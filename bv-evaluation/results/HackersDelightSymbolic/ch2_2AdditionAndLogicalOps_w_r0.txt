@@ -1,610 +1,3 @@
-⚠ [55/2570] Replayed Mathlib.Algebra.Group.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:814:33: `pow_succ'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:819:6: `pow_mul_comm'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:828:6: `pow_three'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Defs.lean:851:6: `pow_mul'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [201/2570] Replayed Mathlib.Logic.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:155:8: `dec_em'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:159:8: `em'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:304:8: `or_congr_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:307:8: `or_congr_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:320:8: `imp_or'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:359:8: `xor_iff_not_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:418:8: `eqRec_heq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:515:8: `forall_true_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:536:8: `exists_apply_eq_apply'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:543:6: `exists_apply_eq_apply2'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:552:6: `exists_apply_eq_apply3'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:579:8: `forall_apply_eq_imp_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:582:8: `forall_eq_apply_imp_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:642:8: `forall_prop_congr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:715:6: `Classical.choose_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:851:8: `dite_eq_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Basic.lean:855:8: `ite_eq_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [202/2570] Replayed Mathlib.Logic.ExistsUnique
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/ExistsUnique.lean:109:16: `exists_unique_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [205/2570] Replayed Mathlib.Logic.Function.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:83:8: `Function.Injective.eq_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:92:8: `Function.Injective.ne_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:122:8: `Function.Injective.of_comp_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:168:8: `Function.Surjective.of_comp_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:242:8: `Function.Bijective.of_comp_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:546:8: `Function.update_comp_eq_of_forall_ne'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:557:8: `Function.update_comp_eq_of_injective'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:654:8: `Function.extend_apply'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Basic.lean:686:8: `Function.Injective.surjective_comp_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [220/2570] Replayed Mathlib.Data.Nat.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:89:6: `Nat.succ_pos'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:280:16: `Nat.sub_eq_of_eq_add'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:282:16: `Nat.eq_sub_of_add_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:285:16: `Nat.lt_sub_iff_add_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:287:16: `Nat.sub_lt_iff_lt_add'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:370:6: `Nat.mul_lt_mul''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:416:6: `Nat.le_div_iff_mul_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:419:6: `Nat.div_lt_iff_lt_mul'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:452:16: `Nat.mul_div_cancel_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:504:16: `Nat.div_le_of_le_mul'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:518:16: `Nat.div_le_self'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:629:6: `Nat.one_le_pow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:635:6: `Nat.one_lt_pow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:644:6: `Nat.one_lt_two_pow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:727:6: `Nat.leRec_succ'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:771:6: `Nat.leRecOn_succ'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:878:6: `Nat.decreasingInduction_succ'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1067:6: `Nat.mod_add_div'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1069:6: `Nat.div_add_mod'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1159:6: `Nat.mul_add_mod'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Defs.lean:1176:6: `Nat.dvd_sub'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [221/2570] Replayed Mathlib.Logic.IsEmpty
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/IsEmpty.lean:36:9: `Fin.isEmpty'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [225/2570] Replayed Mathlib.Tactic.Lift
-warning: ././.lake/packages/mathlib/././Mathlib/Tactic/Lift.lean:49:9: `PiSubtype.canLift'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [226/2570] Replayed Mathlib.Data.Int.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/Defs.lean:191:16: `Int.add_le_zero_iff_le_neg'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/Defs.lean:193:16: `Int.add_nonnneg_iff_neg_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/Defs.lean:324:14: `Int.natAbs_ofNat'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Int/Defs.lean:577:6: `Int.toNat_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [229/2570] Replayed Mathlib.Algebra.Group.Units.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Units/Defs.lean:438:8: `isUnit_iff_exists_inv'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Units/Defs.lean:547:21: `IsUnit.val_inv_unit'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [231/2570] Replayed Mathlib.Logic.Unique
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:131:18: `Unique.subsingleton_unique'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Unique.lean:259:9: `Unique.subtypeEq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [240/2570] Replayed Mathlib.Logic.Function.Iterate
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:160:8: `Function.iterate_succ'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Function/Iterate.lean:163:8: `Function.iterate_succ_apply'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [241/2570] Replayed Mathlib.Data.Prod.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:31:8: `Prod.forall'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:34:8: `Prod.exists'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:51:8: `Prod.map_apply'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:54:8: `Prod.map_fst'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/Basic.lean:57:8: `Prod.map_snd'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [250/2570] Replayed Mathlib.Algebra.Group.Invertible.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:97:8: `invOf_mul_self'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:103:8: `mul_invOf_self'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:109:8: `invOf_mul_cancel_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:120:8: `mul_invOf_cancel_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:131:8: `invOf_mul_cancel_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:142:8: `mul_invOf_cancel_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Invertible/Defs.lean:198:8: `invOf_one'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [260/2570] Replayed Mathlib.Data.FunLike.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Data/FunLike/Basic.lean:187:8: `DFunLike.ext'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [261/2570] Replayed Mathlib.Algebra.Group.Hom.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Hom/Defs.lean:407:8: `map_div'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Hom/Defs.lean:412:6: `map_comp_div'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Hom/Defs.lean:460:8: `map_zpow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Hom/Defs.lean:466:6: `map_comp_zpow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/Hom/Defs.lean:842:18: `MonoidHom.map_zpow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [266/2570] Replayed Mathlib.Logic.Relation
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:351:8: `Relation.TransGen.head'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:354:8: `Relation.TransGen.tail'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:444:8: `Relation.TransGen.lift'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:453:6: `Relation.TransGen.closed'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Relation.lean:523:8: `Relation.ReflTransGen.lift'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [273/2570] Replayed Mathlib.Data.Quot
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:594:18: `Quotient.liftOn'_mk''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:598:14: `Quotient.surjective_liftOn'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:609:18: `Quotient.liftOn₂'_mk''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:675:8: `Quotient.hrecOn'_mk''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:688:8: `Quotient.hrecOn₂'_mk''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:700:8: `Quotient.map'_mk''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:710:8: `Quotient.map₂'_mk''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:715:8: `Quotient.exact'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:719:8: `Quotient.sound'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:723:18: `Quotient.eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:727:18: `Quotient.eq''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:736:8: `Quotient.out_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Quot.lean:739:8: `Quotient.mk_out'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [274/2570] Replayed Mathlib.Data.Bool.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:156:8: `Bool.eq_true_of_not_eq_false'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Bool/Basic.lean:159:8: `Bool.eq_false_of_not_eq_true'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [276/2570] Replayed Mathlib.Logic.Equiv.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:138:9: `Equiv.inhabited'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:153:8: `Equiv.left_inv'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:154:8: `Equiv.right_inv'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:725:16: `Equiv.forall_congr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:737:16: `Equiv.exists_congr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:757:16: `Equiv.existsUnique_congr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:772:18: `Equiv.forall₂_congr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Defs.lean:782:18: `Equiv.forall₃_congr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [278/2570] Replayed Mathlib.Algebra.GroupWithZero.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:110:8: `mul_left_inj'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/GroupWithZero/Defs.lean:113:8: `mul_right_inj'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [279/2570] Replayed Mathlib.Algebra.NeZero
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:44:6: `zero_ne_one'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:46:6: `one_ne_zero'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:48:6: `two_ne_zero'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:50:6: `three_ne_zero'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/NeZero.lean:52:6: `four_ne_zero'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [291/2570] Replayed Mathlib.Data.Sigma.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:90:6: `Sigma.exists'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Sigma/Basic.lean:93:6: `Sigma.forall'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [304/2570] Replayed Mathlib.Logic.Equiv.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Logic/Equiv/Basic.lean:1706:8: `Equiv.coe_piCongr'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [311/2570] Replayed Mathlib.Algebra.Group.TypeTags
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/TypeTags.lean:494:6: `AddMonoidHom.coe_toMultiplicative'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/TypeTags.lean:504:6: `MonoidHom.coe_toAdditive'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/TypeTags.lean:525:6: `AddMonoidHom.coe_toMultiplicative''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Group/TypeTags.lean:535:6: `MonoidHom.coe_toAdditive''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [314/2570] Replayed Mathlib.Data.Nat.Sqrt
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:114:6: `Nat.sqrt_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:118:6: `Nat.lt_succ_sqrt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:127:6: `Nat.le_sqrt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:131:6: `Nat.sqrt_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:150:6: `Nat.eq_sqrt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:170:6: `Nat.sqrt_add_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:175:6: `Nat.sqrt_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:185:6: `Nat.exists_mul_self'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:191:6: `Nat.sqrt_mul_sqrt_lt_succ'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:197:6: `Nat.succ_le_succ_sqrt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Sqrt.lean:207:6: `Nat.not_exists_sq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [414/2570] Replayed Mathlib.Algebra.Ring.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Ring/Defs.lean:234:6: `add_sq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [437/2570] Replayed Mathlib.Algebra.Field.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Field/Defs.lean:202:6: `Rat.cast_mk'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [443/2570] Replayed Mathlib.Control.Combinators
-warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:35:4: `Monad.mapM'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Control/Combinators.lean:57:4: `Monad.sequence'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [445/2570] Replayed Mathlib.Data.Prod.PProd
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:35:8: `PProd.forall'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Prod/PProd.lean:38:8: `PProd.exists'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [456/2570] Replayed Mathlib.Order.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:70:8: `le_trans'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:73:8: `lt_trans'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:76:8: `lt_of_le_of_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:79:8: `lt_of_lt_of_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:91:8: `lt_of_le_of_ne'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:96:8: `Ne.lt_of_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:156:8: `le_of_le_of_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:159:8: `le_of_eq_of_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:162:8: `lt_of_lt_of_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:165:8: `lt_of_eq_of_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:265:8: `LT.lt.ne'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:350:8: `min_def'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:359:8: `max_def'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:402:8: `lt_iff_lt_of_le_iff_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:420:8: `le_of_forall_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:429:8: `le_of_forall_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:432:8: `forall_lt_iff_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:851:8: `update_le_update_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:910:8: `min_rec'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Basic.lean:913:8: `max_rec'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [461/2570] Replayed Mathlib.Order.Compare
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Compare.lean:220:8: `Eq.cmp_eq_eq'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [464/2570] Replayed Mathlib.Order.RelClasses
-warning: ././.lake/packages/mathlib/././Mathlib/Order/RelClasses.lean:34:8: `antisymm'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/RelClasses.lean:111:8: `ne_of_irrefl'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [465/2570] Replayed Mathlib.Order.Monotone.Basic
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Monotone/Basic.lean:476:8: `Subsingleton.monotone'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Monotone/Basic.lean:479:8: `Subsingleton.antitone'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Monotone/Basic.lean:568:18: `StrictMono.ite'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Monotone/Basic.lean:586:18: `StrictAnti.ite'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [494/2570] Replayed Mathlib.Algebra.Order.Group.Synonym
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/Synonym.lean:39:9: `OrderDual.instPow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/Synonym.lean:156:9: `Lex.instPow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [496/2570] Replayed Mathlib.Algebra.Order.Monoid.Unbundled.Pow
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:68:8: `pow_le_pow_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:72:8: `pow_le_pow_right_of_le_one'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:76:8: `one_lt_pow'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:86:8: `pow_right_strictMono'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:90:8: `pow_lt_pow_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:140:6: `pow_lt_pow_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:150:8: `pow_le_pow_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:207:8: `pow_le_pow_iff_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:211:8: `pow_lt_pow_iff_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:221:8: `lt_of_pow_lt_pow_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:239:8: `le_of_pow_le_pow_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Monoid/Unbundled/Pow.lean:253:8: `Left.pow_lt_one_iff'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [559/2570] Replayed Mathlib.Data.PNat.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Data/PNat/Defs.lean:131:8: `PNat.coe_toPNat'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [667/2570] Replayed Mathlib.Data.Nat.Find
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Nat/Find.lean:71:18: `Nat.find_min'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [691/2570] Replayed Mathlib.Control.Applicative
-warning: ././.lake/packages/mathlib/././Mathlib/Control/Applicative.lean:34:8: `Applicative.pure_seq_eq_map'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [807/2570] Replayed Mathlib.Algebra.Order.Group.Abs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/Abs.lean:72:8: `le_abs'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/Abs.lean:81:8: `apply_abs_le_mul_of_one_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/Abs.lean:100:8: `abs_add'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [820/2570] Replayed Mathlib.Algebra.CharZero.Lemmas
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/CharZero/Lemmas.lean:100:8: `nat_mul_inj'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
 ⚠ [880/2570] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
@@ -635,81 +28,6 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:99:37: declarati
 ⚠ [905/2570] Replayed SSA.Experimental.Bits.AutoStructs.Basic
 warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:461:4: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:1070:4: declaration uses 'sorry'
-⚠ [926/2570] Replayed Mathlib.Algebra.Module.Equiv.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/Equiv/Defs.lean:462:8: `LinearEquiv.mk_coe'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [974/2570] Replayed Mathlib.Algebra.Module.ULift
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:40:9: `ULift.isScalarTower'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:44:9: `ULift.isScalarTower''` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:59:9: `ULift.mulAction'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:67:9: `ULift.smulZeroClass'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:73:9: `ULift.distribSMul'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:82:9: `ULift.distribMulAction'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:91:9: `ULift.mulDistribMulAction'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:106:9: `ULift.smulWithZero'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:118:9: `ULift.mulActionWithZero'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Module/ULift.lean:131:9: `ULift.module'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [1027/2570] Replayed Mathlib.Order.Iterate
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Iterate.lean:170:8: `Function.Commute.iterate_pos_lt_of_map_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Iterate.lean:185:8: `Function.Commute.iterate_pos_lt_iff_map_lt'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Order/Iterate.lean:193:8: `Function.Commute.iterate_pos_le_iff_map_le'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [1035/2570] Replayed Mathlib.Data.Countable.Defs
-warning: ././.lake/packages/mathlib/././Mathlib/Data/Countable/Defs.lean:104:9: `Prop.countable'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [1163/2570] Replayed Mathlib.Algebra.Order.BigOperators.Group.Multiset
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/BigOperators/Group/Multiset.lean:127:6: `Multiset.prod_lt_prod'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/BigOperators/Group/Multiset.lean:134:6: `Multiset.prod_lt_prod_of_nonempty'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-⚠ [1266/2570] Replayed Mathlib.Algebra.Order.Group.MinMax
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/MinMax.lean:36:8: `min_inv_inv'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/MinMax.lean:41:8: `max_inv_inv'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/MinMax.lean:46:8: `min_div_div_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/MinMax.lean:50:8: `max_div_div_right'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/MinMax.lean:54:8: `min_div_div_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
-warning: ././.lake/packages/mathlib/././Mathlib/Algebra/Order/Group/MinMax.lean:58:8: `max_div_div_left'` is missing a doc-string, please add one.
-Declarations whose name ends with a `'` are expected to contain an explanation for the presence of a `'` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible.
-note: this linter can be disabled with `set_option linter.docPrime false`
 ⚠ [2562/2570] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:28:4: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:30:6: declaration uses 'sorry'
@@ -734,17 +52,17 @@ warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:659:4: dec
 warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:702:6: declaration uses 'sorry'
 warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:750:6: declaration uses 'sorry'
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 144.306084 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 169.916028 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.543666 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.272411 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 44.169292 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 75.577049 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.812542 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 146.644360 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.034708 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.919990 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.500375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.409950 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -756,31 +74,31 @@ TACSTART
      a := ↑(2 ^ w - 1 - x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
      b := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 65.331792 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 39.315166 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 96.497649 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 68.051110 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.153584 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.053200 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 84.557292 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.880209 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (-x == ~~~x + 1#w)]
     Consider the following assignment:
     BitVec.ofBool (-x == ~~~x + 1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 481.154709 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 673.739638 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 153.416708 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 182.675049 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 6.904333 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.038950 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 46.846125 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 80.599189 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 110.926959 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 155.941990 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.294292 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.864480 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.738167 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.495620 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -792,31 +110,31 @@ TACSTART
      a := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 69.667333 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 44.378334 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 102.351899 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 76.962260 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.062375 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 10.875130 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 85.341625 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.889600 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (-x == ~~~(x + -1#w))]
     Consider the following assignment:
     BitVec.ofBool (-x == ~~~(x + -1#w)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 501.056750 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 696.031337 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 151.950167 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 186.482380 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.645625 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.229010 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 43.602458 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 74.584929 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 101.711583 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 142.201080 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.119500 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.207730 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.510292 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.324840 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -828,31 +146,31 @@ TACSTART
      a := ↑((2 ^ w - x.toNat) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑x.toNat MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 64.830750 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 41.643833 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 97.511449 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 70.219050 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.116417 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 10.629930 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 84.880250 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.674520 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~x == -x + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~x == -x + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 480.307166 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 668.463757 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 144.237625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 168.400399 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.157833 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.910440 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 46.052375 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 77.868019 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 105.696917 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 147.381320 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.137208 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.924630 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.654916 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.447890 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -864,31 +182,31 @@ TACSTART
      a := ↑(x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
      b := ↑(2 ^ w - (2 ^ w - 1 - x.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 65.379917 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 39.625292 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 94.198299 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 68.101710 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 5.747250 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 10.315490 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 85.167208 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.383378 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (-~~~x == x + 1#w)]
     Consider the following assignment:
     BitVec.ofBool (-~~~x == x + 1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 487.448709 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 694.030639 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 151.680625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 183.147520 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.113083 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 9.172010 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 43.083584 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 74.150379 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 112.904167 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 156.639530 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.155459 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.935000 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.642917 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.615340 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -900,31 +218,31 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(2 ^ w - x.toNat) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 65.559084 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 41.047500 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 96.322299 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 70.261970 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.003667 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 10.759890 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 85.037916 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.832350 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(-x) == x + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~(-x) == x + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 495.239458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 693.847857 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 172.121417 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 216.716411 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.763208 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.058179 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 90.835375 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 154.028099 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 114.824000 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 159.897519 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.476375 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.501620 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.212167 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.427760 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -936,32 +254,32 @@ TACSTART
      a := ↑((x.toNat + (2 ^ w - (2 ^ w - 1 - y.toNat))) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 116.093041 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 85.975417 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 178.419359 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 143.878940 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 7.825125 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 13.853420 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.067708 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.066030 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == x + -~~~y + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (x + y == x + -~~~y + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 673.054083 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 977.888695 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 166.073000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 206.500888 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.539625 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 31.865391 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 97.150584 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 163.938229 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 107.630667 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 153.770190 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.952666 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.128660 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.420500 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.764180 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -973,38 +291,38 @@ TACSTART
      a := ↑((x ^^^ y).toNat + 2 % 2 ^ w * (x &&& y).toNat % 2 ^ w) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 114.284458 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 178.981279 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1))
             (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).add (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH simp FAIL, TIME_ELAPSED 82.534958 ms, MSGSTART 
+  TACBENCH simp FAIL, TIME_ELAPSED 139.796769 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.261875 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 14.575510 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.424042 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 73.100351 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == (x ^^^ y) + 2#w * (x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x + y == (x ^^^ y) + 2#w * (x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 629.933500 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 921.298155 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 134.633458 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 147.267530 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.295042 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 22.310389 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 57.180708 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 95.872070 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 103.778584 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 153.314479 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.339750 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.634530 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.459625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.182180 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1016,32 +334,32 @@ TACSTART
      a := ↑((x ||| y).toNat + (x &&& y).toNat) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 77.235584 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 49.121667 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 117.878890 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 80.273769 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.996917 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 12.382290 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.176084 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.421590 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == (x ||| y) + (x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x + y == (x ||| y) + (x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 534.457459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 765.232477 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 169.748584 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 212.455392 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.806291 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 28.023228 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 95.355459 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 162.864059 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 119.443209 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 169.122529 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.459833 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 16.018960 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.682375 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.162600 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1053,38 +371,38 @@ TACSTART
      a := ↑(2 % 2 ^ w * (x ||| y).toNat % 2 ^ w + (2 ^ w - (x ^^^ y).toNat)) % ↑(2 ^ w)
      b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 116.191375 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 180.800009 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).add (AutoStructs.Term.var 1))
             ((AutoStructs.Term.var 2).sub ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)))) =
         true
     is false MSGEND
-  TACBENCH simp FAIL, TIME_ELAPSED 82.737584 ms, MSGSTART 
+  TACBENCH simp FAIL, TIME_ELAPSED 142.463530 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.527541 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 14.846470 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.370667 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 73.317591 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + y == 2#w * (x ||| y) + -(x ^^^ y))]
     Consider the following assignment:
     BitVec.ofBool (x + y == 2#w * (x ||| y) + -(x ^^^ y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 725.555708 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1074.591514 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 160.086208 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 191.751779 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 17.439416 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 23.133000 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 61.402250 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 103.969620 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 113.950542 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 161.542839 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.739708 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.900330 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.066958 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.248590 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1096,32 +414,32 @@ TACSTART
      a := ↑((x.toNat + (2 ^ w - 1 - y.toNat)) % 2 ^ w + 1 % 2 ^ w) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 83.840792 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 54.407583 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 128.703970 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 94.359429 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.168416 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 14.504260 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.440041 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.883843 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == x + ~~~y + 1#w)]
     Consider the following assignment:
     BitVec.ofBool (x + -y == x + ~~~y + 1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 563.462000 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 808.689184 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 176.705167 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 222.956259 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.259959 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 27.726200 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 82.050625 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 141.813719 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 126.794792 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 182.830130 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.964792 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.150719 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.671583 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.111490 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1133,38 +451,38 @@ TACSTART
      a := ↑((x ^^^ y).toNat + (2 ^ w - 2 % 2 ^ w * (~~~x &&& y).toNat % 2 ^ w)) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 101.612500 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 159.139820 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).sub (AutoStructs.Term.var 1))
             (((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)).sub (AutoStructs.Term.var 2))) =
         true
     is false MSGEND
-  TACBENCH simp FAIL, TIME_ELAPSED 70.355959 ms, MSGSTART 
+  TACBENCH simp FAIL, TIME_ELAPSED 122.173119 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 9.408083 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 16.330450 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 88.218750 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.867961 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == (x ^^^ y) + -(2#w * (~~~x &&& y)))]
     Consider the following assignment:
     BitVec.ofBool (x + -y == (x ^^^ y) + -(2#w * (~~~x &&& y))) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 643.384625 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 946.994505 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 146.074958 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 169.186469 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.439083 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.401690 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 49.932292 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 85.916110 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 122.635458 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 176.212059 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.022000 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.375960 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.471417 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.080290 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1176,32 +494,32 @@ TACSTART
      a := ↑((x &&& ~~~y).toNat + (2 ^ w - (~~~x &&& y).toNat)) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 70.812917 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 42.731958 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 103.913489 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 73.584270 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.326375 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 14.591300 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.630041 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 73.266442 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == (x &&& ~~~y) + -(~~~x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x + -y == (x &&& ~~~y) + -(~~~x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 553.312458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 792.383505 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 175.053459 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 222.941422 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 19.327041 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 28.483878 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 82.107125 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 142.532698 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 129.432209 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 185.447640 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.201084 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.241219 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.685292 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 8.143560 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1213,38 +531,38 @@ TACSTART
      a := ↑(2 % 2 ^ w * (x &&& ~~~y).toNat % 2 ^ w + (2 ^ w - (x ^^^ y).toNat)) % ↑(2 ^ w)
      b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 102.194625 ms, MSGSTART 
+  TACBENCH bv_automata_classic FAIL, TIME_ELAPSED 160.442080 ms, MSGSTART 
     tactic 'native_decide' evaluated that the proposition
       formulaIsUniversal
           (AutoStructs.Formula.atom AutoStructs.Relation.eq ((AutoStructs.Term.var 0).sub (AutoStructs.Term.var 1))
             ((AutoStructs.Term.var 2).sub ((AutoStructs.Term.var 0).xor (AutoStructs.Term.var 1)))) =
         true
     is false MSGEND
-  TACBENCH simp FAIL, TIME_ELAPSED 70.677833 ms, MSGSTART 
+  TACBENCH simp FAIL, TIME_ELAPSED 122.884969 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 9.494583 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 16.346700 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.900791 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 75.099790 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x + -y == 2#w * (x &&& ~~~y) + -(x ^^^ y))]
     Consider the following assignment:
     BitVec.ofBool (x + -y == 2#w * (x &&& ~~~y) + -(x ^^^ y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 716.542459 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1050.136366 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 144.413250 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 165.230679 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.643792 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.703030 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 37.030291 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 63.017990 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 110.307333 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 157.001599 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.382791 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.080880 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.269250 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.660610 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1256,32 +574,32 @@ TACSTART
      a := ↑((x ||| y).toNat + (2 ^ w - (x &&& y).toNat)) % ↑(2 ^ w)
      b := ↑(x ^^^ y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 55.178875 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 30.004875 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 78.498340 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 50.877010 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 7.297625 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 12.370450 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.697375 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.099128 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x ^^^ y == (x ||| y) + -(x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x ^^^ y == (x ||| y) + -(x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 494.214417 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 693.709459 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 145.768000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 171.121341 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.484125 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.485519 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 35.120292 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 60.129089 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 107.346459 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 152.613360 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.079833 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.582400 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.107625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.482830 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1293,32 +611,32 @@ TACSTART
      a := ↑((x ||| y).toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
      b := ↑(x &&& ~~~y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 54.268250 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 28.884792 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 77.383329 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 50.191060 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.936208 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 12.299680 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 85.297000 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.947280 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x &&& ~~~y == (x ||| y) + -y)]
     Consider the following assignment:
     BitVec.ofBool (x &&& ~~~y == (x ||| y) + -y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 487.708833 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 684.218077 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 145.426000 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 169.929778 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.266583 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.419591 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 33.975500 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 57.493070 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 107.037125 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 147.174359 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.755916 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.804100 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.934875 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.095590 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1330,32 +648,32 @@ TACSTART
      a := ↑(x.toNat + (2 ^ w - (x &&& y).toNat)) % ↑(2 ^ w)
      b := ↑(x &&& ~~~y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 53.314667 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 28.055334 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 76.000340 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 49.122729 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.684292 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.977110 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.142250 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.834869 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x &&& ~~~y == x + -(x &&& y))]
     Consider the following assignment:
     BitVec.ofBool (x &&& ~~~y == x + -(x &&& y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 476.733583 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 666.218438 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 176.466708 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 228.530679 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 7.849000 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.129360 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 67.324917 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 116.078700 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 122.734333 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 174.815999 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.284209 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.072570 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.972708 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.108130 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -1367,32 +685,32 @@ TACSTART
      a := ↑((y.toNat + (2 ^ w - x.toNat)) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 93.188875 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 65.802000 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 143.917449 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 111.780200 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 7.792375 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 13.790440 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.119458 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.651099 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (~~~(x + -y) == y + -x + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~(x + -y) == y + -x + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 668.823125 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 979.250927 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 138.709292 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 156.879150 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 8.950250 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.155820 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 32.107459 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 54.295959 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 109.154875 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 154.096430 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 8.662583 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.524850 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.666625 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.431530 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -1404,31 +722,31 @@ TACSTART
      a := ↑(2 ^ w - 1 - x.toNat + y.toNat) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w) MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 55.100375 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 28.329000 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 77.854049 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 48.549860 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.532208 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.555290 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.231541 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.332318 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(x + -y) == ~~~x + y)]
     Consider the following assignment:
     BitVec.ofBool (~~~(x + -y) == ~~~x + y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 486.962208 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 677.985409 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 198.218833 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 261.765048 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.116417 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 20.633390 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 83.761708 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 142.705360 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 116.842750 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 166.467609 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 10.002375 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 15.186100 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.454500 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.673630 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -1440,32 +758,32 @@ TACSTART
      a := ↑(((x &&& y).toNat + (2 ^ w - (x ||| y).toNat)) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x ^^^ y).toNat MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 104.151791 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 74.543584 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 163.693159 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 129.895960 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.736334 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 15.456640 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 87.868250 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 74.552569 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (~~~(x ^^^ y) == (x &&& y) + -(x ||| y) + -1#w)]
     Consider the following assignment:
     BitVec.ofBool (~~~(x ^^^ y) == (x &&& y) + -(x ||| y) + -1#w) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 676.277625 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 1001.863586 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 157.874625 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 190.023738 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.567667 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 21.375471 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 47.219958 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 80.206130 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 101.893834 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 143.776469 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.889458 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 14.719770 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.907709 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.856020 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       c ≥ 0
@@ -1477,32 +795,32 @@ TACSTART
      a := ↑((x &&& y).toNat + (2 ^ w - 1 - (x ||| y).toNat)) % ↑(2 ^ w)
      b := ↑2 ^ w
      c := ↑(x ^^^ y).toNat MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 65.474250 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 38.281083 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 95.685820 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 66.048589 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 7.180209 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 12.577020 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 86.370625 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.688190 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (~~~(x ^^^ y) == (x &&& y) + ~~~(x ||| y))]
     Consider the following assignment:
     BitVec.ofBool (~~~(x ^^^ y) == (x &&& y) + ~~~(x ||| y)) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 527.390167 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 760.719987 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 140.897042 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 160.545472 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.782667 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 18.238809 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 36.432500 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 60.468298 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 96.007916 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 136.318240 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.050083 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.510060 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 2.965958 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.210390 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1514,32 +832,32 @@ TACSTART
      a := ↑((x &&& ~~~y).toNat + y.toNat) % ↑(2 ^ w)
      b := ↑(x ||| y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 53.821667 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 28.190084 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 76.648589 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 48.582510 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.280875 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.013450 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 84.884041 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.010140 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x ||| y == (x &&& ~~~y) + y)]
     Consider the following assignment:
     BitVec.ofBool (x ||| y == (x &&& ~~~y) + y) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 469.761458 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 651.045607 ms, 
 TACEND
 TACSTART
-  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 139.931958 ms, MSGSTART 
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 161.073688 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ac FAIL, TIME_ELAPSED 11.515208 ms, MSGSTART 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.434041 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_distrib FAIL, TIME_ELAPSED 35.306666 ms, MSGSTART 
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 59.718750 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_ring FAIL, TIME_ELAPSED 107.451375 ms, MSGSTART 
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 152.867429 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 9.016666 ms, MSGSTART 
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 13.435160 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_omega FAIL, TIME_ELAPSED 3.454250 ms, MSGSTART 
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 5.972870 ms, MSGSTART 
     omega could not prove the goal:
     a possible counterexample may satisfy the constraints
       b ≥ 0
@@ -1551,17 +869,17 @@ TACSTART
      a := ↑((~~~x ||| y).toNat + (2 ^ w - (2 ^ w - 1 - x.toNat))) % ↑(2 ^ w)
      b := ↑(x &&& y).toNat
      c := ↑2 ^ w MSGEND
-  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 54.169167 ms, 
-  TACBENCH simp FAIL, TIME_ELAPSED 28.922083 ms, MSGSTART 
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 77.237320 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 49.782240 ms, MSGSTART 
     simp made no progress MSGEND
-  TACBENCH bv_normalize FAIL, TIME_ELAPSED 6.788916 ms, MSGSTART 
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.913120 ms, MSGSTART 
     internal exception #4 MSGEND
-  TACBENCH bv_decide FAIL, TIME_ELAPSED 85.643375 ms, MSGSTART 
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 71.196198 ms, MSGSTART 
     The prover found a potentially spurious counterexample:
     - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
        (x &&& y == (~~~x ||| y) + -~~~x)]
     Consider the following assignment:
     BitVec.ofBool (x &&& y == (~~~x ||| y) + -~~~x) = 0x0#1
      MSGEND
-  TACBENCH bv_auto PASS, TIME_ELAPSED 480.645834 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 675.565428 ms, 
 TACEND

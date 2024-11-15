@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 import os 
 
+paper_directory = '../../paper-lean-bitvectors/'
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
-res_dir = "results/llvm/"
-raw_data_dir = "raw-data/"
+res_dir = "results/InstCombine/"
+raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
 
 reps = 1

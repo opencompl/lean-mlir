@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 import os 
 
+paper_directory = '../../paper-lean-bitvectors/'
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
-raw_data_dir = '../../paper-lean-bitvectors/raw-data/HackersDelight/'
+raw_data_dir = paper_directory + 'raw-data/HackersDelight/'
 reps = 1
 
 bv_width = [4, 8, 16, 32, 64]
@@ -230,3 +231,4 @@ for file in os.listdir(benchmark_dir):
 
         df.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_proved_data.csv')
         df_ceg.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_ceg_data.csv')
+        df_err_sorted.to_csv(raw_data_dir+'bvw'+str(bvw)+'_'+file.split('.')[0]+'_err_data.csv')
