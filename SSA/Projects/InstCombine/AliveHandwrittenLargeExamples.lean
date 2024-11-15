@@ -44,6 +44,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_case_bash
+  simp_alive_split
   alive_auto
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
