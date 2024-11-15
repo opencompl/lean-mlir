@@ -188,8 +188,8 @@ macro "bv_ring" : tactic =>
     (
       simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
         ← BitVec.negOne_eq_allOnes]
-      ring_nf
-      rfl
+      try ring_nf
+      try rfl
       done
     )
    )
@@ -207,12 +207,9 @@ macro "bv_ac" : tactic =>
 macro "bv_auto": tactic =>
   `(tactic|
       (
-        intros
-        try simp (config := {failIfUnchanged := false}) [-Bool.and_iff_left_iff_imp, (BitVec.negOne_eq_allOnes)]
-        try ring_nf
-        try bv_eliminate_bool
-        repeat (split)
-        <;> try simp (config := {failIfUnchanged := false})
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq]
         try solve
           | bv_bitwise
           | bv_ac
@@ -281,6 +278,9 @@ macro "simp_alive_benchmark": tactic =>
 macro "bv_bench": tactic =>
   `(tactic|
       (
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq]
         all_goals (
           tac_bench [
             "rfl" : (rfl; done),
