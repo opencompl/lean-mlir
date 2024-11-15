@@ -189,6 +189,7 @@ macro "bv_ring" : tactic =>
       simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
         ← BitVec.negOne_eq_allOnes]
       ring_nf
+      rfl
       done
     )
    )
@@ -282,6 +283,7 @@ macro "bv_bench": tactic =>
       (
         all_goals (
           tac_bench [
+            "rfl" : (rfl; done),
             "bv_bitwise" : (bv_bitwise; done),
             "bv_ac" : (bv_ac; done),
             "bv_distrib" : (bv_distrib; done),
