@@ -7,7 +7,7 @@ import re
 paper_directory = '../../paper-lean-bitvectors/'
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/InstCombineSymbolic/"
-raw_data_dir = paper_directory + 'raw-data/InstCombineSymbolic'
+raw_data_dir = paper_directory + 'raw-data/InstCombineSymbolic/'
 reps = 1
 
 
