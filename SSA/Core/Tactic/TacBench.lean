@@ -72,7 +72,7 @@ def hermeticRun (g : MVarId) (item : Item) : TacticM Result := g.withContext do
 
 
 def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
-| `(tacBenchItem| $name:str : $tac:tacticSeq) => 
+| `(tacBenchItem| $name:str : $tac:tacticSeq) =>
      return { name := name.getString, tac := tac : Item }
 | _ => throwUnsupportedSyntax
 
@@ -108,5 +108,3 @@ theorem eg2 (x y : BitVec 8) : x * y = y * x := by
 -/
 
 end Examples
-
-
