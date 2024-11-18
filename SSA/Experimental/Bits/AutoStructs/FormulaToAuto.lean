@@ -14,7 +14,7 @@ import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-import SSA.Experimental.Bits.AutoStructs.GoodNFA
+import SSA.Experimental.Bits.AutoStructs.NFA'
 
 open AutoStructs
 open Mathlib
@@ -40,8 +40,8 @@ lemma NFA.correct_spec {M : NFA α σ} {ζ : M.sa} {L : Language α} :
 abbrev BVRel := ∀ ⦃w⦄, BitVec w → BitVec w → Prop
 abbrev BVNRel n := ∀ ⦃w⦄, Vector (BitVec w) n → Prop
 
-def GoodNFA.sa (M : GoodNFA n) := M.σ → BVNRel n
-def GoodNFA.sa2 (M : GoodNFA 2) := M.σ → BVRel
+def NFA'.sa (M : NFA' n) := M.σ → BVNRel n
+def NFA'.sa2 (M : NFA' 2) := M.σ → BVRel
 
 def langRel (R : BVNRel n) : Set (BitVecs n) :=
   { bvs | R bvs.bvs }
@@ -116,19 +116,19 @@ lemma BitVec.cons_inj : cons b1 bv1 = cons b2 bv2 ↔ (b1 = b2) ∧ bv1 = bv2 :=
 @[simp] lemma BitVec.lk00 : (0#2 : BitVec 2)[0] = false := by rfl
 @[simp] lemma BitVec.lk01 : (0#2 : BitVec 2)[1] = false := by rfl
 
-structure GoodNFA.correct (M : GoodNFA n) (ζ : M.sa) (L : BVNRel n) where
+structure NFA'.correct (M : NFA' n) (ζ : M.sa) (L : BVNRel n) where
   cond1 : ∀ ⦃w⦄ (bvn : Vector (BitVec w) n), (L bvn ↔ ∃ q ∈ M.M.accept, ζ q bvn)
   cond2 q : q ∈ M.M.start ↔ ζ q (Vector.replicate n .nil)
   cond3 q a {w} (bvn : Vector (BitVec w) n) : q ∈ M.M.stepSet { q | ζ q bvn } a ↔
               ζ q (Vector.ofFn fun k => BitVec.cons (a.getLsbD k) (bvn.get k))
 
-structure GoodNFA.correct2 (M : GoodNFA 2) (ζ : M.sa2) (L : BVRel) where
+structure NFA'.correct2 (M : NFA' 2) (ζ : M.sa2) (L : BVRel) where
   cond1 : ∀ (bv1 bv2 : BitVec w), (L bv1 bv2 ↔ ∃ q ∈ M.M.accept, ζ q bv1 bv2)
   cond2 q : q ∈ M.M.start ↔ ζ q .nil .nil
   cond3 q a w (bv1 bv2 : BitVec w) : q ∈ M.M.stepSet { q | ζ q bv1 bv2 } a ↔
               ζ q (BitVec.cons (a.getLsbD 0) bv1) (BitVec.cons (a.getLsbD 1) bv2)
 
-lemma GoodNFA.correct_spec {M : GoodNFA n} {ζ : M.sa} {L : BVNRel n} :
+lemma NFA'.correct_spec {M : NFA' n} {ζ : M.sa} {L : BVNRel n} :
     M.correct ζ L → M.accepts = langRel L := by
   rintro ⟨h1, h2, h3⟩
   simp [accepts, accepts']
@@ -152,7 +152,7 @@ lemma GoodNFA.correct_spec {M : GoodNFA n} {ζ : M.sa} {L : BVNRel n} :
     rw [h]; simp_rw [in_enc]
     simp [langRel, h3]
 
-lemma GoodNFA.correct2_spec {M : GoodNFA 2} {ζ : M.sa2} {L : BVRel} :
+lemma NFA'.correct2_spec {M : NFA' 2} {ζ : M.sa2} {L : BVRel} :
     M.correct2 ζ L → M.accepts = langRel2 L := by
   rintro ⟨h1, h2, h3⟩
   suffices hc : M.correct (fun q w (bvn : Vector (BitVec w) 2) => ζ q (bvn.get 0) (bvn.get 1))
@@ -183,7 +183,7 @@ def NFA.ofFSM (p : FSM arity) : NFA (Alphabet arity) (p.α → Bool) where
     let (s'', b) := p.nextBit s (bitVecToFinFun (a.truncate $ FinEnum.card arity))
     s' = s'' ∧ a.msb = b }
 
-def _root_.GoodNFA.ofFSM'  (p : FSM arity) : GoodNFA (FinEnum.card arity + 1) where
+def _root_.NFA'.ofFSM'  (p : FSM arity) : NFA' (FinEnum.card arity + 1) where
   σ := p.α → Bool
   M := NFA.ofFSM p
 
@@ -191,12 +191,12 @@ def _root_.GoodNFA.ofFSM'  (p : FSM arity) : GoodNFA (FinEnum.card arity + 1) wh
 abbrev inFSMRel (p : FSM arity) {w} (bvn : Vector (BitVec w) _) :=
   bvn.get (Fin.last (FinEnum.card arity)) = p.evalBV (fun ar => bvn.get (FinEnum.equiv.toFun ar))
 
-def GoodNFA.ofFSM_sa (p : FSM arity) : (GoodNFA.ofFSM' p).sa := fun q _ bvn =>
+def NFA'.ofFSM_sa (p : FSM arity) : (NFA'.ofFSM' p).sa := fun q _ bvn =>
     inFSMRel p bvn ∧ q = p.carryBV (fun ar => bvn.get (FinEnum.equiv.toFun ar))
 
 -- TODO: improve this proof
-def GoodNFA.ofFSM_correct (p : FSM arity) :
-    (GoodNFA.ofFSM' p).correct (ofFSM_sa p) (fun _ bvn => inFSMRel p bvn) := by
+def NFA'.ofFSM_correct (p : FSM arity) :
+    (NFA'.ofFSM' p).correct (ofFSM_sa p) (fun _ bvn => inFSMRel p bvn) := by
   constructor
   · simp [inFSMRel, NFA.ofFSM, ofFSM', ofFSM_sa]
   · simp [inFSMRel, NFA.ofFSM, ofFSM', ofFSM_sa]; intros q; constructor
@@ -313,8 +313,8 @@ def GoodNFA.ofFSM_correct (p : FSM arity) :
             omega
           · unfold bitVecToFinFun; simp [BitVec.getLsbD_cons]
 
-def _root_.GoodNFA.ofFSM  (p : FSM arity) : GoodNFA (FinEnum.card arity + 1) :=
-  _root_.GoodNFA.ofFSM' p |>.reduce
+def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
+  _root_.NFA'.ofFSM' p |>.reduce
 
 open BitStream in
 lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.arity → BitVec w) :
@@ -355,18 +355,18 @@ lemma FSM.eval_bv (bvn : Vector (BitVec w) (t.arity + 1)) :
   intros _; omega
 
 @[simp]
-lemma GoodNFA.ofFSM_spec (t : Term) :
+lemma NFA'.ofFSM_spec (t : Term) :
     (ofFSM (FSM.ofTerm t)).accepts = t.language := by
   simp [ofFSM, correct_spec (ofFSM_correct (FSM.ofTerm t)), langRel, Term.language]
   ext bvs; simp; tauto
 
 /--
-Transforms an `FSM` of arity `k` to an `CNFA` of arity `k+1`.
+Transforms an `FSM` of arity `k` to an `RawCNFA` of arity `k+1`.
 This correponds to transforming a function with `k` inputs and
 one output to a `k+1`-ary relation. By convention, the output
 is the MSB of the alphabet.
 -/
-def GoodCNFA.ofFSM (p : FSM arity) : GoodCNFA (FinEnum.card arity + 1) :=
+def CNFA.ofFSM (p : FSM arity) : CNFA (FinEnum.card arity + 1) :=
   worklistRun (BitVec (FinEnum.card p.α))
     (fun _ => true)
     #[finFunToBitVec p.initCarry]
@@ -378,16 +378,16 @@ def GoodCNFA.ofFSM (p : FSM arity) : GoodCNFA (FinEnum.card arity + 1) :=
         let carry' : BitVec (FinEnum.card p.α) := finFunToBitVec (fun c => eval (some c))
         ts.push (a.cons res, carry')
 
-lemma GoodCNFA.ofFSM_spec (p : FSM arity) :
-    (GoodCNFA.ofFSM p).Sim (GoodNFA.ofFSM p) := by
+lemma CNFA.ofFSM_spec (p : FSM arity) :
+    (CNFA.ofFSM p).Sim (NFA'.ofFSM p) := by
   sorry
 
 end fsm
-/- A bunch of CNFAs that implement the relations we care about -/
+/- A bunch of RawCNFAs that implement the relations we care about -/
 section nfas_relations
 
-def CNFA.ofConst {w} (bv : BitVec w) : CNFA (BitVec 1) :=
-  let m := CNFA.empty
+def RawCNFA.ofConst {w} (bv : BitVec w) : RawCNFA (BitVec 1) :=
+  let m := RawCNFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let (s', m) := (List.range w).foldl (init := (s, m)) fun (s, m) i =>
@@ -397,8 +397,8 @@ def CNFA.ofConst {w} (bv : BitVec w) : CNFA (BitVec 1) :=
     (s', m)
   m.addFinal s'
 
-def CNFA.autEq : CNFA (BitVec 2) :=
-  let m := CNFA.empty
+def RawCNFA.autEq : RawCNFA (BitVec 2) :=
+  let m := RawCNFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let m := m.addFinal s
@@ -406,26 +406,26 @@ def CNFA.autEq : CNFA (BitVec 2) :=
   let m := m.addTrans 3 s s
   m
 
-def GoodCNFA.autEq : GoodCNFA 2 :=
-  ⟨CNFA.autEq, by simp [CNFA.autEq]; sorry⟩
+def CNFA.autEq : CNFA 2 :=
+  ⟨RawCNFA.autEq, by simp [RawCNFA.autEq]; sorry⟩
 
 def NFA.autEq : NFA (BitVec 2) Unit :=
   { start := ⊤, accept := ⊤, step := fun () a => if a = 0 ∨ a = 3 then ⊤ else ⊥ }
 
-def GoodNFA.autEq : GoodNFA 2 :=
+def NFA'.autEq : NFA' 2 :=
   ⟨Unit, { start := ⊤, accept := ⊤, step := fun () a => if a = 0 ∨ a = 3 then ⊤ else ⊥ }⟩
 
-def GoodNFA.eqRel : BVRel := fun _ x y => x = y
+def NFA'.eqRel : BVRel := fun _ x y => x = y
 
-lemma GoodNFA.autEq_correct : autEq.correct2 (fun _ => eqRel) eqRel := by
+lemma NFA'.autEq_correct : autEq.correct2 (fun _ => eqRel) eqRel := by
   constructor <;> simp [autEq, eqRel]
   rintro ⟨⟩ ⟨a⟩ w bv1 bv2
   fin_cases a <;> simp [NFA.stepSet]
 
 -- Automata recognizing unsigned comparisons
 
-def CNFA.autUnsignedCmp (cmp: RelationOrdering) : CNFA (BitVec 2) :=
-  let m := CNFA.empty
+def RawCNFA.autUnsignedCmp (cmp: RelationOrdering) : RawCNFA (BitVec 2) :=
+  let m := RawCNFA.empty
   let (seq, m) := m.newState
   let (sgt, m) := m.newState
   let (slt, m) := m.newState
@@ -443,8 +443,8 @@ def CNFA.autUnsignedCmp (cmp: RelationOrdering) : CNFA (BitVec 2) :=
   | .gt => m.addFinal sgt
   | .ge => (m.addFinal sgt).addFinal seq
 
-def GoodCNFA.autUnsignedCmp (cmp: RelationOrdering) : GoodCNFA 2 :=
-  ⟨CNFA.autUnsignedCmp cmp, by sorry⟩
+def CNFA.autUnsignedCmp (cmp: RelationOrdering) : CNFA 2 :=
+  ⟨RawCNFA.autUnsignedCmp cmp, by sorry⟩
 
 inductive NFA.unsignedCmpState : Type where
 | eq | gt | lt
@@ -460,7 +460,7 @@ def NFA.autUnsignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) unsignedCmpState
   start := {.eq}
   accept := match cmp with | .lt => {.lt} | .le => {.lt, .eq} | .gt => {.gt} | .ge => {.gt, .eq}
 
-def GoodNFA.autUnsignedCmp (cmp: RelationOrdering) : GoodNFA 2 :=
+def NFA'.autUnsignedCmp (cmp: RelationOrdering) : NFA' 2 :=
   ⟨_, NFA.autUnsignedCmp cmp⟩
 
 def AutoStructs.RelationOrdering.urel (cmp : RelationOrdering) : BVRel :=
@@ -470,7 +470,7 @@ def AutoStructs.RelationOrdering.urel (cmp : RelationOrdering) : BVRel :=
   | .gt => fun _ bv1 bv2 => bv1 >ᵤ bv2
   | .ge => fun _ bv1 bv2 => bv1 ≥ᵤ bv2
 
-def GoodNFA.autUnsignedCmpSA (q : NFA.unsignedCmpState) : BVRel :=
+def NFA'.autUnsignedCmpSA (q : NFA.unsignedCmpState) : BVRel :=
   match q with
   | .eq => fun _ bv1 bv2 => bv1 = bv2
   | .lt => fun _ bv1 bv2 => bv1 <ᵤ bv2
@@ -496,7 +496,7 @@ lemma ucmp_tricho : (bv1 >ᵤ bv2) = false → (bv2 >ᵤ bv1) = false → bv1 = 
   simp [BitVec.ule, BitVec.ult, BitVec.toNat_eq]
   apply Nat.le_antisymm
 
-lemma GoodNFA.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsignedCmpSA cmp.urel := by
+lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsignedCmpSA cmp.urel := by
   let getState {w} (bv1 bv2 : BitVec w) : NFA.unsignedCmpState :=
     if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
   constructor <;> simp [NFA.autUnsignedCmp, autUnsignedCmp, autUnsignedCmpSA, AutoStructs.RelationOrdering.urel]
@@ -521,8 +521,8 @@ lemma GoodNFA.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUns
 
 -- Automata recognizing signed comparisons
 
-def CNFA.autSignedCmp (cmp: RelationOrdering) : CNFA (BitVec 2) :=
-  let m := CNFA.empty
+def RawCNFA.autSignedCmp (cmp: RelationOrdering) : RawCNFA (BitVec 2) :=
+  let m := RawCNFA.empty
   let (seq, m) := m.newState
   let (sgt, m) := m.newState
   let (slt, m) := m.newState
@@ -548,8 +548,8 @@ def CNFA.autSignedCmp (cmp: RelationOrdering) : CNFA (BitVec 2) :=
   | .gt => m.addFinal sgtfin
   | .ge => (m.addFinal sgtfin).addFinal seq
 
-def GoodCNFA.autSignedCmp (cmp: RelationOrdering) : GoodCNFA 2 :=
-  ⟨CNFA.autSignedCmp cmp, by sorry⟩
+def CNFA.autSignedCmp (cmp: RelationOrdering) : CNFA 2 :=
+  ⟨RawCNFA.autSignedCmp cmp, by sorry⟩
 
 inductive NFA.signedCmpState : Type where
 | eq | gt | lt | ltfin | gtfin
@@ -567,7 +567,7 @@ def NFA.autSignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) signedCmpState whe
   start := {.eq}
   accept := match cmp with | .lt => {.ltfin} | .le => {.ltfin, .eq} | .gt => {.gtfin} | .ge => {.gtfin, .eq}
 
-def GoodNFA.autSignedCmp (cmp: RelationOrdering) : GoodNFA 2 :=
+def NFA'.autSignedCmp (cmp: RelationOrdering) : NFA' 2 :=
   ⟨_, NFA.autSignedCmp cmp⟩
 
 def AutoStructs.RelationOrdering.srel (cmp : RelationOrdering) : BVRel :=
@@ -577,7 +577,7 @@ def AutoStructs.RelationOrdering.srel (cmp : RelationOrdering) : BVRel :=
   | .gt => fun _ bv1 bv2 => bv1 >ₛ bv2
   | .ge => fun _ bv1 bv2 => bv1 ≥ₛ bv2
 
-def GoodNFA.autSignedCmpSA (q : NFA.signedCmpState) : BVRel :=
+def NFA'.autSignedCmpSA (q : NFA.signedCmpState) : BVRel :=
   match q with
   | .eq => fun _ bv1 bv2 => bv1 = bv2
   | .lt => fun _ bv1 bv2 => bv1 <ᵤ bv2
@@ -611,7 +611,7 @@ lemma BitVec.cons_sgt_iff {w} {bv1 bv2 : BitVec w} :
     apply Nat.add_lt_add_iff_left
 
 set_option maxHeartbeats 1000000 in
-lemma GoodNFA.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpSA cmp.srel := by
+lemma NFA'.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpSA cmp.srel := by
   let getState {w} (bv1 bv2 : BitVec w) : NFA.signedCmpState :=
     if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
   constructor <;> simp [NFA.autSignedCmp, autSignedCmp, autSignedCmpSA, AutoStructs.RelationOrdering.srel]
@@ -646,8 +646,8 @@ lemma GoodNFA.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedC
         · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
         · use .gt; simp_all
 
-def CNFA.autMsbSet' : CNFA (BitVec 1) :=
-  let m := CNFA.empty
+def RawCNFA.autMsbSet' : RawCNFA (BitVec 1) :=
+  let m := RawCNFA.empty
   let (si, m) := m.newState
   let (sf, m) := m.newState
   let m := m.addInitial si
@@ -656,8 +656,8 @@ def CNFA.autMsbSet' : CNFA (BitVec 1) :=
   let m := m.addManyTrans [0, 1] si si
   m
 
-def GoodCNFA.autMsbSet : GoodCNFA 1 :=
-  ⟨CNFA.autMsbSet', by sorry⟩
+def CNFA.autMsbSet : CNFA 1 :=
+  ⟨RawCNFA.autMsbSet', by sorry⟩
 
 inductive NFA.msbState : Type where
 | i | f
@@ -673,7 +673,7 @@ def NFA.msb : NFA (BitVec 1) msbState where
   start := {.i}
   accept := {.f}
 
-def GoodNFA.autMsbSet : GoodNFA 1 := ⟨_, NFA.msb⟩
+def NFA'.autMsbSet : NFA' 1 := ⟨_, NFA.msb⟩
 
 def NFA.msbLang : Language (BitVec 1) := { bvs  | bvs.getLast? = some 1 }
 
@@ -699,12 +699,12 @@ def NFA.msbCorrect : msb.correct msbSA msbLang := by
           cases q <;> simp_all
         · rintro rfl; use .i; simp
 
-lemma GoodCNFA.autMsbSet_spec : GoodCNFA.autMsbSet.Sim GoodNFA.autMsbSet := by
+lemma CNFA.autMsbSet_spec : CNFA.autMsbSet.Sim NFA'.autMsbSet := by
   sorry
 
 @[simp]
-lemma autMsbSet_accepts : GoodNFA.autMsbSet.accepts = langMsb := by
-  simp [GoodNFA.accepts, GoodNFA.accepts', GoodNFA.autMsbSet]
+lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
+  simp [NFA'.accepts, NFA'.accepts', NFA'.autMsbSet]
   rw [NFA.correct_spec NFA.msbCorrect, NFA.msbLang]
   ext bvs; simp only [BitVec.ofNat_eq_ofNat, Set.mem_image, Set.mem_setOf_eq]
   constructor
@@ -736,16 +736,16 @@ lemma autMsbSet_accepts : GoodNFA.autMsbSet.accepts = langMsb := by
 
 end nfas_relations
 
-def AutoStructs.Relation.autOfRelation : Relation → GoodCNFA 2
-| .eq => GoodCNFA.autEq
-| .signed ord => GoodCNFA.autSignedCmp ord
-| .unsigned ord => GoodCNFA.autUnsignedCmp ord
+def AutoStructs.Relation.autOfRelation : Relation → CNFA 2
+| .eq => CNFA.autEq
+| .signed ord => CNFA.autSignedCmp ord
+| .unsigned ord => CNFA.autUnsignedCmp ord
 
-def AutoStructs.Relation.absAutOfRelation (rel : Relation) : GoodNFA 2 :=
+def AutoStructs.Relation.absAutOfRelation (rel : Relation) : NFA' 2 :=
   match rel with
-  | .eq => GoodNFA.autEq
-  | .unsigned cmp => GoodNFA.autUnsignedCmp cmp
-  | .signed cmp => GoodNFA.autSignedCmp cmp
+  | .eq => NFA'.autEq
+  | .unsigned cmp => NFA'.autUnsignedCmp cmp
+  | .signed cmp => NFA'.autSignedCmp cmp
 
 lemma autOfRelation_spec (r : AutoStructs.Relation) :
   r.autOfRelation.Sim r.absAutOfRelation := by
@@ -756,59 +756,59 @@ lemma autOfRelation_accepts (r : AutoStructs.Relation) :
     r.absAutOfRelation.accepts = r.language := by
   simp [AutoStructs.Relation.absAutOfRelation]
   rcases r with ⟨⟩ | ⟨cmp⟩ | ⟨cmp⟩ <;> simp
-  · rw [GoodNFA.correct2_spec GoodNFA.autEq_correct]
-    simp [langRel2, GoodNFA.eqRel, evalRelation]
-  · rw [GoodNFA.correct2_spec (GoodNFA.autSignedCmp_correct cmp)]
+  · rw [NFA'.correct2_spec NFA'.autEq_correct]
+    simp [langRel2, NFA'.eqRel, evalRelation]
+  · rw [NFA'.correct2_spec (NFA'.autSignedCmp_correct cmp)]
     simp [langRel2, evalRelation, RelationOrdering.srel]
     cases cmp <;> simp
-  · rw [GoodNFA.correct2_spec (GoodNFA.autUnsignedCmp_correct cmp)]
+  · rw [NFA'.correct2_spec (NFA'.autUnsignedCmp_correct cmp)]
     simp [langRel2, evalRelation, RelationOrdering.urel]
     cases cmp <;> simp
 
-def unopNfa (op : Unop) (m : GoodCNFA n) : GoodCNFA n :=
+def unopNfa (op : Unop) (m : CNFA n) : CNFA n :=
   match op with
   | .neg => m.neg
 
-def unopAbsNfa (op : Unop) (M : GoodNFA n) : GoodNFA n :=
+def unopAbsNfa (op : Unop) (M : NFA' n) : NFA' n :=
   match op with
   | .neg => M.neg
 
-lemma unopNfa_spec (op : Unop) (m : GoodCNFA n) (M : GoodNFA n) :
+lemma unopNfa_spec (op : Unop) (m : CNFA n) (M : NFA' n) :
     m.Sim M → (unopNfa op m).Sim (unopAbsNfa op M) := by
   rcases op with ⟨⟩
   intros hsim
-  apply GoodCNFA.neg_spec; assumption
+  apply CNFA.neg_spec; assumption
 
-def binopNfa (op : Binop) (m1 m2 : GoodCNFA n) : GoodCNFA n :=
+def binopNfa (op : Binop) (m1 m2 : CNFA n) : CNFA n :=
   match op with
   | .and => m1.inter m2
   | .or => m1.union m2
   | .impl => m1.neg.union m2
   | .equiv => (m1.neg.union m2).inter (m2.neg.union m1)
 
-def binopAbsNfa (op : Binop) (M1 M2: GoodNFA n) : GoodNFA n :=
+def binopAbsNfa (op : Binop) (M1 M2: NFA' n) : NFA' n :=
   match op with
   | .and => M1.inter M2
   | .or => M1.union M2
   | .impl => M1.neg.union M2
   | .equiv => (M1.neg.union M2).inter (M2.neg.union M1)
 
-def nfaOfFormula (φ : Formula) : GoodCNFA φ.arity :=
+def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
   match φ with
   | .atom rel t1 t2 =>
-    let m1 := FSM.ofTerm t1 |> GoodCNFA.ofFSM
-    let m2 := FSM.ofTerm t2 |> GoodCNFA.ofFSM
+    let m1 := FSM.ofTerm t1 |> CNFA.ofFSM
+    let m2 := FSM.ofTerm t2 |> CNFA.ofFSM
     let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m1' := m1.lift f1
     let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m2' := m2.lift f2
     let meq := rel.autOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
-    let m := GoodCNFA.inter m1' m2' |> GoodCNFA.inter meq
+    let m := CNFA.inter m1' m2' |> CNFA.inter meq
     let mfinal := m.proj (liftExcept2 _)
     mfinal
   | .msbSet t =>
-    let m := (termEvalEqFSM t).toFSM |> GoodCNFA.ofFSM
-    let mMsb := GoodCNFA.autMsbSet.lift $ fun _ => Fin.last t.arity
+    let m := (termEvalEqFSM t).toFSM |> CNFA.ofFSM
+    let mMsb := CNFA.autMsbSet.lift $ fun _ => Fin.last t.arity
     let res := m.inter mMsb
     res.proj $ fun n => n.castLE (by simp [Formula.arity, FinEnum.card])
   | .unop op φ => unopNfa op (nfaOfFormula φ)
@@ -817,22 +817,22 @@ def nfaOfFormula (φ : Formula) : GoodCNFA φ.arity :=
     let m2 := (nfaOfFormula φ2).lift $ liftMax2 φ1.arity φ2.arity
     binopNfa op m1 m2
 
-def absNfaOfFormula (φ : Formula) : GoodNFA φ.arity :=
+def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
   match φ with
   | .atom rel t1 t2 =>
-    let m1 := FSM.ofTerm t1 |> GoodNFA.ofFSM
-    let m2 := FSM.ofTerm t2 |> GoodNFA.ofFSM
+    let m1 := FSM.ofTerm t1 |> NFA'.ofFSM
+    let m2 := FSM.ofTerm t2 |> NFA'.ofFSM
     let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m1' := m1.lift f1
     let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m2' := m2.lift f2
     let meq := rel.absAutOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
-    let m := GoodNFA.inter m1' m2' |> GoodNFA.inter meq
+    let m := NFA'.inter m1' m2' |> NFA'.inter meq
     let mfinal := m.proj (liftExcept2 _)
     mfinal
   | .msbSet t =>
-    let m := (termEvalEqFSM t).toFSM |> GoodNFA.ofFSM
-    let mMsb := GoodNFA.autMsbSet.lift $ fun _ => Fin.last t.arity
+    let m := (termEvalEqFSM t).toFSM |> NFA'.ofFSM
+    let mMsb := NFA'.autMsbSet.lift $ fun _ => Fin.last t.arity
     let res := m.inter mMsb
     res.proj $ fun n => n.castLE (by simp [Formula.arity, FinEnum.card])
   | .unop op φ => unopAbsNfa op (absNfaOfFormula φ)
@@ -844,39 +844,39 @@ def absNfaOfFormula (φ : Formula) : GoodNFA φ.arity :=
 lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
   induction φ <;> unfold nfaOfFormula absNfaOfFormula <;> simp
   case atom rel t1 t2 =>
-    apply GoodCNFA.proj_spec
-    apply GoodCNFA.inter_spec
-    apply GoodCNFA.lift_spec; apply autOfRelation_spec
-    apply GoodCNFA.inter_spec
-    apply GoodCNFA.lift_spec; apply GoodCNFA.ofFSM_spec
-    apply GoodCNFA.lift_spec; apply GoodCNFA.ofFSM_spec
+    apply CNFA.proj_spec
+    apply CNFA.inter_spec
+    apply CNFA.lift_spec; apply autOfRelation_spec
+    apply CNFA.inter_spec
+    apply CNFA.lift_spec; apply CNFA.ofFSM_spec
+    apply CNFA.lift_spec; apply CNFA.ofFSM_spec
   case msbSet t =>
-    apply GoodCNFA.proj_spec
-    apply GoodCNFA.inter_spec
-    · apply GoodCNFA.ofFSM_spec
-    · apply GoodCNFA.lift_spec
-      apply GoodCNFA.autMsbSet_spec
+    apply CNFA.proj_spec
+    apply CNFA.inter_spec
+    · apply CNFA.ofFSM_spec
+    · apply CNFA.lift_spec
+      apply CNFA.autMsbSet_spec
   case unop op φ ih =>
     rcases op; simp [unopNfa, unopAbsNfa]
-    apply GoodCNFA.neg_spec
+    apply CNFA.neg_spec
     assumption
   case binop op φ1 φ2 ih1 ih2 =>
     rcases op; simp [binopNfa, binopAbsNfa]
-    · apply GoodCNFA.inter_spec
-      apply GoodCNFA.lift_spec; assumption
-      apply GoodCNFA.lift_spec; assumption
-    · apply GoodCNFA.union_spec
-      apply GoodCNFA.lift_spec; assumption
-      apply GoodCNFA.lift_spec; assumption
-    · apply GoodCNFA.union_spec
-      · apply GoodCNFA.neg_spec
-        apply GoodCNFA.lift_spec; assumption
-      · apply GoodCNFA.lift_spec; assumption
-    · apply GoodCNFA.inter_spec <;>
-      · apply GoodCNFA.union_spec
-        · apply GoodCNFA.neg_spec
-          apply GoodCNFA.lift_spec; assumption
-        · apply GoodCNFA.lift_spec; assumption
+    · apply CNFA.inter_spec
+      apply CNFA.lift_spec; assumption
+      apply CNFA.lift_spec; assumption
+    · apply CNFA.union_spec
+      apply CNFA.lift_spec; assumption
+      apply CNFA.lift_spec; assumption
+    · apply CNFA.union_spec
+      · apply CNFA.neg_spec
+        apply CNFA.lift_spec; assumption
+      · apply CNFA.lift_spec; assumption
+    · apply CNFA.inter_spec <;>
+      · apply CNFA.union_spec
+        · apply CNFA.neg_spec
+          apply CNFA.lift_spec; assumption
+        · apply CNFA.lift_spec; assumption
 
 lemma absNfaToFomrmula_spec (φ : Formula) :
     (absNfaOfFormula φ).accepts = φ.language := by
@@ -915,7 +915,7 @@ def formulaIsUniversal (f : Formula) : Bool :=
 theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
     formulaIsUniversal φ → φ.sat' env := by
   unfold formulaIsUniversal; simp
-  intros h; apply GoodCNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
+  intros h; apply CNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
   rw [absNfaToFomrmula_spec, formula_language] at h
   rw [←sat_impl_sat']
   have hx := env_to_bvs φ (fun k => env k.val)
@@ -926,15 +926,15 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
   simp
 
 -- -- For testing the comparison operators.
--- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : CNFA (BitVec 0) :=
---   let m1 := CNFA.ofConst a
---   let m2 := CNFA.ofConst b
+-- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=
+--   let m1 := RawCNFA.ofConst a
+--   let m2 := RawCNFA.ofConst b
 --   let f1 : Fin 1 → Fin 2 := fun 0 => 0
 --   let m1' := m1.lift f1
 --   let f2 : Fin 1 → Fin 2 := fun 0 => 1
 --   let m2' := m2.lift f2
---   let meq := if signed then CNFA.autSignedCmp .lt else CNFA.autUnsignedCmp .lt
---   let m := CNFA.inter m1' m2' |> CNFA.inter meq
+--   let meq := if signed then RawCNFA.autSignedCmp .lt else RawCNFA.autUnsignedCmp .lt
+--   let m := RawCNFA.inter m1' m2' |> RawCNFA.inter meq
 --   let mfinal := m.proj (liftExcecpt2 _)
 --   mfinal
 
@@ -950,22 +950,22 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --       let bv := BitVec.ofNat w n
 --       let bv' := BitVec.ofNat w m
 --       if (if signed then bv <ₛ bv' else bv <ᵤ bv') ==
---         (nfaOfCompareConstants signed bv bv' |> CNFA.isNotEmpty)
+--         (nfaOfCompareConstants signed bv bv' |> RawCNFA.isNotEmpty)
 --       then none else some (bv, bv')
 -- /-- info: true -/
 -- #guard_msgs in #eval! (testLeq true 4 == none)
 
--- def nfaOfMsb {w : Nat} (a : BitVec w) : CNFA (BitVec 0) :=
---   let m := CNFA.ofConst a
---   let meq := CNFA.autMsbSet
---   let m := m |> CNFA.inter meq
+-- def nfaOfMsb {w : Nat} (a : BitVec w) : RawCNFA (BitVec 0) :=
+--   let m := RawCNFA.ofConst a
+--   let meq := RawCNFA.autMsbSet
+--   let m := m |> RawCNFA.inter meq
 --   let mfinal := m.proj $ fun _ => 0
 --   mfinal
 
 -- def testMsb (w : Nat) : Bool :=
 --   (List.range (2^w)).all fun n =>
 --     let bv := BitVec.ofNat w n
---     (bv.msb == true) == (nfaOfMsb bv |> CNFA.isNotEmpty)
+--     (bv.msb == true) == (nfaOfMsb bv |> RawCNFA.isNotEmpty)
 -- /-- info: true -/
 -- #guard_msgs in #eval! testMsb 8
 
@@ -976,7 +976,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --   Formula.atom .eq (neg x) (not $ sub x 1)
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> CNFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> RawCNFA.isUniversal
 
 -- -- x &&& ~~~ y = x - (x &&& y)
 -- def ex_formula_and_not_eq_sub_add : Formula :=
@@ -985,7 +985,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --   let y := var 1
 --   Formula.atom .eq (and x (not y)) (sub x (and x y))
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> CNFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> RawCNFA.isUniversal
 
 -- /- x &&& y ≤ᵤ ~~~(x ^^^ y) -/
 -- def ex_formula_and_ule_not_xor : Formula :=
@@ -995,7 +995,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --   .atom (.unsigned .le) (.and x y) (.not (.xor x y))
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_and_ule_not_xor |> CNFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_and_ule_not_xor |> RawCNFA.isUniversal
 
 -- -- Only true for `w > 0`!
 -- -- x = 0 ↔ (~~~ (x ||| -x)).msb
@@ -1007,7 +1007,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --     (.msbSet (.not (.or x (.neg x))))
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_eq_zero_iff_not_or_sub |> CNFA.isUniversal'
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_eq_zero_iff_not_or_sub |> RawCNFA.isUniversal'
 
 -- -- (x <ₛ 0) ↔ x.msb := by
 -- def ex_formula_lst_iff : Formula :=
@@ -1018,4 +1018,4 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --     (.msbSet x)
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> CNFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> RawCNFA.isUniversal
