@@ -15,7 +15,7 @@ import Mathlib.Data.List.Perm.Subperm
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
 import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.AutoStructs.GoodNFA
+import SSA.Experimental.Bits.AutoStructs.NFA'
 
 abbrev State := Nat
 
@@ -24,7 +24,7 @@ abbrev State := Nat
 The definition of a computational automaton. It is meant to be more efficient
 than the definition in Mathlib.
  -/
-structure CNFA (A : Type 0) [BEq A] [Hashable A] [DecidableEq A] [FinEnum A] where
+structure RawCNFA (A : Type 0) [BEq A] [Hashable A] [DecidableEq A] [FinEnum A] where
   stateMax : State
   initials : Std.HashSet State
   finals : Std.HashSet State
@@ -35,18 +35,18 @@ section sim
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-noncomputable def CNFA.states (m : CNFA A) : Finset State := Finset.range m.stateMax
+noncomputable def RawCNFA.states (m : RawCNFA A) : Finset State := Finset.range m.stateMax
 
-instance CNFA.statesFinset (m : CNFA A) : Fintype m.states := (Finset.range m.stateMax).fintypeCoeSort
+instance RawCNFA.statesFinset (m : RawCNFA A) : Fintype m.states := (Finset.range m.stateMax).fintypeCoeSort
 
 @[simp]
-lemma CNFA.states_lt (m : CNFA A) s : s ∈ m.states → s < m.stateMax := by simp [CNFA.states]
+lemma RawCNFA.states_lt (m : RawCNFA A) s : s ∈ m.states → s < m.stateMax := by simp [RawCNFA.states]
 
 /--
 A simulation between a concrete NFA and an abstract NFA consists in a map from
 concrete to abstract states which satisfies some properties.
 -/
-structure CNFA.SimUnpacked (m : CNFA A) (M : NFA A Q) (R : Set Q) (T : Set (Q × A × Q)) (f : m.states → Q) where
+structure RawCNFA.SimUnpacked (m : RawCNFA A) (M : NFA A Q) (R : Set Q) (T : Set (Q × A × Q)) (f : m.states → Q) where
   injective : Function.Injective f
   reduced : M.Reachable = ⊤ -- all the states are reachable
   accept s : s.val ∈ m.finals ↔ f s ∈ M.accept
@@ -56,13 +56,13 @@ structure CNFA.SimUnpacked (m : CNFA A) (M : NFA A Q) (R : Set Q) (T : Set (Q ×
   trans_match₂ s a s' : s' ∈ m.trans.getD (s.val, a) ∅ → ∃ hin : s' ∈ m.states, f ⟨s', hin⟩ ∈ M.step (f s) a
 
 attribute [aesop 50% unsafe]
- CNFA.SimUnpacked.initial_all
- CNFA.SimUnpacked.trans_match₁
- CNFA.SimUnpacked.trans_match₂
+ RawCNFA.SimUnpacked.initial_all
+ RawCNFA.SimUnpacked.trans_match₁
+ RawCNFA.SimUnpacked.trans_match₂
 
-def CNFA.Sim (m : CNFA A) (A : NFA A S) := ∃ f, CNFA.SimUnpacked m A ⊤ ∅ f
+def RawCNFA.Sim (m : RawCNFA A) (A : NFA A S) := ∃ f, RawCNFA.SimUnpacked m A ⊤ ∅ f
 
-def sim_closed_set (m : CNFA A) (M : NFA A S) (R : Set S) (T : Set (S × A × S)) f (hcl: M.closed_set R) :
+def sim_closed_set (m : RawCNFA A) (M : NFA A S) (R : Set S) (T : Set (S × A × S)) f (hcl: M.closed_set R) :
     T = ∅ →
     m.SimUnpacked M R T f → m.Sim M := by
   rintro rfl ⟨_, hr, _, _, _, h, _⟩; use f
@@ -78,144 +78,143 @@ section basics
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-def CNFA.empty : CNFA A := {
+def RawCNFA.empty : RawCNFA A := {
   stateMax := 0
   initials := ∅
   finals := ∅
   trans := ∅
 }
 
-def CNFA.newState (m : CNFA A) : State × CNFA A :=
+def RawCNFA.newState (m : RawCNFA A) : State × RawCNFA A :=
   let old := m.stateMax
   let m := { m with stateMax := old + 1 }
   (old, m)
 
-def CNFA.addTrans (m : CNFA A) (a : A) (s s' : State) : CNFA A :=
+def RawCNFA.addTrans (m : RawCNFA A) (a : A) (s s' : State) : RawCNFA A :=
   let ns := m.trans.getD (s, a) ∅
   let ns := ns.insert s'
   { m with trans :=  m.trans.insert (s, a) ns }
 
-def CNFA.addManyTrans (m : CNFA A) (a : List A) (s s' : State) : CNFA A :=
+def RawCNFA.addManyTrans (m : RawCNFA A) (a : List A) (s s' : State) : RawCNFA A :=
   a.foldl (init := m) fun m a => m.addTrans a s s'
 
-def CNFA.addInitial (m : CNFA A) (s : State) : CNFA A :=
+def RawCNFA.addInitial (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with initials := m.initials.insert s }
 
-def CNFA.addFinal (m : CNFA A) (s : State) : CNFA A :=
+def RawCNFA.addFinal (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with finals := m.finals.insert s }
 
-def CNFA.createSink (m : CNFA A) : State × CNFA A :=
+def RawCNFA.createSink (m : RawCNFA A) : State × RawCNFA A :=
   let (s, m) := m.newState
   let m := m.addInitial s
   let m := FinEnum.toList (α := A).foldl (init := m) fun m a =>
     m.addTrans a s s
   (s, m)
 
-def CNFA.transSet (m : CNFA A) (ss : Std.HashSet State) (a : A) : Std.HashSet State :=
+def RawCNFA.transSet (m : RawCNFA A) (ss : Std.HashSet State) (a : A) : Std.HashSet State :=
   ss.fold (init := ∅) fun ss' s =>
     ss'.insertMany $ m.trans.getD (s, a) ∅
 
-def CNFA.transBV (m : CNFA A) (s : m.states) (a : A) : BitVec m.stateMax :=
+def RawCNFA.transBV (m : RawCNFA A) (s : m.states) (a : A) : BitVec m.stateMax :=
   let ts := m.trans.getD (s, a) ∅
   BitVec.ofFn (fun n => n ∈ ts)
 
-def CNFA.transSetBV (m : CNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec m.stateMax :=
+def RawCNFA.transSetBV (m : RawCNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec m.stateMax :=
   (List.finRange m.stateMax).foldl (init := BitVec.zero m.stateMax) fun res n =>
-    if ss[n] then res ||| m.transBV ⟨n.val, by simp [CNFA.states]⟩ a else res
+    if ss[n] then res ||| m.transBV ⟨n.val, by simp [RawCNFA.states]⟩ a else res
 
 /-
 Computes the set of states of the automaton. This is only meant to be used in proofs
 and is quite horrible. The alternative is to have a dependent type asserting that
 all the states involved are `< stateMax` which may be a better idea...
 -/
-structure CNFA.WF (m : CNFA A) where
+structure RawCNFA.WF (m : RawCNFA A) where
   initials_lt : ∀ s ∈ m.initials, s < m.stateMax
   finals_lt : ∀ s ∈ m.finals, s < m.stateMax
   trans_src_lt : ∀ s_a ∈ m.trans, s_a.1 < m.stateMax
   trans_tgt_lt : ∀ (s_a : State × A) ss' s', m.trans[s_a]? = some ss' → s' ∈ ss' → s' < m.stateMax
 
-structure GoodCNFA (n : Nat) where
-  m : CNFA (BitVec n)
+structure CNFA (n : Nat) where
+  m : RawCNFA (BitVec n)
   wf : m.WF
-  -- etc?
 
-def GoodCNFA.Sim (m : GoodCNFA n) (M : GoodNFA n) :=
+def CNFA.Sim (m : CNFA n) (M : NFA' n) :=
   m.m.Sim M.M
 
-attribute [simp] CNFA.WF.initials_lt CNFA.WF.trans_src_lt CNFA.WF.trans_tgt_lt CNFA.WF.finals_lt
-attribute [aesop 50% unsafe] CNFA.WF.initials_lt CNFA.WF.trans_src_lt CNFA.WF.trans_tgt_lt CNFA.WF.finals_lt
+attribute [simp] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawCNFA.WF.trans_tgt_lt RawCNFA.WF.finals_lt
+attribute [aesop 50% unsafe] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawCNFA.WF.trans_tgt_lt RawCNFA.WF.finals_lt
 
 @[simp, aesop 50% unsafe]
-lemma CNFA.WF.trans_src_lt' {m : CNFA A} (hwf : m.WF) :
+lemma RawCNFA.WF.trans_src_lt' {m : RawCNFA A} (hwf : m.WF) :
     ∀ s a, (s, a) ∈ m.trans → s < m.stateMax := by
   intros s a hin; simp [hwf.trans_src_lt _ hin]
 
 @[simp, aesop 50% unsafe]
-lemma CNFA.WF.trans_tgt_lt' [LawfulBEq A] {m : CNFA A} (hwf : m.WF) :
+lemma RawCNFA.WF.trans_tgt_lt' [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
     ∀ s a s', s' ∈ m.trans.getD (s, a) ∅ → s' ∈ m.states := by
   intros s a s' hin
   rw [Std.HashMap.getD_eq_getD_getElem?] at hin
   rcases htrans : m.trans[(s, a)]? with ⟨⟩ | ⟨ts⟩
   · simp_all
-  · simp [CNFA.states]; apply hwf.trans_tgt_lt (s, a) ts <;> simp_all
+  · simp [RawCNFA.states]; apply hwf.trans_tgt_lt (s, a) ts <;> simp_all
 
 @[simp, aesop 50% unsafe]
-lemma wf_newState (m : CNFA A) (hwf : m.WF) :
+lemma wf_newState (m : RawCNFA A) (hwf : m.WF) :
     m.newState.2.WF := by
-  constructor <;> intros <;> apply Nat.lt_add_one_of_lt <;> simp_all [CNFA.newState, CNFA.WF]
+  constructor <;> intros <;> apply Nat.lt_add_one_of_lt <;> simp_all [RawCNFA.newState, RawCNFA.WF]
   apply hwf.trans_tgt_lt <;> assumption
 
 @[simp, aesop 50% unsafe]
-lemma wf_addInitial (m : CNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
+lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
-  constructor <;> intros <;> simp_all [CNFA.addInitial, CNFA.WF]
+  constructor <;> intros <;> simp_all [RawCNFA.addInitial, RawCNFA.WF]
   { casesm* _ ∨ _ <;> subst_eqs <;> simp_all }
   { apply hwf.trans_tgt_lt <;> assumption }
 
 @[simp, aesop 50% unsafe]
-lemma wf_addFinal (m : CNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
+lemma wf_addFinal (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addFinal s).WF := by
-  constructor <;> intros <;> simp_all [CNFA.addFinal, CNFA.WF] <;> aesop
+  constructor <;> intros <;> simp_all [RawCNFA.addFinal, RawCNFA.WF] <;> aesop
 
 @[simp, aesop 50% unsafe]
-lemma states_addInitial (m : CNFA A) (s' : State) :
+lemma states_addInitial (m : RawCNFA A) (s' : State) :
     (m.addInitial s').states = m.states := by
-  simp_all [CNFA.addInitial, CNFA.states]
+  simp_all [RawCNFA.addInitial, RawCNFA.states]
 
 @[simp, aesop 50% unsafe]
-lemma states_addFinal (m : CNFA A) (s' : State) :
+lemma states_addFinal (m : RawCNFA A) (s' : State) :
     (m.addFinal s').states = m.states := by
-  simp_all [CNFA.addFinal, CNFA.states]
+  simp_all [RawCNFA.addFinal, RawCNFA.states]
 
 @[simp, aesop 50% unsafe]
-lemma states_addTrans (m : CNFA A) (a : A) (s1 s2 : State) :
+lemma states_addTrans (m : RawCNFA A) (a : A) (s1 s2 : State) :
     (m.addTrans a s1 s2).states = m.states := by
-  simp_all [CNFA.addTrans, CNFA.states]
+  simp_all [RawCNFA.addTrans, RawCNFA.states]
 
 @[simp, aesop 50% unsafe]
-lemma mem_states_newState (m : CNFA A) (s : State) (hin : s ∈ m.states) :
+lemma mem_states_newState (m : RawCNFA A) (s : State) (hin : s ∈ m.states) :
     s ∈ m.newState.2.states := by
-  simp_all [CNFA.newState, CNFA.states]; omega
+  simp_all [RawCNFA.newState, RawCNFA.states]; omega
 
 @[simp, aesop 50% unsafe]
-lemma states_newState (m : CNFA A) :
+lemma states_newState (m : RawCNFA A) :
     m.newState.2.states = m.states ∪ { m.stateMax } := by
-  simp_all [CNFA.newState, CNFA.states, Finset.range_add]
+  simp_all [RawCNFA.newState, RawCNFA.states, Finset.range_add]
 
 @[simp, aesop 50% unsafe]
-lemma newState_eq (m : CNFA A) :
+lemma newState_eq (m : RawCNFA A) :
     m.newState.1 = m.stateMax := by
-  simp_all [CNFA.newState, CNFA.states, Finset.range_add]
+  simp_all [RawCNFA.newState, RawCNFA.states, Finset.range_add]
 
 @[simp, aesop 50% unsafe]
-lemma mem_states_newState_self (m : CNFA A) :
+lemma mem_states_newState_self (m : RawCNFA A) :
     m.newState.1 ∈ m.newState.2.states := by
-  simp_all [CNFA.newState, CNFA.states]
+  simp_all [RawCNFA.newState, RawCNFA.states]
 
 @[simp, aesop 50% unsafe]
-lemma wf_addTrans [LawfulBEq A] (m : CNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
+lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
     (m.addTrans a s s').WF := by
-  constructor <;> simp_all [CNFA.addTrans, CNFA.WF]
+  constructor <;> simp_all [RawCNFA.addTrans, RawCNFA.WF]
   { intros s a htin; casesm* _ ∨ _ <;> aesop }
   { rintro s1 b ss'1 s'1 hsome hmem
     rw [Std.HashMap.getElem?_insert] at hsome; split at hsome; simp_all
@@ -228,8 +227,8 @@ lemma wf_addTrans [LawfulBEq A] (m : CNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.
      }
     { apply hwf.trans_tgt_lt _ _ _ hsome; assumption }}
 
-instance CNFA_Inhabited : Inhabited (CNFA A) where
-  default := CNFA.empty
+instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
+  default := RawCNFA.empty
 
 end basics
 
@@ -240,7 +239,7 @@ variable (A : Type) [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum 
 variable (S : Type) [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
 
 structure worklist.St where
-  m : CNFA A
+  m : RawCNFA A
   map : Std.HashMap S State := ∅
   worklist : Array S := ∅
   worklist_nodup : worklist.toList.Nodup
@@ -352,7 +351,7 @@ theorem processOneElem_grow (st : worklist.St A S) (final : S → Bool) (a : A) 
   use sas
 
 def worklist.initState (inits : Array S) (hinits : inits.toList.Nodup) (final? : S → Bool) : worklist.St A S :=
-  let m := CNFA.empty (A := A)
+  let m := RawCNFA.empty (A := A)
   let mapm := inits.foldl (init := (Std.HashMap.empty, m)) fun (map, m) sa =>
     let (s, m) := m.newState
     let m := m.addInitial s
@@ -361,7 +360,7 @@ def worklist.initState (inits : Array S) (hinits : inits.toList.Nodup) (final? :
   let map := mapm.1
   let m := mapm.2
   let worklist_incl : ∀ sa ∈ inits, sa ∈ map := by
-    let mot (n : ℕ) (mapm : Std.HashMap S State × CNFA A) : Prop :=
+    let mot (n : ℕ) (mapm : Std.HashMap S State × RawCNFA A) : Prop :=
       ∀ sa, ∀ k < n, inits[k]? = some sa → sa ∈ mapm.1
     suffices hccl : mot inits.size mapm by
       simp_all [mot]; intros sa hin
@@ -375,10 +374,10 @@ def worklist.initState (inits : Array S) (hinits : inits.toList.Nodup) (final? :
     { left; simp_all [Array.getElem?_eq_getElem]  }
   { m, map, worklist := inits, worklist_nodup := hinits, worklist_incl }
 
-def worklistRun' (final : S → Bool) (inits : Array S) (hinits : inits.toList.Nodup) (f : S → Array (A × S)) : CNFA A :=
+def worklistRun' (final : S → Bool) (inits : Array S) (hinits : inits.toList.Nodup) (f : S → Array (A × S)) : RawCNFA A :=
   let st0 := worklist.initState _ _ inits hinits final
   go st0
-where go (st0 : worklist.St A S) : CNFA A :=
+where go (st0 : worklist.St A S) : RawCNFA A :=
   if hemp : st0.worklist.isEmpty then st0.m else
   let sa? := st0.worklist.back?
   match heq : sa? with
@@ -459,7 +458,7 @@ where go (st0 : worklist.St A S) : CNFA A :=
   termination_by st0.meas
 
 def worklistRun (final : S → Bool) (inits : Array S)
-    (hinits : inits.toList.Nodup) (f : S → Array (BitVec n × S)) : GoodCNFA n :=
+    (hinits : inits.toList.Nodup) (f : S → Array (BitVec n × S)) : CNFA n :=
   ⟨worklistRun' _ S final inits hinits f, by sorry⟩
 
 -- Correctness of the algorithm
@@ -600,7 +599,7 @@ lemma processOneElem_new_map (st : worklist.St A S) (final : S → Bool) (a : A)
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma processOneElem_initials (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
     (processOneElem A S final s st (a, sa)).m.initials = st.m.initials := by
-  simp [processOneElem, worklist.St.addOrCreateState, CNFA.addTrans, CNFA.newState, CNFA.addFinal]
+  simp [processOneElem, worklist.St.addOrCreateState, RawCNFA.addTrans, RawCNFA.newState, RawCNFA.addFinal]
   split
   · dsimp
   · split <;> dsimp
@@ -615,13 +614,13 @@ lemma processOneElem_finals (st : worklist.St A S) (final : S → Bool) (a : A) 
     dsimp
     have _ := Std.HashMap.mem_of_get? heq
     split_ifs <;> simp_all
-    simp [CNFA.addTrans]
+    simp [RawCNFA.addTrans]
   next heq =>
     dsimp
     have _ := Std.HashMap.get?_none_not_mem heq
     split
-    { simp_all [CNFA.newState, CNFA.addTrans, CNFA.addFinal] }
-    { simp_all [CNFA.newState, CNFA.addTrans] }
+    { simp_all [RawCNFA.newState, RawCNFA.addTrans, RawCNFA.addFinal] }
+    { simp_all [RawCNFA.newState, RawCNFA.addTrans] }
 
 omit [Fintype S] [DecidableEq S] in
 lemma processOneElem_trans (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s' : State) :
@@ -641,16 +640,16 @@ lemma processOneElem_trans (st : worklist.St A S) (final : S → Bool) (a b : A)
     next s'' heq =>
       use s''; constructor; assumption
       have _ := Std.HashMap.mem_of_get? heq
-      simp [CNFA.addTrans]
+      simp [RawCNFA.addTrans]
     next heq =>
       use st.m.stateMax
       simp
-      split_ifs <;> simp_all [CNFA.addFinal, CNFA.addTrans, CNFA.newState]
+      split_ifs <;> simp_all [RawCNFA.addFinal, RawCNFA.addTrans, RawCNFA.newState]
   next heq =>
     dsimp
     split
-    { simp_all [CNFA.newState, CNFA.addTrans, CNFA.addFinal, Std.HashMap.getD_insert]; aesop }
-    { simp_all [CNFA.newState, CNFA.addTrans, CNFA.addFinal, Std.HashMap.getD_insert]
+    { simp_all [RawCNFA.newState, RawCNFA.addTrans, RawCNFA.addFinal, Std.HashMap.getD_insert]; aesop }
+    { simp_all [RawCNFA.newState, RawCNFA.addTrans, RawCNFA.addFinal, Std.HashMap.getD_insert]
       split; simp_all; split <;> simp }
 
 omit [Fintype S] [DecidableEq S] in
@@ -777,7 +776,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     split_ifs with hcond
     { split_ifs at hsa1; simp_all
       simp at hsa1; rcases hsa1 with hsa1 | rfl
-      · have hneq : sa1 ≠ st.m.stateMax := by rintro rfl; simp_all [CNFA.states]
+      · have hneq : sa1 ≠ st.m.stateMax := by rintro rfl; simp_all [RawCNFA.states]
         rw [Std.HashSet.mem_insert]; constructor
         · rintro (hc | hfin)
           dsimp at hc; exfalso; simp at hneq hc; rw [hc] at hneq; simp at hneq
@@ -841,7 +840,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
         rw [hs''] at hmap'
         injection hmap'
       apply inv.map_states at hs''
-      simp [hs'', CNFA.states] at hs''
+      simp [hs'', RawCNFA.states] at hs''
     }
     obtain hT' | hsame :
        (StInv.fun A S M corr inv' ⟨s', _⟩, b, q') ∉ {(q, a, q') | ∃ sa_1 sa',
@@ -939,7 +938,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       rw [h] at hs''
       have hin' := by apply inv.wf.trans_tgt_lt'; assumption
       have hs' : s' ∈ st.m.states := by
-        simp [CNFA.states]; apply inv.wf.trans_src_lt' _ b
+        simp [RawCNFA.states]; apply inv.wf.trans_src_lt' _ b
         apply Std.HashMap.mem_iff_getElem?.mpr
         rw [Std.HashMap.getD_eq_getD_getElem?] at hs''
         by_contra hc
@@ -1081,7 +1080,7 @@ section worklist_good
 
 variable (S : Type) [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
 variable (final : S → Bool) (f : S → Array (BitVec n × S)) (inits : Array S)
-variable (M : GoodNFA n)
+variable (M : NFA' n)
 variable (corr : S → M.σ)
 variable (corr_inj : Function.Injective corr)
 variable (final_corr : ∀ (s : S), final s ↔ corr s ∈ M.M.accept)

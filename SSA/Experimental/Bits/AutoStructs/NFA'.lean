@@ -6,89 +6,89 @@ import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
 
-structure GoodNFA (n : Nat) where
+structure NFA' (n : Nat) where
   σ : Type
   M : NFA (BitVec n) σ
   -- all reachable? complete? etc
 
-namespace GoodNFA
+namespace NFA'
 
 /--
 The encoded tuples of bit vectors accepted by an automaton.
 -/
-def accepts' (M : GoodNFA n) : Set (BitVecs' n) := M.M.accepts
+def accepts' (M : NFA' n) : Set (BitVecs' n) := M.M.accepts
 
 /--
 The tuples of bit vectors accepted by an automaton.
 -/
-def accepts (M : GoodNFA n) : Set (BitVecs n) := dec '' M.accepts'
+def accepts (M : NFA' n) : Set (BitVecs n) := dec '' M.accepts'
 
 
-noncomputable def complete (M : GoodNFA n) : GoodNFA n where
+noncomputable def complete (M : NFA' n) : NFA' n where
   σ := _
   M := M.M.complete
 
 
-def product (final? : Prop → Prop → Prop) (M N : GoodNFA n) : GoodNFA n where
+def product (final? : Prop → Prop → Prop) (M N : NFA' n) : NFA' n where
   σ := _
   M := M.M.product final? N.M
 
-def inter (M N : GoodNFA n) : GoodNFA n := ⟨_, M.M.inter N.M⟩
+def inter (M N : NFA' n) : NFA' n := ⟨_, M.M.inter N.M⟩
 
-lemma inter_eq (M N : GoodNFA n) : M.inter N = GoodNFA.product And M N := by
+lemma inter_eq (M N : NFA' n) : M.inter N = NFA'.product And M N := by
   simp [inter, product, NFA.inter]
 
 @[simp]
-lemma inter_accepts (M N : GoodNFA n) :
+lemma inter_accepts (M N : NFA' n) :
     (M.inter N).accepts = M.accepts ∩ N.accepts := by
   simp [accepts, accepts', inter, Set.image_inter dec_inj]
 
-def union (M N : GoodNFA n) : GoodNFA n := ⟨_, M.M.union N.M⟩
+def union (M N : NFA' n) : NFA' n := ⟨_, M.M.union N.M⟩
 
-lemma union_eq (M N : GoodNFA n) : M.union N = GoodNFA.product Or M.complete N.complete := by
+lemma union_eq (M N : NFA' n) : M.union N = NFA'.product Or M.complete N.complete := by
   simp [union, product, NFA.union, NFA.union', complete]
 
 @[simp]
-lemma union_accepts (M N : GoodNFA n) :
+lemma union_accepts (M N : NFA' n) :
     (M.union N).accepts = M.accepts ∪ N.accepts := by
   simp [accepts, accepts', union]; rw [Set.image_union]
 
-def neg (M : GoodNFA n) : GoodNFA n where
+def neg (M : NFA' n) : NFA' n where
   σ := _
   M := M.M.neg
 
 @[simp]
-lemma neg_accepts (M : GoodNFA n) :
+lemma neg_accepts (M : NFA' n) :
     M.neg.accepts = M.acceptsᶜ:= by
   simp [accepts, accepts', neg, Set.image_compl_eq (dec_bij)]
 
-def reduce (M : GoodNFA n) : GoodNFA n where
+def reduce (M : NFA' n) : NFA' n where
   σ := _
   M := M.M.reduce
 
 @[simp]
-lemma reduce_accepts {M : GoodNFA n} : M.reduce.accepts = M.accepts := by
+lemma reduce_accepts {M : NFA' n} : M.reduce.accepts = M.accepts := by
   simp [reduce, accepts, accepts']
 
 
-def determinize (M : GoodNFA n) : GoodNFA n where
+def determinize (M : NFA' n) : NFA' n where
   σ := _
   M := M.M.toDFA.toNFA
 
-def lift (f : Fin n → Fin m) (M : GoodNFA n) : GoodNFA m where
+def lift (f : Fin n → Fin m) (M : NFA' n) : NFA' m where
   σ := _
   M := M.M.lift f
 
-def proj (f : Fin m → Fin n) (M : GoodNFA n) : GoodNFA m where
+def proj (f : Fin m → Fin n) (M : NFA' n) : NFA' m where
   σ := _
   M := M.M.proj f
 
 @[simp]
-lemma lift_accepts (M : GoodNFA n) (f : Fin n → Fin m) :
+lemma lift_accepts (M : NFA' n) (f : Fin n → Fin m) :
     (M.lift f).accepts = BitVecs.transport f ⁻¹' M.accepts := by
   simp [accepts, accepts', lift]
 
 @[simp]
-lemma proj_accepts (M : GoodNFA m) (f : Fin n → Fin m) :
+lemma proj_accepts (M : NFA' m) (f : Fin n → Fin m) :
     (M.proj f).accepts = BitVecs.transport f '' M.accepts := by
   simp [accepts, accepts', proj]
