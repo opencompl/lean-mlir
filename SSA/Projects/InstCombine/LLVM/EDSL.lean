@@ -300,7 +300,7 @@ https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20F
 Therefore, we choose to match on raw `Expr`.
 -/
 open SSA InstcombineTransformDialect InstCombine in
-elab "[llvm (" mvars:term,* ")| " reg:mlir_region "]" : term => do
+elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
   have φ : Nat := mvars.getElems.size
   -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
   let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
@@ -319,9 +319,9 @@ elab "[llvm (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
   return com
 
-macro "[llvm| " reg:mlir_region "]" : term => `([llvm ()| $reg])
+macro "[llvm| " reg:mlir_region "]" : term => `([llvm()| $reg])
 
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
   `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
-       let code := [llvm ()| $test_reg]
+       let code := [llvm()| $test_reg]
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
