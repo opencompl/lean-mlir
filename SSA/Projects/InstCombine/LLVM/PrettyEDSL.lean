@@ -132,7 +132,7 @@ macro_rules
 section Test
 
 private def pretty_test :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant 8 : i32
     %1 = llvm.add %0, %arg0 : i32
@@ -142,7 +142,7 @@ private def pretty_test :=
   }]
 
 private def pretty_test_generic (w : Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant 8 : _
     %1 = llvm.add %0, %arg0 : _
@@ -152,7 +152,7 @@ private def pretty_test_generic (w : Nat) :=
   }]
 
 private def prettier_test_generic (w : Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant(8)
     %1 = llvm.add %0, %arg0
@@ -162,20 +162,20 @@ private def prettier_test_generic (w : Nat) :=
   }]
 
 private def neg_constant (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
     %0 = llvm.mlir.constant(-1)
     llvm.return %0
   }]
 
 private def pretty_select (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
     ^bb0(%arg0: i1, %arg1 : _):
       %0 = llvm.select %arg0, %arg1, %arg1
       llvm.return %0
   }]
 
 private def pretty_bool :=
-  [llvm ()| {
+  [llvm()| {
     ^bb0():
       %0 = llvm.mlir.constant (1 : i1) : i1
       %1 = llvm.mlir.constant (0 : i1) : i1
@@ -190,7 +190,7 @@ private def pretty_bool :=
   }]
 
 private def pretty_test_overflow :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant 8 : i32
     %1 = llvm.add %0, %arg0 overflow<nsw> : i32
@@ -200,7 +200,7 @@ private def pretty_test_overflow :=
   }]
 
 private def pretty_test_trunc :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i64):
     %0 = llvm.trunc %arg0 : i64 to i32
     %1 = llvm.zext %0 : i32 to i64
@@ -208,28 +208,28 @@ private def pretty_test_trunc :=
   }]
 
 private def pretty_test_icmp :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i1):
     %1 = llvm.icmp "eq" %arg0, %arg0 : i1
     llvm.return %1 : i1
   }]
 
 private def pretty_test_zext :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i32):
     %1 = llvm.zext nneg %arg0 : i32 to i64
     llvm.return %1 : i64
   }]
 
 private def pretty_test_disjoint :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i32, %arg1: i32):
     %1 = llvm.or disjoint %arg0, %arg1 : i32
     llvm.return %1 : i32
   }]
 
 private def pretty_test_exact :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i64):
     %0 = llvm.udiv exact %arg0, %arg0 : i64
     %1 = llvm.sdiv exact %arg0, %arg0 : i64

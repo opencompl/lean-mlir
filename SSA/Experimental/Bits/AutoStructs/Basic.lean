@@ -277,13 +277,16 @@ def worklist.St.addOrCreateState (st : worklist.St A S) (final? : Bool) (sa : S)
     let worklist := st.worklist.push sa
     have worklist_nodup : worklist.toList.Nodup := by
       simp [worklist]; apply List.nodup_middle.mpr; simp
-      intros hc; apply Array.Mem.mk at hc; apply st.worklist_incl at hc; simp at hc; apply Std.HashMap.get?_none_not_mem at heq; contradiction
+      intro hc;
+      apply st.worklist_incl at hc; simp at hc; apply Std.HashMap.get?_none_not_mem at heq; contradiction
     have worklist_incl : ∀ sa ∈ worklist, sa ∈ map := by
       simp [worklist, map]; intros sa' hin; apply Array.mem_push at hin; rcases hin with hin | heq
       { apply st.worklist_incl at hin; aesop }
       { aesop }
     let st' := { st with m, map, worklist, worklist_nodup, worklist_incl }
     (s, st')
+
+seal worklist.St.addOrCreateState
 
 omit [Fintype S] [LawfulBEq A] in
 lemma addOrCreate_preserves_map (st : worklist.St A S) (final? : Bool) (sa sa' : S) :
@@ -297,7 +300,7 @@ lemma addOrCreate_preserves_map (st : worklist.St A S) (final? : Bool) (sa sa' :
   rintro rfl; simp_all
 
 omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
-lemma addOrCreate_preserves_mem (st : worklist.St A S) (final? : Bool) (sa sa' : S) :
+lemma addOrCreateState_preserves_mem (st : worklist.St A S) (final? : Bool) (sa sa' : S) :
     let (_, st') := st.addOrCreateState _ _  final? sa'
     sa ∈ st.map →
     sa ∈ st'.map := by
@@ -330,14 +333,22 @@ lemma processOneElem_preserves_map (st : worklist.St A S) (final : S → Bool) (
     let st' := processOneElem _ _  final s st (a, sa')
     st.map[sa]? = some s' →
     st'.map[sa]? = some s' := by
-  simp_all [processOneElem, addOrCreate_preserves_map]
+  -- TODO: simp [processOneElem, addOrCreate_preserves_map] used to close the goal
+  simp [processOneElem]
+  intros h
+  rw [addOrCreate_preserves_map]
+  assumption
+
 
 omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
 lemma processOneElem_preserves_mem (st : worklist.St A S) (final : S → Bool) (a : A) (sa sa' : S) (s : State) :
     let st' := processOneElem _ _  final s st (a, sa')
     sa ∈ st.map →
     sa ∈ st'.map := by
-  simp_all [processOneElem, addOrCreate_preserves_mem]
+  simp [processOneElem]
+  intros h
+  apply addOrCreateState_preserves_mem
+  assumption
 
 omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
 theorem processOneElem_grow (st : worklist.St A S) (final : S → Bool) (a : A) (sa' : S) (s : State) :
@@ -389,7 +400,6 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
     if let some s := st1.map.get? sa then
       let a := f sa
       let st2 := a.foldl (init := st1) (processOneElem _ _ final s)
-      -- why is ~ not a valid token here?
       open List in
       have hgrow : ∃ sas, st2.map.keys ~ (sas ++ st1.map.keys) ∧ st2.worklist.toList = st1.worklist.toList ++ sas := by
         rcases a with ⟨al⟩
@@ -421,11 +431,11 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
           { apply Array.back?_mem at heq'; apply st0.worklist_incl; assumption }
           { apply Array.not_elem_back_pop at heq' <;> simp_all [Array.pop, wl] } }
         constructor
-        { right; apply Array.back?_mem at heq'; apply Array.Mem.val; assumption}
+        { right; apply Array.back?_mem at heq'; assumption }
         rintro sa hh; rcases hh with hnin | hin
         { simp [hnin] }
         right
-        apply List.mem_of_mem_dropLast; assumption
+        exact Array.mem_of_mem_pop st0.worklist sa hin
       have : st2.meas ≤ st1.meas := by
         apply Finset.card_le_card
         simp [worklist.St.meas, Finset.subset_iff]
@@ -437,7 +447,6 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         right
         simp [st1] at hgrow
         rcases hgrow with ⟨sas, hkeys2, hwl2⟩
-        simp [hwl2] at hin
         have hnin : sa'∉ sas := by
           intros hc
           have hdisj : st0.map.keys.Disjoint sas := by
@@ -449,7 +458,7 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
           apply hdisj
           { simp_all [Std.HashMap.mem_keys_iff_mem]; apply hnew }
           { apply hc }
-        rcases hin <;> trivial
+        rcases hin with ⟨hin⟩; simp_all
       have : st2.meas < st0.meas := by omega
       go st2
     else

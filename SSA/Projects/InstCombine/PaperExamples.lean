@@ -16,13 +16,13 @@ open BitVec
 -- Example proof of shift + mul, this is one of the hardest alive examples.
 -- (alive_simplifyMulDivRem290)
 theorem shift_mul:
-    [llvm (w)| {
+    [llvm(w)| {
   ^bb0(%X : _, %Y : _):
     %c1 = llvm.mlir.constant(1)
     %poty = llvm.shl %c1, %Y
     %r = llvm.mul %poty, %X
     llvm.return %r
-  }] ⊑  [llvm (w)| {
+  }] ⊑  [llvm(w)| {
   ^bb0(%X : _, %Y : _):
     %r = llvm.shl %X, %Y
     llvm.return %r
@@ -41,12 +41,12 @@ info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choi
 
 -- Example proof of xor + sub, this is automatically closed by automation.
 theorem xor_sub :
-    [llvm (w)| {
+    [llvm(w)| {
   ^bb0(%X : _, %Y : _):
     %v1 = llvm.sub %X, %X
     %r = llvm.xor %v1, %Y
     llvm.return %r
-  }] ⊑  [llvm (w)| {
+  }] ⊑  [llvm(w)| {
   ^bb0(%X : _, %Y : _):
     llvm.return %Y
   }] := by
@@ -57,13 +57,13 @@ theorem xor_sub :
 #guard_msgs in #print axioms xor_sub
 
 theorem bitvec_AddSub_1309 :
-  [llvm (w)| {
+  [llvm(w)| {
     ^bb0(%X : _, %Y : _):
       %v1 = llvm.and %X, %Y
       %v2 = llvm.or %X, %Y
       %v3 = llvm.add %v1, %v2
       llvm.return %v3
-  }] ⊑ [llvm (w)| {
+  }] ⊑ [llvm(w)| {
     ^bb0(%X : _, %Y : _):
       %v3 = llvm.add %X, %Y
       llvm.return %v3

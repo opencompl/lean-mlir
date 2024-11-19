@@ -47,7 +47,7 @@ theorem Array.push_incl {a : Array α} {x : α} (y : α) : x ∈ a → x ∈ a.p
   simp [Array.push]
   intros h
   left
-  exact h.val
+  exact h
 
 @[aesop 50% unsafe]
 theorem Array.mem_iff_getElem? {a : Array α} {x : α} :
