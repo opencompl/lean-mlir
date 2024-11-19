@@ -29,6 +29,54 @@ theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.bac
 /- Upstream? -/
 theorem Array.not_elem_back_pop_list (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.toList.dropLast := by sorry
 
+theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
+    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.size → a[i]? ≠ a[j]? := by
+  sorry
+
+@[simp]
+theorem Array.take_ge_size {a : Array α} {n} (h : n ≥ a.size) : a.take n = a := by
+  simp [Array.take]
+  have heq : a.size - n = 0 := by omega
+  rw [heq]; rfl
+
+@[simp]
+theorem Array.take_size {a : Array α} : a.take a.size = a :=
+  a.take_ge_size (Nat.le_refl a.size)
+
+@[simp]
+theorem Array.take_zero {a : Array α} : a.take 0 = #[] := eq_empty_of_size_eq_zero (by simp)
+
+
+theorem Array.mem_take_iff_getElem {a : Array α} {n} :
+    x ∈ a.take n ↔ (∃ (i : Nat) (hm : i < min n a.size), a[i] = x):= by
+  rw [mem_def, toList_take, List.mem_take_iff_getElem]; rfl
+
+theorem Array.mem_take_iff_getElem? {a : Array α} {n} :
+    x ∈ a.take n ↔ (∃ (i : Nat) (_ : i < n), a[i]? = some x):= by
+  rw [mem_take_iff_getElem]
+  constructor
+  · rintro ⟨i, hm, heq⟩
+    exists i, (by omega)
+    rw [getElem?_eq_getElem, heq]
+  · rintro ⟨i, hm, heq⟩
+    obtain ⟨hm', heq⟩ := Array.getElem?_eq_some_iff.mp heq
+    exists i, (by omega)
+
+theorem Array.mem_take_get?_succ {a : Array α} {n} :
+    x ∈ a.take (n + 1) ↔ (a[n]? = some x ∨ x ∈ a.take n):= by
+  repeat rw [Array.mem_take_iff_getElem?]
+  constructor
+  · rintro ⟨i, hm, _⟩
+    by_cases i = n
+    · left; simp_all
+    · right; exists i, (by omega)
+  · rintro (h | ⟨i, hi, heq⟩)
+    · exists n, (by omega)
+    · exists i, (by omega)
+
+theorem Array.mem_take_get_succ {a : Array α} {n} (h : n < a.size) : x ∈ a.take (n + 1) ↔ (a[n]'h = x ∨ x ∈ a.take n):= by
+  simp [mem_take_get?_succ, getElem?_eq_getElem h]
+
 /- Upstream? -/
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by sorry
 
