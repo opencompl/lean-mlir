@@ -18,7 +18,7 @@ precondition: true
 
 -/
 def alive_DivRemOfSelect_src (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
   ^bb0(%c: i1, %y : _, %x : _):
     %c0 = llvm.mlir.constant(0) : _
     %v1 = llvm.select %c, %y, %c0
@@ -26,7 +26,7 @@ def alive_DivRemOfSelect_src (w : Nat) :=
     llvm.return %v2
   }]
 def alive_DivRemOfSelect_tgt (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
   ^bb0(%c: i1, %y : _, %x : _):
     %v1 = llvm.udiv %x, %y
     llvm.return %v1
