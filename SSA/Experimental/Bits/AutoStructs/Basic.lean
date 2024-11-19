@@ -411,7 +411,7 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         have := @(List.perm_subset_iff_right hkeys st1.map.keys).mpr (by aesop) k; aesop
       have : st1.meas < st0.meas := by
         rcases heq' : sa? with ⟨⟩ | ⟨sa⟩
-        { aesop }
+        { simp_all }
         apply Finset.card_lt_card
         simp [worklist.St.meas, Finset.ssubset_iff, Finset.subset_iff]
         use sa
@@ -674,8 +674,6 @@ lemma StInv.fun_inj (inv : StInv' T st) :
   · apply mFun_inj'
   · exact corr_inj
 
-
-
 abbrev StInv.sim {st : worklist.St A S} (inv : StInv' T st) :=
   st.m.SimUnpacked M (st.R A S corr) {(q, a, q') | ∃ sa sa', (sa, a, sa') ∈ T ∧ corr sa = q ∧ corr sa' = q' } (inv.fun A S M corr)
 
@@ -693,18 +691,34 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
   have hmem : ∀ s (sa : S), st.map[sa]? = some s → s ∈ st.m.states := by intros; apply inv.map_states; assumption
   have _ : st.m.WF := by apply inv.wf
   constructor
-  { simp_all only [processOneElem, worklist.St.addOrCreateState]; aesop }
-  { simp_all only [processOneElem, worklist.St.addOrCreateState]; split
-    { aesop }
+  { simp only [processOneElem, worklist.St.addOrCreateState]
+    split
+    · apply wf_addTrans
+      · assumption
+      · apply hmem <;> assumption
+      · apply hmem <;> assumption
+    · split
+      · apply wf_addTrans
+        · simp; apply wf_addFinal
+          · apply wf_newState st.m (by assumption)
+          · apply mem_states_newState_self
+        · simp only [states_addFinal, states_newState, Finset.mem_union, Finset.mem_singleton]; left; apply hmem <;> assumption
+        · simp
+      · apply wf_addTrans
+        · simp; apply wf_newState; assumption
+        · simp; left; apply hmem <;> assumption
+        · simp }
+  { simp only [processOneElem, worklist.St.addOrCreateState]; split
+    { simp; intros; apply hmem <;> assumption }
     { dsimp only; intros sa s hin
       by_cases hnew? : sa' = sa
-      { subst_eqs; simp at hin; subst_eqs; aesop }
-      { have _ : s ∈ st.m.states := by rw [Std.HashMap.getElem?_insert] at hin; aesop
-        aesop } } }
-  { simp_all only [processOneElem, worklist.St.addOrCreateState]; split
+      { subst_eqs; simp at hin; subst_eqs; split <;> simp }
+      { have _ : s ∈ st.m.states := by rw [Std.HashMap.getElem?_insert] at hin; simp_all; apply hmem <;> assumption
+        split <;> simp <;> left <;> assumption } } }
+  { simp only [processOneElem, worklist.St.addOrCreateState]; split
     { simp; intros s hs; apply inv.map_surj ⟨s, hs⟩ }
     { simp; intros s' hs'
-      have hs' : s' ∈ st.m.newState.2.states := by aesop
+      have hs' : s' ∈ st.m.newState.2.states := by split at hs' <;> simp_all [hs']
       simp at hs'
       rcases hs' with hold | rfl
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
@@ -720,12 +734,12 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       apply inv.map_inj ⟨s', hs''⟩ <;> simp_all
     · rintro heq1; split <;> rintro heq2 <;> subst_eqs
       exfalso
-      suffices hccl : st.m.stateMax < st.m.stateMax by aesop
+      suffices hccl : st.m.stateMax < st.m.stateMax by simp_all
       apply st.m.states_lt
       exact hmem st.m.stateMax sa1 (by assumption)
     · rintro heq1; split <;> rintro heq2 <;> try split at heq2 <;> subst_eqs <;> try rfl
       exfalso; subst_eqs
-      suffices hccl : st.m.stateMax < st.m.stateMax by aesop
+      suffices hccl : st.m.stateMax < st.m.stateMax by simp_all
       apply st.m.states_lt
       exact hmem st.m.stateMax sa2 (by assumption)
     · simp }
@@ -740,10 +754,14 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     subst_eqs; left
     simp only [processOneElem, worklist.St.addOrCreateState]
     split; on_goal 2 => simp_all
-    next _ _ heq => simp_all; rw [h2] at *; casesm* _ ∧ _ ; injections; subst_eqs; aesop }
+    next _ _ heq =>
+      simp_all; rw [h2] at *; casesm* _ ∧ _ ; injections; subst_eqs
+      apply Std.HashMap.mem_of_get?; simp_all; rfl }
 
-set_option debug.skipKernelTC true in -- typechecking gets stuck :(
-set_option maxHeartbeats 1000000 in
+seal GetElem.getElem in
+seal GetElem?.getElem? in
+
+set_option debug.skipKernelTC true in -- deterministic timeout
 def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     ∀ a sa', (f sa)[k]? = some (a, sa') →
     processOneElem_mot A S f M corr s sa k st →
@@ -776,7 +794,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     split_ifs with hcond
     { split_ifs at hsa1; simp_all
       simp at hsa1; rcases hsa1 with hsa1 | rfl
-      · have hneq : sa1 ≠ st.m.stateMax := by rintro rfl; simp_all [RawCNFA.states]
+      · have hneq : sa1 ≠ st.m.stateMax := by rintro rfl; simp [RawCNFA.states] at hsa1
         rw [Std.HashSet.mem_insert]; constructor
         · rintro (hc | hfin)
           dsimp at hc; exfalso; simp at hneq hc; rw [hc] at hneq; simp at hneq
@@ -802,7 +820,9 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
           · simp; intros hc; exfalso; apply inv.wf.finals_lt at hc; simp at hc
           · intros hacc; apply final_corr _ |>.mpr at hacc
             suffices hc' : final sa' = true by
-              simp_all
+              specialize hcond (by assumption)
+              exfalso; rw [←Bool.false_eq_true]
+              rw [←hc', ←hcond]
             convert hacc
             apply inv'.mFun_eq
             have hn : st.map[sa']? = none := by apply Std.HashMap.getElem?_eq_none; assumption
@@ -824,8 +844,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     use ⟨s', by simp [processOneElem_states]; split <;> simp⟩
     rcases s' with ⟨s', hs''⟩
     rw [←hfun _ hs'', processOneElem_initials]; dsimp; simp_all only [ge_iff_le, and_self] }
-  {
-    rintro ⟨s', hs'⟩ b q' hq' hR hT
+  { rintro ⟨s', hs'⟩ b q' hq' hR hT
     apply processOneElem_mem_states _ _ _ _ a at hs'
     rcases hs' with hs' | rfl
     on_goal 2 => {
@@ -847,14 +866,16 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
           (sa_1, a, sa') ∈ {(sa1, a, sa') | sa1 = sa ∧ ∃ k_1 ≥ k, (f sa)[k_1]? = some (a, sa')} ∧ corr sa_1 = q ∧ corr sa' = q'} ∨
         (StInv.fun A S M corr inv' ⟨s', _⟩ = corr sa ∧ b = a ∧ corr sa' = q') := by
       simp at hT
-      by_cases hh : StInv.fun A S M corr inv' ⟨s', by assumption⟩ = corr sa ∧ b = a ∧ corr sa' = q'
+      by_cases h : StInv.fun A S M corr inv' ⟨s', by assumption⟩ = corr sa ∧ b = a ∧ corr sa' = q'
       · right; assumption
       · left; simp; rintro s1 s2 rfl k1 hk1 hfk1 hcorr rfl
-        simp at hh
-        specialize hh (by symm; apply hcorr)
+        simp only [ge_iff_le, Prod.mk.eta, not_and] at h
+        specialize h (by symm; apply hcorr)
         by_cases heq : k = k1
-        · subst heq; apply hh; simp_all; simp_all
-        · apply hT s1 _ (by simp_all) k1 (by omega) hfk1 hcorr rfl
+        · subst heq; rw [hfk1] at hf; injection hf with heq; simp at heq
+          obtain ⟨rfl, rfl⟩ := heq
+          apply h rfl rfl
+        · apply hT s1 _ (by rfl) k1 (by omega) hfk1 hcorr rfl
     · -- old
       have hR' : StInv.fun A S M corr inv ⟨s', hs'⟩ ∈ worklist.St.R A S corr st := by
         obtain ⟨sa', hvis, hcorr⟩ := hR
@@ -865,7 +886,9 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
         rw [hcorr]; symm; apply hfun
       rw [←hfun] at hT'
       obtain ⟨⟨s1, hs1⟩, hcorr', htrans⟩ := hsim.trans_match₁ ⟨_, hs'⟩ b q' (by simp_all) hR' hT'
-      use ⟨s1, by rw [processOneElem_states]; split <;> simp_all⟩
+      have hs1_new : s1 ∈ (processOneElem A S final s st (a, sa')).m.states := by
+        rw [processOneElem_states]; split <;> simp [hs1]
+      use ⟨s1, hs1_new⟩
       constructor
       · rw [←hfun]; assumption
       · apply processOneElem_trans_preserved; assumption
@@ -889,7 +912,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
             simp at h
             rcases h with ⟨ssa, h1, h2⟩
             rw [h2]
-            obtain rfl : ssa = s'' := by simp_all
+            obtain rfl : ssa = s'' := by rw [hs''] at h1; injection h1 with h; exact h.symm
             exact Std.HashSet.mem_insert_self
         · simp at habs; obtain ⟨k', hk', hfk'⟩ := habs
           exfalso; apply hT sa sa2 rfl k' hk' hfk' (by symm; apply h1) rfl
@@ -908,14 +931,18 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
           apply corr_inj at h1
           rw [←h1, ←hmfun s' (by assumption), inv.mFun_spec]; rfl
         )
-        use ⟨s1, by rw [processOneElem_states]; split <;> simp_all⟩
+        have hs1_new : s1 ∈ (processOneElem A S final s st (a, sa')).m.states := by
+          rw [processOneElem_states]; split
+          · simp; left; assumption
+          · assumption
+        use ⟨s1, hs1_new⟩
         constructor
         · rw [←hfun _ hs1, hcorr']
         · apply processOneElem_trans_preserved; assumption }
   { rintro ⟨s', hs'⟩ b s'' hs''
     have h := processOneElem_trans _ _ st final a b sa' s s'
     have hs : s ∈ st.m.states := by apply inv.map_states at hmap; assumption
-    have hin := by apply inv'.wf.trans_tgt_lt'; assumption
+    have hin := by apply inv'.wf.trans_tgt_lt'; exact hs''
     use hin
     split at h
     next heqs =>
@@ -934,11 +961,14 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
         have h := hsim.trans_match₂ ⟨s, hs⟩ a s'' hs''
         simp_all only [ge_iff_le, Prod.mk.eta, exists_const]
     next hneq =>
-
       rw [h] at hs''
-      have hin' := by apply inv.wf.trans_tgt_lt'; assumption
+      have hin' := by apply inv.wf.trans_tgt_lt'; exact hs''
       have hs' : s' ∈ st.m.states := by
-        simp [RawCNFA.states]; apply inv.wf.trans_src_lt' _ b
+        suffices h : s' < st.m.stateMax by
+          unfold RawCNFA.states
+          rw [Finset.mem_range]
+          exact h
+        apply inv.wf.trans_src_lt' _ b
         apply Std.HashMap.mem_iff_getElem?.mpr
         rw [Std.HashMap.getD_eq_getD_getElem?] at hs''
         by_contra hc
@@ -947,7 +977,9 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
         · rw [heq] at hs''; simp at hs''
         · apply hc at heq; contradiction
       have h := hsim.trans_match₂ ⟨s', hs'⟩ b s'' hs''
-      simp_all }
+      obtain ⟨hw, h⟩ := h
+      rw [←hfun _ hs', ←hfun _ hw]
+      exact h }
 
 -- TODO: improve this proof, make it faster
 def worklistGo_spec {st : worklist.St A S} (inv : StInv' ∅ st) :
