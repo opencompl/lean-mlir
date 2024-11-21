@@ -6,6 +6,7 @@ import Std.Data.HashSet
 import Std.Data.HashMap
 import Std.Data.HashMap.Lemmas
 import Batteries.Data.Fin.Basic
+import Batteries.Data.Array.Lemmas
 import Mathlib.Computability.NFA
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
