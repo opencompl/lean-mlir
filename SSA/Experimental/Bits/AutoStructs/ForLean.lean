@@ -40,8 +40,8 @@ theorem Array.mem_push (a : Array α) (x y : α) : x ∈ a.push y → x ∈ a �
 
 theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by sorry
 
-theorem Array.mem_push_self (a : Array α) (x : α) : x ∈ a.push x := by
-  simp [Array.push]
+-- theorem Array.mem_push_self (a : Array α) (x : α) : x ∈ a.push x := by
+--   simp [Array.push]
 
 theorem Array.push_incl {a : Array α} {x : α} (y : α) : x ∈ a → x ∈ a.push y := by
   simp [Array.push]
@@ -49,10 +49,10 @@ theorem Array.push_incl {a : Array α} {x : α} (y : α) : x ∈ a → x ∈ a.p
   left
   exact h
 
-@[aesop 50% unsafe]
-theorem Array.mem_iff_getElem? {a : Array α} {x : α} :
-     x ∈ a ↔ ∃ (k : Nat), a[k]? = some x := by
-  sorry
+-- @[aesop 50% unsafe]
+-- theorem Array.mem_iff_getElem? {a : Array α} {x : α} :
+--      x ∈ a ↔ ∃ (k : Nat), a[k]? = some x := by
+--   sorry
 
 theorem Std.HashMap.keys_nodup [BEq K] [Hashable K] (m : Std.HashMap K V) : m.keys.Nodup := by sorry
 
