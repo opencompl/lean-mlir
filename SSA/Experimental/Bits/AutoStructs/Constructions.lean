@@ -91,6 +91,8 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
     simp [product.final, NFA'.product, NFA.product, to_prop, Set.instMembership, Set.Mem]; congr
     · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim1.accept
     · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim2.accept
+  · sorry
+  · sorry
   · rintro ⟨s1, s2⟩ ⟨q1, q2⟩ a hin
     simp [NFA.product] at hin
     obtain ⟨hst1, hst2⟩ := hin
@@ -107,6 +109,7 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
       obtain ⟨h2, hin2⟩ := hsim2.trans_match₂ _ _ _ h2
       aesop
     sorry
+  · sorry
 
 def CNFA.inter_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
@@ -179,6 +182,9 @@ def NFA'.determinize_spec_nonemp (m : CNFA n)  [Nonempty m.m.states]
   · sorry
   · sorry
   · sorry
+  · sorry
+  · sorry
+  · sorry
 
 def NFA'.determinize_spec_emp (m : CNFA n) (hemp : m.m.stateMax = 0)
   {M : NFA' n} (hsim : m.Sim M) :
@@ -194,6 +200,9 @@ def NFA'.determinize_spec_emp (m : CNFA n) (hemp : m.m.stateMax = 0)
     simp [BitVec.any, NFA'.determinize, NFA.toDFA]
     intros q _ ha
     sorry -- need to prove that f is surjective?
+  · sorry
+  · sorry
+  · sorry
   · sorry
   · sorry
 
