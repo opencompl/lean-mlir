@@ -6,6 +6,7 @@ import Std.Data.HashSet
 import Std.Data.HashMap
 import Std.Data.HashMap.Lemmas
 import Batteries.Data.Fin.Basic
+import Batteries.Data.Array.Lemmas
 import Mathlib.Computability.NFA
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
@@ -280,7 +281,7 @@ def worklist.St.addOrCreateState (st : worklist.St A S) (final? : Bool) (sa : S)
       intro hc;
       apply st.worklist_incl at hc; simp at hc; apply Std.HashMap.get?_none_not_mem at heq; contradiction
     have worklist_incl : ∀ sa ∈ worklist, sa ∈ map := by
-      simp [worklist, map]; intros sa' hin; apply Array.mem_push at hin; rcases hin with hin | heq
+      simp [worklist, map]; intros sa' hin; rcases hin with hin | heq
       { apply st.worklist_incl at hin; aesop }
       { aesop }
     let st' := { st with m, map, worklist, worklist_nodup, worklist_incl }
@@ -428,10 +429,10 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         simp [sa?] at heq'
         constructor
         { constructor
-          { apply Array.back?_mem at heq'; apply st0.worklist_incl; assumption }
+          { apply Array.mem_of_back?_eq_some at heq'; apply st0.worklist_incl; assumption }
           { apply Array.not_elem_back_pop at heq' <;> simp_all [Array.pop, wl] } }
         constructor
-        { right; apply Array.back?_mem at heq'; assumption }
+        { right; apply Array.mem_of_back?_eq_some at heq'; assumption }
         rintro sa hh; rcases hh with hnin | hin
         { simp [hnin] }
         right
@@ -490,17 +491,14 @@ lemma addOrCreateElem_visited final? (st : worklist.St A S) sa :
   ext sa'
   split; simp
   simp; constructor <;> simp
-  · rintro ⟨rfl | h⟩ hnin
-    · exfalso; apply hnin; apply Array.mem_push_self
-    · constructor; assumption; intros hin; apply hnin; apply Array.push_incl sa hin
+  · rintro ⟨rfl | h⟩ hnin heq?
+    · simp at heq?
+    · constructor; assumption; simp [hnin]
   · rintro hin hnin; constructor
     · right; assumption
-    · intros hc; apply Array.mem_push at hc
-      rcases hc
-      · simp_all
-      · subst_eqs
-        suffices _ : sa ∉ st.map by simp_all
-        apply Std.HashMap.get?_none_not_mem; assumption
+    · constructor; assumption; rintro rfl
+      suffices _ : sa' ∉ st.map by simp_all
+      apply Std.HashMap.get?_none_not_mem; assumption
 
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma processOneElem_visited (st : worklist.St A S) :
@@ -559,7 +557,7 @@ lemma StInv.mFun_inj' (inv : StInv' T st) : Function.Injective (inv.mFun _ _ _ _
 
 omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
 lemma mFun_mem (inv : StInv' T st) (s : st.m.states) : inv.mFun _ _ _ _ s ∈ st.map :=
-  Std.HashMap.mem_of_get? (inv.mFun_spec _ _ _ _ s)
+  Std.HashMap.mem_of_getElem? (inv.mFun_spec _ _ _ _ s)
 
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma processOneElem_states (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -569,7 +567,7 @@ lemma processOneElem_states (st : worklist.St A S) (final : S → Bool) (a : A) 
   split
   next s' heq =>
     dsimp
-    have _ := Std.HashMap.mem_of_get? heq
+    have _ := Std.HashMap.mem_of_getElem? heq
     split_ifs; simp_all
   next heq =>
     dsimp
@@ -621,7 +619,7 @@ lemma processOneElem_finals (st : worklist.St A S) (final : S → Bool) (a : A) 
   split
   next s' heq =>
     dsimp
-    have _ := Std.HashMap.mem_of_get? heq
+    have _ := Std.HashMap.mem_of_getElem? heq
     split_ifs <;> simp_all
     simp [RawCNFA.addTrans]
   next heq =>
@@ -648,7 +646,7 @@ lemma processOneElem_trans (st : worklist.St A S) (final : S → Bool) (a b : A)
     split
     next s'' heq =>
       use s''; constructor; assumption
-      have _ := Std.HashMap.mem_of_get? heq
+      have _ := Std.HashMap.mem_of_getElem? heq
       simp [RawCNFA.addTrans]
     next heq =>
       use st.m.stateMax
@@ -765,7 +763,7 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     split; on_goal 2 => simp_all
     next _ _ heq =>
       simp_all; rw [h2] at *; casesm* _ ∧ _ ; injections; subst_eqs
-      apply Std.HashMap.mem_of_get?; simp_all; rfl }
+      apply Std.HashMap.mem_of_getElem?; simp_all; rfl }
 
 seal GetElem.getElem in
 seal GetElem?.getElem? in
@@ -1002,7 +1000,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' ∅ st) :
   | case3 st hnemp sa? sa hsa? wl' st' hc =>
     have h : sa ∈ st.map := by
       apply st.worklist_incl
-      simp_all [sa?, Array.back?_mem]
+      simp_all [sa?, Array.mem_of_back?_eq_some]
     apply Std.HashMap.getElem?_eq_some_getD (fallback := 0) at h
     simp [st'] at hc
     exfalso; apply (hc _); exact h
@@ -1065,7 +1063,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' ∅ st) :
           have hmfun : inv.mFun _ _ _ _  = inv'.mFun _ _ _ _ := by simp [StInv.mFun]
           have hfun : inv.fun _ _ _ _ = inv'.fun _ _ _ _ := by simp [StInv.fun, hmfun]
           constructor
-          { simp [worklist.St.visited]; simp_all; exact Std.HashMap.mem_of_get? hmap }
+          { simp [worklist.St.visited]; simp_all; exact Std.HashMap.mem_of_getElem? hmap }
           use inv'; constructor
           { exact hsim.injective }
           { apply hsim.reduced }
@@ -1101,7 +1099,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' ∅ st) :
           intros hin
           suffices ex : ∃ s, st.map[sa]? = some s by simp_all
           simp_all
-        exfalso; apply hnin; apply st.worklist_incl; exact Array.back_mem st.worklist sa hsome
+        exfalso; apply hnin; apply st.worklist_incl; exact Array.mem_of_back?_eq_some hsome
     next hnone =>
       simp [Array.back?] at *
       have : st.worklist.size = 0 := by omega
