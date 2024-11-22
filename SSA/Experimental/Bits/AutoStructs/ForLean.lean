@@ -27,21 +27,12 @@ theorem List.dropLast_nodup (l : List X) : l.Nodup → l.dropLast.Nodup := by
 theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.pop := by sorry
 
 /- Upstream? -/
-theorem Array.back?_mem (a : Array X) (x : X) : a.back? = some x → x ∈ a := by sorry
-
 theorem Array.not_elem_back_pop_list (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.toList.dropLast := by sorry
-
-theorem Array.back_mem (a : Array X) (x : X) : a.back? = some x → x ∈ a := by sorry
 
 /- Upstream? -/
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by sorry
 
--- theorem Array.mem_push (a : Array α) (x y : α) : x ∈ a.push y → x ∈ a ∨ x = y := by sorry
-
 theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by sorry
-
--- theorem Array.mem_push_self (a : Array α) (x : α) : x ∈ a.push x := by
---   simp [Array.push]
 
 theorem Array.push_incl {a : Array α} {x : α} (y : α) : x ∈ a → x ∈ a.push y := by
   simp [Array.push]
@@ -49,12 +40,10 @@ theorem Array.push_incl {a : Array α} {x : α} (y : α) : x ∈ a → x ∈ a.p
   left
   exact h
 
--- @[aesop 50% unsafe]
--- theorem Array.mem_iff_getElem? {a : Array α} {x : α} :
---      x ∈ a ↔ ∃ (k : Nat), a[k]? = some x := by
---   sorry
-
-theorem Std.HashMap.keys_nodup [BEq K] [Hashable K] (m : Std.HashMap K V) : m.keys.Nodup := by sorry
+theorem Std.HashMap.keys_nodup [BEq K] [LawfulBEq K] [Hashable K] (m : Std.HashMap K V) : m.keys.Nodup := by
+  unfold List.Nodup
+  have x := distinct_keys (m := m)
+  simp_all
 
 @[simp]
 theorem Std.HashMap.mem_keys_iff_mem [BEq K] [Hashable K] (m : Std.HashMap K V) (k : K) : k ∈ m.keys ↔ k ∈ m := by sorry
@@ -77,8 +66,8 @@ theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [Lawful
   sorry
 
 @[aesop 50% unsafe]
-theorem Std.HashMap.mem_of_get? [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} :
-    m.get? k = some v → k ∈  m := by
+theorem Std.HashMap.mem_of_getElem? [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} :
+    m[k]? = some v → k ∈  m := by
   sorry
 
 @[aesop 50% unsafe]
