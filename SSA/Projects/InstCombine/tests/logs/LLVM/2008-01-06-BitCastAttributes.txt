@@ -1,0 +1,28 @@
+1: "a"
+4: "a" has unsupported operation: llvm.return
+
+1: "b"
+9: "b" has pointer type input
+
+1: "c"
+4: "c" has unsupported operation: llvm.return
+
+1: "g"
+9: "g" has pointer type input
+
+4: "g" has unsupported operation: llvm.mlir.addressof
+
+4: "g" has unsupported operation: llvm.mlir.zero
+
+4: "g" has unsupported operation: llvm.call
+
+4: "g" has unsupported operation: llvm.call
+
+4: "g" has unsupported operation: llvm.call
+
+4: "g" has unsupported operation: llvm.call
+
+4: "g" has unsupported operation: llvm.call
+
+4: "g" has unsupported operation: llvm.return
+

@@ -1,0 +1,77 @@
+1: "use16"
+5: "use16" is empty
+
+1: "usev4"
+5: "usev4" is empty
+
+1: "icmp_shl_ugt_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_ugt_2"
+8: "icmp_shl_ugt_2" contains vectors which are unsupported
+
+1: "icmp_shl_uge_1"
+8: "icmp_shl_uge_1" contains vectors which are unsupported
+
+1: "icmp_shl_uge_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_ult_1"
+4: "icmp_shl_ult_1" has unsupported operation: llvm.call
+
+1: "icmp_shl_ult_2"
+4: "icmp_shl_ult_2" has unsupported operation: llvm.call
+
+1: "icmp_shl_ule_1"
+8: "icmp_shl_ule_1" contains vectors which are unsupported
+
+1: "icmp_shl_ule_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_eq_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_shl_eq_2"
+8: "icmp_shl_eq_2" contains vectors which are unsupported
+
+1: "icmp_shl_ne_1"
+8: "icmp_shl_ne_1" contains vectors which are unsupported
+
+1: "icmp_shl_ne_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "negative_test_signed_pred"
+7: "negative_test_signed_pred" is unchanged by InstCombine
+
+1: "negative_test_shl_more_than_1"
+7: "negative_test_shl_more_than_1" is unchanged by InstCombine
+
+1: "negative_test_compare_with_different_value"
+7: "negative_test_compare_with_different_value" is unchanged by InstCombine
+

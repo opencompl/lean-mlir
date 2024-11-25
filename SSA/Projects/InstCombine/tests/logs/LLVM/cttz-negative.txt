@@ -1,0 +1,26 @@
+1: "cttz_neg_value"
+4: "cttz_neg_value" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_neg_value_multiuse"
+4: "cttz_neg_value_multiuse" has unsupported operation: llvm.call
+
+4: "cttz_neg_value_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_neg_value_64"
+4: "cttz_neg_value_64" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_neg_value2_64"
+4: "cttz_neg_value2_64" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_neg_value_vec"
+4: "cttz_neg_value_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_nonneg_value"
+4: "cttz_nonneg_value" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_nonneg_value_vec"
+4: "cttz_nonneg_value_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "use"
+5: "use" is empty
+

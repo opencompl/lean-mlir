@@ -1,0 +1,42 @@
+1: "pow_intrinsic_third_fast"
+4: "pow_intrinsic_third_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_intrinsic_third_fast"
+4: "powf_intrinsic_third_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_intrinsic_third_approx"
+4: "pow_intrinsic_third_approx" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_intrinsic_third_approx"
+4: "powf_intrinsic_third_approx" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_libcall_third_fast"
+4: "pow_libcall_third_fast" has unsupported operation: llvm.call
+
+1: "powf_libcall_third_fast"
+4: "powf_libcall_third_fast" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_negthird_fast"
+4: "pow_intrinsic_negthird_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_intrinsic_negthird_fast"
+4: "powf_intrinsic_negthird_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_intrinsic_negthird_approx"
+4: "pow_intrinsic_negthird_approx" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_intrinsic_negthird_approx"
+4: "powf_intrinsic_negthird_approx" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_libcall_negthird_fast"
+4: "pow_libcall_negthird_fast" has unsupported operation: llvm.call
+
+1: "powf_libcall_negthird_fast"
+4: "powf_libcall_negthird_fast" has unsupported operation: llvm.call
+
+1: "pow"
+5: "pow" is empty
+
+1: "powf"
+5: "powf" is empty
+

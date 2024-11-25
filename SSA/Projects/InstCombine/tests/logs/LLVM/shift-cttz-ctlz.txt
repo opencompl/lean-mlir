@@ -1,0 +1,23 @@
+1: "shl_cttz_false"
+4: "shl_cttz_false" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "shl_ctlz_false"
+4: "shl_ctlz_false" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "lshr_cttz_false"
+4: "lshr_cttz_false" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ashr_cttz_false"
+4: "ashr_cttz_false" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "shl_cttz_false_multiuse"
+4: "shl_cttz_false_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "shl_cttz_false_multiuse" has unsupported operation: llvm.call
+
+1: "shl_cttz_as_lhs"
+4: "shl_cttz_as_lhs" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "use"
+5: "use" is empty
+

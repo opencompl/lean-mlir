@@ -1,0 +1,141 @@
+1: "test1"
+9: "test1" has pointer type input
+
+4: "test1" has unsupported operation: llvm.store
+
+1: "test1_logical"
+9: "test1_logical" has pointer type input
+
+4: "test1_logical" has unsupported operation: llvm.store
+
+1: "test1_or_ops_swapped"
+9: "test1_or_ops_swapped" has pointer type input
+
+4: "test1_or_ops_swapped" has unsupported operation: llvm.store
+
+1: "test1_or_ops_swapped_logical"
+9: "test1_or_ops_swapped_logical" has pointer type input
+
+4: "test1_or_ops_swapped_logical" has unsupported operation: llvm.store
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: llvm.store
+
+1: "test2_logical"
+9: "test2_logical" has pointer type input
+
+4: "test2_logical" has unsupported operation: llvm.store
+
+1: "use"
+5: "use" is empty
+
+1: "test3_multiple_overflow_users"
+9: "test3_multiple_overflow_users" has pointer type input
+
+4: "test3_multiple_overflow_users" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test3_multiple_overflow_users" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_overflow_users" has unsupported operation: llvm.call
+
+1: "test3_multiple_overflow_users_logical"
+9: "test3_multiple_overflow_users_logical" has pointer type input
+
+4: "test3_multiple_overflow_users_logical" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test3_multiple_overflow_users_logical" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_overflow_users_logical" has unsupported operation: llvm.call
+
+1: "test3_multiple_overflow_and_mul_users"
+9: "test3_multiple_overflow_and_mul_users" has pointer type input
+
+4: "test3_multiple_overflow_and_mul_users" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test3_multiple_overflow_and_mul_users" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_overflow_and_mul_users" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_overflow_and_mul_users" has unsupported operation: llvm.store
+
+4: "test3_multiple_overflow_and_mul_users" has unsupported operation: llvm.call
+
+1: "test3_multiple_overflow_and_mul_users_logical"
+9: "test3_multiple_overflow_and_mul_users_logical" has pointer type input
+
+4: "test3_multiple_overflow_and_mul_users_logical" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test3_multiple_overflow_and_mul_users_logical" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_overflow_and_mul_users_logical" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_overflow_and_mul_users_logical" has unsupported operation: llvm.store
+
+4: "test3_multiple_overflow_and_mul_users_logical" has unsupported operation: llvm.call
+
+1: "use.2"
+5: "use.2" is empty
+
+1: "test3_multiple_res_users"
+9: "test3_multiple_res_users" has pointer type input
+
+4: "test3_multiple_res_users" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test3_multiple_res_users" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_res_users" has unsupported operation: llvm.store
+
+4: "test3_multiple_res_users" has unsupported operation: llvm.call
+
+1: "test3_multiple_res_users_logical"
+9: "test3_multiple_res_users_logical" has pointer type input
+
+4: "test3_multiple_res_users_logical" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test3_multiple_res_users_logical" has unsupported operation: llvm.extractvalue
+
+4: "test3_multiple_res_users_logical" has unsupported operation: llvm.store
+
+4: "test3_multiple_res_users_logical" has unsupported operation: llvm.call
+
+1: "use.3"
+5: "use.3" is empty
+
+1: "test3_multiple_mul_users"
+9: "test3_multiple_mul_users" has pointer type input
+
+4: "test3_multiple_mul_users" has unsupported operation: llvm.store
+
+4: "test3_multiple_mul_users" has unsupported operation: llvm.call
+
+1: "test3_multiple_mul_users_logical"
+9: "test3_multiple_mul_users_logical" has pointer type input
+
+4: "test3_multiple_mul_users_logical" has unsupported operation: llvm.store
+
+4: "test3_multiple_mul_users_logical" has unsupported operation: llvm.call
+
+1: "test4_no_icmp_ne"
+9: "test4_no_icmp_ne" has pointer type input
+
+4: "test4_no_icmp_ne" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test4_no_icmp_ne" has unsupported operation: llvm.extractvalue
+
+4: "test4_no_icmp_ne" has unsupported operation: llvm.extractvalue
+
+4: "test4_no_icmp_ne" has unsupported operation: llvm.store
+
+1: "test4_no_icmp_ne_logical"
+9: "test4_no_icmp_ne_logical" has pointer type input
+
+4: "test4_no_icmp_ne_logical" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test4_no_icmp_ne_logical" has unsupported operation: llvm.extractvalue
+
+4: "test4_no_icmp_ne_logical" has unsupported operation: llvm.extractvalue
+
+4: "test4_no_icmp_ne_logical" has unsupported operation: llvm.store
+

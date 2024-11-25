@@ -1,0 +1,674 @@
+1: "eq_smin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_smin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_smin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_smin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sge_smin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sge_smin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sge_smin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sge_smin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_smin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_smin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_smin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_smin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_smin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sle_smin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_smin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "eq_smin_contextual"
+4: "eq_smin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "eq_smin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual" has unsupported operation: llvm.return
+
+4: "eq_smin_contextual" has unsupported operation: llvm.return
+
+1: "eq_smin_contextual_commuted"
+4: "eq_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "eq_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "eq_smin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "slt_smin_contextual"
+4: "slt_smin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "slt_smin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual" has unsupported operation: llvm.return
+
+4: "slt_smin_contextual" has unsupported operation: llvm.return
+
+1: "slt_smin_contextual_commuted"
+4: "slt_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "slt_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "slt_smin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "sle_smin_contextual"
+4: "sle_smin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sle_smin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual" has unsupported operation: llvm.return
+
+4: "sle_smin_contextual" has unsupported operation: llvm.return
+
+1: "sle_smin_contextual_commuted"
+4: "sle_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sle_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "sle_smin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "sgt_smin_contextual"
+4: "sgt_smin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sgt_smin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.return
+
+4: "sgt_smin_contextual" has unsupported operation: llvm.return
+
+1: "sgt_smin_contextual_commuted"
+4: "sgt_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "sgt_smin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "sge_smin_contextual"
+4: "sge_smin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sge_smin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual" has unsupported operation: llvm.return
+
+4: "sge_smin_contextual" has unsupported operation: llvm.return
+
+1: "sge_smin_contextual_commuted"
+4: "sge_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sge_smin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "sge_smin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "use_v2i1"
+5: "use_v2i1" is empty
+
+1: "eq_smin_v2i32"
+4: "eq_smin_v2i32" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32" has unsupported operation: llvm.return
+
+1: "eq_smin_v2i32_constant"
+4: "eq_smin_v2i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "eq_smin_v2i32_constant" has unsupported operation: llvm.return
+
+1: "slt_smin_v2i32_constant"
+4: "slt_smin_v2i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "slt_smin_v2i32_constant" has unsupported operation: llvm.return
+
+1: "sle_smin_v2i32_constant"
+4: "sle_smin_v2i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sle_smin_v2i32_constant" has unsupported operation: llvm.return
+
+1: "sgt_smin_v2i32_constant"
+4: "sgt_smin_v2i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sgt_smin_v2i32_constant" has unsupported operation: llvm.return
+
+1: "sge_smin_v2i32_constant"
+4: "sge_smin_v2i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "sge_smin_v2i32_constant" has unsupported operation: llvm.return
+
+1: "unknown_smin_v2i32_constant"
+4: "unknown_smin_v2i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.call
+
+4: "unknown_smin_v2i32_constant" has unsupported operation: llvm.return
+
+1: "smin_or_bitwise"
+4: "smin_or_bitwise" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_and_bitwise"
+4: "smin_and_bitwise" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "eq_smin_nofold"
+4: "eq_smin_nofold" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "eq_smin_nofold" has unsupported operation: builtin.unregistered: llvm.intr.smin
+

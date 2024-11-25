@@ -1,0 +1,600 @@
+1: "use"
+5: "use" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "fneg_op0"
+4: "fneg_op0" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fneg_op1"
+4: "fneg_op1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg1"
+4: "fdiv_fneg1" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg2"
+4: "fdiv_fneg2" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_fneg1"
+4: "fmul_fneg1" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_fneg2"
+4: "fmul_fneg2" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg1_commute"
+4: "fdiv_fneg1_commute" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg1_commute" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg1_commute" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg2_commute"
+4: "fdiv_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_fneg1_commute"
+4: "fmul_fneg1_commute" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg1_commute" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg1_commute" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_fneg2_commute"
+4: "fmul_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg2_commute" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg1_extra_use"
+4: "fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg1_extra_use" has unsupported operation: llvm.call
+
+4: "fdiv_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fdiv_fneg2_extra_use"
+4: "fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg2_extra_use" has unsupported operation: llvm.call
+
+4: "fdiv_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmul_fneg1_extra_use"
+4: "fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg1_extra_use" has unsupported operation: llvm.call
+
+4: "fmul_fneg1_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmul_fneg2_extra_use"
+4: "fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg2_extra_use" has unsupported operation: llvm.call
+
+4: "fmul_fneg2_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fdiv_fneg1_extra_use2"
+4: "fdiv_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fdiv_fneg1_extra_use2" has unsupported operation: llvm.call
+
+4: "fdiv_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg2_extra_use2"
+4: "fdiv_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fdiv_fneg2_extra_use2" has unsupported operation: llvm.call
+
+4: "fdiv_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_fneg1_extra_use2"
+4: "fmul_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fmul_fneg1_extra_use2" has unsupported operation: llvm.call
+
+4: "fmul_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg1_extra_use2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmul_fneg2_extra_use2"
+4: "fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fmul_fneg2_extra_use2" has unsupported operation: llvm.call
+
+4: "fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg2_extra_use2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fdiv_fneg1_extra_use3"
+4: "fdiv_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fdiv_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fdiv_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fdiv_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fdiv_fneg2_extra_use3"
+4: "fdiv_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fdiv_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fdiv_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fdiv_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmul_fneg1_extra_use3"
+4: "fmul_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fmul_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fmul_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg1_extra_use3" has unsupported operation: llvm.call
+
+4: "fmul_fneg1_extra_use3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmul_fneg2_extra_use3"
+4: "fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fmul_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_fneg2_extra_use3" has unsupported operation: llvm.call
+
+4: "fmul_fneg2_extra_use3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_rdx"
+4: "fadd_rdx" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+1: "fadd_rdx_commute"
+4: "fadd_rdx_commute" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fadd_rdx_commute" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+1: "fadd_rdx_fmf"
+4: "fadd_rdx_fmf" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+4: "fadd_rdx_fmf" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_rdx_extra_use"
+4: "fadd_rdx_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+4: "fadd_rdx_extra_use" has unsupported operation: llvm.call
+
+4: "fadd_rdx_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_rdx_nonzero_start_const_op"
+4: "fadd_rdx_nonzero_start_const_op" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+1: "fadd_rdx_nonzero_start_variable_op"
+4: "fadd_rdx_nonzero_start_variable_op" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+4: "fadd_rdx_nonzero_start_variable_op" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_fmul_common_op"
+4: "fadd_fmul_common_op" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_fmul_common_op_vec"
+4: "fadd_fmul_common_op_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_fmul_common_op_commute_vec"
+4: "fadd_fmul_common_op_commute_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_fmul_common_op_commute_vec" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_fmul_common_op_use"
+4: "fadd_fmul_common_op_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_fmul_common_op_use" has unsupported operation: llvm.call
+
+4: "fadd_fmul_common_op_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_fmul_common_op_wrong_fmf"
+4: "fadd_fmul_common_op_wrong_fmf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_fmul_common_op_wrong_fmf" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_fneg_reass_commute0"
+4: "fadd_fneg_reass_commute0" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fadd_fneg_reass_commute0" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute0" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fadd_fneg_reass_commute1"
+4: "fadd_fneg_reass_commute1" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fadd_fneg_reass_commute1" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fadd_fneg_reass_commute1" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fadd_fneg_reass_commute2"
+4: "fadd_fneg_reass_commute2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fadd_fneg_reass_commute2" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fadd_fneg_reass_commute2" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_fneg_reass_commute2" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute2" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fadd_fneg_reass_commute3"
+4: "fadd_fneg_reass_commute3" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fadd_fneg_reass_commute3" has unsupported operation: llvm.call
+
+4: "fadd_fneg_reass_commute3" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fadd_fneg_commute0"
+4: "fadd_fneg_commute0" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fadd_fneg_commute0" has unsupported operation: llvm.call
+
+4: "fadd_fneg_commute0" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fadd_fneg_commute0" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_fneg_commute0" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varA"
+4: "fadd_reduce_sqr_sum_varA" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varA_order2"
+4: "fadd_reduce_sqr_sum_varA_order2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_order2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varA_order3"
+4: "fadd_reduce_sqr_sum_varA_order3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_order3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varA_order4"
+4: "fadd_reduce_sqr_sum_varA_order4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_order4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varA_order5"
+4: "fadd_reduce_sqr_sum_varA_order5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_order5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB"
+4: "fadd_reduce_sqr_sum_varB" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB_order1"
+4: "fadd_reduce_sqr_sum_varB_order1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_order1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB_order2"
+4: "fadd_reduce_sqr_sum_varB_order2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_order2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB_order3"
+4: "fadd_reduce_sqr_sum_varB_order3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_order3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB2"
+4: "fadd_reduce_sqr_sum_varB2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB2_order1"
+4: "fadd_reduce_sqr_sum_varB2_order1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_order1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB2_order2"
+4: "fadd_reduce_sqr_sum_varB2_order2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_order2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB2_order3"
+4: "fadd_reduce_sqr_sum_varB2_order3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_order3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varA_not_one_use1"
+4: "fadd_reduce_sqr_sum_varA_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use1" has unsupported operation: llvm.call
+
+1: "fadd_reduce_sqr_sum_varA_not_one_use2"
+4: "fadd_reduce_sqr_sum_varA_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_not_one_use2" has unsupported operation: llvm.call
+
+1: "fadd_reduce_sqr_sum_varB_not_one_use1"
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use1" has unsupported operation: llvm.call
+
+1: "fadd_reduce_sqr_sum_varB_not_one_use2"
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_not_one_use2" has unsupported operation: llvm.call
+
+1: "fadd_reduce_sqr_sum_varB2_not_one_use"
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_not_one_use" has unsupported operation: llvm.call
+
+1: "fadd_reduce_sqr_sum_varA_invalid1"
+4: "fadd_reduce_sqr_sum_varA_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varA_invalid2"
+4: "fadd_reduce_sqr_sum_varA_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varA_invalid3"
+4: "fadd_reduce_sqr_sum_varA_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varA_invalid4"
+4: "fadd_reduce_sqr_sum_varA_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varA_invalid5"
+4: "fadd_reduce_sqr_sum_varA_invalid5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varA_invalid5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varA_invalid5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fadd_reduce_sqr_sum_varB_invalid1"
+4: "fadd_reduce_sqr_sum_varB_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_invalid1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB_invalid2"
+4: "fadd_reduce_sqr_sum_varB_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_invalid2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB_invalid3"
+4: "fadd_reduce_sqr_sum_varB_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_invalid3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB_invalid4"
+4: "fadd_reduce_sqr_sum_varB_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid4" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_invalid4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB_invalid5"
+4: "fadd_reduce_sqr_sum_varB_invalid5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid5" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB_invalid5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB_invalid5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB2_invalid1"
+4: "fadd_reduce_sqr_sum_varB2_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_invalid1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB2_invalid2"
+4: "fadd_reduce_sqr_sum_varB2_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_invalid2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fadd_reduce_sqr_sum_varB2_invalid3"
+4: "fadd_reduce_sqr_sum_varB2_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fadd_reduce_sqr_sum_varB2_invalid3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_reduce_sqr_sum_varB2_invalid3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fake_func"
+5: "fake_func" is empty
+

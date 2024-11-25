@@ -1,0 +1,67 @@
+1: "use.i3"
+5: "use.i3" is empty
+
+1: "use.i5"
+5: "use.i5" is empty
+
+1: "use.i32"
+5: "use.i32" is empty
+
+1: "or_xor_xor_normal_variant1"
+2: llvm.func
+2: llvm.and
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_xor_xor_normal_variant2"
+2: llvm.func
+2: llvm.and
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_xor_xor_normal_variant3"
+2: llvm.func
+2: llvm.and
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_xor_xor_normal_variant4"
+2: llvm.func
+2: llvm.and
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_xor_xor_normal_binops"
+2: llvm.func
+2: llvm.xor
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_xor_xor_normal_vector"
+8: "or_xor_xor_normal_vector" contains vectors which are unsupported
+
+1: "or_xor_xor_normal_multiple_uses_and"
+4: "or_xor_xor_normal_multiple_uses_and" has unsupported operation: llvm.mlir.addressof
+
+4: "or_xor_xor_normal_multiple_uses_and" has unsupported operation: llvm.call
+
+1: "or_xor_xor_negative_multiple_uses_xor1"
+4: "or_xor_xor_negative_multiple_uses_xor1" has unsupported operation: llvm.mlir.addressof
+
+4: "or_xor_xor_negative_multiple_uses_xor1" has unsupported operation: llvm.call
+
+1: "or_xor_xor_negative_multiple_uses_xor2"
+4: "or_xor_xor_negative_multiple_uses_xor2" has unsupported operation: llvm.call
+

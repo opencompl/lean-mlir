@@ -1,0 +1,47 @@
+1: "passthru_i32"
+5: "passthru_i32" is empty
+
+1: "passthru_p8"
+9: "passthru_p8" has pointer type input
+
+1: "passthru_p8_from_p32"
+9: "passthru_p8_from_p32" has pointer type input
+
+1: "passthru_8i8v_from_2i32v"
+5: "passthru_8i8v_from_2i32v" is empty
+
+1: "returned_const_int_arg"
+4: "returned_const_int_arg" has unsupported operation: llvm.call
+
+1: "returned_const_ptr_arg"
+4: "returned_const_ptr_arg" has unsupported operation: llvm.mlir.zero
+
+4: "returned_const_ptr_arg" has unsupported operation: llvm.call
+
+1: "returned_const_ptr_arg_casted"
+4: "returned_const_ptr_arg_casted" has unsupported operation: llvm.mlir.zero
+
+4: "returned_const_ptr_arg_casted" has unsupported operation: llvm.call
+
+1: "returned_ptr_arg_casted"
+9: "returned_ptr_arg_casted" has pointer type input
+
+4: "returned_ptr_arg_casted" has unsupported operation: llvm.call
+
+1: "returned_const_vec_arg_casted"
+4: "returned_const_vec_arg_casted" has unsupported operation: llvm.call
+
+1: "returned_vec_arg_casted"
+4: "returned_vec_arg_casted" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "returned_vec_arg_casted" has unsupported operation: llvm.call
+
+1: "returned_var_arg"
+4: "returned_var_arg" has unsupported operation: llvm.call
+
+1: "returned_const_int_arg_musttail"
+4: "returned_const_int_arg_musttail" has unsupported operation: llvm.call
+
+1: "returned_var_arg_musttail"
+4: "returned_var_arg_musttail" has unsupported operation: llvm.call
+

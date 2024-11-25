@@ -1,0 +1,76 @@
+1: "foo"
+9: "foo" has pointer type input
+
+1: "bar"
+9: "bar" has pointer type input
+
+1: "nonnullAfterBitCast"
+4: "nonnullAfterBitCast" has unsupported operation: llvm.alloca
+
+4: "nonnullAfterBitCast" has unsupported operation: llvm.call
+
+4: "nonnullAfterBitCast" has unsupported operation: llvm.return
+
+1: "nonnullAfterSExt"
+4: "nonnullAfterSExt" has unsupported operation: llvm.inttoptr
+
+4: "nonnullAfterSExt" has unsupported operation: llvm.call
+
+4: "nonnullAfterSExt" has unsupported operation: llvm.return
+
+1: "nonnullAfterZExt"
+4: "nonnullAfterZExt" has unsupported operation: llvm.inttoptr
+
+4: "nonnullAfterZExt" has unsupported operation: llvm.call
+
+4: "nonnullAfterZExt" has unsupported operation: llvm.return
+
+1: "nonnullAfterInt2Ptr"
+4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.inttoptr
+
+4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.call
+
+4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.inttoptr
+
+4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.call
+
+4: "nonnullAfterInt2Ptr" has unsupported operation: llvm.return
+
+1: "nonnullAfterPtr2Int"
+4: "nonnullAfterPtr2Int" has unsupported operation: llvm.alloca
+
+4: "nonnullAfterPtr2Int" has unsupported operation: llvm.call
+
+4: "nonnullAfterPtr2Int" has unsupported operation: llvm.return
+
+1: "maybenullAfterInt2Ptr"
+4: "maybenullAfterInt2Ptr" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "maybenullAfterInt2Ptr" has unsupported operation: llvm.inttoptr
+
+4: "maybenullAfterInt2Ptr" has unsupported operation: llvm.call
+
+4: "maybenullAfterInt2Ptr" has unsupported operation: llvm.return
+
+1: "maybenullAfterPtr2Int"
+4: "maybenullAfterPtr2Int" has unsupported operation: llvm.alloca
+
+4: "maybenullAfterPtr2Int" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "maybenullAfterPtr2Int" has unsupported operation: llvm.inttoptr
+
+4: "maybenullAfterPtr2Int" has unsupported operation: llvm.call
+
+4: "maybenullAfterPtr2Int" has unsupported operation: llvm.return
+
+1: "maybenullAfterAddrspacecast"
+9: "maybenullAfterAddrspacecast" has pointer type input
+
+4: "maybenullAfterAddrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "maybenullAfterAddrspacecast" has unsupported operation: llvm.call
+
+4: "maybenullAfterAddrspacecast" has unsupported operation: llvm.call
+
+4: "maybenullAfterAddrspacecast" has unsupported operation: llvm.return
+

@@ -1,0 +1,69 @@
+1: "simple_fold"
+4: "simple_fold" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_mixed_signs"
+4: "fold_mixed_signs" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fold_mixed_signs" has unsupported operation: llvm.mlir.undef
+
+4: "fold_mixed_signs" has unsupported operation: llvm.insertvalue
+
+4: "fold_mixed_signs" has unsupported operation: llvm.insertvalue
+
+4: "fold_mixed_signs" has unsupported operation: llvm.insertvalue
+
+1: "fold_on_constant_sub_no_overflow"
+4: "fold_on_constant_sub_no_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_on_constant_sub_overflow"
+4: "no_fold_on_constant_sub_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_simple_splat_constant"
+4: "fold_simple_splat_constant" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_splat_undef_constant"
+4: "no_fold_splat_undef_constant" has unsupported operation: llvm.mlir.undef
+
+4: "no_fold_splat_undef_constant" has unsupported operation: llvm.mlir.undef
+
+4: "no_fold_splat_undef_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "no_fold_splat_undef_constant" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "no_fold_splat_undef_constant" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_splat_not_constant"
+4: "no_fold_splat_not_constant" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "fold_nuwnsw"
+4: "fold_nuwnsw" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_nuw"
+4: "no_fold_nuw" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "no_fold_wrapped_sub"
+4: "no_fold_wrapped_sub" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+1: "fold_add_simple"
+4: "fold_add_simple" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "keep_ssubo_undef"
+4: "keep_ssubo_undef" has unsupported operation: llvm.mlir.undef
+
+4: "keep_ssubo_undef" has unsupported operation: llvm.mlir.undef
+
+4: "keep_ssubo_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "keep_ssubo_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "keep_ssubo_undef" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+1: "keep_ssubo_non_splat"
+4: "keep_ssubo_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "keep_ssubo_one_element_is_128"
+4: "keep_ssubo_one_element_is_128" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+1: "keep_ssubo_128"
+4: "keep_ssubo_128" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+

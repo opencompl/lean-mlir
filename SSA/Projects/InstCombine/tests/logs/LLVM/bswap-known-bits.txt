@@ -1,0 +1,12 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "test4"
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+

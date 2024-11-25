@@ -1,0 +1,306 @@
+1: "acos_test1"
+4: "acos_test1" has unsupported operation: llvm.call
+
+1: "acos_test2"
+4: "acos_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "acos_test2" has unsupported operation: llvm.call
+
+1: "acosh_test1"
+4: "acosh_test1" has unsupported operation: llvm.call
+
+1: "acosh_test2"
+4: "acosh_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "acosh_test2" has unsupported operation: llvm.call
+
+1: "asin_test1"
+4: "asin_test1" has unsupported operation: llvm.call
+
+1: "asin_test2"
+4: "asin_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "asin_test2" has unsupported operation: llvm.call
+
+1: "asinh_test1"
+4: "asinh_test1" has unsupported operation: llvm.call
+
+1: "asinh_test2"
+4: "asinh_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "asinh_test2" has unsupported operation: llvm.call
+
+1: "atan_test1"
+4: "atan_test1" has unsupported operation: llvm.call
+
+1: "atan_test2"
+4: "atan_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "atan_test2" has unsupported operation: llvm.call
+
+1: "atanh_test1"
+4: "atanh_test1" has unsupported operation: llvm.call
+
+1: "atanh_test2"
+4: "atanh_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "atanh_test2" has unsupported operation: llvm.call
+
+1: "cbrt_test1"
+4: "cbrt_test1" has unsupported operation: llvm.call
+
+1: "cbrt_test2"
+4: "cbrt_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "cbrt_test2" has unsupported operation: llvm.call
+
+1: "exp_test1"
+4: "exp_test1" has unsupported operation: llvm.call
+
+1: "exp_test2"
+4: "exp_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "exp_test2" has unsupported operation: llvm.call
+
+1: "expm1_test1"
+4: "expm1_test1" has unsupported operation: llvm.call
+
+1: "expm1_test2"
+4: "expm1_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "expm1_test2" has unsupported operation: llvm.call
+
+1: "exp10_test1"
+4: "exp10_test1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "exp10_test1" has unsupported operation: llvm.call
+
+4: "exp10_test1" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "exp10_test2"
+4: "exp10_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "exp10_test2" has unsupported operation: llvm.call
+
+1: "log_test1"
+4: "log_test1" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "log_test2"
+4: "log_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "log_test2" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "log10_test1"
+4: "log10_test1" has unsupported operation: builtin.unregistered: llvm.intr.log10
+
+1: "log10_test2"
+4: "log10_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "log10_test2" has unsupported operation: builtin.unregistered: llvm.intr.log10
+
+1: "log1p_test1"
+4: "log1p_test1" has unsupported operation: llvm.call
+
+1: "log1p_test2"
+4: "log1p_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "log1p_test2" has unsupported operation: llvm.call
+
+1: "log2_test1"
+4: "log2_test1" has unsupported operation: builtin.unregistered: llvm.intr.log2
+
+1: "log2_test2"
+4: "log2_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "log2_test2" has unsupported operation: builtin.unregistered: llvm.intr.log2
+
+1: "logb_test1"
+4: "logb_test1" has unsupported operation: llvm.call
+
+1: "logb_test2"
+4: "logb_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "logb_test2" has unsupported operation: llvm.call
+
+1: "pow_test1"
+4: "pow_test1" has unsupported operation: llvm.call
+
+1: "pow_test2"
+4: "pow_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "pow_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "pow_test2" has unsupported operation: llvm.call
+
+1: "sin_test1"
+4: "sin_test1" has unsupported operation: llvm.call
+
+1: "sin_test2"
+4: "sin_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "sin_test2" has unsupported operation: llvm.call
+
+1: "sqrt_test1"
+4: "sqrt_test1" has unsupported operation: llvm.call
+
+1: "sqrt_test2"
+4: "sqrt_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "sqrt_test2" has unsupported operation: llvm.call
+
+1: "sqrt_int_test1"
+4: "sqrt_int_test1" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "sqrt_int_test2"
+4: "sqrt_int_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "sqrt_int_test2" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "tan_test1"
+4: "tan_test1" has unsupported operation: llvm.call
+
+1: "tan_test2"
+4: "tan_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "tan_test2" has unsupported operation: llvm.call
+
+1: "tanh_test1"
+4: "tanh_test1" has unsupported operation: llvm.call
+
+1: "tanh_test2"
+4: "tanh_test2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "tanh_test2" has unsupported operation: llvm.call
+
+1: "max1"
+4: "max1" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "fake_fmin"
+4: "fake_fmin" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "fmin"
+5: "fmin" is empty
+
+1: "fmax"
+5: "fmax" is empty
+
+1: "tanh"
+5: "tanh" is empty
+
+1: "tan"
+5: "tan" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "sin"
+5: "sin" is empty
+
+1: "pow"
+5: "pow" is empty
+
+1: "log2"
+5: "log2" is empty
+
+1: "log1p"
+5: "log1p" is empty
+
+1: "log10"
+5: "log10" is empty
+
+1: "log"
+5: "log" is empty
+
+1: "logb"
+5: "logb" is empty
+
+1: "exp10"
+5: "exp10" is empty
+
+1: "expm1"
+5: "expm1" is empty
+
+1: "exp"
+5: "exp" is empty
+
+1: "cbrt"
+5: "cbrt" is empty
+
+1: "atanh"
+5: "atanh" is empty
+
+1: "atan"
+5: "atan" is empty
+
+1: "acos"
+5: "acos" is empty
+
+1: "acosh"
+5: "acosh" is empty
+
+1: "asin"
+5: "asin" is empty
+
+1: "asinh"
+5: "asinh" is empty
+
+1: "acosf"
+5: "acosf" is empty
+
+1: "acoshf"
+5: "acoshf" is empty
+
+1: "asinf"
+5: "asinf" is empty
+
+1: "asinhf"
+5: "asinhf" is empty
+
+1: "atanf"
+5: "atanf" is empty
+
+1: "atanhf"
+5: "atanhf" is empty
+
+1: "cbrtf"
+5: "cbrtf" is empty
+
+1: "expf"
+5: "expf" is empty
+
+1: "expm1f"
+5: "expm1f" is empty
+
+1: "logf"
+5: "logf" is empty
+
+1: "log10f"
+5: "log10f" is empty
+
+1: "log1pf"
+5: "log1pf" is empty
+
+1: "log2f"
+5: "log2f" is empty
+
+1: "logbf"
+5: "logbf" is empty
+
+1: "powf"
+5: "powf" is empty
+
+1: "sinf"
+5: "sinf" is empty
+
+1: "sqrtf"
+5: "sqrtf" is empty
+
+1: "tanf"
+5: "tanf" is empty
+
+1: "tanhf"
+5: "tanhf" is empty
+
+1: "fmaxf"
+5: "fmaxf" is empty
+

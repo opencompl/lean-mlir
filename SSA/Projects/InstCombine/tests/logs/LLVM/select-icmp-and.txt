@@ -1,0 +1,345 @@
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test35"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test35vec"
+8: "test35vec" contains vectors which are unsupported
+
+1: "test35_with_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test36"
+7: "test36" is unchanged by InstCombine
+
+1: "test36vec"
+7: "test36vec" is unchanged by InstCombine
+
+1: "test37"
+7: "test37" is unchanged by InstCombine
+
+1: "test37vec"
+7: "test37vec" is unchanged by InstCombine
+
+1: "test65"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test65vec"
+8: "test65vec" contains vectors which are unsupported
+
+1: "test66"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test66vec"
+8: "test66vec" contains vectors which are unsupported
+
+1: "test66vec_scalar_and"
+8: "test66vec_scalar_and" contains vectors which are unsupported
+
+1: "test67"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test67vec"
+8: "test67vec" contains vectors which are unsupported
+
+1: "test71"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test71vec"
+8: "test71vec" contains vectors which are unsupported
+
+1: "test72"
+7: "test72" is unchanged by InstCombine
+
+1: "test72vec"
+7: "test72vec" is unchanged by InstCombine
+
+1: "test73"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test73vec"
+8: "test73vec" contains vectors which are unsupported
+
+1: "test74"
+7: "test74" is unchanged by InstCombine
+
+1: "test74vec"
+7: "test74vec" is unchanged by InstCombine
+
+1: "test75"
+7: "test75" is unchanged by InstCombine
+
+1: "test15a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15b"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15d"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15e"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15f"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15g"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15h"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15i"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test15j"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "use1"
+5: "use1" is empty
+
+1: "clear_to_set"
+4: "clear_to_set" has unsupported operation: llvm.call
+
+1: "clear_to_clear"
+4: "clear_to_clear" has unsupported operation: llvm.call
+
+1: "set_to_set"
+4: "set_to_set" has unsupported operation: llvm.call
+
+1: "set_to_clear"
+4: "set_to_clear" has unsupported operation: llvm.call
+
+1: "clear_to_set_decomposebittest"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "clear_to_clear_decomposebittest"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "set_to_set_decomposebittest"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "set_to_clear_decomposebittest"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "clear_to_set_decomposebittest_extra_use"
+4: "clear_to_set_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "clear_to_clear_decomposebittest_extra_use"
+4: "clear_to_clear_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "set_to_set_decomposebittest_extra_use"
+4: "set_to_set_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "set_to_clear_decomposebittest_extra_use"
+4: "set_to_clear_decomposebittest_extra_use" has unsupported operation: llvm.call
+
+1: "select_bittest_to_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_bittest_to_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "select_bittest_to_shl"
+7: "select_bittest_to_shl" is unchanged by InstCombine
+
+1: "select_bittest_to_lshr"
+7: "select_bittest_to_lshr" is unchanged by InstCombine
+
+1: "select_bittest_to_ashr"
+7: "select_bittest_to_ashr" is unchanged by InstCombine
+
+1: "select_bittest_to_shl_negative_test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.add
+2: llvm.return
+

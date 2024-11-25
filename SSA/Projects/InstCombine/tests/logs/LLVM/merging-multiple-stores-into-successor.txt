@@ -1,0 +1,174 @@
+1: "_Z4testv"
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z4testv" has unsupported operation: llvm.getelementptr
+
+4: "_Z4testv" has unsupported operation: llvm.getelementptr
+
+4: "_Z4testv" has unsupported operation: llvm.getelementptr
+
+4: "_Z4testv" has unsupported operation: llvm.load
+
+4: "_Z4testv" has unsupported operation: llvm.load
+
+4: "_Z4testv" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_Z4testv" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z4testv" has unsupported operation: llvm.load
+
+4: "_Z4testv" has unsupported operation: llvm.load
+
+4: "_Z4testv" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z4testv" has unsupported operation: llvm.store
+
+4: "_Z4testv" has unsupported operation: llvm.store
+
+4: "_Z4testv" has unsupported operation: llvm.store
+
+4: "_Z4testv" has unsupported operation: llvm.store
+
+4: "_Z4testv" has unsupported operation: llvm.store
+
+4: "_Z4testv" has unsupported operation: llvm.store
+
+4: "_Z4testv" has unsupported operation: llvm.return
+
+1: "diff_types_same_width_merge"
+4: "diff_types_same_width_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "diff_types_same_width_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "diff_types_same_width_merge" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "diff_types_same_width_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "diff_types_diff_width_no_merge"
+4: "diff_types_diff_width_no_merge" has unsupported operation: llvm.alloca
+
+4: "diff_types_diff_width_no_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "diff_types_diff_width_no_merge" has unsupported operation: llvm.store
+
+4: "diff_types_diff_width_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "diff_types_diff_width_no_merge" has unsupported operation: llvm.store
+
+4: "diff_types_diff_width_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "diff_types_diff_width_no_merge" has unsupported operation: llvm.load
+
+1: "vec_no_merge"
+4: "vec_no_merge" has unsupported operation: llvm.alloca
+
+4: "vec_no_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "vec_no_merge" has unsupported operation: llvm.store
+
+4: "vec_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "vec_no_merge" has unsupported operation: llvm.store
+
+4: "vec_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "vec_no_merge" has unsupported operation: llvm.load
+
+1: "one_elem_struct_merge"
+4: "one_elem_struct_merge" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "one_elem_struct_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "one_elem_struct_merge" has unsupported operation: llvm.extractvalue
+
+4: "one_elem_struct_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_elem_struct_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_elem_struct_merge" has unsupported operation: llvm.insertvalue
+
+1: "multi_elem_struct_no_merge"
+4: "multi_elem_struct_no_merge" has unsupported operation: llvm.alloca
+
+4: "multi_elem_struct_no_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "multi_elem_struct_no_merge" has unsupported operation: llvm.store
+
+4: "multi_elem_struct_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multi_elem_struct_no_merge" has unsupported operation: llvm.store
+
+4: "multi_elem_struct_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "multi_elem_struct_no_merge" has unsupported operation: llvm.load
+
+1: "same_types_diff_align_no_merge"
+4: "same_types_diff_align_no_merge" has unsupported operation: llvm.alloca
+
+4: "same_types_diff_align_no_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "same_types_diff_align_no_merge" has unsupported operation: llvm.store
+
+4: "same_types_diff_align_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "same_types_diff_align_no_merge" has unsupported operation: llvm.store
+
+4: "same_types_diff_align_no_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "same_types_diff_align_no_merge" has unsupported operation: llvm.load
+
+1: "ptrtoint_merge"
+9: "ptrtoint_merge" has pointer type input
+
+4: "ptrtoint_merge" has unsupported operation: llvm.alloca
+
+4: "ptrtoint_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ptrtoint_merge" has unsupported operation: llvm.store
+
+4: "ptrtoint_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "ptrtoint_merge" has unsupported operation: llvm.store
+
+4: "ptrtoint_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "ptrtoint_merge" has unsupported operation: llvm.load
+
+1: "inttoptr_merge"
+9: "inttoptr_merge" has pointer type input
+
+4: "inttoptr_merge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "inttoptr_merge" has unsupported operation: llvm.inttoptr
+
+4: "inttoptr_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "inttoptr_merge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "pr46688"
+9: "pr46688" has pointer type input
+
+4: "pr46688" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr46688" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr46688" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr46688" has unsupported operation: llvm.store
+
+4: "pr46688" has unsupported operation: llvm.store
+
+4: "pr46688" has unsupported operation: llvm.return
+

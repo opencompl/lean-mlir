@@ -1,0 +1,183 @@
+1: "generic_personality"
+9: "generic_personality" has pointer type input
+
+1: "__gxx_personality_v0"
+9: "__gxx_personality_v0" has pointer type input
+
+1: "__objc_personality_v0"
+9: "__objc_personality_v0" has pointer type input
+
+1: "__C_specific_handler"
+5: "__C_specific_handler" is empty
+
+1: "bar"
+5: "bar" is empty
+
+1: "foo_generic"
+4: "foo_generic" has unsupported operation: llvm.mlir.addressof
+
+4: "foo_generic" has unsupported operation: llvm.mlir.addressof
+
+4: "foo_generic" has unsupported operation: llvm.mlir.undef
+
+4: "foo_generic" has unsupported operation: llvm.mlir.undef
+
+4: "foo_generic" has unsupported operation: llvm.insertvalue
+
+4: "foo_generic" has unsupported operation: llvm.mlir.zero
+
+4: "foo_generic" has unsupported operation: llvm.mlir.undef
+
+4: "foo_generic" has unsupported operation: llvm.insertvalue
+
+4: "foo_generic" has unsupported operation: llvm.mlir.undef
+
+4: "foo_generic" has unsupported operation: llvm.insertvalue
+
+4: "foo_generic" has unsupported operation: llvm.insertvalue
+
+4: "foo_generic" has unsupported operation: llvm.mlir.addressof
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_generic" has unsupported operation: llvm.return
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_generic" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "foo_cxx"
+4: "foo_cxx" has unsupported operation: llvm.mlir.zero
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_cxx" has unsupported operation: llvm.return
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_cxx" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "foo_objc"
+4: "foo_objc" has unsupported operation: llvm.mlir.zero
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_objc" has unsupported operation: llvm.return
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_objc" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "foo_seh"
+4: "foo_seh" has unsupported operation: llvm.mlir.zero
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo_seh" has unsupported operation: llvm.return
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "foo_seh" has unsupported operation: builtin.unregistered: llvm.unreachable
+

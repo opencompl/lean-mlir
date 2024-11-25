@@ -1,0 +1,96 @@
+1: "use19"
+5: "use19" is empty
+
+1: "use12"
+5: "use12" is empty
+
+1: "use2"
+5: "use2" is empty
+
+1: "add_or_sub_comb_i32_commuted1_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i8_commuted2_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i128_commuted3_nuw_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i64_commuted4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i32vec"
+8: "add_or_sub_comb_i32vec" contains vectors which are unsupported
+
+1: "add_or_sub_comb_i32vec_poison"
+8: "add_or_sub_comb_i32vec_poison" contains vectors which are unsupported
+
+1: "add_or_sub_comb_i12_multiuse_only_sub"
+4: "add_or_sub_comb_i12_multiuse_only_sub" has unsupported operation: llvm.call
+
+1: "add_or_sub_comb_i8_negative_y_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i8_negative_y_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i8_negative_y_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i8_negative_xor_instead_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.xor
+2: llvm.add
+2: llvm.return
+
+1: "add_or_sub_comb_i16_negative_sub_no_negate"
+7: "add_or_sub_comb_i16_negative_sub_no_negate" is unchanged by InstCombine
+
+1: "add_or_sub_comb_i2_negative_multiuse_only_or"
+4: "add_or_sub_comb_i2_negative_multiuse_only_or" has unsupported operation: llvm.call
+
+1: "add_or_sub_comb_i19_negative_multiuse_both"
+4: "add_or_sub_comb_i19_negative_multiuse_both" has unsupported operation: llvm.call
+
+4: "add_or_sub_comb_i19_negative_multiuse_both" has unsupported operation: llvm.call
+

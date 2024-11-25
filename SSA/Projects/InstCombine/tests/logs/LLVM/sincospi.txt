@@ -1,0 +1,79 @@
+1: "__sinpif"
+5: "__sinpif" is empty
+
+1: "__cospif"
+5: "__cospif" is empty
+
+1: "__sinpi"
+5: "__sinpi" is empty
+
+1: "__cospi"
+5: "__cospi" is empty
+
+1: "test_instbased_f32"
+4: "test_instbased_f32" has unsupported operation: llvm.mlir.addressof
+
+4: "test_instbased_f32" has unsupported operation: llvm.load
+
+4: "test_instbased_f32" has unsupported operation: llvm.call
+
+4: "test_instbased_f32" has unsupported operation: llvm.call
+
+4: "test_instbased_f32" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_instbased_f32_other_user"
+9: "test_instbased_f32_other_user" has pointer type input
+
+4: "test_instbased_f32_other_user" has unsupported operation: llvm.mlir.addressof
+
+4: "test_instbased_f32_other_user" has unsupported operation: llvm.load
+
+4: "test_instbased_f32_other_user" has unsupported operation: llvm.store
+
+4: "test_instbased_f32_other_user" has unsupported operation: llvm.call
+
+4: "test_instbased_f32_other_user" has unsupported operation: llvm.call
+
+4: "test_instbased_f32_other_user" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_constant_f32"
+4: "test_constant_f32" has unsupported operation: llvm.call
+
+4: "test_constant_f32" has unsupported operation: llvm.call
+
+4: "test_constant_f32" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_instbased_f64"
+4: "test_instbased_f64" has unsupported operation: llvm.mlir.addressof
+
+4: "test_instbased_f64" has unsupported operation: llvm.load
+
+4: "test_instbased_f64" has unsupported operation: llvm.call
+
+4: "test_instbased_f64" has unsupported operation: llvm.call
+
+4: "test_instbased_f64" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_constant_f64"
+4: "test_constant_f64" has unsupported operation: llvm.call
+
+4: "test_constant_f64" has unsupported operation: llvm.call
+
+4: "test_constant_f64" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fptr"
+9: "test_fptr" has pointer type input
+
+4: "test_fptr" has unsupported operation: llvm.call
+
+4: "test_fptr" has unsupported operation: llvm.call
+
+4: "test_fptr" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_cospif_used_in_branch_cond"
+4: "test_cospif_used_in_branch_cond" has unsupported operation: llvm.call
+
+4: "test_cospif_used_in_branch_cond" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_cospif_used_in_branch_cond" has unsupported operation: builtin.unregistered: llvm.cond_br
+

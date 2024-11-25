@@ -1,0 +1,21 @@
+1: "widen_align_from_allocalign_callsite"
+4: "widen_align_from_allocalign_callsite" has unsupported operation: llvm.call
+
+1: "widen_align_from_allocalign"
+4: "widen_align_from_allocalign" has unsupported operation: llvm.call
+
+1: "dont_narrow_align_from_allocalign"
+4: "dont_narrow_align_from_allocalign" has unsupported operation: llvm.call
+
+1: "my_aligned_alloc_3"
+4: "my_aligned_alloc_3" has unsupported operation: llvm.call
+
+1: "allocalign_disappears"
+4: "allocalign_disappears" has unsupported operation: llvm.call
+
+1: "my_aligned_alloc"
+5: "my_aligned_alloc" is empty
+
+1: "my_aligned_alloc_2"
+5: "my_aligned_alloc_2" is empty
+

@@ -1,0 +1,190 @@
+1: "clamp_float_fast_ordered_strict_maxmin"
+4: "clamp_float_fast_ordered_strict_maxmin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_fast_ordered_strict_maxmin" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "clamp_float_fast_ordered_nonstrict_maxmin"
+4: "clamp_float_fast_ordered_nonstrict_maxmin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_fast_ordered_nonstrict_maxmin" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "clamp_float_fast_ordered_strict_minmax"
+4: "clamp_float_fast_ordered_strict_minmax" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_fast_ordered_strict_minmax" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "clamp_float_fast_ordered_nonstrict_minmax"
+4: "clamp_float_fast_ordered_nonstrict_minmax" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_fast_ordered_nonstrict_minmax" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "clamp_float_fast_unordered_strict_maxmin"
+4: "clamp_float_fast_unordered_strict_maxmin" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "clamp_float_fast_unordered_strict_maxmin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_fast_unordered_nonstrict_maxmin"
+4: "clamp_float_fast_unordered_nonstrict_maxmin" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "clamp_float_fast_unordered_nonstrict_maxmin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_fast_unordered_strict_minmax"
+4: "clamp_float_fast_unordered_strict_minmax" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "clamp_float_fast_unordered_strict_minmax" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_fast_unordered_nonstrict_minmax"
+4: "clamp_float_fast_unordered_nonstrict_minmax" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "clamp_float_fast_unordered_nonstrict_minmax" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_test_1"
+4: "clamp_test_1" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "clamp_test_1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_negative_wrong_const"
+4: "clamp_negative_wrong_const" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "clamp_negative_wrong_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_negative_same_op"
+4: "clamp_negative_same_op" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "clamp_negative_same_op" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_with_zero1"
+4: "clamp_float_with_zero1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_with_zero1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_with_zero2"
+4: "clamp_float_with_zero2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_with_zero2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_strict_maxmin1"
+4: "clamp_float_ordered_strict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_strict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_strict_maxmin2"
+4: "clamp_float_ordered_strict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_strict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_nonstrict_maxmin1"
+4: "clamp_float_ordered_nonstrict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_nonstrict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_nonstrict_maxmin2"
+4: "clamp_float_ordered_nonstrict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_nonstrict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_strict_minmax1"
+4: "clamp_float_ordered_strict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_strict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_strict_minmax2"
+4: "clamp_float_ordered_strict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_strict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_nonstrict_minmax1"
+4: "clamp_float_ordered_nonstrict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_nonstrict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_ordered_nonstrict_minmax2"
+4: "clamp_float_ordered_nonstrict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_ordered_nonstrict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_strict_maxmin1"
+4: "clamp_float_unordered_strict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_strict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_strict_maxmin2"
+4: "clamp_float_unordered_strict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_strict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_nonstrict_maxmin1"
+4: "clamp_float_unordered_nonstrict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_nonstrict_maxmin1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_nonstrict_maxmin2"
+4: "clamp_float_unordered_nonstrict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_nonstrict_maxmin2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_strict_minmax1"
+4: "clamp_float_unordered_strict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_strict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_strict_minmax2"
+4: "clamp_float_unordered_strict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_strict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_nonstrict_minmax1"
+4: "clamp_float_unordered_nonstrict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_nonstrict_minmax1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "clamp_float_unordered_nonstrict_minmax2"
+4: "clamp_float_unordered_nonstrict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "clamp_float_unordered_nonstrict_minmax2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ui32_clamp_and_cast_to_float"
+4: "ui32_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ui32_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "ui64_clamp_and_cast_to_float"
+4: "ui64_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ui64_clamp_and_cast_to_float" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "mixed_clamp_to_float_1"
+4: "mixed_clamp_to_float_1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "mixed_clamp_to_float_1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "mixed_clamp_to_float_1" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "mixed_clamp_to_i32_1"
+4: "mixed_clamp_to_i32_1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "mixed_clamp_to_i32_1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "mixed_clamp_to_i32_1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "mixed_clamp_to_float_2"
+4: "mixed_clamp_to_float_2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "mixed_clamp_to_float_2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "mixed_clamp_to_float_2" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "mixed_clamp_to_i32_2"
+4: "mixed_clamp_to_i32_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "mixed_clamp_to_i32_2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "mixed_clamp_to_i32_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "mixed_clamp_to_float_vec"
+4: "mixed_clamp_to_float_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "mixed_clamp_to_float_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "mixed_clamp_to_float_vec" has unsupported operation: builtin.unregistered: llvm.uitofp
+

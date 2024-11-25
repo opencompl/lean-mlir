@@ -1,0 +1,132 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.zext
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "test3vec"
+8: "test3vec" contains vectors which are unsupported
+
+1: "test3vec_poison1"
+8: "test3vec_poison1" contains vectors which are unsupported
+
+1: "test3vec_poison2"
+8: "test3vec_poison2" contains vectors which are unsupported
+
+1: "test3vec_diff"
+7: "test3vec_diff" is unchanged by InstCombine
+
+1: "test3vec_non-uniform"
+7: "test3vec_non-uniform" is unchanged by InstCombine
+
+1: "test3i"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.or
+2: llvm.or
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "test4a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sub
+2: llvm.lshr
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "test4a_vec"
+8: "test4a_vec" contains vectors which are unsupported
+
+1: "test4b"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sub
+2: llvm.lshr
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "test4c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.sub
+2: llvm.lshr
+2: llvm.or
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test4c_vec"
+8: "test4c_vec" contains vectors which are unsupported
+
+1: "shift_trunc_signbit_test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "shift_trunc_signbit_test_vec_uses"
+9: "shift_trunc_signbit_test_vec_uses" has pointer type input
+
+4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.store
+
+4: "shift_trunc_signbit_test_vec_uses" has unsupported operation: llvm.store
+
+1: "shift_trunc_wrong_shift"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "shift_trunc_wrong_cmp"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+

@@ -1,0 +1,37 @@
+1: "cond"
+5: "cond" is empty
+
+1: "phi_recurrence_start_first"
+4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_recurrence_start_first" has unsupported operation: llvm.call
+
+4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_recurrence_start_first" has unsupported operation: llvm.call
+
+4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_recurrence_start_first" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_recurrence_start_first" has unsupported operation: llvm.return
+
+1: "phi_recurrence_step_first"
+4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_recurrence_step_first" has unsupported operation: llvm.call
+
+4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_recurrence_step_first" has unsupported operation: llvm.call
+
+4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_recurrence_step_first" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_recurrence_step_first" has unsupported operation: llvm.return
+

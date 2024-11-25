@@ -1,0 +1,147 @@
+1: "foo1"
+4: "foo1" has unsupported operation: llvm.mlir.addressof
+
+4: "foo1" has unsupported operation: llvm.call
+
+4: "foo1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo1" has unsupported operation: llvm.return
+
+1: "printf"
+9: "printf" has pointer type input
+
+1: "foo2"
+4: "foo2" has unsupported operation: llvm.mlir.addressof
+
+4: "foo2" has unsupported operation: llvm.call
+
+4: "foo2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo2" has unsupported operation: llvm.return
+
+1: "foo3"
+4: "foo3" has unsupported operation: llvm.mlir.addressof
+
+4: "foo3" has unsupported operation: llvm.call
+
+4: "foo3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo3" has unsupported operation: llvm.return
+
+1: "foo4"
+4: "foo4" has unsupported operation: llvm.mlir.addressof
+
+4: "foo4" has unsupported operation: llvm.call
+
+4: "foo4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo4" has unsupported operation: llvm.return
+
+1: "foo5"
+4: "foo5" has unsupported operation: llvm.mlir.addressof
+
+4: "foo5" has unsupported operation: llvm.call
+
+4: "foo5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo5" has unsupported operation: llvm.return
+
+1: "foo6"
+4: "foo6" has unsupported operation: llvm.mlir.addressof
+
+4: "foo6" has unsupported operation: llvm.call
+
+4: "foo6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo6" has unsupported operation: llvm.return
+
+1: "foo7"
+4: "foo7" has unsupported operation: llvm.mlir.addressof
+
+4: "foo7" has unsupported operation: llvm.call
+
+4: "foo7" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo7" has unsupported operation: llvm.return
+
+1: "foo8"
+4: "foo8" has unsupported operation: llvm.mlir.addressof
+
+4: "foo8" has unsupported operation: llvm.call
+
+4: "foo8" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo8" has unsupported operation: llvm.return
+
+1: "foo9"
+4: "foo9" has unsupported operation: llvm.mlir.addressof
+
+4: "foo9" has unsupported operation: llvm.call
+
+4: "foo9" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo9" has unsupported operation: llvm.return
+
+1: "foo10"
+4: "foo10" has unsupported operation: llvm.mlir.addressof
+
+4: "foo10" has unsupported operation: llvm.call
+
+4: "foo10" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo10" has unsupported operation: llvm.return
+
+1: "foo11"
+4: "foo11" has unsupported operation: llvm.mlir.addressof
+
+4: "foo11" has unsupported operation: llvm.call
+
+4: "foo11" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo11" has unsupported operation: llvm.return
+
+1: "foo12"
+4: "foo12" has unsupported operation: llvm.mlir.addressof
+
+4: "foo12" has unsupported operation: llvm.call
+
+4: "foo12" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo12" has unsupported operation: llvm.return
+
+1: "foo13"
+4: "foo13" has unsupported operation: llvm.mlir.addressof
+
+4: "foo13" has unsupported operation: llvm.call
+
+4: "foo13" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo13" has unsupported operation: llvm.return
+
+1: "foo14"
+4: "foo14" has unsupported operation: llvm.mlir.addressof
+
+4: "foo14" has unsupported operation: llvm.call
+
+4: "foo14" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo14" has unsupported operation: llvm.return
+
+1: "foo15"
+4: "foo15" has unsupported operation: llvm.mlir.addressof
+
+4: "foo15" has unsupported operation: llvm.call
+
+4: "foo15" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo15" has unsupported operation: llvm.return
+
+1: "foo16"
+4: "foo16" has unsupported operation: llvm.mlir.addressof
+
+4: "foo16" has unsupported operation: llvm.call
+
+4: "foo16" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo16" has unsupported operation: llvm.return
+

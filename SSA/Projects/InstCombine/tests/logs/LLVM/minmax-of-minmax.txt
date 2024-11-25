@@ -1,0 +1,60 @@
+1: "smax_of_smax_smin_commute0"
+4: "smax_of_smax_smin_commute0" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_smax_smin_commute1"
+4: "smax_of_smax_smin_commute1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_smax_smin_commute2"
+4: "smax_of_smax_smin_commute2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_smax_smin_commute3"
+4: "smax_of_smax_smin_commute3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin_of_smin_smax_commute0"
+4: "smin_of_smin_smax_commute0" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_smin_smax_commute1"
+4: "smin_of_smin_smax_commute1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_smin_smax_commute2"
+4: "smin_of_smin_smax_commute2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_smin_smax_commute3"
+4: "smin_of_smin_smax_commute3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umax_of_umax_umin_commute0"
+4: "umax_of_umax_umin_commute0" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_umax_umin_commute1"
+4: "umax_of_umax_umin_commute1" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_umax_umin_commute2"
+4: "umax_of_umax_umin_commute2" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_umax_umin_commute3"
+4: "umax_of_umax_umin_commute3" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin_of_umin_umax_commute0"
+4: "umin_of_umin_umax_commute0" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_umin_umax_commute1"
+4: "umin_of_umin_umax_commute1" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_umin_umax_commute2"
+4: "umin_of_umin_umax_commute2" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_umin_umax_commute3"
+4: "umin_of_umin_umax_commute3" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_smin_umax_wrong_pattern"
+4: "umin_of_smin_umax_wrong_pattern" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_umin_umax_wrong_pattern2"
+4: "smin_of_umin_umax_wrong_pattern2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umin_of_umin_umax_wrong_operand"
+4: "umin_of_umin_umax_wrong_operand" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_umin_umax_wrong_operand2"
+4: "umin_of_umin_umax_wrong_operand2" has unsupported operation: builtin.unregistered: llvm.intr.umin
+

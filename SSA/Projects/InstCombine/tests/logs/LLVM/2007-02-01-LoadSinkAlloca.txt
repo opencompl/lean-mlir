@@ -1,0 +1,47 @@
+1: "test2"
+4: "test2" has unsupported operation: llvm.alloca
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.load
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.call
+
+1: "bar"
+5: "bar" is empty
+
+1: "baq"
+5: "baq" is empty
+

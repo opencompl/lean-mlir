@@ -49,24 +49,24 @@ def bb0 : Region 0 := [mlir_region|
 
 /--
 info: def bb0 : Region 0 :=
-Region.mk "bb0" [(SSAVal.SSAVal "arg0", MLIRType.int Signedness.Signless 32)]
-  [Op.mk "llvm.mlir.constant" [(SSAVal.SSAVal (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)] [] []
+Region.mk "bb0" [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32)]
+  [Op.mk "llvm.mlir.constant" [(SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)] [] []
       (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 8 (MLIRType.int Signedness.Signless 32))]),
-    Op.mk "llvm.mlir.constant" [(SSAVal.SSAVal (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)] [] []
+    Op.mk "llvm.mlir.constant" [(SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)] [] []
       (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 31 (MLIRType.int Signedness.Signless 32))]),
-    Op.mk "llvm.ashr" [(SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.SSAVal "arg0", MLIRType.int Signedness.Signless 32),
-        (SSAVal.SSAVal (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)]
+    Op.mk "llvm.ashr" [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
+      [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
+        (SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)]
       [] (AttrDict.mk []),
-    Op.mk "llvm.and" [(SSAVal.SSAVal (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
-        (SSAVal.SSAVal (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
+    Op.mk "llvm.and" [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)]
+      [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
+        (SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
       [] (AttrDict.mk []),
-    Op.mk "llvm.add" [(SSAVal.SSAVal (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.SSAVal (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
-        (SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
+    Op.mk "llvm.add" [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)]
+      [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
+        (SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
       [] (AttrDict.mk []),
-    Op.mk "llvm.return" [] [(SSAVal.SSAVal (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)] []
+    Op.mk "llvm.return" [] [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)] []
       (AttrDict.mk [])]
 -/
 #guard_msgs in #print bb0
@@ -201,7 +201,7 @@ info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
 theorem com_Γ : com.1 = (Γn 1) := by rfl
 theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
 
-def bb0IcomConcrete := [llvm ()|
+def bb0IcomConcrete := [llvm()|
 {
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant(1) : i32
@@ -213,14 +213,14 @@ def bb0IcomConcrete := [llvm ()|
   }]
 
 /-- A simple example of a family of programs, generic over some bitwidth `w` -/
-def GenericWidth (w : Nat) := [llvm (w)|
+def GenericWidth (w : Nat) := [llvm(w)|
 {
   ^bb0():
     %0 = llvm.mlir.constant(0) : _
     llvm.return %0
   }]
 
-def bb0IcomGeneric (w : Nat) := [llvm (w)|
+def bb0IcomGeneric (w : Nat) := [llvm(w)|
 {
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant(1) : _
@@ -254,7 +254,7 @@ example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := by
 open ComWrappers
 
 def one_inst_macro (w: Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0(%arg0: _):
     %0 = llvm.not %arg0
     llvm.return %0
@@ -285,7 +285,7 @@ def one_inst_macro_proof (w : Nat) :
   apply one_inst_stmt
 
 def two_inst_macro (w: Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0(%arg0: _):
     %0 = llvm.not %arg0
     %1 = llvm.not %arg0
@@ -318,7 +318,7 @@ def two_inst_macro_proof (w : Nat) :
   apply two_inst_stmt
 
 def three_inst_macro (w: Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0(%arg0: _):
     %0 = llvm.not %arg0
     %1 = llvm.not %0
@@ -354,7 +354,7 @@ def three_inst_macro_proof (w : Nat) :
   apply three_inst_stmt
 
 def one_inst_concrete_macro :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i1):
     %0 = llvm.not %arg0 : i1
     llvm.return %0 : i1
@@ -385,7 +385,7 @@ def one_inst_concrete_macro_proof :
   apply one_inst_concrete_stmt
 
 def two_inst_concrete_macro :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i1):
     %0 = llvm.not %arg0 : i1
     %1 = llvm.not %arg0 : i1
@@ -418,7 +418,7 @@ def two_inst_concrete_macro_proof :
   apply two_inst_concrete_stmt
 
 def three_inst_concrete_macro :=
-  [llvm ()|{
+  [llvm()|{
   ^bb0(%arg0: i1):
     %0 = llvm.not %arg0 : i1
     %1 = llvm.not %0 : i1
@@ -454,7 +454,7 @@ def three_inst_concrete_macro_proof :
   apply three_inst_concrete_stmt
 
 def two_ne_macro (w : Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0(%arg0: _, %arg1: _):
     %0 = llvm.icmp.ne %arg0,  %arg1
     %1 = llvm.icmp.ne %arg0,  %arg1
@@ -474,7 +474,7 @@ def two_ne_macro_proof (w : Nat) :
   apply two_ne_stmt
 
 def constant_macro (w : Nat) :=
-  [llvm (w)|{
+  [llvm(w)|{
   ^bb0():
     %0 = llvm.mlir.constant(2) : _
     %1 = llvm.mlir.constant(1) : _
@@ -490,10 +490,10 @@ def constant_macro (w : Nat) :=
 
 def constant_stmt :
     @BitVec.Refinement (BitVec w)
-      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
-        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2)))
-      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
-        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2))) := by
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? _  2) (LLVM.const? _  1))
+        (LLVM.const? _  0)) (LLVM.const? _  (-1))) (LLVM.const? _  (-2)))
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? _  2) (LLVM.const? _  1))
+        (LLVM.const? _  0)) (LLVM.const? _  (-1))) (LLVM.const? _  (-2))) := by
   simp
 
 def constant_macro_proof (w : Nat) :

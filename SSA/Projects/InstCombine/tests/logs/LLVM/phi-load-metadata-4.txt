@@ -1,0 +1,36 @@
+1: "bar"
+5: "bar" is empty
+
+1: "baz"
+5: "baz" is empty
+
+1: "test_phi_combine_load_metadata"
+9: "test_phi_combine_load_metadata" has pointer type input
+
+4: "test_phi_combine_load_metadata" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_phi_combine_load_metadata" has unsupported operation: llvm.call
+
+4: "test_phi_combine_load_metadata" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_phi_combine_load_metadata" has unsupported operation: llvm.call
+
+4: "test_phi_combine_load_metadata" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_phi_combine_load_metadata" has unsupported operation: llvm.load
+
+1: "test_phi_combine_load_metadata_negative"
+9: "test_phi_combine_load_metadata_negative" has pointer type input
+
+4: "test_phi_combine_load_metadata_negative" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_phi_combine_load_metadata_negative" has unsupported operation: llvm.call
+
+4: "test_phi_combine_load_metadata_negative" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_phi_combine_load_metadata_negative" has unsupported operation: llvm.call
+
+4: "test_phi_combine_load_metadata_negative" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_phi_combine_load_metadata_negative" has unsupported operation: llvm.load
+

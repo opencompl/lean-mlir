@@ -1,0 +1,24 @@
+1: "strcat"
+9: "strcat" has pointer type input
+
+1: "puts"
+9: "puts" has pointer type input
+
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.alloca
+
+4: "main" has unsupported operation: llvm.store
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: llvm.getelementptr
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "main" has unsupported operation: llvm.call
+
+1: "strlen"
+9: "strlen" has pointer type input
+

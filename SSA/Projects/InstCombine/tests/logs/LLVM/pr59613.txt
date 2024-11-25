@@ -1,0 +1,9 @@
+1: "pr59613"
+4: "pr59613" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr59613" has unsupported operation: llvm.mlir.zero
+
+4: "pr59613" has unsupported operation: llvm.store
+
+4: "pr59613" has unsupported operation: llvm.return
+

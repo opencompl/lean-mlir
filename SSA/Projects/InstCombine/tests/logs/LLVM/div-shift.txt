@@ -1,0 +1,408 @@
+1: "use"
+5: "use" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "t1vec"
+8: "t1vec" contains vectors which are unsupported
+
+1: "t2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "t3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.zext
+2: llvm.udiv
+2: llvm.return
+
+1: "t4"
+4: "t4" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "t5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.udiv
+2: llvm.return
+
+1: "t6"
+4: "t6" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "udiv_umin"
+4: "udiv_umin" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "udiv_umax"
+4: "udiv_umax" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "udiv_umin_"
+4: "udiv_umin_" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "udiv_umin_extra_use"
+4: "udiv_umin_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "udiv_umin_extra_use" has unsupported operation: llvm.call
+
+1: "udiv_smin"
+4: "udiv_smin" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "udiv_smax"
+4: "udiv_smax" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "t7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "t8"
+7: "t8" is unchanged by InstCombine
+
+1: "t9"
+8: "t9" contains vectors which are unsupported
+
+1: "t10"
+2: llvm.func
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "t11"
+8: "t11" contains vectors which are unsupported
+
+1: "t12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "t13"
+7: "t13" is unchanged by InstCombine
+
+1: "t14"
+8: "t14" contains vectors which are unsupported
+
+1: "t15"
+2: llvm.func
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "t16"
+8: "t16" contains vectors which are unsupported
+
+1: "sdiv_mul_shl_nsw"
+2: llvm.func
+2: llvm.mul
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv_mul_shl_nsw_exact_commute1"
+2: llvm.func
+2: llvm.mul
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv_mul_shl_nsw_commute2"
+7: "sdiv_mul_shl_nsw_commute2" is unchanged by InstCombine
+
+1: "sdiv_mul_shl_nsw_use1"
+4: "sdiv_mul_shl_nsw_use1" has unsupported operation: llvm.call
+
+1: "sdiv_mul_shl_nsw_use2"
+4: "sdiv_mul_shl_nsw_use2" has unsupported operation: llvm.call
+
+1: "sdiv_mul_shl_nsw_use3"
+4: "sdiv_mul_shl_nsw_use3" has unsupported operation: llvm.call
+
+4: "sdiv_mul_shl_nsw_use3" has unsupported operation: llvm.call
+
+1: "sdiv_shl_mul_nsw"
+7: "sdiv_shl_mul_nsw" is unchanged by InstCombine
+
+1: "sdiv_mul_shl_missing_nsw1"
+7: "sdiv_mul_shl_missing_nsw1" is unchanged by InstCombine
+
+1: "sdiv_mul_shl_missing_nsw2"
+7: "sdiv_mul_shl_missing_nsw2" is unchanged by InstCombine
+
+1: "udiv_mul_shl_nuw"
+2: llvm.func
+2: llvm.mul
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_mul_shl_nuw_exact_commute1"
+2: llvm.func
+2: llvm.mul
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_mul_shl_nuw_commute2"
+7: "udiv_mul_shl_nuw_commute2" is unchanged by InstCombine
+
+1: "udiv_mul_shl_nsw_use1"
+4: "udiv_mul_shl_nsw_use1" has unsupported operation: llvm.call
+
+1: "udiv_mul_shl_nsw_use2"
+4: "udiv_mul_shl_nsw_use2" has unsupported operation: llvm.call
+
+1: "udiv_mul_shl_nsw_use3"
+4: "udiv_mul_shl_nsw_use3" has unsupported operation: llvm.call
+
+4: "udiv_mul_shl_nsw_use3" has unsupported operation: llvm.call
+
+1: "udiv_shl_mul_nuw"
+2: llvm.func
+2: llvm.shl
+2: llvm.mul
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_shl_mul_nuw_swap"
+2: llvm.func
+2: llvm.shl
+2: llvm.mul
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_shl_mul_nuw_exact"
+2: llvm.func
+2: llvm.shl
+2: llvm.mul
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_shl_mul_nuw_vec"
+8: "udiv_shl_mul_nuw_vec" contains vectors which are unsupported
+
+1: "udiv_shl_mul_nuw_extra_use_of_shl"
+4: "udiv_shl_mul_nuw_extra_use_of_shl" has unsupported operation: llvm.call
+
+1: "udiv_shl_mul_nuw_extra_use_of_mul"
+4: "udiv_shl_mul_nuw_extra_use_of_mul" has unsupported operation: llvm.call
+
+1: "udiv_shl_mul_nuw_extra_use"
+4: "udiv_shl_mul_nuw_extra_use" has unsupported operation: llvm.call
+
+4: "udiv_shl_mul_nuw_extra_use" has unsupported operation: llvm.call
+
+1: "sdiv_shl_mul_nuw"
+7: "sdiv_shl_mul_nuw" is unchanged by InstCombine
+
+1: "udiv_mul_shl_missing_nsw1"
+7: "udiv_mul_shl_missing_nsw1" is unchanged by InstCombine
+
+1: "udiv_mul_shl_missing_nsw2"
+7: "udiv_mul_shl_missing_nsw2" is unchanged by InstCombine
+
+1: "udiv_shl_nuw"
+7: "udiv_shl_nuw" is unchanged by InstCombine
+
+1: "udiv_shl_nuw_exact"
+7: "udiv_shl_nuw_exact" is unchanged by InstCombine
+
+1: "udiv_shl"
+7: "udiv_shl" is unchanged by InstCombine
+
+1: "udiv_shl_nuw_use"
+4: "udiv_shl_nuw_use" has unsupported operation: llvm.call
+
+1: "udiv_lshr_mul_nuw"
+2: llvm.func
+2: llvm.mul
+2: llvm.lshr
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_lshr_mul_nuw_exact_commute1"
+8: "udiv_lshr_mul_nuw_exact_commute1" contains vectors which are unsupported
+
+1: "udiv_lshr_mul_nuw_commute2"
+7: "udiv_lshr_mul_nuw_commute2" is unchanged by InstCombine
+
+1: "udiv_lshr_mul_nuw_use1"
+4: "udiv_lshr_mul_nuw_use1" has unsupported operation: llvm.call
+
+1: "udiv_lshr_mul_nuw_use2"
+4: "udiv_lshr_mul_nuw_use2" has unsupported operation: llvm.call
+
+1: "udiv_lshr_mul_nuw_use3"
+4: "udiv_lshr_mul_nuw_use3" has unsupported operation: llvm.call
+
+4: "udiv_lshr_mul_nuw_use3" has unsupported operation: llvm.call
+
+1: "udiv_lshr_mul_nsw"
+7: "udiv_lshr_mul_nsw" is unchanged by InstCombine
+
+1: "sdiv_lshr_mul_nsw"
+7: "sdiv_lshr_mul_nsw" is unchanged by InstCombine
+
+1: "sdiv_shl_shl_nsw2_nuw"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv_shl_shl_nsw2_nuw_exact_use"
+4: "sdiv_shl_shl_nsw2_nuw_exact_use" has unsupported operation: llvm.call
+
+1: "sdiv_shl_shl_nsw_nuw2"
+7: "sdiv_shl_shl_nsw_nuw2" is unchanged by InstCombine
+
+1: "sdiv_shl_shl_nsw_nuw"
+7: "sdiv_shl_shl_nsw_nuw" is unchanged by InstCombine
+
+1: "sdiv_shl_shl_nuw_nsw2"
+7: "sdiv_shl_shl_nuw_nsw2" is unchanged by InstCombine
+
+1: "udiv_shl_shl_nuw2"
+8: "udiv_shl_shl_nuw2" contains vectors which are unsupported
+
+1: "udiv_shl_shl_nuw2_exact_use2"
+4: "udiv_shl_shl_nuw2_exact_use2" has unsupported operation: llvm.call
+
+4: "udiv_shl_shl_nuw2_exact_use2" has unsupported operation: llvm.call
+
+1: "udiv_shl_shl_nuw_nsw"
+7: "udiv_shl_shl_nuw_nsw" is unchanged by InstCombine
+
+1: "udiv_shl_shl_nsw_nuw"
+7: "udiv_shl_shl_nsw_nuw" is unchanged by InstCombine
+
+1: "udiv_shl_shl_nuw_nsw2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_shl_nuw_divisor"
+7: "udiv_shl_nuw_divisor" is unchanged by InstCombine
+
+1: "udiv_fail_shl_overflow"
+4: "udiv_fail_shl_overflow" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "udiv_shl_no_overflow"
+4: "udiv_shl_no_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+1: "sdiv_shl_pair_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "udiv_shl_pair_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "sdiv_shl_pair1"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv_shl_pair2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv_shl_pair3"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv_shl_no_pair_fail"
+7: "sdiv_shl_no_pair_fail" is unchanged by InstCombine
+
+1: "udiv_shl_pair1"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_shl_pair2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "udiv_shl_pair3"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "sdiv_shl_pair_overflow_fail1"
+7: "sdiv_shl_pair_overflow_fail1" is unchanged by InstCombine
+
+1: "sdiv_shl_pair_overflow_fail2"
+7: "sdiv_shl_pair_overflow_fail2" is unchanged by InstCombine
+
+1: "udiv_shl_pair_overflow_fail1"
+7: "udiv_shl_pair_overflow_fail1" is unchanged by InstCombine
+
+1: "udiv_shl_pair_overflow_fail2"
+7: "udiv_shl_pair_overflow_fail2" is unchanged by InstCombine
+
+1: "udiv_shl_pair_overflow_fail3"
+7: "udiv_shl_pair_overflow_fail3" is unchanged by InstCombine
+
+1: "sdiv_shl_pair_multiuse1"
+4: "sdiv_shl_pair_multiuse1" has unsupported operation: llvm.call
+
+1: "sdiv_shl_pair_multiuse2"
+4: "sdiv_shl_pair_multiuse2" has unsupported operation: llvm.call
+
+1: "sdiv_shl_pair_multiuse3"
+4: "sdiv_shl_pair_multiuse3" has unsupported operation: llvm.call
+
+4: "sdiv_shl_pair_multiuse3" has unsupported operation: llvm.call
+
+1: "pr69291"
+4: "pr69291" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "pr69291" has unsupported operation after optimization: llvm.load
+

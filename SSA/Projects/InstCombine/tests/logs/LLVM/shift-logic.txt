@@ -1,0 +1,289 @@
+1: "use"
+5: "use" is empty
+
+1: "shl_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.shl
+2: llvm.return
+
+1: "shl_and_nonuniform"
+8: "shl_and_nonuniform" contains vectors which are unsupported
+
+1: "shl_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.shl
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "shl_or_poison"
+4: "shl_or_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_or_poison" has unsupported operation: llvm.mlir.undef
+
+4: "shl_or_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_or_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_or_poison" has unsupported operation: llvm.mlir.undef
+
+4: "shl_or_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_or_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.shl
+2: llvm.return
+
+1: "shl_xor_nonuniform"
+8: "shl_xor_nonuniform" contains vectors which are unsupported
+
+1: "lshr_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_and_poison"
+4: "lshr_and_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_and_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_and_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_and_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_and_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_and_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_and_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_or"
+8: "lshr_or" contains vectors which are unsupported
+
+1: "lshr_xor"
+8: "lshr_xor" contains vectors which are unsupported
+
+1: "ashr_and"
+8: "ashr_and" contains vectors which are unsupported
+
+1: "ashr_or"
+8: "ashr_or" contains vectors which are unsupported
+
+1: "ashr_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.ashr
+2: llvm.xor
+2: llvm.ashr
+2: llvm.return
+
+1: "shr_mismatch_xor"
+7: "shr_mismatch_xor" is unchanged by InstCombine
+
+1: "ashr_overshift_xor"
+7: "ashr_overshift_xor" is unchanged by InstCombine
+
+1: "ashr_poison_poison_xor"
+4: "ashr_poison_poison_xor" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_poison_poison_xor" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_poison_poison_xor" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_poison_poison_xor" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_poison_poison_xor" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_poison_poison_xor" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_poison_poison_xor" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_or_extra_use"
+9: "lshr_or_extra_use" has pointer type input
+
+4: "lshr_or_extra_use" has unsupported operation: llvm.store
+
+1: "PR44028"
+4: "PR44028" has unsupported operation: llvm.mlir.addressof
+
+4: "PR44028" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "lshr_mul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_nuw_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_vector"
+8: "lshr_mul_vector" contains vectors which are unsupported
+
+1: "lshr_mul_negative_noexact"
+7: "lshr_mul_negative_noexact" is unchanged by InstCombine
+
+1: "lshr_mul_negative_oneuse"
+4: "lshr_mul_negative_oneuse" has unsupported operation: llvm.call
+
+1: "lshr_mul_negative_nonuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_negative_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "shl_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "shl_add_multiuse"
+4: "shl_add_multiuse" has unsupported operation: llvm.mlir.addressof
+
+4: "shl_add_multiuse" has unsupported operation: llvm.call
+
+1: "shl_add_multiuse_nonconstant"
+4: "shl_add_multiuse_nonconstant" has unsupported operation: llvm.mlir.addressof
+
+4: "shl_add_multiuse_nonconstant" has unsupported operation: llvm.call
+
+1: "shl_add_nonuniform"
+8: "shl_add_nonuniform" contains vectors which are unsupported
+
+1: "shl_add_poison"
+4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_add_poison" has unsupported operation: llvm.mlir.undef
+
+4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_add_poison" has unsupported operation: llvm.mlir.undef
+
+4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_add"
+7: "lshr_add" is unchanged by InstCombine
+
+1: "lshr_add_nonuniform"
+7: "lshr_add_nonuniform" is unchanged by InstCombine
+
+1: "lshr_add_poison"
+4: "lshr_add_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_add_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_sub_no_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "shl_sub_nonuniform"
+8: "shl_sub_nonuniform" contains vectors which are unsupported
+
+1: "shl_sub_poison"
+4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_sub_poison" has unsupported operation: llvm.mlir.undef
+
+4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_poison" has unsupported operation: llvm.mlir.undef
+
+4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_sub"
+7: "lshr_sub" is unchanged by InstCombine
+
+1: "lshr_sub_nonuniform"
+7: "lshr_sub_nonuniform" is unchanged by InstCombine
+
+1: "lshr_sub_poison"
+4: "lshr_sub_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_sub_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_sub_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_sub_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+

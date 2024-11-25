@@ -1,0 +1,14 @@
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test_logical"
+4: "test_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
+

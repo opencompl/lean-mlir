@@ -1,0 +1,286 @@
+1: "use"
+5: "use" is empty
+
+1: "lshr_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_add_commute_splat"
+8: "lshr_add_commute_splat" contains vectors which are unsupported
+
+1: "lshr_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_sub_commute_splat"
+8: "lshr_sub_commute_splat" contains vectors which are unsupported
+
+1: "lshr_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_commute_splat"
+8: "lshr_and_commute_splat" contains vectors which are unsupported
+
+1: "lshr_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_or_commute_splat"
+8: "lshr_or_commute_splat" contains vectors which are unsupported
+
+1: "lshr_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.xor
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_xor_commute_splat"
+8: "lshr_xor_commute_splat" contains vectors which are unsupported
+
+1: "lshr_add_use1"
+4: "lshr_add_use1" has unsupported operation: llvm.call
+
+1: "lshr_add_use2"
+4: "lshr_add_use2" has unsupported operation: llvm.call
+
+1: "lshr_and_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_add_commute_splat"
+8: "lshr_and_add_commute_splat" contains vectors which are unsupported
+
+1: "lshr_and_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.sub
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_sub_commute_splat"
+8: "lshr_and_sub_commute_splat" contains vectors which are unsupported
+
+1: "lshr_and_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.and
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_and_commute_splat"
+8: "lshr_and_and_commute_splat" contains vectors which are unsupported
+
+1: "lshr_and_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_or_disjoint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "ashr_and_or_disjoint"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.ashr
+2: llvm.and
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_or_commute_splat"
+8: "lshr_and_or_commute_splat" contains vectors which are unsupported
+
+1: "lshr_and_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.lshr
+2: llvm.and
+2: llvm.xor
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_and_xor_commute_splat"
+8: "lshr_and_xor_commute_splat" contains vectors which are unsupported
+
+1: "lshr_and_add_use1"
+4: "lshr_and_add_use1" has unsupported operation: llvm.call
+
+1: "lshr_and_add_use2"
+4: "lshr_and_add_use2" has unsupported operation: llvm.call
+
+1: "lshr_and_add_use3"
+4: "lshr_and_add_use3" has unsupported operation: llvm.call
+
+1: "lshr_and_add_use4"
+4: "lshr_and_add_use4" has unsupported operation: llvm.call
+
+4: "lshr_and_add_use4" has unsupported operation: llvm.call
+
+1: "lshr_and_add_use5"
+4: "lshr_and_add_use5" has unsupported operation: llvm.call
+
+4: "lshr_and_add_use5" has unsupported operation: llvm.call
+
+1: "lshr_and_add_use6"
+4: "lshr_and_add_use6" has unsupported operation: llvm.call
+
+4: "lshr_and_add_use6" has unsupported operation: llvm.call
+
+1: "lshr_add_shl_v2i8_undef"
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_shl_v2i8_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_add_shl_v2i8_nonuniform"
+7: "lshr_add_shl_v2i8_nonuniform" is unchanged by InstCombine
+
+1: "lshr_add_and_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_add_and_shl_v2i32"
+8: "lshr_add_and_shl_v2i32" contains vectors which are unsupported
+
+1: "lshr_add_and_shl_v2i32_undef"
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_add_and_shl_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "lshr_add_and_shl_v2i32_nonuniform"
+7: "lshr_add_and_shl_v2i32_nonuniform" is unchanged by InstCombine
+
+1: "shl_add_and_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "shl_add_and_lshr_v2i32"
+8: "shl_add_and_lshr_v2i32" contains vectors which are unsupported
+
+1: "shl_add_and_lshr_v2i32_undef"
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: llvm.mlir.undef
+
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: llvm.mlir.undef
+
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: llvm.mlir.undef
+
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_add_and_lshr_v2i32_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_add_and_lshr_v2i32_nonuniform"
+7: "shl_add_and_lshr_v2i32_nonuniform" is unchanged by InstCombine
+
+1: "test_FoldShiftByConstant_CreateSHL"
+8: "test_FoldShiftByConstant_CreateSHL" contains vectors which are unsupported
+
+1: "test_FoldShiftByConstant_CreateSHL2"
+8: "test_FoldShiftByConstant_CreateSHL2" contains vectors which are unsupported
+
+1: "test_FoldShiftByConstant_CreateAnd"
+8: "test_FoldShiftByConstant_CreateAnd" contains vectors which are unsupported
+

@@ -1,0 +1,53 @@
+1: "tinkywinky"
+4: "tinkywinky" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "tinkywinky" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "tinkywinky" has unsupported operation: llvm.return
+
+1: "test_target_dependent_scope"
+4: "test_target_dependent_scope" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "test_target_dependent_scope" has unsupported operation: llvm.return
+
+1: "dipsy"
+4: "dipsy" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "dipsy" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "dipsy" has unsupported operation: llvm.return
+
+1: "patatino"
+4: "patatino" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "patatino" has unsupported operation: llvm.return
+
+1: "weaker_fence_1"
+4: "weaker_fence_1" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "weaker_fence_1" has unsupported operation: llvm.return
+
+1: "weaker_fence_2"
+4: "weaker_fence_2" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "weaker_fence_2" has unsupported operation: llvm.return
+
+1: "acquire_global_neg_test"
+4: "acquire_global_neg_test" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "acquire_global_neg_test" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "acquire_global_neg_test" has unsupported operation: llvm.return
+
+1: "acquire_single_thread_scope"
+4: "acquire_single_thread_scope" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "acquire_single_thread_scope" has unsupported operation: llvm.return
+
+1: "debug"
+4: "debug" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "debug" has unsupported operation: builtin.unregistered: llvm.fence
+
+4: "debug" has unsupported operation: llvm.return
+

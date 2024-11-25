@@ -1,0 +1,54 @@
+1: "ugt_vscale64_x_32"
+4: "ugt_vscale64_x_32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "ugt_vscale64_x_31"
+4: "ugt_vscale64_x_31" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "ugt_vscale16_x_32"
+4: "ugt_vscale16_x_32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "ult_vscale16"
+4: "ult_vscale16" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "ule_vscale64"
+4: "ule_vscale64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "ueq_vscale64_range4_4"
+4: "ueq_vscale64_range4_4" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "ne_vscale64_x_32"
+4: "ne_vscale64_x_32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ule_max"
+4: "vscale_ule_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ult_max"
+4: "vscale_ult_max" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_uge_min"
+4: "vscale_uge_min" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ugt_min"
+4: "vscale_ugt_min" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_uge_no_max"
+4: "vscale_uge_no_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ugt_no_max"
+4: "vscale_ugt_no_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_uge_max_overflow"
+4: "vscale_uge_max_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ugt_max_overflow"
+4: "vscale_ugt_max_overflow" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_eq_min_overflow"
+4: "vscale_eq_min_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ult_min_overflow"
+4: "vscale_ult_min_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_ugt_min_overflow"
+4: "vscale_ugt_min_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.vscale
+

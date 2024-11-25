@@ -1,0 +1,227 @@
+1: "use"
+5: "use" is empty
+
+1: "powi_fneg_even_int"
+4: "powi_fneg_even_int" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fabs_even_int"
+4: "powi_fabs_even_int" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_copysign_even_int"
+4: "powi_copysign_even_int" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fneg_odd_int"
+4: "powi_fneg_odd_int" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "powi_fneg_odd_int" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fabs_odd_int"
+4: "powi_fabs_odd_int" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "powi_fabs_odd_int" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_copysign_odd_int"
+4: "powi_copysign_odd_int" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "powi_copysign_odd_int" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_arg0_no_reassoc"
+4: "powi_fmul_arg0_no_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_arg0_no_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_arg0"
+4: "powi_fmul_arg0" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_arg0" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_arg0_use"
+4: "powi_fmul_arg0_use" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_arg0_use" has unsupported operation: llvm.call
+
+4: "powi_fmul_arg0_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_no_reassoc1"
+4: "powi_fmul_powi_no_reassoc1" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_no_reassoc1" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_no_reassoc1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_no_reassoc2"
+4: "powi_fmul_powi_no_reassoc2" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_no_reassoc2" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_no_reassoc2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_no_reassoc3"
+4: "powi_fmul_powi_no_reassoc3" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_no_reassoc3" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_no_reassoc3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi"
+4: "powi_fmul_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_powi_fast_on_fmul"
+4: "powi_fmul_powi_fast_on_fmul" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_powi_fast_on_powi"
+4: "powi_fmul_powi_fast_on_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_fast_on_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_fast_on_powi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_same_power"
+4: "powi_fmul_powi_same_power" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_powi_different_integer_types"
+4: "powi_fmul_powi_different_integer_types" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_different_integer_types" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_different_integer_types" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_use_first"
+4: "powi_fmul_powi_use_first" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_use_first" has unsupported operation: llvm.call
+
+4: "powi_fmul_powi_use_first" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_powi_use_second"
+4: "powi_fmul_powi_use_second" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_use_second" has unsupported operation: llvm.call
+
+4: "powi_fmul_powi_use_second" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_different_base"
+4: "powi_fmul_different_base" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_different_base" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_different_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "different_types_powi"
+4: "different_types_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "different_types_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "different_types_powi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv_pow_powi"
+4: "fdiv_pow_powi" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv_powf_powi"
+4: "fdiv_powf_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "fdiv_pow_powi_multi_use"
+4: "fdiv_pow_powi_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_pow_powi_multi_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv_pow_powi_multi_use" has unsupported operation: llvm.call
+
+1: "fdiv_powf_powi_missing_reassoc"
+4: "fdiv_powf_powi_missing_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_powf_powi_missing_reassoc" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_powf_powi_missing_reassoc1"
+4: "fdiv_powf_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_powf_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_powf_powi_missing_nnan"
+4: "fdiv_powf_powi_missing_nnan" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_powf_powi_missing_nnan" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_pow_powi_negative"
+4: "fdiv_pow_powi_negative" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_pow_powi_negative" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_pow_powi_negative_variable"
+4: "fdiv_pow_powi_negative_variable" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_pow_powi_negative_variable" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_fmul_powi"
+4: "fdiv_fmul_powi" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_fmul_powi_2"
+4: "fdiv_fmul_powi_2" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "fdiv_fmul_powi_vector"
+4: "fdiv_fmul_powi_vector" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "fdiv_fmul_powi_missing_reassoc1"
+4: "fdiv_fmul_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_missing_reassoc1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_fmul_powi_missing_reassoc2"
+4: "fdiv_fmul_powi_missing_reassoc2" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_missing_reassoc2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_missing_reassoc2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_fmul_powi_missing_reassoc3"
+4: "fdiv_fmul_powi_missing_reassoc3" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_missing_reassoc3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_missing_reassoc3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_fmul_powi_missing_nnan"
+4: "fdiv_fmul_powi_missing_nnan" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_missing_nnan" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_missing_nnan" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "fdiv_fmul_powi_negative_wrap"
+4: "fdiv_fmul_powi_negative_wrap" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_negative_wrap" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv_fmul_powi_multi_use"
+4: "fdiv_fmul_powi_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "fdiv_fmul_powi_multi_use" has unsupported operation: llvm.call
+
+4: "fdiv_fmul_powi_multi_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fdiv_fmul_powi_multi_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "powi_fmul_powi_x"
+4: "powi_fmul_powi_x" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+1: "powi_fmul_powi_x_multi_use"
+4: "powi_fmul_powi_x_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_x_multi_use" has unsupported operation: llvm.call
+
+4: "powi_fmul_powi_x_multi_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_x_missing_reassoc"
+4: "powi_fmul_powi_x_missing_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_x_missing_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "powi_fmul_powi_x_overflow"
+4: "powi_fmul_powi_x_overflow" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "powi_fmul_powi_x_overflow" has unsupported operation: builtin.unregistered: llvm.fmul
+

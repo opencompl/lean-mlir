@@ -1,0 +1,211 @@
+1: "use"
+5: "use" is empty
+
+1: "mul_mask_pow2_eq0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_mask_pow2_ne0_use1"
+4: "mul_mask_pow2_ne0_use1" has unsupported operation: llvm.call
+
+1: "mul_mask_pow2_ne0_use2"
+4: "mul_mask_pow2_ne0_use2" has unsupported operation: llvm.call
+
+1: "mul_mask_pow2_sgt0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_mask_fakepow2_ne0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_mask_pow2_eq4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_mask_notpow2_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr40493"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr40493_neg1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr40493_neg2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr40493_neg3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.return
+
+1: "pr40493_vec1"
+8: "pr40493_vec1" contains vectors which are unsupported
+
+1: "pr40493_vec2"
+4: "pr40493_vec2" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec2" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "pr40493_vec3"
+4: "pr40493_vec3" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec3" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "pr40493_vec4"
+4: "pr40493_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "pr40493_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "pr40493_vec5"
+7: "pr40493_vec5" is unchanged by InstCombine
+
+1: "pr51551"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr51551_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr51551_neg1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr51551_neg2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.mul
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pr51551_demand3bits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.and
+2: llvm.return
+

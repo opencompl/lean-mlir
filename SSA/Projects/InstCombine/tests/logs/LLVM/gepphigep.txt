@@ -1,0 +1,132 @@
+1: "test1"
+9: "test1" has pointer type input
+
+4: "test1" has unsupported operation: llvm.load
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.store
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.store
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test1" has unsupported operation: llvm.getelementptr
+
+4: "test1" has unsupported operation: llvm.load
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: llvm.load
+
+4: "test2" has unsupported operation: llvm.getelementptr
+
+4: "test2" has unsupported operation: llvm.store
+
+4: "test2" has unsupported operation: llvm.getelementptr
+
+4: "test2" has unsupported operation: llvm.store
+
+4: "test2" has unsupported operation: llvm.getelementptr
+
+4: "test2" has unsupported operation: llvm.load
+
+1: "test3"
+9: "test3" has pointer type input
+
+4: "test3" has unsupported operation: llvm.mlir.addressof
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.store
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.store
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.getelementptr
+
+4: "test3" has unsupported operation: llvm.load
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+
+1: "foo1"
+5: "foo1" is empty
+
+1: "test4"
+9: "test4" has pointer type input
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: llvm.getelementptr
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: llvm.getelementptr
+
+1: "test5"
+9: "test5" has pointer type input
+
+4: "test5" has unsupported operation: llvm.mlir.addressof
+
+4: "test5" has unsupported operation: llvm.load
+
+4: "test5" has unsupported operation: llvm.getelementptr
+
+4: "test5" has unsupported operation: llvm.load
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.load
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: llvm.getelementptr
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.getelementptr
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.load
+
+4: "test5" has unsupported operation: llvm.getelementptr
+
+4: "test5" has unsupported operation: llvm.load
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "g"
+9: "g" has pointer type input
+

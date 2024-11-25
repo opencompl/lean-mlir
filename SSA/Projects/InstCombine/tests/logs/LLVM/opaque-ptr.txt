@@ -1,0 +1,2 @@
+3: opaque-ptr.ll: parsing has failed
+

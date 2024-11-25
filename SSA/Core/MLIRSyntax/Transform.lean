@@ -116,13 +116,13 @@ def BuilderM.isErr {α : Type} (x : BuilderM d α) : Bool :=
   | Except.error _ => false
 
 def TypedSSAVal.mkTy [TransformTy d φ] : TypedSSAVal φ → ExceptM d d.Ty
-  | (.SSAVal _, ty) => TransformTy.mkTy ty
+  | (.name _, ty) => TransformTy.mkTy ty
 
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/
 def TypedSSAVal.mkVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
     ReaderM d (Σ (ty : d.Ty), Ctxt.Var Γ ty)
-| (.SSAVal valStx, tyStx) => do
+| (.name valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let var ← getValFromCtxt Γ valStx ty
     return ⟨ty, var⟩
@@ -133,7 +133,7 @@ def TypedSSAVal.mkVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : Ty
     to cut infinite regress. -/
 def TypedSSAVal.mkVal' [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
     ReaderM d (Σ (ty : d.Ty), Ctxt.Var Γ ty)
-| (.SSAVal valStx, tyStx) => do
+| (.name valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let var ← getValFromCtxt Γ valStx ty
     return ⟨ty, var⟩
@@ -142,7 +142,7 @@ def TypedSSAVal.mkVal' [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : T
     by adding the passed name to the name mapping stored in the monad state -/
 def TypedSSAVal.newVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
     BuilderM d (Σ (Γ' : DerivedCtxt Γ) (ty : d.Ty), Ctxt.Var Γ'.ctxt ty)
-| (.SSAVal valStx, tyStx) => do
+| (.name valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let ⟨Γ, var⟩ ← addValToMapping Γ valStx ty
     return ⟨Γ, ty, var⟩

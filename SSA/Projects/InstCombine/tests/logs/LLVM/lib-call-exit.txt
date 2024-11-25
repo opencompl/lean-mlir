@@ -1,0 +1,26 @@
+1: "exit"
+5: "exit" is empty
+
+1: "_Exit"
+5: "_Exit" is empty
+
+1: "call_exit_0"
+4: "call_exit_0" has unsupported operation: llvm.call
+
+4: "call_exit_0" has unsupported operation: llvm.return
+
+1: "call_exit_1"
+4: "call_exit_1" has unsupported operation: llvm.call
+
+4: "call_exit_1" has unsupported operation: llvm.return
+
+1: "call__Exit_m1"
+4: "call__Exit_m1" has unsupported operation: llvm.call
+
+4: "call__Exit_m1" has unsupported operation: llvm.return
+
+1: "call__Exit_N"
+4: "call__Exit_N" has unsupported operation: llvm.call
+
+4: "call__Exit_N" has unsupported operation: llvm.return
+

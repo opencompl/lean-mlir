@@ -1,0 +1,141 @@
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "fold_a5_4_i0_to_3"
+4: "fold_a5_4_i0_to_3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i0_to_3" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i0_p1_to_2"
+4: "fold_a5_4_i0_p1_to_2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i0_p1_to_2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i0_p1_to_2" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i0_p2_to_1"
+4: "fold_a5_4_i0_p2_to_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i0_p2_to_1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i0_p2_to_1" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i0_p3_to_0"
+4: "fold_a5_4_i0_p3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i0_p3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i0_p3_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i1_to_2"
+4: "fold_a5_4_i1_to_2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i1_to_2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i1_to_2" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i1_p1_to_1"
+4: "fold_a5_4_i1_p1_to_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i1_p1_to_1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i1_p1_to_1" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i1_p2_to_0"
+4: "fold_a5_4_i1_p2_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i1_p2_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i1_p2_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i1_p3_to_0"
+4: "fold_a5_4_i1_p3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i1_p3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i1_p3_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i2_to_1"
+4: "fold_a5_4_i2_to_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i2_to_1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i2_to_1" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i2_p1_to_0"
+4: "fold_a5_4_i2_p1_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i2_p1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i2_p1_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i2_p2_to_0"
+4: "fold_a5_4_i2_p2_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i2_p2_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i2_p2_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i2_p3_to_0"
+4: "fold_a5_4_i2_p3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i2_p3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i2_p3_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i3_to_0"
+4: "fold_a5_4_i3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i3_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i3_p1_to_0"
+4: "fold_a5_4_i3_p1_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i3_p1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i3_p1_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i3_p2_to_0"
+4: "fold_a5_4_i3_p2_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i3_p2_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i3_p2_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_3_i4_p3_to_0"
+4: "fold_a5_3_i4_p3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_3_i4_p3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_3_i4_p3_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i4_to_0"
+4: "fold_a5_4_i4_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i4_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i4_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i4_p1_to_0"
+4: "fold_a5_4_i4_p1_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i4_p1_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i4_p1_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i4_p2_to_0"
+4: "fold_a5_4_i4_p2_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i4_p2_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i4_p2_to_0" has unsupported operation after optimization: llvm.call
+
+1: "fold_a5_4_i4_p3_to_0"
+4: "fold_a5_4_i4_p3_to_0" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_a5_4_i4_p3_to_0" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_a5_4_i4_p3_to_0" has unsupported operation after optimization: llvm.call
+

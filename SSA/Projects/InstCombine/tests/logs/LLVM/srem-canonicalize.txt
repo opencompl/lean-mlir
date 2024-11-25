@@ -1,0 +1,19 @@
+1: "test_srem_canonicalize_op0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.srem
+2: llvm.return
+
+1: "test_srem_canonicalize_op1"
+7: "test_srem_canonicalize_op1" is unchanged by InstCombine
+
+1: "test_srem_canonicalize_nonsw"
+7: "test_srem_canonicalize_nonsw" is unchanged by InstCombine
+
+1: "test_srem_canonicalize_vec"
+8: "test_srem_canonicalize_vec" contains vectors which are unsupported
+
+1: "test_srem_canonicalize_multiple_uses"
+7: "test_srem_canonicalize_multiple_uses" is unchanged by InstCombine
+

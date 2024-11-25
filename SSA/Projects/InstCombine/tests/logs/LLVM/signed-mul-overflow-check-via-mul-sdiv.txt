@@ -1,0 +1,63 @@
+1: "t0_basic"
+4: "t0_basic" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "t0_basic" has unsupported operation: llvm.extractvalue
+
+1: "t1_vec"
+4: "t1_vec" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "t1_vec" has unsupported operation: llvm.extractvalue
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "t2_commutative"
+4: "t2_commutative" has unsupported operation: llvm.call
+
+4: "t2_commutative" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "t2_commutative" has unsupported operation: llvm.extractvalue
+
+1: "t3_commutative"
+4: "t3_commutative" has unsupported operation: llvm.call
+
+4: "t3_commutative" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "t3_commutative" has unsupported operation: llvm.extractvalue
+
+1: "t4_commutative"
+4: "t4_commutative" has unsupported operation: llvm.call
+
+4: "t4_commutative" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "t4_commutative" has unsupported operation: llvm.extractvalue
+
+1: "use8"
+5: "use8" is empty
+
+1: "t5_extrause0"
+4: "t5_extrause0" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "t5_extrause0" has unsupported operation: llvm.extractvalue
+
+4: "t5_extrause0" has unsupported operation: llvm.extractvalue
+
+4: "t5_extrause0" has unsupported operation: llvm.call
+
+1: "t6_extrause1"
+4: "t6_extrause1" has unsupported operation: llvm.call
+
+1: "t7_extrause2"
+4: "t7_extrause2" has unsupported operation: llvm.call
+
+4: "t7_extrause2" has unsupported operation: llvm.call
+
+1: "n8_different_x"
+7: "n8_different_x" is unchanged by InstCombine
+
+1: "n9_different_y"
+7: "n9_different_y" is unchanged by InstCombine
+
+1: "n10_wrong_pred"
+7: "n10_wrong_pred" is unchanged by InstCombine
+

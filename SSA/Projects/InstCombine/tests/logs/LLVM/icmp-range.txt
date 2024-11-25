@@ -1,0 +1,684 @@
+1: "use"
+5: "use" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+4: "test_nonzero" has unsupported operation: range
+
+4: "test_nonzero2" has unsupported operation: range
+
+4: "test_nonzero3" has unsupported operation: range
+
+4: "test_nonzero4" has unsupported operation: range
+
+4: "test_nonzero5" has unsupported operation: range
+
+4: "test_nonzero6" has unsupported operation: range
+
+4: "test_not_in_range" has unsupported operation: range
+
+4: "test_in_range" has unsupported operation: range
+
+4: "test_range_sgt_constant" has unsupported operation: range
+
+4: "test_range_slt_constant" has unsupported operation: range
+
+4: "test_multi_range1" has unsupported operation: range
+
+4: "test_multi_range2" has unsupported operation: range
+
+4: "test_two_ranges" has unsupported operation: range
+
+4: "test_two_attribute_ranges" has unsupported operation: range
+
+4: "test_two_ranges2" has unsupported operation: range
+
+4: "test_two_argument_ranges" has unsupported operation: range
+
+4: "test_one_range_and_one_argument_range" has unsupported operation: range
+
+4: "test_one_argument_range_and_one_range" has unsupported operation: range
+
+4: "test_two_ranges3" has unsupported operation: range
+
+4: "test_two_ranges_vec" has unsupported operation: range
+
+4: "test_two_ranges_vec_false" has unsupported operation: range
+
+4: "test_two_ranges_vec_true" has unsupported operation: range
+
+4: "test_two_argument_ranges_vec" has unsupported operation: range
+
+4: "test_two_argument_ranges_vec_false" has unsupported operation: range
+
+4: "test_two_argument_ranges_vec_true" has unsupported operation: range
+
+1: "create_range1"
+5: "create_range1" is empty
+
+1: "create_range2"
+5: "create_range2" is empty
+
+1: "create_range3"
+5: "create_range3" is empty
+
+4: "test_two_return_attribute_ranges_not_simplified" has unsupported operation: range
+
+4: "test_two_return_attribute_ranges_one_in_call" has unsupported operation: range
+
+4: "test_two_return_attribute_ranges" has unsupported operation: range
+
+4: "test_one_return_argument_and_one_argument_range" has unsupported operation: range
+
+4: "test_one_range_and_one_return_argument" has unsupported operation: range
+
+1: "ugt_zext"
+2: llvm.func
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_zext"
+8: "ult_zext" contains vectors which are unsupported
+
+1: "uge_zext"
+2: llvm.func
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "ule_zext"
+7: "ule_zext" is unchanged by InstCombine
+
+1: "ugt_zext_use"
+4: "ugt_zext_use" has unsupported operation: llvm.call
+
+1: "ult_zext_not_i1"
+7: "ult_zext_not_i1" is unchanged by InstCombine
+
+1: "sub_ult_zext"
+2: llvm.func
+2: llvm.zext
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_ult_zext"
+2: llvm.func
+2: llvm.mul
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_ugt_zext"
+4: "zext_ugt_zext" has unsupported operation: llvm.call
+
+1: "sub_ult_zext_not_i1"
+7: "sub_ult_zext_not_i1" is unchanged by InstCombine
+
+1: "sub_ult_zext_use1"
+4: "sub_ult_zext_use1" has unsupported operation: llvm.call
+
+1: "zext_ugt_sub_use2"
+4: "zext_ugt_sub_use2" has unsupported operation: llvm.call
+
+1: "sub_ult_zext_use3"
+4: "sub_ult_zext_use3" has unsupported operation: llvm.call
+
+4: "sub_ult_zext_use3" has unsupported operation: llvm.call
+
+1: "sub_ule_zext"
+7: "sub_ule_zext" is unchanged by InstCombine
+
+1: "sub_ult_and"
+7: "sub_ult_and" is unchanged by InstCombine
+
+1: "and_ugt_sub"
+7: "and_ugt_sub" is unchanged by InstCombine
+
+1: "uge_sext"
+2: llvm.func
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "ule_sext"
+8: "ule_sext" contains vectors which are unsupported
+
+1: "ugt_sext"
+2: llvm.func
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_sext"
+7: "ult_sext" is unchanged by InstCombine
+
+1: "uge_sext_use"
+4: "uge_sext_use" has unsupported operation: llvm.call
+
+1: "ule_sext_not_i1"
+7: "ule_sext_not_i1" is unchanged by InstCombine
+
+1: "sub_ule_sext"
+2: llvm.func
+2: llvm.sext
+2: llvm.sub
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_ule_sext"
+2: llvm.func
+2: llvm.mul
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "sext_uge_sext"
+4: "sext_uge_sext" has unsupported operation: llvm.call
+
+1: "sub_ule_sext_not_i1"
+7: "sub_ule_sext_not_i1" is unchanged by InstCombine
+
+1: "sub_ule_sext_use1"
+4: "sub_ule_sext_use1" has unsupported operation: llvm.call
+
+1: "sext_uge_sub_use2"
+4: "sext_uge_sub_use2" has unsupported operation: llvm.call
+
+1: "sub_ule_sext_use3"
+4: "sub_ule_sext_use3" has unsupported operation: llvm.call
+
+4: "sub_ule_sext_use3" has unsupported operation: llvm.call
+
+1: "sub_ult_sext"
+7: "sub_ult_sext" is unchanged by InstCombine
+
+1: "sub_ule_ashr"
+7: "sub_ule_ashr" is unchanged by InstCombine
+
+1: "ashr_uge_sub"
+7: "ashr_uge_sub" is unchanged by InstCombine
+
+1: "zext_sext_add_icmp_slt_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_sgt_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_sgt_minus2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_slt_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_i128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_eq_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_ne_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_sgt_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_ult_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_sgt_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_slt_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_eq_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_ne_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_slt_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_ugt_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "vector_zext_sext_add_icmp_slt_1"
+8: "vector_zext_sext_add_icmp_slt_1" contains vectors which are unsupported
+
+1: "vector_zext_sext_add_icmp_slt_1_poison"
+4: "vector_zext_sext_add_icmp_slt_1_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "vector_zext_sext_add_icmp_slt_1_poison" has unsupported operation: llvm.mlir.undef
+
+4: "vector_zext_sext_add_icmp_slt_1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "vector_zext_sext_add_icmp_slt_1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "zext_sext_add_icmp_slt_minus_1_no_oneuse"
+4: "zext_sext_add_icmp_slt_minus_1_no_oneuse" has unsupported operation: llvm.call
+
+1: "zext_sext_add_icmp_sgt_1_no_oneuse"
+4: "zext_sext_add_icmp_sgt_1_no_oneuse" has unsupported operation: llvm.call
+
+1: "zext_sext_add_icmp_slt_2_no_oneuse"
+4: "zext_sext_add_icmp_slt_2_no_oneuse" has unsupported operation: llvm.call
+
+1: "zext_sext_add_icmp_sgt_mins_2_no_oneuse"
+4: "zext_sext_add_icmp_sgt_mins_2_no_oneuse" has unsupported operation: llvm.call
+
+1: "zext_sext_add_icmp_slt_1_no_oneuse"
+4: "zext_sext_add_icmp_slt_1_no_oneuse" has unsupported operation: llvm.call
+
+1: "zext_sext_add_icmp_slt_1_rhs_not_const"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "zext_sext_add_icmp_slt_1_type_not_i1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sext
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+4: "icmp_eq_bool_0" has unsupported operation: range
+
+1: "icmp_eq_bool_1"
+9: "icmp_eq_bool_1" has pointer type input
+
+4: "icmp_eq_bool_1" has unsupported operation: llvm.load
+
+4: "icmp_ne_bool_0" has unsupported operation: range
+
+4: "icmp_ne_bool_1" has unsupported operation: range
+
+1: "icmp_ne_zext_eq_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_zext_ne_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_zext_eq_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_zext_ne_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_zext_eq_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_zext_ne_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_zext_eq_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_zext_ne_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_zext_eq_non_boolean"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_zext_ne_non_boolean"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_zext_eq_non_boolean"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_zext_ne_non_boolean"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_zext_eq_zero_vec"
+8: "icmp_ne_zext_eq_zero_vec" contains vectors which are unsupported
+
+1: "icmp_ne_zext_ne_zero_vec"
+8: "icmp_ne_zext_ne_zero_vec" contains vectors which are unsupported
+
+1: "icmp_ne_zext_eq_one_vec"
+8: "icmp_ne_zext_eq_one_vec" contains vectors which are unsupported
+
+1: "icmp_ne_zext_ne_one_vec"
+8: "icmp_ne_zext_ne_one_vec" contains vectors which are unsupported
+
+1: "icmp_ne_zext_eq_non_boolean_vec"
+8: "icmp_ne_zext_eq_non_boolean_vec" contains vectors which are unsupported
+
+1: "icmp_ne_sext_eq_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_ne_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_sext_eq_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_sext_ne_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_eq_allones"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_ne_allones"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_sext_eq_allones"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_sext_ne_allones"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_eq_otherwise"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_ne_otherwise"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_sext_eq_otherwise"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_sext_ne_otherwise"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_eq_zero_vec"
+8: "icmp_ne_sext_eq_zero_vec" contains vectors which are unsupported
+
+1: "icmp_ne_sext_ne_zero_vec"
+8: "icmp_ne_sext_ne_zero_vec" contains vectors which are unsupported
+
+1: "icmp_ne_sext_eq_allones_vec"
+8: "icmp_ne_sext_eq_allones_vec" contains vectors which are unsupported
+
+1: "icmp_ne_sext_ne_allones_vec"
+8: "icmp_ne_sext_ne_allones_vec" contains vectors which are unsupported
+
+1: "icmp_ne_sext_eq_otherwise_vec"
+8: "icmp_ne_sext_eq_otherwise_vec" contains vectors which are unsupported
+
+1: "icmp_ne_sext_ne_zero_i128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_ne_otherwise_i128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_sgt_zero_nofold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_slt_sext_ne_zero_nofold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_slt_allones_nofold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_slt_sext_ne_allones_nofold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_sext_slt_otherwise_nofold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_slt_sext_ne_otherwise_nofold"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "isFloat"
+7: "isFloat" is unchanged by InstCombine
+

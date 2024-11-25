@@ -1,0 +1,12 @@
+1: "strncat"
+9: "strncat" has pointer type input
+
+1: "test_nosimplify1"
+4: "test_nosimplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_nosimplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_nosimplify1" has unsupported operation: llvm.call
+
+4: "test_nosimplify1" has unsupported operation: llvm.return
+

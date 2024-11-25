@@ -1,0 +1,11 @@
+1: "test1"
+8: "test1" contains vectors which are unsupported
+
+1: "fabsf"
+5: "fabsf" is empty
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fcmp
+

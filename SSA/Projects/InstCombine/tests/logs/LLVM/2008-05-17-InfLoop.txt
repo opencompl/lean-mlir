@@ -1,0 +1,10 @@
+1: "BZALLOC"
+5: "BZALLOC" is empty
+
+1: "f"
+4: "f" has unsupported operation: llvm.call
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f" has unsupported operation: llvm.return
+

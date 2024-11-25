@@ -1,0 +1,69 @@
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.return
+
+1: "n1"
+7: "n1" is unchanged by InstCombine
+
+1: "n2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.return
+
+1: "t3_vec_splat"
+8: "t3_vec_splat" contains vectors which are unsupported
+
+1: "t4_vec"
+8: "t4_vec" contains vectors which are unsupported
+
+1: "n5_vec_undef"
+4: "n5_vec_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "n6_vec_negative"
+7: "n6_vec_negative" is unchanged by InstCombine
+
+1: "shl1_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "shl1_nuw"
+7: "shl1_nuw" is unchanged by InstCombine
+
+1: "shl1_nsw_not_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.sdiv
+2: llvm.return
+
+1: "prove_exact_with_high_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sdiv
+2: llvm.return
+
+1: "prove_exact_with_high_mask_limit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sdiv
+2: llvm.return
+
+1: "not_prove_exact_with_high_mask"
+7: "not_prove_exact_with_high_mask" is unchanged by InstCombine
+
+1: "prove_exact_with_high_mask_splat_vec"
+8: "prove_exact_with_high_mask_splat_vec" contains vectors which are unsupported
+
+1: "prove_exact_with_high_mask_vec"
+7: "prove_exact_with_high_mask_vec" is unchanged by InstCombine
+

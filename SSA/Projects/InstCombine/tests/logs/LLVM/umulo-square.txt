@@ -1,0 +1,32 @@
+1: "umulov_square_i32"
+4: "umulov_square_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umulov_square_i32" has unsupported operation after optimization: llvm.extractvalue
+
+1: "umulov_square_i16"
+4: "umulov_square_i16" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umulov_square_i16" has unsupported operation after optimization: llvm.extractvalue
+
+1: "umulov_square_i13"
+4: "umulov_square_i13" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umulov_square_i13" has unsupported operation: llvm.extractvalue
+
+1: "umulov_square_i32_multiuse"
+4: "umulov_square_i32_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umulov_square_i32_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "umulov_square_i32_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "umulov_square_i32_multiuse" has unsupported operation: llvm.call
+
+1: "smulov_square_i32"
+4: "smulov_square_i32" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "smulov_square_i32" has unsupported operation: llvm.extractvalue
+
+1: "use"
+5: "use" is empty
+

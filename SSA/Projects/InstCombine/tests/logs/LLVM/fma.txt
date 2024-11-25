@@ -1,0 +1,418 @@
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "use_vec3"
+5: "use_vec3" is empty
+
+1: "fma_fneg_x_fneg_y"
+4: "fma_fneg_x_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_fneg_x_unary_fneg_y"
+4: "fma_unary_fneg_x_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fneg_x_fneg_y_vec"
+4: "fma_fneg_x_fneg_y_vec" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_fneg_x_unary_fneg_y_vec"
+4: "fma_unary_fneg_x_unary_fneg_y_vec" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fneg_x_fneg_y_vec_poison"
+4: "fma_fneg_x_fneg_y_vec_poison" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fneg_x_fneg_y_fast"
+4: "fma_fneg_x_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_fneg_x_unary_fneg_y_fast"
+4: "fma_unary_fneg_x_unary_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fneg_const_fneg_y"
+4: "fma_fneg_const_fneg_y" has unsupported operation: llvm.mlir.addressof
+
+4: "fma_fneg_const_fneg_y" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fma_fneg_const_fneg_y" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fma_fneg_const_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_fneg_const_unary_fneg_y"
+4: "fma_unary_fneg_const_unary_fneg_y" has unsupported operation: llvm.mlir.addressof
+
+4: "fma_unary_fneg_const_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fma_unary_fneg_const_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fma_unary_fneg_const_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fneg_x_fneg_const"
+4: "fma_fneg_x_fneg_const" has unsupported operation: llvm.mlir.addressof
+
+4: "fma_fneg_x_fneg_const" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fma_fneg_x_fneg_const" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fma_fneg_x_fneg_const" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_fneg_x_unary_fneg_const"
+4: "fma_unary_fneg_x_unary_fneg_const" has unsupported operation: llvm.mlir.addressof
+
+4: "fma_unary_fneg_x_unary_fneg_const" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fma_unary_fneg_x_unary_fneg_const" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fma_unary_fneg_x_unary_fneg_const" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fabs_x_fabs_y"
+4: "fma_fabs_x_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fma_fabs_x_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fma_fabs_x_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fabs_x_fabs_x"
+4: "fma_fabs_x_fabs_x" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_fabs_x_fabs_x_fast"
+4: "fma_fabs_x_fabs_x_fast" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fmuladd_fneg_x_fneg_y"
+4: "fmuladd_fneg_x_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_unary_fneg_x_unary_fneg_y"
+4: "fmuladd_unary_fneg_x_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_fneg_x_fneg_y_fast"
+4: "fmuladd_fneg_x_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_unfold"
+4: "fmuladd_unfold" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_unfold_vec"
+4: "fmuladd_unfold_vec" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_unary_fneg_x_unary_fneg_y_fast"
+4: "fmuladd_unary_fneg_x_unary_fneg_y_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_fneg_const_fneg_y"
+4: "fmuladd_fneg_const_fneg_y" has unsupported operation: llvm.mlir.addressof
+
+4: "fmuladd_fneg_const_fneg_y" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fmuladd_fneg_const_fneg_y" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fmuladd_fneg_const_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_unary_fneg_const_unary_fneg_y"
+4: "fmuladd_unary_fneg_const_unary_fneg_y" has unsupported operation: llvm.mlir.addressof
+
+4: "fmuladd_unary_fneg_const_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fmuladd_unary_fneg_const_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fmuladd_unary_fneg_const_unary_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_fneg_x_fneg_const"
+4: "fmuladd_fneg_x_fneg_const" has unsupported operation: llvm.mlir.addressof
+
+4: "fmuladd_fneg_x_fneg_const" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fmuladd_fneg_x_fneg_const" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fmuladd_fneg_x_fneg_const" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_unary_fneg_x_unary_fneg_const"
+4: "fmuladd_unary_fneg_x_unary_fneg_const" has unsupported operation: llvm.mlir.addressof
+
+4: "fmuladd_unary_fneg_x_unary_fneg_const" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "fmuladd_unary_fneg_x_unary_fneg_const" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "fmuladd_unary_fneg_x_unary_fneg_const" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_fabs_x_fabs_y"
+4: "fmuladd_fabs_x_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fmuladd_fabs_x_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fmuladd_fabs_x_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_fabs_x_fabs_x"
+4: "fmuladd_fabs_x_fabs_x" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_fabs_x_fabs_x_fast"
+4: "fmuladd_fabs_x_fabs_x_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fma_k_y_z"
+4: "fma_k_y_z" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_k_y_z_fast"
+4: "fma_k_y_z_fast" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fmuladd_k_y_z_fast"
+4: "fmuladd_k_y_z_fast" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fma_1_y_z"
+4: "fma_1_y_z" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_x_1_z"
+4: "fma_x_1_z" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_x_1_z_v2f32"
+4: "fma_x_1_z_v2f32" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_x_1_2_z_v2f32"
+4: "fma_x_1_2_z_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_x_1_z_fast"
+4: "fma_x_1_z_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_1_1_z"
+4: "fma_1_1_z" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_x_y_0"
+4: "fma_x_y_0" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_x_y_0_nsz"
+4: "fma_x_y_0_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fma_x_y_0_v"
+4: "fma_x_y_0_v" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_x_y_0_nsz_v"
+4: "fma_x_y_0_nsz_v" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fmuladd_x_y_0"
+4: "fmuladd_x_y_0" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fmuladd_x_y_0_nsz"
+4: "fmuladd_x_y_0_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fma_x_y_m0"
+4: "fma_x_y_m0" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fma_x_y_m0_v"
+4: "fma_x_y_m0_v" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fmuladd_x_y_m0"
+4: "fmuladd_x_y_m0" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fmuladd_x_1_z_fast"
+4: "fmuladd_x_1_z_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmuladd_a_0_b"
+8: "fmuladd_a_0_b" contains vectors which are unsupported
+
+1: "fmuladd_0_a_b"
+8: "fmuladd_0_a_b" contains vectors which are unsupported
+
+1: "fmuladd_a_0_b_missing_flags"
+4: "fmuladd_a_0_b_missing_flags" has unsupported operation: builtin.unregistered: llvm.intr.fmuladd
+
+1: "fma_a_0_b"
+8: "fma_a_0_b" contains vectors which are unsupported
+
+1: "fma_0_a_b"
+8: "fma_0_a_b" contains vectors which are unsupported
+
+1: "fma_0_a_b_missing_flags"
+4: "fma_0_a_b_missing_flags" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_sqrt"
+4: "fma_sqrt" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_const_fmul"
+4: "fma_const_fmul" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_const_fmul_zero"
+8: "fma_const_fmul_zero" contains vectors which are unsupported
+
+1: "fma_const_fmul_zero2"
+8: "fma_const_fmul_zero2" contains vectors which are unsupported
+
+1: "fma_const_fmul_one"
+4: "fma_const_fmul_one" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_const_fmul_one2"
+4: "fma_const_fmul_one2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fma_nan_and_const_0"
+8: "fma_nan_and_const_0" contains vectors which are unsupported
+
+1: "fma_nan_and_const_1"
+8: "fma_nan_and_const_1" contains vectors which are unsupported
+
+1: "fma_nan_and_const_2"
+8: "fma_nan_and_const_2" contains vectors which are unsupported
+
+1: "fma_undef_0"
+8: "fma_undef_0" contains vectors which are unsupported
+
+1: "fma_undef_1"
+8: "fma_undef_1" contains vectors which are unsupported
+
+1: "fma_undef_2"
+8: "fma_undef_2" contains vectors which are unsupported
+
+1: "fma_partial_undef_0"
+4: "fma_partial_undef_0" has unsupported operation: llvm.mlir.undef
+
+4: "fma_partial_undef_0" has unsupported operation: llvm.mlir.undef
+
+4: "fma_partial_undef_0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_partial_undef_0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_partial_undef_0" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_partial_undef_1"
+4: "fma_partial_undef_1" has unsupported operation: llvm.mlir.undef
+
+4: "fma_partial_undef_1" has unsupported operation: llvm.mlir.undef
+
+4: "fma_partial_undef_1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_partial_undef_1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_partial_undef_1" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_partial_undef_2"
+4: "fma_partial_undef_2" has unsupported operation: llvm.mlir.undef
+
+4: "fma_partial_undef_2" has unsupported operation: llvm.mlir.undef
+
+4: "fma_partial_undef_2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_partial_undef_2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_partial_undef_2" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_nan_0"
+8: "fma_nan_0" contains vectors which are unsupported
+
+1: "fma_nan_1"
+8: "fma_nan_1" contains vectors which are unsupported
+
+1: "fma_nan_2"
+8: "fma_nan_2" contains vectors which are unsupported
+
+1: "fmuladd_const_fmul"
+4: "fmuladd_const_fmul" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fmuladd_nan_and_const_0"
+8: "fmuladd_nan_and_const_0" contains vectors which are unsupported
+
+1: "fmuladd_nan_and_const_1"
+8: "fmuladd_nan_and_const_1" contains vectors which are unsupported
+
+1: "fmuladd_nan_and_const_2"
+8: "fmuladd_nan_and_const_2" contains vectors which are unsupported
+
+1: "fmuladd_nan_0"
+8: "fmuladd_nan_0" contains vectors which are unsupported
+
+1: "fmuladd_nan_1"
+8: "fmuladd_nan_1" contains vectors which are unsupported
+
+1: "fmuladd_undef_0"
+8: "fmuladd_undef_0" contains vectors which are unsupported
+
+1: "fmuladd_undef_1"
+8: "fmuladd_undef_1" contains vectors which are unsupported
+
+1: "fmuladd_undef_2"
+8: "fmuladd_undef_2" contains vectors which are unsupported
+
+1: "fma_unary_shuffle_ops"
+4: "fma_unary_shuffle_ops" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fma_unary_shuffle_ops" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+4: "fma_unary_shuffle_ops" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "fma_unary_shuffle_ops_widening"
+4: "fma_unary_shuffle_ops_widening" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fma_unary_shuffle_ops_widening" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_widening" has unsupported operation: llvm.call
+
+4: "fma_unary_shuffle_ops_widening" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+4: "fma_unary_shuffle_ops_widening" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "fma_unary_shuffle_ops_narrowing"
+4: "fma_unary_shuffle_ops_narrowing" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fma_unary_shuffle_ops_narrowing" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_narrowing" has unsupported operation: llvm.call
+
+4: "fma_unary_shuffle_ops_narrowing" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+4: "fma_unary_shuffle_ops_narrowing" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "fma_unary_shuffle_ops_unshuffled"
+4: "fma_unary_shuffle_ops_unshuffled" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fma_unary_shuffle_ops_unshuffled" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_unshuffled" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_unshuffled" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_shuffle_ops_wrong_mask"
+4: "fma_unary_shuffle_ops_wrong_mask" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fma_unary_shuffle_ops_wrong_mask" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_wrong_mask" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_wrong_mask" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_wrong_mask" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_unary_shuffle_ops_uses"
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: llvm.call
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: llvm.call
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: llvm.call
+
+4: "fma_unary_shuffle_ops_uses" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_negone"
+4: "fma_negone" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmuladd_negone"
+4: "fmuladd_negone" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fma_negone_fmf"
+4: "fma_negone_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fmuladd_negone_fmf"
+4: "fmuladd_negone_fmf" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fma_negone_vec"
+4: "fma_negone_vec" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "fma_negone_vec_partial_undef"
+4: "fma_negone_vec_partial_undef" has unsupported operation: llvm.mlir.undef
+
+4: "fma_negone_vec_partial_undef" has unsupported operation: llvm.mlir.undef
+
+4: "fma_negone_vec_partial_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_negone_vec_partial_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fma_negone_vec_partial_undef" has unsupported operation: builtin.unregistered: llvm.intr.fma
+
+1: "fma_non_negone"
+4: "fma_non_negone" has unsupported operation: builtin.unregistered: llvm.intr.fma
+

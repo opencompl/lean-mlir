@@ -1,0 +1,127 @@
+1: "use8"
+5: "use8" is empty
+
+1: "add_shl_same_amount"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add_shl_same_amount_nsw"
+8: "add_shl_same_amount_nsw" contains vectors which are unsupported
+
+1: "add_shl_same_amount_nuw"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add_shl_same_amount_nsw_extra_use1"
+4: "add_shl_same_amount_nsw_extra_use1" has unsupported operation: llvm.call
+
+1: "add_shl_same_amount_nuw_extra_use2"
+4: "add_shl_same_amount_nuw_extra_use2" has unsupported operation: llvm.call
+
+1: "add_shl_same_amount_nsw_nuw_extra_use3"
+4: "add_shl_same_amount_nsw_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "add_shl_same_amount_nsw_nuw_extra_use3" has unsupported operation: llvm.call
+
+1: "add_shl_same_amount_partial_nsw1"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add_shl_same_amount_partial_nsw2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add_shl_same_amount_partial_nuw1"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add_shl_same_amount_partial_nuw2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "sub_shl_same_amount"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "sub_shl_same_amount_nsw"
+8: "sub_shl_same_amount_nsw" contains vectors which are unsupported
+
+1: "sub_shl_same_amount_nuw"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "sub_shl_same_amount_nsw_extra_use1"
+4: "sub_shl_same_amount_nsw_extra_use1" has unsupported operation: llvm.call
+
+1: "sub_shl_same_amount_nuw_extra_use2"
+4: "sub_shl_same_amount_nuw_extra_use2" has unsupported operation: llvm.call
+
+1: "sub_shl_same_amount_nsw_nuw_extra_use3"
+4: "sub_shl_same_amount_nsw_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "sub_shl_same_amount_nsw_nuw_extra_use3" has unsupported operation: llvm.call
+
+1: "sub_shl_same_amount_partial_nsw1"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "sub_shl_same_amount_partial_nsw2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "sub_shl_same_amount_partial_nuw1"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "sub_shl_same_amount_partial_nuw2"
+2: llvm.func
+2: llvm.shl
+2: llvm.shl
+2: llvm.sub
+2: llvm.return
+
+1: "add_shl_same_amount_constants"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "add_shl_same_amount_constants_extra_use"
+4: "add_shl_same_amount_constants_extra_use" has unsupported operation: llvm.call
+

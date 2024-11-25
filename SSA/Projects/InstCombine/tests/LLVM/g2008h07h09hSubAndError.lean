@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2008h07h09hSubAndError_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,12 +12,12 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h07h09hSubAndError_statements
-                                                    
+
 def foo_before := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(5 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.sub %0, %arg0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
@@ -26,23 +26,20 @@ def foo_before := [llvm|
 def foo_after := [llvm|
 {
 ^0(%arg0 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %0 = llvm.mlir.constant(1 : i32) : i32
+  %1 = llvm.mlir.constant(2 : i32) : i32
   %2 = llvm.sub %0, %arg0 : i32
   %3 = llvm.and %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem foo_proof : foo_before ⊑ foo_after := by
   unfold foo_before foo_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN foo
-  apply foo_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo
 
 

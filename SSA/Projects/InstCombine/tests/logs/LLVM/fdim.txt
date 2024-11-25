@@ -1,0 +1,56 @@
+1: "fdim_double"
+4: "fdim_double" has unsupported operation after optimization: llvm.call
+
+1: "fdim_double1"
+4: "fdim_double1" has unsupported operation after optimization: llvm.call
+
+1: "fdim_float"
+4: "fdim_float" has unsupported operation after optimization: llvm.call
+
+1: "fdim_float1"
+4: "fdim_float1" has unsupported operation after optimization: llvm.call
+
+1: "fdim_poison1"
+4: "fdim_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "fdim_poison2"
+4: "fdim_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "fdim_poison3"
+4: "fdim_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "fdim_undef1"
+4: "fdim_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "fdim_undef1" has unsupported operation: llvm.call
+
+1: "fdim_inf_ninf"
+4: "fdim_inf_ninf" has unsupported operation after optimization: llvm.call
+
+1: "fdim_inf"
+4: "fdim_inf" has unsupported operation after optimization: llvm.call
+
+1: "fdim_nzero"
+4: "fdim_nzero" has unsupported operation after optimization: llvm.call
+
+1: "fdim_strictfp"
+4: "fdim_strictfp" has unsupported operation: llvm.call
+
+1: "fdim_nan1"
+4: "fdim_nan1" has unsupported operation after optimization: llvm.call
+
+1: "fdim_nan2"
+4: "fdim_nan2" has unsupported operation after optimization: llvm.call
+
+1: "fdim_snan1"
+4: "fdim_snan1" has unsupported operation after optimization: llvm.call
+
+1: "fdim_snan2"
+4: "fdim_snan2" has unsupported operation after optimization: llvm.call
+
+1: "fdim"
+5: "fdim" is empty
+
+1: "fdimf"
+5: "fdimf" is empty
+

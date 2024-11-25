@@ -145,7 +145,7 @@ variable (d : Dialect) [DialectSignature d]
 
 mutual
 /-- An intrinsically typed expression whose effect is *at most* EffectKind -/
-inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (ty : d.Ty) → Type :=
+inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (ty : d.Ty) → Type where
   | mk {Γ} {ty} (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
     (eff_le : DialectSignature.effectKind op ≤ eff)
@@ -1823,14 +1823,14 @@ section SubsetEntries
 theorem subset_entries :
     (
      ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty)
-        (inst : DecidableEq d.Op)
+        (_ : DecidableEq d.Op)
         (lets : Lets d Γ_in eff Γ_out)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
         (argsl : HVector Γ_out.Var l) (argsr : HVector Δ_out.Var l) (ma : Mapping Δ_in Γ_out),
       ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
     )
     ∧ (
-      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (_ : DecidableEq d.Op)
         (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
         (w : Var Δ_out t) (ma : Mapping Δ_in Γ_out),
@@ -2080,8 +2080,8 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
     {Γv : Valuation Γ} {Δv : Valuation Δ}
     (op_eq : e₁.op = e₂.op)
     (h_regArgs : HEq e₁.regArgs e₂.regArgs)
-    (h_args : HVector.map (fun x v => Γv v) (op_eq ▸ e₁.args)
-              = HVector.map (fun x v => Δv v) e₂.args) :
+    (h_args : HVector.map (fun _ v => Γv v) (op_eq ▸ e₁.args)
+              = HVector.map (fun _ v => Δv v) e₂.args) :
     e₁.denote Γv = e₂.denote Δv := by
   rcases e₁ with ⟨op₁, ty_eq, _, args₁, regArgs₁⟩
   rcases e₂ with ⟨_, _, _, args₂, _⟩

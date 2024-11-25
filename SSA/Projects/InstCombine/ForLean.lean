@@ -1,6 +1,7 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
-import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
+import Mathlib.Tactic.Ring
+import Mathlib.Data.BitVec
 
 namespace Nat
 
@@ -81,13 +82,28 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
-theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
-   subst h
-   simp
-
 end Nat
 
 namespace BitVec
+
+@[simp]
+theorem replicate_one {w : Nat} : BitVec.replicate w 1#1 = cast (by simp) (allOnes w) := by
+  ext i
+  simp
+  omega
+
+@[simp]
+theorem replicate_zero {w : Nat} : BitVec.replicate w 0#1 = cast (by simp) (0#w) := by
+  ext i
+  simp
+
+theorem abs_eq_add_xor {x : BitVec w} :
+    have y : BitVec w := BitVec.cast (by simp) (BitVec.replicate w (BitVec.ofBool x.msb))
+    x.abs = (x + y) ^^^ y := by
+  simp only [BitVec.abs, neg_eq]
+  by_cases h: x.msb
+  · simp [h, ← allOnes_sub_eq_not]
+  · simp [h]
 
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
@@ -101,15 +117,6 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   apply BitVec.eq_of_toNat_eq
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   rw [Nat.mul_comm]
-
-@[simp]
-def msb_one (h : 1 < w) : BitVec.msb 1#w = false := by
-  simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt,
-    toNat_ofNat]
-  rw [Nat.mod_eq_of_lt] <;> simp <;> omega
-
-@[simp]
-lemma msb_one_of_width_one : BitVec.msb 1#1 = true := rfl
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [BitVec.msb, getMsbD, allOnes]
@@ -145,32 +152,12 @@ theorem udiv_eq_zero {x y : BitVec w} (h : x < y) : udiv x y = 0#w := by
 def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
     BitVec.sdiv (1#w) (BitVec.allOnes w) = BitVec.allOnes w := by
   simp only [BitVec.sdiv]
-  simp only [msb_one h, neg_eq, @msb_allOnes w (by omega)]
+  simp only [msb_one, neg_eq, @msb_allOnes w (by omega)]
   simp only [neg_allOnes]
   simp only [udiv_one_eq_self]
   simp only [negOne_eq_allOnes]
-
-theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
-  obtain ⟨a, ha⟩ := a
-  simp only [pow_one] at ha
-  have acases : a = 0 ∨ a = 1 := by omega
-  rcases acases with ⟨rfl | rfl⟩
-  · simp
-  case inr h =>
-    subst h
-    simp
-
-@[simp]
-lemma add_eq_xor (a b : BitVec 1) : a + b = a ^^^ b := by
-  have ha : a = 0 ∨ a = 1 := width_one_cases _
-  have hb : b = 0 ∨ b = 1 := width_one_cases _
-  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
-
-@[simp]
-lemma mul_eq_and (a b : BitVec 1) : a * b = a &&& b := by
-  have ha : a = 0 ∨ a = 1 := width_one_cases _
-  have hb : b = 0 ∨ b = 1 := width_one_cases _
-  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
+  have : ¬ (w = 1) := by omega
+  simp [this]
 
 theorem sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
@@ -211,16 +198,14 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
   case succ w' =>
     cases w'
     case zero =>
-      have ha' : a = 0#1 ∨ a = 1#1 := BitVec.width_one_cases a
-      rcases ha' with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
+      rcases eq_zero_or_eq_one a with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
         not_true_eq_false] at ha0)
       case inr h => subst h; contradiction
     case succ w' =>
       simp only [BitVec.sdiv, lt_add_iff_pos_left, add_pos_iff, zero_lt_one,
         or_true, msb_one, neg_eq]
       by_cases h : a.msb <;> simp [h]
-      · simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
-        rw [BitVec.udiv_eq_zero]
+      · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1
         · rw [neg_ne_iff_ne_neg]
           simp only [_root_.neg_zero]
@@ -228,7 +213,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         · rw [neg_ne_iff_ne_neg]
           rw [← negOne_eq_allOnes] at hao
           assumption
-      · rw [BitVec.udiv_eq_zero]
+      · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
 
 def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
@@ -236,23 +221,15 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
   by_cases w_1 : w = 1; subst w_1; rfl
   unfold BitVec.sdiv
   unfold BitVec.udiv
-  simp only [toNat_ofNat, neg_eq, toNat_neg]
-  rw [msb_one (by omega)]
-  simp only []
+  simp only [msb_one, w_1, decide_false, toNat_ofNat, ne_eq, w_0, not_false_eq_true,
+    Nat.one_mod_two_pow_eq, zero_lt_one, Nat.div_self]
+  apply BitVec.eq_of_toNat_eq
+  simp
   have hone : 1 % 2 ^ w = 1 := by
     apply Nat.mod_eq_of_lt
     simp
     omega
-  apply BitVec.eq_of_toNat_eq
   simp [hone]
-
-lemma udiv_zero {w : ℕ} {x : BitVec w} : BitVec.udiv x 0#w = 0 := by
-  simp only [udiv, toNat_ofNat, Nat.zero_mod, Nat.div_zero, ofNat_eq_ofNat]
-  rfl
-
-lemma sdiv_zero {w : ℕ} (x : BitVec w) : BitVec.sdiv x 0#w = 0#w := by
-  simp only [sdiv, msb_zero, udiv_zero, ofNat_eq_ofNat, neg_eq, neg_zero]
-  split <;> rfl
 
 -- @[simp bv_toNat]
 lemma toNat_neq_zero_of_neq_zero {x : BitVec w} (hx : x ≠ 0) : x.toNat ≠ 0 := by
@@ -288,12 +265,6 @@ theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
   rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
   omega
 
-theorem width_one_cases' (x : BitVec 1) :
-    x = 0 ∨ x = 1 := by
-  obtain ⟨x, hx⟩ := x
-  simp [BitVec.toNat_eq]
-  omega
-
 /- Not a simp lemma by default because we may want toFin or toInt in the future. -/
 theorem ult_toNat (x y : BitVec n) :
     (BitVec.ult (n := n) x y) = decide (x.toNat < y.toNat) := by
@@ -304,13 +275,10 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
   have rk : _ := @BitVec.getLsbD_ge w x i hi
   apply rk
 
-@[simp]
-private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
-  simp [toInt_ofNat]
-
 theorem intMin_slt_zero (h : 0 < w) :
     BitVec.slt (intMin w) 0 := by
-  simp only [BitVec.slt, BitVec.toInt_intMin]
+  simp only [BitVec.slt, toInt_intMin, Int.ofNat_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
+    toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
   norm_cast
   simp [h]
 
@@ -331,7 +299,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   by_cases h : A.toInt < 0
   · simp [h]
     omega
-  · simp only [toInt_zero, neg_zero, h, decide_False, Bool.not_false, decide_eq_true_eq]
+  · simp only [toInt_zero, neg_zero, h, decide_false, Bool.not_false, decide_eq_true_eq]
     simp only [ofNat_eq_ofNat, ne_eq, ← toInt_ne, toInt_zero] at h_ne_zero
     omega
   simp only [ne_eq]
@@ -370,22 +338,6 @@ theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
     apply intMin_lt_zero
     omega
 
-theorem zero_sub_eq_neg {w : Nat} { A : BitVec w}: BitVec.ofInt w 0 - A = -A:= by
-  simp
-
--- Any bitvec of width 0 is equal to the zero bitvector
-theorem width_zero_eq_zero (x : BitVec 0) : x = BitVec.ofNat 0 0 :=
-  Subsingleton.allEq ..
-
-@[simp]
-theorem toInt_width_zero (x : BitVec 0) : BitVec.toInt x = 0 := by
-  rw [BitVec.width_zero_eq_zero x]
-  simp
-
-@[simp]
-theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
-  simp
-
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
   induction i
@@ -407,10 +359,7 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
 attribute [bv_ofBool] ofBool_or_ofBool
 attribute [bv_ofBool] ofBool_and_ofBool
 attribute [bv_ofBool] ofBool_xor_ofBool
-
-@[simp, bv_ofBool]
-theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
-  rcases a <;> rcases b <;> simp [bv_toNat]
+attribute [simp, bv_ofBool] ofBool_eq_iff_eq
 
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsbD_eq
@@ -440,13 +389,6 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> cases carry i B A false
       <;> rfl
 
-@[simp] theorem getMsb_not (x : BitVec w) :
-    (~~~x).getMsbD i = (decide (i < w) && !(x.getMsbD i)) := by
-  by_cases h : i < w <;> simp [getMsbD, h] ; omega
-
-@[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
-  simp [BitVec.msb]
-
 @[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
     (x.signExtend i).msb = x.msb := by
   simp [BitVec.msb_eq_getLsbD_last, getLsbD_signExtend]
@@ -456,7 +398,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
     x.signExtend (i+1) = cons (if i < w then x.getLsbD i else x.msb) (x.signExtend i) := by
   ext j
-  simp only [getLsbD_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsbD_cons]
+  simp only [getLsbD_signExtend, Fin.is_lt, decide_true, Bool.true_and, getLsbD_cons]
   split <;> split <;> simp_all <;> omega
 
 @[simp]
@@ -477,56 +419,7 @@ theorem allOnes_sshiftRight {w n : Nat} :
   · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
   · simp [getLsbD_sshiftRight]; omega
 
-@[simp]
-theorem zero_sshiftRight {w n : Nat} :
-  (0#w).sshiftRight n = 0#w := by
-  ext i
-  by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
-  · simp [getLsbD_sshiftRight]
-
-@[simp]
-theorem zero_ushiftRight {w n : Nat} :
-    0#w >>> n = 0#w := by
-  ext i
-  by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h]
-  · simp
-
-theorem not_sshiftRight {b : BitVec w} :
-    ~~~b.sshiftRight n = (~~~b).sshiftRight n := by
-  ext i
-  simp [getLsbD_sshiftRight]
-  by_cases h : w ≤ i
-  <;> by_cases h' : n + i < w
-  <;> by_cases h'' : 0 < w
-  <;> simp [h, h', h'']
-  <;> omega
-
-@[simp]
-theorem not_sshiftRight_not {x : BitVec w} {n : Nat} :
-    ~~~((~~~x).sshiftRight n) = x.sshiftRight n := by
-  simp [not_sshiftRight]
-
-@[simp]
-theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
-  x >>> n <<< n = x &&& BitVec.allOnes w <<< n := by
-  induction n generalizing x
-  case zero =>
-    ext; simp
-  case succ n ih =>
-    rw [BitVec.shiftLeft_add, Nat.add_comm, BitVec.shiftRight_add, ih,
-       Nat.add_comm, BitVec.shiftLeft_add, BitVec.shiftLeft_and_distrib]
-    ext i
-    simp only [getLsbD_and, getLsbD_shiftLeft, Fin.is_lt, decide_True, Nat.lt_one_iff,
-      Bool.true_and, getLsbD_ushiftRight, getLsbD_allOnes]
-    rw [Nat.add_comm]
-    by_cases hw : w = 0
-    · simp [hw]
-    · by_cases h : i.val = 0
-      · simp [h]
-      · rw [Nat.sub_add_cancel (by omega)]
-        simp [h]
+attribute [simp] shiftLeft_ushiftRight
 
 theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   simp only [Int.reduceNeg, toNat_eq, toNat_ofInt, Nat.cast_pow, Nat.cast_ofNat, toNat_neg,
@@ -546,26 +439,19 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
     norm_cast
 
 @[simp]
-theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
-    (x + y) <<< n = x <<< n + y <<< n := by
-  induction n
-  case zero =>
-    simp
-  case succ n ih =>
-    simp only [shiftLeft_add, ih, toNat_eq, toNat_shiftLeft, toNat_add, Nat.shiftLeft_eq_mul_pow,
-      Nat.add_mod_mod, Nat.mod_add_mod, pow_one, Nat.mod_mul_mod]
-    rw [Nat.mod_eq_of_eq]
-    omega
-
-@[simp]
 theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
     x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
   simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
 
 @[simp]
-theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
-    simp [bv_toNat]
-
+theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
+    x.sdiv (BitVec.allOnes w) = -x := by
+  simp only [BitVec.sdiv_eq]
+  by_cases h : w = 0
+  · subst h
+    simp [BitVec.eq_nil x]
+  · rw [BitVec.msb_allOnes (by omega)]
+    by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
 end BitVec
 
 namespace Bool
@@ -608,3 +494,16 @@ theorem not_bne' {a b : Bool} : (!bne a b) = (a == b) := by
   <;> simp
 
 end Bool
+
+theorem Option.some_bind'' (x : α) (f : α → Option β) : some x >>= f = f x := by
+  simp
+
+@[simp]
+theorem bind_if_then_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
+    (if h then none else x) >>= f = if h then none else x >>= f := by
+  split <;> simp
+
+@[simp]
+theorem bind_if_else_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
+    (if h then x else none) >>= f = if h then x >>= f else none := by
+  split <;> simp

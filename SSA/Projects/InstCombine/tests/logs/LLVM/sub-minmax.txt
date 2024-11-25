@@ -1,0 +1,340 @@
+1: "max_na_b_minux_na"
+4: "max_na_b_minux_na" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "na_minus_max_na_b"
+4: "na_minus_max_na_b" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_umin"
+4: "sub_umin" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_umin_commute_vec"
+4: "sub_umin_commute_vec" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_umin_uses"
+9: "sub_umin_uses" has pointer type input
+
+4: "sub_umin_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "sub_umin_uses" has unsupported operation: llvm.store
+
+1: "sub_umin_no_common_op"
+4: "sub_umin_no_common_op" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "max_b_na_minus_na"
+4: "max_b_na_minus_na" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "na_minus_max_b_na"
+4: "na_minus_max_b_na" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_na_bi_minux_na"
+4: "max_na_bi_minux_na" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "na_minus_max_na_bi"
+4: "na_minus_max_na_bi" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_bi_na_minus_na"
+4: "max_bi_na_minus_na" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "na_minus_max_bi_na"
+4: "na_minus_max_bi_na" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "max_na_bi_minux_na_use"
+4: "max_na_bi_minux_na_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "max_na_bi_minux_na_use" has unsupported operation: llvm.call
+
+1: "na_minus_max_na_bi_use"
+4: "na_minus_max_na_bi_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "na_minus_max_na_bi_use" has unsupported operation: llvm.call
+
+1: "max_bi_na_minus_na_use"
+4: "max_bi_na_minus_na_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "max_bi_na_minus_na_use" has unsupported operation: llvm.call
+
+1: "na_minus_max_bi_na_use"
+4: "na_minus_max_bi_na_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "na_minus_max_bi_na_use" has unsupported operation: llvm.call
+
+1: "max_na_bi_minux_na_use2"
+4: "max_na_bi_minux_na_use2" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "max_na_bi_minux_na_use2" has unsupported operation: llvm.call
+
+4: "max_na_bi_minux_na_use2" has unsupported operation: llvm.call
+
+1: "na_minus_max_na_bi_use2"
+4: "na_minus_max_na_bi_use2" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "na_minus_max_na_bi_use2" has unsupported operation: llvm.call
+
+4: "na_minus_max_na_bi_use2" has unsupported operation: llvm.call
+
+1: "max_bi_na_minus_na_use2"
+4: "max_bi_na_minus_na_use2" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "max_bi_na_minus_na_use2" has unsupported operation: llvm.call
+
+4: "max_bi_na_minus_na_use2" has unsupported operation: llvm.call
+
+1: "na_minus_max_bi_na_use2"
+4: "na_minus_max_bi_na_use2" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "na_minus_max_bi_na_use2" has unsupported operation: llvm.call
+
+4: "na_minus_max_bi_na_use2" has unsupported operation: llvm.call
+
+1: "umin_not_sub"
+4: "umin_not_sub" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin_not_sub" has unsupported operation: llvm.call
+
+4: "umin_not_sub" has unsupported operation: llvm.call
+
+1: "umin_not_sub_rev"
+4: "umin_not_sub_rev" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin_not_sub_rev" has unsupported operation: llvm.call
+
+4: "umin_not_sub_rev" has unsupported operation: llvm.call
+
+1: "umin3_not_all_ops_extra_uses_invert_subs"
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: llvm.call
+
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: llvm.call
+
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: llvm.call
+
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: llvm.call
+
+4: "umin3_not_all_ops_extra_uses_invert_subs" has unsupported operation: llvm.return
+
+1: "umin_not_sub_intrinsic_commute0"
+4: "umin_not_sub_intrinsic_commute0" has unsupported operation: llvm.call
+
+4: "umin_not_sub_intrinsic_commute0" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin_not_sub_intrinsic_commute0" has unsupported operation: llvm.call
+
+1: "umax_not_sub_intrinsic_commute1"
+4: "umax_not_sub_intrinsic_commute1" has unsupported operation: llvm.call
+
+4: "umax_not_sub_intrinsic_commute1" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umax_not_sub_intrinsic_commute1" has unsupported operation: llvm.call
+
+1: "smin_not_sub_intrinsic_commute2"
+4: "smin_not_sub_intrinsic_commute2" has unsupported operation: llvm.call
+
+4: "smin_not_sub_intrinsic_commute2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "smin_not_sub_intrinsic_commute2" has unsupported operation: llvm.call
+
+1: "smax_not_sub_intrinsic_commute3"
+4: "smax_not_sub_intrinsic_commute3" has unsupported operation: llvm.call
+
+4: "smax_not_sub_intrinsic_commute3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "smax_not_sub_intrinsic_commute3" has unsupported operation: llvm.call
+
+1: "umin_not_sub_intrinsic_uses"
+4: "umin_not_sub_intrinsic_uses" has unsupported operation: llvm.call
+
+4: "umin_not_sub_intrinsic_uses" has unsupported operation: llvm.call
+
+4: "umin_not_sub_intrinsic_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umin_not_sub_intrinsic_uses" has unsupported operation: llvm.call
+
+1: "umax_sub_op0"
+4: "umax_sub_op0" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umax_sub_op0_vec_commute"
+4: "umax_sub_op0_vec_commute" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umax_sub_op0_use"
+4: "umax_sub_op0_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umax_sub_op0_use" has unsupported operation: llvm.call
+
+1: "umax_sub_op1"
+4: "umax_sub_op1" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umax_sub_op1_vec_commute"
+4: "umax_sub_op1_vec_commute" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umax_sub_op1_use"
+4: "umax_sub_op1_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umax_sub_op1_use" has unsupported operation: llvm.call
+
+1: "umin_sub_op1"
+4: "umin_sub_op1" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umin_sub_op1_commute"
+4: "umin_sub_op1_commute" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umin_sub_op0"
+4: "umin_sub_op0" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umin_sub_op0_commute"
+4: "umin_sub_op0_commute" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "umin_sub_op1_use"
+4: "umin_sub_op1_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umin_sub_op1_use" has unsupported operation: llvm.call
+
+1: "umin_sub_op0_use"
+4: "umin_sub_op0_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umin_sub_op0_use" has unsupported operation: llvm.call
+
+1: "diff_add_smin"
+4: "diff_add_smin" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "diff_add_smax"
+4: "diff_add_smax" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "diff_add_umin"
+4: "diff_add_umin" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "diff_add_umax"
+4: "diff_add_umax" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "diff_add_smin_use"
+4: "diff_add_smin_use" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "diff_add_smin_use" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "diff_add_smin_use" has unsupported operation: llvm.call
+
+1: "diff_add_use_smax"
+4: "diff_add_use_smax" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "diff_add_use_smax" has unsupported operation: llvm.call
+
+1: "diff_add_use_umin_use"
+4: "diff_add_use_umin_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "diff_add_use_umin_use" has unsupported operation: llvm.call
+
+4: "diff_add_use_umin_use" has unsupported operation: llvm.call
+
+1: "sub_add_umin"
+4: "sub_add_umin" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_add_umin_commute_umin"
+4: "sub_add_umin_commute_umin" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_add_umin_commute_add"
+4: "sub_add_umin_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_add_umin_commute_add_umin"
+4: "sub_add_umin_commute_add_umin" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_add_umin_vec"
+4: "sub_add_umin_vec" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sub_add_umin_mismatch"
+4: "sub_add_umin_mismatch" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "sub_add_umin_use_a"
+4: "sub_add_umin_use_a" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "sub_add_umin_use_a" has unsupported operation: llvm.call
+
+1: "sub_add_umin_use_m"
+4: "sub_add_umin_use_m" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "sub_add_umin_use_m" has unsupported operation: llvm.call
+
+1: "sub_smax0_sub_nsw"
+4: "sub_smax0_sub_nsw" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "sub_smax0_sub_nsw_use"
+4: "sub_smax0_sub_nsw_use" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sub_smax0_sub_nsw_use" has unsupported operation: llvm.call
+
+4: "sub_smax0_sub_nsw_use" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "sub_smax0_sub"
+4: "sub_smax0_sub" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sub_smax0_sub_commute"
+4: "sub_smax0_sub_commute" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sub_smin0_sub_nsw_use"
+4: "sub_smin0_sub_nsw_use" has unsupported operation: llvm.call
+
+4: "sub_smin0_sub_nsw_use" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sub_smin0_sub_nsw"
+4: "sub_smin0_sub_nsw" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "sub_smin0_sub"
+4: "sub_smin0_sub" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "sub_smin0_sub_nsw_commute"
+4: "sub_smin0_sub_nsw_commute" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "sub_max_min_nsw"
+4: "sub_max_min_nsw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_nuw"
+4: "sub_max_min_nuw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_nsw_commute"
+4: "sub_max_min_nsw_commute" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_nuw_commute"
+4: "sub_max_min_nuw_commute" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_vec_nsw"
+4: "sub_max_min_vec_nsw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_vec_nuw"
+4: "sub_max_min_vec_nuw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_vec_nsw_commute"
+4: "sub_max_min_vec_nsw_commute" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_vec_nuw_commute"
+4: "sub_max_min_vec_nuw_commute" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "sub_max_min_multi_use"
+4: "sub_max_min_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sub_max_min_multi_use" has unsupported operation: llvm.call
+
+4: "sub_max_min_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sub_max_min_multi_use" has unsupported operation: llvm.call
+
+1: "sub_max_min_vec_multi_use"
+4: "sub_max_min_vec_multi_use" has unsupported operation: llvm.mlir.addressof
+
+4: "sub_max_min_vec_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "sub_max_min_vec_multi_use" has unsupported operation: llvm.call
+
+4: "sub_max_min_vec_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sub_max_min_vec_multi_use" has unsupported operation: llvm.call
+
+1: "use8"
+5: "use8" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "use8v2"
+5: "use8v2" is empty
+

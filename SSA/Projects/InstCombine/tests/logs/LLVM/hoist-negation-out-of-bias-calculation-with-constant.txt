@@ -1,0 +1,38 @@
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "t1_vec"
+8: "t1_vec" contains vectors which are unsupported
+
+1: "t2_vec_undef"
+4: "t2_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t2_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t2_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t2_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t3_vec_nonsplat"
+8: "t3_vec_nonsplat" contains vectors which are unsupported
+
+1: "use8"
+5: "use8" is empty
+
+1: "n4_extrause"
+4: "n4_extrause" has unsupported operation: llvm.call
+
+1: "n5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "n6"
+7: "n6" is unchanged by InstCombine
+

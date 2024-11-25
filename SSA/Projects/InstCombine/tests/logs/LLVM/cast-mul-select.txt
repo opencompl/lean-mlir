@@ -1,0 +1,71 @@
+1: "mul"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.mul
+2: llvm.zext
+2: llvm.return
+
+1: "select1"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
+
+1: "select2"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.zext
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
+
+1: "eval_trunc_multi_use_in_one_inst"
+7: "eval_trunc_multi_use_in_one_inst" is unchanged by InstCombine
+
+1: "eval_zext_multi_use_in_one_inst"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.and
+2: llvm.mul
+2: llvm.zext
+2: llvm.return
+
+1: "eval_sext_multi_use_in_one_inst"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.and
+2: llvm.mul
+2: llvm.or
+2: llvm.sext
+2: llvm.return
+
+1: "PR36225"
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "PR36225" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "foo"
+2: llvm.func
+2: llvm.zext
+2: llvm.return
+

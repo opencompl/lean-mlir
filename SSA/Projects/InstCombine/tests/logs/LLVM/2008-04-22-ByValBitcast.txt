@@ -1,0 +1,10 @@
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "bar"
+5: "bar" is empty
+

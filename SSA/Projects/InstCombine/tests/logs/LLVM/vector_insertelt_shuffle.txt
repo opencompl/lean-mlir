@@ -1,0 +1,88 @@
+1: "foo"
+4: "foo" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "foo" has unsupported operation: llvm.mlir.undef
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "bar"
+4: "bar" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bar" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "baz"
+4: "baz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "baz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bazz"
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bazz" has unsupported operation: llvm.mlir.undef
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "bazz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bazzz"
+4: "bazzz" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bazzz" has unsupported operation: llvm.mlir.undef
+
+4: "bazzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bazzzz"
+4: "bazzzz" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bazzzz" has unsupported operation: llvm.mlir.undef
+
+4: "bazzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bazzzzz"
+8: "bazzzzz" contains vectors which are unsupported
+
+1: "bazzzzzz"
+4: "bazzzzzz" has unsupported operation: llvm.mlir.undef
+
+4: "bazzzzzz" has unsupported operation: llvm.mlir.undef
+
+4: "bazzzzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzzzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzzzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bazzzzzz" has unsupported operation: builtin.unregistered: llvm.insertelement
+

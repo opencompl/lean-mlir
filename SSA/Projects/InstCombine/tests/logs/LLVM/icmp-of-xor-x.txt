@@ -1,0 +1,173 @@
+1: "barrier"
+5: "barrier" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "test_xor1"
+4: "test_xor1" has unsupported operation: llvm.call
+
+1: "test_xor2"
+4: "test_xor2" has unsupported operation: llvm.call
+
+1: "test_xor3"
+4: "test_xor3" has unsupported operation: llvm.call
+
+1: "test_xor_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_xor_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_xor4"
+4: "test_xor4" has unsupported operation: llvm.call
+
+1: "test_xor5"
+4: "test_xor5" has unsupported operation: llvm.call
+
+1: "test_xor6"
+4: "test_xor6" has unsupported operation: llvm.call
+
+1: "test_xor7"
+4: "test_xor7" has unsupported operation: llvm.call
+
+1: "test_xor8"
+4: "test_xor8" has unsupported operation: llvm.call
+
+1: "test_slt_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_sle_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_sgt_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_sge_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ult_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ule_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ugt_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_uge_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test_xor1_nofold_multi_use"
+4: "test_xor1_nofold_multi_use" has unsupported operation: llvm.call
+
+4: "test_xor1_nofold_multi_use" has unsupported operation: llvm.call
+
+1: "xor_uge"
+4: "xor_uge" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "xor_uge_fail_maybe_zero"
+7: "xor_uge_fail_maybe_zero" is unchanged by InstCombine
+
+1: "xor_ule_2"
+8: "xor_ule_2" contains vectors which are unsupported
+
+1: "xor_sle_2"
+4: "xor_sle_2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "xor_sge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.or
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "xor_ugt_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "xor_ult"
+7: "xor_ult" is unchanged by InstCombine
+
+1: "xor_sgt"
+8: "xor_sgt" contains vectors which are unsupported
+
+1: "xor_sgt_fail_no_known_msb"
+8: "xor_sgt_fail_no_known_msb" contains vectors which are unsupported
+
+1: "xor_slt_2"
+7: "xor_slt_2" is unchanged by InstCombine
+
+1: "xor_sgt_intmin_2"
+7: "xor_sgt_intmin_2" is unchanged by InstCombine
+
+1: "or_slt_intmin_indirect"
+4: "or_slt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_slt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "or_slt_intmin_indirect" has unsupported operation: llvm.call
+
+4: "or_slt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.br
+

@@ -1,0 +1,325 @@
+1: "use"
+5: "use" is empty
+
+1: "and_to_xor1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "and_to_xor2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "and_to_xor3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "and_to_xor4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "and_to_xor1_vec"
+8: "and_to_xor1_vec" contains vectors which are unsupported
+
+1: "and_to_nxor1"
+4: "and_to_nxor1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "and_to_nxor1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "and_to_nxor2"
+4: "and_to_nxor2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "and_to_nxor2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "and_to_nxor3"
+4: "and_to_nxor3" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "and_to_nxor3" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "and_to_nxor4"
+4: "and_to_nxor4" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "and_to_nxor4" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "or_to_xor1"
+4: "or_to_xor1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "or_to_xor1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "or_to_xor2"
+4: "or_to_xor2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "or_to_xor2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "or_to_xor3"
+4: "or_to_xor3" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "or_to_xor3" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "or_to_xor4"
+4: "or_to_xor4" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "or_to_xor4" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "or_to_nxor1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_to_nxor2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_to_nxor3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "or_to_nxor4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "xor_to_xor1"
+2: llvm.func
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "xor_to_xor2"
+2: llvm.func
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "xor_to_xor3"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_to_xor4"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_to_xor5"
+4: "xor_to_xor5" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor5" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor6"
+4: "xor_to_xor6" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor6" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor7"
+4: "xor_to_xor7" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor7" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor8"
+4: "xor_to_xor8" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor8" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor9"
+4: "xor_to_xor9" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor9" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor10"
+4: "xor_to_xor10" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor10" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor11"
+4: "xor_to_xor11" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor11" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xor12"
+4: "xor_to_xor12" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xor12" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "PR32830"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "and_to_nxor_multiuse"
+4: "and_to_nxor_multiuse" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "and_to_nxor_multiuse" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "or_to_nxor_multiuse"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.or
+2: llvm.mul
+2: llvm.mul
+2: llvm.return
+
+1: "xor_to_xnor1"
+4: "xor_to_xnor1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xnor1" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xnor2"
+4: "xor_to_xnor2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xnor2" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xnor3"
+4: "xor_to_xnor3" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xnor3" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "xor_to_xnor4"
+4: "xor_to_xnor4" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "xor_to_xnor4" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "simplify_or_common_op_commute0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "simplify_or_common_op_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "simplify_or_common_op_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.and
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "simplify_or_common_op_commute3"
+8: "simplify_or_common_op_commute3" contains vectors which are unsupported
+
+1: "simplify_and_common_op_commute0"
+4: "simplify_and_common_op_commute0" has unsupported operation: llvm.call
+
+1: "simplify_and_common_op_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.or
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "simplify_and_common_op_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.or
+2: llvm.or
+2: llvm.or
+2: llvm.xor
+2: llvm.and
+2: llvm.return
+
+1: "simplify_and_common_op_commute3"
+8: "simplify_and_common_op_commute3" contains vectors which are unsupported
+
+1: "simplify_and_common_op_use1"
+4: "simplify_and_common_op_use1" has unsupported operation: llvm.call
+
+1: "simplify_and_common_op_use2"
+4: "simplify_and_common_op_use2" has unsupported operation: llvm.call
+
+1: "simplify_and_common_op_use3"
+4: "simplify_and_common_op_use3" has unsupported operation: llvm.call
+
+1: "reduce_xor_common_op_commute0"
+2: llvm.func
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "reduce_xor_common_op_commute1"
+2: llvm.func
+2: llvm.xor
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "annihilate_xor_common_op_commute2"
+2: llvm.func
+2: llvm.mul
+2: llvm.xor
+2: llvm.xor
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "reduce_xor_common_op_commute3"
+8: "reduce_xor_common_op_commute3" contains vectors which are unsupported
+

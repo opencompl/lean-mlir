@@ -1,0 +1,46 @@
+1: "logbf_const"
+4: "logbf_const" has unsupported operation: llvm.call
+
+1: "logb_const"
+4: "logb_const" has unsupported operation: llvm.call
+
+1: "logbf_zero"
+4: "logbf_zero" has unsupported operation: llvm.call
+
+1: "logb_zero"
+4: "logb_zero" has unsupported operation: llvm.call
+
+1: "logbf_neg_zero"
+4: "logbf_neg_zero" has unsupported operation: llvm.call
+
+1: "logb_neg_zero"
+4: "logb_neg_zero" has unsupported operation: llvm.call
+
+1: "logbf_inf"
+4: "logbf_inf" has unsupported operation: llvm.call
+
+1: "logb_inf"
+4: "logb_inf" has unsupported operation: llvm.call
+
+1: "logbf_nan"
+4: "logbf_nan" has unsupported operation: llvm.call
+
+1: "logb_nan"
+4: "logb_nan" has unsupported operation: llvm.call
+
+1: "logbf_poison"
+4: "logbf_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "logbf_poison" has unsupported operation: llvm.call
+
+1: "logb_poison"
+4: "logb_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "logb_poison" has unsupported operation: llvm.call
+
+1: "logbf"
+5: "logbf" is empty
+
+1: "logb"
+5: "logb" is empty
+

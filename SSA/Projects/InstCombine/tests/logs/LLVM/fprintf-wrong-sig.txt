@@ -1,0 +1,8 @@
+1: "fprintf"
+9: "fprintf" has pointer type input
+
+1: "test1"
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.call
+

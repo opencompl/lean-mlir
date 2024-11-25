@@ -1,0 +1,112 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test1vec"
+8: "test1vec" contains vectors which are unsupported
+
+1: "test2"
+7: "test2" is unchanged by InstCombine
+
+1: "test2vec"
+7: "test2vec" is unchanged by InstCombine
+
+1: "test3"
+7: "test3" is unchanged by InstCombine
+
+1: "test3vec"
+7: "test3vec" is unchanged by InstCombine
+
+1: "test_ne_cp2"
+4: "test_ne_cp2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2" has unsupported operation: llvm.call
+
+1: "test_ne_cp2_2"
+4: "test_ne_cp2_2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_2" has unsupported operation: llvm.call
+
+1: "test_ne_cp2_other_okay_all_ones"
+4: "test_ne_cp2_other_okay_all_ones" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_okay_all_ones" has unsupported operation: llvm.call
+
+1: "test_ne_cp2_other_fail2"
+4: "test_ne_cp2_other_fail2" has unsupported operation: llvm.call
+
+4: "test_ne_cp2_other_fail2" has unsupported operation: llvm.call
+
+1: "test_ne_cp2_other_okay"
+4: "test_ne_cp2_other_okay" has unsupported operation: llvm.call
+
+1: "test_ne_cp2_other_okay2"
+4: "test_ne_cp2_other_okay2" has unsupported operation: llvm.call
+
+1: "test_eq_0_and_15_add_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ne_0_and_15_add_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_eq_0_and_15_add_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ne_0_and_15_add_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_eq_11_and_15_add_10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_ne_11_and_15_add_10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

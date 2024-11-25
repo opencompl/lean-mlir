@@ -1,0 +1,46 @@
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "replace_with_y_noundef"
+2: llvm.func
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "replace_with_x_noundef"
+4: "replace_with_x_noundef" has unsupported operation: llvm.call
+
+1: "replace_with_x_maybe_undef_fail"
+4: "replace_with_x_maybe_undef_fail" has unsupported operation: llvm.call
+
+1: "replace_with_y_for_new_oneuse"
+7: "replace_with_y_for_new_oneuse" is unchanged by InstCombine
+
+1: "replace_with_y_for_new_oneuse2"
+7: "replace_with_y_for_new_oneuse2" is unchanged by InstCombine
+
+1: "replace_with_x_for_new_oneuse"
+7: "replace_with_x_for_new_oneuse" is unchanged by InstCombine
+
+1: "replace_with_x_for_new_oneuse2"
+7: "replace_with_x_for_new_oneuse2" is unchanged by InstCombine
+
+1: "replace_with_x_for_simple_binop"
+4: "replace_with_x_for_simple_binop" has unsupported operation: llvm.call
+
+1: "replace_with_none_for_new_oneuse_fail_maybe_undef"
+7: "replace_with_none_for_new_oneuse_fail_maybe_undef" is unchanged by InstCombine
+
+1: "replace_with_y_for_simple_binop"
+7: "replace_with_y_for_simple_binop" is unchanged by InstCombine
+
+1: "replace_with_y_for_simple_binop_fail_multiuse"
+4: "replace_with_y_for_simple_binop_fail_multiuse" has unsupported operation: llvm.call
+
+1: "replace_with_y_for_simple_binop_fail"
+7: "replace_with_y_for_simple_binop_fail" is unchanged by InstCombine
+

@@ -1,0 +1,64 @@
+1: "p0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pv"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "p1_vec_splat"
+8: "p1_vec_splat" contains vectors which are unsupported
+
+1: "p2_vec_nonsplat"
+8: "p2_vec_nonsplat" contains vectors which are unsupported
+
+1: "p2_vec_nonsplat_edgecase0"
+8: "p2_vec_nonsplat_edgecase0" contains vectors which are unsupported
+
+1: "p2_vec_nonsplat_edgecase1"
+8: "p2_vec_nonsplat_edgecase1" contains vectors which are unsupported
+
+1: "p3_vec_splat_poison"
+8: "p3_vec_splat_poison" contains vectors which are unsupported
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "c0"
+4: "c0" has unsupported operation: llvm.call
+
+1: "cv0"
+4: "cv0" has unsupported operation: llvm.call
+
+1: "cv1"
+4: "cv1" has unsupported operation: llvm.call
+
+1: "cv2"
+4: "cv2" has unsupported operation: llvm.call
+
+1: "use8"
+5: "use8" is empty
+
+1: "oneuse0"
+4: "oneuse0" has unsupported operation: llvm.call
+
+1: "n0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "n1"
+7: "n1" is unchanged by InstCombine
+
+1: "n2"
+8: "n2" contains vectors which are unsupported
+

@@ -37,17 +37,17 @@ inductive BBName
 
 /-- An ssa value is a variable name -/
 inductive SSAVal : Type where
-  | SSAVal : String -> SSAVal
+  | name : String -> SSAVal
 deriving DecidableEq, Repr
 
 def SSAValToString (s: SSAVal): String :=
   match s with
-  | SSAVal.SSAVal str => str
+  | SSAVal.name str => str
 
 instance : ToString SSAVal where
   toString := SSAValToString
 
-inductive Signedness :=
+inductive Signedness where
   | Signless -- i*
   | Unsigned -- u*
   | Signed   -- si*
@@ -57,7 +57,7 @@ abbrev Width φ := ConcreteOrMVar Nat φ
 abbrev Width.concrete : Nat → Width φ := ConcreteOrMVar.concrete
 abbrev Width.mvar : Fin φ → Width φ := ConcreteOrMVar.mvar
 
-inductive MLIRType (φ : Nat) : Type _ :=
+inductive MLIRType (φ : Nat) : Type _ where
   | int: Signedness -> Width φ -> MLIRType φ
   | float: Nat -> MLIRType φ
   | tensor1d: MLIRType φ -- tensor of int values.
@@ -86,7 +86,7 @@ def MLIRType.i (width : Nat) : MLIRTy φ := MLIRType.int Signedness.Signless wid
 abbrev TypedSSAVal := SSAVal × MLIRType φ
 
 mutual
-inductive AttrValue :=
+inductive AttrValue where
   | symbol: String -> AttrValue -- symbol ref attr
   | str : String -> AttrValue
   | int : Int -> MLIRType φ -> AttrValue
@@ -106,12 +106,12 @@ inductive AttrValue :=
 
 -- https://mlir.llvm.org/docs/LangRef/#attributes
 -- | TODO: add support for mutually inductive records / structures
-inductive AttrEntry  :=
+inductive AttrEntry where
   | mk: (key: String)
       -> (value: AttrValue)
       -> AttrEntry
 
-inductive AttrDict :=
+inductive AttrDict where
   | mk: List AttrEntry -> AttrDict
 
 end
@@ -181,7 +181,7 @@ def Op.attrs {φ} : Op φ -> (AttrDict φ)
 | Op.mk _ _ _ _ attrs => attrs
 
 instance : Coe String SSAVal where
-  coe (s: String) := SSAVal.SSAVal s
+  coe (s: String) := SSAVal.name s
 
 instance : Coe String (AttrValue φ) where
   coe (s: String) := AttrValue.str s
@@ -265,7 +265,7 @@ instance : Repr (AttrDefn φ) where
 
 instance : Repr SSAVal where
   reprPrec x _ := match x with
-    | SSAVal.SSAVal name => f!"%{name}"
+    | SSAVal.name name => f!"%{name}"
 
 instance : ToFormat SSAVal where
   format := repr

@@ -1,0 +1,17 @@
+1: "entry"
+4: "entry" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "entry" has unsupported operation: llvm.mlir.zero
+
+4: "entry" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "entry" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "entry" has unsupported operation: llvm.return
+
+4: "entry" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "entry" has unsupported operation: llvm.store
+
+4: "entry" has unsupported operation: builtin.unregistered: llvm.br
+

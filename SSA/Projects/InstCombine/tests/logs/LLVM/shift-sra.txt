@@ -1,0 +1,82 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "ashr_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_overshift"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_ashr_splat_vec"
+8: "ashr_ashr_splat_vec" contains vectors which are unsupported
+
+1: "ashr_overshift_splat_vec"
+8: "ashr_overshift_splat_vec" contains vectors which are unsupported
+
+1: "hoist_ashr_ahead_of_sext_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.ashr
+2: llvm.return
+
+1: "hoist_ashr_ahead_of_sext_1_splat"
+8: "hoist_ashr_ahead_of_sext_1_splat" contains vectors which are unsupported
+
+1: "hoist_ashr_ahead_of_sext_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.ashr
+2: llvm.return
+
+1: "hoist_ashr_ahead_of_sext_2_splat"
+8: "hoist_ashr_ahead_of_sext_2_splat" contains vectors which are unsupported
+

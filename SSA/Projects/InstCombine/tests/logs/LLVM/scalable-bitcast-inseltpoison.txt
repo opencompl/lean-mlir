@@ -1,0 +1,2 @@
+3: scalable-bitcast-inseltpoison.ll: parsing has failed
+

@@ -53,20 +53,20 @@ so eval requires us to give a value for each possible variable.
 -/
 def Term.eval (t : Term) (vars : Nat → BitStream) : BitStream :=
   match t with
-  | var n     => vars n
-  | zero      => BitStream.zero
-  | one       => BitStream.one
-  | negOne    => BitStream.negOne
-  | and t₁ t₂ => (t₁.eval vars) &&& (t₂.eval vars)
-  | or t₁ t₂  => (t₁.eval vars) ||| (t₂.eval vars)
-  | xor t₁ t₂ => (t₁.eval vars) ^^^ (t₂.eval vars)
-  | not t     => ~~~(t.eval vars)
-  | ls b t    => (Term.eval t vars).concat b
-  | add t₁ t₂ => (Term.eval t₁ vars) + (Term.eval t₂ vars)
-  | sub t₁ t₂ => (Term.eval t₁ vars) - (Term.eval t₂ vars)
-  | neg t     => -(Term.eval t vars)
-  | incr t    => BitStream.incr (Term.eval t vars)
-  | decr t    => BitStream.decr (Term.eval t vars)
+  | var n       => vars n
+  | zero        => BitStream.zero
+  | one         => BitStream.one
+  | negOne      => BitStream.negOne
+  | and t₁ t₂   => (t₁.eval vars) &&& (t₂.eval vars)
+  | or t₁ t₂    => (t₁.eval vars) ||| (t₂.eval vars)
+  | xor t₁ t₂   => (t₁.eval vars) ^^^ (t₂.eval vars)
+  | not t       => ~~~(t.eval vars)
+  | ls b t      => (Term.eval t vars).concat b
+  | add t₁ t₂   => (Term.eval t₁ vars) + (Term.eval t₂ vars)
+  | sub t₁ t₂   => (Term.eval t₁ vars) - (Term.eval t₂ vars)
+  | neg t       => -(Term.eval t vars)
+  | incr t      => BitStream.incr (Term.eval t vars)
+  | decr t      => BitStream.decr (Term.eval t vars)
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
@@ -130,6 +130,6 @@ and only require that many bitstream values to be given in `vars`.
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ - x₂
-  | neg t  => -(Term.evalFin t vars)
-  | incr t => BitStream.incr (Term.evalFin t vars)
-  | decr t => BitStream.decr (Term.evalFin t vars)
+  | neg t       => -(Term.evalFin t vars)
+  | incr t      => BitStream.incr (Term.evalFin t vars)
+  | decr t      => BitStream.decr (Term.evalFin t vars)

@@ -1,0 +1,69 @@
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "t1_vec_splat"
+8: "t1_vec_splat" contains vectors which are unsupported
+
+1: "t2_vec_poison0"
+8: "t2_vec_poison0" contains vectors which are unsupported
+
+1: "t3_vec_poison1"
+8: "t3_vec_poison1" contains vectors which are unsupported
+
+1: "t4_vec_poison2"
+8: "t4_vec_poison2" contains vectors which are unsupported
+
+1: "use32"
+5: "use32" is empty
+
+1: "t5"
+4: "t5" has unsupported operation: llvm.call
+
+1: "t6"
+4: "t6" has unsupported operation: llvm.call
+
+1: "t7"
+4: "t7" has unsupported operation: llvm.call
+
+4: "t7" has unsupported operation: llvm.call
+
+1: "gen32"
+5: "gen32" is empty
+
+1: "t8_commutative0"
+4: "t8_commutative0" has unsupported operation: llvm.call
+
+4: "t8_commutative0" has unsupported operation: llvm.call
+
+4: "t8_commutative0" has unsupported operation: llvm.call
+
+1: "t9_commutative1"
+4: "t9_commutative1" has unsupported operation: llvm.call
+
+4: "t9_commutative1" has unsupported operation: llvm.call
+
+1: "t10_commutative2"
+4: "t10_commutative2" has unsupported operation: llvm.call
+
+4: "t10_commutative2" has unsupported operation: llvm.call
+
+4: "t10_commutative2" has unsupported operation: llvm.call
+
+1: "n11"
+7: "n11" is unchanged by InstCombine
+
+1: "n12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+

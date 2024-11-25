@@ -1,0 +1,1057 @@
+1: "use_i32"
+5: "use_i32" is empty
+
+1: "use_v2i32"
+5: "use_v2i32" is empty
+
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test2"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.zext
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.icmp
+2: llvm.zext
+2: llvm.zext
+2: llvm.return
+
+1: "test5"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.return
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test7"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.return
+
+1: "test8"
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test9"
+2: llvm.func
+2: llvm.sext
+2: llvm.trunc
+2: llvm.return
+
+1: "test10"
+2: llvm.func
+2: llvm.sext
+2: llvm.trunc
+2: llvm.return
+
+1: "varargs"
+5: "varargs" is empty
+
+1: "test11"
+9: "test11" has pointer type input
+
+4: "test11" has unsupported operation: llvm.call
+
+4: "test11" has unsupported operation: llvm.return
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+
+1: "test_invoke_vararg_cast"
+9: "test_invoke_vararg_cast" has pointer type input
+
+4: "test_invoke_vararg_cast" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "test_invoke_vararg_cast" has unsupported operation: llvm.return
+
+4: "test_invoke_vararg_cast" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "test_invoke_vararg_cast" has unsupported operation: llvm.return
+
+1: "test13"
+4: "test13" has unsupported operation: llvm.mlir.addressof
+
+4: "test13" has unsupported operation: llvm.getelementptr
+
+1: "test14"
+4: "test14" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test16"
+9: "test16" has pointer type input
+
+4: "test16" has unsupported operation: llvm.mlir.zero
+
+1: "test17"
+2: llvm.func
+2: llvm.zext
+2: llvm.trunc
+2: llvm.return
+
+1: "test18"
+2: llvm.func
+2: llvm.sext
+2: llvm.trunc
+2: llvm.return
+
+1: "test19"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "test19vec"
+8: "test19vec" contains vectors which are unsupported
+
+1: "test19vec2"
+8: "test19vec2" contains vectors which are unsupported
+
+1: "test20"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "test21"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.sext
+2: llvm.and
+2: llvm.return
+
+1: "test22"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.sext
+2: llvm.shl
+2: llvm.return
+
+1: "test23"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.return
+
+1: "test24"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "test26"
+4: "test26" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "test27"
+9: "test27" has pointer type input
+
+1: "test28"
+9: "test28" has pointer type input
+
+1: "test29"
+2: llvm.func
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+
+1: "test30"
+7: "test30" is unchanged by InstCombine
+
+1: "test31"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test31vec"
+7: "test31vec" is unchanged by InstCombine
+
+1: "test32vec"
+8: "test32vec" contains vectors which are unsupported
+
+1: "test33"
+4: "test33" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "test33" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test34"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test35"
+4: "test35" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "test35" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test36"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test36vec"
+8: "test36vec" contains vectors which are unsupported
+
+1: "test37"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.or
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test38"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.zext
+2: llvm.xor
+2: llvm.zext
+2: llvm.return
+
+1: "test39"
+4: "test39" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test40"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.shl
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "test40vec"
+8: "test40vec" contains vectors which are unsupported
+
+1: "test40vec_nonuniform"
+8: "test40vec_nonuniform" contains vectors which are unsupported
+
+1: "test40vec_poison"
+4: "test40vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test40vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test40vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test40vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test40vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test40vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test40vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test41"
+9: "test41" has pointer type input
+
+1: "test41_addrspacecast_smaller"
+9: "test41_addrspacecast_smaller" has pointer type input
+
+4: "test41_addrspacecast_smaller" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+1: "test41_addrspacecast_larger"
+9: "test41_addrspacecast_larger" has pointer type input
+
+4: "test41_addrspacecast_larger" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+1: "test42"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.return
+
+1: "test43"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.sext
+2: llvm.return
+
+1: "test44"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+
+1: "test45"
+7: "test45" is unchanged by InstCombine
+
+1: "test46"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.and
+2: llvm.shl
+2: llvm.zext
+2: llvm.return
+
+1: "test46vec"
+8: "test46vec" contains vectors which are unsupported
+
+1: "test47"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+
+1: "test48"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.zext
+2: llvm.shl
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+
+1: "test49"
+7: "test49" is unchanged by InstCombine
+
+1: "test50"
+7: "test50" is unchanged by InstCombine
+
+1: "test51"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.and
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.sext
+2: llvm.return
+
+1: "test52"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.or
+2: llvm.and
+2: llvm.zext
+2: llvm.return
+
+1: "test53"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.or
+2: llvm.and
+2: llvm.zext
+2: llvm.return
+
+1: "test54"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.or
+2: llvm.and
+2: llvm.sext
+2: llvm.return
+
+1: "test55"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.or
+2: llvm.and
+2: llvm.sext
+2: llvm.return
+
+1: "test56"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.zext
+2: llvm.return
+
+1: "test56vec"
+8: "test56vec" contains vectors which are unsupported
+
+1: "test57"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.zext
+2: llvm.return
+
+1: "test57vec"
+8: "test57vec" contains vectors which are unsupported
+
+1: "test58"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+
+1: "test59"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.and
+2: llvm.zext
+2: llvm.lshr
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+
+1: "test60"
+4: "test60" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test60" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "test61"
+4: "test61" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test61" has unsupported operation: llvm.mlir.undef
+
+4: "test61" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test61" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test61" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test61" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "test62"
+4: "test62" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test62" has unsupported operation: llvm.mlir.undef
+
+4: "test62" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test62" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test62" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test62" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test62" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "test63"
+4: "test63" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test63" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test64"
+8: "test64" contains vectors which are unsupported
+
+1: "test65"
+8: "test65" contains vectors which are unsupported
+
+1: "test66"
+8: "test66" contains vectors which are unsupported
+
+1: "test2c"
+7: "test2c" is unchanged by InstCombine
+
+1: "test67"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.xor
+2: llvm.and
+2: llvm.shl
+2: llvm.xor
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "test68"
+9: "test68" has pointer type input
+
+4: "test68" has unsupported operation: llvm.getelementptr
+
+4: "test68" has unsupported operation: llvm.load
+
+1: "test68_addrspacecast"
+9: "test68_addrspacecast" has pointer type input
+
+4: "test68_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test68_addrspacecast" has unsupported operation: llvm.getelementptr
+
+4: "test68_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test68_addrspacecast" has unsupported operation: llvm.load
+
+1: "test68_addrspacecast_2"
+9: "test68_addrspacecast_2" has pointer type input
+
+4: "test68_addrspacecast_2" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test68_addrspacecast_2" has unsupported operation: llvm.getelementptr
+
+4: "test68_addrspacecast_2" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test68_addrspacecast_2" has unsupported operation: llvm.load
+
+1: "test68_as1"
+9: "test68_as1" has pointer type input
+
+4: "test68_as1" has unsupported operation: llvm.getelementptr
+
+4: "test68_as1" has unsupported operation: llvm.load
+
+1: "test69"
+9: "test69" has pointer type input
+
+4: "test69" has unsupported operation: llvm.getelementptr
+
+4: "test69" has unsupported operation: llvm.load
+
+1: "test70"
+9: "test70" has pointer type input
+
+4: "test70" has unsupported operation: llvm.getelementptr
+
+4: "test70" has unsupported operation: llvm.load
+
+1: "test71"
+9: "test71" has pointer type input
+
+4: "test71" has unsupported operation: llvm.getelementptr
+
+4: "test71" has unsupported operation: llvm.load
+
+1: "test72"
+9: "test72" has pointer type input
+
+4: "test72" has unsupported operation: llvm.getelementptr
+
+4: "test72" has unsupported operation: llvm.load
+
+1: "test73"
+9: "test73" has pointer type input
+
+4: "test73" has unsupported operation: llvm.getelementptr
+
+4: "test73" has unsupported operation: llvm.load
+
+1: "test74"
+9: "test74" has pointer type input
+
+4: "test74" has unsupported operation: llvm.getelementptr
+
+4: "test74" has unsupported operation: llvm.load
+
+1: "test75"
+9: "test75" has pointer type input
+
+4: "test75" has unsupported operation: llvm.getelementptr
+
+1: "test76"
+9: "test76" has pointer type input
+
+4: "test76" has unsupported operation: llvm.getelementptr
+
+4: "test76" has unsupported operation: llvm.load
+
+1: "test77"
+9: "test77" has pointer type input
+
+4: "test77" has unsupported operation: llvm.getelementptr
+
+4: "test77" has unsupported operation: llvm.load
+
+1: "test78"
+9: "test78" has pointer type input
+
+4: "test78" has unsupported operation: llvm.getelementptr
+
+4: "test78" has unsupported operation: llvm.load
+
+1: "test79"
+9: "test79" has pointer type input
+
+4: "test79" has unsupported operation: llvm.getelementptr
+
+4: "test79" has unsupported operation: llvm.load
+
+1: "test80"
+9: "test80" has pointer type input
+
+4: "test80" has unsupported operation: llvm.getelementptr
+
+4: "test80" has unsupported operation: llvm.load
+
+1: "test80_addrspacecast"
+9: "test80_addrspacecast" has pointer type input
+
+4: "test80_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test80_addrspacecast" has unsupported operation: llvm.getelementptr
+
+4: "test80_addrspacecast" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test80_addrspacecast" has unsupported operation: llvm.load
+
+1: "test80_addrspacecast_2"
+9: "test80_addrspacecast_2" has pointer type input
+
+4: "test80_addrspacecast_2" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test80_addrspacecast_2" has unsupported operation: llvm.getelementptr
+
+4: "test80_addrspacecast_2" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test80_addrspacecast_2" has unsupported operation: llvm.load
+
+1: "test80_as1"
+9: "test80_as1" has pointer type input
+
+4: "test80_as1" has unsupported operation: llvm.getelementptr
+
+4: "test80_as1" has unsupported operation: llvm.load
+
+1: "test81"
+9: "test81" has pointer type input
+
+4: "test81" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "test81" has unsupported operation: llvm.getelementptr
+
+4: "test81" has unsupported operation: llvm.load
+
+1: "test82"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.shl
+2: llvm.zext
+2: llvm.return
+
+1: "test83"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.add
+2: llvm.trunc
+2: llvm.shl
+2: llvm.zext
+2: llvm.return
+
+1: "test84"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test85"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test86"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "test87"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.mul
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "test88"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "PR21388"
+9: "PR21388" has pointer type input
+
+4: "PR21388" has unsupported operation: llvm.mlir.zero
+
+1: "sitofp_zext"
+4: "sitofp_zext" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "PR23309"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.sub
+2: llvm.trunc
+2: llvm.return
+
+1: "PR23309v2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
+
+1: "PR24763"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "PR28745"
+8: "PR28745" contains vectors which are unsupported
+
+1: "test89"
+8: "test89" contains vectors which are unsupported
+
+1: "test90"
+8: "test90" contains vectors which are unsupported
+
+1: "test91"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test92"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test93"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_sext_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_sext_uniform"
+8: "trunc_lshr_sext_uniform" contains vectors which are unsupported
+
+1: "trunc_lshr_sext_uniform_poison"
+4: "trunc_lshr_sext_uniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_lshr_sext_uniform_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_lshr_sext_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_sext_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_lshr_sext_nonuniform"
+8: "trunc_lshr_sext_nonuniform" contains vectors which are unsupported
+
+1: "trunc_lshr_sext_nonuniform_poison"
+4: "trunc_lshr_sext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_lshr_sext_nonuniform_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_lshr_sext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_sext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_sext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_lshr_sext_uses1"
+4: "trunc_lshr_sext_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_uses2"
+4: "trunc_lshr_sext_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_uses3"
+4: "trunc_lshr_sext_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_sext_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext"
+8: "trunc_lshr_overshift_sext" contains vectors which are unsupported
+
+1: "trunc_lshr_overshift_sext_uses1"
+4: "trunc_lshr_overshift_sext_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext_uses2"
+4: "trunc_lshr_overshift_sext_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext_uses3"
+4: "trunc_lshr_overshift_sext_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_overshift_sext_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_wide_input"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_sext_wide_input_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_sext_wide_input_uses1"
+4: "trunc_lshr_sext_wide_input_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_wide_input_uses2"
+4: "trunc_lshr_sext_wide_input_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_wide_input_uses3"
+4: "trunc_lshr_sext_wide_input_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_sext_wide_input_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_wide_input_sext"
+8: "trunc_lshr_overshift_wide_input_sext" contains vectors which are unsupported
+
+1: "trunc_lshr_overshift_sext_wide_input_uses1"
+4: "trunc_lshr_overshift_sext_wide_input_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext_wide_input_uses2"
+4: "trunc_lshr_overshift_sext_wide_input_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext_wide_input_uses3"
+4: "trunc_lshr_overshift_sext_wide_input_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_overshift_sext_wide_input_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_narrow_input"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_sext_narrow_input_uses1"
+4: "trunc_lshr_sext_narrow_input_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_narrow_input_uses2"
+4: "trunc_lshr_sext_narrow_input_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_sext_narrow_input_uses3"
+4: "trunc_lshr_sext_narrow_input_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_sext_narrow_input_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_narrow_input_sext"
+8: "trunc_lshr_overshift_narrow_input_sext" contains vectors which are unsupported
+
+1: "trunc_lshr_overshift_sext_narrow_input_uses1"
+4: "trunc_lshr_overshift_sext_narrow_input_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext_narrow_input_uses2"
+4: "trunc_lshr_overshift_sext_narrow_input_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift_sext_narrow_input_uses3"
+4: "trunc_lshr_overshift_sext_narrow_input_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_overshift_sext_narrow_input_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift2_sext"
+8: "trunc_lshr_overshift2_sext" contains vectors which are unsupported
+
+1: "trunc_lshr_overshift2_sext_uses1"
+4: "trunc_lshr_overshift2_sext_uses1" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift2_sext_uses2"
+4: "trunc_lshr_overshift2_sext_uses2" has unsupported operation: llvm.call
+
+1: "trunc_lshr_overshift2_sext_uses3"
+4: "trunc_lshr_overshift2_sext_uses3" has unsupported operation: llvm.call
+
+4: "trunc_lshr_overshift2_sext_uses3" has unsupported operation: llvm.call
+
+1: "trunc_lshr_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_zext_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_zext_uniform"
+8: "trunc_lshr_zext_uniform" contains vectors which are unsupported
+
+1: "trunc_lshr_zext_uniform_poison"
+4: "trunc_lshr_zext_uniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_lshr_zext_uniform_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_lshr_zext_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_zext_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_lshr_zext_nonuniform"
+8: "trunc_lshr_zext_nonuniform" contains vectors which are unsupported
+
+1: "trunc_lshr_zext_nonuniform_poison"
+4: "trunc_lshr_zext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_lshr_zext_nonuniform_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_lshr_zext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_zext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_zext_nonuniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_lshr_zext_uses1"
+4: "trunc_lshr_zext_uses1" has unsupported operation: llvm.call
+
+1: "pr33078_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "pr33078_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "pr33078_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "pr33078_4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "test94"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sext
+2: llvm.xor
+2: llvm.sext
+2: llvm.return
+
+1: "test95"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.zext
+2: llvm.return
+

@@ -1,0 +1,188 @@
+1: "use"
+5: "use" is empty
+
+1: "sideeffect"
+5: "sideeffect" is empty
+
+1: "add_const_incoming0_speculative"
+4: "add_const_incoming0_speculative" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "add_const_incoming0_speculative" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "add_const_incoming0_nonspeculative"
+4: "add_const_incoming0_nonspeculative" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "add_const_incoming0_nonspeculative" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_const_incoming0"
+4: "sub_const_incoming0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_const_incoming0" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sub_const_incoming1"
+4: "sub_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sub_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "mul_const_incoming1"
+4: "mul_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "and_const_incoming1"
+4: "and_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "and_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "xor_const_incoming1"
+4: "xor_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "xor_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "or_const_incoming1"
+4: "or_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "or_const_incoming01"
+4: "or_const_incoming01" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_const_incoming01" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "or_const_incoming10"
+4: "or_const_incoming10" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_const_incoming10" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "ashr_const_incoming0_speculative"
+4: "ashr_const_incoming0_speculative" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ashr_const_incoming0_speculative" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "ashr_const_incoming0"
+4: "ashr_const_incoming0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ashr_const_incoming0" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "lshr_const_incoming1"
+4: "lshr_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "lshr_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "shl_const_incoming1"
+4: "shl_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "shl_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sdiv_not_safe_to_speculate"
+4: "sdiv_not_safe_to_speculate" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sdiv_not_safe_to_speculate" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "sdiv_const_incoming1"
+4: "sdiv_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sdiv_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "udiv_const_incoming1"
+4: "udiv_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "udiv_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "srem_const_incoming1"
+4: "srem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "srem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "urem_const_incoming1"
+4: "urem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "urem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "fmul_const_incoming1"
+4: "fmul_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "fmul_const_incoming1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fmul_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "fadd_const_incoming1"
+4: "fadd_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "fadd_const_incoming1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "fsub_const_incoming1"
+4: "fsub_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "fsub_const_incoming1" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "frem_const_incoming1"
+4: "frem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "frem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "frem_const_incoming1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "add_const_incoming0_use1"
+4: "add_const_incoming0_use1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "add_const_incoming0_use1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "add_const_incoming0_use1" has unsupported operation: llvm.call
+
+1: "add_const_incoming0_use2"
+4: "add_const_incoming0_use2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "add_const_incoming0_use2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "add_const_incoming0_use2" has unsupported operation: llvm.call
+
+1: "or_notconst_incoming"
+4: "or_notconst_incoming" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_notconst_incoming" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "mul_const_incoming0_speculatable"
+4: "mul_const_incoming0_speculatable" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_const_incoming0_speculatable" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "mul_const_incoming0_speculatable" has unsupported operation: llvm.call
+
+1: "udiv_const_incoming0_not_speculatable"
+4: "udiv_const_incoming0_not_speculatable" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "udiv_const_incoming0_not_speculatable" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "udiv_const_incoming0_not_speculatable" has unsupported operation: llvm.call
+
+1: "udiv_const_incoming0_different_block"
+4: "udiv_const_incoming0_different_block" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "udiv_const_incoming0_different_block" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "udiv_const_incoming0_different_block" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "ParseRetVal"
+9: "ParseRetVal" has pointer type input
+
+4: "ParseRetVal" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ParseRetVal" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ParseRetVal" has unsupported operation: llvm.call
+
+4: "ParseRetVal" has unsupported operation: llvm.extractvalue
+
+4: "ParseRetVal" has unsupported operation: llvm.extractvalue
+
+4: "ParseRetVal" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "ParseRetVal" has unsupported operation: llvm.insertvalue
+
+4: "ParseRetVal" has unsupported operation: llvm.insertvalue
+

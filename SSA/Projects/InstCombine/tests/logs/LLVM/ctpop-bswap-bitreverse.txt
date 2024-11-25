@@ -1,0 +1,12 @@
+1: "ctpop_bitreverse"
+4: "ctpop_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_bitreverse_vec"
+4: "ctpop_bitreverse_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_bswap"
+4: "ctpop_bswap" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_bswap_vec"
+4: "ctpop_bswap_vec" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+

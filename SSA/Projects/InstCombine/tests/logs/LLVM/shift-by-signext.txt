@@ -1,0 +1,57 @@
+1: "t0_shl"
+2: llvm.func
+2: llvm.sext
+2: llvm.shl
+2: llvm.return
+
+1: "t1_lshr"
+2: llvm.func
+2: llvm.sext
+2: llvm.lshr
+2: llvm.return
+
+1: "t2_ashr"
+2: llvm.func
+2: llvm.sext
+2: llvm.ashr
+2: llvm.return
+
+1: "t3_vec_shl"
+8: "t3_vec_shl" contains vectors which are unsupported
+
+1: "t4_vec_lshr"
+8: "t4_vec_lshr" contains vectors which are unsupported
+
+1: "t5_vec_ashr"
+8: "t5_vec_ashr" contains vectors which are unsupported
+
+1: "t6_twoshifts"
+4: "t6_twoshifts" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "t6_twoshifts" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "n7_fshl"
+4: "n7_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "n8_fshr"
+4: "n8_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "t9_fshl"
+4: "t9_fshl" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "t10_fshr"
+4: "t10_fshr" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "use32"
+5: "use32" is empty
+
+1: "n11_extrause"
+4: "n11_extrause" has unsupported operation: llvm.call
+
+1: "n12_twoshifts_and_extrause"
+4: "n12_twoshifts_and_extrause" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n12_twoshifts_and_extrause" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "n12_twoshifts_and_extrause" has unsupported operation: llvm.call
+

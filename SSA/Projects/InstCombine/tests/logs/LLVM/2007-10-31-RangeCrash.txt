@@ -1,0 +1,11 @@
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.undef
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+

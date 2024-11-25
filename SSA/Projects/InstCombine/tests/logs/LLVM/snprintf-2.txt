@@ -1,0 +1,103 @@
+1: "snprintf"
+9: "snprintf" has pointer type input
+
+1: "fold_snprintf_fmt"
+4: "fold_snprintf_fmt" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.load
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.load
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.load
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.load
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.load
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.load
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.store
+
+4: "fold_snprintf_fmt" has unsupported operation: llvm.return
+
+1: "call_snprintf_fmt_ximax"
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.mlir.addressof
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.getelementptr
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.mlir.addressof
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.mlir.addressof
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.getelementptr
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.load
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.call
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.store
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.load
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.call
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.store
+
+4: "call_snprintf_fmt_ximax" has unsupported operation: llvm.return
+

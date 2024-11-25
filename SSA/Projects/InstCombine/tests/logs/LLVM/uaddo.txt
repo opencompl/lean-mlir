@@ -1,0 +1,70 @@
+1: "uaddo_commute1"
+7: "uaddo_commute1" is unchanged by InstCombine
+
+1: "uaddo_commute2"
+7: "uaddo_commute2" is unchanged by InstCombine
+
+1: "uaddo_commute3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uaddo_commute4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uaddo_commute5"
+7: "uaddo_commute5" is unchanged by InstCombine
+
+1: "uaddo_commute6"
+7: "uaddo_commute6" is unchanged by InstCombine
+
+1: "uaddo_commute7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uaddo_commute8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uaddo_wrong_pred1"
+7: "uaddo_wrong_pred1" is unchanged by InstCombine
+
+1: "uaddo_wrong_pred2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uaddo_1"
+9: "uaddo_1" has pointer type input
+
+4: "uaddo_1" has unsupported operation: llvm.store
+
+1: "uaddo_neg1"
+9: "uaddo_neg1" has pointer type input
+
+4: "uaddo_neg1" has unsupported operation: llvm.store
+

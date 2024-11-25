@@ -1,0 +1,148 @@
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t1" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "t2"
+4: "t2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t2" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "t4"
+4: "t4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t4" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+1: "t5"
+4: "t5" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "not_maxnum"
+4: "not_maxnum" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "t6"
+4: "t6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t6" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "t7"
+4: "t7" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t7" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "fmin_fmin_zero_mismatch"
+4: "fmin_fmin_zero_mismatch" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fmax_fmax_zero_mismatch"
+4: "fmax_fmax_zero_mismatch" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "t8"
+4: "t8" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t8" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "t9"
+4: "t9" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t9" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t11"
+4: "t11" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "t11" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t12"
+4: "t12" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t12" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t13"
+4: "t13" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t13" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t14"
+4: "t14" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t14" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t14_commute"
+4: "t14_commute" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t14_commute" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t15"
+4: "t15" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "t15" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "t16"
+4: "t16" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+1: "t17"
+4: "t17" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "t17" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "fneg_fmax"
+4: "fneg_fmax" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fneg_fmax" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fmax"
+4: "fsub_fmax" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+4: "fsub_fmax" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fsub_fmin"
+4: "fsub_fmin" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fsub_fmin" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg_fmin"
+4: "fneg_fmin" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+4: "fneg_fmin" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "maxnum_ogt_fmf_on_select"
+4: "maxnum_ogt_fmf_on_select" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "maxnum_oge_fmf_on_select"
+4: "maxnum_oge_fmf_on_select" has unsupported operation: builtin.unregistered: llvm.intr.maxnum
+
+1: "maxnum_ogt_fmf_on_fcmp"
+4: "maxnum_ogt_fmf_on_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "maxnum_oge_fmf_on_fcmp"
+4: "maxnum_oge_fmf_on_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "maxnum_no_nsz"
+4: "maxnum_no_nsz" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "maxnum_no_nnan"
+4: "maxnum_no_nnan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "minnum_olt_fmf_on_select"
+4: "minnum_olt_fmf_on_select" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_ole_fmf_on_select"
+4: "minnum_ole_fmf_on_select" has unsupported operation: builtin.unregistered: llvm.intr.minnum
+
+1: "minnum_olt_fmf_on_fcmp"
+4: "minnum_olt_fmf_on_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "minnum_ole_fmf_on_fcmp"
+4: "minnum_ole_fmf_on_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "minnum_no_nsz"
+4: "minnum_no_nsz" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "minnum_no_nnan"
+4: "minnum_no_nnan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "pr64937_preserve_min_idiom"
+4: "pr64937_preserve_min_idiom" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "pr64937_preserve_min_idiom" has unsupported operation: builtin.unregistered: llvm.fmul
+

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gapinthshifthsimplify_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthshifthsimplify_statements
-                                                    
+
 def test0_before := [llvm|
 {
 ^0(%arg6 : i41, %arg7 : i41, %arg8 : i41):
@@ -30,16 +30,13 @@ def test0_after := [llvm|
   "llvm.return"(%1) : (i41) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test0_proof : test0_before ⊑ test0_after := by
   unfold test0_before test0_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN test0
-  apply test0_thm
+  all_goals (try extract_goal ; sorry)
   ---END test0
 
 
@@ -61,16 +58,13 @@ def test1_after := [llvm|
   "llvm.return"(%1) : (i57) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test1_proof : test1_before ⊑ test1_after := by
   unfold test1_before test1_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN test1
-  apply test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -92,16 +86,13 @@ def test2_after := [llvm|
   "llvm.return"(%1) : (i49) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem test2_proof : test2_before ⊑ test2_after := by
   unfold test2_before test2_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 

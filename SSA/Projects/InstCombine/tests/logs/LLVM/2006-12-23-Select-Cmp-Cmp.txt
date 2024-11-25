@@ -1,0 +1,13 @@
+1: "mng_write_basi"
+9: "mng_write_basi" has pointer type input
+
+4: "mng_write_basi" has unsupported operation: llvm.load
+
+4: "mng_write_basi" has unsupported operation: llvm.load
+
+4: "mng_write_basi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mng_write_basi" has unsupported operation: llvm.return
+
+4: "mng_write_basi" has unsupported operation: llvm.return
+

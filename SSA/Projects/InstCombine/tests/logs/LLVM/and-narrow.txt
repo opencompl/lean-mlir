@@ -1,0 +1,78 @@
+1: "zext_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.add
+2: llvm.and
+2: llvm.return
+
+1: "zext_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.sub
+2: llvm.and
+2: llvm.return
+
+1: "zext_mul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.and
+2: llvm.return
+
+1: "zext_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "zext_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "zext_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "zext_add_vec"
+8: "zext_add_vec" contains vectors which are unsupported
+
+1: "zext_sub_vec"
+8: "zext_sub_vec" contains vectors which are unsupported
+
+1: "zext_mul_vec"
+8: "zext_mul_vec" contains vectors which are unsupported
+
+1: "zext_lshr_vec"
+8: "zext_lshr_vec" contains vectors which are unsupported
+
+1: "zext_ashr_vec"
+8: "zext_ashr_vec" contains vectors which are unsupported
+
+1: "zext_shl_vec"
+8: "zext_shl_vec" contains vectors which are unsupported
+
+1: "zext_lshr_vec_overshift"
+7: "zext_lshr_vec_overshift" is unchanged by InstCombine
+
+1: "zext_lshr_vec_undef"
+4: "zext_lshr_vec_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "zext_shl_vec_overshift"
+7: "zext_shl_vec_overshift" is unchanged by InstCombine
+
+1: "zext_shl_vec_undef"
+4: "zext_shl_vec_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+

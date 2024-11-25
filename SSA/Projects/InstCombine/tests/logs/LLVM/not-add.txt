@@ -1,0 +1,77 @@
+1: "use"
+5: "use" is empty
+
+1: "basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "basic_com_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "basic_use_xor"
+4: "basic_use_xor" has unsupported operation: llvm.call
+
+1: "basic_use_add"
+4: "basic_use_add" has unsupported operation: llvm.call
+
+1: "basic_use_both"
+4: "basic_use_both" has unsupported operation: llvm.call
+
+4: "basic_use_both" has unsupported operation: llvm.call
+
+1: "basic_preserve_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "basic_preserve_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "basic_preserve_nuw_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "vector_test"
+8: "vector_test" contains vectors which are unsupported
+
+1: "vector_test_poison"
+8: "vector_test_poison" contains vectors which are unsupported
+
+1: "vector_test_poison_nsw_nuw"
+8: "vector_test_poison_nsw_nuw" contains vectors which are unsupported
+
+1: "pr50308"
+4: "pr50308" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr50308" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "pr50370"
+4: "pr50370" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr50370" has unsupported operation: llvm.mlir.undef
+
+4: "pr50370" has unsupported operation: llvm.store
+
+4: "pr50370" has unsupported operation: llvm.return
+

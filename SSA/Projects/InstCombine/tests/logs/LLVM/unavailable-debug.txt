@@ -1,0 +1,23 @@
+1: "b"
+4: "b" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+1: "main"
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: llvm.mlir.addressof
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "main" has unsupported operation: llvm.load
+
+4: "main" has unsupported operation: llvm.store
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "main" has unsupported operation: llvm.call
+
+1: "optimize_me_not"
+5: "optimize_me_not" is empty
+

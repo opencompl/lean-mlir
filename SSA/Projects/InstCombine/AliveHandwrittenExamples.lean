@@ -18,7 +18,7 @@ precondition: true
 
 -/
 def alive_DivRemOfSelect_src (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
   ^bb0(%c: i1, %y : _, %x : _):
     %c0 = llvm.mlir.constant(0) : _
     %v1 = llvm.select %c, %y, %c0
@@ -26,7 +26,7 @@ def alive_DivRemOfSelect_src (w : Nat) :=
     llvm.return %v2
   }]
 def alive_DivRemOfSelect_tgt (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
   ^bb0(%c: i1, %y : _, %x : _):
     %v1 = llvm.udiv %x, %y
     llvm.return %v1
@@ -42,6 +42,10 @@ theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
   simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  simp_alive_split
   alive_auto
 
 end AliveHandwritten

@@ -1,0 +1,64 @@
+1: "or_implies_sle"
+4: "or_implies_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "or_implies_sle_fail"
+4: "or_implies_sle_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "or_distjoint_implies_ule"
+4: "or_distjoint_implies_ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "or_distjoint_implies_ule_fail"
+4: "or_distjoint_implies_ule_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "or_prove_distjoin_implies_ule"
+4: "or_prove_distjoin_implies_ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_or_distjoint_implies_sle"
+4: "src_or_distjoint_implies_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_or_distjoint_implies_sle_fail"
+4: "src_or_distjoint_implies_sle_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_addnsw_implies_sle"
+4: "src_addnsw_implies_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_addnsw_implies_sle_fail"
+4: "src_addnsw_implies_sle_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_and_implies_ult"
+4: "src_and_implies_ult" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_and_implies_ult_fail"
+4: "src_and_implies_ult_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_and_implies_slt_fail"
+4: "src_and_implies_slt_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_or_implies_ule"
+4: "src_or_implies_ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_or_implies_false_ugt_todo"
+4: "src_or_implies_false_ugt_todo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_udiv_implies_ult"
+4: "src_udiv_implies_ult" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_udiv_implies_ult2"
+4: "src_udiv_implies_ult2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_smin_implies_sle"
+4: "src_smin_implies_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_umin_implies_ule"
+4: "src_umin_implies_ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_umax_implies_ule"
+4: "src_umax_implies_ule" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "src_umax_implies_ule" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "src_smax_implies_sle"
+4: "src_smax_implies_sle" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "src_smax_implies_sle" has unsupported operation: builtin.unregistered: llvm.cond_br
+

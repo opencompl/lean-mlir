@@ -1,0 +1,190 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test1" has unsupported operation after optimization: llvm.load
+
+1: "test1_noinbounds"
+4: "test1_noinbounds" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1_noinbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test1_noinbounds" has unsupported operation after optimization: llvm.load
+
+1: "test1_noinbounds_i64"
+4: "test1_noinbounds_i64" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1_noinbounds_i64" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test1_noinbounds_i64" has unsupported operation after optimization: llvm.load
+
+1: "test1_noinbounds_as1"
+4: "test1_noinbounds_as1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1_noinbounds_as1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test1_noinbounds_as1" has unsupported operation after optimization: llvm.load
+
+1: "test1_noinbounds_as2"
+4: "test1_noinbounds_as2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test1_noinbounds_as2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test1_noinbounds_as2" has unsupported operation after optimization: llvm.load
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test2" has unsupported operation after optimization: llvm.load
+
+1: "test3"
+4: "test3" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test3" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test3" has unsupported operation after optimization: llvm.load
+
+4: "test3" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test4"
+4: "test4" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test4" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test4" has unsupported operation after optimization: llvm.load
+
+1: "test4_i16"
+4: "test4_i16" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test4_i16" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test4_i16" has unsupported operation after optimization: llvm.load
+
+1: "test5"
+4: "test5" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test5" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test5" has unsupported operation after optimization: llvm.load
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test6" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test6" has unsupported operation after optimization: llvm.load
+
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test7"
+4: "test7" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test7" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test7" has unsupported operation after optimization: llvm.load
+
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test8"
+4: "test8" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test8" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test8" has unsupported operation after optimization: llvm.load
+
+1: "test9"
+4: "test9" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test9" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test9" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct"
+4: "test10_struct" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_noinbounds"
+4: "test10_struct_noinbounds" has unsupported operation: llvm.mlir.addressof
+
+4: "test10_struct_noinbounds" has unsupported operation: llvm.getelementptr
+
+4: "test10_struct_noinbounds" has unsupported operation: llvm.load
+
+1: "test10_struct_i16"
+4: "test10_struct_i16" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_i16" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_i16" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_i64"
+4: "test10_struct_i64" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_i64" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_i64" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_noinbounds_i16"
+4: "test10_struct_noinbounds_i16" has unsupported operation: llvm.mlir.addressof
+
+4: "test10_struct_noinbounds_i16" has unsupported operation: llvm.getelementptr
+
+4: "test10_struct_noinbounds_i16" has unsupported operation: llvm.load
+
+1: "test10_struct_arr"
+4: "test10_struct_arr" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_arr" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_arr" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_arr_noinbounds"
+4: "test10_struct_arr_noinbounds" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_arr_noinbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_arr_noinbounds" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_arr_i16"
+4: "test10_struct_arr_i16" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_arr_i16" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_arr_i16" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_arr_i64"
+4: "test10_struct_arr_i64" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_arr_i64" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_arr_i64" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_arr_noinbounds_i16"
+4: "test10_struct_arr_noinbounds_i16" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_arr_noinbounds_i16" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_arr_noinbounds_i16" has unsupported operation after optimization: llvm.load
+
+1: "test10_struct_arr_noinbounds_i64"
+4: "test10_struct_arr_noinbounds_i64" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test10_struct_arr_noinbounds_i64" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test10_struct_arr_noinbounds_i64" has unsupported operation after optimization: llvm.load
+
+1: "pr93017"
+4: "pr93017" has unsupported operation: llvm.mlir.addressof
+
+4: "pr93017" has unsupported operation: llvm.mlir.zero
+
+4: "pr93017" has unsupported operation: llvm.getelementptr
+
+4: "pr93017" has unsupported operation: llvm.load
+

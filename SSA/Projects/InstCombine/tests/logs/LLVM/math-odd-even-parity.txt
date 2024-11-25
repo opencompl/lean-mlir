@@ -1,0 +1,27 @@
+1: "erf"
+5: "erf" is empty
+
+1: "cos"
+5: "cos" is empty
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "use"
+5: "use" is empty
+
+1: "test_erf"
+4: "test_erf" has unsupported operation: llvm.call
+
+1: "test_cos_fabs"
+4: "test_cos_fabs" has unsupported operation: llvm.call
+
+1: "test_erf_multi_use"
+4: "test_erf_multi_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_erf_multi_use" has unsupported operation: llvm.call
+
+4: "test_erf_multi_use" has unsupported operation: llvm.call
+
+4: "test_erf_multi_use" has unsupported operation: builtin.unregistered: llvm.fneg
+

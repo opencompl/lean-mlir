@@ -5,18 +5,19 @@ import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
-import SSA.Experimental.Bits.Defs
+import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.Circuit
 
 open Sum
 
+section FSM
 variable {α β α' β' : Type} {γ : β → Type}
 
 /-- `FSM n` represents a function `BitStream → ⋯ → BitStream → BitStream`,
 where `n` is the number of `BitStream` arguments,
 as a finite state machine.
 -/
-structure FSM (arity : Type) : Type 1 :=
+structure FSM (arity : Type) : Type 1 where
   /--
   The arity of the (finite) type `α` determines how many bits the internal carry state of this
   FSM has -/
@@ -102,6 +103,15 @@ theorem eval_changeInitCarry_succ
 theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
     p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 :=
   rfl
+
+theorem eval_eq_eval' :
+    p.eval x = p.eval' x := by
+  funext i
+  simp only [eval, eval']
+  induction i generalizing p x
+  case zero => rfl
+  case succ i ih =>
+    sorry
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
@@ -293,7 +303,7 @@ def sub : FSM Bool :=
 theorem carry_sub (x : Bool → BitStream) : ∀ (n : ℕ), sub.carry x (n+1) =
     fun _ => (BitStream.subAux (x true) (x false) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.subAux, sub]
+    simp [carry, nextBit, funext_iff, BitStream.subAux, sub]
   | n+1 => by
     rw [carry, carry_sub _ n]
     simp [nextBit, eval, sub, BitStream.sub, BitStream.subAux, Bool.xor_not_left']
@@ -319,7 +329,7 @@ def neg : FSM Unit :=
 theorem carry_neg (x : Unit → BitStream) : ∀ (n : ℕ), neg.carry x (n+1) =
     fun _ => (BitStream.negAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.negAux, neg]
+    simp [carry, nextBit, funext_iff, BitStream.negAux, neg]
   | n+1 => by
     rw [carry, carry_neg _ n]
     simp [nextBit, eval, neg, BitStream.neg, BitStream.negAux, Bool.xor_not_left']
@@ -387,7 +397,7 @@ def ls (b : Bool) : FSM Unit :=
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, ls]
+    simp [carry, nextBit, funext_iff, ls]
   | n+1 => by
     rw [carry, carry_ls _ _ n]
     simp [nextBit, eval, ls]
@@ -419,7 +429,7 @@ def incr : FSM Unit :=
 theorem carry_incr (x : Unit → BitStream) : ∀ (n : ℕ),
     incr.carry x (n+1) = fun _ => (BitStream.incrAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.incrAux, incr]
+    simp [carry, nextBit, funext_iff, BitStream.incrAux, incr]
   | n+1 => by
     rw [carry, carry_incr _ n]
     simp [nextBit, eval, incr, incr, BitStream.incrAux]
@@ -442,7 +452,7 @@ def decr : FSM Unit :=
 theorem carry_decr (x : Unit → BitStream) : ∀ (n : ℕ), decr.carry x (n+1) =
     fun _ => (BitStream.decrAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, Function.funext_iff, BitStream.decrAux, decr]
+    simp [carry, nextBit, funext_iff, BitStream.decrAux, decr]
   | n+1 => by
     rw [carry, carry_decr _ n]
     simp [nextBit, eval, decr, BitStream.decrAux]
@@ -475,9 +485,26 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
   rw [eval]
   exact (evalAux_eq_zero_of_set p R hR hi hr1 x n).1
 
+def repeatBit : FSM Unit where
+  α := Unit
+  initCarry := fun () => false
+  nextBitCirc := fun _ =>
+    .or (.var true <| .inl ()) (.var true <| .inr ())
+
+@[simp] theorem eval_repeatBit :
+    repeatBit.eval x = BitStream.repeatBit (x ()) := by
+  unfold BitStream.repeatBit
+  rw [eval_eq_eval', eval']
+  apply BitStream.corec_eq_corec
+    (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
+  · simp [repeatBit]
+  · intro ⟨y, a⟩ ⟨b, x⟩ h
+    simp at h
+    simp [h, nextBit, BitStream.head]
+
 end FSM
 
-structure FSMSolution (t : Term) extends FSM (Fin t.arity) :=
+structure FSMSolution (t : Term) extends FSM (Fin t.arity) where
   ( good : t.evalFin = toFSM.eval )
 
 def composeUnary
@@ -503,6 +530,19 @@ def composeBinary
     (λ b => match b with
       | true => q₁.toFSM
       | false => q₂.toFSM)
+
+def composeBinary'
+    (p : FSM Bool)
+    {n m : Nat}
+    (q₁ : FSM (Fin n))
+    (q₂ : FSM (Fin m)) :
+    FSM (Fin (max n m)) :=
+  p.compose (Fin (max n m))
+    (λ b => Fin (cond b n m))
+    (λ b i => Fin.castLE (by cases b <;> simp) i)
+    (λ b => match b with
+      | true => q₁
+      | false => q₂)
 
 @[simp] lemma composeUnary_eval
     (p : FSM Unit)
@@ -589,6 +629,67 @@ def termEvalEqFSM : ∀ (t : Term), FSMSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
+  | repeatBit t =>
+    let p := termEvalEqFSM t
+    { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,
+      good := by ext; simp }
+
+/-!
+FSM that implement bitwise-and. Since we use `0` as the good state,
+we keep the invariant that if both inputs are good and our state is `0`, then we produce a `0`.
+If not, we produce an infinite sequence of `1`.
+-/
+def and : FSM Bool :=
+  { α := Unit,
+    initCarry := fun _ => false,
+    nextBitCirc := fun a =>
+      match a with
+      | some () =>
+             -- Only if both are `0` we produce a `0`.
+             (Circuit.var true (inr false)  |||
+             ((Circuit.var false (inr true) |||
+              -- But if we have failed and have value `1`, then we produce a `1` from our state.
+              (Circuit.var true (inl ())))))
+      | none => -- must succeed in both arguments, so we are `0` if both are `0`.
+                Circuit.var true (inr true) |||
+                Circuit.var true (inr false)
+                }
+
+/-!
+FSM that implement bitwise-or. Since we use `0` as the good state,
+we keep the invariant that if either inputs is `0` then our state is `0`.
+If not, we produce a `1`.
+-/
+def or : FSM Bool :=
+  { α := Unit,
+    initCarry := fun _ => false,
+    nextBitCirc := fun a =>
+      match a with
+      | some () =>
+             -- If either succeeds, then the full thing succeeds
+             ((Circuit.var true (inr false)  &&&
+             ((Circuit.var false (inr true)) |||
+             -- On the other hand, if we have failed, then propagate failure.
+              (Circuit.var true (inl ())))))
+      | none => -- can succeed in either argument, so we are `0` if either is `0`.
+                Circuit.var true (inr true) &&&
+                Circuit.var true (inr false)
+                }
+
+/-!
+FSM that implement logical not.
+we keep the invariant that if the input ever fails and becomes a `1`, then we produce a `0`.
+IF not, we produce an infinite sequence of `1`.
+
+EDIT: Aha, this doesn't work!
+We need NFA to DFA here (as the presburger book does),
+where we must produce an infinite sequence of`0` iff the input can *ever* become a `1`.
+But here, since we phrase things directly in terms of producing sequences, it's a bit less clear
+what we should do :)
+
+- Alternatively, we need to be able to decide `eventually always zero`.
+- Alternatively, we push negations inside, and decide `⬝ ≠ ⬝` and `⬝ ≰ ⬝`.
+-/
 
 inductive Result : Type
   | falseAfter (n : ℕ) : Result
@@ -679,3 +780,47 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     intro x s h
     use x
     exact h
+
+end FSM
+
+/--
+The fragment of predicate logic that we support in `bv_automata`.
+Currently, we support equality, conjunction, disjunction, and negation.
+This can be expanded to also support arithmetic constraints such as unsigned-less-than.
+-/
+inductive Predicate : Nat → Type _ where
+| eq (t1 t2 : Term) : Predicate ((max t1.arity t2.arity))
+| and  (p : Predicate n) (q : Predicate m) : Predicate (max n m)
+| or  (p : Predicate n) (q : Predicate m) : Predicate (max n m)
+-- For now, we can't prove `not`, because it needs NFA → DFA conversion
+-- the way Sid knows how to build it, or negation normal form,
+-- both of which is machinery we lack.
+-- | not (p : Predicate n) : Predicate n
+
+
+
+/--
+denote a reflected `predicate` into a `prop.
+-/
+def Predicate.denote : Predicate α → Prop
+| eq t1 t2 => t1.eval = t2.eval
+| and p q => p.denote ∧  q.denote
+| or p q => p.denote ∨  q.denote
+-- | not p => ¬ p.denote
+
+/--
+Convert a predicate into a proposition
+-/
+def Predicate.toFSM : Predicate k → FSM (Fin k)
+| .eq t1 t2 => (termEvalEqFSM (Term.repeatBit <| Term.xor t1 t2)).toFSM
+| .and p q =>
+    let p := toFSM p
+    let q := toFSM q
+    composeBinary' FSM.and p q
+| .or p q =>
+    let p := toFSM p
+    let q := toFSM q
+    composeBinary' FSM.or p q
+
+theorem Predicate.toFsm_correct {k : Nat} (p : Predicate k) :
+  decideIfZeros p.toFSM = true ↔ p.denote := by sorry

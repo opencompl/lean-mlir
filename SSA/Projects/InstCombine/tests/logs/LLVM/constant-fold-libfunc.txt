@@ -1,0 +1,12 @@
+1: "acos"
+5: "acos" is empty
+
+1: "test_simplify_acos"
+4: "test_simplify_acos" has unsupported operation after optimization: llvm.call
+
+1: "test_acos_nobuiltin"
+4: "test_acos_nobuiltin" has unsupported operation: llvm.call
+
+1: "test_acos_strictfp"
+4: "test_acos_strictfp" has unsupported operation: llvm.call
+

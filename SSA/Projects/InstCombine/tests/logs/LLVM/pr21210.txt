@@ -1,0 +1,36 @@
+1: "foo"
+5: "foo" is empty
+
+1: "bar"
+5: "bar" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "test1" has unsupported operation: llvm.call
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1" has unsupported operation: llvm.return
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.mlir.undef
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.return
+

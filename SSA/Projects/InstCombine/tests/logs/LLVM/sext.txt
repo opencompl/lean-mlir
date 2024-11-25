@@ -1,0 +1,195 @@
+1: "use"
+5: "use" is empty
+
+1: "use_vec"
+5: "use_vec" is empty
+
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.sext
+2: llvm.return
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.sext
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.mul
+2: llvm.sext
+2: llvm.return
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sub
+2: llvm.sext
+2: llvm.return
+
+1: "test8"
+9: "test8" has pointer type input
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.shl
+2: llvm.ashr
+2: llvm.sext
+2: llvm.return
+
+1: "test10_vec"
+8: "test10_vec" contains vectors which are unsupported
+
+1: "test10_vec_nonuniform"
+8: "test10_vec_nonuniform" contains vectors which are unsupported
+
+1: "test10_vec_poison0"
+4: "test10_vec_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test10_vec_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "test10_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test10_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test10_vec_poison1"
+4: "test10_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "test10_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "test10_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test10_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test10_vec_poison2"
+4: "test10_vec_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test10_vec_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "test10_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test10_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test11"
+9: "test11" has pointer type input
+
+4: "test11" has unsupported operation: llvm.store
+
+4: "test11" has unsupported operation: llvm.return
+
+1: "test12"
+7: "test12" is unchanged by InstCombine
+
+1: "test13"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.sext
+2: llvm.return
+
+1: "test14"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.sext
+2: llvm.return
+
+1: "test15"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.sext
+2: llvm.return
+
+1: "test16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.sext
+2: llvm.return
+
+1: "test17"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "test18"
+4: "test18" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test19"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.shl
+2: llvm.ashr
+2: llvm.sext
+2: llvm.return
+
+1: "smear_set_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.sext
+2: llvm.return
+
+1: "smear_set_bit_vec_use1"
+4: "smear_set_bit_vec_use1" has unsupported operation: llvm.call
+
+1: "smear_set_bit_use2"
+4: "smear_set_bit_use2" has unsupported operation: llvm.call
+
+1: "smear_set_bit_wrong_shift_amount"
+7: "smear_set_bit_wrong_shift_amount" is unchanged by InstCombine
+
+1: "smear_set_bit_different_dest_type"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.sext
+2: llvm.return
+
+1: "smear_set_bit_different_dest_type_extra_use"
+4: "smear_set_bit_different_dest_type_extra_use" has unsupported operation: llvm.call
+
+1: "smear_set_bit_different_dest_type_wider_dst"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.sext
+2: llvm.return
+

@@ -1,0 +1,47 @@
+1: "use"
+5: "use" is empty
+
+1: "usevec"
+5: "usevec" is empty
+
+1: "fpext_fpext"
+4: "fpext_fpext" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fpext_fpext" has unsupported operation: builtin.unregistered: llvm.fpext
+
+1: "sext_sext"
+4: "sext_sext" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "zext_zext"
+4: "zext_zext" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "fpext_fpext_types"
+4: "fpext_fpext_types" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fpext_fpext_types" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fpext_fpext_types" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "sext_sext_types"
+4: "sext_sext_types" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "sext_zext"
+4: "sext_zext" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "sext_sext_use1"
+4: "sext_sext_use1" has unsupported operation: llvm.call
+
+4: "sext_sext_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "zext_zext_use2"
+4: "zext_zext_use2" has unsupported operation: llvm.call
+
+4: "zext_zext_use2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "zext_zext_use3"
+4: "zext_zext_use3" has unsupported operation: llvm.call
+
+4: "zext_zext_use3" has unsupported operation: llvm.call
+
+4: "zext_zext_use3" has unsupported operation: builtin.unregistered: llvm.insertelement
+

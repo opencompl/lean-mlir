@@ -1,0 +1,135 @@
+1: "use64"
+5: "use64" is empty
+
+1: "useptr"
+9: "useptr" has pointer type input
+
+1: "test_zero"
+9: "test_zero" has pointer type input
+
+4: "test_zero" has unsupported operation: llvm.getelementptr
+
+4: "test_nonzero" has unsupported operation: range
+
+1: "test_or_disjoint"
+9: "test_or_disjoint" has pointer type input
+
+4: "test_or_disjoint" has unsupported operation: llvm.getelementptr
+
+1: "test_zero_multiuse_index"
+9: "test_zero_multiuse_index" has pointer type input
+
+4: "test_zero_multiuse_index" has unsupported operation: llvm.call
+
+4: "test_zero_multiuse_index" has unsupported operation: llvm.getelementptr
+
+1: "test_zero_multiuse_ptr"
+9: "test_zero_multiuse_ptr" has pointer type input
+
+4: "test_zero_multiuse_ptr" has unsupported operation: llvm.getelementptr
+
+4: "test_zero_multiuse_ptr" has unsupported operation: llvm.call
+
+4: "test_zero_multiuse_ptr" has unsupported operation: llvm.getelementptr
+
+1: "test_zero_sext_add_nsw"
+9: "test_zero_sext_add_nsw" has pointer type input
+
+4: "test_zero_sext_add_nsw" has unsupported operation: llvm.getelementptr
+
+4: "test_zero_sext_add_nsw" has unsupported operation: llvm.getelementptr
+
+4: "test_zero_sext_add_nsw" has unsupported operation: llvm.getelementptr
+
+1: "test_zero_trunc_add"
+9: "test_zero_trunc_add" has pointer type input
+
+4: "test_zero_trunc_add" has unsupported operation: llvm.getelementptr
+
+1: "test_non_i8"
+9: "test_non_i8" has pointer type input
+
+4: "test_non_i8" has unsupported operation: llvm.getelementptr
+
+4: "test_non_i8" has unsupported operation: llvm.getelementptr
+
+1: "test_non_const"
+9: "test_non_const" has pointer type input
+
+4: "test_non_const" has unsupported operation: llvm.getelementptr
+
+4: "test_non_const" has unsupported operation: llvm.getelementptr
+
+4: "test_non_const" has unsupported operation: llvm.getelementptr
+
+1: "test_too_many_indices"
+9: "test_too_many_indices" has pointer type input
+
+4: "test_too_many_indices" has unsupported operation: llvm.getelementptr
+
+4: "test_too_many_indices" has unsupported operation: llvm.getelementptr
+
+1: "test_wrong_op"
+9: "test_wrong_op" has pointer type input
+
+4: "test_wrong_op" has unsupported operation: llvm.getelementptr
+
+4: "test_wrong_op" has unsupported operation: llvm.getelementptr
+
+1: "test_sext_add_without_nsw"
+9: "test_sext_add_without_nsw" has pointer type input
+
+4: "test_sext_add_without_nsw" has unsupported operation: llvm.getelementptr
+
+4: "test_sext_add_without_nsw" has unsupported operation: llvm.getelementptr
+
+1: "test_or_without_disjoint"
+9: "test_or_without_disjoint" has pointer type input
+
+4: "test_or_without_disjoint" has unsupported operation: llvm.getelementptr
+
+4: "test_or_without_disjoint" has unsupported operation: llvm.getelementptr
+
+1: "test_smul_overflow"
+9: "test_smul_overflow" has pointer type input
+
+4: "test_smul_overflow" has unsupported operation: llvm.getelementptr
+
+4: "test_smul_overflow" has unsupported operation: llvm.getelementptr
+
+1: "test_sadd_overflow"
+9: "test_sadd_overflow" has pointer type input
+
+4: "test_sadd_overflow" has unsupported operation: llvm.getelementptr
+
+4: "test_sadd_overflow" has unsupported operation: llvm.getelementptr
+
+1: "test_nonzero_multiuse_index"
+9: "test_nonzero_multiuse_index" has pointer type input
+
+4: "test_nonzero_multiuse_index" has unsupported operation: llvm.getelementptr
+
+4: "test_nonzero_multiuse_index" has unsupported operation: llvm.call
+
+4: "test_nonzero_multiuse_index" has unsupported operation: llvm.getelementptr
+
+1: "test_nonzero_multiuse_ptr"
+9: "test_nonzero_multiuse_ptr" has pointer type input
+
+4: "test_nonzero_multiuse_ptr" has unsupported operation: llvm.getelementptr
+
+4: "test_nonzero_multiuse_ptr" has unsupported operation: llvm.call
+
+4: "test_nonzero_multiuse_ptr" has unsupported operation: llvm.getelementptr
+
+4: "test_nonzero_multiuse_ptr" has unsupported operation: llvm.getelementptr
+
+1: "test_scalable"
+9: "test_scalable" has pointer type input
+
+4: "test_scalable" has unsupported operation: llvm.getelementptr
+
+4: "test_scalable" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+4: "test_scalable" has unsupported operation: llvm.getelementptr
+

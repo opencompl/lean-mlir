@@ -1,0 +1,13 @@
+1: "putchar"
+5: "putchar" is empty
+
+1: "puts"
+9: "puts" has pointer type input
+
+1: "xform_puts"
+4: "xform_puts" has unsupported operation: llvm.mlir.addressof
+
+4: "xform_puts" has unsupported operation: llvm.call
+
+4: "xform_puts" has unsupported operation: llvm.return
+

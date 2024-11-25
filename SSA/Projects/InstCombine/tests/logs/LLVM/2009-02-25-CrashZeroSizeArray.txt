@@ -1,0 +1,15 @@
+1: "_ada_c32001b"
+9: "_ada_c32001b" has pointer type input
+
+4: "_ada_c32001b" has unsupported operation: llvm.alloca
+
+4: "_ada_c32001b" has unsupported operation: llvm.load
+
+4: "_ada_c32001b" has unsupported operation: llvm.load
+
+4: "_ada_c32001b" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_ada_c32001b" has unsupported operation: llvm.return
+
+4: "_ada_c32001b" has unsupported operation: llvm.return
+

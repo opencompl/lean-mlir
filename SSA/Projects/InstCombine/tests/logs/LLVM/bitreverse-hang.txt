@@ -1,0 +1,13 @@
+1: "fn1"
+4: "fn1" has unsupported operation: llvm.mlir.addressof
+
+4: "fn1" has unsupported operation: llvm.mlir.undef
+
+4: "fn1" has unsupported operation: llvm.load
+
+4: "fn1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "fn1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "fn1" has unsupported operation: llvm.store
+

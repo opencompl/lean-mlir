@@ -1,0 +1,243 @@
+1: "n0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t1_single_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "n2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t3_singlebit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "n4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t5_vec"
+8: "t5_vec" contains vectors which are unsupported
+
+1: "n6_vec"
+8: "n6_vec" contains vectors which are unsupported
+
+1: "t7_vec"
+8: "t7_vec" contains vectors which are unsupported
+
+1: "n8_vec"
+8: "n8_vec" contains vectors which are unsupported
+
+1: "t9_highest_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t10_almost_highest_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t11_no_shift"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t10_shift_by_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t11_zero_and_almost_bitwidth"
+8: "t11_zero_and_almost_bitwidth" contains vectors which are unsupported
+
+1: "n12_bad"
+8: "n12_bad" contains vectors which are unsupported
+
+1: "t13_x_is_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t14_x_is_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t15_vec_x_is_one_or_zero"
+8: "t15_vec_x_is_one_or_zero" contains vectors which are unsupported
+
+1: "t16_vec_y_is_one_or_zero"
+8: "t16_vec_y_is_one_or_zero" contains vectors which are unsupported
+
+1: "rawspeed_signbit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.add
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

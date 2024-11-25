@@ -1,0 +1,215 @@
+1: "use_i64"
+5: "use_i64" is empty
+
+1: "use_ptr"
+9: "use_ptr" has pointer type input
+
+1: "constant_fold_ptrtoint_gep_zero"
+7: "constant_fold_ptrtoint_gep_zero" is unchanged by InstCombine
+
+1: "constant_fold_ptrtoint_gep_nonzero"
+4: "constant_fold_ptrtoint_gep_nonzero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "constant_fold_ptrtoint_gep_nonzero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "constant_fold_ptrtoint_gep_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "constant_fold_ptrtoint_gep_zero_inbounds"
+7: "constant_fold_ptrtoint_gep_zero_inbounds" is unchanged by InstCombine
+
+1: "constant_fold_ptrtoint_gep_nonzero_inbounds"
+4: "constant_fold_ptrtoint_gep_nonzero_inbounds" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "constant_fold_ptrtoint_gep_nonzero_inbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "constant_fold_ptrtoint_gep_nonzero_inbounds" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "constant_fold_ptrtoint_of_gep_of_nullgep"
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.call
+
+4: "constant_fold_ptrtoint_of_gep_of_nullgep" has unsupported operation: llvm.return
+
+1: "fold_ptrtoint_nullgep_zero"
+4: "fold_ptrtoint_nullgep_zero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_zero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_zero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_zero_inbounds"
+4: "fold_ptrtoint_nullgep_zero_inbounds" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_zero_inbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_zero_inbounds" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_nonzero"
+4: "fold_ptrtoint_nullgep_nonzero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_nonzero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_nonzero_inbounds"
+4: "fold_ptrtoint_nullgep_nonzero_inbounds" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_nonzero_inbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_nonzero_inbounds" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_variable"
+4: "fold_ptrtoint_nullgep_variable" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_variable" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_variable" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_variable_known_nonzero"
+4: "fold_ptrtoint_nullgep_variable_known_nonzero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_variable_known_nonzero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_variable_known_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_variable_inbounds"
+4: "fold_ptrtoint_nullgep_variable_inbounds" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_variable_inbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_variable_inbounds" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds"
+4: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds_multiple_indices"
+4: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds_multiple_indices" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds_multiple_indices" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_variable_known_nonzero_inbounds_multiple_indices" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_i32_variable"
+4: "fold_ptrtoint_nullgep_i32_variable" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_i32_variable" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_i32_variable" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_variable_trunc"
+4: "fold_ptrtoint_nullgep_variable_trunc" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_variable_trunc" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_variable_trunc" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_zero_nullgep_of_nonzero_inbounds_nullgep"
+4: "fold_ptrtoint_zero_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_zero_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_zero_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_zero_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nonzero_inbounds_nullgep_of_zero_noninbounds_nullgep"
+4: "fold_ptrtoint_nonzero_inbounds_nullgep_of_zero_noninbounds_nullgep" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nonzero_inbounds_nullgep_of_zero_noninbounds_nullgep" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nonzero_inbounds_nullgep_of_zero_noninbounds_nullgep" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nonzero_inbounds_nullgep_of_zero_noninbounds_nullgep" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_complex_index_last_nonzero"
+4: "fold_complex_index_last_nonzero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_complex_index_last_nonzero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_complex_index_last_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_complex_index_multiple_nonzero"
+4: "fold_complex_index_multiple_nonzero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_complex_index_multiple_nonzero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_complex_index_multiple_nonzero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_inbounds_nullgep_of_nonzero_inbounds_nullgep"
+4: "fold_ptrtoint_inbounds_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_inbounds_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_inbounds_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_inbounds_nullgep_of_nonzero_inbounds_nullgep" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_array_one_var_1"
+4: "fold_ptrtoint_nullgep_array_one_var_1" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_array_one_var_1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_array_one_var_1" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nullgep_array_one_var_2"
+4: "fold_ptrtoint_nullgep_array_one_var_2" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nullgep_array_one_var_2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nullgep_array_one_var_2" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nested_array_two_vars"
+4: "fold_ptrtoint_nested_array_two_vars" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nested_array_two_vars" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nested_array_two_vars" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nested_array_two_vars_plus_zero"
+4: "fold_ptrtoint_nested_array_two_vars_plus_zero" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nested_array_two_vars_plus_zero" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nested_array_two_vars_plus_zero" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nested_array_two_vars_plus_const"
+4: "fold_ptrtoint_nested_array_two_vars_plus_const" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "fold_ptrtoint_nested_array_two_vars_plus_const" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_ptrtoint_nested_array_two_vars_plus_const" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "fold_ptrtoint_nested_nullgep_array_variable_multiple_uses"
+4: "fold_ptrtoint_nested_nullgep_array_variable_multiple_uses" has unsupported operation: llvm.mlir.zero
+
+4: "fold_ptrtoint_nested_nullgep_array_variable_multiple_uses" has unsupported operation: llvm.getelementptr
+
+4: "fold_ptrtoint_nested_nullgep_array_variable_multiple_uses" has unsupported operation: llvm.call
+
+4: "fold_ptrtoint_nested_nullgep_array_variable_multiple_uses" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

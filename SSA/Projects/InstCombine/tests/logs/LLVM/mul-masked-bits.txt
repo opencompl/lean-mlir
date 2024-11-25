@@ -1,0 +1,2 @@
+3: mul-masked-bits.ll: parsing has failed
+

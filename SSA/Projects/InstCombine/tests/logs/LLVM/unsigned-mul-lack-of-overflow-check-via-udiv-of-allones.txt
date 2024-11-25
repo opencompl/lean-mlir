@@ -1,0 +1,40 @@
+1: "t0_basic"
+4: "t0_basic" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "t0_basic" has unsupported operation: llvm.extractvalue
+
+1: "t1_vec"
+4: "t1_vec" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "t1_vec" has unsupported operation: llvm.extractvalue
+
+1: "t2_vec_poison"
+4: "t2_vec_poison" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "t2_vec_poison" has unsupported operation: llvm.extractvalue
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "t3_commutative"
+4: "t3_commutative" has unsupported operation: llvm.call
+
+4: "t3_commutative" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "t3_commutative" has unsupported operation: llvm.extractvalue
+
+1: "use8"
+5: "use8" is empty
+
+1: "n4_extrause"
+4: "n4_extrause" has unsupported operation: llvm.call
+
+1: "n5_not_negone"
+7: "n5_not_negone" is unchanged by InstCombine
+
+1: "n6_wrong_pred0"
+7: "n6_wrong_pred0" is unchanged by InstCombine
+
+1: "n6_wrong_pred1"
+7: "n6_wrong_pred1" is unchanged by InstCombine
+

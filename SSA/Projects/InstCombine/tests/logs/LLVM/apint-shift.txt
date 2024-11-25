@@ -1,0 +1,300 @@
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
+
+1: "test6a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.shl
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "test6a_negative_oneuse"
+4: "test6a_negative_oneuse" has unsupported operation: llvm.call
+
+1: "test6a_vec"
+8: "test6a_vec" contains vectors which are unsupported
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.ashr
+2: llvm.return
+
+1: "test8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.return
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.return
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "lshr_lshr_splat_vec"
+8: "lshr_lshr_splat_vec" contains vectors which are unsupported
+
+1: "multiuse_lshr_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.mul
+2: llvm.return
+
+1: "multiuse_lshr_lshr_splat"
+8: "multiuse_lshr_lshr_splat" contains vectors which are unsupported
+
+1: "shl_shl_splat_vec"
+8: "shl_shl_splat_vec" contains vectors which are unsupported
+
+1: "multiuse_shl_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
+
+1: "multiuse_shl_shl_splat"
+8: "multiuse_shl_shl_splat" contains vectors which are unsupported
+
+1: "eq_shl_lshr_splat_vec"
+8: "eq_shl_lshr_splat_vec" contains vectors which are unsupported
+
+1: "eq_lshr_shl_splat_vec"
+8: "eq_lshr_shl_splat_vec" contains vectors which are unsupported
+
+1: "lshr_shl_splat_vec"
+8: "lshr_shl_splat_vec" contains vectors which are unsupported
+
+1: "shl_lshr_splat_vec"
+8: "shl_lshr_splat_vec" contains vectors which are unsupported
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "test12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.shl
+2: llvm.return
+
+1: "test12_splat_vec"
+8: "test12_splat_vec" contains vectors which are unsupported
+
+1: "test13"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.shl
+2: llvm.return
+
+1: "test14"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.or
+2: llvm.shl
+2: llvm.return
+
+1: "test14a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "test15"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "test15a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.shl
+2: llvm.return
+
+1: "test16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test16vec"
+8: "test16vec" contains vectors which are unsupported
+
+1: "test16vec_nonuniform"
+8: "test16vec_nonuniform" contains vectors which are unsupported
+
+1: "test16vec_undef"
+4: "test16vec_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test16vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "test16vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test16vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test17"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "test17vec"
+8: "test17vec" contains vectors which are unsupported
+
+1: "test18"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "test19"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "test19vec"
+8: "test19vec" contains vectors which are unsupported
+
+1: "test19a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "test19a_vec"
+8: "test19a_vec" contains vectors which are unsupported
+
+1: "test20"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "test21"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "test22"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "test23"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "shl_lshr_eq_amt_multi_use"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.add
+2: llvm.return
+
+1: "shl_lshr_eq_amt_multi_use_splat_vec"
+8: "shl_lshr_eq_amt_multi_use_splat_vec" contains vectors which are unsupported
+
+1: "lshr_shl_eq_amt_multi_use"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
+
+1: "lshr_shl_eq_amt_multi_use_splat_vec"
+8: "lshr_shl_eq_amt_multi_use_splat_vec" contains vectors which are unsupported
+
+1: "test25"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "test26"
+4: "test26" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "ossfuzz_9880"
+4: "ossfuzz_9880" has unsupported operation after optimization: llvm.alloca
+
+4: "ossfuzz_9880" has unsupported operation after optimization: llvm.load
+

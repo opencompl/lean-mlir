@@ -1,0 +1,22 @@
+1: "_Z9ray_traceRK3VecRK3RayRK5Scene"
+9: "_Z9ray_traceRK3VecRK3RayRK5Scene" has pointer type input
+
+1: "main"
+9: "main" has pointer type input
+
+4: "main" has unsupported operation: llvm.mlir.zero
+
+4: "main" has unsupported operation: llvm.alloca
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "main" has unsupported operation: llvm.store
+
+4: "main" has unsupported operation: llvm.call
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "main" has unsupported operation: builtin.unregistered: llvm.cond_br
+

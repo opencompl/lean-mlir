@@ -1,0 +1,7 @@
+1: "a"
+4: "a" has unsupported operation: llvm.mlir.zero
+
+4: "a" has unsupported operation: llvm.store
+
+4: "a" has unsupported operation: llvm.return
+

@@ -1,0 +1,57 @@
+1: "fu1"
+4: "fu1" has unsupported operation: llvm.mlir.zero
+
+4: "fu1" has unsupported operation: llvm.alloca
+
+4: "fu1" has unsupported operation: llvm.alloca
+
+4: "fu1" has unsupported operation: llvm.store
+
+4: "fu1" has unsupported operation: llvm.store
+
+4: "fu1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "fu1" has unsupported operation: llvm.load
+
+4: "fu1" has unsupported operation: llvm.alloca
+
+4: "fu1" has unsupported operation: llvm.store
+
+4: "fu1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "fu1" has unsupported operation: llvm.load
+
+4: "fu1" has unsupported operation: llvm.call
+
+4: "fu1" has unsupported operation: llvm.return
+
+1: "bar"
+9: "bar" has pointer type input
+
+1: "fu2"
+4: "fu2" has unsupported operation: llvm.mlir.zero
+
+4: "fu2" has unsupported operation: llvm.alloca
+
+4: "fu2" has unsupported operation: llvm.alloca
+
+4: "fu2" has unsupported operation: llvm.store
+
+4: "fu2" has unsupported operation: llvm.store
+
+4: "fu2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "fu2" has unsupported operation: llvm.load
+
+4: "fu2" has unsupported operation: llvm.alloca
+
+4: "fu2" has unsupported operation: llvm.store
+
+4: "fu2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "fu2" has unsupported operation: llvm.load
+
+4: "fu2" has unsupported operation: llvm.call
+
+4: "fu2" has unsupported operation: llvm.return
+

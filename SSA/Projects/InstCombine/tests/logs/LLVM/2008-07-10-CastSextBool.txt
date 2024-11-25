@@ -1,0 +1,13 @@
+1: "PR2539_A"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "PR2539_B"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.return
+

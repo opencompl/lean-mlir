@@ -1,0 +1,32 @@
+1: "add_byval_callee"
+9: "add_byval_callee" has pointer type input
+
+1: "add_byval_callee_2"
+9: "add_byval_callee_2" has pointer type input
+
+1: "add_byval"
+9: "add_byval" has pointer type input
+
+4: "add_byval" has unsupported operation: llvm.call
+
+4: "add_byval" has unsupported operation: llvm.return
+
+1: "add_byval_2"
+9: "add_byval_2" has pointer type input
+
+4: "add_byval_2" has unsupported operation: llvm.call
+
+4: "add_byval_2" has unsupported operation: llvm.return
+
+1: "vararg_byval"
+9: "vararg_byval" has pointer type input
+
+4: "vararg_byval" has unsupported operation: llvm.mlir.undef
+
+4: "vararg_byval" has unsupported operation: llvm.call
+
+4: "vararg_byval" has unsupported operation: llvm.return
+
+1: "vararg_callee"
+5: "vararg_callee" is empty
+

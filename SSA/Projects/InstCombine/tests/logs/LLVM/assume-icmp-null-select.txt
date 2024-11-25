@@ -1,0 +1,12 @@
+1: "example"
+9: "example" has pointer type input
+
+1: "example2"
+9: "example2" has pointer type input
+
+4: "example2" has unsupported operation: llvm.mlir.zero
+
+4: "example2" has unsupported operation: llvm.load
+
+4: "example2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

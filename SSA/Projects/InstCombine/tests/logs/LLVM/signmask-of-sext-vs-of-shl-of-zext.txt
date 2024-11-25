@@ -1,0 +1,86 @@
+1: "use32"
+5: "use32" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "n2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "n3"
+7: "n3" is unchanged by InstCombine
+
+1: "n4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "t5"
+4: "t5" has unsupported operation: llvm.call
+
+1: "n6"
+4: "n6" has unsupported operation: llvm.call
+
+1: "n7"
+4: "n7" has unsupported operation: llvm.call
+
+4: "n7" has unsupported operation: llvm.call
+
+1: "t8"
+8: "t8" contains vectors which are unsupported
+
+1: "t9"
+8: "t9" contains vectors which are unsupported
+
+1: "t10_undef"
+4: "t10_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t10_undef" has unsupported operation: llvm.mlir.undef
+
+4: "t10_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t10_poison"
+4: "t10_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t10_poison" has unsupported operation: llvm.mlir.undef
+
+4: "t10_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t11"
+4: "t11" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t11" has unsupported operation: llvm.mlir.undef
+
+4: "t11" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t11" has unsupported operation: builtin.unregistered: llvm.insertelement
+

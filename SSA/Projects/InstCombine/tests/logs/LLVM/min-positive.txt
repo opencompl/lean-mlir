@@ -1,0 +1,42 @@
+1: "smin"
+4: "smin" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "smin" has unsupported operation after optimization: llvm.load
+
+1: "smin_int"
+4: "smin_int" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "smin_int" has unsupported operation after optimization: llvm.load
+
+4: "smin_int" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
+
+1: "smin_vec"
+8: "smin_vec" contains vectors which are unsupported
+
+1: "smin_commute"
+4: "smin_commute" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "smin_commute" has unsupported operation after optimization: llvm.load
+
+1: "smin_commute_vec"
+8: "smin_commute_vec" contains vectors which are unsupported
+
+1: "smin_commute_vec_poison_elts"
+4: "smin_commute_vec_poison_elts" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "smin_commute_vec_poison_elts" has unsupported operation: llvm.mlir.undef
+
+4: "smin_commute_vec_poison_elts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "smin_commute_vec_poison_elts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "maybe_not_positive"
+4: "maybe_not_positive" has unsupported operation: llvm.mlir.addressof
+
+4: "maybe_not_positive" has unsupported operation: llvm.load
+
+4: "maybe_not_positive" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "maybe_not_positive_vec"
+4: "maybe_not_positive_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+

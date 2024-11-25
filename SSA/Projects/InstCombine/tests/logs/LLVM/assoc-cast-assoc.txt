@@ -1,0 +1,45 @@
+1: "XorZextXor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
+
+1: "XorZextXorVec"
+8: "XorZextXorVec" contains vectors which are unsupported
+
+1: "OrZextOr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.zext
+2: llvm.or
+2: llvm.return
+
+1: "OrZextOrVec"
+8: "OrZextOrVec" contains vectors which are unsupported
+
+1: "AndZextAnd"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.and
+2: llvm.return
+
+1: "AndZextAndVec"
+8: "AndZextAndVec" contains vectors which are unsupported
+
+1: "zext_nneg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.and
+2: llvm.return
+

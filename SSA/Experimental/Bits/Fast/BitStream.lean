@@ -98,6 +98,45 @@ section Lemmas
 theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
   funext i; exact h i
 
+/--
+The field projection `.1` distributes over function composition, so we can compute
+the first field of the result of the composition by repeatedly composing the first projection.
+-/
+theorem compose_first {α: Type u₁} (i : Nat) (a : α)
+    (f : α → α × Bool) :
+    (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
+  match i with
+    | 0 => by simp
+    | i + 1 => by simp [compose_first i ((f a).1) f]
+
+/--
+Coinduction principle for `corec`.
+To show that `corec f a = corec g b`,
+we must show that:
+- The relation `R a b` is inhabited ["base case"]
+- Given that `R a b` holds, then `R (f a) (g b)` holds [coinductive case]
+-/
+theorem corec_eq_corec {a : α} {b : β} {f g}
+    (R : α → β → Prop)
+    (thing : R a b)
+    (h : ∀ a b, R a b →
+          let x := f a
+          let y := g b
+          R x.fst y.fst ∧ x.snd = y.snd) :
+    corec f a = corec g b := by
+  ext i
+  have lem : R ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) ∧ corec f a i = corec g b i := by
+    induction' i with i ih
+    <;> simp only [Function.iterate_succ, Function.comp_apply, corec]
+    · apply h
+      exact thing
+    · have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
+      cases' m with l r
+      rw [r, ← compose_first, ← @compose_first β]
+      simp [l]
+  cases lem
+  assumption
+
 end Lemmas
 
 end Basic
@@ -209,7 +248,7 @@ variable (x y : BitVec (w+1))
 @[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := by
   funext i
   simp only [ofBitVec, BitVec.getLsbD_not, BitVec.msb_not, lt_add_iff_pos_left, add_pos_iff,
-    zero_lt_one, or_true, decide_True, Bool.true_and, not_eq]
+    zero_lt_one, or_true, decide_true, Bool.true_and, not_eq]
   split <;> simp_all
 
 end Lemmas
@@ -276,6 +315,16 @@ instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
 instance : Sub BitStream := ⟨sub⟩
 
+/-- `repeatBit xs` will repeat the first bit of `xs` which is `true`.
+That is, it will be all-zeros iff `xs` is all-zeroes,
+otherwise, there's some number `k` so that after dropping the `k` least
+significant bits, `repeatBit xs` is all-ones. -/
+def repeatBit (xs : BitStream) : BitStream :=
+  corec (b := (false, xs)) fun (carry, xs) =>
+    let carry := carry || xs 0
+    let xs := xs.tail
+    ((carry, xs), carry)
+
 /-!
 TODO: We should define addition and `carry` in terms of `mapAccum`.
 For example:
@@ -305,11 +354,6 @@ thus could have a bit set in the `w+1`th position.
 Crucially, our decision procedure works by considering which equalities hold for *all* widths,
 
 -/
--- theorem ofBitVec_add {w} (x y z : ∀ w, BitVec w) :
---     (∀ w, (x w + y w) = z w) ↔ (∀ w, (ofBitVec (x w)) + (ofBitVec (y w)) ) := by
---   have ⟨h₁, h₂⟩ : True ∧ True := sorry
---   sorry
-
 variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
 local infix:20 " ≈ʷ " => EqualUpTo w
@@ -380,7 +424,7 @@ theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
     · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsbD_add]
-  simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq, -Nat.add_def]
+  simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
 @[refl]
 theorem equal_up_to_refl : a ≈ʷ a := by
@@ -456,11 +500,13 @@ theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   · simp [EqualUpTo ,h]
   · intros n a
     simp [ofNat_one n, ofBitVec, a]
+    rw [← Bool.decide_and]
+    rw [decide_eq_decide]
     omega
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
-  _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
+  _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]; rfl
   _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
   _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eqTo ofBitVec_one_eqTo_ofNat
   _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]

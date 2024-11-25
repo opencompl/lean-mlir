@@ -1,0 +1,8 @@
+1: "a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.return
+

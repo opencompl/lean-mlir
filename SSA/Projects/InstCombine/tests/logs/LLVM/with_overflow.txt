@@ -1,0 +1,601 @@
+1: "uaddtest1"
+4: "uaddtest1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uaddtest1" has unsupported operation after optimization: llvm.extractvalue
+
+1: "uaddtest2"
+9: "uaddtest2" has pointer type input
+
+4: "uaddtest2" has unsupported operation: llvm.store
+
+1: "uaddtest3"
+9: "uaddtest3" has pointer type input
+
+4: "uaddtest3" has unsupported operation: llvm.store
+
+1: "uaddtest4"
+9: "uaddtest4" has pointer type input
+
+4: "uaddtest4" has unsupported operation: llvm.store
+
+1: "uaddtest5"
+9: "uaddtest5" has pointer type input
+
+4: "uaddtest5" has unsupported operation: llvm.store
+
+1: "uaddtest6"
+4: "uaddtest6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uaddtest6" has unsupported operation after optimization: llvm.extractvalue
+
+1: "uaddtest7"
+4: "uaddtest7" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uaddtest7" has unsupported operation after optimization: llvm.extractvalue
+
+1: "saddtest_nsw"
+4: "saddtest_nsw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "saddtest_nsw" has unsupported operation: llvm.mlir.undef
+
+4: "saddtest_nsw" has unsupported operation: llvm.insertvalue
+
+4: "saddtest_nsw" has unsupported operation: llvm.insertvalue
+
+4: "saddtest_nsw" has unsupported operation: llvm.insertvalue
+
+1: "uaddtest_nuw"
+4: "uaddtest_nuw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "uaddtest_nuw" has unsupported operation: llvm.mlir.undef
+
+4: "uaddtest_nuw" has unsupported operation: llvm.insertvalue
+
+4: "uaddtest_nuw" has unsupported operation: llvm.insertvalue
+
+4: "uaddtest_nuw" has unsupported operation: llvm.insertvalue
+
+1: "ssubtest_nsw"
+4: "ssubtest_nsw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ssubtest_nsw" has unsupported operation: llvm.mlir.undef
+
+4: "ssubtest_nsw" has unsupported operation: llvm.insertvalue
+
+4: "ssubtest_nsw" has unsupported operation: llvm.insertvalue
+
+4: "ssubtest_nsw" has unsupported operation: llvm.insertvalue
+
+1: "usubtest_nuw"
+4: "usubtest_nuw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "usubtest_nuw" has unsupported operation: llvm.mlir.undef
+
+4: "usubtest_nuw" has unsupported operation: llvm.insertvalue
+
+4: "usubtest_nuw" has unsupported operation: llvm.insertvalue
+
+4: "usubtest_nuw" has unsupported operation: llvm.insertvalue
+
+1: "smultest1_nsw"
+4: "smultest1_nsw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "smultest1_nsw" has unsupported operation: llvm.mlir.undef
+
+4: "smultest1_nsw" has unsupported operation: llvm.insertvalue
+
+4: "smultest1_nsw" has unsupported operation: llvm.insertvalue
+
+4: "smultest1_nsw" has unsupported operation: llvm.insertvalue
+
+1: "smultest2_nsw"
+4: "smultest2_nsw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "smultest2_nsw" has unsupported operation: llvm.mlir.undef
+
+4: "smultest2_nsw" has unsupported operation: llvm.insertvalue
+
+4: "smultest2_nsw" has unsupported operation: llvm.insertvalue
+
+4: "smultest2_nsw" has unsupported operation: llvm.insertvalue
+
+1: "smultest3_sw"
+4: "smultest3_sw" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+1: "umultest_nuw"
+4: "umultest_nuw" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "umultest_nuw" has unsupported operation: llvm.mlir.undef
+
+4: "umultest_nuw" has unsupported operation: llvm.insertvalue
+
+4: "umultest_nuw" has unsupported operation: llvm.insertvalue
+
+4: "umultest_nuw" has unsupported operation: llvm.insertvalue
+
+1: "umultest1"
+9: "umultest1" has pointer type input
+
+4: "umultest1" has unsupported operation: llvm.store
+
+1: "umultest2"
+9: "umultest2" has pointer type input
+
+4: "umultest2" has unsupported operation: llvm.store
+
+1: "umultest3"
+4: "umultest3" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umultest3" has unsupported operation after optimization: llvm.extractvalue
+
+4: "umultest3" has unsupported operation after optimization: llvm.extractvalue
+
+1: "umultest4"
+4: "umultest4" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umultest4" has unsupported operation after optimization: llvm.extractvalue
+
+4: "umultest4" has unsupported operation after optimization: llvm.extractvalue
+
+1: "umultest5"
+4: "umultest5" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "umultest5" has unsupported operation: llvm.mlir.undef
+
+4: "umultest5" has unsupported operation: llvm.insertvalue
+
+4: "umultest5" has unsupported operation: llvm.insertvalue
+
+4: "umultest5" has unsupported operation: llvm.insertvalue
+
+1: "overflow_div_add"
+4: "overflow_div_add" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "overflow_div_add" has unsupported operation after optimization: llvm.extractvalue
+
+1: "overflow_div_sub"
+4: "overflow_div_sub" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "overflow_div_sub" has unsupported operation after optimization: llvm.extractvalue
+
+1: "overflow_mod_mul"
+4: "overflow_mod_mul" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "overflow_mod_mul" has unsupported operation after optimization: llvm.extractvalue
+
+1: "overflow_mod_overflow_mul"
+4: "overflow_mod_overflow_mul" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "overflow_mod_overflow_mul" has unsupported operation: llvm.extractvalue
+
+1: "overflow_mod_mul2"
+4: "overflow_mod_mul2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "overflow_mod_mul2" has unsupported operation after optimization: llvm.extractvalue
+
+1: "ssubtest_reorder"
+4: "ssubtest_reorder" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ssubtest_reorder" has unsupported operation: llvm.mlir.undef
+
+4: "ssubtest_reorder" has unsupported operation: llvm.insertvalue
+
+4: "ssubtest_reorder" has unsupported operation: llvm.insertvalue
+
+4: "ssubtest_reorder" has unsupported operation: llvm.insertvalue
+
+1: "never_overflows_ssub_test0"
+4: "never_overflows_ssub_test0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "never_overflows_ssub_test0" has unsupported operation: llvm.mlir.undef
+
+4: "never_overflows_ssub_test0" has unsupported operation: llvm.insertvalue
+
+4: "never_overflows_ssub_test0" has unsupported operation: llvm.insertvalue
+
+4: "never_overflows_ssub_test0" has unsupported operation: llvm.insertvalue
+
+1: "uadd_res_ult_x"
+9: "uadd_res_ult_x" has pointer type input
+
+4: "uadd_res_ult_x" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ult_x" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ult_x" has unsupported operation: llvm.store
+
+4: "uadd_res_ult_x" has unsupported operation: llvm.extractvalue
+
+1: "uadd_res_ult_y"
+9: "uadd_res_ult_y" has pointer type input
+
+4: "uadd_res_ult_y" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ult_y" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ult_y" has unsupported operation: llvm.store
+
+4: "uadd_res_ult_y" has unsupported operation: llvm.extractvalue
+
+1: "uadd_res_ugt_x"
+9: "uadd_res_ugt_x" has pointer type input
+
+4: "uadd_res_ugt_x" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ugt_x" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ugt_x" has unsupported operation: llvm.store
+
+4: "uadd_res_ugt_x" has unsupported operation: llvm.extractvalue
+
+1: "uadd_res_ugt_y"
+9: "uadd_res_ugt_y" has pointer type input
+
+4: "uadd_res_ugt_y" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ugt_y" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ugt_y" has unsupported operation: llvm.store
+
+4: "uadd_res_ugt_y" has unsupported operation: llvm.extractvalue
+
+1: "uadd_res_ult_const"
+9: "uadd_res_ult_const" has pointer type input
+
+4: "uadd_res_ult_const" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ult_const" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ult_const" has unsupported operation: llvm.store
+
+4: "uadd_res_ult_const" has unsupported operation: llvm.extractvalue
+
+1: "uadd_res_ult_const_one"
+9: "uadd_res_ult_const_one" has pointer type input
+
+4: "uadd_res_ult_const_one" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ult_const_one" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ult_const_one" has unsupported operation: llvm.store
+
+4: "uadd_res_ult_const_one" has unsupported operation: llvm.extractvalue
+
+1: "uadd_res_ult_const_minus_one"
+9: "uadd_res_ult_const_minus_one" has pointer type input
+
+4: "uadd_res_ult_const_minus_one" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "uadd_res_ult_const_minus_one" has unsupported operation: llvm.extractvalue
+
+4: "uadd_res_ult_const_minus_one" has unsupported operation: llvm.store
+
+4: "uadd_res_ult_const_minus_one" has unsupported operation: llvm.extractvalue
+
+1: "sadd_canonicalize_constant_arg0"
+4: "sadd_canonicalize_constant_arg0" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+1: "uadd_canonicalize_constant_arg0"
+4: "uadd_canonicalize_constant_arg0" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+1: "ssub_no_canonicalize_constant_arg0"
+4: "ssub_no_canonicalize_constant_arg0" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+1: "usub_no_canonicalize_constant_arg0"
+4: "usub_no_canonicalize_constant_arg0" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+1: "smul_canonicalize_constant_arg0"
+4: "smul_canonicalize_constant_arg0" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+1: "umul_canonicalize_constant_arg0"
+4: "umul_canonicalize_constant_arg0" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+1: "uadd_always_overflow"
+4: "uadd_always_overflow" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "uadd_always_overflow" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "uadd_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "uadd_always_overflow" has unsupported operation: llvm.insertvalue
+
+1: "usub_always_overflow"
+4: "usub_always_overflow" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "usub_always_overflow" has unsupported operation: llvm.mlir.undef
+
+4: "usub_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "usub_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "usub_always_overflow" has unsupported operation: llvm.insertvalue
+
+1: "umul_always_overflow"
+4: "umul_always_overflow" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "umul_always_overflow" has unsupported operation: llvm.mlir.undef
+
+4: "umul_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "umul_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "umul_always_overflow" has unsupported operation: llvm.insertvalue
+
+1: "sadd_always_overflow"
+4: "sadd_always_overflow" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "sadd_always_overflow" has unsupported operation: llvm.mlir.undef
+
+4: "sadd_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "sadd_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "sadd_always_overflow" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "sadd_always_overflow" has unsupported operation: llvm.insertvalue
+
+1: "ssub_always_overflow"
+4: "ssub_always_overflow" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ssub_always_overflow" has unsupported operation: llvm.mlir.undef
+
+4: "ssub_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "ssub_always_overflow" has unsupported operation: llvm.insertvalue
+
+4: "ssub_always_overflow" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "ssub_always_overflow" has unsupported operation: llvm.insertvalue
+
+1: "smul_always_overflow"
+4: "smul_always_overflow" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "smul_always_overflow" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+1: "always_sadd_const_vector"
+4: "always_sadd_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "always_sadd_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "always_sadd_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "always_uadd_const_vector"
+4: "always_uadd_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "always_uadd_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "always_uadd_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "always_ssub_const_vector"
+4: "always_ssub_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "always_ssub_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "always_ssub_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "always_usub_const_vector"
+4: "always_usub_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "always_usub_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "always_usub_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "always_smul_const_vector"
+4: "always_smul_const_vector" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+1: "always_umul_const_vector"
+4: "always_umul_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "always_umul_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "always_umul_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "never_sadd_const_vector"
+4: "never_sadd_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "never_sadd_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "never_sadd_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "never_uadd_const_vector"
+4: "never_uadd_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "never_uadd_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "never_uadd_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "never_ssub_const_vector"
+4: "never_ssub_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "never_ssub_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "never_ssub_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "never_usub_const_vector"
+4: "never_usub_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "never_usub_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "never_usub_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "never_smul_const_vector"
+4: "never_smul_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "never_smul_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "never_smul_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "never_umul_const_vector"
+4: "never_umul_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "never_umul_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "never_umul_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "neutral_sadd_const_vector"
+4: "neutral_sadd_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "neutral_sadd_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "neutral_sadd_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "neutral_uadd_const_vector"
+4: "neutral_uadd_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "neutral_uadd_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "neutral_uadd_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "neutral_ssub_const_vector"
+4: "neutral_ssub_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "neutral_ssub_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "neutral_ssub_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "neutral_usub_const_vector"
+4: "neutral_usub_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "neutral_usub_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "neutral_usub_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "neutral_smul_const_vector"
+4: "neutral_smul_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "neutral_smul_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "neutral_smul_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "neutral_umul_const_vector"
+4: "neutral_umul_const_vector" has unsupported operation: llvm.mlir.undef
+
+4: "neutral_umul_const_vector" has unsupported operation: llvm.insertvalue
+
+4: "neutral_umul_const_vector" has unsupported operation: llvm.insertvalue
+
+1: "smul_neg1"
+9: "smul_neg1" has pointer type input
+
+4: "smul_neg1" has unsupported operation: llvm.store
+
+1: "smul_neg1_vec"
+9: "smul_neg1_vec" has pointer type input
+
+4: "smul_neg1_vec" has unsupported operation: llvm.store
+
+1: "smul_neg1_vec_poison"
+9: "smul_neg1_vec_poison" has pointer type input
+
+4: "smul_neg1_vec_poison" has unsupported operation: llvm.store
+
+1: "smul_neg2"
+9: "smul_neg2" has pointer type input
+
+4: "smul_neg2" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "smul_neg2" has unsupported operation: llvm.extractvalue
+
+4: "smul_neg2" has unsupported operation: llvm.extractvalue
+
+4: "smul_neg2" has unsupported operation: llvm.store
+
+1: "umul_neg1"
+9: "umul_neg1" has pointer type input
+
+4: "umul_neg1" has unsupported operation: llvm.store
+
+1: "umul_neg1_vec"
+9: "umul_neg1_vec" has pointer type input
+
+4: "umul_neg1_vec" has unsupported operation: llvm.store
+
+1: "umul_neg1_vec_poison"
+9: "umul_neg1_vec_poison" has pointer type input
+
+4: "umul_neg1_vec_poison" has unsupported operation: llvm.store
+
+1: "smul_not_neg1_vec"
+8: "smul_not_neg1_vec" contains vectors which are unsupported
+
+1: "umul_neg1_select"
+4: "umul_neg1_select" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umul_neg1_select" has unsupported operation after optimization: llvm.extractvalue
+
+4: "umul_neg1_select" has unsupported operation after optimization: llvm.extractvalue
+
+1: "umul_2"
+9: "umul_2" has pointer type input
+
+4: "umul_2" has unsupported operation: llvm.store
+
+1: "umul_8"
+9: "umul_8" has pointer type input
+
+4: "umul_8" has unsupported operation: llvm.store
+
+1: "umul_64"
+9: "umul_64" has pointer type input
+
+4: "umul_64" has unsupported operation: llvm.store
+
+1: "umul_256"
+9: "umul_256" has pointer type input
+
+4: "umul_256" has unsupported operation: llvm.store
+
+1: "umul_4_vec_poison"
+9: "umul_4_vec_poison" has pointer type input
+
+4: "umul_4_vec_poison" has unsupported operation: llvm.store
+
+1: "umul_3"
+9: "umul_3" has pointer type input
+
+4: "umul_3" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "umul_3" has unsupported operation: llvm.extractvalue
+
+4: "umul_3" has unsupported operation: llvm.extractvalue
+
+4: "umul_3" has unsupported operation: llvm.store
+
+1: "smul_4"
+9: "smul_4" has pointer type input
+
+4: "smul_4" has unsupported operation: llvm.store
+
+1: "smul_16"
+9: "smul_16" has pointer type input
+
+4: "smul_16" has unsupported operation: llvm.store
+
+1: "smul_32"
+9: "smul_32" has pointer type input
+
+4: "smul_32" has unsupported operation: llvm.store
+
+1: "smul_128"
+9: "smul_128" has pointer type input
+
+4: "smul_128" has unsupported operation: llvm.store
+
+1: "smul_2_vec_poison"
+9: "smul_2_vec_poison" has pointer type input
+
+4: "smul_2_vec_poison" has unsupported operation: llvm.store
+
+1: "smul_7"
+9: "smul_7" has pointer type input
+
+4: "smul_7" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "smul_7" has unsupported operation: llvm.extractvalue
+
+4: "smul_7" has unsupported operation: llvm.extractvalue
+
+4: "smul_7" has unsupported operation: llvm.store
+

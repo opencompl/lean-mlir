@@ -1,0 +1,5 @@
+1: "sink_i1_casts"
+4: "sink_i1_casts" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "sink_i1_casts" has unsupported operation: builtin.unregistered: llvm.br
+

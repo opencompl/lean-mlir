@@ -22,7 +22,7 @@ precondition: true
 %r = udiv %X, %Y
 -/
 def alive_DivRemOfSelect_src (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
   ^bb0(%c: i1, %y : _, %x : _):
     %c0 = llvm.mlir.constant(0) : _
     %v1 = llvm.select %c, %y, %c0
@@ -31,7 +31,7 @@ def alive_DivRemOfSelect_src (w : Nat) :=
   }]
 
 def alive_DivRemOfSelect_tgt (w : Nat) :=
-  [llvm (w)| {
+  [llvm(w)| {
   ^bb0(%c: i1, %y : _, %x : _):
     %v1 = llvm.udiv %x, %y
     llvm.return %v1
@@ -43,6 +43,8 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
+  simp_alive_case_bash
+  simp_alive_split
   alive_auto
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
@@ -130,16 +132,13 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
-      simp only [Bool.false_eq_true, add_tsub_cancel_right, ge_iff_le, false_and, toNat_ofNat,
-        lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow, _root_.or_self,
-        ↓reduceIte, Option.some_bind]
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
       case zero =>
         simp only [Nat.zero_eq, toNat_add, toNat_ofNat, Nat.reduceSucc, pow_one,
           Nat.mod_succ, Nat.reduceMod, Nat.lt_one_iff]
-        have hxcases := BitVec.width_one_cases x
+        have hxcases := eq_zero_or_eq_one x
         have hxone : x = 1 := by
           cases hxcases
           case inl => contradiction
@@ -147,23 +146,22 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         subst x
         simp only [ofNat_eq_ofNat, Nat.zero_eq, toNat_ofNat, Nat.reduceSucc,
           pow_one, Nat.mod_succ,
-          Nat.reduceAdd, Nat.mod_self, decide_True, ofBool_true]
+          Nat.reduceAdd, Nat.mod_self, decide_true, ofBool_true]
         decide
       case succ w'' =>
         have htwopow_pos : 2^w'' > 0 := Nat.pow_pos (by omega)
         rw [Nat.mod_eq_of_lt (a := 3) (by omega)]
         split
-        case h_1 c hugt => contradiction
-        case h_2 c hugt =>
+        case h_1 c hugt =>
           clear c
           have hugt :
             (1 + BitVec.toNat x) % 2 ^ Nat.succ (Nat.succ w'') < 3 := by
               by_contra hcontra
-              simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, hcontra, decide_False,
+              simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, hcontra, decide_false,
                 ofBool_false, ofNat_eq_ofNat, Nat.reducePow, Fin.mk_one, Fin.isValue, ofFin_ofNat,
                 Option.some.injEq] at hugt
               contradiction
-          rw [LLVM.sdiv?_eq_pure_of_neq_allOnes (hy := by tauto)]
+          rw [LLVM.sdiv?_eq_some_of_neq_allOnes (hy := by tauto)]
           · have hcases := Nat.cases_of_lt_mod_add hugt
               (by simp)
               (by apply BitVec.isLt)
@@ -177,6 +175,8 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 rw [Nat.mod_eq_of_lt (by omega)]
               subst h1
               simp [BitVec.sdiv_one_one]
+              intro h
+              simp [h]
             · have hcases : (1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') ∨
                   1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') + 1) := by
                 omega
@@ -186,12 +186,12 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                   simp only [Nat.succ_eq_add_one, toNat_allOnes]
                   omega
                 subst heqallones
-                simp [BitVec.sdiv_one_allOnes]
+                simp [BitVec.sdiv_one_allOnes, BitVec.negOne_eq_allOnes]
               · have heqzero : x = 0#_ := BitVec.eq_zero_of_toNat_mod_eq_zero (by omega)
                 subst heqzero
                 simp [BitVec.sdiv_zero]
           · exact intMin_neq_one (by omega)
-        case h_3 c hugt =>
+        case h_2 c hugt =>
           clear c
           simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, Nat.reducePow, Fin.zero_eta,
             Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq,
@@ -211,7 +211,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
               subst hAllOnes
               rw [toNat_allOnes] at hugt
               rw [Nat.add_sub_of_le (by omega)] at hugt
-              simp only [Nat.mod_self, Nat.ofNat_pos, decide_True,
+              simp only [Nat.mod_self, Nat.ofNat_pos, decide_true,
                 ofBool_true, ofNat_eq_ofNat] at hugt
               contradiction
 
@@ -240,12 +240,20 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   · simp only [h, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
     by_cases a_0 : a = 0; subst a_0; simp at c
     by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
-    rw [BitVec.toNat_eq] at a_0 a_1
+    rw [BitVec.toNat_eq] at a_0
+    intro h
+    simp [h]
     simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at a_0 a_1
-    by_cases w_1 : w = 1; subst w_1; omega
+    by_cases w_1 : w = 1
+    · subst w_1
+      have hh := BitVec.eq_zero_or_eq_one a
+      simp [a_0] at hh
+      simp [a_1] at hh
     have w_gt_1 : 1 < w := by omega
-    have el_one: 1 % 2^w = 1 := by rw [Nat.mod_eq_of_lt]; omega
-    rw [el_one] at a_1
+    have el_one: 1 % 2^w = 1 := by
+      rw [Nat.mod_eq_of_lt]
+      have aa := Nat.lt_two_pow w
+      omega
     have el_three: 3 % 2^w = 3 := by
       rw [Nat.mod_eq_of_lt];
       have x := @Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega);
@@ -259,6 +267,9 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       simp [x]
     · rw [Nat.add_mod_of_add_mod_lt] at h
       simp only [el_one, toNat_mod_cancel] at h
+      simp_all
+      simp [bv_toNat] at a_0
+      simp [bv_toNat, show 0 < w by omega] at a_1
       omega
       simp only [el_one, toNat_mod_cancel]
       rw [BitVec.toNat_eq] at a_allones
@@ -351,6 +362,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -402,6 +414,9 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  simp_alive_split
   alive_auto
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:

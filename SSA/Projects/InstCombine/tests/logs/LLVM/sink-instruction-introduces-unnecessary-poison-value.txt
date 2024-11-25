@@ -1,0 +1,29 @@
+1: "?test@@YAHXZ"
+4: "?test@@YAHXZ" has unsupported operation: llvm.mlir.addressof
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "?test@@YAHXZ" has unsupported operation: llvm.mlir.addressof
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "?test@@YAHXZ" has unsupported operation: llvm.load
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "?test@@YAHXZ" has unsupported operation: llvm.load
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "?test@@YAHXZ" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+

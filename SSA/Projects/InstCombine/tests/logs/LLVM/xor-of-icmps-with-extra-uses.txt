@@ -1,0 +1,52 @@
+1: "v0_select_of_consts"
+9: "v0_select_of_consts" has pointer type input
+
+4: "v0_select_of_consts" has unsupported operation: llvm.store
+
+1: "v1_select_of_var_and_const"
+9: "v1_select_of_var_and_const" has pointer type input
+
+4: "v1_select_of_var_and_const" has unsupported operation: llvm.store
+
+1: "v2_select_of_const_and_var"
+9: "v2_select_of_const_and_var" has pointer type input
+
+4: "v2_select_of_const_and_var" has unsupported operation: llvm.store
+
+1: "v3_branch"
+9: "v3_branch" has pointer type input
+
+4: "v3_branch" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "v3_branch" has unsupported operation: llvm.store
+
+4: "v3_branch" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "v3_branch" has unsupported operation: llvm.store
+
+4: "v3_branch" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "v4_not_store"
+9: "v4_not_store" has pointer type input
+
+4: "v4_not_store" has unsupported operation: llvm.store
+
+1: "v5_select_and_not"
+9: "v5_select_and_not" has pointer type input
+
+4: "v5_select_and_not" has unsupported operation: llvm.store
+
+4: "v5_select_and_not" has unsupported operation: llvm.store
+
+1: "n6_select_and_not"
+9: "n6_select_and_not" has pointer type input
+
+4: "n6_select_and_not" has unsupported operation: llvm.store
+
+4: "n6_select_and_not" has unsupported operation: llvm.store
+
+1: "n7_store"
+9: "n7_store" has pointer type input
+
+4: "n7_store" has unsupported operation: llvm.store
+

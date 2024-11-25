@@ -1,0 +1,12 @@
+1: "func_56"
+4: "func_56" has unsupported operation: llvm.mlir.addressof
+
+4: "func_56" has unsupported operation: llvm.mlir.undef
+
+4: "func_56" has unsupported operation: llvm.call
+
+4: "func_56" has unsupported operation: llvm.store
+
+1: "rshift_s_s"
+5: "rshift_s_s" is empty
+

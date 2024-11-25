@@ -1,0 +1,217 @@
+1: "fixed_array16i32_to_scalable4i32"
+9: "fixed_array16i32_to_scalable4i32" has pointer type input
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: llvm.mlir.undef
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: llvm.alloca
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: llvm.store
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: llvm.load
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: llvm.store
+
+4: "fixed_array16i32_to_scalable4i32" has unsupported operation: llvm.return
+
+1: "scalable4i32_to_fixed16i32"
+9: "scalable4i32_to_fixed16i32" has pointer type input
+
+4: "scalable4i32_to_fixed16i32" has unsupported operation: llvm.alloca
+
+4: "scalable4i32_to_fixed16i32" has unsupported operation: llvm.store
+
+4: "scalable4i32_to_fixed16i32" has unsupported operation: llvm.load
+
+4: "scalable4i32_to_fixed16i32" has unsupported operation: llvm.store
+
+4: "scalable4i32_to_fixed16i32" has unsupported operation: llvm.return
+
+1: "fixed16i32_to_scalable4i32"
+9: "fixed16i32_to_scalable4i32" has pointer type input
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: llvm.mlir.undef
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: llvm.alloca
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: llvm.store
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: llvm.load
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: llvm.store
+
+4: "fixed16i32_to_scalable4i32" has unsupported operation: llvm.return
+
+1: "scalable16i32_to_fixed16i32"
+9: "scalable16i32_to_fixed16i32" has pointer type input
+
+4: "scalable16i32_to_fixed16i32" has unsupported operation: llvm.alloca
+
+4: "scalable16i32_to_fixed16i32" has unsupported operation: llvm.store
+
+4: "scalable16i32_to_fixed16i32" has unsupported operation: llvm.load
+
+4: "scalable16i32_to_fixed16i32" has unsupported operation: llvm.store
+
+4: "scalable16i32_to_fixed16i32" has unsupported operation: llvm.return
+
+1: "scalable32i32_to_scalable16i32"
+9: "scalable32i32_to_scalable16i32" has pointer type input
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: llvm.mlir.undef
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: llvm.alloca
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: llvm.store
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: llvm.load
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: llvm.store
+
+4: "scalable32i32_to_scalable16i32" has unsupported operation: llvm.return
+
+1: "scalable32i16_to_scalable16i32"
+9: "scalable32i16_to_scalable16i32" has pointer type input
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: llvm.mlir.undef
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: llvm.alloca
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: llvm.store
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: llvm.load
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: llvm.store
+
+4: "scalable32i16_to_scalable16i32" has unsupported operation: llvm.return
+
+1: "scalable32i16_to_scalable16i32_multiuse"
+9: "scalable32i16_to_scalable16i32_multiuse" has pointer type input
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.mlir.undef
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.alloca
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.store
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.load
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.store
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.load
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.store
+
+4: "scalable32i16_to_scalable16i32_multiuse" has unsupported operation: llvm.return
+

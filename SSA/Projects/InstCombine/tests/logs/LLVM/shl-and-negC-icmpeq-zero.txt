@@ -1,0 +1,112 @@
+1: "scalar_i8_shl_and_negC_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i16_shl_and_negC_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_shl_and_negC_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i64_shl_and_negC_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_shl_and_negC_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "vec_4xi32_shl_and_negC_eq"
+8: "vec_4xi32_shl_and_negC_eq" contains vectors which are unsupported
+
+1: "vec_shl_and_negC_eq_poison1"
+8: "vec_shl_and_negC_eq_poison1" contains vectors which are unsupported
+
+1: "vec_shl_and_negC_eq_poison2"
+8: "vec_shl_and_negC_eq_poison2" contains vectors which are unsupported
+
+1: "vec_shl_and_negC_eq_poison3"
+8: "vec_shl_and_negC_eq_poison3" contains vectors which are unsupported
+
+1: "scalar_shl_and_negC_eq_extra_use_shl"
+9: "scalar_shl_and_negC_eq_extra_use_shl" has pointer type input
+
+4: "scalar_shl_and_negC_eq_extra_use_shl" has unsupported operation: llvm.store
+
+1: "scalar_shl_and_negC_eq_extra_use_and"
+9: "scalar_shl_and_negC_eq_extra_use_and" has pointer type input
+
+4: "scalar_shl_and_negC_eq_extra_use_and" has unsupported operation: llvm.store
+
+1: "scalar_shl_and_negC_eq_extra_use_shl_and"
+9: "scalar_shl_and_negC_eq_extra_use_shl_and" has pointer type input
+
+4: "scalar_shl_and_negC_eq_extra_use_shl_and" has unsupported operation: llvm.store
+
+4: "scalar_shl_and_negC_eq_extra_use_shl_and" has unsupported operation: llvm.store
+
+1: "scalar_i32_shl_and_negC_eq_X_is_constant1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_shl_and_negC_eq_X_is_constant2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_shl_and_negC_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "scalar_i32_shl_and_negC_eq_nonzero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+

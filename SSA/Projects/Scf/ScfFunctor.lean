@@ -488,7 +488,7 @@ open Scf in
 open Arith in
 theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   simp only [lhs, rhs, for_, axpy, cst, add]
-  simp_peephole at Γv
+  simp_peephole [Com.denote] at Γv
   intros A B
   simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
   rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
@@ -550,7 +550,8 @@ theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.V
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   simp only [EffectKind.toMonad_impure, lhs, for_, Ctxt.get?, Var.zero_eq_last, rhs, axpy]
-  simp_peephole at Γv
+  simp_peephole [Com.denote]
+
 
 /-- info:
 'ScfFunctor.ForReversal.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -600,17 +601,17 @@ theorem correct :
     Com.denote (lhs rgn niters1 niters2 start1) Γv =
       Com.denote (rhs rgn niters1 niters2 start1) Γv := by
   simp [lhs, rhs, for_, axpy, cst]
-  simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+  simp_peephole [add, iterate, for_, axpy, cst, cst_nat, Com.denote] at Γv
   intros a
   rw [Nat.add_comm, Function.iterate_add_apply]
   congr
   rw [LoopBody.counterDecorator.iterate_fst_val]
   linarith
 
-/-- info:
-'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms correct
+--/-- info:
+--'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+---/
+--#guard_msgs in #print axioms correct
 
 
 end ForFusion

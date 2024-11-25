@@ -1,0 +1,87 @@
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+
+1: "t1_otherbitwidth"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+
+1: "t2_vec"
+8: "t2_vec" contains vectors which are unsupported
+
+1: "t3_vec_poison0"
+4: "t3_vec_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t4_vec_poison1"
+4: "t4_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t4_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t4_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t4_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t4_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t5_vec_poison2"
+4: "t5_vec_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "n6_extrause"
+4: "n6_extrause" has unsupported operation: llvm.call
+
+1: "t7_already_masked"
+4: "t7_already_masked" has unsupported operation: llvm.call
+
+1: "t8_already_masked_extrause"
+4: "t8_already_masked_extrause" has unsupported operation: llvm.call
+
+4: "t8_already_masked_extrause" has unsupported operation: llvm.call
+
+1: "n9_wrongly_masked_extrause"
+4: "n9_wrongly_masked_extrause" has unsupported operation: llvm.call
+
+4: "n9_wrongly_masked_extrause" has unsupported operation: llvm.call
+
+1: "n10"
+7: "n10" is unchanged by InstCombine
+
+1: "n11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+
+1: "n12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+

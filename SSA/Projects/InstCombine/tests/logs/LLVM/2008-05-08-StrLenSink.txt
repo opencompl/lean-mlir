@@ -1,0 +1,26 @@
+1: "a"
+4: "a" has unsupported operation: llvm.call
+
+4: "a" has unsupported operation: llvm.getelementptr
+
+4: "a" has unsupported operation: llvm.store
+
+4: "a" has unsupported operation: llvm.store
+
+4: "a" has unsupported operation: llvm.call
+
+4: "a" has unsupported operation: llvm.store
+
+4: "a" has unsupported operation: llvm.call
+
+4: "a" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "malloc"
+5: "malloc" is empty
+
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "b"
+5: "b" is empty
+

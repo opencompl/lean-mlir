@@ -1,0 +1,11 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "printf"
+9: "printf" has pointer type input
+
+1: "putchar"
+5: "putchar" is empty
+

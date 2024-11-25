@@ -1,0 +1,23 @@
+1: "hang_2002-03-11"
+4: "hang_2002-03-11" has unsupported operation: llvm.return
+
+1: "sub_failure_2002-05-14"
+7: "sub_failure_2002-05-14" is unchanged by InstCombine
+
+1: "cast_test_2002-08-02"
+2: llvm.func
+2: llvm.trunc
+2: llvm.zext
+2: llvm.return
+
+1: "missed_const_prop_2002-12-05"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.add
+2: llvm.add
+2: llvm.add
+2: llvm.return
+

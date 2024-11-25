@@ -1,0 +1,12 @@
+1: "patatino"
+4: "patatino" has unsupported operation: llvm.mlir.addressof
+
+4: "patatino" has unsupported operation: llvm.getelementptr
+
+4: "patatino" has unsupported operation: llvm.mlir.addressof
+
+4: "patatino" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "fabsf"
+5: "fabsf" is empty
+

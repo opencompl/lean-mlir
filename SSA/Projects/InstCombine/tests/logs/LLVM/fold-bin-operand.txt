@@ -1,0 +1,2 @@
+3: fold-bin-operand.ll: parsing has failed
+

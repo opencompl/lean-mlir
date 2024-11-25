@@ -1,0 +1,241 @@
+1: "dummy"
+5: "dummy" is empty
+
+1: "br_true"
+4: "br_true" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_true" has unsupported operation: llvm.call
+
+4: "br_true" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "br_true" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "br_false"
+4: "br_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_false" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "br_false" has unsupported operation: llvm.call
+
+4: "br_false" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "br_undef"
+4: "br_undef" has unsupported operation: llvm.mlir.undef
+
+4: "br_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "br_undef" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "br_undef" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "br_true_phi_with_repeated_preds"
+4: "br_true_phi_with_repeated_preds" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_true_phi_with_repeated_preds" has unsupported operation: llvm.call
+
+4: "br_true_phi_with_repeated_preds" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "br_true_phi_with_repeated_preds" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "br_true_const_phi_direct_edge"
+4: "br_true_const_phi_direct_edge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_true_const_phi_direct_edge" has unsupported operation: llvm.call
+
+4: "br_true_const_phi_direct_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "br_true_var_phi_direct_edge"
+4: "br_true_var_phi_direct_edge" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_true_var_phi_direct_edge" has unsupported operation: llvm.call
+
+4: "br_true_var_phi_direct_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "switch_case"
+4: "switch_case" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "switch_case" has unsupported operation: llvm.call
+
+4: "switch_case" has unsupported operation: llvm.return
+
+4: "switch_case" has unsupported operation: llvm.return
+
+1: "switch_default"
+4: "switch_default" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "switch_default" has unsupported operation: llvm.return
+
+4: "switch_default" has unsupported operation: llvm.call
+
+4: "switch_default" has unsupported operation: llvm.return
+
+1: "switch_undef"
+4: "switch_undef" has unsupported operation: llvm.mlir.undef
+
+4: "switch_undef" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "switch_undef" has unsupported operation: llvm.return
+
+4: "switch_undef" has unsupported operation: llvm.return
+
+1: "non_term_unreachable"
+4: "non_term_unreachable" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "non_term_unreachable" has unsupported operation: llvm.call
+
+4: "non_term_unreachable" has unsupported operation: llvm.store
+
+4: "non_term_unreachable" has unsupported operation: llvm.return
+
+1: "non_term_unreachable_phi"
+4: "non_term_unreachable_phi" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "non_term_unreachable_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "non_term_unreachable_phi" has unsupported operation: llvm.store
+
+4: "non_term_unreachable_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "non_term_unreachable_following_blocks"
+4: "non_term_unreachable_following_blocks" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "non_term_unreachable_following_blocks" has unsupported operation: llvm.call
+
+4: "non_term_unreachable_following_blocks" has unsupported operation: llvm.store
+
+4: "non_term_unreachable_following_blocks" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "non_term_unreachable_following_blocks" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "non_term_unreachable_following_blocks" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "br_not_into_loop"
+4: "br_not_into_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_not_into_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "br_not_into_loop" has unsupported operation: llvm.call
+
+4: "br_not_into_loop" has unsupported operation: llvm.return
+
+1: "br_into_loop"
+4: "br_into_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "br_into_loop" has unsupported operation: llvm.call
+
+4: "br_into_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "br_into_loop" has unsupported operation: llvm.return
+
+1: "two_br_not_into_loop"
+4: "two_br_not_into_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "two_br_not_into_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "two_br_not_into_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_br_not_into_loop" has unsupported operation: llvm.call
+
+4: "two_br_not_into_loop" has unsupported operation: llvm.return
+
+1: "one_br_into_loop_one_not"
+4: "one_br_into_loop_one_not" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "one_br_into_loop_one_not" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "one_br_into_loop_one_not" has unsupported operation: llvm.call
+
+4: "one_br_into_loop_one_not" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "one_br_into_loop_one_not" has unsupported operation: llvm.call
+
+4: "one_br_into_loop_one_not" has unsupported operation: llvm.return
+
+1: "two_br_not_into_loop_with_split"
+4: "two_br_not_into_loop_with_split" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "two_br_not_into_loop_with_split" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "two_br_not_into_loop_with_split" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_br_not_into_loop_with_split" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_br_not_into_loop_with_split" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "two_br_not_into_loop_with_split" has unsupported operation: llvm.call
+
+4: "two_br_not_into_loop_with_split" has unsupported operation: llvm.return
+
+1: "irreducible"
+4: "irreducible" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "irreducible" has unsupported operation: llvm.call
+
+4: "irreducible" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "irreducible" has unsupported operation: llvm.call
+
+4: "irreducible" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "irreducible" has unsupported operation: llvm.call
+
+4: "irreducible" has unsupported operation: llvm.return
+
+1: "really_unreachable"
+4: "really_unreachable" has unsupported operation: llvm.return
+
+1: "really_unreachable_predecessor"
+4: "really_unreachable_predecessor" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "really_unreachable_predecessor" has unsupported operation: llvm.return
+
+4: "really_unreachable_predecessor" has unsupported operation: llvm.call
+
+4: "really_unreachable_predecessor" has unsupported operation: llvm.return
+
+1: "pr64235"
+4: "pr64235" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "pr64235" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr64235" has unsupported operation: llvm.store
+
+4: "pr64235" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr64235" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr64235" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "invoke"
+9: "invoke" has pointer type input
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.undef
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.store
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: llvm.return
+
+4: "test" has unsupported operation: llvm.return
+

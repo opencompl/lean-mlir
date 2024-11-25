@@ -1,0 +1,45 @@
+1: "limit_i64_eq_7"
+4: "limit_i64_eq_7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_eq_7" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "limit_i64_ne_255"
+4: "limit_i64_ne_255" has unsupported operation: llvm.call
+
+4: "limit_i64_ne_255" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_ne_255" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "use"
+5: "use" is empty
+
+1: "limit_i64_ule_15"
+4: "limit_i64_ule_15" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_ule_15" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "limit_i64_uge_8"
+4: "limit_i64_uge_8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_uge_8" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "limit_i64_ult_8"
+4: "limit_i64_ult_8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_ult_8" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "limit_i64_ugt_7"
+4: "limit_i64_ugt_7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_ugt_7" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "limit_i64_ule_15_mask3"
+4: "limit_i64_ule_15_mask3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_ule_15_mask3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "limit_i64_ult_8_mask1"
+4: "limit_i64_ult_8_mask1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "limit_i64_ult_8_mask1" has unsupported operation: builtin.unregistered: llvm.br
+

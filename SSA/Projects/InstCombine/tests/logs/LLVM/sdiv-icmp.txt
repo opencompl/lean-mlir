@@ -1,0 +1,58 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "sdiv_exact_eq_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_exact_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_exact_ne_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_exact_eq_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_exact_eq_9_no_of"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_exact_eq_9_may_of"
+7: "sdiv_exact_eq_9_may_of" is unchanged by InstCombine
+
+1: "sdiv_exact_eq_9_no_of_fail_multiuse"
+4: "sdiv_exact_eq_9_no_of_fail_multiuse" has unsupported operation: llvm.call
+
+1: "sdiv_exact_eq_9_must_of_todo_is_false"
+7: "sdiv_exact_eq_9_must_of_todo_is_false" is unchanged by InstCombine
+
+1: "udiv_exact_ne_30_no_of"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+

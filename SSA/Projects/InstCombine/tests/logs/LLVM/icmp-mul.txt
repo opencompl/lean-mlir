@@ -1,0 +1,691 @@
+1: "use"
+5: "use" is empty
+
+1: "usev2xi8"
+5: "usev2xi8" is empty
+
+1: "squared_nsw_eq0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "squared_nuw_eq0"
+8: "squared_nuw_eq0" contains vectors which are unsupported
+
+1: "squared_nsw_nuw_ne0"
+4: "squared_nsw_nuw_ne0" has unsupported operation: llvm.call
+
+1: "squared_eq0"
+7: "squared_eq0" is unchanged by InstCombine
+
+1: "mul_nsw_eq0"
+7: "mul_nsw_eq0" is unchanged by InstCombine
+
+1: "squared_nsw_eq1"
+7: "squared_nsw_eq1" is unchanged by InstCombine
+
+1: "squared_nsw_sgt0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_positive_multip_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_negative_multip_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_positive_multip_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_rem_zero_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_rem_nz_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_positive_multip_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_negative_multip_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_positive_multip_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_rem_zero_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_rem_nz_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_nsw_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_nsw_rem_zero"
+8: "ne_nsw_rem_zero" contains vectors which are unsupported
+
+1: "ne_nsw_rem_zero_undef1"
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_nsw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ne_nsw_rem_zero_undef2"
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_nsw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "eq_nsw_rem_zero_uses"
+4: "eq_nsw_rem_zero_uses" has unsupported operation: llvm.call
+
+1: "eq_nsw_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_nsw_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_nuw_rem_zero"
+8: "eq_nuw_rem_zero" contains vectors which are unsupported
+
+1: "eq_nuw_rem_zero_undef1"
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "eq_nuw_rem_zero_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "eq_nuw_rem_zero_undef2"
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "eq_nuw_rem_zero_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ne_nuw_rem_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_nuw_rem_zero_uses"
+4: "ne_nuw_rem_zero_uses" has unsupported operation: llvm.call
+
+1: "eq_nuw_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_nuw_rem_nz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_positive_multip_rem_zero_nonsw"
+7: "sgt_positive_multip_rem_zero_nonsw" is unchanged by InstCombine
+
+1: "ult_multip_rem_zero_nonsw"
+7: "ult_multip_rem_zero_nonsw" is unchanged by InstCombine
+
+1: "ugt_rem_zero_nonuw"
+7: "ugt_rem_zero_nonuw" is unchanged by InstCombine
+
+1: "sgt_minnum"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ule_bignum"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_mulzero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_rem_zero_nonuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_rem_zero_nonuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_constant_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_constant_ne_splat"
+8: "mul_constant_ne_splat" contains vectors which are unsupported
+
+1: "mul_constant_ne_extra_use1"
+4: "mul_constant_ne_extra_use1" has unsupported operation: llvm.call
+
+1: "mul_constant_eq_extra_use2"
+4: "mul_constant_eq_extra_use2" has unsupported operation: llvm.call
+
+1: "mul_constant_ne_extra_use3"
+4: "mul_constant_ne_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_extra_use3" has unsupported operation: llvm.call
+
+1: "mul_constant_eq_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_constant_ne_nsw_splat"
+8: "mul_constant_ne_nsw_splat" contains vectors which are unsupported
+
+1: "mul_constant_ne_nsw_extra_use1"
+4: "mul_constant_ne_nsw_extra_use1" has unsupported operation: llvm.call
+
+1: "mul_constant_eq_nsw_extra_use2"
+4: "mul_constant_eq_nsw_extra_use2" has unsupported operation: llvm.call
+
+1: "mul_constant_ne_nsw_extra_use3"
+4: "mul_constant_ne_nsw_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nsw_extra_use3" has unsupported operation: llvm.call
+
+1: "mul_constant_nuw_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_constant_ne_nuw_splat"
+8: "mul_constant_ne_nuw_splat" contains vectors which are unsupported
+
+1: "mul_constant_ne_nuw_extra_use1"
+4: "mul_constant_ne_nuw_extra_use1" has unsupported operation: llvm.call
+
+1: "mul_constant_eq_nuw_extra_use2"
+4: "mul_constant_eq_nuw_extra_use2" has unsupported operation: llvm.call
+
+1: "mul_constant_ne_nuw_extra_use3"
+4: "mul_constant_ne_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "mul_constant_ne_nuw_extra_use3" has unsupported operation: llvm.call
+
+1: "mul_constant_ult"
+7: "mul_constant_ult" is unchanged by InstCombine
+
+1: "mul_constant_nuw_sgt"
+7: "mul_constant_nuw_sgt" is unchanged by InstCombine
+
+1: "mul_mismatch_constant_nuw_eq"
+7: "mul_mismatch_constant_nuw_eq" is unchanged by InstCombine
+
+1: "mul_constant_partial_nuw_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_constant_mismatch_wrap_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_mul_constants_with_tz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_mul_constants_with_tz_splat"
+8: "eq_mul_constants_with_tz_splat" contains vectors which are unsupported
+
+1: "oss_fuzz_39934"
+4: "oss_fuzz_39934" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "oss_fuzz_39934" has unsupported operation after optimization: llvm.mlir.zero
+
+1: "mul_of_bool"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_bool_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_bools"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "not_mul_of_bool"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "not_mul_of_bool_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_bool_no_lz_other_op"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.sext
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_pow2_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_pow2s"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.mul
+2: llvm.or
+2: llvm.return
+
+1: "not_mul_of_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.zext
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "not_mul_of_pow2_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_of_pow2_no_lz_other_op"
+7: "mul_of_pow2_no_lz_other_op" is unchanged by InstCombine
+
+1: "splat_mul_known_lz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "splat_mul_unknown_lz"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.lshr
+2: llvm.icmp
+2: llvm.return
+
+1: "mul_oddC_overflow_eq"
+7: "mul_oddC_overflow_eq" is unchanged by InstCombine
+
+1: "mul_oddC_eq_nomod"
+7: "mul_oddC_eq_nomod" is unchanged by InstCombine
+
+1: "mul_evenC_ne"
+7: "mul_evenC_ne" is unchanged by InstCombine
+
+1: "mul_oddC_ne_vec"
+8: "mul_oddC_ne_vec" contains vectors which are unsupported
+
+1: "mul_oddC_ne_nosplat_vec"
+7: "mul_oddC_ne_nosplat_vec" is unchanged by InstCombine
+
+1: "mul_nsuw_xy_z_maybe_zero_eq"
+7: "mul_nsuw_xy_z_maybe_zero_eq" is unchanged by InstCombine
+
+1: "mul_xy_z_assumenozero_ne"
+4: "mul_xy_z_assumenozero_ne" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "mul_xy_z_assumeodd_eq"
+4: "mul_xy_z_assumeodd_eq" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "reused_mul_nsw_xy_z_setnonzero_vec_ne"
+4: "reused_mul_nsw_xy_z_setnonzero_vec_ne" has unsupported operation: llvm.call
+
+1: "mul_mixed_nuw_nsw_xy_z_setodd_ult"
+7: "mul_mixed_nuw_nsw_xy_z_setodd_ult" is unchanged by InstCombine
+
+1: "mul_nuw_xy_z_assumenonzero_uge"
+4: "mul_nuw_xy_z_assumenonzero_uge" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "mul_nuw_xy_z_assumenonzero_uge" has unsupported operation: llvm.call
+
+1: "mul_nuw_xy_z_setnonzero_vec_eq"
+8: "mul_nuw_xy_z_setnonzero_vec_eq" contains vectors which are unsupported
+
+1: "mul_nuw_xy_z_brnonzero_ult"
+4: "mul_nuw_xy_z_brnonzero_ult" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "mul_nuw_xy_z_brnonzero_ult" has unsupported operation: llvm.call
+
+1: "reused_mul_nuw_xy_z_selectnonzero_ugt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "mul_mixed_nsw_nuw_xy_z_setnonzero_vec_ule"
+7: "mul_mixed_nsw_nuw_xy_z_setnonzero_vec_ule" is unchanged by InstCombine
+
+1: "icmp_eq_mul_nsw_nonequal"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_mul_nuw_nonequal"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_mul_nsw_nonequal_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ne_mul_nsw_nonequal"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_mul_nsw_mayequal"
+7: "icmp_eq_mul_nsw_mayequal" is unchanged by InstCombine
+
+1: "icmp_eq_mul_nsw_nuw_nonequal"
+7: "icmp_eq_mul_nsw_nuw_nonequal" is unchanged by InstCombine
+
+1: "icmp_ult_mul_nsw_nonequal"
+7: "icmp_ult_mul_nsw_nonequal" is unchanged by InstCombine
+
+1: "icmp_mul_nsw_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_mul_nsw_sle"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_mul_nsw_sgt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_mul_nsw_sge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_mul_nsw_slt_neg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_mul_nsw_slt_neg_var"
+4: "icmp_mul_nsw_slt_neg_var" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "icmp_mul_nonsw_slt"
+7: "icmp_mul_nonsw_slt" is unchanged by InstCombine
+
+1: "icmp_mul_nsw_slt_unknown_sign"
+7: "icmp_mul_nsw_slt_unknown_sign" is unchanged by InstCombine
+
+1: "icmp_mul_nsw_slt_may_be_zero"
+4: "icmp_mul_nsw_slt_may_be_zero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

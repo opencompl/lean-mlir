@@ -1,0 +1,266 @@
+1: "lt_signed_to_large_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "PR28011"
+4: "PR28011" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR28011" has unsupported operation after optimization: llvm.mlir.addressof
+
+1: "lt_signed_to_large_unsigned_vec"
+7: "lt_signed_to_large_unsigned_vec" is unchanged by InstCombine
+
+1: "lt_signed_to_large_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_signed_to_large_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_signed_to_small_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_signed_to_small_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_signed_to_small_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_unsigned_to_large_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_unsigned_to_large_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_unsigned_to_large_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_unsigned_to_small_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_unsigned_to_small_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "lt_unsigned_to_small_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_signed_to_large_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_signed_to_large_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_signed_to_large_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_signed_to_small_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_signed_to_small_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_signed_to_small_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_unsigned_to_large_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_unsigned_to_large_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_unsigned_to_large_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_unsigned_to_small_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_unsigned_to_small_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "gt_unsigned_to_small_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_zext_zext_ugt"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_zext_zext_ugt_commute"
+8: "different_size_zext_zext_ugt_commute" contains vectors which are unsupported
+
+1: "different_size_zext_zext_ult"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_zext_zext_eq"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_zext_zext_ne_commute"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_zext_zext_slt"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_zext_zext_sgt"
+2: llvm.func
+2: llvm.zext
+2: llvm.zext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_sext_sext_sgt"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_sext_sext_sle"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_sext_sext_eq"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_sext_sext_ule"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "different_size_sext_zext_ne"
+7: "different_size_sext_zext_ne" is unchanged by InstCombine
+
+1: "use"
+5: "use" is empty
+
+1: "different_size_sext_sext_ule_extra_use1"
+4: "different_size_sext_sext_ule_extra_use1" has unsupported operation: llvm.call
+
+1: "different_size_sext_sext_ule_extra_use2"
+4: "different_size_sext_sext_ule_extra_use2" has unsupported operation: llvm.call
+
+1: "different_size_sext_sext_ule_extra_use3"
+4: "different_size_sext_sext_ule_extra_use3" has unsupported operation: llvm.call
+
+4: "different_size_sext_sext_ule_extra_use3" has unsupported operation: llvm.call
+

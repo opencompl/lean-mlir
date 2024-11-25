@@ -1,0 +1,21 @@
+1: "f32"
+9: "f32" has pointer type input
+
+1: "f64"
+9: "f64" has pointer type input
+
+1: "icmp_func"
+4: "icmp_func" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "icmp_func" has unsupported operation after optimization: llvm.mlir.addressof
+
+1: "icmp_fptr"
+9: "icmp_fptr" has pointer type input
+
+4: "icmp_fptr" has unsupported operation: llvm.mlir.addressof
+
+1: "icmp_glob"
+4: "icmp_glob" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "icmp_glob" has unsupported operation after optimization: llvm.mlir.addressof
+

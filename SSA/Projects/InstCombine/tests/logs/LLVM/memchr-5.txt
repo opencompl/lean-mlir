@@ -1,0 +1,65 @@
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "fold_memchr_a"
+9: "fold_memchr_a" has pointer type input
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a" has unsupported operation: llvm.store
+
+4: "fold_memchr_a" has unsupported operation: llvm.return
+
+1: "fold_memchr_a_p1"
+9: "fold_memchr_a_p1" has pointer type input
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.store
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.store
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.store
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.store
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.store
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.getelementptr
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.store
+
+4: "fold_memchr_a_p1" has unsupported operation: llvm.return
+

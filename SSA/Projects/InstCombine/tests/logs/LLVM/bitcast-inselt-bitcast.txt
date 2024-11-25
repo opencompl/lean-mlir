@@ -1,0 +1,69 @@
+1: "use"
+5: "use" is empty
+
+1: "insert0_v2i8"
+8: "insert0_v2i8" contains vectors which are unsupported
+
+1: "insert1_v2i8"
+4: "insert1_v2i8" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert1_v2i8" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert1_v2i8" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert0_v4i8"
+8: "insert0_v4i8" contains vectors which are unsupported
+
+1: "insert0_v2half"
+4: "insert0_v2half" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert0_v2half" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert0_v2half" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert0_v4i16"
+4: "insert0_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert0_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert0_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert1_v4i16"
+4: "insert1_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert1_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert1_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert3_v4i16"
+4: "insert3_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert3_v4i16" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert3_v4i16" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert0_v4i32"
+4: "insert0_v4i32" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert0_v4i32" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert0_v4i32" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert0_v2i8_use1"
+4: "insert0_v2i8_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert0_v2i8_use1" has unsupported operation: llvm.call
+
+4: "insert0_v2i8_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert0_v2i8_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "insert0_v2i8_use2"
+4: "insert0_v2i8_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "insert0_v2i8_use2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert0_v2i8_use2" has unsupported operation: llvm.call
+
+4: "insert0_v2i8_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
+

@@ -1,0 +1,85 @@
+1: "strncpy"
+9: "strncpy" has pointer type input
+
+1: "sink"
+9: "sink" has pointer type input
+
+1: "fold_strncpy_overlap"
+9: "fold_strncpy_overlap" has pointer type input
+
+4: "fold_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "fold_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "fold_strncpy_overlap" has unsupported operation: llvm.return
+
+1: "call_strncpy_overlap"
+9: "call_strncpy_overlap" has pointer type input
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.call
+
+4: "call_strncpy_overlap" has unsupported operation: llvm.return
+
+1: "fold_strncpy_s0"
+9: "fold_strncpy_s0" has pointer type input
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.store
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.store
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s0" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s0" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s0" has unsupported operation: llvm.return
+
+1: "fold_strncpy_s"
+9: "fold_strncpy_s" has pointer type input
+
+4: "fold_strncpy_s" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s" has unsupported operation: llvm.load
+
+4: "fold_strncpy_s" has unsupported operation: llvm.store
+
+4: "fold_strncpy_s" has unsupported operation: llvm.call
+
+4: "fold_strncpy_s" has unsupported operation: llvm.return
+
+1: "call_strncpy_s"
+9: "call_strncpy_s" has pointer type input
+
+4: "call_strncpy_s" has unsupported operation: llvm.call
+
+4: "call_strncpy_s" has unsupported operation: llvm.call
+
+4: "call_strncpy_s" has unsupported operation: llvm.call
+
+4: "call_strncpy_s" has unsupported operation: llvm.call
+
+4: "call_strncpy_s" has unsupported operation: llvm.call
+
+4: "call_strncpy_s" has unsupported operation: llvm.call
+
+4: "call_strncpy_s" has unsupported operation: llvm.return
+

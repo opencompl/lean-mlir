@@ -1,0 +1,29 @@
+1: "test0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "test0_vec"
+8: "test0_vec" contains vectors which are unsupported
+
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.xor
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "test1_vec"
+8: "test1_vec" contains vectors which are unsupported
+

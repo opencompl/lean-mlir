@@ -13,8 +13,8 @@ open MLIR
 
 namespace InstcombineTransformDialect
 
-def mkUnaryOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.UnaryOp)
-  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (.bitvec w) :=
+def mkUnaryOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.UnaryOp φ)
+  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (op.outTy w) :=
   ⟨
     .unary w op,
     rfl,
@@ -70,6 +70,15 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MetaLLVM φ) ((MetaLLVM φ
 instance instTransformTy : MLIR.AST.TransformTy (MetaLLVM φ) φ where
   mkTy := mkTy
 
+def getOutputWidth (opStx : MLIR.AST.Op φ) (op : String) :
+    AST.ReaderM (MetaLLVM φ) (Width φ) := do
+  match opStx.res with
+  | res::[] =>
+    match res.2 with
+    | .int _ w => pure w
+    | _ => throw <| .generic s!"The operation {op} must output an integer type"
+  | _ => throw <| .generic s!"The operation {op} must have a single output"
+
 def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     AST.ReaderM (MetaLLVM φ) (Σ eff ty, Expr (MetaLLVM φ) Γ eff ty) := do
   match opStx.args with
@@ -99,13 +108,35 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 
       let (op : MOp.BinaryOp ⊕ LLVM.IntPredicate) ← match opStx.name with
         | "llvm.and"    => pure <| Sum.inl .and
-        | "llvm.or"     => pure <| Sum.inl .or
+        | "llvm.or"     => do
+          let isDisjoint? := opStx.attrs.getAttr "isDisjoint"
+          pure <| Sum.inl (.or ⟨isDisjoint?.isSome⟩)
         | "llvm.xor"    => pure <| Sum.inl .xor
-        | "llvm.shl"    => pure <| Sum.inl .shl
-        | "llvm.lshr"   => pure <| Sum.inl .lshr
-        | "llvm.ashr"   => pure <| Sum.inl .ashr
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
+        | "llvm.lshr"   => do
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.lshr ⟨isExact?.isSome⟩)
+        | "llvm.ashr"   => do
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.ashr ⟨isExact?.isSome⟩)
+        | "llvm.sdiv"   => do
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.sdiv ⟨isExact?.isSome⟩)
+        | "llvm.udiv"   => do
+          let isExact? := opStx.attrs.getAttr "isExact"
+          pure <| Sum.inl (.udiv ⟨isExact?.isSome⟩)
+        | "llvm.shl"    =>  do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.shl)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.shl ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.shl ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.shl ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.shl ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | "llvm.add"    =>  do
           let attr? := opStx.attrs.getAttr "overflowFlags"
           match attr? with
@@ -117,10 +148,28 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
               | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.add ⟨true, true⟩)
               | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
               | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
-        | "llvm.mul"    => pure <| Sum.inl .mul
-        | "llvm.sub"    => pure <| Sum.inl .sub
-        | "llvm.sdiv"   => pure <| Sum.inl .sdiv
-        | "llvm.udiv"   => pure <| Sum.inl .udiv
+        | "llvm.mul"    => do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.mul)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.mul ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.mul ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.mul ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.mul ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+        | "llvm.sub"    =>  do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.sub)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.sub ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPredicate.eq
         | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPredicate.ne
         | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPredicate.ugt
@@ -139,9 +188,24 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
-        | "llvm.not"  => pure .not
-        | "llvm.neg"  => pure .neg
-        | "llvm.copy" => pure .copy
+        | "llvm.not"   => pure .not
+        | "llvm.neg"   => pure .neg
+        | "llvm.copy"  => pure .copy
+        | "llvm.zext"  => do
+          let nonNeg? := opStx.attrs.getAttr "nonNeg"
+          pure <| .zext (← getOutputWidth opStx "zext") ⟨nonNeg?.isSome⟩
+        | "llvm.sext"  => pure <| .sext (← getOutputWidth opStx "sext")
+        | "llvm.trunc" => do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| .trunc (← getOutputWidth opStx "trunc")
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨true, false⟩
+              | .opaque_ "llvm.overflow" "nuw" => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨false, true⟩
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨true, true⟩
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| .trunc (← getOutputWidth opStx "trunc") ⟨true, true⟩
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
     return ⟨_, _, mkUnaryOp op v⟩
   | [] =>
@@ -192,7 +256,7 @@ def instantiateMTy (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
 
 def instantiateMOp (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
   | .binary w binOp => .binary (w.instantiate vals) binOp
-  | .unary w unOp => .unary (w.instantiate vals) unOp
+  | .unary w unOp => .unary (w.instantiate vals) (unOp.instantiate vals)
   | .select w => .select (w.instantiate vals)
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
@@ -208,12 +272,13 @@ def MOp.instantiateCom (vals : Mathlib.Vector Nat φ) : DialectMorphism (MetaLLV
   preserves_signature op := by
     have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
     cases op <;>
+      (try casesm MOp.UnaryOp _) <;>
       simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map,
       Signature.mk, Signature.mkEffectful.injEq,
       List.map_cons, List.map_nil, and_self, MTy.bitvec,
       List.cons.injEq, MTy.bitvec.injEq, and_true, true_and,
-      RegionSignature.map, Signature.map, h1]
+      RegionSignature.map, Signature.map, MOp.UnaryOp.instantiate, MOp.UnaryOp.outTy, h1]
 
 open InstCombine in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
@@ -235,7 +300,7 @@ https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20F
 Therefore, we choose to match on raw `Expr`.
 -/
 open SSA InstcombineTransformDialect InstCombine in
-elab "[llvm (" mvars:term,* ")| " reg:mlir_region "]" : term => do
+elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
   have φ : Nat := mvars.getElems.size
   -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
   let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
@@ -254,9 +319,9 @@ elab "[llvm (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
   return com
 
-macro "[llvm| " reg:mlir_region "]" : term => `([llvm ()| $reg])
+macro "[llvm| " reg:mlir_region "]" : term => `([llvm()| $reg])
 
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
   `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
-       let code := [llvm ()| $test_reg]
+       let code := [llvm()| $test_reg]
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })

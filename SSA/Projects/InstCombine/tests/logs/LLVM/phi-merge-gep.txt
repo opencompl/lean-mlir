@@ -1,0 +1,109 @@
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: llvm.getelementptr
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.return
+

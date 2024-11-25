@@ -1,0 +1,219 @@
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "andcond"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orcond"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andcond.extrause0"
+4: "andcond.extrause0" has unsupported operation: llvm.call
+
+1: "orcond.extrause0"
+4: "orcond.extrause0" has unsupported operation: llvm.call
+
+1: "andcond.extrause1"
+4: "andcond.extrause1" has unsupported operation: llvm.call
+
+1: "orcond.extrause1"
+4: "orcond.extrause1" has unsupported operation: llvm.call
+
+1: "andcond.extrause2"
+4: "andcond.extrause2" has unsupported operation: llvm.call
+
+4: "andcond.extrause2" has unsupported operation: llvm.call
+
+1: "orcond.extrause2"
+4: "orcond.extrause2" has unsupported operation: llvm.call
+
+4: "orcond.extrause2" has unsupported operation: llvm.call
+
+1: "andcond.different.inner.cond"
+7: "andcond.different.inner.cond" is unchanged by InstCombine
+
+1: "orcond.different.inner.cond"
+7: "orcond.different.inner.cond" is unchanged by InstCombine
+
+1: "andcond.different.inner.cond.both.inverted"
+7: "andcond.different.inner.cond.both.inverted" is unchanged by InstCombine
+
+1: "orcond.different.inner.cond.both.inverted"
+7: "orcond.different.inner.cond.both.inverted" is unchanged by InstCombine
+
+1: "andcond.different.inner.cond.inverted.in.outer.cond"
+7: "andcond.different.inner.cond.inverted.in.outer.cond" is unchanged by InstCombine
+
+1: "orcond.different.inner.cond.inverted.in.outer.cond"
+7: "orcond.different.inner.cond.inverted.in.outer.cond" is unchanged by InstCombine
+
+1: "andcond.different.inner.cond.inverted.in.inner.sel"
+7: "andcond.different.inner.cond.inverted.in.inner.sel" is unchanged by InstCombine
+
+1: "orcond.different.inner.cond.inverted.in.inner.sel"
+7: "orcond.different.inner.cond.inverted.in.inner.sel" is unchanged by InstCombine
+
+1: "D139275_c4001580"
+7: "D139275_c4001580" is unchanged by InstCombine
+
+1: "andcond.001.inv.outer.cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orcond.001.inv.outer.cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andcond.010.inv.inner.cond.in.inner.sel"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orcond.010.inv.inner.cond.in.inner.sel"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andcond.100.inv.inner.cond.in.outer.cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orcond.100.inv.inner.cond.in.outer.cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel"
+4: "andcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: llvm.call
+
+1: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel"
+4: "orcond.011.inv.outer.cond.inv.inner.cond.in.inner.sel" has unsupported operation: llvm.call
+
+1: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond"
+4: "andcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: llvm.call
+
+1: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond"
+4: "orcond.101.inv.outer.cond.inv.inner.cond.in.outer.cond" has unsupported operation: llvm.call
+
+1: "andcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orcond.110.inv.inner.cond.in.inner.sel.inv.inner.cond.in.outer.cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andcond.111.inv.all.conds"
+4: "andcond.111.inv.all.conds" has unsupported operation: llvm.call
+
+4: "andcond.111.inv.all.conds" has unsupported operation: llvm.call
+
+1: "orcond.111.inv.all.conds"
+4: "orcond.111.inv.all.conds" has unsupported operation: llvm.call
+
+4: "orcond.111.inv.all.conds" has unsupported operation: llvm.call
+
+1: "test_implied_true"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_implied_true_vec"
+8: "test_implied_true_vec" contains vectors which are unsupported
+
+1: "test_implied_true_falseval"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_implied_false"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_imply_fail"
+7: "test_imply_fail" is unchanged by InstCombine
+
+1: "test_imply_type_mismatch"
+7: "test_imply_type_mismatch" is unchanged by InstCombine
+
+1: "test_dont_crash"
+7: "test_dont_crash" is unchanged by InstCombine
+

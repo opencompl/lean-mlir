@@ -1,0 +1,72 @@
+1: "use"
+5: "use" is empty
+
+1: "test_generic"
+4: "test_generic" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_generic" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant0"
+4: "test_constant0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant0" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant1"
+4: "test_constant1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant1" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant2"
+4: "test_constant2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant2" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant3"
+4: "test_constant3" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant3" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant4"
+4: "test_constant4" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant4" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant127"
+4: "test_constant127" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant127" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant128"
+4: "test_constant128" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant128" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant255"
+4: "test_constant255" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "test_constant255" has unsupported operation after optimization: llvm.extractvalue
+
+1: "sub_eq0"
+4: "sub_eq0" has unsupported operation: llvm.call
+
+1: "sub_ne0"
+4: "sub_ne0" has unsupported operation: llvm.call
+
+1: "sub_eq1"
+4: "sub_eq1" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "sub_eq1" has unsupported operation: llvm.extractvalue
+
+4: "sub_eq1" has unsupported operation: llvm.call
+
+4: "sub_eq1" has unsupported operation: llvm.extractvalue
+
+1: "sub_sgt0"
+4: "sub_sgt0" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "sub_sgt0" has unsupported operation: llvm.extractvalue
+
+4: "sub_sgt0" has unsupported operation: llvm.call
+
+4: "sub_sgt0" has unsupported operation: llvm.extractvalue
+

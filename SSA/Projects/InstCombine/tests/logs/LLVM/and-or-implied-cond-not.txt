@@ -1,0 +1,38 @@
+1: "test_imply_not1"
+4: "test_imply_not1" has unsupported operation: llvm.call
+
+4: "test_imply_not1" has unsupported operation: llvm.call
+
+4: "test_imply_not1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_imply_not1" has unsupported operation: llvm.call
+
+4: "test_imply_not1" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test_imply_not1" has unsupported operation: llvm.call
+
+4: "test_imply_not1" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test_imply_not2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.or
+2: llvm.return
+
+1: "test_imply_not3"
+4: "test_imply_not3" has unsupported operation: llvm.call
+
+1: "func1"
+5: "func1" is empty
+
+1: "func2"
+5: "func2" is empty
+
+1: "use"
+5: "use" is empty
+

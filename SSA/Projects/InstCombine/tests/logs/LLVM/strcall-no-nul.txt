@@ -1,0 +1,257 @@
+1: "strchr"
+9: "strchr" has pointer type input
+
+1: "strrchr"
+9: "strrchr" has pointer type input
+
+1: "strcmp"
+9: "strcmp" has pointer type input
+
+1: "strncmp"
+9: "strncmp" has pointer type input
+
+1: "strstr"
+9: "strstr" has pointer type input
+
+1: "stpcpy"
+9: "stpcpy" has pointer type input
+
+1: "strcpy"
+9: "strcpy" has pointer type input
+
+1: "stpncpy"
+9: "stpncpy" has pointer type input
+
+1: "strncpy"
+9: "strncpy" has pointer type input
+
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "strnlen"
+9: "strnlen" has pointer type input
+
+1: "strpbrk"
+9: "strpbrk" has pointer type input
+
+1: "strspn"
+9: "strspn" has pointer type input
+
+1: "strcspn"
+9: "strcspn" has pointer type input
+
+1: "atoi"
+9: "atoi" has pointer type input
+
+1: "atol"
+9: "atol" has pointer type input
+
+1: "atoll"
+9: "atoll" has pointer type input
+
+1: "strtol"
+9: "strtol" has pointer type input
+
+1: "strtoll"
+9: "strtoll" has pointer type input
+
+1: "strtoul"
+9: "strtoul" has pointer type input
+
+1: "strtoull"
+9: "strtoull" has pointer type input
+
+1: "sprintf"
+9: "sprintf" has pointer type input
+
+1: "snprintf"
+9: "snprintf" has pointer type input
+
+1: "fold_strchr_past_end"
+4: "fold_strchr_past_end" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strchr_past_end" has unsupported operation: llvm.getelementptr
+
+1: "fold_strcmp_past_end"
+9: "fold_strcmp_past_end" has pointer type input
+
+4: "fold_strcmp_past_end" has unsupported operation: llvm.store
+
+4: "fold_strcmp_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_strcmp_past_end" has unsupported operation: llvm.store
+
+4: "fold_strcmp_past_end" has unsupported operation: llvm.return
+
+1: "fold_strncmp_past_end"
+9: "fold_strncmp_past_end" has pointer type input
+
+4: "fold_strncmp_past_end" has unsupported operation: llvm.store
+
+4: "fold_strncmp_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_strncmp_past_end" has unsupported operation: llvm.store
+
+4: "fold_strncmp_past_end" has unsupported operation: llvm.return
+
+1: "fold_strrchr_past_end"
+4: "fold_strrchr_past_end" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "fold_strstr_past_end"
+9: "fold_strstr_past_end" has pointer type input
+
+4: "fold_strstr_past_end" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strstr_past_end" has unsupported operation: llvm.mlir.zero
+
+4: "fold_strstr_past_end" has unsupported operation: llvm.store
+
+4: "fold_strstr_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_strstr_past_end" has unsupported operation: llvm.store
+
+4: "fold_strstr_past_end" has unsupported operation: llvm.return
+
+1: "fold_strlen_past_end"
+4: "fold_strlen_past_end" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "fold_strlen_past_end" has unsupported operation after optimization: llvm.getelementptr
+
+4: "fold_strlen_past_end" has unsupported operation after optimization: llvm.call
+
+1: "fold_stpcpy_past_end"
+9: "fold_stpcpy_past_end" has pointer type input
+
+1: "fold_strcpy_past_end"
+9: "fold_strcpy_past_end" has pointer type input
+
+1: "fold_stpncpy_past_end"
+9: "fold_stpncpy_past_end" has pointer type input
+
+4: "fold_stpncpy_past_end" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "fold_strncpy_past_end"
+9: "fold_strncpy_past_end" has pointer type input
+
+4: "fold_strncpy_past_end" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "fold_strpbrk_past_end"
+9: "fold_strpbrk_past_end" has pointer type input
+
+4: "fold_strpbrk_past_end" has unsupported operation: llvm.mlir.zero
+
+4: "fold_strpbrk_past_end" has unsupported operation: llvm.store
+
+4: "fold_strpbrk_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_strpbrk_past_end" has unsupported operation: llvm.store
+
+4: "fold_strpbrk_past_end" has unsupported operation: llvm.return
+
+1: "fold_strspn_past_end"
+9: "fold_strspn_past_end" has pointer type input
+
+4: "fold_strspn_past_end" has unsupported operation: llvm.store
+
+4: "fold_strspn_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_strspn_past_end" has unsupported operation: llvm.store
+
+4: "fold_strspn_past_end" has unsupported operation: llvm.return
+
+1: "fold_strcspn_past_end"
+9: "fold_strcspn_past_end" has pointer type input
+
+4: "fold_strcspn_past_end" has unsupported operation: llvm.store
+
+4: "fold_strcspn_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_strcspn_past_end" has unsupported operation: llvm.store
+
+4: "fold_strcspn_past_end" has unsupported operation: llvm.return
+
+1: "fold_atoi_past_end"
+4: "fold_atoi_past_end" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_atoi_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atoi_past_end" has unsupported operation: llvm.call
+
+1: "fold_atol_strtol_past_end"
+9: "fold_atol_strtol_past_end" has pointer type input
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.mlir.zero
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.call
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.store
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.call
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.store
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.call
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.store
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.call
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.store
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.call
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.store
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.call
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.store
+
+4: "fold_atol_strtol_past_end" has unsupported operation: llvm.return
+
+1: "fold_sprintf_past_end"
+9: "fold_sprintf_past_end" has pointer type input
+
+4: "fold_sprintf_past_end" has unsupported operation: llvm.store
+
+4: "fold_sprintf_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_sprintf_past_end" has unsupported operation: llvm.store
+
+4: "fold_sprintf_past_end" has unsupported operation: llvm.return
+
+1: "fold_snprintf_past_end"
+9: "fold_snprintf_past_end" has pointer type input
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.call
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.store
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.call
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.getelementptr
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.store
+
+4: "fold_snprintf_past_end" has unsupported operation: llvm.return
+
+1: "memrchr"
+9: "memrchr" has pointer type input
+

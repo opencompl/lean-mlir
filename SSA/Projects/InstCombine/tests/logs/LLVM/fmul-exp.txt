@@ -1,0 +1,56 @@
+1: "use"
+5: "use" is empty
+
+1: "exp_a_exp_b"
+4: "exp_a_exp_b" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_exp_b" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_exp_b" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "exp_a_exp_b_multiple_uses"
+4: "exp_a_exp_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_exp_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp_a_exp_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_exp_b_multiple_uses" has unsupported operation: llvm.call
+
+1: "exp_a_exp_b_multiple_uses_both"
+4: "exp_a_exp_b_multiple_uses_both" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_exp_b_multiple_uses_both" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_exp_b_multiple_uses_both" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "exp_a_exp_b_multiple_uses_both" has unsupported operation: llvm.call
+
+4: "exp_a_exp_b_multiple_uses_both" has unsupported operation: llvm.call
+
+1: "exp_a_exp_b_reassoc"
+4: "exp_a_exp_b_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp_a_exp_b_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+1: "exp_a_a"
+4: "exp_a_a" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp_a_a" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+1: "exp_a_a_extra_use"
+4: "exp_a_a_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+4: "exp_a_a_extra_use" has unsupported operation: llvm.call
+
+4: "exp_a_a_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "exp_a_exp_b_exp_c_exp_d_fast"
+4: "exp_a_exp_b_exp_c_exp_d_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp_a_exp_b_exp_c_exp_d_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp_a_exp_b_exp_c_exp_d_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "exp_a_exp_b_exp_c_exp_d_fast" has unsupported operation: builtin.unregistered: llvm.intr.exp
+

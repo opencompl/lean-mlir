@@ -1,0 +1,246 @@
+1: "abs_abs_x01"
+4: "abs_abs_x01" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x01_vec"
+4: "abs_abs_x01_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x02"
+4: "abs_abs_x02" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x03"
+4: "abs_abs_x03" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x04"
+4: "abs_abs_x04" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x04_vec"
+4: "abs_abs_x04_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x05"
+4: "abs_abs_x05" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x06"
+4: "abs_abs_x06" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x07"
+4: "abs_abs_x07" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x08"
+4: "abs_abs_x08" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x09"
+4: "abs_abs_x09" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x10"
+4: "abs_abs_x10" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x11"
+4: "abs_abs_x11" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x12"
+4: "abs_abs_x12" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x13"
+4: "abs_abs_x13" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x14"
+4: "abs_abs_x14" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x15"
+4: "abs_abs_x15" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x16"
+4: "abs_abs_x16" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x17"
+4: "abs_abs_x17" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x18"
+4: "abs_abs_x18" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x02_vec"
+4: "abs_abs_x02_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_abs_x03_vec"
+4: "abs_abs_x03_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x01"
+4: "nabs_nabs_x01" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x02"
+4: "nabs_nabs_x02" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x03"
+4: "nabs_nabs_x03" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x04"
+4: "nabs_nabs_x04" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x05"
+4: "nabs_nabs_x05" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x06"
+4: "nabs_nabs_x06" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x07"
+4: "nabs_nabs_x07" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x08"
+4: "nabs_nabs_x08" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x09"
+4: "nabs_nabs_x09" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x10"
+4: "nabs_nabs_x10" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x11"
+4: "nabs_nabs_x11" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x12"
+4: "nabs_nabs_x12" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x13"
+4: "nabs_nabs_x13" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x14"
+4: "nabs_nabs_x14" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x15"
+4: "nabs_nabs_x15" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x16"
+4: "nabs_nabs_x16" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x17"
+4: "nabs_nabs_x17" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x18"
+4: "nabs_nabs_x18" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x01_vec"
+4: "nabs_nabs_x01_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_nabs_x02_vec"
+4: "nabs_nabs_x02_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x01"
+4: "abs_nabs_x01" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x02"
+4: "abs_nabs_x02" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x03"
+4: "abs_nabs_x03" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x04"
+4: "abs_nabs_x04" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x05"
+4: "abs_nabs_x05" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x06"
+4: "abs_nabs_x06" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x07"
+4: "abs_nabs_x07" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x08"
+4: "abs_nabs_x08" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x09"
+4: "abs_nabs_x09" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x10"
+4: "abs_nabs_x10" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x11"
+4: "abs_nabs_x11" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x12"
+4: "abs_nabs_x12" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x13"
+4: "abs_nabs_x13" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x14"
+4: "abs_nabs_x14" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x15"
+4: "abs_nabs_x15" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x16"
+4: "abs_nabs_x16" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x17"
+4: "abs_nabs_x17" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x18"
+4: "abs_nabs_x18" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x01_vec"
+4: "abs_nabs_x01_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_nabs_x02_vec"
+4: "abs_nabs_x02_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x01"
+4: "nabs_abs_x01" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x02"
+4: "nabs_abs_x02" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x03"
+4: "nabs_abs_x03" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x04"
+4: "nabs_abs_x04" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x05"
+4: "nabs_abs_x05" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x06"
+4: "nabs_abs_x06" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x07"
+4: "nabs_abs_x07" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x08"
+4: "nabs_abs_x08" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x09"
+4: "nabs_abs_x09" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x10"
+4: "nabs_abs_x10" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x11"
+4: "nabs_abs_x11" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x12"
+4: "nabs_abs_x12" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x13"
+4: "nabs_abs_x13" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x14"
+4: "nabs_abs_x14" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x15"
+4: "nabs_abs_x15" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x16"
+4: "nabs_abs_x16" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x17"
+4: "nabs_abs_x17" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x18"
+4: "nabs_abs_x18" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x01_vec"
+4: "nabs_abs_x01_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_abs_x02_vec"
+4: "nabs_abs_x02_vec" has unsupported operation: builtin.unregistered: llvm.intr.abs
+

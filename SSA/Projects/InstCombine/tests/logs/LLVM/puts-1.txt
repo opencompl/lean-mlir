@@ -1,0 +1,16 @@
+1: "puts"
+9: "puts" has pointer type input
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.call
+
+4: "test_simplify1" has unsupported operation: llvm.return
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "putchar"
+5: "putchar" is empty
+

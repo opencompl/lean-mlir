@@ -1,0 +1,299 @@
+1: "ceil"
+5: "ceil" is empty
+
+1: "copysign"
+5: "copysign" is empty
+
+1: "cos"
+5: "cos" is empty
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "floor"
+5: "floor" is empty
+
+1: "strcat"
+9: "strcat" has pointer type input
+
+1: "strncat"
+9: "strncat" has pointer type input
+
+1: "strchr"
+9: "strchr" has pointer type input
+
+1: "strrchr"
+9: "strrchr" has pointer type input
+
+1: "strcmp"
+9: "strcmp" has pointer type input
+
+1: "strncmp"
+9: "strncmp" has pointer type input
+
+1: "strcpy"
+9: "strcpy" has pointer type input
+
+1: "stpcpy"
+9: "stpcpy" has pointer type input
+
+1: "strncpy"
+9: "strncpy" has pointer type input
+
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "strpbrk"
+9: "strpbrk" has pointer type input
+
+1: "strspn"
+9: "strspn" has pointer type input
+
+1: "strtod"
+9: "strtod" has pointer type input
+
+1: "strtof"
+9: "strtof" has pointer type input
+
+1: "strtold"
+9: "strtold" has pointer type input
+
+1: "strtol"
+9: "strtol" has pointer type input
+
+1: "strtoll"
+9: "strtoll" has pointer type input
+
+1: "strtoul"
+9: "strtoul" has pointer type input
+
+1: "strtoull"
+9: "strtoull" has pointer type input
+
+1: "strcspn"
+9: "strcspn" has pointer type input
+
+1: "abs"
+5: "abs" is empty
+
+1: "ffs"
+5: "ffs" is empty
+
+1: "ffsl"
+5: "ffsl" is empty
+
+1: "ffsll"
+5: "ffsll" is empty
+
+1: "fprintf"
+9: "fprintf" has pointer type input
+
+1: "isascii"
+5: "isascii" is empty
+
+1: "isdigit"
+5: "isdigit" is empty
+
+1: "toascii"
+5: "toascii" is empty
+
+1: "labs"
+5: "labs" is empty
+
+1: "llabs"
+5: "llabs" is empty
+
+1: "printf"
+9: "printf" has pointer type input
+
+1: "sprintf"
+9: "sprintf" has pointer type input
+
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+1: "t2"
+4: "t2" has unsupported operation: llvm.call
+
+1: "t3"
+4: "t3" has unsupported operation: llvm.call
+
+1: "t4"
+4: "t4" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "t5"
+4: "t5" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+1: "t6"
+9: "t6" has pointer type input
+
+1: "t7"
+9: "t7" has pointer type input
+
+4: "t7" has unsupported operation: llvm.mlir.addressof
+
+4: "t7" has unsupported operation: llvm.call
+
+1: "t8"
+4: "t8" has unsupported operation: llvm.mlir.addressof
+
+4: "t8" has unsupported operation: llvm.getelementptr
+
+1: "t9"
+4: "t9" has unsupported operation: llvm.mlir.addressof
+
+4: "t9" has unsupported operation: llvm.getelementptr
+
+1: "t10"
+4: "t10" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t10" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t10" has unsupported operation after optimization: llvm.call
+
+1: "t11"
+4: "t11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t11" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t11" has unsupported operation after optimization: llvm.call
+
+1: "t12"
+9: "t12" has pointer type input
+
+4: "t12" has unsupported operation: llvm.store
+
+1: "t13"
+9: "t13" has pointer type input
+
+4: "t13" has unsupported operation: llvm.getelementptr
+
+4: "t13" has unsupported operation: llvm.store
+
+1: "t14"
+9: "t14" has pointer type input
+
+4: "t14" has unsupported operation: llvm.mlir.addressof
+
+4: "t14" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "t15"
+4: "t15" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "t15" has unsupported operation after optimization: llvm.call
+
+1: "t16"
+9: "t16" has pointer type input
+
+4: "t16" has unsupported operation: llvm.mlir.zero
+
+1: "t17"
+9: "t17" has pointer type input
+
+1: "t18"
+9: "t18" has pointer type input
+
+4: "t18" has unsupported operation: llvm.mlir.addressof
+
+4: "t18" has unsupported operation: llvm.call
+
+1: "t19"
+9: "t19" has pointer type input
+
+4: "t19" has unsupported operation: llvm.mlir.addressof
+
+4: "t19" has unsupported operation: llvm.call
+
+1: "t20"
+9: "t20" has pointer type input
+
+4: "t20" has unsupported operation: llvm.mlir.addressof
+
+4: "t20" has unsupported operation: llvm.call
+
+1: "t21"
+9: "t21" has pointer type input
+
+4: "t21" has unsupported operation: llvm.mlir.addressof
+
+4: "t21" has unsupported operation: llvm.call
+
+1: "t22"
+9: "t22" has pointer type input
+
+4: "t22" has unsupported operation: llvm.mlir.addressof
+
+4: "t22" has unsupported operation: llvm.call
+
+1: "t23"
+9: "t23" has pointer type input
+
+4: "t23" has unsupported operation: llvm.mlir.addressof
+
+4: "t23" has unsupported operation: llvm.call
+
+1: "t24"
+9: "t24" has pointer type input
+
+4: "t24" has unsupported operation: llvm.mlir.addressof
+
+4: "t24" has unsupported operation: llvm.call
+
+1: "t25"
+9: "t25" has pointer type input
+
+1: "t26"
+4: "t26" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "t27"
+4: "t27" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "t28"
+4: "t28" has unsupported operation: llvm.call
+
+1: "t29"
+4: "t29" has unsupported operation: llvm.call
+
+1: "t30"
+4: "t30" has unsupported operation: llvm.mlir.zero
+
+4: "t30" has unsupported operation: llvm.mlir.addressof
+
+4: "t30" has unsupported operation: llvm.call
+
+4: "t30" has unsupported operation: llvm.return
+
+1: "t31"
+4: "t31" has unsupported operation after optimization: llvm.call
+
+1: "t32"
+4: "t32" has unsupported operation after optimization: llvm.call
+
+1: "t33"
+4: "t33" has unsupported operation after optimization: llvm.call
+
+1: "t34"
+4: "t34" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "t35"
+4: "t35" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "t36"
+4: "t36" has unsupported operation: llvm.mlir.addressof
+
+4: "t36" has unsupported operation: llvm.call
+
+4: "t36" has unsupported operation: llvm.return
+
+1: "t37"
+9: "t37" has pointer type input
+
+4: "t37" has unsupported operation: llvm.mlir.addressof
+
+4: "t37" has unsupported operation: llvm.call
+
+4: "t37" has unsupported operation: llvm.return
+
+1: "memrchr"
+9: "memrchr" has pointer type input
+

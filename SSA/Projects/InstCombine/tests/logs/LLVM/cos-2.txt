@@ -1,0 +1,19 @@
+1: "cos"
+5: "cos" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "test_no_simplify2"
+4: "test_no_simplify2" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_no_simplify2" has unsupported operation: llvm.call
+
+1: "bogus_sqrt"
+4: "bogus_sqrt" has unsupported operation: llvm.call
+

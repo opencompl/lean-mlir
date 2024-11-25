@@ -1,0 +1,9 @@
+1: "test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.sub
+2: llvm.return
+

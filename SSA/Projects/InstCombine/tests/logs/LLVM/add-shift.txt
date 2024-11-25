@@ -1,0 +1,23 @@
+1: "flip_add_of_shift_neg"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "flip_add_of_shift_neg_vec"
+8: "flip_add_of_shift_neg_vec" contains vectors which are unsupported
+
+1: "flip_add_of_shift_neg_fail_shr"
+7: "flip_add_of_shift_neg_fail_shr" is unchanged by InstCombine
+
+1: "use.v2i8"
+5: "use.v2i8" is empty
+
+1: "flip_add_of_shift_neg_vec_fail_multiuse_neg"
+4: "flip_add_of_shift_neg_vec_fail_multiuse_neg" has unsupported operation: llvm.call
+
+1: "flip_add_of_shift_neg_vec_fail_multiuse_shift"
+4: "flip_add_of_shift_neg_vec_fail_multiuse_shift" has unsupported operation: llvm.call
+

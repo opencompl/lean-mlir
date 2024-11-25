@@ -1,0 +1,77 @@
+1: "test_generic"
+4: "test_generic" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_generic" has unsupported operation: llvm.extractvalue
+
+1: "test_constant0"
+4: "test_constant0" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant0" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant1"
+4: "test_constant1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant1" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant2"
+4: "test_constant2" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant2" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant3"
+4: "test_constant3" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant3" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant4"
+4: "test_constant4" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant4" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant127"
+4: "test_constant127" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant127" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant128"
+4: "test_constant128" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant128" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_constant255"
+4: "test_constant255" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "test_constant255" has unsupported operation after optimization: llvm.extractvalue
+
+1: "i1_res"
+4: "i1_res" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "i1_res" has unsupported operation after optimization: llvm.extractvalue
+
+1: "v2i1_res"
+8: "v2i1_res" contains vectors which are unsupported
+
+1: "i1_res_by_one"
+4: "i1_res_by_one" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "i1_res_by_one" has unsupported operation after optimization: llvm.extractvalue
+
+1: "v2i1_res_by_one"
+8: "v2i1_res_by_one" contains vectors which are unsupported
+
+1: "i1_ov"
+4: "i1_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "i1_ov" has unsupported operation after optimization: llvm.extractvalue
+
+1: "v2i1_ov"
+8: "v2i1_ov" contains vectors which are unsupported
+
+1: "i1_ov_by_one"
+4: "i1_ov_by_one" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "i1_ov_by_one" has unsupported operation after optimization: llvm.extractvalue
+
+1: "v2i1_ov_by_one"
+8: "v2i1_ov_by_one" contains vectors which are unsupported
+

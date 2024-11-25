@@ -1,0 +1,115 @@
+1: "strlen"
+9: "strlen" has pointer type input
+
+1: "fold_strlen_A"
+9: "fold_strlen_A" has pointer type input
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A" has unsupported operation: llvm.store
+
+4: "fold_strlen_A" has unsupported operation: llvm.return
+
+1: "fold_strlen_A_pI"
+9: "fold_strlen_A_pI" has pointer type input
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.call
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.store
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.call
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.store
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.call
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.store
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.call
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.getelementptr
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.store
+
+4: "fold_strlen_A_pI" has unsupported operation: llvm.return
+

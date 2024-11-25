@@ -1,0 +1,13 @@
+1: "mysqrt"
+4: "mysqrt" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "mysqrt" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "fake_sqrt"
+4: "fake_sqrt" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "fake_sqrt" has unsupported operation: llvm.call
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

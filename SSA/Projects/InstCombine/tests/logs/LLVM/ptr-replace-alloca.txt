@@ -1,0 +1,248 @@
+1: "remove_alloca_use_arg"
+4: "remove_alloca_use_arg" has unsupported operation: llvm.mlir.addressof
+
+4: "remove_alloca_use_arg" has unsupported operation: llvm.getelementptr
+
+4: "remove_alloca_use_arg" has unsupported operation: llvm.getelementptr
+
+4: "remove_alloca_use_arg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "remove_alloca_use_arg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "remove_alloca_use_arg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "remove_alloca_use_arg" has unsupported operation: llvm.load
+
+1: "volatile_load_keep_alloca"
+4: "volatile_load_keep_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "volatile_load_keep_alloca" has unsupported operation: llvm.alloca
+
+4: "volatile_load_keep_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "volatile_load_keep_alloca" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "volatile_load_keep_alloca" has unsupported operation: llvm.getelementptr
+
+4: "volatile_load_keep_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "volatile_load_keep_alloca" has unsupported operation: llvm.getelementptr
+
+4: "volatile_load_keep_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "volatile_load_keep_alloca" has unsupported operation: llvm.load
+
+1: "no_memcpy_keep_alloca"
+4: "no_memcpy_keep_alloca" has unsupported operation: llvm.alloca
+
+4: "no_memcpy_keep_alloca" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "no_memcpy_keep_alloca" has unsupported operation: llvm.getelementptr
+
+4: "no_memcpy_keep_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "no_memcpy_keep_alloca" has unsupported operation: llvm.getelementptr
+
+4: "no_memcpy_keep_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "no_memcpy_keep_alloca" has unsupported operation: llvm.load
+
+1: "loop_phi_remove_alloca"
+4: "loop_phi_remove_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "loop_phi_remove_alloca" has unsupported operation: llvm.getelementptr
+
+4: "loop_phi_remove_alloca" has unsupported operation: llvm.getelementptr
+
+4: "loop_phi_remove_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "loop_phi_remove_alloca" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "loop_phi_remove_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "loop_phi_remove_alloca" has unsupported operation: llvm.load
+
+1: "remove_alloca_ptr_arg"
+9: "remove_alloca_ptr_arg" has pointer type input
+
+4: "remove_alloca_ptr_arg" has unsupported operation: llvm.mlir.addressof
+
+4: "remove_alloca_ptr_arg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "remove_alloca_ptr_arg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "remove_alloca_ptr_arg" has unsupported operation: llvm.load
+
+1: "loop_phi_late_memtransfer_remove_alloca"
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: llvm.getelementptr
+
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: llvm.getelementptr
+
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "loop_phi_late_memtransfer_remove_alloca" has unsupported operation: llvm.load
+
+1: "test_memcpy_after_phi"
+9: "test_memcpy_after_phi" has pointer type input
+
+4: "test_memcpy_after_phi" has unsupported operation: llvm.mlir.addressof
+
+4: "test_memcpy_after_phi" has unsupported operation: llvm.alloca
+
+4: "test_memcpy_after_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_memcpy_after_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_memcpy_after_phi" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_memcpy_after_phi" has unsupported operation: llvm.load
+
+1: "addrspace_diff_keep_alloca"
+9: "addrspace_diff_keep_alloca" has pointer type input
+
+4: "addrspace_diff_keep_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "addrspace_diff_keep_alloca" has unsupported operation: llvm.alloca
+
+4: "addrspace_diff_keep_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "addrspace_diff_keep_alloca" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "addrspace_diff_keep_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "addrspace_diff_keep_alloca" has unsupported operation: llvm.load
+
+1: "addrspace_diff_keep_alloca_extra_gep"
+9: "addrspace_diff_keep_alloca_extra_gep" has pointer type input
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: llvm.mlir.addressof
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: llvm.alloca
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: llvm.getelementptr
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "addrspace_diff_keep_alloca_extra_gep" has unsupported operation: llvm.load
+
+1: "addrspace_diff_remove_alloca"
+4: "addrspace_diff_remove_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "addrspace_diff_remove_alloca" has unsupported operation: llvm.getelementptr
+
+4: "addrspace_diff_remove_alloca" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "addrspace_diff_remove_alloca" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "addrspace_diff_remove_alloca" has unsupported operation: llvm.load
+
+1: "phi_loop"
+4: "phi_loop" has unsupported operation: llvm.mlir.addressof
+
+4: "phi_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_loop" has unsupported operation: llvm.getelementptr
+
+4: "phi_loop" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_loop" has unsupported operation: llvm.load
+
+1: "phi_loop_different_addrspace"
+4: "phi_loop_different_addrspace" has unsupported operation: llvm.mlir.addressof
+
+4: "phi_loop_different_addrspace" has unsupported operation: llvm.alloca
+
+4: "phi_loop_different_addrspace" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "phi_loop_different_addrspace" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "phi_loop_different_addrspace" has unsupported operation: llvm.getelementptr
+
+4: "phi_loop_different_addrspace" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "phi_loop_different_addrspace" has unsupported operation: llvm.load
+
+1: "select_same_addrspace_remove_alloca"
+9: "select_same_addrspace_remove_alloca" has pointer type input
+
+4: "select_same_addrspace_remove_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "select_same_addrspace_remove_alloca" has unsupported operation: llvm.load
+
+1: "select_after_memcpy_keep_alloca"
+9: "select_after_memcpy_keep_alloca" has pointer type input
+
+4: "select_after_memcpy_keep_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "select_after_memcpy_keep_alloca" has unsupported operation: llvm.alloca
+
+4: "select_after_memcpy_keep_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "select_after_memcpy_keep_alloca" has unsupported operation: llvm.load
+
+1: "select_diff_addrspace_keep_alloca"
+9: "select_diff_addrspace_keep_alloca" has pointer type input
+
+4: "select_diff_addrspace_keep_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "select_diff_addrspace_keep_alloca" has unsupported operation: llvm.alloca
+
+4: "select_diff_addrspace_keep_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "select_diff_addrspace_keep_alloca" has unsupported operation: llvm.load
+
+1: "select_diff_addrspace_remove_alloca"
+9: "select_diff_addrspace_remove_alloca" has pointer type input
+
+1: "select_diff_addrspace_remove_alloca_asan"
+9: "select_diff_addrspace_remove_alloca_asan" has pointer type input
+
+4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: llvm.mlir.addressof
+
+4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: llvm.getelementptr
+
+4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: llvm.getelementptr
+
+4: "select_diff_addrspace_remove_alloca_asan" has unsupported operation: llvm.load
+
+1: "readonly_callee"
+9: "readonly_callee" has pointer type input
+
+1: "call_readonly_remove_alloca"
+4: "call_readonly_remove_alloca" has unsupported operation: llvm.mlir.addressof
+
+4: "call_readonly_remove_alloca" has unsupported operation: llvm.alloca
+
+4: "call_readonly_remove_alloca" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "call_readonly_remove_alloca" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "call_readonly_remove_alloca" has unsupported operation: llvm.call
+
+1: "call_readonly_keep_alloca2"
+4: "call_readonly_keep_alloca2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_readonly_keep_alloca2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_readonly_keep_alloca2" has unsupported operation: llvm.alloca
+
+4: "call_readonly_keep_alloca2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "call_readonly_keep_alloca2" has unsupported operation: llvm.getelementptr
+
+4: "call_readonly_keep_alloca2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "call_readonly_keep_alloca2" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "call_readonly_keep_alloca2" has unsupported operation: llvm.call
+

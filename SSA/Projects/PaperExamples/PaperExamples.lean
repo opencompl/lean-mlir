@@ -130,7 +130,7 @@ def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
   }]
 
 def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
-/-- info: 8 -/
+/-- info: 8#32 -/
 #guard_msgs in #eval eg₀val
 
 open MLIR AST MLIR2Simple in

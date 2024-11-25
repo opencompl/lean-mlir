@@ -1,0 +1,16 @@
+1: "f1"
+7: "f1" is unchanged by InstCombine
+
+1: "f1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

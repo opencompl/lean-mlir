@@ -1,0 +1,2 @@
+3: gep-combine-loop-invariant.ll: parsing has failed
+

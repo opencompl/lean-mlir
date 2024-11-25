@@ -1,0 +1,87 @@
+1: "masked_scatter1"
+4: "masked_scatter1" has unsupported operation: llvm.mlir.undef
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "masked_scatter1" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "masked_scatter1" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "masked_scatter1" has unsupported operation: builtin.unregistered: llvm.intr.masked.scatter
+
+4: "masked_scatter1" has unsupported operation: llvm.return
+
+1: "masked_scatter2"
+4: "masked_scatter2" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter2" has unsupported operation: llvm.store
+
+4: "masked_scatter2" has unsupported operation: llvm.return
+
+1: "masked_scatter3"
+4: "masked_scatter3" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter3" has unsupported operation: llvm.store
+
+4: "masked_scatter3" has unsupported operation: llvm.return
+
+1: "masked_scatter4"
+4: "masked_scatter4" has unsupported operation: llvm.return
+
+1: "masked_scatter5"
+4: "masked_scatter5" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter5" has unsupported operation: llvm.store
+
+4: "masked_scatter5" has unsupported operation: llvm.return
+
+1: "masked_scatter6"
+4: "masked_scatter6" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter6" has unsupported operation: llvm.store
+
+4: "masked_scatter6" has unsupported operation: llvm.return
+
+1: "masked_scatter7"
+4: "masked_scatter7" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter7" has unsupported operation: llvm.mlir.undef
+
+4: "masked_scatter7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter7" has unsupported operation: llvm.mlir.addressof
+
+4: "masked_scatter7" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "masked_scatter7" has unsupported operation: llvm.mlir.undef
+
+4: "masked_scatter7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "masked_scatter7" has unsupported operation: builtin.unregistered: llvm.intr.masked.scatter
+
+4: "masked_scatter7" has unsupported operation: llvm.return
+

@@ -1,0 +1,41 @@
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: llvm.call
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "test_no_simplify2"
+4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify2" has unsupported operation: llvm.call
+
+1: "__strncpy_chk"
+9: "__strncpy_chk" has pointer type input
+
+1: "strncpy"
+9: "strncpy" has pointer type input
+

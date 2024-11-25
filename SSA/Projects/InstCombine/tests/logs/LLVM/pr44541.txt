@@ -1,0 +1,8 @@
+1: "passthru"
+7: "passthru" is unchanged by InstCombine
+
+1: "test"
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.intr.smax
+

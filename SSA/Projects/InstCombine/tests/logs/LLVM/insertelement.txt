@@ -1,0 +1,27 @@
+1: "insert_known_idx"
+4: "insert_known_idx" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "insert_known_idx" has unsupported operation: llvm.mlir.undef
+
+4: "insert_known_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_known_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_known_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_known_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "insert_known_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_unknown_idx"
+4: "insert_unknown_idx" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_known_any_idx"
+8: "insert_known_any_idx" contains vectors which are unsupported
+
+1: "insert_known_any_idx_fail1"
+4: "insert_known_any_idx_fail1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "insert_known_any_idx_fail2"
+4: "insert_known_any_idx_fail2" has unsupported operation: builtin.unregistered: llvm.insertelement
+

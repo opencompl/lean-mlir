@@ -1,0 +1,8 @@
+1: "use"
+9: "use" has pointer type input
+
+4: "use" has unsupported operation: llvm.call
+
+1: "strlen"
+9: "strlen" has pointer type input
+

@@ -1,0 +1,64 @@
+1: "use"
+5: "use" is empty
+
+1: "both_sides_fold_slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "both_sides_fold_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "one_side_fold_slt"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "one_side_fold_sgt"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "one_side_fold_eq"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "no_side_fold_cond"
+7: "no_side_fold_cond" is unchanged by InstCombine
+
+1: "no_side_fold_op"
+7: "no_side_fold_op" is unchanged by InstCombine
+
+1: "one_select_mult_use"
+4: "one_select_mult_use" has unsupported operation: llvm.mlir.addressof
+
+4: "one_select_mult_use" has unsupported operation: llvm.call
+
+1: "both_select_mult_use"
+4: "both_select_mult_use" has unsupported operation: llvm.mlir.addressof
+
+4: "both_select_mult_use" has unsupported operation: llvm.call
+
+1: "fold_vector_ops"
+8: "fold_vector_ops" contains vectors which are unsupported
+
+1: "fold_vector_cond_ops"
+8: "fold_vector_cond_ops" contains vectors which are unsupported
+

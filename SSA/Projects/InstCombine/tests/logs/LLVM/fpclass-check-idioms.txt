@@ -1,0 +1,2 @@
+3: fpclass-check-idioms.ll: parsing has failed
+

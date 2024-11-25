@@ -1,0 +1,17 @@
+1: "cmpxchg_0"
+9: "cmpxchg_0" has pointer type input
+
+4: "cmpxchg_0" has unsupported operation: builtin.unregistered: llvm.cmpxchg
+
+4: "cmpxchg_0" has unsupported operation: llvm.extractvalue
+
+1: "cmpxchg_1"
+9: "cmpxchg_1" has pointer type input
+
+4: "cmpxchg_1" has unsupported operation: builtin.unregistered: llvm.cmpxchg
+
+1: "cmpxchg_2"
+9: "cmpxchg_2" has pointer type input
+
+4: "cmpxchg_2" has unsupported operation: builtin.unregistered: llvm.cmpxchg
+

@@ -1,0 +1,27 @@
+1: "ctpop1"
+4: "ctpop1" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop1v"
+4: "ctpop1v" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop1_multiuse"
+4: "ctpop1_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop2"
+4: "ctpop2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop2v"
+4: "ctpop2v" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop2_multiuse"
+4: "ctpop2_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop3"
+4: "ctpop3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop3v"
+4: "ctpop3v" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop3v_poison"
+4: "ctpop3v_poison" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+

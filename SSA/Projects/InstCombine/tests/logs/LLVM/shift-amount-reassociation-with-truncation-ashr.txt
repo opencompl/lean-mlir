@@ -1,0 +1,89 @@
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "t1_vec_splat"
+8: "t1_vec_splat" contains vectors which are unsupported
+
+1: "t3_vec_nonsplat_poison0"
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t3_vec_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t4_vec_nonsplat_poison1"
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t4_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t5_vec_nonsplat_poison1"
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "use16"
+5: "use16" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "t6_extrause0"
+4: "t6_extrause0" has unsupported operation: llvm.call
+
+1: "t7_extrause1"
+4: "t7_extrause1" has unsupported operation: llvm.call
+
+1: "t8_extrause2"
+4: "t8_extrause2" has unsupported operation: llvm.call
+
+4: "t8_extrause2" has unsupported operation: llvm.call
+
+1: "t9_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+
+1: "n10_lshr_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.zext
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.add
+2: llvm.ashr
+2: llvm.return
+

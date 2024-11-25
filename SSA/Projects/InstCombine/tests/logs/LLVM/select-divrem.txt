@@ -1,0 +1,194 @@
+1: "sdiv_common_divisor"
+4: "sdiv_common_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "srem_common_divisor"
+4: "srem_common_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "udiv_common_divisor"
+2: llvm.func
+2: llvm.udiv
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "urem_common_divisor"
+2: llvm.func
+2: llvm.urem
+2: llvm.urem
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "sdiv_common_dividend"
+4: "sdiv_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "srem_common_dividend"
+4: "srem_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "udiv_common_dividend"
+4: "udiv_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem_common_dividend"
+4: "urem_common_dividend" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "sdiv_common_divisor_defined_cond"
+2: llvm.func
+2: llvm.sdiv
+2: llvm.sdiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "srem_common_divisor_defined_cond"
+2: llvm.func
+2: llvm.srem
+2: llvm.srem
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "udiv_common_divisor_defined_cond"
+2: llvm.func
+2: llvm.udiv
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "urem_common_divisor_defined_cond"
+2: llvm.func
+2: llvm.urem
+2: llvm.urem
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "sdiv_common_dividend_defined_cond"
+2: llvm.func
+2: llvm.sdiv
+2: llvm.sdiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "srem_common_dividend_defined_cond"
+2: llvm.func
+2: llvm.srem
+2: llvm.srem
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "udiv_common_dividend_defined_cond"
+2: llvm.func
+2: llvm.udiv
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "urem_common_dividend_defined_cond"
+2: llvm.func
+2: llvm.urem
+2: llvm.urem
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_wrong_sign_test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_add_different_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_wrong_operands_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_vec"
+8: "rem_euclid_vec" contains vectors which are unsupported
+
+1: "rem_euclid_i128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_non_const_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.srem
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_pow2_true_arm_folded"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "rem_euclid_pow2_false_arm_folded"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "pr89516"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.shl
+2: llvm.srem
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

@@ -4,19 +4,22 @@ import Mathlib.Tactic
 /-- Note that this assumes that the input and output bitwidths are the same,
 which is by far the common case. -/
 @[simp]
-theorem LLVM.lshr?_eq_some {a b : BitVec w} (hb : b.toNat < w) :
+theorem LLVM.lshr?_eq_some {a b : BitVec w} (hb : b < w) :
     LLVM.lshr? a b = .some (BitVec.ushiftRight a b.toNat) := by
   simp only [LLVM.lshr?]
   split_ifs
-  case pos contra => linarith
+  case pos contra =>
+    have hb' : ¬ b ≥ w := by
+      simp at hb
+      simp only [BitVec.natCast_eq_ofNat, ge_iff_le, BitVec.not_le, hb]
+    contradiction
   case neg _ =>
     simp only [HShiftRight.hShiftRight]
-    rfl
 
 /-- Note that this assumes that the input and output bitwidths are the same,
 which is by far the common case. -/
 @[simp]
-theorem LLVM.lshr?_eq_none {a b : BitVec w} (hb : b.toNat ≥ w) : LLVM.lshr? a b = .none := by
+theorem LLVM.lshr?_eq_none {a b : BitVec w} (hb : b ≥ w) : LLVM.lshr? a b = .none := by
   simp only [LLVM.lshr?]
   split_ifs; simp
 

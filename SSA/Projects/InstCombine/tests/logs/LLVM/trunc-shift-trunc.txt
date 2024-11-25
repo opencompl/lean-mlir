@@ -1,0 +1,85 @@
+1: "use"
+5: "use" is empty
+
+1: "trunc_lshr_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_shl_trunc"
+7: "trunc_shl_trunc" is unchanged by InstCombine
+
+1: "trunc_lshr_trunc_uniform"
+8: "trunc_lshr_trunc_uniform" contains vectors which are unsupported
+
+1: "trunc_lshr_trunc_nonuniform"
+8: "trunc_lshr_trunc_nonuniform" contains vectors which are unsupported
+
+1: "trunc_lshr_trunc_uniform_poison"
+4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_lshr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_lshr_trunc_outofrange"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_lshr_trunc_nonuniform_outofrange"
+7: "trunc_lshr_trunc_nonuniform_outofrange" is unchanged by InstCombine
+
+1: "trunc_ashr_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_ashr_trunc_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_ashr_trunc_uniform"
+8: "trunc_ashr_trunc_uniform" contains vectors which are unsupported
+
+1: "trunc_ashr_trunc_nonuniform"
+8: "trunc_ashr_trunc_nonuniform" contains vectors which are unsupported
+
+1: "trunc_ashr_trunc_uniform_poison"
+4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: llvm.mlir.undef
+
+4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "trunc_ashr_trunc_uniform_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "trunc_ashr_trunc_outofrange"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "trunc_ashr_trunc_nonuniform_outofrange"
+7: "trunc_ashr_trunc_nonuniform_outofrange" is unchanged by InstCombine
+
+1: "trunc_ashr_trunc_multiuse"
+4: "trunc_ashr_trunc_multiuse" has unsupported operation: llvm.call
+

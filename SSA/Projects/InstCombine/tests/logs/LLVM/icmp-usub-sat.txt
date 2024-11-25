@@ -1,0 +1,116 @@
+1: "icmp_eq_basic_positive"
+4: "icmp_eq_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ne_basic_positive"
+4: "icmp_ne_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ule_basic_positive"
+4: "icmp_ule_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ult_basic_positive"
+4: "icmp_ult_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_uge_basic_positive"
+4: "icmp_uge_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ugt_basic_positive"
+4: "icmp_ugt_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sle_basic_positive"
+4: "icmp_sle_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_slt_basic_positive"
+4: "icmp_slt_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sge_basic_positive"
+4: "icmp_sge_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sgt_basic_positive"
+4: "icmp_sgt_basic_positive" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_eq_basic_negative"
+4: "icmp_eq_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ne_basic_negative"
+4: "icmp_ne_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ule_basic_negative"
+4: "icmp_ule_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ult_basic_negative"
+4: "icmp_ult_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_uge_basic_negative"
+4: "icmp_uge_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ugt_basic_negative"
+4: "icmp_ugt_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sle_basic_negative"
+4: "icmp_sle_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_slt_basic_negative"
+4: "icmp_slt_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sge_basic_negative"
+4: "icmp_sge_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sgt_basic_negative"
+4: "icmp_sgt_basic_negative" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_eq_multiuse_positive"
+4: "icmp_eq_multiuse_positive" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "icmp_eq_multiuse_positive" has unsupported operation: llvm.call
+
+1: "icmp_eq_multiuse_negative"
+4: "icmp_eq_multiuse_negative" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "icmp_eq_multiuse_negative" has unsupported operation: llvm.call
+
+1: "icmp_eq_vector_positive_equal"
+8: "icmp_eq_vector_positive_equal" contains vectors which are unsupported
+
+1: "icmp_eq_vector_positive_unequal"
+4: "icmp_eq_vector_positive_unequal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ne_vector_positive_equal"
+8: "icmp_ne_vector_positive_equal" contains vectors which are unsupported
+
+1: "icmp_ne_vector_positive_unequal"
+4: "icmp_ne_vector_positive_unequal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_ule_vector_positive_equal"
+8: "icmp_ule_vector_positive_equal" contains vectors which are unsupported
+
+1: "icmp_ule_vector_positive_unequal"
+4: "icmp_ule_vector_positive_unequal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_sgt_vector_positive_equal"
+8: "icmp_sgt_vector_positive_equal" contains vectors which are unsupported
+
+1: "icmp_sgt_vector_positive_unequal"
+4: "icmp_sgt_vector_positive_unequal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_eq_vector_negative_equal"
+8: "icmp_eq_vector_negative_equal" contains vectors which are unsupported
+
+1: "icmp_eq_vector_negative_unequal"
+4: "icmp_eq_vector_negative_unequal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "icmp_eq_vector_multiuse_positive_equal"
+4: "icmp_eq_vector_multiuse_positive_equal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "icmp_eq_vector_multiuse_positive_equal" has unsupported operation: llvm.call
+
+1: "icmp_eq_vector_multiuse_negative_equal"
+4: "icmp_eq_vector_multiuse_negative_equal" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "icmp_eq_vector_multiuse_negative_equal" has unsupported operation: llvm.call
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.v2i8"
+5: "use.v2i8" is empty
+

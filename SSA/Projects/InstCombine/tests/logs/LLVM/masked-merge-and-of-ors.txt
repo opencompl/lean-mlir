@@ -1,0 +1,155 @@
+1: "p"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "p_splatvec"
+8: "p_splatvec" contains vectors which are unsupported
+
+1: "p_vec_undef"
+4: "p_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "p_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "p_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p_constmask"
+7: "p_constmask" is unchanged by InstCombine
+
+1: "p_constmask_splatvec"
+7: "p_constmask_splatvec" is unchanged by InstCombine
+
+1: "p_constmask_vec"
+7: "p_constmask_vec" is unchanged by InstCombine
+
+1: "p_constmask_vec_undef"
+4: "p_constmask_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "p_constmask_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_constmask_vec_undef" has unsupported operation: llvm.mlir.undef
+
+4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p_constmask_vec_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "gen32"
+5: "gen32" is empty
+
+1: "p_commutative0"
+7: "p_commutative0" is unchanged by InstCombine
+
+1: "p_commutative1"
+4: "p_commutative1" has unsupported operation: llvm.call
+
+1: "p_commutative2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "p_commutative3"
+4: "p_commutative3" has unsupported operation: llvm.call
+
+1: "p_commutative4"
+7: "p_commutative4" is unchanged by InstCombine
+
+1: "p_commutative5"
+4: "p_commutative5" has unsupported operation: llvm.call
+
+1: "p_commutative6"
+4: "p_commutative6" has unsupported operation: llvm.call
+
+1: "p_constmask_commutative"
+7: "p_constmask_commutative" is unchanged by InstCombine
+
+1: "use32"
+5: "use32" is empty
+
+1: "n0_oneuse_of_neg_is_ok_0"
+4: "n0_oneuse_of_neg_is_ok_0" has unsupported operation: llvm.call
+
+1: "n0_oneuse_1"
+4: "n0_oneuse_1" has unsupported operation: llvm.call
+
+1: "n0_oneuse_2"
+4: "n0_oneuse_2" has unsupported operation: llvm.call
+
+1: "n0_oneuse_3"
+4: "n0_oneuse_3" has unsupported operation: llvm.call
+
+4: "n0_oneuse_3" has unsupported operation: llvm.call
+
+1: "n0_oneuse_4"
+4: "n0_oneuse_4" has unsupported operation: llvm.call
+
+4: "n0_oneuse_4" has unsupported operation: llvm.call
+
+1: "n0_oneuse_5"
+4: "n0_oneuse_5" has unsupported operation: llvm.call
+
+4: "n0_oneuse_5" has unsupported operation: llvm.call
+
+4: "n0_oneuse_5" has unsupported operation: llvm.call
+
+1: "n0_oneuse_6"
+4: "n0_oneuse_6" has unsupported operation: llvm.call
+
+4: "n0_oneuse_6" has unsupported operation: llvm.call
+
+1: "n0_constmask_oneuse_0"
+4: "n0_constmask_oneuse_0" has unsupported operation: llvm.call
+
+1: "n0_constmask_oneuse_1"
+4: "n0_constmask_oneuse_1" has unsupported operation: llvm.call
+
+1: "n0_constmask_oneuse_2"
+4: "n0_constmask_oneuse_2" has unsupported operation: llvm.call
+
+4: "n0_constmask_oneuse_2" has unsupported operation: llvm.call
+
+1: "n1_badxor"
+7: "n1_badxor" is unchanged by InstCombine
+
+1: "n2_badmask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "n3_constmask_badmask_set"
+7: "n3_constmask_badmask_set" is unchanged by InstCombine
+
+1: "n3_constmask_badmask_unset"
+7: "n3_constmask_badmask_unset" is unchanged by InstCombine
+
+1: "n3_constmask_samemask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.or
+2: llvm.and
+2: llvm.return
+

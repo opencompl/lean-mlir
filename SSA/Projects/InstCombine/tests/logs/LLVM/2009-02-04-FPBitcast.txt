@@ -1,0 +1,6 @@
+1: "cast"
+4: "cast" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "invcast"
+4: "invcast" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+

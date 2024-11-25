@@ -1,0 +1,2 @@
+3: gep-can-replace-gep-idx-with-zero-typesize.ll: parsing has failed
+

@@ -1,0 +1,179 @@
+1: "frob"
+4: "frob" has unsupported operation: llvm.mlir.addressof
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.getelementptr
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.store
+
+4: "frob" has unsupported operation: llvm.return
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+4: "test2" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "test2_as1"
+4: "test2_as1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test2_as1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test2_as1" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "test2_as1" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+4: "test2_as1" has unsupported operation after optimization: llvm.getelementptr
+
+4: "test2_as1" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+
+1: "get.i64"
+5: "get.i64" is empty
+
+1: "use.ptr"
+9: "use.ptr" has pointer type input
+
+1: "gep_sub_self"
+4: "gep_sub_self" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_sub_self" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_sub_self" has unsupported operation: llvm.getelementptr
+
+1: "gep_sub_self_plus_addr"
+4: "gep_sub_self_plus_addr" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_sub_self_plus_addr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_sub_self_plus_addr" has unsupported operation: llvm.getelementptr
+
+4: "gep_sub_self_plus_addr" has unsupported operation: llvm.getelementptr
+
+1: "gep_plus_addr_sub_self"
+4: "gep_plus_addr_sub_self" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_plus_addr_sub_self" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_plus_addr_sub_self" has unsupported operation: llvm.getelementptr
+
+4: "gep_plus_addr_sub_self" has unsupported operation: llvm.getelementptr
+
+1: "gep_plus_addr_sub_self_in_loop"
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: llvm.call
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: llvm.getelementptr
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: llvm.getelementptr
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: llvm.call
+
+4: "gep_plus_addr_sub_self_in_loop" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "gep_sub_other"
+4: "gep_sub_other" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_sub_other" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_sub_other" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_sub_other" has unsupported operation: llvm.getelementptr
+
+1: "gep_sub_other_to_int"
+4: "gep_sub_other_to_int" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_sub_other_to_int" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "gep_sub_other_to_int" has unsupported operation: llvm.mlir.addressof
+
+4: "gep_sub_other_to_int" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

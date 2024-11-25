@@ -1,0 +1,78 @@
+1: "shl_nuw_eq_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "shl_nsw_ne_0"
+8: "shl_nsw_ne_0" contains vectors which are unsupported
+
+1: "shl_eq_0_fail_missing_flags"
+7: "shl_eq_0_fail_missing_flags" is unchanged by InstCombine
+
+1: "shl_ne_1_fail_nonzero"
+7: "shl_ne_1_fail_nonzero" is unchanged by InstCombine
+
+1: "shl_nsw_slt_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "shl_vec_nsw_slt_1_0_todo_non_splat"
+7: "shl_vec_nsw_slt_1_0_todo_non_splat" is unchanged by InstCombine
+
+1: "shl_nsw_sle_n1"
+8: "shl_nsw_sle_n1" contains vectors which are unsupported
+
+1: "shl_nsw_sge_1"
+8: "shl_nsw_sge_1" contains vectors which are unsupported
+
+1: "shl_nsw_sgt_n1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "shl_nuw_sgt_n1_fail_wrong_flag"
+7: "shl_nuw_sgt_n1_fail_wrong_flag" is unchanged by InstCombine
+
+1: "shl_nsw_nuw_ult_Csle0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "shl_nsw_ule_Csle0_fail_missing_flag"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "shl_nsw_nuw_uge_Csle0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "shl_nuw_ugt_Csle0_fail_missing_flag"
+7: "shl_nuw_ugt_Csle0_fail_missing_flag" is unchanged by InstCombine
+
+1: "shl_nsw_nuw_sgt_Csle0"
+8: "shl_nsw_nuw_sgt_Csle0" contains vectors which are unsupported
+
+1: "shl_nsw_nuw_sge_Csle0_todo_non_splat"
+8: "shl_nsw_nuw_sge_Csle0_todo_non_splat" contains vectors which are unsupported
+
+1: "shl_nsw_nuw_sle_Csle0"
+8: "shl_nsw_nuw_sle_Csle0" contains vectors which are unsupported
+
+1: "shl_nsw_nuw_slt_Csle0_fail_positive"
+7: "shl_nsw_nuw_slt_Csle0_fail_positive" is unchanged by InstCombine
+

@@ -1,0 +1,43 @@
+1: "foo"
+9: "foo" has pointer type input
+
+1: "asan"
+4: "asan" has unsupported operation: llvm.alloca
+
+4: "asan" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "asan" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "asan" has unsupported operation: llvm.call
+
+4: "asan" has unsupported operation: llvm.return
+
+1: "hwasan"
+4: "hwasan" has unsupported operation: llvm.alloca
+
+4: "hwasan" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "hwasan" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "hwasan" has unsupported operation: llvm.call
+
+4: "hwasan" has unsupported operation: llvm.return
+
+1: "msan"
+4: "msan" has unsupported operation: llvm.alloca
+
+4: "msan" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.start
+
+4: "msan" has unsupported operation: builtin.unregistered: llvm.intr.lifetime.end
+
+4: "msan" has unsupported operation: llvm.call
+
+4: "msan" has unsupported operation: llvm.return
+
+1: "no_asan"
+4: "no_asan" has unsupported operation: llvm.alloca
+
+4: "no_asan" has unsupported operation: llvm.call
+
+4: "no_asan" has unsupported operation: llvm.return
+

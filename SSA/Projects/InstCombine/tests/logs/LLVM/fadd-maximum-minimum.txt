@@ -1,0 +1,21 @@
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_comm1"
+4: "test_comm1" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_comm2"
+4: "test_comm2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_comm3"
+4: "test_comm3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_vect"
+4: "test_vect" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_flags"
+4: "test_flags" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_flags2"
+4: "test_flags2" has unsupported operation: builtin.unregistered: llvm.fadd
+

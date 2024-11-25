@@ -1,0 +1,13 @@
+1: "strchr"
+9: "strchr" has pointer type input
+
+1: "pr43081"
+9: "pr43081" has pointer type input
+
+4: "pr43081" has unsupported operation: llvm.call
+
+4: "pr43081" has unsupported operation: llvm.getelementptr
+
+1: "strlen"
+9: "strlen" has pointer type input
+

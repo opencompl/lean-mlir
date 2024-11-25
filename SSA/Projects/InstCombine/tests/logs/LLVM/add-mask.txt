@@ -1,0 +1,51 @@
+1: "add_mask_sign_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_mask_sign_commute_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_mask_sign_v2i32"
+8: "add_mask_sign_v2i32" contains vectors which are unsupported
+
+1: "add_mask_sign_v2i32_nonuniform"
+7: "add_mask_sign_v2i32_nonuniform" is unchanged by InstCombine
+
+1: "add_mask_ashr28_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_mask_ashr28_non_pow2_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "add_mask_ashr27_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.and
+2: llvm.add
+2: llvm.return
+

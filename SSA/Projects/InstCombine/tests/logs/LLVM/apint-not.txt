@@ -1,0 +1,14 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+

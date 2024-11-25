@@ -1,0 +1,214 @@
+1: "rotl_i32_constant"
+4: "rotl_i32_constant" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_i42_constant"
+4: "rotr_i42_constant" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_i8_constant_commute"
+4: "rotr_i8_constant_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_i88_constant_commute"
+4: "rotl_i88_constant_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_v2i16_constant_splat"
+4: "rotl_v2i16_constant_splat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_v2i16_constant_splat_poison0"
+4: "rotl_v2i16_constant_splat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_v2i16_constant_splat_poison1"
+4: "rotl_v2i16_constant_splat_poison1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_v2i17_constant_splat"
+4: "rotr_v2i17_constant_splat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_v2i17_constant_splat_poison0"
+4: "rotr_v2i17_constant_splat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_v2i17_constant_splat_poison1"
+4: "rotr_v2i17_constant_splat_poison1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_v2i32_constant_nonsplat"
+4: "rotr_v2i32_constant_nonsplat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_v2i32_constant_nonsplat_poison0"
+4: "rotr_v2i32_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "rotr_v2i32_constant_nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "rotr_v2i32_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotr_v2i32_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotr_v2i32_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_v2i32_constant_nonsplat_poison1"
+4: "rotr_v2i32_constant_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_v2i36_constant_nonsplat"
+4: "rotl_v2i36_constant_nonsplat" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_v3i36_constant_nonsplat_poison0"
+4: "rotl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "rotl_v3i36_constant_nonsplat_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "rotl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "rotl_v3i36_constant_nonsplat_poison0" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_i32"
+7: "rotl_i32" is unchanged by InstCombine
+
+1: "rotr_i37"
+7: "rotr_i37" is unchanged by InstCombine
+
+1: "rotr_i8_commute"
+7: "rotr_i8_commute" is unchanged by InstCombine
+
+1: "rotl_v4i32"
+7: "rotl_v4i32" is unchanged by InstCombine
+
+1: "rotr_v3i42"
+7: "rotr_v3i42" is unchanged by InstCombine
+
+1: "rotl_safe_i32"
+4: "rotl_safe_i32" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_safe_i16_commute_extra_use"
+9: "rotl_safe_i16_commute_extra_use" has pointer type input
+
+4: "rotl_safe_i16_commute_extra_use" has unsupported operation: llvm.store
+
+4: "rotl_safe_i16_commute_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_safe_i64"
+4: "rotr_safe_i64" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_safe_i8_commute_extra_use"
+9: "rotr_safe_i8_commute_extra_use" has pointer type input
+
+4: "rotr_safe_i8_commute_extra_use" has unsupported operation: llvm.store
+
+1: "rotl_safe_v2i32"
+4: "rotl_safe_v2i32" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_safe_v3i16"
+4: "rotr_safe_v3i16" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotate_left_16bit"
+4: "rotate_left_16bit" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotate_left_commute_16bit_vec"
+4: "rotate_left_commute_16bit_vec" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotate_right_8bit"
+4: "rotate_right_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotate_right_commute_8bit_unmasked_shl"
+4: "rotate_right_commute_8bit_unmasked_shl" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotate_right_commute_8bit"
+4: "rotate_right_commute_8bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotate8_not_safe"
+4: "rotate8_not_safe" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotate9_not_safe"
+7: "rotate9_not_safe" is unchanged by InstCombine
+
+1: "rotateleft_16_neg_mask"
+4: "rotateleft_16_neg_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotateleft_16_neg_mask_commute"
+4: "rotateleft_16_neg_mask_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotateright_8_neg_mask"
+4: "rotateright_8_neg_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotateright_8_neg_mask_commute"
+4: "rotateright_8_neg_mask_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotateright_16_neg_mask_wide_amount"
+4: "rotateright_16_neg_mask_wide_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotateright_16_neg_mask_wide_amount_commute"
+4: "rotateright_16_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotateright_64_zext_neg_mask_amount"
+4: "rotateright_64_zext_neg_mask_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotateleft_8_neg_mask_wide_amount"
+4: "rotateleft_8_neg_mask_wide_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotateleft_8_neg_mask_wide_amount_commute"
+4: "rotateleft_8_neg_mask_wide_amount_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotateleft_64_zext_neg_mask_amount"
+4: "rotateleft_64_zext_neg_mask_amount" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotateleft_9_neg_mask_wide_amount_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.and
+2: llvm.zext
+2: llvm.shl
+2: llvm.lshr
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "rotl_sub_mask"
+4: "rotl_sub_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_sub_mask"
+4: "rotr_sub_mask" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_sub_mask_vector"
+4: "rotr_sub_mask_vector" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_select"
+4: "rotr_select" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotr_select_commute"
+4: "rotr_select_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotl_select"
+4: "rotl_select" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_select_commute"
+4: "rotl_select_commute" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotl_select_weird_type"
+7: "rotl_select_weird_type" is unchanged by InstCombine
+
+1: "rotl_select_zext_shamt"
+4: "rotl_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotr_select_zext_shamt"
+4: "rotr_select_zext_shamt" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "rotl_constant_expr"
+4: "rotl_constant_expr" has unsupported operation: llvm.mlir.addressof
+
+4: "rotl_constant_expr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "rotateleft32_doubleand1"
+4: "rotateleft32_doubleand1" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+1: "rotateright32_doubleand1"
+4: "rotateright32_doubleand1" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+
+1: "unmasked_shlop_unmasked_shift_amount"
+7: "unmasked_shlop_unmasked_shift_amount" is unchanged by InstCombine
+
+1: "check_rotate_masked_16bit"
+4: "check_rotate_masked_16bit" has unsupported operation: builtin.unregistered: llvm.intr.fshr
+

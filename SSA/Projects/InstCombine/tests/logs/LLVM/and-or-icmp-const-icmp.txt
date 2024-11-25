@@ -1,0 +1,99 @@
+1: "eq_basic"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "ne_basic_equal_5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "eq_basic_equal_minus_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "ne_basic_equal_minus_7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "eq_basic_unequal"
+7: "eq_basic_unequal" is unchanged by InstCombine
+
+1: "ne_basic_unequal"
+7: "ne_basic_unequal" is unchanged by InstCombine
+
+1: "eq_multi_c1"
+4: "eq_multi_c1" has unsupported operation: llvm.call
+
+1: "ne_multi_c2"
+4: "ne_multi_c2" has unsupported operation: llvm.call
+
+1: "eq_vector"
+8: "eq_vector" contains vectors which are unsupported
+
+1: "ne_vector_equal_5"
+8: "ne_vector_equal_5" contains vectors which are unsupported
+
+1: "eq_vector_equal_minus_1"
+8: "eq_vector_equal_minus_1" contains vectors which are unsupported
+
+1: "ne_vector_equal_minus_7"
+8: "ne_vector_equal_minus_7" contains vectors which are unsupported
+
+1: "eq_vector_unequal1"
+7: "eq_vector_unequal1" is unchanged by InstCombine
+
+1: "ne_vector_unequal2"
+7: "ne_vector_unequal2" is unchanged by InstCombine
+
+1: "eq_vector_poison_icmp"
+8: "eq_vector_poison_icmp" contains vectors which are unsupported
+
+1: "eq_vector_poison_add"
+8: "eq_vector_poison_add" contains vectors which are unsupported
+
+1: "eq_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "ne_commuted_equal_minus_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.add
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+

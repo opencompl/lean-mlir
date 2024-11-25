@@ -1,0 +1,29 @@
+1: "test_switch_with_shl_mask"
+4: "test_switch_with_shl_mask" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_shl_nuw_multiuse"
+4: "test_switch_with_shl_nuw_multiuse" has unsupported operation: llvm.call
+
+4: "test_switch_with_shl_nuw_multiuse" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_shl_nsw_multiuse"
+4: "test_switch_with_shl_nsw_multiuse" has unsupported operation: llvm.call
+
+4: "test_switch_with_shl_nsw_multiuse" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_shl_mask_multiuse"
+4: "test_switch_with_shl_mask_multiuse" has unsupported operation: llvm.call
+
+4: "test_switch_with_shl_mask_multiuse" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_shl_mask_unknown_shamt"
+4: "test_switch_with_shl_mask_unknown_shamt" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "test_switch_with_shl_mask_poison"
+4: "test_switch_with_shl_mask_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_switch_with_shl_mask_poison" has unsupported operation: builtin.unregistered: llvm.switch
+
+1: "use"
+5: "use" is empty
+

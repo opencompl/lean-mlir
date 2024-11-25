@@ -1,0 +1,91 @@
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+
+1: "t1_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+
+1: "t2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+
+1: "t3_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+
+1: "t4"
+8: "t4" contains vectors which are unsupported
+
+1: "t5"
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: llvm.mlir.undef
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "use64"
+5: "use64" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "t6"
+4: "t6" has unsupported operation: llvm.call
+
+1: "n7"
+4: "n7" has unsupported operation: llvm.call
+
+1: "n8"
+4: "n8" has unsupported operation: llvm.call
+
+4: "n8" has unsupported operation: llvm.call
+
+1: "n9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+
+1: "n10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.sub
+2: llvm.return
+

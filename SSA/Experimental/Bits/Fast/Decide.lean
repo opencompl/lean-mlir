@@ -1,5 +1,5 @@
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
-import SSA.Experimental.Bits.Lemmas
+import SSA.Experimental.Bits.Fast.Lemmas
 
 instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
   decidable_of_iff
@@ -8,7 +8,7 @@ instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
     ← (termEvalEqFSM (t₁.xor t₂)).good]
   simp only [eval_eq_iff_xor_eq_zero]
   rw [forall_swap]
-  simp only [← Function.funext_iff]
+  simp only [← funext_iff]
 
 
 open Term
@@ -33,96 +33,110 @@ example : ((and x y) + (or x y)).eval = (x + y).eval := by
 example : ((or x y) - (xor x y)).eval = (and x y).eval := by
   native_decide
 
-/-- info: true -/
-#guard_msgs in #eval decide (x + -x) 0
+
+/-
+Note that we use `#eval!` instead of `#eval`, since our
+proof of `decide` currently contains a `sorry`. We should elminate the `sorry`,
+and then switch to `#eval`.
+-/
+
+/--
+info: 'Decidable.decide' does not depend on any axioms
+---
+info: 'decide' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms decide
 
 /-- info: true -/
-#guard_msgs in #eval decide (incr x) (x + 1)
+#guard_msgs in #eval! decide (x + -x) 0
 
 /-- info: true -/
-#guard_msgs in #eval decide (decr x) (x - 1)
+#guard_msgs in #eval! decide (incr x) (x + 1)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + -y) (x - y)
+#guard_msgs in #eval! decide (decr x) (x - 1)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + 0) (var 0)
+#guard_msgs in #eval! decide (x + -y) (x - y)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + y) (y + x)
+#guard_msgs in #eval! decide (x + 0) (var 0)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + (y + z)) (x + y + z)
+#guard_msgs in #eval! decide (x + y) (y + x)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x - x) 0
+#guard_msgs in #eval! decide (x + (y + z)) (x + y + z)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + 0) x
+#guard_msgs in #eval! decide (x - x) 0
 
 /-- info: true -/
-#guard_msgs in #eval decide (0 + x) x
+#guard_msgs in #eval! decide (x + 0) x
 
 /-- info: true -/
-#guard_msgs in #eval decide (-x) (not x).incr
+#guard_msgs in #eval! decide (0 + x) x
 
 /-- info: true -/
-#guard_msgs in #eval decide (-x) (not x.decr)
+#guard_msgs in #eval! decide (-x) (not x).incr
 
 /-- info: true -/
-#guard_msgs in #eval decide (not x) (-x).decr
+#guard_msgs in #eval! decide (-x) (not x.decr)
 
 /-- info: true -/
-#guard_msgs in #eval decide (-not x) (x + 1)
+#guard_msgs in #eval! decide (not x) (-x).decr
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + y) (x - not y - 1)
+#guard_msgs in #eval! decide (-not x) (x + 1)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + y) ((xor x y) + (and x y).ls false)
+#guard_msgs in #eval! decide (x + y) (x - not y - 1)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + y) (or x y + and x y)
+#guard_msgs in #eval! decide (x + y) ((xor x y) + (and x y).ls false)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x + y) ((or x y).ls false - (xor x y))
+#guard_msgs in #eval! decide (x + y) (or x y + and x y)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x - y) (x + not y).incr
+#guard_msgs in #eval! decide (x + y) ((or x y).ls false - (xor x y))
 
 /-- info: true -/
-#guard_msgs in #eval decide (x - y) (xor x y - (and (not x) y).ls false)
+#guard_msgs in #eval! decide (x - y) (x + not y).incr
 
 /-- info: true -/
-#guard_msgs in #eval decide (x - y) (and x (not y) - (and (not x) y))
+#guard_msgs in #eval! decide (x - y) (xor x y - (and (not x) y).ls false)
 
 /-- info: true -/
-#guard_msgs in #eval decide (x - y) ((and x (not y)).ls false - (xor x y))
+#guard_msgs in #eval! decide (x - y) (and x (not y) - (and (not x) y))
 
 /-- info: true -/
-#guard_msgs in #eval decide (xor x y) ((or x y) - (and x y))
+#guard_msgs in #eval! decide (x - y) ((and x (not y)).ls false - (xor x y))
 
 /-- info: true -/
-#guard_msgs in #eval decide (and x (not y)) (or x y - y)
+#guard_msgs in #eval! decide (xor x y) ((or x y) - (and x y))
 
 /-- info: true -/
-#guard_msgs in #eval decide (and x (not y)) (x - and x y)
+#guard_msgs in #eval! decide (and x (not y)) (or x y - y)
 
 /-- info: true -/
-#guard_msgs in #eval decide (not (x - y)) (y - x).decr
+#guard_msgs in #eval! decide (and x (not y)) (x - and x y)
 
 /-- info: true -/
-#guard_msgs in #eval decide (not (x - y)) (not x + y)
+#guard_msgs in #eval! decide (not (x - y)) (y - x).decr
 
 /-- info: true -/
-#guard_msgs in #eval decide (not (xor x y)) (and x y - (or x y)).decr
+#guard_msgs in #eval! decide (not (x - y)) (not x + y)
 
 /-- info: true -/
-#guard_msgs in #eval decide (not (xor x y)) (and x y + not (or x y))
+#guard_msgs in #eval! decide (not (xor x y)) (and x y - (or x y)).decr
 
 /-- info: true -/
-#guard_msgs in #eval decide (or x y) (and x (not y) + y)
+#guard_msgs in #eval! decide (not (xor x y)) (and x y + not (or x y))
 
 /-- info: true -/
-#guard_msgs in #eval decide (and x y) (or (not x) y - not x)
+#guard_msgs in #eval! decide (or x y) (and x (not y) + y)
+
+/-- info: true -/
+#guard_msgs in #eval! decide (and x y) (or (not x) y - not x)
 end testDecide

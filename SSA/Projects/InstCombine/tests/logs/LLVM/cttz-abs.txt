@@ -1,0 +1,71 @@
+1: "cttz_abs"
+4: "cttz_abs" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs_vec"
+4: "cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs2"
+4: "cttz_abs2" has unsupported operation: llvm.call
+
+4: "cttz_abs2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs3"
+4: "cttz_abs3" has unsupported operation: llvm.call
+
+4: "cttz_abs3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs4"
+4: "cttz_abs4" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_nabs"
+4: "cttz_nabs" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_nabs_vec"
+4: "cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs_64"
+4: "cttz_abs_64" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs_multiuse"
+4: "cttz_abs_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "cttz_abs_multiuse" has unsupported operation: llvm.call
+
+4: "cttz_abs_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_nabs_multiuse"
+4: "cttz_nabs_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+4: "cttz_nabs_multiuse" has unsupported operation: llvm.call
+
+4: "cttz_nabs_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "no_cttz_abs"
+4: "no_cttz_abs" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "no_cttz_abs2"
+4: "no_cttz_abs2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "no_cttz_abs3"
+4: "no_cttz_abs3" has unsupported operation: llvm.call
+
+4: "no_cttz_abs3" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "no_cttz_abs_vec"
+4: "no_cttz_abs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "no_cttz_nabs_vec"
+4: "no_cttz_nabs_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_abs_intrin"
+4: "cttz_abs_intrin" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_nabs_intrin"
+4: "cttz_nabs_intrin" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "use_cond"
+5: "use_cond" is empty
+
+1: "use_abs"
+5: "use_abs" is empty
+

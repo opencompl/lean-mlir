@@ -1,0 +1,5 @@
+1: "PR38915"
+4: "PR38915" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "PR38915" has unsupported operation: builtin.unregistered: llvm.intr.smax
+

@@ -1,0 +1,45 @@
+1: "isascii"
+5: "isascii" is empty
+
+1: "sink"
+5: "sink" is empty
+
+1: "fold_isascii"
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.call
+
+4: "fold_isascii" has unsupported operation: llvm.return
+

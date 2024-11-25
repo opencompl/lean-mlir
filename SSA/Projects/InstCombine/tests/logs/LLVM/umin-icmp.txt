@@ -1,0 +1,421 @@
+1: "eq_umin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_umin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_umin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_umin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "uge_umin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "uge_umin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "uge_umin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "uge_umin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_umin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_umin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_umin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_umin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_umin1"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_umin2"
+2: llvm.func
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_umin3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_umin4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "eq_umin_contextual"
+4: "eq_umin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "eq_umin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual" has unsupported operation: llvm.return
+
+4: "eq_umin_contextual" has unsupported operation: llvm.return
+
+1: "eq_umin_contextual_commuted"
+4: "eq_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "eq_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "eq_umin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "ult_umin_contextual"
+4: "ult_umin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ult_umin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual" has unsupported operation: llvm.return
+
+4: "ult_umin_contextual" has unsupported operation: llvm.return
+
+1: "ult_umin_contextual_commuted"
+4: "ult_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ult_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "ult_umin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "ule_umin_contextual"
+4: "ule_umin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ule_umin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual" has unsupported operation: llvm.return
+
+4: "ule_umin_contextual" has unsupported operation: llvm.return
+
+1: "ule_umin_contextual_commuted"
+4: "ule_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ule_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "ule_umin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "ugt_umin_contextual"
+4: "ugt_umin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ugt_umin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.return
+
+4: "ugt_umin_contextual" has unsupported operation: llvm.return
+
+1: "ugt_umin_contextual_commuted"
+4: "ugt_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "ugt_umin_contextual_commuted" has unsupported operation: llvm.return
+
+1: "uge_umin_contextual"
+4: "uge_umin_contextual" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "uge_umin_contextual" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual" has unsupported operation: llvm.return
+
+4: "uge_umin_contextual" has unsupported operation: llvm.return
+
+1: "uge_umin_contextual_commuted"
+4: "uge_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "uge_umin_contextual_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.call
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.return
+
+4: "uge_umin_contextual_commuted" has unsupported operation: llvm.return
+

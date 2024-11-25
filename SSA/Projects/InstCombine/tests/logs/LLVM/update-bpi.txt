@@ -1,0 +1,7 @@
+1: "invert_cond"
+9: "invert_cond" has pointer type input
+
+4: "invert_cond" has unsupported operation: llvm.mlir.zero
+
+4: "invert_cond" has unsupported operation: builtin.unregistered: llvm.cond_br
+

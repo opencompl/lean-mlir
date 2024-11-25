@@ -1,0 +1,6 @@
+1: "bar"
+4: "bar" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

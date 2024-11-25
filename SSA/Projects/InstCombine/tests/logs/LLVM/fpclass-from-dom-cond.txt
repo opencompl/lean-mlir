@@ -1,0 +1,142 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test10"
+4: "test10" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test11_and"
+4: "test11_and" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test11_and" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test11_and" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test12_or"
+4: "test12_or" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test12_or" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test12_or" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+1: "test1_no_dominating"
+4: "test1_no_dominating" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1_no_dominating" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test1_no_dominating" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1_no_dominating" has unsupported operation: builtin.unregistered: llvm.intr.is.fpclass
+
+1: "test_signbit_check"
+4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_signbit_check" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_signbit_check_fail"
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_signbit_check_fail" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_signbit_check_wrong_type"
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_signbit_check_wrong_type" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+

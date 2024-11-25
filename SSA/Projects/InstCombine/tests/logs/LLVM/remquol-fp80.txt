@@ -1,0 +1,8 @@
+1: "remquo_fp80"
+9: "remquo_fp80" has pointer type input
+
+4: "remquo_fp80" has unsupported operation: llvm.store
+
+1: "remquol"
+9: "remquol" has pointer type input
+

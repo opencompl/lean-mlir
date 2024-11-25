@@ -1,0 +1,17 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "bar"
+4: "bar" has unsupported operation: llvm.mlir.addressof
+
+4: "bar" has unsupported operation: llvm.load
+
+1: "vec_store"
+4: "vec_store" has unsupported operation: llvm.mlir.addressof
+
+4: "vec_store" has unsupported operation: llvm.store
+
+4: "vec_store" has unsupported operation: llvm.return
+

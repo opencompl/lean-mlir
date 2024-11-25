@@ -1,0 +1,25 @@
+1: "test1"
+9: "test1" has pointer type input
+
+4: "test1" has unsupported operation: llvm.mlir.addressof
+
+4: "test1" has unsupported operation: llvm.call
+
+4: "test1" has unsupported operation: llvm.return
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: llvm.call
+
+4: "test2" has unsupported operation: llvm.return
+
+1: "fprintf"
+9: "fprintf" has pointer type input
+
+1: "fwrite$UNIX2003"
+9: "fwrite$UNIX2003" has pointer type input
+
+1: "fputs$UNIX2003"
+9: "fputs$UNIX2003" has pointer type input
+

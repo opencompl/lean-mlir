@@ -1,0 +1,67 @@
+1: "test_select_agg_constant_agg"
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.insertvalue
+
+4: "test_select_agg_constant_agg" has unsupported operation after optimization: llvm.extractvalue
+
+1: "test_select_agg_constant_agg_multiuse"
+4: "test_select_agg_constant_agg_multiuse" has unsupported operation: llvm.call
+
+4: "test_select_agg_constant_agg_multiuse" has unsupported operation: llvm.call
+
+4: "test_select_agg_constant_agg_multiuse" has unsupported operation: llvm.return
+
+1: "test_select_agg_constant"
+4: "test_select_agg_constant" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_select_agg_constant" has unsupported operation: llvm.mlir.undef
+
+4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_constant" has unsupported operation: llvm.mlir.undef
+
+4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_constant" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_constant" has unsupported operation: llvm.extractvalue
+
+1: "test_select_agg_multiuse"
+4: "test_select_agg_multiuse" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.call
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.call
+
+4: "test_select_agg_multiuse" has unsupported operation: llvm.return
+
+1: "use"
+5: "use" is empty
+

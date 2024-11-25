@@ -1,0 +1,21 @@
+1: "bar"
+5: "bar" is empty
+
+1: "baz"
+5: "baz" is empty
+
+1: "test_combine_metadata_dominance"
+9: "test_combine_metadata_dominance" has pointer type input
+
+4: "test_combine_metadata_dominance" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_combine_metadata_dominance" has unsupported operation: llvm.call
+
+4: "test_combine_metadata_dominance" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_combine_metadata_dominance" has unsupported operation: llvm.call
+
+4: "test_combine_metadata_dominance" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_combine_metadata_dominance" has unsupported operation: llvm.load
+

@@ -1,0 +1,34 @@
+1: "single"
+4: "single" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "double"
+4: "double" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "double" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "thisdoesnotloop"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.trunc
+2: llvm.return
+
+1: "original"
+4: "original" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "original" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "original_logical"
+4: "original_logical" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "original_logical" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "PR49205"
+4: "PR49205" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "PR49205" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "PR49205" has unsupported operation: builtin.unregistered: llvm.br
+

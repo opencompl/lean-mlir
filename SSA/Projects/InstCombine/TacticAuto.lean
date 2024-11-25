@@ -5,7 +5,14 @@ import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Tactic
+import SSA.Experimental.Bits.AutoStructs.Tactic
+import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
+import SSA.Core.Tactic.TacBench
+import Leanwuzla
+
+open Lean
+open Lean.Elab.Tactic
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
@@ -35,9 +42,9 @@ into a goal about just `BitVec`s, by doing a case distinction on each `Option`.
 Then, we `simp`lify each goal, following the assumption that the `none` cases
 should generally be trivial, hopefully leaving us with just a single goal:
 the one where each option is `some`. -/
-syntax "simp_alive_case_bash" : tactic
+syntax "simp_alive_case_bash'" : tactic
 macro_rules
-  | `(tactic| simp_alive_case_bash) => `(tactic|
+  | `(tactic| simp_alive_case_bash') => `(tactic|
     first
     | fail_if_success (intro (v : Option (_)))
       -- If there is no variable to introduce, `intro` fails, so the first branch succeeds,
@@ -47,11 +54,38 @@ macro_rules
       rcases v with _|x         -- Do the case distinction
       <;> simp (config:={failIfUnchanged := false}) only [simp_llvm_case_bash]
       --  ^^^^^^^^^^^^^^^^^^^^^^^^ Simplify, in the hopes that the `none` case is trivially closed
-      <;> simp_alive_case_bash  -- Recurse, to case bash the next variable (if it exists)
+      <;> simp_alive_case_bash'  -- Recurse, to case bash the next variable (if it exists)
       <;> (try revert x)        -- Finally, revert the variable we got in the `some` case, so that
                                 --   we are left with a universally quantified goal of the form:
                                 --   `∀ (x₁ : BitVec _) ... (xₙ : BitVec _), ...`
     )
+
+def revertIntW (g : MVarId) : MetaM (Array FVarId × MVarId) := do
+  let type ← g.getType
+  let (_, fvars) ← type.forEachWhere Expr.isFVar collector |>.run {}
+  g.revert fvars.toArray
+where
+  collector (e : Expr) : StateT (Std.HashSet FVarId) MetaM Unit := do
+    let fvarId := e.fvarId!
+    let typ ← fvarId.getType
+    match_expr typ with
+    | LLVM.IntW _ =>
+      modify fun s => s.insert fvarId
+    | _ => return ()
+
+elab "revert_intw" : tactic => do
+  let g ← getMainGoal
+  let (_, g') ← revertIntW g
+  replaceMainGoal [g']
+
+syntax "simp_alive_case_bash" : tactic
+macro_rules
+  | `(tactic| simp_alive_case_bash) => `(tactic|
+    (
+      revert_intw
+      simp_alive_case_bash'
+    )
+  )
 
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
@@ -61,6 +95,9 @@ macro "simp_alive_undef" : tactic =>
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm_option,
             BitVec.Refinement, bind_assoc,
+            Bool.false_eq_true, false_and, reduceIte,
+            (BitVec.ofInt_ofNat),
+            Option.some_bind''
           ]
       )
   )
@@ -73,7 +110,8 @@ macro "simp_alive_ops" : tactic =>
             simp_llvm,
             BitVec.ofInt_neg_one,
             (BitVec.ofInt_ofNat),
-            pure_bind
+            pure_bind,
+            bind_if_then_none_eq_if_bind, bind_if_else_none_eq_if_bind
           ]
       )
   )
@@ -83,7 +121,7 @@ This tactic attempts to shift ofBool to the outer-most level,
 and then convert everything to arithmetic
 and then solve with the omega tactic.
 -/
-macro "of_bool_tactic" : tactic =>
+macro "bv_of_bool" : tactic =>
   `(tactic|
     (
     try simp only [bv_ofBool, BitVec.ule, BitVec.ult, BitVec.sle, BitVec.slt, BitVec.toInt, BEq.beq, bne]
@@ -117,50 +155,73 @@ macro "bv_distrib" : tactic =>
     )
    )
 
+macro "bv_bitwise" : tactic =>
+  `(tactic|
+    (
+      ext
+      simp (config := {failIfUnchanged := false}) [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
+      try bv_decide
+      done
+    )
+   )
+
+macro "bv_automata_classic" : tactic =>
+  `(tactic|
+    (
+      simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+      try rw [Bool.eq_iff_iff]
+      simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+      bv_automata'
+    )
+   )
+
+/--
+There are 2 main kinds of operations on BitVecs
+1. Boolean operations (^^^, &&&, |||) which can be solved by extensionality.
+2. Arithmetic operations (+, -) which can be solved by `ring_nf`.
+The purpose of the below line is to convert boolean
+operations to arithmetic operations and then
+solve the arithmetic with the `ring_nf` tactic.
+-/
+macro "bv_ring" : tactic =>
+  `(tactic|
+    (
+      simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
+        ← BitVec.negOne_eq_allOnes]
+      try ring_nf
+      try rfl
+      done
+    )
+   )
+
+macro "bv_ac" : tactic =>
+  `(tactic|
+    (
+      simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
+        ← BitVec.negOne_eq_allOnes]
+      ac_nf
+      done
+    )
+   )
+
 macro "bv_auto": tactic =>
   `(tactic|
       (
-        intros
-        try simp (config := {failIfUnchanged := false}) [-Bool.and_iff_left_iff_imp, (BitVec.negOne_eq_allOnes)]
-        try ring_nf
-        try bv_eliminate_bool
-        repeat (split)
-        <;> try simp (config := {failIfUnchanged := false})
-        /-
-        Solve tries each arm in order, falling through
-        if the goal is not closed.
-        Note that all goals are tried with the original state
-        (i.e. backtracking semantics).
-        -/
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq]
         try solve
-          | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-            try cases BitVec.getLsbD _ _ <;> try simp
-            try cases BitVec.getLsbD _ _ <;> try simp
-            try cases BitVec.getLsbD _ _ <;> try simp
-            try cases BitVec.getLsbD _ _ <;> try simp
-          | simp [bv_ofBool]
-          /-
-          There are 2 main kinds of operations on BitVecs
-          1. Boolean operations (^^^, &&&, |||) which can be solved by extensionality.
-          2. Arithmetic operations (+, -) which can be solved by `ring_nf`.
-          The purpose of the below line is to convert boolean
-          operations to arithmetic operations and then
-          solve the arithmetic with the `ring_nf` tactic.
-          -/
-          | simp only [← BitVec.allOnes_sub_eq_xor]
-            simp only [← BitVec.negOne_eq_allOnes]
-            ring_nf
-          | of_bool_tactic
-          | (
-              simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
-              bv_automata
-            )
-          | bv_decide
+          | bv_bitwise
+          | bv_ac
           | bv_distrib
+          | bv_ring
+          | bv_of_bool
+          | bv_automata_classic
+          | bv_decide
       )
    )
 
-macro "alive_auto": tactic =>
+macro "alive_auto'": tactic =>
   `(tactic|
       (
         simp_alive_undef
@@ -170,5 +231,73 @@ macro "alive_auto": tactic =>
           ensure_only_goal
         )
         bv_auto
+      )
+   )
+
+macro "alive_auto": tactic =>
+  `(tactic|
+      (
+        all_goals alive_auto'
+      )
+   )
+
+macro "bv_compare'": tactic =>
+  `(tactic|
+      (
+        simp (config := {failIfUnchanged := false}) only [BitVec.twoPow, BitVec.intMin, BitVec.intMax] at *
+        bv_compare
+        try bv_decide -- close the goal if possible but do not report errors again
+      )
+   )
+
+macro "simp_alive_split": tactic =>
+  `(tactic|
+      (
+        all_goals try intros
+        repeat(
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+            BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
+          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+            BitVec.Refinement.none_left, Option, some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
+          any_goals split
+        )
+        all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+          BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
+        all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+          BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
+      )
+   )
+
+macro "simp_alive_benchmark": tactic =>
+  `(tactic|
+      (
+        all_goals bv_compare'
+      )
+   )
+
+macro "bv_bench": tactic =>
+  `(tactic|
+      (
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq]
+        all_goals (
+          tac_bench [
+            "rfl" : (rfl; done),
+            "bv_bitwise" : (bv_bitwise; done),
+            "bv_ac" : (bv_ac; done),
+            "bv_distrib" : (bv_distrib; done),
+            "bv_ring" : (bv_ring; done),
+            "bv_of_bool" : (bv_of_bool; done),
+            "bv_omega" : (bv_omega; done),
+            "bv_automata_classic" : (bv_automata_classic; done),
+            "simp" : (simp; done),
+            "bv_normalize" : (bv_normalize; done),
+            "bv_decide" : (bv_decide; done),
+            "bv_auto" : (bv_auto; done)
+          ]
+          try bv_auto
+          try sorry
+        )
       )
    )

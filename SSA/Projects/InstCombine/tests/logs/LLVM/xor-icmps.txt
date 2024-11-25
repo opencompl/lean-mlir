@@ -1,0 +1,148 @@
+1: "eq_zero"
+7: "eq_zero" is unchanged by InstCombine
+
+1: "ne_zero"
+7: "ne_zero" is unchanged by InstCombine
+
+1: "eq_ne_zero"
+7: "eq_ne_zero" is unchanged by InstCombine
+
+1: "slt_zero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "use"
+5: "use" is empty
+
+1: "slt_zero_extra_uses"
+4: "slt_zero_extra_uses" has unsupported operation: llvm.call
+
+4: "slt_zero_extra_uses" has unsupported operation: llvm.call
+
+1: "sgt_zero"
+7: "sgt_zero" is unchanged by InstCombine
+
+1: "sgt_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "slt_zero_sgt_minus1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "sgt_minus1_slt_zero_sgt"
+8: "sgt_minus1_slt_zero_sgt" contains vectors which are unsupported
+
+1: "different_type_cmp_ops"
+7: "different_type_cmp_ops" is unchanged by InstCombine
+
+1: "test13"
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "test14"
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_ptr"
+9: "xor_icmp_ptr" has pointer type input
+
+4: "xor_icmp_ptr" has unsupported operation: llvm.mlir.zero
+
+1: "xor_icmp_true_signed"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_true_signed_multiuse1"
+4: "xor_icmp_true_signed_multiuse1" has unsupported operation: llvm.call
+
+1: "xor_icmp_true_signed_multiuse2"
+4: "xor_icmp_true_signed_multiuse2" has unsupported operation: llvm.call
+
+4: "xor_icmp_true_signed_multiuse2" has unsupported operation: llvm.call
+
+1: "xor_icmp_true_signed_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_true_unsigned"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_to_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_to_ne_multiuse1"
+4: "xor_icmp_to_ne_multiuse1" has unsupported operation: llvm.call
+
+1: "xor_icmp_to_icmp_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_invalid_range"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.xor
+2: llvm.return
+
+1: "xor_icmp_to_ne_multiuse2"
+4: "xor_icmp_to_ne_multiuse2" has unsupported operation: llvm.call
+
+4: "xor_icmp_to_ne_multiuse2" has unsupported operation: llvm.call
+
+1: "xor_icmp_to_icmp_add_multiuse1"
+4: "xor_icmp_to_icmp_add_multiuse1" has unsupported operation: llvm.call
+
+1: "xor_icmp_to_icmp_add_multiuse2"
+4: "xor_icmp_to_icmp_add_multiuse2" has unsupported operation: llvm.call
+
+4: "xor_icmp_to_icmp_add_multiuse2" has unsupported operation: llvm.call
+

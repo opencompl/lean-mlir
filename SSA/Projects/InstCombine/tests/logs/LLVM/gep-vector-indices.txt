@@ -1,0 +1,2 @@
+3: gep-vector-indices.ll: parsing has failed
+

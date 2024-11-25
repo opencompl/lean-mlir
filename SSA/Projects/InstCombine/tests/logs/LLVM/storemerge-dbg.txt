@@ -1,0 +1,12 @@
+1: "escape"
+5: "escape" is empty
+
+1: "foo"
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.call
+

@@ -1,0 +1,164 @@
+1: "neg_mask1_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "sub_mask1_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "neg_mask1_lshr_vector_uniform"
+8: "neg_mask1_lshr_vector_uniform" contains vectors which are unsupported
+
+1: "neg_mask1_lshr_vector_nonuniform"
+8: "neg_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
+
+1: "sub_mask1_lshr_vector_nonuniform"
+8: "sub_mask1_lshr_vector_nonuniform" contains vectors which are unsupported
+
+1: "sub_mask1_trunc_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "sub_sext_mask1_trunc_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.and
+2: llvm.sext
+2: llvm.sub
+2: llvm.return
+
+1: "sub_zext_trunc_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "neg_mask2_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.sub
+2: llvm.return
+
+1: "neg_mask2_lshr_outofbounds"
+4: "neg_mask2_lshr_outofbounds" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "neg_mask1_lshr_vector_var"
+8: "neg_mask1_lshr_vector_var" contains vectors which are unsupported
+
+1: "neg_mask1_lshr_extrause_mask"
+4: "neg_mask1_lshr_extrause_mask" has unsupported operation: llvm.call
+
+1: "neg_mask1_lshr_extrause_lshr"
+4: "neg_mask1_lshr_extrause_lshr" has unsupported operation: llvm.call
+
+1: "neg_signbit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "neg_signbit_use1"
+4: "neg_signbit_use1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "neg_signbit_use1" has unsupported operation: llvm.mlir.undef
+
+4: "neg_signbit_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "neg_signbit_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "neg_signbit_use1" has unsupported operation: llvm.call
+
+1: "neg_signbit_use2"
+4: "neg_signbit_use2" has unsupported operation: llvm.call
+
+1: "neg_not_signbit1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "neg_not_signbit2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "neg_not_signbit3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.zext
+2: llvm.sub
+2: llvm.return
+
+1: "neg_mask"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.and
+2: llvm.return
+
+1: "neg_mask_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sub
+2: llvm.lshr
+2: llvm.zext
+2: llvm.sub
+2: llvm.and
+2: llvm.return
+
+1: "usei8"
+5: "usei8" is empty
+
+1: "usev2i32"
+5: "usev2i32" is empty
+

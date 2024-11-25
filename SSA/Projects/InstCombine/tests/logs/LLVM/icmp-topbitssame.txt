@@ -1,0 +1,111 @@
+1: "use"
+5: "use" is empty
+
+1: "use16"
+5: "use16" is empty
+
+1: "testi16i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "testi16i8_com"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "testi16i8_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "testi16i8_ne_com"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "testi64i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "testi64i32_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "testi32i8"
+7: "testi32i8" is unchanged by InstCombine
+
+1: "wrongimm1"
+7: "wrongimm1" is unchanged by InstCombine
+
+1: "wrongimm2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "slt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.trunc
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "extrause_a"
+4: "extrause_a" has unsupported operation: llvm.call
+
+1: "extrause_l"
+4: "extrause_l" has unsupported operation: llvm.call
+
+1: "extrause_la"
+4: "extrause_la" has unsupported operation: llvm.call
+
+4: "extrause_la" has unsupported operation: llvm.call
+

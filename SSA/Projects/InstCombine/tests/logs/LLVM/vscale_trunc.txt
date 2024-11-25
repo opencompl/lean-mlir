@@ -1,0 +1,9 @@
+1: "vscale_trunc_i32toi8"
+4: "vscale_trunc_i32toi8" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_trunc_i32toi8_poison"
+4: "vscale_trunc_i32toi8_poison" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+
+1: "vscale_trunc_i32toi8_noAttr"
+4: "vscale_trunc_i32toi8_noAttr" has unsupported operation: builtin.unregistered: llvm.intr.vscale
+

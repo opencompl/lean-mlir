@@ -1,0 +1,108 @@
+1: "use"
+5: "use" is empty
+
+1: "ctlz_sel_const_true_false"
+4: "ctlz_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_sel_const_true"
+4: "ctlz_sel_const_true" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_sel_const_false"
+4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ctlz_sel_const_false" has unsupported operation: llvm.mlir.undef
+
+4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ctlz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_sel_const_true_false_extra_use"
+4: "ctlz_sel_const_true_false_extra_use" has unsupported operation: llvm.call
+
+4: "ctlz_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "cttz_sel_const_true_false"
+4: "cttz_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sel_const_true"
+4: "cttz_sel_const_true" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sel_const_false"
+4: "cttz_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sel_const_true_false_extra_use"
+4: "cttz_sel_const_true_false_extra_use" has unsupported operation: llvm.call
+
+4: "cttz_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "ctpop_sel_const_true_false"
+4: "ctpop_sel_const_true_false" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_sel_const_true"
+4: "ctpop_sel_const_true" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_sel_const_false"
+4: "ctpop_sel_const_false" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "ctpop_sel_const_true_false_extra_use"
+4: "ctpop_sel_const_true_false_extra_use" has unsupported operation: llvm.call
+
+4: "ctpop_sel_const_true_false_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "usub_sat_rhs_const_select_all_const"
+4: "usub_sat_rhs_const_select_all_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_rhs_var_select_all_const"
+4: "usub_sat_rhs_var_select_all_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_rhs_const_select_one_const"
+4: "usub_sat_rhs_const_select_one_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_rhs_const_select_no_const"
+4: "usub_sat_rhs_const_select_no_const" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "usub_sat_lhs_const_select_all_const"
+4: "usub_sat_lhs_const_select_all_const" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "non_speculatable"
+4: "non_speculatable" has unsupported operation: llvm.mlir.addressof
+
+4: "non_speculatable" has unsupported operation: llvm.mlir.addressof
+
+4: "non_speculatable" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "non_speculatable" has unsupported operation: builtin.unregistered: llvm.intr.masked.load
+
+1: "vec_to_scalar_select_scalar"
+4: "vec_to_scalar_select_scalar" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.add
+
+1: "vec_to_scalar_select_vector"
+4: "vec_to_scalar_select_vector" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.add
+
+1: "test_drop_noundef"
+4: "test_drop_noundef" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "pr85536"
+4: "pr85536" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test_fabs_select1"
+4: "test_fabs_select1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fabs_select1_vec"
+4: "test_fabs_select1_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fabs_select2"
+4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_fabs_select2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_fabs_select_fmf1"
+4: "test_fabs_select_fmf1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "test_fabs_select_fmf2"
+4: "test_fabs_select_fmf2" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+

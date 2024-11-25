@@ -1,0 +1,63 @@
+1: "undef_arg"
+4: "undef_arg" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "undef_arg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cos
+
+1: "undef_arg2"
+4: "undef_arg2" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+4: "undef_arg2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "fneg_f32"
+4: "fneg_f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "unary_fneg_f32"
+4: "unary_fneg_f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fneg_v2f32"
+4: "fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "unary_fneg_v2f32"
+4: "unary_fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fneg_cos_fmf"
+4: "fneg_cos_fmf" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "unary_fneg_cos_fmf"
+4: "unary_fneg_cos_fmf" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fabs_f32"
+4: "fabs_f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fabs_fneg_f32"
+4: "fabs_fneg_f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fabs_unary_fneg_f32"
+4: "fabs_unary_fneg_f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fabs_fneg_v2f32"
+4: "fabs_fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fabs_unary_fneg_v2f32"
+4: "fabs_unary_fneg_v2f32" has unsupported operation: builtin.unregistered: llvm.intr.cos
+
+1: "fneg_sin"
+4: "fneg_sin" has unsupported operation: builtin.unregistered: llvm.intr.sin
+
+4: "fneg_sin" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "unary_fneg_sin"
+4: "unary_fneg_sin" has unsupported operation: builtin.unregistered: llvm.intr.sin
+
+4: "unary_fneg_sin" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg_sin_fmf"
+4: "fneg_sin_fmf" has unsupported operation: builtin.unregistered: llvm.intr.sin
+
+4: "fneg_sin_fmf" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "unary_fneg_sin_fmf"
+4: "unary_fneg_sin_fmf" has unsupported operation: builtin.unregistered: llvm.intr.sin
+
+4: "unary_fneg_sin_fmf" has unsupported operation: builtin.unregistered: llvm.fneg
+

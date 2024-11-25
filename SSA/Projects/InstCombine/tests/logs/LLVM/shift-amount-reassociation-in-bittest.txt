@@ -1,0 +1,262 @@
+1: "t0_const_lshr_shl_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t1_const_shl_lshr_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t2_const_lshr_shl_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t3_const_after_fold_lshr_shl_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.lshr
+2: llvm.add
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t4_const_after_fold_lshr_shl_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.shl
+2: llvm.add
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "t5_const_lshr_shl_ne"
+7: "t5_const_lshr_shl_ne" is unchanged by InstCombine
+
+1: "t6_const_shl_lshr_ne"
+7: "t6_const_shl_lshr_ne" is unchanged by InstCombine
+
+1: "t7_const_lshr_shl_ne_vec_splat"
+8: "t7_const_lshr_shl_ne_vec_splat" contains vectors which are unsupported
+
+1: "t8_const_lshr_shl_ne_vec_nonsplat"
+8: "t8_const_lshr_shl_ne_vec_nonsplat" contains vectors which are unsupported
+
+1: "t9_const_lshr_shl_ne_vec_poison0"
+4: "t9_const_lshr_shl_ne_vec_poison0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t9_const_lshr_shl_ne_vec_poison0" has unsupported operation: llvm.mlir.undef
+
+4: "t9_const_lshr_shl_ne_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t9_const_lshr_shl_ne_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t9_const_lshr_shl_ne_vec_poison0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t10_const_lshr_shl_ne_vec_poison1"
+4: "t10_const_lshr_shl_ne_vec_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t10_const_lshr_shl_ne_vec_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "t10_const_lshr_shl_ne_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10_const_lshr_shl_ne_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t10_const_lshr_shl_ne_vec_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t11_const_lshr_shl_ne_vec_poison2"
+8: "t11_const_lshr_shl_ne_vec_poison2" contains vectors which are unsupported
+
+1: "t12_const_lshr_shl_ne_vec_poison3"
+4: "t12_const_lshr_shl_ne_vec_poison3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t12_const_lshr_shl_ne_vec_poison3" has unsupported operation: llvm.mlir.undef
+
+4: "t12_const_lshr_shl_ne_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t12_const_lshr_shl_ne_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t12_const_lshr_shl_ne_vec_poison3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t13_const_lshr_shl_ne_vec_poison4"
+4: "t13_const_lshr_shl_ne_vec_poison4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t13_const_lshr_shl_ne_vec_poison4" has unsupported operation: llvm.mlir.undef
+
+4: "t13_const_lshr_shl_ne_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t13_const_lshr_shl_ne_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t13_const_lshr_shl_ne_vec_poison4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t14_const_lshr_shl_ne_vec_poison5"
+4: "t14_const_lshr_shl_ne_vec_poison5" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t14_const_lshr_shl_ne_vec_poison5" has unsupported operation: llvm.mlir.undef
+
+4: "t14_const_lshr_shl_ne_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t14_const_lshr_shl_ne_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t14_const_lshr_shl_ne_vec_poison5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "t15_const_lshr_shl_ne_vec_poison6"
+4: "t15_const_lshr_shl_ne_vec_poison6" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t15_const_lshr_shl_ne_vec_poison6" has unsupported operation: llvm.mlir.undef
+
+4: "t15_const_lshr_shl_ne_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t15_const_lshr_shl_ne_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t15_const_lshr_shl_ne_vec_poison6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "gen32"
+5: "gen32" is empty
+
+1: "t16_commutativity0"
+4: "t16_commutativity0" has unsupported operation: llvm.call
+
+1: "t17_commutativity1"
+4: "t17_commutativity1" has unsupported operation: llvm.call
+
+1: "use32"
+5: "use32" is empty
+
+1: "t18_const_oneuse0"
+4: "t18_const_oneuse0" has unsupported operation: llvm.call
+
+1: "t19_const_oneuse1"
+4: "t19_const_oneuse1" has unsupported operation: llvm.call
+
+1: "t20_const_oneuse2"
+4: "t20_const_oneuse2" has unsupported operation: llvm.call
+
+1: "t21_const_oneuse3"
+4: "t21_const_oneuse3" has unsupported operation: llvm.call
+
+4: "t21_const_oneuse3" has unsupported operation: llvm.call
+
+1: "t22_const_oneuse4"
+4: "t22_const_oneuse4" has unsupported operation: llvm.call
+
+4: "t22_const_oneuse4" has unsupported operation: llvm.call
+
+1: "t23_const_oneuse5"
+4: "t23_const_oneuse5" has unsupported operation: llvm.call
+
+4: "t23_const_oneuse5" has unsupported operation: llvm.call
+
+1: "t24_const_oneuse6"
+4: "t24_const_oneuse6" has unsupported operation: llvm.call
+
+4: "t24_const_oneuse6" has unsupported operation: llvm.call
+
+4: "t24_const_oneuse6" has unsupported operation: llvm.call
+
+1: "t25_var_oneuse0"
+4: "t25_var_oneuse0" has unsupported operation: llvm.call
+
+1: "t26_var_oneuse1"
+4: "t26_var_oneuse1" has unsupported operation: llvm.call
+
+1: "t27_var_oneuse2"
+4: "t27_var_oneuse2" has unsupported operation: llvm.call
+
+1: "t28_var_oneuse3"
+4: "t28_var_oneuse3" has unsupported operation: llvm.call
+
+4: "t28_var_oneuse3" has unsupported operation: llvm.call
+
+1: "t29_var_oneuse4"
+4: "t29_var_oneuse4" has unsupported operation: llvm.call
+
+4: "t29_var_oneuse4" has unsupported operation: llvm.call
+
+1: "t30_var_oneuse5"
+4: "t30_var_oneuse5" has unsupported operation: llvm.call
+
+4: "t30_var_oneuse5" has unsupported operation: llvm.call
+
+1: "t31_var_oneuse6"
+4: "t31_var_oneuse6" has unsupported operation: llvm.call
+
+4: "t31_var_oneuse6" has unsupported operation: llvm.call
+
+4: "t31_var_oneuse6" has unsupported operation: llvm.call
+
+1: "t32_shift_of_const_oneuse0"
+4: "t32_shift_of_const_oneuse0" has unsupported operation: llvm.call
+
+4: "t32_shift_of_const_oneuse0" has unsupported operation: llvm.call
+
+4: "t32_shift_of_const_oneuse0" has unsupported operation: llvm.call
+
+4: "t32_shift_of_const_oneuse0" has unsupported operation: llvm.call
+
+1: "t33_shift_of_const_oneuse1"
+4: "t33_shift_of_const_oneuse1" has unsupported operation: llvm.call
+
+4: "t33_shift_of_const_oneuse1" has unsupported operation: llvm.call
+
+4: "t33_shift_of_const_oneuse1" has unsupported operation: llvm.call
+
+4: "t33_shift_of_const_oneuse1" has unsupported operation: llvm.call
+
+1: "t34_commutativity0_oneuse0"
+4: "t34_commutativity0_oneuse0" has unsupported operation: llvm.call
+
+4: "t34_commutativity0_oneuse0" has unsupported operation: llvm.call
+
+1: "t35_commutativity0_oneuse1"
+4: "t35_commutativity0_oneuse1" has unsupported operation: llvm.call
+
+4: "t35_commutativity0_oneuse1" has unsupported operation: llvm.call
+
+1: "t36_commutativity1_oneuse0"
+4: "t36_commutativity1_oneuse0" has unsupported operation: llvm.call
+
+4: "t36_commutativity1_oneuse0" has unsupported operation: llvm.call
+
+1: "t37_commutativity1_oneuse1"
+4: "t37_commutativity1_oneuse1" has unsupported operation: llvm.call
+
+4: "t37_commutativity1_oneuse1" has unsupported operation: llvm.call
+
+1: "n38_overshift"
+7: "n38_overshift" is unchanged by InstCombine
+
+1: "constantexpr"
+4: "constantexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "constantexpr" has unsupported operation: llvm.load
+
+1: "pr44802"
+7: "pr44802" is unchanged by InstCombine
+

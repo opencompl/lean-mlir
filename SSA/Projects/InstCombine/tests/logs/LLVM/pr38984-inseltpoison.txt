@@ -1,0 +1,22 @@
+1: "PR38984_1"
+8: "PR38984_1" contains vectors which are unsupported
+
+1: "PR38984_2"
+4: "PR38984_2" has unsupported operation: llvm.mlir.addressof
+
+4: "PR38984_2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR38984_2" has unsupported operation: llvm.mlir.addressof
+
+4: "PR38984_2" has unsupported operation: llvm.getelementptr
+
+4: "PR38984_2" has unsupported operation: llvm.mlir.zero
+
+4: "PR38984_2" has unsupported operation: llvm.load
+
+4: "PR38984_2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR38984_2" has unsupported operation: llvm.getelementptr
+
+4: "PR38984_2" has unsupported operation: llvm.getelementptr
+

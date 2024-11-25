@@ -1,0 +1,87 @@
+1: "t0"
+2: llvm.func
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "t0_vec"
+8: "t0_vec" contains vectors which are unsupported
+
+1: "t1"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "t2"
+2: llvm.func
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "t3"
+2: llvm.func
+2: llvm.sext
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "t3_vec"
+8: "t3_vec" contains vectors which are unsupported
+
+1: "xor.commuted"
+4: "xor.commuted" has unsupported operation: llvm.call
+
+1: "extrause01_v1"
+4: "extrause01_v1" has unsupported operation: llvm.call
+
+1: "extrause10_v1"
+4: "extrause10_v1" has unsupported operation: llvm.call
+
+1: "extrause11_v1"
+4: "extrause11_v1" has unsupported operation: llvm.call
+
+4: "extrause11_v1" has unsupported operation: llvm.call
+
+1: "extrause001_v2"
+4: "extrause001_v2" has unsupported operation: llvm.call
+
+1: "extrause010_v2"
+4: "extrause010_v2" has unsupported operation: llvm.call
+
+1: "extrause011_v2"
+4: "extrause011_v2" has unsupported operation: llvm.call
+
+4: "extrause011_v2" has unsupported operation: llvm.call
+
+1: "extrause100_v2"
+4: "extrause100_v2" has unsupported operation: llvm.call
+
+1: "extrause101_v2"
+4: "extrause101_v2" has unsupported operation: llvm.call
+
+4: "extrause101_v2" has unsupported operation: llvm.call
+
+1: "extrause110_v2"
+4: "extrause110_v2" has unsupported operation: llvm.call
+
+4: "extrause110_v2" has unsupported operation: llvm.call
+
+1: "extrause111_v2"
+4: "extrause111_v2" has unsupported operation: llvm.call
+
+4: "extrause111_v2" has unsupported operation: llvm.call
+
+4: "extrause111_v2" has unsupported operation: llvm.call
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "gen.i8"
+5: "gen.i8" is empty
+

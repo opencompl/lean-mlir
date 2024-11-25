@@ -1,0 +1,54 @@
+1: "use_f32"
+5: "use_f32" is empty
+
+1: "use_v4f32"
+5: "use_v4f32" is empty
+
+1: "bitcast_inselt"
+4: "bitcast_inselt" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcast_inselt" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_inselt_use1"
+4: "bitcast_inselt_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_use1" has unsupported operation: llvm.call
+
+4: "bitcast_inselt_use1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcast_inselt_use1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_inselt_use2"
+4: "bitcast_inselt_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_use2" has unsupported operation: llvm.call
+
+4: "bitcast_inselt_use2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bitcast_inselt_use2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "bitcast_inselt_use3"
+4: "bitcast_inselt_use3" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_use3" has unsupported operation: llvm.call
+
+4: "bitcast_inselt_use3" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_use3" has unsupported operation: llvm.call
+
+4: "bitcast_inselt_use3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bitcast_inselt_wrong_bitcast1"
+4: "bitcast_inselt_wrong_bitcast1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_wrong_bitcast1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_wrong_bitcast1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bitcast_inselt_wrong_bitcast2"
+4: "bitcast_inselt_wrong_bitcast2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_wrong_bitcast2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_inselt_wrong_bitcast2" has unsupported operation: builtin.unregistered: llvm.insertelement
+

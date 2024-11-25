@@ -1,0 +1,219 @@
+1: "shl_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.or
+2: llvm.return
+
+1: "lshr_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "ashr_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.add
+2: llvm.ashr
+2: llvm.or
+2: llvm.return
+
+1: "shl_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.xor
+2: llvm.return
+
+1: "lshr_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "ashr_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.add
+2: llvm.ashr
+2: llvm.xor
+2: llvm.return
+
+1: "shl_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.and
+2: llvm.return
+
+1: "lshr_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.and
+2: llvm.return
+
+1: "ashr_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.add
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "shl_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.add
+2: llvm.return
+
+1: "lshr_add_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.add
+2: llvm.lshr
+2: llvm.add
+2: llvm.return
+
+1: "ashr_add_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.add
+2: llvm.ashr
+2: llvm.add
+2: llvm.return
+
+1: "shl_or_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.shl
+2: llvm.or
+2: llvm.return
+
+1: "shl_or_splat"
+8: "shl_or_splat" contains vectors which are unsupported
+
+1: "shl_or_non_splat"
+8: "shl_or_non_splat" contains vectors which are unsupported
+
+1: "shl_or_poison_in_add"
+4: "shl_or_poison_in_add" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_or_poison_in_add" has unsupported operation: llvm.mlir.undef
+
+4: "shl_or_poison_in_add" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_or_poison_in_add" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_or_poison_in_shift1"
+4: "shl_or_poison_in_shift1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_or_poison_in_shift1" has unsupported operation: llvm.mlir.undef
+
+4: "shl_or_poison_in_shift1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_or_poison_in_shift1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl_or_poison_in_shift2"
+4: "shl_or_poison_in_shift2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl_or_poison_in_shift2" has unsupported operation: llvm.mlir.undef
+
+4: "shl_or_poison_in_shift2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl_or_poison_in_shift2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "use"
+5: "use" is empty
+
+1: "shl_or_multiuse"
+4: "shl_or_multiuse" has unsupported operation: llvm.call
+
+4: "shl_or_multiuse" has unsupported operation: llvm.call
+
+4: "shl_or_multiuse" has unsupported operation: llvm.call
+
+1: "mismatched_shifts"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.add
+2: llvm.lshr
+2: llvm.or
+2: llvm.return
+
+1: "mismatched_ops"
+7: "mismatched_ops" is unchanged by InstCombine
+
+1: "add_out_of_range"
+7: "add_out_of_range" is unchanged by InstCombine
+
+1: "shl_or_non_splat_out_of_range"
+7: "shl_or_non_splat_out_of_range" is unchanged by InstCombine
+
+1: "shl_or_with_or_disjoint_instead_of_add"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.or
+2: llvm.shl
+2: llvm.or
+2: llvm.return
+
+1: "shl_or_with_or_instead_of_add"
+7: "shl_or_with_or_instead_of_add" is unchanged by InstCombine
+

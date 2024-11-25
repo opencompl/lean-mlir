@@ -1,0 +1,45 @@
+1: "foo1"
+4: "foo1" has unsupported operation after optimization: llvm.alloca
+
+4: "foo1" has unsupported operation after optimization: llvm.alloca
+
+4: "foo1" has unsupported operation after optimization: llvm.store
+
+4: "foo1" has unsupported operation after optimization: llvm.load
+
+4: "foo1" has unsupported operation after optimization: llvm.store
+
+4: "foo1" has unsupported operation after optimization: llvm.load
+
+1: "foo2"
+4: "foo2" has unsupported operation after optimization: llvm.alloca
+
+4: "foo2" has unsupported operation after optimization: llvm.alloca
+
+4: "foo2" has unsupported operation after optimization: llvm.alloca
+
+4: "foo2" has unsupported operation after optimization: llvm.store
+
+4: "foo2" has unsupported operation after optimization: llvm.store
+
+4: "foo2" has unsupported operation after optimization: llvm.load
+
+4: "foo2" has unsupported operation after optimization: llvm.load
+
+4: "foo2" has unsupported operation after optimization: llvm.store
+
+4: "foo2" has unsupported operation after optimization: llvm.load
+
+1: "foo3"
+4: "foo3" has unsupported operation after optimization: llvm.alloca
+
+4: "foo3" has unsupported operation after optimization: llvm.alloca
+
+4: "foo3" has unsupported operation after optimization: llvm.store
+
+4: "foo3" has unsupported operation after optimization: llvm.load
+
+4: "foo3" has unsupported operation after optimization: llvm.store
+
+4: "foo3" has unsupported operation after optimization: llvm.load
+

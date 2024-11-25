@@ -1,0 +1,191 @@
+1: "foo"
+5: "foo" is empty
+
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "test1_splat"
+8: "test1_splat" contains vectors which are unsupported
+
+1: "test1_logical"
+7: "test1_logical" is unchanged by InstCombine
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "test2_logical"
+7: "test2_logical" is unchanged by InstCombine
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "test3_logical"
+7: "test3_logical" is unchanged by InstCombine
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "test4_logical"
+7: "test4_logical" is unchanged by InstCombine
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: llvm.call
+
+4: "test5" has unsupported operation: llvm.return
+
+4: "test5" has unsupported operation: llvm.return
+
+1: "test5_logical"
+4: "test5_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5_logical" has unsupported operation: llvm.call
+
+4: "test5_logical" has unsupported operation: llvm.return
+
+4: "test5_logical" has unsupported operation: llvm.return
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: llvm.call
+
+4: "test6" has unsupported operation: llvm.return
+
+4: "test6" has unsupported operation: llvm.return
+
+1: "test6_logical"
+4: "test6_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6_logical" has unsupported operation: llvm.call
+
+4: "test6_logical" has unsupported operation: llvm.return
+
+4: "test6_logical" has unsupported operation: llvm.return
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test7" has unsupported operation: llvm.call
+
+4: "test7" has unsupported operation: llvm.return
+
+4: "test7" has unsupported operation: llvm.return
+
+1: "test7_logical"
+4: "test7_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test7_logical" has unsupported operation: llvm.call
+
+4: "test7_logical" has unsupported operation: llvm.return
+
+4: "test7_logical" has unsupported operation: llvm.return
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8" has unsupported operation: llvm.call
+
+4: "test8" has unsupported operation: llvm.return
+
+4: "test8" has unsupported operation: llvm.return
+
+1: "test8_logical"
+4: "test8_logical" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8_logical" has unsupported operation: llvm.call
+
+4: "test8_logical" has unsupported operation: llvm.return
+
+4: "test8_logical" has unsupported operation: llvm.return
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "test9_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "test10_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: llvm.return
+
+1: "test11_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

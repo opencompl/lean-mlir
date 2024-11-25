@@ -1,0 +1,249 @@
+1: "ugt_and_min"
+9: "ugt_and_min" has pointer type input
+
+1: "ugt_and_min_logical"
+9: "ugt_and_min_logical" has pointer type input
+
+1: "ugt_and_min_commute"
+9: "ugt_and_min_commute" has pointer type input
+
+1: "ugt_and_min_commute_logical"
+9: "ugt_and_min_commute_logical" has pointer type input
+
+1: "ugt_swap_and_min"
+9: "ugt_swap_and_min" has pointer type input
+
+1: "ugt_swap_and_min_logical"
+9: "ugt_swap_and_min_logical" has pointer type input
+
+1: "ugt_swap_and_min_commute"
+9: "ugt_swap_and_min_commute" has pointer type input
+
+1: "ugt_swap_and_min_commute_logical"
+9: "ugt_swap_and_min_commute_logical" has pointer type input
+
+1: "ule_or_not_min"
+9: "ule_or_not_min" has pointer type input
+
+1: "ule_or_not_min_logical"
+9: "ule_or_not_min_logical" has pointer type input
+
+1: "ule_or_not_min_commute"
+9: "ule_or_not_min_commute" has pointer type input
+
+1: "ule_or_not_min_commute_logical"
+9: "ule_or_not_min_commute_logical" has pointer type input
+
+1: "ule_swap_or_not_min"
+9: "ule_swap_or_not_min" has pointer type input
+
+1: "ule_swap_or_not_min_logical"
+9: "ule_swap_or_not_min_logical" has pointer type input
+
+1: "ule_swap_or_not_min_commute"
+9: "ule_swap_or_not_min_commute" has pointer type input
+
+1: "ule_swap_or_not_min_commute_logical"
+9: "ule_swap_or_not_min_commute_logical" has pointer type input
+
+1: "ule_and_min"
+9: "ule_and_min" has pointer type input
+
+4: "ule_and_min" has unsupported operation: llvm.mlir.zero
+
+1: "ule_and_min_logical"
+9: "ule_and_min_logical" has pointer type input
+
+4: "ule_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ule_and_min_commute"
+9: "ule_and_min_commute" has pointer type input
+
+4: "ule_and_min_commute" has unsupported operation: llvm.mlir.zero
+
+1: "ule_and_min_commute_logical"
+9: "ule_and_min_commute_logical" has pointer type input
+
+4: "ule_and_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ule_swap_and_min"
+9: "ule_swap_and_min" has pointer type input
+
+4: "ule_swap_and_min" has unsupported operation: llvm.mlir.zero
+
+1: "ule_swap_and_min_logical"
+9: "ule_swap_and_min_logical" has pointer type input
+
+4: "ule_swap_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ule_swap_and_min_commute"
+9: "ule_swap_and_min_commute" has pointer type input
+
+4: "ule_swap_and_min_commute" has unsupported operation: llvm.mlir.zero
+
+1: "ule_swap_and_min_commute_logical"
+9: "ule_swap_and_min_commute_logical" has pointer type input
+
+4: "ule_swap_and_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ule_or_min"
+9: "ule_or_min" has pointer type input
+
+1: "ule_or_min_logical"
+9: "ule_or_min_logical" has pointer type input
+
+1: "ule_or_min_commute"
+9: "ule_or_min_commute" has pointer type input
+
+1: "ule_or_min_commute_logical"
+9: "ule_or_min_commute_logical" has pointer type input
+
+4: "ule_or_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ule_swap_or_min"
+9: "ule_swap_or_min" has pointer type input
+
+1: "ule_swap_or_min_logical"
+9: "ule_swap_or_min_logical" has pointer type input
+
+1: "ule_swap_or_min_commute"
+9: "ule_swap_or_min_commute" has pointer type input
+
+1: "ule_swap_or_min_commute_logical"
+9: "ule_swap_or_min_commute_logical" has pointer type input
+
+4: "ule_swap_or_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_and_not_min"
+9: "ugt_and_not_min" has pointer type input
+
+1: "ugt_and_not_min_logical"
+9: "ugt_and_not_min_logical" has pointer type input
+
+1: "ugt_and_not_min_commute"
+9: "ugt_and_not_min_commute" has pointer type input
+
+1: "ugt_and_not_min_commute_logical"
+9: "ugt_and_not_min_commute_logical" has pointer type input
+
+4: "ugt_and_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_swap_and_not_min"
+9: "ugt_swap_and_not_min" has pointer type input
+
+1: "ugt_swap_and_not_min_logical"
+9: "ugt_swap_and_not_min_logical" has pointer type input
+
+1: "ugt_swap_and_not_min_commute"
+9: "ugt_swap_and_not_min_commute" has pointer type input
+
+1: "ugt_swap_and_not_min_commute_logical"
+9: "ugt_swap_and_not_min_commute_logical" has pointer type input
+
+4: "ugt_swap_and_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_or_not_min"
+9: "ugt_or_not_min" has pointer type input
+
+4: "ugt_or_not_min" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_or_not_min_logical"
+9: "ugt_or_not_min_logical" has pointer type input
+
+4: "ugt_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_or_not_min_commute"
+9: "ugt_or_not_min_commute" has pointer type input
+
+4: "ugt_or_not_min_commute" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_or_not_min_commute_logical"
+9: "ugt_or_not_min_commute_logical" has pointer type input
+
+4: "ugt_or_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_swap_or_not_min"
+9: "ugt_swap_or_not_min" has pointer type input
+
+4: "ugt_swap_or_not_min" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_swap_or_not_min_logical"
+9: "ugt_swap_or_not_min_logical" has pointer type input
+
+4: "ugt_swap_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_swap_or_not_min_commute"
+9: "ugt_swap_or_not_min_commute" has pointer type input
+
+4: "ugt_swap_or_not_min_commute" has unsupported operation: llvm.mlir.zero
+
+1: "ugt_swap_or_not_min_commute_logical"
+9: "ugt_swap_or_not_min_commute_logical" has pointer type input
+
+4: "ugt_swap_or_not_min_commute_logical" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_and_min"
+9: "sgt_and_min" has pointer type input
+
+4: "sgt_and_min" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_and_min_logical"
+9: "sgt_and_min_logical" has pointer type input
+
+4: "sgt_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_and_min_logical_samesign"
+9: "sgt_and_min_logical_samesign" has pointer type input
+
+4: "sgt_and_min_logical_samesign" has unsupported operation: llvm.mlir.zero
+
+1: "sle_or_not_min"
+9: "sle_or_not_min" has pointer type input
+
+4: "sle_or_not_min" has unsupported operation: llvm.mlir.zero
+
+1: "sle_or_not_min_logical"
+9: "sle_or_not_min_logical" has pointer type input
+
+4: "sle_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "sle_and_min"
+9: "sle_and_min" has pointer type input
+
+4: "sle_and_min" has unsupported operation: llvm.mlir.zero
+
+1: "sle_and_min_logical"
+9: "sle_and_min_logical" has pointer type input
+
+4: "sle_and_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_and_not_min"
+9: "sgt_and_not_min" has pointer type input
+
+4: "sgt_and_not_min" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_and_not_min_logical"
+9: "sgt_and_not_min_logical" has pointer type input
+
+4: "sgt_and_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_or_not_min"
+9: "sgt_or_not_min" has pointer type input
+
+4: "sgt_or_not_min" has unsupported operation: llvm.mlir.zero
+
+1: "sgt_or_not_min_logical"
+9: "sgt_or_not_min_logical" has pointer type input
+
+4: "sgt_or_not_min_logical" has unsupported operation: llvm.mlir.zero
+
+1: "slt_and_min"
+9: "slt_and_min" has pointer type input
+
+4: "slt_and_min" has unsupported operation: llvm.mlir.zero
+
+1: "slt_and_min_logical"
+9: "slt_and_min_logical" has pointer type input
+
+4: "slt_and_min_logical" has unsupported operation: llvm.mlir.zero
+

@@ -12,17 +12,17 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 namespace LLVM
 
 
-def IntW w := Option <| BitVec w
+abbrev IntW w := Option <| BitVec w
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 @[simp_llvm]
 def and? {w : Nat} (x y : BitVec w) : IntW w :=
-  pure <| x &&& y
+  some <| x &&& y
 
 @[simp_llvm_option]
-theorem and?_eq : LLVM.and? a b  = .some (BitVec.and a b) := rfl
+theorem and?_eq : LLVM.and? a b  = some (a &&& b) := rfl
 
 @[simp_llvm_option]
 def and {w : Nat} (x y : IntW w) : IntW w := do
@@ -36,16 +36,23 @@ operands.
 -/
 @[simp_llvm]
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
-  pure <| x ||| y
+  some <| x ||| y
 
 @[simp_llvm_option]
-theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
+theorem or?_eq : LLVM.or? a b  = some (a ||| b) := rfl
+
+structure DisjointFlag where
+  disjoint : Bool := false
+  deriving Repr, DecidableEq
 
 @[simp_llvm_option]
-def or {w : Nat} (x y : IntW w) : IntW w := do
+def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  or? x' y'
+  if flag.disjoint ∧ x' &&& y' != 0 then
+    none
+  else
+    or? x' y'
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
@@ -54,10 +61,10 @@ is the “~” operator in C.
 -/
 @[simp_llvm]
 def xor? {w : Nat} (x y : BitVec w) : IntW w :=
-  pure <| x ^^^ y
+  some <| x ^^^ y
 
 @[simp_llvm_option]
-theorem xor?_eq : LLVM.xor? a b  = .some (BitVec.xor a b) := rfl
+theorem xor?_eq : LLVM.xor? a b  = some (a ^^^ b) := rfl
 
 @[simp_llvm_option]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
@@ -72,26 +79,23 @@ Because LLVM integers use a two’s complement representation, this instruction 
 -/
 @[simp_llvm]
 def add? {w : Nat} (x y : BitVec w) : IntW w :=
-  pure <| x + y
+  some <| x + y
 
 @[simp_llvm_option]
-theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
+theorem add?_eq : LLVM.add? a b  = some (a + b) := rfl
 
-structure AdditionFlags where
+structure NoWrapFlags where
   nsw : Bool := false
   nuw : Bool := false
   deriving Repr, DecidableEq
 
 @[simp_llvm_option]
-def add {w : Nat} (x y : IntW w) (flags : AdditionFlags := {nsw := false , nuw := false}) : IntW w := do
+def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let nsw := flags.nsw
-  let nuw := flags.nuw
-  let AddSignedWraps? : Prop := nsw ∧
-    ((x'.toInt + y'.toInt) < -(2^(w-1)) ∨ (x'.toInt + y'.toInt) ≥ 2^w)
-  let AddUnsignedWraps? : Prop := nuw ∧ ((x'.toNat + y'.toNat) ≥ 2^w)
-  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
+  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
+    none
+  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
     none
   else
     add? x' y'
@@ -103,16 +107,25 @@ Because LLVM integers use a two’s complement representation, this instruction 
 -/
 @[simp_llvm]
 def sub? {w : Nat} (x y : BitVec w) : IntW w :=
-  pure <| x - y
+  some <| x - y
 
 @[simp_llvm_option]
-theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
+theorem sub?_eq : LLVM.sub? a b  = some (a - b) := rfl
 
 @[simp_llvm_option]
-def sub {w : Nat} (x y : IntW w) : IntW w := do
+def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  sub? x' y'
+  -- Signed extensions and difference
+  let sx' := BitVec.signExtend (w+1) x'
+  let sy' := BitVec.signExtend (w+1) y'
+  let sdiff := sx' - sy'
+  if flags.nsw ∧ (sdiff.msb ≠ sdiff.getMsbD 1) then
+    none
+  else if flags.nuw ∧ (x' < y') then
+    none
+  else
+    sub? x' y'
 
 /--
 The value produced is the integer product of the two operands.
@@ -127,16 +140,36 @@ sign-extended or zero-extended as appropriate to the width of the full product.
 -/
 @[simp_llvm]
 def mul? {w : Nat} (x y : BitVec w) : IntW w :=
-  pure <| x * y
+  some <| x * y
 
 @[simp_llvm_option]
-theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
+theorem mul?_eq : LLVM.mul? a b  = some (a * b) := rfl
 
 @[simp_llvm_option]
-def mul {w : Nat} (x y : IntW w) : IntW w := do
+def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  mul? x' y'
+  let w1 := w-1
+  let w2 := 2*w
+  -- For multiplication, we do the "naive" approach of doubling the size, doing the multiplication, and comparing to the range.
+  -- Signed Wrap
+  let sx' := x'.signExtend w2
+  let sy' := y'.signExtend w2
+  let smul := sx' * sy'
+  let slbound := (BitVec.twoPow w w1).signExtend w2 -- signed lower bound := -2^(w-1)
+  let shbound := BitVec.twoPow w2 w1 -- signed higher bound + 1 := 2^(w-1)
+  -- Unsigned Wrap
+  let ux' := x'.zeroExtend w2
+  let uy' := y'.zeroExtend w2
+  let umul := ux' * uy'
+  let uhbound := shbound <<< 1
+
+  if flags.nsw ∧ ((smul <ₛ slbound) ∨ (smul ≥ₛ shbound)) then
+    none
+  else if flags.nuw ∧ umul ≥ uhbound then
+    none
+  else
+    mul? x' y'
 
 /--
 The value produced is the unsigned integer quotient of the two operands.
@@ -145,15 +178,23 @@ Division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  match y.toNat with
-    | 0 => none
-    | _ => pure <| BitVec.ofInt w (x.toNat / y.toNat)
+  if y = 0 then
+    none
+  else
+    some <| x / y
+
+structure ExactFlag where
+  exact : Bool := false
+  deriving Repr, DecidableEq
 
 @[simp_llvm_option]
-def udiv {w : Nat} (x y : IntW w) : IntW w := do
+def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  udiv? x' y'
+  if flag.exact ∧ x'.umod y' ≠ 0 then
+    none
+  else
+    udiv? x' y'
 
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
@@ -171,27 +212,31 @@ at width 2, -4 / -1 is considered overflow!
 -/
 -- only way overflow can happen is (INT_MIN / -1).
 -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
--- is no magniture to overflow.
+-- is no magnitude to overflow.
 @[simp_llvm]
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1)
-  then .none
-  else pure (BitVec.sdiv x y)
+  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+    none
+  else
+    some (x.sdiv y)
 
 theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
   LLVM.sdiv? x 0 = none := by
   simp [LLVM.sdiv?, BitVec.sdiv]
 
-theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
-    (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = pure (BitVec.sdiv x y) := by
+theorem sdiv?_eq_some_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
+    (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = some (BitVec.sdiv x y) := by
   simp [LLVM.sdiv?]
   tauto
 
 @[simp_llvm_option]
-def sdiv {w : Nat} (x y : IntW w) : IntW w := do
+def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  sdiv? x' y'
+  if flag.exact ∧ x'.smod y' ≠ 0 then
+    none
+  else
+    sdiv? x' y'
 
 -- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 @[simp_llvm]
@@ -199,7 +244,7 @@ theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
     sdiv? x y =
     if (y = 0) ∨ ((w ≠ 1) ∧ (x = BitVec.intMin w) ∧ (y = -1))
       then none
-    else pure <| BitVec.sdiv x y
+    else some <| BitVec.sdiv x y
     := by
   simp [sdiv?]; split_ifs <;> try tauto
 
@@ -210,9 +255,10 @@ Taking the remainder of a division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y.toNat = 0
-  then none
-  else pure <| BitVec.ofNat w (x.toNat % y.toNat)
+  if y = 0 then
+    none
+  else
+    some <| x % y
 
 @[simp_llvm_option]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
@@ -271,7 +317,10 @@ We use this equation to define srem.
 -/
 @[simp_llvm]
 def srem? {w : Nat} (x y : BitVec w) : IntW w :=
-  (sdiv? x y).map (fun div => x - div * y)
+  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+    none
+  else
+    BitVec.srem x y
 
 @[simp_llvm_option]
 def srem {w : Nat} (x y : IntW w) : IntW w := do
@@ -290,16 +339,22 @@ bits in op1, this instruction returns a poison value.
 -/
 @[simp_llvm]
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
-  if bits >= n then .none
-  else pure (op1 <<< op2)
+  if op2 >= n
+  then .none
+  else some (op1 <<< op2)
 
 
 @[simp_llvm_option]
-def shl {w : Nat} (x y : IntW w) : IntW w := do
+def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  shl? x' y'
+    -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
+  if flags.nsw ∧ ((x' <<< y').sshiftRight'  y' ≠ x') then
+    none
+  else if flags.nuw ∧ ((x' <<< y') >>> y' ≠ x') then
+    none
+  else
+    shl? x' y'
 
 /--
 This instruction always performs a logical shift right operation.
@@ -309,19 +364,22 @@ the shift.
 If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
 this instruction returns a poison value.
 
-Corresponds to `Std.BitVec.ushiftRight` in the `pure` case.
+Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
-  if bits >= n then .none
-  else pure (op1 >>> op2)
+  if op2 >= n
+  then .none
+  else some (op1 >>> op2)
 
 @[simp_llvm_option]
-def lshr {w : Nat} (x y : IntW w) : IntW w := do
+def lshr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  lshr? x' y'
+  if flag.exact ∧(x' >>> y') <<< y' ≠ x' then
+    none
+  else
+    lshr? x' y'
 
 /--
 This instruction always performs an arithmetic shift right operation,
@@ -330,31 +388,32 @@ The most significant bits of the result will be filled with the sign bit of op1.
 If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
 this instruction returns a poison value.
 
-Corresponds to `Std.BitVec.sshiftRight` in the `pure` case.
+Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 -/
 @[simp_llvm]
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
-  if bits >= n then .none
-  else pure (op1 >>>ₛ op2)
+  if op2 >= n
+  then .none
+  else some (op1.sshiftRight' op2)
 
 @[simp_llvm_option]
-def ashr {w : Nat} (x y : IntW w) : IntW w := do
+def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  ashr? x' y'
+  if flag.exact ∧ (x' >>> y') <<< y' ≠ x' then
+    none
+  else
+    ashr? x' y'
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
-
- If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
 @[simp_llvm_option]
-def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w :=
-  match c? with
-  | none => none
-  | some true => x?
-  | some false => y?
+def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w := do
+  let c ← c?
+  match c with
+  | 1#1 => x?
+  | 0#1 => y?
 
 inductive IntPredicate where
   | eq
@@ -438,19 +497,19 @@ The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
 def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
-  pure ↑(icmp' c x y)
+  some ↑(icmp' c x y)
 
 @[simp]
 theorem icmp?_ult_eq {w : Nat} {a b : BitVec w} :
-  icmp? .ult a b =  Option.some (BitVec.ofBool (a <ᵤ b)) := rfl
+  icmp? .ult a b =  some (BitVec.ofBool (a <ᵤ b)) := rfl
 
 @[simp]
 theorem icmp?_slt_eq {w : Nat} {a b : BitVec w} :
-  icmp? .slt a b =  Option.some (BitVec.ofBool (a <ₛ b)) := rfl
+  icmp? .slt a b =  some (BitVec.ofBool (a <ₛ b)) := rfl
 
 @[simp]
 theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
-  icmp? .sgt a b =  Option.some (BitVec.ofBool (a >ₛ b)) := rfl
+  icmp? .sgt a b =  some (BitVec.ofBool (a >ₛ b)) := rfl
 
 @[simp_llvm_option]
 def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
@@ -476,18 +535,18 @@ the value `(2^w + (i mod 2^w)) mod 2^w`.
 TODO: double-check that truncating works the same as MLIR (signedness, overflow, etc)
 -/
 @[simp_llvm]
-def const? (i : Int): IntW w :=
-  pure <| BitVec.ofInt w i
+def const? (w : Nat) (i : Int): IntW w :=
+  some <| BitVec.ofInt w i
 
 @[simp_llvm_option]
-theorem const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
+theorem const?_eq : LLVM.const? w i = some (BitVec.ofInt w i) := rfl
 
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
-  pure (~~~x)
+  some (~~~x)
 
 @[simp_llvm_option]
-theorem not?_eq : LLVM.not? a = .some (BitVec.not a) := rfl
+theorem not?_eq : LLVM.not? a = some (~~~ a) := rfl
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -496,14 +555,54 @@ def not {w : Nat} (x : IntW w) : IntW w := do
 
 @[simp_llvm]
 def neg? {w : Nat} (x : BitVec w) : IntW w := do
-  pure <| (-.) x
+  some <| (-.) x
 
 @[simp_llvm_option]
-theorem neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
+theorem neg?_eq : LLVM.neg? a = some (-a) := rfl
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do
   let x' ← x
   neg? x'
+
+
+@[simp_llvm]
+def trunc? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
+  some <| (BitVec.truncate w' x)
+
+@[simp_llvm_option]
+def trunc {w: Nat} (w': Nat) (x: IntW w) (noWrapFlags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w' := do
+  let x' <- x
+  if noWrapFlags.nsw ∧ ((x'.truncate w').signExtend w ≠ x') then
+    none
+  else if noWrapFlags.nuw ∧ ((x'.truncate w').zeroExtend w ≠ x') then
+    none
+  else
+    trunc? w' x'
+
+structure NonNegFlag where
+  nneg : Bool := false
+  deriving Repr, DecidableEq
+
+@[simp_llvm]
+def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
+  some <| (BitVec.zeroExtend w' x)
+
+@[simp_llvm_option]
+def zext {w: Nat} (w': Nat) (x: IntW w) (flag : NonNegFlag := {nneg := false}) : IntW w' := do
+  let x' <- x
+  if flag.nneg ∧ x'.msb then
+    none
+  else
+    zext? w' x'
+
+@[simp_llvm]
+def sext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
+  some <| (BitVec.signExtend w' x)
+
+@[simp_llvm_option]
+def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
+  let x' <- x
+  sext? w' x'
 
 end LLVM

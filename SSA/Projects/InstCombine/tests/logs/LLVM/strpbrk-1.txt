@@ -1,0 +1,31 @@
+1: "strpbrk"
+9: "strpbrk" has pointer type input
+
+1: "test_simplify1"
+9: "test_simplify1" has pointer type input
+
+4: "test_simplify1" has unsupported operation: llvm.mlir.zero
+
+1: "test_simplify2"
+9: "test_simplify2" has pointer type input
+
+4: "test_simplify2" has unsupported operation: llvm.mlir.zero
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: llvm.getelementptr
+
+1: "test_simplify4"
+9: "test_simplify4" has pointer type input
+
+4: "test_simplify4" has unsupported operation: llvm.call
+
+1: "test_no_simplify1"
+9: "test_no_simplify1" has pointer type input
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "strchr"
+9: "strchr" has pointer type input
+

@@ -1,0 +1,53 @@
+1: "use"
+5: "use" is empty
+
+1: "use_i1"
+5: "use_i1" is empty
+
+1: "use_i1_vec"
+5: "use_i1_vec" is empty
+
+1: "pow2_or_zero_is_negative"
+4: "pow2_or_zero_is_negative" has unsupported operation: llvm.call
+
+1: "pow2_or_zero_is_negative_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pow2_or_zero_is_negative_vec"
+4: "pow2_or_zero_is_negative_vec" has unsupported operation: llvm.call
+
+1: "pow2_or_zero_is_negative_vec_commute"
+8: "pow2_or_zero_is_negative_vec_commute" contains vectors which are unsupported
+
+1: "pow2_or_zero_is_not_negative"
+4: "pow2_or_zero_is_not_negative" has unsupported operation: llvm.call
+
+1: "pow2_or_zero_is_not_negative_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.sub
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "pow2_or_zero_is_not_negative_vec"
+4: "pow2_or_zero_is_not_negative_vec" has unsupported operation: llvm.call
+
+1: "pow2_or_zero_is_not_negative_vec_commute"
+8: "pow2_or_zero_is_not_negative_vec_commute" contains vectors which are unsupported
+
+1: "pow2_or_zero_is_negative_extra_use"
+4: "pow2_or_zero_is_negative_extra_use" has unsupported operation: llvm.call
+
+4: "pow2_or_zero_is_negative_extra_use" has unsupported operation: llvm.call
+

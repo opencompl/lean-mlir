@@ -1,0 +1,424 @@
+1: "use1"
+5: "use1" is empty
+
+1: "use16"
+5: "use16" is empty
+
+1: "use32"
+5: "use32" is empty
+
+1: "use64"
+5: "use64" is empty
+
+1: "t0_notrunc_add"
+4: "t0_notrunc_add" has unsupported operation: llvm.call
+
+4: "t0_notrunc_add" has unsupported operation: llvm.call
+
+4: "t0_notrunc_add" has unsupported operation: llvm.call
+
+4: "t0_notrunc_add" has unsupported operation: llvm.call
+
+4: "t0_notrunc_add" has unsupported operation: llvm.call
+
+1: "t0_notrunc_or"
+4: "t0_notrunc_or" has unsupported operation: llvm.call
+
+4: "t0_notrunc_or" has unsupported operation: llvm.call
+
+4: "t0_notrunc_or" has unsupported operation: llvm.call
+
+4: "t0_notrunc_or" has unsupported operation: llvm.call
+
+4: "t0_notrunc_or" has unsupported operation: llvm.call
+
+1: "t1_notrunc_sub"
+4: "t1_notrunc_sub" has unsupported operation: llvm.call
+
+4: "t1_notrunc_sub" has unsupported operation: llvm.call
+
+4: "t1_notrunc_sub" has unsupported operation: llvm.call
+
+4: "t1_notrunc_sub" has unsupported operation: llvm.call
+
+4: "t1_notrunc_sub" has unsupported operation: llvm.call
+
+1: "t2_trunc_add"
+4: "t2_trunc_add" has unsupported operation: llvm.call
+
+4: "t2_trunc_add" has unsupported operation: llvm.call
+
+4: "t2_trunc_add" has unsupported operation: llvm.call
+
+4: "t2_trunc_add" has unsupported operation: llvm.call
+
+4: "t2_trunc_add" has unsupported operation: llvm.call
+
+4: "t2_trunc_add" has unsupported operation: llvm.call
+
+1: "t2_trunc_or"
+4: "t2_trunc_or" has unsupported operation: llvm.call
+
+4: "t2_trunc_or" has unsupported operation: llvm.call
+
+4: "t2_trunc_or" has unsupported operation: llvm.call
+
+4: "t2_trunc_or" has unsupported operation: llvm.call
+
+4: "t2_trunc_or" has unsupported operation: llvm.call
+
+4: "t2_trunc_or" has unsupported operation: llvm.call
+
+1: "t3_trunc_sub"
+4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+4: "t3_trunc_sub" has unsupported operation: llvm.call
+
+1: "t4_commutativity0"
+4: "t4_commutativity0" has unsupported operation: llvm.call
+
+4: "t4_commutativity0" has unsupported operation: llvm.call
+
+4: "t4_commutativity0" has unsupported operation: llvm.call
+
+4: "t4_commutativity0" has unsupported operation: llvm.call
+
+4: "t4_commutativity0" has unsupported operation: llvm.call
+
+1: "t5_commutativity1"
+4: "t5_commutativity1" has unsupported operation: llvm.call
+
+4: "t5_commutativity1" has unsupported operation: llvm.call
+
+4: "t5_commutativity1" has unsupported operation: llvm.call
+
+4: "t5_commutativity1" has unsupported operation: llvm.call
+
+4: "t5_commutativity1" has unsupported operation: llvm.call
+
+1: "t6_commutativity2"
+4: "t6_commutativity2" has unsupported operation: llvm.call
+
+4: "t6_commutativity2" has unsupported operation: llvm.call
+
+4: "t6_commutativity2" has unsupported operation: llvm.call
+
+4: "t6_commutativity2" has unsupported operation: llvm.call
+
+4: "t6_commutativity2" has unsupported operation: llvm.call
+
+1: "t7_trunc_extrause0"
+4: "t7_trunc_extrause0" has unsupported operation: llvm.call
+
+4: "t7_trunc_extrause0" has unsupported operation: llvm.call
+
+4: "t7_trunc_extrause0" has unsupported operation: llvm.call
+
+4: "t7_trunc_extrause0" has unsupported operation: llvm.call
+
+4: "t7_trunc_extrause0" has unsupported operation: llvm.call
+
+4: "t7_trunc_extrause0" has unsupported operation: llvm.call
+
+1: "t8_trunc_extrause1"
+4: "t8_trunc_extrause1" has unsupported operation: llvm.call
+
+4: "t8_trunc_extrause1" has unsupported operation: llvm.call
+
+4: "t8_trunc_extrause1" has unsupported operation: llvm.call
+
+4: "t8_trunc_extrause1" has unsupported operation: llvm.call
+
+4: "t8_trunc_extrause1" has unsupported operation: llvm.call
+
+4: "t8_trunc_extrause1" has unsupported operation: llvm.call
+
+1: "n9_trunc_extrause2"
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+4: "n9_trunc_extrause2" has unsupported operation: llvm.call
+
+1: "t10_preserve_exact"
+4: "t10_preserve_exact" has unsupported operation: llvm.call
+
+4: "t10_preserve_exact" has unsupported operation: llvm.call
+
+4: "t10_preserve_exact" has unsupported operation: llvm.call
+
+4: "t10_preserve_exact" has unsupported operation: llvm.call
+
+4: "t10_preserve_exact" has unsupported operation: llvm.call
+
+1: "t11_different_zext_of_shamt"
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+4: "t11_different_zext_of_shamt" has unsupported operation: llvm.call
+
+1: "t12_add_sext_of_magic"
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+4: "t12_add_sext_of_magic" has unsupported operation: llvm.call
+
+1: "t13_sub_zext_of_magic"
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+4: "t13_sub_zext_of_magic" has unsupported operation: llvm.call
+
+1: "t14_add_sext_of_shl"
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+4: "t14_add_sext_of_shl" has unsupported operation: llvm.call
+
+1: "t15_sub_zext_of_shl"
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+4: "t15_sub_zext_of_shl" has unsupported operation: llvm.call
+
+1: "n16"
+4: "n16" has unsupported operation: llvm.call
+
+4: "n16" has unsupported operation: llvm.call
+
+4: "n16" has unsupported operation: llvm.call
+
+4: "n16" has unsupported operation: llvm.call
+
+4: "n16" has unsupported operation: llvm.call
+
+1: "n17_add"
+4: "n17_add" has unsupported operation: llvm.call
+
+4: "n17_add" has unsupported operation: llvm.call
+
+4: "n17_add" has unsupported operation: llvm.call
+
+4: "n17_add" has unsupported operation: llvm.call
+
+4: "n17_add" has unsupported operation: llvm.call
+
+1: "n18"
+4: "n18" has unsupported operation: llvm.call
+
+4: "n18" has unsupported operation: llvm.call
+
+4: "n18" has unsupported operation: llvm.call
+
+4: "n18" has unsupported operation: llvm.call
+
+4: "n18" has unsupported operation: llvm.call
+
+1: "n19"
+4: "n19" has unsupported operation: llvm.call
+
+4: "n19" has unsupported operation: llvm.call
+
+4: "n19" has unsupported operation: llvm.call
+
+4: "n19" has unsupported operation: llvm.call
+
+4: "n19" has unsupported operation: llvm.call
+
+1: "n20"
+4: "n20" has unsupported operation: llvm.call
+
+4: "n20" has unsupported operation: llvm.call
+
+4: "n20" has unsupported operation: llvm.call
+
+4: "n20" has unsupported operation: llvm.call
+
+4: "n20" has unsupported operation: llvm.call
+
+1: "n21"
+4: "n21" has unsupported operation: llvm.call
+
+4: "n21" has unsupported operation: llvm.call
+
+4: "n21" has unsupported operation: llvm.call
+
+4: "n21" has unsupported operation: llvm.call
+
+4: "n21" has unsupported operation: llvm.call
+
+1: "n22"
+4: "n22" has unsupported operation: llvm.call
+
+4: "n22" has unsupported operation: llvm.call
+
+4: "n22" has unsupported operation: llvm.call
+
+4: "n22" has unsupported operation: llvm.call
+
+4: "n22" has unsupported operation: llvm.call
+
+4: "n22" has unsupported operation: llvm.call
+
+4: "n22" has unsupported operation: llvm.call
+
+1: "n23"
+4: "n23" has unsupported operation: llvm.call
+
+4: "n23" has unsupported operation: llvm.call
+
+4: "n23" has unsupported operation: llvm.call
+
+4: "n23" has unsupported operation: llvm.call
+
+4: "n23" has unsupported operation: llvm.call
+
+1: "n24"
+4: "n24" has unsupported operation: llvm.call
+
+4: "n24" has unsupported operation: llvm.call
+
+4: "n24" has unsupported operation: llvm.call
+
+4: "n24" has unsupported operation: llvm.call
+
+4: "n24" has unsupported operation: llvm.call
+
+1: "n25_sub"
+4: "n25_sub" has unsupported operation: llvm.call
+
+4: "n25_sub" has unsupported operation: llvm.call
+
+4: "n25_sub" has unsupported operation: llvm.call
+
+4: "n25_sub" has unsupported operation: llvm.call
+
+4: "n25_sub" has unsupported operation: llvm.call
+
+1: "n26"
+4: "n26" has unsupported operation: llvm.call
+
+4: "n26" has unsupported operation: llvm.call
+
+4: "n26" has unsupported operation: llvm.call
+
+4: "n26" has unsupported operation: llvm.call
+
+4: "n26" has unsupported operation: llvm.call
+
+1: "n27_add_zext_of_magic"
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+4: "n27_add_zext_of_magic" has unsupported operation: llvm.call
+
+1: "n28_sub_sext_of_magic"
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+4: "n28_sub_sext_of_magic" has unsupported operation: llvm.call
+
+1: "n290_or_with_wrong_magic"
+4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call
+
+4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call
+
+4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call
+
+4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call
+
+4: "n290_or_with_wrong_magic" has unsupported operation: llvm.call
+
