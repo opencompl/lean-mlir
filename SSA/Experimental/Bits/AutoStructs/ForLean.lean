@@ -109,12 +109,13 @@ theorem Std.HashMap.mem_iff_getElem? [BEq K] [LawfulBEq K] [Hashable K] [LawfulH
      k ∈ m ↔ ∃ v, m[k]? = some v := by
   sorry
 
+-- make equiv
 @[aesop 50% unsafe]
 theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} : m.get? k = none → k ∉ m := by
   sorry
 
 @[aesop 50% unsafe]
-theorem Std.HashMap.getElem?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} : 
+theorem Std.HashMap.getElem?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} :
     m[k]? = none → k ∉ m := by
   sorry
 

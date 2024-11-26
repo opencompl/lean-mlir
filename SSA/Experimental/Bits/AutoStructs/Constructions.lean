@@ -46,17 +46,13 @@ section product
 
 variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-omit [LawfulBEq A] in
-lemma RawCNFA.WF.intitials_states (m : RawCNFA A) (hwf : m.WF) : ∀ s ∈ m.initials, s ∈ m.states := by
-  simp_all [RawCNFA.states, hwf]
-
 def product (final? : Bool → Bool → Bool) (m1 m2 : CNFA n) : CNFA n :=
   worklistRun (m1.m.states × m2.m.states) final inits (by sorry /- looks annoying -/) f
 where final (ss : m1.m.states × m2.m.states) := final? (m1.m.finals.contains ss.1) (m2.m.finals.contains ss.2)
       inits :=
        let a := Array.mkEmpty <| m1.m.initials.size * m2.m.initials.size
-       m1.m.initials.attachWith _ m1.wf.intitials_states |>.fold (init := a) fun is s1 =>
-         m2.m.initials.attachWith _ m2.wf.intitials_states |>.fold (init := is) fun is s2 =>
+       m1.m.initials.attachWith _ @m1.wf.initials_lt |>.fold (init := a) fun is s1 =>
+         m2.m.initials.attachWith _ @m2.wf.initials_lt |>.fold (init := is) fun is s2 =>
            is.push (s1, s2)
       f (ss : m1.m.states × m2.m.states) :=
         let (s1, s2) := ss
@@ -81,7 +77,7 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
     m1.Sim M1 →
     m2.Sim M2 →
     (product final? m1 m2).Sim (NFA'.product (to_prop final?) M1 M2) := by
-  rintro ⟨f1, hsim1⟩ ⟨f2, hsim2⟩
+  rintro ⟨R₁, hsim1⟩ ⟨R₂, hsim2⟩
   apply worklistRun_spec (m1.m.states × m2.m.states)
     (corr := fun (s1, s2) => (f1 s1, f2 s2))
   · rintro ⟨s1, s2⟩ ⟨s1', s2'⟩; simp; rintro heqs
