@@ -45,11 +45,11 @@ noncomputable def RawCNFA.states (m : RawCNFA A) : Finset State := Finset.range 
 instance RawCNFA.statesFinset (m : RawCNFA A) : Fintype m.states := (Finset.range m.stateMax).fintypeCoeSort
 
 @[simp]
-lemma RawCNFA.stateMax_nin_states (m : RawCNFA A) : ¬(m.stateMax ∈ m.states) := by 
+lemma RawCNFA.stateMax_nin_states (m : RawCNFA A) : ¬(m.stateMax ∈ m.states) := by
   simp [states]
 
 @[simp]
-lemma RawCNFA.states_lt (m : RawCNFA A) s : s ∈ m.states → s < m.stateMax := by 
+lemma RawCNFA.states_lt (m : RawCNFA A) s : s ∈ m.states → s < m.stateMax := by
   simp [RawCNFA.states]
 
 /--
@@ -58,11 +58,11 @@ between concrete and abstract states which satisfies some properties, as defined
 in Kozen 1997.
 -/
 structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : Rel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
-  accept s q : R s q → (s ∈ m.finals ↔ q ∈ M.accept)
-  initial₁ s : s ∈ m.initials → s ∈ R.dom
-  initial₂ q : q ∈ M.start → q ∈ R.codom
-  trans_match₁ s s' a q : R s q → s' ∈ m.tr s a → ∃ q', q' ∈ M.step q a ∧ R s' q'
-  trans_match₂ s a q q' : R s q → q' ∈ M.step q a → q ∈ D → (q, a, q') ∉ T → ∃ s', s' ∈ m.tr s a ∧ R s' q'
+  accept {s q} : R s q → (s ∈ m.finals ↔ q ∈ M.accept)
+  initial₁ {s} : s ∈ m.initials → s ∈ R.dom
+  initial₂ {q} : q ∈ M.start → q ∈ R.codom
+  trans_match₁ {s s' a q} : R s q → s' ∈ m.tr s a → ∃ q', q' ∈ M.step q a ∧ R s' q'
+  trans_match₂ {s a q q'} : R s q → q' ∈ M.step q a → q ∈ D → (q, a, q') ∉ T → ∃ s', s' ∈ m.tr s a ∧ R s' q'
 
 /--
 Similarity is the greatest simulation
@@ -151,17 +151,30 @@ attribute [aesop 50% unsafe] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawC
 
 @[simp, aesop 50% unsafe]
 lemma RawCNFA.WF.trans_src_lt' {m : RawCNFA A} (hwf : m.WF) :
-    ∀ s a, (s, a) ∈ m.trans → s < m.stateMax := by
+    ∀ {s a}, (s, a) ∈ m.trans → s < m.stateMax := by
   intros s a hin; simp [hwf.trans_src_lt _ hin]
 
 @[simp, aesop 50% unsafe]
 lemma RawCNFA.WF.trans_tgt_lt' [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
-    ∀ s a s', s' ∈ m.trans.getD (s, a) ∅ → s' ∈ m.states := by
+    ∀ s a s', s' ∈ m.tr s a → s' ∈ m.states := by
   intros s a s' hin
-  rw [Std.HashMap.getD_eq_getD_getElem?] at hin
+  rw [tr, Std.HashMap.getD_eq_getD_getElem?] at hin
   rcases htrans : m.trans[(s, a)]? with ⟨⟩ | ⟨ts⟩
   · simp_all
   · simp [RawCNFA.states]; apply hwf.trans_tgt_lt (s, a) ts <;> simp_all
+
+@[simp, aesop 50% unsafe]
+lemma RawCNFA.WF.trans_src_lt'' [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
+    ∀ {s a s'}, s' ∈ m.tr s a → s ∈ m.states := by
+  rintro s a s' hin
+  simp [states]
+  suffices hin : (s, a) ∈ m.trans by
+    apply trans_src_lt' hwf hin
+  unfold tr at hin
+  rw [Std.HashMap.getD_eq_getD_getElem?] at hin
+  rcases heq : m.trans[(s, a)]? with a | b
+  · simp [heq] at hin
+  · exact Std.HashMap.mem_of_getElem? heq
 
 @[simp, aesop 50% unsafe]
 lemma wf_empty :
@@ -487,7 +500,7 @@ structure StInv0 (m : RawCNFA A) (map : Std.HashMap S State) where
   wf : m.WF
   map_states : ∀ (sa : S) s, map[sa]? = some s → s ∈ m.states
   map_surj : ∀ s : m.states, ∃ (sa : S), map[sa]? = some s.val
-  map_inj : ∀ (s : m.states) (sa sa' : S), map[sa]? = some s.val → map[sa']? = some s.val → sa = sa'
+  map_inj : ∀ {s} {sa sa' : S}, map[sa]? = some s → map[sa']? = some s → sa = sa'
 
 attribute [simp] StInv0.wf StInv0.map_states StInv0.map_surj
 
@@ -558,18 +571,23 @@ lemma worklistRun'_init_wf inits hinits final? :
         rw [Std.HashMap.getElem?_insert]; split
         · specialize hnew sa (Std.HashMap.mem_of_getElem? hsa); simp_all
         · assumption
-    · rintro ⟨s, hs⟩ sa sa' hsa hsa'
+    · rintro s sa sa' hsa hsa'
+      have hs : s ∈ m.states ∪ {m.stateMax} := by
+        rw [Std.HashMap.getElem?_insert] at hsa
+        split_ifs at hsa
+        · simp at hsa; simp [hsa]
+        · apply hst at hsa; simp [hsa]
       simp [hsts] at hs; rcases hs with hs | rfl
       · have _ : m.stateMax ≠ s := by
           rintro rfl; simp [RawCNFA.states] at hs
         rw [Std.HashMap.getElem?_insert] at hsa hsa'
-        split at hsa <;> split at hsa' <;> simp at hsa hsa' <;> try contradiction
+        split at hsa <;> split at hsa' <;> try simp at hsa hsa' <;> try contradiction
         simp only [Subtype.forall] at hinj
-        apply hinj _ hs _ _ hsa hsa'
+        apply hinj hsa hsa'
       · rw [Std.HashMap.getElem?_insert] at hsa hsa'
         have himp : ∀ (sa : S), map[sa]? ≠ some m.stateMax := by
           rintro sa hc; apply hst at hc; simp [RawCNFA.states] at hc
-        split at hsa <;> split at hsa' <;> simp at hsa hsa'
+        split at hsa <;> split at hsa' <;> try simp at hsa hsa'
         · simp_all
         · exfalso; apply himp; assumption
         · exfalso; apply himp; assumption
@@ -797,12 +815,11 @@ omit [Fintype S] [DecidableEq S] in
 lemma processOneElem_trans (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s' : State) :
     if a = b ∧ s = s' then
       ∃ ssa, (processOneElem A S final s st (a, sa)).map[sa]? = some ssa ∧
-        (processOneElem A S final s st (a, sa)).m.trans.getD (s', b) ∅ =
-        (st.m.trans.getD (s, a) ∅ |>.insert ssa)
+        (processOneElem A S final s st (a, sa)).m.tr s' b =
+        (st.m.tr s a |>.insert ssa)
     else
-      (processOneElem A S final s st (a, sa)).m.trans.getD (s', b) ∅ =
-        st.m.trans.getD (s', b) ∅ := by
-  simp [processOneElem, worklist.St.addOrCreateState]
+      (processOneElem A S final s st (a, sa)).m.tr s' b = st.m.tr s' b := by
+  simp [processOneElem, worklist.St.addOrCreateState, RawCNFA.tr]
   split
   next _ =>
     casesm _ ∧ _; subst_eqs
@@ -824,9 +841,9 @@ lemma processOneElem_trans (st : worklist.St A S) (final : S → Bool) (a b : A)
       split; simp_all; split <;> simp }
 
 omit [Fintype S] [DecidableEq S] in
-lemma processOneElem_trans_preserved (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s1 s2 : State) :
-    s2 ∈ st.m.trans.getD (s1, b) ∅ →
-    s2 ∈ (processOneElem A S final s st (a, sa)).m.trans.getD (s1, b) ∅ := by
+lemma processOneElem_trans_preserve (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s1 s2 : State) :
+    s2 ∈ st.m.tr s1 b →
+    s2 ∈ (processOneElem A S final s st (a, sa)).m.tr s1 b := by
   have h := processOneElem_trans _ _ st final a b sa s s1
   split_ifs at h
   · obtain ⟨_, _, h2⟩ := h
@@ -836,9 +853,9 @@ lemma processOneElem_trans_preserved (st : worklist.St A S) (final : S → Bool)
 def worklist.St.rel (st : worklist.St A S) : Rel State σ := λ s q ↦
   st.map[corr_inv q]? = some s ∧ corr_inv q ∈ st.visited
 
-omit [LawfulBEq A] [Fintype S] in 
+omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel {s₁ s₂ : State} {q : σ} :
-    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q ↔ 
+    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q ↔
       (st.rel _ _ corr_inv s₂ q ∨ (s₂ = st.m.stateMax ∧ corr_inv q = sa ∧
         st.map[corr_inv q]? = none ∧ corr_inv q ∈ st.visited)) := by
   simp [worklist.St.rel]
@@ -851,19 +868,19 @@ lemma processOneElem_rel {s₁ s₂ : State} {q : σ} :
       rintro rfl rfl _; right; tauto
   · rintro (⟨heq, hin⟩ | ⟨rfl, rfl, heq⟩) <;> simp [*]
 
-omit [LawfulBEq A] [Fintype S] [LawfulBEq S] [DecidableEq S] in 
+omit [LawfulBEq A] [Fintype S] [LawfulBEq S] [DecidableEq S] in
 lemma rel_in_states {st : worklist.St A S} (hinv : StInv0 A S st.m st.map) :
     st.rel _ _ corr_inv s q → s ∈ st.m.states := by
   rintro ⟨h1, h2⟩
   apply hinv.map_states <;> assumption
 
-omit [LawfulBEq A] [Fintype S] in 
+omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel_preserve {q : σ} :
     st.rel _ _ corr_inv s₂ q →
     (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q := by
   rw [processOneElem_rel]; tauto
 
-omit [LawfulBEq A] [Fintype S] in 
+omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel_preserve_olds {q : σ} :
     (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q →
     s₂ ∈ st.m.states →
@@ -872,14 +889,14 @@ lemma processOneElem_rel_preserve_olds {q : σ} :
   rintro (h | ⟨rfl, rfl, heq, ⟨h1, h2⟩⟩) hs; exact h
   simp at hs
 
-omit [LawfulBEq A] [Fintype S] in 
+omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_dom_preserve :
     s₂ ∈ (st.rel _ _ corr_inv).dom →
     s₂ ∈ ((processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv).dom := by
   rintro ⟨q, hq⟩; use q
   apply processOneElem_rel_preserve; assumption
 
-omit [LawfulBEq A] [Fintype S] in 
+omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_codom_preserve :
     q ∈ (st.rel _ _ corr_inv).codom →
     q ∈ ((processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv).codom := by
@@ -966,7 +983,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     processOneElem_mot A S f M corr_inv s sa (k+1) (processOneElem A S final s st (a, sa')) := by
   intro a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   have hmem : ∀ s (sa : S), st.map[sa]? = some s → s ∈ st.m.states := by intros; apply inv.map_states; assumption
-  have _ : st.m.WF := by apply inv.wf
+  have hwf : st.m.WF := by apply inv.wf
   have inv' := processOneElem_inv A S final f M corr_inv s sa k a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   unfold processOneElem_mot
   constructor
@@ -998,10 +1015,58 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
   { rintro s₁ hs₁; rw [processOneElem_initials] at hs₁
     apply hsim.initial₁ at hs₁
     exact processOneElem_dom_preserve A S final corr_inv hs₁ }
-  { intros q hq; obtain hcod := hsim.initial₂ q hq
+  { intros q hq; obtain hcod := hsim.initial₂ hq
     exact processOneElem_codom_preserve A S final corr_inv hcod }
-  { rintro ⟨s', hs'⟩ b q' hq' hR hT
-    apply processOneElem_mem_states _ _ _ _ a at hs'
+  { rintro s₁ s₂ b q₁ hR htr
+    have h := processOneElem_trans A S st final a b sa' s s₁
+    split_ifs at h with hcond
+    on_goal 2 => {
+      rw [h] at htr
+      apply processOneElem_rel_preserve_olds at hR
+      specialize hR (RawCNFA.WF.trans_src_lt'' hwf htr)
+      obtain ⟨q₂, hst, hrel⟩ := hsim.trans_match₁ hR htr
+      use q₂; simp only [hst, true_and]
+      exact processOneElem_rel_preserve A S final corr_inv hrel }
+    rcases hcond with ⟨rfl, rfl⟩
+    rcases h with ⟨sₙ, hmap', htr'⟩
+    rw [htr'] at htr; clear htr'
+    simp only [Std.HashSet.mem_insert, beq_iff_eq] at htr
+    rcases htr with rfl | htr
+    on_goal 2 =>
+      have hold := RawCNFA.WF.trans_src_lt'' hwf htr
+      obtain ⟨q₂, hst, hrel⟩ := hsim.trans_match₁
+        (by apply processOneElem_rel_preserve_olds A S final corr_inv hR hold) htr
+      use q₂; simp only [hst, true_and]
+      exact processOneElem_rel_preserve A S final corr_inv hrel
+    rw [processOneElem_rel] at hR; rcases hR with hR | ⟨rfl, rfl, heq, hin⟩
+    · obtain ⟨hmap', hvis⟩ := hR
+      obtain rfl : sa = corr_inv q₁ := by
+        apply inv.map_inj hmap hmap'
+      use (corr sa')
+      rw [←corr_li q₁]
+      constructor
+      · apply hf₂; exact Array.mem_of_getElem? hf
+      · constructor; rw [corr_ri]; assumption
+
+
+
+
+
+    · rw [processOneElem_map] at hmap
+      b
+      split at hmap
+      on_goal 2 => split_ifs at hmap; simp_all; subst_eqs;
+      · simp_all; subst_eqs;
+    use corr sa'
+    constructor
+
+    apply hf₂
+
+
+
+
+    rw [processOneElem_rel] at hR
+
     rcases hs' with hs' | rfl
     on_goal 2 => {
       obtain ⟨sa', hvis, hcorr⟩ := hR
