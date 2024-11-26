@@ -168,9 +168,12 @@ macro "bv_bitwise" : tactic =>
 macro "bv_automata_classic" : tactic =>
   `(tactic|
     (
-      simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+      simp -failIfUnchanged only
+        [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
       try rw [Bool.eq_iff_iff]
-      simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+      simp -failIfUnchanged only
+        [Bool.or_eq_true_iff, Bool.and_eq_true_iff, beq_iff_eq, BitVec.ofBool_or_ofBool,
+         ofBool_1_iff_true, Bool.or_eq_true, bne_iff_ne, ne_eq, iff_true, true_iff]
       bv_automata'
     )
    )
@@ -292,6 +295,7 @@ macro "bv_bench": tactic =>
             "bv_of_bool" : (bv_of_bool; done),
             "bv_omega" : (bv_omega; done),
             "bv_automata_classic" : (bv_automata_classic; done),
+            "bv_automata'" : (bv_automata'; done),
             "simp" : (simp; done),
             "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
