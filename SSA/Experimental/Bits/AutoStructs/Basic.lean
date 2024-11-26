@@ -13,6 +13,7 @@ import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Perm.Basic
 import Mathlib.Data.List.Perm.Lattice
 import Mathlib.Data.List.Perm.Subperm
+import Mathlib.Data.Rel
 import Mathlib.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
@@ -37,42 +38,46 @@ section sim
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
+def RawCNFA.tr (m : RawCNFA A) s a := m.trans.getD (s, a) ∅
+
 noncomputable def RawCNFA.states (m : RawCNFA A) : Finset State := Finset.range m.stateMax
 
 instance RawCNFA.statesFinset (m : RawCNFA A) : Fintype m.states := (Finset.range m.stateMax).fintypeCoeSort
 
 @[simp]
-lemma RawCNFA.states_lt (m : RawCNFA A) s : s ∈ m.states → s < m.stateMax := by simp [RawCNFA.states]
+lemma RawCNFA.stateMax_nin_states (m : RawCNFA A) : ¬(m.stateMax ∈ m.states) := by 
+  simp [states]
+
+@[simp]
+lemma RawCNFA.states_lt (m : RawCNFA A) s : s ∈ m.states → s < m.stateMax := by 
+  simp [RawCNFA.states]
 
 /--
-A simulation between a concrete NFA and an abstract NFA consists in a map from
-concrete to abstract states which satisfies some properties.
+A simulation between a concrete NFA and an abstract NFA consists in a relation
+between concrete and abstract states which satisfies some properties, as defined
+in Kozen 1997.
 -/
-structure RawCNFA.SimUnpacked (m : RawCNFA A) (M : NFA A Q) (R : Set Q) (T : Set (Q × A × Q)) (f : m.states → Q) where
-  injective : Function.Injective f
-  reduced : M.Reachable = ⊤ -- all the states are reachable
-  accept s : s.val ∈ m.finals ↔ f s ∈ M.accept
-  initial s : s.val ∈ m.initials ↔ f s ∈ M.start
-  initial_all q : q ∈ M.start → ∃ s, f s = q ∧ s.val ∈ m.initials
-  trans_match₁ s a q' : q' ∈ M.step (f s) a → f s ∈ R → (f s, a, q') ∉ T → ∃ s', f s' = q' ∧ s'.val ∈ m.trans.getD (s.val, a) ∅
-  trans_match₂ s a s' : s' ∈ m.trans.getD (s.val, a) ∅ → ∃ hin : s' ∈ m.states, f ⟨s', hin⟩ ∈ M.step (f s) a
+structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : Rel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
+  accept s q : R s q → (s ∈ m.finals ↔ q ∈ M.accept)
+  initial₁ s : s ∈ m.initials → s ∈ R.dom
+  initial₂ q : q ∈ M.start → q ∈ R.codom
+  trans_match₁ s s' a q : R s q → s' ∈ m.tr s a → ∃ q', q' ∈ M.step q a ∧ R s' q'
+  trans_match₂ s a q q' : R s q → q' ∈ M.step q a → q ∈ D → (q, a, q') ∉ T → ∃ s', s' ∈ m.tr s a ∧ R s' q'
 
-attribute [aesop 50% unsafe]
- RawCNFA.SimUnpacked.initial_all
- RawCNFA.SimUnpacked.trans_match₁
- RawCNFA.SimUnpacked.trans_match₂
+/--
+Similarity is the greatest simulation
+-/
+def RawCNFA.Sim (m : RawCNFA A) (A : NFA A S) := ∃ R, RawCNFA.Simul m A R ⊤ ∅
 
-def RawCNFA.Sim (m : RawCNFA A) (A : NFA A S) := ∃ f, RawCNFA.SimUnpacked m A ⊤ ∅ f
-
-def sim_closed_set (m : RawCNFA A) (M : NFA A S) (R : Set S) (T : Set (S × A × S)) f (hcl: M.closed_set R) :
+def sim_closed_set (m : RawCNFA A) (M : NFA A Q) (D : Set Q) (T : Set (Q × A × Q)) R :
     T = ∅ →
-    m.SimUnpacked M R T f → m.Sim M := by
-  rintro rfl ⟨_, hr, _, _, _, h, _⟩; use f
+    R.codom = D →
+    m.Simul M R D T → m.Sim M := by
+  rintro rfl hcod ⟨_, _, _, _, h⟩; use R
   constructor <;> try assumption
-  rintro s a q' hq' hreach _
+  rintro s a q q' hR hst hD _
   apply h <;> try assumption
-  rw [←hr] at hreach
-  apply NFA.reachable_sub_closed_set at hreach <;> assumption
+  rw [←hcod]; use s
 
 end sim
 
@@ -125,10 +130,8 @@ def RawCNFA.transSetBV (m : RawCNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec
   (List.finRange m.stateMax).foldl (init := BitVec.zero m.stateMax) fun res n =>
     if ss[n] then res ||| m.transBV ⟨n.val, by simp [RawCNFA.states]⟩ a else res
 
-/-
-Computes the set of states of the automaton. This is only meant to be used in proofs
-and is quite horrible. The alternative is to have a dependent type asserting that
-all the states involved are `< stateMax` which may be a better idea...
+/--
+An automaton is well-formed if all the states it mentions are valid, in that they are `< stateMax`.
 -/
 structure RawCNFA.WF (m : RawCNFA A) where
   initials_lt : ∀ s ∈ m.initials, s < m.stateMax
@@ -677,13 +680,18 @@ def worklistRun (final : S → Bool) (inits : Array S)
 variable (final : S → Bool) (f : S → Array (A × S)) (inits : Array S)
 variable (M : NFA A σ)
 variable (corr : S → σ)
-variable (corr_inj : Function.Injective corr)
+variable (corr_inv : σ → S)
+variable (corr_li : Function.LeftInverse corr corr_inv)
+variable (corr_ri : Function.RightInverse corr corr_inv)
 variable (final_corr : ∀ (s : S), final s ↔ corr s ∈ M.accept)
-variable (hinit₁ : ∀ sa ∈ inits, corr sa ∈ M.start)
-variable (hinit₂ : ∀ q ∈  M.start, ∃ sa, corr sa = q ∧ sa ∈ inits)
-variable (hf₁: ∀ sa q' a, q' ∈ M.step (corr sa) a → ∃ sa', corr sa' = q' ∧ (a, sa') ∈ f sa)
+variable (hinit : ∀ (sa : S), sa ∈ inits ↔ corr sa ∈ M.start)
+variable (hf₁: ∀ sa q' a, q' ∈ M.step (corr sa) a → (a, corr_inv q') ∈ f sa)
 variable (hf₂: ∀ sa a sa', (a, sa') ∈ f sa → corr sa' ∈ M.step (corr sa) a)
 
+include corr_ri in
+omit [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S] in
+@[simp]
+lemma corr_inv_corr sa : corr_inv (corr sa) = sa := by rw [corr_ri]
 
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma addOrCreateElem_visited final? (st : worklist.St A S) sa :
@@ -709,49 +717,11 @@ lemma processOneElem_visited (st : worklist.St A S) :
   rw [←addOrCreateElem_visited _ _ (final sa') st sa']
   simp [st', processOneElem, worklist.St.visited]
 
-def worklist.St.R (st : worklist.St A S) : Set σ := { q : σ | ∃ sa ∈ st.visited, corr sa = q }
+def worklist.St.D (st : worklist.St A S) : Set σ := { q : σ | corr_inv q ∈ st.visited }
 
-structure StInv (T : Set (S × A × S)) (st : worklist.St A S) extends StInv0 A S st.m st.map where
-  frontier : ∀ sa a q', sa ∈ st.visited → q' ∈ M.step (corr sa) a →
-               ∃ sa', corr sa' = q' ∧ (sa' ∈ st.map ∨ (sa, a, sa') ∈ T)
+structure StInv (st : worklist.St A S) extends StInv0 A S st.m st.map where
 
-local notation "StInv'" => StInv A S M corr
-
--- We make a map from the (nat) states of the automaton to the
--- abstract states using the axiom of choice applied to the
--- property `StInv.map_surj`
-noncomputable def StInv.mFun (inv : StInv A S M corr T st) : st.m.states → S :=
-  Classical.choose $ Classical.axiomOfChoice inv.map_surj
-
-omit [Fintype S] [LawfulBEq S] [DecidableEq S] [LawfulBEq A] in
-lemma StInv.mFun_spec (inv : StInv' T st) (s : st.m.states) : st.map[inv.mFun _ _ _ _ s]? = some s := by
-  simp [StInv.mFun]
-  apply Classical.choose_spec (Classical.axiomOfChoice inv.map_surj)
-
-omit [Fintype S] [LawfulBEq S] [DecidableEq S] [LawfulBEq A] in
-lemma StInv.mFun_eq (inv : StInv' T st) (s : st.m.states) (sa : S) :
-    st.map[sa]? = some s → sa = inv.mFun _ _ _ _ s := by
-  intros heq; apply inv.map_inj
-  · exact heq
-  · apply inv.mFun_spec
-
-omit [Fintype S] [LawfulBEq S] [DecidableEq S] [LawfulBEq A] in
-lemma StInv.mFun_inj (inv : StInv' T st) (s s' : st.m.states) :
-    inv.mFun _ _ _ _ s  = inv.mFun _ _ _ _ s' → s.val = s'.val := by
-  intros heq
-  have h1 := inv.mFun_spec _ _ _ _ s
-  have h2 := inv.mFun_spec _ _ _ _ s'
-  rcases s; rcases s'
-  simp_all
-
-omit [Fintype S] [LawfulBEq S] [DecidableEq S] [LawfulBEq A] in
-lemma StInv.mFun_inj' (inv : StInv' T st) : Function.Injective (inv.mFun _ _ _ _) := by
-  rintro ⟨s1, hs1⟩ ⟨s2, hs2⟩ heq; simp
-  apply inv.mFun_inj _ _ _ _ ⟨s1, hs1⟩ ⟨s2, hs2⟩ heq
-
-omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
-lemma mFun_mem (inv : StInv' T st) (s : st.m.states) : inv.mFun _ _ _ _ s ∈ st.map :=
-  Std.HashMap.mem_of_getElem? (inv.mFun_spec _ _ _ _ s)
+local notation "StInv'" => StInv A S
 
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma processOneElem_states (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -863,31 +833,72 @@ lemma processOneElem_trans_preserved (st : worklist.St A S) (final : S → Bool)
     simp_all
   · simp_all
 
-noncomputable def StInv.fun (inv : StInv' T st) : st.m.states → σ := corr ∘ inv.mFun
+def worklist.St.rel (st : worklist.St A S) : Rel State σ := λ s q ↦
+  st.map[corr_inv q]? = some s ∧ corr_inv q ∈ st.visited
 
--- why is it needed?
-include corr_inj in
-omit [LawfulBEq A] [Fintype S] [LawfulBEq S] [DecidableEq S] in
-lemma StInv.fun_inj (inv : StInv' T st) :
-    Function.Injective (inv.fun _ _ _ _) := by
-  simp [StInv.fun]
-  rw [Function.Injective.of_comp_iff]
-  · apply mFun_inj'
-  · exact corr_inj
+omit [LawfulBEq A] [Fintype S] in 
+lemma processOneElem_rel {s₁ s₂ : State} {q : σ} :
+    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q ↔ 
+      (st.rel _ _ corr_inv s₂ q ∨ (s₂ = st.m.stateMax ∧ corr_inv q = sa ∧
+        st.map[corr_inv q]? = none ∧ corr_inv q ∈ st.visited)) := by
+  simp [worklist.St.rel]
+  rw [processOneElem_map, processOneElem_visited]
+  constructor
+  · split
+    next s heq => simp only [Option.some.injEq]; rintro ⟨rfl, _⟩; tauto
+    next hnone =>
+      simp only [Option.ite_none_right_eq_some, Option.some.injEq, and_imp]
+      rintro rfl rfl _; right; tauto
+  · rintro (⟨heq, hin⟩ | ⟨rfl, rfl, heq⟩) <;> simp [*]
 
-abbrev StInv.sim {st : worklist.St A S} (inv : StInv' T st) :=
-  st.m.SimUnpacked M (st.R A S corr) {(q, a, q') | ∃ sa sa', (sa, a, sa') ∈ T ∧ corr sa = q ∧ corr sa' = q' } (inv.fun A S M corr)
+omit [LawfulBEq A] [Fintype S] [LawfulBEq S] [DecidableEq S] in 
+lemma rel_in_states {st : worklist.St A S} (hinv : StInv0 A S st.m st.map) :
+    st.rel _ _ corr_inv s q → s ∈ st.m.states := by
+  rintro ⟨h1, h2⟩
+  apply hinv.map_states <;> assumption
+
+omit [LawfulBEq A] [Fintype S] in 
+lemma processOneElem_rel_preserve {q : σ} :
+    st.rel _ _ corr_inv s₂ q →
+    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q := by
+  rw [processOneElem_rel]; tauto
+
+omit [LawfulBEq A] [Fintype S] in 
+lemma processOneElem_rel_preserve_olds {q : σ} :
+    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q →
+    s₂ ∈ st.m.states →
+    st.rel _ _ corr_inv s₂ q := by
+  rw [processOneElem_rel]
+  rintro (h | ⟨rfl, rfl, heq, ⟨h1, h2⟩⟩) hs; exact h
+  simp at hs
+
+omit [LawfulBEq A] [Fintype S] in 
+lemma processOneElem_dom_preserve :
+    s₂ ∈ (st.rel _ _ corr_inv).dom →
+    s₂ ∈ ((processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv).dom := by
+  rintro ⟨q, hq⟩; use q
+  apply processOneElem_rel_preserve; assumption
+
+omit [LawfulBEq A] [Fintype S] in 
+lemma processOneElem_codom_preserve :
+    q ∈ (st.rel _ _ corr_inv).codom →
+    q ∈ ((processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv).codom := by
+  rintro ⟨q, hq⟩; use q
+  apply processOneElem_rel_preserve; assumption
+
+abbrev worklist.St.sim {st : worklist.St A S} (T : Set (S × A × S)) :=
+  st.m.Simul M (st.rel _ _ corr_inv) (st.D A S corr_inv) {(q, a, q') | (corr_inv q, a, corr_inv q') ∈ T }
 
 def processOneElem_mot (s : State) (sa : S) (n : ℕ) (st : worklist.St A S) : Prop :=
   st.map[sa]? = some s ∧
   sa ∈ st.visited ∧
-  ∃ (inv : StInv A S M corr st (T := {(sa1, a, sa') | sa1 = sa ∧ ∃ k ≥ n, (f sa)[k]? = some (a, sa') })),
-    inv.sim A S M corr
+  StInv A S st /-(T := {(sa1, a, sa') | sa1 = sa ∧ ∃ k ≥ n, (f sa)[k]? = some (a, sa') }))-/ ∧
+  st.sim A S M corr_inv {(sa1, a, sa') | sa1 = sa ∧ ∃ k ≥ n, (f sa)[k]? = some (a, sa') }
 
 def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     ∀ a sa', (f sa)[k]? = some (a, sa') →
-    processOneElem_mot A S f M corr s sa k st →
-    StInv' {(sa1, a, sa') | sa1 = sa ∧ ∃ k' ≥ k + 1, (f sa)[k']? = some (a, sa')} (processOneElem A S final s st (a, sa')) := by
+    processOneElem_mot A S f M corr_inv s sa k st →
+    StInv' /-{(sa1, a, sa') | sa1 = sa ∧ ∃ k' ≥ k + 1, (f sa)[k']? = some (a, sa')}-/ (processOneElem A S final s st (a, sa')) := by
   rintro a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   have hmem : ∀ s (sa : S), st.map[sa]? = some s → s ∈ st.m.states := by intros; apply inv.map_states; assumption
   have _ : st.m.WF := by apply inv.wf
@@ -944,20 +955,6 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       apply st.m.states_lt
       exact hmem st.m.stateMax sa2 (by assumption)
     · simp }
-  { intros sa' a q' hsa' hq'
-    rw [processOneElem_visited] at hsa'
-    obtain ⟨sa', h1, h2⟩ := inv.frontier sa' a q' (by simp_all [worklist.St.visited]) hq'
-    use sa'; constructor; assumption
-    rcases h2 with h2 | ⟨rfl, k', hk', h2⟩
-    { left; apply processOneElem_preserves_mem; assumption }
-    by_cases hkeq : k' = k
-    on_goal 2 => right; dsimp; constructor; rfl; use k'; constructor; omega; assumption
-    subst_eqs; left
-    simp only [processOneElem, worklist.St.addOrCreateState]
-    split; on_goal 2 => simp_all
-    next _ _ heq =>
-      simp_all; rw [h2] at *; casesm* _ ∧ _ ; injections; subst_eqs
-      apply Std.HashMap.mem_of_getElem?; simp_all; rfl }
 
 seal GetElem.getElem in
 seal GetElem?.getElem? in
@@ -965,86 +962,44 @@ seal GetElem?.getElem? in
 set_option debug.skipKernelTC true in -- deterministic timeout
 def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     ∀ a sa', (f sa)[k]? = some (a, sa') →
-    processOneElem_mot A S f M corr s sa k st →
-    processOneElem_mot A S f M corr s sa (k+1) (processOneElem A S final s st (a, sa')) := by
+    processOneElem_mot A S f M corr_inv s sa k st →
+    processOneElem_mot A S f M corr_inv s sa (k+1) (processOneElem A S final s st (a, sa')) := by
   intro a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   have hmem : ∀ s (sa : S), st.map[sa]? = some s → s ∈ st.m.states := by intros; apply inv.map_states; assumption
-  -- have hs : s ∈ st.m.states := by apply inv.map_states; assumption
   have _ : st.m.WF := by apply inv.wf
-  have inv' := processOneElem_inv A S final f M corr s sa k a sa' hf ⟨hmap, hvisited, inv, hsim⟩
-  have hmfun s' hs hs' : inv.mFun _ _ _ _ ⟨s', hs⟩ = inv'.mFun _ _ _ _ ⟨s', hs'⟩ := by
-    have h1 := inv.mFun_spec _ _ _ _ ⟨s', hs⟩
-    have h2 := inv'.mFun_spec _ _ _ _ ⟨s', hs'⟩
-    apply inv'.map_inj ⟨s', hs'⟩
-    · apply processOneElem_preserves_map
-      exact h1
-    · apply h2
-  have hfun s' hs hs' : inv.fun _ _ _ _ ⟨s', hs⟩ = inv'.fun _ _ _ _ ⟨s', hs'⟩:= by
-    simp [StInv.fun]; rw [hmfun]
+  have inv' := processOneElem_inv A S final f M corr_inv s sa k a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   unfold processOneElem_mot
   constructor
   (rw [processOneElem_preserves_map]; assumption)
   constructor
   (rw [processOneElem_visited]; exact hvisited)
   use inv'; constructor
-  { exact StInv.fun_inj A S M corr corr_inj inv' }
-  { exact hsim.reduced }
   { rw [processOneElem_finals]
-    rintro ⟨sa1, hsa1⟩
-    rw [processOneElem_states] at hsa1
-    split_ifs with hcond
-    { split_ifs at hsa1; simp_all
-      simp at hsa1; rcases hsa1 with hsa1 | rfl
-      · have hneq : sa1 ≠ st.m.stateMax := by rintro rfl; simp [RawCNFA.states] at hsa1
-        rw [Std.HashSet.mem_insert]; constructor
-        · rintro (hc | hfin)
-          dsimp at hc; exfalso; simp at hneq hc; rw [hc] at hneq; simp at hneq
-          apply hsim.accept ⟨_, hsa1⟩ |>.mp at hfin
-          rw [←hfun]; exact hfin
-        · intros hin; rw [←hfun _ hsa1] at hin; apply hsim.accept _ |>.mpr at hin
-          right; trivial
-      · constructor
-        · intros; rcases hcond with ⟨_, hfinal⟩
-          apply final_corr _ |>.mp at hfinal
-          unfold StInv.fun
-          convert hfinal
-          dsimp; congr; symm; apply inv'.mFun_eq; dsimp
-          have hn : st.map[sa']? = none := by apply Std.HashMap.getElem?_eq_none; assumption
-          rw [processOneElem_new_map, hn]
-        · intros _; exact Std.HashSet.mem_insert_self }
-    { simp at hcond
-      split_ifs at hsa1
-      { rw [hsim.accept ⟨_, hsa1⟩, ←hfun] }
-      { simp at hsa1; rcases hsa1 with hsa1 | rfl
-        · rw [hsim.accept ⟨_, hsa1⟩, ←hfun]
-        · constructor
-          · simp; intros hc; exfalso; apply inv.wf.finals_lt at hc; simp at hc
-          · intros hacc; apply final_corr _ |>.mpr at hacc
-            suffices hc' : final sa' = true by
-              specialize hcond (by assumption)
-              exfalso; rw [←Bool.false_eq_true]
-              rw [←hc', ←hcond]
-            convert hacc
-            apply inv'.mFun_eq
-            have hn : st.map[sa']? = none := by apply Std.HashMap.getElem?_eq_none; assumption
-            rw [processOneElem_new_map, hn]; simp } } }
-  { rintro ⟨s', hs'⟩; rw [processOneElem_initials];
-    rw [processOneElem_states] at hs'
-    have hin : s' ∈ st.m.newState.2.states := by
-      split at hs'; exact hs'; simp; left; exact hs'
-    simp at hin; rcases hin with hin | rfl
-    · rw [←hfun _ hin]; rw [hsim.initial ⟨s', hin⟩]
-    · constructor
-      · intros h; apply inv.wf.initials_lt at h; simp at h
-      · intros h; obtain ⟨s', hs', hinit⟩ := hsim.initial_all _ h
-        rw [hfun _ _ (by rw [processOneElem_states]; split <;> simp)] at hs'
-        apply corr_inj at hs'
-        convert hinit using 1
-        symm; apply inv'.mFun_inj _ _ _ _ _ _ hs' }
-  { intros q hq; obtain ⟨s', hs', hin⟩ := hsim.initial_all q hq
-    use ⟨s', by simp [processOneElem_states]; split <;> simp⟩
-    rcases s' with ⟨s', hs''⟩
-    rw [←hfun _ hs'', processOneElem_initials]; dsimp; simp_all only [ge_iff_le, and_self] }
+    rintro s' q hR
+    have hs' : s ∈ st.m.states := by apply hmem <;> assumption
+    rw [processOneElem_rel] at hR
+    rcases hR with hR | ⟨rfl, rfl, heq, hin⟩
+    · have heq := rel_in_states A S _ inv.toStInv0 hR
+      split_ifs with hcond
+      · have hneq : st.m.stateMax ≠ s' := by rintro rfl; simp [RawCNFA.states] at heq
+        simp [hneq]
+        apply hsim.accept <;> assumption
+      · apply hsim.accept <;> assumption
+    · split_ifs with h
+      · rcases h with ⟨_, hfin⟩
+        rw [final_corr] at hfin
+        rw [corr_li] at hfin
+        simpa [hin]
+      · have ha := final_corr (corr_inv q)
+        rw [corr_li] at ha; rw [←ha]
+        rcases hin with ⟨hin, _⟩
+        suffices _ : corr_inv q ∉ st.map by contradiction
+        exact Std.HashMap.getElem?_none_not_mem heq }
+  { rintro s₁ hs₁; rw [processOneElem_initials] at hs₁
+    apply hsim.initial₁ at hs₁
+    exact processOneElem_dom_preserve A S final corr_inv hs₁ }
+  { intros q hq; obtain hcod := hsim.initial₂ q hq
+    exact processOneElem_codom_preserve A S final corr_inv hcod }
   { rintro ⟨s', hs'⟩ b q' hq' hR hT
     apply processOneElem_mem_states _ _ _ _ a at hs'
     rcases hs' with hs' | rfl
