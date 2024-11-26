@@ -170,7 +170,7 @@ macro "bv_automata_classic" : tactic =>
     (
       simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
       try rw [Bool.eq_iff_iff]
-      simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+      simp (config := {failIfUnchanged := false}) only [Bool.or_eq_true_iff, Bool.and_eq_true_iff, beq_iff_eq]
       bv_automata'
     )
    )
