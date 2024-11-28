@@ -54,7 +54,7 @@ The set of `n`-tuples of bit vectors of an arbitrary width.
 -/
 structure BitVecs (n : Nat) where
   w : Nat
-  bvs : Vector (BitVec w) n
+  bvs : Mathlib.Vector (BitVec w) n
 
 abbrev BitVecs.empty : BitVecs n := ⟨0, Mathlib.Vector.replicate n .nil⟩
 abbrev BitVecs.singleton {w : Nat} (bv : BitVec w) : BitVecs 1 := ⟨w, bv ::ᵥ .nil⟩
@@ -91,7 +91,7 @@ def enc (bvs : BitVecs n) : BitVecs' n :=
 
 def dec (bvs' : BitVecs' n) : BitVecs n where
   w := bvs'.length
-  bvs := Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
+  bvs := Mathlib.Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
 
 @[simp]
 lemma dec_nil n : dec (n := n) [] = BitVecs.empty := by
@@ -167,7 +167,7 @@ def dec_inj {n : Nat} : Function.Injective (dec (n := n)) := by
 @[simp]
 lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
-    bvs := Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
+    bvs := Mathlib.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
   ext k i <;> simp [dec]
   rw [BitVec.getLsbD_cons]
   rcases i with ⟨i, hi⟩; simp at hi ⊢
