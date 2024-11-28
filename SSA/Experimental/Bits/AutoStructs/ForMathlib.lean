@@ -91,7 +91,7 @@ def enc (bvs : BitVecs n) : BitVecs' n :=
 
 def dec (bvs' : BitVecs' n) : BitVecs n where
   w := bvs'.length
-  bvs := Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
+  bvs := Mathlib.Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
 
 @[simp]
 lemma dec_nil n : dec (n := n) [] = BitVecs.empty := by
