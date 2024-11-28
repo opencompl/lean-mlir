@@ -54,7 +54,7 @@ The set of `n`-tuples of bit vectors of an arbitrary width.
 -/
 structure BitVecs (n : Nat) where
   w : Nat
-  bvs : Vector (BitVec w) n
+  bvs : Mathlib.Vector (BitVec w) n
 
 abbrev BitVecs.empty : BitVecs n := ⟨0, Mathlib.Vector.replicate n .nil⟩
 abbrev BitVecs.singleton {w : Nat} (bv : BitVec w) : BitVecs 1 := ⟨w, bv ::ᵥ .nil⟩
