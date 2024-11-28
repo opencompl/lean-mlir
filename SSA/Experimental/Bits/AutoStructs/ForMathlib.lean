@@ -167,7 +167,7 @@ def dec_inj {n : Nat} : Function.Injective (dec (n := n)) := by
 @[simp]
 lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
-    bvs := Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
+    bvs := Mathlib.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
   ext k i <;> simp [dec]
   rw [BitVec.getLsbD_cons]
   rcases i with ⟨i, hi⟩; simp at hi ⊢
