@@ -251,9 +251,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       simp [a_1] at hh
     have w_gt_1 : 1 < w := by omega
     have el_one: 1 % 2^w = 1 := by
-      rw [Nat.mod_eq_of_lt]
-      have aa := Nat.lt_two_pow w
-      omega
+      simp only [Nat.one_lt_two_pow (n := w) (by omega), Nat.mod_eq_of_lt]
     have el_three: 3 % 2^w = 3 := by
       rw [Nat.mod_eq_of_lt];
       have x := @Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega);
