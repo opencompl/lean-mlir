@@ -82,8 +82,21 @@ abbrev map (f : Bool → Bool) : BitStream → BitStream :=
 abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStream :=
   fun x y i => f (x i) (y i)
 
+/-- Scan the bitstream with operator `f` and seed value `init` -/
+abbrev scanl (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : BitStream :=
+  fun n => match n with
+    | 0 => f init (s 0)
+    | n+1 => f (scanl init f s n) (s (n + 1)) 
+
+@[simp]
+theorem scanl_zero (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : scanl init f s 0 = f init (s 0) := rfl
+
+@[simp]
+theorem scanl_succ (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : scanl init f s (n+1) = f (scanl init f s n) (s (n+1)) := rfl
+
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
+
 
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
@@ -215,6 +228,7 @@ instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
 instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
 
+
 section Lemmas
 variable {w : Nat}
 
@@ -254,6 +268,50 @@ variable (x y : BitVec (w+1))
 end Lemmas
 
 end BitwiseOps
+
+section Scan
+
+/-- Scan the bitwise or operation on bitstreams -/
+def scanOr (s : BitStream) : BitStream := scanl false Bool.or s
+
+
+@[simp]
+theorem scanOr_zero (s : BitStream) : scanOr s 0 = s 0 := rfl
+
+@[simp]
+theorem scanOr_succ (s : BitStream) : scanOr s (n+1) = ((s.scanOr n) || s (n + 1)) := rfl
+
+/-- ScanOr is an idempotent operation -/
+@[simp]
+theorem scanOr_idem (s : BitStream) : s.scanOr.scanOr = s.scanOr := by
+  ext n
+  simp [scanOr]
+  induction n
+  case zero => simp
+  case succ n ih => simp [ih]
+
+/-- The result of `scanOr` is false at inde `i` if the bitstream has been false upto (and including) time `n`. -/
+theorem scanOr_false_iff (s : BitStream) (n : Nat) : s.scanOr n = false ↔ ∀ (i : Nat), (hi : i ≤ n) → s i = false := by
+  induction n
+  · simp
+  case succ n ih =>
+    simp only [scanOr_succ, Bool.or_eq_false_iff]
+    constructor
+    · intros h i hi
+      have hi' : i = n + 1 ∨ i < n + 1 := by omega
+      rcases hi' with rfl | hi'
+      · simp [h]
+      · apply ih.mp
+        · simp [h]
+        · omega
+    · intros h
+      constructor
+      · apply ih.mpr
+        intros i hi
+        exact h _ (by omega)
+      · apply h _ (by omega)
+
+end Scan
 
 /-! # Addition, Subtraction, Negation -/
 section Arith

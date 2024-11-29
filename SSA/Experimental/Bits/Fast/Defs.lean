@@ -143,3 +143,110 @@ and only require that many bitstream values to be given in `vars`.
   | incr t      => BitStream.incr (Term.evalFin t vars)
   | decr t      => BitStream.decr (Term.evalFin t vars)
   | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
+
+
+/--
+The fragment of predicate logic that we support in `bv_automata`.
+Currently, we support equality, conjunction, disjunction, and negation.
+This can be expanded to also support arithmetic constraints such as unsigned-less-than.
+-/
+-- a < b <=> b <= a
+inductive Predicate : Type where
+| eq (t₁ t₂ : Term) : Predicate
+-- | neq (t₁ t₂ : Term) : Predicate
+-- | lt (t₁ t₂ : Term) : Predicate
+-- | land  (p q : Predicate) : Predicate)
+-- | lor (p q : Predicate) : Predicate)
+
+
+-- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
+open BitStream in
+/--
+Evaluate a term `t` to the BitStream it represents,
+given a value for the free variables in `t`.
+
+Note that we don't keep track of how many free variable occur in `t`,
+so eval requires us to give a value for each possible variable.
+-/
+def Predicate.eval (p : Predicate) (vars : Nat → BitStream) : BitStream :=
+  match p with
+  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars).scanOr
+
+@[simp]
+theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
+
+section Predicate
+/-- If the two bitstreams are equal, the Predicate.eq will be always zero -/
+lemma eq_iff_all_zeroes (t₁ t₂ : Term) :
+    (t₁.eval = t₂.eval) ↔ (∀ n x, (Predicate.eq t₁ t₂).eval x n = false) := by
+  constructor
+  · intros heq
+    intros n x
+    induction n generalizing x t₁ t₂
+    case zero => simp [Predicate.eval, heq]
+    case succ n ih =>
+      simp only [Predicate.eval, BitStream.scanOr_succ, BitStream.xor_eq, Bool.or_eq_false_iff,
+        bne_eq_false_iff_eq] at ih ⊢
+      constructor
+      · apply ih
+        exact heq
+      · simp [heq]
+  · intros heq
+    ext x n
+    specialize (heq n x)
+    simp only [Predicate.eval] at heq
+    rw [BitStream.scanOr_false_iff] at heq
+    specialize (heq n (by omega))
+    simp only [BitStream.xor_eq, bne_eq_false_iff_eq] at heq
+    exact heq
+
+/-- If something is always true, then it is eventually always true. -/
+theorem eventually_all_zeroes_of_all_zeroes (b : BitStream) (h : ∀ n, b n = false) : ∃ (N : Nat), ∀ n ≥ N, b n = false := by
+  exists Nat.zero
+  simp [h]
+
+
+/-- If the scanOr of something is eventually always zeroes, then it must be all zeroes. -/
+theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N : Nat), ∀ n ≥ N, b.scanOr n = false) : ∀ n, b n = false := by
+  intros n
+  have ⟨N, h⟩ := h
+  simp [BitStream.scanOr_false_iff] at h
+  apply h (n := max N n) <;> omega
+
+/-- Two terms are equal iff the stream of `Predicate.eq` is eventually always zero. -/
+lemma term_eval_eq_iff_Predicate_eventually_all_zeroes_predicate_eq (t₁ t₂ : Term) :
+    (t₁.eval = t₂.eval) ↔ (∃ (N : Nat), ∀ n ≥ N, ∀ x, (Predicate.eq t₁ t₂).eval x n = false) := by
+  constructor
+  · intros h
+    exists 0
+    simp only [ge_iff_le, zero_le, forall_const]
+    intros x n
+    apply (eq_iff_all_zeroes t₁ t₂).mp h
+  · intros h
+    suffices t₁.eval = t₂.eval by simp [this]
+    apply eq_iff_all_zeroes t₁ t₂ |>.mpr
+    intros n x
+    apply all_zeroes_of_scanOr_eventually_all_zeroes
+    -- This is a pretty crazy proof strategy, where we rely on the fact that scanOr is idempotent :)
+    -- While very clever, @bollu should refactor this to be a bit more sane.
+    simp [Predicate.eval] at h ⊢
+    obtain ⟨N, h⟩ := h
+    exists N
+    intros n hn
+    apply h
+    exact hn
+
+end Predicate
+
+@[simp] def Predicate.arity : Predicate → Nat
+| .eq t1 t2 => max (t1.arity) (t2.arity)
+
+/-- denote a reflected `predicate` into a `prop. -/
+@[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
+match p with
+| .eq t₁ t₂ =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    (x₁ ^^^ x₂).scanOr
+
+
