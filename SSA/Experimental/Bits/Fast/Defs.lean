@@ -149,28 +149,41 @@ and only require that many bitstream values to be given in `vars`.
 The fragment of predicate logic that we support in `bv_automata`.
 Currently, we support equality, conjunction, disjunction, and negation.
 This can be expanded to also support arithmetic constraints such as unsigned-less-than.
+
+Meaning of the denotation:
+
+`p w = false` iff the predicate holds *at* width w
 -/
--- a < b <=> b <= a
+-- a < b <=> a - b < 0
+-- a <= 0 <=> a < 0 ∨ a = 0
+-- a > b <=> b < a <=> b - a < 0
 inductive Predicate : Type where
 | eq (t₁ t₂ : Term) : Predicate
--- | neq (t₁ t₂ : Term) : Predicate
--- | lt (t₁ t₂ : Term) : Predicate
--- | land  (p q : Predicate) : Predicate)
--- | lor (p q : Predicate) : Predicate)
+| neq (t₁ t₂ : Term) : Predicate
+| isNeg (t : Term) : Predicate
+| land  (p q : Predicate) : Predicate
+| lor (p q : Predicate) : Predicate
 
 
 -- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
 open BitStream in
 /--
-Evaluate a term `t` to the BitStream it represents,
-given a value for the free variables in `t`.
-
-Note that we don't keep track of how many free variable occur in `t`,
-so eval requires us to give a value for each possible variable.
+Evaluate a term predicate `p` to the BitStream it represents,
+where the predicate is `true` at index `i` if and only if the predicate,
+when truncated to index `i`, is true.
 -/
 def Predicate.eval (p : Predicate) (vars : Nat → BitStream) : BitStream :=
   match p with
-  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars).scanOr
+  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars)
+  | isNeg t => t.eval vars
+  /-
+  If it is ever not equal, then we want to stay not equals for ever.
+  So, if the 'a = b' returns 'false' at some index 'i', we will stay false
+  for all indexes '≥ i'.
+  -/
+  | neq t1 t2 => ((t1.eval vars).nxor (t2.eval vars)).scanAnd
+  | lor p q => (p.eval vars) ||| (q.eval vars)
+  | land p q => (p.eval vars) &&& (q.eval vars)
 
 @[simp]
 theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
@@ -213,7 +226,9 @@ theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N :
   simp [BitStream.scanOr_false_iff] at h
   apply h (n := max N n) <;> omega
 
-/-- Two terms are equal iff the stream of `Predicate.eq` is eventually always zero. -/
+/--
+Two terms are equal iff the stream of `Predicate.eq` is eventually always zero.
+-/
 lemma term_eval_eq_iff_Predicate_eventually_all_zeroes_predicate_eq (t₁ t₂ : Term) :
     (t₁.eval = t₂.eval) ↔ (∃ (N : Nat), ∀ n ≥ N, ∀ x, (Predicate.eq t₁ t₂).eval x n = false) := by
   constructor
@@ -235,6 +250,14 @@ lemma term_eval_eq_iff_Predicate_eventually_all_zeroes_predicate_eq (t₁ t₂ :
     intros n hn
     apply h
     exact hn
+
+/-- Terms are equal if the 'eq' predicate at width 'x' returns 'false' -/
+lemma Predicate.eq_iff_toBitVec_eval_eq :
+    ((t₁.eval x).toBitVec w = (t₂.eval x).toBitVec w) ↔ ((Predicate.eq t₁ t₂).eval x w = false) := by
+  constructor
+  · sorry
+  · intros h
+    sorry
 
 end Predicate
 

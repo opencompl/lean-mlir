@@ -82,7 +82,11 @@ abbrev map (f : Bool → Bool) : BitStream → BitStream :=
 abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStream :=
   fun x y i => f (x i) (y i)
 
-/-- Scan the bitstream with operator `f` and seed value `init` -/
+/--
+Fold with intermediate steps also available as a bitstream.
+(scanl init op s)[0] = op s[0] init
+(scanl init op s)[i+1] = op (scanl init op s)[i] s[i+1]
+-/
 abbrev scanl (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : BitStream :=
   fun n => match n with
     | 0 => f init (s 0)
@@ -192,6 +196,8 @@ def printPrefix (x : BitStream) : Nat → String
     let t := x.tail.printPrefix n
     t ++ h
 
+
+
 section Lemmas
 
 @[simp] theorem toBitVec_ofBitVec (x : BitVec w) (w' : Nat) :
@@ -228,6 +234,11 @@ instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
 instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
 
+/--
+Return a stream of pointwise equality of booleans.
+This is the same as ~(a⊕b), and thus we call it `not xor`.
+-/
+def nxor (a b : BitStream) : BitStream := BitStream.map₂ (fun x y => x == y) a b
 
 section Lemmas
 variable {w : Nat}
@@ -310,6 +321,75 @@ theorem scanOr_false_iff (s : BitStream) (n : Nat) : s.scanOr n = false ↔ ∀ 
         intros i hi
         exact h _ (by omega)
       · apply h _ (by omega)
+
+
+/-- The result of `scanOr` is true at index `i` if the bitstream has been true at some index `i ≤ n`. -/
+theorem scanOr_true_iff (s : BitStream) (n : Nat)
+    : s.scanOr n = true ↔ ∃ (i : Nat), (i ≤ n) ∧ s i = true := by
+  constructor
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanOr_false_iff _ _).mpr (by assumption)
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanOr_false_iff _ _).mp (by assumption)
+
+/--
+(scan s)[0] = s[0]
+(scan s)[i+1] = (scan s)[i] && s[i+1]
+-/
+def scanAnd (s : BitStream) : BitStream := scanl true Bool.and s
+
+
+@[simp] theorem scanAnd_zero (s : BitStream) : scanAnd s 0 = s 0 := rfl
+
+@[simp] theorem scanAnd_succ (s : BitStream) : scanAnd s (n+1) = ((s.scanAnd n) && s (n + 1)) := rfl
+
+/-- ScanAnd is an idempotent operation. -/
+@[simp]
+theorem scanAnd_idem (s : BitStream) : s.scanAnd.scanAnd = s.scanAnd := by
+  ext n
+  simp [scanAnd]
+  induction n
+  case zero => simp
+  case succ n ih => simp [ih]
+
+/-- The result of `scanAnd` is true at index `i` if the bitstream has been true upto (and including) time `n`. -/
+theorem scanAnd_true_iff (s : BitStream) (n : Nat) :
+    s.scanAnd n = true ↔ ∀ (i : Nat), (hi : i ≤ n) → s i = true := by
+  induction n
+  · simp
+  case succ n ih =>
+    simp only [scanAnd_succ, Bool.and_eq_true]
+    constructor
+    · intros h i hi
+      have hi' : i = n + 1 ∨ i < n + 1 := by omega
+      rcases hi' with rfl | hi'
+      · simp [h]
+      · apply ih.mp
+        · simp [h]
+        · omega
+    · intros h
+      constructor
+      · apply ih.mpr
+        intros i hi
+        exact h _ (by omega)
+      · apply h _ (by omega)
+
+/-- The result of `scanAnd` is true at index `i` if the bitstream has been true upto (and including) time `n`. -/
+theorem scanAnd_false_iff (s : BitStream) (n : Nat)
+    : s.scanAnd n = false ↔ ∃ (i : Nat), (i ≤ n) ∧ s i = false := by
+  constructor
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanAnd_true_iff _ _).mpr (by assumption)
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanAnd_true_iff _ _).mp (by assumption)
 
 end Scan
 
