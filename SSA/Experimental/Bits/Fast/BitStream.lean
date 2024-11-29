@@ -248,6 +248,7 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem and_eq : (x &&& y) i = (x i && y i)      := rfl
 @[simp] theorem  or_eq : (x ||| y) i = (x i || y i)      := rfl
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
+@[simp] theorem nxor_eq : (x.nxor y) i = (x i == y i) := rfl
 variable (x y : BitVec (w+1))
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by

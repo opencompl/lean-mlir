@@ -235,6 +235,16 @@ def xor : FSM Bool :=
         (Circuit.var true (inr true))
         (Circuit.var true (inr false))) Empty.elim }
 
+/-- Equality, or alternatively, negation of the xor -/
+def nxor : FSM Bool :=
+  { α := Empty,
+    initCarry := Empty.elim,
+    nextBitCirc := fun a => a.elim
+      (Circuit.xor Circuit.tru
+        (Circuit.xor
+        (Circuit.var true (inr true))
+        (Circuit.var true (inr false)))) Empty.elim }
+
 /--
 Scan a sequence of booleans with the bitwise and operator
 Thus:
@@ -262,7 +272,7 @@ lemma eval_scanAnd_succ (x : Unit → BitStream) (n : Nat) :
   simp [eval, nextBit, scanAnd, and, carry]
 
 /-- The result of `scanAnd` is true at `n` iff the bitvector has been true upto (and including) `n`. -/
-@[simp] lemma eval_scanAnd (x : Unit → BitStream) (n : Nat) : scanAnd.eval x n = true ↔ (∀ (i : Nat), (hi : i ≤ n) → x () i = true) := by
+@[simp] lemma eval_scanAnd_true_iff (x : Unit → BitStream) (n : Nat) : scanAnd.eval x n = true ↔ (∀ (i : Nat), (hi : i ≤ n) → x () i = true) := by
   induction n
   case zero => simp [eval, nextBit, scanAnd, and, carry]
   case succ n ih =>
@@ -287,6 +297,11 @@ lemma eval_scanAnd_succ (x : Unit → BitStream) (n : Nat) :
 
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
   ext n; cases n <;> simp [and, eval, nextBit]
+
+@[simp] lemma eval_nxor (x : Bool → BitStream) : nxor.eval x = ((x true).nxor (x false)) := by
+  ext n; cases n
+  · simp [nxor, eval, nextBit]
+  · simp [nxor, eval, nextBit]
 
 def scanOr  : FSM Unit :=
   {
@@ -329,6 +344,13 @@ lemma eval_scanOr_succ (x : Unit → BitStream) (n : Nat) :
 
 /-- Show that the FSM and the bitstream computations agree for `scanOr`. -/
 @[simp] lemma eval_scanOr (x : Unit → BitStream) : scanOr.eval x = (x ()).scanOr := by
+  ext n;
+  induction n 
+  case zero => simp
+  case succ n ih => simp [ih]
+
+/-- Show that the FSM and the bitstream computations agree for `scanOr`. -/
+@[simp] lemma eval_scanAnd (x : Unit → BitStream) : scanAnd.eval x = (x ()).scanAnd := by
   ext n;
   induction n 
   case zero => simp
@@ -614,13 +636,18 @@ def composeUnary
     {t : Term}
     (q : FSMTermSolution t) :
     FSM (Fin t.arity) := composeUnaryAux p q.toFSM
-/-
-  p.compose
-    (Fin t.arity)
-    _
-    (λ _ => id)
-    (λ _ => q.toFSM)
--/
+
+def composeBinaryAux 
+    (p : FSM Bool)
+    (q₁ : FSM (Fin a₁))
+    (q₂ : FSM (Fin a₂)) :
+    FSM (Fin (max a₁ a₂)) :=
+  p.compose (Fin (max a₁ a₂))
+    (λ b => Fin (cond b a₁ a₂))
+    (λ b i => Fin.castLE (by cases b <;> simp) i)
+    (λ b => match b with
+      | true => q₁
+      | false => q₂)
 
 /-- Compose two binary opeators -/
 def composeBinary
@@ -628,13 +655,7 @@ def composeBinary
     {t₁ t₂ : Term}
     (q₁ : FSMTermSolution t₁)
     (q₂ : FSMTermSolution t₂) :
-    FSM (Fin (max t₁.arity t₂.arity)) :=
-  p.compose (Fin (max t₁.arity t₂.arity))
-    (λ b => Fin (cond b t₁.arity t₂.arity))
-    (λ b i => Fin.castLE (by cases b <;> simp) i)
-    (λ b => match b with
-      | true => q₁.toFSM
-      | false => q₂.toFSM)
+    FSM (Fin (max t₁.arity t₂.arity)) := composeBinaryAux p q₁.toFSM q₂.toFSM
 
 
 @[simp] lemma composeUnaryAux_eval
@@ -652,6 +673,18 @@ def composeBinary
     (composeUnary p q).eval x = p.eval (λ _ => t.evalFin x) := by
   simp [composeUnary, FSM.eval_compose, q.good]
 
+@[simp] lemma composeBinaryAux_eval
+    (p : FSM Bool)
+    (q₁ : FSM (Fin a₁))
+    (q₂ : FSM (Fin a₂))
+    (x : Fin (max a₁ a₂) → BitStream) :
+    (composeBinaryAux p q₁ q₂).eval x = p.eval
+      (λ b => cond b (q₁.eval (fun i => x (Fin.castLE (by simp) i)))
+                  (q₂.eval (fun i => x (Fin.castLE (by simp) i)))) := by
+  rw [composeBinaryAux, FSM.eval_compose]
+  ext b
+  cases b <;> dsimp <;> congr <;> funext b <;> cases b <;> simp
+
 @[simp] lemma composeBinary_eval
     (p : FSM Bool)
     {t₁ t₂ : Term}
@@ -661,7 +694,7 @@ def composeBinary
     (composeBinary p q₁ q₂).eval x = p.eval
       (λ b => cond b (t₁.evalFin (fun i => x (Fin.castLE (by simp) i)))
                   (t₂.evalFin (fun i => x (Fin.castLE (by simp) i)))) := by
-  rw [composeBinary, FSM.eval_compose, q₁.good, q₂.good]
+  rw [composeBinary, composeBinaryAux, FSM.eval_compose, q₁.good, q₂.good]
   ext b
   cases b <;> dsimp <;> congr <;> funext b <;> cases b <;> simp
 
@@ -791,7 +824,36 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
     toFSM := composeUnaryAux FSM.scanOr (composeBinary FSM.xor t₁' t₂')
     good := by ext; simp;
    }
- | _ => sorry
+ | .neq t₁ t₂ => 
+   let t₁' := termEvalEqFSM t₁
+   let t₂' := termEvalEqFSM t₂
+   {
+    toFSM := composeUnaryAux FSM.scanAnd (composeBinary FSM.nxor t₁' t₂')
+    good := by ext; simp;
+   }
+  | .land p q =>
+    let x₁ := predicateEvalEqFSM p
+    let x₂ :=  predicateEvalEqFSM q
+    {
+      toFSM := composeBinaryAux FSM.or x₁.toFSM x₂.toFSM
+      good := by
+        ext; simp [x₁.good, x₂.good]
+    }
+  | .lor p q =>
+    let x₁ := predicateEvalEqFSM p
+    let x₂ :=  predicateEvalEqFSM q
+    {
+      toFSM := composeBinaryAux FSM.and x₁.toFSM x₂.toFSM
+      good := by
+        ext; simp [x₁.good, x₂.good]
+    }
+ | .isNeg t =>
+   let t' := termEvalEqFSM t
+   {
+     toFSM := composeUnary FSM.not t'
+     good := by ext; simp
+   }
+   
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)

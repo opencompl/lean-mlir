@@ -243,21 +243,26 @@ match p with
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁ ^^^ x₂).scanOr
+    (x₁ ^^^ x₂).scanOr -- x₁ ⊕ x)
 | .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     (x₁.nxor x₂).scanAnd
 | .land p q =>
+  -- if both `p` and `q` are logically true (i.e. the predicate is `false`),
+  -- only then should we return a `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  (x₁ &&& x₂)
+  (x₁ ||| x₂)
 | .lor p q =>
+  -- If either of the predicates are `false`, then result is `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   (x₁ &&& x₂)
 | .isNeg t  =>
+  -- If it is negative, then we should return `false`.
+  -- That is, if the msb (i.e. the bit at the current location is `true`, then we should return `false`.
   let x₁ := t.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  x₁
+  ~~~x₁
 
 
