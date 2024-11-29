@@ -104,14 +104,6 @@ theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
     p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 :=
   rfl
 
-theorem eval_eq_eval' :
-    p.eval x = p.eval' x := by
-  funext i
-  simp only [eval, eval']
-  induction i generalizing p x
-  case zero => rfl
-  case succ i ih =>
-    sorry
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
@@ -587,16 +579,16 @@ def repeatBit : FSM Unit where
   nextBitCirc := fun _ =>
     .or (.var true <| .inl ()) (.var true <| .inr ())
 
-@[simp] theorem eval_repeatBit :
-    repeatBit.eval x = BitStream.repeatBit (x ()) := by
-  unfold BitStream.repeatBit
-  rw [eval_eq_eval', eval']
-  apply BitStream.corec_eq_corec
-    (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
-  · simp [repeatBit]
-  · intro ⟨y, a⟩ ⟨b, x⟩ h
-    simp at h
-    simp [h, nextBit, BitStream.head]
+-- @[simp] theorem eval_repeatBit :
+--     repeatBit.eval x = BitStream.repeatBit (x ()) := by
+--   unfold BitStream.repeatBit
+--   rw [eval_eq_eval', eval']
+--   apply BitStream.corec_eq_corec
+--     (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
+--   · simp [repeatBit]
+--   · intro ⟨y, a⟩ ⟨b, x⟩ h
+--     simp at h
+--     simp [h, nextBit, BitStream.head]
 
 end FSM
 
@@ -737,10 +729,10 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
-  | repeatBit t =>
-    let p := termEvalEqFSM t
-    { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,
-      good := by ext; simp }
+  -- | repeatBit t =>
+  --   let p := termEvalEqFSM t
+  --   { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,
+  --     good := by ext; simp }
 
 /-!
 FSM that implement bitwise-and. Since we use `0` as the good state,

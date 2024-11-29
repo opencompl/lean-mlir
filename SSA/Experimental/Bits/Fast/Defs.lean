@@ -40,13 +40,13 @@ inductive Term : Type
 | incr : Term → Term
 /-- Decrement (i.e., subtract one) -/
 | decr : Term → Term
-/-- `repeatBit` is an operation that will repeat the infinitely repeat the
+/- `repeatBit` is an operation that will repeat the infinitely repeat the
 least significant `true` bit of the input.
 
 That is `repeatBit t` is all-zeroes iff `t` is all-zeroes.
 Otherwise, there is some number `k` s.t. `repeatBit t` is all-ones after
 dropping the least significant `k` bits  -/
-| repeatBit : Term → Term
+-- | repeatBit : Term → Term
 
 open Term
 
@@ -74,7 +74,7 @@ def Term.eval (t : Term) (vars : Nat → BitStream) : BitStream :=
   | neg t       => -(Term.eval t vars)
   | incr t      => BitStream.incr (Term.eval t vars)
   | decr t      => BitStream.decr (Term.eval t vars)
-  | repeatBit t => BitStream.repeatBit (Term.eval t vars)
+ -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
@@ -102,7 +102,7 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | neg t => arity t
 | incr t => arity t
 | decr t => arity t
-| repeatBit t => arity t
+-- | repeatBit t => arity t
 
 /--
 Evaluate a term `t` to the BitStream it represents.
@@ -142,7 +142,7 @@ and only require that many bitstream values to be given in `vars`.
   | neg t       => -(Term.evalFin t vars)
   | incr t      => BitStream.incr (Term.evalFin t vars)
   | decr t      => BitStream.decr (Term.evalFin t vars)
-  | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
+  -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
 
 
 /--

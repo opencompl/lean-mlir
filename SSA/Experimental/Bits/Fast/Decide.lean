@@ -43,7 +43,7 @@ and then switch to `#eval`.
 /--
 info: 'Decidable.decide' does not depend on any axioms
 ---
-info: 'decide' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+info: 'decide' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms decide
 
