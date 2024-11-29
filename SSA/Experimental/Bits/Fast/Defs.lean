@@ -198,19 +198,12 @@ lemma eq_iff_all_zeroes (t₁ t₂ : Term) :
     induction n generalizing x t₁ t₂
     case zero => simp [Predicate.eval, heq]
     case succ n ih =>
-      simp only [Predicate.eval, BitStream.scanOr_succ, BitStream.xor_eq, Bool.or_eq_false_iff,
-        bne_eq_false_iff_eq] at ih ⊢
-      constructor
-      · apply ih
-        exact heq
-      · simp [heq]
+      simp [Predicate.eval] at ih ⊢
+      rw [heq]
   · intros heq
     ext x n
     specialize (heq n x)
-    simp only [Predicate.eval] at heq
-    rw [BitStream.scanOr_false_iff] at heq
-    specialize (heq n (by omega))
-    simp only [BitStream.xor_eq, bne_eq_false_iff_eq] at heq
+    simp only [Predicate.eval, BitStream.xor_eq, bne_eq_false_iff_eq] at heq
     exact heq
 
 /-- If something is always true, then it is eventually always true. -/
@@ -226,50 +219,45 @@ theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N :
   simp [BitStream.scanOr_false_iff] at h
   apply h (n := max N n) <;> omega
 
-/--
-Two terms are equal iff the stream of `Predicate.eq` is eventually always zero.
--/
-lemma term_eval_eq_iff_Predicate_eventually_all_zeroes_predicate_eq (t₁ t₂ : Term) :
-    (t₁.eval = t₂.eval) ↔ (∃ (N : Nat), ∀ n ≥ N, ∀ x, (Predicate.eq t₁ t₂).eval x n = false) := by
-  constructor
-  · intros h
-    exists 0
-    simp only [ge_iff_le, zero_le, forall_const]
-    intros x n
-    apply (eq_iff_all_zeroes t₁ t₂).mp h
-  · intros h
-    suffices t₁.eval = t₂.eval by simp [this]
-    apply eq_iff_all_zeroes t₁ t₂ |>.mpr
-    intros n x
-    apply all_zeroes_of_scanOr_eventually_all_zeroes
-    -- This is a pretty crazy proof strategy, where we rely on the fact that scanOr is idempotent :)
-    -- While very clever, @bollu should refactor this to be a bit more sane.
-    simp [Predicate.eval] at h ⊢
-    obtain ⟨N, h⟩ := h
-    exists N
-    intros n hn
-    apply h
-    exact hn
-
 /-- Terms are equal if the 'eq' predicate at width 'x' returns 'false' -/
 lemma Predicate.eq_iff_toBitVec_eval_eq :
     ((t₁.eval x).toBitVec w = (t₂.eval x).toBitVec w) ↔ ((Predicate.eq t₁ t₂).eval x w = false) := by
   constructor
-  · sorry
+  · intros h
+    sorry
   · intros h
     sorry
 
 end Predicate
 
 @[simp] def Predicate.arity : Predicate → Nat
-| .eq t1 t2 => max (t1.arity) (t2.arity)
+| .eq t1 t2 => max t1.arity t2.arity
+| .lor p q => max p.arity q.arity
+| .land p q => max p.arity q.arity
+| .isNeg t => t.arity
+| .neq t₁ t₂ => max t₁.arity t₂.arity
 
-/-- denote a reflected `predicate` into a `prop. -/
+/-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     (x₁ ^^^ x₂).scanOr
+| .neq t₁ t₂  =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    (x₁.nxor x₂).scanAnd
+| .land p q =>
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  (x₁ &&& x₂)
+| .lor p q =>
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  (x₁ &&& x₂)
+| .isNeg t  =>
+  let x₁ := t.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  x₁
 
 

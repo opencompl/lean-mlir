@@ -799,6 +799,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
     toFSM := composeUnaryAux FSM.scanOr (composeBinary FSM.xor t₁' t₂')
     good := by ext; simp;
    }
+ | _ => sorry
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
