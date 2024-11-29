@@ -4,12 +4,39 @@ import SSA.Experimental.Bits.Fast.Lemmas
 instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
   decidable_of_iff
     (decideIfZeros (termEvalEqFSM (t₁.xor t₂)).toFSM) $ by
-  rw [decideIfZeros_correct,
-    ← (termEvalEqFSM (t₁.xor t₂)).good]
+  rw [decideIfZeros_correct, ← (termEvalEqFSM (t₁.xor t₂)).good]
   simp only [eval_eq_iff_xor_eq_zero]
   rw [forall_swap]
   simp only [← funext_iff]
 
+instance (p : Predicate) : Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
+  decidable_of_iff
+    (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
+  rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
+
+
+/-
+We can decide that the evaluation of a predicate is forever false,
+which is to say, that it is true for all bitwidths.
+-/
+instance (p : Predicate) : Decidable (∀ (n : ℕ) (x : ℕ → BitStream) , p.eval x n = false) :=
+  decidable_of_iff
+    (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
+  rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
+  constructor
+  · intro h n
+    intros x
+    specialize (h n (fun i => x i))
+    rw [Predicate.evalFin_eq_eval] at h
+    exact h
+  · intros h n
+    intros x
+    let env := (fun j => if hj : j < (p.arity) then x ⟨j, hj⟩ else fun _ => false)
+    specialize h n env
+    rw [← h]
+    have hx : x = (fun (i : Fin p.arity) => env i) := by simp [env]
+    rw [hx]
+    rw [Predicate.evalFin_eq_eval]
 
 open Term
 

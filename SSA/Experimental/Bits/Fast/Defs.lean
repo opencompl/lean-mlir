@@ -174,38 +174,21 @@ when truncated to index `i`, is true.
 -/
 def Predicate.eval (p : Predicate) (vars : Nat → BitStream) : BitStream :=
   match p with
-  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars)
-  | isNeg t => t.eval vars
+  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars).scanOr
   /-
   If it is ever not equal, then we want to stay not equals for ever.
   So, if the 'a = b' returns 'false' at some index 'i', we will stay false
   for all indexes '≥ i'.
   -/
   | neq t1 t2 => ((t1.eval vars).nxor (t2.eval vars)).scanAnd
-  | lor p q => (p.eval vars) ||| (q.eval vars)
-  | land p q => (p.eval vars) &&& (q.eval vars)
+  | lor p q => (p.eval vars) &&& (q.eval vars)
+  | land p q => (p.eval vars) ||| (q.eval vars)
+  | isNeg t => ~~~ (t.eval vars) -- recall that we must return `false`, if the predicate is true, so we negate the current bit (which is the msb of the truncated repr).
 
 @[simp]
 theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
 
 section Predicate
-/-- If the two bitstreams are equal, the Predicate.eq will be always zero -/
-lemma eq_iff_all_zeroes (t₁ t₂ : Term) :
-    (t₁.eval = t₂.eval) ↔ (∀ n x, (Predicate.eq t₁ t₂).eval x n = false) := by
-  constructor
-  · intros heq
-    intros n x
-    induction n generalizing x t₁ t₂
-    case zero => simp [Predicate.eval, heq]
-    case succ n ih =>
-      simp [Predicate.eval] at ih ⊢
-      rw [heq]
-  · intros heq
-    ext x n
-    specialize (heq n x)
-    simp only [Predicate.eval, BitStream.xor_eq, bne_eq_false_iff_eq] at heq
-    exact heq
-
 /-- If something is always true, then it is eventually always true. -/
 theorem eventually_all_zeroes_of_all_zeroes (b : BitStream) (h : ∀ n, b n = false) : ∃ (N : Nat), ∀ n ≥ N, b n = false := by
   exists Nat.zero
@@ -218,15 +201,6 @@ theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N :
   have ⟨N, h⟩ := h
   simp [BitStream.scanOr_false_iff] at h
   apply h (n := max N n) <;> omega
-
-/-- Terms are equal if the 'eq' predicate at width 'x' returns 'false' -/
-lemma Predicate.eq_iff_toBitVec_eval_eq :
-    ((t₁.eval x).toBitVec w = (t₂.eval x).toBitVec w) ↔ ((Predicate.eq t₁ t₂).eval x w = false) := by
-  constructor
-  · intros h
-    sorry
-  · intros h
-    sorry
 
 end Predicate
 
@@ -243,7 +217,7 @@ match p with
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁ ^^^ x₂).scanOr -- x₁ ⊕ x)
+    (x₁ ^^^ x₂).scanOr
 | .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))

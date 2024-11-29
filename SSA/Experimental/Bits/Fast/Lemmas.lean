@@ -12,10 +12,25 @@ import SSA.Experimental.Bits.Fast.BitStream
 
 open Term
 
-lemma evalFin_eq_eval (t : Term) (vars : Nat → BitStream) :
+lemma Term.evalFin_eq_eval (t : Term) (vars : Nat → BitStream) :
     Term.evalFin t (fun i => vars i) = Term.eval t vars := by
   induction t <;>
-  dsimp [Term.evalFin, Term.eval, arity] at * <;> simp [*]
+    dsimp [Term.evalFin, Term.eval, arity] at * <;> simp [*]
+
+lemma Predicate.evalFin_eq_eval (p : Predicate) (vars : Nat → BitStream) :
+    Predicate.evalFin p (fun i => vars i) = Predicate.eval p vars := by
+  induction p
+  · dsimp [Predicate.evalFin, Predicate.eval, arity] at *
+    repeat rw [Term.evalFin_eq_eval]
+  · dsimp [Predicate.evalFin, Predicate.eval, arity] at *
+    repeat rw [Term.evalFin_eq_eval]
+  · dsimp [Predicate.evalFin, Predicate.eval, arity] at *
+    repeat rw [Term.evalFin_eq_eval]
+  · dsimp [Predicate.evalFin, Predicate.eval, arity] at *
+    simp [*]
+  · dsimp [Predicate.evalFin, Predicate.eval, arity] at *
+    simp [*]
+
 
 lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by
