@@ -28,52 +28,47 @@ def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
 
 
 /-- Denote a Term into its underlying bitvector -/
-def Term.denote (t : Term) (vars : ℕ → BitStream) (w : Nat) : BitVec w :=
+def Term.denote (w : Nat) (t : Term) (vars : ℕ → BitVec w) : BitVec w :=
   match t with
-  | var n => (vars n).denote w
+  | var n => (vars n)
   | zero => 0#w
   | negOne => BitVec.allOnes w
   | one  => 1#w
-  | and a b => (a.denote vars w) &&& (b.denote vars w)
-  | or a b => (a.denote vars w) ||| (b.denote vars w)
-  | xor a b => (a.denote vars w) ^^^ (b.denote vars w)
-  | not a => ~~~ (a.denote vars w)
-  | add a b => (a.denote vars w) + (b.denote vars w)
-  | sub a b => (a.denote vars w) - (b.denote vars w)
-  | neg a => - (a.denote vars w)
-  | incr a => (a.denote vars w) + 1#w
-  | decr a => (a.denote vars w) - 1#w
-  | ls bit a => (a.denote vars w).shiftConcat bit
+  | and a b => (a.denote w vars) &&& (b.denote w vars)
+  | or a b => (a.denote w vars) ||| (b.denote w vars)
+  | xor a b => (a.denote w vars) ^^^ (b.denote w vars)
+  | not a => ~~~ (a.denote w vars)
+  | add a b => (a.denote w vars) + (b.denote w vars)
+  | sub a b => (a.denote w vars) - (b.denote w vars)
+  | neg a => - (a.denote w vars)
+  | incr a => (a.denote w vars) + 1#w
+  | decr a => (a.denote w vars) - 1#w
+  | ls bit a => (a.denote w vars).shiftConcat bit
 
-theorem Term.eval_eq_denote (t : Term) (vars : ℕ → BitStream) (w : Nat) :
-    (t.eval vars).denote w = t.denote vars w := by
-  induction t generalizing vars w
-  · simp [eval, denote]
-  · simp [eval, denote]
-  · simp [eval, denote]
-  · simp [eval, denote]
-    sorry
+theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : ℕ → BitVec w) :
+    (t.eval (fun i => BitStream.ofBitVec (vars i))).denote w = t.denote w vars := by
+  induction t generalizing w vars
   repeat sorry
 
-def Predicate.denote (p : Predicate) (vars : ℕ → BitStream) (w : Nat) : Prop :=
+def Predicate.denote (p : Predicate) (w : Nat) (vars : ℕ → BitVec w) : Prop :=
   match p with
-  | .eq t₁ t₂ => t₁.denote vars w = t₂.denote vars w
-  | .neq t₁ t₂ => t₁.denote vars w ≠ t₂.denote vars w
-  | .isNeg t => (t.denote vars w).slt (0#w)
-  | .land  p q => p.denote vars w ∧ q.denote vars w
-  | .lor  p q => p.denote vars w ∨ q.denote vars w
+  | .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
+  | .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
+  | .isNeg t => (t.denote w vars).slt (0#w)
+  | .land  p q => p.denote w vars ∧ q.denote w vars
+  | .lor  p q => p.denote w vars ∨ q.denote w vars
 
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
 -/
-theorem Predicate.eval_eq_denote (p : Predicate) (vars : ℕ → BitStream) (w : Nat) :
-    (p.eval vars w = false) ↔ p.denote vars w := by
+theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : ℕ → BitVec w) :
+    (p.eval (fun i => BitStream.ofBitVec (vars i)) w = false) ↔ p.denote w vars := by
   induction p generalizing vars w
   repeat sorry
 
-def Reflect.Map.empty : ℕ → BitStream := fun _ => BitStream.zero
-def Reflect.Map.set (s : BitStream) (ix : ℕ)  (m : ℕ → BitStream) := fun j => if j = ix then s else m ix
+def Reflect.Map.empty : ℕ → BitVec w := fun _ => 0#w
+def Reflect.Map.set (s : BitVec w) (ix : ℕ)  (m : ℕ → BitVec w) : ℕ → BitVec w := fun j => if j = ix then s else m ix
 
 /-
 Armed with the above, we write a proof by reflection principle.
