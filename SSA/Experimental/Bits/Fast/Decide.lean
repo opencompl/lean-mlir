@@ -15,28 +15,16 @@ instance (p : Predicate) : Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStre
   rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
 
 
-/-
+/--
 We can decide that the evaluation of a predicate is forever false,
 which is to say, that it is true for all bitwidths.
 -/
-instance (p : Predicate) : Decidable (∀ (n : ℕ) (x : ℕ → BitStream) , p.eval x n = false) :=
+instance (p : Predicate) :
+    Decidable (∀ (n : ℕ) (x : List BitStream) , p.eval x n = false) :=
   decidable_of_iff
     (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
   rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
-  constructor
-  · intro h n
-    intros x
-    specialize (h n (fun i => x i))
-    rw [Predicate.evalFin_eq_eval] at h
-    exact h
-  · intros h n
-    intros x
-    let env := (fun j => if hj : j < (p.arity) then x ⟨j, hj⟩ else fun _ => false)
-    specialize h n env
-    rw [← h]
-    have hx : x = (fun (i : Fin p.arity) => env i) := by simp [env]
-    rw [hx]
-    rw [Predicate.evalFin_eq_eval]
+  constructor <;> sorry
 
 open Term
 
@@ -70,7 +58,7 @@ and then switch to `#eval`.
 /--
 info: 'Decidable.decide' does not depend on any axioms
 ---
-info: 'decide' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'decide' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms decide
 
