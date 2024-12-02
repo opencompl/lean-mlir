@@ -1,6 +1,7 @@
 import Batteries.Data.Fin.Basic
 import Mathlib.Computability.NFA
 import Mathlib.Data.FinEnum
+import Mathlib.Data.Rel
 import Mathlib.Data.Vector.Basic
 import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
@@ -637,3 +638,18 @@ lemma proj_accepts (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
     use w'; simp [htr]; use q
   · rintro ⟨w', ⟨q, he, hv⟩, htr⟩
     use q; simp [he]; use w'
+
+/- Simulations -/
+
+structure Bisimul (R : Rel σ ς) (M₁ : NFA α σ) (M₂ : NFA α ς) where
+  accept : R q₁ q₂ → (q₁ ∈ M₁.accept ↔ q₂ ∈ M₂.accept)
+  start₁ : q₁ ∈ M₁.start → ∃ q₂ ∈ M₂.start, R q₁ q₂
+  start₂ : q₂ ∈ M₂.start → ∃ q₁ ∈ M₁.start, R q₁ q₂
+  trans_match₁ : R q₁ q₂ → q₁' ∈ M₁.step q₁ a → ∃ q₂', q₂' ∈ M₂.step q₂ a ∧ R q₁' q₂'
+  trans_match₂ : R q₁ q₂ → q₂' ∈ M₂.step q₂ a → ∃ q₁', q₁' ∈ M₁.step q₁ a ∧ R q₁' q₂'
+
+def Bisim (M₁ : NFA α σ) (M₂ : NFA α ς) := ∃ R, M₁.Bisimul R M₂
+
+theorem bisimul_accepts :
+    Bisimul R M₁ M₂ → M₁.accepts = M₂.accepts := by
+  sorry
