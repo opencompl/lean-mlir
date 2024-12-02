@@ -20,7 +20,7 @@ mkShell {
         name = "lean4";
         publisher = "leanprover";
         version = "latest";
-        sha256 = "sha256-V2ZjimjLdWjy2ARQY9d5bASOxImVQcSVY/sqMIogiDw=";
+        sha256 = "sha256-9i/cYAvdGDGnw8o0HZtVWYKF6FSuaoiHPGg7w3Xz3n8=";
       }
     ];
     })
