@@ -59,6 +59,9 @@ We have a decision procedure which operates on BitStream operations, but we'd li
 
 def BitStream : Type := Nat → Bool
 
+instance : Inhabited BitStream where
+  default := fun _ => false
+
 namespace BitStream
 
 /-! # Preliminaries -/

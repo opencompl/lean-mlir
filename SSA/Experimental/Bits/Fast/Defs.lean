@@ -58,9 +58,9 @@ given a value for the free variables in `t`.
 Note that we don't keep track of how many free variable occur in `t`,
 so eval requires us to give a value for each possible variable.
 -/
-def Term.eval (t : Term) (vars : Nat → BitStream) : BitStream :=
+def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   match t with
-  | var n       => vars n
+  | var n       => vars[n]!
   | zero        => BitStream.zero
   | one         => BitStream.one
   | negOne      => BitStream.negOne
@@ -172,7 +172,7 @@ Evaluate a term predicate `p` to the BitStream it represents,
 where the predicate is `true` at index `i` if and only if the predicate,
 when truncated to index `i`, is true.
 -/
-def Predicate.eval (p : Predicate) (vars : Nat → BitStream) : BitStream :=
+def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
   | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars).scanOr
   /-
