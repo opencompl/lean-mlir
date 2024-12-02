@@ -5,6 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 This file reflects the semantics of bitstreams, terms, predicates, and FSMs
 into lean bitvectors.
 
+We use `grind_norm` to convert the expression into negation normal form.
+
 Authors: Siddharth Bhat
 -/
 import Mathlib.Data.Bool.Basic
@@ -12,6 +14,8 @@ import Mathlib.Data.Fin.Basic
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
+import SSA.Experimental.Bits.Fast.Attr
+
 import Lean
 
 /--
@@ -71,6 +75,49 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : ℕ → BitVe
 def Reflect.Map.empty : ℕ → BitVec w := fun _ => 0#w
 def Reflect.Map.set (s : BitVec w) (ix : ℕ)  (m : ℕ → BitVec w) : ℕ → BitVec w := fun j => if j = ix then s else m ix
 
+namespace NNF
+open Lean Elab Meta
+
+
+/-- convert goal to negation normal form, by running appropriate lemmas from `grind_norm`, and reverting all hypothese. -/
+def runNNFSimpSet (g : MVarId) : MetaM MVarId := do
+  let some ext ← (getSimpExtension? `grind_norm)
+    | throwError m!"[nnf] Error: 'grind_norm' simp attribute not found!"
+  let theorems ← ext.getTheorems
+  let some ext ← (Simp.getSimprocExtension? `grind_norm)
+    | throwError m!"[nnf] Error: 'grind_norm' simp attribute not found!"
+  let simprocs ← ext.getSimprocs
+  let ctx ← Simp.mkContext (simpTheorems := #[theorems]) (congrTheorems := ← Meta.getSimpCongrTheorems)
+  match ← simpGoal g ctx (simprocs := #[simprocs]) with
+  | (none, _) => throwError "NNF: goal was incorrectly solved when converting to negation normal form"
+  | (some (_newHyps, g'), _) => pure g'
+
+open Lean Elab Meta Tactic in
+/-- Convert the goal into negation normal form. -/
+elab "nnf" : tactic => do
+  liftMetaTactic fun g => do
+    let g ← runNNFSimpSet g
+    -- revert after running the simp-set, so that we don't transform
+    -- with `forall_and : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x)`.
+    -- TODO(@bollu): This opens up an interesting possibility, where we can handle smaller problems
+    -- by just working on disjunctions.
+    let g ← g.revertAll 
+    return [g]
+
+attribute [grind_norm] BitVec.not_lt
+attribute [grind_norm] BitVec.not_le
+attribute [grind_norm] ne_eq
+
+/--
+warning: declaration uses 'sorry'
+---
+info: ⊢ ∀ {w : ℕ}, (∀ (x x_1 : BitVec w), x_1 ≤ x) ∧ ∀ (x x_1 : BitVec w), x ≤ x_1 ∨ x_1 < x ∨ x ≤ x_1 ∨ ¬x = x_1
+-/
+#guard_msgs in example : ∀ (a b : BitVec w),  ¬ (a < b ∨ a > b ∧ a ≤ b ∧ a > b ∧ (¬ (a ≠ b))) := by
+ nnf; trace_state; sorry
+
+end NNF
+
 /-
 Armed with the above, we write a proof by reflection principle.
 This is adapted from Bits/Fast/Tactic.lean, but is cleaned up to build 'nice' looking environments
@@ -89,9 +136,10 @@ structure ReflectResult where
   e : Expr
   w : Expr
 
+
 /-
 return a new expression that this is defeq to, along with the expression of the environment that this needs.
-Crucially, when this succeeds, this will be in terms of `Term.denote`,
+Crucially, when this succeeds, this will be in terms of `term`.
 and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
@@ -102,7 +150,7 @@ def reflectTermUnchecked (map : Array Expr) (w : Expr) (e : Expr) : OptionT Meta
   return { map := map, e := mkApp (mkConst ``Term.var) (mkNatLit ix), w := w }
 
 /- return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-def reflectPredicate (map : Array Expr) (e : Expr)  : OptionT MetaM ReflectResult := do
+def reflectPredicateAux (map : Array Expr) (e : Expr)  : OptionT MetaM ReflectResult := do
   match_expr e with
   | Eq α a b =>
     let_expr BitVec w := α | OptionT.fail
@@ -123,7 +171,7 @@ def mapToExpr (xs : Array Expr) : MetaM Expr := do
 
 elab "bv_automata2" : tactic => do
   liftMetaFinishingTactic fun g => do
-    let .some p ← reflectPredicate #[] (← g.getType')
+    let .some p ← reflectPredicateAux #[] (← g.getType')
       | throwError "unable to reflect predicate at goal {g}"
     let target' := (mkAppN (mkConst ``Predicate.denote) #[p.w, ← mapToExpr p.map])
     logInfo m!"target': {target'}"
