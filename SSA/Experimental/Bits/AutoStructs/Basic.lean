@@ -87,10 +87,10 @@ lemma bisimul_comp {m : RawCNFA A} :
   · rintro s q₁ ⟨q₂, hR₁, hR₂⟩; rw [h₁.accept hR₁, h₂.accept hR₂]
   · rintro s hs
     obtain ⟨q₁, hi₁, hq₁⟩ := h₁.initial₁ hs
-    obtain⟨q₂, hi₂, hq₂⟩ := h₂.start₁ hi₁
+    obtain⟨q₂, hi₂, hq₂⟩ := h₂.start.1 hi₁
     use q₂, hi₂, q₁
   · rintro q₂ hi₂
-    obtain⟨q₁, hi₁, hq₂⟩ := h₂.start₂ hi₂
+    obtain⟨q₁, hi₁, hq₂⟩ := h₂.start.2 hi₂
     obtain ⟨s, hsi, hs⟩ := h₁.initial₂ hi₁
     use s, hsi, q₁
   · rintro s s' a q₂ ⟨q₁, hR₁, hR₂⟩ htr

@@ -39,7 +39,22 @@ def RawCNFA.flipFinals (m : RawCNFA A) : RawCNFA A :=
     if oldFinals.contains s then fins else fins.insert s
   { m with finals := newFinals }
 
-def CNFA.flipFinals (m : CNFA n) : CNFA n := ⟨m.m.flipFinals, by sorry⟩
+lemma RawCNFA.flipFinal_wf {m : RawCNFA A} (hwf : m.WF) : m.flipFinals.WF := by
+  simp [flipFinals]
+  constructor <;> simp_all
+
+  let motive (fs : Std.HashSet State) := ∀ s ∈ fs, s ∈ m.states
+  suffices h : motive $ List.foldl (fun fins s => if m.finals.contains s = true then fins else fins.insert s) ∅ (List.range m.stateMax) by
+    exact h
+  apply List.foldlRecOn
+  · simp [motive]
+  · simp [motive]
+    rintro _ _ _ _ _ hif
+    split_ifs at hif <;> simp_all
+    rcases hif <;> simp_all [states]
+  · intros; apply hwf.trans_tgt_lt <;> assumption
+
+def CNFA.flipFinals (m : CNFA n) : CNFA n := ⟨m.m.flipFinals, m.m.flipFinal_wf m.wf⟩
 
 end sink
 
@@ -76,7 +91,7 @@ lemma product.f_spec :
     (a, (s₁', s₂')) ∈ f m1 m2 (s₁, s₂) ↔ s₁'.val ∈ m1.m.tr s₁ a ∧ s₂'.val ∈ m2.m.tr s₂ a := by
   sorry
 
-lemma product.simul {m1 m2 : CNFA n}:
+lemma product.sim {m1 m2 : CNFA n}:
     m1.Sim M1 → m2.Sim M2 →
     (nfa (inits m1 m2) (final final? m1 m2) (f m1 m2)).Bisim (M1.M.product (to_prop final?) M2.M) := by
   rintro ⟨R₁, hsim₁⟩ ⟨R₂, hsim₂⟩
@@ -86,18 +101,19 @@ lemma product.simul {m1 m2 : CNFA n}:
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ ⟨hR₁, hR₂⟩
     simp [nfa, to_prop, final]
     rw [←hsim₁.accept hR₁, ←hsim₂.accept hR₂]; congr
-  · rintro ⟨s₁, s₂⟩ hstart
-    simp [nfa, inits_spec] at hstart; rcases hstart with ⟨h₁, h₂⟩
-    obtain ⟨q₁, hq₁, hR₁⟩ := hsim₁.initial₁ h₁
-    obtain ⟨q₂, hq₂, hR₂⟩ := hsim₂.initial₁ h₂
-    use (q₁, q₂); simp [NFA.product, R, *]
-  · rintro ⟨q₁, q₂⟩ ⟨hst₁, hst₂⟩
-    apply hsim₁.initial₂ at hst₁; obtain ⟨s₁, hi₁, hR₁⟩ := hst₁
-    apply hsim₂.initial₂ at hst₂; obtain ⟨s₂, hi₂, hR₂⟩ := hst₂
-    simp only [nfa, Set.mem_setOf_eq, Prod.exists, inits_spec, exists_and_left, exists_prop]
-    have hin₁ : s₁ ∈ m1.m.states := by apply m1.wf.initials_lt hi₁
-    have hin₂ : s₂ ∈ m2.m.states := by apply m2.wf.initials_lt hi₂
-    use ⟨s₁, hin₁⟩, ⟨s₂, hin₂⟩
+  · constructor
+    · rintro ⟨s₁, s₂⟩ hstart
+      simp [nfa, inits_spec] at hstart; rcases hstart with ⟨h₁, h₂⟩
+      obtain ⟨q₁, hq₁, hR₁⟩ := hsim₁.initial₁ h₁
+      obtain ⟨q₂, hq₂, hR₂⟩ := hsim₂.initial₁ h₂
+      use (q₁, q₂); simp [NFA.product, R, *]
+    · rintro ⟨q₁, q₂⟩ ⟨hst₁, hst₂⟩
+      apply hsim₁.initial₂ at hst₁; obtain ⟨s₁, hi₁, hR₁⟩ := hst₁
+      apply hsim₂.initial₂ at hst₂; obtain ⟨s₂, hi₂, hR₂⟩ := hst₂
+      simp only [nfa, Set.mem_setOf_eq, Prod.exists, inits_spec, exists_and_left, exists_prop]
+      have hin₁ : s₁ ∈ m1.m.states := by apply m1.wf.initials_lt hi₁
+      have hin₂ : s₂ ∈ m2.m.states := by apply m2.wf.initials_lt hi₂
+      use ⟨s₁, hin₁⟩, ⟨s₂, hin₂⟩
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ a ⟨s₁', s₂'⟩ ⟨hR₁, hR₂⟩ hst
     simp [nfa, f_spec] at hst; rcases hst with ⟨hst₁, hst₂⟩
     obtain ⟨q₁', hst₁, hR₁'⟩ := hsim₁.trans_match₁ hR₁ hst₁
@@ -115,7 +131,6 @@ lemma product.simul {m1 m2 : CNFA n}:
 
 def CNFA.inter (m1 m2 : CNFA n) : CNFA n := product (fun b1 b2 => b1 && b2) m1 m2
 def CNFA.union (m1 m2 : CNFA n) : CNFA n :=
-  -- FIXME add a sink state to each automata, or modify product
   product (fun b1 b2 => b1 || b2) m1.addSink m2.addSink
 
 def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
@@ -123,35 +138,10 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
     m1.Sim M1 →
     m2.Sim M2 →
     (product final? m1 m2).Sim (NFA'.product (to_prop final?) M1 M2) := by
-  rintro ⟨R₁, hsim1⟩ ⟨R₂, hsim2⟩
-  apply worklistRun_spec (m1.m.states × m2.m.states)
-    (corr := fun (s1, s2) => (f1 s1, f2 s2))
-  · rintro ⟨s1, s2⟩ ⟨s1', s2'⟩; simp; rintro heqs
-    injection heqs with h1 h2
-    apply hsim1.injective at h1; apply hsim2.injective at h2; simp_all
-  · rintro ⟨s1, s2⟩
-    simp [product.final, NFA'.product, NFA.product, to_prop, Set.instMembership, Set.Mem]; congr
-    · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim1.accept
-    · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim2.accept
-  · sorry
-  · sorry
-  · rintro ⟨s1, s2⟩ ⟨q1, q2⟩ a hin
-    simp [NFA.product] at hin
-    obtain ⟨hst1, hst2⟩ := hin
-    obtain ⟨s1', hf1, htr1⟩ := hsim1.trans_match₁ s1 a q1 hst1 (by simp) (by simp)
-    obtain ⟨s2', hf2, htr2⟩ := hsim2.trans_match₁ s2 a q2 hst2 (by simp) (by simp)
-    use ⟨s1', s2'⟩; simp_all [product.f]
-    sorry
-  · rintro ⟨s1, s2⟩ a ⟨s1', s2'⟩ hinf
-    dsimp only [NFA'.product, NFA.product]
-    simp [to_prop, Set.instMembership, Set.Mem]
-    suffices h : s1'.val ∈ m1.m.trans.getD (s1, a) ∅ ∧ s2'.val ∈ m2.m.trans.getD (s2, a) ∅ by
-      rcases h with ⟨h1, h2⟩
-      obtain ⟨h1, hin1⟩ := hsim1.trans_match₂ _ _ _ h1
-      obtain ⟨h2, hin2⟩ := hsim2.trans_match₂ _ _ _ h2
-      aesop
-    sorry
-  · sorry
+  rintro h₁ h₂
+  apply bisim_comp
+  · apply worklistRun_spec
+  · apply product.sim h₁ h₂
 
 def CNFA.inter_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
@@ -198,63 +188,102 @@ variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum 
 def BitVec.any (b : BitVec w) (f : Fin w → Bool → Bool) :=
   List.finRange w |>.any fun n => f n (b[n])
 
+theorem BitVec.any_iff_exists {bv : BitVec w} :
+    bv.any p ↔ ∃ (i : Fin w), p i (bv.getLsbD i) := by
+  simp [any]; rfl
+
+-- could this become a `where` clause in `determinize`?
+def CNFA.determinize.inits (m : CNFA n) : Array (BitVec m.m.stateMax) :=
+  #[BitVec.ofFn (fun n => n ∈ m.m.initials)]
+
 def CNFA.determinize (m : CNFA n) : CNFA n :=
   worklistRun (BitVec m.m.stateMax)
     (fun ss => ss.any fun n b => b == true && n ∈ m.m.finals)
-    #[BitVec.ofFn (fun n => n ∈ m.m.initials)]
+    (determinize.inits m)
     (by apply List.nodup_singleton)
-    fun (ss : BitVec m.m.stateMax) =>
+    f
+where
+  f := fun (ss : BitVec m.m.stateMax) =>
         (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
           let ss' := m.m.transSetBV ss a
           ts.push (a, ss')
 
-def NFA'.determinize_spec_nonemp (m : CNFA n)  [Nonempty m.m.states]
-  {M : NFA' n} (hsim : m.Sim M) :
-    m.determinize.Sim M.determinize := by
-  rcases hsim with ⟨fsim, hsim⟩
-  unfold CNFA.determinize
-  apply worklistRun_spec (BitVec m.m.stateMax)
-    (corr := λ ss q => let i := Function.invFun fsim q; ss[i.val] == true)
-    (M := M.determinize)
-  · intros ss1 ss2; simp; intros heq; ext i
-    rw [funext_iff] at heq
-    specialize heq (fsim ⟨i.val, by simp [RawCNFA.states]⟩)
-    rw [Function.leftInverse_invFun hsim.injective] at heq
-    simp at heq; exact heq
-  · sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
+private def bv_to_set {m : CNFA n} (bv : BitVec m.m.stateMax) : Set State :=
+  { s | bv.getLsbD s }
 
-def NFA'.determinize_spec_emp (m : CNFA n) (hemp : m.m.stateMax = 0)
-  {M : NFA' n} (hsim : m.Sim M) :
-    m.determinize.Sim M.determinize := by
-  rcases hsim with ⟨fsim, hsim⟩
-  unfold CNFA.determinize
-  apply worklistRun_spec (BitVec m.m.stateMax)
-    (corr := λ ss _ => True)
-    (M := M.determinize)
-  · rw [hemp]; intros ss1 ss2 _; apply BitVec.eq_of_getMsbD_eq; simp
-  · rw [hemp]; rintro ⟨⟨x⟩⟩
-    obtain rfl : x = 0 := by omega
-    simp [BitVec.any, NFA'.determinize, NFA.toDFA]
-    intros q _ ha
-    sorry -- need to prove that f is surjective?
-  · sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
+lemma transSetBV_spec {m : CNFA n} {ss : BitVec m.m.stateMax} :
+    s' ∈ bv_to_set (m.m.transSetBV ss a) ↔
+      ∃ s ∈ bv_to_set ss, s' ∈ m.m.tr s a :=
+  by sorry
 
-def NFA'.determinize_spec (m : CNFA n)
+lemma CNFA.determinize.f_spec {m : CNFA n} {a : BitVec n} {sa sa' : BitVec m.m.stateMax} :
+    (a, sa') ∈ (f m sa) ↔ (∀ {s'}, s' ∈ bv_to_set sa' ↔ ∃ s ∈ bv_to_set sa, s' ∈ m.m.tr s a) := by
+  sorry
+
+def CNFA.determinize_spec (m : CNFA n)
   {M : NFA' n} (hsim : m.Sim M) :
     m.determinize.Sim M.determinize := by
-  rcases heq : m.m.stateMax
-  · apply NFA'.determinize_spec_emp <;> simp_all
-  · have _ : Nonempty m.m.states := by use 0; simp_all [RawCNFA.states]
-    apply NFA'.determinize_spec_nonemp; simp_all
+  rcases hsim with ⟨Ri, hsim⟩
+  apply bisim_comp
+  · apply worklistRun_spec
+  let R : Rel (BitVec m.m.stateMax) (Set M.σ) :=
+    λ ss qs ↦ Ri.set_eq (bv_to_set ss) qs
+  use R; constructor
+  · simp [nfa', nfa, NFA'.determinize, NFA.toDFA, BitVec.any_iff_exists]
+    rintro q₁ q₂ hR; constructor
+    · rintro ⟨i, hi, ha⟩
+      obtain ⟨s, hsq₂, hRi⟩ := hR.1 hi
+      use s, hsq₂, hsim.accept hRi |>.mp ha
+    · rintro ⟨s, hs, ha⟩
+      obtain ⟨i, hlsb, hRi⟩ := hR.2 hs
+      have hlt : i < m.m.stateMax :=
+        BitVec.lt_of_getLsbD hlsb
+      use ⟨i, hlt⟩, hlsb, hsim.accept hRi |>.mpr ha
+  · have heq : R (BitVec.ofFn fun n_1 => decide (↑n_1 ∈ m.m.initials)) M.M.start := by
+      constructor
+      · rintro s hi
+        obtain ⟨hlt, hinit⟩ := BitVec.ofFn_getLsbD_true.mp hi
+        simp at hinit
+        exact hsim.initial₁ hinit
+      · rintro q hstart
+        obtain ⟨s, hinit, hRi⟩ := hsim.initial₂ hstart
+        simp [bv_to_set]
+        have hlt : s ∈ m.m.states := by apply m.wf.initials_lt hinit
+        simp [RawCNFA.states] at hlt
+        use s, (by apply BitVec.ofFn_getLsbD_true.mpr; use hlt; simp [hinit])
+    simp only [determinize.inits, nfa', nfa, NFA'.determinize, NFA.toDFA, Array.mem_toArray,
+      List.mem_singleton, Set.setOf_eq_eq_singleton, beq_true, DFA.toNFA_start]
+    constructor
+    · rintro bv hin
+      simp only [Set.mem_singleton_iff] at hin; subst hin
+      use M.M.start; simp [heq]
+    · simp [heq]
+  · simp [nfa', nfa, NFA'.determinize, NFA.toDFA, determinize.f_spec]
+    rintro q₁ q₂ a q₁' hR hq₁'; constructor
+    · rintro s' hs'; obtain ⟨s, hs, htr⟩ := hq₁'.mp hs'
+      obtain ⟨q, hq, hRi⟩ := hR.1 hs
+      obtain ⟨q', hq', hRi'⟩ := hsim.trans_match₁ hRi htr
+      simp_all only [NFA.mem_stepSet]; tauto
+    · simp only [NFA.mem_stepSet]; rintro q' ⟨q, hq, hst⟩
+      obtain ⟨s, hs, hRi⟩ := hR.2 hq
+      obtain ⟨s', hs', hRi'⟩ := hsim.trans_match₂ hRi hst (by simp) (by simp)
+      use s'; simp_all only [Set.top_eq_univ, and_true]; tauto
+  · simp [nfa', nfa, NFA'.determinize, NFA.toDFA, determinize.f_spec]
+    rintro q₁ q₂ a hR
+    use m.m.transSetBV q₁ a
+    constructor
+    · intros s; rw [transSetBV_spec]
+    constructor
+    · intro s' h; obtain ⟨s, hs, htr⟩ := transSetBV_spec.mp h
+      obtain ⟨q, hq, hRi⟩ := hR.1 hs
+      obtain ⟨q', hst, hRi'⟩ := hsim.trans_match₁ hRi htr
+      use q'; simp_all only [Set.top_eq_univ, and_true, NFA.mem_stepSet]; use q
+    · simp [NFA.mem_stepSet]
+      rintro q' q hq hst
+      obtain ⟨s, hs, hRi⟩ := hR.2 hq
+      obtain ⟨s', htr, hRi'⟩ := hsim.trans_match₂ hRi hst (by simp) (by simp)
+      use s'; simp_all [transSetBV_spec]; tauto
+
 
 def CNFA.neg (m : CNFA n) : CNFA n := m.determinize.flipFinals
 
