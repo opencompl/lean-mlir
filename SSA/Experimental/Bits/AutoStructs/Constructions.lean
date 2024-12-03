@@ -7,6 +7,7 @@ import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.NFA'
+import SSA.Experimental.Bits.AutoStructs.Worklist
 
 section sink
 
@@ -48,7 +49,7 @@ variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum 
 
 def product (final? : Bool → Bool → Bool) (m1 m2 : CNFA n) : CNFA n :=
   worklistRun (m1.m.states × m2.m.states) final inits (by sorry /- looks annoying -/) f
-where final (ss : m1.m.states × m2.m.states) := final? (m1.m.finals.contains ss.1) (m2.m.finals.contains ss.2)
+where final (ss : m1.m.states × m2.m.states) := final? (ss.1 ∈ m1.m.finals) (ss.2 ∈ m2.m.finals)
       inits :=
        let a := Array.mkEmpty <| m1.m.initials.size * m2.m.initials.size
        m1.m.initials.attachWith _ @m1.wf.initials_lt |>.fold (init := a) fun is s1 =>
@@ -64,13 +65,58 @@ where final (ss : m1.m.states × m2.m.states) := final? (m1.m.finals.contains ss
               as.push (a, (s1', s2'))
 
 
+noncomputable def to_prop (f : Bool → Bool → Bool) (p1 p2 : Prop) : Prop :=
+  f (@Decidable.decide p1 (Classical.propDecidable _)) (@Decidable.decide p2 (Classical.propDecidable _))
+
+lemma product.inits_spec :
+    (s₁, s₂) ∈ inits m1 m2 ↔ s₁.val ∈ m1.m.initials ∧ s₂.val ∈ m2.m.initials := by
+  sorry
+
+lemma product.f_spec :
+    (a, (s₁', s₂')) ∈ f m1 m2 (s₁, s₂) ↔ s₁'.val ∈ m1.m.tr s₁ a ∧ s₂'.val ∈ m2.m.tr s₂ a := by
+  sorry
+
+lemma product.simul {m1 m2 : CNFA n}:
+    m1.Sim M1 → m2.Sim M2 →
+    (nfa (inits m1 m2) (final final? m1 m2) (f m1 m2)).Bisim (M1.M.product (to_prop final?) M2.M) := by
+  rintro ⟨R₁, hsim₁⟩ ⟨R₂, hsim₂⟩
+  let R : Rel (m1.m.states × m2.m.states) (M1.σ × M2.σ) :=
+    λ (s₁, s₂) (q₁, q₂) ↦ R₁ s₁ q₁ ∧ R₂ s₂ q₂
+  use R; constructor
+  · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ ⟨hR₁, hR₂⟩
+    simp [nfa, to_prop, final]
+    rw [←hsim₁.accept hR₁, ←hsim₂.accept hR₂]; congr
+  · rintro ⟨s₁, s₂⟩ hstart
+    simp [nfa, inits_spec] at hstart; rcases hstart with ⟨h₁, h₂⟩
+    obtain ⟨q₁, hq₁, hR₁⟩ := hsim₁.initial₁ h₁
+    obtain ⟨q₂, hq₂, hR₂⟩ := hsim₂.initial₁ h₂
+    use (q₁, q₂); simp [NFA.product, R, *]
+  · rintro ⟨q₁, q₂⟩ ⟨hst₁, hst₂⟩
+    apply hsim₁.initial₂ at hst₁; obtain ⟨s₁, hi₁, hR₁⟩ := hst₁
+    apply hsim₂.initial₂ at hst₂; obtain ⟨s₂, hi₂, hR₂⟩ := hst₂
+    simp only [nfa, Set.mem_setOf_eq, Prod.exists, inits_spec, exists_and_left, exists_prop]
+    have hin₁ : s₁ ∈ m1.m.states := by apply m1.wf.initials_lt hi₁
+    have hin₂ : s₂ ∈ m2.m.states := by apply m2.wf.initials_lt hi₂
+    use ⟨s₁, hin₁⟩, ⟨s₂, hin₂⟩
+  · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ a ⟨s₁', s₂'⟩ ⟨hR₁, hR₂⟩ hst
+    simp [nfa, f_spec] at hst; rcases hst with ⟨hst₁, hst₂⟩
+    obtain ⟨q₁', hst₁, hR₁'⟩ := hsim₁.trans_match₁ hR₁ hst₁
+    obtain ⟨q₂', hst₂, hR₂'⟩ := hsim₂.trans_match₁ hR₂ hst₂
+    simp [NFA.product]
+    use q₁', q₂'
+  · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ a ⟨q₁', q₂'⟩ ⟨hR₁, hR₂⟩ hst
+    simp [NFA.product] at hst; rcases hst with ⟨hst₁, hst₂⟩
+    obtain ⟨s₁', hst₁, hR₁'⟩ := hsim₁.trans_match₂ hR₁ hst₁ (by simp) (by simp)
+    obtain ⟨s₂', hst₂, hR₂'⟩ := hsim₂.trans_match₂ hR₂ hst₂ (by simp) (by simp)
+    have hin₁ : s₁' ∈ m1.m.states := by apply m1.wf.trans_tgt_lt' _ _ _ hst₁;
+    have hin₂ : s₂' ∈ m2.m.states := by apply m2.wf.trans_tgt_lt' _ _ _ hst₂
+    simp only [nfa, Set.mem_setOf_eq, Prod.exists, f_spec, exists_and_left, exists_prop]
+    use ⟨s₁', hin₁⟩, ⟨s₂', hin₂⟩
+
 def CNFA.inter (m1 m2 : CNFA n) : CNFA n := product (fun b1 b2 => b1 && b2) m1 m2
 def CNFA.union (m1 m2 : CNFA n) : CNFA n :=
   -- FIXME add a sink state to each automata, or modify product
   product (fun b1 b2 => b1 || b2) m1.addSink m2.addSink
-
-noncomputable def to_prop (f : Bool → Bool → Bool) (p1 p2 : Prop) : Prop :=
-  f (@Decidable.decide p1 (Classical.propDecidable _)) (@Decidable.decide p2 (Classical.propDecidable _))
 
 def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :

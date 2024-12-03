@@ -965,3 +965,17 @@ def worklistRun_spec : (worklistRun S final inits hinits f |>.Sim M) :=
   worklistRun'_spec (BitVec n) S final f inits M.M corr corr_inv  corr_li corr_ri final_corr hinit hf₁ hf₂
 
 end worklist_good
+
+section nfa
+
+variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+variable {S : Type} [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
+
+variable (inits : Array S) (final : S → Bool) (f : S → Array (A × S))
+
+def nfa : NFA A S where
+  start := { sa | sa ∈ inits }
+  accept := { sa | final sa }
+  step sa a := { sa' | (a, sa') ∈ f sa }
+
+end nfa
