@@ -1,5 +1,30 @@
 import SSA.Experimental.Bits.AutoStructs.Basic
 
+section nfa
+
+variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+variable {S : Type} [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
+
+variable (inits : Array S) (final : S → Bool) (f : S → Array (A × S))
+
+def nfa : NFA A S where
+  start := { sa | sa ∈ inits }
+  accept := { sa | final sa }
+  step sa a := { sa' | (a, sa') ∈ f sa }
+
+end nfa
+
+section nfa'
+
+variable {S : Type} [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
+
+variable (inits : Array S) (final : S → Bool) (f : S → Array (BitVec n × S))
+
+def nfa' : NFA' n :=
+  { σ := _, M := nfa inits final f }
+
+end nfa'
+
 -- A generic function to define automata constructions using worklist algorithms
 section worklist
 
@@ -244,9 +269,6 @@ structure StInv (m : RawCNFA A) (map : Std.HashMap S State) where
 
 attribute [simp] StInv.wf StInv.map_states StInv.map_surj
 
--- is there a better way?
-local notation "StInv'" => StInv A S
-
 def worklistRun_init_post (inits : Array S) (final : S → Bool)
     (map : Std.HashMap S State) (m : RawCNFA A) :=
   (forall sa, sa ∈ map ↔ sa ∈ inits) ∧
@@ -256,12 +278,12 @@ def worklistRun_init_post (inits : Array S) (final : S → Bool)
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma worklistRun'_init_wf inits hinits final? :
     let st := worklist.initState A S inits hinits final?
-    (StInv' st.m st.map ∧ worklistRun_init_post A S inits final? st.map st.m) := by
+    (StInv A S st.m st.map ∧ worklistRun_init_post A S inits final? st.map st.m) := by
   unfold worklist.initState
   lift_lets
   intros m0 mapm
   let motive := λ (k : Nat) (x : Std.HashMap S State × RawCNFA A) =>
-                  (StInv' x.2 x.1 ∧ worklistRun_init_post _ _ (inits.take k) final? x.1 x.2)
+                  (StInv A S x.2 x.1 ∧ worklistRun_init_post _ _ (inits.take k) final? x.1 x.2)
   suffices _ : motive (inits.size) mapm by
     simp_all [motive]
   apply Array.foldl_induction
@@ -434,22 +456,15 @@ def worklistRun (final : S → Bool) (inits : Array S)
     (hinits : inits.toList.Nodup) (f : S → Array (BitVec n × S)) : CNFA n :=
   ⟨worklistRun' _ S final inits hinits f, worklistRun'_wf (BitVec n) S⟩
 
--- Correctness of the algorithm
-variable (final : S → Bool) (f : S → Array (A × S)) (inits : Array S)
-variable (M : NFA A σ)
-variable (corr : S → σ)
-variable (corr_inv : σ → S)
-variable (corr_li : Function.LeftInverse corr corr_inv)
-variable (corr_ri : Function.RightInverse corr corr_inv)
-variable (final_corr : ∀ (s : S), final s ↔ corr s ∈ M.accept)
-variable (hinit : ∀ (sa : S), sa ∈ inits ↔ corr sa ∈ M.start)
-variable (hf₁: ∀ sa q' a, q' ∈ M.step (corr sa) a → (a, corr_inv q') ∈ f sa)
-variable (hf₂: ∀ sa a sa', (a, sa') ∈ f sa → corr sa' ∈ M.step (corr sa) a)
+end worklist
 
-include corr_ri in
-omit [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S] in
-@[simp]
-lemma corr_inv_corr sa : corr_inv (corr sa) = sa := by rw [corr_ri]
+section worklist_correct
+
+-- Correctness of the algorithm
+variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+variable {S : Type} [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
+
+variable (inits : Array S) (final : S → Bool) (f : S → Array (A × S))
 
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma addOrCreateElem_visited final? (st : worklist.St A S) sa :
@@ -472,10 +487,13 @@ lemma processOneElem_visited (st : worklist.St A S) :
     let st' := processOneElem _ _  final s st (a, sa')
     st'.visited = st.visited := by
   intros st'
-  rw [←addOrCreateElem_visited _ _ (final sa') st sa']
+  rw [←addOrCreateElem_visited (final sa') st sa']
   simp [st', processOneElem, worklist.St.visited]
 
-def worklist.St.D (st : worklist.St A S) : Set σ := { q : σ | corr_inv q ∈ st.visited }
+def worklist.St.rel (st : worklist.St A S) : Rel State S := λ s sa ↦
+  st.map[sa]? = some s
+
+def worklist.St.D (st : worklist.St A S) : Set S := st.visited
 
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma processOneElem_states (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -540,7 +558,6 @@ lemma processOneElem_finals (st : worklist.St A S) (final : S → Bool) (a : A) 
     dsimp
     have _ := Std.HashMap.mem_of_getElem? heq
     split_ifs <;> simp_all
-    simp [RawCNFA.addTrans]
   next heq =>
     dsimp
     have _ := Std.HashMap.get?_none_not_mem heq
@@ -581,20 +598,16 @@ omit [Fintype S] [DecidableEq S] in
 lemma processOneElem_trans_preserve (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s1 s2 : State) :
     s2 ∈ st.m.tr s1 b →
     s2 ∈ (processOneElem A S final s st (a, sa)).m.tr s1 b := by
-  have h := processOneElem_trans _ _ st final a b sa s s1
+  have h := processOneElem_trans st final a b sa s s1
   split_ifs at h
   · obtain ⟨_, _, h2⟩ := h
     simp_all
   · simp_all
 
-def worklist.St.rel (st : worklist.St A S) : Rel State σ := λ s q ↦
-  st.map[corr_inv q]? = some s
-
 omit [LawfulBEq A] [Fintype S] in
-lemma processOneElem_rel {s₁ s₂ : State} {q : σ} :
-    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q ↔
-      (st.rel _ _ corr_inv s₂ q ∨ (s₂ = st.m.stateMax ∧ corr_inv q = sa ∧
-        st.map[corr_inv q]? = none)) := by
+lemma processOneElem_rel {s₁ s₂ : State} :
+    (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' ↔
+      (st.rel s₂ sa' ∨ (s₂ = st.m.stateMax ∧ sa' = sa ∧ st.map[sa']? = none)) := by
   simp [worklist.St.rel]
   rw [processOneElem_map]
   constructor
@@ -607,53 +620,38 @@ lemma processOneElem_rel {s₁ s₂ : State} {q : σ} :
 
 omit [LawfulBEq A] [Fintype S] [LawfulBEq S] [DecidableEq S] in
 lemma rel_in_states {st : worklist.St A S} (hinv : StInv A S st.m st.map) :
-    st.rel _ _ corr_inv s q → s ∈ st.m.states := by
+    st.rel s sa → s ∈ st.m.states := by
   rintro h1
   apply hinv.map_states <;> assumption
 
 omit [LawfulBEq A] [Fintype S] in
-lemma processOneElem_rel_preserve {q : σ} :
-    st.rel _ _ corr_inv s₂ q →
-    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q := by
+lemma processOneElem_rel_preserve :
+    st.rel s₂ sa' →
+    (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' := by
   rw [processOneElem_rel]; tauto
 
 omit [LawfulBEq A] [Fintype S] in
-lemma processOneElem_rel_preserve_olds {q : σ} :
-    (processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv s₂ q →
-    s₂ ∈ st.m.states →
-    st.rel _ _ corr_inv s₂ q := by
+lemma processOneElem_rel_preserve_olds :
+    (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' →
+    s₂ ∈ st.m.states → st.rel s₂ sa' := by
   rw [processOneElem_rel]
   rintro (h | ⟨rfl, rfl, heq⟩) hs; exact h
   simp at hs
 
-omit [LawfulBEq A] [Fintype S] in
-lemma processOneElem_dom_preserve :
-    s₂ ∈ (st.rel _ _ corr_inv).dom →
-    s₂ ∈ ((processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv).dom := by
-  rintro ⟨q, hq⟩; use q
-  apply processOneElem_rel_preserve; assumption
-
-omit [LawfulBEq A] [Fintype S] in
-lemma processOneElem_codom_preserve :
-    q ∈ (st.rel _ _ corr_inv).codom →
-    q ∈ ((processOneElem A S final s₁ st (a, sa)).rel _ _ corr_inv).codom := by
-  rintro ⟨q, hq⟩; use q
-  apply processOneElem_rel_preserve; assumption
-
 abbrev worklist.St.sim {st : worklist.St A S} (T : Set (S × A × S)) :=
-  st.m.Simul M (st.rel _ _ corr_inv) (st.D A S corr_inv) {(q, a, q') | (corr_inv q, a, corr_inv q') ∈ T }
+  st.m.Simul (nfa inits final f) st.rel st.D T
 
 def processOneElem_mot (s : State) (sa : S) (n : ℕ) (st : worklist.St A S) : Prop :=
   st.map[sa]? = some s ∧
   sa ∈ st.visited ∧
   StInv A S st.m st.map ∧
-  st.sim A S M corr_inv {(sa1, a, sa') | sa1 = sa ∧ ∃ k ≥ n, (f sa)[k]? = some (a, sa') }
+  st.sim inits final f  {(sa1, a, sa') | sa1 = sa ∧ ∃ k ≥ n, (f sa)[k]? = some (a, sa') }
 
 def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     ∀ a sa', (f sa)[k]? = some (a, sa') →
-    processOneElem_mot A S f M corr_inv s sa k st →
+    processOneElem_mot inits final f s sa k st →
     let st' := processOneElem A S final s st (a, sa')
-    StInv' st'.m st'.map := by
+    StInv A S st'.m st'.map := by
   rintro a sa' hf ⟨hmap, hvisited, inv, hsim⟩; simp only
   have hmem : ∀ s (sa : S), st.map[sa]? = some s → s ∈ st.m.states := by intros; apply inv.map_states; assumption
   have _ : st.m.WF := by apply inv.wf
@@ -713,12 +711,12 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
 
 def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     ∀ a sa', (f sa)[k]? = some (a, sa') →
-    processOneElem_mot A S f M corr_inv s sa k st →
-    processOneElem_mot A S f M corr_inv s sa (k+1) (processOneElem A S final s st (a, sa')) := by
+    processOneElem_mot inits final f s sa k st →
+    processOneElem_mot inits final f s sa (k+1) (processOneElem A S final s st (a, sa')) := by
   intro a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   have hmem : ∀ s (sa : S), st.map[sa]? = some s → s ∈ st.m.states := by intros; apply inv.map_states; assumption
   have hwf : st.m.WF := by apply inv.wf
-  have inv' := processOneElem_inv A S final f M corr_inv s sa k a sa' hf ⟨hmap, hvisited, inv, hsim⟩
+  have inv' := processOneElem_inv inits final f s sa k a sa' hf ⟨hmap, hvisited, inv, hsim⟩
   unfold processOneElem_mot
   constructor
   (rw [processOneElem_preserves_map]; assumption)
@@ -730,7 +728,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     have hs' : s ∈ st.m.states := by apply hmem <;> assumption
     rw [processOneElem_rel] at hR
     rcases hR with hR | ⟨rfl, rfl, heq⟩
-    · have heq := rel_in_states A S _ inv hR
+    · have heq := rel_in_states inv hR
       split_ifs with hcond
       · have hneq : st.m.stateMax ≠ s' := by rintro rfl; simp [RawCNFA.states] at heq
         simp [hneq]
@@ -738,23 +736,20 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       · apply hsim.accept; assumption
     · split_ifs with h
       · rcases h with ⟨_, hfin⟩
-        rw [final_corr] at hfin
-        rw [corr_li] at hfin
-        simp [hfin]
-      · have ha := final_corr (corr_inv q)
-        rw [corr_li] at ha; rw [←ha]
-        suffices hnin : corr_inv q ∉ st.map by
+        simp [nfa, hfin]
+      · simp [nfa]
+        suffices hnin : q ∉ st.map by
           push_neg at h; specialize h hnin; simp_all
           rintro hc; apply hwf.finals_lt at hc; simp at hc
         exact Std.HashMap.getElem?_none_not_mem heq }
   { rintro s₁ hs₁; rw [processOneElem_initials] at hs₁
     obtain ⟨q, hq, hR⟩ := hsim.initial₁ hs₁
-    use q, hq, processOneElem_rel_preserve A S final corr_inv hR }
+    use q, hq, processOneElem_rel_preserve final hR }
   { intros q hq; obtain ⟨s, hs, hR⟩ := hsim.initial₂ hq
     simp only [processOneElem_initials]
-    use s, hs, (by exact processOneElem_rel_preserve A S final corr_inv hR) }
+    use s, hs, (by exact processOneElem_rel_preserve final hR) }
   { rintro s₁ s₂ b q₁ hR htr
-    have h := processOneElem_trans A S st final a b sa' s s₁
+    have h := processOneElem_trans st final a b sa' s s₁
     split_ifs at h with hcond
     on_goal 2 => {
       rw [h] at htr
@@ -762,7 +757,7 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       specialize hR (RawCNFA.WF.trans_src_lt'' hwf htr)
       obtain ⟨q₂, hst, hrel⟩ := hsim.trans_match₁ hR htr
       use q₂; simp only [hst, true_and]
-      exact processOneElem_rel_preserve A S final corr_inv hrel }
+      exact processOneElem_rel_preserve final hrel }
     rcases hcond with ⟨rfl, rfl⟩
     rcases h with ⟨sₙ, hmap', htr'⟩
     rw [htr'] at htr; clear htr'
@@ -771,23 +766,21 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
     on_goal 2 =>
       have hold := RawCNFA.WF.trans_src_lt'' hwf htr
       obtain ⟨q₂, hst, hrel⟩ := hsim.trans_match₁
-        (by apply processOneElem_rel_preserve_olds A S final corr_inv hR hold) htr
-      use q₂; simp only [hst, true_and]
-      exact processOneElem_rel_preserve A S final corr_inv hrel
-    use corr sa'; constructor
-    · suffices heq : q₁ = corr sa by
-        subst heq; apply hf₂ _ _ _ (Array.mem_of_getElem? hf)
-      suffices heq : sa = corr_inv q₁ by rw [heq, corr_li]
+        (by apply processOneElem_rel_preserve_olds final hR hold) htr
+      use q₂, hst, processOneElem_rel_preserve final hrel
+    use sa'; constructor
+    · suffices heq : q₁ = sa by
+        subst heq; apply Array.mem_of_getElem? hf
       apply processOneElem_preserves_map at hmap
       unfold worklist.St.rel at hR
-      apply inv'.map_inj hmap hR
-    · convert hmap'; rw [worklist.St.rel, corr_ri] }
+      apply inv'.map_inj hR hmap
+    · exact hmap' }
   { rintro s₁ b q₁ q₂ hR hs hD hnT
     simp only [ge_iff_le, Prod.mk.eta, Set.mem_setOf_eq, not_and, not_exists] at hnT
-    have h := processOneElem_trans _ _ st final a b sa' s s₁
+    have h := processOneElem_trans st final a b sa' s s₁
     split_ifs at h with hcond
     on_goal 2 =>
-      have hR' : st.rel A S corr_inv s₁ q₁ := by
+      have hR' : st.rel s₁ q₁ := by
         rw [processOneElem_rel] at hR; rcases hR with hR' | ⟨_, _, hnone⟩; exact hR'
         unfold worklist.St.D at hD; rw [processOneElem_visited] at hD
         rcases hD with ⟨hnin, -⟩
@@ -805,14 +798,13 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       apply processOneElem_rel_preserve; assumption
     rcases hcond with ⟨rfl, rfl⟩
     rcases h with ⟨sₙ, hmap', htr'⟩
-    obtain rfl : sa = corr_inv q₁ := by
+    obtain rfl : sa = q₁ := by
       apply processOneElem_preserves_map at hmap
-      unfold worklist.St.rel at hR
       apply inv'.map_inj hmap hR
     simp only [htr', Std.HashSet.mem_insert, beq_iff_eq]
-    by_cases heq : sa' = corr_inv q₂
+    by_cases heq : sa' = q₂
     · subst heq; use sₙ; simp only [true_or, true_and]; exact hmap'
-    · have hold := hmem s (corr_inv q₁) hmap
+    · have hold := hmem _ _ hmap
       apply processOneElem_rel_preserve_olds at hR
       obtain ⟨s₂, hs', hR⟩ := hsim.trans_match₂ (hR hold) hs
         (by simp_all [worklist.St.D, processOneElem_visited])
@@ -822,9 +814,9 @@ def processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       use s₂; simp only [hs', or_true, true_and]
       apply processOneElem_rel_preserve; assumption }
 
-def worklistGo_spec {st : worklist.St A S} (inv : StInv' st.m st.map) :
-    st.sim A S M corr_inv ∅ →
-    (worklistRun'.go A S final f st |>.Sim M) := by
+def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
+    st.sim inits final f ∅ →
+    (worklistRun'.go A S final f st |>.Sim $ nfa inits final f) := by
   induction st using worklistRun'.go.induct _ _ final f with
   | case4 st hnemp sa? hsa? =>
     -- trivial case that's impossible
@@ -843,7 +835,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' st.m st.map) :
     have : st.worklist = #[] := by
       simp only [Array.isEmpty] at hemp; apply Array.eq_empty_of_size_eq_zero; simp_all only [decide_eq_true_eq]
     intros hsim; unfold worklistRun'.go; simp_all
-    apply sim_full_cod _ _ _ _ _ (by simp_all) hsim
+    apply sim_full_cod st.m (nfa inits final f) st.D ∅ st.rel (by simp_all) hsim
     unfold worklist.St.rel worklist.St.D worklist.St.visited; simp [this]
     ext q; constructor
     · rintro ⟨s, hs⟩; exact Std.HashMap.mem_of_getElem? hs
@@ -860,7 +852,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' st.m st.map) :
         have _ : s' = s := by simp_all
         subst_eqs
         rw [heq] at hsome; subst_eqs
-        suffices hccl : processOneElem_mot A S f M corr_inv s sa (f sa).size (Array.foldl (processOneElem A S final s) st1 (f sa)) by
+        suffices hccl : processOneElem_mot inits final f s sa (f sa).size (Array.foldl (processOneElem A S final s) st1 (f sa)) by
           obtain ⟨_, _, inv', hsim'⟩ := hccl
           have hemp : {(sa1, a, sa') | sa1 = sa ∧ ∃ k, (f sa).size ≤ k ∧ (f sa)[k]? = some (a, sa')} = ∅ := by
             ext sa'; simp_all; rintro rfl k hge hsome
@@ -870,7 +862,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' st.m st.map) :
         apply Array.foldl_induction
         { simp only [st1, wl']
           unfold processOneElem_mot
-          have inv' : StInv' st1.m st1.map := by
+          have inv' : StInv A S st1.m st1.map := by
             constructor
             { simp [st1]; exact inv.wf }
             { simp [st1]; apply inv.map_states }
@@ -884,23 +876,21 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' st.m st.map) :
           { apply @hsim.initial₁ }
           { apply @hsim.initial₂ }
           { apply @hsim.trans_match₁ }
-          { rintro s1 a q₁ q₂ hR hst hD hnT
+          { rintro s1 a sa₁ sa₂ hR hst hD hnT
             simp only
-            by_cases hnew? : q₁ = corr sa
+            by_cases hnew? : sa₁ = sa
             · exfalso; apply hnT; subst hnew?
-              apply hf₁ at hst
-              simp [corr_ri, Array.mem_iff_getElem?.mp hst]
+              simp [Array.mem_iff_getElem?.mp hst]
             · obtain ⟨s₂, htr, hR⟩ := hsim.trans_match₂ hR hst (by
                 rcases hD with ⟨hmap, hwl⟩
                 use hmap
                 rw [Array.mem_pop_iff]; simp [hwl, heq]
-                rintro rfl; apply hnew?
-                rw [corr_li])
+                rintro rfl; apply hnew? rfl)
                 (by simp)
               use s₂, htr
               simp [worklist.St.rel]; exact hR }}
         { intros k st
-          apply processOneElem_spec A S final f M corr corr_inv corr_li corr_ri final_corr hf₂
+          apply processOneElem_spec
           simp; exact Array.getElem?_lt (f sa) k.isLt }
       next hnone =>
         have hnin : sa ∉ st.map := by
@@ -913,30 +903,30 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' st.m st.map) :
       have : st.worklist.size = 0 := by omega
       simp_all
 
-def worklistRun'_spec : (worklistRun' A S final inits hinits f |>.Sim M) := by
+def worklistRun'_spec :
+    (worklistRun' A S final inits hinits f |>.Sim $ nfa inits final f) := by
   unfold worklistRun'
   simp
   obtain ⟨inv, hmi, hts, hif⟩ := worklistRun'_init_wf A S inits hinits final
   have hvis : (worklist.initState A S inits hinits final).visited = ∅ := by
-    simp [worklist.St.visited]; simp_all; simp [worklist.initState, hinit]
+    simp [worklist.St.visited]; simp_all; simp [worklist.initState]
   apply worklistGo_spec <;> try assumption
   constructor
   · rintro s q hR
-    obtain ⟨sa, hsa⟩ := inv.map_surj ⟨s, by exact inv.map_states (corr_inv q) s hR⟩
-    rw [(hif _ _ hsa).2, final_corr]
-    suffices heq : sa = corr_inv q by
-      rw [heq, corr_li]
-    unfold worklist.St.rel at hR
+    obtain ⟨sa, hsa⟩ := inv.map_surj ⟨s, by exact inv.map_states _ s hR⟩
+    rw [(hif _ _ hsa).2, nfa]
+    simp only [Set.mem_setOf_eq, Bool.coe_iff_coe]; congr
     apply inv.map_inj hsa hR
   · rintro s hi
     obtain ⟨sa, hsa⟩ := inv.map_surj ⟨s, by apply inv.wf.initials_lt hi⟩
-    use corr sa
+    simp [nfa]
+    use sa
     constructor
-    · rw [←hinit, ←hmi]
-      exact Std.HashMap.mem_of_getElem? hsa
-    · rw [←corr_ri sa] at hsa; exact hsa
+    · rw [←hmi]; exact Std.HashMap.mem_of_getElem? hsa
+    · exact hsa
   · rintro q hs
-    rw [←corr_li q, ←hinit, ←hmi, Std.HashMap.mem_iff_getElem?] at hs
+    simp only [nfa, Set.mem_setOf_eq] at hs
+    rw [←hmi, Std.HashMap.mem_iff_getElem?] at hs
     obtain ⟨s, hR⟩ := hs
     use s
     constructor
@@ -945,37 +935,15 @@ def worklistRun'_spec : (worklistRun' A S final inits hinits f |>.Sim M) := by
   · simp [RawCNFA.tr, hts]
   · simp [worklist.St.D, hvis]
 
-end worklist
+end worklist_correct
 
 section worklist_good
 
-variable (S : Type) [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
-variable (final : S → Bool) (f : S → Array (BitVec n × S)) (inits : Array S)
-variable (M : NFA' n)
-variable (corr : S → M.σ)
-variable (corr_inv : M.σ → S)
-variable (corr_li : Function.LeftInverse corr corr_inv)
-variable (corr_ri : Function.RightInverse corr corr_inv)
-variable (final_corr : ∀ (s : S), final s ↔ corr s ∈ M.M.accept)
-variable (hinit : ∀ (sa : S), sa ∈ inits ↔ corr sa ∈ M.M.start)
-variable (hf₁: ∀ sa q' a, q' ∈ M.M.step (corr sa) a → (a, corr_inv q') ∈ f sa)
-variable (hf₂: ∀ sa a sa', (a, sa') ∈ f sa → corr sa' ∈ M.M.step (corr sa) a)
-
-def worklistRun_spec : (worklistRun S final inits hinits f |>.Sim M) :=
-  worklistRun'_spec (BitVec n) S final f inits M.M corr corr_inv  corr_li corr_ri final_corr hinit hf₁ hf₂
-
-end worklist_good
-
-section nfa
-
-variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 variable {S : Type} [Fintype S] [BEq S] [LawfulBEq S] [Hashable S] [DecidableEq S]
 
-variable (inits : Array S) (final : S → Bool) (f : S → Array (A × S))
+variable (inits : Array S) (final : S → Bool) (f : S → Array (BitVec n × S))
 
-def nfa : NFA A S where
-  start := { sa | sa ∈ inits }
-  accept := { sa | final sa }
-  step sa a := { sa' | (a, sa') ∈ f sa }
+def worklistRun_spec : (worklistRun S final inits hinits f |>.Sim $ nfa' inits final f) :=
+  worklistRun'_spec inits final f
 
-end nfa
+end worklist_good

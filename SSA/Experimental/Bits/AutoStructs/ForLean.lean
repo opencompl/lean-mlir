@@ -170,6 +170,12 @@ theorem BitVec.ofFn_getLsbD {w : Nat} (f : Fin w → Bool) (i : Fin w) :
 theorem BitVec.ofFn_getLsbD' {w : Nat} (f : Fin w → Bool) (i : Nat) (hi : i < w) :
     (BitVec.ofFn f).getLsbD i = f ⟨i, hi⟩ := ofFn_getLsbD f ⟨i, hi⟩
 
+theorem BitVec.ofFn_getLsbD_true {w : Nat} {f : Fin w → Bool} {i : Nat} :
+    (BitVec.ofFn f).getLsbD i = true ↔ ∃ (hlt : i < w), f ⟨i, hlt⟩ = true := by
+  constructor
+  · intro h; have hlt := lt_of_getLsbD h; simp_all
+  · rintro ⟨hlt, heq⟩; simp_all
+
 @[simp]
 theorem BitVec.ofFn_getElem {w : Nat} (f : Fin w → Bool) (i : Fin w) :
     (BitVec.ofFn f)[i.val] = f i := by

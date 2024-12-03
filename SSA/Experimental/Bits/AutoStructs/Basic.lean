@@ -87,10 +87,10 @@ lemma bisimul_comp {m : RawCNFA A} :
   · rintro s q₁ ⟨q₂, hR₁, hR₂⟩; rw [h₁.accept hR₁, h₂.accept hR₂]
   · rintro s hs
     obtain ⟨q₁, hi₁, hq₁⟩ := h₁.initial₁ hs
-    obtain⟨q₂, hi₂, hq₂⟩ := h₂.start₁ hi₁
+    obtain⟨q₂, hi₂, hq₂⟩ := h₂.start.1 hi₁
     use q₂, hi₂, q₁
   · rintro q₂ hi₂
-    obtain⟨q₁, hi₁, hq₂⟩ := h₂.start₂ hi₂
+    obtain⟨q₁, hi₁, hq₂⟩ := h₂.start.2 hi₂
     obtain ⟨s, hsi, hs⟩ := h₁.initial₂ hi₁
     use s, hsi, q₁
   · rintro s s' a q₂ ⟨q₁, hR₁, hR₂⟩ htr
@@ -136,6 +136,18 @@ def RawCNFA.addManyTrans (m : RawCNFA A) (a : List A) (s s' : State) : RawCNFA A
 def RawCNFA.addInitial (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with initials := m.initials.insert s }
 
+@[simp]
+lemma RawCNFA.addInitial_initials {m : RawCNFA A} : (m.addInitial s).initials = m.initials.insert s := by
+  rfl
+
+@[simp]
+lemma RawCNFA.addInitial_finals {m : RawCNFA A} : (m.addInitial s).finals = m.finals := by
+  rfl
+
+@[simp]
+lemma RawCNFA.addInitial_tr {m : RawCNFA A} : s' ∈ (m.addInitial s'').tr s a ↔ s' ∈ m.tr s a := by
+  rfl
+
 def RawCNFA.addFinal (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with finals := m.finals.insert s }
 
@@ -171,12 +183,36 @@ lemma states_addFinal (m : RawCNFA A) (s' : State) :
 @[simp, aesop 50% unsafe]
 lemma states_addTrans (m : RawCNFA A) (a : A) (s1 s2 : State) :
     (m.addTrans a s1 s2).states = m.states := by
-  simp_all [RawCNFA.addTrans, RawCNFA.states]
+  rfl
+
+@[simp, aesop 50% unsafe]
+lemma addTrans_initials (m : RawCNFA A) (a : A) (s1 s2 : State) :
+    (m.addTrans a s1 s2).initials = m.initials := by
+  rfl
+
+@[simp, aesop 50% unsafe]
+lemma addTrans_finals (m : RawCNFA A) (a : A) (s1 s2 : State) :
+    (m.addTrans a s1 s2).finals = m.finals := by
+  rfl
+
+@[simp]
+lemma addTrans_tr (m : RawCNFA A) [LawfulBEq A] (a : A) (s1 s2 : State) :
+    s' ∈ (m.addTrans a s1 s2).tr s b ↔
+      (s = s1 ∧ s' = s2 ∧ b = a) ∨ s' ∈ m.tr s b := by
+  simp [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  split_ifs with heqs
+  · rcases heqs with ⟨rfl, rfl⟩; simp; tauto
+  · tauto
 
 @[simp, aesop 50% unsafe]
 lemma mem_states_newState (m : RawCNFA A) (s : State) (hin : s ∈ m.states) :
     s ∈ m.newState.2.states := by
   simp_all [RawCNFA.newState, RawCNFA.states]; omega
+
+@[simp]
+lemma newState_tr {m : RawCNFA A} :
+    s' ∈ m.newState.2.tr s a ↔ s' ∈ m.tr s a := by
+  rfl
 
 @[simp, aesop 50% unsafe]
 lemma states_empty :
@@ -187,6 +223,16 @@ lemma states_empty :
 lemma states_newState (m : RawCNFA A) :
     m.newState.2.states = m.states ∪ { m.stateMax } := by
   simp_all [RawCNFA.newState, RawCNFA.states, Finset.range_add]
+
+@[simp, aesop 50% unsafe]
+lemma newState_initials (m : RawCNFA A) :
+    m.newState.2.initials = m.initials := by
+  rfl
+
+@[simp, aesop 50% unsafe]
+lemma newState_finals (m : RawCNFA A) :
+    m.newState.2.finals = m.finals := by
+  rfl
 
 @[simp, aesop 50% unsafe]
 lemma newState_eq (m : RawCNFA A) :
@@ -209,6 +255,8 @@ structure RawCNFA.WF (m : RawCNFA A) where
 structure CNFA (n : Nat) where
   m : RawCNFA (BitVec n)
   wf : m.WF
+
+attribute [simp] CNFA.wf
 
 def CNFA.Sim (m : CNFA n) (M : NFA' n) :=
   m.m.Sim M.M
@@ -274,7 +322,6 @@ lemma wf_addFinal (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addFinal s).WF := by
   constructor <;> intros <;> simp_all [RawCNFA.addFinal, RawCNFA.WF] <;> aesop
 
-
 @[simp, aesop 50% unsafe]
 lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
     (m.addTrans a s s').WF := by
@@ -290,6 +337,71 @@ lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈
         simp_all }
      }
     { apply hwf.trans_tgt_lt hsome; assumption }}
+
+@[simp]
+lemma wf_createSink [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) : m.createSink.2.WF := by
+  let motive (m' : RawCNFA A) := m'.WF ∧ m.stateMax ∈ m'.states
+  suffices _ : motive m.createSink.2 by simp_all [motive]
+  simp only [RawCNFA.createSink, newState_eq]
+  apply List.foldlRecOn <;> simp_all [motive]
+
+@[simp]
+lemma createSink_states [LawfulBEq A] {m : RawCNFA A} : m.createSink.2.states = m.states ∪ {m.stateMax} := by
+  let motive (m' : RawCNFA A) := m'.states = m.states ∪ {m.stateMax}
+  suffices _ : motive m.createSink.2 by simp_all [motive]
+  simp only [RawCNFA.createSink, newState_eq]
+  apply List.foldlRecOn <;> simp_all [motive]
+
+@[simp]
+lemma createSink_initials [LawfulBEq A] {m : RawCNFA A} : m.createSink.2.initials = m.initials.insert m.stateMax := by
+  let motive (m' : RawCNFA A) := m'.initials = m.initials.insert m.stateMax
+  suffices _ : motive m.createSink.2 by simp_all [motive]
+  simp only [RawCNFA.createSink, newState_eq]
+  apply List.foldlRecOn <;> simp_all [motive]
+
+@[simp]
+lemma createSink_finals [LawfulBEq A] {m : RawCNFA A} : m.createSink.2.finals = m.finals := by
+  let motive (m' : RawCNFA A) := m'.finals = m.finals
+  suffices _ : motive m.createSink.2 by simp_all [motive]
+  simp only [RawCNFA.createSink, newState_eq]
+  apply List.foldlRecOn <;> simp_all [motive]
+
+@[simp]
+lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
+    s₂ ∈ m.createSink.2.tr s₁ a ↔
+      (s₁ = m.stateMax ∧ s₂ = m.stateMax) ∨
+      (s₁ ∈ m.states ∧ s₂ ∈ m.states ∧ s₂ ∈ m.tr s₁ a) := by
+  unfold RawCNFA.createSink
+  simp
+  let motive (mᵢ : RawCNFA A) (hwf : mᵢ.WF) (as : List A) :=
+    mᵢ.states = m.states ∪ {m.stateMax} →
+    ∀ a,
+      s₂ ∈ (as.foldl (λ (m' : RawCNFA A) a => m'.addTrans a m.stateMax m.stateMax)
+              (init := mᵢ)).tr s₁ a ↔
+        (s₁ = m.stateMax ∧ s₂ = m.stateMax ∧ a ∈ as) ∨
+        (s₂ ∈ mᵢ.tr s₁ a)
+  suffices h : motive (m.newState.2.addInitial m.stateMax) (by simp_all) (FinEnum.toList A) by
+    simp only [FinEnum.mem_toList, and_true, motive] at h
+    rw [h] <;> simp only [RawCNFA.addInitial_tr, newState_tr,
+                          states_addInitial, states_newState]
+    constructor; on_goal 2 => tauto
+    rintro (h | h); (exact .inl h); right
+    use (RawCNFA.WF.trans_src_lt'' hwf h),
+        (RawCNFA.WF.trans_tgt_lt' hwf s₁ a s₂ h),
+        h
+  generalize_proofs hwf'; revert hwf'
+  generalize (m.newState.2.addInitial m.stateMax) = mi
+  induction FinEnum.toList A generalizing mi
+  case nil =>
+    rintro hwf'; simp [motive, RawCNFA.createSink, hwf]
+  case cons a as ih =>
+    simp [motive, RawCNFA.createSink, hwf]
+    rintro hwf' hstates b
+    simp [motive] at ih
+    rw [ih]
+    · simp only [addTrans_tr]; tauto
+    · simp [hwf', hstates]
+    · simp [hstates]
 
 instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
   default := RawCNFA.empty
