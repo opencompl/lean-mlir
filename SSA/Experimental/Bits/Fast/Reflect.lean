@@ -197,7 +197,7 @@ structure ReflectResult where
 instance : ToMessageData ReflectResult where
   toMessageData result := m!"{result.e} {result.map}"
 
-/-
+/--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
 Crucially, when this succeeds, this will be in terms of `term`.
 and furthermore, it will reflect all terms as variables.
@@ -313,7 +313,6 @@ elab "bv_reflect" : tactic => do
     let g ← reflectUniversalWidthBVs g (← g.getType')
     check (Expr.mvar g)
     return [g]
-
 
 /--
 info: result: Predicate.eq (Term.var 0) (Term.var 1) [0→a 1→b]
