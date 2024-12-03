@@ -9,11 +9,11 @@ instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
   rw [forall_swap]
   simp only [← funext_iff]
 
-instance (p : Predicate) : Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
+instance (p : Predicate) : 
+    Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
   decidable_of_iff
     (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
   rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
-
 
 /--
 We can decide that the evaluation of a predicate is forever false,
@@ -34,7 +34,6 @@ def run_decide (t₁ t₂ : Term) : IO Bool := do
 def decide (t₁ t₂ : Term) : IO Bool :=
   --timeit "" (run_decide t₁ t₂)
   (run_decide t₁ t₂)
-
 
 section testDecide
 
@@ -154,4 +153,5 @@ info: 'decide' depends on axioms: [propext, sorryAx, Classical.choice, Quot.soun
 
 /-- info: true -/
 #guard_msgs in #eval! decide (and x y) (or (not x) y - not x)
+
 end testDecide
