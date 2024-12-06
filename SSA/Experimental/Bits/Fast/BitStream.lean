@@ -67,6 +67,14 @@ section Basic
 def head (x : BitStream) : Bool      := x 0
 def tail (x : BitStream) : BitStream := (x <| · + 1)
 
+/--
+TODO: mark this as a simp-lemma.
+@bollu does not dare to do this right now,
+as it might just break even more proofs .
+-/
+theorem getElem_tail (x : BitStream) (i : Nat) : x.tail i = x (i + 1) :=
+  rfl
+
 /-- Append a single bit to the least significant end of a bitvector.
 That is, the new bit is the least significant bit.
 -/
@@ -84,6 +92,15 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
+
+@[simp] theorem corec_zero {β} (f : β → β × Bool) (b : β) :
+    corec f b 0 = (f b).2 := rfl
+
+@[simp] theorem corec_succ {β} (f : β → β × Bool) (b : β) (i : Nat) :
+    corec f b (i + 1) = (corec f (f b).1) i := by
+  induction' i with i ih
+  · simp [corec]
+  · simp [corec, ih]
 
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
