@@ -322,6 +322,11 @@ warning: declaration uses 'sorry'
 #guard_msgs in example : ∀ (w : Nat) (a b : BitVec w), a = b := by
   intros w a b
   bv_reflect
+  apply (Predicate.eval_eq_denote _ _ _).mp
+  generalize (List.map _ _) = xs
+  clear a b
+  revert xs w
+  native_decide
   sorry
 
 /-- error: expcted width to be a free variable, found '10' (bitwidth with width '10' is 'b') -/
