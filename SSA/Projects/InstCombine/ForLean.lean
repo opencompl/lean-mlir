@@ -86,24 +86,24 @@ end Nat
 
 namespace BitVec
 
-@[simp]
-theorem replicate_one {w : Nat} : BitVec.replicate w 1#1 = cast (by simp) (allOnes w) := by
-  ext i
-  simp
-  omega
+-- @[simp]
+-- theorem replicate_one {w : Nat} : BitVec.replicate w 1#1 = cast (by simp) (allOnes w) := by
+--   ext i
+--   simp
+--   omega
 
-@[simp]
-theorem replicate_zero {w : Nat} : BitVec.replicate w 0#1 = cast (by simp) (0#w) := by
-  ext i
-  simp
+-- @[simp]
+-- theorem replicate_zero {w : Nat} : BitVec.replicate w 0#1 = cast (by simp) (0#w) := by
+--   ext i
+--   simp
 
-theorem abs_eq_add_xor {x : BitVec w} :
-    have y : BitVec w := BitVec.cast (by simp) (BitVec.replicate w (BitVec.ofBool x.msb))
-    x.abs = (x + y) ^^^ y := by
-  simp only [BitVec.abs, neg_eq]
-  by_cases h: x.msb
-  · simp [h, ← allOnes_sub_eq_not]
-  · simp [h]
+-- theorem abs_eq_add_xor {x : BitVec w} :
+--     have y : BitVec w := BitVec.cast (by simp) (BitVec.replicate w (BitVec.ofBool x.msb))
+--     x.abs = (x + y) ^^^ y := by
+--   simp only [BitVec.abs, neg_eq]
+--   by_cases h: x.msb
+--   · simp [h, ← allOnes_sub_eq_not]
+--   · simp [h]
 
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :

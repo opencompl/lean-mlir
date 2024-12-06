@@ -103,9 +103,9 @@ theorem BitVec.append_inj {x1 x2 : BitVec w} {y1 y2 : BitVec w'} :
       assumption
   · rintro ⟨rfl, rfl⟩; rfl
 
-@[simp]
-lemma BitVec.cons_inj : cons b1 bv1 = cons b2 bv2 ↔ (b1 = b2) ∧ bv1 = bv2 := by
-  simp [cons]
+-- @[simp]
+-- lemma BitVec.cons_inj : cons b1 bv1 = cons b2 bv2 ↔ (b1 = b2) ∧ bv1 = bv2 := by
+--   simp [cons]
 
 @[simp] lemma BitVec.lk30 : (3#2 : BitVec 2)[0] = true := by rfl
 @[simp] lemma BitVec.lk31 : (3#2 : BitVec 2)[1] = true := by rfl
@@ -894,14 +894,14 @@ lemma absNfaToFomrmula_spec (φ : Formula) :
 The theorem stating that the automaton generated from the formula φ recognizes
 exactly the solution of φ.
 -/
-theorem absNfaToFomrmula_spec' (φ : Formula) :
-    (absNfaOfFormula φ).accepts = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) = true } := by
-  simp [absNfaToFomrmula_spec, formula_language]
+-- theorem absNfaToFomrmula_spec' (φ : Formula) :
+--     (absNfaOfFormula φ).accepts = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) = true } := by
+--   simp [absNfaToFomrmula_spec, formula_language]
 
-/--
-info: 'absNfaToFomrmula_spec'' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms absNfaToFomrmula_spec'
+-- /--
+-- info: 'absNfaToFomrmula_spec'' depends on axioms: [propext, Classical.choice, Quot.sound]
+-- -/
+-- #guard_msgs in #print axioms absNfaToFomrmula_spec'
 
 /-
 Note: it is important to define this function and not inline it, otherwise
