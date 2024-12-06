@@ -407,8 +407,8 @@ theorem ult_iff_not_ule : (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by bv_automata'
 theorem sub_neg_sub : (x - y) = - (y - x) := by bv_automata'
 
 -- only for w > 0
-theorem eq_iff_not_sub_or_sub :
-    x = y ↔ (~~~ (x - y ||| y - x)).msb := by bv_automata'
+-- theorem eq_iff_not_sub_or_sub :
+--     x = y ↔ (~~~ (x - y ||| y - x)).msb := by bv_automata'
 
 theorem zulip_example :
   ¬(n <ᵤ ~~~k) ∨
