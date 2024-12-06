@@ -77,7 +77,7 @@ lemma dec_snoc_in_langRel2 :
 
 -- move
 @[simp]
-theorem BitVec.cast_inj (h : w = w') {x y : BitVec w} : cast h x = cast h y ↔ x = y := by
+theorem BitVec.cast_inj (h : w = w') {x y : BitVec w} : BitVec.cast h x = BitVec.cast h y ↔ x = y := by
   rcases h; simp
 
 -- move
