@@ -17,6 +17,9 @@ def unpack (x : ValueStream α) : ValueStream α × TokenStream :=
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
 
+def unpack' (x : ValueStream α) : ValueStream α × TokenStream :=
+  (x, x.map (Option.map fun _ => ()))
+
 def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
   Stream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -38,8 +41,7 @@ def branch (x : ValueStream Bool): TokenStream × TokenStream  :=
 
 def fork (x : TokenStream) : TokenStream × TokenStream  :=
   Stream.corec₂ (β := TokenStream) x
-    fun x => Id.run <| do
-      (x 0, x 0, x.tail)
+    fun x => (x 0, x 0, x.tail)
 
 def join (x y : TokenStream) : TokenStream  :=
   Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>

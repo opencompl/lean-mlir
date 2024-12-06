@@ -123,6 +123,10 @@ def fork (x : Stream α) : Stream α × Stream α :=
       let x' := x.tail
       (x0, x0, x')
 
+-- this is basically the same as the fork in DC
+def fork' (x : Stream α) : Stream α × Stream α :=
+  (x,x)
+
 -- not entirely nondeterministic (still picks left first)
 def controlMerge (x y : Stream α) : Stream α × Stream Bool :=
   Stream.corec₂ (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
