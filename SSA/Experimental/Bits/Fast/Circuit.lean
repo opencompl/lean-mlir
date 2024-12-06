@@ -15,7 +15,7 @@ inductive Circuit (α : Type u) : Type u
   | fals : Circuit α
   /-- `var b x` represents literal `x` or the negated literat `¬x`,
       depending on the value of `b` -/
-  | var : Bool → α → Circuit α
+  | var : (isPositive : Bool) → (tag : α) → Circuit α
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
   | xor : Circuit α → Circuit α → Circuit α
@@ -74,6 +74,11 @@ lemma eval_eq_evalv [DecidableEq α] : ∀ (c : Circuit α) (f : α → Bool),
 @[simp] def ofBool (b : Bool) : Circuit α :=
   if b then tru else fals
 
+/--
+We have L ≤ R iff for every input `i` such that L[i] = 1, we have R[i] = 1.
+Therefore, L as treated as a function is pointwise less than the function R,
+under the ordering `0 ≤ 1`.
+-/
 instance : LE (Circuit α) :=
   ⟨λ c₁ c₂ => ∀ f, eval c₁ f → eval c₂ f⟩
 
@@ -221,7 +226,7 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | or c₁ c₂, f => (map c₁ f) ||| (map c₂ f)
   | xor c₁ c₂, f => (map c₁ f) ^^^ (map c₂ f)
 
-lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
+@[simp] lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
     eval (map c f) g = eval c (λ x => g (f x)) := by
   induction c <;> simp [*, Circuit.map, eval] at *
 
