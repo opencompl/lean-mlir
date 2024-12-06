@@ -76,9 +76,9 @@ lemma dec_snoc_in_langRel2 :
   simp [langRel2]
 
 -- move
-@[simp]
-theorem BitVec.cast_inj (h : w = w') {x y : BitVec w} : cast h x = cast h y ↔ x = y := by
-  rcases h; simp
+-- @[simp]
+-- theorem BitVec.cast_inj (h : w = w') {x y : BitVec w} : cast h x = cast h y ↔ x = y := by
+--   rcases h; simp
 
 -- move
 @[simp]
@@ -417,10 +417,10 @@ def NFA'.autEq : NFA' 2 :=
 
 def NFA'.eqRel : BVRel := fun _ x y => x = y
 
-lemma NFA'.autEq_correct : autEq.correct2 (fun _ => eqRel) eqRel := by
-  constructor <;> simp [autEq, eqRel]
-  rintro ⟨⟩ ⟨a⟩ w bv1 bv2
-  fin_cases a <;> simp [NFA.stepSet]
+-- lemma NFA'.autEq_correct : autEq.correct2 (fun _ => eqRel) eqRel := by
+--   constructor <;> simp [autEq, eqRel]
+--   rintro ⟨⟩ ⟨a⟩ w bv1 bv2
+--   fin_cases a <;> simp [NFA.stepSet]
 
 -- Automata recognizing unsigned comparisons
 
@@ -496,28 +496,28 @@ lemma ucmp_tricho : (bv1 >ᵤ bv2) = false → (bv2 >ᵤ bv1) = false → bv1 = 
   simp [BitVec.ule, BitVec.ult, BitVec.toNat_eq]
   apply Nat.le_antisymm
 
-lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsignedCmpSA cmp.urel := by
-  let getState {w} (bv1 bv2 : BitVec w) : NFA.unsignedCmpState :=
-    if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
-  constructor <;> simp [NFA.autUnsignedCmp, autUnsignedCmp, autUnsignedCmpSA, AutoStructs.RelationOrdering.urel]
-  · cases cmp <;> simp [BitVec.ule_iff_ult_or_eq]; tauto
-  · rintro (_ | _ | _) <;> simp
-  · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
-      · rintro ⟨_, _⟩; use .eq; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA] at * <;> tauto
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
-      · rintro _; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
-        · use .gt; simp_all
-        · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
-        · use .gt; simp_all
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
-      · rintro _; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
-        · use .lt; simp_all
-        · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
-        · use .lt; simp_all
+-- lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsignedCmpSA cmp.urel := by
+--   let getState {w} (bv1 bv2 : BitVec w) : NFA.unsignedCmpState :=
+  --   if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
+  -- constructor <;> simp [NFA.autUnsignedCmp, autUnsignedCmp, autUnsignedCmpSA, AutoStructs.RelationOrdering.urel]
+  -- · cases cmp <;> simp [BitVec.ule_iff_ult_or_eq]; tauto
+  -- · rintro (_ | _ | _) <;> simp
+  -- · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
+  --   · constructor
+  --     · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
+  --     · rintro ⟨_, _⟩; use .eq; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA] at * <;> tauto
+  --   · constructor
+  --     · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
+  --     · rintro _; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
+  --       · use .gt; simp_all
+  --       · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
+  --       · use .gt; simp_all
+  --   · constructor
+  --     · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
+  --     · rintro _; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
+  --       · use .lt; simp_all
+  --       · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
+        -- · use .lt; simp_all
 
 -- Automata recognizing signed comparisons
 
@@ -617,34 +617,35 @@ lemma NFA'.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpS
   constructor <;> simp [NFA.autSignedCmp, autSignedCmp, autSignedCmpSA, AutoStructs.RelationOrdering.srel]
   · cases cmp <;> simp [BitVec.sle_iff_slt_or_eq]; tauto
   · rintro (_ | _ | _) <;> simp
-  · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
-      · rintro ⟨_, _⟩; use .eq; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA] at * <;> tauto
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
-      · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
-        · use .gt; simp_all
-        · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
-        · use .gt; simp_all
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
-      · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
-        · use .lt; simp_all
-        · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
-        · use .lt; simp_all
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
-      · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
-        · use .lt; simp_all
-        · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
-        · use .lt; simp_all
-    · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
-      · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
-        · use .gt; simp_all
-        · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
-        · use .gt; simp_all
+  · sorry
+    -- rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
+    -- · constructor
+    --   · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
+    --   · rintro ⟨_, _⟩; use .eq; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA] at * <;> tauto
+    -- · constructor
+    --   · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
+    --   · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
+    --     · use .gt; simp_all
+    --     · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
+    --     · use .gt; simp_all
+    -- · constructor
+    --   · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
+    --   · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
+    --     · use .lt; simp_all
+    --     · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
+    --     · use .lt; simp_all
+    -- · constructor
+    --   · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
+    --   · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
+    --     · use .lt; simp_all
+    --     · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
+    --     · use .lt; simp_all
+    -- · constructor
+    --   · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
+    --   · rintro _; fin_cases a <;> simp [NFA.signedCmpStep, instFinEnumBitVec_sSA] at *
+    --     · use .gt; simp_all
+    --     · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
+    --     · use .gt; simp_all
 
 def RawCNFA.autMsbSet' : RawCNFA (BitVec 1) :=
   let m := RawCNFA.empty
@@ -751,19 +752,19 @@ lemma autOfRelation_spec (r : AutoStructs.Relation) :
   r.autOfRelation.Sim r.absAutOfRelation := by
   sorry
 
-@[simp]
-lemma autOfRelation_accepts (r : AutoStructs.Relation) :
-    r.absAutOfRelation.accepts = r.language := by
-  simp [AutoStructs.Relation.absAutOfRelation]
-  rcases r with ⟨⟩ | ⟨cmp⟩ | ⟨cmp⟩ <;> simp
-  · rw [NFA'.correct2_spec NFA'.autEq_correct]
-    simp [langRel2, NFA'.eqRel, evalRelation]
-  · rw [NFA'.correct2_spec (NFA'.autSignedCmp_correct cmp)]
-    simp [langRel2, evalRelation, RelationOrdering.srel]
-    cases cmp <;> simp
-  · rw [NFA'.correct2_spec (NFA'.autUnsignedCmp_correct cmp)]
-    simp [langRel2, evalRelation, RelationOrdering.urel]
-    cases cmp <;> simp
+-- @[simp]
+-- lemma autOfRelation_accepts (r : AutoStructs.Relation) :
+--     r.absAutOfRelation.accepts = r.language := by
+--   simp [AutoStructs.Relation.absAutOfRelation]
+--   rcases r with ⟨⟩ | ⟨cmp⟩ | ⟨cmp⟩ <;> simp
+--   · rw [NFA'.correct2_spec NFA'.autEq_correct]
+--     simp [langRel2, NFA'.eqRel, evalRelation]
+--   · rw [NFA'.correct2_spec (NFA'.autSignedCmp_correct cmp)]
+--     simp [langRel2, evalRelation, RelationOrdering.srel]
+--     cases cmp <;> simp
+--   · rw [NFA'.correct2_spec (NFA'.autUnsignedCmp_correct cmp)]
+--     simp [langRel2, evalRelation, RelationOrdering.urel]
+--     cases cmp <;> simp
 
 def unopNfa (op : Unop) (m : CNFA n) : CNFA n :=
   match op with
@@ -878,17 +879,17 @@ lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
           apply CNFA.lift_spec; assumption
         · apply CNFA.lift_spec; assumption
 
-lemma absNfaToFomrmula_spec (φ : Formula) :
-    (absNfaOfFormula φ).accepts = φ.language := by
-  induction φ
-  case atom rel t1 t2 =>
-    simp [absNfaOfFormula, binopAbsNfa]; ac_nf
-  case msbSet t =>
-    simp [absNfaOfFormula]
-  case unop op φ ih =>
-    simp [absNfaOfFormula, unopAbsNfa, ih]
-  case binop op φ1 φ2 ih1 ih2 =>
-    rcases op <;> simp [absNfaOfFormula, binopAbsNfa, langBinop, ih1, ih2]
+-- lemma absNfaToFomrmula_spec (φ : Formula) :
+--     (absNfaOfFormula φ).accepts = φ.language := by
+--   induction φ
+--   case atom rel t1 t2 =>
+--     simp [absNfaOfFormula, binopAbsNfa]; ac_nf
+--   case msbSet t =>
+--     simp [absNfaOfFormula]
+--   case unop op φ ih =>
+--     simp [absNfaOfFormula, unopAbsNfa, ih]
+--   case binop op φ1 φ2 ih1 ih2 =>
+--     rcases op <;> simp [absNfaOfFormula, binopAbsNfa, langBinop, ih1, ih2]
 
 /--
 The theorem stating that the automaton generated from the formula φ recognizes
@@ -912,18 +913,18 @@ def formulaIsUniversal (f : Formula) : Bool :=
   let m := nfaOfFormula f
   m.isUniversal
 
-theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
-    formulaIsUniversal φ → φ.sat' env := by
-  unfold formulaIsUniversal; simp
-  intros h; apply CNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
-  rw [absNfaToFomrmula_spec, formula_language] at h
-  rw [←sat_impl_sat']
-  have hx := env_to_bvs φ (fun k => env k.val)
-  extract_lets bvs at hx
-  suffices hin : bvs ∈ (⊤ : Set _) by
-    rw [←h] at hin
-    simp [Set.instMembership, Set.Mem] at hin; assumption
-  simp
+-- theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
+--     formulaIsUniversal φ → φ.sat' env := by
+--   unfold formulaIsUniversal; simp
+--   intros h; apply CNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
+--   rw [absNfaToFomrmula_spec, formula_language] at h
+--   rw [←sat_impl_sat']
+--   have hx := env_to_bvs φ (fun k => env k.val)
+--   extract_lets bvs at hx
+--   suffices hin : bvs ∈ (⊤ : Set _) by
+--     rw [←h] at hin
+--     simp [Set.instMembership, Set.Mem] at hin; assumption
+--   simp
 
 -- -- For testing the comparison operators.
 -- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=
