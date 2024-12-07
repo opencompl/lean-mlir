@@ -15,6 +15,7 @@ import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.Attr
+import SSA.Experimental.Bits.Fast.Decide
 import Lean.Meta.ForEachExpr
 
 import Lean
@@ -72,6 +73,15 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
     (p.eval (vars.map BitStream.ofBitVec) w = false) ↔ p.denote w vars := by
   induction p generalizing vars w
   repeat sorry
+
+
+/-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
+theorem Predicate.denote_of_eval_eq {p : Predicate}
+    (heval : ∀ (w : Nat) (vars : List BitStream), p.eval vars w = false) : 
+    ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
+  intros w vars
+  apply p.eval_eq_denote w vars |>.mp (heval w <| vars.map BitStream.ofBitVec)
+
 
 def Reflect.Map.empty : List (BitVec w) := []
 
@@ -191,11 +201,11 @@ structure ReflectResult where
   /-- Map of 'free variables' in the bitvector expression,
   which are indexed as Term.var. This array is used to build the environment for decide.
   -/
-  map : ReflectMap
+  bvToIxMap : ReflectMap
   e : ReflectedExpr
 
 instance : ToMessageData ReflectResult where
-  toMessageData result := m!"{result.e} {result.map}"
+  toMessageData result := m!"{result.e} {result.bvToIxMap}"
 
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
@@ -206,46 +216,48 @@ Precondition: we assume that this is called on bitvectors.
 -/
 def reflectTermUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM ReflectResult := do
   let (e, map) := map.findOrInsertExpr e
-  return { map := map, e := e }
+  return { bvToIxMap := map, e := e }
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-def reflectPredicateAux (map : ReflectMap) (e : Expr) : MetaM ReflectResult := do
+def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResult := do
   match_expr e with
   | Eq α a b =>
     let_expr BitVec w := α | throwError "expected equality of bitvectors"
-    let a ←  reflectTermUnchecked map w a
-    let b ← reflectTermUnchecked a.map w b
-    return { map := b.map, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
+    let a ←  reflectTermUnchecked bvToIxMap w a
+    let b ← reflectTermUnchecked a.bvToIxMap w b
+    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
   | Ne α a b =>
     let_expr BitVec w := α | throwError "expected disequality of bitvectors"
-    let a ←  reflectTermUnchecked map w a
-    let b ← reflectTermUnchecked a.map w b
-    return { map := b.map, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
+    let a ←  reflectTermUnchecked bvToIxMap w a
+    let b ← reflectTermUnchecked a.bvToIxMap w b
+    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
   | _ => throwError "expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
 /-- Name of the tactic -/
 def tacName : String := "bv_automata3"
-#check congrArg
 
-/-- Find all bitwidths implicated in the given expression,
-by visiting subexpressions with visitExpr:
-  O(size of expr × inferType)
--/
-def findExprBitwidthsAux (target : Expr) : StateT (Std.HashMap Expr Expr) MetaM Unit := do
-  forEachExpr target fun e => do
-    match_expr ← inferType e with
-    | BitVec n => 
-      -- TODO(@bollu): do we decide to normalize `n`? upto what?
-      modify (fun arr => arr.insert n.cleanupAnnotations e)
-    | _ => return ()
+abbrev WidthToExprMap := Std.HashMap Expr Expr
 
 /--
 Find all bitwidths implicated in the given expression.
 Maps each length (the key) to an expression of that length.
+
+Find all bitwidths implicated in the given expression,
+by visiting subexpressions with visitExpr:
+    O(size of expr × inferType)
 -/
-def findExprBitwidths (target : Expr) : MetaM (Std.HashMap Expr Expr) := do
-  let (_, out) ← StateT.run (findExprBitwidthsAux target) ∅
+def findExprBitwidths (target : Expr) : MetaM WidthToExprMap := do
+  let (_, out) ← StateT.run (go target) ∅
   return out
+  where
+    go (target : Expr) : StateT WidthToExprMap MetaM Unit := do
+      -- Creates fvars when going inside binders.
+      forEachExpr target fun e => do
+        match_expr ← inferType e with
+        | BitVec n => 
+          -- TODO(@bollu): do we decide to normalize `n`? upto what?
+          modify (fun arr => arr.insert n.cleanupAnnotations e)
+        | _ => return ()
 
 /-- Return if expression 'e' is a bitvector of bitwidth 'w' -/
 private def Expr.isBitVecOfWidth (e : Expr) (w : Expr) : MetaM Bool := do
@@ -266,6 +278,16 @@ def revertBVsOfWidth (g : MVarId) (w : Expr) : MetaM MVarId := g.withContext do
   let (_fvars, g) ← g.revert reverts
   return g
   
+/-- generalize our mapping to get a single fvar -/
+def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
+  let (fvars, g) ← g.generalize #[{ expr := e : GeneralizeArg}]
+  -- Now target no longer depends on the particular bitvectors
+  if h : fvars.size = 1 then
+    return (fvars[0], g)
+  throwError"expected a single free variable from generalizing map {e}, found multiple..."
+
+#check reduceBool
+#check ofReduceBool
 
 /-- 
 Reflect an expression of the form:
@@ -273,7 +295,7 @@ Reflect an expression of the form:
   ∀ (b₁ b₂ ... bₙ : BitVec w),
   <proposition about bitvectors>.
 -/
-def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
+def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM (List MVarId) := do
   let ws ← findExprBitwidths target
   let ws := ws.toArray
   if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD target}"
@@ -286,18 +308,74 @@ def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
     -- we have exactly one width
     let (w, wExample) := ws[0]
     if !w.isFVar then
-      throwError "expcted width to be a free variable, found '{w}' (bitwidth with width '{w}' is '{wExample}')"
+      throwError "expcted width to be a free variable, found with '{w}' (for bitvector '{wExample}')"
     else
       -- invariant: w is known to be an fvar.
-      let wFvar := w.fvarId!
+      let wFv := w.fvarId!
       let result ← reflectPredicateAux ∅ target
       logInfo m!"result: {result}"
-      let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, ← result.map.toExpr w])
+      let bvToIxMapVal ← result.bvToIxMap.toExpr w
+      let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, bvToIxMapVal])
       let g ← g.replaceTargetDefEq target
-      return g
-      -- let (_newHyps, g) ← g.revert #[wFvar]
-      -- return g
+      let (mapFv, g) ← generalizeMap g bvToIxMapVal; 
+      let (_, g) ← g.revert #[mapFv]
+      -- Apply Predicate.denote_of_eval_eq.
+      let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq) 
+        | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+      let [g] ← g.apply <| (mkConst ``of_decide_eq_true) 
+        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool) 
+        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      return [g]
+      -- let proof ← mkDecideProof (← g.getType)
+      -- g.assign proof
+      -- return []
+      -- let some (_, lhs, rhs) := Expr.eq? (← g.getType)
+      --   | throwError "Expected target to be `<reduceBool ...> = <true>`"
+      -- let proof := mkApp3 (mkConst ``Lean.ofReduceBool)
+      --   lhs 
+      --   (toExpr true) -- the rhs  must be ... = true
+      --   (← mkDecideProof <| ← g.getType)
+      -- check proof
+      -- g.assign proof
+      -- return []
+      -- logInfo m!"made decide proof {indentD proof}"
+      -- logInfo m!"closing goal with proof."
+      -- if ← isDefEq (.mvar g) proof then 
+      --   logInfo "successfully proved by reflection"
+      -- else 
+      --   throwError "failed to close {g} with `Lean.ofReduceBool`. The decsion procedure shows that the proposition is untrue"
 
+      -- return []
+
+      -- -- First generalize over `bvToIxMapVal` and revert it.
+      -- let (fvars, g') ← g.generalize #[{ expr := bvToIxMapVal : GeneralizeArg}]
+      -- -- Now target no longer depends on the particular bitvectors
+      -- g := g'
+      -- if h : fvars.size ≠ 1 then throwError "foo"
+      -- else 
+      --   -- Clear out the bitvectors, since they have been replaced by `Term.var` ...
+      --   for (expr, termIx) in result.bvToIxMap.exprs do
+      --     -- these must be fvarIds
+      --     assert! expr.isFVar
+      --     g ← g.clear expr.fvarId!
+      --   -- Revert the bv to index map.
+      --   (_, g) ← g.revert #[fvars[0]]
+      --   -- Finally, revert the bitwidth.
+      --   (_, g) ← g.revert #[wFv]
+      --   return g
+
+
+theorem x : (true.and true) = true := by
+  apply ofReduceBool
+  decide
+  -- native_decide
+
+#print x
+  
+
+
+#reduce ofReduceBool ((Decidable.decide (∀ (w : ℕ) (vars : List BitStream), (Predicate.eq (Term.var 0) (Term.var 0)).eval vars w = false))) true (by rfl)
 /--
 Given a goal state of the form:
   ∀ (w : Nat)
@@ -310,26 +388,28 @@ TODO(@bollu): Also decide properties about finite widths, by extending to the ma
 -/
 elab "bv_reflect" : tactic => do
   liftMetaTactic fun g => do
-    let g ← reflectUniversalWidthBVs g (← g.getType')
-    check (Expr.mvar g)
-    return [g]
+    reflectUniversalWidthBVs g (← g.getType')
 
-/--
-info: result: Predicate.eq (Term.var 0) (Term.var 1) [0→a 1→b]
----
-warning: declaration uses 'sorry'
--/
-#guard_msgs in example : ∀ (w : Nat) (a b : BitVec w), a = b := by
-  intros w a b
+theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
+  intros w a 
   bv_reflect
-  apply (Predicate.eval_eq_denote _ _ _).mp
-  generalize (List.map _ _) = xs
-  clear a b
-  revert xs w
   native_decide
-  sorry
+  -- native_decide
+  -- apply of_decide_eq_true
+  -- apply Lean.ofReduceBool _ true
 
-/-- error: expcted width to be a free variable, found '10' (bitwidth with width '10' is 'b') -/
+  -- native_decide
+  -- apply Predicate.denote_of_eval_eq
+  -- apply (Predicate.eval_eq_denote _ _ _).mp
+  -- generalize (List.map _ _) = xs
+  -- clear a b
+  -- revert xs
+  -- revert w
+  -- native_decid
+#print eq1
+
+
+/-- error: expcted width to be a free variable, found with '10' (for bitvector 'b') -/
 #guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
   intros a b
   bv_reflect
