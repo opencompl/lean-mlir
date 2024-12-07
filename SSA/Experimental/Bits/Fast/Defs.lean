@@ -160,6 +160,8 @@ Meaning of the denotation:
 inductive Predicate : Type where
 | eq (t₁ t₂ : Term) : Predicate
 | neq (t₁ t₂ : Term) : Predicate
+| ult (t₁  t₃ : Term) : Predicate
+| ule (t₁  t₃ : Term) : Predicate
 | isNeg (t : Term) : Predicate
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
@@ -183,14 +185,27 @@ def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   | neq t1 t2 => ((t1.eval vars).nxor (t2.eval vars)).scanAnd
   | lor p q => (p.eval vars) &&& (q.eval vars)
   | land p q => (p.eval vars) ||| (q.eval vars)
-  | isNeg t => ~~~ (t.eval vars) -- recall that we must return `false`, if the predicate is true, so we negate the current bit (which is the msb of the truncated repr).
+  /-
+  Recall that we must return `false`, if the predicate is true, so we negate the current bit (which is the msb of the truncated repr).
+  -/
+  | isNeg t => ~~~ (t.eval vars) 
+  -- if (p - q) is negative at a bitwidth, then the bit will be `1`.
+  -- we report negative when the bit is `0`.
+  | ult p q => ((p.eval vars) - (q.eval vars)).neg 
+  -- We implement ule as either ult or eq.
+  | ule p q => 
+      ((p.eval vars) ^^^ (q.eval vars).scanOr) &&&
+      ((p.eval vars) - (q.eval vars)).neg 
+      
+
 
 @[simp]
 theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
 
 section Predicate
 /-- If something is always true, then it is eventually always true. -/
-theorem eventually_all_zeroes_of_all_zeroes (b : BitStream) (h : ∀ n, b n = false) : ∃ (N : Nat), ∀ n ≥ N, b n = false := by
+theorem eventually_all_zeroes_of_all_zeroes (b : BitStream)
+    (h : ∀ n, b n = false) : ∃ (N : Nat), ∀ n ≥ N, b n = false := by
   exists Nat.zero
   simp [h]
 
@@ -208,6 +223,8 @@ end Predicate
 | .eq t1 t2 => max t1.arity t2.arity
 | .lor p q => max p.arity q.arity
 | .land p q => max p.arity q.arity
+| .ult p q => max p.arity q.arity
+| .ule p q => max p.arity q.arity
 | .isNeg t => t.arity
 | .neq t₁ t₂ => max t₁.arity t₂.arity
 
@@ -219,6 +236,14 @@ match p with
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     (x₁ ^^^ x₂).scanOr
 | .neq t₁ t₂  =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    (x₁.nxor x₂).scanAnd
+| .ult t₁ t₂  =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    (x₁.nxor x₂).scanAnd
+| .ule t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     (x₁.nxor x₂).scanAnd
