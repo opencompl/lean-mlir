@@ -341,9 +341,7 @@ macro "bv_automata" : tactic =>
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
   bv_automata
 
-/--
-info: 'alive_1' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'alive_1' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms alive_1
 
 def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
@@ -354,7 +352,7 @@ def test_OfNat_ofNat (x : BitVec 1) : 1 + x = x + 1 := by
   bv_automata
 
 /--
-info: 'test_OfNat_ofNat' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'test_OfNat_ofNat' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms test_OfNat_ofNat
 
@@ -362,168 +360,130 @@ def test_BitVec_ofNat (x : BitVec 1) : 1 + x = x + 1#1 := by
   bv_automata
 
 /--
-info: 'test_BitVec_ofNat' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'test_BitVec_ofNat' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms test_BitVec_ofNat
 
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
 
-/--
-info: 'test0' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test0' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test0
 
 def test_simple2 {w : Nat} (x y : BitVec (w + 1)) : x = x := by
   bv_automata
 
 /--
-info: 'test_simple2' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'test_simple2' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms test_simple2
 
 def test1 {w : Nat} (x y : BitVec (w + 1)) : (x ||| y) - (x ^^^ y) = x &&& y := by
   bv_automata
 
-/--
-info: 'test1' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test1' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test1
 
 def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
   bv_automata
 
-/--
-info: 'test2' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test2' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test2
 
 def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
   bv_automata
 
-/--
-info: 'test3' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test3' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test3
 
 def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
   bv_automata
 
-/--
-info: 'test4' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test4' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test4
 
 def test5 (x y z : BitVec 2) : (x + y + z) = (z + y + x) := by
   bv_automata
 
-/--
-info: 'test5' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test5' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test5
 
 def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
   bv_automata
 
-/--
-info: 'test6' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test6' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test6
 
 def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
   bv_automata
 
-/--
-info: 'test11' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test11' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test11
 
 def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
   bv_automata
 
-/--
-info: 'test15' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test15' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test15
 
 def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
   bv_automata
 
-/--
-info: 'test17' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test17' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test17
 
 def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
   bv_automata
 
-/--
-info: 'test18' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test18' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test18
 
 def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
   bv_automata
 
-/--
-info: 'test19' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test19' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test19
 
 def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
   bv_automata
 
-/--
-info: 'test21' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test21' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test21
 
 def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
   bv_automata
 
-/--
-info: 'test23' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test23' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test23
 
 def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata
 
-/--
-info: 'test24' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test24
 
 def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata
 
-/--
-info: 'test25' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test25' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test25
 
 def test26 {w : Nat} (x y : BitVec (w + 1)) : 1 + x + 0 = 1  + x := by
   bv_automata
 
-/--
-info: 'test26' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test26' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test26
 
 def test27 (x y : BitVec 5) : 2 + x  = 1  + x + 1 := by
   bv_automata
 
-/--
-info: 'test27' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test27' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test27
 
 def test28 {w : Nat} (x y : BitVec (w + 1)) : x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_automata
 
-/--
-info: 'test28' depends on axioms: [propext, sorryAx, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
+/-- info: 'test28' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test28
 
 -- This test is commented out because it takes over a minute to run

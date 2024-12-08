@@ -40,13 +40,13 @@ inductive Term : Type
 | incr : Term → Term
 /-- Decrement (i.e., subtract one) -/
 | decr : Term → Term
-/-- `repeatBit` is an operation that will repeat the infinitely repeat the
+/- `repeatBit` is an operation that will repeat the infinitely repeat the
 least significant `true` bit of the input.
 
 That is `repeatBit t` is all-zeroes iff `t` is all-zeroes.
 Otherwise, there is some number `k` s.t. `repeatBit t` is all-ones after
 dropping the least significant `k` bits  -/
-| repeatBit : Term → Term
+-- | repeatBit : Term → Term
 
 open Term
 
@@ -58,9 +58,9 @@ given a value for the free variables in `t`.
 Note that we don't keep track of how many free variable occur in `t`,
 so eval requires us to give a value for each possible variable.
 -/
-def Term.eval (t : Term) (vars : Nat → BitStream) : BitStream :=
+def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   match t with
-  | var n       => vars n
+  | var n       => vars[n]!
   | zero        => BitStream.zero
   | one         => BitStream.one
   | negOne      => BitStream.negOne
@@ -74,7 +74,7 @@ def Term.eval (t : Term) (vars : Nat → BitStream) : BitStream :=
   | neg t       => -(Term.eval t vars)
   | incr t      => BitStream.incr (Term.eval t vars)
   | decr t      => BitStream.decr (Term.eval t vars)
-  | repeatBit t => BitStream.repeatBit (Term.eval t vars)
+ -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
@@ -102,7 +102,7 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | neg t => arity t
 | incr t => arity t
 | decr t => arity t
-| repeatBit t => arity t
+-- | repeatBit t => arity t
 
 /--
 Evaluate a term `t` to the BitStream it represents.
@@ -142,4 +142,101 @@ and only require that many bitstream values to be given in `vars`.
   | neg t       => -(Term.evalFin t vars)
   | incr t      => BitStream.incr (Term.evalFin t vars)
   | decr t      => BitStream.decr (Term.evalFin t vars)
-  | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
+  -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
+
+
+/--
+The fragment of predicate logic that we support in `bv_automata`.
+Currently, we support equality, conjunction, disjunction, and negation.
+This can be expanded to also support arithmetic constraints such as unsigned-less-than.
+
+Meaning of the denotation:
+
+`p w = false` iff the predicate holds *at* width w
+-/
+-- a < b <=> a - b < 0
+-- a <= 0 <=> a < 0 ∨ a = 0
+-- a > b <=> b < a <=> b - a < 0
+inductive Predicate : Type where
+| eq (t₁ t₂ : Term) : Predicate
+| neq (t₁ t₂ : Term) : Predicate
+| isNeg (t : Term) : Predicate
+| land  (p q : Predicate) : Predicate
+| lor (p q : Predicate) : Predicate
+
+
+-- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
+open BitStream in
+/--
+Evaluate a term predicate `p` to the BitStream it represents,
+where the predicate is `true` at index `i` if and only if the predicate,
+when truncated to index `i`, is true.
+-/
+def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
+  match p with
+  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars).scanOr
+  /-
+  If it is ever not equal, then we want to stay not equals for ever.
+  So, if the 'a = b' returns 'false' at some index 'i', we will stay false
+  for all indexes '≥ i'.
+  -/
+  | neq t1 t2 => ((t1.eval vars).nxor (t2.eval vars)).scanAnd
+  | lor p q => (p.eval vars) &&& (q.eval vars)
+  | land p q => (p.eval vars) ||| (q.eval vars)
+  | isNeg t => ~~~ (t.eval vars) -- recall that we must return `false`, if the predicate is true, so we negate the current bit (which is the msb of the truncated repr).
+
+@[simp]
+theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
+
+section Predicate
+/-- If something is always true, then it is eventually always true. -/
+theorem eventually_all_zeroes_of_all_zeroes (b : BitStream) (h : ∀ n, b n = false) : ∃ (N : Nat), ∀ n ≥ N, b n = false := by
+  exists Nat.zero
+  simp [h]
+
+
+/-- If the scanOr of something is eventually always zeroes, then it must be all zeroes. -/
+theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N : Nat), ∀ n ≥ N, b.scanOr n = false) : ∀ n, b n = false := by
+  intros n
+  have ⟨N, h⟩ := h
+  simp [BitStream.scanOr_false_iff] at h
+  apply h (n := max N n) <;> omega
+
+end Predicate
+
+@[simp] def Predicate.arity : Predicate → Nat
+| .eq t1 t2 => max t1.arity t2.arity
+| .lor p q => max p.arity q.arity
+| .land p q => max p.arity q.arity
+| .isNeg t => t.arity
+| .neq t₁ t₂ => max t₁.arity t₂.arity
+
+/-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
+@[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
+match p with
+| .eq t₁ t₂ =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    (x₁ ^^^ x₂).scanOr
+| .neq t₁ t₂  =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    (x₁.nxor x₂).scanAnd
+| .land p q =>
+  -- if both `p` and `q` are logically true (i.e. the predicate is `false`),
+  -- only then should we return a `false`.
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  (x₁ ||| x₂)
+| .lor p q =>
+  -- If either of the predicates are `false`, then result is `false`.
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  (x₁ &&& x₂)
+| .isNeg t  =>
+  -- If it is negative, then we should return `false`.
+  -- That is, if the msb (i.e. the bit at the current location is `true`, then we should return `false`.
+  let x₁ := t.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  ~~~x₁
+
+
