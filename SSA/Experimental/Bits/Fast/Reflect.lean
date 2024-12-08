@@ -294,8 +294,15 @@ Reflect an expression of the form:
   ∀ ⟦(w : Nat)⟧ (← focus)
   ∀ (b₁ b₂ ... bₙ : BitVec w),
   <proposition about bitvectors>.
+
+Reflection code adapted from `elabNaticeDecideCoreUnsafe`,
+which explains how to create the correct auxiliary definition of the form
+`decideProprerty = true`, such that our goal state after using `ofReduceBool` becomes
+⊢ ofReduceBool decideProperty = true
+
+which is then indeed `rfl` equal to `true`. 
 -/
-def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM (List MVarId) := do
+def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
   let ws ← findExprBitwidths target
   let ws := ws.toArray
   if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD target}"
@@ -326,7 +333,8 @@ def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM (List MVarId) 
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool) 
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      return [g]
+      return g
+      -- return [g]
       -- let proof ← mkDecideProof (← g.getType)
       -- g.assign proof
       -- return []
@@ -388,24 +396,19 @@ TODO(@bollu): Also decide properties about finite widths, by extending to the ma
 -/
 elab "bv_reflect" : tactic => do
   liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g (← g.getType')
+    let g ← reflectUniversalWidthBVs g (← g.getType')
+    return [g]
+
+elab "bv_automata3" : tactic => do
+  liftMetaTactic fun g => do
+    let g ← reflectUniversalWidthBVs g (← g.getType')
+    return [g]
+  evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
+  
 
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
   intros w a 
-  bv_reflect
-  native_decide
-  -- native_decide
-  -- apply of_decide_eq_true
-  -- apply Lean.ofReduceBool _ true
-
-  -- native_decide
-  -- apply Predicate.denote_of_eval_eq
-  -- apply (Predicate.eval_eq_denote _ _ _).mp
-  -- generalize (List.map _ _) = xs
-  -- clear a b
-  -- revert xs
-  -- revert w
-  -- native_decid
+  bv_automata3
 #print eq1
 
 
