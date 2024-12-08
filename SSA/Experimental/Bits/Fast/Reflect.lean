@@ -334,56 +334,7 @@ def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
       let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool) 
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       return g
-      -- return [g]
-      -- let proof ← mkDecideProof (← g.getType)
-      -- g.assign proof
-      -- return []
-      -- let some (_, lhs, rhs) := Expr.eq? (← g.getType)
-      --   | throwError "Expected target to be `<reduceBool ...> = <true>`"
-      -- let proof := mkApp3 (mkConst ``Lean.ofReduceBool)
-      --   lhs 
-      --   (toExpr true) -- the rhs  must be ... = true
-      --   (← mkDecideProof <| ← g.getType)
-      -- check proof
-      -- g.assign proof
-      -- return []
-      -- logInfo m!"made decide proof {indentD proof}"
-      -- logInfo m!"closing goal with proof."
-      -- if ← isDefEq (.mvar g) proof then 
-      --   logInfo "successfully proved by reflection"
-      -- else 
-      --   throwError "failed to close {g} with `Lean.ofReduceBool`. The decsion procedure shows that the proposition is untrue"
 
-      -- return []
-
-      -- -- First generalize over `bvToIxMapVal` and revert it.
-      -- let (fvars, g') ← g.generalize #[{ expr := bvToIxMapVal : GeneralizeArg}]
-      -- -- Now target no longer depends on the particular bitvectors
-      -- g := g'
-      -- if h : fvars.size ≠ 1 then throwError "foo"
-      -- else 
-      --   -- Clear out the bitvectors, since they have been replaced by `Term.var` ...
-      --   for (expr, termIx) in result.bvToIxMap.exprs do
-      --     -- these must be fvarIds
-      --     assert! expr.isFVar
-      --     g ← g.clear expr.fvarId!
-      --   -- Revert the bv to index map.
-      --   (_, g) ← g.revert #[fvars[0]]
-      --   -- Finally, revert the bitwidth.
-      --   (_, g) ← g.revert #[wFv]
-      --   return g
-
-
-theorem x : (true.and true) = true := by
-  apply ofReduceBool
-  decide
-  -- native_decide
-
-#print x
-  
-
-
-#reduce ofReduceBool ((Decidable.decide (∀ (w : ℕ) (vars : List BitStream), (Predicate.eq (Term.var 0) (Term.var 0)).eval vars w = false))) true (by rfl)
 /--
 Given a goal state of the form:
   ∀ (w : Nat)
@@ -405,18 +356,21 @@ elab "bv_automata3" : tactic => do
     return [g]
   evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
   
-
+/-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
-  intros w a 
+  intros 
   bv_automata3
 #print eq1
 
+/-- Can solve implicitly quantified expressions by directly invoking bv_automata3. -/
+theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
+  bv_automata3
+#print eq1
 
 /-- error: expcted width to be a free variable, found with '10' (for bitvector 'b') -/
 #guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
   intros a b
   bv_reflect
-  sorry
 
 end Reflect
 
