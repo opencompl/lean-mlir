@@ -135,7 +135,6 @@ toType := fun
 | Ty.valuestream2 Ty2 => CIRCTStream.DC.ValueStream (toType Ty2) × CIRCTStream.DC.ValueStream (toType Ty2)
 | Ty.valuetokenstream Ty2 => CIRCTStream.DC.ValueStream (toType Ty2) × CIRCTStream.DC.TokenStream
 
-set_option linter.dupNamespace false in
 abbrev DC : Dialect where
   Op := Op
   Ty := Ty
