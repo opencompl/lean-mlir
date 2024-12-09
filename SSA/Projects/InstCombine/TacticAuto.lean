@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
-import SSA.Experimental.Bits.Fast.Tactic
+import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
