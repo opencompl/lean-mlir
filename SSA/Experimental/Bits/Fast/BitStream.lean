@@ -241,7 +241,7 @@ instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
 Return a stream of pointwise equality of booleans.
 This is the same as ~(a⊕b), and thus we call it `not xor`.
 -/
-def nxor (a b : BitStream) : BitStream := BitStream.map₂ (fun x y => x == y) a b
+def nxor (a b : BitStream) : BitStream := fun i => a i == b i
 
 section Lemmas
 variable {w : Nat}

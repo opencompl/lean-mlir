@@ -531,8 +531,57 @@ theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
 
 
 open NNF in
+
+example (w : Nat) (a b : BitVec w) : a + b = b + a := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∨ (a = 0#w) := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
+  bv_automata3
+
+example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a ≠ 0#w) := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a + 0#w = a) := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a = b) := by
+  fail_if_success bv_automata3
+  sorry
+
+example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
+  bv_automata3
+
+/-- In bitwidth 0, all values are equal.
+In bitwidth 1, 1 + 1 = 0.
+In bitwidth 2, 1 + 1 = 2 ≠ 0#2
+For all bitwidths ≥ 2, we know that a ≠ a + 1
+-/
+example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#w = 0#w):= by
+  bv_automata3
+
+/-- If we have that 'a &&& a = 0`, then we know that `a = 0` -/
+example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
+  bv_automata3
+
+
+example (w : Nat) (a : BitVec w) : (a  = - a) → a = 0#w := by
+  bv_automata3
+
+example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
+  bv_automata3
+
+
 /-- Can use implications -/
-theorem eq3 (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → (a + b = (a ||| b)) := by
+theorem eq3 (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
   bv_nnf
   bv_automata3
 #print eq3

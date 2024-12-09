@@ -57,6 +57,8 @@ given a value for the free variables in `t`.
 
 Note that we don't keep track of how many free variable occur in `t`,
 so eval requires us to give a value for each possible variable.
+
+Note that **this is the value that is run by reflection**.
 -/
 def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   match t with
@@ -169,9 +171,28 @@ inductive Predicate : Type where
 
 
 
-def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂)
+/--
+If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
+-/
+def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂).scanOr
+/--
+If they have been equal so far, then `BitStream.nxor t₁ t₂`.scanAnd will be 1.
+Start by assuming that they are not (not equal) i.e. that they are equal, and the 
+   initial value of the preciate is false / `1`.
+If their values ever differ, then we know that we will have `a[i] == b[i]` to be `false`.
+From this point onward, they will always disagree, and thus the predicate should become `0`.
+-/
+-- def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := (BitStream.nxor t₁ t₂).scanAnd
+def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := 
+  let bs : BitStream := fun i => if t₁ i != t₂ i then false else true
+  bs.scanAnd
 
-def Predicate.evalOr (t₁ t₂ : BitStream) : BitStream := (t₁ &&& t₂)
+/-
+If they have been `0` so far, then `t1 &&& t2 |>.scanOr` will be `1`.
+-/
+def Predicate.evalLor (t₁ t₂ : BitStream) : BitStream := (t₁ &&& t₂)
+-- | And does not seem to work?
+def Predicate.evalLand (t₁ t₂ : BitStream) : BitStream := (t₁ ||| t₂)
 
 
 /-- 
@@ -195,6 +216,7 @@ open BitStream in
 Evaluate a term predicate `p` to the BitStream it represents,
 where the predicate is `true` at index `i` if and only if the predicate,
 when truncated to index `i`, is true.
+Note that **this is the value that is run by reflection**.
 -/
 def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
@@ -204,16 +226,16 @@ def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   So, if the 'a = b' returns 'false' at some index 'i', we will stay false
   for all indexes '≥ i'.
   -/
-  | neq t1 t2 => ((t1.eval vars).nxor (t2.eval vars)).scanAnd
-  | lor p q => Predicate.evalOr (p.eval vars) (q.eval vars)
-  | land p q => (p.eval vars) ||| (q.eval vars)
+  | neq t1 t2 => Predicate.evalNeq (t1.eval vars) (t2.eval vars)
+  | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
+  | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
   | ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
   | ule t₁ t₂ => 
-     Predicate.evalOr 
+     Predicate.evalLor 
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
   | slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
-  | sle t₁ t₂ => Predicate.evalOr 
+  | sle t₁ t₂ => Predicate.evalLor 
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
 
