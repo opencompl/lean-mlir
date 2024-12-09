@@ -114,7 +114,11 @@ theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s
 open Ctxt in
 theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
   (Handshake.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
-  simp [DCFork, Valuation.ofPair, Valuation.ofHVector]
+  simp only [MLIR2DC.instDialectDenoteDC, EffectKind.toMonad_impure, DCFork,
+    EffectKind.pure_sup_pure_eq, DerivedCtxt.ofCtxt, DerivedCtxt.snoc.eq_1, get?.eq_1,
+    Var.zero_eq_last, zero_add, Var.succ_eq_toSnoc, Nat.reduceAdd, Valuation.ofHVector,
+    Ctxt.ofList.eq_1, Com.denote_var, EffectKind.toMonad_pure, Com.denote_ret, Id.pure_eq,
+    Id.bind_eq]
   unfold Handshake.fork DC.pack DC.unpack DC.fork
   simp_peephole
   unfold Bisim; exists Eq
@@ -133,15 +137,15 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
         simp_all [Stream'.get, Stream'.map]
     · unfold map_to_unit_pair
       and_intros
-      · simp; rw [corec₂_corec1]
+      · simp only; rw [corec₂_corec1]
         have h : ((fun s' => match
             Id.run (match s' 0 with
-              | some val => (s' 0, some (), s'.tail)
+              | some _ => (s' 0, some (), s'.tail)
               | none => (none, none, s'.tail)) with
-          | (a, fst, b) => (a, b)) : Stream Int → Option Int × Stream Int) =
+          | (a, _, b) => (a, b)) : Stream Int → Option Int × Stream Int) =
           (fun s' => (s' 0, s'.tail)) := by
           ext s' <;> cases h : s' 0 <;> simp_all [Id.run]
-        dsimp [TyDenote.toType, MLIR2DC.Ty2, MLIR2DC.instTyDenoteTy2, MLIR2DC.Ty2.int] at *;
+        dsimp only [MLIR2DC.instTyDenoteTy2, TyDenote.toType] at *;
         unfold DC.unpack.match_1 equiv_fork_fst.match_1 at *
         rw [h]
         unfold corec
@@ -152,30 +156,28 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
         have {α} : ((fun x => x.tail) : Stream' α → Stream' α) = Stream'.tail := by rfl
         rw [this]; unfold Stream'.get
         rw [tail_iterate']
-      · simp; rw [corec₂_corec1, corec₂_corec2]
-        dsimp [Id.run]
+      · simp only; rw [corec₂_corec1, corec₂_corec2]
+        dsimp only [Id.run]
         have h : ((fun s' => match
             Id.run (match s' 0 with
-              | some val => (s' 0, some (), s'.tail)
+              | some _ => (s' 0, some (), s'.tail)
               | none => (none, none, s'.tail)) with
-          | (fst, a, b) => (a, b)) : Stream Int → Option Unit × Stream Int) =
+          | (_, a, b) => (a, b)) : Stream Int → Option Unit × Stream Int) =
           (fun s' => (Option.map (fun _ => ()) (s' 0), s'.tail)) := by
           ext s' <;> cases h : s' 0 <;> simp_all [Id.run]
         unfold CIRCTStream.DC.unpack.match_1 CIRCTStream.Stream.Bisim.corec₂_corec1.match_1 CIRCTStream.Stream.Bisim.equiv_fork_fst.match_2 CIRCTStream.Stream.Bisim.equiv_fork_fst.match_1 at *
-        dsimp [Id.run, TyDenote.toType] at *
+        dsimp only [Id.run, TyDenote.toType] at *
         set_option pp.explicit true in trace_state
         rw [h]; clear h
         unfold corec
         rw [Stream'.ext_iff]; intro n
-        rw [Stream'.corec_def]; simp
+        rw [Stream'.corec_def]; simp only [Stream'.get_map]
         unfold Stream Stream.tail at *
         have {α} : ((fun x => x.tail) : Stream' α → Stream' α) = Stream'.tail := by rfl
         rw [this]; unfold Stream'.get
-        rw [tail_iterate'] 
-        rw [Stream'.corec_def]
-        rw [this]
+        rw [tail_iterate', Stream'.corec_def, this]
         unfold Stream'.map Stream'.get
-        dsimp
+        dsimp only
         rw [tail_iterate']
   · apply EqIsBisim
 
@@ -218,12 +220,11 @@ theorem corec₂_eq_corec_of_corec₂ (streamInt: DC.ValueStream Int) :
   rw [stream_pair_1]
   unfold HasEquiv.Equiv
   unfold instHasEquivOfSetoid
-  simp
-  unfold Setoid.r
-  unfold StreamSetoid
-  simp
+  simp only
+  unfold Setoid.r StreamSetoid
+  simp only
   unfold Bisim
-  simp
+  simp only
   exists Eq
   and_intros
   · sorry
