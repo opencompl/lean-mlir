@@ -82,8 +82,8 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
     m2.Sim M2 →
     (product final? m1 m2).Sim (NFA'.product (to_prop final?) M1 M2) := by
   rintro ⟨f1, hsim1⟩ ⟨f2, hsim2⟩
-  apply worklistRun_spec (m1.m.states × m2.m.states)
   sorry
+  -- apply worklistRun_spec (m1.m.states × m2.m.states)
   -- (corr := fun (s1, s2) => (f1 s1, f2 s2))
   -- · rintro ⟨s1, s2⟩ ⟨s1', s2'⟩; simp; rintro heqs
   --   injection heqs with h1 h2
