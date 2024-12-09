@@ -167,7 +167,6 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
           ext s' <;> cases h : s' 0 <;> simp_all [Id.run]
         unfold CIRCTStream.DC.unpack.match_1 CIRCTStream.Stream.Bisim.corec₂_corec1.match_1 CIRCTStream.Stream.Bisim.equiv_fork_fst.match_2 CIRCTStream.Stream.Bisim.equiv_fork_fst.match_1 at *
         dsimp only [Id.run, TyDenote.toType] at *
-        set_option pp.explicit true in trace_state
         rw [h]; clear h
         unfold corec
         rw [Stream'.ext_iff]; intro n
