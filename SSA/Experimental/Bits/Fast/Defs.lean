@@ -246,13 +246,25 @@ end Predicate
 | .slt t₁ t₂ => max t₁.arity t₂.arity
 | .sle t₁ t₂ => max t₁.arity t₂.arity
 
+def Predicate.evalFinLor (x₁ x₂ : BitStream) : BitStream := 
+    (x₁ &&& x₂)
+
+def Predicate.evalFinEq (x₁ x₂ : BitStream) : BitStream := 
+    (x₁ ^^^ x₂)
+
+def Predicate.evalFinSlt (x₁ x₂ : BitStream) : BitStream := 
+  ~~~ (x₁ - x₂)
+
+def Predicate.evalFinUlt (x₁ x₂ : BitStream) : BitStream := 
+  (x₁.borrow x₂)
+
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁ ^^^ x₂)
+    Predicate.evalFinEq x₁ x₂
 | .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
@@ -267,10 +279,22 @@ match p with
   -- If either of the predicates are `false`, then result is `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  (x₁ &&& x₂)
-| .slt p q => sorry
-| .sle p q => sorry
-| .ult p q => sorry
-| .ule p q => sorry
+  Predicate.evalFinLor x₁ x₂
+| .slt p q => 
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  Predicate.evalFinSlt x₁ x₂
+| .sle p q => 
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  Predicate.evalFinLor (Predicate.evalFinSlt x₁ x₂) (Predicate.evalFinEq x₁ x₂)
+| .ult p q => 
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  (Predicate.evalFinUlt x₁ x₂)
+| .ule p q => 
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  Predicate.evalFinLor (Predicate.evalFinUlt x₁ x₂) (Predicate.evalFinEq x₁ x₂)
 
 

@@ -61,9 +61,12 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   match p with
   | .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
   | .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
-  | .isNeg t => (t.denote w vars).slt (0#w)
   | .land  p q => p.denote w vars ∧ q.denote w vars
   | .lor  p q => p.denote w vars ∨ q.denote w vars
+  | .sle  t₁ t₂ => (t₁.denote w vars).slt (t₂.denote w vars)
+  | .slt  t₁ t₂ => (t₁.denote w vars).sle (t₂.denote w vars)
+  | .ule  t₁ t₂ => (t₁.denote w vars) ≤ (t₂.denote w vars)
+  | .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
 
 /--
 The semantics of a predicate:
