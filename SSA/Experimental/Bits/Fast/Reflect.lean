@@ -96,23 +96,28 @@ def Reflect.Map.get (ix : ℕ) (s : BitVec w)  (m : List (BitVec w)) : BitVec w 
 namespace NNF
 open Lean Elab Meta
 
-
 /-- convert goal to negation normal form, by running appropriate lemmas from `grind_norm`, and reverting all hypothese. -/
 def runNNFSimpSet (g : MVarId) : MetaM (Option MVarId) := do
   let some ext ← (getSimpExtension? `grind_norm)
-    | throwError m!"[nnf] Error: 'grind_norm' simp attribute not found!"
+    | throwError m!"[bv_nnf] Error: 'grind_norm' simp attribute not found!"
   let theorems ← ext.getTheorems
+  let theorems ←  theorems.erase (Origin.decl ``ne_eq)
   let some ext ← (Simp.getSimprocExtension? `grind_norm)
-    | throwError m!"[nnf] Error: 'grind_norm' simp attribute not found!"
+    | throwError m!"[bv_nnf] Error: 'grind_norm' simp attribute not found!"
   let simprocs ← ext.getSimprocs
-  let ctx ← Simp.mkContext (simpTheorems := #[theorems]) (congrTheorems := ← Meta.getSimpCongrTheorems)
+  let config : Simp.Config := { Simp.neutralConfig with
+    failIfUnchanged   := false,
+  }
+  let ctx ← Simp.mkContext (config := config)
+    (simpTheorems := #[theorems])
+    (congrTheorems := ← Meta.getSimpCongrTheorems)
   match ← simpGoal g ctx (simprocs := #[simprocs]) with
   | (none, _) => return none
   | (some (_newHyps, g'), _) => pure g'
 
 open Lean Elab Meta Tactic in
 /-- Convert the goal into negation normal form. -/
-elab "nnf" : tactic => do
+elab "bv_nnf" : tactic => do
   liftMetaTactic fun g => do
     match ← runNNFSimpSet g with
     | none => return []
@@ -124,8 +129,9 @@ elab "nnf" : tactic => do
       -- let g ← g.revertAll
       return [g]
 
-attribute [grind_norm] BitVec.not_lt
-attribute [grind_norm] BitVec.not_le
+-- attribute [grind_norm] BitVec.not_lt
+-- attribute [grind_norm] BitVec.not_le
+--  ne_eq: (a ≠ b) = ¬(a = b) := rfl
 attribute [- grind_norm] ne_eq -- TODO(bollu): Debate with grind maintainer about having `a ≠ b → ¬ (a = b)` in the simp-set?
 @[grind_norm] theorem not_eq_iff_neq : (¬ (a = b)) = (a ≠ b) := by rfl
 
@@ -133,10 +139,21 @@ attribute [- grind_norm] ne_eq -- TODO(bollu): Debate with grind maintainer abou
 warning: declaration uses 'sorry'
 ---
 info: w : ℕ
-⊢ (∀ (x x_1 : BitVec w), x_1 ≤ x) ∧ ∀ (x x_1 : BitVec w), x ≤ x_1 ∨ x_1 < x ∨ x ≤ x_1 ∨ x ≠ x_1
+⊢ (∀ (x x_1 : BitVec w), ¬x < x_1) ∧ ∀ (x x_1 : BitVec w), ¬x_1 < x ∨ ¬x ≤ x_1 ∨ ¬x_1 < x ∨ x ≠ x_1
 -/
 #guard_msgs in example : ∀ (a b : BitVec w),  ¬ (a < b ∨ a > b ∧ a ≤ b ∧ a > b ∧ (¬ (a ≠ b))) := by
- nnf; trace_state; sorry
+ bv_nnf; trace_state; sorry
+
+/--
+warning: 'ne_eq' does not have [simp] attribute
+---
+warning: declaration uses 'sorry'
+---
+info: w : ℕ
+⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+-/
+#guard_msgs in example : ∀ (a b : BitVec w), a &&& b = 0#w → a = b := by
+ bv_nnf; trace_state; sorry
 
 end NNF
 
@@ -292,6 +309,22 @@ def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
 #check reduceBool
 #check ofReduceBool
 
+/--
+Revert all hypotheses that have to do with bitvectors, so that we can use them.
+
+For now, we choose to revert all propositional hypotheses.
+The issue is as follows: Since our reflection fragment only deals with 
+goals in negation normal form, the naive algorithm would run an NNF pass
+and then try to reflect the hyp before reverting it. This is expensive and annoying to implement.
+
+Ideally, we would have a pass that quickly walks an expression to cheaply
+ee if it's in the BV fragment, and revert it if it is.
+For now, we use a sound overapproximation and revert everything.
+-/
+def revertBvHyps (g : MVarId) : MetaM MVarId := do
+  let (_, g) ← g.revert (← g.getNondepPropHyps)
+  return g
+
 /-- 
 Reflect an expression of the form:
   ∀ ⟦(w : Nat)⟧ (← focus)
@@ -305,7 +338,8 @@ which explains how to create the correct auxiliary definition of the form
 
 which is then indeed `rfl` equal to `true`. 
 -/
-def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
+def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
+  let target ← g.getType
   let ws ← findExprBitwidths target
   let ws := ws.toArray
   if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD target}"
@@ -322,6 +356,15 @@ def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
     else
       -- invariant: w is known to be an fvar.
       let wFv := w.fvarId!
+      -- We can now revert hypotheses that are of this bitwidth.
+      let g ← revertBvHyps g
+          
+      -- Next, after reverting, we have a goal which we want to reflect.
+      -- we convert this goal to NNF
+      let .some g ← NNF.runNNFSimpSet g
+        | logInfo m!"simp automatically closed goal."
+          return[]
+      -- finally, we perform reflection.
       let result ← reflectPredicateAux ∅ target
       logInfo m!"result: {result}"
       let bvToIxMapVal ← result.bvToIxMap.toExpr w
@@ -336,7 +379,7 @@ def reflectUniversalWidthBVs (g : MVarId) (target : Expr) : MetaM MVarId := do
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool) 
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      return g
+      return [g]
 
 /--
 Given a goal state of the form:
@@ -350,14 +393,18 @@ TODO(@bollu): Also decide properties about finite widths, by extending to the ma
 -/
 elab "bv_reflect" : tactic => do
   liftMetaTactic fun g => do
-    let g ← reflectUniversalWidthBVs g (← g.getType')
-    return [g]
+    reflectUniversalWidthBVs g
+
 
 elab "bv_automata3" : tactic => do
   liftMetaTactic fun g => do
-    let g ← reflectUniversalWidthBVs g (← g.getType')
-    return [g]
-  evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
+    reflectUniversalWidthBVs g 
+
+  match ← getUnsolvedGoals  with
+  | [] => return ()
+  -- | TODO: replace with ofReduceBool
+  | [_g] => evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
+  | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
   
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
@@ -369,6 +416,22 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata3
 #print eq1
+
+
+open NNF in
+/-- Can use implications -/
+theorem eq3 (w : Nat) (a b : BitVec w) : a &&& b = 0#w → a + b = a ||| b := by
+  bv_nnf
+  bv_automata3
+#print eq3
+
+
+open NNF in
+/-- Can exploit hyps -/
+theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
+  bv_nnf
+  bv_automata3
+#print eq3
 
 /-- error: expcted width to be a free variable, found with '10' (for bitvector 'b') -/
 #guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
