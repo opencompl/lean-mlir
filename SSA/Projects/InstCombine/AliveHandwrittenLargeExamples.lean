@@ -215,10 +215,10 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 ofBool_true, ofNat_eq_ofNat] at hugt
               contradiction
 
--- /--
--- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms: [propext, Classical.choice, Quot.sound]
--- -/
--- #guard_msgs in #print axioms alive_simplifyMulDivRem805
+/--
+info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms alive_simplifyMulDivRem805
 
 def alive_simplifyMulDivRem805' (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
@@ -311,9 +311,9 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       omega
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
--- /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
--- [propext, Classical.choice, Quot.sound] -/
--- #guard_msgs in #print axioms alive_simplifyMulDivRem805'
+/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms alive_simplifyMulDivRem805'
 
 /-
 Name: MulDivRem:290
