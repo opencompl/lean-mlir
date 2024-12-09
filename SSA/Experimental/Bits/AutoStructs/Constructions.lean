@@ -82,8 +82,8 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
     m2.Sim M2 →
     (product final? m1 m2).Sim (NFA'.product (to_prop final?) M1 M2) := by
   rintro ⟨f1, hsim1⟩ ⟨f2, hsim2⟩
+  apply worklistRun_spec (m1.m.states × m2.m.states)
   sorry
-  -- apply worklistRun_spec (m1.m.states × m2.m.states)
   -- (corr := fun (s1, s2) => (f1 s1, f2 s2))
   -- · rintro ⟨s1, s2⟩ ⟨s1', s2'⟩; simp; rintro heqs
   --   injection heqs with h1 h2
@@ -172,42 +172,40 @@ def NFA'.determinize_spec_nonemp (m : CNFA n)  [Nonempty m.m.states]
     m.determinize.Sim M.determinize := by
   rcases hsim with ⟨fsim, hsim⟩
   unfold CNFA.determinize
-  sorry
-  -- apply worklistRun_spec (BitVec m.m.stateMax)
-  --   (corr := λ ss q => let i := Function.invFun fsim q; ss[i.val] == true)
-  --   (M := M.determinize)
-  -- · intros ss1 ss2; simp; intros heq; ext i
-  --   rw [funext_iff] at heq
-  --   specialize heq (fsim ⟨i.val, by simp [RawCNFA.states]⟩)
-  --   rw [Function.leftInverse_invFun hsim.injective] at heq
-  --   simp at heq; exact heq
-  -- · sorry
-  -- · sorry
-  -- · sorry
-  -- · sorry
-  -- · sorry
-  -- · sorry
+  apply worklistRun_spec (BitVec m.m.stateMax)
+    (corr := λ ss q => let i := Function.invFun fsim q; ss[i.val] == true)
+    (M := M.determinize)
+  · intros ss1 ss2; simp; intros heq; ext i
+    rw [funext_iff] at heq
+    specialize heq (fsim ⟨i.val, by simp [RawCNFA.states]⟩)
+    rw [Function.leftInverse_invFun hsim.injective] at heq
+    simp at heq; exact heq
+  · sorry
+  · sorry
+  · sorry
+  · sorry
+  · sorry
+  · sorry
 
 def NFA'.determinize_spec_emp (m : CNFA n) (hemp : m.m.stateMax = 0)
   {M : NFA' n} (hsim : m.Sim M) :
     m.determinize.Sim M.determinize := by
   rcases hsim with ⟨fsim, hsim⟩
   unfold CNFA.determinize
-  sorry
-  -- apply worklistRun_spec (BitVec m.m.stateMax)
-  --   (corr := λ ss _ => True)
-  --   (M := M.determinize)
-  -- · rw [hemp]; intros ss1 ss2 _; apply BitVec.eq_of_getMsbD_eq; simp
-  -- · rw [hemp]; rintro ⟨⟨x⟩⟩
-  --   obtain rfl : x = 0 := by omega
-  --   simp [BitVec.any, NFA'.determinize, NFA.toDFA]
-  --   intros q _ ha
-  --   sorry -- need to prove that f is surjective?
-  -- · sorry
-  -- · sorry
-  -- · sorry
-  -- · sorry
-  -- · sorry
+  apply worklistRun_spec (BitVec m.m.stateMax)
+    (corr := λ ss _ => True)
+    (M := M.determinize)
+  · rw [hemp]; intros ss1 ss2 _; apply BitVec.eq_of_getMsbD_eq; simp
+  · rw [hemp]; rintro ⟨⟨x⟩⟩
+    obtain rfl : x = 0 := by omega
+    simp [BitVec.any, NFA'.determinize, NFA.toDFA]
+    intros q _ ha
+    sorry -- need to prove that f is surjective?
+  · sorry
+  · sorry
+  · sorry
+  · sorry
+  · sorry
 
 def NFA'.determinize_spec (m : CNFA n)
   {M : NFA' n} (hsim : m.Sim M) :
