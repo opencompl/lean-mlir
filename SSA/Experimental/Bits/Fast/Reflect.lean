@@ -17,6 +17,7 @@ import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.Attr
 import SSA.Experimental.Bits.Fast.Decide
 import Lean.Meta.ForEachExpr
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 
 import Lean
 
@@ -227,6 +228,40 @@ structure ReflectResult where
 instance : ToMessageData ReflectResult where
   toMessageData result := m!"{result.e} {result.bvToIxMap}"
 
+
+
+/--
+info: ∀ {w : Nat} (a b : BitVec w),
+  @Eq (BitVec w) (@HAdd.hAdd (BitVec w) (BitVec w) (BitVec w) (@instHAdd (BitVec w) (@BitVec.instAdd w)) a b)
+    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+-/
+#guard_msgs in set_option pp.explicit true in
+#check ∀ {w : Nat} (a b: BitVec w), a + b = 0#w
+
+/--
+info: ∀ {w : Nat} (a : BitVec w),
+  @Eq (BitVec w) (@Neg.neg (BitVec w) (@BitVec.instNeg w) a)
+    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+-/
+#guard_msgs in set_option pp.explicit true in
+#check ∀ {w : Nat} (a : BitVec w), - a = 0#w
+
+
+/--
+info: ∀ {w : Nat} (a : BitVec w),
+  @Eq (BitVec w) (@Complement.complement (BitVec w) (@BitVec.instComplement w) a)
+    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+-/
+#guard_msgs in set_option pp.explicit true in
+#check ∀ {w : Nat} (a : BitVec w),  ~~~ a  = 0#w
+
+
+def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM ReflectResult := do
+  let (e, map) := map.findOrInsertExpr e
+  return { bvToIxMap := map, e := e }
+
+
+
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
 Crucially, when this succeeds, this will be in terms of `term`.
@@ -234,12 +269,78 @@ and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
 -/
-def reflectTermUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM ReflectResult := do
-  let (e, map) := map.findOrInsertExpr e
-  return { bvToIxMap := map, e := e }
+partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM ReflectResult := do
+  -- TODO: bitvector contants.
+  match_expr e with
+  | BitVec.ofInt _wExpr iExpr =>
+    let i ← getIntValue? iExpr
+    match i with
+    | .some (-1) =>
+      let e := (mkConst ``Term.negOne)
+      return {bvToIxMap := map, e := e}
+    | _ => 
+      let (e, map) := map.findOrInsertExpr e
+      return { bvToIxMap := map, e := e }
+  | BitVec.ofNat _wExpr nExpr =>
+    let n ← getNatValue? nExpr
+    match n with
+    | .some 0 => 
+      let e := (mkConst ``Term.zero)
+      return {bvToIxMap := map, e := e}
+    | .some 1 =>
+      let e := (mkConst ``Term.one)
+      return {bvToIxMap := map, e := e}
+    | _ => 
+      let (e, map) := map.findOrInsertExpr e
+      return { bvToIxMap := map, e := e }
+  | HAnd.hAnd _bv _bv _bv _inst a b =>
+      let a ← reflectTermUnchecked map w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let out := mkApp2 (mkConst ``Term.and) a.e b.e
+      return { b with e := out }
+  | HOr.hOr _bv _bv _bv _inst a b =>
+      let a ← reflectTermUnchecked map w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let out := mkApp2 (mkConst ``Term.or) a.e b.e
+      return { b with e := out }
+  | HXor.hXor _bv _bv _bv _inst a b =>
+      let a ← reflectTermUnchecked map w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let out := mkApp2 (mkConst ``Term.xor) a.e b.e
+      return { b with e := out }
+  | Complement.complement _bv _inst a =>
+      let a ← reflectTermUnchecked map w a
+      let out := mkApp (mkConst ``Term.not) a.e
+      return { a with e := out }
+  | HAdd.hAdd _bv _bv _bv _inst a b =>
+      let a ← reflectTermUnchecked map w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let out := mkApp2 (mkConst ``Term.add) a.e b.e
+      return { b with e := out }
+  | HSub.hSub _bv _bv _bv _inst a b =>
+      let a ← reflectTermUnchecked map w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let out := mkApp2 (mkConst ``Term.sub) a.e b.e
+      return { b with e := out }
+  | Neg.neg _bv _inst a =>
+      let a ← reflectTermUnchecked map w a
+      let out := mkApp (mkConst ``Term.neg) a.e
+      return { a with e := out }
+  -- incr
+  -- decr
+  | _ => 
+    let (e, map) := map.findOrInsertExpr e
+    return { bvToIxMap := map, e := e }
+
+set_option pp.explicit true in
+/--
+info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec w) a b) (@Eq (BitVec w) a b)) : Prop
+-/
+#guard_msgs in 
+#check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResult := do
+partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResult := do
   match_expr e with
   | Eq α a b =>
     let_expr BitVec w := α | throwError "expected equality of bitvectors"
@@ -248,10 +349,21 @@ def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResul
     return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
   | Ne α a b =>
     let_expr BitVec w := α | throwError "expected disequality of bitvectors"
-    let a ←  reflectTermUnchecked bvToIxMap w a
+    let a ← reflectTermUnchecked bvToIxMap w a
     let b ← reflectTermUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
-  | _ => throwError "expected predicate over bitvectors (no quantification), found:  {indentD e}"
+  | Or p q =>
+    let p ← reflectPredicateAux bvToIxMap p
+    let q ← reflectPredicateAux p.bvToIxMap q
+    let out := mkApp2 (mkConst ``Predicate.lor) p.e q.e
+    return { q with e := out }
+  | And p q =>
+    let p ← reflectPredicateAux bvToIxMap p
+    let q ← reflectPredicateAux p.bvToIxMap q
+    let out := mkApp2 (mkConst ``Predicate.land) p.e q.e
+    return { q with e := out }
+  | _ => 
+     throwError "expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
 /-- Name of the tactic -/
 def tacName : String := "bv_automata3"
@@ -301,7 +413,7 @@ def revertBVsOfWidth (g : MVarId) (w : Expr) : MetaM MVarId := g.withContext do
 /-- generalize our mapping to get a single fvar -/
 def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
   let (fvars, g) ← g.generalize #[{ expr := e : GeneralizeArg}]
-  -- Now target no longer depends on the particular bitvectors
+  --eNow target no longer depends on the particular bitvectors
   if h : fvars.size = 1 then
     return (fvars[0], g)
   throwError"expected a single free variable from generalizing map {e}, found multiple..."
@@ -339,10 +451,9 @@ which explains how to create the correct auxiliary definition of the form
 which is then indeed `rfl` equal to `true`. 
 -/
 def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
-  let target ← g.getType
-  let ws ← findExprBitwidths target
+  let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
-  if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD target}"
+  if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
   else if hgt: ws.size > 1 then
     let (w1, wExample1) := ws[0]
     let (w2, wExample2) := ws[1]
@@ -364,12 +475,13 @@ def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
       let .some g ← NNF.runNNFSimpSet g
         | logInfo m!"simp automatically closed goal."
           return[]
+      logInfo m!"goal after NNF: {indentD g}"
       -- finally, we perform reflection.
-      let result ← reflectPredicateAux ∅ target
-      logInfo m!"result: {result}"
+      let result ← reflectPredicateAux ∅ (← g.getType)
       let bvToIxMapVal ← result.bvToIxMap.toExpr w
       let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, bvToIxMapVal])
       let g ← g.replaceTargetDefEq target
+      logInfo m!"goal after reflection: {indentD g}"
       let (mapFv, g) ← generalizeMap g bvToIxMapVal; 
       let (_, g) ← g.revert #[mapFv]
       -- Apply Predicate.denote_of_eval_eq.
@@ -420,7 +532,7 @@ theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
 
 open NNF in
 /-- Can use implications -/
-theorem eq3 (w : Nat) (a b : BitVec w) : a &&& b = 0#w → a + b = a ||| b := by
+theorem eq3 (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → (a + b = (a ||| b)) := by
   bv_nnf
   bv_automata3
 #print eq3
@@ -429,7 +541,6 @@ theorem eq3 (w : Nat) (a b : BitVec w) : a &&& b = 0#w → a + b = a ||| b := by
 open NNF in
 /-- Can exploit hyps -/
 theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
-  bv_nnf
   bv_automata3
 #print eq3
 
