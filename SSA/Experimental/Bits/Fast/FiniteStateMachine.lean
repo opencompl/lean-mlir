@@ -427,6 +427,21 @@ theorem eval_sub (x : Bool → BitStream) : sub.eval x = (x true) - (x false) :=
   · rw [eval, carry_sub]
     simp [nextBit, eval, sub, BitStream.sub, BitStream.subAux]
 
+/-!
+We define a borrow automata, whose output stream is the internal state of the subtraction automata,
+which is the bits to be borrowed.
+-/
+
+def borrow : FSM Bool :=
+  { α := Unit,
+    initCarry := fun _ => false,
+    -- | TODO: check that this is in fact the borrow bit of the subtraction automata.
+    nextBitCirc := fun _a =>
+             (Circuit.var false (inr true) &&& Circuit.var true (inr false)) |||
+             ((Circuit.var false (inr true) ^^^ Circuit.var true (inr false)) &&&
+              (Circuit.var true (inl ())))
+  }
+
 def neg : FSM Unit :=
   { α := Unit,
     i := by infer_instance,
@@ -847,10 +862,47 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       good := by
         ext; simp [x₁.good, x₂.good]
     }
-  | .slt t₁ t₂ => sorry
-  | .sle t₁ t₂ => sorry
-  | .ult t₁ t₂ => sorry
-  | .ule t₁ t₂ => sorry
+  | .slt t₁ t₂ => 
+    let q₁ := termEvalEqFSM t₁
+    let q₂ := termEvalEqFSM t₂
+    { toFSM := composeBinary FSM.sub q₁ q₂,
+      good := by sorry --   ext; simp }
+    }
+  | .sle t₁ t₂ => 
+     let t₁' := termEvalEqFSM t₁
+     let t₂' := termEvalEqFSM t₂
+     let slt := (composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
+     let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) := 
+       Nat.max_self ..
+     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
+       simp [hsz]
+     let out := composeBinaryAux FSM.or slt eq
+     {
+      toFSM := hsz ▸ out
+      good := by sorry -- TODO: show that it's good 'ext; simp';
+     }
+  | .ult t₁ t₂ => 
+     let t₁' := termEvalEqFSM t₁
+     let t₂' := termEvalEqFSM t₂
+     {
+      toFSM := (composeBinary FSM.borrow t₁' t₂')
+      good := by sorry -- TODO: show that it's good 'ext; simp';
+     }
+  | .ule t₁ t₂ => 
+     let t₁' := termEvalEqFSM t₁
+     let t₂' := termEvalEqFSM t₂
+     let ult := (composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
+     let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) := 
+       Nat.max_self ..
+     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
+       simp [hsz]
+     let out := composeBinaryAux FSM.or ult eq
+     {
+      toFSM := hsz ▸ out
+      good := by sorry -- TODO: show that it's good 'ext; simp';
+     }
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
