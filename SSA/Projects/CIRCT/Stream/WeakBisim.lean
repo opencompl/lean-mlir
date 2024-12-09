@@ -329,7 +329,33 @@ theorem corec_eq_corec_of
   case zero       => exact hR
   case succ i ih  => exact (h _ _ (ih hR)).right
 
+theorem corec₂_eq_corec₂_of
+    (R : β₁ → β₂→ Prop)
+    (f₁ : β₁ → (Option α₁ × Option α₂ × β₁) )
+    (f₂ : β₂ → (Option α₁ × Option α₂ × β₂))
+    (h : ∀ b₁ b₂, R b₁ b₂ →
+      (f₁ b₁).fst = (f₂ b₂).fst
+      ∧ R (f₁ b₁).snd.snd (f₂ b₂).snd.snd)
+    (h2 : ∀ b₁ b₂, R b₁ b₂ →
+      (f₁ b₁).snd.fst = (f₂ b₂).snd.fst
+      ∧ R (f₁ b₁).snd.snd (f₂ b₂).snd.snd)
+    {b₁ : β₁} {b₂ : β₂} (hR : R b₁ b₂):
+    corec₂ b₁ f₁ = corec₂ b₂ f₂ := by sorry
+  -- funext i
+  -- simp only [corec, Stream'.corec_def, Stream'.map, Stream'.get]
+  -- suffices
+  --   ∀ i, R (Stream'.iterate (f₁ · |>.snd) b₁ i) (Stream'.iterate (f₂ · |>.snd) b₂ i)
+  -- from (h _ _ (this i)).left
+  -- intro i
+  -- induction i generalizing b₁ b₂
+  -- case zero       => exact hR
+  -- case succ i ih  => exact (h _ _ (ih hR)).right
+
 -- unfold quot stuff to reduce to bisim stuff
+
+
+
+
 
 theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck α)
     (y_neq_stuck : y ≠ stuck α := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
