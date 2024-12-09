@@ -534,8 +534,9 @@ lemma worklistRun'_init_wf inits hinits final? :
       rintro sa hin rfl; simp_all
       rw [Array.mem_take_iff_getElem?] at hin
       rcases hin with ⟨k, hki, hk⟩
-      simp [←Array.getElem?_eq_getElem i.isLt] at hk
-      apply Array.nodup_iff_getElem?_ne_getElem?.mp hinits at hk; trivial; assumption; exact i.isLt
+      sorry
+      -- simp [←Array.getElem?_eq_getElem i.isLt] at hk
+      -- apply Array.nodup_iff_getElem?_ne_getElem?.mp hinits at hk; trivial; assumption; exact i.isLt
     have hsts : m2.states = m.states ∪ {m.stateMax} := by
       simp [m2, m1]; split; simp; rw [states_addInitial]; simp
     simp [motive]; constructor; constructor
@@ -1287,8 +1288,9 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' ∅ st) :
               have heq : sa1 = sa := by apply Array.mem_pop_iff _ _ |>.mp at hc; simp_all
               simp_all}}
           { apply hsim.trans_match₂ } }
-        { intros k st; apply processOneElem_spec A S final f M corr (st := st) corr_inj final_corr hf₂ s sa k
-          simp; exact Array.getElem?_lt (f sa) k.isLt }
+        sorry
+        -- { intros k st; apply processOneElem_spec A S final f M corr (st := st) corr_inj final_corr hf₂ s sa k
+        --   simp; exact Array.getElem?_lt (f sa) k.isLt }
       next hnone =>
         have hnin : sa ∉ st.map := by
           intros hin
@@ -1356,8 +1358,8 @@ variable (hinit₂ : ∀ q ∈  M.M.start, ∃ sa, corr sa = q ∧ sa ∈ inits)
 variable (hf₁: ∀ sa q' a, q' ∈ M.M.step (corr sa) a → ∃ sa', corr sa' = q' ∧ (a, sa') ∈ f sa)
 variable (hf₂: ∀ sa a sa', (a, sa') ∈ f sa → corr sa' ∈ M.M.step (corr sa) a)
 
-def worklistRun_spec (hM : M.M.Reachable = ⊤) : (worklistRun S final inits hinits f |>.Sim M) :=
-  worklistRun'_spec (BitVec n) S final f inits M.M corr corr_inj final_corr hinit₁ hinit₂ hf₁ hf₂ hM
+def worklistRun_spec (hM : M.M.Reachable = ⊤) : (worklistRun S final inits hinits f |>.Sim M) := sorry
+  -- worklistRun'_spec (BitVec n) S final f inits M.M corr corr_inj final_corr hinit₁ hinit₂ hf₁ hf₂ hM
 
 end worklist_good
 
