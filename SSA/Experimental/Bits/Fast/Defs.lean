@@ -160,10 +160,34 @@ Meaning of the denotation:
 inductive Predicate : Type where
 | eq (t₁ t₂ : Term) : Predicate
 | neq (t₁ t₂ : Term) : Predicate
-| isNeg (t : Term) : Predicate
+| ult (t₁ t₂ : Term) : Predicate
+| ule (t₁ t₂ : Term) : Predicate
+| slt (t₁ t₂ : Term) : Predicate
+| sle (t₁ t₂ : Term) : Predicate
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
 
+
+
+def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂)
+
+def Predicate.evalOr (t₁ t₂ : BitStream) : BitStream := (t₁ &&& t₂)
+
+
+/-- 
+Evaluate whether 't₁ <ᵤ t₂'.
+This is defined by computing the borrow bit of 't₁ - t₂'.
+If the borrow bit is `1`, then we know that `t₁ < t₂'.
+Otherwise, we know that 't₁ ≥ t₂'.
+-/
+def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := t₁.borrow t₂
+
+/-- 
+Evaluate whether 't₁ <s t₂'.
+This is defined by computing the most significant bit of 't₁ - t₂'.
+IF the `msb is 1`, then `t₁ - t₂ <s 0`, and thus `t₁ <s t₂'.
+-/
+def Predicate.evalSlt (t₁ t₂ : BitStream) : BitStream := ~~~ (t₁ - t₂)
 
 -- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
 open BitStream in
@@ -174,16 +198,24 @@ when truncated to index `i`, is true.
 -/
 def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
-  | eq t1 t2 => (t1.eval vars ^^^ t2.eval vars).scanOr
+  | eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
   /-
   If it is ever not equal, then we want to stay not equals for ever.
   So, if the 'a = b' returns 'false' at some index 'i', we will stay false
   for all indexes '≥ i'.
   -/
   | neq t1 t2 => ((t1.eval vars).nxor (t2.eval vars)).scanAnd
-  | lor p q => (p.eval vars) &&& (q.eval vars)
+  | lor p q => Predicate.evalOr (p.eval vars) (q.eval vars)
   | land p q => (p.eval vars) ||| (q.eval vars)
-  | isNeg t => ~~~ (t.eval vars) -- recall that we must return `false`, if the predicate is true, so we negate the current bit (which is the msb of the truncated repr).
+  | ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
+  | ule t₁ t₂ => 
+     Predicate.evalOr 
+       (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
+       (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
+  | slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
+  | sle t₁ t₂ => Predicate.evalOr 
+       (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
+       (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
 
 @[simp]
 theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
@@ -208,8 +240,11 @@ end Predicate
 | .eq t1 t2 => max t1.arity t2.arity
 | .lor p q => max p.arity q.arity
 | .land p q => max p.arity q.arity
-| .isNeg t => t.arity
 | .neq t₁ t₂ => max t₁.arity t₂.arity
+| .ult t₁ t₂ => max t₁.arity t₂.arity
+| .ule t₁ t₂ => max t₁.arity t₂.arity
+| .slt t₁ t₂ => max t₁.arity t₂.arity
+| .sle t₁ t₂ => max t₁.arity t₂.arity
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
@@ -217,11 +252,11 @@ match p with
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁ ^^^ x₂).scanOr
+    (x₁ ^^^ x₂)
 | .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁.nxor x₂).scanAnd
+    (x₁.nxor x₂)
 | .land p q =>
   -- if both `p` and `q` are logically true (i.e. the predicate is `false`),
   -- only then should we return a `false`.
@@ -233,10 +268,9 @@ match p with
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   (x₁ &&& x₂)
-| .isNeg t  =>
-  -- If it is negative, then we should return `false`.
-  -- That is, if the msb (i.e. the bit at the current location is `true`, then we should return `false`.
-  let x₁ := t.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  ~~~x₁
+| .slt p q => sorry
+| .sle p q => sorry
+| .ult p q => sorry
+| .ule p q => sorry
 
 

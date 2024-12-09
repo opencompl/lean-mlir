@@ -821,14 +821,14 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
    let t₁' := termEvalEqFSM t₁
    let t₂' := termEvalEqFSM t₂
    {
-    toFSM := composeUnaryAux FSM.scanOr (composeBinary FSM.xor t₁' t₂')
+    toFSM := (composeBinary FSM.xor t₁' t₂')
     good := by ext; simp;
    }
  | .neq t₁ t₂ => 
    let t₁' := termEvalEqFSM t₁
    let t₂' := termEvalEqFSM t₂
    {
-    toFSM := composeUnaryAux FSM.scanAnd (composeBinary FSM.nxor t₁' t₂')
+    toFSM := (composeBinary FSM.nxor t₁' t₂')
     good := by ext; simp;
    }
   | .land p q =>
@@ -847,13 +847,10 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       good := by
         ext; simp [x₁.good, x₂.good]
     }
- | .isNeg t =>
-   let t' := termEvalEqFSM t
-   {
-     toFSM := composeUnary FSM.not t'
-     good := by ext; simp
-   }
-   
+  | .slt t₁ t₂ => sorry
+  | .sle t₁ t₂ => sorry
+  | .ult t₁ t₂ => sorry
+  | .ule t₁ t₂ => sorry
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
