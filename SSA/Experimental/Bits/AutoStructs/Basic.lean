@@ -1374,7 +1374,7 @@ end worklist_good
 
   Possible improvements for performance:
   0. Implement language equality directly instead of encoding it
-  1. change the representation, eg. transitions as
+  1. change the representation, eg. transitions ass
         Array (Array (A × State))
   as in LASH, or with BDD as in MONA
   2. Use the interleaving technique to reduce the number of transitions:
