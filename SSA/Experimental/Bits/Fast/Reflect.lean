@@ -81,7 +81,7 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
 
 /-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
 theorem Predicate.denote_of_eval_eq {p : Predicate}
-    (heval : ∀ (w : Nat) (vars : List BitStream), p.eval vars w = false) : 
+    (heval : ∀ (w : Nat) (vars : List BitStream), p.eval vars w = false) :
     ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
   intros w vars
   apply p.eval_eq_denote w vars |>.mp (heval w <| vars.map BitStream.ofBitVec)
@@ -209,7 +209,7 @@ def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : ReflectedExpr × R
       (ix, { m with exprs := m.exprs.insert e ix })
   let e :=  mkApp (mkConst ``Term.var) (mkNatLit ix)
   (e, m)
-    
+
 
 /--
 Convert the meta-level `ReflectMap` into an object level `Reflect.Map` by
@@ -307,19 +307,19 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
     | .some (-1) =>
       let e := (mkConst ``Term.negOne)
       return {bvToIxMap := map, e := e}
-    | _ => 
+    | _ =>
       let (e, map) := map.findOrInsertExpr e
       return { bvToIxMap := map, e := e }
   | BitVec.ofNat _wExpr nExpr =>
     let n ← getNatValue? nExpr
     match n with
-    | .some 0 => 
+    | .some 0 =>
       let e := (mkConst ``Term.zero)
       return {bvToIxMap := map, e := e}
     | .some 1 =>
       let e := (mkConst ``Term.one)
       return {bvToIxMap := map, e := e}
-    | _ => 
+    | _ =>
       let (e, map) := map.findOrInsertExpr e
       return { bvToIxMap := map, e := e }
   | HAnd.hAnd _bv _bv _bv _inst a b =>
@@ -357,7 +357,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       return { a with e := out }
   -- incr
   -- decr
-  | _ => 
+  | _ =>
     let (e, map) := map.findOrInsertExpr e
     return { bvToIxMap := map, e := e }
 
@@ -365,15 +365,15 @@ set_option pp.explicit true in
 /--
 info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec w) a b) (@Eq (BitVec w) a b)) : Prop
 -/
-#guard_msgs in 
+#guard_msgs in
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResult := do
   match_expr e with
   | Eq α a b =>
-    match_expr α with 
-    | BitVec w => 
+    match_expr α with
+    | BitVec w =>
       let a ←  reflectTermUnchecked bvToIxMap w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
       return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
@@ -382,18 +382,18 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM Refl
       -- so we get goal states of them form 'a <ₛb = true'.
       -- So we need to match on 'Eq _ true' where '_' is 'slt'.
       -- This makes me unhappy too, but c'est la vie.
-      let_expr true := b 
+      let_expr true := b
         | throwError "only boolean conditionals allowed are 'bv.slt bv = true', 'bv.sle bv = true'. Found {indentD e}."
       match_expr a with
-      | BitVec.slt w a b => 
+      | BitVec.slt w a b =>
         let a ← reflectTermUnchecked bvToIxMap w a
         let b ← reflectTermUnchecked a.bvToIxMap w b
         return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.slt) #[a.e, b.e] }
-      | BitVec.sle w a b => 
+      | BitVec.sle w a b =>
         let a ← reflectTermUnchecked bvToIxMap w a
         let b ← reflectTermUnchecked a.bvToIxMap w b
         return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.sle) #[a.e, b.e] }
-      | _ => 
+      | _ =>
         throwError "unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
     | _ =>
       throwError "unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
@@ -422,11 +422,11 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM Refl
     let q ← reflectPredicateAux p.bvToIxMap q
     let out := mkApp2 (mkConst ``Predicate.land) p.e q.e
     return { q with e := out }
-  | _ => 
+  | _ =>
      throwError "expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
 /-- Name of the tactic -/
-def tacName : String := "bv_automata3"
+def tacName : String := "bv_automata_circuit"
 
 abbrev WidthToExprMap := Std.HashMap Expr Expr
 
@@ -446,7 +446,7 @@ def findExprBitwidths (target : Expr) : MetaM WidthToExprMap := do
       -- Creates fvars when going inside binders.
       forEachExpr target fun e => do
         match_expr ← inferType e with
-        | BitVec n => 
+        | BitVec n =>
           -- TODO(@bollu): do we decide to normalize `n`? upto what?
           modify (fun arr => arr.insert n.cleanupAnnotations e)
         | _ => return ()
@@ -456,7 +456,7 @@ private def Expr.isBitVecOfWidth (e : Expr) (w : Expr) : MetaM Bool := do
   match_expr ← inferType e with
   | BitVec w' => return w == w'
   | _ => return false
-    
+
 
 /-- Revert all bitwidths of a given bitwidth and then run the continuation 'k'.
 This allows
@@ -469,7 +469,7 @@ def revertBVsOfWidth (g : MVarId) (w : Expr) : MetaM MVarId := g.withContext do
   /- revert all the bitvectors of the given width in one fell swoop. -/
   let (_fvars, g) ← g.revert reverts
   return g
-  
+
 /-- generalize our mapping to get a single fvar -/
 def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
   let (fvars, g) ← g.generalize #[{ expr := e : GeneralizeArg}]
@@ -485,7 +485,7 @@ def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
 Revert all hypotheses that have to do with bitvectors, so that we can use them.
 
 For now, we choose to revert all propositional hypotheses.
-The issue is as follows: Since our reflection fragment only deals with 
+The issue is as follows: Since our reflection fragment only deals with
 goals in negation normal form, the naive algorithm would run an NNF pass
 and then try to reflect the hyp before reverting it. This is expensive and annoying to implement.
 
@@ -497,7 +497,7 @@ def revertBvHyps (g : MVarId) : MetaM MVarId := do
   let (_, g) ← g.revert (← g.getNondepPropHyps)
   return g
 
-/-- 
+/--
 Reflect an expression of the form:
   ∀ ⟦(w : Nat)⟧ (← focus)
   ∀ (b₁ b₂ ... bₙ : BitVec w),
@@ -508,7 +508,7 @@ which explains how to create the correct auxiliary definition of the form
 `decideProprerty = true`, such that our goal state after using `ofReduceBool` becomes
 ⊢ ofReduceBool decideProperty = true
 
-which is then indeed `rfl` equal to `true`. 
+which is then indeed `rfl` equal to `true`.
 -/
 def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
@@ -529,7 +529,7 @@ def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
       let wFv := w.fvarId!
       -- We can now revert hypotheses that are of this bitwidth.
       let g ← revertBvHyps g
-          
+
       -- Next, after reverting, we have a goal which we want to reflect.
       -- we convert this goal to NNF
       let .some g ← NNF.runNNFSimpSet g
@@ -542,14 +542,14 @@ def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
       let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, bvToIxMapVal])
       let g ← g.replaceTargetDefEq target
       logInfo m!"goal after reflection: {indentD g}"
-      let (mapFv, g) ← generalizeMap g bvToIxMapVal; 
+      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
       let (_, g) ← g.revert #[mapFv]
       -- Apply Predicate.denote_of_eval_eq.
-      let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq) 
+      let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
         | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``of_decide_eq_true) 
+      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool) 
+      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       return [g]
 
@@ -568,71 +568,71 @@ elab "bv_reflect" : tactic => do
     reflectUniversalWidthBVs g
 
 
-elab "bv_automata3" : tactic => do
+elab "bv_automata_circuit" : tactic => do
   liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g 
+    reflectUniversalWidthBVs g
 
   match ← getUnsolvedGoals  with
   | [] => return ()
   -- | TODO: replace with ofReduceBool
   | [g] => do
     logInfo m!"goal being decided: {indentD g}"
-    evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
+    evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig})
   | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
-  
+
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
-  intros 
-  bv_automata3
+  intros
+  bv_automata_circuit
 #print eq1
 
 /-- Can solve implicitly quantified expressions by directly invoking bv_automata3. -/
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
-  bv_automata3
+  bv_automata_circuit
 #print eq1
 
 
 open NNF in
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∨ (a = 0#w) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a ≠ 0#w) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a b : BitVec w) : (a + 0#w = a) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
-  bv_automata3
+  bv_automata_circuit
 
 /-- either a < b or b ≤ a -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
-  bv_automata3
+  bv_automata_circuit
 
 /-- Tricohotomy of < -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
-  bv_automata3
+  bv_automata_circuit
 
 /-- < implies not equals -/
 example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
-  bv_automata3
+  bv_automata_circuit
 
 /-- <= and >= implies equals -/
 example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
-  bv_automata3
+  bv_automata_circuit
 
 example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
   fail_if_success bv_decide
@@ -643,22 +643,22 @@ example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
 
 /-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (1#w = 0#w) ∨ ((a - b).slt 0 → a.slt b) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 /-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.sle a) := by
-  bv_automata3
+  bv_automata_circuit
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
-  bv_automata3
+  bv_automata_circuit
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- a <=s b and b <=s a implies a = b-/
 example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
-  bv_automata3
+  bv_automata_circuit
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- In bitwidth 0, all values are equal.
@@ -667,11 +667,11 @@ In bitwidth 2, 1 + 1 = 2 ≠ 0#2
 For all bitwidths ≥ 2, we know that a ≠ a + 1
 -/
 example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#w = 0#w):= by
-  bv_automata3
+  bv_automata_circuit
 
 /-- If we have that 'a &&& a = 0`, then we know that `a = 0` -/
 example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
-  bv_automata3
+  bv_automata_circuit
 
 /-
 Is this true at bitwidth 1? Not it is not!
@@ -680,7 +680,7 @@ We do this by saying that either the given condition, or 1+1 = 0.
 I'm actually not sure why I need to rule out bitwidth 0? Mysterious!
 -/
 example (w : Nat) (a : BitVec w) : (1#w = 0#w) ∨ (1#w + 1#w = 0#w) ∨ ((a = - a) → a = 0#w) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 /-
@@ -689,28 +689,28 @@ When we have this, we then explicitly enumerate the different values that a can 
 Note that this is pretty expensive.
 -/
 example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
-  bv_automata3
+  bv_automata_circuit
 
 
 /-- Can use implications -/
-theorem eq3 (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
+theorem eq_circuit (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
   bv_nnf
-  bv_automata3
+  bv_automata_circuit
 
-#print eq3
+#print eq_circuit
 
 
 open NNF in
 /-- Can exploit hyps -/
 theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
-  bv_automata3
+  bv_automata_circuit
 
-#print eq3
+#print eq_circuit
 
 /-- error: expcted width to be a free variable, found with '10' (for bitvector 'b') -/
 #guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
@@ -725,7 +725,7 @@ section BvAutomataTests
 -/
 
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata3
+  bv_automata_circuit
 
 /--
 info: 'Reflect.alive_1' depends on axioms: [propext,
@@ -738,80 +738,79 @@ info: 'Reflect.alive_1' depends on axioms: [propext,
 #guard_msgs in #print axioms alive_1
 
 def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
-  fail_if_success bv_automata3
+  fail_if_success bv_automata_circuit
   sorry
 
 def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
-  fail_if_success bv_automata3 -- can't decide things for fixed bitwidth.
+  fail_if_success bv_automata_circuit -- can't decide things for fixed bitwidth.
   sorry
 
 
 
 def test0 {w : Nat} (x y : BitVec w) : x + 0#w = x := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test_simple2 {w : Nat} (x y : BitVec w) : x = x := by
-  bv_automata3
+  bv_automata_circuit
 
 def test1 {w : Nat} (x y : BitVec w) : (x ||| y) - (x ^^^ y) = x &&& y := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test4 (x y : BitVec w) : (x + -y) = (x - y) := by
-  bv_automata3
+  bv_automata_circuit
 
 def test5 (x y z : BitVec w) : (x + y + z) = (z + y + x) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test6 (x y z : BitVec w) : (x + (y + z)) = (x + y + z) := by
-  bv_automata3
+  bv_automata_circuit
 
 def test11 (x y : BitVec w) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test15 (x y : BitVec w) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test17 (x y : BitVec w) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test18 (x y : BitVec w) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test19 (x y : BitVec w) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
-  bv_automata3
+  bv_automata_circuit
 
 
 def test21 (x y : BitVec w) : (~~~(x - y)) = (~~~x + y) := by
-  bv_automata3
+  bv_automata_circuit
 
-def test23 (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
-  bv_automata3
+def test2_circuit (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
+  bv_automata_circuit
 
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
-  bv_automata3
+  bv_automata_circuit
 
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
-  bv_automata3
+  bv_automata_circuit
 
 def test26 {w : Nat} (x y : BitVec w) : 1#w + x + 0#w = 1#w + x := by
-  bv_automata3
+  bv_automata_circuit
 
 /-- NOTE: this fails since we don't support literals yet! -/
 def test27 (x y : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
-  fail_if_success bv_automata3
+  fail_if_success bv_automata_circuit
   sorry
 
 def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
-  bv_automata3
+  bv_automata_circuit
 
 end BvAutomataTests
 
 end Reflect
-
