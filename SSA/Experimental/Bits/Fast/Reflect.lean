@@ -717,5 +717,101 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
   intros a b
   bv_reflect
 
+
+section BvAutomataTests
+
+/-!
+# Test Cases
+-/
+
+def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
+  bv_automata3
+
+/--
+info: 'Reflect.alive_1' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms alive_1
+
+def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
+  fail_if_success bv_automata3
+  sorry
+
+def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
+  fail_if_success bv_automata3 -- can't decide things for fixed bitwidth.
+  sorry
+
+
+
+def test0 {w : Nat} (x y : BitVec w) : x + 0#w = x := by
+  bv_automata3
+
+
+def test_simple2 {w : Nat} (x y : BitVec w) : x = x := by
+  bv_automata3
+
+def test1 {w : Nat} (x y : BitVec w) : (x ||| y) - (x ^^^ y) = x &&& y := by
+  bv_automata3
+
+
+def test4 (x y : BitVec w) : (x + -y) = (x - y) := by
+  bv_automata3
+
+def test5 (x y z : BitVec w) : (x + y + z) = (z + y + x) := by
+  bv_automata3
+
+
+def test6 (x y z : BitVec w) : (x + (y + z)) = (x + y + z) := by
+  bv_automata3
+
+def test11 (x y : BitVec w) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
+  bv_automata3
+
+
+def test15 (x y : BitVec w) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
+  bv_automata3
+
+
+def test17 (x y : BitVec w) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
+  bv_automata3
+
+
+def test18 (x y : BitVec w) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
+  bv_automata3
+
+
+def test19 (x y : BitVec w) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
+  bv_automata3
+
+
+def test21 (x y : BitVec w) : (~~~(x - y)) = (~~~x + y) := by
+  bv_automata3
+
+def test23 (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
+  bv_automata3
+
+def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
+  bv_automata3
+
+def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
+  bv_automata3
+
+def test26 {w : Nat} (x y : BitVec w) : 1#w + x + 0#w = 1#w + x := by
+  bv_automata3
+
+/-- NOTE: this fails since we don't support literals yet! -/
+def test27 (x y : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
+  fail_if_success bv_automata3
+  sorry
+
+def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
+  bv_automata3
+
+end BvAutomataTests
+
 end Reflect
 
