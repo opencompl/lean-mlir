@@ -81,36 +81,7 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
     m1.Sim M1 →
     m2.Sim M2 →
     (product final? m1 m2).Sim (NFA'.product (to_prop final?) M1 M2) := by
-  rintro ⟨f1, hsim1⟩ ⟨f2, hsim2⟩
   sorry
-  -- apply worklistRun_spec (m1.m.states × m2.m.states)
-  -- (corr := fun (s1, s2) => (f1 s1, f2 s2))
-  -- · rintro ⟨s1, s2⟩ ⟨s1', s2'⟩; simp; rintro heqs
-  --   injection heqs with h1 h2
-  --   apply hsim1.injective at h1; apply hsim2.injective at h2; simp_all
-  -- · rintro ⟨s1, s2⟩
-  --   simp [product.final, NFA'.product, NFA.product, to_prop, Set.instMembership, Set.Mem]; congr
-  --   · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim1.accept
-  --   · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim2.accept
-  -- · sorry
-  -- · sorry
-  -- · rintro ⟨s1, s2⟩ ⟨q1, q2⟩ a hin
-  --   simp [NFA.product] at hin
-  --   obtain ⟨hst1, hst2⟩ := hin
-  --   obtain ⟨s1', hf1, htr1⟩ := hsim1.trans_match₁ s1 a q1 hst1 (by simp) (by simp)
-  --   obtain ⟨s2', hf2, htr2⟩ := hsim2.trans_match₁ s2 a q2 hst2 (by simp) (by simp)
-  --   use ⟨s1', s2'⟩; simp_all [product.f]
-  --   sorry
-  -- · rintro ⟨s1, s2⟩ a ⟨s1', s2'⟩ hinf
-  --   dsimp only [NFA'.product, NFA.product]
-  --   simp [to_prop, Set.instMembership, Set.Mem]
-  --   suffices h : s1'.val ∈ m1.m.trans.getD (s1, a) ∅ ∧ s2'.val ∈ m2.m.trans.getD (s2, a) ∅ by
-  --     rcases h with ⟨h1, h2⟩
-  --     obtain ⟨h1, hin1⟩ := hsim1.trans_match₂ _ _ _ h1
-  --     obtain ⟨h2, hin2⟩ := hsim2.trans_match₂ _ _ _ h2
-  --     aesop
-  --   sorry
-  -- · sorry
 
 def CNFA.inter_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
@@ -170,42 +141,12 @@ def CNFA.determinize (m : CNFA n) : CNFA n :=
 def NFA'.determinize_spec_nonemp (m : CNFA n)  [Nonempty m.m.states]
   {M : NFA' n} (hsim : m.Sim M) :
     m.determinize.Sim M.determinize := by
-  rcases hsim with ⟨fsim, hsim⟩
-  unfold CNFA.determinize
-  apply worklistRun_spec (BitVec m.m.stateMax)
-    (corr := λ ss q => let i := Function.invFun fsim q; ss[i.val] == true)
-    (M := M.determinize)
-  · intros ss1 ss2; simp; intros heq; ext i
-    rw [funext_iff] at heq
-    specialize heq (fsim ⟨i.val, by simp [RawCNFA.states]⟩)
-    rw [Function.leftInverse_invFun hsim.injective] at heq
-    simp at heq; exact heq
-  · sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
+  sorry
 
 def NFA'.determinize_spec_emp (m : CNFA n) (hemp : m.m.stateMax = 0)
   {M : NFA' n} (hsim : m.Sim M) :
     m.determinize.Sim M.determinize := by
-  rcases hsim with ⟨fsim, hsim⟩
-  unfold CNFA.determinize
-  apply worklistRun_spec (BitVec m.m.stateMax)
-    (corr := λ ss _ => True)
-    (M := M.determinize)
-  · rw [hemp]; intros ss1 ss2 _; apply BitVec.eq_of_getMsbD_eq; simp
-  · rw [hemp]; rintro ⟨⟨x⟩⟩
-    obtain rfl : x = 0 := by omega
-    simp [BitVec.any, NFA'.determinize, NFA.toDFA]
-    intros q _ ha
-    sorry -- need to prove that f is surjective?
-  · sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
+  sorry
 
 def NFA'.determinize_spec (m : CNFA n)
   {M : NFA' n} (hsim : m.Sim M) :
