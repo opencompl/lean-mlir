@@ -294,7 +294,8 @@ macro "bv_bench": tactic =>
             "simp" : (simp; done),
             "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
-            "bv_auto" : (bv_auto; done)
+            "bv_auto" : (bv_auto; done),
+            "bv_automata_circuit" : (bv_automata3; done)
           ]
           try bv_auto
           try sorry
