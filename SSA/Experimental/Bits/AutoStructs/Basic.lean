@@ -534,7 +534,7 @@ lemma worklistRun'_init_wf inits hinits final? :
       rintro sa hin rfl; simp_all
       rw [Array.mem_take_iff_getElem?] at hin
       rcases hin with ⟨k, hki, hk⟩
-      simp [←Array.getElem?_eq_getElem i.isLt] at hk
+      simp only [←Array.getElem?_eq_getElem i.isLt] at hk
       apply Array.nodup_iff_getElem?_ne_getElem?.mp hinits at hk; trivial; assumption; exact i.isLt
     have hsts : m2.states = m.states ∪ {m.stateMax} := by
       simp [m2, m1]; split; simp; rw [states_addInitial]; simp
@@ -1288,7 +1288,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv' ∅ st) :
               simp_all}}
           { apply hsim.trans_match₂ } }
         { intros k st; apply processOneElem_spec A S final f M corr (st := st) corr_inj final_corr hf₂ s sa k
-          simp; exact Array.getElem?_lt (f sa) k.isLt }
+          simp}
       next hnone =>
         have hnin : sa ∉ st.map := by
           intros hin
@@ -1374,7 +1374,7 @@ end worklist_good
 
   Possible improvements for performance:
   0. Implement language equality directly instead of encoding it
-  1. change the representation, eg. transitions as
+  1. change the representation, eg. transitions ass
         Array (Array (A × State))
   as in LASH, or with BDD as in MONA
   2. Use the interleaving technique to reduce the number of transitions:
