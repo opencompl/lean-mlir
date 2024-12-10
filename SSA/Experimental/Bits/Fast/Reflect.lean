@@ -64,9 +64,9 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
   | .land  p q => p.denote w vars ∧ q.denote w vars
   | .lor  p q => p.denote w vars ∨ q.denote w vars
-  | .sle  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
-  | .slt  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
-  | .ule  t₁ t₂ => (t₁.denote w vars) ≤ (t₂.denote w vars)
+  | .sle  t₁ t₂ => (((t₁.denote w vars).sle (t₂.denote w vars)) = true)
+  | .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
+  | .ule  t₁ t₂ => ((t₁.denote w vars) ≤ (t₂.denote w vars))
   | .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
 
 /--
@@ -645,6 +645,11 @@ example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
 example (w : Nat) (a b : BitVec w) : (1#w = 0#w) ∨ ((a - b).slt 0 → a.slt b) := by
   bv_automata3
 
+
+/-- Tricohotomy of slt. Currently fails! -/
+example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.sle a) := by
+  bv_automata3
+  -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
