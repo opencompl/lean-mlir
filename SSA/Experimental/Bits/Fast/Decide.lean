@@ -4,12 +4,27 @@ import SSA.Experimental.Bits.Fast.Lemmas
 instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
   decidable_of_iff
     (decideIfZeros (termEvalEqFSM (t₁.xor t₂)).toFSM) $ by
-  rw [decideIfZeros_correct,
-    ← (termEvalEqFSM (t₁.xor t₂)).good]
+  rw [decideIfZeros_correct, ← (termEvalEqFSM (t₁.xor t₂)).good]
   simp only [eval_eq_iff_xor_eq_zero]
   rw [forall_swap]
   simp only [← funext_iff]
 
+instance (p : Predicate) : 
+    Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
+  decidable_of_iff
+    (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
+  rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
+
+/--
+We can decide that the evaluation of a predicate is forever false,
+which is to say, that it is true for all bitwidths.
+-/
+instance (p : Predicate) :
+    Decidable (∀ (n : ℕ) (x : List BitStream) , p.eval x n = false) :=
+  decidable_of_iff
+    (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
+  rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
+  constructor <;> sorry
 
 open Term
 
@@ -19,7 +34,6 @@ def run_decide (t₁ t₂ : Term) : IO Bool := do
 def decide (t₁ t₂ : Term) : IO Bool :=
   --timeit "" (run_decide t₁ t₂)
   (run_decide t₁ t₂)
-
 
 section testDecide
 
@@ -139,4 +153,5 @@ info: 'decide' depends on axioms: [propext, sorryAx, Classical.choice, Quot.soun
 
 /-- info: true -/
 #guard_msgs in #eval! decide (and x y) (or (not x) y - not x)
+
 end testDecide

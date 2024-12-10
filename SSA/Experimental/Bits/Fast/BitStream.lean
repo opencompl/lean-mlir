@@ -59,6 +59,9 @@ We have a decision procedure which operates on BitStream operations, but we'd li
 
 def BitStream : Type := Nat → Bool
 
+instance : Inhabited BitStream where
+  default := fun _ => false
+
 namespace BitStream
 
 /-! # Preliminaries -/
@@ -82,8 +85,25 @@ abbrev map (f : Bool → Bool) : BitStream → BitStream :=
 abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStream :=
   fun x y i => f (x i) (y i)
 
+/--
+Fold with intermediate steps also available as a bitstream.
+(scanl init op s)[0] = op s[0] init
+(scanl init op s)[i+1] = op (scanl init op s)[i] s[i+1]
+-/
+abbrev scanl (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : BitStream :=
+  fun n => match n with
+    | 0 => f init (s 0)
+    | n+1 => f (scanl init f s n) (s (n + 1)) 
+
+@[simp]
+theorem scanl_zero (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : scanl init f s 0 = f init (s 0) := rfl
+
+@[simp]
+theorem scanl_succ (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : scanl init f s (n+1) = f (scanl init f s n) (s (n+1)) := rfl
+
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
+
 
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
@@ -179,6 +199,8 @@ def printPrefix (x : BitStream) : Nat → String
     let t := x.tail.printPrefix n
     t ++ h
 
+
+
 section Lemmas
 
 @[simp] theorem toBitVec_ofBitVec (x : BitVec w) (w' : Nat) :
@@ -215,6 +237,12 @@ instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
 instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
 
+/--
+Return a stream of pointwise equality of booleans.
+This is the same as ~(a⊕b), and thus we call it `not xor`.
+-/
+def nxor (a b : BitStream) : BitStream := fun i => a i == b i
+
 section Lemmas
 variable {w : Nat}
 
@@ -223,6 +251,7 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem and_eq : (x &&& y) i = (x i && y i)      := rfl
 @[simp] theorem  or_eq : (x ||| y) i = (x i || y i)      := rfl
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
+@[simp] theorem nxor_eq : (x.nxor y) i = (x i == y i) := rfl
 variable (x y : BitVec (w+1))
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
@@ -255,6 +284,119 @@ end Lemmas
 
 end BitwiseOps
 
+section Scan
+
+/-- Scan the bitwise or operation on bitstreams -/
+def scanOr (s : BitStream) : BitStream := scanl false Bool.or s
+
+
+@[simp]
+theorem scanOr_zero (s : BitStream) : scanOr s 0 = s 0 := rfl
+
+@[simp]
+theorem scanOr_succ (s : BitStream) : scanOr s (n+1) = ((s.scanOr n) || s (n + 1)) := rfl
+
+/-- ScanOr is an idempotent operation -/
+@[simp]
+theorem scanOr_idem (s : BitStream) : s.scanOr.scanOr = s.scanOr := by
+  ext n
+  simp [scanOr]
+  induction n
+  case zero => simp
+  case succ n ih => simp [ih]
+
+/-- The result of `scanOr` is false at inde `i` if the bitstream has been false upto (and including) time `n`. -/
+theorem scanOr_false_iff (s : BitStream) (n : Nat) : s.scanOr n = false ↔ ∀ (i : Nat), (hi : i ≤ n) → s i = false := by
+  induction n
+  · simp
+  case succ n ih =>
+    simp only [scanOr_succ, Bool.or_eq_false_iff]
+    constructor
+    · intros h i hi
+      have hi' : i = n + 1 ∨ i < n + 1 := by omega
+      rcases hi' with rfl | hi'
+      · simp [h]
+      · apply ih.mp
+        · simp [h]
+        · omega
+    · intros h
+      constructor
+      · apply ih.mpr
+        intros i hi
+        exact h _ (by omega)
+      · apply h _ (by omega)
+
+
+/-- The result of `scanOr` is true at index `i` if the bitstream has been true at some index `i ≤ n`. -/
+theorem scanOr_true_iff (s : BitStream) (n : Nat)
+    : s.scanOr n = true ↔ ∃ (i : Nat), (i ≤ n) ∧ s i = true := by
+  constructor
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanOr_false_iff _ _).mpr (by assumption)
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanOr_false_iff _ _).mp (by assumption)
+
+/--
+(scan s)[0] = s[0]
+(scan s)[i+1] = (scan s)[i] && s[i+1]
+-/
+def scanAnd (s : BitStream) : BitStream := scanl true Bool.and s
+
+
+@[simp] theorem scanAnd_zero (s : BitStream) : scanAnd s 0 = s 0 := rfl
+
+@[simp] theorem scanAnd_succ (s : BitStream) : scanAnd s (n+1) = ((s.scanAnd n) && s (n + 1)) := rfl
+
+/-- ScanAnd is an idempotent operation. -/
+@[simp]
+theorem scanAnd_idem (s : BitStream) : s.scanAnd.scanAnd = s.scanAnd := by
+  ext n
+  simp [scanAnd]
+  induction n
+  case zero => simp
+  case succ n ih => simp [ih]
+
+/-- The result of `scanAnd` is true at index `i` if the bitstream has been true upto (and including) time `n`. -/
+theorem scanAnd_true_iff (s : BitStream) (n : Nat) :
+    s.scanAnd n = true ↔ ∀ (i : Nat), (hi : i ≤ n) → s i = true := by
+  induction n
+  · simp
+  case succ n ih =>
+    simp only [scanAnd_succ, Bool.and_eq_true]
+    constructor
+    · intros h i hi
+      have hi' : i = n + 1 ∨ i < n + 1 := by omega
+      rcases hi' with rfl | hi'
+      · simp [h]
+      · apply ih.mp
+        · simp [h]
+        · omega
+    · intros h
+      constructor
+      · apply ih.mpr
+        intros i hi
+        exact h _ (by omega)
+      · apply h _ (by omega)
+
+/-- The result of `scanAnd` is true at index `i` if the bitstream has been true upto (and including) time `n`. -/
+theorem scanAnd_false_iff (s : BitStream) (n : Nat)
+    : s.scanAnd n = false ↔ ∃ (i : Nat), (i ≤ n) ∧ s i = false := by
+  constructor
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanAnd_true_iff _ _).mpr (by assumption)
+  · intros h
+    contrapose h
+    simp_all
+    apply (scanAnd_true_iff _ _).mp (by assumption)
+
+end Scan
+
 /-! # Addition, Subtraction, Negation -/
 section Arith
 
@@ -278,12 +420,18 @@ def subAux (x y : BitStream) : Nat → Bool × Bool
 def sub (x y : BitStream) : BitStream :=
   fun n => (subAux x y n).1
 
+
+/-- The stream of borrow bits from the subtraction -/
+def borrow (x y : BitStream) : BitStream := 
+  fun n => (subAux x y n).2
+
 def negAux (x : BitStream) : Nat → Bool × Bool
   | 0 => (x 0, !(x 0))
   | n+1 =>
     let borrow := (negAux x n).2
     let a := x (n + 1)
     (xor (!a) borrow, !a && borrow)
+
 
 def neg (x : BitStream) : BitStream :=
   fun n => (negAux x n).1
