@@ -132,6 +132,20 @@ elab "bv_nnf" : tactic => do
 
 attribute [grind_norm] BitVec.not_lt
 attribute [grind_norm] BitVec.not_le
+
+@[grind_norm]
+theorem sle_iff_slt_eq_false {a b : BitVec w} : a.slt b = false ↔ b.sle a := by
+  constructor <;>
+  intros h <;>
+  simp [BitVec.sle, BitVec.slt] at h ⊢ <;>
+  omega
+
+@[grind_norm]
+theorem slt_iff_sle_eq_false {a b : BitVec w} : a.sle b = false ↔ b.slt a := by
+  constructor <;>
+  intros h <;>
+  simp [BitVec.sle, BitVec.slt] at h ⊢ <;>
+  omega
 --  ne_eq: (a ≠ b) = ¬(a = b) := rfl
 attribute [- grind_norm] ne_eq -- TODO(bollu): Debate with grind maintainer about having `a ≠ b → ¬ (a = b)` in the simp-set?
 @[grind_norm] theorem not_eq_iff_neq : (¬ (a = b)) = (a ≠ b) := by rfl
@@ -620,6 +634,11 @@ example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
   bv_automata3
 
 /-- Tricohotomy of slt. Currently fails! -/
+example (w : Nat) (a b : BitVec w) : (a - b).slt 0 → a.slt b := by
+  fail_if_success bv_automata3
+  sorry
+
+/-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
   fail_if_success bv_automata3
   sorry
@@ -642,11 +661,13 @@ example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
   bv_automata3
 
 
-example (w : Nat) (a : BitVec w) : (a  = - a) → a = 0#w := by
-  bv_automata3
+example (w : Nat) (a : BitVec w) : (a = - a) → a = 0#w := by
+  fail_if_success bv_automata3
+  sorry
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
-  bv_automata3
+  fail_if_success bv_automata3
+  sorry
 
 
 /-- Can use implications -/

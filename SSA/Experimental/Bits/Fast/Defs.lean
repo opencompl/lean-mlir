@@ -40,13 +40,10 @@ inductive Term : Type
 | incr : Term → Term
 /-- Decrement (i.e., subtract one) -/
 | decr : Term → Term
-/- `repeatBit` is an operation that will repeat the infinitely repeat the
-least significant `true` bit of the input.
-
-That is `repeatBit t` is all-zeroes iff `t` is all-zeroes.
-Otherwise, there is some number `k` s.t. `repeatBit t` is all-ones after
-dropping the least significant `k` bits  -/
--- | repeatBit : Term → Term
+-- | shiftL : Term → Nat → Term : shift left by `k` bits.
+-- | lshiftR : Term → Nat → Term : logical shift right by `k` bits.
+-- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
+--   hence, I don't anticipate us implementing it.
 
 open Term
 
@@ -237,7 +234,7 @@ def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   | slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
   | sle t₁ t₂ => Predicate.evalLor 
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
-       (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
+       (Predicate.evalSlt (t₁.eval vars) (t₂.eval vars))
 
 @[simp]
 theorem Bool.xor_false_iff_eq : ∀ (a b : Bool), (a ^^ b) = false ↔ a = b := by decide
