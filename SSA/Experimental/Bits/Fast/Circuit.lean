@@ -21,6 +21,7 @@ inductive Circuit (α : Type u) : Type u
 deriving Repr
 
 namespace Circuit
+
 variable {α : Type u} {β : Type v}
 
 def vars [DecidableEq α] : Circuit α → List α
@@ -758,5 +759,9 @@ lemma always_true_iff [DecidableEq α] (c : Circuit α) :
 instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit α → Prop) :=
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
     by simp [always_true_iff, le_def, or_iff_not_imp_left]
+
+/-- Negate the value of the circuit -/
+def not {α : Type u} (c : Circuit α) : Circuit α := 
+  .xor .tru c
 
 end Circuit

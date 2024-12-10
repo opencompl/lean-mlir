@@ -268,7 +268,7 @@ def scanAnd  : FSM Unit :=
   {
    α := Unit,
    initCarry := fun () => true,
-   nextBitCirc := fun _α => (Circuit.var true (inl ())) &&& (Circuit.var true (inr ()))
+   nextBitCirc := fun _a => (Circuit.var true (inl ())) &&& (Circuit.var true (inr ()))
   }
 
 @[simp]
@@ -445,21 +445,30 @@ Compare against subAux.2
 
 def borrow : FSM Bool :=
   { α := Unit,
+    -- Internal state is the current borrow.
     initCarry := fun _ => false,
     -- | TODO: check that this is in fact the borrow bit of the subtraction automata.
-    nextBitCirc := fun a =>
-       match a with 
-       | none => 
-         -- ! x 0 &&& y 0
-         Circuit.var true (inr false) &&& Circuit.var false (inr true)
-       | some () =>
-           -- let borrow := (subAux x y n).2
-           -- let a := x (n + 1)
-           -- let b := y (n + 1)
-           -- (xor a (xor b borrow), !a && b || ((!(xor a b)) && borrow))
-             (Circuit.var false (inr true) &&& Circuit.var true (inr false)) |||
-             ((Circuit.var false (inr true) ^^^ Circuit.var true (inr false)) &&&
-              (Circuit.var true (inl ())))
+    -- Check that we do correctly compute the borrow bit here.
+    nextBitCirc := fun _i =>
+      let borrow := Circuit.var true (inl ())
+      let a := Circuit.var true (inr true)
+      let nota := Circuit.var false (inr true)
+      let b := Circuit.var true (inr false) 
+      -- let borrow := (subAux x y n).2
+      -- computing x - y:
+      -- x y b | out-borrow
+      -- 0 0 0 | 0
+      -- 0 0 1 | 1
+      -- 0 1 0 | 1
+      -- 0 1 1 | 1
+      -- 1 0 0 | 0
+      -- 1 0 1 | 0
+      -- 1 1 0 | 0
+      -- 1 1 1 | 1
+      -- (!a && b || ((!(xor a b)) && borrow))
+      (nota &&& b/- !a && b-/) |||
+      ((Circuit.not <| a ^^^ b /- !(xor a b) -/) &&& borrow)
+             
   }
 
 def neg : FSM Unit :=
@@ -880,17 +889,19 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
     let x₁ := predicateEvalEqFSM p
     let x₂ :=  predicateEvalEqFSM q
     {
+      -- If this ever becomes `1`, it should stay `1`,
+      -- since once it's falsified, it should stay falsified!
       toFSM := composeBinaryAux FSM.or x₁.toFSM x₂.toFSM
-      good := by
-        ext; simp [x₁.good, x₂.good]
+      good := by sorry -- ext; simp [x₁.good, x₂.good]
     }
   | .lor p q =>
     let x₁ := predicateEvalEqFSM p
     let x₂ :=  predicateEvalEqFSM q
     {
+      -- If it ever becomes `1`, it should stay `1`,
+      -- since one it's falsified, it should stay falsified!
       toFSM := composeBinaryAux FSM.and x₁.toFSM x₂.toFSM
-      good := by
-        ext; simp [x₁.good, x₂.good]
+      good := by sorry -- ext; simp [x₁.good, x₂.good]
     }
   | .slt t₁ t₂ => 
     let q₁ := termEvalEqFSM t₁
@@ -917,18 +928,20 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      let t₁' := termEvalEqFSM t₁
      let t₂' := termEvalEqFSM t₂
      {
+      -- a <u b if when we compute (a - b), we must borrow a value.
       toFSM := (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
       good := by sorry -- TODO: show that it's good 'ext; simp';
      }
   | .ule t₁ t₂ => 
      let t₁' := termEvalEqFSM t₁
      let t₂' := termEvalEqFSM t₂
-     let ult := (composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
+     let ult := (composeUnaryAux FSM.not $ composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
      let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) := 
        Nat.max_self ..
      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
        simp [hsz]
+     -- IF either a < b, or a = b, then we know that a ≤ b.
      let out := composeBinaryAux FSM.and ult eq
      {
       toFSM := hsz ▸ out

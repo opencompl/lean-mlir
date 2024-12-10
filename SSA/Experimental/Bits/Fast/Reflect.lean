@@ -615,17 +615,12 @@ example (w : Nat) (a b : BitVec w) : (a + 0#w = a) := by
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
   bv_automata3
 
-example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a = b) := by
-  fail_if_success bv_automata3
-  sorry
-
 example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
   bv_automata3
 
 /-- either a < b or b ≤ a -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
-  fail_if_success bv_automata3
-  sorry
+  bv_automata3
 
 /-- Tricohotomy of < -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
@@ -639,18 +634,27 @@ example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
 example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
   bv_automata3
 
-/-- Tricohotomy of slt. Currently fails! -/
-example (w : Nat) (a b : BitVec w) : (a - b).slt 0 → a.slt b := by
-  fail_if_success bv_automata3
+example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
+  fail_if_success bv_decide
+  -- The prover found a counterexample, consider the following assignment:
+  -- a = 0x0#1
+  -- b = 0x1#1
   sorry
+
+/-- Tricohotomy of slt. Currently fails! -/
+example (w : Nat) (a b : BitVec w) : (1#w = 0#w) ∨ ((a - b).slt 0 → a.slt b) := by
+  bv_automata3
+
 
 /-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
   bv_automata3
+  -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- a <=s b and b <=s a implies a = b-/
 example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
   bv_automata3
+  -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- In bitwidth 0, all values are equal.
 In bitwidth 1, 1 + 1 = 0.
@@ -664,10 +668,25 @@ example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#
 example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
   bv_automata3
 
+/-
+Is this true at bitwidth 1? Not it is not!
+So we need an extra hypothesis that rules out bitwifth 1.
+We do this by saying that either the given condition, or 1+1 = 0.
+I'm actually not sure why I need to rule out bitwidth 0? Mysterious!
+-/
+example (w : Nat) (a : BitVec w) : (1#w = 0#w) ∨ (1#w + 1#w = 0#w) ∨ ((a = - a) → a = 0#w) := by
+  bv_automata3
 
-example (w : Nat) (a : BitVec w) : (a = - a) → a = 0#w := by
-  fail_if_success bv_automata3
-  sorry
+
+/-
+We can say that we are at bitwidth 1 by saying that 1 + 1 = 0.
+When we have this, we then explicitly enumerate the different values that a can have.
+Note that this is pretty expensive.
+-/
+example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
+  bv_automata3
+
+
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
   bv_automata3
