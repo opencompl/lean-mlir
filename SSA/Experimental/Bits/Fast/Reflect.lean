@@ -64,8 +64,8 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
   | .land  p q => p.denote w vars ∧ q.denote w vars
   | .lor  p q => p.denote w vars ∨ q.denote w vars
-  | .sle  t₁ t₂ => (t₁.denote w vars).slt (t₂.denote w vars)
-  | .slt  t₁ t₂ => (t₁.denote w vars).sle (t₂.denote w vars)
+  | .sle  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
+  | .slt  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
   | .ule  t₁ t₂ => (t₁.denote w vars) ≤ (t₂.denote w vars)
   | .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
 
@@ -130,17 +130,19 @@ elab "bv_nnf" : tactic => do
       -- let g ← g.revertAll
       return [g]
 
--- attribute [grind_norm] BitVec.not_lt
--- attribute [grind_norm] BitVec.not_le
+attribute [grind_norm] BitVec.not_lt
+attribute [grind_norm] BitVec.not_le
 --  ne_eq: (a ≠ b) = ¬(a = b) := rfl
 attribute [- grind_norm] ne_eq -- TODO(bollu): Debate with grind maintainer about having `a ≠ b → ¬ (a = b)` in the simp-set?
 @[grind_norm] theorem not_eq_iff_neq : (¬ (a = b)) = (a ≠ b) := by rfl
 
 /--
+warning: 'ne_eq' does not have [simp] attribute
+---
 warning: declaration uses 'sorry'
 ---
 info: w : ℕ
-⊢ (∀ (x x_1 : BitVec w), ¬x < x_1) ∧ ∀ (x x_1 : BitVec w), ¬x_1 < x ∨ ¬x ≤ x_1 ∨ ¬x_1 < x ∨ x ≠ x_1
+⊢ (∀ (x x_1 : BitVec w), x_1 ≤ x) ∧ ∀ (x x_1 : BitVec w), x ≤ x_1 ∨ x_1 < x ∨ x ≤ x_1 ∨ x ≠ x_1
 -/
 #guard_msgs in example : ∀ (a b : BitVec w),  ¬ (a < b ∨ a > b ∧ a ≤ b ∧ a > b ∧ (¬ (a ≠ b))) := by
  bv_nnf; trace_state; sorry
@@ -249,11 +251,24 @@ info: ∀ {w : Nat} (a : BitVec w),
 
 /--
 info: ∀ {w : Nat} (a : BitVec w),
-  @Eq (BitVec w) (@Complement.complement (BitVec w) (@BitVec.instComplement w) a)
-    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+  @LT.lt (BitVec w) (@instLTBitVec w) a (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
-#check ∀ {w : Nat} (a : BitVec w),  ~~~ a  = 0#w
+#check ∀ {w : Nat} (a : BitVec w),  a  < 0#w
+
+/--
+info: ∀ {w : Nat} (a : BitVec w),
+  @LE.le (BitVec w) (@instLEBitVec w) a (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+-/
+#guard_msgs in set_option pp.explicit true in
+#check ∀ {w : Nat} (a : BitVec w),  a  ≤ 0#w
+
+/--
+info: ∀ {w : Nat} (a : BitVec w),
+  @Eq Bool (@BitVec.slt w a (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0)))) true : Prop
+-/
+#guard_msgs in set_option pp.explicit true in
+#check ∀ {w : Nat} (a : BitVec w),  a.slt 0#w
 
 
 def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM ReflectResult := do
@@ -343,15 +358,46 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResult := do
   match_expr e with
   | Eq α a b =>
-    let_expr BitVec w := α | throwError "expected equality of bitvectors"
-    let a ←  reflectTermUnchecked bvToIxMap w a
-    let b ← reflectTermUnchecked a.bvToIxMap w b
-    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
+    match_expr α with 
+    | BitVec w => 
+      let a ←  reflectTermUnchecked bvToIxMap w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
+    | Bool =>
+      -- Sadly, recall that slt, sle are of type 'BitVec w → BitVec w → Bool',
+      -- so we get goal states of them form 'a <ₛb = true'.
+      -- So we need to match on 'Eq _ true' where '_' is 'slt'.
+      -- This makes me unhappy too, but c'est la vie.
+      let_expr true := b 
+        | throwError "only boolean conditionals allowed are 'bv.slt bv = true', 'bv.sle bv = true'. Found {indentD e}."
+      match_expr a with
+      | BitVec.slt w a b => 
+        let a ← reflectTermUnchecked bvToIxMap w a
+        let b ← reflectTermUnchecked a.bvToIxMap w b
+        return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.slt) #[a.e, b.e] }
+      | BitVec.sle w a b => 
+        let a ← reflectTermUnchecked bvToIxMap w a
+        let b ← reflectTermUnchecked a.bvToIxMap w b
+        return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.sle) #[a.e, b.e] }
+      | _ => 
+        throwError "unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+    | _ =>
+      throwError "unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
   | Ne α a b =>
-    let_expr BitVec w := α | throwError "expected disequality of bitvectors"
+    let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {e} when matching against 'Ne'"
     let a ← reflectTermUnchecked bvToIxMap w a
     let b ← reflectTermUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
+  | LT.lt α _inst a b =>
+    let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
+    let a ← reflectTermUnchecked bvToIxMap w a
+    let b ← reflectTermUnchecked a.bvToIxMap w b
+    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.ult) #[a.e, b.e] }
+  | LE.le α _inst a b =>
+    let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LE.le'"
+    let a ← reflectTermUnchecked bvToIxMap w a
+    let b ← reflectTermUnchecked a.bvToIxMap w b
+    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.ule) #[a.e, b.e] }
   | Or p q =>
     let p ← reflectPredicateAux bvToIxMap p
     let q ← reflectPredicateAux p.bvToIxMap q
@@ -559,6 +605,29 @@ example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a = b) := by
 
 example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
   bv_automata3
+
+/-- Tricohotomy of < -/
+example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
+  bv_automata3
+
+/-- < implies not equals -/
+example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
+  fail_if_success  bv_automata3
+  sorry
+
+/-- <= and >= implies equals -/
+example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
+  bv_automata3
+
+/-- Tricohotomy of slt. Currently fails! -/
+example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
+  fail_if_success bv_automata3
+  sorry
+
+/-- a <=s b and b <=s a implies a = b-/
+example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
+  fail_if_success bv_automata3
+  sorry
 
 /-- In bitwidth 0, all values are equal.
 In bitwidth 1, 1 + 1 = 0.
