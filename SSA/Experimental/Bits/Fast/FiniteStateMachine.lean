@@ -239,7 +239,7 @@ def xor : FSM Bool :=
 def nxor : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun a => 
+    nextBitCirc := fun a =>
      match a with
      | none =>
       -- x ⊕ y ⊕ T
@@ -258,10 +258,10 @@ def nxor : FSM Bool :=
 Scan a sequence of booleans with the bitwise and operator
 Thus:
 
+```lean
 (scanAnd)[0] = in[0] &&& True
 (scanAnd)[1] = in[1] &&& scanAnd[0]
 (scanAnd)[2] = in[2] &&& scanAnd[1]
-...
 ```
 -/
 def scanAnd  : FSM Unit :=
@@ -354,14 +354,14 @@ lemma eval_scanOr_succ (x : Unit → BitStream) (n : Nat) :
 /-- Show that the FSM and the bitstream computations agree for `scanOr`. -/
 @[simp] lemma eval_scanOr (x : Unit → BitStream) : scanOr.eval x = (x ()).scanOr := by
   ext n;
-  induction n 
+  induction n
   case zero => simp
   case succ n ih => simp [ih]
 
 /-- Show that the FSM and the bitstream computations agree for `scanOr`. -/
 @[simp] lemma eval_scanAnd (x : Unit → BitStream) : scanAnd.eval x = (x ()).scanAnd := by
   ext n;
-  induction n 
+  induction n
   case zero => simp
   case succ n ih => simp [ih]
 
@@ -453,7 +453,7 @@ def borrow : FSM Bool :=
       let borrow := Circuit.var true (inl ())
       let a := Circuit.var true (inr true)
       let nota := Circuit.var false (inr true)
-      let b := Circuit.var true (inr false) 
+      let b := Circuit.var true (inr false)
       -- let borrow := (subAux x y n).2
       -- computing x - y:
       -- x y b | out-borrow
@@ -468,7 +468,7 @@ def borrow : FSM Bool :=
       -- (!a && b || ((!(xor a b)) && borrow))
       (nota &&& b/- !a && b-/) |||
       ((Circuit.not <| a ^^^ b /- !(xor a b) -/) &&& borrow)
-             
+
   }
 
 def neg : FSM Unit :=
@@ -540,6 +540,9 @@ def negOne : FSM (Fin 0) :=
 @[simp] lemma eval_negOne (x : Fin 0 → BitStream) : negOne.eval x = BitStream.negOne := by
   ext; simp [negOne, eval, nextBit]
 
+/--
+An FSM whose first output is `b`, and later outputs are whatever the input is.
+-/
 def ls (b : Bool) : FSM Unit :=
   { α := Unit,
     initCarry := fun _ => b,
@@ -681,7 +684,7 @@ def composeUnary
     (q : FSMTermSolution t) :
     FSM (Fin t.arity) := composeUnaryAux p q.toFSM
 
-def composeBinaryAux 
+def composeBinaryAux
     (p : FSM Bool)
     (q₁ : FSM (Fin a₁))
     (q₂ : FSM (Fin a₂)) :
@@ -746,6 +749,162 @@ instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
     Fintype (cond b α β) := by
   cases b <;> simp <;> infer_instance
 
+
+namespace FSM
+
+/--
+A finite state machine whose outputs are the bits of the natural number `n`,
+in least to most significant bit order.
+
+See that this uses only as much as as *log₂ n*, which is the correct
+number of bits necessary to count up to `n`.
+-/
+def ofNat (n : Nat)  : FSM (Fin 0) :=
+  match hn : n with
+  | 0 => FSM.zero
+  | n' + 1 =>
+    let bit := n.testBit 0
+    let m := n / 2
+    have h : m < n := by
+      simp [m];
+      apply Nat.div_lt_iff_lt_mul _ |>.mpr
+      · omega
+      · decide
+    composeUnaryAux (FSM.ls bit) (ofNat m)
+
+@[simp]
+theorem const_zero : ofNat 0 = FSM.zero :=
+  by simp [ofNat]
+
+/-- Evaluating 'const n' gives us the bits of the value of 'const n'.-/
+@[simp]
+theorem eval_const (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (ofNat n).eval env i = n.testBit i := by
+  induction n using Nat.div2Induction generalizing i
+  case ind n hn =>
+    rcases n with rfl | hn
+    case zero => simp
+    case succ n =>
+      simp [ofNat]
+      have : n + 1 > 0 := by omega
+      specialize (hn this)
+      cases i
+      · case zero => simp
+      · case succ i' =>
+        simp [hn, Nat.testBit_succ]
+
+/--
+Build an FSM whose state is `true` at step `n`,
+and `false` everywhere else.
+-/
+def trueOnlyAt (n : Nat) : FSM (Fin 0) := ofNat (1 <<< n)
+
+/- `Nat.testBit 1 i = false` if and only if `i` is nonzero. -/
+@[simp]
+private theorem _root_.Nat.testBit_one_eq_false_iff (i : Nat) :
+    Nat.testBit 1 i = false ↔ i ≠ 0 := by
+  constructor
+  · simp only [ne_eq]
+    by_cases hi : i = 0 <;> simp [hi]
+  · intros h
+    rw [Nat.testBit, Nat.shiftRight_eq_div_pow]
+    have : 2^i ≥ 2 := by
+      exact Nat.le_self_pow h 2
+    simp only [Nat.one_and_eq_mod_two, Nat.mod_two_bne_zero, beq_eq_false_iff_ne,
+      ne_eq, Nat.mod_two_not_eq_one]
+    rw [Nat.mod_eq_of_lt]
+    · apply Nat.div_eq_zero_iff _ |>.mpr <;> omega
+    · apply Nat.div_lt_of_lt_mul
+      omega
+
+/--
+`falseOnlyAt n` builds an FSM that is `false` at state `n` and
+`true` everywhere else. This is useful to build a predicate that
+checks if we are in the `n`th state.
+-/
+@[simp]
+theorem eval_trueOnlyAt (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (trueOnlyAt n).eval env i = decide (i = n) := by
+  simp [trueOnlyAt]
+  by_cases hn : i = n
+  · simp [hn]
+  · simp [hn]
+    omega
+
+/--
+Build an FSM whose state is `false` at step `n`,
+and `true` everywhere else.
+-/
+def falseOnlyAt (n : Nat) : FSM (Fin 0) :=
+  composeUnaryAux FSM.not (trueOnlyAt n)
+
+/--
+`falseOnlyAt n` builds an FSM that is `false` at state `n` and
+`true` everywhere else. This is useful to build a predicate that
+checks if we are in the `n`th state.
+-/
+@[simp] theorem eval_falseOnlyAt (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseOnlyAt n).eval env i = !decide (i = n) := by simp [falseOnlyAt]
+
+/--
+Build an FSM whose value is 'true' for states [0, 1, ... n),
+and 'false' after.
+-/
+def trueUptoExcluding (n : Nat) : FSM (Fin 0) :=
+  ofNat (BitVec.allOnes n).toNat
+@[simp] theorem eval_trueUptoExcluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (trueUptoExcluding n).eval env i = decide (i < n) := by simp [trueUptoExcluding]
+
+def falseAfterIncluding (n : Nat) : FSM (Fin 0) := trueUptoExcluding n
+private theorem falseAfterIncluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
+  (falseAfterIncluding n).eval env i = false ↔ i ≥ n := by simp [falseAfterIncluding];
+
+/--
+Build an FSM whose value is 'true' for states [0, 1, ... n] (including the endpoint),
+and 'false' after.
+-/
+def trueUptoIncluding (n : Nat) : FSM (Fin 0) := ofNat (BitVec.allOnes (n+1)).toNat
+@[simp] theorem eval_trueUptoIncluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (trueUptoIncluding n).eval env i = decide (i ≤ n) := by
+  simp [trueUptoIncluding]; omega
+def falseAfterExcluding (n : Nat) : FSM (Fin 0) := trueUptoIncluding n
+private theorem falseAfterExcluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
+  (falseAfterExcluding n).eval env i = false ↔ i > n := by simp [falseAfterExcluding]
+
+/--
+Build an FSM whose value is and 'false' for the first [0, 1, ... n), and 'true' for [n, n + 1, ...).
+-/
+def falseUptoExcluding (n : Nat) : FSM (Fin 0) := composeUnaryAux FSM.not (FSM.trueUptoExcluding n)
+@[simp] theorem eval_falseUptoExcluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseUptoExcluding n).eval env i = decide (n ≤ i) := by
+  simp [falseUptoExcluding];
+  by_cases hi : i < n <;> (simp [hi]; try omega)
+/--
+Psychological theorem to see that 'i < n'
+if and only if 'falseUptoExcluding' evaluates to 'false
+-/
+private theorem falseUptoExcluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    ((falseUptoExcluding n).eval env i = false) ↔ i < n := by simp;
+
+/--
+Build an FSM whose value is false' for the first [0, 1, ... n],
+and 'true' for (n, n + 1, ...) (excluding the startpoint)
+-/
+def falseUptoIncluding (n : Nat) : FSM (Fin 0) :=
+  composeUnaryAux FSM.not (FSM.trueUptoIncluding n)
+@[simp] theorem eval_falseUptoIncluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseUptoIncluding n).eval env i = decide (n < i) := by
+  simp [falseUptoIncluding];
+  by_cases hi : n < i <;> (simp [hi]; try omega)
+/--
+Psychological theorem to see that 'i ≤ n'
+if and only if 'falseUptoExcluding' evaluates to 'false
+-/
+private theorem falseUptoIncluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    ((falseUptoIncluding n).eval env i = false) ↔ i ≤ n := by simp
+
+end FSM
+
 open Term
 
 /--
@@ -753,6 +912,9 @@ open Term
 Note that **this is the value that is run by decide**.
 -/
 def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
+  | ofNat n =>
+    { toFSM := FSM.ofNat n,
+      good := by ext; simp [Term.evalFin] }
   | var n =>
     { toFSM := FSM.var n,
       good := by ext; simp [Term.evalFin] }
@@ -857,10 +1019,10 @@ def or : FSM Bool :=
                 Circuit.var true (inr false)
                 }
 
-
 /-- An `FSMPredicateSolution `t` is an FSM with a witness that the FSM evaluates to the same value as `t` does -/
 structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
   ( good : p.evalFin = toFSM.eval )
+
 
 
 /-- Evaluating the eq predicate equals the FSM value.
@@ -868,85 +1030,115 @@ structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
 Note that **this is the value that is run by decide**.
 
 -/
-def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p 
- | .eq t₁ t₂ => 
-   let t₁' := termEvalEqFSM t₁
-   let t₂' := termEvalEqFSM t₂
-   {
-    toFSM := (composeBinary FSM.xor t₁' t₂')
-    good := by ext; simp;
-   }
- | .neq t₁ t₂ => 
-   let t₁' := termEvalEqFSM t₁
-   let t₂' := termEvalEqFSM t₂
-   {
-    -- If it ever becomes `0`, it should stay `0` forever, because once
-    -- two bitstreams become disequal, they stay disequal!
-    toFSM := composeUnaryAux FSM.scanAnd <| (composeBinary FSM.nxor t₁' t₂')
-    good := by sorry -- ext; simp;
-   }
-  | .land p q =>
-    let x₁ := predicateEvalEqFSM p
-    let x₂ :=  predicateEvalEqFSM q
+def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
+  | .widthEq n =>
     {
-      -- If this ever becomes `1`, it should stay `1`,
-      -- since once it's falsified, it should stay falsified!
-      toFSM := composeBinaryAux FSM.or x₁.toFSM x₂.toFSM
-      good := by sorry -- ext; simp [x₁.good, x₂.good]
+      toFSM := FSM.falseOnlyAt n
+      good := by sorry
     }
-  | .lor p q =>
-    let x₁ := predicateEvalEqFSM p
-    let x₂ :=  predicateEvalEqFSM q
+  | .widthNeq n =>
+     {
+      toFSM := FSM.trueOnlyAt n
+      good := by sorry
+     }
+  | .widthGe n =>
+     {
+      toFSM := FSM.falseAfterIncluding n
+      good := by sorry
+     }
+  | .widthGt n =>
+     {
+      toFSM := FSM.falseAfterExcluding n
+      good := by sorry
+     }
+  | .widthLt n =>
+     {
+      toFSM := FSM.falseUptoExcluding n
+      good := by sorry
+     }
+  | .widthLe n =>
+     {
+      toFSM := FSM.falseUptoIncluding n
+      good := by sorry
+     }
+  | .eq t₁ t₂ =>
+    let t₁' := termEvalEqFSM t₁
+    let t₂' := termEvalEqFSM t₂
     {
-      -- If it ever becomes `1`, it should stay `1`,
-      -- since one it's falsified, it should stay falsified!
-      toFSM := composeBinaryAux FSM.and x₁.toFSM x₂.toFSM
-      good := by sorry -- ext; simp [x₁.good, x₂.good]
+     toFSM := (composeBinary FSM.xor t₁' t₂')
+     good := by ext; simp;
     }
-  | .slt t₁ t₂ => 
-    let q₁ := termEvalEqFSM t₁
-    let q₂ := termEvalEqFSM t₂
-    { toFSM := composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
-      good := by sorry --   ext; simp }
+  | .neq t₁ t₂ =>
+    let t₁' := termEvalEqFSM t₁
+    let t₂' := termEvalEqFSM t₂
+    {
+     -- If it ever becomes `0`, it should stay `0` forever, because once
+     -- two bitstreams become disequal, they stay disequal!
+     toFSM := composeUnaryAux FSM.scanAnd <| (composeBinary FSM.nxor t₁' t₂')
+     good := by sorry -- ext; simp;
     }
-  | .sle t₁ t₂ => 
-     let t₁' := termEvalEqFSM t₁
-     let t₂' := termEvalEqFSM t₂
-     let slt := (composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM)
-     let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
-     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) := 
-       Nat.max_self ..
-     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
-       simp [hsz]
-     -- We want an OR of the two cases, which we take by computing an AND of the predicates.
-     let out := composeBinaryAux FSM.and slt eq
+   | .land p q =>
+     let x₁ := predicateEvalEqFSM p
+     let x₂ :=  predicateEvalEqFSM q
      {
-      toFSM := hsz ▸ out
-      good := by sorry -- TODO: show that it's good 'ext; simp';
+       -- If this ever becomes `1`, it should stay `1`,
+       -- since once it's falsified, it should stay falsified!
+       toFSM := composeBinaryAux FSM.or x₁.toFSM x₂.toFSM
+       good := by sorry -- ext; simp [x₁.good, x₂.good]
      }
-  | .ult t₁ t₂ => 
-     let t₁' := termEvalEqFSM t₁
-     let t₂' := termEvalEqFSM t₂
+   | .lor p q =>
+     let x₁ := predicateEvalEqFSM p
+     let x₂ :=  predicateEvalEqFSM q
      {
-      -- a <u b if when we compute (a - b), we must borrow a value.
-      toFSM := (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
-      good := by sorry -- TODO: show that it's good 'ext; simp';
+       -- If it ever becomes `1`, it should stay `1`,
+       -- since one it's falsified, it should stay falsified!
+       toFSM := composeBinaryAux FSM.and x₁.toFSM x₂.toFSM
+       good := by sorry -- ext; simp [x₁.good, x₂.good]
      }
-  | .ule t₁ t₂ => 
-     let t₁' := termEvalEqFSM t₁
-     let t₂' := termEvalEqFSM t₂
-     let ult := (composeUnaryAux FSM.not $ composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
-     let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
-     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) := 
-       Nat.max_self ..
-     have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
-       simp [hsz]
-     -- IF either a < b, or a = b, then we know that a ≤ b.
-     let out := composeBinaryAux FSM.and ult eq
-     {
-      toFSM := hsz ▸ out
-      good := by sorry -- TODO: show that it's good 'ext; simp';
+   | .slt t₁ t₂ =>
+     let q₁ := termEvalEqFSM t₁
+     let q₂ := termEvalEqFSM t₂
+     { toFSM := composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
+       good := by sorry --   ext; simp }
      }
+   | .sle t₁ t₂ =>
+      let t₁' := termEvalEqFSM t₁
+      let t₂' := termEvalEqFSM t₂
+      let slt := (composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM)
+      let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
+        Nat.max_self ..
+      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
+        simp [hsz]
+      -- We want an OR of the two cases, which we take by computing an AND of the predicates.
+      let out := composeBinaryAux FSM.and slt eq
+      {
+       toFSM := hsz ▸ out
+       good := by sorry -- TODO: show that it's good 'ext; simp';
+      }
+   | .ult t₁ t₂ =>
+      let t₁' := termEvalEqFSM t₁
+      let t₂' := termEvalEqFSM t₂
+      {
+       -- a <u b if when we compute (a - b), we must borrow a value.
+       toFSM := (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
+       good := by sorry -- TODO: show that it's good 'ext; simp';
+      }
+   | .ule t₁ t₂ =>
+      let t₁' := termEvalEqFSM t₁
+      let t₂' := termEvalEqFSM t₂
+      let ult := (composeUnaryAux FSM.not $ composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
+      let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
+        Nat.max_self ..
+      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
+        simp [hsz]
+      -- IF either a < b, or a = b, then we know that a ≤ b.
+      let out := composeBinaryAux FSM.and ult eq
+      {
+       toFSM := hsz ▸ out
+       good := by sorry -- TODO: show that it's good 'ext; simp';
+      }
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
@@ -1032,5 +1224,30 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     use x
     exact h
 
-end FSM
+/-- Iterate the next bit circuit 'n' times, while universally quantifying over all inputs
+that are possible at each step. -/
+def FSM.nextBitCircIterate {arity : Type _ } [DecidableEq arity]
+    (fsm : FSM arity) (n : Nat) : Circuit fsm.α :=
+  match n with
+  | 0 => fsm.nextBitCirc none |>.fst
+  | n' + 1 =>
+     -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
+     let c := fsm.nextBitCircIterate n'
+     (c.bind (fsm.nextBitCirc ∘ some)).fst
 
+/-- Decide if the FSM produces zeroes for all inputs at a given index of the bitstream -/
+def decideIfZerosAtIx {arity : Type _} [DecidableEq arity]
+      (fsm : FSM arity) (w : Nat) : Bool :=
+    let c := fsm.nextBitCircIterate w
+    c.eval fsm.initCarry
+
+/--
+The correctness statement of 'denoteIfZeroesAtIx'.
+This tells us that 'denoteIfZeroesAtIx' is correct iff the FSM 'p' when evaluated returns false
+for all inputs at the index 'w' of the bitstream
+-/
+theorem decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ x, p.eval x w = false := by
+  sorry
+
+end FSM

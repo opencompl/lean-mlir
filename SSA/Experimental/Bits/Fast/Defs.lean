@@ -20,6 +20,8 @@ inductive Term : Type
 | negOne : Term
 /-- The constant `1` -/
 | one : Term
+/-- The constant `n` from a bitvector expression -/
+| ofNat (n : Nat) : Term
 /-- Bitwise and -/
 | and : Term → Term → Term
 /-- Bitwise or -/
@@ -61,6 +63,7 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | zero        => BitStream.zero
   | one         => BitStream.one
   | negOne      => BitStream.negOne
+  | ofNat n     => BitStream.ofNat n
   | and t₁ t₂   => (t₁.eval vars) &&& (t₂.eval vars)
   | or t₁ t₂    => (t₁.eval vars) ||| (t₂.eval vars)
   | xor t₁ t₂   => (t₁.eval vars) ^^^ (t₂.eval vars)
@@ -89,6 +92,7 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | zero => 0
 | one => 0
 | negOne => 0
+| ofNat _ => 0
 | Term.and t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.or t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
@@ -114,6 +118,7 @@ and only require that many bitstream values to be given in `vars`.
   | zero    => BitStream.zero
   | one     => BitStream.one
   | negOne  => BitStream.negOne
+  | ofNat n => BitStream.ofNat n
   | and t₁ t₂ =>
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
@@ -155,6 +160,18 @@ Meaning of the denotation:
 -- a <= 0 <=> a < 0 ∨ a = 0
 -- a > b <=> b < a <=> b - a < 0
 inductive Predicate : Type where
+/-- Assert that the bitwidth equals `n` -/
+| widthEq (n : Nat) : Predicate
+/-- Assert that the bitwidth does not equal `n` -/
+| widthNeq (n : Nat) : Predicate
+/-- Assert that the bitwidth is less than 'n' -/
+| widthLt (n : Nat) : Predicate
+/-- Assert that the bitwidth is less than or equal to 'n' -/
+| widthLe (n : Nat) : Predicate
+/-- Assert that the bitwidth is greater than 'n' -/
+| widthGt (n : Nat) : Predicate
+/-- Assert that the bitwidth is greater than or equal to 'n' -/
+| widthGe (n : Nat) : Predicate
 | eq (t₁ t₂ : Term) : Predicate
 | neq (t₁ t₂ : Term) : Predicate
 | ult (t₁ t₂ : Term) : Predicate
@@ -215,6 +232,12 @@ when truncated to index `i`, is true.
 -/
 def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
+  | widthEq n => BitStream.falseIffEq n
+  | widthNeq n => BitStream.falseIffNeq n
+  | widthLt n => BitStream.falseIffLt n
+  | widthLe n => BitStream.falseIffLe n
+  | widthGt n => BitStream.falseIffGt n
+  | widthGe n => BitStream.falseIffGe n
   | eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
   /-
   If it is ever not equal, then we want to stay not equals for ever.
@@ -254,6 +277,7 @@ theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N :
 end Predicate
 
 @[simp] def Predicate.arity : Predicate → Nat
+| .widthEq _ | .widthNeq _ | .widthGe _ | .widthGt _ | .widthLt _ | .widthLe _ => 0
 | .eq t1 t2 => max t1.arity t2.arity
 | .lor p q => max p.arity q.arity
 | .land p q => max p.arity q.arity
@@ -282,6 +306,12 @@ def Predicate.evalFinUlt (x₁ x₂ : BitStream) : BitStream :=
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
+| widthEq n => BitStream.falseIffEq n
+| widthNeq n => BitStream.falseIffNeq n
+| widthLt n => BitStream.falseIffLt n
+| widthLe n => BitStream.falseIffLe n
+| widthGt n => BitStream.falseIffGt n
+| widthGe n => BitStream.falseIffGe n
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
@@ -317,5 +347,4 @@ match p with
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalFinLor (Predicate.evalFinUlt x₁ x₂) (Predicate.evalFinEq x₁ x₂)
-
 

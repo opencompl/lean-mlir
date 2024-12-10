@@ -26,6 +26,19 @@ instance (p : Predicate) :
   rw [decideIfZeros_correct, ← (predicateEvalEqFSM p).good]
   constructor <;> sorry
 
+instance (p : Predicate) (n : ℕ) : 
+    Decidable (∀ (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
+  decidable_of_iff
+    (decideIfZerosAtIx (predicateEvalEqFSM p).toFSM n) $ by
+  rw [decideIfZeroesAtIx_correct, ← (predicateEvalEqFSM p).good]
+
+instance (p : Predicate) (n : ℕ) : 
+    Decidable (∀ (x : List BitStream) , p.eval x n = false) :=
+  decidable_of_iff
+    (decideIfZerosAtIx (predicateEvalEqFSM p).toFSM n) $ by
+  rw [decideIfZeroesAtIx_correct, ← (predicateEvalEqFSM p).good]
+  constructor <;> sorry
+
 open Term
 
 def run_decide (t₁ t₂ : Term) : IO Bool := do
