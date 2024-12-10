@@ -239,11 +239,20 @@ def xor : FSM Bool :=
 def nxor : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
+    nextBitCirc := fun a => 
+     match a with
+     | none =>
+      -- x ⊕ y ⊕ T
+      -- 0 ⊕ 0 ⊕ 1 = 1
+      -- 0 ⊕ 1 ⊕ 1 = 0 -- value is 0 iff they differ
+      -- 1 ⊕ 0 ⊕ 1 = 0 -- value is 1 iff they differ.
+      -- 1 ⊕ 1 ⊕ 1 = 1
       (Circuit.xor Circuit.tru
         (Circuit.xor
         (Circuit.var true (inr true))
-        (Circuit.var true (inr false)))) Empty.elim }
+        (Circuit.var true (inr false))))
+     | some empty => empty.elim
+  }
 
 /--
 Scan a sequence of booleans with the bitwise and operator
@@ -430,13 +439,24 @@ theorem eval_sub (x : Bool → BitStream) : sub.eval x = (x true) - (x false) :=
 /-!
 We define a borrow automata, whose output stream is the internal state of the subtraction automata,
 which is the bits to be borrowed.
+
+Compare against subAux.2
 -/
 
 def borrow : FSM Bool :=
   { α := Unit,
     initCarry := fun _ => false,
     -- | TODO: check that this is in fact the borrow bit of the subtraction automata.
-    nextBitCirc := fun _a =>
+    nextBitCirc := fun a =>
+       match a with 
+       | none => 
+         -- ! x 0 &&& y 0
+         Circuit.var true (inr false) &&& Circuit.var false (inr true)
+       | some () =>
+           -- let borrow := (subAux x y n).2
+           -- let a := x (n + 1)
+           -- let b := y (n + 1)
+           -- (xor a (xor b borrow), !a && b || ((!(xor a b)) && borrow))
              (Circuit.var false (inr true) &&& Circuit.var true (inr false)) |||
              ((Circuit.var false (inr true) ^^^ Circuit.var true (inr false)) &&&
               (Circuit.var true (inl ())))
@@ -865,19 +885,20 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
   | .slt t₁ t₂ => 
     let q₁ := termEvalEqFSM t₁
     let q₂ := termEvalEqFSM t₂
-    { toFSM := composeBinary FSM.sub q₁ q₂,
+    { toFSM := composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
       good := by sorry --   ext; simp }
     }
   | .sle t₁ t₂ => 
      let t₁' := termEvalEqFSM t₁
      let t₂' := termEvalEqFSM t₂
-     let slt := (composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
+     let slt := (composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM)
      let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) := 
        Nat.max_self ..
      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
        simp [hsz]
-     let out := composeBinaryAux FSM.or slt eq
+     -- We want an OR of the two cases, which we take by computing an AND of the predicates.
+     let out := composeBinaryAux FSM.and slt eq
      {
       toFSM := hsz ▸ out
       good := by sorry -- TODO: show that it's good 'ext; simp';
@@ -886,7 +907,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      let t₁' := termEvalEqFSM t₁
      let t₂' := termEvalEqFSM t₂
      {
-      toFSM := (composeBinary FSM.borrow t₁' t₂')
+      toFSM := (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
       good := by sorry -- TODO: show that it's good 'ext; simp';
      }
   | .ule t₁ t₂ => 
@@ -898,7 +919,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        Nat.max_self ..
      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
        simp [hsz]
-     let out := composeBinaryAux FSM.or ult eq
+     let out := composeBinaryAux FSM.and ult eq
      {
       toFSM := hsz ▸ out
       good := by sorry -- TODO: show that it's good 'ext; simp';

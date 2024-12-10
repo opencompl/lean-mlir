@@ -420,6 +420,7 @@ def subAux (x y : BitStream) : Nat → Bool × Bool
 def sub (x y : BitStream) : BitStream :=
   fun n => (subAux x y n).1
 
+
 /-- The stream of borrow bits from the subtraction -/
 def borrow (x y : BitStream) : BitStream := 
   fun n => (subAux x y n).2

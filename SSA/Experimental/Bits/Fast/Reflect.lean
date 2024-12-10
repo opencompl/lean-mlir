@@ -575,7 +575,9 @@ elab "bv_automata3" : tactic => do
   match ← getUnsolvedGoals  with
   | [] => return ()
   -- | TODO: replace with ofReduceBool
-  | [_g] => evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
+  | [g] => do
+    logInfo m!"goal being decided: {indentD g}"
+    evalDecideCore `bv_automata3 (cfg := { native := true : Parser.Tactic.DecideConfig})
   | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
   
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
@@ -620,14 +622,18 @@ example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a = b) := by
 example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
   bv_automata3
 
+/-- either a < b or b ≤ a -/
+example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
+  fail_if_success bv_automata3
+  sorry
+
 /-- Tricohotomy of < -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
   bv_automata3
 
 /-- < implies not equals -/
 example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
-  fail_if_success  bv_automata3
-  sorry
+  bv_automata3
 
 /-- <= and >= implies equals -/
 example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
@@ -640,13 +646,11 @@ example (w : Nat) (a b : BitVec w) : (a - b).slt 0 → a.slt b := by
 
 /-- Tricohotomy of slt. Currently fails! -/
 example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
-  fail_if_success bv_automata3
-  sorry
+  bv_automata3
 
 /-- a <=s b and b <=s a implies a = b-/
 example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
-  fail_if_success bv_automata3
-  sorry
+  bv_automata3
 
 /-- In bitwidth 0, all values are equal.
 In bitwidth 1, 1 + 1 = 0.

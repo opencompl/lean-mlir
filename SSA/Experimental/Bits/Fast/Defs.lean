@@ -188,6 +188,7 @@ def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream :=
 If they have been `0` so far, then `t1 &&& t2 |>.scanOr` will be `1`.
 -/
 def Predicate.evalLor (t₁ t₂ : BitStream) : BitStream := (t₁ &&& t₂)
+
 -- | And does not seem to work?
 def Predicate.evalLand (t₁ t₂ : BitStream) : BitStream := (t₁ ||| t₂)
 
@@ -195,10 +196,10 @@ def Predicate.evalLand (t₁ t₂ : BitStream) : BitStream := (t₁ ||| t₂)
 /-- 
 Evaluate whether 't₁ <ᵤ t₂'.
 This is defined by computing the borrow bit of 't₁ - t₂'.
-If the borrow bit is `1`, then we know that `t₁ < t₂'.
+If the borrow bit is `1`, then we know that `t₁ < t₂', so we return a `0`.
 Otherwise, we know that 't₁ ≥ t₂'.
 -/
-def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := t₁.borrow t₂
+def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := ~~~ (t₁.borrow t₂)
 
 /-- 
 Evaluate whether 't₁ <s t₂'.
@@ -279,7 +280,7 @@ def Predicate.evalFinSlt (x₁ x₂ : BitStream) : BitStream :=
 
 @[simp]
 def Predicate.evalFinUlt (x₁ x₂ : BitStream) : BitStream := 
-  (x₁.borrow x₂)
+  ~~~ (x₁.borrow x₂)
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
