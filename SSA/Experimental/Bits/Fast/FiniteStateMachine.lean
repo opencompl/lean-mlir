@@ -739,6 +739,10 @@ instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
 
 open Term
 
+/--
+
+Note that **this is the value that is run by decide**.
+-/
 def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
   | var n =>
     { toFSM := FSM.var n,
@@ -850,7 +854,11 @@ structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
   ( good : p.evalFin = toFSM.eval )
 
 
-/-- Evaluating the eq predicate equals the FSM value. -/
+/-- Evaluating the eq predicate equals the FSM value.
+
+Note that **this is the value that is run by decide**.
+
+-/
 def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p 
  | .eq t₁ t₂ => 
    let t₁' := termEvalEqFSM t₁
@@ -863,8 +871,10 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
    let t₁' := termEvalEqFSM t₁
    let t₂' := termEvalEqFSM t₂
    {
-    toFSM := (composeBinary FSM.nxor t₁' t₂')
-    good := by ext; simp;
+    -- If it ever becomes `0`, it should stay `0` forever, because once
+    -- two bitstreams become disequal, they stay disequal!
+    toFSM := composeUnaryAux FSM.scanAnd <| (composeBinary FSM.nxor t₁' t₂')
+    good := by sorry -- ext; simp;
    }
   | .land p q =>
     let x₁ := predicateEvalEqFSM p

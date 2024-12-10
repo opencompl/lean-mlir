@@ -670,23 +670,22 @@ example (w : Nat) (a : BitVec w) : (a = - a) → a = 0#w := by
   sorry
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
-  fail_if_success bv_automata3
-  sorry
+  bv_automata3
 
 
 /-- Can use implications -/
 theorem eq3 (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
   bv_nnf
-  fail_if_success bv_automata3
-  sorry
+  bv_automata3
+
 #print eq3
 
 
 open NNF in
 /-- Can exploit hyps -/
 theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
-  fail_if_success bv_automata3
-  sorry
+  bv_automata3
+
 #print eq3
 
 /-- error: expcted width to be a free variable, found with '10' (for bitvector 'b') -/

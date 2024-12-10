@@ -54,8 +54,6 @@ given a value for the free variables in `t`.
 
 Note that we don't keep track of how many free variable occur in `t`,
 so eval requires us to give a value for each possible variable.
-
-Note that **this is the value that is run by reflection**.
 -/
 def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   match t with
@@ -214,7 +212,6 @@ open BitStream in
 Evaluate a term predicate `p` to the BitStream it represents,
 where the predicate is `true` at index `i` if and only if the predicate,
 when truncated to index `i`, is true.
-Note that **this is the value that is run by reflection**.
 -/
 def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
