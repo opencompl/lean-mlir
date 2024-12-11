@@ -813,7 +813,7 @@ private theorem _root_.Nat.testBit_one_eq_false_iff (i : Nat) :
     simp only [Nat.one_and_eq_mod_two, Nat.mod_two_bne_zero, beq_eq_false_iff_ne,
       ne_eq, Nat.mod_two_not_eq_one]
     rw [Nat.mod_eq_of_lt]
-    · apply Nat.div_eq_zero_iff _ |>.mpr <;> omega
+    · apply Nat.div_eq_zero_iff |>.mpr; omega
     · apply Nat.div_lt_of_lt_mul
       omega
 
