@@ -92,10 +92,10 @@ theorem Predicate.width_eq_implies_iff (wn : Nat) {p : Nat → Prop} :
     p wn ↔ (∀ (w : Nat), w = wn → p w) := by
   constructor
   · intros hp h hwn
-    subst hwn 
+    subst hwn
     apply hp
-  · intros hp 
-    apply hp 
+  · intros hp
+    apply hp
     rfl
 
 /-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
@@ -897,6 +897,16 @@ theorem neg_eq_not_add_one (x : BitVec w) :
 theorem add_eq_xor_add_mul_and (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
   bv_automata_circuit
+
+theorem add_eq_xor_add_mul_and' (x y z : BitVec w) :
+    x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
+  bv_automata_circuit
+
+theorem add_eq_xor_add_mul_and_nt (x y z : BitVec w) :
+    x + y = (x ^^^ y) + 2 * (x &&& y) := by
+  fail_if_success bv_automata_circuit
+  sorry
+
 
 /--
 warning: Width '1' is not a free variable (i.e. width is not universally quantified).
