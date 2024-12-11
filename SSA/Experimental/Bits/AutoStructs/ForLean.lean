@@ -109,8 +109,14 @@ theorem Std.HashMap.mem_iff_getElem? [BEq K] [LawfulBEq K] [Hashable K] [LawfulH
      k ∈ m ↔ ∃ v, m[k]? = some v := by
   sorry
 
+-- make equiv
 @[aesop 50% unsafe]
 theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} : m.get? k = none → k ∉ m := by
+  sorry
+
+@[aesop 50% unsafe]
+theorem Std.HashMap.getElem?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] {m : Std.HashMap K V} {k : K} :
+    m[k]? = none → k ∉ m := by
   sorry
 
 @[aesop 50% unsafe]
@@ -137,17 +143,22 @@ instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := 
     (xs : Std.HashSet α) (P : α → Prop) (H : ∀ x ∈ xs, P x) : Std.HashSet {x // P x} :=
   Std.HashSet.ofList <| xs.toList.attachWith P fun x h => H x (by sorry /- need lemmas about toList -/)
 
-theorem List.mem_attachWith_mem (l : List α) {P H}(x : α) h : ⟨x, h⟩ ∈ l.attachWith P H → x ∈ l := by
-  induction l
-  case nil => simp
-  case cons x l ih => simp only [attachWith_cons, mem_cons, Subtype.mk.injEq]; intros h; rcases h <;> simp_all
+@[simp]
+theorem Std.HashSet.mem_attachWith_mem [BEq α] [Hashable α] [LawfulBEq α] (m : HashSet α) {P H} (x : α) h :
+    ⟨x, h⟩ ∈ m.attachWith P H ↔ x ∈ m := by
+  sorry
+
+-- TODO: upstream
+@[simp]
+theorem List.mem_attachWith_mem (l : List α) {P H}(x : α) h : ⟨x, h⟩ ∈ l.attachWith P H ↔ x ∈ l := by
+  induction l <;> simp_all
 
 theorem List.attachWith_nodup (l : List α) (hnd : l.Nodup) P H : (l.attachWith P H).Nodup := by
   induction l
   case nil => simp
   case cons x l ih =>
-    simp; constructor
-    · intros h; simp only [nodup_cons] at hnd; rcases hnd; have := l.mem_attachWith_mem x _ h; contradiction
+    simp only [attachWith_cons, nodup_cons, mem_attachWith_mem]; constructor
+    · intros h; simp [h] at hnd
     · apply ih; simp_all
 
 def BitVec.ofFn {w : Nat} (f : Fin w → Bool) : BitVec w :=
@@ -163,6 +174,12 @@ theorem BitVec.ofFn_getLsbD {w : Nat} (f : Fin w → Bool) (i : Fin w) :
 @[simp]
 theorem BitVec.ofFn_getLsbD' {w : Nat} (f : Fin w → Bool) (i : Nat) (hi : i < w) :
     (BitVec.ofFn f).getLsbD i = f ⟨i, hi⟩ := ofFn_getLsbD f ⟨i, hi⟩
+
+theorem BitVec.ofFn_getLsbD_true {w : Nat} {f : Fin w → Bool} {i : Nat} :
+    (BitVec.ofFn f).getLsbD i = true ↔ ∃ (hlt : i < w), f ⟨i, hlt⟩ = true := by
+  constructor
+  · intro h; have hlt := lt_of_getLsbD h; simp_all
+  · rintro ⟨hlt, heq⟩; simp_all
 
 @[simp]
 theorem BitVec.ofFn_getElem {w : Nat} (f : Fin w → Bool) (i : Fin w) :
