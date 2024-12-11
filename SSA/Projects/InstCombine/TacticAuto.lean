@@ -280,7 +280,8 @@ macro "bv_bench": tactic =>
       (
         simp (config := { failIfUnchanged := false }) only
           [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
-           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq]
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
+           BitVec.ofNat_eq_ofNat, BitVec.two_mul]
         all_goals (
           tac_bench [
             "rfl" : (rfl; done),

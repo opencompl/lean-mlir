@@ -34,13 +34,13 @@ def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
   simp [denote, toBitVec]
   sorry
 
-
 /-- Denote a Term into its underlying bitvector -/
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   match t with
+  | ofNat n => BitVec.ofNat w n
   | var n => vars[n]!
   | zero => 0#w
-  | negOne => BitVec.allOnes w
+  | negOne => BitVec.ofInt w (-1)
   | one  => 1#w
   | and a b => (a.denote w vars) &&& (b.denote w vars)
   | or a b => (a.denote w vars) ||| (b.denote w vars)
@@ -60,6 +60,12 @@ theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
 
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
   match p with
+  | .widthGe k => k ≤ w -- w ≥ k
+  | .widthGt k => k < w -- w > k
+  | .widthLe k => w ≤ k
+  | .widthLt k => w < k
+  | .widthNeq k => w ≠ k
+  | .widthEq k => w = k
   | .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
   | .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
   | .land  p q => p.denote w vars ∧ q.denote w vars
@@ -78,6 +84,19 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   induction p generalizing vars w
   repeat sorry
 
+/--
+A predicate for a fixed width 'wn' can be expressed as universal quantification
+over all width 'w', with a constraint that 'w = wn'
+-/
+theorem Predicate.width_eq_implies_iff (wn : Nat) {p : Nat → Prop} :
+    p wn ↔ (∀ (w : Nat), w = wn → p w) := by
+  constructor
+  · intros hp h hwn
+    subst hwn
+    apply hp
+  · intros hp
+    apply hp
+    rfl
 
 /-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
 theorem Predicate.denote_of_eval_eq {p : Predicate}
@@ -290,7 +309,6 @@ def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM Refle
   return { bvToIxMap := map, e := e }
 
 
-
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
 Crucially, when this succeeds, this will be in terms of `term`.
@@ -320,7 +338,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       let e := (mkConst ``Term.one)
       return {bvToIxMap := map, e := e}
     | _ =>
-      let (e, map) := map.findOrInsertExpr e
+      let e := mkApp (mkConst ``Term.ofNat) nExpr
       return { bvToIxMap := map, e := e }
   | HAnd.hAnd _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
@@ -369,7 +387,7 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM ReflectResult := do
+partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected : Expr) : MetaM ReflectResult := do
   match_expr e with
   | Eq α a b =>
     match_expr α with
@@ -398,10 +416,22 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM Refl
     | _ =>
       throwError "unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
   | Ne α a b =>
-    let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {e} when matching against 'Ne'"
-    let a ← reflectTermUnchecked bvToIxMap w a
-    let b ← reflectTermUnchecked a.bvToIxMap w b
-    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
+    /- Support width constraints with α = Nat -/
+    match_expr α with
+    | Nat => do
+      -- TODO: canonicalize 'a ≠ w' into 'w ≠ a'.
+      if wExpected != a then
+        throwError "Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
+      let some natVal ← Lean.Meta.getNatValue? b
+        | throwError "Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
+      let out := mkApp (mkConst ``Predicate.widthNeq) (Lean.mkNatLit natVal)
+      return { bvToIxMap := bvToIxMap, e := out }
+    | BitVec w =>
+      let a ← reflectTermUnchecked bvToIxMap w a
+      let b ← reflectTermUnchecked a.bvToIxMap w b
+      return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
+    | _ =>
+      throwError "Expected typeclass to be 'BitVec w' / 'Nat', found '{indentD α}' in {e} when matching against 'Ne'"
   | LT.lt α _inst a b =>
     let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
     let a ← reflectTermUnchecked bvToIxMap w a
@@ -413,13 +443,13 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) : MetaM Refl
     let b ← reflectTermUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.ule) #[a.e, b.e] }
   | Or p q =>
-    let p ← reflectPredicateAux bvToIxMap p
-    let q ← reflectPredicateAux p.bvToIxMap q
+    let p ← reflectPredicateAux bvToIxMap p wExpected
+    let q ← reflectPredicateAux p.bvToIxMap q wExpected
     let out := mkApp2 (mkConst ``Predicate.lor) p.e q.e
     return { q with e := out }
   | And p q =>
-    let p ← reflectPredicateAux bvToIxMap p
-    let q ← reflectPredicateAux p.bvToIxMap q
+    let p ← reflectPredicateAux bvToIxMap p wExpected
+    let q ← reflectPredicateAux p.bvToIxMap q wExpected
     let out := mkApp2 (mkConst ``Predicate.land) p.e q.e
     return { q with e := out }
   | _ =>
@@ -522,36 +552,47 @@ def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
   else
     -- we have exactly one width
     let (w, wExample) := ws[0]
-    if !w.isFVar then
-      throwError "expcted width to be a free variable, found with '{w}' (for bitvector '{wExample}')"
-    else
-      -- invariant: w is known to be an fvar.
-      let wFv := w.fvarId!
-      -- We can now revert hypotheses that are of this bitwidth.
-      let g ← revertBvHyps g
 
-      -- Next, after reverting, we have a goal which we want to reflect.
-      -- we convert this goal to NNF
-      let .some g ← NNF.runNNFSimpSet g
-        | logInfo m!"simp automatically closed goal."
-          return[]
-      logInfo m!"goal after NNF: {indentD g}"
-      -- finally, we perform reflection.
-      let result ← reflectPredicateAux ∅ (← g.getType)
-      let bvToIxMapVal ← result.bvToIxMap.toExpr w
-      let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, bvToIxMapVal])
-      let g ← g.replaceTargetDefEq target
-      logInfo m!"goal after reflection: {indentD g}"
-      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
-      let (_, g) ← g.revert #[mapFv]
-      -- Apply Predicate.denote_of_eval_eq.
-      let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
-        | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      return [g]
+    -- We can now revert hypotheses that are of this bitwidth.
+    let g ← revertBvHyps g
+
+    -- Interesting, tobias was right.
+    -- @bollu: I can 'generalize' and solve the '∀ w ... ' problem, and then 're-specialize' back to 'w = k'
+    -- for fixed k. I think this loses some power as opposed to having a width constraint.
+      if !w.isFVar then
+        let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
+        let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
+        let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
+        logWarning  msg
+        -- let g ← g.assertExt (name := `w') (type := mkConst ``Nat) (val := w) (hName := `hw')
+        -- let (w', g) ← g.intro1P
+        -- let (hw', g) ← g.intro1P
+        -- g.withContext do logInfo m!"Added new constraint for width (to be abstracted): {← hw'.getType}"
+        pure g
+      else pure g
+
+    -- Next, after reverting, we have a goal which we want to reflect.
+    -- we convert this goal to NNF
+    let .some g ← NNF.runNNFSimpSet g
+      | logInfo m!"simp automatically closed goal."
+        return[]
+    logInfo m!"goal after NNF: {indentD g}"
+    -- finally, we perform reflection.
+    let result ← reflectPredicateAux ∅ (← g.getType) w
+    let bvToIxMapVal ← result.bvToIxMap.toExpr w
+    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, bvToIxMapVal])
+    let g ← g.replaceTargetDefEq target
+    logInfo m!"goal after reflection: {indentD g}"
+    let (mapFv, g) ← generalizeMap g bvToIxMapVal;
+    let (_, g) ← g.revert #[mapFv]
+    -- Apply Predicate.denote_of_eval_eq.
+    let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
+      | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+    let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+      | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+    let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+      | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+    return [g]
 
 /--
 Given a goal state of the form:
@@ -712,7 +753,27 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
 
 #print eq_circuit
 
-/-- error: expcted width to be a free variable, found with '10' (for bitvector 'b') -/
+/--
+warning: Width '10' is not a free variable (i.e. width is not universally quantified).
+The tactic will perform width-generic reasoning.
+To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = 10), ...
+---
+info: goal after NNF: ⏎
+  a b : BitVec 10
+  ⊢ a = b
+---
+info: goal after reflection: ⏎
+  a b : BitVec 10
+  ⊢ (Predicate.eq (Term.var 0) (Term.var 1)).denote 10 (Map.append 10 b (Map.append 10 a Map.empty))
+---
+error: unsolved goals
+case heval.a.h
+a b : BitVec 10
+⊢ reduceBool
+      (Decidable.decide
+        (∀ (w : ℕ) (vars : List BitStream), (Predicate.eq (Term.var 0) (Term.var 1)).eval vars w = false)) =
+    true
+-/
 #guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
   intros a b
   bv_reflect
@@ -742,9 +803,7 @@ def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
   sorry
 
 def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
-  fail_if_success bv_automata_circuit -- can't decide things for fixed bitwidth.
-  sorry
-
+  bv_automata_circuit -- can't decide things for fixed bitwidth.
 
 
 def test0 {w : Nat} (x y : BitVec w) : x + 0#w = x := by
@@ -803,12 +862,91 @@ def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
 def test26 {w : Nat} (x y : BitVec w) : 1#w + x + 0#w = 1#w + x := by
   bv_automata_circuit
 
-/-- NOTE: this fails since we don't support literals yet! -/
+/-- NOTE: we now support 'ofNat' literals -/
 def test27 (x y : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
+  bv_automata_circuit
+
+def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
+  bv_automata_circuit
+
+example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofNat w 1 := by
+  intros
+  bv_automata_circuit
+
+example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
+  intros
+  bv_automata_circuit
+
+/-- Can solve width-constraints problems -/
+def test29 (x y : BitVec w) : w = 64 → x &&& x &&& x &&& x &&& x &&& x = x := by
+  bv_automata_circuit
+
+/-- Can solve width-constraints problems -/
+def test30  : (w = 2) → 8#w = 0#w := by
+  bv_automata_circuit
+
+/-- Can solve width-constraints problems -/
+def test31 (w : Nat) (x : BitVec w) : (w = 64) → x &&& x = x := by
+  bv_automata_circuit
+
+
+theorem neg_eq_not_add_one (x : BitVec w) :
+    -x = ~~~ x + 1#w := by
+  bv_automata_circuit
+
+theorem add_eq_xor_add_mul_and (x y : BitVec w) :
+    x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
+  bv_automata_circuit
+
+theorem add_eq_xor_add_mul_and' (x y z : BitVec w) :
+    x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
+  bv_automata_circuit
+
+theorem add_eq_xor_add_mul_and_nt (x y z : BitVec w) :
+    x + y = (x ^^^ y) + 2 * (x &&& y) := by
   fail_if_success bv_automata_circuit
   sorry
 
-def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
+
+/--
+warning: Width '1' is not a free variable (i.e. width is not universally quantified).
+The tactic will perform width-generic reasoning.
+To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = 1), ...
+---
+info: goal after NNF: ⏎
+  x : BitVec 1
+  ⊢ x + x + x + x = 0#1
+---
+info: goal after reflection: ⏎
+  x : BitVec 1
+  ⊢ (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).denote 1
+      (Map.append 1 x Map.empty)
+---
+info: goal being decided: ⏎
+  case heval.a.h
+  x : BitVec 1
+  ⊢ reduceBool
+        (Decidable.decide
+          (∀ (w : ℕ) (vars : List BitStream),
+            (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars w =
+              false)) =
+      true
+---
+error: tactic 'bv_automata_circuit' evaluated that the proposition
+  reduceBool
+      (Decidable.decide
+        (∀ (w : ℕ) (vars : List BitStream),
+          (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars w =
+            false)) =
+    true
+is false
+-/
+#guard_msgs in def width_generic_exploit_fail (x : BitVec 1) : x + x + x + x = 0#1 := by
+  bv_automata_circuit
+  sorry
+
+/-- Can solve width-constraints problems, when written with a width constraint. -/
+def width_generic_exploit_success (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
   bv_automata_circuit
 
 end BvAutomataTests

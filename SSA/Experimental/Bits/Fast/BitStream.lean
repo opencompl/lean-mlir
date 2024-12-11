@@ -77,6 +77,12 @@ def concat (b : Bool) (x : BitStream) : BitStream
   | 0   => b
   | i+1 => x i
 
+@[simp]
+theorem concat_zero (b : Bool) (x : BitStream) : concat b x 0 = b := rfl
+
+@[simp]
+theorem concat_succ (b : Bool) (x : BitStream) : concat b x (n+1) = x n := rfl
+
 /-- `map f` maps a (unary) function over a bitstreams -/
 abbrev map (f : Bool → Bool) : BitStream → BitStream :=
   fun x i => f (x i)
@@ -93,7 +99,7 @@ Fold with intermediate steps also available as a bitstream.
 abbrev scanl (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : BitStream :=
   fun n => match n with
     | 0 => f init (s 0)
-    | n+1 => f (scanl init f s n) (s (n + 1)) 
+    | n+1 => f (scanl init f s n) (s (n + 1))
 
 @[simp]
 theorem scanl_zero (init : Bool) (f : Bool → Bool → Bool) (s : BitStream) : scanl init f s 0 = f init (s 0) := rfl
@@ -167,6 +173,9 @@ section OfNat
 /-- Zero-extend a natural number to an infinite bitstream -/
 def ofNat (x : Nat) : BitStream :=
   Nat.testBit x
+
+@[simp(low)]
+theorem ofNat_eq : ofNat x i = Nat.testBit x i := rfl
 
 instance : OfNat BitStream n := ⟨ofNat n⟩
 
@@ -422,7 +431,7 @@ def sub (x y : BitStream) : BitStream :=
 
 
 /-- The stream of borrow bits from the subtraction -/
-def borrow (x y : BitStream) : BitStream := 
+def borrow (x y : BitStream) : BitStream :=
   fun n => (subAux x y n).2
 
 def negAux (x : BitStream) : Nat → Bool × Bool
@@ -639,6 +648,7 @@ theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
   simp [negAux_eq_not_addAux, Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
 
+@[simp(high)]
 theorem ofNat_one (i : Nat) : ofNat 1 i = decide (0 = i) := by
   cases i
   <;> simp [ofNat, Nat.shiftRight, Nat.testBit_add_one]
@@ -649,8 +659,9 @@ theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   · intros n a
     simp [ofNat_one n, ofBitVec, a]
     rw [← Bool.decide_and]
-    rw [decide_eq_decide]
-    omega
+    rcases n with rfl | n
+    · simp; omega
+    · simp
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
@@ -771,6 +782,31 @@ def ofInt : Int → BitStream
 abbrev zero   : BitStream := fun _ => false
 abbrev one    : BitStream := (· == 0)
 abbrev negOne : BitStream := fun _ => true
+
+/-- 'falseIffEq n i' = false ↔ i = n -/
+abbrev falseIffEq (n : Nat) : BitStream := fun i => decide (i != n)
+theorem falseIffEq_eq_false_iff (n i : Nat) :
+    falseIffEq n i = false ↔ i = n := by simp; try omega
+
+abbrev falseIffNeq (n : Nat) : BitStream := fun i => decide (i == n)
+theorem falseIffNeq_eq_false_iff (n i : Nat) :
+    falseIffNeq n i = false ↔ i ≠ n := by simp; try omega
+
+abbrev falseIffLe (n : Nat) : BitStream := fun i => decide (i > n)
+theorem falseIffLe_eq_false_iff (n i : Nat) :
+    falseIffLe n i = false ↔ i ≤ n := by simp; try omega
+
+abbrev falseIffLt (n : Nat) : BitStream := fun i => decide (i ≥ n)
+theorem falseIffLt_eq_false_iff (n i : Nat) :
+    falseIffLt n i = false ↔ i < n := by simp; try omega
+
+abbrev falseIffGe (n : Nat) : BitStream := fun i => decide (i < n)
+theorem falseIffGe_eq_false_iff (n i : Nat) :
+    falseIffGe n i = false ↔ i ≥ n := by simp; try omega
+
+abbrev falseIffGt (n : Nat) : BitStream := fun i => decide (i ≤ n)
+theorem falseIffGt_eq_false_iff (n i : Nat) :
+    falseIffGt n i = false ↔ i > n := by simp; try omega
 
 section Lemmas
 
