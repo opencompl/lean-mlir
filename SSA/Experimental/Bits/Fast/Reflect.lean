@@ -889,6 +889,15 @@ def test30  : (w = 2) → 8#w = 0#w := by
 def test31 (w : Nat) (x : BitVec w) : (w = 64) → x &&& x = x := by
   bv_automata_circuit
 
+
+theorem neg_eq_not_add_one (x : BitVec w) :
+    -x = ~~~ x + 1#w := by
+  bv_automata_circuit
+
+theorem add_eq_xor_add_mul_and (x y : BitVec w) :
+    x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
+  bv_automata_circuit
+
 /--
 warning: Width '1' is not a free variable (i.e. width is not universally quantified).
 The tactic will perform width-generic reasoning.
