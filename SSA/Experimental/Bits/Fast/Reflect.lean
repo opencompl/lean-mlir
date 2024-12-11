@@ -21,6 +21,19 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 
 import Lean
 
+/-
+TODO:
+- [ ] BitVec.ofInt
+- [ ] leftShift
+- [ ] Break down numeral multiplication into left shift:
+       10 * z
+     = z <<< 1 + 5 * z
+     = z <<< 1 + (z + 4 * z)
+     = z <<< 1 + (z + z <<< 2).
+
+     Needs O(log |N|) terms.
+-/
+
 /--
 Denote a bitstream into the underlying bitvector.
 -/
