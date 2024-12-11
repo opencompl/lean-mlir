@@ -181,6 +181,9 @@ end CIRCTStream
 ## LeanMLIR Dialect Definitions
 Define a `Handshake` dialect, and connect its semantics to the function defined above
 -/
+
+namespace MLIR2Handshake
+
 section Dialect
 
 inductive Ty2
@@ -257,7 +260,7 @@ be recognized by the LeanMLIR generic syntax parser, and
 defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
 
-namespace MLIR2Handshake
+
 
 
 def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2

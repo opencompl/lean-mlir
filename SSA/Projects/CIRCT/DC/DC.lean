@@ -87,6 +87,8 @@ def source : TokenStream :=
 end DC
 end CIRCTStream
 
+namespace MLIR2DC
+
 section Dialect
 
 inductive Ty2
@@ -97,6 +99,9 @@ deriving Inhabited, DecidableEq, Repr
 inductive Op
 | fst
 | snd
+| pair (t : Ty2)
+| fstVal (t : Ty2)
+| sndVal (t : Ty2)
 | merge
 | branch
 | fork
@@ -111,8 +116,9 @@ deriving Inhabited, DecidableEq, Repr
 inductive Ty
 | tokenstream : Ty
 | tokenstream2 : Ty
-| valuestream (ty2 : Ty2) : Ty -- A stream of values of type `ty2`.
-| valuetokenstream (ty2 : Ty2) : Ty -- A product of streams of values of type `ty2`.
+| valuestream (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
+| valuestream2 (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
+| valuetokenstream (Ty2 : Ty2) : Ty -- A product of streams of values of type `Ty2`.
 deriving Inhabited, DecidableEq, Repr
 
 instance : TyDenote Ty2 where
@@ -125,10 +131,10 @@ instance instDCTyDenote : TyDenote Ty where
 toType := fun
 | Ty.tokenstream => CIRCTStream.DC.TokenStream
 | Ty.tokenstream2 => CIRCTStream.DC.TokenStream × CIRCTStream.DC.TokenStream
-| Ty.valuestream ty2 => CIRCTStream.DC.ValueStream (toType ty2)
-| Ty.valuetokenstream ty2 => CIRCTStream.DC.ValueStream (toType ty2) × CIRCTStream.DC.TokenStream
+| Ty.valuestream Ty2 => CIRCTStream.DC.ValueStream (toType Ty2)
+| Ty.valuestream2 Ty2 => CIRCTStream.DC.ValueStream (toType Ty2) × CIRCTStream.DC.ValueStream (toType Ty2)
+| Ty.valuetokenstream Ty2 => CIRCTStream.DC.ValueStream (toType Ty2) × CIRCTStream.DC.TokenStream
 
-set_option linter.dupNamespace false in
 abbrev DC : Dialect where
   Op := Op
   Ty := Ty
@@ -139,7 +145,10 @@ open TyDenote (toType)
 @[simp, reducible]
 def Op.sig : Op  → List Ty
   | .fst => [Ty.tokenstream2]
+  | .fstVal t => [Ty.valuetokenstream t]
   | .snd => [Ty.tokenstream2]
+  | .sndVal t => [Ty.valuetokenstream t]
+  | .pair t => [Ty.valuestream t, Ty.valuestream t]
   | .merge => [Ty.tokenstream, Ty.tokenstream]
   | .branch => [Ty.valuestream Ty2.bool]
   | .fork => [Ty.tokenstream]
@@ -154,7 +163,10 @@ def Op.sig : Op  → List Ty
 @[simp, reducible]
 def Op.outTy : Op → Ty
   | .fst => Ty.tokenstream
+  | .fstVal t => Ty.valuestream t
+  | .sndVal _ => Ty.tokenstream
   | .snd => Ty.tokenstream
+  | .pair t => Ty.valuestream2 t
   | .merge => Ty.valuestream Ty2.bool
   | .branch => Ty.tokenstream2
   | .fork => Ty.tokenstream2
@@ -176,6 +188,9 @@ instance : DialectDenote (DC) where
     denote
     | .fst, arg, _ => (arg.getN 0).fst
     | .snd, arg, _ => (arg.getN 0).snd
+    | .fstVal _, arg, _ => (arg.getN 0).fst
+    | .sndVal _, arg, _ => (arg.getN 0).snd
+    | .pair _, arg, _ => (arg.getN 0, arg.getN 1)
     | .unpack _, arg, _ => CIRCTStream.DC.unpack (arg.getN 0)
     | .pack _, arg, _  => CIRCTStream.DC.pack (arg.getN 0) (arg.getN 1)
     | .branch, arg, _  => CIRCTStream.DC.branch (arg.getN 0)
@@ -188,7 +203,7 @@ instance : DialectDenote (DC) where
 
 end Dialect
 
-namespace MLIR2DC
+
 
 def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
   | "Int" => return (.int)
@@ -204,6 +219,8 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
       return .tokenstream2
     | ["ValueStream", r] =>
       return .valuestream (← mkTy2 r)
+    | ["ValueStream2", r] =>
+      return .valuestream2 (← mkTy2 r)
     | ["ValueTokenStream", r] =>
       return .valuetokenstream (← mkTy2 r)
     | _ => throw .unsupportedType
@@ -292,12 +309,36 @@ def fst {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokens
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+def fstVal {r} {Γ : Ctxt _} (a : Γ.Var (.valuetokenstream r))  : Expr (DC) Γ .pure (.valuestream r)  :=
+  Expr.mk
+    (op := .fstVal r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def sndVal {r} {Γ : Ctxt _} (a : Γ.Var (.valuetokenstream r))  : Expr (DC) Γ .pure (.tokenstream)  :=
+  Expr.mk
+    (op := .sndVal r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
 def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokenstream)  :=
   Expr.mk
     (op := .snd)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def pair {r} {Γ : Ctxt _} (a b: Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.valuestream2 r)  :=
+  Expr.mk
+    (op := .pair r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
@@ -308,26 +349,31 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
     else
       return ⟨_, .tokenstream, source⟩
-  | op@"DC.sink" | op@"DC.unpack" | op@"DC.fork" | op@"DC.branch" | op@"DC.fst" | op@"DC.snd" =>
+  | op@"DC.sink" | op@"DC.unpack" | op@"DC.fork" | op@"DC.branch" | op@"DC.fst" | op@"DC.snd" | op@"DC.fstVal" | op@"DC.sndVal" =>
     match opStx.args with
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
       | .tokenstream2, "DC.fst" => return ⟨_, .tokenstream, fst v₁⟩
       | .tokenstream2, "DC.snd"  => return ⟨_, .tokenstream, snd v₁⟩
+      | .valuetokenstream r, "DC.fstVal" => return ⟨_, .valuestream r, fstVal v₁⟩
+      | .valuetokenstream r, "DC.sndVal"  => return ⟨_, .tokenstream, sndVal v₁⟩
       | .tokenstream, "DC.sink" => return ⟨_, .tokenstream, sink v₁⟩
       | .valuestream r, "DC.unpack"  => return ⟨_, .valuetokenstream r, unpack v₁⟩
       | .tokenstream, "DC.fork"  => return ⟨_, .tokenstream2, fork v₁⟩
       | .valuestream .bool, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DC.merge" | op@"DC.join" | op@"DC.pack"  =>
+  | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.pair"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
       | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream .bool, merge v₁ v₂⟩
+      | .valuestream r, .valuestream r', "DC.pair" =>
+        if h: r = r' then return ⟨_, .valuestream2 r, pair v₁ (by subst r ; exact v₂)⟩
+        else throw <| .generic s!"type mismatch"
       | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
