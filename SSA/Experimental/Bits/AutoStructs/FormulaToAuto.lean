@@ -91,18 +91,16 @@ theorem BitVec.append_inj {x1 x2 : BitVec w} {y1 y2 : BitVec w'} :
     x1 ++ y1 = x2 ++ y2 ↔ x1 = x2 ∧ y1 = y2 := by
   constructor
   · rintro heq
-    have h : ∀ (i : Fin (w + w')), (x1 ++ y1).getLsbD i = (x2 ++ y2).getLsbD i := by simp [heq]
+    have h : ∀ i, i < w + w' → (x1 ++ y1).getLsbD i = (x2 ++ y2).getLsbD i := by simp [heq]
     constructor
-    · apply eq_of_getLsbD_eq; intros i
-      sorry
-      -- specialize h (i.addNat w')
-      -- simp [getLsbD_append] at h
-      -- assumption
-    · sorry
-      -- apply eq_of_getLsbD_eq; intros i
-      -- specialize h (Nat.add_comm _ _ ▸ (i.castAdd w))
-      -- simp [getLsbD_append] at h
-      -- assumption
+    · apply eq_of_getLsbD_eq; intros i hi
+      specialize h (i + w') (by omega)
+      simp [getLsbD_append] at h
+      assumption
+    · apply eq_of_getLsbD_eq; intros i hi
+      specialize h i (by omega)
+      simp [getLsbD_append] at h
+      simp_all
   · rintro ⟨rfl, rfl⟩; rfl
 
 @[simp]
@@ -219,7 +217,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         rw [heq, hmsb]
         unfold bitVecToFinFun
         simp
-        ext i
+        ext i hi
         simp [BitVec.getLsbD_cons]
         split
         next hi =>
@@ -238,22 +236,20 @@ def NFA'.ofFSM_correct (p : FSM arity) :
             simp; omega
           · ext ar; simp [BitVec.getLsbD_cons]
         next hne =>
-          sorry
-          -- rcases i with ⟨i, hi⟩
-          -- simp at hne ⊢
-          -- have hlt : i < w := by omega
-          -- rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
-          -- simp [hsa, FSM.evalBV]
-          -- rw [BitVec.ofFn_getLsbD' _ _ hlt]
-          -- simp
-          -- apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
-          -- rw [ite_cond_eq_true]
-          -- on_goal 2 => simp; omega
-          -- rw [ite_cond_eq_true]
-          -- on_goal 2 => simp; omega
-          -- simp [BitVec.getLsbD_cons]
-          -- rw [ite_cond_eq_false]
-          -- simp; omega
+          simp [hi] at hne ⊢
+          have hlt : i < w := by omega
+          rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
+          simp [hsa, FSM.evalBV]
+          rw [BitVec.ofFn_getLsbD' _ _ hlt]
+          simp
+          apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+          rw [ite_cond_eq_true]
+          on_goal 2 => simp; omega
+          rw [ite_cond_eq_true]
+          on_goal 2 => simp; omega
+          simp [BitVec.getLsbD_cons]
+          rw [ite_cond_eq_false]
+          simp; omega
       · rw [hq]
         rcases hsa with ⟨-, rfl⟩
         simp [FSM.carryBV, FSM.carry]; congr
@@ -271,28 +267,25 @@ def NFA'.ofFSM_correct (p : FSM arity) :
       rcases hsa with ⟨hrel, hcar⟩
       constructor
       · constructor
-        sorry
-        sorry
-        -- on_goal 2 => rfl
-        -- simp [inFSMRel] at *
-        -- ext ⟨i, hi⟩
-        -- simp
-        -- rw [BitVec.eq_of_getLsbD_eq_iff] at hrel
-        -- specialize hrel ⟨i, by omega⟩
-        -- simp [BitVec.getLsbD_cons] at hrel
-        -- rw [ite_cond_eq_false] at hrel
-        -- on_goal 2 => simp; omega
-        -- rw [hrel]
-        -- simp [FSM.evalBV]
-        -- repeat rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
-        -- simp
-        -- apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
-        -- rw [ite_cond_eq_true]
-        -- on_goal 2 => simp; omega
-        -- rw [ite_cond_eq_true]
-        -- on_goal 2 => simp; omega
-        -- simp [BitVec.getLsbD_cons]
-        -- omega
+        on_goal 2 => rfl
+        simp [inFSMRel] at *
+        ext i hi
+        rw [BitVec.eq_of_getLsbD_eq_iff] at hrel
+        specialize hrel i (by omega)
+        simp [BitVec.getLsbD_cons] at hrel
+        rw [ite_cond_eq_false] at hrel
+        on_goal 2 => simp; omega
+        rw [hrel]
+        simp [FSM.evalBV]
+        repeat rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
+        simp only
+        apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+        rw [ite_cond_eq_true]
+        on_goal 2 => simp; omega
+        rw [ite_cond_eq_true]
+        on_goal 2 => simp; omega
+        simp [BitVec.getLsbD_cons]
+        omega
       · rw [hcar]; simp [NFA.ofFSM]
         constructor
         · simp [FSM.carryBV, FSM.carry]; congr
@@ -349,21 +342,21 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
     symm; transitivity; apply ofBitVec_neg
     symm; apply BitStream.neg_congr; simp_all
 
--- @[simp]
--- lemma FSM.eval_bv (bvn : Mathlib.Vector (BitVec w) (t.arity + 1)) :
---   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
---     (t.evalFin fun ar => bvn.get ar.castSucc) := by
---   simp [FSM.evalBV]; ext ⟨k, hk⟩
---   simp [BitVec.ofFn_getLsbD' _ _ hk, FSM.ofTerm]
---   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
---   simp only [ite_eq_left_iff, not_lt]
---   intros _; omega
+@[simp]
+lemma FSM.eval_bv (bvn : Mathlib.Vector (BitVec w) (t.arity + 1)) :
+  ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
+    (t.evalFin fun ar => bvn.get ar.castSucc) := by
+  simp [FSM.evalBV]; ext k hk
+  simp [BitVec.ofFn_getLsbD' _ _ hk, FSM.ofTerm]
+  rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
+  simp only [ite_eq_left_iff, not_lt]
+  intros _; omega
 
--- @[simp]
--- lemma NFA'.ofFSM_spec (t : Term) :
---     (ofFSM (FSM.ofTerm t)).accepts = t.language := by
---   simp [ofFSM, correct_spec (ofFSM_correct (FSM.ofTerm t)), langRel, Term.language]
---   ext bvs; simp; tauto
+@[simp]
+lemma NFA'.ofFSM_spec (t : Term) :
+    (ofFSM (FSM.ofTerm t)).accepts = t.language := by
+  simp [ofFSM, correct_spec (ofFSM_correct (FSM.ofTerm t)), langRel, Term.language]
+  ext bvs; simp; tauto
 
 /--
 Transforms an `FSM` of arity `k` to an `RawCNFA` of arity `k+1`.
@@ -733,12 +726,12 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     use ⟨bvs.w - 1, by omega⟩
     simp; rw [List.getLast?_eq_getElem?]
     simp; constructor
-    · sorry--rw [List.getElem?_eq_getElem (by simp; omega)]; simp
-    · ext; rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
-      sorry
-      -- rw [BitVec.msb_eq_getLsbD_last] at h
-      -- simp [←BitVec.getLsbD_eq_getElem]
-      -- exact h
+    · rw [List.getElem?_eq_getElem (by simp; omega)]; simp
+    · ext i hi; rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
+      rw [BitVec.msb_eq_getLsbD_last] at h
+      simp [←BitVec.getLsbD_eq_getElem]
+      obtain rfl : i = 0 := by omega
+      simp_all
 
 end nfas_relations
 
@@ -884,17 +877,17 @@ lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
           apply CNFA.lift_spec; assumption
         · apply CNFA.lift_spec; assumption
 
--- lemma absNfaToFomrmula_spec (φ : Formula) :
---     (absNfaOfFormula φ).accepts = φ.language := by
---   induction φ
---   case atom rel t1 t2 =>
---     simp [absNfaOfFormula, binopAbsNfa]; ac_nf
---   case msbSet t =>
---     simp [absNfaOfFormula]
---   case unop op φ ih =>
---     simp [absNfaOfFormula, unopAbsNfa, ih]
---   case binop op φ1 φ2 ih1 ih2 =>
---     rcases op <;> simp [absNfaOfFormula, binopAbsNfa, langBinop, ih1, ih2]
+lemma absNfaToFomrmula_spec (φ : Formula) :
+    (absNfaOfFormula φ).accepts = φ.language := by
+  induction φ
+  case atom rel t1 t2 =>
+    simp [absNfaOfFormula, binopAbsNfa]; ac_nf
+  case msbSet t =>
+    simp [absNfaOfFormula]
+  case unop op φ ih =>
+    simp [absNfaOfFormula, unopAbsNfa, ih]
+  case binop op φ1 φ2 ih1 ih2 =>
+    rcases op <;> simp [absNfaOfFormula, binopAbsNfa, langBinop, ih1, ih2]
 
 /--
 The theorem stating that the automaton generated from the formula φ recognizes
@@ -918,18 +911,18 @@ def formulaIsUniversal (f : Formula) : Bool :=
   let m := nfaOfFormula f
   m.isUniversal
 
--- theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
---     formulaIsUniversal φ → φ.sat' env := by
---   unfold formulaIsUniversal; simp
---   intros h; apply CNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
---   rw [absNfaToFomrmula_spec, formula_language] at h
---   rw [←sat_impl_sat']
---   have hx := env_to_bvs φ (fun k => env k.val)
---   extract_lets bvs at hx
---   suffices hin : bvs ∈ (⊤ : Set _) by
---     rw [←h] at hin
---     simp [Set.instMembership, Set.Mem] at hin; assumption
---   simp
+theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
+    formulaIsUniversal φ → φ.sat' env := by
+  unfold formulaIsUniversal; simp
+  intros h; apply CNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
+  rw [absNfaToFomrmula_spec, formula_language] at h
+  rw [←sat_impl_sat']
+  have hx := env_to_bvs φ (fun k => env k.val)
+  extract_lets bvs at hx
+  suffices hin : bvs ∈ (⊤ : Set _) by
+    rw [←h] at hin
+    simp [Set.instMembership, Set.Mem] at hin; assumption
+  simp
 
 -- -- For testing the comparison operators.
 -- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=
@@ -940,7 +933,7 @@ def formulaIsUniversal (f : Formula) : Bool :=
 --   let f2 : Fin 1 → Fin 2 := fun 0 => 1
 --   let m2' := m2.lift f2
 --   let meq := if signed then RawCNFA.autSignedCmp .lt else RawCNFA.autUnsignedCmp .lt
---   let m := RawCNFA.inter m1' m2' |> RawCNFA.inter meq
+--   let m := m1'.inter m2' |> RawCNFA.inter meq
 --   let mfinal := m.proj (liftExcecpt2 _)
 --   mfinal
 

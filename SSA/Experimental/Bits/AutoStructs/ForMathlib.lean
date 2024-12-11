@@ -49,6 +49,13 @@ lemma BitVec.transport_getLsbD (f : Fin n2 → Fin n1) (bv : BitVec n1) (i : Fin
     (bv.transport f).getLsbD i = bv.getLsbD (f i) := by
   simp [transport]
 
+@[simp]
+lemma BitVec.transport_getLsbD_nat (f : Fin n2 → Fin n1) (bv : BitVec n1) (i : Nat) (hlt : i < n2) :
+    (bv.transport f).getLsbD i = bv.getLsbD (f ⟨i, hlt⟩) := by
+  have heq : i = (Fin.mk i hlt).val := by rfl
+  nth_rw 1 [heq]
+  rw [transport_getLsbD]
+
 /--
 The set of `n`-tuples of bit vectors of an arbitrary width.
 -/
@@ -134,12 +141,10 @@ lemma dec_enc : Function.RightInverse (α := BitVecs' n) enc dec := by
   next i =>
     simp only [enc, Fin.getElem_fin, dec, List.getElem_map, List.getElem_finRange, Fin.cast_mk,
       Fin.is_lt, BitVec.ofFn_getLsbD', Fin.eta, Vector.get_ofFn]
-    ext j
-    simp only [BitVec.getLsbD_cast']
-    rw [BitVec.getLsbD_eq_getElem?_getD]
-    rw [BitVec.getLsbD_eq_getElem?_getD]
-    sorry
-
+    ext
+    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD',
+      BitVec.getLsbD_cast']
+    rfl
 
 @[simp]
 lemma enc_dec : Function.LeftInverse (α := BitVecs' n) enc dec := by
@@ -147,8 +152,9 @@ lemma enc_dec : Function.LeftInverse (α := BitVecs' n) enc dec := by
   ext1 k
   by_cases hin : k < (List.length bvs')
   · simp
-    rw [List.getElem?_eq_getElem] <;> sorry --simp_all
-    --ext1; simp
+    rw [List.getElem?_eq_getElem] <;> simp_all only [List.length_finRange, List.getElem_finRange,
+      Fin.cast_mk, Option.map_some', List.getElem?_eq_getElem, Option.some.injEq]
+    ext1; simp_all
   · simp; repeat rw [List.getElem?_eq_none] <;> simp_all
 
 @[simp]
@@ -170,17 +176,14 @@ def dec_inj {n : Nat} : Function.Injective (dec (n := n)) := by
 lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
     bvs := Mathlib.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
-  ext k i <;> simp [dec]
+  ext k i <;> simp_all only [dec, Fin.getElem_fin, List.length_append, List.length_singleton,
+    Vector.get_ofFn, BitVec.ofFn_getLsbD', BitVec.getLsbD_cast']
   rw [BitVec.getLsbD_cons]
-  rcases i with ⟨i, hi⟩;
-  sorry
-  sorry
-  -- simp at hi ⊢
-  -- split
-  -- next heq => simp_all
-  -- next h =>
-  --   have hlt : i < List.length bvs' := by omega
-  --   rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD' _ _ hlt]
+  split
+  next heq => simp_all
+  next h =>
+    have hlt : i < List.length bvs' := by omega
+    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD' _ _ hlt]
 
 @[simp]
 lemma dec_enc_image : dec '' (enc '' S) = S := Function.LeftInverse.image_image dec_enc _
@@ -226,13 +229,8 @@ def dec_transport_idx {bvs' : BitVecs' n} (f : Fin m → Fin n) :
     (dec (bvs'.transport f)).bvs.get i =  h ▸ (((dec bvs').transport f).bvs.get i) := by
   intros h
   simp [dec]
-  ext1 i
-  simp
-  sorry
-  -- rw [BitVecs'.transport_getElem' f i]
-  -- rcases i with ⟨i, hi⟩; simp
-  -- rw [BitVec.ofFn_getLsbD' _ i (by simp_all)]
-  -- simp
+  ext1 i hi
+  simp_all [BitVecs'.tranport_length, BitVec.getLsbD_cast']
 
 @[simp]
 def dec_transport :
@@ -241,9 +239,8 @@ def dec_transport :
 
 @[simp]
 def enc_transport_idx {bvs : BitVecs n} (f : Fin m → Fin n) (i : Fin bvs.w) :
-    -- have h : (BitVecs.transport f (dec bvs')).w = (dec (BitVecs'.transport f bvs')).w := by simp
     (enc (bvs.transport f))[i] = (enc bvs)[i].transport f := by
-  ext1 k; sorry--simp [enc]; rfl
+  ext1 k hk; simp_all [enc]; rfl
 
 @[simp]
 def enc_transport :
@@ -375,8 +372,6 @@ lemma reduce_spec (M : NFA α σ) : M.reduce.accepts = M.accepts := by
     constructor
     · apply ha
     · simp_all [←reduce_eval q]
-
--- TODO: M.reduce is reduced
 
 def closed_set (M : NFA α σ) (S : Set σ) := M.start ⊆ S ∧ ∀ a, M.stepSet S a ⊆ S
 
