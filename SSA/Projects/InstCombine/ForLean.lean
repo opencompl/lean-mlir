@@ -417,7 +417,7 @@ theorem allOnes_sshiftRight {w n : Nat} :
   (allOnes w).sshiftRight n = allOnes w := by
   ext i
   by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
+  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight, ←decide_not]; omega
   · simp [getLsbD_sshiftRight]; omega
 
 attribute [simp] shiftLeft_ushiftRight

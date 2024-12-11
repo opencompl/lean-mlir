@@ -91,16 +91,16 @@ theorem BitVec.append_inj {x1 x2 : BitVec w} {y1 y2 : BitVec w'} :
     x1 ++ y1 = x2 ++ y2 ↔ x1 = x2 ∧ y1 = y2 := by
   constructor
   · rintro heq
-    have h : ∀ (i : Fin (w + w')), (x1 ++ y1).getLsbD i = (x2 ++ y2).getLsbD i := by simp [heq]
+    have h : ∀ i, i < w + w' → (x1 ++ y1).getLsbD i = (x2 ++ y2).getLsbD i := by simp [heq]
     constructor
-    · apply eq_of_getLsbD_eq; intros i
-      specialize h (i.addNat w')
+    · apply eq_of_getLsbD_eq; intros i hi
+      specialize h (i + w') (by omega)
       simp [getLsbD_append] at h
       assumption
-    · apply eq_of_getLsbD_eq; intros i
-      specialize h (Nat.add_comm _ _ ▸ (i.castAdd w))
+    · apply eq_of_getLsbD_eq; intros i hi
+      specialize h i (by omega)
       simp [getLsbD_append] at h
-      assumption
+      simp_all
   · rintro ⟨rfl, rfl⟩; rfl
 
 @[simp]
@@ -217,7 +217,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         rw [heq, hmsb]
         unfold bitVecToFinFun
         simp
-        ext i
+        ext i hi
         simp [BitVec.getLsbD_cons]
         split
         next hi =>
@@ -236,8 +236,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
             simp; omega
           · ext ar; simp [BitVec.getLsbD_cons]
         next hne =>
-          rcases i with ⟨i, hi⟩
-          simp at hne ⊢
+          simp [hi] at hne ⊢
           have hlt : i < w := by omega
           rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
           simp [hsa, FSM.evalBV]
@@ -270,17 +269,16 @@ def NFA'.ofFSM_correct (p : FSM arity) :
       · constructor
         on_goal 2 => rfl
         simp [inFSMRel] at *
-        ext ⟨i, hi⟩
-        simp
+        ext i hi
         rw [BitVec.eq_of_getLsbD_eq_iff] at hrel
-        specialize hrel ⟨i, by omega⟩
+        specialize hrel i (by omega)
         simp [BitVec.getLsbD_cons] at hrel
         rw [ite_cond_eq_false] at hrel
         on_goal 2 => simp; omega
         rw [hrel]
         simp [FSM.evalBV]
         repeat rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
-        simp
+        simp only
         apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
         rw [ite_cond_eq_true]
         on_goal 2 => simp; omega
@@ -348,7 +346,7 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
 lemma FSM.eval_bv (bvn : Mathlib.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
     (t.evalFin fun ar => bvn.get ar.castSucc) := by
-  simp [FSM.evalBV]; ext ⟨k, hk⟩
+  simp [FSM.evalBV]; ext k hk
   simp [BitVec.ofFn_getLsbD' _ _ hk, FSM.ofTerm]
   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
   simp only [ite_eq_left_iff, not_lt]
@@ -729,10 +727,11 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     simp; rw [List.getLast?_eq_getElem?]
     simp; constructor
     · rw [List.getElem?_eq_getElem (by simp; omega)]; simp
-    · ext; rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
+    · ext i hi; rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
       rw [BitVec.msb_eq_getLsbD_last] at h
       simp [←BitVec.getLsbD_eq_getElem]
-      exact h
+      obtain rfl : i = 0 := by omega
+      simp_all
 
 end nfas_relations
 
@@ -894,14 +893,14 @@ lemma absNfaToFomrmula_spec (φ : Formula) :
 The theorem stating that the automaton generated from the formula φ recognizes
 exactly the solution of φ.
 -/
-theorem absNfaToFomrmula_spec' (φ : Formula) :
-    (absNfaOfFormula φ).accepts = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) = true } := by
-  simp [absNfaToFomrmula_spec, formula_language]
+-- theorem absNfaToFomrmula_spec' (φ : Formula) :
+--     (absNfaOfFormula φ).accepts = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) = true } := by
+--   simp [absNfaToFomrmula_spec, formula_language]
 
-/--
-info: 'absNfaToFomrmula_spec'' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms absNfaToFomrmula_spec'
+-- /--
+-- info: 'absNfaToFomrmula_spec'' depends on axioms: [propext, Classical.choice, Quot.sound]
+-- -/
+-- #guard_msgs in #print axioms absNfaToFomrmula_spec'
 
 /-
 Note: it is important to define this function and not inline it, otherwise
@@ -934,7 +933,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
 --   let f2 : Fin 1 → Fin 2 := fun 0 => 1
 --   let m2' := m2.lift f2
 --   let meq := if signed then RawCNFA.autSignedCmp .lt else RawCNFA.autUnsignedCmp .lt
---   let m := RawCNFA.inter m1' m2' |> RawCNFA.inter meq
+--   let m := m1'.inter m2' |> RawCNFA.inter meq
 --   let mfinal := m.proj (liftExcecpt2 _)
 --   mfinal
 
