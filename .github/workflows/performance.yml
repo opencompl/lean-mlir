@@ -35,3 +35,7 @@ jobs:
         run: |
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build
+
+      - name: Build
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j16)
