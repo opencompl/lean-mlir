@@ -50,6 +50,10 @@ instance : Std.Commutative Nat.add where
 instance : Std.Associative Nat.add where
   assoc := fun a b => by simp only [Nat.add_eq]; omega
 
+/-- The size of the state space of the finite state machine. -/
+def stateSpaceSize : Nat := @Finset.univ p.α inferInstance |>.card
+
+
 /--
 Return the total size of the FSM as a function of all of its circuits.
 Note that this implicitly counts the size of the state space of the FSM,
