@@ -12,7 +12,7 @@ permissions:
 jobs:
   build:
     name: tools, scaling, and auto-generated stmts
-    runs-on: [self-hosted, Linux]
+    runs-on: self-hosted
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
