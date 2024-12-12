@@ -296,7 +296,7 @@ macro "bv_bench": tactic =>
             "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
             "bv_auto" : (bv_auto; done),
-            "bv_automata_circuit" : (bv_automata_circuit (config := { circuitSizeThreshold := 30 } ); done)
+            "bv_automata_circuit" : (bv_automata_circuit (config := { circuitSizeThreshold := 30 } ); done),
             "bv_normalize_automata_circuit" : (bv_normalize; bv_automata_circuit (config := { circuitSizeThreshold := 30 } ); done)
           ]
           try bv_auto
