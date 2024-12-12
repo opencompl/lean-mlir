@@ -24,6 +24,14 @@ namespace Circuit
 
 variable {α : Type u} {β : Type v}
 
+/--
+Compute the size of the circuit.
+Leaf nodes take 1 size, and internal nodes take 1 + size of children.
+-/
+def size (α : Type u) : Circuit α → Nat
+| tru | fals | var .. => 1
+| and l r | or l r | xor l r => 1 + l.size  + r.size
+
 def vars [DecidableEq α] : Circuit α → List α
   | tru => []
   | fals => []

@@ -44,6 +44,23 @@ namespace FSM
 
 variable {arity : Type} (p : FSM arity)
 
+instance : Std.Commutative Nat.add where
+  comm := fun a b => by simp only [Nat.add_eq]; omega
+
+instance : Std.Associative Nat.add where
+  assoc := fun a b => by simp only [Nat.add_eq]; omega
+
+/--
+Return the total size of the FSM as a function of all of its circuits.
+Note that this implicitly counts the size of the state space of the FSM,
+and consequently, is the natural notion of complexity of the FSM.
+-/
+def circuitSize : Nat := Id.run do
+  let outCircSize := p.nextBitCirc none |>.size
+  let states := @Finset.univ p.α inferInstance
+  let stateCircSize := Finset.fold Nat.add  0 (fun a => p.nextBitCirc (.some a) |>.size) states
+  return outCircSize + stateCircSize
+
 /-- The state of FSM `p` is given by a function from `p.α` to `Bool`.
 
 Note that `p.α` is assumed to be a finite type, so `p.State` is morally
