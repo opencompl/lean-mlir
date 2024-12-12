@@ -246,6 +246,14 @@ instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
 instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
 
+/-- Shift left by `k` bits, giving a new bitstream whose first `k` bits are zero. -/
+def shiftLeft (x : BitStream) (k : Nat) : BitStream :=
+  fun i => if i < k then false else x (i - k) -- i ≥ k
+
+/-- Shift logical right by `k` bits, making the 'i'th output be the 'k+i'th input bit. -/
+def logicalShiftRight (x : BitStream) (k : Nat) : BitStream :=
+  fun i => x (k + i)
+
 /--
 Return a stream of pointwise equality of booleans.
 This is the same as ~(a⊕b), and thus we call it `not xor`.
@@ -262,6 +270,19 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
 @[simp] theorem nxor_eq : (x.nxor y) i = (x i == y i) := rfl
 variable (x y : BitVec (w+1))
+
+
+@[simp] theorem eval_shiftLeft {x : BitStream} {k : Nat} :
+  (shiftLeft x k) i = if i < k then false else x (i - k) := rfl
+
+@[simp] theorem eval_shiftLeft_of_lt {x : BitStream} {k : Nat} (hi : i < k) :
+  (shiftLeft x k) i = false := by simp [hi]
+
+@[simp] theorem eval_shiftLeft_of_le {x : BitStream} {k : Nat} (hi : k ≤ i) :
+  (shiftLeft x k) i = x (i - k) := by simp [hi]
+
+@[simp] theorem eval_logicalShiftRight {x : BitStream} {k : Nat} :
+  (logicalShiftRight x k) i = x (k + i) := rfl
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
   funext i

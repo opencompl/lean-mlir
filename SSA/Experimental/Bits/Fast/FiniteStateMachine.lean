@@ -814,6 +814,23 @@ theorem eval_const (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
       · case succ i' =>
         simp [hn, Nat.testBit_succ]
 
+
+/-- Identity finite state machine -/
+def id : FSM Unit := {
+ α := Empty,
+ initCarry := Empty.elim,
+ nextBitCirc := fun a => 
+   match a with 
+   | none => (Circuit.var true (inr ()))
+   | some f => f.elim
+}
+
+/-- Build logical shift left automata by `n` bits -/
+def shiftLeft (n : Nat) : FSM Unit :=
+  match n with
+  | 0 => FSM.id
+  | n + 1 => composeUnaryAux (FSM.ls false) (shiftLeft n)
+
 /--
 Build an FSM whose state is `true` at step `n`,
 and `false` everywhere else.
@@ -993,6 +1010,12 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
+  | shiftL t k =>
+     let q := termEvalEqFSM t
+     {
+       toFSM := by dsimp [arity]; exact composeUnary (FSM.shiftLeft k) q,
+       good := by ext; simp; sorry
+     }
   -- | repeatBit t =>
   --   let p := termEvalEqFSM t
   --   { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,

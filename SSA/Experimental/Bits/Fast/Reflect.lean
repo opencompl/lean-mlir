@@ -73,6 +73,7 @@ def Term.quote (t : _root_.Term) : Expr :=
   | xor t₁ t₂ => mkApp2 (mkConst ``Term.xor) (t₁.quote) (t₂.quote)
   | or t₁ t₂ => mkApp2 (mkConst ``Term.or) (t₁.quote) (t₂.quote)
   | and t₁ t₂ => mkApp2 (mkConst ``Term.and) (t₁.quote) (t₂.quote)
+  | shiftL t₁ n => mkApp2 (mkConst ``Term.shiftL) (t₁.quote) (mkNatLit n)
 
 open Lean in
 def Predicate.quote (p : _root_.Predicate) : Expr :=
@@ -110,6 +111,7 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | incr a => (a.denote w vars) + 1#w
   | decr a => (a.denote w vars) - 1#w
   | ls bit a => (a.denote w vars).shiftConcat bit
+  | shiftL a n => (a.denote w vars) <<< n
 
 theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
     (t.eval (vars.map BitStream.ofBitVec)).denote w = t.denote w vars := by
