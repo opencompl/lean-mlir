@@ -216,7 +216,7 @@ inductive Relation
 | unsigned (ord : RelationOrdering)
 deriving Repr
 
-def evalRelation (rel : Relation) {w} (bv1 bv2 : BitVec w) : Bool :=
+def evalRelation (rel : Relation) {w} (bv1 bv2 : BitVec w) : Prop :=
   match rel with
   | .eq => bv1 = bv2
   | .signed .lt => bv1 <ₛ bv2
@@ -241,12 +241,12 @@ inductive Binop
 | and | or | impl | equiv
 deriving Repr
 
-def evalBinop (op : Binop) (b1 b2 : Bool) : Bool :=
+def evalBinop (op : Binop) (b1 b2 : Prop) : Prop :=
   match op with
-  | .and => b1 && b2
-  | .or => b1 || b2
-  | .impl => b1 -> b2
-  | .equiv => b1 <-> b2
+  | .and => b1 ∧ b2
+  | .or => b1 ∨ b2
+  | .impl => b1 → b2
+  | .equiv => b1 ↔ b2
 
 @[simp]
 def evalBinop' (op : Binop) (b1 b2 : Prop) : Prop :=
@@ -284,13 +284,13 @@ def Formula.arity : Formula → Nat
 | binop _ φ1 φ2 => max φ1.arity φ2.arity
 
 @[simp]
-def Formula.sat {w : Nat} (φ : Formula) (ρ : Fin φ.arity → BitVec w) : Bool :=
+def Formula.sat {w : Nat} (φ : Formula) (ρ : Fin φ.arity → BitVec w) : Prop :=
   match φ with
   | .atom rel t1 t2 =>
     let bv1 := t1.evalFin (fun n => ρ $ Fin.castLE (by simp [arity]) n)
     let bv2 := t2.evalFin (fun n => ρ $ Fin.castLE (by simp [arity]) n)
     evalRelation rel bv1 bv2
-  | .unop .neg φ => !φ.sat ρ
+  | .unop .neg φ => ¬ φ.sat ρ
   | .binop op φ1 φ2 =>
     let b1 := φ1.sat (fun n => ρ $ Fin.castLE (by simp [arity]) n)
     let b2 := φ2.sat (fun n => ρ $ Fin.castLE (by simp [arity]) n)
@@ -333,7 +333,7 @@ lemma msb_coe {x : BitVec w1} (heq : w1 = w2) : x.msb = (heq ▸ x).msb := by rc
 
 lemma formula_language_case_atom :
     let φ := Formula.atom rel t1 t2
-    φ.language = λ (bvs : BitVecs φ.arity) => (φ.sat (fun k => bvs.bvs.get k) = true) := by
+    φ.language = λ (bvs : BitVecs φ.arity) => φ.sat (fun k => bvs.bvs.get k) := by
   unfold Formula.language
   rintro φ
   let n := φ.arity
@@ -437,7 +437,7 @@ lemma formula_language_case_atom :
         congr 1
 
 theorem formula_language (φ : Formula) :
-    φ.language = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) = true } := by
+    φ.language = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) } := by
   let n : Nat := φ.arity
   induction φ
   case atom rel t1 t2 =>
@@ -448,15 +448,15 @@ theorem formula_language (φ : Formula) :
     unfold Formula.language
     ext1 bvs
     simp [ih1, ih2]
-    have heq1 : (φ1.sat fun k => bvs.bvs.get (liftMax1 φ1.arity φ2.arity k)) = true ↔
-           (φ1.sat fun n => bvs.bvs.get (Fin.castLE (by simp) n)) = true := by
-      simp; congr
+    have heq1 : (φ1.sat fun k => bvs.bvs.get (liftMax1 φ1.arity φ2.arity k)) ↔
+           (φ1.sat fun n => bvs.bvs.get (Fin.castLE (by simp) n)) := by
+      congr!
     have heq2 : (φ2.sat fun k => bvs.bvs.get (liftMax2 φ1.arity φ2.arity k)) = true ↔
            (φ2.sat fun n => bvs.bvs.get (Fin.castLE (by simp) n)) = true := by
-      simp; congr
+      congr!
     rcases op <;>
       simp [evalBinop, langBinop, Set.compl, Set.instMembership,
-        Set.Mem, Mathlib.Vector.transport] <;> aesop
+        Set.Mem, Mathlib.Vector.transport] <;> simp_all <;> tauto
   case msbSet t =>
     ext1 bvs; simp only [Formula.arity, Formula.language, Set.proj, Set.lift, langMsb, Fin.isValue,
       Set.preimage_setOf_eq, Set.mem_image, Set.mem_inter_iff,
@@ -522,9 +522,6 @@ lemma sat_impl_sat' {φ : Formula} :
     simp [←evalFin_evalNat]
   case binop op φ1 φ2 ih1 ih2 =>
     simp [evalBinop, ←ih1, ←ih2]
-    rcases op <;> simp
-    rw [←Bool.eq_false_eq_not_eq_true]
-    tauto
   case unop op φ ih => rcases op; simp [←ih]
   case msbSet t =>
     simp [←evalFin_evalNat]
