@@ -7,90 +7,8 @@ import Lean.Meta.KExprMap
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
+import SSA.Experimental.Bits.Fast.Reflect
 import Qq.Macro
-
-
-namespace AutoStructs
-
-section EvalLemmas
-variable {x y : Term} {w} {vars : Nat → BitVec w}
-
-lemma eval_sub :
-    (x.sub y).evalNat vars = x.evalNat vars - y.evalNat vars := by
-  simp only [Term.evalNat]
-
-lemma eval_add :
-    (x.add y).evalNat vars = x.evalNat vars + y.evalNat vars := by
-  simp only [Term.evalNat]
-
-lemma eval_neg :
-    (x.neg).evalNat vars = - x.evalNat vars := by
-  simp only [Term.evalNat]
-
-lemma eval_not :
-    (x.not).evalNat vars = ~~~ x.evalNat vars := by
-  simp only [Term.evalNat]
-
-lemma eval_and :
-    (x.and y).evalNat vars = x.evalNat vars &&& y.evalNat vars := by
-  simp only [Term.evalNat]
-
-lemma eval_xor :
-    (x.xor y).evalNat vars = x.evalNat vars ^^^ y.evalNat vars := by
-  simp only [Term.evalNat]
-
-lemma eval_or :
-    (x.or y).evalNat vars = x.evalNat vars ||| y.evalNat vars := by
-  simp only [Term.evalNat]
-end EvalLemmas
-
-section SatLemmas
-variable {x y : Formula} {w} {vars : Nat → BitVec w}
-
-open Formula
-
-lemma sat_and :
-    (binop .and x y).sat' vars ↔ x.sat' vars ∧ y.sat' vars := by
-  simp only [Formula.sat', evalBinop']
-
-lemma sat_or :
-    (binop .or x y).sat' vars ↔ x.sat' vars ∨ y.sat' vars := by
-  simp only [Formula.sat', evalBinop']
-
-lemma sat_impl :
-    (binop .impl x y).sat' vars ↔ (x.sat' vars → y.sat' vars) := by
-  simp only [Formula.sat', evalBinop']
-
-lemma sat_iff :
-    (binop .equiv x y).sat' vars ↔ (x.sat' vars ↔ y.sat' vars) := by
-  simp only [Formula.sat', evalBinop']
-
-lemma sat_neg :
-    (unop .neg x).sat' vars ↔ (¬ x.sat' vars) := by
-  simp only [Formula.sat', evalBinop']
-
-lemma sat_eq (t1 t2 : Term) :
-    (atom .eq t1 t2).sat' vars ↔ (t1.evalNat vars = t2.evalNat vars) := by
-  simp [Formula.sat', evalRelation]
-
-lemma sat_slt (t1 t2 : Term) :
-    (atom (.signed .lt) t1 t2).sat' vars ↔ (t1.evalNat vars <ₛ t2.evalNat vars) := by
-  simp [Formula.sat', evalRelation]
-
-lemma sat_sle (t1 t2 : Term) :
-    (atom (.signed .le) t1 t2).sat' vars ↔ (t1.evalNat vars ≤ₛ t2.evalNat vars) := by
-  simp [Formula.sat', evalRelation]
-
-lemma sat_ult (t1 t2 : Term) :
-    (atom (.unsigned .lt) t1 t2).sat' vars ↔ (t1.evalNat vars <ᵤ t2.evalNat vars) := by
-  simp [Formula.sat', evalRelation]
-
-lemma sat_ule (t1 t2 : Term) :
-    (atom (.unsigned .le) t1 t2).sat' vars ↔ (t1.evalNat vars ≤ᵤ t2.evalNat vars) := by
-  simp [Formula.sat', evalRelation]
-
-end SatLemmas
-end AutoStructs
 
 open AutoStructs
 
@@ -252,10 +170,15 @@ partial def parseFormula (e : Expr) : M Formula := do
       let_expr Bool ← α | failure
       pure $ .unop .neg (←parseFormula e1)
     | _ =>
-      let_expr BitVec _ ← α | throwError m!"Equality {e} has a strange type"
-      let t1 ← parseTerm e1
-      let t2 ← parseTerm e2
-      pure (.atom .eq t1 t2)
+      match_expr α with
+      | BitVec _ =>
+        let t1 ← parseTerm e1
+        let t2 ← parseTerm e2
+        pure (.atom .eq t1 t2)
+      | _ => -- assume it's a prop...
+        let t1 ← parseFormula e1
+        let t2 ← parseFormula e2
+        pure (.binop .equiv t1 t2)
   | Not e =>
     let t ← parseFormula e
     pure (.unop .neg t)
@@ -269,6 +192,7 @@ partial def parseFormula (e : Expr) : M Formula := do
       let t1 ← parseTerm e1
       let t2 ← parseTerm e2
       pure (.atom .eq t1 t2)
+      -- TODO: select the case where α is Prop
     | _ => throwError m!"Unexpected Beq type {α}"
   -- | Impl => TODO
   | And e1 e2 =>
@@ -347,16 +271,11 @@ private def buildEnv (es : Array Expr) : MetaM Expr := do
 private partial def assertSame (φ : Formula) (st : State) : TacticM Unit:= do
   withMainContext do
     liftMetaTactic fun goal => do
-      let goalT ← goal.getType
       let efor := toExpr φ
       let ρ ← buildEnv st.invMap
       let new ← mkAppM ``Formula.sat' #[efor, ρ]
-      -- let new ← mkAppM ``Eq #[new, mkConst ``true]
-      let newGoal ← mkAppM ``Iff #[new, goalT]
-      let mvar ← mkFreshExprMVar (some newGoal)
-      let mvar' ← mkFreshExprMVar (some new)
-      goal.assign (←mkAppM ``Iff.mp #[mvar, mvar'])
-      pure [mvar.mvarId!, mvar'.mvarId!]
+      let goal ← goal.replaceTargetDefEq new
+      pure [goal]
 
 elab "bv_automata_inner" : tactic => do
   withMainContext do
@@ -369,26 +288,7 @@ elab "bv_automata_inner" : tactic => do
 macro "bv_automata'" : tactic =>
   `(tactic| (
      bv_automata_inner
-     { simp only [
-         AutoStructs.sat_and,
-         AutoStructs.sat_or,
-         AutoStructs.sat_impl,
-         AutoStructs.sat_iff,
-         AutoStructs.sat_neg,
-         AutoStructs.sat_eq,
-         AutoStructs.sat_slt,
-         AutoStructs.sat_sle,
-         AutoStructs.sat_ult,
-         AutoStructs.sat_ule,
-         AutoStructs.eval_sub,
-         AutoStructs.eval_add,
-         AutoStructs.eval_neg,
-         AutoStructs.eval_and,
-         AutoStructs.eval_xor,
-         AutoStructs.eval_or,
-         AutoStructs.eval_not]
-       rfl }
-     { apply decision_procedure_is_correct; native_decide } ))
+     apply decision_procedure_is_correct; native_decide))
 
 end Tactic
 
@@ -396,7 +296,8 @@ section tests
 
 variable (w : Nat) (x y z : BitVec w)
 
-theorem dfadfa : (x <ₛ 0) ↔ x.msb := by bv_automata'
+theorem dfadfa : (x <ₛ 0) ↔ x.msb := by
+  bv_automata'
 
 theorem and_ule_not_xor : x &&& y ≤ᵤ ~~~(x ^^^ y) := by bv_automata'
 
@@ -405,10 +306,6 @@ theorem xor_ule_or : x ^^^ y ≤ᵤ x ||| y := by bv_automata'
 theorem ult_iff_not_ule : (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by bv_automata'
 
 theorem sub_neg_sub : (x - y) = - (y - x) := by bv_automata'
-
--- only for w > 0
--- theorem eq_iff_not_sub_or_sub :
---     x = y ↔ (~~~ (x - y ||| y - x)).msb := by bv_automata'
 
 theorem zulip_example :
   ¬(n <ᵤ ~~~k) ∨

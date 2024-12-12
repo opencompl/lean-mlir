@@ -1,9 +1,11 @@
 import Batteries.Data.Fin.Basic
 import Mathlib.Computability.NFA
 import Mathlib.Data.FinEnum
+import Mathlib.Data.Rel
 import Mathlib.Data.Vector.Basic
 import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
+import Std.Data.HashSet.Basic
 
 open Set
 open Mathlib
@@ -638,3 +640,73 @@ lemma proj_accepts (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
     use w'; simp [htr]; use q
   · rintro ⟨w', ⟨q, he, hv⟩, htr⟩
     use q; simp [he]; use w'
+
+/- Simulations -/
+
+structure _root_.Rel.set_eq (R : Rel α β) (A : Set α) (B : Set β) where
+  fwd : a ∈ A → ∃ b ∈ B, R a b
+  bwd : b ∈ B → ∃ a ∈ A, R a b
+
+theorem _root_.Rel.set_eq_symm {R : Rel α β} (h : R.set_eq A B) : R.inv.set_eq B A := by
+  rcases h with ⟨h1, h2⟩; constructor <;> simp_all [Rel.inv, flip]
+
+structure Bisimul (R : Rel σ ς) (M₁ : NFA α σ) (M₂ : NFA α ς) where
+  accept : R q₁ q₂ → (q₁ ∈ M₁.accept ↔ q₂ ∈ M₂.accept)
+  start : R.set_eq M₁.start M₂.start
+  trans_match₁ : R q₁ q₂ → q₁' ∈ M₁.step q₁ a → ∃ q₂', q₂' ∈ M₂.step q₂ a ∧ R q₁' q₂'
+  trans_match₂ : R q₁ q₂ → q₂' ∈ M₂.step q₂ a → ∃ q₁', q₁' ∈ M₁.step q₁ a ∧ R q₁' q₂'
+
+def Bisim (M₁ : NFA α σ) (M₂ : NFA α ς) := ∃ R, M₁.Bisimul R M₂
+
+theorem Bisimul.symm (hsim : Bisimul R M₁ M₂) : Bisimul R.inv M₂ M₁ := by
+  rcases hsim with ⟨h1, h2, h3, h4⟩; constructor <;> simp_all [Rel.inv, flip]
+  · intros; symm; apply h1; assumption
+  · apply R.set_eq_symm; assumption
+  · intros; apply h4 <;> assumption
+  · intros; apply h3 <;> assumption
+
+lemma bisimul_eval_one (hsim : Bisimul R M₁ M₂) :
+    R.set_eq Q₁ Q₂ → R.set_eq (M₁.stepSet Q₁ a) (M₂.stepSet Q₂ a) := by
+  rintro ⟨h1, h2⟩; constructor <;> simp only [stepSet, mem_iUnion, exists_prop,
+    forall_exists_index, and_imp] at *
+  · rintro q₁' q₁ hq₁ hst
+    obtain ⟨q₂, hq₂, hR⟩ := h1 hq₁
+    obtain ⟨q₂', hst', hR'⟩ := hsim.trans_match₁ hR hst
+    use q₂', ⟨q₂, hq₂, hst'⟩
+  · rintro q₂' q₂ hq₂ hst
+    obtain ⟨q₁, hq₁, hR⟩ := h2 hq₂
+    obtain ⟨q₁', hst', hR'⟩ := hsim.trans_match₂ hR hst
+    use q₁', ⟨q₁, hq₁, hst'⟩
+
+lemma bisimul_eval (hsim : Bisimul R M₁ M₂) w :
+    R.set_eq Q₁ Q₂ → R.set_eq (M₁.evalFrom Q₁ w) (M₂.evalFrom Q₂ w) := by
+  induction w using List.list_reverse_induction generalizing Q₁ Q₂
+  case base => simp
+  case ind w a ih => rintro heq; simp [evalFrom_append_singleton, bisimul_eval_one, *]
+
+theorem bisimul_accepts₁ :
+    Bisimul R M₁ M₂ → M₁.accepts ≤ M₂.accepts := by
+  rintro hsim w ⟨q₁, ha, he⟩
+  have ⟨q₂, he', hR⟩ := (bisimul_eval hsim w hsim.start).1 he
+  use q₂, (hsim.accept hR).mp ha, he'
+
+theorem bisimul_accepts :
+    Bisimul R M₁ M₂ → M₁.accepts = M₂.accepts := by
+  rintro hsim
+  apply le_antisymm
+  · apply bisimul_accepts₁ hsim
+  · apply bisimul_accepts₁ hsim.symm
+
+end NFA
+
+def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | x ∈ m }
+
+@[simp]
+lemma Std.HashSet.mem_toSet [BEq α] [Hashable α] (m : HashSet α) : x ∈ m.toSet ↔ x ∈ m := by rfl
+
+theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
+  {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :
+    motive b ∅ →
+    (∀ b x s, x ∉ s → motive b s → motive (f b x) (s ∪ {x})) →
+    motive (m.fold f b) m.toSet := by
+  sorry

@@ -841,7 +841,7 @@ def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
     binopAbsNfa op m1 m2
 
 lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
-  induction φ <;> unfold nfaOfFormula absNfaOfFormula <;> simp
+  induction φ
   case atom rel t1 t2 =>
     apply CNFA.proj_spec
     apply CNFA.inter_spec
