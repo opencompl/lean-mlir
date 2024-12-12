@@ -274,8 +274,13 @@ def nxor : FSM Bool :=
 def simplify (p : FSM arity) : FSM arity := {
   α := p.α
   initCarry := p.initCarry
-  nextBitCirc := Circuit.simplify ∘ p.nextBitCirc 
+  -- nextBitCirc := Circuit.simplify ∘ p.nextBitCirc
+  nextBitCirc := p.nextBitCirc
 }
+
+/-- Evaluating the value after `simplify` is the same as the original value. -/
+@[simp] lemma eval_simplify {arity : Type} (x : arity → BitStream) (p : FSM arity) :
+    p.simplify.eval x = p.eval x := rfl
 
 
 /--
@@ -947,14 +952,6 @@ private theorem falseUptoIncluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0
 end FSM
 
 open Term
-
-/-- Evaluating the value after `simplify` is the same as the original value. -/
-@[simp] lemma eval_simplify {arity : Type} (x : arity → BitStream) (p : FSM arity) : 
-    p.simplify.eval x = p.eval x := by
-  ext n 
-  induction n generalizing x
-  case zero => sorry
-  case succ n ih => sorry
 
 /--
 Note that **this is the value that is run by decide**.
