@@ -279,8 +279,8 @@ def simplify (p : FSM arity) : FSM arity := {
 }
 
 /-- Evaluating the value after `simplify` is the same as the original value. -/
-@[simp] lemma eval_simplify {arity : Type} (x : arity → BitStream) (p : FSM arity) :
-    p.simplify.eval x = p.eval x := rfl
+@[simp] lemma eval_simplify :
+    p.simplify.eval = p.eval := rfl
 
 
 /--
@@ -1264,7 +1264,7 @@ termination_by card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.simplify.eval x n = false := by
-  simp only [eval_simplify]
+  simp only [FSM.eval_simplify]
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
     intro s x h

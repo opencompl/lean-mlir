@@ -1079,7 +1079,7 @@ set_option trace.profiler true  in
 /-- warning: declaration uses 'sorry' -/
 theorem slow₁ (x : BitVec 32) :
     63#32 - (x &&& 31#32) = x &&& 31#32 ^^^ 63#32 := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
+  fail_if_success bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
   sorry
 
 end BvAutomataTests
