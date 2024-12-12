@@ -21,6 +21,19 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 
 import Lean
 
+/-
+TODO:
+- [ ] BitVec.ofInt
+- [ ] leftShift
+- [ ] Break down numeral multiplication into left shift:
+       10 * z
+     = z <<< 1 + 5 * z
+     = z <<< 1 + (z + 4 * z)
+     = z <<< 1 + (z + z <<< 2).
+
+     Needs O(log |N|) terms.
+-/
+
 /--
 Denote a bitstream into the underlying bitvector.
 -/
@@ -33,6 +46,49 @@ def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
 @[simp] theorem BitStream.denote_negOne : BitStream.denote BitStream.negOne w = BitVec.allOnes w := by
   simp [denote, toBitVec]
   sorry
+
+open Lean in
+def mkBoolLit (b : Bool) : Expr :=
+  match b with
+  | true => mkConst ``true
+  | false => mkConst ``false
+
+open Lean in
+def Term.quote (t : _root_.Term) : Expr :=
+  match t with
+  | ofNat n => mkApp (mkConst ``Term.ofNat) (mkNatLit n)
+  | var n => mkApp (mkConst ``Term.var) (mkNatLit n)
+  | zero => mkConst ``Term.zero
+  | one => mkConst ``Term.one
+  | negOne => mkConst ``Term.negOne
+  | decr t => mkApp (mkConst ``Term.decr) (t.quote)
+  | incr t => mkApp (mkConst ``Term.incr) (t.quote)
+  | neg t => mkApp (mkConst ``Term.neg) (t.quote)
+  | not t => mkApp (mkConst ``Term.not) (t.quote)
+  | ls b t => mkApp2 (mkConst ``Term.ls) (mkBoolLit b) (t.quote)
+  | sub t₁ t₂ => mkApp2 (mkConst ``Term.sub) (t₁.quote) (t₂.quote)
+  | add t₁ t₂ => mkApp2 (mkConst ``Term.add) (t₁.quote) (t₂.quote)
+  | xor t₁ t₂ => mkApp2 (mkConst ``Term.xor) (t₁.quote) (t₂.quote)
+  | or t₁ t₂ => mkApp2 (mkConst ``Term.or) (t₁.quote) (t₂.quote)
+  | and t₁ t₂ => mkApp2 (mkConst ``Term.and) (t₁.quote) (t₂.quote)
+
+open Lean in
+def Predicate.quote (p : _root_.Predicate) : Expr :=
+  match p with
+  | widthEq n => mkApp (mkConst ``Predicate.widthEq) (mkNatLit n)
+  | widthNeq n => mkApp (mkConst ``Predicate.widthNeq) (mkNatLit n)
+  | widthLt n => mkApp (mkConst ``Predicate.widthLt) (mkNatLit n)
+  | widthLe n => mkApp (mkConst ``Predicate.widthLe) (mkNatLit n)
+  | widthGt n => mkApp (mkConst ``Predicate.widthGt) (mkNatLit n)
+  | widthGe n => mkApp (mkConst ``Predicate.widthGe) (mkNatLit n)
+  | eq a b => mkApp2 (mkConst ``Predicate.eq) (_root_.Term.quote a) (_root_.Term.quote b)
+  | neq a b => mkApp2 (mkConst ``Predicate.neq) (_root_.Term.quote a) (_root_.Term.quote b)
+  | ult a b => mkApp2 (mkConst ``Predicate.ult) (_root_.Term.quote a) (_root_.Term.quote b)
+  | ule a b => mkApp2 (mkConst ``Predicate.ule) (_root_.Term.quote a) (_root_.Term.quote b)
+  | slt a b => mkApp2 (mkConst ``Predicate.slt) (_root_.Term.quote a) (_root_.Term.quote b)
+  | sle a b => mkApp2 (mkConst ``Predicate.sle) (_root_.Term.quote a) (_root_.Term.quote b)
+  | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
+  | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
 
 /-- Denote a Term into its underlying bitvector -/
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
@@ -74,6 +130,14 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
   | .ule  t₁ t₂ => ((t₁.denote w vars) ≤ (t₂.denote w vars))
   | .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
+
+/--
+The cost model of the predicate, which is based on the cardinality of the state space,
+and the size of the circuits.
+-/
+def Predicate.cost (p : Predicate) : Nat :=
+  let fsm := predicateEvalEqFSM p
+  fsm.circuitSize
 
 /--
 The semantics of a predicate:
@@ -205,6 +269,18 @@ TODO(@bollu): We also assume that the goals are in negation normal form, and if 
 namespace Reflect
 open Lean Meta Elab Tactic
 
+/-- Tactic options for bv_automata_circuit -/
+structure Config where
+  /--
+  The upper bound on the size of the FSM, beyond which the tactic will bail out on an error.
+  This is useful to prevent the tactic from taking oodles of time cruncing on goals that
+  build large state spaces, which can happen in the presence of tactics.
+  -/
+  circuitSizeThreshold : Nat := 80
+
+/-- Default user configuration -/
+def Config.default : Config := {}
+
 /-- The free variables in the term that is reflected. -/
 structure ReflectMap where
   /-- Map expressions to their index in the eventual `Reflect.Map`. -/
@@ -220,14 +296,14 @@ abbrev ReflectedExpr := Expr
 Insert expression 'e' into the reflection map. This returns the map,
 as well as the denoted term.
 -/
-def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : ReflectedExpr × ReflectMap :=
+def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : _root_.Term × ReflectMap :=
   let (ix, m) := match m.exprs.get? e with
     | some ix =>  (ix, m)
     | none =>
       let ix := m.exprs.size
       (ix, { m with exprs := m.exprs.insert e ix })
-  let e :=  mkApp (mkConst ``Term.var) (mkNatLit ix)
-  (e, m)
+  -- let e :=  mkApp (mkConst ``Term.var) (mkNatLit ix)
+  (Term.var ix, m)
 
 
 /--
@@ -253,14 +329,14 @@ instance : ToMessageData ReflectMap where
 Result of reflection, where we have a collection of bitvector variables,
 along with the bitwidth and the final term.
 -/
-structure ReflectResult where
+structure ReflectResult (α : Type) where
   /-- Map of 'free variables' in the bitvector expression,
   which are indexed as Term.var. This array is used to build the environment for decide.
   -/
   bvToIxMap : ReflectMap
-  e : ReflectedExpr
+  e : α
 
-instance : ToMessageData ReflectResult where
+instance [ToMessageData α] : ToMessageData (ReflectResult α) where
   toMessageData result := m!"{result.e} {result.bvToIxMap}"
 
 
@@ -304,7 +380,7 @@ info: ∀ {w : Nat} (a : BitVec w),
 #check ∀ {w : Nat} (a : BitVec w),  a.slt 0#w
 
 
-def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM ReflectResult := do
+def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
   let (e, map) := map.findOrInsertExpr e
   return { bvToIxMap := map, e := e }
 
@@ -316,15 +392,14 @@ and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
 -/
-partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM ReflectResult := do
+partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
   -- TODO: bitvector contants.
   match_expr e with
   | BitVec.ofInt _wExpr iExpr =>
     let i ← getIntValue? iExpr
     match i with
     | .some (-1) =>
-      let e := (mkConst ``Term.negOne)
-      return {bvToIxMap := map, e := e}
+      return {bvToIxMap := map, e := Term.negOne }
     | _ =>
       let (e, map) := map.findOrInsertExpr e
       return { bvToIxMap := map, e := e }
@@ -332,46 +407,48 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
     let n ← getNatValue? nExpr
     match n with
     | .some 0 =>
-      let e := (mkConst ``Term.zero)
-      return {bvToIxMap := map, e := e}
+      return {bvToIxMap := map, e := Term.zero }
     | .some 1 =>
       let e := (mkConst ``Term.one)
-      return {bvToIxMap := map, e := e}
-    | _ =>
-      let e := mkApp (mkConst ``Term.ofNat) nExpr
-      return { bvToIxMap := map, e := e }
+      return {bvToIxMap := map, e := Term.one }
+    | .some n =>
+      return { bvToIxMap := map, e := Term.ofNat n }
+    | none =>
+      logWarning "expected concrete BitVec.ofNat, found symbol '{n}', creating free variable"
+      reflectAtomUnchecked map w e
+
   | HAnd.hAnd _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      let out := mkApp2 (mkConst ``Term.and) a.e b.e
+      let out := Term.and a.e b.e
       return { b with e := out }
   | HOr.hOr _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      let out := mkApp2 (mkConst ``Term.or) a.e b.e
+      let out := Term.or a.e b.e
       return { b with e := out }
   | HXor.hXor _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      let out := mkApp2 (mkConst ``Term.xor) a.e b.e
+      let out := Term.xor a.e b.e
       return { b with e := out }
   | Complement.complement _bv _inst a =>
       let a ← reflectTermUnchecked map w a
-      let out := mkApp (mkConst ``Term.not) a.e
+      let out := Term.not a.e
       return { a with e := out }
   | HAdd.hAdd _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      let out := mkApp2 (mkConst ``Term.add) a.e b.e
+      let out := Term.add a.e b.e
       return { b with e := out }
   | HSub.hSub _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      let out := mkApp2 (mkConst ``Term.sub) a.e b.e
+      let out := Term.sub a.e b.e
       return { b with e := out }
   | Neg.neg _bv _inst a =>
       let a ← reflectTermUnchecked map w a
-      let out := mkApp (mkConst ``Term.neg) a.e
+      let out := Term.neg a.e
       return { a with e := out }
   -- incr
   -- decr
@@ -387,14 +464,14 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected : Expr) : MetaM ReflectResult := do
+partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected : Expr) : MetaM (ReflectResult Predicate) := do
   match_expr e with
   | Eq α a b =>
     match_expr α with
     | BitVec w =>
       let a ←  reflectTermUnchecked bvToIxMap w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.eq) #[a.e, b.e] }
+      return { bvToIxMap := b.bvToIxMap, e := Predicate.eq a.e b.e }
     | Bool =>
       -- Sadly, recall that slt, sle are of type 'BitVec w → BitVec w → Bool',
       -- so we get goal states of them form 'a <ₛb = true'.
@@ -406,11 +483,11 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       | BitVec.slt w a b =>
         let a ← reflectTermUnchecked bvToIxMap w a
         let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.slt) #[a.e, b.e] }
+        return { bvToIxMap := b.bvToIxMap, e := Predicate.slt a.e b.e }
       | BitVec.sle w a b =>
         let a ← reflectTermUnchecked bvToIxMap w a
         let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.sle) #[a.e, b.e] }
+        return { bvToIxMap := b.bvToIxMap, e := Predicate.sle a.e b.e }
       | _ =>
         throwError "unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
     | _ =>
@@ -424,33 +501,33 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
         throwError "Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
       let some natVal ← Lean.Meta.getNatValue? b
         | throwError "Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
-      let out := mkApp (mkConst ``Predicate.widthNeq) (Lean.mkNatLit natVal)
+      let out := Predicate.widthNeq natVal
       return { bvToIxMap := bvToIxMap, e := out }
     | BitVec w =>
       let a ← reflectTermUnchecked bvToIxMap w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
-      return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.neq) #[a.e, b.e] }
+      return { bvToIxMap := b.bvToIxMap, e := Predicate.neq a.e b.e }
     | _ =>
       throwError "Expected typeclass to be 'BitVec w' / 'Nat', found '{indentD α}' in {e} when matching against 'Ne'"
   | LT.lt α _inst a b =>
     let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
     let a ← reflectTermUnchecked bvToIxMap w a
     let b ← reflectTermUnchecked a.bvToIxMap w b
-    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.ult) #[a.e, b.e] }
+    return { bvToIxMap := b.bvToIxMap, e := Predicate.ult a.e b.e }
   | LE.le α _inst a b =>
     let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LE.le'"
     let a ← reflectTermUnchecked bvToIxMap w a
     let b ← reflectTermUnchecked a.bvToIxMap w b
-    return { bvToIxMap := b.bvToIxMap, e := mkAppN (mkConst ``Predicate.ule) #[a.e, b.e] }
+    return { bvToIxMap := b.bvToIxMap, e := Predicate.ule a.e b.e }
   | Or p q =>
     let p ← reflectPredicateAux bvToIxMap p wExpected
     let q ← reflectPredicateAux p.bvToIxMap q wExpected
-    let out := mkApp2 (mkConst ``Predicate.lor) p.e q.e
+    let out := Predicate.lor p.e q.e
     return { q with e := out }
   | And p q =>
     let p ← reflectPredicateAux bvToIxMap p wExpected
     let q ← reflectPredicateAux p.bvToIxMap q wExpected
-    let out := mkApp2 (mkConst ``Predicate.land) p.e q.e
+    let out := Predicate.land p.e q.e
     return { q with e := out }
   | _ =>
      throwError "expected predicate over bitvectors (no quantification), found:  {indentD e}"
@@ -508,9 +585,6 @@ def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
     return (fvars[0], g)
   throwError"expected a single free variable from generalizing map {e}, found multiple..."
 
-#check reduceBool
-#check ofReduceBool
-
 /--
 Revert all hypotheses that have to do with bitvectors, so that we can use them.
 
@@ -527,6 +601,7 @@ def revertBvHyps (g : MVarId) : MetaM MVarId := do
   let (_, g) ← g.revert (← g.getNondepPropHyps)
   return g
 
+
 /--
 Reflect an expression of the form:
   ∀ ⟦(w : Nat)⟧ (← focus)
@@ -540,7 +615,7 @@ which explains how to create the correct auxiliary definition of the form
 
 which is then indeed `rfl` equal to `true`.
 -/
-def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
+def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
   if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
@@ -579,8 +654,15 @@ def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
     logInfo m!"goal after NNF: {indentD g}"
     -- finally, we perform reflection.
     let result ← reflectPredicateAux ∅ (← g.getType) w
+    let fsm := predicateEvalEqFSM result.e |>.toFSM
+    logInfo m!"Circuit size of FSM: '{toMessageData fsm.circuitSize}'"
+    if fsm.circuitSize > cfg.circuitSizeThreshold then
+      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('{cfg.circuitSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmCircuitSizeUpperBound := <number>})')"
+
     let bvToIxMapVal ← result.bvToIxMap.toExpr w
-    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e, w, bvToIxMapVal])
+
+    let cost := result.e.cost
+    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     logInfo m!"goal after reflection: {indentD g}"
     let (mapFv, g) ← generalizeMap g bvToIxMapVal;
@@ -606,12 +688,18 @@ TODO(@bollu): Also decide properties about finite widths, by extending to the ma
 -/
 elab "bv_reflect" : tactic => do
   liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g
+    reflectUniversalWidthBVs g Config.default
 
+/-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
+declare_config_elab elabBvAutomataCircuitConfig Config
 
-elab "bv_automata_circuit" : tactic => do
-  liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g
+syntax (name := bvAutomataCircuit) "bv_automata_circuit" (Lean.Parser.Tactic.config)? : tactic
+@[tactic bvAutomataCircuit]
+def evalBvAutomataCircuit : Tactic := fun
+| `(tactic| bv_automata_circuit $[$cfg]?) => do
+  let cfg ← elabBvAutomataCircuitConfig (mkOptionalNode cfg)
+
+  liftMetaTactic fun g => do reflectUniversalWidthBVs g cfg
 
   match ← getUnsolvedGoals  with
   | [] => return ()
@@ -620,6 +708,7 @@ elab "bv_automata_circuit" : tactic => do
     logInfo m!"goal being decided: {indentD g}"
     evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig})
   | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
+| _ => throwUnsupportedSyntax
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
@@ -762,6 +851,8 @@ info: goal after NNF: ⏎
   a b : BitVec 10
   ⊢ a = b
 ---
+info: Circuit size of FSM: '3'
+---
 info: goal after reflection: ⏎
   a b : BitVec 10
   ⊢ (Predicate.eq (Term.var 0) (Term.var 1)).denote 10 (Map.append 10 b (Map.append 10 a Map.empty))
@@ -786,7 +877,7 @@ section BvAutomataTests
 -/
 
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
 /--
 info: 'Reflect.alive_1' depends on axioms: [propext,
@@ -877,8 +968,8 @@ example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
   intros
   bv_automata_circuit
 
-/-- Can solve width-constraints problems -/
-def test29 (x y : BitVec w) : w = 64 → x &&& x &&& x &&& x &&& x &&& x = x := by
+/-- Can solve width-constraints problems, but this takes a while. -/
+def test29 (x y : BitVec w) : w = 32 → x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_automata_circuit
 
 /-- Can solve width-constraints problems -/
@@ -896,11 +987,11 @@ theorem neg_eq_not_add_one (x : BitVec w) :
 
 theorem add_eq_xor_add_mul_and (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
-theorem add_eq_xor_add_mul_and' (x y z : BitVec w) :
+theorem add_eq_xor_add_mul_and' (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
 theorem add_eq_xor_add_mul_and_nt (x y z : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
@@ -916,6 +1007,8 @@ To perform width-specific reasoning, rewrite goal with a width constraint, e.g. 
 info: goal after NNF: ⏎
   x : BitVec 1
   ⊢ x + x + x + x = 0#1
+---
+info: Circuit size of FSM: '70'
 ---
 info: goal after reflection: ⏎
   x : BitVec 1
