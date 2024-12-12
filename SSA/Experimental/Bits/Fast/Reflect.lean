@@ -32,6 +32,8 @@ TODO:
      = z <<< 1 + (z + z <<< 2).
 
      Needs O(log |N|) terms.
+
+
 -/
 
 /--
@@ -272,11 +274,17 @@ open Lean Meta Elab Tactic
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
   /--
-  The upper bound on the size of the FSM, beyond which the tactic will bail out on an error.
+  The upper bound on the size of circuits in the FSM, beyond which the tactic will bail out on an error.
   This is useful to prevent the tactic from taking oodles of time cruncing on goals that
   build large state spaces, which can happen in the presence of tactics.
   -/
   circuitSizeThreshold : Nat := 80
+
+  /--
+  The upper bound on the state space of the FSM, beyond which the tactic will bail out on an error.
+  See also `Config.circuitSizeThreshold`.
+  -/
+  stateSpaceSizeThreshold : Nat := 20
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -325,6 +333,26 @@ instance : ToMessageData ReflectMap where
     let es := exprs.exprs.toArray.qsort (fun a b => a.2 < b.2)
     let mut lines := es.map (fun (e, i) => m!"{i}→{e}")
     return m!"[" ++ m!" ".joinSep lines.toList ++ m!"]"
+
+/--
+If we have variables in the `ReflectMap` that are not FVars,
+then we will throw a warning informing the user that this will be treated as a symbolic variable.
+-/
+def ReflectMap.throwWarningIfUninterpretedExprs (xs : ReflectMap) : MetaM Unit := do
+  let mut out? : Option MessageData := none
+  let header := m!"Tactic has not understood the following expressions, and will treat them as symbolic:"
+  -- Order the expressions so we get stable error messages.
+  let exprs := xs.exprs.toArray.qsort (fun ei ej => ei.1.quickLt ej.1)
+
+  for (e, _) in exprs do
+    if e.isFVar then continue
+    let eshow := indentD m!"- {e}"
+    out? := match out? with
+      | .none => header ++ Format.line ++ eshow
+      | .some out => .some (out ++ eshow)
+  let .some out := out? | return ()
+  logWarning out
+
 /--
 Result of reflection, where we have a collection of bitvector variables,
 along with the bitwidth and the final term.
@@ -409,7 +437,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
     | .some 0 =>
       return {bvToIxMap := map, e := Term.zero }
     | .some 1 =>
-      let e := (mkConst ``Term.one)
+      let _ := (mkConst ``Term.one)
       return {bvToIxMap := map, e := Term.one }
     | .some n =>
       return { bvToIxMap := map, e := Term.ofNat n }
@@ -654,17 +682,23 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     logInfo m!"goal after NNF: {indentD g}"
     -- finally, we perform reflection.
     let result ← reflectPredicateAux ∅ (← g.getType) w
-    let fsm := predicateEvalEqFSM result.e |>.toFSM
-    logInfo m!"Circuit size of FSM: '{toMessageData fsm.circuitSize}'"
-    if fsm.circuitSize > cfg.circuitSizeThreshold then
-      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('{cfg.circuitSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmCircuitSizeUpperBound := <number>})')"
+    result.bvToIxMap.throwWarningIfUninterpretedExprs
 
     let bvToIxMapVal ← result.bvToIxMap.toExpr w
 
-    let cost := result.e.cost
     let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     logInfo m!"goal after reflection: {indentD g}"
+
+    -- Log the finite state machine size, and bail out if we cross the barrier.
+    let fsm := predicateEvalEqFSM result.e |>.toFSM
+    logInfo m!"FSM: ⋆Circuit size '{toMessageData fsm.circuitSize}'  ⋆State space size '{fsm.stateSpaceSize}'"
+    if fsm.circuitSize > cfg.circuitSizeThreshold then
+      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('{cfg.circuitSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmCircuitSizeUpperBound := <number>})')"
+
+    if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
+      throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('{cfg.stateSpaceSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmStateSpaceSizeUpperBound := <number>})')"
+
     let (mapFv, g) ← generalizeMap g bvToIxMapVal;
     let (_, g) ← g.revert #[mapFv]
     -- Apply Predicate.denote_of_eval_eq.
@@ -851,11 +885,11 @@ info: goal after NNF: ⏎
   a b : BitVec 10
   ⊢ a = b
 ---
-info: Circuit size of FSM: '3'
----
 info: goal after reflection: ⏎
   a b : BitVec 10
   ⊢ (Predicate.eq (Term.var 0) (Term.var 1)).denote 10 (Map.append 10 b (Map.append 10 a Map.empty))
+---
+info: FSM: ⋆Circuit size '3'  ⋆State space size '0'
 ---
 error: unsolved goals
 case heval.a.h
@@ -876,18 +910,21 @@ section BvAutomataTests
 # Test Cases
 -/
 
-def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
-
 /--
-info: 'Reflect.alive_1' depends on axioms: [propext,
- sorryAx,
- Classical.choice,
- Lean.ofReduceBool,
- Lean.trustCompiler,
- Quot.sound]
+warning: Tactic has not understood the following expressions, and will treat them as symbolic:
+
+  - f x
+  - f y
 -/
-#guard_msgs in #print axioms alive_1
+#guard_msgs (warning, drop error, drop info) in
+theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) : f x ≠ f y :=
+  by bv_automata_circuit
+  
+
+/- See that such problems have large circuit sizes, but small state spaces -/
+def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
+  bv_automata_circuit (config := { circuitSizeThreshold := 81 })
+
 
 def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
   fail_if_success bv_automata_circuit
@@ -895,7 +932,6 @@ def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
 
 def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
   bv_automata_circuit -- can't decide things for fixed bitwidth.
-
 
 def test0 {w : Nat} (x y : BitVec w) : x + 0#w = x := by
   bv_automata_circuit
@@ -924,7 +960,6 @@ def test11 (x y : BitVec w) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
 
 def test15 (x y : BitVec w) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
   bv_automata_circuit
-
 
 def test17 (x y : BitVec w) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
   bv_automata_circuit
@@ -970,7 +1005,7 @@ example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
 
 /-- Can solve width-constraints problems, but this takes a while. -/
 def test29 (x y : BitVec w) : w = 32 → x &&& x &&& x &&& x &&& x &&& x = x := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { stateSpaceSizeThreshold := 33 })
 
 /-- Can solve width-constraints problems -/
 def test30  : (w = 2) → 8#w = 0#w := by
@@ -978,8 +1013,7 @@ def test30  : (w = 2) → 8#w = 0#w := by
 
 /-- Can solve width-constraints problems -/
 def test31 (w : Nat) (x : BitVec w) : (w = 64) → x &&& x = x := by
-  bv_automata_circuit
-
+  bv_automata_circuit (config := { stateSpaceSizeThreshold := 65 })
 
 theorem neg_eq_not_add_one (x : BitVec w) :
     -x = ~~~ x + 1#w := by
@@ -998,7 +1032,6 @@ theorem add_eq_xor_add_mul_and_nt (x y z : BitVec w) :
   fail_if_success bv_automata_circuit
   sorry
 
-
 /--
 warning: Width '1' is not a free variable (i.e. width is not universally quantified).
 The tactic will perform width-generic reasoning.
@@ -1008,12 +1041,12 @@ info: goal after NNF: ⏎
   x : BitVec 1
   ⊢ x + x + x + x = 0#1
 ---
-info: Circuit size of FSM: '70'
----
 info: goal after reflection: ⏎
   x : BitVec 1
   ⊢ (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).denote 1
       (Map.append 1 x Map.empty)
+---
+info: FSM: ⋆Circuit size '70'  ⋆State space size '3'
 ---
 info: goal being decided: ⏎
   case heval.a.h
@@ -1041,6 +1074,12 @@ is false
 /-- Can solve width-constraints problems, when written with a width constraint. -/
 def width_generic_exploit_success (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
   bv_automata_circuit
+
+/-- warning: declaration uses 'sorry' -/
+#guard_msgs in theorem slow₁ (x : BitVec 32) :
+    63#32 - (x &&& 31#32) = x &&& 31#32 ^^^ 63#32 := by
+  fail_if_success bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
+  sorry
 
 end BvAutomataTests
 
