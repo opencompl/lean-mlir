@@ -385,6 +385,14 @@ info: ∀ {w : Nat} (a : BitVec w),
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a : BitVec w), - a = 0#w
 
+/--
+info: ∀ {w : Nat} (a : BitVec w) (n : Nat),
+  @Eq (BitVec w) (@HShiftLeft.hShiftLeft (BitVec w) Nat (BitVec w) (@BitVec.instHShiftLeftNat w) a n)
+    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+-/
+#guard_msgs in set_option pp.explicit true in
+#check ∀ {w : Nat} (a : BitVec w) (n : Nat), a <<< n = 0#w
+
 
 /--
 info: ∀ {w : Nat} (a : BitVec w),
@@ -469,6 +477,11 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       let b ← reflectTermUnchecked a.bvToIxMap w b
       let out := Term.add a.e b.e
       return { b with e := out }
+  | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
+      let a ← reflectTermUnchecked map w a
+      let some natVal ← Lean.Meta.getNatValue? n
+        | throwError "Only shift left by natural numbers are allowed, but found shift by expression '{n}' at {indentD e}"
+      return { a with e := Term.shiftL a.e natVal }
   | HSub.hSub _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
@@ -1002,6 +1015,12 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
 example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
   intros
   bv_automata_circuit
+
+example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by intros; bv_automata_circuit
+example : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by intros; bv_automata_circuit
+example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
+  intros; bv_automata_circuit
+
 
 /-- Can solve width-constraints problems, but this takes a while. -/
 def test29 (x y : BitVec w) : w = 32 → x &&& x &&& x &&& x &&& x &&& x = x := by
