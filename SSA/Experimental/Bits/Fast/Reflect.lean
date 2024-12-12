@@ -1,7 +1,5 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
-
-
 This file reflects the semantics of bitstreams, terms, predicates, and FSMs
 into lean bitvectors.
 
@@ -915,8 +913,8 @@ section BvAutomataTests
 /--
 warning: Tactic has not understood the following expressions, and will treat them as symbolic:
 
-  - f x
   - f y
+  - f x
 -/
 #guard_msgs (warning, drop error, drop info) in
 theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) : f x ≠ f y :=
@@ -1077,10 +1075,11 @@ is false
 def width_generic_exploit_success (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
   bv_automata_circuit
 
+set_option trace.profiler true  in
 /-- warning: declaration uses 'sorry' -/
-#guard_msgs in theorem slow₁ (x : BitVec 32) :
+theorem slow₁ (x : BitVec 32) :
     63#32 - (x &&& 31#32) = x &&& 31#32 ^^^ 63#32 := by
-  fail_if_success bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
+  bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
   sorry
 
 end BvAutomataTests

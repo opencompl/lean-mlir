@@ -230,8 +230,7 @@ def and : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
     nextBitCirc := fun a => a.elim
-      (Circuit.and
-        (Circuit.var true (inr true))
+      ((Circuit.var true (inr true)) &&&
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_and (x : Bool → BitStream) : and.eval x = (x true) &&& (x false) := by
@@ -241,8 +240,7 @@ def or : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
     nextBitCirc := fun a => a.elim
-      (Circuit.or
-        (Circuit.var true (inr true))
+      ((Circuit.var true (inr true)) |||
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = (x true) ||| (x false) := by
@@ -252,8 +250,7 @@ def xor : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
     nextBitCirc := fun a => a.elim
-      (Circuit.xor
-        (Circuit.var true (inr true))
+      ( (Circuit.var true (inr true)) ^^^
         (Circuit.var true (inr false))) Empty.elim }
 
 /-- Equality, or alternatively, negation of the xor -/
@@ -268,12 +265,18 @@ def nxor : FSM Bool :=
       -- 0 ⊕ 1 ⊕ 1 = 0 -- value is 0 iff they differ
       -- 1 ⊕ 0 ⊕ 1 = 0 -- value is 1 iff they differ.
       -- 1 ⊕ 1 ⊕ 1 = 1
-      (Circuit.xor Circuit.tru
-        (Circuit.xor
-        (Circuit.var true (inr true))
+      (Circuit.tru ^^^
+        ( (Circuit.var true (inr true)) ^^^
         (Circuit.var true (inr false))))
      | some empty => empty.elim
   }
+
+def simplify (p : FSM arity) : FSM arity := {
+  α := p.α
+  initCarry := p.initCarry
+  nextBitCirc := Circuit.simplify ∘ p.nextBitCirc 
+}
+
 
 /--
 Scan a sequence of booleans with the bitwise and operator
@@ -488,7 +491,7 @@ def borrow : FSM Bool :=
       -- 1 1 1 | 1
       -- (!a && b || ((!(xor a b)) && borrow))
       (nota &&& b/- !a && b-/) |||
-      ((Circuit.not <| a ^^^ b /- !(xor a b) -/) &&& borrow)
+      ((~~~ (a ^^^ b) /- !(xor a b) -/) &&& borrow)
 
   }
 
@@ -945,8 +948,15 @@ end FSM
 
 open Term
 
-/--
+/-- Evaluating the value after `simplify` is the same as the original value. -/
+@[simp] lemma eval_simplify {arity : Type} (x : arity → BitStream) (p : FSM arity) : 
+    p.simplify.eval x = p.eval x := by
+  ext n 
+  induction n generalizing x
+  case zero => sorry
+  case succ n ih => sorry
 
+/--
 Note that **this is the value that is run by decide**.
 -/
 def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
@@ -1256,7 +1266,8 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
 termination_by card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
+    (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.simplify.eval x n = false := by
+  simp only [eval_simplify]
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
     intro s x h
