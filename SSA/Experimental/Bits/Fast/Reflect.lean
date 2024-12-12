@@ -269,6 +269,18 @@ TODO(@bollu): We also assume that the goals are in negation normal form, and if 
 namespace Reflect
 open Lean Meta Elab Tactic
 
+/-- Tactic options for bv_automata_circuit -/
+structure Config where
+  /--
+  The upper bound on the size of the FSM, beyond which the tactic will bail out on an error.
+  This is useful to prevent the tactic from taking oodles of time cruncing on goals that
+  build large state spaces, which can happen in the presence of tactics.
+  -/
+  circuitSizeThreshold : Nat := 80
+
+/-- Default user configuration -/
+def Config.default : Config := {}
+
 /-- The free variables in the term that is reflected. -/
 structure ReflectMap where
   /-- Map expressions to their index in the eventual `Reflect.Map`. -/
@@ -603,7 +615,7 @@ which explains how to create the correct auxiliary definition of the form
 
 which is then indeed `rfl` equal to `true`.
 -/
-def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
+def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
   if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
@@ -642,11 +654,10 @@ def reflectUniversalWidthBVs (g : MVarId) : MetaM (List MVarId) := do
     logInfo m!"goal after NNF: {indentD g}"
     -- finally, we perform reflection.
     let result ← reflectPredicateAux ∅ (← g.getType) w
-    let circuitSizeThreshold : Nat := 100
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo m!"Circuit size of FSM: '{toMessageData fsm.circuitSize}'"
-    if fsm.circuitSize > circuitSizeThreshold then
-      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('{circuitSizeThreshold}')"
+    if fsm.circuitSize > cfg.circuitSizeThreshold then
+      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('{cfg.circuitSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmCircuitSizeUpperBound := <number>})')"
 
     let bvToIxMapVal ← result.bvToIxMap.toExpr w
 
@@ -677,12 +688,18 @@ TODO(@bollu): Also decide properties about finite widths, by extending to the ma
 -/
 elab "bv_reflect" : tactic => do
   liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g
+    reflectUniversalWidthBVs g Config.default
 
+/-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
+declare_config_elab elabBvAutomataCircuitConfig Config
 
-elab "bv_automata_circuit" : tactic => do
-  liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g
+syntax (name := bvAutomataCircuit) "bv_automata_circuit" (Lean.Parser.Tactic.config)? : tactic
+@[tactic bvAutomataCircuit]
+def evalBvAutomataCircuit : Tactic := fun
+| `(tactic| bv_automata_circuit $[$cfg]?) => do
+  let cfg ← elabBvAutomataCircuitConfig (mkOptionalNode cfg)
+
+  liftMetaTactic fun g => do reflectUniversalWidthBVs g cfg
 
   match ← getUnsolvedGoals  with
   | [] => return ()
@@ -691,6 +708,7 @@ elab "bv_automata_circuit" : tactic => do
     logInfo m!"goal being decided: {indentD g}"
     evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig})
   | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
+| _ => throwUnsupportedSyntax
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
@@ -859,7 +877,7 @@ section BvAutomataTests
 -/
 
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
 /--
 info: 'Reflect.alive_1' depends on axioms: [propext,
@@ -969,11 +987,11 @@ theorem neg_eq_not_add_one (x : BitVec w) :
 
 theorem add_eq_xor_add_mul_and (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
-theorem add_eq_xor_add_mul_and' (x y z : BitVec w) :
+theorem add_eq_xor_add_mul_and' (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit
+  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
 theorem add_eq_xor_add_mul_and_nt (x y z : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
