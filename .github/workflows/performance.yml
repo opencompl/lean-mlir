@@ -1,0 +1,42 @@
+name: Performance
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: tools, scaling, and auto-generated stmts
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Build
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build
+
+      - name: Run benchmarks
+        run: |
+          cd bv-evaluation
+	  ./python3 compare-leansat-vs-bitwuzla-llvm-sym.py -j32
