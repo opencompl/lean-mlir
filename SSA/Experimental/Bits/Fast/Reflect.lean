@@ -21,8 +21,19 @@ import Lean
 
 /-
 TODO:
-- [ ] BitVec.ofInt
-- [ ] leftShift
+- [?] BitVec.ofInt
+    + This is sadly more subtle than I realized.
+    + In the infinite width model, we have something like
+        `∀ w, (negOnes w).getLsb 20 = true`
+      However, this is patently untrue in lean, since we can instantiate `w = 0`.
+    + So, it's not clear to me that this makes sense in the lean model of things?
+      However, there is the funnny complication that we don't actually support getLsb, 
+      or right shift to access that bit before we reach that bitwidth, so the abstraction
+      may still be legal, for reasons that I don't clearly understand now :P 
+    + Very interesting subtleties!
+    + I currently add support for BitVec.ofInt, with the knowledge that I can remove it
+      if I'm unable to prove soundness.
+- [x] leftShift
 - [ ] Break down numeral multiplication into left shift:
        10 * z
      = z <<< 1 + 5 * z
@@ -30,8 +41,6 @@ TODO:
      = z <<< 1 + (z + z <<< 2).
 
      Needs O(log |N|) terms.
-
-
 -/
 
 /--
@@ -176,8 +185,44 @@ def Reflect.Map.empty : List (BitVec w) := []
 
 def Reflect.Map.append (w : Nat) (s : BitVec w)  (m : List (BitVec w)) : List (BitVec w) := m.append [s]
 
-def Reflect.Map.get (ix : ℕ) (s : BitVec w)  (m : List (BitVec w)) : BitVec w := m[ix]!
+def Reflect.Map.get (ix : ℕ) (_ : BitVec w)  (m : List (BitVec w)) : BitVec w := m[ix]!
 
+namespace Simplifications 
+
+/-- 
+Multiplying by an even number `e` is the same as shifting by `1`,
+followed by multiplying by half of `e` (the number `n`).
+This is used to simplify multiplications into shifts.
+-/
+theorem BitVec.mul_even_eq_shiftLeft_mul_of_eq_mul_two (x : BitVec w) (n e : Nat) (he : e = n * 2) :
+    x * e = (x <<< 1) * n := by
+  apply BitVec.eq_of_toNat_eq 
+  simp [Nat.shiftLeft_eq, he]
+  rcases w with rfl | w 
+  · simp [Nat.mod_one]
+  · simp only [lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow,
+    pow_one]
+    congr 1
+    rw [Nat.mul_comm n 2, Nat.mul_assoc]
+    
+/-- 
+Multiplying by an odd number `o` is the same as adding `x`, followed by multiplying by `(o - 1) / 2`.
+This is used to simplify multiplications into shifts.
+-/
+theorem BitVec.mul_odd_eq_shiftLeft_mul_of_eq_mul_two_add_one (x : BitVec w) (n o : Nat)
+    (ho : o = n * 2 + 1) : x * o = (x <<< 1) * n + x := by
+  apply BitVec.eq_of_toNat_eq 
+  simp [Nat.shiftLeft_eq, ho]
+  rcases w with rfl | w 
+  · simp [Nat.mod_one]
+  · simp only [lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow,
+    pow_one]
+    congr 1
+    rw [Nat.mul_add x.toNat _ 1]
+    rw [Nat.mul_comm n 2, Nat.mul_assoc]
+    omega
+
+end Simplifications
 
 namespace NNF
 open Lean Elab Meta

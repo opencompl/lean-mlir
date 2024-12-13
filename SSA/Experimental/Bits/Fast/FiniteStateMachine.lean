@@ -802,12 +802,12 @@ def ofNat (n : Nat)  : FSM (Fin 0) :=
     composeUnaryAux (FSM.ls bit) (ofNat m)
 
 @[simp]
-theorem const_zero : ofNat 0 = FSM.zero :=
+theorem ofNat_zero : ofNat 0 = FSM.zero :=
   by simp [ofNat]
 
 /-- Evaluating 'const n' gives us the bits of the value of 'const n'.-/
 @[simp]
-theorem eval_const (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+theorem eval_ofNat (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
     (ofNat n).eval env i = n.testBit i := by
   induction n using Nat.div2Induction generalizing i
   case ind n hn =>
@@ -823,12 +823,118 @@ theorem eval_const (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
         simp [hn, Nat.testBit_succ]
 
 
+/-- Test the 'k'th bit of an integer.
+
+* negSucc:
+   - (n + 1)
+   = -n - 1
+   = (!x + 1) - 1 = !x
+-/
+def _root_.Int.testBit' (i : Int) (k : Nat) : Bool :=
+  match i with 
+  | .ofNat n => n.testBit k
+  | .negSucc n => !(n.testBit k)
+
+/--
+the 'k'th bit of 'w' is equal to the 'k'th bit we get by testing the integer representation.
+-/
+theorem BitVec.getLsbD_eq_toInt_testBit' (b : BitVec w) (hk : k < w) : b.getLsbD k = b.toInt.testBit' k := by
+  rw [BitVec.getLsbD]
+  rw [BitVec.toInt_eq_toNat_cond]
+  by_cases hb : 2 * b.toNat < 2^w
+  · simp [hb]
+    rw [Int.testBit'.eq_def]
+  · simp [hb]
+    have : ↑b.toNat - 2 ^ w = Int.subNatNat b.toNat (2 ^ w) := by norm_cast
+    rw [Int.testBit'.eq_def, this, Int.subNatNat_of_lt (by omega)]
+    simp
+    let notb := (~~~ b).toNat
+    rw [show 2^w - b.toNat - 1 = 2^w - 1 - b.toNat by omega, ← BitVec.toNat_not]
+    rw [← BitVec.getLsbD, ← BitVec.getLsbD]
+    simp
+    omega
+
+
+/--
+If `i < -1`, then `i` is less than `i / 2`.
+If `i = -1`, then `-1 / 2 = -1` (floor division of integers).
+-/
+private theorem Int.lt_of_neg {i : Int} (hi : i < - 1) : i < i / 2 := by
+  have h : (2 ∣ i) ∨ (2 ∣ (i - 1)) := by
+    omega
+  rcases h with h | h
+  · rw [Int.div_def]
+    apply Int.lt_ediv_of_mul_lt <;> omega
+  · have hi : i = (i - 1) + 1 := by omega
+    conv =>
+      rhs
+      rw [hi]
+    rw [Int.add_ediv_of_dvd_left]
+    · simp only [Int.reduceDiv, add_zero]
+      apply Int.lt_ediv_of_mul_lt
+      · omega
+      · exact h
+      · omega
+    · omega
+
+/--
+Show how to build a bitvector representation from a `negSucc`.
+The theory of `Int.testBit` tells us that we can get the bits from `!(n.testBit k)`.
+-/
+def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
+  if hi' : i = -1 then  
+    FSM.negOne
+  else
+    let bit := i.testBit' 0
+    let m := i / 2
+    let k := ofNegInt m (by omega)
+    composeUnaryAux (FSM.ls bit) k
+  termination_by (-i |>.toNat)
+  decreasing_by
+    simp [hi]
+    apply Int.lt_of_neg
+    omega
+
+/-- 
+-/
+@[simp] theorem eval_ofNegInt (x : Int) (hx : x < 0)  (i : Nat) {env : Fin 0 → BitStream} :
+    (ofNegInt x hx).eval env i = BitStream.ofInt x i := by
+  rcases x with x | x 
+  · simp at hx; omega
+  · simp [BitStream.ofInt]
+    induction x
+    case zero => 
+      simp [ofNegInt]
+    case succ x ih =>
+      rw [ofNegInt]
+      have hi' : Int.negSucc (x + 1) ≠ -1 := by omega
+      simp [hi']
+      simp [BitStream.concat]
+      sorry
+
+/-- Build a finite state machine for the integer `i` -/
+def ofInt (x : Int) : FSM (Fin 0) := 
+  if hi : x ≥ 0 then
+    ofNat x.toNat
+  else
+    ofNegInt x (by omega)
+
+/-- 
+The result of `FSM.ofInt x` matches with `BitStream.ofInt x`.
+-/
+theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
+    (ofInt x).eval env i = BitStream.ofInt x i := by
+  rcases x with x | x
+  · simp [ofInt, BitStream.ofInt]
+  · simp [ofInt, BitStream.ofInt]
+
+
 /-- Identity finite state machine -/
 def id : FSM Unit := {
  α := Empty,
  initCarry := Empty.elim,
  nextBitCirc := fun a => 
-   match a with 
+   match a with
    | none => (Circuit.var true (inr ()))
    | some f => f.elim
 }

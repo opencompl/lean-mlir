@@ -493,6 +493,10 @@ instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
 instance : Sub BitStream := ⟨sub⟩
 
+theorem add_eq (a b : BitStream) : a.add b = a + b := rfl
+theorem sub_eq (a b : BitStream) : a.sub b = a - b := rfl
+theorem neg_eq (a : BitStream) : a.neg  = - a := rfl
+
 /-- `repeatBit xs` will repeat the first bit of `xs` which is `true`.
 That is, it will be all-zeros iff `xs` is all-zeroes,
 otherwise, there's some number `k` so that after dropping the `k` least
@@ -837,6 +841,20 @@ variable (i : Nat)
 @[simp] theorem one_eq  : one i = (i == 0)  := rfl
 @[simp] theorem negOne_eq : negOne i = true := rfl
 
+/-- The stream from `- (ofNat 1)` has all output bits `1` and all cary bits `0`. -/
+@[simp] theorem negAux_ofNat_one_eq : negAux (BitStream.ofNat 1) i = (true, false) := by
+  induction i
+  case zero => simp [negAux]
+  case succ i ih =>
+    simp [negAux, ih]
+
+/-- The stream from `- (ofNat 1)` has all output bits `1`, and is thus equal to `negOne`. -/
+@[simp] theorem neg_ofNat_one_eq : - (BitStream.ofNat 1) = negOne := by 
+  rw [← neg_eq]
+  unfold BitStream.neg
+  simp
+
 end Lemmas
 
 end OfInt
+
