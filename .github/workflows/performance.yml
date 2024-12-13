@@ -52,14 +52,35 @@ jobs:
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j256)
 
+      - name: Run LLVM
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j256)
+
+      - name: Run Alive
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive.py -j256)
+
+      - name: Run HDel
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j256)
+
       - name: Compare LLVM Symbolic
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
-      - name: Compare Alive Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
-
       - name: Compare HDEl Symbolic
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
+
+      - name: Compare LLVM Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-llvm.py > /dev/null)
+
+      - name: Compare HDEl Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+
+      - name: Compare Alive All
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
+
