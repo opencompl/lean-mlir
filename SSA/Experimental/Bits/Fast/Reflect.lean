@@ -130,7 +130,7 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | incr a => (a.denote w vars) + 1#w
   | decr a => (a.denote w vars) - 1#w
   | ls bit a => (a.denote w vars).shiftConcat bit
-  | shiftL a n => (a.denote w vars) <<< (BitVec.ofNat w n)
+  | shiftL a n => (a.denote w vars) <<< n
 
 theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
     (t.eval (vars.map BitStream.ofBitVec)).denote w = t.denote w vars := by
@@ -222,19 +222,29 @@ with BitVec.ofNat -/
   x * (BitVec.ofNat w n) = BitVec.ofNat w n * x := by rw [BitVec.mul_comm]
 
 
+/-! Normal form for shifts
+
+See that `x <<< (n : Nat)` is strictly more expression than `x <<< BitVec.ofNat w n`,
+because in the former case, we can shift by arbitrary amounts, while in the latter case,
+we can only shift by numbers upto `2^w`. Therefore, we choose `x <<< (n : Nat)` as our simp
+and preprocessing normal form for the tactic.
+-/
+
+@[simp] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) : 
+  x <<< BitVec.ofNat w n = x <<< (n % 2^w) := by simp
+
 /--
 Multiplying by an even number `e` is the same as shifting by `1`,
 followed by multiplying by half of `e` (the number `n`).
 This is used to simplify multiplications into shifts.
 -/
 theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two (w : Nat) (x : BitVec w) (n e : Nat) (he : e = n * 2) :
-    (BitVec.ofNat w e) * x = (BitVec.ofNat w n) * (x <<< (1#w)) := by
+    (BitVec.ofNat w e) * x = (BitVec.ofNat w n) * (x <<< (1 : Nat)) := by
   apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, he]
   rcases w with rfl | w
   · simp [Nat.mod_one]
-  · simp
-    congr 1
+  · congr 1
     rw [Nat.mul_comm x.toNat 2, ← Nat.mul_assoc n]
 
 /--
@@ -242,14 +252,12 @@ Multiplying by an odd number `o` is the same as adding `x`, followed by multiply
 This is used to simplify multiplications into shifts.
 -/
 theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : BitVec w) (n o : Nat)
-    (ho : o = n * 2 + 1) : (BitVec.ofNat w o) * x = x + (BitVec.ofNat w n) * (x <<< (1#w)) := by
+    (ho : o = n * 2 + 1) : (BitVec.ofNat w o) * x = x + (BitVec.ofNat w n) * (x <<< (1 : Nat)) := by
   apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, ho]
   rcases w with rfl | w
   · simp [Nat.mod_one]
-  · simp only [lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow,
-    pow_one]
-    congr 1
+  · congr 1
     rw [Nat.add_mul]
     simp only [one_mul]
     rw [Nat.mul_assoc, Nat.mul_comm 2]
@@ -635,10 +643,8 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       return { b with e := out }
   | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
       let a ← reflectTermUnchecked map w a
-      let_expr BitVec.ofNat _w n := n 
-        | throwError "expected shiftLeft by '(BitVec.ofNat _ n)', found '{indentD <| toMessageData n}' at '{indentD e}'"
       let some n ← getNatValue? n 
-        | throwError "expected shiftLeft by '(BitVec.ofNat _ <const>), found symbolic shift amount '{n}' at '{indentD e}'"
+        | throwError "expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
       return { a with e := Term.shiftL a.e n }
 
   | HSub.hSub _bv _bv _bv _inst a b =>
@@ -1199,6 +1205,8 @@ example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
 example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by intros; bv_automata_circuit
 example : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by intros; bv_automata_circuit
 example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
+  intros w n
+  -- rw [BitVec.ofNat_eq_ofNat (n := w) (i := 2)]
   intros; bv_automata_circuit
 
 
