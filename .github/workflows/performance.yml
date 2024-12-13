@@ -60,10 +60,6 @@ jobs:
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j256)
 
-      - name: Run Alive
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive.py -j256)
-
       - name: Run HDel
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j256)
