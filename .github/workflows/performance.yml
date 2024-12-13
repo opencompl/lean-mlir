@@ -42,7 +42,7 @@ jobs:
 
       - name: Run LLVM Symbolic
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j256)
 
       - name: Compare LLVM Symbolic
         run: |
