@@ -42,8 +42,10 @@ inductive Term : Type
 | incr : Term → Term
 /-- Decrement (i.e., subtract one) -/
 | decr : Term → Term
--- | shiftL : Term → Nat → Term : shift left by `k` bits.
--- | lshiftR : Term → Nat → Term : logical shift right by `k` bits.
+/-- shift left by `k` bits. -/
+| shiftL : Term → Nat → Term 
+-- /-- logical shift right by `k` bits. -/
+-- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
 --   hence, I don't anticipate us implementing it.
 
@@ -74,6 +76,7 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | neg t       => -(Term.eval t vars)
   | incr t      => BitStream.incr (Term.eval t vars)
   | decr t      => BitStream.decr (Term.eval t vars)
+  | shiftL t n  => BitStream.shiftLeft (Term.eval t vars) n
  -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
 
 instance : Add Term := ⟨add⟩
@@ -103,6 +106,7 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | neg t => arity t
 | incr t => arity t
 | decr t => arity t
+| shiftL t .. => arity t
 -- | repeatBit t => arity t
 
 /--
@@ -144,6 +148,7 @@ and only require that many bitstream values to be given in `vars`.
   | neg t       => -(Term.evalFin t vars)
   | incr t      => BitStream.incr (Term.evalFin t vars)
   | decr t      => BitStream.decr (Term.evalFin t vars)
+  | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
 
 

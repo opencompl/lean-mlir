@@ -770,6 +770,6 @@ instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit �
 
 /-- Negate the value of the circuit -/
 def not {α : Type u} (c : Circuit α) : Circuit α := 
-  .xor .tru c
+  c ^^^ .tru
 
 end Circuit
