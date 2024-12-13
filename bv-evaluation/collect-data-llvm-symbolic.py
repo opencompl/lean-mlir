@@ -4,7 +4,7 @@ import pandas as pd
 import os 
 import re
 
-paper_directory = '../../paper-lean-bitvectors/'
+paper_directory = 'for-paper/'
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/InstCombineSymbolic/"
 raw_data_dir = paper_directory + 'raw-data/InstCombineSymbolic/'
