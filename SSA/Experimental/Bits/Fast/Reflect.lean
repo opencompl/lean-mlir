@@ -34,7 +34,7 @@ TODO:
     + I currently add support for BitVec.ofInt, with the knowledge that I can remove it
       if I'm unable to prove soundness.
 - [x] leftShift
-- [ ] Break down numeral multiplication into left shift:
+- [x] Break down numeral multiplication into left shift:
        10 * z
        = z <<< 1 + 5 * z
        = z <<< 1 + (z + 4 * z)
@@ -130,7 +130,7 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | incr a => (a.denote w vars) + 1#w
   | decr a => (a.denote w vars) - 1#w
   | ls bit a => (a.denote w vars).shiftConcat bit
-  | shiftL a n => (a.denote w vars) <<< n
+  | shiftL a n => (a.denote w vars) <<< (BitVec.ofNat w n)
 
 theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
     (t.eval (vars.map BitStream.ofBitVec)).denote w = t.denote w vars := by
@@ -227,8 +227,8 @@ Multiplying by an even number `e` is the same as shifting by `1`,
 followed by multiplying by half of `e` (the number `n`).
 This is used to simplify multiplications into shifts.
 -/
-theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two (x : BitVec w) (n e : Nat) (he : e = n * 2) :
-    (BitVec.ofNat w e) * x = (BitVec.ofNat w n) * (x <<< 1) := by
+theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two (w : Nat) (x : BitVec w) (n e : Nat) (he : e = n * 2) :
+    (BitVec.ofNat w e) * x = (BitVec.ofNat w n) * (x <<< (1#w)) := by
   apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, he]
   rcases w with rfl | w
@@ -241,8 +241,8 @@ theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two (x : BitVec w) (n e : Nat
 Multiplying by an odd number `o` is the same as adding `x`, followed by multiplying by `(o - 1) / 2`.
 This is used to simplify multiplications into shifts.
 -/
-theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (x : BitVec w) (n o : Nat)
-    (ho : o = n * 2 + 1) : (BitVec.ofNat w o) * x = x + (BitVec.ofNat w n) * (x <<< 1) := by
+theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : BitVec w) (n o : Nat)
+    (ho : o = n * 2 + 1) : (BitVec.ofNat w o) * x = x + (BitVec.ofNat w n) * (x <<< (1#w)) := by
   apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, ho]
   rcases w with rfl | w
@@ -271,6 +271,47 @@ theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (x : BitVec w) (n 
 @[bv_circuit_preprocess] theorem BitVec.one_mul (x : BitVec w) : 1#w * x = x := by simp
 
 @[bv_circuit_preprocess] theorem BitVec.zero_mul (x : BitVec w) : 0#w * x = 0#w := by simp
+
+
+open Lean Meta Elab in
+
+/--
+Given an equality proof with `lhs = rhs`, return the `rhs`,
+and bail out if we are unable to determine it precisely (i.e. no loose metavars).
+-/
+def getEqRhs (eq : Expr) : MetaM Expr := do
+  check eq
+  let eq ← whnf <| ← inferType eq
+  let some (_ty, _lhs, rhs) := eq.eq? | throwError "unable to infer RHS for equality {eq}"
+  let rhs ← instantiateMVars rhs
+  rhs.ensureHasNoMVars
+  return rhs
+
+open Lean Meta Elab in 
+/--
+This needs to be a pre-simproc, because we want to rewrite `k * x`
+repeatedly into smaller multiplications:
+  + rewrite into `x + ((k/2) * (x <<< 1))` if `k` odd.
+  + rewrite into `(k/2) * (x <<< 1) if k even.
+
+Since we get a smaller multiplication with `k/2`, we need it to be a pre-simproc so we recurse
+into the RHS expression.
+-/
+simproc↓ [bv_circuit_preprocess] shiftLeft_break_down ((BitVec.ofNat _ _) * (_ : BitVec _)) := fun x => do
+  match_expr x with 
+  | HMul.hMul _bv _bv _bv _inst kbv x => 
+    let_expr BitVec.ofNat _w k := kbv | return .continue 
+    let some kVal ← Meta.getNatValue? k | return .continue
+    /- base cases, will be taken care of by rewrite theorems -/
+    if kVal == 0 || kVal == 1 then return .continue
+    let thmName := if kVal % 2 == 0 then
+      mkConst ``BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two
+    else 
+      mkConst ``BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one
+    let eqProof := mkAppN thmName
+      #[_w, x, mkNatLit <| Nat.div2 kVal, mkNatLit kVal,  (← mkEqRefl k)]
+    return .visit { proof? := eqProof, expr := ← getEqRhs eqProof }
+  | _ => return .continue
 
 open Lean Elab Meta
 def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
@@ -594,9 +635,12 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       return { b with e := out }
   | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
       let a ← reflectTermUnchecked map w a
-      let some natVal ← Lean.Meta.getNatValue? n
-        | throwError "Only shift left by natural numbers are allowed, but found shift by expression '{n}' at {indentD e}"
-      return { a with e := Term.shiftL a.e natVal }
+      let_expr BitVec.ofNat _w n := n 
+        | throwError "expected shiftLeft by '(BitVec.ofNat _ n)', found '{indentD <| toMessageData n}' at '{indentD e}'"
+      let some n ← getNatValue? n 
+        | throwError "expected shiftLeft by '(BitVec.ofNat _ <const>), found symbolic shift amount '{n}' at '{indentD e}'"
+      return { a with e := Term.shiftL a.e n }
+
   | HSub.hSub _bv _bv _bv _inst a b =>
       let a ← reflectTermUnchecked map w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
@@ -1187,16 +1231,12 @@ theorem add_eq_xor_add_mul_and_nt (x y : BitVec w) :
   bv_automata_circuit
 
 /-- Check that we correctly process an even numeral multiplication. -/
-theorem mul_four (x : BitVec w) :
-  4 * x = x + x + x + x := by
-  fail_if_success bv_automata_circuit
-  sorry
+theorem mul_four (x : BitVec w) : 4 * x = x + x + x + x := by
+  bv_automata_circuit
 
 /-- Check that we correctly process an odd numeral multiplication. -/
-theorem mul_five (x : BitVec w) :
-  5 * x = x + x + x + x + 5 := by
-  fail_if_success bv_automata_circuit
-  sorry
+theorem mul_five (x : BitVec w) : 5 * x = x + x + x + x + x := by
+  bv_automata_circuit (config := { circuitSizeThreshold := 150 })
 
 open BitVec in
 /-- Check that we support sign extension. -/
