@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Alive Symbolic
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alivelvm-sym.py -j256)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j256)
 
       - name: Run HDel Symbolic
         run: |
