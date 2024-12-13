@@ -88,3 +88,6 @@ jobs:
         run: |
           (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
 
+      - name: Compare Alive All
+        run: |
+          (cd bv-evaluation/for-paper/tools; python3 ./collect-statsalive.py)
