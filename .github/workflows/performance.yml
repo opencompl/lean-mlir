@@ -46,4 +46,4 @@ jobs:
 
       - name: Compare LLVM Symbolic
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py)
+          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
