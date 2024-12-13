@@ -35,6 +35,10 @@ jobs:
           path: .lake
           key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
 
+      - name: Install Python Modules
+        run: |
+          apt install python3-matplotlib python3-pandas python3-num2words
+
       - name: Build
         run: |
           lake -R exe cache get # download cache of mathlib docs.
