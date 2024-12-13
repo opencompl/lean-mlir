@@ -49,10 +49,11 @@ TODO:
 	      SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
     + gsubhxor: We need support for `signExtend`, which we don't have yet :)
       I can add this.
-- [ ] `signExtend` and `zeroExtend` support.
-
+- [ ] `signExtend`  support.
+- [WONTFIX] `zeroExtend support: I don't think this is possible either, since zero extension
+  is not a property that correctly extends across bitwidths. That is, it's not an
+  'arithmetical' property so I don't know how to do it right!
 - [ ] Write custom fast decision procedure for constant widths.
-
 -/
 
 /--
@@ -191,6 +192,13 @@ theorem Predicate.denote_of_eval_eq {p : Predicate}
     ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
   intros w vars
   apply p.eval_eq_denote w vars |>.mp (heval w <| vars.map BitStream.ofBitVec)
+
+/-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
+theorem Predicate.denote_of_eval_eq_fixedWidth {p : Predicate} (w : Nat)
+    (heval : ∀ (vars : List BitStream), p.eval vars w = false) :
+    ∀ (vars : List (BitVec w)), p.denote w vars := by
+  intros vars
+  apply p.eval_eq_denote w vars |>.mp (heval <| vars.map BitStream.ofBitVec)
 
 
 def Reflect.Map.empty : List (BitVec w) := []
@@ -447,6 +455,10 @@ structure Config where
   See also `Config.circuitSizeThreshold`.
   -/
   stateSpaceSizeThreshold : Nat := 20
+  /--
+  Whethere the tactic should used a specialized solver for fixed-width constraints.
+  -/
+  fastFixedWidth : Bool := true
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -837,21 +849,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     -- We can now revert hypotheses that are of this bitwidth.
     let g ← revertBvHyps g
 
-    -- Interesting, tobias was right.
-    -- @bollu: I can 'generalize' and solve the '∀ w ... ' problem, and then 're-specialize' back to 'w = k'
-    -- for fixed k. I think this loses some power as opposed to having a width constraint.
-      if !w.isFVar then
-        let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
-        let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
-        let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
-        logWarning  msg
-        -- let g ← g.assertExt (name := `w') (type := mkConst ``Nat) (val := w) (hName := `hw')
-        -- let (w', g) ← g.intro1P
-        -- let (hw', g) ← g.intro1P
-        -- g.withContext do logInfo m!"Added new constraint for width (to be abstracted): {← hw'.getType}"
-        pure g
-      else pure g
-
     -- Next, after reverting, we have a goal which we want to reflect.
     -- we convert this goal to NNF
     let .some g ← NNF.runNNFSimpSet g
@@ -885,8 +882,28 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     let (mapFv, g) ← generalizeMap g bvToIxMapVal;
     let (_, g) ← g.revert #[mapFv]
     -- Apply Predicate.denote_of_eval_eq.
-    let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
-      | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+    let wVal? ← Meta.getNatValue? w 
+    let g ← 
+      -- Fixed width problem
+      if h : wVal?.isSome ∧ cfg.fastFixedWidth then
+        logInfo m!"using special fixed-width procedure for fixed bitwidth '{w}'."
+        let wVal := wVal?.get h.left
+        let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq_fixedWidth)
+          | throwError m!"Failed to apply `Predicate.denote_of_eval_eq_fixedWidth` on goal '{indentD g}'"
+        pure g
+      else 
+        -- Generic width problem.
+        -- If the generic width problem has as 'complex' width, then warn the user that they're
+        -- trying to solve a fragment that's better expressed differently.
+        if !w.isFVar then
+          let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
+          let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
+          let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
+          logWarning  msg
+
+        let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
+          | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+        pure g
     let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
       | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
     let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
@@ -1060,10 +1077,6 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
 #print eq_circuit
 
 /--
-warning: Width '10' is not a free variable (i.e. width is not universally quantified).
-The tactic will perform width-generic reasoning.
-To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = 10), ...
----
 info: goal after NNF: ⏎
   a b : BitVec 10
   ⊢ a = b
@@ -1078,12 +1091,13 @@ info: goal after reflection: ⏎
 ---
 info: FSM: ⋆Circuit size '3'  ⋆State space size '0'
 ---
+info: using special fixed-width procedure for fixed bitwidth '10'.
+---
 error: unsolved goals
 case heval.a.h
 a b : BitVec 10
 ⊢ reduceBool
-      (Decidable.decide
-        (∀ (w : ℕ) (vars : List BitStream), (Predicate.eq (Term.var 0) (Term.var 1)).eval vars w = false)) =
+      (Decidable.decide (∀ (vars : List BitStream), (Predicate.eq (Term.var 0) (Term.var 1)).eval vars 10 = false)) =
     true
 -/
 #guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
@@ -1260,11 +1274,18 @@ theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
   fail_if_success bv_automata_circuit
   sorry
 
+/-- Can solve width-constraints problems, when written with a width constraint. -/
+def width_specific_1 (x : BitVec 1) : x + x = x ^^^ x := by
+  bv_automata_circuit
+
+
+example (x : BitVec 0) : x = x + 0#0 := by
+  bv_automata_circuit
+
+def width_generic_exploit_fail (x : BitVec 0) : x + x + x + x = 0#0 := by
+  bv_automata_circuit
+
 /--
-warning: Width '1' is not a free variable (i.e. width is not universally quantified).
-The tactic will perform width-generic reasoning.
-To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = 1), ...
----
 info: goal after NNF: ⏎
   x : BitVec 1
   ⊢ x + x + x + x = 0#1
@@ -1280,21 +1301,23 @@ info: goal after reflection: ⏎
 ---
 info: FSM: ⋆Circuit size '70'  ⋆State space size '3'
 ---
+info: using special fixed-width procedure for fixed bitwidth '1'.
+---
 info: goal being decided: ⏎
   case heval.a.h
   x : BitVec 1
   ⊢ reduceBool
         (Decidable.decide
-          (∀ (w : ℕ) (vars : List BitStream),
-            (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars w =
+          (∀ (vars : List BitStream),
+            (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars 1 =
               false)) =
       true
 ---
 error: tactic 'bv_automata_circuit' evaluated that the proposition
   reduceBool
       (Decidable.decide
-        (∀ (w : ℕ) (vars : List BitStream),
-          (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars w =
+        (∀ (vars : List BitStream),
+          (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars 1 =
             false)) =
     true
 is false

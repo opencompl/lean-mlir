@@ -1385,27 +1385,32 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
 /-- Iterate the next bit circuit 'n' times, while universally quantifying over all inputs
 that are possible at each step. -/
 def FSM.nextBitCircIterate {arity : Type _ } [DecidableEq arity]
-    (fsm : FSM arity) (n : Nat) : Circuit fsm.α :=
+    (fsm : FSM arity) (n : Nat) : Circuit fsm.α := -- given initial state, produce output.
   match n with
-  | 0 => fsm.nextBitCirc none |>.fst
+  | 0 => 
+     -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
+    fsm.nextBitCirc none |>.fst
   | n' + 1 =>
      -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
      let c := fsm.nextBitCircIterate n'
-     (c.bind (fsm.nextBitCirc ∘ some)).fst
+     -- | for each input, compute the next bit circuit, quantifier eliminate it, and then compose.
+     let c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
+     c'
 
 /-- Decide if the FSM produces zeroes for all inputs at a given index of the bitstream -/
 def decideIfZerosAtIx {arity : Type _} [DecidableEq arity]
       (fsm : FSM arity) (w : Nat) : Bool :=
     let c := fsm.nextBitCircIterate w
+    -- evaluate at the initial carry bit.
     c.eval fsm.initCarry
 
 /--
-The correctness statement of 'denoteIfZeroesAtIx'.
-This tells us that 'denoteIfZeroesAtIx' is correct iff the FSM 'p' when evaluated returns false
+The correctness statement of decideIfZeroesAtIx.
+This tells us that decideIfZeroesAtIx is correct iff the FSM 'p' when evaluated returns false
 for all inputs at the index 'w' of the bitstream
 -/
 theorem decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ x, p.eval x w = false := by
+    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false := by
   sorry
 
 end FSM
