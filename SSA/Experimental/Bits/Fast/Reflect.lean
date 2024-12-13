@@ -27,20 +27,32 @@ TODO:
         `∀ w, (negOnes w).getLsb 20 = true`
       However, this is patently untrue in lean, since we can instantiate `w = 0`.
     + So, it's not clear to me that this makes sense in the lean model of things?
-      However, there is the funnny complication that we don't actually support getLsb, 
+      However, there is the funnny complication that we don't actually support getLsb,
       or right shift to access that bit before we reach that bitwidth, so the abstraction
-      may still be legal, for reasons that I don't clearly understand now :P 
+      may still be legal, for reasons that I don't clearly understand now :P
     + Very interesting subtleties!
     + I currently add support for BitVec.ofInt, with the knowledge that I can remove it
       if I'm unable to prove soundness.
 - [x] leftShift
 - [ ] Break down numeral multiplication into left shift:
        10 * z
-     = z <<< 1 + 5 * z
-     = z <<< 1 + (z + 4 * z)
-     = z <<< 1 + (z + z <<< 2).
+       = z <<< 1 + 5 * z
+       = z <<< 1 + (z + 4 * z)
+       = z <<< 1 + (z + z <<< 2).
+       Needs O(log |N|) terms.
+    + Wrote the theorems needed to perform the simplification.
+    + Need to write the `simproc`.
 
-     Needs O(log |N|) terms.
+- [ ] Check if the constants we support work for (a) hackers delight and (b) gsubhxor_proof
+    + Added support for hacker's delight numerals. Checked by running files
+        SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean
+	      SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
+    + gsubhxor: We need support for `signExtend`, which we don't have yet :)
+      I can add this.
+- [ ] `signExtend` and `zeroExtend` support.
+
+- [ ] Write custom fast decision procedure for constant widths.
+
 -/
 
 /--
@@ -187,44 +199,100 @@ def Reflect.Map.append (w : Nat) (s : BitVec w)  (m : List (BitVec w)) : List (B
 
 def Reflect.Map.get (ix : ℕ) (_ : BitVec w)  (m : List (BitVec w)) : BitVec w := m[ix]!
 
-namespace Simplifications 
+namespace Simplifications
 
-/-- 
+/-!
+Canonicalize `OfNat.ofNat`, `BitVec.ofNat` and `Nat` multiplication to become
+`BitVec.ofNat` multiplication with constant on the left.
+-/
+
+attribute [bv_circuit_preprocess] BitVec.ofNat_eq_ofNat
+
+/-- Canonicalize multiplications by numerals. -/
+@[bv_circuit_preprocess] theorem BitVec.mul_nat_eq_ofNat_mul (x : BitVec w) (n : Nat) :
+  x * n = BitVec.ofNat w n * x  := by rw [BitVec.mul_comm]; simp
+
+/-- Canonicalize multiplications by numerals to have constants on the left,
+with BitVec.ofNat -/
+@[bv_circuit_preprocess] theorem BitVec.nat_mul_eq_ofNat_mul (x : BitVec w) (n : Nat) :
+  n * x = BitVec.ofNat w n * x := by rfl
+
+/-- Reassociate multiplication to move constants to left. -/
+@[bv_circuit_preprocess] theorem BitVec.mul_ofNat_eq_ofNat_mul (x : BitVec w) (n : Nat) :
+  x * (BitVec.ofNat w n) = BitVec.ofNat w n * x := by rw [BitVec.mul_comm]
+
+
+/--
 Multiplying by an even number `e` is the same as shifting by `1`,
 followed by multiplying by half of `e` (the number `n`).
 This is used to simplify multiplications into shifts.
 -/
-theorem BitVec.mul_even_eq_shiftLeft_mul_of_eq_mul_two (x : BitVec w) (n e : Nat) (he : e = n * 2) :
-    x * e = (x <<< 1) * n := by
-  apply BitVec.eq_of_toNat_eq 
+theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two (x : BitVec w) (n e : Nat) (he : e = n * 2) :
+    (BitVec.ofNat w e) * x = (BitVec.ofNat w n) * (x <<< 1) := by
+  apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, he]
-  rcases w with rfl | w 
+  rcases w with rfl | w
   · simp [Nat.mod_one]
-  · simp only [lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow,
-    pow_one]
+  · simp
     congr 1
-    rw [Nat.mul_comm n 2, Nat.mul_assoc]
-    
-/-- 
+    rw [Nat.mul_comm x.toNat 2, ← Nat.mul_assoc n]
+
+/--
 Multiplying by an odd number `o` is the same as adding `x`, followed by multiplying by `(o - 1) / 2`.
 This is used to simplify multiplications into shifts.
 -/
-theorem BitVec.mul_odd_eq_shiftLeft_mul_of_eq_mul_two_add_one (x : BitVec w) (n o : Nat)
-    (ho : o = n * 2 + 1) : x * o = (x <<< 1) * n + x := by
-  apply BitVec.eq_of_toNat_eq 
+theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (x : BitVec w) (n o : Nat)
+    (ho : o = n * 2 + 1) : (BitVec.ofNat w o) * x = x + (BitVec.ofNat w n) * (x <<< 1) := by
+  apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, ho]
-  rcases w with rfl | w 
+  rcases w with rfl | w
   · simp [Nat.mod_one]
   · simp only [lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow,
     pow_one]
     congr 1
-    rw [Nat.mul_add x.toNat _ 1]
-    rw [Nat.mul_comm n 2, Nat.mul_assoc]
+    rw [Nat.add_mul]
+    simp only [one_mul]
+    rw [Nat.mul_assoc, Nat.mul_comm 2]
     omega
+
+@[bv_circuit_preprocess] theorem BitVec.two_mul_eq_add_add (x : BitVec w) : 2#w * x = x + x := by
+  apply BitVec.eq_of_toNat_eq;
+  simp only [BitVec.ofNat_eq_ofNat, BitVec.toNat_mul, BitVec.toNat_ofNat, Nat.mod_mul_mod,
+    BitVec.toNat_add]
+  congr
+  omega
+
+@[bv_circuit_preprocess] theorem BitVec.two_mul (x : BitVec w) : 2#w * x = x + x := by
+  apply BitVec.eq_of_toNat_eq
+  simp only [BitVec.toNat_mul, BitVec.toNat_ofNat, Nat.mod_mul_mod, BitVec.toNat_add]
+  congr
+  omega
+
+@[bv_circuit_preprocess] theorem BitVec.one_mul (x : BitVec w) : 1#w * x = x := by simp
+
+@[bv_circuit_preprocess] theorem BitVec.zero_mul (x : BitVec w) : 0#w * x = 0#w := by simp
+
+open Lean Elab Meta
+def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+  let some ext ← (getSimpExtension? `bv_circuit_preprocess)
+    | throwError m!"'bv_circuit_preprocess' simp attribute not found!"
+  let theorems ← ext.getTheorems
+  let some ext ← (Simp.getSimprocExtension? `bv_circuit_preprocess)
+    | throwError m!" 'bv_circuit_preprocess' simp attribute not found!"
+  let simprocs ← ext.getSimprocs
+  let config : Simp.Config := { }
+  let config := { config with failIfUnchanged := false }
+  let ctx ← Simp.mkContext (config := config)
+    (simpTheorems := #[theorems])
+    (congrTheorems := ← Meta.getSimpCongrTheorems)
+  match ← simpGoal g ctx (simprocs := #[simprocs]) with
+  | (none, _) => return none
+  | (some (_newHyps, g'), _) => pure g'
 
 end Simplifications
 
 namespace NNF
+
 open Lean Elab Meta
 
 /-- convert goal to negation normal form, by running appropriate lemmas from `grind_norm`, and reverting all hypothese. -/
@@ -323,7 +391,7 @@ structure Config where
   This is useful to prevent the tactic from taking oodles of time cruncing on goals that
   build large state spaces, which can happen in the presence of tactics.
   -/
-  circuitSizeThreshold : Nat := 80
+  circuitSizeThreshold : Nat := 90
 
   /--
   The upper bound on the state space of the FSM, beyond which the tactic will bail out on an error.
@@ -387,7 +455,7 @@ def ReflectMap.throwWarningIfUninterpretedExprs (xs : ReflectMap) : MetaM Unit :
   let mut out? : Option MessageData := none
   let header := m!"Tactic has not understood the following expressions, and will treat them as symbolic:"
   -- Order the expressions so we get stable error messages.
-  let exprs := xs.exprs.toArray.qsort (fun ei ej => ei.1.quickLt ej.1)
+  let exprs := xs.exprs.toArray.qsort (fun ei ej => ei.1.lt ej.1)
 
   for (e, _) in exprs do
     if e.isFVar then continue
@@ -474,6 +542,8 @@ and furthermore, it will reflect all terms as variables.
 Precondition: we assume that this is called on bitvectors.
 -/
 partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
+  if let some (v, _bvTy) ← getOfNatValue? e ``BitVec then
+    return { bvToIxMap := map, e := Term.ofNat v }
   -- TODO: bitvector contants.
   match_expr e with
   | BitVec.ofInt _wExpr iExpr =>
@@ -735,9 +805,15 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     -- Next, after reverting, we have a goal which we want to reflect.
     -- we convert this goal to NNF
     let .some g ← NNF.runNNFSimpSet g
-      | logInfo m!"simp automatically closed goal."
+      | logInfo m!"Converting to negation normal form automatically closed goal."
         return[]
     logInfo m!"goal after NNF: {indentD g}"
+
+    let .some g ← Simplifications.runPreprocessing g
+      | logInfo m!"Preprocessing automatically closed goal."
+        return[]
+    logInfo m!"goal after preprocessing: {indentD g}"
+
     -- finally, we perform reflection.
     let result ← reflectPredicateAux ∅ (← g.getType) w
     result.bvToIxMap.throwWarningIfUninterpretedExprs
@@ -752,10 +828,9 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo m!"FSM: ⋆Circuit size '{toMessageData fsm.circuitSize}'  ⋆State space size '{fsm.stateSpaceSize}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
-      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('{cfg.circuitSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmCircuitSizeUpperBound := <number>})')"
-
+      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
     if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
-      throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('{cfg.stateSpaceSizeThreshold}'. Increase size with 'bv_automata_circuit (config := \{default with fsmStateSpaceSizeUpperBound := <number>})')"
+      throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
 
     let (mapFv, g) ← generalizeMap g bvToIxMapVal;
     let (_, g) ← g.revert #[mapFv]
@@ -943,6 +1018,10 @@ info: goal after NNF: ⏎
   a b : BitVec 10
   ⊢ a = b
 ---
+info: goal after preprocessing: ⏎
+  a b : BitVec 10
+  ⊢ a = b
+---
 info: goal after reflection: ⏎
   a b : BitVec 10
   ⊢ (Predicate.eq (Term.var 0) (Term.var 1)).denote 10 (Map.append 10 b (Map.append 10 a Map.empty))
@@ -971,13 +1050,25 @@ section BvAutomataTests
 /--
 warning: Tactic has not understood the following expressions, and will treat them as symbolic:
 
-  - f y
   - f x
+  - f y
 -/
 #guard_msgs (warning, drop error, drop info) in
 theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) : f x ≠ f y :=
   by bv_automata_circuit
-  
+
+/-- Check that we correctly handle `OfNat.ofNat 1`. -/
+theorem not_neg_eq_sub_one (x : BitVec 53):
+    ~~~ (- x) = x - 1 := by
+  all_goals bv_automata_circuit
+
+/-- Check that we correctly handle multiplication by two. -/
+theorem sub_eq_mul_and_not_sub_xor (x y : BitVec w):
+    x - y = 2 * (x &&& ~~~ y) - (x ^^^ y) := by
+  -- simp [Simplifications.BitVec.OfNat_ofNat_mul_eq_ofNat_mul]
+  -- simp only [BitVec.ofNat_eq_ofNat, Simplifications.BitVec.two_mul_eq_add_add]
+  all_goals bv_automata_circuit
+
 
 /- See that such problems have large circuit sizes, but small state spaces -/
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
@@ -1091,8 +1182,19 @@ theorem add_eq_xor_add_mul_and' (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
   bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
 
-theorem add_eq_xor_add_mul_and_nt (x y z : BitVec w) :
+theorem add_eq_xor_add_mul_and_nt (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
+  bv_automata_circuit
+
+/-- Check that we correctly process an even numeral multiplication. -/
+theorem mul_four (x : BitVec w) :
+  4 * x = x + x + x + x := by
+  fail_if_success bv_automata_circuit
+  sorry
+
+/-- Check that we correctly process an odd numeral multiplication. -/
+theorem mul_five (x : BitVec w) :
+  5 * x = x + x + x + x + 5 := by
   fail_if_success bv_automata_circuit
   sorry
 
@@ -1102,6 +1204,10 @@ The tactic will perform width-generic reasoning.
 To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = 1), ...
 ---
 info: goal after NNF: ⏎
+  x : BitVec 1
+  ⊢ x + x + x + x = 0#1
+---
+info: goal after preprocessing: ⏎
   x : BitVec 1
   ⊢ x + x + x + x = 0#1
 ---
