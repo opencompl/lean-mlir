@@ -60,7 +60,7 @@ def run():
     out = None
     for file in os.listdir(benchmark_dir):
         if ('proof' in file and "gandhorhicmps_proof" not in file):
-            with open(res_dir+file.split(".")[0]+"_r"+str("0")+".txt") as res_file:
+            with open(res_dir+file.split(".")[0]+"_r"+str("0")+".txt", 'r', encoding="latin-1") as res_file:
                     results = parse_tacbenches(file.split(".")[0], res_file.read())
 
             df = pd.DataFrame(results)
