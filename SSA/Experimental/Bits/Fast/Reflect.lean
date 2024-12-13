@@ -49,10 +49,11 @@ TODO:
 	      SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
     + gsubhxor: We need support for `signExtend`, which we don't have yet :)
       I can add this.
-- [ ] `signExtend` and `zeroExtend` support.
-
+- [ ] `signExtend`  support.
+- [WONTFIX] `zeroExtend support: I don't think this is possible either, since zero extension
+  is not a property that correctly extends across bitwidths. That is, it's not an
+  'arithmetical' property so I don't know how to do it right!
 - [ ] Write custom fast decision procedure for constant widths.
-
 -/
 
 /--
