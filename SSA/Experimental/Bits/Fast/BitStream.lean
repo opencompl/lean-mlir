@@ -246,6 +246,14 @@ instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
 instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
 
+/-- Shift left by `k` bits, giving a new bitstream whose first `k` bits are zero. -/
+def shiftLeft (x : BitStream) (k : Nat) : BitStream :=
+  fun i => if i < k then false else x (i - k) -- i ≥ k
+
+/-- Shift logical right by `k` bits, making the 'i'th output be the 'k+i'th input bit. -/
+def logicalShiftRight (x : BitStream) (k : Nat) : BitStream :=
+  fun i => x (k + i)
+
 /--
 Return a stream of pointwise equality of booleans.
 This is the same as ~(a⊕b), and thus we call it `not xor`.
@@ -262,6 +270,19 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
 @[simp] theorem nxor_eq : (x.nxor y) i = (x i == y i) := rfl
 variable (x y : BitVec (w+1))
+
+
+@[simp] theorem eval_shiftLeft {x : BitStream} {k : Nat} :
+  (shiftLeft x k) i = if i < k then false else x (i - k) := rfl
+
+@[simp] theorem eval_shiftLeft_of_lt {x : BitStream} {k : Nat} (hi : i < k) :
+  (shiftLeft x k) i = false := by simp [hi]
+
+@[simp] theorem eval_shiftLeft_of_le {x : BitStream} {k : Nat} (hi : k ≤ i) :
+  (shiftLeft x k) i = x (i - k) := by simp [hi]
+
+@[simp] theorem eval_logicalShiftRight {x : BitStream} {k : Nat} :
+  (logicalShiftRight x k) i = x (k + i) := rfl
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
   funext i
@@ -471,6 +492,10 @@ def carry (x y : BitStream) : BitStream :=
 instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
 instance : Sub BitStream := ⟨sub⟩
+
+theorem add_eq (a b : BitStream) : a.add b = a + b := rfl
+theorem sub_eq (a b : BitStream) : a.sub b = a - b := rfl
+theorem neg_eq (a : BitStream) : a.neg  = - a := rfl
 
 /-- `repeatBit xs` will repeat the first bit of `xs` which is `true`.
 That is, it will be all-zeros iff `xs` is all-zeroes,
@@ -816,6 +841,20 @@ variable (i : Nat)
 @[simp] theorem one_eq  : one i = (i == 0)  := rfl
 @[simp] theorem negOne_eq : negOne i = true := rfl
 
+/-- The stream from `- (ofNat 1)` has all output bits `1` and all cary bits `0`. -/
+@[simp] theorem negAux_ofNat_one_eq : negAux (BitStream.ofNat 1) i = (true, false) := by
+  induction i
+  case zero => simp [negAux]
+  case succ i ih =>
+    simp [negAux, ih]
+
+/-- The stream from `- (ofNat 1)` has all output bits `1`, and is thus equal to `negOne`. -/
+@[simp] theorem neg_ofNat_one_eq : - (BitStream.ofNat 1) = negOne := by 
+  rw [← neg_eq]
+  unfold BitStream.neg
+  simp
+
 end Lemmas
 
 end OfInt
+
