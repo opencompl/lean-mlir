@@ -43,7 +43,7 @@ TODO:
     + Wrote the theorems needed to perform the simplification.
     + Need to write the `simproc`.
 
-- [ ] Check if the constants we support work for (a) hackers delight and (b) gsubhxor_proof
+- [x] Check if the constants we support work for (a) hackers delight and (b) gsubhxor_proof
     + Added support for hacker's delight numerals. Checked by running files
         SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean
 	      SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
@@ -1195,6 +1195,20 @@ theorem mul_four (x : BitVec w) :
 /-- Check that we correctly process an odd numeral multiplication. -/
 theorem mul_five (x : BitVec w) :
   5 * x = x + x + x + x + 5 := by
+  fail_if_success bv_automata_circuit
+  sorry
+
+open BitVec in
+/-- Check that we support sign extension. -/
+theorem sext
+    (b : BitVec 8)
+    (c : ¬(11#9 - signExtend 9 (b &&& 7#8)).msb = (11#9 - signExtend 9 (b &&& 7#8)).getMsbD 1) :
+    False := by
+  fail_if_success bv_automata_circuit
+  sorry
+
+/-- Check that we support zero extension. -/
+theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
   fail_if_success bv_automata_circuit
   sorry
 
