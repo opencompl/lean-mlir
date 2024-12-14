@@ -44,9 +44,9 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build
 
-      - name: Run LLVM Symbolic
+      - name: Run LLVM
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j256)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128 &; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128&; wait)
 
       - name: Run Alive Symbolic
         run: |
@@ -55,10 +55,6 @@ jobs:
       - name: Run HDel Symbolic
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j256)
-
-      - name: Run LLVM
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j256)
 
       - name: Run HDel
         run: |
