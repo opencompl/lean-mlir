@@ -424,9 +424,9 @@ def smtlib_stats(performance_smtlib_dir):
     f.close()
 
 def instcombine_stats(performance_instcombine_dir):
-    df_ceg=pd.read_csv('../raw-data/InstCombine/instcombine_ceg.csv')
-    df=pd.read_csv('../raw-data/InstCombine/instcombine_proved.csv')
-    df_err=pd.read_csv('../raw-data/InstCombine/instcombine_err.csv')
+    df_ceg=pd.read_csv('../raw-data/InstCombine/err-llvm.csv')
+    df=pd.read_csv('../raw-data/InstCombine/llvm-proved-data.csv')
+    df_err=pd.read_csv('../raw-data/InstCombine/llvm-ceg-data.csv')
     get_avg_bb_sat(df, 'InstCombine', 'sat', performance_instcombine_dir)
     get_avg_bb_sat(df, 'InstCombine', 'lrat', performance_instcombine_dir)
     tot_problems = len(df) + len(df_ceg) + len (df_err)
