@@ -603,12 +603,12 @@ performance_hackersdelight_symbolic_file = '../performance-hackersdelight-symbol
 performance_instcombine_symbolic_file = '../performance-instcombine-symbolic.tex'
 performance_alive_symbolic_file = '../performance-alive-symbolic.tex'
 
-slowdown_smtlib_stats()
+#slowdown_smtlib_stats()
 
 # first remove old stats
 
-with open (performance_smtlib_dir, "w"):
-    pass
+#with open (performance_smtlib_dir, "w"):
+#    pass
 
 with open (performance_instcombine_dir, "w"):
     pass
