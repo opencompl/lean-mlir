@@ -46,7 +46,9 @@ jobs:
 
       - name: Run LLVM
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128 & python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128& wait)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
+          echo "Symbolic"
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
 
       - name: Run Alive Symbolic
         run: |
