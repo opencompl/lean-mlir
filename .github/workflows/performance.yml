@@ -86,4 +86,4 @@ jobs:
 
       - name: Collect Stats
         run: |
-          (cd bv-evaluation/for-paper/tools; python3 ./collect-stats.py
+          (cd bv-evaluation/for-paper/tools; python3 ./collect-stats.py)
