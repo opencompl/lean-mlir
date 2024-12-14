@@ -616,7 +616,7 @@ with open (performance_instcombine_dir, "w"):
 with open (performance_hackerdelight_dir, "w"):
     pass
 
-smtlib_stats(performance_smtlib_dir)
+#smtlib_stats(performance_smtlib_dir)
 instcombine_stats(performance_instcombine_dir)
 hackersdelight_stats(performance_hackerdelight_dir)
 hackersdelight_symbolic_stats(performance_hackersdelight_symbolic_file)
