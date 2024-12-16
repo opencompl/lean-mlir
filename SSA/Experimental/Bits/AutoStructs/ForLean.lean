@@ -148,6 +148,16 @@ theorem Std.HashSet.mem_attachWith_mem [BEq α] [Hashable α] [LawfulBEq α] (m 
     ⟨x, h⟩ ∈ m.attachWith P H ↔ x ∈ m := by
   sorry
 
+@[simp]
+theorem Std.HashSet.mem_union [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
+    x ∈ m₁.union m₂ ↔ x ∈ m₁ ∨ x ∈ m₂ := by
+  sorry
+
+@[simp]
+theorem Std.HashMap.mem_keysArray [BEq α] [Hashable α] [LawfulBEq α] [LawfulHashable α] {m : HashMap α β} {k : α} :
+    k ∈ m.keysArray ↔ k ∈ m := by
+  sorry
+
 -- TODO: upstream
 @[simp]
 theorem List.mem_attachWith_mem (l : List α) {P H}(x : α) h : ⟨x, h⟩ ∈ l.attachWith P H ↔ x ∈ l := by
