@@ -38,6 +38,7 @@ section sim
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
+@[inline]
 def RawCNFA.tr (m : RawCNFA A) s a := m.trans.getD (s, a) ∅
 
 def RawCNFA.states (m : RawCNFA A) : Finset State := Finset.range m.stateMax
@@ -167,15 +168,15 @@ def RawCNFA.transBV (m : RawCNFA A) (s : m.states) (a : A) : BitVec m.stateMax :
   BitVec.ofFn (fun n => n ∈ ts)
 
 def RawCNFA.transBV' (m : RawCNFA A) (res : BitVec m.stateMax) (s : m.states) (a : A) : BitVec m.stateMax :=
-  let ts := m.trans.getD (s, a) ∅
-  ts.fold (init := res) fun res s => res ||| 1 <<< s
+  let ts := m.tr s a
+  ts.fold (init := res) fun res s => res ||| 1#m.stateMax <<< s
 
 -- def RawCNFA.transSetBV (m : RawCNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec m.stateMax :=
 --   (List.finRange m.stateMax).foldl (init := BitVec.zero m.stateMax) fun res n =>
 --     if ss[n] then res ||| m.transBV ⟨n.val, by simp [RawCNFA.states]⟩ a else res
 def RawCNFA.transSetBV (m : RawCNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec m.stateMax :=
   (List.finRange m.stateMax).foldl (init := BitVec.zero m.stateMax) fun res n =>
-    if ss[n] then m.transBV' res ⟨n.val, by simp [RawCNFA.states]⟩ a else res
+    if ss.getLsbD n.val then m.transBV' res ⟨n.val, by simp [RawCNFA.states]⟩ a else res
 
 @[simp, aesop 50% unsafe]
 lemma states_addInitial (m : RawCNFA A) (s' : State) :
