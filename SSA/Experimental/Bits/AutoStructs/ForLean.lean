@@ -177,14 +177,13 @@ def BitVec.ofFn {w : Nat} (f : Fin w → Bool) : BitVec w :=
 
 -- TODO: is there a way to only have one of these three lemmas?
 
-@[simp]
-theorem BitVec.ofFn_getLsbD {w : Nat} (f : Fin w → Bool) (i : Fin w) :
+theorem BitVec.ofFn_getLsbD_fin {w : Nat} {f : Fin w → Bool} {i : Fin w} :
     (BitVec.ofFn f).getLsbD i = f i := by
   simp [BitVec.ofFn, BitVec.iunfoldr_getLsbD (fun _ => ())]
 
 @[simp]
-theorem BitVec.ofFn_getLsbD' {w : Nat} (f : Fin w → Bool) (i : Nat) (hi : i < w) :
-    (BitVec.ofFn f).getLsbD i = f ⟨i, hi⟩ := ofFn_getLsbD f ⟨i, hi⟩
+theorem BitVec.ofFn_getLsbD {w : Nat} {f : Fin w → Bool} {i : Nat} (hi : i < w) :
+    (BitVec.ofFn f).getLsbD i = f ⟨i, hi⟩ := ofFn_getLsbD_fin (i := ⟨i, hi⟩)
 
 theorem BitVec.ofFn_getLsbD_true {w : Nat} {f : Fin w → Bool} {i : Nat} :
     (BitVec.ofFn f).getLsbD i = true ↔ ∃ (hlt : i < w), f ⟨i, hlt⟩ = true := by
@@ -193,8 +192,10 @@ theorem BitVec.ofFn_getLsbD_true {w : Nat} {f : Fin w → Bool} {i : Nat} :
   · rintro ⟨hlt, heq⟩; simp_all
 
 @[simp]
-theorem BitVec.ofFn_getElem {w : Nat} (f : Fin w → Bool) (i : Fin w) :
+theorem BitVec.ofFn_getElem {w : Nat} (f : Fin w → Bool) {i : Nat} (hi : i < w) :
+    (BitVec.ofFn f)[i] = f ⟨i, hi⟩ := by
+  simp_all [←getLsbD_eq_getElem]
+
+theorem BitVec.ofFn_getElem_fin {w : Nat} (f : Fin w → Bool) (i : Fin w) :
     (BitVec.ofFn f)[i.val] = f i := by
-  rw [←BitVec.ofFn_getLsbD f i]
-  rw [BitVec.getLsbD_eq_getElem?_getD]
   simp

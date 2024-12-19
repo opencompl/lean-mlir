@@ -142,9 +142,9 @@ lemma dec_enc : Function.RightInverse (α := BitVecs' n) enc dec := by
   intros bvs; ext1; exact dec_enc_w bvs
   next i =>
     simp only [enc, Fin.getElem_fin, dec, List.getElem_map, List.getElem_finRange, Fin.cast_mk,
-      Fin.is_lt, BitVec.ofFn_getLsbD', Fin.eta, List.Vector.get_ofFn]
+      Fin.is_lt, BitVec.ofFn_getLsbD, Fin.eta, List.Vector.get_ofFn]
     ext
-    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD',
+    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD,
       BitVec.getLsbD_cast']
     rfl
 
@@ -179,13 +179,13 @@ lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
     bvs := List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
   ext k i <;> simp_all only [dec, Fin.getElem_fin, List.length_append, List.length_singleton,
-    List.Vector.get_ofFn, BitVec.ofFn_getLsbD', BitVec.getLsbD_cast']
+    List.Vector.get_ofFn, BitVec.ofFn_getLsbD, BitVec.getLsbD_cast']
   rw [BitVec.getLsbD_cons]
   split
   next heq => simp_all
   next h =>
     have hlt : i < List.length bvs' := by omega
-    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD' _ _ hlt]
+    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD hlt]
 
 @[simp]
 lemma dec_enc_image : dec '' (enc '' S) = S := Function.LeftInverse.image_image dec_enc _
@@ -704,6 +704,7 @@ def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | 
 @[simp]
 lemma Std.HashSet.mem_toSet [BEq α] [Hashable α] (m : HashSet α) : x ∈ m.toSet ↔ x ∈ m := by rfl
 
+-- TODO: state in in pure Lean using `toList`, and decude this one
 theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
   {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :
     motive b ∅ →
