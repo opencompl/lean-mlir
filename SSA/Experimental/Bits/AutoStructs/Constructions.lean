@@ -674,11 +674,24 @@ variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum 
 
 def CNFA.isEmpty (m : CNFA n) : Bool := m.m.finals.isEmpty
 
+theorem CNFA.isEmpty_spec {m : CNFA n} {M : NFA' n} :
+    m.Sim M → m.isEmpty → M.accepts = ∅ := by
+  rintro ⟨R, hsim⟩ hemp
+  apply Set.eq_empty_of_forall_not_mem
+  rintro w ⟨w', ⟨q, ha, he⟩, ww⟩
+  obtain ⟨s, hR⟩ := hsim.rel_eval he
+  obtain hfin := hsim.accept hR |>.mpr ha
+  exact Std.HashSet.isEmpty_iff_forall_not_mem.mp hemp _ hfin
+
 def CNFA.isUniversal (m : CNFA n) : Bool := m.neg.isEmpty
 
 theorem CNFA.isUniversal_spec {m : CNFA n} {M : NFA' n} :
     m.Sim M → m.isUniversal → M.accepts = ⊤ := by
-  sorry
+  rintro hsim huniv
+  simp [isUniversal] at huniv
+  have hsim' : m.neg.Sim M.neg := neg_spec m hsim
+  have _ := isEmpty_spec hsim' huniv
+  simp_all
 
 /-- Recognizes the empty word -/
 def RawCNFA.emptyWord : RawCNFA A :=
