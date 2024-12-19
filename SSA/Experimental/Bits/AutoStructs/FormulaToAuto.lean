@@ -312,7 +312,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           · unfold bitVecToFinFun; simp [BitVec.getLsbD_cons]
 
 def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
-  _root_.NFA'.ofFSM' p |>.reduce
+  _root_.NFA'.ofFSM' p -- |>.reduce
 
 open BitStream in
 lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.arity → BitVec w) :
@@ -369,16 +369,32 @@ def CNFA.ofFSM (p : FSM arity) : CNFA (FinEnum.card arity + 1) :=
     (fun _ => true)
     #[finFunToBitVec p.initCarry]
     (by apply List.nodup_singleton)
-    fun carry =>
+    f
+  where
+    f := fun carry =>
       (FinEnum.toList (BitVec (FinEnum.card arity))).foldl (init := #[]) fun ts a =>
         let eval x := (p.nextBitCirc x).eval (Sum.elim (bitVecToFinFun carry) (bitVecToFinFun a))
         let res : Bool := eval none
         let carry' : BitVec (FinEnum.card p.α) := finFunToBitVec (fun c => eval (some c))
         ts.push (a.cons res, carry')
 
+@[simp]
+lemma CNFA.ofFSM.f_spec {p : FSM arity} {s s' : BitVec (FinEnum.card p.α)} :
+    (a, s') ∈ f p s ↔ bitVecToFinFun s' ∈ (NFA.ofFSM p).step (bitVecToFinFun s) a := by
+  sorry
+
 lemma CNFA.ofFSM_spec (p : FSM arity) :
     (CNFA.ofFSM p).Sim (NFA'.ofFSM p) := by
-  sorry
+  apply bisim_comp
+  · apply worklistRun_spec
+  use (λ s q ↦ q = bitVecToFinFun s)
+  constructor
+  · simp [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM]
+  · simp [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM, Rel.set_eq]
+    -- TODO: prove the two bitVec functions are inverse of each others
+    sorry
+  · sorry
+  · sorry
 
 end fsm
 /- A bunch of RawCNFAs that implement the relations we care about -/
@@ -405,7 +421,7 @@ def RawCNFA.autEq : RawCNFA (BitVec 2) :=
   m
 
 def CNFA.autEq : CNFA 2 :=
-  ⟨RawCNFA.autEq, by simp [RawCNFA.autEq]; sorry⟩
+  ⟨RawCNFA.autEq, by simp [RawCNFA.autEq]; aesop⟩
 
 def NFA.autEq : NFA (BitVec 2) Unit :=
   { start := ⊤, accept := ⊤, step := fun () a => if a = 0 ∨ a = 3 then ⊤ else ⊥ }
@@ -644,7 +660,7 @@ lemma NFA'.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpS
         · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
         · use .gt; simp_all
 
-def RawCNFA.autMsbSet' : RawCNFA (BitVec 1) :=
+def RawCNFA.autMsbSet : RawCNFA (BitVec 1) :=
   let m := RawCNFA.empty
   let (si, m) := m.newState
   let (sf, m) := m.newState
@@ -654,8 +670,9 @@ def RawCNFA.autMsbSet' : RawCNFA (BitVec 1) :=
   let m := m.addManyTrans [0, 1] si si
   m
 
+@[inline]
 def CNFA.autMsbSet : CNFA 1 :=
-  ⟨RawCNFA.autMsbSet', by sorry⟩
+  ⟨RawCNFA.autMsbSet, by simp [RawCNFA.autMsbSet]; sorry⟩
 
 inductive NFA.msbState : Type where
 | i | f
