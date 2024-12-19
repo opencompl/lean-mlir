@@ -34,7 +34,7 @@ Where the number of repeated `t`s is determined by the number of arguments given
 It's also possible to leave out the `: $t` type annotation entirely, in which case `t` will be
 assumed to be `_`, the "hole" type.
 -/
-syntax (mlir_op_operand " = ")? MLIR.Pretty.uniform_op mlir_op_operand,*
+syntax (mlir_op_operand " = ")? MLIR.Pretty.uniform_op ppSpace mlir_op_operand,*
   (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.uniform_op $xs,* $[: $t]? ) => do
