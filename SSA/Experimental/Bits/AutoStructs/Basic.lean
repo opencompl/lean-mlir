@@ -151,6 +151,18 @@ lemma bisim_comp (m : RawCNFA A) :
   rintro ⟨R₁, h₁⟩ ⟨R₂, h₂⟩
   exact ⟨_, bisimul_comp h₁ h₂⟩
 
+
+structure RawCNFA.SimulFun (m : RawCNFA A) (M : NFA A Q) (f : m.states ≃ Q)  where
+  accept {q} : ((f.invFun q).val ∈ m.finals ↔ q ∈ M.accept)
+  initial₁ {s} : s.val ∈ m.initials → f.toFun s ∈ M.start
+  initial₂ {q} : q ∈ M.start → (f.invFun q).val ∈ m.initials
+  trans_match₁ {s s' : m.states} {a} : s'.val ∈ m.tr s.val a → f s' ∈ M.step (f s) a
+  trans_match₂ {a q q'} : q' ∈ M.step q a →  (f.invFun q').val ∈ m.tr (f.invFun q).val a
+
+lemma simulFun_sim {m : RawCNFA A} f :
+    m.SimulFun M f → m.Sim M := by
+  sorry
+
 end sim
 
 section basics
@@ -174,8 +186,18 @@ def RawCNFA.addTrans (m : RawCNFA A) (a : A) (s s' : State) : RawCNFA A :=
   let ns := ns.insert s'
   { m with trans :=  m.trans.insert (s, a) ns }
 
+
 def RawCNFA.addManyTrans (m : RawCNFA A) (a : List A) (s s' : State) : RawCNFA A :=
   a.foldl (init := m) fun m a => m.addTrans a s s'
+
+@[simp]
+lemma RawCNFA.addManyTrans_nil (m : RawCNFA A) {s s' : State} :
+    m.addManyTrans [] s s' = m :=
+  rfl
+@[simp]
+lemma RawCNFA.addManyTrans_cons (m : RawCNFA A) {s s' : State} :
+    m.addManyTrans (a::as) s s' = (m.addTrans a s s').addManyTrans as s s' :=
+  rfl
 
 def RawCNFA.addInitial (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with initials := m.initials.insert s }
@@ -235,6 +257,14 @@ lemma states_addFinal (m : RawCNFA A) (s' : State) :
 lemma states_addTrans (m : RawCNFA A) (a : A) (s1 s2 : State) :
     (m.addTrans a s1 s2).states = m.states := by
   rfl
+
+@[simp, aesop 50% unsafe]
+lemma states_addManyTrans (m : RawCNFA A) (as : List A) (s1 s2 : State) :
+    (m.addManyTrans as s1 s2).states = m.states := by
+  simp [RawCNFA.addManyTrans]
+  let motive (m' : RawCNFA A) := m'.states = m.states
+  suffices h : motive (m.addManyTrans as s1 s2) by exact h
+  apply List.foldlRecOn <;> simp_all [motive]
 
 @[simp, aesop 50% unsafe]
 lemma addTrans_initials (m : RawCNFA A) (a : A) (s1 s2 : State) :
@@ -387,6 +417,12 @@ lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈
       · have : m.trans.getD (s, a) ∅ = ∅ := by apply Std.HashMap.getD_eq_fallback; assumption
         simp_all
     · apply hwf.trans_tgt_lt hsome; assumption
+
+@[simp, aesop 50% unsafe]
+lemma wf_addManyTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s as s'
+  (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
+    (m.addManyTrans as s s').WF := by
+  induction as generalizing m <;> simp_all
 
 @[simp]
 lemma wf_createSink [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) : m.createSink.2.WF := by
