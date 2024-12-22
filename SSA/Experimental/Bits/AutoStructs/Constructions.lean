@@ -951,9 +951,9 @@ def CNFA.proj_tr (m : CNFA n₂) (f : Fin n₁ → Fin n₂) :
     constructor
     · rintro (hin | ⟨a', hin, heq, hin'⟩)
       · use t.2
-        simp only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_take, Array.size_take,
+        simp +zetaDelta only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_take, Array.size_take,
           lt_inf_iff, and_self, and_true, hin]
-        use i.val, by simp
+        use i.val, by simp +zetaDelta
       · use a'; simp [heq, hin']
         simp only [Array.mem_iff_getElem, Array.getElem_take, Array.size_take, Fin.is_le',
           inf_of_le_left, lt_inf_iff] at hin ⊢

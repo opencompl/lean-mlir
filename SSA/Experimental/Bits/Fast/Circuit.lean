@@ -721,7 +721,7 @@ def nonemptyAux [DecidableEq α] :
       ⟨b₁ || b₂, by
         simp only [eval_eq_evalv, Bool.or_eq_true, eq_iff_iff]
         rw [← b₁.prop, ← b₂.prop]
-        simp! only [(eval_assignVars)]
+        simp +zetaDelta only [(eval_assignVars)]
         constructor
         · rintro ⟨x, hx⟩
           cases hi : x i
@@ -769,7 +769,7 @@ instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit �
     by simp [always_true_iff, le_def, or_iff_not_imp_left]
 
 /-- Negate the value of the circuit -/
-def not {α : Type u} (c : Circuit α) : Circuit α := 
+def not {α : Type u} (c : Circuit α) : Circuit α :=
   c ^^^ .tru
 
 end Circuit
