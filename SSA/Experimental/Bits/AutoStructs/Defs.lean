@@ -328,7 +328,7 @@ def Formula.language (φ : Formula) : Set (BitVecs φ.arity) :=
     l'.proj fun n => n.castLE (by simp [Formula.arity, FinEnum.card])
 
 lemma helper1 : (k = 0) → (x ::ᵥ vs).get k = x := by rintro rfl; simp
-lemma helper2 : (k = 1) → (x ::ᵥ y ::ᵥ vs).get k = y := by rintro rfl; simp [Mathlib.Vector.get]
+lemma helper2 : (k = 1) → (x ::ᵥ y ::ᵥ vs).get k = y := by rintro rfl; simp [List.Vector.get]
 lemma msb_coe {x : BitVec w1} (heq : w1 = w2) : x.msb = (heq ▸ x).msb := by rcases heq; simp
 
 lemma formula_language_case_atom :
@@ -356,7 +356,7 @@ lemma formula_language_case_atom :
       apply hrel
     have ht1 : bvsb.bvs.get n = t1.evalFin fun n => bvsb.bvs.get n := by
       unfold Term.language at h1
-      simp [Mathlib.Vector.transport, liftMaxSucc1] at h1
+      simp [List.Vector.transport, liftMaxSucc1] at h1
       unfold n; simp +zetaDelta; rw [←h1]
       congr; ext1 k
       split_ifs with h
@@ -367,7 +367,7 @@ lemma formula_language_case_atom :
       · congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
     have ht2 : bvsb.bvs.get (Fin.last (n+1)) = t2.evalFin fun n => bvsb.bvs.get n := by
       unfold Term.language at h2
-      simp [Mathlib.Vector.transport, liftMaxSucc2] at h2
+      simp [List.Vector.transport, liftMaxSucc2] at h2
       unfold n; simp +zetaDelta only [Formula.arity, Fin.natCast_self]; rw [←h2]
       congr; ext1 k
       split_ifs with h
@@ -382,14 +382,14 @@ lemma formula_language_case_atom :
       apply evalFin_eq hw; intros k
       rcases bvs with ⟨w, bvs⟩; rcases hw
       injection heqb with _ heqb; rw [←heqb]
-      simp [Mathlib.Vector.transport, liftExcept2]
+      simp [List.Vector.transport, liftExcept2]
       congr; ext; simp; omega
     have heq2 : (t2.evalFin fun n => bvsb.bvs.get n) =
         hw ▸ t2.evalFin fun n => bvs.bvs.get $ n.castLE (by simp) := by
       apply evalFin_eq hw; intros k
       rcases bvs with ⟨w, bvs⟩; rcases hw
       injection heqb with _ heqb; rw [←heqb]
-      simp [Mathlib.Vector.transport, liftExcept2]
+      simp [List.Vector.transport, liftExcept2]
       congr; ext; simp; omega
     rw [ht1, ht2, heq1, heq2, evalRelation_coe] at hrel
     dsimp only [Set.instMembership, Set.Mem]
@@ -398,21 +398,21 @@ lemma formula_language_case_atom :
     simp
     let bv1 := t1.evalFin fun k => bvs.bvs.get $ k.castLE (by simp)
     let bv2 := t2.evalFin fun k => bvs.bvs.get $ k.castLE (by simp)
-    use ⟨bvs.w, bvs.bvs.append $ bv1 ::ᵥ bv2 ::ᵥ Mathlib.Vector.nil⟩
+    use ⟨bvs.w, bvs.bvs.append $ bv1 ::ᵥ bv2 ::ᵥ List.Vector.nil⟩
     rcases bvs with ⟨w, bvs⟩
     simp
     constructor
     · unfold l; simp; split_ands
       · unfold lrel; simp only [Fin.isValue, BitVecs.transport_getElem,
           liftLast2, Set.mem_setOf_eq, Fin.val_last, le_add_iff_nonneg_right, zero_le,
-          Mathlib.Vector.append_get_ge]
-        rw [Mathlib.Vector.append_get_ge (by dsimp; rw [Nat.mod_eq_of_lt]; omega)]
+          List.Vector.append_get_ge]
+        rw [List.Vector.append_get_ge (by dsimp; rw [Nat.mod_eq_of_lt]; omega)]
         simp [Set.instMembership, Set.Mem] at h
         convert h using 2
         · apply helper1; ext; simp; rw [Nat.mod_eq_of_lt] <;> omega
         · apply helper2; ext; simp
-      · unfold l1 Term.language; simp [Mathlib.Vector.transport, liftMaxSucc1]
-        rw [Mathlib.Vector.append_get_ge (by dsimp; rw [Nat.mod_eq_of_lt]; omega)]
+      · unfold l1 Term.language; simp [List.Vector.transport, liftMaxSucc1]
+        rw [List.Vector.append_get_ge (by dsimp; rw [Nat.mod_eq_of_lt]; omega)]
         rw [helper1 (by ext; simp; rw [Nat.mod_eq_of_lt] <;> omega)]
         unfold bv1
         congr; ext1 k; split_ifs
@@ -421,7 +421,7 @@ lemma formula_language_case_atom :
           have _ : k = t1.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
           omega
         · simp; congr 1
-      · unfold l2 Term.language; simp [Mathlib.Vector.transport, liftMaxSucc2]
+      · unfold l2 Term.language; simp [List.Vector.transport, liftMaxSucc2]
         rw [helper2 (by ext; simp)]
         unfold bv2
         congr; ext1 k; split_ifs
@@ -432,8 +432,8 @@ lemma formula_language_case_atom :
         · simp; congr 1
     · ext1; simp
       next i =>
-        simp [Mathlib.Vector.transport, liftExcept2]
-        rw [Mathlib.Vector.append_get_lt i.isLt]
+        simp [List.Vector.transport, liftExcept2]
+        rw [List.Vector.append_get_lt i.isLt]
         congr 1
 
 theorem formula_language (φ : Formula) :
@@ -456,7 +456,7 @@ theorem formula_language (φ : Formula) :
       congr!
     rcases op <;>
       simp [evalBinop, langBinop, Set.compl, Set.instMembership,
-        Set.Mem, Mathlib.Vector.transport] <;> simp_all <;> tauto
+        Set.Mem, List.Vector.transport] <;> simp_all <;> tauto
   case msbSet t =>
     ext1 bvs; simp only [Formula.arity, Formula.language, Set.proj, Set.lift, langMsb, Fin.isValue,
       Set.preimage_setOf_eq, Set.mem_image, Set.mem_inter_iff,
@@ -466,19 +466,19 @@ theorem formula_language (φ : Formula) :
     · rintro ⟨bvsb, ⟨ht, hmsb⟩, heq⟩
       simp only [Fin.isValue, Formula.arity] at ht hmsb ⊢
       unfold Term.language at ht
-      simp only [BitVecs.transport, Mathlib.Vector.transport] at hmsb
+      simp only [BitVecs.transport, List.Vector.transport] at hmsb
       simp at ht; rw [←ht] at hmsb; rw [←hmsb]
       simp [BitVecs.transport] at heq
       obtain ⟨hw, hbvs⟩ := heq
       simp [hw]; congr 1; simp [hw]
       rcases hw; simp
       congr 1; ext1 k
-      simp at hbvs; simp [←hbvs, Mathlib.Vector.transport]; congr
+      simp at hbvs; simp [←hbvs, List.Vector.transport]; congr
     · intros heq
       use ⟨w,
-        bvs.append ((t.evalFin fun k => bvs.get $ k.castLE (by simp)) ::ᵥ Mathlib.Vector.nil)⟩
+        bvs.append ((t.evalFin fun k => bvs.get $ k.castLE (by simp)) ::ᵥ List.Vector.nil)⟩
       unfold Term.language
-      simp [BitVecs.transport, Mathlib.Vector.transport] at heq ⊢
+      simp [BitVecs.transport, List.Vector.transport] at heq ⊢
       constructor; assumption
       ext1 k; simp; congr 1
 
@@ -527,7 +527,7 @@ lemma sat_impl_sat' {φ : Formula} :
     simp [←evalFin_evalNat]
 
 lemma env_to_bvs (φ : Formula) (ρ : Fin φ.arity → BitVec w) :
-    let bvs : BitVecs φ.arity := ⟨w, Mathlib.Vector.ofFn fun k => ρ k⟩
+    let bvs : BitVecs φ.arity := ⟨w, List.Vector.ofFn fun k => ρ k⟩
     ρ = fun k => bvs.bvs.get k := by
   simp
 

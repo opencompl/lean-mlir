@@ -284,7 +284,7 @@ instance : ToString (MOp φ) where
 
 abbrev Op := MOp 0
 
-def MOp.UnaryOp.instantiate (as : Mathlib.Vector Nat φ) : MOp.UnaryOp φ → MOp.UnaryOp 0
+def MOp.UnaryOp.instantiate (as : List.Vector Nat φ) : MOp.UnaryOp φ → MOp.UnaryOp 0
 | .trunc w' flags     => .trunc (.concrete <| w'.instantiate as) flags
 | .zext w' flag => .zext (.concrete <| w'.instantiate as) flag
 | .sext w'      => .sext (.concrete <| w'.instantiate as)

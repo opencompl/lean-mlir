@@ -251,22 +251,22 @@ instance : AST.TransformReturn (MetaLLVM φ) φ where
   Finally, we show how to instantiate a family of programs to a concrete program
 -/
 
-def instantiateMTy (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
+def instantiateMTy (vals : List.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
   | .bitvec w => .bitvec <| w.instantiate vals
 
-def instantiateMOp (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
+def instantiateMOp (vals : List.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
   | .binary w binOp => .binary (w.instantiate vals) binOp
   | .unary w unOp => .unary (w.instantiate vals) (unOp.instantiate vals)
   | .select w => .select (w.instantiate vals)
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
 
-def instantiateCtxt (vals : Mathlib.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) :
+def instantiateCtxt (vals : List.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) :
     Ctxt InstCombine.Ty :=
   Γ.map (instantiateMTy vals)
 
 open InstCombine in
-def MOp.instantiateCom (vals : Mathlib.Vector Nat φ) : DialectMorphism (MetaLLVM φ) LLVM where
+def MOp.instantiateCom (vals : List.Vector Nat φ) : DialectMorphism (MetaLLVM φ) LLVM where
   mapOp := instantiateMOp vals
   mapTy := instantiateMTy vals
   preserves_signature op := by
@@ -282,7 +282,7 @@ def MOp.instantiateCom (vals : Mathlib.Vector Nat φ) : DialectMorphism (MetaLLV
 
 open InstCombine in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
-    MLIR.AST.ExceptM (MetaLLVM φ) (Mathlib.Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
+    MLIR.AST.ExceptM (MetaLLVM φ) (List.Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
   let ⟨Γ, eff, ty, com⟩ ← MLIR.AST.mkCom reg
   return fun vals =>
     let Γ' := instantiateCtxt vals Γ
@@ -306,10 +306,10 @@ elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
     SSA.elabIntoCom reg q(MetaLLVM $φ)
 
-  let mvalues : Q(Mathlib.Vector Nat $φ) ←
+  let mvalues : Q(List.Vector Nat $φ) ←
     withTraceNode `llvm (return m!"{exceptEmoji ·} elaborating mvalues") <| do
       let mvalues ← `(⟨[$mvars,*], by rfl⟩)
-      elabTermEnsuringType mvalues q(Mathlib.Vector Nat $φ)
+      elabTermEnsuringType mvalues q(List.Vector Nat $φ)
 
   let com ← withTraceNode `llvm (return m!"{exceptEmoji ·} building final Expr") <| do
     let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]

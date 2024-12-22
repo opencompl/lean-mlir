@@ -38,7 +38,7 @@ lemma NFA.correct_spec {M : NFA α σ} {ζ : M.sa} {L : Language α} :
   simp_all
 
 abbrev BVRel := ∀ ⦃w⦄, BitVec w → BitVec w → Prop
-abbrev BVNRel n := ∀ ⦃w⦄, Mathlib.Vector (BitVec w) n → Prop
+abbrev BVNRel n := ∀ ⦃w⦄, List.Vector (BitVec w) n → Prop
 
 def NFA'.sa (M : NFA' n) := M.σ → BVNRel n
 def NFA'.sa2 (M : NFA' 2) := M.σ → BVRel
@@ -56,7 +56,7 @@ lemma in_enc : x ∈ enc '' S ↔ dec x ∈ S := by
   · rintro hS; use dec x; simp_all
 
 @[simp]
-lemma Mathlib.Vector.ofFn_0 {f : Fin 0 → α} : ofFn f = .nil := by
+lemma List.Vector.ofFn_0 {f : Fin 0 → α} : ofFn f = .nil := by
   simp [ofFn]
 
 @[simp]
@@ -66,7 +66,7 @@ lemma BitVec.ofFn_0 {f : Fin 0 → Bool} : ofFn f = .nil := by
 @[simp]
 lemma dec_snoc_in_langRel {n} {R : BVNRel n} {w : BitVecs' n} {a : BitVec n} :
     dec (w ++ [a]) ∈ langRel R ↔
-      R (Mathlib.Vector.ofFn fun k => .cons (a.getLsbD k) ((dec w).bvs.get k)) := by
+      R (List.Vector.ofFn fun k => .cons (a.getLsbD k) ((dec w).bvs.get k)) := by
   simp [langRel]
 
 @[simp]
@@ -117,10 +117,10 @@ lemma BitVec.cons_inj : cons b1 bv1 = cons b2 bv2 ↔ (b1 = b2) ∧ bv1 = bv2 :=
 @[simp] lemma BitVec.lk01 : (0#2 : BitVec 2)[1] = false := by rfl
 
 structure NFA'.correct (M : NFA' n) (ζ : M.sa) (L : BVNRel n) where
-  cond1 : ∀ ⦃w⦄ (bvn : Mathlib.Vector (BitVec w) n), (L bvn ↔ ∃ q ∈ M.M.accept, ζ q bvn)
-  cond2 q : q ∈ M.M.start ↔ ζ q (Vector.replicate n .nil)
-  cond3 q a {w} (bvn : Mathlib.Vector (BitVec w) n) : q ∈ M.M.stepSet { q | ζ q bvn } a ↔
-              ζ q (Mathlib.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) (bvn.get k))
+  cond1 : ∀ ⦃w⦄ (bvn : List.Vector (BitVec w) n), (L bvn ↔ ∃ q ∈ M.M.accept, ζ q bvn)
+  cond2 q : q ∈ M.M.start ↔ ζ q (List.Vector.replicate n .nil)
+  cond3 q a {w} (bvn : List.Vector (BitVec w) n) : q ∈ M.M.stepSet { q | ζ q bvn } a ↔
+              ζ q (List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) (bvn.get k))
 
 structure NFA'.correct2 (M : NFA' 2) (ζ : M.sa2) (L : BVRel) where
   cond1 : ∀ (bv1 bv2 : BitVec w), (L bv1 bv2 ↔ ∃ q ∈ M.M.accept, ζ q bv1 bv2)
@@ -155,7 +155,7 @@ lemma NFA'.correct_spec {M : NFA' n} {ζ : M.sa} {L : BVNRel n} :
 lemma NFA'.correct2_spec {M : NFA' 2} {ζ : M.sa2} {L : BVRel} :
     M.correct2 ζ L → M.accepts = langRel2 L := by
   rintro ⟨h1, h2, h3⟩
-  suffices hc : M.correct (fun q w (bvn : Mathlib.Vector (BitVec w) 2) => ζ q (bvn.get 0) (bvn.get 1))
+  suffices hc : M.correct (fun q w (bvn : List.Vector (BitVec w) 2) => ζ q (bvn.get 0) (bvn.get 1))
                       (fun w bvn => L (bvn.get 0) (bvn.get 1)) by
     rw [M.correct_spec hc]
     simp [langRel2, langRel]
@@ -188,7 +188,7 @@ def _root_.NFA'.ofFSM'  (p : FSM arity) : NFA' (FinEnum.card arity + 1) where
   M := NFA.ofFSM p
 
 @[simp]
-abbrev inFSMRel (p : FSM arity) {w} (bvn : Mathlib.Vector (BitVec w) _) :=
+abbrev inFSMRel (p : FSM arity) {w} (bvn : List.Vector (BitVec w) _) :=
   bvn.get (Fin.last (FinEnum.card arity)) = p.evalBV (fun ar => bvn.get (FinEnum.equiv.toFun ar))
 
 def NFA'.ofFSM_sa (p : FSM arity) : (NFA'.ofFSM' p).sa := fun q _ bvn =>
@@ -343,7 +343,7 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
     symm; apply BitStream.neg_congr; simp_all
 
 @[simp]
-lemma FSM.eval_bv (bvn : Mathlib.Vector (BitVec w) (t.arity + 1)) :
+lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
     (t.evalFin fun ar => bvn.get ar.castSucc) := by
   simp [FSM.evalBV]; ext k hk
