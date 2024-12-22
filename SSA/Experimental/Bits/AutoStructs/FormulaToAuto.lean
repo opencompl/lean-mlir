@@ -921,7 +921,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
   extract_lets bvs at hx
   suffices hin : bvs ∈ (⊤ : Set _) by
     rw [←h] at hin
-    simp [Set.instMembership, Set.Mem] at hin; assumption
+    simp +zetaDelta [Set.instMembership, Set.Mem] at hin; assumption
   simp
 
 -- -- For testing the comparison operators.

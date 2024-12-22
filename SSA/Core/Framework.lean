@@ -1307,7 +1307,7 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
       specialize ih he f'
       simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
         EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
-      simp [denote, ← ih]
+      simp +zetaDelta [denote, ← ih]
     | last =>
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
         Option.mem_def, Option.some.injEq] at he

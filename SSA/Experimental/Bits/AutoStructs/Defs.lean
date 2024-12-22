@@ -349,15 +349,15 @@ lemma formula_language_case_atom :
     simp at h
     unfold lrel l1 l2 at h
     obtain ⟨⟨hrel, h1⟩, h2⟩ := h
-    have _ : n+1 < bvsb.bvs.length := by simp_all [n]
-    have _ : n < bvsb.bvs.length := by simp_all [n]
+    have _ : n+1 < bvsb.bvs.length := by simp +zetaDelta [n]
+    have _ : n < bvsb.bvs.length := by simp +zetaDelta [n]
     have hrel : evalRelation rel (bvsb.bvs.get n) (bvsb.bvs.get (Fin.last (n + 1))) := by
       simp at hrel
       apply hrel
     have ht1 : bvsb.bvs.get n = t1.evalFin fun n => bvsb.bvs.get n := by
       unfold Term.language at h1
       simp [Mathlib.Vector.transport, liftMaxSucc1] at h1
-      unfold n; simp; rw [←h1]
+      unfold n; simp +zetaDelta; rw [←h1]
       congr; ext1 k
       split_ifs with h
       · exfalso
@@ -368,7 +368,7 @@ lemma formula_language_case_atom :
     have ht2 : bvsb.bvs.get (Fin.last (n+1)) = t2.evalFin fun n => bvsb.bvs.get n := by
       unfold Term.language at h2
       simp [Mathlib.Vector.transport, liftMaxSucc2] at h2
-      unfold n; simp only [Formula.arity, Fin.natCast_self]; rw [←h2]
+      unfold n; simp +zetaDelta only [Formula.arity, Fin.natCast_self]; rw [←h2]
       congr; ext1 k
       split_ifs with h
       · exfalso
