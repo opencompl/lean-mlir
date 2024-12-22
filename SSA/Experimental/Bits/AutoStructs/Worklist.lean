@@ -89,7 +89,7 @@ lemma addOrCreate_preserves_map (st : worklist.St A S) (final? : Bool) (sa sa' :
   simp_all [worklist.St.addOrCreateState]; intros hmap
   split; simp_all
   dsimp only
-  simp_all [Std.HashMap.getElem?_insert]
+  simp [Std.HashMap.getElem?_insert, *]
   rintro rfl; simp_all
 
 omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
@@ -526,10 +526,10 @@ lemma processOneElem_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa
   split
   next s' heq =>
     dsimp
-    split <;> simp_all
+    split <;> simp_all only []
     split <;> simp_all
   next heq =>
-    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all)
+    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none])
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_new_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -608,7 +608,7 @@ omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel {s₁ s₂ : State} :
     (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' ↔
       (st.rel s₂ sa' ∨ (s₂ = st.m.stateMax ∧ sa' = sa ∧ st.map[sa']? = none)) := by
-  simp [worklist.St.rel]
+  simp only [worklist.St.rel]
   rw [processOneElem_map]
   constructor
   · split
@@ -688,7 +688,7 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       rcases hs' with hold | rfl
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
         rw [Std.HashMap.getElem?_insert]
-        simp_all; rintro rfl; simp_all }
+        simp_all [-getElem?_eq_none]; rintro rfl; simp_all [-getElem?_eq_none] }
       { use sa'; simp_all } } }
   { rintro s' sa1 sa2
     rw [processOneElem_map]
@@ -821,7 +821,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
   induction st using worklistRun'.go.induct _ _ final f with
   | case4 st hnemp sa? hsa? =>
     -- trivial case that's impossible
-      simp [sa?, Array.back?] at hsa?
+      simp only [Array.back?, Array.getElem?_eq_none_iff, sa?] at hsa?
       have : st.worklist.size = 0 := by omega
       simp_all only [Array.isEmpty, decide_true, not_true_eq_false]
   | case3 st hnemp sa? sa hsa? wl' st' hc =>
@@ -898,7 +898,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
           simp_all
         exfalso; apply hnin; apply st.worklist_incl; exact Array.mem_of_back?_eq_some hsome
     next hnone =>
-      simp [Array.back?] at *
+      simp only [Array.back?, Array.getElem?_eq_none_iff] at *
       have : st.worklist.size = 0 := by omega
       simp_all
 
