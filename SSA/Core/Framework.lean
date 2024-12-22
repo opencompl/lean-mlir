@@ -2454,7 +2454,7 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
   · intro h t v
     rcases v with ⟨i, hi⟩
     try simp only [Erased.out_mk] at hi
-    rcases List.get?_eq_some.1 hi with ⟨h', rfl⟩
+    rcases List.get?_eq_some_iff.1 hi with ⟨h', rfl⟩
     simp at h'
     convert h ⟨i, h'⟩
   · intro h i
