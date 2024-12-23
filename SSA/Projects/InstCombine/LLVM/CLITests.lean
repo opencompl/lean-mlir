@@ -201,11 +201,11 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length)
 -/
 
 def InstCombine.mkValuation (ctxt : MContext 0)
-  (values : Mathlib.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
+  (values : List.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
   | [], ⟨[],_⟩ => Ctxt.Valuation.nil
   | ty::tys, ⟨val::vals,hlen⟩ =>
-    let valsVec : Mathlib.Vector (Option Int) tys.length := ⟨vals,by aesop⟩
+    let valsVec : List.Vector (Option Int) tys.length := ⟨vals,by aesop⟩
     let valuation' := mkValuation tys valsVec
     match ty with
       | .bitvec (.concrete w) =>
@@ -214,7 +214,7 @@ match ctxt, values with
          Ctxt.Valuation.snoc valuation' newTy
 
 def ConcreteCliTest.eval (test : ConcreteCliTest)
-    (values : Mathlib.Vector (Option Int) test.context.length) :
+    (values : List.Vector (Option Int) test.context.length) :
  IO ⟦test.ty⟧ := do
   let valuesStack := values.reverse -- we reverse values since context is a stack
   let valuation := InstCombine.mkValuation test.context valuesStack
@@ -223,14 +223,14 @@ def ConcreteCliTest.eval (test : ConcreteCliTest)
 def ConcreteCliTest.eval? (test : ConcreteCliTest) (values : Array (Option Int)) :
   IO (Except String ⟦test.ty⟧) := do
     if h : values.size = test.context.length then
-      let valuesVec : Mathlib.Vector (Option Int) test.context.length := h ▸ (Vector.ofArray values)
+      let valuesVec : List.Vector (Option Int) test.context.length := h ▸ (Vector.ofArray values)
       return Except.ok <| (← test.eval valuesVec)
     else
       return Except.error (s!"Invalid input length: {values} has length {values.size}, " ++
         s!" required {test.context.length}")
 
 def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) :
-    Cli.ParseableType (Mathlib.Vector Int test.context.length)
+    Cli.ParseableType (List.Vector Int test.context.length)
   := inferInstance
 
 def CocreteCliTest.signature (test : ConcreteCliTest) :

@@ -11,17 +11,17 @@ open Set
 open Mathlib
 
 @[simp]
-lemma Mathlib.Vector.append_get_lt {x : Mathlib.Vector α n} {y : Mathlib.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
+lemma List.Vector.append_get_lt {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
     (x.append y).get i = x.get (i.castLT hlt) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [Mathlib.Vector.append, Mathlib.Vector.get]
+  dsimp [List.Vector.append, List.Vector.get]
   apply List.getElem_append_left
 
 @[simp]
-lemma Mathlib.Vector.append_get_ge {x : Mathlib.Vector α n} {y : Mathlib.Vector α m} {i : Fin (n+m)} (hlt: n ≤ i) :
+lemma List.Vector.append_get_ge {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: n ≤ i) :
     (x.append y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [Mathlib.Vector.append, Mathlib.Vector.get]
+  dsimp [List.Vector.append, List.Vector.get]
   rcases hx
   apply List.getElem_append_right hlt
 
@@ -40,7 +40,7 @@ instance finenum_fin : FinEnum (Fin n) where
 instance (α : Type) : Inter (Language α) := ⟨Set.inter⟩
 instance (α : Type) : Union (Language α) := ⟨Set.union⟩
 
-def Mathlib.Vector.transport (v : Vector α m) (f : Fin n → Fin m) : Vector α n :=
+def List.Vector.transport (v : Vector α m) (f : Fin n → Fin m) : Vector α n :=
   Vector.ofFn fun i => v.get (f i)
 
 def BitVec.transport (f : Fin n2 → Fin n1) (bv : BitVec n1) : BitVec n2 :=
@@ -63,14 +63,14 @@ The set of `n`-tuples of bit vectors of an arbitrary width.
 -/
 structure BitVecs (n : Nat) where
   w : Nat
-  bvs : Mathlib.Vector (BitVec w) n
+  bvs : List.Vector (BitVec w) n
 
-abbrev BitVecs.empty : BitVecs n := ⟨0, Mathlib.Vector.replicate n .nil⟩
+abbrev BitVecs.empty : BitVecs n := ⟨0, List.Vector.replicate n .nil⟩
 abbrev BitVecs.singleton {w : Nat} (bv : BitVec w) : BitVecs 1 := ⟨w, bv ::ᵥ .nil⟩
 abbrev BitVecs.pair {w : Nat} (bv1 bv2 : BitVec w) : BitVecs 2 := ⟨w, bv1 ::ᵥ bv2 ::ᵥ .nil⟩
 
 def BitVecs0 : Set (BitVecs n) :=
-  {⟨0, Vector.replicate n (BitVec.zero 0)⟩}
+  {⟨0, List.Vector.replicate n (BitVec.zero 0)⟩}
 
 -- TODO: this ought to be way easier
 @[ext (iff := false)]
@@ -100,7 +100,7 @@ def enc (bvs : BitVecs n) : BitVecs' n :=
 
 def dec (bvs' : BitVecs' n) : BitVecs n where
   w := bvs'.length
-  bvs := Mathlib.Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
+  bvs := List.Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
 
 @[simp]
 lemma dec_nil n : dec (n := n) [] = BitVecs.empty := by
@@ -142,7 +142,7 @@ lemma dec_enc : Function.RightInverse (α := BitVecs' n) enc dec := by
   intros bvs; ext1; exact dec_enc_w bvs
   next i =>
     simp only [enc, Fin.getElem_fin, dec, List.getElem_map, List.getElem_finRange, Fin.cast_mk,
-      Fin.is_lt, BitVec.ofFn_getLsbD', Fin.eta, Vector.get_ofFn]
+      Fin.is_lt, BitVec.ofFn_getLsbD', Fin.eta, List.Vector.get_ofFn]
     ext
     simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD',
       BitVec.getLsbD_cast']
@@ -177,9 +177,9 @@ def dec_inj {n : Nat} : Function.Injective (dec (n := n)) := by
 @[simp]
 lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
-    bvs := Mathlib.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
+    bvs := List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
   ext k i <;> simp_all only [dec, Fin.getElem_fin, List.length_append, List.length_singleton,
-    Vector.get_ofFn, BitVec.ofFn_getLsbD', BitVec.getLsbD_cast']
+    List.Vector.get_ofFn, BitVec.ofFn_getLsbD', BitVec.getLsbD_cast']
   rw [BitVec.getLsbD_cons]
   split
   next heq => simp_all
@@ -204,7 +204,7 @@ lemma BitVecs.transport_w {bvs : BitVecs n} : (BitVecs.transport f bvs).w = bvs.
 @[simp]
 lemma BitVecs.transport_getElem {bvs : BitVecs m} (f : Fin n → Fin m) (i : Fin n) :
     (bvs.transport f).bvs.get i = bvs.bvs.get (f i) := by
-  simp [transport, Mathlib.Vector.transport]
+  simp [transport, List.Vector.transport]
 
 def BitVecs'.transport (f : Fin n → Fin m) (bvs' : BitVecs' m): BitVecs' n :=
   bvs'.map fun bv => bv.transport f

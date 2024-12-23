@@ -40,10 +40,6 @@ theorem Array.take_ge_size {a : Array α} {n} (h : n ≥ a.size) : a.take n = a 
   rw [heq]; rfl
 
 @[simp]
-theorem Array.take_size {a : Array α} : a.take a.size = a :=
-  a.take_ge_size (Nat.le_refl a.size)
-
-@[simp]
 theorem Array.take_zero {a : Array α} : a.take 0 = #[] := eq_empty_of_size_eq_zero (by simp)
 
 
