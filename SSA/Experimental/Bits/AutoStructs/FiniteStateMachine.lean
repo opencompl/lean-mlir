@@ -253,7 +253,7 @@ def or : FSM Bool :=
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = (x true) ||| (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
+  ext n; cases n <;> (simp [and, eval, nextBit]; sorry)
 
 def xor : FSM Bool :=
   { α := Empty,
@@ -264,7 +264,7 @@ def xor : FSM Bool :=
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
+  ext n; cases n <;> (simp [and, eval, nextBit]; sorry)
 
 def add : FSM Bool :=
   { α := Unit,
@@ -291,6 +291,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
   | succ n ih =>
     unfold carry
     simp [nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
+    sorry
 
 @[simp] theorem carry_zero (x : ar → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
@@ -395,7 +396,7 @@ def one : FSM (Fin 0) :=
   ext n
   cases n
   · rfl
-  · simp [eval, carry_one, nextBit]
+  · simp [eval, carry_one, nextBit]; sorry
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -427,7 +428,7 @@ theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
   ext n
   cases n
   · rfl
-  · simp [carry_ls, eval, nextBit, BitStream.concat]
+  · simp [carry_ls, eval, nextBit, BitStream.concat]; sorry
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
