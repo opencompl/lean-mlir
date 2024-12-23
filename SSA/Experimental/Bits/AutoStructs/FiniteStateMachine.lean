@@ -397,9 +397,7 @@ def one : FSM (Fin 0) :=
   ext n
   cases n
   · rfl
-  · simp [eval, carry_one, nextBit]
-    sorry -- TODO: fix this proof
-
+  · simp! [eval, carry_one, nextBit, one, mk]
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -410,7 +408,7 @@ def negOne : FSM (Fin 0) :=
 @[simp] lemma eval_negOne (x : Fin 0 → BitStream) : negOne.eval x = BitStream.negOne := by
   ext; simp [negOne, eval, nextBit]
 
-def ls (b : Bool) : FSM Unit :=
+@[simp] def ls (b : Bool) : FSM Unit :=
   { α := Unit,
     initCarry := fun _ => b,
     nextBitCirc := fun x =>
@@ -431,8 +429,7 @@ theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
   ext n
   cases n
   · rfl
-  · simp [ls, carry_ls, eval, nextBit, BitStream.concat]
-    sorry -- TODO: fix this proof
+  · simp [ls, carry, carry_ls, eval, nextBit, BitStream.concat]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,

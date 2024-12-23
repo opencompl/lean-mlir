@@ -559,8 +559,7 @@ def one : FSM (Fin 0) :=
   ext n
   cases n
   · rfl
-  · simp [eval, carry_one, nextBit]
-    sorry
+  · simp! [eval, carry_one, nextBit, one]
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -595,8 +594,7 @@ theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
   ext n
   cases n
   · rfl
-  · simp [carry_ls, eval, nextBit, BitStream.concat]
-    sorry
+  · simp [ls, carry_ls, eval, nextBit, BitStream.concat, carry]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
