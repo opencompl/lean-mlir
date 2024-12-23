@@ -238,10 +238,15 @@ private def pretty_test_exact :=
     llvm.return %0 : i64
   }]
 
+
 example : pretty_test = prettier_test_generic 32 := by
   unfold pretty_test prettier_test_generic
+  simp [DialectSignature.sig, signature]
   simp_alive_meta
-  simp
+  simp [DialectSignature.sig, signature, InstcombineTransformDialect.instantiateMTy]
+  simp_alive_meta
+  simp [List.map]
+  sorry
 
 example : pretty_test_generic = prettier_test_generic    := rfl
 

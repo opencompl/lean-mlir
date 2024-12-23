@@ -68,7 +68,7 @@ since `GetElem` requires us to specify a type `elem` such that `xs[i] : elem`,
 but `elem` is *not* allowed to depend on the concrete index `i`.
 Thus, `GetElem` does not properly support heterogeneous container types like `HVector`
 -/
-abbrev getN (x : HVector A as) (i : Nat) (hi : i < as.length := by hvector_get_elem_tactic) :
+abbrev getN (x : HVector A as) (i : Nat) (hi : i < as.length := by (try simp [DialectSignature.sig, signature]); try hvector_get_elem_tactic) :
     A (as.get ⟨i, hi⟩) :=
   x.get ⟨i, hi⟩
 
