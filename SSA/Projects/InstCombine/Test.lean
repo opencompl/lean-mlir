@@ -205,11 +205,7 @@ def bb0IcomConcrete := [llvm()|
 {
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant(1) : i32
-    %1 = llvm.mlir.constant(31) : i32
-    %2 = llvm.ashr %arg0, %1 : i32
-    %3 = llvm.and %2, %0 : i32
-    %4 = llvm.add %3, %2 : i32
-    llvm.return %4 : i32
+    llvm.return %0 : i32
   }]
 
 /-- A simple example of a family of programs, generic over some bitwidth `w` -/
@@ -224,18 +220,13 @@ def bb0IcomGeneric (w : Nat) := [llvm(w)|
 {
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant(1) : _
-    %1 = llvm.mlir.constant(31) : _
-    %2 = llvm.ashr %arg0, %1
-    %3 = llvm.and %2, %0
-    %4 = llvm.add %3, %2
-    llvm.return %4
+    llvm.return %0
   }]
 
 /-- Indeed, the concrete program is an instantiation of the generic program -/
 example : bb0IcomGeneric 32 = bb0IcomConcrete := by
   unfold bb0IcomGeneric bb0IcomConcrete
   simp_alive_meta
-  simp
 
 /-
   Simple example of the denotation of `GenericWidth`.

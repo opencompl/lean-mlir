@@ -32,6 +32,9 @@ theorem shift_mul:
   simp_alive_ops
   simp_alive_case_bash
   · simp
+
+
+
   · simp
 
 /--
