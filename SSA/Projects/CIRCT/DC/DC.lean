@@ -186,19 +186,19 @@ instance : DialectSignature DC := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (DC) where
     denote
-    | .fst, arg, _ => (arg.getN 0).fst
-    | .snd, arg, _ => (arg.getN 0).snd
-    | .fstVal _, arg, _ => (arg.getN 0).fst
-    | .sndVal _, arg, _ => (arg.getN 0).snd
-    | .pair _, arg, _ => (arg.getN 0, arg.getN 1)
-    | .unpack _, arg, _ => CIRCTStream.DC.unpack (arg.getN 0)
-    | .pack _, arg, _  => CIRCTStream.DC.pack (arg.getN 0) (arg.getN 1)
-    | .branch, arg, _  => CIRCTStream.DC.branch (arg.getN 0)
-    | .fork, arg, _  => CIRCTStream.DC.fork (arg.getN 0)
-    | .join, arg, _  => CIRCTStream.DC.join (arg.getN 0) (arg.getN 1)
-    | .merge, arg, _  => CIRCTStream.DC.merge (arg.getN 0) (arg.getN 1)
-    | .select, arg, _  => CIRCTStream.DC.select (arg.getN 0) (arg.getN 1) (arg.getN 2)
-    | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0)
+    | .fst, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).fst
+    | .snd, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).snd
+    | .fstVal _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).fst
+    | .sndVal _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature]) ).snd
+    | .pair _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature]), arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .unpack _, arg, _ => CIRCTStream.DC.unpack (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+    | .pack _, arg, _  => CIRCTStream.DC.pack (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .branch, arg, _  => CIRCTStream.DC.branch (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+    | .fork, arg, _  => CIRCTStream.DC.fork (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+    | .join, arg, _  => CIRCTStream.DC.join (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .merge, arg, _  => CIRCTStream.DC.merge (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .select, arg, _  => CIRCTStream.DC.select (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
+    | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .source, _, _  => CIRCTStream.DC.source
 
 end Dialect
