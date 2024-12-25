@@ -413,7 +413,7 @@ def negOne : FSM (Fin 0) :=
 @[simp] lemma eval_negOne (x : Fin 0 → BitStream) : negOne.eval x = BitStream.negOne := by
   ext; simp [negOne, eval, nextBit]
 
-@[simp] def ls (b : Bool) : FSM Unit :=
+def ls (b : Bool) : FSM Unit :=
   { α := Unit,
     initCarry := fun _ => b,
     nextBitCirc := fun x =>
