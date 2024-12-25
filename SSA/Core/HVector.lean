@@ -115,6 +115,9 @@ theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
   cases h; cases t₁; cases t₂; rfl
 syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
+@[simp]
+theorem cons_nil_get : (HVector.cons x .nil).get (0 : Fin 1) = x := rfl
+
 -- Copied from core for List
 macro_rules
   | `([ $elems,* ]ₕ) => do
