@@ -266,6 +266,64 @@ def xor : FSM Bool :=
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
   ext n; cases n <;> simp [xor, eval, nextBit]
 
+@[simp] lemma eval_nxor (x : Bool → BitStream) : nxor.eval x = ((x true).nxor (x false)) := by
+  ext n; cases n
+  · simp [nxor, eval, nextBit]
+  · simp [nxor, eval, nextBit]
+
+def scanOr  : FSM Unit :=
+  {
+   α := Unit,
+   initCarry := fun () => false,
+   nextBitCirc := fun _α => (Circuit.var true (inl ())) ||| (Circuit.var true (inr ()))
+  }
+
+@[simp]
+lemma eval_scanOr_zero (x : Unit → BitStream) : scanOr.eval x 0 = (x () 0) := by
+  simp[eval, nextBit, scanOr, and, carry]
+
+@[simp]
+lemma eval_scanOr_succ (x : Unit → BitStream) (n : Nat) :
+    (scanOr.eval x (n+1)) = ((scanOr.eval x n) || (x () (n+1)))  := by
+  simp [eval, nextBit, scanOr, and, carry]
+
+/-- The result of `scanOr` is false at `n` iff the bitvector has been false upto (and including) time `n`. -/
+@[simp] lemma eval_scanor_false_iff (x : Unit → BitStream) (n : Nat) : scanOr.eval x n = false ↔ (∀ (i : Nat), (hi : i ≤ n) → x () i = false) := by
+  induction n
+  case zero => simp [eval, nextBit, scanOr, and, carry]
+  case succ n ih =>
+    rw [eval_scanOr_succ]
+    constructor
+    · intros h
+      intros i hi
+      have := Bool.or_eq_false_iff.mp h
+      have hi : (i = n+1) ∨ (i < n + 1) := by omega
+      rcases hi with rfl | hi
+      · simp [this]
+      · apply ih.mp
+        · simp [this]
+        · omega
+    · intros h
+      have := h (n + 1) (by omega)
+      simp [this]
+      apply ih.mpr
+      intros j hj
+      exact h j (by omega)
+
+/-- Show that the FSM and the bitstream computations agree for `scanOr`. -/
+@[simp] lemma eval_scanOr (x : Unit → BitStream) : scanOr.eval x = (x ()).scanOr := by
+  ext n;
+  induction n
+  case zero => simp
+  case succ n ih => simp [ih]
+
+/-- Show that the FSM and the bitstream computations agree for `scanOr`. -/
+@[simp] lemma eval_scanAnd (x : Unit → BitStream) : scanAnd.eval x = (x ()).scanAnd := by
+  ext n;
+  induction n
+  case zero => simp
+  case succ n ih => simp [ih]
+
 def add : FSM Bool :=
   { α := Unit,
     initCarry := λ _ => false,
@@ -279,6 +337,13 @@ def add : FSM Bool :=
                 Circuit.var true (inr false) ^^^
                 Circuit.var true (inl ()) }
 
+theorem add_nextBitCirc_some_eval :
+    (add.nextBitCirc (some ())).eval =
+      fun x => x (inr true) && x (inr false) || x (inr true)
+        && x (inl ()) || x (inr false) && x (inl ()) := by
+  ext x
+  simp +ground [eval, add, Circuit.simplifyAnd, Circuit.simplifyOr]
+
 /-- The internal carry state of the `add` FSM agrees with
 the carry bit of addition as implemented on bitstreams -/
 theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
@@ -290,8 +355,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb, nextBitCirc, Sum.elim]
-    sorry -- TODO: fix this proof
+    simp [add_nextBitCirc_some_eval, nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
 
 
 @[simp] theorem carry_zero (x : ar → BitStream) : carry p x 0 = p.initCarry := rfl
@@ -397,7 +461,7 @@ def one : FSM (Fin 0) :=
   ext n
   cases n
   · rfl
-  · simp! [eval, carry_one, nextBit, one, mk]
+  · simp! [eval, carry_one, nextBit, one]
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -429,7 +493,7 @@ theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
   ext n
   cases n
   · rfl
-  · simp [ls, carry, carry_ls, eval, nextBit, BitStream.concat]
+  · simp [ls, carry_ls, eval, nextBit, BitStream.concat, carry]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
@@ -579,6 +643,285 @@ def composeBinary'
 instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
     Fintype (cond b α β) := by
   cases b <;> simp <;> infer_instance
+
+
+namespace FSM
+
+/--
+A finite state machine whose outputs are the bits of the natural number `n`,
+in least to most significant bit order.
+
+See that this uses only as much as as *log₂ n*, which is the correct
+number of bits necessary to count up to `n`.
+-/
+def ofNat (n : Nat)  : FSM (Fin 0) :=
+  match hn : n with
+  | 0 => FSM.zero
+  | n' + 1 =>
+    let bit := n.testBit 0
+    let m := n / 2
+    have h : m < n := by
+      simp [m];
+      apply Nat.div_lt_iff_lt_mul _ |>.mpr
+      · omega
+      · decide
+    composeUnaryAux (FSM.ls bit) (ofNat m)
+
+@[simp]
+theorem ofNat_zero : ofNat 0 = FSM.zero :=
+  by simp [ofNat]
+
+/-- Evaluating 'const n' gives us the bits of the value of 'const n'.-/
+@[simp]
+theorem eval_ofNat (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (ofNat n).eval env i = n.testBit i := by
+  induction n using Nat.div2Induction generalizing i
+  case ind n hn =>
+    rcases n with rfl | hn
+    case zero => simp
+    case succ n =>
+      simp [ofNat]
+      have : n + 1 > 0 := by omega
+      specialize (hn this)
+      cases i
+      · case zero => simp
+      · case succ i' =>
+        simp [hn, Nat.testBit_succ]
+
+
+/-- Test the 'k'th bit of an integer.
+
+* negSucc:
+   - (n + 1)
+   = -n - 1
+   = (!x + 1) - 1 = !x
+-/
+def _root_.Int.testBit' (i : Int) (k : Nat) : Bool :=
+  match i with
+  | .ofNat n => n.testBit k
+  | .negSucc n => !(n.testBit k)
+
+/--
+the 'k'th bit of 'w' is equal to the 'k'th bit we get by testing the integer representation.
+-/
+theorem BitVec.getLsbD_eq_toInt_testBit' (b : BitVec w) (hk : k < w) : b.getLsbD k = b.toInt.testBit' k := by
+  rw [BitVec.getLsbD]
+  rw [BitVec.toInt_eq_toNat_cond]
+  by_cases hb : 2 * b.toNat < 2^w
+  · simp [hb]
+    rw [Int.testBit'.eq_def]
+  · simp [hb]
+    have : ↑b.toNat - 2 ^ w = Int.subNatNat b.toNat (2 ^ w) := by norm_cast
+    rw [Int.testBit'.eq_def, this, Int.subNatNat_of_lt (by omega)]
+    simp
+    let notb := (~~~ b).toNat
+    rw [show 2^w - b.toNat - 1 = 2^w - 1 - b.toNat by omega, ← BitVec.toNat_not]
+    rw [← BitVec.getLsbD, ← BitVec.getLsbD]
+    simp
+    omega
+
+
+/--
+If `i < -1`, then `i` is less than `i / 2`.
+If `i = -1`, then `-1 / 2 = -1` (floor division of integers).
+-/
+private theorem Int.lt_of_neg {i : Int} (hi : i < - 1) : i < i / 2 := by
+  have h : (2 ∣ i) ∨ (2 ∣ (i - 1)) := by
+    omega
+  rcases h with h | h
+  · rw [Int.div_def]
+    apply Int.lt_ediv_of_mul_lt <;> omega
+  · have hi : i = (i - 1) + 1 := by omega
+    conv =>
+      rhs
+      rw [hi]
+    rw [Int.add_ediv_of_dvd_left]
+    · simp only [Int.reduceDiv, add_zero]
+      apply Int.lt_ediv_of_mul_lt
+      · omega
+      · exact h
+      · omega
+    · omega
+
+/--
+Show how to build a bitvector representation from a `negSucc`.
+The theory of `Int.testBit` tells us that we can get the bits from `!(n.testBit k)`.
+-/
+def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
+  if hi' : i = -1 then
+    FSM.negOne
+  else
+    let bit := i.testBit' 0
+    let m := i / 2
+    let k := ofNegInt m (by omega)
+    composeUnaryAux (FSM.ls bit) k
+  termination_by (-i |>.toNat)
+  decreasing_by
+    simp [hi]
+    apply Int.lt_of_neg
+    omega
+
+/--
+-/
+@[simp] theorem eval_ofNegInt (x : Int) (hx : x < 0)  (i : Nat) {env : Fin 0 → BitStream} :
+    (ofNegInt x hx).eval env i = BitStream.ofInt x i := by
+  rcases x with x | x
+  · simp at hx; omega
+  · simp [BitStream.ofInt]
+    induction x
+    case zero =>
+      simp [ofNegInt]
+    case succ x ih =>
+      rw [ofNegInt]
+      have hi' : Int.negSucc (x + 1) ≠ -1 := by omega
+      simp [hi']
+      simp [BitStream.concat]
+      sorry
+
+/-- Build a finite state machine for the integer `i` -/
+def ofInt (x : Int) : FSM (Fin 0) :=
+  if hi : x ≥ 0 then
+    ofNat x.toNat
+  else
+    ofNegInt x (by omega)
+
+/--
+The result of `FSM.ofInt x` matches with `BitStream.ofInt x`.
+-/
+theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
+    (ofInt x).eval env i = BitStream.ofInt x i := by
+  rcases x with x | x
+  · simp [ofInt, BitStream.ofInt]
+  · simp [ofInt, BitStream.ofInt]
+
+
+/-- Identity finite state machine -/
+def id : FSM Unit := {
+ α := Empty,
+ initCarry := Empty.elim,
+ nextBitCirc := fun a =>
+   match a with
+   | none => (Circuit.var true (inr ()))
+   | some f => f.elim
+}
+
+/-- Build logical shift left automata by `n` bits -/
+def shiftLeft (n : Nat) : FSM Unit :=
+  match n with
+  | 0 => FSM.id
+  | n + 1 => composeUnaryAux (FSM.ls false) (shiftLeft n)
+
+/--
+Build an FSM whose state is `true` at step `n`,
+and `false` everywhere else.
+-/
+def trueOnlyAt (n : Nat) : FSM (Fin 0) := ofNat (1 <<< n)
+
+/- `Nat.testBit 1 i = false` if and only if `i` is nonzero. -/
+@[simp]
+private theorem _root_.Nat.testBit_one_eq_false_iff (i : Nat) :
+    Nat.testBit 1 i = false ↔ i ≠ 0 := by
+  constructor
+  · simp only [ne_eq]
+    by_cases hi : i = 0 <;> simp [hi]
+  · intros h
+    rw [Nat.testBit, Nat.shiftRight_eq_div_pow]
+    have : 2^i ≥ 2 := by
+      exact Nat.le_self_pow h 2
+    simp only [Nat.one_and_eq_mod_two, Nat.mod_two_bne_zero, beq_eq_false_iff_ne,
+      ne_eq, Nat.mod_two_not_eq_one]
+    rw [Nat.mod_eq_of_lt]
+    · apply Nat.div_eq_zero_iff |>.mpr; omega
+    · apply Nat.div_lt_of_lt_mul
+      omega
+
+/--
+`falseOnlyAt n` builds an FSM that is `false` at state `n` and
+`true` everywhere else. This is useful to build a predicate that
+checks if we are in the `n`th state.
+-/
+@[simp]
+theorem eval_trueOnlyAt (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (trueOnlyAt n).eval env i = decide (i = n) := by
+  simp [trueOnlyAt]
+  by_cases hn : i = n
+  · simp [hn]
+  · simp [hn]
+    omega
+
+/--
+Build an FSM whose state is `false` at step `n`,
+and `true` everywhere else.
+-/
+def falseOnlyAt (n : Nat) : FSM (Fin 0) :=
+  composeUnaryAux FSM.not (trueOnlyAt n)
+
+/--
+`falseOnlyAt n` builds an FSM that is `false` at state `n` and
+`true` everywhere else. This is useful to build a predicate that
+checks if we are in the `n`th state.
+-/
+@[simp] theorem eval_falseOnlyAt (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseOnlyAt n).eval env i = !decide (i = n) := by simp [falseOnlyAt]
+
+/--
+Build an FSM whose value is 'true' for states [0, 1, ... n),
+and 'false' after.
+-/
+def trueUptoExcluding (n : Nat) : FSM (Fin 0) :=
+  ofNat (BitVec.allOnes n).toNat
+@[simp] theorem eval_trueUptoExcluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (trueUptoExcluding n).eval env i = decide (i < n) := by simp [trueUptoExcluding]
+
+def falseAfterIncluding (n : Nat) : FSM (Fin 0) := trueUptoExcluding n
+private theorem falseAfterIncluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
+  (falseAfterIncluding n).eval env i = false ↔ i ≥ n := by simp [falseAfterIncluding];
+
+/--
+Build an FSM whose value is 'true' for states [0, 1, ... n] (including the endpoint),
+and 'false' after.
+-/
+def trueUptoIncluding (n : Nat) : FSM (Fin 0) := ofNat (BitVec.allOnes (n+1)).toNat
+@[simp] theorem eval_trueUptoIncluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (trueUptoIncluding n).eval env i = decide (i ≤ n) := by
+  simp [trueUptoIncluding]; omega
+def falseAfterExcluding (n : Nat) : FSM (Fin 0) := trueUptoIncluding n
+private theorem falseAfterExcluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
+  (falseAfterExcluding n).eval env i = false ↔ i > n := by simp [falseAfterExcluding]
+
+/--
+Build an FSM whose value is and 'false' for the first [0, 1, ... n), and 'true' for [n, n + 1, ...).
+-/
+def falseUptoExcluding (n : Nat) : FSM (Fin 0) := composeUnaryAux FSM.not (FSM.trueUptoExcluding n)
+@[simp] theorem eval_falseUptoExcluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseUptoExcluding n).eval env i = decide (n ≤ i) := by
+  simp [falseUptoExcluding];
+  by_cases hi : i < n <;> (simp [hi]; try omega)
+/--
+Psychological theorem to see that 'i < n'
+if and only if 'falseUptoExcluding' evaluates to 'false
+-/
+private theorem falseUptoExcluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    ((falseUptoExcluding n).eval env i = false) ↔ i < n := by simp;
+
+/--
+Build an FSM whose value is false' for the first [0, 1, ... n],
+and 'true' for (n, n + 1, ...) (excluding the startpoint)
+-/
+def falseUptoIncluding (n : Nat) : FSM (Fin 0) :=
+  composeUnaryAux FSM.not (FSM.trueUptoIncluding n)
+@[simp] theorem eval_falseUptoIncluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseUptoIncluding n).eval env i = decide (n < i) := by
+  simp [falseUptoIncluding];
+  by_cases hi : n < i <;> (simp [hi]; try omega)
+/--
+Psychological theorem to see that 'i ≤ n'
+if and only if 'falseUptoExcluding' evaluates to 'false
+-/
+private theorem falseUptoIncluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    ((falseUptoIncluding n).eval env i = false) ↔ i ≤ n := by simp
+
+end FSM
 
 open Term
 
