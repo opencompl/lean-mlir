@@ -253,7 +253,7 @@ def or : FSM Bool :=
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = (x true) ||| (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
+  ext n; cases n <;> simp [or, eval, nextBit]
 
 def xor : FSM Bool :=
   { α := Empty,
@@ -264,7 +264,7 @@ def xor : FSM Bool :=
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
+  ext n; cases n <;> simp [xor, eval, nextBit]
 
 def add : FSM Bool :=
   { α := Unit,
@@ -279,6 +279,13 @@ def add : FSM Bool :=
                 Circuit.var true (inr false) ^^^
                 Circuit.var true (inl ()) }
 
+private theorem add_nextBitCirc_some_eval :
+    (add.nextBitCirc (some ())).eval =
+      fun x => x (inr true) && x (inr false) || x (inr true)
+        && x (inl ()) || x (inr false) && x (inl ()) := by
+  ext x
+  simp [add]
+
 /-- The internal carry state of the `add` FSM agrees with
 the carry bit of addition as implemented on bitstreams -/
 theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
@@ -290,7 +297,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
+    simp [add_nextBitCirc_some_eval, nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb, nextBitCirc, Sum.elim]
 
 @[simp] theorem carry_zero (x : ar → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
@@ -395,7 +402,7 @@ def one : FSM (Fin 0) :=
   ext n
   cases n
   · rfl
-  · simp [eval, carry_one, nextBit]
+  · simp! [eval, carry_one, nextBit, one, mk]
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -427,7 +434,7 @@ theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
   ext n
   cases n
   · rfl
-  · simp [carry_ls, eval, nextBit, BitStream.concat]
+  · simp [ls, carry, carry_ls, eval, nextBit, BitStream.concat]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
