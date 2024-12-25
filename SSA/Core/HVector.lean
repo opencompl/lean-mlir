@@ -116,7 +116,10 @@ theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
 syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
 @[simp]
-theorem cons_nil_get : (HVector.cons x .nil).get (0 : Fin 1) = x := rfl
+theorem cons_get_zero {A : α → Type*} {tt : α} {as : List α} {adf : A tt}
+  {afs: HVector A as} :
+   (HVector.cons adf afs).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = adf := by
+  rfl
 
 -- Copied from core for List
 macro_rules

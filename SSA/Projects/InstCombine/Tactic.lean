@@ -70,7 +70,7 @@ macro "simp_alive_ssa" : tactic =>
 
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get,
-            beq_self_eq_true, Option.isSome_some, HVector.cons_nil_get
+            beq_self_eq_true, Option.isSome_some, HVector.cons_get_zero
           ]
 
         -- Fold integers into their canonical form.
