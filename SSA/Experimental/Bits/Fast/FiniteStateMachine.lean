@@ -831,7 +831,7 @@ theorem eval_ofNat (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
    = (!x + 1) - 1 = !x
 -/
 def _root_.Int.testBit' (i : Int) (k : Nat) : Bool :=
-  match i with 
+  match i with
   | .ofNat n => n.testBit k
   | .negSucc n => !(n.testBit k)
 
@@ -882,7 +882,7 @@ Show how to build a bitvector representation from a `negSucc`.
 The theory of `Int.testBit` tells us that we can get the bits from `!(n.testBit k)`.
 -/
 def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
-  if hi' : i = -1 then  
+  if hi' : i = -1 then
     FSM.negOne
   else
     let bit := i.testBit' 0
@@ -895,15 +895,15 @@ def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
     apply Int.lt_of_neg
     omega
 
-/-- 
+/--
 -/
 @[simp] theorem eval_ofNegInt (x : Int) (hx : x < 0)  (i : Nat) {env : Fin 0 → BitStream} :
     (ofNegInt x hx).eval env i = BitStream.ofInt x i := by
-  rcases x with x | x 
+  rcases x with x | x
   · simp at hx; omega
   · simp [BitStream.ofInt]
     induction x
-    case zero => 
+    case zero =>
       simp [ofNegInt]
     case succ x ih =>
       rw [ofNegInt]
@@ -913,13 +913,13 @@ def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
       sorry
 
 /-- Build a finite state machine for the integer `i` -/
-def ofInt (x : Int) : FSM (Fin 0) := 
+def ofInt (x : Int) : FSM (Fin 0) :=
   if hi : x ≥ 0 then
     ofNat x.toNat
   else
     ofNegInt x (by omega)
 
-/-- 
+/--
 The result of `FSM.ofInt x` matches with `BitStream.ofInt x`.
 -/
 theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
@@ -933,7 +933,7 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
 def id : FSM Unit := {
  α := Empty,
  initCarry := Empty.elim,
- nextBitCirc := fun a => 
+ nextBitCirc := fun a =>
    match a with
    | none => (Circuit.var true (inr ()))
    | some f => f.elim
