@@ -20,7 +20,7 @@ macro "simp_alive_meta" : tactic =>
       simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret,
         Com.changeDialect_var, Expr.changeDialect]
       simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
-      dsimp (config := {failIfUnchanged := false }) only [HVector.map']
+      simp (config := {failIfUnchanged := false }) only [HVector.map']
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
