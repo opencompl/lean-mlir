@@ -279,6 +279,13 @@ def add : FSM Bool :=
                 Circuit.var true (inr false) ^^^
                 Circuit.var true (inl ()) }
 
+private theorem add_nextBitCirc_some_eval :
+    (add.nextBitCirc (some ())).eval =
+      fun x => x (inr true) && x (inr false) || x (inr true)
+        && x (inl ()) || x (inr false) && x (inl ()) := by
+  ext x
+  simp [add]
+
 /-- The internal carry state of the `add` FSM agrees with
 the carry bit of addition as implemented on bitstreams -/
 theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
@@ -290,9 +297,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb, nextBitCirc, Sum.elim]
-    sorry -- TODO: fix this proof
-
+    simp [add_nextBitCirc_some_eval, nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb, nextBitCirc, Sum.elim]
 
 @[simp] theorem carry_zero (x : ar → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
