@@ -31,7 +31,8 @@ theorem shift_mul:
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  <;> simp
+  · simp
+  · simp
 
 /--
 info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -50,9 +51,7 @@ theorem xor_sub :
     llvm.return %Y
   }] := by
     simp_alive_peephole
-    simp_alive_undef
-    simp_alive_case_bash
-    simp
+    alive_auto
 
 /-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms xor_sub

@@ -238,7 +238,6 @@ private def pretty_test_exact :=
     llvm.return %0 : i64
   }]
 
-
 example : pretty_test = prettier_test_generic 32 := by
   unfold pretty_test prettier_test_generic
   simp_alive_meta
