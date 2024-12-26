@@ -1222,16 +1222,18 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
     let t₁' := termEvalEqFSM t₁
     let t₂' := termEvalEqFSM t₂
     {
-     toFSM := (composeBinary FSM.xor t₁' t₂')
-     good := by ext; simp;
+     -- At width 0, all things are equal.
+     toFSM := composeUnaryAux (FSM.ls false) <| (composeUnaryAux FSM.scanOr <| composeBinary FSM.xor t₁' t₂')
+     good := by ext; simp; sorry
     }
   | .neq t₁ t₂ =>
     let t₁' := termEvalEqFSM t₁
     let t₂' := termEvalEqFSM t₂
     {
+     -- At width 0, all things are equal, so the predicate is untrue.
      -- If it ever becomes `0`, it should stay `0` forever, because once
      -- two bitstreams become disequal, they stay disequal!
-     toFSM := composeUnaryAux FSM.scanAnd <| (composeBinary FSM.nxor t₁' t₂')
+     toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.scanAnd <| composeBinary FSM.nxor t₁' t₂')
      good := by sorry -- ext; simp;
     }
    | .land p q =>
@@ -1255,14 +1257,17 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
    | .slt t₁ t₂ =>
      let q₁ := termEvalEqFSM t₁
      let q₂ := termEvalEqFSM t₂
-     { toFSM := composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
-       good := by sorry --   ext; simp }
+     { toFSM := 
+       composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
+       good := by sorry -- ext; simp
      }
    | .sle t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
       let t₂' := termEvalEqFSM t₂
-      let slt := (composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM)
-      let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+      let slt := 
+        composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM
+      let eq := 
+        composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
         Nat.max_self ..
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
@@ -1278,14 +1283,14 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       let t₂' := termEvalEqFSM t₂
       {
        -- a <u b if when we compute (a - b), we must borrow a value.
-       toFSM := (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
+       toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
        good := by sorry -- TODO: show that it's good 'ext; simp';
       }
    | .ule t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
       let t₂' := termEvalEqFSM t₂
-      let ult := (composeUnaryAux FSM.not $ composeBinaryAux FSM.borrow t₁'.toFSM t₂'.toFSM)
-      let eq := (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+      let ult := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
+      let eq := composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
         Nat.max_self ..
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
@@ -1391,19 +1396,36 @@ def FSM.nextBitCircIterate {arity : Type _ } [DecidableEq arity]
      -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
     fsm.nextBitCirc none |>.fst
   | n' + 1 =>
-     -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
      let c := fsm.nextBitCircIterate n'
-     -- | for each input, compute the next bit circuit, quantifier eliminate it, and then compose.
+     -- | for each input, compute the next bit circuit, quantifier eliminate it for all inputs, and then compose.
      let c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
      c'
 
 /-- Decide if the FSM produces zeroes for all inputs at a given index of the bitstream -/
-def decideIfZerosAtIx {arity : Type _} [DecidableEq arity]
+def decideIfZerosAtIxOld {arity : Type _} [DecidableEq arity]
       (fsm : FSM arity) (w : Nat) : Bool :=
     let c := fsm.nextBitCircIterate w
     -- evaluate at the initial carry bit.
     c.eval fsm.initCarry
 
+/-- Decide if the FSM produces zeroes for all inputs at a given index of the bitstream -/
+def decideIfZerosAtIxAux {arity : Type _} [DecidableEq arity]
+      (fsm : FSM arity) (c : Circuit fsm.α) (nItersLeft : Nat) : Bool :=
+    if (c.eval fsm.initCarry)
+    then false
+    else
+      match nItersLeft with 
+      | 0 => true -- c has accumulated the effects so far.
+      | nItersLeft' + 1 => 
+        -- accumulate one iteration
+        have c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
+        if h : c' ≤ c 
+        then true
+        else decideIfZerosAtIxAux fsm (c' ||| c) nItersLeft'
+
+def decideIfZerosAtIx {arity : Type _} [DecidableEq arity]
+      (fsm : FSM arity) (w : Nat) : Bool :=
+    decideIfZerosAtIxAux fsm (fsm.nextBitCirc none).fst w
 /--
 The correctness statement of decideIfZeroesAtIx.
 This tells us that decideIfZeroesAtIx is correct iff the FSM 'p' when evaluated returns false

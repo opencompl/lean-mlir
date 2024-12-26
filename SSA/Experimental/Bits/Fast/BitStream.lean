@@ -811,27 +811,27 @@ abbrev negOne : BitStream := fun _ => true
 /-- 'falseIffEq n i' = false ↔ i = n -/
 abbrev falseIffEq (n : Nat) : BitStream := fun i => decide (i != n)
 theorem falseIffEq_eq_false_iff (n i : Nat) :
-    falseIffEq n i = false ↔ i = n := by simp; try omega
+    falseIffEq n i = false ↔ i = n := by simp
 
 abbrev falseIffNeq (n : Nat) : BitStream := fun i => decide (i == n)
 theorem falseIffNeq_eq_false_iff (n i : Nat) :
-    falseIffNeq n i = false ↔ i ≠ n := by simp; try omega
+    falseIffNeq n i = false ↔ i ≠ n := by simp
 
 abbrev falseIffLe (n : Nat) : BitStream := fun i => decide (i > n)
 theorem falseIffLe_eq_false_iff (n i : Nat) :
-    falseIffLe n i = false ↔ i ≤ n := by simp; try omega
+    falseIffLe n i = false ↔ i ≤ n := by simp
 
 abbrev falseIffLt (n : Nat) : BitStream := fun i => decide (i ≥ n)
 theorem falseIffLt_eq_false_iff (n i : Nat) :
-    falseIffLt n i = false ↔ i < n := by simp; try omega
+    falseIffLt n i = false ↔ i < n := by simp
 
 abbrev falseIffGe (n : Nat) : BitStream := fun i => decide (i < n)
 theorem falseIffGe_eq_false_iff (n i : Nat) :
-    falseIffGe n i = false ↔ i ≥ n := by simp; try omega
+    falseIffGe n i = false ↔ i ≥ n := by simp
 
 abbrev falseIffGt (n : Nat) : BitStream := fun i => decide (i ≤ n)
 theorem falseIffGt_eq_false_iff (n i : Nat) :
-    falseIffGt n i = false ↔ i > n := by simp; try omega
+    falseIffGt n i = false ↔ i > n := by simp
 
 section Lemmas
 

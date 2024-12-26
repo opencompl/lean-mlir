@@ -399,7 +399,7 @@ structure Config where
   This is useful to prevent the tactic from taking oodles of time cruncing on goals that
   build large state spaces, which can happen in the presence of tactics.
   -/
-  circuitSizeThreshold : Nat := 90
+  circuitSizeThreshold : Nat := 200
 
   /--
   The upper bound on the state space of the FSM, beyond which the tactic will bail out on an error.
@@ -636,6 +636,16 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
   match_expr e with
   | Eq α a b =>
     match_expr α with
+    | Nat =>
+       -- support width equality constraints
+      -- TODO: canonicalize 'a = w' into 'w = a'.
+      if wExpected != a then
+        throwError "Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
+      let some natVal ← Lean.Meta.getNatValue? b
+        | throwError "Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
+      let out := Predicate.widthEq natVal
+      return { bvToIxMap := bvToIxMap, e := out }
+
     | BitVec w =>
       let a ←  reflectTermUnchecked bvToIxMap w a
       let b ← reflectTermUnchecked a.bvToIxMap w b
@@ -955,7 +965,7 @@ example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
   -- b = 0x1#1
   sorry
 
-/-- Tricohotomy of slt. Currently fails! -/
+/-- Tricohotomy of slt. -/
 example (w : Nat) (a b : BitVec w) : (1#w = 0#w) ∨ ((a - b).slt 0 → a.slt b) := by
   bv_automata_circuit
 
@@ -993,10 +1003,19 @@ So we need an extra hypothesis that rules out bitwifth 1.
 We do this by saying that either the given condition, or 1+1 = 0.
 I'm actually not sure why I need to rule out bitwidth 0? Mysterious!
 -/
-example (w : Nat) (a : BitVec w) : (1#w = 0#w) ∨ (1#w + 1#w = 0#w) ∨ ((a = - a) → a = 0#w) := by
+example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
+  fail_if_success bv_automata_circuit
+  sorry
+
+
+example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
+example (w : Nat) (a : BitVec w) : (w = 0) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
+example (w : Nat) : (w = 1) → (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) : (w = 0) → (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) : ((w = 0) ∨ (w = 1)) → (1#w + 1#w = 0#w) := by bv_automata_circuit
+
+example (w : Nat) : (1#w + 1#w = 0#w) → ((w = 0) ∨ (w = 1)):= by
   bv_automata_circuit
-
-
 /-
 We can say that we are at bitwidth 1 by saying that 1 + 1 = 0.
 When we have this, we then explicitly enumerate the different values that a can have.
@@ -1004,8 +1023,6 @@ Note that this is pretty expensive.
 -/
 example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
   bv_automata_circuit
-
-
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
   bv_automata_circuit
@@ -1019,7 +1036,6 @@ theorem eq_circuit (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (
 #print eq_circuit
 
 
-open NNF in
 /-- Can exploit hyps -/
 theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
   bv_automata_circuit
@@ -1039,7 +1055,7 @@ info: goal after reflection: ⏎
   a b : BitVec 10
   ⊢ (Predicate.eq (Term.var 0) (Term.var 1)).denote 10 (Map.append 10 b (Map.append 10 a Map.empty))
 ---
-info: FSM: ⋆Circuit size '3'  ⋆State space size '0'
+info: FSM: ⋆Circuit size '11'  ⋆State space size '2'
 ---
 info: using special fixed-width procedure for fixed bitwidth '10'.
 ---
@@ -1072,21 +1088,21 @@ theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) :
   by bv_automata_circuit
 
 /-- Check that we correctly handle `OfNat.ofNat 1`. -/
-theorem not_neg_eq_sub_one (x : BitVec 53):
+theorem not_neg_eq_sub_one (x : BitVec 53) :
     ~~~ (- x) = x - 1 := by
-  all_goals bv_automata_circuit
+  bv_automata_circuit
 
 /-- Check that we correctly handle multiplication by two. -/
 theorem sub_eq_mul_and_not_sub_xor (x y : BitVec w):
     x - y = 2 * (x &&& ~~~ y) - (x ^^^ y) := by
   -- simp [Simplifications.BitVec.OfNat_ofNat_mul_eq_ofNat_mul]
   -- simp only [BitVec.ofNat_eq_ofNat, Simplifications.BitVec.two_mul_eq_add_add]
-  all_goals bv_automata_circuit
+  all_goals bv_automata_circuit (config := {circuitSizeThreshold := 140 })
 
 
 /- See that such problems have large circuit sizes, but small state spaces -/
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 81 })
+  bv_automata_circuit (config := { circuitSizeThreshold := 107 })
 
 
 def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
@@ -1171,18 +1187,13 @@ example : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by intros; bv
 example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
   intros; bv_automata_circuit
 
-
-/-- Can solve width-constraints problems, but this takes a while. -/
-def test29 (x y : BitVec w) : w = 32 → x &&& x &&& x &&& x &&& x &&& x = x := by
-  bv_automata_circuit (config := { stateSpaceSizeThreshold := 33 })
-
 /-- Can solve width-constraints problems -/
 def test30  : (w = 2) → 8#w = 0#w := by
   bv_automata_circuit
 
 /-- Can solve width-constraints problems -/
-def test31 (w : Nat) (x : BitVec w) : (w = 64) → x &&& x = x := by
-  bv_automata_circuit (config := { stateSpaceSizeThreshold := 65 })
+def test31 (w : Nat) (x : BitVec w) : x &&& x = x := by
+  bv_automata_circuit (config := { stateSpaceSizeThreshold := 100 })
 
 theorem neg_eq_not_add_one (x : BitVec w) :
     -x = ~~~ x + 1#w := by
@@ -1190,11 +1201,11 @@ theorem neg_eq_not_add_one (x : BitVec w) :
 
 theorem add_eq_xor_add_mul_and (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
+  bv_automata_circuit (config := { circuitSizeThreshold := 300 } )
 
 theorem add_eq_xor_add_mul_and' (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 100 } )
+  bv_automata_circuit (config := { circuitSizeThreshold := 300 } )
 
 theorem add_eq_xor_add_mul_and_nt (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
@@ -1227,60 +1238,24 @@ theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
   sorry
 
 /-- Can solve width-constraints problems, when written with a width constraint. -/
-def width_specific_1 (x : BitVec 1) : x + x = x ^^^ x := by
+def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
   bv_automata_circuit
 
 
 example (x : BitVec 0) : x = x + 0#0 := by
   bv_automata_circuit
 
-def width_generic_exploit_fail (x : BitVec 0) : x + x + x + x = 0#0 := by
+/-- All bitvectors are equal at width 0 -/
+example (x y : BitVec 0) : x = y := by bv_automata_circuit
+
+/-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
+def width_1_char_2 (x : BitVec 1) : x + x = 0#1 := by
   bv_automata_circuit
 
-/--
-info: goal after NNF: ⏎
-  x : BitVec 1
-  ⊢ x + x + x + x = 0#1
----
-info: goal after preprocessing: ⏎
-  x : BitVec 1
-  ⊢ x + x + x + x = 0#1
----
-info: goal after reflection: ⏎
-  x : BitVec 1
-  ⊢ (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).denote 1
-      (Map.append 1 x Map.empty)
----
-info: FSM: ⋆Circuit size '70'  ⋆State space size '3'
----
-info: using special fixed-width procedure for fixed bitwidth '1'.
----
-info: goal being decided: ⏎
-  case heval.a.h
-  x : BitVec 1
-  ⊢ reduceBool
-        (Decidable.decide
-          (∀ (vars : List BitStream),
-            (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars 1 =
-              false)) =
-      true
----
-error: tactic 'bv_automata_circuit' evaluated that the proposition
-  reduceBool
-      (Decidable.decide
-        (∀ (vars : List BitStream),
-          (Predicate.eq ((((Term.var 0).add (Term.var 0)).add (Term.var 0)).add (Term.var 0)) Term.zero).eval vars 1 =
-            false)) =
-    true
-is false
--/
-#guard_msgs in def width_generic_exploit_fail (x : BitVec 1) : x + x + x + x = 0#1 := by
-  bv_automata_circuit
-  sorry
 
-/-- Can solve width-constraints problems, when written with a width constraint. -/
-def width_generic_exploit_success (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
-  bv_automata_circuit
+/-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
+def width_1_char_2_add_four (x : BitVec 1) : x + x + x + x = 0#1 := by bv_automata_circuit
+
 
 set_option trace.profiler true  in
 /-- warning: declaration uses 'sorry' -/
