@@ -21,7 +21,7 @@ open Mathlib
 
 @[simp] theorem Language.mem_setOf_eq {x : List α} {p : List α → Prop} :
     @Membership.mem (List α) (Language α) instMembershipListLanguage {y | p y} x = p x := by
-  sorry--rfl
+  rfl
 
 @[simp] theorem Language.trivial : x ∈ (⊤ : Language α) := by trivial
 
