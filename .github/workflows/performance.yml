@@ -76,7 +76,7 @@ jobs:
 
       - name: Compare LLVM
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py > /dev/null)
+          (cd bv-evaluation; python3 ./collect-data-llvm.py)
 
       - name: Compare HDEl
         run: |
