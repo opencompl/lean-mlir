@@ -45,9 +45,13 @@ jobs:
           lake -R build
 
       - name: Run LLVM
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
-          echo "Symbolic"
+
+      - name: Run LLVM Symbolic
+        continue-on-error: true
+        run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
 
       - name: Run Alive Symbolic
