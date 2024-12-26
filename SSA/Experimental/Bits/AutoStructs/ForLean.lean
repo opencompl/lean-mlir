@@ -40,10 +40,6 @@ theorem Array.take_ge_size {a : Array α} {n} (h : n ≥ a.size) : a.take n = a 
   rw [heq]; rfl
 
 @[simp]
-theorem Array.take_size {a : Array α} : a.take a.size = a :=
-  a.take_ge_size (Nat.le_refl a.size)
-
-@[simp]
 theorem Array.take_zero {a : Array α} : a.take 0 = #[] := eq_empty_of_size_eq_zero (by simp)
 
 
@@ -146,6 +142,21 @@ instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := 
 @[simp]
 theorem Std.HashSet.mem_attachWith_mem [BEq α] [Hashable α] [LawfulBEq α] (m : HashSet α) {P H} (x : α) h :
     ⟨x, h⟩ ∈ m.attachWith P H ↔ x ∈ m := by
+  sorry
+
+@[simp]
+theorem Std.HashSet.mem_union [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
+    x ∈ m₁.union m₂ ↔ x ∈ m₁ ∨ x ∈ m₂ := by
+  sorry
+
+@[simp]
+theorem Std.HashSet.isEmpty_union_iff_isEmpty [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
+    (m₁.union m₂).isEmpty ↔ m₁.isEmpty ∧ m₂.isEmpty := by
+  simp only [isEmpty_iff_forall_not_mem, mem_union, not_or, forall_and]
+
+@[simp]
+theorem Std.HashMap.mem_keysArray [BEq α] [Hashable α] [LawfulBEq α] [LawfulHashable α] {m : HashMap α β} {k : α} :
+    k ∈ m.keysArray ↔ k ∈ m := by
   sorry
 
 -- TODO: upstream

@@ -244,7 +244,7 @@ def or : FSM Bool :=
         (Circuit.var true (inr false))) Empty.elim }
 
 @[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = (x true) ||| (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
+  ext n; cases n <;> simp [or, eval, nextBit]
 
 def xor : FSM Bool :=
   { α := Empty,
@@ -334,7 +334,7 @@ lemma eval_scanAnd_succ (x : Unit → BitStream) (n : Nat) :
       exact h j (by omega)
 
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
+  ext n; cases n <;> simp [xor, eval, nextBit]
 
 @[simp] lemma eval_nxor (x : Bool → BitStream) : nxor.eval x = ((x true).nxor (x false)) := by
   ext n; cases n
@@ -407,6 +407,13 @@ def add : FSM Bool :=
                 Circuit.var true (inr false) ^^^
                 Circuit.var true (inl ()) }
 
+theorem add_nextBitCirc_some_eval :
+    (add.nextBitCirc (some ())).eval =
+      fun x => x (inr true) && x (inr false) || x (inr true)
+        && x (inl ()) || x (inr false) && x (inl ()) := by
+  ext x
+  simp +ground [eval, add, Circuit.simplifyAnd, Circuit.simplifyOr]
+
 /-- The internal carry state of the `add` FSM agrees with
 the carry bit of addition as implemented on bitstreams -/
 theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
@@ -418,7 +425,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
+    simp [add_nextBitCirc_some_eval, nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
 
 @[simp] theorem carry_zero (x : arity → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
@@ -558,7 +565,7 @@ def one : FSM (Fin 0) :=
   ext n
   cases n
   · rfl
-  · simp [eval, carry_one, nextBit]
+  · simp! [eval, carry_one, nextBit, one]
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -593,7 +600,7 @@ theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
   ext n
   cases n
   · rfl
-  · simp [carry_ls, eval, nextBit, BitStream.concat]
+  · simp [ls, carry_ls, eval, nextBit, BitStream.concat, carry]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
@@ -831,7 +838,7 @@ theorem eval_ofNat (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
    = (!x + 1) - 1 = !x
 -/
 def _root_.Int.testBit' (i : Int) (k : Nat) : Bool :=
-  match i with 
+  match i with
   | .ofNat n => n.testBit k
   | .negSucc n => !(n.testBit k)
 
@@ -882,7 +889,7 @@ Show how to build a bitvector representation from a `negSucc`.
 The theory of `Int.testBit` tells us that we can get the bits from `!(n.testBit k)`.
 -/
 def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
-  if hi' : i = -1 then  
+  if hi' : i = -1 then
     FSM.negOne
   else
     let bit := i.testBit' 0
@@ -895,15 +902,15 @@ def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
     apply Int.lt_of_neg
     omega
 
-/-- 
+/--
 -/
 @[simp] theorem eval_ofNegInt (x : Int) (hx : x < 0)  (i : Nat) {env : Fin 0 → BitStream} :
     (ofNegInt x hx).eval env i = BitStream.ofInt x i := by
-  rcases x with x | x 
+  rcases x with x | x
   · simp at hx; omega
   · simp [BitStream.ofInt]
     induction x
-    case zero => 
+    case zero =>
       simp [ofNegInt]
     case succ x ih =>
       rw [ofNegInt]
@@ -913,13 +920,13 @@ def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
       sorry
 
 /-- Build a finite state machine for the integer `i` -/
-def ofInt (x : Int) : FSM (Fin 0) := 
+def ofInt (x : Int) : FSM (Fin 0) :=
   if hi : x ≥ 0 then
     ofNat x.toNat
   else
     ofNegInt x (by omega)
 
-/-- 
+/--
 The result of `FSM.ofInt x` matches with `BitStream.ofInt x`.
 -/
 theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
@@ -933,7 +940,7 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
 def id : FSM Unit := {
  α := Empty,
  initCarry := Empty.elim,
- nextBitCirc := fun a => 
+ nextBitCirc := fun a =>
    match a with
    | none => (Circuit.var true (inr ()))
    | some f => f.elim

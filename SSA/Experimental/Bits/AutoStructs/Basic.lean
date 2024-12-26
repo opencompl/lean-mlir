@@ -38,6 +38,7 @@ section sim
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
+@[inline]
 def RawCNFA.tr (m : RawCNFA A) s a := m.trans.getD (s, a) ∅
 
 def RawCNFA.states (m : RawCNFA A) : Finset State := Finset.range m.stateMax
@@ -63,6 +64,49 @@ structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : Rel State Q) (D : Set
   initial₂ {q} : q ∈ M.start → ∃ s ∈ m.initials, R s q
   trans_match₁ {s s' a q} : R s q → s' ∈ m.tr s a → ∃ q', q' ∈ M.step q a ∧ R s' q'
   trans_match₂ {s a q q'} : R s q → q' ∈ M.step q a → q ∈ D → (q, a, q') ∉ T → ∃ s', s' ∈ m.tr s a ∧ R s' q'
+
+@[simp]
+lemma RawCNFA.Simul.initial {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
+    R.set_eq m.initials.toSet M.start := by
+  constructor
+  · rintro s h; exact hsim.initial₁ h
+  · rintro q h; exact hsim.initial₂ h
+
+lemma RawCNFA.Simul.rel_preserved_letter {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
+    R.set_eq S₁ Q₁ → ∃ S₂, R.set_eq S₂ (M.stepSet Q₁ a) := by
+  rintro hR
+  use {s' | ∃ s ∈ S₁, s' ∈ m.tr s a }
+  constructor
+  · rintro s' ⟨s, hs, htr⟩
+    obtain ⟨q₁, hq₁, hR₁⟩ := hR.1 hs
+    obtain ⟨q₂, hst, hR₂⟩ := hsim.trans_match₁ hR₁ htr
+    use q₂
+    simp_all only [Set.top_eq_univ, NFA.stepSet, Set.mem_iUnion, exists_prop, and_true]
+    use q₁, hq₁
+  · rintro q₂ ⟨Q₂, ⟨q₁, rfl⟩, Q, ⟨hq₁, rfl⟩, hst⟩
+    obtain ⟨s₁, hs₁, hR₁⟩ := hR.2 hq₁
+    obtain ⟨s₂, htr, hR₂⟩ := hsim.trans_match₂ hR₁ hst (by simp) (by simp)
+    use s₂, ⟨s₁, by tauto⟩
+
+lemma RawCNFA.Simul.rel_preserved_word {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
+    R.set_eq S₁ Q₁ → ∃ S₂, R.set_eq S₂ (M.evalFrom Q₁ w) := by
+  induction w using List.list_reverse_induction
+  case base => rintro h; use S₁; simp [h]
+  case ind w a ih =>
+    rintro h; obtain ⟨S₂, hR⟩ := ih h; clear ih
+    simp only [NFA.evalFrom_append_singleton]
+    exact hsim.rel_preserved_letter hR
+
+lemma RawCNFA.Simul.eval_set_eq {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
+    ∃ S, R.set_eq S (M.eval w) :=
+  hsim.rel_preserved_word (hsim.initial)
+
+lemma RawCNFA.Simul.rel_eval {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
+    q ∈ M.eval w → ∃ s, R s q := by
+  rintro h
+  obtain ⟨S, heq⟩ := hsim.eval_set_eq
+  obtain ⟨s, hs, hR⟩ := heq.2 h
+  exact ⟨s, hR⟩
 
 /--
 Similarity is the greatest simulation
@@ -167,15 +211,15 @@ def RawCNFA.transBV (m : RawCNFA A) (s : m.states) (a : A) : BitVec m.stateMax :
   BitVec.ofFn (fun n => n ∈ ts)
 
 def RawCNFA.transBV' (m : RawCNFA A) (res : BitVec m.stateMax) (s : m.states) (a : A) : BitVec m.stateMax :=
-  let ts := m.trans.getD (s, a) ∅
-  ts.fold (init := res) fun res s => res ||| 1 <<< s
+  let ts := m.tr s a
+  ts.fold (init := res) fun res s => res ||| 1#m.stateMax <<< s
 
 -- def RawCNFA.transSetBV (m : RawCNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec m.stateMax :=
 --   (List.finRange m.stateMax).foldl (init := BitVec.zero m.stateMax) fun res n =>
 --     if ss[n] then res ||| m.transBV ⟨n.val, by simp [RawCNFA.states]⟩ a else res
 def RawCNFA.transSetBV (m : RawCNFA A) (ss : BitVec m.stateMax) (a : A) : BitVec m.stateMax :=
   (List.finRange m.stateMax).foldl (init := BitVec.zero m.stateMax) fun res n =>
-    if ss[n] then m.transBV' res ⟨n.val, by simp [RawCNFA.states]⟩ a else res
+    if ss.getLsbD n.val then m.transBV' res ⟨n.val, by simp [RawCNFA.states]⟩ a else res
 
 @[simp, aesop 50% unsafe]
 lemma states_addInitial (m : RawCNFA A) (s' : State) :
