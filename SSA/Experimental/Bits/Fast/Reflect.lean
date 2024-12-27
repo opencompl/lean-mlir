@@ -1269,7 +1269,7 @@ theorem mul_four (x : BitVec w) : 4 * x = x + x + x + x := by
 
 /-- Check that we correctly process an odd numeral multiplication. -/
 theorem mul_five (x : BitVec w) : 5 * x = x + x + x + x + x := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 150 })
+  bv_automata_circuit (config := { circuitSizeThreshold := 180 })
 
 open BitVec in
 /-- Check that we support sign extension. -/
@@ -1299,7 +1299,6 @@ example (x y : BitVec 0) : x = y := by bv_automata_circuit
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
 def width_1_char_2 (x : BitVec 1) : x + x = 0#1 := by
   bv_automata_circuit
-
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
 def width_1_char_2_add_four (x : BitVec 1) : x + x + x + x = 0#1 := by bv_automata_circuit
