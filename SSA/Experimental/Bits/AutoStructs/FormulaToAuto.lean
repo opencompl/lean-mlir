@@ -20,8 +20,7 @@ open AutoStructs
 open Mathlib
 
 @[simp] theorem Language.mem_setOf_eq {x : List α} {p : List α → Prop} :
-    @Membership.mem (List α) (Language α) instMembershipListLanguage {y | p y} x = p x := by
-  rfl
+    @Membership.mem (List α) (Language α) Language.instMembershipList {y | p y} x = p x := rfl
 
 @[simp] theorem Language.trivial : x ∈ (⊤ : Language α) := by trivial
 
