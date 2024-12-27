@@ -32,7 +32,7 @@ def run_file(file: str):
         with open(log_file_path, 'w') as log_file:
             cmd = 'lake lean ' + file_path
             print(cmd)
-            subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
+            subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=1800)
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
