@@ -52,7 +52,7 @@ macro_rules
       -- that occur in the later tactics
     | intro (v : Option (_))    -- Introduce the variable,
       rcases v with _|x         -- Do the case distinction
-      <;> simp (config:={failIfUnchanged := false}) only [simp_llvm_case_bash]
+      <;> simp (config:={failIfUnchanged := false}) -implicitDefEqProofs only [simp_llvm_case_bash]
       --  ^^^^^^^^^^^^^^^^^^^^^^^^ Simplify, in the hopes that the `none` case is trivially closed
       <;> simp_alive_case_bash'  -- Recurse, to case bash the next variable (if it exists)
       <;> (try revert x)        -- Finally, revert the variable we got in the `some` case, so that
@@ -258,15 +258,15 @@ macro "simp_alive_split": tactic =>
       (
         all_goals try intros
         repeat(
-          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+          all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
             BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
-          all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+          all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
             BitVec.Refinement.none_left, Option, some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
           any_goals split
         )
-        all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+        all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
           BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
-        all_goals try simp only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+        all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
           BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
       )
    )
