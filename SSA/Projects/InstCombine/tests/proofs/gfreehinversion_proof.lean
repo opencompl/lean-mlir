@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gfreehinversion_proof
 theorem xor_1_thm (e e_1 e_2 : IntW 8) (e_3 : IntW 1) :

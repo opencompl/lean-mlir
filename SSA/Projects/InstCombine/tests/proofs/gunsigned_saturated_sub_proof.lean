@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gunsigned_saturated_sub_proof
 theorem max_sub_ugt_c0_thm (e : IntW 32) :

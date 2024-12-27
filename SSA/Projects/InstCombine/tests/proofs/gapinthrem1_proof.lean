@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gapinthrem1_proof
 theorem test1_thm (e : IntW 33) : urem e (const? 33 4096) ⊑ LLVM.and e (const? 33 4095) := by 

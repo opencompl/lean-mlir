@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gapinthselect_proof
 theorem zext_thm (e : IntW 1) : select e (const? 41 1) (const? 41 0) ⊑ zext 41 e := by 

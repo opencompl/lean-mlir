@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gashrhdemand_proof
 theorem srem2_ashr_mask_thm (e : IntW 32) :

@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gdemorganhsinkhnothintohxor_proof
 theorem positive_easyinvert_thm (e : IntW 16) (e_1 : IntW 8) :

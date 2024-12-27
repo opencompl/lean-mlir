@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gicmphshlhnuw_proof
 theorem icmp_ugt_32_thm (e : IntW 64) :

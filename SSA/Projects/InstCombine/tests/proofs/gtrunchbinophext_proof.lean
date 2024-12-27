@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gtrunchbinophext_proof
 theorem narrow_sext_and_thm (e : IntW 32) (e_1 : IntW 16) :

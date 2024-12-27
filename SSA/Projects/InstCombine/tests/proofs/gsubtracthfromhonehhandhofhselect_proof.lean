@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gsubtracthfromhonehhandhofhselect_proof
 theorem t0_sub_from_trueval_thm (e : IntW 8) (e_1 : IntW 1) (e_2 : IntW 8) :

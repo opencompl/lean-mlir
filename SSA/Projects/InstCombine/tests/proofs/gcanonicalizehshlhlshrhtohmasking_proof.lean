@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gcanonicalizehshlhlshrhtohmasking_proof
 theorem positive_samevar_thm (e e_1 : IntW 32) : lshr (shl e_1 e) e ⊑ LLVM.and (lshr (const? 32 (-1)) e) e_1 := by 

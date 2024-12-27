@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gshifthshift_proof
 theorem shl_shl_thm (e : IntW 32) : shl (shl e (const? 32 6)) (const? 32 28) ⊑ const? 32 0 := by 

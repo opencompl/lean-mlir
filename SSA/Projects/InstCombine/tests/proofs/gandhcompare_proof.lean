@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gandhcompare_proof
 theorem test1_thm (e e_1 : IntW 32) :

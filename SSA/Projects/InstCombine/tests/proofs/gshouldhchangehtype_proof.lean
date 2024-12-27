@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gshouldhchangehtype_proof
 theorem test1_thm (e e_1 : IntW 8) : trunc 8 (add (zext 64 e_1) (zext 64 e)) ⊑ add e_1 e := by 

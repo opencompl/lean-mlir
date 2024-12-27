@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gshlhbo_proof
 theorem lshr_add_thm (e e_1 : IntW 8) :

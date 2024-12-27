@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gsubhxorhcmp_proof
 theorem sext_xor_sub_thm (e : IntW 1) (e_1 : IntW 64) :
