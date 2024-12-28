@@ -458,7 +458,7 @@ structure Config where
   /--
   Whethere the tactic should used a specialized solver for fixed-width constraints.
   -/
-  fastFixedWidth : Bool := true
+  fastFixedWidth : Bool := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -1092,35 +1092,6 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
 
 #print eq_circuit
 
-/--
-info: goal after NNF: ⏎
-  a b : BitVec 10
-  ⊢ a = b
----
-info: goal after preprocessing: ⏎
-  a b : BitVec 10
-  ⊢ a = b
----
-info: goal after reflection: ⏎
-  a b : BitVec 10
-  ⊢ (Predicate.eq (Term.var 0) (Term.var 1)).denote 10 (Map.append 10 b (Map.append 10 a Map.empty))
----
-info: FSM: ⋆Circuit size '11'  ⋆State space size '2'
----
-info: using special fixed-width procedure for fixed bitwidth '10'.
----
-error: unsolved goals
-case heval.a.h
-a b : BitVec 10
-⊢ reduceBool
-      (Decidable.decide (∀ (vars : List BitStream), (Predicate.eq (Term.var 0) (Term.var 1)).eval vars 10 = false)) =
-    true
--/
-#guard_msgs in example : ∀ (a b : BitVec 10), a = b := by
-  intros a b
-  bv_reflect
-
-
 section BvAutomataTests
 
 /-!
@@ -1294,14 +1265,16 @@ example (x : BitVec 0) : x = x + 0#0 := by
   bv_automata_circuit
 
 /-- All bitvectors are equal at width 0 -/
-example (x y : BitVec 0) : x = y := by bv_automata_circuit
+example (x y : BitVec w) (hw : w = 0) : x = y := by 
+  bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
-def width_1_char_2 (x : BitVec 1) : x + x = 0#1 := by
+def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
-def width_1_char_2_add_four (x : BitVec 1) : x + x + x + x = 0#1 := by bv_automata_circuit
+def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by 
+  bv_automata_circuit
 
 
 set_option trace.profiler true  in
