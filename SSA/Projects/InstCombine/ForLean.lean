@@ -357,6 +357,11 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
   simp only [Bool.bne_assoc]
   cases a.getLsbD ↑i <;> simp [carry_and_xor_false]
 
+@[simp]
+theorem or_sub_xor_eq_and {a b : BitVec w} : (a ||| b) - (a ^^^ b) = a &&& b := by
+  symm
+  rw [eq_sub_iff_add_eq, and_add_xor_eq_or]
+
 attribute [bv_ofBool] ofBool_or_ofBool
 attribute [bv_ofBool] ofBool_and_ofBool
 attribute [bv_ofBool] ofBool_xor_ofBool
