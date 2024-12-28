@@ -32,13 +32,13 @@ instance (p : Predicate) :
   rw [← (predicateEvalEqFSM p).good]
   constructor <;> sorry
 
-instance (p : Predicate) (n : ℕ) : 
+instance DecideFixedWidthPredicateEvalFin  (p : Predicate) (n : ℕ) : 
     Decidable (∀ (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
   decidable_of_iff
     (decideIfZerosAtIx (predicateEvalEqFSM p).toFSM n) $ by
   rw [decideIfZeroesAtIx_correct, ← (predicateEvalEqFSM p).good]
 
-instance (p : Predicate) (n : ℕ) : 
+instance DecideFixedWidthPredicateEval (p : Predicate) (n : ℕ) : 
     Decidable (∀ (x : List BitStream) , p.eval x n = false) :=
   decidable_of_iff
     (decideIfZerosAtIx (predicateEvalEqFSM p).toFSM n) $ by
