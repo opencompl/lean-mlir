@@ -321,20 +321,6 @@ def Predicate.cost (p : Predicate) : Nat :=
   let fsm := predicateEvalEqFSM p
   fsm.circuitSize
 
--- @[simp] theorem Predicate.eval_land_iff (p q : Predicate) (vars : List (BitVec w)) :
---     evalLand (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
---     p.denote w vars ∧ q.denote w vars := by
---   constructor
---   · simp [evalLand];
---     intros hp hq
--- 
---   · simp; sorry
--- 
--- @[simp] theorem Predicate.eval_lor_iff (p q : Predicate) (vars : List (BitVec w)) :
---     evalLor (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
---     p.denote w vars ∨ q.denote w vars := by sorry
- 
-
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
