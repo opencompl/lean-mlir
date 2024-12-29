@@ -194,6 +194,24 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
   | 0   => 0#0
   | w+1 => (x.toBitVec w).cons (x w)
 
+@[simp] theorem getLsbD_toBitVec (w : Nat) (x : BitStream) : 
+    (x.toBitVec w).getLsbD i = ((decide (i < w)) && x i) := by 
+  induction w generalizing x 
+  case zero => simp [toBitVec]
+  case succ w ih => 
+    simp [toBitVec]
+    rw [BitVec.getLsbD_cons]
+    by_cases hi : i = w
+    · simp [hi]
+    · simp [hi]
+      by_cases hw : i < w + 1 
+      · simp [hw]
+        rw [ih]
+        simp; omega
+      · simp [hw]
+        apply BitVec.getLsbD_ge
+        omega
+
 /-- `EqualUpTo w x y` holds iff `x` and `y` are equal in the first `w` bits -/
 def EqualUpTo (w : Nat) (x y : BitStream) : Prop :=
   ∀ i < w, x i = y i

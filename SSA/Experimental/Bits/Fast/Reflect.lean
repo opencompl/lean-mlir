@@ -160,9 +160,114 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | ls bit a => (a.denote w vars).shiftConcat bit
   | shiftL a n => (a.denote w vars) <<< n
 
-@[simp] theorem BitStream.denote_ofBitVec (x : BitVec w) : 
-    (BitStream.ofBitVec x).toBitVec w = x := by 
-  simp [BitStream.toBitVec, BitVec.signExtend_eq_setWidth_of_lt]
+@[simp]
+theorem BitStream.toBitVec_ofNat : BitStream.toBitVec w (BitStream.ofNat n) = BitVec.ofNat w n := by 
+  simp [toBitVec, ofNat]
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  simp [BitVec.getLsbD_ofNat]
+
+@[simp]
+theorem BitStream.toBitVec_and (a b : BitStream) : 
+    (a &&& b).toBitVec w = a.toBitVec w &&& b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_or (a b : BitStream) : 
+    (a ||| b).toBitVec w = a.toBitVec w ||| b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_xor (a b : BitStream) : 
+    (a ^^^ b).toBitVec w = a.toBitVec w ^^^ b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  intros hi 
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_not (a : BitStream) : 
+    (~~~ a).toBitVec w = ~~~ (a.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_add (a b : BitStream) : 
+    (a + b).toBitVec w = (a.toBitVec w) + (b.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+  sorry
+
+@[simp]
+theorem BitStream.toBitVec_sub (a b : BitStream) : 
+    (a - b).toBitVec w = (a.toBitVec w) - (b.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+  sorry
+
+@[simp]
+theorem BitStream.toBitVec_neg (a : BitStream) : 
+    (- a).toBitVec w = - (a.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+  sorry
+
+@[simp]
+theorem BitStream.toBitVec_incr (a : BitStream) : 
+    (a.incr).toBitVec w = (a.toBitVec w) + 1#w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+  sorry
+
+@[simp]
+theorem BitStream.toBitVec_decr (a : BitStream) : 
+    (a.decr).toBitVec w = (a.toBitVec w) - 1#w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+  sorry
+
+@[simp]
+theorem BitStream.toBitVec_shiftL (a : BitStream) (k : Nat) : 
+    (a.shiftLeft k).toBitVec w = (a.toBitVec w).shiftLeft k := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi 
+  simp [hi]
+  by_cases hk : i < k 
+  · simp [hk]
+  · simp [hk]; omega
+
+@[simp]
+theorem BitStream.toBitVec_concat_zero (a : BitStream) : 
+    (a.concat b).toBitVec 0 = 0#0 := by simp [toBitVec]
+
+@[simp]
+theorem BitStream.toBitVec_concat_succ (a : BitStream) : 
+    (a.concat b).toBitVec (w + 1) = (a.toBitVec w).concat b := by 
+  apply BitVec.eq_of_getLsbD_eq
+  simp
+  intros i hi 
+  simp [hi]
+  rcases i with rfl | i
+  · simp 
+  · simp; omega
+
+@[simp]
+theorem BitStream.toBitVec_concat(a : BitStream) : 
+    (a.concat b).toBitVec w = 
+      match w with 
+      | 0 => 0#0
+      | w + 1 => (a.toBitVec w).concat b  := by
+  rcases w with rfl | w <;> simp
 
 /--
 Evaluating the term and then coercing the term to a bitvector is equal to denoting the term directly.
@@ -178,8 +283,18 @@ theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
   case zero => simp [eval, denote]
   case negOne => simp [eval, denote]; rw [← BitVec.negOne_eq_allOnes]
   case one => simp [eval, denote]
-  case ofNat n => simp [eval, denote]; sorry
-  repeat sorry
+  case ofNat n => simp [eval, denote]
+  case and a b ha hb  => simp [eval, denote, ha, hb]
+  case or a b ha hb => simp [eval, denote, ha, hb]
+  case xor a b ha hb => simp [eval, denote, ha, hb]
+  case not a ha => simp [eval, denote, ha]
+  case ls b a ha  => simp [eval, denote]; sorry
+  case add a b ha hb => simp [eval, denote, ha, hb]
+  case sub a b ha hb => simp [eval, denote, ha, hb]
+  case neg a ha => simp [eval, denote, ha]
+  case incr a ha => simp [eval, denote, ha]
+  case decr a ha => simp [eval, denote, ha]
+  case shiftL a ha => simp [eval, denote, ha]
 
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
   match p with
