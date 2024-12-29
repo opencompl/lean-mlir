@@ -199,10 +199,7 @@ Start by assuming that they are not (not equal) i.e. that they are equal, and th
 If their values ever differ, then we know that we will have `a[i] == b[i]` to be `false`.
 From this point onward, they will always disagree, and thus the predicate should become `0`.
 -/
--- def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := (BitStream.nxor t₁ t₂).scanAnd
-def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := 
-  let bs : BitStream := fun i => if t₁ i != t₂ i then false else true
-  bs.scanAnd
+def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := (t₁.nxor t₂).concat true |>.scanAnd
 
 /-
 If they have been `0` so far, then `t1 &&& t2 |>.scanOr` will be `1`.
@@ -306,6 +303,11 @@ def Predicate.evalFinEq (x₁ x₂ : BitStream) : BitStream :=
     BitStream.concat false (x₁ ^^^ x₂) |>.scanOr
 
 @[simp]
+def Predicate.evalFinNeq (x₁ x₂ : BitStream) : BitStream := 
+    -- width 0, stuff is always equal
+    BitStream.concat true (x₁.nxor x₂) |>.scanAnd
+
+@[simp]
 def Predicate.evalFinSlt (x₁ x₂ : BitStream) : BitStream := 
   -- width 0, nothing is less than
   BitStream.concat true (~~~ (x₁ - x₂))
@@ -331,7 +333,7 @@ match p with
 | .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁.nxor x₂)
+    Predicate.evalFinNeq x₁ x₂
 | .land p q =>
   -- if both `p` and `q` are logically true (i.e. the predicate is `false`),
   -- only then should we return a `false`.

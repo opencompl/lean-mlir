@@ -507,6 +507,33 @@ def borrow : FSM Bool :=
 
   }
 
+/--
+The carry state of the borrow bit.
+TODO: rewrite with 'induction' to be a clean proof script.
+-/
+@[simp] theorem carry_borrow (x : Bool → BitStream) : ∀ (n : ℕ), borrow.carry x (n+1) =
+    fun _ => (x true).borrow (x false) n := by
+  intros n 
+  induction n 
+  case zero => 
+    ext i
+    simp [carry, nextBit, borrow]
+  case succ n ih =>
+    rw [carry, ih]
+    simp [nextBit, eval, borrow]
+
+
+@[simp] lemma eval_borrow (x : Bool → BitStream) : borrow.eval x = (x true).borrow (x false) := by
+  ext i
+  induction i
+  case zero => 
+    simp [borrow, BitStream.borrow, BitStream.subAux, eval, nextBit]
+  case succ i ih =>
+    rw [eval]
+    simp only [carry_borrow, BitStream.borrow_succ, Bool.not_bne']
+    rw [← ih]
+    simp [nextBit, eval, borrow]
+
 def neg : FSM Unit :=
   { α := Unit,
     i := by infer_instance,
@@ -1236,10 +1263,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      -- If it ever becomes `0`, it should stay `0` forever, because once
      -- two bitstreams become disequal, they stay disequal!
      toFSM := (composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinary FSM.nxor t₁' t₂')
-     good := by
-       ext x i
-       simp
-       sorry
+     good := by ext; simp
     }
    | .land p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1264,7 +1288,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      let q₂ := termEvalEqFSM t₂
      { toFSM := 
        composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
-       good := by sorry -- ext; simp
+       good := by ext; simp
      }
    | .sle t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
@@ -1272,7 +1296,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       let slt := 
         composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM
       let eq := 
-        composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+        composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
         Nat.max_self ..
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
@@ -1281,24 +1305,25 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       let out := composeBinaryAux FSM.and slt eq
       {
        toFSM := hsz ▸ out
-       good := by ext x i; simp; sorry
+       good := by
+         ext x i
+         simp [out, slt, eq, t₁'.good, t₂'.good]
       }
    | .ult t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
       let t₂' := termEvalEqFSM t₂
       {
        -- a <u b if when we compute (a - b), we must borrow a value.
-       toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
+       toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not <| composeBinary FSM.borrow t₁' t₂')
        good := by 
-         ext x i; 
+         ext x i
          simp
-         sorry
       }
    | .ule t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
       let t₂' := termEvalEqFSM t₂
       let ult := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
-      let eq := composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
+      let eq := composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
         Nat.max_self ..
       have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
@@ -1309,8 +1334,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        toFSM := hsz ▸ out
        good := by 
          ext x i
-         simp
-         sorry
+         simp [out, ult, eq, t₁'.good, t₂'.good]
       }
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=

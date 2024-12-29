@@ -454,6 +454,14 @@ def sub (x y : BitStream) : BitStream :=
 def borrow (x y : BitStream) : BitStream :=
   fun n => (subAux x y n).2
 
+@[simp] theorem borrow_zero (x y : BitStream) : (x.borrow y 0) = (!(x 0) && y 0) := rfl
+
+@[simp] theorem borrow_succ (x y : BitStream) : (x.borrow y (i+1)) = 
+  let borrow := borrow x y i
+  let a := x (i + 1)
+  let b := y (i + 1)
+  !a && b || ((!(xor a b)) && borrow) := rfl
+
 def negAux (x : BitStream) : Nat → Bool × Bool
   | 0 => (x 0, !(x 0))
   | n+1 =>
