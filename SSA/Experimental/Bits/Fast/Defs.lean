@@ -297,16 +297,23 @@ def Predicate.evalFinLor (x₁ x₂ : BitStream) : BitStream :=
     (x₁ &&& x₂)
 
 @[simp]
+def Predicate.evalFinLand (x₁ x₂ : BitStream) : BitStream := 
+  (x₁ ||| x₂)
+
+@[simp]
 def Predicate.evalFinEq (x₁ x₂ : BitStream) : BitStream := 
-    (x₁ ^^^ x₂)
+    -- width 0, stuff is always equal
+    BitStream.concat false (x₁ ^^^ x₂) |>.scanOr
 
 @[simp]
 def Predicate.evalFinSlt (x₁ x₂ : BitStream) : BitStream := 
-  ~~~ (x₁ - x₂)
+  -- width 0, nothing is less than
+  BitStream.concat true (~~~ (x₁ - x₂))
 
 @[simp]
 def Predicate.evalFinUlt (x₁ x₂ : BitStream) : BitStream := 
-  ~~~ (x₁.borrow x₂)
+  -- width 0, nothing is less than
+  BitStream.concat true (~~~ (x₁.borrow x₂))
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
@@ -330,7 +337,7 @@ match p with
   -- only then should we return a `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  (x₁ ||| x₂)
+  Predicate.evalFinLand x₁ x₂
 | .lor p q =>
   -- If either of the predicates are `false`, then result is `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))

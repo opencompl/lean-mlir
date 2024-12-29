@@ -1225,8 +1225,8 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
     let t₂' := termEvalEqFSM t₂
     {
      -- At width 0, all things are equal.
-     toFSM := composeUnaryAux (FSM.ls false) <| (composeUnaryAux FSM.scanOr <| composeBinary FSM.xor t₁' t₂')
-     good := by ext; simp; sorry
+     toFSM := (composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <|  composeBinary FSM.xor t₁' t₂')
+     good := by ext; simp
     }
   | .neq t₁ t₂ =>
     let t₁' := termEvalEqFSM t₁
@@ -1235,8 +1235,11 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      -- At width 0, all things are equal, so the predicate is untrue.
      -- If it ever becomes `0`, it should stay `0` forever, because once
      -- two bitstreams become disequal, they stay disequal!
-     toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.scanAnd <| composeBinary FSM.nxor t₁' t₂')
-     good := by sorry -- ext; simp;
+     toFSM := (composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinary FSM.nxor t₁' t₂')
+     good := by
+       ext x i
+       simp
+       sorry
     }
    | .land p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1245,7 +1248,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        -- If this ever becomes `1`, it should stay `1`,
        -- since once it's falsified, it should stay falsified!
        toFSM := composeBinaryAux FSM.or x₁.toFSM x₂.toFSM
-       good := by sorry -- ext; simp [x₁.good, x₂.good]
+       good := by ext x i; simp [x₁.good, x₂.good]
      }
    | .lor p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1254,7 +1257,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        -- If it ever becomes `1`, it should stay `1`,
        -- since one it's falsified, it should stay falsified!
        toFSM := composeBinaryAux FSM.and x₁.toFSM x₂.toFSM
-       good := by sorry -- ext; simp [x₁.good, x₂.good]
+       good := by ext x i; simp [x₁.good, x₂.good]
      }
    | .slt t₁ t₂ =>
      let q₁ := termEvalEqFSM t₁
@@ -1278,7 +1281,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       let out := composeBinaryAux FSM.and slt eq
       {
        toFSM := hsz ▸ out
-       good := by sorry -- TODO: show that it's good 'ext; simp';
+       good := by ext x i; simp; sorry
       }
    | .ult t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
@@ -1286,7 +1289,10 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       {
        -- a <u b if when we compute (a - b), we must borrow a value.
        toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
-       good := by sorry -- TODO: show that it's good 'ext; simp';
+       good := by 
+         ext x i; 
+         simp
+         sorry
       }
    | .ule t₁ t₂ =>
       let t₁' := termEvalEqFSM t₁
@@ -1301,7 +1307,10 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       let out := composeBinaryAux FSM.and ult eq
       {
        toFSM := hsz ▸ out
-       good := by sorry -- TODO: show that it's good 'ext; simp';
+       good := by 
+         ext x i
+         simp
+         sorry
       }
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=

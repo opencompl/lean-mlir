@@ -319,7 +319,6 @@ section Scan
 /-- Scan the bitwise or operation on bitstreams -/
 def scanOr (s : BitStream) : BitStream := scanl false Bool.or s
 
-
 @[simp]
 theorem scanOr_zero (s : BitStream) : scanOr s 0 = s 0 := rfl
 
