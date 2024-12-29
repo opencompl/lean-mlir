@@ -926,7 +926,11 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
   rcases x with x | x
   · simp [ofInt, BitStream.ofInt]
   · simp only [ofInt, composeUnaryAux_eval, eval_neg, BitStream.ofInt]
-    sorry
+    -- TODO: why does 'congr' not work here?
+    apply congrFun
+    apply congrArg
+    ext i
+    simp
 
 
 /-- Identity finite state machine -/
