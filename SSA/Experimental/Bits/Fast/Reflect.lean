@@ -61,13 +61,30 @@ Denote a bitstream into the underlying bitvector.
 -/
 def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
 
-@[simp] theorem BitStream.denote_zero : BitStream.denote BitStream.zero w = 0#w := by
-  simp [denote, toBitVec]
-  sorry
+@[simp] theorem BitStream.toBitVec_zero : BitStream.toBitVec w BitStream.zero = 0#w := by
+  induction w
+  case zero => simp [toBitVec, BitStream.zero]
+  case succ n ih =>
+    simp [denote, toBitVec, BitStream.zero]
+    have : 0#(n + 1) = BitVec.cons false 0#n := by simp
+    rw [this, ih]
 
-@[simp] theorem BitStream.denote_negOne : BitStream.denote BitStream.negOne w = BitVec.allOnes w := by
-  simp [denote, toBitVec]
-  sorry
+@[simp] theorem BitStream.denote_zero : BitStream.denote BitStream.zero w = 0#w := by simp [denote]
+
+@[simp] theorem BitStream.toBitVec_negOne : BitStream.toBitVec w BitStream.negOne = BitVec.allOnes w := by
+  induction w
+  case zero => simp [toBitVec, BitStream.zero]
+  case succ n ih =>
+    simp [denote, toBitVec, BitStream.zero]
+    rw [ih]
+    apply BitVec.eq_of_getLsbD_eq
+    simp only [BitVec.getLsbD_cons, BitVec.getLsbD_allOnes, Bool.if_true_left]
+    intros i hi
+    simp only [hi, decide_true, Bool.or_eq_true, decide_eq_true_eq]
+    omega
+
+@[simp] theorem BitStream.denote_negOne : BitStream.denote BitStream.negOne w = BitVec.allOnes w := 
+  by simp [denote]
 
 open Lean in
 def mkBoolLit (b : Bool) : Expr :=
