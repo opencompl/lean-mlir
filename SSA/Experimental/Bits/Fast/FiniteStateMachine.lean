@@ -998,6 +998,9 @@ def trueUptoExcluding (n : Nat) : FSM (Fin 0) :=
 def falseAfterIncluding (n : Nat) : FSM (Fin 0) := trueUptoExcluding n
 private theorem falseAfterIncluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
   (falseAfterIncluding n).eval env i = false ↔ i ≥ n := by simp [falseAfterIncluding];
+@[simp] theorem eval_falseAfterIncluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseAfterIncluding n).eval env i = decide (i < n) := by
+  simp [falseAfterIncluding]
 
 /--
 Build an FSM whose value is 'true' for states [0, 1, ... n] (including the endpoint),
@@ -1010,6 +1013,8 @@ def trueUptoIncluding (n : Nat) : FSM (Fin 0) := ofNat (BitVec.allOnes (n+1)).to
 def falseAfterExcluding (n : Nat) : FSM (Fin 0) := trueUptoIncluding n
 private theorem falseAfterExcluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
   (falseAfterExcluding n).eval env i = false ↔ i > n := by simp [falseAfterExcluding]
+@[simp] theorem eval_falseAfterExcluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
+    (falseAfterExcluding n).eval env i = decide (i ≤ n) := by simp [falseAfterExcluding]
 
 /--
 Build an FSM whose value is and 'false' for the first [0, 1, ... n), and 'true' for [n, n + 1, ...).
@@ -1180,32 +1185,40 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
   | .widthEq n =>
     {
       toFSM := FSM.falseOnlyAt n
-      good := by sorry
+      good := by 
+        ext i x
+        simp only [Predicate.evalFin, Bool.decide_eq_true, Predicate.arity.eq_1,
+          FSM.eval_falseOnlyAt]
+        by_cases h : x = n  <;> simp [h]
     }
   | .widthNeq n =>
      {
       toFSM := FSM.trueOnlyAt n
-      good := by sorry
+      good := by
+        ext i x 
+        simp only [Predicate.evalFin, Bool.decide_eq_true, Predicate.arity.eq_2,
+          FSM.eval_trueOnlyAt]
+        by_cases h : x = n <;> simp [h]
      }
   | .widthGe n =>
      {
       toFSM := FSM.falseAfterIncluding n
-      good := by sorry
+      good := by ext; simp
      }
   | .widthGt n =>
      {
       toFSM := FSM.falseAfterExcluding n
-      good := by sorry
+      good := by ext; simp
      }
   | .widthLt n =>
      {
       toFSM := FSM.falseUptoExcluding n
-      good := by sorry
+      good := by ext; simp
      }
   | .widthLe n =>
      {
       toFSM := FSM.falseUptoIncluding n
-      good := by sorry
+      good := by ext; simp
      }
   | .eq t₁ t₂ =>
     let t₁' := termEvalEqFSM t₁
