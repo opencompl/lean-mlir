@@ -1458,7 +1458,7 @@ def decideIfZerosAtIxAux {arity : Type _} [DecidableEq arity]
       | nItersLeft' + 1 => 
         -- accumulate one iteration
         have c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
-        if h : c' ≤ c 
+        if _ : c' ≤ c 
         then true
         else decideIfZerosAtIxAux fsm (c' ||| c) nItersLeft'
 
