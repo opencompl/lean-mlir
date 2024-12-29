@@ -272,7 +272,7 @@ theorem BitStream.toBitVec_concat(a : BitStream) :
 /--
 Evaluating the term and then coercing the term to a bitvector is equal to denoting the term directly.
 -/
-theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
+@[simp] theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
     (t.eval (vars.map BitStream.ofBitVec)).toBitVec w = t.denote w vars := by
   induction t generalizing w vars
   case var x =>
@@ -321,6 +321,15 @@ def Predicate.cost (p : Predicate) : Nat :=
   let fsm := predicateEvalEqFSM p
   fsm.circuitSize
 
+@[simp] theorem Predicate.eval_land_iff (p q : Predicate) (vars : List (BitVec w)) :
+    evalLand (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    p.denote w vars ∧ q.denote w vars := by sorry
+
+@[simp] theorem Predicate.eval_lor_iff (p q : Predicate) (vars : List (BitVec w)) :
+    evalLor (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    p.denote w vars ∨ q.denote w vars := by sorry
+ 
+
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -328,7 +337,20 @@ The predicate, when evaluated, at index `i` is false iff the denotation is true.
 theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec w)) :
     (p.eval (vars.map BitStream.ofBitVec) w = false) ↔ p.denote w vars := by
   induction p generalizing vars w
-  repeat sorry
+  case widthEq n => simp [eval, denote]
+  case widthNeq n => simp [eval, denote]
+  case widthLt n => simp [eval, denote]
+  case widthLe n => simp [eval, denote]
+  case widthGt n => simp [eval, denote]
+  case widthGe n => simp [eval, denote]
+  case eq a b => simp [eval, denote]; sorry
+  case neq a b => simp [eval, denote]; sorry
+  case ult a b => simp [eval, denote]; sorry
+  case ule a b => simp [eval, denote]; sorry
+  case slt a b => simp [eval, denote]; sorry
+  case sle a b => simp [eval, denote]; sorry
+  case land p q hp hq => simp [eval, denote, hp, hq]
+  case lor p q hp hq => simp [eval, denote, hp, hq]
 
 /--
 A predicate for a fixed width 'wn' can be expressed as universal quantification
