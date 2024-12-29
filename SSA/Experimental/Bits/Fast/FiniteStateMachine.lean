@@ -884,47 +884,12 @@ private theorem Int.lt_of_neg {i : Int} (hi : i < - 1) : i < i / 2 := by
       · omega
     · omega
 
-/--
-Show how to build a bitvector representation from a `negSucc`.
-The theory of `Int.testBit` tells us that we can get the bits from `!(n.testBit k)`.
--/
-def ofNegInt (i : Int) (hi : i < 0) : FSM (Fin 0) :=
-  if hi' : i = -1 then
-    FSM.negOne
-  else
-    let bit := i.testBit' 0
-    let m := i / 2
-    let k := ofNegInt m (by omega)
-    composeUnaryAux (FSM.ls bit) k
-  termination_by (-i |>.toNat)
-  decreasing_by
-    simp [hi]
-    apply Int.lt_of_neg
-    omega
-
-/--
--/
-@[simp] theorem eval_ofNegInt (x : Int) (hx : x < 0)  (i : Nat) {env : Fin 0 → BitStream} :
-    (ofNegInt x hx).eval env i = BitStream.ofInt x i := by
-  rcases x with x | x
-  · simp at hx; omega
-  · simp [BitStream.ofInt]
-    induction x
-    case zero =>
-      simp [ofNegInt]
-    case succ x ih =>
-      rw [ofNegInt]
-      have hi' : Int.negSucc (x + 1) ≠ -1 := by omega
-      simp [hi']
-      simp [BitStream.concat]
-      sorry
-
 /-- Build a finite state machine for the integer `i` -/
 def ofInt (x : Int) : FSM (Fin 0) :=
-  if hi : x ≥ 0 then
-    ofNat x.toNat
-  else
-    ofNegInt x (by omega)
+  match x with 
+  | .ofNat n => ofNat n
+  | .negSucc n =>
+      composeUnaryAux neg (ofNat (n + 1))
 
 /--
 The result of `FSM.ofInt x` matches with `BitStream.ofInt x`.
@@ -933,7 +898,8 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
     (ofInt x).eval env i = BitStream.ofInt x i := by
   rcases x with x | x
   · simp [ofInt, BitStream.ofInt]
-  · simp [ofInt, BitStream.ofInt]
+  · simp only [ofInt, composeUnaryAux_eval, eval_neg, BitStream.ofInt]
+    sorry
 
 
 /-- Identity finite state machine -/
@@ -946,11 +912,26 @@ def id : FSM Unit := {
    | some f => f.elim
 }
 
+@[simp]
+def eval_id (env: Unit → BitStream) (i : Nat) : id.eval env i = (env ()) i := rfl
+
 /-- Build logical shift left automata by `n` bits -/
 def shiftLeft (n : Nat) : FSM Unit :=
   match n with
   | 0 => FSM.id
   | n + 1 => composeUnaryAux (FSM.ls false) (shiftLeft n)
+
+@[simp]
+theorem eval_shiftLeft (k : Nat) (env : Unit → BitStream) (i : Nat) :
+    (shiftLeft k).eval env i = ((decide (k ≤ i)) && ((env ()) (i - k))) := by
+  induction k generalizing i 
+  case zero => 
+    simp [shiftLeft]
+  case succ k ih =>
+    simp[shiftLeft]
+    rcases i with rfl | i 
+    · simp
+    · simp [ih]
 
 /--
 Build an FSM whose state is `true` at step `n`,
@@ -1134,12 +1115,14 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
      let q := termEvalEqFSM t
      {
        toFSM := by dsimp [arity]; exact composeUnary (FSM.shiftLeft k) q,
-       good := by ext; simp; sorry
+       good := by 
+         ext x i
+         simp only [evalFin, BitStream.eval_shiftLeft, Bool.if_false_left, arity.eq_16, id_eq,
+           composeUnary_eval, FSM.eval_shiftLeft]
+         by_cases hi : i < k
+         · simp [hi]
+         · simp [hi]; omega
      }
-  -- | repeatBit t =>
-  --   let p := termEvalEqFSM t
-  --   { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,
-  --     good := by ext; simp }
 
 /-!
 FSM that implement bitwise-and. Since we use `0` as the good state,
@@ -1190,7 +1173,6 @@ structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
 
 
 /-- Evaluating the eq predicate equals the FSM value.
-
 Note that **this is the value that is run by decide**.
 
 -/
