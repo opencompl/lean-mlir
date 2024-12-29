@@ -1464,10 +1464,11 @@ def decideIfZerosAtIx {arity : Type _} [DecidableEq arity]
 /--
 The correctness statement of decideIfZeroesAtIx.
 This tells us that decideIfZeroesAtIx is correct iff the FSM 'p' when evaluated returns false
-for all inputs at the index 'w' of the bitstream
+for all inputs at the index 'w' of the bitstream.
+
+We file this as a separate axiom
 -/
-theorem decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false := by
-  sorry
+axiom decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false 
 
 end FSM
