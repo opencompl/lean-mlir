@@ -296,6 +296,38 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
   case decr a ha => simp [eval, denote, ha]
   case shiftL a ha => simp [eval, denote, ha]
 
+/-
+This says that calling 'eval' at an index equals calling 'denote' and grabbing the bitstream
+ at that index, as long as the value is inbounds, and if not, it's going to be 'false' 
+ -/
+theorem Term.eval_eq_denote_apply (t : Term) {w : Nat} {vars : List (BitVec w)} 
+    {i : Nat} (hi : i < w) :
+    (t.eval (vars.map BitStream.ofBitVec)) i = (t.denote w vars).getLsbD i := by
+  have := t.eval_eq_denote w vars
+  have : 
+    (BitStream.toBitVec w (t.eval (List.map BitStream.ofBitVec vars))).getLsbD i = 
+    (denote w t vars).getLsbD i := by simp [this]
+  rw [BitStream.getLsbD_toBitVec] at this
+  simp only [show i < w by omega, decide_true, Bool.true_and] at this
+  simp [this]
+
+/-
+This says that calling 'eval' at an index equals calling 'denote' and grabbing the bitstream
+ at that index, as long as the value is inbounds, and if not, it's going to be 'false' 
+ -/
+theorem Term.denote_eq_eval_land_lt (t : Term) {w : Nat} {vars : List (BitVec w)} 
+    {i : Nat} :
+    (t.denote w vars).getLsbD i = ((t.eval (vars.map BitStream.ofBitVec)) i && (decide (i < w))) := by
+  have := t.eval_eq_denote w vars
+  have : 
+    (BitStream.toBitVec w (t.eval (List.map BitStream.ofBitVec vars))).getLsbD i = 
+    (denote w t vars).getLsbD i := by simp [this]
+  rw [BitStream.getLsbD_toBitVec] at this
+  by_cases hi : i < w
+  · simp [hi] at this
+    simp [this, hi]
+  · simpa [hi] using this
+
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
   match p with
   | .widthGe k => k ≤ w -- w ≥ k
@@ -321,6 +353,32 @@ def Predicate.cost (p : Predicate) : Nat :=
   let fsm := predicateEvalEqFSM p
   fsm.circuitSize
 
+
+/-
+if 'evalEq' evaluates to 'false', then indeed the denotations of the terms are equal.
+-/
+theorem Predicate.evalEq_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) : 
+    evalEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    Term.denote w a vars = Term.denote w b vars := by 
+  simp [evalEq]
+  constructor
+  · intros h
+    /- Dear god, this proof is ugly. -/
+    simp only [BitStream.scanOr_false_iff, BitStream.xor_eq, bne_eq_false_iff_eq] at h
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    specialize h (i + 1) (by omega)
+    simp at h
+    rw [Term.eval_eq_denote_apply a hi, Term.eval_eq_denote_apply b  hi] at h
+    exact h
+  · intros h
+    rw [BitStream.scanOr_false_iff]
+    intros i hi
+    rcases i with rfl | i 
+    · simp
+    · simp
+      rw [Term.eval_eq_denote_apply a (by omega), Term.eval_eq_denote_apply b (by omega), h]
+
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -334,7 +392,9 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case widthLe n => simp [eval, denote]
   case widthGt n => simp [eval, denote]
   case widthGe n => simp [eval, denote]
-  case eq a b => simp [eval, denote]; sorry
+  case eq a b => 
+    simp [eval, denote]
+    apply evalEq_denote
   case neq a b => simp [eval, denote]; sorry
   case ult a b => simp [eval, denote]; sorry
   case ule a b => simp [eval, denote]; sorry

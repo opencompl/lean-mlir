@@ -212,6 +212,7 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
         apply BitVec.getLsbD_ge
         omega
 
+
 /-- `EqualUpTo w x y` holds iff `x` and `y` are equal in the first `w` bits -/
 def EqualUpTo (w : Nat) (x y : BitStream) : Prop :=
   ∀ i < w, x i = y i

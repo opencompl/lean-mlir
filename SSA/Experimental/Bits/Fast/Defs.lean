@@ -191,7 +191,7 @@ inductive Predicate : Type where
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
 -/
-def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂).scanOr
+def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂).concat false |>.scanOr
 /--
 If they have been equal so far, then `BitStream.nxor t₁ t₂`.scanAnd will be 1.
 Start by assuming that they are not (not equal) i.e. that they are equal, and the 
