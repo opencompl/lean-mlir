@@ -57,25 +57,23 @@ TODO:
 -/
 
 /--
-Denote a bitstream into the underlying bitvector.
--/
+Denote a bitstream into the underlying bitvector, by using toBitVec
 def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
+-/
 
 @[simp] theorem BitStream.toBitVec_zero : BitStream.toBitVec w BitStream.zero = 0#w := by
   induction w
   case zero => simp [toBitVec, BitStream.zero]
   case succ n ih =>
-    simp [denote, toBitVec, BitStream.zero]
+    simp [toBitVec, toBitVec, BitStream.zero]
     have : 0#(n + 1) = BitVec.cons false 0#n := by simp
     rw [this, ih]
-
-@[simp] theorem BitStream.denote_zero : BitStream.denote BitStream.zero w = 0#w := by simp [denote]
 
 @[simp] theorem BitStream.toBitVec_negOne : BitStream.toBitVec w BitStream.negOne = BitVec.allOnes w := by
   induction w
   case zero => simp [toBitVec, BitStream.zero]
   case succ n ih =>
-    simp [denote, toBitVec, BitStream.zero]
+    simp [toBitVec, toBitVec, BitStream.zero]
     rw [ih]
     apply BitVec.eq_of_getLsbD_eq
     simp only [BitVec.getLsbD_cons, BitVec.getLsbD_allOnes, Bool.if_true_left]
@@ -83,8 +81,20 @@ def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
     simp only [hi, decide_true, Bool.or_eq_true, decide_eq_true_eq]
     omega
 
-@[simp] theorem BitStream.denote_negOne : BitStream.denote BitStream.negOne w = BitVec.allOnes w := 
-  by simp [denote]
+@[simp] theorem BitStream.toBitVec_one : BitStream.toBitVec w BitStream.one = 1#w := by
+  induction w
+  case zero => simp [toBitVec, BitStream.zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, BitStream.one]
+    rw [ih]
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    simp [BitVec.getLsbD_cons]
+    by_cases hi' : i = n
+    · simp [hi']
+      by_cases hn : n = 0 <;> simp [hn]
+    · simp [hi']
+      omega
 
 open Lean in
 def mkBoolLit (b : Bool) : Expr :=
@@ -130,13 +140,13 @@ def Predicate.quote (p : _root_.Predicate) : Expr :=
   | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
   | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
 
-/-- Denote a Term into its underlying bitvector -/
+/-- toBitVec a Term into its underlying bitvector -/
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   match t with
   | ofNat n => BitVec.ofNat w n
   | var n => vars[n]!
   | zero => 0#w
-  | negOne => BitVec.ofInt w (-1)
+  | negOne => -1#w
   | one  => 1#w
   | and a b => (a.denote w vars) &&& (b.denote w vars)
   | or a b => (a.denote w vars) ||| (b.denote w vars)
@@ -150,9 +160,25 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | ls bit a => (a.denote w vars).shiftConcat bit
   | shiftL a n => (a.denote w vars) <<< n
 
+@[simp] theorem BitStream.denote_ofBitVec (x : BitVec w) : 
+    (BitStream.ofBitVec x).toBitVec w = x := by 
+  simp [BitStream.toBitVec, BitVec.signExtend_eq_setWidth_of_lt]
+
+/--
+Evaluating the term and then coercing the term to a bitvector is equal to denoting the term directly.
+-/
 theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
-    (t.eval (vars.map BitStream.ofBitVec)).denote w = t.denote w vars := by
+    (t.eval (vars.map BitStream.ofBitVec)).toBitVec w = t.denote w vars := by
   induction t generalizing w vars
+  case var x =>
+    simp [eval, denote]
+    cases x? : vars[x]?
+    case none => simp [default, denote]
+    case some x => simp [BitVec.signExtend_eq_setWidth_of_lt]
+  case zero => simp [eval, denote]
+  case negOne => simp [eval, denote]; rw [← BitVec.negOne_eq_allOnes]
+  case one => simp [eval, denote]
+  case ofNat n => simp [eval, denote]; sorry
   repeat sorry
 
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
@@ -627,8 +653,6 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
   | BitVec.ofInt _wExpr iExpr =>
     let i ← getIntValue? iExpr
     match i with
-    | .some (-1) =>
-      return {bvToIxMap := map, e := Term.negOne }
     | _ =>
       let (e, map) := map.findOrInsertExpr e
       return { bvToIxMap := map, e := e }
@@ -1216,7 +1240,7 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
   intros
   bv_automata_circuit
 
-example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
+example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   intros
   bv_automata_circuit
 
