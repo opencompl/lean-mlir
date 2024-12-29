@@ -321,13 +321,18 @@ def Predicate.cost (p : Predicate) : Nat :=
   let fsm := predicateEvalEqFSM p
   fsm.circuitSize
 
-@[simp] theorem Predicate.eval_land_iff (p q : Predicate) (vars : List (BitVec w)) :
-    evalLand (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
-    p.denote w vars ∧ q.denote w vars := by sorry
-
-@[simp] theorem Predicate.eval_lor_iff (p q : Predicate) (vars : List (BitVec w)) :
-    evalLor (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
-    p.denote w vars ∨ q.denote w vars := by sorry
+-- @[simp] theorem Predicate.eval_land_iff (p q : Predicate) (vars : List (BitVec w)) :
+--     evalLand (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+--     p.denote w vars ∧ q.denote w vars := by
+--   constructor
+--   · simp [evalLand];
+--     intros hp hq
+-- 
+--   · simp; sorry
+-- 
+-- @[simp] theorem Predicate.eval_lor_iff (p q : Predicate) (vars : List (BitVec w)) :
+--     evalLor (p.eval (List.map BitStream.ofBitVec vars)) (q.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+--     p.denote w vars ∨ q.denote w vars := by sorry
  
 
 /--
@@ -349,8 +354,26 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case ule a b => simp [eval, denote]; sorry
   case slt a b => simp [eval, denote]; sorry
   case sle a b => simp [eval, denote]; sorry
-  case land p q hp hq => simp [eval, denote, hp, hq]
-  case lor p q hp hq => simp [eval, denote, hp, hq]
+  case land p q hp hq => simp [eval, denote, hp, hq, evalLand]
+  case lor p q hp hq => 
+    simp [eval, denote, hp, hq]
+    simp only [evalLor, BitStream.and_eq]
+    constructor
+    · intros heval
+      by_cases hp' : p.denote w vars
+      · simp [hp']
+      · by_cases hq' : q.denote w vars
+        · simp [hq']
+        · have := hp .. |>.not |>.mpr hp'
+          simp [this] at heval
+          have := hq .. |>.not |>.mpr hq'
+          simp [this] at heval
+    · intros hdenote
+      rcases hdenote with hp' | hq'
+      · have := hp .. |>.mpr hp'
+        simp [this]
+      · have := hq .. |>.mpr hq'
+        simp [this]
 
 /--
 A predicate for a fixed width 'wn' can be expressed as universal quantification
