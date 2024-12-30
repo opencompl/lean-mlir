@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gdebuginfohvariables_proof
 theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := by

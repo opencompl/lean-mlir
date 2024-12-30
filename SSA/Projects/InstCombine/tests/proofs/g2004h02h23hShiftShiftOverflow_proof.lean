@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section g2004h02h23hShiftShiftOverflow_proof
 theorem test_thm (e : IntW 32) : ashr (ashr e (const? 32 17)) (const? 32 17) ⊑ ashr e (const? 32 31) := by

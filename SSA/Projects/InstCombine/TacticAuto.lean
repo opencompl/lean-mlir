@@ -18,7 +18,7 @@ attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
   bind_assoc forall_const
   Option.bind_eq_bind Option.none_bind Option.bind_none Option.some_bind Option.pure_def
-  BitVec.reduceOfInt Nat.cast_one
+  Nat.cast_one
 
 attribute [simp_llvm_split]
   BitVec.Refinement.some_some BitVec.Refinement.refl Option.some_bind''

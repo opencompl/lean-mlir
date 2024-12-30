@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gselecthsafehtransforms_proof
 theorem cond_eq_and_const_thm (e e_1 : IntW 8) :

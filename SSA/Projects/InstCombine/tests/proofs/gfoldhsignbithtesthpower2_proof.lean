@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gfoldhsignbithtesthpower2_proof
 theorem pow2_or_zero_is_negative_commute_thm (e : IntW 8) :

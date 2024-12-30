@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gicmphpower2handhicmphshiftedhmask_proof
 theorem icmp_power2_and_icmp_shifted_mask_2147483648_1610612736_thm (e : IntW 32) :

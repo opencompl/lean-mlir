@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gbinophcast_proof
 theorem and_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.and (sext 32 e_1) e ⊑ select e_1 e (const? 32 0) := by

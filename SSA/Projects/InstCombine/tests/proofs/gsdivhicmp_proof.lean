@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gsdivhicmp_proof
 theorem sdiv_exact_eq_0_thm (e e_1 : IntW 8) :
