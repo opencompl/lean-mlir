@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section g2006h10h19hSignedToUnsignedCastAndConsth2_proof
 theorem eq_signed_to_small_unsigned_thm (e : IntW 8) :

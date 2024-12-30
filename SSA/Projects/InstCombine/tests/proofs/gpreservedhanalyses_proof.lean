@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gpreservedhanalyses_proof
 theorem test_thm (e : IntW 32) : add (add e (const? 32 5)) (const? 32 (-5)) ⊑ e := by 

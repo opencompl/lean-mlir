@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gcast_proof
 theorem test2_thm (e : IntW 8) : zext 64 (zext 32 (zext 16 e)) ⊑ zext 64 e := by 

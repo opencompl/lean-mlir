@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gapinthshifthsimplify_proof
 theorem test0_thm (e e_1 e_2 : IntW 41) : LLVM.and (shl e_2 e_1) (shl e e_1) ⊑ shl (LLVM.and e_2 e) e_1 := by 

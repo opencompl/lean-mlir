@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gsubhlshrhorhtohicmphselect_proof
 theorem neg_or_lshr_i32_thm (e : IntW 32) :

@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gpr17827_proof
 theorem test_shift_and_cmp_changed1_thm (e e_1 : IntW 8) :

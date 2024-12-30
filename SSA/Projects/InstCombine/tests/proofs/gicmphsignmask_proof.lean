@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gicmphsignmask_proof
 theorem cmp_x_and_negp2_with_eq_thm (e : IntW 8) :

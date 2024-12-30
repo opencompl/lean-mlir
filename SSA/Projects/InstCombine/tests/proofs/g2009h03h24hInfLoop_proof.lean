@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section g2009h03h24hInfLoop_proof
 theorem test_thm (e : IntW 32) :

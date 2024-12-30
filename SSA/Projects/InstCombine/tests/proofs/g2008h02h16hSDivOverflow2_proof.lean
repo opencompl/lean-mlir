@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section g2008h02h16hSDivOverflow2_proof
 theorem i_thm (e : IntW 8) :

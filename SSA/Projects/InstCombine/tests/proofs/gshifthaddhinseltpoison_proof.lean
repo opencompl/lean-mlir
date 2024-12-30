@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gshifthaddhinseltpoison_proof
 theorem shl_C1_add_A_C2_i32_thm (e : IntW 16) :

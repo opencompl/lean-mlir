@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gaddhshift_proof
 theorem flip_add_of_shift_neg_thm (e e_1 e_2 : IntW 8) :

@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gicmphselecthimplieshcommonhop_proof
 theorem sgt_3_impliesF_eq_2_thm (e e_1 : IntW 8) :

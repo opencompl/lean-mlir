@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gset_proof
 theorem test3_thm (e : IntW 32) : icmp IntPredicate.slt e e ⊑ const? 1 0 := by 

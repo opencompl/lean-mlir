@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gtrunchshlhzext_proof
 theorem trunc_shl_zext_32_thm (e : IntW 32) :

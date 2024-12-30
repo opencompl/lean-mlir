@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gshlhdemand_proof
 theorem src_srem_shl_demand_max_signbit_thm (e : IntW 32) :

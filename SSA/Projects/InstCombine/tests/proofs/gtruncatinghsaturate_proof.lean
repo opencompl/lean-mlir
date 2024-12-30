@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gtruncatinghsaturate_proof
 theorem testtrunclowhigh_thm (e e_1 : IntW 16) (e_2 : IntW 32) :

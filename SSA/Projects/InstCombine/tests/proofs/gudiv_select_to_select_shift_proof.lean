@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gudiv_select_to_select_shift_proof
 theorem test_thm (e : IntW 1) (e_1 : IntW 64) :

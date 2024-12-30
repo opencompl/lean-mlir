@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gxor_proof
 theorem test0_thm (e : IntW 1) : LLVM.xor e (const? 1 0) ⊑ e := by 

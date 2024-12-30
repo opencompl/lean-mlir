@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxRecDepth 3000
 
 section gicmphandhlowbithmask_proof
 theorem src_is_mask_zext_thm (e : IntW 8) (e_1 : IntW 16) :
