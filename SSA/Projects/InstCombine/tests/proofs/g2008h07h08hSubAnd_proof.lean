@@ -9,7 +9,7 @@ set_option linter.unreachableTactic false
 
 section g2008h07h08hSubAnd_proof
 theorem a_thm (e : IntW 32) :
-  LLVM.and (sub (const? 32 8) e) (const? 32 7) ⊑ LLVM.and (sub (const? 32 0) e) (const? 32 7) := by 
+  LLVM.and (sub (const? 32 8) e) (const? 32 7) ⊑ LLVM.and (sub (const? 32 0) e) (const? 32 7) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

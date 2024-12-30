@@ -10,7 +10,7 @@ set_option linter.unreachableTactic false
 section gxorhashr_proof
 theorem testi8i8_thm (e : IntW 8) :
   LLVM.xor (ashr e (const? 8 7)) (const? 8 127) ⊑
-    select (icmp IntPredicate.sgt e (const? 8 (-1))) (const? 8 127) (const? 8 (-128)) := by 
+    select (icmp IntPredicate.sgt e (const? 8 (-1))) (const? 8 127) (const? 8 (-128)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +21,7 @@ theorem testi8i8_thm (e : IntW 8) :
 
 theorem testi16i8_thm (e : IntW 16) :
   LLVM.xor (trunc 8 (ashr e (const? 16 15))) (const? 8 27) ⊑
-    select (icmp IntPredicate.sgt e (const? 16 (-1))) (const? 8 27) (const? 8 (-28)) := by 
+    select (icmp IntPredicate.sgt e (const? 16 (-1))) (const? 8 27) (const? 8 (-28)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -32,7 +32,7 @@ theorem testi16i8_thm (e : IntW 16) :
 
 theorem testi64i32_thm (e : IntW 64) :
   LLVM.xor (trunc 32 (ashr e (const? 64 63))) (const? 32 127) ⊑
-    select (icmp IntPredicate.sgt e (const? 64 (-1))) (const? 32 127) (const? 32 (-128)) := by 
+    select (icmp IntPredicate.sgt e (const? 64 (-1))) (const? 32 127) (const? 32 (-128)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -43,7 +43,7 @@ theorem testi64i32_thm (e : IntW 64) :
 
 theorem testi128i128_thm (e : IntW 128) :
   LLVM.xor (ashr e (const? 128 127)) (const? 128 27) ⊑
-    select (icmp IntPredicate.sgt e (const? 128 (-1))) (const? 128 27) (const? 128 (-28)) := by 
+    select (icmp IntPredicate.sgt e (const? 128 (-1))) (const? 128 27) (const? 128 (-28)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -54,7 +54,7 @@ theorem testi128i128_thm (e : IntW 128) :
 
 theorem wrongimm_thm (e : IntW 16) :
   LLVM.xor (trunc 8 (ashr e (const? 16 14))) (const? 8 27) ⊑
-    LLVM.xor (trunc 8 (ashr e (const? 16 14)) { «nsw» := true, «nuw» := false }) (const? 8 27) := by 
+    LLVM.xor (trunc 8 (ashr e (const? 16 14)) { «nsw» := true, «nuw» := false }) (const? 8 27) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

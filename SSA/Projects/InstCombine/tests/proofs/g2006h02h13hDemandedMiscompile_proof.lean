@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
 section g2006h02h13hDemandedMiscompile_proof
-theorem test_thm (e : IntW 8) : ashr (sext 32 e) (const? 32 8) ⊑ sext 32 (ashr e (const? 8 7)) := by 
+theorem test_thm (e : IntW 8) : ashr (sext 32 e) (const? 32 8) ⊑ sext 32 (ashr e (const? 8 7)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

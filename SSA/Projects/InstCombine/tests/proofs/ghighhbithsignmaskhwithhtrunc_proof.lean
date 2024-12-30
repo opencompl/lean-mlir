@@ -10,7 +10,7 @@ set_option linter.unreachableTactic false
 section ghighhbithsignmaskhwithhtrunc_proof
 theorem t0_thm (e : IntW 64) :
   sub (const? 32 0) (trunc 32 (lshr e (const? 64 63))) ⊑
-    trunc 32 (ashr e (const? 64 63)) { «nsw» := true, «nuw» := false } := by 
+    trunc 32 (ashr e (const? 64 63)) { «nsw» := true, «nuw» := false } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +21,7 @@ theorem t0_thm (e : IntW 64) :
 
 theorem t1_exact_thm (e : IntW 64) :
   sub (const? 32 0) (trunc 32 (lshr e (const? 64 63) { «exact» := true })) ⊑
-    trunc 32 (ashr e (const? 64 63) { «exact» := true }) { «nsw» := true, «nuw» := false } := by 
+    trunc 32 (ashr e (const? 64 63) { «exact» := true }) { «nsw» := true, «nuw» := false } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -32,7 +32,7 @@ theorem t1_exact_thm (e : IntW 64) :
 
 theorem t2_thm (e : IntW 64) :
   sub (const? 32 0) (trunc 32 (ashr e (const? 64 63))) ⊑
-    trunc 32 (lshr e (const? 64 63)) { «nsw» := true, «nuw» := true } := by 
+    trunc 32 (lshr e (const? 64 63)) { «nsw» := true, «nuw» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -43,7 +43,7 @@ theorem t2_thm (e : IntW 64) :
 
 theorem t3_exact_thm (e : IntW 64) :
   sub (const? 32 0) (trunc 32 (ashr e (const? 64 63) { «exact» := true })) ⊑
-    trunc 32 (lshr e (const? 64 63) { «exact» := true }) { «nsw» := true, «nuw» := true } := by 
+    trunc 32 (lshr e (const? 64 63) { «exact» := true }) { «nsw» := true, «nuw» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -55,7 +55,7 @@ theorem t3_exact_thm (e : IntW 64) :
 theorem n9_thm (e : IntW 64) :
   sub (const? 32 0) (trunc 32 (lshr e (const? 64 62))) ⊑
     sub (const? 32 0) (trunc 32 (lshr e (const? 64 62)) { «nsw» := true, «nuw» := true })
-      { «nsw» := true, «nuw» := false } := by 
+      { «nsw» := true, «nuw» := false } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -67,7 +67,7 @@ theorem n9_thm (e : IntW 64) :
 theorem n10_thm (e : IntW 64) :
   sub (const? 32 1) (trunc 32 (lshr e (const? 64 63))) ⊑
     add (trunc 32 (ashr e (const? 64 63)) { «nsw» := true, «nuw» := false }) (const? 32 1)
-      { «nsw» := true, «nuw» := false } := by 
+      { «nsw» := true, «nuw» := false } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

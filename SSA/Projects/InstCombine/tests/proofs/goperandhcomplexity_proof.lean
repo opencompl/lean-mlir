@@ -10,7 +10,7 @@ set_option linter.unreachableTactic false
 section goperandhcomplexity_proof
 theorem neg_thm (e : IntW 8) :
   LLVM.xor (sub (const? 8 0) e) (LLVM.udiv e (const? 8 42)) ⊑
-    LLVM.xor (LLVM.udiv e (const? 8 42)) (sub (const? 8 0) e) := by 
+    LLVM.xor (LLVM.udiv e (const? 8 42)) (sub (const? 8 0) e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +21,7 @@ theorem neg_thm (e : IntW 8) :
 
 theorem not_thm (e : IntW 8) :
   mul (LLVM.xor (const? 8 (-1)) e) (LLVM.udiv e (const? 8 42)) ⊑
-    mul (LLVM.udiv e (const? 8 42)) (LLVM.xor e (const? 8 (-1))) := by 
+    mul (LLVM.udiv e (const? 8 42)) (LLVM.xor e (const? 8 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -14,7 +14,7 @@ theorem unmasked_shlop_insufficient_mask_shift_amount_thm (e e_1 e_2 : IntW 16) 
         (lshr (LLVM.and e (const? 16 255)) (LLVM.and e_1 (const? 16 15)))) ⊑
     trunc 8
       (LLVM.or (shl e_2 (sub (const? 16 8) (LLVM.and e_1 (const? 16 15)) { «nsw» := true, «nuw» := false }))
-        (lshr (LLVM.and e (const? 16 255)) (LLVM.and e_1 (const? 16 15)))) := by 
+        (lshr (LLVM.and e (const? 16 255)) (LLVM.and e_1 (const? 16 15)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 
 section gdivhi1_proof
-theorem sdiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.sdiv e_1 e ⊑ e_1 := by 
+theorem sdiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.sdiv e_1 e ⊑ e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -17,7 +17,7 @@ theorem sdiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.sdiv e_1 e ⊑ e_1 := by
     all_goals sorry
 
 
-theorem udiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.udiv e_1 e ⊑ e_1 := by 
+theorem udiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.udiv e_1 e ⊑ e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -26,7 +26,7 @@ theorem udiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.udiv e_1 e ⊑ e_1 := by
     all_goals sorry
 
 
-theorem srem_i1_is_zero_thm (e e_1 : IntW 1) : LLVM.srem e_1 e ⊑ const? 1 0 := by 
+theorem srem_i1_is_zero_thm (e e_1 : IntW 1) : LLVM.srem e_1 e ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,7 +35,7 @@ theorem srem_i1_is_zero_thm (e e_1 : IntW 1) : LLVM.srem e_1 e ⊑ const? 1 0 :=
     all_goals sorry
 
 
-theorem urem_i1_is_zero_thm (e e_1 : IntW 1) : urem e_1 e ⊑ const? 1 0 := by 
+theorem urem_i1_is_zero_thm (e e_1 : IntW 1) : urem e_1 e ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
