@@ -477,17 +477,6 @@ theorem tryFactorization_xor_ashr_ashr_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem PR96857_xor_with_noundef_thm (e e_1 e_2 : IntW 4) :
-  LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? 4 (-1))) e) ⊑
-    LLVM.or (LLVM.and e_2 e_1) (LLVM.and e (LLVM.xor e_2 (const? 4 (-1)))) { «disjoint» := true } := by
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    simp_alive_benchmark
-    all_goals sorry
-
-
 theorem PR96857_xor_without_noundef_thm (e e_1 e_2 : IntW 4) :
   LLVM.xor (LLVM.and e_2 e_1) (LLVM.and (LLVM.xor e_2 (const? 4 (-1))) e) ⊑
     LLVM.or (LLVM.and e_2 e_1) (LLVM.and e (LLVM.xor e_2 (const? 4 (-1)))) := by
