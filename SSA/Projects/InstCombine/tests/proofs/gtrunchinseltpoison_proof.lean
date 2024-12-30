@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gtrunchinseltpoison_proof
 theorem test5_thm (e : IntW 32) : trunc 32 (lshr (zext 128 e) (const? 128 16)) ⊑ lshr e (const? 32 16) := by

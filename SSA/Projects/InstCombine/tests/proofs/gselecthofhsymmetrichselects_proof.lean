@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gselecthofhsymmetrichselects_proof
 theorem select_of_symmetric_selects_thm (e e_1 : IntW 32) (e_2 e_3 : IntW 1) :

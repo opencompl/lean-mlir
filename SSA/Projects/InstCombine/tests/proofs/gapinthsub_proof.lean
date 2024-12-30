@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gapinthsub_proof
 theorem test1_thm (e : IntW 23) : sub e e ⊑ const? 23 0 := by

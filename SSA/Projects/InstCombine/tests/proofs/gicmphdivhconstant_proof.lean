@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gicmphdivhconstant_proof
 theorem is_rem2_neg_i8_thm (e : IntW 8) :

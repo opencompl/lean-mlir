@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gapinthmul2_proof
 theorem test1_thm (e : IntW 177) : mul e (shl (const? 177 1) (const? 177 155)) ⊑ shl e (const? 177 155) := by

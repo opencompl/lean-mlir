@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gadd_or_sub_proof
 theorem add_or_sub_comb_i32_commuted1_nuw_thm (e : IntW 32) :

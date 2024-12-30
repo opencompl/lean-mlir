@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section g2008h07h10hCastSextBool_proof
 theorem PR2539_A_thm (e : IntW 1) : icmp IntPredicate.slt (zext 32 e) (const? 32 1) ⊑ LLVM.xor e (const? 1 1) := by

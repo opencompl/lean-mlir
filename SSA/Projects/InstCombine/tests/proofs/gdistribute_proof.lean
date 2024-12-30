@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gdistribute_proof
 theorem factorize_thm (e : IntW 32) : LLVM.and (LLVM.or e (const? 32 1)) (LLVM.or e (const? 32 2)) ⊑ e := by

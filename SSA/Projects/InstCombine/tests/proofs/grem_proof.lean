@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section grem_proof
 theorem test1_thm (e : IntW 32) : LLVM.srem e (const? 32 1) ⊑ const? 32 0 := by

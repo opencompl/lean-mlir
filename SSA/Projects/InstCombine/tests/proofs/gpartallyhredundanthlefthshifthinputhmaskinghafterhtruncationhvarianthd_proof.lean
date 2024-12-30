@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gpartallyhredundanthlefthshifthinputhmaskinghafterhtruncationhvarianthd_proof
 theorem PR51351_thm (e : IntW 64) (e_1 : IntW 32) :

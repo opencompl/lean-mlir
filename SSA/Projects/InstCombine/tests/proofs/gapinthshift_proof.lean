@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gapinthshift_proof
 theorem test6_thm (e : IntW 55) : mul (shl e (const? 55 1)) (const? 55 3) ⊑ mul e (const? 55 6) := by

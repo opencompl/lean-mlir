@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gsubhofhnegatiblehinseltpoison_proof
 theorem t0_thm (e : IntW 8) : sub e (const? 8 (-42)) ⊑ add e (const? 8 42) := by

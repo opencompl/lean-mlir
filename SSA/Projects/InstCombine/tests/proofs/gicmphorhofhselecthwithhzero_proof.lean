@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gicmphorhofhselecthwithhzero_proof
 theorem src_tv_eq_thm (e e_1 : IntW 8) (e_2 : IntW 1) :

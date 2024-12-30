@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gcasthset_proof
 theorem test5_thm (e : IntW 16) : trunc 16 (LLVM.and (sext 32 e) (const? 32 15)) ⊑ LLVM.and e (const? 16 15) := by

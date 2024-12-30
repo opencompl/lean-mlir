@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gicmphshlhnsw_proof
 theorem icmp_shl_nsw_sgt_thm (e : IntW 32) :
