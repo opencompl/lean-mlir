@@ -4,12 +4,7 @@
 1: "use.i8"
 5: "use.i8" is empty
 
-1: "replace_with_y_noundef"
-2: llvm.func
-2: llvm.icmp
-2: llvm.and
-2: builtin.unregistered: llvm.select
-2: llvm.return
+4: "replace_with_y_noundef" has unsupported operation: noundef
 
 1: "replace_with_x_noundef"
 4: "replace_with_x_noundef" has unsupported operation: llvm.call
