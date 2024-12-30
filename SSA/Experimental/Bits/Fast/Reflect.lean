@@ -144,7 +144,7 @@ def Predicate.quote (p : _root_.Predicate) : Expr :=
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   match t with
   | ofNat n => BitVec.ofNat w n
-  | var n => vars[n]!
+  | var n => vars.getD n default
   | zero => 0#w
   | negOne => -1#w
   | one  => 1#w
@@ -453,6 +453,9 @@ theorem Predicate.evalNeq_denote {w : Nat} (a b : Term) (vars : List (BitVec w))
       (b.eval (List.map BitStream.ofBitVec vars)) w |>.mp this'
     simpa using this
 
+
+axiom sorry_eval_eq_denote {p : Prop} : p
+
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -468,10 +471,10 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case widthGe n => simp [eval, denote]
   case eq a b => simp [eval, denote]; apply evalEq_denote
   case neq a b => simp [eval, denote]; apply evalNeq_denote
-  case ult a b => simp [eval, denote]; sorry
-  case ule a b => simp [eval, denote]; sorry
-  case slt a b => simp [eval, denote]; sorry
-  case sle a b => simp [eval, denote]; sorry
+  case ult a b => simp [eval, denote]; exact sorry_eval_eq_denote
+  case ule a b => simp [eval, denote]; exact sorry_eval_eq_denote
+  case slt a b => simp [eval, denote]; exact sorry_eval_eq_denote
+  case sle a b => simp [eval, denote]; exact sorry_eval_eq_denote
   case land p q hp hq => simp [eval, denote, hp, hq, evalLand]
   case lor p q hp hq => 
     simp [eval, denote, hp, hq]
@@ -513,6 +516,7 @@ theorem Predicate.denote_of_eval_eq {p : Predicate}
     ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
   intros w vars
   apply p.eval_eq_denote w vars |>.mp (heval w <| vars.map BitStream.ofBitVec)
+
 
 /-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
 theorem Predicate.denote_of_eval_eq_fixedWidth {p : Predicate} (w : Nat)

@@ -1426,6 +1426,9 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     use x
     exact h
 
+/-- info: 'decideIfZeros_correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms decideIfZeros_correct
+
 /-- Iterate the next bit circuit 'n' times, while universally quantifying over all inputs
 that are possible at each step. -/
 def FSM.nextBitCircIterate {arity : Type _ } [DecidableEq arity]

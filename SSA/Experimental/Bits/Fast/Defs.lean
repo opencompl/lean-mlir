@@ -61,7 +61,7 @@ so eval requires us to give a value for each possible variable.
 -/
 def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   match t with
-  | var n       => vars[n]!
+  | var n       => vars.getD n default
   | zero        => BitStream.zero
   | one         => BitStream.one
   | negOne      => BitStream.negOne
