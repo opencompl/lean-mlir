@@ -262,6 +262,13 @@ macro "simp_alive_split": tactic =>
             BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
           all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
             BitVec.Refinement.none_left, Option, some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
+          any_goals split_ifs
+        )
+        repeat(
+          all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+            BitVec.Refinement.none_left, Option.some_bind, Option.bind_none, Option.none_bind, Option.some.injEq]
+          all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
+            BitVec.Refinement.none_left, Option, some_bind, Option.bind_none, Option.none_bind, Option.some.injEq] at *
           any_goals split
         )
         all_goals try simp -implicitDefEqProofs only [BitVec.Refinement.some_some, BitVec.Refinement.refl, Option.some_bind'',
