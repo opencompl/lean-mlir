@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gshlhunsignedhcmphconst_proof
 theorem scalar_i8_shl_ult_const_1_thm (e : IntW 8) :

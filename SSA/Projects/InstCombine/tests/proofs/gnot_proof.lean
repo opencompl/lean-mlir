@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gnot_proof
 theorem test1_thm (e : IntW 32) : LLVM.xor (LLVM.xor e (const? 32 (-1))) (const? 32 (-1)) ⊑ e := by

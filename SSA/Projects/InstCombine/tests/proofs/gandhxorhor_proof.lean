@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gandhxorhor_proof
 theorem and_xor_common_op_thm (e e_1 : IntW 32) :

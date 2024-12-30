@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gcanonicalizehconstanthlowhbithmaskhandhicmphugthtohicmphugt_proof
 theorem c0_thm (e : IntW 8) : icmp IntPredicate.ugt (LLVM.and e (const? 8 3)) e ⊑ const? 1 0 := by

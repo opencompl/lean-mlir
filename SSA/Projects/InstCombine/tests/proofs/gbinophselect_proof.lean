@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gbinophselect_proof
 theorem and_sel_op0_thm (e : IntW 1) : LLVM.and (select e (const? 32 25) (const? 32 0)) (const? 32 1) ⊑ zext 32 e := by

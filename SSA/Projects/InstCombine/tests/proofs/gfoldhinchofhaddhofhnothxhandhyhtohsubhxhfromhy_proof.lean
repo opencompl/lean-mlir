@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gfoldhinchofhaddhofhnothxhandhyhtohsubhxhfromhy_proof
 theorem t0_thm (e e_1 : IntW 32) : add (add (LLVM.xor e_1 (const? 32 (-1))) e) (const? 32 1) ⊑ sub e e_1 := by

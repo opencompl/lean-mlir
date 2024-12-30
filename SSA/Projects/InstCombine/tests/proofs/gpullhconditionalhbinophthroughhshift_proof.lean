@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gpullhconditionalhbinophthroughhshift_proof
 theorem and_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :

@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section g2008h06h21hCompareMiscomp_proof
 theorem test_thm (e : IntW 32) :

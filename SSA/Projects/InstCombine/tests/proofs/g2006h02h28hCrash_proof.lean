@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section g2006h02h28hCrash_proof
 theorem test_thm : zext 32 (icmp IntPredicate.eq (const? 32 1) (const? 32 2)) ⊑ const? 32 0 := by

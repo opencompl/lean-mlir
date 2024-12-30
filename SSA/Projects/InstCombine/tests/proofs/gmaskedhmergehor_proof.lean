@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gmaskedhmergehor_proof
 theorem p_thm (e e_1 e_2 : IntW 32) :

@@ -6,6 +6,7 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
 
 section gsignedhcomparison_proof
 theorem scalar_zext_slt_thm (e : IntW 16) :
