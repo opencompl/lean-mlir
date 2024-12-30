@@ -456,6 +456,25 @@ theorem Predicate.evalNeq_denote {w : Nat} (a b : Term) (vars : List (BitVec w))
 
 axiom sorry_eval_eq_denote {p : Prop} : p
 
+
+theorem Predicate.evalUlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+  evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+  Term.denote w a vars < Term.denote w b vars := by exact sorry_eval_eq_denote
+
+theorem Predicate.evalSlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+  evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w =
+  !Term.denote w a vars <ₛ Term.denote w b vars:= by exact sorry_eval_eq_denote
+
+theorem BitVec.ule_iff_ult_or_eq (x y : BitVec w) : x ≤ y ↔ (x = y ∨ x < y) := by 
+  constructor <;> bv_omega
+
+theorem BitVec.sle_iff_slt_or_eq (x y : BitVec w) : x.sle y ↔ (x = y ∨ x.slt y) := by 
+  constructor
+  · exact sorry_eval_eq_denote
+  · intros h
+    rcases h with rfl | h 
+    · simp [BitVec.sle]
+    · exact sorry_eval_eq_denote
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -471,10 +490,29 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case widthGe n => simp [eval, denote]
   case eq a b => simp [eval, denote]; apply evalEq_denote
   case neq a b => simp [eval, denote]; apply evalNeq_denote
-  case ult a b => simp [eval, denote]; exact sorry_eval_eq_denote
-  case ule a b => simp [eval, denote]; exact sorry_eval_eq_denote
-  case slt a b => simp [eval, denote]; exact sorry_eval_eq_denote
-  case sle a b => simp [eval, denote]; exact sorry_eval_eq_denote
+  case ult a b => simp [eval, denote]; apply evalUlt_denote
+  case slt a b => simp [eval, denote]; apply evalSlt_denote
+  case ule a b => 
+    simp [eval, denote]; 
+    simp only [evalLor, BitStream.and_eq]
+    rw [BitVec.ule_iff_ult_or_eq]
+    by_cases heq : Term.denote w a vars = Term.denote w b vars
+    · rw [heq]
+      simp [evalEq_denote a b vars |>.mpr heq]
+    · simp [heq]
+      by_cases hlt : Term.denote w a vars < Term.denote w b vars
+      · simp [hlt]
+        simp [evalUlt_denote a b vars |>.mpr hlt]
+      · simp [hlt]
+        have := evalEq_denote a b vars |>.not |>.mpr heq
+        simp only [this, true_and]
+        have := evalUlt_denote a b vars |>.not |>.mpr hlt
+        simp only [this]
+  case sle a b => 
+    simp [eval, denote]
+    simp only [evalLor, BitStream.and_eq]
+    exact sorry_eval_eq_denote
+    -- rw [BitVec.sle_iff_slt_or_eq]
   case land p q hp hq => simp [eval, denote, hp, hq, evalLand]
   case lor p q hp hq => 
     simp [eval, denote, hp, hq]
