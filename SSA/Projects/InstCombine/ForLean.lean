@@ -508,3 +508,11 @@ theorem bind_if_then_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
 theorem bind_if_else_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
     (if h then x else none) >>= f = if h then x >>= f else none := by
   split <;> simp
+
+theorem if_if_eq_if_and (x y : Prop) [Decidable x] [Decidable y]:
+   (if x then if y then a else b else b) = if x && y then a else b := by
+  split_ifs <;> simp_all
+
+theorem if_if_eq_if_or (x y : Prop) [Decidable x] [Decidable y]:
+   (if x then a else if y then a else b) = if x || y then a else b := by
+  split_ifs <;> simp_all
