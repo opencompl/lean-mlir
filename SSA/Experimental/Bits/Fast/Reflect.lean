@@ -196,21 +196,43 @@ theorem BitStream.toBitVec_not (a : BitStream) :
   intros i hi 
   simp [hi]
 
-@[simp]
-theorem BitStream.toBitVec_add (a b : BitStream) : 
-    (a + b).toBitVec w = (a.toBitVec w) + (b.toBitVec w) := by
+theorem BitVec.add_getLsbD_zero {x y : BitVec w} (hw : 0 < w) : (x + y).getLsbD 0 = 
+    ((x.getLsbD 0 ^^ y.getLsbD 0)) := by 
+  simp [hw, getLsbD_add hw]
+
+theorem BitVec.add_getLsbD_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y).getLsbD (i + 1) = 
+    (x.getLsbD (i + 1) ^^ (y.getLsbD (i + 1)) ^^ carry (i + 1) x y false) := by 
+  simp [hw, getLsbD_add hw]
+
+/-- TODO: simplify this proof, something too complex is going on here. -/
+@[simp] theorem BitStream.toBitVec_add' (a b : BitStream) (w i : Nat) (hi : i < w) :
+    ((a + b).toBitVec w).getLsbD i = ((a.toBitVec w) + (b.toBitVec w)).getLsbD i ∧ 
+    (a.addAux b i).2 = (BitVec.carry (i + 1) (a.toBitVec w) (b.toBitVec w) false) := by 
+  simp [hi]
+  rw [BitStream.add_eq_addAux]
+  induction i 
+  case zero => 
+    simp
+    rw [BitVec.add_getLsbD_zero hi]
+    simp [hi]
+    simp [BitVec.carry_succ, hi]
+  case succ i ih => 
+    simp
+    rw [BitVec.add_getLsbD_succ _ _ hi]
+    have : i < w := by omega
+    specialize ih this
+    obtain ⟨ih₁, ih₂⟩ := ih
+    rw [ih₂]
+    simp [hi]
+    rw [BitVec.carry_succ (i + 1)]
+    simp [hi]
+
+@[simp] theorem BitStream.toBitVec_add (a b : BitStream) :
+    (a + b).toBitVec w = (a.toBitVec w) + (b.toBitVec w) := by 
   apply BitVec.eq_of_getLsbD_eq
   intros i hi 
-  simp [hi]
-  -- rw [BitVec.getLsbD_add]
-  rw [BitStream.add_eq_addAux]
-  induction i generalizing a b
-  case pred.zero => 
-    rw [addAux, BitVec.getLsbD_add hi, BitVec.adcb, BitStream.getLsbD_toBitVec]
-    simp [hi]
-  case pred.succ i hi =>
-    rw [BitStream.addAux]
-    sorry
+  obtain ⟨h₁, h₂⟩ := BitStream.toBitVec_add' a b w i hi
+  exact h₁
 
 @[simp]
 theorem BitStream.toBitVec_sub (a b : BitStream) : 

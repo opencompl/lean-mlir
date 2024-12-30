@@ -452,29 +452,55 @@ def adcb (x y c : BitStream) (i : Nat) :  Bool × Bool :=
   Prod.swap (BitVec.adcb (x i) (y i) (c i))
 
 def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
-  let carry : Bool := match i with
+  let carryIn : Bool := match i with
     | 0 => false
     | i + 1 => (addAux x y i).2
-  Prod.swap (BitVec.adcb (x i) (y i) carry)
+  Prod.swap (BitVec.adcb (x i) (y i) carryIn)
 
-/-- The stream of carries -/
-def carry (x y : BitStream) : BitStream :=
-  fun n => (addAux x y n).2
+@[simp] theorem addAux_zero (x y : BitStream) : (x.addAux y 0) = ((x 0) ^^ (y 0), (x 0) && (y 0)) := by
+  simp [addAux, addAux,BitVec.adcb]
 
-@[simp] theorem carry_zero (x y : BitStream) : (x.carry y 0) = ((x 0) && (y 0)) := by
-  simp [carry, addAux,BitVec.adcb]
-
-@[simp] theorem carry_succ (x y : BitStream) : (x.carry y (i+1)) = 
-    let carry := carry x y i
+@[simp] theorem addAux_succ (x y : BitStream) : (x.addAux y (i+1)) = 
+    let addAux := (addAux x y i)
     let a := x (i + 1)
     let b := y (i + 1)
-    Bool.atLeastTwo a  b carry := by
-  simp [carry, addAux, BitVec.adcb, Bool.atLeastTwo]
-
+    let carryOut := addAux.2
+    (a ^^ b ^^ carryOut, Bool.atLeastTwo a  b carryOut) := by
+  simp [addAux, BitVec.adcb, Bool.atLeastTwo]
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
 
+
+/-!
+Use `add_eq_addAux` to reason about `add`'s behaviour.
+-/
+
+
+-- /-- The stream of carries -/
+-- def carryOut (x y : BitStream) : BitStream :=
+--   fun n => (addAux x y n).2
+-- 
+-- @[simp] theorem carryOutOut_zero (x y : BitStream) : (x.carryOut y 0) = ((x 0) && (y 0)) := by
+--   simp [carryOut, addAux,BitVec.adcb]
+-- 
+-- @[simp] theorem carryOut_succ (x y : BitStream) : (x.carryOut y (i+1)) = 
+--     let carryOut := carryOut x y i
+--     let a := x (i + 1)
+--     let b := y (i + 1)
+--     Bool.atLeastTwo a  b carryOut := by
+--   simp [carryOut, addAux, BitVec.adcb, Bool.atLeastTwo]
+-- 
+-- @[simp] theorem add_zero (x y : BitStream) : (x.add y 0) = ((x 0) ^^ (y 0)) := by
+--   simp [add, addAux, BitVec.adcb]
+-- 
+-- @[simp] theorem add_succ (x y : BitStream) : (x.add y (i+1)) = 
+--     let carryIn := carryOut x y i
+--     let a := x (i + 1)
+--     let b := y (i + 1)
+--     a ^^ b ^^ carryIn := by
+--   simp [addAux, add, BitVec.adcb, carryOut]
+-- 
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
@@ -529,9 +555,6 @@ def decrAux (x : BitStream) : Nat → Bool × Bool
 
 def decr (x : BitStream) : BitStream :=
   fun n => (decrAux x n).1
-
-def carry (x y : BitStream) : BitStream :=
-  fun n => (addAux x y n).1
 
 instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
@@ -647,11 +670,20 @@ theorem sub_eq_add_neg : a - b = a + (-b) := by
 theorem ofBitVec_getLsbD (n : Nat) (h : n < w) : ofBitVec x n = x.getLsbD n := by
   simp [ofBitVec, h]
 
+-- theorem add_lemma (n : Nat) (hn : n < w) : 
+--   ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+--     induction' n with n ih
+--     · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
+--         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
+--     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsbD_add]
+--   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
+
+
 theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
   intros n a
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih
-    · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
+    · simp? [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsbD_add]
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
