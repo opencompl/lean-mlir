@@ -1599,6 +1599,17 @@ def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
 def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by 
   bv_automata_circuit
 
+/--
+info: 'Reflect.width_1_char_2_add_four' depends on axioms: [axEvalFinEqEval,
+ propext,
+ sorry_eval_eq_denote,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms width_1_char_2_add_four
+
 
 set_option trace.profiler true  in
 /-- warning: declaration uses 'sorry' -/
