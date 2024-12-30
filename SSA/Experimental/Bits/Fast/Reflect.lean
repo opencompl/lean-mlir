@@ -202,7 +202,15 @@ theorem BitStream.toBitVec_add (a b : BitStream) :
   apply BitVec.eq_of_getLsbD_eq
   intros i hi 
   simp [hi]
-  sorry
+  -- rw [BitVec.getLsbD_add]
+  rw [BitStream.add_eq_addAux]
+  induction i generalizing a b
+  case pred.zero => 
+    rw [addAux, BitVec.getLsbD_add hi, BitVec.adcb, BitStream.getLsbD_toBitVec]
+    simp [hi]
+  case pred.succ i hi =>
+    rw [BitStream.addAux]
+    sorry
 
 @[simp]
 theorem BitStream.toBitVec_sub (a b : BitStream) : 

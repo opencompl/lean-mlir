@@ -448,11 +448,29 @@ end Scan
 /-! # Addition, Subtraction, Negation -/
 section Arith
 
+def adcb (x y c : BitStream) (i : Nat) :  Bool × Bool :=
+  Prod.swap (BitVec.adcb (x i) (y i) (c i))
+
 def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
   let carry : Bool := match i with
     | 0 => false
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carry)
+
+/-- The stream of carries -/
+def carry (x y : BitStream) : BitStream :=
+  fun n => (addAux x y n).2
+
+@[simp] theorem carry_zero (x y : BitStream) : (x.carry y 0) = ((x 0) && (y 0)) := by
+  simp [carry, addAux,BitVec.adcb]
+
+@[simp] theorem carry_succ (x y : BitStream) : (x.carry y (i+1)) = 
+    let carry := carry x y i
+    let a := x (i + 1)
+    let b := y (i + 1)
+    Bool.atLeastTwo a  b carry := by
+  simp [carry, addAux, BitVec.adcb, Bool.atLeastTwo]
+
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
@@ -522,6 +540,10 @@ instance : Sub BitStream := ⟨sub⟩
 theorem add_eq (a b : BitStream) : a.add b = a + b := rfl
 theorem sub_eq (a b : BitStream) : a.sub b = a - b := rfl
 theorem neg_eq (a : BitStream) : a.neg  = - a := rfl
+
+theorem add_eq_addAux (x y : BitStream) : (x + y) i = (addAux x y i).1 := rfl
+theorem sub_eq_subAux (x y : BitStream) : (x - y) i = (subAux x y i).1 := rfl
+theorem neg_eq_negAux (x : BitStream) : (- x) i = (negAux x i).1 := rfl
 
 /-- `repeatBit xs` will repeat the first bit of `xs` which is `true`.
 That is, it will be all-zeros iff `xs` is all-zeroes,
