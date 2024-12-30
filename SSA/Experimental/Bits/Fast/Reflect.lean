@@ -379,6 +379,58 @@ theorem Predicate.evalEq_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) 
     · simp
       rw [Term.eval_eq_denote_apply a (by omega), Term.eval_eq_denote_apply b (by omega), h]
 
+/-- evalEq is true iff evalNeq is false -/
+theorem Predicate.evalEq_iff_not_evalNeq (a b : BitStream) : 
+    ∀ (w : Nat), evalEq a b w ↔ ¬ (evalNeq a b w) := by
+  intros w
+  rcases w with rfl | w 
+  · simp [evalEq, evalNeq]
+  · simp [evalEq, evalNeq]
+    by_cases hab : a w = b w
+    · simp [hab]
+      by_cases heq : (BitStream.concat false (a ^^^ b)).scanOr w
+      · simp [heq]
+        rw [BitStream.scanAnd_false_iff]
+        rw [BitStream.scanOr_true_iff] at heq
+        obtain ⟨i, hi, hi'⟩ := heq
+        exists i
+        simp [hi]
+        rcases i with rfl | i 
+        · simp at hi'
+        · simpa using hi'
+      · simp [heq]
+        rw [BitStream.scanAnd_true_iff]
+        simp at heq
+        intros i hi
+        rw [BitStream.scanOr_false_iff] at heq
+        specialize (heq i hi)
+        rcases i with rfl | i
+        · simp
+        · simpa using heq
+    · simp [hab]
+    
+
+/-- 'evalNeq' correctly witnesses when terms are disequal -/
+theorem Predicate.evalNeq_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalNeq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    Term.denote w a vars ≠ Term.denote w b vars := by 
+  constructor
+  · intros h
+    apply Predicate.evalEq_denote .. |>.not.mp
+    simp only [Bool.not_eq_false]
+    have := Predicate.evalEq_iff_not_evalNeq 
+      (a.eval (List.map BitStream.ofBitVec vars))
+      (b.eval (List.map BitStream.ofBitVec vars))
+    apply this .. |>.mpr
+    simp [h]
+  · intros h
+    have this' := Predicate.evalEq_denote .. |>.not.mpr h
+    simp at this'
+    have := Predicate.evalEq_iff_not_evalNeq 
+      (a.eval (List.map BitStream.ofBitVec vars))
+      (b.eval (List.map BitStream.ofBitVec vars)) w |>.mp this'
+    simpa using this
+
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -392,10 +444,8 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case widthLe n => simp [eval, denote]
   case widthGt n => simp [eval, denote]
   case widthGe n => simp [eval, denote]
-  case eq a b => 
-    simp [eval, denote]
-    apply evalEq_denote
-  case neq a b => simp [eval, denote]; sorry
+  case eq a b => simp [eval, denote]; apply evalEq_denote
+  case neq a b => simp [eval, denote]; apply evalNeq_denote
   case ult a b => simp [eval, denote]; sorry
   case ule a b => simp [eval, denote]; sorry
   case slt a b => simp [eval, denote]; sorry
