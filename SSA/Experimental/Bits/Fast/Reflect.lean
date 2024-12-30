@@ -296,7 +296,23 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
   case or a b ha hb => simp [eval, denote, ha, hb]
   case xor a b ha hb => simp [eval, denote, ha, hb]
   case not a ha => simp [eval, denote, ha]
-  case ls b a ha  => simp [eval, denote]; sorry
+  case ls b a ha  => 
+    simp [eval, denote]
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    specialize ha w vars
+    rcases w with rfl | w 
+    · simp
+    · simp
+      rw [BitVec.getLsbD_shiftConcat]
+      rw [BitVec.getLsbD_concat]
+      simp [hi]
+      rcases i with rfl | i 
+      · simp
+      · simp only [AddLeftCancelMonoid.add_eq_zero, one_ne_zero, and_false, ↓reduceIte,
+        add_tsub_cancel_right, show i < w by omega, decide_true, Bool.true_and]
+        rw [← ha]
+        simp; omega
   case add a b ha hb => simp [eval, denote, ha, hb]
   case sub a b ha hb => simp [eval, denote, ha, hb]
   case neg a ha => simp [eval, denote, ha]
