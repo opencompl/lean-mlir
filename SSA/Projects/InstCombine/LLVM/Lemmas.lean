@@ -36,12 +36,6 @@ theorem LLVM.select?_some_false : LLVM.select (w := w) (.some false) a b = b := 
 theorem LLVM.select?_eq_some {w : Nat} {c : BitVec 1} {x y : Option (BitVec w)} :
     LLVM.select (.some c) x y =  if c = 1 then x else y := by
   simp [LLVM.select]
-  obtain ⟨c, hc⟩ := c
-  simp at hc
-  have hc' : c = 0 ∨ c = 1 := by
-    rcases c with rfl | rfl | hcontra <;> simp at hc ⊢
-    contradiction
-  rcases hc' with rfl | rfl <;> simp
 
 @[simp]
 theorem LLVM.sdiv?_denom_zero {w : Nat} {a b : BitVec w} (hb : b = 0) : LLVM.sdiv? a b = none :=
