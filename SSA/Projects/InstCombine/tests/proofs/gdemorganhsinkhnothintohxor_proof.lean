@@ -10,7 +10,7 @@ set_option linter.unreachableTactic false
 section gdemorganhsinkhnothintohxor_proof
 theorem positive_easyinvert_thm (e : IntW 16) (e_1 : IntW 8) :
   LLVM.xor (LLVM.xor (icmp IntPredicate.slt e_1 (const? 8 0)) (icmp IntPredicate.slt e (const? 16 0))) (const? 1 1) ⊑
-    LLVM.xor (icmp IntPredicate.slt e_1 (const? 8 0)) (icmp IntPredicate.sgt e (const? 16 (-1))) := by 
+    LLVM.xor (icmp IntPredicate.slt e_1 (const? 8 0)) (icmp IntPredicate.sgt e (const? 16 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

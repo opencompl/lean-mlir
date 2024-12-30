@@ -9,7 +9,7 @@ set_option linter.unreachableTactic false
 
 section g2006h04h28hShiftShiftLongLong_proof
 theorem test_thm (e : IntW 64) :
-  ashr (shl e (const? 64 16)) (const? 64 16) ⊑ ashr (shl e (const? 64 16)) (const? 64 16) { «exact» := true } := by 
+  ashr (shl e (const? 64 16)) (const? 64 16) ⊑ ashr (shl e (const? 64 16)) (const? 64 16) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

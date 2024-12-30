@@ -9,7 +9,7 @@ set_option linter.unreachableTactic false
 
 section g2012h08h28hudiv_ashl_proof
 theorem udiv400_thm (e : IntW 32) :
-  LLVM.udiv (lshr e (const? 32 2)) (const? 32 100) ⊑ LLVM.udiv e (const? 32 400) := by 
+  LLVM.udiv (lshr e (const? 32 2)) (const? 32 100) ⊑ LLVM.udiv e (const? 32 400) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -19,7 +19,7 @@ theorem udiv400_thm (e : IntW 32) :
 
 
 theorem sdiv400_yes_thm (e : IntW 32) :
-  LLVM.sdiv (lshr e (const? 32 2)) (const? 32 100) ⊑ LLVM.udiv e (const? 32 400) := by 
+  LLVM.sdiv (lshr e (const? 32 2)) (const? 32 100) ⊑ LLVM.udiv e (const? 32 400) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -29,7 +29,7 @@ theorem sdiv400_yes_thm (e : IntW 32) :
 
 
 theorem udiv_i80_thm (e : IntW 80) :
-  LLVM.udiv (lshr e (const? 80 2)) (const? 80 100) ⊑ LLVM.udiv e (const? 80 400) := by 
+  LLVM.udiv (lshr e (const? 80 2)) (const? 80 100) ⊑ LLVM.udiv e (const? 80 400) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

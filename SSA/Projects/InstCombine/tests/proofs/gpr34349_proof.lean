@@ -23,7 +23,7 @@ theorem fast_div_201_thm (e : IntW 8) :
         (trunc 8 (lshr (mul (zext 16 e) (const? 16 71) { «nsw» := true, «nuw» := true }) (const? 16 8))
           { «nsw» := true, «nuw» := true })
         { «nsw» := false, «nuw» := true })
-      (const? 8 7) := by 
+      (const? 8 7) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

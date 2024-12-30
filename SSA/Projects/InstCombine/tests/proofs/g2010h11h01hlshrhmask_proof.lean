@@ -18,7 +18,7 @@ theorem main_thm (e : IntW 32) :
           (const? 8 7))
         (const? 8 64)) ⊑
     zext 32 (LLVM.and (shl (LLVM.xor (trunc 8 e) (const? 8 (-1))) (const? 8 5)) (const? 8 64))
-      { «nneg» := true } := by 
+      { «nneg» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -38,7 +38,7 @@ theorem foo_thm (e e_1 : IntW 8) :
         (LLVM.or (LLVM.and e (const? 8 33))
           (LLVM.and (sub (const? 8 40) (LLVM.and e (const? 8 84)) { «nsw» := true, «nuw» := false }) (const? 8 84))
           { «disjoint» := true })
-        (LLVM.xor (shl e_1 (const? 8 7)) (LLVM.and e (const? 8 (-118)))) { «disjoint» := true }) := by 
+        (LLVM.xor (shl e_1 (const? 8 7)) (LLVM.and e (const? 8 (-118)))) { «disjoint» := true }) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

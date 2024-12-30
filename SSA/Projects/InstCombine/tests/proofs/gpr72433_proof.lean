@@ -16,7 +16,7 @@ theorem widget_thm (e : IntW 32) :
     shl
       (LLVM.or (shl (const? 32 20) (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «nsw» := true, «nuw» := true })
         (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «disjoint» := true })
-      (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «nsw» := true, «nuw» := true } := by 
+      (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «nsw» := true, «nuw» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

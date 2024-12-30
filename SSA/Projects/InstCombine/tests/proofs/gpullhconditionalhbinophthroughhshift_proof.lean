@@ -10,7 +10,7 @@ set_option linter.unreachableTactic false
 section gpullhconditionalhbinophthroughhshift_proof
 theorem and_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (LLVM.and e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.and (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (LLVM.and (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +21,7 @@ theorem and_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem and_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (LLVM.and e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.and (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (LLVM.and (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -32,7 +32,7 @@ theorem and_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem or_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (LLVM.or e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.or (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (LLVM.or (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -43,7 +43,7 @@ theorem or_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem or_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (LLVM.or e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.or (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (LLVM.or (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -54,7 +54,7 @@ theorem or_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem xor_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (LLVM.xor e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.xor (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (LLVM.xor (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -65,7 +65,7 @@ theorem xor_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem xor_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (LLVM.xor e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.xor (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (LLVM.xor (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -76,7 +76,7 @@ theorem xor_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem add_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (add e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (add (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (add (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -87,7 +87,7 @@ theorem add_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem add_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
   shl (select e_1 (add e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (add (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by 
+    select e_1 (add (shl e (const? 32 8)) (const? 32 (-16777216))) (shl e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -98,7 +98,7 @@ theorem add_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem and_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
   lshr (select e_1 (LLVM.and e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.and (lshr e (const? 32 8)) (const? 32 16776960)) (lshr e (const? 32 8)) := by 
+    select e_1 (LLVM.and (lshr e (const? 32 8)) (const? 32 16776960)) (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -109,7 +109,7 @@ theorem and_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem and_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
   lshr (select e_1 (LLVM.and e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.and (lshr e (const? 32 8)) (const? 32 8388352)) (lshr e (const? 32 8)) := by 
+    select e_1 (LLVM.and (lshr e (const? 32 8)) (const? 32 8388352)) (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -120,7 +120,7 @@ theorem and_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem or_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
   lshr (select e_1 (LLVM.or e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.or (lshr e (const? 32 8)) (const? 32 16776960)) (lshr e (const? 32 8)) := by 
+    select e_1 (LLVM.or (lshr e (const? 32 8)) (const? 32 16776960)) (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -131,7 +131,7 @@ theorem or_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem or_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
   lshr (select e_1 (LLVM.or e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.or (lshr e (const? 32 8)) (const? 32 8388352)) (lshr e (const? 32 8)) := by 
+    select e_1 (LLVM.or (lshr e (const? 32 8)) (const? 32 8388352)) (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -142,7 +142,7 @@ theorem or_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem xor_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
   lshr (select e_1 (LLVM.xor e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.xor (lshr e (const? 32 8)) (const? 32 16776960)) (lshr e (const? 32 8)) := by 
+    select e_1 (LLVM.xor (lshr e (const? 32 8)) (const? 32 16776960)) (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -153,7 +153,7 @@ theorem xor_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem xor_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
   lshr (select e_1 (LLVM.xor e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.xor (lshr e (const? 32 8)) (const? 32 8388352)) (lshr e (const? 32 8)) := by 
+    select e_1 (LLVM.xor (lshr e (const? 32 8)) (const? 32 8388352)) (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -164,7 +164,7 @@ theorem xor_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem and_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
   ashr (select e_1 (LLVM.and e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.and (ashr e (const? 32 8)) (const? 32 (-256))) (ashr e (const? 32 8)) := by 
+    select e_1 (LLVM.and (ashr e (const? 32 8)) (const? 32 (-256))) (ashr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -175,7 +175,7 @@ theorem and_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem and_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
   ashr (select e_1 (LLVM.and e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.and (ashr e (const? 32 8)) (const? 32 8388352)) (ashr e (const? 32 8)) := by 
+    select e_1 (LLVM.and (ashr e (const? 32 8)) (const? 32 8388352)) (ashr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -186,7 +186,7 @@ theorem and_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem or_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
   ashr (select e_1 (LLVM.or e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.or (ashr e (const? 32 8)) (const? 32 (-256))) (ashr e (const? 32 8)) := by 
+    select e_1 (LLVM.or (ashr e (const? 32 8)) (const? 32 (-256))) (ashr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -197,7 +197,7 @@ theorem or_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem or_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
   ashr (select e_1 (LLVM.or e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.or (ashr e (const? 32 8)) (const? 32 8388352)) (ashr e (const? 32 8)) := by 
+    select e_1 (LLVM.or (ashr e (const? 32 8)) (const? 32 8388352)) (ashr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -208,7 +208,7 @@ theorem or_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem xor_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
   ashr (select e_1 (LLVM.xor e (const? 32 (-65536))) e) (const? 32 8) ⊑
-    select e_1 (LLVM.xor (ashr e (const? 32 8)) (const? 32 (-256))) (ashr e (const? 32 8)) := by 
+    select e_1 (LLVM.xor (ashr e (const? 32 8)) (const? 32 (-256))) (ashr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -219,7 +219,7 @@ theorem xor_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
 
 theorem xor_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
   ashr (select e_1 (LLVM.xor e (const? 32 2147418112)) e) (const? 32 8) ⊑
-    select e_1 (LLVM.xor (ashr e (const? 32 8)) (const? 32 8388352)) (ashr e (const? 32 8)) := by 
+    select e_1 (LLVM.xor (ashr e (const? 32 8)) (const? 32 8388352)) (ashr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

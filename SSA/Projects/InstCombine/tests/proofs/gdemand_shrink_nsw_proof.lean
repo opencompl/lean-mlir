@@ -33,7 +33,7 @@ theorem foo_thm (e : IntW 32) :
             (const? 32 290))
           { «nsw» := true, «nuw» := true })
         (const? 32 1533579450) { «nsw» := false, «nuw» := true })
-      (const? 32 749011377) := by 
+      (const? 32 749011377) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

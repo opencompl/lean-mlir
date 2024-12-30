@@ -10,7 +10,7 @@ set_option linter.unreachableTactic false
 section gunsignedhaddhlackhofhoverflowhcheckhviahxor_proof
 theorem t3_no_extrause_thm (e e_1 : IntW 8) :
   icmp IntPredicate.uge (LLVM.xor e_1 (const? 8 (-1))) e ⊑
-    icmp IntPredicate.ule e (LLVM.xor e_1 (const? 8 (-1))) := by 
+    icmp IntPredicate.ule e (LLVM.xor e_1 (const? 8 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
