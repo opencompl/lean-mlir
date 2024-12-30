@@ -38,10 +38,10 @@ inductive Term : Type
 | sub : Term → Term → Term
 /-- Negation -/
 | neg : Term → Term
-/-- Increment (i.e., add one) -/
-| incr : Term → Term
-/-- Decrement (i.e., subtract one) -/
-| decr : Term → Term
+-- /-- Increment (i.e., add one) -/
+-- | incr : Term → Term
+-- /-- Decrement (i.e., subtract one) -/
+-- | decr : Term → Term
 /-- shift left by `k` bits. -/
 | shiftL : Term → Nat → Term 
 -- /-- logical shift right by `k` bits. -/
@@ -74,8 +74,8 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | add t₁ t₂   => (Term.eval t₁ vars) + (Term.eval t₂ vars)
   | sub t₁ t₂   => (Term.eval t₁ vars) - (Term.eval t₂ vars)
   | neg t       => -(Term.eval t vars)
-  | incr t      => BitStream.incr (Term.eval t vars)
-  | decr t      => BitStream.decr (Term.eval t vars)
+--   | incr t      => BitStream.incr (Term.eval t vars)
+--   | decr t      => BitStream.decr (Term.eval t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.eval t vars) n
  -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
 
@@ -104,8 +104,8 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | add t₁ t₂ => max (arity t₁) (arity t₂)
 | sub t₁ t₂ => max (arity t₁) (arity t₂)
 | neg t => arity t
-| incr t => arity t
-| decr t => arity t
+-- | incr t => arity t
+-- | decr t => arity t
 | shiftL t .. => arity t
 -- | repeatBit t => arity t
 
@@ -146,8 +146,8 @@ and only require that many bitstream values to be given in `vars`.
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ - x₂
   | neg t       => -(Term.evalFin t vars)
-  | incr t      => BitStream.incr (Term.evalFin t vars)
-  | decr t      => BitStream.decr (Term.evalFin t vars)
+ --  | incr t      => BitStream.incr (Term.evalFin t vars)
+ --  | decr t      => BitStream.decr (Term.evalFin t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
 

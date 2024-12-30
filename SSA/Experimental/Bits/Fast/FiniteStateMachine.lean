@@ -1139,21 +1139,21 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.neg q,
       good := by ext; simp }
-  | incr t =>
-    let q := termEvalEqFSM t
-    { toFSM := by dsimp [arity]; exact composeUnary FSM.incr q,
-      good := by ext; simp }
-  | decr t =>
-    let q := termEvalEqFSM t
-    { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
-      good := by ext; simp }
+--   | incr t =>
+--     let q := termEvalEqFSM t
+--     { toFSM := by dsimp [arity]; exact composeUnary FSM.incr q,
+--       good := by ext; simp }
+--   | decr t =>
+--     let q := termEvalEqFSM t
+--     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
+--       good := by ext; simp }
   | shiftL t k =>
      let q := termEvalEqFSM t
      {
        toFSM := by dsimp [arity]; exact composeUnary (FSM.shiftLeft k) q,
        good := by 
          ext x i
-         simp only [evalFin, BitStream.eval_shiftLeft, Bool.if_false_left, arity.eq_16, id_eq,
+         simp only [evalFin, BitStream.eval_shiftLeft, Bool.if_false_left, arity.eq_14, id_eq,
            composeUnary_eval, FSM.eval_shiftLeft]
          by_cases hi : i < k
          · simp [hi]

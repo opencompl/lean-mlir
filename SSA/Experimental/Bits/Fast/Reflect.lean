@@ -110,8 +110,8 @@ def Term.quote (t : _root_.Term) : Expr :=
   | zero => mkConst ``Term.zero
   | one => mkConst ``Term.one
   | negOne => mkConst ``Term.negOne
-  | decr t => mkApp (mkConst ``Term.decr) (t.quote)
-  | incr t => mkApp (mkConst ``Term.incr) (t.quote)
+-- | decr t => mkApp (mkConst ``Term.decr) (t.quote)
+  -- | incr t => mkApp (mkConst ``Term.incr) (t.quote)
   | neg t => mkApp (mkConst ``Term.neg) (t.quote)
   | not t => mkApp (mkConst ``Term.not) (t.quote)
   | ls b t => mkApp2 (mkConst ``Term.ls) (mkBoolLit b) (t.quote)
@@ -155,8 +155,8 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | add a b => (a.denote w vars) + (b.denote w vars)
   | sub a b => (a.denote w vars) - (b.denote w vars)
   | neg a => - (a.denote w vars)
-  | incr a => (a.denote w vars) + 1#w
-  | decr a => (a.denote w vars) - 1#w
+  -- | incr a => (a.denote w vars) + 1#w
+  -- | decr a => (a.denote w vars) - 1#w
   | ls bit a => (a.denote w vars).shiftConcat bit
   | shiftL a n => (a.denote w vars) <<< n
 
@@ -235,36 +235,14 @@ theorem BitVec.add_getLsbD_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y).getL
   exact h₁
 
 @[simp]
-theorem BitStream.toBitVec_sub (a b : BitStream) : 
-    (a - b).toBitVec w = (a.toBitVec w) - (b.toBitVec w) := by
-  apply BitVec.eq_of_getLsbD_eq
-  intros i hi 
-  simp [hi]
-  sorry
-
-@[simp]
 theorem BitStream.toBitVec_neg (a : BitStream) : 
     (- a).toBitVec w = - (a.toBitVec w) := by
-  apply BitVec.eq_of_getLsbD_eq
-  intros i hi 
-  simp [hi]
-  sorry
+  simp [neg_eq_not_add_one, BitStream.toBitVec_add, BitVec.neg_eq_not_add]
 
 @[simp]
-theorem BitStream.toBitVec_incr (a : BitStream) : 
-    (a.incr).toBitVec w = (a.toBitVec w) + 1#w := by
-  apply BitVec.eq_of_getLsbD_eq
-  intros i hi 
-  simp [hi]
-  sorry
-
-@[simp]
-theorem BitStream.toBitVec_decr (a : BitStream) : 
-    (a.decr).toBitVec w = (a.toBitVec w) - 1#w := by
-  apply BitVec.eq_of_getLsbD_eq
-  intros i hi 
-  simp [hi]
-  sorry
+theorem BitStream.toBitVec_sub (a b : BitStream) : 
+    (a - b).toBitVec w = (a.toBitVec w) - (b.toBitVec w) := by
+  simp [BitVec.sub_eq_add_neg, sub_eq_add_neg]
 
 @[simp]
 theorem BitStream.toBitVec_shiftL (a : BitStream) (k : Nat) : 
@@ -322,8 +300,6 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
   case add a b ha hb => simp [eval, denote, ha, hb]
   case sub a b ha hb => simp [eval, denote, ha, hb]
   case neg a ha => simp [eval, denote, ha]
-  case incr a ha => simp [eval, denote, ha]
-  case decr a ha => simp [eval, denote, ha]
   case shiftL a ha => simp [eval, denote, ha]
 
 /-
