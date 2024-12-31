@@ -280,6 +280,7 @@ macro "simp_alive_split": tactic =>
 macro "simp_alive_benchmark": tactic =>
   `(tactic|
       (
+        all_goals (try (simp (config := {singlePass := true}) only [BitVec.MulEqMulShortcircuitLeft, BitVec.MulEqMulShortcircuitRight]))
         all_goals bv_compare'
       )
    )
