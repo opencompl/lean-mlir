@@ -7,6 +7,7 @@ open LLVM
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gapinthcasthcasthtohand_proof
 theorem test1_thm (e : IntW 61) : zext 61 (trunc 41 e) ⊑ LLVM.and e (const? 61 2199023255551) := by
