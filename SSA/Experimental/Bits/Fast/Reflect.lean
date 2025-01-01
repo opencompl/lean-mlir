@@ -470,8 +470,8 @@ theorem Predicate.evalUlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w))
 
 /-- TODO: ForLean -/
 private theorem Predicate.evalSlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
-  evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w =
-  !Term.denote w a vars <ₛ Term.denote w b vars:= by exact sorry_eval_eq_denote
+  evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+  (Term.denote w a vars <ₛ Term.denote w b vars) := by exact sorry_eval_eq_denote
 
 /-- TODO: ForLean -/
 private theorem BitVec.ForLean.ule_iff_ult_or_eq (x y : BitVec w) : x ≤ y ↔ (x = y ∨ x < y) := by
@@ -500,7 +500,18 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case eq a b => simp [eval, denote]; apply evalEq_denote
   case neq a b => simp [eval, denote]; apply evalNeq_denote
   case ult a b => simp [eval, denote]; apply evalUlt_denote
-  case slt a b => simp [eval, denote]; apply evalSlt_denote
+  case slt a b =>
+    simp [eval, denote];
+    by_cases h : Term.denote w a vars <ₛ Term.denote w b vars
+    · rw [h]
+      simp [Predicate.evalSlt_denote, h]
+    · simp at h
+      rw [h]
+      simp only [Bool.not_false]
+      by_contra h'
+      simp only [Bool.not_eq_true] at h'
+      rw [Predicate.evalSlt_denote] at h'
+      simp only [h, Bool.false_eq_true] at h'
   case ule a b =>
     simp [eval, denote];
     simp only [evalLor, BitStream.and_eq]
