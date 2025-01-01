@@ -436,6 +436,7 @@ theorem shift_no_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    <;> congr 1
     simp_alive_benchmark
     all_goals sorry
 
@@ -448,6 +449,7 @@ theorem shift_no_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    <;> congr 1
     simp_alive_benchmark
     all_goals sorry
 
@@ -460,6 +462,7 @@ theorem no_shift_no_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    <;> congr 1
     simp_alive_benchmark
     all_goals sorry
 
@@ -472,6 +475,7 @@ theorem no_shift_no_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    <;> congr 1
     simp_alive_benchmark
     all_goals sorry
 
@@ -484,6 +488,7 @@ theorem no_shift_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    <;> congr 1
     simp_alive_benchmark
     all_goals sorry
 
@@ -496,6 +501,7 @@ theorem no_shift_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    <;> congr 1
     simp_alive_benchmark
     all_goals sorry
 
@@ -561,7 +567,14 @@ theorem shift_no_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -574,7 +587,14 @@ theorem shift_no_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · simp_alive_benchmark
+    · simp at *
+      congr 1
+      simp_alive_benchmark
+    · simp_alive_benchmark
+    · simp at *
+      congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -587,7 +607,14 @@ theorem no_shift_no_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -600,6 +627,14 @@ theorem no_shift_no_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     simp_alive_benchmark
     all_goals sorry
 
@@ -613,7 +648,14 @@ theorem no_shift_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -626,7 +668,14 @@ theorem no_shift_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -643,7 +692,14 @@ theorem no_shift_xor_multiuse_cmp_with_and_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -656,7 +712,14 @@ theorem shift_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
+    · congr 1
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -705,7 +768,14 @@ theorem no_shift_no_xor_multiuse_cmp_or_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -724,7 +794,14 @@ theorem no_shift_no_xor_multiuse_cmp_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -743,6 +820,14 @@ theorem no_shift_xor_multiuse_cmp_or_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     simp_alive_benchmark
     all_goals sorry
 
@@ -764,7 +849,14 @@ theorem no_shift_xor_multiuse_cmp_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -785,7 +877,14 @@ theorem no_shift_xor_multiuse_cmp_and_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     all_goals sorry
 
 
@@ -804,6 +903,14 @@ theorem shift_xor_multiuse_cmp_or_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     simp_alive_benchmark
     all_goals sorry
 
@@ -825,6 +932,14 @@ theorem shift_xor_multiuse_cmp_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
+    · congr 2
+      simp_alive_benchmark
     simp_alive_benchmark
     all_goals sorry
 
@@ -893,5 +1008,3 @@ theorem select_icmp_eq_and_1_0_lshr_tv_thm (e e_1 : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
