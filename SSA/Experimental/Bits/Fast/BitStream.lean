@@ -194,17 +194,17 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
   | 0   => 0#0
   | w+1 => (x.toBitVec w).cons (x w)
 
-@[simp] theorem getLsbD_toBitVec (w : Nat) (x : BitStream) : 
-    (x.toBitVec w).getLsbD i = ((decide (i < w)) && x i) := by 
-  induction w generalizing x 
+@[simp] theorem getLsbD_toBitVec (w : Nat) (x : BitStream) :
+    (x.toBitVec w).getLsbD i = ((decide (i < w)) && x i) := by
+  induction w generalizing x
   case zero => simp [toBitVec]
-  case succ w ih => 
+  case succ w ih =>
     simp [toBitVec]
     rw [BitVec.getLsbD_cons]
     by_cases hi : i = w
     · simp [hi]
     · simp [hi]
-      by_cases hw : i < w + 1 
+      by_cases hw : i < w + 1
       · simp [hw]
         rw [ih]
         simp; omega
@@ -468,7 +468,7 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
 @[simp] theorem addAux_zero (x y : BitStream) : (x.addAux y 0) = ((x 0) ^^ (y 0), (x 0) && (y 0)) := by
   simp [addAux, addAux,BitVec.adcb]
 
-@[simp] theorem addAux_succ (x y : BitStream) : (x.addAux y (i+1)) = 
+@[simp] theorem addAux_succ (x y : BitStream) : (x.addAux y (i+1)) =
     let addAux := (addAux x y i)
     let a := x (i + 1)
     let b := y (i + 1)
@@ -488,27 +488,27 @@ Use `add_eq_addAux` to reason about `add`'s behaviour.
 -- /-- The stream of carries -/
 -- def carryOut (x y : BitStream) : BitStream :=
 --   fun n => (addAux x y n).2
--- 
+--
 -- @[simp] theorem carryOutOut_zero (x y : BitStream) : (x.carryOut y 0) = ((x 0) && (y 0)) := by
 --   simp [carryOut, addAux,BitVec.adcb]
--- 
--- @[simp] theorem carryOut_succ (x y : BitStream) : (x.carryOut y (i+1)) = 
+--
+-- @[simp] theorem carryOut_succ (x y : BitStream) : (x.carryOut y (i+1)) =
 --     let carryOut := carryOut x y i
 --     let a := x (i + 1)
 --     let b := y (i + 1)
 --     Bool.atLeastTwo a  b carryOut := by
 --   simp [carryOut, addAux, BitVec.adcb, Bool.atLeastTwo]
--- 
+--
 -- @[simp] theorem add_zero (x y : BitStream) : (x.add y 0) = ((x 0) ^^ (y 0)) := by
 --   simp [add, addAux, BitVec.adcb]
--- 
--- @[simp] theorem add_succ (x y : BitStream) : (x.add y (i+1)) = 
+--
+-- @[simp] theorem add_succ (x y : BitStream) : (x.add y (i+1)) =
 --     let carryIn := carryOut x y i
 --     let a := x (i + 1)
 --     let b := y (i + 1)
 --     a ^^ b ^^ carryIn := by
 --   simp [addAux, add, BitVec.adcb, carryOut]
--- 
+--
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
@@ -525,9 +525,10 @@ def sub (x y : BitStream) : BitStream :=
 def borrow (x y : BitStream) : BitStream :=
   fun n => (subAux x y n).2
 
+
 @[simp] theorem borrow_zero (x y : BitStream) : (x.borrow y 0) = (!(x 0) && y 0) := rfl
 
-@[simp] theorem borrow_succ (x y : BitStream) : (x.borrow y (i+1)) = 
+@[simp] theorem borrow_succ (x y : BitStream) : (x.borrow y (i+1)) =
   let borrow := borrow x y i
   let a := x (i + 1)
   let b := y (i + 1)
@@ -542,7 +543,7 @@ def negAux (x : BitStream) : Nat → Bool × Bool
 
 @[simp] theorem negAux_zero (x : BitStream) : x.negAux 0 = (x 0, ! (x 0)) := rfl
 
-@[simp] theorem negAux_succ (x : BitStream) (n : Nat) : x.negAux (n + 1) = 
+@[simp] theorem negAux_succ (x : BitStream) (n : Nat) : x.negAux (n + 1) =
     let borrow := (negAux x n).2
     let a := x (n + 1)
     (xor (!a) borrow, !a && borrow) := rfl
@@ -591,13 +592,13 @@ abbrev negOne : BitStream := fun _ => true
 @[simp] theorem one_ext_zero : one 0 = true := rfl
 @[simp] theorem one_ext_succ : one (i + 1) = false := rfl
 
-theorem negAux_eq_addAux (x : BitStream) (i : Nat) : 
-    (negAux x i).1 =  (addAux (~~~ x) one i).1 ∧ 
+theorem negAux_eq_addAux (x : BitStream) (i : Nat) :
+    (negAux x i).1 =  (addAux (~~~ x) one i).1 ∧
     (negAux x i).2 =  (addAux (~~~ x) one i).2 := by
   induction i
   case zero => simp
   case succ ih => simp [ih]
-  
+
 theorem neg_eq_not_add_one (x : BitStream) : - x = (~~~ x) + one := by
   ext i
   rw [neg_eq_negAux, add_eq_addAux]
@@ -952,7 +953,7 @@ variable (i : Nat)
     simp [negAux, ih]
 
 /-- The stream from `- (ofNat 1)` has all output bits `1`, and is thus equal to `negOne`. -/
-@[simp] theorem neg_ofNat_one_eq : - (BitStream.ofNat 1) = negOne := by 
+@[simp] theorem neg_ofNat_one_eq : - (BitStream.ofNat 1) = negOne := by
   rw [← neg_eq]
   unfold BitStream.neg
   simp
@@ -960,4 +961,3 @@ variable (i : Nat)
 end Lemmas
 
 end OfInt
-

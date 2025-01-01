@@ -218,21 +218,36 @@ Otherwise, we know that 't₁ ≥ t₂'.
 -/
 def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := (~~~ (t₁.borrow t₂)).concat true
 
+
 /--
-Evaluate whether the MSB is uneqal at this bit.
+Returns false if the MSBs are equal.
 -/
-def Predicate.evalMsbNeq (t₁ t₂ : BitStream) : BitStream :=
+def Predicate.evalMsbEq (t₁ t₂ : BitStream) : BitStream :=
   (t₁ ^^^ t₂).concat false
+
+
+private theorem not_not_xor_not (a b : Bool) : ! ((!a).xor (!b)) = (a == b) := by
+  revert a b
+  decide
+
+/--
+info: BitVec.slt_eq_not_carry {w : ℕ} (x y : BitVec w) : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
+-/
+#guard_msgs in #check BitVec.slt_eq_not_carry
 
 /--
 Evaluate whether `t₁ <ₛ t₂`.
 This is defined by computing the most significant bit of `t₁ - t₂`.
 IF the `msb is 1`, then `t₁ - t₂ <s 0`, and thus `t₁ <s t₂`.
+
+consider the cases:
+  evalMsbEq | evalUlt |
+  F         | F       | F (it's correct. MSBs are equal, and they are ULT)
+
 -/
 def Predicate.evalSlt (t₁ t₂ : BitStream) : BitStream :=
-  (Predicate.evalUlt t₁ t₂) ^^^ (Predicate.evalMsbNeq t₁ t₂)
+    (((Predicate.evalUlt t₁ t₂)) ^^^ (Predicate.evalMsbEq t₁ t₂))
 
--- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
 open BitStream in
 /--
 Evaluate a term predicate `p` to the BitStream it represents,

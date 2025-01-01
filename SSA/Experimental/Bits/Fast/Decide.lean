@@ -1,7 +1,7 @@
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.Lemmas
 
-instance (p : Predicate) : 
+instance (p : Predicate) :
     Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
   decidable_of_iff
     (decideIfZeros (predicateEvalEqFSM p).toFSM) $ by
@@ -33,21 +33,20 @@ instance DecidableForallPredicateEvalEqFalse (p : Predicate) :
         rw [List.getElem?_eq_none (by omega)]
         simp
   · intros h n xs
-    specialize h n 
+    specialize h n
     rw [Predicate.evalFin_eq_eval p  (List.ofFn xs) xs]
     · apply h
     · simp
 
 /--
-info: 'DecidableForallPredicateEvalEqFalse' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'DecidableForallPredicateEvalEqFalse' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
 -/
-#guard_msgs in #print axioms DecidableForallPredicateEvalEqFalse 
+#guard_msgs in #print axioms DecidableForallPredicateEvalEqFalse
 
-instance DecideFixedWidthPredicateEvalFin  (p : Predicate) (n : ℕ) : 
+instance DecideFixedWidthPredicateEvalFin  (p : Predicate) (n : ℕ) :
     Decidable (∀ (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
   decidable_of_iff
     (decideIfZerosAtIx (predicateEvalEqFSM p).toFSM n) $ by
   rw [decideIfZeroesAtIx_correct, ← (predicateEvalEqFSM p).good]
 
 open Term
-
