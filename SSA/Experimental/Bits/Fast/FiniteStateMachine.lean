@@ -513,9 +513,9 @@ TODO: rewrite with 'induction' to be a clean proof script.
 -/
 @[simp] theorem carry_borrow (x : Bool → BitStream) : ∀ (n : ℕ), borrow.carry x (n+1) =
     fun _ => (x true).borrow (x false) n := by
-  intros n 
-  induction n 
-  case zero => 
+  intros n
+  induction n
+  case zero =>
     ext i
     simp [carry, nextBit, borrow]
   case succ n ih =>
@@ -526,7 +526,7 @@ TODO: rewrite with 'induction' to be a clean proof script.
 @[simp] lemma eval_borrow (x : Bool → BitStream) : borrow.eval x = (x true).borrow (x false) := by
   ext i
   induction i
-  case zero => 
+  case zero =>
     simp [borrow, BitStream.borrow, BitStream.subAux, eval, nextBit]
   case succ i ih =>
     rw [eval]
@@ -913,7 +913,7 @@ private theorem Int.lt_of_neg {i : Int} (hi : i < - 1) : i < i / 2 := by
 
 /-- Build a finite state machine for the integer `i` -/
 def ofInt (x : Int) : FSM (Fin 0) :=
-  match x with 
+  match x with
   | .ofNat n => ofNat n
   | .negSucc n =>
       composeUnaryAux neg (ofNat (n + 1))
@@ -955,12 +955,12 @@ def shiftLeft (n : Nat) : FSM Unit :=
 @[simp]
 theorem eval_shiftLeft (k : Nat) (env : Unit → BitStream) (i : Nat) :
     (shiftLeft k).eval env i = ((decide (k ≤ i)) && ((env ()) (i - k))) := by
-  induction k generalizing i 
-  case zero => 
+  induction k generalizing i
+  case zero =>
     simp [shiftLeft]
   case succ k ih =>
     simp[shiftLeft]
-    rcases i with rfl | i 
+    rcases i with rfl | i
     · simp
     · simp [ih]
 
@@ -1151,7 +1151,7 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
      let q := termEvalEqFSM t
      {
        toFSM := by dsimp [arity]; exact composeUnary (FSM.shiftLeft k) q,
-       good := by 
+       good := by
          ext x i
          simp only [evalFin, BitStream.eval_shiftLeft, Bool.if_false_left, arity.eq_14, id_eq,
            composeUnary_eval, FSM.eval_shiftLeft]
@@ -1207,45 +1207,56 @@ structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
   ( good : p.evalFin = toFSM.eval )
 
 
-def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not <| composeBinaryAux FSM.borrow a b)
 
-def fsmSlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
-  composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinaryAux FSM.sub a b
-
-def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <|  composeBinaryAux FSM.xor a b
 
-def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinaryAux FSM.nxor a b
 
-def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeBinaryAux FSM.or a b
 
-def fsmLor (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+def fsmLor (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeBinaryAux FSM.and  a b
 
-def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) := 
+def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) :=
   let ult := fsmUlt a b
   let eq := fsmEq a b
   fsmLor ult eq
-  
-def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) := 
+
+def fsmMsbNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
+  composeUnaryAux (FSM.ls false) <| composeBinaryAux FSM.xor a b
+
+
+def fsmSlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) :=
+  let msbCheck := fsmMsbNeq a b
+  let ult := fsmUlt a b
+  let out := composeBinaryAux FSM.xor msbCheck ult
+  composeUnaryAux (FSM.ls true) out
+
+/--
+TODO: implement FSM.cast so we don't need to accumulate `max`s in this godforsaken fashion.
+This needs a `Circuit.cast` as well, so we do this after we have verified end-to-end
+correctness.
+-/
+def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l) ⊔ (k ⊔ l))) :=
   let slt := fsmSlt a b
   let eq := fsmEq a b
-  -- We want an OR of the two cases, which we take by computing an AND of the predicates.
-  fsmLor slt eq
+  let out := fsmLor slt eq
+  out
 
-
-/-- Evaluating the eq predicate equals the FSM value.
+/--
+Evaluating the eq predicate equals the FSM value.
 Note that **this is the value that is run by decide**.
-
 -/
 def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
   | .widthEq n =>
     {
       toFSM := FSM.falseOnlyAt n
-      good := by 
+      good := by
         ext i x
         simp only [Predicate.evalFin, Bool.decide_eq_true, Predicate.arity.eq_1,
           FSM.eval_falseOnlyAt]
@@ -1255,7 +1266,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      {
       toFSM := FSM.trueOnlyAt n
       good := by
-        ext i x 
+        ext i x
         simp only [Predicate.evalFin, Bool.decide_eq_true, Predicate.arity.eq_2,
           FSM.eval_trueOnlyAt]
         by_cases h : x = n <;> simp [h]
@@ -1320,7 +1331,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      let a := termEvalEqFSM t₁
      let b := termEvalEqFSM t₂
      { toFSM := fsmSlt a.toFSM b.toFSM
-       good := by ext; simp [fsmSlt, a.good, b.good]
+       good := by ext; simp [fsmSlt, fsmMsbNeq, a.good, b.good]
      }
    | .sle t₁ t₂ =>
       let a := termEvalEqFSM t₁
@@ -1337,7 +1348,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       {
        -- a <u b if when we compute (a - b), we must borrow a value.
        toFSM := fsmUlt a.toFSM b.toFSM
-       good := by 
+       good := by
          ext x i
          simp [fsmUlt, a.good, b.good]
       }
@@ -1444,7 +1455,7 @@ that are possible at each step. -/
 def FSM.nextBitCircIterate {arity : Type _ } [DecidableEq arity]
     (fsm : FSM arity) (n : Nat) : Circuit fsm.α := -- given initial state, produce output.
   match n with
-  | 0 => 
+  | 0 =>
      -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
     fsm.nextBitCirc none |>.fst
   | n' + 1 =>
@@ -1466,12 +1477,12 @@ def decideIfZerosAtIxAux {arity : Type _} [DecidableEq arity]
     if (c.eval fsm.initCarry)
     then false
     else
-      match nItersLeft with 
+      match nItersLeft with
       | 0 => true -- c has accumulated the effects so far.
-      | nItersLeft' + 1 => 
+      | nItersLeft' + 1 =>
         -- accumulate one iteration
         have c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
-        if _ : c' ≤ c 
+        if _ : c' ≤ c
         then true
         else decideIfZerosAtIxAux fsm (c' ||| c) nItersLeft'
 
@@ -1486,6 +1497,6 @@ for all inputs at the index 'w' of the bitstream.
 We file this as a separate axiom
 -/
 axiom decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false 
+    (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false
 
 end FSM
