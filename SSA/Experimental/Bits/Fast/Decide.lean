@@ -39,7 +39,7 @@ instance DecidableForallPredicateEvalEqFalse (p : Predicate) :
     · simp
 
 /--
-info: 'DecidableForallPredicateEvalEqFalse' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+info: 'DecidableForallPredicateEvalEqFalse' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms DecidableForallPredicateEvalEqFalse
 

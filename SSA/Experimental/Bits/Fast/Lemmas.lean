@@ -94,8 +94,6 @@ lemma Term.evalFin_eq_eval (t : Term)
 /-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms Term.evalFin_eq_eval 
 
-axiom axEvalFinEqEval {p : Prop} : p
-
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
    (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :

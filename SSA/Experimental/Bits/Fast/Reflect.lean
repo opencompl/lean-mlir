@@ -1701,6 +1701,28 @@ def test2_circuit (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y))
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_circuit
 
+/--
+info: 'Reflect.test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
+-/
+#guard_msgs in #print axioms test24
+
+/--
+info: def Reflect.test24 : ∀ {w : ℕ} (x y : BitVec w), x ||| y = (x &&& ~~~y) + y :=
+fun {w} x y =>
+  id
+    (Predicate.denote_of_eval_eq
+      (of_decide_eq_true
+        (ofReduceBool
+          (decide
+            (∀ (w : ℕ) (vars : List BitStream),
+              (Predicate.eq ((Term.var 0).or (Term.var 1)) (((Term.var 0).and (Term.var 1).not).add (Term.var 1))).eval
+                  vars w =
+                false))
+          true SSA.Experimental.Bits.Fast.Reflect._auxLemma.32))
+      w (Map.append w y (Map.append w x Map.empty)))
+-/
+#guard_msgs in #print test24
+
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata_circuit
 
@@ -1797,7 +1819,6 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 
 /--
 info: 'Reflect.width_1_char_2_add_four' depends on axioms: [propext,
- sorryAx,
  Classical.choice,
  Lean.ofReduceBool,
  Lean.trustCompiler,
