@@ -1207,6 +1207,35 @@ structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
   ( good : p.evalFin = toFSM.eval )
 
 
+def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+  composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not <| composeBinaryAux FSM.borrow a b)
+
+def fsmSlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+  composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinaryAux FSM.sub a b
+
+def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+  composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <|  composeBinaryAux FSM.xor a b
+
+def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+  composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinaryAux FSM.nxor a b
+
+def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+  composeBinaryAux FSM.or a b
+
+def fsmLor (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) := 
+  composeBinaryAux FSM.and  a b
+
+def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) := 
+  let ult := fsmUlt a b
+  let eq := fsmEq a b
+  fsmLor ult eq
+  
+def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) := 
+  let slt := fsmSlt a b
+  let eq := fsmEq a b
+  -- We want an OR of the two cases, which we take by computing an AND of the predicates.
+  fsmLor slt eq
+
 
 /-- Evaluating the eq predicate equals the FSM value.
 Note that **this is the value that is run by decide**.
@@ -1252,22 +1281,22 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       good := by ext; simp
      }
   | .eq t₁ t₂ =>
-    let t₁' := termEvalEqFSM t₁
-    let t₂' := termEvalEqFSM t₂
+    let t₁ := termEvalEqFSM t₁
+    let t₂ := termEvalEqFSM t₂
     {
      -- At width 0, all things are equal.
-     toFSM := (composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <|  composeBinary FSM.xor t₁' t₂')
-     good := by ext; simp
+     toFSM := fsmEq t₁.toFSM t₂.toFSM
+     good := by ext; simp [fsmEq, t₁.good, t₂.good]
     }
   | .neq t₁ t₂ =>
-    let t₁' := termEvalEqFSM t₁
-    let t₂' := termEvalEqFSM t₂
+    let t₁ := termEvalEqFSM t₁
+    let t₂ := termEvalEqFSM t₂
     {
      -- At width 0, all things are equal, so the predicate is untrue.
      -- If it ever becomes `0`, it should stay `0` forever, because once
      -- two bitstreams become disequal, they stay disequal!
-     toFSM := (composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinary FSM.nxor t₁' t₂')
-     good := by ext; simp
+     toFSM := fsmNeq t₁.toFSM t₂.toFSM
+     good := by ext; simp [fsmNeq, t₁.good, t₂.good]
     }
    | .land p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1275,8 +1304,8 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      {
        -- If this ever becomes `1`, it should stay `1`,
        -- since once it's falsified, it should stay falsified!
-       toFSM := composeBinaryAux FSM.or x₁.toFSM x₂.toFSM
-       good := by ext x i; simp [x₁.good, x₂.good]
+       toFSM := fsmLand x₁.toFSM x₂.toFSM
+       good := by ext x i; simp [fsmLand, x₁.good, x₂.good]
      }
    | .lor p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1284,61 +1313,42 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      {
        -- If it ever becomes `1`, it should stay `1`,
        -- since one it's falsified, it should stay falsified!
-       toFSM := composeBinaryAux FSM.and x₁.toFSM x₂.toFSM
-       good := by ext x i; simp [x₁.good, x₂.good]
+       toFSM := fsmLor  x₁.toFSM x₂.toFSM
+       good := by ext x i; simp [fsmLor, x₁.good, x₂.good]
      }
    | .slt t₁ t₂ =>
-     let q₁ := termEvalEqFSM t₁
-     let q₂ := termEvalEqFSM t₂
-     { toFSM := 
-       composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinary FSM.sub q₁ q₂,
-       good := by ext; simp
+     let a := termEvalEqFSM t₁
+     let b := termEvalEqFSM t₂
+     { toFSM := fsmSlt a.toFSM b.toFSM
+       good := by ext; simp [fsmSlt, a.good, b.good]
      }
    | .sle t₁ t₂ =>
-      let t₁' := termEvalEqFSM t₁
-      let t₂' := termEvalEqFSM t₂
-      let slt := 
-        composeUnaryAux (FSM.ls true) <| composeUnaryAux FSM.not <| composeBinaryAux FSM.sub t₁'.toFSM t₂'.toFSM
-      let eq := 
-        composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
-      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
-        Nat.max_self ..
-      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.sle t₁ t₂) := by
-        simp [hsz]
-      -- We want an OR of the two cases, which we take by computing an AND of the predicates.
-      let out := composeBinaryAux FSM.and slt eq
+      let a := termEvalEqFSM t₁
+      let b := termEvalEqFSM t₂
       {
-       toFSM := hsz ▸ out
-       good := by
-         ext x i
-         simp [out, slt, eq, t₁'.good, t₂'.good]
+        toFSM := fsmSle a.toFSM b.toFSM
+        good := by
+          ext x i
+          simp [fsmSle, fsmEq, fsmLor, fsmSlt, a.good, b.good]
       }
    | .ult t₁ t₂ =>
-      let t₁' := termEvalEqFSM t₁
-      let t₂' := termEvalEqFSM t₂
+      let a := termEvalEqFSM t₁
+      let b := termEvalEqFSM t₂
       {
        -- a <u b if when we compute (a - b), we must borrow a value.
-       toFSM := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not <| composeBinary FSM.borrow t₁' t₂')
+       toFSM := fsmUlt a.toFSM b.toFSM
        good := by 
          ext x i
-         simp
+         simp [fsmUlt, a.good, b.good]
       }
    | .ule t₁ t₂ =>
-      let t₁' := termEvalEqFSM t₁
-      let t₂' := termEvalEqFSM t₂
-      let ult := composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not $ composeBinary FSM.borrow t₁' t₂')
-      let eq := composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <| (composeBinaryAux FSM.xor t₁'.toFSM t₂'.toFSM)
-      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = (max t₁.arity t₂.arity) :=
-        Nat.max_self ..
-      have hsz : max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity) = Predicate.arity (.ule t₁ t₂) := by
-        simp [hsz]
-      -- IF either a < b, or a = b, then we know that a ≤ b.
-      let out := composeBinaryAux FSM.and ult eq
+      let a := termEvalEqFSM t₁
+      let b := termEvalEqFSM t₂
       {
-       toFSM := hsz ▸ out
-       good := by 
-         ext x i
-         simp [out, ult, eq, t₁'.good, t₂'.good]
+        toFSM := fsmUle a.toFSM b.toFSM
+        good := by
+          ext x i
+          simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good]
       }
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=

@@ -285,9 +285,9 @@ end Predicate
 | .land p q => max p.arity q.arity
 | .neq t₁ t₂ => max t₁.arity t₂.arity
 | .ult t₁ t₂ => max t₁.arity t₂.arity
-| .ule t₁ t₂ => max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity)
+| .ule t₁ t₂ => t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity)
 | .slt t₁ t₂ => max t₁.arity t₂.arity
-| .sle t₁ t₂ => max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity)
+| .sle t₁ t₂ => t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity)
 
 @[simp]
 def Predicate.evalFinLor (x₁ x₂ : BitStream) : BitStream := 
