@@ -458,17 +458,26 @@ axiom sorry_eval_eq_denote {p : Prop} : p
 
 
 theorem Predicate.evalUlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
-  evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
-  Term.denote w a vars < Term.denote w b vars := by exact sorry_eval_eq_denote
+    evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    Term.denote w a vars < Term.denote w b vars := by
+  induction w generalizing a b 
+  case zero => exact sorry_eval_eq_denote
+  case succ w ih => exact sorry_eval_eq_denote
+  -- case zero =>
+    -- constructor
+  -- case zero => simp [evalUlt]
+  -- case succ w ih => simp [evalUlt, ih]
 
-theorem Predicate.evalSlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+/-- TODO: ForLean -/
+private theorem Predicate.evalSlt_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
   evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w =
   !Term.denote w a vars <ₛ Term.denote w b vars:= by exact sorry_eval_eq_denote
 
-theorem BitVec.ule_iff_ult_or_eq (x y : BitVec w) : x ≤ y ↔ (x = y ∨ x < y) := by 
+/-- TODO: ForLean -/
+private theorem BitVec.ForLean.ule_iff_ult_or_eq (x y : BitVec w) : x ≤ y ↔ (x = y ∨ x < y) := by 
   constructor <;> bv_omega
 
-theorem BitVec.sle_iff_slt_or_eq (x y : BitVec w) : x.sle y ↔ (x = y ∨ x.slt y) := by 
+private theorem BitVec.ForLean.sle_iff_slt_or_eq (x y : BitVec w) : x.sle y ↔ (x = y ∨ x.slt y) := by 
   constructor
   · exact sorry_eval_eq_denote
   · intros h
@@ -495,7 +504,7 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case ule a b => 
     simp [eval, denote]; 
     simp only [evalLor, BitStream.and_eq]
-    rw [BitVec.ule_iff_ult_or_eq]
+    rw [BitVec.ForLean.ule_iff_ult_or_eq]
     by_cases heq : Term.denote w a vars = Term.denote w b vars
     · rw [heq]
       simp [evalEq_denote a b vars |>.mpr heq]
@@ -511,6 +520,7 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case sle a b => 
     simp [eval, denote]
     simp only [evalLor, BitStream.and_eq]
+    -- rw [BitVec.ForLean.sle_iff_slt_or_eq]
     exact sorry_eval_eq_denote
     -- rw [BitVec.sle_iff_slt_or_eq]
   case land p q hp hq => simp [eval, denote, hp, hq, evalLand]
@@ -1638,8 +1648,7 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
   bv_automata_circuit
 
 /--
-info: 'Reflect.width_1_char_2_add_four' depends on axioms: [axEvalFinEqEval,
- propext,
+info: 'Reflect.width_1_char_2_add_four' depends on axioms: [propext,
  sorry_eval_eq_denote,
  Classical.choice,
  Lean.ofReduceBool,

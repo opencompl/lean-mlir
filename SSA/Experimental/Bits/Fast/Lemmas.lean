@@ -10,6 +10,7 @@ import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.BitStream
 
+
 open Term
 
 /--
@@ -95,7 +96,6 @@ lemma Term.evalFin_eq_eval (t : Term)
 
 axiom axEvalFinEqEval {p : Prop} : p
 
-
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
    (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :
@@ -146,10 +146,9 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     simp [evalUlt]
     rw [Term.evalFin_eq_eval _ varsList]
     · rw [Term.evalFin_eq_eval _ varsList]
-      · exact axEvalFinEqEval  -- discrepancy
-      · intros i
-        rw [hvars ⟨i, by omega⟩]
-        rfl
+      intros i 
+      rw [hvars ⟨i, by omega⟩]
+      rfl
     · intros i
       rw [hvars ⟨i, by omega⟩]
       rfl
@@ -157,10 +156,9 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     simp [evalSlt]
     rw [Term.evalFin_eq_eval _ varsList]
     · rw [Term.evalFin_eq_eval _ varsList]
-      · exact axEvalFinEqEval  -- discrepancy
-      · intros i
-        rw [hvars ⟨i, by omega⟩]
-        rfl
+      intros i 
+      rw [hvars ⟨i, by omega⟩]
+      rfl
     · intros i
       rw [hvars ⟨i, by omega⟩]
       rfl
@@ -168,7 +166,8 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     simp [evalUlt, evalEq]
     rw [Term.evalFin_eq_eval _ varsList]
     · rw [Term.evalFin_eq_eval _ varsList]
-      · exact axEvalFinEqEval  -- discrepancy
+      · simp [evalLor]
+        rw [BitStream.and_comm]
       · intros i
         rw [hvars ⟨i, by omega⟩]
         rfl
@@ -179,7 +178,8 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     simp [evalUlt, evalEq]
     rw [Term.evalFin_eq_eval _ varsList]
     · rw [Term.evalFin_eq_eval _ varsList]
-      · exact axEvalFinEqEval  -- discrepancy
+      · simp [evalSlt, evalLor]
+        rw [BitStream.and_comm]
       · intros i
         rw [hvars ⟨i, by omega⟩]
         rfl
@@ -187,7 +187,7 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
       rw [hvars ⟨i, by omega⟩]
       rfl
 
-/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [axEvalFinEqEval, propext, Quot.sound] -/
+/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.evalFin_eq_eval
 
 

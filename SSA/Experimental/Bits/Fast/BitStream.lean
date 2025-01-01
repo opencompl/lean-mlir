@@ -329,6 +329,14 @@ variable (x y : BitVec (w+1))
     zero_lt_one, or_true, decide_true, Bool.true_and, not_eq]
   split <;> simp_all
 
+theorem and_comm (x y : BitStream) : x &&& y = y &&& x := by
+  funext i
+  simp [Bool.and_comm]
+
+theorem or_comm (x y : BitStream) : x ||| y = y ||| x := by
+  funext i
+  simp [Bool.or_comm]
+
 end Lemmas
 
 end BitwiseOps

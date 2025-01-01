@@ -216,14 +216,14 @@ This is defined by computing the borrow bit of 't₁ - t₂'.
 If the borrow bit is `1`, then we know that `t₁ < t₂', so we return a `0`.
 Otherwise, we know that 't₁ ≥ t₂'.
 -/
-def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := ~~~ (t₁.borrow t₂)
+def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := (~~~ (t₁.borrow t₂)).concat true
 
 /-- 
 Evaluate whether 't₁ <s t₂'.
 This is defined by computing the most significant bit of 't₁ - t₂'.
 IF the `msb is 1`, then `t₁ - t₂ <s 0`, and thus `t₁ <s t₂'.
 -/
-def Predicate.evalSlt (t₁ t₂ : BitStream) : BitStream := ~~~ (t₁ - t₂)
+def Predicate.evalSlt (t₁ t₂ : BitStream) : BitStream := (~~~ (t₁ - t₂)).concat true
 
 -- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
 open BitStream in
