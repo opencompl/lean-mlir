@@ -297,6 +297,7 @@ end Predicate
 | .sle t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity) ⊔ (t₁.arity ⊔ t₂.arity))
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
+-- TODO: remove this from the @[simp] set.
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
 | widthEq n => BitStream.falseIffEq n

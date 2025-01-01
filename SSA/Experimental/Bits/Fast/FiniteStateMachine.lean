@@ -1210,11 +1210,37 @@ structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
 def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not <| composeBinaryAux FSM.borrow a b)
 
+@[simp]
+theorem eval_fsmUlt_eq_evalFin_Predicate_ult (t₁ t₂ : Term) :
+   (fsmUlt (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.ult t₁ t₂).evalFin  := by
+  ext x i
+  generalize ha : termEvalEqFSM t₁ = a
+  generalize hb : termEvalEqFSM t₂ = b
+  simp [fsmUlt, Predicate.evalUlt, a.good, b.good]
+
 def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux FSM.scanOr <| composeUnaryAux (FSM.ls false) <|  composeBinaryAux FSM.xor a b
 
+/-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
+@[simp]
+theorem eval_fsmEq_eq_evalFin_Predicate_eq (t₁ t₂ : Term) :
+   (fsmEq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.eq t₁ t₂).evalFin  := by
+  ext x i
+  generalize ha : termEvalEqFSM t₁ = a
+  generalize hb : termEvalEqFSM t₂ = b
+  simp [fsmEq, Predicate.evalEq, a.good, b.good]
+
 def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinaryAux FSM.nxor a b
+
+/-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
+@[simp]
+theorem eval_fsmNeq_eq_evalFin_Predicate_neq (t₁ t₂ : Term) :
+   (fsmNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.neq t₁ t₂).evalFin  := by
+  ext x i
+  generalize ha : termEvalEqFSM t₁ = a
+  generalize hb : termEvalEqFSM t₂ = b
+  simp [fsmNeq, Predicate.evalNeq, a.good, b.good]
 
 def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeBinaryAux FSM.or a b
@@ -1227,15 +1253,17 @@ def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l)
   let eq := fsmEq a b
   fsmLor ult eq
 
+
 def fsmMsbNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux (FSM.ls false) <| composeBinaryAux FSM.xor a b
 
+-- theorem fsmMsbNeq_eq_Predicate_MsbNeq (t₁ t₂ : Term) :
+--   (Predicate.msbNeq t₁ t₂).evalFin = (fsmMsbNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval := sorry
 
 def fsmSlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) :=
   let msbCheck := fsmMsbNeq a b
   let ult := fsmUlt a b
-  let out := composeBinaryAux FSM.xor msbCheck ult
-  composeUnaryAux (FSM.ls true) out
+  composeBinaryAux FSM.xor ult msbCheck
 
 /--
 TODO: implement FSM.cast so we don't need to accumulate `max`s in this godforsaken fashion.
@@ -1297,7 +1325,9 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
     {
      -- At width 0, all things are equal.
      toFSM := fsmEq t₁.toFSM t₂.toFSM
-     good := by ext; simp [fsmEq, t₁.good, t₂.good]
+     good := by
+      ext x i
+      rw [eval_fsmEq_eq_evalFin_Predicate_eq]
     }
   | .neq t₁ t₂ =>
     let t₁ := termEvalEqFSM t₁
@@ -1307,7 +1337,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      -- If it ever becomes `0`, it should stay `0` forever, because once
      -- two bitstreams become disequal, they stay disequal!
      toFSM := fsmNeq t₁.toFSM t₂.toFSM
-     good := by ext; simp [fsmNeq, t₁.good, t₂.good]
+     good := by ext; rw [eval_fsmNeq_eq_evalFin_Predicate_neq]
     }
    | .land p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1316,7 +1346,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        -- If this ever becomes `1`, it should stay `1`,
        -- since once it's falsified, it should stay falsified!
        toFSM := fsmLand x₁.toFSM x₂.toFSM
-       good := by ext x i; simp [fsmLand, x₁.good, x₂.good]
+       good := by ext x i; simp [Predicate.evalLand, fsmLand, x₁.good, x₂.good]
      }
    | .lor p q =>
      let x₁ := predicateEvalEqFSM p
@@ -1325,13 +1355,19 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        -- If it ever becomes `1`, it should stay `1`,
        -- since one it's falsified, it should stay falsified!
        toFSM := fsmLor  x₁.toFSM x₂.toFSM
-       good := by ext x i; simp [fsmLor, x₁.good, x₂.good]
+       good := by ext x i; simp [Predicate.evalLor, fsmLor, x₁.good, x₂.good]
      }
    | .slt t₁ t₂ =>
      let a := termEvalEqFSM t₁
      let b := termEvalEqFSM t₂
      { toFSM := fsmSlt a.toFSM b.toFSM
-       good := by ext; simp [fsmSlt, fsmMsbNeq, a.good, b.good]
+       good := by
+        ext;
+        simp
+        simp [Predicate.evalSlt, fsmSlt]
+        congr
+        · simp [Predicate.evalUlt, fsmUlt, a.good, b.good]
+        · simp [Predicate.evalMsbNeq, fsmMsbNeq, a.good, b.good]
      }
    | .sle t₁ t₂ =>
       let a := termEvalEqFSM t₁
@@ -1340,18 +1376,24 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
         toFSM := fsmSle a.toFSM b.toFSM
         good := by
           ext x i
-          simp [fsmSle, fsmEq, fsmLor, fsmSlt, a.good, b.good]
+          simp [fsmSle]
+          simp [Predicate.evalLor, fsmLor]
+          congr
+          · simp [Predicate.evalSlt, fsmSlt, Predicate.evalUlt, fsmUlt, a.good, b.good, Predicate.evalMsbNeq, fsmMsbNeq]
+            -- TODO: this should follow from a theorem we have proven.
+          · simp [Predicate.evalEq, fsmEq, a.good, b.good]
       }
    | .ult t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
-      {
+      let out := {
        -- a <u b if when we compute (a - b), we must borrow a value.
        toFSM := fsmUlt a.toFSM b.toFSM
        good := by
          ext x i
-         simp [fsmUlt, a.good, b.good]
+         simp [fsmUlt, a.good, b.good, Predicate.evalUlt]
       }
+      out
    | .ule t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
@@ -1359,8 +1401,11 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
         toFSM := fsmUle a.toFSM b.toFSM
         good := by
           ext x i
-          simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good]
+          simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good, Predicate.evalLor, Predicate.evalUlt, Predicate.evalEq]
       }
+
+/-- info: 'predicateEvalEqFSM' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms predicateEvalEqFSM
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
