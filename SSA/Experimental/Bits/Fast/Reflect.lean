@@ -1284,6 +1284,12 @@ theorem slow₁ (x : BitVec 32) :
   fail_if_success bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
   sorry
 
+theorem e_1 (x y : BitVec w) :
+     - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
+  simp
+  bv_automata_circuit -- (config := { circuitSizeThreshold := 600, stateSpaceSizeThreshold := 100 })
+
+
 end BvAutomataTests
 
 end Reflect
