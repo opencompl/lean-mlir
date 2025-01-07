@@ -1406,8 +1406,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     -- Log the finite state machine size, and bail out if we cross the barrier.
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo m!"FSM: ⋆Circuit size '{toMessageData fsm.circuitSize}'  ⋆State space size '{fsm.stateSpaceSize}'"
-    logInfo m!"FSM: ⋆Projection Circuit '{fsm.nextBitCirc .none}'"
-    logInfo m!"FSM: ⋆Next State Circuit '{fsm.nextBitCirc .none}'"
+    logInfo f!"{fsm}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
       throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
     if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
@@ -1625,8 +1624,8 @@ section BvAutomataTests
 /--
 warning: Tactic has not understood the following expressions, and will treat them as symbolic:
 
-  - f x
-  - f y
+  - 'f x'
+  - 'f y'
 -/
 #guard_msgs (warning, drop error, drop info) in
 theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) : f x ≠ f y :=
@@ -1707,7 +1706,12 @@ def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_circuit
 
 /--
-info: 'Reflect.test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
+info: 'Reflect.test24' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms test24
 
