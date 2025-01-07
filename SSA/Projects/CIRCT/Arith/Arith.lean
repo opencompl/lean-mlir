@@ -39,7 +39,7 @@ def cmpi (x y op : Int) : Bool :=
 
 
 -- model poison as 'none' (seems the way to go, afaiu from lean-mlir paper)
-def select (cond : Option Bool) (x y : α) : Option α :=
+def select (cond : Option Bool) (x y : Int) : Option Int :=
   match cond with
   | none => none
   | some true => x
@@ -81,17 +81,15 @@ def Op.sig : Op → List Ty
   | .const => [Ty.int]
   | .cmpi =>  [Ty.int, Ty.int, Ty.bool]
   | .select => [Ty.bool, Ty.int, Ty.int]
-  -- again: select should digest any α (int, vect, tensor),
-  -- i would like to create a new type for these three and define all het (in)eqs
-  -- to manage all those in arith, but unsure this is the correct way
-  -- same for the option bool argument (type denotation fails bc. it's not atomic,
-  -- unclear how to solve that yet)
+  -- select should digest any α (int, vect, tensor),
+  -- luisa would like to create a new type for these three and define all the (in)eqs
+  -- same for the option bool argument (type denotation fails bc. it's not atomic, unclear how to solve that)
 
 -- return type CONF
 @[simp, reducible]
 def Op.outTy : Op → Ty
   | .const => Ty.int
-  | .cmpi =>  Ty.bool
+  | .cmpi => Ty.bool
   | .select => Ty.int
 
 @[simp, reducible]
@@ -100,12 +98,12 @@ def Op.signature : Op → Signature (Ty) :=
 
 instance : DialectSignature Arith := ⟨Op.signature⟩
 
--- @[simp]
--- instance : DialectDenote (Arith) where
---   denote
---   | .const, arg => Arith.const (arg.getN 0 (by simp [DialectSignature.sig, signature]))
---   | .cmpi, arg => (arg.getN 0 (by simp [DialectSignature.sig, signature]))
---   | .select, arg => (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+@[simp]
+instance : DialectDenote (Arith) where
+  denote
+  | .const, arg, _ => Arith.const (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .select, arg, _ => Arith.select (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
+  | .cmpi, arg, _ => Arith.cmpi (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
 
 -- @[simp]
 -- instance : DialectDenote (DC) where
@@ -125,7 +123,7 @@ instance : DialectSignature Arith := ⟨Op.signature⟩
 --     | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0 (by simp [DialectSignature.sig, signature]))
 --     | .source, _, _  => CIRCTStream.DC.source
 
--- end Dialect
+end Dialect
 
 
 
