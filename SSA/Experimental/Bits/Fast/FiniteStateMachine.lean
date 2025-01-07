@@ -46,21 +46,13 @@ def Finset.toListUnsafe (as : Finset α) : List α :=
   Quotient.lift id sorry multiset
 
 open Lean in
-def formatFSM (fsm : FSM α) : Format := Id.run do
-  let fsm := Lean.ShareCommon.shareCommon fsm
-  let mut out := f!""
-  out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
-  out := out ++ "'" ++ Format.group (Format.nest 2 (format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
-  out := out ++ "**State Transition:**" ++  Format.line 
-  let as : List fsm.α := Finset.univ |>.toListUnsafe
-  let mut ts := f!""
-  for (i, a) in List.enum as do
-    ts := ts ++ Format.align true ++ f!"{i}: '{(format (fsm.nextBitCirc (some a)))}'" ++ Format.line
-  out := out ++ Format.group (Format.nest 2 ts)
-  return out
+instance FormatSum [formatα : ToFormat α] [formatβ : ToFormat β] : ToFormat (α ⊕ β) where 
+  format x := match x with | .inl x => f!"(l {format x})" | .inr x => f!"(r {format x})"
 
-instance : Lean.ToFormat (FSM α) where
-  format := formatFSM
+open Lean in
+def formatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α := 
+  let as : List α := Finset.toListUnsafe Finset.univ
+  { format a := format <| as.findIdx (fun b => a = b) }
 
 namespace FSM
 
@@ -86,6 +78,27 @@ def circuitSize : Nat := Id.run do
   let states := @Finset.univ p.α inferInstance
   let stateCircSize := Finset.fold Nat.add  0 (fun a => p.nextBitCirc (.some a) |>.size) states
   return outCircSize + stateCircSize
+
+open Lean in
+def format (fsm : FSM σ) [Fintype σ] [DecidableEq σ] : Format := Id.run do
+  have : DecidableEq fsm.α := fsm.dec_eq
+  let formatSum : ToFormat (fsm.α ⊕ σ) := formatDecEqFinset
+  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
+  let arity : Nat := @Finset.univ σ inferInstance |>.card
+  let fsm := Lean.ShareCommon.shareCommon fsm
+  let mut out := f!""
+  out := out ++ f!"⋆ #args '{arity}'" ++ Format.line
+  out := out ++ f!"⋆ #state bits '{numStateBits}'" ++ Format.line
+  out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
+  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum.format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
+  out := out ++ "**State Transition:**" ++  Format.line 
+  let as : List fsm.α := Finset.univ |>.toListUnsafe
+  let mut ts := f!""
+  for (i, a) in List.enum as do
+    ts := ts ++ Format.align true ++ f!"{i}: '{(formatCircuit formatSum.format (fsm.nextBitCirc (some a)))}'" ++ Format.line
+  out := out ++ Format.group (Format.nest 2 ts)
+  return out
+
 
 /-- The state of FSM `p` is given by a function from `p.α` to `Bool`.
 
@@ -857,8 +870,6 @@ def ofNat (n : Nat)  : FSM (Fin 0) :=
       · decide
     composeUnaryAux (FSM.ls bit) (ofNat m)
 
-#eval! Lean.format (FSM.ofNat 3)
-
 @[simp]
 theorem ofNat_zero : ofNat 0 = FSM.zero :=
   by simp [ofNat]
@@ -1292,6 +1303,7 @@ def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l)
   let out := fsmLor slt eq
   out
 
+
 /--
 Evaluating the eq predicate equals the FSM value.
 Note that **this is the value that is run by decide**.
@@ -1505,8 +1517,15 @@ def decideIfZerosAuxUnverified {σ ι : Type _}
   termination_by card_compl π
 
 
+def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity where 
+  α := p.α
+  initCarry := p.initCarry
+  nextBitCirc := fun v => (p.nextBitCirc v).optimize
+  
+
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
+  let p := FSM.optimize p
   decideIfZerosAuxUnverified p.initCarry (p.nextBitCirc none).fst (fun s => p.nextBitCirc (some s))
 
 

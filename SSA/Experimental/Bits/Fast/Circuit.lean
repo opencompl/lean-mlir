@@ -18,26 +18,19 @@ inductive Circuit (α : Type u) : Type u
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
   | xor : Circuit α → Circuit α → Circuit α
-deriving Repr
+deriving Repr, DecidableEq 
 
 open Lean in
-unsafe def formatCircuitImpl {α : Type u} (c : Circuit α) : Lean.Format :=
+def formatCircuit {α : Type u} (formatVar : α → Format)  (c : Circuit α) : Lean.Format :=
   match c with 
   | .tru => "T"
   | .fals => "F"
   | .var b v =>
-     let vstr := "v-" ++ toString (ptrAddrUnsafe v) |>.take 4
+     let vstr := "v:" ++ formatVar v
      if b then vstr else "!" ++ vstr
-  | .and l r => s!"(and {formatCircuitImpl l} {formatCircuitImpl r})"
-  | .or l r => s!"(or {formatCircuitImpl l} {formatCircuitImpl r})"
-  | .xor l r => s!"(xor {formatCircuitImpl l} {formatCircuitImpl r})"
-
-     
-
-@[implemented_by formatCircuitImpl]
-def formatCircuit {α : Type u} (c : Circuit α) : Lean.Format := "circuit"
-instance : Lean.ToFormat (Circuit α) where
-  format c := "<" ++ formatCircuit (Lean.ShareCommon.shareCommon c) ++ ">"
+  | .and l r => s!"(and {formatCircuit formatVar l} {formatCircuit formatVar r})"
+  | .or l r => s!"(or {formatCircuit formatVar l} {formatCircuit formatVar r})"
+  | .xor l r => s!"(xor {formatCircuit formatVar l} {formatCircuit formatVar r})"
 
 namespace Circuit
 
@@ -794,5 +787,37 @@ instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit �
 /-- Negate the value of the circuit -/
 def not {α : Type u} (c : Circuit α) : Circuit α :=
   c ^^^ .tru
+
+section Optimizer
+variable {α : Type u} [DecidableEq α]
+
+def optimize : Circuit α → Circuit α 
+| .tru => .tru
+| .fals => .fals 
+| .var b v => .var b v
+| .or l r => 
+   let l := optimize l
+   let r := optimize r 
+   if l == r
+   then l
+   else l ||| r
+| .and l r => 
+   let l := optimize l
+   let r := optimize r 
+   if l == r then l 
+   else l &&& r
+| .xor l r => 
+  let l := optimize l
+  let r := optimize r 
+  if l == r
+  then .fals
+  else 
+    match l, r with 
+    | .var b v, .var b' v' => 
+       if v == v' 
+       then .ofBool <| b.xor b' 
+       else l ^^^ r 
+    | _, _ => l ^^^ r
+end Optimizer
 
 end Circuit

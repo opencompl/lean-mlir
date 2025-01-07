@@ -1404,9 +1404,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     logInfo m!"goal after reflection: {indentD g}"
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM
-    logInfo m!"FSM: ⋆Circuit size '{toMessageData fsm.circuitSize}'  ⋆State space size '{fsm.stateSpaceSize}'"
-    logInfo f!"{fsm}'"
+    let fsm := predicateEvalEqFSM result.e |>.toFSM |>.optimize
+    logInfo f!"{fsm.format}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
       throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
     if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
