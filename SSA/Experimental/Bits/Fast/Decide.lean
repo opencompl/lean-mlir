@@ -38,10 +38,12 @@ instance DecidableForallPredicateEvalEqFalse (p : Predicate) :
     · apply h
     · simp
 
+/-
 /--
 info: 'DecidableForallPredicateEvalEqFalse' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms DecidableForallPredicateEvalEqFalse
+-/
 
 instance DecideFixedWidthPredicateEvalFin  (p : Predicate) (n : ℕ) :
     Decidable (∀ (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=

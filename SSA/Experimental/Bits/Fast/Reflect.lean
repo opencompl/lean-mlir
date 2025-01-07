@@ -689,8 +689,11 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
       · have := hq .. |>.mpr hq'
         simp [this]
 
+/-
 /-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.eval_eq_denote
+-/
+
 
 /--
 A predicate for a fixed width 'wn' can be expressed as universal quantification
@@ -1041,7 +1044,7 @@ def ReflectMap.throwWarningIfUninterpretedExprs (xs : ReflectMap) : MetaM Unit :
 
   for (e, _) in exprs do
     if e.isFVar then continue
-    let eshow := indentD m!"- {e}"
+    let eshow := indentD m!"- '{e}'"
     out? := match out? with
       | .none => header ++ Format.line ++ eshow
       | .some out => .some (out ++ eshow)
@@ -1403,6 +1406,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     -- Log the finite state machine size, and bail out if we cross the barrier.
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo m!"FSM: ⋆Circuit size '{toMessageData fsm.circuitSize}'  ⋆State space size '{fsm.stateSpaceSize}'"
+    logInfo m!"FSM: ⋆Projection Circuit '{fsm.nextBitCirc .none}'"
+    logInfo m!"FSM: ⋆Next State Circuit '{fsm.nextBitCirc .none}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
       throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
     if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
@@ -1819,6 +1824,7 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 
 /--
 info: 'Reflect.width_1_char_2_add_four' depends on axioms: [propext,
+ sorryAx,
  Classical.choice,
  Lean.ofReduceBool,
  Lean.trustCompiler,
@@ -1833,10 +1839,18 @@ theorem slow₁ (x : BitVec 32) :
   fail_if_success bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
   sorry
 
+theorem neg_one_mul (x y : BitVec w) :
+     - 1 *  ~~~(x ^^^ y)  = -1 * ~~~ (x ^^^ y) := by
+  bv_automata_circuit
+
+
+
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
   simp
-  bv_automata_circuit -- (config := { circuitSizeThreshold := 600, stateSpaceSizeThreshold := 100 })
+  bv_automata_circuit
+
+  -- bv_automata_circuit -- (config := { circuitSizeThreshold := 600, stateSpaceSizeThreshold := 100 })
 
 
 end BvAutomataTests

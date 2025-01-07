@@ -20,6 +20,25 @@ inductive Circuit (α : Type u) : Type u
   | xor : Circuit α → Circuit α → Circuit α
 deriving Repr
 
+open Lean in
+unsafe def formatCircuitImpl {α : Type u} (c : Circuit α) : Lean.Format :=
+  match c with 
+  | .tru => "T"
+  | .fals => "F"
+  | .var b v =>
+     let vstr := "v-" ++ toString (ptrAddrUnsafe v) |>.take 4
+     if b then vstr else "!" ++ vstr
+  | .and l r => s!"(and {formatCircuitImpl l} {formatCircuitImpl r})"
+  | .or l r => s!"(or {formatCircuitImpl l} {formatCircuitImpl r})"
+  | .xor l r => s!"(xor {formatCircuitImpl l} {formatCircuitImpl r})"
+
+     
+
+@[implemented_by formatCircuitImpl]
+def formatCircuit {α : Type u} (c : Circuit α) : Lean.Format := "circuit"
+instance : Lean.ToFormat (Circuit α) where
+  format c := "<" ++ formatCircuit (Lean.ShareCommon.shareCommon c) ++ ">"
+
 namespace Circuit
 
 variable {α : Type u} {β : Type v}
