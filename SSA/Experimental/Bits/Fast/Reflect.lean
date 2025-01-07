@@ -57,17 +57,44 @@ TODO:
 -/
 
 /--
-Denote a bitstream into the underlying bitvector.
--/
+Denote a bitstream into the underlying bitvector, by using toBitVec
 def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
+-/
 
-@[simp] theorem BitStream.denote_zero : BitStream.denote BitStream.zero w = 0#w := by
-  simp [denote, toBitVec]
-  sorry
+@[simp] theorem BitStream.toBitVec_zero : BitStream.toBitVec w BitStream.zero = 0#w := by
+  induction w
+  case zero => simp [toBitVec, BitStream.zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, BitStream.zero]
+    have : 0#(n + 1) = BitVec.cons false 0#n := by simp
+    rw [this, ih]
 
-@[simp] theorem BitStream.denote_negOne : BitStream.denote BitStream.negOne w = BitVec.allOnes w := by
-  simp [denote, toBitVec]
-  sorry
+@[simp] theorem BitStream.toBitVec_negOne : BitStream.toBitVec w BitStream.negOne = BitVec.allOnes w := by
+  induction w
+  case zero => simp [toBitVec, BitStream.zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, BitStream.zero]
+    rw [ih]
+    apply BitVec.eq_of_getLsbD_eq
+    simp only [BitVec.getLsbD_cons, BitVec.getLsbD_allOnes, Bool.if_true_left]
+    intros i hi
+    simp only [hi, decide_true, Bool.or_eq_true, decide_eq_true_eq]
+    omega
+
+@[simp] theorem BitStream.toBitVec_one : BitStream.toBitVec w BitStream.one = 1#w := by
+  induction w
+  case zero => simp [toBitVec, BitStream.zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, BitStream.one]
+    rw [ih]
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    simp [BitVec.getLsbD_cons]
+    by_cases hi' : i = n
+    · simp [hi']
+      by_cases hn : n = 0 <;> simp [hn]
+    · simp [hi']
+      omega
 
 open Lean in
 def mkBoolLit (b : Bool) : Expr :=
@@ -83,8 +110,8 @@ def Term.quote (t : _root_.Term) : Expr :=
   | zero => mkConst ``Term.zero
   | one => mkConst ``Term.one
   | negOne => mkConst ``Term.negOne
-  | decr t => mkApp (mkConst ``Term.decr) (t.quote)
-  | incr t => mkApp (mkConst ``Term.incr) (t.quote)
+-- | decr t => mkApp (mkConst ``Term.decr) (t.quote)
+  -- | incr t => mkApp (mkConst ``Term.incr) (t.quote)
   | neg t => mkApp (mkConst ``Term.neg) (t.quote)
   | not t => mkApp (mkConst ``Term.not) (t.quote)
   | ls b t => mkApp2 (mkConst ``Term.ls) (mkBoolLit b) (t.quote)
@@ -113,13 +140,13 @@ def Predicate.quote (p : _root_.Predicate) : Expr :=
   | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
   | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
 
-/-- Denote a Term into its underlying bitvector -/
+/-- toBitVec a Term into its underlying bitvector -/
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   match t with
   | ofNat n => BitVec.ofNat w n
-  | var n => vars[n]!
+  | var n => vars.getD n default
   | zero => 0#w
-  | negOne => BitVec.ofInt w (-1)
+  | negOne => -1#w
   | one  => 1#w
   | and a b => (a.denote w vars) &&& (b.denote w vars)
   | or a b => (a.denote w vars) ||| (b.denote w vars)
@@ -128,15 +155,216 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | add a b => (a.denote w vars) + (b.denote w vars)
   | sub a b => (a.denote w vars) - (b.denote w vars)
   | neg a => - (a.denote w vars)
-  | incr a => (a.denote w vars) + 1#w
-  | decr a => (a.denote w vars) - 1#w
+  -- | incr a => (a.denote w vars) + 1#w
+  -- | decr a => (a.denote w vars) - 1#w
   | ls bit a => (a.denote w vars).shiftConcat bit
   | shiftL a n => (a.denote w vars) <<< n
 
-theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
-    (t.eval (vars.map BitStream.ofBitVec)).denote w = t.denote w vars := by
+@[simp]
+theorem BitStream.toBitVec_ofNat : BitStream.toBitVec w (BitStream.ofNat n) = BitVec.ofNat w n := by
+  simp [toBitVec, ofNat]
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  simp [BitVec.getLsbD_ofNat]
+
+@[simp]
+theorem BitStream.toBitVec_and (a b : BitStream) :
+    (a &&& b).toBitVec w = a.toBitVec w &&& b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_or (a b : BitStream) :
+    (a ||| b).toBitVec w = a.toBitVec w ||| b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_xor (a b : BitStream) :
+    (a ^^^ b).toBitVec w = a.toBitVec w ^^^ b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  intros hi
+  simp [hi]
+
+@[simp]
+theorem BitStream.toBitVec_not (a : BitStream) :
+    (~~~ a).toBitVec w = ~~~ (a.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+
+theorem BitVec.add_getLsbD_zero {x y : BitVec w} (hw : 0 < w) : (x + y).getLsbD 0 =
+    ((x.getLsbD 0 ^^ y.getLsbD 0)) := by
+  simp [hw, getLsbD_add hw]
+
+theorem BitVec.add_getLsbD_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y).getLsbD (i + 1) =
+    (x.getLsbD (i + 1) ^^ (y.getLsbD (i + 1)) ^^ carry (i + 1) x y false) := by
+  simp [hw, getLsbD_add hw]
+
+/-- TODO: simplify this proof, something too complex is going on here. -/
+@[simp] theorem BitStream.toBitVec_add' (a b : BitStream) (w i : Nat) (hi : i < w) :
+    ((a + b).toBitVec w).getLsbD i = ((a.toBitVec w) + (b.toBitVec w)).getLsbD i ∧
+    (a.addAux b i).2 = (BitVec.carry (i + 1) (a.toBitVec w) (b.toBitVec w) false) := by
+  simp [hi]
+  rw [BitStream.add_eq_addAux]
+  induction i
+  case zero =>
+    simp
+    rw [BitVec.add_getLsbD_zero hi]
+    simp [hi]
+    simp [BitVec.carry_succ, hi]
+  case succ i ih =>
+    simp
+    rw [BitVec.add_getLsbD_succ _ _ hi]
+    have : i < w := by omega
+    specialize ih this
+    obtain ⟨ih₁, ih₂⟩ := ih
+    rw [ih₂]
+    simp [hi]
+    rw [BitVec.carry_succ (i + 1)]
+    simp [hi]
+
+@[simp] theorem BitStream.toBitVec_add (a b : BitStream) :
+    (a + b).toBitVec w = (a.toBitVec w) + (b.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  obtain ⟨h₁, h₂⟩ := BitStream.toBitVec_add' a b w i hi
+  exact h₁
+
+@[simp]
+theorem BitStream.toBitVec_neg (a : BitStream) :
+    (- a).toBitVec w = - (a.toBitVec w) := by
+  simp [neg_eq_not_add_one, BitStream.toBitVec_add, BitVec.neg_eq_not_add]
+
+@[simp]
+theorem BitStream.toBitVec_sub (a b : BitStream) :
+    (a - b).toBitVec w = (a.toBitVec w) - (b.toBitVec w) := by
+  simp [BitVec.sub_eq_add_neg, sub_eq_add_neg]
+
+@[simp] theorem BitStream.subAux_eq_BitVec_carry (a b : BitStream) (w i : Nat) (hi : i < w) :
+    (a.subAux b i).2 = !(BitVec.carry (i + 1) (a.toBitVec w) ((~~~b).toBitVec w) true) := by
+  induction i
+  case zero =>
+    simp
+    simp [BitVec.carry_succ, BitStream.subAux, hi, Bool.atLeastTwo]
+    rcases a 0 <;> rcases b 0 <;> rfl
+  case succ i ih =>
+    have : i < w := by omega
+    specialize ih this
+    rw [BitVec.carry_succ (i + 1)]
+    simp [hi]
+    rw [subAux, ih]
+    simp
+    rcases a (i + 1) <;> rcases b (i + 1) <;> simp
+
+@[simp]
+theorem BitStream.toBitVec_shiftL (a : BitStream) (k : Nat) :
+    (a.shiftLeft k).toBitVec w = (a.toBitVec w).shiftLeft k := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+  by_cases hk : i < k
+  · simp [hk]
+  · simp [hk]; omega
+
+@[simp]
+theorem BitStream.toBitVec_concat_zero (a : BitStream) :
+    (a.concat b).toBitVec 0 = 0#0 := by simp [toBitVec]
+
+@[simp]
+theorem BitStream.toBitVec_concat_succ (a : BitStream) :
+    (a.concat b).toBitVec (w + 1) = (a.toBitVec w).concat b := by
+  apply BitVec.eq_of_getLsbD_eq
+  simp
+  intros i hi
+  simp [hi]
+  rcases i with rfl | i
+  · simp
+  · simp; omega
+
+@[simp]
+theorem BitStream.toBitVec_concat(a : BitStream) :
+    (a.concat b).toBitVec w =
+      match w with
+      | 0 => 0#0
+      | w + 1 => (a.toBitVec w).concat b  := by
+  rcases w with rfl | w <;> simp
+
+/--
+Evaluating the term and then coercing the term to a bitvector is equal to denoting the term directly.
+-/
+@[simp] theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
+    (t.eval (vars.map BitStream.ofBitVec)).toBitVec w = t.denote w vars := by
   induction t generalizing w vars
-  repeat sorry
+  case var x =>
+    simp [eval, denote]
+    cases x? : vars[x]?
+    case none => simp [default, denote]
+    case some x => simp [BitVec.signExtend_eq_setWidth_of_lt]
+  case zero => simp [eval, denote]
+  case negOne => simp [eval, denote]; rw [← BitVec.negOne_eq_allOnes]
+  case one => simp [eval, denote]
+  case ofNat n => simp [eval, denote]
+  case and a b ha hb  => simp [eval, denote, ha, hb]
+  case or a b ha hb => simp [eval, denote, ha, hb]
+  case xor a b ha hb => simp [eval, denote, ha, hb]
+  case not a ha => simp [eval, denote, ha]
+  case ls b a ha  =>
+    simp [eval, denote]
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    specialize ha w vars
+    rcases w with rfl | w
+    · simp
+    · simp
+      rw [BitVec.getLsbD_shiftConcat]
+      rw [BitVec.getLsbD_concat]
+      simp [hi]
+      rcases i with rfl | i
+      · simp
+      · simp only [AddLeftCancelMonoid.add_eq_zero, one_ne_zero, and_false, ↓reduceIte,
+        add_tsub_cancel_right, show i < w by omega, decide_true, Bool.true_and]
+        rw [← ha]
+        simp; omega
+  case add a b ha hb => simp [eval, denote, ha, hb]
+  case sub a b ha hb => simp [eval, denote, ha, hb]
+  case neg a ha => simp [eval, denote, ha]
+  case shiftL a ha => simp [eval, denote, ha]
+
+/-
+This says that calling 'eval' at an index equals calling 'denote' and grabbing the bitstream
+ at that index, as long as the value is inbounds, and if not, it's going to be 'false'
+ -/
+theorem Term.eval_eq_denote_apply (t : Term) {w : Nat} {vars : List (BitVec w)}
+    {i : Nat} (hi : i < w) :
+    (t.eval (vars.map BitStream.ofBitVec)) i = (t.denote w vars).getLsbD i := by
+  have := t.eval_eq_denote w vars
+  have :
+    (BitStream.toBitVec w (t.eval (List.map BitStream.ofBitVec vars))).getLsbD i =
+    (denote w t vars).getLsbD i := by simp [this]
+  rw [BitStream.getLsbD_toBitVec] at this
+  simp only [show i < w by omega, decide_true, Bool.true_and] at this
+  simp [this]
+
+/-
+This says that calling 'eval' at an index equals calling 'denote' and grabbing the bitstream
+ at that index, as long as the value is inbounds, and if not, it's going to be 'false'
+ -/
+theorem Term.denote_eq_eval_land_lt (t : Term) {w : Nat} {vars : List (BitVec w)}
+    {i : Nat} :
+    (t.denote w vars).getLsbD i = ((t.eval (vars.map BitStream.ofBitVec)) i && (decide (i < w))) := by
+  have := t.eval_eq_denote w vars
+  have :
+    (BitStream.toBitVec w (t.eval (List.map BitStream.ofBitVec vars))).getLsbD i =
+    (denote w t vars).getLsbD i := by simp [this]
+  rw [BitStream.getLsbD_toBitVec] at this
+  by_cases hi : i < w
+  · simp [hi] at this
+    simp [this, hi]
+  · simpa [hi] using this
 
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
   match p with
@@ -150,7 +378,7 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
   | .land  p q => p.denote w vars ∧ q.denote w vars
   | .lor  p q => p.denote w vars ∨ q.denote w vars
-  | .sle  t₁ t₂ => (((t₁.denote w vars).sle (t₂.denote w vars)) = true)
+  | .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
   | .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
   | .ule  t₁ t₂ => ((t₁.denote w vars) ≤ (t₂.denote w vars))
   | .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
@@ -163,6 +391,225 @@ def Predicate.cost (p : Predicate) : Nat :=
   let fsm := predicateEvalEqFSM p
   fsm.circuitSize
 
+
+/-
+if 'evalEq' evaluates to 'false', then indeed the denotations of the terms are equal.
+-/
+theorem Predicate.evalEq_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    Term.denote w a vars = Term.denote w b vars := by
+  simp [evalEq]
+  constructor
+  · intros h
+    /- Dear god, this proof is ugly. -/
+    simp only [BitStream.scanOr_false_iff, BitStream.xor_eq, bne_eq_false_iff_eq] at h
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    specialize h (i + 1) (by omega)
+    simp at h
+    rw [Term.eval_eq_denote_apply a hi, Term.eval_eq_denote_apply b  hi] at h
+    exact h
+  · intros h
+    rw [BitStream.scanOr_false_iff]
+    intros i hi
+    rcases i with rfl | i
+    · simp
+    · simp
+      rw [Term.eval_eq_denote_apply a (by omega), Term.eval_eq_denote_apply b (by omega), h]
+
+/-- evalEq is true iff evalNeq is false -/
+theorem Predicate.evalEq_iff_not_evalNeq (a b : BitStream) :
+    ∀ (w : Nat), evalEq a b w ↔ ¬ (evalNeq a b w) := by
+  intros w
+  rcases w with rfl | w
+  · simp [evalEq, evalNeq]
+  · simp [evalEq, evalNeq]
+    by_cases hab : a w = b w
+    · simp [hab]
+      by_cases heq : (BitStream.concat false (a ^^^ b)).scanOr w
+      · simp [heq]
+        rw [BitStream.scanAnd_false_iff]
+        rw [BitStream.scanOr_true_iff] at heq
+        obtain ⟨i, hi, hi'⟩ := heq
+        exists i
+        simp [hi]
+        rcases i with rfl | i
+        · simp at hi'
+        · simpa using hi'
+      · simp [heq]
+        rw [BitStream.scanAnd_true_iff]
+        simp at heq
+        intros i hi
+        rw [BitStream.scanOr_false_iff] at heq
+        specialize (heq i hi)
+        rcases i with rfl | i
+        · simp
+        · simpa using heq
+    · simp [hab]
+
+
+
+
+/-- 'evalNeq' correctly witnesses when terms are disequal -/
+theorem Predicate.evalNeq_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalNeq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    Term.denote w a vars ≠ Term.denote w b vars := by
+  constructor
+  · intros h
+    apply Predicate.evalEq_denote_false_iff .. |>.not.mp
+    simp only [Bool.not_eq_false]
+    have := Predicate.evalEq_iff_not_evalNeq
+      (a.eval (List.map BitStream.ofBitVec vars))
+      (b.eval (List.map BitStream.ofBitVec vars))
+    apply this .. |>.mpr
+    simp [h]
+  · intros h
+    have this' := Predicate.evalEq_denote_false_iff .. |>.not.mpr h
+    simp at this'
+    have := Predicate.evalEq_iff_not_evalNeq
+      (a.eval (List.map BitStream.ofBitVec vars))
+      (b.eval (List.map BitStream.ofBitVec vars)) w |>.mp this'
+    simpa using this
+
+theorem Predicate.evalEq_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
+    Term.denote w a vars ≠ Term.denote w b vars := by
+  rw [Predicate.evalEq_iff_not_evalNeq]
+  simp [evalNeq_denote]
+
+
+private theorem BitVec.lt_eq_decide_ult {x y : BitVec w} : (x < y) = decide (x.ult y) := by
+  simp [BitVec.lt_def, BitVec.ult_toNat]
+
+private theorem BitVec.lt_iff_ult {x y : BitVec w} : (x < y) ↔ (x.ult y) := by
+  simp [BitVec.lt_def, BitVec.ult_toNat]
+
+theorem Predicate.evalUlt_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    (Term.denote w a vars < Term.denote w b vars) := by
+  simp [evalUlt, Term.eval_eq_denote_apply, BitVec.lt_eq_decide_ult, BitVec.ult_eq_not_carry]
+  rcases w with rfl | w
+  · simp [evalUlt, BitVec.of_length_zero]
+  · simp [evalUlt, BitVec.of_length_zero, BitVec.lt_eq_decide_ult, BitVec.ult_eq_not_carry]
+    simp [BitStream.borrow, BitStream.subAux_eq_BitVec_carry (w := w + 1)]
+
+theorem Predicate.evalUlt_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
+      (Term.denote w b vars) ≤ (Term.denote w a vars) := by
+  obtain ⟨h₁, h₂⟩ := evalUlt_denote_false_iff a b vars
+  constructor
+  · intros h
+    by_contra h'
+    simp at h'
+    specialize (h₂ h')
+    simp [h₂] at h
+  · intros h
+    by_contra h'
+    simp at h'
+    specialize (h₁ h')
+    bv_omega
+
+private theorem evalMsbEq_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    Predicate.evalMsbEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+   ((Term.denote w a vars).msb = (Term.denote w b vars).msb) := by
+  simp [Predicate.evalMsbEq]
+  rcases w with rfl | w
+  · simp [BitVec.of_length_zero]
+  · simp [BitVec.msb_eq_getLsbD_last, Term.eval_eq_denote_apply]
+
+private theorem evalMsbEq_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    Predicate.evalMsbEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
+   ((Term.denote w a vars).msb ≠ (Term.denote w b vars).msb) := by
+  simp [Predicate.evalMsbEq]
+  rcases w with rfl | w
+  · simp [BitVec.of_length_zero]
+  · simp [BitVec.msb_eq_getLsbD_last, Term.eval_eq_denote_apply]
+
+theorem eq_true_iff_of_eq_false_iff (b : Bool) (rhs : Prop) (h : (b = false) ↔ rhs) :
+    (b = true) ↔ ¬ rhs := by
+constructor
+· intros h'
+  apply h.not.mp
+  simp [h']
+· intros h'
+  by_contra hcontra
+  simp at hcontra
+  have := h.mp hcontra
+  exact h' this
+
+/-- TODO: Minimize this proof by a metric fuckton. -/
+private theorem Predicate.evalSlt_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+    (Term.denote w a vars <ₛ Term.denote w b vars) := by
+  simp [evalSlt, BitStream.not_eq, BitStream.xor_eq, Bool.not_bne', beq_eq_false_iff_ne, ne_eq]
+  have hult_iff := Predicate.evalUlt_denote_false_iff a b vars
+  by_cases hUlt : evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w
+  · rw [hUlt]
+    have hUlt' := evalUlt_denote_true_iff .. |>.mp hUlt
+    simp
+    by_cases hMsbEq : evalMsbEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w
+    · rw [hMsbEq]
+      have hMsbEq' := evalMsbEq_denote_true_iff .. |>.mp hMsbEq
+      simp
+      rw [BitVec.slt_eq_ult]
+      -- TODO: how to deal with booleans properly? This is making my life pretty miserable at the moment.
+      have : ((Term.denote w a vars).msb != (Term.denote w b vars).msb) = true := by
+        simp [hMsbEq']
+      simp [this]
+      rw [BitVec.ult]
+      rw [BitVec.le_def] at hUlt'
+      simp; omega
+    · simp at hMsbEq
+      have hMsbEq' := evalMsbEq_denote_false_iff .. |>.mp hMsbEq
+      simp [hMsbEq]
+      rw [BitVec.le_def] at hUlt'
+      rw [BitVec.slt_eq_ult]
+      rw [BitVec.ult]
+      simp [show ¬ (Term.denote w a vars).toNat < (Term.denote w b vars).toNat by omega]
+      simp [hMsbEq']
+  · simp at hUlt
+    rw [hUlt]
+    have hUlt' := evalUlt_denote_false_iff .. |>.mp hUlt
+    simp
+    by_cases h' : evalMsbEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w
+    · simp [h']
+      rw [BitVec.slt_eq_ult]
+      rw [BitVec.ult]
+      rw [BitVec.lt_def] at hUlt'
+      simp [hUlt']
+      simp [evalMsbEq_denote_true_iff .. |>.mp h']
+    · simp at h'
+      simp [h']
+      rw [BitVec.slt_eq_ult]
+      rw [BitVec.ult]
+      rw [BitVec.lt_def] at hUlt'
+      simp [hUlt']
+      simp [evalMsbEq_denote_false_iff .. |>.mp h']
+
+private theorem Predicate.evalSlt_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+    evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
+    ¬ (Term.denote w a vars <ₛ Term.denote w b vars) := by
+  rw [eq_true_iff_of_eq_false_iff]
+  simp [Predicate.evalSlt_denote_false_iff]
+
+/-- TODO: ForLean -/
+private theorem BitVec.ForLean.ule_iff_ult_or_eq (x y : BitVec w) : x ≤ y ↔ (x = y ∨ x < y) := by
+  constructor <;> bv_omega
+
+private theorem BitVec.sle_iff_slt_or_eq (x y : BitVec w) : x.sle y ↔ (decide (x = y) ∨ x.slt y) := by
+  simp [BitVec.slt, BitVec.sle]
+  constructor
+  · intros h
+    suffices x.toInt = y.toInt ∨ x.toInt < y.toInt by
+      rcases this with h | h
+      · left
+        apply BitVec.eq_of_toInt_eq h
+      · right
+        omega
+    omega
+  · intros h
+    rcases h with rfl | h  <;> omega
+
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -170,7 +617,80 @@ The predicate, when evaluated, at index `i` is false iff the denotation is true.
 theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec w)) :
     (p.eval (vars.map BitStream.ofBitVec) w = false) ↔ p.denote w vars := by
   induction p generalizing vars w
-  repeat sorry
+  case widthEq n => simp [eval, denote]
+  case widthNeq n => simp [eval, denote]
+  case widthLt n => simp [eval, denote]
+  case widthLe n => simp [eval, denote]
+  case widthGt n => simp [eval, denote]
+  case widthGe n => simp [eval, denote]
+  case eq a b => simp [eval, denote]; apply evalEq_denote_false_iff
+  case neq a b => simp [eval, denote]; apply evalNeq_denote
+  case ult a b => simp [eval, denote]; apply evalUlt_denote_false_iff
+  case slt a b =>
+    simp [eval, denote];
+    by_cases h : Term.denote w a vars <ₛ Term.denote w b vars
+    · rw [h]
+      simp [Predicate.evalSlt_denote_false_iff, h]
+    · simp at h
+      rw [h]
+      simp only [Bool.not_false]
+      by_contra h'
+      simp only [Bool.not_eq_true] at h'
+      rw [Predicate.evalSlt_denote_false_iff] at h'
+      simp only [h, Bool.false_eq_true] at h'
+  case ule a b =>
+    simp [eval, denote];
+    simp only [evalLor, BitStream.and_eq]
+    rw [BitVec.ForLean.ule_iff_ult_or_eq]
+    by_cases heq : Term.denote w a vars = Term.denote w b vars
+    · rw [heq]
+      simp [evalEq_denote_false_iff a b vars |>.mpr heq]
+    · simp [heq]
+      by_cases hlt : Term.denote w a vars < Term.denote w b vars
+      · simp [hlt]
+        simp [evalUlt_denote_false_iff a b vars |>.mpr hlt]
+      · simp [hlt]
+        have := evalEq_denote_false_iff a b vars |>.not |>.mpr heq
+        simp only [this, true_and]
+        have := evalUlt_denote_false_iff a b vars |>.not |>.mpr hlt
+        simp only [this]
+  case sle a b =>
+    simp [eval, denote]
+    simp only [evalLor, BitStream.and_eq]
+    have h := BitVec.sle_iff_slt_or_eq (Term.denote w a vars) (Term.denote w b vars) |>.eq
+    rcases hSle : Term.denote w a vars ≤ₛ Term.denote w b vars
+    · simp [hSle] at h ⊢
+      obtain ⟨h₁, h₂⟩ := h
+      simp [evalEq_denote_true_iff .. |>.mpr h₁]
+      rw [evalSlt_denote_true_iff .. |>.mpr]
+      simp [h₂]
+    · simp [hSle] at h ⊢
+      intros hEq
+      simp [evalEq_denote_true_iff .. |>.mp hEq] at h
+      apply evalSlt_denote_false_iff .. |>.mpr h
+  case land p q hp hq => simp [eval, denote, hp, hq, evalLand]
+  case lor p q hp hq =>
+    simp [eval, denote, hp, hq]
+    simp only [evalLor, BitStream.and_eq]
+    constructor
+    · intros heval
+      by_cases hp' : p.denote w vars
+      · simp [hp']
+      · by_cases hq' : q.denote w vars
+        · simp [hq']
+        · have := hp .. |>.not |>.mpr hp'
+          simp [this] at heval
+          have := hq .. |>.not |>.mpr hq'
+          simp [this] at heval
+    · intros hdenote
+      rcases hdenote with hp' | hq'
+      · have := hp .. |>.mpr hp'
+        simp [this]
+      · have := hq .. |>.mpr hq'
+        simp [this]
+
+/-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms Predicate.eval_eq_denote
 
 /--
 A predicate for a fixed width 'wn' can be expressed as universal quantification
@@ -192,6 +712,7 @@ theorem Predicate.denote_of_eval_eq {p : Predicate}
     ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
   intros w vars
   apply p.eval_eq_denote w vars |>.mp (heval w <| vars.map BitStream.ofBitVec)
+
 
 /-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
 theorem Predicate.denote_of_eval_eq_fixedWidth {p : Predicate} (w : Nat)
@@ -238,7 +759,7 @@ we can only shift by numbers upto `2^w`. Therefore, we choose `x <<< (n : Nat)` 
 and preprocessing normal form for the tactic.
 -/
 
-@[simp] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) : 
+@[simp] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
   x <<< BitVec.ofNat w n = x <<< (n % 2^w) := by simp
 
 /--
@@ -303,7 +824,7 @@ def getEqRhs (eq : Expr) : MetaM Expr := do
   rhs.ensureHasNoMVars
   return rhs
 
-open Lean Meta Elab in 
+open Lean Meta Elab in
 /--
 This needs to be a pre-simproc, because we want to rewrite `k * x`
 repeatedly into smaller multiplications:
@@ -314,15 +835,15 @@ Since we get a smaller multiplication with `k/2`, we need it to be a pre-simproc
 into the RHS expression.
 -/
 simproc↓ [bv_circuit_preprocess] shiftLeft_break_down ((BitVec.ofNat _ _) * (_ : BitVec _)) := fun x => do
-  match_expr x with 
-  | HMul.hMul _bv _bv _bv _inst kbv x => 
-    let_expr BitVec.ofNat _w k := kbv | return .continue 
+  match_expr x with
+  | HMul.hMul _bv _bv _bv _inst kbv x =>
+    let_expr BitVec.ofNat _w k := kbv | return .continue
     let some kVal ← Meta.getNatValue? k | return .continue
     /- base cases, will be taken care of by rewrite theorems -/
     if kVal == 0 || kVal == 1 then return .continue
     let thmName := if kVal % 2 == 0 then
       mkConst ``BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two
-    else 
+    else
       mkConst ``BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one
     let eqProof := mkAppN thmName
       #[_w, x, mkNatLit <| Nat.div2 kVal, mkNatLit kVal,  (← mkEqRefl k)]
@@ -610,8 +1131,6 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
   | BitVec.ofInt _wExpr iExpr =>
     let i ← getIntValue? iExpr
     match i with
-    | .some (-1) =>
-      return {bvToIxMap := map, e := Term.negOne }
     | _ =>
       let (e, map) := map.findOrInsertExpr e
       return { bvToIxMap := map, e := e }
@@ -655,7 +1174,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       return { b with e := out }
   | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
       let a ← reflectTermUnchecked map w a
-      let some n ← getNatValue? n 
+      let some n ← getNatValue? n
         | throwError "expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
       return { a with e := Term.shiftL a.e n }
 
@@ -892,8 +1411,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     let (mapFv, g) ← generalizeMap g bvToIxMapVal;
     let (_, g) ← g.revert #[mapFv]
     -- Apply Predicate.denote_of_eval_eq.
-    let wVal? ← Meta.getNatValue? w 
-    let g ← 
+    let wVal? ← Meta.getNatValue? w
+    let g ←
       -- Fixed width problem
       if h : wVal?.isSome ∧ cfg.fastFixedWidth then
         logInfo m!"using special fixed-width procedure for fixed bitwidth '{w}'."
@@ -901,7 +1420,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
         let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq_fixedWidth)
           | throwError m!"Failed to apply `Predicate.denote_of_eval_eq_fixedWidth` on goal '{indentD g}'"
         pure g
-      else 
+      else
         -- Generic width problem.
         -- If the generic width problem has as 'complex' width, then warn the user that they're
         -- trying to solve a fragment that's better expressed differently.
@@ -965,7 +1484,6 @@ theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_circuit
 #print eq1
 
-
 open NNF in
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
@@ -1015,9 +1533,10 @@ example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
   -- b = 0x1#1
   sorry
 
-/-- Tricohotomy of slt. -/
-example (w : Nat) (a b : BitVec w) : (1#w = 0#w) ∨ ((a - b).slt 0 → a.slt b) := by
-  bv_automata_circuit
+-- This should succeed.
+example (w : Nat) (a b : BitVec w) : (w > 1 ∧ (a - b).slt 0 → a.slt b) := by
+  try bv_automata_circuit;
+  sorry
 
 
 /-- Tricohotomy of slt. Currently fails! -/
@@ -1047,7 +1566,7 @@ example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#
 example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
   bv_automata_circuit
 
-/-
+/--
 Is this true at bitwidth 1? Not it is not!
 So we need an extra hypothesis that rules out bitwifth 1.
 We do this by saying that either the given condition, or 1+1 = 0.
@@ -1182,6 +1701,28 @@ def test2_circuit (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y))
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_circuit
 
+/--
+info: 'Reflect.test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
+-/
+#guard_msgs in #print axioms test24
+
+/--
+info: def Reflect.test24 : ∀ {w : ℕ} (x y : BitVec w), x ||| y = (x &&& ~~~y) + y :=
+fun {w} x y =>
+  id
+    (Predicate.denote_of_eval_eq
+      (of_decide_eq_true
+        (ofReduceBool
+          (decide
+            (∀ (w : ℕ) (vars : List BitStream),
+              (Predicate.eq ((Term.var 0).or (Term.var 1)) (((Term.var 0).and (Term.var 1).not).add (Term.var 1))).eval
+                  vars w =
+                false))
+          true SSA.Experimental.Bits.Fast.Reflect._auxLemma.32))
+      w (Map.append w y (Map.append w x Map.empty)))
+-/
+#guard_msgs in #print test24
+
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata_circuit
 
@@ -1199,7 +1740,7 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
   intros
   bv_automata_circuit
 
-example : ∀ (w : Nat) (x : BitVec w), (BitVec.ofInt w (-1)) &&& x = x := by
+example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   intros
   bv_automata_circuit
 
@@ -1265,7 +1806,7 @@ example (x : BitVec 0) : x = x + 0#0 := by
   bv_automata_circuit
 
 /-- All bitvectors are equal at width 0 -/
-example (x y : BitVec w) (hw : w = 0) : x = y := by 
+example (x y : BitVec w) (hw : w = 0) : x = y := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
@@ -1273,9 +1814,17 @@ def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
-def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by 
+def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
   bv_automata_circuit
 
+/--
+info: 'Reflect.width_1_char_2_add_four' depends on axioms: [propext,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms width_1_char_2_add_four
 
 set_option trace.profiler true  in
 /-- warning: declaration uses 'sorry' -/
