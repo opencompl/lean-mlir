@@ -12,6 +12,26 @@ $ lake build bv-circuit-profile; samply record .lake/build/bin/bv-circuit-profil
 Authors: Siddharth Bhat
 -/
 import SSA.Experimental.Bits.Fast.Reflect
+import Lean
+open Lean 
+
+open Lean Elab Meta
+#check Lean.Core.CoreM.toIO
+
+/-
+/--
+Run a `CoreM α` in a fresh `Environment` with specified `modules : List Name` imported.
+-/
+def CoreM.withImportModules {α : Type} (modules : Array Name) (run : CoreM α)
+    (searchPath : Option SearchPath := none) (options : Options := {})
+    (trustLevel : UInt32 := 0) (fileName := "") :
+    IO α := unsafe do
+  if let some sp := searchPath then searchPathRef.set sp
+  Lean.withImportModules (modules.map (Import.mk · false)) options trustLevel fun env =>
+    let ctx := {fileName, options, fileMap := default}
+    let state := {env}
+    Prod.fst <$> (CoreM.toIO · ctx state) do
+-/
 
 
 def preds : Array Predicate := #[
@@ -24,6 +44,10 @@ def preds : Array Predicate := #[
       (Term.add (Term.and (Term.var 0) (Term.var 1)) (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1)))
   ]
 
+
+#check Tactic.BVDecide.External.satQuery
+
+-- 
 
 /-!
 We disable closed term extraction to make sure that the evaluation of
