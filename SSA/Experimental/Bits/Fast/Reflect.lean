@@ -1397,6 +1397,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     let result ← reflectPredicateAux ∅ (← g.getType) w
     result.bvToIxMap.throwWarningIfUninterpretedExprs
 
+    logInfo m!"predicate (repr): {indentD (repr result.e)}"
+
     let bvToIxMapVal ← result.bvToIxMap.toExpr w
 
     let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
