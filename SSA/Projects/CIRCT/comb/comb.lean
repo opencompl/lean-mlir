@@ -296,18 +296,18 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 /-
   problem: handling nat/bool arguments
 -/
-def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv w) :=
+def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat)  : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .extract w n)
-    (ty_eq := rfl)
+    (ty_eq := sorry)
     (eff_le := by constructor)
-    (args := .cons a <| .cons n .nil)
+    (args := sorry)
     (regArgs := .nil)
 
 def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .icmp w)
-    (ty_eq := rfl)
+    (ty_eq := sorry)
     (eff_le := by constructor)
     (args := sorry)
     (regArgs := .nil)
@@ -352,7 +352,7 @@ def or {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ 
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
+def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .parity w)
     (ty_eq := sorry)
@@ -360,9 +360,9 @@ def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
+def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .replicate w _)
+    (op := .replicate w n)
     (ty_eq := sorry)
     (eff_le := by constructor)
     (args := sorry)
