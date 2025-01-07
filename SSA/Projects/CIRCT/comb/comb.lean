@@ -12,7 +12,7 @@ def add (x y : BitVec w) : BitVec w :=
 def and (x y : BitVec w) : BitVec w :=
   x &&& y
 
-def concat (x y : BitVec w) : BitVec (w + w) :=
+def concat (x : BitVec w₁) (y : BitVec w₂) : BitVec (w₁ + w₂) :=
   x ++ y
 
 def divs (x y : BitVec w) : BitVec w :=
@@ -70,8 +70,8 @@ def mux (x y : BitVec w) (cond : Bool) : BitVec w :=
 def or (x y : BitVec w) : BitVec w :=
   x ||| y
 
-def parity (x : BitVec w) : BitVec 1 :=
-  BitVec.truncate 1 (BitVec.umod x 2#w)
+def parity (x : BitVec w) : Bool :=
+  (BitVec.umod x 2#w) == 1
 
 def replicate (x : BitVec w) (n : Nat) : BitVec (w * n) :=
   BitVec.replicate n x
@@ -122,10 +122,10 @@ section Dialect
 inductive Op
 | add (w : Nat)
 | and (w : Nat)
-| concat (w : Nat)
+| concat (w₁ : Nat) (w₂ : Nat)
 | divs (w : Nat)
 | divu (w : Nat)
-| extract (w : Nat)
+| extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
 | icmp (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
@@ -133,7 +133,7 @@ inductive Op
 | mux (w : Nat)
 | or (w : Nat)
 | parity (w : Nat)
-| replicate (w : Nat)
+| replicate (w : Nat) (n : Nat)
 | shl (w : Nat)
 | shrs (w : Nat)
 | shru (w : Nat)
@@ -165,10 +165,10 @@ open TyDenote (toType)
 def Op.sig : Op  → List Ty
   | .add w => [Ty.bv w, Ty.bv w]
   | .and w => [Ty.bv w, Ty.bv w]
-  | .concat w => [Ty.bv w, Ty.bv w]
+  | .concat w₁ w₂ => [Ty.bv w₁, Ty.bv w₂]
   | .divs w => [Ty.bv w, Ty.bv w]
   | .divu w => [Ty.bv w, Ty.bv w]
-  | .extract w => [Ty.bv w, Ty.nat]
+  | .extract w _ => [Ty.bv w, Ty.nat]
   | .icmp w => [Ty.bv w, Ty.bv w, Ty.nat]
   | .mods w => [Ty.bv w, Ty.bv w]
   | .modu w => [Ty.bv w, Ty.bv w]
@@ -176,7 +176,7 @@ def Op.sig : Op  → List Ty
   | .mux w => [Ty.bv w, Ty.bv w, Ty.bool]
   | .or w => [Ty.bv w, Ty.bv w]
   | .parity w => [Ty.bv w]
-  | .replicate w => [Ty.bv w, Ty.nat]
+  | .replicate w _ => [Ty.bv w, Ty.nat]
   | .shl w => [Ty.bv w, Ty.bv w]
   | .shrs w => [Ty.bv w, Ty.bv w]
   | .shru w => [Ty.bv w, Ty.bv w]
@@ -188,10 +188,10 @@ def Op.sig : Op  → List Ty
 def Op.outTy : Op  → Ty
   | .add w => Ty.bv w
   | .and w => Ty.bv w
-  | .concat w => Ty.bv (w + w)
+  | .concat w₁ w₂ => Ty.bv (w₁ + w₂)
   | .divs w => Ty.bv w
   | .divu w => Ty.bv w
-  | .extract w => sorry -- Ty.bv (w - n)
+  | .extract w n => Ty.bv (w - n)
   | .icmp _ => Ty.bool
   | .mods w => Ty.bv w
   | .modu w => Ty.bv w
@@ -199,7 +199,7 @@ def Op.outTy : Op  → Ty
   | .mux w => Ty.bv w
   | .or w =>  Ty.bv w
   | .parity _ => Ty.bool
-  | .replicate w => sorry -- Ty.bv (w * n)
+  | .replicate w n =>  Ty.bv (w * n)
   | .shl w =>  Ty.bv w
   | .shrs w =>  Ty.bv w
   | .shru w =>  Ty.bv w
@@ -215,25 +215,25 @@ instance : DialectSignature Comb := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (Comb) where
     denote
-    | .add w, arg, _ => Comb.add (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .and w, arg, _ => Comb.and (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .concat w, arg, _ => sorry --Comb.concat (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .divs w, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .divu w, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .extract w, arg, _ => sorry -- Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .icmp w, arg, _ => sorry -- Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .mods w, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .modu w, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .mul w, arg, _ => Comb.mul (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .mux w, arg, _ => sorry -- Comb.mux (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .or w, arg, _ => Comb.or (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .parity w, arg, _ => sorry -- Comb.parity (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .replicate w, arg, _ => sorry -- Comb.replicate (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .shl w, arg, _ => Comb.shl (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .shrs w, arg, _ => Comb.shrs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .shru w, arg, _ => Comb.shru (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .sub w, arg, _ => Comb.sub (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .xor w, arg, _ => Comb.xor (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .add _, arg, _ => Comb.add (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .and _, arg, _ => Comb.and (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .concat _ _, arg, _ => Comb.concat (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .extract w n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
+    | .icmp _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
+    | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .mul _, arg, _ => Comb.mul (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .mux _, arg, _ => Comb.mux (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
+    | .or _, arg, _ => Comb.or (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .parity _, arg, _ => Comb.parity (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+    | .replicate _ n, arg, _ => Comb.replicate (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
+    | .shl _, arg, _ => Comb.shl (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .shrs _, arg, _ => Comb.shrs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .shru _, arg, _ => Comb.shru (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .sub _, arg, _ => Comb.sub (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .xor _, arg, _ => Comb.xor (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
 
 end Dialect
 
