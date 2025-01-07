@@ -296,18 +296,18 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 /-
   problem: handling nat/bool arguments
 -/
-def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat)  : Expr (Comb) Γ .pure (.bv w) :=
+def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat)  : Expr (Comb) Γ .pure (.bv (w - n)) :=
   Expr.mk
     (op := .extract w n)
-    (ty_eq := sorry)
+    (ty_eq := rfl)
     (eff_le := by constructor)
     (args := sorry)
     (regArgs := .nil)
 
-def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
+def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
     (op := .icmp w)
-    (ty_eq := sorry)
+    (ty_eq := rfl)
     (eff_le := by constructor)
     (args := sorry)
     (regArgs := .nil)
@@ -352,18 +352,18 @@ def or {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ 
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
     (op := .parity w)
-    (ty_eq := sorry)
+    (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv w) :=
+def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv (w * n)) :=
   Expr.mk
     (op := .replicate w n)
-    (ty_eq := sorry)
+    (ty_eq := rfl)
     (eff_le := by constructor)
     (args := sorry)
     (regArgs := .nil)
@@ -417,7 +417,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .bv w, "Comb.parity" => return ⟨_, .bv w, parity v₁⟩
+      | .bv w, "Comb.parity" => return ⟨_, .bool, parity v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.add" | op@"Comb.and" | op@"Comb.concat" | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.extract" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub" | op@"Comb.xor"   =>
@@ -520,7 +520,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .bv w₁, .bv w₂, .nat, "Comb.icmp" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁, icmp v₁ v₂ v₃⟩
+          return ⟨_, .bool, icmp v₁ v₂ v₃⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, .bool, "Comb.mux" =>
