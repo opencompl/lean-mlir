@@ -1139,14 +1139,6 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.neg q,
       good := by ext; simp }
---   | incr t =>
---     let q := termEvalEqFSM t
---     { toFSM := by dsimp [arity]; exact composeUnary FSM.incr q,
---       good := by ext; simp }
---   | decr t =>
---     let q := termEvalEqFSM t
---     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
---       good := by ext; simp }
   | shiftL t k =>
      let q := termEvalEqFSM t
      {

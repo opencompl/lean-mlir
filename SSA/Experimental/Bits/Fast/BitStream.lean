@@ -479,36 +479,6 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
 
-
-/-!
-Use `add_eq_addAux` to reason about `add`'s behaviour.
--/
-
-
--- /-- The stream of carries -/
--- def carryOut (x y : BitStream) : BitStream :=
---   fun n => (addAux x y n).2
---
--- @[simp] theorem carryOutOut_zero (x y : BitStream) : (x.carryOut y 0) = ((x 0) && (y 0)) := by
---   simp [carryOut, addAux,BitVec.adcb]
---
--- @[simp] theorem carryOut_succ (x y : BitStream) : (x.carryOut y (i+1)) =
---     let carryOut := carryOut x y i
---     let a := x (i + 1)
---     let b := y (i + 1)
---     Bool.atLeastTwo a  b carryOut := by
---   simp [carryOut, addAux, BitVec.adcb, Bool.atLeastTwo]
---
--- @[simp] theorem add_zero (x y : BitStream) : (x.add y 0) = ((x 0) ^^ (y 0)) := by
---   simp [add, addAux, BitVec.adcb]
---
--- @[simp] theorem add_succ (x y : BitStream) : (x.add y (i+1)) =
---     let carryIn := carryOut x y i
---     let a := x (i + 1)
---     let b := y (i + 1)
---     a ^^ b ^^ carryIn := by
---   simp [addAux, add, BitVec.adcb, carryOut]
---
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
