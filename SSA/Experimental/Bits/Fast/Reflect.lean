@@ -689,10 +689,8 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
       · have := hq .. |>.mpr hq'
         simp [this]
 
-/-
 /-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.eval_eq_denote
--/
 
 
 /--
@@ -1406,7 +1404,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     logInfo m!"goal after reflection: {indentD g}"
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM |>.optimize
+    let fsm := predicateEvalEqFSM result.e |>.toFSM 
     logInfo f!"{fsm.format}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
       throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
@@ -1707,12 +1705,7 @@ def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_circuit
 
 /--
-info: 'Reflect.test24' depends on axioms: [propext,
- sorryAx,
- Classical.choice,
- Lean.ofReduceBool,
- Lean.trustCompiler,
- Quot.sound]
+info: 'Reflect.test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
 -/
 #guard_msgs in #print axioms test24
 
@@ -1829,7 +1822,6 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 
 /--
 info: 'Reflect.width_1_char_2_add_four' depends on axioms: [propext,
- sorryAx,
  Classical.choice,
  Lean.ofReduceBool,
  Lean.trustCompiler,
@@ -1848,14 +1840,10 @@ theorem neg_one_mul (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y)  = -1 * ~~~ (x ^^^ y) := by
   bv_automata_circuit
 
-
-
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
   simp
   bv_automata_circuit
-
-  -- bv_automata_circuit -- (config := { circuitSizeThreshold := 600, stateSpaceSizeThreshold := 100 })
 
 
 end BvAutomataTests

@@ -1458,7 +1458,6 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
   termination_by card_compl c
 
 
-
 theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
     (hc : ∀ s, c.eval s = true →
@@ -1525,14 +1524,14 @@ def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arit
 
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
-  let p := FSM.optimize p
-  decideIfZerosAuxUnverified p.initCarry (p.nextBitCirc none).fst (fun s => p.nextBitCirc (some s))
+  -- let p := FSM.optimize p
+  decideIfZerosAux p (p.nextBitCirc none).fst 
 
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.simplify.eval x n = false := by sorry
-/-
+    (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.simplify.eval x n = false := by
   simp only [FSM.eval_simplify]
+  simp [decideIfZeros]
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
     intro s x h
@@ -1543,10 +1542,9 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     intro x s h
     use x
     exact h
--/
 
-/- info: 'decideIfZeros_correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
--- #guard_msgs in #print axioms decideIfZeros_correct
+/-- info: 'decideIfZeros_correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms decideIfZeros_correct
 
 /-- Iterate the next bit circuit 'n' times, while universally quantifying over all inputs
 that are possible at each step. -/
