@@ -420,8 +420,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .bv w, "Comb.parity" => return ⟨_, .bv w, parity v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"Comb.add" | op@"Comb.and" | op@"Comb.concat" | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.extract" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.mul"
-  | op@"Comb.or" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub" | op@"Comb.xor"   =>
+  | op@"Comb.add" | op@"Comb.and" | op@"Comb.concat" | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.extract" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub" | op@"Comb.xor"   =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -430,69 +429,82 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       /- more checks need to be added here to ensure the consistency of operations and bitvec sizes -/
       | .bv w₁, .bv w₂, "Comb.add" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, add v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.and" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, add v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.concat" => return ⟨_, .bv (w₁ + w₂), concat v₁ v₂⟩
       | .bv w₁, .bv w₂, "Comb.divs" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, divs v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.divu" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, divu v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w, .nat, "Comb.extract" => sorry -- i need a way to have n here! beyond the type. ideal: return ⟨_, .bv (w - n), extract v₁ n⟩
       | .bv w₁, .bv w₂, "Comb.mods" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, mods v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.modu" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, modu v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.mul" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, mul v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.or" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, or v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       /- TODO: conditions on shifts can be relaxed. reason about how. -/
       | .bv w₁, .bv w₂, "Comb.shl" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, shl v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.shrs" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, shrs v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.shru" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, shru v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.sub" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, sub v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, "Comb.xor" =>
         if h : w₁ = w₂ then
+          let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bv w₁, xor v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
@@ -507,13 +519,15 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       match ty₁, ty₂, ty₃, op with
       | .bv w₁, .bv w₂, .nat, "Comb.icmp" =>
         if h : w₁ = w₂ then
-          return ⟨_, .bv w, icmp v₁ v₂ v₃⟩
+          let v₂ := v₂.cast (by rw [h])
+          return ⟨_, .bv w₁, icmp v₁ v₂ v₃⟩
         else
           throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, .bool, "Comb.mux" =>
-        .bv w₁, .bv w₂, .nat, "Comb.icmp" =>
         if h : w₁ = w₂ then
-          return ⟨_, .bv w, mux v₁ v₂ v₃⟩
+          /- mux should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
+          let v₂ := v₂.cast (by rw [h])
+          return ⟨_, .bv w₁, mux v₁ v₂ v₃⟩
         else
           throw <| .generic s!"type mismatch"
       | _, _, _, _=> throw <| .generic s!"type mismatch"
