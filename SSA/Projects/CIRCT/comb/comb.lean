@@ -255,8 +255,8 @@ instance instTransformTy : MLIR.AST.TransformTy Comb 0 where
 
 def add {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
-    (ty_eq := rfl)
+    (op := .add w)
+    (ty_eq := by rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
@@ -269,17 +269,17 @@ def and {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def concat {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def concat {Γ : Ctxt _} (a : Γ.Var (.bv w₁)) (b : Γ.Var (.bv w₂)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
-    (ty_eq := rfl)
+    (op := .concat w₁ w₂)
+    (ty_eq := sorry)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
 def divs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .divs w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -287,7 +287,7 @@ def divs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 
 def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .divu w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -296,17 +296,17 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 /-
   problem: handling nat/bool arguments
 -/
-def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
+def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .extract w n)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := sorry)--.cons a <| sorry n <| .nil)
+    (args := .cons a <| .cons n .nil)
     (regArgs := .nil)
 
 def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .icmp w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := sorry)
@@ -314,7 +314,7 @@ def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (n : Γ.Var (.n
 
 def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .mods w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -322,7 +322,7 @@ def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 
 def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .modu w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -330,7 +330,7 @@ def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 
 def mul {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .mul w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -338,32 +338,32 @@ def mul {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ
 
 def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (.bool)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .mux w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := sorry)
+    (args := .cons a <| .cons b <| .cons cond <| .nil)
     (regArgs := .nil)
 
 def or {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .or w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
-    (ty_eq := rfl)
+    (op := .parity w)
+    (ty_eq := sorry)
     (eff_le := by constructor)
-    (args := sorry)
+    (args := .cons a <| .nil)
     (regArgs := .nil)
 
 def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
-    (ty_eq := rfl)
+    (op := .replicate w _)
+    (ty_eq := sorry)
     (eff_le := by constructor)
     (args := sorry)
     (regArgs := .nil)
@@ -371,7 +371,7 @@ def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Com
 
 def shl {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .shl w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -379,7 +379,7 @@ def shl {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ
 
 def shrs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .shrs w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -387,7 +387,7 @@ def shrs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 
 def shru {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .shru w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -395,7 +395,7 @@ def shru {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 
 def sub {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .sub w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
@@ -403,7 +403,7 @@ def sub {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ
 
 def xor {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
-    (op := .and w)
+    (op := .xor w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
