@@ -45,9 +45,56 @@ def preds : Array Predicate := #[
   ]
 
 
-#check Tactic.BVDecide.External.satQuery
+open Std Sat AIG in
+/--
+Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
+bitblasting capabilities.
+-/
+def Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) : 
+    ExtendingEntrypoint aig :=
+  match c with 
+  | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
+  | .tru => ⟨aig.mkConstCached true, by apply  LawfulOperator.le_size⟩
+  | .var b v => 
+    let out := mkAtomCached aig v
+    have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v
+    if b then
+      ⟨out, by simp [out]; omega⟩
+    else 
+      let notOut := mkNotCached out.aig out.ref
+      have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
+      ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
+  | .and l r =>
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let lhsRef := lhsRef.cast <| by
+      dsimp only at rextend ⊢
+      omega
+    let input := ⟨lhsRef, rhsRef⟩
+    let ret := aig.mkAndCached input
+    have Lawful := LawfulOperator.le_size (f := mkAndCached) aig input
+    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+  | .or l r => 
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let lhsRef := lhsRef.cast <| by
+      dsimp only at rextend ⊢
+      omega
+    let input := ⟨lhsRef, rhsRef⟩
+    let ret := aig.mkOrCached input
+    have Lawful := LawfulOperator.le_size (f := mkOrCached) aig input
+    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+  | .xor l r => 
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let lhsRef := lhsRef.cast <| by
+      dsimp only at rextend ⊢
+      omega
+    let input := ⟨lhsRef, rhsRef⟩
+    let ret := aig.mkXorCached input
+    have Lawful := LawfulOperator.le_size (f := mkXorCached) aig input
+    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
 
--- 
 
 /-!
 We disable closed term extraction to make sure that the evaluation of

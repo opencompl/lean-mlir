@@ -1457,6 +1457,53 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
       decideIfZerosAux p (c' ||| c)
   termination_by card_compl c
 
+def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
+    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → 
+        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' }) 
+    (p : FSM arity) (c : Circuit p.α) : m Bool := do
+  if c.eval p.initCarry
+  then return false
+  else
+    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    let le ← decLe c' c
+    if h : le then return true
+    else
+      have _wf : card_compl (c' ||| c) < card_compl c :=
+        have := le.prop
+        have hNotLt : ¬ c' ≤ c := by
+          simp at h
+          have := this.not
+          simp at this
+          exact this.mp h
+        decideIfZeroAux_wf hNotLt
+      decideIfZerosAuxM decLe p (c' ||| c) 
+  termination_by card_compl c
+
+/--
+The monadic version is equivalent to 'decideIfZerosAux',
+if the monad used is `Id` and the comparator that is used is the usual `≤` operation.
+-/
+theorem decideIfZerosAuxM_Id_eq_decideIfZerosAux {arity : Type _}
+    (p : FSM arity) [DecidableEq arity] [Fintype arity] (c : Circuit p.α) :
+    decideIfZerosAuxM (m := Id) (decLe := fun c c' => 
+      let b := c ≤ c'
+      ⟨b, by simp [b]⟩
+    ) p c = decideIfZerosAux p c := by 
+  rw [decideIfZerosAuxM, decideIfZerosAux]
+  by_cases h : c.eval p.initCarry
+  case pos => simp [h]
+  case neg =>
+    simp [h]
+    clear h
+    by_cases h : (c.bind (p.nextBitCirc ∘ some)).fst ≤ c
+    case pos =>
+      simp [h]
+    case neg =>
+      simp [h]
+      have _wf :=  decideIfZeroAux_wf h
+      apply decideIfZerosAuxM_Id_eq_decideIfZerosAux
+  termination_by card_compl c
+
 
 theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
