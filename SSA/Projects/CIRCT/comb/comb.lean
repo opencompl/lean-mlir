@@ -296,12 +296,12 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
 /-
   problem: handling nat/bool arguments
 -/
-def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat)  : Expr (Comb) Γ .pure (.bv (w - n)) :=
+def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Comb) Γ .pure (.bv (w - n)) :=
   Expr.mk
     (op := .extract w n)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := sorry)
+    (args := .cons a <| .cons k <| .nil)
     (regArgs := .nil)
 
 def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Comb) Γ .pure (.bool) :=
@@ -309,7 +309,7 @@ def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.n
     (op := .icmp w n)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := sorry)
+    (args := .cons a <| .cons b <| .cons k <| .nil)
     (regArgs := .nil)
 
 def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
@@ -360,12 +360,12 @@ def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bool) :=
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv (w * n)) :=
+def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Comb) Γ .pure (.bv (w * n)) :=
   Expr.mk
     (op := .replicate w n)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := sorry)
+    (args := .cons a <| .cons k <| .nil)
     (regArgs := .nil)
 
 
@@ -453,8 +453,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         else
           throw <| .generic s!"type mismatch"
       | .bv w, .nat n, "Comb.extract" =>
-        return ⟨_, .bv (w - n), extract v₁ n⟩
-      | .bv w, .nat n, "Comb.replicate" => return ⟨_, .bv (w * n), replicate v₁ n⟩
+        return ⟨_, .bv (w - n), extract v₁ v₂⟩
+      | .bv w, .nat n, "Comb.replicate" =>
+        return ⟨_, .bv (w * n), replicate v₁ v₂⟩
       | .bv w₁, .bv w₂, "Comb.mods" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
