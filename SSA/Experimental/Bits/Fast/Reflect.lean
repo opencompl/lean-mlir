@@ -1607,7 +1607,7 @@ theorem eq_circuit (w : Nat) (a b : BitVec w) : ¬ (a &&& b = 0#w) ∨  ((a + b)
 
 
 /-- Can exploit hyps -/
-theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
+theorem eq4 (w : Nat) (a b : BitVec w) : ¬ (a &&& b = 0#w) ∨ (a + b = a ||| b) := by
   bv_automata_circuit
 
 #print eq_circuit
