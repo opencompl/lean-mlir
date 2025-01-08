@@ -7,7 +7,10 @@ import SSA.Experimental.Bits.Fast.Reflect
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  bv_decide
+  bv_automata_circuit
+
+
+#exit 
 
 theorem e_2 (x y : BitVec w) :
     1 *  ~~~x - 2 * (x ^^^ y) + 1 *  ~~~(x &&& y) = 2 *  ~~~(x ||| y) - 1 * (x &&&  ~~~y) := by

@@ -40,6 +40,20 @@ structure FSM (arity : Type) : Type 1 where
 
 attribute [instance] FSM.i FSM.dec_eq
 
+
+def Finset.toListUnsafe (as : Finset α) : List α := 
+  let multiset := as.val
+  Quotient.lift id sorry multiset
+
+open Lean in
+instance FormatSum [formatα : ToFormat α] [formatβ : ToFormat β] : ToFormat (α ⊕ β) where 
+  format x := match x with | .inl x => f!"(l {format x})" | .inr x => f!"(r {format x})"
+
+open Lean in
+def formatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α := 
+  let as : List α := Finset.toListUnsafe Finset.univ
+  { format a := format <| as.findIdx (fun b => a = b) }
+
 namespace FSM
 
 variable {arity : Type} (p : FSM arity)
@@ -64,6 +78,27 @@ def circuitSize : Nat := Id.run do
   let states := @Finset.univ p.α inferInstance
   let stateCircSize := Finset.fold Nat.add  0 (fun a => p.nextBitCirc (.some a) |>.size) states
   return outCircSize + stateCircSize
+
+open Lean in
+def format (fsm : FSM σ) [Fintype σ] [DecidableEq σ] : Format := Id.run do
+  have : DecidableEq fsm.α := fsm.dec_eq
+  let formatSum : ToFormat (fsm.α ⊕ σ) := formatDecEqFinset
+  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
+  let arity : Nat := @Finset.univ σ inferInstance |>.card
+  let fsm := Lean.ShareCommon.shareCommon fsm
+  let mut out := f!""
+  out := out ++ f!"⋆ #args '{arity}'" ++ Format.line
+  out := out ++ f!"⋆ #state bits '{numStateBits}'" ++ Format.line
+  out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
+  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum.format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
+  out := out ++ "**State Transition:**" ++  Format.line 
+  let as : List fsm.α := Finset.univ |>.toListUnsafe
+  let mut ts := f!""
+  for (i, a) in List.enum as do
+    ts := ts ++ Format.align true ++ f!"{i}: '{(formatCircuit formatSum.format (fsm.nextBitCirc (some a)))}'" ++ Format.line
+  out := out ++ Format.group (Format.nest 2 ts)
+  return out
+
 
 /-- The state of FSM `p` is given by a function from `p.α` to `Bool`.
 
@@ -1268,6 +1303,7 @@ def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l)
   let out := fsmLor slt eq
   out
 
+
 /--
 Evaluating the eq predicate equals the FSM value.
 Note that **this is the value that is run by decide**.
@@ -1407,6 +1443,7 @@ theorem decideIfZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
   use x
   simp [hx, h]
 
+
 def decideIfZerosAux {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α) : Bool :=
   if c.eval p.initCarry
@@ -1420,9 +1457,6 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
       decideIfZerosAux p (c' ||| c)
   termination_by card_compl c
 
-def decideIfZeros {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : Bool :=
-  decideIfZerosAux p (p.nextBitCirc none).fst
 
 theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
@@ -1466,9 +1500,38 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
           Circuit.eval_or, this, or_true]
 termination_by card_compl c
 
+
+def decideIfZerosAuxUnverified {σ ι : Type _}
+    [DecidableEq σ] [Fintype σ] [DecidableEq ι] 
+    (s0 : σ → Bool)  (π : Circuit σ) (δ : σ → Circuit (σ ⊕ ι)) : Bool :=
+  if π.eval s0
+  then false
+  else
+    have π' := (π.bind δ).fst
+    if h : π' ≤ π then true
+    else
+      have _wf : card_compl (π' ||| π) < card_compl π :=
+        decideIfZeroAux_wf h
+      decideIfZerosAuxUnverified s0 (π' ||| π) δ
+  termination_by card_compl π
+
+
+def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity where 
+  α := p.α
+  initCarry := p.initCarry
+  nextBitCirc := fun v => (p.nextBitCirc v).optimize
+  
+
+def decideIfZeros {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) : Bool :=
+  -- let p := FSM.optimize p
+  decideIfZerosAux p (p.nextBitCirc none).fst 
+
+
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.simplify.eval x n = false := by
   simp only [FSM.eval_simplify]
+  simp [decideIfZeros]
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
     intro s x h

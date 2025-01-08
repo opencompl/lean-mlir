@@ -36,6 +36,10 @@ name = "mlirnatural"
 root = "SSA.MLIRNatural"
 
 [[lean_exe]]
+name = "bv-circuit-profile"
+root = "SSA.Experimental.Bits.Fast.Profile"
+
+[[lean_exe]]
 name = "opt"
 root = "SSA.Projects.InstCombine.LLVM.Opt"
 supportInterpreter = true
