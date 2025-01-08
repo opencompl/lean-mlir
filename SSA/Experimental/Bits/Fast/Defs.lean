@@ -48,6 +48,7 @@ inductive Term : Type
 -- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
 --   hence, I don't anticipate us implementing it.
+deriving Repr
 
 open Term
 
@@ -185,8 +186,7 @@ inductive Predicate : Type where
 | sle (t₁ t₂ : Term) : Predicate
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
-
-
+deriving Repr
 
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
