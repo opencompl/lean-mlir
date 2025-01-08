@@ -126,7 +126,7 @@ inductive Op
 | divs (w : Nat)
 | divu (w : Nat)
 | extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
-| icmp (w : Nat)
+| icmp (w : Nat) (n : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat)
@@ -143,15 +143,15 @@ deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
-| nat : Ty
+| nat (n : Nat): Ty -- A very unfair trick
 | bool : Ty
 deriving Inhabited, DecidableEq, Repr
 
 open TyDenote (toType) in
 instance instCombTyDenote : TyDenote Ty where
 toType := fun
-| Ty.bv n => BitVec n
-| Ty.nat => Nat
+| Ty.bv w => BitVec w
+| Ty.nat _ => Nat
 | Ty.bool => Bool
 
 abbrev Comb : Dialect where
@@ -168,15 +168,15 @@ def Op.sig : Op  → List Ty
   | .concat w₁ w₂ => [Ty.bv w₁, Ty.bv w₂]
   | .divs w => [Ty.bv w, Ty.bv w]
   | .divu w => [Ty.bv w, Ty.bv w]
-  | .extract w _ => [Ty.bv w, Ty.nat]
-  | .icmp w => [Ty.bv w, Ty.bv w, Ty.nat]
+  | .extract w n => [Ty.bv w, Ty.nat n]
+  | .icmp w n => [Ty.bv w, Ty.bv w, Ty.nat n]
   | .mods w => [Ty.bv w, Ty.bv w]
   | .modu w => [Ty.bv w, Ty.bv w]
   | .mul w => [Ty.bv w, Ty.bv w]
   | .mux w => [Ty.bv w, Ty.bv w, Ty.bool]
   | .or w => [Ty.bv w, Ty.bv w]
   | .parity w => [Ty.bv w]
-  | .replicate w _ => [Ty.bv w, Ty.nat]
+  | .replicate w n => [Ty.bv w, Ty.nat n]
   | .shl w => [Ty.bv w, Ty.bv w]
   | .shrs w => [Ty.bv w, Ty.bv w]
   | .shru w => [Ty.bv w, Ty.bv w]
@@ -192,7 +192,7 @@ def Op.outTy : Op  → Ty
   | .divs w => Ty.bv w
   | .divu w => Ty.bv w
   | .extract w n => Ty.bv (w - n)
-  | .icmp _ => Ty.bool
+  | .icmp _ _ => Ty.bool
   | .mods w => Ty.bv w
   | .modu w => Ty.bv w
   | .mul w => Ty.bv w
@@ -221,7 +221,7 @@ instance : DialectDenote (Comb) where
     | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .extract w n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
-    | .icmp _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
+    | .icmp _ _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
     | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mul _, arg, _ => Comb.mul (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
@@ -243,8 +243,8 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
     match s.splitOn "_" with
     | ["bool"] =>
       return .bool
-    | ["nat"] =>
-      return .nat
+    | ["nat", r] =>
+      return .nat r.toNat!
     | ["bv", r] =>
       return .bv (r.toNat!) -- this seems a bit sketchy
     | _ => throw .unsupportedType
@@ -304,9 +304,9 @@ def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat)  : Expr (Comb) Γ .pure
     (args := sorry)
     (regArgs := .nil)
 
-def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bool) :=
+def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
-    (op := .icmp w)
+    (op := .icmp w n)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := sorry)
@@ -452,9 +452,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           return ⟨_, .bv w₁, divu v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
-      | .bv w, .nat, "Comb.extract" =>
-        return ⟨_, .bv (w - n), extract v₁ v₂⟩
-      | .bv w, .nat, "Comb.replicate" => return ⟨_, .bv (w * _), replicate v₁ _⟩
+      | .bv w, .nat n, "Comb.extract" =>
+        return ⟨_, .bv (w - n), extract v₁ n⟩
+      | .bv w, .nat n, "Comb.replicate" => return ⟨_, .bv (w * n), replicate v₁ n⟩
       | .bv w₁, .bv w₂, "Comb.mods" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
@@ -519,7 +519,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .bv w₁, .bv w₂, .nat, "Comb.icmp" =>
+      | .bv w₁, .bv w₂, .nat n, "Comb.icmp" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bool, icmp v₁ v₂ v₃⟩
