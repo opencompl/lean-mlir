@@ -1520,11 +1520,11 @@ example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
   bv_automata_circuit
 
 /-- < implies not equals -/
-example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
+example (w : Nat) (a b : BitVec w) : ¬ (a < b) ∨ (a ≠ b) := by
   bv_automata_circuit
 
 /-- <= and >= implies equals -/
-example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
+example (w : Nat) (a b : BitVec w) : ¬ ((a ≤ b) ∧ (b ≤ a)) ∨ (a = b) := by
   bv_automata_circuit
 
 example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
@@ -1551,7 +1551,7 @@ example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- a <=s b and b <=s a implies a = b-/
-example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
+example (w : Nat) (a b : BitVec w) : ¬ ((a.sle b) ∧ (b.sle a)) ∨ a = b := by
   bv_automata_circuit
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
@@ -1564,7 +1564,7 @@ example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#
   bv_automata_circuit
 
 /-- If we have that 'a &&& a = 0`, then we know that `a = 0` -/
-example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
+example (w : Nat) (a : BitVec w) : ¬ (a &&& a = 0#w) ∨ a = 0#w := by
   bv_automata_circuit
 
 /--
@@ -1578,28 +1578,28 @@ example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
   sorry
 
 
-example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
-example (w : Nat) (a : BitVec w) : (w = 0) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
-example (w : Nat) : (w = 1) → (1#w + 1#w = 0#w) := by bv_automata_circuit
-example (w : Nat) : (w = 0) → (1#w + 1#w = 0#w) := by bv_automata_circuit
-example (w : Nat) : ((w = 0) ∨ (w = 1)) → (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) (a : BitVec w) : ¬ (w = 1) ∨ (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
+example (w : Nat) (a : BitVec w) : ¬ (w = 0) ∨ (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
+example (w : Nat) : ¬ (w = 1) ∨  (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) : ¬ (w = 0) ∨  (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) : ¬ ((w = 0) ∨ (w = 1)) ∨ (1#w + 1#w = 0#w) := by bv_automata_circuit
 
-example (w : Nat) : (1#w + 1#w = 0#w) → ((w = 0) ∨ (w = 1)):= by
+example (w : Nat) : ¬ (1#w + 1#w = 0#w) ∨ ((w = 0) ∨ (w = 1)):= by
   bv_automata_circuit
 /-
 We can say that we are at bitwidth 1 by saying that 1 + 1 = 0.
 When we have this, we then explicitly enumerate the different values that a can have.
 Note that this is pretty expensive.
 -/
-example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
+example (w : Nat) (a : BitVec w) : ¬ (1#w + 1#w = 0#w) ∨ (a = 0#w ∨ a = 1#w) := by
   bv_automata_circuit
 
-example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
+example (w : Nat) (a b : BitVec w) : ¬ (a + b = 0#w) ∨ a = - b := by
   bv_automata_circuit
 
 
 /-- Can use implications -/
-theorem eq_circuit (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
+theorem eq_circuit (w : Nat) (a b : BitVec w) : ¬ (a &&& b = 0#w) ∨  ((a + b) = (a ||| b)) := by
   bv_nnf
   bv_automata_circuit
 
