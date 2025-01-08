@@ -269,10 +269,10 @@ def and {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def concat {Γ : Ctxt _} (a : Γ.Var (.bv w₁)) (b : Γ.Var (.bv w₂)) : Expr (Comb) Γ .pure (.bv w) :=
+def concat {Γ : Ctxt _} (a : Γ.Var (.bv w₁)) (b : Γ.Var (.bv w₂)) : Expr (Comb) Γ .pure (.bv (w₁ + w₂)) :=
   Expr.mk
     (op := .concat w₁ w₂)
-    (ty_eq := sorry)
+    (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
@@ -452,7 +452,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           return ⟨_, .bv w₁, divu v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
-      | .bv w, .nat, "Comb.extract" => sorry -- i need a way to have n here! beyond the type. ideal: return ⟨_, .bv (w - n), extract v₁ n⟩
+      | .bv w, .nat, "Comb.extract" =>
+        return ⟨_, .bv (w - n), extract v₁ v₂⟩
+      | .bv w, .nat, "Comb.replicate" => return ⟨_, .bv (w * _), replicate v₁ _⟩
       | .bv w₁, .bv w₂, "Comb.mods" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
