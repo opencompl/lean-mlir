@@ -939,15 +939,13 @@ info: w : ℕ
  bv_nnf; trace_state; sorry
 
 /--
-warning: 'ne_eq' does not have [simp] attribute
----
 warning: declaration uses 'sorry'
 ---
 info: w : ℕ
-⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+⊢ ∀ (a b : BitVec w), a &&& b = 0#w → a = b
 -/
 #guard_msgs in example : ∀ (a b : BitVec w), a &&& b = 0#w → a = b := by
- bv_nnf; trace_state; sorry
+ trace_state; sorry
 
 end NNF
 
@@ -1404,7 +1402,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     logInfo m!"goal after reflection: {indentD g}"
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM 
+    let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo f!"{fsm.format}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
       throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
