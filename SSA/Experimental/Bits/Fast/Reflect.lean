@@ -1508,7 +1508,7 @@ example (w : Nat) (a b : BitVec w) : (a + 0#w = a) := by
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
   bv_automata_circuit
 
-example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
+example (w : Nat) (a b : BitVec w) : ¬ (a ≠ b) ∨ (b ≠ a) := by
   bv_automata_circuit
 
 /-- either a < b or b ≤ a -/
