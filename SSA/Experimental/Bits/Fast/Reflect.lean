@@ -1753,7 +1753,7 @@ example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
   intros; bv_automata_circuit
 
 /-- Can solve width-constraints problems -/
-def test30  : (w = 2) → 8#w = 0#w := by
+def test30  : ¬ (w = 2) ∨ 8#w = 0#w := by
   bv_automata_circuit
 
 /-- Can solve width-constraints problems -/
@@ -1799,7 +1799,7 @@ theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
   sorry
 
 /-- Can solve width-constraints problems, when written with a width constraint. -/
-def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
+def width_specific_1 (x : BitVec w) : ¬ (w = 1) ∨ (x + x = x ^^^ x ):= by
   bv_automata_circuit
 
 
@@ -1807,15 +1807,15 @@ example (x : BitVec 0) : x = x + 0#0 := by
   bv_automata_circuit
 
 /-- All bitvectors are equal at width 0 -/
-example (x y : BitVec w) (hw : w = 0) : x = y := by
+example (x y : BitVec w) : ¬ w = 0 ∨ x = y := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
-def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
+def width_1_char_2 (x : BitVec w) : ¬ w = 1 ∨ x + x = 0#w := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
-def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
+def width_1_char_2_add_four (x : BitVec w) : ¬ w = 1 ∨ x + x + x + x = 0#w := by
   bv_automata_circuit
 
 /--

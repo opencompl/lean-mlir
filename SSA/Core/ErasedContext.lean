@@ -475,8 +475,7 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     intro i t h_get
     rcases d with ⟨d, h_get_d⟩
     specialize @h_get_d (i+1) t
-    simp only [get?, List.get?, add_zero, and_false, false_and, imp_self,
-      implies_true] at h_get_d
+    simp only [get?, List.get?] at h_get_d
     rw [←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
