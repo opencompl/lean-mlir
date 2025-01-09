@@ -232,14 +232,18 @@ def reflectUniversalWidthBVsWithCadical (g : MVarId) : TermElabM (List MVarId) :
 
 syntax (name := bvAutomataCircuitCadical) "bv_automata_circuit_cadical" (Lean.Parser.Tactic.config)? : tactic
 
-
 open Tactic in
 @[tactic bvAutomataCircuitCadical]
 def evalBvAutomataCircuit : Tactic := fun
-| `(tactic| bv_automata_circuit $[$cfg]?) => do
+| `(tactic| bv_automata_circuit_cadical $[$cfg]?) => do
    let g ← getMainGoal
    setGoals (← reflectUniversalWidthBVsWithCadical g)
 | _ => throwUnsupportedSyntax
+
+example : ∀ (x y : BitVec w), x + y - x = y := by
+  intros x y
+  bv_automata_circuit_cadical
+
 
 
 def timeElapsedMs (x : IO α) : IO (α × Int) := do
