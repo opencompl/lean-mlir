@@ -141,26 +141,26 @@ def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circui
     let ⟨entrypoint, labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath (trimProofs := true) (timeout := 1000) (binaryProofs := true)
-    match out with 
-    | .error _model => return false 
+    match out with
+    | .error _model => return false
     | .ok _cert => return true
 
 
-/-- 
+/--
 An axiom that tracks that a theorem is true because of our currently unverified
 'decideIfZerosM' decision procedure.
 -/
 axiom decideIfZerosMAx {p : Prop} : p
 
 def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
-  (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do 
- -- Justified by Circuit.le_iff_implies 
+  (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do
+ -- Justified by Circuit.le_iff_implies
  let impliesCircuit := c.implies c'
  let ret ← checkCircuitTautoAux impliesCircuit
  return ⟨ret, decideIfZerosMAx⟩
 
 
-def FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool := 
+def FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool :=
   decideIfZerosM Circuit.decLeCadical fsm
 /--
 Reflect an expression of the form:
@@ -216,19 +216,19 @@ def reflectUniversalWidthBVsWithCadical (g : MVarId) : TermElabM (List MVarId) :
     logInfo m!"goal after reflection: {indentD g}"
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM 
+    let fsm := predicateEvalEqFSM result.e |>.toFSM
     let isTrueForall ← fsm.decideIfZerosMCadical
     if isTrueForall
     then do
       let gs ← g.apply (mkConst ``decideIfZerosMAx [])
       if gs.isEmpty
       then return gs
-      else 
+      else
         throwError "Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
     else
       throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
       return [g]
-      
+
 
 syntax (name := bvAutomataCircuitCadical) "bv_automata_circuit_cadical" (Lean.Parser.Tactic.config)? : tactic
 
@@ -248,8 +248,9 @@ FSM.decideAllZeroes is not lifted into a top-level closed term whose value is co
 -/
 set_option compiler.extract_closed false in
 unsafe def main : IO Unit := do
-  Lean.withImportModules #[{ module := `Lean.Tactic.BVDecide}] (opts := {}) (trustLevel := 0) fun env => do
-    initSearchPath (← findSysroot)
+  initSearchPath (← findSysroot)
+  Lean.withImportModules #[{ module := `Lean.Elab.Tactic.BVDecide}, {module := `Std.Tactic.BVDecide}]
+      (opts := {}) (trustLevel := 0) fun env => do
     for p in preds do
       for i in [0:4] do
         IO.println (repr p)
@@ -262,7 +263,7 @@ unsafe def main : IO Unit := do
         IO.println "--"
 
         let tStart ← IO.monoMsNow
-        let b := fsm.toFSM.decideIfZerosMCadical 
+        let b := fsm.toFSM.decideIfZerosMCadical
 
         let ctxCore : Core.Context := { fileName := "SynthCadicalFile", fileMap := FileMap.ofString "" }
         let sCore : Core.State :=  { env }
