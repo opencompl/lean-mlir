@@ -911,6 +911,12 @@ attribute [grind_norm] BitVec.not_lt
 attribute [grind_norm] BitVec.not_le
 
 @[grind_norm]
+theorem implies_eq_not_a_or_b (a b : Prop) : (a → b) = (¬ a ∨ b) := by
+  by_cases a
+  case pos h => simp [h]
+  case neg h => simp [h]
+
+@[grind_norm]
 theorem sle_iff_slt_eq_false {a b : BitVec w} : a.slt b = false ↔ b.sle a := by
   constructor <;>
   intros h <;>
