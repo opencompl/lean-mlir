@@ -146,17 +146,22 @@ def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circui
     | .ok _cert => return true
 
 
-def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α]
-  (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do 
- -- Justified by Circuit.le_iff_implies 
- let impliesCircuit := c.implies c'
- checkCircuitTautoAux impliesCircuit
-
 /-- 
 An axiom that tracks that a theorem is true because of our currently unverified
 'decideIfZerosM' decision procedure.
 -/
 axiom decideIfZerosMAx {p : Prop} : p
+
+def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+  (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do 
+ -- Justified by Circuit.le_iff_implies 
+ let impliesCircuit := c.implies c'
+ let ret ← checkCircuitTautoAux impliesCircuit
+ return ⟨ret, decideIfZerosMAx⟩
+
+
+def FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool := 
+  decideIfZerosM Circuit.decLeCadical fsm
 /--
 Reflect an expression of the form:
   ∀ ⟦(w : Nat)⟧ (← focus)
@@ -212,7 +217,7 @@ def reflectUniversalWidthBVsWithCadical (g : MVarId) : TermElabM (List MVarId) :
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
     let fsm := predicateEvalEqFSM result.e |>.toFSM 
-    let isTrueForall ← decideIfZerosM Circuit.decLeCadical fsm
+    let isTrueForall ← fsm.decideIfZerosMCadical
     if isTrueForall
     then do
       let gs ← g.apply (mkConst ``decideIfZerosMAx [])
@@ -225,20 +230,49 @@ def reflectUniversalWidthBVsWithCadical (g : MVarId) : TermElabM (List MVarId) :
       return [g]
       
 
+syntax (name := bvAutomataCircuitCadical) "bv_automata_circuit_cadical" (Lean.Parser.Tactic.config)? : tactic
+
+
+open Tactic in
+@[tactic bvAutomataCircuitCadical]
+def evalBvAutomataCircuit : Tactic := fun
+| `(tactic| bv_automata_circuit $[$cfg]?) => do
+   let g ← getMainGoal
+   setGoals (← reflectUniversalWidthBVsWithCadical g)
+| _ => throwUnsupportedSyntax
+
+open Lean Elab Meta in
 /-!
 We disable closed term extraction to make sure that the evaluation of
 FSM.decideAllZeroes is not lifted into a top-level closed term whose value is computed at initialization.
 -/
 set_option compiler.extract_closed false in
-def main : IO Unit := do
-  for p in preds do
-    for i in [0:4] do
-      IO.println (repr p)
-      let fsm := predicateEvalEqFSM p
-      IO.println s!"Iteration #{i + 1}"
-      let tStart ← IO.monoMsNow
-      let b := decideIfZeros fsm.toFSM
-      let tEnd ← IO.monoMsNow
-      IO.println s!"  is all zeroes: '{b}' | time: '{(tEnd - tStart) / 1000}' seconds"
-      IO.println "--"
+unsafe def main : IO Unit := do
+  Lean.withImportModules #[{ module := `Lean.Tactic.BVDecide}] (opts := {}) (trustLevel := 0) fun env => do
+    initSearchPath (← findSysroot)
+    for p in preds do
+      for i in [0:4] do
+        IO.println (repr p)
+        let fsm := predicateEvalEqFSM p
+        IO.println s!"Iteration #{i + 1}"
+        let tStart ← IO.monoMsNow
+        let b := decideIfZeros fsm.toFSM
+        let tEnd ← IO.monoMsNow
+        IO.println s!"  is all zeroes: '{b}' | time: '{(tEnd - tStart) / 1000}' seconds"
+        IO.println "--"
+
+        let tStart ← IO.monoMsNow
+        let b := fsm.toFSM.decideIfZerosMCadical 
+
+        let ctxCore : Core.Context := { fileName := "SynthCadicalFile", fileMap := FileMap.ofString "" }
+        let sCore : Core.State :=  { env }
+        let ctxMeta : Meta.Context := {}
+        let sMeta : Meta.State := {}
+        let ctxTerm : Term.Context := {}
+        let sTerm : Term.State := {}
+        let (b, _coreState, _metaState, _termState) ← b.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
+
+        let tEnd ← IO.monoMsNow
+        IO.println s!"  is all zeroes: '{b}' | time: '{(tEnd - tStart) / 1000}' seconds"
+        IO.println "--"
   return ()

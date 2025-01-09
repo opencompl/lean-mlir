@@ -23,6 +23,7 @@ structure FSM (arity : Type) : Type 1 where
   FSM has -/
   ( α  : Type )
   [ i : Fintype α ]
+  [ h : Hashable α ]
   [ dec_eq : DecidableEq α ]
   /--
   `initCarry` is the value of the initial internal carry state.
@@ -38,7 +39,7 @@ structure FSM (arity : Type) : Type 1 where
   `nextBitCirc (some a)`, computes the *one* bit of the new state that corresponds to `a : α`. -/
   ( nextBitCirc : Option α → Circuit (α ⊕ arity) )
 
-attribute [instance] FSM.i FSM.dec_eq
+attribute [instance] FSM.i FSM.dec_eq FSM.h
 
 
 def Finset.toListUnsafe (as : Finset α) : List α := 
@@ -166,13 +167,24 @@ The function `f` determines how the new input bits map to the input expected by 
 def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
   { p with nextBitCirc := fun a => (p.nextBitCirc a).map (Sum.map id changeVars) }
 
+#check Sigma
+
+instance {α : Type _} [Hashable α] {f : α → Type _} [∀ (a : α), Hashable (f a)] : Hashable (Sigma f) where
+  hash v := hash (v.fst, v.snd)
+
+instance [Hashable α] [Hashable β] : Hashable (Sum α β) where
+  hash 
+  | .inl a => hash (false, a)
+  | .inr b => hash (true, b)
+#synth Hashable (Sum Int Int)
+
 /--
 Given an FSM `p` of arity `n`,
 a family of `n` FSMs `qᵢ` of posibly different arities `mᵢ`,
 and given yet another arity `m` such that `mᵢ ≤ m` for all `i`,
 we can compose `p` with `qᵢ` yielding a single FSM of arity `m`,
 such that each FSM `qᵢ` computes the `i`th bit that is fed to the FSM `p`. -/
-def compose [Fintype arity] [DecidableEq arity]
+def compose [Fintype arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)        -- `new_arity` is the resulting arity
     (q_arity : arity → Type)  -- `q_arityₐ` is the arity of FSM `qₐ`
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -206,7 +218,7 @@ def compose [Fintype arity] [DecidableEq arity]
               (fun a => inl (inr ⟨_, a⟩))
               (fun a => inr (vars x a))) }
 
-lemma carry_compose [Fintype arity] [DecidableEq arity]
+lemma carry_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -239,7 +251,7 @@ lemma carry_compose [Fintype arity] [DecidableEq arity]
         · simp
 
 /-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
-lemma eval_compose [Fintype arity] [DecidableEq arity]
+lemma eval_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -260,6 +272,9 @@ lemma eval_compose [Fintype arity] [DecidableEq arity]
   cases a
   simp
   simp
+
+instance : Hashable Empty where 
+  hash x := x.elim
 
 def and : FSM Bool :=
   { α := Empty,
@@ -316,6 +331,9 @@ def simplify (p : FSM arity) : FSM arity := {
 /-- Evaluating the value after `simplify` is the same as the original value. -/
 @[simp] lemma eval_simplify :
     p.simplify.eval = p.eval := rfl
+
+instance : Hashable Unit where 
+  hash _ := 42
 
 
 /--
@@ -1458,7 +1476,7 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
   termination_by card_compl c
 
 def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
-    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → 
+    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' }) 
     (p : FSM arity) (c : Circuit p.α) : m Bool := do
   if c.eval p.initCarry
@@ -1575,7 +1593,7 @@ def decideIfZeros {arity : Type _} [DecidableEq arity]
   decideIfZerosAux p (p.nextBitCirc none).fst 
 
 def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
-    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → 
+    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' }) 
     (p : FSM arity) : m Bool := 
   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
