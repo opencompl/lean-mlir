@@ -250,7 +250,7 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
               apply st2.map.keys_nodup
             simp [List.nodup_append_comm, List.disjoint_of_nodup_append, this]
           apply hdisj
-          { simp_all [Std.HashMap.mem_keys_iff_mem]; apply hnew }
+          { simp_all [Std.HashMap.mem_keys]; apply hnew }
           { apply hc }
         rcases hin with ⟨hin⟩; simp_all +zetaDelta
       have : st2.meas < st0.meas := by omega
