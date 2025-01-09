@@ -939,13 +939,15 @@ info: w : ℕ
  bv_nnf; trace_state; sorry
 
 /--
+warning: 'ne_eq' does not have [simp] attribute
+---
 warning: declaration uses 'sorry'
 ---
 info: w : ℕ
-⊢ ∀ (a b : BitVec w), a &&& b = 0#w → a = b
+⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 -/
 #guard_msgs in example : ∀ (a b : BitVec w), a &&& b = 0#w → a = b := by
- trace_state; sorry
+ bv_nnf; trace_state; sorry
 
 end NNF
 
@@ -1402,7 +1404,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     logInfo m!"goal after reflection: {indentD g}"
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM
+    let fsm := predicateEvalEqFSM result.e |>.toFSM 
     logInfo f!"{fsm.format}'"
     if fsm.circuitSize > cfg.circuitSizeThreshold then
       throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
@@ -1508,7 +1510,7 @@ example (w : Nat) (a b : BitVec w) : (a + 0#w = a) := by
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
   bv_automata_circuit
 
-example (w : Nat) (a b : BitVec w) : ¬ (a ≠ b) ∨ (b ≠ a) := by
+example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
   bv_automata_circuit
 
 /-- either a < b or b ≤ a -/
@@ -1520,11 +1522,11 @@ example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
   bv_automata_circuit
 
 /-- < implies not equals -/
-example (w : Nat) (a b : BitVec w) : ¬ (a < b) ∨ (a ≠ b) := by
+example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
   bv_automata_circuit
 
 /-- <= and >= implies equals -/
-example (w : Nat) (a b : BitVec w) : ¬ ((a ≤ b) ∧ (b ≤ a)) ∨ (a = b) := by
+example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
   bv_automata_circuit
 
 example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
@@ -1551,7 +1553,7 @@ example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
 /-- a <=s b and b <=s a implies a = b-/
-example (w : Nat) (a b : BitVec w) : ¬ ((a.sle b) ∧ (b.sle a)) ∨ a = b := by
+example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
   bv_automata_circuit
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
@@ -1564,7 +1566,7 @@ example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#
   bv_automata_circuit
 
 /-- If we have that 'a &&& a = 0`, then we know that `a = 0` -/
-example (w : Nat) (a : BitVec w) : ¬ (a &&& a = 0#w) ∨ a = 0#w := by
+example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
   bv_automata_circuit
 
 /--
@@ -1578,28 +1580,28 @@ example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
   sorry
 
 
-example (w : Nat) (a : BitVec w) : ¬ (w = 1) ∨ (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
-example (w : Nat) (a : BitVec w) : ¬ (w = 0) ∨ (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
-example (w : Nat) : ¬ (w = 1) ∨  (1#w + 1#w = 0#w) := by bv_automata_circuit
-example (w : Nat) : ¬ (w = 0) ∨  (1#w + 1#w = 0#w) := by bv_automata_circuit
-example (w : Nat) : ¬ ((w = 0) ∨ (w = 1)) ∨ (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
+example (w : Nat) (a : BitVec w) : (w = 0) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
+example (w : Nat) : (w = 1) → (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) : (w = 0) → (1#w + 1#w = 0#w) := by bv_automata_circuit
+example (w : Nat) : ((w = 0) ∨ (w = 1)) → (1#w + 1#w = 0#w) := by bv_automata_circuit
 
-example (w : Nat) : ¬ (1#w + 1#w = 0#w) ∨ ((w = 0) ∨ (w = 1)):= by
+example (w : Nat) : (1#w + 1#w = 0#w) → ((w = 0) ∨ (w = 1)):= by
   bv_automata_circuit
 /-
 We can say that we are at bitwidth 1 by saying that 1 + 1 = 0.
 When we have this, we then explicitly enumerate the different values that a can have.
 Note that this is pretty expensive.
 -/
-example (w : Nat) (a : BitVec w) : ¬ (1#w + 1#w = 0#w) ∨ (a = 0#w ∨ a = 1#w) := by
+example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
   bv_automata_circuit
 
-example (w : Nat) (a b : BitVec w) : ¬ (a + b = 0#w) ∨ a = - b := by
+example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
   bv_automata_circuit
 
 
 /-- Can use implications -/
-theorem eq_circuit (w : Nat) (a b : BitVec w) : ¬ (a &&& b = 0#w) ∨  ((a + b) = (a ||| b)) := by
+theorem eq_circuit (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
   bv_nnf
   bv_automata_circuit
 
@@ -1607,7 +1609,7 @@ theorem eq_circuit (w : Nat) (a b : BitVec w) : ¬ (a &&& b = 0#w) ∨  ((a + b)
 
 
 /-- Can exploit hyps -/
-theorem eq4 (w : Nat) (a b : BitVec w) : ¬ (a &&& b = 0#w) ∨ (a + b = a ||| b) := by
+theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
   bv_automata_circuit
 
 #print eq_circuit
@@ -1753,7 +1755,7 @@ example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
   intros; bv_automata_circuit
 
 /-- Can solve width-constraints problems -/
-def test30  : ¬ (w = 2) ∨ 8#w = 0#w := by
+def test30  : (w = 2) → 8#w = 0#w := by
   bv_automata_circuit
 
 /-- Can solve width-constraints problems -/
@@ -1799,7 +1801,7 @@ theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
   sorry
 
 /-- Can solve width-constraints problems, when written with a width constraint. -/
-def width_specific_1 (x : BitVec w) : ¬ (w = 1) ∨ (x + x = x ^^^ x ):= by
+def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
   bv_automata_circuit
 
 
@@ -1807,15 +1809,15 @@ example (x : BitVec 0) : x = x + 0#0 := by
   bv_automata_circuit
 
 /-- All bitvectors are equal at width 0 -/
-example (x y : BitVec w) : ¬ w = 0 ∨ x = y := by
+example (x y : BitVec w) (hw : w = 0) : x = y := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
-def width_1_char_2 (x : BitVec w) : ¬ w = 1 ∨ x + x = 0#w := by
+def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
   bv_automata_circuit
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
-def width_1_char_2_add_four (x : BitVec w) : ¬ w = 1 ∨ x + x + x + x = 0#w := by
+def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
   bv_automata_circuit
 
 /--
