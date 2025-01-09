@@ -241,6 +241,13 @@ def evalBvAutomataCircuit : Tactic := fun
    setGoals (← reflectUniversalWidthBVsWithCadical g)
 | _ => throwUnsupportedSyntax
 
+
+def timeElapsedMs (x : IO α) : IO (α × Int) := do
+    let tStart ← IO.monoMsNow
+    let b ← x
+    let tEnd ← IO.monoMsNow
+    return (b, tEnd - tStart)
+
 open Lean Elab Meta in
 /-!
 We disable closed term extraction to make sure that the evaluation of
@@ -251,29 +258,23 @@ unsafe def main : IO Unit := do
   initSearchPath (← findSysroot)
   Lean.withImportModules #[{ module := `Lean.Elab.Tactic.BVDecide}, {module := `Std.Tactic.BVDecide}]
       (opts := {}) (trustLevel := 0) fun env => do
+    let ctxCore : Core.Context := { fileName := "SynthCadicalFile", fileMap := FileMap.ofString "" }
+    let sCore : Core.State :=  { env }
+    let ctxMeta : Meta.Context := {}
+    let sMeta : Meta.State := {}
+    let ctxTerm : Term.Context :=  { declName? := .some (Name.mkSimple s!"problem")}
+    let sTerm : Term.State := {}
     for p in preds do
       for i in [0:4] do
         IO.println (repr p)
         let fsm := predicateEvalEqFSM p
+        let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
+        let (bCadical, tElapsedCadical) ← timeElapsedMs do
+          let (b, _coreState, _metaState, _termState) ←
+            fsm.toFSM.decideIfZerosMCadical |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
+          return b
         IO.println s!"Iteration #{i + 1}"
-        let tStart ← IO.monoMsNow
-        let b := decideIfZeros fsm.toFSM
-        let tEnd ← IO.monoMsNow
-        IO.println s!"  is all zeroes: '{b}' | time: '{(tEnd - tStart) / 1000}' seconds"
-        IO.println "--"
-
-        let tStart ← IO.monoMsNow
-        let b := fsm.toFSM.decideIfZerosMCadical
-
-        let ctxCore : Core.Context := { fileName := "SynthCadicalFile", fileMap := FileMap.ofString "" }
-        let sCore : Core.State :=  { env }
-        let ctxMeta : Meta.Context := {}
-        let sMeta : Meta.State := {}
-        let ctxTerm : Term.Context := {}
-        let sTerm : Term.State := {}
-        let (b, _coreState, _metaState, _termState) ← b.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-
-        let tEnd ← IO.monoMsNow
-        IO.println s!"  is all zeroes: '{b}' | time: '{(tEnd - tStart) / 1000}' seconds"
+        IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
+        IO.println s!" (cadical)  is all zeroes: '{bCadical}' | time: '{tElapsedCadical}' ms"
         IO.println "--"
   return ()
