@@ -1574,6 +1574,12 @@ def decideIfZeros {arity : Type _} [DecidableEq arity]
   -- let p := FSM.optimize p
   decideIfZerosAux p (p.nextBitCirc none).fst 
 
+def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
+    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → 
+        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' }) 
+    (p : FSM arity) : m Bool := 
+  decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
+
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.simplify.eval x n = false := by

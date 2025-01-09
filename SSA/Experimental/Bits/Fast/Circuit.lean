@@ -788,6 +788,26 @@ instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit �
 def not {α : Type u} (c : Circuit α) : Circuit α :=
   c ^^^ .tru
 
+def implies (c₁ c₂ : Circuit α) : Circuit α := (~~~ c₁) ||| c₂
+
+@[simp]
+theorem eval_implies (c₁ c₂ : Circuit α) (f : _) : (c₁.implies c₂).eval f = (!(c₁.eval f) || (c₂.eval f)) := by
+  simp [implies]
+
+/-- c₁ ≤ c₂ iff (c₁.implies c₂) is a tautology. -/
+lemma le_iff_implies : ∀ (c₁ c₂ : Circuit α), c₁ ≤ c₂ ↔ (∀ f, eval (implies c₁ c₂) f = true) := by
+  intros c₁ c₂
+  simp [le_def]
+  constructor
+  · intros h
+    intros f
+    specialize h f
+    by_cases hc₁ : c₁.eval f  <;> by_cases hc₂ : c₂.eval f <;> simp_all
+  · intros h
+    intros f
+    specialize h f
+    by_cases hc₁ : c₁.eval f  <;> by_cases hc₂ : c₂.eval f <;> simp_all
+
 section Optimizer
 variable {α : Type u} [DecidableEq α]
 
