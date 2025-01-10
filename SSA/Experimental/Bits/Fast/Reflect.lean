@@ -911,6 +911,12 @@ attribute [grind_norm] BitVec.not_lt
 attribute [grind_norm] BitVec.not_le
 
 @[grind_norm]
+theorem implies_eq_not_a_or_b (a b : Prop) : (a → b) = (¬ a ∨ b) := by
+  by_cases a
+  case pos h => simp [h]
+  case neg h => simp [h]
+
+@[grind_norm]
 theorem sle_iff_slt_eq_false {a b : BitVec w} : a.slt b = false ↔ b.sle a := by
   constructor <;>
   intros h <;>
@@ -1496,10 +1502,10 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     logInfo m!"goal after reflection: {indentD g}"
 
     -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM 
+    let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo f!"{fsm.format}'"
 
-    if cfg.cadical 
+    if cfg.cadical
     then -- Use cadical to close goal.
       let isTrueForall ← fsm.decideIfZerosMCadical
       if isTrueForall
@@ -1935,9 +1941,8 @@ theorem neg_one_mul (x y : BitVec w) :
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  simp; 
+  simp;
   bv_automata_circuit (config := { cadical := true })
-
 
 end BvAutomataTests
 

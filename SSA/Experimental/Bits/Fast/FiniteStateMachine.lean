@@ -42,16 +42,16 @@ structure FSM (arity : Type) : Type 1 where
 attribute [instance] FSM.i FSM.dec_eq FSM.h
 
 
-def Finset.toListUnsafe (as : Finset α) : List α := 
+def Finset.toListUnsafe (as : Finset α) : List α :=
   let multiset := as.val
   Quotient.lift id sorry multiset
 
 open Lean in
-instance FormatSum [formatα : ToFormat α] [formatβ : ToFormat β] : ToFormat (α ⊕ β) where 
+instance FormatSum [formatα : ToFormat α] [formatβ : ToFormat β] : ToFormat (α ⊕ β) where
   format x := match x with | .inl x => f!"(l {format x})" | .inr x => f!"(r {format x})"
 
 open Lean in
-def formatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α := 
+def formatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α :=
   let as : List α := Finset.toListUnsafe Finset.univ
   { format a := format <| as.findIdx (fun b => a = b) }
 
@@ -92,7 +92,7 @@ def format (fsm : FSM σ) [Fintype σ] [DecidableEq σ] : Format := Id.run do
   out := out ++ f!"⋆ #state bits '{numStateBits}'" ++ Format.line
   out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
   out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum.format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
-  out := out ++ "**State Transition:**" ++  Format.line 
+  out := out ++ "**State Transition:**" ++  Format.line
   let as : List fsm.α := Finset.univ |>.toListUnsafe
   let mut ts := f!""
   for (i, a) in List.enum as do
@@ -173,7 +173,7 @@ instance {α : Type _} [Hashable α] {f : α → Type _} [∀ (a : α), Hashable
   hash v := hash (v.fst, v.snd)
 
 instance [Hashable α] [Hashable β] : Hashable (Sum α β) where
-  hash 
+  hash
   | .inl a => hash (false, a)
   | .inr b => hash (true, b)
 #synth Hashable (Sum Int Int)
@@ -273,7 +273,7 @@ lemma eval_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
   simp
   simp
 
-instance : Hashable Empty where 
+instance : Hashable Empty where
   hash x := x.elim
 
 def and : FSM Bool :=
@@ -332,7 +332,7 @@ def simplify (p : FSM arity) : FSM arity := {
 @[simp] lemma eval_simplify :
     p.simplify.eval = p.eval := rfl
 
-instance : Hashable Unit where 
+instance : Hashable Unit where
   hash _ := 42
 
 
@@ -1477,7 +1477,7 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
 
 def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
-        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' }) 
+        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
     (p : FSM arity) (c : Circuit p.α) : m Bool := do
   if c.eval p.initCarry
   then return false
@@ -1494,7 +1494,7 @@ def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
           simp at this
           exact this.mp h
         decideIfZeroAux_wf hNotLt
-      decideIfZerosAuxM decLe p (c' ||| c) 
+      decideIfZerosAuxM decLe p (c' ||| c)
   termination_by card_compl c
 
 /--
@@ -1503,10 +1503,10 @@ if the monad used is `Id` and the comparator that is used is the usual `≤` ope
 -/
 theorem decideIfZerosAuxM_Id_eq_decideIfZerosAux {arity : Type _}
     (p : FSM arity) [DecidableEq arity] [Fintype arity] (c : Circuit p.α) :
-    decideIfZerosAuxM (m := Id) (decLe := fun c c' => 
+    decideIfZerosAuxM (m := Id) (decLe := fun c c' =>
       let b := c ≤ c'
       ⟨b, by simp [b]⟩
-    ) p c = decideIfZerosAux p c := by 
+    ) p c = decideIfZerosAux p c := by
   rw [decideIfZerosAuxM, decideIfZerosAux]
   by_cases h : c.eval p.initCarry
   case pos => simp [h]
@@ -1567,7 +1567,7 @@ termination_by card_compl c
 
 
 def decideIfZerosAuxUnverified {σ ι : Type _}
-    [DecidableEq σ] [Fintype σ] [DecidableEq ι] 
+    [DecidableEq σ] [Fintype σ] [DecidableEq ι]
     (s0 : σ → Bool)  (π : Circuit σ) (δ : σ → Circuit (σ ⊕ ι)) : Bool :=
   if π.eval s0
   then false
@@ -1581,21 +1581,21 @@ def decideIfZerosAuxUnverified {σ ι : Type _}
   termination_by card_compl π
 
 
-def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity where 
+def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity where
   α := p.α
   initCarry := p.initCarry
   nextBitCirc := fun v => (p.nextBitCirc v).optimize
-  
+
 
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
   -- let p := FSM.optimize p
-  decideIfZerosAux p (p.nextBitCirc none).fst 
+  decideIfZerosAux p (p.nextBitCirc none).fst
 
 def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
-        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' }) 
-    (p : FSM arity) : m Bool := 
+        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
+    (p : FSM arity) : m Bool :=
   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
 
 
