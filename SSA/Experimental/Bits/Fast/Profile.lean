@@ -13,26 +13,7 @@ Authors: Siddharth Bhat
 -/
 import SSA.Experimental.Bits.Fast.Reflect
 import Lean
-open Lean 
-
 open Lean Elab Meta
-#check Lean.Core.CoreM.toIO
-
-/-
-/--
-Run a `CoreM α` in a fresh `Environment` with specified `modules : List Name` imported.
--/
-def CoreM.withImportModules {α : Type} (modules : Array Name) (run : CoreM α)
-    (searchPath : Option SearchPath := none) (options : Options := {})
-    (trustLevel : UInt32 := 0) (fileName := "") :
-    IO α := unsafe do
-  if let some sp := searchPath then searchPathRef.set sp
-  Lean.withImportModules (modules.map (Import.mk · false)) options trustLevel fun env =>
-    let ctx := {fileName, options, fileMap := default}
-    let state := {env}
-    Prod.fst <$> (CoreM.toIO · ctx state) do
--/
-
 
 def preds : Array Predicate := #[
   Predicate.eq
@@ -44,25 +25,38 @@ def preds : Array Predicate := #[
       (Term.add (Term.and (Term.var 0) (Term.var 1)) (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1)))
   ]
 
-
-#check Tactic.BVDecide.External.satQuery
-
--- 
+def timeElapsedMs (x : IO α) : IO (α × Int) := do
+    let tStart ← IO.monoMsNow
+    let b ← x
+    let tEnd ← IO.monoMsNow
+    return (b, tEnd - tStart)
 
 /-!
 We disable closed term extraction to make sure that the evaluation of
 FSM.decideAllZeroes is not lifted into a top-level closed term whose value is computed at initialization.
 -/
 set_option compiler.extract_closed false in
-def main : IO Unit := do
-  for p in preds do
-    for i in [0:4] do
-      IO.println (repr p)
-      let fsm := predicateEvalEqFSM p
-      IO.println s!"Iteration #{i + 1}"
-      let tStart ← IO.monoMsNow
-      let b := decideIfZeros fsm.toFSM
-      let tEnd ← IO.monoMsNow
-      IO.println s!"  is all zeroes: '{b}' | time: '{(tEnd - tStart) / 1000}' seconds"
-      IO.println "--"
+unsafe def main : IO Unit := do
+  initSearchPath (← findSysroot)
+  Lean.withImportModules #[{ module := `Lean.Elab.Tactic.BVDecide}, {module := `Std.Tactic.BVDecide}]
+      (opts := {}) (trustLevel := 0) fun env => do
+    let ctxCore : Core.Context := { fileName := "SynthCadicalFile", fileMap := FileMap.ofString "" }
+    let sCore : Core.State :=  { env }
+    let ctxMeta : Meta.Context := {}
+    let sMeta : Meta.State := {}
+    let ctxTerm : Term.Context :=  { declName? := .some (Name.mkSimple s!"problem")}
+    let sTerm : Term.State := {}
+    for p in preds do
+      for i in [0:4] do
+        IO.println (repr p)
+        let fsm := predicateEvalEqFSM p
+        let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
+        let (bCadical, tElapsedCadical) ← timeElapsedMs do
+          let (b, _coreState, _metaState, _termState) ←
+            fsm.toFSM.decideIfZerosMCadical |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
+          return b
+        IO.println s!"Iteration #{i + 1}"
+        IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
+        IO.println s!" (cadical)  is all zeroes: '{bCadical}' | time: '{tElapsedCadical}' ms"
+        IO.println "--"
   return ()
