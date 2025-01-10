@@ -176,58 +176,60 @@ which explains how to create the correct auxiliary definition of the form
 which is then indeed `rfl` equal to `true`.
 -/
 def reflectUniversalWidthBVsWithCadical (g : MVarId) : TermElabM (List MVarId) := do
-  let ws ← Reflect.findExprBitwidths (← g.getType)
-  let ws := ws.toArray
-  if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
-  else if hgt: ws.size > 1 then
-    let (w1, wExample1) := ws[0]
-    let (w2, wExample2) := ws[1]
-    let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
-    throwError "found multiple bitvector widths in the target: {indentD mExample}"
-  else
-    -- we have exactly one width
-    let (w, wExample) := ws[0]
-
-    -- We can now revert hypotheses that are of this bitwidth.
-    let g ← Reflect.revertBvHyps g
-
-    -- Next, after reverting, we have a goal which we want to reflect.
-    -- we convert this goal to NNF
-    let .some g ← NNF.runNNFSimpSet g
-      | logInfo m!"Converting to negation normal form automatically closed goal."
-        return[]
-    logInfo m!"goal after NNF: {indentD g}"
-
-    let .some g ← Simplifications.runPreprocessing g
-      | logInfo m!"Preprocessing automatically closed goal."
-        return[]
-    logInfo m!"goal after preprocessing: {indentD g}"
-
-    -- finally, we perform reflection.
-    let result ← Reflect.reflectPredicateAux ∅ (← g.getType) w
-    result.bvToIxMap.throwWarningIfUninterpretedExprs
-
-    logInfo m!"predicate (repr): {indentD (repr result.e)}"
-
-    let bvToIxMapVal ← result.bvToIxMap.toExpr w
-
-    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
-    let g ← g.replaceTargetDefEq target
-    logInfo m!"goal after reflection: {indentD g}"
-
-    -- Log the finite state machine size, and bail out if we cross the barrier.
-    let fsm := predicateEvalEqFSM result.e |>.toFSM
-    let isTrueForall ← fsm.decideIfZerosMCadical
-    if isTrueForall
-    then do
-      let gs ← g.apply (mkConst ``decideIfZerosMAx [])
-      if gs.isEmpty
-      then return gs
-      else
-        throwError "Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+  g.withContext do
+    let ws ← Reflect.findExprBitwidths (← g.getType)
+    let ws := ws.toArray
+    if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
+    else if hgt: ws.size > 1 then
+      let (w1, wExample1) := ws[0]
+      let (w2, wExample2) := ws[1]
+      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
+      throwError "found multiple bitvector widths in the target: {indentD mExample}"
     else
-      throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
-      return [g]
+      -- we have exactly one width
+      let (w, wExample) := ws[0]
+
+      -- We can now revert hypotheses that are of this bitwidth.
+      let g ← Reflect.revertBvHyps g
+
+      -- Next, after reverting, we have a goal which we want to reflect.
+      -- we convert this goal to NNF
+      let .some g ← NNF.runNNFSimpSet g
+        | logInfo m!"Converting to negation normal form automatically closed goal."
+          return[]
+      logInfo m!"goal after NNF: {indentD g}"
+
+      let .some g ← Simplifications.runPreprocessing g
+        | logInfo m!"Preprocessing automatically closed goal."
+          return[]
+      logInfo m!"goal after preprocessing: {indentD g}"
+
+      -- finally, we perform reflection.
+      let result ← Reflect.reflectPredicateAux ∅ (← g.getType) w
+      result.bvToIxMap.throwWarningIfUninterpretedExprs
+
+      logInfo m!"predicate (repr): {indentD (repr result.e)}"
+
+      let bvToIxMapVal ← result.bvToIxMap.toExpr w
+
+      let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
+      let g ← g.replaceTargetDefEq target
+      logInfo m!"goal after reflection: {indentD g}"
+
+      -- Log the finite state machine size, and bail out if we cross the barrier.
+      let fsm := predicateEvalEqFSM result.e |>.toFSM
+      logInfo m!"fsm: {indentD <| fsm.format}"
+      let isTrueForall ← fsm.decideIfZerosMCadical
+      if isTrueForall
+      then do
+        let gs ← g.apply (mkConst ``decideIfZerosMAx [])
+        if gs.isEmpty
+        then return gs
+        else
+          throwError "Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+      else
+        throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
+        return [g]
 
 
 syntax (name := bvAutomataCircuitCadical) "bv_automata_circuit_cadical" (Lean.Parser.Tactic.config)? : tactic
@@ -237,14 +239,13 @@ open Tactic in
 def evalBvAutomataCircuit : Tactic := fun
 | `(tactic| bv_automata_circuit_cadical $[$cfg]?) => do
    let g ← getMainGoal
-   setGoals (← reflectUniversalWidthBVsWithCadical g)
+   let g' ← reflectUniversalWidthBVsWithCadical g
+   setGoals g'
 | _ => throwUnsupportedSyntax
 
 example : ∀ (x y : BitVec w), x + y - x = y := by
   intros x y
   bv_automata_circuit_cadical
-
-
 
 def timeElapsedMs (x : IO α) : IO (α × Int) := do
     let tStart ← IO.monoMsNow
