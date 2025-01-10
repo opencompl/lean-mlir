@@ -810,6 +810,10 @@ theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : Bit
 
 @[bv_circuit_preprocess] theorem BitVec.zero_mul (x : BitVec w) : 0#w * x = 0#w := by simp
 
+-- @[bv_circuit_preprocess] theorem BitVec.neg_one_mul (x : BitVec w) : -1#w * x = -x := by simp
+
+@[bv_circuit_preprocess] theorem BitVec.neg_mul (x y : BitVec w) : (- x) * y = -(x * y) := by simp
+
 
 open Lean Meta Elab in
 
@@ -1941,7 +1945,6 @@ theorem neg_one_mul (x y : BitVec w) :
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  simp;
   bv_automata_circuit (config := { cadical := true })
 
 end BvAutomataTests
