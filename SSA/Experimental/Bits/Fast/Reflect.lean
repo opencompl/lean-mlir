@@ -978,9 +978,13 @@ structure Config where
   -/
   stateSpaceSizeThreshold : Nat := 20
   /--
-  Whethere the tactic should used a specialized solver for fixed-width constraints.
+  Whether the tactic should used a specialized solver for fixed-width constraints.
   -/
   fastFixedWidth : Bool := false
+  /--
+  Whether the tactic should use the (currently unverified) bv_decide based backend for solving constraints.
+  -/
+  cadical : Bool := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -1349,6 +1353,94 @@ def revertBvHyps (g : MVarId) : MetaM MVarId := do
   let (_, g) ← g.revert (← g.getNondepPropHyps)
   return g
 
+namespace BvDecide
+open Std Sat AIG in
+
+/--
+Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
+bitblasting capabilities.
+-/
+def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
+    ExtendingEntrypoint aig :=
+  match c with
+  | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
+  | .tru => ⟨aig.mkConstCached true, by apply  LawfulOperator.le_size⟩
+  | .var b v =>
+    let out := mkAtomCached aig v
+    have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v
+    if b then
+      ⟨out, by simp [out]; omega⟩
+    else
+      let notOut := mkNotCached out.aig out.ref
+      have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
+      ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
+  | .and l r =>
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let lhsRef := lhsRef.cast <| by
+      dsimp only at rextend ⊢
+      omega
+    let input := ⟨lhsRef, rhsRef⟩
+    let ret := aig.mkAndCached input
+    have Lawful := LawfulOperator.le_size (f := mkAndCached) aig input
+    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+  | .or l r =>
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let lhsRef := lhsRef.cast <| by
+      dsimp only at rextend ⊢
+      omega
+    let input := ⟨lhsRef, rhsRef⟩
+    let ret := aig.mkOrCached input
+    have Lawful := LawfulOperator.le_size (f := mkOrCached) aig input
+    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+  | .xor l r =>
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let lhsRef := lhsRef.cast <| by
+      dsimp only at rextend ⊢
+      omega
+    let input := ⟨lhsRef, rhsRef⟩
+    let ret := aig.mkXorCached input
+    have Lawful := LawfulOperator.le_size (f := mkXorCached) aig input
+    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+/-!
+Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
+-/
+
+open Std Sat AIG Tactic BVDecide Frontend in
+def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+  let cfg : BVDecideConfig := {}
+  IO.FS.withTempFile fun _ lratFile => do
+    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+    let c := c.not -- we're checking TAUTO, so check that negation is UNSAT.
+    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
+    let cnf := toCNF entrypoint
+    let out ← runExternal cnf cfg.solver cfg.lratPath (trimProofs := true) (timeout := 1000) (binaryProofs := true)
+    match out with
+    | .error _model => return false
+    | .ok _cert => return true
+
+/--
+An axiom that tracks that a theorem is true because of our currently unverified
+'decideIfZerosM' decision procedure.
+-/
+axiom decideIfZerosMAx {p : Prop} : p
+
+
+def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+  (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do
+ -- Justified by Circuit.le_iff_implies
+ let impliesCircuit := c.implies c'
+ let ret ← checkCircuitTautoAux impliesCircuit
+ return ⟨ret, decideIfZerosMAx⟩
+
+def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool :=
+  decideIfZerosM Circuit.decLeCadical fsm
+
+end BvDecide
+
 
 /--
 Reflect an expression of the form:
@@ -1363,7 +1455,7 @@ which explains how to create the correct auxiliary definition of the form
 
 which is then indeed `rfl` equal to `true`.
 -/
-def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) := do
+def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
   if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
@@ -1406,55 +1498,56 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : MetaM (List MVarId) :
     -- Log the finite state machine size, and bail out if we cross the barrier.
     let fsm := predicateEvalEqFSM result.e |>.toFSM 
     logInfo f!"{fsm.format}'"
-    if fsm.circuitSize > cfg.circuitSizeThreshold then
-      throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
-    if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
-      throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
 
-    let (mapFv, g) ← generalizeMap g bvToIxMapVal;
-    let (_, g) ← g.revert #[mapFv]
-    -- Apply Predicate.denote_of_eval_eq.
-    let wVal? ← Meta.getNatValue? w
-    let g ←
-      -- Fixed width problem
-      if h : wVal?.isSome ∧ cfg.fastFixedWidth then
-        logInfo m!"using special fixed-width procedure for fixed bitwidth '{w}'."
-        let wVal := wVal?.get h.left
-        let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq_fixedWidth)
-          | throwError m!"Failed to apply `Predicate.denote_of_eval_eq_fixedWidth` on goal '{indentD g}'"
-        pure g
+    if cfg.cadical 
+    then -- Use cadical to close goal.
+      let isTrueForall ← fsm.decideIfZerosMCadical
+      if isTrueForall
+      then do
+        let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
+        if gs.isEmpty
+        then return gs
+        else
+          throwError "Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
       else
-        -- Generic width problem.
-        -- If the generic width problem has as 'complex' width, then warn the user that they're
-        -- trying to solve a fragment that's better expressed differently.
-        if !w.isFVar then
-          let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
-          let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
-          let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
-          logWarning  msg
+        throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
+        return [g]
+    else -- Use boolean reflection to close goal.
+      if fsm.circuitSize > cfg.circuitSizeThreshold then
+        throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
+      if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
+        throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
 
-        let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
-          | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-        pure g
-    let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-      | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-    let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-      | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-    return [g]
+      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
+      let (_, g) ← g.revert #[mapFv]
+      -- Apply Predicate.denote_of_eval_eq.
+      let wVal? ← Meta.getNatValue? w
+      let g ←
+        -- Fixed width problem
+        if h : wVal?.isSome ∧ cfg.fastFixedWidth then
+          logInfo m!"using special fixed-width procedure for fixed bitwidth '{w}'."
+          let wVal := wVal?.get h.left
+          let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq_fixedWidth)
+            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq_fixedWidth` on goal '{indentD g}'"
+          pure g
+        else
+          -- Generic width problem.
+          -- If the generic width problem has as 'complex' width, then warn the user that they're
+          -- trying to solve a fragment that's better expressed differently.
+          if !w.isFVar then
+            let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
+            let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
+            let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
+            logWarning  msg
 
-/--
-Given a goal state of the form:
-  ∀ (w : Nat)
-  ∀ (b₁ b₂ ... bₙ : BitVec w),
-  <proposition about bitvectors>.
-
-decide the property by reduction to finite automata.
-
-TODO(@bollu): Also decide properties about finite widths, by extending to the maximal width and clearing the high bits?
--/
-elab "bv_reflect" : tactic => do
-  liftMetaTactic fun g => do
-    reflectUniversalWidthBVs g Config.default
+          let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
+            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+          pure g
+      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      return [g]
 
 /-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
 declare_config_elab elabBvAutomataCircuitConfig Config
@@ -1464,16 +1557,16 @@ syntax (name := bvAutomataCircuit) "bv_automata_circuit" (Lean.Parser.Tactic.con
 def evalBvAutomataCircuit : Tactic := fun
 | `(tactic| bv_automata_circuit $[$cfg]?) => do
   let cfg ← elabBvAutomataCircuitConfig (mkOptionalNode cfg)
-
-  liftMetaTactic fun g => do reflectUniversalWidthBVs g cfg
-
-  match ← getUnsolvedGoals  with
-  | [] => return ()
-  -- | TODO: replace with ofReduceBool
-  | [g] => do
-    logInfo m!"goal being decided: {indentD g}"
-    evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig})
-  | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
+  let g ← getMainGoal
+  g.withContext do
+    let gs ← reflectUniversalWidthBVs g cfg
+    replaceMainGoal gs
+    match gs  with
+    | [] => return ()
+    | [g] => do
+      logInfo m!"goal being decided via boolean reflection: {indentD g}"
+      evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig })
+    | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
@@ -1842,8 +1935,8 @@ theorem neg_one_mul (x y : BitVec w) :
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  simp
-  bv_automata_circuit
+  simp; 
+  bv_automata_circuit (config := { cadical := true })
 
 
 end BvAutomataTests
