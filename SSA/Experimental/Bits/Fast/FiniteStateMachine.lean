@@ -1475,6 +1475,22 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
       decideIfZerosAux p (c' ||| c)
   termination_by card_compl c
 
+-- |- decideIfZerosAux p c = true
+
+-- sym_eval_circ_le: 
+--    (c₁ c₂: Circuit α) c₁ ≤ c₂ --tactic[ <cadical, reflection, etc>]-->t/f
+-- 
+-- repeat (simp [decideIfZerosAux];
+--    rw [sym_eval_circ_le]; 
+--    (rw [decideIfZerosAux_le_true] <|> rw [decideIfZerosAux_le_false]);
+--  )
+-- 
+
+--  decideIfZerosAux p (c ||| (c.bind (p.nextBitCirc ∘ some)).fst) = true
+-- 
+-- reduce (c ||| c') to NF -> expensive, complex. Price we pay for metaprogramming.
+
+
 def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
@@ -1496,6 +1512,10 @@ def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
         decideIfZeroAux_wf hNotLt
       decideIfZerosAuxM decLe p (c' ||| c)
   termination_by card_compl c
+
+-- theorem decideIfZerosAuxM_decLe_true : 
+-- rw [decideIfZerosAuxM_decLe_true proof_from_cadical]
+-- rw [decideIfZerosAuxM_decLe_false proof_from_cadical]
 
 /--
 The monadic version is equivalent to 'decideIfZerosAux',
