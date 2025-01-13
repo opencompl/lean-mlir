@@ -1254,7 +1254,7 @@ def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 
 @[simp]
 theorem eval_fsmUlt_eq_evalFin_Predicate_ult (t₁ t₂ : Term) :
-   (fsmUlt (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.ult t₁ t₂).evalFin  := by
+   (fsmUlt (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .ult t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
@@ -1266,7 +1266,7 @@ def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 /-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
 @[simp]
 theorem eval_fsmEq_eq_evalFin_Predicate_eq (t₁ t₂ : Term) :
-   (fsmEq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.eq t₁ t₂).evalFin  := by
+   (fsmEq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .eq t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
@@ -1278,7 +1278,7 @@ def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 /-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
 @[simp]
 theorem eval_fsmNeq_eq_evalFin_Predicate_neq (t₁ t₂ : Term) :
-   (fsmNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.neq t₁ t₂).evalFin  := by
+   (fsmNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .neq t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
@@ -1324,7 +1324,7 @@ Evaluating the eq predicate equals the FSM value.
 Note that **this is the value that is run by decide**.
 -/
 def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
-  | .widthEq n =>
+  | .width .eq n =>
     {
       toFSM := FSM.falseOnlyAt n
       good := by
@@ -1333,7 +1333,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
           FSM.eval_falseOnlyAt]
         by_cases h : x = n  <;> simp [h]
     }
-  | .widthNeq n =>
+  | .width .neq n =>
      {
       toFSM := FSM.trueOnlyAt n
       good := by
@@ -1342,27 +1342,27 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
           FSM.eval_trueOnlyAt]
         by_cases h : x = n <;> simp [h]
      }
-  | .widthGe n =>
+  | .width .ge n =>
      {
       toFSM := FSM.falseAfterIncluding n
       good := by ext; simp
      }
-  | .widthGt n =>
+  | .width .gt n =>
      {
       toFSM := FSM.falseAfterExcluding n
       good := by ext; simp
      }
-  | .widthLt n =>
+  | .width .lt n =>
      {
       toFSM := FSM.falseUptoExcluding n
       good := by ext; simp
      }
-  | .widthLe n =>
+  | .width .le n =>
      {
       toFSM := FSM.falseUptoIncluding n
       good := by ext; simp
      }
-  | .eq t₁ t₂ =>
+  | .binary .eq t₁ t₂ =>
     let t₁ := termEvalEqFSM t₁
     let t₂ := termEvalEqFSM t₂
     {
@@ -1372,7 +1372,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       ext x i
       rw [eval_fsmEq_eq_evalFin_Predicate_eq]
     }
-  | .neq t₁ t₂ =>
+  | .binary .neq t₁ t₂ =>
     let t₁ := termEvalEqFSM t₁
     let t₂ := termEvalEqFSM t₂
     {
@@ -1400,7 +1400,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        toFSM := fsmLor  x₁.toFSM x₂.toFSM
        good := by ext x i; simp [Predicate.evalLor, fsmLor, x₁.good, x₂.good]
      }
-   | .slt t₁ t₂ =>
+   | .binary .slt t₁ t₂ =>
      let a := termEvalEqFSM t₁
      let b := termEvalEqFSM t₂
      { toFSM := fsmSlt a.toFSM b.toFSM
@@ -1409,7 +1409,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
         simp [Predicate.evalSlt, fsmSlt,
           Predicate.evalUlt, fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq, a.good, b.good]
      }
-   | .sle t₁ t₂ =>
+   | .binary .sle t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
       {
@@ -1422,7 +1422,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
             fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq,
             Predicate.evalEq, fsmEq, a.good, b.good]
       }
-   | .ult t₁ t₂ =>
+   | .binary .ult t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
       let out := {
@@ -1433,7 +1433,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
          simp [fsmUlt, a.good, b.good, Predicate.evalUlt]
       }
       out
-   | .ule t₁ t₂ =>
+   | .binary .ule t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
       {

@@ -27,6 +27,12 @@ theorem e_4 (x y : BitVec w) :
   bv_automata_circuit (config := { backend := .dryrun })
 
 
+#exit
+
+
+theorem e_4 (x y : BitVec w) :
+    11 *  ~~~(x &&&  ~~~y) - 9 *  ~~~(x ||| y) + 2 * (x &&&  ~~~y) = 2 *  ~~~y + 11 * y := by
+  bv_automata_circuit (config := { backend := .cadical })
 
 theorem e_5 (x y : BitVec w) :
      - 1 *  ~~~y + 2 *  ~~~(x &&& y) - 1 *  ~~~(x |||  ~~~y) - 1 * (x &&&  ~~~y) = 1 *  ~~~x := by
@@ -2159,7 +2165,7 @@ theorem e_533 (x y : BitVec w) :
 
 theorem e_534 (x y : BitVec w) :
      - 2 *  ~~~(x &&& y) - 2 * (x ^^^ y) + 5 *  ~~~y + 7 * (x |||  ~~~y) - 7 * x - 6 *  ~~~(x ||| y) + 8 *  ~~~(x |||  ~~~y) + 4 * (x &&&  ~~~y) + 5 * (x &&& y) = 5 *  ~~~(x &&&  ~~~x) - 1 *  ~~~x := by
-  bv_automata_circuit (config := { backend := .cadical })
+  bv_automata_circuit (config := { backend := .lean .fast })
 
 theorem e_535 (x y : BitVec w) :
      - 11 *  ~~~x + 5 * (x ||| y) + 4 *  ~~~(x &&& y) - 2 *  ~~~y + 2 * x + 5 * y + 9 *  ~~~(x ||| y) - 3 *  ~~~(x |||  ~~~y) - 12 * (x &&& y) = 9 * (x &&&  ~~~y) := by
