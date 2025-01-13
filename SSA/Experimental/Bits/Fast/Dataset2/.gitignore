@@ -1,0 +1,5 @@
+*.sqlite
+*.sqlite3
+Test*.lean
+*.log
+
