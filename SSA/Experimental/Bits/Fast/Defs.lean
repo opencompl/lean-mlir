@@ -30,8 +30,6 @@ inductive Term : Type
 | xor : Term → Term → Term
 /-- Bitwise complement -/
 | not : Term → Term
-/-- Append a single bit the start (i.e., least-significant end) of the bitstream -/
-| ls (b : Bool) : Term → Term
 /-- Addition -/
 | add : Term → Term → Term
 /-- Subtraction -/
@@ -71,7 +69,6 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | or t₁ t₂    => (t₁.eval vars) ||| (t₂.eval vars)
   | xor t₁ t₂   => (t₁.eval vars) ^^^ (t₂.eval vars)
   | not t       => ~~~(t.eval vars)
-  | ls b t      => (Term.eval t vars).concat b
   | add t₁ t₂   => (Term.eval t₁ vars) + (Term.eval t₂ vars)
   | sub t₁ t₂   => (Term.eval t₁ vars) - (Term.eval t₂ vars)
   | neg t       => -(Term.eval t vars)
@@ -101,7 +98,6 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | Term.or t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.not t => arity t
-| ls _ t => arity t
 | add t₁ t₂ => max (arity t₁) (arity t₂)
 | sub t₁ t₂ => max (arity t₁) (arity t₂)
 | neg t => arity t
@@ -137,7 +133,6 @@ and only require that many bitstream values to be given in `vars`.
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ ^^^ x₂
   | not t     => ~~~(t.evalFin vars)
-  | ls b t    => (t.evalFin vars).concat b
   | add t₁ t₂ =>
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))

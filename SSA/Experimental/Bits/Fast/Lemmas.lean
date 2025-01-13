@@ -63,11 +63,6 @@ lemma Term.evalFin_eq_eval (t : Term)
   case not a ha => rw [ha varsList _ hvars]
   case neg a ha => rw [ha varsList _ hvars]
   case shiftL k a ha => rw [ha varsList _ hvars]
-  case ls a b ha =>
-    rw [ha varsList]
-    intros i
-    -- TODO: make this into simp normal form
-    rw [hvars]
   case add a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
