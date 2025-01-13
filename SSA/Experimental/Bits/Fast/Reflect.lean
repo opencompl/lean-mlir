@@ -1508,14 +1508,14 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
       IO.println s!"Inductive invariant established! (time={tElapsedSec}s)"
       return true
     else
-      have _wf : card_compl (cNext ||| c) < card_compl c :=
-        have := le.prop
-        have hNotLt : ¬ cNext ≤ c := by
-          simp at h
-          have := this.not
-          simp at this
-          exact this.mp h
-        decideIfZeroAux_wf hNotLt
+      -- have _wf : card_compl (cNext ||| c) < card_compl c :=
+      --   have := le.prop
+      --   have hNotLt : ¬ cNext ≤ c := by
+      --     simp at h
+      --     have := this.not
+      --     simp at this
+      --     exact this.mp h
+      --   decideIfZeroAux_wf hNotLt
       IO.println s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
       decideIfZerosAuxTermElabM p (cNext ||| c) (iter + 1)
   -- termination_by sorry -- card_compl c
