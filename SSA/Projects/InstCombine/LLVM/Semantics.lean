@@ -8,6 +8,41 @@ import Mathlib.Tactic.Tauto
 import Aesop
 import SSA.Projects.InstCombine.LLVM.SimpSet
 
+/-- Overflow predicate for 2's complement unary minus.
+
+  SMT-Lib name: `bvnego`.
+-/
+
+def not_overflow {w : Nat} (x : BitVec w) : Bool := x.toInt == - (2 ^ (w - 1))
+
+/-- Overflow predicate for unsigned addition modulo 2^m.
+
+  SMT-Lib name: `bvuaddo`.
+-/
+
+def uadd_overflow {w : Nat} (x y : BitVec w) : Bool := x.toNat + y.toNat ≥ 2 ^ w
+
+/-- Overflow predicate for signed addition on m-bit 2's complement.
+
+  SMT-Lib name: `bvsaddo`.
+-/
+
+def sadd_overflow {w : Nat} (x y : BitVec w) : Bool := (x.toInt + y.toInt ≥ 2 ^ (w - 1)) || (x.toInt + y.toInt < - 2 ^ (w - 1))
+
+/-- Overflow predicate for unsigned multiplication modulo 2^m.
+
+  SMT-Lib name: `bvumulo`.
+-/
+
+def umul_overflow {w : Nat} (x y : BitVec w) : Bool := x.toNat * y.toNat ≥ 2 ^ w
+
+/-- Overflow predicate for signed multiplication on m-bit 2's complement.
+
+  SMT-Lib name: `bvsmulo`.
+-/
+
+def smul_overflow {w : Nat} (x y : BitVec w) : Bool := (x.toInt * y.toInt ≥ 2 ^ (w - 1)) || (x.toInt * y.toInt < - 2 ^ (w - 1))
+
 
 namespace LLVM
 
@@ -93,9 +128,9 @@ structure NoWrapFlags where
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
+  if flags.nsw ∧ sadd_overflow x' y' then
     none
-  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
+  else if flags.nuw ∧ uadd_overflow x' y' then
     none
   else
     add? x' y'
@@ -155,18 +190,10 @@ def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   -- Signed Wrap
   let sx' := x'.signExtend w2
   let sy' := y'.signExtend w2
-  let smul := sx' * sy'
-  let slbound := (BitVec.twoPow w w1).signExtend w2 -- signed lower bound := -2^(w-1)
-  let shbound := BitVec.twoPow w2 w1 -- signed higher bound + 1 := 2^(w-1)
   -- Unsigned Wrap
-  let ux' := x'.zeroExtend w2
-  let uy' := y'.zeroExtend w2
-  let umul := ux' * uy'
-  let uhbound := shbound <<< 1
-
-  if flags.nsw ∧ ((smul <ₛ slbound) ∨ (smul ≥ₛ shbound)) then
+  if flags.nsw ∧ smul_overflow sx' sy' then
     none
-  else if flags.nuw ∧ umul ≥ uhbound then
+  else if flags.nuw ∧ umul_overflow sx' sy' then
     none
   else
     mul? x' y'
