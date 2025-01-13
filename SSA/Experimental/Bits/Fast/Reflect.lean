@@ -1526,10 +1526,11 @@ def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (p : FSM arity) : m Bool :=
   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
 
-def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool :=
+def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity] (fsm : FSM arity) : TermElabM Bool :=
   -- decideIfZerosM Circuit.decLeCadical fsm
   withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
-    decideIfZerosAuxTermElabM fsm (fsm.nextBitCirc none).fst 1
+    let c : Circuit (fsm.α ⊕ Empty) := (fsm.nextBitCirc none).fst.map Sum.inl
+    decideIfZerosAuxTermElabM fsm c 1
 
 end BvDecide
 
