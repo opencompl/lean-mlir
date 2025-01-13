@@ -973,6 +973,15 @@ TODO(@bollu): We also assume that the goals are in negation normal form, and if 
 namespace Reflect
 open Lean Meta Elab Tactic
 
+inductive CircuitBackend
+/-- Pure lean implementation, verified. -/
+| lean 
+/-- bv_decide based backend. Currently unverified. -/
+| cadical 
+/-- Dry run, do not execute and close proof with `sorry` -/
+| dryrun
+deriving Repr, DecidableEq
+
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
   /--
@@ -994,7 +1003,7 @@ structure Config where
   /--
   Whether the tactic should use the (currently unverified) bv_decide based backend for solving constraints.
   -/
-  cadical : Bool := false
+  backend : CircuitBackend := .lean
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -1438,7 +1447,6 @@ An axiom that tracks that a theorem is true because of our currently unverified
 -/
 axiom decideIfZerosMAx {p : Prop} : p
 
-
 def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
   (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do
  -- Justified by Circuit.le_iff_implies
@@ -1446,8 +1454,52 @@ def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
  let ret ← checkCircuitTautoAux impliesCircuit
  return ⟨ret, decideIfZerosMAx⟩
 
+def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) (c : Circuit p.α) (iter : Nat) : TermElabM Bool := do
+  IO.println s!"## K-induction (iter {iter})"
+  IO.println s!"Evaluating circuit of size '{c.size}' on initial state"
+  if c.eval p.initCarry
+  then 
+    IO.println s!"Safety property failed on initial state."
+    return false
+  else
+    IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
+    let tStart ← IO.monoMsNow
+    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    IO.println s!"Built state circuit of size: '{c'.size}' (time={tElapsedSec}s)"
+    IO.println s!"Establishing inductive invariant with cadical..."
+    let tStart ← IO.monoMsNow
+    let le ← Circuit.decLeCadical c' c
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    if h : le then 
+      IO.println s!"Inductive invariant established! (time={tElapsedSec}s)"
+      return true
+    else
+      have _wf : card_compl (c' ||| c) < card_compl c :=
+        have := le.prop
+        have hNotLt : ¬ c' ≤ c := by
+          simp at h
+          have := this.not
+          simp at this
+          exact this.mp h
+        decideIfZeroAux_wf hNotLt
+      IO.println s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
+      decideIfZerosAuxTermElabM p (c' ||| c) (iter + 1)
+  termination_by card_compl c
+
+def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
+    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
+        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
+    (p : FSM arity) : m Bool :=
+  decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
+
 def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool :=
-  decideIfZerosM Circuit.decLeCadical fsm
+  -- decideIfZerosM Circuit.decLeCadical fsm
+  withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
+    decideIfZerosAuxTermElabM fsm (fsm.nextBitCirc none).fst 1
 
 end BvDecide
 
@@ -1509,8 +1561,12 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo f!"{fsm.format}'"
 
-    if cfg.cadical
-    then -- Use cadical to close goal.
+    match cfg.backend with 
+    | .dryrun =>
+        g.assign (← mkSorry (← g.getType) (synthetic := false))
+        logInfo "Closing goal with 'sorry' for dry-run"
+        return []
+    | .cadical =>
       let isTrueForall ← fsm.decideIfZerosMCadical
       if isTrueForall
       then do
@@ -1522,7 +1578,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       else
         throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
         return [g]
-    else -- Use boolean reflection to close goal.
+    | .lean =>
       if fsm.circuitSize > cfg.circuitSizeThreshold then
         throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
       if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
@@ -1945,7 +2001,7 @@ theorem neg_one_mul (x y : BitVec w) :
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  bv_automata_circuit (config := { cadical := true })
+  bv_automata_circuit (config := { backend := .cadical })
 
 end BvAutomataTests
 
