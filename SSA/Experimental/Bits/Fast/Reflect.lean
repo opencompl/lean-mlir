@@ -1428,6 +1428,20 @@ Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
 -/
 
 open Std Sat AIG Tactic BVDecide Frontend in
+def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+  let cfg : BVDecideConfig := {}
+  IO.FS.withTempFile fun _ lratFile => do
+    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
+    let cnf := toCNF entrypoint
+    let out ← runExternal cnf cfg.solver cfg.lratPath (trimProofs := true) (timeout := 1000) (binaryProofs := true)
+    match out with
+    | .error _model => return true
+    | .ok _cert => return false
+
+
+open Std Sat AIG Tactic BVDecide Frontend in
 def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
   let cfg : BVDecideConfig := {}
   IO.FS.withTempFile fun _ lratFile => do
@@ -1454,41 +1468,57 @@ def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
  let ret ← checkCircuitTautoAux impliesCircuit
  return ⟨ret, decideIfZerosMAx⟩
 
-def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) (c : Circuit p.α) (iter : Nat) : TermElabM Bool := do
+partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  [DecidableEq β] [Fintype β] [Hashable β]
+    (p : FSM arity) (c : Circuit (p.α ⊕ β))  (iter : Nat) : TermElabM Bool := do
   IO.println s!"## K-induction (iter {iter})"
   IO.println s!"Evaluating circuit of size '{c.size}' on initial state"
-  if c.eval p.initCarry
+  let cInit := c.assignVars fun v hv => 
+    match v with 
+    | .inl a => .inr (p.initCarry a)
+    | .inr b => .inl b
+  if ← checkCircuitSatAux cInit
   then 
     IO.println s!"Safety property failed on initial state."
     return false
   else
     IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
     let tStart ← IO.monoMsNow
-    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    let cNext : Circuit (p.α ⊕ (β ⊕ arity)) := 
+      c.bind fun v =>
+        match v with
+        | .inl a => p.nextBitCirc (some a) |>.map fun v => 
+          match v with 
+          | .inl a => .inl a 
+          | .inr x => .inr (.inr x)
+        | .inr b => .var true (.inr (.inl b))
+    let c : Circuit (p.α ⊕ (β ⊕ arity)) := c.map fun v =>
+      match v with 
+      | .inl a => .inl a 
+      | .inr b => .inr (.inl b)
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    IO.println s!"Built state circuit of size: '{c'.size}' (time={tElapsedSec}s)"
+    IO.println s!"Built state circuit of size: '{cNext.size}' (time={tElapsedSec}s)"
     IO.println s!"Establishing inductive invariant with cadical..."
     let tStart ← IO.monoMsNow
-    let le ← Circuit.decLeCadical c' c
+    let le ← Circuit.decLeCadical cNext c
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if h : le then 
       IO.println s!"Inductive invariant established! (time={tElapsedSec}s)"
       return true
     else
-      have _wf : card_compl (c' ||| c) < card_compl c :=
+      have _wf : card_compl (cNext ||| c) < card_compl c :=
         have := le.prop
-        have hNotLt : ¬ c' ≤ c := by
+        have hNotLt : ¬ cNext ≤ c := by
           simp at h
           have := this.not
           simp at this
           exact this.mp h
         decideIfZeroAux_wf hNotLt
       IO.println s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM p (c' ||| c) (iter + 1)
-  termination_by card_compl c
+      decideIfZerosAuxTermElabM p (cNext ||| c) (iter + 1)
+  -- termination_by sorry -- card_compl c
 
 def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
