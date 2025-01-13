@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Card
+import Mathlib.Data.FinEnum
 import Mathlib.Data.Fintype.Sum
 import Mathlib.Data.Fintype.Sigma
 import Mathlib.Data.Fintype.Pi
@@ -7,6 +8,7 @@ import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.Circuit
+import SSA.Experimental.Bits.AutoStructs.FinEnum
 
 open Sum
 
@@ -22,7 +24,7 @@ structure FSM (arity : Type) : Type 1 where
   The arity of the (finite) type `α` determines how many bits the internal carry state of this
   FSM has -/
   ( α  : Type )
-  [ i : Fintype α ]
+  [ i : FinEnum α ]
   [ h : Hashable α ]
   [ dec_eq : DecidableEq α ]
   /--
@@ -181,7 +183,7 @@ a family of `n` FSMs `qᵢ` of posibly different arities `mᵢ`,
 and given yet another arity `m` such that `mᵢ ≤ m` for all `i`,
 we can compose `p` with `qᵢ` yielding a single FSM of arity `m`,
 such that each FSM `qᵢ` computes the `i`th bit that is fed to the FSM `p`. -/
-def compose [Fintype arity] [DecidableEq arity] [Hashable arity]
+def compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)        -- `new_arity` is the resulting arity
     (q_arity : arity → Type)  -- `q_arityₐ` is the arity of FSM `qₐ`
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -215,7 +217,7 @@ def compose [Fintype arity] [DecidableEq arity] [Hashable arity]
               (fun a => inl (inr ⟨_, a⟩))
               (fun a => inr (vars x a))) }
 
-lemma carry_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
+lemma carry_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -248,7 +250,7 @@ lemma carry_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
         · simp
 
 /-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
-lemma eval_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
+lemma eval_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)

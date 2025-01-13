@@ -330,7 +330,7 @@ def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
 
 open BitStream in
 lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.arity → BitVec w) :
-    EqualUpTo w (t.evalFinStream (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFin vars) := by
+    EqualUpTo w (t.evalFin (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFinBV vars) := by
   induction t <;> simp
   case var => rfl
   case zero => unfold BitStream.ofBitVec; rintro _ _; simp
@@ -339,6 +339,9 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case one =>
     unfold BitStream.ofBitVec; rintro k hk; simp
     cases k <;> simp_all
+  case ofNat =>
+    intros i hi
+    simp_all [ofBitVec, ofNat, BitVec.getLsbD_ofNat]
   case and => apply BitStream.and_congr <;> simp_all
   case or => apply BitStream.or_congr <;> simp_all
   case xor => apply BitStream.xor_congr <;> simp_all
@@ -355,11 +358,16 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case neg =>
     symm; transitivity; apply ofBitVec_neg
     symm; apply BitStream.neg_congr; simp_all
+  case shiftL t k ih =>
+    intros i hi
+    have hik : i - k < w := by omega
+    specialize ih vars (i-k) hik
+    simp_all [ofBitVec]
 
 @[simp]
 lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
-    (t.evalFin fun ar => bvn.get ar.castSucc) := by
+    (t.evalFinBV fun ar => bvn.get ar.castSucc) := by
   simp only [FSM.evalBV]; ext k hk
   simp only [FSM.ofTerm, hk, BitVec.ofFn_getLsbD]
   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
