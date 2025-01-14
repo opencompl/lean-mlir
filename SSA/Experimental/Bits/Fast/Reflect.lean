@@ -9,6 +9,7 @@ Authors: Siddharth Bhat
 -/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
+import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
@@ -54,11 +55,6 @@ TODO:
   is not a property that correctly extends across bitwidths. That is, it's not an
   'arithmetical' property so I don't know how to do it right!
 - [ ] Write custom fast decision procedure for constant widths.
--/
-
-/--
-Denote a bitstream into the underlying bitvector, by using toBitVec
-def BitStream.denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
 -/
 
 @[simp] theorem BitStream.toBitVec_zero : BitStream.toBitVec w BitStream.zero = 0#w := by
@@ -142,25 +138,6 @@ def Predicate.quote (p : _root_.Predicate) : Expr :=
   | .binary .sle a b => mkApp2 (mkConstBin ``BinaryPredicate.sle) (_root_.Term.quote a) (_root_.Term.quote b)
   | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
   | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
-
-/-- toBitVec a Term into its underlying bitvector -/
-def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
-  match t with
-  | ofNat n => BitVec.ofNat w n
-  | var n => vars.getD n default
-  | zero => 0#w
-  | negOne => -1#w
-  | one  => 1#w
-  | and a b => (a.denote w vars) &&& (b.denote w vars)
-  | or a b => (a.denote w vars) ||| (b.denote w vars)
-  | xor a b => (a.denote w vars) ^^^ (b.denote w vars)
-  | not a => ~~~ (a.denote w vars)
-  | add a b => (a.denote w vars) + (b.denote w vars)
-  | sub a b => (a.denote w vars) - (b.denote w vars)
-  | neg a => - (a.denote w vars)
-  -- | incr a => (a.denote w vars) + 1#w
-  -- | decr a => (a.denote w vars) - 1#w
-  | shiftL a n => (a.denote w vars) <<< n
 
 @[simp]
 theorem BitStream.toBitVec_ofNat : BitStream.toBitVec w (BitStream.ofNat n) = BitVec.ofNat w n := by
@@ -350,23 +327,6 @@ theorem Term.denote_eq_eval_land_lt (t : Term) {w : Nat} {vars : List (BitVec w)
   · simp [hi] at this
     simp [this, hi]
   · simpa [hi] using this
-
-def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
-  match p with
-  | .width .ge k => k ≤ w -- w ≥ k
-  | .width .gt k => k < w -- w > k
-  | .width .le k => w ≤ k
-  | .width .lt k => w < k
-  | .width .neq k => w ≠ k
-  | .width .eq k => w = k
-  | .binary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
-  | .binary .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
-  | .land  p q => p.denote w vars ∧ q.denote w vars
-  | .lor  p q => p.denote w vars ∨ q.denote w vars
-  | .binary .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
-  | .binary .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
-  | .binary .ule  t₁ t₂ => ((t₁.denote w vars) ≤ (t₂.denote w vars))
-  | .binary .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
 
 /--
 The cost model of the predicate, which is based on the cardinality of the state space,
@@ -954,7 +914,7 @@ open Lean Meta Elab Tactic
 
 inductive AutomataBackend
 | fast
--- | classic
+| classic
 deriving Repr, DecidableEq
 
 inductive CircuitBackend
@@ -1631,6 +1591,33 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
             logWarning  msg
 
           let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
+            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+          pure g
+      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      return [g]
+    | .lean .classic =>
+      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
+      let (_, g) ← g.revert #[mapFv]
+      -- Apply Predicate.denote_of_eval_eq.
+      let wVal? ← Meta.getNatValue? w
+      let g ←
+        -- TODO FIXME
+        if false then
+          pure g
+        else
+          -- Generic width problem.
+          -- If the generic width problem has as 'complex' width, then warn the user that they're
+          -- trying to solve a fragment that's better expressed differently.
+          if !w.isFVar then
+            let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
+            let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
+            let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
+            logWarning  msg
+
+          let [g] ← g.apply <| (mkConst ``Formula.denote_of_isUniversal)
             | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
           pure g
       let [g] ← g.apply <| (mkConst ``of_decide_eq_true)

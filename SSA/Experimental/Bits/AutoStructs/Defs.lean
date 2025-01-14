@@ -202,24 +202,51 @@ inductive Unop
 deriving Repr
 
 inductive Formula : Type
+| width : WidthPredicate → Nat → Formula
 | atom : Relation → Term → Term → Formula
 | msbSet : Term → Formula
 | unop : Unop → Formula → Formula
 | binop : Binop → Formula → Formula → Formula
 deriving Repr
 
+def formula_of_predicate (p : _root_.Predicate) : Formula :=
+  match p with
+  | .width wp n => .width wp n
+  | .binary rel t₁ t₂ => 
+    match rel with
+    | .eq => .atom .eq t₁ t₂
+    | .neq => .unop .neg (.atom .eq t₁ t₂)
+    | .ult => .atom (.unsigned .lt) t₁ t₂
+    | .ule => .atom (.unsigned .le) t₁ t₂
+    | .slt => .atom (.signed .lt) t₁ t₂
+    | .sle => .atom (.signed .le) t₁ t₂
+  | .lor p q => .binop .or (formula_of_predicate p) (formula_of_predicate q)
+  | .land p q => .binop .and (formula_of_predicate p) (formula_of_predicate q)
+
 instance : Inhabited Formula := ⟨Formula.msbSet default⟩
 
 @[simp]
 def Formula.arity : Formula → Nat
+| width _ _ => 0
 | atom _ t1 t2 => max t1.arity t2.arity
 | msbSet t => t.arity
 | unop _ φ => φ.arity
 | binop _ φ1 φ2 => max φ1.arity φ2.arity
 
 @[simp]
+def _root_.WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
+  match wp with
+  | .eq => w = n
+  | .neq => w ≠ n
+  | .lt => w < n
+  | .le => w ≤ n
+  | .gt => w > n
+  | .ge => w ≥ n
+
+@[simp]
 def Formula.sat {w : Nat} (φ : Formula) (ρ : Fin φ.arity → BitVec w) : Prop :=
   match φ with
+  | .width wp n => wp.sat w n
   | .atom rel t1 t2 =>
     let bv1 := t1.evalFinBV (fun n => ρ $ Fin.castLE (by simp [arity]) n)
     let bv2 := t2.evalFinBV (fun n => ρ $ Fin.castLE (by simp [arity]) n)
@@ -245,6 +272,7 @@ def langMsb : Set (BitVecs 1) := { bvs | bvs.bvs.get 0 |>.msb }
 @[simp]
 def Formula.language (φ : Formula) : Set (BitVecs φ.arity) :=
   match φ with
+  | .width wp n => { bvs | wp.sat bvs.w n }
   | .atom rel t1 t2 =>
     let l1 := t1.language.lift (liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity))
     let l2 := t2.language.lift (liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity))
@@ -374,6 +402,8 @@ theorem formula_language (φ : Formula) :
     φ.language = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) } := by
   let n : Nat := φ.arity
   induction φ
+  case width wp n =>
+    simp
   case atom rel t1 t2 =>
     apply formula_language_case_atom
   case unop op φ ih =>
@@ -434,6 +464,7 @@ Same as `Formula.sat` but the environment is indexed by unbounded natural number
 @[simp]
 def Formula.sat' {w : Nat} (φ : Formula) (ρ : Nat → BitVec w) : Prop :=
   match φ with
+  | .width wp n => wp.sat w n
   | .atom rel t1 t2 =>
     let bv1 := t1.evalNat ρ
     let bv2 := t2.evalNat ρ
@@ -452,6 +483,7 @@ lemma evalFin_evalNat (t : Term):
 lemma sat_impl_sat' {φ : Formula} :
     (φ.sat fun k => ρ k.val) ↔ φ.sat' ρ := by
   induction φ
+  case width wp n => simp
   case atom rel t1 t2 =>
     simp [←evalFin_evalNat]
   case binop op φ1 φ2 ih1 ih2 =>
@@ -470,3 +502,4 @@ abbrev envOfArray {w} (a : Array (BitVec w)) : Nat → BitVec w := fun n => a.ge
 
 @[simp]
 abbrev envOfList {w} (a : List (BitVec w)) : Nat → BitVec w := fun n => a.getD n 0
+

@@ -45,10 +45,20 @@ def AutoStructs.Unop.toExpr (rel : Unop) : Expr :=
   match rel with
   | .neg => mkConst ``neg
 
+def _root_.WidthPredicate.toExpr (wp : WidthPredicate) : Expr :=
+  mkConst (match wp with 
+  | .eq => ``WidthPredicate.eq
+  | .neq => ``WidthPredicate.neq
+  | .le => ``WidthPredicate.le
+  | .lt => ``WidthPredicate.lt
+  | .ge => ``WidthPredicate.ge
+  | .gt => ``WidthPredicate.gt)
+
 def AutoStructs.Formula.toExpr (φ : Formula) : Expr :=
   open AutoStructs in
   open Formula in
   match φ with
+  | .width wp n => mkApp2 (mkConst ``width) wp.toExpr (mkNatLit n)   
   | .atom rel t1 t2 => mkApp3 (mkConst ``atom) rel.toExpr t1.toExpr t2.toExpr
   | .binop op φ1 φ2 => mkApp3 (mkConst ``binop) op.toExpr φ1.toExpr φ2.toExpr
   | .unop op φ => mkApp2 (mkConst ``unop) op.toExpr φ.toExpr

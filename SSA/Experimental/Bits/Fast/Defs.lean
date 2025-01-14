@@ -353,3 +353,39 @@ match p with
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor (Predicate.evalUlt x₁ x₂) (Predicate.evalEq x₁ x₂)
+
+/-- toBitVec a Term into its underlying bitvector -/
+def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
+  match t with
+  | ofNat n => BitVec.ofNat w n
+  | var n => vars.getD n default
+  | zero => 0#w
+  | negOne => -1#w
+  | one  => 1#w
+  | and a b => (a.denote w vars) &&& (b.denote w vars)
+  | or a b => (a.denote w vars) ||| (b.denote w vars)
+  | xor a b => (a.denote w vars) ^^^ (b.denote w vars)
+  | not a => ~~~ (a.denote w vars)
+  | add a b => (a.denote w vars) + (b.denote w vars)
+  | sub a b => (a.denote w vars) - (b.denote w vars)
+  | neg a => - (a.denote w vars)
+  -- | incr a => (a.denote w vars) + 1#w
+  -- | decr a => (a.denote w vars) - 1#w
+  | shiftL a n => (a.denote w vars) <<< n
+
+def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
+  match p with
+  | .width .ge k => k ≤ w -- w ≥ k
+  | .width .gt k => k < w -- w > k
+  | .width .le k => w ≤ k
+  | .width .lt k => w < k
+  | .width .neq k => w ≠ k
+  | .width .eq k => w = k
+  | .binary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
+  | .binary .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
+  | .land  p q => p.denote w vars ∧ q.denote w vars
+  | .lor  p q => p.denote w vars ∨ q.denote w vars
+  | .binary .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
+  | .binary .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
+  | .binary .ule  t₁ t₂ => ((t₁.denote w vars) ≤ (t₂.denote w vars))
+  | .binary .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)
