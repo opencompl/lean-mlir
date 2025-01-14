@@ -135,13 +135,17 @@ def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   else
     add? x' y'
 
-  def sadd_overflow_eq {w : Nat} (x y : BitVec w) :
-      (x.msb = y.msb ∧ (x + y).msb ≠ x.msb) = (sadd_overflow x y) := by
+  theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
+      sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
+    simp [sadd_overflow]
     sorry
 
-  def uadd_overflow_eq {w : Nat} (x y : BitVec w) :
-      (x + y < x ∨ x + y < y) = (uadd_overflow x y) := by
-    sorry
+
+
+  theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
+      uadd_overflow x y = BitVec.carry w x y false := by
+    simp only [uadd_overflow, BitVec.carry]
+    by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
 /--
 The value produced is the integer difference of the two operands.
