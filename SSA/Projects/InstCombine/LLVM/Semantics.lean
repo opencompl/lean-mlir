@@ -15,7 +15,7 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 
 def not_overflow {w : Nat} (x : BitVec w) : Bool := x.toInt == - (2 ^ (w - 1))
 
-/-- Overflow predicate for unsigned addition modulo 2^m.
+/-- Overflow predicate for unsigned addition modulo 2^w.
 
   SMT-Lib name: `bvuaddo`.
 -/
@@ -29,7 +29,7 @@ def uadd_overflow {w : Nat} (x y : BitVec w) : Bool := x.toNat + y.toNat ≥ 2 ^
 
 def sadd_overflow {w : Nat} (x y : BitVec w) : Bool := (x.toInt + y.toInt ≥ 2 ^ (w - 1)) || (x.toInt + y.toInt < - 2 ^ (w - 1))
 
-/-- Overflow predicate for unsigned multiplication modulo 2^m.
+/-- Overflow predicate for unsigned multiplication modulo 2^w.
 
   SMT-Lib name: `bvumulo`.
 -/
@@ -134,6 +134,14 @@ def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
     none
   else
     add? x' y'
+
+  def sadd_overflow_eq {w : Nat} (x y : BitVec w) :
+      (x.msb = y.msb ∧ (x + y).msb ≠ x.msb) = (sadd_overflow x y) := by
+    sorry
+
+  def uadd_overflow_eq {w : Nat} (x y : BitVec w) :
+      (x + y < x ∨ x + y < y) = (uadd_overflow x y) := by
+    sorry
 
 /--
 The value produced is the integer difference of the two operands.
