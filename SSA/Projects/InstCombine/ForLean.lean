@@ -13,11 +13,12 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
-    smul_overflow x y = (decide (y.toInt < 0) && decide (x.toInt = 2 ^ (w - 1))) ∨ ¬y.toInt = 0 ∧ ¬x * y % y = x := by
+    smul_overflow x y = (decide (y.toInt < 0) && decide (x.toInt = 2 ^ (w - 1))) ∨ ¬y.toInt = 0 ∧ ¬(x * y).smod y = x := by
+
   sorry
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
-    umul_overflow x y = true ↔ ¬y.toNat = 0 ∧ ¬x * y % y = x := by
+    umul_overflow x y = true ↔ ¬y.toNat = 0 ∧ ¬(x * y).umod y = x := by
   simp only [umul_overflow, ge_iff_le, decide_eq_true_eq]
   sorry
 
