@@ -123,7 +123,7 @@ https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 """
 
 def translate_dataset_expr_to_lean(counter, expression):
-  exp = f"theorem e_{counter} (x y d e f : BitVec w) :\n    "
+  exp = f"theorem e_{counter} (a b c d e f t x y z : BitVec w) :\n    "
   expression = expression.replace(",True", "")
   expression = expression.replace(",", " = ")
   expression = expression.replace("*", " * ")
