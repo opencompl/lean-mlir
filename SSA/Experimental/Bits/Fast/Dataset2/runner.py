@@ -120,10 +120,12 @@ set_option maxHeartbeats 0
 This dataset was derived from
 https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 -/
+
+variable { a b c d e f g t x y z : BitVec w }
 """
 
 def translate_dataset_expr_to_lean(counter, expression):
-  exp = f"theorem e_{counter} (a b c d e f t x y z : BitVec w) :\n    "
+  exp = f"theorem e_{counter} :\n    "
   expression = expression.replace(",True", "")
   expression = expression.replace(",", " = ")
   expression = expression.replace("*", " * ")
