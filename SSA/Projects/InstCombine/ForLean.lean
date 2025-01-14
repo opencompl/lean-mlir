@@ -5,16 +5,22 @@ import Mathlib.Data.BitVec
 
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
-  simp [sadd_overflow]
   sorry
-
-
 
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
+
+theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
+    smul_overflow x y = (y.toInt < 0 && x.toInt = 2 ^ (w - 1)) || (y.toInt ≠ 0 && (x.toInt * y.toInt) % y.toInt ≠ x.toInt) := by
+  sorry
+
+theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
+    umul_overflow x y = true ↔ ¬y.toNat = 0 ∧ ¬x * y % y = x := by
+  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq]
+  sorry
 
 namespace Nat
 
