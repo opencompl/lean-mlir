@@ -59,6 +59,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         # Return True if no row is found (i.e., result is None)
         if result is not None:
             logging.warning(f"Skipping ({filename}, {timeout}) as run already exists.")
+            completed_counter.increment()
             return
         
         process = await asyncio.create_subprocess_shell(
@@ -122,7 +123,7 @@ https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 """
 
 def translate_dataset_expr_to_lean(counter, expression):
-  exp = f"theorem e_{counter} (x y : BitVec w) :\n    "
+  exp = f"theorem e_{counter} (x y d e f : BitVec w) :\n    "
   expression = expression.replace(",True", "")
   expression = expression.replace(",", " = ")
   expression = expression.replace("*", " * ")
