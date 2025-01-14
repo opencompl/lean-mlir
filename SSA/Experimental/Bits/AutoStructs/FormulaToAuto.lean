@@ -15,7 +15,9 @@ import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 import SSA.Experimental.Bits.AutoStructs.NFA'
+import SSA.Experimental.Bits.FastCopy.Defs
 
+open Copy
 open AutoStructs
 open Mathlib
 
@@ -330,7 +332,7 @@ def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
 
 open BitStream in
 lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.arity → BitVec w) :
-    EqualUpTo w (t.evalFinStream (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFin vars) := by
+    EqualUpTo w (t.evalFin (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFinBV vars) := by
   induction t <;> simp
   case var => rfl
   case zero => unfold BitStream.ofBitVec; rintro _ _; simp
@@ -339,6 +341,9 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case one =>
     unfold BitStream.ofBitVec; rintro k hk; simp
     cases k <;> simp_all
+  case ofNat =>
+    intros i hi
+    simp_all [ofBitVec, ofNat, BitVec.getLsbD_ofNat]
   case and => apply BitStream.and_congr <;> simp_all
   case or => apply BitStream.or_congr <;> simp_all
   case xor => apply BitStream.xor_congr <;> simp_all
@@ -355,11 +360,16 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case neg =>
     symm; transitivity; apply ofBitVec_neg
     symm; apply BitStream.neg_congr; simp_all
+  case shiftL t k ih =>
+    intros i hi
+    have hik : i - k < w := by omega
+    specialize ih vars (i-k) hik
+    simp_all [ofBitVec]
 
 @[simp]
 lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
-    (t.evalFin fun ar => bvn.get ar.castSucc) := by
+    (t.evalFinBV fun ar => bvn.get ar.castSucc) := by
   simp only [FSM.evalBV]; ext k hk
   simp only [FSM.ofTerm, hk, BitVec.ofFn_getLsbD]
   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
@@ -720,7 +730,7 @@ def NFA'.autSignedCmpSA (q : NFA.signedCmpState) : BVRel :=
 
 -- TODO: why is it BitVec.toInt_inj but its BitVec.toNat_eq?
 
-lemma BitVec.sle_iff_slt_or_eq {w : ℕ} (bv1 bv2 : BitVec w):
+private lemma BitVec.sle_iff_slt_or_eq {w : ℕ} (bv1 bv2 : BitVec w):
     (bv2 ≥ₛ bv1) = true ↔ (bv2 >ₛ bv1) = true ∨ bv1 = bv2 := by
   simp [BitVec.sle, BitVec.slt, le_iff_lt_or_eq, BitVec.toInt_inj]
 
@@ -904,7 +914,6 @@ def NFA.msbSA (q : msbState) : Language (BitVec 1) :=
   | .i => ⊤
   | .f => msbLang
 
--- TODO: rewrite with the n-ary `correct` predicate!
 def NFA.msbCorrect : msb.correct msbSA msbLang := by
   constructor
   · simp [msb, msbSA]
@@ -983,6 +992,20 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
       obtain rfl : i = 0 := by omega
       simp_all
 
+def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
+  decide (wp.sat s n)
+
+def RawCNFA.autWidth (wp : WidthPredicate) (n : Nat) : RawCNFA (BitVec 0) :=
+  let m := RawCNFA.empty
+  let m := (List.range (n + 1)).foldl (init := m) fun m _ =>
+    let (s, m) := m.newState
+    let m := if wp.final? n s then m.addFinal s else m
+    if s > 0 then m.addTrans (BitVec.zero 0) (s-1) s else m
+  m.addInitial 0
+
+def CNFA.autWidth (wp : WidthPredicate) (n : Nat) : CNFA 0 :=
+  ⟨RawCNFA.autWidth wp n, sorry⟩
+
 end nfas_relations
 
 def AutoStructs.Relation.autOfRelation : Relation → CNFA 2
@@ -1048,6 +1071,7 @@ def binopAbsNfa (op : Binop) (M1 M2: NFA' n) : NFA' n :=
 
 def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
   match φ with
+  | .width wp n => CNFA.autWidth wp n
   | .atom rel t1 t2 =>
     let m1 := FSM.ofTerm t1 |> CNFA.ofFSM
     let m2 := FSM.ofTerm t2 |> CNFA.ofFSM
@@ -1072,6 +1096,7 @@ def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
 
 def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
   match φ with
+  | .width wp n => sorry
   | .atom rel t1 t2 =>
     let m1 := FSM.ofTerm t1 |> NFA'.ofFSM
     let m2 := FSM.ofTerm t2 |> NFA'.ofFSM
@@ -1096,6 +1121,7 @@ def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
 
 lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
   induction φ
+  case width rel n => sorry
   case atom rel t1 t2 =>
     apply CNFA.proj_spec
     apply CNFA.inter_spec
@@ -1134,6 +1160,7 @@ lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
 lemma absNfaToFomrmula_spec (φ : Formula) :
     (absNfaOfFormula φ).accepts = φ.language := by
   induction φ
+  case width wp n => sorry
   case atom rel t1 t2 =>
     simp [absNfaOfFormula, binopAbsNfa]; ac_nf
   case msbSet t =>
@@ -1177,6 +1204,11 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
     rw [←h] at hin
     simp +zetaDelta [Set.instMembership, Set.Mem] at hin; assumption
   simp
+
+theorem Formula.denote_of_isUniversal {p : Predicate}
+    (heval : formulaIsUniversal (formula_of_predicate p)) :
+    ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
+  sorry
 
 -- -- For testing the comparison operators.
 -- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=
