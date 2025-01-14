@@ -5,9 +5,11 @@ import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
 import SSA.Projects.InstCombine.ForLean
-import SSA.Experimental.Bits.Fast.Defs
-import SSA.Experimental.Bits.Fast.BitStream
+import SSA.Experimental.Bits.FastCopy.Defs
+import SSA.Experimental.Bits.FastCopy.BitStream
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
+
+open Copy
 
 namespace AutoStructs
 
@@ -35,7 +37,7 @@ and the denotation of these terms into operations on bitstreams -/
 instance : Inhabited Term where
   default := .zero
 
--- From the Fast module
+-- From the FastCopy module
 open Term
 
 /-- `t.arity` is the max free variable id that occurs in the given term `t`,
@@ -65,7 +67,7 @@ This differs from `Term.eval` in that `Term.evalFin` uses `Term.arity` to
 determine the number of free variables that occur in the given term,
 and only require that many bitstream values to be given in `vars`.
 -/
-@[simp] def _root_.Term.evalFinBV (t : Term) (vars : Fin (arity t) → BitVec w) : BitVec w :=
+@[simp] def _root_.Copy.Term.evalFinBV (t : Term) (vars : Fin (arity t) → BitVec w) : BitVec w :=
   match t with
   | .var n => vars (Fin.last n)
   | .zero    => BitVec.zero w
@@ -94,7 +96,7 @@ and only require that many bitstream values to be given in `vars`.
       let x₁ := t₁.evalFinBV (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFinBV (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ - x₂
-  | .neg t       => -(Term.evalFinBV t vars)
+  | .neg t       => -(t.evalFinBV vars)
   | .shiftL a n => (a.evalFinBV vars) <<< n
 
 lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.arity → BitVec w2} :
@@ -105,7 +107,7 @@ lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.a
   simp only
   congr; ext1; simp_all
 
-@[simp] def _root_.Term.evalNat (t : Term) (vars : Nat → BitVec w) : BitVec w :=
+@[simp] def _root_.Copy.Term.evalNat (t : Term) (vars : Nat → BitVec w) : BitVec w :=
   match t with
   | .var n => vars n
   | .zero    => BitVec.zero w
@@ -134,10 +136,10 @@ lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.a
       let x₁ := t₁.evalNat vars
       let x₂ := t₂.evalNat vars
       x₁ - x₂
-  | .neg t       => -(Term.evalNat t vars)
+  | .neg t       => -(t.evalNat vars)
   | .shiftL a n => (a.evalNat vars) <<< n
 
-def _root_.Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
+def _root_.Copy.Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
   { bvs : BitVecs (t.arity + 1) | t.evalFinBV (fun n => bvs.bvs.get n) = bvs.bvs.get t.arity }
 
 inductive RelationOrdering
@@ -209,10 +211,10 @@ inductive Formula : Type
 | binop : Binop → Formula → Formula → Formula
 deriving Repr
 
-def formula_of_predicate (p : _root_.Predicate) : Formula :=
+def formula_of_predicate (p : Predicate) : Formula :=
   match p with
   | .width wp n => .width wp n
-  | .binary rel t₁ t₂ => 
+  | .binary rel t₁ t₂ =>
     match rel with
     | .eq => .atom .eq t₁ t₂
     | .neq => .unop .neg (.atom .eq t₁ t₂)
@@ -234,7 +236,7 @@ def Formula.arity : Formula → Nat
 | binop _ φ1 φ2 => max φ1.arity φ2.arity
 
 @[simp]
-def _root_.WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
+def _root_.Copy.WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
   match wp with
   | .eq => w = n
   | .neq => w ≠ n
@@ -502,4 +504,3 @@ abbrev envOfArray {w} (a : Array (BitVec w)) : Nat → BitVec w := fun n => a.ge
 
 @[simp]
 abbrev envOfList {w} (a : List (BitVec w)) : Nat → BitVec w := fun n => a.getD n 0
-

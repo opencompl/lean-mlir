@@ -15,8 +15,9 @@ import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 import SSA.Experimental.Bits.AutoStructs.NFA'
-import SSA.Experimental.Bits.Fast.Defs
+import SSA.Experimental.Bits.FastCopy.Defs
 
+open Copy
 open AutoStructs
 open Mathlib
 
@@ -991,12 +992,12 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
       obtain rfl : i = 0 := by omega
       simp_all
 
-def _root_.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
+def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
   decide (wp.sat s n)
 
 def RawCNFA.autWidth (wp : WidthPredicate) (n : Nat) : RawCNFA (BitVec 0) :=
   let m := RawCNFA.empty
-  let m := (List.range (n + 1)).foldl (init := m) fun m _ => 
+  let m := (List.range (n + 1)).foldl (init := m) fun m _ =>
     let (s, m) := m.newState
     let m := if wp.final? n s then m.addFinal s else m
     if s > 0 then m.addTrans (BitVec.zero 0) (s-1) s else m

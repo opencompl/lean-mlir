@@ -8,18 +8,19 @@ import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.Fast.Circuit
-import SSA.Experimental.Bits.Fast.FiniteStateMachine
-import SSA.Experimental.Bits.Fast.BitStream
+import SSA.Experimental.Bits.FastCopy.Circuit
+import SSA.Experimental.Bits.FastCopy.FiniteStateMachine
+import SSA.Experimental.Bits.FastCopy.BitStream
 
 open Sum
 
 section FSM
 variable {α β α' β' : Type} {γ : β → Type}
 
-attribute [instance] FSM.i FSM.dec_eq
-
+namespace Copy
 namespace FSM
+
+attribute [instance] FSM.i FSM.dec_eq
 
 variable {ar : Type} (p : FSM ar)
 

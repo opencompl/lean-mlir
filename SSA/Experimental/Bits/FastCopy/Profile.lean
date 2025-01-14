@@ -11,10 +11,11 @@ $ lake build bv-circuit-profile; samply record .lake/build/bin/bv-circuit-profil
 
 Authors: Siddharth Bhat
 -/
-import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.FastCopy.Reflect
 import Lean
 open Lean Elab Meta
 
+namespace Copy
 def preds : Array Predicate := #[
   -- Predicate.eq
   --   (Term.add
@@ -53,7 +54,7 @@ def preds : Array Predicate := #[
   --       (Term.var 1)
   --       (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
     -- 11 *  ~~~(x &&&  ~~~y) - 11 * x + 11 * (x &&&  ~~~y) + 11 * (x &&& y) = 11 *  ~~~(x ||| y) + 11 * y
-    Predicate.eq
+    Predicate.binary .eq
     (Term.add
       (Term.add
         (Term.sub

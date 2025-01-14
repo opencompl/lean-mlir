@@ -3,8 +3,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
-import SSA.Experimental.Bits.Fast.BitStream
+import SSA.Experimental.Bits.FastCopy.BitStream
 
+namespace Copy
 /-!
 # Term Language
 This file defines the term language the decision procedure operates on,
@@ -30,8 +31,6 @@ inductive Term : Type
 | xor : Term → Term → Term
 /-- Bitwise complement -/
 | not : Term → Term
-/-- Append a single bit the start (i.e., least-significant end) of the bitstream -/
-| ls (b : Bool) : Term → Term
 /-- Addition -/
 | add : Term → Term → Term
 /-- Subtraction -/
@@ -71,7 +70,6 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | or t₁ t₂    => (t₁.eval vars) ||| (t₂.eval vars)
   | xor t₁ t₂   => (t₁.eval vars) ^^^ (t₂.eval vars)
   | not t       => ~~~(t.eval vars)
-  | ls b t      => (Term.eval t vars).concat b
   | add t₁ t₂   => (Term.eval t₁ vars) + (Term.eval t₂ vars)
   | sub t₁ t₂   => (Term.eval t₁ vars) - (Term.eval t₂ vars)
   | neg t       => -(Term.eval t vars)
@@ -101,7 +99,6 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | Term.or t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.not t => arity t
-| ls _ t => arity t
 | add t₁ t₂ => max (arity t₁) (arity t₂)
 | sub t₁ t₂ => max (arity t₁) (arity t₂)
 | neg t => arity t
@@ -137,7 +134,6 @@ and only require that many bitstream values to be given in `vars`.
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ ^^^ x₂
   | not t     => ~~~(t.evalFin vars)
-  | ls b t    => (t.evalFin vars).concat b
   | add t₁ t₂ =>
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
@@ -152,6 +148,23 @@ and only require that many bitstream values to be given in `vars`.
   | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
 
+inductive BinaryPredicate
+| eq
+| neq
+| ult
+| ule
+| slt
+| sle
+deriving Repr
+
+inductive WidthPredicate
+| eq
+| neq
+| lt
+| le
+| gt
+| ge
+deriving Repr
 
 /--
 The fragment of predicate logic that we support in `bv_automata`.
@@ -166,24 +179,9 @@ Meaning of the denotation:
 -- a <= 0 <=> a < 0 ∨ a = 0
 -- a > b <=> b < a <=> b - a < 0
 inductive Predicate : Type where
-/-- Assert that the bitwidth equals `n` -/
-| widthEq (n : Nat) : Predicate
-/-- Assert that the bitwidth does not equal `n` -/
-| widthNeq (n : Nat) : Predicate
-/-- Assert that the bitwidth is less than 'n' -/
-| widthLt (n : Nat) : Predicate
-/-- Assert that the bitwidth is less than or equal to 'n' -/
-| widthLe (n : Nat) : Predicate
-/-- Assert that the bitwidth is greater than 'n' -/
-| widthGt (n : Nat) : Predicate
-/-- Assert that the bitwidth is greater than or equal to 'n' -/
-| widthGe (n : Nat) : Predicate
-| eq (t₁ t₂ : Term) : Predicate
-| neq (t₁ t₂ : Term) : Predicate
-| ult (t₁ t₂ : Term) : Predicate
-| ule (t₁ t₂ : Term) : Predicate
-| slt (t₁ t₂ : Term) : Predicate
-| sle (t₁ t₂ : Term) : Predicate
+/-- Assert the corresponding relation between `n` and the width. -/
+| width (rel : WidthPredicate) (n : Nat) : Predicate
+| binary (pred : BinaryPredicate) (t₁ t₂ : Term) : Predicate
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
 deriving Repr
@@ -256,28 +254,28 @@ when truncated to index `i`, is true.
 -/
 def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
-  | widthEq n => BitStream.falseIffEq n
-  | widthNeq n => BitStream.falseIffNeq n
-  | widthLt n => BitStream.falseIffLt n
-  | widthLe n => BitStream.falseIffLe n
-  | widthGt n => BitStream.falseIffGt n
-  | widthGe n => BitStream.falseIffGe n
-  | eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
+  | .width .eq n => BitStream.falseIffEq n
+  | .width .neq n => BitStream.falseIffNeq n
+  | .width .lt n => BitStream.falseIffLt n
+  | .width .le n => BitStream.falseIffLe n
+  | .width .gt n => BitStream.falseIffGt n
+  | .width .ge n => BitStream.falseIffGe n
+  | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
+  | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
+  | binary .eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
   /-
   If it is ever not equal, then we want to stay not equals for ever.
   So, if the 'a = b' returns 'false' at some index 'i', we will stay false
   for all indexes '≥ i'.
   -/
-  | neq t1 t2 => Predicate.evalNeq (t1.eval vars) (t2.eval vars)
-  | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
-  | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
-  | ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
-  | ule t₁ t₂ =>
+  | binary .neq t1 t2 => Predicate.evalNeq (t1.eval vars) (t2.eval vars)
+  | binary .ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
+  | binary .ule t₁ t₂ =>
      Predicate.evalLor
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
-  | slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
-  | sle t₁ t₂ => Predicate.evalLor
+  | binary .slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
+  | binary .sle t₁ t₂ => Predicate.evalLor
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalSlt (t₁.eval vars) (t₂.eval vars))
 
@@ -301,31 +299,31 @@ theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N :
 end Predicate
 
 @[simp] def Predicate.arity : Predicate → Nat
-| .widthEq _ | .widthNeq _ | .widthGe _ | .widthGt _ | .widthLt _ | .widthLe _ => 0
-| .eq t1 t2 => max t1.arity t2.arity
+| .width _ _ => 0
+| .binary .eq t1 t2 => max t1.arity t2.arity
 | .lor p q => max p.arity q.arity
 | .land p q => max p.arity q.arity
-| .neq t₁ t₂ => max t₁.arity t₂.arity
-| .ult t₁ t₂ => max t₁.arity t₂.arity
-| .ule t₁ t₂ => t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity)
-| .slt t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity))
-| .sle t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity) ⊔ (t₁.arity ⊔ t₂.arity))
+| .binary .neq t₁ t₂ => max t₁.arity t₂.arity
+| .binary .ult t₁ t₂ => max t₁.arity t₂.arity
+| .binary .ule t₁ t₂ => t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity)
+| .binary .slt t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity))
+| .binary .sle t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity) ⊔ (t₁.arity ⊔ t₂.arity))
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 -- TODO: remove this from the @[simp] set.
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
-| widthEq n => BitStream.falseIffEq n
-| widthNeq n => BitStream.falseIffNeq n
-| widthLt n => BitStream.falseIffLt n
-| widthLe n => BitStream.falseIffLe n
-| widthGt n => BitStream.falseIffGt n
-| widthGe n => BitStream.falseIffGe n
-| .eq t₁ t₂ =>
+| .width .eq n => BitStream.falseIffEq n
+| .width .neq n => BitStream.falseIffNeq n
+| .width .lt n => BitStream.falseIffLt n
+| .width .le n => BitStream.falseIffLe n
+| .width .gt n => BitStream.falseIffGt n
+| .width .ge n => BitStream.falseIffGe n
+| .binary .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     Predicate.evalEq x₁ x₂
-| .neq t₁ t₂  =>
+| .binary .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     Predicate.evalNeq x₁ x₂
@@ -340,19 +338,55 @@ match p with
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor x₁ x₂
-| .slt p q =>
+| .binary .slt p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalSlt x₁ x₂
-| .sle p q =>
+| .binary .sle p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor (Predicate.evalSlt x₁ x₂) (Predicate.evalEq x₁ x₂)
-| .ult p q =>
+| .binary .ult p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   (Predicate.evalUlt x₁ x₂)
-| .ule p q =>
+| .binary .ule p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor (Predicate.evalUlt x₁ x₂) (Predicate.evalEq x₁ x₂)
+
+/-- toBitVec a Term into its underlying bitvector -/
+def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
+  match t with
+  | ofNat n => BitVec.ofNat w n
+  | var n => vars.getD n default
+  | zero => 0#w
+  | negOne => -1#w
+  | one  => 1#w
+  | and a b => (a.denote w vars) &&& (b.denote w vars)
+  | or a b => (a.denote w vars) ||| (b.denote w vars)
+  | xor a b => (a.denote w vars) ^^^ (b.denote w vars)
+  | not a => ~~~ (a.denote w vars)
+  | add a b => (a.denote w vars) + (b.denote w vars)
+  | sub a b => (a.denote w vars) - (b.denote w vars)
+  | neg a => - (a.denote w vars)
+  -- | incr a => (a.denote w vars) + 1#w
+  -- | decr a => (a.denote w vars) - 1#w
+  | shiftL a n => (a.denote w vars) <<< n
+
+def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
+  match p with
+  | .width .ge k => k ≤ w -- w ≥ k
+  | .width .gt k => k < w -- w > k
+  | .width .le k => w ≤ k
+  | .width .lt k => w < k
+  | .width .neq k => w ≠ k
+  | .width .eq k => w = k
+  | .binary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
+  | .binary .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
+  | .land  p q => p.denote w vars ∧ q.denote w vars
+  | .lor  p q => p.denote w vars ∨ q.denote w vars
+  | .binary .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
+  | .binary .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
+  | .binary .ule  t₁ t₂ => ((t₁.denote w vars) ≤ (t₂.denote w vars))
+  | .binary .ult  t₁ t₂ => (t₁.denote w vars) < (t₂.denote w vars)

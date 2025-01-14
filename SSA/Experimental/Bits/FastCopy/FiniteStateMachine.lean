@@ -1,14 +1,18 @@
 import Mathlib.Data.Fintype.Card
+import Mathlib.Data.FinEnum
 import Mathlib.Data.Fintype.Sum
 import Mathlib.Data.Fintype.Sigma
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
-import SSA.Experimental.Bits.Fast.Defs
-import SSA.Experimental.Bits.Fast.Circuit
+import SSA.Experimental.Bits.FastCopy.Defs
+import SSA.Experimental.Bits.FastCopy.Circuit
+import SSA.Experimental.Bits.AutoStructs.FinEnum
 
 open Sum
+
+namespace Copy
 
 section FSM
 variable {α β α' β' : Type} {γ : β → Type}
@@ -22,7 +26,7 @@ structure FSM (arity : Type) : Type 1 where
   The arity of the (finite) type `α` determines how many bits the internal carry state of this
   FSM has -/
   ( α  : Type )
-  [ i : Fintype α ]
+  [ i : FinEnum α ]
   [ h : Hashable α ]
   [ dec_eq : DecidableEq α ]
   /--
@@ -93,7 +97,7 @@ def format (fsm : FSM σ) [Fintype σ] [DecidableEq σ] : Format := Id.run do
   out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
   out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum.format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
   out := out ++ "**State Transition:**" ++  Format.line
-  let as : List fsm.α := Finset.univ |>.toListUnsafe
+  let as : List fsm.α := Finset.univ |> Finset.toListUnsafe
   let mut ts := f!""
   for (i, a) in List.enum as do
     ts := ts ++ Format.align true ++ f!"{i}: '{(formatCircuit formatSum.format (fsm.nextBitCirc (some a)))}'" ++ Format.line
@@ -181,7 +185,7 @@ a family of `n` FSMs `qᵢ` of posibly different arities `mᵢ`,
 and given yet another arity `m` such that `mᵢ ≤ m` for all `i`,
 we can compose `p` with `qᵢ` yielding a single FSM of arity `m`,
 such that each FSM `qᵢ` computes the `i`th bit that is fed to the FSM `p`. -/
-def compose [Fintype arity] [DecidableEq arity] [Hashable arity]
+def compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)        -- `new_arity` is the resulting arity
     (q_arity : arity → Type)  -- `q_arityₐ` is the arity of FSM `qₐ`
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -215,7 +219,7 @@ def compose [Fintype arity] [DecidableEq arity] [Hashable arity]
               (fun a => inl (inr ⟨_, a⟩))
               (fun a => inr (vars x a))) }
 
-lemma carry_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
+lemma carry_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -248,7 +252,7 @@ lemma carry_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
         · simp
 
 /-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
-lemma eval_compose [Fintype arity] [DecidableEq arity] [Hashable arity]
+lemma eval_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -914,7 +918,7 @@ theorem eval_ofNat (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
    = -n - 1
    = (!x + 1) - 1 = !x
 -/
-def _root_.Int.testBit' (i : Int) (k : Nat) : Bool :=
+def Int.testBit' (i : Int) (k : Nat) : Bool :=
   match i with
   | .ofNat n => n.testBit k
   | .negSucc n => !(n.testBit k)
@@ -922,7 +926,7 @@ def _root_.Int.testBit' (i : Int) (k : Nat) : Bool :=
 /--
 the 'k'th bit of 'w' is equal to the 'k'th bit we get by testing the integer representation.
 -/
-theorem BitVec.getLsbD_eq_toInt_testBit' (b : BitVec w) (hk : k < w) : b.getLsbD k = b.toInt.testBit' k := by
+theorem BitVec.getLsbD_eq_toInt_testBit' (b : BitVec w) (hk : k < w) : b.getLsbD k = (Int.testBit' b.toInt k) := by
   rw [BitVec.getLsbD]
   rw [BitVec.toInt_eq_toNat_cond]
   by_cases hb : 2 * b.toNat < 2^w
@@ -1022,7 +1026,7 @@ def trueOnlyAt (n : Nat) : FSM (Fin 0) := ofNat (1 <<< n)
 
 /- `Nat.testBit 1 i = false` if and only if `i` is nonzero. -/
 @[simp]
-private theorem _root_.Nat.testBit_one_eq_false_iff (i : Nat) :
+private theorem Nat.testBit_one_eq_false_iff (i : Nat) :
     Nat.testBit 1 i = false ↔ i ≠ 0 := by
   constructor
   · simp only [ne_eq]
@@ -1167,10 +1171,6 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
     let q₂ := termEvalEqFSM t₂
     { toFSM := composeBinary FSM.xor q₁ q₂,
       good := by ext; simp }
-  | ls b t =>
-    let q := termEvalEqFSM t
-    { toFSM := by dsimp [arity]; exact composeUnary (FSM.ls b) q,
-      good := by ext; simp }
   | Term.not t =>
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.not q,
@@ -1195,7 +1195,7 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
        toFSM := by dsimp [arity]; exact composeUnary (FSM.shiftLeft k) q,
        good := by
          ext x i
-         simp only [evalFin, BitStream.eval_shiftLeft, Bool.if_false_left, arity.eq_14, id_eq,
+         simp only [evalFin, BitStream.eval_shiftLeft, Bool.if_false_left, arity.eq_13, id_eq,
            composeUnary_eval, FSM.eval_shiftLeft]
          by_cases hi : i < k
          · simp [hi]
@@ -1254,7 +1254,7 @@ def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 
 @[simp]
 theorem eval_fsmUlt_eq_evalFin_Predicate_ult (t₁ t₂ : Term) :
-   (fsmUlt (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.ult t₁ t₂).evalFin  := by
+   (fsmUlt (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .ult t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
@@ -1266,7 +1266,7 @@ def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 /-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
 @[simp]
 theorem eval_fsmEq_eq_evalFin_Predicate_eq (t₁ t₂ : Term) :
-   (fsmEq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.eq t₁ t₂).evalFin  := by
+   (fsmEq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .eq t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
@@ -1278,7 +1278,7 @@ def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 /-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
 @[simp]
 theorem eval_fsmNeq_eq_evalFin_Predicate_neq (t₁ t₂ : Term) :
-   (fsmNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.neq t₁ t₂).evalFin  := by
+   (fsmNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .neq t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
@@ -1324,7 +1324,7 @@ Evaluating the eq predicate equals the FSM value.
 Note that **this is the value that is run by decide**.
 -/
 def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
-  | .widthEq n =>
+  | .width .eq n =>
     {
       toFSM := FSM.falseOnlyAt n
       good := by
@@ -1333,7 +1333,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
           FSM.eval_falseOnlyAt]
         by_cases h : x = n  <;> simp [h]
     }
-  | .widthNeq n =>
+  | .width .neq n =>
      {
       toFSM := FSM.trueOnlyAt n
       good := by
@@ -1342,27 +1342,27 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
           FSM.eval_trueOnlyAt]
         by_cases h : x = n <;> simp [h]
      }
-  | .widthGe n =>
+  | .width .ge n =>
      {
       toFSM := FSM.falseAfterIncluding n
       good := by ext; simp
      }
-  | .widthGt n =>
+  | .width .gt n =>
      {
       toFSM := FSM.falseAfterExcluding n
       good := by ext; simp
      }
-  | .widthLt n =>
+  | .width .lt n =>
      {
       toFSM := FSM.falseUptoExcluding n
       good := by ext; simp
      }
-  | .widthLe n =>
+  | .width .le n =>
      {
       toFSM := FSM.falseUptoIncluding n
       good := by ext; simp
      }
-  | .eq t₁ t₂ =>
+  | .binary .eq t₁ t₂ =>
     let t₁ := termEvalEqFSM t₁
     let t₂ := termEvalEqFSM t₂
     {
@@ -1372,7 +1372,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       ext x i
       rw [eval_fsmEq_eq_evalFin_Predicate_eq]
     }
-  | .neq t₁ t₂ =>
+  | .binary .neq t₁ t₂ =>
     let t₁ := termEvalEqFSM t₁
     let t₂ := termEvalEqFSM t₂
     {
@@ -1400,7 +1400,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
        toFSM := fsmLor  x₁.toFSM x₂.toFSM
        good := by ext x i; simp [Predicate.evalLor, fsmLor, x₁.good, x₂.good]
      }
-   | .slt t₁ t₂ =>
+   | .binary .slt t₁ t₂ =>
      let a := termEvalEqFSM t₁
      let b := termEvalEqFSM t₂
      { toFSM := fsmSlt a.toFSM b.toFSM
@@ -1409,7 +1409,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
         simp [Predicate.evalSlt, fsmSlt,
           Predicate.evalUlt, fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq, a.good, b.good]
      }
-   | .sle t₁ t₂ =>
+   | .binary .sle t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
       {
@@ -1422,7 +1422,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
             fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq,
             Predicate.evalEq, fsmEq, a.good, b.good]
       }
-   | .ult t₁ t₂ =>
+   | .binary .ult t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
       let out := {
@@ -1433,7 +1433,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
          simp [fsmUlt, a.good, b.good, Predicate.evalUlt]
       }
       out
-   | .ule t₁ t₂ =>
+   | .binary .ule t₁ t₂ =>
       let a := termEvalEqFSM t₁
       let b := termEvalEqFSM t₂
       {
@@ -1442,9 +1442,6 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
           ext x i
           simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good, Predicate.evalLor, Predicate.evalUlt, Predicate.evalEq]
       }
-
-/-- info: 'predicateEvalEqFSM' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms predicateEvalEqFSM
 
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
@@ -1630,9 +1627,6 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     intro x s h
     use x
     exact h
-
-/-- info: 'decideIfZeros_correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms decideIfZeros_correct
 
 /-- Iterate the next bit circuit 'n' times, while universally quantifying over all inputs
 that are possible at each step. -/

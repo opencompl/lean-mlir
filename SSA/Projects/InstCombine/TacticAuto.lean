@@ -5,6 +5,7 @@ import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.FastCopy.Reflect
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
@@ -185,7 +186,7 @@ macro "bool_to_prop" : tactic =>
 macro "bv_automata_classic" : tactic =>
   `(tactic|
     (
-      bv_automata_circuit (config := {backend := .lean .classic })
+      bv_automata_classic_nf
     )
    )
 
@@ -230,7 +231,7 @@ macro "bv_auto": tactic =>
           | bv_distrib
           | bv_ring
           | bv_of_bool
-          | bool_to_prop; bv_automata_classic
+          | bool_to_prop; bv_automata'
           | bv_decide
       )
    )
