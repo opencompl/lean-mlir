@@ -12,9 +12,8 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
-
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
-    smul_overflow x y = (y.toInt < 0 && x.toInt = 2 ^ (w - 1)) || (y.toInt ≠ 0 && (x.toInt * y.toInt) % y.toInt ≠ x.toInt) := by
+    smul_overflow x y = (decide (y.toInt < 0) && decide (x.toInt = 2 ^ (w - 1))) ∨ ¬y.toInt = 0 ∧ ¬x * y % y = x := by
   sorry
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
