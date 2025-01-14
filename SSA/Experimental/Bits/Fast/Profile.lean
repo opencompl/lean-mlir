@@ -35,20 +35,54 @@ def preds : Array Predicate := #[
   --     (Term.and (Term.var 0) (Term.not (Term.var 1)))),
 
   -- 11 *  ~~~(x &&&  ~~~y) - 9 *  ~~~(x ||| y) + 2 * (x &&&  ~~~y) = 2 *  ~~~y + 11 * y := by
-  Predicate.eq
+  -- Predicate.eq
+  --   (Term.add
+  --     (Term.sub
+  --       (Term.add
+  --         (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
+  --         (Term.add
+  --           (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
+  --           (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1) 1)))
+  --       (Term.add
+  --         (Term.not (Term.or (Term.var 0) (Term.var 1)))
+  --         (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
+  --     (Term.add (Term.and (Term.var 0) (Term.not (Term.var 1))) (Term.and (Term.var 0) (Term.not (Term.var 1)))))
+  --   (Term.add
+  --     (Term.add (Term.not (Term.var 1)) (Term.not (Term.var 1)))
+  --     (Term.add
+  --       (Term.var 1)
+  --       (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
+    -- 11 *  ~~~(x &&&  ~~~y) - 11 * x + 11 * (x &&&  ~~~y) + 11 * (x &&& y) = 11 *  ~~~(x ||| y) + 11 * y
+    Predicate.eq
     (Term.add
-      (Term.sub
-        (Term.add
-          (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
+      (Term.add
+        (Term.sub
           (Term.add
-            (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
-            (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1) 1)))
+            (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
+            (Term.add
+              (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
+              (Term.shiftL
+                (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1)
+                1)))
+          (Term.add
+            (Term.var 0)
+            (Term.add (Term.shiftL (Term.var 0) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 0) 1) 1) 1))))
         (Term.add
-          (Term.not (Term.or (Term.var 0) (Term.var 1)))
-          (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
-      (Term.add (Term.and (Term.var 0) (Term.not (Term.var 1))) (Term.and (Term.var 0) (Term.not (Term.var 1)))))
+          (Term.and (Term.var 0) (Term.not (Term.var 1)))
+          (Term.add
+            (Term.shiftL (Term.and (Term.var 0) (Term.not (Term.var 1))) 1)
+            (Term.shiftL (Term.shiftL (Term.shiftL (Term.and (Term.var 0) (Term.not (Term.var 1))) 1) 1) 1))))
+      (Term.add
+        (Term.and (Term.var 0) (Term.var 1))
+        (Term.add
+          (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1)
+          (Term.shiftL (Term.shiftL (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1) 1) 1))))
     (Term.add
-      (Term.add (Term.not (Term.var 1)) (Term.not (Term.var 1)))
+      (Term.add
+        (Term.not (Term.or (Term.var 0) (Term.var 1)))
+        (Term.add
+          (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1)
+          (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
       (Term.add
         (Term.var 1)
         (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))

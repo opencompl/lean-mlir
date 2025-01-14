@@ -167,8 +167,6 @@ The function `f` determines how the new input bits map to the input expected by 
 def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
   { p with nextBitCirc := fun a => (p.nextBitCirc a).map (Sum.map id changeVars) }
 
-#check Sigma
-
 instance {α : Type _} [Hashable α] {f : α → Type _} [∀ (a : α), Hashable (f a)] : Hashable (Sigma f) where
   hash v := hash (v.fst, v.snd)
 
@@ -176,7 +174,6 @@ instance [Hashable α] [Hashable β] : Hashable (Sum α β) where
   hash
   | .inl a => hash (false, a)
   | .inr b => hash (true, b)
-#synth Hashable (Sum Int Int)
 
 /--
 Given an FSM `p` of arity `n`,
@@ -1477,17 +1474,17 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
 
 -- |- decideIfZerosAux p c = true
 
--- sym_eval_circ_le: 
+-- sym_eval_circ_le:
 --    (c₁ c₂: Circuit α) c₁ ≤ c₂ --tactic[ <cadical, reflection, etc>]-->t/f
--- 
+--
 -- repeat (simp [decideIfZerosAux];
---    rw [sym_eval_circ_le]; 
+--    rw [sym_eval_circ_le];
 --    (rw [decideIfZerosAux_le_true] <|> rw [decideIfZerosAux_le_false]);
 --  )
--- 
+--
 
 --  decideIfZerosAux p (c ||| (c.bind (p.nextBitCirc ∘ some)).fst) = true
--- 
+--
 -- reduce (c ||| c') to NF -> expensive, complex. Price we pay for metaprogramming.
 
 
@@ -1513,7 +1510,7 @@ def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
       decideIfZerosAuxM decLe p (c' ||| c)
   termination_by card_compl c
 
--- theorem decideIfZerosAuxM_decLe_true : 
+-- theorem decideIfZerosAuxM_decLe_true :
 -- rw [decideIfZerosAuxM_decLe_true proof_from_cadical]
 -- rw [decideIfZerosAuxM_decLe_false proof_from_cadical]
 
