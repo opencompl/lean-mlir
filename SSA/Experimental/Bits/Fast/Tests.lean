@@ -251,7 +251,8 @@ fun {w} x y =>
         (Lean.ofReduceBool
           (decide
             (∀ (w : ℕ) (vars : List BitStream),
-              (Predicate.eq ((Term.var 0).or (Term.var 1)) (((Term.var 0).and (Term.var 1).not).add (Term.var 1))).eval
+              (Predicate.binary BinaryPredicate.eq ((Term.var 0).or (Term.var 1))
+                      (((Term.var 0).and (Term.var 1).not).add (Term.var 1))).eval
                   vars w =
                 false))
           true SSA.Experimental.Bits.Fast.Tests._auxLemma.18))

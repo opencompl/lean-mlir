@@ -53,7 +53,7 @@ def preds : Array Predicate := #[
   --       (Term.var 1)
   --       (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
     -- 11 *  ~~~(x &&&  ~~~y) - 11 * x + 11 * (x &&&  ~~~y) + 11 * (x &&& y) = 11 *  ~~~(x ||| y) + 11 * y
-    Predicate.eq
+    Predicate.binary .eq
     (Term.add
       (Term.add
         (Term.sub
