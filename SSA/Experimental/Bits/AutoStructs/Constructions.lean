@@ -630,6 +630,19 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   apply CNFA.flipFinals_spec
   apply determinize_spec m hsim
 
+def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
+  let m' := { m with trans := Std.HashMap.empty, initials := m.finals, finals := m.initials}
+  m.trans.fold (init := m') fun m' (s, a) ss' =>
+    ss'.fold (init := m') fun m' s' =>
+      m'.addTrans a s' s
+
+def CNFA.reverse (m : CNFA n) : CNFA n :=
+  ⟨m.m.reverse, sorry⟩
+
+def CNFA.minimize (m : CNFA n) : CNFA n :=
+  let mᵣ := m.reverse.determinize
+  mᵣ.reverse.determinize
+
 end determinization
 
 section equality
