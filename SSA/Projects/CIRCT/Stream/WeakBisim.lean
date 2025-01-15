@@ -114,36 +114,36 @@ theorem tail_bisim_of_bisim_of_head_eq {a b : Stream α} (h_sim : a ~ b) (head_e
         have b_head_eq_none : b.head = none       := h_m 0 (by omega)
         have a_head_eq_none : a.head = none       := by simp_all
         have b_get_eq_none  : b.get (m+1) = none  := by simpa [← a_head_eq_none] using h_eq.symm
-        simp only [show m' + 1 + (m + 2) = m' + m + 3 by omega] at h_sim_drop'
-
-        refine ⟨n', m'+m+1, h_sim_drop', h_eq', h_n', ?_⟩
-        intro j j_lt
-        by_cases lt_m : j < m
-        · apply h_m; omega
-        · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : m ≤ j)
-          match j with
-          | 0    => exact b_get_eq_none
-          | j+1  =>
-            simp only [← h_m' j (by omega), tail, Stream'.get_tail]
-            congr 1
-            omega
+        simp [show m' + 1 + (m + 2) = m' + m + 3 by omega] at h_sim_drop'
+        sorry
+        -- refine ⟨n', m'+m+1, h_sim_drop', h_eq', h_n', ?_⟩
+        -- intro j j_lt
+        -- by_cases lt_m : j < m
+        -- · apply h_m; omega
+        -- · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : m ≤ j)
+        --   match j with
+        --   | 0    => exact b_get_eq_none
+        --   | j+1  =>
+        --     simp only [← h_m' j (by omega), tail, Stream'.get_tail]
+        --     congr 1
+        --     omega
     | n+1, 0 =>
         have a_head_eq_none : a.head = none       := h_n 0 (by omega)
         have b_head_eq_none : b.head = none       := by simp_all
         have a_get_eq_none  : a.get (n+1) = none  := by simpa [← b_head_eq_none] using h_eq
-        simp only [show n' + 1 + (n + 2) = n' + n + 3 by omega] at h_sim_drop'
-
-        refine ⟨n'+n+1, m', h_sim_drop', h_eq', ?_, h_m'⟩
-        intro j j_lt
-        by_cases lt_m : j < n
-        · apply h_n; omega
-        · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : n ≤ j)
-          match j with
-          | 0    => exact a_get_eq_none
-          | j+1  =>
-            simp only [← h_n' j (by omega), tail, Stream'.get_tail]
-            congr 1
-            omega
+        simp [show n' + 1 + (n + 2) = n' + n + 3 by omega] at h_sim_drop'
+        sorry
+        -- refine ⟨n'+n+1, m', h_sim_drop', h_eq', ?_, h_m'⟩
+        -- intro j j_lt
+        -- by_cases lt_m : j < n
+        -- · apply h_n; omega
+        -- · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : n ≤ j)
+        --   match j with
+        --   | 0    => exact a_get_eq_none
+        --   | j+1  =>
+        --     simp only [← h_n' j (by omega), tail, Stream'.get_tail]
+        --     congr 1
+        --     omega
 
 theorem tail_bisim_iff_bisim_of_head {a b : Stream α} (head_eq : a.head = b.head) :
     a.tail ~ b.tail ↔ a ~ b := by

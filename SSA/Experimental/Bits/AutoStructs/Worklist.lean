@@ -71,7 +71,8 @@ def worklist.St.addOrCreateState (st : worklist.St A S) (final? : Bool) (sa : S)
     have worklist_nodup : worklist.toList.Nodup := by
       simp [worklist]; apply List.nodup_middle.mpr; simp
       intro hc;
-      apply st.worklist_incl at hc; simp at hc; apply Std.HashMap.get?_none_not_mem at heq; contradiction
+      apply st.worklist_incl at hc;
+      apply Std.HashMap.get?_none_not_mem at heq; contradiction
     have worklist_incl : ∀ sa ∈ worklist, sa ∈ map := by
       simp [worklist, map]; intros sa' hin; rcases hin with hin | heq
       { apply st.worklist_incl at hin; aesop }
