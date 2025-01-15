@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# 30 sec * 2500 = 
+# 30 sec * 2500 =
 # >>> ((30 * 2500) / 60) / 60
 # 20.833333333333332 / $NPROC
 # maxHeartbeats
@@ -61,14 +61,17 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             logging.warning(f"Skipping ({filename}, {timeout}) as run already exists.")
             completed_counter.increment()
             return
-        
-        process = await asyncio.create_subprocess_shell(
-            command,
+
+        process = await asyncio.create_subprocess_exec(
+            "lake",
+            "build",
+            f"SSA.Experimental.Bits.Fast.Dataset2.{module_name}",
             cwd=git_root_dir,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE 
+            stderr=asyncio.subprocess.PIPE,
+            preexec_fn=os.setsid,
         )
-    
+
         status = STATUS_TIMED_OUT
         exit_code = 1
         try:
@@ -77,7 +80,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             status = STATUS_SUCCESS if process.returncode == 0 else STATUS_FAIL
         except asyncio.TimeoutError:
             logging.warning(f"[Timeout for {filename}] Process exceeded {timeout} seconds")
-            process.terminate()  # Terminate the process
+            os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
 
         logging.info(f"[Finished {filename}]  Status: {status}")
 
@@ -151,7 +154,7 @@ def write_files():
 
 def setup_logging(db_name : str):
     # Set up the logging configuration
-    logging.basicConfig(level=logging.DEBUG, 
+    logging.basicConfig(level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
