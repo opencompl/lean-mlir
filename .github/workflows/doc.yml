@@ -13,9 +13,9 @@ permissions:
 jobs:
   build:
     name: build and deploy documentation.
-    runs-on: ubuntu-latest
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
-    if: "!contains(runner.labels, 'self-hosted')" 
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
