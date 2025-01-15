@@ -28,75 +28,77 @@ STATUS_FAIL = "fail"
 STATUS_SUCCESS = "success"
 STATUS_TIMED_OUT = "timeout"
 
-async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename):
+class Counter:
+    def __init__(self, on_increment):
+        self.val = 0
+        self.on_increment = on_increment
+
+    def increment(self):
+        self.val += 1
+        self.on_increment(self.val)
+
+async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
         command = f"lake build SSA.Experimental.Bits.Fast.Dataset2.{module_name}"
         logging.info(f"Running {i_test+1}/{n_tests} '{command}'")
 
+        logging.info(f"[Looking up cached {filename}]  Opening connection...")
         con = sqlite3.connect(db)
         cur = con.cursor()
         # Check if there is a row with the given filename and timeout
+        logging.info(f"[Looking up cached {filename}]  SELECTING for existing data...")
         cur.execute("""
             SELECT 1 FROM tests WHERE filename = ? AND timeout = ? LIMIT 1
         """, (filename, timeout))
         # Fetch the result, if no rows exist, the result will be an empty list
         result = cur.fetchone()
+        logging.info(f"[Looking up cached {filename}]  DONE")
         con.close()
 
         # Return True if no row is found (i.e., result is None)
         if result is not None:
             logging.warning(f"Skipping ({filename}, {timeout}) as run already exists.")
+            completed_counter.increment()
             return
         
         process = await asyncio.create_subprocess_shell(
             command,
             cwd=git_root_dir,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            stderr=asyncio.subprocess.PIPE 
         )
-        stdout_task = asyncio.create_task(process.stdout.read())
-        stderr_task = asyncio.create_task(process.stderr.read())
     
-        stdout = ""
-        stderr = ""
         status = STATUS_TIMED_OUT
         exit_code = 1
-
         try:
             await asyncio.wait_for(process.wait(), timeout=timeout)
             exit_code = process.returncode
-            stdout, stderr = await asyncio.gather(stdout_task, stderr_task)
             status = STATUS_SUCCESS if process.returncode == 0 else STATUS_FAIL
         except asyncio.TimeoutError:
             logging.warning(f"[Timeout for {filename}] Process exceeded {timeout} seconds")
-            # Create a task to read stdout and stderr concurrently
-            # Capture whatever was output before the timeout
-            process.kill()  # Terminate the process
-            await process.wait()  # Ensure cleanup
-            stdout, stderr = await asyncio.gather(stdout_task, stderr_task)
-
-        if stdout:
-            logging.debug(f"[Output for {filename}]\n{stdout.decode()}")
-        if stderr:
-            logging.debug(f"[Error for {filename}]\n{stderr.decode()}")
+            process.terminate()  # Terminate the process
 
         logging.info(f"[Finished {filename}]  Status: {status}")
 
+        logging.info(f"[Writing {filename}]  Opening connection...")
         con = sqlite3.connect(args.db)
+        logging.info(f"[Writing {filename}]  Executing INSERT...")
         cur = con.cursor()
         cur.execute("""
             INSERT INTO tests (
                 filename,
                 timeout,
                 status,
-                stdout,
-                stderr,
                 exit_code)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (filename, timeout, status, stdout, stderr, exit_code))
+            VALUES (?, ?, ?, ?)
+        """, (filename, timeout, status, exit_code))
+        logging.info(f"[Writing {filename}]  Commiting...")
         con.commit()
+        logging.info(f"[Writing {filename}]  Closing...")
         con.close()
+        logging.info(f"[Writing {filename}]  DONE")
+        completed_counter.increment()
 
 def get_git_root():
     result = subprocess.run(
@@ -118,10 +120,12 @@ set_option maxHeartbeats 0
 This dataset was derived from
 https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 -/
+
+variable { a b c d e f g t x y z : BitVec w }
 """
 
 def translate_dataset_expr_to_lean(counter, expression):
-  exp = f"theorem e_{counter} (x y : BitVec w) :\n    "
+  exp = f"theorem e_{counter} :\n    "
   expression = expression.replace(",True", "")
   expression = expression.replace(",", " = ")
   expression = expression.replace("*", " * ")
@@ -152,7 +156,6 @@ def setup_logging(db_name : str):
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
 async def main(args):
-    setup_logging(args.db)
     logging.info(f"parsed config args: {args}")
 
     git_root_dir = get_git_root()
@@ -165,8 +168,6 @@ async def main(args):
             filename TEXT,
             timeout INTEGER,
             status TEXT,
-            stdout TEXT, 
-            stderr TEXT,
             exit_code INTEGER,
             PRIMARY KEY (filename, timeout)  -- Composite primary key
             )
@@ -187,6 +188,7 @@ async def main(args):
     n_tests = len(tests)
 
     logging.info(f"found {n_tests} files to process")
+    completed_counter = Counter(lambda val: logging.info(f"** COMPLETED {val}/{n_tests} **"))
     async with asyncio.TaskGroup() as tg:
         for (i_test, test) in enumerate(tests):
             filename = f"Test{i_test+1}.lean"
@@ -201,8 +203,16 @@ async def main(args):
                            timeout=args.timeout,
                            i_test=i_test,
                            n_tests=n_tests,
-                           filename=filename))
+                           filename=filename,
+                           completed_counter=completed_counter))
 
 if __name__ == "__main__":
     args = parse_args()
-    asyncio.run(main(args))
+    setup_logging(args.db)
+    logging.debug("started asyncio")
+    loop = asyncio.new_event_loop();
+    asyncio.set_event_loop(loop);
+    loop.run_until_complete(main(args))
+    # https://stackoverflow.com/questions/65682221/runtimeerror-exception-ignored-in-function-proactorbasepipetransport
+    # asyncio.run(main(args), debug=True)
+    logging.debug("done asyncio")
