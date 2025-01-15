@@ -13,6 +13,8 @@ jobs:
   build:
     name: tools, scaling, and auto-generated stmts
     runs-on: ubuntu-latest
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    if: "!contains(runner.labels, 'self-hosted')" 
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
