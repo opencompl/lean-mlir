@@ -3,9 +3,22 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
+theorem toInt_add_eq_msb {w : Nat} (x y : BitVec w) :
+  ((x + y).toInt).msb = y.msb ∧ ¬(x + y).msb = x.msb := by sorry
+
+
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
-  sorry
+  simp only [sadd_overflow, ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
+  by_cases hneg : x.toInt + y.toInt < - 2 ^ (w - 1)
+  · simp [hneg, BitVec.msb_eq_decide]
+    and_intros
+    ·
+      sorry
+    ·
+      sorry
+  ·
+    sorry
 
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
@@ -13,14 +26,30 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
-    smul_overflow x y = (decide (y.toInt < 0) && decide (x.toInt = 2 ^ (w - 1))) ∨ ¬y.toInt = 0 ∧ ¬(x * y).smod y = x := by
-
+    smul_overflow x y = true ↔ y.toInt < 0 ∧ x.toInt = 2 ^ (w - 1) ∨ ¬y.toInt = 0 ∧ ¬(x * y).smod y = x := by
   sorry
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
-    umul_overflow x y = true ↔ ¬y.toNat = 0 ∧ ¬(x * y).umod y = x := by
+    umul_overflow x y = true ↔ ¬y.toNat = 0 ∧ ¬x * y % y = x := by
   simp only [umul_overflow, ge_iff_le, decide_eq_true_eq]
-  sorry
+  by_cases h : y.toNat = 0
+  · simp [h]
+  · simp [h, BitVec.toNat_eq]
+    by_cases h' : 2 ^ w ≤ x.toNat * y.toNat
+    · simp [h']
+
+      sorry
+    · simp [h']
+      simp at h'
+      rw [Nat.mod_eq_of_lt h']
+      have hy : 0 < y.toNat := by omega
+      rw [Nat.mod_eq]
+      simp [hy]
+      by_cases hx : 0 < x.toNat
+      · simp [hx, show 1 ≤ x.toNat by omega]
+        simp [Nat.mod_eq_sub_div_mul]
+        sorry
+      · simp [hx, show x.toNat = 0 by omega]
 
 namespace Nat
 
