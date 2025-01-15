@@ -3,22 +3,65 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
-theorem toInt_add_eq_msb {w : Nat} (x y : BitVec w) :
-  ((x + y).toInt).msb = y.msb ∧ ¬(x + y).msb = x.msb := by sorry
+#check BitVec.toInt_eq_toNat_of_msb
 
+theorem foo (a k : Int) (h1 : k ≤ a) (h2 : a ≤ k * 2) : a - k * 2 ≤ k := by omega
+theorem bar (a k : Int) (h1 : k ≤ a) (h2 : a ≤ k * 2) : -k ≤ a - k * 2 := by omega
 
+/-
+Step 1: Case split on x.msb, y.msb
+Step 2: work out all cases.
+-/
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
-  simp only [sadd_overflow, ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
-  by_cases hneg : x.toInt + y.toInt < - 2 ^ (w - 1)
-  · simp [hneg, BitVec.msb_eq_decide]
-    and_intros
-    ·
-      sorry
-    ·
-      sorry
-  ·
-    sorry
+  rcases w with rfl | w
+  · revert x y; decide
+  · simp only [sadd_overflow, ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
+    by_cases hx : x.msb <;> by_cases hy : y.msb
+    · by_cases hoverflow : x.toNat + y.toNat < 2^w
+      · have hoverflowMsb : (x + y).msb = false := by
+          rw [BitVec.msb_eq_decide]
+          simp
+          rw [Nat.mod_eq_of_lt (by omega)]
+          omega
+        rw [hoverflowMsb, hx, hy]
+        simp only [add_tsub_cancel_right, Bool.false_eq_true, not_false_eq_true, and_self, iff_true]
+        simp [BitVec.toInt_eq_msb_cond, hx, hy]
+        rw [Int.pow_succ]
+        have hxGe := BitVec.toNat_ge_of_msb_true hx
+        have hyGe := BitVec.toNat_ge_of_msb_true hy
+        simp at hxGe hyGe
+        omega
+      · sorry
+      -- norm_cast
+    · sorry
+    · sorry
+    · sorry
+  -- constructor
+  -- · intros h
+  --   sorry
+
+  -- · intros h
+  --   have h1: x.msb = y.msb := by simp [*]
+  --   have h2: ¬(x + y).msb = x.msb := by exact h.right
+  --   clear h
+  --   by_cases x_sgn : x.msb
+  --   ·
+  --     simp_all [x_sgn]
+  --     by_cases hh : x.toInt + y.toInt < -2 ^ (w - 1)
+  --     · simp [hh]
+  --     ·
+  --       simp_all
+  --       simp [BitVec.msb_eq_toInt] at h2
+  --       -- simp [bmod]
+  --       simp [Int.bmod_def] at h2
+
+  --       split at h2
+
+  --   ·
+  --     sorry
+  -- ·
+  --   sorry
 
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
@@ -26,11 +69,11 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
-    smul_overflow x y = true ↔ y.toInt < 0 ∧ x.toInt = 2 ^ (w - 1) ∨ ¬y.toInt = 0 ∧ ¬(x * y).smod y = x := by
+    smul_overflow x y = true ↔ ((y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) <ₛ (BitVec.twoPow w (w - 1)).signExtend (w * 2)) ∨ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) (w - 1)) := by
   sorry
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
-    umul_overflow x y = true ↔ ¬y.toNat = 0 ∧ ¬x * y % y = x := by
+    umul_overflow x y = true ↔ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) w) := by
   simp only [umul_overflow, ge_iff_le, decide_eq_true_eq]
   by_cases h : y.toNat = 0
   · simp [h]
