@@ -82,7 +82,7 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
-theorem two_pow_add_one_div_two : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
+theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
   by_cases hw : w = 0
   · subst hw
     decide
@@ -129,17 +129,18 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
         rw [BitVec.msb_eq_toInt] at hx
         simp_all
         have xyneg : x.toInt + y.toInt < 0 := by omega
-        have h3 : -2 ^ w < x.toInt + y.toInt := by
-          have hx' := toInt_lt x
-          have hy' := toInt_lt y
+        have h3 : -2 ^ w ≤ x.toInt + y.toInt := by
+          have hx' := le_toInt x
+          have hy' := le_toInt y
           norm_cast
           rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
           push_cast
           rw [Int.neg_add]
           rw [← sub_eq_add_neg]
-          push_cast
-
-          sorry -- by bounds on toInt * 2
+          norm_cast
+          have h0 := Int.add_le_add hx' hy'
+          simp
+          omega
         unfold Int.bmod at h2
         simp at h2
         have h4 : (x.toInt + y.toInt) % 2 ^ w = (x.toInt + y.toInt + 2 ^ w) := by
@@ -150,7 +151,11 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
         have h5 : x.toInt + y.toInt + 2 ^ w < (2 ^ w + 1) / 2 := by
           norm_cast
           simp_all
-          sorry -- contradiction via h2
+          by_cases hh : x.toInt + y.toInt + 2 ^ w < (2 ^ w + 1) / 2
+          · simp_all
+          · simp_all
+            have : 0 > x.toInt + y.toInt := by simp [xyneg]
+            omega
         simp_all
         have h6 : x.toInt + y.toInt + 2 ^ w < 2 ^ (w - 1) := by
           norm_cast at h5
