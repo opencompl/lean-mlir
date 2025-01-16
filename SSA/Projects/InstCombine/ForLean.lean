@@ -49,7 +49,7 @@ theorem toInd_add_toInt_lt_two_pow (x y : BitVec w) :
     push_cast
     omega
 
-theorem bmod_pos_iff {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+theorem bmod_pos_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
     0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
   simp [Int.bmod_def]
   rw [Int.emod_eq_of_lt (by omega) (by omega)]
@@ -57,7 +57,7 @@ theorem bmod_pos_iff {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
   · omega
   · omega
 
-theorem bmod_neg_iff {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
     (x.bmod y) < 0 ↔ (y + 1) / 2 ≤ x := by
   simp [Int.bmod_def]
   rw [Int.emod_eq_of_lt (by omega) (by omega)]
@@ -84,7 +84,14 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
-theorem aaaa : (2 ^ w + 1) / 2 = 2 ^ (w-1) := by sorry
+theorem aaaa : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
+  by_cases hw : w = 0
+  · subst hw
+    simp
+  ·
+    rw [← Nat.two_pow_pred_add_two_pow_pred (by omega), ← Nat.mul_two]
+    sorry
+
 
 theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
@@ -113,7 +120,7 @@ theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
         have xysmall := toInd_add_toInt_lt_two_pow x y
         have xypos : 0 ≤ x.toInt + y.toInt := by omega
         left
-        rw [bmod_neg_iff] at h2
+        rw [bmod_neg_iff_of_pos_lt] at h2
         simp at h2
         norm_cast at h2
         rw [aaaa] at h2
