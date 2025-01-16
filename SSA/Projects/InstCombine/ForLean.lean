@@ -5,8 +5,99 @@ import Mathlib.Data.BitVec
 
 #check BitVec.toInt_eq_toNat_of_msb
 
+theorem toInt_lt {w : Nat} (x : BitVec w) :
+    x.toInt < 2 ^ (w - 1) := by
+  simp only [BitVec.toInt, Nat.cast_pow]
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x]
+  · rw [←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.two_mul]
+    split
+    case neg.isTrue h =>
+      norm_cast
+      omega
+    case neg.isFalse h =>
+      rw [sub_lt_iff_lt_add]
+      norm_cast
+      omega
+
+@[simp]
+theorem toInt_add_mod_elim {x y : BitVec w} :
+    (x.toInt + y.toInt) % 2 ^ w = x.toInt + y.toInt := by
+  have ltx := toInt_lt x
+  have lty := toInt_lt y
+  have h : x.toInt + y.toInt < 2 * 2 ^ (w - 1) := by
+    sorry
+
+  have h : x.toInt + y.toInt < 2 ^ w := by
+    sorry
+  clear ltx lty
+  --rw [Int.add_comm, Nat.two_pow_pred_mul_two] at h
+  omega
+
+theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
+    uadd_overflow x y = BitVec.carry w x y false := by
+  simp only [uadd_overflow, BitVec.carry]
+  by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
+
+
+theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
+    sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
+  simp only [sadd_overflow]
+  by_cases h: w = 0
+  · subst h
+    simp [BitVec.eq_nil x, BitVec.eq_nil y]
+  ·
+    have h' : w > 0 := by omega
+    simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
+    constructor
+    ·
+      intros h
+      sorry
+    · intros h
+      have h1 := h.left
+      have h2 := h.right
+      clear h
+      clear h
+      by_cases hx : x.msb = false
+      ·
+        simp_all [hx]
+        rw [BitVec.msb_eq_toInt] at h2
+        rw [BitVec.msb_eq_toInt] at h1
+        rw [BitVec.msb_eq_toInt] at hx
+        simp_all
+        simp [Int.bmod] at h2
+        by_cases hh : (x.toInt + y.toInt) % 2 ^ w < (2 ^ w + 1) / 2
+        · simp_all
+        · simp_all
+          have hhh : (2 ^ w + 1) / 2 ≤ (x.toInt + y.toInt) := sorry
+          simp_all
+
+
+          rw [Int.bmod_]
+          omega
+      ·
+        simp_all [hx]
+        rw [BitVec.msb_eq_toInt] at h2
+        rw [BitVec.msb_eq_toInt] at h1
+        rw [BitVec.msb_eq_toInt] at hx
+        simp_all
+
+
+
+
+
+
+
+      sorry
+
+
+
+
+
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
+
   rcases w with rfl | w
   · revert x y; decide
   · simp only [sadd_overflow, ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
@@ -85,11 +176,6 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
           simp [BitVec.msb_eq_toNat, ← BitVec.toNat_add]
           sorry
         sorry
-
-theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
-    uadd_overflow x y = BitVec.carry w x y false := by
-  simp only [uadd_overflow, BitVec.carry]
-  by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     smul_overflow x y = true ↔ ((y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) <ₛ (BitVec.twoPow w (w - 1)).signExtend (w * 2)) ∨ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) (w - 1)) := by
