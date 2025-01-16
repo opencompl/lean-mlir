@@ -49,17 +49,21 @@ theorem toInd_add_toInt_lt_two_pow (x y : BitVec w) :
     push_cast
     omega
 
-theorem bmod_neg_iff {x : Int} {y : Nat} (h1 : 0 < x) (h2 : x < y) :
+theorem bmod_pos_iff {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
     0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
   simp [Int.bmod_def]
-  simp [h]
-
+  rw [Int.emod_eq_of_lt (by omega) (by omega)]
   split
-  case isTrue h =>
-    sorry
-  case isFalse h =>
-    sorry
+  · omega
+  · omega
 
+theorem bmod_neg_iff {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+    (x.bmod y) < 0 ↔ (y + 1) / 2 ≤ x := by
+  simp [Int.bmod_def]
+  rw [Int.emod_eq_of_lt (by omega) (by omega)]
+  split
+  · omega
+  · omega
 
 @[simp]
 theorem toInt_add_mod_elim {x y : BitVec w} :
@@ -80,6 +84,7 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
+theorem aaaa : (2 ^ w + 1) / 2 = 2 ^ (w-1) := by sorry
 
 theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
@@ -100,26 +105,24 @@ theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
       clear h
       clear h
       by_cases hx : x.msb = false
-      ·
-        simp_all [hx]
+      · simp_all [hx]
         rw [BitVec.msb_eq_toInt] at h2
         rw [BitVec.msb_eq_toInt] at h1
         rw [BitVec.msb_eq_toInt] at hx
         simp_all
         have xysmall := toInd_add_toInt_lt_two_pow x y
         have xypos : 0 ≤ x.toInt + y.toInt := by omega
-
-
-        simp [Int.bmod] at h2
-        by_cases hh : (x.toInt + y.toInt) % 2 ^ w < (2 ^ w + 1) / 2
-        · simp_all
-        · simp_all
-          have hhh : (2 ^ w + 1) / 2 ≤ (x.toInt + y.toInt) := sorry
-          simp_all
-
-
-          rw [Int.bmod_]
-          omega
+        left
+        rw [bmod_neg_iff] at h2
+        simp at h2
+        norm_cast at h2
+        rw [aaaa] at h2
+        norm_cast at h2
+        norm_cast
+        omega
+        norm_cast
+        norm_cast at h2
+        norm_cast at xysmall
       ·
         simp_all [hx]
         rw [BitVec.msb_eq_toInt] at h2
