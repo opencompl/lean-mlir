@@ -309,6 +309,7 @@ macro "bv_bench": tactic =>
             "bv_omega" : (bv_omega; done),
             "bv_automata_classic_prop" : (bool_to_prop; bv_automata_classic; done),
             "bv_automata_classic" : (bv_automata_classic; done),
+            "bv_normalize_automata_classic" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
             "simp" : (simp; done),
             "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
