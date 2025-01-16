@@ -106,6 +106,10 @@ theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
         rw [BitVec.msb_eq_toInt] at h1
         rw [BitVec.msb_eq_toInt] at hx
         simp_all
+        have xysmall := toInd_add_toInt_lt_two_pow x y
+        have xypos : 0 ≤ x.toInt + y.toInt := by omega
+
+
         simp [Int.bmod] at h2
         by_cases hh : (x.toInt + y.toInt) % 2 ^ w < (2 ^ w + 1) / 2
         · simp_all
@@ -122,6 +126,8 @@ theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
         rw [BitVec.msb_eq_toInt] at h1
         rw [BitVec.msb_eq_toInt] at hx
         simp_all
+        have xyneg : x.toInt + y.toInt < 0 := by omega
+        have xylarge : x.toInt + y.toInt ≥ -2 ^ w := add
 
 
 
