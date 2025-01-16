@@ -49,6 +49,18 @@ theorem toInd_add_toInt_lt_two_pow (x y : BitVec w) :
     push_cast
     omega
 
+theorem toInd_add_toInt_ge_two_pow (x y : BitVec w) :
+    (x.toInt + y.toInt) ≥  - 2 ^ w := by
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x, BitVec.eq_nil y]
+  · norm_cast
+    rw [←Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    have hx := le_toInt x
+    have hy := le_toInt y
+    push_cast
+    omega
+
 theorem bmod_pos_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
     0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
   simp [Int.bmod_def]
@@ -65,35 +77,20 @@ theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
   · omega
   · omega
 
-@[simp]
-theorem toInt_add_mod_elim {x y : BitVec w} :
-    (x.toInt + y.toInt) % 2 ^ w = x.toInt + y.toInt := by
-  have ltx := toInt_lt x
-  have lty := toInt_lt y
-  have h : x.toInt + y.toInt < 2 * 2 ^ (w - 1) := by
-    sorry
-
-  have h : x.toInt + y.toInt < 2 ^ w := by
-    sorry
-  clear ltx lty
-  --rw [Int.add_comm, Nat.two_pow_pred_mul_two] at h
-  omega
-
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
-theorem aaaa : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
+theorem two_pow_add_one_div_two : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
   by_cases hw : w = 0
   · subst hw
     decide
-  ·
-    rw [← Nat.two_pow_pred_add_two_pow_pred (by omega), ← Nat.mul_two]
+  · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega), ← Nat.mul_two]
     sorry
 
 
-theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
+theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
   simp only [sadd_overflow]
   by_cases h: w = 0
@@ -101,15 +98,14 @@ theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
   · have h' : w > 0 := by omega
     simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
     constructor
-    ·
-      intros h
+    · intros h
       sorry
     · intros h
       have h1 := h.left
       have h2 := h.right
       clear h
       clear h
-      by_cases hx : x.msb = false
+      cases hx : x.msb
       · simp_all [hx]
         rw [BitVec.msb_eq_toInt] at h2
         rw [BitVec.msb_eq_toInt] at h1
@@ -121,115 +117,56 @@ theorem sadd_overflow_eq' {w : Nat} (x y : BitVec w) :
         rw [bmod_neg_iff_of_pos_lt] at h2
         simp at h2
         norm_cast at h2
-        rw [aaaa] at h2
-        norm_cast at h2
+        rw [two_pow_add_one_div_two] at h2
         norm_cast
         omega
-        norm_cast
         norm_cast at h2
         norm_cast at xysmall
-      ·
+      · right
         simp_all [hx]
         rw [BitVec.msb_eq_toInt] at h2
         rw [BitVec.msb_eq_toInt] at h1
         rw [BitVec.msb_eq_toInt] at hx
         simp_all
         have xyneg : x.toInt + y.toInt < 0 := by omega
-        have xylarge : x.toInt + y.toInt ≥ -2 ^ w := add
+        have h3 : -2 ^ w < x.toInt + y.toInt := by
+          have hx' := toInt_lt x
+          have hy' := toInt_lt y
+          norm_cast
+          rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+          push_cast
+          have : (-(2 ^ (w - 1) + 2 ^ (w - 1)) < x.toInt + y.toInt) = (x.toInt + y.toInt ≤ (2 ^ (w - 1) + 2 ^ (w - 1)) ):= by
+            simp_all
+            sorry
+          rw [this]
+          simp [toInt_add_toInt_ge_two_pow]
 
-
-
-
-
-
-
-      sorry
-
-
-
-
-
-theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
-    sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
-
-  rcases w with rfl | w
-  · revert x y; decide
-  · simp only [sadd_overflow, ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
-    by_cases hx : x.msb <;> by_cases hy : y.msb
-    · by_cases hoverflow : x.toNat + y.toNat < 2^w
-      · have hoverflowMsb : (x + y).msb = false := by
-          rw [BitVec.msb_eq_decide]
-          simp
-          rw [Nat.mod_eq_of_lt (by omega)]
-          omega
-        rw [hoverflowMsb, hx, hy]
-        simp only [add_tsub_cancel_right, BitVec.toInt_eq_msb_cond, hx, ↓reduceIte, Nat.cast_pow,
-          Nat.cast_ofNat, hy, Bool.false_eq_true, not_false_eq_true, and_self, iff_true]
-        rw [Int.pow_succ]
-        have hxGe := BitVec.toNat_ge_of_msb_true hx
-        have hyGe := BitVec.toNat_ge_of_msb_true hy
-        simp at hxGe hyGe
-        omega
-      · simp [hoverflow, hx, hy, BitVec.toInt_eq_msb_cond, Int.pow_succ]
-        simp at hoverflow
-        have : (x + y).msb = true := by
-          simp [BitVec.msb_eq_toNat, ← BitVec.toNat_add]
-
-          sorry
-        sorry
-    · by_cases hoverflow : x.toNat + y.toNat < 2^w
-      · have hoverflowMsb : (x + y).msb = false := by
-          rw [BitVec.msb_eq_decide]
-          simp
-          rw [Nat.mod_eq_of_lt (by omega)]
-          omega
-        rw [hoverflowMsb, hx]
-        simp only [add_tsub_cancel_right, BitVec.toInt_eq_msb_cond, hx, ↓reduceIte, Nat.cast_pow,
-          Nat.cast_ofNat, hy, Bool.false_eq_true, not_false_eq_true, and_self, iff_true]
-        rw [Int.pow_succ]
-        have hxGe := BitVec.toNat_ge_of_msb_true hx
-        simp at hxGe
-        omega
-      · simp [hoverflow, hx, hy, BitVec.toInt_eq_msb_cond, Int.pow_succ]
-        simp at hoverflow
-        have : (x + y).msb = true := by
-          simp [BitVec.msb_eq_toNat, ← BitVec.toNat_add]
-          sorry
-        sorry
-    · by_cases hoverflow : x.toNat + y.toNat < 2^w
-      · have hoverflowMsb : (x + y).msb = false := by
-          rw [BitVec.msb_eq_decide]
-          simp
-          rw [Nat.mod_eq_of_lt (by omega)]
-          omega
-        rw [hoverflowMsb, hy]
-        simp only [add_tsub_cancel_right, BitVec.toInt_eq_msb_cond, hx, ↓reduceIte, Nat.cast_pow,
-          Nat.cast_ofNat, hy, Bool.false_eq_true, not_false_eq_true, and_self, iff_true]
-        rw [Int.pow_succ]
-        have hyGe := BitVec.toNat_ge_of_msb_true hy
-        simp at hyGe
-        omega
-      · simp [hoverflow, hx, hy, BitVec.toInt_eq_msb_cond, Int.pow_succ]
-        simp at hoverflow
-        have : (x + y).msb = true := by
-          simp [BitVec.msb_eq_toNat, ← BitVec.toNat_add]
-          sorry
-        sorry
-    · by_cases hoverflow : x.toNat + y.toNat < 2^w
-      · have hoverflowMsb : (x + y).msb = false := by
-          rw [BitVec.msb_eq_decide]
-          simp
-          rw [Nat.mod_eq_of_lt (by omega)]
-          omega
-        rw [hoverflowMsb]
-        sorry
-
-      · simp [hoverflow, hx, hy, BitVec.toInt_eq_msb_cond, Int.pow_succ]
-        simp at hoverflow
-        have : (x + y).msb = true := by
-          simp [BitVec.msb_eq_toNat, ← BitVec.toNat_add]
-          sorry
-        sorry
+          sorry -- by bounds on toInt * 2
+        unfold Int.bmod at h2
+        simp at h2
+        have h4 : (x.toInt + y.toInt) % 2 ^ w = (x.toInt + y.toInt + 2 ^ w) := by
+          rw [← Int.add_emod_self]
+          rw [Int.emod_eq_of_lt]
+          <;> omega
+        simp [h4] at *
+        have h5 : x.toInt + y.toInt + 2 ^ w < (2 ^ w + 1) / 2 := by
+          norm_cast
+          simp_all
+          sorry -- contradiction via h2
+        simp_all
+        have h6 : x.toInt + y.toInt + 2 ^ w < 2 ^ (w - 1) := by
+          norm_cast at h5
+          rw [two_pow_add_one_div_two] at h5
+          norm_cast
+        have h7 :  x.toInt + y.toInt < (2 ^ (w - 1)) - 2 ^ w := by
+          rw [Int.add_lt_iff] at h6
+          norm_cast at h6
+          have : -(2 ^ w) + (2 ^ (w - 1)) = - 2 ^ (w - 1) := by
+            norm_cast
+            rw [← Int.two_pow_pred_sub_two_pow]
+            <;> omega
+          simp_all
+        simp_all
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     smul_overflow x y = true ↔ ((y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) <ₛ (BitVec.twoPow w (w - 1)).signExtend (w * 2)) ∨ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) (w - 1)) := by
