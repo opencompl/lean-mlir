@@ -5,8 +5,7 @@ import Mathlib.Data.BitVec
 
 #check BitVec.toInt_eq_toNat_of_msb
 
-theorem toInt_lt {w : Nat} (x : BitVec w) :
-    x.toInt < 2 ^ (w - 1) := by
+theorem toInt_lt {w : Nat} (x : BitVec w) : x.toInt < 2 ^ (w - 1) := by
   simp only [BitVec.toInt, Nat.cast_pow]
   by_cases hw : w = 0
   · subst hw
@@ -20,6 +19,47 @@ theorem toInt_lt {w : Nat} (x : BitVec w) :
       rw [sub_lt_iff_lt_add]
       norm_cast
       omega
+
+theorem le_toInt {w : Nat} (x : BitVec w) : -2 ^ (w - 1) ≤ x.toInt := by
+  simp only [BitVec.toInt, Nat.cast_pow]
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x]
+  · rw [←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.two_mul]
+    simp only [zero_lt_two, mul_lt_mul_left, Nat.cast_ofNat]
+    split
+    case neg.isTrue h =>
+      norm_cast
+      omega
+    case neg.isFalse h =>
+      simp only [neg_le_sub_iff_le_add]
+      norm_cast
+      rw [←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.two_mul]
+      omega
+
+theorem toInd_add_toInt_lt_two_pow (x y : BitVec w) :
+    (x.toInt + y.toInt) < 2 ^ w := by
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x, BitVec.eq_nil y]
+  · norm_cast
+    rw [←Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    have hx := toInt_lt x
+    have hy := toInt_lt y
+    push_cast
+    omega
+
+theorem bmod_neg_iff {x : Int} {y : Nat} (h1 : 0 < x) (h2 : x < y) :
+    0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
+  simp [Int.bmod_def]
+  simp [h]
+
+  split
+  case isTrue h =>
+    sorry
+  case isFalse h =>
+    sorry
+
 
 @[simp]
 theorem toInt_add_mod_elim {x y : BitVec w} :
