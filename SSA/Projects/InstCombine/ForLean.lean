@@ -65,20 +65,6 @@ theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
   · omega
   · omega
 
-@[simp]
-theorem toInt_add_mod_elim {x y : BitVec w} :
-    (x.toInt + y.toInt) % 2 ^ w = x.toInt + y.toInt := by
-  have ltx := toInt_lt x
-  have lty := toInt_lt y
-  have h : x.toInt + y.toInt < 2 * 2 ^ (w - 1) := by
-    sorry
-
-  have h : x.toInt + y.toInt < 2 ^ w := by
-    sorry
-  clear ltx lty
-  --rw [Int.add_comm, Nat.two_pow_pred_mul_two] at h
-  omega
-
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
   simp only [uadd_overflow, BitVec.carry]
