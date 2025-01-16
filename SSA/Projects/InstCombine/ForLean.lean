@@ -135,11 +135,9 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
           norm_cast
           rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
           push_cast
-          have : (-(2 ^ (w - 1) + 2 ^ (w - 1)) < x.toInt + y.toInt) = (x.toInt + y.toInt ≤ (2 ^ (w - 1) + 2 ^ (w - 1)) ):= by
-            simp_all
-            sorry
-          rw [this]
-          simp [toInt_add_toInt_ge_two_pow]
+          rw [Int.neg_add]
+          rw [← sub_eq_add_neg]
+          push_cast
 
           sorry -- by bounds on toInt * 2
         unfold Int.bmod at h2
