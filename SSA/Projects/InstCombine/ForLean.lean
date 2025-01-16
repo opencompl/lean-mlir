@@ -83,12 +83,10 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
 theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
-  by_cases hw : w = 0
-  · subst hw
-    decide
-  · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega), ← Nat.mul_two]
-    sorry
-
+  cases hw : w
+  · decide
+  · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    omega
 
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
