@@ -49,8 +49,8 @@ theorem toInd_add_toInt_lt_two_pow (x y : BitVec w) :
     push_cast
     omega
 
-theorem toInd_add_toInt_ge_two_pow (x y : BitVec w) :
-    (x.toInt + y.toInt) ≥  - 2 ^ w := by
+theorem neg_two_pow_le_toInd_add_toInt (x y : BitVec w) :
+    - 2 ^ w ≤ x.toInt + y.toInt := by
   by_cases hw : w = 0
   · subst hw
     simp [BitVec.eq_nil x, BitVec.eq_nil y]
@@ -127,18 +127,7 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
         rw [BitVec.msb_eq_toInt] at hx
         simp_all
         have xyneg : x.toInt + y.toInt < 0 := by omega
-        have h3 : -2 ^ w ≤ x.toInt + y.toInt := by
-          have hx' := le_toInt x
-          have hy' := le_toInt y
-          norm_cast
-          rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-          push_cast
-          rw [Int.neg_add]
-          rw [← sub_eq_add_neg]
-          norm_cast
-          have h0 := Int.add_le_add hx' hy'
-          simp
-          omega
+        have h3 := neg_two_pow_le_toInd_add_toInt x y
         unfold Int.bmod at h2
         simp at h2
         have h4 : (x.toInt + y.toInt) % 2 ^ w = (x.toInt + y.toInt + 2 ^ w) := by
