@@ -124,32 +124,34 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
   · subst w; revert x y; decide
   · have h' : w > 0 := by omega
     simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
-    constructor
-    · intros h
-      sorry
-    · intros h
-      have h1 := h.left
-      have h2 := h.right
-      clear h
-      clear h
-      cases hx : x.msb
-      · simp_all [hx]
-        rw [BitVec.msb_eq_toInt] at h2
-        rw [BitVec.msb_eq_toInt] at h1
-        rw [BitVec.msb_eq_toInt] at hx
-        simp_all
-        have xysmall := toInd_add_toInt_lt_two_pow x y
-        have xypos : 0 ≤ x.toInt + y.toInt := by omega
-        left
-        rw [bmod_neg_iff_of_pos_lt] at h2
-        simp at h2
-        norm_cast at h2
-        rw [two_pow_add_one_div_two] at h2
-        norm_cast
-        omega
-        norm_cast at h2
-        norm_cast at xysmall
-      · right
+    cases hx : x.msb
+    · constructor
+      · sorry
+      · intros h
+        have h1 := h.left
+        have h2 := h.right
+        clear h
+        clear h
+        · simp_all [hx]
+          rw [BitVec.msb_eq_toInt] at h2
+          rw [BitVec.msb_eq_toInt] at h1
+          rw [BitVec.msb_eq_toInt] at hx
+          simp_all
+          have xysmall := toInd_add_toInt_lt_two_pow x y
+          have xypos : 0 ≤ x.toInt + y.toInt := by omega
+          left
+          rw [bmod_neg_iff_of_pos_lt] at h2
+          simp at h2
+          norm_cast at h2
+          rw [two_pow_add_one_div_two] at h2
+          norm_cast
+          omega
+          norm_cast at h2
+          norm_cast at xysmall
+    · constructor
+      · sorry
+      · intros h
+        right
         simp_all [hx]
         rw [BitVec.msb_eq_toInt] at h2
         rw [BitVec.msb_eq_toInt] at h1
