@@ -87,7 +87,7 @@ theorem bmod_pos_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) 
   · omega
 
 theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
-    (x.bmod y) < 0 ↔ -(y + 1) / 2 < x := by
+    (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
   simp [Int.bmod_def]
   rw [Int.emod_eq_add_self_emod]
   rw [Int.emod_eq_of_lt (by  omega) (by omega)]
@@ -106,17 +106,6 @@ theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
   · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
     omega
 
-theorem neg_two_pow_add_one_div_two {w : Nat} : -(2 ^ w + 1) / 2 = -2 ^ (w - 1) := by
-  cases hw : w
-  · decide
-  · norm_cast
-    rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-    simp
-    rw [Int.negSucc_eq]
-    simp
-    norm_cast
-    omega
-
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
   simp only [sadd_overflow]
@@ -125,38 +114,39 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
   · have h' : w > 0 := by omega
     simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
     cases hx : x.msb
+    · simp only [gt_iff_lt, BitVec.msb_eq_toInt, decide_eq_false_iff_not, not_lt,
+      false_eq_decide_iff, BitVec.toInt_add, not_le] at *
+      have xysmall := toInd_add_toInt_lt_two_pow x y
+      have hhx := le_toInt x
+      have hhy := le_toInt y
+      have hhx' := toInt_lt x
+      have hhy' := toInt_lt y
+      constructor
+      · intros h
+        by_cases hhh : 0 ≤ x.toInt + y.toInt
+        · rw_mod_cast [bmod_neg_iff_of_pos_lt (by omega) (by omega),
+            two_pow_add_one_div_two]
+          rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred (by omega)] at xysmall
+          omega
+        · rw [bmod_neg_iff_of_neg_gt (by omega) (by omega)]
+          omega
+      · intros h
+        have xypos : 0 ≤ x.toInt + y.toInt := by omega
+        rw_mod_cast [bmod_neg_iff_of_pos_lt (by omega) (by omega),
+          two_pow_add_one_div_two] at h
+        omega
+
     · constructor
       · sorry
       · intros h
         have h1 := h.left
         have h2 := h.right
         clear h
-        clear h
-        · simp_all [hx]
-          rw [BitVec.msb_eq_toInt] at h2
-          rw [BitVec.msb_eq_toInt] at h1
-          rw [BitVec.msb_eq_toInt] at hx
-          simp_all
-          have xysmall := toInd_add_toInt_lt_two_pow x y
-          have xypos : 0 ≤ x.toInt + y.toInt := by omega
-          left
-          rw [bmod_neg_iff_of_pos_lt] at h2
-          simp at h2
-          norm_cast at h2
-          rw [two_pow_add_one_div_two] at h2
-          norm_cast
-          omega
-          norm_cast at h2
-          norm_cast at xysmall
-    · constructor
-      · sorry
-      · intros h
         right
-        simp_all [hx]
         rw [BitVec.msb_eq_toInt] at h2
         rw [BitVec.msb_eq_toInt] at h1
         rw [BitVec.msb_eq_toInt] at hx
-        simp_all
+        simp at *
         have xyneg : x.toInt + y.toInt < 0 := by omega
         have h3 := neg_two_pow_le_toInd_add_toInt x y
         --rw [bmod_pos_iff_of_neg_gt] at h2
