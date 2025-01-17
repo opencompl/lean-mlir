@@ -4,7 +4,6 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
-import Mathlib.Tactic
 
 open BitVec
 open MLIR AST
@@ -48,7 +47,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   alive_auto
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-axioms: [propext, Classical.choice, Quot.sound] -/
+axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
 end DivRemOfSelect

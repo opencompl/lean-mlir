@@ -9,12 +9,13 @@ import Mathlib.Data.FinEnum
 import Mathlib.Data.Vector.Basic
 import Mathlib.Data.Vector.Defs
 import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Linarith
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-import SSA.Experimental.Bits.AutoStructs.NFA'
+import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.FastCopy.Defs
 
 open Copy

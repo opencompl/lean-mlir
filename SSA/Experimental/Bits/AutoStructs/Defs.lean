@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.LiftLets
 import SSA.Projects.InstCombine.ForLean
 import SSA.Experimental.Bits.FastCopy.Defs
 import SSA.Experimental.Bits.FastCopy.BitStream

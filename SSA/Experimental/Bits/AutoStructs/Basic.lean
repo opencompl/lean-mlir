@@ -11,14 +11,11 @@ import Mathlib.Computability.NFA
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Perm.Basic
-import Mathlib.Data.List.Perm.Lattice
-import Mathlib.Data.List.Perm.Subperm
 import Mathlib.Data.Rel
-import Mathlib.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
 import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.AutoStructs.NFA'
+import SSA.Experimental.Bits.AutoStructs.BundledNfa
 
 abbrev State := Nat
 
@@ -113,7 +110,7 @@ Similarity is the greatest simulation
 -/
 def RawCNFA.Sim (m : RawCNFA A) (A : NFA A S) := ∃ R, RawCNFA.Simul m A R ⊤ ∅
 
-def sim_full_cod (m : RawCNFA A) (M : NFA A Q) (D : Set Q) (T : Set (Q × A × Q)) R :
+lemma sim_full_cod (m : RawCNFA A) (M : NFA A Q) (D : Set Q) (T : Set (Q × A × Q)) R :
     T = ∅ →
     m.Simul M R D T →
     R.codom = D →

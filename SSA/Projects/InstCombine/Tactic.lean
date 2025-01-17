@@ -5,7 +5,6 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.LLVM.SimpSet
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.ForStd
-import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
 
