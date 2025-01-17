@@ -86,6 +86,56 @@ theorem bmod_pos_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) 
   · omega
   · omega
 
+theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
+  cases hw : w
+  · decide
+  · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    omega
+
+/--
+        -4 -3 -2 -1  0  1  2  3
+bmod 4   0  1 -2 -1  0  1 -2 -1
+-/
+theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
+    0 ≤ (x.bmod (2^w)) ↔ (2 * x ≤ -(2^w)) ∨ (0 ≤ x ∧ 2 * x < 2^w) := by
+  simp [Int.bmod_def]
+  by_cases h : 0 ≤ x
+  · rw [Int.emod_eq_of_lt (by omega) (by omega)]
+    split
+    · omega
+    · omega
+  · rw [Int.emod_eq_add_self_emod]
+    rw [Int.emod_eq_of_lt (by omega) (by omega)]
+    split
+    · omega
+    ·
+      rename_i hh
+      rw_mod_cast [two_pow_add_one_div_two] at hh
+      constructor
+      · intros hhh
+        sorry
+      · intros hhh
+        norm_cast at *
+        omega
+      --rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred] at *
+      --rw_mod_cast [← Nat.mul_two] at *
+      rw [mul_comm]
+      simp
+      push_cast at *
+      · omega
+      · intros hhh
+        simp [h]
+        by_cases haa : 2 * x ≤ -(2 * 2 ^ (w - 1))
+        ·
+          norm_cast at *
+          rw [Nat.mul_two] at *
+          norm_cast at haa
+          rw [Nat.mul_comm, Nat.mul_two] at haa
+
+          omega
+        · omega
+
+
 theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
     (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
   simp [Int.bmod_def]
@@ -100,12 +150,6 @@ theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
   simp only [uadd_overflow, BitVec.carry]
   by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
 
-theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
-  cases hw : w
-  · decide
-  · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-    omega
-
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
   simp only [sadd_overflow]
@@ -117,10 +161,8 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     · simp only [gt_iff_lt, BitVec.msb_eq_toInt, decide_eq_false_iff_not, not_lt,
       false_eq_decide_iff, BitVec.toInt_add, not_le] at *
       have xysmall := toInd_add_toInt_lt_two_pow x y
-      have hhx := le_toInt x
       have hhy := le_toInt y
       have hhx' := toInt_lt x
-      have hhy' := toInt_lt y
       constructor
       · intros h
         by_cases hhh : 0 ≤ x.toInt + y.toInt
@@ -136,16 +178,41 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
           two_pow_add_one_div_two] at h
         omega
 
-    · constructor
-      · sorry
+    ·
+      rw [BitVec.msb_eq_toInt] at hx
+      rw [BitVec.msb_eq_toInt]
+      rw [BitVec.msb_eq_toInt]
+      constructor
+      · intros h
+        simp
+        have hhx := le_toInt x
+        have hhy := le_toInt y
+        have hhx' := toInt_lt x
+        have hhy' := toInt_lt y
+        have hxy := toInd_add_toInt_lt_two_pow x y
+        have hxy := neg_two_pow_le_toInd_add_toInt x y
+        rw [bmod_pos_iff (by omega) (by omega)]
+        norm_cast
+        simp
+        norm_cast
+        rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+        norm_cast
+        by_cases has : y.toInt < 0
+        · simp [has]
+          simp at *
+          omega
+        · rename_i aass
+          norm_cast at aass
+          rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)] at aass
+          push_cast at *
+          simp at *
+          omega
+
       · intros h
         have h1 := h.left
         have h2 := h.right
         clear h
         right
-        rw [BitVec.msb_eq_toInt] at h2
-        rw [BitVec.msb_eq_toInt] at h1
-        rw [BitVec.msb_eq_toInt] at hx
         simp at *
         have xyneg : x.toInt + y.toInt < 0 := by omega
         have h3 := neg_two_pow_le_toInd_add_toInt x y
