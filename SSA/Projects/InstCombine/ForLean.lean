@@ -113,27 +113,26 @@ theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
       rw_mod_cast [two_pow_add_one_div_two] at hh
       constructor
       · intros hhh
-        sorry
+        left
+        simp at *
+        omega
       · intros hhh
         norm_cast at *
-        omega
-      --rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred] at *
-      --rw_mod_cast [← Nat.mul_two] at *
-      rw [mul_comm]
-      simp
-      push_cast at *
-      · omega
-      · intros hhh
-        simp [h]
-        by_cases haa : 2 * x ≤ -(2 * 2 ^ (w - 1))
+        simp at *
+        by_cases hh : 2 * x ≤ -2 ^ w
         ·
-          norm_cast at *
-          rw [Nat.mul_two] at *
-          norm_cast at haa
-          rw [Nat.mul_comm, Nat.mul_two] at haa
+          rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred] at hh
+          rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred] at hhh
+          rename_i hhaa
+          rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w] at hhaa
+          push_cast at *
+
+
 
           omega
-        · omega
+
+        · simp [hh] at *
+          omega
 
 
 theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
