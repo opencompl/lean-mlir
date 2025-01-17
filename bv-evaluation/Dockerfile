@@ -23,17 +23,17 @@ ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 # First, get cached dependencies
 WORKDIR /code/lean-mlir
 COPY lean-toolchain lakefile.toml lake-manifest.json ./
-RUN lake -R exe cache get!
+RUN lake exe cache get!
 
 # Then, copy & build lean-mlir
 COPY . .
-RUN lake exe cache get && \
-    lake build SSA mlirnatural
+
+RUN lake build
 
 # Set the evaluation script directory as working dir
 WORKDIR /code/lean-mlir/bv-evaluation
 # Set python as entrypoint, since the experiments are python scripts
-ENTRYPOINT [ "python3" ]
+# ENTRYPOINT [ "python3" ]
 
 USER root
 
