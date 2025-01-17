@@ -4,7 +4,7 @@ import pandas as pd
 import os 
 import re
 
-paper_directory = 'for-paper/'
+paper_directory = ''
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelightSymbolic/"
 raw_data_dir = paper_directory + 'raw-data/HackersDelightSymbolic/'

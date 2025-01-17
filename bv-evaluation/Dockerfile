@@ -6,6 +6,8 @@ WORKDIR /code
 RUN apt-get update -y \
     && DEBIAN_FRONTEND="noninteractive" apt-get install --yes \
         tzdata \
+	pip \
+	python3-venv \
         build-essential \
         cmake \
         git \
@@ -14,7 +16,7 @@ RUN apt-get update -y \
         # dependencies for experiment scripts
         python3-matplotlib python3-pandas python3-num2words \
         # bitwuzla dependencies
-        meson libgmp-dev libcadical-dev libsymfpu-dev
+        meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config
 
 # Install Lean
 RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf > /code/elan.sh \
@@ -25,7 +27,16 @@ ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 # Install Bitwuzla
 RUN git clone https://github.com/bitwuzla/bitwuzla
 WORKDIR /code/bitwuzla
-RUN ./configure.py && build && ninja install
+RUN ./configure.py && cd build && ninja install
+
+# Install plotting script dependencies
+
+WORKDIR /code/lean-mlir/bv-evaluation/
+COPY bv-evaluation/requirements.txt ./
+RUN bash -c "\
+	python3 -m venv venv \
+	&& source venv/bin/activate \
+	&& python3 -m pip install -r requirements.txt "
 
 # First, get cached dependencies
 WORKDIR /code/lean-mlir
@@ -39,8 +50,6 @@ RUN lake build
 
 # Set the evaluation script directory as working dir
 WORKDIR /code/lean-mlir/bv-evaluation
-# Set python as entrypoint, since the experiments are python scripts
-ENTRYPOINT [ "python3" ]
 
 USER root
 

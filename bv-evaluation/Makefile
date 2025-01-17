@@ -8,10 +8,10 @@ docker-image:
 .PHONY: 
 
 *.py:   .PHONY  
-	./run-script.sh $@
+	./run-script.sh python3 $@
 
 clean:
 	docker rmi ${DOCKER_IMAGE_TAG}
 
 all: 
-	./run-script.sh --entrypoint=/usr/bin/sh run-tests.sh
+	./run-script.sh ./run-tests.sh
