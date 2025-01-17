@@ -135,12 +135,16 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
   · subst w; revert x y; decide
   · have h' : w > 0 := by omega
     simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
+    have hhx := le_toInt x
+    have hhy := le_toInt y
+    have hhx' := toInt_lt x
+    have hhy' := toInt_lt y
+    have hxy := toInd_add_toInt_lt_two_pow x y
+    have hxy := neg_two_pow_le_toInd_add_toInt x y
     cases hx : x.msb
     · simp only [gt_iff_lt, BitVec.msb_eq_toInt, decide_eq_false_iff_not, not_lt,
       false_eq_decide_iff, BitVec.toInt_add, not_le] at *
       have xysmall := toInd_add_toInt_lt_two_pow x y
-      have hhy := le_toInt y
-      have hhx' := toInt_lt x
       constructor
       · intros h
         by_cases hhh : 0 ≤ x.toInt + y.toInt
@@ -159,10 +163,6 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     · rw [BitVec.msb_eq_toInt] at hx
       rw [BitVec.msb_eq_toInt]
       rw [BitVec.msb_eq_toInt]
-      have hhx := le_toInt x
-      have hhy' := toInt_lt y
-      have hxy := toInd_add_toInt_lt_two_pow x y
-      have hxy := neg_two_pow_le_toInd_add_toInt x y
       constructor
       · intros h
         simp only [true_eq_decide_iff, BitVec.toInt_add, decide_eq_true_eq, not_lt]
