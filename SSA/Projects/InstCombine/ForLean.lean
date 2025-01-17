@@ -105,6 +105,15 @@ theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
   · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
     omega
 
+theorem bmod_neg_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
+    (x.bmod (2^w)) < 0 ↔ (-(2^w) ≤ 2 * x ∧ x < 0) ∨ (2^w ≤ 2 * x) := by
+  simp only [Int.bmod_def, Nat.cast_pow, Nat.cast_ofNat]
+  by_cases xpos : 0 ≤ x
+  · rw [Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+  · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+
 theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
     (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
   simp [Int.bmod_def]
