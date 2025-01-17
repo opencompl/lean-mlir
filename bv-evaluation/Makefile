@@ -1,5 +1,5 @@
 
-DOCKER=docker
+DOCKER=podman
 DOCKER_IMAGE_TAG=opencompl/lean-mlir-bv-evaluate
 
 docker-image:
@@ -10,3 +10,6 @@ docker-image:
 
 clean:
 	docker rmi ${DOCKER_IMAGE_TAG}
+
+all: 
+	./run-script --entrypoint=/usr/bin/sh run-tests.sh

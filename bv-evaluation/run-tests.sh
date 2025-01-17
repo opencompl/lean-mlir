@@ -15,5 +15,4 @@ python3 collect-leansat-vs-bitwuzla-hdel-symbolic.py
 python3 compare-leansat-vs-bitwuzla-alive.py
 python3 collect-leansat-vs-bitwuzla-alive.py
 
-cd plots
-python3 plot.py
+cd plots && python3 plot.py
