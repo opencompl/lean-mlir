@@ -133,44 +133,17 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
   simp only [sadd_overflow]
   by_cases h: w = 0
   · subst w; revert x y; decide
-  · have h' : w > 0 := by omega
-    simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
-    have hhx := le_toInt x
-    have hhy := le_toInt y
-    have hhy' := toInt_lt y
-    have hhx' := toInt_lt x
-    have hxy := toInd_add_toInt_lt_two_pow x y
-    have hxy := neg_two_pow_le_toInd_add_toInt x y
-    cases hx : x.msb
-    · simp only [gt_iff_lt, BitVec.msb_eq_toInt, decide_eq_false_iff_not, not_lt,
-      false_eq_decide_iff, BitVec.toInt_add, not_le] at *
-      have xysmall := toInd_add_toInt_lt_two_pow x y
-      constructor
-      · intros h
-        by_cases hhh : 0 ≤ x.toInt + y.toInt
-        · rw_mod_cast [bmod_neg_iff_of_pos_lt (by omega) (by omega),
-            two_pow_add_one_div_two]
-          rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred (by omega)] at xysmall
-          omega
-        · rw [bmod_neg_iff_of_neg_gt (by omega) (by omega)]
-          omega
-      · intros h
-        rw_mod_cast [bmod_neg_iff_of_pos_lt (by omega) (by omega),
-          two_pow_add_one_div_two] at h
-        omega
-    · rw [BitVec.msb_eq_toInt] at hx
-      rw [BitVec.msb_eq_toInt]
-      rw [BitVec.msb_eq_toInt]
-      simp only [true_eq_decide_iff, BitVec.toInt_add, decide_eq_true_eq, not_lt]
-      rw [bmod_pos_iff (by omega) (by omega)]
-      constructor
-      · intros h
-        rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-        simp at *
-        omega
-      · rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-        simp at *
-        omega
+  · have := le_toInt x
+    have := le_toInt y
+    have := toInt_lt y
+    have := toInt_lt x
+    have := toInd_add_toInt_lt_two_pow x y
+    have := neg_two_pow_le_toInd_add_toInt x y
+    simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq, BitVec.msb_eq_toInt,
+      decide_eq_decide, BitVec.toInt_add]
+    rw [bmod_neg_iff (by omega) (by omega)]
+    rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
+    omega
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     smul_overflow x y = true ↔ ((y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) <ₛ (BitVec.twoPow w (w - 1)).signExtend (w * 2)) ∨ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) (w - 1)) := by
