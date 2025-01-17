@@ -97,70 +97,13 @@ theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
 bmod 4   0  1 -2 -1  0  1 -2 -1
 -/
 theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
-    0 ≤ (x.bmod (2^w)) ↔ (2 * x ≤ -(2^w)) ∨ (0 ≤ x ∧ 2 * x < 2^w) := by
-  simp [Int.bmod_def]
-  by_cases h : 0 ≤ x
+    0 ≤ (x.bmod (2^w)) ↔ 2 * x < -(2^w) ∨ (0 ≤ x ∧ 2 * x < 2^w) := by
+  simp only [Int.bmod_def, Nat.cast_pow, Nat.cast_ofNat]
+  by_cases xpos : 0 ≤ x
   · rw [Int.emod_eq_of_lt (by omega) (by omega)]
-    split
-    · omega
-    · omega
-  · rw [Int.emod_eq_add_self_emod]
-    rw [Int.emod_eq_of_lt (by omega) (by omega)]
-    split
-    · omega
-    ·
-      rename_i hh
-      rw_mod_cast [two_pow_add_one_div_two] at hh
-      constructor
-      · intros hhh
-        left
-        simp at *
-        omega
-      · intros hhh
-        norm_cast at *
-        simp at *
-        by_cases hh : 2 * x ≤ -2 ^ w
-        ·
-          rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred] at hh
-          rw_mod_cast [← Nat.two_pow_pred_add_two_pow_pred] at hhh
-          rename_i hhaa
-          rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w] at hhaa
-          push_cast at *
-          simp at *
-          rw [← Int.add_assoc] at hhaa
-          simp at hhaa
-          rw [Int.add_comm] at hh
-          have aas := Int.le_sub_left_of_add_le hh
-          ring_nf at aas
-          rw [← Int.neg_mul] at aas
-          have aa : x ≤ -2 ^ (w - 1) := by omega
-          have aaa : -2 ^ (w - 1) ≤ x := by omega
-          norm_cast at *
-          by_cases hw : w = 0
-          · subst hw
-            simp_all
-            ring_nf at *
-            push_cast at *
-
-            omega
-          have att : x = -2 ^ (w - 1) := by omega
-
-
-          clear aas
-          simp at aas
-          rw [Int.neg_sub]
-          norm_cast at aaso
-
-
-
-
-
-
-          omega
-
-        · simp [hh] at *
-          omega
-
+    omega
+  · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
 
 theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
     (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
