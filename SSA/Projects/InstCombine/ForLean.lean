@@ -147,73 +147,37 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
           two_pow_add_one_div_two] at h
         omega
 
-    ·
-      rw [BitVec.msb_eq_toInt] at hx
+    · rw [BitVec.msb_eq_toInt] at hx
       rw [BitVec.msb_eq_toInt]
       rw [BitVec.msb_eq_toInt]
+      have hhx := le_toInt x
+      have hhy' := toInt_lt y
+      have hxy := toInd_add_toInt_lt_two_pow x y
+      have hxy := neg_two_pow_le_toInd_add_toInt x y
       constructor
       · intros h
-        simp
-        have hhx := le_toInt x
-        have hhy := le_toInt y
-        have hhx' := toInt_lt x
-        have hhy' := toInt_lt y
-        have hxy := toInd_add_toInt_lt_two_pow x y
-        have hxy := neg_two_pow_le_toInd_add_toInt x y
+        simp only [true_eq_decide_iff, BitVec.toInt_add, decide_eq_true_eq, not_lt]
         rw [bmod_pos_iff (by omega) (by omega)]
         norm_cast
-        simp
-        norm_cast
         rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-        norm_cast
         by_cases has : y.toInt < 0
-        · simp [has]
-          simp at *
+        · simp at *
           omega
         · rename_i aass
           norm_cast at aass
           rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)] at aass
-          push_cast at *
           simp at *
           omega
-
-      · intros h
-        have h1 := h.left
-        have h2 := h.right
-        clear h
-        right
-        simp at *
-        have xyneg : x.toInt + y.toInt < 0 := by omega
-        have h3 := neg_two_pow_le_toInd_add_toInt x y
-        --rw [bmod_pos_iff_of_neg_gt] at h2
-        unfold Int.bmod at h2
-        have h4 : (x.toInt + y.toInt) % 2 ^ w = (x.toInt + y.toInt + 2 ^ w) := by
-          rw [← Int.add_emod_self]
-          rw [Int.emod_eq_of_lt]
-          <;> omega
-        simp [h4] at *
-        have h5 : x.toInt + y.toInt + 2 ^ w < (2 ^ w + 1) / 2 := by
-          norm_cast
-          simp_all
-          by_cases hh : x.toInt + y.toInt + 2 ^ w < (2 ^ w + 1) / 2
-          · simp_all
-          · simp_all
-            have : 0 > x.toInt + y.toInt := by simp [xyneg]
-            omega
-        simp_all
-        have h6 : x.toInt + y.toInt + 2 ^ w < 2 ^ (w - 1) := by
-          norm_cast at h5
-          rw [two_pow_add_one_div_two] at h5
-          norm_cast
-        have h7 :  x.toInt + y.toInt < (2 ^ (w - 1)) - 2 ^ w := by
-          rw [Int.add_lt_iff] at h6
-          norm_cast at h6
-          have : -(2 ^ w) + (2 ^ (w - 1)) = - 2 ^ (w - 1) := by
-            norm_cast
-            rw [← Int.two_pow_pred_sub_two_pow]
-            <;> omega
-          simp_all
-        simp_all
+      · simp only [gt_iff_lt, decide_eq_true_eq, true_eq_decide_iff, BitVec.toInt_add, not_lt,
+          and_imp]
+        rw [bmod_pos_iff (by omega) (by omega)]
+        by_cases hr : 2 * (x.toInt + y.toInt) < -2 ^ w
+        · norm_cast at hr
+          rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)] at hr
+          simp at *
+          omega
+        · simp [hr] at *
+          omega
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     smul_overflow x y = true ↔ ((y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) <ₛ (BitVec.twoPow w (w - 1)).signExtend (w * 2)) ∨ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) (w - 1)) := by
