@@ -33,7 +33,7 @@ RUN lake build
 # Set the evaluation script directory as working dir
 WORKDIR /code/lean-mlir/bv-evaluation
 # Set python as entrypoint, since the experiments are python scripts
-# ENTRYPOINT [ "python3" ]
+ENTRYPOINT [ "python3" ]
 
 USER root
 
