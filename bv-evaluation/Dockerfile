@@ -20,6 +20,11 @@ RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -
 ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
+# Install Bitwuzla
+RUN git clone https://github.com/bitwuzla/bitwuzla
+WORKDIR /code/bitwuzla
+RUN ./configure.py && build && ninja install
+
 # First, get cached dependencies
 WORKDIR /code/lean-mlir
 COPY lean-toolchain lakefile.toml lake-manifest.json ./
