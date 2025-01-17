@@ -77,6 +77,24 @@ theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
   · omega
   · omega
 
+theorem bmod_pos_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
+    0 ≤ (x.bmod y) ↔ x ≤ -(y + 1) / 2 := by
+  simp [Int.bmod_def]
+  rw [Int.emod_eq_add_self_emod]
+  rw [Int.emod_eq_of_lt (by  omega) (by omega)]
+  split
+  · omega
+  · omega
+
+theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
+    (x.bmod y) < 0 ↔ -(y + 1) / 2 < x := by
+  simp [Int.bmod_def]
+  rw [Int.emod_eq_add_self_emod]
+  rw [Int.emod_eq_of_lt (by  omega) (by omega)]
+  split
+  · omega
+  · omega
+
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
   simp only [uadd_overflow, BitVec.carry]
@@ -86,6 +104,17 @@ theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
   cases hw : w
   · decide
   · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    omega
+
+theorem neg_two_pow_add_one_div_two {w : Nat} : -(2 ^ w + 1) / 2 = -2 ^ (w - 1) := by
+  cases hw : w
+  · decide
+  · norm_cast
+    rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    simp
+    rw [Int.negSucc_eq]
+    simp
+    norm_cast
     omega
 
 theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
@@ -128,8 +157,8 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
         simp_all
         have xyneg : x.toInt + y.toInt < 0 := by omega
         have h3 := neg_two_pow_le_toInd_add_toInt x y
+        --rw [bmod_pos_iff_of_neg_gt] at h2
         unfold Int.bmod at h2
-        simp at h2
         have h4 : (x.toInt + y.toInt) % 2 ^ w = (x.toInt + y.toInt + 2 ^ w) := by
           rw [← Int.add_emod_self]
           rw [Int.emod_eq_of_lt]
