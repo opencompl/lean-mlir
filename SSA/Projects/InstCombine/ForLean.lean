@@ -158,7 +158,6 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
         rw_mod_cast [bmod_neg_iff_of_pos_lt (by omega) (by omega),
           two_pow_add_one_div_two] at h
         omega
-
     · rw [BitVec.msb_eq_toInt] at hx
       rw [BitVec.msb_eq_toInt]
       rw [BitVec.msb_eq_toInt]
