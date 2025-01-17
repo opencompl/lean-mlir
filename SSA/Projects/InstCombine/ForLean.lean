@@ -126,6 +126,33 @@ theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
           rename_i hhaa
           rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w] at hhaa
           push_cast at *
+          simp at *
+          rw [← Int.add_assoc] at hhaa
+          simp at hhaa
+          rw [Int.add_comm] at hh
+          have aas := Int.le_sub_left_of_add_le hh
+          ring_nf at aas
+          rw [← Int.neg_mul] at aas
+          have aa : x ≤ -2 ^ (w - 1) := by omega
+          have aaa : -2 ^ (w - 1) ≤ x := by omega
+          norm_cast at *
+          by_cases hw : w = 0
+          · subst hw
+            simp_all
+            ring_nf at *
+            push_cast at *
+
+            omega
+          have att : x = -2 ^ (w - 1) := by omega
+
+
+          clear aas
+          simp at aas
+          rw [Int.neg_sub]
+          norm_cast at aaso
+
+
+
 
 
 
