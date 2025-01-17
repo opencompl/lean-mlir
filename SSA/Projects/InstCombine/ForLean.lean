@@ -137,8 +137,8 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq]
     have hhx := le_toInt x
     have hhy := le_toInt y
-    have hhx' := toInt_lt x
     have hhy' := toInt_lt y
+    have hhx' := toInt_lt x
     have hxy := toInd_add_toInt_lt_two_pow x y
     have hxy := neg_two_pow_le_toInd_add_toInt x y
     cases hx : x.msb
@@ -155,7 +155,6 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
         · rw [bmod_neg_iff_of_neg_gt (by omega) (by omega)]
           omega
       · intros h
-        have xypos : 0 ≤ x.toInt + y.toInt := by omega
         rw_mod_cast [bmod_neg_iff_of_pos_lt (by omega) (by omega),
           two_pow_add_one_div_two] at h
         omega
