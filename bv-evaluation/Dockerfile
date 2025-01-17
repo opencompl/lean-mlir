@@ -12,7 +12,9 @@ RUN apt-get update -y \
         ninja-build \
         gdb curl wget \
         # dependencies for experiment scripts
-        python3-matplotlib python3-pandas python3-num2words
+        python3-matplotlib python3-pandas python3-num2words \
+        # bitwuzla dependencies
+        meson libgmp-dev libcadical-dev libsymfpu-dev
 
 # Install Lean
 RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf > /code/elan.sh \
