@@ -105,8 +105,8 @@ theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
   · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
     omega
 
-theorem bmod_neg_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
-    (x.bmod (2^w)) < 0 ↔ (-(2^w) ≤ 2 * x ∧ x < 0) ∨ (2^w ≤ 2 * x) := by
+theorem bmod_pow_two_neg_iff {w : Nat} {x : Int} (h1 : x < 2 ^ w) (h2 : -(2 ^ w) ≤ x) :
+    (x.bmod (2 ^ w)) < 0 ↔ (-(2 ^ w) ≤ 2 * x ∧ x < 0) ∨ (2 ^ w ≤ 2 * x) := by
   simp only [Int.bmod_def, Nat.cast_pow, Nat.cast_ofNat]
   by_cases xpos : 0 ≤ x
   · rw [Int.emod_eq_of_lt (by omega) (by omega)]
@@ -141,7 +141,7 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     have := neg_two_pow_le_toInd_add_toInt x y
     simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq, BitVec.msb_eq_toInt,
       decide_eq_decide, BitVec.toInt_add]
-    rw [bmod_neg_iff (by omega) (by omega)]
+    rw [bmod_pow_two_neg_iff (by omega) (by omega)]
     rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
     omega
 
