@@ -145,6 +145,41 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
     omega
 
+#check BitVec.toInt_signExtend
+
+#eval (1#1).toInt * (1#1).toInt
+#eval (BitVec.intMax 1).toInt
+
+theorem toInd_mul_toInt_lt_two_pow (x y : BitVec w) :
+    (x.toInt * y.toInt) ≤ 2 ^ ((w-1)*2) := by
+  by_cases hw : w = 0
+  · subst hw
+    decide +revert
+  by_cases hw : w = 1
+  · subst hw
+    decide +revert
+  by_cases hw : w = 2
+  · subst hw
+    decide +revert
+  by_cases hw : w = 3
+  · subst hw
+    decide +revert
+
+  · norm_cast
+    rw [←Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    have hx := toInt_lt x
+    have hy := toInt_lt y
+    norm_cast
+    rw [← Nat.mul_two]
+    rw [← Nat.pow_add_one]
+    simp
+    rw [Nat.sub_add_cancel (by omega)]
+    have aa := @Int.mul_lt_mul x.toInt y.toInt (2^(w-1)) (2^(w-1)) (by omega) (by omega) (by sorry) (by omega)
+    norm_cast at aa
+    rw [← Nat.pow_add] at aa
+    ring_nf at aa
+    norm_cast
+
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     smul_overflow x y = true ↔ (w > 0) ∧ (let res := y.signExtend (2*w) * x.signExtend (2*w); (res <ₛ (BitVec.intMin w).signExtend (2*w)) ∨ (BitVec.intMax w).signExtend (2*w) <ₛ res ) := by
   simp [smul_overflow]
@@ -156,6 +191,9 @@ theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     simp [show 0 < w by omega]
     left
     simp [BitVec.slt]
+    rw [BitVec.toInt_signExtend_of_lt (by omega)]
+    rw [BitVec.toInt_signExtend_of_lt (by omega)]
+    unfold BitVec.intMin
 
     sorry
 
