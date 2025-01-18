@@ -145,27 +145,21 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
     omega
 
-#check BitVec.toInt_signExtend
+theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (h : -y < 2 * x ∧ 2 * x < y) :
+    x.bmod y = x := by
+  simp only [Int.bmod_def]
+  by_cases hh : 0 ≤ x
+  · rw [Int.emod_eq_of_lt hh (by omega)]
+    omega
+  · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
 
-#eval (1#1).toInt * (1#1).toInt
-#eval (BitVec.intMax 1).toInt
-
-theorem toInd_mul_toInt_lt_two_pow (x y : BitVec w) :
-    (x.toInt * y.toInt) ≤ 2 ^ ((w-1)*2) := by
+theorem toInt_mul_toInt (x y : BitVec w) :
+    (x.toInt * y.toInt) ≤ 2^(2 * (w-1))  := by
   by_cases hw : w = 0
   · subst hw
     decide +revert
-  by_cases hw : w = 1
-  · subst hw
-    decide +revert
-  by_cases hw : w = 2
-  · subst hw
-    decide +revert
-  by_cases hw : w = 3
-  · subst hw
-    decide +revert
-
-  · norm_cast
+  ·
     rw [←Nat.two_pow_pred_add_two_pow_pred (by omega)]
     have hx := toInt_lt x
     have hy := toInt_lt y
@@ -194,6 +188,15 @@ theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     rw [BitVec.toInt_signExtend_of_lt (by omega)]
     rw [BitVec.toInt_signExtend_of_lt (by omega)]
     unfold BitVec.intMin
+    have aa := toInt_mul_toInt x y
+    rw [← Nat.two_pow_pred_add_two_pow_pred]
+    rw [bmod_eq_iff_of_lt_of_lt (by
+      norm_cast at *;
+      rw [← Nat.mul_two]
+
+
+      omega)]
+
 
     sorry
 
