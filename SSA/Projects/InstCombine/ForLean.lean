@@ -146,8 +146,20 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     omega
 
 theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
-    smul_overflow x y = true ↔ ((y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) <ₛ (BitVec.twoPow w (w - 1)).signExtend (w * 2)) ∨ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (BitVec.twoPow (w * 2) (w - 1)) := by
+    smul_overflow x y = true ↔ (w > 0) ∧ (let res := y.signExtend (2*w) * x.signExtend (2*w); (res <ₛ (BitVec.intMin w).signExtend (2*w)) ∨ (BitVec.intMax w).signExtend (2*w) <ₛ res ) := by
   simp [smul_overflow]
+  by_cases w0 : w = 0
+  · subst w0
+    decide +revert
+  constructor
+  · intros h
+    simp [show 0 < w by omega]
+    left
+    simp [BitVec.slt]
+
+    sorry
+
+
 
   sorry
 
