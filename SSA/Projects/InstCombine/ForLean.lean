@@ -152,21 +152,24 @@ theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
   sorry
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
-    umul_overflow x y = true ↔ (y.zeroExtend (w * 2) * x.zeroExtend (w * 2)) ≥ₛ (1#w <<< (w - 1)).zeroExtend (w * 2) := by
-  simp [umul_overflow, ge_iff_le, decide_eq_true_eq]
-  constructor
-  · by_cases ho : 2 ^ w ≤ x.toNat * y.toNat
-    · simp [ho]
-      unfold BitVec.setWidth
-      simp [show w ≤ w * 2 by omega]
-
-
-
-      sorry
-    ·
-      sorry
-  ·
-    sorry
+    umul_overflow x y ↔ ((0 < w) ∧ BitVec.twoPow (2 * w) w ≤ x.zeroExtend (2 * w) * y.zeroExtend (2 * w)) := by
+  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq, BitVec.truncate_eq_setWidth, LE.le]
+  simp only [Nat.le_eq, BitVec.toNat_twoPow, BitVec.toNat_mul, BitVec.toNat_setWidth,
+    Nat.mul_mod_mod, Nat.mod_mul_mod]
+  by_cases w0 : w = 0
+  · subst w0
+    decide +revert
+  have h : x.toNat * y.toNat < 2 ^ (2 * w) := by
+    have ltx := BitVec.isLt x
+    have lty := BitVec.isLt y
+    have lt_mul := @Nat.mul_lt_mul_of_le_of_lt x.toNat (2^w) y.toNat (2^w) (by omega) (by omega) (by omega)
+    rw [← Nat.pow_add] at lt_mul
+    rw [← Nat.mul_two] at lt_mul
+    rw [← Nat.mul_comm 2 w] at lt_mul
+    apply lt_mul
+  rw [Nat.mod_eq_of_lt h]
+  rw [Nat.mod_eq_of_lt ((@Nat.pow_lt_pow_iff_right 2 w (2*w) (by omega)).mpr (by omega))]
+  omega
 
 namespace Nat
 
