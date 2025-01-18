@@ -158,13 +158,18 @@ theorem toInt_twoPow {w n : Nat} :
     (BitVec.twoPow w n).toInt = Int.bmod (2 ^ n) (2 ^ w) := by
   simp only [BitVec.twoPow, BitVec.toInt, Nat.cast_pow]
   split
+  · sorry
+  · sorry
+
+theorem toInt_twoPow_of_lt {w n : Nat} (h : n < w) :
+    (BitVec.twoPow w n).toInt = 2 ^ n := by
+  simp [toInt_twoPow]
+  rw [bmod_eq_iff_of_lt_of_lt (by sorry) (by sorry)]
 
 theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w < w₁) (h₂ : w < w₂) :
     (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
   apply BitVec.toInt_inj.mp
-  unfold BitVec.signExtend
 
-  simp
 
 
 theorem toInt_mul_toInt (x y : BitVec w) :
@@ -202,12 +207,11 @@ theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     rw [BitVec.toInt_signExtend_of_lt (by omega)]
     unfold BitVec.intMin
     rw [signExtend_twoPow_of_lt_of_lt (by omega) (by omega)]
+    rw [toInt_twoPow_of_lt (by omega)]
     have aa := toInt_mul_toInt x y
     rw [← Nat.two_pow_pred_add_two_pow_pred]
     rw [bmod_eq_iff_of_lt_of_lt
       (by
-
-
         omega)
       (by
         rw [← Nat.mul_two]
