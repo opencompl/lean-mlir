@@ -145,7 +145,7 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
     omega
 
-theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (h : -y < 2 * x ∧ 2 * x < y) :
+theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (hlb : -y ≤ 2 * x) (hub : 2 * x < y) :
     x.bmod y = x := by
   simp only [Int.bmod_def]
   by_cases hh : 0 ≤ x
@@ -154,8 +154,21 @@ theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (h : -y < 2 * x ∧ 2 * x < 
   · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
     omega
 
+theorem toInt_twoPow {w n : Nat} :
+    (BitVec.twoPow w n).toInt = Int.bmod (2 ^ n) (2 ^ w) := by
+  simp only [BitVec.twoPow, BitVec.toInt, Nat.cast_pow]
+  split
+
+theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w < w₁) (h₂ : w < w₂) :
+    (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
+  apply BitVec.toInt_inj.mp
+  unfold BitVec.signExtend
+
+  simp
+
+
 theorem toInt_mul_toInt (x y : BitVec w) :
-    (x.toInt * y.toInt) ≤ 2^(2 * (w-1))  := by
+    (x.toInt * y.toInt) < 2^(2 * (w-1))  := by
   by_cases hw : w = 0
   · subst hw
     decide +revert
@@ -188,17 +201,24 @@ theorem smul_overflow_eq {w : Nat} (x y : BitVec w) :
     rw [BitVec.toInt_signExtend_of_lt (by omega)]
     rw [BitVec.toInt_signExtend_of_lt (by omega)]
     unfold BitVec.intMin
+    rw [signExtend_twoPow_of_lt_of_lt (by omega) (by omega)]
     have aa := toInt_mul_toInt x y
     rw [← Nat.two_pow_pred_add_two_pow_pred]
-    rw [bmod_eq_iff_of_lt_of_lt (by
-      norm_cast at *;
-      rw [← Nat.mul_two]
+    rw [bmod_eq_iff_of_lt_of_lt
+      (by
 
 
-      omega)]
+        omega)
+      (by
+        rw [← Nat.mul_two]
+        rw [Nat.mul_comm]
+        ring_nf
+        norm_cast
+        have aas := @Int.mul_eq_mul_left_iff (y.toInt * x.toInt) (2 ^ (w * 2 - 1)) (2) (by omega)
+        rw_mod_cast [aas.mp]
 
+      )]
 
-    sorry
 
 
 
