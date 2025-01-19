@@ -37,3 +37,4 @@ test-semantics/*.llvm
 *.olean
 lakefile.olean
 .lake/
+profile.json
