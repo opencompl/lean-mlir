@@ -233,13 +233,61 @@ theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
   simp
   simp [show ¬(w ≤ i) by omega, h]
 
+theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+    -(s*s) ≤ x * y := by
+  induction s
+  simp
+  omega
+  simp at *
+  rename_i i ih
+  ring_nf
+
+theorem aab {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+    x * y < s * s := by
+  induction s
+  simp
+  omega
+  simp at *
+  rename_i i ih
+  ring_nf
+
 theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
-    -↑(2 ^ (w * 2 - 1)) ≤ y.toInt * x.toInt := by
-  sorry
+    -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
+  have xlt := toInt_lt x
+  have ylt := toInt_lt y
+  have xle := le_toInt x
+  have yle := le_toInt y
+  norm_cast at *
+
+  have aaa := @aa x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
+  norm_cast at aaa
+  rw [← Nat.pow_add] at aaa
+  simp at aaa
+  ring_nf at aaa
+  ring_nf
+  norm_cast at *
+  rw [Nat.sub_mul] at aaa
+  simp at aaa
+  norm_cast at aaa
 
 theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
-    y.toInt * x.toInt < 2 ^ (w * 2 - 1) := by
-  sorry
+    x.toInt * y.toInt < 2 ^ (w * 2 - 2) := by
+  have xlt := toInt_lt x
+  have ylt := toInt_lt y
+  have xle := le_toInt x
+  have yle := le_toInt y
+  norm_cast at *
+
+  have aaa := @aab x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
+  norm_cast at aaa
+  rw [← Nat.pow_add] at aaa
+  simp at aaa
+  ring_nf at aaa
+  ring_nf
+  norm_cast at *
+  rw [Nat.sub_mul] at aaa
+  simp at aaa
+  norm_cast at aaa
 
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
   sorry
