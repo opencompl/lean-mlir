@@ -291,7 +291,7 @@ theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y)
       omega
 
 theorem aab {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
-    x * y < s * s := by
+    x * y ≤ s * s := by
   by_cases s0 : s = 0
   · subst s0
     simp
@@ -306,16 +306,38 @@ theorem aab {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y
   have hss : -((s:Int) * s) < 0 := by
     have ara := (@Int.neg_neg_iff_pos (s*s)).mpr (by omega)
     apply ara
-
-  by_cases h1 : 0 ≤ x
+  by_cases h4 : x = 0
   ·
-    by_cases h2 : 0 ≤ y
-    · sorry
-    · sorry
+    subst h4
+    simp at *
+    omega
+  by_cases h4 : y = 0
   ·
-    by_cases h2 : 0 ≤ y
-    · sorry
-    · sorry
+    subst h4
+    simp at *
+    omega
+  by_cases h1 : 0 < x
+  ·
+    by_cases h2 : 0 < y
+    ·
+      have jrk := @Int.mul_lt_mul x y s s (by omega) (by omega) (by omega) (by omega)
+      omega
+    · simp at h1 h2
+      have aar : x * y < 0 := by
+        have pp := @Int.mul_neg_of_pos_of_neg x y (by omega) (by omega)
+        apply pp
+      omega
+  ·
+    by_cases h2 : 0 < y
+    · simp at h1 h2
+      have aar : x * y < 0 := by
+        have pp := @Int.mul_neg_of_pos_of_neg y x (by omega) (by omega)
+        rw [Int.mul_comm]
+        apply pp
+      omega
+    ·
+      simp at h1 h2
+      sorry
 
 theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
     -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
@@ -337,7 +359,7 @@ theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
   norm_cast at aaa
 
 theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
-    x.toInt * y.toInt < 2 ^ (w * 2 - 2) := by
+    x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x
   have ylt := toInt_lt y
   have xle := le_toInt x
@@ -449,7 +471,7 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
           have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
           norm_cast at *
-          have asr := @Int.lt_trans (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) ((2 ^ (w * 2 - 1)))
+          have asr := @Int.lt_of_le_of_lt (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) (2 ^ (w * 2 - 1))
             (by rw [Int.mul_comm] at this; norm_cast)
             (by rw [Int.mul_comm] at this; norm_cast)
           norm_cast at *
