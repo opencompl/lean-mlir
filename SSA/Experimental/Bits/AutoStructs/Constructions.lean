@@ -422,7 +422,6 @@ instance [BEq α] [LawfulBEq α] [Hashable α] : LawfulBEq (Std.HashSet α) :=
 instance [BEq α] [Hashable α] : Hashable (Std.HashSet α) where
   hash m := m.fold (init := 0) fun h x => h ^^^ hash x
 
-
 -- Is it necessary? maybe rework the worklist function to only use `==`
 instance [BEq α] [Hashable α] : DecidableEq (Std.HashSet α) :=
   sorry
@@ -662,6 +661,19 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   rw [NFA'.neg_eq, CNFA.neg]
   apply CNFA.flipFinals_spec
   apply determinize_spec m hsim
+
+def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
+   let m' := { stateMax := m.stateMax, trans := Std.HashMap.empty, initials := m.finals, finals := m.initials}
+   m.trans.fold (init := m') fun m' (s, a) ss' =>
+     ss'.fold (init := m') fun m' s' =>
+       m'.addTrans a s' s
+
+ def CNFA.reverse (m : CNFA n) : CNFA n :=
+   ⟨m.m.reverse, sorry⟩
+
+ def CNFA.minimize (m : CNFA n) : CNFA n :=
+   let mᵣ := m.reverse.determinize
+   mᵣ.reverse.determinize
 
 end determinization
 

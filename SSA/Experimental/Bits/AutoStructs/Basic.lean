@@ -489,9 +489,8 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
 
 def CNFA.transSet (m : CNFA n) (ss : Std.HashSet m.m.states) (a : BitVec n) : Std.HashSet m.m.states :=
   ss.fold (init := ∅) fun ss' (s : m.m.states) =>
-    let ss' := m.m.tr s a
-    let ss' := ss'.attachWith (λ s ↦ s ∈ m.m.states) (by simp_all; sorry)
-    ss'.insertMany ss'
+    let ssn := (m.m.tr s a).attachWith (λ s ↦ s ∈ m.m.states) (by simp_all; sorry)
+    ss'.insertMany ssn
 
 instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
   default := RawCNFA.empty
