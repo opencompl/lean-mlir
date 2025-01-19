@@ -244,13 +244,55 @@ theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
   sorry
 
-theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w < w₁) (h₂ : w < w₂) :
+
+theorem arf (h : w + 1 = w₂): Int.bmod (2 ^ w) (2 ^ w₂) = -2 ^ w := by
+  simp [Int.bmod_def]
+  norm_cast at *
+  subst h
+  simp
+  split
+  ·
+    rename_i h
+    rw [Nat.mod_eq_of_lt] at h
+    omega
+    have aar := @Nat.pow_lt_pow_of_lt 2 (w) (w+1) (by omega) (by omega)
+    apply aar
+  ·
+    rw [Nat.mod_eq_of_lt]
+    rw [Int.subNatNat_eq_coe]
+    rw [← Nat.two_pow_pred_add_two_pow_pred (w := w + 1)]
+    simp
+    omega
+    have aar := @Nat.pow_lt_pow_of_lt 2 (w) (w+1) (by omega) (by omega)
+    apply aar
+
+theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) (h₂ : w + 1 < w₂) :
     (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
   apply BitVec.toInt_inj.mp
   simp [BitVec.signExtend]
   simp [toInt_twoPow]
   simp [show ¬(w₁ ≤ w) by omega, show ¬(w₂ ≤ w) by omega]
-  sorry
+  simp [show ¬(w + 1 = w₁) by omega, show ¬(w + 1 = w₂) by omega]
+  rw [Nat.shiftLeft_eq_mul_pow]
+  simp
+  rw [bmod_eq_iff_of_lt_of_lt (by
+        simp
+        norm_cast
+        rw [Nat.mul_comm, ←Nat.pow_add_one]
+        simp
+        have := @Nat.pow_pos  2 (w+1) (by omega)
+        have := @Nat.pow_pos  2 (w₂) (by omega)
+        norm_cast
+        omega
+    ) (by
+        simp
+        norm_cast
+        rw [Nat.mul_comm, ←Nat.pow_add_one]
+        norm_cast
+        have aar := @Nat.pow_lt_pow_of_lt 2 (w+1) (w₂) (by omega) (by
+        omega)
+        omega
+    )]
 
 theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
     smul_overflow x y = false ↔ (w = 0) ∨ (let res := x.signExtend (2*w) * y.signExtend (2*w); ((BitVec.intMin w).signExtend (2*w) ≤ₛ res ) ∧ res ≤ₛ (BitVec.intMax w).signExtend (2*w)) := by
