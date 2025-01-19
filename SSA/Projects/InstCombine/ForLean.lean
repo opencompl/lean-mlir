@@ -292,8 +292,30 @@ theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y)
 
 theorem aab {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y < s * s := by
-  -- This should follow a similar proof as the theorm above
-  sorry
+  by_cases s0 : s = 0
+  · subst s0
+    simp
+    omega
+  have hs : -(s:Int) < 0 := by omega
+  have hs : 0 < s := by omega
+  have hss : 0 < (s* s) := by
+    have aas :=  @Int.mul_self_lt_mul_self 0 s (by omega) (by omega)
+    simp at aas
+    norm_cast at aas
+
+  have hss : -((s:Int) * s) < 0 := by
+    have ara := (@Int.neg_neg_iff_pos (s*s)).mpr (by omega)
+    apply ara
+
+  by_cases h1 : 0 ≤ x
+  ·
+    by_cases h2 : 0 ≤ y
+    · sorry
+    · sorry
+  ·
+    by_cases h2 : 0 ≤ y
+    · sorry
+    · sorry
 
 theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
     -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
