@@ -4,7 +4,6 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
-import Mathlib.Tactic
 
 open BitVec
 open MLIR AST
