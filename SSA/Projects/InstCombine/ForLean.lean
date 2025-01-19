@@ -3,8 +3,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
-#check BitVec.toInt_eq_toNat_of_msb
-
 theorem toInt_lt {w : Nat} (x : BitVec w) : x.toInt < 2 ^ (w - 1) := by
   simp only [BitVec.toInt, Nat.cast_pow]
   by_cases hw : w = 0
@@ -233,23 +231,69 @@ theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
   simp
   simp [show ¬(w ≤ i) by omega, h]
 
+theorem mul_le_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
+    a * b < c * d := by
+  have aaa := Nat.mul_le_mul_right b hac
+  have bbb := Nat.mul_lt_mul_of_pos_left hbd hc
+  have ccc := Nat.lt_of_le_of_lt aaa bbb
+  apply ccc
+
+
+theorem mul_le_mulaa {a b c d : Int}
+    (hac : a ≤ c) (hbd : d ≤ b) (nn_b : 0 ≤ b) (nn_c : c ≤ 0) : a * b ≤ c * d := by
+  have aas := Int.mul_le_mul_of_nonneg_right hac nn_b
+  have kll := Int.mul_le_mul_of_nonpos_right hbd nn_c
+  rw [Int.mul_comm] at kll
+  have aaa := Int.le_trans aas kll
+  rw [Int.mul_comm (a:= d)] at aaa
+  apply aaa
+
 theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     -(s*s) ≤ x * y := by
-  induction s
-  simp
-  omega
-  simp at *
-  rename_i i ih
-  ring_nf
+  by_cases s0 : s = 0
+  · subst s0
+    simp
+    omega
+  have hs : -(s:Int) < 0 := by omega
+  have hs : 0 < s := by omega
+  have hss : 0 < (s* s) := by
+    have aas :=  @Int.mul_self_lt_mul_self 0 s (by omega) (by omega)
+    simp at aas
+    norm_cast at aas
+
+  have hss : -((s:Int) * s) < 0 := by
+    have ara := (@Int.neg_neg_iff_pos (s*s)).mpr (by omega)
+    apply ara
+
+  by_cases h1 : 0 ≤ x
+  ·
+    by_cases h2 : 0 ≤ y
+    ·
+      have haaf : 0 ≤ x * y := by
+        have pp := @Int.mul_nonneg x y (by omega) (by omega)
+        apply pp
+      omega
+    ·
+      simp at h2 h1
+      have pr := @mul_le_mulaa (-s) (s) (y) (x) (by omega) (by omega) (by omega) (by omega)
+      rw [Int.neg_mul] at pr
+      rw [Int.mul_comm (a := x)]
+      apply pr
+  ·
+    by_cases h2 : 0 ≤ y
+    ·
+      simp at h2 h1
+      have pr := @mul_le_mulaa (-s) (s) (x) (y) (by omega) (by omega) (by omega) (by omega)
+      rw [Int.neg_mul] at pr
+      apply pr
+    · simp at h1 h2
+      have pp := @Int.mul_pos_of_neg_of_neg x y (by omega) (by omega)
+      omega
 
 theorem aab {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y < s * s := by
-  induction s
-  simp
-  omega
-  simp at *
-  rename_i i ih
-  ring_nf
+  -- This should follow a similar proof as the theorm above
+  sorry
 
 theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
     -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
@@ -336,7 +380,6 @@ theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) 
         simp
         norm_cast
         rw [Nat.mul_comm, ←Nat.pow_add_one]
-        norm_cast
         have aar := @Nat.pow_lt_pow_of_lt 2 (w+1) (w₂) (by omega) (by
         omega)
         omega
@@ -364,13 +407,15 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
          rw [← Int.neg_mul]
          rw [Int.mul_le_mul_iff_of_pos_right (by omega)]
          rw [Int.mul_comm]
-         have as : -2 ^ (w * 2 - 1) < -2 ^ (w - 1) := by
+         have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
            simp
            norm_cast
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
          norm_cast
          have := le_toInt_mul_toInt x y
          norm_cast at *
+         rw [Int.mul_comm]
+         omega
          )
       (by
         ring_nf
@@ -378,6 +423,13 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
         apply Int.mul_lt_mul_of_pos_right (by
           norm_cast
           have := toInt_mul_toInt_lt y x
+          norm_cast at *
+          have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
+           apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
+          norm_cast at *
+          have asr := @Int.lt_trans (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) ((2 ^ (w * 2 - 1)))
+            (by rw [Int.mul_comm] at this; norm_cast)
+            (by rw [Int.mul_comm] at this; norm_cast)
           norm_cast at *
         ) (by omega)
       )]
