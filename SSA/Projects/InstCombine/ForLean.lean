@@ -211,17 +211,17 @@ theorem mul_le_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
   apply h2
 
 
-theorem mul_le_mulaa {a b c d : Int}
-    (hac : a ≤ c) (hbd : d ≤ b) (nn_b : 0 ≤ b) (nn_c : c ≤ 0) : a * b ≤ c * d := by
-  have aas := Int.mul_le_mul_of_nonneg_right hac nn_b
-  have kll := Int.mul_le_mul_of_nonpos_right hbd nn_c
-  rw [Int.mul_comm] at kll
-  have aaa := Int.le_trans aas kll
-  rw [Int.mul_comm (a:= d)] at aaa
-  apply aaa
+theorem mul_le_mul_neg {a b c d : Int}
+    (hac : a ≤ c) (hbd : d ≤ b) (hb : 0 ≤ b) (hc : c ≤ 0) : a * b ≤ c * d := by
+  have hac := Int.mul_le_mul_of_nonneg_right hac hb
+  have hbd := Int.mul_le_mul_of_nonpos_right hbd hc
+  rw [Int.mul_comm] at hbd
+  have h := Int.le_trans hac hbd
+  rw [Int.mul_comm (a:= d)] at h
+  apply h
 
-theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
-    -(s*s) ≤ x * y := by
+theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+    -(s * s) ≤ x * y := by
   by_cases s0 : s = 0
   · subst s0
     simp
@@ -247,7 +247,7 @@ theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y)
       omega
     ·
       simp at h2 h1
-      have pr := @mul_le_mulaa (-s) (s) (y) (x) (by omega) (by omega) (by omega) (by omega)
+      have pr := @mul_le_mul_neg (-s) (s) (y) (x) (by omega) (by omega) (by omega) (by omega)
       rw [Int.neg_mul] at pr
       rw [Int.mul_comm (a := x)]
       apply pr
@@ -255,14 +255,14 @@ theorem aa {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y)
     by_cases h2 : 0 ≤ y
     ·
       simp at h2 h1
-      have pr := @mul_le_mulaa (-s) (s) (x) (y) (by omega) (by omega) (by omega) (by omega)
+      have pr := @mul_le_mul_neg (-s) (s) (x) (y) (by omega) (by omega) (by omega) (by omega)
       rw [Int.neg_mul] at pr
       apply pr
     · simp at h1 h2
       have pp := @Int.mul_pos_of_neg_of_neg x y (by omega) (by omega)
       omega
 
-theorem aab {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y ≤ s * s := by
   by_cases s0 : s = 0
   · subst s0
@@ -338,7 +338,7 @@ theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
   have yle := le_toInt y
   norm_cast at *
 
-  have aaa := @aab x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
+  have aaa := @mul_le_mul_self_neg x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
   norm_cast at aaa
   rw [← Nat.pow_add] at aaa
   simp at aaa
