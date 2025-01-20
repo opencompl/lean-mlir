@@ -59,35 +59,35 @@ theorem neg_two_pow_le_toInd_add_toInt (x y : BitVec w) :
     push_cast
     omega
 
-theorem bmod_pos_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
-    0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
-  simp [Int.bmod_def]
-  rw [Int.emod_eq_of_lt (by omega) (by omega)]
-  split
-  · omega
-  · omega
+-- theorem bmod_pos_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+--     0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_of_lt (by omega) (by omega)]
+--   split
+--   · omega
+--   · omega
 
-theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
-    (x.bmod y) < 0 ↔ (y + 1) / 2 ≤ x := by
-  simp [Int.bmod_def]
-  rw [Int.emod_eq_of_lt (by omega) (by omega)]
-  split
-  · omega
-  · omega
+-- theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+--     (x.bmod y) < 0 ↔ (y + 1) / 2 ≤ x := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_of_lt (by omega) (by omega)]
+--   split
+--   · omega
+--   · omega
 
-theorem bmod_pos_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
-    0 ≤ (x.bmod y) ↔ x ≤ -(y + 1) / 2 := by
-  simp [Int.bmod_def]
-  rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by  omega) (by omega)]
-  split
-  · omega
-  · omega
+-- theorem bmod_pos_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
+--     0 ≤ (x.bmod y) ↔ x ≤ -(y + 1) / 2 := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by  omega) (by omega)]
+--   split
+--   · omega
+--   · omega
 
-theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
-  cases hw : w
-  · decide
-  · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-    omega
+-- theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
+--   cases hw : w
+--   · decide
+--   · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+--     omega
 
 theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
     0 ≤ (x.bmod (2^w)) ↔ 2 * x < -(2^w) ∨ (0 ≤ x ∧ 2 * x < 2^w) := by
@@ -107,13 +107,13 @@ theorem bmod_two_pow_neg_iff {w : Nat} {x : Int} (h1 : x < 2 ^ w) (h2 : -(2 ^ w)
   · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
     omega
 
-theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
-    (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
-  simp [Int.bmod_def]
-  rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by  omega) (by omega)]
-  split
-  · omega
-  · omega
+-- theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
+--     (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by  omega) (by omega)]
+--   split
+--   · omega
+--   · omega
 
 theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
     uadd_overflow x y = BitVec.carry w x y false := by
@@ -147,7 +147,7 @@ theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (hlb : -y ≤ 2 * x) (hub : 
     omega
 
 @[simp]
-theorem as {w i : Nat} (h : w ≤ i) : 1#w <<< i = 0#w := by
+theorem shiftLeft_gt_eq_zero {w i : Nat} (h : w ≤ i) : 1#w <<< i = 0#w := by
   simp [bv_toNat]
   by_cases w0 : w = 0
   · subst w0
@@ -201,13 +201,7 @@ theorem toInt_twoPow {w i : Nat} :
           omega
         simp [sl, ha]
 
-theorem toInt_twoPow_of_lt {w i : Nat} (h : i + 1 < w) :
-    (BitVec.twoPow w i).toInt = (2 ^ i) := by
-  simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, show ¬ (i + 1 = w) by omega]
 
-theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
-    (BitVec.twoPow w i).toInt = -(2 ^ i) := by
-  simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, h]
 
 theorem mul_le_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
     a * b < c * d := by
@@ -355,55 +349,35 @@ theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
   simp at aaa
   norm_cast at aaa
 
+theorem toInt_twoPow_of_lt {w i : Nat} (h : i + 1 < w) :
+    (BitVec.twoPow w i).toInt = (2 ^ i) := by
+  simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, show ¬ (i + 1 = w) by omega]
+
+theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
+    (BitVec.twoPow w i).toInt = -(2 ^ i) := by
+  simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, h]
+
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
+  simp only [BitVec.twoPow]
   sorry
-
-
-theorem arf (h : w + 1 = w₂): Int.bmod (2 ^ w) (2 ^ w₂) = -2 ^ w := by
-  simp [Int.bmod_def]
-  norm_cast at *
-  subst h
-  simp
-  split
-  ·
-    rename_i h
-    rw [Nat.mod_eq_of_lt] at h
-    omega
-    have aar := @Nat.pow_lt_pow_of_lt 2 (w) (w+1) (by omega) (by omega)
-    apply aar
-  ·
-    rw [Nat.mod_eq_of_lt]
-    rw [Int.subNatNat_eq_coe]
-    rw [← Nat.two_pow_pred_add_two_pow_pred (w := w + 1)]
-    simp
-    omega
-    have aar := @Nat.pow_lt_pow_of_lt 2 (w) (w+1) (by omega) (by omega)
-    apply aar
 
 theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) (h₂ : w + 1 < w₂) :
     (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
   apply BitVec.toInt_inj.mp
-  simp [BitVec.signExtend]
-  simp [toInt_twoPow]
-  simp [show ¬(w₁ ≤ w) by omega, show ¬(w₂ ≤ w) by omega]
-  simp [show ¬(w + 1 = w₁) by omega, show ¬(w + 1 = w₂) by omega]
-  rw [Nat.shiftLeft_eq_mul_pow]
-  simp
+  simp only [BitVec.signExtend, toInt_twoPow, show ¬(w₁ ≤ w) by omega, ↓reduceIte,
+    show ¬(w + 1 = w₁) by omega, Nat.shiftLeft_eq_mul_pow, one_mul, Nat.cast_pow, Nat.cast_ofNat,
+    BitVec.toInt_ofInt, show ¬(w₂ ≤ w) by omega, show ¬(w + 1 = w₂) by omega]
   rw [bmod_eq_iff_of_lt_of_lt (by
-        simp
-        norm_cast
-        rw [Nat.mul_comm, ←Nat.pow_add_one]
-        simp
+        simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.mul_comm, ←Nat.pow_add_one]
         have := @Nat.pow_pos  2 (w+1) (by omega)
         have := @Nat.pow_pos  2 (w₂) (by omega)
         norm_cast
         omega
     ) (by
-        simp
+        simp [Nat.mul_comm, ←Nat.pow_add_one]
         norm_cast
         rw [Nat.mul_comm, ←Nat.pow_add_one]
-        have aar := @Nat.pow_lt_pow_of_lt 2 (w+1) (w₂) (by omega) (by
-        omega)
+        have aar := @Nat.pow_lt_pow_of_lt 2 (w+1) (w₂) (by omega) (by omega)
         omega
     )]
 
@@ -413,24 +387,19 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
   by_cases w0 : w = 0
   · subst w0
     decide +revert
-  simp [w0]
+  simp only [w0, false_or]
   unfold BitVec.intMin BitVec.intMax
-  simp [BitVec.sle]
-  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega)]
-  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega)]
-  rw [toInt_twoPow_of_eq (by omega)]
-  rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+  simp only [BitVec.sle, BitVec.toInt_mul, decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
+  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega), toInt_twoPow_of_eq (by omega), ← Nat.two_pow_pred_add_two_pow_pred (by omega)]
   norm_cast
   rw [←Nat.mul_two]
   rw [bmod_eq_iff_of_lt_of_lt
       (by
          ring_nf
          push_cast
-         rw [← Int.neg_mul]
-         rw [Int.mul_le_mul_iff_of_pos_right (by omega)]
-         rw [Int.mul_comm]
+         rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega), Int.mul_comm]
          have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
-           simp
+           simp only [neg_lt_neg_iff]
            norm_cast
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
          norm_cast
@@ -472,12 +441,9 @@ theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
     have ltx := BitVec.isLt x
     have lty := BitVec.isLt y
     have lt_mul := @Nat.mul_lt_mul_of_le_of_lt x.toNat (2^w) y.toNat (2^w) (by omega) (by omega) (by omega)
-    rw [← Nat.pow_add] at lt_mul
-    rw [← Nat.mul_two] at lt_mul
-    rw [← Nat.mul_comm 2 w] at lt_mul
+    rw [← Nat.pow_add, ← Nat.mul_two, ← Nat.mul_comm 2 w] at lt_mul
     apply lt_mul
-  rw [Nat.mod_eq_of_lt h]
-  rw [Nat.mod_eq_of_lt ((@Nat.pow_lt_pow_iff_right 2 w (2*w) (by omega)).mpr (by omega))]
+  rw [Nat.mod_eq_of_lt h, Nat.mod_eq_of_lt ((@Nat.pow_lt_pow_iff_right 2 w (2*w) (by omega)).mpr (by omega))]
   omega
 
 namespace Nat
