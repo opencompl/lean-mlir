@@ -67,8 +67,8 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             "build",
             f"SSA.Experimental.Bits.Fast.Dataset2.{module_name}",
             cwd=git_root_dir,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
             preexec_fn=os.setsid,
         )
 
@@ -81,6 +81,10 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         except asyncio.TimeoutError:
             logging.warning(f"[Timeout for {filename}] Process exceeded {timeout} seconds")
             os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
+            try:
+                os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
+            except Exception as e:
+                logging.warning(f"Weird exception {e}")
 
         logging.info(f"[Finished {filename}]  Status: {status}")
 
