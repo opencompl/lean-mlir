@@ -433,8 +433,8 @@ theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
   · subst w0
     decide +revert
   have h : x.toNat * y.toNat < 2 ^ (2 * w) := by
-    have ltx := BitVec.isLt x
-    have lty := BitVec.isLt y
+    have := BitVec.isLt x
+    have := BitVec.isLt y
     have lt_mul := @Nat.mul_lt_mul_of_le_of_lt x.toNat (2^w) y.toNat (2^w) (by omega) (by omega) (by omega)
     rw [← Nat.pow_add, ← Nat.mul_two, ← Nat.mul_comm 2 w] at lt_mul
     apply lt_mul
