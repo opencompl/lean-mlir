@@ -137,7 +137,7 @@ theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
     rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
     omega
 
-theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (hlb : -y ≤ 2 * x) (hub : 2 * x < y) :
+theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (hlb : -y ≤ x * 2) (hub : x * 2 < y) :
     x.bmod y = x := by
   simp only [Int.bmod_def]
   by_cases hh : 0 ≤ x
@@ -319,7 +319,7 @@ theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
   have yle := le_toInt y
   norm_cast at *
 
-  have aaa := @aa x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
+  have aaa := @mul_self_neg_le_mul x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
   norm_cast at aaa
   rw [← Nat.pow_add] at aaa
   simp at aaa
@@ -374,16 +374,18 @@ theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) 
         norm_cast
         omega
     ) (by
-        simp [Nat.mul_comm, ←Nat.pow_add_one]
         norm_cast
-        rw [Nat.mul_comm, ←Nat.pow_add_one]
-        have aar := @Nat.pow_lt_pow_of_lt 2 (w+1) (w₂) (by omega) (by omega)
-        omega
+        rw [←Nat.pow_add_one]
+        exact Nat.pow_lt_pow_of_lt (by omega) (by omega)
     )]
 
 theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
-    smul_overflow x y = false ↔ (w = 0) ∨ (let res := x.signExtend (2*w) * y.signExtend (2*w); ((BitVec.intMin w).signExtend (2*w) ≤ₛ res ) ∧ res ≤ₛ (BitVec.intMax w).signExtend (2*w)) := by
-  simp [smul_overflow]
+    smul_overflow x y = false ↔
+      w = 0 ∨ (let res := x.signExtend (w * 2) * y.signExtend (w * 2);
+               ((BitVec.intMin w).signExtend (w * 2) ≤ₛ res) ∧
+                 res ≤ₛ (BitVec.intMax w).signExtend (w * 2)) := by
+  simp only [smul_overflow, ge_iff_le, Bool.or_eq_false_iff, decide_eq_false_iff_not, not_le,
+    not_lt]
   by_cases w0 : w = 0
   · subst w0
     decide +revert
@@ -395,7 +397,6 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
   rw [←Nat.mul_two]
   rw [bmod_eq_iff_of_lt_of_lt
       (by
-         ring_nf
          push_cast
          rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
          have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
@@ -406,7 +407,6 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
          omega
          )
       (by
-        ring_nf
         push_cast
         apply Int.mul_lt_mul_of_pos_right (by
           have := toInt_mul_toInt_lt x y
