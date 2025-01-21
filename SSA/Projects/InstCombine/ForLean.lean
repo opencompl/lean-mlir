@@ -347,8 +347,8 @@ theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) 
     BitVec.toInt_ofInt, show ¬(w₂ ≤ w) by omega, show ¬(w + 1 = w₂) by omega]
   rw [bmod_eq_iff_of_lt_of_lt (by
         simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.mul_comm, ←Nat.pow_add_one]
-        have := @Nat.pow_pos  2 (w+1) (by omega)
-        have := @Nat.pow_pos  2 (w₂) (by omega)
+        have := @Nat.pow_pos 2 (w+1) (by omega)
+        have := @Nat.pow_pos 2 (w₂) (by omega)
         norm_cast
         omega
     ) (by
