@@ -223,19 +223,17 @@ theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
   cases' s with n
   · simp; omega
   · have := @Int.mul_pos (n + 1) (n + 1) (by omega) (by omega)
-    by_cases hx : 0 ≤ x
-    · by_cases hy : 0 ≤ y
-      · norm_cast
-        have := @Int.mul_nonneg x y (by omega) (by omega)
-        omega
-      · rw [← Int.neg_mul, Int.mul_comm (a := x)]
-        apply mul_le_mul_neg (a := (-(n + 1))) (b := (n + 1)) (c := (y : Int)) (d := (x : Int)) (by omega) (by omega) (by omega) (by omega)
-    · by_cases hy : 0 ≤ y
-      · rw [← Int.neg_mul]
-        apply mul_le_mul_neg (a := (-(n + 1))) (b := (n + 1)) (c := (x : Int)) (d := (y : Int)) (by omega) (by omega) (by omega) (by omega)
-      · have := @Int.mul_pos_of_neg_of_neg x y (by omega) (by omega)
-        norm_cast
-        omega
+    by_cases 0 ≤ x <;> by_cases 0 ≤ y
+    · norm_cast
+      have := @Int.mul_nonneg x y (by omega) (by omega)
+      omega
+    · rw [← Int.neg_mul, Int.mul_comm (a := x)]
+      apply mul_le_mul_neg (a := (-(n + 1))) (b := (n + 1)) (c := (y : Int)) (d := (x : Int)) (by omega) (by omega) (by omega) (by omega)
+    · rw [← Int.neg_mul]
+      apply mul_le_mul_neg (a := (-(n + 1))) (b := (n + 1)) (c := (x : Int)) (d := (y : Int)) (by omega) (by omega) (by omega) (by omega)
+    · have := @Int.mul_pos_of_neg_of_neg x y (by omega) (by omega)
+      norm_cast
+      omega
 
 theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y ≤ s * s := by
