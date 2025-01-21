@@ -424,22 +424,22 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
   rw [Int.subNatNat_eq_coe]
   omega
 
+theorem toNat_mul_toNat_lt {x y : BitVec w} : x.toNat * y.toNat < 2 ^ (w * 2) := by
+  have := BitVec.isLt x; have := BitVec.isLt y
+  simp only [Nat.mul_two, Nat.pow_add]
+  exact Nat.mul_lt_mul_of_le_of_lt (by omega) (by omega) (by omega)
+
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
-    umul_overflow x y ↔ ((0 < w) ∧ BitVec.twoPow (2 * w) w ≤ x.zeroExtend (2 * w) * y.zeroExtend (2 * w)) := by
-  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq, BitVec.truncate_eq_setWidth, LE.le]
-  simp only [Nat.le_eq, BitVec.toNat_twoPow, BitVec.toNat_mul, BitVec.toNat_setWidth,
-    Nat.mul_mod_mod, Nat.mod_mul_mod]
+    umul_overflow x y ↔ ((0 < w) ∧ BitVec.twoPow (w * 2) w ≤ x.zeroExtend (w * 2) * y.zeroExtend (w * 2)) := by
+  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq, BitVec.truncate_eq_setWidth, BitVec.le_def,
+    BitVec.toNat_twoPow, BitVec.toNat_mul, BitVec.toNat_setWidth, Nat.mul_mod_mod, Nat.mod_mul_mod]
   by_cases w0 : w = 0
   · subst w0
     decide +revert
-  have h : x.toNat * y.toNat < 2 ^ (2 * w) := by
-    have := BitVec.isLt x
-    have := BitVec.isLt y
-    have lt_mul := @Nat.mul_lt_mul_of_le_of_lt x.toNat (2^w) y.toNat (2^w) (by omega) (by omega) (by omega)
-    rw [← Nat.pow_add, ← Nat.mul_two, ← Nat.mul_comm 2 w] at lt_mul
-    apply lt_mul
-  rw [Nat.mod_eq_of_lt h, Nat.mod_eq_of_lt ((@Nat.pow_lt_pow_iff_right 2 w (2*w) (by omega)).mpr (by omega))]
-  omega
+  · rw [Nat.mod_eq_of_lt toNat_mul_toNat_lt, Nat.mod_eq_of_lt]
+    omega
+    rw [Nat.pow_lt_pow_iff_right (by omega)]
+    omega
 
 namespace Nat
 
