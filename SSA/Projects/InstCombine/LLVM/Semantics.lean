@@ -5,14 +5,247 @@ import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic.Cases
 import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
+import Mathlib.Data.Option.Basic
 import Aesop
 import SSA.Projects.InstCombine.LLVM.SimpSet
+
+section ForLean
+
+theorem Option.isSome_left_of_isSome_bind {x : Option α} {f : α → Option β}
+    (h : (x.bind f).isSome) :
+    x.isSome := by
+  cases hx : x.isSome
+  · simp_all
+  · rfl
+
+theorem Option.isSome_right_of_isSome_bind {x : Option α} {f : α → Option β}
+    (h : (x.bind f).isSome) :
+    (f <| x.get (isSome_left_of_isSome_bind h)).isSome := by
+  cases x
+  · contradiction
+  · simpa using h
+
+theorem Option.bind_get (x : Option α) (f : α → Option β)
+    (h : (x.bind f).isSome) :
+    (x.bind f).get h =
+    (f (x.get <| isSome_left_of_isSome_bind h)).get (isSome_right_of_isSome_bind h) := by
+  rcases x with _|x
+  · contradiction
+  · simp
+
+end ForLean
+
+section ForMathlib
+
+theorem exists_iff_exists_of_forall {α : Sort*} {P Q : α → Prop}
+    (h : ∀ a, P a ↔ Q a) :
+    (∃ a, P a) ↔ (∃ a, Q a) := by
+  constructor
+  · rintro ⟨_, hP⟩; exact ⟨_, (h _).mp hP⟩
+  · rintro ⟨_, hQ⟩; exact ⟨_, (h _).mpr hQ⟩
+
+end ForMathlib
 
 
 namespace LLVM
 
 
 abbrev IntW w := Option <| BitVec w
+
+namespace IntW
+
+/-- Returns *false* if `x` is the poison value -/
+def isDefined (x : IntW w) : Prop := x.isSome = true
+
+/-- Returns the value of `x`, given that it's not poison -/
+def value (x : IntW w) (h : x.isDefined) : BitVec w :=
+  x.get h
+
+section Lemmas
+
+@[simp] theorem isDefined_some_iff : isDefined (some x) ↔ True := by
+  simp only [isDefined, Option.isSome_some]
+@[simp] theorem isDefined_some : isDefined (some x) := rfl
+
+@[simp] theorem isDefined_none : ¬(@isDefined w none) := by
+  simp [isDefined]
+
+@[simp] theorem value_some (x : BitVec w) (h : _) : value (some x) h = x := rfl
+
+@[simp] theorem isDefined_bif (c : Bool) (x y : IntW w) :
+    (bif c then x else y).isDefined ↔ (c = true ∧ x.isDefined) ∨ (c = false ∧ y.isDefined) := by
+  cases c <;> simp
+
+end Lemmas
+
+/-! ## Lifting a BitVec computation -/
+section Bind
+
+/-- Lift a binary operation on bitvectors onto an operation on `IntW`, such that
+the result is defined iff both operands are defined, and the value, when
+defined, is the bitvector operation applied to the operands respective values.
+-/
+def bind₂ (f : BitVec w → BitVec w → IntW w) (x? y? : IntW w) : IntW w := do
+  let x ← x?
+  let y ← y?
+  f x y
+
+variable {f : BitVec w → BitVec w → IntW w} {x? y? : IntW w}
+
+@[simp]
+theorem isDefined_bind₂ :
+    (bind₂ f x? y?).isDefined
+    ↔ ∃ hx hy, (f (x?.value hx) (y?.value hy)).isDefined := by
+  cases x? <;> cases y? <;> simp [bind₂, isDefined, value]
+
+theorem isDefined_left_of_isDefined_bind :
+    (bind₂ f x? y?).isDefined → x?.isDefined := by
+  simp only [isDefined_bind₂]
+  rintro ⟨hx, _, _⟩
+  exact hx
+
+theorem isDefined_right_of_isDefined_bind :
+    (bind₂ f x? y?).isDefined → y?.isDefined := by
+  simp only [isDefined_bind₂]
+  rintro ⟨_, hy, _⟩
+  exact hy
+
+theorem isDefined_app_of_isDefined_bind (h : (bind₂ f x? y?).isDefined) :
+    (f (x?.value <| isDefined_left_of_isDefined_bind h)
+       (y?.value <| isDefined_right_of_isDefined_bind h)).isDefined := by
+  simp only [isDefined_bind₂] at h
+  exact h.choose_spec.choose_spec
+
+@[simp]
+theorem value_bind₂ (h : (bind₂ f x? y?).isDefined) :
+    (bind₂ f x? y?).value h
+    = (f (x?.value <| isDefined_left_of_isDefined_bind h)
+        (y?.value <| isDefined_right_of_isDefined_bind h)
+      |>.value (isDefined_app_of_isDefined_bind h)) := by
+  simp [IntW.value, Option.bind_get, bind₂]
+
+end Bind
+
+
+section Lift
+
+/-- Lift a binary operation on bitvectors onto an operation on `IntW`, such that
+the result is defined iff both operands are defined, and the value, when
+defined, is the bitvector operation applied to the operands respective values.
+-/
+def lift₂ (f : BitVec w → BitVec w → BitVec w) : IntW w → IntW w → IntW w :=
+  bind₂ (fun x y => some (f x y))
+
+variable {f : BitVec w → BitVec w → BitVec w} {x? y? : IntW w}
+
+@[simp]
+theorem isDefined_lift₂ :
+    (lift₂ f x? y?).isDefined ↔ (x?.isDefined ∧ y?.isDefined) := by
+  simp [lift₂, isDefined_bind₂]
+
+theorem isDefined_left_of_isDefined_lift :
+    (lift₂ f x? y?).isDefined → x?.isDefined :=
+  isDefined_left_of_isDefined_bind
+
+theorem isDefined_right_of_isDefined_lift :
+    (lift₂ f x? y?).isDefined → y?.isDefined :=
+  isDefined_right_of_isDefined_bind
+
+@[simp]
+theorem value_lift₂ (h : (lift₂ f x? y?).isDefined) :
+    (lift₂ f x? y?).value h
+    = f (x?.value <| isDefined_left_of_isDefined_lift h)
+        (y?.value <| isDefined_right_of_isDefined_lift h) := by
+  simp [lift₂]
+
+end Lift
+
+/-! ## IntW operations -/
+
+/-! #### Bitwise -/
+
+def and : IntW w → IntW w → IntW w := lift₂ (· &&& ·)
+def xor : IntW w → IntW w → IntW w := lift₂ (· ^^^ ·)
+
+structure DisjointFlag where
+  disjoint : Bool := false
+  deriving Repr, DecidableEq
+
+def or (flag : DisjointFlag := {}) : IntW w → IntW w → IntW w := bind₂ fun x y =>
+  bif flag.disjoint && (x &&& y != 0) then
+    none
+  else
+    some (x ||| y)
+
+/-! #### Arithmetic -/
+
+structure NoWrapFlags where
+  nsw : Bool := false
+  nuw : Bool := false
+  deriving Repr, DecidableEq
+
+@[simp_llvm_option] -- TODO: should the flags not come *before* the arguments?
+def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w :=
+  let f := fun x y =>
+    bif flags.nsw ∧ x.msb = y.msb ∧ (x + y).msb ≠ x.msb then
+      none
+    else bif flags.nuw ∧ (x + y < x ∨ x + y < y) then
+      none
+    else
+      some (x + y)
+  bind₂ f x y
+
+
+
+/-! ### Lemmas about `isDefined` -/
+section PoisonLemmas
+
+@[simp] theorem isDefined_and :
+    isDefined (and x y) ↔ (x.isDefined ∧ y.isDefined) := isDefined_lift₂
+
+@[simp] theorem isDefined_xor :
+    isDefined (xor x y) ↔ (x.isDefined ∧ y.isDefined) := isDefined_lift₂
+
+@[simp] theorem isDefined_or_not_disjoint :
+    isDefined (or {disjoint := false} x y) ↔ x.isDefined ∧ y.isDefined := isDefined_lift₂
+
+@[simp] theorem isDefined_or_disjoint :
+    isDefined (or {disjoint := true} x y) ↔
+    ∃ (hx : x.isDefined) (hy : y.isDefined), x.value hx &&& y.value hy = 0 := by
+  simp [or]
+
+@[simp] theorem isDefined_add_nsw_nuw :
+    isDefined (add x y {nsw := true, nuw := true})
+    ↔ ∃ (hx : x.isDefined) (hy : y.isDefined),
+        ( (x.value hx).msb ≠ (y.value hy).msb
+          ∨ ((x.value hx) + (y.value hy)).msb = (x.value hx).msb)
+        ∧ x.value hx + (y.value hy) ≥ x.value hx
+        ∧ x.value hx + (y.value hy) ≥ (y.value hy) := by
+  simp [add, isDefined_bind₂, isDefined_bif, imp_iff_not_or]
+
+@[simp] theorem isDefined_add_nsw :
+    isDefined (add x y {nsw := true, nuw := false})
+    ↔ ∃ (hx : x.isDefined) (hy : y.isDefined),
+        (x.value hx).msb ≠ (y.value hy).msb
+        ∨ ((x.value hx) + (y.value hy)).msb = (x.value hx).msb := by
+  simp [add, isDefined_bind₂, isDefined_bif, imp_iff_not_or]
+
+@[simp] theorem isDefined_add_nuw :
+    isDefined (add x y {nsw := false, nuw := true})
+    ↔ ∃ (hx : x.isDefined) (hy : y.isDefined),
+        x.value hx + (y.value hy) ≥ x.value hx
+        ∧ x.value hx + (y.value hy) ≥ (y.value hy) := by
+  simp [add, isDefined_bind₂, isDefined_bif]
+
+@[simp] theorem isDefined_add :
+    isDefined (add x y {nsw := false, nuw := false})
+    ↔ x.isDefined ∧ y.isDefined := by
+  simp [add]
+
+end PoisonLemmas
+
+
+end IntW
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
@@ -29,6 +262,8 @@ def and {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
   and? x' y'
+
+
 
 /--
 The ‘or’ instruction returns the bitwise logical inclusive or of its two
