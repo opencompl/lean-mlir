@@ -310,26 +310,6 @@ theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
     ·
       simp at h1 h2
       sorry
-
-theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
-    -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
-  have xlt := toInt_lt x
-  have ylt := toInt_lt y
-  have xle := le_toInt x
-  have yle := le_toInt y
-  norm_cast at *
-
-  have aaa := @mul_self_neg_le_mul x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
-  norm_cast at aaa
-  rw [← Nat.pow_add] at aaa
-  simp at aaa
-  ring_nf at aaa
-  ring_nf
-  norm_cast at *
-  rw [Nat.sub_mul] at aaa
-  simp at aaa
-  norm_cast at aaa
-
 theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
     x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x; have xle := le_toInt x
@@ -338,6 +318,15 @@ theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
     simp [← Nat.pow_add, ←Nat.mul_two, Nat.sub_mul]
   rw_mod_cast [h]
   exact mul_le_mul_self_neg xle xlt yle ylt
+
+theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
+    -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
+  have xlt := toInt_lt x; have xle := le_toInt x
+  have ylt := toInt_lt y; have yle := le_toInt y
+  have h : 2 ^ (w * 2 - 2) = 2 ^ (w - 1) * 2 ^ (w - 1) := by
+    simp [← Nat.pow_add, ←Nat.mul_two, Nat.sub_mul]
+  rw_mod_cast [h]
+  exact mul_self_neg_le_mul xle xlt yle ylt
 
 theorem toInt_twoPow_of_lt {w i : Nat} (h : i + 1 < w) :
     (BitVec.twoPow w i).toInt = (2 ^ i) := by
