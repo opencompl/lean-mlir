@@ -434,13 +434,13 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
            rw [neg_lt_neg_iff]
            norm_cast
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
-         have := le_toInt_mul_toInt x y
+         have := @le_toInt_mul_toInt w x y
          omega
          )
       (by
         push_cast
         apply Int.mul_lt_mul_of_pos_right (by
-          have := toInt_mul_toInt_lt x y
+          have := @toInt_mul_toInt_lt w x y
           push_cast at *
           have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
