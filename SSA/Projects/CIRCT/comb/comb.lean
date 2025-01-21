@@ -6,8 +6,9 @@ import SSA.Projects.CIRCT.Stream.WeakBisim
 namespace Comb
 
 /- most inputs for the following ops should be variadic. binary for now. -/
-def add (x y : BitVec w) : BitVec w :=
-  x + y
+
+def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
+  List.foldr BitVec.add (BitVec.zero w) l
 
 def and (x y : BitVec w) : BitVec w :=
   x &&& y
@@ -57,8 +58,8 @@ def mods (x y : BitVec w) : BitVec w :=
 def modu (x y : BitVec w) : BitVec w :=
   BitVec.umod x y
 
-def mul (x y : BitVec w) : BitVec w :=
-  x * y
+def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
+  List.foldr BitVec.mul (1#w) l
 
 /- according to the docs the input of mux
   can be any type. I'll stick to bitvecs for now. -/
@@ -67,8 +68,8 @@ def mux (x y : BitVec w) (cond : Bool) : BitVec w :=
   | true => x
   | false => y
 
-def or (x y : BitVec w) : BitVec w :=
-  x ||| y
+def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
+  List.foldr BitVec.or (BitVec.zero w) l
 
 def parity (x : BitVec w) : Bool :=
   (BitVec.umod x 2#w) == 1
@@ -103,8 +104,8 @@ def sub (x y : BitVec w) : BitVec w :=
   I need to meditate a bit more on how to define this.
 -/
 
-def xor (x y : BitVec w) : BitVec w :=
-  x ^^^ y
+def xor {w : Nat} (l : List (BitVec w)) : BitVec w :=
+  List.foldr BitVec.xor (BitVec.zero w) l
 
 end Comb
 
@@ -213,10 +214,6 @@ def Op.signature : Op → Signature (Ty) :=
 instance : DialectSignature Comb := ⟨Op.signature⟩
 
 def HVector.toList : HVector f (List.replicate n a) → List (f a) :=
-  sorry
-
-def Comb.variadicAdd (l : List (BitVec w)) : List (BitVec w) → BitVec w :=
-  List.foldr BitVec.add _ _
   sorry
 
 @[simp]
