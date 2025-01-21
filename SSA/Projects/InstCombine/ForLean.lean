@@ -3,6 +3,446 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
+theorem toInt_lt {w : Nat} (x : BitVec w) : x.toInt < 2 ^ (w - 1) := by
+  simp only [BitVec.toInt, Nat.cast_pow]
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x]
+  · rw [←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.two_mul]
+    split
+    case neg.isTrue h =>
+      norm_cast
+      omega
+    case neg.isFalse h =>
+      rw [sub_lt_iff_lt_add]
+      norm_cast
+      omega
+
+theorem le_toInt {w : Nat} (x : BitVec w) : -2 ^ (w - 1) ≤ x.toInt := by
+  simp only [BitVec.toInt, Nat.cast_pow]
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x]
+  · rw [←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.two_mul]
+    simp only [zero_lt_two, mul_lt_mul_left, Nat.cast_ofNat]
+    split
+    case neg.isTrue h =>
+      norm_cast
+      omega
+    case neg.isFalse h =>
+      simp only [neg_le_sub_iff_le_add]
+      norm_cast
+      rw [←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.two_mul]
+      omega
+
+theorem toInd_add_toInt_lt_two_pow (x y : BitVec w) :
+    (x.toInt + y.toInt) < 2 ^ w := by
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x, BitVec.eq_nil y]
+  · norm_cast
+    rw [←Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    have hx := toInt_lt x
+    have hy := toInt_lt y
+    push_cast
+    omega
+
+theorem neg_two_pow_le_toInd_add_toInt (x y : BitVec w) :
+    - 2 ^ w ≤ x.toInt + y.toInt := by
+  by_cases hw : w = 0
+  · subst hw
+    simp [BitVec.eq_nil x, BitVec.eq_nil y]
+  · norm_cast
+    rw [←Nat.two_pow_pred_add_two_pow_pred (by omega)]
+    have hx := le_toInt x
+    have hy := le_toInt y
+    push_cast
+    omega
+
+-- theorem bmod_pos_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+--     0 ≤ (x.bmod y) ↔ x < (y + 1) / 2 := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_of_lt (by omega) (by omega)]
+--   split
+--   · omega
+--   · omega
+
+-- theorem bmod_neg_iff_of_pos_lt {x : Int} {y : Nat} (h1 : 0 ≤ x) (h2 : x < y) :
+--     (x.bmod y) < 0 ↔ (y + 1) / 2 ≤ x := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_of_lt (by omega) (by omega)]
+--   split
+--   · omega
+--   · omega
+
+-- theorem bmod_pos_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
+--     0 ≤ (x.bmod y) ↔ x ≤ -(y + 1) / 2 := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by  omega) (by omega)]
+--   split
+--   · omega
+--   · omega
+
+-- theorem two_pow_add_one_div_two {w : Nat} : (2 ^ w + 1) / 2 = 2 ^ (w - 1) := by
+--   cases hw : w
+--   · decide
+--   · rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+--     omega
+
+theorem bmod_pos_iff {w : Nat} {x : Int} (h1 : x < 2^w) (h2 : -(2^w) ≤ x) :
+    0 ≤ (x.bmod (2^w)) ↔ 2 * x < -(2^w) ∨ (0 ≤ x ∧ 2 * x < 2^w) := by
+  simp only [Int.bmod_def, Nat.cast_pow, Nat.cast_ofNat]
+  by_cases xpos : 0 ≤ x
+  · rw [Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+  · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+
+theorem bmod_two_pow_neg_iff {w : Nat} {x : Int} (h1 : x < 2 ^ w) (h2 : -(2 ^ w) ≤ x) :
+    (x.bmod (2 ^ w)) < 0 ↔ (-(2 ^ w) ≤ 2 * x ∧ x < 0) ∨ (2 ^ w ≤ 2 * x) := by
+  simp only [Int.bmod_def, Nat.cast_pow, Nat.cast_ofNat]
+  by_cases xpos : 0 ≤ x
+  · rw [Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+  · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+
+-- theorem bmod_neg_iff_of_neg_gt {x : Int} {y : Nat} (h1 : x < 0) (h2 : -y ≤ x) :
+--     (x.bmod y) < 0 ↔ - y - 1 < x * 2 := by
+--   simp [Int.bmod_def]
+--   rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by  omega) (by omega)]
+--   split
+--   · omega
+--   · omega
+
+theorem uadd_overflow_eq {w : Nat} (x y : BitVec w) :
+    uadd_overflow x y = BitVec.carry w x y false := by
+  simp only [uadd_overflow, BitVec.carry]
+  by_cases h : 2 ^ w ≤ x.toNat + y.toNat <;> simp [h]
+
+theorem sadd_overflow_eq {w : Nat} (x y : BitVec w) :
+    sadd_overflow x y = true ↔ x.msb = y.msb ∧ ¬(x + y).msb = x.msb := by
+  simp only [sadd_overflow]
+  by_cases h: w = 0
+  · subst w; revert x y; decide
+  · have := le_toInt x
+    have := le_toInt y
+    have := toInt_lt y
+    have := toInt_lt x
+    have := toInd_add_toInt_lt_two_pow x y
+    have := neg_two_pow_le_toInd_add_toInt x y
+    simp only [ge_iff_le, Bool.or_eq_true, decide_eq_true_eq, BitVec.msb_eq_toInt,
+      decide_eq_decide, BitVec.toInt_add]
+    rw [bmod_two_pow_neg_iff (by omega) (by omega)]
+    rw_mod_cast [← @Nat.two_pow_pred_add_two_pow_pred w (by omega)] at *
+    omega
+
+theorem bmod_eq_iff_of_lt_of_lt {x : Int} {y : Nat} (hlb : -y ≤ x * 2) (hub : x * 2 < y) :
+    x.bmod y = x := by
+  simp only [Int.bmod_def]
+  by_cases hh : 0 ≤ x
+  · rw [Int.emod_eq_of_lt hh (by omega)]
+    omega
+  · rw [Int.emod_eq_add_self_emod, Int.emod_eq_of_lt (by omega) (by omega)]
+    omega
+
+@[simp]
+theorem shiftLeft_gt_eq_zero {w i : Nat} (h : w ≤ i) : 1#w <<< i = 0#w := by
+  simp [bv_toNat]
+  by_cases w0 : w = 0
+  · subst w0
+    simp
+  rw [Nat.mod_eq_of_lt (a := 1) (by
+    have x := @Nat.lt_two_pow_self w
+    omega)
+  ]
+  rw [Nat.shiftLeft_eq_mul_pow]
+  simp only [one_mul]
+  rw [Nat.mod_eq_zero_of_dvd]
+  have aa := @Nat.pow_dvd_pow w i 2 (by omega)
+  apply aa
+
+theorem toInt_twoPow {w i : Nat} :
+    (BitVec.twoPow w i).toInt = if w ≤ i then (0 : Int) else (if i + 1 = w then -(1 <<< i:Int) else (1 <<< i)) := by
+  simp only [BitVec.twoPow, BitVec.toInt]
+  by_cases w0 : w = 0
+  · subst w0
+    simp
+  · by_cases h : w ≤ i
+    · simp [h]
+    · simp only [BitVec.toNat_shiftLeft, BitVec.toNat_ofNat, Int.ofNat_emod, Nat.cast_pow,
+      Nat.cast_ofNat, h, ↓reduceIte]
+      simp at h
+      have x : (1 % 2 ^ w) = 1 := by
+        rw [Nat.one_mod_eq_one]
+        have a := @Nat.lt_two_pow_self w
+        omega
+      have y : (2^ i % 2 ^ w) = 2^i := by
+        rw [Nat.mod_eq_of_lt (by rw [Nat.pow_lt_pow_iff_right (by omega)]; omega)]
+      have z : 2 ^ i % 2 ^ (i + 1) = 2 ^ i := by
+        rw [Nat.mod_eq_of_lt (by rw [Nat.pow_lt_pow_iff_right (by omega)]; omega)]
+      have j : 2 * 2 ^ i = 2 ^ (i + 1) := by
+        rw [Nat.pow_add]
+        ring
+      norm_cast
+      simp only [x, Nat.shiftLeft_eq_mul_pow, one_mul, y, j, Nat.cast_pow, Nat.cast_ofNat]
+      rw [Int.subNatNat_eq_coe]
+      by_cases ha : i + 1 = w
+      · simp only [ha, lt_self_iff_false, ↓reduceIte, Nat.cast_pow, Nat.cast_ofNat]
+        subst ha
+        norm_cast
+        rw [← Nat.two_pow_pred_add_two_pow_pred (w := i+1) (by omega)]
+        simp only [add_tsub_cancel_right, Nat.cast_pow, Nat.cast_ofNat]
+        norm_cast
+        rw [Int.subNatNat_eq_coe, Int.natCast_add]
+        omega
+      · have sl : 2 ^ (i + 1) < 2 ^ w := by
+          rw [Nat.pow_lt_pow_iff_right (by omega)]
+          omega
+        simp [sl, ha]
+
+
+
+theorem mul_le_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
+    a * b < c * d := by
+  have h0 := Nat.mul_le_mul_right b hac
+  have h1 := Nat.mul_lt_mul_of_pos_left hbd hc
+  have h2 := Nat.lt_of_le_of_lt h0 h1
+  apply h2
+
+
+theorem mul_le_mul_neg {a b c d : Int}
+    (hac : a ≤ c) (hbd : d ≤ b) (hb : 0 ≤ b) (hc : c ≤ 0) : a * b ≤ c * d := by
+  have hac := Int.mul_le_mul_of_nonneg_right hac hb
+  have hbd := Int.mul_le_mul_of_nonpos_right hbd hc
+  rw [Int.mul_comm] at hbd
+  have h := Int.le_trans hac hbd
+  rw [Int.mul_comm (a:= d)] at h
+  apply h
+
+theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+    -(s * s) ≤ x * y := by
+  by_cases s0 : s = 0
+  · subst s0
+    simp
+    omega
+  have hs : -(s:Int) < 0 := by omega
+  have hs : 0 < s := by omega
+  have hss : 0 < (s* s) := by
+    have aas :=  @Int.mul_self_lt_mul_self 0 s (by omega) (by omega)
+    simp at aas
+    norm_cast at aas
+
+  have hss : -((s:Int) * s) < 0 := by
+    have ara := (@Int.neg_neg_iff_pos (s*s)).mpr (by omega)
+    apply ara
+
+  by_cases h1 : 0 ≤ x
+  ·
+    by_cases h2 : 0 ≤ y
+    ·
+      have haaf : 0 ≤ x * y := by
+        have pp := @Int.mul_nonneg x y (by omega) (by omega)
+        apply pp
+      omega
+    ·
+      simp at h2 h1
+      have pr := @mul_le_mul_neg (-s) (s) (y) (x) (by omega) (by omega) (by omega) (by omega)
+      rw [Int.neg_mul] at pr
+      rw [Int.mul_comm (a := x)]
+      apply pr
+  ·
+    by_cases h2 : 0 ≤ y
+    ·
+      simp at h2 h1
+      have pr := @mul_le_mul_neg (-s) (s) (x) (y) (by omega) (by omega) (by omega) (by omega)
+      rw [Int.neg_mul] at pr
+      apply pr
+    · simp at h1 h2
+      have pp := @Int.mul_pos_of_neg_of_neg x y (by omega) (by omega)
+      omega
+
+theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+    x * y ≤ s * s := by
+  by_cases s0 : s = 0
+  · subst s0
+    simp
+    omega
+  have hs : -(s:Int) < 0 := by omega
+  have hs : 0 < s := by omega
+  have hss : 0 < (s* s) := by
+    have aas :=  @Int.mul_self_lt_mul_self 0 s (by omega) (by omega)
+    simp at aas
+    norm_cast at aas
+
+  have hss : -((s:Int) * s) < 0 := by
+    have ara := (@Int.neg_neg_iff_pos (s*s)).mpr (by omega)
+    apply ara
+  by_cases h4 : x = 0
+  ·
+    subst h4
+    simp at *
+    omega
+  by_cases h4 : y = 0
+  ·
+    subst h4
+    simp at *
+    omega
+  by_cases h1 : 0 < x
+  ·
+    by_cases h2 : 0 < y
+    ·
+      have jrk := @Int.mul_lt_mul x y s s (by omega) (by omega) (by omega) (by omega)
+      omega
+    · simp at h1 h2
+      have aar : x * y < 0 := by
+        have pp := @Int.mul_neg_of_pos_of_neg x y (by omega) (by omega)
+        apply pp
+      omega
+  ·
+    by_cases h2 : 0 < y
+    · simp at h1 h2
+      have aar : x * y < 0 := by
+        have pp := @Int.mul_neg_of_pos_of_neg y x (by omega) (by omega)
+        rw [Int.mul_comm]
+        apply pp
+      omega
+    ·
+      simp at h1 h2
+      sorry
+
+theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
+    -(2 ^ (w * 2 - 2)) ≤ x.toInt * y.toInt := by
+  have xlt := toInt_lt x
+  have ylt := toInt_lt y
+  have xle := le_toInt x
+  have yle := le_toInt y
+  norm_cast at *
+
+  have aaa := @mul_self_neg_le_mul x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
+  norm_cast at aaa
+  rw [← Nat.pow_add] at aaa
+  simp at aaa
+  ring_nf at aaa
+  ring_nf
+  norm_cast at *
+  rw [Nat.sub_mul] at aaa
+  simp at aaa
+  norm_cast at aaa
+
+theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
+    x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
+  have xlt := toInt_lt x
+  have ylt := toInt_lt y
+  have xle := le_toInt x
+  have yle := le_toInt y
+  norm_cast at *
+
+  have aaa := @mul_le_mul_self_neg x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
+  norm_cast at aaa
+  rw [← Nat.pow_add] at aaa
+  simp at aaa
+  ring_nf at aaa
+  ring_nf
+  norm_cast at *
+  rw [Nat.sub_mul] at aaa
+  simp at aaa
+  norm_cast at aaa
+
+theorem toInt_twoPow_of_lt {w i : Nat} (h : i + 1 < w) :
+    (BitVec.twoPow w i).toInt = (2 ^ i) := by
+  simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, show ¬ (i + 1 = w) by omega]
+
+theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
+    (BitVec.twoPow w i).toInt = -(2 ^ i) := by
+  simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, h]
+
+theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
+  simp only [BitVec.twoPow]
+  sorry
+
+theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) (h₂ : w + 1 < w₂) :
+    (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
+  apply BitVec.toInt_inj.mp
+  simp only [BitVec.signExtend, toInt_twoPow, show ¬(w₁ ≤ w) by omega, ↓reduceIte,
+    show ¬(w + 1 = w₁) by omega, Nat.shiftLeft_eq_mul_pow, one_mul, Nat.cast_pow, Nat.cast_ofNat,
+    BitVec.toInt_ofInt, show ¬(w₂ ≤ w) by omega, show ¬(w + 1 = w₂) by omega]
+  rw [bmod_eq_iff_of_lt_of_lt (by
+        simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.mul_comm, ←Nat.pow_add_one]
+        have := @Nat.pow_pos  2 (w+1) (by omega)
+        have := @Nat.pow_pos  2 (w₂) (by omega)
+        norm_cast
+        omega
+    ) (by
+        norm_cast
+        rw [←Nat.pow_add_one]
+        exact Nat.pow_lt_pow_of_lt (by omega) (by omega)
+    )]
+
+theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
+    smul_overflow x y = false ↔
+      w = 0 ∨ (let res := x.signExtend (w * 2) * y.signExtend (w * 2);
+               ((BitVec.intMin w).signExtend (w * 2) ≤ₛ res) ∧
+                 res ≤ₛ (BitVec.intMax w).signExtend (w * 2)) := by
+  simp only [smul_overflow, ge_iff_le, Bool.or_eq_false_iff, decide_eq_false_iff_not, not_le,
+    not_lt]
+  by_cases w0 : w = 0
+  · subst w0
+    decide +revert
+  simp only [w0, false_or, BitVec.intMin, BitVec.intMax, BitVec.sle, BitVec.toInt_mul,
+    decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
+  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
+    BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
+    toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega)]
+  rw [←Nat.mul_two]
+  rw [bmod_eq_iff_of_lt_of_lt
+      (by
+         push_cast
+         rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
+         have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
+           rw [neg_lt_neg_iff]
+           norm_cast
+           apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
+         have := le_toInt_mul_toInt x y
+         omega
+         )
+      (by
+        push_cast
+        apply Int.mul_lt_mul_of_pos_right (by
+          have := toInt_mul_toInt_lt x y
+          push_cast at *
+          have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
+           apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
+          have asr := @Int.lt_of_le_of_lt (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) (2 ^ (w * 2 - 1))
+            (by omega)
+            (by norm_cast)
+          omega
+        ) (by omega)
+      )]
+  rw [toInt_twoPow_sub_one]
+  norm_cast at *
+  rw [Int.subNatNat_eq_coe]
+  omega
+
+theorem toNat_mul_toNat_lt {x y : BitVec w} : x.toNat * y.toNat < 2 ^ (w * 2) := by
+  have := BitVec.isLt x; have := BitVec.isLt y
+  simp only [Nat.mul_two, Nat.pow_add]
+  exact Nat.mul_lt_mul_of_le_of_lt (by omega) (by omega) (by omega)
+
+theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
+    umul_overflow x y ↔
+      0 < w ∧ BitVec.twoPow (w * 2) w ≤ x.zeroExtend (w * 2) * y.zeroExtend (w * 2) := by
+  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq, BitVec.truncate_eq_setWidth,
+    BitVec.le_def, BitVec.toNat_twoPow, BitVec.toNat_mul, BitVec.toNat_setWidth,
+    Nat.mul_mod_mod, Nat.mod_mul_mod]
+  by_cases w0 : w = 0
+  · subst w0
+    decide +revert
+  · rw [Nat.mod_eq_of_lt toNat_mul_toNat_lt, Nat.mod_eq_of_lt]
+    omega
+    rw [Nat.pow_lt_pow_iff_right (by omega)]
+    omega
+
 namespace Nat
 
 theorem eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
