@@ -332,16 +332,12 @@ theorem le_toInt_mul_toInt {w : Nat} (x y : BitVec w) :
 
 theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
     x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
-  have xlt := toInt_lt x
-  have ylt := toInt_lt y
-  have xle := le_toInt x
-  have yle := le_toInt y
-  norm_cast at *
-
-  have aaa := @mul_le_mul_self_neg x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
-  norm_cast at aaa
-  simp [← Nat.pow_add, ← Nat.mul_two, Nat.sub_mul] at aaa
-  norm_cast at aaa
+  have xlt := toInt_lt x; have xle := le_toInt x
+  have ylt := toInt_lt y; have yle := le_toInt y
+  have h : 2 ^ (w * 2 - 2) = 2 ^ (w - 1) * 2 ^ (w - 1) := by
+    simp [← Nat.pow_add, ←Nat.mul_two, Nat.sub_mul]
+  rw_mod_cast [h]
+  exact mul_le_mul_self_neg xle xlt yle ylt
 
 theorem toInt_twoPow_of_lt {w i : Nat} (h : i + 1 < w) :
     (BitVec.twoPow w i).toInt = (2 ^ i) := by
