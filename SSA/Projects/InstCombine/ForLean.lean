@@ -397,28 +397,26 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
       (by
          ring_nf
          push_cast
-         rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega), Int.mul_comm]
+         rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
          have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
            rw [neg_lt_neg_iff]
            norm_cast
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
          have := le_toInt_mul_toInt x y
-         norm_cast at *
-         rw [Int.mul_comm]
          omega
          )
       (by
         ring_nf
         push_cast
         apply Int.mul_lt_mul_of_pos_right (by
-          have := toInt_mul_toInt_lt y x
-          norm_cast at *
+          have := toInt_mul_toInt_lt x y
+          push_cast at *
           have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
           have asr := @Int.lt_of_le_of_lt (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) (2 ^ (w * 2 - 1))
-            (by rw [Int.mul_comm] at this; norm_cast)
-            (by rw [Int.mul_comm] at this; norm_cast)
-          norm_cast at *
+            (by omega)
+            (by norm_cast)
+          omega
         ) (by omega)
       )]
   rw [toInt_twoPow_sub_one]
