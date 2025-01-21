@@ -421,7 +421,7 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
       )]
   rw [toInt_twoPow_sub_one]
   norm_cast at *
-  rw [Int.subNatNat_eq_coe] at *
+  rw [Int.subNatNat_eq_coe]
   omega
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
