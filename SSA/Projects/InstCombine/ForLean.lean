@@ -387,9 +387,8 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
   by_cases w0 : w = 0
   · subst w0
     decide +revert
-  simp only [w0, false_or]
-  unfold BitVec.intMin BitVec.intMax
-  simp only [BitVec.sle, BitVec.toInt_mul, decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
+  simp only [w0, false_or, BitVec.intMin, BitVec.intMax, BitVec.sle, BitVec.toInt_mul,
+    decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
   rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
     BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
     toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega)]
