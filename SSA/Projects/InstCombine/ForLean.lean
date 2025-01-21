@@ -426,29 +426,22 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
     BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
     toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega)]
   rw [←Nat.mul_two]
-  rw [bmod_eq_iff_of_lt_of_lt
-      (by
-         push_cast
-         rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
-         have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
-           rw [neg_lt_neg_iff]
-           norm_cast
-           apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
-         have := @le_toInt_mul_toInt w x y
-         omega
-         )
-      (by
+  rw [bmod_eq_iff_of_lt_of_lt (by
         push_cast
-        apply Int.mul_lt_mul_of_pos_right (by
+        rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
+        have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
+          rw [neg_lt_neg_iff]
+          norm_cast
+          apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
+        have := @le_toInt_mul_toInt w x y
+        omega
+      ) (by
+        push_cast
+        exact Int.mul_lt_mul_of_pos_right (by
           have := @toInt_mul_toInt_lt w x y
-          push_cast at *
-          have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
-           apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
-          have asr := @Int.lt_of_le_of_lt (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) (2 ^ (w * 2 - 1))
-            (by omega)
-            (by norm_cast)
-          omega
-        ) (by omega)
+          have : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := Nat.pow_lt_pow_of_lt (by omega) (by omega)
+          norm_cast at *
+          omega) (by omega)
       )]
   rw [toInt_twoPow_sub_one]
   norm_cast at *
