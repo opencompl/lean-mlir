@@ -340,13 +340,7 @@ theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
 
   have aaa := @mul_le_mul_self_neg x.toInt y.toInt (2 ^ (w - 1)) xle xlt yle ylt
   norm_cast at aaa
-  rw [← Nat.pow_add] at aaa
-  simp at aaa
-  ring_nf at aaa
-  ring_nf
-  norm_cast at *
-  rw [Nat.sub_mul] at aaa
-  simp at aaa
+  simp [← Nat.pow_add, ← Nat.mul_two, Nat.sub_mul] at aaa
   norm_cast at aaa
 
 theorem toInt_twoPow_of_lt {w i : Nat} (h : i + 1 < w) :
