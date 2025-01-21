@@ -430,9 +430,11 @@ theorem toNat_mul_toNat_lt {x y : BitVec w} : x.toNat * y.toNat < 2 ^ (w * 2) :=
   exact Nat.mul_lt_mul_of_le_of_lt (by omega) (by omega) (by omega)
 
 theorem umul_overflow_eq {w : Nat} (x y : BitVec w) :
-    umul_overflow x y ↔ ((0 < w) ∧ BitVec.twoPow (w * 2) w ≤ x.zeroExtend (w * 2) * y.zeroExtend (w * 2)) := by
-  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq, BitVec.truncate_eq_setWidth, BitVec.le_def,
-    BitVec.toNat_twoPow, BitVec.toNat_mul, BitVec.toNat_setWidth, Nat.mul_mod_mod, Nat.mod_mul_mod]
+    umul_overflow x y ↔
+      0 < w ∧ BitVec.twoPow (w * 2) w ≤ x.zeroExtend (w * 2) * y.zeroExtend (w * 2) := by
+  simp only [umul_overflow, ge_iff_le, decide_eq_true_eq, BitVec.truncate_eq_setWidth,
+    BitVec.le_def, BitVec.toNat_twoPow, BitVec.toNat_mul, BitVec.toNat_setWidth,
+    Nat.mul_mod_mod, Nat.mod_mul_mod]
   by_cases w0 : w = 0
   · subst w0
     decide +revert
