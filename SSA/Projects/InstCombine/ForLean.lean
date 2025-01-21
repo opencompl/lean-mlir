@@ -252,7 +252,7 @@ theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
           simp
           omega
         · rw [Int.mul_comm]
-          have := @Int.mul_neg_of_pos_of_neg (a := y) (b := x) (by omega) (by omega)
+          have : y * x < 0 := Int.mul_neg_of_pos_of_neg (by omega) (by omega)
           simp
           omega
         · exact mul_le_mul_pos_neg (by omega) (by omega) (by omega) (by omega)
