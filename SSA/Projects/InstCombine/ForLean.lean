@@ -390,8 +390,10 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
   simp only [w0, false_or]
   unfold BitVec.intMin BitVec.intMax
   simp only [BitVec.sle, BitVec.toInt_mul, decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
-  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega), toInt_twoPow_of_eq (by omega), ← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-  norm_cast
+
+  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
+    BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
+    toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega)]
   rw [←Nat.mul_two]
   rw [bmod_eq_iff_of_lt_of_lt
       (by
@@ -399,10 +401,9 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
          push_cast
          rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega), Int.mul_comm]
          have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
-           simp only [neg_lt_neg_iff]
+           rw [neg_lt_neg_iff]
            norm_cast
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
-         norm_cast
          have := le_toInt_mul_toInt x y
          norm_cast at *
          rw [Int.mul_comm]
@@ -412,12 +413,10 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
         ring_nf
         push_cast
         apply Int.mul_lt_mul_of_pos_right (by
-          norm_cast
           have := toInt_mul_toInt_lt y x
           norm_cast at *
           have as : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := by
            apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
-          norm_cast at *
           have asr := @Int.lt_of_le_of_lt (x.toInt * y.toInt) (2 ^ (w * 2 - 2)) (2 ^ (w * 2 - 1))
             (by rw [Int.mul_comm] at this; norm_cast)
             (by rw [Int.mul_comm] at this; norm_cast)
