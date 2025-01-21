@@ -310,6 +310,7 @@ theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
     ·
       simp at h1 h2
       sorry
+
 theorem toInt_mul_toInt_lt {w : Nat} (x y : BitVec w) :
     x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x; have xle := le_toInt x
