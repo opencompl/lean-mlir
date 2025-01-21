@@ -218,6 +218,10 @@ theorem mul_le_mul_neg {a b c d : Int}
   rw [Int.mul_comm (a:= d)] at h
   apply h
 
+theorem mul_le_mul_pos_neg {a b c d : Int}
+    (hac : a ≤ c) (hbd : b < d) (hb : b < 0) (hc : 0 < c) : a * b ≤ c * d := by
+  sorry
+
 theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     -(s * s) ≤ x * y := by
   cases' s with n
@@ -237,54 +241,23 @@ theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
 
 theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y ≤ s * s := by
-  by_cases s0 : s = 0
-  · subst s0
-    simp
-    omega
-  have hs : -(s:Int) < 0 := by omega
-  have hs : 0 < s := by omega
-  have hss : 0 < (s* s) := by
-    have aas :=  @Int.mul_self_lt_mul_self 0 s (by omega) (by omega)
-    simp at aas
-    norm_cast at aas
-
-  have hss : -((s:Int) * s) < 0 := by
-    have ara := (@Int.neg_neg_iff_pos (s*s)).mpr (by omega)
-    apply ara
-  by_cases h4 : x = 0
-  ·
-    subst h4
-    simp at *
-    omega
-  by_cases h4 : y = 0
-  ·
-    subst h4
-    simp at *
-    omega
-  by_cases h1 : 0 < x
-  ·
-    by_cases h2 : 0 < y
-    ·
-      have jrk := @Int.mul_lt_mul x y s s (by omega) (by omega) (by omega) (by omega)
-      omega
-    · simp at h1 h2
-      have aar : x * y < 0 := by
-        have pp := @Int.mul_neg_of_pos_of_neg x y (by omega) (by omega)
-        apply pp
-      omega
-  ·
-    by_cases h2 : 0 < y
-    · simp at h1 h2
-      have aar : x * y < 0 := by
-        have pp := @Int.mul_neg_of_pos_of_neg y x (by omega) (by omega)
-        rw [Int.mul_comm]
-        apply pp
-      omega
-    ·
-      simp at h1 h2
-      have hpos : 0 ≤ x * y := by
-        sorry
-      sorry
+  cases' s with n
+  · simp; omega
+  · have := @Int.mul_pos (n + 1) (n + 1) (by omega) (by omega)
+    by_cases hx₀ : x = 0
+    · subst hx₀; simp; omega
+    · by_cases hy₀ : y = 0
+      · subst hy₀; simp; omega
+      · by_cases hx : 0 < x <;> by_cases hy : 0 < y
+        · push_cast
+          apply @Int.mul_le_mul (a := x) (b :=y) (c :=(n + 1)) (d := (n + 1)) (by omega) (by omega) (by omega) (by omega)
+        · have := @Int.mul_neg_of_pos_of_neg (a := x) (b := y) (by omega) (by omega)
+          simp_all; omega
+        · rw [Int.mul_comm]
+          have := @Int.mul_neg_of_pos_of_neg (a := y) (b := x) (by omega) (by omega)
+          simp_all; omega
+        · have := @mul_le_mul_pos_neg (a := x) (b :=y) (c :=(n + 1)) (d := (n + 1)) (by omega) (by omega) (by omega) (by omega)
+          simp_all
 
 theorem toInt_mul_toInt_lt {x y : BitVec w} : x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x; have xle := le_toInt x
