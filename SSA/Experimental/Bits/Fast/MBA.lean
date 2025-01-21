@@ -28,9 +28,13 @@ def Factor.numVars : Factor → Nat
 @[simp]
 theorem Factor.numVars_term : (Factor.var n).numVars = n + 1 := rfl
 
-def Env (w : Nat) := List (BitVec w)
-def Env.getLsb (env : Env w) : Env 1 := env.map <| fun x => BitVec.ofBool <| x.getLsbD 0
-def Env.getNonLsbs (env : Env w) : Env (w-1) := env.map <| fun x => x.extractLsb' 1 (w-1)
+abbrev Env (w : Nat) := List (BitVec w)
+def Env.getLsb {w : Nat} (env : Env w) : Env 1 := env.map <| fun x => BitVec.ofBool <| x.getLsbD 0
+def Env.getNonLsbs {w : Nat} (env : Env w) : Env (w-1) := env.map <| fun x => x.extractLsb' 1 (w-1)
+
+@[simp]
+theorem Env.getLsb_getElem {env : Env w} (n : Nat) : (Env.getLsb env)[n]? = (env[n]?).map (fun (x : BitVec w) => BitVec.ofBool (x.getLsbD 0)) := by
+  simp [Env.getLsb]
   
 def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w 
 | .var n => xs.getD n (0#w)
@@ -40,22 +44,8 @@ def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w
 | .not x => ~~~ (x.reflect xs)
 
 
-def Factor.denote {w : Nat} (xs : Env w) (f : Factor) : Int := 
-  match f with 
-  | .var n => xs.getD n (0#w) |>.toInt 
-  | .and x y => (x.denote xs) && (y.denote xs)
 
-def Factor.denote_eq_toInt_reflect {w : Nat} (xs : Env w) (f : Factor) : f.denote xs = (f.reflect xs |>.toInt) := by sorry
-
-
-/-- Split a denote at an env intoa denote at the LSB and the denote at the non-Lsbs -/
-theorem Factor.denote_eq_add_denote_getLsb_denote_getNonLsbs (x : Factor) (xs : Env w) : 
-    x.denote env = 2 * x.denote xs.getNonLsbs  + x.denote xs.getLsb := by
-  induction x generalizing xs 
-  case var n => sorry
-  case and x y hx hy =>
-  sorry
-
+def Factor.denote {w : Nat} (xs : Env w) (f : Factor) : Int := f.reflect xs |>.toInt
 
 
 /--
@@ -65,6 +55,18 @@ We need `Factor.reflect` to def-eq-unify with the user's given goal state.
 We show their equivalence to allow us to decide on `denoteFin`, and to use this when proving facts about `denote`.
 -/
 def EnvFin (w : Nat) (n : Nat) := Fin n → (BitVec w)
+def EnvFin.getLsb {w : Nat} (env : EnvFin w n) : EnvFin 1 n := fun n => BitVec.ofBool <| (env n).getLsbD 0
+def EnvFin.getNonLsbs {w : Nat} (env : EnvFin w n) : EnvFin (w-1) n := fun n => (env n).extractLsb' 1 (w-1)
+
+/-- Using 'env.getLsb' shortens all bitvectors to be one-bit, and so calling 'getLsbD' on this environment will only return the lowest bit if available -/
+@[simp]
+theorem EnvFin.getLsbD_geLsb {w : Nat} (env : EnvFin w n) (bit : Nat) : (env.getLsb i).getLsbD bit = 
+    if bit = 0 then (env i).getLsbD 0 else false := by 
+  rcases bit with rfl | bit 
+  · simp [EnvFin.getLsb]
+  · simp
+
+
 
 def Factor.reflectFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : BitVec w := 
   match f with
@@ -135,6 +137,47 @@ theorem Factor.reflect_width_zero  (f : Factor) (env : Env 0) : f.reflect env = 
 @[simp]
 theorem Factor.denote_width_zero  (f : Factor) (env : Env 0) : f.denote env = 0 := by
   simp [denote]
+
+
+@[simp]
+theorem Factor.reflectFin_width_zero  (f : Factor) (env : EnvFin 0 f.numVars) : f.reflectFin env = 0#0 := by
+  apply Subsingleton.elim
+
+theorem Factor.reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs {w : Nat} {x : Factor} {env : EnvFin w x.numVars} :
+    (x.reflectFin env).getLsbD i = if i = 0 then ((x.reflectFin env.getLsb).getLsbD 0) else (x.reflectFin env.getNonLsbs).getLsbD (i - 1) := by
+  rcases i with rfl | i 
+  · simp
+    induction x 
+    case var n => 
+      simp [reflectFin]
+    case and x y hx hy =>
+      simp [reflectFin]
+      simp [hx, hy]
+      rfl
+    case or x y hx hy =>
+      simp [reflectFin]
+      simp [hx, hy]
+      rfl
+    case xor x y hx hy =>
+      simp only [reflectFin, BitVec.getLsbD_xor]
+      simp only [hx, hy]
+      rfl
+    case not x hx  =>
+      simp only [reflectFin, BitVec.getLsbD_not]
+      intros h
+
+  · simp
+
+
+
+
+/-- Split a denote at an env intoa denote at the LSB and the denote at the non-Lsbs -/
+theorem Factor.denote_eq_add_denote_getLsb_denote_getNonLsbs (x : Factor) (xs : Env w) : 
+    x.denote env = 2 * x.denote xs.getNonLsbs  + x.denote xs.getLsb := by
+  induction x generalizing xs 
+  case var n => sorry
+  case and x y hx hy =>
+    simp [denote, reflect]
 
 structure Term where 
   c : Int
