@@ -336,8 +336,61 @@ theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
   simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, h]
 
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
-  simp only [BitVec.twoPow]
-  sorry
+  by_cases w0 : w = 0
+  · subst w0
+    decide
+  · have h1gt : 1 < 2 ^ w := by
+      rw [← Nat.pow_zero (n := 2)]
+      rw [Nat.pow_lt_pow_iff_right (by omega)]
+      omega
+    simp [BitVec.twoPow]
+    by_cases hw : 1 < w
+    · have h1 : (1#w).toInt = 1 := by
+        unfold BitVec.toInt
+        simp
+        rw [Nat.mod_eq_of_lt (by omega)]
+        by_cases hw : 1 < w
+        · simp [hw]
+          rw [← Nat.pow_one (a := 2)]
+          norm_cast
+          have hw1 : (2 ^ 1) ^ w = 2 ^ w := by simp
+          rw [hw1]
+          have h2 : 2 ^ 1 < 2 ^ w := by
+            rw [Nat.pow_lt_pow_iff_right (by omega)]
+            omega
+          simp only [show 2 ^ 1 < 2 ^ w by omega]
+          simp
+          norm_cast
+          rw [Nat.mod_eq_of_lt (by sorry)]
+        · omega
+      rw [bmod_eq_iff_of_lt_of_lt]
+      · rw [Nat.shiftLeft_eq]
+        rw [Nat.mod_eq_of_lt (by omega)]
+        simp
+        omega
+      · simp [h1]
+        norm_cast
+        rw [Int.subNatNat_eq_coe]
+        rw [Nat.shiftLeft_eq]
+        rw [Nat.mod_eq_of_lt (by omega)]
+        simp [Int.sub_mul]
+        norm_cast
+        rw [Nat.two_pow_pred_mul_two (by omega)]
+        rw [← Nat.mul_two]
+        omega
+      · simp [h1]
+        norm_cast
+        rw [Int.subNatNat_eq_coe]
+        rw [Nat.shiftLeft_eq]
+        rw [Nat.mod_eq_of_lt (by omega)]
+        simp [Int.sub_mul]
+        norm_cast
+        rw [Nat.two_pow_pred_mul_two (by omega)]
+        rw [Int.subNatNat_eq_coe]
+        omega
+    · have hw' : w = 1 := by omega
+      subst hw'
+      simp
 
 theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) (h₂ : w + 1 < w₂) :
     (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
