@@ -361,7 +361,7 @@ theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 
           simp only [show 2 ^ 1 < 2 ^ w by omega]
           simp
           norm_cast
-          rw [Nat.mod_eq_of_lt (by sorry)]
+          rw [Nat.mod_eq_of_lt (by omega)]
         · omega
       rw [bmod_eq_iff_of_lt_of_lt]
       · rw [Nat.shiftLeft_eq]
