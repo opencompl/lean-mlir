@@ -159,10 +159,6 @@ canonicalize according to the *left* operation, meaning we treat the entire rhs
 as an atom. This is still useful, as it will pull out an occurence of the rhs
 in the lhs (if present) to the front (such an occurence would be the common
 expression).
-
-Also note that the simproc will throw an error when attempting to canonicalize
-an operation that is not associative and commutative, rather than silently
-ignoring such expressions.
 -/
 def canonicalizeWithSharing : Simp.Simproc := fun eq => do
   let_expr Eq _ lhs rhs := eq | return .continue
