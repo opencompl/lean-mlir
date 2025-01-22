@@ -276,13 +276,14 @@ theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 
     · subst w1
       decide
     · have : 1 < 2 ^ w := Nat.one_lt_two_pow (by omega)
-      simp [BitVec.twoPow]
+      simp only [BitVec.twoPow, BitVec.toInt_sub, BitVec.toInt_shiftLeft, BitVec.toNat_ofNat,
+        Int.bmod_sub_bmod_congr]
       rw [toInt_one (by omega), Nat.shiftLeft_eq, Nat.mod_eq_of_lt (by omega), one_mul]
       norm_cast
-      rw [Int.subNatNat_eq_coe, Nat.cast_pow, Nat.cast_ofNat,]
+      rw [Int.subNatNat_eq_coe]
       rw [bmod_eq_iff_of_lt_of_lt]
       · norm_cast
-        rw [Int.subNatNat_eq_coe, Nat.cast_pow, Nat.cast_ofNat]
+        rw [Int.subNatNat_eq_coe]
         have : - 2 ^ w < 0  := by norm_cast; omega
         have : 0 <  (2 ^ (w - 1) - 1) * 2 := by
           simp [Nat.sub_mul]; omega
