@@ -201,37 +201,22 @@ theorem toInt_twoPow {w i : Nat} :
           omega
         simp [sl, ha]
 
-
-theorem mul_le_mul_of_le_of_lt (hac : a ≤ c) (hbd : b < d) (hc : 0 < c) :
-    a * b < c * d := by
-  have h0 := Nat.mul_le_mul_right b hac
-  have h1 := Nat.mul_lt_mul_of_pos_left hbd hc
-  have h2 := Nat.lt_of_le_of_lt h0 h1
-  exact h2
-
 theorem mul_le_mul_neg {a b c d : Int}
-    (hac : a ≤ c) (hbd : d ≤ b) (hb : 0 ≤ b) (hc : c ≤ 0) : a * b ≤ c * d := by
-  have hac := Int.mul_le_mul_of_nonneg_right hac hb
-  have hbd := Int.mul_le_mul_of_nonpos_right hbd hc
-  rw [Int.mul_comm] at hbd
-  have h := Int.le_trans hac hbd
-  rw [Int.mul_comm (a:= d)] at h
-  exact h
+    (hac : a ≤ c) (hbd : d ≤ b) (hb : 0 ≤ b) (hc : c ≤ 0) : a * b ≤ c * d :=
+  Int.le_trans (Int.mul_le_mul_of_nonneg_right hac hb) (Int.mul_le_mul_of_nonpos_left hc hbd)
 
 theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     -(s * s) ≤ x * y := by
-  cases' s with n
-  · simp; omega
-  · have : 0 < (n + 1) * (n + 1) := Nat.mul_pos (by omega) (by omega)
-    by_cases 0 ≤ x <;> by_cases 0 ≤ y
-    · have : 0 ≤ x * y := Int.mul_nonneg (by omega) (by omega)
-      omega
-    · rw [← Int.neg_mul, Int.mul_comm (a := x)]
-      exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
-    · rw [← Int.neg_mul]
-      exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
-    · have : 0 < x * y := Int.mul_pos_of_neg_of_neg (by omega) (by omega)
-      omega
+  have : 0 * 0 ≤ s * s := Nat.mul_le_mul (by omega) (by omega)
+  by_cases 0 ≤ x <;> by_cases 0 ≤ y
+  · have : 0 ≤ x * y := Int.mul_nonneg (by omega) (by omega)
+    omega
+  · rw [← Int.neg_mul, Int.mul_comm (a := x)]
+    exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
+  · rw [← Int.neg_mul]
+    exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
+  · have : 0 < x * y := Int.mul_pos_of_neg_of_neg (by omega) (by omega)
+    omega
 
 theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y ≤ s * s := by
