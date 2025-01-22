@@ -94,15 +94,6 @@ where
         incrVar coe e
   | e => incrVar coe e
 
-  /-
-  if `e` is application of `op` then
-    recursively call with operands
-  else
-    increment variable index of `e`
-
-  See AC.toACExpr.toPreExpr for inspiration
-  -/
-
 structure SharedCoefficients where
   common : CoefficientsMap := {}
   x : CoefficientsMap
