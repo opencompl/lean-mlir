@@ -150,20 +150,49 @@ def proveEqualityByAC (u : Level) (ty : Expr) (x y : Expr) : MetaM Expr := do
   let expectedType := mkApp3 (mkConst ``Eq [u]) ty x y
   let goal ← mkFreshMVarId
   let proof ← mkFreshExprMVarWithId goal expectedType
+  -- FIXME: this will likely fail to close the goal when the operation is not
+  --   actually associative and commutative. We likely want some `try`/`catch`
+  --   behaviour here, with a silently ignoring `Simp.Step.continue`
   AC.rewriteUnnormalizedRefl goal -- invoke `ac_rfl`
   instantiateMVars proof
 
 /--
-Given an operation `op : $ty → $ty → $ty` and an expression `eq`, which can be
-decomposed into `lhs = rhs` where `lhs, rhs : $ty` and `ty : Sort $u`,
-canonicalize any top-level applications of the given associative and commutative
-operation `op` on both the `lhs` and the `rhs` such that the final expression is:
+Given an expression `lhs = rhs`, canonicalize top-level applications of some
+associative and commutative operation  on both the `lhs` and the `rhs` such that
+the final expression is:
   `$common ⋅ $lhs' = $common ⋅ $rhs'`
-
 That is, in a way that exposes terms that are shared between the lhs and rhs.
+
+Note that if both lhs and rhs are applications of a *different* operation, we
+canonicalize according to the *left* operation, meaning we treat the entire rhs
+as an atom. This is still useful, as it will pull out an occurence of the rhs
+in the lhs (if present) to the front (such an occurence would be the common
+expression).
+
+Also note that the simproc will throw an error when attempting to canonicalize
+an operation that is not associative and commutative, rather than silently
+ignoring such expressions.
 -/
-def canonicalizeWithSharing (u : Level) (ty op eq : Expr) : SimpM Simp.Step := do
+def canonicalizeWithSharing : Simp.Simproc := fun eq => do
   let_expr Eq _ lhs rhs := eq | return .continue
+  withTraceNode  `Meta.AC (fun _ => pure m!"canonicalizeWithSharing: {eq}") <| do
+
+  let ty ← inferType lhs
+  let u ← match ← inferType ty with
+    | Expr.sort u => pure u
+    | tyOfTy => do
+      let u ← mkFreshLevelMVar
+      throwError "{ty} {← mkHasTypeButIsExpectedMsg tyOfTy (.sort u)}"
+
+  let op ← match lhs with
+    | AC.bin op _ _ => pure op
+    | _             => let AC.bin op .. := rhs | return .continue
+                       pure op
+
+  -- Check that `op` is associative and commutative, so that we don't get
+  -- inscrutable errors later
+  let some _ ← AC.getInstance ``Std.Associative #[op] | return .continue
+  let some _ ← AC.getInstance ``Std.Commutative #[op] | return .continue
 
   VarStateM.run' <| do
     let lCoe ← computeCoefficients op lhs
@@ -198,35 +227,22 @@ def canonicalizeWithSharing (u : Level) (ty op eq : Expr) : SimpM Simp.Step := d
       mkAppN (mkConst ``Grind.eq_congr [u])
         #[ty, lhs, rhs, lNew, rNew, lEq, rEq]
 
+    trace[Meta.AC] "rewrote to:\n\t{expr}"
     return Simp.Step.continue <| some {
       expr := expr
       proof? := some proof
     }
 
-def canonicalizeBVAdd : Simp.Simproc := fun e => do
-  let w ← mkFreshExprMVar (mkConst ``Nat [])          -- `w` is a metavar
-  let instAdd := mkApp (mkConst ``BitVec.instAdd) w   -- instAdd is `@BitVec.instAdd ?w`
-  let bv := mkApp (mkConst ``BitVec) w                -- bv is `BitVec ?w`
-  let instHAdd := mkApp2 (mkConst ``instHAdd [0]) bv instAdd -- instHAdd is `instHAdd.{0} $bv $instAdd`
-  let op := mkApp4 (.const ``HAdd.hAdd [0,0,0]) bv bv bv instHAdd
-  canonicalizeWithSharing 1 bv op e
+def rewriteUnnormalizedWithSharing (mvarId : MVarId) : MetaM MVarId := do
+  let simpCtx ← Simp.mkContext
+      (simpTheorems  := {})
+      (congrTheorems := (← getSimpCongrTheorems))
+      (config        := Simp.neutralConfig)
+  let tgt ← instantiateMVars (← mvarId.getType)
+  let (res, _) ← Simp.main tgt simpCtx (methods := { post := canonicalizeWithSharing })
+  applySimpResultToTarget mvarId tgt res
 
-def canonicalizeBVMul : Simp.Simproc := fun e => do
-  let w ← mkFreshExprMVar (mkConst ``Nat [])
-  let inst := mkApp (mkConst ``BitVec.instMul) w
-  let bv := mkApp (mkConst ``BitVec) w
-  let instH := mkApp2 (mkConst ``instHMul [0]) bv inst
-  let op := mkApp4 (.const ``HMul.hMul [0,0,0]) bv bv bv instH
-  canonicalizeWithSharing 1 bv op e
-
-simproc↑ acNormalizeBVAddWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) :=
-  canonicalizeBVAdd
-
-
-simproc↑ acNormalizeBVMulWithSharing (@Eq (BitVec _) (_ * _) (_ * _)) :=
-  canonicalizeBVMul
-
-
-example (x y z : BitVec w) :
-    x + y + (z + z + y) = y + (x + x + x) := by
-  simp
+elab "ac_nf!" : tactic => do
+  -- FIXME: this currently *will* throw inscrutable errors when called on an equality where the
+  -- top-level operations is *not* associative and commutative
+  Tactic.liftMetaTactic1 fun goal => rewriteUnnormalizedWithSharing goal
