@@ -390,24 +390,24 @@ theorem Eqn.denoteFin_eq_add {w : Nat} (eqn : Eqn) (env : EnvFin (w + 1) eqn.num
     rw [Int.mul_add]
     ac_nf
 
-/- To evaluate `e.denote`, one can equally well evaluate `e.denoteFin` -/
+/-- To evaluate `e.denote`, one can equally well evaluate `e.denoteFin` -/
 theorem Eqn.denoteFin_eq_denote {e : Eqn} {xs : List (BitVec w)} {xsFin : EnvFin w e.numVars} 
     (h : ∀ (i : Fin e.numVars), xs[i]?.getD 0#w = xsFin i) :
     e.denoteFin xsFin = e.denote xs := by 
   induction e 
   case nil => simp [Eqn.denoteFin]
   case cons t es ih => 
-    simp [Eqn.denoteFin]
-    rw [Term.denoteFin_eq_denote (xs := xs)]
-    · simp
-      rw [ih]
-      · intros i 
-        rw [← h]
-        simp
-    · intros i
-      rw [← h]
-      simp
-       
+    simp
+    rw [ih]
+    · congr 
+      apply Term.denoteFin_eq_denote
+      intros i 
+      specialize h ⟨i, by simp; omega⟩
+      assumption
+    · intros i 
+      specialize h ⟨i, by simp; omega⟩
+      assumption
+
 @[simp]
 theorem Eqn.reflect_width_zero  (es : Eqn) (env : Env 0) : 
     Eqn.reflect es env = 0 := by 
