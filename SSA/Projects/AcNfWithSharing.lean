@@ -232,4 +232,5 @@ def rewriteUnnormalizedWithSharing (mvarId : MVarId) : MetaM MVarId := do
 elab "ac_nf!" : tactic => do
   Tactic.liftMetaTactic1 fun goal => rewriteUnnormalizedWithSharing goal
 
-macro "ac_rfl!" : tactic => `(tactic| (ac_nf!; rfl))
+example {x y z v : BitVec w} : x + y + z = x + y + v := by
+  ac_nf!
