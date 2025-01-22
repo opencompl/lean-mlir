@@ -104,8 +104,8 @@ def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoeffi
         let com := min xCnt yCnt
         res := {
           common := res.common.insert idx com
-          x := x.insert idx (xCnt - com)
-          y := y.insert idx (yCnt - com)
+          x := res.x.insert idx (xCnt - com)
+          y := res.y.insert idx (yCnt - com)
         }
     | _, _ => pure ()
 
