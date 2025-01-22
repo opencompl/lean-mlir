@@ -13,21 +13,21 @@ structure VarState where
   StateM S α := S -> S × α
 -/
 
-abbrev VarStateM  := StateM VarState
-abbrev VarReaderM := ReaderM VarState /- VarReaderM α = VarState → α -/
+abbrev VarStateT  := StateT VarState
+abbrev VarReaderT := ReaderT VarState /- VarReaderT m α = VarState → m α -/
 
-def VarStateM.run' (x : VarStateM α) (s : VarState := {}) : α :=
+def VarStateT.run' {m} [Functor m] (x : VarStateT m α) (s : VarState := {}) : m α :=
   /-
   let x : VarState → (α × VarState) := x
   (x s).1
   -/
   StateT.run' x s
 
-instance : MonadLift VarReaderM VarStateM where
-  monadLift x s := (x s, s)
+instance [Monad m] : MonadLift (VarReaderT m) (VarStateT m) where
+  monadLift x s := x s >>= (pure ⟨·, s⟩)
 
-def VarStateM.exprToVar (e : Expr) : VarStateM VarIndex := fun state =>
-  match state.varIndices[e]? with
+def VarStateT.exprToVar [Monad m] (e : Expr) : VarStateT m VarIndex := fun state =>
+  return match state.varIndices[e]? with
   | some idx => (idx, state)
   | none =>
     let { varIndices, nextIndex } := state
@@ -40,7 +40,7 @@ def VarStateM.exprToVar (e : Expr) : VarStateM VarIndex := fun state =>
 /-
 The monadic version is just an abstracted version of the following signature
 
-def VarStateM.exprToVar (state : VarState) (e : Expr) : VarState ×  VarIndex := ...
+def VarStateT.exprToVar (state : VarState) (e : Expr) : VarState ×  VarIndex := ...
 -/
 
 abbrev Coefficients := Std.HashMap VarIndex Nat
@@ -59,7 +59,7 @@ c => 1
 
 Any compound expression which is not an application of the given `op`
 -/
-def VarStateM.computeCoefficients (op : Expr) (e : Expr) : VarStateM Coefficients := do
+def VarStateT.computeCoefficients [Monad m] (op : Expr) (e : Expr) : VarStateT m Coefficients := do
   sorry
   /-
   if `e` is application of `op` then
@@ -82,7 +82,7 @@ def SharedCoefficients.compute (x y : Coefficients) : SharedCoefficients :=
   sorry
 
 /-- Compute the canonical expression for a given set of coefficients. -/
-def Coefficients.toExpr : Coefficients → VarReaderM Expr :=
+def Coefficients.toExpr : Coefficients → VarReaderT m Expr :=
   sorry
 
 #check BitVec.instAdd
@@ -121,13 +121,25 @@ theorem eq_of_eq_of_eq (x y x' y' : BitVec w) (hx : x = x') (hy : y = y') :
 -- theorem foo.{u} : Type u = Sort (u+1) := by
 --   rfl
 
+open VarStateT Lean.Meta Lean.Elab Term
+
+/-- Given two expressions `x, y : $ty`, where `ty : Sort $u`, which are equal
+up to associativity and commutativity, construct and return a proof of `x = y`.
+
+Uses `ac_nf` internally to contruct said proof. -/
+def proofEqualityByAC (u : Level) (ty : Expr) (x y : Expr) : MetaM Expr := do
+  let expectedType := mkApp3 (mkConst ``Eq [u]) ty x y
+  let goal ← mkFreshMVarId
+  let proof ← mkFreshExprMVarWithId goal expectedType
+  AC.rewriteUnnormalizedRefl goal -- invoke `ac_rfl`
+  instantiateMVars proof
+
 #check (Type : Type 1)
 #check ()
 
 #check Grind.eq_congr
 #check Eq
 
-open VarStateM Lean.Meta in
 simproc acNormalizeEqWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) := fun e => do
   let_expr Eq _ x y := e          | return .continue
 
@@ -138,27 +150,25 @@ simproc acNormalizeEqWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) := fun e => do
 
   let hAdd := mkApp4 (mkConst ``HAdd.hAdd) bv bv bv instHAdd
 
-  VarStateM.run' <| do
+  VarStateT.run' <| do
     /- Now we have access to the `VarState` state, and can modify it!
-        Note that VarStateM.run' gives an initial state as the empty hashmap -/
+        Note that VarStateT.run' gives an initial state as the empty hashmap -/
     let xCoe ← computeCoefficients hAdd x
-    -- `let x ← m` for some `m : VarStateM`, means:
-    -- `let (x, newState) := m (currentState)`
+    -- `let x ← mx` for some `mx : VarStateT`, means:
+    -- `let (x, newState) := mx (currentState)`
 
     let yCoe ← computeCoefficients hAdd y
 
     let ⟨commonCoe, xCoe, yCoe⟩ := SharedCoefficients.compute xCoe yCoe
 
-    let commonExpr ← commonCoe.toExpr
-    let xNew ← xCoe.toExpr
+    let commonExpr : Expr ← commonCoe.toExpr
+    let xNew : Expr ← xCoe.toExpr
     let xNew := mkApp2 hAdd commonExpr xNew
-    let yNew ← yCoe.toExpr
+    let yNew : Expr ← yCoe.toExpr
     let yNew := mkApp2 hAdd commonExpr yNew
 
-    let xEq : Expr /- of type `$x = $xNew` -/ :=
-      sorry /- invoke ac_rfl -/
-    let yEq : Expr /- of type `$y = $yNew` -/ :=
-      sorry /- invoke ac_rfl -/
+    let xEq : Expr /- of type `$x = $xNew` -/ ← proofEqualityByAC 1 bv x y
+    let yEq : Expr /- of type `$y = $yNew` -/ ← proofEqualityByAC 1 bv x y
 
     let expr : Expr /- `$xNew = $yNew` -/ :=
       -- @Eq (BitVec ?w) _ _
@@ -168,7 +178,7 @@ simproc acNormalizeEqWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) := fun e => do
       mkAppN (mkConst ``Grind.eq_congr [1])
         #[bv, x, y, xNew, yNew, xEq, yEq]
 
-    pure <| pure <| Simp.Step.continue <| some {
+    return Simp.Step.continue <| some {
       expr := expr
       proof? := some proof
     }
