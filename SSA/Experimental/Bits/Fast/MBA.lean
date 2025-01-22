@@ -229,11 +229,35 @@ theorem Factor.reflectFin_eq_reflectFin_getLsb_reflectFin_getNonLsbs
   rw [BitVec.getLsbD_concat]
 
 
+/-- Build an 'EnvFin' from 'Env' -/
 def EnvFin.ofEnv (env : Env w) (n : Nat) : EnvFin w n := 
   fun i => env.getD i 0#w
 
+/-- Build an Env from an 'EnvFin' -/
+def Env.ofEnvFin (envFin : EnvFin w n) : Env w := (List.finRange n).map envFin
+
+@[simp]
+theorem Env.length_ofEnvFin (envFin : EnvFin w n) : 
+  List.length (Env.ofEnvFin envFin) = n := by simp [ofEnvFin]
+
 @[simp]
 def EnvFin.get_ofEnv (env : Env w) (n : Nat) (i : Fin n) : (EnvFin.ofEnv env n) i = env.getD i 0#w := rfl
+
+@[simp]
+def Env.get_ofEnvFin (envFin : EnvFin w n) (i : Fin n) : 
+    (Env.ofEnvFin envFin)[i] = envFin i := by simp [ofEnvFin]
+
+@[simp]
+def Env.getElem_ofEnvFin (envFin : EnvFin w n) (i : Nat) (h : i < n) : 
+    (Env.ofEnvFin envFin)[i]'(by simp [Env.length_ofEnvFin, h]) = envFin ⟨i, by omega⟩ := 
+  by simp [ofEnvFin]
+
+
+@[simp]
+def Env.getD_getElem?_ofEnvFin (envFin : EnvFin w n) (i : Nat) : 
+    (Env.ofEnvFin envFin)[i]?.getD (0#w) = if h : i < n then envFin ⟨i, h⟩ else 0#w := by 
+  rw [List.getD_getElem?]
+  by_cases h : i < n  <;> simp [h]
 
 theorem Factor.denote_eq_toNat_reflectFin {w : Nat} (xs : Env w) (f : Factor) : 
     f.denote xs = (f.reflectFin (EnvFin.ofEnv xs _)).toNat := by 
@@ -454,27 +478,34 @@ def Env.getLsb_eq_of_width_one (env : List (BitVec 1)) : Env.getLsb env = env :=
   simp [this]
 
 
-theorem Eqn.denote_hard_case_aux (eqn : Eqn) (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), Eqn.denoteFin eqn env1 = 0) :
+theorem Eqn.denote_hard_case_aux {eqn : Eqn}
+    (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), Eqn.denoteFin eqn env1 = 0) :
     ∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteFin env = 0 := by
   intros w
   induction w 
-  case zero => sorry
-  case succ w ih => sorry
-      
-      
+  case zero => simp
+  case succ w ih => 
+    intros env 
+    rw [Eqn.denoteFin_eq_add]
+    rw [h1]
+    simp
+    rw [ih]
+    simp
 
 
-theorem Eqn.denote_hard_case (e : Eqn) (h : ∀ (env1 : List (BitVec 1)), Eqn.denote e env1 = 0) :
+theorem Eqn.denote_hard_case_of_denote (e : Eqn) (h : ∀ (env1 : List (BitVec 1)), Eqn.denote e env1 = 0) :
     ∀ {w : Nat} (env : List (BitVec w)), e.reflect env = 0 := by
   intros w env 
-  induction w 
-  case zero => simp
-  case succ w ih =>
-    rw [Eqn.reflect_eq_ofInt_denote]
-    induction e 
-    case nil => simp
-    case cons t es ih =>
-    sorry
+  rw [Eqn.reflect_eq_ofInt_denote]
+  rw [← Eqn.denoteFin_eq_denote (xsFin := EnvFin.ofEnv env e.numVars) (h := by simp)]
+  rw [Eqn.denote_hard_case_aux]
+  · simp
+  · intros env1
+    let env1' := Env.ofEnvFin env1
+    specialize h env1'
+    rw [Eqn.denoteFin_eq_denote (xsFin := env1) (xs := env1')]
+    · exact h 
+    · simp [env1']
 
 /-
 instance decEqnDenoteFinWidth1 {e : Eqn} : Decidable (∀ env1 : Env (BitVec 1), Eqn.denoteFin e env1 = 0) := 
@@ -491,7 +522,7 @@ Central theorem: To decide if a bitvector equation is zero for all widths, it su
 theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (h : (∀ env1 : List (BitVec 1), Eqn.denote e env1 = 0)) : 
     ∀ (w : Nat) (env : List (BitVec w)), Eqn.reflect e env = 0 := by
   intros w env
-  rw [Eqn.denote_hard_case]
+  rw [Eqn.denote_hard_case_of_denote]
   exact h
 
 end MBA
