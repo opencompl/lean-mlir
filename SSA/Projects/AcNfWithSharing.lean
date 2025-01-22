@@ -10,9 +10,9 @@ structure VarState where
   varIndices : Std.HashMap Expr VarIndex := {}
   nextIndex : VarIndex := 0
 
-abbrev Coefficients := Std.HashMap VarIndex Nat
+abbrev CoefficientsMap := Std.HashMap VarIndex Nat
 
-/-! ### VarState Monad -/
+/-! ### VarState monadic boilerplate  -/
 
 abbrev VarStateM  := StateT VarState MetaM
 abbrev VarReaderM := ReaderT VarState MetaM
@@ -24,6 +24,13 @@ instance : MonadLift VarReaderM VarStateM where
   monadLift x s := x s >>= (pure ⟨·, s⟩)
 
 /-! ### Implementation -/
+
+/-- Return a list with all variable indices that have a mapping.
+
+Note that this is always a complete sequence `0, 1, ..., (n-1)`, without skipping
+numbers. -/
+def getAllIndices : VarReaderM (List VarIndex) := fun state =>
+  pure <| List.range state.nextIndex
 
 /-- Return the unique variable index for an expression.
 
@@ -55,13 +62,13 @@ c => 1
 
 Any compound expression which is not an application of the given `op`
 -/
-def VarStateM.computeCoefficients (op : Expr) (e : Expr) : VarStateM Coefficients :=
+def VarStateM.computeCoefficients (op : Expr) (e : Expr) : VarStateM CoefficientsMap :=
   go {} e
 where
-  incrVar (coe : Coefficients) (e : Expr) : VarStateM Coefficients := do
+  incrVar (coe : CoefficientsMap) (e : Expr) : VarStateM CoefficientsMap := do
     let idx ← exprToVar e
     return coe.alter idx (fun c => some <| (c.getD 0) + 1)
-  go (coe : Coefficients) : Expr → VarStateM Coefficients
+  go (coe : CoefficientsMap) : Expr → VarStateM CoefficientsMap
   | e@(AC.bin op' x y) => do
       if ← isDefEq op op' then
         let coe ← go coe x
@@ -81,18 +88,31 @@ where
   -/
 
 structure SharedCoefficients where
-  common : Coefficients
-  x : Coefficients
-  y : Coefficients
+  common : CoefficientsMap := {}
+  x : CoefficientsMap
+  y : CoefficientsMap
 
 /-- Given two sets of coefficients `x` and `y` (computed with the same variable
 mapping), extract the shared coefficients, such that `x` (resp. `y`) is the sum of
 coefficients in `common` and `x` (resp `y`) of the result. -/
-def SharedCoefficients.compute (x y : Coefficients) : SharedCoefficients :=
-  sorry
+def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoefficients := do
+  let mut res : SharedCoefficients := { x, y }
+
+  for idx in ← getAllIndices do
+    match x[idx]?, y[idx]? with
+    | some xCnt, some yCnt =>
+        let com := min xCnt yCnt
+        res := {
+          common := res.common.insert idx com
+          x := x.insert idx (xCnt - com)
+          y := y.insert idx (yCnt - com)
+        }
+    | _, _ => pure ()
+
+  return res
 
 /-- Compute the canonical expression for a given set of coefficients. -/
-def Coefficients.toExpr : Coefficients → VarReaderM Expr :=
+def Coefficients.toExpr : CoefficientsMap → VarReaderM Expr :=
   sorry
 
 open VarStateM Lean.Meta Lean.Elab Term
