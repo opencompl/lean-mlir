@@ -307,36 +307,30 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
                  res ≤ₛ (BitVec.intMax w).signExtend (w * 2)) := by
   simp only [smul_overflow, ge_iff_le, Bool.or_eq_false_iff, decide_eq_false_iff_not, not_le,
     not_lt]
-  by_cases w0 : w = 0
-  · subst w0
-    decide +revert
-  simp only [w0, false_or, BitVec.intMin, BitVec.intMax, BitVec.sle, BitVec.toInt_mul,
-    decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
-  rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
-    BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
-    toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega)]
-  rw [←Nat.mul_two]
-  rw [bmod_eq_iff_of_lt_of_lt (by
-        push_cast
-        rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
-        have as : -2 ^ (w * 2 - 1) < -(2 ^ (w * 2 - 2)) := by
-          rw [neg_lt_neg_iff]
-          norm_cast
-          apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
-        have := @le_toInt_mul_toInt w x y
-        omega
-      ) (by
-        push_cast
-        exact Int.mul_lt_mul_of_pos_right (by
-          have := @toInt_mul_toInt_lt w x y
-          have : 2 ^ (w * 2 - 2) < (2 ^ (w * 2 - 1)) := Nat.pow_lt_pow_of_lt (by omega) (by omega)
-          norm_cast at *
-          omega) (by omega)
-      )]
-  rw [toInt_twoPow_sub_one]
-  norm_cast at *
-  rw [Int.subNatNat_eq_coe]
-  omega
+  rcases w with _ | w
+  · decide +revert
+  · simp only [false_or, BitVec.intMin, BitVec.intMax, BitVec.sle, BitVec.toInt_mul,
+      decide_eq_true_eq, BitVec.ofNat_eq_ofNat]
+    have hlb : -((2 ^ ((w + 1) * 2 - 1) : Nat) * 2) ≤ x.toInt * y.toInt * 2 := by
+      rw [← Int.neg_mul, Int.mul_le_mul_iff_of_pos_right (by omega)]
+      have as : -2 ^ ((w + 1) * 2 - 1) < -(2 ^ ((w + 1) * 2 - 2)) := by
+        rw [neg_lt_neg_iff]
+        norm_cast
+        apply Nat.pow_lt_pow_of_lt (by omega) (by omega)
+      have := @le_toInt_mul_toInt (w + 1) x y
+      push_cast
+      omega
+    have hub : x.toInt * y.toInt * 2 < ((2 ^ ((w + 1) * 2 - 1): Nat) * 2) :=
+      Int.mul_lt_mul_of_pos_right (by
+        have := @toInt_mul_toInt_lt (w + 1) x y
+        have : 2 ^ ((w + 1) * 2 - 2) < (2 ^ ((w + 1)* 2 - 1)) := Nat.pow_lt_pow_of_lt (by omega) (by omega)
+        norm_cast at *
+        omega) (by omega)
+    rw [BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
+      BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
+      toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.mul_two,
+      bmod_eq_iff_of_lt_of_lt hlb hub, toInt_twoPow_sub_one]
+    omega
 
 theorem toNat_mul_toNat_lt {x y : BitVec w} : x.toNat * y.toNat < 2 ^ (w * 2) := by
   have := BitVec.isLt x; have := BitVec.isLt y
