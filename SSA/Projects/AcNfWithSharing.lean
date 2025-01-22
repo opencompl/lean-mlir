@@ -127,7 +127,7 @@ open VarStateT Lean.Meta Lean.Elab Term
 up to associativity and commutativity, construct and return a proof of `x = y`.
 
 Uses `ac_nf` internally to contruct said proof. -/
-def proofEqualityByAC (u : Level) (ty : Expr) (x y : Expr) : MetaM Expr := do
+def proveEqualityByAC (u : Level) (ty : Expr) (x y : Expr) : MetaM Expr := do
   let expectedType := mkApp3 (mkConst ``Eq [u]) ty x y
   let goal ← mkFreshMVarId
   let proof ← mkFreshExprMVarWithId goal expectedType
@@ -167,8 +167,8 @@ simproc acNormalizeEqWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) := fun e => do
     let yNew : Expr ← yCoe.toExpr
     let yNew := mkApp2 hAdd commonExpr yNew
 
-    let xEq : Expr /- of type `$x = $xNew` -/ ← proofEqualityByAC 1 bv x y
-    let yEq : Expr /- of type `$y = $yNew` -/ ← proofEqualityByAC 1 bv x y
+    let xEq : Expr /- of type `$x = $xNew` -/ ← proveEqualityByAC 1 bv x y
+    let yEq : Expr /- of type `$y = $yNew` -/ ← proveEqualityByAC 1 bv x y
 
     let expr : Expr /- `$xNew = $yNew` -/ :=
       -- @Eq (BitVec ?w) _ _
