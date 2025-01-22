@@ -253,62 +253,45 @@ theorem toInt_twoPow_of_eq {w i : Nat} (h : i + 1 = w) :
     (BitVec.twoPow w i).toInt = -(2 ^ i) := by
   simp [toInt_twoPow, Nat.shiftLeft_eq_mul_pow, show ¬(w ≤ i) by omega, h]
 
+@[simp]
+theorem toInt_one {w : Nat} (h : 1 < w ) : (1#w).toInt = 1 := by
+  have : 1 < 2 ^ w := Nat.one_lt_two_pow (by omega)
+  unfold BitVec.toInt
+  simp only [BitVec.toNat_ofNat, Int.ofNat_emod, Nat.cast_one, Nat.cast_pow, Nat.cast_ofNat]
+  rw [Nat.mod_eq_of_lt (by omega)]
+  by_cases hw' : 2 * 1 < 2 ^ w
+  · simp [hw', show 2 ^ 1 < 2 ^ w by omega, ↓reduceIte, Int.ofNat_emod, Nat.cast_one, Nat.cast_pow, Nat.cast_ofNat]
+    norm_cast
+    rw [Nat.mod_eq_of_lt (by omega)]
+  · simp only [not_lt] at hw'
+    have h2 : 2 * 1 = 2 ^ 1 := by simp
+    rw [h2, Nat.pow_le_pow_iff_right (a := 2) (by omega)] at hw'
+    omega
+
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
   by_cases w0 : w = 0
   · subst w0
     decide
-  · have h1gt : 1 < 2 ^ w := by
-      rw [← Nat.pow_zero (n := 2)]
-      rw [Nat.pow_lt_pow_iff_right (by omega)]
-      omega
-    simp [BitVec.twoPow]
-    by_cases hw : 1 < w
-    · have h1 : (1#w).toInt = 1 := by
-        unfold BitVec.toInt
-        simp
-        rw [Nat.mod_eq_of_lt (by omega)]
-        by_cases hw : 1 < w
-        · simp [hw]
-          rw [← Nat.pow_one (a := 2)]
-          norm_cast
-          have hw1 : (2 ^ 1) ^ w = 2 ^ w := by simp
-          rw [hw1]
-          have h2 : 2 ^ 1 < 2 ^ w := by
-            rw [Nat.pow_lt_pow_iff_right (by omega)]
-            omega
-          simp only [show 2 ^ 1 < 2 ^ w by omega]
-          simp
-          norm_cast
-          rw [Nat.mod_eq_of_lt (by omega)]
-        · omega
+  · by_cases w1 : w = 1
+    · subst w1
+      decide
+    · have : 1 < 2 ^ w := Nat.one_lt_two_pow (by omega)
+      simp [BitVec.twoPow]
+      rw [toInt_one (by omega), Nat.shiftLeft_eq, Nat.mod_eq_of_lt (by omega), one_mul]
+      norm_cast
+      rw [Int.subNatNat_eq_coe, Nat.cast_pow, Nat.cast_ofNat,]
       rw [bmod_eq_iff_of_lt_of_lt]
-      · rw [Nat.shiftLeft_eq]
-        rw [Nat.mod_eq_of_lt (by omega)]
-        simp
+      · norm_cast
+        rw [Int.subNatNat_eq_coe, Nat.cast_pow, Nat.cast_ofNat]
+        have : - 2 ^ w < 0  := by norm_cast; omega
+        have : 0 <  (2 ^ (w - 1) - 1) * 2 := by
+          simp [Nat.sub_mul]; omega
         omega
-      · simp [h1]
+      · rw [Int.sub_mul]
         norm_cast
-        rw [Int.subNatNat_eq_coe]
-        rw [Nat.shiftLeft_eq]
-        rw [Nat.mod_eq_of_lt (by omega)]
-        simp [Int.sub_mul]
-        norm_cast
-        rw [Nat.two_pow_pred_mul_two (by omega)]
-        rw [← Nat.mul_two]
+        rw [Nat.two_pow_pred_mul_two (by omega), Int.subNatNat_eq_coe]
         omega
-      · simp [h1]
-        norm_cast
-        rw [Int.subNatNat_eq_coe]
-        rw [Nat.shiftLeft_eq]
-        rw [Nat.mod_eq_of_lt (by omega)]
-        simp [Int.sub_mul]
-        norm_cast
-        rw [Nat.two_pow_pred_mul_two (by omega)]
-        rw [Int.subNatNat_eq_coe]
-        omega
-    · have hw' : w = 1 := by omega
-      subst hw'
-      simp
+
 
 theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) (h₂ : w + 1 < w₂) :
     (BitVec.twoPow w₁ w).signExtend w₂ = BitVec.twoPow w₂ w := by
