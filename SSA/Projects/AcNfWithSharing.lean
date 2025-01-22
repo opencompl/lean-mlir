@@ -2,30 +2,33 @@ import Lean
 
 open Lean Meta
 
+/-! ### Types -/
+
 abbrev VarIndex := Nat
 
 structure VarState where
   varIndices : Std.HashMap Expr VarIndex := {}
   nextIndex : VarIndex := 0
 
-/-
-  StateM S : Type → Type
-  StateM S α := S -> S × α
--/
+abbrev Coefficients := Std.HashMap VarIndex Nat
+
+/-! ### VarState Monad -/
 
 abbrev VarStateT  := StateT VarState
-abbrev VarReaderT := ReaderT VarState /- VarReaderT m α = VarState → m α -/
+abbrev VarReaderT := ReaderT VarState
 
 def VarStateT.run' {m} [Functor m] (x : VarStateT m α) (s : VarState := {}) : m α :=
-  /-
-  let x : VarState → (α × VarState) := x
-  (x s).1
-  -/
   StateT.run' x s
 
 instance [Monad m] : MonadLift (VarReaderT m) (VarStateT m) where
   monadLift x s := x s >>= (pure ⟨·, s⟩)
 
+/-! ### Implementation -/
+
+/-- Return the unique variable index for an expression.
+
+Modifies the monadic state to add a new mapping and increment the index,
+if needed. -/
 def VarStateT.exprToVar [Monad m] (e : Expr) : VarStateT m VarIndex := fun state =>
   return match state.varIndices[e]? with
   | some idx => (idx, state)
@@ -36,16 +39,6 @@ def VarStateT.exprToVar [Monad m] (e : Expr) : VarStateT m VarIndex := fun state
       nextIndex := nextIndex + 1
     }
     (nextIndex, state)
-
-/-
-The monadic version is just an abstracted version of the following signature
-
-def VarStateT.exprToVar (state : VarState) (e : Expr) : VarState ×  VarIndex := ...
--/
-
-abbrev Coefficients := Std.HashMap VarIndex Nat
-
-#check AC.toACExpr.toPreExpr
 
 /-- Given a binary, associative and commutative operation `op`,
 decompose expression `e` into its variable coefficients.
@@ -85,42 +78,6 @@ def SharedCoefficients.compute (x y : Coefficients) : SharedCoefficients :=
 def Coefficients.toExpr : Coefficients → VarReaderT m Expr :=
   sorry
 
-#check BitVec.instAdd
-#check @HAdd.hAdd (BitVec ?w) (BitVec ?w) (BitVec ?w) _
-#check synthInstance
-
-#synth HAdd (BitVec ?w) (BitVec ?w) (BitVec ?w)
-#check instHAdd
-#check @instHAdd.{0}
-
-theorem eq_of_eq_of_eq (x y x' y' : BitVec w) (hx : x = x') (hy : y = y') :
-    (x = y) = (x' = y') := by
-  exact Grind.eq_congr hx hy
-
-#check Grind.eq_congr
-#print eq_of_eq_of_eq
-
--- example : Prop = Sort 0 := rfl
--- example : Type = Type 0 := rfl
--- example : Type = Sort 1 := rfl
-
--- #check (Sort 0 : Sort 1)
--- #check (Sort 0 : Type 0)
--- #check (Sort 0 : Type)
-
--- #check Sort
-
--- universe u
--- #check Sort u
-
--- #check List (1 = 1)
-
--- #check (BitVec ?w : Type 0)
--- #check (BitVec ?w : Sort 1)
-
--- theorem foo.{u} : Type u = Sort (u+1) := by
---   rfl
-
 open VarStateT Lean.Meta Lean.Elab Term
 
 /-- Given two expressions `x, y : $ty`, where `ty : Sort $u`, which are equal
@@ -133,12 +90,6 @@ def proveEqualityByAC (u : Level) (ty : Expr) (x y : Expr) : MetaM Expr := do
   let proof ← mkFreshExprMVarWithId goal expectedType
   AC.rewriteUnnormalizedRefl goal -- invoke `ac_rfl`
   instantiateMVars proof
-
-#check (Type : Type 1)
-#check ()
-
-#check Grind.eq_congr
-#check Eq
 
 simproc acNormalizeEqWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) := fun e => do
   let_expr Eq _ x y := e          | return .continue
