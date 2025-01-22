@@ -154,11 +154,17 @@ def proveEqualityByAC (u : Level) (ty : Expr) (x y : Expr) : MetaM Expr := do
   instantiateMVars proof
 
 /--
-Given expressions `lhs, rhs : $ty` and `op : $ty → $ty → $ty`, where `ty : Sort $u`,
-canonicalize any top-level applications of the given associative and commutative operation `op` on
-both the `lhs` and the `rhs` in a way that pro
+Given an operation `op : $ty → $ty → $ty` and an expression `eq`, which can be
+decomposed into `lhs = rhs` where `lhs, rhs : $ty` and `ty : Sort $u`,
+canonicalize any top-level applications of the given associative and commutative
+operation `op` on both the `lhs` and the `rhs` such that the final expression is:
+  `$common ⋅ $lhs' = $common ⋅ $rhs'`
+
+That is, in a way that exposes terms that are shared between the lhs and rhs.
 -/
-def canonicalizeWithSharing (u : Level) (ty op lhs rhs : Expr) : SimpM Simp.Step := do
+def canonicalizeWithSharing (u : Level) (ty op eq : Expr) : SimpM Simp.Step := do
+  let_expr Eq _ lhs rhs := eq | return .continue
+
   VarStateM.run' <| do
     let lCoe ← computeCoefficients op lhs
     let rCoe ← computeCoefficients op rhs
@@ -197,13 +203,30 @@ def canonicalizeWithSharing (u : Level) (ty op lhs rhs : Expr) : SimpM Simp.Step
       proof? := some proof
     }
 
-simproc acNormalizeEqWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) := fun e => do
-  let_expr Eq _ lhs rhs := e          | return .continue
-
+def canonicalizeBVAdd : Simp.Simproc := fun e => do
   let w ← mkFreshExprMVar (mkConst ``Nat [])          -- `w` is a metavar
   let instAdd := mkApp (mkConst ``BitVec.instAdd) w   -- instAdd is `@BitVec.instAdd ?w`
   let bv := mkApp (mkConst ``BitVec) w                -- bv is `BitVec ?w`
   let instHAdd := mkApp2 (mkConst ``instHAdd [0]) bv instAdd -- instHAdd is `instHAdd.{0} $bv $instAdd`
-  let op := mkApp4 (mkConst ``HAdd.hAdd) bv bv bv instHAdd
+  let op := mkApp4 (.const ``HAdd.hAdd [0,0,0]) bv bv bv instHAdd
+  canonicalizeWithSharing 1 bv op e
 
-  canonicalizeWithSharing 1 bv op lhs rhs
+def canonicalizeBVMul : Simp.Simproc := fun e => do
+  let w ← mkFreshExprMVar (mkConst ``Nat [])
+  let inst := mkApp (mkConst ``BitVec.instMul) w
+  let bv := mkApp (mkConst ``BitVec) w
+  let instH := mkApp2 (mkConst ``instHMul [0]) bv inst
+  let op := mkApp4 (.const ``HMul.hMul [0,0,0]) bv bv bv instH
+  canonicalizeWithSharing 1 bv op e
+
+simproc↑ acNormalizeBVAddWithSharing (@Eq (BitVec _) (_ + _) (_ + _)) :=
+  canonicalizeBVAdd
+
+
+simproc↑ acNormalizeBVMulWithSharing (@Eq (BitVec _) (_ * _) (_ * _)) :=
+  canonicalizeBVMul
+
+
+example (x y z : BitVec w) :
+    x + y + (z + z + y) = y + (x + x + x) := by
+  simp
