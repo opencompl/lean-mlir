@@ -75,6 +75,30 @@ def EnvFin.castLe {w n n' : Nat} (env : EnvFin w n) (h : n' ≤ n) : EnvFin w n'
 def EnvFin.get_castLe {w n n' : Nat} (env : EnvFin w n) (h : n' ≤ n) (i : Fin n') :
   (env.castLe h) i = env ⟨i, by omega⟩ := rfl
 
+/-- Map a function from `Fin n'` to `Fin n` on the index set of `EnvFin`. -/
+def EnvFin.comap {w n n' : Nat} (env : EnvFin w n) (f : Fin n' → Fin n) : EnvFin w n' := 
+  fun i' => env (f i')
+
+@[simp]
+theorem EnvFin.get_comap (env : EnvFin w n) (f : Fin n' → Fin n) (i : Fin n') : 
+  (env.comap f) i = env (f i) := rfl
+
+/--
+Cons a value 'b' onto the env, which obeys the equations:
+- `(cons env b) 0 = b`,
+- `(cons env b) i.succ = env i`
+-/
+def EnvFin.cons (env : EnvFin w n) (b : BitVec w) : EnvFin w (n + 1) :=
+  fun i => i.cases b env
+
+@[simp]
+theorem EnvFin.cons_zero (env : EnvFin w n) (b : BitVec w) :
+  (env.cons b) 0 = b := rfl
+
+-- TODO: write theorems about `cons`.
+@[simp]
+theorem EnvFin.cons_succ (env : EnvFin w n) (b : BitVec w) (i : Fin n) :
+  (env.cons b) i.succ = env i := rfl
 
 /--
 Using 'env.getNonLsbs' peels off the bits from index 'i+1' to 'w'.
@@ -522,5 +546,64 @@ theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn)
   rw [Eqn.denote_hard_case_of_denote]
   exact h
 
+@[simp]
+theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by 
+  simp [EnvFin] at *
+  ext i 
+  exact i.elim0
+
+def EnvFin.getAll1 (n : Nat) : { envs : List (EnvFin 1 n) // ∀ (envFin : EnvFin 1 n), envFin ∈ envs } := 
+  match hn : n with 
+  | 0 => ⟨[fun i => i.elim0], by intros envFin; simp⟩
+  | n' + 1 => 
+     let ⟨envs, henvs⟩ := EnvFin.getAll1 n'
+     let out := envs.flatMap (fun env => [env.cons (BitVec.ofBool false), env.cons (BitVec.ofBool true)])
+     ⟨out, by 
+       intros envFin
+       simp [out]
+       let envFinSmaller := envFin.comap Fin.succ
+       specialize henvs envFinSmaller
+       exists envFinSmaller 
+       simp only [henvs, true_and, out]
+       have hv : (envFin 0) = 0#1 ∨ (envFin 0) = 1#1 := by 
+         generalize envFin 0 = a
+         revert a
+         decide
+       rcases hv with hv | hv
+       · left 
+         funext i
+         cases i using Fin.cases
+         case zero => simp [hv]
+         case succ i' => 
+           simp [envFinSmaller]
+       · right
+         funext i 
+         cases i using Fin.cases 
+         case zero => simp [hv]
+         case succ i' => 
+           simp [envFinSmaller]
+     ⟩
+  
+/--
+Show how to exhaustively enumerate environments to check that the denotation at 1-bit is zero.
+-/
+instance (e : Eqn) : Decidable (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0) := 
+  let ⟨allEnvs, hAllEnvs⟩ := EnvFin.getAll1 e.numVars
+  let b := allEnvs.all (fun env1 => e.denoteFin env1 = 0)
+  match hb : b with 
+  | true => .isTrue <| by 
+    simp [b] at hb
+    intros env1 
+    apply hb
+    apply hAllEnvs
+  | false => .isFalse <| by 
+    simp
+    simp [b] at hb
+    obtain ⟨env, henvMem, henvDenote⟩ := hb
+    exists env 
+
+  
+
 end MBA
+
 
