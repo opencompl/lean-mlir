@@ -237,3 +237,5 @@ elab "ac_nf!" : tactic => do
   -- FIXME: this currently *will* throw inscrutable errors when called on an equality where the
   -- top-level operations is *not* associative and commutative
   Tactic.liftMetaTactic1 fun goal => rewriteUnnormalizedWithSharing goal
+
+macro "ac_rfl!" : tactic => `(tactic| (ac_nf!; rfl))
