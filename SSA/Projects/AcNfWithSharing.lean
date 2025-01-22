@@ -14,13 +14,13 @@ abbrev Coefficients := Std.HashMap VarIndex Nat
 
 /-! ### VarState Monad -/
 
-abbrev VarStateT  := StateT VarState
-abbrev VarReaderT := ReaderT VarState
+abbrev VarStateM  := StateT VarState MetaM
+abbrev VarReaderM := ReaderT VarState MetaM
 
-def VarStateT.run' {m} [Functor m] (x : VarStateT m α) (s : VarState := {}) : m α :=
+def VarStateM.run' (x : VarStateM α) (s : VarState := {}) : MetaM α :=
   StateT.run' x s
 
-instance [Monad m] : MonadLift (VarReaderT m) (VarStateT m) where
+instance : MonadLift VarReaderM VarStateM where
   monadLift x s := x s >>= (pure ⟨·, s⟩)
 
 /-! ### Implementation -/
@@ -29,7 +29,7 @@ instance [Monad m] : MonadLift (VarReaderT m) (VarStateT m) where
 
 Modifies the monadic state to add a new mapping and increment the index,
 if needed. -/
-def VarStateT.exprToVar [Monad m] (e : Expr) : VarStateT m VarIndex := fun state =>
+def VarStateM.exprToVar (e : Expr) : VarStateM VarIndex := fun state =>
   -- TODO: we should consider normalizing `e` here using `AC.rewriteUnnormalized`, so that distinct
   --   atomic expressions which are equal up-to associativity and commutativity of another operator
   --   get mapped to the same variable id
@@ -55,8 +55,22 @@ c => 1
 
 Any compound expression which is not an application of the given `op`
 -/
-def VarStateT.computeCoefficients [Monad m] (op : Expr) (e : Expr) : VarStateT m Coefficients := do
-  sorry
+def VarStateM.computeCoefficients (op : Expr) (e : Expr) : VarStateM Coefficients :=
+  go {} e
+where
+  incrVar (coe : Coefficients) (e : Expr) : VarStateM Coefficients := do
+    let idx ← exprToVar e
+    return coe.alter idx (fun c => some <| (c.getD 0) + 1)
+  go (coe : Coefficients) : Expr → VarStateM Coefficients
+  | e@(AC.bin op' x y) => do
+      if ← isDefEq op op' then
+        let coe ← go coe x
+        let coe ← go coe y
+        return coe
+      else
+        incrVar coe e
+  | e => incrVar coe e
+
   /-
   if `e` is application of `op` then
     recursively call with operands
@@ -78,10 +92,10 @@ def SharedCoefficients.compute (x y : Coefficients) : SharedCoefficients :=
   sorry
 
 /-- Compute the canonical expression for a given set of coefficients. -/
-def Coefficients.toExpr : Coefficients → VarReaderT m Expr :=
+def Coefficients.toExpr : Coefficients → VarReaderM Expr :=
   sorry
 
-open VarStateT Lean.Meta Lean.Elab Term
+open VarStateM Lean.Meta Lean.Elab Term
 
 /-- Given two expressions `x, y : $ty`, where `ty : Sort $u`, which are equal
 up to associativity and commutativity, construct and return a proof of `x = y`.
@@ -100,7 +114,7 @@ canonicalize any top-level applications of the given associative and commutative
 both the `lhs` and the `rhs` in a way that pro
 -/
 def canonicalizeWithSharing (u : Level) (ty op lhs rhs : Expr) : SimpM Simp.Step := do
-  VarStateT.run' <| do
+  VarStateM.run' <| do
     let lCoe ← computeCoefficients op lhs
     let rCoe ← computeCoefficients op rhs
     -- FIXME: we should identify any neutral/identity elements of the operation
