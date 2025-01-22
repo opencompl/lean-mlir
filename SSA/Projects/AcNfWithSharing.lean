@@ -8,10 +8,16 @@ abbrev VarIndex := Nat
 
 structure VarState where
   varIndices : Std.HashMap Expr VarIndex := {}
-  -- varExprs : Array Expr := #[]
+  varExprs : Array Expr := #[]
 
--- structure LegalVarState extends VarState where
---   h_size : varExprs.size = varIndices.size
+/-!
+We don't verify the state manipulations, but if we would, these are the invariants:
+```
+structure LegalVarState extends VarState where
+  h_size  : varExprs.size = varIndices.size := by omega
+  h_elems : ∀ h_lt : i < varExprs.size, varIndices[varExprs[i]]? = some i
+```
+-/
 
 abbrev CoefficientsMap := Std.HashMap VarIndex Nat
 
@@ -32,7 +38,7 @@ instance : MonadLift VarReaderM VarStateM where
 
 Note that this is always a complete sequence `0, 1, ..., (n-1)`, without skipping
 numbers. -/
-def getAllIndices : VarReaderM (List VarIndex) := fun state =>
+def getAllVarIndices : VarReaderM (List VarIndex) := fun state =>
   pure <| List.range state.varIndices.size
 
 /-- Return the unique variable index for an expression.
@@ -46,9 +52,19 @@ def VarStateM.exprToVar (e : Expr) : VarStateM VarIndex := fun state =>
   return match state.varIndices[e]? with
   | some idx => (idx, state)
   | none =>
-    let nextIndex := state.varIndices.size
-    let state := ⟨ state.varIndices.insert e nextIndex ⟩
-    (nextIndex, state)
+    let { varIndices, varExprs } := state
+    let nextIndex := varIndices.size
+    let varIndices := varIndices.insert e nextIndex
+    let varExprs := varExprs.push e
+    (nextIndex, { varIndices, varExprs })
+
+/-- Return the expression that is represented by a specific variable index. -/
+def VarStateM.varToExpr (idx : VarIndex) : VarReaderM Expr := fun { varExprs, .. } =>
+  if h : idx < varExprs.size then
+    pure varExprs[idx]
+  else
+    throwError "internal error (this is a bug!): index {idx} out of range, \
+      the current state only has {varExprs.size} variables:\n\n{varExprs}"
 
 /-- Given a binary, associative and commutative operation `op`,
 decompose expression `e` into its variable coefficients.
@@ -98,7 +114,7 @@ coefficients in `common` and `x` (resp `y`) of the result. -/
 def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoefficients := do
   let mut res : SharedCoefficients := { x, y }
 
-  for idx in ← getAllIndices do
+  for idx in ← getAllVarIndices do
     match x[idx]?, y[idx]? with
     | some xCnt, some yCnt =>
         let com := min xCnt yCnt
@@ -112,8 +128,17 @@ def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoeffi
   return res
 
 /-- Compute the canonical expression for a given set of coefficients. -/
-def CoefficientsMap.toExpr : CoefficientsMap → VarReaderM Expr :=
-  sorry
+def CoefficientsMap.toExpr (coe : CoefficientsMap) (op : Expr) : VarReaderM (Option Expr) := do
+  let exprs := (← readThe VarState).varExprs.toList
+  return (
+    exprs.enum
+    |>.flatMap (fun (idx, expr) =>
+      let cnt := coe[idx]?.getD 0
+      List.replicate cnt expr
+    )
+    |>.foldl (init := none) fun acc (expr : Expr) => match acc with
+        | none => expr
+        | some acc => some <| mkApp2 op acc expr)
 
 open VarStateM Lean.Meta Lean.Elab Term
 
@@ -142,12 +167,20 @@ def canonicalizeWithSharing (u : Level) (ty op lhs rhs : Expr) : SimpM Simp.Step
     --        corresponding coefficient
 
     let ⟨commonCoe, xCoe, yCoe⟩ ← SharedCoefficients.compute lCoe rCoe
+    let mergeExpr : Option Expr → Option Expr → Option Expr
+      | some a, some b  => some <| mkApp2 op a b
+      | some e, none
+      | none,   some e  => some <| e
+      | none,   none    => none
 
-    let commonExpr : Expr ← commonCoe.toExpr
-    let lNew : Expr ← xCoe.toExpr
-    let lNew := mkApp2 op commonExpr lNew
-    let rNew : Expr ← yCoe.toExpr
-    let rNew := mkApp2 op commonExpr rNew
+    let commonExpr? : Option Expr ← commonCoe.toExpr op
+    let lNew? : Option Expr ← xCoe.toExpr op
+    -- It is not possible for both `commonExpr?` and `lNew?` to be none
+    let some lNew := mergeExpr commonExpr? lNew? | failure
+
+    let rNew? : Option Expr ← yCoe.toExpr op
+    -- Idem; it is not possible for both `commonExpr?` and `rNew?` to be none
+    let some rNew := mergeExpr commonExpr? rNew? | failure
 
     let lEq : Expr /- of type `$lhs = $lNew` -/ ← proveEqualityByAC 1 ty lhs lNew
     let rEq : Expr /- of type `$rhs = $rNew` -/ ← proveEqualityByAC 1 ty rhs rNew
