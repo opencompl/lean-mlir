@@ -269,19 +269,17 @@ theorem toInt_one {w : Nat} (h : 1 < w ) : (1#w).toInt = 1 := by
     omega
 
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
-  rcases w with _|_|w'
+  rcases w with _|_|w
   · decide
   · decide
-  · generalize hw : w' + 2 = w
-    have : 1 < 2 ^ w := Nat.one_lt_two_pow (by omega)
+  · have : 1 < 2 ^ (w + 1 + 1) := Nat.one_lt_two_pow (by omega)
     rw_mod_cast [BitVec.twoPow, BitVec.toInt_sub, BitVec.toInt_shiftLeft, BitVec.toNat_ofNat,
       Int.bmod_sub_bmod_congr, toInt_one (by omega), Nat.shiftLeft_eq,
       Nat.mod_eq_of_lt (by omega), one_mul, bmod_eq_iff_of_lt_of_lt]
-    · have : - 2 ^ w < 0  := by norm_cast; omega
-      have : 0 < (2 ^ (w - 1) - 1) * 2 := by simp [Nat.sub_mul]; omega
+    · have : 0 < (2 ^ (w + 1 + 1 - 1) - 1) * 2 := by simp
       rw [Int.subNatNat_eq_coe]
       omega
-    · rw [← Nat.two_pow_pred_add_two_pow_pred (w := w) (by omega), Int.subNatNat_eq_coe, Int.sub_mul]
+    · rw [← Nat.two_pow_pred_add_two_pow_pred (w := w + 1 + 1) (by omega), Int.subNatNat_eq_coe]
       omega
 
 theorem signExtend_twoPow_of_lt_of_lt {w w₁ w₂ : Nat} (h₁ : w + 1 < w₁) (h₂ : w + 1 < w₂) :
