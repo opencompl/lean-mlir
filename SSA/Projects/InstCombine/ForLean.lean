@@ -218,10 +218,6 @@ theorem mul_le_mul_neg {a b c d : Int}
   rw [Int.mul_comm (a:= d)] at h
   exact h
 
-theorem mul_le_mul_pos_neg {a b c d : Int}
-    (hac : a ≤ c) (hbd : b < d) (hb : b < 0) (hc : 0 < c) : a * b ≤ c * d := by
-  sorry
-
 theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     -(s * s) ≤ x * y := by
   cases' s with n
@@ -255,7 +251,8 @@ theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
           have : y * x < 0 := Int.mul_neg_of_pos_of_neg (by omega) (by omega)
           simp
           omega
-        · exact mul_le_mul_pos_neg (by omega) (by omega) (by omega) (by omega)
+        · have : -x * -y ≤ (n + 1) * (n + 1) := Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
+          simp_all
 
 theorem toInt_mul_toInt_lt {x y : BitVec w} : x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x; have xle := le_toInt x
