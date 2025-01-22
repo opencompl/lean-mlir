@@ -205,37 +205,23 @@ theorem mul_le_mul_neg {a b c d : Int}
     (hac : a ≤ c) (hbd : d ≤ b) (hb : 0 ≤ b) (hc : c ≤ 0) : a * b ≤ c * d :=
   Int.le_trans (Int.mul_le_mul_of_nonneg_right hac hb) (Int.mul_le_mul_of_nonpos_left hc hbd)
 
-theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
-    -(s * s) ≤ x * y := by
-  have : 0 * 0 ≤ s * s := Nat.mul_le_mul (by omega) (by omega)
-  by_cases 0 ≤ x <;> by_cases 0 ≤ y
-  · have : 0 ≤ x * y := Int.mul_nonneg (by omega) (by omega)
-    omega
-  · rw [← Int.neg_mul, Int.mul_comm (a := x)]
-    exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
-  · rw [← Int.neg_mul]
-    exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
-  · have : 0 < x * y := Int.mul_pos_of_neg_of_neg (by omega) (by omega)
-    omega
-
-theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
-    x * y ≤ s * s := by
-  have := @Int.mul_pos s s (by omega) (by omega)
-  by_cases hx : 0 < x <;> by_cases hy : 0 < y
-  · exact Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
-  · have : x * y ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
-    omega
-  · rw [Int.mul_comm]
-    have : y * x ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
-    omega
-  · have : -x * -y ≤ s * s := Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
-    simp_all
-
 theorem toInt_mul_toInt_lt {x y : BitVec w} : x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x; have xle := le_toInt x
   have ylt := toInt_lt y; have yle := le_toInt y
   have h : 2 ^ (w * 2 - 2) = 2 ^ (w - 1) * 2 ^ (w - 1) := by
     simp [← Nat.pow_add, ←Nat.mul_two, Nat.sub_mul]
+  have mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+      x * y ≤ s * s := by
+    have := @Int.mul_pos s s (by omega) (by omega)
+    by_cases hx : 0 < x <;> by_cases hy : 0 < y
+    · exact Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
+    · have : x * y ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
+      omega
+    · rw [Int.mul_comm]
+      have : y * x ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
+      omega
+    · have : -x * -y ≤ s * s := Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
+      simp_all
   rw_mod_cast [h]
   exact mul_le_mul_self_neg xle xlt yle ylt
 
@@ -244,6 +230,18 @@ theorem le_toInt_mul_toInt {x y : BitVec w} : -(2 ^ (w * 2 - 2)) ≤ x.toInt * y
   have ylt := toInt_lt y; have yle := le_toInt y
   have h : 2 ^ (w * 2 - 2) = 2 ^ (w - 1) * 2 ^ (w - 1) := by
     simp [← Nat.pow_add, ←Nat.mul_two, Nat.sub_mul]
+  have mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
+      -(s * s) ≤ x * y := by
+    have : 0 * 0 ≤ s * s := Nat.mul_le_mul (by omega) (by omega)
+    by_cases 0 ≤ x <;> by_cases 0 ≤ y
+    · have : 0 ≤ x * y := Int.mul_nonneg (by omega) (by omega)
+      omega
+    · rw [← Int.neg_mul, Int.mul_comm (a := x)]
+      exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
+    · rw [← Int.neg_mul]
+      exact mul_le_mul_neg (by omega) (by omega) (by omega) (by omega)
+    · have : 0 < x * y := Int.mul_pos_of_neg_of_neg (by omega) (by omega)
+      omega
   rw_mod_cast [h]
   exact mul_self_neg_le_mul xle xlt yle ylt
 
