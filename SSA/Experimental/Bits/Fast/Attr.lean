@@ -10,3 +10,6 @@ import Lean
 
 /-- Preprocessing steps for bv_automata_circuit. -/
 register_simp_attr bv_circuit_preprocess
+
+/-- Preprocessing steps for bv_automata_circuit. -/
+register_simp_attr bv_circuit_nnf
