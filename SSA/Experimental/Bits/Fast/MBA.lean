@@ -325,6 +325,12 @@ def Eqn.numVars (e : Eqn) : Nat :=
   | [] => 0 
   | e :: es => max e.numVars (Eqn.numVars es)
 
+@[simp]
+theorem Eqn.numVars_nil : Eqn.numVars [] = 0 := rfl
+
+@[simp]
+theorem Eqn.numVars_cons : Eqn.numVars (t :: es) = max t.numVars (Eqn.numVars es) := rfl
+
 def Eqn.reflect {w : Nat} (e : Eqn) (env : Env w) : BitVec w := 
   match e with
   | [] => 0
@@ -359,16 +365,19 @@ def Eqn.denoteFin {w : Nat} (e : Eqn) (envFin : EnvFin w e.numVars) : Int :=
   match e with
   | [] => 0
   | t :: ts =>
-    t.denoteFin (fun n => envFin ⟨n, by simp [Eqn.numVars]; omega⟩) + 
-    Eqn.denoteFin ts (fun n => envFin ⟨n, by simp [Eqn.numVars]; omega⟩)
+    t.denoteFin (envFin.castLe (by simp; omega)) + 
+    Eqn.denoteFin ts (envFin.castLe (by simp; omega))
 
+@[simp]
 theorem Eqn.denoteFin_nil {w : Nat} (envFin : EnvFin w 0) : 
   Eqn.denoteFin [] envFin = 0 := rfl
 
+@[simp]
 theorem Eqn.denoteFin_cons {w : Nat} (t : Term) (eqn : Eqn)
     (envFin : EnvFin w (max t.numVars  eqn.numVars)) : 
-  Eqn.denoteFin (t :: eqn) envFin = t.denote envFin := rfl
-
+  Eqn.denoteFin (t :: eqn) envFin = 
+  t.denoteFin (envFin.castLe (by omega)) +
+  Eqn.denoteFin eqn (envFin.castLe (by omega)) := rfl
 
 theorem Eqn.denoteFin_eq_add {w : Nat} (eqn : Eqn) (env : EnvFin (w + 1) eqn.numVars) : 
     eqn.denoteFin env = 2 * eqn.denoteFin env.getNonLsbs + eqn.denoteFin env.getLsb := by
@@ -377,9 +386,9 @@ theorem Eqn.denoteFin_eq_add {w : Nat} (eqn : Eqn) (env : EnvFin (w + 1) eqn.num
   case cons x xs ih => 
     simp only [denoteFin]
     simp only [ih]
-  sorry
-
-
+    rw [Term.denoteFin_eq_add x]
+    rw [Int.mul_add]
+    ac_nf
 
 /- To evaluate `e.denote`, one can equally well evaluate `e.denoteFin` -/
 theorem Eqn.denoteFin_eq_denote {e : Eqn} {xs : List (BitVec w)} {xsFin : EnvFin w e.numVars} 
