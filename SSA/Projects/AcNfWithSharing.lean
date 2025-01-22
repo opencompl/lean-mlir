@@ -8,7 +8,10 @@ abbrev VarIndex := Nat
 
 structure VarState where
   varIndices : Std.HashMap Expr VarIndex := {}
-  nextIndex : VarIndex := 0
+  -- varExprs : Array Expr := #[]
+
+-- structure LegalVarState extends VarState where
+--   h_size : varExprs.size = varIndices.size
 
 abbrev CoefficientsMap := Std.HashMap VarIndex Nat
 
@@ -30,7 +33,7 @@ instance : MonadLift VarReaderM VarStateM where
 Note that this is always a complete sequence `0, 1, ..., (n-1)`, without skipping
 numbers. -/
 def getAllIndices : VarReaderM (List VarIndex) := fun state =>
-  pure <| List.range state.nextIndex
+  pure <| List.range state.varIndices.size
 
 /-- Return the unique variable index for an expression.
 
@@ -43,11 +46,8 @@ def VarStateM.exprToVar (e : Expr) : VarStateM VarIndex := fun state =>
   return match state.varIndices[e]? with
   | some idx => (idx, state)
   | none =>
-    let { varIndices, nextIndex } := state
-    let state := {
-      varIndices := varIndices.insert e nextIndex
-      nextIndex := nextIndex + 1
-    }
+    let nextIndex := state.varIndices.size
+    let state := ⟨ state.varIndices.insert e nextIndex ⟩
     (nextIndex, state)
 
 /-- Given a binary, associative and commutative operation `op`,
@@ -112,7 +112,7 @@ def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoeffi
   return res
 
 /-- Compute the canonical expression for a given set of coefficients. -/
-def Coefficients.toExpr : CoefficientsMap → VarReaderM Expr :=
+def CoefficientsMap.toExpr : CoefficientsMap → VarReaderM Expr :=
   sorry
 
 open VarStateM Lean.Meta Lean.Elab Term
@@ -141,7 +141,7 @@ def canonicalizeWithSharing (u : Level) (ty op lhs rhs : Expr) : SimpM Simp.Step
     --        (e.g., 0 for addition, or 1 for multiplication), and remove the
     --        corresponding coefficient
 
-    let ⟨commonCoe, xCoe, yCoe⟩ := SharedCoefficients.compute lCoe rCoe
+    let ⟨commonCoe, xCoe, yCoe⟩ ← SharedCoefficients.compute lCoe rCoe
 
     let commonExpr : Expr ← commonCoe.toExpr
     let lNew : Expr ← xCoe.toExpr
