@@ -226,8 +226,44 @@ def rewriteUnnormalizedWithSharing (mvarId : MVarId) : MetaM MVarId := do
   let (res, _) ← Simp.main tgt simpCtx (methods := { post := canonicalizeWithSharing })
   applySimpResultToTarget mvarId tgt res
 
-elab "ac_nf!" : tactic => do
-  Tactic.liftMetaTactic1 fun goal => rewriteUnnormalizedWithSharing goal
+
+
+/-! ## Tactic Boilerplate -/
+
+open Tactic
+
+def acNfHypMeta (goal : MVarId) (fvarId : FVarId) : MetaM (Option MVarId) := do
+  goal.withContext do
+    let simpCtx ← Simp.mkContext
+      (simpTheorems  := {})
+      (congrTheorems := (← getSimpCongrTheorems))
+      (config        := Simp.neutralConfig)
+    let tgt ← instantiateMVars (← fvarId.getType)
+    let (res, _) ← Simp.main tgt simpCtx (methods := { post := canonicalizeWithSharing })
+    return (← applySimpResultToLocalDecl goal fvarId res false).map (·.snd)
+
+/-- Implementation of the `ac_nf!` tactic when operating on the main goal. -/
+def acNfTargetTactic : TacticM Unit :=
+  liftMetaTactic1 fun goal => rewriteUnnormalizedWithSharing goal
+
+/-- Implementation of the `ac_nf!` tactic when operating on a hypothesis. -/
+def acNfHypTactic (fvarId : FVarId) : TacticM Unit :=
+  liftMetaTactic1 fun goal => acNfHypMeta goal fvarId
+
+open Lean.Parser.Tactic (location) in
+elab "ac_nf!" loc?:(location)? : tactic => do
+  let loc := match loc? with
+  | some loc => expandLocation loc
+  | none => Location.targets #[] true
+  withMainContext do
+    match loc with
+    | Location.targets hyps target =>
+      if target then acNfTargetTactic
+      (← getFVarIds hyps).forM acNfHypTactic
+    | Location.wildcard =>
+      acNfTargetTactic
+      (← (← getMainGoal).getNondepPropHyps).forM acNfHypTactic
+
 
 example {x y z v : BitVec w} : x + y + z = x + y + v := by
   ac_nf!
