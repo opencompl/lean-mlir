@@ -30,6 +30,9 @@ instance [Monad m] : MonadLift (VarReaderT m) (VarStateT m) where
 Modifies the monadic state to add a new mapping and increment the index,
 if needed. -/
 def VarStateT.exprToVar [Monad m] (e : Expr) : VarStateT m VarIndex := fun state =>
+  -- TODO: we should consider normalizing `e` here using `AC.rewriteUnnormalized`, so that distinct
+  --   atomic expressions which are equal up-to associativity and commutativity of another operator
+  --   get mapped to the same variable id
   return match state.varIndices[e]? with
   | some idx => (idx, state)
   | none =>
