@@ -220,24 +220,16 @@ theorem mul_self_neg_le_mul {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s)
 
 theorem mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
     x * y ≤ s * s := by
-  cases' s with n
-  · simp; omega
-  · have := @Int.mul_pos (n + 1) (n + 1) (by omega) (by omega)
-    by_cases hx₀ : x = 0
-    · subst hx₀; simp; omega
-    · by_cases hy₀ : y = 0
-      · subst hy₀; simp; omega
-      · by_cases hx : 0 < x <;> by_cases hy : 0 < y
-        · exact Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
-        · have : x * y < 0 := Int.mul_neg_of_pos_of_neg (by omega) (by omega)
-          simp
-          omega
-        · rw [Int.mul_comm]
-          have : y * x < 0 := Int.mul_neg_of_pos_of_neg (by omega) (by omega)
-          simp
-          omega
-        · have : -x * -y ≤ (n + 1) * (n + 1) := Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
-          simp_all
+  have := @Int.mul_pos s s (by omega) (by omega)
+  by_cases hx : 0 < x <;> by_cases hy : 0 < y
+  · exact Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
+  · have : x * y ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
+    omega
+  · rw [Int.mul_comm]
+    have : y * x ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
+    omega
+  · have : -x * -y ≤ s * s := Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
+    simp_all
 
 theorem toInt_mul_toInt_lt {x y : BitVec w} : x.toInt * y.toInt ≤ 2 ^ (w * 2 - 2) := by
   have xlt := toInt_lt x; have xle := le_toInt x
