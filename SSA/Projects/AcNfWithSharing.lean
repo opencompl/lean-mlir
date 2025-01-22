@@ -24,13 +24,9 @@ abbrev CoefficientsMap := Std.HashMap VarIndex Nat
 /-! ### VarState monadic boilerplate  -/
 
 abbrev VarStateM  := StateT VarState MetaM
-abbrev VarReaderM := ReaderT VarState MetaM
 
 def VarStateM.run' (x : VarStateM α) (s : VarState := {}) : MetaM α :=
   StateT.run' x s
-
-instance : MonadLift VarReaderM VarStateM where
-  monadLift x s := x s >>= (pure ⟨·, s⟩)
 
 /-! ### Implementation -/
 
@@ -38,8 +34,8 @@ instance : MonadLift VarReaderM VarStateM where
 
 Note that this is always a complete sequence `0, 1, ..., (n-1)`, without skipping
 numbers. -/
-def getAllVarIndices : VarReaderM (List VarIndex) := fun state =>
-  pure <| List.range state.varIndices.size
+def getAllVarIndices : VarStateM (List VarIndex) := do
+  pure <| List.range (← get).varIndices.size
 
 /-- Return the unique variable index for an expression.
 
@@ -59,7 +55,8 @@ def VarStateM.exprToVar (e : Expr) : VarStateM VarIndex := fun state =>
     (nextIndex, { varIndices, varExprs })
 
 /-- Return the expression that is represented by a specific variable index. -/
-def VarStateM.varToExpr (idx : VarIndex) : VarReaderM Expr := fun { varExprs, .. } =>
+def VarStateM.varToExpr (idx : VarIndex) : VarStateM Expr := do
+  let { varExprs, .. } ← get
   if h : idx < varExprs.size then
     pure varExprs[idx]
   else
@@ -102,7 +99,7 @@ structure SharedCoefficients where
 /-- Given two sets of coefficients `x` and `y` (computed with the same variable
 mapping), extract the shared coefficients, such that `x` (resp. `y`) is the sum of
 coefficients in `common` and `x` (resp `y`) of the result. -/
-def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoefficients := do
+def SharedCoefficients.compute (x y : CoefficientsMap) : VarStateM SharedCoefficients := do
   let mut res : SharedCoefficients := { x, y }
 
   for idx in ← getAllVarIndices do
@@ -119,8 +116,8 @@ def SharedCoefficients.compute (x y : CoefficientsMap) : VarReaderM SharedCoeffi
   return res
 
 /-- Compute the canonical expression for a given set of coefficients. -/
-def CoefficientsMap.toExpr (coe : CoefficientsMap) (op : Expr) : VarReaderM (Option Expr) := do
-  let exprs := (← readThe VarState).varExprs.toList
+def CoefficientsMap.toExpr (coe : CoefficientsMap) (op : Expr) : VarStateM (Option Expr) := do
+  let exprs := (← get).varExprs.toList
   return (
     exprs.enum
     |>.flatMap (fun (idx, expr) =>
