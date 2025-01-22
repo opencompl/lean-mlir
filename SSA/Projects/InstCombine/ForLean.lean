@@ -212,7 +212,7 @@ theorem toInt_mul_toInt_lt {x y : BitVec w} : x.toInt * y.toInt ≤ 2 ^ (w * 2 -
     simp [← Nat.pow_add, ←Nat.mul_two, Nat.sub_mul]
   have mul_le_mul_self_neg {x y : Int} {s : Nat} (lbx : -s ≤ x) (ubx : x < s) (lby : -s ≤ y) (uby : y < s) :
       x * y ≤ s * s := by
-    have := @Int.mul_pos s s (by omega) (by omega)
+    have : 0 < s * s := Nat.mul_pos (by omega) (by omega)
     by_cases hx : 0 < x <;> by_cases hy : 0 < y
     · exact Int.mul_le_mul (by omega) (by omega) (by omega) (by omega)
     · have : x * y ≤ 0 := Int.mul_nonpos_of_nonneg_of_nonpos (by omega) (by omega)
