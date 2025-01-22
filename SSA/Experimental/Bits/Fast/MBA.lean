@@ -493,7 +493,7 @@ theorem Eqn.denote_hard_case_aux {eqn : Eqn}
     simp
 
 
-theorem Eqn.denote_hard_case_of_denote (e : Eqn) (h : ∀ (env1 : List (BitVec 1)), Eqn.denote e env1 = 0) :
+theorem Eqn.denote_hard_case_of_denote (e : Eqn) (h : ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0) :
     ∀ {w : Nat} (env : List (BitVec w)), e.reflect env = 0 := by
   intros w env 
   rw [Eqn.reflect_eq_ofInt_denote]
@@ -501,11 +501,7 @@ theorem Eqn.denote_hard_case_of_denote (e : Eqn) (h : ∀ (env1 : List (BitVec 1
   rw [Eqn.denote_hard_case_aux]
   · simp
   · intros env1
-    let env1' := Env.ofEnvFin env1
-    specialize h env1'
-    rw [Eqn.denoteFin_eq_denote (xsFin := env1) (xs := env1')]
-    · exact h 
-    · simp [env1']
+    apply h 
 
 /-
 instance decEqnDenoteFinWidth1 {e : Eqn} : Decidable (∀ env1 : Env (BitVec 1), Eqn.denoteFin e env1 = 0) := 
@@ -519,7 +515,8 @@ instance {e : Eqn} : Decidable (∀ env1 : List (BitVec 1), Eqn.denote e env1 = 
 /--
 Central theorem: To decide if a bitvector equation is zero for all widths, it sufficest to check that the denotation is zero at width zero.
 -/
-theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (h : (∀ env1 : List (BitVec 1), Eqn.denote e env1 = 0)) : 
+theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) 
+      (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) : 
     ∀ (w : Nat) (env : List (BitVec w)), Eqn.reflect e env = 0 := by
   intros w env
   rw [Eqn.denote_hard_case_of_denote]
