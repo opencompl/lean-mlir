@@ -268,6 +268,7 @@ theorem toInt_one {w : Nat} (h : 1 < w ) : (1#w).toInt = 1 := by
     rw [h2, Nat.pow_le_pow_iff_right (a := 2) (by omega)] at hw'
     omega
 
+@[simp]
 theorem toInt_twoPow_sub_one : (BitVec.twoPow w (w - 1) - 1#w).toInt = 2 ^ (w - 1) - 1 := by
   rcases w with _|_|w
   · decide
@@ -305,8 +306,7 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
       w = 0 ∨ (let res := x.signExtend (w * 2) * y.signExtend (w * 2);
                ((BitVec.intMin w).signExtend (w * 2) ≤ₛ res) ∧
                  res ≤ₛ (BitVec.intMax w).signExtend (w * 2)) := by
-  simp only [smul_overflow, ge_iff_le, Bool.or_eq_false_iff, decide_eq_false_iff_not, not_le,
-    not_lt]
+  simp only [smul_overflow]
   rcases w with _ | w
   · decide +revert
   · simp only [false_or, BitVec.intMin, BitVec.intMax, BitVec.sle, BitVec.toInt_mul,
@@ -330,6 +330,7 @@ theorem smul_overflow_false_eq {w : Nat} (x y : BitVec w) :
       BitVec.toInt_signExtend_of_lt (by omega), BitVec.toInt_signExtend_of_lt (by omega),
       toInt_twoPow_of_eq (by omega), ←Nat.two_pow_pred_add_two_pow_pred (by omega), ←Nat.mul_two,
       bmod_eq_iff_of_lt_of_lt hlb hub, toInt_twoPow_sub_one]
+    simp
     omega
 
 theorem toNat_mul_toNat_lt {x y : BitVec w} : x.toNat * y.toNat < 2 ^ (w * 2) := by
