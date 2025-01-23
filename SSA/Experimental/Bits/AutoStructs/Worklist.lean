@@ -223,10 +223,10 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         simp [sa?] at heq'
         constructor
         { constructor
-          { apply Array.mem_of_back?_eq_some at heq'; apply st0.worklist_incl; assumption }
+          { apply Array.mem_of_back? at heq'; apply st0.worklist_incl; assumption }
           { apply Array.not_elem_back_pop at heq' <;> simp_all +zetaDelta [Array.pop, wl] } }
         constructor
-        { right; apply Array.mem_of_back?_eq_some at heq'; assumption }
+        { right; apply Array.mem_of_back? at heq'; assumption }
         rintro sa hh; rcases hh with hnin | hin
         { simp +zetaDelta [hnin] }
         right
@@ -829,7 +829,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
   | case3 st hnemp sa? sa hsa? wl' st' hc =>
     have h : sa ∈ st.map := by
       apply st.worklist_incl
-      simp_all [sa?, Array.mem_of_back?_eq_some]
+      simp_all [sa?, Array.mem_of_back?]
     apply Std.HashMap.getElem?_eq_some_getD (fallback := 0) at h
     simp [st'] at hc
     exfalso; apply (hc _); exact h
@@ -898,7 +898,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
           intros hin
           suffices ex : ∃ s, st.map[sa]? = some s by simp_all
           simp_all +zetaDelta
-        exfalso; apply hnin; apply st.worklist_incl; exact Array.mem_of_back?_eq_some hsome
+        exfalso; apply hnin; apply st.worklist_incl; exact Array.mem_of_back? hsome
     next hnone =>
       simp only [Array.back?, Array.getElem?_eq_none_iff] at *
       have : st.worklist.size = 0 := by omega
