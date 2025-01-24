@@ -704,6 +704,34 @@ def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | 
 @[simp]
 lemma Std.HashSet.mem_toSet [BEq α] [Hashable α] (m : HashSet α) : x ∈ m.toSet ↔ x ∈ m := by rfl
 
+/- Upstream? Unfortunately we need Mathlib lemmas... -/
+@[simp]
+theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.pop := by
+  rcases a with ⟨l⟩
+  simp only [List.back?_toArray, List.pop_toArray, mem_toArray]
+  rintro hnd hlast hdl
+  apply List.dropLast_append_getLast? at hlast
+  rw [←hlast] at hnd
+  apply List.disjoint_of_nodup_append at hnd
+  exact hnd hdl (List.mem_singleton.mpr rfl)
+
+theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
+    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.size → a[i]? ≠ a[j]? :=
+  List.nodup_iff_getElem?_ne_getElem?
+
+theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
+  rcases a with ⟨l⟩
+  simp only [List.pop_toArray, mem_toArray]
+  exact List.mem_of_mem_dropLast
+
+theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by
+  rcases a with ⟨l⟩; simp only [mem_toArray, List.pop_toArray, List.back?_toArray]
+  induction l using List.list_reverse_induction
+  case base => simp
+  case ind l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
+    List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.some.injEq]; tauto
+
+
 -- TODO: state in in pure Lean using `toList`, and decude this one
 theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
   {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :

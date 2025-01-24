@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 This file reflects the semantics of bitstreams, terms, predicates, and FSMs
 into lean bitvectors.
 
-We use `grind_norm` to convert the expression into negation normal form.
+We use `bv_circuit_nnf` to convert the expression into negation normal form.
 
 Authors: Siddharth Bhat
 -/
@@ -878,14 +878,13 @@ namespace NNF
 
 open Lean Elab Meta
 
-/-- convert goal to negation normal form, by running appropriate lemmas from `grind_norm`, and reverting all hypothese. -/
+/-- convert goal to negation normal form, by running appropriate lemmas from `bv_circuit_nnf`, and reverting all hypothese. -/
 def runNNFSimpSet (g : MVarId) : MetaM (Option MVarId) := do
-  let some ext ← (getSimpExtension? `grind_norm)
-    | throwError m!"[bv_nnf] Error: 'grind_norm' simp attribute not found!"
+  let some ext ← (getSimpExtension? `bv_circuit_nnf)
+    | throwError m!"[bv_nnf] Error: 'bv_circuit_nnf' simp attribute not found!"
   let theorems ← ext.getTheorems
-  let theorems ←  theorems.erase (Origin.decl ``ne_eq)
-  let some ext ← (Simp.getSimprocExtension? `grind_norm)
-    | throwError m!"[bv_nnf] Error: 'grind_norm' simp attribute not found!"
+  let some ext ← (Simp.getSimprocExtension? `bv_circuit_nnf)
+    | throwError m!"[bv_nnf] Error: 'bv_circuit_nnf' simp attribute not found!"
   let simprocs ← ext.getSimprocs
   let config : Simp.Config := { Simp.neutralConfig with
     failIfUnchanged   := false,
@@ -911,46 +910,153 @@ elab "bv_nnf" : tactic => do
       -- let g ← g.revertAll
       return [g]
 
-attribute [grind_norm] BitVec.not_lt
-attribute [grind_norm] BitVec.not_le
+attribute [bv_circuit_nnf] BitVec.not_lt
+attribute [bv_circuit_nnf] BitVec.not_le
 
-@[grind_norm]
+@[bv_circuit_nnf]
 theorem implies_eq_not_a_or_b (a b : Prop) : (a → b) = (¬ a ∨ b) := by
   by_cases a
   case pos h => simp [h]
   case neg h => simp [h]
 
-@[grind_norm]
+@[bv_circuit_nnf]
 theorem sle_iff_slt_eq_false {a b : BitVec w} : a.slt b = false ↔ b.sle a := by
   constructor <;>
   intros h <;>
   simp [BitVec.sle, BitVec.slt] at h ⊢ <;>
   omega
 
-@[grind_norm]
+@[bv_circuit_nnf]
 theorem slt_iff_sle_eq_false {a b : BitVec w} : a.sle b = false ↔ b.slt a := by
   constructor <;>
   intros h <;>
   simp [BitVec.sle, BitVec.slt] at h ⊢ <;>
   omega
---  ne_eq: (a ≠ b) = ¬(a = b) := rfl
-attribute [- grind_norm] ne_eq -- TODO(bollu): Debate with grind maintainer about having `a ≠ b → ¬ (a = b)` in the simp-set?
-@[grind_norm] theorem not_eq_iff_neq : (¬ (a = b)) = (a ≠ b) := by rfl
+
+/-!
+Normalization theorems for the `grind` tactic.
+
+We are also going to use simproc's in the future.
+-/
+
+-- Not
+attribute [bv_circuit_nnf] Classical.not_not
+
+@[bv_circuit_nnf] theorem not_eq_eq {α : Sort u} (a b : α) : (¬ (a = b)) = (a ≠ b) := by simp
+
+-- Iff
+@[bv_circuit_nnf] theorem iff_eq (p q : Prop) : (p ↔ q) = (p = q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+
+-- Eq
+attribute [bv_circuit_nnf] eq_self heq_eq_eq
+
+-- Prop equality
+@[bv_circuit_nnf] theorem eq_true_eq (p : Prop) : (p = True) = p := by simp
+@[bv_circuit_nnf] theorem eq_false_eq (p : Prop) : (p = False) = ¬p := by simp
+@[bv_circuit_nnf] theorem not_eq_prop (p q : Prop) : (¬(p = q)) = (p = ¬q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+
+-- True
+attribute [bv_circuit_nnf] not_true
+
+-- False
+attribute [bv_circuit_nnf] not_false_eq_true
+
+-- Remark: we disabled the following normalization rule because we want this information when implementing splitting heuristics
+-- Implication as a clause
+theorem imp_eq (p q : Prop) : (p → q) = (¬ p ∨ q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+
+@[bv_circuit_nnf] theorem true_imp_eq (p : Prop) : (True → p) = p := by simp
+@[bv_circuit_nnf] theorem false_imp_eq (p : Prop) : (False → p) = True := by simp
+@[bv_circuit_nnf] theorem imp_true_eq (p : Prop) : (p → True) = True := by simp
+@[bv_circuit_nnf] theorem imp_false_eq (p : Prop) : (p → False) = ¬p := by simp
+@[bv_circuit_nnf] theorem imp_self_eq (p : Prop) : (p → p) = True := by simp
+
+-- And
+@[bv_circuit_nnf↓] theorem not_and (p q : Prop) : (¬(p ∧ q)) = (¬p ∨ ¬q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+attribute [bv_circuit_nnf] and_true true_and and_false false_and and_assoc
+
+-- Or
+attribute [bv_circuit_nnf↓] not_or
+attribute [bv_circuit_nnf] or_true true_or or_false false_or or_assoc
+
+-- ite
+attribute [bv_circuit_nnf] ite_true ite_false
+@[bv_circuit_nnf↓] theorem not_ite {_ : Decidable p} (q r : Prop) : (¬ite p q r) = ite p (¬q) (¬r) := by
+  by_cases p <;> simp [*]
+
+@[bv_circuit_nnf] theorem ite_true_false {_ : Decidable p} : (ite p True False) = p := by
+  by_cases p <;> simp
+
+@[bv_circuit_nnf] theorem ite_false_true {_ : Decidable p} : (ite p False True) = ¬p := by
+  by_cases p <;> simp
+
+-- Forall
+@[bv_circuit_nnf↓] theorem not_forall (p : α → Prop) : (¬∀ x, p x) = ∃ x, ¬p x := by simp
+attribute [bv_circuit_nnf] forall_and
+
+-- Exists
+@[bv_circuit_nnf↓] theorem not_exists (p : α → Prop) : (¬∃ x, p x) = ∀ x, ¬p x := by simp
+attribute [bv_circuit_nnf] exists_const exists_or exists_prop exists_and_left exists_and_right
+
+-- Bool cond
+@[bv_circuit_nnf] theorem cond_eq_ite (c : Bool) (a b : α) : cond c a b = ite c a b := by
+  cases c <;> simp [*]
+
+-- Bool or
+attribute [bv_circuit_nnf]
+  Bool.or_false Bool.or_true Bool.false_or Bool.true_or Bool.or_eq_true Bool.or_assoc
+
+-- Bool and
+attribute [bv_circuit_nnf]
+  Bool.and_false Bool.and_true Bool.false_and Bool.true_and Bool.and_eq_true Bool.and_assoc
+
+-- Bool not
+attribute [bv_circuit_nnf]
+  Bool.not_not
+
+-- beq
+attribute [bv_circuit_nnf] beq_iff_eq
+
+-- bne
+attribute [bv_circuit_nnf] bne_iff_ne
+
+-- Bool not eq true/false
+attribute [bv_circuit_nnf] Bool.not_eq_true Bool.not_eq_false
+
+-- decide
+attribute [bv_circuit_nnf] decide_eq_true_eq decide_not not_decide_eq_true
+
+-- Nat LE
+attribute [bv_circuit_nnf] Nat.le_zero_eq
+
+-- Nat/Int LT
+@[bv_circuit_nnf] theorem Nat.lt_eq (a b : Nat) : (a < b) = (a + 1 ≤ b) := by
+  simp [Nat.lt, LT.lt]
+
+@[bv_circuit_nnf] theorem Int.lt_eq (a b : Int) : (a < b) = (a + 1 ≤ b) := by
+  simp [Int.lt, LT.lt]
+
+-- GT GE
+attribute [bv_circuit_nnf] GT.gt GE.ge
+
+-- Succ
+attribute [bv_circuit_nnf] Nat.succ_eq_add_one
 
 /--
-warning: 'ne_eq' does not have [simp] attribute
----
 warning: declaration uses 'sorry'
 ---
 info: w : ℕ
 ⊢ (∀ (x x_1 : BitVec w), x_1 ≤ x) ∧ ∀ (x x_1 : BitVec w), x ≤ x_1 ∨ x_1 < x ∨ x ≤ x_1 ∨ x ≠ x_1
 -/
 #guard_msgs in example : ∀ (a b : BitVec w),  ¬ (a < b ∨ a > b ∧ a ≤ b ∧ a > b ∧ (¬ (a ≠ b))) := by
- bv_nnf; trace_state; sorry
+ bv_nnf;
+ trace_state; sorry
 
 /--
-warning: 'ne_eq' does not have [simp] attribute
----
 warning: declaration uses 'sorry'
 ---
 info: w : ℕ
@@ -1427,16 +1533,38 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
 -/
 
+def cadicalTimeoutSec : Nat := 1000
+
+open Std Sat AIG Tactic BVDecide Frontend in
+def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+  let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
+  IO.FS.withTempFile fun _ lratFile => do
+    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
+    let cnf := toCNF entrypoint
+    let out ← runExternal cnf cfg.solver cfg.lratPath 
+      (trimProofs := true) 
+      (timeout := cadicalTimeoutSec)
+      (binaryProofs := true)
+    match out with
+    | .error _model => return true
+    | .ok _cert => return false
+
+
 open Std Sat AIG Tactic BVDecide Frontend in
 def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
-  let cfg : BVDecideConfig := {}
+  let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
     let c := c.not -- we're checking TAUTO, so check that negation is UNSAT.
     let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
-    let out ← runExternal cnf cfg.solver cfg.lratPath (trimProofs := true) (timeout := 1000) (binaryProofs := true)
+    let out ← runExternal cnf cfg.solver cfg.lratPath
+      (trimProofs := true)
+      (timeout := cadicalTimeoutSec)
+      (binaryProofs := true)
     match out with
     | .error _model => return false
     | .ok _cert => return true
@@ -1454,41 +1582,57 @@ def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
  let ret ← checkCircuitTautoAux impliesCircuit
  return ⟨ret, decideIfZerosMAx⟩
 
-def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) (c : Circuit p.α) (iter : Nat) : TermElabM Bool := do
-  IO.println s!"## K-induction (iter {iter})"
-  IO.println s!"Evaluating circuit of size '{c.size}' on initial state"
-  if c.eval p.initCarry
+partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  [DecidableEq β] [Fintype β] [Hashable β]
+    (p : FSM arity) (c : Circuit (p.α ⊕ β))  (iter : Nat) : TermElabM Bool := do
+  IO.eprintln s!"## K-induction (iter {iter})"
+  IO.eprintln s!"Evaluating circuit of size '{c.size}' on initial state"
+  let cInit := c.assignVars fun v hv => 
+    match v with 
+    | .inl a => .inr (p.initCarry a)
+    | .inr b => .inl b
+  if ← checkCircuitSatAux cInit
   then 
     IO.println s!"Safety property failed on initial state."
     return false
   else
     IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
     let tStart ← IO.monoMsNow
-    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    let cNext : Circuit (p.α ⊕ (β ⊕ arity)) := 
+      c.bind fun v =>
+        match v with
+        | .inl a => p.nextBitCirc (some a) |>.map fun v => 
+          match v with 
+          | .inl a => .inl a 
+          | .inr x => .inr (.inr x)
+        | .inr b => .var true (.inr (.inl b))
+    let c : Circuit (p.α ⊕ (β ⊕ arity)) := c.map fun v =>
+      match v with 
+      | .inl a => .inl a 
+      | .inr b => .inr (.inl b)
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    IO.println s!"Built state circuit of size: '{c'.size}' (time={tElapsedSec}s)"
-    IO.println s!"Establishing inductive invariant with cadical..."
+    IO.eprintln s!"Built state circuit of size: '{cNext.size}' (time={tElapsedSec}s)"
+    IO.eprintln s!"Establishing inductive invariant with cadical..."
     let tStart ← IO.monoMsNow
-    let le ← Circuit.decLeCadical c' c
+    let le ← Circuit.decLeCadical cNext c
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if h : le then 
-      IO.println s!"Inductive invariant established! (time={tElapsedSec}s)"
+      IO.eprintln s!"Inductive invariant established! (time={tElapsedSec}s)"
       return true
     else
-      have _wf : card_compl (c' ||| c) < card_compl c :=
-        have := le.prop
-        have hNotLt : ¬ c' ≤ c := by
-          simp at h
-          have := this.not
-          simp at this
-          exact this.mp h
-        decideIfZeroAux_wf hNotLt
-      IO.println s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM p (c' ||| c) (iter + 1)
-  termination_by card_compl c
+      -- have _wf : card_compl (cNext ||| c) < card_compl c :=
+      --   have := le.prop
+      --   have hNotLt : ¬ cNext ≤ c := by
+      --     simp at h
+      --     have := this.not
+      --     simp at this
+      --     exact this.mp h
+      --   decideIfZeroAux_wf hNotLt
+      IO.eprintln s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
+      decideIfZerosAuxTermElabM p (cNext ||| c) (iter + 1)
+  -- termination_by sorry -- card_compl c
 
 def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
@@ -1496,10 +1640,11 @@ def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (p : FSM arity) : m Bool :=
   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
 
-def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  (fsm : FSM arity) : TermElabM Bool :=
+def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity] (fsm : FSM arity) : TermElabM Bool :=
   -- decideIfZerosM Circuit.decLeCadical fsm
   withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
-    decideIfZerosAuxTermElabM fsm (fsm.nextBitCirc none).fst 1
+    let c : Circuit (fsm.α ⊕ Empty) := (fsm.nextBitCirc none).fst.map Sum.inl
+    decideIfZerosAuxTermElabM fsm c 1
 
 end BvDecide
 
@@ -1634,375 +1779,5 @@ def evalBvAutomataCircuit : Tactic := fun
       evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig })
     | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
-
-/-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
-theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
-  intros
-  bv_automata_circuit
-#print eq1
-
-/-- Can solve implicitly quantified expressions by directly invoking bv_automata3. -/
-theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
-  bv_automata_circuit
-#print eq1
-
-open NNF in
-
-example (w : Nat) (a b : BitVec w) : a + b = b + a := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∨ (a = 0#w) := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
-  bv_automata_circuit
-
-example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a ≠ 0#w) := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a + 0#w = a) := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + 0#w = a) := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
-  bv_automata_circuit
-
-/-- either a < b or b ≤ a -/
-example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
-  bv_automata_circuit
-
-/-- Tricohotomy of < -/
-example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
-  bv_automata_circuit
-
-/-- < implies not equals -/
-example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
-  bv_automata_circuit
-
-/-- <= and >= implies equals -/
-example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
-  bv_automata_circuit
-
-example (a b : BitVec 1) : (a - b).slt 0 → a.slt b := by
-  fail_if_success bv_decide
-  -- The prover found a counterexample, consider the following assignment:
-  -- a = 0x0#1
-  -- b = 0x1#1
-  sorry
-
--- This should succeed.
-example (w : Nat) (a b : BitVec w) : (w > 1 ∧ (a - b).slt 0 → a.slt b) := by
-  try bv_automata_circuit;
-  sorry
-
-
-/-- Tricohotomy of slt. Currently fails! -/
-example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.sle a) := by
-  bv_automata_circuit
-  -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
-
-/-- Tricohotomy of slt. Currently fails! -/
-example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
-  bv_automata_circuit
-  -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
-
-/-- a <=s b and b <=s a implies a = b-/
-example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
-  bv_automata_circuit
-  -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
-
-/-- In bitwidth 0, all values are equal.
-In bitwidth 1, 1 + 1 = 0.
-In bitwidth 2, 1 + 1 = 2 ≠ 0#2
-For all bitwidths ≥ 2, we know that a ≠ a + 1
--/
-example (w : Nat) (a : BitVec w) : (a ≠ a + 1#w) ∨ (1#w + 1#w = 0#w) ∨ (1#w = 0#w):= by
-  bv_automata_circuit
-
-/-- If we have that 'a &&& a = 0`, then we know that `a = 0` -/
-example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
-  bv_automata_circuit
-
-/--
-Is this true at bitwidth 1? Not it is not!
-So we need an extra hypothesis that rules out bitwifth 1.
-We do this by saying that either the given condition, or 1+1 = 0.
-I'm actually not sure why I need to rule out bitwidth 0? Mysterious!
--/
-example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
-  fail_if_success bv_automata_circuit
-  sorry
-
-
-example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
-example (w : Nat) (a : BitVec w) : (w = 0) → (a = 0#w ∨ a = 1#w) := by bv_automata_circuit
-example (w : Nat) : (w = 1) → (1#w + 1#w = 0#w) := by bv_automata_circuit
-example (w : Nat) : (w = 0) → (1#w + 1#w = 0#w) := by bv_automata_circuit
-example (w : Nat) : ((w = 0) ∨ (w = 1)) → (1#w + 1#w = 0#w) := by bv_automata_circuit
-
-example (w : Nat) : (1#w + 1#w = 0#w) → ((w = 0) ∨ (w = 1)):= by
-  bv_automata_circuit
-/-
-We can say that we are at bitwidth 1 by saying that 1 + 1 = 0.
-When we have this, we then explicitly enumerate the different values that a can have.
-Note that this is pretty expensive.
--/
-example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
-  bv_automata_circuit
-
-example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
-  bv_automata_circuit
-
-
-/-- Can use implications -/
-theorem eq_circuit (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
-  bv_nnf
-  bv_automata_circuit
-
-#print eq_circuit
-
-
-/-- Can exploit hyps -/
-theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
-  bv_automata_circuit
-
-#print eq_circuit
-
-section BvAutomataTests
-
-/-!
-# Test Cases
--/
-
-/--
-warning: Tactic has not understood the following expressions, and will treat them as symbolic:
-
-  - 'f x'
-  - 'f y'
--/
-#guard_msgs (warning, drop error, drop info) in
-theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) : f x ≠ f y :=
-  by bv_automata_circuit
-
-/-- Check that we correctly handle `OfNat.ofNat 1`. -/
-theorem not_neg_eq_sub_one (x : BitVec 53) :
-    ~~~ (- x) = x - 1 := by
-  bv_automata_circuit
-
-/-- Check that we correctly handle multiplication by two. -/
-theorem sub_eq_mul_and_not_sub_xor (x y : BitVec w):
-    x - y = 2 * (x &&& ~~~ y) - (x ^^^ y) := by
-  -- simp [Simplifications.BitVec.OfNat_ofNat_mul_eq_ofNat_mul]
-  -- simp only [BitVec.ofNat_eq_ofNat, Simplifications.BitVec.two_mul_eq_add_add]
-  all_goals bv_automata_circuit (config := {circuitSizeThreshold := 140 })
-
-
-/- See that such problems have large circuit sizes, but small state spaces -/
-def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 107 })
-
-
-def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
-  fail_if_success bv_automata_circuit
-  sorry
-
-def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
-  bv_automata_circuit -- can't decide things for fixed bitwidth.
-
-def test0 {w : Nat} (x y : BitVec w) : x + 0#w = x := by
-  bv_automata_circuit
-
-
-def test_simple2 {w : Nat} (x y : BitVec w) : x = x := by
-  bv_automata_circuit
-
-def test1 {w : Nat} (x y : BitVec w) : (x ||| y) - (x ^^^ y) = x &&& y := by
-  bv_automata_circuit
-
-
-def test4 (x y : BitVec w) : (x + -y) = (x - y) := by
-  bv_automata_circuit
-
-def test5 (x y z : BitVec w) : (x + y + z) = (z + y + x) := by
-  bv_automata_circuit
-
-
-def test6 (x y z : BitVec w) : (x + (y + z)) = (x + y + z) := by
-  bv_automata_circuit
-
-def test11 (x y : BitVec w) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
-  bv_automata_circuit
-
-
-def test15 (x y : BitVec w) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
-  bv_automata_circuit
-
-def test17 (x y : BitVec w) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
-  bv_automata_circuit
-
-
-def test18 (x y : BitVec w) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
-  bv_automata_circuit
-
-
-def test19 (x y : BitVec w) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
-  bv_automata_circuit
-
-
-def test21 (x y : BitVec w) : (~~~(x - y)) = (~~~x + y) := by
-  bv_automata_circuit
-
-def test2_circuit (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
-  bv_automata_circuit
-
-def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
-  bv_automata_circuit
-
-/--
-info: 'Reflect.test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
--/
-#guard_msgs in #print axioms test24
-
-/--
-info: def Reflect.test24 : ∀ {w : ℕ} (x y : BitVec w), x ||| y = (x &&& ~~~y) + y :=
-fun {w} x y =>
-  id
-    (Predicate.denote_of_eval_eq
-      (of_decide_eq_true
-        (ofReduceBool
-          (decide
-            (∀ (w : ℕ) (vars : List BitStream),
-              (Predicate.eq ((Term.var 0).or (Term.var 1)) (((Term.var 0).and (Term.var 1).not).add (Term.var 1))).eval
-                  vars w =
-                false))
-          true SSA.Experimental.Bits.Fast.Reflect._auxLemma.32))
-      w (Map.append w y (Map.append w x Map.empty)))
--/
-#guard_msgs in #print test24
-
-def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
-  bv_automata_circuit
-
-def test26 {w : Nat} (x y : BitVec w) : 1#w + x + 0#w = 1#w + x := by
-  bv_automata_circuit
-
-/-- NOTE: we now support 'ofNat' literals -/
-def test27 (x y : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
-  bv_automata_circuit
-
-def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
-  bv_automata_circuit
-
-example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofNat w 1 := by
-  intros
-  bv_automata_circuit
-
-example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
-  intros
-  bv_automata_circuit
-
-example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by intros; bv_automata_circuit
-example : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by intros; bv_automata_circuit
-example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
-  intros w n
-  -- rw [BitVec.ofNat_eq_ofNat (n := w) (i := 2)]
-  intros; bv_automata_circuit
-
-/-- Can solve width-constraints problems -/
-def test30  : (w = 2) → 8#w = 0#w := by
-  bv_automata_circuit
-
-/-- Can solve width-constraints problems -/
-def test31 (w : Nat) (x : BitVec w) : x &&& x = x := by
-  bv_automata_circuit (config := { stateSpaceSizeThreshold := 100 })
-
-theorem neg_eq_not_add_one (x : BitVec w) :
-    -x = ~~~ x + 1#w := by
-  bv_automata_circuit
-
-theorem add_eq_xor_add_mul_and (x y : BitVec w) :
-    x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 300 } )
-
-theorem add_eq_xor_add_mul_and' (x y : BitVec w) :
-    x + y = (x ^^^ y) + (x &&& y) + (x &&& y) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 300 } )
-
-theorem add_eq_xor_add_mul_and_nt (x y : BitVec w) :
-    x + y = (x ^^^ y) + 2 * (x &&& y) := by
-  bv_automata_circuit
-
-/-- Check that we correctly process an even numeral multiplication. -/
-theorem mul_four (x : BitVec w) : 4 * x = x + x + x + x := by
-  bv_automata_circuit
-
-/-- Check that we correctly process an odd numeral multiplication. -/
-theorem mul_five (x : BitVec w) : 5 * x = x + x + x + x + x := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 180 })
-
-open BitVec in
-/-- Check that we support sign extension. -/
-theorem sext
-    (b : BitVec 8)
-    (c : ¬(11#9 - signExtend 9 (b &&& 7#8)).msb = (11#9 - signExtend 9 (b &&& 7#8)).getMsbD 1) :
-    False := by
-  fail_if_success bv_automata_circuit
-  sorry
-
-/-- Check that we support zero extension. -/
-theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
-  fail_if_success bv_automata_circuit
-  sorry
-
-/-- Can solve width-constraints problems, when written with a width constraint. -/
-def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
-  bv_automata_circuit
-
-
-example (x : BitVec 0) : x = x + 0#0 := by
-  bv_automata_circuit
-
-/-- All bitvectors are equal at width 0 -/
-example (x y : BitVec w) (hw : w = 0) : x = y := by
-  bv_automata_circuit
-
-/-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
-def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
-  bv_automata_circuit
-
-/-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
-def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
-  bv_automata_circuit
-
-/--
-info: 'Reflect.width_1_char_2_add_four' depends on axioms: [propext,
- Classical.choice,
- Lean.ofReduceBool,
- Lean.trustCompiler,
- Quot.sound]
--/
-#guard_msgs in #print axioms width_1_char_2_add_four
-
-set_option trace.profiler true  in
-/-- warning: declaration uses 'sorry' -/
-theorem slow₁ (x : BitVec 32) :
-    63#32 - (x &&& 31#32) = x &&& 31#32 ^^^ 63#32 := by
-  fail_if_success bv_automata_circuit (config := { circuitSizeThreshold := 30, stateSpaceSizeThreshold := 24 } )
-  sorry
-
-theorem neg_one_mul (x y : BitVec w) :
-     - 1 *  ~~~(x ^^^ y)  = -1 * ~~~ (x ^^^ y) := by
-  bv_automata_circuit
-
-theorem e_1 (x y : BitVec w) :
-     - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  bv_automata_circuit (config := { backend := .cadical })
-
-end BvAutomataTests
 
 end Reflect

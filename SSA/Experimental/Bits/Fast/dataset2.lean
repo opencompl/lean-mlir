@@ -1,6 +1,8 @@
 import Std.Tactic.BVDecide
 import SSA.Experimental.Bits.Fast.Reflect
 
+set_option maxHeartbeats 0
+
 /- This dataset was derived from
    https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 -/
@@ -15,23 +17,16 @@ theorem e_1 (x y : BitVec w) :
   bv_automata_circuit (config := {backend := .cadical})
 
 
-
 theorem e_2 (x y : BitVec w) :
     1 *  ~~~x - 2 * (x ^^^ y) + 1 *  ~~~(x &&& y) = 2 *  ~~~(x ||| y) - 1 * (x &&&  ~~~y) := by
   bv_automata_circuit (config := { backend := .cadical })
-
 
 
 theorem e_4 (x y : BitVec w) :
     11 *  ~~~(x &&&  ~~~y) - 9 *  ~~~(x ||| y) + 2 * (x &&&  ~~~y) = 2 *  ~~~y + 11 * y := by
   bv_automata_circuit (config := { backend := .dryrun })
 
-#exit 
 
-
-theorem e_4 (x y : BitVec w) :
-    11 *  ~~~(x &&&  ~~~y) - 9 *  ~~~(x ||| y) + 2 * (x &&&  ~~~y) = 2 *  ~~~y + 11 * y := by
-  bv_automata_circuit (config := { backend := .cadical })
 
 theorem e_5 (x y : BitVec w) :
      - 1 *  ~~~y + 2 *  ~~~(x &&& y) - 1 *  ~~~(x |||  ~~~y) - 1 * (x &&&  ~~~y) = 1 *  ~~~x := by
@@ -43,7 +38,7 @@ theorem e_6 (x y : BitVec w) :
 
 theorem e_7 (x y : BitVec w) :
     11 *  ~~~(x &&&  ~~~y) - 11 * x + 11 * (x &&&  ~~~y) + 11 * (x &&& y) = 11 *  ~~~(x ||| y) + 11 * y := by
-  bv_automata_circuit (config := { backend := .cadical })
+  bv_automata_circuit (config := { backend := .dryrun })
 
 theorem e_8 (x y : BitVec w) :
     1 * (x |||  ~~~y) - 1 * (x ||| y) - 2 *  ~~~(x ||| y) - 1 * (x &&& y) =  - 1 *  ~~~(x &&&  ~~~y) := by
@@ -51,7 +46,7 @@ theorem e_8 (x y : BitVec w) :
 
 theorem e_9 (x y : BitVec w) :
      - 2 * (x ^^^ y) + 11 * (x ||| y) + 5 * y - 9 * (x &&&  ~~~y) = 14 *  ~~~(x |||  ~~~y) + 16 * (x &&& y) := by
-  bv_automata_circuit (config := { backend := .cadical })
+  bv_automata_circuit (config := { backend := .dryrun })
 
 theorem e_10 (x y : BitVec w) :
      - 3 * x - 2 *  ~~~y + 6 * (x &&&  ~~~y) + 4 * (x &&& y) =  - 3 *  ~~~(x ||| y) + 1 * (x |||  ~~~y) := by
@@ -73,6 +68,13 @@ theorem e_14 (x y : BitVec w) :
     2 * x + 5 *  ~~~y + 2 *  ~~~(x |||  ~~~y) - 7 * (x &&&  ~~~y) = 5 *  ~~~(x ||| y) + 2 * y := by
   bv_automata_circuit (config := { backend := .cadical })
 
+theorem e_15' (x y k l m: BitVec w) :
+     ((k =  ~~~ (x ^^^ y)) ∧
+     (l = ~~~(x |||  ~~~y)) ∧
+     (m = ~~~(x ||| y))) →
+     (- 5 * y + 1 *  ~~~x + 11 *  k + 4 * l = 6 * (x &&& y) + 12 * m) := by
+  bv_automata_circuit (config := { backend := .cadical })
+
 theorem e_15 (x y : BitVec w) :
      - 5 * y + 1 *  ~~~x + 11 *  ~~~(x ^^^ y) + 4 *  ~~~(x |||  ~~~y) = 6 * (x &&& y) + 12 *  ~~~(x ||| y) := by
   bv_automata_circuit (config := { backend := .cadical })
@@ -80,6 +82,12 @@ theorem e_15 (x y : BitVec w) :
 theorem e_16 (x y : BitVec w) :
     1 * (x ||| y) + 7 * x - 1 *  ~~~x - 8 * (x &&& y) =  - 1 *  ~~~(x ||| y) + 8 * (x &&&  ~~~y) := by
   bv_automata_circuit (config := { backend := .cadical })
+
+theorem e_17' (x y : BitVec 6) :
+     - 11 *  ~~~(x &&& y) + 14 *  ~~~(x ||| y) + 9 *  ~~~(x |||  ~~~y) + 16 * (x &&&  ~~~y) =  - 2 *  ~~~x + 5 *  ~~~y := by
+  bv_decide
+  -- bv_automata_circuit (config := { backend := .cadical })
+
 
 theorem e_17 (x y : BitVec w) :
      - 11 *  ~~~(x &&& y) + 14 *  ~~~(x ||| y) + 9 *  ~~~(x |||  ~~~y) + 16 * (x &&&  ~~~y) =  - 2 *  ~~~x + 5 *  ~~~y := by

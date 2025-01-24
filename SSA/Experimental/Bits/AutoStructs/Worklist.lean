@@ -1,4 +1,5 @@
 import SSA.Experimental.Bits.AutoStructs.Basic
+import Mathlib.Tactic.LiftLets
 
 section nfa
 
@@ -71,7 +72,8 @@ def worklist.St.addOrCreateState (st : worklist.St A S) (final? : Bool) (sa : S)
     have worklist_nodup : worklist.toList.Nodup := by
       simp [worklist]; apply List.nodup_middle.mpr; simp
       intro hc;
-      apply st.worklist_incl at hc; simp at hc; apply Std.HashMap.get?_none_not_mem at heq; contradiction
+      apply st.worklist_incl at hc;
+      apply Std.HashMap.get?_none_not_mem at heq; contradiction
     have worklist_incl : ∀ sa ∈ worklist, sa ∈ map := by
       simp [worklist, map]; intros sa' hin; rcases hin with hin | heq
       { apply st.worklist_incl at hin; aesop }
@@ -221,10 +223,10 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         simp [sa?] at heq'
         constructor
         { constructor
-          { apply Array.mem_of_back?_eq_some at heq'; apply st0.worklist_incl; assumption }
+          { apply Array.mem_of_back? at heq'; apply st0.worklist_incl; assumption }
           { apply Array.not_elem_back_pop at heq' <;> simp_all +zetaDelta [Array.pop, wl] } }
         constructor
-        { right; apply Array.mem_of_back?_eq_some at heq'; assumption }
+        { right; apply Array.mem_of_back? at heq'; assumption }
         rintro sa hh; rcases hh with hnin | hin
         { simp +zetaDelta [hnin] }
         right
@@ -249,7 +251,7 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
               apply st2.map.keys_nodup
             simp [List.nodup_append_comm, List.disjoint_of_nodup_append, this]
           apply hdisj
-          { simp_all [Std.HashMap.mem_keys_iff_mem]; apply hnew }
+          { simp_all [Std.HashMap.mem_keys]; apply hnew }
           { apply hc }
         rcases hin with ⟨hin⟩; simp_all +zetaDelta
       have : st2.meas < st0.meas := by omega
@@ -827,7 +829,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
   | case3 st hnemp sa? sa hsa? wl' st' hc =>
     have h : sa ∈ st.map := by
       apply st.worklist_incl
-      simp_all [sa?, Array.mem_of_back?_eq_some]
+      simp_all [sa?, Array.mem_of_back?]
     apply Std.HashMap.getElem?_eq_some_getD (fallback := 0) at h
     simp [st'] at hc
     exfalso; apply (hc _); exact h
@@ -896,7 +898,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
           intros hin
           suffices ex : ∃ s, st.map[sa]? = some s by simp_all
           simp_all +zetaDelta
-        exfalso; apply hnin; apply st.worklist_incl; exact Array.mem_of_back?_eq_some hsome
+        exfalso; apply hnin; apply st.worklist_incl; exact Array.mem_of_back? hsome
     next hnone =>
       simp only [Array.back?, Array.getElem?_eq_none_iff] at *
       have : st.worklist.size = 0 := by omega
