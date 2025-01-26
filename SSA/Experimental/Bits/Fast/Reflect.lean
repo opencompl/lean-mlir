@@ -1081,9 +1081,9 @@ open Lean Meta Elab Tactic
 
 inductive CircuitBackend
 /-- Pure lean implementation, verified. -/
-| lean 
+| lean
 /-- bv_decide based backend. Currently unverified. -/
-| cadical 
+| cadical
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
 deriving Repr, DecidableEq
@@ -1543,8 +1543,8 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
     let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
-    let out ← runExternal cnf cfg.solver cfg.lratPath 
-      (trimProofs := true) 
+    let out ← runExternal cnf cfg.solver cfg.lratPath
+      (trimProofs := true)
       (timeout := cadicalTimeoutSec)
       (binaryProofs := true)
     match out with
@@ -1587,28 +1587,28 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
     (p : FSM arity) (c : Circuit (p.α ⊕ β))  (iter : Nat) : TermElabM Bool := do
   IO.eprintln s!"## K-induction (iter {iter})"
   IO.eprintln s!"Evaluating circuit of size '{c.size}' on initial state"
-  let cInit := c.assignVars fun v hv => 
-    match v with 
+  let cInit := c.assignVars fun v hv =>
+    match v with
     | .inl a => .inr (p.initCarry a)
     | .inr b => .inl b
   if ← checkCircuitSatAux cInit
-  then 
+  then
     IO.println s!"Safety property failed on initial state."
     return false
   else
     IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
     let tStart ← IO.monoMsNow
-    let cNext : Circuit (p.α ⊕ (β ⊕ arity)) := 
+    let cNext : Circuit (p.α ⊕ (β ⊕ arity)) :=
       c.bind fun v =>
         match v with
-        | .inl a => p.nextBitCirc (some a) |>.map fun v => 
-          match v with 
-          | .inl a => .inl a 
+        | .inl a => p.nextBitCirc (some a) |>.map fun v =>
+          match v with
+          | .inl a => .inl a
           | .inr x => .inr (.inr x)
         | .inr b => .var true (.inr (.inl b))
     let c : Circuit (p.α ⊕ (β ⊕ arity)) := c.map fun v =>
-      match v with 
-      | .inl a => .inl a 
+      match v with
+      | .inl a => .inl a
       | .inr b => .inr (.inl b)
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
@@ -1618,7 +1618,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
     let le ← Circuit.decLeCadical cNext c
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    if h : le then 
+    if h : le then
       IO.eprintln s!"Inductive invariant established! (time={tElapsedSec}s)"
       return true
     else
@@ -1706,7 +1706,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo f!"{fsm.format}'"
 
-    match cfg.backend with 
+    match cfg.backend with
     | .dryrun =>
         g.assign (← mkSorry (← g.getType) (synthetic := false))
         logInfo "Closing goal with 'sorry' for dry-run"
