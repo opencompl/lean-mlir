@@ -1,5 +1,6 @@
 import SSA.Experimental.Bits.Fast.Attr
 import Lean
+import Lean.ToExpr
 
 @[simp]
 theorem BitVec.zero_concat (b : Bool) : (0#0).concat b = BitVec.ofBool b := by
@@ -25,6 +26,21 @@ def Factor.numVars : Factor → Nat
 | .var n => n+1
 | .and x y | .or x y | xor x y => max (x.numVars) (y.numVars)
 | .not x => x.numVars
+
+open Lean Elab Meta in
+def Factor.toExpr (f : Factor) : Expr := 
+  match f with 
+  | .var i => mkApp (mkConst ``Factor.var) (mkNatLit i)
+  | .xor i j => mkApp2 (mkConst ``Factor.xor) i.toExpr j.toExpr
+  | .and i j => mkApp2 (mkConst ``Factor.and) i.toExpr j.toExpr
+  | .or i j => mkApp2 (mkConst ``Factor.or) i.toExpr j.toExpr
+  | .not x => mkApp (mkConst ``Factor.not) x.toExpr
+
+open Lean in
+instance : ToExpr Factor where
+  toExpr := Factor.toExpr
+  toTypeExpr := mkConst ``Factor
+
 
 @[simp]
 theorem Factor.numVars_term : (Factor.var n).numVars = n + 1 := rfl
@@ -315,6 +331,15 @@ structure Term where
   c : Int
   f : Factor
 
+open Lean Elab Meta in
+def Term.toExpr (t : Term) : Expr := 
+  mkApp2 (mkConst ``Term.mk) (ToExpr.toExpr t.c) (t.f.toExpr)
+
+open Lean in
+instance : ToExpr Term where
+  toExpr := Term.toExpr
+  toTypeExpr := mkConst ``Term
+
 def Term.numVars (t : Term) : Nat := t.f.numVars
 
 /-- Reflect is what we use for reflection -/
@@ -368,6 +393,19 @@ theorem Term.denoteFin_width_zero  (t : Term) (env : EnvFin 0 t.numVars) :
     t.denoteFin env = 0 := by simp [Term.denoteFin, Factor.denoteFin]
 
 def Eqn := List Term
+
+open Lean in
+def Eqn.toExpr (e : Eqn) : Expr := ToExpr.toExpr (α := List Term) e
+
+open Lean in 
+instance : ToExpr Eqn where 
+  toExpr := Eqn.toExpr
+  toTypeExpr := mkConst ``Eqn
+
+open Lean in
+instance : ToExpr Term where
+  toExpr := Term.toExpr
+  toTypeExpr := mkConst ``Term
 
 def Eqn.numVars (e : Eqn) : Nat := 
   match e with 
@@ -666,13 +704,13 @@ attribute [bv_mba_preprocess] BitVec.ofNat_eq_ofNat
 
 
 namespace Reflect
-open Lean Elab Meta 
+open Lean Elab Meta Tactic
 
 abbrev Ix := Nat
 
 structure State where
   -- Exprressions to indexes in the interned object.
-  e2ix : Std.HashMap Expr Ix
+  e2ix : Std.HashMap Expr Ix := {}
 
 abbrev M := StateRefT State MetaM
 
@@ -687,7 +725,7 @@ def reflectFactor (e : Expr) : M Factor := do
 
 def reflectTermCoeff (e : Expr) : M Int :=
   match_expr e with 
-  | BitVec.ofInt w i => do
+  | BitVec.ofInt _w i => do
     let .some i := Expr.int? i
       | throwError "Expected 'BitVec.ofInt w <constant int>' at '{e}', found {i}"
     return i
@@ -718,6 +756,59 @@ partial def reflectEqnAux (e : Expr) : M Eqn :=
   | _ => do return [← reflectTerm e]
 
 def reflectEqn (e : Expr) : M Eqn := reflectEqnAux e
+
+def runM (x : M α) : MetaM (α × State) := x.run {}
+
+def runBvMbaPreprocess (g : MVarId) : MetaM (Option MVarId) := do
+  let simpName := `bv_mba_preprocess
+  let some ext ← (getSimpExtension? simpName)
+    | throwError m!"[bv_mba] Error: {simpName} simp attribute not found!"
+  let theorems ← ext.getTheorems
+  let some ext ← (Simp.getSimprocExtension? simpName)
+    | throwError m!"[bv_nnf] Error: {simpName}} simp attribute not found!"
+  let simprocs ← ext.getSimprocs
+  let config : Simp.Config := { Simp.neutralConfig with
+    failIfUnchanged   := false,
+  }
+  let ctx ← Simp.mkContext (config := config)
+    (simpTheorems := #[theorems])
+    (congrTheorems := ← Meta.getSimpCongrTheorems)
+  match ← simpGoal g ctx (simprocs := #[simprocs]) with
+  | (none, _) => return none
+  | (some (_newHyps, g'), _) => pure g'
+
+/-- Make an 'Env' out of the state by reading the values -/
+def State.envToExpr (s : State) : MetaM Expr := do
+  let mut ix2e : Std.HashMap Nat Expr := {}
+  for (e, ix) in s.e2ix do
+    ix2e := ix2e.insert ix e
+  let mut env ←  mkAppM ``List.nil #[]
+  for i in [0:ix2e.size] do
+    env ← mkAppM ``List.cons #[ix2e[i]!, env]
+  return env
+  
+def mbaTac (g : MVarId) : TermElabM Unit := do
+  g.withContext do 
+    let (eqn, reflectState) ← runM <| reflectEqn (← g.getType)
+    let env ← State.envToExpr reflectState
+    let g ← g.replaceTargetDefEq (← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env])
+    -- apply: Eqn.forall_width_reflect_zero_of_width_one_denote_zero
+
+    let gs ← g.apply (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero [])
+    let [g] := gs
+      | throwError m!"expected single goal after applying reflection theorem, found {gs}"
+    let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+     | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+    let [] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+        | throwError m!"Failed to decide with `Lean.ofReducebool` applied to '{indentD g}'"
+    return ()
+
+syntax (name := bvMba) "bv_mba" : tactic
+
+@[tactic bvMba]
+def evalBvMba : Tactic := fun
+  | `(tactic| bv_mba) => do mbaTac (← getMainGoal)
+  | _ => throwUnsupportedSyntax
 
 end Reflect
 end Tactic
