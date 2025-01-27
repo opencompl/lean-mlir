@@ -346,7 +346,7 @@ def Term.numVars (t : Term) : Nat := t.f.numVars
 
 /-- Reflect is what we use for reflection -/
 def Term.reflect {w : Nat}  (t : Term) (xs: Env w) : BitVec w := 
-  t.c * t.f.reflect xs 
+  (BitVec.ofInt w t.c) * t.f.reflect xs 
 
 def Term.denote {w : Nat} (t : Term) (xs : Env w) : Int := 
   t.c * t.f.denote xs
@@ -612,10 +612,11 @@ Central theorem: To decide if a bitvector equation is zero for all widths, it su
 -/
 theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) 
       (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) : 
-    ∀ (w : Nat) (env : List (BitVec w)), Eqn.reflect e env = 0 := by
+    ∀ (w : Nat) (env : List (BitVec w)), Eqn.reflect e env = BitVec.ofInt w 0 := by
   intros w env
   rw [Eqn.denote_hard_case_of_denote]
-  exact h
+  simp
+  apply h
 
 @[simp]
 theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by 
@@ -815,6 +816,7 @@ def State.envToExpr (w : WidthExpr) (s : State) : MetaM Expr := do
   let bvTy := w.toBitVecType
   let mut env :=  mkApp (mkConst ``List.nil [Level.zero]) bvTy
   for i in [0:ix2e.size] do
+    let i := ix2e.size - 1 - i
     env := mkApp3 (mkConst ``List.cons [Level.zero]) bvTy  ix2e[i]! env
   return env
   
