@@ -119,7 +119,7 @@ def get_git_root():
 def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
-import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.Fast.MBA
 
 set_option maxHeartbeats 0
 
@@ -130,6 +130,7 @@ https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 
 variable { a b c d e f g t x y z : BitVec w }
 """
+
 
 def translate_dataset_expr_to_lean(counter, expression):
   exp = f"theorem e_{counter} :\n    "
@@ -143,7 +144,7 @@ def translate_dataset_expr_to_lean(counter, expression):
   expression = expression.replace("&", " &&& ")
   expression = expression.replace("~", " ~~~")
 
-  exp = exp + expression + " := by\n  bv_automata_circuit (config := { backend := .cadical })\n"
+  exp = exp + expression + " := by bv_mba"
 
   return exp
 
