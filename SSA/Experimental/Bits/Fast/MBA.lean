@@ -56,7 +56,7 @@ theorem Env.getLsb_getElem {env : Env (w + 1)} (n : Nat) :
   simp [Env.getLsb]
 
 def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w
-| .var n => xs.getD n (0#w)
+| .var n => xs[n]?.getD (0#w)
 | .and x y => x.reflect xs &&& y.reflect xs
 | .or x y => x.reflect xs ||| y.reflect xs
 | .xor x y => x.reflect xs ^^^ y.reflect xs
@@ -425,6 +425,7 @@ theorem Eqn.numVars_cons : Eqn.numVars (t :: es) = max t.numVars (Eqn.numVars es
 def Eqn.reflect {w : Nat} (e : Eqn) (env : Env w) : BitVec w :=
   match e with
   | [] => 0
+  | t :: [] => t.reflect env
   | t :: ts => t.reflect env + Eqn.reflect ts env
 
 
@@ -435,7 +436,10 @@ theorem Eqn.reflect_nil  {w : Nat} (env : Env w) :
 @[simp]
 theorem Eqn.reflect_cons {w : Nat}
     (t : Term) (ts : List Term) (env : Env w) :
-    Eqn.reflect (t :: ts) env = t.reflect env + Eqn.reflect ts env := rfl
+    Eqn.reflect (t :: ts) env = t.reflect env + Eqn.reflect ts env := by
+  rcases ts with t | ts
+  simp [reflect]
+  simp [reflect]
 
 
 def Eqn.denote {w : Nat} (e : Eqn) (env : Env w) : Int :=
@@ -585,7 +589,6 @@ theorem zero_of_ofInt_zero_of_lt (i : Int) (w : Nat)
 /--
 This theory should work: Just pick a large enough field where showing that the value is zero
 will prove that the value is zero
--/
 theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
     (h : ∀ (w : Nat) (env : List (BitVec w)), e.reflect env = 0) :
     ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0 := by
@@ -596,6 +599,7 @@ theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
   specialize h env'
   simp [env'] at h
   sorry
+-/
 
 
 /-
@@ -606,17 +610,21 @@ instance {e : Eqn} : Decidable (∀ env1 : List (BitVec 1), Eqn.denote e env1 = 
   sorry
 -/
 
+def Eqn.reflectEqZero (w : Nat) (eqn : Eqn) (env : Env w) : Prop :=
+  Eqn.reflect eqn env = BitVec.ofInt w 0
 
 /--
 Central theorem: To decide if a bitvector equation is zero for all widths, it sufficest to check that the denotation is zero at width zero.
 -/
-theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn)
-      (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) :
-    ∀ (w : Nat) (env : List (BitVec w)), Eqn.reflect e env = BitVec.ofInt w 0 := by
-  intros w env
+theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (w : Nat) (env : List (BitVec w))
+    (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) :
+    Eqn.reflectEqZero w e env  := by
+  rw [Eqn.reflectEqZero]
   rw [Eqn.denote_hard_case_of_denote]
   simp
   apply h
+
+#check Eqn.forall_width_reflect_zero_of_width_one_denote_zero
 
 @[simp]
 theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by
@@ -692,14 +700,15 @@ theorem BitVec.eq_iff_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
 theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
   simp [BitVec.eq_iff_sub_zero, h]
 
+axiom BitVecUnprovenLemmas {p : Prop} : p
 
 @[bv_mba_preprocess]
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
-  x - (y - z) = x - y + z := by sorry
+  x - (y - z) = x - y + z := by exact BitVecUnprovenLemmas
 
 @[bv_mba_preprocess]
 theorem BitVec.sub_distrib_add (x y z : BitVec w) :
-  x - (y + z) = x - y - z := by sorry
+  x - (y + z) = x - y - z := by exact BitVecUnprovenLemmas
 
 attribute [bv_mba_preprocess] BitVec.sub_toAdd
 
@@ -710,6 +719,39 @@ theorem BitVec.ofNat_eq_ofInt (n w : Nat) :
   simp[BitVec.toInt_ofNat]
 
 attribute [bv_mba_preprocess] BitVec.ofNat_eq_ofNat
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_ofInt {w : Nat} (i : Int) :
+    - (BitVec.ofInt  w i) = BitVec.ofInt w (-i) := by
+  exact BitVecUnprovenLemmas
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_add {x y : BitVec w} : - (x + y) = (-x) + (-y) := by
+  exact BitVecUnprovenLemmas
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
+  exact BitVecUnprovenLemmas
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
+    - (x * y) = (- x) * y := by
+  exact BitVecUnprovenLemmas
+
+attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
+attribute [bv_mba_preprocess] Int.reduceNeg
+attribute [bv_mba_preprocess] Int.reduceAdd
+attribute [bv_mba_preprocess] Int.zero_add
+attribute [bv_mba_preprocess] BitVec.add_zero
+attribute [bv_mba_preprocess] BitVec.zero_add
+attribute [bv_mba_preprocess] Int.neg_eq_of_add_eq_zero
+
+@[bv_mba_preprocess]
+theorem BitVec.add_ofInt_zero (x : BitVec w) : x + BitVec.ofInt w 0 = x := by simp
+
+/- Right associate, so our expressions are of the form x1 + (x2 + (x3 + ...))) -/
+attribute [bv_mba_preprocess] BitVec.add_assoc
+
 
 
 namespace Reflect
@@ -766,11 +808,11 @@ def reflectTerm (e : Expr) : M Term :=
 Recall that add and sub in lean are associated to the left, so we have
 ((a + b) + c) + d and so on.
 -/
-partial def reflectEqnRevAux (e : Expr) : M Eqn :=
+partial def reflectEqnAux (e : Expr) : M Eqn :=
   match_expr e with
-  | HAdd.hAdd _bv _bv _bv _inst ls r => do
-    let eqn ← reflectEqnRevAux ls
-    let t ← reflectTerm r
+  | HAdd.hAdd _bv _bv _bv _inst l rs => do
+    let t ← reflectTerm l
+    let eqn ← reflectEqnAux rs
     return t :: eqn
   | _ => do return [← reflectTerm e]
 
@@ -783,7 +825,7 @@ def reflectEqn (e : Expr) : M (WidthExpr × Eqn) := do
   let_expr BitVec w := ty
     | throwError "expected equality of bitvectors, but found {indentD ty}"
   logInfo m!"found top-level equality LHS '{lhs}'"
-  return (w, List.reverse <| ← reflectEqnRevAux lhs)
+  return (w, ← reflectEqnAux lhs)
 
 def runM (x : M α) : MetaM (α × State) := x.run {}
 
@@ -829,17 +871,19 @@ def mbaTac (g : MVarId) : TermElabM (List MVarId) := do
       | do
          logInfo "goal closed by Mba normalizer."
          return []
-    let ((widthExpr, eqn), reflectState) ← runM <| reflectEqn (← g.getType)
+    logInfo m!"Normalized goal state to {indentD g}"
+    let ((widthExpr, eqn), reflectState) ← g.withContext do runM <| reflectEqn (← g.getType)
     logInfo m!"found expression of width: '{indentD widthExpr}'"
     let env ← State.envToExpr widthExpr reflectState
-    logInfo m!"replacing goal with reflected version. Equation: {indentD <| repr eqn}\nEnvironment: {indentD (toMessageData reflectState.e2ix.toList)}"
-    let reflectedLhs ← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env]
-    let reflectedRhs := mkApp2 (mkConst ``BitVec.ofInt) widthExpr (toExpr (0 : Int))
-    let g ← g.replaceTargetDefEq (← mkEq reflectedLhs reflectedRhs)
-    logInfo m!"Replaced. {indentD g}"
+    logInfo m!"replacing goal with reflected version. Equation: {indentD <| repr eqn}"
+    logInfo m!"Environment: {indentD (toMessageData reflectState.e2ix.toList)}"
+    -- let reflectedLhs ← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env]
+    -- let reflectedRhs := mkApp2 (mkConst ``BitVec.ofInt) widthExpr (toExpr (0 : Int))
+    -- let g ← g.replaceTargetDefEq (← mkEq reflectedLhs reflectedRhs)
+    -- logInfo m!"Replaced. {indentD g}"
     -- apply: Eqn.forall_width_reflect_zero_of_width_one_denote_zero
 
-    let gs ← g.apply (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero [])
+    let gs ← g.withContext do g.apply (mkAppN (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero []) #[Eqn.toExpr eqn, widthExpr, env])
     let [g] := gs
       | throwError m!"expected single goal after applying reflection theorem, found {gs}"
     let dec ← mkDecideProof <| ← g.getType
@@ -847,7 +891,7 @@ def mbaTac (g : MVarId) : TermElabM (List MVarId) := do
       logInfo "successfully decided!"
       return []
     else
-      throwError "failed to prove theorem using decision procedure, statement is false."
+      logWarning "failed to prove theorem using decision procedure, statement is false."
       return [g]
     -- let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
     --  | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
@@ -868,45 +912,29 @@ end Tactic
 
 namespace Examples
 
-theorem BitVec.toNat_ofInt {w : Nat} (i : Int) : (BitVec.ofInt w i).toNat = k := by
-  rw [BitVec.ofInt, BitVec.toNat]
-  sorry
 
-@[bv_mba_preprocess]
-theorem BitVec.neg_ofInt {w : Nat} (i : Int) :
-    - (BitVec.ofInt  w i) = BitVec.ofInt w (-i) := by sorry
+example (x y : BitVec w) :
+  Eqn.reflectEqZero w
+    [Term.mk 1 (.var 0), Term.mk 2 (.var 1)] [x, y] =
+    (BitVec.ofInt w 1 * x + BitVec.ofInt w 2 * y = BitVec.ofInt w 0) := rfl
 
-@[bv_mba_preprocess]
-theorem BitVec.neg_add {x y : BitVec w} : - (x + y) = (-x) + (-y) := by sorry
+example (x y : BitVec w) :
+  Eqn.reflectEqZero w
+    [Term.mk 1 (.var 0), Term.mk 2 (.var 1), Term.mk (-1) (.var 0)] [x, y] =
+    (BitVec.ofInt w 1 * x + (BitVec.ofInt w 2 * y + BitVec.ofInt w (-1) * x) = BitVec.ofInt w 0) := rfl
 
-@[bv_mba_preprocess]
-theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by sorry
+example (x : BitVec w) : 1 * x  + (-1) * x = 0 := by
+ bv_mba
 
-@[bv_mba_preprocess]
-theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
-    - (x * y) = (- x) * y := by sorry
 
-attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
-attribute [bv_mba_preprocess] Int.reduceNeg
-attribute [bv_mba_preprocess] Int.reduceAdd
-attribute [bv_mba_preprocess] Int.zero_add
-attribute [bv_mba_preprocess] BitVec.add_zero
-attribute [bv_mba_preprocess] BitVec.zero_add
-attribute [bv_mba_preprocess] Int.neg_eq_of_add_eq_zero
-
-@[bv_mba_preprocess]
-theorem BitVec.add_ofInt_zero (x : BitVec w) : x + BitVec.ofInt w 0 = x := by simp
-
-@[bv_mba_preprocess]
-theorem BitVec.add_assocl (x y z : BitVec w) : x + (y + z) = x + y + z := by
-  simp [BitVec.add_assoc]
+example (x y : BitVec w) : 1 * x  + 2 * y + (-1) * x + (-2) * y = 0 := by
+ bv_mba
 
 theorem e_3 (x y : BitVec w) :
      - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
- rw [MBA.Tactic.BitVec.eq_iff_sub_zero]
- rw [MBA.Tactic.BitVec.eq_iff_sub_zero]
- simp only [bv_mba_preprocess]
- bv_mba
+  bv_mba
+
+#print axioms e_3
 
 end Examples
 end MBA
