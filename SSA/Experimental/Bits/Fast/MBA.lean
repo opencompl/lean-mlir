@@ -772,7 +772,7 @@ partial def reflectFactor (e : Expr) : M Factor := do
   | HOr.hOr _bv _bv _bv _inst a b =>
      return Factor.or (← reflectFactor a) (← reflectFactor b)
   | HXor.hXor _bv _bv _bv _inst a b =>
-     return Factor.or (← reflectFactor a) (← reflectFactor b)
+     return Factor.xor (← reflectFactor a) (← reflectFactor b)
   | Complement.complement _bv _inst a =>
      return Factor.not (← reflectFactor a)
   | _ =>
