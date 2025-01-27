@@ -216,6 +216,31 @@ async def main(args):
                            filename=filename,
                            completed_counter=completed_counter))
 
+def print_summary_from_db(db):
+    logging.info(f"Summary of run:")
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    # Check if there is a row with the given filename and timeout
+    cur.execute("""
+        SELECT status, count(status) FROM tests GROUP BY status
+    """)
+    # Fetch the result, if no rows exist, the result will be an empty list
+    for row in cur.fetchall():
+      logging.info(f"  - {row[0]} : #{row[1]}")
+
+    cur.execute("""
+        SELECT filename FROM tests  WHERE status == 'fail' ORDER BY filename ASC LIMIT 10
+    """)
+    rows = cur.fetchall()
+    if rows:
+      logging.info(f"{len(rows)} failing tests:")
+      for row in rows:
+          print(f"  - {row[0]}")
+    else:
+        logging.info("All tests passed!")
+    logging.info("Done with summary.")
+    con.close()
+
 if __name__ == "__main__":
     args = parse_args()
     setup_logging(args.db)
@@ -226,4 +251,5 @@ if __name__ == "__main__":
     # https://stackoverflow.com/questions/65682221/runtimeerror-exception-ignored-in-function-proactorbasepipetransport
     # asyncio.run(main(args), debug=True)
     logging.debug("done asyncio")
+    print_summary_from_db(args.db)
     logging.info(f"completed run {args}")
