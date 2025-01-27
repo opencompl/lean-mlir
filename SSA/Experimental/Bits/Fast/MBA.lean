@@ -1,3 +1,4 @@
+import SSA.Experimental.Bits.Fast.Attr
 import Lean
 
 @[simp]
@@ -630,10 +631,11 @@ instance (e : Eqn) : Decidable (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e e
     obtain ⟨env, henvMem, henvDenote⟩ := hb
     exists env 
 
-/--
-Two bitvectors are equal iff their different is zero.
--/
-theorem BitVec.eq_of_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
+
+namespace Tactic
+
+/-- Two bitvectors are equal iff their different is zero. -/
+theorem BitVec.eq_iff_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
   constructor 
   · intros h
     simp [h]
@@ -644,6 +646,114 @@ theorem BitVec.eq_of_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
     simp [BitVec.add_comm _ y, ← BitVec.sub_toAdd] at h
     exact h
 
+@[bv_mba_preprocess]
+theorem BitVec.sub_distrib_sub (x y z : BitVec w) : 
+  x - (y - z) = x - y + z := by sorry
+
+@[bv_mba_preprocess]
+theorem BitVec.sub_distrib_add (x y z : BitVec w) : 
+  x - (y + z) = x - y - z := by sorry
+
+attribute [bv_mba_preprocess] BitVec.sub_toAdd
+
+@[bv_mba_preprocess]
+theorem BitVec.ofNat_eq_ofInt (n w : Nat) : 
+    BitVec.ofNat w n = BitVec.ofInt w n := by
+  apply BitVec.eq_of_toInt_eq
+  simp[BitVec.toInt_ofNat]
+
+attribute [bv_mba_preprocess] BitVec.ofNat_eq_ofNat
+
+
+namespace Reflect
+open Lean Elab Meta 
+
+abbrev Ix := Nat
+
+structure State where
+  -- Exprressions to indexes in the interned object.
+  e2ix : Std.HashMap Expr Ix
+
+abbrev M := StateRefT State MetaM
+
+def reflectFactor (e : Expr) : M Factor := do
+  let s ← get
+  match s.e2ix[e]? with 
+  | .some ix => return Factor.var ix
+  | .none => do
+     let ix := s.e2ix.size
+     set { s with e2ix := s.e2ix.insert e ix }
+     return .var ix
+
+def reflectTermCoeff (e : Expr) : M Int :=
+  match_expr e with 
+  | BitVec.ofInt w i => do
+    let .some i := Expr.int? i
+      | throwError "Expected 'BitVec.ofInt w <constant int>' at '{e}', found {i}"
+    return i
+  | Int.cast _ _ i => do
+    let .some i := Expr.int? i
+      | throwError "Expected Int.cast <constant int>' at '{e}', found {i}"
+    return i 
+  | _ => throwError "unable to reflect term coefficient '{e}'. Expected an integer."
+
+def reflectTerm (e : Expr) : M Term := 
+  match_expr e with 
+  | HMul.hMul _ _ _ l r => do
+    let c ← reflectTermCoeff l
+    let f ← reflectFactor r
+    return { c, f }
+  | _ => throwError "unable to reflect term '{e}'. Expected 'int * variable'."
+
+/-!
+Recall that add and sub in lean are associated to the left, so we have
+((a + b) + c) + d and so on.
+-/
+partial def reflectEqnAux (e : Expr) : M Eqn := 
+  match_expr e with 
+  | HAdd.hAdd _ _ _ ls r => do
+    let eqn ← reflectEqnAux ls
+    let t ← reflectTerm r
+    return t :: eqn
+  | _ => do return [← reflectTerm e]
+
+def reflectEqn (e : Expr) : M Eqn := reflectEqnAux e
+
+end Reflect
+end Tactic
+
+namespace Examples
+
+theorem BitVec.toNat_ofInt {w : Nat} (i : Int) : (BitVec.ofInt w i).toNat = k := by 
+  rw [BitVec.ofInt, BitVec.toNat]
+  sorry
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_ofInt {w : Nat} (i : Int) : 
+    - (BitVec.ofInt  w i) = BitVec.ofInt w (-i) := by sorry
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_add {x y : BitVec w} : - (x + y) = (-x) + (-y) := by sorry
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by sorry
+
+@[bv_mba_preprocess]
+theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
+    - (x * y) = (- x) * y := by sorry
+
+attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
+attribute [bv_mba_preprocess] Int.reduceNeg
+-- attribute [bv_mba_preprocess] BitVec.ofInt_ofNat
+
+theorem e_3 (x y : BitVec w) :
+     - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
+ rw [MBA.Tactic.BitVec.eq_iff_sub_zero]
+ simp only [bv_mba_preprocess]
+
+ sorry
+
+end Examples
 end MBA
 
 
