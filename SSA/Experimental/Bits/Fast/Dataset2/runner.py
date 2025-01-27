@@ -53,15 +53,16 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         """, (filename, timeout))
         # Fetch the result, if no rows exist, the result will be an empty list
         result = cur.fetchone()
-        logging.info(f"[Looking up cached {filename}]  DONE")
         con.close()
 
         # Return True if no row is found (i.e., result is None)
+        logging.info(f"[Looking up cached {filename}]  DONE (cached: {result is not None})")
         if result is not None:
             logging.warning(f"Skipping ({filename}, {timeout}) as run already exists.")
             completed_counter.increment()
             return
 
+        logging.info(f"Running {filename}, no cache found.")
         process = await asyncio.create_subprocess_exec(
             "lake",
             "build",
@@ -122,6 +123,7 @@ import Std.Tactic.BVDecide
 import SSA.Experimental.Bits.Fast.MBA
 
 set_option maxHeartbeats 0
+set_option maxRecDepth 9000
 
 /-
 This dataset was derived from
@@ -224,3 +226,4 @@ if __name__ == "__main__":
     # https://stackoverflow.com/questions/65682221/runtimeerror-exception-ignored-in-function-proactorbasepipetransport
     # asyncio.run(main(args), debug=True)
     logging.debug("done asyncio")
+    logging.info(f"completed run {args}")
