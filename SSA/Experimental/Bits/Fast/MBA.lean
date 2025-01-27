@@ -21,6 +21,7 @@ inductive Factor
 | or (x y : Factor) 
 | xor (x y : Factor) 
 | not (x : Factor) 
+deriving Repr
 
 def Factor.numVars : Factor → Nat
 | .var n => n+1
@@ -330,6 +331,7 @@ theorem Factor.denoteFin_eq_add {w : Nat} (x : Factor) (env : EnvFin (w + 1) x.n
 structure Term where 
   c : Int
   f : Factor
+deriving Repr
 
 open Lean Elab Meta in
 def Term.toExpr (t : Term) : Expr := 
@@ -393,6 +395,8 @@ theorem Term.denoteFin_width_zero  (t : Term) (env : EnvFin 0 t.numVars) :
     t.denoteFin env = 0 := by simp [Term.denoteFin, Factor.denoteFin]
 
 def Eqn := List Term
+
+instance : Repr Eqn := inferInstanceAs (Repr (List Term))
 
 open Lean in
 def Eqn.toExpr (e : Eqn) : Expr := ToExpr.toExpr (α := List Term) e
@@ -684,6 +688,10 @@ theorem BitVec.eq_iff_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
     simp [BitVec.add_comm _ y, ← BitVec.sub_toAdd] at h
     exact h
 
+theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
+  simp [BitVec.eq_iff_sub_zero, h]
+
+
 @[bv_mba_preprocess]
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) : 
   x - (y - z) = x - y + z := by sorry
@@ -731,31 +739,40 @@ def reflectTermCoeff (e : Expr) : M Int :=
     return i
   | Int.cast _ _ i => do
     let .some i := Expr.int? i
-      | throwError "Expected Int.cast <constant int>' at '{e}', found {i}"
+      | throwError "Expected Int.cast <constant int>' at '{indentD e}', found {i}"
     return i 
-  | _ => throwError "unable to reflect term coefficient '{e}'. Expected an integer."
+  | _ => throwError "unable to reflect term coefficient '{indentD e}'. Expected an integer."
 
 def reflectTerm (e : Expr) : M Term := 
   match_expr e with 
-  | HMul.hMul _ _ _ l r => do
+  | HMul.hMul _bv _bv _bv _inst l r => do
     let c ← reflectTermCoeff l
     let f ← reflectFactor r
     return { c, f }
-  | _ => throwError "unable to reflect term '{e}'. Expected 'int * variable'."
+  | _ => throwError "unable to reflect term '{indentD e}'.\nExpected 'int * variable'."
 
 /-!
 Recall that add and sub in lean are associated to the left, so we have
 ((a + b) + c) + d and so on.
 -/
-partial def reflectEqnAux (e : Expr) : M Eqn := 
+partial def reflectEqnRevAux (e : Expr) : M Eqn := 
   match_expr e with 
-  | HAdd.hAdd _ _ _ ls r => do
-    let eqn ← reflectEqnAux ls
+  | HAdd.hAdd _bv _bv _bv _inst ls r => do
+    let eqn ← reflectEqnRevAux ls
     let t ← reflectTerm r
     return t :: eqn
   | _ => do return [← reflectTerm e]
 
-def reflectEqn (e : Expr) : M Eqn := reflectEqnAux e
+/- The expression corresponding to the bitwidth we are working with -/
+abbrev WidthExpr := Expr 
+
+def reflectEqn (e : Expr) : M (WidthExpr × Eqn) := do
+  let .some (ty, lhs, _rhs) := Expr.eq? e
+    | throwError "expected top-level equality, but found {e}"
+  let_expr BitVec w := ty
+    | throwError "expected equality of bitvectors, but found {indentD ty}"
+  logInfo m!"found top-level equality LHS '{lhs}'"
+  return (w, List.reverse <| ← reflectEqnRevAux lhs)
 
 def runM (x : M α) : MetaM (α × State) := x.run {}
 
@@ -777,21 +794,37 @@ def runBvMbaPreprocess (g : MVarId) : MetaM (Option MVarId) := do
   | (none, _) => return none
   | (some (_newHyps, g'), _) => pure g'
 
+def WidthExpr.toBitVecType (w : WidthExpr) : Expr := 
+  mkApp (mkConst ``BitVec) w
+
 /-- Make an 'Env' out of the state by reading the values -/
-def State.envToExpr (s : State) : MetaM Expr := do
+def State.envToExpr (w : WidthExpr) (s : State) : MetaM Expr := do
   let mut ix2e : Std.HashMap Nat Expr := {}
   for (e, ix) in s.e2ix do
     ix2e := ix2e.insert ix e
-  let mut env ←  mkAppM ``List.nil #[]
+  let bvTy := w.toBitVecType
+  let mut env :=  mkApp (mkConst ``List.nil) bvTy
   for i in [0:ix2e.size] do
-    env ← mkAppM ``List.cons #[ix2e[i]!, env]
+    env := mkApp3 (mkConst ``List.cons [Level.zero]) bvTy  ix2e[i]! env
   return env
   
+open Std Lean in
 def mbaTac (g : MVarId) : TermElabM Unit := do
   g.withContext do 
-    let (eqn, reflectState) ← runM <| reflectEqn (← g.getType)
-    let env ← State.envToExpr reflectState
-    let g ← g.replaceTargetDefEq (← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env])
+    let [g] ← g.apply (mkConst ``BitVec.eq_of_sub_zero)
+      | throwError m!"unable to apply `BitVec.eq_of_sub_zero`."
+    let .some g ← runBvMbaPreprocess  g 
+      | do 
+         logInfo "goal closed by Mba normalizer."
+         return ()
+    let ((widthExpr, eqn), reflectState) ← runM <| reflectEqn (← g.getType)
+    logInfo m!"found expression of width: '{indentD widthExpr}'"
+    let env ← State.envToExpr widthExpr reflectState
+    logInfo m!"replacing goal with reflected version. Equation: {indentD <| repr eqn}\nEnvironment: {indentD (toMessageData reflectState.e2ix.toList)}"
+    let reflectedLhs ← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env]
+    let reflectedRhs := mkApp2 (mkConst ``BitVec.ofInt) widthExpr (toExpr (0 : Int))
+    let g ← g.replaceTargetDefEq (← mkEq reflectedLhs reflectedRhs)
+    logInfo m!"Replaced. {indentD g}"
     -- apply: Eqn.forall_width_reflect_zero_of_width_one_denote_zero
 
     let gs ← g.apply (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero [])
@@ -835,14 +868,25 @@ theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
 
 attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
 attribute [bv_mba_preprocess] Int.reduceNeg
-attribute [bv_mba_preprocess] BitVec.add_assoc
+attribute [bv_mba_preprocess] Int.reduceAdd
+attribute [bv_mba_preprocess] Int.zero_add
+attribute [bv_mba_preprocess] BitVec.add_zero
+attribute [bv_mba_preprocess] BitVec.zero_add
+attribute [bv_mba_preprocess] Int.neg_eq_of_add_eq_zero
+
+@[bv_mba_preprocess]
+theorem BitVec.add_ofInt_zero (x : BitVec w) : x + BitVec.ofInt w 0 = x := by simp
+
+@[bv_mba_preprocess]
+theorem BitVec.add_assocl (x y z : BitVec w) : x + (y + z) = x + y + z := by 
+  simp [BitVec.add_assoc]
 
 theorem e_3 (x y : BitVec w) :
      - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
  rw [MBA.Tactic.BitVec.eq_iff_sub_zero]
+ rw [MBA.Tactic.BitVec.eq_iff_sub_zero]
  simp only [bv_mba_preprocess]
-
- sorry
+ bv_mba
 
 end Examples
 end MBA
