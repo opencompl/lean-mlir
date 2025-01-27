@@ -744,7 +744,7 @@ theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
 
 attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
 attribute [bv_mba_preprocess] Int.reduceNeg
--- attribute [bv_mba_preprocess] BitVec.ofInt_ofNat
+attribute [bv_mba_preprocess] BitVec.add_assoc
 
 theorem e_3 (x y : BitVec w) :
      - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
