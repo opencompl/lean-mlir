@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 This file reflects the semantics of bitstreams, terms, predicates, and FSMs
 into lean bitvectors.
 
-We use `grind_norm` to convert the expression into negation normal form.
+We use `bv_circuit_nnf_copy` to convert the expression into negation normal form.
 
 Authors: Siddharth Bhat
 -/
@@ -339,13 +339,13 @@ namespace NNF
 
 open Lean Elab Meta
 
-/-- convert goal to negation normal form, by running appropriate lemmas from `grind_norm`, and reverting all hypothese. -/
+/-- convert goal to negation normal form, by running appropriate lemmas from `bv_circuit_nnf_copy`, and reverting all hypothese. -/
 def runNNFSimpSet (g : MVarId) : MetaM (Option MVarId) := do
-  let some ext ← (getSimpExtension? `grind_norm)
+  let some ext ← (getSimpExtension? `bv_circuit_nnf_copy)
     | throwError m!"[bv_nnf] Error: 'grind_norm' simp attribute not found!"
   let theorems ← ext.getTheorems
   let theorems ←  theorems.erase (Origin.decl ``ne_eq)
-  let some ext ← (Simp.getSimprocExtension? `grind_norm)
+  let some ext ← (Simp.getSimprocExtension? `bv_circuit_nnf_copy)
     | throwError m!"[bv_nnf] Error: 'grind_norm' simp attribute not found!"
   let simprocs ← ext.getSimprocs
   let config : Simp.Config := { Simp.neutralConfig with
@@ -372,31 +372,143 @@ elab "bv_nnf" : tactic => do
       -- let g ← g.revertAll
       return [g]
 
-attribute [grind_norm] BitVec.not_lt
-attribute [grind_norm] BitVec.not_le
+attribute [bv_circuit_nnf_copy] BitVec.not_lt
+attribute [bv_circuit_nnf_copy] BitVec.not_le
 
-@[grind_norm]
+@[bv_circuit_nnf_copy]
 theorem implies_eq_not_a_or_b (a b : Prop) : (a → b) = (¬ a ∨ b) := by
   by_cases a
   case pos h => simp [h]
   case neg h => simp [h]
 
-@[grind_norm]
+@[bv_circuit_nnf_copy]
 theorem sle_iff_slt_eq_false {a b : BitVec w} : a.slt b = false ↔ b.sle a := by
   constructor <;>
   intros h <;>
   simp [BitVec.sle, BitVec.slt] at h ⊢ <;>
   omega
 
-@[grind_norm]
+@[bv_circuit_nnf_copy]
 theorem slt_iff_sle_eq_false {a b : BitVec w} : a.sle b = false ↔ b.slt a := by
   constructor <;>
   intros h <;>
   simp [BitVec.sle, BitVec.slt] at h ⊢ <;>
   omega
---  ne_eq: (a ≠ b) = ¬(a = b) := rfl
-attribute [- grind_norm] ne_eq -- TODO(bollu): Debate with grind maintainer about having `a ≠ b → ¬ (a = b)` in the simp-set?
-@[grind_norm] theorem not_eq_iff_neq : (¬ (a = b)) = (a ≠ b) := by rfl
+
+/-!
+Normalization theorems for the `grind` tactic.
+
+We are also going to use simproc's in the future.
+-/
+
+-- Not
+attribute [bv_circuit_nnf_copy] Classical.not_not
+
+@[bv_circuit_nnf_copy] theorem not_eq_eq {α : Sort u} (a b : α) : (¬ (a = b)) = (a ≠ b) := by simp
+
+-- Iff
+@[bv_circuit_nnf_copy] theorem iff_eq (p q : Prop) : (p ↔ q) = (p = q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+
+-- Eq
+attribute [bv_circuit_nnf_copy] eq_self heq_eq_eq
+
+-- Prop equality
+@[bv_circuit_nnf_copy] theorem eq_true_eq (p : Prop) : (p = True) = p := by simp
+@[bv_circuit_nnf_copy] theorem eq_false_eq (p : Prop) : (p = False) = ¬p := by simp
+@[bv_circuit_nnf_copy] theorem not_eq_prop (p q : Prop) : (¬(p = q)) = (p = ¬q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+
+-- True
+attribute [bv_circuit_nnf_copy] not_true
+
+-- False
+attribute [bv_circuit_nnf_copy] not_false_eq_true
+
+-- Remark: we disabled the following normalization rule because we want this information when implementing splitting heuristics
+-- Implication as a clause
+theorem imp_eq (p q : Prop) : (p → q) = (¬ p ∨ q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+
+@[bv_circuit_nnf_copy] theorem true_imp_eq (p : Prop) : (True → p) = p := by simp
+@[bv_circuit_nnf_copy] theorem false_imp_eq (p : Prop) : (False → p) = True := by simp
+@[bv_circuit_nnf_copy] theorem imp_true_eq (p : Prop) : (p → True) = True := by simp
+@[bv_circuit_nnf_copy] theorem imp_false_eq (p : Prop) : (p → False) = ¬p := by simp
+@[bv_circuit_nnf_copy] theorem imp_self_eq (p : Prop) : (p → p) = True := by simp
+
+-- And
+@[bv_circuit_nnf_copy↓] theorem not_and (p q : Prop) : (¬(p ∧ q)) = (¬p ∨ ¬q) := by
+  by_cases p <;> by_cases q <;> simp [*]
+attribute [bv_circuit_nnf_copy] and_true true_and and_false false_and and_assoc
+
+-- Or
+attribute [bv_circuit_nnf_copy↓] not_or
+attribute [bv_circuit_nnf_copy] or_true true_or or_false false_or or_assoc
+
+-- ite
+attribute [bv_circuit_nnf_copy] ite_true ite_false
+@[bv_circuit_nnf_copy↓] theorem not_ite {_ : Decidable p} (q r : Prop) : (¬ite p q r) = ite p (¬q) (¬r) := by
+  by_cases p <;> simp [*]
+
+@[bv_circuit_nnf_copy] theorem ite_true_false {_ : Decidable p} : (ite p True False) = p := by
+  by_cases p <;> simp
+
+@[bv_circuit_nnf_copy] theorem ite_false_true {_ : Decidable p} : (ite p False True) = ¬p := by
+  by_cases p <;> simp
+
+-- Forall
+@[bv_circuit_nnf_copy↓] theorem not_forall (p : α → Prop) : (¬∀ x, p x) = ∃ x, ¬p x := by simp
+attribute [bv_circuit_nnf_copy] forall_and
+
+-- Exists
+@[bv_circuit_nnf_copy↓] theorem not_exists (p : α → Prop) : (¬∃ x, p x) = ∀ x, ¬p x := by simp
+attribute [bv_circuit_nnf_copy] exists_const exists_or exists_prop exists_and_left exists_and_right
+
+-- Bool cond
+@[bv_circuit_nnf_copy] theorem cond_eq_ite (c : Bool) (a b : α) : cond c a b = ite c a b := by
+  cases c <;> simp [*]
+
+-- Bool or
+attribute [bv_circuit_nnf_copy]
+  Bool.or_false Bool.or_true Bool.false_or Bool.true_or Bool.or_eq_true Bool.or_assoc
+
+-- Bool and
+attribute [bv_circuit_nnf_copy]
+  Bool.and_false Bool.and_true Bool.false_and Bool.true_and Bool.and_eq_true Bool.and_assoc
+
+-- Bool not
+attribute [bv_circuit_nnf_copy]
+  Bool.not_not
+
+-- beq
+attribute [bv_circuit_nnf_copy] beq_iff_eq
+
+-- bne
+attribute [bv_circuit_nnf_copy] bne_iff_ne
+
+-- Bool not eq true/false
+attribute [bv_circuit_nnf_copy] Bool.not_eq_true Bool.not_eq_false
+
+-- decide
+attribute [bv_circuit_nnf_copy] decide_eq_true_eq decide_not not_decide_eq_true
+
+-- Nat LE
+attribute [bv_circuit_nnf_copy] Nat.le_zero_eq
+
+-- Nat/Int LT
+@[bv_circuit_nnf_copy] theorem Nat.lt_eq (a b : Nat) : (a < b) = (a + 1 ≤ b) := by
+  simp [Nat.lt, LT.lt]
+
+@[bv_circuit_nnf_copy] theorem Int.lt_eq (a b : Int) : (a < b) = (a + 1 ≤ b) := by
+  simp [Int.lt, LT.lt]
+
+-- GT GE
+attribute [bv_circuit_nnf_copy] GT.gt GE.ge
+
+-- Succ
+attribute [bv_circuit_nnf_copy] Nat.succ_eq_add_one
+
+
 
 /--
 warning: 'ne_eq' does not have [simp] attribute
