@@ -528,6 +528,34 @@ theorem Eqn.denote_hard_case_of_denote (e : Eqn) (h : ∀ (env1 : EnvFin 1 e.num
     apply h 
 
 /-
+theorem zero_of_ofInt_zero_of_lt (i : Int) (w : Nat) 
+    (h : BitVec.ofInt w i = 0#w) (h' : i.natAbs < 2^w) : i = 0 := by 
+  have : (BitVec.ofInt w i).toNat = (0#w).toNat := by rw [h]
+  simp at this
+  rw [Int.emod_def] at this
+  rw [Int.ediv_eq_of_eq_mul_left] at this
+  · simp at this
+    sorry 
+-/
+
+
+/--
+This theory should work: Just pick a large enough field where showing that the value is zero
+will prove that the value is zero
+-/
+theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
+    (h : ∀ (w : Nat) (env : List (BitVec w)), e.reflect env = 0) : 
+    ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0 := by
+  intros env1
+  let size := (e.denoteFin env1).natAbs.log2 + 1
+  specialize h size
+  let env' := List.finRange e.numVars |>.map fun x => (env1 x).signExtend size
+  specialize h env'
+  simp [env'] at h
+  sorry
+  
+
+/-
 instance decEqnDenoteFinWidth1 {e : Eqn} : Decidable (∀ env1 : Env (BitVec 1), Eqn.denoteFin e env1 = 0) := 
   sorry
 
@@ -602,7 +630,19 @@ instance (e : Eqn) : Decidable (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e e
     obtain ⟨env, henvMem, henvDenote⟩ := hb
     exists env 
 
-  
+/--
+Two bitvectors are equal iff their different is zero.
+-/
+theorem BitVec.eq_of_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
+  constructor 
+  · intros h
+    simp [h]
+  · intros h 
+    obtain h : (x - y) + y = y := by simp [h]
+    obtain h : (x + (-y)) + y = y := by simp [← BitVec.sub_toAdd, h]
+    obtain h : x + (-y + y) = y := by simp [← BitVec.add_assoc, h]
+    simp [BitVec.add_comm _ y, ← BitVec.sub_toAdd] at h
+    exact h
 
 end MBA
 
