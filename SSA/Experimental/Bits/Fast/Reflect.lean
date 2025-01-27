@@ -1109,7 +1109,7 @@ structure Config where
   /--
   Whether the tactic should use the (currently unverified) bv_decide based backend for solving constraints.
   -/
-  backend : CircuitBackend := .cadical
+  backend : CircuitBackend := .lean
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -1592,7 +1592,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
     (p : FSM arity) (c0K : Circuit (p.α ⊕ β)) (cK : Circuit (p.α ⊕ β))  (iter : Nat) : TermElabM Bool := do
   IO.eprintln s!"## K-induction (iter {iter})"
   IO.eprintln s!"Evaluating circuit of size '{cK.size}' on initial state"
-  let cKWithInit := cK.assignVars fun v hv =>
+  let cKWithInit := cK.assignVars fun v _hv =>
     match v with
     | .inl a => .inr (p.initCarry a)
     | .inr b => .inl b
