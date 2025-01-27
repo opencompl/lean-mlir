@@ -722,14 +722,24 @@ structure State where
 
 abbrev M := StateRefT State MetaM
 
-def reflectFactor (e : Expr) : M Factor := do
-  let s ← get
-  match s.e2ix[e]? with 
-  | .some ix => return Factor.var ix
-  | .none => do
-     let ix := s.e2ix.size
-     set { s with e2ix := s.e2ix.insert e ix }
-     return .var ix
+partial def reflectFactor (e : Expr) : M Factor := do
+  match_expr e with 
+  | HAnd.hAnd _bv _bv _bv _inst a b => 
+     return Factor.and (← reflectFactor a) (← reflectFactor b)
+  | HOr.hOr _bv _bv _bv _inst a b => 
+     return Factor.or (← reflectFactor a) (← reflectFactor b)
+  | HXor.hXor _bv _bv _bv _inst a b => 
+     return Factor.or (← reflectFactor a) (← reflectFactor b)
+  | Complement.complement _bv _inst a => 
+     return Factor.not (← reflectFactor a) 
+  | _ => 
+    let s ← get
+    match s.e2ix[e]? with 
+    | .some ix => return Factor.var ix
+    | .none => do
+       let ix := s.e2ix.size
+       set { s with e2ix := s.e2ix.insert e ix }
+       return .var ix
 
 def reflectTermCoeff (e : Expr) : M Int :=
   match_expr e with 
@@ -803,20 +813,20 @@ def State.envToExpr (w : WidthExpr) (s : State) : MetaM Expr := do
   for (e, ix) in s.e2ix do
     ix2e := ix2e.insert ix e
   let bvTy := w.toBitVecType
-  let mut env :=  mkApp (mkConst ``List.nil) bvTy
+  let mut env :=  mkApp (mkConst ``List.nil [Level.zero]) bvTy
   for i in [0:ix2e.size] do
     env := mkApp3 (mkConst ``List.cons [Level.zero]) bvTy  ix2e[i]! env
   return env
   
 open Std Lean in
-def mbaTac (g : MVarId) : TermElabM Unit := do
+def mbaTac (g : MVarId) : TermElabM (List MVarId) := do
   g.withContext do 
     let [g] ← g.apply (mkConst ``BitVec.eq_of_sub_zero)
       | throwError m!"unable to apply `BitVec.eq_of_sub_zero`."
     let .some g ← runBvMbaPreprocess  g 
       | do 
          logInfo "goal closed by Mba normalizer."
-         return ()
+         return []
     let ((widthExpr, eqn), reflectState) ← runM <| reflectEqn (← g.getType)
     logInfo m!"found expression of width: '{indentD widthExpr}'"
     let env ← State.envToExpr widthExpr reflectState
@@ -830,17 +840,25 @@ def mbaTac (g : MVarId) : TermElabM Unit := do
     let gs ← g.apply (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero [])
     let [g] := gs
       | throwError m!"expected single goal after applying reflection theorem, found {gs}"
-    let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-     | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-    let [] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-        | throwError m!"Failed to decide with `Lean.ofReducebool` applied to '{indentD g}'"
-    return ()
+    let dec ← mkDecideProof <| ← g.getType
+    if ← isDefEq (mkMVar g) dec then 
+      logInfo "successfully decided!"
+      return []
+    else
+      throwError "failed to prove theorem using decision procedure, statement is false."
+      return [g]
+    -- let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+    --  | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+    -- let [] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+    --     | throwError m!"Failed to decide with `Lean.ofReducebool` applied to '{indentD g}'"
 
 syntax (name := bvMba) "bv_mba" : tactic
 
 @[tactic bvMba]
 def evalBvMba : Tactic := fun
-  | `(tactic| bv_mba) => do mbaTac (← getMainGoal)
+  | `(tactic| bv_mba) => do 
+     let gs ← mbaTac (← getMainGoal)
+     replaceMainGoal gs
   | _ => throwUnsupportedSyntax
 
 end Reflect
