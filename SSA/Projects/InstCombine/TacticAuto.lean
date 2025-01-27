@@ -5,6 +5,7 @@ import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.FastCopy.Reflect
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
@@ -317,6 +318,7 @@ macro "bv_bench": tactic =>
             "bv_automata_circuit_prop" : (bool_to_prop; bv_automata_circuit; done),
             "bv_automata_circuit" : (bv_automata_circuit; done),
             "bv_normalize_automata_circuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done)
+            "bv_mba" : ((try (solve | bv_normalize)); (try bv_mba); done)
           ]
           try bv_auto
           try sorry
