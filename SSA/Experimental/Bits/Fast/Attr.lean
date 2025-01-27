@@ -11,5 +11,8 @@ import Lean
 /-- Preprocessing steps for bv_automata_circuit. -/
 register_simp_attr bv_circuit_preprocess
 
+/-- Preprocessing steps for bv_mba tactic. -/
+register_simp_attr bv_mba_preprocess
+
 /-- Preprocessing steps for bv_automata_circuit. -/
 register_simp_attr bv_circuit_nnf
