@@ -1288,7 +1288,7 @@ def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeBinaryAux FSM.or a b
 
 def fsmLor (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
-  composeBinaryAux FSM.and  a b
+  composeBinaryAux FSM.and a b
 
 def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) :=
   let ult := fsmUlt a b

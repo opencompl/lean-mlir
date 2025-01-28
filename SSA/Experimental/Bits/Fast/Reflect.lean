@@ -1081,9 +1081,9 @@ open Lean Meta Elab Tactic
 
 inductive CircuitBackend
 /-- Pure lean implementation, verified. -/
-| lean 
+| lean
 /-- bv_decide based backend. Currently unverified. -/
-| cadical 
+| cadical (maxIter : Nat := 4)
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
 deriving Repr, DecidableEq
@@ -1543,8 +1543,8 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
     let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
-    let out ← runExternal cnf cfg.solver cfg.lratPath 
-      (trimProofs := true) 
+    let out ← runExternal cnf cfg.solver cfg.lratPath
+      (trimProofs := true)
       (timeout := cadicalTimeoutSec)
       (binaryProofs := true)
     match out with
@@ -1553,11 +1553,11 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
 
 
 open Std Sat AIG Tactic BVDecide Frontend in
-def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    let c := c.not -- we're checking TAUTO, so check that negation is UNSAT.
+    let c := ~~~ c -- we're checking TAUTO, so check that negation is UNSAT.
     let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
@@ -1569,70 +1569,73 @@ def checkCircuitTautoAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circui
     | .error _model => return false
     | .ok _cert => return true
 
+@[implemented_by checkCircuitTautoAuxImpl]
+def checkCircuitTautoAux {α : Type} [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+  return false
+
 /--
 An axiom that tracks that a theorem is true because of our currently unverified
 'decideIfZerosM' decision procedure.
 -/
 axiom decideIfZerosMAx {p : Prop} : p
 
-def Circuit.decLeCadical {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
-  (c : Circuit α) (c' : Circuit α) : TermElabM { b : Bool // b ↔ c ≤ c' } := do
- -- Justified by Circuit.le_iff_implies
- let impliesCircuit := c.implies c'
- let ret ← checkCircuitTautoAux impliesCircuit
- return ⟨ret, decideIfZerosMAx⟩
-
 partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity]
   [DecidableEq β] [Fintype β] [Hashable β]
-    (p : FSM arity) (c : Circuit (p.α ⊕ β))  (iter : Nat) : TermElabM Bool := do
-  IO.eprintln s!"## K-induction (iter {iter})"
-  IO.eprintln s!"Evaluating circuit of size '{c.size}' on initial state"
-  let cInit := c.assignVars fun v hv => 
-    match v with 
-    | .inl a => .inr (p.initCarry a)
+    (p : FSM arity) (c0K : Circuit (p.α ⊕ β)) (cK : Circuit (p.α ⊕ β))  (iter : Nat) (maxIter : Nat) : TermElabM Bool := do
+  logInfo s!"## K-induction (iter {iter})"
+  if iter ≥ maxIter then
+    logInfo s!"ran out of iterations, quitting"
+    return false
+  let cKWithInit : Circuit β := cK.assignVars fun v _hv =>
+    match v with
+    | .inl a => .inr (p.initCarry a) -- assign init state
     | .inr b => .inl b
-  if ← checkCircuitSatAux cInit
-  then 
+  let formatβ : ToFormat β := formatDecEqFinset
+  logInfo m!"safety property circuit: {formatCircuit formatβ.format cKWithInit}"
+  if ← checkCircuitSatAux cKWithInit
+  then
     IO.println s!"Safety property failed on initial state."
     return false
   else
     IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
-    let tStart ← IO.monoMsNow
-    let cNext : Circuit (p.α ⊕ (β ⊕ arity)) := 
-      c.bind fun v =>
+    -- circuit of the output at state (k+1)
+    let cKSucc : Circuit (p.α ⊕ (β ⊕ arity)) :=
+      cK.bind fun v =>
         match v with
-        | .inl a => p.nextBitCirc (some a) |>.map fun v => 
-          match v with 
-          | .inl a => .inl a 
+        | .inl a => p.nextBitCirc (some a) |>.map fun v =>
+          match v with
+          | .inl a => .inl a
           | .inr x => .inr (.inr x)
         | .inr b => .var true (.inr (.inl b))
-    let c : Circuit (p.α ⊕ (β ⊕ arity)) := c.map fun v =>
-      match v with 
-      | .inl a => .inl a 
-      | .inr b => .inr (.inl b)
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    IO.eprintln s!"Built state circuit of size: '{cNext.size}' (time={tElapsedSec}s)"
-    IO.eprintln s!"Establishing inductive invariant with cadical..."
+    -- circuit of the outputs from 0..K, all ORd together, ignoring the new 'arity' output.
+    let c0KAdapted : Circuit (p.α ⊕ (β ⊕ arity)) := c0K.map fun v =>
+       match v with
+       | .inl a => .inl a
+       | .inr b => .inr (.inl b)
     let tStart ← IO.monoMsNow
-    let le ← Circuit.decLeCadical cNext c
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    if h : le then 
-      IO.eprintln s!"Inductive invariant established! (time={tElapsedSec}s)"
+    logInfo s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
+    logInfo s!"Establishing inductive invariant with cadical..."
+    let tStart ← IO.monoMsNow
+    -- c = 0 => c' = 0
+    -- !c => !c'
+    -- !!c || !c'
+    -- c || !c'
+    -- c' => c
+    let impliesCircuit := c0KAdapted ||| ~~~ cKSucc
+    let formatαβarity : ToFormat (p.α ⊕ (β ⊕ arity)) := formatDecEqFinset
+    logInfo m!"induction hyp circuit: {formatCircuit formatαβarity.format impliesCircuit}"
+    let le : Bool := sorry
+    let le ← checkCircuitTautoAux impliesCircuit
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    if le then
+      logInfo s!"Inductive invariant established! (time={tElapsedSec}s)"
       return true
     else
-      -- have _wf : card_compl (cNext ||| c) < card_compl c :=
-      --   have := le.prop
-      --   have hNotLt : ¬ cNext ≤ c := by
-      --     simp at h
-      --     have := this.not
-      --     simp at this
-      --     exact this.mp h
-      --   decideIfZeroAux_wf hNotLt
-      IO.eprintln s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM p (cNext ||| c) (iter + 1)
-  -- termination_by sorry -- card_compl c
+      logInfo s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
+      decideIfZerosAuxTermElabM p (c0KAdapted ||| cKSucc) cKSucc (iter + 1) maxIter
 
 def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
@@ -1640,11 +1643,12 @@ def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (p : FSM arity) : m Bool :=
   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
 
-def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity] (fsm : FSM arity) : TermElabM Bool :=
-  -- decideIfZerosM Circuit.decLeCadical fsm
+def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
+  -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
     let c : Circuit (fsm.α ⊕ Empty) := (fsm.nextBitCirc none).fst.map Sum.inl
-    decideIfZerosAuxTermElabM fsm c 1
+    decideIfZerosAuxTermElabM fsm c c 1 maxIter
 
 end BvDecide
 
@@ -1706,13 +1710,13 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     let fsm := predicateEvalEqFSM result.e |>.toFSM
     logInfo f!"{fsm.format}'"
 
-    match cfg.backend with 
+    match cfg.backend with
     | .dryrun =>
         g.assign (← mkSorry (← g.getType) (synthetic := false))
         logInfo "Closing goal with 'sorry' for dry-run"
         return []
-    | .cadical =>
-      let isTrueForall ← fsm.decideIfZerosMCadical
+    | .cadical maxIter =>
+      let isTrueForall ← fsm.decideIfZerosMCadical maxIter
       if isTrueForall
       then do
         let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])

@@ -784,10 +784,6 @@ instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit �
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
     by simp [always_true_iff, le_def, or_iff_not_imp_left]
 
-/-- Negate the value of the circuit -/
-def not {α : Type u} (c : Circuit α) : Circuit α :=
-  c ^^^ .tru
-
 def implies (c₁ c₂ : Circuit α) : Circuit α := (~~~ c₁) ||| c₂
 
 @[simp]
