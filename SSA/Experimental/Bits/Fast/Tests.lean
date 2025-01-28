@@ -31,7 +31,19 @@ example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_circuit (config := {backend := .cadical} )
 
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
+  bv_automata_circuit (config := {backend := .cadical 40 } )
+
+
+example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
+  bv_automata_circuit (config := {backend := .cadical 20 } )
+
+example (w : Nat) (a : BitVec w) : (a ≠ a - a)  := by
+  -- this cannot be true, because it's false at width 0
+  fail_if_success bv_automata_circuit (config := {backend := .cadical 5 } )
   sorry
+
+example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
+  bv_automata_circuit
   -- bv_automata_circuit (config := {backend := .cadical 20 } )
 
 
@@ -129,7 +141,7 @@ example (w : Nat) : (w = 1) → (1#w + 1#w = 0#w) := by
   bv_automata_circuit (config := {backend := .cadical} )
 example (w : Nat) : (w = 0) → (1#w + 1#w = 0#w) := by
   bv_automata_circuit (config := {backend := .cadical} )
-example (w : Nat) : ((w = 0) ∨ (w = 1)) → (1#w + 1#w = 0#w) := by 
+example (w : Nat) : ((w = 0) ∨ (w = 1)) → (1#w + 1#w = 0#w) := by
   bv_automata_circuit (config := {backend := .cadical} )
 
 example (w : Nat) : (1#w + 1#w = 0#w) → ((w = 0) ∨ (w = 1)):= by
@@ -193,7 +205,7 @@ theorem sub_eq_mul_and_not_sub_xor (x y : BitVec w):
 
 /- See that such problems have large circuit sizes, but small state spaces -/
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
-  bv_automata_circuit (config := { circuitSizeThreshold := 107 })
+  bv_automata_circuit (config := { backend := .cadical })
 
 
 def false_statement {w : ℕ} (x y : BitVec w) : x = y := by
@@ -283,7 +295,7 @@ example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
   bv_automata_circuit (config := {backend := .cadical} )
 
 example : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by
-  intros 
+  intros
   bv_automata_circuit (config := {backend := .cadical} )
 
 example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
@@ -327,7 +339,7 @@ theorem mul_eleven (x : BitVec w) : 11 * x =
   (x + x + x + x + x +
    x + x + x + x + x +
    x) := by
-  bv_automata_circuit (config := {backend := .cadical 11} )
+  bv_automata_circuit (config := {backend := .cadical 6 } )
 
 theorem mul_eleven' (x : BitVec w) : 11 * x =
   (x + x + x + x + x +
@@ -382,10 +394,11 @@ set_option trace.profiler true  in
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  bv_automata_circuit (config := {backend := .cadical 20} )
+  bv_automata_circuit (config := {backend := .cadical 5 } )
 
 theorem e_331 (x y : BitVec w):
      - 6 *  ~~~x + 2 * (x |||  ~~~y) - 3 * x + 2 * (x ||| y) - 10 *  ~~~(x ||| y) - 10 *  ~~~(x |||  ~~~y) - 4 * (x &&&  ~~~y) - 15 * (x &&& y) + 3 *  ~~~(x &&&  ~~~x) + 11 *  ~~~(x &&&  ~~~y) = 0#w := by
-  bv_automata_circuit (config := {backend := .cadical 4} )
+  -- bv_automata_circuit (config := {circuitSizeThreshold := 2000, stateSpaceSizeThreshold := 100})
+  bv_automata_circuit (config := {backend := .cadical 5 } )
 
 end BvAutomataTests

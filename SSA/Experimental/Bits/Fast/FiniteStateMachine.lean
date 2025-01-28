@@ -661,8 +661,8 @@ def ls (b : Bool) : FSM Unit :=
     initCarry := fun _ => b,
     nextBitCirc := fun x =>
       match x with
-      | none => Circuit.var true (inl ())
-      | some () => Circuit.var true (inr ()) }
+      | none => Circuit.var true (inl ()) -- next state bit = state bit
+      | some () => Circuit.var true (inr ()) } -- 
 
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
@@ -875,6 +875,7 @@ number of bits necessary to count up to `n`.
 def ofNat (n : Nat)  : FSM (Fin 0) :=
   match hn : n with
   | 0 => FSM.zero
+--   | 1 => FSM.one
   | n' + 1 =>
     let bit := n.testBit 0
     let m := n / 2
