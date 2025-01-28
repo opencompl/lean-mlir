@@ -700,15 +700,22 @@ theorem BitVec.eq_iff_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
 theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
   simp [BitVec.eq_iff_sub_zero, h]
 
-axiom BitVecUnprovenLemmas {p : Prop} : p
-
-@[bv_mba_preprocess]
+@[bv_mba_preprocess, simp]
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
-  x - (y - z) = x - y + z := by exact BitVecUnprovenLemmas
+    x - (y - z) = x - y + z := by 
+  apply BitVec.eq_of_toInt_eq
+  simp only [BitVec.toInt_sub, Int.sub_bmod_bmod, BitVec.toInt_add, Int.bmod_add_bmod_congr]
+  congr
+  omega
 
-@[bv_mba_preprocess]
+@[bv_mba_preprocess, simp]
 theorem BitVec.sub_distrib_add (x y z : BitVec w) :
-  x - (y + z) = x - y - z := by exact BitVecUnprovenLemmas
+    x - (y + z) = x - y - z := by
+  apply BitVec.eq_of_toInt_eq
+  simp only [BitVec.toInt_sub, BitVec.toInt_add, Int.sub_bmod_bmod, Int.bmod_sub_bmod_congr]
+  congr 1
+  omega
+
 
 attribute [bv_mba_preprocess] BitVec.sub_toAdd
 
@@ -718,25 +725,66 @@ theorem BitVec.ofNat_eq_ofInt (n w : Nat) :
   apply BitVec.eq_of_toInt_eq
   simp[BitVec.toInt_ofNat]
 
+
 attribute [bv_mba_preprocess] BitVec.ofNat_eq_ofNat
+
+theorem BitVec.neg_eq_zero_sub {w : Nat} (x : BitVec w) : -x = 0#w - x := by
+  exact rfl
+
+
+attribute [simp] BitVec.neg_neg
+
+theorem BitVec.ofInt_add {w : Nat} (i j : Int) :
+    BitVec.ofInt w (i + j) = BitVec.ofInt w i + BitVec.ofInt w j := by
+  apply BitVec.eq_of_toInt_eq
+  simp
 
 @[bv_mba_preprocess]
 theorem BitVec.neg_ofInt {w : Nat} (i : Int) :
-    - (BitVec.ofInt  w i) = BitVec.ofInt w (-i) := by
-  exact BitVecUnprovenLemmas
+    - (BitVec.ofInt w i) = BitVec.ofInt w (-i) := by
+  symm
+  rw [BitVec.eq_iff_sub_zero]
+  rw [BitVec.sub_toAdd, BitVec.neg_neg]
+  rw [← BitVec.ofInt_add]
+  simp [show -i + i = 0 by omega]
 
 @[bv_mba_preprocess]
 theorem BitVec.neg_add {x y : BitVec w} : - (x + y) = (-x) + (-y) := by
-  exact BitVecUnprovenLemmas
+  rw [BitVec.neg_eq_zero_sub]
+  simp only [sub_distrib_add, BitVec.zero_sub]
+  exact BitVec.sub_toAdd (-x) y
 
 @[bv_mba_preprocess]
 theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
-  exact BitVecUnprovenLemmas
+  rw [BitVec.neg_eq_zero_sub]
+  simp only [sub_distrib_sub, BitVec.zero_sub]
+
+theorem BitVec.mul_distrib_add_left (x y z : BitVec w) : x * (y + z) = x * y + x * z := by
+  apply BitVec.eq_of_toNat_eq
+  simp [← Nat.mul_add]
+  conv => 
+    rhs 
+    rw [Nat.mul_mod]
+  simp
+
+theorem BitVec.mul_distrib_add_right (x y z : BitVec w) :  (y + z) * x = y * x + z * x := by
+  rw [BitVec.mul_comm]
+  rw [BitVec.mul_distrib_add_left]
+  ac_nf
 
 @[bv_mba_preprocess]
 theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
     - (x * y) = (- x) * y := by
-  exact BitVecUnprovenLemmas
+  symm
+  rw [BitVec.eq_iff_sub_zero]
+  rw [BitVec.sub_toAdd]
+  rw [BitVec.neg_neg]
+  rw [← BitVec.mul_distrib_add_right]
+  have : -x + x = 0 := by 
+    rw [BitVec.add_comm]
+    rw [← BitVec.sub_toAdd]
+    simp
+  simp [this]
 
 attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
 attribute [bv_mba_preprocess] Int.reduceNeg
@@ -923,18 +971,12 @@ example (x y : BitVec w) :
     [Term.mk 1 (.var 0), Term.mk 2 (.var 1), Term.mk (-1) (.var 0)] [x, y] =
     (BitVec.ofInt w 1 * x + (BitVec.ofInt w 2 * y + BitVec.ofInt w (-1) * x) = BitVec.ofInt w 0) := rfl
 
-example (x : BitVec w) : 1 * x  + (-1) * x = 0 := by
- bv_mba
-
-
-example (x y : BitVec w) : 1 * x  + 2 * y + (-1) * x + (-2) * y = 0 := by
- bv_mba
-
-theorem e_3 (x y : BitVec w) :
+theorem eg3 (x y : BitVec w) :
      - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
   bv_mba
 
-#print axioms e_3
+/-- info: 'MBA.Examples.eg3' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms eg3
 
 end Examples
 end MBA
