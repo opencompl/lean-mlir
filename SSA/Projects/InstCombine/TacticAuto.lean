@@ -318,7 +318,8 @@ macro "bv_bench": tactic =>
             "bv_automata_circuit_prop" : (bool_to_prop; bv_automata_circuit; done),
             "bv_automata_circuit" : (bv_automata_circuit; done),
             "bv_normalize_automata_circuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done),
-            "bv_mba" : ((try (solve | bv_normalize)); (try bv_mba); done)
+            "bv_mba" : (bv_mba; done),
+            "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done)
           ]
           try bv_auto
           try sorry
