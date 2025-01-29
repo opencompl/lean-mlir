@@ -31,7 +31,7 @@ example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_circuit (config := {backend := .cadical} )
 
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
-  bv_automata_circuit (config := {backend := .cadical 40 } )
+  bv_automata_circuit (config := {backend := .cadical 10 } )
 
 
 example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
