@@ -1579,17 +1579,79 @@ An axiom that tracks that a theorem is true because of our currently unverified
 -/
 axiom decideIfZerosMAx {p : Prop} : p
 
-partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity]
-  [DecidableEq β] [Fintype β] [Hashable β]
-    (p : FSM arity) (c0K : Circuit (p.α ⊕ β)) (cK : Circuit (p.α ⊕ β))  (iter : Nat) (maxIter : Nat) : TermElabM Bool := do
+/--
+An inductive type representing the variables in the unrolled FSM circuit,
+where we unroll for 'n' steps.
+-/
+inductive UnrolledVars (σ ι : Type) : Nat → Type  where
+| zero: σ → UnrolledVars σ ι 0
+| succ : UnrolledVars σ ι n → ι → UnrolledVars σ ι n.succ
+deriving DecidableEq, Hashable
+
+
+namespace UnrolledVars
+
+def lmap (f : σ → σ') : UnrolledVars σ ι n → UnrolledVars σ' ι n
+| .zero s => .zero <| f s
+| .succ xs i => .succ (xs.lmap f) i
+
+def rmap (f : ι → ι') : UnrolledVars σ ι n → UnrolledVars σ ι' n
+| .zero s => .zero <| s
+| .succ xs i => .succ (xs.rmap f) (f i)
+
+def univ [DecidableEq σ] [DecidableEq ι]
+    [Fintype σ] [Fintype ι] (n : Nat) :
+    { univ : Finset (UnrolledVars σ ι n) // ∀ x : UnrolledVars σ ι n, x ∈ univ } :=
+  match n with
+  | 0 =>
+    let ss : Finset σ := Finset.univ
+    let out := ss.map ⟨fun s => UnrolledVars.zero s, by
+      intros s t
+      simp
+    ⟩
+    ⟨out, by
+      intros x
+      rcases x
+      case zero v =>
+        simp [out]
+        apply Fintype.complete
+    ⟩
+  | n + 1 =>
+    let ⟨univN, hUnivN⟩ := univ n
+    let ii : Finset ι := Finset.univ
+    let out := univN.biUnion (fun unrolled => ii.map ⟨fun i => unrolled.succ i, by intros i1 i2; simp⟩)
+    ⟨out, by
+      intros x
+      rcases x
+      case succ vs i =>
+        simp [out]
+        apply And.intro
+        · apply hUnivN
+        · apply Fintype.complete
+    ⟩
+
+instance [DecidableEq σ] [DecidableEq ι] [Fintype σ] [Fintype ι] :
+    Fintype (UnrolledVars σ ι n) where
+  elems := univ n |>.val
+  complete := univ n |>.property
+
+end UnrolledVars
+
+partial def decideIfZerosAuxTermElabM {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    [DecidableEq β] [Fintype β] [Hashable β]
+    (iter : Nat) (maxIter : Nat)
+    (p : FSM arity)
+    (c0K : Circuit (UnrolledVars p.α β iter))
+    (cK : Circuit (UnrolledVars p.α β iter))  : TermElabM Bool := do
   logInfo s!"## K-induction (iter {iter})"
   if iter ≥ maxIter then
     logInfo s!"ran out of iterations, quitting"
     return false
-  let cKWithInit : Circuit β := cK.assignVars fun v _hv =>
+  let cKWithInit : Circuit (UnrolledVars Unit β iter) := cK.assignVars fun v _hv =>
     match v with
-    | .inl a => .inr (p.initCarry a) -- assign init state
-    | .inr b => .inl b
+    | .zero a => .inr (p.initCarry a) -- assign init state
+    | .succ b bs => sorry--  .inl b
   let formatβ := formatDecEqFinset
   logInfo m!"safety property circuit: {formatCircuit formatβ cKWithInit}"
   if ← checkCircuitSatAux cKWithInit
@@ -1624,10 +1686,10 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
     -- c || !c'
     -- c' => c
     let impliesCircuit := c0KAdapted ||| ~~~ cKSucc
-    -- let formatαβarity : ToFormat (p.α ⊕ (β ⊕ arity)) := formatDecEqFinset
-    -- logInfo m!"induction hyp circuit: {formatCircuit formatαβarity.format impliesCircuit}"
+    let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
+    logInfo m!"induction hyp circuit: {formatCircuit formatαβarity.format impliesCircuit}"
     let le : Bool := sorry
-    let le ← checkCircuitTautoAux impliesCircuit
+    -- let le ← checkCircuitTautoAux impliesCircuit
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if le then
