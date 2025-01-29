@@ -1613,16 +1613,20 @@ def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
   input := f i.input
 
 def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
-    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } :=
-  match n with
-  | 0 =>
-    let out : Finset (Inputs ι 0) := {}
-    ⟨out, by
-      intros x
-      apply x.ix.elim0
-    ⟩
-  | n + 1 =>
-    sorry
+    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } := 
+  let ixs : Finset (Fin n) := Finset.univ
+  let inputs : Finset ι := Finset.univ
+  let out := ixs.biUnion 
+      (fun ix => inputs.map ⟨fun input => Inputs.mk ix input, by intros a b; simp⟩)
+  ⟨out, by 
+    intros i
+    obtain ⟨ix, input⟩ := i
+    simp [out]
+    constructor
+    · apply Fintype.complete
+    · apply Fintype.complete
+  ⟩
+
 
 instance [DecidableEq ι] [Fintype ι] :
     Fintype (Inputs ι n) where
@@ -1668,7 +1672,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
   logInfo s!"## K-induction (iter {iter})"
   if iter ≥ maxIter then
-    logInfo s!"ran out of iterations, quitting"
+    throwError s!"ran out of iterations, quitting"
     return false
   let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
     match v with
@@ -1718,7 +1722,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     logInfo m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     -- let le : Bool := sorry
-    let le ← checkCircuitTautoAux impliesCircuit
+    let le ← checkCircuitTautoAux safetyProperty
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if le then
