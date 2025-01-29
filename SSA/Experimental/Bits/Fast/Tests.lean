@@ -33,7 +33,6 @@ example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
   bv_automata_circuit (config := {backend := .cadical 20 } )
 
-
 example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
   bv_automata_circuit (config := {backend := .cadical 20 } )
 
@@ -44,7 +43,8 @@ example (w : Nat) (a : BitVec w) : (a ≠ a - a)  := by
 
 example (w : Nat) (a : BitVec w) : (a = 0#w) := by
   -- bv_automata_circuit
-  bv_automata_circuit (config := {backend := .cadical 20 } )
+  fail_if_success bv_automata_circuit (config := {backend := .cadical 20 } )
+  sorry
 
 /-
 Init: 0:st → false
@@ -170,12 +170,10 @@ When we have this, we then explicitly enumerate the different values that a can 
 Note that this is pretty expensive.
 -/
 example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
-  fail_if_success bv_automata_circuit (config := {backend := .cadical} )
-  bv_automata_circuit
+  bv_automata_circuit (config := {backend := .cadical} )
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
-  fail_if_success bv_automata_circuit (config := {backend := .cadical} )
-  bv_automata_circuit
+  bv_automata_circuit (config := {backend := .cadical} )
 
 
 /-- Can use implications -/
@@ -293,8 +291,7 @@ def test26 {w : Nat} (x y : BitVec w) : 1#w + x + 0#w = 1#w + x := by
 
 /-- NOTE: we now support 'ofNat' literals -/
 def test27 (x y : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
-  fail_if_success bv_automata_circuit (config := {backend := .cadical} )
-  bv_automata_circuit
+  bv_automata_circuit (config := {backend := .cadical} )
 
 def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_automata_circuit (config := {backend := .cadical} )
@@ -305,8 +302,7 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
 
 example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   intros
-  fail_if_success bv_automata_circuit (config := {backend := .cadical} )
-  bv_automata_circuit
+  bv_automata_circuit (config := {backend := .cadical} )
 
 example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
   intros
