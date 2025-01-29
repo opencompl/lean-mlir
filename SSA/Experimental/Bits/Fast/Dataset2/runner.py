@@ -37,7 +37,7 @@ class Counter:
         self.val += 1
         self.on_increment(self.val)
 
-async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter):
+async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter, test_content, solver):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
         command = f"lake build SSA.Experimental.Bits.Fast.Dataset2.{module_name}"
@@ -96,11 +96,13 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         cur.execute("""
             INSERT INTO tests (
                 filename,
+                test_content,
+                solver,
                 timeout,
                 status,
                 exit_code)
-            VALUES (?, ?, ?, ?)
-        """, (filename, timeout, status, exit_code))
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (filename, test_content, solver, timeout, status, exit_code))
         logging.info(f"[Writing {filename}]  Commiting...")
         con.commit()
         logging.info(f"[Writing {filename}]  Closing...")
@@ -121,6 +123,7 @@ def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
 import SSA.Experimental.Bits.Fast.MBA
+import SSA.Experimental.Bits.Fast.Reflect
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 9000
@@ -134,7 +137,7 @@ variable { a b c d e f g t x y z : BitVec w }
 """
 
 
-def translate_dataset_expr_to_lean(counter, expression):
+def translate_dataset_expr_to_lean(counter, expression, rhs_after_colon_equals):
   exp = f"theorem e_{counter} :\n    "
   expression = expression.replace(",True", "")
   expression = expression.replace(",", " = ")
@@ -146,18 +149,9 @@ def translate_dataset_expr_to_lean(counter, expression):
   expression = expression.replace("&", " &&& ")
   expression = expression.replace("~", " ~~~")
 
-  exp = exp + expression + " := by bv_mba"
+  exp = exp + expression + " := " + rhs_after_colon_equals
 
   return exp
-
-def write_files():
-    counter = 0
-    with open('dataset2_64bit.txt', 'r') as infile:
-        for line in list(infile)[1:]:
-            with open(f'Test{counter}.lean', 'w') as outfile:
-                outfile.write(preamble)
-                outfile.write(translate_dataset_expr_to_lean(counter, line.strip()) + "\n")
-            counter += 1
 
 def setup_logging(db_name : str):
     # Set up the logging configuration
@@ -175,7 +169,9 @@ async def main(args):
     cur = con.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tests (
-            filename TEXT,
+            filename text,
+            test_content text,
+            solver text,
             timeout INTEGER,
             status TEXT,
             exit_code INTEGER,
@@ -200,21 +196,30 @@ async def main(args):
     logging.info(f"found {n_tests} files to process")
     completed_counter = Counter(lambda val: logging.info(f"** COMPLETED {val}/{n_tests} **"))
     async with asyncio.TaskGroup() as tg:
-        for (i_test, test) in enumerate(tests):
-            filename = f"Test{i_test+1}.lean"
-            with open(filename, 'w') as f:
-                f.write(test_file_preamble())
-                f.write(translate_dataset_expr_to_lean(i_test, test.strip()) + "\n")
-
-            logging.debug(f"spawning async task for {i_test+1}:{test.strip()}:{filename}")
-            tg.create_task(run_lake_build(db=args.db,
-                           git_root_dir=git_root_dir,
-                           semaphore=semaphore,
-                           timeout=args.timeout,
-                           i_test=i_test,
-                           n_tests=n_tests,
-                           filename=filename,
-                           completed_counter=completed_counter))
+        for (i_test, test_content) in enumerate(tests):
+            for solver in ["mba", "kinduction"]:
+                rhs_for_solver = {
+                  "mba": "by bv_mba",
+                  "kinduction": "by bv_automata_circuit (config := { backend := .cadical 10 })",
+                }
+                filename = f"Test{solver}{i_test+1}.lean".replace("-","").replace("_","")
+                with open(filename, 'w') as f:
+                    f.write(test_file_preamble())
+                    f.write(translate_dataset_expr_to_lean(counter=i_test, 
+                            expression=test_content.strip(),
+                            rhs_after_colon_equals=rhs_for_solver[solver]))
+                    f.write("\n")
+                logging.debug(f"spawning async task for {i_test+1}:{test_content.strip()}:{filename}")
+                tg.create_task(run_lake_build(db=args.db,
+                               git_root_dir=git_root_dir,
+                               semaphore=semaphore,
+                               timeout=args.timeout,
+                               i_test=i_test,
+                               n_tests=n_tests,
+                               test_content=test_content,
+                               solver=solver,
+                               filename=filename,
+                               completed_counter=completed_counter))
 
 def print_summary_from_db(db):
     logging.info(f"Summary of run:")

@@ -1,4 +1,7 @@
-.PHONY: run
+.PHONY: run clean
+
+clean:
+	rm *.lean
 
 run: runner.py
 	rm *.lean
