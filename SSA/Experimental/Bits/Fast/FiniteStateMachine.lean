@@ -46,14 +46,24 @@ def Finset.toListUnsafe (as : Finset α) : List α :=
   let multiset := as.val
   Quotient.lift id sorry multiset
 
+
+open Lean in
+def formatSum (fα : α → Lean.Format) (fβ : β → Lean.Format) (x : α ⊕ β) : Lean.Format := 
+  match x with | .inl x => f!"(l {fα x})" | .inr x => f!"(r {fβ x})"
+
+
 open Lean in
 instance FormatSum [formatα : ToFormat α] [formatβ : ToFormat β] : ToFormat (α ⊕ β) where
   format x := match x with | .inl x => f!"(l {format x})" | .inr x => f!"(r {format x})"
 
 open Lean in
-def formatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α :=
+def formatDecEqFinset [Fintype α] [DecidableEq α] (a : α) : Lean.Format :=
   let as : List α := Finset.toListUnsafe Finset.univ
-  { format a := format <| as.findIdx (fun b => a = b) }
+  format <| as.findIdx (fun b => a = b)
+
+open Lean in
+def FormatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α where 
+  format := formatDecEqFinset
 
 namespace FSM
 
@@ -81,22 +91,27 @@ def circuitSize : Nat := Id.run do
   return outCircSize + stateCircSize
 
 open Lean in
-def format (fsm : FSM σ) [Fintype σ] [DecidableEq σ] : Format := Id.run do
+def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.run do
   have : DecidableEq fsm.α := fsm.dec_eq
-  let formatSum : ToFormat (fsm.α ⊕ σ) := formatDecEqFinset
-  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
-  let arity : Nat := @Finset.univ σ inferInstance |>.card
-  let fsm := Lean.ShareCommon.shareCommon fsm
+  let fα : fsm.α → Format := fun x => formatDecEqFinset x ++ ":st"
+  let farity : arity → Format := fun x => formatDecEqFinset x ++ ":in"
+  let formatSum : (fsm.α ⊕ arity) → Format := formatSum fα farity
   let mut out := f!""
+  for a in @Finset.univ fsm.α |>.toListUnsafe do
+    out := out ++ f!"Init: {fα a} → {fsm.initCarry a}"
+    pure ()
+  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
+  let arity : Nat := @Finset.univ arity inferInstance |>.card
+  let fsm := Lean.ShareCommon.shareCommon fsm
   out := out ++ f!"⋆ #args '{arity}'" ++ Format.line
   out := out ++ f!"⋆ #state bits '{numStateBits}'" ++ Format.line
   out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
-  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum.format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
+  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum (fsm.nextBitCirc none))) ++ "'" ++ Format.line
   out := out ++ "**State Transition:**" ++  Format.line
   let as : List fsm.α := Finset.univ |>.toListUnsafe
   let mut ts := f!""
-  for (i, a) in List.enum as do
-    ts := ts ++ Format.align true ++ f!"{i}: '{(formatCircuit formatSum.format (fsm.nextBitCirc (some a)))}'" ++ Format.line
+  for (_i, a) in List.enum as do
+    ts := ts ++ Format.align true ++ f!"{fα a}: '{(formatCircuit formatSum (fsm.nextBitCirc (some a)))}'" ++ Format.line
   out := out ++ Format.group (Format.nest 2 ts)
   return out
 

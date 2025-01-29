@@ -42,6 +42,10 @@ example (w : Nat) (a : BitVec w) : (a ≠ a - a)  := by
   fail_if_success bv_automata_circuit (config := {backend := .cadical 5 } )
   sorry
 
+example (w : Nat) (a : BitVec w) : (a = 0#w) := by
+  -- bv_automata_circuit
+  bv_automata_circuit (config := {backend := .cadical 20 } )
+
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
   bv_automata_circuit
   -- bv_automata_circuit (config := {backend := .cadical 20 } )
