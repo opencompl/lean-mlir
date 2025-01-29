@@ -1616,7 +1616,7 @@ def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
       apply x.ix.elim0
     ⟩
   | n + 1 =>
-      sorry
+    sorry
 
 instance [DecidableEq ι] [Fintype ι] :
     Fintype (Inputs ι n) where
@@ -1701,11 +1701,11 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     -- !!c || !c'
     -- c || !c'
     -- c' => c
-    let impliesCircuit := c0KAdapted ||| ~~~ cKSucc
-    let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
-    logInfo m!"induction hyp circuit: {formatCircuit formatαβarity.format impliesCircuit}"
-    let le : Bool := sorry
-    -- let le ← checkCircuitTautoAux impliesCircuit
+    let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ cKSucc
+    -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
+    logInfo m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
+    -- let le : Bool := sorry
+    let le ← checkCircuitTautoAux impliesCircuit
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if le then
@@ -1713,20 +1713,20 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
       return true
     else
       logInfo s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM p (c0KAdapted ||| cKSucc) cKSucc (iter + 1) maxIter
+      decideIfZerosAuxTermElabM (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc
 
-def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
-    (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
-        (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
-    (p : FSM arity) : m Bool :=
-  decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
+-- def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
+--     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
+--         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
+--     (p : FSM arity) : m Bool :=
+--   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
 
 def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
-    let c : Circuit (fsm.α ⊕ Empty) := (fsm.nextBitCirc none).fst.map Sum.inl
-    decideIfZerosAuxTermElabM fsm c c 1 maxIter
+    let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
+    decideIfZerosAuxTermElabM 0 maxIter fsm c c
 
 end BvDecide
 
