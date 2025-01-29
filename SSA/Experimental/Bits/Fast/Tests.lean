@@ -46,6 +46,20 @@ example (w : Nat) (a : BitVec w) : (a = 0#w) := by
   -- bv_automata_circuit
   bv_automata_circuit (config := {backend := .cadical 20 } )
 
+/-
+Init: 0:st → false
+Init: 1:st → false
+Init: 2:st → false
+Init: 3:st → false
+Init: 4:st → false
+'(and (or v:(l 0:st) v:(l 1:st)) (or v:(l 2:st) v:(l 3:st)))'
+**State Transition:**
+  0:st: '(or v:(l 0:st) v:(l 1:st))' -- accumulate failure from [1], and check that (a=0)
+  1:st: 'v:(r 0:in)' -- store value from the input stream [from a=0]
+  2:st: '(or v:(l 2:st) v:(l 3:st))' -- accumulate failure from [3]
+  3:st: '(xor v:(r 0:in) (xor v:(r 0:in) v:(l 4:st)))' ~= v:(4:st)
+  4:st: '(and v:(r 0:in) v:(l 4:st))' ' -- accumulate failure, and check that a=0.
+-/
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
   bv_automata_circuit
   -- bv_automata_circuit (config := {backend := .cadical 20 } )

@@ -95,10 +95,11 @@ def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.
   have : DecidableEq fsm.α := fsm.dec_eq
   let fα : fsm.α → Format := fun x => formatDecEqFinset x ++ ":st"
   let farity : arity → Format := fun x => formatDecEqFinset x ++ ":in"
-  let formatSum : (fsm.α ⊕ arity) → Format := formatSum fα farity
+  let formatSum : (fsm.α ⊕ arity) → Format := Sum.elim fα farity
   let mut out := f!""
+  out := out ++ f!"Initial state:"
   for a in @Finset.univ fsm.α |>.toListUnsafe do
-    out := out ++ f!"Init: {fα a} → {fsm.initCarry a}"
+    out := out ++ f!"  - {fα a} → {fsm.initCarry a}" ++ Format.line
     pure ()
   let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
   let arity : Nat := @Finset.univ arity inferInstance |>.card
