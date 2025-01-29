@@ -4,6 +4,7 @@
 # 20.833333333333332 / $NPROC
 # maxHeartbeats
 # timeout.
+from typing import List, Dict
 import os
 import argparse
 import glob
@@ -27,6 +28,12 @@ def parse_args():
 STATUS_FAIL = "fail"
 STATUS_SUCCESS = "success"
 STATUS_TIMED_OUT = "timeout"
+
+status_to_emoji = {
+    STATUS_FAIL : "❌",
+    STATUS_SUCESS : "🎉",
+    STATUS_TIMED_OUT : "⌛️"
+}
 
 class Counter:
     def __init__(self, on_increment):
@@ -87,7 +94,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             except Exception as e:
                 logging.warning(f"Weird exception {e}")
 
-        logging.info(f"[Finished {filename}]  Status: {status}")
+        logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
 
         logging.info(f"[Writing {filename}]  Opening connection...")
         con = sqlite3.connect(args.db)
@@ -138,18 +145,6 @@ variable { a b c d e f g t x y z : BitVec w }
 
 
 def translate_dataset_expr_to_lean(counter, expression, rhs_after_colon_equals):
-  exp = f"theorem e_{counter} :\n    "
-  expression = expression.replace(",True", "")
-  expression = expression.replace(",", " = ")
-  expression = expression.replace("*", " * ")
-  expression = expression.replace("-", " - ")
-  expression = expression.replace("+", " + ")
-  expression = expression.replace("^", " ^^^ ")
-  expression = expression.replace("|", " ||| ")
-  expression = expression.replace("&", " &&& ")
-  expression = expression.replace("~", " ~~~")
-
-  exp = exp + expression + " := " + rhs_after_colon_equals
 
   return exp
 
@@ -158,6 +153,57 @@ def setup_logging(db_name : str):
     logging.basicConfig(level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
+
+
+class UnitTest:
+    test : str
+    solver : str
+
+    solver_mba = "mba"
+    solver_kinduction = "kinduction"
+    solvers = [solver_mba, solver_kinduction]
+    
+    def __init__(self, test, solver):
+        self.test = test
+        self.solver = solver
+        assert self.solver in UnitTest.solvers
+    
+    def write(self, f):
+        f.write(test_file_preamble())
+        out = f"private theorem thm :\n    "
+        expression = self.test
+        expression = expression.replace(",True", "")
+        expression = expression.replace(",", " = ")
+        expression = expression.replace("*", " * ")
+        expression = expression.replace("-", " - ")
+        expression = expression.replace("+", " + ")
+        expression = expression.replace("^", " ^^^ ")
+        expression = expression.replace("|", " ||| ")
+        expression = expression.replace("&", " &&& ")
+        expression = expression.replace("~", " ~~~")
+        out = out + expression + " := "
+        if self.solver == UnitTest.solver_mba:
+            out += "by bv_mba"
+        elif self.solver == UnitTest.solver_kinduction:
+            out += "by bv_automata_circuit (config := {backend := .cadical 10})"
+        else:
+            raise RuntimeError(f"expected self.solver to be one of '{UnitTest.solvers}', found '{self.solver}'")
+        f.write(out)
+
+def load_tests(args) -> List[UnitTest]:
+    with open('dataset2_64bit.txt', 'r') as f:
+        tests = list(f)[1:]
+
+    if not args.prod_run:
+        logging.info(f"--prod_run not enabled, pruning files to small batch")
+        tests = tests[:13]
+
+    out = []
+    for t in tests:
+        for s in UnitTest.solvers:
+            out.append(UnitTest(test=t, solver=s))
+    return out
+
 
 async def main(args):
     logging.info(f"parsed config args: {args}")
@@ -183,43 +229,27 @@ async def main(args):
 
     semaphore = asyncio.Semaphore(args.j)  # Limit to j concurrent tasks
 
-    # Get all files matching the pattern
-
-    with open('dataset2_64bit.txt', 'r') as f:
-        tests = list(f)[1:]
-
-    if not args.prod_run:
-        logging.info(f"--prod_run not enabled, pruning files to small batch")
-        tests = tests[:20]
+    tests = load_tests(args)
     n_tests = len(tests)
-
     logging.info(f"found {n_tests} files to process")
     completed_counter = Counter(lambda val: logging.info(f"** COMPLETED {val}/{n_tests} **"))
+
     async with asyncio.TaskGroup() as tg:
-        for (i_test, test_content) in enumerate(tests):
-            for solver in ["mba", "kinduction"]:
-                rhs_for_solver = {
-                  "mba": "by bv_mba",
-                  "kinduction": "by bv_automata_circuit (config := { backend := .cadical 10 })",
-                }
-                filename = f"Test{solver}{i_test+1}.lean".replace("-","").replace("_","")
-                with open(filename, 'w') as f:
-                    f.write(test_file_preamble())
-                    f.write(translate_dataset_expr_to_lean(counter=i_test, 
-                            expression=test_content.strip(),
-                            rhs_after_colon_equals=rhs_for_solver[solver]))
-                    f.write("\n")
-                logging.debug(f"spawning async task for {i_test+1}:{test_content.strip()}:{filename}")
-                tg.create_task(run_lake_build(db=args.db,
-                               git_root_dir=git_root_dir,
-                               semaphore=semaphore,
-                               timeout=args.timeout,
-                               i_test=i_test,
-                               n_tests=n_tests,
-                               test_content=test_content,
-                               solver=solver,
-                               filename=filename,
-                               completed_counter=completed_counter))
+        for (i_test, test) in enumerate(tests):
+            filename = f"Test{test.solver}{i_test+1}.lean".replace("-","").replace("_","")
+            with open(filename, 'w') as f:
+                test.write(f)
+            logging.debug(f"spawning async task for {i_test+1}:{test.test.strip()}:{filename}")
+            tg.create_task(run_lake_build(db=args.db,
+                           git_root_dir=git_root_dir,
+                           semaphore=semaphore,
+                           timeout=args.timeout,
+                           i_test=i_test,
+                           n_tests=n_tests,
+                           test_content=test.test,
+                           solver=test.solver,
+                           filename=filename,
+                           completed_counter=completed_counter))
 
 def print_summary_from_db(db):
     logging.info(f"Summary of run:")
