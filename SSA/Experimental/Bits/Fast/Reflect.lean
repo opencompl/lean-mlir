@@ -1590,8 +1590,8 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
     match v with
     | .inl a => .inr (p.initCarry a) -- assign init state
     | .inr b => .inl b
-  let formatβ : ToFormat β := formatDecEqFinset
-  logInfo m!"safety property circuit: {formatCircuit formatβ.format cKWithInit}"
+  let formatβ := formatDecEqFinset
+  logInfo m!"safety property circuit: {formatCircuit formatβ cKWithInit}"
   if ← checkCircuitSatAux cKWithInit
   then
     IO.println s!"Safety property failed on initial state."
@@ -1624,8 +1624,8 @@ partial def decideIfZerosAuxTermElabM {arity : Type _} [DecidableEq arity] [Fint
     -- c || !c'
     -- c' => c
     let impliesCircuit := c0KAdapted ||| ~~~ cKSucc
-    let formatαβarity : ToFormat (p.α ⊕ (β ⊕ arity)) := formatDecEqFinset
-    logInfo m!"induction hyp circuit: {formatCircuit formatαβarity.format impliesCircuit}"
+    -- let formatαβarity : ToFormat (p.α ⊕ (β ⊕ arity)) := formatDecEqFinset
+    -- logInfo m!"induction hyp circuit: {formatCircuit formatαβarity.format impliesCircuit}"
     let le : Bool := sorry
     let le ← checkCircuitTautoAux impliesCircuit
     let tEnd ← IO.monoMsNow
