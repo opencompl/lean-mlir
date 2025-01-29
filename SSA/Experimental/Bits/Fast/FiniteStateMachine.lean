@@ -46,14 +46,24 @@ def Finset.toListUnsafe (as : Finset α) : List α :=
   let multiset := as.val
   Quotient.lift id sorry multiset
 
+
+open Lean in
+def formatSum (fα : α → Lean.Format) (fβ : β → Lean.Format) (x : α ⊕ β) : Lean.Format := 
+  match x with | .inl x => f!"(l {fα x})" | .inr x => f!"(r {fβ x})"
+
+
 open Lean in
 instance FormatSum [formatα : ToFormat α] [formatβ : ToFormat β] : ToFormat (α ⊕ β) where
   format x := match x with | .inl x => f!"(l {format x})" | .inr x => f!"(r {format x})"
 
 open Lean in
-def formatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α :=
+def formatDecEqFinset [Fintype α] [DecidableEq α] (a : α) : Lean.Format :=
   let as : List α := Finset.toListUnsafe Finset.univ
-  { format a := format <| as.findIdx (fun b => a = b) }
+  format <| as.findIdx (fun b => a = b)
+
+open Lean in
+def FormatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α where 
+  format := formatDecEqFinset
 
 namespace FSM
 
@@ -81,22 +91,28 @@ def circuitSize : Nat := Id.run do
   return outCircSize + stateCircSize
 
 open Lean in
-def format (fsm : FSM σ) [Fintype σ] [DecidableEq σ] : Format := Id.run do
+def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.run do
   have : DecidableEq fsm.α := fsm.dec_eq
-  let formatSum : ToFormat (fsm.α ⊕ σ) := formatDecEqFinset
-  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
-  let arity : Nat := @Finset.univ σ inferInstance |>.card
-  let fsm := Lean.ShareCommon.shareCommon fsm
+  let fα : fsm.α → Format := fun x => formatDecEqFinset x ++ ":st"
+  let farity : arity → Format := fun x => formatDecEqFinset x ++ ":in"
+  let formatSum : (fsm.α ⊕ arity) → Format := Sum.elim fα farity
   let mut out := f!""
+  out := out ++ f!"Initial state:"
+  for a in @Finset.univ fsm.α |>.toListUnsafe do
+    out := out ++ f!"  - {fα a} → {fsm.initCarry a}" ++ Format.line
+    pure ()
+  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
+  let arity : Nat := @Finset.univ arity inferInstance |>.card
+  let fsm := Lean.ShareCommon.shareCommon fsm
   out := out ++ f!"⋆ #args '{arity}'" ++ Format.line
   out := out ++ f!"⋆ #state bits '{numStateBits}'" ++ Format.line
   out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
-  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum.format (fsm.nextBitCirc none))) ++ "'" ++ Format.line
+  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum (fsm.nextBitCirc none))) ++ "'" ++ Format.line
   out := out ++ "**State Transition:**" ++  Format.line
   let as : List fsm.α := Finset.univ |>.toListUnsafe
   let mut ts := f!""
-  for (i, a) in List.enum as do
-    ts := ts ++ Format.align true ++ f!"{i}: '{(formatCircuit formatSum.format (fsm.nextBitCirc (some a)))}'" ++ Format.line
+  for (_i, a) in List.enum as do
+    ts := ts ++ Format.align true ++ f!"{fα a}: '{(formatCircuit formatSum (fsm.nextBitCirc (some a)))}'" ++ Format.line
   out := out ++ Format.group (Format.nest 2 ts)
   return out
 
@@ -661,8 +677,8 @@ def ls (b : Bool) : FSM Unit :=
     initCarry := fun _ => b,
     nextBitCirc := fun x =>
       match x with
-      | none => Circuit.var true (inl ())
-      | some () => Circuit.var true (inr ()) }
+      | none => Circuit.var true (inl ()) -- next state bit = state bit
+      | some () => Circuit.var true (inr ()) } -- 
 
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
@@ -875,6 +891,7 @@ number of bits necessary to count up to `n`.
 def ofNat (n : Nat)  : FSM (Fin 0) :=
   match hn : n with
   | 0 => FSM.zero
+--   | 1 => FSM.one
   | n' + 1 =>
     let bit := n.testBit 0
     let m := n / 2
@@ -1288,7 +1305,7 @@ def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeBinaryAux FSM.or a b
 
 def fsmLor (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
-  composeBinaryAux FSM.and  a b
+  composeBinaryAux FSM.and a b
 
 def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) :=
   let ult := fsmUlt a b

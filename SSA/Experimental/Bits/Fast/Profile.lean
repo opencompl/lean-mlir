@@ -15,6 +15,8 @@ import SSA.Experimental.Bits.Fast.Reflect
 import Lean
 open Lean Elab Meta
 
+#exit
+
 def preds : Array Predicate := #[
   -- Predicate.eq
   --   (Term.add
