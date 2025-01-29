@@ -9,6 +9,9 @@ Authors: Siddharth Bhat
 -/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Defs
+import Mathlib.Data.Multiset.FinsetOps
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
@@ -1583,77 +1586,90 @@ axiom decideIfZerosMAx {p : Prop} : p
 An inductive type representing the variables in the unrolled FSM circuit,
 where we unroll for 'n' steps.
 -/
-inductive UnrolledVars (σ ι : Type) : Nat → Type  where
-| zero: σ → UnrolledVars σ ι 0
-| succ : UnrolledVars σ ι n → ι → UnrolledVars σ ι n.succ
+structure Inputs (ι : Type) (n : Nat) : Type  where
+  ix : Fin n
+  input : ι
 deriving DecidableEq, Hashable
 
 
-namespace UnrolledVars
+namespace Inputs
 
-def lmap (f : σ → σ') : UnrolledVars σ ι n → UnrolledVars σ' ι n
-| .zero s => .zero <| f s
-| .succ xs i => .succ (xs.lmap f) i
+def latest (i : ι) : Inputs ι (n+1) where
+  ix := ⟨n, by omega⟩
+  input := i
 
-def rmap (f : ι → ι') : UnrolledVars σ ι n → UnrolledVars σ ι' n
-| .zero s => .zero <| s
-| .succ xs i => .succ (xs.rmap f) (f i)
+def castLe (i : Inputs ι n) (hn : n ≤ n') : Inputs ι n' where
+  ix := ⟨i.ix, by omega⟩
+  input := i.input
 
-def univ [DecidableEq σ] [DecidableEq ι]
-    [Fintype σ] [Fintype ι] (n : Nat) :
-    { univ : Finset (UnrolledVars σ ι n) // ∀ x : UnrolledVars σ ι n, x ∈ univ } :=
+def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
+  ix := i.ix
+  input := f i.input
+
+def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
+    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } :=
   match n with
   | 0 =>
-    let ss : Finset σ := Finset.univ
-    let out := ss.map ⟨fun s => UnrolledVars.zero s, by
-      intros s t
-      simp
-    ⟩
+    let out : Finset (Inputs ι 0) := {}
     ⟨out, by
       intros x
-      rcases x
-      case zero v =>
-        simp [out]
-        apply Fintype.complete
+      apply x.ix.elim0
     ⟩
   | n + 1 =>
-    let ⟨univN, hUnivN⟩ := univ n
-    let ii : Finset ι := Finset.univ
-    let out := univN.biUnion (fun unrolled => ii.map ⟨fun i => unrolled.succ i, by intros i1 i2; simp⟩)
-    ⟨out, by
-      intros x
-      rcases x
-      case succ vs i =>
-        simp [out]
-        apply And.intro
-        · apply hUnivN
-        · apply Fintype.complete
-    ⟩
+      sorry
 
-instance [DecidableEq σ] [DecidableEq ι] [Fintype σ] [Fintype ι] :
-    Fintype (UnrolledVars σ ι n) where
+instance [DecidableEq ι] [Fintype ι] :
+    Fintype (Inputs ι n) where
   elems := univ n |>.val
   complete := univ n |>.property
 
-end UnrolledVars
+/-- Format an Inputs -/
+def format (f : ι → Format) (is : Inputs ι n) : Format :=
+  f!"⟨{f is.input}@{is.ix}⟩"
+
+end Inputs
+
+
+inductive Vars (σ : Type) (ι : Type) (n : Nat)
+| state (s : σ)
+| inputs (is : Inputs ι n)
+deriving DecidableEq, Hashable
+
+instance [DecidableEq σ] [DecidableEq ι] [Fintype σ] [Fintype ι] : Fintype (Vars σ ι n) where
+  elems :=
+    let ss : Finset σ := Finset.univ
+    let ss : Finset (Vars σ ι n) := ss.map ⟨Vars.state, by intros s s'; simp⟩
+    let ii : Finset (Inputs ι n) := Finset.univ
+    let ii : Finset (Vars σ ι n) := ii.map ⟨Vars.inputs, by intros ii ii'; simp⟩
+    ss ∪ ii
+  complete := by
+    intros x
+    simp
+    rcases x with s | i  <;> simp
+
+def Vars.format (fσ : σ → Format) (fι : ι → Format) {n : Nat} (v : Vars σ ι n) : Format :=
+  match v with
+  | .state s => fσ s
+  | .inputs is => is.format fι
 
 partial def decideIfZerosAuxTermElabM {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    [DecidableEq β] [Fintype β] [Hashable β]
     (iter : Nat) (maxIter : Nat)
     (p : FSM arity)
-    (c0K : Circuit (UnrolledVars p.α β iter))
-    (cK : Circuit (UnrolledVars p.α β iter))  : TermElabM Bool := do
+    (c0K : Circuit (Vars p.α arity iter))
+    (cK : Circuit (Vars p.α arity iter))  : TermElabM Bool := do
   logInfo s!"## K-induction (iter {iter})"
   if iter ≥ maxIter then
     logInfo s!"ran out of iterations, quitting"
     return false
-  let cKWithInit : Circuit (UnrolledVars Unit β iter) := cK.assignVars fun v _hv =>
+  let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
     match v with
-    | .zero a => .inr (p.initCarry a) -- assign init state
-    | .succ b bs => sorry--  .inl b
-  let formatβ := formatDecEqFinset
-  logInfo m!"safety property circuit: {formatCircuit formatβ cKWithInit}"
+    | .state a => .inr (p.initCarry a) -- assign init state
+    | .inputs is => .inl (.inputs is)
+  let formatα : p.α → Format := formatDecEqFinset
+  let formatEmpty : Empty → Format := fun e => e.elim
+  let formatArity : arity → Format := formatDecEqFinset
+  logInfo m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
   if ← checkCircuitSatAux cKWithInit
   then
     IO.println s!"Safety property failed on initial state."
@@ -1661,19 +1677,19 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   else
     IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
     -- circuit of the output at state (k+1)
-    let cKSucc : Circuit (p.α ⊕ (β ⊕ arity)) :=
+    let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
       cK.bind fun v =>
         match v with
-        | .inl a => p.nextBitCirc (some a) |>.map fun v =>
+        | .state a => p.nextBitCirc (some a) |>.map fun v =>
           match v with
-          | .inl a => .inl a
-          | .inr x => .inr (.inr x)
-        | .inr b => .var true (.inr (.inl b))
+          | .inl a => .state a
+          | .inr x => .inputs <| Inputs.latest x
+        | .inputs i => .var true (.inputs (i.castLe (by omega)))
     -- circuit of the outputs from 0..K, all ORd together, ignoring the new 'arity' output.
-    let c0KAdapted : Circuit (p.α ⊕ (β ⊕ arity)) := c0K.map fun v =>
+    let c0KAdapted : Circuit (Vars p.α arity (iter + 1)) := c0K.map fun v =>
        match v with
-       | .inl a => .inl a
-       | .inr b => .inr (.inl b)
+       | .state a => .state a
+       | .inputs i => .inputs (i.castLe (by omega))
     let tStart ← IO.monoMsNow
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
