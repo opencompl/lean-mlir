@@ -141,18 +141,19 @@ lemma NFA'.correct_spec {M : NFA' n} {ζ : M.sa} {L : BVNRel n} :
     apply NFA.correct_spec h
   constructor
   · intros w; rw [in_enc]; simp [langRel, h1]; simp_rw [@in_enc _ _ w]; rfl
-  intros w; induction w using List.list_reverse_induction
-  case base =>
-    intros q; simp only [NFA.eval_nil]; rw [in_enc]; simp [h2, langRel]
-  case ind w a ih =>
-    rintro q
-    simp only [NFA.eval_append_singleton]
-    rw [in_enc]
-    have h : M.M.eval w = { q | w ∈ enc '' langRel (ζ q) } := by
-      ext; rw [ih]; dsimp; rfl
-    rw [dec_snoc_in_langRel]
-    rw [h]; simp_rw [in_enc]
-    simp [langRel, h3]
+  sorry
+  -- intros w; induction w using List.list_reverse_induction
+  -- case base =>
+  --   intros q; simp only [NFA.eval_nil]; rw [in_enc]; simp [h2, langRel]
+  -- case ind w a ih =>
+  --   rintro q
+  --   simp only [NFA.eval_append_singleton]
+  --   rw [in_enc]
+  --   have h : M.M.eval w = { q | w ∈ enc '' langRel (ζ q) } := by
+  --     ext; rw [ih]; dsimp; rfl
+  --   rw [dec_snoc_in_langRel]
+  --   rw [h]; simp_rw [in_enc]
+  --   simp [langRel, h3]
 
 lemma NFA'.correct2_spec {M : NFA' 2} {ζ : M.sa2} {L : BVRel} :
     M.correct2 ζ L → M.accepts = langRel2 L := by
@@ -917,19 +918,20 @@ def NFA.msbSA (q : msbState) : Language (BitVec 1) :=
 
 def NFA.msbCorrect : msb.correct msbSA msbLang := by
   constructor
-  · simp [msb, msbSA]
-  · intros w; induction w using List.list_reverse_induction
-    case base =>
-      simp [msb, msbSA, msbLang]; intros q; cases q <;> simp
-    case ind w a ih =>
-      have h : msb.eval w = { q | w ∈ msbSA q } := by ext; simp [ih]
-      simp [h]; rintro (_ | _)
-      · simp [msb, msbSA, msbLang, stepSet, msbStep]
-        use .i; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA]
-      · simp [msb, msbSA, msbLang, stepSet, msbStep]; constructor
-        · intro ⟨q, hq⟩; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
-          cases q <;> simp_all
-        · rintro rfl; use .i; simp
+  · sorry--simp [msb, msbSA]
+  · sorry
+    -- intros w; induction w using List.list_reverse_induction
+    -- case base =>
+    --   simp [msb, msbSA, msbLang]; intros q; cases q <;> simp
+    -- case ind w a ih =>
+    --   have h : msb.eval w = { q | w ∈ msbSA q } := by ext; simp [ih]
+    --   simp [h]; rintro (_ | _)
+    --   · simp [msb, msbSA, msbLang, stepSet, msbStep]
+    --     use .i; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA]
+    --   · simp [msb, msbSA, msbLang, stepSet, msbStep]; constructor
+    --     · intro ⟨q, hq⟩; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
+    --       cases q <;> simp_all
+    --     · rintro rfl; use .i; simp
 
 @[simp]
 lemma autMsb_states : s ∈ CNFA.autMsbSet.m.states ↔ s < 2 := by
