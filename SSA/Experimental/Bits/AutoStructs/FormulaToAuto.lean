@@ -141,10 +141,10 @@ lemma NFA'.correct_spec {M : NFA' n} {ζ : M.sa} {L : BVNRel n} :
     apply NFA.correct_spec h
   constructor
   · intros w; rw [in_enc]; simp [langRel, h1]; simp_rw [@in_enc _ _ w]; rfl
-  intros w; induction w using List.list_reverse_induction
-  case base =>
+  intros w; induction w using List.reverseRecOn
+  case nil =>
     intros q; simp only [NFA.eval_nil]; rw [in_enc]; simp [h2, langRel]
-  case ind w a ih =>
+  case append_singleton w a ih =>
     rintro q
     simp only [NFA.eval_append_singleton]
     rw [in_enc]
@@ -918,10 +918,10 @@ def NFA.msbSA (q : msbState) : Language (BitVec 1) :=
 def NFA.msbCorrect : msb.correct msbSA msbLang := by
   constructor
   · simp [msb, msbSA]
-  · intros w; induction w using List.list_reverse_induction
-    case base =>
+  · intros w; induction w using List.reverseRecOn
+    case nil =>
       simp [msb, msbSA, msbLang]; intros q; cases q <;> simp
-    case ind w a ih =>
+    case append_singleton w a ih =>
       have h : msb.eval w = { q | w ∈ msbSA q } := by ext; simp [ih]
       simp [h]; rintro (_ | _)
       · simp [msb, msbSA, msbLang, stepSet, msbStep]
