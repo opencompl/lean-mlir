@@ -13,8 +13,12 @@ def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
 def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.and (0#w) l
 
-def concat (ln : List Nat) (l : List (ln.map (fun w => BitVec w))) : BitVec (List.sum ln) :=
-  List.foldr BitVec.append (0#0) l
+def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
+  match (xs) with
+  | (.nil) => 0#0
+  | (.cons x xs) =>
+     let xsSum := concat xs
+     x ++ xsSum
 
 def divs (x y : BitVec w) : BitVec w :=
   BitVec.sdiv x y
@@ -121,8 +125,8 @@ section Dialect
 -/
 
 inductive Op
-| add (w : Nat) (n : Nat) -- n is the number of arguments
-| and (w : Nat) (n : Nat)
+| add (w : Nat) -- n is the number of arguments
+| and (w : Nat)
 | concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
 | divs (w : Nat)
 | divu (w : Nat)
@@ -130,22 +134,23 @@ inductive Op
 | icmp (w : Nat) (n : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
-| mul (w : Nat) (n : Nat)
+| mul (w : Nat)
 | mux (w : Nat)
-| or (w : Nat) (n : Nat)
+| or (w : Nat)
 | parity (w : Nat)
 | replicate (w : Nat) (n : Nat)
 | shl (w : Nat)
 | shrs (w : Nat)
 | shru (w : Nat)
 | sub (w : Nat)
-| xor (w : Nat) (n : Nat)
+| xor (w : Nat)
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
 | nat (n : Nat): Ty -- A very unfair trick
 | bool : Ty
+| list (w : Nat) : Ty -- list of bitvecs with the same length
 deriving Inhabited, DecidableEq, Repr
 
 open TyDenote (toType) in
@@ -154,6 +159,7 @@ toType := fun
 | Ty.bv w => BitVec w
 | Ty.nat _ => Nat
 | Ty.bool => Bool
+| Ty.list w => List (BitVec w)
 
 abbrev Comb : Dialect where
   Op := Op
@@ -164,31 +170,31 @@ open TyDenote (toType)
 -- arg type CONF
 @[simp, reducible]
 def Op.sig : Op  → List Ty
-  | .add w n => List.replicate (n + 1) (Ty.bv w)
-  | .and w n => List.replicate (n + 1) (Ty.bv w)
-  | .concat w  => w.map (fun w => Ty.bv w)
+  | .add w => [Ty.list w]
+  | .and w => [Ty.list w]
+  | .concat w => w.map (fun w => Ty.bv w)
   | .divs w => [Ty.bv w, Ty.bv w]
   | .divu w => [Ty.bv w, Ty.bv w]
   | .extract w n => [Ty.bv w, Ty.nat n]
   | .icmp w n => [Ty.bv w, Ty.bv w, Ty.nat n]
   | .mods w => [Ty.bv w, Ty.bv w]
   | .modu w => [Ty.bv w, Ty.bv w]
-  | .mul w n => List.replicate (n + 1) (Ty.bv w)
+  | .mul w => [Ty.list w]
   | .mux w => [Ty.bv w, Ty.bv w, Ty.bool]
-  | .or w n => List.replicate (n + 1) (Ty.bv w)
+  | .or w => [Ty.list w]
   | .parity w => [Ty.bv w]
   | .replicate w _ => [Ty.bv w]
   | .shl w => [Ty.bv w, Ty.bv w]
   | .shrs w => [Ty.bv w, Ty.bv w]
   | .shru w => [Ty.bv w, Ty.bv w]
   | .sub w => [Ty.bv w, Ty.bv w]
-  | .xor w n => List.replicate (n + 1) (Ty.bv w)
+  | .xor w => [Ty.list w]
 
 -- return type CONF
 @[simp, reducible]
 def Op.outTy : Op  → Ty
-  | .add w _ => Ty.bv w
-  | .and w _ => Ty.bv w
+  | .add w => Ty.bv w
+  | .and w => Ty.bv w
   | .concat w => Ty.bv w.sum
   | .divs w => Ty.bv w
   | .divu w => Ty.bv w
@@ -196,16 +202,16 @@ def Op.outTy : Op  → Ty
   | .icmp _ _ => Ty.bool
   | .mods w => Ty.bv w
   | .modu w => Ty.bv w
-  | .mul w _ => Ty.bv w
+  | .mul w => Ty.bv w
   | .mux w => Ty.bv w
-  | .or w _ =>  Ty.bv w
+  | .or w =>  Ty.bv w
   | .parity _ => Ty.bool
   | .replicate w n =>  Ty.bv (w * n)
   | .shl w =>  Ty.bv w
   | .shrs w =>  Ty.bv w
   | .shru w =>  Ty.bv w
   | .sub w =>  Ty.bv w
-  | .xor w _ => Ty.bv w
+  | .xor w => Ty.bv w
 
 @[simp, reducible]
 def Op.signature : Op → Signature (Ty) :=
@@ -213,34 +219,30 @@ def Op.signature : Op → Signature (Ty) :=
 
 instance : DialectSignature Comb := ⟨Op.signature⟩
 
-def HVector.toList : HVector f (List.replicate n a) → List (f a) :=
-  sorry
-
 @[simp]
 instance : DialectDenote (Comb) where
     denote
-    | .add _ _, arg, _ => Comb.add (HVector.toList (f:=toType) arg)
-    | .and _ _, arg, _ => Comb.and (HVector.toList (f:=toType) arg)
-    | .concat _, arg, _ => Comb.concat (HVector.toList (f:=toType) arg)
+    | .add _, arg, _ => Comb.add (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+    | .and _, arg, _ => Comb.and (arg.getN 0 (by simp [DialectSignature.sig, signature]))
+    | .concat _, arg, _ => sorry
     | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .extract w n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
     | .icmp _ _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
     | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .mul _ _, arg, _ => Comb.mul (HVector.toList (f:=toType) arg)
+    | .mul _, arg, _ => Comb.mul (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .mux _, arg, _ => Comb.mux (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
-    | .or _ _, arg, _ => Comb.or (HVector.toList (f:=toType) arg)
+    | .or _, arg, _ => Comb.or (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .parity _, arg, _ => Comb.parity (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .replicate _ n, arg, _ => Comb.replicate (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
     | .shl _, arg, _ => Comb.shl (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .shrs _, arg, _ => Comb.shrs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .shru _, arg, _ => Comb.shru (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .sub _, arg, _ => Comb.sub (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .xor _ _, arg, _ => Comb.xor (HVector.toList (f:=toType) arg)
+    | .xor _, arg, _ => Comb.xor (arg.getN 0 (by simp [DialectSignature.sig, signature]))
 
 end Dialect
-
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
   | MLIR.AST.MLIRType.undefined s => do
@@ -250,35 +252,37 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
     | ["nat", r] =>
       return .nat r.toNat!
     | ["bv", r] =>
-      return .bv (r.toNat!) -- this seems a bit sketchy
+      return .bv (r.toNat!)
+    | ["list", r] =>
+      return .list (r.toNat!)
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy Comb 0 where
   mkTy := mkTy
 
-def add {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def add {Γ : Ctxt _} (l : Γ.Var (.list w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .add w)
     (ty_eq := by rfl)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
+    (args := .cons l <| .nil)
     (regArgs := .nil)
 
-def and {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def and {Γ : Ctxt _} (l : Γ.Var (.list w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .and w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
+    (args := .cons l <| .nil)
     (regArgs := .nil)
 
-def concat {Γ : Ctxt _} (a : Γ.Var (.bv w₁)) (b : Γ.Var (.bv w₂)) : Expr (Comb) Γ .pure (.bv (w₁ + w₂)) :=
+def concat {Γ : Ctxt _} (l : sorry) (b : sorry) : Expr (Comb) Γ .pure (.bv (w₁ + w₂)) :=
   Expr.mk
-    (op := .concat w₁ w₂)
-    (ty_eq := rfl)
+    (op := sorry)
+    (ty_eq := sorry)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
+    (args := sorry)
     (regArgs := .nil)
 
 def divs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
@@ -332,12 +336,12 @@ def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def mul {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def mul {Γ : Ctxt _} (l : Γ.Var (.list w))  : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .mul w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
+    (args := .cons l <| .nil)
     (regArgs := .nil)
 
 def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (.bool)) : Expr (Comb) Γ .pure (.bv w) :=
@@ -348,12 +352,12 @@ def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (
     (args := .cons a <| .cons b <| .cons cond <| .nil)
     (regArgs := .nil)
 
-def or {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
+def or {Γ : Ctxt _} (l : Γ.Var (.list w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .or w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
+    (args := .cons l <| .nil)
     (regArgs := .nil)
 
 def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bool) :=
@@ -410,7 +414,7 @@ def xor {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ
     (op := .xor w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
+    (args := sorry)
     (regArgs := .nil)
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
