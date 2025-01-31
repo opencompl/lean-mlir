@@ -298,10 +298,10 @@ lemma deterministic_stepSet_subsingleton {M : NFA α σ} {S : Set σ} (hd : M.De
   rfl
 
 lemma deterministic_eval_subsingleton {M : NFA α σ} (hd : M.Deterministic) w :
-    M.eval w |>.Subsingleton := by sorry
-  -- induction w using List.list_reverse_induction
-  -- case base => simp_all
-  -- case ind w a ih => simp; apply deterministic_stepSet_subsingleton <;> assumption
+    M.eval w |>.Subsingleton := by
+  induction w using List.reverseRecOn
+  case nil => simp_all
+  case append_singleton w a ih => simp; apply deterministic_stepSet_subsingleton <;> assumption
 
 private noncomputable instance {M : NFA α σ} : Decidable M.Complete :=
   Classical.propDecidable _
@@ -346,19 +346,19 @@ lemma reduce_stepSet' {M : NFA α σ} (q : M.Reachable) (S1 : Set M.Reachable) (
     (q ∈ M.reduce.stepSet S1 a → q.val ∈ M.stepSet S2 a) := by
   intros h; simp [←reduce_stepSet _ _ h]
 
-lemma reduce_eval {M : NFA α σ} {w} (q : σ) : (∃ hq, ⟨q, hq⟩ ∈ M.reduce.eval w) ↔ q ∈ M.eval w := by sorry
-  -- induction w using List.list_reverse_induction generalizing q
-  -- case base => simp [reduce, Set.instMembership, Set.Mem]; intros hs; use .nil; simpa
-  -- case ind a w ih =>
-  --   simp [eval]; constructor
-  --   · rintro ⟨hq, hs⟩
-  --     apply reduce_stepSet' at hs
-  --     apply hs
-  --     apply ih
-  --   · rintro hs
-  --     rw [←reduce_stepSet] at hs
-  --     apply hs
-  --     apply ih
+lemma reduce_eval {M : NFA α σ} {w} (q : σ) : (∃ hq, ⟨q, hq⟩ ∈ M.reduce.eval w) ↔ q ∈ M.eval w := by
+  induction w using List.reverseRecOn generalizing q
+  case nil => simp [reduce, Set.instMembership, Set.Mem]; intros hs; use .nil; simpa
+  case append_singleton a w ih =>
+    simp [eval]; constructor
+    · rintro ⟨hq, hs⟩
+      apply reduce_stepSet' at hs
+      apply hs
+      apply ih
+    · rintro hs
+      rw [←reduce_stepSet] at hs
+      apply hs
+      apply ih
 
 @[simp]
 lemma reduce_spec (M : NFA α σ) : M.reduce.accepts = M.accepts := by
@@ -378,18 +378,18 @@ lemma reduce_spec (M : NFA α σ) : M.reduce.accepts = M.accepts := by
 def closed_set (M : NFA α σ) (S : Set σ) := M.start ⊆ S ∧ ∀ a, M.stepSet S a ⊆ S
 
 theorem reachable_sub_closed_set (M : NFA α σ) (S : Set σ) (hcl: M.closed_set S) :
-    M.Reachable ⊆ S := by sorry
-  -- rintro q ⟨w, hw⟩
-  -- rcases hcl with ⟨hstart, hincl⟩
-  -- induction w using List.list_reverse_induction generalizing q
-  -- case base => aesop
-  -- case ind w a ih =>
-  --   simp only [eval] at hw
-  --   rw [evalFrom_append_singleton, mem_stepSet] at hw
-  --   rcases hw with ⟨q', h1, h2⟩
-  --   apply ih at h1
-  --   suffices _ : q ∈ M.stepSet S a by aesop
-  --   rw [mem_stepSet]; use q'
+    M.Reachable ⊆ S := by
+  rintro q ⟨w, hw⟩
+  rcases hcl with ⟨hstart, hincl⟩
+  induction w using List.reverseRecOn generalizing q
+  case nil => aesop
+  case append_singleton w a ih =>
+    simp only [eval] at hw
+    rw [evalFrom_append_singleton, mem_stepSet] at hw
+    rcases hw with ⟨q', h1, h2⟩
+    apply ih at h1
+    suffices _ : q ∈ M.stepSet S a by aesop
+    rw [mem_stepSet]; use q'
 
 @[simps]
 def complete (M : NFA α σ) : NFA α (σ ⊕ Unit) where
@@ -424,28 +424,28 @@ lemma complete_stepSet_sink {M : NFA α σ} :
 
 @[simp]
 lemma complete_eval {M : NFA α σ} {w} (q : σ) :
-    (.inl q ∈ M.complete.eval w) ↔ q ∈ M.eval w := by sorry
-  -- induction w using List.list_reverse_induction generalizing q
-  -- case base => simp [complete, Set.instMembership, Set.Mem]
-  -- case ind a w ih =>
-  --   simp only [eval]; constructor
-  --   · simp; rintro _; rw [←complete_stepSet]; assumption; apply ih
-  --   · simp; rintro _; rw [complete_stepSet]; assumption; apply ih
+    (.inl q ∈ M.complete.eval w) ↔ q ∈ M.eval w := by
+  induction w using List.reverseRecOn generalizing q
+  case nil => simp [complete, Set.instMembership, Set.Mem]
+  case append_singleton a w ih =>
+    simp only [eval]; constructor
+    · simp; rintro _; rw [←complete_stepSet]; assumption; apply ih
+    · simp; rintro _; rw [complete_stepSet]; assumption; apply ih
 
 @[simp]
 theorem complete_accepts (M : NFA α σ) : M.complete.accepts = M.accepts := by
   simp [accepts]
 
 @[simp]
-theorem complete_complete (M : NFA α σ) : M.complete.Complete := by sorry
-  -- intros w
-  -- use (.inr ())
-  -- induction w using List.list_reverse_induction
-  -- case base => simp
-  -- case ind w a ih =>
-  --   simp [eval]
-  --   apply complete_stepSet_sink
-  --   apply ih
+theorem complete_complete (M : NFA α σ) : M.complete.Complete := by
+  intros w
+  use (.inr ())
+  induction w using List.reverseRecOn
+  case nil => simp
+  case append_singleton w a ih =>
+    simp [eval]
+    apply complete_stepSet_sink
+    apply ih
 
 def product (accept? : Prop → Prop → Prop) (M : NFA α σ) (N : NFA α ς) : NFA α (σ × ς) where
   step := fun (q₁, q₂) a => { (q₁', q₂') | (q₁' ∈ M.step q₁ a) ∧ (q₂' ∈ N.step q₂ a) }
@@ -477,10 +477,10 @@ lemma product_stepSet {M : NFA α σ} {N : NFA α ς} :
 
 @[simp]
 lemma product_eval {M : NFA α σ} {N : NFA α ς} {w} :
-  (M.product accept? N).eval w = M.eval w ×ˢ N.eval w := by sorry
-  -- unfold eval; induction w using List.list_reverse_induction
-  -- case base => ext; simp [product]
-  -- case ind w a ih => simp only [eval, evalFrom_append_singleton, product_stepSet, ih]
+  (M.product accept? N).eval w = M.eval w ×ˢ N.eval w := by
+  unfold eval; induction w using List.reverseRecOn
+  case nil => ext; simp [product]
+  case append_singleton w a ih => simp only [eval, evalFrom_append_singleton, product_stepSet, ih]
 
 @[simp]
 theorem inter_accepts (M : NFA α σ) (N : NFA α ς) :
@@ -571,10 +571,10 @@ lemma lift_stepSet (M : NFA (BitVec n) σ) (f : Fin n → Fin m) :
 
 @[simp]
 lemma lift_eval (M : NFA (BitVec n) σ) (f : Fin n → Fin m) :
-    (M.lift f).eval w = M.eval (BitVecs'.transport f w) := by sorry
-  -- induction w using List.list_reverse_induction
-  -- case base => simp [lift, BitVecs'.transport]
-  -- case ind w a ih => simp [BitVecs'.transport, ih]
+    (M.lift f).eval w = M.eval (BitVecs'.transport f w) := by
+  induction w using List.reverseRecOn
+  case nil => simp [lift, BitVecs'.transport]
+  case append_singleton w a ih => simp [BitVecs'.transport, ih]
 
 @[simp]
 lemma lift_accepts (M : NFA (BitVec n) σ) (f : Fin n → Fin m) :
@@ -600,37 +600,37 @@ lemma proj_stepSet (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
 @[simp]
 lemma proj_eval (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
     (M.proj f).eval w =
-      ⋃ w' ∈ BitVecs'.transport f ⁻¹' {w}, M.eval w' := by sorry
-  -- induction w using List.list_reverse_induction
-  -- case base => simp [proj, BitVecs'.transport]
-  -- case ind w a ih =>
-  --   ext q; simp [BitVecs'.transport]; constructor
-  --   · rintro ⟨a', htr, S, hrS, hqS⟩
-  --     rcases hrS with ⟨q', rfl⟩
-  --     simp [ih] at hqS
-  --     rcases hqS with ⟨⟨w', htr', he⟩, hs⟩
-  --     use w' ++ [a']; constructor
-  --     · simp_all; exact htr'
-  --     · simp; use M.step q' a'; constructor
-  --       on_goal 2 => assumption
-  --       use q'; simp_all
-  --   · rintro ⟨wa', heq, he⟩
-  --     by_cases hemp : wa' = []
-  --     · simp_all
-  --     have hdl := List.dropLast_concat_getLast hemp
-  --     rw [←hdl] at heq he
-  --     simp at heq
-  --     use List.getLast wa' hemp; constructor
-  --     · apply List.append_inj_right' at heq; simp_all
-  --     · obtain rfl := List.append_inj_left' heq (by simp)
-  --       simp at he; rcases he with ⟨S, ⟨q', rfl⟩, hqS⟩
-  --       simp at hqS; rcases hqS with ⟨he, hs⟩
-  --       simp only [stepSet, mem_iUnion, exists_prop]
-  --       use q'
-  --       simp [ih]; constructor
-  --       on_goal 2 => assumption
-  --       use wa'.dropLast
-  --       simp_all [BitVecs'.transport]
+      ⋃ w' ∈ BitVecs'.transport f ⁻¹' {w}, M.eval w' := by
+  induction w using List.reverseRecOn
+  case nil => simp [proj, BitVecs'.transport]
+  case append_singleton w a ih =>
+    ext q; simp [BitVecs'.transport]; constructor
+    · rintro ⟨a', htr, S, hrS, hqS⟩
+      rcases hrS with ⟨q', rfl⟩
+      simp [ih] at hqS
+      rcases hqS with ⟨⟨w', htr', he⟩, hs⟩
+      use w' ++ [a']; constructor
+      · simp_all; exact htr'
+      · simp; use M.step q' a'; constructor
+        on_goal 2 => assumption
+        use q'; simp_all
+    · rintro ⟨wa', heq, he⟩
+      by_cases hemp : wa' = []
+      · simp_all
+      have hdl := List.dropLast_concat_getLast hemp
+      rw [←hdl] at heq he
+      simp at heq
+      use List.getLast wa' hemp; constructor
+      · apply List.append_inj_right' at heq; simp_all
+      · obtain rfl := List.append_inj_left' heq (by simp)
+        simp at he; rcases he with ⟨S, ⟨q', rfl⟩, hqS⟩
+        simp at hqS; rcases hqS with ⟨he, hs⟩
+        simp only [stepSet, mem_iUnion, exists_prop]
+        use q'
+        simp [ih]; constructor
+        on_goal 2 => assumption
+        use wa'.dropLast
+        simp_all [BitVecs'.transport]
 
 @[simp]
 lemma proj_accepts (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
@@ -679,10 +679,10 @@ lemma bisimul_eval_one (hsim : Bisimul R M₁ M₂) :
     use q₁', ⟨q₁, hq₁, hst'⟩
 
 lemma bisimul_eval (hsim : Bisimul R M₁ M₂) w :
-    R.set_eq Q₁ Q₂ → R.set_eq (M₁.evalFrom Q₁ w) (M₂.evalFrom Q₂ w) := by sorry
-  -- induction w using List.list_reverse_induction generalizing Q₁ Q₂
-  -- case base => simp
-  -- case ind w a ih => rintro heq; simp [evalFrom_append_singleton, bisimul_eval_one, *]
+    R.set_eq Q₁ Q₂ → R.set_eq (M₁.evalFrom Q₁ w) (M₂.evalFrom Q₂ w) := by
+  induction w using List.reverseRecOn generalizing Q₁ Q₂
+  case nil => simp
+  case append_singleton w a ih => rintro heq; simp [evalFrom_append_singleton, bisimul_eval_one, *]
 
 theorem bisimul_accepts₁ :
     Bisimul R M₁ M₂ → M₁.accepts ≤ M₂.accepts := by
@@ -724,12 +724,12 @@ theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a :
   simp only [List.pop_toArray, mem_toArray]
   exact List.mem_of_mem_dropLast
 
-theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by sorry
-  -- rcases a with ⟨l⟩; simp only [mem_toArray, List.pop_toArray, List.back?_toArray]
-  -- induction l using List.list_reverse_induction
-  -- case base => simp
-  -- case ind l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
-  --   List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.some.injEq]; tauto
+theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by
+  rcases a with ⟨l⟩; simp only [mem_toArray, List.pop_toArray, List.back?_toArray]
+  induction l using List.reverseRecOn
+  case nil => simp
+  case append_singleton l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
+    List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.some.injEq]; tauto
 
 
 -- TODO: state in in pure Lean using `toList`, and decude this one

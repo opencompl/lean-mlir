@@ -86,13 +86,13 @@ lemma RawCNFA.Simul.rel_preserved_letter {m : RawCNFA A} {M : NFA A Q} (hsim : m
     use s₂, ⟨s₁, by tauto⟩
 
 lemma RawCNFA.Simul.rel_preserved_word {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
-    R.set_eq S₁ Q₁ → ∃ S₂, R.set_eq S₂ (M.evalFrom Q₁ w) := by sorry
-  -- induction w using List.list_reverse_induction
-  -- case base => rintro h; use S₁; simp [h]
-  -- case ind w a ih =>
-  --   rintro h; obtain ⟨S₂, hR⟩ := ih h; clear ih
-  --   simp only [NFA.evalFrom_append_singleton]
-  --   exact hsim.rel_preserved_letter hR
+    R.set_eq S₁ Q₁ → ∃ S₂, R.set_eq S₂ (M.evalFrom Q₁ w) := by
+  induction w using List.reverseRecOn
+  case nil => rintro h; use S₁; simp [h]
+  case append_singleton w a ih =>
+    rintro h; obtain ⟨S₂, hR⟩ := ih h; clear ih
+    simp only [NFA.evalFrom_append_singleton]
+    exact hsim.rel_preserved_letter hR
 
 lemma RawCNFA.Simul.eval_set_eq {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
     ∃ S, R.set_eq S (M.eval w) :=
