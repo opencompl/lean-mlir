@@ -7,7 +7,7 @@ import shutil
 import pandas as pd
 import os
 import re
-import sqlite
+import sqlite3
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/AutomataCircuit/'
@@ -64,17 +64,18 @@ def clear_results_folder():
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
+    print(f"processing '{file}'")
     subprocess.Popen('sed -i -E \'s,try alive_auto,simp_alive_split,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen('sed -i -E \'s,sorry,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,sorry,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
         with open(log_file_path, 'w') as log_file:
             cmd = 'lake lean ' + file_path
-            print(cmd)
+            print(f"running '{cmd}' @ '{log_file_path}'")
             subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
     subprocess.Popen('sed -i -E \'s,simp_alive_split,try alive_auto,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen('sed -i -E \'s,bv_bench,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,bv_bench_automata,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -83,7 +84,6 @@ def process(jobs: int):
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
         for file in os.listdir(BENCHMARK_DIR):
-            print(f"processing '{file}'")
             if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
                 future = executor.submit(run_file, file)
                 futures[future] = file

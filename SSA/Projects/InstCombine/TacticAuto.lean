@@ -342,8 +342,6 @@ macro "bv_bench_automata": tactic =>
             "bv_automata_classic" : (bv_automata_classic; done),
             "bv_automata_circuit" : (bv_automata_circuit; done)
           ]
-          try bv_auto
-          try sorry
         )
       )
    )
