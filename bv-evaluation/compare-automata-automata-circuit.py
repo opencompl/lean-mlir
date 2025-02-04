@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import subprocess
 import os
+import platform
 import concurrent.futures
 import argparse
 import shutil
@@ -61,12 +62,17 @@ def clear_results_folder():
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
+def sed():
+    if platform.system() == "Darwin":
+        return "gsed"
+    return "sed"
+
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
     print(f"processing '{file}'")
-    subprocess.Popen('gsed -i -E \'s,try alive_auto,simp_alive_split,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen('gsed -i -E \'s,sorry,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,try alive_auto,simp_alive_split,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,sorry,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
@@ -74,8 +80,8 @@ def run_file(file: str):
             cmd = 'lake lean ' + file_path
             print(f"running '{cmd}' @ '{log_file_path}'")
             subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
-    subprocess.Popen('gsed -i -E \'s,simp_alive_split,try alive_auto,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen('gsed -i -E \'s,bv_bench_automata,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_split,try alive_auto,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,bv_bench_automata,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
