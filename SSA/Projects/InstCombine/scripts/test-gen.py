@@ -13,17 +13,48 @@ from cfg import *
 
 
 def allowed(op):
+    allowed_names = {
+        "llvm.return",
+        "llvm.mul",
+        "llvm.add",
+        "llvm.sub",
+        "llvm.shl",
+        "llvm.and",
+        "llvm.or",
+        "llvm.xor",
+        "llvm.mlir.constant",
+        # "llvm.lshr",
+        # "llvm.ashr",
+        # "llvm.urem",
+        # "llvm.srem",
+        "llvm.add",
+        "llvm.mul",
+        "llvm.sub",
+        # "llvm.sdiv",
+        # "llvm.udiv",
+        # "llvm.zext",
+        # "llvm.sext",
+        # "llvm.trunc",
+        "llvm.icmp",
+    }
+
+    allowed_unregistered = {
+        "llvm.select",
+    }
+
     # we do not support void returns. Someone should look into this!
     if isinstance(op, ReturnOp) and op.arg is None:
         return False
-    return (
-        hasattr(op, "sym_name")
-        or (
-            op.name == "builtin.unregistered"
-            and op.op_name.data in allowed_unregistered
-        )
-        or (op.name in allowed_names)
-    )
+    if hasattr(op, "sym_name")
+        return True
+    if  op.name == "builtin.unregistered" and op.op_name.data in allowed_unregistered:
+        return True
+    if op.name not in allowed_names:
+        return False
+    if op.name == "llvm.mul":
+        # filter for problems that 
+        raise RuntimeError(f"op is: {op}")
+        import pudb; pudb.set_trace()
 
 
 def show(block):
