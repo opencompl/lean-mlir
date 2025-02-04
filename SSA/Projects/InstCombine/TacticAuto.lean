@@ -326,3 +326,24 @@ macro "bv_bench": tactic =>
         )
       )
    )
+
+/--
+Benchmark the automata algorithms to understand their pros and cons. Produce output as CSV.
+-/
+macro "bv_bench_automata": tactic =>
+  `(tactic|
+      (
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
+           BitVec.ofNat_eq_ofNat, BitVec.two_mul]
+        all_goals (
+          tac_bench (config := { outputType := .csv }) [
+            "bv_automata_classic" : (bv_automata_classic; done),
+            "bv_automata_circuit" : (bv_automata_circuit; done)
+          ]
+          try bv_auto
+          try sorry
+        )
+      )
+   )

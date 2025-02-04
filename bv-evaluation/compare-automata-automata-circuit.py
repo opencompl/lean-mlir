@@ -7,6 +7,7 @@ import shutil
 import pandas as pd
 import os
 import re
+import sqlite
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/AutomataCircuit/'

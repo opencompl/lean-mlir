@@ -16,12 +16,23 @@ open Lean Meta Elab Tactic
 open Lean.Meta
 
 namespace TacBench
+
+inductive Config.OutputType
+| text  -- TACSTART..TACEND
+| csv -- CSV
+deriving Repr, DecidableEq
+
+structure Config where
+  outputType : Config.OutputType := .text
+/-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
+declare_config_elab elabTacBenchConfig Config
+
 /--
 Run `tac_bench <name> <tacticSeq>` to run a sequence of tactics whose runtime is benchmarked.
 This does not affect the current goal state, and thus allow multiple `tac_bench` statements to be run in sequence.
 -/
 syntax tacBenchItem := str &":" tacticSeq
-syntax (name := tacBench) "tac_bench" "["(tacBenchItem),*"]" : tactic
+syntax (name := tacBench) "tac_bench" (Lean.Parser.Tactic.config)? "["(tacBenchItem),*"]" : tactic
 
 
 def setTraceOptions (opt : Options) : Options := opt
@@ -45,6 +56,21 @@ structure Item where
 inductive Result
 | ok (item : Item) (time : Float)
 | err (item : Item) (time : Float) (e : Exception)
+
+def Result.isOk (r : Result) : Bool :=
+  match r with
+  | .ok .. => true
+  | .err .. => false
+
+def Result.timeElapsed (r : Result) : Float :=
+  match r with
+  | .ok (time := time) ..  => time
+  | .err (time := time) .. => time
+
+def Result.item (r : Result) : Item :=
+  match r with
+  | .ok item .. => item
+  | .err item .. => item
 
 
 def Result.toMessageData : Result → MessageData
@@ -79,19 +105,30 @@ def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
 
 @[tactic tacBench]
 def evalTacBench : Tactic := fun
-| `(tactic| tac_bench [$tacBenchItems:tacBenchItem,*]) => do
+| `(tactic| tac_bench $[$cfg]? [$tacBenchItems:tacBenchItem,*]) => do
+    let cfg ← elabTacBenchConfig (mkOptionalNode cfg)
     let thmName : String :=
       match (← getLCtx).decls.toArray.get? 0 with
       | .some (.some decl) => decl.userName.toString
       | _ => "unknown-theorem"
     let g ← getMainGoal
     let items ← tacBenchItems.getElems.mapM parseTacBenchItem
-    -- logInfo m!{← hermeticRun g tac}
     let mut msg := m!""
+    let mut results : Array Result := #[]
     for item in items do
       let out ← hermeticRun g item
+      results := results.push out
       msg := msg ++ m!"\n" ++ out.toMessageData
-    logInfo m!"TACSTART NAME {thmName} ENDNAME {.nestD msg}\nTACEND"
+    -- Produce output.
+    if cfg.outputType == Config.OutputType.text then
+      logInfo m!"TACSTART NAME {thmName} ENDNAME {.nestD msg}\nTACEND"
+    else if cfg.outputType == Config.OutputType.csv then
+      let goalStr := m!"{g}"
+      for result in results do
+        let okStr := if result.isOk then "ok" else "err"
+        let outStr := m!"TACBENCHCSV, {thmName}, {goalStr}, {result.item.name}, {okStr}, {result.timeElapsed}"
+        logInfo outStr
+
 | _ => throwUnsupportedSyntax
 end TacBench
 
