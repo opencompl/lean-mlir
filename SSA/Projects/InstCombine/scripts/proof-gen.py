@@ -119,7 +119,7 @@ def main():
                 print(file_path)
                 worklist.append(file_path)
     print(f"worklist = {worklist}")
-    with Pool(200) as p:
+    with Pool(20) as p:
         p.map(process_file, worklist)
 
 

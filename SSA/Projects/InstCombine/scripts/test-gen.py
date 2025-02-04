@@ -45,7 +45,7 @@ def allowed(op):
     # we do not support void returns. Someone should look into this!
     if isinstance(op, ReturnOp) and op.arg is None:
         return False
-    if hasattr(op, "sym_name")
+    if hasattr(op, "sym_name"):
         return True
     if  op.name == "builtin.unregistered" and op.op_name.data in allowed_unregistered:
         return True
@@ -269,5 +269,5 @@ def process_file(file):
 
 if __name__ == "__main__":
     remove()
-    with Pool(300) as p:
+    with Pool(20) as p:
         p.map(process_file, os.listdir(directory))
