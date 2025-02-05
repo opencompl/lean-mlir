@@ -71,11 +71,11 @@ def sed():
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
-    print(f"processing '{file}'")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
+        print(f"processing '{file} @ {log_file_path}'")
         with open(log_file_path, 'w') as log_file:
             cmd = 'lake lean ' + file_path
             print(cmd)
