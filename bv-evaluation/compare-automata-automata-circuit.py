@@ -99,8 +99,6 @@ def run_file(db : str, file: str):
     else:
         logging.info(f"{fileTitle}: cache miss, processing ▶️")
 
-    logging.info(f"{fileTitle}: resetting state of file.")
-    subprocess.Popen(f'git checkout -- {file_path}', cwd=ROOT_DIR, shell=True).wait()
     logging.info(f"{fileTitle}: writing 'bv_bench_automata' tactic into file.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
     logging.info(f"{fileTitle}: {STATUS_PROCESSING}")
@@ -162,8 +160,7 @@ def run_file(db : str, file: str):
     except subprocess.TimeoutExpired as e:
         logging.info(f"{file_path} - time out of {TIMEOUT} seconds reached")
     finally:
-        logging.info(f"{fileTitle}: resetting state of file.")
-        subprocess.Popen(f'git checkout -- {file_path}', cwd=ROOT_DIR, shell=True).wait()
+        return
 
 def process(db : str, jobs: int, prod_run : bool):
     os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -193,17 +190,20 @@ def process(db : str, jobs: int, prod_run : bool):
     con.commit()
     con.close()
 
+    logging.info(f"Clearing git state of '{BENCHMARK_DIR}' with 'git checkout --'")
+    subprocess.Popen(f'git checkout -- {BENCHMARK_DIR}', cwd=ROOT_DIR, shell=True).wait()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
         files = os.listdir(BENCHMARK_DIR)
-        if not prod_run:
-            files = files[:4]
 
         for file in files:
             if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
                 future = executor.submit(run_file, db, file)
                 futures[future] = file
+                N_TEST_RUN_FILES = 5
+                if len(futures) == N_TEST_RUN_FILES and not prod_run:
+                    break # quit if we are not doing a production run after 5 files.
 
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
