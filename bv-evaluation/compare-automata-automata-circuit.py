@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+import datetime
 import os
 import platform
 import concurrent.futures
@@ -9,12 +10,21 @@ import pandas as pd
 import os
 import re
 import sqlite3
+import logging
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/AutomataCircuit/'
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 REPS = 1
 TIMEOUT = 1800 # timeout
+
+
+STATUS_FAIL = "❌",
+STATUS_GREEN_CHECK = "✅",
+STATUS_SUCCESS = "🎉",
+STATUS_PROCESSING = "⌛️"
+
+
 
 def parse_tacbenches(file_name, raw):
     # Regular expression to match TACBENCH entries
@@ -35,19 +45,19 @@ def parse_tacbenches(file_name, raw):
             time_elapsed = float(match.group(3))
             error_message = match.group(4).strip() if match.group(4) else None  # Only if MSGSTART-MSGEND present
             new.append({
-                "filename" : file_name,
+                "fileTitle" : file_name,
                 "guid":guid,
                 "name": tactic_name,
                 "status": status,
                 "time_elapsed": time_elapsed,
                 "error_message": error_message
             })
-        print("==")
-        print(blk)
-        print("--")
-        for r in new: print(r)
+        logging.info("==")
+        logging.info(blk)
+        logging.info("--")
+        for r in new: logging.info(r)
         out.extend(new)
-        print("==")
+        logging.info("==")
     return out
 
 
@@ -61,50 +71,126 @@ def clear_results_folder():
             elif os.path.isdir(file_path):
                 shutil.rmtree(file_path)
         except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
+            logging.info('Failed to delete %s. Reason: %s' % (file_path, e))
 
 def sed():
     if platform.system() == "Darwin":
         return "gsed"
     return "sed"
 
-def run_file(file: str):
+def run_file(db : str, file: str):
     file_path = BENCHMARK_DIR + file
-    file_title = file.split('.')[0]
+    fileTitle = file.split('.')[0]
+
+    logging.info(f"{fileTitle}: Cache lookup, Opening connection...")
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    # Check if there is a row with the given fileTitle and timeout
+    logging.info(f"{fileTitle}: Cache lookup, SELECTING for existing data...")
+    cur.execute("""
+        SELECT 1 FROM completedFiles WHERE fileTitle = ? LIMIT 1
+    """, (fileTitle, ))
+    # Fetch the result, if no rows exist, the result will be an empty list
+    result = cur.fetchone()
+    con.close()
+    if result is not None:
+        logging.info(f"{fileTitle}: cache hit, skipping ⏭️")
+        return
+    else:
+        logging.info(f"{fileTitle}: cache miss, processing ▶️")
+
+    logging.info(f"{fileTitle}: resetting state of file.")
+    subprocess.Popen(f'git checkout -- {file_path}', cwd=ROOT_DIR, shell=True).wait()
+    logging.info(f"{fileTitle}: writing 'bv_bench_automata' tactic into file.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    logging.info(f"{fileTitle}: {STATUS_PROCESSING}")
 
+    cmd = 'lake lean ' + file_path
+    logging.info(f"{fileTitle}: running '{cmd}'")
+    try:
+        p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
+        logging.info(f"{fileTitle}: running...")
+        out, err = p.communicate(timeout=TIMEOUT)
+        logging.info(f"{fileTitle}: done.")
+        logging.info(out)
+        if p.returncode != 0:
+            logging.info(f"ERROR: Expected return code of 0, found {p.returncode}")
+            logging.info(f"{fileTitle} stderr: {err}")
+            assert p.returncode == 0
+        logging.info(f"{fileTitle} output:\n{out}")
+        for line in out.strip().split("\n"):
+            TACBENCH_PREAMBLE = "TACBENCHCSV|"
+            COLS = ["thmName", "goalStr", "tactic", "status", "errmsg", "timeElapsed"]
+            if line.startswith(TACBENCH_PREAMBLE):
+                line = line.removeprefix(TACBENCH_PREAMBLE)
+                row = line.split(", ")
+                assert len(row) == len(COLS)
+                record = dict(zip(COLS, row))
+                record["fileTitle"] = fileTitle
+                # TODO: invoke sqlite here to store
+                logging.info(f"{fileTitle}: Opening connection to write test record.")
+                con = sqlite3.connect(args.db)
+                logging.info(f"{fileTitle}: Executing INSERT of record...")
+                cur = con.cursor()
+                cur.execute("""
+                    INSERT INTO tests (
+                        fileTitle,
+                        thmName,
+                        goalStr,
+                        tactic,
+                        status,
+                        errmsg,
+                        timeElapsed)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (record["fileTitle"], record["thmName"], record["goalStr"], record["tactic"], record["status"], record["errmsg"], record["timeElapsed"]))
+                logging.info(f"{fileTitle}: Done executing INSERT of record...")
+                con.close()
 
-    for r in range(REPS):
-        print(f"processing '{file}'...")
-        cmd = 'lake lean ' + file_path
-        print(cmd)
-        try:
-            p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
-            print("communicating...")
-            out, err = p.communicate(timeout=TIMEOUT)
-            print("done!")
-            if p.returncode != 0:
-                print(f"ERROR: Expected return code of 0, found {p.returncode}")
-                assert p.returncode == 0
-            print(f"## output ##\n{'-'*10}\n{out}")
-            for line in out.strip().split():
-                TACBENCH_PREAMBLE = "TACBENCHCSV|"
-                COLS = ["thmName", "goalStr", "tactic", "status", "errmsg", "timeElapsed"]
-                if line.startswith(TACBENCH_PREAMBLE):
-                    line = line.removeprefix(TACBENCH_PREAMBLE)
-                    row = line.split(", ")
-                    assert len(row) == len(COLS)
-                    record = dict(zip(COLS, row))
-                    print(f"record: {record}")
-                    # TODO: invoke sqlite here to store
-        except subprocess.TimeoutExpired as e:
-            print(f"{file_path} - time out of {TIMEOUT} seconds reached")
+        # write that we are done with the file
+        logging.info(f"{fileTitle}: Opening connection to write successful completion.")
+        con = sqlite3.connect(args.db)
+        logging.info(f"{fileTitle}: Executing INSERT of successful completion...")
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO completedFiles (fileTitle) VALUES (?)
+        """, (record["fileTitle"], ))
+        logging.info(f"{fileTitle}: Done executing INSERT of successful completion...")
+        con.close()
 
-    subprocess.Popen(f'{sed()} -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    except subprocess.TimeoutExpired as e:
+        logging.info(f"{file_path} - time out of {TIMEOUT} seconds reached")
+    finally:
+        logging.info(f"{fileTitle}: resetting state of file.")
+        subprocess.Popen(f'git checkout -- {file_path}', cwd=ROOT_DIR, shell=True).wait()
 
-def process(jobs: int, prod_run : bool):
+def process(db : str, jobs: int, prod_run : bool):
     os.makedirs(RESULTS_DIR, exist_ok=True)
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
+
+    # make a table.
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS tests (
+            fileTitle text,
+            thmName text,
+            goalStr text,
+            tactic text,
+            status text,
+            errmsg TEXT,
+            timeElapsed FLOAT,
+            PRIMARY KEY (fileTitle, thmName, goalStr)
+            )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS completedFiles (
+            fileTitle text
+            )
+    """)
+
+    con.commit()
+    con.close()
+
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
@@ -114,7 +200,7 @@ def process(jobs: int, prod_run : bool):
 
         for file in files:
             if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
-                future = executor.submit(run_file, file)
+                future = executor.submit(run_file, db, file)
                 futures[future] = file
 
         total = len(futures)
@@ -124,7 +210,7 @@ def process(jobs: int, prod_run : bool):
             file = futures[future]
             future.result()
             percentage = ((idx + 1) / total) * 100
-            print(f'{file} completed, {percentage}%')
+            logging.info(f'{file} completed, {percentage}%')
 
 def produce_csv():
     out = None
@@ -134,26 +220,36 @@ def produce_csv():
                 results = parse_tacbenches(file.split(".")[0], res_file.read())
 
         df = pd.DataFrame(results)
-        print(df)
+        logging.info(df)
         if out is None:
             out = df
         else:
             out = pd.concat([out, df])
-
-    print(out)
+    logging.info(out)
     out.to_csv(RESULTS_DIR + 'hackersDelightSymbolic.csv')
 
+def setup_logging(db_name : str):
+    # Set up the logging configuration
+    logging.basicConfig(level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
+
 if __name__ == "__main__":
+  current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+  nproc = os.cpu_count()
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
-  parser.add_argument('-j', '--jobs', type=int, default=1)
+  parser.add_argument('--db', default=f'automata-circuit-{current_time}.sqlite3', help='path to sqlite3 database')
+  parser.add_argument('-j', '--jobs', type=int, default=nproc // 3)
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
   parser.add_argument('--csv', action='store_true', help="run CSV")
   args = parser.parse_args()
+  setup_logging(args.db)
+  logging.info(args)
   clear_results_folder()
   if args.run:
-    process(args.jobs, prod_run=False)
+    process(args.db, args.jobs, prod_run=False)
   if args.prodrun:
-    process(args.jobs, prod_run=True)
+    process(args.db, args.jobs, prod_run=True)
   if args.csv:
     produce_csv()
