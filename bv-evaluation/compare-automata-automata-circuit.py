@@ -74,23 +74,31 @@ def run_file(file: str):
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
-        log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
         print(f"processing '{file} @ {log_file_path}'")
-        with open(log_file_path, 'w') as log_file:
-            cmd = 'lake lean ' + file_path
-            print(cmd)
-            try:
-                p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
-                print("communicating...")
-                out, err = p.communicate(timeout=TIMEOUT)
-                print("done!")
-                log_file.write(out)
-                print(f"## output ##\n{'-'*10}\n{out}")
-            except subprocess.TimeoutExpired as e:
-                log_file.truncate(0)
-                log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
-                print(f"{file_path} - time out of {TIMEOUT} seconds reached")
-                raise e
+        cmd = 'lake lean ' + file_path
+        print(cmd)
+        try:
+            p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
+            print("communicating...")
+            out, err = p.communicate(timeout=TIMEOUT)
+            print("done!")
+            assert p.returncode == 0
+            log_file.write(out)
+            print(f"## output ##\n{'-'*10}\n{out}")
+            for line in out:
+                TACBENCH_PREAMBLE="TACBENCHCSV|"
+                COLS = ["thmName", "goalStr", "tactic", "status", "errmsg", "timeElapsed"]
+                if line.startswith(TACBENCH_PREAMBLE):
+                    line = line.removeprefix(TACBENCH_PREAMBLE)
+                    row = line.split(", ")
+                    assert len(row) == len(COLS)
+                    record = dict(zip(COLS, row))
+                    print(f"record: {record}")
+                    # TODO: invoke sqlite here to store
+        except subprocess.TimeoutExpired as e:
+            log_file.truncate(0)
+            log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
+            print(f"{file_path} - time out of {TIMEOUT} seconds reached")
 
     subprocess.Popen(f'{sed()} -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
