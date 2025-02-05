@@ -13,11 +13,8 @@ import sqlite3
 import logging
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
-RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/AutomataCircuit/'
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
-REPS = 1
 TIMEOUT = 1800 # timeout
-
 
 STATUS_FAIL = "❌",
 STATUS_GREEN_CHECK = "✅",
@@ -60,18 +57,6 @@ def parse_tacbenches(file_name, raw):
         logging.info("==")
     return out
 
-
-def clear_results_folder():
-    os.makedirs(RESULTS_DIR, exist_ok=True)
-    for file in os.listdir(RESULTS_DIR):
-        file_path = os.path.join(RESULTS_DIR, file)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            logging.info('Failed to delete %s. Reason: %s' % (file_path, e))
 
 def sed():
     if platform.system() == "Darwin":
@@ -163,7 +148,6 @@ def run_file(db : str, file: str):
         return
 
 def process(db : str, jobs: int, prod_run : bool):
-    os.makedirs(RESULTS_DIR, exist_ok=True)
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
 
     # make a table.
@@ -214,22 +198,6 @@ def process(db : str, jobs: int, prod_run : bool):
             percentage = ((idx + 1) / total) * 100
             logging.info(f'{file} completed, {percentage}%')
 
-def produce_csv():
-    out = None
-    os.makedirs(RESULTS_DIR, exist_ok=True)
-    for file in os.listdir(BENCHMARK_DIR):
-        with open(RESULTS_DIR+file.split(".")[0]+"_"+str("w")+"_r"+str("0")+".txt") as res_file:
-                results = parse_tacbenches(file.split(".")[0], res_file.read())
-
-        df = pd.DataFrame(results)
-        logging.info(df)
-        if out is None:
-            out = df
-        else:
-            out = pd.concat([out, df])
-    logging.info(out)
-    out.to_csv(RESULTS_DIR + 'hackersDelightSymbolic.csv')
-
 def setup_logging(db_name : str):
     # Set up the logging configuration
     logging.basicConfig(level=logging.DEBUG,
@@ -244,14 +212,13 @@ if __name__ == "__main__":
   parser.add_argument('-j', '--jobs', type=int, default=nproc // 3)
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
-  parser.add_argument('--csv', action='store_true', help="run CSV")
   args = parser.parse_args()
   setup_logging(args.db)
   logging.info(args)
-  clear_results_folder()
   if args.run:
     process(args.db, args.jobs, prod_run=False)
-  if args.prodrun:
+  elif args.prodrun:
     process(args.db, args.jobs, prod_run=True)
-  if args.csv:
-    produce_csv()
+  else:
+    logging.error("expected --run or --prodrun.")
+
