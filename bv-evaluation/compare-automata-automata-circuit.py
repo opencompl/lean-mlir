@@ -73,8 +73,9 @@ def run_file(file: str):
     file_title = file.split('.')[0]
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
+
     for r in range(REPS):
-        print(f"processing '{file} @ {log_file_path}'")
+        print(f"processing '{file}'...")
         cmd = 'lake lean ' + file_path
         print(cmd)
         try:
@@ -82,11 +83,12 @@ def run_file(file: str):
             print("communicating...")
             out, err = p.communicate(timeout=TIMEOUT)
             print("done!")
-            assert p.returncode == 0
-            log_file.write(out)
+            if p.returncode != 0:
+                print(f"ERROR: Expected return code of 0, found {p.returncode}")
+                assert p.returncode == 0
             print(f"## output ##\n{'-'*10}\n{out}")
-            for line in out:
-                TACBENCH_PREAMBLE="TACBENCHCSV|"
+            for line in out.strip().split():
+                TACBENCH_PREAMBLE = "TACBENCHCSV|"
                 COLS = ["thmName", "goalStr", "tactic", "status", "errmsg", "timeElapsed"]
                 if line.startswith(TACBENCH_PREAMBLE):
                     line = line.removeprefix(TACBENCH_PREAMBLE)
@@ -96,25 +98,29 @@ def run_file(file: str):
                     print(f"record: {record}")
                     # TODO: invoke sqlite here to store
         except subprocess.TimeoutExpired as e:
-            log_file.truncate(0)
-            log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
             print(f"{file_path} - time out of {TIMEOUT} seconds reached")
 
     subprocess.Popen(f'{sed()} -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
-def process(jobs: int):
+def process(jobs: int, prod_run : bool):
     os.makedirs(RESULTS_DIR, exist_ok=True)
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
-        for file in os.listdir(BENCHMARK_DIR):
+        files = os.listdir(BENCHMARK_DIR)
+        if not prod_run:
+            files = files[:4]
+
+        for file in files:
             if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
                 future = executor.submit(run_file, file)
                 futures[future] = file
 
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
+            if future.exception() is not None:
+                raise future.exception()
             file = futures[future]
             future.result()
             percentage = ((idx + 1) / total) * 100
@@ -140,11 +146,14 @@ def produce_csv():
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
   parser.add_argument('-j', '--jobs', type=int, default=1)
-  parser.add_argument('--evaluate', action='store_true', help="run evaluation")
+  parser.add_argument('--run', action='store_true', help="run evaluation")
+  parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
   parser.add_argument('--csv', action='store_true', help="run CSV")
   args = parser.parse_args()
   clear_results_folder()
-  if args.evaluate:
-    process(args.jobs)
+  if args.run:
+    process(args.jobs, prod_run=False)
+  if args.prodrun:
+    process(args.jobs, prod_run=True)
   if args.csv:
     produce_csv()
