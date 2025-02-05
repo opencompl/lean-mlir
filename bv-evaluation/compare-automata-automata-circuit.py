@@ -14,6 +14,7 @@ ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).deco
 RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/AutomataCircuit/'
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 REPS = 1
+TIMEOUT = 1800 # timeout
 
 def parse_tacbenches(file_name, raw):
     # Regular expression to match TACBENCH entries
@@ -71,17 +72,21 @@ def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
     print(f"processing '{file}'")
-    subprocess.Popen(f'{sed()} -i -E \'s,try alive_auto,simp_alive_split,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen(f'{sed()} -i -E \'s,sorry,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
         with open(log_file_path, 'w') as log_file:
             cmd = 'lake lean ' + file_path
-            print(f"running '{cmd}' @ '{log_file_path}'")
-            subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
-    subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_split,try alive_auto,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    subprocess.Popen(f'{sed()} -i -E \'s,bv_bench_automata,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+            print(cmd)
+            try:
+                subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
+            except subprocess.TimeoutExpired:
+                log_file.truncate(0)
+                log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
+                print(f"{file_path} - time out of {TIMEOUT} seconds reached")
+
+    subprocess.Popen('sed -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
