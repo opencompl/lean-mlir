@@ -143,6 +143,7 @@ def run_file(db : str, file: str):
                         timeElapsed)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """, (record["fileTitle"], record["thmName"], record["goalStr"], record["tactic"], record["status"], record["errmsg"], record["timeElapsed"]))
+                con.commit()
                 logging.info(f"{fileTitle}: Done executing INSERT of record...")
                 con.close()
 
@@ -154,6 +155,7 @@ def run_file(db : str, file: str):
         cur.execute("""
             INSERT INTO completedFiles (fileTitle) VALUES (?)
         """, (record["fileTitle"], ))
+        con.commit()
         logging.info(f"{fileTitle}: Done executing INSERT of successful completion...")
         con.close()
 
@@ -179,7 +181,7 @@ def process(db : str, jobs: int, prod_run : bool):
             status text,
             errmsg TEXT,
             timeElapsed FLOAT,
-            PRIMARY KEY (fileTitle, thmName, goalStr)
+            PRIMARY KEY (fileTitle, thmName, goalStr, tactic)
             )
     """)
     cur.execute("""
