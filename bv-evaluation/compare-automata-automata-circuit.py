@@ -80,13 +80,19 @@ def run_file(file: str):
             cmd = 'lake lean ' + file_path
             print(cmd)
             try:
-                subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
-            except subprocess.TimeoutExpired:
+                p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
+                print("communicating...")
+                out, err = p.communicate(timeout=TIMEOUT)
+                print("done!")
+                log_file.write(out)
+                print(f"## output ##\n{'-'*10}\n{out}")
+            except subprocess.TimeoutExpired as e:
                 log_file.truncate(0)
                 log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
                 print(f"{file_path} - time out of {TIMEOUT} seconds reached")
+                raise e
 
-    subprocess.Popen('sed -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
