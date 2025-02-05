@@ -21,43 +21,6 @@ STATUS_GREEN_CHECK = "✅",
 STATUS_SUCCESS = "🎉",
 STATUS_PROCESSING = "⌛️"
 
-
-
-def parse_tacbenches(file_name, raw):
-    # Regular expression to match TACBENCH entries
-    tac_bench_pattern = re.compile(
-        r"TACBENCH\s+(\w+)\s+(PASS|FAIL),\s+TIME_ELAPSED\s+([\d.]+)\s+ms,(?:\s*MSGSTART(.*?)MSGEND)?",
-        re.DOTALL
-    )
-    tac_block_pattern = re.compile(r"(TACSTART.*?TACEND)", re.DOTALL)
-    # Parsing the TACBENCH entries
-    guid = 0
-    out = []
-    for blk in tac_block_pattern.findall(raw):
-        guid += 1
-        new = []
-        for match in tac_bench_pattern.finditer(blk):
-            tactic_name = match.group(1)
-            status = match.group(2)
-            time_elapsed = float(match.group(3))
-            error_message = match.group(4).strip() if match.group(4) else None  # Only if MSGSTART-MSGEND present
-            new.append({
-                "fileTitle" : file_name,
-                "guid":guid,
-                "name": tactic_name,
-                "status": status,
-                "time_elapsed": time_elapsed,
-                "error_message": error_message
-            })
-        logging.info("==")
-        logging.info(blk)
-        logging.info("--")
-        for r in new: logging.info(r)
-        out.extend(new)
-        logging.info("==")
-    return out
-
-
 def sed():
     if platform.system() == "Darwin":
         return "gsed"
