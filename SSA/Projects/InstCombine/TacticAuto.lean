@@ -325,7 +325,7 @@ macro "bv_bench": tactic =>
             "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical 0 })); done),
             -- MBA algorithm.
             "bv_mba" : (bv_mba; done),
-            "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done)
+            "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done),
           ]
           try bv_auto
           try sorry
@@ -349,7 +349,8 @@ macro "bv_bench_automata": tactic =>
             "circuit" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
             "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
             "width_ok" : (bv_automata_fragment_width_legal),
-            "reflect_ok" : (bv_automata_fragment_reflect)
+            "reflect_ok" : (bv_automata_fragment_reflect),
+            "bv_decide" : (bv_decide; done),
           ]
         )
       )

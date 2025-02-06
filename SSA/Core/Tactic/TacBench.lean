@@ -32,7 +32,7 @@ Run `tac_bench <name> <tacticSeq>` to run a sequence of tactics whose runtime is
 This does not affect the current goal state, and thus allow multiple `tac_bench` statements to be run in sequence.
 -/
 syntax tacBenchItem := str &":" tacticSeq
-syntax (name := tacBench) "tac_bench" (Lean.Parser.Tactic.config)? "["(tacBenchItem),*"]" : tactic
+syntax (name := tacBench) "tac_bench" (Lean.Parser.Tactic.config)? "["(tacBenchItem),*,?"]" : tactic
 
 
 def setTraceOptions (opt : Options) : Options := opt
