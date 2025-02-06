@@ -87,7 +87,7 @@ end Nat
 namespace BitVec
 
 @[simp]
-theorem replicate_one {w : Nat} : BitVec.replicate w 1#1 = BitVec.cast (by simp) (allOnes w) := by
+theorem replicate_one_eq_allOnes {w : Nat} : BitVec.replicate w 1#1 = BitVec.cast (by simp) (allOnes w) := by
   ext i
   simp
   omega
