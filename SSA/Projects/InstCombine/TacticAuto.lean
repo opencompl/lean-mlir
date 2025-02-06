@@ -315,9 +315,15 @@ macro "bv_bench": tactic =>
             "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
             "bv_auto" : (bv_auto; done),
-            "bv_automata_circuit_prop" : (bool_to_prop; bv_automata_circuit; done),
-            "bv_automata_circuit" : (bv_automata_circuit; done),
-            "bv_normalize_automata_circuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done),
+            -- Verified, Lean-based.
+            "bv_automata_circuit_lean_prop" : (bool_to_prop; bv_automata_circuit; done),
+            "bv_automata_circuit_lean" : (bv_automata_circuit; done),
+            "bv_normalize_automata_circuit_lean" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done),
+            -- Cadical based, currently unverified.
+            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_circuit (config := { backend := .cadical 0 }); done),
+            "bv_automata_circuit_cadical" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
+            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical 0 })); done),
+            -- MBA algorithm.
             "bv_mba" : (bv_mba; done),
             "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done)
           ]
