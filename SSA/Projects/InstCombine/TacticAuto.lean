@@ -339,11 +339,11 @@ macro "bv_bench_automata": tactic =>
            BitVec.ofNat_eq_ofNat, BitVec.two_mul]
         all_goals (
           tac_bench (config := { outputType := .csv }) [
-            "bv_automata_classic" : (bv_automata_classic; done),
-            "bv_automata_circuit" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
-            "bv_automata_fragment_no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
-            "bv_automata_fragment_width_legal" : (bv_automata_fragment_width_legal),
-            "bv_automata_fragment_reflect" : (bv_automata_fragment_reflect)
+            "presburger" : (bv_automata_classic; done),
+            "circuit" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
+            "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
+            "width_ok" : (bv_automata_fragment_width_legal),
+            "reflect_ok" : (bv_automata_fragment_reflect)
           ]
         )
       )
