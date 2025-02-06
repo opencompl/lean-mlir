@@ -114,6 +114,8 @@ def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
      return { name := name.getString, tac := tac : Item }
 | _ => throwUnsupportedSyntax
 
+private def toMessageDataToCsvString [ToMessageData α] (a : α) : MetaM String := do 
+  return csvEscapeString <| ← MessageData.toString <| ← addMessageContextFull <| toMessageData a
 
 @[tactic tacBench]
 def evalTacBench : Tactic := fun
@@ -124,24 +126,24 @@ def evalTacBench : Tactic := fun
       | .some (.some decl) => decl.userName.toString
       | _ => "unknown-theorem"
     let g ← getMainGoal
-    let items ← tacBenchItems.getElems.mapM parseTacBenchItem
-    let mut msg := m!""
-    let mut results : Array Result := #[]
-    for item in items do
-      let out ← hermeticRun g item
-      results := results.push out
-      msg := msg ++ m!"\n" ++ out.toMessageData
-    -- Produce output.
-    if cfg.outputType == Config.OutputType.text then
-      logInfo m!"TACSTART NAME {thmName} ENDNAME {.nestD msg}\nTACEND"
-    else if cfg.outputType == Config.OutputType.csv then
-      let goalStr := csvEscapeString (← MessageData.toString m!"{g}")
-      for result in results do
-        let statusStr := if result.isOk then "ok" else "err"
-        let errMsgStr := csvEscapeString <| 
-            ← if result.isOk then pure "<noerror>" else MessageData.toString result.errorMessage
-        let outStr := m!"TACBENCHCSV| {thmName}, {goalStr}, {result.item.name}, {statusStr}, {errMsgStr}, {result.timeElapsed}"
-        logInfo outStr
+    g.withContext do
+      let items ← tacBenchItems.getElems.mapM parseTacBenchItem
+      let mut msg := m!""
+      let mut results : Array Result := #[]
+      for item in items do
+        let out ← hermeticRun g item
+        results := results.push out
+        msg := msg ++ m!"\n" ++ out.toMessageData
+      -- Produce output.
+      if cfg.outputType == Config.OutputType.text then
+        logInfo m!"TACSTART NAME {thmName} ENDNAME {.nestD msg}\nTACEND"
+      else if cfg.outputType == Config.OutputType.csv then
+        let goalStr ← toMessageDataToCsvString g
+        for result in results do
+          let statusStr := if result.isOk then "ok" else "err"
+          let errMsgStr ← if result.isOk then pure "<noerror>" else toMessageDataToCsvString result.errorMessage
+          let outStr := m!"TACBENCHCSV| {thmName}, {goalStr}, {result.item.name}, {statusStr}, {errMsgStr}, {result.timeElapsed}"
+          logInfo outStr
 
 | _ => throwUnsupportedSyntax
 end TacBench

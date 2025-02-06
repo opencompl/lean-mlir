@@ -827,7 +827,7 @@ and bail out if we are unable to determine it precisely (i.e. no loose metavars)
 def getEqRhs (eq : Expr) : MetaM Expr := do
   check eq
   let eq ← whnf <| ← inferType eq
-  let some (_ty, _lhs, rhs) := eq.eq? | throwError "unable to infer RHS for equality {eq}"
+  let some (_ty, _lhs, rhs) := eq.eq? | throwError m!"unable to infer RHS for equality {eq}"
   let rhs ← instantiateMVars rhs
   rhs.ensureHasNoMVars
   return rhs
@@ -1308,7 +1308,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
   | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
       let a ← reflectTermUnchecked map w a
       let some n ← getNatValue? n
-        | throwError "expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
+        | throwError m!"expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
       return { a with e := Term.shiftL a.e n }
 
   | HSub.hSub _bv _bv _bv _inst a b =>
@@ -1342,9 +1342,9 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
        -- support width equality constraints
       -- TODO: canonicalize 'a = w' into 'w = a'.
       if wExpected != a then
-        throwError "Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
+        throwError m!"Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
       let some natVal ← Lean.Meta.getNatValue? b
-        | throwError "Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
+        | throwError m!"Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
       let out := Predicate.widthEq natVal
       return { bvToIxMap := bvToIxMap, e := out }
 
@@ -1358,7 +1358,7 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       -- So we need to match on 'Eq _ true' where '_' is 'slt'.
       -- This makes me unhappy too, but c'est la vie.
       let_expr true := b
-        | throwError "only boolean conditionals allowed are 'bv.slt bv = true', 'bv.sle bv = true'. Found {indentD e}."
+        | throwError m!"only boolean conditionals allowed are 'bv.slt bv = true', 'bv.sle bv = true'. Found {indentD e}."
       match_expr a with
       | BitVec.slt w a b =>
         let a ← reflectTermUnchecked bvToIxMap w a
@@ -1369,18 +1369,18 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
         let b ← reflectTermUnchecked a.bvToIxMap w b
         return { bvToIxMap := b.bvToIxMap, e := Predicate.sle a.e b.e }
       | _ =>
-        throwError "unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+        throwError m!"unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
     | _ =>
-      throwError "unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+      throwError m!"unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
   | Ne α a b =>
     /- Support width constraints with α = Nat -/
     match_expr α with
     | Nat => do
       -- TODO: canonicalize 'a ≠ w' into 'w ≠ a'.
       if wExpected != a then
-        throwError "Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
+        throwError m!"Only Nat expressions allowed are '{wExpected} ≠ <concrete value>'. Found {indentD e}."
       let some natVal ← Lean.Meta.getNatValue? b
-        | throwError "Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
+        | throwError m!"Expected '{wExpected} ≠ <concrete width>', found symbolic width {indentD b}."
       let out := Predicate.widthNeq natVal
       return { bvToIxMap := bvToIxMap, e := out }
     | BitVec w =>
@@ -1388,14 +1388,14 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       let b ← reflectTermUnchecked a.bvToIxMap w b
       return { bvToIxMap := b.bvToIxMap, e := Predicate.neq a.e b.e }
     | _ =>
-      throwError "Expected typeclass to be 'BitVec w' / 'Nat', found '{indentD α}' in {e} when matching against 'Ne'"
+      throwError m!"Expected typeclass to be 'BitVec w' / 'Nat', found '{indentD α}' in {e} when matching against 'Ne'"
   | LT.lt α _inst a b =>
-    let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
+    let_expr BitVec w := α | throwError m!"Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
     let a ← reflectTermUnchecked bvToIxMap w a
     let b ← reflectTermUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := Predicate.ult a.e b.e }
   | LE.le α _inst a b =>
-    let_expr BitVec w := α | throwError "Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LE.le'"
+    let_expr BitVec w := α | throwError m!"Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LE.le'"
     let a ← reflectTermUnchecked bvToIxMap w a
     let b ← reflectTermUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := Predicate.ule a.e b.e }
@@ -1410,7 +1410,7 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
     let out := Predicate.land p.e q.e
     return { q with e := out }
   | _ =>
-     throwError "expected predicate over bitvectors (no quantification), found:  {indentD e}"
+     throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
 /-- Name of the tactic -/
 def tacName : String := "bv_automata_circuit"
@@ -1766,12 +1766,12 @@ which is then indeed `rfl` equal to `true`.
 def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
-  if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
+  if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
   else if hgt: ws.size > 1 then
     let (w1, wExample1) := ws[0]
     let (w2, wExample2) := ws[1]
-    let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
-    throwError "found multiple bitvector widths in the target: {indentD mExample}"
+    let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
+    throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
   else
     -- we have exactly one width
     let (w, wExample) := ws[0]
@@ -1820,15 +1820,15 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         if gs.isEmpty
         then return gs
         else
-          throwError "Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
       else
-        throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
+        throwError m!"failed to prove goal, since decideIfZerosM established that theorem is not true."
         return [g]
     | .lean =>
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
-        throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
+        throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
       if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold && cfg.stateSpaceSizeThreshold != 0 then
-        throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
+        throwError m!"Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
 
       let (mapFv, g) ← generalizeMap g bvToIxMapVal;
       let (_, g) ← g.revert #[mapFv]
@@ -1878,7 +1878,7 @@ def evalBvAutomataCircuit : Tactic := fun
     | [g] => do
       logInfo m!"goal being decided via boolean reflection: {indentD g}"
       evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig })
-    | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
+    | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
 /-- A tactic that succeeds if we have multiple widths. -/
@@ -1890,12 +1890,12 @@ def evalBvAutomataFragmentIllegalWidth : Tactic := fun
   g.withContext do
     let ws ← findExprBitwidths (← g.getType)
     let ws := ws.toArray
-    if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
+    if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
     else if hgt: ws.size > 1 then
       let (w1, wExample1) := ws[0]
       let (w2, wExample2) := ws[1]
-      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
-      throwError "found multiple bitvector widths in the target: {indentD mExample}"
+      let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
+      throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
     else
       return ()
 | _ => throwUnsupportedSyntax
@@ -1910,12 +1910,12 @@ def evalBvAutomataFragmentNoUninterpreted : Tactic := fun
     let ws ← findExprBitwidths (← g.getType)
     let ws := ws.toArray
     if h0: ws.size = 0 then
-      throwError "found no bitvector in the target: {indentD (← g.getType)}"
+      throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
     else if hgt: ws.size > 1 then
       let (w1, wExample1) := ws[0]
       let (w2, wExample2) := ws[1]
-      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
-      throwError "found multiple bitvector widths in the target: {indentD mExample}"
+      let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
+      throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
     else
       let (w, wExample) := ws[0]
       let g ← revertBvHyps g
@@ -1955,12 +1955,12 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
   g.withContext do
     let ws ← findExprBitwidths (← g.getType)
     let ws := ws.toArray
-    if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
+    if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
     else if hgt: ws.size > 1 then
       let (w1, wExample1) := ws[0]
       let (w2, wExample2) := ws[1]
-      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
-      throwError "found multiple bitvector widths in the target: {indentD mExample}"
+      let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
+      throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
     else
       -- we have exactly one width
       let (w, wExample) := ws[0]
