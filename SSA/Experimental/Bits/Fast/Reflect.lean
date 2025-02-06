@@ -1098,13 +1098,13 @@ structure Config where
   This is useful to prevent the tactic from taking oodles of time cruncing on goals that
   build large state spaces, which can happen in the presence of tactics.
   -/
-  circuitSizeThreshold : Nat := 200
+  circuitSizeThreshold : Nat := 0
 
   /--
   The upper bound on the state space of the FSM, beyond which the tactic will bail out on an error.
   See also `Config.circuitSizeThreshold`.
   -/
-  stateSpaceSizeThreshold : Nat := 20
+  stateSpaceSizeThreshold : Nat := 0
   /--
   Whether the tactic should used a specialized solver for fixed-width constraints.
   -/
@@ -1671,7 +1671,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     (cK : Circuit (Vars p.α arity iter))
     (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
   logInfo s!"## K-induction (iter {iter})"
-  if iter ≥ maxIter then
+  if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
     return false
   let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
@@ -1825,9 +1825,9 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         throwError "failed to prove goal, since decideIfZerosM established that theorem is not true."
         return [g]
     | .lean =>
-      if fsm.circuitSize > cfg.circuitSizeThreshold then
+      if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError "Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
-      if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold then
+      if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold && cfg.stateSpaceSizeThreshold != 0 then
         throwError "Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
 
       let (mapFv, g) ← generalizeMap g bvToIxMapVal;
@@ -1881,4 +1881,112 @@ def evalBvAutomataCircuit : Tactic := fun
     | _gs => throwError "expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
-end Reflect
+/-- A tactic that succeeds if we have multiple widths. -/
+syntax (name := bvAutomataFragmentWidthLegal) "bv_automata_fragment_width_legal" : tactic
+@[tactic bvAutomataFragmentWidthLegal]
+def evalBvAutomataFragmentIllegalWidth : Tactic := fun
+| `(tactic| bv_automata_fragment_width_legal) => do
+  let g ← getMainGoal
+  g.withContext do
+    let ws ← findExprBitwidths (← g.getType)
+    let ws := ws.toArray
+    if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
+    else if hgt: ws.size > 1 then
+      let (w1, wExample1) := ws[0]
+      let (w2, wExample2) := ws[1]
+      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
+      throwError "found multiple bitvector widths in the target: {indentD mExample}"
+    else
+      return ()
+| _ => throwUnsupportedSyntax
+
+/-- A tactic that succeeds if we have no uninterpreted function symbols. -/
+syntax (name := bvAutomataFragmentNoUninterpreted) "bv_automata_fragment_no_uninterpreted" : tactic
+@[tactic bvAutomataFragmentNoUninterpreted]
+def evalBvAutomataFragmentNoUninterpreted : Tactic := fun
+| `(tactic| bv_automata_fragment_no_uninterpreted) => do
+  let g ← getMainGoal
+  g.withContext do
+    let ws ← findExprBitwidths (← g.getType)
+    let ws := ws.toArray
+    if h0: ws.size = 0 then
+      throwError "found no bitvector in the target: {indentD (← g.getType)}"
+    else if hgt: ws.size > 1 then
+      let (w1, wExample1) := ws[0]
+      let (w2, wExample2) := ws[1]
+      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
+      throwError "found multiple bitvector widths in the target: {indentD mExample}"
+    else
+      let (w, wExample) := ws[0]
+      let g ← revertBvHyps g
+      -- Next, after reverting, we have a goal which we want to reflect.
+      -- we convert this goal to NNF
+      let .some g ← NNF.runNNFSimpSet g
+        | logInfo m!"Converting to negation normal form automatically closed goal."
+          return ()
+      logInfo m!"goal after NNF: {indentD g}"
+      let .some g ← Simplifications.runPreprocessing g
+        | logInfo m!"Preprocessing automatically closed goal."
+          return ()
+      logInfo m!"goal after preprocessing: {indentD g}"
+      -- finally, we perform reflection.
+      let result ← reflectPredicateAux ∅ (← g.getType) w
+      -- Order the expressions so we get stable error messages.
+      let exprs := result.bvToIxMap.exprs.toArray.qsort (fun ei ej => ei.1.lt ej.1)
+      let mut out? : Option MessageData := .none
+      let header := m!"Tactic has not understood the following expressions, and will treat them as symbolic:"
+      for (e, _) in exprs do
+        if e.isFVar then continue
+        let eshow := indentD m!"- '{e}'"
+        out? := match out? with
+          | .none => header ++ Format.line ++ eshow
+          | .some out => .some (out ++ eshow)
+      match out? with
+      | .none => pure ()
+      | .some out => throwError out
+| _  => throwUnsupportedSyntax
+
+/-- A tactic that succeeds if we have successfully reflected the goal state. -/
+syntax (name := bvAutomataFragmentCheckReflected) "bv_automata_fragment_reflect" : tactic
+@[tactic bvAutomataFragmentCheckReflected]
+def evalBvAutomataFragmentCheckReflected : Tactic := fun
+| `(tactic| bv_automata_fragment_reflect) => do
+  let g ← getMainGoal
+  g.withContext do
+    let ws ← findExprBitwidths (← g.getType)
+    let ws := ws.toArray
+    if h0: ws.size = 0 then throwError "found no bitvector in the target: {indentD (← g.getType)}"
+    else if hgt: ws.size > 1 then
+      let (w1, wExample1) := ws[0]
+      let (w2, wExample2) := ws[1]
+      let mExample := f!"{w1} → {wExample1}" ++ f!"{w2} → {wExample2}"
+      throwError "found multiple bitvector widths in the target: {indentD mExample}"
+    else
+      -- we have exactly one width
+      let (w, wExample) := ws[0]
+
+      -- We can now revert hypotheses that are of this bitwidth.
+      let g ← revertBvHyps g
+
+      -- Next, after reverting, we have a goal which we want to reflect.
+      -- we convert this goal to NNF
+      let .some g ← NNF.runNNFSimpSet g
+        | logInfo m!"Converting to negation normal form automatically closed goal."
+          return ()
+      logInfo m!"goal after NNF: {indentD g}"
+
+      let .some g ← Simplifications.runPreprocessing g
+        | logInfo m!"Preprocessing automatically closed goal."
+          return ()
+      logInfo m!"goal after preprocessing: {indentD g}"
+      -- finally, we perform reflection.
+      let result ← reflectPredicateAux ∅ (← g.getType) w
+      let bvToIxMapVal ← result.bvToIxMap.toExpr w
+
+      let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
+      let g ← g.replaceTargetDefEq target
+      logInfo m!"goal after reflection: {indentD g}"
+      return ()
+| _  => throwUnsupportedSyntax
+
+end  Reflect

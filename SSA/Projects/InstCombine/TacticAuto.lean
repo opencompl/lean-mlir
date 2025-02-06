@@ -340,7 +340,10 @@ macro "bv_bench_automata": tactic =>
         all_goals (
           tac_bench (config := { outputType := .csv }) [
             "bv_automata_classic" : (bv_automata_classic; done),
-            "bv_automata_circuit" : (bv_automata_circuit; done)
+            "bv_automata_circuit" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
+            "bv_automata_fragment_no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
+            "bv_automata_fragment_width_legal" : (bv_automata_fragment_width_legal),
+            "bv_automata_fragment_reflect" : (bv_automata_fragment_reflect)
           ]
         )
       )
