@@ -178,7 +178,7 @@ def setup_logging(db_name : str):
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
 def analyze_errors(cur : sqlite3.Cursor):
-    """Tabulate all uninterpreted functions"""
+    """Tabulate all errors and catalogue them"""
     logging.info("Analyzing uninterpreted functions")
     rows = cur.execute("""
         SELECT fileTitle, thmName, goalStr, errMsg FROM tests WHERE tactic = "circuit" AND status = "err"
@@ -190,6 +190,7 @@ def analyze_errors(cur : sqlite3.Cursor):
     KEY_SYMBOLIC_SHIFT_LEFT = "expected shiftLeft by natural number  found symbolic shift amount"
     KEY_UNKNOWN_BOOLEAN_EQUALITY = "only boolean conditionals allowed are 'bv.slt bv = true'  'bv.sle bv = true'. Found"
     KEY_UNKNOWN_BOOLEAN_DISEQUALITY = "Expected typeclass to be 'BitVec w' / 'Nat'  found '   Bool' in"
+    KEY_UNKNOWN = "unknown"
 
     str2explanation = {
       KEY_UNTRUE : "theorems that are established as untrue",
@@ -198,6 +199,7 @@ def analyze_errors(cur : sqlite3.Cursor):
       KEY_SYMBOLIC_SHIFT_LEFT : "theorems that have symbolic left shift amount",
       KEY_UNKNOWN_BOOLEAN_EQUALITY : "unknown boolean equality",
       KEY_UNKNOWN_BOOLEAN_DISEQUALITY : "unknown boolean disequality",
+      KEY_UNKNOWN : "unknown",
     }
     str2matches = {
       KEY_UNTRUE : [],
@@ -206,11 +208,14 @@ def analyze_errors(cur : sqlite3.Cursor):
       KEY_SYMBOLIC_SHIFT_LEFT : [],
       KEY_UNKNOWN_BOOLEAN_EQUALITY : [],
       KEY_UNKNOWN_BOOLEAN_DISEQUALITY : [],
+      KEY_UNKNOWN : []
     }
 
 
     HEADERS = ["errMsg", "goalStr", "thmName", "fileTitle"]
     HEADER_COL_WIDTHS = [40, 40, 50, 50]
+
+    unmatched = []
     for row in rows:
         (fileTitle, thmName, goalStr, errMsg) = row
         matched = False
@@ -220,11 +225,13 @@ def analyze_errors(cur : sqlite3.Cursor):
                 matched = True
                 break
         if not matched:
+            str2matches[KEY_UNKNOWN].append((errMsg, goalStr, thmName, fileTitle))
             print(errMsg)
 
     for s in str2matches:
         NEXAMPLES = 5
         print(f"{str2explanation[s]} (#{len(str2matches[s])}):")
+        if not str2matches[s]: continue
         print(tabulate(str2matches[s][:NEXAMPLES], headers=HEADERS, tablefmt="grid", maxcolwidths=HEADER_COL_WIDTHS))
 
 
@@ -245,9 +252,8 @@ def analyze(db : str):
     con = sqlite3.connect(db)
     cur = con.cursor()
     analyze_uninterpreted_functions(cur)
-    #analyze_errors(cur)
+    analyze_errors(cur)
     pass
-
 
 if __name__ == "__main__":
   current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')

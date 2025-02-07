@@ -1098,13 +1098,13 @@ structure Config where
   This is useful to prevent the tactic from taking oodles of time cruncing on goals that
   build large state spaces, which can happen in the presence of tactics.
   -/
-  circuitSizeThreshold : Nat := 200
+  circuitSizeThreshold : Nat := 0
 
   /--
   The upper bound on the state space of the FSM, beyond which the tactic will bail out on an error.
   See also `Config.circuitSizeThreshold`.
   -/
-  stateSpaceSizeThreshold : Nat := 20
+  stateSpaceSizeThreshold : Nat := 0
   /--
   Whether the tactic should used a specialized solver for fixed-width constraints.
   -/
