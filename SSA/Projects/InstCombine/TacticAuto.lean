@@ -5,6 +5,8 @@ import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.Fast.MBA
+import SSA.Experimental.Bits.FastCopy.Reflect
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
@@ -170,7 +172,7 @@ macro "bv_bitwise" : tactic =>
     )
    )
 
-macro "bv_automata_classic" : tactic =>
+macro "bool_to_prop" : tactic =>
   `(tactic|
     (
       simp -failIfUnchanged only
@@ -179,7 +181,13 @@ macro "bv_automata_classic" : tactic =>
       simp -failIfUnchanged only
         [Bool.or_eq_true_iff, Bool.and_eq_true_iff, beq_iff_eq, BitVec.ofBool_or_ofBool,
          ofBool_1_iff_true, Bool.or_eq_true, bne_iff_ne, ne_eq, iff_true, true_iff]
-      bv_automata'
+    )
+   )
+
+macro "bv_automata_classic" : tactic =>
+  `(tactic|
+    (
+      bv_automata_classic_nf
     )
    )
 
@@ -224,7 +232,7 @@ macro "bv_auto": tactic =>
           | bv_distrib
           | bv_ring
           | bv_of_bool
-          | bv_automata_classic
+          | bool_to_prop; bv_automata'
           | bv_decide
       )
    )
@@ -300,17 +308,53 @@ macro "bv_bench": tactic =>
             "bv_ring" : (bv_ring; done),
             "bv_of_bool" : (bv_of_bool; done),
             "bv_omega" : (bv_omega; done),
+            -- Automata Classic
+            "bv_automata_classic_prop" : (bool_to_prop; bv_automata_classic; done),
             "bv_automata_classic" : (bv_automata_classic; done),
-            "bv_automata'" : (bv_automata'; done),
+            "bv_normalize_automata_classic" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
             "simp" : (simp; done),
             "bv_normalize" : (bv_normalize; done),
             "bv_decide" : (bv_decide; done),
             "bv_auto" : (bv_auto; done),
-            "bv_automata_circuit" : (bv_automata_circuit; done),
-            "bv_normalize_automata_circuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done)
+            -- Verified, Lean-based.
+            "bv_automata_circuit_lean_prop" : (bool_to_prop; bv_automata_circuit; done),
+            "bv_automata_circuit_lean" : (bv_automata_circuit; done),
+            "bv_normalize_automata_circuit_lean" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done),
+            -- Cadical based, currently unverified.
+            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
+            "bv_automata_circuit_cadical" : (bv_automata_circuit (config := { backend := .cadical /- maxIter-/ 4 }); done),
+            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4})); done),
+            -- MBA algorithm.
+            "bv_mba" : (bv_mba; done),
+            "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done),
           ]
           try bv_auto
           try sorry
+        )
+      )
+   )
+
+/--
+Benchmark the automata algorithms to understand their pros and cons. Produce output as CSV.
+-/
+macro "bv_bench_automata": tactic =>
+  `(tactic|
+      (
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
+           BitVec.ofNat_eq_ofNat, BitVec.two_mul]
+        all_goals (
+          tac_bench (config := { outputType := .csv }) [
+            "presburger" : (bv_automata_classic; done),
+            "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
+            "circuit" : (bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
+            "normCircuit" : ((try (solve | bv_normalize); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 })); done)),
+            "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
+            "width_ok" : (bv_automata_fragment_width_legal),
+            "reflect_ok" : (bv_automata_fragment_reflect),
+            "bv_decide" : (bv_decide; done),
+          ]
         )
       )
    )

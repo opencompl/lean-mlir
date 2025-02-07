@@ -4,7 +4,6 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
-import Mathlib.Tactic
 
 open BitVec
 open MLIR AST
@@ -48,7 +47,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   alive_auto
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-axioms: [propext, Classical.choice, Quot.sound] -/
+axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
 end DivRemOfSelect
@@ -174,8 +173,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 rw [Nat.mod_eq_of_lt (by omega)]
               subst h1
               simp [BitVec.sdiv_one_one]
-              intro h
-              simp [h]
             · have hcases : (1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') ∨
                   1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') + 1) := by
                 omega
@@ -241,6 +238,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
     rw [BitVec.toNat_eq] at a_0
     intro h
+    subst h
     simp [h]
     simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at a_0 a_1
     by_cases w_1 : w = 1

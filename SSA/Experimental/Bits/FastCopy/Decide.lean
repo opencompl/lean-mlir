@@ -1,6 +1,7 @@
-import SSA.Experimental.Bits.Fast.FiniteStateMachine
-import SSA.Experimental.Bits.Fast.Lemmas
+import SSA.Experimental.Bits.FastCopy.FiniteStateMachine
+import SSA.Experimental.Bits.FastCopy.Lemmas
 
+namespace Copy
 instance (p : Predicate) :
     Decidable (∀ (n : ℕ) (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=
   decidable_of_iff
@@ -37,11 +38,6 @@ instance DecidableForallPredicateEvalEqFalse (p : Predicate) :
     rw [Predicate.evalFin_eq_eval p  (List.ofFn xs) xs]
     · apply h
     · simp
-
-/--
-info: 'DecidableForallPredicateEvalEqFalse' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms DecidableForallPredicateEvalEqFalse
 
 instance DecideFixedWidthPredicateEvalFin  (p : Predicate) (n : ℕ) :
     Decidable (∀ (x : Fin p.arity → BitStream) , p.evalFin x n = false) :=

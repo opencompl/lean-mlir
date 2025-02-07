@@ -3,6 +3,9 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Logic.Function.Iterate
 import SSA.Projects.InstCombine.ForLean
 -- TODO: upstream the following section
+
+namespace Copy
+
 section UpStream
 
 namespace Int
@@ -15,7 +18,7 @@ theorem bmod_eq_of_ge_and_le (z : Int) (m : Nat)
 theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
     (↑n : Int).bmod m = ↑(n % m) := by
   simp only [
-    bmod, ofNat_emod, ite_eq_left_iff,
+    _root_.Int.bmod, _root_.Int.ofNat_emod, ite_eq_left_iff,
     show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
     Nat.mod_eq_of_lt (by omega : n < m)
   ]
@@ -30,7 +33,7 @@ theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
         have := Int.zero_le_ofNat o
         contradiction
       }
-      simp only [Int.abs_eq_natAbs, subNatNat, HAdd.hAdd, Add.add, Int.add]
+      simp only [Int.abs_eq_natAbs, Int.subNatNat, HAdd.hAdd, Add.add, Int.add]
       have e : o.succ = (o.mod b.natAbs).add 1 := by
         simp only [Nat.mod, Nat.add]
         congr
@@ -878,9 +881,9 @@ section OfInt
 open Int in
 /-- Sign-extend an integer to its representation as a 2-adic number
 (morally, an infinite width 2s complement representation) -/
-def ofInt : Int → BitStream
+def _root_.Copy.BitStream.ofInt : Int → BitStream
   | .ofNat n  => ofNat n
-  | -[n+1]    => -(ofNat (n+1))
+  | .negSucc n => -(ofNat (n+1))
 
 /-- 'falseIffEq n i' = false ↔ i = n -/
 abbrev falseIffEq (n : Nat) : BitStream := fun i => decide (i != n)

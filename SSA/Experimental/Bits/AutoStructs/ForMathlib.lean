@@ -142,9 +142,9 @@ lemma dec_enc : Function.RightInverse (α := BitVecs' n) enc dec := by
   intros bvs; ext1; exact dec_enc_w bvs
   next i =>
     simp only [enc, Fin.getElem_fin, dec, List.getElem_map, List.getElem_finRange, Fin.cast_mk,
-      Fin.is_lt, BitVec.ofFn_getLsbD', Fin.eta, List.Vector.get_ofFn]
+      Fin.is_lt, BitVec.ofFn_getLsbD, Fin.eta, List.Vector.get_ofFn]
     ext
-    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD',
+    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD,
       BitVec.getLsbD_cast']
     rfl
 
@@ -179,13 +179,13 @@ lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
     bvs := List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
   ext k i <;> simp_all only [dec, Fin.getElem_fin, List.length_append, List.length_singleton,
-    List.Vector.get_ofFn, BitVec.ofFn_getLsbD', BitVec.getLsbD_cast']
+    List.Vector.get_ofFn, BitVec.ofFn_getLsbD, BitVec.getLsbD_cast']
   rw [BitVec.getLsbD_cons]
   split
   next heq => simp_all
   next h =>
     have hlt : i < List.length bvs' := by omega
-    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD' _ _ hlt]
+    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD hlt]
 
 @[simp]
 lemma dec_enc_image : dec '' (enc '' S) = S := Function.LeftInverse.image_image dec_enc _
@@ -299,9 +299,9 @@ lemma deterministic_stepSet_subsingleton {M : NFA α σ} {S : Set σ} (hd : M.De
 
 lemma deterministic_eval_subsingleton {M : NFA α σ} (hd : M.Deterministic) w :
     M.eval w |>.Subsingleton := by
-  induction w using List.list_reverse_induction
-  case base => simp_all
-  case ind w a ih => simp; apply deterministic_stepSet_subsingleton <;> assumption
+  induction w using List.reverseRecOn
+  case nil => simp_all
+  case append_singleton w a ih => simp; apply deterministic_stepSet_subsingleton <;> assumption
 
 private noncomputable instance {M : NFA α σ} : Decidable M.Complete :=
   Classical.propDecidable _
@@ -347,9 +347,9 @@ lemma reduce_stepSet' {M : NFA α σ} (q : M.Reachable) (S1 : Set M.Reachable) (
   intros h; simp [←reduce_stepSet _ _ h]
 
 lemma reduce_eval {M : NFA α σ} {w} (q : σ) : (∃ hq, ⟨q, hq⟩ ∈ M.reduce.eval w) ↔ q ∈ M.eval w := by
-  induction w using List.list_reverse_induction generalizing q
-  case base => simp [reduce, Set.instMembership, Set.Mem]; intros hs; use .nil; simpa
-  case ind a w ih =>
+  induction w using List.reverseRecOn generalizing q
+  case nil => simp [reduce, Set.instMembership, Set.Mem]; intros hs; use .nil; simpa
+  case append_singleton a w ih =>
     simp [eval]; constructor
     · rintro ⟨hq, hs⟩
       apply reduce_stepSet' at hs
@@ -381,9 +381,9 @@ theorem reachable_sub_closed_set (M : NFA α σ) (S : Set σ) (hcl: M.closed_set
     M.Reachable ⊆ S := by
   rintro q ⟨w, hw⟩
   rcases hcl with ⟨hstart, hincl⟩
-  induction w using List.list_reverse_induction generalizing q
-  case base => aesop
-  case ind w a ih =>
+  induction w using List.reverseRecOn generalizing q
+  case nil => aesop
+  case append_singleton w a ih =>
     simp only [eval] at hw
     rw [evalFrom_append_singleton, mem_stepSet] at hw
     rcases hw with ⟨q', h1, h2⟩
@@ -425,9 +425,9 @@ lemma complete_stepSet_sink {M : NFA α σ} :
 @[simp]
 lemma complete_eval {M : NFA α σ} {w} (q : σ) :
     (.inl q ∈ M.complete.eval w) ↔ q ∈ M.eval w := by
-  induction w using List.list_reverse_induction generalizing q
-  case base => simp [complete, Set.instMembership, Set.Mem]
-  case ind a w ih =>
+  induction w using List.reverseRecOn generalizing q
+  case nil => simp [complete, Set.instMembership, Set.Mem]
+  case append_singleton a w ih =>
     simp only [eval]; constructor
     · simp; rintro _; rw [←complete_stepSet]; assumption; apply ih
     · simp; rintro _; rw [complete_stepSet]; assumption; apply ih
@@ -440,9 +440,9 @@ theorem complete_accepts (M : NFA α σ) : M.complete.accepts = M.accepts := by
 theorem complete_complete (M : NFA α σ) : M.complete.Complete := by
   intros w
   use (.inr ())
-  induction w using List.list_reverse_induction
-  case base => simp
-  case ind w a ih =>
+  induction w using List.reverseRecOn
+  case nil => simp
+  case append_singleton w a ih =>
     simp [eval]
     apply complete_stepSet_sink
     apply ih
@@ -478,9 +478,9 @@ lemma product_stepSet {M : NFA α σ} {N : NFA α ς} :
 @[simp]
 lemma product_eval {M : NFA α σ} {N : NFA α ς} {w} :
   (M.product accept? N).eval w = M.eval w ×ˢ N.eval w := by
-  unfold eval; induction w using List.list_reverse_induction
-  case base => ext; simp [product]
-  case ind w a ih => simp only [eval, evalFrom_append_singleton, product_stepSet, ih]
+  unfold eval; induction w using List.reverseRecOn
+  case nil => ext; simp [product]
+  case append_singleton w a ih => simp only [eval, evalFrom_append_singleton, product_stepSet, ih]
 
 @[simp]
 theorem inter_accepts (M : NFA α σ) (N : NFA α ς) :
@@ -572,9 +572,9 @@ lemma lift_stepSet (M : NFA (BitVec n) σ) (f : Fin n → Fin m) :
 @[simp]
 lemma lift_eval (M : NFA (BitVec n) σ) (f : Fin n → Fin m) :
     (M.lift f).eval w = M.eval (BitVecs'.transport f w) := by
-  induction w using List.list_reverse_induction
-  case base => simp [lift, BitVecs'.transport]
-  case ind w a ih => simp [BitVecs'.transport, ih]
+  induction w using List.reverseRecOn
+  case nil => simp [lift, BitVecs'.transport]
+  case append_singleton w a ih => simp [BitVecs'.transport, ih]
 
 @[simp]
 lemma lift_accepts (M : NFA (BitVec n) σ) (f : Fin n → Fin m) :
@@ -601,9 +601,9 @@ lemma proj_stepSet (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
 lemma proj_eval (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
     (M.proj f).eval w =
       ⋃ w' ∈ BitVecs'.transport f ⁻¹' {w}, M.eval w' := by
-  induction w using List.list_reverse_induction
-  case base => simp [proj, BitVecs'.transport]
-  case ind w a ih =>
+  induction w using List.reverseRecOn
+  case nil => simp [proj, BitVecs'.transport]
+  case append_singleton w a ih =>
     ext q; simp [BitVecs'.transport]; constructor
     · rintro ⟨a', htr, S, hrS, hqS⟩
       rcases hrS with ⟨q', rfl⟩
@@ -680,9 +680,9 @@ lemma bisimul_eval_one (hsim : Bisimul R M₁ M₂) :
 
 lemma bisimul_eval (hsim : Bisimul R M₁ M₂) w :
     R.set_eq Q₁ Q₂ → R.set_eq (M₁.evalFrom Q₁ w) (M₂.evalFrom Q₂ w) := by
-  induction w using List.list_reverse_induction generalizing Q₁ Q₂
-  case base => simp
-  case ind w a ih => rintro heq; simp [evalFrom_append_singleton, bisimul_eval_one, *]
+  induction w using List.reverseRecOn generalizing Q₁ Q₂
+  case nil => simp
+  case append_singleton w a ih => rintro heq; simp [evalFrom_append_singleton, bisimul_eval_one, *]
 
 theorem bisimul_accepts₁ :
     Bisimul R M₁ M₂ → M₁.accepts ≤ M₂.accepts := by
@@ -704,6 +704,35 @@ def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | 
 @[simp]
 lemma Std.HashSet.mem_toSet [BEq α] [Hashable α] (m : HashSet α) : x ∈ m.toSet ↔ x ∈ m := by rfl
 
+/- Upstream? Unfortunately we need Mathlib lemmas... -/
+@[simp]
+theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.pop := by
+  rcases a with ⟨l⟩
+  simp only [List.back?_toArray, List.pop_toArray, mem_toArray]
+  rintro hnd hlast hdl
+  apply List.dropLast_append_getLast? at hlast
+  rw [←hlast] at hnd
+  apply List.disjoint_of_nodup_append at hnd
+  exact hnd hdl (List.mem_singleton.mpr rfl)
+
+theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
+    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.size → a[i]? ≠ a[j]? :=
+  List.nodup_iff_getElem?_ne_getElem?
+
+theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
+  rcases a with ⟨l⟩
+  simp only [List.pop_toArray, mem_toArray]
+  exact List.mem_of_mem_dropLast
+
+theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by
+  rcases a with ⟨l⟩; simp only [mem_toArray, List.pop_toArray, List.back?_toArray]
+  induction l using List.reverseRecOn
+  case nil => simp
+  case append_singleton l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
+    List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.some.injEq]; tauto
+
+
+-- TODO: state in in pure Lean using `toList`, and decude this one
 theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
   {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :
     motive b ∅ →

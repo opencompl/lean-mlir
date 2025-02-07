@@ -11,14 +11,11 @@ import Mathlib.Computability.NFA
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Perm.Basic
-import Mathlib.Data.List.Perm.Lattice
-import Mathlib.Data.List.Perm.Subperm
 import Mathlib.Data.Rel
-import Mathlib.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
 import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.AutoStructs.NFA'
+import SSA.Experimental.Bits.AutoStructs.BundledNfa
 
 abbrev State := Nat
 
@@ -90,9 +87,9 @@ lemma RawCNFA.Simul.rel_preserved_letter {m : RawCNFA A} {M : NFA A Q} (hsim : m
 
 lemma RawCNFA.Simul.rel_preserved_word {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
     R.set_eq S₁ Q₁ → ∃ S₂, R.set_eq S₂ (M.evalFrom Q₁ w) := by
-  induction w using List.list_reverse_induction
-  case base => rintro h; use S₁; simp [h]
-  case ind w a ih =>
+  induction w using List.reverseRecOn
+  case nil => rintro h; use S₁; simp [h]
+  case append_singleton w a ih =>
     rintro h; obtain ⟨S₂, hR⟩ := ih h; clear ih
     simp only [NFA.evalFrom_append_singleton]
     exact hsim.rel_preserved_letter hR
@@ -113,7 +110,7 @@ Similarity is the greatest simulation
 -/
 def RawCNFA.Sim (m : RawCNFA A) (A : NFA A S) := ∃ R, RawCNFA.Simul m A R ⊤ ∅
 
-def sim_full_cod (m : RawCNFA A) (M : NFA A Q) (D : Set Q) (T : Set (Q × A × Q)) R :
+lemma sim_full_cod (m : RawCNFA A) (M : NFA A Q) (D : Set Q) (T : Set (Q × A × Q)) R :
     T = ∅ →
     m.Simul M R D T →
     R.codom = D →
@@ -174,8 +171,18 @@ def RawCNFA.addTrans (m : RawCNFA A) (a : A) (s s' : State) : RawCNFA A :=
   let ns := ns.insert s'
   { m with trans :=  m.trans.insert (s, a) ns }
 
+
 def RawCNFA.addManyTrans (m : RawCNFA A) (a : List A) (s s' : State) : RawCNFA A :=
   a.foldl (init := m) fun m a => m.addTrans a s s'
+
+@[simp]
+lemma RawCNFA.addManyTrans_nil (m : RawCNFA A) {s s' : State} :
+    m.addManyTrans [] s s' = m :=
+  rfl
+@[simp]
+lemma RawCNFA.addManyTrans_cons (m : RawCNFA A) {s s' : State} :
+    m.addManyTrans (a::as) s s' = (m.addTrans a s s').addManyTrans as s s' :=
+  rfl
 
 def RawCNFA.addInitial (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with initials := m.initials.insert s }
@@ -194,6 +201,10 @@ lemma RawCNFA.addInitial_tr {m : RawCNFA A} : s' ∈ (m.addInitial s'').tr s a �
 
 def RawCNFA.addFinal (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with finals := m.finals.insert s }
+
+@[simp]
+lemma RawCNFA.addFinal_tr {m : RawCNFA A} : s' ∈ (m.addFinal s'').tr s a ↔ s' ∈ m.tr s a := by
+  rfl
 
 def RawCNFA.createSink (m : RawCNFA A) : State × RawCNFA A :=
   let (s, m) := m.newState
@@ -235,6 +246,14 @@ lemma states_addFinal (m : RawCNFA A) (s' : State) :
 lemma states_addTrans (m : RawCNFA A) (a : A) (s1 s2 : State) :
     (m.addTrans a s1 s2).states = m.states := by
   rfl
+
+@[simp, aesop 50% unsafe]
+lemma states_addManyTrans (m : RawCNFA A) (as : List A) (s1 s2 : State) :
+    (m.addManyTrans as s1 s2).states = m.states := by
+  simp [RawCNFA.addManyTrans]
+  let motive (m' : RawCNFA A) := m'.states = m.states
+  suffices h : motive (m.addManyTrans as s1 s2) by exact h
+  apply List.foldlRecOn <;> simp_all [motive]
 
 @[simp, aesop 50% unsafe]
 lemma addTrans_initials (m : RawCNFA A) (a : A) (s1 s2 : State) :
@@ -294,6 +313,15 @@ lemma newState_eq (m : RawCNFA A) :
 lemma mem_states_newState_self (m : RawCNFA A) :
     m.newState.1 ∈ m.newState.2.states := by
   simp_all [RawCNFA.newState, RawCNFA.states]
+
+@[simp]
+lemma addTrans_stateMax {m : RawCNFA A} : (m.addTrans a s s').stateMax = m.stateMax := rfl
+@[simp]
+lemma addFinal_stateMax {m : RawCNFA A} : (m.addFinal s).stateMax = m.stateMax := rfl
+@[simp]
+lemma addInitial_stateMax {m : RawCNFA A} : (m.addInitial s).stateMax = m.stateMax := rfl
+
+
 /--
 An automaton is well-formed if all the states it mentions are valid, in that they are `< stateMax`.
 -/
@@ -388,6 +416,12 @@ lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈
         simp_all
     · apply hwf.trans_tgt_lt hsome; assumption
 
+@[simp, aesop 50% unsafe]
+lemma wf_addManyTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s as s'
+  (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
+    (m.addManyTrans as s s').WF := by
+  induction as generalizing m <;> simp_all
+
 @[simp]
 lemma wf_createSink [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) : m.createSink.2.WF := by
   let motive (m' : RawCNFA A) := m'.WF ∧ m.stateMax ∈ m'.states
@@ -455,6 +489,34 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
 
 instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
   default := RawCNFA.empty
+
+structure RawCNFA.SimulFun (m : RawCNFA A) (M : NFA A Q) (f : m.states ≃ Q)  where
+  accept {q} : ((f.invFun q).val ∈ m.finals ↔ q ∈ M.accept)
+  initial {q} : q ∈ M.start ↔ (f.invFun q).val ∈ m.initials
+  trans_match {a q q'} : q' ∈ M.step q a ↔ (f.invFun q').val ∈ m.tr (f.invFun q) a
+
+lemma simulFun_sim_raw [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) f :
+    m.SimulFun M f → m.Sim M := by
+  rintro hsim; use (λ s q ↦ (f.invFun q).val = s); constructor
+  · rintro s q rfl; exact hsim.accept
+  · rintro s hin; use f ⟨s, hwf.initials_lt hin⟩
+    simp only [Equiv.invFun_as_coe, Equiv.symm_apply_apply, and_true]
+    obtain heq : s = (f.invFun (f ⟨s, hwf.initials_lt hin⟩)) := by simp
+    rw [heq, ←hsim.initial] at hin; assumption
+  · rintro q hin; rw [hsim.initial] at hin; simp_all
+  · rintro s s' a q rfl htr
+    have hs' := hwf.trans_tgt_lt' _ _ _ htr
+    obtain heq : s' = (f.invFun (f ⟨s', hs'⟩)) := by simp
+    rw [heq, ←hsim.trans_match] at htr
+    use (f ⟨s', hs'⟩)
+    clear heq; simp_all
+  · rintro s a q q' rfl hst - -
+    rw [hsim.trans_match] at hst; simp_all
+
+lemma simulFun_sim {m : CNFA n} f :
+    m.m.SimulFun M.M f → m.Sim M := by
+  rintro hsim
+  apply simulFun_sim_raw m.wf f hsim
 
 end basics
 

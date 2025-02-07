@@ -246,7 +246,7 @@ lemma add_eq_propagate (x y : BitStream) :
   | 0 =>
     simp  [HAdd.hAdd, Add.add, BitStream.add, BitStream.addAux, BitVec.adcb]
   | 1 =>
-    simp [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add, addAux, addAux, propagate, propagateAux,  -BitVec.add_eq, -Nat.add_eq, -Nat.add_def]
+    simp [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add, addAux, addAux, propagate, propagateAux,  -BitVec.add_eq, -Nat.add_eq]
   | n+2 =>
     simp only [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add
       , BitVec.adcb, addAux, addAux_eq_propagateCarry, propagate_succ, Bool.or_assoc]

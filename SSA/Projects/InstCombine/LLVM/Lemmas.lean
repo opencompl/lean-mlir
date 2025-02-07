@@ -1,5 +1,4 @@
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Mathlib.Tactic
 
 /-- Note that this assumes that the input and output bitwidths are the same,
 which is by far the common case. -/

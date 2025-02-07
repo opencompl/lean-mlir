@@ -29,4 +29,4 @@ import SSA.Projects.LeanMlirCommon.LeanMlirCommon
 -- ============
 
 -- Bit-fiddling decision procedure
--- import SSA.Experimental.Bits.Decide
+import SSA.Experimental.Bits.Fast
