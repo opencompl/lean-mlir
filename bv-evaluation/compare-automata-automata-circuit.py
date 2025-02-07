@@ -11,6 +11,8 @@ import os
 import re
 import sqlite3
 import logging
+import random
+from tabulate import tabulate
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
@@ -138,7 +140,15 @@ def process(db : str, jobs: int, prod_run : bool):
     con.close()
 
     logging.info(f"Clearing git state of '{BENCHMARK_DIR}' with 'git checkout --'")
-    subprocess.Popen(f'git checkout -- {BENCHMARK_DIR}', cwd=ROOT_DIR, shell=True).wait()
+    gco = subprocess.Popen(f'git checkout -- {BENCHMARK_DIR}', cwd=ROOT_DIR, shell=True)
+    gco.wait()
+    assert gco.returncode == 0, f"git checkout -- {BENCHMARK_DIR} should succeed."
+
+
+    logging.info(f"Running a 'lake exe cache get && lake build'.")
+    lake = subprocess.Popen(f'lake exe cache get && lake build', cwd=ROOT_DIR, shell=True)
+    lake.wait()
+    assert lake.returncode == 0, f"lake build should succeed before running evaluation."
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
@@ -167,14 +177,88 @@ def setup_logging(db_name : str):
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
+def analyze_errors(cur : sqlite3.Cursor):
+    """Tabulate all uninterpreted functions"""
+    logging.info("Analyzing uninterpreted functions")
+    rows = cur.execute("""
+        SELECT fileTitle, thmName, goalStr, errMsg FROM tests WHERE tactic = "circuit" AND status = "err"
+    """)
+
+    KEY_UNTRUE = "failed to prove goal  since decideIfZerosM established that theorem is not true"
+    KEY_MULTIPLE_WIDTHS = "found multiple bitvector widths in the target"
+    KEY_UNKNOWN_GOAL_STATE_FORMAT = "expected predicate over bitvectors (no quantification)  found"
+    KEY_SYMBOLIC_SHIFT_LEFT = "expected shiftLeft by natural number  found symbolic shift amount"
+    KEY_UNKNOWN_BOOLEAN_EQUALITY = "only boolean conditionals allowed are 'bv.slt bv = true'  'bv.sle bv = true'. Found"
+    KEY_UNKNOWN_BOOLEAN_DISEQUALITY = "Expected typeclass to be 'BitVec w' / 'Nat'  found '   Bool' in"
+
+    str2explanation = {
+      KEY_UNTRUE : "theorems that are established as untrue",
+      KEY_MULTIPLE_WIDTHS : "theorems that have multiple widths",
+      KEY_UNKNOWN_GOAL_STATE_FORMAT : "theorems that have unknown goal state format",
+      KEY_SYMBOLIC_SHIFT_LEFT : "theorems that have symbolic left shift amount",
+      KEY_UNKNOWN_BOOLEAN_EQUALITY : "unknown boolean equality",
+      KEY_UNKNOWN_BOOLEAN_DISEQUALITY : "unknown boolean disequality",
+    }
+    str2matches = {
+      KEY_UNTRUE : [],
+      KEY_MULTIPLE_WIDTHS : [],
+      KEY_UNKNOWN_GOAL_STATE_FORMAT : [],
+      KEY_SYMBOLIC_SHIFT_LEFT : [],
+      KEY_UNKNOWN_BOOLEAN_EQUALITY : [],
+      KEY_UNKNOWN_BOOLEAN_DISEQUALITY : [],
+    }
+
+
+    HEADERS = ["errMsg", "goalStr", "thmName", "fileTitle"]
+    HEADER_COL_WIDTHS = [40, 40, 50, 50]
+    for row in rows:
+        (fileTitle, thmName, goalStr, errMsg) = row
+        matched = False
+        for s in str2matches:
+            if s in errMsg:
+                str2matches[s].append((errMsg, goalStr, thmName, fileTitle))
+                matched = True
+                break
+        if not matched:
+            print(errMsg)
+
+    for s in str2matches:
+        NEXAMPLES = 5
+        print(f"{str2explanation[s]} (#{len(str2matches[s])}):")
+        print(tabulate(str2matches[s][:NEXAMPLES], headers=HEADERS, tablefmt="grid", maxcolwidths=HEADER_COL_WIDTHS))
+
+
+def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
+    """Tabulate all uninterpreted functions"""
+    logging.info("Analyzing uninterpreted functions")
+    rows = cur.execute("""
+        SELECT fileTitle, thmName, goalStr, errMsg FROM tests WHERE tactic = "no_uninterpreted" AND status = "err"
+    """)
+    rows = list(rows)
+    for row in rows:
+        (fileTitle, thmName, goalStr, errMsg) = row
+        print(errMsg)
+    print(f"#problems with uninterpreted functions: {len(rows)}")
+
+# analyze the sqlite db.
+def analyze(db : str):
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    analyze_uninterpreted_functions(cur)
+    #analyze_errors(cur)
+    pass
+
+
 if __name__ == "__main__":
   current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
   nproc = os.cpu_count()
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
-  parser.add_argument('--db', default=f'automata-circuit-{current_time}.sqlite3', help='path to sqlite3 database')
+  default_db = f'automata-circuit-{current_time}.sqlite3'
+  parser.add_argument('--db', default=default_db, help='path to sqlite3 database')
   parser.add_argument('-j', '--jobs', type=int, default=nproc // 3)
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
+  parser.add_argument('--analyze', action='store_true', help="analyze the data of the db")
   args = parser.parse_args()
   setup_logging(args.db)
   logging.info(args)
@@ -182,6 +266,11 @@ if __name__ == "__main__":
     process(args.db, args.jobs, prod_run=False)
   elif args.prodrun:
     process(args.db, args.jobs, prod_run=True)
+  elif args.analyze:
+    if args.db == default_db:
+      logging.error("expected additional argument '--db <path/to/db/to/analyze'")
+      exit(1)
+    analyze(args.db)
   else:
     logging.error("expected --run or --prodrun.")
 
