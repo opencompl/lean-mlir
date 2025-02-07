@@ -11,6 +11,8 @@ import os
 import re
 import sqlite3
 import logging
+import random
+from tabulate import tabulate
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
@@ -175,8 +177,62 @@ def setup_logging(db_name : str):
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
+def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
+    """Tabulate all uninterpreted functions"""
+    logging.info("Analyzing uninterpreted functions")
+    rows = cur.execute("""
+        SELECT fileTitle, thmName, goalStr, errMsg FROM tests WHERE tactic = "circuit" AND status = "err"
+    """)
+
+    KEY_UNTRUE = "failed to prove goal  since decideIfZerosM established that theorem is not true"
+    KEY_MULTIPLE_WIDTHS = "found multiple bitvector widths in the target"
+    KEY_UNKNOWN_GOAL_STATE_FORMAT = "expected predicate over bitvectors (no quantification)  found"
+    KEY_SYMBOLIC_SHIFT_LEFT = "expected shiftLeft by natural number  found symbolic shift amount"
+    KEY_UNKNOWN_BOOLEAN_EQUALITY = "only boolean conditionals allowed are 'bv.slt bv = true'  'bv.sle bv = true'. Found"
+    KEY_UNKNOWN_BOOLEAN_DISEQUALITY = "Expected typeclass to be 'BitVec w' / 'Nat'  found '   Bool' in"
+
+    str2explanation = {
+      KEY_UNTRUE : "theorems that are established as untrue",
+      KEY_MULTIPLE_WIDTHS : "theorems that have multiple widths",
+      KEY_UNKNOWN_GOAL_STATE_FORMAT : "theorems that have unknown goal state format",
+      KEY_SYMBOLIC_SHIFT_LEFT : "theorems that have symbolic left shift amount",
+      KEY_UNKNOWN_BOOLEAN_EQUALITY : "unknown boolean equality",
+      KEY_UNKNOWN_BOOLEAN_DISEQUALITY : "unknown boolean disequality",
+    }
+    str2matches = {
+      KEY_UNTRUE : [],
+      KEY_MULTIPLE_WIDTHS : [],
+      KEY_UNKNOWN_GOAL_STATE_FORMAT : [],
+      KEY_SYMBOLIC_SHIFT_LEFT : [],
+      KEY_UNKNOWN_BOOLEAN_EQUALITY : [],
+      KEY_UNKNOWN_BOOLEAN_DISEQUALITY : [],
+    }
+
+
+    HEADERS = ["fileTitle", "thmName", "goalStr", "errMsg"]
+    HEADER_COL_WIDTHS = [40, 40, 50, 50]
+    for row in rows:
+        (fileTitle, thmName, goalStr, errMsg) = row
+        matched = False
+        for s in str2matches:
+            if s in errMsg:
+                str2matches[s].append(row)
+                matched = True
+                break
+        if not matched:
+            print(errMsg)
+
+    for s in str2matches:
+        NEXAMPLES = 5
+        print(f"{str2explanation[s]} (#{len(str2matches[KEY_UNTRUE])}):")
+        print(tabulate(str2matches[s][:NEXAMPLES], headers=HEADERS, tablefmt="grid", maxcolwidths=HEADER_COL_WIDTHS))
+
+
 # analyze the sqlite db.
 def analyze(db : str):
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    analyze_uninterpreted_functions(cur)
     pass
 
 
