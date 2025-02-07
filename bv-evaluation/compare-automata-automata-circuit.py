@@ -177,7 +177,7 @@ def setup_logging(db_name : str):
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
-def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
+def analyze_errors(cur : sqlite3.Cursor):
     """Tabulate all uninterpreted functions"""
     logging.info("Analyzing uninterpreted functions")
     rows = cur.execute("""
@@ -224,15 +224,28 @@ def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
 
     for s in str2matches:
         NEXAMPLES = 5
-        print(f"{str2explanation[s]} (#{len(str2matches[KEY_UNTRUE])}):")
+        print(f"{str2explanation[s]} (#{len(str2matches[s])}):")
         print(tabulate(str2matches[s][:NEXAMPLES], headers=HEADERS, tablefmt="grid", maxcolwidths=HEADER_COL_WIDTHS))
 
+
+def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
+    """Tabulate all uninterpreted functions"""
+    logging.info("Analyzing uninterpreted functions")
+    rows = cur.execute("""
+        SELECT fileTitle, thmName, goalStr, errMsg FROM tests WHERE tactic = "no_uninterpreted" AND status = "err"
+    """)
+    rows = list(rows)
+    for row in rows:
+        (fileTitle, thmName, goalStr, errMsg) = row
+        print(errMsg)
+    print(f"#problems with uninterpreted functions: {len(rows)}")
 
 # analyze the sqlite db.
 def analyze(db : str):
     con = sqlite3.connect(db)
     cur = con.cursor()
     analyze_uninterpreted_functions(cur)
+    #analyze_errors(cur)
     pass
 
 
