@@ -5,7 +5,6 @@ import SSA.Projects.CIRCT.Stream.WeakBisim
 
 namespace Comb
 
-/- most inputs for the following ops should be variadic. binary for now. -/
 
 def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.add (0#w) l
@@ -13,6 +12,8 @@ def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
 def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.and (0#w) l
 
+/-- Concatenate a list of bitvecs `xs`, where the length of bitvec xs[i] is given by
+  element ls[i] in a list of nat `ls`-/
 def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
   match (xs) with
   | (.nil) => 0#0
