@@ -320,9 +320,9 @@ macro "bv_bench": tactic =>
             "bv_automata_circuit_lean" : (bv_automata_circuit; done),
             "bv_normalize_automata_circuit_lean" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done),
             -- Cadical based, currently unverified.
-            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_circuit (config := { backend := .cadical 0 }); done),
-            "bv_automata_circuit_cadical" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
-            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical 0 })); done),
+            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
+            "bv_automata_circuit_cadical" : (bv_automata_circuit (config := { backend := .cadical /- maxIter-/ 4 }); done),
+            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4})); done),
             -- MBA algorithm.
             "bv_mba" : (bv_mba; done),
             "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done),
@@ -346,7 +346,7 @@ macro "bv_bench_automata": tactic =>
         all_goals (
           tac_bench (config := { outputType := .csv }) [
             "presburger" : (bv_automata_classic; done),
-            "circuit" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
+            "circuit" : (bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
             "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
             "width_ok" : (bv_automata_fragment_width_legal),
             "reflect_ok" : (bv_automata_fragment_reflect),
