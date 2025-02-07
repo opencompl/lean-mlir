@@ -209,14 +209,14 @@ def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
     }
 
 
-    HEADERS = ["fileTitle", "thmName", "goalStr", "errMsg"]
+    HEADERS = ["errMsg", "goalStr", "thmName", "fileTitle"]
     HEADER_COL_WIDTHS = [40, 40, 50, 50]
     for row in rows:
         (fileTitle, thmName, goalStr, errMsg) = row
         matched = False
         for s in str2matches:
             if s in errMsg:
-                str2matches[s].append(row)
+                str2matches[s].append((errMsg, goalStr, thmName, fileTitle))
                 matched = True
                 break
         if not matched:
