@@ -127,10 +127,10 @@ deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
-| nat (n : Nat): Ty -- A very unfair trick
+| nat (n : Nat): Ty
 | bool : Ty
 | list (w : Nat) : Ty -- list of bitvecs with the same length
-| hList (l : List Nat) : Ty -- list of bitvecs with the same length
+| hList (l : List Nat) : Ty -- dependent type bitvec
 deriving Inhabited, DecidableEq, Repr
 
 open TyDenote (toType) in
