@@ -138,7 +138,15 @@ def process(db : str, jobs: int, prod_run : bool):
     con.close()
 
     logging.info(f"Clearing git state of '{BENCHMARK_DIR}' with 'git checkout --'")
-    subprocess.Popen(f'git checkout -- {BENCHMARK_DIR}', cwd=ROOT_DIR, shell=True).wait()
+    gco = subprocess.Popen(f'git checkout -- {BENCHMARK_DIR}', cwd=ROOT_DIR, shell=True)
+    gco.wait()
+    assert gco.returncode == 0, f"git checkout -- {BENCHMARK_DIR} should succeed."
+
+
+    logging.info(f"Running a 'lake exe cache get && lake build'.")
+    lake = subprocess.Popen(f'lake exe cache get && lake build', cwd=ROOT_DIR, shell=True)
+    lake.wait()
+    assert lake.returncode == 0, f"lake build should succeed before running evaluation."
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
@@ -167,14 +175,21 @@ def setup_logging(db_name : str):
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
+# analyze the sqlite db.
+def analyze(db : str):
+    pass
+
+
 if __name__ == "__main__":
   current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
   nproc = os.cpu_count()
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
-  parser.add_argument('--db', default=f'automata-circuit-{current_time}.sqlite3', help='path to sqlite3 database')
+  default_db = f'automata-circuit-{current_time}.sqlite3'
+  parser.add_argument('--db', default=default_db, help='path to sqlite3 database')
   parser.add_argument('-j', '--jobs', type=int, default=nproc // 3)
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
+  parser.add_argument('--analyze', action='store_true', help="analyze the data of the db")
   args = parser.parse_args()
   setup_logging(args.db)
   logging.info(args)
@@ -182,6 +197,11 @@ if __name__ == "__main__":
     process(args.db, args.jobs, prod_run=False)
   elif args.prodrun:
     process(args.db, args.jobs, prod_run=True)
+  elif args.analyze:
+    if args.db == default_db:
+      logging.error("expected additional argument '--db <path/to/db/to/analyze'")
+      exit(1)
+    analyze(args.db)
   else:
     logging.error("expected --run or --prodrun.")
 
