@@ -308,6 +308,7 @@ macro "bv_bench": tactic =>
             "bv_ring" : (bv_ring; done),
             "bv_of_bool" : (bv_of_bool; done),
             "bv_omega" : (bv_omega; done),
+            -- Automata, Classic.
             "bv_automata_classic_prop" : (bool_to_prop; bv_automata_classic; done),
             "bv_automata_classic" : (bv_automata_classic; done),
             "bv_normalize_automata_classic" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
@@ -346,7 +347,7 @@ macro "bv_bench_automata": tactic =>
         all_goals (
           tac_bench (config := { outputType := .csv }) [
             "presburger" : (bv_automata_classic; done),
-            "circuit" : (bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
+            "circuit" : (bv_automata_circuit (config := { backend := .cadical 0 }); done),
             "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
             "width_ok" : (bv_automata_fragment_width_legal),
             "reflect_ok" : (bv_automata_fragment_reflect),
