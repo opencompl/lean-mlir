@@ -1703,7 +1703,7 @@ def mkCircuit0K
     let cK := mkCircuitK (iter' + 1) fsm
     cK ||| c0K
 
-/-- Make the circuit for the inducitive invariant -/
+/-- Make the circuit for the inducitive invariant. -/
 def mkCircuitInductiveInvariantK
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat)
@@ -1712,13 +1712,21 @@ def mkCircuitInductiveInvariantK
   | 0 => mkCircuitK 0 fsm
   | iter' + 1 =>
     -- Either we have the previous safety properties...
-    let cSafeK := mkCircuitInductiveInvariantK iter' fsm
+    let cKSucc := mkCircuitK (iter' + 1) fsm
     -- Or, being safe upto iter', shows that we are safe at iter' + 1
-    let c0K := mkCircuit0K (iter' + 1) fsm |>.map (Vars.succ)
-    sorry
+    let c0KAdapted := mkCircuit0K  iter' fsm |> Circuit.mapSucc
+    -- c = 0 => c' = 0
+    -- !c => !c'
+    -- !!c || !c'
+    -- c || !c'
+    -- c' => c
+    let safetyPropertyCur := c0KAdapted ||| ~~~ cKSucc
+    -- Safety property upto K
+    let safetyPropertyK := mkCircuitInductiveInvariantK  iter' fsm |> Circuit.mapSucc
+    safetyPropertyCur ||| safetyPropertyK
 
 /-- Make the circuit for the inductive base case -/
-def mkCircuitInductiveBaseCase 
+def mkCircuitInductiveBaseCase
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat)
     (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) := sorry
