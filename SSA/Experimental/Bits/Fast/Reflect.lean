@@ -1691,18 +1691,54 @@ def mkCircuitK {arity : Type _}
           | .inr x => .inputs <| Inputs.latest x
         | .inputs i => .var true (.inputs (i.castLe (by omega)))
 
-
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
-def mkCircuitSafetyPropertyK
+def mkCircuit0K
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat)
     (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) :=
   match iter with
   | 0 => mkCircuitK 0 fsm
   | iter' + 1 =>
-    let c0K := mkCircuitSafetyPropertyK iter' fsm |>.map (Vars.succ)
+    let c0K := mkCircuit0K iter' fsm |>.map (Vars.succ)
     let cK := mkCircuitK (iter' + 1) fsm
     cK ||| c0K
+
+/-- Make the circuit for the inducitive invariant -/
+def mkCircuitInductiveInvariantK
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat)
+    (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) :=
+  match iter with
+  | 0 => mkCircuitK 0 fsm
+  | iter' + 1 =>
+    -- Either we have the previous safety properties...
+    let cSafeK := mkCircuitInductiveInvariantK iter' fsm
+    -- Or, being safe upto iter', shows that we are safe at iter' + 1
+    let c0K := mkCircuit0K (iter' + 1) fsm |>.map (Vars.succ)
+    sorry
+
+/-- Make the circuit for the inductive base case -/
+def mkCircuitInductiveBaseCase 
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat)
+    (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) := sorry
+
+/--
+Main theorem: If safety invariant holds for K steps, and we know that safety for K implies safety for K+1,
+then we have established our inductive invariant.
+
+The two certificates can be computed by invoking 'bv_decide' on Circuit.eval.
+
+Modeled after 'decideIfZeroesAuxCorrect': 
+-/
+
+theorem safetyPropertyImpliesAllZeroes {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (k : Nat)
+    (p : FSM arity)
+    (hbase : Circuit.always_false (mkCircuitInductiveBaseCase k p))
+    (hind : Circuit.always_false (mkCircuitInductiveInvariantK k p)) :
+    ∀ n x, p.eval x n = false := by sorry
 
 @[nospecialize]
 partial def decideIfZeroesAuxCadical {arity : Type _}
