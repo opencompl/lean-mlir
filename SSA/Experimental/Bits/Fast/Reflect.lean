@@ -322,7 +322,7 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
     specialize ha w vars
     rcases w with rfl | w
     · simp
-    · simpreflect
+    · simp
       rw [BitVec.getLsbD_shiftConcat]
       rw [BitVec.getLsbD_concat]
       simp [hi]
@@ -1590,7 +1590,7 @@ An inductive type representing the variables in the unrolled FSM circuit,
 where we unroll for 'n' steps.
 -/
 structure Inputs (ι : Type) (n : Nat) : Type  where
-  ix : Fin n
+  ix : Fin (n + 1)
   input : ι
 deriving DecidableEq, Hashable
 
@@ -1610,12 +1610,12 @@ def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
   input := f i.input
 
 def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
-    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } := 
-  let ixs : Finset (Fin n) := Finset.univ
+    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } :=
+  let ixs : Finset (Fin (n + 1)) := Finset.univ
   let inputs : Finset ι := Finset.univ
-  let out := ixs.biUnion 
+  let out := ixs.biUnion
       (fun ix => inputs.map ⟨fun input => Inputs.mk ix input, by intros a b; simp⟩)
-  ⟨out, by 
+  ⟨out, by
     intros i
     obtain ⟨ix, input⟩ := i
     simp [out]
@@ -1637,6 +1637,7 @@ def format (f : ι → Format) (is : Inputs ι n) : Format :=
 end Inputs
 
 
+/-- Given 'n', we have iterated `0 ≤ n` times. -/
 inductive Vars (σ : Type) (ι : Type) (n : Nat)
 | state (s : σ)
 | inputs (is : Inputs ι n)
@@ -1705,7 +1706,7 @@ structure Vars.EnvMatchesStream {arity : Type _} [DecidableEq arity] [Fintype ar
   (envVars: Vars fsm.α arity iter → Bool)
   (envStream : arity → BitStream) : Prop where
   hStateInitCarry : ∀ (s : fsm.α), envVars (.state s) = fsm.initCarry s
-  hInputsEval : ∀ (a : arity) (i : Nat) (hi : i < iter), envStream a i = envVars (.inputs { input := a, ix := ⟨i, hi⟩ })
+  hInputsEval : ∀ (a : arity) (i : Nat) (hi : i ≤ iter), envStream a i = envVars (.inputs { input := a, ix := ⟨i, by omega⟩ })
 
 /-- If the environments match, then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm` -/
 theorem eval_mkCircuitK {arity : Type _}
@@ -1715,7 +1716,14 @@ theorem eval_mkCircuitK {arity : Type _}
     {envVars : Vars fsm.α arity iter → Bool}
     {envStream : arity → BitStream}
     (hEnv : Vars.EnvMatchesStream envVars envStream):
-  (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by sorry
+  (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
+  induction iter
+  case zero =>
+    obtain ⟨hState, hInputs⟩ := hEnv
+    simp
+    sorry
+  case succ i ih => sorry
+
 
 
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
