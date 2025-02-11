@@ -322,7 +322,7 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
     specialize ha w vars
     rcases w with rfl | w
     · simp
-    · simp
+    · simpreflect
       rw [BitVec.getLsbD_shiftConcat]
       rw [BitVec.getLsbD_concat]
       simp [hi]
@@ -1642,6 +1642,7 @@ inductive Vars (σ : Type) (ι : Type) (n : Nat)
 | inputs (is : Inputs ι n)
 deriving DecidableEq, Hashable
 
+
 instance [DecidableEq σ] [DecidableEq ι] [Fintype σ] [Fintype ι] : Fintype (Vars σ ι n) where
   elems :=
     let ss : Finset σ := Finset.univ
@@ -1691,6 +1692,32 @@ def mkCircuitK {arity : Type _}
           | .inr x => .inputs <| Inputs.latest x
         | .inputs i => .var true (.inputs (i.castLe (by omega)))
 
+@[simp]
+theorem mkCircuitK_zero_eq {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) : mkCircuitK 0 fsm = (fsm.nextBitCirc none).fst.map Vars.state := rfl
+
+/--
+`Vars.EnvMatchesStream envVars envStream`
+say that the `envVars` matches the `envStream` upto the number of iterations `iter`.
+-/
+structure Vars.EnvMatchesStream {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity} {iter : Nat}
+  (envVars: Vars fsm.α arity iter → Bool)
+  (envStream : arity → BitStream) : Prop where
+  hStateInitCarry : ∀ (s : fsm.α), envVars (.state s) = fsm.initCarry s
+  hInputsEval : ∀ (a : arity) (i : Nat) (hi : i < iter), envStream a i = envVars (.inputs { input := a, ix := ⟨i, hi⟩ })
+
+/-- If the environments match, then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm` -/
+theorem eval_mkCircuitK {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat)
+    (fsm : FSM arity)
+    {envVars : Vars fsm.α arity iter → Bool}
+    {envStream : arity → BitStream}
+    (hEnv : Vars.EnvMatchesStream envVars envStream):
+  (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by sorry
+
+
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
 def mkCircuit0K
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1729,15 +1756,40 @@ def mkCircuitInductiveInvariantK
 def mkCircuitInductiveBaseCase
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat)
-    (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) := sorry
+    (fsm : FSM arity) : Circuit (Vars Empty arity iter) :=
+  -- Note that this is *stronger* than what the algorithm does.
+  -- It uses the loop invariant that since it's checked upto $k$,
+  -- It only needs to check the $k+1$ th state.
+  -- Here, since we are decoupled, we re-check.
+  mkCircuit0K iter fsm |>.assignVars fun v _hv =>
+    match v with
+    | .state a => .inr (fsm.initCarry a) -- assign init state
+    | .inputs is => .inl (.inputs is)
 
+theorem eval_false_of_mkCircuitInductiveBaseCase_always_false
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (k : Nat)
+    (p : FSM arity)
+    (hbase : Circuit.always_false (mkCircuitInductiveBaseCase k p))
+    (hind : Circuit.always_false (mkCircuitInductiveInvariantK k p)) :
+    ∀ (x : arity → BitStream) (n : Nat) (hn : n ≤ k), p.eval x n = false := by sorry
+
+
+theorem eval_false_of_eval_false_of_always_false_mkCircuitInductiveInvariantK
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (k : Nat)
+    (p : FSM arity)
+    (hind : Circuit.always_false (mkCircuitInductiveInvariantK k p)) :
+    ∀ (x : arity → BitStream) (n : Nat)
+      (hind : ∀ (i : Nat) (hi : i ≤ k), p.eval x (n + i) = false),
+    p.eval x (n + k + 1) = false := by sorry
 /--
 Main theorem: If safety invariant holds for K steps, and we know that safety for K implies safety for K+1,
 then we have established our inductive invariant.
 
 The two certificates can be computed by invoking 'bv_decide' on Circuit.eval.
 
-Modeled after 'decideIfZeroesAuxCorrect': 
+Modeled after 'decideIfZeroesAuxCorrect':
 -/
 
 theorem safetyPropertyImpliesAllZeroes {arity : Type _}
