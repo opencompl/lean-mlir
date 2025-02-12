@@ -1669,6 +1669,9 @@ def Vars.succ {σ ι : Type} {n : Nat} (v : Vars σ ι n) : Vars σ ι (n + 1) :
 /- Check if circuit is unsatisfiable -/
 def Circuit.always_false [DecidableEq α] (c : Circuit α) : Bool := (~~~ c).always_true
 
+theorem Circuit.always_false_iff [DecidableEq α] (c : Circuit α) :
+  c.always_false ↔ True := sorry
+
 /-- Convert a Circuit with 'Vars α arity iterm' to a circuit with 'Vars α arity (iter + 1)' -/
 def Circuit.mapSucc {α arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1727,18 +1730,20 @@ theorem eval_mkCircuitK {arity : Type _}
     {envStream : arity → BitStream}
     (hEnv : Vars.EnvMatchesStream envVars envStream):
   (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
-  induction iter
+  induction iter generalizing envStream
   case zero =>
     obtain ⟨hState, hInputs⟩ := hEnv
-    simp [FSM.eval, FSM.nextBit, Circuit.eval_map]
+    simp only [mkCircuitK_zero_eq, Circuit.eval_map, FSM.eval, FSM.nextBit, FSM.carry_zero]
     congr
     ext sum
     rcases sum with state | var
     · simp [hState]
     · simp [hInputs, Inputs.latest]
-  case succ i ih => sorry
-
-
+  case succ i ih =>
+    rw [mkCircuitK]
+    -- Need a theorem about FSM.eval in terms of FSM.succ
+    rw [Circuit.eval_bind]
+    sorry
 
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
 def mkCircuit0K
