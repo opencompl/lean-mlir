@@ -1744,20 +1744,15 @@ def mkCircuitInductiveInvariantK
     (iter : Nat)
     (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) :=
   match iter with
-  | 0 => mkCircuitK 0 fsm
+  | 0 => .fals
   | iter' + 1 =>
-    -- Either we have the previous safety properties...
-    let cKSucc := mkCircuitK (iter' + 1) fsm
+    -- Either we are safe upto K
+    let safetyPropertyK := mkCircuitInductiveInvariantK  iter' fsm |> Circuit.mapSucc
     -- Or, being safe upto iter', shows that we are safe at iter' + 1
     let c0KAdapted := mkCircuit0K  iter' fsm |> Circuit.mapSucc
-    -- c = 0 => c' = 0
-    -- !c => !c'
-    -- !!c || !c'
-    -- c || !c'
-    -- c' => c
+    let cKSucc := mkCircuitK (iter' + 1) fsm
+    -- If property holds for [0..K], then it holds for (k+1)
     let safetyPropertyCur := c0KAdapted ||| ~~~ cKSucc
-    -- Safety property upto K
-    let safetyPropertyK := mkCircuitInductiveInvariantK  iter' fsm |> Circuit.mapSucc
     safetyPropertyCur ||| safetyPropertyK
 
 /-- Make the circuit for the inductive base case -/
@@ -1813,8 +1808,8 @@ partial def decideIfZeroesAuxCadical {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (p : FSM arity)
-    (c0K : Circuit (Vars p.α arity iter))
-    (cK : Circuit (Vars p.α arity iter))
+    (c0K : Circuit (Vars p.α arity iter)) -- [0..k]
+    (cK : Circuit (Vars p.α arity iter)) -- cK
     (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
   logInfo s!"## K-induction (iter {iter})"
   if iter ≥ maxIter && maxIter != 0 then
@@ -1835,47 +1830,25 @@ partial def decideIfZeroesAuxCadical {arity : Type _}
   else
     IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
     -- circuit of the output at state (k+1)
-    let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
-      cK.bind fun v =>
-        match v with
-        | .state a => p.nextBitCirc (some a) |>.map fun v =>
-          match v with
-          | .inl a => .state a
-          | .inr x => .inputs <| Inputs.latest x
-        | .inputs i => .var true (.inputs (i.castLe (by omega)))
+    let cKSucc : Circuit (Vars p.α arity (iter + 1)) := mkCircuitK (iter := _) p
     -- circuit of the outputs from 0..K, all ORd together, ignoring the new 'arity' output.
-    let c0KAdapted : Circuit (Vars p.α arity (iter + 1)) := c0K.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
-    let tStart ← IO.monoMsNow
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    logInfo s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
+    let c0KAdapted : Circuit (Vars p.α arity (iter + 1)) := Circuit.mapSucc c0K
     logInfo s!"Establishing inductive invariant with cadical..."
     let tStart ← IO.monoMsNow
-    -- c = 0 => c' = 0
-    -- !c => !c'
-    -- !!c || !c'
-    -- c || !c'
-    -- c' => c
     let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ cKSucc
-    let safetyProperty := safetyProperty.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
+    let safetyProperty := safetyProperty |> Circuit.mapSucc
     let safetyProperty := safetyProperty ||| impliesCircuit
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     logInfo m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     -- let le : Bool := sorry
     let le ← checkCircuitTautoAux safetyProperty
     let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
+    let tElapsedMs := (tEnd - tStart)
     if le then
-      logInfo s!"Inductive invariant established! (time={tElapsedSec}s)"
+      logInfo s!"Inductive invariant established! (time={tElapsedMs}ms)"
       return true
     else
-      logInfo s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
+      logInfo s!"Unable to establish inductive invariant (time={tElapsedMs}ms). Recursing..."
       decideIfZeroesAuxCadical (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
 
 @[nospecialize]
@@ -1883,7 +1856,7 @@ def _root_.FSM.decideIfZeroesCadical  {arity : Type _} [DecidableEq arity]  [Fin
    (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
-    let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
+    let c : Circuit (Vars fsm.α arity 0) := mkCircuitK 0 fsm
     let safety : Circuit (Vars fsm.α arity 0) := .fals
     decideIfZeroesAuxCadical 0 maxIter fsm c c safety
 
