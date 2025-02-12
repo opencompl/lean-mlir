@@ -1597,7 +1597,7 @@ deriving DecidableEq, Hashable
 
 namespace Inputs
 
-def latest (i : ι) : Inputs ι (n+1) where
+def latest (i : ι) : Inputs ι n where
   ix := ⟨n, by omega⟩
   input := i
 
@@ -1682,7 +1682,11 @@ def mkCircuitK {arity : Type _}
     (iter : Nat)
     (fsm : FSM arity) : Circuit (Vars fsm.α arity iter) :=
   match iter with
-  | 0 => (fsm.nextBitCirc none).fst.map Vars.state
+  | 0 =>
+    (fsm.nextBitCirc none).map fun v =>
+      match v with
+      | .inl a => Vars.state a
+      | .inr x => .inputs <| Inputs.latest x
   | iter' + 1 =>
       let cK := mkCircuitK iter' fsm
       cK.bind fun v =>
@@ -1696,7 +1700,11 @@ def mkCircuitK {arity : Type _}
 @[simp]
 theorem mkCircuitK_zero_eq {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (fsm : FSM arity) : mkCircuitK 0 fsm = (fsm.nextBitCirc none).fst.map Vars.state := rfl
+    (fsm : FSM arity) : mkCircuitK 0 fsm =
+    (fsm.nextBitCirc none).map fun v =>
+      match v with
+      | .inl a => Vars.state a
+      | .inr x => .inputs <| Inputs.latest x := rfl
 
 /--
 `Vars.EnvMatchesStream envVars envStream`
@@ -1708,7 +1716,9 @@ structure Vars.EnvMatchesStream {arity : Type _} [DecidableEq arity] [Fintype ar
   hStateInitCarry : ∀ (s : fsm.α), envVars (.state s) = fsm.initCarry s
   hInputsEval : ∀ (a : arity) (i : Nat) (hi : i ≤ iter), envStream a i = envVars (.inputs { input := a, ix := ⟨i, by omega⟩ })
 
-/-- If the environments match, then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm` -/
+/--
+If the environments match,
+then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm`. -/
 theorem eval_mkCircuitK {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat)
@@ -1720,8 +1730,12 @@ theorem eval_mkCircuitK {arity : Type _}
   induction iter
   case zero =>
     obtain ⟨hState, hInputs⟩ := hEnv
-    simp
-    sorry
+    simp [FSM.eval, FSM.nextBit, Circuit.eval_map]
+    congr
+    ext sum
+    rcases sum with state | var
+    · simp [hState]
+    · simp [hInputs, Inputs.latest]
   case succ i ih => sorry
 
 
