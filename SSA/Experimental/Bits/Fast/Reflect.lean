@@ -1794,14 +1794,18 @@ theorem Circuit.eval_map_bind {α β γ} (a : Circuit α) (f : α → β) (b : �
     ((a.map f).bind b).eval env = (a.bind (fun x => b (f x))).eval env := by
   simp [Circuit.eval_bind, Circuit.eval_map]
 
--- theorem eval_changeInitCarry_eq_mkCircuitK
---     [DecidableEq arity] [Fintype arity] [Hashable arity]
---     (iter : Nat)
---     (fsm : FSM arity)
---     {envVars : Vars fsm.α arity iter → Bool}
---     {envStream : arity → BitStream}
---     (hEnv : Vars.EnvMatchesStream iter envVars envStream):
---   (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
+def Vars.ofFSMVars {arity : Type _} (fsm : FSM arity) (i : Nat) (hi : i ≤ n)
+    (v : fsm.α ⊕ arity) : Vars fsm.α arity n :=
+  match v with
+  | .inl s => .state s
+  | .inr a => .inputs { input := a, ix := ⟨i, by omega⟩ }
+
+/-- Give the FSM's nextBitCirc in terms of a 'Vars' based circuit. -/
+def _root_.FSM.nextBitCircVars (fsm : FSM arity) : fsm.α → Circuit (Vars fsm.α arity 0) :=
+  fun a => fsm.nextBitCirc (some a) |>.map (Vars.ofFSMVars fsm 0 (by omega))
+
+def _root_.FSM.outputCircVars (fsm : FSM arity) : Circuit (Vars fsm.α arity 0) :=
+  fsm.nextBitCirc none |>.map (Vars.ofFSMVars fsm 0 (by omega))
 
 /-
 If the environments match,
@@ -1810,33 +1814,33 @@ Actually, to think about it differently, the problem is that the theorem is *too
 and the structure deserves to be unbundled!
 If we did not index it too much on the FSM, we could easily remove the `changeInitCarry`?
 -/
--- theorem eval_mkCircuitK_changeInitCarry {arity : Type _}
---     [DecidableEq arity] [Fintype arity] [Hashable arity]
---     (iter : Nat)
---     {envVars : Vars α arity iter → Bool}
---     {envStream : arity → BitStream}
---     {carry : α → Bool}
---     (nextBitCirc : α → Circuit (Vars α arity 0))
---     (outputCirc : Circuit (Vars α arity 0))
---     (hEnv : Vars.EnvMatchesStream carry iter envVars envStream) :
---   (mkCircuitK iter nextBitCirc outputCirc).eval envVars = (fsm.changeInitCarry carry).eval envStream iter := by
---   induction iter generalizing fsm carry envStream
---   case zero =>
---     obtain ⟨hState, hInputs⟩ := hEnv
---     simp only [mkCircuitK_zero_eq, Circuit.eval_map, FSM.eval, FSM.nextBit, FSM.carry_zero, FSM.changeInitCarry]
---     congr
---     ext sum
---     rcases sum with state | var
---     · simp [hState]
---     · simp [hInputs, Inputs.latest]
---   case succ i ih =>
---     rw [mkCircuitK]
---     -- rw [FSM.eval_changeInitCarry_succ]
---     rw [Circuit.eval_bind, FSM.eval]
---     rw [ih]
---     · sorry
---     · sorry
---     · sorry
+theorem eval_mkCircuitK_changeInitCarry {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat)
+    {envVars : Vars α arity iter → Bool}
+    {envStream : arity → BitStream}
+    {carry : α → Bool}
+    (nextBitCirc : α → Circuit (Vars α arity 0))
+    (outputCirc : Circuit (Vars α arity 0))
+    (hEnv : Vars.EnvMatchesStream carry iter envVars envStream) :
+  (mkCircuitK iter nextBitCirc outputCirc).eval envVars = (fsm.changeInitCarry carry).eval envStream iter := by
+  induction iter generalizing fsm carry envStream
+  case zero =>
+    obtain ⟨hState, hInputs⟩ := hEnv
+    simp only [mkCircuitK_zero_eq, Circuit.eval_map, FSM.eval, FSM.nextBit, FSM.carry_zero, FSM.changeInitCarry]
+    congr
+    ext sum
+    rcases sum with state | var
+    · simp [hState]
+    · simp [hInputs, Inputs.latest]
+  case succ i ih =>
+    rw [mkCircuitK]
+    -- rw [FSM.eval_changeInitCarry_succ]
+    rw [Circuit.eval_bind, FSM.eval]
+    rw [ih]
+    · sorry
+    · sorry
+    · sorry
 
 
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
@@ -1889,24 +1893,16 @@ def mkCircuitInductiveBaseCase
     | .state a => .inr (initCarry a) -- assign init state
     | .inputs is => .inl (.inputs is)
 
-def Vars.ofFSMVars {arity : Type _} (fsm : FSM arity) (i : Nat) (hi : i ≤ n)
-    (v : fsm.α ⊕ arity) : Vars fsm.α arity n :=
-  match v with
-  | .inl s => .state s
-  | .inr a => .inputs { input := a, ix := ⟨i, by omega⟩ }
-
-/-- Give the FSM's nextBitCirc in terms of a 'Vars' based circuit. -/
-def _root_.FSM.nextBitCircVars (fsm : FSM arity) : fsm.α → Circuit (Vars fsm.α arity 0) :=
-  fun a => fsm.nextBitCirc (some a) |>.map (Vars.ofFSMVars fsm 0 (by omega))
-
-def _root_.FSM.outputCircVars (fsm : FSM arity) : Circuit (Vars fsm.α arity 0) :=
-  fsm.nextBitCirc none |>.map (Vars.ofFSMVars fsm 0 (by omega))
 
 theorem eval_false_of_mkCircuitInductiveBaseCase_always_false
     [DecidableEq arity] [Fintype arity] [Hashable arity]
+    [DecidableEq α] [Fintype α] [Hashable α]
     (k : Nat)
     (p : FSM arity)
-    (hbase : Circuit.always_false (mkCircuitInductiveBaseCase k  p.nextBitCircVars p.outputCircVars p.initCarry))
+    (nextBitCirc : α → Circuit (Vars α arity 0))
+    (outputCirc : Circuit (Vars α arity 0))
+    (initCarry : α → Bool)
+    (hbase : Circuit.always_false (mkCircuitInductiveBaseCase k nextBitCirc outputCirc initCarry))
     : -- (hind : Circuit.always_false (mkCircuitInductiveInvariantK k p.nextBitCircVars p.outputCircVars)) :
     ∀ (x : arity → BitStream) (n : Nat) (hn : n ≤ k), p.eval x n = false := by sorry
 

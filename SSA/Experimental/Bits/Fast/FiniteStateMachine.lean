@@ -48,7 +48,7 @@ def Finset.toListUnsafe (as : Finset α) : List α :=
 
 
 open Lean in
-def formatSum (fα : α → Lean.Format) (fβ : β → Lean.Format) (x : α ⊕ β) : Lean.Format := 
+def formatSum (fα : α → Lean.Format) (fβ : β → Lean.Format) (x : α ⊕ β) : Lean.Format :=
   match x with | .inl x => f!"(l {fα x})" | .inr x => f!"(r {fβ x})"
 
 
@@ -62,7 +62,7 @@ def formatDecEqFinset [Fintype α] [DecidableEq α] (a : α) : Lean.Format :=
   format <| as.findIdx (fun b => a = b)
 
 open Lean in
-def FormatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α where 
+def FormatDecEqFinset [Fintype α] [DecidableEq α] : ToFormat α where
   format := formatDecEqFinset
 
 namespace FSM
@@ -177,6 +177,31 @@ theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
     p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 :=
   rfl
 
+theorem eval_eq_eval_changeInitCarry_id
+    (p : FSM arity) (x : arity → BitStream) (n : ℕ) :
+    p.eval x n = (p.changeInitCarry p.initCarry).eval x n := by
+  rw [eval_eq_carry]
+  simp [eval, changeInitCarry]
+/-- Evaluation at zero can be replaced by nextBit of initCarry -/
+theorem eval_zero_eq_nextBit_initCarry (env : arity → BitStream)
+    (env0 : arity → Bool)
+    (hEnv : ∀ (a : arity), env0 a = env a 0):
+    (p.changeInitCarry state).eval env 0 = (p.nextBit state env0).2 := by
+  simp [eval]
+  rw [carry]
+  congr
+  ext i
+  simp [hEnv]
+
+/-- Evaluation at zero can be replaced by nextBit of initCarry -/
+theorem eval_succ_eq_eval_changeInitCarry (x : arity → BitStream) (env : arity → Bool) (hEnv : ∀ (a : arity), env a = x a 0):
+    p.eval x (n+1) =
+      (p.nextBit p.initCarry env).2 := by
+  simp [eval]
+  rw [carry]
+  congr
+  ext i
+  simp [hEnv]
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
@@ -678,7 +703,7 @@ def ls (b : Bool) : FSM Unit :=
     nextBitCirc := fun x =>
       match x with
       | none => Circuit.var true (inl ()) -- next state bit = state bit
-      | some () => Circuit.var true (inr ()) } -- 
+      | some () => Circuit.var true (inr ()) } --
 
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
