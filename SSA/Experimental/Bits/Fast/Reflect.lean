@@ -1749,6 +1749,15 @@ theorem Circuit.eval_map_bind {α β γ} (a : Circuit α) (f : α → β) (b : �
     ((a.map f).bind b).eval env = (a.bind (fun x => b (f x))).eval env := by
   simp [Circuit.eval_bind, Circuit.eval_map]
 
+-- theorem eval_changeInitCarry_eq_mkCircuitK
+--     [DecidableEq arity] [Fintype arity] [Hashable arity]
+--     (iter : Nat)
+--     (fsm : FSM arity)
+--     {envVars : Vars fsm.α arity iter → Bool}
+--     {envStream : arity → BitStream}
+--     (hEnv : Vars.EnvMatchesStream iter envVars envStream):
+--   (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
+
 /-
 If the environments match,
 then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm`. -/
@@ -1758,7 +1767,7 @@ theorem eval_mkCircuitK {arity : Type _}
     (fsm : FSM arity)
     {envVars : Vars fsm.α arity iter → Bool}
     {envStream : arity → BitStream}
-    (hEnv : Vars.EnvMatchesStream iter envVars envStream):
+    (hEnv : Vars.EnvMatchesStream iter envVars envStream) :
   (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
   induction iter generalizing envStream
   case zero =>
@@ -1771,8 +1780,23 @@ theorem eval_mkCircuitK {arity : Type _}
     · simp [hInputs, Inputs.latest]
   case succ i ih =>
     rw [mkCircuitK]
-    rw [Circuit.eval_bind]
-    sorry
+    -- rw [FSM.eval_changeInitCarry_succ]
+    rw [Circuit.eval_bind, FSM.eval]
+    let envStream' := fun a => (envStream a).tail
+    rw [ih (envStream := envStream')]
+    · rw [← FSM.eval]
+      -- TODO: I need a `changeInitCarry` to convert the carry of the LHS to be the carry that one would see
+      -- after running for 1 state.
+      -- envStream' := envStream.drop 1 ⊢ fsm.eval envStream' i = fsm.eval envStream (i + 1)
+    · constructor
+      · sorry
+      · intros a k hk
+        simp [envStream']
+        have := hEnv.hInputsEval
+        rw [BitStream.tail]
+        rw [this a _ (by omega)]
+        sorry
+
 
 
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
