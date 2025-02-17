@@ -1670,7 +1670,7 @@ def Vars.succ {σ ι : Type} {n : Nat} (v : Vars σ ι n) : Vars σ ι (n + 1) :
 def Circuit.always_false [DecidableEq α] (c : Circuit α) : Bool := (~~~ c).always_true
 
 theorem Circuit.always_false_iff [DecidableEq α] (c : Circuit α) :
-  c.always_false ↔ True := sorry
+  Circuit.always_false c ↔ ∀ x, c.eval x = false := sorry
 
 /-- Convert a Circuit with 'Vars α arity iterm' to a circuit with 'Vars α arity (iter + 1)' -/
 def Circuit.mapSucc {α arity : Type _}
@@ -1713,13 +1713,43 @@ theorem mkCircuitK_zero_eq {arity : Type _}
 `Vars.EnvMatchesStream envVars envStream`
 say that the `envVars` matches the `envStream` upto the number of iterations `iter`.
 -/
-structure Vars.EnvMatchesStream {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity} {iter : Nat}
+structure Vars.EnvMatchesStream {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity}
+  (iter : Nat)
   (envVars: Vars fsm.α arity iter → Bool)
   (envStream : arity → BitStream) : Prop where
   hStateInitCarry : ∀ (s : fsm.α), envVars (.state s) = fsm.initCarry s
   hInputsEval : ∀ (a : arity) (i : Nat) (hi : i ≤ iter), envStream a i = envVars (.inputs { input := a, ix := ⟨i, by omega⟩ })
 
+/-- Given matching upto `Fin (n + 1)` show matching upto `Fin n` -/
+theorem Vars.EnvMatchesStream.of_succ {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity} {iter : Nat}
+  {envVars: Vars fsm.α arity (iter+1) → Bool}
+  {envStream : arity → BitStream}
+  (hEnvMatches : Vars.EnvMatchesStream (iter+1) envVars envStream) :
+  Vars.EnvMatchesStream iter (fun x => envVars x.succ) envStream where
+  hStateInitCarry := by
+    intros s
+    simp [Vars.succ, hEnvMatches.hStateInitCarry]
+  hInputsEval := by
+    intros a i hi
+    simp [Vars.succ, hEnvMatches.hInputsEval a i (by omega)]
+    congr
+
 /--
+The evaluation operation, being monadic, is also associative.
+The theorem reassociates from left to right.
+-/
+theorem Circuit.eval_bind_assoc {α β γ} (a : Circuit α) (b : α → Circuit β) (c : β → Circuit γ) (env : γ → Bool):
+    ((Circuit.bind a b).bind c).eval env =
+    (Circuit.bind a fun x => (b x).bind c).eval env := by
+  simp [Circuit.eval_bind]
+
+theorem Circuit.eval_map_bind {α β γ} (a : Circuit α) (f : α → β) (b : β → Circuit γ) (env : γ → Bool):
+    ((a.map f).bind b).eval env = (a.bind (fun x => b (f x))).eval env := by
+  simp [Circuit.eval_bind, Circuit.eval_map]
+
+/-
 If the environments match,
 then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm`. -/
 theorem eval_mkCircuitK {arity : Type _}
@@ -1728,7 +1758,7 @@ theorem eval_mkCircuitK {arity : Type _}
     (fsm : FSM arity)
     {envVars : Vars fsm.α arity iter → Bool}
     {envStream : arity → BitStream}
-    (hEnv : Vars.EnvMatchesStream envVars envStream):
+    (hEnv : Vars.EnvMatchesStream iter envVars envStream):
   (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
   induction iter generalizing envStream
   case zero =>
@@ -1741,9 +1771,9 @@ theorem eval_mkCircuitK {arity : Type _}
     · simp [hInputs, Inputs.latest]
   case succ i ih =>
     rw [mkCircuitK]
-    -- Need a theorem about FSM.eval in terms of FSM.succ
     rw [Circuit.eval_bind]
     sorry
+
 
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
 def mkCircuit0K
