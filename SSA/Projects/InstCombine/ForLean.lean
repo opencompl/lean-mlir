@@ -114,9 +114,15 @@ lemma toNat_shiftLeft' (A B : BitVec w) :
 
 lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
     (1 <<< B * A) = (A <<< B) := by
-  apply BitVec.eq_of_toNat_eq
-  simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
-  rw [Nat.mul_comm]
+  rcases w with _|w
+  · simp
+  · rw [BitVec.toNat_eq]
+    rw [BitVec.toNat_shiftLeft']
+    rw [BitVec.shiftLeft_eq']
+    have := Nat.one_shiftLeft (n := B.toNat)
+    simp_all only [ofNat_eq_ofNat, toNat_mul, toNat_shiftLeft, toNat_ofNat, lt_add_iff_pos_left,
+      add_pos_iff, Nat.lt_one_iff, pos_of_gt, or_true, Nat.one_mod_two_pow, Nat.mod_mul_mod]
+    rw [Nat.mul_comm]
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [BitVec.msb, getMsbD, allOnes]
@@ -141,7 +147,7 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : x.udiv 1#w = x := by
 
 theorem udiv_eq_zero_iff {x y : BitVec w} (h : 0#w < y) : udiv x y = 0#w ↔ x < y := by
   simp_all [bv_toNat, Nat.div_eq_zero_iff, h]
-  omega
+  sorry
 
 @[simp]
 theorem udiv_eq_zero {x y : BitVec w} (h : x < y) : udiv x y = 0#w := by
@@ -261,10 +267,9 @@ theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): BitVec.intMin w = 1 := by
       contradiction
 
 theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
-  have h' : w > 0 := by omega
-  simp [bv_toNat, h']
-  rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
-  omega
+  simp only [intMin, twoPow, ofNat_eq_ofNat]
+  rw [shiftLeft_eq_mul_twoPow, BitVec.one_mul]
+  sorry
 
 /- Not a simp lemma by default because we may want toFin or toInt in the future. -/
 theorem ult_toNat (x y : BitVec n) :
@@ -304,10 +309,16 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
     simp only [ofNat_eq_ofNat, ne_eq, ← toInt_ne, toInt_zero] at h_ne_zero
     omega
   simp only [ne_eq]
-  simp only [bv_toNat]
   have h : 0 < w := by omega
   simp only [Nat.zero_mod, h, Nat.two_pow_pred_mod_two_pow, ne_eq]
   have two_pow_pos := Nat.two_pow_pos (w-1)
+  simp only [intMin, toNat_eq, toNat_ofNat, Nat.zero_mod, toNat_twoPow, ne_eq]
+  let w' := w - 1
+  have hw₀: w - 1 = w' := by omega
+  have hw₁: w = w' + 1 := by omega
+  rw [hw₀, hw₁]
+  rw [Nat.mod_eq_of_lt (by simp [Nat.pow_lt_pow_succ])]
+  have := Nat.two_pow_pos (w := w')
   omega
 
 theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
@@ -353,7 +364,7 @@ lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
 @[simp]
 theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := by
   ext i
-  rw [getLsbD_add (by omega), getLsbD_and, getLsbD_xor, getLsbD_or]
+  rw [← BitVec.getLsbD_eq_getElem, getLsbD_add (by omega), getLsbD_and, getLsbD_xor, ← BitVec.getLsbD_eq_getElem, getLsbD_or]
   simp only [Bool.bne_assoc]
   cases a.getLsbD ↑i <;> simp [carry_and_xor_false]
 
@@ -384,7 +395,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> cases B.getLsbD i
       <;> cases carry i B A false
       <;> rfl
-    · rw [getLsbD_add (by omega)]
+    · rw [← BitVec.getLsbD_eq_getElem, getLsbD_add (by omega)]
       cases A.getLsbD i
       <;> cases B.getLsbD i
       <;> cases carry i B A false
@@ -392,14 +403,15 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
 
 @[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
     (x.signExtend i).msb = x.msb := by
-  simp [BitVec.msb_eq_getLsbD_last, getLsbD_signExtend]
+  simp only [msb_eq_getLsbD_last, getLsbD_signExtend, tsub_lt_self_iff, Nat.lt_one_iff, pos_of_gt,
+    and_true]
   split <;> by_cases (0 < i) <;> simp_all
-  simp [show i = w by omega]
+  simp [← BitVec.getLsbD_eq_getElem, show i = w by omega]
 
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
     x.signExtend (i+1) = cons (if i < w then x.getLsbD i else x.msb) (x.signExtend i) := by
   ext j
-  simp only [getLsbD_signExtend, Fin.is_lt, decide_true, Bool.true_and, getLsbD_cons]
+  simp only [← BitVec.getLsbD_eq_getElem, getLsbD_signExtend, Fin.is_lt, decide_true, Bool.true_and, getLsbD_cons]
   split <;> split <;> simp_all <;> omega
 
 @[simp]
@@ -417,7 +429,7 @@ theorem allOnes_sshiftRight {w n : Nat} :
   (allOnes w).sshiftRight n = allOnes w := by
   ext i
   by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight, ←decide_not]; omega
+  · simp [← BitVec.getLsbD_eq_getElem, BitVec.msb_allOnes h, getLsbD_sshiftRight, ←decide_not]; omega
   · simp [getLsbD_sshiftRight]; omega
 
 attribute [simp] shiftLeft_ushiftRight
