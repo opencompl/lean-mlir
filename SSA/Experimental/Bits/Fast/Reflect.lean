@@ -1928,8 +1928,6 @@ theorem eval_false_of_eval_false_of_always_false_mkCircuitInductiveInvariantK
     (k : Nat)
     (p : FSM arity)
     (hind : Circuit.always_false (mkCircuitInductiveInvariantK k p.nextBitCircVars p.outputCircVars)) :
-    ∀ (x : arity → BitStream) (n : Nat)
-      (hind : ∀ (i : Nat) (hi : i ≤ k), p.eval x (n + i) = false),
     p.eval x (n + k + 1) = false := by sorry
 
 /--
@@ -1955,7 +1953,8 @@ theorem safetyPropertyImpliesAllZeroes {arity : Type _}
     apply hbase
     omega
   case ih i ih =>
-    sorry
+    apply eval_false_of_eval_false_of_always_false_mkCircuitInductiveInvariantK
+    apply hind
 
 @[nospecialize]
 partial def decideIfZeroesAuxCadical {arity : Type _}
