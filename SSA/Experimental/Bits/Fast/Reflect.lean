@@ -1715,19 +1715,26 @@ say that the `envVars` matches the `envStream` upto the number of iterations `it
 -/
 structure Vars.EnvMatchesStream {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity}
+  (carry : fsm.α → Bool)
   (iter : Nat)
   (envVars: Vars fsm.α arity iter → Bool)
   (envStream : arity → BitStream) : Prop where
-  hStateInitCarry : ∀ (s : fsm.α), envVars (.state s) = fsm.initCarry s
+  hStateInitCarry : ∀ (s : fsm.α), envVars (.state s) = carry s
   hInputsEval : ∀ (a : arity) (i : Nat) (hi : i ≤ iter), envStream a i = envVars (.inputs { input := a, ix := ⟨i, by omega⟩ })
 
+
 /-- Given matching upto `Fin (n + 1)` show matching upto `Fin n` -/
-theorem Vars.EnvMatchesStream.of_succ {arity : Type _}
-  [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity} {iter : Nat}
-  {envVars: Vars fsm.α arity (iter+1) → Bool}
-  {envStream : arity → BitStream}
-  (hEnvMatches : Vars.EnvMatchesStream (iter+1) envVars envStream) :
-  Vars.EnvMatchesStream iter (fun x => envVars x.succ) envStream where
+theorem Vars.EnvMatchesStream.tail_of_succ {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} {carry : fsm.α → Bool} {iter : Nat}
+    {envVars: Vars fsm.α arity (iter+1) → Bool}
+    {envStream : arity → BitStream}
+    (hEnvMatches : Vars.EnvMatchesStream carry (iter+1) envVars envStream) :
+    Vars.EnvMatchesStream
+      carry
+      iter
+      (fun x => envVars x.succ)
+      envStream where
   hStateInitCarry := by
     intros s
     simp [Vars.succ, hEnvMatches.hStateInitCarry]
@@ -1735,6 +1742,37 @@ theorem Vars.EnvMatchesStream.of_succ {arity : Type _}
     intros a i hi
     simp [Vars.succ, hEnvMatches.hInputsEval a i (by omega)]
     congr
+
+/-- Given matching upto `Fin (n + 1)` show matching upto `Fin n` -/
+theorem Vars.EnvMatchesStream.changeInitCarry_of_succ {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} {carry carry': fsm.α → Bool} {iter : Nat}
+    {envVars: Vars fsm.α arity (iter+1) → Bool}
+    {envVars': Vars fsm.α arity iter → Bool}
+    {envStream : arity → BitStream}
+    (hCarry' : carry' = (fsm.nextBit carry (fun a => envStream a 0)).1) -- carry' matches carry
+    (hEnvVarsState : ∀ s, envVars (.state s) = carry' s) -- matches from (i+1)..N
+    (hEnvVarsInputs : ∀ x, envVars x.succ  = envVars' x) -- matches from (i+1)..N [this is wrong! I need]
+    (hEnvMatches : Vars.EnvMatchesStream carry' iter envVars' envStream) :
+    Vars.EnvMatchesStream
+      carry'
+      iter
+      (fun x => envVars x.succ)
+      (fun x => (envStream x).tail)  where
+  hStateInitCarry := by
+    intros s
+    simp [Vars.succ, hEnvMatches.hStateInitCarry]
+    rw [hEnvVarsState]
+  hInputsEval := by
+    intros a i hi
+    simp [Vars.succ, hEnvMatches.hInputsEval a i (by omega)]
+    congr
+    rw [BitStream.tail]
+    have := hEnvMatches.hInputsEval
+    sorry
+    -- rw [hEnvMatches.hInputsEval a i]
+    -- simp
+
 
 /--
 The evaluation operation, being monadic, is also associative.
@@ -1760,19 +1798,24 @@ theorem Circuit.eval_map_bind {α β γ} (a : Circuit α) (f : α → β) (b : �
 
 /-
 If the environments match,
-then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm`. -/
-theorem eval_mkCircuitK {arity : Type _}
+then making a circuit and evaluating it on `envVars` is the same as evaluating the `fsm`.
+Actually, to think about it differently, the problem is that the theorem is *too* indexed on the `fsm`,
+and the structure deserves to be unbundled!
+If we did not index it too much on the FSM, we could easily remove the `changeInitCarry`?
+-/
+theorem eval_mkCircuitK_changeInitCarry {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat)
     (fsm : FSM arity)
     {envVars : Vars fsm.α arity iter → Bool}
     {envStream : arity → BitStream}
-    (hEnv : Vars.EnvMatchesStream iter envVars envStream) :
-  (mkCircuitK iter fsm).eval envVars = fsm.eval envStream iter := by
-  induction iter generalizing envStream
+    {carry : fsm.α → Bool}
+    (hEnv : Vars.EnvMatchesStream carry iter envVars envStream) :
+  (mkCircuitK iter (fsm.changeInitCarry carry)).eval envVars = (fsm.changeInitCarry carry).eval envStream iter := by
+  induction iter generalizing fsm carry envStream
   case zero =>
     obtain ⟨hState, hInputs⟩ := hEnv
-    simp only [mkCircuitK_zero_eq, Circuit.eval_map, FSM.eval, FSM.nextBit, FSM.carry_zero]
+    simp only [mkCircuitK_zero_eq, Circuit.eval_map, FSM.eval, FSM.nextBit, FSM.carry_zero, FSM.changeInitCarry]
     congr
     ext sum
     rcases sum with state | var
@@ -1782,21 +1825,10 @@ theorem eval_mkCircuitK {arity : Type _}
     rw [mkCircuitK]
     -- rw [FSM.eval_changeInitCarry_succ]
     rw [Circuit.eval_bind, FSM.eval]
-    let envStream' := fun a => (envStream a).tail
-    rw [ih (envStream := envStream')]
-    · rw [← FSM.eval]
-      -- TODO: I need a `changeInitCarry` to convert the carry of the LHS to be the carry that one would see
-      -- after running for 1 state.
-      -- envStream' := envStream.drop 1 ⊢ fsm.eval envStream' i = fsm.eval envStream (i + 1)
-    · constructor
-      · sorry
-      · intros a k hk
-        simp [envStream']
-        have := hEnv.hInputsEval
-        rw [BitStream.tail]
-        rw [this a _ (by omega)]
-        sorry
-
+    rw [ih]
+    · sorry
+    · sorry
+    · sorry
 
 
 /-- Make the circuit that produces the OR of the outputs from [0..K], given K inputs and initial state vector -/
