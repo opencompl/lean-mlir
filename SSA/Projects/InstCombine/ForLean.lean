@@ -145,9 +145,28 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : x.udiv 1#w = x := by
     simp [eq_nil x]
   · simp_all [bv_toNat]
 
-theorem udiv_eq_zero_iff {x y : BitVec w} (h : 0#w < y) : udiv x y = 0#w ↔ x < y := by
-  simp_all [bv_toNat, Nat.div_eq_zero_iff, h]
-  sorry
+
+theorem udiv_eq_zero_iff {x y : BitVec w} (hy : 0#w < y) : udiv x y = 0#w ↔ x < y := by
+  simp_all [bv_toNat, Nat.div_eq_zero_iff, hy]
+  constructor
+  · rw [BitVec.lt_def, BitVec.udiv_def]
+    intros h
+    have : BitVec.toNat (BitVec.ofNat w (x.toNat / y.toNat)) = (0#w).toNat := by
+      rw [h]
+    simp at this
+    simp [BitVec.lt_def] at hy
+    rw [Nat.mod_eq_of_lt] at this
+    · apply Nat.lt_of_div_eq_zero (by omega) this
+    · apply Nat.lt_of_le_of_lt
+      · apply Nat.div_le_self
+      · omega
+  · intros h
+    apply BitVec.eq_of_toNat_eq
+    simp [BitVec.lt_def] at h
+    simp
+    omega
+
+
 
 @[simp]
 theorem udiv_eq_zero {x y : BitVec w} (h : x < y) : udiv x y = 0#w := by
@@ -267,9 +286,13 @@ theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): BitVec.intMin w = 1 := by
       contradiction
 
 theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
-  simp only [intMin, twoPow, ofNat_eq_ofNat]
-  rw [shiftLeft_eq_mul_twoPow, BitVec.one_mul]
-  sorry
+  simp only [intMin, twoPow, ofNat_eq_ofNat, ne_eq]
+  rw [shiftLeft_eq_mul_twoPow, BitVec.one_mul, BitVec.toNat_eq, toNat_twoPow, toNat_ofNat]
+  have := Nat.pow_lt_pow_of_lt (a := 2) (n := 1) (m := w)
+  have := Nat.pow_lt_pow_of_lt (a := 2) (n := w - 1) (m := w)
+  have := Nat.pow_lt_pow_of_lt (a := 2) (n := 0) (m := w - 1)
+  rw [Nat.mod_eq_of_lt (by omega), Nat.mod_eq_of_lt (by omega)]
+  omega
 
 /- Not a simp lemma by default because we may want toFin or toInt in the future. -/
 theorem ult_toNat (x y : BitVec n) :
