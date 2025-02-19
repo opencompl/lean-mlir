@@ -309,32 +309,6 @@ theorem logical_and_implies_folds_proof : logical_and_implies_folds_before ⊑ l
 
 
 
-def logical_and_noundef_b_before := [llvm|
-{
-^0(%arg240 : i1, %arg241 : i1):
-  %0 = llvm.mlir.constant(false) : i1
-  %1 = "llvm.select"(%arg240, %arg241, %0) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i1, i1) -> i1
-  "llvm.return"(%1) : (i1) -> ()
-}
-]
-def logical_and_noundef_b_after := [llvm|
-{
-^0(%arg240 : i1, %arg241 : i1):
-  %0 = llvm.and %arg240, %arg241 : i1
-  "llvm.return"(%0) : (i1) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem logical_and_noundef_b_proof : logical_and_noundef_b_before ⊑ logical_and_noundef_b_after := by
-  unfold logical_and_noundef_b_before logical_and_noundef_b_after
-  simp_alive_peephole
-  intros
-  ---BEGIN logical_and_noundef_b
-  apply logical_and_noundef_b_thm
-  ---END logical_and_noundef_b
-
-
-
 def not_not_true_before := [llvm|
 {
 ^0(%arg238 : i1, %arg239 : i1):

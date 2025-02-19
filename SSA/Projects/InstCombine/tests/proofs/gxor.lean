@@ -1401,39 +1401,6 @@ theorem tryFactorization_xor_ashr_ashr_proof : tryFactorization_xor_ashr_ashr_be
 
 
 
-def PR96857_xor_with_noundef_before := [llvm|
-{
-^0(%arg33 : i4, %arg34 : i4, %arg35 : i4):
-  %0 = llvm.mlir.constant(-1 : i4) : i4
-  %1 = llvm.and %arg35, %arg33 : i4
-  %2 = llvm.xor %arg35, %0 : i4
-  %3 = llvm.and %2, %arg34 : i4
-  %4 = llvm.xor %1, %3 : i4
-  "llvm.return"(%4) : (i4) -> ()
-}
-]
-def PR96857_xor_with_noundef_after := [llvm|
-{
-^0(%arg33 : i4, %arg34 : i4, %arg35 : i4):
-  %0 = llvm.mlir.constant(-1 : i4) : i4
-  %1 = llvm.and %arg35, %arg33 : i4
-  %2 = llvm.xor %arg35, %0 : i4
-  %3 = llvm.and %arg34, %2 : i4
-  %4 = llvm.or disjoint %1, %3 : i4
-  "llvm.return"(%4) : (i4) -> ()
-}
-]
-set_option debug.skipKernelTC true in
-theorem PR96857_xor_with_noundef_proof : PR96857_xor_with_noundef_before ⊑ PR96857_xor_with_noundef_after := by
-  unfold PR96857_xor_with_noundef_before PR96857_xor_with_noundef_after
-  simp_alive_peephole
-  intros
-  ---BEGIN PR96857_xor_with_noundef
-  apply PR96857_xor_with_noundef_thm
-  ---END PR96857_xor_with_noundef
-
-
-
 def PR96857_xor_without_noundef_before := [llvm|
 {
 ^0(%arg30 : i4, %arg31 : i4, %arg32 : i4):

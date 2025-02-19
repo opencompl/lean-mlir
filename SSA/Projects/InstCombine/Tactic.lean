@@ -5,7 +5,6 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.LLVM.SimpSet
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.ForStd
-import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
 
@@ -17,40 +16,40 @@ and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
      (
-      simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret,
+      try simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret,
         Com.changeDialect_var, Expr.changeDialect]
-      simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
-      dsimp (config := {failIfUnchanged := false }) only [HVector.map']
-      dsimp (config := {failIfUnchanged := false }) only [Functor.map]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
-      dsimp (config := {failIfUnchanged := false }) only [List.map]
-      dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toSnoc_toMap]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_cons]
-      dsimp (config := {failIfUnchanged := false }) only
+      try simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
+      try simp (config := {failIfUnchanged := false }) only [HVector.map']
+      try dsimp (config := {failIfUnchanged := false }) only [Functor.map]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
+      try dsimp (config := {failIfUnchanged := false }) only [List.map]
+      try dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toSnoc_toMap]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
+      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_cons]
+      try dsimp (config := {failIfUnchanged := false }) only
         [InstcombineTransformDialect.MOp.instantiateCom]
-      dsimp (config := {failIfUnchanged := false }) only
+      try dsimp (config := {failIfUnchanged := false }) only
         [InstcombineTransformDialect.instantiateMTy]
-      dsimp (config := {failIfUnchanged := false }) only [Fin.zero_eta, List.map_cons]
-      dsimp (config := {failIfUnchanged := false }) only
+      try dsimp (config := {failIfUnchanged := false }) only [Fin.zero_eta, List.map_cons]
+      try dsimp (config := {failIfUnchanged := false }) only
         [InstcombineTransformDialect.instantiateMOp]
-      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
-      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
-      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
-      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
-      dsimp (config := {failIfUnchanged := false }) only
+      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
+      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
+      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
+      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
+      try dsimp (config := {failIfUnchanged := false }) only
         [InstcombineTransformDialect.instantiateMTy]
-      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
+      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
       -- How can I avoid this `simp! only` and instead use a plain `simp only`?
-      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.ofNat_eq_concrete]
-      simp! (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_ofNat_eq]
+      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.ofNat_eq_concrete]
+      try simp! (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_ofNat_eq]
    )
  )
 
@@ -70,7 +69,7 @@ macro "simp_alive_ssa" : tactic =>
 
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get,
-            beq_self_eq_true, Option.isSome_some
+            beq_self_eq_true, Option.isSome_some, HVector.cons_get_zero
           ]
 
         -- Fold integers into their canonical form.

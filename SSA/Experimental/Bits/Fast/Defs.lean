@@ -38,16 +38,17 @@ inductive Term : Type
 | sub : Term → Term → Term
 /-- Negation -/
 | neg : Term → Term
-/-- Increment (i.e., add one) -/
-| incr : Term → Term
-/-- Decrement (i.e., subtract one) -/
-| decr : Term → Term
+-- /-- Increment (i.e., add one) -/
+-- | incr : Term → Term
+-- /-- Decrement (i.e., subtract one) -/
+-- | decr : Term → Term
 /-- shift left by `k` bits. -/
-| shiftL : Term → Nat → Term 
+| shiftL : Term → Nat → Term
 -- /-- logical shift right by `k` bits. -/
 -- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
 --   hence, I don't anticipate us implementing it.
+deriving Repr
 
 open Term
 
@@ -61,7 +62,7 @@ so eval requires us to give a value for each possible variable.
 -/
 def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   match t with
-  | var n       => vars[n]!
+  | var n       => vars.getD n default
   | zero        => BitStream.zero
   | one         => BitStream.one
   | negOne      => BitStream.negOne
@@ -74,8 +75,8 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | add t₁ t₂   => (Term.eval t₁ vars) + (Term.eval t₂ vars)
   | sub t₁ t₂   => (Term.eval t₁ vars) - (Term.eval t₂ vars)
   | neg t       => -(Term.eval t vars)
-  | incr t      => BitStream.incr (Term.eval t vars)
-  | decr t      => BitStream.decr (Term.eval t vars)
+--   | incr t      => BitStream.incr (Term.eval t vars)
+--   | decr t      => BitStream.decr (Term.eval t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.eval t vars) n
  -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
 
@@ -104,8 +105,8 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | add t₁ t₂ => max (arity t₁) (arity t₂)
 | sub t₁ t₂ => max (arity t₁) (arity t₂)
 | neg t => arity t
-| incr t => arity t
-| decr t => arity t
+-- | incr t => arity t
+-- | decr t => arity t
 | shiftL t .. => arity t
 -- | repeatBit t => arity t
 
@@ -146,8 +147,8 @@ and only require that many bitstream values to be given in `vars`.
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ - x₂
   | neg t       => -(Term.evalFin t vars)
-  | incr t      => BitStream.incr (Term.evalFin t vars)
-  | decr t      => BitStream.decr (Term.evalFin t vars)
+ --  | incr t      => BitStream.incr (Term.evalFin t vars)
+ --  | decr t      => BitStream.decr (Term.evalFin t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
 
@@ -185,24 +186,20 @@ inductive Predicate : Type where
 | sle (t₁ t₂ : Term) : Predicate
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
-
-
+deriving Repr
 
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
 -/
-def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂).scanOr
+def Predicate.evalEq (t₁ t₂ : BitStream) : BitStream := (t₁ ^^^ t₂).concat false |>.scanOr
 /--
 If they have been equal so far, then `BitStream.nxor t₁ t₂`.scanAnd will be 1.
-Start by assuming that they are not (not equal) i.e. that they are equal, and the 
+Start by assuming that they are not (not equal) i.e. that they are equal, and the
    initial value of the preciate is false / `1`.
 If their values ever differ, then we know that we will have `a[i] == b[i]` to be `false`.
 From this point onward, they will always disagree, and thus the predicate should become `0`.
 -/
--- def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := (BitStream.nxor t₁ t₂).scanAnd
-def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := 
-  let bs : BitStream := fun i => if t₁ i != t₂ i then false else true
-  bs.scanAnd
+def Predicate.evalNeq (t₁ t₂ : BitStream) : BitStream := (t₁.nxor t₂).concat true |>.scanAnd
 
 /-
 If they have been `0` so far, then `t1 &&& t2 |>.scanOr` will be `1`.
@@ -213,22 +210,44 @@ def Predicate.evalLor (t₁ t₂ : BitStream) : BitStream := (t₁ &&& t₂)
 def Predicate.evalLand (t₁ t₂ : BitStream) : BitStream := (t₁ ||| t₂)
 
 
-/-- 
+/--
 Evaluate whether 't₁ <ᵤ t₂'.
 This is defined by computing the borrow bit of 't₁ - t₂'.
 If the borrow bit is `1`, then we know that `t₁ < t₂', so we return a `0`.
 Otherwise, we know that 't₁ ≥ t₂'.
 -/
-def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := ~~~ (t₁.borrow t₂)
+def Predicate.evalUlt (t₁ t₂ : BitStream) : BitStream := (~~~ (t₁.borrow t₂)).concat true
 
-/-- 
-Evaluate whether 't₁ <s t₂'.
-This is defined by computing the most significant bit of 't₁ - t₂'.
-IF the `msb is 1`, then `t₁ - t₂ <s 0`, and thus `t₁ <s t₂'.
+
+/--
+Returns false if the MSBs are equal.
 -/
-def Predicate.evalSlt (t₁ t₂ : BitStream) : BitStream := ~~~ (t₁ - t₂)
+def Predicate.evalMsbEq (t₁ t₂ : BitStream) : BitStream :=
+  (t₁ ^^^ t₂).concat false
 
--- | leq (t₁ t₂ : Term) : Predicate -> simulate in terms of lt and eq
+
+private theorem not_not_xor_not (a b : Bool) : ! ((!a).xor (!b)) = (a == b) := by
+  revert a b
+  decide
+
+/--
+info: BitVec.slt_eq_not_carry {w : ℕ} (x y : BitVec w) : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
+-/
+#guard_msgs in #check BitVec.slt_eq_not_carry
+
+/--
+Evaluate whether `t₁ <ₛ t₂`.
+This is defined by computing the most significant bit of `t₁ - t₂`.
+IF the `msb is 1`, then `t₁ - t₂ <s 0`, and thus `t₁ <s t₂`.
+
+consider the cases:
+  evalMsbEq | evalUlt |
+  F         | F       | F (it's correct. MSBs are equal, and they are ULT)
+
+-/
+def Predicate.evalSlt (t₁ t₂ : BitStream) : BitStream :=
+    (((Predicate.evalUlt t₁ t₂)) ^^^ (Predicate.evalMsbEq t₁ t₂))
+
 open BitStream in
 /--
 Evaluate a term predicate `p` to the BitStream it represents,
@@ -253,12 +272,12 @@ def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
   | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
   | ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
-  | ule t₁ t₂ => 
-     Predicate.evalLor 
+  | ule t₁ t₂ =>
+     Predicate.evalLor
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
   | slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
-  | sle t₁ t₂ => Predicate.evalLor 
+  | sle t₁ t₂ => Predicate.evalLor
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalSlt (t₁.eval vars) (t₂.eval vars))
 
@@ -288,27 +307,12 @@ end Predicate
 | .land p q => max p.arity q.arity
 | .neq t₁ t₂ => max t₁.arity t₂.arity
 | .ult t₁ t₂ => max t₁.arity t₂.arity
-| .ule t₁ t₂ => max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity)
-| .slt t₁ t₂ => max t₁.arity t₂.arity
-| .sle t₁ t₂ => max (max t₁.arity t₂.arity) (max t₁.arity t₂.arity)
-
-@[simp]
-def Predicate.evalFinLor (x₁ x₂ : BitStream) : BitStream := 
-    (x₁ &&& x₂)
-
-@[simp]
-def Predicate.evalFinEq (x₁ x₂ : BitStream) : BitStream := 
-    (x₁ ^^^ x₂)
-
-@[simp]
-def Predicate.evalFinSlt (x₁ x₂ : BitStream) : BitStream := 
-  ~~~ (x₁ - x₂)
-
-@[simp]
-def Predicate.evalFinUlt (x₁ x₂ : BitStream) : BitStream := 
-  ~~~ (x₁.borrow x₂)
+| .ule t₁ t₂ => t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity)
+| .slt t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity))
+| .sle t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity) ⊔ (t₁.arity ⊔ t₂.arity))
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
+-- TODO: remove this from the @[simp] set.
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
 | widthEq n => BitStream.falseIffEq n
@@ -320,36 +324,35 @@ match p with
 | .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    Predicate.evalFinEq x₁ x₂
+    Predicate.evalEq x₁ x₂
 | .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    (x₁.nxor x₂)
+    Predicate.evalNeq x₁ x₂
 | .land p q =>
   -- if both `p` and `q` are logically true (i.e. the predicate is `false`),
   -- only then should we return a `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  (x₁ ||| x₂)
+  Predicate.evalLand x₁ x₂
 | .lor p q =>
   -- If either of the predicates are `false`, then result is `false`.
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  Predicate.evalFinLor x₁ x₂
-| .slt p q => 
+  Predicate.evalLor x₁ x₂
+| .slt p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  Predicate.evalFinSlt x₁ x₂
-| .sle p q => 
+  Predicate.evalSlt x₁ x₂
+| .sle p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  Predicate.evalFinLor (Predicate.evalFinSlt x₁ x₂) (Predicate.evalFinEq x₁ x₂)
-| .ult p q => 
+  Predicate.evalLor (Predicate.evalSlt x₁ x₂) (Predicate.evalEq x₁ x₂)
+| .ult p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  (Predicate.evalFinUlt x₁ x₂)
-| .ule p q => 
+  (Predicate.evalUlt x₁ x₂)
+| .ule p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-  Predicate.evalFinLor (Predicate.evalFinUlt x₁ x₂) (Predicate.evalFinEq x₁ x₂)
-
+  Predicate.evalLor (Predicate.evalUlt x₁ x₂) (Predicate.evalEq x₁ x₂)

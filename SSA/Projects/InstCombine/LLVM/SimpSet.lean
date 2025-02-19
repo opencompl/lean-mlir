@@ -12,4 +12,6 @@ register_simp_attr simp_llvm_wrap
 /-- The simp-set used in `simp_alive_case_bash` to attempt to discharge trivial `none` cases -/
 register_simp_attr simp_llvm_case_bash
 
+register_simp_attr simp_llvm_split
+
 register_simp_attr bv_ofBool

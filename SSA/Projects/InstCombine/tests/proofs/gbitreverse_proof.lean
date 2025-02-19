@@ -6,6 +6,8 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gbitreverse_proof
 theorem rev8_mul_and_lshr_thm (e : IntW 8) :
@@ -23,7 +25,7 @@ theorem rev8_mul_and_lshr_thm (e : IntW 8) :
             (LLVM.and (mul (zext 64 e) (const? 64 32800) { «nsw» := true, «nuw» := true }) (const? 64 558144))
             { «disjoint» := true })
           (const? 64 65793) { «nsw» := true, «nuw» := true })
-        (const? 64 16)) := by 
+        (const? 64 16)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

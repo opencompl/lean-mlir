@@ -8,7 +8,7 @@ from cfg import *
 
 def get_lines(msg):
     # Define the regex pattern to match error messages with line numbers
-    pattern = re.compile(r"info: .+?:(\d+):\d+: (.+?)(?=warning)", flags=re.DOTALL)
+    pattern = re.compile(r"info: .+?:(\d+):\d+: (theorem extracted.+?)(?=warning)", flags=re.DOTALL)
     # Find all matches in the log
     matches = pattern.findall(msg)
     lines_thm = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
@@ -19,7 +19,7 @@ def get_lines(msg):
 def gen_proof(thm):
     return thm.replace(
         "sorry\n",
-        """by 
+        """by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -39,6 +39,8 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section {stem}_proof
 """

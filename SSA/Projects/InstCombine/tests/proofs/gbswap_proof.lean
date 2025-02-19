@@ -6,13 +6,15 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gbswap_proof
 theorem test1_trunc_thm (e : IntW 32) :
   trunc 16 (LLVM.or (lshr e (const? 32 24)) (LLVM.and (lshr e (const? 32 8)) (const? 32 65280))) ⊑
     trunc 16
       (LLVM.or (lshr e (const? 32 24)) (LLVM.and (lshr e (const? 32 8)) (const? 32 65280)) { «disjoint» := true })
-      { «nsw» := false, «nuw» := true } := by 
+      { «nsw» := false, «nuw» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -24,7 +26,7 @@ theorem test1_trunc_thm (e : IntW 32) :
 theorem PR39793_bswap_u64_as_u16_trunc_thm (e : IntW 64) :
   trunc 8
       (LLVM.or (LLVM.and (lshr e (const? 64 8)) (const? 64 255)) (LLVM.and (shl e (const? 64 8)) (const? 64 65280))) ⊑
-    trunc 8 (lshr e (const? 64 8)) := by 
+    trunc 8 (lshr e (const? 64 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -36,7 +38,7 @@ theorem PR39793_bswap_u64_as_u16_trunc_thm (e : IntW 64) :
 theorem PR39793_bswap_u32_as_u16_trunc_thm (e : IntW 32) :
   trunc 8
       (LLVM.or (LLVM.and (lshr e (const? 32 8)) (const? 32 255)) (LLVM.and (shl e (const? 32 8)) (const? 32 65280))) ⊑
-    trunc 8 (lshr e (const? 32 8)) := by 
+    trunc 8 (lshr e (const? 32 8)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -47,7 +49,7 @@ theorem PR39793_bswap_u32_as_u16_trunc_thm (e : IntW 32) :
 
 theorem bswap_and_mask_1_thm (e : IntW 64) :
   LLVM.or (LLVM.and (lshr e (const? 64 40)) (const? 64 65280)) (lshr e (const? 64 56)) ⊑
-    LLVM.or (LLVM.and (lshr e (const? 64 40)) (const? 64 65280)) (lshr e (const? 64 56)) { «disjoint» := true } := by 
+    LLVM.or (LLVM.and (lshr e (const? 64 40)) (const? 64 65280)) (lshr e (const? 64 56)) { «disjoint» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

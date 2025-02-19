@@ -7,29 +7,17 @@ import Lean.Meta.KExprMap
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
-import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.FastCopy.Reflect
 import Qq.Macro
 
+open Copy
 open AutoStructs
 
 open Lean Elab Tactic
 open Lean Meta
 open scoped Qq
 
-def AutoStructs.Term.toExpr (t : Term) : Expr :=
-  open Term in
-  match t with
-  | .var n => mkApp (mkConst ``var) (mkNatLit n)
-  | .zero => mkConst ``zero
-  | .one => mkConst ``one
-  | .negOne => mkConst ``negOne
-  | .and t1 t2 => mkApp2 (mkConst ``Term.and) t1.toExpr t2.toExpr
-  | .or t1 t2 => mkApp2 (mkConst ``Term.or) t1.toExpr t2.toExpr
-  | .xor t1 t2 => mkApp2 (mkConst ``Term.xor) t1.toExpr t2.toExpr
-  | .add t1 t2 => mkApp2 (mkConst ``add) t1.toExpr t2.toExpr
-  | .sub t1 t2 => mkApp2 (mkConst ``sub) t1.toExpr t2.toExpr
-  | .not t => mkApp (mkConst ``Term.not) t.toExpr
-  | .neg t => mkApp (mkConst ``neg) t.toExpr
+def _root_.Copy.Term.toExpr (t : _root_.Copy.Term) : Expr := t.quote
 
 def AutoStructs.Relation.toExpr (rel : Relation) : Expr :=
   open Relation in
@@ -58,10 +46,20 @@ def AutoStructs.Unop.toExpr (rel : Unop) : Expr :=
   match rel with
   | .neg => mkConst ``neg
 
+def _root_.Copy.WidthPredicate.toExpr (wp : WidthPredicate) : Expr :=
+  mkConst (match wp with
+  | .eq => ``WidthPredicate.eq
+  | .neq => ``WidthPredicate.neq
+  | .le => ``WidthPredicate.le
+  | .lt => ``WidthPredicate.lt
+  | .ge => ``WidthPredicate.ge
+  | .gt => ``WidthPredicate.gt)
+
 def AutoStructs.Formula.toExpr (φ : Formula) : Expr :=
   open AutoStructs in
   open Formula in
   match φ with
+  | .width wp n => mkApp2 (mkConst ``width) wp.toExpr (mkNatLit n)
   | .atom rel t1 t2 => mkApp3 (mkConst ``atom) rel.toExpr t1.toExpr t2.toExpr
   | .binop op φ1 φ2 => mkApp3 (mkConst ``binop) op.toExpr φ1.toExpr φ2.toExpr
   | .unop op φ => mkApp2 (mkConst ``unop) op.toExpr φ.toExpr
@@ -79,7 +77,7 @@ deriving Inhabited
 
 abbrev M := StateRefT State MetaM
 
-def addAsVar (e : Expr) : M AutoStructs.Term := do
+def addAsVar (e : Expr) : M _root_.Copy.Term := do
   if let some v ← (←get).varMap.find? e then
       pure (.var v)
   else
@@ -97,18 +95,18 @@ def checkBVs (es : List Expr) : M Bool := do
   pure true
 
 -- TODO: make the shortcuts better
-partial def parseTerm (e : Expr) : M AutoStructs.Term := do
+partial def parseTerm (e : Expr) : M _root_.Copy.Term := do
   match_expr e with
   | OfNat.ofNat α n _ =>
     let_expr BitVec _ ← α | addAsVar e
     match n with
-    | .lit (.natVal 0) => pure AutoStructs.Term.zero
-    | .lit (.natVal 1) => pure AutoStructs.Term.one
+    | .lit (.natVal 0) => pure _root_.Copy.Term.zero
+    | .lit (.natVal 1) => pure _root_.Copy.Term.one
     | _ =>  logWarning m!"Unknown integer {n}"; addAsVar e -- TODO: all other integers...
   | BitVec.ofNat _w n =>
     match n.nat? with
-    | some 0 => pure AutoStructs.Term.zero
-    | some 1 => pure AutoStructs.Term.one
+    | some 0 => pure _root_.Copy.Term.zero
+    | some 1 => pure _root_.Copy.Term.one
     | _ =>  logWarning m!"Unknown integer {n}"; addAsVar e -- TODO: all other integers...
   | HXor.hXor α1 α2 α3 _ e1 e2 =>
     let_expr BitVec _ ← α1 | addAsVar e

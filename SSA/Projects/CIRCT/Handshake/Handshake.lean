@@ -246,10 +246,10 @@ instance : DialectSignature Handshake := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (Handshake) where
     denote
-    | .branch _, arg, _ => CIRCTStream.Handshake.branch (arg.getN 0) (arg.getN 1)
-    | .merge _, arg, _  => CIRCTStream.Handshake.merge (arg.getN 0) (arg.getN 1)
-    | .fst _, arg, _ => (arg.getN 0).fst
-    | .snd _, arg, _ => (arg.getN 0).snd
+    | .branch _, arg, _ => CIRCTStream.Handshake.branch (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .merge _, arg, _  => CIRCTStream.Handshake.merge (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .fst _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).fst
+    | .snd _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).snd
 
 end Dialect
 

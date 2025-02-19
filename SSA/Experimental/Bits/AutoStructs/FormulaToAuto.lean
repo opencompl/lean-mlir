@@ -9,19 +9,21 @@ import Mathlib.Data.FinEnum
 import Mathlib.Data.Vector.Basic
 import Mathlib.Data.Vector.Defs
 import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Linarith
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-import SSA.Experimental.Bits.AutoStructs.NFA'
+import SSA.Experimental.Bits.AutoStructs.BundledNfa
+import SSA.Experimental.Bits.FastCopy.Defs
 
+open Copy
 open AutoStructs
 open Mathlib
 
 @[simp] theorem Language.mem_setOf_eq {x : List α} {p : List α → Prop} :
-    @Membership.mem (List α) (Language α) instMembershipListLanguage {y | p y} x = p x := by
-  rfl
+    @Membership.mem (List α) (Language α) Language.instMembershipList {y | p y} x = p x := rfl
 
 @[simp] theorem Language.trivial : x ∈ (⊤ : Language α) := by trivial
 
@@ -38,7 +40,7 @@ lemma NFA.correct_spec {M : NFA α σ} {ζ : M.sa} {L : Language α} :
   simp_all
 
 abbrev BVRel := ∀ ⦃w⦄, BitVec w → BitVec w → Prop
-abbrev BVNRel n := ∀ ⦃w⦄, Mathlib.Vector (BitVec w) n → Prop
+abbrev BVNRel n := ∀ ⦃w⦄, List.Vector (BitVec w) n → Prop
 
 def NFA'.sa (M : NFA' n) := M.σ → BVNRel n
 def NFA'.sa2 (M : NFA' 2) := M.σ → BVRel
@@ -56,7 +58,7 @@ lemma in_enc : x ∈ enc '' S ↔ dec x ∈ S := by
   · rintro hS; use dec x; simp_all
 
 @[simp]
-lemma Mathlib.Vector.ofFn_0 {f : Fin 0 → α} : ofFn f = .nil := by
+lemma List.Vector.ofFn_0 {f : Fin 0 → α} : ofFn f = .nil := by
   simp [ofFn]
 
 @[simp]
@@ -66,7 +68,7 @@ lemma BitVec.ofFn_0 {f : Fin 0 → Bool} : ofFn f = .nil := by
 @[simp]
 lemma dec_snoc_in_langRel {n} {R : BVNRel n} {w : BitVecs' n} {a : BitVec n} :
     dec (w ++ [a]) ∈ langRel R ↔
-      R (Mathlib.Vector.ofFn fun k => .cons (a.getLsbD k) ((dec w).bvs.get k)) := by
+      R (List.Vector.ofFn fun k => .cons (a.getLsbD k) ((dec w).bvs.get k)) := by
   simp [langRel]
 
 @[simp]
@@ -117,10 +119,10 @@ lemma BitVec.cons_inj : cons b1 bv1 = cons b2 bv2 ↔ (b1 = b2) ∧ bv1 = bv2 :=
 @[simp] lemma BitVec.lk01 : (0#2 : BitVec 2)[1] = false := by rfl
 
 structure NFA'.correct (M : NFA' n) (ζ : M.sa) (L : BVNRel n) where
-  cond1 : ∀ ⦃w⦄ (bvn : Mathlib.Vector (BitVec w) n), (L bvn ↔ ∃ q ∈ M.M.accept, ζ q bvn)
-  cond2 q : q ∈ M.M.start ↔ ζ q (Vector.replicate n .nil)
-  cond3 q a {w} (bvn : Mathlib.Vector (BitVec w) n) : q ∈ M.M.stepSet { q | ζ q bvn } a ↔
-              ζ q (Mathlib.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) (bvn.get k))
+  cond1 : ∀ ⦃w⦄ (bvn : List.Vector (BitVec w) n), (L bvn ↔ ∃ q ∈ M.M.accept, ζ q bvn)
+  cond2 q : q ∈ M.M.start ↔ ζ q (List.Vector.replicate n .nil)
+  cond3 q a {w} (bvn : List.Vector (BitVec w) n) : q ∈ M.M.stepSet { q | ζ q bvn } a ↔
+              ζ q (List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) (bvn.get k))
 
 structure NFA'.correct2 (M : NFA' 2) (ζ : M.sa2) (L : BVRel) where
   cond1 : ∀ (bv1 bv2 : BitVec w), (L bv1 bv2 ↔ ∃ q ∈ M.M.accept, ζ q bv1 bv2)
@@ -139,10 +141,10 @@ lemma NFA'.correct_spec {M : NFA' n} {ζ : M.sa} {L : BVNRel n} :
     apply NFA.correct_spec h
   constructor
   · intros w; rw [in_enc]; simp [langRel, h1]; simp_rw [@in_enc _ _ w]; rfl
-  intros w; induction w using List.list_reverse_induction
-  case base =>
+  intros w; induction w using List.reverseRecOn
+  case nil =>
     intros q; simp only [NFA.eval_nil]; rw [in_enc]; simp [h2, langRel]
-  case ind w a ih =>
+  case append_singleton w a ih =>
     rintro q
     simp only [NFA.eval_append_singleton]
     rw [in_enc]
@@ -155,7 +157,7 @@ lemma NFA'.correct_spec {M : NFA' n} {ζ : M.sa} {L : BVNRel n} :
 lemma NFA'.correct2_spec {M : NFA' 2} {ζ : M.sa2} {L : BVRel} :
     M.correct2 ζ L → M.accepts = langRel2 L := by
   rintro ⟨h1, h2, h3⟩
-  suffices hc : M.correct (fun q w (bvn : Mathlib.Vector (BitVec w) 2) => ζ q (bvn.get 0) (bvn.get 1))
+  suffices hc : M.correct (fun q w (bvn : List.Vector (BitVec w) 2) => ζ q (bvn.get 0) (bvn.get 1))
                       (fun w bvn => L (bvn.get 0) (bvn.get 1)) by
     rw [M.correct_spec hc]
     simp [langRel2, langRel]
@@ -170,11 +172,27 @@ abbrev Alphabet (arity: Type) [FinEnum arity] := BitVec (FinEnum.card arity + 1)
 
 variable {arity : Type} [FinEnum arity]
 
-def finFunToBitVec (c : carry → Bool) [FinEnum carry] : BitVec (FinEnum.card carry) :=
-  ((FinEnum.toList carry).enum.map (fun (i, x) => c x |> Bool.toNat * 2^i)).foldl (init := 0) Nat.add |> BitVec.ofNat _
+def finFunToBitVec [fe : FinEnum carry] (c : carry → Bool) : BitVec (FinEnum.card carry) :=
+  BitVec.ofFn fun i => c (fe.equiv.invFun i)
 
 def bitVecToFinFun [FinEnum ar] (bv : BitVec $ FinEnum.card ar) : ar → Bool :=
-  fun c => bv[FinEnum.equiv.toFun c]
+  fun c => bv.getLsbD $ FinEnum.equiv.toFun c
+
+@[simp]
+lemma bitVecToFinFun_rinv (c : carry → Bool) [FinEnum carry]:
+    bitVecToFinFun (finFunToBitVec c) = c := by
+  ext x; simp [bitVecToFinFun, finFunToBitVec]
+
+@[simp]
+lemma bitVecToFinFun_linv [FinEnum ar] (bv : BitVec $ FinEnum.card ar) :
+    finFunToBitVec (bitVecToFinFun bv) = bv := by
+  ext i hi; simp [bitVecToFinFun, finFunToBitVec, hi]
+
+@[simp]
+lemma bitVecToFinFun_inj [FinEnum ar] : Function.Injective (bitVecToFinFun (ar := ar)) := by
+  let g := finFunToBitVec (carry := ar)
+  apply Function.LeftInverse.injective (g := g)
+  apply bitVecToFinFun_linv
 
 def NFA.ofFSM (p : FSM arity) : NFA (Alphabet arity) (p.α → Bool) where
   start := { q | q = p.initCarry }
@@ -188,7 +206,7 @@ def _root_.NFA'.ofFSM'  (p : FSM arity) : NFA' (FinEnum.card arity + 1) where
   M := NFA.ofFSM p
 
 @[simp]
-abbrev inFSMRel (p : FSM arity) {w} (bvn : Mathlib.Vector (BitVec w) _) :=
+abbrev inFSMRel (p : FSM arity) {w} (bvn : List.Vector (BitVec w) _) :=
   bvn.get (Fin.last (FinEnum.card arity)) = p.evalBV (fun ar => bvn.get (FinEnum.equiv.toFun ar))
 
 def NFA'.ofFSM_sa (p : FSM arity) : (NFA'.ofFSM' p).sa := fun q _ bvn =>
@@ -240,8 +258,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           have hlt : i < w := by omega
           rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
           simp [hsa, FSM.evalBV]
-          rw [BitVec.ofFn_getLsbD' _ _ hlt]
-          simp
+          simp only [hlt, BitVec.ofFn_getLsbD]
           apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
@@ -276,8 +293,8 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         rw [ite_cond_eq_false] at hrel
         on_goal 2 => simp; omega
         rw [hrel]
-        simp [FSM.evalBV]
-        repeat rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
+        simp only [FSM.evalBV]
+        repeat rw [BitVec.ofFn_getLsbD (by omega)]
         simp only
         apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
         rw [ite_cond_eq_true]
@@ -312,11 +329,11 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           · unfold bitVecToFinFun; simp [BitVec.getLsbD_cons]
 
 def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
-  _root_.NFA'.ofFSM' p |>.reduce
+  _root_.NFA'.ofFSM' p -- |>.reduce
 
 open BitStream in
 lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.arity → BitVec w) :
-    EqualUpTo w (t.evalFinStream (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFin vars) := by
+    EqualUpTo w (t.evalFin (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFinBV vars) := by
   induction t <;> simp
   case var => rfl
   case zero => unfold BitStream.ofBitVec; rintro _ _; simp
@@ -325,6 +342,9 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case one =>
     unfold BitStream.ofBitVec; rintro k hk; simp
     cases k <;> simp_all
+  case ofNat =>
+    intros i hi
+    simp_all [ofBitVec, ofNat, BitVec.getLsbD_ofNat]
   case and => apply BitStream.and_congr <;> simp_all
   case or => apply BitStream.or_congr <;> simp_all
   case xor => apply BitStream.xor_congr <;> simp_all
@@ -341,13 +361,18 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case neg =>
     symm; transitivity; apply ofBitVec_neg
     symm; apply BitStream.neg_congr; simp_all
+  case shiftL t k ih =>
+    intros i hi
+    have hik : i - k < w := by omega
+    specialize ih vars (i-k) hik
+    simp_all [ofBitVec]
 
 @[simp]
-lemma FSM.eval_bv (bvn : Mathlib.Vector (BitVec w) (t.arity + 1)) :
+lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
-    (t.evalFin fun ar => bvn.get ar.castSucc) := by
-  simp [FSM.evalBV]; ext k hk
-  simp [BitVec.ofFn_getLsbD' _ _ hk, FSM.ofTerm]
+    (t.evalFinBV fun ar => bvn.get ar.castSucc) := by
+  simp only [FSM.evalBV]; ext k hk
+  simp only [FSM.ofTerm, hk, BitVec.ofFn_getLsbD]
   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
   simp only [ite_eq_left_iff, not_lt]
   intros _; omega
@@ -369,16 +394,73 @@ def CNFA.ofFSM (p : FSM arity) : CNFA (FinEnum.card arity + 1) :=
     (fun _ => true)
     #[finFunToBitVec p.initCarry]
     (by apply List.nodup_singleton)
-    fun carry =>
+    f
+  where
+    @[inline]
+    f carry :=
       (FinEnum.toList (BitVec (FinEnum.card arity))).foldl (init := #[]) fun ts a =>
+        process carry ts a
+    @[inline]
+    process carry ts a :=
         let eval x := (p.nextBitCirc x).eval (Sum.elim (bitVecToFinFun carry) (bitVecToFinFun a))
         let res : Bool := eval none
         let carry' : BitVec (FinEnum.card p.α) := finFunToBitVec (fun c => eval (some c))
         ts.push (a.cons res, carry')
 
+@[simp]
+lemma CNFA.ofFSM.f_spec {p : FSM arity} {s s' : BitVec (FinEnum.card p.α)} :
+    (a, s') ∈ f p s ↔ bitVecToFinFun s' ∈ (NFA.ofFSM p).step (bitVecToFinFun s) a := by
+  let motive (as : List (BitVec (FinEnum.card arity))) := ∀ (acc : Array _) a s',
+    ((a, s') ∈ as.foldl (init := acc) (process p s))
+      ↔ (a, s') ∈ acc ∨ (a.setWidth (FinEnum.card arity) ∈ as) ∧
+          bitVecToFinFun s' ∈ (NFA.ofFSM p).step (bitVecToFinFun s) a
+  suffices h : motive (FinEnum.toList (BitVec (FinEnum.card arity))) by
+    specialize h #[]
+    simp [motive] at h
+    rw [←h]
+    rfl
+  generalize FinEnum.toList (BitVec (FinEnum.card arity)) = qs
+  induction qs
+  case nil => simp [motive]
+  case cons a as ih =>
+    rintro acc b s'
+    simp only [List.foldl_cons]; rw [ih]
+    simp [process]
+    constructor
+    · rintro ((hacc | ⟨rfl, rfl⟩) | ⟨hin₁, hin₂⟩)
+      · exact .inl hacc
+      · right; simp [NFA.ofFSM]; constructor <;> rfl
+      · right; simp_all only [or_true, and_self, motive]
+    · rintro (hacc | ⟨(rfl | hold), hst⟩)
+      · tauto
+      · simp [NFA.ofFSM] at hst; left; right
+        rcases hst with ⟨hs', hb⟩
+        constructor
+        · rw [←BitVec.cons_msb_setWidth b]
+          simp_all only [BitVec.setWidth_cons, BitVec.cons_inj, and_true]; rfl
+        · apply_fun bitVecToFinFun <;> simp only [hs', bitVecToFinFun_rinv, bitVecToFinFun_inj]
+          rfl
+      · tauto
+
 lemma CNFA.ofFSM_spec (p : FSM arity) :
     (CNFA.ofFSM p).Sim (NFA'.ofFSM p) := by
-  sorry
+  apply bisim_comp
+  · apply worklistRun_spec
+  use (λ s q ↦ q = bitVecToFinFun s)
+  constructor
+  · simp [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM]
+  · simp only [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM, BitVec.truncate_eq_setWidth,
+    Set.setOf_eq_eq_singleton, Set.top_eq_univ, ofFSM.f_spec, Set.mem_setOf_eq, Array.mem_toArray,
+    List.mem_singleton, Set.setOf_true]
+    constructor <;> simp
+  · simp only [nfa', nfa, ofFSM.f_spec, Array.mem_toArray, List.mem_singleton,
+    Set.setOf_eq_eq_singleton, Set.setOf_true, Set.mem_setOf_eq, exists_eq_right]
+    aesop
+  · simp only [nfa', nfa, ofFSM.f_spec, Array.mem_toArray, List.mem_singleton,
+    Set.setOf_eq_eq_singleton, Set.setOf_true, Set.mem_setOf_eq]
+    rintro q₁ q₂ a q₂' rfl hst
+    use (finFunToBitVec q₂')
+    simpa [hst]
 
 end fsm
 /- A bunch of RawCNFAs that implement the relations we care about -/
@@ -405,7 +487,7 @@ def RawCNFA.autEq : RawCNFA (BitVec 2) :=
   m
 
 def CNFA.autEq : CNFA 2 :=
-  ⟨RawCNFA.autEq, by simp [RawCNFA.autEq]; sorry⟩
+  ⟨RawCNFA.autEq, by simp [RawCNFA.autEq]; aesop⟩
 
 def NFA.autEq : NFA (BitVec 2) Unit :=
   { start := ⊤, accept := ⊤, step := fun () a => if a = 0 ∨ a = 3 then ⊤ else ⊥ }
@@ -419,6 +501,32 @@ lemma NFA'.autEq_correct : autEq.correct2 (fun _ => eqRel) eqRel := by
   constructor <;> simp [autEq, eqRel]
   rintro ⟨⟩ ⟨a⟩ w bv1 bv2
   fin_cases a <;> simp [NFA.stepSet]
+
+@[simp] lemma CNFA.autEq_stateMax : autEq.m.stateMax = 1 := by rfl
+@[simp]
+lemma CNFA.autEq_states : s ∈ autEq.m.states ↔ s = 0 := by
+  simp [RawCNFA.states]
+
+def autEq_equiv : CNFA.autEq.m.states ≃ NFA'.autEq.σ where
+  toFun := fun ⟨s, hs⟩ =>
+    match s with
+    | _ => ()
+  invFun q :=
+    match q with
+    | () => ⟨0, by simp⟩
+  left_inv := by rintro ⟨x, hx⟩; symm; simp at hx; simp [hx]
+  right_inv := by rintro ⟨⟩; simp
+
+local macro "go" : tactic =>
+  `(tactic | simp [CNFA.autEq, RawCNFA.autEq, NFA'.autEq, NFA.autEq, autEq_equiv,
+       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
+       RawCNFA.empty, RawCNFA.tr, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
+
+lemma CNFA.autEq_spec : autEq.Sim NFA'.autEq := by
+  apply simulFun_sim autEq_equiv; constructor
+  · rintro ⟨⟩; go
+  · rintro ⟨⟩; go
+  · rintro a ⟨⟩ ⟨⟩; fin_cases a <;> go
 
 -- Automata recognizing unsigned comparisons
 
@@ -434,15 +542,27 @@ def RawCNFA.autUnsignedCmp (cmp: RelationOrdering) : RawCNFA (BitVec 2) :=
   let m := m.addManyTrans [0#2, 1#2, 3#2] sgt sgt
   let m := m.addTrans 2#2 sgt slt
   let m := m.addManyTrans [0#2, 2#2, 3#2] slt slt
-  let m := m.addTrans 1#2 slt sgt
+  let mf := m.addTrans 1#2 slt sgt
   match cmp with
-  | .lt => m.addFinal slt
-  | .le => (m.addFinal slt).addFinal seq
-  | .gt => m.addFinal sgt
-  | .ge => (m.addFinal sgt).addFinal seq
+  | .lt => mf.addFinal slt
+  | .le => (mf.addFinal slt).addFinal seq
+  | .gt => mf.addFinal sgt
+  | .ge => (mf.addFinal sgt).addFinal seq
+
+-- TODO: make it faster with a custom tactic?
+lemma RawCNFA.autoUnsignedCmp_wf {cmp} : autUnsignedCmp cmp |>.WF := by
+  unfold autUnsignedCmp; aesop
 
 def CNFA.autUnsignedCmp (cmp: RelationOrdering) : CNFA 2 :=
-  ⟨RawCNFA.autUnsignedCmp cmp, by sorry⟩
+  ⟨RawCNFA.autUnsignedCmp cmp, RawCNFA.autoUnsignedCmp_wf⟩
+
+@[simp]
+lemma CNFA.autUnsignedCmp_stateMax cmp : (autUnsignedCmp cmp).m.stateMax = 3 := by
+  rcases cmp <;> rfl
+
+@[simp]
+lemma CNFA.autUnsignedCmp_states cmp : s ∈ (autUnsignedCmp cmp).m.states ↔  s < 3 := by
+  simp [RawCNFA.states]
 
 inductive NFA.unsignedCmpState : Type where
 | eq | gt | lt
@@ -517,37 +637,63 @@ lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsign
         · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
         · use .lt; simp_all
 
+
 -- Automata recognizing signed comparisons
 
 def RawCNFA.autSignedCmp (cmp: RelationOrdering) : RawCNFA (BitVec 2) :=
-  let m := RawCNFA.empty
-  let (seq, m) := m.newState
-  let (sgt, m) := m.newState
-  let (slt, m) := m.newState
-  let (sgtfin, m) := m.newState
-  let (sltfin, m) := m.newState
-  let m := m.addInitial seq
-  let m := m.addManyTrans [0#2, 3#2] seq seq
-  let m := m.addTrans 1#2 seq sgt
-  let m := m.addTrans 2#2 seq slt
-  let m := m.addTrans 1#2 seq sltfin
-  let m := m.addTrans 2#2 seq sgtfin
-  let m := m.addManyTrans [0#2, 1#2, 3#2] sgt sgt
-  let m := m.addManyTrans [0#2, 2#2, 3#2] sgt sgtfin
-  let m := m.addTrans 1#2 sgt sltfin
-  let m := m.addTrans 2#2 sgt slt
-  let m := m.addManyTrans [0#2, 2#2, 3#2] slt slt
-  let m := m.addManyTrans [0#2, 1#2, 3#2] slt sltfin
-  let m := m.addTrans 2#2 slt sgtfin
-  let m := m.addTrans 1#2 slt sgt
+  let (m, sltfin, sgtfin, seq) := m
   match cmp with
   | .lt => m.addFinal sltfin
   | .le => (m.addFinal sltfin).addFinal seq
   | .gt => m.addFinal sgtfin
   | .ge => (m.addFinal sgtfin).addFinal seq
+where
+  @[inline]
+  m :=
+    let m := RawCNFA.empty
+    let (seq, m) := m.newState
+    let (sgt, m) := m.newState
+    let (slt, m) := m.newState
+    let (sgtfin, m) := m.newState
+    let (sltfin, m) := m.newState
+    let m := m.addInitial seq
+    let m := m.addManyTrans [0#2, 3#2] seq seq
+    let m := m.addTrans 1#2 seq sgt
+    let m := m.addTrans 2#2 seq slt
+    let m := m.addTrans 1#2 seq sltfin
+    let m := m.addTrans 2#2 seq sgtfin
+    let m := m.addManyTrans [0#2, 1#2, 3#2] sgt sgt
+    let m := m.addManyTrans [0#2, 2#2, 3#2] sgt sgtfin
+    let m := m.addTrans 1#2 sgt sltfin
+    let m := m.addTrans 2#2 sgt slt
+    let m := m.addManyTrans [0#2, 2#2, 3#2] slt slt
+    let m := m.addManyTrans [0#2, 1#2, 3#2] slt sltfin
+    let m := m.addTrans 2#2 slt sgtfin
+    (m.addTrans 1#2 slt sgt, sltfin, sgtfin, seq)
+
+-- TODO: make it faster with a custom tactic?
+@[simp]
+lemma RawCNFA.autSignedCmp_m_wf : autSignedCmp.m.1 |>.WF := by
+  unfold autSignedCmp.m; aesop
+
+-- TODO: make it faster with a custom tactic?
+lemma RawCNFA.autSignedCmp_wf {cmp} : autSignedCmp cmp |>.WF := by
+  unfold autSignedCmp; simp
+  have _ : autSignedCmp.m.2.1 ∈ autSignedCmp.m.1.states := by unfold autSignedCmp.m; aesop
+  have _ : autSignedCmp.m.2.2.1 ∈ autSignedCmp.m.1.states := by unfold autSignedCmp.m; aesop
+  have _ : autSignedCmp.m.2.2.2 ∈ autSignedCmp.m.1.states := by unfold autSignedCmp.m; aesop
+  aesop
 
 def CNFA.autSignedCmp (cmp: RelationOrdering) : CNFA 2 :=
-  ⟨RawCNFA.autSignedCmp cmp, by sorry⟩
+  ⟨RawCNFA.autSignedCmp cmp, RawCNFA.autSignedCmp_wf⟩
+
+@[simp]
+lemma CNFA.SignedCmp_stateMax cmp : (autSignedCmp cmp).m.stateMax = 5 := by
+  rcases cmp <;> rfl
+
+@[simp]
+lemma CNFA.SignedCmp_states cmp : s ∈ (autSignedCmp cmp).m.states ↔  s < 5 := by
+  simp [RawCNFA.states]
 
 inductive NFA.signedCmpState : Type where
 | eq | gt | lt | ltfin | gtfin
@@ -585,7 +731,7 @@ def NFA'.autSignedCmpSA (q : NFA.signedCmpState) : BVRel :=
 
 -- TODO: why is it BitVec.toInt_inj but its BitVec.toNat_eq?
 
-lemma BitVec.sle_iff_slt_or_eq {w : ℕ} (bv1 bv2 : BitVec w):
+private lemma BitVec.sle_iff_slt_or_eq {w : ℕ} (bv1 bv2 : BitVec w):
     (bv2 ≥ₛ bv1) = true ↔ (bv2 >ₛ bv1) = true ∨ bv1 = bv2 := by
   simp [BitVec.sle, BitVec.slt, le_iff_lt_or_eq, BitVec.toInt_inj]
 
@@ -644,7 +790,92 @@ lemma NFA'.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpS
         · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
         · use .gt; simp_all
 
-def RawCNFA.autMsbSet' : RawCNFA (BitVec 1) :=
+def unsigned_equiv cmp : (CNFA.autUnsignedCmp cmp).m.states ≃ (NFA'.autUnsignedCmp cmp).σ where
+  toFun := fun ⟨s, hs⟩ =>
+    match s with
+    | 0 => .eq
+    | 1 => .gt
+    | _ => .lt
+  invFun q :=
+    match q with
+    | .eq => ⟨0, by simp⟩
+    | .gt => ⟨1, by simp⟩
+    | .lt => ⟨2, by simp⟩
+  left_inv := by
+    simp; rintro ⟨x, hx⟩
+    rcases x with _ | _ | _ | n
+    · rfl
+    · rfl
+    · rfl
+    · simp at hx; simp [State] at *; omega
+  right_inv := by simp; rintro x; rcases x <;> rfl
+
+local macro "go" : tactic =>
+  `(tactic | simp [CNFA.autUnsignedCmp, RawCNFA.autUnsignedCmp, NFA'.autUnsignedCmp, NFA.autUnsignedCmp,
+       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
+       RawCNFA.empty, RawCNFA.tr, NFA.unsignedCmpStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
+
+set_option maxHeartbeats 1000000 in
+lemma CNFA.autUnsignedCmp_spec {cmp} : (CNFA.autUnsignedCmp cmp).Sim (NFA'.autUnsignedCmp cmp) := by
+  apply simulFun_sim (unsigned_equiv cmp)
+  constructor
+  · rintro q; rcases cmp <;> rcases q <;> simp only [unsigned_equiv] <;> go
+  · rintro q; rcases cmp <;> rcases q <;> simp only [unsigned_equiv] <;> go
+  · rintro a q q'; rcases cmp <;> rcases q <;> rcases q' <;> fin_cases a <;>
+      simp only [unsigned_equiv] <;>
+      (simp [NFA'.autUnsignedCmp, NFA.autUnsignedCmp, NFA.unsignedCmpStep, instFinEnumBitVec_sSA];
+       native_decide)
+
+def signed_equiv cmp : (CNFA.autSignedCmp cmp).m.states ≃ (NFA'.autSignedCmp cmp).σ where
+  toFun := fun ⟨s, hs⟩ =>
+    match s with
+    | 0 => .eq
+    | 1 => .gt
+    | 2 => .lt
+    | 3 => .gtfin
+    | _ => .ltfin
+  invFun q :=
+    match q with
+    | .eq => ⟨0, by simp⟩
+    | .gt => ⟨1, by simp⟩
+    | .lt => ⟨2, by simp⟩
+    | .gtfin => ⟨3, by simp⟩
+    | .ltfin => ⟨4, by simp⟩
+  left_inv := by
+    simp; rintro ⟨x, hx⟩
+    rcases x with _ | _ | _ | _ | _ | n
+    · rfl
+    · rfl
+    · rfl
+    · rfl
+    · rfl
+    · simp at hx; simp [State] at *; omega
+  right_inv := by simp; rintro x; rcases x <;> rfl
+
+local macro "go" : tactic =>
+  `(tactic | simp [CNFA.autSignedCmp, RawCNFA.autSignedCmp, RawCNFA.autSignedCmp.m, NFA'.autSignedCmp, NFA.autSignedCmp,
+       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
+       RawCNFA.empty, RawCNFA.tr, NFA.signedCmpStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
+
+@[simp]
+lemma CNFA.autSignedCmp_tr {cmp} :
+    s' ∈ (autSignedCmp cmp).m.tr s a ↔ s' ∈ RawCNFA.autSignedCmp.m.1.tr s a := by
+  simp only [autSignedCmp, RawCNFA.autSignedCmp]
+  rcases cmp <;> simp
+
+set_option maxHeartbeats 1000000 in
+lemma CNFA.autSignedCmp_spec {cmp} : (CNFA.autSignedCmp cmp).Sim (NFA'.autSignedCmp cmp) := by
+  apply simulFun_sim (signed_equiv cmp)
+  constructor
+  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go
+  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go
+  · rintro a q q'
+    simp [NFA'.autSignedCmp, NFA.autSignedCmp, signed_equiv] at q q' ⊢
+    rcases q <;> rcases q' <;> fin_cases a <;>
+      (simp [NFA'.autSignedCmp, NFA.autSignedCmp, NFA.signedCmpStep, instFinEnumBitVec_sSA];
+       native_decide)
+
+def RawCNFA.autMsbSet : RawCNFA (BitVec 1) :=
   let m := RawCNFA.empty
   let (si, m) := m.newState
   let (sf, m) := m.newState
@@ -654,8 +885,12 @@ def RawCNFA.autMsbSet' : RawCNFA (BitVec 1) :=
   let m := m.addManyTrans [0, 1] si si
   m
 
+lemma RawCNFA.autMsbSet_wf : autMsbSet.WF := by
+  unfold autMsbSet; aesop
+
+@[inline]
 def CNFA.autMsbSet : CNFA 1 :=
-  ⟨RawCNFA.autMsbSet', by sorry⟩
+  ⟨RawCNFA.autMsbSet, RawCNFA.autMsbSet_wf⟩
 
 inductive NFA.msbState : Type where
 | i | f
@@ -680,14 +915,13 @@ def NFA.msbSA (q : msbState) : Language (BitVec 1) :=
   | .i => ⊤
   | .f => msbLang
 
--- TODO: rewrite with the n-ary `correct` predicate!
 def NFA.msbCorrect : msb.correct msbSA msbLang := by
   constructor
   · simp [msb, msbSA]
-  · intros w; induction w using List.list_reverse_induction
-    case base =>
+  · intros w; induction w using List.reverseRecOn
+    case nil =>
       simp [msb, msbSA, msbLang]; intros q; cases q <;> simp
-    case ind w a ih =>
+    case append_singleton w a ih =>
       have h : msb.eval w = { q | w ∈ msbSA q } := by ext; simp [ih]
       simp [h]; rintro (_ | _)
       · simp [msb, msbSA, msbLang, stepSet, msbStep]
@@ -697,8 +931,34 @@ def NFA.msbCorrect : msb.correct msbSA msbLang := by
           cases q <;> simp_all
         · rintro rfl; use .i; simp
 
+@[simp]
+lemma autMsb_states : s ∈ CNFA.autMsbSet.m.states ↔ s < 2 := by
+  simp [RawCNFA.states]; rfl
+
+def autMsb_equiv : CNFA.autMsbSet.m.states ≃ NFA'.autMsbSet.σ where
+  toFun := fun ⟨s, hs⟩ =>
+    match s with
+    | 0 => .i
+    | 1 => .f
+    | _ => .i
+  invFun q :=
+    match q with
+    | .i => ⟨0, by simp⟩
+    | .f => ⟨1, by simp⟩
+  left_inv := by simp; rintro x; fin_cases x <;> rfl
+  right_inv := by simp; rintro x; rcases x <;> rfl
+
+local macro "go" : tactic =>
+  `(tactic | simp [CNFA.autMsbSet, RawCNFA.autMsbSet, NFA'.autMsbSet, NFA.msb,
+       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
+       RawCNFA.empty, RawCNFA.tr, NFA.msbStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
+
 lemma CNFA.autMsbSet_spec : CNFA.autMsbSet.Sim NFA'.autMsbSet := by
-  sorry
+  apply simulFun_sim autMsb_equiv
+  constructor
+  · rintro q; rcases q <;> simp only [autMsb_equiv] <;> go
+  · rintro q; rcases q <;> simp only [autMsb_equiv] <;> go
+  · rintro a q q'; rcases q <;> rcases q' <;> fin_cases a <;> simp only [autMsb_equiv] <;> go
 
 @[simp]
 lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
@@ -711,7 +971,7 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     rw [←heq]
     simp [dec]
     rw [BitVec.msb_eq_getLsbD_last]
-    rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
+    rw [BitVec.ofFn_getLsbD (by omega)]
     simp
     rw [List.getLast?_eq_getElem?] at hl
     rw [List.getElem?_eq_getElem (by omega)] at hl
@@ -727,11 +987,25 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     simp; rw [List.getLast?_eq_getElem?]
     simp; constructor
     · rw [List.getElem?_eq_getElem (by simp; omega)]; simp
-    · ext i hi; rw [BitVec.ofFn_getLsbD' _ _ (by omega)]
+    · ext i hi; rw [BitVec.ofFn_getLsbD (by omega)]
       rw [BitVec.msb_eq_getLsbD_last] at h
       simp [←BitVec.getLsbD_eq_getElem]
       obtain rfl : i = 0 := by omega
       simp_all
+
+def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
+  decide (wp.sat s n)
+
+def RawCNFA.autWidth (wp : WidthPredicate) (n : Nat) : RawCNFA (BitVec 0) :=
+  let m := RawCNFA.empty
+  let m := (List.range (n + 1)).foldl (init := m) fun m _ =>
+    let (s, m) := m.newState
+    let m := if wp.final? n s then m.addFinal s else m
+    if s > 0 then m.addTrans (BitVec.zero 0) (s-1) s else m
+  m.addInitial 0
+
+def CNFA.autWidth (wp : WidthPredicate) (n : Nat) : CNFA 0 :=
+  ⟨RawCNFA.autWidth wp n, sorry⟩
 
 end nfas_relations
 
@@ -748,7 +1022,11 @@ def AutoStructs.Relation.absAutOfRelation (rel : Relation) : NFA' 2 :=
 
 lemma autOfRelation_spec (r : AutoStructs.Relation) :
   r.autOfRelation.Sim r.absAutOfRelation := by
-  sorry
+  simp [AutoStructs.Relation.autOfRelation, AutoStructs.Relation.absAutOfRelation]
+  rcases r
+  · exact CNFA.autEq_spec
+  · exact CNFA.autSignedCmp_spec
+  · exact CNFA.autUnsignedCmp_spec
 
 @[simp]
 lemma autOfRelation_accepts (r : AutoStructs.Relation) :
@@ -794,6 +1072,7 @@ def binopAbsNfa (op : Binop) (M1 M2: NFA' n) : NFA' n :=
 
 def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
   match φ with
+  | .width wp n => CNFA.autWidth wp n
   | .atom rel t1 t2 =>
     let m1 := FSM.ofTerm t1 |> CNFA.ofFSM
     let m2 := FSM.ofTerm t2 |> CNFA.ofFSM
@@ -818,6 +1097,7 @@ def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
 
 def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
   match φ with
+  | .width wp n => sorry
   | .atom rel t1 t2 =>
     let m1 := FSM.ofTerm t1 |> NFA'.ofFSM
     let m2 := FSM.ofTerm t2 |> NFA'.ofFSM
@@ -842,6 +1122,7 @@ def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
 
 lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
   induction φ
+  case width rel n => sorry
   case atom rel t1 t2 =>
     apply CNFA.proj_spec
     apply CNFA.inter_spec
@@ -880,6 +1161,7 @@ lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
 lemma absNfaToFomrmula_spec (φ : Formula) :
     (absNfaOfFormula φ).accepts = φ.language := by
   induction φ
+  case width wp n => sorry
   case atom rel t1 t2 =>
     simp [absNfaOfFormula, binopAbsNfa]; ac_nf
   case msbSet t =>
@@ -921,8 +1203,13 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
   extract_lets bvs at hx
   suffices hin : bvs ∈ (⊤ : Set _) by
     rw [←h] at hin
-    simp [Set.instMembership, Set.Mem] at hin; assumption
+    simp +zetaDelta [Set.instMembership, Set.Mem] at hin; assumption
   simp
+
+theorem Formula.denote_of_isUniversal {p : Predicate}
+    (heval : formulaIsUniversal (formula_of_predicate p)) :
+    ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
+  sorry
 
 -- -- For testing the comparison operators.
 -- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=

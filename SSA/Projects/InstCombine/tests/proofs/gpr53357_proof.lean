@@ -6,10 +6,12 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gpr53357_proof
 theorem src_thm (e e_1 : IntW 32) :
-  add (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by 
+  add (LLVM.and e_1 e) (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -19,7 +21,7 @@ theorem src_thm (e e_1 : IntW 32) :
 
 
 theorem src2_thm (e e_1 : IntW 32) :
-  add (LLVM.and e_1 e) (LLVM.xor (LLVM.or e e_1) (const? 32 (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by 
+  add (LLVM.and e_1 e) (LLVM.xor (LLVM.or e e_1) (const? 32 (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -30,7 +32,7 @@ theorem src2_thm (e e_1 : IntW 32) :
 
 theorem src3_thm (e e_1 : IntW 32) :
   add (LLVM.and e_1 e) (LLVM.and (LLVM.xor e (const? 32 (-1))) (LLVM.xor e_1 (const? 32 (-1)))) ⊑
-    LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by 
+    LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -40,7 +42,7 @@ theorem src3_thm (e e_1 : IntW 32) :
 
 
 theorem src4_thm (e e_1 : IntW 32) :
-  add (LLVM.and e_1 e) (LLVM.xor (LLVM.or e e_1) (const? 32 (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by 
+  add (LLVM.and e_1 e) (LLVM.xor (LLVM.or e e_1) (const? 32 (-1))) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -50,7 +52,7 @@ theorem src4_thm (e e_1 : IntW 32) :
 
 
 theorem src5_thm (e e_1 : IntW 32) :
-  add (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))) (LLVM.and e_1 e) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by 
+  add (LLVM.xor (LLVM.or e_1 e) (const? 32 (-1))) (LLVM.and e_1 e) ⊑ LLVM.xor (LLVM.xor e_1 e) (const? 32 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

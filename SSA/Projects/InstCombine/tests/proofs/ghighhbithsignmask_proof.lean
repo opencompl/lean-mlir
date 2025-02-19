@@ -6,9 +6,11 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section ghighhbithsignmask_proof
-theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ashr e (const? 64 63) := by 
+theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ashr e (const? 64 63) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -18,7 +20,7 @@ theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ash
 
 
 theorem t0_exact_thm (e : IntW 64) :
-  sub (const? 64 0) (lshr e (const? 64 63) { «exact» := true }) ⊑ ashr e (const? 64 63) { «exact» := true } := by 
+  sub (const? 64 0) (lshr e (const? 64 63) { «exact» := true }) ⊑ ashr e (const? 64 63) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -27,7 +29,7 @@ theorem t0_exact_thm (e : IntW 64) :
     all_goals sorry
 
 
-theorem t2_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lshr e (const? 64 63) := by 
+theorem t2_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lshr e (const? 64 63) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -37,7 +39,7 @@ theorem t2_thm (e : IntW 64) : sub (const? 64 0) (ashr e (const? 64 63)) ⊑ lsh
 
 
 theorem t3_exact_thm (e : IntW 64) :
-  sub (const? 64 0) (ashr e (const? 64 63) { «exact» := true }) ⊑ lshr e (const? 64 63) { «exact» := true } := by 
+  sub (const? 64 0) (ashr e (const? 64 63) { «exact» := true }) ⊑ lshr e (const? 64 63) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -48,7 +50,7 @@ theorem t3_exact_thm (e : IntW 64) :
 
 theorem n9_thm (e : IntW 64) :
   sub (const? 64 0) (lshr e (const? 64 62)) ⊑
-    sub (const? 64 0) (lshr e (const? 64 62)) { «nsw» := true, «nuw» := false } := by 
+    sub (const? 64 0) (lshr e (const? 64 62)) { «nsw» := true, «nuw» := false } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -58,7 +60,7 @@ theorem n9_thm (e : IntW 64) :
 
 
 theorem n10_thm (e : IntW 64) :
-  sub (const? 64 1) (lshr e (const? 64 63)) ⊑ zext 64 (icmp IntPredicate.sgt e (const? 64 (-1))) := by 
+  sub (const? 64 1) (lshr e (const? 64 63)) ⊑ zext 64 (icmp IntPredicate.sgt e (const? 64 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

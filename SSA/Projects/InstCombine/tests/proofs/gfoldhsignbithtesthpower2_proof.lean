@@ -6,11 +6,13 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gfoldhsignbithtesthpower2_proof
 theorem pow2_or_zero_is_negative_commute_thm (e : IntW 8) :
   icmp IntPredicate.slt (LLVM.and (sub (const? 8 0) (mul (const? 8 42) e)) (mul (const? 8 42) e)) (const? 8 0) ⊑
-    icmp IntPredicate.eq (mul e (const? 8 42)) (const? 8 (-128)) := by 
+    icmp IntPredicate.eq (mul e (const? 8 42)) (const? 8 (-128)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +23,7 @@ theorem pow2_or_zero_is_negative_commute_thm (e : IntW 8) :
 
 theorem pow2_or_zero_is_not_negative_commute_thm (e : IntW 8) :
   icmp IntPredicate.sgt (LLVM.and (sub (const? 8 0) (mul (const? 8 42) e)) (mul (const? 8 42) e)) (const? 8 (-1)) ⊑
-    icmp IntPredicate.ne (mul e (const? 8 42)) (const? 8 (-128)) := by 
+    icmp IntPredicate.ne (mul e (const? 8 42)) (const? 8 (-128)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

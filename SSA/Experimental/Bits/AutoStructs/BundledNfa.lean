@@ -53,6 +53,10 @@ lemma union_accepts (M N : NFA' n) :
     (M.union N).accepts = M.accepts ∪ N.accepts := by
   simp [accepts, accepts', union]; rw [Set.image_union]
 
+def flipAccept (M : NFA' n) : NFA' n where
+  σ := _
+  M := M.M.flipAccept
+
 def neg (M : NFA' n) : NFA' n where
   σ := _
   M := M.M.neg
@@ -74,6 +78,8 @@ lemma reduce_accepts {M : NFA' n} : M.reduce.accepts = M.accepts := by
 def determinize (M : NFA' n) : NFA' n where
   σ := _
   M := M.M.toDFA.toNFA
+
+lemma neg_eq {M : NFA' n} : M.neg = M.determinize.flipAccept := by rfl
 
 def lift (f : Fin n → Fin m) (M : NFA' n) : NFA' m where
   σ := _

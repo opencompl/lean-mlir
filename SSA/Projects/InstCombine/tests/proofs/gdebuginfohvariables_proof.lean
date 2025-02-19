@@ -6,9 +6,11 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gdebuginfohvariables_proof
-theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := by 
+theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -18,7 +20,7 @@ theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := 
 
 
 theorem test_cast_select_thm (e : IntW 1) :
-  zext 32 (select e (const? 16 3) (const? 16 5)) ⊑ select e (const? 32 3) (const? 32 5) := by 
+  zext 32 (select e (const? 16 3) (const? 16 5)) ⊑ select e (const? 32 3) (const? 32 5) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

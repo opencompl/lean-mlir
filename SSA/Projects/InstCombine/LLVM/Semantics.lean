@@ -411,9 +411,7 @@ def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
 @[simp_llvm_option]
 def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w := do
   let c ← c?
-  match c with
-  | 1#1 => x?
-  | 0#1 => y?
+  if c = 1#1 then x? else y?
 
 inductive IntPredicate where
   | eq

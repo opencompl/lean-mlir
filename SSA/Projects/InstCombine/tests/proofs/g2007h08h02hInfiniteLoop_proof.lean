@@ -6,11 +6,13 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section g2007h08h02hInfiniteLoop_proof
 theorem test_thm (e e_1 : IntW 16) :
   sext 64 (add (sext 32 e_1) (sext 32 e)) ⊑
-    sext 64 (add (sext 32 e_1) (sext 32 e) { «nsw» := true, «nuw» := false }) := by 
+    sext 64 (add (sext 32 e_1) (sext 32 e) { «nsw» := true, «nuw» := false }) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

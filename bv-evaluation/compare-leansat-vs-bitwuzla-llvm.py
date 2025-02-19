@@ -12,6 +12,8 @@ BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 
 REPS = 1 
 
+TIMEOUT = 1800
+
 def clear_folder():
     for file in os.listdir(RESULTS_DIR):
         file_path = os.path.join(RESULTS_DIR, file)
@@ -32,7 +34,12 @@ def run_file(file: str):
         with open(log_file_path, 'w') as log_file:
             cmd = 'lake lean ' + file_path
             print(cmd)
-            subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
+            try:
+                subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
+            except subprocess.TimeoutExpired:
+                log_file.truncate(0)
+                log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
+                print(f"{file_path} - time out of {TIMEOUT} seconds reached")
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)

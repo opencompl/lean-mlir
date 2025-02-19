@@ -6,6 +6,8 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gpr72433_proof
 theorem widget_thm (e : IntW 32) :
@@ -16,7 +18,7 @@ theorem widget_thm (e : IntW 32) :
     shl
       (LLVM.or (shl (const? 32 20) (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «nsw» := true, «nuw» := true })
         (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «disjoint» := true })
-      (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «nsw» := true, «nuw» := true } := by 
+      (zext 32 (icmp IntPredicate.ne e (const? 32 0))) { «nsw» := true, «nuw» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -6,11 +6,13 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gsignext_proof
 theorem sextinreg_thm (e : IntW 32) :
   add (LLVM.xor (LLVM.and e (const? 32 65535)) (const? 32 (-32768))) (const? 32 32768) ⊑
-    ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true } := by 
+    ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -21,7 +23,7 @@ theorem sextinreg_thm (e : IntW 32) :
 
 theorem sextinreg_alt_thm (e : IntW 32) :
   add (LLVM.xor (LLVM.and e (const? 32 65535)) (const? 32 32768)) (const? 32 (-32768)) ⊑
-    ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true } := by 
+    ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -31,7 +33,7 @@ theorem sextinreg_alt_thm (e : IntW 32) :
 
 
 theorem sext_thm (e : IntW 16) :
-  add (LLVM.xor (zext 32 e) (const? 32 32768)) (const? 32 (-32768)) ⊑ sext 32 e := by 
+  add (LLVM.xor (zext 32 e) (const? 32 32768)) (const? 32 (-32768)) ⊑ sext 32 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -42,7 +44,7 @@ theorem sext_thm (e : IntW 16) :
 
 theorem sextinreg2_thm (e : IntW 32) :
   add (LLVM.xor (LLVM.and e (const? 32 255)) (const? 32 128)) (const? 32 (-128)) ⊑
-    ashr (shl e (const? 32 24)) (const? 32 24) { «exact» := true } := by 
+    ashr (shl e (const? 32 24)) (const? 32 24) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -52,7 +54,7 @@ theorem sextinreg2_thm (e : IntW 32) :
 
 
 theorem test5_thm (e : IntW 32) :
-  ashr (shl e (const? 32 16)) (const? 32 16) ⊑ ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true } := by 
+  ashr (shl e (const? 32 16)) (const? 32 16) ⊑ ashr (shl e (const? 32 16)) (const? 32 16) { «exact» := true } := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -61,7 +63,7 @@ theorem test5_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem test6_thm (e : IntW 16) : ashr (shl (zext 32 e) (const? 32 16)) (const? 32 16) ⊑ sext 32 e := by 
+theorem test6_thm (e : IntW 16) : ashr (shl (zext 32 e) (const? 32 16)) (const? 32 16) ⊑ sext 32 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -71,7 +73,7 @@ theorem test6_thm (e : IntW 16) : ashr (shl (zext 32 e) (const? 32 16)) (const? 
 
 
 theorem ashr_thm (e : IntW 32) :
-  add (LLVM.xor (lshr e (const? 32 5)) (const? 32 67108864)) (const? 32 (-67108864)) ⊑ ashr e (const? 32 5) := by 
+  add (LLVM.xor (lshr e (const? 32 5)) (const? 32 67108864)) (const? 32 (-67108864)) ⊑ ashr e (const? 32 5) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

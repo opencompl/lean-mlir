@@ -94,13 +94,13 @@ elab "print_goal_as_error " : tactic => do
   pure ()
 
 -- TODO: should these go into Std?
-def Vector.ofList {α : Type u} (l : List α) : Mathlib.Vector α l.length :=
+def Vector.ofList {α : Type u} (l : List α) : List.Vector α l.length :=
 ⟨l, rfl⟩
 
-def Vector.ofArray {α : Type u} (a : Array α) : Mathlib.Vector α a.size :=
+def Vector.ofArray {α : Type u} (a : Array α) : List.Vector α a.size :=
  Vector.ofList a.toList
 
-instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Mathlib.Vector τ n) where
+instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (List.Vector τ n) where
   name := s!"Vector ({inst.name}) {n}"
   parse? str := do
     let arr : Array τ ← Cli.ParseableType.parse? str

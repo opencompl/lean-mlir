@@ -6,12 +6,14 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gmodulo_proof
 theorem modulo2_thm (e : IntW 32) :
   add (select (icmp IntPredicate.slt (LLVM.srem e (const? 32 2)) (const? 32 0)) (const? 32 2) (const? 32 0))
       (LLVM.srem e (const? 32 2)) { «nsw» := true, «nuw» := false } ⊑
-    LLVM.and e (const? 32 1) := by 
+    LLVM.and e (const? 32 1) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,7 +25,7 @@ theorem modulo2_thm (e : IntW 32) :
 theorem modulo4_thm (e : IntW 32) :
   add (select (icmp IntPredicate.slt (LLVM.srem e (const? 32 4)) (const? 32 0)) (const? 32 4) (const? 32 0))
       (LLVM.srem e (const? 32 4)) { «nsw» := true, «nuw» := false } ⊑
-    LLVM.and e (const? 32 3) := by 
+    LLVM.and e (const? 32 3) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,7 +37,7 @@ theorem modulo4_thm (e : IntW 32) :
 theorem modulo32_thm (e : IntW 32) :
   add (select (icmp IntPredicate.slt (LLVM.srem e (const? 32 32)) (const? 32 0)) (const? 32 32) (const? 32 0))
       (LLVM.srem e (const? 32 32)) { «nsw» := true, «nuw» := false } ⊑
-    LLVM.and e (const? 32 31) := by 
+    LLVM.and e (const? 32 31) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

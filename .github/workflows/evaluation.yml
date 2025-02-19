@@ -1,10 +1,9 @@
-name: Performance
+name: Evaluation
 on:
   push:
     branches:
       - "main"
   pull_request:
-  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -15,7 +14,9 @@ permissions:
 
 jobs:
   build:
-    name: tools, scaling, and auto-generated stmts
+    name: Evaluation of Tactics & Decision Procedures
+    # Use expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-self-hosted-runners
     runs-on: self-hosted
     steps:
       - name: Checkout 🛎️
@@ -44,10 +45,14 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build
 
-      - name: Run LLVM
+      - name: Run LLVM Symbolic
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
-          echo "Symbolic"
+
+      - name: Run LLVM
+        continue-on-error: true
+        run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
 
       - name: Run Alive Symbolic
@@ -72,7 +77,7 @@ jobs:
 
       - name: Compare LLVM
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py > /dev/null)
+          (cd bv-evaluation; python3 ./collect-data-llvm.py)
 
       - name: Compare HDEl
         run: |

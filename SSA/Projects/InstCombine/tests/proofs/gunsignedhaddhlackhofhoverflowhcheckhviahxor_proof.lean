@@ -6,11 +6,13 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gunsignedhaddhlackhofhoverflowhcheckhviahxor_proof
 theorem t3_no_extrause_thm (e e_1 : IntW 8) :
   icmp IntPredicate.uge (LLVM.xor e_1 (const? 8 (-1))) e ⊑
-    icmp IntPredicate.ule e (LLVM.xor e_1 (const? 8 (-1))) := by 
+    icmp IntPredicate.ule e (LLVM.xor e_1 (const? 8 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

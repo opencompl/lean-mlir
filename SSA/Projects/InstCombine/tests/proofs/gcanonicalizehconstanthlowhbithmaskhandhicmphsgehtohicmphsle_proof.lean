@@ -6,10 +6,12 @@ open LLVM
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
 
 section gcanonicalizehconstanthlowhbithmaskhandhicmphsgehtohicmphsle_proof
 theorem p0_thm (e : IntW 8) :
-  icmp IntPredicate.sge (LLVM.and e (const? 8 3)) e ⊑ icmp IntPredicate.slt e (const? 8 4) := by 
+  icmp IntPredicate.sge (LLVM.and e (const? 8 3)) e ⊑ icmp IntPredicate.slt e (const? 8 4) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

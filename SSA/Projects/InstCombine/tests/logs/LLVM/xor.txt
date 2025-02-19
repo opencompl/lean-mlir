@@ -591,14 +591,7 @@
 2: llvm.xor
 2: llvm.return
 
-1: "PR96857_xor_with_noundef"
-2: llvm.func
-2: llvm.mlir.constant
-2: llvm.and
-2: llvm.xor
-2: llvm.and
-2: llvm.xor
-2: llvm.return
+4: "PR96857_xor_with_noundef" has unsupported operation: noundef
 
 1: "PR96857_xor_without_noundef"
 2: llvm.func
