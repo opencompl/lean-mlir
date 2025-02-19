@@ -411,7 +411,7 @@ def BitVec.any (b : BitVec w) (f : Fin w → Bool → Bool) :=
 
 theorem BitVec.any_iff_exists {bv : BitVec w} :
     bv.any p ↔ ∃ (i : Fin w), p i (bv.getLsbD i) := by
-  simp [any]; rfl
+  simp [any]
 
 -- could this become a `where` clause in `determinize`?
 def CNFA.determinize.inits (m : CNFA n) : Array (BitVec m.m.stateMax) :=
@@ -448,6 +448,7 @@ lemma bv_to_set_ext : bv_to_set bv₁ = bv_to_set bv₂ ↔ bv₁ = bv₂ := by
   · rintro heq; ext i hi
     rw [Set.ext_iff] at heq
     simp_all [bv_to_set]
+    apply heq
   · tauto
 
 @[simp]
