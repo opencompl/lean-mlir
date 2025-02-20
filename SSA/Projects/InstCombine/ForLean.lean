@@ -3,6 +3,8 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
+open Lean Meta
+
 namespace Nat
 
 theorem eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
@@ -453,6 +455,51 @@ theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
     simp [BitVec.eq_nil x]
   · rw [BitVec.msb_allOnes (by omega)]
     by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
+
+theorem mul_eq_mul_shortcircuit_right {x y z : BitVec w} :
+    (x * z = y * z) ↔ (x = y ∨ (x * z = y * z)) := by
+  simp
+  intros h
+  congr
+
+theorem mul_eq_mul_shortcircuit_left {x y z : BitVec w} :
+    (z * x = z * y) ↔ (x = y ∨ (z * x = z * y)) := by
+  simp
+  intros h
+  congr
+
+simproc [] MulEqMulShortcircuitRight ((_ : BitVec _) * _ = _ * _) := fun e => do
+  -- matching for `a * b = c * d`
+  let_expr Eq bv l r := e | return .continue
+  let_expr HMul.hMul _ _ _ _ a b := l | return .continue
+  let_expr HMul.hMul _ _ _ _ c d := r | return .continue
+  let_expr BitVec w := bv | return .continue
+
+  if b != d then
+    return .continue
+
+  let eq  ← mkAppM ``Eq #[a, c]
+  let or ← mkAppM ``Or #[eq, e]
+  let iffProof := mkApp4 (mkConst ``mul_eq_mul_shortcircuit_right) w a c b
+  let proof := mkApp3 (mkConst ``propext) e or iffProof
+  return .done { expr := or, proof? := proof}
+
+simproc [] MulEqMulShortcircuitLeft ((_ : BitVec _) * _ = _ * _) := fun e => do
+  -- matching for `a * b = c * d`
+  let_expr Eq bv l r := e | return .continue
+  let_expr HMul.hMul _ _ _ _ a b := l | return .continue
+  let_expr HMul.hMul _ _ _ _ c d := r | return .continue
+  let_expr BitVec w := bv | return .continue
+
+  if a != c then
+    return .continue
+
+  let eq  ← mkAppM ``Eq #[b, d]
+  let or ← mkAppM ``Or #[eq, e]
+  let iffProof := mkApp4 (mkConst ``mul_eq_mul_shortcircuit_left) w b d c
+  let proof := mkApp3 (mkConst ``propext) e or iffProof
+  return .done { expr := or, proof? := proof}
+
 end BitVec
 
 namespace Bool
