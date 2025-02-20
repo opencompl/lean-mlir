@@ -499,15 +499,19 @@ end Bool
 theorem Option.some_bind'' (x : α) (f : α → Option β) : some x >>= f = f x := by
   simp
 
+theorem bind_distrib_if [Decidable b] [Monad m] (mt me : m α) (k : α → m β):
+    (if b then mt else me) >>= k = if b then mt >>= k else me >>= k := by
+  split <;> simp
+
 @[simp]
 theorem bind_if_then_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
     (if h then none else x) >>= f = if h then none else x >>= f := by
-  split <;> simp
+  simp [bind_distrib_if]
 
 @[simp]
 theorem bind_if_else_none_eq_if_bind (h : Prop) [Decidable h] (x : Option α) :
     (if h then x else none) >>= f = if h then x >>= f else none := by
-  split <;> simp
+  simp [bind_distrib_if]
 
 theorem if_if_eq_if_and (x y : Prop) [Decidable x] [Decidable y] :
    (if x then if y then a else b else b) = if x ∧ y then a else b := by
