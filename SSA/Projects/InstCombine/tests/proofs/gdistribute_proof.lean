@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gdistribute_proof
 theorem factorize_thm (e : IntW 32) : LLVM.and (LLVM.or e (const? 32 1)) (LLVM.or e (const? 32 2)) ⊑ e := by
@@ -64,5 +65,3 @@ theorem expand_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gselecthsafehtransforms_proof
 theorem cond_eq_and_const_thm (e e_1 : IntW 8) :
@@ -303,5 +304,3 @@ theorem orn_and_cmp_2_partial_logical_thm (e : IntW 1) (e_1 e_2 : IntW 16) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

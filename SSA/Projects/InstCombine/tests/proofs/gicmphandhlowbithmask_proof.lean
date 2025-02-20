@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphandhlowbithmask_proof
 theorem src_is_mask_zext_thm (e : IntW 8) (e_1 : IntW 16) :
@@ -442,5 +443,3 @@ theorem src_x_or_mask_ne_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

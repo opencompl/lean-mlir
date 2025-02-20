@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphandhshift_proof
 theorem icmp_eq_and_pow2_shl1_thm (e : IntW 32) :
@@ -359,5 +360,3 @@ theorem test_const_shr_and_1_ne_0_i1_negative_thm (e : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

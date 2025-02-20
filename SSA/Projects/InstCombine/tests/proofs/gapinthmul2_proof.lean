@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gapinthmul2_proof
 theorem test1_thm (e : IntW 177) : mul e (shl (const? 177 1) (const? 177 155)) âŠ‘ shl e (const? 177 155) := by
@@ -17,5 +18,3 @@ theorem test1_thm (e : IntW 177) : mul e (shl (const? 177 1) (const? 177 155)) â
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

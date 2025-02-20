@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphrange_proof
 theorem ugt_zext_thm (e : IntW 8) (e_1 : IntW 1) :
@@ -606,5 +607,3 @@ theorem icmp_slt_sext_ne_otherwise_nofold_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

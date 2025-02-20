@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphshlh1hoverflow_proof
 theorem icmp_shl_ugt_1_thm (e : IntW 8) :
@@ -61,5 +62,3 @@ theorem icmp_shl_ne_2_thm (e : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

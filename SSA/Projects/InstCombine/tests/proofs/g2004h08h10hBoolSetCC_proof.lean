@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section g2004h08h10hBoolSetCC_proof
 theorem test_thm (e : IntW 1) : icmp IntPredicate.ult e (const? 1 0) ⊑ const? 1 0 := by
@@ -17,5 +18,3 @@ theorem test_thm (e : IntW 1) : icmp IntPredicate.ult e (const? 1 0) ⊑ const? 
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

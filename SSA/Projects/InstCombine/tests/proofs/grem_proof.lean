@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section grem_proof
 theorem test1_thm (e : IntW 32) : LLVM.srem e (const? 32 1) ⊑ const? 32 0 := by
@@ -367,5 +368,3 @@ theorem urem_constant_dividend_select_of_constants_divisor_0_arm_thm (e : IntW 1
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

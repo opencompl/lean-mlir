@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphshrhlthgt_proof
 theorem lshrugt_01_00_thm (e : IntW 4) :
@@ -4030,5 +4031,3 @@ theorem negtest_near_pow2_cmpval_would_overflow_into_signbit_thm (e : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

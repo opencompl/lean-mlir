@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gdivhi1_proof
 theorem sdiv_i1_is_op0_thm (e e_1 : IntW 1) : LLVM.sdiv e_1 e ⊑ e_1 := by
@@ -44,5 +45,3 @@ theorem urem_i1_is_zero_thm (e e_1 : IntW 1) : urem e_1 e ⊑ const? 1 0 := by
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

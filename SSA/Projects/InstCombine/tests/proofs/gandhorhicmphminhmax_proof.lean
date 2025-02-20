@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gandhorhicmphminhmax_proof
 theorem slt_and_max_thm (e e_1 : IntW 8) :
@@ -1856,5 +1857,3 @@ theorem ugt_swap_or_not_min_commute_logical_thm (e e_1 : IntW 823) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

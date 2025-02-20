@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gudivremhchangehwidth_proof
 theorem udiv_i8_thm (e e_1 : IntW 8) : trunc 8 (LLVM.udiv (zext 32 e_1) (zext 32 e)) ⊑ LLVM.udiv e_1 e := by
@@ -168,5 +169,3 @@ theorem urem_c_i32_thm (e : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

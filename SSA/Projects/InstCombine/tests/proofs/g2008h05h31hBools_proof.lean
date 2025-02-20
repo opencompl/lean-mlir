@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section g2008h05h31hBools_proof
 theorem foo1_thm (e e_1 : IntW 1) : sub e_1 e ⊑ LLVM.xor e e_1 := by
@@ -44,5 +45,3 @@ theorem foo4_thm (e e_1 : IntW 1) : LLVM.sdiv e_1 e ⊑ e_1 := by
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

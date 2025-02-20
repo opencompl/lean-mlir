@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphtrunc_proof
 theorem ult_2_thm (e : IntW 32) :
@@ -106,5 +107,3 @@ theorem shl1_trunc_sgt4_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

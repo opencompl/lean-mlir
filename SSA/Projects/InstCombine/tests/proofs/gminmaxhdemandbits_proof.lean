@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gminmaxhdemandbits_proof
 theorem and_umax_less_thm (e : IntW 32) :
@@ -159,5 +160,3 @@ theorem and_min_7_8_thm (e : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

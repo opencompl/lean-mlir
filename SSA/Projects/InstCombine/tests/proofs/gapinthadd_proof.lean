@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gapinthadd_proof
 theorem test1_thm (e : IntW 1) : add (LLVM.xor e (const? 1 1)) (const? 1 1) ⊑ e := by
@@ -123,5 +124,3 @@ theorem test9_thm (e : IntW 77) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

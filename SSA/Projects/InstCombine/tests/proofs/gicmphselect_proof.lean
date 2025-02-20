@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gicmphselect_proof
 theorem icmp_select_const_thm (e e_1 : IntW 8) :
@@ -267,5 +268,3 @@ theorem icmp_eq_select_thm (e e_1 : IntW 32) (e_2 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

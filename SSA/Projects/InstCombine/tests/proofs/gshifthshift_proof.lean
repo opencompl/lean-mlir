@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gshifthshift_proof
 theorem shl_shl_thm (e : IntW 32) : shl (shl e (const? 32 6)) (const? 32 28) ⊑ const? 32 0 := by
@@ -188,5 +189,3 @@ theorem lshr_shl_demand4_thm (e : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

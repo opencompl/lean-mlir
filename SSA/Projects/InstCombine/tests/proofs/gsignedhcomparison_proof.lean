@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gsignedhcomparison_proof
 theorem scalar_zext_slt_thm (e : IntW 16) :
@@ -18,5 +19,3 @@ theorem scalar_zext_slt_thm (e : IntW 16) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

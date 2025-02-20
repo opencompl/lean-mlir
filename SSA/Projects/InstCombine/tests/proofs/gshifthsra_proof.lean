@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gshifthsra_proof
 theorem test1_thm (e : IntW 8) (e_1 : IntW 32) :
@@ -66,5 +67,3 @@ theorem hoist_ashr_ahead_of_sext_2_thm (e : IntW 8) : ashr (sext 32 e) (const? 3
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

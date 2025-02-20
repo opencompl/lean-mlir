@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gxor2_proof
 theorem test0_thm (e : IntW 32) :
@@ -431,5 +432,3 @@ theorem xor_notand_to_or_not4_thm (e e_1 e_2 : IntW 3) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gshifthaddhinseltpoison_proof
 theorem shl_C1_add_A_C2_i32_thm (e : IntW 16) :
@@ -39,5 +40,3 @@ theorem lshr_C1_add_A_C2_i32_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option exponentiation.threshold 500
 
 section gdivhshift_proof
 theorem t1_thm (e : IntW 32) (e_1 : IntW 16) :
@@ -293,5 +294,3 @@ theorem udiv_shl_pair3_thm (e e_1 e_2 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
