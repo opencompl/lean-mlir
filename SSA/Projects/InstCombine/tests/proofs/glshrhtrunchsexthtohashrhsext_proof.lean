@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section glshrhtrunchsexthtohashrhsext_proof
 theorem t0_thm (e : IntW 8) : sext 16 (trunc 4 (lshr e (const? 8 4))) ⊑ sext 16 (ashr e (const? 8 4)) := by

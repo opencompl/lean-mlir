@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section g2008h07h10hCastSextBool_proof
 theorem PR2539_A_thm (e : IntW 1) : icmp IntPredicate.slt (zext 32 e) (const? 32 1) ⊑ LLVM.xor e (const? 1 1) := by

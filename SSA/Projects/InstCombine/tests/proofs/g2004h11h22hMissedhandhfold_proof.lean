@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section g2004h11h22hMissedhandhfold_proof
 theorem test21_thm (e : IntW 8) : LLVM.and (ashr e (const? 8 7)) (const? 8 1) ⊑ lshr e (const? 8 7) := by

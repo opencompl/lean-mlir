@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gmisch2002_proof
 theorem cast_test_2002h08h02_thm (e : IntW 64) : zext 64 (trunc 8 e) ⊑ LLVM.and e (const? 64 255) := by

@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gapinthdiv1_proof
 theorem test1_thm (e : IntW 33) : LLVM.udiv e (const? 33 4096) ⊑ lshr e (const? 33 12) := by

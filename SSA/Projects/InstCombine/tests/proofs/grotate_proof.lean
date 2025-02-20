@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section grotate_proof
 theorem rotateleft_9_neg_mask_wide_amount_commute_thm (e : IntW 33) (e_1 : IntW 9) :

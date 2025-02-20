@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gzext_proof
 theorem test_sext_zext_thm (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := by

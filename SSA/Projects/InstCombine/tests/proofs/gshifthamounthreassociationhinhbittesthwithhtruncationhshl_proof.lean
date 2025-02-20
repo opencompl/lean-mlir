@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gshifthamounthreassociationhinhbittesthwithhtruncationhshl_proof
 theorem t0_const_after_fold_lshr_shl_ne_thm (e : IntW 64) (e_1 e_2 : IntW 32) :

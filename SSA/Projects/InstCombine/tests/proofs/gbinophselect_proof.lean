@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gbinophselect_proof
 theorem and_sel_op0_thm (e : IntW 1) : LLVM.and (select e (const? 32 25) (const? 32 0)) (const? 32 1) ⊑ zext 32 e := by

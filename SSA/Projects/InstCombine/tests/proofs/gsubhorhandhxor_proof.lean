@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gsubhorhandhxor_proof
 theorem sub_to_xor_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLVM.and e_1 e) ⊑ LLVM.xor e_1 e := by

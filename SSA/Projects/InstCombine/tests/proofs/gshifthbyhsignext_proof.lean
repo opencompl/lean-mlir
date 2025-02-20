@@ -8,7 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
-set_option exponentiation.threshold 500
+set_option exponentiation.threshold 1500
 
 section gshifthbyhsignext_proof
 theorem t0_shl_thm (e : IntW 8) (e_1 : IntW 32) : shl e_1 (sext 32 e) ⊑ shl e_1 (zext 32 e { «nneg» := true }) := by
