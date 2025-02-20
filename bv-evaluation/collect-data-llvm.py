@@ -120,6 +120,7 @@ for file in os.listdir(benchmark_dir):
                         elif "counter example" in l: 
                             tot = float(l.split("ms")[0].split("after ")[1])
                             if r == 0:
+                                print("found a counterexample in file "+file)
                                 counter_leanSAT_tot_times_average.append([tot])
                                 counter_leanSAT_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
                                 counter_leanSAT_sat_times_average.append([float(l.split("ms")[1].split("solving ")[1])])
