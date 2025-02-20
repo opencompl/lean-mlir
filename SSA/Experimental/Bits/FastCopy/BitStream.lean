@@ -3,9 +3,6 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Logic.Function.Iterate
 import SSA.Projects.InstCombine.ForLean
 -- TODO: upstream the following section
-
-namespace Copy
-
 section UpStream
 
 namespace Int
@@ -18,7 +15,7 @@ theorem bmod_eq_of_ge_and_le (z : Int) (m : Nat)
 theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
     (↑n : Int).bmod m = ↑(n % m) := by
   simp only [
-    _root_.Int.bmod, _root_.Int.ofNat_emod, ite_eq_left_iff,
+    bmod, ofNat_emod, ite_eq_left_iff,
     show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
     Nat.mod_eq_of_lt (by omega : n < m)
   ]
@@ -33,7 +30,7 @@ theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
         have := Int.zero_le_ofNat o
         contradiction
       }
-      simp only [Int.abs_eq_natAbs, Int.subNatNat, HAdd.hAdd, Add.add, Int.add]
+      simp only [Int.abs_eq_natAbs, subNatNat, HAdd.hAdd, Add.add, Int.add]
       have e : o.succ = (o.mod b.natAbs).add 1 := by
         simp only [Nat.mod, Nat.add]
         congr
@@ -215,6 +212,15 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
         apply BitVec.getLsbD_ge
         omega
 
+
+@[simp] theorem getElem_toBitVec (w : Nat) (x : BitStream) (i : Nat) (hi : i < w) :
+    (x.toBitVec w)[i] = ((decide (i < w)) && x i) := by
+  rw [← BitVec.getLsbD_eq_getElem]
+  simp
+
+@[simp] theorem getElemFin_toBitVec (w : Nat) (x : BitStream) (i : Fin w) :
+    (x.toBitVec w)[i] = ((decide (i < w)) && x i) := by
+  simp [← BitVec.getLsbD_eq_getElem]
 
 /-- `EqualUpTo w x y` holds iff `x` and `y` are equal in the first `w` bits -/
 def EqualUpTo (w : Nat) (x y : BitStream) : Prop :=
@@ -686,7 +692,7 @@ theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
     induction' n with n ih
     · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
-    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsbD_add]
+    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add]; 
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
 @[refl]
@@ -764,10 +770,7 @@ theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   · simp [EqualUpTo ,h]
   · intros n a
     simp [ofNat_one n, ofBitVec, a]
-    rw [← Bool.decide_and]
-    rcases n with rfl | n
-    · simp; omega
-    · simp
+    omega
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
@@ -881,9 +884,9 @@ section OfInt
 open Int in
 /-- Sign-extend an integer to its representation as a 2-adic number
 (morally, an infinite width 2s complement representation) -/
-def _root_.Copy.BitStream.ofInt : Int → BitStream
+def ofInt : Int → BitStream
   | .ofNat n  => ofNat n
-  | .negSucc n => -(ofNat (n+1))
+  | -[n+1]    => -(ofNat (n+1))
 
 /-- 'falseIffEq n i' = false ↔ i = n -/
 abbrev falseIffEq (n : Nat) : BitStream := fun i => decide (i != n)

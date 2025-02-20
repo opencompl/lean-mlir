@@ -1,7 +1,8 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Pi
+import Mathlib.Data.Finset.Union
 
-namespace Copy
+
 universe u v
 
 /--
@@ -19,11 +20,11 @@ inductive Circuit (α : Type u) : Type u
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
   | xor : Circuit α → Circuit α → Circuit α
-deriving Repr, DecidableEq
+deriving Repr, DecidableEq 
 
 open Lean in
 def formatCircuit {α : Type u} (formatVar : α → Format)  (c : Circuit α) : Lean.Format :=
-  match c with
+  match c with 
   | .tru => "T"
   | .fals => "F"
   | .var b v =>
@@ -785,10 +786,6 @@ instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit �
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
     by simp [always_true_iff, le_def, or_iff_not_imp_left]
 
-/-- Negate the value of the circuit -/
-def not {α : Type u} (c : Circuit α) : Circuit α :=
-  c ^^^ .tru
-
 def implies (c₁ c₂ : Circuit α) : Circuit α := (~~~ c₁) ||| c₂
 
 @[simp]
@@ -812,32 +809,32 @@ lemma le_iff_implies : ∀ (c₁ c₂ : Circuit α), c₁ ≤ c₂ ↔ (∀ f, e
 section Optimizer
 variable {α : Type u} [DecidableEq α]
 
-def optimize : Circuit α → Circuit α
+def optimize : Circuit α → Circuit α 
 | .tru => .tru
-| .fals => .fals
+| .fals => .fals 
 | .var b v => .var b v
-| .or l r =>
+| .or l r => 
    let l := optimize l
-   let r := optimize r
+   let r := optimize r 
    if l == r
    then l
    else l ||| r
-| .and l r =>
+| .and l r => 
    let l := optimize l
-   let r := optimize r
-   if l == r then l
+   let r := optimize r 
+   if l == r then l 
    else l &&& r
-| .xor l r =>
+| .xor l r => 
   let l := optimize l
-  let r := optimize r
+  let r := optimize r 
   if l == r
   then .fals
-  else
-    match l, r with
-    | .var b v, .var b' v' =>
-       if v == v'
-       then .ofBool <| b.xor b'
-       else l ^^^ r
+  else 
+    match l, r with 
+    | .var b v, .var b' v' => 
+       if v == v' 
+       then .ofBool <| b.xor b' 
+       else l ^^^ r 
     | _, _ => l ^^^ r
 end Optimizer
 
