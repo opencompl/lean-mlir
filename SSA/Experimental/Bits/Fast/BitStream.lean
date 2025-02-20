@@ -213,6 +213,15 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
         omega
 
 
+@[simp] theorem getElem_toBitVec (w : Nat) (x : BitStream) (i : Nat) (hi : i < w) :
+    (x.toBitVec w)[i] = ((decide (i < w)) && x i) := by
+  rw [← BitVec.getLsbD_eq_getElem]
+  simp
+
+@[simp] theorem getElemFin_toBitVec (w : Nat) (x : BitStream) (i : Fin w) :
+    (x.toBitVec w)[i] = ((decide (i < w)) && x i) := by
+  simp [← BitVec.getLsbD_eq_getElem]
+
 /-- `EqualUpTo w x y` holds iff `x` and `y` are equal in the first `w` bits -/
 def EqualUpTo (w : Nat) (x y : BitStream) : Prop :=
   ∀ i < w, x i = y i
