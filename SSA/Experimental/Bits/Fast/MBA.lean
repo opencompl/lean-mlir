@@ -1,6 +1,7 @@
 import SSA.Experimental.Bits.Fast.Attr
 import Lean
 import Lean.ToExpr
+import Lean.Data.RArray
 
 @[simp]
 theorem BitVec.zero_concat (b : Bool) : (0#0).concat b = BitVec.ofBool b := by
@@ -55,6 +56,10 @@ theorem Env.getLsb_getElem {env : Env (w + 1)} (n : Nat) :
     (Env.getLsb env)[n]? = (env[n]?).map (fun (x : BitVec (w + 1)) => BitVec.ofBool (x.getLsbD 0)) := by
   simp [Env.getLsb]
 
+def Env.sext (env : Env w) (w' : Nat) : Env w' := 
+  List.map (fun x => x.signExtend w') env
+
+
 def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w
 | .var n => xs[n]?.getD (0#w)
 | .and x y => x.reflect xs &&& y.reflect xs
@@ -63,7 +68,6 @@ def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w
 | .not x => ~~~ (x.reflect xs)
 
 def Factor.denote {w : Nat} (xs : Env w) (f : Factor) : Nat := f.reflect xs |>.toNat
-
 
 theorem Factor.denote_eq_toNat_reflect {w : Nat} (xs : Env w) (f : Factor) :
   f.denote xs = (f.reflect xs |>.toNat) := rfl
@@ -77,6 +81,12 @@ We show their equivalence to allow us to decide on `denoteFin`, and to use this 
 def EnvFin (w : Nat) (n : Nat) := Fin n → (BitVec w)
 def EnvFin.getLsb {w : Nat} (env : EnvFin (w + 1) n) : EnvFin 1 n := fun n => BitVec.ofBool <| (env n).getLsbD 0
 def EnvFin.getNonLsbs {w : Nat} (env : EnvFin (w + 1) n) : EnvFin w n := fun n => (env n).extractLsb' 1 w
+
+def EnvFin.sext (env : EnvFin w n) (w' : Nat) : EnvFin w' n := fun n => (env n).signExtend w'
+
+@[simp]
+theorem EnvFin.get_sext {env : EnvFin w n} {w' : Nat} (i : Fin n) : 
+  ((env.sext w') i) = (env i).signExtend w' := rfl
 
 /-- Using 'env.getLsb' shortens all bitvectors to be one-bit, and so calling 'getLsbD' on this environment will only return the lowest bit if available -/
 @[simp]
@@ -511,7 +521,6 @@ theorem Eqn.reflect_width_zero  (es : Eqn) (env : Env 0) :
   case cons e es ih =>
     simp [ih, Eqn.reflect]
 
-
 @[simp]
 theorem Eqn.denote_width_zero  (es : Eqn) (env : Env 0) :
     Eqn.denote es env = 0 := by
@@ -536,6 +545,7 @@ theorem Eqn.reflect_eq_ofInt_denote {w : Nat} (xs : Env w) (e : Eqn) :
   case cons t ts ih =>
     simp
     simp [BitVec.ofInt_add, ih]
+
 @[simp]
 theorem Eqn.reflect_zero_of_denote_zero {w : Nat} (xs : Env w) (e : Eqn) (h : e.denote xs = 0) :
     e.reflect xs = 0 := by simp [h]
@@ -549,7 +559,8 @@ def Env.getLsb_eq_of_width_one (env : List (BitVec 1)) : Env.getLsb env = env :=
   simp [this]
 
 
-theorem Eqn.denote_hard_case_aux {eqn : Eqn}
+
+theorem Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero {eqn : Eqn}
     (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), Eqn.denoteFin eqn env1 = 0) :
     ∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteFin env = 0 := by
   intros w
@@ -564,26 +575,120 @@ theorem Eqn.denote_hard_case_aux {eqn : Eqn}
     simp
 
 
-theorem Eqn.denote_hard_case_of_denote (e : Eqn) (h : ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0) :
+theorem Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
+    (h : ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0) :
     ∀ {w : Nat} (env : List (BitVec w)), e.reflect env = 0 := by
   intros w env
   rw [Eqn.reflect_eq_ofInt_denote]
   rw [← Eqn.denoteFin_eq_denote (xsFin := EnvFin.ofEnv env e.numVars) (h := by simp)]
-  rw [Eqn.denote_hard_case_aux]
+  rw [Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero]
   · simp
   · intros env1
     apply h
 
-/-
-theorem zero_of_ofInt_zero_of_lt (i : Int) (w : Nat)
-    (h : BitVec.ofInt w i = 0#w) (h' : i.natAbs < 2^w) : i = 0 := by
-  have : (BitVec.ofInt w i).toNat = (0#w).toNat := by rw [h]
-  simp at this
-  rw [Int.emod_def] at this
-  rw [Int.ediv_eq_of_eq_mul_left] at this
-  · simp at this
-    sorry
--/
+#check Int.bdiv_add_bmod
+#check Int.bdiv
+#eval (6 : Int).bdiv 6
+#eval (5 : Int).bdiv 6
+#eval (4 : Int).bdiv 6
+#eval (3 : Int).bdiv 6  -- >= half rounds upwards
+#eval (2 : Int).bdiv 6
+#eval (1 : Int).bdiv 6
+#eval (0 : Int).bdiv 6
+#eval (-1 : Int).bdiv 6
+#eval (-2 : Int).bdiv 6
+#eval (-3 : Int).bdiv 6 -- >= half rounds upwards
+#eval (-4 : Int).bdiv 6
+#eval (-5 : Int).bdiv 6
+
+
+#eval (6 : Int).bmod 6
+#eval (5 : Int).bmod 6
+#eval (4 : Int).bmod 6
+#eval (3 : Int).bmod 6  -- >= half rounds upwards
+#eval (2 : Int).bmod 6
+#eval (1 : Int).bmod 6
+#eval (0 : Int).bmod 6
+#eval (-1 : Int).bmod 6
+#eval (-2 : Int).bmod 6
+#eval (-3 : Int).bmod 6 -- >= half rounds upwards
+#eval (-4 : Int).bmod 6
+#eval (-5 : Int).bmod 6
+
+
+theorem Int.bmod_eq_of_natAbs_lt (x : Int) (n : Nat) (hn : 2 * x.natAbs < n) : 
+    x.bmod n = x := by 
+  rcases x with x | x 
+  case ofNat => 
+   simp at *; 
+   rw [Int.bmod_def]
+   norm_cast
+   have : x % n = x := by 
+    apply Nat.mod_eq_of_lt
+    omega
+   rw [this]
+   have : x < (n + 1) / 2 := by 
+     rw [Nat.lt_div_iff_mul_lt (by decide)]
+     omega
+   simp [this]
+  case negSucc => 
+    simp at *
+    norm_cast
+    rw [Int.bmod_def]
+    -- This is true because 'emod' will flip it over, making it larger that (n + 1) / 2
+    have : ¬ (Int.negSucc x % (n : Int) < ((n : Int) + 1) / 2) := by sorry
+    simp [this]
+    have h := Int.ediv_add_emod (Int.negSucc x) n
+    -- see that (Int.negSucc x / n) = -1, giving us the intended statement..
+    -- This is true because 'Int.negSucc x < 0' and '(Int.negSucc x).natAbs < n'
+    have hMinusOne : (Int.negSucc x / ↑n) = -1 := by 
+     rw [Int.div_def]
+     sorry
+    simp [hMinusOne] at h
+    omega
+
+
+theorem Int.eq_of_ofInt_zero_of_lt {w : Nat} {x : Int}
+    (hx : BitVec.ofInt w x = 0#w) (hw : 2 * x.natAbs < 2 ^ w) : x = 0 := by
+ have : BitVec.toInt (BitVec.ofInt w x) = BitVec.toInt (0#w) := by rw [hx]
+ simp at this
+ rw [Int.bmod_eq_of_natAbs_lt] at this
+ · simp [this]
+ · omega
+
+theorem Factor.denoteFin_eq_denoteFin_sext_of_le (w w' : Nat) (f : Factor)
+    (env : EnvFin w f.numVars) (hw : w ≤ w') : 
+    f.denoteFin env = 0 ↔ f.denoteFin (env.sext w') = 0 := by 
+  induction f 
+  case var n => 
+    simp [denoteFin, reflectFin]
+    constructor 
+    · intros h 
+      simp [BitVec.toNat_signExtend, h]
+      intros h 
+      -- show that 2^w' <= 2^w
+      sorry 
+    · intros h 
+      simp [BitVec.toNat_signExtend, hw] at h
+      have := h.1
+      rw [Nat.mod_eq_of_lt] at this
+      · exact this 
+      · sorry
+  repeat sorry
+
+/-- If we increase the bitwidth and sign-extend, the denotations must agree -/
+theorem Eqn.denoteFin_eq_denoteFin_sext_of_le (w w' : Nat) (e : Eqn)
+    (env : EnvFin w e.numVars) (hw : w ≤ w') : 
+    e.denoteFin env = e.denoteFin (env.sext w') := by sorry
+
+theorem Eqn.denoteFin_width_one_eqo_zero_of_reflect_eq_zero (e : Eqn)
+    (h : ∀ {w : Nat} (env : EnvFin w e.numVars), e.denoteFin env = 0) : 
+     ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0 := by
+  intros envFin1
+  generalize hv : e.denoteFin envFin1 = v
+  specialize h (envFin1.sext (v.natAbs))
+  rw [← hv]
+  sorry
 
 
 /--
@@ -618,13 +723,12 @@ Central theorem: To decide if a bitvector equation is zero for all widths, it su
 -/
 theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (w : Nat) (env : List (BitVec w))
     (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) :
-    Eqn.reflectEqZero w e env  := by
+    Eqn.reflectEqZero w e env := by
   rw [Eqn.reflectEqZero]
-  rw [Eqn.denote_hard_case_of_denote]
+  rw [Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero]
   simp
   apply h
 
-#check Eqn.forall_width_reflect_zero_of_width_one_denote_zero
 
 @[simp]
 theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by
