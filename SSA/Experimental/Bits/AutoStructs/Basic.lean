@@ -8,6 +8,7 @@ import Std.Data.HashMap.Lemmas
 import Batteries.Data.Fin.Basic
 import Batteries.Data.Array.Lemmas
 import Mathlib.Computability.NFA
+import Mathlib.Algebra.Group.Nat.Range
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Perm.Basic
