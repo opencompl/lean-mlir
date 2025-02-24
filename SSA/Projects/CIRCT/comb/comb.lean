@@ -2,111 +2,125 @@ import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
 
-
+/-!
+  This file defines CIRCT's Comb dialect's semantics: https://circt.llvm.org/docs/Dialects/Comb/
+  We currently only support 2-state logic.
+-/
 namespace Comb
 
-/-- Variadic `add` operation on a list of `BitVec w` -/
+inductive IcmpPredicate where
+  | eq
+  | ne
+  | slt
+  | sle
+  | sgt
+  | sge
+  | ult
+  | ule
+  | ugt
+  | uge
+deriving Inhabited, DecidableEq, Repr
+
+instance : ToString IcmpPredicate where
+  toString
+  | .eq  => "eq"
+  | .ne  => "ne"
+  | .slt => "ugt"
+  | .sle => "sle"
+  | .sgt => "sgt"
+  | .sge => "sge"
+  | .ult => "ult"
+  | .ule => "ule"
+  | .ugt => "ugt"
+  | .uge => "uge"
+
+/-- Variadic `add` operation with a list of bitvectors with width `w` as input -/
 def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.add (0#w) l
 
-/-- Variadic `and` operation on a list of `BitVec w` -/
+/-- Variadic `and` operation with a list of bitvectors with width `w` as input -/
 def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.and (0#w) l
 
-/-- Concatenate a list of bitvecs `xs`, where the length of bitvec xs[i] is given by
-  element ls[i] in a list of nat `ls`-/
+/-- Concatenate a list of bitvecs `xs`, where the length of bitvec `xs[i]` is given by
+  element `ls[i]` in a list of nat `ls` -/
 def concat {ls : List Nat} : HVector BitVec ls → BitVec (List.sum ls)
   | .nil => 0#0
   | .cons x xs =>
      let xsSum := concat xs
      x ++ xsSum
 
-/-- Signed division between two `BitVec w` -/
+/-- Signed division -/
 def divs (x y : BitVec w) : BitVec w :=
   BitVec.sdiv x y
 
-/-- Unsigned division between two `BitVec w` -/
+/-- Unsigned division -/
 def divu (x y : BitVec w) : BitVec w :=
   BitVec.udiv x y
 
-/-- Extract the most significant bits from a `BitVec w` up to `lb` -/
+/-- Extract the `lb` lower bits from BitVec `x` -/
 def extract (x : BitVec w) (lb : Nat) : BitVec (w - lb) :=
   BitVec.truncate (w - lb) (BitVec.ushiftRight x lb)
 
+/-- Boolean comparison between two input BitVecs -/
+def icmp {w : Nat} (c : IcmpPredicate) (x y : BitVec w) : Bool :=
+  match c with
+    | .eq  => (x == y)
+    | .ne => (x != y)
+    | .sgt => (y.slt x)
+    | .sge => (y.sle x)
+    | .slt => (x.slt y)
+    | .sle => (x.sle y)
+    | .ugt => (x > y)
+    | .uge => (x ≥ y)
+    | .ult => (x < y)
+    | .ule => (x ≤ y)
 
-/-- Compare two integer values -/
-def icmp (x y : BitVec w) (op : Nat) : Bool :=
-  match op with
-  | 0 => x == y
-  | 1 => x != y
-  | 2 => BitVec.slt x y
-  | 3 => BitVec.sle x y
-  | 4 => x.toInt > y.toInt
-  | 5 => x.toInt ≥  y.toInt
-  | 6 => BitVec.ult x y
-  | 7 => BitVec.ule x y
-  | 8 => x.toNat > y.toNat
-  | 9 => x.toNat > y.toNat
-  /- ceq/cne = SV case in/equality ("===")
-    tests 4-state logical in/equality (0, 1, x, z)
-    TODO: model the concept.
-  -/
-  | 10 => x == y
-  | 11 => x == y
-  /- weq/wne = SV wild card inequality ("==?")
-    also based on 4-state logical in/equality,
-    with x and z values acting as wild cards.
-    TODO: model the concept.
-  -/
-  | 12 => x == y
-  | 13 => x == y
-  | _ => false
-
-/-- Signed modulo between two `BitVec w` -/
+/-- Signed modulo -/
 def mods (x y : BitVec w) : BitVec w :=
   BitVec.smod x y
 
-/-- Unsigned modulo between two `BitVec w` -/
+/-- Unsigned modulo -/
 def modu (x y : BitVec w) : BitVec w :=
   BitVec.umod x y
 
-/-- Variadic `mul` operation on a list of `BitVec w` -/
+/-- Variadic `mul` operation with a list of bitvectors with width `w` as input -/
 def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.mul (1#w) l
 
-/-- Return one or the other operand depending on a selector bit -/
+/- Generic `mux` operation for any type α -/
 def mux (x y : α) (cond : Bool) : α :=
   bif cond then x else y
 
-/-- Variadic `or` operation on a list of `BitVec w` -/
+/-- Variadic `or` operation with a list of bitvectors with width `w` as input -/
 def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.or (BitVec.zero w) l
 
-/-- Return the boolean parity value of `BitVec w` -/
+/-- Returns boolean parity value of BitVec `x` -/
 def parity (x : BitVec w) : Bool :=
   (BitVec.umod x 2#w) == 1
 
-/-- Replicate `BitVec w` `n` times -/
+/-- Replicate input BitVec `x` `n` times -/
 def replicate (x : BitVec w) (n : Nat) : BitVec (w * n) :=
   BitVec.replicate n x
 
-/-- Shift left between two `BitVec w` -/
+/-- Shift left -/
 def shl (x y : BitVec w) : BitVec w :=
   x <<< y
 
-/-- Signed shift right between two `BitVec w` -/
+/-- Signed shift right -/
 def shrs (x y : BitVec w) : BitVec w :=
   BitVec.sshiftRight' x y
 
-/-- Unigned shift right between two `BitVec w` -/
+/-- Unsigned shift right -/
 def shru (x y : BitVec w) : BitVec w :=
   BitVec.ushiftRight x y.toNat
 
-/-- Subtraction two `BitVec w` -/
+/-- Subtraction -/
 def sub (x y : BitVec w) : BitVec w :=
   x - y
 
-/-- Variadic `xor` operation on a list of `BitVec w` -/
+/-- Variadic `xor` operation with a list of bitvectors with width `w` as input -/
 def xor {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.xor (BitVec.zero w) l
 
@@ -123,27 +137,28 @@ inductive Op
 | divs (w : Nat)
 | divu (w : Nat)
 | extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
-| icmp (w : Nat) (n : Nat)
+| icmp (p : Comb.IcmpPredicate) (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat)
 | mux (w : Nat)
-| or (n : Nat)
+| or (w : Nat)
 | parity (w : Nat)
 | replicate (w : Nat) (n : Nat)
 | shl (w : Nat)
 | shrs (w : Nat)
 | shru (w : Nat)
 | sub (w : Nat)
-| xor (n : Nat)
+| xor (w : Nat)
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
-| nat (n : Nat): Ty
+| nat (ne_bot_of_le_ne_bot : Nat) : Ty
 | bool : Ty
 | list (w : Nat) : Ty -- list of bitvecs with the same length
 | hList (l : List Nat) : Ty -- dependent type bitvec
+| icmpPred (p : Comb.IcmpPredicate) : Ty -- dependent type bitvec
 deriving Inhabited, DecidableEq, Repr
 
 open TyDenote (toType) in
@@ -154,6 +169,7 @@ toType := fun
 | Ty.bool => Bool
 | Ty.list w => List (BitVec w)
 | Ty.hList l => HVector BitVec l
+| Ty.icmpPred _ => Comb.IcmpPredicate
 
 abbrev Comb : Dialect where
   Op := Op
@@ -170,7 +186,7 @@ def Op.sig : Op  → List Ty
   | .divs w => [Ty.bv w, Ty.bv w]
   | .divu w => [Ty.bv w, Ty.bv w]
   | .extract w n => [Ty.bv w, Ty.nat n]
-  | .icmp w n => [Ty.bv w, Ty.bv w, Ty.nat n]
+  | .icmp p w => [Ty.icmpPred p, Ty.bv w, Ty.bv w]
   | .mods w => [Ty.bv w, Ty.bv w]
   | .modu w => [Ty.bv w, Ty.bv w]
   | .mul w => [Ty.list w]
@@ -221,8 +237,8 @@ instance : DialectDenote (Comb) where
     | .concat _, arg, _ => Comb.concat (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .extract w n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
-    | .icmp _ _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
+    | .extract _ n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
+    | .icmp op _, arg, _ => Comb.icmp op (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mul _, arg, _ => Comb.mul (arg.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -249,6 +265,8 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
       return .bv (r.toNat!)
     | ["list", r] =>
       return .list (r.toNat!)
+    | ["icmpPred", r] =>
+      return r .toString
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
