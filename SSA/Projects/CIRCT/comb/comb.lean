@@ -5,10 +5,11 @@ import SSA.Projects.CIRCT.Stream.WeakBisim
 
 namespace Comb
 
-
+/-- Variadic `add` operation on a list of `BitVec w` -/
 def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.add (0#w) l
 
+/-- Variadic `and` operation on a list of `BitVec w` -/
 def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.and (0#w) l
 
@@ -21,15 +22,20 @@ def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
      let xsSum := concat xs
      x ++ xsSum
 
+/-- Signed division between two `BitVec w` -/
 def divs (x y : BitVec w) : BitVec w :=
   BitVec.sdiv x y
 
+/-- Unsigned division between two `BitVec w` -/
 def divu (x y : BitVec w) : BitVec w :=
   BitVec.udiv x y
 
+/-- Extract the most significant bits from a `BitVec w` up to `lb` -/
 def extract (x : BitVec w) (lb : Nat) : BitVec (w - lb) :=
   BitVec.truncate (w - lb) (BitVec.ushiftRight x lb)
 
+
+/-- Compare two integer values -/
 def icmp (x y : BitVec w) (op : Nat) : Bool :=
   match op with
   | 0 => x == y
@@ -57,43 +63,51 @@ def icmp (x y : BitVec w) (op : Nat) : Bool :=
   | 13 => x == y
   | _ => false
 
+/-- Signed modulo between two `BitVec w` -/
 def mods (x y : BitVec w) : BitVec w :=
   BitVec.smod x y
 
+/-- Unsigned modulo between two `BitVec w` -/
 def modu (x y : BitVec w) : BitVec w :=
   BitVec.umod x y
 
+/-- Variadic `mul` operation on a list of `BitVec w` -/
 def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.mul (1#w) l
 
-/- according to the docs the input of mux
-  can be any type. I'll stick to bitvecs for now. -/
-def mux (x y : BitVec w) (cond : Bool) : BitVec w :=
-  match cond with
-  | true => x
-  | false => y
+/-- Return one or the other operand depending on a selector bit -/
+def mux (x y : α) (cond : Bool) : α :=
+  bif cond then x else y
 
+/-- Variadic `or` operation on a list of `BitVec w` -/
 def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.or (BitVec.zero w) l
 
+/-- Return the boolean parity value of `BitVec w` -/
 def parity (x : BitVec w) : Bool :=
   (BitVec.umod x 2#w) == 1
 
+/-- Replicate `BitVec w` `n` times -/
 def replicate (x : BitVec w) (n : Nat) : BitVec (w * n) :=
   BitVec.replicate n x
 
+/-- Shift left between two `BitVec w` -/
 def shl (x y : BitVec w) : BitVec w :=
   x <<< y
 
+/-- Signed shift right between two `BitVec w` -/
 def shrs (x y : BitVec w) : BitVec w :=
   BitVec.sshiftRight' x y
 
+/-- Unigned shift right between two `BitVec w` -/
 def shru (x y : BitVec w) : BitVec w :=
   BitVec.ushiftRight x y.toNat
 
+/-- Subtraction two `BitVec w` -/
 def sub (x y : BitVec w) : BitVec w :=
   x - y
 
+/-- Variadic `xor` operation on a list of `BitVec w` -/
 def xor {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.xor (BitVec.zero w) l
 
