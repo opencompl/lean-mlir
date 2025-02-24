@@ -15,10 +15,9 @@ def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
 
 /-- Concatenate a list of bitvecs `xs`, where the length of bitvec xs[i] is given by
   element ls[i] in a list of nat `ls`-/
-def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
-  match (xs) with
-  | (.nil) => 0#0
-  | (.cons x xs) =>
+def concat {ls : List Nat} : HVector BitVec ls → BitVec (List.sum ls)
+  | .nil => 0#0
+  | .cons x xs =>
      let xsSum := concat xs
      x ++ xsSum
 
