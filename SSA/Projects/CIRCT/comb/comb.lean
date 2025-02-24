@@ -118,8 +118,8 @@ namespace MLIR2Comb
 section Dialect
 
 inductive Op
-| add (w : Nat) -- n is the number of arguments
-| and (w : Nat)
+| add (n : Nat) -- n is the number of arguments
+| and (n : Nat)
 | concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
 | divs (w : Nat)
 | divu (w : Nat)
@@ -129,14 +129,14 @@ inductive Op
 | modu (w : Nat)
 | mul (w : Nat)
 | mux (w : Nat)
-| or (w : Nat)
+| or (n : Nat)
 | parity (w : Nat)
 | replicate (w : Nat) (n : Nat)
 | shl (w : Nat)
 | shrs (w : Nat)
 | shru (w : Nat)
 | sub (w : Nat)
-| xor (w : Nat)
+| xor (n : Nat)
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
