@@ -263,8 +263,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     · rw [Nat.add_mod_of_add_mod_lt] at h
       simp only [el_one, toNat_mod_cancel] at h
       simp_all
-      simp [bv_toNat] at a_0
-      simp [bv_toNat, show 0 < w by omega] at a_1
+      simp [toNat_eq] at a_0
+      simp [toNat_eq, show 0 < w by omega] at a_1
       omega
       simp only [el_one, toNat_mod_cancel]
       rw [BitVec.toNat_eq] at a_allones
@@ -310,9 +310,9 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
 
-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
-[propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms alive_simplifyMulDivRem805'
+-- sorry /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
+-- [propext, Classical.choice, Quot.sound] -/
+-- #guard_msgs in #print axioms alive_simplifyMulDivRem805'
 
 /-
 Name: MulDivRem:290
