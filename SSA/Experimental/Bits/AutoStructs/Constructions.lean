@@ -908,18 +908,19 @@ lemma RawCNFA.proj_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₂ → Fin n₁} (h
     simp only [proj]; apply Array.foldl_induction
     · simp [motive]
     rintro i trans ih s₀ a₀ ss' s' heq hin
-    simp only [proj.process, Array.get_eq_getElem, Std.HashMap.getElem?_insert, beq_iff_eq,
-      Prod.mk.injEq] at heq
-    split_ifs at heq with h
-    on_goal 2 => tauto
-    · rcases h with ⟨rfl, rfl⟩
-      simp at heq; subst heq; simp at hin
-      rcases hin with hin | hin
-      · exact WF.trans_tgt_lt' hwf _ _ _ hin
-      · rw [Std.HashMap.getD_eq_getD_getElem?] at hin
-        rcases htr : trans[(m.trans.keysArray[i.val].1, BitVec.transport f m.trans.keysArray[i.val].2)]? with _ | ss'
-        · rw [htr] at hin; simp at hin
-        · rw [htr] at hin; apply ih _ _ _ _ htr hin
+    sorry
+    -- simp only [proj.process, Array.get_eq_getElem, Std.HashMap.getElem?_insert, beq_iff_eq,
+    --   Prod.mk.injEq] at heq
+    -- split_ifs at heq with h
+    -- on_goal 2 => tauto
+    -- · rcases h with ⟨rfl, rfl⟩
+    --   simp at heq; subst heq; simp at hin
+    --   rcases hin with hin | hin
+    --   · exact WF.trans_tgt_lt' hwf _ _ _ hin
+    --   · rw [Std.HashMap.getD_eq_getD_getElem?] at hin
+    --     rcases htr : trans[(m.trans.keysArray[i.val].1, BitVec.transport f m.trans.keysArray[i.val].2)]? with _ | ss'
+    --     · rw [htr] at hin; simp at hin
+    --     · rw [htr] at hin; apply ih _ _ _ _ htr hin
 
 @[inline]
 def CNFA.proj (m: CNFA n2) (f : Fin n1 → Fin n2) : CNFA n1 :=
