@@ -137,7 +137,7 @@ inductive Op
 | divs (w : Nat)
 | divu (w : Nat)
 | extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
-| icmp (p : Comb.IcmpPredicate) (w : Nat)
+| icmp (p : String) (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat)
@@ -158,7 +158,7 @@ inductive Ty
 | bool : Ty
 | list (w : Nat) : Ty -- list of bitvecs with the same length
 | hList (l : List Nat) : Ty -- dependent type bitvec
-| icmpPred (p : Comb.IcmpPredicate) : Ty -- dependent type bitvec
+| icmpPred (s : String) : Ty -- dependent type bitvec
 deriving Inhabited, DecidableEq, Repr
 
 open TyDenote (toType) in
@@ -238,7 +238,7 @@ instance : DialectDenote (Comb) where
     | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .extract _ n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
-    | .icmp op _, arg, _ => Comb.icmp op (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
+    | .icmp _ _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mul _, arg, _ => Comb.mul (arg.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -266,7 +266,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
     | ["list", r] =>
       return .list (r.toNat!)
     | ["icmpPred", r] =>
-      return r .toString
+      return .icmpPred r
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
@@ -324,12 +324,12 @@ def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Com
     (args := .cons a <| .cons k <| .nil)
     (regArgs := .nil)
 
-def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Comb) Γ .pure (.bool) :=
+def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred op)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
-    (op := .icmp w n)
+    (op := .icmp op w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .cons k <| .nil)
+    (args := .cons k <| .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
 def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
@@ -513,7 +513,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .bv w₁, .bv w₂, .nat n, "Comb.icmp" =>
+      | .bv w₁, .bv w₂, .icmpPred s, "Comb.icmp" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bool, icmp v₁ v₂ v₃⟩
