@@ -717,7 +717,9 @@ theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.bac
   exact hnd hdl (List.mem_singleton.mpr rfl)
 
 theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
-    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.toList.length → a.toList[i]? ≠ a.toList[j]? := List.nodup_iff_getElem?_ne_getElem?
+    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.toList.length → a[i]? ≠ a[j]? := by
+  simp_rw [←Array.getElem?_toList]
+  exact List.nodup_iff_getElem?_ne_getElem?
 
   -- List.nodup_iff_getElem?_ne_getElem?
 
