@@ -1216,10 +1216,32 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
     simp +zetaDelta [Set.instMembership, Set.Mem] at hin; assumption
   simp
 
+@[simp]
+lemma formula_predicate_term_match {t : Term} :
+    t.denote w vars = t.evalNat (vars[·]!) := by
+  induction t <;> simp_all [Term.denote, Term.evalNat]
+
+lemma formula_predicate_match {p : Predicate} :
+    p.denote w vars ↔ (formula_of_predicate p).sat' (vars[·]!) := by
+  induction p
+  case binary pred t₁ t₂ =>
+    cases pred <;> simp only [Predicate.denote, formula_predicate_term_match,
+      List.getElem!_eq_getElem?_getD, formula_of_predicate, Formula.sat', evalRelation]
+    · simp [instLTBitVec, BitVec.ult]
+    · simp [instLEBitVec, BitVec.ule]
+  case width rel w' =>
+     cases rel <;> simp [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
+  case land p₁ p₂ ih₁ ih₂ =>
+    simp_all [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
+  case lor p₁ p₂ ih₁ ih₂ =>
+    simp_all [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
+
 theorem Formula.denote_of_isUniversal {p : Predicate}
     (heval : formulaIsUniversal (formula_of_predicate p)) :
     ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
-  sorry
+  rintro w vars
+  apply decision_procedure_is_correct _ (λ n ↦ vars[n]!) at heval
+  simp_all [formula_predicate_match]
 
 -- -- For testing the comparison operators.
 -- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=
