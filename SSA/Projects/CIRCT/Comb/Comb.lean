@@ -167,9 +167,9 @@ toType := fun
 | Ty.bv w => BitVec w
 | Ty.nat _ => Nat
 | Ty.bool => Bool
-| Ty.list w => List (BitVec w)
-| Ty.hList l => HVector BitVec l
-| Ty.icmpPred _ => Comb.IcmpPredicate
+| Ty.list w => List (BitVec w) -- list of bitvec with length w
+| Ty.hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
+| Ty.icmpPred _=> Comb.IcmpPredicate
 
 abbrev Comb : Dialect where
   Op := Op
@@ -257,15 +257,20 @@ end Dialect
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
-    | ["bool"] =>
+    | ["Bool"] =>
       return .bool
-    | ["nat", r] =>
-      return .nat r.toNat!
-    | ["bv", r] =>
+    | ["Nat", r] =>
+      let rp := r.toNat?
+      if rp ≠ none then
+        return .nat r.toNat!
+      else
+        return .nat 0
+    | ["BitVec", r] =>
       return .bv (r.toNat!)
-    | ["list", r] =>
+    | ["List", r] =>
       return .list (r.toNat!)
-    | ["icmpPred", r] =>
+    | ["IcmpPred", r] =>
+      -- check whether one such
       return .icmpPred r
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
