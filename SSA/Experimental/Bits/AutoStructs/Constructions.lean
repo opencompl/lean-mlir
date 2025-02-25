@@ -908,8 +908,7 @@ lemma RawCNFA.proj_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₂ → Fin n₁} (h
     simp only [proj]; apply Array.foldl_induction
     · simp [motive]
     rintro i trans ih s₀ a₀ ss' s' heq hin
-    simp only [proj.process, Array.get_eq_getElem, Std.HashMap.getElem?_insert, beq_iff_eq,
-      Prod.mk.injEq] at heq
+    simp only [proj.process, Std.HashMap.getElem?_insert, beq_iff_eq, Prod.mk.injEq] at heq
     split_ifs at heq with h
     on_goal 2 => tauto
     · rcases h with ⟨rfl, rfl⟩
@@ -953,15 +952,13 @@ def CNFA.proj_tr (m : CNFA n₂) (f : Fin n₁ → Fin n₂) :
     constructor
     · rintro (hin | ⟨a', hin, heq, hin'⟩)
       · use t.2
-        sorry
-        -- simp +zetaDelta only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_take, Array.size_take,
-        --   lt_inf_iff, and_self, and_true, hin]
-        -- use i.val, by simp +zetaDelta
-      · sorry
-        -- use a'; simp [heq, hin']
-        -- simp only [Array.mem_iff_getElem, Array.getElem_take, Array.size_take, Fin.is_le',
-        --   inf_of_le_left, lt_inf_iff] at hin ⊢
-        -- rcases hin with ⟨j, hj, heq⟩; use j, by omega
+        simp +zetaDelta only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_extract, zero_add,
+          Array.size_extract, tsub_zero, lt_inf_iff, hin, and_self, and_true]
+        use i.val, by simp +zetaDelta
+      · use a'; simp [heq, hin']
+        simp only [Array.mem_iff_getElem, Array.getElem_extract, zero_add, Array.size_extract,
+          Fin.is_le', inf_of_le_left, tsub_zero, lt_inf_iff] at hin ⊢
+        rcases hin with ⟨j, hj, heq⟩; use j, by omega
     · rintro ⟨a', hin, heq, hin'⟩
       by_cases heq? : a' = t.2
       · subst heq?; tauto
@@ -969,18 +966,16 @@ def CNFA.proj_tr (m : CNFA n₂) (f : Fin n₁ → Fin n₂) :
       rcases hin with ⟨j, hj, heq⟩
       have hneq : j ≠ i := by
         rintro rfl; apply heq?; apply_fun Prod.snd at heq; exact heq.symm
-      sorry
-      -- right; use a'; simp_all only [←heq, ne_eq, and_self, and_true]
-      -- use j, by omega
-  · sorry
-    -- simp only [ih, Array.mem_iff_getElem, Array.getElem_take, Array.size_take, Fin.is_le',
-    -- inf_of_le_left, lt_inf_iff]
-    -- constructor
-    -- · rintro ⟨a', ⟨j, _, _⟩, htp, hin⟩; use a', ⟨j, by use by omega⟩
-    -- · rintro ⟨a', ⟨j, _, heq⟩, htp, hin⟩
-    --   have _ : j ≠ i := by
-    --     rintro rfl; simp [←htp, heq] at hcond
-    --   use a', ⟨j, by use by omega⟩
+      right; use a'; simp_all only [←heq, ne_eq, and_self, and_true]
+      use j, by omega
+  · simp only [ih, Array.mem_iff_getElem, Array.getElem_extract, zero_add, Array.size_extract,
+    Fin.is_le', inf_of_le_left, tsub_zero, lt_inf_iff, motive]
+    constructor
+    · rintro ⟨a', ⟨j, _, _⟩, htp, hin⟩; use a', ⟨j, by use by omega⟩
+    · rintro ⟨a', ⟨j, _, heq⟩, htp, hin⟩
+      have _ : j ≠ i := by
+        rintro rfl; simp [←htp, heq] at hcond
+      use a', ⟨j, by use by omega⟩
 
 def CNFA.proj_spec (m : CNFA n2) (f : Fin n1 → Fin n2) {M : NFA' n2} :
     m.Sim M → (m.proj f |>.Sim (M.proj f)) := by
