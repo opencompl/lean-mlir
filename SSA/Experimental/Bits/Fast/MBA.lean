@@ -588,6 +588,12 @@ theorem Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
 
 #check Int.bdiv_add_bmod
 #check Int.bdiv
+#eval (12 : Int).bdiv 6
+#eval (11 : Int).bdiv 6
+#eval (10 : Int).bdiv 6
+#eval (9 : Int).bdiv 6  -- >= half rounds upwards
+#eval (8 : Int).bdiv 6
+#eval (7 : Int).bdiv 6
 #eval (6 : Int).bdiv 6
 #eval (5 : Int).bdiv 6
 #eval (4 : Int).bdiv 6
@@ -600,22 +606,156 @@ theorem Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
 #eval (-3 : Int).bdiv 6 -- >= half rounds upwards
 #eval (-4 : Int).bdiv 6
 #eval (-5 : Int).bdiv 6
+#eval (-6 : Int).bdiv 6
+#eval (-7 : Int).bdiv 6
+#eval (-8 : Int).bdiv 6
+#eval (-9 : Int).bdiv 6 -- >= half rounds upwards
+#eval (-10 : Int).bdiv 6
+#eval (-11 : Int).bdiv 6
 
 
-#eval (6 : Int).bmod 6
-#eval (5 : Int).bmod 6
-#eval (4 : Int).bmod 6
-#eval (3 : Int).bmod 6  -- >= half rounds upwards
-#eval (2 : Int).bmod 6
-#eval (1 : Int).bmod 6
-#eval (0 : Int).bmod 6
-#eval (-1 : Int).bmod 6
-#eval (-2 : Int).bmod 6
-#eval (-3 : Int).bmod 6 -- >= half rounds upwards
-#eval (-4 : Int).bmod 6
-#eval (-5 : Int).bmod 6
+-- ediv: In posittive side, floor. In negative side, floor
+#eval (12 : Int).ediv 6
+#eval (11 : Int).ediv 6
+#eval (10 : Int).ediv 6
+#eval (9 : Int).ediv 6  -- >= half rounds upwards
+#eval (8 : Int).ediv 6
+#eval (7 : Int).ediv 6
+#eval (6 : Int).ediv 6
+#eval (5 : Int).ediv 6
+#eval (4 : Int).ediv 6
+#eval (3 : Int).ediv 6  -- >= half rounds upwards
+#eval (2 : Int).ediv 6
+#eval (1 : Int).ediv 6
+#eval (0 : Int).ediv 6
+#eval (-1 : Int).ediv 6 -- anything negative rounds to -1
+#eval (-2 : Int).ediv 6
+#eval (-3 : Int).ediv 6 
+#eval (-4 : Int).ediv 6
+#eval (-5 : Int).ediv 6
+#eval (-6 : Int).ediv 6 -- anything negative rounds to -1
+#eval (-7 : Int).ediv 6
+#eval (-8 : Int).ediv 6 
+#eval (-9 : Int).ediv 6
+#eval (-10 : Int).ediv 6
+#eval (-11 : Int).ediv 6
+
+class Nonneg (i : Int) where 
+  Nonneg : i ≥ 0
+
+class Nonpos (i : Int) where 
+  Nonpos : i ≤ 0
 
 
+theorem ediv_natCast_eq_of_le (x : Int) (hx : 0 ≤ x)  (y : Nat) : x / (y : Int) = Int.ofNat (x.natAbs / y) := by 
+ rcases x with x | x 
+ · simp 
+ · omega
+@[simp] theorem ofNat_ediv_ofNat_eq (x y : Nat) : (Int.ofNat x) / (Int.ofNat y) = Int.ofNat (x / y) := rfl
+
+-- -x / y = if x = 0 then 0 else -((-x + 1) / y)
+theorem negSucc_ediv_ofNat_eq (x y : Nat) : (Int.negSucc x) / (y : Int) = if y = 0 then 0 else Int.negSucc (x / y) := by 
+  rw [Int.div_def, Int.ediv.eq_def]
+  rcases y with rfl | y <;> simp
+
+theorem Int.natAbs_add_eq_of_le_of_le {x y : Int} (hx : 0 ≤ x) (hy : 0 ≤ y) : (x + y).natAbs = x.natAbs + y.natAbs := by 
+  rw [Int.natAbs.eq_def]
+  rcases x with x | x <;> rcases y with y | y <;> first | omega | rfl
+
+theorem Int.natAbs_add_eq_of_le_iff_le {x y : Int} (h : 0 ≤ x ↔ 0 ≤ y) : (x + y).natAbs = x.natAbs + y.natAbs := by
+  by_cases hx : 0 ≤ x 
+  · have := h.mp hx
+    rcases x with x | x <;> rcases y with y | y <;> first | omega | rfl
+  · have := hx.imp h.mpr
+    rcases x with x | x <;> rcases y with y | y <;> omega 
+
+-- -x / y = if x = 0 then 0 else -((-x + 1) / y)
+theorem ediv_ofNat_eq_of_lt {x : Int} (hx : x < 0)  {y : Nat} :  x / (y : Int) = 
+    if y = 0
+    then 0
+    else - ((-x + 1) / y) + 1 := by 
+  rcases x with x  | x 
+  · simp at hx
+    omega
+  · rw [negSucc_ediv_ofNat_eq]
+    rcases y with rfl | y 
+    · simp
+    · rw [ediv_natCast_eq_of_le]
+      simp
+      · rw [Int.natAbs_add_eq_of_le_iff_le]
+        · simp
+          sorry
+        · omega
+      · omega
+
+
+#check Int.ediv
+@[simp] theorem ofNat_ediv_negSucc_eq (x y : Nat) : (Int.ofNat x) / (Int.negSucc y) = -Int.ofNat (x / (y +1)) := rfl
+
+-- tdiv: In positive side, floor. In negative side, ceil.
+#eval (12 : Int).tdiv 6
+#eval (11 : Int).tdiv 6
+#eval (10 : Int).tdiv 6
+#eval (9 : Int).tdiv 6
+#eval (8 : Int).tdiv 6
+#eval (7 : Int).tdiv 6
+#eval (6 : Int).tdiv 6
+#eval (5 : Int).tdiv 6
+#eval (4 : Int).tdiv 6
+#eval (3 : Int).tdiv 6 
+#eval (2 : Int).tdiv 6
+#eval (1 : Int).tdiv 6
+#eval (0 : Int).tdiv 6
+#eval (-1 : Int).tdiv 6 -- anything negative rounds to -1
+#eval (-2 : Int).tdiv 6
+#eval (-3 : Int).tdiv 6 
+#eval (-4 : Int).tdiv 6
+#eval (-5 : Int).tdiv 6
+#eval (-6 : Int).tdiv 6 -- anything negative rounds to -1
+#eval (-7 : Int).tdiv 6
+#eval (-8 : Int).tdiv 6 
+#eval (-9 : Int).tdiv 6
+#eval (-10 : Int).tdiv 6
+#eval (-11 : Int).tdiv 6
+#eval (-12 : Int).tdiv 6
+
+
+-- fdiv: in positive side, floor. in negative side, floor.
+#eval (12 : Int).fdiv 6
+#eval (11 : Int).fdiv 6
+#eval (10 : Int).fdiv 6
+#eval (9 : Int).fdiv 6
+#eval (8 : Int).fdiv 6
+#eval (7 : Int).fdiv 6
+#eval (6 : Int).fdiv 6
+#eval (5 : Int).fdiv 6
+#eval (4 : Int).fdiv 6
+#eval (3 : Int).fdiv 6 
+#eval (2 : Int).fdiv 6
+#eval (1 : Int).fdiv 6
+#eval (0 : Int).fdiv 6
+#eval (-1 : Int).fdiv 6 -- anything negative rounds to -1
+#eval (-2 : Int).fdiv 6
+#eval (-3 : Int).fdiv 6 
+#eval (-4 : Int).fdiv 6
+#eval (-5 : Int).fdiv 6
+#eval (-6 : Int).fdiv 6 -- anything negative rounds to -1
+#eval (-7 : Int).fdiv 6
+#eval (-8 : Int).fdiv 6 
+#eval (-9 : Int).fdiv 6
+#eval (-10 : Int).fdiv 6
+#eval (-11 : Int).fdiv 6
+#eval (-12 : Int).fdiv 6
+
+
+-- n.ediv d = 
+-- theorem Int.ofNat_ediv_ofNat -- sorry
+-- theorem Int.ofNat_ediv_negSucc -- sorry
+-- theorem Int.ofNat_ediv_ofNat -- sorry
+-- theorem Int.ofNat_ediv_ofNat -- sorry
+
+#check Int.bmod
+#check Int.ediv_nonneg_of_nonpos_of_nonpos
 theorem Int.bmod_eq_of_natAbs_lt (x : Int) (n : Nat) (hn : 2 * x.natAbs < n) : 
     x.bmod n = x := by 
   rcases x with x | x 
@@ -636,7 +776,10 @@ theorem Int.bmod_eq_of_natAbs_lt (x : Int) (n : Nat) (hn : 2 * x.natAbs < n) :
     norm_cast
     rw [Int.bmod_def]
     -- This is true because 'emod' will flip it over, making it larger that (n + 1) / 2
-    have : ¬ (Int.negSucc x % (n : Int) < ((n : Int) + 1) / 2) := by sorry
+    have : ¬ (Int.negSucc x % (n : Int) < ((n : Int) + 1) / 2) := by 
+      rw [Int.emod_negSucc]
+      simp
+      sorry
     simp [this]
     have h := Int.ediv_add_emod (Int.negSucc x) n
     -- see that (Int.negSucc x / n) = -1, giving us the intended statement..
@@ -656,40 +799,54 @@ theorem Int.eq_of_ofInt_zero_of_lt {w : Nat} {x : Int}
  · simp [this]
  · omega
 
-theorem Factor.denoteFin_eq_denoteFin_sext_of_le (w w' : Nat) (f : Factor)
+theorem BitVec.eq_zero_of_signExtend_eq_zero {x : BitVec w} {w' : Nat} (hw : w ≤ w')
+    (hx : x.signExtend w' = 0#w') : x = 0#w := by 
+  have : (x.signExtend w').toNat = (0#w').toNat := by simp [hx]
+  simp [BitVec.toNat_signExtend]at this
+  apply BitVec.eq_of_toNat_eq
+  simp only [BitVec.toNat_ofNat, Nat.zero_mod]
+  have := this.1
+  rw [Nat.mod_eq_of_lt] at this
+  · exact this
+  · apply Nat.lt_of_lt_of_le
+    · exact x.isLt
+    · apply Nat.pow_le_pow_of_le (by decide) hw
+
+theorem Factor.reflect_eq_reflect_sext_of_le (w w' : Nat) (f : Factor)
     (env : EnvFin w f.numVars) (hw : w ≤ w') : 
-    f.denoteFin env = 0 ↔ f.denoteFin (env.sext w') = 0 := by 
+    f.reflectFin env = 0#w ↔ f.reflectFin (env.sext w') = 0#w' := by 
   induction f 
   case var n => 
-    simp [denoteFin, reflectFin]
+    simp [reflectFin]
     constructor 
     · intros h 
       simp [BitVec.toNat_signExtend, h]
-      intros h 
+      ext i h
+      simp [BitVec.getLsbD_signExtend]
       -- show that 2^w' <= 2^w
-      sorry 
     · intros h 
-      simp [BitVec.toNat_signExtend, hw] at h
-      have := h.1
-      rw [Nat.mod_eq_of_lt] at this
-      · exact this 
-      · sorry
-  repeat sorry
+      apply BitVec.eq_zero_of_signExtend_eq_zero hw
+      exact h
+  case and x y xh yh =>
+   simp [reflectFin]
+   sorry
+  case or x y xh yh => sorry
+  case xor x y xh yh => sorry 
+  case not x => sorry
 
-/-- If we increase the bitwidth and sign-extend, the denotations must agree -/
-theorem Eqn.denoteFin_eq_denoteFin_sext_of_le (w w' : Nat) (e : Eqn)
-    (env : EnvFin w e.numVars) (hw : w ≤ w') : 
-    e.denoteFin env = e.denoteFin (env.sext w') := by sorry
 
-theorem Eqn.denoteFin_width_one_eqo_zero_of_reflect_eq_zero (e : Eqn)
-    (h : ∀ {w : Nat} (env : EnvFin w e.numVars), e.denoteFin env = 0) : 
-     ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0 := by
-  intros envFin1
-  generalize hv : e.denoteFin envFin1 = v
-  specialize h (envFin1.sext (v.natAbs))
-  rw [← hv]
+
+
+theorem Factor.denoteFin_eq_zero_iff_denoteFin_sext_eq_zero_of_le (w w' : Nat) (f : Factor)
+    (env : EnvFin w f.numVars) (hw : w ≤ w') : 
+    f.denoteFin env = 0 ↔ f.denoteFin (env.sext w') = 0 := by 
+  rw [Factor.denoteFin]
   sorry
 
+/-- If we increase the bitwidth and sign-extend, the denotations must agree -/
+theorem Eqn.denoteFin_eq_zero_iff_denoteFin_sext_eq_zero_of_le (w w' : Nat) (e : Eqn)
+    (env : EnvFin w e.numVars) (hw : w ≤ w') : 
+    e.denoteFin env = 0 ↔ e.denoteFin (env.sext w') = 0 := by sorry
 
 /--
 This theory should work: Just pick a large enough field where showing that the value is zero
