@@ -877,14 +877,6 @@ lemma CNFA.autSignedCmp_spec {cmp} : (CNFA.autSignedCmp cmp).Sim (NFA'.autSigned
       (simp [NFA'.autSignedCmp, NFA.autSignedCmp, NFA.signedCmpStep, instFinEnumBitVec_sSA];
        native_decide)
 
-
-  -- · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go
-  -- · rintro a q q'
-  --   simp [NFA'.autSignedCmp, NFA.autSignedCmp, signed_equiv] at q q' ⊢
-  --   rcases q <;> rcases q' <;> fin_cases a <;>
-  --     (simp [NFA'.autSignedCmp, NFA.autSignedCmp, NFA.signedCmpStep, instFinEnumBitVec_sSA];
-  --      native_decide)
-
 def RawCNFA.autMsbSet : RawCNFA (BitVec 1) :=
   let m := RawCNFA.empty
   let (si, m) := m.newState
@@ -1007,15 +999,238 @@ def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State
   decide (wp.sat s n)
 
 def RawCNFA.autWidth (wp : WidthPredicate) (n : Nat) : RawCNFA (BitVec 0) :=
-  let m := RawCNFA.empty
-  let m := (List.range (n + 1)).foldl (init := m) fun m _ =>
+  let m := (n+2).iterate f empty
+  let m := m.addInitial 0
+  m.addTrans (BitVec.zero 0) (n + 1) (n + 1)
+where
+  f m :=
     let (s, m) := m.newState
     let m := if wp.final? n s then m.addFinal s else m
     if s > 0 then m.addTrans (BitVec.zero 0) (s-1) s else m
-  m.addInitial 0
+
+set_option maxHeartbeats 1_000_000 in
+lemma RawCNFA.autWidth_spec {wp : WidthPredicate} :
+  let m := RawCNFA.autWidth wp n
+  m.WF ∧ m.stateMax = n+2 ∧
+  (∀ s, s ∈ m.states → (s ∈ m.initials ↔ s = 0) ∧ (s ∈ m.finals ↔ wp.final? n s)) ∧
+  (∀ s s', s ∈ m.states → s' ∈ m.states → (s' ∈ m.tr s 0 ↔ if s = n+1 then s = s' else s' = s + 1))
+  := by
+    unfold autWidth
+    lift_lets
+    generalize h : n = k
+    nth_rw 1 [←h]
+    rintro m
+    let motive (m : RawCNFA (BitVec 0)) k := m.WF ∧ (∀ i, i ∈ m.states ↔ i < k) ∧
+      (∀ s, (s ∉ m.initials) ∧ (s ∈ m.finals ↔ (s ∈ m.states ∧ wp.final? n s))) ∧
+      (∀ s s', (s' ∈ m.tr s 0 ↔ (s ∈ m.states ∧ s' ∈ m.states ∧ s' = s + 1)))
+    have hsucc m k : motive m k → motive (autWidth.f wp n m) (k + 1) := by
+      simp only [motive, autWidth.f]
+      rintro ⟨hwf, hsts, hin, htrs⟩
+      have hk : k = m.stateMax := by
+        simp [states] at hsts; symm
+        apply eq_of_forall_lt_iff (hsts ·)
+      split_ands
+      · split_ifs <;> try simp_all
+        · apply wf_addTrans <;> simp_all
+      · rintro i; split
+        · split <;> simp_all <;> unfold State at * <;> omega
+        · split <;> simp_all
+      · rintro s
+        simp only [newState_eq, gt_iff_lt, BitVec.zero_eq, motive]
+        split <;> split <;> simp <;> grind
+      · rintro s s'
+        unfold State at *
+        split <;> split <;> simp_all [State] <;> omega
+
+    suffices h: motive m (k + 2) by
+      simp only [motive]
+      rcases h with ⟨hwf, hsts, hin, htrs⟩
+      split_ands
+      · simp_all
+      · simp only [BitVec.zero_eq, addTrans_stateMax, addInitial_stateMax, motive]
+        simp only [states, Finset.mem_range, motive] at hsts
+        apply eq_of_forall_lt_iff (hsts ·)
+      · rintro s hs; simp_all; grind
+      · rintro s s' hs hs'; simp_all
+        unfold State at *
+        split <;> omega
+    clear h
+    unfold m
+    generalize h : k+2 = z
+    clear m h k
+    induction z
+    case zero =>
+      simp [motive]
+    case succ k ih =>
+      obtain heq : k + 1 = 1 + k := by omega
+      nth_rw 1 [heq, Function.iterate_add]
+      simp
+      apply hsucc
+      apply ih
+
+lemma RawCNFA.autWidth_wf {wp : WidthPredicate} : RawCNFA.autWidth wp n |>.WF := autWidth_spec.1
 
 def CNFA.autWidth (wp : WidthPredicate) (n : Nat) : CNFA 0 :=
-  ⟨RawCNFA.autWidth wp n, sorry⟩
+  ⟨RawCNFA.autWidth wp n, RawCNFA.autWidth_wf⟩
+
+def NFA.autWidth (wp : WidthPredicate) (n : Nat) : NFA (BitVec 0) (Fin (n+2)) where
+  start := { 0 }
+  accept := { s | wp.final? n s }
+  step s₁ _ := { s₂ | if s₁ = Fin.last (n+1) then s₁ = s₂ else s₂ = s₁ + 1 }
+
+def NFA'.autWidth (wp : WidthPredicate) (n : Nat) : NFA' 0 := ⟨_, NFA.autWidth wp n⟩
+
+def NFA.autWidthLang (wp : WidthPredicate) (n : Nat) : Language (BitVec 0) := { bvs  | wp.final? n bvs.length }
+
+def NFA.autWidthSA (n : Nat) (q : Fin (n+2)) : Language (BitVec 0) :=
+  if q = Fin.last (n+1) then { w | w.length > n } else { w | w.length = q }
+
+@[simp]
+lemma Fin.clamp_eq_bound : Fin.clamp m n = Fin.last n ↔ n ≤ m := by
+  simp [Fin.ext_iff]
+
+@[simp]
+lemma Fin.clamp_neq_bound : Fin.clamp m n ≠ Fin.last n ↔ m < n := by
+  simp [not_iff_not]
+
+-- TODO: refactor, remove non-terminal simps
+def NFA.autWidth_correct : (autWidth wp n).correct (autWidthSA n) (autWidthLang wp n) := by
+  constructor
+  · simp [autWidth, autWidthSA, autWidthLang]
+    rintro w; constructor
+    · rintro h; use (Fin.clamp w.length (n+1))
+      simp_all only [Fin.coe_clamp, Fin.clamp_eq_bound]
+      constructor
+      · cases wp <;> simp_all [WidthPredicate.final?]; omega
+      · split
+        · simp only [Language.mem_setOf_eq]
+          omega
+        · simp only [Language.mem_setOf_eq, left_eq_inf]
+          omega
+    · rintro ⟨q, hfin, hlen⟩
+      split at hlen <;> simp_all
+      cases wp <;> simp_all [WidthPredicate.final?] <;> omega
+
+  · intros w; induction w using List.reverseRecOn
+    case nil =>
+      simp only [autWidth, Set.setOf_eq_eq_singleton, eval_nil, Set.mem_singleton_iff, autWidthSA,
+      gt_iff_lt]
+      rintro q; constructor
+      · rintro rfl; split <;> simp_all; exact rfl
+      · split <;> simp_all [Fin.eq_of_val_eq]
+        rintro h; exact (Fin.eq_of_val_eq h).symm
+    case append_singleton w a ih =>
+      rintro q; simp only [eval_append_singleton, stepSet, ih, Set.mem_iUnion, exists_prop]
+      simp only [autWidthSA, gt_iff_lt, autWidth, Set.setOf_eq_eq_singleton, Set.mem_singleton_iff]
+      constructor
+      · rintro ⟨q', hq, heq⟩
+        simp only [Set.mem_setOf_eq] at heq
+        split_ifs at heq with hcond
+        · subst heq hcond
+          simp_all only [Fin.val_last, ite_true, Language.mem_setOf_eq, List.length_append,
+            List.length_cons, List.length_nil, zero_add]
+          omega
+        · subst heq; simp_all
+          apply Fin.val_lt_last at hcond
+          split_ifs with hcond' <;> simp_all
+          · suffices _ : n = q' by simp_all
+            rw [Fin.ext_iff] at hcond'
+            rw [Fin.val_add_one_of_lt hcond] at hcond'
+            simp_all
+          · exact (Fin.val_add_one_of_lt hcond).symm
+      · rintro h; rcases q with ⟨q, hq⟩; split_ifs at h with hcond
+        · simp at h
+          by_cases hlen: w.length = n
+          · use ⟨n, by omega⟩; simp [←hcond]
+            have : n ≠ q := by rintro rfl; rw [Fin.ext_iff] at hcond; simp_all
+            simp_all
+            ext; simp
+            have hlt : n < Fin.last (n+1) := by
+              by_contra!; simp at this
+            rw [Fin.val_add_one_of_lt hlt]
+          · use ⟨q, hq⟩; simp_all
+            omega
+        · simp at h
+          use q - 1
+          have hneq : (q : Fin (n+2)) - 1 ≠ Fin.last (n + 1) := by
+            rintro habs
+            rw [Fin.ext_iff] at habs
+            simp_all only [Fin.val_last]
+            rw [Fin.sub_val_of_le] at habs
+            · rw [←h] at habs
+              simp_all
+              rw [Nat.mod_eq_of_lt hq] at habs
+              omega
+            · rw [←h]
+              simp_all only
+              have : q ≥ 1 := by omega
+              simpa [Fin.le_def, Nat.mod_eq_of_lt hq]
+          simp [hneq]
+          nth_rw 1 [←h]
+          simp
+          constructor
+          · exact (Nat.mod_eq_of_lt (by omega)).symm
+          · ext; simp; exact (Nat.mod_eq_of_lt (by omega)).symm
+
+@[simp]
+def NFA.autWidth_spec : (autWidth wp n).accepts = { bv | wp.sat bv.length n } := by
+   simp [autWidthLang, correct_spec autWidth_correct, WidthPredicate.final?]
+
+@[simp]
+def NFA'.autWidth_spec : (autWidth wp n).accepts = { bv | wp.sat bv.w n } := by
+  simp [accepts, accepts', autWidth]
+  cases wp <;> ext bv <;> simp <;>
+    · constructor
+      · rintro ⟨x, hpred, rfl⟩; simpa
+      · rintro hpred; use (enc bv); simpa
+
+@[simp]
+lemma CNFA.autWidth_stateMax : (autWidth wp n).m.stateMax = n + 2 := RawCNFA.autWidth_spec.2.1
+
+@[simp]
+lemma CNFA.autWidth_states: s ∈ (autWidth wp n).m.states ↔ s < n+2 := by
+  simp [RawCNFA.states]
+
+lemma CNFA.autWidth_initials : s ∈ (autWidth wp n).m.initials ↔ s = 0 := by
+  have h := (@RawCNFA.autWidth_spec n wp).2.2.1
+  by_cases hs : s ∈ (autWidth wp n).m.states
+  · exact (h _ hs).1
+  · constructor
+    · rintro _; simp_all
+    · rintro _; simp_all
+
+lemma CNFA.autWidth_finals (hn : s < n + 2) : s ∈ (autWidth wp n).m.finals ↔ wp.final? n s := by
+  have h := (@RawCNFA.autWidth_spec n wp).2.2.1
+  exact (h _ (autWidth_states.mpr hn)).2
+
+lemma CNFA.autWidth_tr (hs : s < n + 2) (hs' : s' < n + 2) : s' ∈ (autWidth wp n).m.tr s 0 ↔ if s = n+1 then s = s' else s' = s + 1 := by
+  have h := (@RawCNFA.autWidth_spec n wp).2.2.2
+  exact (h _ _ (autWidth_states.mpr hs) (autWidth_states.mpr hs'))
+
+def autWidth_equiv : (CNFA.autWidth wp n).m.states ≃ (NFA'.autWidth wp n).σ where
+  toFun := fun ⟨s, hs⟩ =>
+    Fin.mk s (by simp_all)
+  invFun q := ⟨q.val, by simp_all⟩
+  left_inv := by rintro _; simp
+  right_inv := by rintro _; simp
+
+lemma CNFA.autWidth_spec : autWidth wp n |>.Sim (NFA'.autWidth wp n) := by
+  apply simulFun_sim autWidth_equiv; simp [autWidth_equiv]; constructor
+  · rintro q; simp_all [NFA'.autWidth, NFA.autWidth]; apply autWidth_finals (q.isLt)
+  · rintro q; simp_all [NFA'.autWidth, NFA.autWidth]; rw [autWidth_initials]; exact
+    eq_iff_eq_of_cmp_eq_cmp rfl
+  · rintro a q q'; fin_cases a; simp_all [NFA'.autWidth, NFA.autWidth, instFinEnumBitVec_sSA];
+    have h := @autWidth_tr q.val n q'.val wp q.isLt q'.isLt
+    unfold State at *
+    simp_all
+    rcases q with ⟨q, hq⟩
+    rcases q' with ⟨q', hq'⟩
+    simp [Fin.last]
+    split
+    · rfl
+    · rw [Fin.add_def]
+      simp only [Fin.val_one, Fin.mk.injEq]
+      rw [Nat.mod_eq_of_lt (by omega)]
 
 end nfas_relations
 
@@ -1107,7 +1322,7 @@ def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
 
 def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
   match φ with
-  | .width wp n => sorry
+  | .width wp n => NFA'.autWidth wp n
   | .atom rel t1 t2 =>
     let m1 := FSM.ofTerm t1 |> NFA'.ofFSM
     let m2 := FSM.ofTerm t2 |> NFA'.ofFSM
@@ -1132,7 +1347,8 @@ def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
 
 lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
   induction φ
-  case width rel n => sorry
+  case width rel n =>
+    apply CNFA.autWidth_spec
   case atom rel t1 t2 =>
     apply CNFA.proj_spec
     apply CNFA.inter_spec
@@ -1171,7 +1387,8 @@ lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
 lemma absNfaToFomrmula_spec (φ : Formula) :
     (absNfaOfFormula φ).accepts = φ.language := by
   induction φ
-  case width wp n => sorry
+  case width wp n =>
+    simp [absNfaOfFormula]
   case atom rel t1 t2 =>
     simp [absNfaOfFormula, binopAbsNfa]; ac_nf
   case msbSet t =>

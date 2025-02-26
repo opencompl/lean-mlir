@@ -162,6 +162,10 @@ def RawCNFA.empty : RawCNFA A := {
   trans := ∅
 }
 
+@[simp] lemma RawCNFA.empty_mem_initials {s : State} : s ∉ empty (A := A).initials := by simp [empty]
+@[simp] lemma RawCNFA.empty_mem_finals {s : State} : s ∉ empty (A := A).finals := by simp [empty]
+@[simp] lemma RawCNFA.empty_mem_tr {s s' : State} : s' ∉ empty (A := A).tr s a := by simp [empty, tr]
+
 def RawCNFA.newState (m : RawCNFA A) : State × RawCNFA A :=
   let old := m.stateMax
   let m := { m with stateMax := old + 1 }
@@ -202,6 +206,14 @@ lemma RawCNFA.addInitial_tr {m : RawCNFA A} : s' ∈ (m.addInitial s'').tr s a �
 
 def RawCNFA.addFinal (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with finals := m.finals.insert s }
+
+@[simp]
+lemma RawCNFA.addFinal_initials {m : RawCNFA A} : (m.addFinal s).initials = m.initials := by
+  rfl
+
+@[simp]
+lemma RawCNFA.addFinal_finals {m : RawCNFA A} : (m.addFinal s).finals = m.finals.insert s := by
+  rfl
 
 @[simp]
 lemma RawCNFA.addFinal_tr {m : RawCNFA A} : s' ∈ (m.addFinal s'').tr s a ↔ s' ∈ m.tr s a := by
@@ -390,6 +402,9 @@ lemma RawCNFA.same_stateMax (m : RawCNFA A) x y (z : Std.HashMap (State × A) (S
     (RawCNFA.mk m.stateMax x y z).states = m.states := by
   simp [RawCNFA.states]
 
+@[simp]
+lemma RawCNFA.empty_stateMax : empty (A := A).stateMax = 0 := rfl
+
 @[simp, aesop 50% unsafe]
 lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
@@ -487,6 +502,11 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
     · simp only [addTrans_tr]; tauto
     · simp [hwf', hstates]
     · simp [hstates]
+
+def CNFA.transSet (m : CNFA n) (ss : Std.HashSet m.m.states) (a : BitVec n) : Std.HashSet m.m.states :=
+  ss.fold (init := ∅) fun ss' (s : m.m.states) =>
+    let ssn := (m.m.tr s a).attachWith (λ s ↦ s ∈ m.m.states) (by simp only; rintro x hx; aesop)
+    ss'.insertMany ssn
 
 instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
   default := RawCNFA.empty
