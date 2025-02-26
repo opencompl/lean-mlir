@@ -59,7 +59,6 @@ theorem Env.getLsb_getElem {env : Env (w + 1)} (n : Nat) :
 def Env.sext (env : Env w) (w' : Nat) : Env w' :=
   List.map (fun x => x.signExtend w') env
 
-
 def Factor.reflectBV {w : Nat} (xs : Env w) : Factor → BitVec w
 | .var n => xs[n]?.getD (0#w)
 | .and x y => x.reflectBV xs &&& y.reflectBV xs
@@ -76,7 +75,7 @@ theorem Factor.denote_eq_toNat_reflectBV {w : Nat} (xs : Env w) (f : Factor) :
 Environment of *finite* size, which can agree with the `Factor.reflectBV`.
 We need `Factor.reflectBVFin` to show that our brute-force evaluation for length 1 has a finite environment size for exhaustive enumeration,
 We need `Factor.reflectBV` to def-eq-unify with the user's given goal state.
-We show their equivalence to allow us to decide on `denoteFin`, and to use this when proving facts about `denoteInt`.
+We show their equivalence to allow us to decide on `denoteIntFin`, and to use this when proving facts about `denoteInt`.
 -/
 def EnvFin (w : Nat) (n : Nat) := Fin n → (BitVec w)
 def EnvFin.getLsb {w : Nat} (env : EnvFin (w + 1) n) : EnvFin 1 n := fun n => BitVec.ofBool <| (env n).getLsbD 0
@@ -185,16 +184,16 @@ theorem Factor.reflectBV_eq_reflectBVFin {f : Factor} {xs : List (BitVec w)} {xs
     · intros i
       simp [← h]
 
-def Factor.denoteFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : Nat := f.reflectBVFin xs |>.toNat
+def Factor.denoteIntFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : Nat := f.reflectBVFin xs |>.toNat
 
 theorem Factor.denoteFin_eq_toNat_reflectBVFin (f : Factor) (xs : EnvFin w f.numVars) :
-  f.denoteFin xs = (f.reflectBVFin xs).toNat := rfl
+  f.denoteIntFin xs = (f.reflectBVFin xs).toNat := rfl
 
 /-- Show that 'denote'  agrees with 'denoteFin' -/
-theorem Factor.denoteFin_eq_denote {f : Factor} {xs : List (BitVec w)} {xsFin : EnvFin w f.numVars}
+theorem Factor.denoteIntFin_eq_denoteInt {f : Factor} {xs : List (BitVec w)} {xsFin : EnvFin w f.numVars}
     (h : ∀ (i : Fin f.numVars), xs[i]?.getD 0#w = xsFin i) :
-    f.denoteFin xsFin = f.denoteInt xs := by
-  rw [Factor.denoteInt, Factor.denoteFin, Factor.reflectBV_eq_reflectBVFin h]
+    f.denoteIntFin xsFin = f.denoteInt xs := by
+  rw [Factor.denoteInt, Factor.denoteIntFin, Factor.reflectBV_eq_reflectBVFin h]
 
 theorem Factor.reflectBV_eq_ofInt_denote {w : Nat} (xs : Env w) (f : Factor) :
     f.reflectBV xs = (BitVec.ofInt w <| f.denoteInt xs) := by
@@ -311,6 +310,13 @@ def Env.getD_getElem?_ofEnvFin (envFin : EnvFin w n) (i : Nat) :
   rw [List.getD_getElem?]
   by_cases h : i < n  <;> simp [h]
 
+
+@[simp]
+theorem Env.sext_ofEnvFin (envFin : EnvFin w n) (w' : Nat) :
+    (Env.ofEnvFin envFin).sext w' = Env.ofEnvFin (envFin.sext w') := by
+  ext i x
+  sorry
+
 theorem Factor.denote_eq_toNat_reflectBVFin {w : Nat} (xs : Env w) (f : Factor) :
     f.denoteInt xs = (f.reflectBVFin (EnvFin.ofEnv xs _)).toNat := by
   rw [Factor.denote_eq_toNat_reflectBV]
@@ -327,7 +333,7 @@ theorem Factor.reflectBVFin_toNat_eq_add
 
 /-- Split a denoteInt at an env intoa denoteInt at the LSB and the denoteInt at the non-Lsbs -/
 theorem Factor.denoteFin_eq_add {w : Nat} (x : Factor) (env : EnvFin (w + 1) x.numVars) :
-    x.denoteFin env = 2 * x.denoteFin env.getNonLsbs + x.denoteFin env.getLsb := by
+    x.denoteIntFin env = 2 * x.denoteIntFin env.getNonLsbs + x.denoteIntFin env.getLsb := by
   rw [Factor.denoteFin_eq_toNat_reflectBVFin]
   rw [Factor.denoteFin_eq_toNat_reflectBVFin]
   rw [Factor.denoteFin_eq_toNat_reflectBVFin]
@@ -361,23 +367,23 @@ def Term.reflectBV {w : Nat}  (t : Term) (xs: Env w) : BitVec w :=
 def Term.denoteInt {w : Nat} (t : Term) (xs : Env w) : Int :=
   t.c * t.f.denoteInt xs
 
-def Term.denoteFin {w : Nat} (t : Term) (xs : EnvFin w t.numVars) : Int :=
-  t.c * t.f.denoteFin xs
+def Term.denoteIntFin {w : Nat} (t : Term) (xs : EnvFin w t.numVars) : Int :=
+  t.c * t.f.denoteIntFin xs
 
 /-- Split a denoteInt at an env intoa denoteInt at the LSB and the denoteInt at the non-Lsbs -/
 theorem Term.denoteFin_eq_add {w : Nat} (t : Term) (env : EnvFin (w + 1) t.numVars) :
-    t.denoteFin env = 2 * t.denoteFin env.getNonLsbs + t.denoteFin env.getLsb := by
-  rw [Term.denoteFin]
+    t.denoteIntFin env = 2 * t.denoteIntFin env.getNonLsbs + t.denoteIntFin env.getLsb := by
+  rw [Term.denoteIntFin]
   rw [Factor.denoteFin_eq_add]
-  rw [Term.denoteFin]
-  rw [Term.denoteFin]
+  rw [Term.denoteIntFin]
+  rw [Term.denoteIntFin]
   simp only [Int.natCast_add, Int.natCast_mul, Int.Nat.cast_ofNat_Int]
   rw [Int.mul_add]
   ac_nf
 
-theorem Term.denoteFin_eq_denote {t : Term} {xs : List (BitVec w)} {xsFin : EnvFin w t.numVars} (h : ∀ (i : Fin t.numVars), xs[i]?.getD 0#w = xsFin i) :
-    t.denoteFin xsFin = t.denoteInt xs := by
-  simp [Term.denoteFin, Term.denoteInt, Factor.denoteFin_eq_denote h]
+theorem Term.denoteIntFin_eq_denoteInt {t : Term} {xs : List (BitVec w)} {xsFin : EnvFin w t.numVars} (h : ∀ (i : Fin t.numVars), xs[i]?.getD 0#w = xsFin i) :
+    t.denoteIntFin xsFin = t.denoteInt xs := by
+  simp [Term.denoteIntFin, Term.denoteInt, Factor.denoteIntFin_eq_denoteInt h]
 
 @[simp]
 theorem Term.reflectBV_eq_ofInt_denote {w : Nat} {t : Term} {xs : Env w} :
@@ -402,7 +408,7 @@ theorem Term.denote_width_zero  (t : Term) (env : Env 0) :
 
 @[simp]
 theorem Term.denoteFin_width_zero  (t : Term) (env : EnvFin 0 t.numVars) :
-    t.denoteFin env = 0 := by simp [Term.denoteFin, Factor.denoteFin]
+    t.denoteIntFin env = 0 := by simp [Term.denoteIntFin, Factor.denoteIntFin]
 
 def Eqn := List Term
 
@@ -466,46 +472,46 @@ theorem Eqn.denote_cons {w : Nat}
     (t : Term) (ts : List Term) (env : Env w) :
     Eqn.denoteInt (t :: ts) env = t.denoteInt env + Eqn.denoteInt ts env := rfl
 
-def Eqn.denoteFin {w : Nat} (e : Eqn) (envFin : EnvFin w e.numVars) : Int :=
+def Eqn.denoteIntFin {w : Nat} (e : Eqn) (envFin : EnvFin w e.numVars) : Int :=
   match e with
   | [] => 0
   | t :: ts =>
-    t.denoteFin (envFin.castLe (by simp; omega)) +
-    Eqn.denoteFin ts (envFin.castLe (by simp; omega))
+    t.denoteIntFin (envFin.castLe (by simp; omega)) +
+    Eqn.denoteIntFin ts (envFin.castLe (by simp; omega))
 
 @[simp]
 theorem Eqn.denoteFin_nil {w : Nat} (envFin : EnvFin w 0) :
-  Eqn.denoteFin [] envFin = 0 := rfl
+  Eqn.denoteIntFin [] envFin = 0 := rfl
 
 @[simp]
 theorem Eqn.denoteFin_cons {w : Nat} (t : Term) (eqn : Eqn)
     (envFin : EnvFin w (max t.numVars  eqn.numVars)) :
-  Eqn.denoteFin (t :: eqn) envFin =
-  t.denoteFin (envFin.castLe (by omega)) +
-  Eqn.denoteFin eqn (envFin.castLe (by omega)) := rfl
+  Eqn.denoteIntFin (t :: eqn) envFin =
+  t.denoteIntFin (envFin.castLe (by omega)) +
+  Eqn.denoteIntFin eqn (envFin.castLe (by omega)) := rfl
 
 theorem Eqn.denoteFin_eq_add {w : Nat} (eqn : Eqn) (env : EnvFin (w + 1) eqn.numVars) :
-    eqn.denoteFin env = 2 * eqn.denoteFin env.getNonLsbs + eqn.denoteFin env.getLsb := by
+    eqn.denoteIntFin env = 2 * eqn.denoteIntFin env.getNonLsbs + eqn.denoteIntFin env.getLsb := by
   induction eqn
-  case nil => simp [denoteFin]
+  case nil => simp [denoteIntFin]
   case cons x xs ih =>
-    simp only [denoteFin]
+    simp only [denoteIntFin]
     simp only [ih]
     rw [Term.denoteFin_eq_add x]
     rw [Int.mul_add]
     ac_nf
 
-/-- To evaluate `e.denoteInt`, one can equally well evaluate `e.denoteFin` -/
-theorem Eqn.denoteFin_eq_denote {e : Eqn} {xs : List (BitVec w)} {xsFin : EnvFin w e.numVars}
+/-- To evaluate `e.denoteInt`, one can equally well evaluate `e.denoteIntFin` -/
+theorem Eqn.denoteIntFin_eq_denoteInt {e : Eqn} {xs : List (BitVec w)} {xsFin : EnvFin w e.numVars}
     (h : ∀ (i : Fin e.numVars), xs[i]?.getD 0#w = xsFin i) :
-    e.denoteFin xsFin = e.denoteInt xs := by
+    e.denoteIntFin xsFin = e.denoteInt xs := by
   induction e
-  case nil => simp [Eqn.denoteFin]
+  case nil => simp [Eqn.denoteIntFin]
   case cons t es ih =>
     simp
     rw [ih]
     · congr
-      apply Term.denoteFin_eq_denote
+      apply Term.denoteIntFin_eq_denoteInt
       intros i
       specialize h ⟨i, by simp; omega⟩
       assumption
@@ -531,11 +537,11 @@ theorem Eqn.denote_width_zero  (es : Eqn) (env : Env 0) :
 
 @[simp]
 theorem Eqn.denoteFin_width_zero  (es : Eqn) (env : EnvFin 0 es.numVars) :
-    Eqn.denoteFin es env = 0 := by
+    Eqn.denoteIntFin es env = 0 := by
   induction es
-  case nil => simp [Eqn.denoteFin]
+  case nil => simp [Eqn.denoteIntFin]
   case cons e es ih =>
-    simp [ih, Eqn.denoteFin]
+    simp [ih, Eqn.denoteIntFin]
 
 @[simp]
 theorem Eqn.reflectBV_eq_ofInt_denote {w : Nat} (xs : Env w) (e : Eqn) :
@@ -561,8 +567,8 @@ def Env.getLsb_eq_of_width_one (env : List (BitVec 1)) : Env.getLsb env = env :=
 
 
 theorem Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero {eqn : Eqn}
-    (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), eqn.denoteFin env1 = 0) :
-    ∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteFin env = 0 := by
+    (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), eqn.denoteIntFin env1 = 0) :
+    ∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteIntFin env = 0 := by
   intros w
   induction w
   case zero => simp
@@ -574,17 +580,85 @@ theorem Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero {eqn : Eqn}
     rw [ih]
     simp
 
+theorem Eqn.denoteFin_width_one_eq_zero_of_denoteFin_eq_zero {eqn : Eqn}
+    (h1 : ∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteIntFin env = 0) :
+    ∀ (env1 : EnvFin 1 eqn.numVars), eqn.denoteIntFin env1 = 0 := by
+  apply h1
 
+
+/--
+Core theorem: the denotation at width 1 is always zero iff
+the denotation at all widths is zero.
+-/
+theorem Eqn.denoteFin_width_one_eq_zero_iff_denoteFin_eq_zero (eqn : Eqn) :
+    (∀ (env1 : EnvFin 1 eqn.numVars), eqn.denoteIntFin env1 = 0) ↔
+    (∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteIntFin env = 0) where
+  mp := Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero
+  mpr := Eqn.denoteFin_width_one_eq_zero_of_denoteFin_eq_zero
+
+/--
+To check that the BV value is always zero, it suffices to check that the 'Int' based relation stating with BV 1 suffices.
+-/
 theorem Eqn.reflectBV_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
-    (h : ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0) :
+    (h : ∀ (env1 : EnvFin 1 e.numVars), e.denoteIntFin env1 = 0) :
     ∀ {w : Nat} (env : List (BitVec w)), e.reflectBV env = 0 := by
   intros w env
   rw [Eqn.reflectBV_eq_ofInt_denote]
-  rw [← Eqn.denoteFin_eq_denote (xsFin := EnvFin.ofEnv env e.numVars) (h := by simp)]
+  rw [← Eqn.denoteIntFin_eq_denoteInt (xsFin := EnvFin.ofEnv env e.numVars) (h := by simp)]
   rw [Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero]
   · simp
   · intros env1
     apply h
+
+/-- To show 'i = 0', it suffices to show that it's zero for all large enough bitvectors -/
+theorem Int.eq_zero_iff_ofInt_zero (i : Int) : (i = 0) ↔ (∀ (w : Nat), BitVec.ofInt w i = 0#w) := by
+  constructor
+  · intros h
+    simp [h]
+  · intros h
+    apply Classical.byContradiction
+    sorry
+
+/--
+Denoting at an environment also works at a sign-extended environment.
+The proof technique will be to show that Factor.signExtend (actually, we should use zeroExtend)
+will extend cleanly, and then the same will work for Term.
+
+-/
+theorem Eqn.denoteIntFin_eq_denoteIntFin_sext {e : Eqn} {xsFin : EnvFin w e.numVars} (w' : Nat) (hw' : w ≤ w') :
+  e.denoteIntFin xsFin = e.denoteIntFin (xsFin.sext w') := by sorry
+
+-- a => b,
+-- b => a =|= !a => !b
+theorem Eqn.reflectBV_neq_zero_iff_denoteFin_width_one_neq_zero (e : Eqn)
+    (h : ∀ {w : Nat} (env : List (BitVec w)), e.reflectBV env = 0) :
+    (∀ (env1 : EnvFin 1 e.numVars), e.denoteIntFin env1 = 0) := by
+  intros env1
+  apply Int.eq_zero_iff_ofInt_zero _ |>.mpr
+  intros w
+  by_cases hw : w = 0
+  · subst hw
+    apply Subsingleton.elim
+  · simp [Eqn.reflectBV_eq_ofInt_denote] at h
+    -- OK, I now know what we need to do.
+    -- (1) change environments to a zext'd environment.
+    let envA := Env.sext (Env.ofEnvFin env1) w
+    let envB := EnvFin.sext env1 w
+    specialize h envA
+    have := Eqn.denoteIntFin_eq_denoteInt (e := e) (xs := Env.ofEnvFin envB) (xsFin := envB) (by sorry)
+    rw [Eqn.denoteIntFin_eq_denoteIntFin_sext w]
+    · rw [this]
+      have envA_eq_envB : Env.ofEnvFin envB = envA := by
+        simp [envA, envB]
+      rw [envA_eq_envB]
+      exact h
+    · omega
+
+
+
+
+
+
 
 #check Int.bdiv_add_bmod
 #check Int.bdiv
@@ -849,7 +923,7 @@ theorem Factor.getLsbD_reflectBVFin_eq_false_iff_getLsbD_reflectBVFin_sext_eq_fa
 /-- If we increase the bitwidth and sign-extend, the denotations must agree -/
 theorem Eqn.denoteFin_eq_zero_iff_denoteFin_sext_eq_zero_of_le (w w' : Nat) (e : Eqn)
     (env : EnvFin w e.numVars) (hw : w ≤ w') :
-    e.denoteFin env = 0 ↔ e.denoteFin (env.sext w') = 0 := by
+    e.denoteIntFin env = 0 ↔ e.denoteIntFin (env.sext w') = 0 := by
   · sorry
 -/
 
@@ -858,9 +932,9 @@ This theory should work: Just pick a large enough field where showing that the v
 will prove that the value is zero
 theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
     (h : ∀ (w : Nat) (env : List (BitVec w)), e.reflectBV env = 0) :
-    ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0 := by
+    ∀ (env1 : EnvFin 1 e.numVars), e.denoteIntFin env1 = 0 := by
   intros env1
-  let size := (e.denoteFin env1).natAbs.log2 + 1
+  let size := (e.denoteIntFin env1).natAbs.log2 + 1
   specialize h size
   let env' := List.finRange e.numVars |>.map fun x => (env1 x).signExtend size
   specialize h env'
@@ -870,7 +944,7 @@ theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
 
 
 /-
-instance decEqnDenoteFinWidth1 {e : Eqn} : Decidable (∀ env1 : Env (BitVec 1), Eqn.denoteFin e env1 = 0) :=
+instance decEqnDenoteFinWidth1 {e : Eqn} : Decidable (∀ env1 : Env (BitVec 1), Eqn.denoteIntFin e env1 = 0) :=
   sorry
 
 instance {e : Eqn} : Decidable (∀ env1 : List (BitVec 1), Eqn.denoteInt e env1 = 0) :=
@@ -884,7 +958,7 @@ def Eqn.reflectBVEqZero (w : Nat) (eqn : Eqn) (env : Env w) : Prop :=
 Central theorem: To decide if a bitvector equation is zero for all widths, it sufficest to check that the denotation is zero at width zero.
 -/
 theorem Eqn.forall_width_reflectBV_zero_of_width_one_denote_zero (e : Eqn) (w : Nat) (env : List (BitVec w))
-    (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) :
+    (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteIntFin e env1 = 0)) :
     Eqn.reflectBVEqZero w e env := by
   rw [Eqn.reflectBVEqZero]
   rw [Eqn.reflectBV_eq_zero_of_denoteFin_width_one_eq_zero]
@@ -933,9 +1007,9 @@ def EnvFin.getAll1 (n : Nat) : { envs : List (EnvFin 1 n) // ∀ (envFin : EnvFi
 /--
 Show how to exhaustively enumerate environments to check that the denotation at 1-bit is zero.
 -/
-instance (e : Eqn) : Decidable (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0) :=
+instance (e : Eqn) : Decidable (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteIntFin e env1 = 0) :=
   let ⟨allEnvs, hAllEnvs⟩ := EnvFin.getAll1 e.numVars
-  let b := allEnvs.all (fun env1 => e.denoteFin env1 = 0)
+  let b := allEnvs.all (fun env1 => e.denoteIntFin env1 = 0)
   match hb : b with
   | true => .isTrue <| by
     simp [b] at hb
