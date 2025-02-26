@@ -56,27 +56,27 @@ theorem Env.getLsb_getElem {env : Env (w + 1)} (n : Nat) :
     (Env.getLsb env)[n]? = (env[n]?).map (fun (x : BitVec (w + 1)) => BitVec.ofBool (x.getLsbD 0)) := by
   simp [Env.getLsb]
 
-def Env.sext (env : Env w) (w' : Nat) : Env w' := 
+def Env.sext (env : Env w) (w' : Nat) : Env w' :=
   List.map (fun x => x.signExtend w') env
 
 
-def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w
+def Factor.reflectBV {w : Nat} (xs : Env w) : Factor → BitVec w
 | .var n => xs[n]?.getD (0#w)
-| .and x y => x.reflect xs &&& y.reflect xs
-| .or x y => x.reflect xs ||| y.reflect xs
-| .xor x y => x.reflect xs ^^^ y.reflect xs
-| .not x => ~~~ (x.reflect xs)
+| .and x y => x.reflectBV xs &&& y.reflectBV xs
+| .or x y => x.reflectBV xs ||| y.reflectBV xs
+| .xor x y => x.reflectBV xs ^^^ y.reflectBV xs
+| .not x => ~~~ (x.reflectBV xs)
 
-def Factor.denote {w : Nat} (xs : Env w) (f : Factor) : Nat := f.reflect xs |>.toNat
+def Factor.denoteInt {w : Nat} (xs : Env w) (f : Factor) : Nat := f.reflectBV xs |>.toNat
 
-theorem Factor.denote_eq_toNat_reflect {w : Nat} (xs : Env w) (f : Factor) :
-  f.denote xs = (f.reflect xs |>.toNat) := rfl
+theorem Factor.denote_eq_toNat_reflectBV {w : Nat} (xs : Env w) (f : Factor) :
+  f.denoteInt xs = (f.reflectBV xs |>.toNat) := rfl
 
 /--
-Environment of *finite* size, which can agree with the `Factor.reflect`.
-We need `Factor.reflectFin` to show that our brute-force evaluation for length 1 has a finite environment size for exhaustive enumeration,
-We need `Factor.reflect` to def-eq-unify with the user's given goal state.
-We show their equivalence to allow us to decide on `denoteFin`, and to use this when proving facts about `denote`.
+Environment of *finite* size, which can agree with the `Factor.reflectBV`.
+We need `Factor.reflectBVFin` to show that our brute-force evaluation for length 1 has a finite environment size for exhaustive enumeration,
+We need `Factor.reflectBV` to def-eq-unify with the user's given goal state.
+We show their equivalence to allow us to decide on `denoteFin`, and to use this when proving facts about `denoteInt`.
 -/
 def EnvFin (w : Nat) (n : Nat) := Fin n → (BitVec w)
 def EnvFin.getLsb {w : Nat} (env : EnvFin (w + 1) n) : EnvFin 1 n := fun n => BitVec.ofBool <| (env n).getLsbD 0
@@ -85,7 +85,7 @@ def EnvFin.getNonLsbs {w : Nat} (env : EnvFin (w + 1) n) : EnvFin w n := fun n =
 def EnvFin.sext (env : EnvFin w n) (w' : Nat) : EnvFin w' n := fun n => (env n).signExtend w'
 
 @[simp]
-theorem EnvFin.get_sext {env : EnvFin w n} {w' : Nat} (i : Fin n) : 
+theorem EnvFin.get_sext {env : EnvFin w n} {w' : Nat} (i : Fin n) :
   ((env.sext w') i) = (env i).signExtend w' := rfl
 
 /-- Using 'env.getLsb' shortens all bitvectors to be one-bit, and so calling 'getLsbD' on this environment will only return the lowest bit if available -/
@@ -139,115 +139,115 @@ theorem EnvFin.getLsbD_getNonLsbs {w : Nat} (env : EnvFin (w + 1) n) (bit : Nat)
   · simp [h, show 1 + bit = bit + 1 by omega]
   · simp [h]
 
-def Factor.reflectFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : BitVec w :=
+def Factor.reflectBVFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : BitVec w :=
   match f with
   | .var n => xs ⟨n, by simp⟩
   | .and x y =>
-    x.reflectFin (fun n => xs ⟨n, by simp [numVars]; omega⟩) &&& y.reflectFin (fun n => xs ⟨n, by simp [numVars]; omega⟩)
+    x.reflectBVFin (fun n => xs ⟨n, by simp [numVars]; omega⟩) &&& y.reflectBVFin (fun n => xs ⟨n, by simp [numVars]; omega⟩)
   | .or x y =>
-     x.reflectFin (fun n => xs ⟨n, by simp [numVars]; omega⟩) ||| y.reflectFin (fun n => xs ⟨n, by simp [numVars]; omega⟩)
+     x.reflectBVFin (fun n => xs ⟨n, by simp [numVars]; omega⟩) ||| y.reflectBVFin (fun n => xs ⟨n, by simp [numVars]; omega⟩)
   | .xor x y =>
-     x.reflectFin (fun n => xs ⟨n, by simp [numVars]; omega⟩) ^^^ y.reflectFin (fun n => xs ⟨n, by simp [numVars]; omega⟩)
+     x.reflectBVFin (fun n => xs ⟨n, by simp [numVars]; omega⟩) ^^^ y.reflectBVFin (fun n => xs ⟨n, by simp [numVars]; omega⟩)
   | .not x =>
-     ~~~ x.reflectFin (fun n => xs ⟨n, by simp [numVars]⟩)
+     ~~~ x.reflectBVFin (fun n => xs ⟨n, by simp [numVars]⟩)
 
 
-/-- Show that reflect and reflectFin agree in their values -/
-theorem Factor.reflect_eq_reflectFin {f : Factor} {xs : List (BitVec w)} {xsFin : EnvFin w f.numVars}
+/-- Show that reflectBV and reflectBVFin agree in their values -/
+theorem Factor.reflectBV_eq_reflectBVFin {f : Factor} {xs : List (BitVec w)} {xsFin : EnvFin w f.numVars}
     (h : ∀ (i : Fin f.numVars), xs[i]?.getD 0#w = xsFin i) :
-    f.reflect xs = f.reflectFin xsFin := by
+    f.reflectBV xs = f.reflectBVFin xsFin := by
   induction f
-  case var n => simp [reflect, reflectFin] at h ⊢; rw[← h]
+  case var n => simp [reflectBV, reflectBVFin] at h ⊢; rw[← h]
   case and x y hx hy =>
-    simp [reflect, reflectFin] at h ⊢
+    simp [reflectBV, reflectBVFin] at h ⊢
     rw[← hx, ← hy]
     · intros i
       simp [← h]
     · intros i
       simp [← h]
   case or x y hx hy =>
-    simp [reflect, reflectFin] at h ⊢
+    simp [reflectBV, reflectBVFin] at h ⊢
     rw[← hx, ← hy]
     · intros i
       simp [← h]
     · intros i
       simp [← h]
   case xor x y hx hy =>
-    simp [reflect, reflectFin] at h ⊢
+    simp [reflectBV, reflectBVFin] at h ⊢
     rw[← hx, ← hy]
     · intros i
       simp [← h]
     · intros i
       simp [← h]
   case not x hx =>
-    simp [reflect, reflectFin] at h ⊢
+    simp [reflectBV, reflectBVFin] at h ⊢
     rw[← hx]
     · intros i
       simp [← h]
 
-def Factor.denoteFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : Nat := f.reflectFin xs |>.toNat
+def Factor.denoteFin {w : Nat} (f : Factor) (xs : EnvFin w f.numVars) : Nat := f.reflectBVFin xs |>.toNat
 
-theorem Factor.denoteFin_eq_toNat_reflectFin (f : Factor) (xs : EnvFin w f.numVars) :
-  f.denoteFin xs = (f.reflectFin xs).toNat := rfl
+theorem Factor.denoteFin_eq_toNat_reflectBVFin (f : Factor) (xs : EnvFin w f.numVars) :
+  f.denoteFin xs = (f.reflectBVFin xs).toNat := rfl
 
 /-- Show that 'denote'  agrees with 'denoteFin' -/
 theorem Factor.denoteFin_eq_denote {f : Factor} {xs : List (BitVec w)} {xsFin : EnvFin w f.numVars}
     (h : ∀ (i : Fin f.numVars), xs[i]?.getD 0#w = xsFin i) :
-    f.denoteFin xsFin = f.denote xs := by
-  rw [Factor.denote, Factor.denoteFin, Factor.reflect_eq_reflectFin h]
+    f.denoteFin xsFin = f.denoteInt xs := by
+  rw [Factor.denoteInt, Factor.denoteFin, Factor.reflectBV_eq_reflectBVFin h]
 
-theorem Factor.reflect_eq_ofInt_denote {w : Nat} (xs : Env w) (f : Factor) :
-    f.reflect xs = (BitVec.ofInt w <| f.denote xs) := by
-  simp [reflect, denote]
-
-@[simp]
-theorem Factor.reflect_zero_of_denote_zero {w : Nat} {f : Factor} {xs : Env w} (h : f.denote xs = 0) :
-    f.reflect xs = 0#w := by
-  simp [reflect_eq_ofInt_denote, h]
+theorem Factor.reflectBV_eq_ofInt_denote {w : Nat} (xs : Env w) (f : Factor) :
+    f.reflectBV xs = (BitVec.ofInt w <| f.denoteInt xs) := by
+  simp [reflectBV, denoteInt]
 
 @[simp]
-theorem Factor.reflect_width_zero  (f : Factor) (env : Env 0) : f.reflect env = 0#0 := by
+theorem Factor.reflectBV_zero_of_denote_zero {w : Nat} {f : Factor} {xs : Env w} (h : f.denoteInt xs = 0) :
+    f.reflectBV xs = 0#w := by
+  simp [reflectBV_eq_ofInt_denote, h]
+
+@[simp]
+theorem Factor.reflectBV_width_zero  (f : Factor) (env : Env 0) : f.reflectBV env = 0#0 := by
   apply Subsingleton.elim
 
 @[simp]
-theorem Factor.denote_width_zero  (f : Factor) (env : Env 0) : f.denote env = 0 := by
-  simp [denote]
+theorem Factor.denote_width_zero  (f : Factor) (env : Env 0) : f.denoteInt env = 0 := by
+  simp [denoteInt]
 
 @[simp]
-theorem Factor.reflectFin_width_zero  (f : Factor) (env : EnvFin 0 f.numVars) : f.reflectFin env = 0#0 := by
+theorem Factor.reflectBVFin_width_zero  (f : Factor) (env : EnvFin 0 f.numVars) : f.reflectBVFin env = 0#0 := by
   apply Subsingleton.elim
 
 /--
-The value of 'x.reflectFin env' can be computed from using
-'(x.reflectFin env.getlsb)' and '(x.reflectFin env.getNonLsbs)'.
+The value of 'x.reflectBVFin env' can be computed from using
+'(x.reflectBVFin env.getlsb)' and '(x.reflectBVFin env.getNonLsbs)'.
 -/
-theorem Factor.getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs
+theorem Factor.getLsb_reflectBVFin_eq_or_reflectBVFin_getLsb_reflectBVFin_getNonLsbs
     {w : Nat} {x : Factor} {env : EnvFin (w +1) x.numVars} :
-    (x.reflectFin env).getLsbD i = if i = 0 then ((x.reflectFin env.getLsb).getLsbD 0) else (x.reflectFin env.getNonLsbs).getLsbD (i - 1) := by
+    (x.reflectBVFin env).getLsbD i = if i = 0 then ((x.reflectBVFin env.getLsb).getLsbD 0) else (x.reflectBVFin env.getNonLsbs).getLsbD (i - 1) := by
   rcases i with rfl | i
   · simp
     induction x
     case var n =>
-      simp [reflectFin]
+      simp [reflectBVFin]
     case and x y hx hy =>
-      simp [reflectFin]
+      simp [reflectBVFin]
       simp [hx, hy]
       rfl
     case or x y hx hy =>
-      simp [reflectFin]
+      simp [reflectBVFin]
       simp [hx, hy]
       rfl
     case xor x y hx hy =>
-      simp only [reflectFin, BitVec.getLsbD_xor]
+      simp only [reflectBVFin, BitVec.getLsbD_xor]
       simp only [hx, hy]
       rfl
     case not x hx  =>
-      simp only [reflectFin, BitVec.getLsbD_not]
+      simp only [reflectBVFin, BitVec.getLsbD_not]
       simp [hx]
   · simp
     induction x
     case var n =>
-      simp [reflectFin]
+      simp [reflectBVFin]
       intros h
       apply Classical.byContradiction
       intros hcontra
@@ -255,29 +255,29 @@ theorem Factor.getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs
       have := BitVec.getLsbD_ge (env ⟨n, by simp⟩) (i + 1) (by omega)
       simp [this] at h
     case and x y hx hy =>
-      simp [reflectFin]
+      simp [reflectBVFin]
       simp [hx, hy]
       rfl
     case or x y hx hy =>
-      simp [reflectFin]
+      simp [reflectBVFin]
       simp [hx, hy]
       rfl
     case xor x y hx hy =>
-      simp only [reflectFin, BitVec.getLsbD_xor]
+      simp only [reflectBVFin, BitVec.getLsbD_xor]
       simp only [hx, hy]
       rfl
     case not x hx  =>
-      simp only [reflectFin, BitVec.getLsbD_not]
+      simp only [reflectBVFin, BitVec.getLsbD_not]
       simp [hx]
 
-theorem Factor.reflectFin_eq_reflectFin_getLsb_reflectFin_getNonLsbs
+theorem Factor.reflectBVFin_eq_reflectBVFin_getLsb_reflectBVFin_getNonLsbs
     {w : Nat} {x : Factor} {env : EnvFin (w +1) x.numVars} :
-    (x.reflectFin env) = (x.reflectFin env.getNonLsbs).concat ((x.reflectFin env.getLsb).getLsbD 0) := by
+    (x.reflectBVFin env) = (x.reflectBVFin env.getNonLsbs).concat ((x.reflectBVFin env.getLsb).getLsbD 0) := by
   apply BitVec.eq_of_getLsbD_eq
   intros i hi
   conv =>
     lhs
-    rw [getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs]
+    rw [getLsb_reflectBVFin_eq_or_reflectBVFin_getLsb_reflectBVFin_getNonLsbs]
   rw [BitVec.getLsbD_concat]
 
 
@@ -311,29 +311,29 @@ def Env.getD_getElem?_ofEnvFin (envFin : EnvFin w n) (i : Nat) :
   rw [List.getD_getElem?]
   by_cases h : i < n  <;> simp [h]
 
-theorem Factor.denote_eq_toNat_reflectFin {w : Nat} (xs : Env w) (f : Factor) :
-    f.denote xs = (f.reflectFin (EnvFin.ofEnv xs _)).toNat := by
-  rw [Factor.denote_eq_toNat_reflect]
-  rw [reflect_eq_reflectFin]
+theorem Factor.denote_eq_toNat_reflectBVFin {w : Nat} (xs : Env w) (f : Factor) :
+    f.denoteInt xs = (f.reflectBVFin (EnvFin.ofEnv xs _)).toNat := by
+  rw [Factor.denote_eq_toNat_reflectBV]
+  rw [reflectBV_eq_reflectBVFin]
   simp
 
-theorem Factor.reflectFin_toNat_eq_add
+theorem Factor.reflectBVFin_toNat_eq_add
     {w : Nat} {x : Factor} {env : EnvFin (w +1) x.numVars} :
-    (x.reflectFin env).toNat = 2 * (x.reflectFin env.getNonLsbs).toNat + ((x.reflectFin env.getLsb).getLsbD 0).toNat := by
-  rw [Factor.reflectFin_eq_reflectFin_getLsb_reflectFin_getNonLsbs]
+    (x.reflectBVFin env).toNat = 2 * (x.reflectBVFin env.getNonLsbs).toNat + ((x.reflectBVFin env.getLsb).getLsbD 0).toNat := by
+  rw [Factor.reflectBVFin_eq_reflectBVFin_getLsb_reflectBVFin_getNonLsbs]
   simp
   rw [Nat.mul_comm]
 
 
-/-- Split a denote at an env intoa denote at the LSB and the denote at the non-Lsbs -/
+/-- Split a denoteInt at an env intoa denoteInt at the LSB and the denoteInt at the non-Lsbs -/
 theorem Factor.denoteFin_eq_add {w : Nat} (x : Factor) (env : EnvFin (w + 1) x.numVars) :
     x.denoteFin env = 2 * x.denoteFin env.getNonLsbs + x.denoteFin env.getLsb := by
-  rw [Factor.denoteFin_eq_toNat_reflectFin]
-  rw [Factor.denoteFin_eq_toNat_reflectFin]
-  rw [Factor.denoteFin_eq_toNat_reflectFin]
-  rw [Factor.reflectFin_toNat_eq_add]
+  rw [Factor.denoteFin_eq_toNat_reflectBVFin]
+  rw [Factor.denoteFin_eq_toNat_reflectBVFin]
+  rw [Factor.denoteFin_eq_toNat_reflectBVFin]
+  rw [Factor.reflectBVFin_toNat_eq_add]
   simp
-  generalize (x.reflectFin env.getLsb) = bv
+  generalize (x.reflectBVFin env.getLsb) = bv
   revert bv
   decide
 
@@ -354,17 +354,17 @@ instance : ToExpr Term where
 
 def Term.numVars (t : Term) : Nat := t.f.numVars
 
-/-- Reflect is what we use for reflection -/
-def Term.reflect {w : Nat}  (t : Term) (xs: Env w) : BitVec w :=
-  (BitVec.ofInt w t.c) * t.f.reflect xs
+/-- reflectBV is what we use for reflectBVion -/
+def Term.reflectBV {w : Nat}  (t : Term) (xs: Env w) : BitVec w :=
+  (BitVec.ofInt w t.c) * t.f.reflectBV xs
 
-def Term.denote {w : Nat} (t : Term) (xs : Env w) : Int :=
-  t.c * t.f.denote xs
+def Term.denoteInt {w : Nat} (t : Term) (xs : Env w) : Int :=
+  t.c * t.f.denoteInt xs
 
 def Term.denoteFin {w : Nat} (t : Term) (xs : EnvFin w t.numVars) : Int :=
   t.c * t.f.denoteFin xs
 
-/-- Split a denote at an env intoa denote at the LSB and the denote at the non-Lsbs -/
+/-- Split a denoteInt at an env intoa denoteInt at the LSB and the denoteInt at the non-Lsbs -/
 theorem Term.denoteFin_eq_add {w : Nat} (t : Term) (env : EnvFin (w + 1) t.numVars) :
     t.denoteFin env = 2 * t.denoteFin env.getNonLsbs + t.denoteFin env.getLsb := by
   rw [Term.denoteFin]
@@ -376,29 +376,29 @@ theorem Term.denoteFin_eq_add {w : Nat} (t : Term) (env : EnvFin (w + 1) t.numVa
   ac_nf
 
 theorem Term.denoteFin_eq_denote {t : Term} {xs : List (BitVec w)} {xsFin : EnvFin w t.numVars} (h : ∀ (i : Fin t.numVars), xs[i]?.getD 0#w = xsFin i) :
-    t.denoteFin xsFin = t.denote xs := by
-  simp [Term.denoteFin, Term.denote, Factor.denoteFin_eq_denote h]
+    t.denoteFin xsFin = t.denoteInt xs := by
+  simp [Term.denoteFin, Term.denoteInt, Factor.denoteFin_eq_denote h]
 
 @[simp]
-theorem Term.reflect_eq_ofInt_denote {w : Nat} {t : Term} {xs : Env w} :
-    t.reflect xs = (BitVec.ofInt w <| t.denote xs) := by
+theorem Term.reflectBV_eq_ofInt_denote {w : Nat} {t : Term} {xs : Env w} :
+    t.reflectBV xs = (BitVec.ofInt w <| t.denoteInt xs) := by
   obtain ⟨c, f⟩ := t
-  simp [Term.reflect, Term.denote]
+  simp [Term.reflectBV, Term.denoteInt]
   rw [BitVec.ofInt_mul]
-  rw [Factor.reflect_eq_ofInt_denote]
+  rw [Factor.reflectBV_eq_ofInt_denote]
 
 @[simp]
-theorem Term.reflect_zero_of_denote_zero {w : Nat} {t : Term} {xs : Env w} (h : t.denote xs = 0) :
-    t.reflect xs = 0#w := by
-  simp [Term.reflect_eq_ofInt_denote, h]
+theorem Term.reflectBV_zero_of_denote_zero {w : Nat} {t : Term} {xs : Env w} (h : t.denoteInt xs = 0) :
+    t.reflectBV xs = 0#w := by
+  simp [Term.reflectBV_eq_ofInt_denote, h]
 
 @[simp]
-theorem Term.reflect_width_zero  (t : Term) (env : Env 0) :
-    t.reflect env = 0 := by simp [Term.reflect]
+theorem Term.reflectBV_width_zero  (t : Term) (env : Env 0) :
+    t.reflectBV env = 0 := by simp [Term.reflectBV]
 
 @[simp]
 theorem Term.denote_width_zero  (t : Term) (env : Env 0) :
-    t.denote env = 0 := by simp [Term.denote]
+    t.denoteInt env = 0 := by simp [Term.denoteInt]
 
 @[simp]
 theorem Term.denoteFin_width_zero  (t : Term) (env : EnvFin 0 t.numVars) :
@@ -432,39 +432,39 @@ theorem Eqn.numVars_nil : Eqn.numVars [] = 0 := rfl
 @[simp]
 theorem Eqn.numVars_cons : Eqn.numVars (t :: es) = max t.numVars (Eqn.numVars es) := rfl
 
-def Eqn.reflect {w : Nat} (e : Eqn) (env : Env w) : BitVec w :=
+def Eqn.reflectBV {w : Nat} (e : Eqn) (env : Env w) : BitVec w :=
   match e with
   | [] => 0
-  | t :: [] => t.reflect env
-  | t :: ts => t.reflect env + Eqn.reflect ts env
+  | t :: [] => t.reflectBV env
+  | t :: ts => t.reflectBV env + Eqn.reflectBV ts env
 
 
 @[simp]
-theorem Eqn.reflect_nil  {w : Nat} (env : Env w) :
-    Eqn.reflect [] env = 0 := rfl
+theorem Eqn.reflectBV_nil  {w : Nat} (env : Env w) :
+    Eqn.reflectBV [] env = 0 := rfl
 
 @[simp]
-theorem Eqn.reflect_cons {w : Nat}
+theorem Eqn.reflectBV_cons {w : Nat}
     (t : Term) (ts : List Term) (env : Env w) :
-    Eqn.reflect (t :: ts) env = t.reflect env + Eqn.reflect ts env := by
+    Eqn.reflectBV (t :: ts) env = t.reflectBV env + Eqn.reflectBV ts env := by
   rcases ts with t | ts
-  simp [reflect]
-  simp [reflect]
+  simp [reflectBV]
+  simp [reflectBV]
 
 
-def Eqn.denote {w : Nat} (e : Eqn) (env : Env w) : Int :=
+def Eqn.denoteInt {w : Nat} (e : Eqn) (env : Env w) : Int :=
   match e with
   | [] => 0
-  | t :: ts => t.denote env + Eqn.denote ts env
+  | t :: ts => t.denoteInt env + Eqn.denoteInt ts env
 
 @[simp]
 theorem Eqn.denote_nil  {w : Nat} (env : Env w) :
-    Eqn.denote [] env = 0 := rfl
+    Eqn.denoteInt [] env = 0 := rfl
 
 @[simp]
 theorem Eqn.denote_cons {w : Nat}
     (t : Term) (ts : List Term) (env : Env w) :
-    Eqn.denote (t :: ts) env = t.denote env + Eqn.denote ts env := rfl
+    Eqn.denoteInt (t :: ts) env = t.denoteInt env + Eqn.denoteInt ts env := rfl
 
 def Eqn.denoteFin {w : Nat} (e : Eqn) (envFin : EnvFin w e.numVars) : Int :=
   match e with
@@ -495,10 +495,10 @@ theorem Eqn.denoteFin_eq_add {w : Nat} (eqn : Eqn) (env : EnvFin (w + 1) eqn.num
     rw [Int.mul_add]
     ac_nf
 
-/-- To evaluate `e.denote`, one can equally well evaluate `e.denoteFin` -/
+/-- To evaluate `e.denoteInt`, one can equally well evaluate `e.denoteFin` -/
 theorem Eqn.denoteFin_eq_denote {e : Eqn} {xs : List (BitVec w)} {xsFin : EnvFin w e.numVars}
     (h : ∀ (i : Fin e.numVars), xs[i]?.getD 0#w = xsFin i) :
-    e.denoteFin xsFin = e.denote xs := by
+    e.denoteFin xsFin = e.denoteInt xs := by
   induction e
   case nil => simp [Eqn.denoteFin]
   case cons t es ih =>
@@ -514,20 +514,20 @@ theorem Eqn.denoteFin_eq_denote {e : Eqn} {xs : List (BitVec w)} {xsFin : EnvFin
       assumption
 
 @[simp]
-theorem Eqn.reflect_width_zero  (es : Eqn) (env : Env 0) :
-    Eqn.reflect es env = 0 := by
+theorem Eqn.reflectBV_width_zero  (es : Eqn) (env : Env 0) :
+    Eqn.reflectBV es env = 0 := by
   induction es
-  case nil => simp [Eqn.reflect]
+  case nil => simp [Eqn.reflectBV]
   case cons e es ih =>
-    simp [ih, Eqn.reflect]
+    simp [ih, Eqn.reflectBV]
 
 @[simp]
 theorem Eqn.denote_width_zero  (es : Eqn) (env : Env 0) :
-    Eqn.denote es env = 0 := by
+    Eqn.denoteInt es env = 0 := by
   induction es
-  case nil => simp [Eqn.denote]
+  case nil => simp [Eqn.denoteInt]
   case cons e es ih =>
-    simp [ih, Eqn.denote]
+    simp [ih, Eqn.denoteInt]
 
 @[simp]
 theorem Eqn.denoteFin_width_zero  (es : Eqn) (env : EnvFin 0 es.numVars) :
@@ -538,8 +538,8 @@ theorem Eqn.denoteFin_width_zero  (es : Eqn) (env : EnvFin 0 es.numVars) :
     simp [ih, Eqn.denoteFin]
 
 @[simp]
-theorem Eqn.reflect_eq_ofInt_denote {w : Nat} (xs : Env w) (e : Eqn) :
-    e.reflect xs = BitVec.ofInt w (e.denote xs) := by
+theorem Eqn.reflectBV_eq_ofInt_denote {w : Nat} (xs : Env w) (e : Eqn) :
+    e.reflectBV xs = BitVec.ofInt w (e.denoteInt xs) := by
   induction e
   case nil => simp
   case cons t ts ih =>
@@ -547,8 +547,8 @@ theorem Eqn.reflect_eq_ofInt_denote {w : Nat} (xs : Env w) (e : Eqn) :
     simp [BitVec.ofInt_add, ih]
 
 @[simp]
-theorem Eqn.reflect_zero_of_denote_zero {w : Nat} (xs : Env w) (e : Eqn) (h : e.denote xs = 0) :
-    e.reflect xs = 0 := by simp [h]
+theorem Eqn.reflectBV_zero_of_denote_zero {w : Nat} (xs : Env w) (e : Eqn) (h : e.denoteInt xs = 0) :
+    e.reflectBV xs = 0 := by simp [h]
 
 @[simp]
 def Env.getLsb_eq_of_width_one (env : List (BitVec 1)) : Env.getLsb env = env := by
@@ -561,7 +561,7 @@ def Env.getLsb_eq_of_width_one (env : List (BitVec 1)) : Env.getLsb env = env :=
 
 
 theorem Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero {eqn : Eqn}
-    (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), Eqn.denoteFin eqn env1 = 0) :
+    (h1 : ∀ (env1 : EnvFin 1 eqn.numVars), eqn.denoteFin env1 = 0) :
     ∀ {w : Nat} (env : EnvFin w eqn.numVars), eqn.denoteFin env = 0 := by
   intros w
   induction w
@@ -575,11 +575,11 @@ theorem Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero {eqn : Eqn}
     simp
 
 
-theorem Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
+theorem Eqn.reflectBV_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
     (h : ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0) :
-    ∀ {w : Nat} (env : List (BitVec w)), e.reflect env = 0 := by
+    ∀ {w : Nat} (env : List (BitVec w)), e.reflectBV env = 0 := by
   intros w env
-  rw [Eqn.reflect_eq_ofInt_denote]
+  rw [Eqn.reflectBV_eq_ofInt_denote]
   rw [← Eqn.denoteFin_eq_denote (xsFin := EnvFin.ofEnv env e.numVars) (h := by simp)]
   rw [Eqn.denoteFin_eq_zero_of_denoteFin_width_one_eq_zero]
   · simp
@@ -630,55 +630,56 @@ theorem Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
 #eval (0 : Int).ediv 6
 #eval (-1 : Int).ediv 6 -- anything negative rounds to -1
 #eval (-2 : Int).ediv 6
-#eval (-3 : Int).ediv 6 
+#eval (-3 : Int).ediv 6
 #eval (-4 : Int).ediv 6
 #eval (-5 : Int).ediv 6
 #eval (-6 : Int).ediv 6 -- anything negative rounds to -1
 #eval (-7 : Int).ediv 6
-#eval (-8 : Int).ediv 6 
+#eval (-8 : Int).ediv 6
 #eval (-9 : Int).ediv 6
 #eval (-10 : Int).ediv 6
 #eval (-11 : Int).ediv 6
 
-class Nonneg (i : Int) where 
+class Nonneg (i : Int) where
   Nonneg : i ≥ 0
 
-class Nonpos (i : Int) where 
+class Nonpos (i : Int) where
   Nonpos : i ≤ 0
 
 
-theorem ediv_natCast_eq_of_le (x : Int) (hx : 0 ≤ x)  (y : Nat) : x / (y : Int) = Int.ofNat (x.natAbs / y) := by 
- rcases x with x | x 
- · simp 
+theorem ediv_natCast_eq_of_le (x : Int) (hx : 0 ≤ x)  (y : Nat) : x / (y : Int) = Int.ofNat (x.natAbs / y) := by
+ rcases x with x | x
+ · simp
  · omega
 @[simp] theorem ofNat_ediv_ofNat_eq (x y : Nat) : (Int.ofNat x) / (Int.ofNat y) = Int.ofNat (x / y) := rfl
 
 -- -x / y = if x = 0 then 0 else -((-x + 1) / y)
-theorem negSucc_ediv_ofNat_eq (x y : Nat) : (Int.negSucc x) / (y : Int) = if y = 0 then 0 else Int.negSucc (x / y) := by 
+theorem negSucc_ediv_ofNat_eq (x y : Nat) : (Int.negSucc x) / (y : Int) = if y = 0 then 0 else Int.negSucc (x / y) := by
   rw [Int.div_def, Int.ediv.eq_def]
   rcases y with rfl | y <;> simp
 
-theorem Int.natAbs_add_eq_of_le_of_le {x y : Int} (hx : 0 ≤ x) (hy : 0 ≤ y) : (x + y).natAbs = x.natAbs + y.natAbs := by 
+theorem Int.natAbs_add_eq_of_le_of_le {x y : Int} (hx : 0 ≤ x) (hy : 0 ≤ y) : (x + y).natAbs = x.natAbs + y.natAbs := by
   rw [Int.natAbs.eq_def]
   rcases x with x | x <;> rcases y with y | y <;> first | omega | rfl
 
 theorem Int.natAbs_add_eq_of_le_iff_le {x y : Int} (h : 0 ≤ x ↔ 0 ≤ y) : (x + y).natAbs = x.natAbs + y.natAbs := by
-  by_cases hx : 0 ≤ x 
+  by_cases hx : 0 ≤ x
   · have := h.mp hx
     rcases x with x | x <;> rcases y with y | y <;> first | omega | rfl
   · have := hx.imp h.mpr
-    rcases x with x | x <;> rcases y with y | y <;> omega 
+    rcases x with x | x <;> rcases y with y | y <;> omega
 
+/-
 -- -x / y = if x = 0 then 0 else -((-x + 1) / y)
-theorem ediv_ofNat_eq_of_lt {x : Int} (hx : x < 0)  {y : Nat} :  x / (y : Int) = 
+theorem ediv_ofNat_eq_of_lt {x : Int} (hx : x < 0)  {y : Nat} :  x / (y : Int) =
     if y = 0
     then 0
-    else - ((-x + 1) / y) + 1 := by 
-  rcases x with x  | x 
+    else - ((-x + 1) / y) + 1 := by
+  rcases x with x  | x
   · simp at hx
     omega
   · rw [negSucc_ediv_ofNat_eq]
-    rcases y with rfl | y 
+    rcases y with rfl | y
     · simp
     · rw [ediv_natCast_eq_of_le]
       simp
@@ -687,6 +688,7 @@ theorem ediv_ofNat_eq_of_lt {x : Int} (hx : x < 0)  {y : Nat} :  x / (y : Int) =
           sorry
         · omega
       · omega
+-/
 
 
 #check Int.ediv
@@ -702,18 +704,18 @@ theorem ediv_ofNat_eq_of_lt {x : Int} (hx : x < 0)  {y : Nat} :  x / (y : Int) =
 #eval (6 : Int).tdiv 6
 #eval (5 : Int).tdiv 6
 #eval (4 : Int).tdiv 6
-#eval (3 : Int).tdiv 6 
+#eval (3 : Int).tdiv 6
 #eval (2 : Int).tdiv 6
 #eval (1 : Int).tdiv 6
 #eval (0 : Int).tdiv 6
 #eval (-1 : Int).tdiv 6 -- anything negative rounds to -1
 #eval (-2 : Int).tdiv 6
-#eval (-3 : Int).tdiv 6 
+#eval (-3 : Int).tdiv 6
 #eval (-4 : Int).tdiv 6
 #eval (-5 : Int).tdiv 6
 #eval (-6 : Int).tdiv 6 -- anything negative rounds to -1
 #eval (-7 : Int).tdiv 6
-#eval (-8 : Int).tdiv 6 
+#eval (-8 : Int).tdiv 6
 #eval (-9 : Int).tdiv 6
 #eval (-10 : Int).tdiv 6
 #eval (-11 : Int).tdiv 6
@@ -730,53 +732,54 @@ theorem ediv_ofNat_eq_of_lt {x : Int} (hx : x < 0)  {y : Nat} :  x / (y : Int) =
 #eval (6 : Int).fdiv 6
 #eval (5 : Int).fdiv 6
 #eval (4 : Int).fdiv 6
-#eval (3 : Int).fdiv 6 
+#eval (3 : Int).fdiv 6
 #eval (2 : Int).fdiv 6
 #eval (1 : Int).fdiv 6
 #eval (0 : Int).fdiv 6
 #eval (-1 : Int).fdiv 6 -- anything negative rounds to -1
 #eval (-2 : Int).fdiv 6
-#eval (-3 : Int).fdiv 6 
+#eval (-3 : Int).fdiv 6
 #eval (-4 : Int).fdiv 6
 #eval (-5 : Int).fdiv 6
 #eval (-6 : Int).fdiv 6 -- anything negative rounds to -1
 #eval (-7 : Int).fdiv 6
-#eval (-8 : Int).fdiv 6 
+#eval (-8 : Int).fdiv 6
 #eval (-9 : Int).fdiv 6
 #eval (-10 : Int).fdiv 6
 #eval (-11 : Int).fdiv 6
 #eval (-12 : Int).fdiv 6
 
 
--- n.ediv d = 
+-- n.ediv d =
 -- theorem Int.ofNat_ediv_ofNat -- sorry
 -- theorem Int.ofNat_ediv_negSucc -- sorry
 -- theorem Int.ofNat_ediv_ofNat -- sorry
 -- theorem Int.ofNat_ediv_ofNat -- sorry
 
+/-
 #check Int.bmod
 #check Int.ediv_nonneg_of_nonpos_of_nonpos
-theorem Int.bmod_eq_of_natAbs_lt (x : Int) (n : Nat) (hn : 2 * x.natAbs < n) : 
-    x.bmod n = x := by 
-  rcases x with x | x 
-  case ofNat => 
-   simp at *; 
+theorem Int.bmod_eq_of_natAbs_lt (x : Int) (n : Nat) (hn : 2 * x.natAbs < n) :
+    x.bmod n = x := by
+  rcases x with x | x
+  case ofNat =>
+   simp at *;
    rw [Int.bmod_def]
    norm_cast
-   have : x % n = x := by 
+   have : x % n = x := by
     apply Nat.mod_eq_of_lt
     omega
    rw [this]
-   have : x < (n + 1) / 2 := by 
+   have : x < (n + 1) / 2 := by
      rw [Nat.lt_div_iff_mul_lt (by decide)]
      omega
    simp [this]
-  case negSucc => 
+  case negSucc =>
     simp at *
     norm_cast
     rw [Int.bmod_def]
     -- This is true because 'emod' will flip it over, making it larger that (n + 1) / 2
-    have : ¬ (Int.negSucc x % (n : Int) < ((n : Int) + 1) / 2) := by 
+    have : ¬ (Int.negSucc x % (n : Int) < ((n : Int) + 1) / 2) := by
       rw [Int.emod_negSucc]
       simp
       sorry
@@ -784,7 +787,7 @@ theorem Int.bmod_eq_of_natAbs_lt (x : Int) (n : Nat) (hn : 2 * x.natAbs < n) :
     have h := Int.ediv_add_emod (Int.negSucc x) n
     -- see that (Int.negSucc x / n) = -1, giving us the intended statement..
     -- This is true because 'Int.negSucc x < 0' and '(Int.negSucc x).natAbs < n'
-    have hMinusOne : (Int.negSucc x / ↑n) = -1 := by 
+    have hMinusOne : (Int.negSucc x / ↑n) = -1 := by
      rw [Int.div_def]
      sorry
     simp [hMinusOne] at h
@@ -798,9 +801,10 @@ theorem Int.eq_of_ofInt_zero_of_lt {w : Nat} {x : Int}
  rw [Int.bmod_eq_of_natAbs_lt] at this
  · simp [this]
  · omega
+-/
 
 theorem BitVec.eq_zero_of_signExtend_eq_zero {x : BitVec w} {w' : Nat} (hw : w ≤ w')
-    (hx : x.signExtend w' = 0#w') : x = 0#w := by 
+    (hx : x.signExtend w' = 0#w') : x = 0#w := by
   have : (x.signExtend w').toNat = (0#w').toNat := by simp [hx]
   simp [BitVec.toNat_signExtend]at this
   apply BitVec.eq_of_toNat_eq
@@ -812,47 +816,48 @@ theorem BitVec.eq_zero_of_signExtend_eq_zero {x : BitVec w} {w' : Nat} (hw : w �
     · exact x.isLt
     · apply Nat.pow_le_pow_of_le (by decide) hw
 
-theorem Factor.reflect_eq_reflect_sext_of_le (w w' : Nat) (f : Factor)
-    (env : EnvFin w f.numVars) (hw : w ≤ w') : 
-    f.reflectFin env = 0#w ↔ f.reflectFin (env.sext w') = 0#w' := by 
-  induction f 
-  case var n => 
-    simp [reflectFin]
-    constructor 
-    · intros h 
-      simp [BitVec.toNat_signExtend, h]
-      ext i h
-      simp [BitVec.getLsbD_signExtend]
+/-
+theorem Factor.getLsbD_reflectBVFin_eq_false_iff_getLsbD_reflectBVFin_sext_eq_false (w w' : Nat) (f : Factor)
+    (env : EnvFin w f.numVars) (hw : w ≤ w') :
+    (∀ (i : Nat), (f.reflectBVFin env).getLsbD i = false) ↔ (∀ (i : Nat), (f.reflectBVFin (env.sext w')).getLsbD i = false) := by
+  induction f
+  case var n =>
+    simp [reflectBVFin]
+    constructor
+    · intros h i
+      simp [BitVec.getLsbD_signExtend, h i]
+      intros hi hi'
+      simp [BitVec.msb_eq_getLsbD_last, h]
       -- show that 2^w' <= 2^w
-    · intros h 
-      apply BitVec.eq_zero_of_signExtend_eq_zero hw
-      exact h
-  case and x y xh yh =>
-   simp [reflectFin]
+    · intros h
+      intros i
+      have := h i
+      simp [BitVec.getLsbD_signExtend] at this
+      sorry -- do case analysis
+  case and x y hx hy  =>
+   simp [reflectBVFin]
    sorry
   case or x y xh yh => sorry
-  case xor x y xh yh => sorry 
+  case xor x y xh yh => sorry
   case not x => sorry
+-/
 
 
 
 
-theorem Factor.denoteFin_eq_zero_iff_denoteFin_sext_eq_zero_of_le (w w' : Nat) (f : Factor)
-    (env : EnvFin w f.numVars) (hw : w ≤ w') : 
-    f.denoteFin env = 0 ↔ f.denoteFin (env.sext w') = 0 := by 
-  rw [Factor.denoteFin]
-  sorry
-
+/-
 /-- If we increase the bitwidth and sign-extend, the denotations must agree -/
 theorem Eqn.denoteFin_eq_zero_iff_denoteFin_sext_eq_zero_of_le (w w' : Nat) (e : Eqn)
-    (env : EnvFin w e.numVars) (hw : w ≤ w') : 
-    e.denoteFin env = 0 ↔ e.denoteFin (env.sext w') = 0 := by sorry
+    (env : EnvFin w e.numVars) (hw : w ≤ w') :
+    e.denoteFin env = 0 ↔ e.denoteFin (env.sext w') = 0 := by
+  · sorry
+-/
 
 /--
 This theory should work: Just pick a large enough field where showing that the value is zero
 will prove that the value is zero
 theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
-    (h : ∀ (w : Nat) (env : List (BitVec w)), e.reflect env = 0) :
+    (h : ∀ (w : Nat) (env : List (BitVec w)), e.reflectBV env = 0) :
     ∀ (env1 : EnvFin 1 e.numVars), e.denoteFin env1 = 0 := by
   intros env1
   let size := (e.denoteFin env1).natAbs.log2 + 1
@@ -868,21 +873,21 @@ theorem Eqn.denote_hard_case_of_denote_mpr (e : Eqn)
 instance decEqnDenoteFinWidth1 {e : Eqn} : Decidable (∀ env1 : Env (BitVec 1), Eqn.denoteFin e env1 = 0) :=
   sorry
 
-instance {e : Eqn} : Decidable (∀ env1 : List (BitVec 1), Eqn.denote e env1 = 0) :=
+instance {e : Eqn} : Decidable (∀ env1 : List (BitVec 1), Eqn.denoteInt e env1 = 0) :=
   sorry
 -/
 
-def Eqn.reflectEqZero (w : Nat) (eqn : Eqn) (env : Env w) : Prop :=
-  Eqn.reflect eqn env = BitVec.ofInt w 0
+def Eqn.reflectBVEqZero (w : Nat) (eqn : Eqn) (env : Env w) : Prop :=
+  Eqn.reflectBV eqn env = BitVec.ofInt w 0
 
 /--
 Central theorem: To decide if a bitvector equation is zero for all widths, it sufficest to check that the denotation is zero at width zero.
 -/
-theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (w : Nat) (env : List (BitVec w))
+theorem Eqn.forall_width_reflectBV_zero_of_width_one_denote_zero (e : Eqn) (w : Nat) (env : List (BitVec w))
     (h : (∀ env1 : EnvFin 1 e.numVars, Eqn.denoteFin e env1 = 0)) :
-    Eqn.reflectEqZero w e env := by
-  rw [Eqn.reflectEqZero]
-  rw [Eqn.reflect_eq_zero_of_denoteFin_width_one_eq_zero]
+    Eqn.reflectBVEqZero w e env := by
+  rw [Eqn.reflectBVEqZero]
+  rw [Eqn.reflectBV_eq_zero_of_denoteFin_width_one_eq_zero]
   simp
   apply h
 
@@ -963,7 +968,7 @@ theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
 
 @[bv_mba_preprocess, simp]
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
-    x - (y - z) = x - y + z := by 
+    x - (y - z) = x - y + z := by
   apply BitVec.eq_of_toInt_eq
   simp only [BitVec.toInt_sub, Int.sub_bmod_bmod, BitVec.toInt_add, Int.bmod_add_bmod_congr]
   congr
@@ -1023,8 +1028,8 @@ theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
 theorem BitVec.mul_distrib_add_left (x y z : BitVec w) : x * (y + z) = x * y + x * z := by
   apply BitVec.eq_of_toNat_eq
   simp [← Nat.mul_add]
-  conv => 
-    rhs 
+  conv =>
+    rhs
     rw [Nat.mul_mod]
   simp
 
@@ -1041,7 +1046,7 @@ theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
   rw [BitVec.sub_toAdd]
   rw [BitVec.neg_neg]
   rw [← BitVec.mul_distrib_add_right]
-  have : -x + x = 0 := by 
+  have : -x + x = 0 := by
     rw [BitVec.add_comm]
     rw [← BitVec.sub_toAdd]
     simp
@@ -1063,7 +1068,7 @@ attribute [bv_mba_preprocess] BitVec.add_assoc
 
 
 
-namespace Reflect
+namespace reflectBV
 open Lean Elab Meta Tactic
 
 abbrev Ix := Nat
@@ -1074,16 +1079,16 @@ structure State where
 
 abbrev M := StateRefT State MetaM
 
-partial def reflectFactor (e : Expr) : M Factor := do
+partial def reflectBVFactor (e : Expr) : M Factor := do
   match_expr e with
   | HAnd.hAnd _bv _bv _bv _inst a b =>
-     return Factor.and (← reflectFactor a) (← reflectFactor b)
+     return Factor.and (← reflectBVFactor a) (← reflectBVFactor b)
   | HOr.hOr _bv _bv _bv _inst a b =>
-     return Factor.or (← reflectFactor a) (← reflectFactor b)
+     return Factor.or (← reflectBVFactor a) (← reflectBVFactor b)
   | HXor.hXor _bv _bv _bv _inst a b =>
-     return Factor.xor (← reflectFactor a) (← reflectFactor b)
+     return Factor.xor (← reflectBVFactor a) (← reflectBVFactor b)
   | Complement.complement _bv _inst a =>
-     return Factor.not (← reflectFactor a)
+     return Factor.not (← reflectBVFactor a)
   | _ =>
     let s ← get
     match s.e2ix[e]? with
@@ -1093,7 +1098,7 @@ partial def reflectFactor (e : Expr) : M Factor := do
        set { s with e2ix := s.e2ix.insert e ix }
        return .var ix
 
-def reflectTermCoeff (e : Expr) : M Int :=
+def reflectBVTermCoeff (e : Expr) : M Int :=
   match_expr e with
   | BitVec.ofInt _w i => do
     let .some i := Expr.int? i
@@ -1103,38 +1108,38 @@ def reflectTermCoeff (e : Expr) : M Int :=
     let .some i := Expr.int? i
       | throwError "Expected Int.cast <constant int>' at '{indentD e}', found {i}"
     return i
-  | _ => throwError "unable to reflect term coefficient '{indentD e}'. Expected an integer."
+  | _ => throwError "unable to reflectBV term coefficient '{indentD e}'. Expected an integer."
 
-def reflectTerm (e : Expr) : M Term :=
+def reflectBVTerm (e : Expr) : M Term :=
   match_expr e with
   | HMul.hMul _bv _bv _bv _inst l r => do
-    let c ← reflectTermCoeff l
-    let f ← reflectFactor r
+    let c ← reflectBVTermCoeff l
+    let f ← reflectBVFactor r
     return { c, f }
-  | _ => throwError "unable to reflect term '{indentD e}'.\nExpected 'int * variable'."
+  | _ => throwError "unable to reflectBV term '{indentD e}'.\nExpected 'int * variable'."
 
 /-!
 Recall that add and sub in lean are associated to the left, so we have
 ((a + b) + c) + d and so on.
 -/
-partial def reflectEqnAux (e : Expr) : M Eqn :=
+partial def reflectBVEqnAux (e : Expr) : M Eqn :=
   match_expr e with
   | HAdd.hAdd _bv _bv _bv _inst l rs => do
-    let t ← reflectTerm l
-    let eqn ← reflectEqnAux rs
+    let t ← reflectBVTerm l
+    let eqn ← reflectBVEqnAux rs
     return t :: eqn
-  | _ => do return [← reflectTerm e]
+  | _ => do return [← reflectBVTerm e]
 
 /- The expression corresponding to the bitwidth we are working with -/
 abbrev WidthExpr := Expr
 
-def reflectEqn (e : Expr) : M (WidthExpr × Eqn) := do
+def reflectBVEqn (e : Expr) : M (WidthExpr × Eqn) := do
   let .some (ty, lhs, _rhs) := Expr.eq? e
     | throwError "expected top-level equality, but found {e}"
   let_expr BitVec w := ty
     | throwError "expected equality of bitvectors, but found {indentD ty}"
   logInfo m!"found top-level equality LHS '{lhs}'"
-  return (w, ← reflectEqnAux lhs)
+  return (w, ← reflectBVEqnAux lhs)
 
 def runM (x : M α) : MetaM (α × State) := x.run {}
 
@@ -1181,20 +1186,20 @@ def mbaTac (g : MVarId) : TermElabM (List MVarId) := do
          logInfo "goal closed by Mba normalizer."
          return []
     logInfo m!"Normalized goal state to {indentD g}"
-    let ((widthExpr, eqn), reflectState) ← g.withContext do runM <| reflectEqn (← g.getType)
+    let ((widthExpr, eqn), reflectBVState) ← g.withContext do runM <| reflectBVEqn (← g.getType)
     logInfo m!"found expression of width: '{indentD widthExpr}'"
-    let env ← State.envToExpr widthExpr reflectState
-    logInfo m!"replacing goal with reflected version. Equation: {indentD <| repr eqn}"
-    logInfo m!"Environment: {indentD (toMessageData reflectState.e2ix.toList)}"
-    -- let reflectedLhs ← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env]
-    -- let reflectedRhs := mkApp2 (mkConst ``BitVec.ofInt) widthExpr (toExpr (0 : Int))
-    -- let g ← g.replaceTargetDefEq (← mkEq reflectedLhs reflectedRhs)
+    let env ← State.envToExpr widthExpr reflectBVState
+    logInfo m!"replacing goal with reflectBVed version. Equation: {indentD <| repr eqn}"
+    logInfo m!"Environment: {indentD (toMessageData reflectBVState.e2ix.toList)}"
+    -- let reflectBVedLhs ← mkAppM ``Eqn.reflectBV #[Eqn.toExpr eqn, env]
+    -- let reflectBVedRhs := mkApp2 (mkConst ``BitVec.ofInt) widthExpr (toExpr (0 : Int))
+    -- let g ← g.replaceTargetDefEq (← mkEq reflectBVedLhs reflectBVedRhs)
     -- logInfo m!"Replaced. {indentD g}"
-    -- apply: Eqn.forall_width_reflect_zero_of_width_one_denote_zero
+    -- apply: Eqn.forall_width_reflectBV_zero_of_width_one_denote_zero
 
-    let gs ← g.withContext do g.apply (mkAppN (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero []) #[Eqn.toExpr eqn, widthExpr, env])
+    let gs ← g.withContext do g.apply (mkAppN (mkConst ``Eqn.forall_width_reflectBV_zero_of_width_one_denote_zero []) #[Eqn.toExpr eqn, widthExpr, env])
     let [g] := gs
-      | throwError m!"expected single goal after applying reflection theorem, found {gs}"
+      | throwError m!"expected single goal after applying reflectBVion theorem, found {gs}"
     let dec ← mkDecideProof <| ← g.getType
     if ← isDefEq (mkMVar g) dec then
       logInfo "successfully decided!"
@@ -1216,19 +1221,19 @@ def evalBvMba : Tactic := fun
      replaceMainGoal gs
   | _ => throwUnsupportedSyntax
 
-end Reflect
+end reflectBV
 end Tactic
 
 namespace Examples
 
 
 example (x y : BitVec w) :
-  Eqn.reflectEqZero w
+  Eqn.reflectBVEqZero w
     [Term.mk 1 (.var 0), Term.mk 2 (.var 1)] [x, y] =
     (BitVec.ofInt w 1 * x + BitVec.ofInt w 2 * y = BitVec.ofInt w 0) := rfl
 
 example (x y : BitVec w) :
-  Eqn.reflectEqZero w
+  Eqn.reflectBVEqZero w
     [Term.mk 1 (.var 0), Term.mk 2 (.var 1), Term.mk (-1) (.var 0)] [x, y] =
     (BitVec.ofInt w 1 * x + (BitVec.ofInt w 2 * y + BitVec.ofInt w (-1) * x) = BitVec.ofInt w 0) := rfl
 
