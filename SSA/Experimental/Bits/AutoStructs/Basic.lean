@@ -389,6 +389,9 @@ lemma RawCNFA.same_stateMax (m : RawCNFA A) x y (z : Std.HashMap (State × A) (S
     (RawCNFA.mk m.stateMax x y z).states = m.states := by
   simp [RawCNFA.states]
 
+@[simp]
+lemma RawCNFA.empty_stateMax : empty (A := A).stateMax = 0 := rfl
+
 @[simp, aesop 50% unsafe]
 lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
