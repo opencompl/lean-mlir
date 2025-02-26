@@ -143,7 +143,7 @@ def product.prodArray' (a : Array γ) :=
       is.push (f s1 s2)
 
 @[inline]
-def product.prodArray := prodArray' f hm₁ hm₂ (Array.mkEmpty <| m₁.size * m₂.size)
+def product.prodArray := prodArray' f hm₁ hm₂ (Array.emptyWithCapacity <| m₁.size * m₂.size)
 
 include hinj in
 omit [BEq α] [Hashable α] [LawfulBEq α] in
@@ -218,7 +218,7 @@ lemma product.prodArray_spec_full :
     ∀ s₁ s₂, f s₁ s₂ ∈ product.prodArray f hm₁ hm₂ ↔ (s₁.val ∈ m₁ ∧ s₂.val ∈ m₂) := by
   simp only [prodArray]
   obtain ⟨h1, _, h2⟩ := prodArray'_spec_full (aᵢ := #[]) f hinj hm₁ hm₂ (by simp) (by simp)
-  simp only [Array.mkEmpty_eq]
+  simp only [Array.emptyWithCapacity_eq]
   simp only [h1]
   simp only [h2]
   simp only [implies_true]
@@ -433,7 +433,7 @@ instance [BEq α] [Hashable α] : DecidableEq (Std.HashSet α) :=
 def CNFA.determinize' (m : CNFA n) : CNFA n :=
   worklistRun (Std.HashSet m.m.states)
     (fun ss => ss.any fun s => s ∈ m.m.finals)
-    #[m.m.initials.attachWith (λ s ↦ s ∈ m.m.states) sorry]
+    #[m.m.initials.attachWith (λ s ↦ s ∈ m.m.states) (by aesop)]
     (by apply List.nodup_singleton)
     f
 where
@@ -667,7 +667,7 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   apply determinize_spec m hsim
 
 def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
-   let m' := { stateMax := m.stateMax, trans := Std.HashMap.empty, initials := m.finals, finals := m.initials}
+   let m' := { stateMax := m.stateMax, trans := Std.HashMap.emptyWithCapacity m.trans.size, initials := m.finals, finals := m.initials}
    m.trans.fold (init := m') fun m' (s, a) ss' =>
      ss'.fold (init := m') fun m' s' =>
        m'.addTrans a s' s
@@ -925,7 +925,7 @@ def CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
 -- Morally, n1 >= n2
 @[inline]
 def RawCNFA.proj (m1: RawCNFA (BitVec n1)) (f : Fin n2 → Fin n1) : RawCNFA (BitVec n2) :=
-  let trans := m1.trans.keysArray.foldl (init := Std.HashMap.empty) process
+  let trans := m1.trans.keysArray.foldl (init := Std.HashMap.emptyWithCapacity) process
   { m1 with trans }
 where
   @[inline]
