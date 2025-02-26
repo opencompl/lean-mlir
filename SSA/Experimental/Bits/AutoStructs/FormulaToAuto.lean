@@ -1008,15 +1008,72 @@ def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State
   decide (wp.sat s n)
 
 def RawCNFA.autWidth (wp : WidthPredicate) (n : Nat) : RawCNFA (BitVec 0) :=
-  let m := RawCNFA.empty
-  let m := (List.range (n + 1)).foldl (init := m) fun m _ =>
+  let m := (n+1).iterate f empty
+  let m := m.addInitial 0
+  m.addTrans (BitVec.zero 0) n n
+where
+  f m :=
     let (s, m) := m.newState
     let m := if wp.final? n s then m.addFinal s else m
     if s > 0 then m.addTrans (BitVec.zero 0) (s-1) s else m
-  m.addInitial 0
+
+lemma RawCNFA.autWidth_wf {wp : WidthPredicate} : RawCNFA.autWidth wp n |>.WF := by
+  unfold autWidth
+  lift_lets
+  generalize h : n = k
+  nth_rw 1 [←h]
+  clear h
+  rintro m
+  let motive (m : RawCNFA (BitVec 0)) k := m.WF ∧ (∀ i, i ∈ m.states ↔ i < k)
+  have hsucc n m k : motive m k → motive (autWidth.f wp n m) (k + 1) := by
+    simp [motive, autWidth.f]
+    rintro hwf hsts
+    have hk : k = m.stateMax := by
+      simp [states] at hsts; symm
+      apply eq_of_forall_lt_iff (hsts ·)
+    constructor
+    · split_ifs <;> try simp_all
+      · apply wf_addTrans <;> simp_all
+    · rintro i; split
+      · split <;> simp_all <;> unfold State at * <;> omega
+      · split <;> simp_all
+  suffices h: motive m (k + 1) by simp_all [motive]
+  unfold m
+  generalize h : k+1 = z
+  clear m h k
+  induction z
+  case zero =>
+    simp [motive]
+  case succ k ih =>
+    obtain heq : k + 1 = 1 + k := by omega
+    nth_rw 1 [heq, Function.iterate_add]
+    simp
+    apply hsucc
+    apply ih
 
 def CNFA.autWidth (wp : WidthPredicate) (n : Nat) : CNFA 0 :=
-  ⟨RawCNFA.autWidth wp n, sorry⟩
+  ⟨RawCNFA.autWidth wp n, RawCNFA.autWidth_wf⟩
+
+def NFA.autWidth (wp : WidthPredicate) (n : Nat) : NFA (BitVec 0) (Fin (n+1)) where
+  start := { 0 }
+  accept := { s | wp.final? n s }
+  step s₁ _ := { s₂ | s₂ = s₁ + 1 }
+
+def NFA'.autWidth (wp : WidthPredicate) (n : Nat) : NFA' 0 := ⟨_, NFA.autWidth wp n⟩
+
+def NFA.autWidthLang (wp : WidthPredicate) (n : Nat) : Language (BitVec 0) := { bvs  | wp.final? n bvs.length }
+
+def NFA.autWidthSA (n : Nat) (q : Fin (n+1)) : Language (BitVec 0) :=
+  if q = n then { w | w.length ≥ n } else { w | w.length = q }
+
+def NFA.autWidthCorrect : (autWidth wp n).correct (autWidthSA n) (autWidthLang wp n) := by
+  constructor
+  · simp [autWidth, autWidthSA, autWidthLang]
+    sorry
+  · intros w; induction w using List.reverseRecOn <;> sorry
+
+lemma CNFA.autWidth_spec : autWidth wp n |>.Sim (NFA'.autWidth wp n) := by
+  sorry
 
 end nfas_relations
 
