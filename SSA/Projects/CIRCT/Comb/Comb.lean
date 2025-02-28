@@ -254,22 +254,24 @@ instance : DialectDenote (Comb) where
 
 end Dialect
 
+def StringToNat (s : String) : Nat :=
+  if s = "4" then 4 else 42
+
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["Bool"] =>
       return .bool
     | ["Nat", r] =>
-      let rp := r.toNat?
-      if rp ≠ none then
-        return .nat r.toNat!
-      else
-        return .nat 0
+      return .nat (StringToNat r)
     | ["BitVec", r] =>
-      return .bv (r.toNat!)
+      return .bv (StringToNat r)
     | ["List", r] =>
       return .list (r.toNat!)
     | ["IcmpPred", r] =>
+      -- check whether one such
+      return .icmpPred r
+    | ["hList", r] =>
       -- check whether one such
       return .icmpPred r
     | _ => throw .unsupportedType

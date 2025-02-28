@@ -49,8 +49,9 @@ def CombEg3 := [Comb_com| {
 
 unseal String.splitOnAux in
 def CombEg4 := [Comb_com| {
-  ^entry(%0: !Nat_3):
-    "return" (%0) : (!Nat_3) -> ()
+  ^entry(%0: !BitVec_4):
+    %1 = "Comb.modu" (%0, %0) : (!BitVec_4, !BitVec_4) -> (!BitVec_4)
+    "return" (%1) : (!BitVec_4) -> ()
   }]
 
 #check CombEg4
@@ -59,12 +60,12 @@ def CombEg4 := [Comb_com| {
 #check CombEg4.denote
 #print axioms CombEg4
 
-def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+-- def ofList (vals : List (Option α)) : Stream α :=
+--   fun i => (vals.get? i).join
 
-def c : DC.ValueStream Bool := ofList [some true, none, some false, some true, some false]
-def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
-def u : DC.TokenStream := ofList [some (), none, some (), some (), none]
+-- def c : DC.ValueStream Bool := ofList [some true, none, some false, some true, some false]
+-- def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
+-- def u : DC.TokenStream := ofList [some (), none, some (), some (), none]
 
-def test2 : DC.TokenStream :=
-  BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
+-- def test2 : DC.TokenStream :=
+--   BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
