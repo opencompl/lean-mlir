@@ -1081,6 +1081,133 @@ def binopAbsNfa (op : Binop) (M1 M2: NFA' n) : NFA' n :=
   | .impl => M1.neg.union M2
   | .equiv => (M1.neg.union M2).inter (M2.neg.union M1)
 
+
+def liftOp n : Fin (n + 1) → Fin (n + 3) :=
+  fun k =>
+    if k = n then Fin.last (n+2) else k.castLE (by omega)
+
+def liftUnop n : Fin (n + 1) → Fin (n + 2) :=
+  fun k =>
+    if k = n then Fin.last (n+1) else k.castLE (by omega)
+
+def nfaOfTerm (t : Term) : CNFA (t.arity + 1) :=
+  match t with
+  | .var n => FSM.ofTerm (.var n) |> CNFA.ofFSM
+  | .zero => FSM.ofTerm .zero |> CNFA.ofFSM
+  | .negOne => FSM.ofTerm .negOne |> CNFA.ofFSM
+  | .one => FSM.ofTerm .one |> CNFA.ofFSM
+  | .ofNat n => FSM.ofTerm (.ofNat n) |> CNFA.ofFSM
+  | .and t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.and (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .or t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.or (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .xor t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.xor (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .add t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.add (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .sub t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.sub (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .neg t =>
+    let m := nfaOfTerm t
+    let mop : CNFA 2 := FSM.ofTerm (.neg (.var 0)) |> CNFA.ofFSM
+    let m : CNFA (t.arity + 2) := m.lift (λ i ↦ i.castLE (by omega))
+    let mop : CNFA (t.arity + 2) := mop.lift (λ i ↦ i + t.arity)
+    let m := CNFA.inter m mop
+    let mfinal := m.proj (liftUnop t.arity)
+    mfinal.minimize
+  | .not t =>
+    let m := nfaOfTerm t
+    let mop : CNFA 2 := FSM.ofTerm (.not (.var 0)) |> CNFA.ofFSM
+    let m : CNFA (t.arity + 2) := m.lift (λ i ↦ i.castLE (by omega))
+    let mop : CNFA (t.arity + 2) := mop.lift (λ i ↦ i + t.arity)
+    let m := CNFA.inter m mop
+    let mfinal := m.proj (liftUnop t.arity)
+    mfinal.minimize
+  | .shiftL t k =>
+    let m := nfaOfTerm t
+    let mop : CNFA 2 := FSM.ofTerm (.shiftL (.var 0) k) |> CNFA.ofFSM
+    let m : CNFA (t.arity + 2) := m.lift (λ i ↦ i.castLE (by omega))
+    let mop : CNFA (t.arity + 2) := mop.lift (λ i ↦ i + t.arity)
+    let m := CNFA.inter m mop
+    let mfinal := m.proj (liftUnop t.arity)
+    mfinal.minimize
+
+def nfaOfFormula' (φ : Formula) : CNFA φ.arity :=
+  match φ with
+  | .width wp n => CNFA.autWidth wp n
+  | .atom rel t1 t2 =>
+    let m1 := nfaOfTerm t1
+    let m2 := nfaOfTerm t2
+    let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
+    let m1' := m1.lift f1
+    let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
+    let m2' := m2.lift f2
+    let meq := rel.autOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter meq
+    let mfinal := m.proj (liftExcept2 _)
+    mfinal
+  | .msbSet t =>
+    let m := (termEvalEqFSM t).toFSM |> CNFA.ofFSM
+    let mMsb := CNFA.autMsbSet.lift $ fun _ => Fin.last t.arity
+    let res := m.inter mMsb
+    res.proj $ fun n => n.castLE (by simp [Formula.arity, FinEnum.card])
+  | .unop op φ => unopNfa op (nfaOfFormula' φ)
+  | .binop op φ1 φ2 =>
+    let m1 := (nfaOfFormula' φ1).lift $ liftMax1 φ1.arity φ2.arity
+    let m2 := (nfaOfFormula' φ2).lift $ liftMax2 φ1.arity φ2.arity
+    binopNfa op m1 m2
+
+@[implemented_by nfaOfFormula']
 def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
   match φ with
   | .width wp n => CNFA.autWidth wp n

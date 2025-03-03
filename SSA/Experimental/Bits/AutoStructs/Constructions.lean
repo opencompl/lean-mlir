@@ -406,8 +406,37 @@ variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum 
 -- TODO: I'd rather use hashsets, but I don't think the following holds
 -- `Fintype α → Fintype (HashSet α)`
 
+
 def BitVec.any (b : BitVec w) (f : Fin w → Bool → Bool) :=
   List.finRange w |>.any fun n => f n (b[n])
+
+instance [Fintype α] [BEq α] [Hashable α] : Fintype (Std.HashSet α) :=
+  sorry
+
+-- It's false, but we should be able to not need it
+instance [BEq α] [LawfulBEq α] [Hashable α] : LawfulBEq (Std.HashSet α) :=
+  sorry
+
+-- I think if the way we combine the hashing function is commutative, then this
+-- instance should also satisfy `LawfulHashable` and we should be fine!
+instance [BEq α] [Hashable α] : Hashable (Std.HashSet α) where
+  hash m := m.fold (init := 0) fun h x => h ^^^ hash x
+
+-- Is it necessary? maybe rework the worklist function to only use `==`
+instance [BEq α] [Hashable α] : DecidableEq (Std.HashSet α) :=
+  sorry
+
+def CNFA.determinize' (m : CNFA n) : CNFA n :=
+  worklistRun (Std.HashSet m.m.states)
+    (fun ss => ss.any fun s => s ∈ m.m.finals)
+    #[m.m.initials.attachWith (λ s ↦ s ∈ m.m.states) sorry]
+    (by apply List.nodup_singleton)
+    f
+where
+  f := fun (ss : Std.HashSet m.m.states) =>
+        (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
+          let ss' := m.transSet ss a
+          ts.push (a, ss')
 
 theorem BitVec.any_iff_exists {bv : BitVec w} :
     bv.any p ↔ ∃ (i : Fin w), p i (bv.getLsbD i) := by
@@ -417,6 +446,7 @@ theorem BitVec.any_iff_exists {bv : BitVec w} :
 def CNFA.determinize.inits (m : CNFA n) : Array (BitVec m.m.stateMax) :=
   #[BitVec.ofFn (fun n => n ∈ m.m.initials)]
 
+@[implemented_by CNFA.determinize']
 def CNFA.determinize (m : CNFA n) : CNFA n :=
   worklistRun (BitVec m.m.stateMax)
     (fun ss => ss.any fun n b => b == true && n ∈ m.m.finals)
@@ -631,6 +661,19 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   rw [NFA'.neg_eq, CNFA.neg]
   apply CNFA.flipFinals_spec
   apply determinize_spec m hsim
+
+def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
+   let m' := { stateMax := m.stateMax, trans := Std.HashMap.empty, initials := m.finals, finals := m.initials}
+   m.trans.fold (init := m') fun m' (s, a) ss' =>
+     ss'.fold (init := m') fun m' s' =>
+       m'.addTrans a s' s
+
+ def CNFA.reverse (m : CNFA n) : CNFA n :=
+   ⟨m.m.reverse, sorry⟩
+
+ def CNFA.minimize (m : CNFA n) : CNFA n :=
+   let mᵣ := m.reverse.determinize
+   mᵣ.reverse.determinize
 
 end determinization
 
