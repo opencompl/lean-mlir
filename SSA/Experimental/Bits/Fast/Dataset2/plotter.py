@@ -4,6 +4,7 @@ import sqlite3
 import matplotlib.pyplot as plt
 import polars as pl
 import argparse
+import os
 
 
 import argparse
@@ -65,12 +66,17 @@ def save(figure, name):
     # content of the pdfs we generate more deterministic.
     metadata = {'CreationDate': None, 'Creator': None, 'Producer': None}
 
+    # Save as PDF
     figure.savefig(name, metadata=metadata)
+
+    # Save as JPEG
+    jpeg_name = os.path.splitext(name)[0] + ".jpeg"
+    figure.savefig(jpeg_name, format='jpeg')
 
     # Close figure to avoid warning about too many open figures.
     plt.close(figure)
 
-    print(f'written to {name}')
+    print(f'written to {name} and {jpeg_name}')
 
 # helper for str_from_float.
 # format float in scientific with at most *digits* digits.
@@ -193,7 +199,6 @@ def plot(args):
     outlier_threshold = df["walltime"].quantile(0.99)
 
     # Filter out outliers
-    filtered_df = df.filter(pl.col("walltime") <= outlier_threshold)
     outliers = df.filter(pl.col("walltime") > outlier_threshold)
 
     # Print outliers as LaTeX
@@ -209,7 +214,7 @@ def plot(args):
         "bv_automata_classic": material_green
     }
 
-    for solver_tuple, sub_df in filtered_df.group_by("solver"):
+    for solver_tuple, sub_df in df.group_by("solver"):
         solver = solver_tuple[0]  # Extract solver name from tuple
         print(f"solver: {solver}")
         sub_df = sub_df.sort("walltime")  # Sort in ascending order
