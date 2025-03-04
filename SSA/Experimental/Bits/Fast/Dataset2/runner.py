@@ -44,9 +44,6 @@ class Counter:
         self.val += 1
         self.on_increment(self.val)
 
-def is_tacbench_row(line : str) -> bool:
-    return line.startswith(TACBENCH_PREAMBLE)
-
 class TacbenchRecord:
     TACBENCH_PREAMBLE = "TACBENCHCSV|"
     COLS = ["thm", "goal", "tactic", "status", "errmsg", "walltime"]
@@ -59,27 +56,31 @@ class TacbenchRecord:
         self.walltime = walltime
         self.filename = filename
 
+
+    @classmethod
+    def is_tacbench_row(cls, line : str) -> bool:
+        return line.startswith(TacbenchRecord.TACBENCH_PREAMBLE)
     @classmethod
     def parse_tacbench_row(cls, filename : str, line : str):
         assert line.startswith(TacbenchRecord.TACBENCH_PREAMBLE)
         line = line.removeprefix(TacbenchRecord.TACBENCH_PREAMBLE)
         row = line.split(", ")
         assert len(row) == len(TacbenchRecord.COLS)
-        record = dict(zip(COLS, row))
+        record = dict(zip(TacbenchRecord.COLS, row))
         record["filename"] = filename
         return TacbenchRecord(**record)
 
 def parse_tacbench_rows_from_stdout(filename : str, stdout : str) -> List[TacbenchRecord]:
     rows = []
     for line in stdout.split("\n"):
-        if is_tacbench_row(line):
-            rows.append(parse_tacbench_row(filename, line))
+        if TacbenchRecord.is_tacbench_row(line):
+            rows.append(TacbenchRecord.parse_tacbench_row(filename, line))
     return rows
 
 async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
-        command = f"lake build SSA.Experimental.Bits.Fast.Dataset2.{module_name}"
+        command = f"lake lean {filename} --dir {git_root_dir}"
         logging.info(f"Running {i_test+1}/{n_tests} '{command}'")
 
         logging.info(f"[Looking up cached {filename}]  Opening connection...")
@@ -104,12 +105,14 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         logging.info(f"Running {filename}, no cache found.")
         process = await asyncio.create_subprocess_exec(
             "lake",
-            "build",
-            f"SSA.Experimental.Bits.Fast.Dataset2.{module_name}",
-            cwd=git_root_dir,
-            stdout=asyncio.subprocess.DEVNULL,
+            "lean",
+            filename,
+            "--dir",
+            git_root_dir,
+            # cwd=git_root_dir,
+            stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.DEVNULL,
-            preexec_fn=os.setsid,
+            preexec_fn=os.setsid
         )
 
         status = STATUS_TIMED_OUT
@@ -117,7 +120,8 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         walltime = float('inf')
         stdout = ""
         try:
-            stdout = await asyncio.wait_for(process.communicate(), timeout=timeout)
+            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
+            stdout = stdout.decode("utf-8")
             records = parse_tacbench_rows_from_stdout(filename, stdout)
             assert len(records) == 1
             record = records[0]
@@ -172,8 +176,8 @@ import SSA.Core.Tactic.TacBench
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.FastCopy.Reflect
-import SSA.Experimental.Bits.AutoStructs.Tactic
-import SSA.Experimental.Bits.AutoStructs.ForLean
+-- import SSA.Experimental.Bits.AutoStructs.Tactic
+-- import SSA.Experimental.Bits.AutoStructs.ForLean
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 9000
@@ -216,11 +220,11 @@ class UnitTest:
 
     @classmethod
     def _solver_to_tactic_invocation(cls, solver):
-        interpolant = """by tac_bench (config := {{ outputType := .csv }}) [{solver} : {call}]"""
+        interpolant = """by tac_bench (config := {{ outputType := .csv }}) ["{solver}" : {call}]; sorry"""
         if solver == UnitTest.solver_mba:
             return interpolant.format(solver=solver, call="bv_mba")
         elif solver == UnitTest.solver_kinduction:
-            return interpolant.format(solver=solver, call="bv_automata_circuit (config := {backend := .cadical}")
+            return interpolant.format(solver=solver, call="bv_automata_circuit (config := {backend := .cadical})")
         elif solver == UnitTest.solver_bv_automata_classic:
             return interpolant.format(solver=solver, call="bv_automata_classic_nf")
         else:
@@ -255,9 +259,9 @@ def load_tests(args) -> List[UnitTest]:
 
     if not args.prod_run:
         logging.info(f"--prod_run not enabled, pruning files to small batch")
-        NTESTS_TO_RETURN = 5
-        # return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
-        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+        NTESTS_TO_RETURN = 1
+        return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
+        # return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
     else:
         return out
 
