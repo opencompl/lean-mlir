@@ -29,9 +29,6 @@ STATUS_FAIL = "fail"
 STATUS_SUCCESS = "success"
 STATUS_TIMED_OUT = "timeout"
 
-EMOJI_SKIP = "⏭️"
-EMOJI_PLAY = "▶️"
-
 status_to_emoji = {
     STATUS_FAIL : "❌",
     STATUS_SUCCESS : "🎉",
@@ -47,7 +44,39 @@ class Counter:
         self.val += 1
         self.on_increment(self.val)
 
-async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter, test_content):
+def is_tacbench_row(line : str) -> bool:
+    return line.startswith(TACBENCH_PREAMBLE)
+
+class TacbenchRecord:
+    TACBENCH_PREAMBLE = "TACBENCHCSV|"
+    COLS = ["thm", "goal", "tactic", "status", "errmsg", "walltime"]
+    def __init__(self, thm, goal, tactic, status, errmsg, walltime, filename):
+        self.thm = thm
+        self.goal = goal
+        self.tactic = tactic
+        self.status = status
+        self.errmsg = errmsg
+        self.walltime = walltime
+        self.filename = filename
+
+    @classmethod
+    def parse_tacbench_row(cls, filename : str, line : str):
+        assert line.startswith(TacbenchRecord.TACBENCH_PREAMBLE)
+        line = line.removeprefix(TacbenchRecord.TACBENCH_PREAMBLE)
+        row = line.split(", ")
+        assert len(row) == len(TacbenchRecord.COLS)
+        record = dict(zip(COLS, row))
+        record["filename"] = filename
+        return TacbenchRecord(**record)
+
+def parse_tacbench_rows_from_stdout(filename : str, stdout : str) -> List[TacbenchRecord]:
+    rows = []
+    for line in stdout.split("\n"):
+        if is_tacbench_row(line):
+            rows.append(parse_tacbench_row(filename, line))
+    return rows
+
+async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
         command = f"lake build SSA.Experimental.Bits.Fast.Dataset2.{module_name}"
@@ -59,8 +88,8 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         # Check if there is a row with the given filename and timeout
         logging.info(f"[Looking up cached {filename}]  SELECTING for existing data...")
         cur.execute("""
-            SELECT 1 FROM completed WHERE filename = ? LIMIT 1
-        """, (filename, ))
+            SELECT 1 FROM tests WHERE filename = ? AND timeout = ? LIMIT 1
+        """, (filename, timeout))
         # Fetch the result, if no rows exist, the result will be an empty list
         result = cur.fetchone()
         con.close()
@@ -68,26 +97,31 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         # Return True if no row is found (i.e., result is None)
         logging.info(f"[Looking up cached {filename}]  DONE (cached: {result is not None})")
         if result is not None:
-            logging.warning(f"Skipping ({filename}, {timeout}) as run already exists {EMOJI_SKIP}.")
+            logging.warning(f"Skipping ({filename}, {timeout}) as run already exists.")
             completed_counter.increment()
             return
 
-        logging.info(f"Running {filename}, no cache found {EMOJI_PLAY}.")
+        logging.info(f"Running {filename}, no cache found.")
         process = await asyncio.create_subprocess_exec(
             "lake",
             "build",
             f"SSA.Experimental.Bits.Fast.Dataset2.{module_name}",
             cwd=git_root_dir,
-            stdout=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.DEVNULL,
             preexec_fn=os.setsid,
         )
 
         status = STATUS_TIMED_OUT
-        out = ""
         exit_code = 1
+        walltime = float('inf')
+        stdout = ""
         try:
             stdout = await asyncio.wait_for(process.communicate(), timeout=timeout)
+            records = parse_tacbench_rows_from_stdout(filename, stdout)
+            assert len(records) == 1
+            record = records[0]
+            walltime = record.walltime
             exit_code = process.returncode
             status = STATUS_SUCCESS if process.returncode == 0 else STATUS_FAIL
         except asyncio.TimeoutError:
@@ -96,51 +130,31 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             try:
                 os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
             except Exception as e:
-                logging.warning(f"Weird exception {e}")
+                logging.warning(f"Weird exception: {e}")
 
         logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
 
-        for line in out.strip().split("\n"):
-            TACBENCH_PREAMBLE = "TACBENCHCSV|"
-            COLS = ["thm", "goal", "tactic", "status", "errmsg", "walltime"]
-            if line.startswith(TACBENCH_PREAMBLE):
-                line = line.removeprefix(TACBENCH_PREAMBLE)
-                row = line.split(", ")
-                assert len(row) == len(COLS)
-                record = dict(zip(COLS, row))
-                record["filename"] = filename
-                # TODO: invoke sqlite here to store
-                logging.info(f"{filename}: Opening connection to write test record.")
-                con = sqlite3.connect(args.db)
-                logging.info(f"{filename}: Executing INSERT of record...")
-                cur = con.cursor()
-                cur.execute("""
-                    INSERT INTO tests (
-                        filename,
-                        thm,
-                        goal,
-                        tactic,
-                        status,
-                        errmsg,
-                        walltime)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (record["filename"], record["thm"], record["goal"], record["tactic"], record["status"], record["errmsg"], record["walltime"]))
-                con.commit()
-                logging.info(f"{filename}: Done executing INSERT of record...")
-                con.close()
-
-        # write that we are done with the file
-        logging.info(f"{filename}: Opening connection to write successful completion.")
+        logging.info(f"[Writing {filename}]  Opening connection...")
         con = sqlite3.connect(args.db)
-        logging.info(f"{filename}: Executing INSERT of successful completion...")
+        logging.info(f"[Writing {filename}]  Executing INSERT...")
         cur = con.cursor()
         cur.execute("""
-            INSERT INTO completed (filename) VALUES (?)
-        """, (filename, ))
+            INSERT INTO tests (
+                filename,
+                test_content,
+                solver,
+                timeout,
+                status,
+                exit_code,
+                walltime)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (filename, test_content, solver, timeout, status, exit_code, walltime))
+        logging.info(f"[Writing {filename}]  Commiting...")
         con.commit()
-        logging.info(f"{filename}: Done executing INSERT of successful completion...")
+        logging.info(f"[Writing {filename}]  Closing...")
         con.close()
-
+        logging.info(f"[Writing {filename}]  DONE")
+        completed_counter.increment()
 
 def get_git_root():
     result = subprocess.run(
@@ -169,13 +183,6 @@ This dataset was derived from
 https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 -/
 
-macro "run_bench" : tactic =>
-  `(tactic| tac_bench (config := { outputType := .csv }) [
-    "bv_mba" : bv_mba,
-    "bv_automata_circuit" : bv_automata_circuit (config := {backend := .cadical }),
-    "bv_automata_classic" : bv_automata_classic_nf, 
-  ])
-
 variable { a b c d e f g t x y z : BitVec w }
 """
 
@@ -192,10 +199,32 @@ def setup_logging(db_name : str):
 
 
 class UnitTest:
+    ix : int
     test : str
+    solver : str
+
+    solver_mba = "mba"
+    solver_kinduction = "kinduction"
+    solver_bv_automata_classic = "bv_automata_classic"
+    solvers = [solver_mba, solver_kinduction, solver_bv_automata_classic]
     
-    def __init__(self, test):
+    def __init__(self, ix, test, solver):
+        self.ix = ix
         self.test = test
+        self.solver = solver
+        assert self.solver in UnitTest.solvers
+
+    @classmethod
+    def _solver_to_tactic_invocation(cls, solver):
+        interpolant = """by tac_bench (config := {{ outputType := .csv }}) [{solver} : {call}]"""
+        if solver == UnitTest.solver_mba:
+            return interpolant.format(solver=solver, call="bv_mba")
+        elif solver == UnitTest.solver_kinduction:
+            return interpolant.format(solver=solver, call="bv_automata_circuit (config := {backend := .cadical}")
+        elif solver == UnitTest.solver_bv_automata_classic:
+            return interpolant.format(solver=solver, call="bv_automata_classic_nf")
+        else:
+            raise RuntimeError(f"expected solver to be one of '{UnitTest.solvers}', found '{solver}'")
     
     def write(self, f):
         f.write(test_file_preamble())
@@ -210,21 +239,27 @@ class UnitTest:
         expression = expression.replace("|", " ||| ")
         expression = expression.replace("&", " &&& ")
         expression = expression.replace("~", " ~~~")
-        out = out + expression + " := by run_bench; sorry"
+        out = out + expression + " := " + self._solver_to_tactic_invocation(self.solver)
         f.write(out)
 
 def load_tests(args) -> List[UnitTest]:
     with open('dataset2_64bit.txt', 'r') as f:
+        # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
+
+    out = []
+    ix = 0
+    for (ix, t) in enumerate(tests):
+        for s in UnitTest.solvers:
+            out.append(UnitTest(ix=ix, test=t, solver=s))
 
     if not args.prod_run:
         logging.info(f"--prod_run not enabled, pruning files to small batch")
-        tests = tests[:13]
-
-    out = []
-    for t in tests:
-        out.append(UnitTest(test=t))
-    return out
+        NTESTS_TO_RETURN = 5
+        # return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
+        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+    else:
+        return out
 
 
 async def main(args):
@@ -237,19 +272,14 @@ async def main(args):
     cur = con.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tests (
-            filename text,
-            thm text,
-            goal text,
-            tactic text,
-            status text,
-            errmsg TEXT,
+            filename TEXT,
+            test_content TEXT,
+            solver TEXT,
+            timeout INTEGER,
+            status TEXT,
+            exit_code INTEGER,
             walltime FLOAT,
-            PRIMARY KEY (filename, thm, goal, tactic)
-            )
-    """)
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS completed (
-            filename text
+            PRIMARY KEY (filename, timeout)  -- Composite primary key
             )
     """)
     con.commit()
@@ -263,45 +293,47 @@ async def main(args):
     completed_counter = Counter(lambda val: logging.info(f"** COMPLETED {val}/{n_tests} **"))
 
     async with asyncio.TaskGroup() as tg:
-        for (i_test, test) in enumerate(tests):
-            filename = f"Test{i_test+1}.lean".replace("-","").replace("_","")
+        # work through tests in reverse order, hardest to easiest.
+        for test in tests:
+            filename = f"Test{test.solver}{test.ix+1}.lean".replace("-","").replace("_","")
             with open(filename, 'w') as f:
                 test.write(f)
-            logging.debug(f"spawning async task for {i_test+1}:{test.test.strip()}:{filename}")
+            logging.debug(f"spawning async task for {test.ix+1}:{test.test.strip()}:{filename}")
             tg.create_task(run_lake_build(db=args.db,
                            git_root_dir=git_root_dir,
                            semaphore=semaphore,
                            timeout=args.timeout,
-                           i_test=i_test,
+                           i_test=test.ix,
                            n_tests=n_tests,
                            test_content=test.test,
+                           solver=test.solver,
                            filename=filename,
                            completed_counter=completed_counter))
 
-# def print_summary_from_db(db):
-#     logging.info(f"Summary of run:")
-#     con = sqlite3.connect(db)
-#     cur = con.cursor()
-#     # Check if there is a row with the given filename and timeout
-#     cur.execute("""
-#         SELECT status, count(status) FROM tests GROUP BY status
-#     """)
-#     # Fetch the result, if no rows exist, the result will be an empty list
-#     for row in cur.fetchall():
-#       logging.info(f"  - {row[0]} : #{row[1]}")
-# 
-#     cur.execute("""
-#         SELECT filename FROM tests  WHERE status == 'fail' ORDER BY filename ASC LIMIT 10
-#     """)
-#     rows = cur.fetchall()
-#     if rows:
-#       logging.info(f"{len(rows)} failing tests:")
-#       for row in rows:
-#           print(f"  - {row[0]}")
-#     else:
-#         logging.info("All tests passed!")
-#     logging.info("Done with summary.")
-#     con.close()
+def print_summary_from_db(db):
+    logging.info(f"Summary of run:")
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    # Check if there is a row with the given filename and timeout
+    cur.execute("""
+        SELECT status, count(status) FROM tests GROUP BY status
+    """)
+    # Fetch the result, if no rows exist, the result will be an empty list
+    for row in cur.fetchall():
+      logging.info(f"  - {row[0]} : #{row[1]}")
+
+    cur.execute("""
+        SELECT filename FROM tests  WHERE status == 'fail' ORDER BY filename ASC LIMIT 10
+    """)
+    rows = cur.fetchall()
+    if rows:
+      logging.info(f"{len(rows)} failing tests:")
+      for row in rows:
+          print(f"  - {row[0]}")
+    else:
+        logging.info("All tests passed!")
+    logging.info("Done with summary.")
+    con.close()
 
 if __name__ == "__main__":
     args = parse_args()
@@ -313,5 +345,5 @@ if __name__ == "__main__":
     # https://stackoverflow.com/questions/65682221/runtimeerror-exception-ignored-in-function-proactorbasepipetransport
     # asyncio.run(main(args), debug=True)
     logging.debug("done asyncio")
-    # print_summary_from_db(args.db)
+    print_summary_from_db(args.db)
     logging.info(f"completed run {args}")
