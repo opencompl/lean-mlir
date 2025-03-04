@@ -214,17 +214,17 @@ def plot(args):
         print(f"solver: {solver}")
         sub_df = sub_df.sort("walltime")  # Sort in ascending order
         sub_df = sub_df.with_columns(pl.col("walltime").cum_sum().alias("cumulative_walltime"))
+        num_problems_solved = range(1, len(sub_df) + 1)
         color = solver_colors.get(solver, "black")  # Default to black if solver not in dict
-        ax.scatter(sub_df["walltime"], sub_df["cumulative_walltime"],
+        ax.plot(num_problems_solved, sub_df["cumulative_walltime"],
             label=solver,
             alpha=1,
-            s=5,
             color=color,
             marker='x')
-    ax.set_xscale("log")
-    ax.set_xlabel("Walltime (ms, sorted)")
+    ax.set_yscale("log")
+    ax.set_xlabel("Number of Problems Solved")
     ax.set_ylabel("Cumulative Walltime (ms)")
-    ax.set_title("Cumulative Scatter Plot of Walltime for Each Solver")
+    ax.set_title("Number of Problems Solved vs Cumulative Walltime for Each Solver")
     ax.legend()
     save(fig, "dataset2_cactus_plot.pdf")
     plt.show()
