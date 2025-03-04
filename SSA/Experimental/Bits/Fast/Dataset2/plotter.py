@@ -225,7 +225,8 @@ def plot(args):
             label=solver,
             alpha=1,
             color=color,
-            marker='x')
+            marker='x',
+            markersize=3)
     ax.set_yscale("log")
     ax.set_xlabel("Number of Problems Solved")
     ax.set_ylabel("Cumulative Walltime (ms)")
