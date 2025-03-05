@@ -6,7 +6,6 @@ import polars as pl
 import argparse
 import os
 
-
 import argparse
 
 import matplotlib
@@ -60,7 +59,7 @@ white = "#ffffff"
 material_red = "#F48FB1"
 material_blue = "#90CAF9"
 material_green = "#4CAF50"
-
+material_yellow = "#FFEB3B"
 def save(figure, name):
     # Do not emit a creation date, creator name, or producer. This will make the
     # content of the pdfs we generate more deterministic.
@@ -195,50 +194,74 @@ def plot(args):
         connection=con)
     con.close()
 
+    print(df)
+    # fileTitle   ┆ thmName ┆ goalStr ┆ tactic ┆ status ┆ errmsg ┆ timeElapsed
+    # │ gapinthcasthcasthtohand_proof ┆  test1_thm    ┆ case some x✝ : BitVec 61 ⊢ Bit… ┆ reflect_ok       ┆ err    ┆ found multiple bitvector width… ┆ 0.17294     │
+    # │ …                             ┆ …             ┆ …                               ┆ …                ┆ …      ┆ …                               ┆ …           │
+    # │ gfreehinversion_proof         ┆  select_1_thm ┆ case pos x✝⁴ : BitVec 8 x✝³ : … ┆ circuit          ┆ ok     ┆ <noerror>                       ┆ 261.047698  │
+
     # Define outlier threshold (e.g., 99th percentile)
-    outlier_threshold = df["walltime"].quantile(0.99)
+    outlier_threshold = df["timeElapsed"].quantile(0.99)
 
     # Filter out outliers
-    outliers = df.filter(pl.col("walltime") > outlier_threshold)
+    # outliers = df.filter(pl.col("timeElapsed") > outlier_threshold)
 
     # Print outliers as LaTeX
-    for row in outliers.iter_rows(named=True):
-        print(f"\\texttt{{{row['filename']}}} & {row['walltime']} \\\\")
+    # for row in outliers.iter_rows(named=True):
+    #     print(f"\\texttt{{{row['fileTitle']}}} & {row['timeElapsed']} \\\\")
 
     # Plot cumulative scatter plot for each solver
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 3))
 
-    solver_colors = {
-        "mba": material_red,
-        "kinduction": material_blue,
-        "bv_automata_classic": material_green
+
+    # print available solver
+    print(df["tactic"].unique())
+    # Series: 'tactic' [str]
+    # [
+    #     "width_ok"
+    #     "bv_decide"
+    #     "presburger"
+    #     "circuit"
+    #     "no_uninterpreted"
+    #     "reflect_ok"
+    # ]
+
+    solver_colors : dict[str, str] = {
+        "circuit": material_red,
+        "presburger": material_blue,
+        "bv_decide": material_green,
+        # "reflect_ok": material_yellow,
     }
 
-    for solver_tuple, sub_df in df.group_by("solver"):
-        solver = solver_tuple[0]  # Extract solver name from tuple
+    for solver_tuple, sub_df in df.group_by("tactic"):
+        solver : str = str(solver_tuple[0])  # Extract solver name from tuple
+        if solver not in solver_colors:
+            continue
         print(f"solver: {solver}")
-        sub_df = sub_df.sort("walltime")  # Sort in ascending order
-        sub_df = sub_df.with_columns(pl.col("walltime").cum_sum().alias("cumulative_walltime"))
+        # num solved = columns "status" == "ok"
+        sub_df = sub_df.filter(pl.col("status") == "ok")
+        sub_df = sub_df.sort("timeElapsed")  # Sort in ascending order
+        sub_df = sub_df.with_columns(pl.col("timeElapsed").cum_sum().alias("cumulative_timeElapsed"))
         num_problems_solved = range(1, len(sub_df) + 1)
-        color = solver_colors.get(solver, "black")  # Default to black if solver not in dict
-        ax.plot(num_problems_solved, sub_df["cumulative_walltime"],
+        color : str = solver_colors.get(solver, "black")  # Default to black if solver not in dict
+        _ = ax.plot(num_problems_solved, sub_df["cumulative_timeElapsed"],
             label=solver,
-            alpha=1,
+            # alpha=0.4,
             color=color,
             marker='x',
             markersize=3)
-    ax.set_yscale("log")
-    ax.set_xlabel("Number of Problems Solved")
-    ax.set_ylabel("Cumulative Walltime (ms)")
-    ax.set_title("Number of Problems Solved vs Cumulative Walltime for Each Solver")
-    ax.legend()
-    save(fig, "dataset2_cactus_plot.pdf")
-    plt.show()
+    _ = ax.set_yscale("log")
+    _ = ax.set_xlabel("#Problems Solved")
+    _ = ax.set_ylabel("Cumulative Time Elapsed (ms)")
+    _ = ax.set_title("#Problems Solved vs Cumulative Time Elapsed on LLVM Peephole Rewrites")
+    _ = ax.legend()
+    save(fig, "automata-automata-circuit-plot.pdf")
+    _ = plt.show()
 
 
 def parse_args():
     parser = argparse.ArgumentParser(prog='runner')
-    parser.add_argument('db',  help='path to sqlite3 database')
+    _ = parser.add_argument('db',  help='path to sqlite3 database')
     return parser.parse_args()
 
 if __name__ == "__main__":
