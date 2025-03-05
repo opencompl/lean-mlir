@@ -227,8 +227,8 @@ def plot(args):
     # ]
 
     solver_colors : dict[str, str] = {
-        "circuit": material_red,
-        "presburger": material_blue,
+        "normCircuit": material_red,
+        "normPresburger": material_blue,
         "bv_decide": material_green,
         # "reflect_ok": material_yellow,
     }
@@ -237,9 +237,11 @@ def plot(args):
         solver : str = str(solver_tuple[0])  # Extract solver name from tuple
         if solver not in solver_colors:
             continue
-        print(f"solver: {solver}")
-        # num solved = columns "status" == "ok"
+        print(f"## solver: {solver} ##")
+        print(f"  #problems (total): {len(sub_df)}")
         sub_df = sub_df.filter(pl.col("status") == "ok")
+        # print number of problems solved
+        print(f"  #problems solved : {len(sub_df)}")
         sub_df = sub_df.sort("timeElapsed")  # Sort in ascending order
         sub_df = sub_df.with_columns(pl.col("timeElapsed").cum_sum().alias("cumulative_timeElapsed"))
         num_problems_solved = range(1, len(sub_df) + 1)
@@ -255,7 +257,7 @@ def plot(args):
     _ = ax.set_ylabel("Cumulative Time Elapsed (ms)")
     _ = ax.set_title("#Problems Solved vs Cumulative Time Elapsed on LLVM Peephole Rewrites")
     _ = ax.legend()
-    save(fig, "automata-automata-circuit-plot.pdf")
+    save(fig, "automata-automata-circuit-cactus-plot.pdf")
     _ = plt.show()
 
 
