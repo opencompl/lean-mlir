@@ -242,6 +242,16 @@ def plot(args):
         "bv_decide": "bv_decide",
         # "reflect_ok": "Reflect",
     }
+    solver_latex_names : dict[str, str] = {
+        "normCircuit": "NormCircuit",
+        "normPresburger": "NormPresburger",
+        "bv_decide": "BvDecide",
+    }
+    solver_geo_mean : dict[str, float] = {}
+
+    solver_num_solved = {}
+    solver_total_time = {}
+    total_problems = 0
 
     for solver_tuple, sub_df in df.group_by("tactic"):
         solver : str = str(solver_tuple[0])  # Extract solver name from tuple
@@ -249,12 +259,24 @@ def plot(args):
             continue
         print(f"## solver: {solver} ##")
         print(f"  #problems (total): {len(sub_df)}")
+        total_problems = len(sub_df)
         sub_df = sub_df.filter(pl.col("status") == "ok")
         # print number of problems solved
         print(f"  #problems solved : {len(sub_df)}")
+        solver_num_solved[solver] = len(sub_df)
         sub_df = sub_df.sort("timeElapsed")  # Sort in ascending order
+        # geo_mean = df.select( (pl.col("values").log().mean()).exp().alias("geometric_mean"))
+        # geomean of timeElapsed
+        geomean_timeElapsed = sub_df.select((pl.col('timeElapsed').log().mean()).exp().alias('geomean_timeElapsed'))
+        geometric_mean = geomean_timeElapsed['geomean_timeElapsed'][0]
+        print(f"  geomean timeElapsed: {geometric_mean}")
+        solver_geo_mean[solver] = geometric_mean
+
+
         sub_df = sub_df.with_columns(pl.col("timeElapsed").cum_sum().alias("cumulative_timeElapsed"))
         num_problems_solved = range(1, len(sub_df) + 1)
+        solver_total_time[solver] = sub_df["cumulative_timeElapsed"].last()
+
         color : str = solver_colors.get(solver, "black")  # Default to black if solver not in dict
         _ = ax.plot(num_problems_solved, sub_df["cumulative_timeElapsed"],
             label=solver_names[solver],
@@ -270,6 +292,19 @@ def plot(args):
     save(fig, "automata-automata-circuit-cactus-plot.pdf")
     _ = plt.show()
 
+    # write data to latex file
+    with open("automata-automata-circuit-cactus-plot-data.tex", "w") as f:
+        for solver, num_solved in solver_num_solved.items():
+            solver = solver_latex_names[solver]
+            f.write(f"\\newcommand{{\\InstCombine{solver}NumSolved}}{{{num_solved}}}\n")
+        for solver, total_time in solver_total_time.items():
+            solver = solver_latex_names[solver]
+            f.write(f"\\newcommand{{\\InstCombine{solver}TotalTime}}{{{str_from_ms(total_time)}}}\n")
+        for solver, geo_mean in solver_geo_mean.items():
+            solver = solver_latex_names[solver]
+            f.write(f"\\newcommand{{\\InstCombine{solver}GeoMean}}{{{str_from_ms(geo_mean)}}}\n")
+        f.write(f"\\newcommand{{\\InstCombineTotalProblems}}{{{total_problems}}}\n")
+        print("written to automata-automata-circuit-cactus-plot-data.tex")
 
 def parse_args():
     parser = argparse.ArgumentParser(prog='runner')
