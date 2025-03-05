@@ -60,6 +60,10 @@ material_red = "#F48FB1"
 material_blue = "#90CAF9"
 material_green = "#4CAF50"
 material_yellow = "#FFEB3B"
+material_orange = "#FFAB40"
+material_purple = "#B39DDB"
+material_teal = "#80CBC4"
+
 def save(figure, name):
     # Do not emit a creation date, creator name, or producer. This will make the
     # content of the pdfs we generate more deterministic.
@@ -227,10 +231,16 @@ def plot(args):
     # ]
 
     solver_colors : dict[str, str] = {
-        "normCircuit": material_red,
-        "normPresburger": material_blue,
-        "bv_decide": material_green,
+        "normCircuit": material_blue,
+        "normPresburger": material_green,
+        "bv_decide": material_purple,
         # "reflect_ok": material_yellow,
+    }
+    solver_names : dict[str, str] = {
+        "normCircuit": "k-induction",
+        "normPresburger": "bv_automata_classic",
+        "bv_decide": "bv_decide",
+        # "reflect_ok": "Reflect",
     }
 
     for solver_tuple, sub_df in df.group_by("tactic"):
@@ -247,7 +257,7 @@ def plot(args):
         num_problems_solved = range(1, len(sub_df) + 1)
         color : str = solver_colors.get(solver, "black")  # Default to black if solver not in dict
         _ = ax.plot(num_problems_solved, sub_df["cumulative_timeElapsed"],
-            label=solver,
+            label=solver_names[solver],
             # alpha=0.4,
             color=color,
             marker='x',
