@@ -209,7 +209,7 @@ def plot(args):
         print(f"\\texttt{{{row['filename']}}} & {row['walltime']} \\\\")
 
     # Plot cumulative scatter plot for each solver
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 3))
 
     solver_colors = {
         "mba": material_red,
