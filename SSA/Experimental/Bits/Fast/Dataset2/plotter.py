@@ -173,6 +173,9 @@ def str_from_ms(ms):
 def autolabel_ms(ax, rects, **kwargs):
   autolabel(ax, rects, label_from_height=str_from_ms, **kwargs)
 
+def geomean(expr):
+    out = math.pow(math.e, expr.log(base=math.e).mean())
+    return out
 
 def plot(args):
     con = sqlite3.connect(args.db)
@@ -206,7 +209,7 @@ def plot(args):
         print(f"\\texttt{{{row['filename']}}} & {row['walltime']} \\\\")
 
     # Plot cumulative scatter plot for each solver
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 3))
 
     solver_colors = {
         "mba": material_red,
@@ -214,14 +217,32 @@ def plot(args):
         "bv_automata_classic": material_green
     }
 
+    solver_latex_names = {
+        "mba": "MBA",
+        "kinduction": "KInduction",
+        "bv_automata_classic": "Presburger",
+        "bv_decide": "BvDecide"
+    }
+
+    solver_num_solved = {}
+    solver_total_time = {}
+    solver_geo_mean = {}
+
     for solver_tuple, sub_df in df.group_by("solver"):
         solver = solver_tuple[0]  # Extract solver name from tuple
         print(f"solver: {solver}")
         sub_df = sub_df.sort("walltime")  # Sort in ascending order
         sub_df = sub_df.with_columns(pl.col("walltime").cum_sum().alias("cumulative_walltime"))
-        num_problems_solved = range(1, len(sub_df) + 1)
+        # num solved is thouse where 'success' = 'true'
+        sub_df = sub_df.filter(pl.col("status") == "success")
+        print(sub_df)
+        solver_num_solved[solver] = len(sub_df)
+        solver_total_time[solver] = sub_df["walltime"].sum()
+        solver_geo_mean[solver] = geomean(sub_df["walltime"])
         color = solver_colors.get(solver, "black")  # Default to black if solver not in dict
-        ax.plot(num_problems_solved, sub_df["cumulative_walltime"],
+        print(sub_df)
+        x_axis = range(1, len(sub_df) + 1)
+        ax.plot(x_axis, sub_df["cumulative_walltime"],
             label=solver,
             alpha=1,
             color=color,
@@ -232,8 +253,20 @@ def plot(args):
     ax.set_ylabel("Cumulative Walltime (ms)")
     ax.set_title("Number of Problems Solved vs Cumulative Walltime for Each Solver")
     ax.legend()
-    save(fig, "dataset2_cactus_plot.pdf")
+    save(fig, "dataset2-cactus-plot.pdf")
     plt.show()
+
+    with open("dataset2-cactus-plot-data.tex", "w") as f:
+        for solver, num_solved in solver_num_solved.items():
+            solver = solver_latex_names[solver]
+            f.write(f"\\newcommand{{\\MBA{solver}NumSolved}}{{{num_solved}}}\n")
+        for solver, total_time in solver_total_time.items():
+            solver = solver_latex_names[solver]
+            f.write(f"\\newcommand{{\\MBA{solver}TotalTime}}{{{str_from_ms(total_time)}}}\n")
+        for solver, geo_mean in solver_geo_mean.items():
+            solver = solver_latex_names[solver]
+            f.write(f"\\newcommand{{\\MBA{solver}GeoMean}}{{{str_from_ms(geo_mean)}}}\n")
+        print("written to dataset2-cactus-plot-data.tex")
 
 
 def parse_args():
