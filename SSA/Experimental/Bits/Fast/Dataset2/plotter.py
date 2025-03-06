@@ -60,6 +60,8 @@ white = "#ffffff"
 material_red = "#F48FB1"
 material_blue = "#90CAF9"
 material_green = "#4CAF50"
+material_yellow = "#FFEB3B"
+material_purple = "#B39DDB"
 
 def save(figure, name):
     # Do not emit a creation date, creator name, or producer. This will make the
@@ -214,7 +216,8 @@ def plot(args):
     solver_colors = {
         "mba": material_red,
         "kinduction": material_blue,
-        "bv_automata_classic": material_green
+        "bv_automata_classic": material_green,
+        "bv_decide": material_purple
     }
 
     solver_latex_names = {

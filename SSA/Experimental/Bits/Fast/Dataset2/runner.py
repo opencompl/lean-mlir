@@ -187,7 +187,7 @@ This dataset was derived from
 https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 -/
 
-variable { a b c d e f g t x y z : BitVec w }
+variable { a b c d e f g t x y z : BitVec 64 }
 """
 
 
@@ -210,7 +210,8 @@ class UnitTest:
     solver_mba = "mba"
     solver_kinduction = "kinduction"
     solver_bv_automata_classic = "bv_automata_classic"
-    solvers = [solver_mba, solver_kinduction, solver_bv_automata_classic]
+    solver_bv_decide = "bv_decide"
+    solvers = [solver_mba, solver_kinduction, solver_bv_automata_classic, solver_bv_decide]
     
     def __init__(self, ix, test, solver):
         self.ix = ix
@@ -227,6 +228,8 @@ class UnitTest:
             return interpolant.format(solver=solver, call="bv_automata_circuit (config := {backend := .cadical})")
         elif solver == UnitTest.solver_bv_automata_classic:
             return interpolant.format(solver=solver, call="bv_automata_classic_nf")
+        elif solver == UnitTest.solver_bv_decide:
+            return interpolant.format(solver=solver, call="bv_decide")
         else:
             raise RuntimeError(f"expected solver to be one of '{UnitTest.solvers}', found '{solver}'")
     
