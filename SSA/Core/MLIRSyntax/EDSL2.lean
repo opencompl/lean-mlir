@@ -23,6 +23,10 @@ open MLIR.AST
 
 private unsafe def evalExprOfTypeRegionAux (φ : Nat) : Q(Region $φ) → MetaM (Region φ) :=
   evalExpr (Region φ) q(Region $φ)
+/-
+SAFETY: the `implemented_by` is safe, *assuming* that `Region φ` and `q(Region φ)`
+  are the same; this means we trust Qq to construct the right `Expr`.
+-/
 @[implemented_by evalExprOfTypeRegionAux]
 partial def evalExprOfTypeRegion (φ : Nat) : Q(Region $φ) → MetaM (Region φ) :=
   default
@@ -38,8 +42,7 @@ def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
     let expr ← elabTermEnsuringTypeQ stx q(Region $φ)
     withTraceNode `elabIntoCom (fun _ => return m!"parsed Expr … ") <| do
       trace[elabIntoCom] "{expr}"
-    -- SAFETY: the next line is safe, *assuming* that `Region φ` and `q(Region φ)`
-    --         are the same; this means we trust Qq to construct the right `Expr`.
+
     evalExprOfTypeRegion φ expr
 
   let ⟨_Γ, _eff, _ty, com⟩ ←
