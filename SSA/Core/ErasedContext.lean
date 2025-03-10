@@ -660,7 +660,7 @@ instance : ToExpr (Var Γ ty) where
         In this case, though, `ty` should be in normal form by construction,
         thus reduction should be safe. -/
       let optTy := mkApp (.const ``Option [0]) Ty
-      let getE := mkApp2 (mkConst ``Ctxt.get?) Γ i
+      let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ i
       mkApp2 (.const ``rfl [1]) optTy getE
     mkApp5 (mkConst ``Var.mk) Ty Γ ty i hi
 
