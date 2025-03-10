@@ -13,8 +13,8 @@ namespace DeMorgansLawsExtended
 variable {x y z : BitVec 64}
 
 theorem not_and_eq_not_or_not :
-    ~~~ (x &&& y) = ~~~ x ||| ~~~ y := by
-  all_goals sorry
+   (x &&& y) = ~~~ x ||| ~~~ y := by
+bv_decide
 
 theorem not_or_eq_not_and_not :
     ~~~ (x ||| y) = ~~~ x &&& ~~~ y := by
