@@ -22,7 +22,7 @@ private def effLeToExpr {eff eff' : EffectKind} (h : eff ≤ eff') : Q($eff ≤ 
 
 mutual
 
-def Com.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
+partial def Com.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
     (dE : Q(Dialect) := d.toExpr)
     (sig : Q(DialectSignature $dE))
     (com : Com d Γ eff ty) : Lean.Expr :=
@@ -37,9 +37,8 @@ def Com.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
     let e := e.toExprAux dE sig
     let body := body.toExprAux dE sig
     mkAppN (mkConst ``Com.ret) #[dE, sig, ΓE, tyE, effE, e, body]
-decreasing_by all_goals sorry
 
-def Expr.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
+partial def Expr.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
     (dE : Q(Dialect) := d.toExpr)
     (sig : Q(DialectSignature $dE))
     : Expr d Γ eff ty → Lean.Expr :=
@@ -57,9 +56,8 @@ def Expr.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
     mkAppN (mkConst ``Expr.mk) #[
       dE, sig, effE, ΓE, tyE, toExpr op, ty_eq, eff_le, toExpr args, regArgs
     ]
-decreasing_by sorry
 
-def Regions.toExprAux {regSig : List (Ctxt d.Ty × d.Ty)}
+partial def Regions.toExprAux {regSig : List (Ctxt d.Ty × d.Ty)}
     (dE : Q(Dialect) := d.toExpr)
     (sig : Q(DialectSignature $dE))
     (regs : HVector (fun (t : _ × _) => Com d t.1 EffectKind.impure t.2) regSig) :
@@ -75,7 +73,6 @@ def Regions.toExprAux {regSig : List (Ctxt d.Ty × d.Ty)}
     let x := x.toExprAux dE sig
     let xs := Regions.toExprAux dE sig xs
     mkApp6 (.const ``HVector.cons [0,0]) Ty A as a x xs
-decreasing_by all_goals sorry
 
 end
 
