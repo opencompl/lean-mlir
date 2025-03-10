@@ -1,6 +1,10 @@
 import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
+import Qq
+
+open Lean (ToExpr)
 
 /-!
   This file defines CIRCT's Comb dialect's semantics: https://circt.llvm.org/docs/Dialects/Comb/
@@ -19,7 +23,7 @@ inductive IcmpPredicate where
   | ule
   | ugt
   | uge
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, ToExpr
 
 instance : ToString IcmpPredicate where
   toString
@@ -150,7 +154,7 @@ inductive Op
 | shru (w : Nat)
 | sub (w : Nat)
 | xor (w : Nat)
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
@@ -159,7 +163,7 @@ inductive Ty
 | list (w : Nat) : Ty -- list of bitvecs with the same length
 | hList (l : List Nat) : Ty -- dependent type bitvec
 | icmpPred (s : String) : Ty -- dependent type bitvec
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, ToExpr
 
 open TyDenote (toType) in
 instance instCombTyDenote : TyDenote Ty where
@@ -174,6 +178,10 @@ toType := fun
 abbrev Comb : Dialect where
   Op := Op
   Ty := Ty
+
+open Qq in instance : DialectToExpr Comb where
+  toExprDialect := q(Comb)
+  toExprM := q(Id) -- assumes that `Comb.m = Id`
 
 open TyDenote (toType)
 
@@ -572,6 +580,7 @@ instance : MLIR.AST.TransformReturn (Comb) 0 where
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[Comb_com| " reg:mlir_region "]" : term => do
-  SSA.elabIntoCom reg q(Comb)
+  -- SSA.elabIntoCom reg q(Comb)
+  SSA.elabIntoCom' reg Comb
 
 end MLIR2Comb
