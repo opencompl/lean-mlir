@@ -33,10 +33,11 @@ partial def Com.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
   | .ret v =>
     let v := toExpr v
     mkAppN (mkConst ``Com.ret) #[dE, sig, ΓE, tyE, effE, v]
-  | .var e body =>
+  | .var (α := eTy) e body =>
+    let eTyE := toExpr eTy
     let e := e.toExprAux dE sig
     let body := body.toExprAux dE sig
-    mkAppN (mkConst ``Com.ret) #[dE, sig, ΓE, tyE, effE, e, body]
+    mkAppN (mkConst ``Com.var) #[dE, sig, ΓE, effE, eTyE, tyE, e, body]
 
 partial def Expr.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
     (dE : Q(Dialect) := d.toExpr)
