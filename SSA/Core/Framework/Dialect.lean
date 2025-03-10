@@ -31,15 +31,8 @@ hence needing this extra class.
 -/
 class DialectToExpr (δ : Dialect) [ToExpr δ.Op] [ToExpr δ.Ty] where
   toExprM : Q(Type → Type)
+  toExprDialect : Q(Dialect)
 
 /-- Construct the `Expr` that represents dialect `δ` -/
 def Dialect.toExpr (δ : Dialect) [ToExpr δ.Op] [ToExpr δ.Ty] [DialectToExpr δ] : Q(Dialect) :=
-  let Op : Q(Type) := ToExpr.toTypeExpr δ.Op
-  let Ty : Q(Type) := ToExpr.toTypeExpr δ.Ty
-  let m : Q(Type → Type) := DialectToExpr.toExprM δ
-  q(⟨$Op, $Ty, $m⟩)
-
-/-- Define a default `DialectToExpr` instance for pure dialects -/
-def DialectToExpr.ofPure {d : Dialect} (_isPure : d.m = Id := by rfl)
-    [ToExpr d.Op] [ToExpr d.Ty] : DialectToExpr d where
-  toExprM := q(Id)
+  DialectToExpr.toExprDialect δ
