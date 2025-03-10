@@ -15,10 +15,10 @@ open Qq
 variable {d : Dialect} [DialectSignature d]
   [Lean.ToExpr d.Ty] [Lean.ToExpr d.Op] [DialectToExpr d]
 
-set_option pp.rawOnError true
-
-private def effLeToExpr {eff eff' : EffectKind} (h : eff ≤ eff') : Q($eff ≤ $eff') :=
-  sorry
+private def effLeToExpr : {eff eff' : EffectKind} → (h : eff ≤ eff') → Q($eff ≤ $eff')
+  | .impure, .impure, _ => q(EffectKind.le_refl .impure)
+  | .pure, .pure, _     => q(EffectKind.le_refl .pure)
+  | .pure, .impure, _   => q(EffectKind.pure_le .impure)
 
 mutual
 
