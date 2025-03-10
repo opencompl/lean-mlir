@@ -4,7 +4,7 @@ import Mathlib.Order.Lattice
 inductive EffectKind
 | pure -- pure effects.
 | impure -- impure, lives in IO.
-deriving Repr, DecidableEq
+deriving Repr, DecidableEq, Lean.ToExpr
 
 namespace EffectKind
 

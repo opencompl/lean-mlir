@@ -349,7 +349,7 @@ macro "bv_bench_automata": tactic =>
             "presburger" : (bv_automata_classic; done),
             "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
             "circuit" : (bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
-            "normCircuit" : ((try (solve | bv_normalize); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 })); done)),
+            "normCircuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 })); done),
             "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
             "width_ok" : (bv_automata_fragment_width_legal),
             "reflect_ok" : (bv_automata_fragment_reflect),

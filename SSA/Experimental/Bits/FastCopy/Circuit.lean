@@ -1,7 +1,9 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Pi
+import Mathlib.Data.Finset.Union
 
 namespace Copy
+
 universe u v
 
 /--
@@ -784,10 +786,6 @@ lemma always_true_iff [DecidableEq α] (c : Circuit α) :
 instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit α → Prop) :=
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
     by simp [always_true_iff, le_def, or_iff_not_imp_left]
-
-/-- Negate the value of the circuit -/
-def not {α : Type u} (c : Circuit α) : Circuit α :=
-  c ^^^ .tru
 
 def implies (c₁ c₂ : Circuit α) : Circuit α := (~~~ c₁) ||| c₂
 

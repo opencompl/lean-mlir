@@ -531,7 +531,7 @@ lemma processOneElem_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa
     split <;> simp_all only []
     split <;> simp_all
   next heq =>
-    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none])
+    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none_iff])
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_new_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -690,7 +690,8 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       rcases hs' with hold | rfl
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
         rw [Std.HashMap.getElem?_insert]
-        simp_all [-getElem?_eq_none]; rintro rfl; simp_all [-getElem?_eq_none] }
+        simp_all only [ge_iff_le, Prod.mk.eta, beq_iff_eq, ite_eq_right_iff, Option.some.injEq]
+        rintro rfl; simp_all }
       { use sa'; simp_all } } }
   { rintro s' sa1 sa2
     rw [processOneElem_map]

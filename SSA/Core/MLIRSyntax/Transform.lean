@@ -58,6 +58,12 @@ end Monads
   returns with `TransformReturn`.
   - These three automatically give an instance of `TransformDialect`.
 -/
+
+/- TODO: the above mentions a `TransformDialect`, but such a class does not
+          exist. Was it removed for some reason, or did we just not implement it?
+          It would be nice to not have to spell out the three different classes
+          in, e.g., `mkCom` -/
+
 class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
   mkTy   : MLIRType φ → ExceptM d d.Ty
 

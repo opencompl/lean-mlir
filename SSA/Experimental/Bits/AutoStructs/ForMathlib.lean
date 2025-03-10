@@ -25,12 +25,6 @@ lemma List.Vector.append_get_ge {x : List.Vector α n} {y : List.Vector α m} {i
   rcases hx
   apply List.getElem_append_right hlt
 
-@[simp]
-def BitVec.getLsbD_cast' (bv : BitVec n) (h : n = m):
-    (h ▸ bv).getLsbD i = bv.getLsbD i := by
-  rcases h; simp
-
-
 -- this is better because card is defeq to n
 @[simps]
 instance finenum_fin : FinEnum (Fin n) where
@@ -58,6 +52,12 @@ lemma BitVec.transport_getLsbD_nat (f : Fin n2 → Fin n1) (bv : BitVec n1) (i :
   nth_rw 1 [heq]
   rw [transport_getLsbD]
 
+@[simp]
+lemma BitVec.transport_getElem (f : Fin n2 → Fin n1) (bv : BitVec n1) (i : Nat) (hlt : i < n2) :
+    (bv.transport f)[i] = bv.getLsbD (f ⟨i, hlt⟩) := by
+  have h := transport_getLsbD_nat f bv i hlt
+  simp_all
+
 /--
 The set of `n`-tuples of bit vectors of an arbitrary width.
 -/
@@ -75,17 +75,18 @@ def BitVecs0 : Set (BitVecs n) :=
 -- TODO: this ought to be way easier
 @[ext (iff := false)]
 lemma BitVecs.ext (x y : BitVecs n) :
-    ∀ (heq : x.w = y.w),
-      (∀ (i : Fin n), x.bvs.get i = heq ▸ y.bvs.get i) →
+    ∀ (heq : y.w = x.w),
+      (∀ (i : Fin n), x.bvs.get i = (y.bvs.get i).cast heq) →
       x = y := by
   intros heq hbvs
   rcases x with ⟨wx, bvsx⟩
   rcases y with ⟨wy, bvsy⟩
   congr
-  rcases heq
-  apply heq_of_eq
-  ext i j
-  simp_all
+  · exact heq.symm
+  · rcases heq
+    apply heq_of_eq
+    ext i j
+    simp_all
 
 /--
 The set of `n`-tuples of bit vectors of an arbitrary width, encoded as a list of
@@ -98,23 +99,22 @@ def enc (bvs : BitVecs n) : BitVecs' n :=
   (List.finRange bvs.w).map (fun i =>
     BitVec.ofFn (fun (k : Fin n) => (bvs.bvs.get k)[i]))
 
+@[simps]
 def dec (bvs' : BitVecs' n) : BitVecs n where
   w := bvs'.length
   bvs := List.Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
 
 @[simp]
 lemma dec_nil n : dec (n := n) [] = BitVecs.empty := by
-  ext <;> simp [dec]
+  ext _ _ h
+  · simp_all [dec]
+  · simp [dec] at h
 
 -- The two sets are in bijection.
 
 @[simp]
 lemma enc_length (bvs : BitVecs n) : (enc bvs).length = bvs.w := by
   simp [enc]
-
-@[simp]
-lemma dec_w (bvs' : BitVecs' n) : (dec bvs').w = bvs'.length := by
-  simp [dec]
 
 @[simp]
 lemma enc_spec (bvs : BitVecs n) (i : Fin bvs.w) (k : Fin n) :
@@ -139,14 +139,11 @@ lemma helper_dec_enc (bvs : BitVecs n) (h : w' = bvs.w) i (j : Nat) :
 
 @[simp]
 lemma dec_enc : Function.RightInverse (α := BitVecs' n) enc dec := by
-  intros bvs; ext1; exact dec_enc_w bvs
+  intros bvs; ext1; exact dec_enc_w bvs |>.symm
   next i =>
     simp only [enc, Fin.getElem_fin, dec, List.getElem_map, List.getElem_finRange, Fin.cast_mk,
       Fin.is_lt, BitVec.ofFn_getLsbD, Fin.eta, List.Vector.get_ofFn]
-    ext
-    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD,
-      BitVec.getLsbD_cast']
-    rfl
+    ext; simp
 
 @[simp]
 lemma enc_dec : Function.LeftInverse (α := BitVecs' n) enc dec := by
@@ -178,13 +175,12 @@ def dec_inj {n : Nat} : Function.Injective (dec (n := n)) := by
 lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
     bvs := List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
-  ext k i <;> simp_all only [dec, Fin.getElem_fin, List.length_append, List.length_singleton,
-    List.Vector.get_ofFn, BitVec.ofFn_getLsbD, BitVec.getLsbD_cast']
-  rw [BitVec.getLsbD_cons]
+  ext k i hi <;> simp_all
+  rw [BitVec.getElem_cons]
   split
   next heq => simp_all
   next h =>
-    have hlt : i < List.length bvs' := by omega
+    have hlt : i < List.length bvs' := by simp at hi; omega
     rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD hlt]
 
 @[simp]
@@ -223,21 +219,26 @@ lemma BitVecs'.transport_getElem' {bvs' : BitVecs' m} (f : Fin n → Fin m) (i :
     (bvs'.transport f)[i]'(by simp_all) = (bvs'[i]'h).transport f := by
   simp [transport]
 
--- TODO: this script generates an ill typed proof :(
-set_option debug.skipKernelTC true in
 @[simp]
 def dec_transport_idx {bvs' : BitVecs' n} (f : Fin m → Fin n) :
     have h : (BitVecs.transport f (dec bvs')).w = (dec (BitVecs'.transport f bvs')).w := by simp
-    (dec (bvs'.transport f)).bvs.get i =  h ▸ (((dec bvs').transport f).bvs.get i) := by
+    (dec (bvs'.transport f)).bvs.get i =  (((dec bvs').transport f).bvs.get i).cast h := by
   intros h
   simp [dec]
-  ext1 i hi
-  simp_all [BitVecs'.tranport_length, BitVec.getLsbD_cast']
+  ext1 j hj
+  simp at h hj ⊢
+  simp_all
+  simp at h ⊢
+  -- TODO: FIXME: why is this necessary to have the rewrite work?
+  generalize_proofs h1 h2 h3 h4
+  rw [BitVec.ofFn_getElem _ h4]
 
 @[simp]
 def dec_transport :
     dec (bvs'.transport f) = (dec bvs').transport f := by
-  ext k j <;> simp
+  ext1
+  · simp
+  · apply dec_transport_idx
 
 @[simp]
 def enc_transport_idx {bvs : BitVecs n} (f : Fin m → Fin n) (i : Fin bvs.w) :
@@ -716,8 +717,11 @@ theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.bac
   exact hnd hdl (List.mem_singleton.mpr rfl)
 
 theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
-    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.size → a[i]? ≠ a[j]? :=
-  List.nodup_iff_getElem?_ne_getElem?
+    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.toList.length → a[i]? ≠ a[j]? := by
+  simp_rw [←Array.getElem?_toList]
+  exact List.nodup_iff_getElem?_ne_getElem?
+
+  -- List.nodup_iff_getElem?_ne_getElem?
 
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
   rcases a with ⟨l⟩

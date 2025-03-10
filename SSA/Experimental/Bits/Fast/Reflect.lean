@@ -175,7 +175,7 @@ theorem BitStream.toBitVec_and (a b : BitStream) :
     (a &&& b).toBitVec w = a.toBitVec w &&& b.toBitVec w := by
   apply BitVec.eq_of_getLsbD_eq
   intros i hi
-  simp [hi]
+  simp? [hi]
 
 @[simp]
 theorem BitStream.toBitVec_or (a b : BitStream) :
@@ -199,13 +199,13 @@ theorem BitStream.toBitVec_not (a : BitStream) :
   intros i hi
   simp [hi]
 
-theorem BitVec.add_getLsbD_zero {x y : BitVec w} (hw : 0 < w) : (x + y).getLsbD 0 =
-    ((x.getLsbD 0 ^^ y.getLsbD 0)) := by
-  simp [hw, getLsbD_add hw]
+theorem BitVec.add_getElem_zero {x y : BitVec w} (hw : 0 < w) : (x + y)[0] =
+    ((x[0] ^^ y[0])) := by
+  simp [hw, getElem_add hw]
 
-theorem BitVec.add_getLsbD_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y).getLsbD (i + 1) =
-    (x.getLsbD (i + 1) ^^ (y.getLsbD (i + 1)) ^^ carry (i + 1) x y false) := by
-  simp [hw, getLsbD_add hw]
+theorem BitVec.add_getElem_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y)[i + 1] =
+    (x[i + 1] ^^ (y[i + 1]) ^^ carry (i + 1) x y false) := by
+  simp [hw, getElem_add hw]
 
 /-- TODO: simplify this proof, something too complex is going on here. -/
 @[simp] theorem BitStream.toBitVec_add' (a b : BitStream) (w i : Nat) (hi : i < w) :
@@ -216,12 +216,12 @@ theorem BitVec.add_getLsbD_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y).getL
   induction i
   case zero =>
     simp
-    rw [BitVec.add_getLsbD_zero hi]
+    rw [BitVec.add_getElem_zero hi]
     simp [hi]
     simp [BitVec.carry_succ, hi]
   case succ i ih =>
     simp
-    rw [BitVec.add_getLsbD_succ _ _ hi]
+    rw [BitVec.add_getElem_succ _ _ hi]
     have : i < w := by omega
     specialize ih this
     obtain ⟨ih₁, ih₂⟩ := ih
@@ -1098,13 +1098,13 @@ structure Config where
   This is useful to prevent the tactic from taking oodles of time cruncing on goals that
   build large state spaces, which can happen in the presence of tactics.
   -/
-  circuitSizeThreshold : Nat := 0
+  circuitSizeThreshold : Nat := 200
 
   /--
   The upper bound on the state space of the FSM, beyond which the tactic will bail out on an error.
   See also `Config.circuitSizeThreshold`.
   -/
-  stateSpaceSizeThreshold : Nat := 0
+  stateSpaceSizeThreshold : Nat := 200
   /--
   Whether the tactic should used a specialized solver for fixed-width constraints.
   -/

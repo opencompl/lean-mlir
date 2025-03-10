@@ -8,6 +8,7 @@ import Std.Data.HashMap.Lemmas
 import Batteries.Data.Fin.Basic
 import Batteries.Data.Array.Lemmas
 import Mathlib.Computability.NFA
+import Mathlib.Algebra.Group.Nat.Range
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Perm.Basic
@@ -214,8 +215,7 @@ def RawCNFA.createSink (m : RawCNFA A) : State × RawCNFA A :=
   (s, m)
 
 def RawCNFA.transSet (m : RawCNFA A) (ss : Std.HashSet State) (a : A) : Std.HashSet State :=
-  ss.fold (init := ∅) fun ss' s =>
-    ss'.insertMany $ m.trans.getD (s, a) ∅
+  ss.fold (init := ∅) fun ss' s => ss'.insertMany $ m.tr s a
 
 def RawCNFA.transBV (m : RawCNFA A) (s : m.states) (a : A) : BitVec m.stateMax :=
   let ts := m.trans.getD (s, a) ∅
@@ -486,6 +486,11 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
     · simp only [addTrans_tr]; tauto
     · simp [hwf', hstates]
     · simp [hstates]
+
+def CNFA.transSet (m : CNFA n) (ss : Std.HashSet m.m.states) (a : BitVec n) : Std.HashSet m.m.states :=
+  ss.fold (init := ∅) fun ss' (s : m.m.states) =>
+    let ssn := (m.m.tr s a).attachWith (λ s ↦ s ∈ m.m.states) (by simp_all; sorry)
+    ss'.insertMany ssn
 
 instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
   default := RawCNFA.empty

@@ -174,7 +174,8 @@ def BitVec.ofFn {w : Nat} (f : Fin w → Bool) : BitVec w :=
 
 theorem BitVec.ofFn_getLsbD_fin {w : Nat} {f : Fin w → Bool} {i : Fin w} :
     (BitVec.ofFn f).getLsbD i = f i := by
-  simp [BitVec.ofFn, BitVec.iunfoldr_getLsbD (fun _ => ())]
+  rw [ofFn, BitVec.iunfoldr_getLsbD (fun _ => ())]
+  simp
 
 @[simp]
 theorem BitVec.ofFn_getLsbD {w : Nat} {f : Fin w → Bool} {i : Nat} (hi : i < w) :
@@ -183,8 +184,9 @@ theorem BitVec.ofFn_getLsbD {w : Nat} {f : Fin w → Bool} {i : Nat} (hi : i < w
 theorem BitVec.ofFn_getLsbD_true {w : Nat} {f : Fin w → Bool} {i : Nat} :
     (BitVec.ofFn f).getLsbD i = true ↔ ∃ (hlt : i < w), f ⟨i, hlt⟩ = true := by
   constructor
-  · intro h; have hlt := lt_of_getLsbD h; simp_all
-  · rintro ⟨hlt, heq⟩; simp_all
+  · intro h; have hlt := lt_of_getLsbD h; simp_all [-getLsbD_eq_getElem]
+  · rintro ⟨hlt, heq⟩
+    simp_all [-getLsbD_eq_getElem]
 
 @[simp]
 theorem BitVec.ofFn_getElem {w : Nat} (f : Fin w → Bool) {i : Nat} (hi : i < w) :
