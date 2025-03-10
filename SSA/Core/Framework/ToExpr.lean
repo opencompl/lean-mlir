@@ -82,13 +82,13 @@ end
 variable {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
 
 /-- Build a (Lean) `Expr` to represent a LeanMLIR program -/
-def Com.toExpr (com : Com d Γ eff ty) : MetaM Lean.Expr := do
+def Com.toExprM (com : Com d Γ eff ty) : MetaM Lean.Expr := do
   let dE := d.toExpr
   let sig ← synthInstanceQ q(DialectSignature $dE)
   return com.toExprAux dE sig
 
 /-- Build a (Lean) `Expr` to represent a LeanMLIR expression -/
-def Expr.toExpr (expr : Expr d Γ eff ty) : MetaM Lean.Expr := do
+def Expr.toExprM (expr : Expr d Γ eff ty) : MetaM Lean.Expr := do
   let dE := d.toExpr
   let sig ← synthInstanceQ q(DialectSignature $dE)
   return expr.toExprAux dE sig
