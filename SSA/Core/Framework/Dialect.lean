@@ -1,7 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-
+import Lean
+import Qq
 
 /-- A MLIR `Dialect` is comprised of a type of `Op`erations, and a type of `Ty`pes.
 
@@ -15,3 +16,25 @@ structure Dialect where
   (Op : Type)
   (Ty : Type)
   (m : Type → Type := Id)
+
+/-! ## ToExpr -/
+section ToExpr
+open Lean Qq
+
+/--
+`DialectToExpr δ` allows us to construct an `Expr` that represent dialect `δ`.
+
+This is closely linked to the `Lean.ToExpr` class, except that the former cannot
+succintly express that only specific inhabitants of a type may be reflected.
+`ToExpr Dialect` is impossible to write, as it would require `ToExpr Type`,
+hence needing this extra class.
+-/
+class DialectToExpr (δ : Dialect) [ToExpr δ.Op] [ToExpr δ.Ty] where
+  toExprM : Q(Type → Type)
+
+/-- Construct the `Expr` that represents dialect `δ` -/
+def Dialect.toExpr (δ : Dialect) [ToExpr δ.Op] [ToExpr δ.Ty] [DialectToExpr δ] : Q(Dialect) :=
+  let Op : Q(Type) := ToExpr.toTypeExpr δ.Op
+  let Ty : Q(Type) := ToExpr.toTypeExpr δ.Ty
+  let m : Q(Type → Type) := DialectToExpr.toExprM δ
+  q(⟨$Op, $Ty, $m⟩)
