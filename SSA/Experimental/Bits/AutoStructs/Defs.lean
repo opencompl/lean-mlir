@@ -29,6 +29,17 @@ def liftMax1 (n m : Nat) : Fin n → Fin (max n m) :=
 def liftMax2 (n m : Nat) : Fin m → Fin (max n m) :=
   fun k => k.castLE (by omega)
 
+def liftLast3 n : Fin 3 → Fin (n + 3)
+| 0 => n
+| 1 => n + 1
+| 2 => Fin.last (n + 2)
+def liftMaxSuccSucc1 (n m : Nat) : Fin (n + 1) → Fin (max n m + 3) :=
+  fun k => if _ : k = n then max n m else k.castLE (by omega)
+def liftMaxSuccSucc2 (n m : Nat) : Fin (m + 1) → Fin (max n m + 3) :=
+  fun k => if _ : k = m then max n m + 1 else k.castLE (by omega)
+def liftExcept3 n : Fin n → Fin (n + 3) :=
+  fun k => Fin.castLE (by omega) k
+
 /-!
 # Term Language
 This file defines the term language the decision procedure operates on,

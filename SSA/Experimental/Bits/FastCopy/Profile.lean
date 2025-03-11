@@ -17,76 +17,34 @@ open Lean Elab Meta
 
 namespace Copy
 def preds : Array Predicate := #[
-  -- Predicate.eq
-  --   (Term.add
-  --     (Term.sub (Term.neg (Term.not (Term.xor (Term.var 0) (Term.var 1)))) (Term.shiftL (Term.var 1) 1))
-  --     (Term.not (Term.var 0)))
-  --   (Term.sub
-  --     (Term.neg (Term.not (Term.or (Term.var 0) (Term.not (Term.var 1)))))
-  --     (Term.add (Term.and (Term.var 0) (Term.var 1)) (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1))),
-  -- 1 *  ~~~x - 2 * (x ^^^ y) + 1 *  ~~~(x &&& y) = 2 *  ~~~(x ||| y) - 1 * (x &&&  ~~~y) := by
-  -- Predicate.eq
-  --   (Term.add
-  --     (Term.sub
-  --       (Term.not (Term.var 0))
-  --       (Term.add (Term.xor (Term.var 0) (Term.var 1)) (Term.xor (Term.var 0) (Term.var 1))))
-  --     (Term.not (Term.and (Term.var 0) (Term.var 1))))
-  --   (Term.sub
-  --     (Term.add (Term.not (Term.or (Term.var 0) (Term.var 1))) (Term.not (Term.or (Term.var 0) (Term.var 1))))
-  --     (Term.and (Term.var 0) (Term.not (Term.var 1)))),
-
-  -- 11 *  ~~~(x &&&  ~~~y) - 9 *  ~~~(x ||| y) + 2 * (x &&&  ~~~y) = 2 *  ~~~y + 11 * y := by
-  -- Predicate.eq
-  --   (Term.add
-  --     (Term.sub
-  --       (Term.add
-  --         (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
-  --         (Term.add
-  --           (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
-  --           (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1) 1)))
-  --       (Term.add
-  --         (Term.not (Term.or (Term.var 0) (Term.var 1)))
-  --         (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
-  --     (Term.add (Term.and (Term.var 0) (Term.not (Term.var 1))) (Term.and (Term.var 0) (Term.not (Term.var 1)))))
-  --   (Term.add
-  --     (Term.add (Term.not (Term.var 1)) (Term.not (Term.var 1)))
-  --     (Term.add
-  --       (Term.var 1)
-  --       (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
-    -- 11 *  ~~~(x &&&  ~~~y) - 11 * x + 11 * (x &&&  ~~~y) + 11 * (x &&& y) = 11 *  ~~~(x ||| y) + 11 * y
-    Predicate.binary .eq
-    (Term.add
-      (Term.add
-        (Term.sub
-          (Term.add
-            (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
-            (Term.add
-              (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
-              (Term.shiftL
-                (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1)
-                1)))
-          (Term.add
-            (Term.var 0)
-            (Term.add (Term.shiftL (Term.var 0) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 0) 1) 1) 1))))
-        (Term.add
-          (Term.and (Term.var 0) (Term.not (Term.var 1)))
-          (Term.add
-            (Term.shiftL (Term.and (Term.var 0) (Term.not (Term.var 1))) 1)
-            (Term.shiftL (Term.shiftL (Term.shiftL (Term.and (Term.var 0) (Term.not (Term.var 1))) 1) 1) 1))))
-      (Term.add
-        (Term.and (Term.var 0) (Term.var 1))
-        (Term.add
-          (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1)
-          (Term.shiftL (Term.shiftL (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1) 1) 1))))
-    (Term.add
-      (Term.add
-        (Term.not (Term.or (Term.var 0) (Term.var 1)))
-        (Term.add
-          (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1)
-          (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
-      (Term.add
-        (Term.var 1)
-        (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
+(Copy.Predicate.binary Copy.BinaryPredicate.eq
+                  (((((((((((Copy.Term.var 0).or (Copy.Term.var 1)).add
+                                                    ((((Copy.Term.var 0).or (Copy.Term.var 1)).shiftL 1).add
+                                                      (((((Copy.Term.var 0).or (Copy.Term.var 1)).shiftL 1).shiftL
+                                                            1).shiftL
+                                                        1))).add
+                                                (((Copy.Term.var 0).xor (Copy.Term.var 1)).not.add
+                                                  (((Copy.Term.var 0).xor (Copy.Term.var 1)).not.shiftL 1))).add
+                                            ((Copy.Term.var 0).xor (Copy.Term.var 1))).sub
+                                        ((Copy.Term.var 1).add ((Copy.Term.var 1).shiftL 1))).add
+                                    (((Copy.Term.var 0).and (Copy.Term.var 1).not).not.add
+                                      (((Copy.Term.var 0).and (Copy.Term.var 1).not).not.shiftL 1))).add
+                                ((Copy.Term.var 0).add
+                                  (((Copy.Term.var 0).shiftL 1).add
+                                    ((((Copy.Term.var 0).shiftL 1).shiftL 1).shiftL 1)))).sub
+                            ((((Copy.Term.var 0).or (Copy.Term.var 1)).not.shiftL 1).add
+                              (((((Copy.Term.var 0).or (Copy.Term.var 1)).not.shiftL 1).shiftL 1).shiftL 1))).sub
+                        ((((((Copy.Term.var 0).or (Copy.Term.var 1).not).not.shiftL 1).shiftL 1).shiftL 1).shiftL
+                          1)).sub
+                    (((Copy.Term.var 0).and (Copy.Term.var 1)).add
+                      ((((((Copy.Term.var 0).and (Copy.Term.var 1)).shiftL 1).shiftL 1).shiftL 1).add
+                        ((((((Copy.Term.var 0).and (Copy.Term.var 1)).shiftL 1).shiftL 1).shiftL 1).shiftL 1))))
+                  ((((Copy.Term.var 0).and (Copy.Term.var 1).not).add
+                        ((((Copy.Term.var 0).and (Copy.Term.var 1).not).shiftL 1).add
+                          (((((Copy.Term.var 0).and (Copy.Term.var 1).not).shiftL 1).shiftL 1).add
+                            ((((((Copy.Term.var 0).and (Copy.Term.var 1).not).shiftL 1).shiftL 1).shiftL 1).shiftL
+                              1)))).sub
+                    (((Copy.Term.var 0).not.shiftL 1).shiftL 1)))
   ]
 
 def timeElapsedMs (x : IO α) : IO (α × Int) := do
@@ -95,6 +53,8 @@ def timeElapsedMs (x : IO α) : IO (α × Int) := do
     let tEnd ← IO.monoMsNow
     return (b, tEnd - tStart)
 
+end Copy
+open Copy
 /-!
 We disable closed term extraction to make sure that the evaluation of
 FSM.decideAllZeroes is not lifted into a top-level closed term whose value is computed at initialization.
@@ -103,24 +63,18 @@ set_option compiler.extract_closed false in
 unsafe def main : IO Unit := do
   initSearchPath (← findSysroot)
   Lean.withImportModules #[{ module := `Lean.Elab.Tactic.BVDecide}, {module := `Std.Tactic.BVDecide}]
-      (opts := {}) (trustLevel := 0) fun env => do
-    let ctxCore : Core.Context := { fileName := "SynthCadicalFile", fileMap := FileMap.ofString "" }
-    let sCore : Core.State :=  { env }
-    let ctxMeta : Meta.Context := {}
-    let sMeta : Meta.State := {}
-    let ctxTerm : Term.Context :=  { declName? := .some (Name.mkSimple s!"problem")}
-    let sTerm : Term.State := {}
+      (opts := {}) (trustLevel := 0) fun _env => do
     for p in preds do
       IO.println (repr p)
-      for i in [0:1] do
-        IO.println s!"Iteration #{i + 1} of Running Algorithm"
-        let fsm := predicateEvalEqFSM p
-        -- let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
-        let (bCadical, tElapsedCadical) ← timeElapsedMs do
-          let (b, _coreState, _metaState, _termState) ←
-            fsm.toFSM.decideIfZerosMCadical |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-          return b
-        -- IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
-        IO.println s!" (cadical)  is all zeroes: '{bCadical}' | time: '{tElapsedCadical}' ms"
-        IO.println "--"
+      let tStart ← IO.monoMsNow
+      let nfa := nfaOfFormula (AutoStructs.formula_of_predicate p)
+      let tMid ← IO.monoMsNow
+      IO.println s!"It took {tMid - tStart}ms to compute the {nfa.m.stateMax} states of the NFA"
+      let nfa := nfa.minimize
+      let tMid' ← IO.monoMsNow
+      IO.println s!"It took {tMid' - tMid}ms to determinize the NFA, into {nfa.m.stateMax} states"
+      let res := nfa.isUniversal
+      let tEnd ← IO.monoMsNow
+      IO.println s!"It took {tEnd - tMid'}ms to compute whether the NFA is universal: {res}"
+      IO.println "--"
   return ()

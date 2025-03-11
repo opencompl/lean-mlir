@@ -2,6 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Union
 import SSA.Core.HVector
 
 /--
@@ -85,7 +86,7 @@ def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
 /-- constructor for Var. -/
-def Var.mk (Γ : Ctxt Ty) (t : Ty) (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
+def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
   ⟨i, hi⟩
 
 namespace Var
@@ -635,5 +636,41 @@ abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
 instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
   coe v := dropUntilDiff.toHom v
 
+
+/-!
+# ToExpr
+-/
+section ToExpr
+open Lean Qq
+variable [ToExpr Ty] {Γ : Ctxt Ty} {ty : Ty}
+
+instance : ToExpr (Ctxt Ty) :=
+  inferInstanceAs <| ToExpr (List Ty)
+
+instance : ToExpr (Var Γ ty) where
+  toTypeExpr := mkApp3 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ) (toExpr ty)
+  toExpr := fun ⟨i, _hi⟩ =>
+    let Ty := toTypeExpr Ty
+    let optTy := mkApp (.const ``Option [0]) Ty
+    let Γ := toExpr Γ
+    let ty := toExpr ty
+    let i := toExpr i
+    let someTy := mkApp2 (.const ``Option.some [0]) Ty ty
+    let hi := /- : Γ.get? i = some ty := rfl -/
+      /- Folklore suggests an explicit proof (instead of `rfl`) would be more
+        efficient, as the kernel might not know what to reduce.
+        In this case, though, `ty` should be in normal form by construction,
+        thus reduction should be safe. -/
+      mkApp2 (.const ``rfl [1]) optTy someTy
+    let P :=
+      let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ (.bvar 0)
+      let eq := mkApp3 (.const ``Eq [1]) optTy getE someTy
+      Expr.lam `i (mkConst ``Nat) eq .default
+    mkApp4 (.const ``Subtype.mk [1]) (mkConst ``Nat) P i hi
+
+instance : HVector.ToExpr (Var Γ) where
+  toTypeExpr := mkApp2 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ)
+
+end ToExpr
 
 end Ctxt

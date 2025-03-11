@@ -176,7 +176,7 @@ def finFunToBitVec [fe : FinEnum carry] (c : carry → Bool) : BitVec (FinEnum.c
   BitVec.ofFn fun i => c (fe.equiv.invFun i)
 
 def bitVecToFinFun [FinEnum ar] (bv : BitVec $ FinEnum.card ar) : ar → Bool :=
-  fun c => bv.getLsbD $ FinEnum.equiv.toFun c
+  fun c => bv[FinEnum.equiv.toFun c]
 
 @[simp]
 lemma bitVecToFinFun_rinv (c : carry → Bool) [FinEnum carry]:
@@ -223,7 +223,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
       · simp [FSM.carryBV]
     · rintro ⟨-, rfl⟩; simp [FSM.carryBV]
   · simp [inFSMRel, ofFSM']; intros q a w bvn
-    have heq : a.getLsbD (FinEnum.card arity) = a.msb := by
+    have heq : a[FinEnum.card arity] = a.msb := by
       simp [BitVec.msb_eq_getLsbD_last]
     constructor
     · simp [NFA.stepSet]
@@ -236,7 +236,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         unfold bitVecToFinFun
         simp
         ext i hi
-        simp [BitVec.getLsbD_cons]
+        simp [BitVec.getElem_cons]
         split
         next hi =>
           rw [hi]
@@ -252,9 +252,8 @@ def NFA'.ofFSM_correct (p : FSM arity) :
             simp [BitVec.getLsbD_cons]
             rw [ite_cond_eq_false]
             simp; omega
-          · ext ar; simp [BitVec.getLsbD_cons]
+          · ext ar; simp [BitVec.getElem_cons]; rfl
         next hne =>
-          simp [hi] at hne ⊢
           have hlt : i < w := by omega
           rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
           simp [hsa, FSM.evalBV]
@@ -278,7 +277,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           simp [BitVec.getLsbD_cons]
           rw [ite_cond_eq_false]
           simp; omega
-        · unfold bitVecToFinFun; simp [BitVec.getLsbD_cons]
+        · unfold bitVecToFinFun; simp [BitVec.getElem_cons]; rfl
     · rintro hsa; simp [NFA.stepSet]
       use p.carryBV (fun ar => bvn.get (FinEnum.equiv.toFun ar))
       rcases hsa with ⟨hrel, hcar⟩
@@ -287,22 +286,22 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         on_goal 2 => rfl
         simp [inFSMRel] at *
         ext i hi
-        rw [BitVec.eq_of_getLsbD_eq_iff] at hrel
+        rw [BitVec.eq_of_getElem_eq_iff] at hrel
         specialize hrel i (by omega)
-        simp [BitVec.getLsbD_cons] at hrel
+        simp [BitVec.getElem_cons] at hrel
         rw [ite_cond_eq_false] at hrel
         on_goal 2 => simp; omega
+        rw [BitVec.getLsbD_eq_getElem] at hrel
         rw [hrel]
         simp only [FSM.evalBV]
-        repeat rw [BitVec.ofFn_getLsbD (by omega)]
-        simp only
+        repeat rw [BitVec.ofFn_getElem _ (by omega)]
         apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
         rw [ite_cond_eq_true]
         on_goal 2 => simp; omega
         rw [ite_cond_eq_true]
-        on_goal 2 => simp; omega
         simp [BitVec.getLsbD_cons]
-        omega
+        simp at hk; omega
+        simp at hk ⊢; omega
       · rw [hcar]; simp [NFA.ofFSM]
         constructor
         · simp [FSM.carryBV, FSM.carry]; congr
@@ -313,11 +312,11 @@ def NFA'.ofFSM_correct (p : FSM arity) :
             on_goal 2 => simp; omega
             simp [BitVec.getLsbD_cons]
             omega
-          · unfold bitVecToFinFun; simp [BitVec.getLsbD_cons]
+          · unfold bitVecToFinFun; simp [BitVec.getElem_cons]; rfl
         · unfold inFSMRel at hrel
           rw [BitVec.eq_of_getLsbD_eq_iff] at hrel
           specialize hrel (Fin.last w)
-          simp [BitVec.getLsbD_cons, heq] at hrel
+          simp [BitVec.getElem_cons, heq] at hrel
           rw [hrel]; simp [FSM.evalBV, FSM.eval, FSM.carryBV]; congr
           · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
             rw [ite_cond_eq_true]
@@ -326,7 +325,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
             on_goal 2 => simp; omega
             simp [BitVec.getLsbD_cons]
             omega
-          · unfold bitVecToFinFun; simp [BitVec.getLsbD_cons]
+          · unfold bitVecToFinFun; simp [BitVec.getElem_cons]; rfl
 
 def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
   _root_.NFA'.ofFSM' p -- |>.reduce
@@ -344,7 +343,11 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
     cases k <;> simp_all
   case ofNat =>
     intros i hi
-    simp_all [ofBitVec, ofNat, BitVec.getLsbD_ofNat]
+    simp_all only [ofNat, ofBitVec, BitVec.getLsbD_eq_getElem, ite_true]
+    -- TODO: should there be a BitVec.getElem_ofNat ?
+    rw [←BitVec.getLsbD_eq_getElem]
+    rw [BitVec.getLsbD_ofNat]
+    simp_all
   case and => apply BitStream.and_congr <;> simp_all
   case or => apply BitStream.or_congr <;> simp_all
   case xor => apply BitStream.xor_congr <;> simp_all
@@ -372,10 +375,9 @@ lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
     (t.evalFinBV fun ar => bvn.get ar.castSucc) := by
   simp only [FSM.evalBV]; ext k hk
-  simp only [FSM.ofTerm, hk, BitVec.ofFn_getLsbD]
+  simp only [FSM.ofTerm, hk, BitVec.ofFn_getElem]
   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
-  simp only [ite_eq_left_iff, not_lt]
-  intros _; omega
+  simp_all
 
 @[simp]
 lemma NFA'.ofFSM_spec (t : Term) :
@@ -810,21 +812,21 @@ def unsigned_equiv cmp : (CNFA.autUnsignedCmp cmp).m.states ≃ (NFA'.autUnsigne
     · simp at hx; simp [State] at *; omega
   right_inv := by simp; rintro x; rcases x <;> rfl
 
-local macro "go" : tactic =>
-  `(tactic | simp [CNFA.autUnsignedCmp, RawCNFA.autUnsignedCmp, NFA'.autUnsignedCmp, NFA.autUnsignedCmp,
-       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
-       RawCNFA.empty, RawCNFA.tr, NFA.unsignedCmpStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
 
-set_option maxHeartbeats 1000000 in
+local macro "go" : tactic =>
+  `(tactic | simp only [CNFA.autUnsignedCmp, RawCNFA.autUnsignedCmp, NFA'.autUnsignedCmp, NFA.autUnsignedCmp,
+       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
+       RawCNFA.empty, RawCNFA.tr, NFA.unsignedCmpStep ])
+
+set_option debug.skipKernelTC true in
+set_option maxHeartbeats 0 in
 lemma CNFA.autUnsignedCmp_spec {cmp} : (CNFA.autUnsignedCmp cmp).Sim (NFA'.autUnsignedCmp cmp) := by
   apply simulFun_sim (unsigned_equiv cmp)
   constructor
-  · rintro q; rcases cmp <;> rcases q <;> simp only [unsigned_equiv] <;> go
-  · rintro q; rcases cmp <;> rcases q <;> simp only [unsigned_equiv] <;> go
-  · rintro a q q'; rcases cmp <;> rcases q <;> rcases q' <;> fin_cases a <;>
-      simp only [unsigned_equiv] <;>
-      (simp [NFA'.autUnsignedCmp, NFA.autUnsignedCmp, NFA.unsignedCmpStep, instFinEnumBitVec_sSA];
-       native_decide)
+  · rintro q; rcases cmp <;> rcases q <;> go <;> simp <;> native_decide
+  · rintro q; rcases cmp <;> rcases q <;> simp only [unsigned_equiv] <;> go <;> simp
+  · rintro a q q'; rcases cmp <;> rcases q <;> rcases q' <;> fin_cases a
+      <;> (unfold NFA'.autUnsignedCmp NFA.autUnsignedCmp NFA.unsignedCmpStep instFinEnumBitVec_sSA unsigned_equiv; simp; native_decide)
 
 def signed_equiv cmp : (CNFA.autSignedCmp cmp).m.states ≃ (NFA'.autSignedCmp cmp).σ where
   toFun := fun ⟨s, hs⟩ =>
@@ -853,7 +855,7 @@ def signed_equiv cmp : (CNFA.autSignedCmp cmp).m.states ≃ (NFA'.autSignedCmp c
   right_inv := by simp; rintro x; rcases x <;> rfl
 
 local macro "go" : tactic =>
-  `(tactic | simp [CNFA.autSignedCmp, RawCNFA.autSignedCmp, RawCNFA.autSignedCmp.m, NFA'.autSignedCmp, NFA.autSignedCmp,
+  `(tactic | simp only [CNFA.autSignedCmp, RawCNFA.autSignedCmp, RawCNFA.autSignedCmp.m, NFA'.autSignedCmp, NFA.autSignedCmp,
        RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
        RawCNFA.empty, RawCNFA.tr, NFA.signedCmpStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
 
@@ -863,17 +865,26 @@ lemma CNFA.autSignedCmp_tr {cmp} :
   simp only [autSignedCmp, RawCNFA.autSignedCmp]
   rcases cmp <;> simp
 
-set_option maxHeartbeats 1000000 in
+set_option debug.skipKernelTC true in
+set_option maxHeartbeats 0 in
 lemma CNFA.autSignedCmp_spec {cmp} : (CNFA.autSignedCmp cmp).Sim (NFA'.autSignedCmp cmp) := by
   apply simulFun_sim (signed_equiv cmp)
   constructor
-  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go
-  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go
+  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go <;> simp
+  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go <;> simp
   · rintro a q q'
     simp [NFA'.autSignedCmp, NFA.autSignedCmp, signed_equiv] at q q' ⊢
     rcases q <;> rcases q' <;> fin_cases a <;>
       (simp [NFA'.autSignedCmp, NFA.autSignedCmp, NFA.signedCmpStep, instFinEnumBitVec_sSA];
        native_decide)
+
+
+  -- · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go
+  -- · rintro a q q'
+  --   simp [NFA'.autSignedCmp, NFA.autSignedCmp, signed_equiv] at q q' ⊢
+  --   rcases q <;> rcases q' <;> fin_cases a <;>
+  --     (simp [NFA'.autSignedCmp, NFA.autSignedCmp, NFA.signedCmpStep, instFinEnumBitVec_sSA];
+  --      native_decide)
 
 def RawCNFA.autMsbSet : RawCNFA (BitVec 1) :=
   let m := RawCNFA.empty
@@ -976,7 +987,7 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     rw [List.getLast?_eq_getElem?] at hl
     rw [List.getElem?_eq_getElem (by omega)] at hl
     injection hl
-    simp_all only [BitVec.getLsbD_one, zero_lt_one, decide_true, Bool.and_self]
+    simp_all only [BitVec.getElem_one, zero_lt_one, decide_true, Bool.and_self]
   · intros h; use enc bvs
     simp only [dec_enc', and_true]
     simp [enc]
@@ -987,7 +998,7 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     simp; rw [List.getLast?_eq_getElem?]
     simp; constructor
     · rw [List.getElem?_eq_getElem (by simp; omega)]; simp
-    · ext i hi; rw [BitVec.ofFn_getLsbD (by omega)]
+    · ext i hi; rw [BitVec.ofFn_getElem _ (by omega)]
       rw [BitVec.msb_eq_getLsbD_last] at h
       simp [←BitVec.getLsbD_eq_getElem]
       obtain rfl : i = 0 := by omega
@@ -1070,6 +1081,133 @@ def binopAbsNfa (op : Binop) (M1 M2: NFA' n) : NFA' n :=
   | .impl => M1.neg.union M2
   | .equiv => (M1.neg.union M2).inter (M2.neg.union M1)
 
+
+def liftOp n : Fin (n + 1) → Fin (n + 3) :=
+  fun k =>
+    if k = n then Fin.last (n+2) else k.castLE (by omega)
+
+def liftUnop n : Fin (n + 1) → Fin (n + 2) :=
+  fun k =>
+    if k = n then Fin.last (n+1) else k.castLE (by omega)
+
+def nfaOfTerm (t : Term) : CNFA (t.arity + 1) :=
+  match t with
+  | .var n => FSM.ofTerm (.var n) |> CNFA.ofFSM
+  | .zero => FSM.ofTerm .zero |> CNFA.ofFSM
+  | .negOne => FSM.ofTerm .negOne |> CNFA.ofFSM
+  | .one => FSM.ofTerm .one |> CNFA.ofFSM
+  | .ofNat n => FSM.ofTerm (.ofNat n) |> CNFA.ofFSM
+  | .and t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.and (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .or t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.or (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .xor t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.xor (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .add t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.add (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .sub t₁ t₂ =>
+    let m₁ := nfaOfTerm t₁
+    let m₂ := nfaOfTerm t₂
+    let m : CNFA 3 := FSM.ofTerm (.sub (.var 0) (.var 1)) |> CNFA.ofFSM
+    let f₁ := liftMaxSuccSucc1 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m1' := m₁.lift f₁
+    let f₂ := liftMaxSuccSucc2 (FinEnum.card $ Fin t₁.arity) (FinEnum.card $ Fin t₂.arity)
+    let m2' := m₂.lift f₂
+    let mop := m.lift $ liftLast3 (max (FinEnum.card (Fin t₁.arity)) (FinEnum.card (Fin t₂.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter mop
+    let mfinal := m.proj (liftOp _)
+    mfinal.minimize
+  | .neg t =>
+    let m := nfaOfTerm t
+    let mop : CNFA 2 := FSM.ofTerm (.neg (.var 0)) |> CNFA.ofFSM
+    let m : CNFA (t.arity + 2) := m.lift (λ i ↦ i.castLE (by omega))
+    let mop : CNFA (t.arity + 2) := mop.lift (λ i ↦ i + t.arity)
+    let m := CNFA.inter m mop
+    let mfinal := m.proj (liftUnop t.arity)
+    mfinal.minimize
+  | .not t =>
+    let m := nfaOfTerm t
+    let mop : CNFA 2 := FSM.ofTerm (.not (.var 0)) |> CNFA.ofFSM
+    let m : CNFA (t.arity + 2) := m.lift (λ i ↦ i.castLE (by omega))
+    let mop : CNFA (t.arity + 2) := mop.lift (λ i ↦ i + t.arity)
+    let m := CNFA.inter m mop
+    let mfinal := m.proj (liftUnop t.arity)
+    mfinal.minimize
+  | .shiftL t k =>
+    let m := nfaOfTerm t
+    let mop : CNFA 2 := FSM.ofTerm (.shiftL (.var 0) k) |> CNFA.ofFSM
+    let m : CNFA (t.arity + 2) := m.lift (λ i ↦ i.castLE (by omega))
+    let mop : CNFA (t.arity + 2) := mop.lift (λ i ↦ i + t.arity)
+    let m := CNFA.inter m mop
+    let mfinal := m.proj (liftUnop t.arity)
+    mfinal.minimize
+
+def nfaOfFormula' (φ : Formula) : CNFA φ.arity :=
+  match φ with
+  | .width wp n => CNFA.autWidth wp n
+  | .atom rel t1 t2 =>
+    let m1 := nfaOfTerm t1
+    let m2 := nfaOfTerm t2
+    let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
+    let m1' := m1.lift f1
+    let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
+    let m2' := m2.lift f2
+    let meq := rel.autOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
+    let m := CNFA.inter m1' m2' |> CNFA.inter meq
+    let mfinal := m.proj (liftExcept2 _)
+    mfinal
+  | .msbSet t =>
+    let m := (termEvalEqFSM t).toFSM |> CNFA.ofFSM
+    let mMsb := CNFA.autMsbSet.lift $ fun _ => Fin.last t.arity
+    let res := m.inter mMsb
+    res.proj $ fun n => n.castLE (by simp [Formula.arity, FinEnum.card])
+  | .unop op φ => unopNfa op (nfaOfFormula' φ)
+  | .binop op φ1 φ2 =>
+    let m1 := (nfaOfFormula' φ1).lift $ liftMax1 φ1.arity φ2.arity
+    let m2 := (nfaOfFormula' φ2).lift $ liftMax2 φ1.arity φ2.arity
+    binopNfa op m1 m2
+
+@[implemented_by nfaOfFormula']
 def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
   match φ with
   | .width wp n => CNFA.autWidth wp n

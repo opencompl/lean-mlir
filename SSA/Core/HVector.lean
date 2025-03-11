@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Batteries.Tactic.Basic
 import Mathlib.Tactic.TypeStar
-
+import Qq
 
 /-- An heterogeneous vector -/
 inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
@@ -12,7 +12,7 @@ inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
 
 namespace HVector
 
-variable {A B : α → Type*} {as : List α}
+variable {α : Type u} {A B : α → Type*} {as : List α}
 
 /-
   # Definitions
@@ -134,4 +134,40 @@ macro_rules
       `(%[ $elems,* | List.nil ])
 
 infixl:50 "::ₕ" => HVector.cons
+
+/-
+  # ToExpr
+-/
+section ToExpr
+open Lean Qq
+
+class ToExpr {α : Type u} (A : α → Type v) [∀ a, ToExpr (A a)] where
+  /-- The expression representing `A` -/
+  toTypeExpr : Expr
+
+variable {A : α → Type v}
+
+instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExpr A]
+    [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
+    Lean.ToExpr (HVector A as) :=
+  let α := toTypeExpr α
+  let AE := ToExpr.toTypeExpr A
+  let us := [toLevel.{u}, toLevel.{v}]
+  let rec toExpr : {as : List _} → HVector A as → Lean.Expr
+  | [], .nil =>
+    mkApp2 (.const ``HVector.nil us) α AE
+  | a::as, .cons x xs =>
+    let a := Lean.toExpr a
+    let as := Lean.toExpr as
+    let x := Lean.toExpr x
+    let xs := toExpr xs
+    mkApp6 (.const ``HVector.cons us) α AE as a x xs
+  { toTypeExpr :=
+      let as := Lean.toExpr as
+      mkApp2 (.const ``HVector us) AE as
+    toExpr }
+
+end ToExpr
+
+
 end HVector
