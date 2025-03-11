@@ -651,18 +651,22 @@ instance : ToExpr (Var Γ ty) where
   toTypeExpr := mkApp3 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ) (toExpr ty)
   toExpr := fun ⟨i, _hi⟩ =>
     let Ty := toTypeExpr Ty
+    let optTy := mkApp (.const ``Option [0]) Ty
     let Γ := toExpr Γ
     let ty := toExpr ty
     let i := toExpr i
+    let someTy := mkApp2 (.const ``Option.some [0]) Ty ty
     let hi := /- : Γ.get? i = some ty := rfl -/
       /- Folklore suggests an explicit proof (instead of `rfl`) would be more
         efficient, as the kernel might not know what to reduce.
         In this case, though, `ty` should be in normal form by construction,
         thus reduction should be safe. -/
-      let optTy := mkApp (.const ``Option [0]) Ty
-      let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ i
-      mkApp2 (.const ``rfl [1]) optTy getE
-    mkApp5 (mkConst ``Var.mk) Ty Γ ty i hi
+      mkApp2 (.const ``rfl [1]) optTy someTy
+    let P :=
+      let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ (.bvar 0)
+      let eq := mkApp3 (.const ``Eq [1]) optTy getE someTy
+      Expr.lam `i (mkConst ``Nat) eq .default
+    mkApp4 (.const ``Subtype.mk [1]) (mkConst ``Nat) P i hi
 
 instance : HVector.ToExpr (Var Γ) where
   toTypeExpr := mkApp2 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ)
