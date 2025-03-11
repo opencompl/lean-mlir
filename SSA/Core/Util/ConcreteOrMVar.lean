@@ -12,7 +12,7 @@ import Mathlib.Data.Vector.Basic
 inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | concrete (a : α)
   | mvar (i : Fin φ)
-  deriving DecidableEq, Repr, Inhabited
+  deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 instance [ToString α] : ToString (ConcreteOrMVar α n) where
   toString

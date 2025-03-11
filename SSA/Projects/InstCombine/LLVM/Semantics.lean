@@ -43,7 +43,7 @@ theorem or?_eq : LLVM.or? a b  = some (a ||| b) := rfl
 
 structure DisjointFlag where
   disjoint : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
@@ -87,7 +87,7 @@ theorem add?_eq : LLVM.add? a b  = some (a + b) := rfl
 structure NoWrapFlags where
   nsw : Bool := false
   nuw : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
@@ -185,7 +185,7 @@ def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
 
 structure ExactFlag where
   exact : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
@@ -424,7 +424,7 @@ inductive IntPredicate where
   | sge
   | slt
   | sle
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : ToString IntPredicate where
   toString
@@ -580,7 +580,7 @@ def trunc {w: Nat} (w': Nat) (x: IntW w) (noWrapFlags : NoWrapFlags := {nsw := f
 
 structure NonNegFlag where
   nneg : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm]
 def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do

@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Qq
 import SSA.Projects.InstCombine.Base
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
@@ -304,7 +304,7 @@ elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
   have φ : Nat := mvars.getElems.size
   -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
   let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
-    SSA.elabIntoCom reg q(MetaLLVM $φ)
+    SSA.elabIntoCom' reg (MetaLLVM φ)
 
   let mvalues : Q(List.Vector Nat $φ) ←
     withTraceNode `llvm (return m!"{exceptEmoji ·} elaborating mvalues") <| do
