@@ -31,11 +31,11 @@ SAFETY: the `implemented_by` is safe, *assuming* that `Region φ` and `q(Region 
 partial def evalExprOfTypeRegion (φ : Nat) : Q(Region $φ) → MetaM (Region φ) :=
   default
 
-def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
+def elabIntoComObj (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
     [ToExpr d.Op] [ToExpr d.Ty] [DialectToExpr d]
     [DialectSignature d] [Repr d.Ty]
     [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ] :
-    TermElabM Expr := withRef region <| do
+    TermElabM (Σ Γ eff ty, Com d Γ eff ty) := withRef region <| do
   let ast : Region φ ←
     withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} evaluating AST expression") <| do
     let stx  ← `([mlir_region| $region])
@@ -47,12 +47,17 @@ def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
 
     evalExprOfTypeRegion φ expr
 
-  let ⟨_Γ, _eff, _ty, com⟩ ←
-    withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} parsing AST") <| do
+  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} parsing AST") <| do
     match mkCom ast with
     | .error (e : TransformError d.Ty) => throwError (repr e)
     | .ok res => pure res
 
+def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
+    [ToExpr d.Op] [ToExpr d.Ty] [DialectToExpr d]
+    [DialectSignature d] [Repr d.Ty]
+    [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ] :
+    TermElabM Expr := withRef region <| do
+  let ⟨_Γ, _eff, _ty, com⟩ ← elabIntoComObj region d
   com.toExprM
 
 end SSA
