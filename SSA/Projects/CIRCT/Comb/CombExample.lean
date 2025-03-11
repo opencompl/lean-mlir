@@ -8,6 +8,7 @@ import SSA.Core.EffectKind
 import SSA.Core.Util
 
 namespace CIRCTStream
+open MLIR2Comb -- Makes output of `#print` and such a bit prettier
 
 open MLIR AST in
 
@@ -51,8 +52,7 @@ def CombEg4 := [Comb_com| {
   }]
 
 #check CombEg4
-#eval CombEg4
-#reduce CombEg4
+#print CombEg4
 #check CombEg4.denote
 #print axioms CombEg4
 
