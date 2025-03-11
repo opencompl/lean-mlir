@@ -11,7 +11,6 @@ namespace CIRCTStream
 
 open MLIR AST in
 
-unseal String.splitOnAux in
 def CombEg1 := [Comb_com| {
   ^entry(%0: !Bool):
     "return" (%0) : (!Bool) -> ()
@@ -23,7 +22,6 @@ def CombEg1 := [Comb_com| {
 #check CombEg1.denote
 #print axioms CombEg1
 
-unseal String.splitOnAux in
 def CombEg2 := [Comb_com| {
   ^entry(%0: !IcmpPred_eq):
     "return" (%0) : (!IcmpPred_eq) -> ()
@@ -35,7 +33,6 @@ def CombEg2 := [Comb_com| {
 #check CombEg2.denote
 #print axioms CombEg2
 
-unseal String.splitOnAux in
 def CombEg3 := [Comb_com| {
   ^entry(%0: !IcmpPred_neq):
     "return" (%0) : (!IcmpPred_neq) -> ()
@@ -47,7 +44,6 @@ def CombEg3 := [Comb_com| {
 #check CombEg3.denote
 #print axioms CombEg3
 
-unseal String.splitOnAux in
 def CombEg4 := [Comb_com| {
   ^entry(%0: !BitVec_4):
     %1 = "Comb.modu" (%0, %0) : (!BitVec_4, !BitVec_4) -> (!BitVec_4)
