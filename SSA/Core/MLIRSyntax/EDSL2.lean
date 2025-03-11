@@ -40,6 +40,8 @@ def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
     withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} evaluating AST expression") <| do
     let stx  ← `([mlir_region| $region])
     let expr ← elabTermEnsuringTypeQ stx q(Region $φ)
+    synthesizeSyntheticMVarsNoPostponing
+    let expr ← instantiateMVars expr
     withTraceNode `elabIntoCom (fun _ => return m!"parsed Expr … ") <| do
       trace[elabIntoCom] "{expr}"
 
