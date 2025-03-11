@@ -63,17 +63,18 @@ partial def Regions.toExprAux {regSig : List (Ctxt d.Ty × d.Ty)}
     (sig : Q(DialectSignature $dE))
     (regs : HVector (fun (t : _ × _) => Com d t.1 EffectKind.impure t.2) regSig) :
     Lean.Expr :=
-  let Ty := Lean.toTypeExpr d.Ty
-  let A : Lean.Expr := q(fun (t : _ × _) => Com $dE t.1 EffectKind.impure t.2)
+  let α := q(Ctxt ($dE).Ty × ($dE).Ty)
+  let A :=
+    q(fun (t : Ctxt ($dE).Ty × ($dE).Ty) => Com $dE t.1 EffectKind.impure t.2)
   match regSig, regs with
   | [], .nil =>
-    mkApp2 (.const ``HVector.nil [0,0]) Ty A
+    mkApp2 (.const ``HVector.nil [0,0]) α A
   | a::as, .cons x xs =>
     let a := Lean.toExpr a
     let as := Lean.toExpr as
     let x := x.toExprAux dE sig
     let xs := Regions.toExprAux dE sig xs
-    mkApp6 (.const ``HVector.cons [0,0]) Ty A as a x xs
+    mkApp6 (.const ``HVector.cons [0,0]) α A as a x xs
 
 end
 
