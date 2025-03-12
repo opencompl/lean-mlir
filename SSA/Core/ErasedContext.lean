@@ -27,6 +27,14 @@ namespace Ctxt
 
 variable {Ty : Type}
 
+/-! ### Inherited Instances-/
+/-- `inherit_instance Foo` wil define an instance of `[Foo Ty] → Foo (Ctxt Ty)`,
+  assuming an instance of `Foo` exists for `List` -/
+local macro "inherit_instance" cls:term : command =>
+  `(instance {Ty : Type} [$cls Ty] : $cls (Ctxt Ty) := inferInstanceAs <| $cls (List Ty))
+inherit_instance Repr
+inherit_instance Lean.ToMessageData
+
 -- def empty : Ctxt := Erased.mk []
 def empty : Ctxt Ty := []
 
