@@ -48,6 +48,13 @@ def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
   | [],   b, .nil       => b
   | t::_, b, .cons a as => foldl f (f t b a) as
 
+def foldr {β : Type*} (f : ∀ (a : α), A a → β → β) :
+    ∀ {l : List α}, (init : β) → HVector A l → β
+  | [],   b, .nil       => b
+  | t::_, b, .cons a as =>
+    let b' := foldr f b as
+    f t a b'
+
 def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .nil, i => i.elim0
   | .cons x  _, ⟨0,   _⟩  => x
