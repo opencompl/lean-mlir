@@ -32,25 +32,28 @@ partial def evalExprOfTypeRegion (φ : Nat) : Q(Region $φ) → MetaM (Region φ
   default
 
 def elabIntoComObj (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
-    [ToExpr d.Op] [ToExpr d.Ty] [DialectToExpr d]
     [DialectSignature d] [Repr d.Ty]
     [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ] :
     TermElabM (Σ Γ eff ty, Com d Γ eff ty) := withRef region <| do
+  withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} elaborating MLIR DSL") <| do
+  trace[LeanMLIR.Elab] "syntax: {region}"
+
   let ast : Region φ ←
-    withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} evaluating AST expression") <| do
+    withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} evaluating AST expression") <| do
     let stx  ← `([mlir_region| $region])
     let expr ← elabTermEnsuringTypeQ stx q(Region $φ)
     synthesizeSyntheticMVarsNoPostponing
     let expr ← instantiateMVars expr
-    withTraceNode `elabIntoCom (fun _ => return m!"parsed Expr … ") <| do
-      trace[elabIntoCom] "{expr}"
+    let reg ← evalExprOfTypeRegion φ expr
+    trace[LeanMLIR.Elab] "{repr reg}"
+    pure reg
 
-    evalExprOfTypeRegion φ expr
-
-  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} parsing AST") <| do
-    match mkCom ast with
-    | .error (e : TransformError d.Ty) => throwError (repr e)
-    | .ok res => pure res
+  withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} parsing AST") <| do
+    let res ← match mkCom ast with
+      | .error (e : TransformError d.Ty) => throwError (repr e)
+      | .ok res => pure res
+    trace[LeanMLIR.Elab] "context: {repr res.1}"
+    pure res
 
 def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
     [ToExpr d.Op] [ToExpr d.Ty] [DialectToExpr d]
