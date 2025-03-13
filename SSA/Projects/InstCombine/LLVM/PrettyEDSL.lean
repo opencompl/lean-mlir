@@ -239,8 +239,6 @@ private def pretty_test_exact :=
   }]
 
 example : pretty_test = prettier_test_generic 32 := by
-  unfold pretty_test prettier_test_generic
-  simp_alive_meta
   rfl
 
 example : pretty_test_generic = prettier_test_generic    := rfl

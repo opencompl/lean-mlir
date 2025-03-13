@@ -245,11 +245,51 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 instance : AST.TransformReturn (MetaLLVM φ) φ where
   mkReturn := mkReturn
 
-
 /-!
   ## Instantiation
   Finally, we show how to instantiate a family of programs to a concrete program
 -/
+
+open InstCombine Qq in
+def MetaLLVM.instantiate (vals : Vector Expr φ) : DialectMetaMorphism (MetaLLVM φ) q(LLVM) where
+  mapTy := fun
+  | .bitvec w =>
+    mkApp (mkConst ``Ty.bitvec) <| w.metaInstantiate vals
+  mapOp :=
+    fun
+    | .binary w binOp =>
+      let w := w.metaInstantiate vals
+      mkApp2 (mkConst ``Op.binary) w (toExpr binOp)
+    | .unary w unOp =>
+      let w := w.metaInstantiate vals
+
+      /- NOTE: `Op` contructors expect a `Nat` argument to indicate the width,
+          but `MOp.UnaryOp` constructors expect `ConcreteOrMVar Nat 0`.
+          Hence, we define `mapWidth` to construct the latter
+      -/
+      let mapWidth (w : ConcreteOrMVar Nat φ) : Q(ConcreteOrMVar Nat 0) :=
+        let w : Q(Nat) := w.metaInstantiate vals
+        q(.concrete $w)
+      open MOp (UnaryOp) in
+      let unOp : Q(UnaryOp 0) := match unOp with
+        | .neg => q(.neg)
+        | .not => q(.not)
+        | .copy => q(.copy)
+        | .trunc w' flags => q(.trunc $(mapWidth w') $flags)
+        | .zext w' nneg => q(.zext $(mapWidth w') $nneg)
+        | .sext w' => q(.sext $(mapWidth w'))
+      mkApp2 (mkConst ``Op.unary) w unOp
+    | .select w =>
+      let w : Q(Nat) := w.metaInstantiate vals
+      mkApp (mkConst ``Op.select) w
+    | .icmp c w =>
+      let w := w.metaInstantiate vals
+      let c := toExpr c
+      mkApp2 (mkConst ``Op.icmp) c w
+    | .const w val =>
+      let w := w.metaInstantiate vals
+      let val := toExpr val
+      mkApp2 (mkConst ``Op.const) w val
 
 def instantiateMTy (vals : List.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
   | .bitvec w => .bitvec <| w.instantiate vals
@@ -292,32 +332,21 @@ def mkComInstantiate (reg : MLIR.AST.Region φ) :
 
 end InstcombineTransformDialect
 
-/-
-https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20Find.20.60Real.2Eadd.60/near/402089561
-> I would recommend avoiding Qq for pattern matching.
-> That part of the Qq implementation is spicy.
 
-Therefore, we choose to match on raw `Expr`.
--/
 open SSA InstcombineTransformDialect InstCombine in
 elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
-  have φ : Nat := mvars.getElems.size
-  -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
-  let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
-    SSA.elabIntoCom' reg (MetaLLVM φ)
+  withTraceNode `LeanMLIR.Elab (pure m!"{exceptEmoji ·} elaborate LLVM program") <| do
 
-  let mvalues : Q(List.Vector Nat $φ) ←
-    withTraceNode `llvm (return m!"{exceptEmoji ·} elaborating mvalues") <| do
-      let mvalues ← `(⟨[$mvars,*], by rfl⟩)
-      elabTermEnsuringType mvalues q(List.Vector Nat $φ)
+  let φ : Nat := mvars.getElems.size
+  let ⟨_, _, _, mcom⟩ ← SSA.elabIntoComObj reg (MetaLLVM φ)
 
-  let com ← withTraceNode `llvm (return m!"{exceptEmoji ·} building final Expr") <| do
-    let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
-    let com ← mkAppM ``Com.changeDialect #[instantiateFun, mcom]
-    synthesizeSyntheticMVarsNoPostponing
-    return com
+  let res ← mcom.metaMap <| MetaLLVM.instantiate <| ←do
+    let mvars : Vector _ φ := ⟨mvars.getElems, rfl⟩
+    mvars.mapM fun (stx : Term) =>
+      elabTermEnsuringType stx (mkConst ``Nat)
 
-  return com
+  trace[LeanMLIR.Elab] "elaborated expression: {res}"
+  return res
 
 macro "[llvm| " reg:mlir_region "]" : term => `([llvm()| $reg])
 
@@ -325,7 +354,6 @@ macro "deftest" name:ident " := " test_reg:mlir_region : command => do
   `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
        let code := [llvm()| $test_reg]
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
-
 
 section Test
 open InstCombine Ty
