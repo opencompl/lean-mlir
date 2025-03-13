@@ -291,45 +291,6 @@ def MetaLLVM.instantiate (vals : Vector Expr φ) : DialectMetaMorphism (MetaLLVM
       let val := toExpr val
       mkApp2 (mkConst ``Op.const) w val
 
-def instantiateMTy (vals : List.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
-  | .bitvec w => .bitvec <| w.instantiate vals
-
-def instantiateMOp (vals : List.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
-  | .binary w binOp => .binary (w.instantiate vals) binOp
-  | .unary w unOp => .unary (w.instantiate vals) (unOp.instantiate vals)
-  | .select w => .select (w.instantiate vals)
-  | .icmp c w => .icmp c (w.instantiate vals)
-  | .const w val => .const (w.instantiate vals) val
-
-def instantiateCtxt (vals : List.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) :
-    Ctxt InstCombine.Ty :=
-  Γ.map (instantiateMTy vals)
-
-open InstCombine in
-def MOp.instantiateCom (vals : List.Vector Nat φ) : DialectMorphism (MetaLLVM φ) LLVM where
-  mapOp := instantiateMOp vals
-  mapTy := instantiateMTy vals
-  preserves_signature op := by
-    have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
-    cases op <;>
-      (try casesm MOp.UnaryOp _) <;>
-      simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
-      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map,
-      Signature.mk, Signature.mkEffectful.injEq,
-      List.map_cons, List.map_nil, and_self, MTy.bitvec,
-      List.cons.injEq, MTy.bitvec.injEq, and_true, true_and,
-      RegionSignature.map, Signature.map, MOp.UnaryOp.instantiate, MOp.UnaryOp.outTy, h1]
-
-open InstCombine in
-def mkComInstantiate (reg : MLIR.AST.Region φ) :
-    MLIR.AST.ExceptM (MetaLLVM φ) (List.Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
-  let ⟨Γ, eff, ty, com⟩ ← MLIR.AST.mkCom reg
-  return fun vals =>
-    let Γ' := instantiateCtxt vals Γ
-    let ty' := instantiateMTy vals ty
-    let com' := com.changeDialect (MOp.instantiateCom vals)
-    ⟨Γ', eff, ty', com'⟩
-
 end InstcombineTransformDialect
 
 
