@@ -17,9 +17,6 @@ import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.Attr
 import SSA.Experimental.Bits.Fast.Decide
-import Std.Sat.AIG.CNF
-import Std.Sat.AIG.RelabelNat
-import Std.Tactic.BVDecide.Bitblast.BVExpr
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Lean
@@ -1615,7 +1612,7 @@ def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
   input := f i.input
 
 def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
-    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } :=
+    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } := 
   let ixs : Finset (Fin n) := Finset.univ
   let inputs : Finset ι := Finset.univ
   let out := ixs.biUnion
