@@ -96,7 +96,7 @@ def bvExpr : BVLogicalExpr :=
 
 
 #eval solver bvExpr
---- need to create a toString
+
 
 -- def model' (bvExpr: BVLogicalExpr) : TermElabM (Option (Array (Bool × Nat))) := do
 --   match ← solver bvExpr with
