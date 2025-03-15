@@ -181,7 +181,8 @@ lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   next heq => simp_all
   next h =>
     have hlt : i < List.length bvs' := by simp at hi; omega
-    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD hlt]
+    rw [List.getElem_append_left hlt]
+    simp
 
 @[simp]
 lemma dec_enc_image : dec '' (enc '' S) = S := Function.LeftInverse.image_image dec_enc _
