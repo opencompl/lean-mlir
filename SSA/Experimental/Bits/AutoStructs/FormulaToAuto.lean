@@ -257,7 +257,6 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           have hlt : i < w := by omega
           rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
           simp [hsa, FSM.evalBV]
-          simp only [hlt, BitVec.ofFn_getLsbD]
           apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
@@ -288,10 +287,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         ext i hi
         rw [BitVec.eq_of_getElem_eq_iff] at hrel
         specialize hrel i (by omega)
-        simp [BitVec.getElem_cons] at hrel
-        rw [ite_cond_eq_false] at hrel
-        on_goal 2 => simp; omega
-        rw [BitVec.getLsbD_eq_getElem] at hrel
+        simp only [BitVec.getElem_cons, show ¬i = w by omega, ↓reduceDIte] at hrel
         rw [hrel]
         simp only [FSM.evalBV]
         repeat rw [BitVec.ofFn_getElem _ (by omega)]
