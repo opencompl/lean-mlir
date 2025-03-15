@@ -390,7 +390,7 @@ lemma worklistRun'_go_wf :
     have heq := Option.eq_none_iff_forall_not_mem.mpr hmap
     simp_all
     split <;> simp_all +zetaDelta
-  case case4 sa? hnone =>
+  case case4 sa? _ =>
     unfold worklistRun'.go sa? at *
     simp; simp_all
   case case2 st hnemp sa? sa heq wl' st1 s hs as st2 _ _ _ _ _ ih => -- inductive case, prove the invariant is maintained
