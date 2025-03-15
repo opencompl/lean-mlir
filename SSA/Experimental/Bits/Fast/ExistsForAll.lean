@@ -1,14 +1,4 @@
 
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.Fin.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Defs
-import Mathlib.Data.Multiset.FinsetOps
-import SSA.Experimental.Bits.Fast.BitStream
-import SSA.Experimental.Bits.Fast.Defs
-import SSA.Experimental.Bits.Fast.FiniteStateMachine
-import SSA.Experimental.Bits.Fast.Attr
-import SSA.Experimental.Bits.Fast.Decide
 import Std.Sat.AIG.CNF
 import Std.Sat.AIG.RelabelNat
 import Std.Tactic.BVDecide.Bitblast.BVExpr
@@ -57,7 +47,7 @@ theorem unsat_of_verifyBVExpr_eq_true (bv : BVLogicalExpr) (c : String)
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
 
-def solver (bvExpr: BVLogicalExpr) : TermElabM (Except (Array (Bool × Nat)) Unit) := do
+def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Expr BVExpr.PackedBitVec)) := do
     --TODO: Can this function return a model class like in Python?
     let cfg: BVDecideConfig := {timeout := 10}
     IO.FS.withTempFile fun _ lratFile => do
@@ -77,15 +67,19 @@ def solver (bvExpr: BVLogicalExpr) : TermElabM (Except (Array (Bool × Nat)) Uni
           (timeout := cadicalTimeoutSec)
           (binaryProofs := true)
 
+      -- let flipper := (fun (expr, {width, atomNumber, synthetic}) => (atomNumber, (width, expr, synthetic)))
+      -- let atomsPairs := (← getThe State).atoms.toList.map flipper
+      -- let atomsAssignment := Std.HashMap.ofList atomsPairs
+
       match res with
       | .ok cert =>
         logInfo m! "SAT solver found a proof."
         -- let proof ← cert.toReflectionProof ctx bvExpr ``verifyBVExpr ``unsat_of_verifyBVExpr_eq_true -- can get rid of it
-        return .ok ()
+        return none
       | .error assignment =>
         logInfo m! "SAT solver found a counter example."
         -- let equations := reconstructCounterExample map assignment entry.aig.decls.size atomsAssignment
-        return .error assignment
+        return .some assignment
 
 def bvExpr : BVLogicalExpr :=
   let x := BVExpr.const (BitVec.ofNat 64 2)
