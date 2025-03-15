@@ -126,7 +126,7 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [BitVec.msb, getMsbD, allOnes]
-  simp only [getLsbD_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
+  simp only [getLsbD_ofNatLT, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
     decide_eq_true_eq]
   rw [Nat.sub_lt_iff_lt_add] <;> omega
 
@@ -467,7 +467,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
     simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
     Nat.self_sub_mod]
     have h' := @Int.add_emod_self (-1) (2^w)
-    rw [← h', ← Int.tmod_eq_emod (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
+    rw [← h', ← Int.tmod_eq_emod_of_nonneg (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
       Int.add_comm]
     norm_cast
     rw [Int.ofNat_add_negSucc, Int.subNatNat_eq_coe]
