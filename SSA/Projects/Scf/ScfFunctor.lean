@@ -1,7 +1,6 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Algebra.GroupPower.IterateHom
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Tactic.Linarith
 import SSA.Core.Framework
