@@ -393,8 +393,6 @@ lemma worklistRun'_go_wf :
   case case4 sa? hnone =>
     unfold worklistRun'.go sa? at *
     simp; simp_all
-    rw [hnone]
-    simp_all
   case case2 st hnemp sa? sa heq wl' st1 s hs as st2 _ _ _ _ _ ih => -- inductive case, prove the invariant is maintained
     rcases h with ⟨hwf, hst⟩
     unfold worklistRun'.go
