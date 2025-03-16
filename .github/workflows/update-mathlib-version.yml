@@ -1,6 +1,8 @@
 name: Update mathlib version
 on:
   workflow_dispatch
+  schedule:
+    - cron: '44 * * * *'
 
 permissions: write-all
 
@@ -36,7 +38,6 @@ jobs:
            cat lakefile.toml
 
       - name: Lake Update Mathlib
-        continue-on-error: true
         run: |
            lake update mathlib
 
