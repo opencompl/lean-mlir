@@ -28,7 +28,7 @@ jobs:
         id: mldate
         run: |
            echo "date=nightly-testing-`date +20%y-%m-%d`"
-           echo "date=nightly-testing-`date +20%y-%m-%d`" >> $GITHUB_OUTPUT.
+           echo "date=nightly-testing-`date +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
       - name: Set Mathlib Date
         run: |
