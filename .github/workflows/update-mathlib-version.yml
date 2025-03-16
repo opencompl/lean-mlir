@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   build:
-    name: core library
+    name: Update Mathlib Version
     permissions:
       pull-requests: write
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
