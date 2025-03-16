@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+        with:
+          token: ${{secrets.PAT}}
 
       - name: Install elan 🕑
         run: |
@@ -42,3 +44,4 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           title: "chore: nightly update ${{steps.mldate.outputs.date}}"
+          token: ${{secrets.PAT}}
