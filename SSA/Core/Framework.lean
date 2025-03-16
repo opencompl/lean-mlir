@@ -1822,21 +1822,16 @@ section SubsetEntries
 
 theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
     (
-     ∀ (Δ_out : Ctxt d.Ty)
-       (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
-       (l : List d.Ty)
-       (argsl : HVector Γ_out.Var l)
-       (argsr : HVector Δ_out.Var l)
-       (ma : Mapping Δ_in Γ_out),
-       (∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries)
-    ) ∧ (
-      ∀ (Δ_out : Ctxt d.Ty)
-        (t : d.Ty)
-        (v : Γ_out.Var t)
+     ∀  (Δ_out : Ctxt d.Ty)
+        (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
+        (argsl : HVector Γ_out.Var l) (argsr : HVector Δ_out.Var l) (ma : Mapping Δ_in Γ_out),
+      ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
+    )
+    ∧ (
+      ∀ (Δ_out : Ctxt d.Ty) (t : d.Ty) (v : Γ_out.Var t)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
-        (w : Δ_out.Var t)
-        (ma : Mapping Δ_in Γ_out),
-        ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
+        (w : Var Δ_out t) (ma : Mapping Δ_in Γ_out),
+      ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
     ) := by
   apply matchArg.mutual_induct (d:=d)
   <;> intro Δ_out lets
