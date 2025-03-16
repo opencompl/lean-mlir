@@ -25,12 +25,13 @@ jobs:
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Get Mathlib Date
-        id: "mldate"
+        id: mldate
         run: |
-           echo MLDATE=nightly-testing-`date +20%y-%m-%d` >> $GITHUB_OUTPUT.
+           echo "date=nightly-testing-`date +20%y-%m-%d`"
+           echo "date=nightly-testing-`date +20%y-%m-%d`" >> $GITHUB_OUTPUT.
 
       - name: Set Mathlib Date
         run: |
-           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.MLDATE}}\"/" -i lakefile.toml
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
            cat lakefile.toml
 
