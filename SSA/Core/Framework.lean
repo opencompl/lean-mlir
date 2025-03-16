@@ -1837,9 +1837,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
         (w : Δ_out.Var t)
         (ma : Mapping Δ_in Γ_out),
         ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
-    )
-
-     := by
+    ) := by
   apply matchArg.mutual_induct (d:=d)
   <;> intro Δ_out lets
   · intro ma varMap hvarMap
