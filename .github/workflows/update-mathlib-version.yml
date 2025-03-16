@@ -4,6 +4,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   build:
@@ -35,3 +36,11 @@ jobs:
            sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
            cat lakefile.toml
 
+      - name: Lake Update Mathlib
+        run: |
+           lake update mathlib
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        commit-message: |
+            chore: nightly update ${{steps.mldate.outputs.date}}
