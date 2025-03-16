@@ -1846,6 +1846,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
     simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
     subst hvarMap
     exact Set.Subset.refl _
+
   · intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
     simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
@@ -1853,6 +1854,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
       simp; exact h2
     have hmut := ih_matchVar ma' <| by simp; exact h1
     apply List.Subset.trans hmut hind
+
   · intro Δ_out u matchLets matchExpr l h ma
     intro ih_matchVar motive
     intros varMap hvarMap
