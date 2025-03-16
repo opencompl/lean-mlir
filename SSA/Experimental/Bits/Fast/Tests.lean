@@ -200,6 +200,12 @@ warning: Tactic has not understood the following expressions, and will treat the
 
   - 'f x'
   - 'f y'
+---
+warning: 'sorry' tactic does nothing
+note: this linter can be disabled with `set_option linter.unusedTactic false`
+---
+warning: this tactic is never executed
+note: this linter can be disabled with `set_option linter.unreachableTactic false`
 -/
 #guard_msgs (warning, drop error, drop info) in
 theorem test_symbolic_abstraction (f : BitVec w → BitVec w) (x y : BitVec w) : f x ≠ f y := by
