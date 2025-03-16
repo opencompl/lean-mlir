@@ -1,4 +1,4 @@
-name: core library
+name: Update mathlib version
 on:
   workflow_dispatch
 
