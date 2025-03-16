@@ -366,7 +366,7 @@ theorem Term.denoteFin_eq_add {w : Nat} (t : Term) (env : EnvFin (w + 1) t.numVa
   rw [Factor.denoteFin_eq_add]
   rw [Term.denoteFin]
   rw [Term.denoteFin]
-  simp only [Int.natCast_add, Int.natCast_mul, Int.Nat.cast_ofNat_Int]
+  simp only [Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
   rw [Int.mul_add]
   ac_nf
 
@@ -708,7 +708,7 @@ theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
 
 @[bv_mba_preprocess, simp]
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
-    x - (y - z) = x - y + z := by 
+    x - (y - z) = x - y + z := by
   apply BitVec.eq_of_toInt_eq
   simp only [BitVec.toInt_sub, Int.sub_bmod_bmod, BitVec.toInt_add, Int.bmod_add_bmod_congr]
   congr
@@ -768,8 +768,8 @@ theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
 theorem BitVec.mul_distrib_add_left (x y z : BitVec w) : x * (y + z) = x * y + x * z := by
   apply BitVec.eq_of_toNat_eq
   simp [← Nat.mul_add]
-  conv => 
-    rhs 
+  conv =>
+    rhs
     rw [Nat.mul_mod]
   simp
 
@@ -786,13 +786,13 @@ theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
   rw [BitVec.sub_toAdd]
   rw [BitVec.neg_neg]
   rw [← BitVec.mul_distrib_add_right]
-  have : -x + x = 0 := by 
+  have : -x + x = 0 := by
     rw [BitVec.add_comm]
     rw [← BitVec.sub_toAdd]
     simp
   simp [this]
 
-attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
+attribute [bv_mba_preprocess] Int.cast_ofNat_Int
 attribute [bv_mba_preprocess] Int.reduceNeg
 attribute [bv_mba_preprocess] Int.reduceAdd
 attribute [bv_mba_preprocess] Int.zero_add
@@ -986,5 +986,3 @@ theorem eg3 (x y : BitVec w) :
 
 end Examples
 end MBA
-
-

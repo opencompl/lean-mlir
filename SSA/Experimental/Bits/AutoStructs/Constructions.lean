@@ -218,7 +218,11 @@ lemma product.prodArray_spec_full :
     ∀ s₁ s₂, f s₁ s₂ ∈ product.prodArray f hm₁ hm₂ ↔ (s₁.val ∈ m₁ ∧ s₂.val ∈ m₂) := by
   simp only [prodArray]
   obtain ⟨h1, _, h2⟩ := prodArray'_spec_full (aᵢ := #[]) f hinj hm₁ hm₂ (by simp) (by simp)
-  simp [h1, h2]
+  simp only [Array.mkEmpty_eq]
+  simp only [h1]
+  simp only [h2]
+  simp only [implies_true]
+  simp only [and_self]
 
 include hinj in
 @[simp]
@@ -391,7 +395,7 @@ def CNFA.union_spec (m1 m2 : CNFA n)
 end product
 
 def HashSet.inter [BEq A] [Hashable A] (m1 m2 : Std.HashSet A) : Std.HashSet A :=
-  m1.fold (init := Std.HashSet.empty) fun mi x => if m2.contains x then mi.insert x else mi
+  m1.fold (init := ∅) fun mi x => if m2.contains x then mi.insert x else mi
 
 def Std.HashSet.isDisjoint [BEq A] [Hashable A] (m1 m2 : Std.HashSet A) : Bool :=
   (HashSet.inter m1 m2).isEmpty
@@ -768,7 +772,7 @@ variable {n : Nat}
 
 @[inline]
 def RawCNFA.lift (m₁: RawCNFA (BitVec n1)) (f : Fin n1 → Fin n2) : RawCNFA (BitVec n2) :=
-  let trans := (List.range m₁.stateMax).foldl (init := Std.HashMap.empty) fun m2 s => processState m2 s
+  let trans := (List.range m₁.stateMax).foldl (init := ∅) fun m2 s => processState m2 s
   { m₁ with trans }
 where
   @[inline]
@@ -787,7 +791,7 @@ lemma RawCNFA.lift_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₁ → Fin n₂} (h
   have hss : (m.lift f).states = m.states := rfl
   constructor <;> simp_all [hss, lift]
   · let motive (X : Std.HashMap (State × BitVec n₂) (Std.HashSet State)) := ∀ s a, (s, a) ∈ X → s ∈ m.states
-    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) Std.HashMap.empty (List.range m.stateMax)) by
+    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) ∅ (List.range m.stateMax)) by
       exact h
     apply List.foldlRecOn
     · simp [motive]
@@ -805,7 +809,7 @@ lemma RawCNFA.lift_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₁ → Fin n₂} (h
   · let motive (X : Std.HashMap (State × BitVec n₂) (Std.HashSet State)) :=
       ∀ (s : State) (a : BitVec n₂) (ss' : Std.HashSet State) s',
         X[(s, a)]? = some ss' → s' ∈ ss' → s' ∈ m.states
-    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) Std.HashMap.empty (List.range m.stateMax)) by
+    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) ∅ (List.range m.stateMax)) by
       exact h
     apply List.foldlRecOn
     · simp [motive]
@@ -887,7 +891,10 @@ def CNFA.lift_tr (m : CNFA n₁) (f : Fin n₁ → Fin n₂) :
   suffices h : motive (List.range m.m.stateMax) by
     simp [motive] at h
     rw [h]
-    simp only [Std.HashMap.getD_empty, Std.HashSet.not_mem_emptyc, false_or, and_iff_right_iff_imp]
+    simp only [Std.HashMap.getD_empty]
+    simp only [Std.HashSet.not_mem_empty]
+    simp only [false_or]
+    simp only [and_iff_right_iff_imp, motive]
     rintro hin
     have h := m.wf.trans_src_lt'' hin
     simp [RawCNFA.states] at h; exact h
