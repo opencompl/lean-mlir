@@ -1,6 +1,7 @@
 name: Update mathlib version
 on:
   workflow_dispatch
+  pull_request
 
 permissions:
   contents: write
