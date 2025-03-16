@@ -33,10 +33,11 @@ jobs:
 
       - name: Set Mathlib Date
         run: |
-           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly-testing.*\"/${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
            cat lakefile.toml
 
       - name: Lake Update Mathlib
+        continue-on-error: true
         run: |
            lake update mathlib
 
