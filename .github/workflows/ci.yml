@@ -38,7 +38,7 @@ jobs:
       - name: Get mathlib cache (only if no cache available) 
         if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
+          (lake -R exe cache get ; true) # download cache of mathlib docs.
 
       - name: Compile Library 🧐
         run: |
