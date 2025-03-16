@@ -471,6 +471,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
       Int.add_comm]
     norm_cast
     simp only [Nat.cast_pow, Nat.cast_ofNat, Int.reduceNeg]
+    simp only [Int.reduceNegSucc, Int.reduceNeg]
     rw [Int.add_neg_eq_sub]
     norm_cast
     rw [Int.subNatNat_eq_coe]
