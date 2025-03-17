@@ -43,10 +43,17 @@ def instantiateOne (a : α) : ConcreteOrMVar α (φ+1) → ConcreteOrMVar α φ
       (.concrete a)       -- `i = Fin.last`
       (fun j => .mvar j)  -- `i = Fin.castSucc j`
 
-/-- Instantiate all meta-variables -/
+/-- Instantiate all meta-variables using values -/
 def instantiate (as : List.Vector α φ) : ConcreteOrMVar α φ → α
   | .concrete w => w
   | .mvar i => as.get i
+
+open Lean in
+/-- Instantiate all meta-variables using Lean expressions,
+resulting in a Lean expression of type `α`. -/
+def metaInstantiate [ToExpr α] (as : Vector Lean.Expr φ) : ConcreteOrMVar α φ → Lean.Expr
+  | .concrete w => toExpr w
+  | .mvar i => as[i]
 
 /-- We choose ConcreteOrMVar.concrete to be our simp normal form. -/
 @[simp]

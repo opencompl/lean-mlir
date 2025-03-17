@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Batteries.Tactic.Basic
 import Mathlib.Tactic.TypeStar
-
+import Qq
 
 /-- An heterogeneous vector -/
 inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
@@ -12,7 +12,7 @@ inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
 
 namespace HVector
 
-variable {A B : α → Type*} {as : List α}
+variable {α : Type u} {A B : α → Type*} {as : List α}
 
 /-
   # Definitions
@@ -47,6 +47,13 @@ def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
     ∀ {l : List α}, B → HVector A l → B
   | [],   b, .nil       => b
   | t::_, b, .cons a as => foldl f (f t b a) as
+
+def foldr {β : Type*} (f : ∀ (a : α), A a → β → β) :
+    ∀ {l : List α}, (init : β) → HVector A l → β
+  | [],   b, .nil       => b
+  | t::_, b, .cons a as =>
+    let b' := foldr f b as
+    f t a b'
 
 def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .nil, i => i.elim0
@@ -134,4 +141,40 @@ macro_rules
       `(%[ $elems,* | List.nil ])
 
 infixl:50 "::ₕ" => HVector.cons
+
+/-
+  # ToExpr
+-/
+section ToExprPi
+open Lean Qq
+
+class ToExprPi {α : Type u} (A : α → Type v) [∀ a, ToExpr (A a)] where
+  /-- The expression representing `A` -/
+  toTypeExpr : Expr
+
+variable {A : α → Type v}
+
+instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
+    [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
+    Lean.ToExpr (HVector A as) :=
+  let α := toTypeExpr α
+  let AE := ToExprPi.toTypeExpr A
+  let us := [toLevel.{u}, toLevel.{v}]
+  let rec toExpr : {as : List _} → HVector A as → Lean.Expr
+  | [], .nil =>
+    mkApp2 (.const ``HVector.nil us) α AE
+  | a::as, .cons x xs =>
+    let a := Lean.toExpr a
+    let as := Lean.toExpr as
+    let x := Lean.toExpr x
+    let xs := toExpr xs
+    mkApp6 (.const ``HVector.cons us) α AE as a x xs
+  { toTypeExpr :=
+      let as := Lean.toExpr as
+      mkApp2 (.const ``HVector us) AE as
+    toExpr }
+
+end ToExprPi
+
+
 end HVector

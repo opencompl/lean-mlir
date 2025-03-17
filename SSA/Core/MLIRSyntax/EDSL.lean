@@ -3,6 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.Transform
+import SSA.Core.Framework.Trace
 
 /-!
 # MLIR Dialect Domain Specific Language
@@ -64,14 +65,14 @@ def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
     (_transformReturn  : Q(TransformReturn $d $φ) := by exact q(by infer_instance)) :
     TermElabM Expr := do
   let com : Q(ExceptM $d (Σ Γ' eff ty, Com $d Γ' eff ty)) ←
-    withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} building `Com` expression") <| do
+    withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} building `Com` expression") <| do
     let ast_stx ← `([mlir_region| $region])
     let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
     return q(MLIR.AST.mkCom $ast)
-  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} synthesizingMVars") <|
+  withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} synthesizingMVars") <|
     synthesizeSyntheticMVarsNoPostponing
 
-  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} unwrapping `Com` expression") <| do
+  withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} unwrapping `Com` expression") <| do
     /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
       expression of type `Com ..` -/
     let com : Q(ExceptM $d (Σ Γ' eff ty, Com $d Γ' eff ty)) ← whnf com
@@ -88,7 +89,7 @@ def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
                 /- Finally, use `comNf` to ensure the resulting expression is of the form
                     `Com.var (Expr.mk ...) <| Com.var (Expr.mk ...) ... <| Com.rete _`,
                   where the arguments to `Expr.mk` are not reduced -/
-                withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
+                withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} reducing `Com` expression") <|
                   comNf com
             | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
           | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
