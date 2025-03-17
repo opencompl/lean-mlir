@@ -145,20 +145,20 @@ infixl:50 "::ₕ" => HVector.cons
 /-
   # ToExpr
 -/
-section ToExpr
+section ToExprPi
 open Lean Qq
 
-class ToExpr {α : Type u} (A : α → Type v) [∀ a, ToExpr (A a)] where
+class ToExprPi {α : Type u} (A : α → Type v) [∀ a, ToExpr (A a)] where
   /-- The expression representing `A` -/
   toTypeExpr : Expr
 
 variable {A : α → Type v}
 
-instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExpr A]
+instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
     Lean.ToExpr (HVector A as) :=
   let α := toTypeExpr α
-  let AE := ToExpr.toTypeExpr A
+  let AE := ToExprPi.toTypeExpr A
   let us := [toLevel.{u}, toLevel.{v}]
   let rec toExpr : {as : List _} → HVector A as → Lean.Expr
   | [], .nil =>
@@ -174,7 +174,7 @@ instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExpr A]
       mkApp2 (.const ``HVector us) AE as
     toExpr }
 
-end ToExpr
+end ToExprPi
 
 
 end HVector
