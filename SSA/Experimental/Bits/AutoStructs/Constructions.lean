@@ -667,17 +667,73 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   apply determinize_spec m hsim
 
 def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
-   let m' := { stateMax := m.stateMax, trans := Std.HashMap.emptyWithCapacity m.trans.size, initials := m.finals, finals := m.initials}
-   m.trans.fold (init := m') fun m' (s, a) ss' =>
-     ss'.fold (init := m') fun m' s' =>
-       m'.addTrans a s' s
+  let m' := { stateMax := m.stateMax, trans := Std.HashMap.emptyWithCapacity m.trans.size, initials := m.finals, finals := m.initials}
+  m.trans.fold (init := m') processState
+where
+  processState := fun m' (s, a) ss' =>
+    ss'.fold (init := m') fun m' s' => m'.addTrans a s' s
 
- def CNFA.reverse (m : CNFA n) : CNFA n :=
-   ⟨m.m.reverse, sorry⟩
+@[simp]
+lemma RawCNFA.reverse_induction_helper {m : RawCNFA A} :
+    (∃ ss', m.trans.toPFun (s, a) = some ss' ∧ s' ∈ ss') ↔ s' ∈ m.tr s a := by
+  sorry
 
- def CNFA.minimize (m : CNFA n) : CNFA n :=
-   let mᵣ := m.reverse.determinize
-   mᵣ.reverse.determinize
+lemma RawCNFA.reverse_spec_procesState {m : RawCNFA A} (hwf : m.WF) s₀ a₀ ss' (hs₀ : s₀ ∈ m.states) :
+    let motive m' ss' :=
+      (∀ s ∈ ss', s ∈ m.states) →
+        m'.WF ∧ m'.stateMax = m.stateMax ∧ m'.initials = m.initials ∧ m'.finals = m.finals ∧
+          ∀ s a s', s' ∈ m'.tr s a ↔ (s' ∈ m.tr s a ∨ s' = s₀ ∧ a = a₀ ∧ s ∈ ss')
+    motive (RawCNFA.reverse.processState m (s₀, a₀) ss') ss'.toSet := by
+  rintro motive
+  apply Std.HashSet.fold_induction
+  · simpa [motive]
+  · rintro m' s ss' hnew ih hss'
+    specialize ih (by simp_all)
+    rcases ih with ⟨hwf', hms', his', hfs', htrs'⟩
+    simp_all [motive]
+    constructor
+    · have _ : s₀ ∈ m'.states := by simp_all [states]
+      have _ : s ∈ m'.states := by simp_all [states]
+      simp_all
+    · grind
+
+lemma RawCNFA.reverse_spec {m : RawCNFA A} (hwf : m.WF) :
+    let m' := m.reverse
+    m'.WF ∧ m'.stateMax = m.stateMax ∧ m'.initials = m.finals ∧ m'.finals = m.initials ∧
+      ∀ s a s', s' ∈ m'.tr s a ↔ s ∈ m.tr s' a := by
+  let motive (m' : RawCNFA A) (trs : (State × A) → Option (Std.HashSet State)) :=
+    (∀ s a ss', trs (s, a) = some ss' → s ∈ m.states ∧ ∀ s' ∈ ss', s' ∈ m.states) →
+    m'.WF ∧ m'.stateMax = m.stateMax ∧ m'.initials = m.finals ∧ m'.finals = m.initials ∧
+      ∀ s a s', s' ∈ m'.tr s a ↔ ∃ ss', trs (s', a) = some ss' ∧ s ∈ ss' -- s' -a-> s is a transition
+  suffices h : motive (m.reverse) (m.trans.toPFun) by
+    specialize h (by rintro s a ss' heq; exact ⟨hwf.trans_src_lt _ (Std.HashMap.mem_of_getElem? heq), fun s' hin => hwf.trans_tgt_lt heq hin⟩)
+    simp_all [motive]
+
+  apply Std.HashMap.fold_induction
+  · simp only [tr, Std.HashMap.getD_emptyWithCapacity, Std.HashSet.not_mem_empty, reduceCtorEq,
+    false_and, exists_const, implies_true, and_self, and_true, motive]
+    rintro _; constructor <;> simp_all
+  · rintro m' ⟨s, a⟩ ss' trs hnew ih
+    rintro hsts
+    specialize ih (by rintro s₀ a₀ ss₀ heq; apply hsts _ a₀; simp [Function.update_apply]; split <;> simp_all)
+    rcases ih with ⟨hwf', hm', his', hfs', htrs'⟩
+    specialize hsts s a ss' (by simp)
+    have hs : s ∈ m'.states := by simp_all [states]
+    have hss' : ∀ s ∈ ss'.toSet, s ∈ m'.states := by simp_all [states]
+    obtain ⟨hwf'', hm'', his'', hfs'', htrs''⟩ := reverse_spec_procesState hwf' s a ss' hs hss'
+    simp_all only [true_and, motive]
+    rintro s₁ b s₂
+    by_cases hcond : s₂ = s ∧ b = a
+    · rcases hcond with ⟨rfl, rfl, hin⟩
+      simp_all
+    · simp_all
+
+def CNFA.reverse (m : CNFA n) : CNFA n :=
+  ⟨m.m.reverse, RawCNFA.reverse_spec m.wf |>.1⟩
+
+def CNFA.minimize (m : CNFA n) : CNFA n :=
+  let mᵣ := m.reverse.determinize
+  mᵣ.reverse.determinize
 
 end determinization
 

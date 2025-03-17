@@ -744,3 +744,13 @@ theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
     (∀ b x s, x ∉ s → motive b s → motive (f b x) (s ∪ {x})) →
     motive (m.fold f b) m.toSet := by
   sorry
+
+def Std.HashMap.toPFun [BEq α] [Hashable α] (m : HashMap α β) (x : α) : Option β := m[x]?
+
+-- TODO: state in in pure Lean using `toList`, and decude this one
+theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Hashable α]
+  {f : γ → α → β → γ} {m : HashMap α β} {motive : γ → (α → Option β) → Prop} :
+    motive b (λ _ ↦ none) →
+    (∀ b x y m, m x = none → motive b m → motive (f b x y) (Function.update m x y)) →
+    motive (m.fold f b) m.toPFun := by
+  sorry
