@@ -1820,26 +1820,21 @@ theorem matchVar_var_last_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} 
 
 section SubsetEntries
 
-theorem subset_entries :
+theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
     (
-     ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty)
-        (_ : DecidableEq d.Op)
-        (lets : Lets d Γ_in eff Γ_out)
+     ∀  (Δ_out : Ctxt d.Ty)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
         (argsl : HVector Γ_out.Var l) (argsr : HVector Δ_out.Var l) (ma : Mapping Δ_in Γ_out),
       ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
     )
     ∧ (
-      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (_ : DecidableEq d.Op)
-        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t)
+      ∀ (Δ_out : Ctxt d.Ty) (t : d.Ty) (v : Γ_out.Var t)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
         (w : Var Δ_out t) (ma : Mapping Δ_in Γ_out),
       ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
     ) := by
   apply matchArg.mutual_induct (d:=d)
-  <;> first
-      | intro (Γ_in : Ctxt _) eff Γ_out Δ_in Δ_out inst lets matchLets
-      | intro (eff : EffectKind) Γ_in Γ_out Δ_in t inst lets w
+  <;> intro Δ_out lets
   · intro ma varMap hvarMap
     simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
     subst hvarMap
@@ -1880,7 +1875,7 @@ theorem subset_entries :
       subst hvarMap
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
-      by_cases hx : x = ⟨t, w⟩
+      by_cases hx : x = ⟨Δ_out, w⟩
       · subst hx; simp_all
       · rwa [AList.lookup_insert_ne hx]
   · intro w ma v₂
@@ -1909,7 +1904,7 @@ theorem subset_entries :
       intros x hx
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
-      by_cases hx : x = ⟨t, w⟩
+      by_cases hx : x = ⟨Δ_out, w⟩
       · subst hx; simp_all
       · rwa [AList.lookup_insert_ne hx]
 
@@ -1924,7 +1919,7 @@ theorem subset_entries_matchArg [DecidableEq d.Op]
     {varMap : Mapping Δ_in Γ_out}
     (hvarMap : varMap ∈ matchArg lets matchLets argsl argsr ma) :
     ma.entries ⊆ varMap.entries :=
-  subset_entries.1 _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
+  (@subset_entries _ _ _ _ _ _ _ _ _).1 _ _ _ _ _ _ _ hvarMap
 
 /--
 matchVar only adds new entries:
@@ -1939,7 +1934,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
     {w : Var Δ_out t}
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) :
     ma.entries ⊆ varMap.entries :=
-  subset_entries.2 _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
+  (@subset_entries _ _ _ _ _ _ _ _ _).2 _ _ _ _ _ _ _ hvarMap
 
 end SubsetEntries
 

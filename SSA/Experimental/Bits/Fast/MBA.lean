@@ -47,12 +47,12 @@ instance : ToExpr Factor where
 theorem Factor.numVars_term : (Factor.var n).numVars = n + 1 := rfl
 
 abbrev Env (w : Nat) := List (BitVec w)
-def Env.getLsb {w : Nat} (env : Env (w + 1)) : Env 1 := env.map <| fun x => BitVec.ofBool <| x.getLsbD 0
+def Env.getLsb {w : Nat} (env : Env (w + 1)) : Env 1 := env.map <| fun x => BitVec.ofBool <| x[0]
 def Env.getNonLsbs {w : Nat} (env : Env (w + 1)) : Env w := env.map <| fun x => x.extractLsb' 1 w
 
 @[simp]
 theorem Env.getLsb_getElem {env : Env (w + 1)} (n : Nat) :
-    (Env.getLsb env)[n]? = (env[n]?).map (fun (x : BitVec (w + 1)) => BitVec.ofBool (x.getLsbD 0)) := by
+    (Env.getLsb env)[n]? = (env[n]?).map (fun (x : BitVec (w + 1)) => BitVec.ofBool (x[0])) := by
   simp [Env.getLsb]
 
 def Factor.reflect {w : Nat} (xs : Env w) : Factor → BitVec w
@@ -75,13 +75,17 @@ We need `Factor.reflect` to def-eq-unify with the user's given goal state.
 We show their equivalence to allow us to decide on `denoteFin`, and to use this when proving facts about `denote`.
 -/
 def EnvFin (w : Nat) (n : Nat) := Fin n → (BitVec w)
-def EnvFin.getLsb {w : Nat} (env : EnvFin (w + 1) n) : EnvFin 1 n := fun n => BitVec.ofBool <| (env n).getLsbD 0
+def EnvFin.getLsb {w : Nat} (env : EnvFin (w + 1) n) : EnvFin 1 n := fun n => BitVec.ofBool <| (env n)[0]
 def EnvFin.getNonLsbs {w : Nat} (env : EnvFin (w + 1) n) : EnvFin w n := fun n => (env n).extractLsb' 1 w
+
+@[simp]
+theorem EnvFin.apply_getLsb_eq (env : EnvFin (w + 1) n) (i : Fin n) : env.getLsb i =
+  BitVec.ofBool (env i)[0] := rfl
 
 /-- Using 'env.getLsb' shortens all bitvectors to be one-bit, and so calling 'getLsbD' on this environment will only return the lowest bit if available -/
 @[simp]
 theorem EnvFin.getLsbD_getLsb {w : Nat} (env : EnvFin (w + 1) n) (bit : Nat) : (env.getLsb i).getLsbD bit =
-    if bit = 0 then (env i).getLsbD 0 else false := by
+    if bit = 0 then (env i)[0] else false := by
   rcases bit with rfl | bit
   · simp [EnvFin.getLsb]
   · simp
@@ -229,11 +233,12 @@ theorem Factor.getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs
       rfl
     case xor x y hx hy =>
       simp only [reflectFin, BitVec.getLsbD_xor]
-      simp only [hx, hy]
+      simp [hx, hy]
       rfl
     case not x hx  =>
       simp only [reflectFin, BitVec.getLsbD_not]
       simp [hx]
+      rfl
   · simp
     induction x
     case var n =>
@@ -361,7 +366,7 @@ theorem Term.denoteFin_eq_add {w : Nat} (t : Term) (env : EnvFin (w + 1) t.numVa
   rw [Factor.denoteFin_eq_add]
   rw [Term.denoteFin]
   rw [Term.denoteFin]
-  simp only [Int.natCast_add, Int.natCast_mul, Int.Nat.cast_ofNat_Int]
+  simp only [Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
   rw [Int.mul_add]
   ac_nf
 
@@ -543,7 +548,8 @@ theorem Eqn.reflect_zero_of_denote_zero {w : Nat} (xs : Env w) (e : Eqn) (h : e.
 @[simp]
 def Env.getLsb_eq_of_width_one (env : List (BitVec 1)) : Env.getLsb env = env := by
   simp [getLsb]
-  suffices heq : (fun x => BitVec.ofBool (x.getLsbD 0)) = id by simp [heq]
+  suffices heq : (fun x => BitVec.ofBool (x[0])) = id by
+    simp [heq]
   ext x i hi
   have : i = 0 := by omega
   simp [this]
@@ -702,7 +708,7 @@ theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
 
 @[bv_mba_preprocess, simp]
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
-    x - (y - z) = x - y + z := by 
+    x - (y - z) = x - y + z := by
   apply BitVec.eq_of_toInt_eq
   simp only [BitVec.toInt_sub, Int.sub_bmod_bmod, BitVec.toInt_add, Int.bmod_add_bmod_congr]
   congr
@@ -762,8 +768,8 @@ theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
 theorem BitVec.mul_distrib_add_left (x y z : BitVec w) : x * (y + z) = x * y + x * z := by
   apply BitVec.eq_of_toNat_eq
   simp [← Nat.mul_add]
-  conv => 
-    rhs 
+  conv =>
+    rhs
     rw [Nat.mul_mod]
   simp
 
@@ -780,13 +786,13 @@ theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
   rw [BitVec.sub_toAdd]
   rw [BitVec.neg_neg]
   rw [← BitVec.mul_distrib_add_right]
-  have : -x + x = 0 := by 
+  have : -x + x = 0 := by
     rw [BitVec.add_comm]
     rw [← BitVec.sub_toAdd]
     simp
   simp [this]
 
-attribute [bv_mba_preprocess] Int.Nat.cast_ofNat_Int
+attribute [bv_mba_preprocess] Int.cast_ofNat_Int
 attribute [bv_mba_preprocess] Int.reduceNeg
 attribute [bv_mba_preprocess] Int.reduceAdd
 attribute [bv_mba_preprocess] Int.zero_add
@@ -980,5 +986,3 @@ theorem eg3 (x y : BitVec w) :
 
 end Examples
 end MBA
-
-

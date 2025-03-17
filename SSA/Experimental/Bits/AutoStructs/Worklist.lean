@@ -390,11 +390,9 @@ lemma worklistRun'_go_wf :
     have heq := Option.eq_none_iff_forall_not_mem.mpr hmap
     simp_all
     split <;> simp_all +zetaDelta
-  case case4 sa? hnone =>
+  case case4 sa? _ =>
     unfold worklistRun'.go sa? at *
     simp; simp_all
-    rw [hnone]
-    simp_all
   case case2 st hnemp sa? sa heq wl' st1 s hs as st2 _ _ _ _ _ ih => -- inductive case, prove the invariant is maintained
     rcases h with ⟨hwf, hst⟩
     unfold worklistRun'.go
@@ -531,7 +529,7 @@ lemma processOneElem_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa
     split <;> simp_all only []
     split <;> simp_all
   next heq =>
-    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none])
+    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none_iff])
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_new_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -690,7 +688,8 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       rcases hs' with hold | rfl
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
         rw [Std.HashMap.getElem?_insert]
-        simp_all [-getElem?_eq_none]; rintro rfl; simp_all [-getElem?_eq_none] }
+        simp_all only [ge_iff_le, Prod.mk.eta, beq_iff_eq, ite_eq_right_iff, Option.some.injEq]
+        rintro rfl; simp_all }
       { use sa'; simp_all } } }
   { rintro s' sa1 sa2
     rw [processOneElem_map]
