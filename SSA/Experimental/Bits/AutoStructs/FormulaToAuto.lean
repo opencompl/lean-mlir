@@ -18,6 +18,8 @@ import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.FastCopy.Defs
 
+set_option grind.warning false
+
 open Copy
 open AutoStructs
 open Mathlib
@@ -459,6 +461,12 @@ lemma CNFA.ofFSM_spec (p : FSM arity) :
     rintro q₁ q₂ a q₂' rfl hst
     use (finFunToBitVec q₂')
     simpa [hst]
+
+lemma CNFA.ofFSM_bv_language :
+    (CNFA.ofFSM (FSM.ofTerm t)).bv_recognizes t.language := by
+  rw [bv_recognizes_equiv]
+  use NFA'.ofFSM (FSM.ofTerm t), ofFSM_spec (FSM.ofTerm t)
+  exact NFA'.ofFSM_spec t
 
 end fsm
 /- A bunch of RawCNFAs that implement the relations we care about -/
@@ -995,6 +1003,11 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
       obtain rfl : i = 0 := by omega
       simp_all
 
+lemma CNFA.autMsbSet_bv_language : autMsbSet.bv_recognizes langMsb := by
+  rw [bv_recognizes_equiv]
+  use NFA'.autMsbSet, autMsbSet_spec
+  exact autMsbSet_accepts
+
 def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
   decide (wp.sat s n)
 
@@ -1232,6 +1245,12 @@ lemma CNFA.autWidth_spec : autWidth wp n |>.Sim (NFA'.autWidth wp n) := by
       simp only [Fin.val_one, Fin.mk.injEq]
       rw [Nat.mod_eq_of_lt (by omega)]
 
+lemma CNFA.autWidth_bv_language :
+    (autWidth wp n).bv_recognizes { bv | wp.sat bv.w n }  := by
+  rw [bv_recognizes_equiv]
+  use NFA'.autWidth wp n, autWidth_spec
+  exact NFA'.autWidth_spec
+
 end nfas_relations
 
 def AutoStructs.Relation.autOfRelation : Relation → CNFA 2
@@ -1267,6 +1286,12 @@ lemma autOfRelation_accepts (r : AutoStructs.Relation) :
     simp [langRel2, evalRelation, RelationOrdering.urel]
     cases cmp <;> simp
 
+lemma CNFA.autOfRelation_bv_language (r : AutoStructs.Relation) :
+    (r.autOfRelation).bv_recognizes r.language := by
+  rw [bv_recognizes_equiv]
+  use r.absAutOfRelation, autOfRelation_spec r
+  exact autOfRelation_accepts r
+
 def unopNfa (op : Unop) (m : CNFA n) : CNFA n :=
   match op with
   | .neg => m.neg
@@ -1280,6 +1305,17 @@ lemma unopNfa_spec (op : Unop) (m : CNFA n) (M : NFA' n) :
   rcases op with ⟨⟩
   intros hsim
   apply CNFA.neg_spec; assumption
+
+lemma unopNfa_accepts (op : Unop) (M : NFA' n) :
+    (unopAbsNfa op M).accepts = M.acceptsᶜ := by
+  simp [unopAbsNfa]
+
+lemma unopNfa_bv_language (op : Unop) :
+    m.bv_recognizes L → (unopNfa op m).bv_recognizes Lᶜ := by
+  repeat rw [CNFA.bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use (unopAbsNfa op M), unopNfa_spec op m M hsim
+  exact unopNfa_accepts op M
 
 def binopNfa (op : Binop) (m1 m2 : CNFA n) : CNFA n :=
   match op with
@@ -1295,12 +1331,535 @@ def binopAbsNfa (op : Binop) (M1 M2: NFA' n) : NFA' n :=
   | .impl => M1.neg.union M2
   | .equiv => (M1.neg.union M2).inter (M2.neg.union M1)
 
+lemma binopNfa_bv_language (op : Binop) {m₁ m₂ : CNFA n}  :
+    m₁.bv_recognizes L₁ → m₂.bv_recognizes L₂ →
+    (binopNfa op m₁ m₂).bv_recognizes (langBinop op L₁ L₂) := by
+  repeat rw [CNFA.bv_recognizes_equiv]
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use (binopAbsNfa op M₁ M₂)
+  constructor
+  · rcases op <;> simp_all [binopNfa, binopAbsNfa]
+    · exact CNFA.inter_spec m₁ m₂ hsim₁ hsim₂
+    · exact CNFA.union_spec m₁ m₂ hsim₁ hsim₂
+    · apply CNFA.union_spec
+      · exact CNFA.neg_spec m₁ hsim₁
+      · assumption
+    · apply CNFA.inter_spec
+      · apply CNFA.union_spec
+        · apply CNFA.neg_spec _ hsim₁
+        · assumption
+      · apply CNFA.union_spec
+        · apply CNFA.neg_spec _ hsim₂
+        · assumption
+  · rcases op <;> simp_all [binopNfa, binopAbsNfa, langBinop]
+
+def liftOp n : Fin (n + 1) → Fin (n + 3) :=
+  fun k =>
+    if k = n then Fin.last (n+2) else k.castLE (by omega)
+
+@[simp]
+def liftOp_unchanged (k : Fin n) : liftOp n k.castSucc = k.castLE (by simp) := by
+  simp only [liftOp, Fin.coe_eq_castSucc, Fin.natCast_eq_last, Fin.castLE_castSucc,
+    ite_eq_right_iff]
+  rcases k with ⟨k, hk⟩
+  simp only [Fin.castSucc_mk, Fin.last, Fin.mk.injEq, Fin.castLE_mk]; omega
+
+def liftUnop n : Fin (n + 1) → Fin (n + 2) :=
+  fun k =>
+    if k = n then Fin.last (n+1) else k.castLE (by omega)
+
+@[simp]
+def liftUnop_unchanged (k : Fin n) : liftUnop n k = k.castLE (by simp) := by
+  simp only [liftUnop, Fin.coe_eq_castSucc, Fin.natCast_eq_last, Fin.castLE_castSucc,
+    ite_eq_right_iff]
+  rcases k with ⟨k, hk⟩
+  simp only [Fin.castSucc_mk, Fin.last, Fin.mk.injEq, Fin.castLE_mk]; omega
+
+@[simp]
+def liftUnop_unchanged' (k : Fin n) : liftUnop n k.castSucc = k.castLE (by simp) := by
+  simp only [liftUnop, Fin.coe_eq_castSucc, Fin.natCast_eq_last, Fin.castLE_castSucc,
+    ite_eq_right_iff]
+  rcases k with ⟨k, hk⟩
+  simp only [Fin.castSucc_mk, Fin.last, Fin.mk.injEq, Fin.castLE_mk]; omega
+
+inductive TermBinop where
+| and | or | xor | add | sub
+
+def TermBinop.subst (op : TermBinop) (t₁ t₂ : Term) : Term :=
+  match op with
+  | .and => .and t₁ t₂
+  | .or => .or t₁ t₂
+  | .xor => .xor t₁ t₂
+  | .add => .add t₁ t₂
+  | .sub => .sub t₁ t₂
+
+lemma TermBinop.subst_arity {op : TermBinop} : (op.subst t₁ t₂).arity = t₁.arity ⊔ t₂.arity := by
+  rcases op <;> rfl
+
+lemma TermBinop.subst_arity' {op : TermBinop} : (op.subst t₁ t₂).arity + 1= t₁.arity ⊔ t₂.arity + 1 := by
+  rcases op <;> rfl
+
+def TermBinop.openTerm (op : TermBinop) : Term := op.subst (.var 0) (.var 1)
+
+@[simp]
+def TermBinop.openTerm_arity (op : TermBinop) : op.openTerm.arity + 1 = 3 := by rcases op <;> rfl
+
+def TermBinop.termGadget (t : TermBinop) : CNFA 3 :=
+  match t with
+  | .and => FSM.ofTerm (.and (.var 0) (.var 1)) |> CNFA.ofFSM
+  | .or => FSM.ofTerm (.or (.var 0) (.var 1)) |> CNFA.ofFSM
+  | .xor => FSM.ofTerm (.xor (.var 0) (.var 1)) |> CNFA.ofFSM
+  | .add => FSM.ofTerm (.add (.var 0) (.var 1)) |> CNFA.ofFSM
+  | .sub => FSM.ofTerm (.sub (.var 0) (.var 1)) |> CNFA.ofFSM
+
+def autOfTermBinop (op : TermBinop) (m₁ : CNFA (n + 1)) (m₂ : CNFA (m + 1)) : CNFA ((n ⊔ m) + 1 ) :=
+  let mop : CNFA 3 := op.termGadget
+  let f₁ := liftMaxSuccSucc1 n m
+  let m1' := m₁.lift f₁
+  let f₂ := liftMaxSuccSucc2 n m
+  let m2' := m₂.lift f₂
+  let mop := mop.lift $ liftLast3 (max (FinEnum.card (Fin n)) (FinEnum.card (Fin m)))
+  let m := CNFA.inter m1' m2' |> CNFA.inter mop
+  let mfinal := m.proj (liftOp _)
+  mfinal.minimize
+
+
+@[simp]
+lemma Set.mem_cast (A : W → Type) (P : A w → Prop) (h : w = w') (x : A w') :
+  x ∈ h ▸ setOf P ↔
+  P (h ▸ x) := by
+  cases h
+  simp
+
+@[simp]
+lemma BitVecs.cast_eq  (x : BitVecs n) (h : n = n') : h ▸ x = x.cast h := by
+  cases h
+  rfl
+
+@[simp]
+lemma List.Vector.cast_get {bvs : List.Vector (BitVec w) n} {h : n = n'} :
+    (h ▸ bvs).get i = bvs.get (i.cast h.symm) := by
+  cases h
+  rfl
+
+-- Upstream?
+@[simp]
+lemma Fin.castLE_toNat (x : Fin n) : (x.castLE h).val = x.val := by rfl
+
+lemma Fin.natAdd_zero' [h : NeZero m] : Fin.natAdd (m := m) n 0 = n := by
+  ext
+  simp
+  rw [Nat.mod_eq_of_lt]
+  have := h.ne
+  omega
+
+@[simp]
+lemma Fin.castSucc_neq_last (x : Fin n) : x.castSucc ≠ Fin.last n := by
+  rintro h
+  rcases x with ⟨x, hx⟩
+  simp only [castSucc_mk, Fin.ext_iff, val_last] at h
+  omega
+
+def swapLastTwoBlock (x : Fin (n + 3)) : Fin (n + 3) :=
+  if x = Fin.last (n+2) then n
+  else if x = n+1 then Fin.last (n + 2)
+  else if x = n then n + 1
+  else x
+
+@[simp] lemma swapLastTwoBlock_n {n : Nat} : swapLastTwoBlock (n := n) n = n + 1 := by
+  simp [swapLastTwoBlock]
+  rintro h
+  rw [Fin.ext_iff] at h
+  simp at h
+  rw [Nat.mod_eq_of_lt (by omega)] at h
+  omega
+
+@[simp] lemma swapLastTwoBlock_Sn {n : Nat} : swapLastTwoBlock (n := n) (n+1) = Fin.last _ := by
+   simp [swapLastTwoBlock, Fin.last, Fin.add_def, Nat.mod_eq_of_lt]
+
+@[simp] lemma swapLastTwoBlock_SSn {n : Nat} : swapLastTwoBlock (Fin.last (n+2)) = n := by
+   simp [swapLastTwoBlock]
+
+@[simp] lemma swapLastTwoBlock_cast {n : Nat} {x : Fin m} (h : m ≤ n) : swapLastTwoBlock (n := n) (x.castLE (by omega)) = x := by
+   rcases x with ⟨x, hx⟩
+   simp [swapLastTwoBlock]
+   split_ifs
+   · simp_all [Fin.last, Fin.castLE]; omega
+   · simp_all [Fin.last, Fin.castLE, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt]; omega
+   · simp_all [Fin.last, Fin.ext_iff, Nat.mod_eq_of_lt]; omega
+   · simp_all [Fin.last, Fin.ext_iff]; rw [Nat.mod_eq_of_lt (by omega)] at *
+
+@[simp] lemma swapLastTwoBlock_cast' {n : Nat} {x : Fin (m + 1)} (h : m ≤ n) (hne : x ≠ Fin.last _) :
+    swapLastTwoBlock (n := n) (x.castLE (by omega)) = x := by
+  rcases x with ⟨x, hx⟩
+  simp [swapLastTwoBlock]
+  split_ifs
+  · simp_all [Fin.last, Fin.castLE]; omega
+  · simp_all [Fin.last, Fin.castLE, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt]; omega
+  · simp_all [Fin.last, Fin.ext_iff, Nat.mod_eq_of_lt]; omega
+  · simp_all [Fin.last, Fin.ext_iff]; rw [Nat.mod_eq_of_lt (by omega)] at *
+
+set_option maxHeartbeats 1000000 in
+lemma TermBinop.alt_lang {t₁ t₂ : Term} (op : TermBinop) :
+  (op.subst_arity' ▸ (op.subst t₁ t₂).language) =
+    let lop : Set (BitVecs 3) := op.openTerm_arity ▸ op.openTerm.language
+    let lop' : Set (BitVecs ((t₁.arity ⊔ t₂.arity) + 3)) := lop.lift (liftLast3 (max t₁.arity t₂.arity))
+    let l₁ := t₁.language.lift (liftMaxSuccSucc1 t₁.arity t₂.arity)
+    let l₂ := t₂.language.lift (liftMaxSuccSucc2 t₁.arity t₂.arity)
+    let l := l₁ ∩ l₂ ∩ lop'
+    l.proj (liftOp _)
+    := by
+  simp [Term.language]
+  ext bvs
+  simp
+  constructor
+  · rintro heq
+    let bvs' := bvs.bvs.append
+                  (t₁.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ t₂.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ List.Vector.nil)
+                |>.transport swapLastTwoBlock
+    use ⟨_, bvs'⟩
+    simp [bvs']
+    split_ands
+    · rw [liftMaxSuccSucc1]; simp
+      conv =>
+        enter [1, 2, n]
+        rw [List.Vector.append_get_lt (by rcases n with ⟨n, hn⟩; simp_all; rw [Nat.mod_eq_of_lt (by omega)]; omega)]
+        rfl
+
+      rw [List.Vector.append_get_ge]
+      on_goal 2 => apply Nat.le_of_eq; simp [Fin.add_def]; rw [Nat.mod_eq_of_lt (by omega)]
+
+      generalize_proofs h₁ h₂ h₃ h₄
+      have heq h : Fin.subNat (t₁.arity ⊔ t₂.arity + 1) (Fin.cast h₄ (↑(t₁.arity ⊔ t₂.arity) + 1)) h = 0 := by
+         ext; simp [Fin.add_def]; rw [Nat.mod_eq_of_lt (by omega)]; omega
+      simp [heq]
+      congr; ext1 i; congr 1
+      rcases i with ⟨i, hi⟩; simp [Fin.castLT]; ext; simp; repeat rw [Nat.mod_eq_of_lt (by omega)]
+    · rw [liftMaxSuccSucc2]; simp
+      conv =>
+        enter [1, 2, n]
+        rw [List.Vector.append_get_lt (by rcases n with ⟨n, hn⟩; simp_all; rw [Nat.mod_eq_of_lt (by omega)]; omega)]
+        rfl
+      generalize_proofs h₁ h₂ h₃ h₄
+      have heq h : Fin.subNat (t₁.arity ⊔ t₂.arity + 1) (Fin.last (2 + t₁.arity ⊔ t₂.arity)) h = 1 := by
+         ext; simp [Fin.add_def]; omega
+      simp [heq]
+      congr; ext1 i; congr 1
+      rcases i with ⟨i, hi⟩; simp [Fin.castLT]; ext; simp; repeat rw [Nat.mod_eq_of_lt (by omega)]
+    · rw [BitVecs.cast_eq] at *
+      simp [BitVecs.cast] at *
+      rw [liftLast3]
+      simp
+      rw [List.Vector.append_get_lt (by simp; rw [Nat.mod_eq_of_lt (by omega)]; omega)]
+      convert heq using 1
+      have h n : n + 1 < n + 3 := by omega
+      have h' n m k : n < m → n < (k ⊔ m) + 1 := by omega
+      · cases op <;>
+        · simp [openTerm, subst, liftLast3]; congr
+          · rw [List.Vector.append_get_ge]
+            · simp [Fin.subNat, Fin.add_def]; simp [Nat.mod_eq_of_lt, h]; congr! with ⟨n, hn⟩; ext; simp; omega
+            · rw [Fin.add_def]; simp; rw [Nat.mod_eq_of_lt (by omega)]
+          · have heq h : (Fin.subNat (t₁.arity ⊔ t₂.arity + 1) (Fin.last (2 + t₁.arity ⊔ t₂.arity)) h) = 1 := by
+              simp [Fin.subNat]; omega
+            simp [heq, List.Vector.get]; congr; ext1 ⟨i, hi⟩; simp; simp [Nat.mod_eq_of_lt (h' _ _ t₁.arity hi)]
+      · congr!; simp [Fin.castLT, Fin.last]; omega
+    · ext1
+      · simp
+      next i =>
+        simp [bvs', List.Vector.append_get_ge, liftOp]
+        split_ifs with h
+        · subst h
+          simp
+          rw [List.Vector.append_get_lt]
+          on_goal 2 =>
+            simp +arith
+            repeat (rw [Nat.mod_eq_of_lt (by omega)])
+            omega
+          congr; ext; simp +arith
+          omega
+        · simp [h]
+          rw [List.Vector.append_get_lt (by rcases i; simp_all [Fin.last]; rw [Nat.mod_eq_of_lt (by omega)]; omega)]
+          rcases i with ⟨i, hi⟩; congr!; simp_all; omega
+  · rintro ⟨bvs', ⟨⟨⟨heq₁, heq₂⟩, heq₃⟩, heq₄⟩⟩
+    rw [BitVecs.cast_eq] at *
+    simp [BitVecs.cast] at *
+    rw [←heq₄]
+    conv_rhs =>
+      simp
+      simp [liftOp]
+      rfl
+    simp [liftMaxSuccSucc1, liftMaxSuccSucc2] at heq₁ heq₂
+    rw [liftLast3] at heq₃
+    convert heq₃ using 1
+    have h₁ : (t₁.evalFinBV fun i => bvs'.bvs.get (liftOp (t₁.arity ⊔ t₂.arity) (Fin.castLE (by omega) i).castSucc)) =
+                  bvs'.bvs.get (liftLast3 (t₁.arity ⊔ t₂.arity) 0) := by
+      simp only [liftOp_unchanged, Fin.castLE_castLE, liftLast3]; convert heq₁ using 1
+    have h₂ : (t₂.evalFinBV fun i => bvs'.bvs.get (liftOp (t₁.arity ⊔ t₂.arity) (Fin.castLE (by omega) i).castSucc)) =
+                  bvs'.bvs.get (liftLast3 (t₁.arity ⊔ t₂.arity) 1) := by
+      simp only [liftOp_unchanged, Fin.castLE_castLE, liftLast3]; convert heq₂
+    rcases op with _ | _ | _ <;>
+    . simp [subst, openTerm] at *; congr
+
+
+inductive TermUnop where
+| neg | not | shiftL (k : Nat)
+
+def TermUnop.openTerm (op : TermUnop) : Term :=
+  match op with
+  | .neg => .neg (.var 0)
+  | .not => .not (.var 0)
+  | .shiftL k => .shiftL (.var 0) k
+
+def TermUnop.openTerm_arity (op : TermUnop) : op.openTerm.arity = 1 := by rcases op <;> rfl
+
+@[simp]
+def TermUnop.openTerm_arity' (op : TermUnop) : op.openTerm.arity + 1 = 2 := by rcases op <;> rfl
+
+def TermUnop.subst (op : TermUnop) (t : Term) : Term :=
+  match op with
+  | .neg => .neg t
+  | .not => .not t
+  | .shiftL k => .shiftL t k
+
+@[simp]
+lemma TermUnop.subst_arity {op : TermUnop} : (op.subst t).arity = t.arity := by
+  rcases op <;> rfl
+
+@[simp]
+lemma TermUnop.subst_arity' {op : TermUnop} : (op.subst t).arity + 1 = t.arity + 1 := by simp
+
+lemma autOfTermBinop_bv_language op {t₁ t₂ : Term} (m₁ : CNFA (t₁.arity + 1)) (m₂ : CNFA (t₂.arity + 1)) :
+    m₁.bv_recognizes t₁.language →
+    m₂.bv_recognizes t₂.language →
+    (autOfTermBinop op m₁ m₂ |>.bv_recognizes (op.subst_arity' ▸ (op.subst t₁ t₂).language)) := by
+  rintro hrec₁ hrec₂
+  simp [autOfTermBinop]
+  rw [TermBinop.alt_lang]
+  simp
+  apply CNFA.minimize_bv_language
+  apply CNFA.proj_bv_language
+  ac_nf
+  apply CNFA.inter_bv_language
+  · apply CNFA.lift_bv_language
+    rcases op <;> simp [TermBinop.termGadget, TermBinop.openTerm] <;> apply CNFA.ofFSM_bv_language
+  · apply CNFA.inter_bv_language
+    · apply CNFA.lift_bv_language; assumption
+    · apply CNFA.lift_bv_language; assumption
+
+def TermUnop.termGadget (t : TermUnop) : CNFA 2 :=
+  match t with
+  | .neg => FSM.ofTerm (.neg (.var 0)) |> CNFA.ofFSM
+  | .not => FSM.ofTerm (.not (.var 0)) |> CNFA.ofFSM
+  | .shiftL k => FSM.ofTerm (.shiftL (.var 0) k) |> CNFA.ofFSM
+
+def autOfTermUnop (op : TermUnop) (m : CNFA (n + 1)) : CNFA (n + 1) :=
+  let mop : CNFA 2 := op.termGadget
+  let mop : CNFA (n + 2) := mop.lift (λ i ↦ i.natAdd n)
+  let m : CNFA (n + 2) := m.lift (λ i ↦ i.castLE (by omega))
+  let m := CNFA.inter m mop
+  let mfinal := m.proj (liftUnop n)
+  mfinal.minimize
+
+def nfaOfTerm (t : Term) : CNFA (t.arity + 1) :=
+  match t with
+  | .var n => FSM.ofTerm (.var n) |> CNFA.ofFSM
+  | .zero => FSM.ofTerm .zero |> CNFA.ofFSM
+  | .negOne => FSM.ofTerm .negOne |> CNFA.ofFSM
+  | .one => FSM.ofTerm .one |> CNFA.ofFSM
+  | .ofNat n => FSM.ofTerm (.ofNat n) |> CNFA.ofFSM
+  | .and t₁ t₂ => autOfTermBinop .and (nfaOfTerm t₁) (nfaOfTerm t₂)
+  | .or t₁ t₂ => autOfTermBinop .or (nfaOfTerm t₁) (nfaOfTerm t₂)
+  | .xor t₁ t₂ => autOfTermBinop .xor (nfaOfTerm t₁) (nfaOfTerm t₂)
+  | .add t₁ t₂ => autOfTermBinop .add (nfaOfTerm t₁) (nfaOfTerm t₂)
+  | .sub t₁ t₂ => autOfTermBinop .sub (nfaOfTerm t₁) (nfaOfTerm t₂)
+  | .neg t => autOfTermUnop .neg (nfaOfTerm t)
+  | .not t => autOfTermUnop .not (nfaOfTerm t)
+  | .shiftL t k => autOfTermUnop (.shiftL k) (nfaOfTerm t)
+
+def swapLastTwo (x : Fin (n + 2)) : Fin (n + 2) :=
+  if x = Fin.last (n + 1) then n else if x = n then Fin.last (n + 1) else x
+
+@[simp]
+lemma swapLastTwo_same (x : Fin n) : swapLastTwo (n := n) (x.castLE (by omega)) = x.castLE (by omega) := by
+  simp [swapLastTwo]
+  split_ifs with h h' <;> simp_all +arith
+  · rcases x with ⟨x, hx⟩
+    simp_all [Fin.ext_iff, Fin.add_def]
+    omega
+  · rcases x with ⟨x, hx⟩
+    simp_all [Fin.ext_iff, Fin.add_def]
+    rw [h'] at hx
+    rw [Nat.mod_eq_of_lt (by omega)] at hx
+    simp at hx
+
+@[simp]
+lemma swapLastTwo_same' (x : Fin (n + 1)) (h : x ≠ Fin.last n) : swapLastTwo (n := n) (x.castLE (by omega)) = x.castLE (by omega) := by
+  simp [swapLastTwo]
+  split_ifs with h h' <;> simp_all +arith
+  · rcases x with ⟨x, hx⟩
+    simp_all [Fin.ext_iff, Fin.add_def]
+    omega
+  · rcases x with ⟨x, hx⟩
+    simp_all [Fin.ext_iff, Fin.add_def]
+    omega
+
+@[simp]
+lemma swapLastTwo_eq1 : swapLastTwo (n := n) (Fin.natAdd n 1) = n := by
+  have : Fin.natAdd (m := 2) n 1 = Fin.last (n + 1) := by ext; simp
+  simp [swapLastTwo, this]
+
+@[simp]
+lemma swapLastTwo_eq1' : swapLastTwo (n := n) (Fin.last (n + 1)) = n := by
+  simp [swapLastTwo]
+
+@[simp]
+lemma swapLastTwo_eq2 : swapLastTwo (n := n) n = Fin.last (n+1) := by
+  simp [swapLastTwo]
+
+lemma TermUnop.alt_lang {t : Term} (op : TermUnop) :
+  (op.subst_arity' ▸ (op.subst t).language) =
+    let lop : Set (BitVecs 2) := op.openTerm_arity' ▸ op.openTerm.language
+    let lop' : Set (BitVecs (t.arity + 2)) := lop.lift (λ i ↦ i.natAdd t.arity)
+    let lt : Set (BitVecs (t.arity + 2)) := t.language.lift (λ i ↦ i.castLE (by omega))
+    let l := lt ∩ lop'
+    l.proj (liftUnop t.arity)
+    := by
+  simp [Term.language]
+  ext bvs
+  simp
+
+  generalize_proofs h₁ h₂ h₃ h₄ h₅
+  constructor
+  · rintro heq
+    let bvs' := bvs.bvs.append (t.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ List.Vector.nil) |>.transport swapLastTwo
+    use ⟨_, bvs'⟩
+    split_ands
+    · simp [bvs']
+      have heq : (swapLastTwo (Fin.castLE h₃ (Fin.last t.arity))) = Fin.last (t.arity + 1) := by
+        simp [swapLastTwo]
+        split_ifs with h₁ h₂
+        · exfalso; rw [Fin.ext_iff] at h₁
+          simp [Fin.add_def] at h₁
+        · rfl
+        · exfalso; apply h₂; ext; simp; exact Eq.symm (Nat.mod_eq_of_lt h₃)
+      rw [heq]
+      rw [List.Vector.append_get_ge]
+      on_goal 2 => simp [Fin.add_def]
+      simp
+      congr
+      ext1 x
+      rw [List.Vector.append_get_lt]
+      on_goal 2 => simp +arith
+      congr!
+    · rw [BitVecs.cast_eq] at heq ⊢
+      unfold BitVecs.cast
+      simp
+      simp [BitVecs.cast] at heq
+      have hget : bvs'.get (Fin.natAdd t.arity 1) = bvs.bvs.get t.arity := by
+        simp [bvs']
+        rw [List.Vector.append_get_lt]
+        on_goal 2 => simp +arith; exact Nat.mod_le t.arity (t.arity + 2)
+        · congr
+          ext
+          simp +arith
+      rw [hget]
+      convert heq using 1
+      · have hbvs' : bvs'.get t.arity = t.evalFinBV fun n => bvs.bvs.get n := by
+          simp [bvs', Fin.add]
+        simp [openTerm]
+        rcases op <;> simp [hbvs', Fin.natAdd_zero'] <;> rfl
+      · congr!;  ext; simp
+    · ext1
+      · simp
+      next i =>
+        simp [bvs', List.Vector.append_get_ge, liftUnop]
+        split_ifs with h
+        · subst h
+          simp
+          rw [List.Vector.append_get_lt]
+          on_goal 2 => simp +arith; exact Nat.mod_le t.arity (t.arity + 2)
+          congr
+          ext; simp +arith
+        · simp [h]
+          congr!
+  · rintro ⟨bvs', ⟨⟨heq₁, heq₂⟩, heq₃⟩⟩
+    rw [BitVecs.cast_eq] at *
+    simp [BitVecs.cast] at *
+    rw [←heq₃]
+    conv_rhs =>
+      simp only [BitVecs.transport_getElem]
+      simp [liftUnop]
+      rw [ite_cond_eq_true]
+      rfl
+      tactic => simp only [eq_iff_iff, iff_true]; ext1; simp
+    convert heq₂ using 1
+    rcases op with _ | _ | _ <;>
+    . simp [subst, openTerm] at *; congr
+
+lemma autOfTermUnop_bv_language op {t : Term} (m : CNFA (t.arity + 1)) :
+    m.bv_recognizes t.language →
+    (autOfTermUnop op m |>.bv_recognizes (op.subst_arity' ▸ (op.subst t).language)) := by
+  rintro hrec
+  rw [TermUnop.alt_lang]
+  simp only [autOfTermUnop]
+  simp
+  apply CNFA.minimize_bv_language
+  apply CNFA.proj_bv_language
+  apply CNFA.inter_bv_language
+  · apply CNFA.lift_bv_language; assumption
+  · apply CNFA.lift_bv_language
+    simp [TermUnop.openTerm, TermUnop.termGadget]
+    rcases op <;> apply CNFA.ofFSM_bv_language
+
+lemma nfaOfTerm_bv_language (t : Term) :
+    nfaOfTerm t |>.bv_recognizes t.language := by
+  induction t
+  case var x =>
+    simp only [nfaOfTerm]
+    exact CNFA.ofFSM_bv_language
+  case zero =>
+    simp only [nfaOfTerm]
+    exact CNFA.ofFSM_bv_language
+  case one =>
+    simp only [nfaOfTerm]
+    exact CNFA.ofFSM_bv_language
+  case negOne =>
+    simp only [nfaOfTerm]
+    exact CNFA.ofFSM_bv_language
+  case ofNat k =>
+    simp only [nfaOfTerm]
+    exact CNFA.ofFSM_bv_language
+  case neg t ih =>
+    simp only [nfaOfTerm]
+    apply autOfTermUnop_bv_language; assumption
+  case not t ih =>
+    simp only [nfaOfTerm]
+    apply autOfTermUnop_bv_language; assumption
+  case shiftL k t ih =>
+    simp only [nfaOfTerm]
+    apply autOfTermUnop_bv_language; assumption
+  case and t₁ t₂ ih₁ ih₂ =>
+    simp only [nfaOfTerm]
+    apply autOfTermBinop_bv_language <;> assumption
+  case or t₁ t₂ ih₁ ih₂ =>
+    simp only [nfaOfTerm]
+    apply autOfTermBinop_bv_language <;> assumption
+  case xor t₁ t₂ ih₁ ih₂ =>
+    simp only [nfaOfTerm]
+    apply autOfTermBinop_bv_language <;> assumption
+  case add t₁ t₂ ih₁ ih₂ =>
+    simp only [nfaOfTerm]
+    apply autOfTermBinop_bv_language <;> assumption
+  case sub t₁ t₂ ih₁ ih₂ =>
+    simp only [nfaOfTerm]
+    apply autOfTermBinop_bv_language <;> assumption
+
 def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
   match φ with
   | .width wp n => CNFA.autWidth wp n
   | .atom rel t1 t2 =>
-    let m1 := FSM.ofTerm t1 |> CNFA.ofFSM
-    let m2 := FSM.ofTerm t2 |> CNFA.ofFSM
+    let m1 := nfaOfTerm t1
+    let m2 := nfaOfTerm t2
     let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m1' := m1.lift f1
     let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
@@ -1320,83 +1879,41 @@ def nfaOfFormula (φ : Formula) : CNFA φ.arity :=
     let m2 := (nfaOfFormula φ2).lift $ liftMax2 φ1.arity φ2.arity
     binopNfa op m1 m2
 
-def absNfaOfFormula (φ : Formula) : NFA' φ.arity :=
-  match φ with
-  | .width wp n => NFA'.autWidth wp n
-  | .atom rel t1 t2 =>
-    let m1 := FSM.ofTerm t1 |> NFA'.ofFSM
-    let m2 := FSM.ofTerm t2 |> NFA'.ofFSM
-    let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
-    let m1' := m1.lift f1
-    let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
-    let m2' := m2.lift f2
-    let meq := rel.absAutOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
-    let m := NFA'.inter m1' m2' |> NFA'.inter meq
-    let mfinal := m.proj (liftExcept2 _)
-    mfinal
-  | .msbSet t =>
-    let m := (termEvalEqFSM t).toFSM |> NFA'.ofFSM
-    let mMsb := NFA'.autMsbSet.lift $ fun _ => Fin.last t.arity
-    let res := m.inter mMsb
-    res.proj $ fun n => n.castLE (by simp [Formula.arity, FinEnum.card])
-  | .unop op φ => unopAbsNfa op (absNfaOfFormula φ)
-  | .binop op φ1 φ2 =>
-    let m1 := (absNfaOfFormula φ1).lift $ liftMax1 φ1.arity φ2.arity
-    let m2 := (absNfaOfFormula φ2).lift $ liftMax2 φ1.arity φ2.arity
-    binopAbsNfa op m1 m2
+attribute [aesop unsafe 80%] CNFA.inter_bv_language CNFA.union_bv_language CNFA.lift_bv_language CNFA.proj_bv_language
 
-lemma nfaOfFormula_spec φ : (nfaOfFormula φ).Sim (absNfaOfFormula φ) := by
+theorem nfaOfFormula_bv_language φ :
+    (nfaOfFormula φ).bv_recognizes φ.language := by
   induction φ
   case width rel n =>
-    apply CNFA.autWidth_spec
+    simp only [nfaOfFormula]
+    apply CNFA.autWidth_bv_language
   case atom rel t1 t2 =>
-    apply CNFA.proj_spec
-    apply CNFA.inter_spec
-    apply CNFA.lift_spec; apply autOfRelation_spec
-    apply CNFA.inter_spec
-    apply CNFA.lift_spec; apply CNFA.ofFSM_spec
-    apply CNFA.lift_spec; apply CNFA.ofFSM_spec
+    simp only [nfaOfFormula, Formula.language]
+    apply CNFA.proj_bv_language
+    ac_nf
+    apply CNFA.inter_bv_language
+    · apply CNFA.lift_bv_language
+      exact CNFA.autOfRelation_bv_language rel
+    · apply CNFA.inter_bv_language
+      · apply CNFA.lift_bv_language
+        exact nfaOfTerm_bv_language t1
+      · apply CNFA.lift_bv_language
+        exact nfaOfTerm_bv_language t2
   case msbSet t =>
-    apply CNFA.proj_spec
-    apply CNFA.inter_spec
-    · apply CNFA.ofFSM_spec
-    · apply CNFA.lift_spec
-      apply CNFA.autMsbSet_spec
+    simp only [nfaOfFormula, Formula.language]
+    apply CNFA.proj_bv_language
+    apply CNFA.inter_bv_language
+    · exact CNFA.ofFSM_bv_language
+    · apply CNFA.lift_bv_language
+      apply CNFA.autMsbSet_bv_language
   case unop op φ ih =>
-    rcases op; simp [unopNfa, unopAbsNfa]
-    apply CNFA.neg_spec
-    assumption
-  case binop op φ1 φ2 ih1 ih2 =>
-    rcases op; simp [binopNfa, binopAbsNfa]
-    · apply CNFA.inter_spec
-      apply CNFA.lift_spec; assumption
-      apply CNFA.lift_spec; assumption
-    · apply CNFA.union_spec
-      apply CNFA.lift_spec; assumption
-      apply CNFA.lift_spec; assumption
-    · apply CNFA.union_spec
-      · apply CNFA.neg_spec
-        apply CNFA.lift_spec; assumption
-      · apply CNFA.lift_spec; assumption
-    · apply CNFA.inter_spec <;>
-      · apply CNFA.union_spec
-        · apply CNFA.neg_spec
-          apply CNFA.lift_spec; assumption
-        · apply CNFA.lift_spec; assumption
-
-lemma absNfaToFomrmula_spec (φ : Formula) :
-    (absNfaOfFormula φ).accepts = φ.language := by
-  induction φ
-  case width wp n =>
-    simp [absNfaOfFormula]
-  case atom rel t1 t2 =>
-    simp [absNfaOfFormula, binopAbsNfa]; ac_nf
-  case msbSet t =>
-    simp [absNfaOfFormula]
-  case unop op φ ih =>
-    simp [absNfaOfFormula, unopAbsNfa, ih]
-  case binop op φ1 φ2 ih1 ih2 =>
-    rcases op <;> simp [absNfaOfFormula, binopAbsNfa, langBinop, ih1, ih2]
+    simp only [nfaOfFormula, Formula.language]
+    exact unopNfa_bv_language op ih
+  case binop op φ₁ φ2 ih₁ ih₂ =>
+    simp only [nfaOfFormula, Formula.language, ih₁, ih₂]
+    apply binopNfa_bv_language op
+    · apply CNFA.lift_bv_language; assumption
+    · apply CNFA.lift_bv_language; assumption
 
 /--
 The theorem stating that the automaton generated from the formula φ recognizes
@@ -1423,15 +1940,17 @@ def formulaIsUniversal (f : Formula) : Bool :=
 theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
     formulaIsUniversal φ → φ.sat' env := by
   unfold formulaIsUniversal; simp
-  intros h; apply CNFA.isUniversal_spec (nfaOfFormula_spec φ) at h
-  rw [absNfaToFomrmula_spec, formula_language] at h
+  rintro h
+  have hl := nfaOfFormula_bv_language φ
+  have := CNFA.isUniversal_bv_language hl h
+  rw [formula_language] at this
   rw [←sat_impl_sat']
   have hx := env_to_bvs φ (fun k => env k.val)
   extract_lets bvs at hx
-  suffices hin : bvs ∈ (⊤ : Set _) by
-    rw [←h] at hin
-    simp +zetaDelta [Set.instMembership, Set.Mem] at hin; assumption
-  simp
+  have hin : bvs ∈ (⊤ : Set _) := by simp
+  rw [←this] at hin
+  simp +zetaDelta [Set.instMembership, Set.Mem] at hin
+  assumption
 
 @[simp]
 lemma formula_predicate_term_match {t : Term} :

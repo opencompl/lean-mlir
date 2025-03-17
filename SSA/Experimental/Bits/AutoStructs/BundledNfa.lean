@@ -81,6 +81,10 @@ def determinize (M : NFA' n) : NFA' n where
 
 lemma neg_eq {M : NFA' n} : M.neg = M.determinize.flipAccept := by rfl
 
+def reverse (M : NFA' n) : NFA' n where
+  σ := _
+  M := M.M.reverse
+
 def lift (f : Fin n → Fin m) (M : NFA' n) : NFA' m where
   σ := _
   M := M.M.lift f
