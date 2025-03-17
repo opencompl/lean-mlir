@@ -58,6 +58,7 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> (str, str):
     f = open(filename, "w")
 
     f.write("".join(preamble))
+    f.write("set_option linter.unusedTactic false\n\n")
     rewritten = []
     name = ""
     for line in proof:
