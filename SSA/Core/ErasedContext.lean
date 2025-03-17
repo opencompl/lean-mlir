@@ -27,6 +27,14 @@ namespace Ctxt
 
 variable {Ty : Type}
 
+/-! ### Inherited Instances-/
+/-- `inherit_instance Foo` wil define an instance of `[Foo Ty] → Foo (Ctxt Ty)`,
+  assuming an instance of `Foo` exists for `List` -/
+local macro "inherit_instance" cls:term : command =>
+  `(instance {Ty : Type} [$cls Ty] : $cls (Ctxt Ty) := inferInstanceAs <| $cls (List Ty))
+inherit_instance Repr
+inherit_instance Lean.ToMessageData
+
 -- def empty : Ctxt := Erased.mk []
 def empty : Ctxt Ty := []
 
@@ -86,7 +94,7 @@ def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
 /-- constructor for Var. -/
-def Var.mk (Γ : Ctxt Ty) (t : Ty) (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
+def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
   ⟨i, hi⟩
 
 namespace Var
@@ -636,5 +644,50 @@ abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
 instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
   coe v := dropUntilDiff.toHom v
 
+
+/-!
+# ToExpr
+-/
+section ToExpr
+open Lean Qq
+variable [ToExpr Ty] {Γ : Ctxt Ty} {ty : Ty}
+
+instance : ToExpr (Ctxt Ty) :=
+  inferInstanceAs <| ToExpr (List Ty)
+
+/-- Construct an expression of type `Var Γ ty`.
+
+If no proof `hi : Γ.get? i = some ty` is provided,
+it's assumed to be true by rfl. -/
+def mkVar (Ty : Q(Type)) (Γ : Q(Ctxt $Ty)) (ty : Q($Ty)) (i : Q(Nat))
+    (hi? : Option Q(($Γ).get? $i = some $ty) := none) :
+    Q(($Γ).Var $ty) :=
+  let optTy := mkApp (.const ``Option [0]) Ty
+  let someTy := mkApp2 (.const ``Option.some [0]) Ty ty
+  let P :=
+    let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ (.bvar 0)
+    let eq := mkApp3 (.const ``Eq [1]) optTy getE someTy
+    Expr.lam `i (mkConst ``Nat) eq .default
+  let hi := hi?.getD <| /- : Γ.get? i = some ty := rfl -/
+    mkApp2 (.const ``rfl [1]) optTy someTy
+  mkApp4 (.const ``Subtype.mk [1]) (mkConst ``Nat) P i hi
+
+instance : ToExpr (Var Γ ty) where
+  toTypeExpr := mkApp3 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ) (toExpr ty)
+  toExpr := fun ⟨i, _hi⟩ =>
+    let Ty := toTypeExpr Ty
+    let Γ := toExpr Γ
+    let ty := toExpr ty
+    let i := toExpr i
+    /- Folklore suggests an explicit proof (instead of `rfl`) would be more
+        efficient, as the kernel might not know what to reduce.
+        In this case, though, `ty` should be in normal form by construction,
+        thus reduction should be safe. -/
+    mkVar Ty Γ ty i
+
+instance : HVector.ToExprPi (Var Γ) where
+  toTypeExpr := mkApp2 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ)
+
+end ToExpr
 
 end Ctxt
