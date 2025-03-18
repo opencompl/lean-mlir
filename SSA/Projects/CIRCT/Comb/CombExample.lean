@@ -35,7 +35,6 @@ def CombEg2 := [Comb_com| {
 #check CombEg2.denote
 #print axioms CombEg2
 
-unseal String.splitOnAux in
 def CombEg3 := [Comb_com| {
   ^entry(%0: !IcmpPred_neq):
     "return" (%0) : (!IcmpPred_neq) -> ()
@@ -47,23 +46,45 @@ def CombEg3 := [Comb_com| {
 #check CombEg3.denote
 #print axioms CombEg3
 
-unseal String.splitOnAux in
-def CombExample4 := [Comb_com| {
+def CombEg4 := [Comb_com| {
   ^entry(%0: !BitVec_4):
     -- %1 = "Comb.modu" (%0, %0) : (!bv_4, !BitVec_4) -> (!BitVec_4)
     "return" (%0) : (!BitVec_4) -> ()
   }]
 
-#check CombExample4
+#check CombEg4
 #eval CombEg4
 #reduce CombEg4
 #check CombEg4.denote
 #print axioms CombEg4
 
--- def ofList (vals : List (Option α)) : Stream α :=
---   fun i => (vals.get? i).join
 
--- def c : DC.ValueStream Bool := ofList [some true, none, some false, some true, some false]
+def CombEg5 := [Comb_com| {
+    ^entry(%0: !List_4): 
+      %1 = "Comb.add" (%0) : (!List_4) -> !BitVec_4
+      "return" (%1) : (!BitVec_4) -> ()
+    }]
+
+#print CombEg5
+#eval CombEg5
+#reduce CombEg5
+#check CombEg5 
+#print axioms CombEg5
+
+
+
+def l : List (BitVec 4) := [BitVec.ofNat 4 1, BitVec.ofNat 4 2, BitVec.ofNat 4 3, BitVec.ofNat 4 4]
+
+def lh : HVector TyDenote.toType [MLIR2Comb.Ty.list 4] := HVector.cons l .nil  
+
+#check HVector.cons
+
+def test : BitVec 4 := CombEg5.denote (Ctxt.Valuation.ofHVector lh)
+
+#eval test
+
+
+
 -- def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
 -- def u : DC.TokenStream := ofList [some (), none, some (), some (), none]
 

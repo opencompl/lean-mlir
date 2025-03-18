@@ -1,4 +1,4 @@
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
 
@@ -6,6 +6,9 @@ import SSA.Projects.CIRCT.Stream.WeakBisim
   This file defines CIRCT's Comb dialect's semantics: https://circt.llvm.org/docs/Dialects/Comb/
   We currently only support 2-state logic.
 -/
+
+open Lean (ToExpr)
+
 namespace Comb
 
 inductive IcmpPredicate where
@@ -131,12 +134,12 @@ namespace MLIR2Comb
 section Dialect
 
 inductive Op
-| add (n : Nat) -- n is the number of arguments
-| and (n : Nat)
+| add (w : Nat) 
+| and (w : Nat)
 | concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
 | divs (w : Nat)
 | divu (w : Nat)
--- | extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
+| extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
 | icmp (p : String) (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
@@ -150,7 +153,7 @@ inductive Op
 | shru (w : Nat)
 | sub (w : Nat)
 | xor (w : Nat)
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, ToExpr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
@@ -159,7 +162,7 @@ inductive Ty
 | list (w : Nat) : Ty -- list of bitvecs with the same length
 | hList (l : List Nat) : Ty -- dependent type bitvec
 | icmpPred (s : String) : Ty -- dependent type bitvec
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, ToExpr
 
 open TyDenote (toType) in
 instance instCombTyDenote : TyDenote Ty where
@@ -175,6 +178,10 @@ abbrev Comb : Dialect where
   Op := Op
   Ty := Ty
 
+open Qq in instance : DialectToExpr Comb where 
+  toExprDialect := q(Comb)
+  toExprM := q(Id)
+
 open TyDenote (toType)
 
 -- arg type CONF
@@ -185,7 +192,7 @@ def Op.sig : Op  → List Ty
   | .concat l => [Ty.hList l]
   | .divs w => [Ty.bv w, Ty.bv w]
   | .divu w => [Ty.bv w, Ty.bv w]
-  -- | .extract w _ => [Ty.bv w, Ty.nat]
+  | .extract w _ => [Ty.bv w]
   | .icmp p w => [Ty.icmpPred p, Ty.bv w, Ty.bv w]
   | .mods w => [Ty.bv w, Ty.bv w]
   | .modu w => [Ty.bv w, Ty.bv w]
@@ -208,7 +215,7 @@ def Op.outTy : Op  → Ty
   | .concat l => Ty.bv l.sum
   | .divs w => Ty.bv w
   | .divu w => Ty.bv w
-  -- | .extract w n => Ty.bv (w - n)
+  | .extract w n => Ty.bv (w - n)
   | .icmp _ _ => Ty.bool
   | .mods w => Ty.bv w
   | .modu w => Ty.bv w
@@ -237,7 +244,7 @@ instance : DialectDenote (Comb) where
     | .concat _, arg, _ => Comb.concat (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    -- | .extract _ n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
+    | .extract _ n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
     | .icmp _ _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
@@ -315,13 +322,13 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
--- def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv (w - n)) :=
---   Expr.mk
---     (op := .extract w m)
---     (ty_eq := rfl)
---     (eff_le := by constructor)
---     (args := .cons a <| .cons n <| .nil)
---     (regArgs := .nil)
+def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv (w - n)) :=
+  Expr.mk
+    (op := .extract w n)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
 
 def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred op)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
@@ -564,6 +571,6 @@ instance : MLIR.AST.TransformReturn (Comb) 0 where
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[Comb_com| " reg:mlir_region "]" : term => do
-  SSA.elabIntoCom reg q(Comb)
+  SSA.elabIntoCom' reg Comb
 
 end MLIR2Comb
