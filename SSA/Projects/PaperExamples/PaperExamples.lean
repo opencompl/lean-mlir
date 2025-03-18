@@ -257,7 +257,10 @@ open SimpleReg (int)
 def_signature for SimpleReg
   | .const _    => () → .int
   | .add        => (.int, .int) → .int
-  | .iterate _  => { (.int) → .int } → (.int) -[.pure]-> .int
+  | .iterate _  => { (.int) → .int } → (.int) → .int
+
+
+
 
 @[reducible]
 instance : DialectDenote SimpleReg where

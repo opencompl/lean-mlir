@@ -44,14 +44,21 @@ def plainArrow := leading_parser unicodeSymbol " → " " -> "
 def effectArrow := leading_parser " -[" >> termParser >> "]-> "
 def arrow := leading_parser plainArrow <|> effectArrow
 
+def concreteArgumentList : Parser :=
+  leading_parser "(" >> (sepBy termParser ",") >> ")"
+def antiquotArgumentList : Parser :=
+  leading_parser "${" >> termParser >> "}"
+def argumentList : Parser :=
+  leading_parser concreteArgumentList <|> antiquotArgumentList
+
 /-- An mlir function type: `( term,* ) → term`,
 with optional effect annotation on the arrow -/
 def function : Parser :=
-  leading_parser "(" >> (sepBy termParser ",") >> ")" >> arrow >> termParser
+  leading_parser argumentList >> arrow >> termParser
 
 /-- An mlir function type: `( term,* ) → term`, without effect annotation. -/
 def plainFunction : Parser :=
-  leading_parser "(" >> (sepBy termParser ",") >> ")" >> plainArrow >> termParser
+  leading_parser argumentList >> plainArrow >> termParser
 
 /-- An mlir region arguments signature: `{ function,* }` -/
 def region : Parser :=
@@ -75,6 +82,53 @@ open LeanMLIR.Parser
 open Lean.Parser.Term (matchAltExpr)
 open Lean.Elab.Term (MatchAltView)
 open Lean.Elab.Command (CommandElabM elabCommand)
+
+/-- A meta region signature stores a list of expressions describing the argument
+types and an expression describing the return type.
+
+All expressions are expected to be of type `d.Ty` for some fixed `d : Dialect`.
+-/
+structure MetaRegionSignature where
+  /-- `argumentTypes?` gives a list of expressions, where each describes the
+    type of one argument. This field is `none` if the `${...}` escape hatch was
+    used, as the number of arguments might not be knowable statically. -/
+  argumentTypes? : Option (List Expr)
+  /- Hmm, what if the operation is variadic?
+  Say, we have some `add w n` instruction, where `n` is the number of arguments,
+  then the signature would be akin to `List.replicate m (Ty.iX w)`.
+
+  The point of this meta signature is that we can use information about the signature
+  in `def_semantics` to influence the expected type on the RHS to not mention any
+  `HVector` shenanigans.
+
+  Note, however, that such a signature is inexpressible with `def_signature` to begin with...
+  This is a potential, yet wildly unsatisying answer: maybe we just don't support
+  variadics in the pretty answer. I'd rather not admit defeat, though!
+
+  The answer is relatively elegant: we introduce a `${...}` escape hatch, where
+  the term inside is expected to be of type `List MyDialectTy`.
+  Then, in the semantics we know when we can be cute, and when we have to
+  fallback to hvectors (namely, we fallback when the escape hatch was used to
+  define the signature).
+
+  This escape hatch is reflected in this structure via the `argumentTypes?` field,
+  as per the doc-string: when the escape hatch is used, we set the field to `none`.
+  Otherwise, we can elaborate each argument separately, and get a list of expressions.
+  -/
+
+  returnType : Expr
+
+/- A meta function signature stores:
+* A list of (meta) region signatures,
+* A list of argument types, and
+* A single return type
+
+Where each "type" is a Lean expression of type `d.Ty`,
+for some fixed `d : Dialect`.
+-/
+structure MetaSignature extends MetaRegionSignature where
+  regions : List MetaRegionSignature
+
 
 /-
 TODO: automatically open the `Ty` namespace when elaborating the signature.
@@ -116,33 +170,38 @@ If this error is thrown, it indicates a bug in the implementation. -/
 def throwUnexpectedSyntax (stx : Syntax) : CommandElabM α :=
   throwErrorAt stx "Unexpected syntax: {stx}\nThis is an internal bug"
 
-/-- Transforms an mlir function signature to a Lean function.
+-- /-- Transforms an mlir function signature to a Lean function.
 
-For example, `(int, nat) -> int` becomes `⟦int⟧ → ⟦int⟧ → ⟦nat⟧`. -/
-def functionSignatureToTermFunction : TSyntax ``function → CommandElabM Term
-  | `(function| ($args,*) → $outTy:term) => do
-    let outTy ← `(⟦$outTy⟧)
-    args.getElems.foldlM (init := outTy) fun ty acc =>
-      `(⟦$ty⟧ → $acc)
-  | ref => throwUnexpectedSyntax ref
+-- For example, `(int, nat) -> int` becomes `⟦int⟧ → ⟦int⟧ → ⟦nat⟧`. -/
+-- def functionSignatureToTermFunction : TSyntax ``function → CommandElabM Term
+--   | `(function| ($args,*) → $outTy:term) => do
+--     let outTy ← `(⟦$outTy⟧)
+--     args.getElems.foldlM (init := outTy) fun ty acc =>
+--       `(⟦$ty⟧ → $acc)
+--   | ref => throwUnexpectedSyntax ref
 
 partial def transformSignature : TSyntax ``LeanMLIR.Parser.signature → CommandElabM Term
   | `(signature| { $regions,* } → $fn:function ) => do
       -- TODO: figure out how to get the regions in here
       let regions ← regions.getElems.mapM fun fn => do
-        let `(plainFunction| ($args,*) → $outTy) := fn
+        let `(plainFunction| $args → $outTy) := fn
           | throwUnexpectedSyntax fn
-        `(⟨[$args,*], $outTy⟩)
+        let args ← parseArgs args
+        `(⟨$args, $outTy⟩)
       parseFunction regions fn
   | `(signature| $fn:function) => parseFunction #[] fn
   | ref => throwUnexpectedSyntax ref
   where
+    parseArgs : TSyntax ``argumentList → CommandElabM Term
+      | `(argumentList| ($args,*))      => `([$args,*])
+      | `(argumentList| ${ $argsList }) => pure argsList
+      | stx => throwUnexpectedSyntax stx
     parseFunction (regions : Array Term) : TSyntax ``LeanMLIR.Parser.function → CommandElabM Term
-      | `(function| ($args,*) -[$eff]-> $outTy) => do
-        let args ← `([$args,*])
+      | `(function| $args -[$eff]-> $outTy) => do
+        let args ← parseArgs args
         `(_root_.Signature.mkEffectful ($args) [$regions,*] ($outTy) ($eff))
-      | `(function| ($args,*) → $outTy) => do
-        let args ← `([$args,*])
+      | `(function| $args → $outTy) => do
+        let args ← parseArgs args
         `(_root_.Signature.mkEffectful ($args) [$regions,*] ($outTy) (_root_.EffectKind.pure))
       | ref => throwUnexpectedSyntax ref
 
