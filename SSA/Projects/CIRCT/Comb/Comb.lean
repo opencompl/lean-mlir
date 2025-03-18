@@ -136,7 +136,7 @@ inductive Op
 | concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
 | divs (w : Nat)
 | divu (w : Nat)
-| extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
+-- | extract (w : Nat) (n : Nat) -- I tried to avoid the two args but could not think of a better solution
 | icmp (p : String) (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
@@ -154,8 +154,8 @@ deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `Ty2`.
-| nat (ne_bot_of_le_ne_bot : Nat) : Ty
 | bool : Ty
+| nat : Ty
 | list (w : Nat) : Ty -- list of bitvecs with the same length
 | hList (l : List Nat) : Ty -- dependent type bitvec
 | icmpPred (s : String) : Ty -- dependent type bitvec
@@ -165,8 +165,8 @@ open TyDenote (toType) in
 instance instCombTyDenote : TyDenote Ty where
 toType := fun
 | Ty.bv w => BitVec w
-| Ty.nat _ => Nat
 | Ty.bool => Bool
+| Ty.nat => Nat
 | Ty.list w => List (BitVec w) -- list of bitvec with length w
 | Ty.hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
 | Ty.icmpPred _=> Comb.IcmpPredicate
@@ -185,7 +185,7 @@ def Op.sig : Op  → List Ty
   | .concat l => [Ty.hList l]
   | .divs w => [Ty.bv w, Ty.bv w]
   | .divu w => [Ty.bv w, Ty.bv w]
-  | .extract w n => [Ty.bv w, Ty.nat n]
+  -- | .extract w _ => [Ty.bv w, Ty.nat]
   | .icmp p w => [Ty.icmpPred p, Ty.bv w, Ty.bv w]
   | .mods w => [Ty.bv w, Ty.bv w]
   | .modu w => [Ty.bv w, Ty.bv w]
@@ -208,7 +208,7 @@ def Op.outTy : Op  → Ty
   | .concat l => Ty.bv l.sum
   | .divs w => Ty.bv w
   | .divu w => Ty.bv w
-  | .extract w n => Ty.bv (w - n)
+  -- | .extract w n => Ty.bv (w - n)
   | .icmp _ _ => Ty.bool
   | .mods w => Ty.bv w
   | .modu w => Ty.bv w
@@ -237,7 +237,7 @@ instance : DialectDenote (Comb) where
     | .concat _, arg, _ => Comb.concat (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .divs _, arg, _ => Comb.divs (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .divu _, arg, _ => Comb.divu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .extract _ n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
+    -- | .extract _ n, arg, _ => Comb.extract (arg.getN 0 (by simp [DialectSignature.sig, signature])) n
     | .icmp _ _, arg, _ => Comb.icmp (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .mods _, arg, _ => Comb.mods (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
     | .modu _, arg, _ => Comb.modu (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
@@ -254,25 +254,20 @@ instance : DialectDenote (Comb) where
 
 end Dialect
 
-def StringToNat (s : String) : Nat :=
-  if s = "4" then 4 else 42
-
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["Bool"] =>
       return .bool
-    | ["Nat", r] =>
-      return .nat (StringToNat r)
+    | ["Nat"] =>
+      return .nat
     | ["BitVec", r] =>
-      return .bv (StringToNat r)
+      return .bv (r.toNat!)
     | ["List", r] =>
       return .list (r.toNat!)
     | ["IcmpPred", r] =>
-      -- check whether one such
       return .icmpPred r
     | ["hList", r] =>
-      -- check whether one such
       return .icmpPred r
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
@@ -320,16 +315,13 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) �
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-/-
-  problem: handling nat/bool arguments
--/
-def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (k : Γ.Var (.nat n)) : Expr (Comb) Γ .pure (.bv (w - n)) :=
-  Expr.mk
-    (op := .extract w n)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .cons k <| .nil)
-    (regArgs := .nil)
+-- def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Γ.Var (.nat)) : Expr (Comb) Γ .pure (.bv (w - n)) :=
+--   Expr.mk
+--     (op := .extract w m)
+--     (ty_eq := rfl)
+--     (eff_le := by constructor)
+--     (args := .cons a <| .cons n <| .nil)
+--     (regArgs := .nil)
 
 def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred op)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
@@ -452,7 +444,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .hList l, "Comb.concat" => return ⟨_, .bv l.sum, concat v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.extract" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
+  | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -473,8 +465,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           return ⟨_, .bv w₁, divu v₁ v₂⟩
         else
           throw <| .generic s!"type mismatch"
-      | .bv w, .nat n, "Comb.extract" =>
-        return ⟨_, .bv (w - n), extract v₁ v₂⟩
+      -- | .bv w, .nat, "Comb.extract" =>
+      --   return ⟨_, .bv (w - v₂), extract v₁ v₂⟩
       | .bv w₁, .bv w₂, "Comb.mods" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
