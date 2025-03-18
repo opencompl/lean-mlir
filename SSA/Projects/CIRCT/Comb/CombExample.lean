@@ -25,8 +25,8 @@ def CombEg1 := [Comb_com| {
 
 unseal String.splitOnAux in
 def CombEg2 := [Comb_com| {
-  ^entry(%0: !IcmpPred_eq):
-    "return" (%0) : (!IcmpPred_eq) -> ()
+  ^entry(%0: !IcmpPred_dv):
+    "return" (%0) : (!IcmpPred_dv) -> ()
   }]
 
 #check CombEg2
@@ -48,13 +48,13 @@ def CombEg3 := [Comb_com| {
 #print axioms CombEg3
 
 unseal String.splitOnAux in
-def CombEg4 := [Comb_com| {
+def CombExample4 := [Comb_com| {
   ^entry(%0: !BitVec_4):
-    %1 = "Comb.modu" (%0, %0) : (!BitVec_4, !BitVec_4) -> (!BitVec_4)
-    "return" (%1) : (!BitVec_4) -> ()
+    -- %1 = "Comb.modu" (%0, %0) : (!bv_4, !BitVec_4) -> (!BitVec_4)
+    "return" (%0) : (!BitVec_4) -> ()
   }]
 
-#check CombEg4
+#check CombExample4
 #eval CombEg4
 #reduce CombEg4
 #check CombEg4.denote
