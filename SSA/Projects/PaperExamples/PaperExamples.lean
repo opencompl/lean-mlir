@@ -5,6 +5,7 @@ import Qq
 import Lean
 import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
+import SSA.Core.Framework.Macro
 import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
@@ -31,7 +32,7 @@ instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 
-inductive Op :  Type
+inductive Op : Type
   | add : Op
   | const : (val : ℤ) → Op
   deriving DecidableEq, Repr
@@ -40,6 +41,10 @@ inductive Op :  Type
 abbrev Simple : Dialect where
   Op := Op
   Ty := Ty
+
+def_signature for Simple
+  | .add      => (.int, .int) → .int
+  | .const _  => () → .int
 
 instance : DialectSignature Simple where
   signature
@@ -122,7 +127,7 @@ end MLIR2Simple
 open MLIR AST MLIR2Simple in
 def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
   [simple_com| {
-    %c2= "const"() {value = 2} : () -> i32
+    %c2 = "const"() {value = 2} : () -> i32
     %c4 = "const"() {value = 4} : () -> i32
     %c6 = "add"(%c2, %c4) : (i32, i32) -> i32
     %c8 = "add"(%c6, %c2) : (i32, i32) -> i32
@@ -249,11 +254,10 @@ abbrev SimpleReg : Dialect where
 abbrev SimpleReg.int : SimpleReg.Ty := .int
 open SimpleReg (int)
 
-instance : DialectSignature SimpleReg where
-  signature
-    | .const _ => ⟨[], [], int, .pure⟩
-    | .add   => ⟨[int, int], [], int, .pure⟩
-    | .iterate _k => ⟨[int], [([int], int)], int, .pure⟩
+def_signature for SimpleReg
+  | .const _    => () → .int
+  | .add        => (.int, .int) → .int
+  | .iterate _  => { (.int) → .int } → (.int) -[.pure]-> .int
 
 @[reducible]
 instance : DialectDenote SimpleReg where
