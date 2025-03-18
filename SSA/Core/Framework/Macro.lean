@@ -4,7 +4,25 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.Framework
 import SSA.Core.Framework.Trace
 
-/-! ## `def_signature` macro -/
+/-! ## `def_signature` elaborator
+This file defines `def_signature` elaborator that makes it easier to define the
+signature of operations in a LeanMLIR dialect.
+
+For example, `PaperExamples.lean` defines a signature as follows:
+```lean
+def_signature for SimpleReg
+  | .const _    => () → .int
+  | .add        => (.int, .int) → .int
+  | .iterate _  => { (.int) → .int } → (.int) -[.pure]-> .int
+```
+
+Read as: "iterate" has one region, of type `(int) -> int`, and one regular argument,
+of type `int`, returning an `int`, without performing any side-effects (i.e., it is pure).
+Note that the purity annotation on the last line is redundant: the default assumption
+when using regular arrows (->) is that the operations is pure. We just used the
+other arrow to showcase the syntax.
+
+-/
 open Lean
 
 namespace LeanMLIR.Parser
