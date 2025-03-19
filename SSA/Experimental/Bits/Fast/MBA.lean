@@ -2,6 +2,7 @@ import SSA.Experimental.Bits.Fast.Attr
 import Lean
 import Lean.ToExpr
 import Lean.Data.RArray
+-- import Init.Data.Int.DivMod.Lemmas
 
 @[simp]
 theorem BitVec.zero_concat (b : Bool) : (0#0).concat b = BitVec.ofBool b := by
@@ -623,6 +624,39 @@ theorem Eqn.reflectBV_eq_zero_of_denoteFin_width_one_eq_zero (e : Eqn)
   · intros env1
     apply h
 
+theorem Int.lt_twoPow_natAbs_self (i : Int) : i < 2^i.natAbs := by
+  have hi : i < 0 ∨ i ≥ 0 := by omega
+  rcases hi with hi | hi
+  · have : 2^i.natAbs > 0 := by apply Nat.pow_pos; omega
+    norm_cast
+    omega
+  · obtain ⟨n, hn⟩ := Int.eq_ofNat_of_zero_le hi
+    subst hn
+    simp
+    norm_cast
+    exact Nat.lt_two_pow_self
+
+theorem Int.bmod_twoPow_self_eq_self {i : Int} : i.bmod (2 ^ i.natAbs)  = i := by
+  rw [Int.bmod_def]
+  rw [Int.emod_def]
+  have : i < 2^i.natAbs := by
+    apply Int.lt_twoPow_natAbs_self
+  have : i / ((2^i.natAbs) : Nat) = 0 := by
+    sorry
+  simp only [this, Int.mul_zero, Int.sub_zero]
+  have : i < ((2^i.natAbs : Nat) + 1) / 2 := by 
+    sorry
+  simp [this]
+
+theorem int_eq_zero_of_natAbs_ofInt_eq_zero (i : Int) (w : Nat)
+    (hw : w = i.natAbs) (h : BitVec.ofInt w i = 0#w) : i = 0 := by
+  have : BitVec.toInt (BitVec.ofInt w i) = BitVec.toInt (BitVec.ofNat w 0) := by rw [h]
+  simp at this
+  subst w
+  rw [Int.bmod_twoPow_self_eq_self] at this
+  simp [this]
+
+
 /-- To show 'i = 0', it suffices to show that it's zero for all large enough bitvectors -/
 theorem Int.eq_zero_iff_ofInt_zero (i : Int) : (i = 0) ↔ (∀ (w : Nat), BitVec.ofInt w i = 0#w) := by
   constructor
@@ -630,7 +664,9 @@ theorem Int.eq_zero_iff_ofInt_zero (i : Int) : (i = 0) ↔ (∀ (w : Nat), BitVe
     simp [h]
   · intros h
     apply Classical.byContradiction
-    sorry
+    intros hcontra
+    specialize (h i.natAbs)
+    
 
 /--
 Denoting at an environment also works at a sign-extended environment.
