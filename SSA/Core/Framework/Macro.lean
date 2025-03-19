@@ -180,10 +180,11 @@ def throwUnexpectedSyntax (stx : Syntax) : CommandElabM α :=
 --       `(⟦$ty⟧ → $acc)
 --   | ref => throwUnexpectedSyntax ref
 
-partial def transformSignature : TSyntax ``LeanMLIR.Parser.signature → CommandElabM Term
+partial def transformSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : CommandElabM Term :=
+  withRef ref <| match ref with
   | `(signature| { $regions,* } → $fn:function ) => do
       -- TODO: figure out how to get the regions in here
-      let regions ← regions.getElems.mapM fun fn => do
+      let regions ← regions.getElems.mapM fun fn => withRef fn do
         let `(plainFunction| $args → $outTy) := fn
           | throwUnexpectedSyntax fn
         let args ← parseArgs args
@@ -193,7 +194,7 @@ partial def transformSignature : TSyntax ``LeanMLIR.Parser.signature → Command
   | ref => throwUnexpectedSyntax ref
   where
     parseArgs : TSyntax ``argumentList → CommandElabM Term
-      | `(argumentList| ($args,*))      => `([$args,*])
+      | ref@`(argumentList| ($args,*))  => withRef ref <| `([$args,*])
       | `(argumentList| ${ $argsList }) => pure argsList
       | stx => throwUnexpectedSyntax stx
     parseFunction (regions : Array Term) : TSyntax ``LeanMLIR.Parser.function → CommandElabM Term
