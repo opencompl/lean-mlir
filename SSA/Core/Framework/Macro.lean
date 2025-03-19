@@ -140,23 +140,23 @@ This requires us to figure out what namespace this is, by:
 -/
 
 /-- Given `stx` a match-expression, return its alternatives. -/
--- Based on `Lean.Elab.Match.getMatchAlts`
-private def getMatchAlts (alts : TSyntax ``matchAltsSig) : Array MatchAltView :=
+-- Based on `Lean.Elab.Match.getMatchAlts` and `expandMatchAlt`
+private def getMatchAlts (alts : TSyntax ``matchAltsSig) :
+    Array (MatchAltView ``Parser.signature) :=
   let alts := alts.raw[0].getArgs
-  alts.filterMap fun alt => match alt with
-    | `(matchAltSig| | $patterns,* => $rhs) => some {
-        ref      := alt,
-        patterns := patterns,
-        rhs      := rhs
-      }
-    | stx =>
-        dbg_trace "Unknown syntax: {stx}"
-        some ⟨.missing, #[], .missing⟩
+  alts.flatMap fun
+    | ref@`(matchAltSig| | $[$patss,*]|* => $rhs) =>
+        patss.map fun patterns => {
+            ref := ref,
+            patterns := patterns.getElems,
+            rhs := rhs
+          }
+    | stx => #[⟨.missing, #[], ⟨.missing⟩⟩]
 
 variable {m} [Monad m] [MonadRef m] [MonadQuotation m] in
 /-- Reassemble an array of alternatives into a `matchAlts` syntax,
     assuming that the rhs of each match arm is a `Term`.  -/
-protected def mkMatchAltsExpr (alts : Array MatchAltView) :
+protected def mkMatchAltsExpr (alts : Array (MatchAltView `term)) :
     m (TSyntax ``LeanMLIR.Parser.matchAltsExpr) := do
   let alts ← alts.mapM fun view => do
     let patterns : Syntax.TSepArray [`term] "," :=
@@ -206,15 +206,20 @@ partial def transformSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : Com
         `(_root_.Signature.mkEffectful ($args) [$regions,*] ($outTy) (_root_.EffectKind.pure))
       | ref => throwUnexpectedSyntax ref
 
-elab "def_signature" " for " dialect:term (" where ")? alts:matchAltsSig : command => do
-  trace[LeanMLIR.Elab] "Dialect: {dialect}"
-  let alts := getMatchAlts alts
-  let alts ← alts.mapM fun view => do return {view with
-      rhs := ←transformSignature ⟨view.rhs⟩
-    }
-  let matchAlts ← Elab.mkMatchAltsExpr alts
-  elabCommand <|← `(command|
-    instance : DialectSignature $dialect where
-      signature := fun op => match op with $matchAlts:matchAlts
-  )
-  return ()
+elab "def_signature" " for " dialect:term (" where ")? alts:matchAltsSig : command =>
+  let msg := (return m!"{exceptEmoji ·} Defining operation signature for {dialect} dialect")
+  withTraceNode `LeanMLIR.Elab msg (collapsed := false) <| do
+    let alts := getMatchAlts alts
+    let alts ← alts.filterMapM fun view => do
+      trace[LeanMLIR.Elab] "Parsing match alternative with\n\
+        \tpatterns: {view.patterns}\n\
+        \tsignature: {view.rhs}"
+      return some {view with
+        rhs := ←transformSignature view.rhs
+      }
+    let matchAlts ← Elab.mkMatchAltsExpr alts
+    elabCommand <|← `(command|
+      instance : DialectSignature $dialect where
+        signature := fun op => match op with $matchAlts:matchAlts
+    )
+    return ()
