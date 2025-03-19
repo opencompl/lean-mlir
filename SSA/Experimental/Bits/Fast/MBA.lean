@@ -315,7 +315,20 @@ def Env.getD_getElem?_ofEnvFin (envFin : EnvFin w n) (i : Nat) :
 theorem Env.sext_ofEnvFin (envFin : EnvFin w n) (w' : Nat) :
     (Env.ofEnvFin envFin).sext w' = Env.ofEnvFin (envFin.sext w') := by
   ext i x
-  sorry
+  simp [Env.sext, EnvFin.sext]
+  constructor
+  · intros h
+    simp only [ofEnvFin, List.getElem?_map, Option.map_eq_some', EnvFin.sext] at h ⊢
+    obtain ⟨h₁, h₂⟩ := h
+    obtain ⟨h₃, h₄⟩ := h₂
+    obtain ⟨a, h₃⟩ := h₃
+    exists a
+    simp [h₃, h₄]
+  · intros h
+    simp only [ofEnvFin, List.getElem?_map, Option.map_eq_some', EnvFin.sext] at h ⊢
+    obtain ⟨a, h₁⟩ := h
+    exists (envFin a)
+    simp [h₁]
 
 theorem Factor.denote_eq_toNat_reflectBVFin {w : Nat} (xs : Env w) (f : Factor) :
     f.denoteInt xs = (f.reflectBVFin (EnvFin.ofEnv xs _)).toNat := by
