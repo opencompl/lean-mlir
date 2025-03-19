@@ -29,9 +29,80 @@ namespace LeanMLIR.Parser
 open Lean.Parser
 
 /-!
+## Syntax parsers
+We will use `Lean.Parser.Term.matchAlts` to parse the match arms in `def_signature`.
+This works, despite the custom syntax for the RHS because  `matchAlts` takes in
+an optional `rhsParser` argument.
+
+Unfortunately, the type of this argument is `Parser`, whereas the convenient
+`syntax` macro gives us a `ParserDescr`. There is in theory a way to compile
+a `ParserDescr`, but we choose rather to define our signature syntax in
+lower-level primitives that directly give a `Parser`.
+-/
+
+def plainArrow := leading_parser unicodeSymbol " → " " -> "
+def effectArrow := leading_parser " -[" >> termParser >> "]-> "
+def arrow := leading_parser plainArrow <|> effectArrow
+
+def concreteArgumentList : Parser :=
+  leading_parser "(" >> (sepBy termParser ",") >> ")"
+def antiquotArgumentList : Parser :=
+  leading_parser "${" >> termParser >> "}"
+def argumentList : Parser :=
+  leading_parser concreteArgumentList <|> antiquotArgumentList
+
+/-- An mlir function type: `( term,* ) → term`,
+with optional effect annotation on the arrow -/
+def function : Parser :=
+  leading_parser argumentList >> arrow >> termParser
+
+/-- An mlir function type: `( term,* ) → term`, without effect annotation. -/
+def plainFunction : Parser :=
+  leading_parser argumentList >> plainArrow >> termParser
+
+/-- An mlir region arguments signature: `{ function,* }` -/
+def region : Parser :=
+  leading_parser "{" >> sepBy plainFunction "," >> "}"
+
+def signature : Parser :=
+  leading_parser optional (region >> plainArrow) >> function
+
+def matchAltSig : Parser := Lean.Parser.Term.matchAlt signature
+def matchAltsSig : Parser := Lean.Parser.Term.matchAlts signature
+
+protected def matchAltsExpr : Parser := Lean.Parser.Term.matchAlts
+instance : Coe (TSyntax ``Parser.matchAltsExpr) (TSyntax ``Lean.Parser.Term.matchAlts) where
+  coe x := ⟨x.raw⟩
+
+end Parser
+
+
+/-!
 ## MetaSignature Datastructures and Environment Extension
 -/
 namespace Elab
+open LeanMLIR.Parser
+open Lean.Parser.Term (matchAltExpr)
+open Lean.Elab.Term (TermElabM)
+open Lean.Elab.Command (CommandElabM elabCommand)
+
+/--
+
+Based on Lean.Elab.Term.MatchAltView, but adapted for our purposes
+-/
+structure MatchAltView (rhsKind : SyntaxNodeKinds) where
+  ref : Syntax
+  patterns : Array Term
+  rhs : TSyntax rhsKind
+
+inductive ArgListView
+  | antiquot (term : Term)
+  | list (ref : Syntax) (args : Array Term)
+
+structure SignatureView where
+  regions : Array (ArgListView × Term)
+  arguments : ArgListView
+  returnType : Term
 
 /-- A meta region signature stores a list of expressions describing the argument
 types and an expression describing the return type.
@@ -78,6 +149,21 @@ for some fixed `d : Dialect`.
 -/
 structure MetaSignature extends MetaRegionSignature where
   regions : List MetaRegionSignature
+
+/-- Elaborate a `MatchAltView` into a `MetaSignature` -/
+def MetaSignature.ofView (view : MatchAltView ``Parser.signature) :
+    TermElabM MetaSignature := withRef view.ref do
+  sorry
+
+
+
+
+
+
+
+
+
+
 
 /-
 TODO: Store the signature declared in `def_signature` somewhere, so that we can
@@ -156,73 +242,7 @@ would not be great.
 
 -/
 
-
-
-end Elab
-
-/-!
-## Syntax parsers
-We will use `Lean.Parser.Term.matchAlts` to parse the match arms in `def_signature`.
-This works, despite the custom syntax for the RHS because  `matchAlts` takes in
-an optional `rhsParser` argument.
-
-Unfortunately, the type of this argument is `Parser`, whereas the convenient
-`syntax` macro gives us a `ParserDescr`. There is in theory a way to compile
-a `ParserDescr`, but we choose rather to define our signature syntax in
-lower-level primitives that directly give a `Parser`.
--/
-
-def plainArrow := leading_parser unicodeSymbol " → " " -> "
-def effectArrow := leading_parser " -[" >> termParser >> "]-> "
-def arrow := leading_parser plainArrow <|> effectArrow
-
-def concreteArgumentList : Parser :=
-  leading_parser "(" >> (sepBy termParser ",") >> ")"
-def antiquotArgumentList : Parser :=
-  leading_parser "${" >> termParser >> "}"
-def argumentList : Parser :=
-  leading_parser concreteArgumentList <|> antiquotArgumentList
-
-/-- An mlir function type: `( term,* ) → term`,
-with optional effect annotation on the arrow -/
-def function : Parser :=
-  leading_parser argumentList >> arrow >> termParser
-
-/-- An mlir function type: `( term,* ) → term`, without effect annotation. -/
-def plainFunction : Parser :=
-  leading_parser argumentList >> plainArrow >> termParser
-
-/-- An mlir region arguments signature: `{ function,* }` -/
-def region : Parser :=
-  leading_parser "{" >> sepBy plainFunction "," >> "}"
-
-def signature : Parser :=
-  leading_parser optional (region >> plainArrow) >> function
-
-def matchAltSig : Parser := Lean.Parser.Term.matchAlt signature
-def matchAltsSig : Parser := Lean.Parser.Term.matchAlts signature
-
-protected def matchAltsExpr : Parser := Lean.Parser.Term.matchAlts
-instance : Coe (TSyntax ``Parser.matchAltsExpr) (TSyntax ``Lean.Parser.Term.matchAlts) where
-  coe x := ⟨x.raw⟩
-
-end Parser
-
 /-! ## `def_signature` Elaboration  -/
-namespace Elab
-open LeanMLIR.Parser
-open Lean.Parser.Term (matchAltExpr)
-open Lean.Elab.Term (MatchAltView)
-open Lean.Elab.Command (CommandElabM elabCommand)
-
-/--
-
-Based on Lean.Elab.Term.MatchAltView, but adapted for our purposes
--/
-structure MatchAltView (rhsKind : SyntaxNodeKinds) where
-  ref : Syntax
-  patterns : Array Term
-  rhs : TSyntax rhsKind
 
 /-
 TODO: automatically open the `Ty` namespace when elaborating the signature.
@@ -264,6 +284,16 @@ If this error is thrown, it indicates a bug in the implementation. -/
 def throwUnexpectedSyntax (stx : Syntax) : CommandElabM α :=
   throwErrorAt stx "Unexpected syntax: {stx}\nThis is an internal bug"
 
+
+def ArgListView.parse : TSyntax ``argumentList → CommandElabM ArgListView
+  | ref@`(argumentList| ($args,*))  => return .list ref args
+  | `(argumentList| ${$argList})    => return .antiquot argList
+  | stx => throwUnexpectedSyntax stx
+
+def ArgListView.toTerm : ArgListView → CommandElabM Term
+  | .list ref args  => withRef ref <| `([$args,*])
+  | .antiquot t     => return t
+
 -- /-- Transforms an mlir function signature to a Lean function.
 
 -- For example, `(int, nat) -> int` becomes `⟦int⟧ → ⟦int⟧ → ⟦nat⟧`. -/
@@ -281,23 +311,18 @@ partial def transformSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : Com
       let regions ← regions.getElems.mapM fun fn => withRef fn do
         let `(plainFunction| $args → $outTy) := fn
           | throwUnexpectedSyntax fn
-        let args ← parseArgs args
+        let args ← (← ArgListView.parse args).toTerm
         `(⟨$args, $outTy⟩)
       parseFunction regions fn
   | `(signature| $fn:function) => parseFunction #[] fn
   | ref => throwUnexpectedSyntax ref
   where
-    parseArgs : TSyntax ``argumentList → CommandElabM Term
-      | ref@`(argumentList| ($args,*))  => withRef ref <| `([$args,*])
-      | `(argumentList| ${ $argsList }) => pure argsList
-      | stx => throwUnexpectedSyntax stx
     parseFunction (regions : Array Term) : TSyntax ``LeanMLIR.Parser.function → CommandElabM Term
       | `(function| $args -[$eff]-> $outTy) => do
-        let args ← parseArgs args
-        `(_root_.Signature.mkEffectful ($args) [$regions,*] ($outTy) ($eff))
+          let args ← (← ArgListView.parse args).toTerm
+          `(_root_.Signature.mkEffectful $args [$regions,*] ($outTy) ($eff))
       | `(function| $args → $outTy) => do
-        let args ← parseArgs args
-        `(_root_.Signature.mkEffectful ($args) [$regions,*] ($outTy) (_root_.EffectKind.pure))
+          parseFunction regions (←`(function| $args -[.pure]-> $outTy))
       | ref => throwUnexpectedSyntax ref
 
 elab "def_signature" " for " dialect:term (" where ")? alts:matchAltsSig : command =>
