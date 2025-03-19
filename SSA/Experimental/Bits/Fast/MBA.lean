@@ -648,8 +648,9 @@ theorem Int.bmod_twoPow_self_eq_self {i : Int} : i.bmod (2 ^ i.natAbs)  = i := b
     sorry
   simp [this]
 
-theorem int_eq_zero_of_natAbs_ofInt_eq_zero (i : Int) (w : Nat)
-    (hw : w = i.natAbs) (h : BitVec.ofInt w i = 0#w) : i = 0 := by
+theorem int_eq_zero_of_natAbs_ofInt_eq_zero {i : Int} {w : Nat}
+    (h : BitVec.ofInt w i = 0#w)
+    (hw : w = i.natAbs) : i = 0 := by
   have : BitVec.toInt (BitVec.ofInt w i) = BitVec.toInt (BitVec.ofNat w 0) := by rw [h]
   simp at this
   subst w
@@ -666,7 +667,8 @@ theorem Int.eq_zero_iff_ofInt_zero (i : Int) : (i = 0) ↔ (∀ (w : Nat), BitVe
     apply Classical.byContradiction
     intros hcontra
     specialize (h i.natAbs)
-    
+    have := int_eq_zero_of_natAbs_ofInt_eq_zero h rfl
+    contradiction
 
 /--
 Denoting at an environment also works at a sign-extended environment.
