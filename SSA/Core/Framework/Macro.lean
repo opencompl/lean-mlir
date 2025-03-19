@@ -81,28 +81,35 @@ end Parser
 ## MetaSignature Datastructures and Environment Extension
 -/
 namespace Elab
+open Qq
 open LeanMLIR.Parser
 open Lean.Parser.Term (matchAltExpr)
-open Lean.Elab.Term (TermElabM)
-open Lean.Elab.Command (CommandElabM elabCommand)
+open Lean.Meta Lean.Elab.Command Lean.Elab.Term
 
-/--
-
-Based on Lean.Elab.Term.MatchAltView, but adapted for our purposes
--/
+/-- Based on Lean.Elab.Term.MatchAltView, but adapted for our purposes -/
 structure MatchAltView (rhsKind : SyntaxNodeKinds) where
   ref : Syntax
   patterns : Array Term
   rhs : TSyntax rhsKind
 
+/-- A structured representation of the Syntax describing a list of arguments -/
 inductive ArgListView
+  /-- A single term, expected to be of type `List _`,
+      to describe all arguments at once -/
   | antiquot (term : Term)
+  /-- A list of terms, where each term describes a single argument type -/
   | list (ref : Syntax) (args : Array Term)
 
-structure SignatureView where
-  regions : Array (ArgListView × Term)
-  arguments : ArgListView
+/-- A structured representation of the Syntax describing the signature of a region -/
+structure RegionSignatureView where
+  ref : Syntax
+  argumentTypes : ArgListView
   returnType : Term
+
+/-- A structured representation of the Syntax describing the signature of an operation -/
+structure SignatureView extends RegionSignatureView where
+  regions : Array RegionSignatureView
+  effectKind : Term
 
 /-- A meta region signature stores a list of expressions describing the argument
 types and an expression describing the return type.
@@ -113,31 +120,16 @@ structure MetaRegionSignature where
   /-- `argumentTypes?` gives a list of expressions, where each describes the
     type of one argument. This field is `none` if the `${...}` escape hatch was
     used, as the number of arguments might not be knowable statically. -/
-  argumentTypes? : Option (List Expr)
-  /- Hmm, what if the operation is variadic?
-  Say, we have some `add w n` instruction, where `n` is the number of arguments,
-  then the signature would be akin to `List.replicate m (Ty.iX w)`.
-
-  The point of this meta signature is that we can use information about the signature
-  in `def_semantics` to influence the expected type on the RHS to not mention any
-  `HVector` shenanigans.
-
-  Note, however, that such a signature is inexpressible with `def_signature` to begin with...
-  This is a potential, yet wildly unsatisying answer: maybe we just don't support
-  variadics in the pretty answer. I'd rather not admit defeat, though!
-
-  The answer is relatively elegant: we introduce a `${...}` escape hatch, where
-  the term inside is expected to be of type `List MyDialectTy`.
-  Then, in the semantics we know when we can be cute, and when we have to
-  fallback to hvectors (namely, we fallback when the escape hatch was used to
-  define the signature).
-
-  This escape hatch is reflected in this structure via the `argumentTypes?` field,
-  as per the doc-string: when the escape hatch is used, we set the field to `none`.
-  Otherwise, we can elaborate each argument separately, and get a list of expressions.
-  -/
-
+  argumentTypes? : Option (Array Expr)
   returnType : Expr
+  deriving BEq
+
+/-!
+NOTE: we'll use the `argumentTypes?` field in `def_semantics` to determine if
+we expect a prettified `fun (x y : BitVec _) => _` type function, or a raw
+`HVector` function. Namely, we can do the former if `argumentTypes?` is known,
+and revert to the latter if not.
+-/
 
 /- A meta function signature stores:
 * A list of (meta) region signatures,
@@ -148,20 +140,158 @@ Where each "type" is a Lean expression of type `d.Ty`,
 for some fixed `d : Dialect`.
 -/
 structure MetaSignature extends MetaRegionSignature where
-  regions : List MetaRegionSignature
+  regions : Array MetaRegionSignature
+  /-- `priority` records the position of the match alternative that corresponds
+  to this signature definition, where `0` indicates the first (and thus highest-
+  priority) match alternative. -/
+  priority : Nat
+  deriving BEq
 
-/-- Elaborate a `MatchAltView` into a `MetaSignature` -/
-def MetaSignature.ofView (view : MatchAltView ``Parser.signature) :
+def MetaRegionSignature.ofView (Ty : Expr) (view : RegionSignatureView) :
+    TermElabM MetaRegionSignature := withRef view.ref do
+  let argumentTypes? ← match view.argumentTypes with
+    | .antiquot _ => pure none
+    | .list ref argumentTypes => withRef ref <| do
+        let exprs ← argumentTypes.mapM (elabTermEnsuringType · Ty)
+        pure <| some exprs
+  let returnType ← elabTermEnsuringType view.returnType Ty
+  return { argumentTypes?, returnType }
+
+/-- Elaborate a `MatchAltView` into a `MetaSignature`, given a Lean expression
+`Ty : Type` that describes the type universe of the expected dialect. -/
+def MetaSignature.ofView (Ty : Expr) (view : SignatureView) (priority : Nat) :
     TermElabM MetaSignature := withRef view.ref do
-  sorry
+  let base ← MetaRegionSignature.ofView Ty view.toRegionSignatureView
+  return { base with
+    regions  := ←view.regions.mapM (MetaRegionSignature.ofView Ty)
+    priority := priority
+  }
+
+structure MetaSignatureTree.Key where
+  /-- Construct a `Key` from a **fully-reduced(!)** expression.
+
+  Prefer `Key.ofExpr`, which will perform the necessary reduction.
+  -/
+  mk :: toExpr : Expr
+
+/-- A `MetaSignatureTree` stores the signatures of all operations in a specific
+dialect. -/
+/-
+Discrtrees are hard, so let's just start with the naive array-based solution.
+TODO: check whether the quadratic complexity is problematic, and move to
+      `DiscrTree` if it is.
+-/
+structure MetaSignatureTree where
+  /-- A collection of signatures, ascendingly ordered by their priority. -/
+  signatures : Array (MetaSignatureTree.Key × MetaSignature)
+  /-- The threshold priority: if a new element has a priority strictly less
+    than `maxPriority`, the array will have to be sorted after insertion.
+    This is equal to the maximum priority of any signature contained in
+    the array, or `0` if the array is empty. -/
+  maxPriority : Nat
+
+namespace MetaSignatureTree
+
+def empty : MetaSignatureTree where
+  signatures := .empty
+  maxPriority := 0
+
+def Key.ofExpr (op : Expr) : MetaM Key :=
+  -- TODO: fully reduce op
+  return ⟨op⟩
+
+def insert (self : MetaSignatureTree) (key : Key) (signature : MetaSignature) :
+    MetaSignatureTree :=
+  let signatures := self.signatures.push (key, signature)
+  if signature.priority ≥ self.maxPriority then
+    { self with signatures, maxPriority := signature.priority }
+  else
+    let signatures :=
+      signatures.insertionSort (lt := fun x y => x.2.priority < y.2.priority)
+    { self with signatures }
+
+def getMatch (self : MetaSignatureTree) (op : Expr) :
+    MetaM MetaSignature := do
+  let key ← Key.ofExpr op
+  let hits := self.signatures
+  for hit in hits do
+    if ←isDefEq key.toExpr hit.1.toExpr then
+      return hit.2
+  /- TODO: come up with a better error, that indicates why no signature might have been found.
+    In particular, we should explicate that we did find the `def_signature` info, but failed to
+    unify the current op with any of the LHSs of the signatures.
+  -/
+  throwError "No signature found for {op}."
 
 
+end MetaSignatureTree
 
+/-!
+### Dialect identifiers
+We need some way to find the `MetaSignature` information in `def_semantics`.
+We can store this information an EnvironmentExtension, but we'd do so in some kind
+of map from, say, `Name` to `MetaSignature`, which begs the question: what name
+do we use there?
 
+We could assume that dialects are always applications of a fixed constant, and
+use the name of that constant. This yields consistent results, but then means
+that if we define the signature of operations in a meta dialect (e.g., `MetaLLVM`)
+this signature would not be found for the concrete dialect `LLVM` even if normal
+typeclass resolution would find the instance.
 
+We can also be a bit more cute, and use the name of the `DialectSignature` *instance*
+as the identifier. This way, we can be sure that the meta info is in sync with
+the instance that got synthesized!
+-/
 
+initialize signatureExt : EnvExtension (NameMap MetaSignatureTree) ←
+  registerEnvExtension
+    (mkInitial := return .empty)
+    (asyncMode := .mainOnly)  -- TODO: for now we've picked the default,
+                              -- but we should re-evaluate what asyncMode is appropriate here
 
+private def throwExpectedInstToBeApp (instType inst : Expr) : MetaM α := do
+  throwError "Synthesized the following instance of {instType}:\n\
+        \t{inst}\n\
+        This was expected to be an application of a constant."
 
+/--
+Register the signatures for a given dialect in the `signatureExt`
+environment extension.
+
+NOTE: this assumes that an instance of `DialectSignature $dialect` has just been
+defined using these signatures.
+-/
+def registerDialectMetaSignatures (dialect : Expr) (signatures : MetaSignatureTree) :
+    MetaM Unit := do
+  let dialect : Q(Dialect) := dialect
+  let instType := q(DialectSignature $dialect)
+  let inst ← synthInstance instType
+  let .const instName _ := inst.getAppFn
+    | throwExpectedInstToBeApp instType inst
+  setEnv <| signatureExt.modifyState (← getEnv) fun map =>
+    map.insert instName signatures
+
+/--
+Get the signatures for a given dialect from the `signatureExt`
+environment extension, or throw an error if no signatures could be found.
+-/
+def getDialectMetaSignatures (dialect : Expr) : MetaM MetaSignatureTree := do
+  let dialect : Q(Dialect) := dialect
+  let instType := q($dialect)
+  let inst ← synthInstance instType
+  let .const instName _ := Expr.bvar 0
+    | throwExpectedInstToBeApp instType inst
+  let state := signatureExt.findStateAsync (← getEnv) instName
+  let some sig := state.find? instName
+    | throwError "Synthesized the following instance of {instType}:\n\
+        \t{inst}\n\
+        However, the corresponding signature information was not found.\
+        Was this instance defined using `def_signature`, in this file?\n\
+        \n\
+        Manually defined instances, or instances defined in other files are not \
+        supported!"
+  return sig
 
 
 
@@ -267,7 +397,8 @@ private def getMatchAlts (alts : TSyntax ``matchAltsSig) :
           }
     | stx => #[⟨.missing, #[], ⟨.missing⟩⟩]
 
-variable {m} [Monad m] [MonadRef m] [MonadQuotation m] in
+variable {m} [Monad m] [MonadRef m] [MonadQuotation m] [MonadError m]
+
 /-- Reassemble an array of alternatives into a `matchAlts` syntax,
     assuming that the rhs of each match arm is a `Term`.  -/
 protected def mkMatchAltsExpr (alts : Array (MatchAltView `term)) :
@@ -281,16 +412,15 @@ protected def mkMatchAltsExpr (alts : Array (MatchAltView `term)) :
 
 /-- Generic error to be used for fallback match patterns that should be unreachable.
 If this error is thrown, it indicates a bug in the implementation. -/
-def throwUnexpectedSyntax (stx : Syntax) : CommandElabM α :=
+def throwUnexpectedSyntax (stx : Syntax) : m α :=
   throwErrorAt stx "Unexpected syntax: {stx}\nThis is an internal bug"
 
-
-def ArgListView.parse : TSyntax ``argumentList → CommandElabM ArgListView
+def ArgListView.parse : TSyntax ``argumentList → m ArgListView
   | ref@`(argumentList| ($args,*))  => return .list ref args
   | `(argumentList| ${$argList})    => return .antiquot argList
   | stx => throwUnexpectedSyntax stx
 
-def ArgListView.toTerm : ArgListView → CommandElabM Term
+def ArgListView.toTerm : ArgListView → m Term
   | .list ref args  => withRef ref <| `([$args,*])
   | .antiquot t     => return t
 
@@ -304,48 +434,103 @@ def ArgListView.toTerm : ArgListView → CommandElabM Term
 --       `(⟦$ty⟧ → $acc)
 --   | ref => throwUnexpectedSyntax ref
 
-partial def transformSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : CommandElabM Term :=
+def parseSignature (ref : TSyntax ``LeanMLIR.Parser.signature) :
+    m SignatureView :=
   withRef ref <| match ref with
   | `(signature| { $regions,* } → $fn:function ) => do
-      -- TODO: figure out how to get the regions in here
       let regions ← regions.getElems.mapM fun fn => withRef fn do
         let `(plainFunction| $args → $outTy) := fn
           | throwUnexpectedSyntax fn
-        let args ← (← ArgListView.parse args).toTerm
-        `(⟨$args, $outTy⟩)
+        return {
+          ref := fn
+          argumentTypes := ← ArgListView.parse args
+          returnType := outTy
+        }
+        -- `(⟨$args, $outTy⟩)
       parseFunction regions fn
   | `(signature| $fn:function) => parseFunction #[] fn
   | ref => throwUnexpectedSyntax ref
   where
-    parseFunction (regions : Array Term) : TSyntax ``LeanMLIR.Parser.function → CommandElabM Term
-      | `(function| $args -[$eff]-> $outTy) => do
-          let args ← (← ArgListView.parse args).toTerm
-          `(_root_.Signature.mkEffectful $args [$regions,*] ($outTy) ($eff))
-      | `(function| $args → $outTy) => do
-          parseFunction regions (←`(function| $args -[.pure]-> $outTy))
-      | ref => throwUnexpectedSyntax ref
+    parseFunction (regions : Array RegionSignatureView)
+        (ref : TSyntax ``LeanMLIR.Parser.function) :
+        m SignatureView := withRef ref <| do
+      let view : SignatureView := {
+        ref, regions,
+        returnType    := ⟨.missing⟩
+        argumentTypes := .list .missing #[]
+        effectKind    := ⟨.missing⟩
+      }
+      match ref with
+      | `(function| $argumentTypes -[$effectKind]-> $returnType) => do
+          let argumentTypes ← ArgListView.parse argumentTypes
+          return { view with
+            argumentTypes, returnType, effectKind
+          }
+          -- `(_root_.Signature.mkEffectful $args [$regions,*] ($outTy) ($eff))
+      | `(function| $argumentTypes → $returnType) => do
+          let argumentTypes ← ArgListView.parse argumentTypes
+          return { view with
+            argumentTypes, returnType,
+            effectKind := ←`(_root_.EffectKind.pure),
+          }
+      | _ => throwUnexpectedSyntax ref
 
+def SignatureView.toTerm (view : SignatureView) : m Term := do
+  let regions ← view.regions.mapM fun view => withRef view.ref <| do
+      `(⟨$(← view.argumentTypes.toTerm), $view.returnType⟩)
+  let argumentTypes ← view.argumentTypes.toTerm
+  `(_root_.Signature.mkEffectful
+      $argumentTypes
+      [$regions,*]
+      $view.returnType
+      $view.effectKind)
+
+-- TODO: should this be upstreamed at some point?
+def _root_.Array.foldMapIdxM {m} [Monad m]
+    (f : Nat → σ → α → m (β × σ)) (init : σ) (as : Array α) : m (Array β × σ) :=
+  StateT.run (s := init) <| as.mapIdxM fun n a s => f n s a
+
+open MetaSignatureTree (Key) in
 elab "def_signature" " for " dialect:term (" where ")? alts:matchAltsSig : command =>
   let msg := (return m!"{exceptEmoji ·} Defining operation signature for {dialect} dialect")
   withTraceNode `LeanMLIR.Elab msg (collapsed := false) <| do
     let alts := getMatchAlts alts
-    let alts ← alts.filterMapM fun view => do
-      trace[LeanMLIR.Elab] "Parsing match alternative with\n\
-        \tpatterns: {view.patterns}\n\
-        \tsignature: {view.rhs}"
-      return some {view with
-        rhs := ←transformSignature view.rhs
-      }
+    let (alts, (sigTree : MetaSignatureTree)) ← runTermElabM <| fun _ => do
+      let dialectExpr : Q(Dialect) ← elabTermEnsuringType dialect q(Dialect)
+      let Op := q(Dialect.Op $dialectExpr)
+      let Ty := q(Dialect.Ty $dialectExpr)
+      alts.foldMapIdxM (init := .empty) fun priority state view => do
+        trace[LeanMLIR.Elab] m!"Parsing match alternative with\n\
+          \tpatterns: {(view.patterns : Array _)}\n\
+          \tsignature: {view.rhs}"
+        -- HACK: The `(_ : Array _)` type ascription above is load-bearing.
+        --       Without it, we get a type mismatch error.
+
+        let key : Key ← do
+          let op : Term := view.patterns[0]!
+          let op : Expr ← elabTermEnsuringType op Op
+          Key.ofExpr op
+        let sigView ← parseSignature view.rhs
+        let signature ← MetaSignature.ofView Ty sigView priority
+        return ({view with
+                  rhs := ← sigView.toTerm
+                },
+                state.insert key signature)
+
+    -- Define instance
     let matchAlts ← Elab.mkMatchAltsExpr alts
     elabCommand <|← `(command|
       instance : DialectSignature $dialect where
         signature := fun op => match op with $matchAlts:matchAlts
     )
+    -- Save signature
+    runTermElabM <| fun  _ => do
+      let dialectExpr ← elabTermEnsuringType dialect q(Dialect)
+      registerDialectMetaSignatures dialectExpr sigTree
     return ()
 
 /-! ## `def_semantics`-/
 open Parser (matchAltsExpr)
-open Meta Elab.Command Elab.Term
 open Qq
 
 #check TyDenote
