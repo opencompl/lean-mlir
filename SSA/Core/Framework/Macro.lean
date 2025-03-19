@@ -206,7 +206,7 @@ partial def transformSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : Com
         `(_root_.Signature.mkEffectful ($args) [$regions,*] ($outTy) (_root_.EffectKind.pure))
       | ref => throwUnexpectedSyntax ref
 
-elab "def_signature" "for" dialect:term ("where")? alts:matchAltsSig : command => do
+elab "def_signature" " for " dialect:term (" where ")? alts:matchAltsSig : command => do
   trace[LeanMLIR.Elab] "Dialect: {dialect}"
   let alts := getMatchAlts alts
   let alts ← alts.mapM fun view => do return {view with
