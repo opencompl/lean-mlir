@@ -53,7 +53,7 @@ jobs:
       - name: Run LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j64)
 
       - name: Run Alive Symbolic
         run: |

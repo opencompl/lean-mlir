@@ -12,7 +12,7 @@ BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 
 REPS = 1 
 
-TIMEOUT = 1800
+TIMEOUT = 3600
 
 def clear_folder():
     for file in os.listdir(RESULTS_DIR):
