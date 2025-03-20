@@ -30,6 +30,7 @@ import SSA.Projects.InstCombine.LLVM.Lemmas
 import SSA.Projects.InstCombine.Test
 -- Examples for the paper
 import SSA.Projects.InstCombine.PaperExamples
+
 -- Proofs from Hackers Delight Book
 import SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan
 import SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps

@@ -213,6 +213,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     then do
     let some att := opStx.attrs.getAttr "value"
       | throw <| .generic "tried to resolve constant without 'value' attribute"
+
+    let some x 
     match att with
       | .int val ty =>
           let opTy@(.bitvec w) ← mkTy ty -- ty.mkTy

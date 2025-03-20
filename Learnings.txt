@@ -1,0 +1,4 @@
+bv_decide
+    uses bit blasting therefore can't be used with generic width 
+        inputs it into sat solver 
+    if bv_decide times out -> change scale (e.g width), maybe just scalability issue 
