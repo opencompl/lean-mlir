@@ -11,6 +11,8 @@ import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.AutoStructs.Worklist
 
+set_option grind.warning false
+
 section sink
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
@@ -21,7 +23,7 @@ def RawCNFA.addSink (m : RawCNFA A) : RawCNFA A := m.createSink.2
 @[inline]
 def CNFA.addSink (m : CNFA n) : CNFA n := ⟨m.m.addSink, wf_createSink m.wf⟩
 
-lemma addSink_spec (m : CNFA n) (M : NFA' n) :
+lemma CNFA.addSink_spec (m : CNFA n) (M : NFA' n) :
     m.Sim M →
     m.addSink.Sim M.complete := by
   rintro ⟨Ri, hsim⟩
@@ -51,6 +53,9 @@ lemma addSink_spec (m : CNFA n) (M : NFA' n) :
     obtain ⟨s', htr, _⟩ := hsim.trans_match₂ hRi hst (by simp) (by simp)
     have hs' : s' ∈ m.m.states := m.wf.trans_tgt_lt' _ _ _ htr
     use s'; tauto
+
+-- @[simp]
+-- lemma CNFA.addSink_language {m : CNFA n} (hl : m.recognizes L) : m.addSink.recognizes L := sorry
 
 def RawCNFA.flipFinals (m : RawCNFA A) : RawCNFA A :=
   let oldFinals := m.finals
@@ -368,7 +373,7 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
   · apply worklistRun_spec
   apply product.sim <;> assumption
 
-def CNFA.inter_spec (m1 m2 : CNFA n)
+lemma CNFA.inter_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
     m1.Sim M1 →
     m2.Sim M2 →
@@ -380,7 +385,26 @@ def CNFA.inter_spec (m1 m2 : CNFA n)
   simp [heq]
   apply product_spec <;> assumption
 
-def CNFA.union_spec (m1 m2 : CNFA n)
+@[simp]
+def CNFA.inter_language (m₁ m₂ : CNFA n) :
+    m₁.recognizes L₁ →
+    m₂.recognizes L₂ →
+    (m₁.inter m₂).recognizes (L₁ ∩ L₂) := by
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.inter M₂
+  simp_all only [inter_spec, true_and]
+  simp_all [NFA'.inter]
+
+def CNFA.inter_bv_language (m₁ m₂ : CNFA n) :
+    m₁.bv_recognizes L₁ →
+    m₂.bv_recognizes L₂ →
+    (m₁.inter m₂).bv_recognizes (L₁ ∩ L₂) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.inter M₂
+  simp_all [inter_spec]
+
+lemma CNFA.union_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
     m1.Sim M1 →
     m2.Sim M2 →
@@ -391,6 +415,24 @@ def CNFA.union_spec (m1 m2 : CNFA n)
     ext x y; simp [to_prop]
   simp [heq]
   apply product_spec <;> apply addSink_spec <;> assumption
+
+def CNFA.union_language (m₁ m₂ : CNFA n) :
+    m₁.recognizes L₁ →
+    m₂.recognizes L₂ →
+    (m₁.union m₂).recognizes (L₁ ∪ L₂) := by
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.union M₂
+  simp_all only [union_spec, true_and]
+  simp_all [NFA'.union]
+
+def CNFA.union_bv_language (m₁ m₂ : CNFA n) :
+    m₁.bv_recognizes L₁ →
+    m₂.bv_recognizes L₂ →
+    (m₁.union m₂).bv_recognizes (L₁ ∪ L₂) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.union M₂
+  simp_all [union_spec, true_and]
 
 end product
 
@@ -666,6 +708,13 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   apply CNFA.flipFinals_spec
   apply determinize_spec m hsim
 
+lemma CNFA.neg_bv_language {m : CNFA n} :
+    m.bv_recognizes L → (m.neg.bv_recognizes Lᶜ) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use M.neg
+  simp_all [neg_spec]
+
 def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
   let m' := { stateMax := m.stateMax, trans := Std.HashMap.emptyWithCapacity m.trans.size, initials := m.finals, finals := m.initials}
   m.trans.fold (init := m') processState
@@ -676,7 +725,8 @@ where
 @[simp]
 lemma RawCNFA.reverse_induction_helper {m : RawCNFA A} :
     (∃ ss', m.trans.toPFun (s, a) = some ss' ∧ s' ∈ ss') ↔ s' ∈ m.tr s a := by
-  sorry
+  simp [Std.HashMap.toPFun, tr, Std.HashMap.getD_eq_getD_getElem?]
+  rcases m.trans[(s, a)]? <;> simp
 
 lemma RawCNFA.reverse_spec_procesState {m : RawCNFA A} (hwf : m.WF) s₀ a₀ ss' (hs₀ : s₀ ∈ m.states) :
     let motive m' ss' :=
@@ -728,12 +778,37 @@ lemma RawCNFA.reverse_spec {m : RawCNFA A} (hwf : m.WF) :
       simp_all
     · simp_all
 
+
 def CNFA.reverse (m : CNFA n) : CNFA n :=
   ⟨m.m.reverse, RawCNFA.reverse_spec m.wf |>.1⟩
+
+lemma CNFA.reverse_spec {m : CNFA n} : m.reverse.Sim m.toNFA'.reverse := by
+  obtain ⟨h₁, h₂, h₃, h₄, h₅⟩ := RawCNFA.reverse_spec m.wf
+  use (λ s s' ↦ s = s'.val)
+  simp_all [NFA'.reverse, NFA.reverse, reverse, toNFA']
+  constructor <;> aesop
+
+lemma CNFA.reverse_language {m : CNFA n} (hl : m.recognizes L) : m.reverse.recognizes L.reverse := by
+  rcases hl with ⟨M, hsim, rfl⟩
+  use m.toNFA'.reverse
+  simp [reverse_spec]
+  simp_all [toNFA', NFA'.reverse]
+  suffices h : m.toNFA.accepts = M.M.accepts by simp_all
+  exact sim_toNFA_eq_accepts hsim
 
 def CNFA.minimize (m : CNFA n) : CNFA n :=
   let mᵣ := m.reverse.determinize
   mᵣ.reverse.determinize
+
+lemma CNFA.minimize_language {m : CNFA n} :
+    m.recognizes L → m.minimize.recognizes L := by
+  sorry
+
+lemma CNFA.minimize_bv_language {m : CNFA n} :
+    m.bv_recognizes L → m.minimize.bv_recognizes L := by
+  rintro ⟨L, hrec, rfl⟩
+  apply minimize_language at hrec
+  use L
 
 end determinization
 
@@ -797,6 +872,15 @@ theorem CNFA.isUniversal_spec {m : CNFA n} {M : NFA' n} :
   have hsim' : m.neg.Sim M.neg := neg_spec m hsim
   have _ := isEmpty_spec hsim' huniv
   simp_all
+
+theorem CNFA.isUniversal_bv_language {m : CNFA n} :
+    m.bv_recognizes L → m.isUniversal → L = ⊤ := by
+  rintro hr hu
+  suffices htop : m.bv_recognizes ⊤ by
+    apply bv_recognizes_functional <;> assumption
+  rw [bv_recognizes_equiv] at hr ⊢
+  rcases hr with ⟨M, hsim, rfl⟩
+  use M, hsim, m.isUniversal_spec hsim hu
 
 /-- Recognizes the empty word -/
 def RawCNFA.emptyWord : RawCNFA A :=
@@ -963,7 +1047,7 @@ def CNFA.lift_tr (m : CNFA n₁) (f : Fin n₁ → Fin n₂) :
     rw [ih]; simp only [RawCNFA.lift_processState_spec]
     aesop
 
-def CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
+lemma CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
     m.Sim M → (m.lift f |>.Sim (M.lift f)) := by
   rintro ⟨R, hsim⟩; use R; constructor
   · exact hsim.accept
@@ -977,6 +1061,14 @@ def CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
     simp at htr
     obtain ⟨q', hst, hR'⟩ := hsim.trans_match₂ hR htr (by simp) (by simp)
     simp [NFA'.proj]; use q', hst, hR'
+
+@[simp]
+lemma CNFA.lift_bv_language {m : CNFA n1} {f : Fin n1 → Fin n2} :
+    m.bv_recognizes L → (m.lift f |>.bv_recognizes (BitVecs.transport f ⁻¹' L)) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use M.lift f
+  simp_all [lift_spec]
 
 -- Morally, n1 >= n2
 @[inline]
@@ -1097,5 +1189,12 @@ def CNFA.proj_spec (m : CNFA n2) (f : Fin n1 → Fin n2) {M : NFA' n2} :
     simp at htr; rcases htr with ⟨a', rfl, htr⟩
     obtain ⟨q', hst, hR'⟩ := hsim.trans_match₂ hR htr (by simp) (by simp)
     simp [NFA'.proj]; use q', ⟨a', rfl, hst⟩, hR'
+
+lemma CNFA.proj_bv_language {m : CNFA n2} {f : Fin n1 → Fin n2} :
+    m.bv_recognizes L → (m.proj f |>.bv_recognizes (BitVecs.transport f '' L)) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use M.proj f
+  simp_all [proj_spec]
 
 end lift_proj

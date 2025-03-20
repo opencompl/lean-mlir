@@ -18,6 +18,8 @@ import SSA.Experimental.Bits.AutoStructs.ForMathlib
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
 
+set_option grind.warning false
+
 abbrev State := Nat
 
 -- where to add the wellformedness conditions? a typeclass?
@@ -537,6 +539,83 @@ lemma simulFun_sim {m : CNFA n} f :
     m.m.SimulFun M.M f → m.Sim M := by
   rintro hsim
   apply simulFun_sim_raw m.wf f hsim
+
+def CNFA.toNFA (m : CNFA n) : NFA (BitVec n) m.m.states where
+  start := { s | s.val ∈ m.m.initials }
+  accept := { s | s.val ∈ m.m.finals }
+  step s₁ a := { s₂ | s₂.val ∈ m.m.tr s₁.val a }
+
+def CNFA.toNFA' (m : CNFA n) : NFA' n := ⟨_, m.toNFA⟩
+
+lemma CNFA.canonicalSimul (m : CNFA n) : m.m.Simul m.toNFA (λ s s' ↦ s = s'.val) ⊤ ∅ := by
+  simp [toNFA]
+  have hwf := m.wf
+  constructor <;> aesop
+
+lemma CNFA.canonicalSim (m : CNFA n) : m.m.Sim m.toNFA := by
+  exact ⟨_, m.canonicalSimul⟩
+
+def RawCNFA.recognizes (m : RawCNFA A) (L : Language A) :=
+  ∃ (σ : Type) (M : NFA A σ), m.Sim M ∧ M.accepts = L
+
+def CNFA.recognizes (m : CNFA n) (L : Language (BitVec n)) :=
+  ∃ (M : NFA' n), m.Sim M ∧ M.M.accepts = L
+
+def CNFA.bv_recognizes (m : CNFA n) (L : Set (BitVecs n)) :=
+  ∃ L', m.recognizes L' ∧ L = dec '' L'
+
+lemma simul_equiv {m : CNFA n} {M : NFA' n} :
+    m.Sim M → m.toNFA'.M.Bisim M.M := by
+  rintro ⟨R, h₂, h₃, h₄, h₅, h₆⟩
+  use (λ s q ↦ R s.val q)
+  simp [CNFA.toNFA', CNFA.toNFA]
+  constructor
+  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
+  · simp [CNFA.toNFA', CNFA.toNFA]
+    constructor
+    · simp_all
+    · simp_all
+      rintro q hst
+      obtain ⟨s, hi, hR⟩ := h₄ hst
+      aesop
+  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
+  · simp only [Set.mem_setOf_eq, Subtype.exists, CNFA.wf, exists_and_left, exists_prop,
+    Subtype.forall]
+    rintro s₁ hs₁ q₁ a q₂ hR₁ hst
+    obtain ⟨s₂, htr, hR₂⟩:= h₆ hR₁ hst (by simp) (by simp)
+    use s₂, htr, RawCNFA.WF.trans_tgt_lt' m.wf s₁ a s₂ htr, hR₂
+
+lemma language_stable_sim {m : CNFA n} {M₁ M₂ : NFA' n} :
+    m.Sim M₁ → m.Sim M₂ → M₁.M.accepts = M₂.M.accepts := by
+  rintro h₁ h₂
+  suffices hsim: M₁.M.Bisim M₂.M by
+    simp [NFA.bisim_accepts hsim]
+  apply simul_equiv at h₁
+  apply simul_equiv at h₂
+  exact h₁.symm.comp h₂
+
+lemma CNFA.recognizes_functional {m : CNFA n} :
+    m.recognizes L₁ → m.recognizes L₂ → L₁ = L₂ := by
+  rintro ⟨M₁, hs₁, rfl⟩ ⟨M₂, hs₂, rfl⟩
+  exact language_stable_sim hs₁ hs₂
+
+@[simp]
+lemma sim_toNFA_eq_accepts {m : CNFA n} {M : NFA' n} (hsim : m.Sim M) :
+    m.toNFA.accepts = M.M.accepts := by
+  have : m.toNFA = m.toNFA'.M := by rfl
+  rw [this]
+  apply NFA.bisim_accepts
+  apply simul_equiv hsim
+
+lemma CNFA.bv_recognizes_equiv {m : CNFA n} :
+    m.bv_recognizes L ↔ ∃ (M : NFA' n), m.Sim M ∧ M.accepts = L := by
+  simp [bv_recognizes, NFA'.accepts, recognizes]
+  aesop
+
+lemma CNFA.bv_recognizes_functional {m : CNFA n} :
+    m.bv_recognizes L₁ → m.bv_recognizes L₂ → L₁ = L₂ := by
+  rintro ⟨L₁', h₁, rfl⟩ ⟨L₂', h₂, rfl⟩
+  rw [recognizes_functional h₁ h₂]
 
 end basics
 

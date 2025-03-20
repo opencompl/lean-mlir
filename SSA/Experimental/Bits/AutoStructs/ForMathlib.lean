@@ -37,6 +37,11 @@ instance (α : Type) : Union (Language α) := ⟨Set.union⟩
 def List.Vector.transport (v : Vector α m) (f : Fin n → Fin m) : Vector α n :=
   Vector.ofFn fun i => v.get (f i)
 
+@[simp]
+lemma List.Vector.transport_get {v : Vector α m} { f : Fin n → Fin m} :
+    (v.transport f).get i = v.get (f i) := by
+  simp [transport]
+
 def BitVec.transport (f : Fin n2 → Fin n1) (bv : BitVec n1) : BitVec n2 :=
   BitVec.ofFn fun i => bv.getLsbD (f i)
 
@@ -64,6 +69,9 @@ The set of `n`-tuples of bit vectors of an arbitrary width.
 structure BitVecs (n : Nat) where
   w : Nat
   bvs : List.Vector (BitVec w) n
+
+def BitVecs.cast (bvs : BitVecs n) (h : n = n') : BitVecs n' :=
+  { w := bvs.w, bvs := h ▸ bvs.bvs }
 
 abbrev BitVecs.empty : BitVecs n := ⟨0, List.Vector.replicate n .nil⟩
 abbrev BitVecs.singleton {w : Nat} (bv : BitVec w) : BitVecs 1 := ⟨w, bv ::ᵥ .nil⟩
@@ -553,6 +561,13 @@ theorem neg_accepts (M : NFA α σ) :
     M.neg.accepts = M.acceptsᶜ := by
   simp [neg]
 
+def reverse (M : NFA α σ) : NFA α σ where
+  start := M.accept
+  accept := M.start
+  step q a := { q' | M.step q' a q }
+
+@[simp]
+theorem reverse_accepts {M : NFA α σ} : M.reverse.accepts = M.accepts.reverse := by sorry
 
 /-
 NOTE: all that follows is defined in terms of bit vectors, even though it should
@@ -667,6 +682,38 @@ theorem Bisimul.symm (hsim : Bisimul R M₁ M₂) : Bisimul R.inv M₂ M₁ := b
   · intros; apply h4 <;> assumption
   · intros; apply h3 <;> assumption
 
+theorem Bisim.symm (hsim : Bisim M₁ M₂) : Bisim M₂ M₁ := by
+  rcases hsim with ⟨_, hsimul⟩
+  exact ⟨_, hsimul.symm⟩
+
+lemma Bisimul.comp {M₁ : NFA A σ1} {M₂ : NFA A σ₂} {M₃ : NFA A σ₃}  :
+    M₁.Bisimul R₁ M₂ → M₂.Bisimul R₂ M₃ →
+    M₁.Bisimul (R₁.comp R₂) M₃ := by
+  rintro h₁ h₂; constructor
+  · rintro s q₁ ⟨q₂, hR₁, hR₂⟩; rw [h₁.accept hR₁, h₂.accept hR₂]
+  · constructor
+    · rintro s hs
+      obtain ⟨q₁, hi₁, hq₁⟩ := h₁.start.1 hs
+      obtain⟨q₂, hi₂, hq₂⟩ := h₂.start.1 hi₁
+      use q₂, hi₂, q₁
+    · rintro q₂ hi₂
+      obtain⟨q₁, hi₁, hq₂⟩ := h₂.start.2 hi₂
+      obtain ⟨s, hsi, hs⟩ := h₁.start.2 hi₁
+      use s, hsi, q₁
+  · rintro s s' a q₂ ⟨q₁, hR₁, hR₂⟩ htr
+    obtain ⟨q₁', hst, hq₁'⟩ := h₁.trans_match₁ hR₁ htr
+    obtain ⟨q₂', hst', hq₂'⟩ := h₂.trans_match₁ hR₂ hst
+    use q₂', hst', q₁', hq₁', hq₂'
+  · rintro s a q₂ q₂' ⟨q₁, hR₁, hR₂⟩ hst
+    obtain ⟨q₁', hst', hR₂'⟩:= h₂.trans_match₂ hR₂ hst
+    obtain ⟨s', htr, hR₁'⟩ := h₁.trans_match₂ hR₁ hst'
+    use s', htr, q₁'
+
+lemma Bisim.comp {M₁ : NFA A σ1} {M₂ : NFA A σ₂} {M₃ : NFA A σ₃}  :
+    M₁.Bisim M₂ → M₂.Bisim M₃ → M₁.Bisim M₃ := by
+  rintro ⟨_, hsim₁⟩ ⟨_, hsim₂⟩
+  exact ⟨_, Bisimul.comp hsim₁ hsim₂⟩
+
 lemma bisimul_eval_one (hsim : Bisimul R M₁ M₂) :
     R.set_eq Q₁ Q₂ → R.set_eq (M₁.stepSet Q₁ a) (M₂.stepSet Q₂ a) := by
   rintro ⟨h1, h2⟩; constructor <;> simp only [stepSet, mem_iUnion, exists_prop,
@@ -699,6 +746,11 @@ theorem bisimul_accepts :
   · apply bisimul_accepts₁ hsim
   · apply bisimul_accepts₁ hsim.symm
 
+theorem bisim_accepts :
+    Bisim M₁ M₂ → M₁.accepts = M₂.accepts := by
+  rintro ⟨R, hsimul⟩
+  exact bisimul_accepts hsimul
+
 end NFA
 
 def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | x ∈ m }
@@ -721,8 +773,6 @@ theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
     a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.toList.length → a[i]? ≠ a[j]? := by
   simp_rw [←Array.getElem?_toList]
   exact List.nodup_iff_getElem?_ne_getElem?
-
-  -- List.nodup_iff_getElem?_ne_getElem?
 
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
   rcases a with ⟨l⟩
