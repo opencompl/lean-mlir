@@ -533,11 +533,6 @@ elab "def_signature" " for " dialect:term (" where ")? alts:matchAltsSig : comma
 open Parser (matchAltsExpr)
 open Qq
 
-#check TyDenote
-#check Dialect.Ty
-#check Syntax
-#check SourceInfo.fromRef
-#check Syntax.setInfo
 
 elab "def_semantics" " for " dialect:term (" where ")? alts:matchAltsExpr : command => do
   let dialectExpr ← withRef dialect <| runTermElabM <| fun _ => do
