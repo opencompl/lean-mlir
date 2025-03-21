@@ -232,10 +232,7 @@ def bb0IcomGeneric (w : Nat) := [llvm(w)|
   }]
 
 /-- Indeed, the concrete program is an instantiation of the generic program -/
-example : bb0IcomGeneric 32 = bb0IcomConcrete := by
-  unfold bb0IcomGeneric bb0IcomConcrete
-  simp_alive_meta
-  rfl
+example : bb0IcomGeneric 32 = bb0IcomConcrete := rfl
 
 /-
   Simple example of the denotation of `GenericWidth`.
@@ -244,12 +241,7 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := by
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
-example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := by
-  unfold GenericWidth
-  revert Γv
-  simp_alive_meta
-  simp_alive_ssa
-  rfl
+example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
 
 open ComWrappers
 
@@ -273,14 +265,12 @@ def one_inst_com_proof (w : Nat) :
     one_inst_com w ⊑ one_inst_com w := by
   unfold one_inst_com
   simp only [simp_llvm_wrap]
-  simp_alive_meta
   simp_alive_ssa
   apply one_inst_stmt
 
 def one_inst_macro_proof (w : Nat) :
     one_inst_macro w ⊑ one_inst_macro w := by
   unfold one_inst_macro
-  simp_alive_meta
   simp_alive_ssa
   apply one_inst_stmt
 
@@ -306,14 +296,12 @@ def two_inst_com_proof (w : Nat) :
     two_inst_com w ⊑ two_inst_com w := by
   unfold two_inst_com
   simp only [simp_llvm_wrap]
-  simp_alive_meta
   simp_alive_ssa
   apply two_inst_stmt
 
 def two_inst_macro_proof (w : Nat) :
     two_inst_macro w ⊑ two_inst_macro w := by
   unfold two_inst_macro
-  simp_alive_meta
   simp_alive_ssa
   apply two_inst_stmt
 
@@ -342,14 +330,12 @@ def three_inst_com_proof (w : Nat) :
     three_inst_com w ⊑ three_inst_com w := by
   unfold three_inst_com
   simp only [simp_llvm_wrap]
-  simp_alive_meta
   simp_alive_ssa
   apply three_inst_stmt
 
 def three_inst_macro_proof (w : Nat) :
     three_inst_macro w ⊑ three_inst_macro w := by
   unfold three_inst_macro
-  simp_alive_meta
   simp_alive_ssa
   apply three_inst_stmt
 
@@ -373,14 +359,12 @@ def one_inst_concrete_com_proof :
     one_inst_concrete_com ⊑ one_inst_concrete_com := by
   unfold one_inst_concrete_com
   simp only [simp_llvm_wrap]
-  simp_alive_meta
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
 def one_inst_concrete_macro_proof :
     one_inst_concrete_macro ⊑ one_inst_concrete_macro := by
   unfold one_inst_concrete_macro
-  simp_alive_meta
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
@@ -406,14 +390,12 @@ def two_inst_concrete_com_proof :
     two_inst_concrete_com w ⊑ two_inst_concrete_com w := by
   unfold two_inst_concrete_com
   simp only [simp_llvm_wrap]
-  simp_alive_meta
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
 def two_inst_concrete_macro_proof :
     two_inst_concrete_macro ⊑ two_inst_concrete_macro := by
   unfold two_inst_concrete_macro
-  simp_alive_meta
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
@@ -442,14 +424,12 @@ def three_inst_concrete_com_proof :
     three_inst_concrete_com ⊑ three_inst_concrete_com := by
   unfold three_inst_concrete_com
   simp only [simp_llvm_wrap]
-  simp_alive_meta
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
 def three_inst_concrete_macro_proof :
     three_inst_concrete_macro ⊑ three_inst_concrete_macro := by
   unfold three_inst_concrete_macro
-  simp_alive_meta
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
@@ -469,7 +449,6 @@ def two_ne_stmt (a b : LLVM.IntW w) :
 def two_ne_macro_proof (w : Nat) :
     two_ne_macro w ⊑ two_ne_macro w := by
   unfold two_ne_macro
-  simp_alive_meta
   simp_alive_ssa
   apply two_ne_stmt
 
@@ -499,6 +478,5 @@ def constant_stmt :
 def constant_macro_proof (w : Nat) :
     constant_macro w ⊑ constant_macro w := by
   unfold constant_macro
-  simp_alive_meta
   simp_alive_ssa
   apply constant_stmt
