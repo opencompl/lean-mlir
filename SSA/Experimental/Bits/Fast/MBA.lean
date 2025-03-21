@@ -768,10 +768,6 @@ theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
 theorem BitVec.mul_distrib_add_left (x y z : BitVec w) : x * (y + z) = x * y + x * z := by
   apply BitVec.eq_of_toNat_eq
   simp [← Nat.mul_add]
-  conv =>
-    rhs
-    rw [Nat.mul_mod]
-  simp
 
 theorem BitVec.mul_distrib_add_right (x y z : BitVec w) :  (y + z) * x = y * x + z * x := by
   rw [BitVec.mul_comm]
