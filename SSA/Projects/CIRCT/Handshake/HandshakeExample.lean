@@ -9,6 +9,8 @@ import SSA.Core.Util
 
 namespace CIRCTStream
 
+#exit
+
 open MLIR AST in
 
 unseal String.splitOnAux in
