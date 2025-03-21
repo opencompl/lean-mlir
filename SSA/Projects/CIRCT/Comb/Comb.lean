@@ -239,6 +239,7 @@ instance : DialectSignature Comb := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (Comb) where
     denote
+    -- the idea is to parse arg as a List w (where arg is currently a list of mlir types)
     | .add _, arg, _ => Comb.add (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .and _, arg, _ => Comb.and (arg.getN 0 (by simp [DialectSignature.sig, signature]))
     | .concat _, arg, _ => Comb.concat (arg.getN 0 (by simp [DialectSignature.sig, signature]))

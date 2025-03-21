@@ -83,8 +83,6 @@ def test : BitVec 4 := CombEg5.denote (Ctxt.Valuation.ofHVector lh)
 
 #eval test
 
-
-
 -- def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
 -- def u : DC.TokenStream := ofList [some (), none, some (), some (), none]
 
