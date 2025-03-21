@@ -9,7 +9,7 @@ import SSA.Core.Framework.Macro
 import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Projects.InstCombine.Tactic
 import Mathlib.Tactic.Ring
 
@@ -25,7 +25,7 @@ namespace ToyNoRegion
 
 inductive Ty
   | int
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 @[reducible]
 instance : TyDenote Ty where
@@ -35,7 +35,7 @@ instance : TyDenote Ty where
 inductive Op : Type
   | add : Op
   | const : (val : ℤ) → Op
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 /-- `Simple` is a very basic example dialect -/
 abbrev Simple : Dialect where
@@ -46,10 +46,9 @@ def_signature for Simple
   | .add      => (.int, .int) → .int
   | .const _  => () → .int
 
-instance : DialectSignature Simple where
-  signature
-    | .const _ => ⟨[], [], .int, .pure⟩
-    | .add   => ⟨[.int, .int], [], .int, .pure⟩
+instance : DialectToExpr Simple where
+  toExprM := .const ``Id [0]
+  toExprDialect := .const ``Simple []
 
 @[reducible]
 instance : DialectDenote Simple where
@@ -120,7 +119,7 @@ instance : MLIR.AST.TransformReturn Simple 0 where
   mkReturn := mkReturn
 
 open Qq in
-elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Simple)
+elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom' reg (Simple)
 
 end MLIR2Simple
 
