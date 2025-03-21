@@ -1,0 +1,1331 @@
+,filename,guid,name,status,time_elapsed,error_message
+0,ch2_2AdditionAndLogicalOps,1,rfl,FAIL,8.460125,"tactic 'rfl' failed, the left-hand side
+      -x
+    is not definitionally equal to the right-hand side
+      ~~~x + 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ -x = ~~~x + 1#w"
+1,ch2_2AdditionAndLogicalOps,1,bv_bitwise,FAIL,369.577192,internal exception #5
+2,ch2_2AdditionAndLogicalOps,1,bv_ac,FAIL,72.340751,internal exception #5
+3,ch2_2AdditionAndLogicalOps,1,bv_distrib,FAIL,354.932973,internal exception #5
+4,ch2_2AdditionAndLogicalOps,1,bv_ring,FAIL,653.088842,internal exception #5
+5,ch2_2AdditionAndLogicalOps,1,bv_of_bool,FAIL,64.775026,simp made no progress
+6,ch2_2AdditionAndLogicalOps,1,bv_omega,FAIL,31.539609,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
+     b := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+7,ch2_2AdditionAndLogicalOps,1,bv_automata_classic_prop,PASS,67.606175,
+8,ch2_2AdditionAndLogicalOps,1,bv_automata_classic,PASS,15.50856,
+9,ch2_2AdditionAndLogicalOps,1,bv_normalize_automata_classic,PASS,92.381648,
+10,ch2_2AdditionAndLogicalOps,1,simp,FAIL,301.458768,simp made no progress
+11,ch2_2AdditionAndLogicalOps,1,bv_normalize,FAIL,44.575351,internal exception #5
+12,ch2_2AdditionAndLogicalOps,1,bv_decide,FAIL,103.98164,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [-x == ~~~x + 1#w]
+    Consider the following assignment:
+    -x == ~~~x + 1#w = false"
+13,ch2_2AdditionAndLogicalOps,1,bv_auto,PASS,969.46688,
+14,ch2_2AdditionAndLogicalOps,1,bv_automata_circuit_lean_prop,PASS,19.421077,
+15,ch2_2AdditionAndLogicalOps,1,bv_automata_circuit_lean,PASS,7.831225,
+16,ch2_2AdditionAndLogicalOps,1,bv_normalize_automata_circuit_lean,PASS,19.288327,
+17,ch2_2AdditionAndLogicalOps,1,bv_automata_circuit_cadical_prop,PASS,269.343439,
+18,ch2_2AdditionAndLogicalOps,1,bv_automata_circuit_cadical,PASS,257.135218,
+19,ch2_2AdditionAndLogicalOps,1,bv_normalize_automata_circuit_cadical,PASS,264.612872,
+20,ch2_2AdditionAndLogicalOps,1,bv_mba,FAIL,4.917727,"unable to reflect term '
+      -x'.
+    Expected 'int * variable'."
+21,ch2_2AdditionAndLogicalOps,1,bv_normalize_mba,FAIL,15.19594,internal exception #5
+22,ch2_2AdditionAndLogicalOps,2,rfl,FAIL,3.627518,"tactic 'rfl' failed, the left-hand side
+      -x
+    is not definitionally equal to the right-hand side
+      ~~~(x - 1#w)
+    w : ℕ
+    x : BitVec w
+    ⊢ -x = ~~~(x - 1#w)"
+23,ch2_2AdditionAndLogicalOps,2,bv_bitwise,FAIL,634.552915,internal exception #5
+24,ch2_2AdditionAndLogicalOps,2,bv_ac,FAIL,61.925018,internal exception #5
+25,ch2_2AdditionAndLogicalOps,2,bv_distrib,FAIL,668.429762,internal exception #5
+26,ch2_2AdditionAndLogicalOps,2,bv_ring,FAIL,1288.897746,internal exception #5
+27,ch2_2AdditionAndLogicalOps,2,bv_of_bool,FAIL,37.384485,simp made no progress
+28,ch2_2AdditionAndLogicalOps,2,bv_omega,FAIL,30.492599,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≤ -2
+    where
+     a := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)"
+29,ch2_2AdditionAndLogicalOps,2,bv_automata_classic_prop,PASS,1639.999761,
+30,ch2_2AdditionAndLogicalOps,2,bv_automata_classic,PASS,6.657126,
+31,ch2_2AdditionAndLogicalOps,2,bv_normalize_automata_classic,PASS,15.976849,
+32,ch2_2AdditionAndLogicalOps,2,simp,FAIL,63.343808,simp made no progress
+33,ch2_2AdditionAndLogicalOps,2,bv_normalize,FAIL,10.159883,internal exception #5
+34,ch2_2AdditionAndLogicalOps,2,bv_decide,FAIL,72.810641,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [-x == ~~~(x + -1#w)]
+    Consider the following assignment:
+    -x == ~~~(x + -1#w) = false"
+35,ch2_2AdditionAndLogicalOps,2,bv_auto,PASS,424.766415,
+36,ch2_2AdditionAndLogicalOps,2,bv_automata_circuit_lean_prop,PASS,18.702668,
+37,ch2_2AdditionAndLogicalOps,2,bv_automata_circuit_lean,PASS,7.225955,
+38,ch2_2AdditionAndLogicalOps,2,bv_normalize_automata_circuit_lean,PASS,17.194658,
+39,ch2_2AdditionAndLogicalOps,2,bv_automata_circuit_cadical_prop,PASS,269.15957,
+40,ch2_2AdditionAndLogicalOps,2,bv_automata_circuit_cadical,PASS,256.795388,
+41,ch2_2AdditionAndLogicalOps,2,bv_normalize_automata_circuit_cadical,PASS,266.083631,
+42,ch2_2AdditionAndLogicalOps,2,bv_mba,FAIL,4.532357,"unable to reflect term '
+      -x'.
+    Expected 'int * variable'."
+43,ch2_2AdditionAndLogicalOps,2,bv_normalize_mba,FAIL,14.369471,internal exception #5
+44,ch2_2AdditionAndLogicalOps,3,rfl,FAIL,4.807007,"tactic 'rfl' failed, the left-hand side
+      ~~~x
+    is not definitionally equal to the right-hand side
+      -x - 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~x = -x - 1#w"
+45,ch2_2AdditionAndLogicalOps,3,bv_bitwise,FAIL,389.122409,internal exception #5
+46,ch2_2AdditionAndLogicalOps,3,bv_ac,FAIL,32.559438,internal exception #5
+47,ch2_2AdditionAndLogicalOps,3,bv_distrib,FAIL,319.289346,internal exception #5
+48,ch2_2AdditionAndLogicalOps,3,bv_ring,FAIL,551.308381,internal exception #5
+49,ch2_2AdditionAndLogicalOps,3,bv_of_bool,FAIL,53.234344,simp made no progress
+50,ch2_2AdditionAndLogicalOps,3,bv_omega,FAIL,31.940489,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑((2 ^ w - x.toNat) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑x.toNat"
+51,ch2_2AdditionAndLogicalOps,3,bv_automata_classic_prop,PASS,4801.472841,
+52,ch2_2AdditionAndLogicalOps,3,bv_automata_classic,PASS,7.437245,
+53,ch2_2AdditionAndLogicalOps,3,bv_normalize_automata_classic,PASS,22.628025,
+54,ch2_2AdditionAndLogicalOps,3,simp,FAIL,70.655443,simp made no progress
+55,ch2_2AdditionAndLogicalOps,3,bv_normalize,FAIL,11.231422,internal exception #5
+56,ch2_2AdditionAndLogicalOps,3,bv_decide,FAIL,73.776811,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~x == -x + -1#w]
+    Consider the following assignment:
+    ~~~x == -x + -1#w = false"
+57,ch2_2AdditionAndLogicalOps,3,bv_auto,PASS,404.036489,
+58,ch2_2AdditionAndLogicalOps,3,bv_automata_circuit_lean_prop,PASS,18.294728,
+59,ch2_2AdditionAndLogicalOps,3,bv_automata_circuit_lean,PASS,7.079165,
+60,ch2_2AdditionAndLogicalOps,3,bv_normalize_automata_circuit_lean,PASS,18.377208,
+61,ch2_2AdditionAndLogicalOps,3,bv_automata_circuit_cadical_prop,PASS,265.981641,
+62,ch2_2AdditionAndLogicalOps,3,bv_automata_circuit_cadical,PASS,255.282919,
+63,ch2_2AdditionAndLogicalOps,3,bv_normalize_automata_circuit_cadical,PASS,267.318841,
+64,ch2_2AdditionAndLogicalOps,3,bv_mba,FAIL,6.232846,"unable to reflect term '
+      ~~~x'.
+    Expected 'int * variable'."
+65,ch2_2AdditionAndLogicalOps,3,bv_normalize_mba,FAIL,17.042798,internal exception #5
+66,ch2_2AdditionAndLogicalOps,4,rfl,FAIL,10.551993,"tactic 'rfl' failed, the left-hand side
+      -~~~x
+    is not definitionally equal to the right-hand side
+      x + 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ -~~~x = x + 1#w"
+67,ch2_2AdditionAndLogicalOps,4,bv_bitwise,FAIL,427.960713,internal exception #5
+68,ch2_2AdditionAndLogicalOps,4,bv_ac,FAIL,122.120389,internal exception #5
+69,ch2_2AdditionAndLogicalOps,4,bv_distrib,FAIL,522.449829,internal exception #5
+70,ch2_2AdditionAndLogicalOps,4,bv_ring,FAIL,918.870505,internal exception #5
+71,ch2_2AdditionAndLogicalOps,4,bv_of_bool,FAIL,74.769959,simp made no progress
+72,ch2_2AdditionAndLogicalOps,4,bv_omega,FAIL,55.903653,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑(x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
+     b := ↑(2 ^ w - (2 ^ w - 1 - x.toNat)) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+73,ch2_2AdditionAndLogicalOps,4,bv_automata_classic_prop,PASS,5851.148508,
+74,ch2_2AdditionAndLogicalOps,4,bv_automata_classic,PASS,6.492735,
+75,ch2_2AdditionAndLogicalOps,4,bv_normalize_automata_classic,PASS,15.96331,
+76,ch2_2AdditionAndLogicalOps,4,simp,FAIL,61.666988,simp made no progress
+77,ch2_2AdditionAndLogicalOps,4,bv_normalize,FAIL,10.103714,internal exception #5
+78,ch2_2AdditionAndLogicalOps,4,bv_decide,FAIL,72.733631,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [-~~~x == x + 1#w]
+    Consider the following assignment:
+    -~~~x == x + 1#w = false"
+79,ch2_2AdditionAndLogicalOps,4,bv_auto,PASS,410.311615,
+80,ch2_2AdditionAndLogicalOps,4,bv_automata_circuit_lean_prop,PASS,18.278818,
+81,ch2_2AdditionAndLogicalOps,4,bv_automata_circuit_lean,PASS,6.945755,
+82,ch2_2AdditionAndLogicalOps,4,bv_normalize_automata_circuit_lean,PASS,17.110649,
+83,ch2_2AdditionAndLogicalOps,4,bv_automata_circuit_cadical_prop,PASS,268.980719,
+84,ch2_2AdditionAndLogicalOps,4,bv_automata_circuit_cadical,PASS,257.152708,
+85,ch2_2AdditionAndLogicalOps,4,bv_normalize_automata_circuit_cadical,PASS,267.511381,
+86,ch2_2AdditionAndLogicalOps,4,bv_mba,FAIL,4.846547,"unable to reflect term '
+      -~~~x'.
+    Expected 'int * variable'."
+87,ch2_2AdditionAndLogicalOps,4,bv_normalize_mba,FAIL,14.70513,internal exception #5
+88,ch2_2AdditionAndLogicalOps,5,rfl,FAIL,3.795368,"tactic 'rfl' failed, the left-hand side
+      ~~~(-x)
+    is not definitionally equal to the right-hand side
+      x - 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(-x) = x - 1#w"
+89,ch2_2AdditionAndLogicalOps,5,bv_bitwise,FAIL,598.021749,internal exception #5
+90,ch2_2AdditionAndLogicalOps,5,bv_ac,FAIL,77.201418,internal exception #5
+91,ch2_2AdditionAndLogicalOps,5,bv_distrib,FAIL,530.473675,internal exception #5
+92,ch2_2AdditionAndLogicalOps,5,bv_ring,FAIL,741.170073,internal exception #5
+93,ch2_2AdditionAndLogicalOps,5,bv_of_bool,FAIL,48.600957,simp made no progress
+94,ch2_2AdditionAndLogicalOps,5,bv_omega,FAIL,29.60808,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)"
+95,ch2_2AdditionAndLogicalOps,5,bv_automata_classic_prop,PASS,7750.152885,
+96,ch2_2AdditionAndLogicalOps,5,bv_automata_classic,PASS,7.813295,
+97,ch2_2AdditionAndLogicalOps,5,bv_normalize_automata_classic,PASS,22.843805,
+98,ch2_2AdditionAndLogicalOps,5,simp,FAIL,71.103472,simp made no progress
+99,ch2_2AdditionAndLogicalOps,5,bv_normalize,FAIL,11.066013,internal exception #5
+100,ch2_2AdditionAndLogicalOps,5,bv_decide,FAIL,73.85522,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(-x) == x + -1#w]
+    Consider the following assignment:
+    ~~~(-x) == x + -1#w = false"
+101,ch2_2AdditionAndLogicalOps,5,bv_auto,PASS,418.39083,
+102,ch2_2AdditionAndLogicalOps,5,bv_automata_circuit_lean_prop,PASS,18.132688,
+103,ch2_2AdditionAndLogicalOps,5,bv_automata_circuit_lean,PASS,7.968545,
+104,ch2_2AdditionAndLogicalOps,5,bv_normalize_automata_circuit_lean,PASS,24.387273,
+105,ch2_2AdditionAndLogicalOps,5,bv_automata_circuit_cadical_prop,PASS,271.305968,
+106,ch2_2AdditionAndLogicalOps,5,bv_automata_circuit_cadical,PASS,257.018268,
+107,ch2_2AdditionAndLogicalOps,5,bv_normalize_automata_circuit_cadical,PASS,268.24909,
+108,ch2_2AdditionAndLogicalOps,5,bv_mba,FAIL,6.005076,"unable to reflect term '
+      ~~~(-x)'.
+    Expected 'int * variable'."
+109,ch2_2AdditionAndLogicalOps,5,bv_normalize_mba,FAIL,16.594469,internal exception #5
+110,ch2_2AdditionAndLogicalOps,6,rfl,FAIL,15.19984,"tactic 'rfl' failed, the left-hand side
+      x + y
+    is not definitionally equal to the right-hand side
+      x - ~~~y - 1#w
+    w : ℕ
+    x y : BitVec w
+    ⊢ x + y = x - ~~~y - 1#w"
+111,ch2_2AdditionAndLogicalOps,6,bv_bitwise,FAIL,1519.881321,internal exception #5
+112,ch2_2AdditionAndLogicalOps,6,bv_ac,FAIL,169.654116,internal exception #5
+113,ch2_2AdditionAndLogicalOps,6,bv_distrib,FAIL,861.196353,internal exception #5
+114,ch2_2AdditionAndLogicalOps,6,bv_ring,FAIL,443.838902,internal exception #5
+115,ch2_2AdditionAndLogicalOps,6,bv_of_bool,FAIL,27.361112,simp made no progress
+116,ch2_2AdditionAndLogicalOps,6,bv_omega,FAIL,14.59454,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x.toNat + (2 ^ w - (2 ^ w - 1 - y.toNat))) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+117,ch2_2AdditionAndLogicalOps,6,bv_automata_classic_prop,PASS,8563.49302,
+118,ch2_2AdditionAndLogicalOps,6,bv_automata_classic,PASS,7.641435,
+119,ch2_2AdditionAndLogicalOps,6,bv_normalize_automata_classic,PASS,25.915603,
+120,ch2_2AdditionAndLogicalOps,6,simp,FAIL,108.849178,simp made no progress
+121,ch2_2AdditionAndLogicalOps,6,bv_normalize,FAIL,18.831847,internal exception #5
+122,ch2_2AdditionAndLogicalOps,6,bv_decide,FAIL,81.641795,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + y == x + -~~~y + -1#w]
+    Consider the following assignment:
+    x + y == x + -~~~y + -1#w = false"
+123,ch2_2AdditionAndLogicalOps,6,bv_auto,PASS,538.976709,
+124,ch2_2AdditionAndLogicalOps,6,bv_automata_circuit_lean_prop,PASS,32.772708,
+125,ch2_2AdditionAndLogicalOps,6,bv_automata_circuit_lean,PASS,19.917967,
+126,ch2_2AdditionAndLogicalOps,6,bv_normalize_automata_circuit_lean,PASS,40.961162,
+127,ch2_2AdditionAndLogicalOps,6,bv_automata_circuit_cadical_prop,PASS,270.648559,
+128,ch2_2AdditionAndLogicalOps,6,bv_automata_circuit_cadical,PASS,260.540175,
+129,ch2_2AdditionAndLogicalOps,6,bv_normalize_automata_circuit_cadical,PASS,278.895083,
+130,ch2_2AdditionAndLogicalOps,6,bv_mba,FAIL,8.475914,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+131,ch2_2AdditionAndLogicalOps,6,bv_normalize_mba,FAIL,27.007072,internal exception #5
+132,ch2_2AdditionAndLogicalOps,7,rfl,FAIL,15.71304,"tactic 'rfl' failed, the left-hand side
+      x + y
+    is not definitionally equal to the right-hand side
+      (x ^^^ y) + ((x &&& y) + (x &&& y))
+    w : ℕ
+    x y : BitVec w
+    ⊢ x + y = (x ^^^ y) + ((x &&& y) + (x &&& y))"
+133,ch2_2AdditionAndLogicalOps,7,bv_bitwise,FAIL,843.955294,internal exception #5
+134,ch2_2AdditionAndLogicalOps,7,bv_ac,FAIL,191.680212,internal exception #5
+135,ch2_2AdditionAndLogicalOps,7,bv_distrib,FAIL,884.922127,internal exception #5
+136,ch2_2AdditionAndLogicalOps,7,bv_ring,FAIL,536.96834,internal exception #5
+137,ch2_2AdditionAndLogicalOps,7,bv_of_bool,FAIL,63.718607,simp made no progress
+138,ch2_2AdditionAndLogicalOps,7,bv_omega,FAIL,24.987613,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x ^^^ y).toNat + ((x &&& y).toNat + (x &&& y).toNat) % 2 ^ w) % ↑(2 ^ w)
+     b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+139,ch2_2AdditionAndLogicalOps,7,bv_automata_classic_prop,PASS,11232.426111,
+140,ch2_2AdditionAndLogicalOps,7,bv_automata_classic,PASS,8.411984,
+141,ch2_2AdditionAndLogicalOps,7,bv_normalize_automata_classic,PASS,27.531962,
+142,ch2_2AdditionAndLogicalOps,7,simp,FAIL,106.609338,simp made no progress
+143,ch2_2AdditionAndLogicalOps,7,bv_normalize,FAIL,19.746787,internal exception #5
+144,ch2_2AdditionAndLogicalOps,7,bv_decide,FAIL,82.388465,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + y == (x ^^^ y) + (x &&& y) * 2#w]
+    Consider the following assignment:
+    x + y == (x ^^^ y) + (x &&& y) * 2#w = false"
+145,ch2_2AdditionAndLogicalOps,7,bv_auto,PASS,505.886241,
+146,ch2_2AdditionAndLogicalOps,7,bv_automata_circuit_lean_prop,PASS,27.748921,
+147,ch2_2AdditionAndLogicalOps,7,bv_automata_circuit_lean,PASS,15.70683,
+148,ch2_2AdditionAndLogicalOps,7,bv_normalize_automata_circuit_lean,PASS,35.053746,
+149,ch2_2AdditionAndLogicalOps,7,bv_automata_circuit_cadical_prop,PASS,272.442758,
+150,ch2_2AdditionAndLogicalOps,7,bv_automata_circuit_cadical,PASS,257.670057,
+151,ch2_2AdditionAndLogicalOps,7,bv_normalize_automata_circuit_cadical,PASS,277.993243,
+152,ch2_2AdditionAndLogicalOps,7,bv_mba,FAIL,5.467287,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+153,ch2_2AdditionAndLogicalOps,7,bv_normalize_mba,FAIL,24.873913,internal exception #5
+154,ch2_2AdditionAndLogicalOps,8,rfl,FAIL,15.2647,"tactic 'rfl' failed, the left-hand side
+      x + y
+    is not definitionally equal to the right-hand side
+      (x ||| y) + (x &&& y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ x + y = (x ||| y) + (x &&& y)"
+155,ch2_2AdditionAndLogicalOps,8,bv_bitwise,FAIL,639.156521,internal exception #5
+156,ch2_2AdditionAndLogicalOps,8,bv_ac,FAIL,103.362221,internal exception #5
+157,ch2_2AdditionAndLogicalOps,8,bv_distrib,FAIL,602.902556,internal exception #5
+158,ch2_2AdditionAndLogicalOps,8,bv_ring,FAIL,708.372505,internal exception #5
+159,ch2_2AdditionAndLogicalOps,8,bv_of_bool,FAIL,82.081605,simp made no progress
+160,ch2_2AdditionAndLogicalOps,8,bv_omega,FAIL,33.762157,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x ||| y).toNat + (x &&& y).toNat) % ↑(2 ^ w)
+     b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+161,ch2_2AdditionAndLogicalOps,8,bv_automata_classic_prop,PASS,13713.301608,
+162,ch2_2AdditionAndLogicalOps,8,bv_automata_classic,PASS,7.454255,
+163,ch2_2AdditionAndLogicalOps,8,bv_normalize_automata_classic,PASS,27.289302,
+164,ch2_2AdditionAndLogicalOps,8,simp,FAIL,93.590557,simp made no progress
+165,ch2_2AdditionAndLogicalOps,8,bv_normalize,FAIL,20.014817,internal exception #5
+166,ch2_2AdditionAndLogicalOps,8,bv_decide,FAIL,82.880204,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + y == ~~~(~~~x &&& ~~~y) + (x &&& y)]
+    Consider the following assignment:
+    x + y == ~~~(~~~x &&& ~~~y) + (x &&& y) = false"
+167,ch2_2AdditionAndLogicalOps,8,bv_auto,PASS,461.101961,
+168,ch2_2AdditionAndLogicalOps,8,bv_automata_circuit_lean_prop,PASS,21.218916,
+169,ch2_2AdditionAndLogicalOps,8,bv_automata_circuit_lean,PASS,8.293155,
+170,ch2_2AdditionAndLogicalOps,8,bv_normalize_automata_circuit_lean,PASS,27.476041,
+171,ch2_2AdditionAndLogicalOps,8,bv_automata_circuit_cadical_prop,PASS,270.563849,
+172,ch2_2AdditionAndLogicalOps,8,bv_automata_circuit_cadical,PASS,258.097417,
+173,ch2_2AdditionAndLogicalOps,8,bv_normalize_automata_circuit_cadical,PASS,278.784513,
+174,ch2_2AdditionAndLogicalOps,8,bv_mba,FAIL,4.716807,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+175,ch2_2AdditionAndLogicalOps,8,bv_normalize_mba,FAIL,24.699353,internal exception #5
+176,ch2_2AdditionAndLogicalOps,9,rfl,FAIL,19.798016,"tactic 'rfl' failed, the left-hand side
+      x + y
+    is not definitionally equal to the right-hand side
+      (x ||| y) + (x ||| y) - (x ^^^ y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ x + y = (x ||| y) + (x ||| y) - (x ^^^ y)"
+177,ch2_2AdditionAndLogicalOps,9,bv_bitwise,FAIL,1559.934945,internal exception #5
+178,ch2_2AdditionAndLogicalOps,9,bv_ac,FAIL,136.886698,internal exception #5
+179,ch2_2AdditionAndLogicalOps,9,bv_distrib,FAIL,890.672843,internal exception #5
+180,ch2_2AdditionAndLogicalOps,9,bv_ring,FAIL,392.229667,internal exception #5
+181,ch2_2AdditionAndLogicalOps,9,bv_of_bool,FAIL,31.761869,simp made no progress
+182,ch2_2AdditionAndLogicalOps,9,bv_omega,FAIL,14.94526,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑(((x ||| y).toNat + (x ||| y).toNat) % 2 ^ w + (2 ^ w - (x ^^^ y).toNat)) % ↑(2 ^ w)
+     b := ↑(x.toNat + y.toNat) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+183,ch2_2AdditionAndLogicalOps,9,bv_automata_classic_prop,PASS,14827.82432,
+184,ch2_2AdditionAndLogicalOps,9,bv_automata_classic,PASS,10.513953,
+185,ch2_2AdditionAndLogicalOps,9,bv_normalize_automata_classic,PASS,40.082443,
+186,ch2_2AdditionAndLogicalOps,9,simp,FAIL,187.181805,simp made no progress
+187,ch2_2AdditionAndLogicalOps,9,bv_normalize,FAIL,22.369995,internal exception #5
+188,ch2_2AdditionAndLogicalOps,9,bv_decide,FAIL,85.178653,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + y ==
+       ~~~(~~~x &&& ~~~y) * 2#w + -(x ^^^ y)]
+    Consider the following assignment:
+    x + y == ~~~(~~~x &&& ~~~y) * 2#w + -(x ^^^ y) = false"
+189,ch2_2AdditionAndLogicalOps,9,bv_auto,PASS,691.172757,
+190,ch2_2AdditionAndLogicalOps,9,bv_automata_circuit_lean_prop,PASS,26.985612,
+191,ch2_2AdditionAndLogicalOps,9,bv_automata_circuit_lean,PASS,14.75963,
+192,ch2_2AdditionAndLogicalOps,9,bv_normalize_automata_circuit_lean,PASS,37.207115,
+193,ch2_2AdditionAndLogicalOps,9,bv_automata_circuit_cadical_prop,PASS,273.305517,
+194,ch2_2AdditionAndLogicalOps,9,bv_automata_circuit_cadical,PASS,260.702595,
+195,ch2_2AdditionAndLogicalOps,9,bv_normalize_automata_circuit_cadical,PASS,282.94082,
+196,ch2_2AdditionAndLogicalOps,9,bv_mba,FAIL,6.588845,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+197,ch2_2AdditionAndLogicalOps,9,bv_normalize_mba,FAIL,28.412241,internal exception #5
+198,ch2_2AdditionAndLogicalOps,10,rfl,FAIL,29.05604,"tactic 'rfl' failed, the left-hand side
+      x - y
+    is not definitionally equal to the right-hand side
+      x + ~~~y + 1#w
+    w : ℕ
+    x y : BitVec w
+    ⊢ x - y = x + ~~~y + 1#w"
+199,ch2_2AdditionAndLogicalOps,10,bv_bitwise,FAIL,635.158675,internal exception #5
+200,ch2_2AdditionAndLogicalOps,10,bv_ac,FAIL,72.315021,internal exception #5
+201,ch2_2AdditionAndLogicalOps,10,bv_distrib,FAIL,525.274998,internal exception #5
+202,ch2_2AdditionAndLogicalOps,10,bv_ring,FAIL,739.513594,internal exception #5
+203,ch2_2AdditionAndLogicalOps,10,bv_of_bool,FAIL,54.623594,simp made no progress
+204,ch2_2AdditionAndLogicalOps,10,bv_omega,FAIL,53.558324,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x.toNat + (2 ^ w - 1 - y.toNat)) % 2 ^ w + 1 % 2 ^ w) % ↑(2 ^ w)
+     b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+205,ch2_2AdditionAndLogicalOps,10,bv_automata_classic_prop,PASS,18314.329564,
+206,ch2_2AdditionAndLogicalOps,10,bv_automata_classic,PASS,9.384053,
+207,ch2_2AdditionAndLogicalOps,10,bv_normalize_automata_classic,PASS,35.155377,
+208,ch2_2AdditionAndLogicalOps,10,simp,FAIL,93.332177,simp made no progress
+209,ch2_2AdditionAndLogicalOps,10,bv_normalize,FAIL,18.479698,internal exception #5
+210,ch2_2AdditionAndLogicalOps,10,bv_decide,FAIL,81.575885,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + -y == x + ~~~y + 1#w]
+    Consider the following assignment:
+    x + -y == x + ~~~y + 1#w = false"
+211,ch2_2AdditionAndLogicalOps,10,bv_auto,PASS,493.301959,
+212,ch2_2AdditionAndLogicalOps,10,bv_automata_circuit_lean_prop,PASS,33.225697,
+213,ch2_2AdditionAndLogicalOps,10,bv_automata_circuit_lean,PASS,21.266086,
+214,ch2_2AdditionAndLogicalOps,10,bv_normalize_automata_circuit_lean,PASS,40.029713,
+215,ch2_2AdditionAndLogicalOps,10,bv_automata_circuit_cadical_prop,PASS,270.324979,
+216,ch2_2AdditionAndLogicalOps,10,bv_automata_circuit_cadical,PASS,258.669146,
+217,ch2_2AdditionAndLogicalOps,10,bv_normalize_automata_circuit_cadical,PASS,278.404264,
+218,ch2_2AdditionAndLogicalOps,10,bv_mba,FAIL,7.148525,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+219,ch2_2AdditionAndLogicalOps,10,bv_normalize_mba,FAIL,25.411623,internal exception #5
+220,ch2_2AdditionAndLogicalOps,11,rfl,FAIL,55.655443,"tactic 'rfl' failed, the left-hand side
+      x - y
+    is not definitionally equal to the right-hand side
+      (x ^^^ y) - ((~~~x &&& y) + (~~~x &&& y))
+    w : ℕ
+    x y : BitVec w
+    ⊢ x - y = (x ^^^ y) - ((~~~x &&& y) + (~~~x &&& y))"
+221,ch2_2AdditionAndLogicalOps,11,bv_bitwise,FAIL,1195.081879,internal exception #5
+222,ch2_2AdditionAndLogicalOps,11,bv_ac,FAIL,158.783593,internal exception #5
+223,ch2_2AdditionAndLogicalOps,11,bv_distrib,FAIL,907.586032,internal exception #5
+224,ch2_2AdditionAndLogicalOps,11,bv_ring,FAIL,465.727368,internal exception #5
+225,ch2_2AdditionAndLogicalOps,11,bv_of_bool,FAIL,43.118281,simp made no progress
+226,ch2_2AdditionAndLogicalOps,11,bv_omega,FAIL,24.638973,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x ^^^ y).toNat + (2 ^ w - ((~~~x &&& y).toNat + (~~~x &&& y).toNat) % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+227,ch2_2AdditionAndLogicalOps,11,bv_automata_classic_prop,PASS,19646.107981,
+228,ch2_2AdditionAndLogicalOps,11,bv_automata_classic,PASS,12.305082,
+229,ch2_2AdditionAndLogicalOps,11,bv_normalize_automata_classic,PASS,47.462658,
+230,ch2_2AdditionAndLogicalOps,11,simp,FAIL,167.437708,internal exception #5
+231,ch2_2AdditionAndLogicalOps,11,bv_normalize,FAIL,21.823675,internal exception #5
+232,ch2_2AdditionAndLogicalOps,11,bv_decide,FAIL,84.935723,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + -y ==
+       (x ^^^ y) + -((~~~x &&& y) * 2#w)]
+    Consider the following assignment:
+    x + -y == (x ^^^ y) + -((~~~x &&& y) * 2#w) = false"
+233,ch2_2AdditionAndLogicalOps,11,bv_auto,PASS,682.709003,
+234,ch2_2AdditionAndLogicalOps,11,bv_automata_circuit_lean_prop,PASS,27.402401,
+235,ch2_2AdditionAndLogicalOps,11,bv_automata_circuit_lean,PASS,15.22233,
+236,ch2_2AdditionAndLogicalOps,11,bv_normalize_automata_circuit_lean,PASS,37.094795,
+237,ch2_2AdditionAndLogicalOps,11,bv_automata_circuit_cadical_prop,PASS,271.707808,
+238,ch2_2AdditionAndLogicalOps,11,bv_automata_circuit_cadical,PASS,259.937846,
+239,ch2_2AdditionAndLogicalOps,11,bv_normalize_automata_circuit_cadical,PASS,282.67612,
+240,ch2_2AdditionAndLogicalOps,11,bv_mba,FAIL,6.927226,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+241,ch2_2AdditionAndLogicalOps,11,bv_normalize_mba,FAIL,27.903831,internal exception #5
+242,ch2_2AdditionAndLogicalOps,12,rfl,FAIL,39.894153,"tactic 'rfl' failed, the left-hand side
+      x - y
+    is not definitionally equal to the right-hand side
+      (x &&& ~~~y) - (~~~x &&& y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ x - y = (x &&& ~~~y) - (~~~x &&& y)"
+243,ch2_2AdditionAndLogicalOps,12,bv_bitwise,FAIL,1622.048793,internal exception #5
+244,ch2_2AdditionAndLogicalOps,12,bv_ac,FAIL,216.262135,internal exception #5
+245,ch2_2AdditionAndLogicalOps,12,bv_distrib,FAIL,701.799889,internal exception #5
+246,ch2_2AdditionAndLogicalOps,12,bv_ring,FAIL,367.401394,internal exception #5
+247,ch2_2AdditionAndLogicalOps,12,bv_of_bool,FAIL,26.760882,simp made no progress
+248,ch2_2AdditionAndLogicalOps,12,bv_omega,FAIL,13.311931,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x &&& ~~~y).toNat + (2 ^ w - (~~~x &&& y).toNat)) % ↑(2 ^ w)
+     b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+249,ch2_2AdditionAndLogicalOps,12,bv_automata_classic_prop,PASS,22036.519129,
+250,ch2_2AdditionAndLogicalOps,12,bv_automata_classic,PASS,9.287734,
+251,ch2_2AdditionAndLogicalOps,12,bv_normalize_automata_classic,PASS,35.640096,
+252,ch2_2AdditionAndLogicalOps,12,simp,FAIL,106.986568,simp made no progress
+253,ch2_2AdditionAndLogicalOps,12,bv_normalize,FAIL,19.924387,internal exception #5
+254,ch2_2AdditionAndLogicalOps,12,bv_decide,FAIL,82.989694,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + -y == (x &&& ~~~y) + -(~~~x &&& y)]
+    Consider the following assignment:
+    x + -y == (x &&& ~~~y) + -(~~~x &&& y) = false"
+255,ch2_2AdditionAndLogicalOps,12,bv_auto,PASS,527.642047,
+256,ch2_2AdditionAndLogicalOps,12,bv_automata_circuit_lean_prop,PASS,18.503187,
+257,ch2_2AdditionAndLogicalOps,12,bv_automata_circuit_lean,PASS,7.332796,
+258,ch2_2AdditionAndLogicalOps,12,bv_normalize_automata_circuit_lean,PASS,26.909612,
+259,ch2_2AdditionAndLogicalOps,12,bv_automata_circuit_cadical_prop,PASS,270.215118,
+260,ch2_2AdditionAndLogicalOps,12,bv_automata_circuit_cadical,PASS,258.924367,
+261,ch2_2AdditionAndLogicalOps,12,bv_normalize_automata_circuit_cadical,PASS,279.126842,
+262,ch2_2AdditionAndLogicalOps,12,bv_mba,FAIL,5.395817,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+263,ch2_2AdditionAndLogicalOps,12,bv_normalize_mba,FAIL,24.916553,internal exception #5
+264,ch2_2AdditionAndLogicalOps,13,rfl,FAIL,159.929023,"tactic 'rfl' failed, the left-hand side
+      x - y
+    is not definitionally equal to the right-hand side
+      (x &&& ~~~y) + (x &&& ~~~y) - (x ^^^ y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ x - y = (x &&& ~~~y) + (x &&& ~~~y) - (x ^^^ y)"
+265,ch2_2AdditionAndLogicalOps,13,bv_bitwise,FAIL,2416.85494,internal exception #5
+266,ch2_2AdditionAndLogicalOps,13,bv_ac,FAIL,75.32416,internal exception #5
+267,ch2_2AdditionAndLogicalOps,13,bv_distrib,FAIL,415.245121,internal exception #5
+268,ch2_2AdditionAndLogicalOps,13,bv_ring,FAIL,242.232978,internal exception #5
+269,ch2_2AdditionAndLogicalOps,13,bv_of_bool,FAIL,20.171276,simp made no progress
+270,ch2_2AdditionAndLogicalOps,13,bv_omega,FAIL,10.193593,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑(((x &&& ~~~y).toNat + (x &&& ~~~y).toNat) % 2 ^ w + (2 ^ w - (x ^^^ y).toNat)) % ↑(2 ^ w)
+     b := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     c := ↑2 ^ w"
+271,ch2_2AdditionAndLogicalOps,13,bv_automata_classic_prop,PASS,23776.026853,
+272,ch2_2AdditionAndLogicalOps,13,bv_automata_classic,PASS,8.496785,
+273,ch2_2AdditionAndLogicalOps,13,bv_normalize_automata_classic,PASS,29.52443,
+274,ch2_2AdditionAndLogicalOps,13,simp,FAIL,189.920882,simp made no progress
+275,ch2_2AdditionAndLogicalOps,13,bv_normalize,FAIL,21.569176,internal exception #5
+276,ch2_2AdditionAndLogicalOps,13,bv_decide,FAIL,84.631853,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x + -y ==
+       (x &&& ~~~y) * 2#w + -(x ^^^ y)]
+    Consider the following assignment:
+    x + -y == (x &&& ~~~y) * 2#w + -(x ^^^ y) = false"
+277,ch2_2AdditionAndLogicalOps,13,bv_auto,PASS,729.012821,
+278,ch2_2AdditionAndLogicalOps,13,bv_automata_circuit_lean_prop,PASS,26.934282,
+279,ch2_2AdditionAndLogicalOps,13,bv_automata_circuit_lean,PASS,14.69098,
+280,ch2_2AdditionAndLogicalOps,13,bv_normalize_automata_circuit_lean,PASS,36.373555,
+281,ch2_2AdditionAndLogicalOps,13,bv_automata_circuit_cadical_prop,PASS,273.118117,
+282,ch2_2AdditionAndLogicalOps,13,bv_automata_circuit_cadical,PASS,261.268415,
+283,ch2_2AdditionAndLogicalOps,13,bv_normalize_automata_circuit_cadical,PASS,282.98339,
+284,ch2_2AdditionAndLogicalOps,13,bv_mba,FAIL,6.970755,"unable to reflect term '
+      x'.
+    Expected 'int * variable'."
+285,ch2_2AdditionAndLogicalOps,13,bv_normalize_mba,FAIL,28.013422,internal exception #5
+286,ch2_2AdditionAndLogicalOps,14,rfl,FAIL,26.525842,"tactic 'rfl' failed, the left-hand side
+      x ^^^ y
+    is not definitionally equal to the right-hand side
+      (x ||| y) - (x &&& y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ x ^^^ y = (x ||| y) - (x &&& y)"
+287,ch2_2AdditionAndLogicalOps,14,bv_bitwise,FAIL,1500.645144,internal exception #5
+288,ch2_2AdditionAndLogicalOps,14,bv_ac,FAIL,220.008032,internal exception #5
+289,ch2_2AdditionAndLogicalOps,14,bv_distrib,FAIL,726.816213,internal exception #5
+290,ch2_2AdditionAndLogicalOps,14,bv_ring,FAIL,400.138032,internal exception #5
+291,ch2_2AdditionAndLogicalOps,14,bv_of_bool,FAIL,37.690255,simp made no progress
+292,ch2_2AdditionAndLogicalOps,14,bv_omega,FAIL,13.9284,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x ||| y).toNat + (2 ^ w - (x &&& y).toNat)) % ↑(2 ^ w)
+     b := ↑(x ^^^ y).toNat
+     c := ↑2 ^ w"
+293,ch2_2AdditionAndLogicalOps,14,bv_automata_classic_prop,PASS,26790.755942,
+294,ch2_2AdditionAndLogicalOps,14,bv_automata_classic,PASS,6.831306,
+295,ch2_2AdditionAndLogicalOps,14,bv_normalize_automata_classic,PASS,21.865145,
+296,ch2_2AdditionAndLogicalOps,14,simp,FAIL,79.201727,simp made no progress
+297,ch2_2AdditionAndLogicalOps,14,bv_normalize,FAIL,15.00804,internal exception #5
+298,ch2_2AdditionAndLogicalOps,14,bv_decide,FAIL,78.172478,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x ^^^ y ==
+       ~~~(~~~x &&& ~~~y) + -(x &&& y)]
+    Consider the following assignment:
+    x ^^^ y == ~~~(~~~x &&& ~~~y) + -(x &&& y) = false"
+299,ch2_2AdditionAndLogicalOps,14,bv_auto,PASS,453.431556,
+300,ch2_2AdditionAndLogicalOps,14,bv_automata_circuit_lean_prop,PASS,19.888017,
+301,ch2_2AdditionAndLogicalOps,14,bv_automata_circuit_lean,PASS,7.207555,
+302,ch2_2AdditionAndLogicalOps,14,bv_normalize_automata_circuit_lean,PASS,21.678175,
+303,ch2_2AdditionAndLogicalOps,14,bv_automata_circuit_cadical_prop,PASS,271.318748,
+304,ch2_2AdditionAndLogicalOps,14,bv_automata_circuit_cadical,PASS,260.205136,
+305,ch2_2AdditionAndLogicalOps,14,bv_normalize_automata_circuit_cadical,PASS,275.230745,
+306,ch2_2AdditionAndLogicalOps,14,bv_mba,FAIL,4.648537,"unable to reflect term '
+      x ^^^ y'.
+    Expected 'int * variable'."
+307,ch2_2AdditionAndLogicalOps,14,bv_normalize_mba,FAIL,18.928657,internal exception #5
+308,ch2_2AdditionAndLogicalOps,15,rfl,FAIL,26.217432,"tactic 'rfl' failed, the left-hand side
+      x &&& ~~~y
+    is not definitionally equal to the right-hand side
+      (x ||| y) - y
+    w : ℕ
+    x y : BitVec w
+    ⊢ x &&& ~~~y = (x ||| y) - y"
+309,ch2_2AdditionAndLogicalOps,15,bv_bitwise,FAIL,1338.700293,internal exception #5
+310,ch2_2AdditionAndLogicalOps,15,bv_ac,FAIL,144.740813,internal exception #5
+311,ch2_2AdditionAndLogicalOps,15,bv_distrib,FAIL,939.49711,internal exception #5
+312,ch2_2AdditionAndLogicalOps,15,bv_ring,FAIL,355.114242,internal exception #5
+313,ch2_2AdditionAndLogicalOps,15,bv_of_bool,FAIL,39.814543,simp made no progress
+314,ch2_2AdditionAndLogicalOps,15,bv_omega,FAIL,14.70859,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x ||| y).toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     b := ↑(x &&& ~~~y).toNat
+     c := ↑2 ^ w"
+315,ch2_2AdditionAndLogicalOps,15,bv_automata_classic_prop,PASS,28774.113413,
+316,ch2_2AdditionAndLogicalOps,15,bv_automata_classic,PASS,7.293115,
+317,ch2_2AdditionAndLogicalOps,15,bv_normalize_automata_classic,PASS,21.776665,
+318,ch2_2AdditionAndLogicalOps,15,simp,FAIL,79.292907,simp made no progress
+319,ch2_2AdditionAndLogicalOps,15,bv_normalize,FAIL,14.73877,internal exception #5
+320,ch2_2AdditionAndLogicalOps,15,bv_decide,FAIL,78.137168,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x &&& ~~~y == ~~~(~~~x &&& ~~~y) + -y]
+    Consider the following assignment:
+    x &&& ~~~y == ~~~(~~~x &&& ~~~y) + -y = false"
+321,ch2_2AdditionAndLogicalOps,15,bv_auto,PASS,451.229978,
+322,ch2_2AdditionAndLogicalOps,15,bv_automata_circuit_lean_prop,PASS,18.235388,
+323,ch2_2AdditionAndLogicalOps,15,bv_automata_circuit_lean,PASS,9.185904,
+324,ch2_2AdditionAndLogicalOps,15,bv_normalize_automata_circuit_lean,PASS,21.469175,
+325,ch2_2AdditionAndLogicalOps,15,bv_automata_circuit_cadical_prop,PASS,272.684617,
+326,ch2_2AdditionAndLogicalOps,15,bv_automata_circuit_cadical,PASS,264.033793,
+327,ch2_2AdditionAndLogicalOps,15,bv_normalize_automata_circuit_cadical,PASS,278.063514,
+328,ch2_2AdditionAndLogicalOps,15,bv_mba,FAIL,4.634417,"unable to reflect term '
+      x &&& ~~~y'.
+    Expected 'int * variable'."
+329,ch2_2AdditionAndLogicalOps,15,bv_normalize_mba,FAIL,18.718937,internal exception #5
+330,ch2_2AdditionAndLogicalOps,16,rfl,FAIL,18.785088,"tactic 'rfl' failed, the left-hand side
+      x &&& ~~~y
+    is not definitionally equal to the right-hand side
+      x - (x &&& y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ x &&& ~~~y = x - (x &&& y)"
+331,ch2_2AdditionAndLogicalOps,16,bv_bitwise,FAIL,1679.192304,internal exception #5
+332,ch2_2AdditionAndLogicalOps,16,bv_ac,FAIL,141.149295,internal exception #5
+333,ch2_2AdditionAndLogicalOps,16,bv_distrib,FAIL,586.824617,internal exception #5
+334,ch2_2AdditionAndLogicalOps,16,bv_ring,FAIL,318.977956,internal exception #5
+335,ch2_2AdditionAndLogicalOps,16,bv_of_bool,FAIL,38.394294,simp made no progress
+336,ch2_2AdditionAndLogicalOps,16,bv_omega,FAIL,17.973758,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑(x.toNat + (2 ^ w - (x &&& y).toNat)) % ↑(2 ^ w)
+     b := ↑(x &&& ~~~y).toNat
+     c := ↑2 ^ w"
+337,ch2_2AdditionAndLogicalOps,16,bv_automata_classic_prop,PASS,30761.037411,
+338,ch2_2AdditionAndLogicalOps,16,bv_automata_classic,PASS,6.732116,
+339,ch2_2AdditionAndLogicalOps,16,bv_normalize_automata_classic,PASS,18.912827,
+340,ch2_2AdditionAndLogicalOps,16,simp,FAIL,76.134019,simp made no progress
+341,ch2_2AdditionAndLogicalOps,16,bv_normalize,FAIL,12.532162,internal exception #5
+342,ch2_2AdditionAndLogicalOps,16,bv_decide,FAIL,75.697229,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x &&& ~~~y == x + -(x &&& y)]
+    Consider the following assignment:
+    x &&& ~~~y == x + -(x &&& y) = false"
+343,ch2_2AdditionAndLogicalOps,16,bv_auto,PASS,428.891022,
+344,ch2_2AdditionAndLogicalOps,16,bv_automata_circuit_lean_prop,PASS,16.747798,
+345,ch2_2AdditionAndLogicalOps,16,bv_automata_circuit_lean,PASS,6.319446,
+346,ch2_2AdditionAndLogicalOps,16,bv_normalize_automata_circuit_lean,PASS,18.970427,
+347,ch2_2AdditionAndLogicalOps,16,bv_automata_circuit_cadical_prop,PASS,270.177099,
+348,ch2_2AdditionAndLogicalOps,16,bv_automata_circuit_cadical,PASS,260.569936,
+349,ch2_2AdditionAndLogicalOps,16,bv_normalize_automata_circuit_cadical,PASS,273.985046,
+350,ch2_2AdditionAndLogicalOps,16,bv_mba,FAIL,4.344097,"unable to reflect term '
+      x &&& ~~~y'.
+    Expected 'int * variable'."
+351,ch2_2AdditionAndLogicalOps,16,bv_normalize_mba,FAIL,16.254439,internal exception #5
+352,ch2_2AdditionAndLogicalOps,17,rfl,FAIL,33.910488,"tactic 'rfl' failed, the left-hand side
+      ~~~(x - y)
+    is not definitionally equal to the right-hand side
+      y - x - 1#w
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x - y) = y - x - 1#w"
+353,ch2_2AdditionAndLogicalOps,17,bv_bitwise,FAIL,1075.570978,internal exception #5
+354,ch2_2AdditionAndLogicalOps,17,bv_ac,FAIL,36.106326,internal exception #5
+355,ch2_2AdditionAndLogicalOps,17,bv_distrib,FAIL,667.067983,internal exception #5
+356,ch2_2AdditionAndLogicalOps,17,bv_ring,FAIL,921.920642,internal exception #5
+357,ch2_2AdditionAndLogicalOps,17,bv_of_bool,FAIL,39.614674,simp made no progress
+358,ch2_2AdditionAndLogicalOps,17,bv_omega,FAIL,24.970073,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑((y.toNat + (2 ^ w - x.toNat)) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)"
+359,ch2_2AdditionAndLogicalOps,17,bv_automata_classic_prop,PASS,32600.081268,
+360,ch2_2AdditionAndLogicalOps,17,bv_automata_classic,PASS,8.445354,
+361,ch2_2AdditionAndLogicalOps,17,bv_normalize_automata_classic,PASS,27.646862,
+362,ch2_2AdditionAndLogicalOps,17,simp,FAIL,94.774296,simp made no progress
+363,ch2_2AdditionAndLogicalOps,17,bv_normalize,FAIL,13.519391,internal exception #5
+364,ch2_2AdditionAndLogicalOps,17,bv_decide,FAIL,76.823799,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x + -y) == y + -x + -1#w]
+    Consider the following assignment:
+    ~~~(x + -y) == y + -x + -1#w = false"
+365,ch2_2AdditionAndLogicalOps,17,bv_auto,PASS,505.680341,
+366,ch2_2AdditionAndLogicalOps,17,bv_automata_circuit_lean_prop,PASS,31.636789,
+367,ch2_2AdditionAndLogicalOps,17,bv_automata_circuit_lean,PASS,19.721256,
+368,ch2_2AdditionAndLogicalOps,17,bv_normalize_automata_circuit_lean,PASS,33.556188,
+369,ch2_2AdditionAndLogicalOps,17,bv_automata_circuit_cadical_prop,PASS,270.104139,
+370,ch2_2AdditionAndLogicalOps,17,bv_automata_circuit_cadical,PASS,261.040685,
+371,ch2_2AdditionAndLogicalOps,17,bv_normalize_automata_circuit_cadical,PASS,274.935525,
+372,ch2_2AdditionAndLogicalOps,17,bv_mba,FAIL,8.269665,"unable to reflect term '
+      ~~~(x + -y)'.
+    Expected 'int * variable'."
+373,ch2_2AdditionAndLogicalOps,17,bv_normalize_mba,FAIL,21.390885,internal exception #5
+374,ch2_2AdditionAndLogicalOps,18,rfl,FAIL,13.020141,"tactic 'rfl' failed, the left-hand side
+      ~~~(x - y)
+    is not definitionally equal to the right-hand side
+      ~~~x + y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x - y) = ~~~x + y"
+375,ch2_2AdditionAndLogicalOps,18,bv_bitwise,FAIL,847.938052,internal exception #5
+376,ch2_2AdditionAndLogicalOps,18,bv_ac,FAIL,61.044509,internal exception #5
+377,ch2_2AdditionAndLogicalOps,18,bv_distrib,FAIL,529.082765,internal exception #5
+378,ch2_2AdditionAndLogicalOps,18,bv_ring,FAIL,648.461346,internal exception #5
+379,ch2_2AdditionAndLogicalOps,18,bv_of_bool,FAIL,53.663234,simp made no progress
+380,ch2_2AdditionAndLogicalOps,18,bv_omega,FAIL,24.734913,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + y.toNat) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)"
+381,ch2_2AdditionAndLogicalOps,18,bv_automata_classic_prop,PASS,35314.445368,
+382,ch2_2AdditionAndLogicalOps,18,bv_automata_classic,PASS,6.920786,
+383,ch2_2AdditionAndLogicalOps,18,bv_normalize_automata_classic,PASS,18.708087,
+384,ch2_2AdditionAndLogicalOps,18,simp,FAIL,75.998949,simp made no progress
+385,ch2_2AdditionAndLogicalOps,18,bv_normalize,FAIL,12.339392,internal exception #5
+386,ch2_2AdditionAndLogicalOps,18,bv_decide,FAIL,75.694399,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x + -y) == ~~~x + y]
+    Consider the following assignment:
+    ~~~(x + -y) == ~~~x + y = false"
+387,ch2_2AdditionAndLogicalOps,18,bv_auto,PASS,430.070112,
+388,ch2_2AdditionAndLogicalOps,18,bv_automata_circuit_lean_prop,PASS,16.580119,
+389,ch2_2AdditionAndLogicalOps,18,bv_automata_circuit_lean,PASS,6.698976,
+390,ch2_2AdditionAndLogicalOps,18,bv_normalize_automata_circuit_lean,PASS,18.497188,
+391,ch2_2AdditionAndLogicalOps,18,bv_automata_circuit_cadical_prop,PASS,269.044879,
+392,ch2_2AdditionAndLogicalOps,18,bv_automata_circuit_cadical,PASS,261.095145,
+393,ch2_2AdditionAndLogicalOps,18,bv_normalize_automata_circuit_cadical,PASS,272.590267,
+394,ch2_2AdditionAndLogicalOps,18,bv_mba,FAIL,4.083997,"unable to reflect term '
+      ~~~(x + -y)'.
+    Expected 'int * variable'."
+395,ch2_2AdditionAndLogicalOps,18,bv_normalize_mba,FAIL,16.01245,internal exception #5
+396,ch2_2AdditionAndLogicalOps,19,rfl,FAIL,78.178228,"tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      (x &&& y) - (x ||| y) - 1#w
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = (x &&& y) - (x ||| y) - 1#w"
+397,ch2_2AdditionAndLogicalOps,19,bv_bitwise,FAIL,2035.192175,internal exception #5
+398,ch2_2AdditionAndLogicalOps,19,bv_ac,FAIL,150.08449,internal exception #5
+399,ch2_2AdditionAndLogicalOps,19,bv_distrib,FAIL,462.51154,internal exception #5
+400,ch2_2AdditionAndLogicalOps,19,bv_ring,FAIL,240.634548,internal exception #5
+401,ch2_2AdditionAndLogicalOps,19,bv_of_bool,FAIL,36.865606,simp made no progress
+402,ch2_2AdditionAndLogicalOps,19,bv_omega,FAIL,11.489552,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(((x &&& y).toNat + (2 ^ w - (x ||| y).toNat)) % 2 ^ w + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat"
+403,ch2_2AdditionAndLogicalOps,19,bv_automata_classic_prop,PASS,36274.365995,
+404,ch2_2AdditionAndLogicalOps,19,bv_automata_classic,PASS,10.735353,
+405,ch2_2AdditionAndLogicalOps,19,bv_normalize_automata_classic,PASS,33.131788,
+406,ch2_2AdditionAndLogicalOps,19,simp,FAIL,131.550011,simp made no progress
+407,ch2_2AdditionAndLogicalOps,19,bv_normalize,FAIL,16.706399,internal exception #5
+408,ch2_2AdditionAndLogicalOps,19,bv_decide,FAIL,79.920587,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x ^^^ y) ==
+       (x &&& y) + -~~~(~~~x &&& ~~~y) + -1#w]
+    Consider the following assignment:
+    ~~~(x ^^^ y) == (x &&& y) + -~~~(~~~x &&& ~~~y) + -1#w = false"
+409,ch2_2AdditionAndLogicalOps,19,bv_auto,PASS,575.340354,
+410,ch2_2AdditionAndLogicalOps,19,bv_automata_circuit_lean_prop,PASS,26.164873,
+411,ch2_2AdditionAndLogicalOps,19,bv_automata_circuit_lean,PASS,15.31964,
+412,ch2_2AdditionAndLogicalOps,19,bv_normalize_automata_circuit_lean,PASS,31.452988,
+413,ch2_2AdditionAndLogicalOps,19,bv_automata_circuit_cadical_prop,PASS,273.757477,
+414,ch2_2AdditionAndLogicalOps,19,bv_automata_circuit_cadical,PASS,261.877374,
+415,ch2_2AdditionAndLogicalOps,19,bv_normalize_automata_circuit_cadical,PASS,280.510702,
+416,ch2_2AdditionAndLogicalOps,19,bv_mba,FAIL,8.720354,"unable to reflect term '
+      ~~~(x ^^^ y)'.
+    Expected 'int * variable'."
+417,ch2_2AdditionAndLogicalOps,19,bv_normalize_mba,FAIL,24.620944,internal exception #5
+418,ch2_2AdditionAndLogicalOps,20,rfl,FAIL,45.150919,"tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      (x &&& y) + ~~~(x ||| y)
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = (x &&& y) + ~~~(x ||| y)"
+419,ch2_2AdditionAndLogicalOps,20,bv_bitwise,FAIL,1671.39807,internal exception #5
+420,ch2_2AdditionAndLogicalOps,20,bv_ac,FAIL,205.666402,internal exception #5
+421,ch2_2AdditionAndLogicalOps,20,bv_distrib,FAIL,593.147593,internal exception #5
+422,ch2_2AdditionAndLogicalOps,20,bv_ring,FAIL,274.355946,internal exception #5
+423,ch2_2AdditionAndLogicalOps,20,bv_of_bool,FAIL,29.93998,simp made no progress
+424,ch2_2AdditionAndLogicalOps,20,bv_omega,FAIL,14.47676,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑((x &&& y).toNat + (2 ^ w - 1 - (x ||| y).toNat)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat"
+425,ch2_2AdditionAndLogicalOps,20,bv_automata_classic_prop,PASS,38703.195057,
+426,ch2_2AdditionAndLogicalOps,20,bv_automata_classic,PASS,7.914245,
+427,ch2_2AdditionAndLogicalOps,20,bv_normalize_automata_classic,PASS,22.664474,
+428,ch2_2AdditionAndLogicalOps,20,simp,FAIL,103.227821,simp made no progress
+429,ch2_2AdditionAndLogicalOps,20,bv_normalize,FAIL,15.42339,internal exception #5
+430,ch2_2AdditionAndLogicalOps,20,bv_decide,FAIL,78.849357,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x ^^^ y) ==
+       (x &&& y) + (~~~x &&& ~~~y)]
+    Consider the following assignment:
+    ~~~(x ^^^ y) == (x &&& y) + (~~~x &&& ~~~y) = false"
+431,ch2_2AdditionAndLogicalOps,20,bv_auto,PASS,494.456238,
+432,ch2_2AdditionAndLogicalOps,20,bv_automata_circuit_lean_prop,PASS,19.390437,
+433,ch2_2AdditionAndLogicalOps,20,bv_automata_circuit_lean,PASS,7.838925,
+434,ch2_2AdditionAndLogicalOps,20,bv_normalize_automata_circuit_lean,PASS,24.271563,
+435,ch2_2AdditionAndLogicalOps,20,bv_automata_circuit_cadical_prop,PASS,272.856148,
+436,ch2_2AdditionAndLogicalOps,20,bv_automata_circuit_cadical,PASS,260.927005,
+437,ch2_2AdditionAndLogicalOps,20,bv_normalize_automata_circuit_cadical,PASS,277.066455,
+438,ch2_2AdditionAndLogicalOps,20,bv_mba,FAIL,4.507678,"unable to reflect term '
+      ~~~(x ^^^ y)'.
+    Expected 'int * variable'."
+439,ch2_2AdditionAndLogicalOps,20,bv_normalize_mba,FAIL,19.354377,internal exception #5
+440,ch2_2AdditionAndLogicalOps,21,rfl,FAIL,39.740634,"tactic 'rfl' failed, the left-hand side
+      x ||| y
+    is not definitionally equal to the right-hand side
+      (x &&& ~~~y) + y
+    w : ℕ
+    x y : BitVec w
+    ⊢ x ||| y = (x &&& ~~~y) + y"
+441,ch2_2AdditionAndLogicalOps,21,bv_bitwise,FAIL,1461.58638,internal exception #5
+442,ch2_2AdditionAndLogicalOps,21,bv_ac,FAIL,211.626578,internal exception #5
+443,ch2_2AdditionAndLogicalOps,21,bv_distrib,FAIL,686.04013,internal exception #5
+444,ch2_2AdditionAndLogicalOps,21,bv_ring,FAIL,322.916424,internal exception #5
+445,ch2_2AdditionAndLogicalOps,21,bv_of_bool,FAIL,29.61454,simp made no progress
+446,ch2_2AdditionAndLogicalOps,21,bv_omega,FAIL,11.423412,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((x &&& ~~~y).toNat + y.toNat) % ↑(2 ^ w)
+     b := ↑(x ||| y).toNat
+     c := ↑2 ^ w"
+447,ch2_2AdditionAndLogicalOps,21,bv_automata_classic_prop,PASS,40794.971555,
+448,ch2_2AdditionAndLogicalOps,21,bv_automata_classic,PASS,6.769596,
+449,ch2_2AdditionAndLogicalOps,21,bv_normalize_automata_classic,PASS,20.160936,
+450,ch2_2AdditionAndLogicalOps,21,simp,FAIL,77.036988,simp made no progress
+451,ch2_2AdditionAndLogicalOps,21,bv_normalize,FAIL,12.853302,internal exception #5
+452,ch2_2AdditionAndLogicalOps,21,bv_decide,FAIL,76.136719,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(~~~x &&& ~~~y) == (x &&& ~~~y) + y]
+    Consider the following assignment:
+    ~~~(~~~x &&& ~~~y) == (x &&& ~~~y) + y = false"
+453,ch2_2AdditionAndLogicalOps,21,bv_auto,PASS,417.13622,
+454,ch2_2AdditionAndLogicalOps,21,bv_automata_circuit_lean_prop,PASS,16.599429,
+455,ch2_2AdditionAndLogicalOps,21,bv_automata_circuit_lean,PASS,6.648695,
+456,ch2_2AdditionAndLogicalOps,21,bv_normalize_automata_circuit_lean,PASS,20.276647,
+457,ch2_2AdditionAndLogicalOps,21,bv_automata_circuit_cadical_prop,PASS,269.526239,
+458,ch2_2AdditionAndLogicalOps,21,bv_automata_circuit_cadical,PASS,259.920135,
+459,ch2_2AdditionAndLogicalOps,21,bv_normalize_automata_circuit_cadical,PASS,274.280557,
+460,ch2_2AdditionAndLogicalOps,21,bv_mba,FAIL,4.123477,"unable to reflect term '
+      x ||| y'.
+    Expected 'int * variable'."
+461,ch2_2AdditionAndLogicalOps,21,bv_normalize_mba,FAIL,16.522599,internal exception #5
+462,ch2_2AdditionAndLogicalOps,22,rfl,FAIL,21.105476,"tactic 'rfl' failed, the left-hand side
+      x &&& y
+    is not definitionally equal to the right-hand side
+      (~~~x ||| y) - ~~~x
+    w : ℕ
+    x y : BitVec w
+    ⊢ x &&& y = (~~~x ||| y) - ~~~x"
+463,ch2_2AdditionAndLogicalOps,22,bv_bitwise,FAIL,908.887011,internal exception #5
+464,ch2_2AdditionAndLogicalOps,22,bv_ac,FAIL,127.476664,internal exception #5
+465,ch2_2AdditionAndLogicalOps,22,bv_distrib,FAIL,628.472079,internal exception #5
+466,ch2_2AdditionAndLogicalOps,22,bv_ring,FAIL,496.173467,internal exception #5
+467,ch2_2AdditionAndLogicalOps,22,bv_of_bool,FAIL,51.073546,simp made no progress
+468,ch2_2AdditionAndLogicalOps,22,bv_omega,FAIL,42.114632,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑((~~~x ||| y).toNat + (2 ^ w - (2 ^ w - 1 - x.toNat))) % ↑(2 ^ w)
+     b := ↑(x &&& y).toNat
+     c := ↑2 ^ w"
+469,ch2_2AdditionAndLogicalOps,22,bv_automata_classic_prop,PASS,43126.594022,
+470,ch2_2AdditionAndLogicalOps,22,bv_automata_classic,PASS,6.809865,
+471,ch2_2AdditionAndLogicalOps,22,bv_normalize_automata_classic,PASS,22.339115,
+472,ch2_2AdditionAndLogicalOps,22,simp,FAIL,77.451558,simp made no progress
+473,ch2_2AdditionAndLogicalOps,22,bv_normalize,FAIL,15.0492,internal exception #5
+474,ch2_2AdditionAndLogicalOps,22,bv_decide,FAIL,78.498397,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x &&& y == ~~~(x &&& ~~~y) + -~~~x]
+    Consider the following assignment:
+    x &&& y == ~~~(x &&& ~~~y) + -~~~x = false"
+475,ch2_2AdditionAndLogicalOps,22,bv_auto,PASS,437.117417,
+476,ch2_2AdditionAndLogicalOps,22,bv_automata_circuit_lean_prop,PASS,17.010108,
+477,ch2_2AdditionAndLogicalOps,22,bv_automata_circuit_lean,PASS,6.859056,
+478,ch2_2AdditionAndLogicalOps,22,bv_normalize_automata_circuit_lean,PASS,21.531085,
+479,ch2_2AdditionAndLogicalOps,22,bv_automata_circuit_cadical_prop,PASS,270.949159,
+480,ch2_2AdditionAndLogicalOps,22,bv_automata_circuit_cadical,PASS,261.384414,
+481,ch2_2AdditionAndLogicalOps,22,bv_normalize_automata_circuit_cadical,PASS,276.657265,
+482,ch2_2AdditionAndLogicalOps,22,bv_mba,FAIL,4.506977,"unable to reflect term '
+      x &&& y'.
+    Expected 'int * variable'."
+483,ch2_2AdditionAndLogicalOps,22,bv_normalize_mba,FAIL,18.852917,internal exception #5
+0,ch2_1DeMorgan,1,rfl,FAIL,3.652728,"tactic 'rfl' failed, the left-hand side
+      ~~~(x &&& y)
+    is not definitionally equal to the right-hand side
+      ~~~x ||| ~~~y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x &&& y) = ~~~x ||| ~~~y"
+1,ch2_1DeMorgan,1,bv_bitwise,PASS,156.317665,
+2,ch2_1DeMorgan,1,bv_ac,FAIL,63.219988,internal exception #5
+3,ch2_1DeMorgan,1,bv_distrib,FAIL,173.513733,internal exception #5
+4,ch2_1DeMorgan,1,bv_ring,FAIL,133.85284,internal exception #5
+5,ch2_1DeMorgan,1,bv_of_bool,FAIL,22.269286,simp made no progress
+6,ch2_1DeMorgan,1,bv_omega,FAIL,8.674834,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ||| ~~~y).toNat
+     b := ↑2 ^ w
+     c := ↑(x &&& y).toNat"
+7,ch2_1DeMorgan,1,bv_automata_classic_prop,PASS,18.882757,
+8,ch2_1DeMorgan,1,bv_automata_classic,PASS,7.636735,
+9,ch2_1DeMorgan,1,bv_normalize_automata_classic,PASS,7.974625,
+10,ch2_1DeMorgan,1,simp,FAIL,106.957388,simp made no progress
+11,ch2_1DeMorgan,1,bv_normalize,PASS,5.398986,
+12,ch2_1DeMorgan,1,bv_decide,PASS,5.370247,
+13,ch2_1DeMorgan,1,bv_auto,PASS,100.755052,
+14,ch2_1DeMorgan,1,bv_automata_circuit_lean_prop,PASS,17.664138,
+15,ch2_1DeMorgan,1,bv_automata_circuit_lean,PASS,6.021986,
+16,ch2_1DeMorgan,1,bv_normalize_automata_circuit_lean,PASS,5.595066,
+17,ch2_1DeMorgan,1,bv_automata_circuit_cadical_prop,PASS,136.602859,
+18,ch2_1DeMorgan,1,bv_automata_circuit_cadical,PASS,126.174035,
+19,ch2_1DeMorgan,1,bv_normalize_automata_circuit_cadical,PASS,8.073225,
+20,ch2_1DeMorgan,1,bv_mba,FAIL,3.159527,"unable to reflect term '
+      ~~~(x &&& y)'.
+    Expected 'int * variable'."
+21,ch2_1DeMorgan,1,bv_normalize_mba,PASS,5.487037,
+22,ch2_1DeMorgan,2,rfl,FAIL,5.208327,"tactic 'rfl' failed, the left-hand side
+      ~~~(x ||| y)
+    is not definitionally equal to the right-hand side
+      ~~~x &&& ~~~y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ||| y) = ~~~x &&& ~~~y"
+23,ch2_1DeMorgan,2,bv_bitwise,PASS,195.856938,
+24,ch2_1DeMorgan,2,bv_ac,FAIL,57.631312,internal exception #5
+25,ch2_1DeMorgan,2,bv_distrib,FAIL,155.426475,internal exception #5
+26,ch2_1DeMorgan,2,bv_ring,FAIL,131.170652,internal exception #5
+27,ch2_1DeMorgan,2,bv_of_bool,FAIL,21.188796,simp made no progress
+28,ch2_1DeMorgan,2,bv_omega,FAIL,8.685414,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x &&& ~~~y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ||| y).toNat"
+29,ch2_1DeMorgan,2,bv_automata_classic_prop,PASS,634.037945,
+30,ch2_1DeMorgan,2,bv_automata_classic,PASS,6.819296,
+31,ch2_1DeMorgan,2,bv_normalize_automata_classic,PASS,5.684486,
+32,ch2_1DeMorgan,2,simp,FAIL,86.153832,simp made no progress
+33,ch2_1DeMorgan,2,bv_normalize,PASS,5.387127,
+34,ch2_1DeMorgan,2,bv_decide,PASS,5.286037,
+35,ch2_1DeMorgan,2,bv_auto,PASS,101.643782,
+36,ch2_1DeMorgan,2,bv_automata_circuit_lean_prop,PASS,17.148938,
+37,ch2_1DeMorgan,2,bv_automata_circuit_lean,PASS,6.212776,
+38,ch2_1DeMorgan,2,bv_normalize_automata_circuit_lean,PASS,5.465766,
+39,ch2_1DeMorgan,2,bv_automata_circuit_cadical_prop,PASS,136.178329,
+40,ch2_1DeMorgan,2,bv_automata_circuit_cadical,PASS,125.610686,
+41,ch2_1DeMorgan,2,bv_normalize_automata_circuit_cadical,PASS,8.003504,
+42,ch2_1DeMorgan,2,bv_mba,FAIL,3.114748,"unable to reflect term '
+      ~~~(x ||| y)'.
+    Expected 'int * variable'."
+43,ch2_1DeMorgan,2,bv_normalize_mba,PASS,5.379697,
+44,ch2_1DeMorgan,3,rfl,FAIL,4.682267,"tactic 'rfl' failed, the left-hand side
+      ~~~(x + 1#w)
+    is not definitionally equal to the right-hand side
+      ~~~x - 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(x + 1#w) = ~~~x - 1#w"
+45,ch2_1DeMorgan,3,bv_bitwise,FAIL,249.508713,internal exception #5
+46,ch2_1DeMorgan,3,bv_ac,FAIL,19.932976,internal exception #5
+47,ch2_1DeMorgan,3,bv_distrib,FAIL,130.639723,internal exception #5
+48,ch2_1DeMorgan,3,bv_ring,FAIL,216.430135,internal exception #5
+49,ch2_1DeMorgan,3,bv_of_bool,FAIL,20.161146,simp made no progress
+50,ch2_1DeMorgan,3,bv_omega,FAIL,12.404312,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)"
+51,ch2_1DeMorgan,3,bv_automata_classic_prop,PASS,1162.83078,
+52,ch2_1DeMorgan,3,bv_automata_classic,PASS,6.808146,
+53,ch2_1DeMorgan,3,bv_normalize_automata_classic,PASS,6.765975,
+54,ch2_1DeMorgan,3,simp,FAIL,76.072449,simp made no progress
+55,ch2_1DeMorgan,3,bv_normalize,PASS,6.497776,
+56,ch2_1DeMorgan,3,bv_decide,PASS,6.400506,
+57,ch2_1DeMorgan,3,bv_auto,PASS,445.345621,
+58,ch2_1DeMorgan,3,bv_automata_circuit_lean_prop,PASS,18.686817,
+59,ch2_1DeMorgan,3,bv_automata_circuit_lean,PASS,9.154564,
+60,ch2_1DeMorgan,3,bv_normalize_automata_circuit_lean,PASS,6.623795,
+61,ch2_1DeMorgan,3,bv_automata_circuit_cadical_prop,PASS,257.199788,
+62,ch2_1DeMorgan,3,bv_automata_circuit_cadical,PASS,247.533114,
+63,ch2_1DeMorgan,3,bv_normalize_automata_circuit_cadical,PASS,9.072744,
+64,ch2_1DeMorgan,3,bv_mba,FAIL,6.242946,"unable to reflect term '
+      ~~~(x + BitVec.ofInt w 1)'.
+    Expected 'int * variable'."
+65,ch2_1DeMorgan,3,bv_normalize_mba,PASS,6.502685,
+66,ch2_1DeMorgan,4,rfl,FAIL,6.102846,"tactic 'rfl' failed, the left-hand side
+      ~~~(x - 1#w)
+    is not definitionally equal to the right-hand side
+      ~~~x + 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(x - 1#w) = ~~~x + 1#w"
+67,ch2_1DeMorgan,4,bv_bitwise,FAIL,250.738182,internal exception #5
+68,ch2_1DeMorgan,4,bv_ac,FAIL,19.293927,internal exception #5
+69,ch2_1DeMorgan,4,bv_distrib,FAIL,138.903316,internal exception #5
+70,ch2_1DeMorgan,4,bv_ring,FAIL,225.26192,internal exception #5
+71,ch2_1DeMorgan,4,bv_of_bool,FAIL,20.757746,simp made no progress
+72,ch2_1DeMorgan,4,bv_omega,FAIL,11.473122,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)"
+73,ch2_1DeMorgan,4,bv_automata_classic_prop,PASS,2636.740732,
+74,ch2_1DeMorgan,4,bv_automata_classic,PASS,6.934666,
+75,ch2_1DeMorgan,4,bv_normalize_automata_classic,PASS,19.113837,
+76,ch2_1DeMorgan,4,simp,FAIL,77.687768,simp made no progress
+77,ch2_1DeMorgan,4,bv_normalize,FAIL,12.802791,internal exception #5
+78,ch2_1DeMorgan,4,bv_decide,FAIL,73.327071,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x + -1#w) == ~~~x + 1#w]
+    Consider the following assignment:
+    ~~~(x + -1#w) == ~~~x + 1#w = false"
+79,ch2_1DeMorgan,4,bv_auto,PASS,454.616835,
+80,ch2_1DeMorgan,4,bv_automata_circuit_lean_prop,PASS,19.256037,
+81,ch2_1DeMorgan,4,bv_automata_circuit_lean,PASS,8.953634,
+82,ch2_1DeMorgan,4,bv_normalize_automata_circuit_lean,PASS,21.467385,
+83,ch2_1DeMorgan,4,bv_automata_circuit_cadical_prop,PASS,259.946196,
+84,ch2_1DeMorgan,4,bv_automata_circuit_cadical,PASS,250.806372,
+85,ch2_1DeMorgan,4,bv_normalize_automata_circuit_cadical,PASS,264.505462,
+86,ch2_1DeMorgan,4,bv_mba,FAIL,5.597827,"unable to reflect term '
+      ~~~(x + BitVec.ofInt w (-1))'.
+    Expected 'int * variable'."
+87,ch2_1DeMorgan,4,bv_normalize_mba,FAIL,17.934488,internal exception #5
+88,ch2_1DeMorgan,5,rfl,FAIL,3.818567,"tactic 'rfl' failed, the left-hand side
+      ~~~(-x)
+    is not definitionally equal to the right-hand side
+      x - 1#w
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(-x) = x - 1#w"
+89,ch2_1DeMorgan,5,bv_bitwise,FAIL,206.431332,internal exception #5
+90,ch2_1DeMorgan,5,bv_ac,FAIL,22.723905,internal exception #5
+91,ch2_1DeMorgan,5,bv_distrib,FAIL,109.831806,internal exception #5
+92,ch2_1DeMorgan,5,bv_ring,FAIL,228.871226,internal exception #5
+93,ch2_1DeMorgan,5,bv_of_bool,FAIL,18.861448,simp made no progress
+94,ch2_1DeMorgan,5,bv_omega,FAIL,11.216602,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(2 ^ w - x.toNat) % ↑(2 ^ w)"
+95,ch2_1DeMorgan,5,bv_automata_classic_prop,PASS,4596.102549,
+96,ch2_1DeMorgan,5,bv_automata_classic,PASS,6.018976,
+97,ch2_1DeMorgan,5,bv_normalize_automata_classic,PASS,16.446509,
+98,ch2_1DeMorgan,5,simp,FAIL,63.042198,simp made no progress
+99,ch2_1DeMorgan,5,bv_normalize,FAIL,11.011463,internal exception #5
+100,ch2_1DeMorgan,5,bv_decide,FAIL,71.399282,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(-x) == x + -1#w]
+    Consider the following assignment:
+    ~~~(-x) == x + -1#w = false"
+101,ch2_1DeMorgan,5,bv_auto,PASS,411.401024,
+102,ch2_1DeMorgan,5,bv_automata_circuit_lean_prop,PASS,16.331398,
+103,ch2_1DeMorgan,5,bv_automata_circuit_lean,PASS,6.542176,
+104,ch2_1DeMorgan,5,bv_normalize_automata_circuit_lean,PASS,17.593038,
+105,ch2_1DeMorgan,5,bv_automata_circuit_cadical_prop,PASS,257.183918,
+106,ch2_1DeMorgan,5,bv_automata_circuit_cadical,PASS,248.027674,
+107,ch2_1DeMorgan,5,bv_normalize_automata_circuit_cadical,PASS,260.127316,
+108,ch2_1DeMorgan,5,bv_mba,FAIL,6.033126,"unable to reflect term '
+      ~~~(-x)'.
+    Expected 'int * variable'."
+109,ch2_1DeMorgan,5,bv_normalize_mba,FAIL,16.789589,internal exception #5
+110,ch2_1DeMorgan,6,rfl,FAIL,6.256736,"tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      ~~~x ^^^ y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y"
+111,ch2_1DeMorgan,6,bv_bitwise,PASS,131.077852,
+112,ch2_1DeMorgan,6,bv_ac,FAIL,35.132377,internal exception #5
+113,ch2_1DeMorgan,6,bv_distrib,FAIL,161.999271,internal exception #5
+114,ch2_1DeMorgan,6,bv_ring,FAIL,127.289575,internal exception #5
+115,ch2_1DeMorgan,6,bv_of_bool,FAIL,26.325062,simp made no progress
+116,ch2_1DeMorgan,6,bv_omega,FAIL,11.743762,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ^^^ y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat"
+117,ch2_1DeMorgan,6,bv_automata_classic_prop,PASS,6463.554028,
+118,ch2_1DeMorgan,6,bv_automata_classic,PASS,6.480475,
+119,ch2_1DeMorgan,6,bv_normalize_automata_classic,PASS,14.48462,
+120,ch2_1DeMorgan,6,simp,FAIL,71.835322,simp made no progress
+121,ch2_1DeMorgan,6,bv_normalize,FAIL,8.899514,internal exception #5
+122,ch2_1DeMorgan,6,bv_decide,FAIL,69.112324,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x ^^^ y) == ~~~x ^^^ y]
+    Consider the following assignment:
+    ~~~(x ^^^ y) == ~~~x ^^^ y = false"
+123,ch2_1DeMorgan,6,bv_auto,PASS,91.957508,
+124,ch2_1DeMorgan,6,bv_automata_circuit_lean_prop,PASS,15.95513,
+125,ch2_1DeMorgan,6,bv_automata_circuit_lean,PASS,5.937346,
+126,ch2_1DeMorgan,6,bv_normalize_automata_circuit_lean,PASS,15.917499,
+127,ch2_1DeMorgan,6,bv_automata_circuit_cadical_prop,PASS,135.810779,
+128,ch2_1DeMorgan,6,bv_automata_circuit_cadical,PASS,126.535115,
+129,ch2_1DeMorgan,6,bv_normalize_automata_circuit_cadical,PASS,135.616759,
+130,ch2_1DeMorgan,6,bv_mba,FAIL,3.035448,"unable to reflect term '
+      ~~~(x ^^^ y)'.
+    Expected 'int * variable'."
+131,ch2_1DeMorgan,6,bv_normalize_mba,FAIL,11.442052,internal exception #5
+132,ch2_1DeMorgan,7,rfl,FAIL,6.561266,"tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      ~~~x ^^^ y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y"
+133,ch2_1DeMorgan,7,bv_bitwise,PASS,148.62744,
+134,ch2_1DeMorgan,7,bv_ac,FAIL,45.34135,internal exception #5
+135,ch2_1DeMorgan,7,bv_distrib,FAIL,144.109923,internal exception #5
+136,ch2_1DeMorgan,7,bv_ring,FAIL,124.568586,internal exception #5
+137,ch2_1DeMorgan,7,bv_of_bool,FAIL,24.131564,simp made no progress
+138,ch2_1DeMorgan,7,bv_omega,FAIL,10.206213,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ^^^ y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat"
+139,ch2_1DeMorgan,7,bv_automata_classic_prop,PASS,7253.332908,
+140,ch2_1DeMorgan,7,bv_automata_classic,PASS,6.237496,
+141,ch2_1DeMorgan,7,bv_normalize_automata_classic,PASS,14.557781,
+142,ch2_1DeMorgan,7,simp,FAIL,71.896392,simp made no progress
+143,ch2_1DeMorgan,7,bv_normalize,FAIL,8.446715,internal exception #5
+144,ch2_1DeMorgan,7,bv_decide,FAIL,69.128743,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x ^^^ y) == ~~~x ^^^ y]
+    Consider the following assignment:
+    ~~~(x ^^^ y) == ~~~x ^^^ y = false"
+145,ch2_1DeMorgan,7,bv_auto,PASS,91.454289,
+146,ch2_1DeMorgan,7,bv_automata_circuit_lean_prop,PASS,15.653719,
+147,ch2_1DeMorgan,7,bv_automata_circuit_lean,PASS,5.849056,
+148,ch2_1DeMorgan,7,bv_normalize_automata_circuit_lean,PASS,13.925831,
+149,ch2_1DeMorgan,7,bv_automata_circuit_cadical_prop,PASS,134.5962,
+150,ch2_1DeMorgan,7,bv_automata_circuit_cadical,PASS,126.337835,
+151,ch2_1DeMorgan,7,bv_normalize_automata_circuit_cadical,PASS,135.421199,
+152,ch2_1DeMorgan,7,bv_mba,FAIL,3.004048,"unable to reflect term '
+      ~~~(x ^^^ y)'.
+    Expected 'int * variable'."
+153,ch2_1DeMorgan,7,bv_normalize_mba,FAIL,11.444333,internal exception #5
+154,ch2_1DeMorgan,8,rfl,FAIL,4.991016,"tactic 'rfl' failed, the left-hand side
+      ~~~(x + y)
+    is not definitionally equal to the right-hand side
+      ~~~x - y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x + y) = ~~~x - y"
+155,ch2_1DeMorgan,8,bv_bitwise,FAIL,259.120496,internal exception #5
+156,ch2_1DeMorgan,8,bv_ac,FAIL,17.798408,internal exception #5
+157,ch2_1DeMorgan,8,bv_distrib,FAIL,132.874651,internal exception #5
+158,ch2_1DeMorgan,8,bv_ring,FAIL,184.770817,internal exception #5
+159,ch2_1DeMorgan,8,bv_of_bool,FAIL,18.652217,simp made no progress
+160,ch2_1DeMorgan,8,bv_omega,FAIL,10.597493,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + y.toNat) % ↑(2 ^ w)"
+161,ch2_1DeMorgan,8,bv_automata_classic_prop,PASS,7914.060705,
+162,ch2_1DeMorgan,8,bv_automata_classic,PASS,6.631836,
+163,ch2_1DeMorgan,8,bv_normalize_automata_classic,PASS,18.574647,
+164,ch2_1DeMorgan,8,simp,FAIL,76.517889,simp made no progress
+165,ch2_1DeMorgan,8,bv_normalize,FAIL,12.249142,internal exception #5
+166,ch2_1DeMorgan,8,bv_decide,FAIL,72.979301,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x + y) == ~~~x + -y]
+    Consider the following assignment:
+    ~~~(x + y) == ~~~x + -y = false"
+167,ch2_1DeMorgan,8,bv_auto,PASS,423.994925,
+168,ch2_1DeMorgan,8,bv_automata_circuit_lean_prop,PASS,15.40393,
+169,ch2_1DeMorgan,8,bv_automata_circuit_lean,PASS,6.555095,
+170,ch2_1DeMorgan,8,bv_normalize_automata_circuit_lean,PASS,18.557198,
+171,ch2_1DeMorgan,8,bv_automata_circuit_cadical_prop,PASS,257.262967,
+172,ch2_1DeMorgan,8,bv_automata_circuit_cadical,PASS,248.127444,
+173,ch2_1DeMorgan,8,bv_normalize_automata_circuit_cadical,PASS,261.304825,
+174,ch2_1DeMorgan,8,bv_mba,FAIL,4.028457,"unable to reflect term '
+      ~~~(x + y)'.
+    Expected 'int * variable'."
+175,ch2_1DeMorgan,8,bv_normalize_mba,FAIL,15.896909,internal exception #5
+176,ch2_1DeMorgan,9,rfl,FAIL,4.460347,"tactic 'rfl' failed, the left-hand side
+      ~~~(x - y)
+    is not definitionally equal to the right-hand side
+      ~~~x + y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x - y) = ~~~x + y"
+177,ch2_1DeMorgan,9,bv_bitwise,FAIL,275.218245,internal exception #5
+178,ch2_1DeMorgan,9,bv_ac,FAIL,19.515637,internal exception #5
+179,ch2_1DeMorgan,9,bv_distrib,FAIL,137.819638,internal exception #5
+180,ch2_1DeMorgan,9,bv_ring,FAIL,185.802505,internal exception #5
+181,ch2_1DeMorgan,9,bv_of_bool,FAIL,20.291777,simp made no progress
+182,ch2_1DeMorgan,9,bv_omega,FAIL,10.719042,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + y.toNat) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)"
+183,ch2_1DeMorgan,9,bv_automata_classic_prop,PASS,9691.300484,
+184,ch2_1DeMorgan,9,bv_automata_classic,PASS,6.525816,
+185,ch2_1DeMorgan,9,bv_normalize_automata_classic,PASS,18.356448,
+186,ch2_1DeMorgan,9,simp,FAIL,76.160658,simp made no progress
+187,ch2_1DeMorgan,9,bv_normalize,FAIL,12.249542,internal exception #5
+188,ch2_1DeMorgan,9,bv_decide,FAIL,72.741251,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [~~~(x + -y) == ~~~x + y]
+    Consider the following assignment:
+    ~~~(x + -y) == ~~~x + y = false"
+189,ch2_1DeMorgan,9,bv_auto,PASS,423.351827,
+190,ch2_1DeMorgan,9,bv_automata_circuit_lean_prop,PASS,15.5404,
+191,ch2_1DeMorgan,9,bv_automata_circuit_lean,PASS,6.234316,
+192,ch2_1DeMorgan,9,bv_normalize_automata_circuit_lean,PASS,18.854887,
+193,ch2_1DeMorgan,9,bv_automata_circuit_cadical_prop,PASS,256.820768,
+194,ch2_1DeMorgan,9,bv_automata_circuit_cadical,PASS,248.692303,
+195,ch2_1DeMorgan,9,bv_normalize_automata_circuit_cadical,PASS,261.431795,
+196,ch2_1DeMorgan,9,bv_mba,FAIL,4.131458,"unable to reflect term '
+      ~~~(x + -y)'.
+    Expected 'int * variable'."
+197,ch2_1DeMorgan,9,bv_normalize_mba,FAIL,15.984249,internal exception #5
