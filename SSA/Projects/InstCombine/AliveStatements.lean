@@ -778,6 +778,7 @@ theorem bv_290__292 :
 
 theorem bv_820 :
     ∀ (e e_1 : LLVM.IntW 9), LLVM.sdiv (LLVM.sub e_1 (LLVM.srem e_1 e)) e ⊑ LLVM.sdiv e_1 e := by
+  stop -- this triggers a Lean bug https://github.com/leanprover/lean4/issues/7612
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
