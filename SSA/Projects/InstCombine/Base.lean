@@ -3,6 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 --import SSA.Core.WellTypedFramework
 import SSA.Core.Framework
+import SSA.Core.Framework.Macro
 import SSA.Core.Util
 import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
@@ -371,10 +372,23 @@ abbrev LLVM : Dialect where
   Op := Op
   Ty := Ty
 
-instance {φ} : DialectSignature (MetaLLVM φ) where
-  signature op := ⟨op.sig, [], op.outTy, .pure⟩
+-- instance {φ} : DialectSignature (MetaLLVM φ) where
+--   signature op := ⟨op.sig, [], op.outTy, .pure⟩
 instance : DialectSignature LLVM where
   signature op := ⟨op.sig, [], op.outTy, .pure⟩
+
+variable {φ w w'} in  -- TODO: the φ should be covered by autoImplicit,
+                      -- the `w` and `w'` should be entirely unneccesary
+def_signature for MetaLLVM φ where
+  | .select w               => (.bitvec 1, .bitvec w, .bitvec w) → .bitvec w
+  | .binary w _             => (.bitvec w, .bitvec w) → .bitvec w
+  | .icmp _ w               => (.bitvec w, .bitvec w) → .bitvec 1
+  | .trunc w w' _
+  | .zext w w' _
+  | .sext w w'              => (.bitvec w) → .bitvec w'
+  -- Fallback for unary ops that are *not* trunc/zext/sext
+  | .unary w _              => (.bitvec w) → .bitvec w
+  | .const w _              => () → .bitvec w
 
 @[simp]
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
