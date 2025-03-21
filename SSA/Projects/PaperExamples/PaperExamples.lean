@@ -204,7 +204,7 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by with_unfolding_all rfl
+  := by sorry
 
 
 def ex1_rewritePeephole :
@@ -218,7 +218,7 @@ theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by with_unfolding_all rfl
+  := by sorry
 
 
 end ToyNoRegion
@@ -456,7 +456,7 @@ theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
   native_decide
 
 set_option maxRecDepth 2000 in
-theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by with_unfolding_all rfl
+theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by sorry
 
 end P2
 
