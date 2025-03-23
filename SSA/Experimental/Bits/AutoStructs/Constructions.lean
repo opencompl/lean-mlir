@@ -54,9 +54,6 @@ lemma CNFA.addSink_spec (m : CNFA n) (M : NFA' n) :
     have hs' : s' ∈ m.m.states := m.wf.trans_tgt_lt' _ _ _ htr
     use s'; tauto
 
--- @[simp]
--- lemma CNFA.addSink_language {m : CNFA n} (hl : m.recognizes L) : m.addSink.recognizes L := sorry
-
 def RawCNFA.flipFinals (m : RawCNFA A) : RawCNFA A :=
   let oldFinals := m.finals
   let newFinals := (List.range m.stateMax).foldl (init := ∅) fun fins s =>

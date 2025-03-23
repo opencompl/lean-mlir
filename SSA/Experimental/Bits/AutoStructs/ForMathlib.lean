@@ -7,6 +7,8 @@ import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Data.HashSet.Basic
 
+set_option grind.warning false
+
 open Set
 open Mathlib
 
@@ -839,7 +841,6 @@ theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ 
 theorem Std.HashSet.toSet_toList[BEq α] [LawfulBEq α] [Hashable α] (m : HashSet α) : m.toSet = { x | x ∈ m.toList } := by
   ext x; simp
 
--- TODO: state in in pure Lean using `toList`, and decude this one
 theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
   {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :
     motive b ∅ →
@@ -866,10 +867,51 @@ theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
 
 def Std.HashMap.toPFun [BEq α] [Hashable α] (m : HashMap α β) (x : α) : Option β := m[x]?
 
--- TODO: state in in pure Lean using `toList`, and decude this one
+theorem Std.HashMap.toPFun_toList[BEq α] [LawfulBEq α] [Hashable α] (m : HashMap α β) :
+    m.toPFun = λ k ↦ m.toList.find? (λ x ↦ x.1 == k) |>.map Prod.snd := by
+  ext x y; simp [toPFun]
+  simp [Std.HashMap.find?_toList_eq_some_iff_getKey?_eq_some_and_getElem?_eq_some]
+  rintro hlk
+  have : m[x]?.isSome := by aesop
+  rw [←Std.HashMap.contains_eq_isSome_getElem?] at this
+  rw [Std.HashMap.contains_eq_isSome_getKey?] at this
+  revert this
+  rcases (m.getKey? x) <;> simp
+
 theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Hashable α]
   {f : γ → α → β → γ} {m : HashMap α β} {motive : γ → (α → Option β) → Prop} :
     motive b (λ _ ↦ none) →
     (∀ b x y m, m x = none → motive b m → motive (f b x y) (Function.update m x y)) →
     motive (m.fold f b) m.toPFun := by
-  sorry
+  rintro hemp hind
+  rw [Std.HashMap.fold_eq_foldl_toList, toPFun_toList]
+  have := m.distinct_keys_toList
+  revert this
+  induction m.toList using List.reverseRecOn
+  case nil =>
+    simp_all
+  case append_singleton xs xy ih =>
+    rcases xy with ⟨x, y⟩
+    rintro hd
+    simp_all
+    simp [List.pairwise_append] at hd
+    rcases hd with ⟨hd, hnew⟩
+    let f := fun k => Option.map Prod.snd (List.find? (fun x => x.1 == k) xs)
+    specialize ih (by simp [hd])
+    have hnewf : f x = none := by
+      simp [f]; grind
+    specialize hind _ x y _ hnewf ih
+    convert hind using 1
+    ext a b; simp
+    rw [Function.update_apply]
+    split_ifs with hcond
+    · subst hcond; constructor
+      · rintro ⟨a', hf | hf⟩
+        · obtain h := List.find?_some hf
+          simp at h; subst h
+          grind [List.mem_of_find?_eq_some]
+        · grind
+      · simp only [Option.some.injEq, true_and]
+        rintro rfl
+        aesop
+    · simp [f]; grind
