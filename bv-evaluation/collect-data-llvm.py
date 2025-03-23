@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os 
 from enum import Enum
-
+import subprocess
 output = Enum('output', [('counterxample', 1), ('proved', 2), ('failed', 0)])
 paper_directory = 'for-paper/'
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
@@ -255,6 +255,23 @@ print("leanSAT succeeded and Bitwuzla failed on "+str(bw_only_failed)+" theorems
 print("There were "+str(inconsistencies)+" inconsistencies")
 print("Errors raised: "+str(errTot))
 
+# Double Checking Against Grep Output
+def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_val : int) -> int:
+    response = subprocess.check_output(cmd, shell=True, cwd=cwd, text=True)
+    val = int(response)
+    failed =  val != expected_val
+    failed_str = "FAIL" if failed else "SUCCESS"
+    print(f"ran {cmd}, expected {expected_val}, found {val}, {failed_str}")
+
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT failed' | wc -l", both_failed+ls_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_leanSAT))
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla provided a counter' | wc -l", len(counter_bitwuzla))
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT proved' | wc -l", len(leanSAT) + bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla proved' | wc -l", len(bitwuzla) + ls_only_failed)
+
+
+# Converting to DataFrame
 
 
 err_a = np.array(err_msg_tot)
