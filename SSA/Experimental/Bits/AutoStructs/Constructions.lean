@@ -694,6 +694,18 @@ def CNFA.determinize_spec (m : CNFA n)
       obtain ⟨s', htr, hRi'⟩ := hsim.trans_match₂ hRi hst (by simp) (by simp)
       use s'; simp_all [transSetBV_spec]; tauto
 
+lemma CNFA.determinize_language {m : CNFA n} :
+    m.recognizes L → m.determinize.recognizes L := by
+  rintro ⟨M, hsim, rfl⟩
+  use M.determinize, m.determinize_spec hsim
+  simp [NFA'.determinize, NFA'.accepts, NFA'.accepts']
+
+lemma CNFA.determinize_bv_language {m : CNFA n} :
+    m.bv_recognizes L → m.determinize.bv_recognizes L := by
+  simp only [bv_recognizes_equiv, forall_exists_index, and_imp]
+  rintro M hsim rfl
+  use M.determinize, m.determinize_spec hsim
+  simp [NFA'.determinize, NFA'.accepts, NFA'.accepts']
 
 def CNFA.neg (m : CNFA n) : CNFA n := m.determinize.flipFinals
 
@@ -797,7 +809,13 @@ def CNFA.minimize (m : CNFA n) : CNFA n :=
 
 lemma CNFA.minimize_language {m : CNFA n} :
     m.recognizes L → m.minimize.recognizes L := by
-  sorry
+  rintro h
+  rw [←Language.reverse_reverse L]
+  simp only [minimize]
+  apply determinize_language
+  apply reverse_language
+  apply determinize_language
+  apply reverse_language h
 
 lemma CNFA.minimize_bv_language {m : CNFA n} :
     m.bv_recognizes L → m.minimize.bv_recognizes L := by
