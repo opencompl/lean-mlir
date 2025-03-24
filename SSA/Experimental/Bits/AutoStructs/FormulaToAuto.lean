@@ -1,22 +1,14 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Std.Data.HashSet
-import Std.Data.HashMap
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.FinEnum
-import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Vector.Defs
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Linarith
-import SSA.Experimental.Bits.AutoStructs.Basic
+
+import Batteries.Data.Fin.Basic
+import Batteries.Data.Fin.Lemmas
 import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
-import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
-import SSA.Experimental.Bits.AutoStructs.BundledNfa
-import SSA.Experimental.Bits.FastCopy.Defs
+
+import Mathlib.Tactic.FinCases
 
 set_option grind.warning false
 
@@ -756,10 +748,15 @@ lemma BitVec.cons_sgt_iff {w} {bv1 bv2 : BitVec w} :
   simp [BitVec.slt, BitVec.toInt_eq_msb_cond]
   have hbv1 := bv1.isLt
   have hbv2 := bv2.isLt
+  have h₁ : bv1.toNat - bv2.toNat < 2 ^ w := by omega
+  have h₂ : 2 ^ (w + 1) - 2 ^ w = 2 ^ w := by simp [Nat.two_pow_succ]
+  have h₃ (x : Nat) : (2 : ℤ) ^ x = (2 ^ x : ℕ) := by simp_all only [Nat.cast_pow, Nat.cast_ofNat]
+  have := h₃ w
+  have := h₃ (w + 1)
   cases b1 <;> cases b2 <;> simp [BitVec.ult, Nat.shiftLeft_eq] <;>
     repeat rw [←Nat.add_lt_is_or (by assumption)] <;> simp [Nat.two_pow_succ]
-  · linarith [Nat.two_pow_succ w] -- why do I need to use `two_pow_succ` twice?
-  · linarith [Nat.two_pow_succ w]
+  · omega
+  · omega
   · rw [←Nat.add_lt_is_or hbv1, ←Nat.add_lt_is_or hbv2]
     apply Nat.add_lt_add_iff_left
 
@@ -2073,3 +2070,5 @@ theorem Formula.denote_of_isUniversal {p : Predicate}
 
 -- /-- info: true -/
 -- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> RawCNFA.isUniversal
+
+#min_imports

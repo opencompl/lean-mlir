@@ -1,15 +1,7 @@
-import Std.Data.HashSet
-import Std.Data.HashMap
-import Mathlib.Data.FinEnum
 import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Tactic.ApplyFun
-import SSA.Experimental.Bits.AutoStructs.Basic
-import SSA.Experimental.Bits.AutoStructs.ForLean
-import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.AutoStructs.Worklist
+
+import Mathlib.Tactic.ApplyFun
 
 set_option grind.warning false
 

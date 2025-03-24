@@ -1,9 +1,3 @@
-import Batteries.Data.Fin.Basic
-import Mathlib.Computability.NFA
-import Mathlib.Data.FinEnum
-import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Vector.Defs
-import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
 
 structure NFA' (n : Nat) where
@@ -102,3 +96,5 @@ lemma lift_accepts (M : NFA' n) (f : Fin n → Fin m) :
 lemma proj_accepts (M : NFA' m) (f : Fin n → Fin m) :
     (M.proj f).accepts = BitVecs.transport f '' M.accepts := by
   simp [accepts, accepts', proj]
+
+#min_imports

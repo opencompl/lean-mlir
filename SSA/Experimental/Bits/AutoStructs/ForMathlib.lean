@@ -1,11 +1,8 @@
-import Batteries.Data.Fin.Basic
 import Mathlib.Computability.NFA
 import Mathlib.Data.FinEnum
 import Mathlib.Data.Rel
 import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
-import Std.Data.HashSet.Basic
 
 set_option grind.warning false
 
@@ -915,3 +912,5 @@ theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Has
         rintro rfl
         aesop
     · simp [f]; grind
+
+#min_imports

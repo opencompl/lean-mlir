@@ -2,21 +2,9 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Std.Data.HashSet
-import Std.Data.HashMap
-import Std.Data.HashMap.Lemmas
-import Batteries.Data.Fin.Basic
-import Batteries.Data.Array.Lemmas
-import Mathlib.Computability.NFA
 import Mathlib.Algebra.Group.Nat.Range
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.List.Perm.Basic
-import Mathlib.Data.Rel
-import SSA.Experimental.Bits.AutoStructs.ForLean
-import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
+import SSA.Experimental.Bits.AutoStructs.FinEnum
 
 set_option grind.warning false
 
@@ -640,3 +628,5 @@ end basics
   representation of (a00, a01, .., a0k)(a10, a11, .., a1k)...(an0, an1, .., ank)
   is (a00 a10 ... an0 a01 a11 ... an1 ...... ank)
 -/
+
+#min_imports
