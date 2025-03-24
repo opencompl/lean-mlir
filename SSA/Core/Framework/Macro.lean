@@ -143,10 +143,6 @@ for some fixed `d : Dialect`.
 -/
 structure MetaSignature extends MetaRegionSignature where
   regions : Array MetaRegionSignature
-  /-- `priority` records the position of the match alternative that corresponds
-  to this signature definition, where `0` indicates the first (and thus highest-
-  priority) match alternative. -/
-  priority : Nat
   deriving BEq
 
 def MetaRegionSignature.ofView (Ty : Expr) (view : RegionSignatureView) :
@@ -161,218 +157,12 @@ def MetaRegionSignature.ofView (Ty : Expr) (view : RegionSignatureView) :
 
 /-- Elaborate a `MatchAltView` into a `MetaSignature`, given a Lean expression
 `Ty : Type` that describes the type universe of the expected dialect. -/
-def MetaSignature.ofView (Ty : Expr) (view : SignatureView) (priority : Nat) :
+def MetaSignature.ofView (Ty : Expr) (view : SignatureView) :
     TermElabM MetaSignature := withRef view.ref do
   let base ← MetaRegionSignature.ofView Ty view.toRegionSignatureView
   return { base with
     regions  := ←view.regions.mapM (MetaRegionSignature.ofView Ty)
-    priority := priority
   }
-
-structure MetaSignatureTree.Key where
-  /-- Construct a `Key` from a **fully-reduced(!)** expression.
-
-  Prefer `Key.ofExpr`, which will perform the necessary reduction.
-  -/
-  mk :: toExpr : Expr
-
-/-- A `MetaSignatureTree` stores the signatures of all operations in a specific
-dialect. -/
-/-
-Discrtrees are hard, so let's just start with the naive array-based solution.
-TODO: check whether the quadratic complexity is problematic, and move to
-      `DiscrTree` if it is.
--/
-structure MetaSignatureTree where
-  /-- A collection of signatures, ascendingly ordered by their priority. -/
-  signatures : Array (MetaSignatureTree.Key × MetaSignature)
-  /-- The threshold priority: if a new element has a priority strictly less
-    than `maxPriority`, the array will have to be sorted after insertion.
-    This is equal to the maximum priority of any signature contained in
-    the array, or `0` if the array is empty. -/
-  maxPriority : Nat
-
-namespace MetaSignatureTree
-
-def empty : MetaSignatureTree where
-  signatures := .empty
-  maxPriority := 0
-
-def Key.ofExpr (op : Expr) : MetaM Key :=
-  -- TODO: fully reduce op
-  return ⟨op⟩
-
-def insert (self : MetaSignatureTree) (key : Key) (signature : MetaSignature) :
-    MetaSignatureTree :=
-  let signatures := self.signatures.push (key, signature)
-  if signature.priority ≥ self.maxPriority then
-    { self with signatures, maxPriority := signature.priority }
-  else
-    let signatures :=
-      signatures.insertionSort (lt := fun x y => x.2.priority < y.2.priority)
-    { self with signatures }
-
-def getMatch (self : MetaSignatureTree) (op : Expr) :
-    MetaM MetaSignature := do
-  let key ← Key.ofExpr op
-  let hits := self.signatures
-  for hit in hits do
-    if ←isDefEq key.toExpr hit.1.toExpr then
-      return hit.2
-  /- TODO: come up with a better error, that indicates why no signature might have been found.
-    In particular, we should explicate that we did find the `def_signature` info, but failed to
-    unify the current op with any of the LHSs of the signatures.
-  -/
-  throwError "No signature found for {op}."
-
-
-end MetaSignatureTree
-
-/-!
-### Dialect identifiers
-We need some way to find the `MetaSignature` information in `def_semantics`.
-We can store this information an EnvironmentExtension, but we'd do so in some kind
-of map from, say, `Name` to `MetaSignature`, which begs the question: what name
-do we use there?
-
-We could assume that dialects are always applications of a fixed constant, and
-use the name of that constant. This yields consistent results, but then means
-that if we define the signature of operations in a meta dialect (e.g., `MetaLLVM`)
-this signature would not be found for the concrete dialect `LLVM` even if normal
-typeclass resolution would find the instance.
-
-We can also be a bit more cute, and use the name of the `DialectSignature` *instance*
-as the identifier. This way, we can be sure that the meta info is in sync with
-the instance that got synthesized!
--/
-
-initialize signatureExt : EnvExtension (NameMap MetaSignatureTree) ←
-  registerEnvExtension
-    (mkInitial := return .empty)
-    (asyncMode := .mainOnly)  -- TODO: for now we've picked the default,
-                              -- but we should re-evaluate what asyncMode is appropriate here
-
-private def throwExpectedInstToBeApp (instType inst : Expr) : MetaM α := do
-  throwError "Synthesized the following instance of {instType}:\n\
-        \t{inst}\n\
-        This was expected to be an application of a constant."
-
-/--
-Register the signatures for a given dialect in the `signatureExt`
-environment extension.
-
-NOTE: this assumes that an instance of `DialectSignature $dialect` has just been
-defined using these signatures.
--/
-def registerDialectMetaSignatures (dialect : Expr) (signatures : MetaSignatureTree) :
-    MetaM Unit := do
-  let dialect : Q(Dialect) := dialect
-  let instType := q(DialectSignature $dialect)
-  let inst ← synthInstance instType
-  let .const instName _ := inst.getAppFn
-    | throwExpectedInstToBeApp instType inst
-  setEnv <| signatureExt.modifyState (← getEnv) fun map =>
-    map.insert instName signatures
-
-/--
-Get the signatures for a given dialect from the `signatureExt`
-environment extension, or throw an error if no signatures could be found.
--/
-def getDialectMetaSignatures (dialect : Expr) : MetaM MetaSignatureTree := do
-  let dialect : Q(Dialect) := dialect
-  let instType := q($dialect)
-  let inst ← synthInstance instType
-  let .const instName _ := Expr.bvar 0
-    | throwExpectedInstToBeApp instType inst
-  let state := signatureExt.findStateAsync (← getEnv) instName
-  let some sig := state.find? instName
-    | throwError "Synthesized the following instance of {instType}:\n\
-        \t{inst}\n\
-        However, the corresponding signature information was not found.\
-        Was this instance defined using `def_signature`, in this file?\n\
-        \n\
-        Manually defined instances, or instances defined in other files are not \
-        supported!"
-  return sig
-
-/-
-TODO: Store the signature declared in `def_signature` somewhere, so that we can
-query it in `def_semantics`.
-
-We have the `MetaSignature` struct above; it should be relatively straightforward
-to reflect a signature in the syntax we've defined for `def_signature`'s rhs'es
-into such a `MetaSignature`, keeping in mind that we simply give up when encountering
-the `${...}` variadic escape hatch.
-
-The challenge lies in the lhs'es -- the patterns: when elaborating a specific
-match arm of `def_signature` how do we find the corresponding signature?
-* In the case that the Op type is just a simple enumeration and the patterns are
-  ground terms, this should be easy.
-  We could store something like a HashMap from names to meta signature, where
-  we use the `Op` constructor name as key.
-* If the Op type additionally carries information such as bitwidths, which don't
-  alter the shape of the signature but might affect the specific types, we already
-  get a bit more challenging: this width would be expressed as a variable
-  (is it free or bound? I'm not actually sure).
-  To make proper sense of the signature, we'd have to make sure we bind that
-  variable appropriately in `def_semantics`.
-* Supposing we have multiple match arms for one operations, things get even more
-  challenging, as the hashmap would now have multiple entries for a single operation.
-
-I can see two solutions:
-a) We hypothesize that dialects will often not have that many different operations,
-  so we could store all patterns in an ordered list, and when querying semantics
-  we simply try to unify against each pattern, in order, until we've found a match.
-  **Counterpoint:** this performs unifications quadratic in the number of ops,
-  and dialects like RISC-V/LLVM do have a decent number of operations already,
-  so this seems suboptimal.
-b) We mandate that patterns in `def_signature` and `def_semantics` use the same
-  head symbol up-to-reducability. That is, if we define some aliases for `Op`,
-  and those aliasses are *not* marked reducable, then it would not be allowed to
-  use the aliased form in `def_signature` and the non-aliased form in
-  `def_semantics`. We keep a hashmap from Op names to lists of patterns, and
-  perform unifications in order untill we find the right variant.
-  This is still quadratic, but now in the number of variants for a specific Op,
-  which almost surely will remain a low number, and is thus fine.
-  **Counterpoint:** currently, we use aliasses in `MetaLLVM`/`LLVM`, to avoid
-    having to redefine the entire `MOp` type, but also somewhat hide the meta
-    definitions in the concrete LLVM dialect. I believe we've defined the
-    signature for `MetaLLVM`, which then is able to be re-used as-is for `LLVM`.
-    In this scenario, we'd like to define semantics using the nice ops, but we
-    also would not want to make the aliasses reducible.
-
-Although neither option is without fault, I like option (b) better:
-it might invite some unnecessary code duplication, but it is unlikely to become
-the source of scalability problems, and it seems relatively explainable (
-with good error messages indicating the rules/expectations).
-
-
-On second thought: we might want to just fully reduce the patterns, and chuck
-everything in a discrimination tree. Lhs's are expected to be very simple, so
-fully reducing them should not really be a concern. The reason we want this is
-found in the LLVM dialect once again: when defining signatures, it's nice to just
-group, e.g., all binary ops in one, letting us define the signatures fairly
-succintly as follows:
-```lean
-def_signature for MetaLLVM φ where
-  | .select w               => (.bitvec 1, .bitvec w, .bitvec w) → .bitvec w
-  | .binary w _             => (.bitvec w, .bitvec w) → .bitvec w
-  | .icmp _ w               => (.bitvec w, .bitvec w) → .bitvec 1
-  | .trunc w w' _
-  | .zext w w' _
-  | .sext w w'              => (.bitvec w) → .bitvec w'
-  -- Fallback for unary ops that are *not* trunc/zext/sext
-  | .unary w _              => (.bitvec w) → .bitvec w
-  | .const w _              => () → .bitvec w
-```
-
-However, when defining the semantics we obviously want to do so using the specific
-binary ops, like `.add w` or `.sub w`. Requiring those to be marked reducible
-would not be great.
-
--/
-
-
 
 /-!
 ## `def_signature` Elaboration
@@ -501,18 +291,12 @@ def SignatureView.toTerm (view : SignatureView) : m Term := do
       $view.returnType
       $view.effectKind)
 
--- TODO: should this be upstreamed at some point?
-def _root_.Array.foldMapIdxM {m} [Monad m]
-    (f : Nat → σ → α → m (β × σ)) (init : σ) (as : Array α) : m (Array β × σ) :=
-  StateT.run (s := init) <| as.mapIdxM fun n a s => f n s a
-
-open MetaSignatureTree (Key) in
 def elabDefSignatureFor (dialect : Term) (alts : TSyntax ``matchAltsSig) : CommandElabM Unit := do
   let msg := (return m!"{exceptEmoji ·} Defining operation signature for {dialect} dialect")
   withTraceNode `LeanMLIR.Elab msg (collapsed := false) <| do
     let alts := getMatchAlts alts
     let alts ← do
-      alts.mapIdxM fun priority view => do
+      alts.mapM fun view => do
         trace[LeanMLIR.Elab] m!"Parsing match alternative with\n\
           \tpatterns: {(view.patterns : Array _)}\n\
           \tsignature: {view.rhs}"
@@ -523,40 +307,13 @@ def elabDefSignatureFor (dialect : Term) (alts : TSyntax ``matchAltsSig) : Comma
         return {view with
                   rhs := ← sigView.toTerm
                 }
-    -- let (alts, (sigTree : MetaSignatureTree)) ← runTermElabM <| fun _ => do
-    --   let dialectExpr : Q(Dialect) ← elabTermEnsuringType dialect q(Dialect)
-    --   let Op := q(Dialect.Op $dialectExpr)
-    --   let Ty := q(Dialect.Ty $dialectExpr)
-    --   alts.foldMapIdxM (init := .empty) fun priority state view => do
-    --     trace[LeanMLIR.Elab] m!"Parsing match alternative with\n\
-    --       \tpatterns: {(view.patterns : Array _)}\n\
-    --       \tsignature: {view.rhs}"
-    --     -- HACK: The `(_ : Array _)` type ascription above is load-bearing.
-    --     --       Without it, we get a type mismatch error.
-
-    --     -- let key : Key ← do
-    --     --   let op : Term := view.patterns[0]!
-    --     --   let op : Expr ← elabTermEnsuringType op Op
-    --     --   Key.ofExpr op
-    --     let sigView ← parseSignature view.rhs
-    --     return ({view with
-    --               rhs := ← sigView.toTerm
-    --             },
-    --             state.insert key signature)
 
     -- Define instance
     let matchAlts ← Elab.mkMatchAltsExpr alts
-    let stx ← `(command|
+    elabCommand <|← `(command|
       instance : DialectSignature $dialect where
         signature := fun op => match op with $matchAlts:matchAlts
     )
-    trace[LeanMLIR.Elab] "Elaborating:\n{stx}"
-    elabCommand stx
-    -- Save signature
-    -- runTermElabM <| fun  _ => do
-    --   let dialectExpr ← elabTermEnsuringType dialect q(Dialect)
-    --   registerDialectMetaSignatures dialectExpr sigTree
-    return ()
 
 /--
   `def_signature for FooDialect where ...` defines an instance of
