@@ -444,34 +444,6 @@ variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum 
 def BitVec.any (b : BitVec w) (f : Fin w → Bool → Bool) :=
   List.finRange w |>.any fun n => f n (b[n])
 
-instance [Fintype α] [BEq α] [Hashable α] : Fintype (Std.HashSet α) :=
-  sorry
-
--- It's false, but we should be able to not need it
-instance [BEq α] [LawfulBEq α] [Hashable α] : LawfulBEq (Std.HashSet α) :=
-  sorry
-
--- I think if the way we combine the hashing function is commutative, then this
--- instance should also satisfy `LawfulHashable` and we should be fine!
-instance [BEq α] [Hashable α] : Hashable (Std.HashSet α) where
-  hash m := m.fold (init := 0) fun h x => h ^^^ hash x
-
--- Is it necessary? maybe rework the worklist function to only use `==`
-instance [BEq α] [Hashable α] : DecidableEq (Std.HashSet α) :=
-  sorry
-
-def CNFA.determinize' (m : CNFA n) : CNFA n :=
-  worklistRun (Std.HashSet m.m.states)
-    (fun ss => ss.any fun s => s ∈ m.m.finals)
-    #[m.m.initials.attachWith (λ s ↦ s ∈ m.m.states) (by aesop)]
-    (by apply List.nodup_singleton)
-    f
-where
-  f := fun (ss : Std.HashSet m.m.states) =>
-        (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
-          let ss' := m.transSet ss a
-          ts.push (a, ss')
-
 theorem BitVec.any_iff_exists {bv : BitVec w} :
     bv.any p ↔ ∃ (i : Fin w), p i (bv.getLsbD i) := by
   simp [any]
