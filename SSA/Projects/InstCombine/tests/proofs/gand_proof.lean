@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gand_proof
 theorem test_with_1_thm (e : IntW 32) :
@@ -1182,5 +1183,3 @@ theorem and_sext_multiuse_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gshifthdirectionhinhbithtest_proof
 theorem t7_twoshifts2_thm (e e_1 e_2 : IntW 32) :
@@ -65,5 +66,3 @@ theorem t15_and_with_const1_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

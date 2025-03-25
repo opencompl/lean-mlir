@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section glshrhandhsignbithicmpeqhzero_proof
 theorem scalar_i8_lshr_and_signbit_eq_thm (e e_1 : IntW 8) :
@@ -106,5 +107,3 @@ theorem scalar_i32_lshr_and_negC_eq_nonzero_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
