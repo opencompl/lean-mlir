@@ -94,25 +94,6 @@ structure MatchAltView (rhsKind : SyntaxNodeKinds) where
   patterns : Array Term
   rhs : TSyntax rhsKind
 
-/-- A structured representation of the Syntax describing a list of arguments -/
-inductive ArgListView
-  /-- A single term, expected to be of type `List _`,
-      to describe all arguments at once -/
-  | antiquot (term : Term)
-  /-- A list of terms, where each term describes a single argument type -/
-  | list (ref : Syntax) (args : Array Term)
-
-/-- A structured representation of the Syntax describing the signature of a region -/
-structure RegionSignatureView where
-  ref : Syntax
-  argumentTypes : ArgListView
-  returnType : Term
-
-/-- A structured representation of the Syntax describing the signature of an operation -/
-structure SignatureView extends RegionSignatureView where
-  regions : Array RegionSignatureView
-  effectKind : Term
-
 /-- A meta region signature stores a list of expressions describing the argument
 types and an expression describing the return type.
 
@@ -122,7 +103,7 @@ structure MetaRegionSignature where
   /-- `argumentTypes?` gives a list of expressions, where each describes the
     type of one argument. This field is `none` if the `${...}` escape hatch was
     used, as the number of arguments might not be knowable statically. -/
-  argumentTypes? : Option (Array Expr)
+  argumentTypes : (Array Expr) ⊕ Expr
   returnType : Expr
   deriving BEq
 
@@ -143,26 +124,84 @@ for some fixed `d : Dialect`.
 -/
 structure MetaSignature extends MetaRegionSignature where
   regions : Array MetaRegionSignature
+  effectKind : EffectKind ⊕ Expr
   deriving BEq
 
-def MetaRegionSignature.ofView (Ty : Expr) (view : RegionSignatureView) :
-    TermElabM MetaRegionSignature := withRef view.ref do
-  let argumentTypes? ← match view.argumentTypes with
-    | .antiquot _ => pure none
-    | .list ref argumentTypes => withRef ref <| do
-        let exprs ← argumentTypes.mapM (elabTermEnsuringType · Ty)
-        pure <| some exprs
-  let returnType ← elabTermEnsuringType view.returnType Ty
-  return { argumentTypes?, returnType }
+partial def MetaSignature.ofExpr (signature : Expr) : MetaM MetaSignature := do
+  let typeOfSignature ← inferType signature
+  let Ty : Q(Type) ← mkFreshExprMVar q(Type)
+  let expected := q(Signature $Ty)
+  unless ←isDefEq typeOfSignature expected do
+    throwError m!"{signature} {← mkHasTypeButIsExpectedMsg typeOfSignature expected}"
 
-/-- Elaborate a `MatchAltView` into a `MetaSignature`, given a Lean expression
-`Ty : Type` that describes the type universe of the expected dialect. -/
-def MetaSignature.ofView (Ty : Expr) (view : SignatureView) :
-    TermElabM MetaSignature := withRef view.ref do
-  let base ← MetaRegionSignature.ofView Ty view.toRegionSignatureView
-  return { base with
-    regions  := ←view.regions.mapM (MetaRegionSignature.ofView Ty)
+  let_expr Signature.mkEffectful _Ty argumentTypes regSig returnType eff := ←whnf signature
+    | throwError "{signature} is not in normal form"
+
+  let some regions ← listExprToArray regSig
+    | throwError "Failed to recognize indivial region signatures in:\n\t\
+        {regSig}\nNote that variadic regions are not supported."
+  let regions ← regions.mapM <| fun reg => do
+    let_expr Prod.mk _ args returnType :=← whnf reg
+      | throwError m!"{reg} is not in normal form"
+    return {
+      argumentTypes := ←optToSum listExprToArray args
+      returnType
+    }
+  return {
+    argumentTypes := ←optToSum listExprToArray argumentTypes
+    returnType
+    regions := regions
+    effectKind := ←optToSum (EffectKind.fromExpr? <$> whnf ·) eff
   }
+
+where
+  optToSum {α} (f : Expr → MetaM (Option α)) (e : Expr) : MetaM (α ⊕ Expr) := do
+    return match ← f e with
+    | some a => .inl a
+    | none => .inr e
+  /--
+  Given `e` a Lean expression of type `Array α`, return an array of
+  expressions `es : Array Expr` where `es[i]` is the `i`th element of `e`.
+
+  Returns `none` if `e` does not reduce to `Array.mk`, or if the underlying list
+  does not reduce to a sequence of `List` constructors. -/
+  arrayExprToArray (e : Expr) : MetaM (Option <| Array Expr) := do
+    let e ← whnf e
+    let_expr Array.mk listE := e
+      | return none
+    listExprToArray listE
+  /--
+  Given `e` a Lean expression of type `List α`, return an array of
+  expressions `es : Array Expr` where `es[i]` is the `i`th element of `e`.
+
+  Returns `none` if `e` does not reduce to a sequence of `List` constructors. -/
+  listExprToArray (e : Expr) : MetaM (Option <| Array Expr) := @id (OptionT MetaM _) <| do
+    let e ← whnf e
+    match_expr e with
+    | List.cons _ a as => do
+        let as ← listExprToArray as
+        return as.push a -- TODO: check that this is the right order
+    | List.nil _  => return #[]
+    | _           => OptionT.fail
+
+-- def MetaRegionSignature.ofView (Ty : Expr) (view : RegionSignatureView) :
+--     TermElabM MetaRegionSignature := withRef view.ref do
+--   let argumentTypes? ← match view.argumentTypes with
+--     | .antiquot _ => pure none
+--     | .list ref argumentTypes => withRef ref <| do
+--         let exprs ← argumentTypes.mapM (elabTermEnsuringType · Ty)
+--         pure <| some exprs
+--   let returnType ← elabTermEnsuringType view.returnType Ty
+--   return { argumentTypes?, returnType }
+
+-- /-- Elaborate a `MatchAltView` into a `MetaSignature`, given a Lean expression
+-- `Ty : Type` that describes the type universe of the expected dialect. -/
+-- def MetaSignature.ofView (Ty : Expr) (view : SignatureView) :
+--     TermElabM MetaSignature := withRef view.ref do
+--   let base ← MetaRegionSignature.ofView Ty view.toRegionSignatureView
+--   return { base with
+--     regions  := ←view.regions.mapM (MetaRegionSignature.ofView Ty)
+--   }
 
 /-!
 ## `def_signature` Elaboration
@@ -221,15 +260,6 @@ If this error is thrown, it indicates a bug in the implementation. -/
 def throwUnexpectedSyntax (stx : Syntax) : m α :=
   throwErrorAt stx "Unexpected syntax: {stx}\nThis is an internal bug"
 
-def ArgListView.parse : TSyntax ``argumentList → m ArgListView
-  | ref@`(argumentList| ($args,*))  => return .list ref args
-  | `(argumentList| ${$argList})    => return .antiquot argList
-  | stx => throwUnexpectedSyntax stx
-
-def ArgListView.toTerm : ArgListView → m Term
-  | .list ref args  => withRef ref <| `([$args,*])
-  | .antiquot t     => return t
-
 -- /-- Transforms an mlir function signature to a Lean function.
 
 -- For example, `(int, nat) -> int` becomes `⟦int⟧ → ⟦int⟧ → ⟦nat⟧`. -/
@@ -240,56 +270,37 @@ def ArgListView.toTerm : ArgListView → m Term
 --       `(⟦$ty⟧ → $acc)
 --   | ref => throwUnexpectedSyntax ref
 
-def parseSignature (ref : TSyntax ``LeanMLIR.Parser.signature) :
-    m SignatureView :=
+def parseSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : m Term :=
   withRef ref <| match ref with
   | `(signature| { $regions,* } → $fn:function ) => do
       let regions ← regions.getElems.mapM fun fn => withRef fn do
         let `(plainFunction| $args → $outTy) := fn
           | throwUnexpectedSyntax fn
-        return {
-          ref := fn
-          argumentTypes := ← ArgListView.parse args
-          returnType := outTy
-        }
-        -- `(⟨$args, $outTy⟩)
+        let args ← parseArgumentList args
+        `(⟨$args, $outTy⟩)
       parseFunction regions fn
   | `(signature| $fn:function) => parseFunction #[] fn
   | ref => throwUnexpectedSyntax ref
   where
-    parseFunction (regions : Array RegionSignatureView)
+    parseArgumentList : TSyntax ``argumentList → m Term
+      | `(argumentList| ${$args})  => pure args
+      | `(argumentList| ($args,*)) => `([$args,*])
+      | ref => throwUnexpectedSyntax ref
+    mkSignature (argumentTypes : TSyntax ``argumentList) (regions : Array Term)
+        (returnType : Term) (effectKind : Term) :
+        m Term := do
+      let argumentTypes ← parseArgumentList argumentTypes
+      `(_root_.Signature.mkEffectful $argumentTypes [$regions,*] $returnType $effectKind)
+    parseFunction (regions : Array Term)
         (ref : TSyntax ``LeanMLIR.Parser.function) :
-        m SignatureView := withRef ref <| do
-      let view : SignatureView := {
-        ref, regions,
-        returnType    := ⟨.missing⟩
-        argumentTypes := .list .missing #[]
-        effectKind    := ⟨.missing⟩
-      }
+        m Term := withRef ref <| do
       match ref with
-      | `(function| $argumentTypes -[$effectKind]-> $returnType) => do
-          let argumentTypes ← ArgListView.parse argumentTypes
-          return { view with
-            argumentTypes, returnType, effectKind
-          }
-          -- `(_root_.Signature.mkEffectful $args [$regions,*] ($outTy) ($eff))
+      | `(function| $argumentTypes -[$effectKind]-> $returnType) =>
+          mkSignature argumentTypes regions returnType effectKind
       | `(function| $argumentTypes → $returnType) => do
-          let argumentTypes ← ArgListView.parse argumentTypes
-          return { view with
-            argumentTypes, returnType,
-            effectKind := ←`(_root_.EffectKind.pure),
-          }
+          let effectKind ← `(_root_.EffectKind.pure)
+          mkSignature argumentTypes regions returnType effectKind
       | _ => throwUnexpectedSyntax ref
-
-def SignatureView.toTerm (view : SignatureView) : m Term := do
-  let regions ← view.regions.mapM fun view => withRef view.ref <| do
-      `(⟨$(← view.argumentTypes.toTerm), $view.returnType⟩)
-  let argumentTypes ← view.argumentTypes.toTerm
-  `(_root_.Signature.mkEffectful
-      $argumentTypes
-      [$regions,*]
-      $view.returnType
-      $view.effectKind)
 
 def elabDefSignatureFor (dialect : Term) (alts : TSyntax ``matchAltsSig) : CommandElabM Unit := do
   let msg := (return m!"{exceptEmoji ·} Defining operation signature for {dialect} dialect")
@@ -298,15 +309,10 @@ def elabDefSignatureFor (dialect : Term) (alts : TSyntax ``matchAltsSig) : Comma
     let alts ← do
       alts.mapM fun view => do
         trace[LeanMLIR.Elab] m!"Parsing match alternative with\n\
-          \tpatterns: {(view.patterns : Array _)}\n\
+          \tpatterns: {view.patterns}\n\
           \tsignature: {view.rhs}"
-        -- HACK: The `(_ : Array _)` type ascription above is load-bearing.
-        --       Without it, we get a type mismatch error.
-
-        let sigView ← parseSignature view.rhs
-        return {view with
-                  rhs := ← sigView.toTerm
-                }
+        let rhs ← parseSignature view.rhs
+        return { view with rhs }
 
     -- Define instance
     let matchAlts ← Elab.mkMatchAltsExpr alts
