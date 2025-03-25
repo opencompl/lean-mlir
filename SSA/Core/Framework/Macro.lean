@@ -272,18 +272,18 @@ def MetaArgList.foldForall (body : Expr) : MetaArgList → Expr
 ```
   HVector ?f ?as → HVector ?g ?bs → ?β
 ```
-Where `as` and `bs` both reduce to a simple sequence of `List` constructors
-TODO: What if they don't? Currently, the elaborator throws an error, but that
-      means we don't support variadic operations at all.
-      We should build in some fallback to the raw vector if this reduction fails.
 
-Then, it elaborates the passed term `fn` expecting the type:
+This is transformed into an idiomatic, curried, function type--assuming that
+`as` and `bs` reduce to a simple sequence of `List` constructors.
 ```
   f as[0] → f as[1] → … → f as[n] → g bs[0] → … → g bs[m] → β
 ```
 Finally, an expression of the originally expected type is construed by applying
 the elaborated the function to appropriate elements of the vectors arguments,
 extracted via `HVector.get`.
+
+If either `as` or `bs` does not reduce, the corresponding `HVector` argument
+is left as-is in the new expected type.
 -/
 local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
   let origLCtx ← getLCtx
