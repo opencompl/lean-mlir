@@ -236,7 +236,27 @@ elab "def_signature" " for " dialects:term,* (" where ")? alts:matchAltsSig : co
 open Parser (matchAltsExpr)
 open Qq
 
-def elabHVectorFun (fn : Term) (expectedType : Expr) : TermElabM Expr := do
+/--
+`hvectorFun(...)` is an implementation detail of `def_semantics`.
+
+`hvectorFun($fn)` assumes the `expectedType` is something like:
+```
+  HVector ?f ?as → HVector ?g ?bs → ?β
+```
+Where `as` and `bs` both reduce to a simple sequence of `List` constructors
+TODO: What if they don't? Currently, the elaborator throws an error, but that
+      means we don't support variadic operations at all.
+      We should build in some fallback to the raw vector if this reduction fails.
+
+Then, it elaborates the passed term `fn` expecting the type:
+```
+  f as[0] → f as[1] → … → f as[n] → g bs[0] → … → g bs[m] → β
+```
+Finally, an expression of the originally expected type is construed by applying
+the elaborated the function to appropriate elements of the vectors arguments,
+extracted via `HVector.get`.
+-/
+local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
   let origLCtx ← getLCtx
   let origLocalInst ← getLocalInstances
   forallTelescope expectedType fun args returnType => do
@@ -249,26 +269,44 @@ def elabHVectorFun (fn : Term) (expectedType : Expr) : TermElabM Expr := do
       let_expr HVector _α f as := arg
         | throwError "Expected HVector, found: {arg}"
       let some as ← listExprToArray as
-        | throwError "Failed to reflect:\n\t{as}\nExpected a sequence of `List` constructors"
+        | throwError "Failed to reflect:\n\t{as}\n\
+            Expected a sequence of `List` constructors"
       as.mapM (whnf <| mkApp f ·)
     let returnType ← whnf returnType
-    let altExpectedType := argTypes.flatten.foldr (init := returnType) fun binderType body =>
-      Expr.forallE .anonymous binderType body .default
+    let altExpectedType :=
+      argTypes.flatten.foldr (init := returnType) fun binderType body =>
+        Expr.forallE .anonymous binderType body .default
 
     let fn ← withLCtx origLCtx origLocalInst <|
       elabTermEnsuringType fn altExpectedType
-    let fn ← (args.zip argTypes).foldlM (init := fn) fun fn (vecArg, argTypes) => do
+    let fn ← (args.zip argTypes).foldlM (init := fn) fun fn (vecArg, args) => do
       let mut fn := fn
-      for i in [0:argTypes.size] do
+      let n := args.size
+      for (i : Nat) in [0:n] do
         let arg ← mkAppM ``HVector.getN #[vecArg, toExpr i]
-        fn := mkApp fn arg
+        let inBoundsProof ← withLCtx origLCtx origLocalInst do
+          let len : Q(Nat) := toExpr n
+          mkDecideProof q($i < $len)
+        fn := mkApp fn (mkApp arg inBoundsProof)
       return fn
 
-    mkLambdaFVars args fn
+    let fn ← mkLambdaFVars args fn
+    synthesizeSyntheticMVarsUsingDefault
+    runPendingTacticsAt fn
+    let fn ← instantiateMVars fn
+    trace[LeanMLIR.Elab] m!"desugared: {fn}"
+    return fn
 
-local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
-  elabHVectorFun fn expectedType
+/--
+`def_semantics for $FooDialect` enables the definition of an instance for
+`DialectDenote $FooDialect` via idiomatic curried functions, instead of the
+internal encoding with `HVector` arguments.
 
+NOTE: this is only possible for operations where the number of arguments in the
+signature can be statically determined. For operations where we cannot (such as
+variadic operations), the expected type falls back to the internal `HVector`
+encoding.
+-/
 elab "def_semantics" " for " dialect:term (" where ")? alts:matchAltsExpr : command => do
   let matchAlts := getMatchAltsExpr alts
   let matchAlts ← matchAlts.mapM fun altView => withRef altView.rhs <| do
@@ -278,7 +316,6 @@ elab "def_semantics" " for " dialect:term (" where ")? alts:matchAltsExpr : comm
   -- Re-assemble match alternatives
   let matchAlts ← Elab.mkMatchAltsExpr matchAlts
 
-  elabCommand <|← `(command| -- Declare instance
-    instance : DialectDenote $dialect where
+  elabCommand <|← `(instance : DialectDenote $dialect where
       denote := fun op => match op with $matchAlts:matchAlts
   )
