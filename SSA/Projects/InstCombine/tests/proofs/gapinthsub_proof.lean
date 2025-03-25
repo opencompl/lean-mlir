@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gapinthsub_proof
 theorem test1_thm (e : IntW 23) : sub e e ⊑ const? 23 0 := by
@@ -165,5 +166,3 @@ theorem test21_thm (e e_1 : IntW 256) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

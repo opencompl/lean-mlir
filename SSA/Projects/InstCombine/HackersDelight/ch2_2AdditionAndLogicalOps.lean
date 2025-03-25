@@ -1,5 +1,5 @@
 import SSA.Projects.InstCombine.TacticAuto
-
+set_option Elab.async false
 /- 2–2 Addition Combined with Logical Operations -/
 
 namespace HackersDelight

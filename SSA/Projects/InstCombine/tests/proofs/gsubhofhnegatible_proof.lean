@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gsubhofhnegatible_proof
 theorem t0_thm (e : IntW 8) : sub e (const? 8 (-42)) ⊑ add e (const? 8 42) := by
@@ -262,5 +263,3 @@ theorem negate_select_of_op_vs_negated_op_nsw_xyyx_thm (e e_1 : IntW 8) (e_2 : I
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

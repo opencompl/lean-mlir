@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gapinthshift_proof
 theorem test6_thm (e : IntW 55) : mul (shl e (const? 55 1)) (const? 55 3) ⊑ mul e (const? 55 6) := by
@@ -281,5 +282,3 @@ theorem test25_thm (e e_1 : IntW 37) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

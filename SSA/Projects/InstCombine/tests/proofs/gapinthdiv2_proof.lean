@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gapinthdiv2_proof
 theorem test1_thm (e : IntW 333) : LLVM.udiv e (const? 333 70368744177664) ⊑ lshr e (const? 333 46) := by
@@ -38,5 +39,3 @@ theorem test3_thm (e : IntW 1) (e_1 : IntW 599) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

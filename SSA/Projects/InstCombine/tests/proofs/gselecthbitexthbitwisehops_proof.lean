@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gselecthbitexthbitwisehops_proof
 theorem sel_false_val_is_a_masked_shl_of_true_val1_thm (e : IntW 64) (e_1 : IntW 32) :
@@ -82,5 +83,3 @@ theorem sel_false_val_is_a_masked_ashr_of_true_val2_thm (e : IntW 64) (e_1 : Int
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
