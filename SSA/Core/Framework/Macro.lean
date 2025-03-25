@@ -231,13 +231,42 @@ elab "def_signature" " for " dialects:term,* (" where ")? alts:matchAltsSig : co
     elabDefSignatureFor dialect alts
 
 /-!
-## `def_semantics`
+## `def_denote`
 -/
 open Parser (matchAltsExpr)
 open Qq
 
+/-- `MetaList` represents an expression of type `List α` -/
+inductive MetaArgList
+  /-- A statically known argument list, represented as an array of expressions,
+    where each `elements[i]` is of type `Dialect.Ty $d`, for some (fixed)
+    dialect `d`
+  -/
+  | static (elements : Array Expr)
+  /-- A dynamic argument list is simply a single expression of type `Type _`,
+      usually this expression is an application of `HVector`. -/
+  | dynamic (name : Name) (expr : Expr)
+
+def MetaArgList.ofExpr (arg : Expr) : MetaM MetaArgList := do
+  let e ← inferType arg
+  let_expr HVector _α f as := e
+    | throwError "Expected HVector, found: {e}"
+  match ← listExprToArray as with
+  | some as => do
+      let as ← as.mapM (whnf <| mkApp f ·)
+      return .static as
+  | none =>
+    let name ← match arg.fvarId? with
+      | some id => id.getUserName
+      | none    => pure .anonymous
+    return .dynamic name e
+
+def MetaArgList.foldForall (body : Expr) : MetaArgList → Expr
+  | .dynamic name e => Expr.forallE name e body .default
+  | .static es => es.foldr (init := body) (Expr.forallE .anonymous · · .default)
+
 /--
-`hvectorFun(...)` is an implementation detail of `def_semantics`.
+`hvectorFun(...)` is an implementation detail of `def_denote`.
 
 `hvectorFun($fn)` assumes the `expectedType` is something like:
 ```
@@ -264,31 +293,25 @@ local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
       if returnType.containsFVar arg.fvarId! then
         throwError "Return type {returnType} depends on argument {arg}.\n\
           Only non-dependent arrow are supported."
-    let argVecTypes ← args.mapM (inferType ·)
-    let argTypes ← argVecTypes.mapM fun arg => do
-      let_expr HVector _α f as := arg
-        | throwError "Expected HVector, found: {arg}"
-      let some as ← listExprToArray as
-        | throwError "Failed to reflect:\n\t{as}\n\
-            Expected a sequence of `List` constructors"
-      as.mapM (whnf <| mkApp f ·)
+
+    let argTypes ← args.mapM (MetaArgList.ofExpr ·)
     let returnType ← whnf returnType
-    let altExpectedType :=
-      argTypes.flatten.foldr (init := returnType) fun binderType body =>
-        Expr.forallE .anonymous binderType body .default
+    let altExpectedType := argTypes.foldr (·.foldForall) returnType
 
     let fn ← withLCtx origLCtx origLocalInst <|
       elabTermEnsuringType fn altExpectedType
     let fn ← (args.zip argTypes).foldlM (init := fn) fun fn (vecArg, args) => do
       let mut fn := fn
-      let n := args.size
-      for (i : Nat) in [0:n] do
-        let arg ← mkAppM ``HVector.getN #[vecArg, toExpr i]
-        let inBoundsProof ← withLCtx origLCtx origLocalInst do
-          let len : Q(Nat) := toExpr n
-          mkDecideProof q($i < $len)
-        fn := mkApp fn (mkApp arg inBoundsProof)
-      return fn
+      match args with
+      | .dynamic .. => return mkApp fn vecArg
+      | .static args =>
+          have n : Nat := args.size
+          for (i : Nat) in [0:n] do
+            let inBoundsProof ← withLCtx origLCtx origLocalInst <|
+              mkDecideProof q($i < $n)
+            let i := mkApp3 (.const ``Fin.mk []) (toExpr n) (toExpr i) inBoundsProof
+            fn := mkApp fn <|← mkAppM ``HVector.get #[vecArg, i]
+          return fn
 
     let fn ← mkLambdaFVars args fn
     synthesizeSyntheticMVarsUsingDefault
@@ -298,7 +321,7 @@ local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
     return fn
 
 /--
-`def_semantics for $FooDialect` enables the definition of an instance for
+`def_denote for $FooDialect` enables the definition of an instance for
 `DialectDenote $FooDialect` via idiomatic curried functions, instead of the
 internal encoding with `HVector` arguments.
 
@@ -307,7 +330,7 @@ signature can be statically determined. For operations where we cannot (such as
 variadic operations), the expected type falls back to the internal `HVector`
 encoding.
 -/
-elab "def_semantics" " for " dialect:term (" where ")? alts:matchAltsExpr : command => do
+elab "def_denote" " for " dialect:term (" where ")? alts:matchAltsExpr : command => do
   let matchAlts := getMatchAltsExpr alts
   let matchAlts ← matchAlts.mapM fun altView => withRef altView.rhs <| do
     return { altView with
