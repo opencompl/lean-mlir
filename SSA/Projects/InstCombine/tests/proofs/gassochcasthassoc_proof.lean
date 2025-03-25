@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gassochcasthassoc_proof
 theorem XorZextXor_thm (e : IntW 3) :
@@ -50,5 +51,3 @@ theorem zext_nneg_thm (e : IntW 16) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

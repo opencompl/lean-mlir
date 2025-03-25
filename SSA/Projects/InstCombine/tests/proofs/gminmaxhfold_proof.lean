@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gminmaxhfold_proof
 theorem add_umin_constant_limit_thm (e : IntW 32) :
@@ -129,5 +130,3 @@ theorem twoway_clamp_lt_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

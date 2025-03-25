@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gselecthsafehboolhtransforms_proof
 theorem land_land_left1_thm (e e_1 : IntW 1) :
@@ -448,5 +449,3 @@ theorem bor_lor_right2_thm (e e_1 : IntW 1) : select e_1 (const? 1 1) (LLVM.or e
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
