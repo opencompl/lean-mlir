@@ -67,6 +67,8 @@ instance : TyDenote Ty where
 toType := fun
   | .bitvec w => LLVM.IntW w
 
+#check Ty
+
 instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
   coe z := match ty with
     | .bitvec w => some <| BitVec.ofInt w z

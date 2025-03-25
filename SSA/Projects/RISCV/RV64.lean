@@ -373,6 +373,15 @@ BitVec.signExtend 64
               (32))))
           (BitVec.extractLsb 4 0 rs2_val)))).toNat))
 
+ def ZBB_RTYPE_pure64_RISCV_ROL (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.or (BitVec.shiftLeft  rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
+    (BitVec.ushiftRight rs1_val  (BitVec.extractLsb' 0 6 (BitVec.ofInt (7) (64)) - BitVec.extractLsb 5 0 rs2_val).toNat)
+
+ def ZBB_RTYPE_pure64_RISCV_ROR (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+      BitVec.or (BitVec.ushiftRight rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
+    (BitVec.shiftLeft rs1_val ((BitVec.extractLsb' 0 6 (BitVec.ofInt (7) (64)) - BitVec.extractLsb 5 0 rs2_val)).toNat)
+
+
 def const_func (val : BitVec 64) := val
 /-
 
@@ -408,7 +417,7 @@ namespace toRISCV
 
 section Dialect
 
---defining the MLIR operations
+--defining operations of my dialect
 --encoding the operations such that my input arguements are only the registers
 inductive Op
 |const (val: BitVec 64)
@@ -436,13 +445,23 @@ inductive Op
 |srl
 |sub
 |sra
-|remw (s : Bool) -- to indicate if signed or not
-|rem (s : Bool)
-|mul (high : Bool) (s1 : Bool) (s2 : Bool)
+|remw
+|rem
+|mul
+|mulu
 |mulw
+|mulh
+|mulhu
+|mulhsu
+|divu
+|rol
+|ror
+|remwu
+|remu
  --the sign or unsigned when calling the function -> pattern match on to mul op to get the correct cases
-|divw (s : Bool) -- to indicate if signed or not
-|div (s : Bool) -- to indicate if signed or not
+|divw
+|divwu
+|div
 |addi (imm : BitVec 12)
 |slti (imm : BitVec 12)
 |sltiu (imm : BitVec 12)
@@ -484,6 +503,10 @@ inductive Ty -- here belongs what my operations operate on
   deriving Inhabited, DecidableEq, Repr
 
 -- connecting the MLIR operations and types to their semantics
+
+--def HVector.denote : {d : Dialect} → TyDenote (Dialect.Ty d) → ...
+-- TyDenote (Dialect.Ty d) give me the way to interpret the types into actual semantics and Ty is the type of types in the lanugae
+-- how Lean should interpet these types of dialects d
 open TyDenote (toType) in
 instance RV64TyDenote : TyDenote Ty where
 toType := fun
@@ -498,7 +521,17 @@ open TyDenote (toType)
 
 @[simp, reducible]
 def Op.sig : Op → List Ty -- did the signature accroding to the execution functions above
-  |.const (val: BitVec 64) =>  [Ty.bv]
+  |.const (val : BitVec 64) =>  []
+  |.mulu  => [Ty.bv, Ty.bv]
+  |mulh  => [Ty.bv, Ty.bv]
+  |mulhu  => [Ty.bv, Ty.bv]
+  |mulhsu  => [Ty.bv, Ty.bv]
+  |divu =>  [Ty.bv, Ty.bv]
+  |rol => [Ty.bv, Ty.bv]
+  |ror => [Ty.bv, Ty.bv]
+  |.remwu  => [Ty.bv, Ty.bv] -- to indicate if signed or not
+  |.remu  =>  [Ty.bv, Ty.bv]
+
   |.addiw (imm : BitVec 12) => [Ty.bv] -- specifying the input argument types
   |.lui (imm : BitVec 20) => [Ty.bv] -- Ty.bv 20 as the immediate
   |.auipc (imm : BitVec 20)  => [Ty.bv] --Ty.bv 20,as the immediate
@@ -523,12 +556,13 @@ def Op.sig : Op → List Ty -- did the signature accroding to the execution func
   |.srl => [Ty.bv, Ty.bv]
   |.sub => [Ty.bv, Ty.bv]
   |.sra => [Ty.bv, Ty.bv]
-  |.remw (s : Bool) => [Ty.bv, Ty.bv] -- to indicate if signed or not
-  |.rem (s : Bool) =>  [Ty.bv, Ty.bv]
-  |.mul (high : Bool) (s1 : Bool) (s2 : Bool) => [Ty.bv, Ty.bv]
+  |.remw  => [Ty.bv, Ty.bv] -- to indicate if signed or not
+  |.rem  =>  [Ty.bv, Ty.bv]
+  |.mul => [Ty.bv, Ty.bv]
   |.mulw => [Ty.bv, Ty.bv]
-  |.div (s : Bool) =>  [Ty.bv, Ty.bv]
-  |.divw (s : Bool) =>  [Ty.bv, Ty.bv]
+  |.div  =>  [Ty.bv, Ty.bv]
+  |.divw  =>  [Ty.bv, Ty.bv]
+  |.divwu  =>  [Ty.bv, Ty.bv]
   |.addi (imm : BitVec 12) => [Ty.bv]
   |.slti (imm : BitVec 12) => [Ty.bv]
   |.sltiu (imm : BitVec 12) => [Ty.bv]
@@ -550,9 +584,19 @@ def Op.sig : Op → List Ty -- did the signature accroding to the execution func
   |bseti (shamt : BitVec 6) => [Ty.bv]
   |rolw => [Ty.bv, Ty.bv]
   |rorw => [Ty.bv, Ty.bv]
+
 @[simp, reducible] -- reduceable means this expression can always be expanded by the type checker when type checking
 def Op.outTy : Op  → Ty --- dervied from the ouput of the execution function
   |.const (val: BitVec 64) => Ty.bv
+  |.mulu  => Ty.bv
+  |.mulh  => Ty.bv
+  |.mulhu  => Ty.bv
+  |.mulhsu  => Ty.bv
+  |.divu =>  Ty.bv
+  |.rol => Ty.bv
+  |.ror => Ty.bv
+  |.remwu  => Ty.bv-- to indicate if signed or not
+  |.remu  =>  Ty.bv
   |.addiw (imm : BitVec 12) => Ty.bv -- specifying the input argument types
   |.lui (imm : BitVec 20) => Ty.bv
   |.auipc (imm : BitVec 20) => Ty.bv
@@ -577,12 +621,13 @@ def Op.outTy : Op  → Ty --- dervied from the ouput of the execution function
   |.srl => Ty.bv
   |.sub => Ty.bv
   |.sra => Ty.bv
-  |.remw (s : Bool) => Ty.bv-- to indicate if signed or not
-  |.rem (s : Bool) =>  Ty.bv
-  |.mul (high : Bool) (s1 : Bool) (s2 : Bool) => Ty.bv
+  |.remw  => Ty.bv-- to indicate if signed or not
+  |.rem =>  Ty.bv
+  |.mul => Ty.bv
   |.mulw => Ty.bv
-  |.div (s : Bool) =>  Ty.bv
-  |.divw (s : Bool) =>  Ty.bv
+  |.div=>  Ty.bv
+  |.divw  =>  Ty.bv
+  |.divwu  =>  Ty.bv
   |.addi (imm : BitVec 12) => Ty.bv
   |.slti (imm : BitVec 12) => Ty.bv
   |.sltiu (imm : BitVec 12) => Ty.bv
@@ -623,7 +668,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (RV64) where
   denote
-  |.const val, _,  _  => RV64.const_func val
+  |.const val,_,  _  => RV64.const_func val
   |.addiw imm, regs, _   => RV64.ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   |.lui imm,  regs , _   => RV64.UTYPE_pure64_lui imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   |.auipc imm, regs, _  => RV64.UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -648,23 +693,23 @@ instance : DialectDenote (RV64) where
   |.srl, regs, _ => RV64.RTYPE_pure64_RISCV_SRL (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
   |.sub, regs, _  => RV64.RTYPE_pure64_RISCV_SUB (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
   |.sra, regs, _  => RV64.RTYPE_pure64_RISCV_SRA (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.remw true, regs, _  => RV64.REMW_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))-- double-check
-  |.remw false, regs, _  => RV64.REMW_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))-- double-check
-  |.rem true, regs, _  =>  RV64.REM_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.rem false, regs, _ =>  RV64.REM_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul false false false, regs, _ => RV64.MUL_pure64_fff (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature])) -- double check
-  |.mul false false true , regs, _ => RV64.MUL_pure64_fft (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul  false true false , regs, _ => RV64.MUL_pure64_ftf (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul  true false false ,regs, _ => RV64.MUL_pure64_tff (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul false true true ,regs, _ => RV64.MUL_pure64_ftt (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul  true false true,regs, _ => RV64.MUL_pure64_tft (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul  true true false ,regs, _ => RV64.MUL_pure64_ttf (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.mul  true true  true ,regs, _ => RV64.MUL_pure64_ttt (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.remw, regs, _  => RV64.REMW_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))-- double-check
+  |.remwu, regs, _  => RV64.REMW_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))-- double-check
+  |.rem, regs, _  =>  RV64.REM_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.remu, regs, _ =>  RV64.REM_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.mulu, regs, _ => RV64.MUL_pure64_fff (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature])) -- double check
+  --|.mul false false true , regs, _ => RV64.MUL_pure64_fft (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  --|.mul  false true false , regs, _ => RV64.MUL_pure64_ftf (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.mulhu,regs, _ => RV64.MUL_pure64_tff (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.mul ,regs, _ => RV64.MUL_pure64_ftt (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  --|.mul  true false true,regs, _ => RV64.MUL_pure64_tft (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.mulhsu ,regs, _ => RV64.MUL_pure64_ttf (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.mulh,regs, _ => RV64.MUL_pure64_ttt (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
   |.mulw,  regs, _ => RV64.MULW_pure64 (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature])) -- double check
-  |.div true, regs, _  =>  RV64.DIV_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.div false, regs, _ =>  RV64.DIV_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.divw true, regs, _  =>  RV64.DIVW_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
-  |.divw false, regs, _ =>  RV64.DIVW_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.div, regs, _  =>  RV64.DIV_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.divu,  regs, _ =>  RV64.DIV_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.divw, regs, _  =>  RV64.DIVW_pure64_signed (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.divwu, regs, _ =>  RV64.DIVW_pure64_unsigned (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
   |.addi imm, reg, _  => RV64.ITYPE_pure64_RISCV_ADDI  imm (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   |.slti imm, reg, _  => RV64.ITYPE_pure64_RISCV_SLTI  imm (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   |.sltiu imm, reg, _ => RV64.ITYPE_pure64_RISCV_SLTIU  imm (reg.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -686,6 +731,8 @@ instance : DialectDenote (RV64) where
   |.bseti shamt, reg, _ => RV64.ZBS_IOP_pure64_RISCV_BSETI (shamt) (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   |.rolw, regs, _ => RV64.ZBB_RTYPEW_pure64_RISCV_ROLW (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
   |.rorw, regs, _ => RV64.ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.rol, regs, _ => RV64.ZBB_RTYPE_pure64_RISCV_ROL (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
+  |.ror, regs, _ => RV64.ZBB_RTYPE_pure64_RISCV_ROR (regs.getN 0 (by simp [DialectSignature.sig, signature]))  (regs.getN 1 (by simp [DialectSignature.sig, signature]))
 end Dialect
 
 /-
@@ -710,12 +757,23 @@ instance instTransformTy : MLIR.AST.TransformTy RV64 0 where
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   MLIR.AST.ReaderM (RV64) (Σ eff ty, Expr (RV64) Γ eff ty) := do
-  match opStx.name with
-  | op@"RV64.addiw" | op@"RV64.lui" | op@"RV64.auipc" | op@"RV64.slliw" | op@"RV64.srliw"  | op@"RV64.sraiw" | op@"RV64.slli" | op@"RV64.srli"
-    | op@"RV64.addi" | op@"RV64.slti" | op@"RV64.sltiu" | op@"RV64.andi" | op@"RV64.xori" | op@"RV64.ori" | op@"RV64.srai"
-        | op@"RV64.sext.b" | op@"RV64.sext.h" | op@"RV64.zext.h"
-            | op@"RV64.bclri" | op@"RV64.bexti" | op@"RV64.binvi" | op@"RV64.bseti" | op@"RV64.const"  =>
     match opStx.args with
+    | []  => do
+        let some att := opStx.attrs.getAttr "val"
+          | throw <| .unsupportedOp s!"no attirbute in const {repr opStx}"
+        match att with
+          | .int val ty =>
+            let opTy@(.bv) ← mkTy ty -- ty.mkTy
+            return ⟨.pure, opTy, ⟨
+              .const (BitVec.ofInt 64 val),
+              by
+              simp[DialectSignature.outTy, signature]
+             ,
+              by constructor,
+              .nil,
+              .nil
+            ⟩⟩
+          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
     | v₁Stx::[] =>
        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         match ty₁, opStx.name with
@@ -727,22 +785,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             let opTy@(.bv) ← mkTy ty -- ty.mkTy
             return ⟨.pure, opTy, ⟨
               .srai (BitVec.ofInt 6 val),
-              by
-              simp[DialectSignature.outTy, signature]
-             ,
-              by constructor,
-              .cons v₁ <| .nil,
-              .nil
-            ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "RV64.const" => do
-          let some att := opStx.attrs.getAttr "val"
-             | throw <| .unsupportedOp s!"no attirbute in bclri {repr opStx}"
-          match att with
-          | .int val ty => -- ides modell it as a list of 3 bools
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy
-            return ⟨.pure, opTy, ⟨
-              .const (BitVec.ofInt 64 val),
               by
               simp[DialectSignature.outTy, signature]
              ,
@@ -1060,13 +1102,26 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .nil,
                 .nil⟩⟩
         |_ , _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-    |_  => throw <| .unsupportedOp s!"wrong number of regs for single reg operation {repr opStx}"
-  | op@"RV64.addw" | op@"RV64.subw" | op@"RV64.sllw" | op@"RV64.srlw"  | op@"RV64.add" | op@"RV64.sub" | op@"RV64.slt" | op@"RV64.sltu" | op@"RV64.and" | op@"RV64.or" | op@"RV64.xor" | op@"RV64.sll" | op@"RV64.srl" |op@"RV64.remw" | op@"RV64.rem" | op@"RV64.mul"| op@"RV64.mulw" | op@"RV64.div" | op@"RV64.divw" | op@"RV64.czero.eqz" | op@"RV64.czero.nez" | op@"RV64.bclr" | op@"RV64.bext" | op@"RV64.binv"| op@"RV64.bset" | op@"RV64.rolw" | op@"RV64.rorw" | op@"RV64.sraw" | op@"RV64.sra"  =>
-    match opStx.args with
     | v₁Stx::v₂Stx:: [] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-        match ty₁, ty₂, op with
+        match ty₁, ty₂, opStx.name with
+        | .bv, .bv, "RV64.rem" =>
+          return ⟨.pure, .bv ,⟨ .rem, by rfl ,by constructor,
+             .cons v₁ <| .cons v₂ <| .nil,
+              .nil ⟩⟩
+        | .bv, .bv, "RV64.ror" =>
+          return ⟨.pure, .bv ,⟨ .ror, by rfl ,by constructor,
+             .cons v₁ <| .cons v₂ <| .nil,
+              .nil ⟩⟩
+        | .bv, .bv, "RV64.rol" =>
+          return ⟨.pure, .bv ,⟨ .rol, by rfl ,by constructor,
+             .cons v₁ <| .cons v₂ <| .nil,
+              .nil ⟩⟩
+        | .bv, .bv, "RV64.remu" =>
+          return ⟨.pure, .bv ,⟨ .remu, by rfl ,by constructor,
+             .cons v₁ <| .cons v₂ <| .nil,
+              .nil ⟩⟩
         | .bv, .bv, "RV64.sra" =>
           return ⟨.pure, .bv ,⟨ .sra, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
@@ -1159,113 +1214,59 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
               return ⟨ .pure, .bv ,⟨ .rorw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "RV64.rem" => do
-          let some att := opStx.attrs.getAttr "s"
-            | throw <| .unsupportedOp s!"no attirbute in rem {repr opStx}"
-          match att with
-          | .int val ty  => -- to d o removed ty
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy
-            return ⟨.pure, .bv , ⟨ -- debug , i put manuallay bv mifht get an eroror
-              .rem (val != 0 ), --- to pass in a boolean instead of an int
-              by
-              simp[DialectSignature.outTy, signature]
-             ,
-              by constructor,
-              .cons v₁ <| .cons v₂ <| .nil,
-              .nil
-            ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, .bv, "RV64.remw" => do
-          let some att := opStx.attrs.getAttr "s"
-            | throw <| .unsupportedOp s!"no attirbute in remw {repr opStx}"
-          match att with
-          | .int val ty  =>
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy
-            return ⟨.pure, .bv, ⟨
-              .remw (val != 0), -- to pass in a boolean instead of an int
-              by
-              simp[DialectSignature.outTy, signature],
-              by constructor,
-              .cons v₁ <| .cons v₂ <| .nil,
-              .nil
-            ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv , .bv , "RV64.mul" => do
-          let some high := opStx.attrs.getAttr "high"
-            | throw <| .unsupportedOp s!"no attirbute in mul {repr opStx}"
-          let some s1 := opStx.attrs.getAttr "s1"
-            | throw <| .unsupportedOp s!"no attirbute in mul {repr opStx}"
-          let some s2 := opStx.attrs.getAttr "s2"
-            | throw <| .unsupportedOp s!"no attirbute in mul {repr opStx}"
-          match high, s1, s2 with
-          |.int val ty , .int val2 ty1 , .int val3 ty2  =>--.bool true, .bool false, .bool true] =>
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy;
-            let opTy@(.bv) ← mkTy ty1; -- ty.mkTy
-            let opTy@(.bv) ← mkTy ty2 -- ty.mkTy
-            return ⟨.pure, .bv, ⟨
-              .mul (val != 0) (val2 !=0) (val3 != 0), --debug: not sure if i can just assume that it is a bool
-              by
-              simp[DialectSignature.outTy, signature]
-             ,
-              by constructor,
-              .cons v₁ <| .cons v₂ <| .nil,
-              .nil
-            ⟩⟩
-          | _, _, _  => throw <| .unsupportedOp s!"unsupported attribute for rem {repr opStx}"
+        | .bv , .bv , "RV64.mul" =>
+            return ⟨ .pure, .bv ,⟨ .mul, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv , .bv , "RV64.mulu" =>
+            return ⟨ .pure, .bv ,⟨ .mulu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv , .bv , "RV64.mulh" =>
+            return ⟨ .pure, .bv ,⟨ .mulh, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv , .bv , "RV64.mulhu" =>
+            return ⟨ .pure, .bv ,⟨ .mulhu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv , .bv , "RV64.mulhsu" =>
+            return ⟨ .pure, .bv ,⟨ .mulhsu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+
         | .bv , .bv , "RV64.mulw" => do -- (s : Bool)
           return ⟨ .pure, .bv ,⟨ .mulw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "RV64.divw" => do
-          let some att := opStx.attrs.getAttr "s"
-            | throw <| .unsupportedOp s!"no attirbute in divw {repr opStx}"
-          match att with
-          | .int val ty  =>
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy
-            return ⟨.pure, .bv, ⟨
-              .divw (val != 0), -- to pass in a boolean instead of an int
-              by
-              simp[DialectSignature.outTy, signature],
-              by constructor,
-              .cons v₁ <| .cons v₂ <| .nil,
-              .nil
-            ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, .bv, "RV64.div" => do
-          let some att := opStx.attrs.getAttr "s"
-            | throw <| .unsupportedOp s!"no attirbute in div {repr opStx}"
-          match att with
-          | .int val ty  =>
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy
-            return ⟨.pure, .bv, ⟨
-              .div (val != 0), -- to pass in a boolean instead of an int
-              by
-              simp[DialectSignature.outTy, signature],
-              by constructor,
-              .cons v₁ <| .cons v₂ <| .nil,
-              .nil
-            ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
-    | _ => throw <| .unsupportedOp s!"wrong number of arguemnts for 2 reg operation {repr opStx}"
-  | _ => throw <| .unsupportedOp s!"wrong number of arguemnts, more than 2 arguemnts  {repr opStx}"
-/- | .bv, "RV64.srli" => do
-          let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attirbute in srli {repr opStx}"
-          match att with
-          | .int val ty =>
-            let opTy@(.bv) ← mkTy ty -- ty.mkTy
-            return ⟨.pure, opTy, ⟨
-              .srli (BitVec.ofInt 6 val),
-              by
-              simp[DialectSignature.outTy, signature]
-             ,
-              by constructor,
-              .cons v₁ <| .nil,
-              .nil
-            ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"-/
+        | .bv, .bv, "RV64.divw" =>
+          return ⟨ .pure, .bv ,⟨ .divw, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv, .bv, "RV64.divwu" =>
+            return ⟨ .pure, .bv ,⟨ .divwu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv, .bv, "RV64.div" =>
+            return ⟨ .pure, .bv ,⟨ .div, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv, .bv, "RV64.divu" =>
+            return ⟨ .pure, .bv ,⟨ .divu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv, .bv, "RV64.remw" =>
+            return ⟨ .pure, .bv ,⟨ .remw, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+        | .bv, .bv, "RV64.remwu" =>
+            return ⟨ .pure, .bv ,⟨ .remw, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
 
+
+        | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
+    | _ => throw <| .unsupportedOp s!"wrong number of arguemnts, more than 2 arguemnts  {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (RV64) 0 where
   mkExpr := mkExpr
@@ -1287,6 +1288,5 @@ instance : MLIR.AST.TransformReturn (RV64) 0 where
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[RV64_com| " reg:mlir_region "]" : term => do
   SSA.elabIntoCom reg q(RV64)
-
 
 end toRISCV

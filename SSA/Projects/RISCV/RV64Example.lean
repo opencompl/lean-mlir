@@ -1,4 +1,3 @@
-
 -- goal: in this file I want to define a RISC-V dialect semantics
 -- alllows me issue a sequence of myPureFunction or BitVector Operation sequence given some RISC-V assembly code.
 import SSA.Projects.RISCV.RV64
@@ -43,11 +42,11 @@ def test_selfadd : BitVec 64 := RISCVEg2.denote (Ctxt.Valuation.ofHVector lh)
 --addiw
 def RISCVEg3 := [RV64_com| {
   ^entry (%0: !i64, %1: !i64 ):
-    %2 = "RV64.addw" (%0, %1) : (!i64, !i64) -> (!i64)
+    %2 = "RV64.addw" (%0, %0) : (!i64, !i64) -> (!i64)
     "return" (%2) : (!i64, !i64 ) -> ()
 }]
 --def lh3 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 1) <| HVector.cons (BitVec.ofNat 64 2) .nil
-def lh3 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 4294967297) <| HVector.cons (BitVec.ofNat 64 4294967296) .nil --checking edge cases
+def lh3 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 0) <| HVector.cons (BitVec.ofNat 64 2) .nil --checking edge cases
 def test_addw : BitVec 64 := RISCVEg3.denote  (Ctxt.Valuation.ofHVector lh3)
 #eval test_addw
 
@@ -179,11 +178,11 @@ def test_srl : BitVec 64 := RISCVEg14.denote  (Ctxt.Valuation.ofHVector lh14)
 --sub
 -- add support for subtraction
 def RISCVEg15 := [RV64_com| {
-  ^entry (%0: !i64, %1: !i64 ):
-    %2 = "RV64.sub" (%0, %1) : (!i64, !i64) -> (!i64)
+  ^entry (%0: !i64, %1: !i64 ): -- 0 10
+    %2 = "RV64.sub"  (%0, %1) : (!i64, !i64) -> (!i64)
     "return" (%2) : (!i64, !i64 ) -> ()
 }]
-def lh15 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 10) <| HVector.cons (BitVec.ofNat 64 5) .nil
+def lh15 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 10) <| HVector.cons (BitVec.ofNat 64 0) .nil
 def test_sub : BitVec 64 := RISCVEg15.denote  (Ctxt.Valuation.ofHVector lh15)
 #eval test_sub --interprete it as signed or unsigned
 
@@ -269,7 +268,7 @@ def test_srli : BitVec 64 := RISCVEg23.denote  (Ctxt.Valuation.ofHVector lh23)
 -- RV64M: rem rd, rs1, rs2, unsigned reminder of rs1 by rs1 -- rs1, rs2
 def RISCVEg24 := [RV64_com| {
   ^entry (%0: !i64, %1: !i64 ):
-    %2 = "RV64.rem" (%0, %1)  { s = 0 : !i64 } : ( !i64, !i64 ) -> (!i64)
+    %2 = "RV64.rem" (%0, %1) : ( !i64, !i64 ) -> (!i64)
     "return" (%2) : ( !i64, !i64 ) -> ()
 }]
 def lh24 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv] := HVector.cons (BitVec.ofNat 64 9) <| HVector.cons (BitVec.ofNat 64 (8)) .nil
@@ -282,7 +281,7 @@ def test_rem : BitVec 64 := RISCVEg24.denote  (Ctxt.Valuation.ofHVector lh24)
 -- RV64M: mul rd, rs1, rs2, signed multiplication of rs1 by rs2 and places lower bits into rd
 def RISCVEg25 := [RV64_com| {
   ^entry (%0: !i64, %1: !i64 ):
-    %2 = "RV64.mul" (%0, %1)  { high = 0 : !i64 , s1 = 0 : !i64, s2 = 0 : !i64  } : ( !i64, !i64 ) -> (!i64)
+    %2 = "RV64.mul" (%0, %1) : ( !i64, !i64 ) -> (!i64)
     "return" (%2) : ( !i64, !i64 ) -> ()
 }]
 def lh25 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv] := HVector.cons (BitVec.ofNat 64 7) <| HVector.cons (BitVec.ofNat 64 8) .nil
@@ -302,7 +301,7 @@ def test_mulw : BitVec 64 := RISCVEg26.denote  (Ctxt.Valuation.ofHVector lh26)
 --RV64M: div rd, rs1, rs2  : signed division of rs1 by rs2
 def RISCVEg27 := [RV64_com| {
   ^entry (%0: !i64, %1: !i64 ):
-    %2 = "RV64.div" (%0, %1)  { s = 0 : !i64 } : ( !i64, !i64 ) -> (!i64)
+    %2 = "RV64.div" (%0, %1) : ( !i64, !i64 ) -> (!i64)
     "return" (%2) : ( !i64, !i64 ) -> ()
 }]
 def lh27 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv] := HVector.cons (BitVec.ofNat 64 8) <| HVector.cons (BitVec.ofNat 64 4) .nil
@@ -312,7 +311,7 @@ def test_div : BitVec 64 := RISCVEg27.denote  (Ctxt.Valuation.ofHVector lh27)
 -- divw
 def RISCVEg28 := [RV64_com| {
   ^entry (%0: !i64, %1: !i64 ):
-    %2 = "RV64.divw" (%0, %1)  { s = 0 : !i64 } : ( !i64, !i64 ) -> (!i64)
+    %2 = "RV64.divw" (%0, %1)  : ( !i64, !i64 ) -> (!i64)
     "return" (%2) : ( !i64, !i64 ) -> ()
 }]
 def lh28 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv] := HVector.cons (BitVec.ofNat 64 56) <| HVector.cons (BitVec.ofNat 64 8) .nil
@@ -385,7 +384,7 @@ def RISCVEg35 := [RV64_com| {
     %2 = "RV64.czero.eqz" (%0, %1) : (!i64, !i64) -> (!i64)
     "return" (%2) : (!i64, !i64 ) -> ()
 }]
-def lh35 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 19) <| HVector.cons (BitVec.ofNat 64 1) .nil
+def lh35 : HVector TyDenote.toType [toRISCV.Ty.bv ,toRISCV.Ty.bv] :=  HVector.cons (BitVec.ofNat 64 1) <| HVector.cons (BitVec.ofNat 64 1) .nil
 def test_czero.eqz : BitVec 64 := RISCVEg35.denote  (Ctxt.Valuation.ofHVector lh35)
 #eval test_czero.eqz --interprete it as signed or unsigned
 
@@ -532,20 +531,34 @@ def test_seti : BitVec 64 := RISCVEg49.denote  (Ctxt.Valuation.ofHVector lh49)
 -- constant : used in rewrites to model constant aka known register input ?
 def RISCVEg50 := [RV64_com| {
   ^entry (%0 : !i64 ):
-    %2 = "RV64.const" (%0) { val = 250 : !i64 } : ( !i64) -> (!i64)
+    %2 = "RV64.const" () { val = 250 : !i64 } : ( !i64) -> (!i64)
     "return" (%2) : ( !i64 ) -> ()
 }]
 def lh50 : HVector TyDenote.toType [toRISCV.Ty.bv] := .cons (BitVec.ofNat 64 1) .nil
 def test_const : BitVec 64 := RISCVEg50.denote  (Ctxt.Valuation.ofHVector lh50)
 #eval test_const
 
+def RISCVEg200 := [RV64_com| {
+  ^entry (%0 : !i64, %1 : !i64 ):
+    %2 = "RV64.const" () { val = 1 : !i64 } : ( !i64) -> (!i64)
+    %3 = "RV64.add" (%0, %1) : ( !i64,!i64 ) -> (!i64)
+    %4 = "RV64.add" (%0, %0) : ( !i64,!i64 ) -> (!i64)
+    %5 = "RV64.sub" (%1, %0) : ( !i64,!i64 ) -> (!i64)
+    "return" (%5) : ( !i64 ) -> ()
+}]
+
+def lh200 : HVector TyDenote.toType [toRISCV.Ty.bv,toRISCV.Ty.bv ] := HVector.cons (BitVec.ofNat 64 1) <| HVector.cons (BitVec.ofNat 64 3) .nil
+def test_RISCVEg200 : BitVec 64 := RISCVEg200.denote  (Ctxt.Valuation.ofHVector lh200)
+#eval test_RISCVEg200
+
+
 -- srai rd rs1 shamt -> shifts by the amount specifed by the imm aka its lower 6 bits
 def RISCVEg51 := [RV64_com| {
   ^entry (%0 : !i64 ):
-    %2 = "RV64.srai" (%0) { shamt = 63 : !i64 } : ( !i64) -> (!i64)
+    %2 = "RV64.srai" (%0) { shamt = 1 : !i64 } : ( !i64) -> (!i64)
     "return" (%2) : ( !i64 ) -> ()
 }]
-def lh51 : HVector TyDenote.toType [toRISCV.Ty.bv] := .cons (BitVec.ofNat 64 0) .nil
+def lh51 : HVector TyDenote.toType [toRISCV.Ty.bv] := .cons (BitVec.ofNat 64 16) .nil
 def test_srai : BitVec 64 := RISCVEg51.denote  (Ctxt.Valuation.ofHVector lh51)
 #eval test_srai
 
@@ -555,6 +568,40 @@ def RISCVEg52 := [RV64_com| {
     %2 = "RV64.sra" (%0, %1 ) : (!i64,!i64) -> (!i64)
     "return" (%2) : ( !i64 ) -> ()
 }]
-def lh52 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv ] := HVector.cons (BitVec.ofNat 64 2) <| HVector.cons (BitVec.ofNat 64 2) .nil
+def lh52 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv ] := HVector.cons (BitVec.ofNat 64 16) <| HVector.cons (BitVec.ofNat 64 2) .nil
 def test_sra : BitVec 64 := RISCVEg52.denote (Ctxt.Valuation.ofHVector lh52)
 #eval test_sra
+
+def RISCVEg53 := [RV64_com| {
+  ^entry (%0 : !i64, %1 : !i64  ):
+    %2 = "RV64.rol" (%0, %1 ) : (!i64,!i64) -> (!i64)
+    "return" (%2) : ( !i64 ) -> ()
+}]
+def lh53 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv ]
+  := HVector.cons (BitVec.ofNat 64 2) <| HVector.cons (BitVec.ofNat 64 1) .nil
+
+def test_rol : BitVec 64 := RISCVEg53.denote (Ctxt.Valuation.ofHVector lh53)
+#eval test_rol
+
+
+def RISCVEg54 := [RV64_com| {
+  ^entry (%0 : !i64, %1 : !i64  ):
+    %2 = "RV64.ror" (%0, %1 ) : (!i64,!i64) -> (!i64)
+    "return" (%2) : ( !i64 ) -> ()
+}]
+def lh54 : HVector TyDenote.toType [toRISCV.Ty.bv, toRISCV.Ty.bv ]
+  := HVector.cons (BitVec.ofNat 64 8) <| HVector.cons (BitVec.ofNat 64 1) .nil
+
+def test_ror : BitVec 64 := RISCVEg54.denote (Ctxt.Valuation.ofHVector lh54)
+#eval test_ror
+
+
+def RISCVEg55 := [RV64_com| {
+  ^entry ():
+    %2 = "RV64.const" () { val = 670 : !i64 } : ( !i64) -> (!i64)
+    "return" (%2) : ( !i64 ) -> ()
+}]
+def lh55 : HVector TyDenote.toType ([] : List toRISCV.Ty) := .nil
+def test_const1 : BitVec 64 := RISCVEg55.denote  (Ctxt.Valuation.ofHVector lh55)
+#eval test_const1
+#check TyDenote.toType
