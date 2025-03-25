@@ -1,6 +1,4 @@
 /-
-Released under Apache 2.0 license as described in the file LICENSE.
-
 Syntax definitions for `ModArith`, providing a custom `[mod_arith q, hq | ...]` with syntax sugar
 analogous to FHE's `[poly| ...]`.
 

@@ -1,6 +1,4 @@
 /-
-Released under Apache 2.0 license as described in the file LICENSE.
-
 This file contains some basic lemmas for the `ModArith` dialect in HEIR,
 analogous to the `Statements.lean` file from the `Poly` dialect.
 

@@ -1,6 +1,4 @@
 /-
-Released under Apache 2.0 license as described in the file LICENSE.
-
 End-to-end showcase of the framework for verifying rewrites about ModArith semantics,
 by analogy to the FHE/Poly `PaperExamples.lean`.
 
