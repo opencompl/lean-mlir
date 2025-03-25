@@ -350,7 +350,7 @@ abbrev LLVM : Dialect where
   Op := Op
   Ty := Ty
 
-def_signature for LLVM, MetaLLVM φ where
+def_signature for MetaLLVM φ where
   | .select w               => (.bitvec 1, .bitvec w, .bitvec w) → .bitvec w
   | .binary w _             => (.bitvec w, .bitvec w) → .bitvec w
   | .icmp _ w               => (.bitvec w, .bitvec w) → .bitvec 1
@@ -360,6 +360,9 @@ def_signature for LLVM, MetaLLVM φ where
   -- Fallback for unary ops that are *not* trunc/zext/sext
   | .unary w _              => (.bitvec w) → .bitvec w
   | .const w _              => () → .bitvec w
+
+/-- info: instDialectSignatureMetaLLVM -/
+#guard_msgs in #synth DialectSignature LLVM
 
 def_denote for LLVM where
   | Op.const _ val        => const? _ val
