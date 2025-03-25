@@ -63,6 +63,7 @@ material_yellow = "#FFEB3B"
 material_orange = "#FFAB40"
 material_purple = "#B39DDB"
 material_teal = "#80CBC4"
+material_gray = "#B0BEC5"
 
 def save(figure, name):
     # Do not emit a creation date, creator name, or producer. This will make the
@@ -234,18 +235,22 @@ def plot(args):
         "normCircuit": material_blue,
         "normPresburger": material_green,
         "bv_decide": material_purple,
-        # "reflect_ok": material_yellow,
+        "bv_normalize": material_red,
+        #"reflect_ok": material_yellow,
     }
     solver_names : dict[str, str] = {
         "normCircuit": "k-induction",
         "normPresburger": "bv_automata_classic",
         "bv_decide": "bv_decide",
+        "bv_normalize": "bv_normalize",
         # "reflect_ok": "Reflect",
     }
     solver_latex_names : dict[str, str] = {
         "normCircuit": "NormCircuit",
         "normPresburger": "NormPresburger",
         "bv_decide": "BvDecide",
+        "bv_normalize": "BvNormalize",
+        # "reflect_ok": "ReflectOK"
     }
     solver_geo_mean : dict[str, float] = {}
 
@@ -280,10 +285,10 @@ def plot(args):
         color : str = solver_colors.get(solver, "black")  # Default to black if solver not in dict
         _ = ax.plot(num_problems_solved, sub_df["cumulative_timeElapsed"],
             label=solver_names[solver],
-            # alpha=0.4,
+            alpha=0.4,
             color=color,
             marker='x',
-            markersize=3)
+            markersize=1)
     _ = ax.set_yscale("log")
     _ = ax.set_xlabel("#Problems Solved")
     _ = ax.set_ylabel("Cumulative Time Elapsed (ms)")
