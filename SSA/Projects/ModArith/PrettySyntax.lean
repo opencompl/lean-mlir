@@ -1,6 +1,4 @@
 /-
-Released under Apache 2.0 license as described in the file LICENSE.
-
 This file defines a "pretty syntax" for the `ModArith` dialect, analogous to
 `FullyHomomorphicEncryption/PrettySyntax.lean`.
 

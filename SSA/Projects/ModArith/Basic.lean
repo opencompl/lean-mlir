@@ -1,11 +1,9 @@
 /-
-Released under Apache 2.0 license as described in the file LICENSE.
-
 This file contains the definition of the MLIR `ModArith` dialect as
 implemented in HEIR, see:
   https://heir.dev/docs/dialects/modarith/
 
-It is structurally similar to `Poly.Basic.lean` but focuses on arithmetic
+It is structurally similar to `FullyHomomorphicEncryption.Basic.lean` but focuses on arithmetic
 directly in ℤ/qℤ (ZMod q), rather than polynomials over ℤ/qℤ.
 
 Authors: Jaeho Choi<zerozerozero0216@gmail.com>
