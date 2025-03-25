@@ -127,7 +127,23 @@ structure MetaSignature extends MetaRegionSignature where
   effectKind : EffectKind ⊕ Expr
   deriving BEq
 
-partial def MetaSignature.ofExpr (signature : Expr) : MetaM MetaSignature := do
+/--
+Given `e` a Lean expression of type `List α`, return an array of
+expressions `es : Array Expr` where `es[i]` is the `i`th element of `e`.
+
+Returns `none` if `e` does not reduce to a sequence of `List` constructors. -/
+partial def listExprToArray : Expr → MetaM (Option <| Array Expr) :=
+  go #[]
+where go (es : Array Expr) (e : Expr) : (OptionT MetaM _) := do
+  let e ← whnf e
+  match_expr e with
+  | List.cons _ a as => do
+      let es := es.push a
+      go es as
+  | List.nil _  => return es
+  | _           => OptionT.fail
+
+partial def MetaSignature.ofExpr? (signature : Expr) : MetaM (Option MetaSignature) := do
   let typeOfSignature ← inferType signature
   let Ty : Q(Type) ← mkFreshExprMVar q(Type)
   let expected := q(Signature $Ty)
@@ -135,7 +151,7 @@ partial def MetaSignature.ofExpr (signature : Expr) : MetaM MetaSignature := do
     throwError m!"{signature} {← mkHasTypeButIsExpectedMsg typeOfSignature expected}"
 
   let_expr Signature.mkEffectful _Ty argumentTypes regSig returnType eff := ←whnf signature
-    | throwError "{signature} is not in normal form"
+    | return none -- throwError "{signature} is not in normal form"
 
   let some regions ← listExprToArray regSig
     | throwError "Failed to recognize indivial region signatures in:\n\t\
@@ -147,7 +163,7 @@ partial def MetaSignature.ofExpr (signature : Expr) : MetaM MetaSignature := do
       argumentTypes := ←optToSum listExprToArray args
       returnType
     }
-  return {
+  return some {
     argumentTypes := ←optToSum listExprToArray argumentTypes
     returnType
     regions := regions
@@ -170,19 +186,6 @@ where
     let_expr Array.mk listE := e
       | return none
     listExprToArray listE
-  /--
-  Given `e` a Lean expression of type `List α`, return an array of
-  expressions `es : Array Expr` where `es[i]` is the `i`th element of `e`.
-
-  Returns `none` if `e` does not reduce to a sequence of `List` constructors. -/
-  listExprToArray (e : Expr) : MetaM (Option <| Array Expr) := @id (OptionT MetaM _) <| do
-    let e ← whnf e
-    match_expr e with
-    | List.cons _ a as => do
-        let as ← listExprToArray as
-        return as.push a -- TODO: check that this is the right order
-    | List.nil _  => return #[]
-    | _           => OptionT.fail
 
 -- def MetaRegionSignature.ofView (Ty : Expr) (view : RegionSignatureView) :
 --     TermElabM MetaRegionSignature := withRef view.ref do
@@ -395,6 +398,7 @@ def MetaSignature.fromInstance (dialect : Expr) : TermElabM MetaSignatures := do
   /- `match foo with ...` gets elaborated into an application of a
       `$ident.match_$n` function: the following gets us that function. -/
   let matchFun := sig.getAppFn
+
   /- If the instance definition has variables, those get added to the match
       definition as well. The following normalizes this, so that the type of
       `matchFun` should be akin to:
@@ -405,10 +409,12 @@ def MetaSignature.fromInstance (dialect : Expr) : TermElabM MetaSignatures := do
   let matchFun := mkAppN matchFun instArgs
   let matchType ← inferType matchFun
   trace[LeanMLIR.Elab] "Match function: {matchFun}"
-  forallTelescope matchType fun matchArgs _resultType => do
-    let matchArgs := matchArgs.drop 2 -- ignore `motive` and `op`
+  forallTelescope matchType fun matchArgFVars _resultType => do
+    let matchArgFVars := matchArgFVars.drop 2 -- ignore `motive` and `op`
+    let matchArgs := sig.getAppArgsN matchArgFVars.size
+    trace[LeanMLIR.Elab] "Match arguments (as fvars): {matchArgFVars}"
     trace[LeanMLIR.Elab] "Match arguments:\n{matchArgs}"
-    let map ← matchArgs.mapM fun matchArg => do
+    let map ← matchArgFVars.mapM fun matchArg => do
       let ty ← inferType matchArg
       let pattern := do
         let ⟨_, _, ty⟩ ← forallMetaTelescope ty
@@ -452,28 +458,106 @@ def MetaSignatures.findStx (self : MetaSignatures) (Op : Expr) (opPattern : Term
       let expr ← elabTerm opPattern Op
       self.find expr
 
+#check Signature
+
+structure SignatureFunction where
+  Op : Expr
+  /-- An instance of `DialectSignature $dialect` -/
+  inst : Expr
+  /-- An expression of type `($dialect).Op → Signature` -/
+  toExpr : Expr
+
+def SignatureFunction.synthesize (dialect : Expr) : MetaM SignatureFunction := do
+  let dialect : Q(Dialect) := dialect
+  let instType := q(DialectSignature $dialect)
+  let inst ← Meta.synthInstance instType
+  return {
+    Op := q(Dialect.Op $dialect)
+    inst := inst
+    toExpr := ← whnf <| mkApp2 (.const ``DialectSignature.signature []) dialect inst
+  }
+  -- trace[LeanMLIR.Elab] "Found instance: {inst}"
+  -- let inst ← whnf inst -- ensure we get the definition
+  -- let ⟨_, _, inst⟩ ← lambdaMetaTelescope inst -- ignore any lambdas
+  -- let_expr DialectSignature.mk _d sig := inst
+  --   | throwError m!"\
+  --       Synthesised the following instance of {instType}:\n
+  --       \t{inst}\n
+  --       Expected the definition to be an application of \
+  --       {Expr.const ``DialectSignature.mk []},found:\n\
+  --       \t{inst}"
+  -- return ⟨sig⟩
+
+def SignatureFunction.find? (signature : SignatureFunction) (op : Expr) :
+    MetaM (Option MetaSignature) := do
+  let sigExpr ← whnf <| mkApp signature.toExpr op
+  MetaSignature.ofExpr? sigExpr
+
+def SignatureFunction.findFromSyntax? (self : SignatureFunction) (opPattern : Term) :
+    TermElabM (Option MetaSignature) :=
+  let msg := (pure m!"{exceptEmoji ·} Searching signature for {opPattern} (syntax)")
+  withTraceNode `LeanMLIR.Elab msg <| do
+    let patternVars ← getPatternVars opPattern
+    let patternVars := getPatternVarNames patternVars
+    trace[LeanMLIR.Elab] "pattern variables: {patternVars}"
+    let patternVars := patternVars.map fun name =>
+      (name, fun _ => (mkFreshExprMVar none : TermElabM _))
+    withLocalDeclsD patternVars <| fun _ => do
+      let expr ← elabTerm opPattern self.Op
+      self.find? expr
+
+def MetaSignature.cleanExpectedType (sig : MetaSignature) : MetaM Term := do
+  sorry
+
+
+def elabHVectorFun (fn : Term) (expectedType : Expr) : TermElabM Expr := do
+  let origLCtx ← getLCtx
+  let origLocalInst ← getLocalInstances
+  forallTelescope expectedType fun args returnType => do
+    for arg in args do
+      if returnType.containsFVar arg.fvarId! then
+        throwError "Return type {returnType} depends on argument {arg}.\n\
+          Only non-dependent arrow are supported."
+    let argVecTypes ← args.mapM (inferType ·)
+    let argTypes ← argVecTypes.mapM fun arg => do
+      let_expr HVector _α f as := arg
+        | throwError "Expected HVector, found: {arg}"
+      let some as ← listExprToArray as
+        | throwError "Failed to reflect:\n\t{as}\nExpected a sequence of `List` constructors"
+      as.mapM (whnf <| mkApp f ·)
+    let returnType ← whnf returnType
+    let altExpectedType := argTypes.flatten.foldr (init := returnType) fun binderType body =>
+      Expr.forallE .anonymous binderType body .default
+
+    let fn ← withLCtx origLCtx origLocalInst <|
+      elabTermEnsuringType fn altExpectedType
+    let fn ← (args.zip argTypes).foldlM (init := fn) fun fn (vecArg, argTypes) => do
+      let mut fn := fn
+      for i in [0:argTypes.size] do
+        let arg ← mkAppM ``HVector.getN #[vecArg, toExpr i]
+        fn := mkApp fn arg
+      return fn
+
+    mkLambdaFVars args fn
+
+local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
+  elabHVectorFun fn expectedType
+
 elab "def_semantics" " for " dialect:term (" where ")? alts:matchAltsExpr : command => do
-  let alts ← runTermElabM <| fun _ => do
-    let dialectExpr : Q(Dialect) ← elabTermEnsuringType dialect q(Dialect)
-
-    -- Get signature info
-    let sigMap ← withRef dialect <|
-      MetaSignature.fromInstance dialectExpr
-    let findSig := sigMap.findStx q(Dialect.Op $dialectExpr)
-
+  -- let alts ← runTermElabM <| fun _ => do
     -- Add function type annotations
-    let matchAlts := getMatchAltsExpr alts
-    let matchAlts ← matchAlts.mapM fun altView => withRef altView.ref <| do
-      let pattern := altView.patterns[0]!
-      match ← findSig pattern with
-      | none     => return altView
-      | some sig => do return { altView with
-          rhs := ←`( ($altView.rhs : $sig.cleanExpectedType) )
-        }
-    -- Re-assemble match alternatives
-    Elab.mkMatchAltsExpr matchAlts
+  let matchAlts := getMatchAltsExpr alts
+  let matchAlts ← matchAlts.mapM fun altView => withRef altView.rhs <| do
+    return { altView with
+      rhs := ←`(hvectorFun($altView.rhs))
+    }
+  -- Re-assemble match alternatives
+  let matchAlts ← Elab.mkMatchAltsExpr matchAlts
 
   elabCommand <|← `(command| -- Declare instance
     instance : DialectDenote $dialect where
-      denote := fun op => match op with $alts:matchAlts
+      denote := fun op => match op with $matchAlts:matchAlts
   )
+
+#check (Expr.forallE .anonymous · · .default)
+#check HVector.getN
