@@ -246,7 +246,9 @@ example : pretty_test_generic = prettier_test_generic    := rfl
 /-! ## antiquotations test -/
 
 /-
-TODO: antiquotations don't work with the new elaborator ;(
+TODO: Constant value antiquotations don't work with the new elaborator.
+            To properly support these test-cases, we should include constant values
+            into the existing deeply-embedded metavariable instantiation
 
 private def antiquot_test (x) := -- antiquotated constant value in generic syntax
   [llvm| {
