@@ -236,33 +236,48 @@ elab "def_signature" " for " dialects:term,* (" where ")? alts:matchAltsSig : co
 open Parser (matchAltsExpr)
 open Qq
 
-/-- `MetaList` represents an expression of type `List α` -/
-inductive MetaArgList
-  /-- A statically known argument list, represented as an array of expressions,
-    where each `elements[i]` is of type `Dialect.Ty $d`, for some (fixed)
-    dialect `d`
+#check Ctxt.Valuation
+
+/-- TODO: better documents -/
+inductive CurriedArgs
+  /--
+  A vector with statically known element types, where each `elements[i]` is an
+  expression of type `Ty`, and `toType : Ty → Type`
+
+  NOTE: We assume that `Ty : Type`, i.e, we don't support universe polymorphism
+        despite the fact that `HVector` *is* polymorphic.
   -/
-  | static (Ty toType : Expr) (elements : Array Expr)
-  /-- A dynamic argument list is simply a single expression of type `Type _`,
-      usually this expression is an application of `HVector`. -/
-  | dynamic (name : Name) (expr : Expr)
+  | vector (Ty toType : Expr) (elements : Array Expr)
+  /--
+  A valuation for a statically known context, where each `Γ[i]` is an expression
+  of type `Ty`, and `instTyDenote` is an expression of type `TyDenote $Ty`
+  -/
+  | valuation (Ty instTyDenote : Expr) (Γ : Array Expr)
+  /--
+  Some expression of type `Type`.
+  -/
+  | other (name : Name) (expr : Expr)
 
-/-- Construct a `MetaArgList` from an expression of type `HVector f as`.
 
-NOTE: the `MetaArgList` effectively represents the list `as`. -/
-def MetaArgList.ofExpr (arg : Expr) : MetaM MetaArgList := do
+/-- Construct a `CurriedArgs` from an expression of type `HVector f as`
+  or `Ctxt.Valuation Γ`.
+
+NOTE: the `CurriedArgs` effectively represents the list `as`. -/
+def CurriedArgs.ofExpr (arg : Expr) : MetaM CurriedArgs := do
+  let name ← match arg.fvarId? with
+    | some id => id.getUserName
+    | none    => pure .anonymous
   let e ← inferType arg
-  let_expr HVector α f as := e
-    | throwError "Expected HVector, found: {e}"
-  match ← listExprToArray as with
-  | some as => do
-      -- let as ← as.mapM (whnf <| mkApp f ·)
-      return .static α f as
-  | none =>
-    let name ← match arg.fvarId? with
-      | some id => id.getUserName
-      | none    => pure .anonymous
-    return .dynamic name e
+  match_expr e with
+  | HVector α f as =>
+      return match ← listExprToArray as with
+      | some as => vector α f as
+      | none => other name e
+  | Ctxt.Valuation Ty inst Γ =>
+      return match ← listExprToArray Γ with
+      | some Γ => valuation Ty inst Γ
+      | none => other name e
+  | _ => return other name e
 
 /--
 Given some expression `body` of type `Type _`, return the type expression
@@ -271,26 +286,37 @@ if the list of argument types is statically known, or simply
   `HVector $f $as → $body`
 if not
 -/
-def MetaArgList.foldForallType (body : Expr) : MetaArgList → MetaM Expr
-  | .dynamic name e => return Expr.forallE name e body .default
-  | .static _ f as =>
-    as.foldrM (init := body) fun a type => do
-      let binderType ← whnf (.app f a)
-      return Expr.forallE .anonymous binderType type .default
-
--- /-- Return the application of `HVector` represented by this argument list. -/
--- def toHVectorExpr : MetaArgList → Expr
---   | .static es    =>
---   | .dynamic _ e  => e
+def CurriedArgs.foldForallType (body : Expr) : CurriedArgs → MetaM Expr
+  | other name e => return Expr.forallE name e body .default
+  | valuation Ty inst Γ =>
+      let toType := mkApp2 (.const ``TyDenote.toType []) Ty inst
+      Γ.foldrM (init := body) fun t type => do
+        let binderType ← whnf (.app toType t)
+        return Expr.forallE .anonymous binderType type .default
+  | vector _ f as =>
+      as.foldrM (init := body) fun a type => do
+        let binderType ← whnf (.app f a)
+        return Expr.forallE .anonymous binderType type .default
 
 /--
 Given an expression `fn` of the curried type returned by `args.foldForallType body`,
-and an expression of uncurried type `HVector $f $as` (for the `f` and `as` this
-`MetaArgList` was constructed with), return an expression of type `$body`.
+and an expression of the uncurried type `args` was constructed from,
+return an expression of type `$body`.
 -/
-def MetaArgList.applyCurried (fn vec : Expr) : MetaArgList → MetaM Expr
-  | dynamic ..      => return mkApp fn vec
-  | static _α _f as => do
+def CurriedArgs.applyCurried (fn vec : Expr) : CurriedArgs → MetaM Expr
+  | other ..      => return mkApp fn vec
+  | valuation (Ty : Q(Type)) _ Γ => do
+      let Γe : Q(Ctxt $Ty) :=
+        Γ.foldr (mkApp3 (.const ``List.cons [0]) Ty)
+          (mkApp (.const ``List.nil [0]) Ty)
+      let n : Nat := Γ.size
+      let mut fn := fn
+      for hi : (i : Nat) in [0:n] do
+        let t := Γ[i]
+        let var := Ctxt.mkVar Ty Γe t (toExpr i)
+        fn := mkApp fn (mkApp2 vec t var)
+      return fn
+  | vector _α _f as => do
       let n : Nat := as.size
       let mut fn := fn
       for (i : Nat) in [0:n] do
@@ -330,7 +356,7 @@ local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
         throwError "Return type {returnType} depends on argument {arg}.\n\
           Only non-dependent arrow are supported."
 
-    let argTypes ← args.mapM (MetaArgList.ofExpr ·)
+    let argTypes ← args.mapM (CurriedArgs.ofExpr ·)
     let returnType ← whnf returnType
     let altExpectedType ← argTypes.foldrM (·.foldForallType ·) returnType
 
