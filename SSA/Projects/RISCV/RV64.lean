@@ -256,29 +256,18 @@ def  DIVW_pure64_unsigned (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 6
                 (Int.ofNat (BitVec.extractLsb 31 0 rs2_val).toNat)).toNat)))
 
 def DIV_pure64_signed (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  BitVec.signExtend 64
-    (BitVec.extractLsb' 0 32
-      (BitVec.ofInt 33
-        (max
-          (if
-              2147483647 <
-                if (BitVec.extractLsb 31 0 rs2_val).toInt = 0 then -1
-                else (BitVec.extractLsb 31 0 rs1_val).toInt.tdiv (BitVec.extractLsb 31 0 rs2_val).toInt then
-            -2147483648
-          else
-            if (BitVec.extractLsb 31 0 rs2_val).toInt = 0 then -1
-            else (BitVec.extractLsb 31 0 rs1_val).toInt.tdiv (BitVec.extractLsb 31 0 rs2_val).toInt)
-          0)))
+  BitVec.extractLsb' 0 64
+    (BitVec.ofInt 65
+      (max
+        (if 9223372036854775807 < if rs2_val.toInt = 0 then -1 else rs1_val.toInt.tdiv rs2_val.toInt then
+          -9223372036854775808
+        else if rs2_val.toInt = 0 then -1 else rs1_val.toInt.tdiv rs2_val.toInt)
+        0))
 
 def DIV_pure64_unsigned (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  BitVec.signExtend 64
-    (BitVec.extractLsb' 0 32
-      (BitVec.ofInt 33
-        (Int.ofNat
-          (if Int.ofNat (BitVec.extractLsb 31 0 rs2_val).toNat = 0 then -1
-            else
-              (Int.ofNat (BitVec.extractLsb 31 0 rs1_val).toNat).tdiv
-                (Int.ofNat (BitVec.extractLsb 31 0 rs2_val).toNat)).toNat)))
+ BitVec.extractLsb' 0 64
+    (BitVec.ofNat 65
+      (if Int.ofNat rs2_val.toNat = 0 then -1 else (Int.ofNat rs1_val.toNat).tdiv (Int.ofNat rs2_val.toNat)).toNat)
 
 def ITYPE_pure64_RISCV_ADDI (imm : BitVec 12) (rs1_val : BitVec 64) : BitVec 64 :=
     let immext : BitVec 64 := (BitVec.signExtend 64 imm) ;
