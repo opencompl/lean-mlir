@@ -156,7 +156,7 @@ def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]
 @[simp] theorem ofFn_nil : ofFn A [] f = .nil := by rfl
 
 /-
-  # ToExpr
+  # ToExpr and other Meta helpers
 -/
 section ToExprPi
 open Lean Qq
@@ -166,6 +166,24 @@ class ToExprPi {α : Type u} (A : α → Type v) [∀ a, ToExpr (A a)] where
   toTypeExpr : Expr
 
 variable {A : α → Type v}
+
+/--
+Given an array of elements, such that `elems[i].snd` is of type `f elems[i].fst`,
+construct an expression of type `@HVector α f _`, where
+* `α : Type u₁`, and
+* `f : α → Type u₂`
+-/
+def mkOfElems (u₁ u₂ : Level) (α f : Expr) (elems : Array (Expr × Expr)) : MetaM Expr := do
+  let us := [u₁, u₂]
+  let init := (
+    mkApp (.const ``List.nil [u₁]) α,
+    mkApp2 (.const ``HVector.nil us) α f
+  )
+  let res := elems.foldr (init := init) fun (a, elem) (as, vec) => (
+      mkApp3 (.const ``List.nil [u₁]) α a as,
+      mkApp6 (.const ``HVector.cons us) α f as a elem vec
+    )
+  return res.snd
 
 instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
