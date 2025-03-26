@@ -236,76 +236,207 @@ elab "def_signature" " for " dialects:term,* (" where ")? alts:matchAltsSig : co
 open Parser (matchAltsExpr)
 open Qq
 
-#check Ctxt.Valuation
+mutual
 
-/-- TODO: better documents -/
+/-- `CurriedArrow` represents a function *type*.
+It is constructed from an uncurried type, such as
+```
+  HVector TyDenote.toType [.int, .int] → (Ctxt.Valuation [.int] → ⟦.int⟧) → ⟦.int⟧
+```
+And, assuming the denotation of `int` is an `Int`, represents the
+curried function type:
+```
+  Int → Int → (Int → Int) → Int
+```
+
+Meanwhile storing enough information to reconstruct a term of the original
+uncurried type from a term of the constructed curried type.
+-/
+structure CurriedArrow where
+  (args : Array CurriedArgs)
+  (returnType : Expr)
+
+/-- `CurriedArgs` represents a single *uncurried* argument in a `CurriedArrow`.
+In particular, it generally represents an `HVector` or `Ctxt.Valuation`, but may
+in general represent any type expression.
+
+Note that in the process of currying, the single uncurried argument is generally
+transformed into multiple curried arguments.
+-/
 inductive CurriedArgs
   /--
   A vector with statically known element types, where each `elements[i]` is an
-  expression of type `Ty`, and `toType : Ty → Type`
+  expression of type `α : Type`, and `f : α → Type`.
+  Each `args[i]` represents the type `toType elements[i]`.
 
-  NOTE: We assume that `Ty : Type`, i.e, we don't support universe polymorphism
-        despite the fact that `HVector` *is* polymorphic.
+  NOTE: We don't support universe polymorphism despite the fact that `HVector`
+        *is* polymorphic.
   -/
-  | vector (Ty toType : Expr) (elements : Array Expr)
+  | vector (α f : Expr) (elements : Array Expr) (args : Array CurriedArrow)
   /--
   A valuation for a statically known context, where each `Γ[i]` is an expression
-  of type `Ty`, and `instTyDenote` is an expression of type `TyDenote $Ty`
+  of type `Ty`, and `instTyDenote` is an expression of type `TyDenote $Ty`.
+  Each `args[i]` represents the type `⟦Γ[i]⟧`.
   -/
-  | valuation (Ty instTyDenote : Expr) (Γ : Array Expr)
+  | valuation (Ty instTyDenote : Expr) (Γ : Array Expr) (args : Array CurriedArrow)
   /--
   Some expression of type `Type`.
   -/
   | other (name : Name) (expr : Expr)
 
+end
 
-/-- Construct a `CurriedArgs` from an expression of type `HVector f as`
-  or `Ctxt.Valuation Γ`.
+-- /-- Given an expression of type `HVector ?f ?as → ?β`, return the curried
+-- function expression of type:
+-- ```
+--   ?f ?a₀ → ⋯ → ?f ?aₙ → ?β
+-- ```
+-- Where additionally we attempt to reduce argument types `?f ?aᵢ`.
 
-NOTE: the `CurriedArgs` effectively represents the list `as`. -/
-def CurriedArgs.ofExpr (arg : Expr) : MetaM CurriedArgs := do
-  let name ← match arg.fvarId? with
-    | some id => id.getUserName
-    | none    => pure .anonymous
-  let e ← inferType arg
-  match_expr e with
+-- Alternatively, if the passed expression is of type `Valuation Γ → ?β`, then
+-- we compose with `Valuation.ofHVector` and curry the resulting function.
+
+-- If the passed expression is not of the expected type, or if `as` does not
+-- reduce to a decomposable sequence of `List` constructors, the passed expression
+-- is returned unchanged. In particular, no error is raised!
+
+-- NOTE: only a single `HVector` argument is curried; if `β` is itself of the form
+-- `HVector _ _ → γ`, this is left as-is.
+-- -/
+-- partial def curryHVecFun (fn fnType : Expr) : MetaM Expr := do
+--   withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Currying: {fn}") <| do
+--   trace[LeanMLIR.Elab] "Declared type: {fnType}"
+--   let fnType ← whnf fnType
+--   let (.forallE xs binderType _body binderInfo) := fnType
+--     | trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expected a function type, found: {fnType}"
+--       return fn
+
+--   if let mkApp3 (.const ``Ctxt.Valuation _) Ty instTyDenote Γ := binderType then
+--     trace[LeanMLIR.Elab] "Match for valuation function!"
+
+--     let vectorType :=
+--       let toType := mkApp2 (.const ``TyDenote.toType []) Ty instTyDenote
+--       mkAppN (.const ``HVector [0, 0]) #[Ty, toType, Γ]
+--     let val :=
+--       mkApp4 (.const ``Ctxt.Valuation.ofHVector []) Ty instTyDenote Γ (.bvar 0)
+--     let fn := Expr.lam xs vectorType (.app fn val) binderInfo
+--     let fn ← curryHVecFun fn (← inferType fn)
+--     return fn
+
+--   let (mkApp3 (.const ``HVector [u₁, u₂]) α f as) := binderType
+--     | return fn
+--   trace[LeanMLIR.Elab] "Match for HVector function!"
+--   let some as ← listExprToArray as
+--     | return fn
+
+--   let argTypes ← as.mapM (whnf <| mkApp f ·)
+--   let decls := argTypes.mapIdx (Prod.mk <| Name.mkSimple s!"{xs}_{·}")
+--   withLocalDeclsDND decls <| fun argIds => do
+--     let elems := as.zip argIds
+--     let vec ← HVector.mkOfElems u₁ u₂ α f elems
+--     mkLambdaFVars argIds <| mkApp fn vec
+
+mutual
+
+/-- Parse an expression of type `Type` into a `CurriedArrow` -/
+partial def CurriedArrow.ofExpr (e : Expr) (argsArray : Array CurriedArgs := #[]) :
+    MetaM CurriedArrow := do
+  let e ← whnf e
+  if let .forallE _x binderType body .default := e then
+    -- NOTE: we currently don't track binderInfo, so we explicitly match only
+    --       on arguments with default binderInfo!
+    let args ← CurriedArgs.ofTypeExpr binderType
+    CurriedArrow.ofExpr body (argsArray.push args)
+  else
+    let mut args := argsArray
+    let mut returnType := e
+    for _ in [0:args.size] do
+      if let some (.other x binderType) := args.back? then
+        args := args.pop
+        returnType := Expr.forallE x binderType returnType .default
+      else
+        break
+    return {
+      args := argsArray
+      returnType := e
+    }
+
+/-- Construct a `CurriedArgs` from a type expression such as `HVector ?f ?as`
+or `Ctxt.Valuation ?Γ`.
+-/
+partial def CurriedArgs.ofTypeExpr (argTy : Expr) (argName : Option Name := none) :
+    MetaM CurriedArgs := do
+  let name := argName.getD .anonymous
+  trace[LeanMLIR.Elab] "Analyzing: {argTy}"
+  match_expr argTy with
   | HVector α f as =>
-      return match ← listExprToArray as with
-      | some as => vector α f as
-      | none => other name e
+      match ← listExprToArray as with
+      | some as => do
+          let args ← as.mapM (CurriedArrow.ofExpr <| .app f ·)
+          return .vector α f as args
+      | none => return .other name argTy
   | Ctxt.Valuation Ty inst Γ =>
-      return match ← listExprToArray Γ with
-      | some Γ => valuation Ty inst Γ
-      | none => other name e
-  | _ => return other name e
+      match ← listExprToArray Γ with
+      | some Γ =>
+          let toType := mkApp2 (.const ``TyDenote.toType []) Ty inst
+          let args ← Γ.mapM (CurriedArrow.ofExpr <| .app toType ·)
+          return .valuation Ty inst Γ args
+      | none => return .other name argTy
+  | _ => return .other name argTy
+
+end
+
+def CurriedArgs.ofArgExpr (arg : Expr) : MetaM CurriedArgs := do
+  let argTy ← inferType arg
+  let name ← arg.fvarId?.mapM (·.getUserName)
+  ofTypeExpr argTy name
+
+mutual
+
+partial def CurriedArrow.toExpr : CurriedArrow → Expr
+  | ⟨args, returnType⟩ => args.foldr (·.foldForallType ·) returnType
 
 /--
-Given some expression `body` of type `Type _`, return the type expression
-  `$f $as[0] → … → $f $as[n] → $body`
-if the list of argument types is statically known, or simply
-  `HVector $f $as → $body`
+Given some expression `body` of type `Type _`, return the curried type expression
+  `$args[0] → … → $args[n] → $body`
+if the list of argument types is statically known, or the uncurried type
+  `$args → $body`
 if not
 -/
-def CurriedArgs.foldForallType (body : Expr) : CurriedArgs → MetaM Expr
-  | other name e => return Expr.forallE name e body .default
-  | valuation Ty inst Γ =>
-      let toType := mkApp2 (.const ``TyDenote.toType []) Ty inst
-      Γ.foldrM (init := body) fun t type => do
-        let binderType ← whnf (.app toType t)
-        return Expr.forallE .anonymous binderType type .default
-  | vector _ f as =>
-      as.foldrM (init := body) fun a type => do
-        let binderType ← whnf (.app f a)
-        return Expr.forallE .anonymous binderType type .default
+partial def CurriedArgs.foldForallType (body : Expr) : CurriedArgs → Expr
+  | .other name e => Expr.forallE name e body .default
+  | .valuation _Ty _inst _Γ args
+  | .vector _ _f _as args =>
+      args.foldr (init := body) fun binderType type =>
+        Expr.forallE .anonymous binderType.toExpr type .default
+
+end
+
+
+mutual
+
+/--
+Given an expression `fn` of the curried type returned by `arrow.toExpr`,
+return an expression of the original uncurried type.
+-/
+partial def CurriedArrow.uncurry (fn : Expr) (arrow : CurriedArrow) : MetaM Expr :=
+  let bvars := Array.range arrow.args.size
+
+  -- TODO: loop over each `arg in arrow.args`, and set
+  --          `fn := arg.applyToFn fn (.bvar $i)`, with the approriate bvar index
+
+  -- TODO: wrap the applied function in `Expr.lam`, one lambda for each
+  --       `arg in arrow.args`
+  return sorry
 
 /--
 Given an expression `fn` of the curried type returned by `args.foldForallType body`,
 and an expression of the uncurried type `args` was constructed from,
 return an expression of type `$body`.
 -/
-def CurriedArgs.applyCurried (fn vec : Expr) : CurriedArgs → MetaM Expr
-  | other ..      => return mkApp fn vec
-  | valuation (Ty : Q(Type)) _ Γ => do
+partial def CurriedArgs.applyFn (fn vec : Expr) : CurriedArgs → MetaM Expr
+  | .other ..      => return mkApp fn vec
+  | .valuation (Ty : Q(Type)) _ Γ _ => do
       let Γe : Q(Ctxt $Ty) :=
         Γ.foldr (mkApp3 (.const ``List.cons [0]) Ty)
           (mkApp (.const ``List.nil [0]) Ty)
@@ -316,7 +447,7 @@ def CurriedArgs.applyCurried (fn vec : Expr) : CurriedArgs → MetaM Expr
         let var := Ctxt.mkVar Ty Γe t (toExpr i)
         fn := mkApp fn (mkApp2 vec t var)
       return fn
-  | vector _α _f as => do
+  | .vector _α _f as _ => do
       let n : Nat := as.size
       let mut fn := fn
       for (i : Nat) in [0:n] do
@@ -326,6 +457,8 @@ def CurriedArgs.applyCurried (fn vec : Expr) : CurriedArgs → MetaM Expr
         -- let arg ← curryHVecFun arg args[i]
         fn := mkApp fn arg
       return fn
+
+end
 
 /--
 `hvectorFun(...)` is an implementation detail of `def_denote`.
@@ -348,22 +481,15 @@ If either `as` or `bs` does not reduce, the corresponding `HVector` argument
 is left as-is in the new expected type.
 -/
 local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
-  let origLCtx ← getLCtx
-  let origLocalInst ← getLocalInstances
-  forallTelescope expectedType fun args returnType => do
-    for arg in args do
-      if returnType.containsFVar arg.fvarId! then
-        throwError "Return type {returnType} depends on argument {arg}.\n\
-          Only non-dependent arrow are supported."
+  let arrow ← CurriedArrow.ofExpr expectedType
+  if arrow.returnType.hasLooseBVars then
+    throwError "Expected a non-dependent arrow type, found a dependent arrow:\n\t{expectedType}"
 
-    let argTypes ← args.mapM (CurriedArgs.ofExpr ·)
-    let returnType ← whnf returnType
-    let altExpectedType ← argTypes.foldrM (·.foldForallType ·) returnType
+  let fn ← elabTermEnsuringType fn arrow.toExpr
 
-    let fn ← withLCtx origLCtx origLocalInst <| do
-      elabTermEnsuringType fn altExpectedType
-    let fn ← (args.zip argTypes).foldlM (init := fn) fun fn (vecArg, args) => do
-      args.applyCurried fn vecArg
+  forallTelescope expectedType fun args _ => do
+    let fn ← (args.zip arrow.args).foldlM (init := fn) fun fn (vecArg, args) => do
+      args.applyFn fn vecArg
 
     let fn ← mkLambdaFVars args fn
     synthesizeSyntheticMVarsUsingDefault

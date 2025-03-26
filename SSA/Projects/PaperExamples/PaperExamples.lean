@@ -251,13 +251,12 @@ def_signature for SimpleReg
   | .add        => (.int, .int) → .int
   | .iterate _  => { (.int) → .int } → (.int) → .int
 
+set_option trace.LeanMLIR.Elab true in
 def_denote for SimpleReg
   | .const n    => BitVec.ofInt 32 n
   | .add        => fun a b => a + b
   | .iterate k  => fun x f =>
-      --TODO: the type of `f` does not get prettified, yet!
-      let f' (v :  BitVec 32) : BitVec 32 := f (Ctxt.Valuation.nil.snoc v)
-      k.iterate f' x
+      k.iterate f x
 
 /-
 TODO: the current `denote` function puts the regular arguments *before* the regions,
