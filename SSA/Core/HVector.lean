@@ -142,6 +142,19 @@ macro_rules
 
 infixl:50 "::ₕ" => HVector.cons
 
+
+/-!
+  ## OfFn
+-/
+
+def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]) :
+    HVector A as :=
+  match as with
+  | _ :: as => f (0 : Fin (_ + 1)) ::ₕ ofFn A as (fun i => f i.succ)
+  | [] => .nil
+
+@[simp] theorem ofFn_nil : ofFn A [] f = .nil := by rfl
+
 /-
   # ToExpr
 -/
