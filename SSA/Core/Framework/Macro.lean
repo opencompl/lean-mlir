@@ -242,28 +242,64 @@ inductive MetaArgList
     where each `elements[i]` is of type `Dialect.Ty $d`, for some (fixed)
     dialect `d`
   -/
-  | static (elements : Array Expr)
+  | static (Ty toType : Expr) (elements : Array Expr)
   /-- A dynamic argument list is simply a single expression of type `Type _`,
       usually this expression is an application of `HVector`. -/
   | dynamic (name : Name) (expr : Expr)
 
+/-- Construct a `MetaArgList` from an expression of type `HVector f as`.
+
+NOTE: the `MetaArgList` effectively represents the list `as`. -/
 def MetaArgList.ofExpr (arg : Expr) : MetaM MetaArgList := do
   let e ← inferType arg
-  let_expr HVector _α f as := e
+  let_expr HVector α f as := e
     | throwError "Expected HVector, found: {e}"
   match ← listExprToArray as with
   | some as => do
-      let as ← as.mapM (whnf <| mkApp f ·)
-      return .static as
+      -- let as ← as.mapM (whnf <| mkApp f ·)
+      return .static α f as
   | none =>
     let name ← match arg.fvarId? with
       | some id => id.getUserName
       | none    => pure .anonymous
     return .dynamic name e
 
-def MetaArgList.foldForall (body : Expr) : MetaArgList → Expr
-  | .dynamic name e => Expr.forallE name e body .default
-  | .static es => es.foldr (init := body) (Expr.forallE .anonymous · · .default)
+/--
+Given some expression `body` of type `Type _`, return the type expression
+  `$f $as[0] → … → $f $as[n] → $body`
+if the list of argument types is statically known, or simply
+  `HVector $f $as → $body`
+if not
+-/
+def MetaArgList.foldForallType (body : Expr) : MetaArgList → MetaM Expr
+  | .dynamic name e => return Expr.forallE name e body .default
+  | .static _ f as =>
+    as.foldrM (init := body) fun a type => do
+      let binderType ← whnf (.app f a)
+      return Expr.forallE .anonymous binderType type .default
+
+-- /-- Return the application of `HVector` represented by this argument list. -/
+-- def toHVectorExpr : MetaArgList → Expr
+--   | .static es    =>
+--   | .dynamic _ e  => e
+
+/--
+Given an expression `fn` of the curried type returned by `args.foldForallType body`,
+and an expression of uncurried type `HVector $f $as` (for the `f` and `as` this
+`MetaArgList` was constructed with), return an expression of type `$body`.
+-/
+def MetaArgList.applyCurried (fn vec : Expr) : MetaArgList → MetaM Expr
+  | dynamic ..      => return mkApp fn vec
+  | static _α _f as => do
+      let n : Nat := as.size
+      let mut fn := fn
+      for (i : Nat) in [0:n] do
+        let inBoundsProof ← mkDecideProof q($i < $n)
+        let idxExpr := mkApp3 (.const ``Fin.mk []) (toExpr n) (toExpr i) inBoundsProof
+        let arg ← mkAppM ``HVector.get #[vec, idxExpr]
+        -- let arg ← curryHVecFun arg args[i]
+        fn := mkApp fn arg
+      return fn
 
 /--
 `hvectorFun(...)` is an implementation detail of `def_denote`.
@@ -296,22 +332,12 @@ local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
 
     let argTypes ← args.mapM (MetaArgList.ofExpr ·)
     let returnType ← whnf returnType
-    let altExpectedType := argTypes.foldr (·.foldForall) returnType
+    let altExpectedType ← argTypes.foldrM (·.foldForallType ·) returnType
 
-    let fn ← withLCtx origLCtx origLocalInst <|
+    let fn ← withLCtx origLCtx origLocalInst <| do
       elabTermEnsuringType fn altExpectedType
     let fn ← (args.zip argTypes).foldlM (init := fn) fun fn (vecArg, args) => do
-      let mut fn := fn
-      match args with
-      | .dynamic .. => return mkApp fn vecArg
-      | .static args =>
-          have n : Nat := args.size
-          for (i : Nat) in [0:n] do
-            let inBoundsProof ← withLCtx origLCtx origLocalInst <|
-              mkDecideProof q($i < $n)
-            let i := mkApp3 (.const ``Fin.mk []) (toExpr n) (toExpr i) inBoundsProof
-            fn := mkApp fn <|← mkAppM ``HVector.get #[vecArg, i]
-          return fn
+      args.applyCurried fn vecArg
 
     let fn ← mkLambdaFVars args fn
     synthesizeSyntheticMVarsUsingDefault
