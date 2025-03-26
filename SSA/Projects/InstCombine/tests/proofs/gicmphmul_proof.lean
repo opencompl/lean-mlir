@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gicmphmul_proof
 theorem squared_nsw_eq0_thm (e : IntW 5) :
@@ -634,5 +635,3 @@ theorem icmp_mul_nsw_slt_neg_thm (e e_1 : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

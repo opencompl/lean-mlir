@@ -93,9 +93,9 @@ structure NoWrapFlags where
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
+  if flags.nsw ∧ BitVec.saddOverflow x' y' then
     none
-  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
+  else if flags.nuw ∧ BitVec.uaddOverflow x' y' then
     none
   else
     add? x' y'
@@ -291,12 +291,12 @@ theorem _root_.Int.rem_sign_dividend :
       by_cases (0 < y)
       case pos hypos =>
         have hyleq : 0 ≤ y := by omega
-        rw [← Int.eq_natAbs_of_zero_le hyleq]; exact Int.emod_lt_of_pos x hypos
+        rw [← Int.eq_natAbs_of_nonneg hyleq]; exact Int.emod_lt_of_pos x hypos
       case neg hynonneg =>
         have hmyneg : 0 < -y := by omega
         have hmynnonpos : 0 ≤ -y := by omega
         rw [← Int.emod_neg, ← Int.natAbs_neg]
-        rw [← Int.eq_natAbs_of_zero_le hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
+        rw [← Int.eq_natAbs_of_nonneg hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
 
 /--
 This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),

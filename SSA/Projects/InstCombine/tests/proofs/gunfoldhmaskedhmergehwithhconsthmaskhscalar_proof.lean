@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gunfoldhmaskedhmergehwithhconsthmaskhscalar_proof
 theorem scalar0_thm (e e_1 : IntW 4) :
@@ -113,5 +114,3 @@ theorem commutativity_constant_14_vary_thm (e : IntW 4) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

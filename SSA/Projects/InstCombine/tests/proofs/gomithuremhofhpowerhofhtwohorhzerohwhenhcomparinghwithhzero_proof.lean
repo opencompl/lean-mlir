@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gomithuremhofhpowerhofhtwohorhzerohwhenhcomparinghwithhzero_proof
 theorem p0_scalar_urem_by_const_thm (e : IntW 32) :
@@ -42,5 +43,3 @@ theorem p2_scalar_shifted_urem_by_const_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

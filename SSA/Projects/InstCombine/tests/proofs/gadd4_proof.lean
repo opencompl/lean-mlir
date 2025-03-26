@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gadd4_proof
 theorem match_unsigned_thm (e : IntW 64) :
@@ -134,5 +135,3 @@ theorem fold_add_udiv_urem_without_noundef_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
