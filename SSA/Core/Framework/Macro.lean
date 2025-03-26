@@ -368,6 +368,7 @@ partial def CurriedArgs.ofTypeExpr (argTy : Expr) (argName : Option Name := none
     MetaM CurriedArgs := do
   let name := argName.getD .anonymous
   trace[LeanMLIR.Elab] "Analyzing: {argTy}"
+  -- TODO: add better tracing, that explains when an argument type is left uncurried
   match_expr argTy with
   | HVector α f as =>
       match ← listExprToArray as with
@@ -412,6 +413,22 @@ partial def CurriedArgs.foldForallType (body : Expr) : CurriedArgs → Expr
 
 end
 
+def _root_.List.mkOfElems (u : Level) (α : Expr) (elems : Array Expr) : Expr :=
+  elems.foldr (init := mkApp (.const ``List.nil [u]) α) <|
+    mkApp3 (.const ``List.cons [u]) α
+
+def CurriedArgs.toUncurriedExpr : CurriedArgs → Expr
+  | .other _ e              => e
+  | .vector α f as _ =>
+      let as := List.mkOfElems 0 α as
+      mkApp3 (.const ``HVector [0, 0]) α f as
+  | .valuation Ty inst Γ _  =>
+      let Γ := List.mkOfElems 0 Ty Γ
+      mkApp3 (.const ``Ctxt.Valuation []) Ty inst Γ
+
+def CurriedArgs.name : CurriedArgs → Name
+  | .other name _ => name
+  | _ => .anonymous
 
 mutual
 
@@ -419,15 +436,13 @@ mutual
 Given an expression `fn` of the curried type returned by `arrow.toExpr`,
 return an expression of the original uncurried type.
 -/
-partial def CurriedArrow.uncurry (fn : Expr) (arrow : CurriedArrow) : MetaM Expr :=
-  let bvars := Array.range arrow.args.size
+partial def CurriedArrow.uncurry (fn : Expr) (arrow : CurriedArrow) : MetaM Expr := do
+  let args := arrow.args
+  let fn ← args.zipIdx.foldlM (init := fn) fun fn (arg, i) =>
+    arg.applyFn fn (.bvar <| args.size - i - 1)
 
-  -- TODO: loop over each `arg in arrow.args`, and set
-  --          `fn := arg.applyToFn fn (.bvar $i)`, with the approriate bvar index
-
-  -- TODO: wrap the applied function in `Expr.lam`, one lambda for each
-  --       `arg in arrow.args`
-  return sorry
+  return args.foldr (init := fn) fun arg fn =>
+    Expr.lam arg.name arg.toUncurriedExpr fn .default
 
 /--
 Given an expression `fn` of the curried type returned by `args.foldForallType body`,
@@ -437,48 +452,37 @@ return an expression of type `$body`.
 partial def CurriedArgs.applyFn (fn vec : Expr) : CurriedArgs → MetaM Expr
   | .other ..      => return mkApp fn vec
   | .valuation (Ty : Q(Type)) _ Γ _ => do
-      let Γe : Q(Ctxt $Ty) :=
-        Γ.foldr (mkApp3 (.const ``List.cons [0]) Ty)
-          (mkApp (.const ``List.nil [0]) Ty)
+      let Γe : Q(Ctxt $Ty) := List.mkOfElems 0 Ty Γ
       let n : Nat := Γ.size
       let mut fn := fn
       for hi : (i : Nat) in [0:n] do
         let t := Γ[i]
         let var := Ctxt.mkVar Ty Γe t (toExpr i)
-        fn := mkApp fn (mkApp2 vec t var)
+        let arg := mkApp2 vec t var
+        fn := mkApp fn arg
       return fn
-  | .vector _α _f as _ => do
+  | .vector α f as _ => do
+      let asE := List.mkOfElems 0 α as
       let n : Nat := as.size
       let mut fn := fn
       for (i : Nat) in [0:n] do
         let inBoundsProof ← mkDecideProof q($i < $n)
         let idxExpr := mkApp3 (.const ``Fin.mk []) (toExpr n) (toExpr i) inBoundsProof
-        let arg ← mkAppM ``HVector.get #[vec, idxExpr]
-        -- let arg ← curryHVecFun arg args[i]
+        let arg := mkApp5 (.const ``HVector.get [0, 0]) α f asE vec idxExpr
         fn := mkApp fn arg
       return fn
 
 end
 
 /--
-`hvectorFun(...)` is an implementation detail of `def_denote`.
+`hvectorFun($fn)` is an implementation detail of `def_denote`.
 
-`hvectorFun($fn)` assumes the `expectedType` is something like:
-```
-  HVector ?f ?as → HVector ?g ?bs → ?β
-```
+Assuming the expected type is an uncurried function type, we use `CurriedFun`
+machinery to transform this into a *curried* function type, elaborate the term
+`fn` as a curried function, and finally transfo`rm the elaborated expression
+into a term of the original, uncurried type.
 
-This is transformed into an idiomatic, curried, function type--assuming that
-`as` and `bs` reduce to a simple sequence of `List` constructors.
-```
-  f as[0] → f as[1] → … → f as[n] → g bs[0] → … → g bs[m] → β
-```
-Finally, an expression of the originally expected type is construed by applying
-the elaborated the function to appropriate elements of the vectors arguments,
-extracted via `HVector.get`.
-
-If either `as` or `bs` does not reduce, the corresponding `HVector` argument
-is left as-is in the new expected type.
+See `CurriedFun` for details.
 -/
 local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
   let arrow ← CurriedArrow.ofExpr expectedType
@@ -487,16 +491,9 @@ local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
 
   let fn ← elabTermEnsuringType fn arrow.toExpr
 
-  forallTelescope expectedType fun args _ => do
-    let fn ← (args.zip arrow.args).foldlM (init := fn) fun fn (vecArg, args) => do
-      args.applyFn fn vecArg
-
-    let fn ← mkLambdaFVars args fn
-    synthesizeSyntheticMVarsUsingDefault
-    runPendingTacticsAt fn
-    let fn ← instantiateMVars fn
-    trace[LeanMLIR.Elab] m!"desugared: {fn}"
-    return fn
+  let fn ← arrow.uncurry fn
+  trace[LeanMLIR.Elab] m!"desugared: {fn}"
+  return fn
 
 /--
 `def_denote for $FooDialect` enables the definition of an instance for
