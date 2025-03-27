@@ -548,6 +548,7 @@ def RawCNFA.autUnsignedCmp (cmp: RelationOrdering) : RawCNFA (BitVec 2) :=
   | .ge => (mf.addFinal sgt).addFinal seq
 
 -- TODO: make it faster with a custom tactic?
+set_option maxHeartbeats 1000000 in
 lemma RawCNFA.autoUnsignedCmp_wf {cmp} : autUnsignedCmp cmp |>.WF := by
   unfold autUnsignedCmp; aesop
 
@@ -612,6 +613,7 @@ lemma ucmp_tricho : (bv1 >ᵤ bv2) = false → (bv2 >ᵤ bv1) = false → bv1 = 
   simp [BitVec.ule, BitVec.ult, BitVec.toNat_eq]
   apply Nat.le_antisymm
 
+set_option maxHeartbeats 1000000 in
 lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsignedCmpSA cmp.urel := by
   let getState {w} (bv1 bv2 : BitVec w) : NFA.unsignedCmpState :=
     if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
@@ -670,6 +672,7 @@ where
     (m.addTrans 1#2 slt sgt, sltfin, sgtfin, seq)
 
 -- TODO: make it faster with a custom tactic?
+set_option maxHeartbeats 1000000 in
 @[simp]
 lemma RawCNFA.autSignedCmp_m_wf : autSignedCmp.m.1 |>.WF := by
   unfold autSignedCmp.m; aesop
