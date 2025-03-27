@@ -390,6 +390,26 @@ def CurriedArgs.name : CurriedArgs → Name
 mutual
 
 /--
+Given an expression `fn` of the uncurried type used represented by `arrow`,
+return an expression of the curried type returned by `arrow.toExpr`.
+-/
+partial def CurriedArrow.curry (fn : Expr) (arrow : CurriedArrow) : MetaM Expr :=
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"currying `{fn}`") <|
+    go fn arrow.args.toSubarray
+where
+  go (fn : Expr) (args : Subarray CurriedArgs) : MetaM Expr := do
+    let some (arg, args) := args.popHead?
+      | return fn
+    let decls ← arg.toCurriedExprs.mapM fun argTy => do
+      return (← mkFreshUserName arg.name, argTy)
+    withLocalDeclsDND decls <| fun fvars => do
+      let fn := mkApp fn (← arg.mkVector fvars)
+      let fn ← go fn args
+      let fn ← mkLambdaFVars fvars fn
+      trace[LeanMLIR.Elab] "curried to: `{fn}`"
+      return fn
+
+/--
 Given an expression `fn` of the curried type returned by `arrow.toExpr`,
 return an expression of the original uncurried type.
 -/
@@ -399,41 +419,53 @@ partial def CurriedArrow.uncurry (fn : Expr) (arrow : CurriedArrow) : MetaM Expr
     let decls ← args.mapM fun arg => do
       return (← mkFreshUserName arg.name, arg.toUncurriedExpr)
     withLocalDeclsDND decls <| fun fvars => do
-      let fn ← (args.zip fvars).foldlM (init := fn) fun fn (arg, x) =>
-        arg.applyFn fn x
+      let fn ← (args.zip fvars).foldlM (init := fn) fun fn (arg, x) => do
+        return mkAppN fn (← arg.getElems x)
       let fn ← mkLambdaFVars fvars fn
       trace[LeanMLIR.Elab] "uncurried to: `{fn}`"
       return fn
 
 /--
-Given an expression `fn` of the curried type returned by `args.foldForallType body`,
-and an expression of the uncurried type `args` was constructed from,
-return an expression of type `$body`.
+Given an expression `vec` of the uncurried type `args` was constructed from,
+return an array of expressions, where each expression is a single element of the
+vector/valuation.
 -/
-partial def CurriedArgs.applyFn (fn vec : Expr) : CurriedArgs → MetaM Expr
-  | .other ..      => return mkApp fn vec
+partial def CurriedArgs.getElems (vec : Expr) : CurriedArgs → MetaM (Array Expr)
+  | .other ..      => return #[vec]
   | .valuation _ (Ty : Q(Type)) _ Γ arrows => do
       let Γe : Q(Ctxt $Ty) := List.mkOfElems 0 Ty Γ
-      let n : Nat := Γ.size
-      let mut fn := fn
-      for hi : (i : Nat) in [0:n] do
-        let t := Γ[i]
+      (Γ.zip arrows).mapIdxM fun i (t, arr) => do
         let var := Ctxt.mkVar Ty Γe t (toExpr i)
         let arg := mkApp2 vec t var
-        let arg ← arrows[i]!.uncurry arg
-        fn := mkApp fn arg
-      return fn
+        arr.curry arg
   | .vector _ α f as arrows => do
       let asE := List.mkOfElems 0 α as
       let n : Nat := arrows.size
-      let mut fn := fn
-      for hi : (i : Nat) in [0:n] do
+      arrows.mapIdxM fun (i : Nat) arr => do
         let inBoundsProof ← mkDecideProof q($i < $n)
         let idxExpr := mkApp3 (.const ``Fin.mk []) (toExpr n) (toExpr i) inBoundsProof
         let arg := mkApp5 (.const ``HVector.get [0, 0]) α f asE vec idxExpr
-        let arg ← arrows[i].uncurry arg
-        fn := mkApp fn arg
-      return fn
+        arr.curry arg
+
+/--
+Given an array of curried function arguments, construct an expression of the
+uncurried vector/valuation type represented by `args`
+-/
+partial def CurriedArgs.mkVector (elems : Array Expr) : CurriedArgs → MetaM Expr
+  | .other ..      =>
+      if h : elems.size = 1 then
+        return elems[0]
+      else
+        throwError "Expected exactly 1 element, found:\n{elems}"
+  | .valuation _ (Ty : Q(Type)) inst Γ arrows => do
+      let elems ← (arrows.zip elems).mapM fun (arr, elem) => arr.uncurry elem
+      let toType := mkApp2 (.const ``TyDenote.toType []) Ty inst
+      let vec ← HVector.mkOfElems 0 0 Ty toType (Γ.zip elems)
+      return mkAppN (.const ``Ctxt.Valuation.ofHVector [])
+        #[Ty, inst, (List.mkOfElems 0 Ty Γ), vec]
+  | .vector _ α f as arrows => do
+      let elems ← (arrows.zip elems).mapM fun (arr, elem) => arr.uncurry elem
+      HVector.mkOfElems 0 0 α f (as.zip elems)
 
 end
 
@@ -442,7 +474,7 @@ end
 
 Assuming the expected type is an uncurried function type, we use `CurriedFun`
 machinery to transform this into a *curried* function type, elaborate the term
-`fn` as a curried function, and finally transfo`rm the elaborated expression
+`fn` as a curried function, and finally transform the elaborated expression
 into a term of the original, uncurried type.
 
 See `CurriedFun` for details.
@@ -457,6 +489,7 @@ local elab "hvectorFun(" fn:term ")" : term <= expectedType => do
   let fn ← elabTermEnsuringType fn arrow.toExpr
   let fn ← arrow.uncurry fn
   trace[LeanMLIR.Elab] m!"desugared: {fn}"
+  Meta.check fn -- TODO: remove this once finished debugging
   return fn
 
 /--
