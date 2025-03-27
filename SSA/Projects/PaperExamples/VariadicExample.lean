@@ -35,4 +35,4 @@ instance : TyDenote (Dialect.Ty VariadicDialect) where
 
 def_denote for VariadicDialect where
   | .const z => BitVec.ofInt _ z
-  | .add n   => sorry
+  | .add _   => fun xs => xs.foldl (fun ⟨⟩ => (· + ·)) 0#32
