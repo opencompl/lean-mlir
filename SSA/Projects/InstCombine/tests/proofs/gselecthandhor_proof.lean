@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gselecthandhor_proof
 theorem logical_and_not_thm (e e_1 : IntW 1) :
@@ -390,5 +391,3 @@ theorem test_logical_and_ne_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Qq
 import SSA.Projects.InstCombine.Base
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
@@ -245,79 +245,69 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 instance : AST.TransformReturn (MetaLLVM φ) φ where
   mkReturn := mkReturn
 
-
 /-!
   ## Instantiation
   Finally, we show how to instantiate a family of programs to a concrete program
 -/
 
-def instantiateMTy (vals : List.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
-  | .bitvec w => .bitvec <| w.instantiate vals
+open InstCombine Qq in
+def MetaLLVM.instantiate (vals : Vector Expr φ) : DialectMetaMorphism (MetaLLVM φ) q(LLVM) where
+  mapTy := fun
+  | .bitvec w =>
+    mkApp (mkConst ``Ty.bitvec) <| w.metaInstantiate vals
+  mapOp :=
+    fun
+    | .binary w binOp =>
+      let w := w.metaInstantiate vals
+      mkApp2 (mkConst ``Op.binary) w (toExpr binOp)
+    | .unary w unOp =>
+      let w := w.metaInstantiate vals
 
-def instantiateMOp (vals : List.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
-  | .binary w binOp => .binary (w.instantiate vals) binOp
-  | .unary w unOp => .unary (w.instantiate vals) (unOp.instantiate vals)
-  | .select w => .select (w.instantiate vals)
-  | .icmp c w => .icmp c (w.instantiate vals)
-  | .const w val => .const (w.instantiate vals) val
-
-def instantiateCtxt (vals : List.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) :
-    Ctxt InstCombine.Ty :=
-  Γ.map (instantiateMTy vals)
-
-open InstCombine in
-def MOp.instantiateCom (vals : List.Vector Nat φ) : DialectMorphism (MetaLLVM φ) LLVM where
-  mapOp := instantiateMOp vals
-  mapTy := instantiateMTy vals
-  preserves_signature op := by
-    have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
-    cases op <;>
-      (try casesm MOp.UnaryOp _) <;>
-      simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
-      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map,
-      Signature.mk, Signature.mkEffectful.injEq,
-      List.map_cons, List.map_nil, and_self, MTy.bitvec,
-      List.cons.injEq, MTy.bitvec.injEq, and_true, true_and,
-      RegionSignature.map, Signature.map, MOp.UnaryOp.instantiate, MOp.UnaryOp.outTy, h1]
-
-open InstCombine in
-def mkComInstantiate (reg : MLIR.AST.Region φ) :
-    MLIR.AST.ExceptM (MetaLLVM φ) (List.Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
-  let ⟨Γ, eff, ty, com⟩ ← MLIR.AST.mkCom reg
-  return fun vals =>
-    let Γ' := instantiateCtxt vals Γ
-    let ty' := instantiateMTy vals ty
-    let com' := com.changeDialect (MOp.instantiateCom vals)
-    ⟨Γ', eff, ty', com'⟩
+      /- NOTE: `Op` contructors expect a `Nat` argument to indicate the width,
+          but `MOp.UnaryOp` constructors expect `ConcreteOrMVar Nat 0`.
+          Hence, we define `mapWidth` to construct the latter
+      -/
+      let mapWidth (w : ConcreteOrMVar Nat φ) : Q(ConcreteOrMVar Nat 0) :=
+        let w : Q(Nat) := w.metaInstantiate vals
+        q(.concrete $w)
+      open MOp (UnaryOp) in
+      let unOp : Q(UnaryOp 0) := match unOp with
+        | .neg => q(.neg)
+        | .not => q(.not)
+        | .copy => q(.copy)
+        | .trunc w' flags => q(.trunc $(mapWidth w') $flags)
+        | .zext w' nneg => q(.zext $(mapWidth w') $nneg)
+        | .sext w' => q(.sext $(mapWidth w'))
+      mkApp2 (mkConst ``Op.unary) w unOp
+    | .select w =>
+      let w : Q(Nat) := w.metaInstantiate vals
+      mkApp (mkConst ``Op.select) w
+    | .icmp c w =>
+      let w := w.metaInstantiate vals
+      let c := toExpr c
+      mkApp2 (mkConst ``Op.icmp) c w
+    | .const w val =>
+      let w := w.metaInstantiate vals
+      let val := toExpr val
+      mkApp2 (mkConst ``Op.const) w val
 
 end InstcombineTransformDialect
 
-/-
-https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20Find.20.60Real.2Eadd.60/near/402089561
-> I would recommend avoiding Qq for pattern matching.
-> That part of the Qq implementation is spicy.
 
-Therefore, we choose to match on raw `Expr`.
--/
 open SSA InstcombineTransformDialect InstCombine in
 elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
-  have φ : Nat := mvars.getElems.size
-  -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
-  let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
-    SSA.elabIntoCom reg q(MetaLLVM $φ)
+  withTraceNode `LeanMLIR.Elab (pure m!"{exceptEmoji ·} elaborate LLVM program") <| do
 
-  let mvalues : Q(List.Vector Nat $φ) ←
-    withTraceNode `llvm (return m!"{exceptEmoji ·} elaborating mvalues") <| do
-      let mvalues ← `(⟨[$mvars,*], by rfl⟩)
-      elabTermEnsuringType mvalues q(List.Vector Nat $φ)
+  let φ : Nat := mvars.getElems.size
+  let ⟨_, _, _, mcom⟩ ← SSA.elabIntoComObj reg (MetaLLVM φ)
 
-  let com ← withTraceNode `llvm (return m!"{exceptEmoji ·} building final Expr") <| do
-    let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
-    let com ← mkAppM ``Com.changeDialect #[instantiateFun, mcom]
-    synthesizeSyntheticMVarsNoPostponing
-    return com
+  let res ← mcom.metaMap <| MetaLLVM.instantiate <| ←do
+    let mvars : Vector _ φ := ⟨mvars.getElems, rfl⟩
+    mvars.mapM fun (stx : Term) =>
+      elabTermEnsuringType stx (mkConst ``Nat)
 
-  return com
+  trace[LeanMLIR.Elab] "elaborated expression: {res}"
+  return res
 
 macro "[llvm| " reg:mlir_region "]" : term => `([llvm()| $reg])
 
@@ -325,3 +315,17 @@ macro "deftest" name:ident " := " test_reg:mlir_region : command => do
   `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
        let code := [llvm()| $test_reg]
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
+
+section Test
+open InstCombine Ty
+
+/-- Assert that the elaborator respects variable ordering correctly -/
+private def variable_order1 : Com LLVM [bitvec 2, bitvec 1]  .pure (bitvec 1) := [llvm()| {
+    ^bb0(%arg1: i1, %arg2 : i2):
+      "llvm.return"(%arg1) : (i1) -> ()
+  }]
+/-- Assert that the elaborator respects variable ordering correctly -/
+private def variable_order2 : Com LLVM [bitvec 2, bitvec 1] .pure (bitvec 2) := [llvm()| {
+    ^bb0(%arg1: i1, %arg2 : i2):
+      "llvm.return"(%arg2) : (i2) -> ()
+  }]

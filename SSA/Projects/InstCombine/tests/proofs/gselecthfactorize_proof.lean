@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gselecthfactorize_proof
 theorem logic_and_logic_or_1_thm (e e_1 e_2 : IntW 1) :
@@ -396,5 +397,3 @@ theorem or_or_logic_and_2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

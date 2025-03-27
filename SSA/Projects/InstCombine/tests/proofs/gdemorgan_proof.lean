@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gdemorgan_proof
 theorem demorgan_or_apint1_thm (e e_1 : IntW 43) :
@@ -357,5 +358,3 @@ theorem PR45984_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

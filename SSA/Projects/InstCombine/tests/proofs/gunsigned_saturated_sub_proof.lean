@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gunsigned_saturated_sub_proof
 theorem max_sub_ugt_c0_thm (e : IntW 32) :
@@ -72,5 +73,3 @@ theorem max_sub_ult_c0_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
