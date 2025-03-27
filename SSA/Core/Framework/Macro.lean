@@ -76,10 +76,8 @@ instance : Coe (TSyntax ``Parser.matchAltsExpr) (TSyntax ``Lean.Parser.Term.matc
 
 end Parser
 
-
-
 /-!
-## MetaSignature Datastructures and Environment Extension
+## Common Elaboration Utilities
 -/
 
 namespace Elab
