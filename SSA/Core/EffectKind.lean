@@ -204,10 +204,3 @@ def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
-
-/-- Reflect a fully-reduced Lean expresion of type `EffectKind`,
-or return `none` if the expression was not an `EffectKind` constructor. -/
-def fromExpr? : Lean.Expr → Option EffectKind
-  | .const ``pure _   => some pure
-  | .const ``impure _ => some impure
-  | _ => none
