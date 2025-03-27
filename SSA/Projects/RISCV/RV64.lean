@@ -246,7 +246,7 @@ def DIVW_pure64_signed (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :
           0)))
 
 def  DIVW_pure64_unsigned (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-    BitVec.signExtend 64
+       BitVec.signExtend 64
     (BitVec.extractLsb' 0 32
       (BitVec.ofInt 33
         (Int.ofNat
@@ -265,7 +265,7 @@ def DIV_pure64_signed (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
         0))
 
 def DIV_pure64_unsigned (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
- BitVec.extractLsb' 0 64
+  BitVec.extractLsb' 0 64
     (BitVec.ofNat 65
       (if Int.ofNat rs2_val.toNat = 0 then -1 else (Int.ofNat rs1_val.toNat).tdiv (Int.ofNat rs2_val.toNat)).toNat)
 
