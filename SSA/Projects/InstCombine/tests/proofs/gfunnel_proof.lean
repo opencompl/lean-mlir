@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gfunnel_proof
 theorem unmasked_shlop_insufficient_mask_shift_amount_thm (e e_1 e_2 : IntW 16) :
@@ -23,5 +24,3 @@ theorem unmasked_shlop_insufficient_mask_shift_amount_thm (e e_1 e_2 : IntW 16) 
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

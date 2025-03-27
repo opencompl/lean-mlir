@@ -43,7 +43,7 @@ theorem or?_eq : LLVM.or? a b  = some (a ||| b) := rfl
 
 structure DisjointFlag where
   disjoint : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
@@ -87,15 +87,15 @@ theorem add?_eq : LLVM.add? a b  = some (a + b) := rfl
 structure NoWrapFlags where
   nsw : Bool := false
   nuw : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
+  if flags.nsw ∧ BitVec.saddOverflow x' y' then
     none
-  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
+  else if flags.nuw ∧ BitVec.uaddOverflow x' y' then
     none
   else
     add? x' y'
@@ -185,7 +185,7 @@ def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
 
 structure ExactFlag where
   exact : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
@@ -291,12 +291,12 @@ theorem _root_.Int.rem_sign_dividend :
       by_cases (0 < y)
       case pos hypos =>
         have hyleq : 0 ≤ y := by omega
-        rw [← Int.eq_natAbs_of_zero_le hyleq]; exact Int.emod_lt_of_pos x hypos
+        rw [← Int.eq_natAbs_of_nonneg hyleq]; exact Int.emod_lt_of_pos x hypos
       case neg hynonneg =>
         have hmyneg : 0 < -y := by omega
         have hmynnonpos : 0 ≤ -y := by omega
         rw [← Int.emod_neg, ← Int.natAbs_neg]
-        rw [← Int.eq_natAbs_of_zero_le hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
+        rw [← Int.eq_natAbs_of_nonneg hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
 
 /--
 This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),
@@ -424,7 +424,7 @@ inductive IntPredicate where
   | sge
   | slt
   | sle
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : ToString IntPredicate where
   toString
@@ -580,7 +580,7 @@ def trunc {w: Nat} (w': Nat) (x: IntW w) (noWrapFlags : NoWrapFlags := {nsw := f
 
 structure NonNegFlag where
   nneg : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm]
 def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do

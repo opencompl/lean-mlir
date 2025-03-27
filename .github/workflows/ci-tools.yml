@@ -49,10 +49,4 @@ jobs:
 
       - name: Compile Alive Scaling
         run: |
-          lake -R build AliveScaling
-
-      - name: Check for changes in AliveStatements
-        run: |
-          lake build AliveExamples
-          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
-          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          lake -R build SSA.Projects.InstCombine.ScalingTest

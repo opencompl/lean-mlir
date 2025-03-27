@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gicmphselecthimplieshcommonhop_proof
 theorem sgt_3_impliesF_eq_2_thm (e e_1 : IntW 8) :
@@ -74,5 +75,3 @@ theorem ult_1_impliesF_eq_1_thm (e e_1 : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

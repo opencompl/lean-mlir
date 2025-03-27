@@ -261,8 +261,8 @@ macro "bv_compare'": tactic =>
   `(tactic|
       (
         simp (config := {failIfUnchanged := false}) only [BitVec.twoPow, BitVec.intMin, BitVec.intMax] at *
-        bv_compare
-        try bv_decide -- close the goal if possible but do not report errors again
+        bv_compare +acNf +shortCircuit
+        try bv_decide +acNf +shortCircuit -- close the goal if possible but do not report errors again
       )
    )
 

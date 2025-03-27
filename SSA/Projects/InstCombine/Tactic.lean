@@ -10,49 +10,6 @@ import SSA.Core.Tactic
 
 open MLIR AST
 
-/-- We eliminate our alive framework's metavarible machinery.
-At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be eliminated,
-and all `Width.mvar` should be resolved into `Width.concrete`.  -/
-macro "simp_alive_meta" : tactic =>
- `(tactic|
-     (
-      try simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret,
-        Com.changeDialect_var, Expr.changeDialect]
-      try simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
-      try simp (config := {failIfUnchanged := false }) only [HVector.map']
-      try dsimp (config := {failIfUnchanged := false }) only [Functor.map]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
-      try dsimp (config := {failIfUnchanged := false }) only [List.map]
-      try dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toSnoc_toMap]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
-      try dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_cons]
-      try dsimp (config := {failIfUnchanged := false }) only
-        [InstcombineTransformDialect.MOp.instantiateCom]
-      try dsimp (config := {failIfUnchanged := false }) only
-        [InstcombineTransformDialect.instantiateMTy]
-      try dsimp (config := {failIfUnchanged := false }) only [Fin.zero_eta, List.map_cons]
-      try dsimp (config := {failIfUnchanged := false }) only
-        [InstcombineTransformDialect.instantiateMOp]
-      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
-      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
-      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
-      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
-      try dsimp (config := {failIfUnchanged := false }) only
-        [InstcombineTransformDialect.instantiateMTy]
-      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
-      -- How can I avoid this `simp! only` and instead use a plain `simp only`?
-      try dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.ofNat_eq_concrete]
-      try simp! (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_ofNat_eq]
-   )
- )
-
 /-- Eliminate the SSA structure of the program
 - We first simplify `Com.refinement` to see the context `Γv`.
 - We `simp_peephole Γv` to simplify context accesses by variables.
@@ -88,7 +45,6 @@ where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
-        simp_alive_meta
         simp_alive_ssa
       )
    )

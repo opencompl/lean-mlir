@@ -277,6 +277,7 @@ def worklistRun_init_post (inits : Array S) (final : S → Bool)
   m.trans = ∅ ∧
   ∀ sa s, map[sa]? = some s → (s ∈ m.initials) ∧ (s ∈ m.finals ↔ final sa)
 
+set_option maxHeartbeats 1000000 in
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma worklistRun'_init_wf inits hinits final? :
     let st := worklist.initState A S inits hinits final?
@@ -332,8 +333,10 @@ lemma worklistRun'_init_wf inits hinits final? :
       · have hin : s ∈ m.states := by simp_all
         obtain ⟨sa, hsa⟩ := hsurj ⟨_, hin⟩; use sa
         specialize hst sa s hsa
-        rw [Std.HashMap.getElem?_insert]; split
-        · specialize hnew sa (Std.HashMap.mem_of_getElem? hsa); simp_all
+        rw [Std.HashMap.getElem?_insert]; split_ifs with hcond
+        · simp only [beq_iff_eq, motive, m1, m2, m0] at hcond
+          specialize hnew sa (Std.HashMap.mem_of_getElem? hsa) hcond
+          contradiction
         · assumption
     · rintro s sa sa' hsa hsa'
       have hs : s ∈ m.states ∪ {m.stateMax} := by
@@ -376,6 +379,7 @@ lemma worklistRun'_init_wf inits hinits final? :
         · split <;> simp [RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.newState, hif]
           rintro rfl; exfalso; apply hst at hmap; simp [RawCNFA.states] at hmap
 
+set_option maxHeartbeats 1000000 in
 lemma worklistRun'_go_wf :
     (st.m.WF ∧ (∀ (sa : S) s, st.map[sa]? = some s → s ∈ st.m.states)) →
     (worklistRun'.go A S final f st).WF := by

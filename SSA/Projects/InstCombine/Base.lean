@@ -35,7 +35,7 @@ abbrev Width φ := ConcreteOrMVar Nat φ
 
 inductive MTy (φ : Nat)
   | bitvec (w : Width φ) : MTy φ
-  deriving DecidableEq, Inhabited
+  deriving DecidableEq, Inhabited, Lean.ToExpr
 
 abbrev Ty := MTy 0
 
@@ -88,7 +88,7 @@ inductive MOp.UnaryOp (φ : Nat) : Type
   | trunc (w' : Width φ) (noWrapFlags : NoWrapFlags := {nsw := false, nuw := false} )
   | zext  (w' : Width φ) (nneg : NonNegFlag := {nneg := false} )
   | sext  (w' : Width φ)
-deriving Repr, DecidableEq, Inhabited
+deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
 /-- Homogeneous, binary operations -/
 inductive MOp.BinaryOp : Type
@@ -105,7 +105,7 @@ inductive MOp.BinaryOp : Type
   | sub  (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
   | sdiv (exact : ExactFlag := {exact := false} )
   | udiv (exact : ExactFlag := {exact := false} )
-deriving DecidableEq, Inhabited
+deriving DecidableEq, Inhabited, Lean.ToExpr
 
 open Std (Format) in
 /--
@@ -152,7 +152,7 @@ inductive MOp (φ : Nat) : Type
   | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
-deriving Repr, DecidableEq, Inhabited
+deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
 namespace MOp
 
