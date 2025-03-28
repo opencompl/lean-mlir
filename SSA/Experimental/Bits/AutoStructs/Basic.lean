@@ -2,21 +2,11 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Std.Data.HashSet
-import Std.Data.HashMap
-import Std.Data.HashMap.Lemmas
-import Batteries.Data.Fin.Basic
-import Batteries.Data.Array.Lemmas
-import Mathlib.Computability.NFA
 import Mathlib.Algebra.Group.Nat.Range
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.List.Perm.Basic
-import Mathlib.Data.Rel
-import SSA.Experimental.Bits.AutoStructs.ForLean
-import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.AutoStructs.FinEnum
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
+import SSA.Experimental.Bits.AutoStructs.FinEnum
+
+set_option grind.warning false
 
 abbrev State := Nat
 
@@ -162,6 +152,10 @@ def RawCNFA.empty : RawCNFA A := {
   trans := ∅
 }
 
+@[simp] lemma RawCNFA.empty_mem_initials {s : State} : s ∉ empty (A := A).initials := by simp [empty]
+@[simp] lemma RawCNFA.empty_mem_finals {s : State} : s ∉ empty (A := A).finals := by simp [empty]
+@[simp] lemma RawCNFA.empty_mem_tr {s s' : State} : s' ∉ empty (A := A).tr s a := by simp [empty, tr]
+
 def RawCNFA.newState (m : RawCNFA A) : State × RawCNFA A :=
   let old := m.stateMax
   let m := { m with stateMax := old + 1 }
@@ -202,6 +196,14 @@ lemma RawCNFA.addInitial_tr {m : RawCNFA A} : s' ∈ (m.addInitial s'').tr s a �
 
 def RawCNFA.addFinal (m : RawCNFA A) (s : State) : RawCNFA A :=
   { m with finals := m.finals.insert s }
+
+@[simp]
+lemma RawCNFA.addFinal_initials {m : RawCNFA A} : (m.addFinal s).initials = m.initials := by
+  rfl
+
+@[simp]
+lemma RawCNFA.addFinal_finals {m : RawCNFA A} : (m.addFinal s).finals = m.finals.insert s := by
+  rfl
 
 @[simp]
 lemma RawCNFA.addFinal_tr {m : RawCNFA A} : s' ∈ (m.addFinal s'').tr s a ↔ s' ∈ m.tr s a := by
@@ -390,6 +392,9 @@ lemma RawCNFA.same_stateMax (m : RawCNFA A) x y (z : Std.HashMap (State × A) (S
     (RawCNFA.mk m.stateMax x y z).states = m.states := by
   simp [RawCNFA.states]
 
+@[simp]
+lemma RawCNFA.empty_stateMax : empty (A := A).stateMax = 0 := rfl
+
 @[simp, aesop 50% unsafe]
 lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
@@ -488,6 +493,11 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
     · simp [hwf', hstates]
     · simp [hstates]
 
+def CNFA.transSet (m : CNFA n) (ss : Std.HashSet m.m.states) (a : BitVec n) : Std.HashSet m.m.states :=
+  ss.fold (init := ∅) fun ss' (s : m.m.states) =>
+    let ssn := (m.m.tr s a).attachWith (λ s ↦ s ∈ m.m.states) (by simp only; rintro x hx; aesop)
+    ss'.insertMany ssn
+
 instance RawCNFA_Inhabited : Inhabited (RawCNFA A) where
   default := RawCNFA.empty
 
@@ -519,6 +529,83 @@ lemma simulFun_sim {m : CNFA n} f :
   rintro hsim
   apply simulFun_sim_raw m.wf f hsim
 
+def CNFA.toNFA (m : CNFA n) : NFA (BitVec n) m.m.states where
+  start := { s | s.val ∈ m.m.initials }
+  accept := { s | s.val ∈ m.m.finals }
+  step s₁ a := { s₂ | s₂.val ∈ m.m.tr s₁.val a }
+
+def CNFA.toNFA' (m : CNFA n) : NFA' n := ⟨_, m.toNFA⟩
+
+lemma CNFA.canonicalSimul (m : CNFA n) : m.m.Simul m.toNFA (λ s s' ↦ s = s'.val) ⊤ ∅ := by
+  simp [toNFA]
+  have hwf := m.wf
+  constructor <;> aesop
+
+lemma CNFA.canonicalSim (m : CNFA n) : m.m.Sim m.toNFA := by
+  exact ⟨_, m.canonicalSimul⟩
+
+def RawCNFA.recognizes (m : RawCNFA A) (L : Language A) :=
+  ∃ (σ : Type) (M : NFA A σ), m.Sim M ∧ M.accepts = L
+
+def CNFA.recognizes (m : CNFA n) (L : Language (BitVec n)) :=
+  ∃ (M : NFA' n), m.Sim M ∧ M.M.accepts = L
+
+def CNFA.bv_recognizes (m : CNFA n) (L : Set (BitVecs n)) :=
+  ∃ L', m.recognizes L' ∧ L = dec '' L'
+
+lemma simul_equiv {m : CNFA n} {M : NFA' n} :
+    m.Sim M → m.toNFA'.M.Bisim M.M := by
+  rintro ⟨R, h₂, h₃, h₄, h₅, h₆⟩
+  use (λ s q ↦ R s.val q)
+  simp [CNFA.toNFA', CNFA.toNFA]
+  constructor
+  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
+  · simp [CNFA.toNFA', CNFA.toNFA]
+    constructor
+    · simp_all
+    · simp_all
+      rintro q hst
+      obtain ⟨s, hi, hR⟩ := h₄ hst
+      aesop
+  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
+  · simp only [Set.mem_setOf_eq, Subtype.exists, CNFA.wf, exists_and_left, exists_prop,
+    Subtype.forall]
+    rintro s₁ hs₁ q₁ a q₂ hR₁ hst
+    obtain ⟨s₂, htr, hR₂⟩:= h₆ hR₁ hst (by simp) (by simp)
+    use s₂, htr, RawCNFA.WF.trans_tgt_lt' m.wf s₁ a s₂ htr, hR₂
+
+lemma language_stable_sim {m : CNFA n} {M₁ M₂ : NFA' n} :
+    m.Sim M₁ → m.Sim M₂ → M₁.M.accepts = M₂.M.accepts := by
+  rintro h₁ h₂
+  suffices hsim: M₁.M.Bisim M₂.M by
+    simp [NFA.bisim_accepts hsim]
+  apply simul_equiv at h₁
+  apply simul_equiv at h₂
+  exact h₁.symm.comp h₂
+
+lemma CNFA.recognizes_functional {m : CNFA n} :
+    m.recognizes L₁ → m.recognizes L₂ → L₁ = L₂ := by
+  rintro ⟨M₁, hs₁, rfl⟩ ⟨M₂, hs₂, rfl⟩
+  exact language_stable_sim hs₁ hs₂
+
+@[simp]
+lemma sim_toNFA_eq_accepts {m : CNFA n} {M : NFA' n} (hsim : m.Sim M) :
+    m.toNFA.accepts = M.M.accepts := by
+  have : m.toNFA = m.toNFA'.M := by rfl
+  rw [this]
+  apply NFA.bisim_accepts
+  apply simul_equiv hsim
+
+lemma CNFA.bv_recognizes_equiv {m : CNFA n} :
+    m.bv_recognizes L ↔ ∃ (M : NFA' n), m.Sim M ∧ M.accepts = L := by
+  simp [bv_recognizes, NFA'.accepts, recognizes]
+  aesop
+
+lemma CNFA.bv_recognizes_functional {m : CNFA n} :
+    m.bv_recognizes L₁ → m.bv_recognizes L₂ → L₁ = L₂ := by
+  rintro ⟨L₁', h₁, rfl⟩ ⟨L₂', h₂, rfl⟩
+  rw [recognizes_functional h₁ h₂]
+
 end basics
 
 /-   TODOs and NOTES
@@ -541,3 +628,5 @@ end basics
   representation of (a00, a01, .., a0k)(a10, a11, .., a1k)...(an0, an1, .., ank)
   is (a00 a10 ... an0 a01 a11 ... an1 ...... ank)
 -/
+
+#min_imports

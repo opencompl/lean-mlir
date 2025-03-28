@@ -7,13 +7,10 @@ We use `bv_circuit_nnf_copy` to convert the expression into negation normal form
 
 Authors: Siddharth Bhat
 -/
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.Fin.Basic
+
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 import SSA.Experimental.Bits.FastCopy.Defs
 import SSA.Experimental.Bits.FastCopy.Attr
-import Lean.Meta.ForEachExpr
-import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 
 import Lean
 

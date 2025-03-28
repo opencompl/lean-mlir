@@ -1,14 +1,8 @@
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.FinEnum
-import Mathlib.Data.Fintype.Sum
-import Mathlib.Data.Fintype.Sigma
 import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Ring
-import SSA.Experimental.Bits.FastCopy.Defs
-import SSA.Experimental.Bits.FastCopy.Circuit
+import Mathlib.Data.Fintype.Sum
 import SSA.Experimental.Bits.AutoStructs.FinEnum
+import SSA.Experimental.Bits.FastCopy.Circuit
+import SSA.Experimental.Bits.FastCopy.Defs
 
 open Sum
 
@@ -1678,3 +1672,5 @@ axiom decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false
 
 end FSM
+
+#min_imports
