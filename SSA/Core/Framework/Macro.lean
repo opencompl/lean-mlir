@@ -47,7 +47,7 @@ def arrow := leading_parser plainArrow <|> effectArrow
 def concreteArgumentList : Parser :=
   leading_parser "(" >> (sepBy termParser ",") >> ")"
 def antiquotArgumentList : Parser :=
-  leading_parser "${" >> termParser >> "}"
+  leading_parser "$" >> checkNoWsBefore >> "{" >> termParser >> "}"
 def argumentList : Parser :=
   leading_parser concreteArgumentList <|> antiquotArgumentList
 
