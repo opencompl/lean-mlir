@@ -11,25 +11,6 @@ open Lean
 open Std.Sat
 open Std.Tactic.BVDecide
 
-def cadicalTimeoutSec : Nat := 1000
-
-/--
-Verify that a proof certificate is valid for a given formula.
--/
-def verifyCert (cnf : CNF Nat) (cert : String) : Bool :=
-  match LRAT.parseLRATProof cert.toUTF8 with
-  | .ok lratProof => LRAT.check lratProof cnf
-  | .error _ => false
-
-theorem verifyCert_correct : ∀ cnf cert, verifyCert cnf cert = true → cnf.Unsat := by
-  intro c b h1
-  unfold verifyCert at h1
-  split at h1
-  . apply LRAT.check_sound
-    assumption
-  . contradiction
-
-
 def reconstructCounterExample' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array (Bool × Nat))
     (aigSize : Nat)  :
     Std.HashMap Nat BVExpr.PackedBitVec := Id.run do
@@ -70,24 +51,9 @@ def reconstructCounterExample' (var2Cnf : Std.HashMap BVBit Nat) (assignment : A
     finalMap := finalMap.insert bitVecVar ⟨BitVec.ofNat currentBit value⟩
   return finalMap
 
-/--
-Verify that `cert` is an UNSAT proof for the SAT problem obtained by bitblasting `bv`.
--/
-def verifyBVExpr (bv : BVLogicalExpr) (cert : String) : Bool :=
-  verifyCert (AIG.toCNF bv.bitblast.relabelNat) cert
-
-theorem unsat_of_verifyBVExpr_eq_true (bv : BVLogicalExpr) (c : String)
-    (h : verifyBVExpr bv c = true) :
-    bv.Unsat := by
-  apply BVLogicalExpr.unsat_of_bitblast
-  rw [← AIG.Entrypoint.relabelNat_unsat_iff]
-  rw [← AIG.toCNF_equisat]
-  apply verifyCert_correct
-  rw [verifyBVExpr] at h
-  assumption
-
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
+def cadicalTimeoutSec : Nat := 1000
 def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     --TODO: Can this function return a model class like in Python?
     let cfg: BVDecideConfig := {timeout := 10}
@@ -108,26 +74,52 @@ def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.P
           (timeout := cadicalTimeoutSec)
           (binaryProofs := true)
 
-      -- let flipper := (fun (expr, {width, atomNumber, synthetic}) => (atomNumber, (width, expr, synthetic)))
-      -- let atomsPairs := (← getThe State).atoms.toList.map flipper
-      -- let atomsAssignment := Std.HashMap.ofList atomsPairs
-
       match res with
-      | .ok cert =>
+      | .ok _ =>
         logInfo m! "SAT solver found a proof."
-        -- let proof ← cert.toReflectionProof ctx bvExpr ``verifyBVExpr ``unsat_of_verifyBVExpr_eq_true -- can get rid of it
         return none
       | .error assignment =>
         logInfo m! "SAT solver found a counter example."
         let equations := reconstructCounterExample' map assignment entry.aig.decls.size
         return .some equations
 
+def substitute (bvExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) : BVLogicalExpr :=
+  --TODO
+  bvExpr
+
+structure ExistsForAllConfig where
+  expr : BVLogicalExpr
+  existsVars : List Nat
+  forAllVars : List Nat
+  numAttempts: Nat
+
+partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat):
+                  TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    let existsRes ← solver bvExpr
+
+    match existsRes with
+      | none =>
+        logInfo s! "Could not satisfy exists formula for {bvExpr}"
+        return none
+      | some assignment =>
+        let existsVals := assignment.filter fun c _ => existsVars.contains c
+        let substExpr := substitute bvExpr existsVals
+        let forAllRes ← solver (BoolExpr.not substExpr)
+
+        match forAllRes with
+          | none =>
+            return some existsVals
+          | some counterEx =>
+              let newExpr := substitute bvExpr counterEx
+              existsForAll (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
+
+
 def bvExpr : BVLogicalExpr :=
-  let x := BVExpr.const (BitVec.ofNat 64 2)
-  let y := BVExpr.const (BitVec.ofNat 64 4)
-  let z := BVExpr.var 0
-  let sum := BVExpr.bin x BVBinOp.add y
-  BoolExpr.literal (BVPred.bin sum BVBinPred.eq z)
+  let x := BVExpr.const (BitVec.ofNat 5 2)
+  let y := BVExpr.const (BitVec.ofNat 5 4)
+  let z : BVExpr 5 := BVExpr.var 0
+  let sum : BVExpr 5 := BVExpr.bin x BVBinOp.add z
+  BoolExpr.not (BoolExpr.literal (BVPred.bin sum BVBinPred.eq y))
 
 
 syntax (name := testExFa) "test_exists_forall" : tactic
@@ -141,78 +133,37 @@ def testExFaImpl : Tactic := fun _ => do
           logInfo m! "Results: {id}={var.bv}"
   pure ()
 
-theorem test : False := by
+theorem test : True := by
   test_exists_forall
 
 
-structure Solver where
-  constraints : IO.Ref (List BVLogicalExpr)
-  modelRef : IO.Ref (Std.HashMap Expr BVExpr.PackedBitVec)
-
-namespace Solver
-
-def new : IO Solver := do
-  let constraints ← IO.mkRef ([] : List BVLogicalExpr)
-  let modelRef ← IO.mkRef ({} : Std.HashMap Expr BVExpr.PackedBitVec)
-  return { constraints, modelRef }
-
-def add (s : Solver) (expr : BVLogicalExpr) : IO Unit := do
-  s.constraints.modify (λ cs => expr :: cs)
 
 
-def generateModel (s : Solver) : IO (Std.HashMap Expr BVExpr.PackedBitVec) := do
-  --TODO
-  return {}
+-- structure Solver where
+--   constraints : IO.Ref (List BVLogicalExpr)
+--   modelRef : IO.Ref (Std.HashMap Expr BVExpr.PackedBitVec)
 
-def check (s : Solver) : IO Bool := do
-  --TODO: Invoke the solver function and update the model
-  return True
+-- namespace Solver
 
+-- def new : IO Solver := do
+--   let constraints ← IO.mkRef ([] : List BVLogicalExpr)
+--   let modelRef ← IO.mkRef ({} : Std.HashMap Expr BVExpr.PackedBitVec)
+--   return { constraints, modelRef }
 
-def model (s : Solver) : IO (Std.HashMap Expr BVExpr.PackedBitVec) := do
-  s.modelRef.get
-
-end Solver
-
-def substitute (bvExpr: BVLogicalExpr) (subst: Std.HashMap Expr BVExpr.PackedBitVec) : BVLogicalExpr :=
-  --TODO
-  bvExpr
-
-structure ExistsForAllConfig where
-  expr : BVLogicalExpr
-  existsVars : List Expr
-  forAllVars : List Expr
-
-def existsForAll (cfg: ExistsForAllConfig) : IO (Option (Std.HashMap Expr BVExpr.PackedBitVec)) := do
-  let eSolver ← Solver.new
-  eSolver.add cfg.expr
-
-  let rec helper : IO (Option (Std.HashMap Expr BVExpr.PackedBitVec)) := do
-    let eSat ← eSolver.check
-    if !eSat then
-      logInfo s! "Could not satisfy exists formula for {cfg.expr}"
-      return none
-
-    let eModel ← eSolver.model
-    let eVals := eModel.filter fun (c, _) => cfg.existVars.contains c
-
-    let substExpr := substitute cfg.expr eVals
-
-    let fSolver ← Solver.new
-    fSolver.add (BoolExpr.not substExpr)
-
-    let fSat ← fSolver.check
-    if !fSat then
-      logInfo s! "Found solution"
-      return some eVals
+-- def add (s : Solver) (expr : BVLogicalExpr) : IO Unit := do
+--   s.constraints.modify (λ cs => expr :: cs)
 
 
-    let fModel ← fSolver.model
-    let counterExamples := fModel.filter fun (c, _) => cfg.forAllVars.contains c
+-- def generateModel (s : Solver) : IO (Std.HashMap Expr BVExpr.PackedBitVec) := do
+--   --TODO
+--   return {}
 
-    let substExpr' := substitute cfg.expr counterExamples
-    eSolver.add substExpr'
+-- def check (s : Solver) : IO Bool := do
+--   --TODO: Invoke the solver function and update the model
+--   return True
 
-    helper
 
-  helper
+-- def model (s : Solver) : IO (Std.HashMap Expr BVExpr.PackedBitVec) := do
+--   s.modelRef.get
+
+-- end Solver
