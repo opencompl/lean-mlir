@@ -83,9 +83,39 @@ def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.P
         let equations := reconstructCounterExample' map assignment entry.aig.decls.size
         return .some equations
 
-def substitute (bvExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) : BVLogicalExpr :=
-  --TODO
-  bvExpr
+
+def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) : BVLogicalExpr :=
+  let rec substituteBVExpr {w} (bvExpr : BVExpr w) : BVExpr w :=
+    match bvExpr with
+    | .var idx =>
+      match assignment[idx]? with
+      | some packedBitVec =>
+          BVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat) --(packedBitVec.bv)
+      | _ => bvExpr
+    | .bin lhs op rhs =>
+        BVExpr.bin (substituteBVExpr lhs) op (substituteBVExpr rhs)
+    | .un op operand =>
+        BVExpr.un op (substituteBVExpr operand)
+    | .shiftLeft lhs rhs =>
+        BVExpr.shiftLeft (substituteBVExpr lhs) (substituteBVExpr rhs)
+    | .shiftRight lhs rhs =>
+        BVExpr.shiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
+    | .arithShiftRight lhs rhs =>
+        BVExpr.arithShiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
+    | _ => bvExpr --TODO: handle other constructors
+
+
+  match bvLogicalExpr with
+  | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (substituteBVExpr lhs) op (substituteBVExpr rhs))
+  | .not boolExpr =>
+      BoolExpr.not (substitute boolExpr assignment)
+  | .gate op lhs rhs =>
+      BoolExpr.gate op (substitute lhs assignment) (substitute rhs assignment)
+  | .ite op1 op2 op3 =>
+      BoolExpr.ite (substitute op1 assignment) (substitute op2 assignment) (substitute op3 assignment)
+  | _ => bvLogicalExpr
+
+
 
 structure ExistsForAllConfig where
   expr : BVLogicalExpr
@@ -110,6 +140,7 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
           | none =>
             return some existsVals
           | some counterEx =>
+              logInfo s! "Found counterexample; rerunning"
               let newExpr := substitute bvExpr counterEx
               existsForAll (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
 
@@ -119,12 +150,12 @@ def bvExpr : BVLogicalExpr :=
   let y := BVExpr.const (BitVec.ofNat 5 4)
   let z : BVExpr 5 := BVExpr.var 0
   let sum : BVExpr 5 := BVExpr.bin x BVBinOp.add z
-  BoolExpr.not (BoolExpr.literal (BVPred.bin sum BVBinPred.eq y))
+  BoolExpr.literal (BVPred.bin sum BVBinPred.eq y)
 
 
-syntax (name := testExFa) "test_exists_forall" : tactic
-@[tactic testExFa]
-def testExFaImpl : Tactic := fun _ => do
+syntax (name := testExSolver) "test_solver" : tactic
+@[tactic testExSolver]
+def testSolverImpl : Tactic := fun _ => do
   let res ← solver bvExpr
   match res with
     | none => pure ()
@@ -133,8 +164,49 @@ def testExFaImpl : Tactic := fun _ => do
           logInfo m! "Results: {id}={var.bv}"
   pure ()
 
-theorem test : True := by
-  test_exists_forall
+theorem test_solver : False := by
+  test_solver
+
+
+def leftShiftRightShift : BVLogicalExpr :=
+  let bitwidth := 4
+  let x : BVExpr bitwidth := BVExpr.var 0
+  let c1: BVExpr bitwidth := BVExpr.var 100
+  let c2: BVExpr bitwidth := BVExpr.var 101
+  let c3: BVExpr bitwidth := BVExpr.var 102
+  let c4: BVExpr bitwidth := BVExpr.var 103
+
+  -- ((x << c1) >> c2) << c3 == x & c4
+  let lhs := BVExpr.shiftLeft (BVExpr.arithShiftRight (BVExpr.shiftLeft x c1) c2) c3
+  let rhs := BVExpr.bin x BVBinOp.and c4
+  BoolExpr.literal (BVPred.bin lhs BVBinPred.eq rhs)
+
+def addConst : BVLogicalExpr :=
+  let bitwidth := 4
+  let x: BVExpr bitwidth := BVExpr.var 0
+  let c1: BVExpr bitwidth := BVExpr.var 100
+
+  -- x + c1 == c1
+  let lhs := BVExpr.bin x BVBinOp.add c1
+  BoolExpr.literal (BVPred.bin lhs BVBinPred.eq x)
+
+syntax (name := testExFa) "test_exists_for_all" : tactic
+@[tactic testExFa]
+def testExFaImpl : Tactic := fun _ => do
+  -- let res ← existsForAll leftShiftRightShift [100, 101, 102, 103] [0]
+  let res ← existsForAll addConst [100] [0]
+  match res with
+    | none => pure ()
+    | some counterex =>
+        for (id, var) in counterex do
+          logInfo m! "Results: {id}={var.bv}"
+  pure ()
+
+theorem test_exists_for_all : False := by
+  test_exists_for_all
+
+
+
 
 
 
