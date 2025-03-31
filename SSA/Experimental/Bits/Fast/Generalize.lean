@@ -85,12 +85,12 @@ def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.P
 
 
 def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) : BVLogicalExpr :=
-  let rec substituteBVExpr {w} (bvExpr : BVExpr w) : BVExpr w :=
+  let rec substituteBVExpr {w: Nat} (bvExpr : BVExpr w) : BVExpr w :=
     match bvExpr with
     | .var idx =>
       match assignment[idx]? with
       | some packedBitVec =>
-          BVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat) --(packedBitVec.bv)
+          BVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
       | _ => bvExpr
     | .bin lhs op rhs =>
         BVExpr.bin (substituteBVExpr lhs) op (substituteBVExpr rhs)
@@ -102,7 +102,13 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVEx
         BVExpr.shiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
     | .arithShiftRight lhs rhs =>
         BVExpr.arithShiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
-    | _ => bvExpr --TODO: handle other constructors?
+    -- | .zeroExtend v expr =>
+    --     BVExpr.zeroExtend v (substituteBVExpr expr)
+    -- | .extract start len expr =>
+    --     BVExpr.extract start len (substituteBVExpr expr)
+    -- | .append lhs rhs =>
+    --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
+    | _ => bvExpr --TODO: Handle other constructors
 
   match bvLogicalExpr with
   | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (substituteBVExpr lhs) op (substituteBVExpr rhs))
@@ -121,6 +127,15 @@ structure ExistsForAllConfig where
   forAllVars : List Nat
   numAttempts: Nat
 
+
+instance : ToString BVExpr.PackedBitVec where
+  toString bitvec := toString bitvec.bv
+
+instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.HashMap α β) where
+  toString map :=
+    "{" ++ String.intercalate ", " (map.toList.map (λ (k, v) => toString k ++ " → " ++ toString v)) ++ "}"
+
+
 partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat):
                   TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let existsRes ← solver bvExpr
@@ -138,21 +153,15 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
           | none =>
             return some existsVals
           | some counterEx =>
-              logInfo s! "Found counterexample; rerunning"
+              logInfo s! "Found counterexample {counterEx}; rerunning"
               let newExpr := substitute bvExpr counterEx
+              logInfo s! "New expr: {newExpr}"
               existsForAll (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
 
 
-instance : ToString BVExpr.PackedBitVec where
-  toString bitvec := toString bitvec.bv
 
-instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.HashMap α β) where
-  toString map :=
-    "{" ++ String.intercalate ", " (map.toList.map (λ (k, v) => toString k ++ " → " ++ toString v)) ++ "}"
-
-
-
-def bvExpr : BVLogicalExpr :=
+---- Test Solver function ----
+def simpleArith : BVLogicalExpr :=
   let x := BVExpr.const (BitVec.ofNat 5 2)
   let y := BVExpr.const (BitVec.ofNat 5 4)
   let z : BVExpr 5 := BVExpr.var 0
@@ -162,7 +171,7 @@ def bvExpr : BVLogicalExpr :=
 syntax (name := testExSolver) "test_solver" : tactic
 @[tactic testExSolver]
 def testSolverImpl : Tactic := fun _ => do
-  let res ← solver bvExpr
+  let res ← solver simpleArith
   match res with
     | none => pure ()
     | some counterex =>
@@ -174,7 +183,20 @@ theorem test_solver : False := by
   test_solver
 
 
-def leftShiftRightShift : BVLogicalExpr :=
+---- Test ExistsForAll function ---
+def leftShiftRightShiftOne : BVLogicalExpr :=
+  let bitwidth := 4
+  let x : BVExpr bitwidth := BVExpr.var 0
+  let c1: BVExpr bitwidth := BVExpr.var 100
+  let c2: BVExpr bitwidth := BVExpr.var 101
+
+  -- (x << c1) >> c1 == x & c2
+  let lhs := BVExpr.shiftRight (BVExpr.shiftLeft x c1) c1
+  let rhs := BVExpr.bin x BVBinOp.and c2
+  BoolExpr.literal (BVPred.bin lhs BVBinPred.eq rhs)
+
+
+def leftShiftRightShiftTwo : BVLogicalExpr :=
   let bitwidth := 4
   let x : BVExpr bitwidth := BVExpr.var 0
   let c1: BVExpr bitwidth := BVExpr.var 100
@@ -183,11 +205,11 @@ def leftShiftRightShift : BVLogicalExpr :=
   let c4: BVExpr bitwidth := BVExpr.var 103
 
   -- ((x << c1) >> c2) << c3 == x & c4
-  let lhs := BVExpr.shiftLeft (BVExpr.arithShiftRight (BVExpr.shiftLeft x c1) c2) c3
+  let lhs := BVExpr.shiftLeft (BVExpr.shiftRight (BVExpr.shiftLeft x c1) c2) c3
   let rhs := BVExpr.bin x BVBinOp.and c4
   BoolExpr.literal (BVPred.bin lhs BVBinPred.eq rhs)
 
-def addConst : BVLogicalExpr :=
+def addId : BVLogicalExpr :=
   let bitwidth := 4
   let x: BVExpr bitwidth := BVExpr.var 0
   let c1: BVExpr bitwidth := BVExpr.var 100
@@ -196,11 +218,21 @@ def addConst : BVLogicalExpr :=
   let lhs := BVExpr.bin x BVBinOp.add c1
   BoolExpr.literal (BVPred.bin lhs BVBinPred.eq x)
 
+def addInfeasible : BVLogicalExpr :=
+  let bitwidth := 4
+  let x: BVExpr bitwidth := BVExpr.var 0
+  let c1: BVExpr bitwidth := BVExpr.var 100
+
+  BoolExpr.literal (BVPred.bin x BVBinPred.eq c1)
+
+
 syntax (name := testExFa) "test_exists_for_all" : tactic
 @[tactic testExFa]
 def testExFaImpl : Tactic := fun _ => do
-  let res ← existsForAll leftShiftRightShift [100, 101, 102, 103] [0]
+  let res ← existsForAll leftShiftRightShiftOne [100, 101] [0]
+  -- let res ← existsForAll leftShiftRightShiftTwo [100, 101, 102, 103] [0]
   -- let res ← existsForAll addConst [100] [0]
+  -- let res ← existsForAll addInfeasible [100] [0]
   match res with
     | none => pure ()
     | some counterex =>
