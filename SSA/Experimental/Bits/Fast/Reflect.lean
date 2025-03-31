@@ -786,10 +786,10 @@ def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
   input := f i.input
 
 def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
-    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } :=  
+    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } := 
   let ixs : Finset (Fin n) := Finset.univ
   let inputs : Finset ι := Finset.univ
-  let out := ixs.biUnion
+  let out := ixs.biUnion 
       (fun ix => inputs.map ⟨fun input => Inputs.mk ix input, by intros a b; simp⟩)
   ⟨out, by 
     intros i
