@@ -3,6 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 --import SSA.Core.WellTypedFramework
 import SSA.Core.Framework
+import SSA.Core.Framework.Macro
 import SSA.Core.Util
 import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
@@ -383,35 +384,28 @@ instance : DialectToExpr LLVM where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``LLVM []
 
-@[simp]
-def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
-    (TyDenote.toType <| DialectSignature.outTy o) :=
-  match o with
-  | Op.const _ val    => const? _ val
-  | Op.copy _         =>               (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.not _          => LLVM.not      (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.neg _          => LLVM.neg      (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.trunc w w'    flags => LLVM.trunc w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flags
-  | Op.zext w w' flag => LLVM.zext  w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flag
-  | Op.sext w w'      => LLVM.sext  w' (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.and _          => LLVM.and      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.or _ flag      => LLVM.or       (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.xor _          => LLVM.xor      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.shl _ flags    => LLVM.shl      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.lshr _ flag    => LLVM.lshr     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.ashr _ flag    => LLVM.ashr     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.sub _ flags    => LLVM.sub      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.add _ flags    => LLVM.add      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.mul _ flags    => LLVM.mul      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.sdiv _ flag    => LLVM.sdiv     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.udiv _ flag    => LLVM.udiv     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.urem _         => LLVM.urem     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.srem _         => LLVM.srem     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.icmp c _       => LLVM.icmp  c  (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.select _       => LLVM.select   (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) (op.getN 2 (by simp [DialectSignature.sig, signature]))
-
-instance : DialectDenote LLVM := ⟨
-  fun o args _ => Op.denote o args
-⟩
+def_denote for LLVM where
+  | Op.const _ val        => const? _ val
+  | Op.copy _             => fun x => x
+  | Op.not _              => LLVM.not
+  | Op.neg _              => LLVM.neg
+  | Op.trunc _w w' flags  => (LLVM.trunc w' · flags)
+  | Op.zext _w w' flag    => (LLVM.zext w' · flag)
+  | Op.sext _w w'         => LLVM.sext  w'
+  | Op.and _              => LLVM.and
+  | Op.or _ flag          => (LLVM.or · · flag)
+  | Op.xor _              => LLVM.xor
+  | Op.shl _ flags        => (LLVM.shl · · flags)
+  | Op.lshr _ flag        => (LLVM.lshr · · flag)
+  | Op.ashr _ flag        => (LLVM.ashr · · flag)
+  | Op.sub _ flags        => (LLVM.sub  · · flags)
+  | Op.add _ flags        => (LLVM.add  · · flags)
+  | Op.mul _ flags        => (LLVM.mul  · · flags)
+  | Op.sdiv _ flag        => (LLVM.sdiv · · flag)
+  | Op.udiv _ flag        => (LLVM.udiv · · flag)
+  | Op.urem _             => LLVM.urem
+  | Op.srem _             => LLVM.srem
+  | Op.icmp c _           => LLVM.icmp c
+  | Op.select _           => LLVM.select
 
 end InstCombine
