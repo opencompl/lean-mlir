@@ -39,7 +39,7 @@ def reconstructCounterExample' (var2Cnf : Std.HashMap BVBit Nat) (assignment : A
     bitMap := bitMap.insert bitVar.idx varSet
     sparseMap := sparseMap.insert bitVar.var bitMap
 
-  let mut finalMap := Std.HashMap.empty
+  let mut finalMap := Std.HashMap.emptyWithCapacity
   for (bitVecVar, bitMap) in sparseMap.toArray do
     let mut value : Nat := 0
     let mut currentBit := 0
@@ -53,7 +53,7 @@ def reconstructCounterExample' (var2Cnf : Std.HashMap BVBit Nat) (assignment : A
 
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
-def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let cadicalTimeoutSec : Nat := 1000
     let cfg: BVDecideConfig := {timeout := 10}
 
@@ -95,7 +95,7 @@ def simpleArith : BVLogicalExpr :=
 syntax (name := testExSolver) "test_solver" : tactic
 @[tactic testExSolver]
 def testSolverImpl : Tactic := fun _ => do
-  let res ← solver simpleArith
+  let res ← solve simpleArith
   match res with
     | none => pure ()
     | some counterex =>
@@ -156,7 +156,7 @@ instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.Hash
 
 partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat):
                   TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    let existsRes ← solver bvExpr
+    let existsRes ← solve bvExpr
 
     match existsRes with
       | none =>
@@ -165,7 +165,7 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
       | some assignment =>
         let existsVals := assignment.filter fun c _ => existsVars.contains c
         let substExpr := substitute bvExpr existsVals
-        let forAllRes ← solver (BoolExpr.not substExpr)
+        let forAllRes ← solve (BoolExpr.not substExpr)
 
         match forAllRes with
           | none =>
@@ -239,15 +239,66 @@ theorem test_exists_for_all : False := by
 
 
 def binaryOperators : List BVBinOp :=
-  [BVBinOp.add, BVBinOp.mul]
+  [BVBinOp.add] -- TODO: Needs to support subtractions
 
+instance : Inhabited BVExpr.PackedBitVec where
+  default := { bv := BitVec.ofNat 0 0 }
 
-def inductive_synthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BVExpr w)) (target: BVExpr w) (depth: Nat) :
-                      TermElabM (Option (List (BVExpr w))) := do
+def Std.Tactic.BVDecide.BVExpr.getConst! : BVExpr w → BitVec w
+  | .const val => val
+  | _ => panic! "BVExpr is not a constant"
+
+partial def inductive_synthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) (depth: Nat) :
+                      TermElabM ( List (BVExpr w)) := do
     match depth with
-      | 1 => return none -- enumerative synthesis
+      | 1 => return [] -- enumerative synthesis
       | _ =>
-            let res : List (BVExpr w) := []
-            for (const, value) in constants.toArray do
-              logInfo m! "Hello"
-            return some []
+            let mut res : List (BVExpr w) := []
+            for (constId, constVal) in constants.toArray do
+              if constVal == target then
+                res := BVExpr.var constId :: res
+              else
+              let constExpr := BVExpr.const constVal
+              for op in binaryOperators do
+                let auxId := constId + 1
+                let aux : BVExpr w := BVExpr.var auxId
+
+                let lhs := BVExpr.bin constExpr op aux
+                let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq (BVExpr.const target))
+                let solver_res ← solve bvLogicalExpr
+
+                match solver_res with
+                  | none => continue
+                  | some assignment =>
+                      let newTarget := assignment[auxId]!
+                      let remainingExprs ← inductive_synthesis expr inputs constants (BitVec.ofNat w newTarget.bv.toNat) (depth-1)
+                      for remainingExpr in remainingExprs do
+                        res := BVExpr.bin (BVExpr.var constId) op remainingExpr :: res
+
+            return res
+
+
+
+syntax (name := testInductive) "test_inductive_synthesis" : tactic
+@[tactic testInductive]
+def testInductiveSynthesis : Tactic := fun _ => do
+  let bitwidth := 8
+  let x : BVExpr bitwidth := BVExpr.var 0
+  let y : BVExpr bitwidth := BVExpr.var 1
+  let c1: BVExpr bitwidth := BVExpr.var 100
+  let c2: BVExpr bitwidth := BVExpr.var 101
+
+  let constants := Std.HashMap.ofList [(100, BitVec.ofNat bitwidth 10), (101, BitVec.ofNat bitwidth 14)]
+  let target := BitVec.ofNat bitwidth 24
+
+  let expr := BVExpr.bin (BVExpr.bin x BVBinOp.add c1) BVBinOp.add (BVExpr.bin y BVBinOp.add c2)
+
+  let res ← inductive_synthesis expr [0, 1] constants target 3
+  -- let res ← existsForAll leftShiftRightShiftTwo [100, 101, 102, 103] [0]
+  -- let res ← existsForAll addConst [100] [0]
+  -- let res ← existsForAll addInfeasible [100] [0]
+  logInfo m! "Results: {res}"
+  pure ()
+
+theorem test_inductive : False := by
+  test_inductive_synthesis
