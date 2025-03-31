@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
+import SSA.Experimental.Bits.ForLean
 
 open BitVec
 open MLIR AST
@@ -499,7 +500,7 @@ def alive_simplifySelect764 (w : Nat) :
   · simp [zero_sgt_A]
   · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
     by_cases neg_A_sgt_zero : -A >ₛ 0#w
-    · simp only [Bool.false_eq_true, ↓reduceIte, _root_.neg_neg, neg_A_sgt_zero]
+    · simp only [reduceEq, ↓reduceIte, _root_.neg_neg, neg_A_sgt_zero, ofBool_true, ofNat_eq_ofNat]
       by_cases A_sgt_zero : A >ₛ 0#w
       simp [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
       · by_cases A_eq_zero : A = 0
@@ -515,7 +516,8 @@ def alive_simplifySelect764 (w : Nat) :
         simp only at neg_A_sgt_zero
         simp [neg_A_sgt_zero] at A_sgt_zero
       simp [A_sgt_zero]
-    · simp only [Bool.false_eq_true, ↓reduceIte, _root_.neg_neg, neg_A_sgt_zero]
+    · simp only [reduceEq, ↓reduceIte, _root_.neg_neg, neg_A_sgt_zero, ofBool_false,
+      ofNat_eq_ofNat]
       by_cases A_sgt_zero : A >ₛ 0#w
       · simp [A_sgt_zero]
       ·
