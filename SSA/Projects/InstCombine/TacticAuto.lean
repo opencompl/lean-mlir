@@ -7,7 +7,6 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.FastCopy.Reflect
-import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
 import SSA.Core.Tactic.TacBench
@@ -232,7 +231,7 @@ macro "bv_auto": tactic =>
           | bv_distrib
           | bv_ring
           | bv_of_bool
-          | bool_to_prop; bv_automata'
+          | bool_to_prop; bv_automata_classic_nf
           | bv_decide
       )
    )
@@ -261,8 +260,8 @@ macro "bv_compare'": tactic =>
   `(tactic|
       (
         simp (config := {failIfUnchanged := false}) only [BitVec.twoPow, BitVec.intMin, BitVec.intMax] at *
-        bv_compare
-        try bv_decide -- close the goal if possible but do not report errors again
+        bv_compare +acNf +shortCircuit
+        try bv_decide +acNf +shortCircuit -- close the goal if possible but do not report errors again
       )
    )
 

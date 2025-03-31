@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gicmphlogical_proof
 theorem masked_and_notallzeroes_thm (e : IntW 32) :
@@ -1272,5 +1273,3 @@ theorem masked_icmps_bmask_notmixed_and_expected_false_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

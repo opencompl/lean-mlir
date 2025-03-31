@@ -1,11 +1,10 @@
-import Batteries.Data.Fin.Basic
 import Mathlib.Computability.NFA
 import Mathlib.Data.FinEnum
 import Mathlib.Data.Rel
 import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
-import Std.Data.HashSet.Basic
+
+set_option grind.warning false
 
 open Set
 open Mathlib
@@ -37,6 +36,11 @@ instance (α : Type) : Union (Language α) := ⟨Set.union⟩
 def List.Vector.transport (v : Vector α m) (f : Fin n → Fin m) : Vector α n :=
   Vector.ofFn fun i => v.get (f i)
 
+@[simp]
+lemma List.Vector.transport_get {v : Vector α m} { f : Fin n → Fin m} :
+    (v.transport f).get i = v.get (f i) := by
+  simp [transport]
+
 def BitVec.transport (f : Fin n2 → Fin n1) (bv : BitVec n1) : BitVec n2 :=
   BitVec.ofFn fun i => bv.getLsbD (f i)
 
@@ -64,6 +68,9 @@ The set of `n`-tuples of bit vectors of an arbitrary width.
 structure BitVecs (n : Nat) where
   w : Nat
   bvs : List.Vector (BitVec w) n
+
+def BitVecs.cast (bvs : BitVecs n) (h : n = n') : BitVecs n' :=
+  { w := bvs.w, bvs := h ▸ bvs.bvs }
 
 abbrev BitVecs.empty : BitVecs n := ⟨0, List.Vector.replicate n .nil⟩
 abbrev BitVecs.singleton {w : Nat} (bv : BitVec w) : BitVecs 1 := ⟨w, bv ::ᵥ .nil⟩
@@ -181,7 +188,8 @@ lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   next heq => simp_all
   next h =>
     have hlt : i < List.length bvs' := by simp at hi; omega
-    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD hlt]
+    rw [List.getElem_append_left hlt]
+    simp
 
 @[simp]
 lemma dec_enc_image : dec '' (enc '' S) = S := Function.LeftInverse.image_image dec_enc _
@@ -552,6 +560,63 @@ theorem neg_accepts (M : NFA α σ) :
     M.neg.accepts = M.acceptsᶜ := by
   simp [neg]
 
+def reverse (M : NFA α σ) : NFA α σ where
+  start := M.accept
+  accept := M.start
+  step q a := { q' | M.step q' a q }
+
+theorem evalFrom_cons {M : NFA α σ} (S : Set σ) (x : List α) (a : α) :
+    M.evalFrom S (a :: x) = M.evalFrom (M.stepSet S a) x := by
+  simp [evalFrom]
+
+@[simp]
+theorem reverse_stepSet {M : NFA α σ} {S : Set σ} : M.reverse.stepSet S a = { q | ∃ q' ∈ S, q' ∈ M.step q a } := by
+  simp [reverse, stepSet]; ext q; simp; rfl
+
+theorem evalFrom_union {M : NFA α σ} {S : Set σ} : M.evalFrom S w = ⋃ s ∈ S, M.evalFrom {s} w := by
+  induction w using List.reverseRecOn generalizing S
+  case nil => simp
+  case append_singleton w a ih =>
+    simp only [evalFrom_append_singleton]
+    rw [ih]
+    simp [stepSet]
+
+@[simp]
+theorem reverse_evalFrom {M : NFA α σ} {S : Set σ} : M.reverse.evalFrom S w = { q | ∃ q' ∈ S, q' ∈ M.evalFrom {q} w.reverse } := by
+  induction w using List.reverseRecOn generalizing S
+  case nil => simp
+  case append_singleton w a ih =>
+    simp
+    ext q
+    simp [ih, mem_stepSet]
+    constructor
+    · rintro ⟨q', ⟨q'', hS, hst''⟩, hst'⟩
+      simp [evalFrom_cons]
+      use q'', hS
+      rw [evalFrom_union]; simp_all
+      use q', by (simpa [stepSet]), hst''
+    · simp only [forall_exists_index, and_imp]
+      rintro q' hS hef
+      simp [evalFrom_cons] at hef
+      rw [evalFrom_union] at hef
+      simp only [mem_iUnion, exists_prop] at hef
+      rcases hef with ⟨q'', hst, hef⟩
+      simp [stepSet] at hst
+      use q'', ⟨q', hS, hef⟩
+
+@[simp]
+theorem reverse_accepts {M : NFA α σ} : M.reverse.accepts = M.accepts.reverse := by
+  simp [accepts, eval]; ext w; simp only [Language.mem_reverse]; constructor
+  · simp only [Language.eq_def, mem_setOf_eq, forall_exists_index, and_imp]
+    rintro qf ha qi hi hef
+    use qi, hi
+    rw [evalFrom_union]; simp only [mem_iUnion, exists_prop]
+    use qf, ha
+  · simp only [Language.eq_def, mem_setOf_eq, forall_exists_index, and_imp]
+    rintro qa ha hef
+    rw [evalFrom_union] at hef; simp only [mem_iUnion, exists_prop] at hef
+    rcases hef with ⟨qi, hi, hef⟩
+    use qi, hi, qa, ha
 
 /-
 NOTE: all that follows is defined in terms of bit vectors, even though it should
@@ -666,6 +731,38 @@ theorem Bisimul.symm (hsim : Bisimul R M₁ M₂) : Bisimul R.inv M₂ M₁ := b
   · intros; apply h4 <;> assumption
   · intros; apply h3 <;> assumption
 
+theorem Bisim.symm (hsim : Bisim M₁ M₂) : Bisim M₂ M₁ := by
+  rcases hsim with ⟨_, hsimul⟩
+  exact ⟨_, hsimul.symm⟩
+
+lemma Bisimul.comp {M₁ : NFA A σ1} {M₂ : NFA A σ₂} {M₃ : NFA A σ₃}  :
+    M₁.Bisimul R₁ M₂ → M₂.Bisimul R₂ M₃ →
+    M₁.Bisimul (R₁.comp R₂) M₃ := by
+  rintro h₁ h₂; constructor
+  · rintro s q₁ ⟨q₂, hR₁, hR₂⟩; rw [h₁.accept hR₁, h₂.accept hR₂]
+  · constructor
+    · rintro s hs
+      obtain ⟨q₁, hi₁, hq₁⟩ := h₁.start.1 hs
+      obtain⟨q₂, hi₂, hq₂⟩ := h₂.start.1 hi₁
+      use q₂, hi₂, q₁
+    · rintro q₂ hi₂
+      obtain⟨q₁, hi₁, hq₂⟩ := h₂.start.2 hi₂
+      obtain ⟨s, hsi, hs⟩ := h₁.start.2 hi₁
+      use s, hsi, q₁
+  · rintro s s' a q₂ ⟨q₁, hR₁, hR₂⟩ htr
+    obtain ⟨q₁', hst, hq₁'⟩ := h₁.trans_match₁ hR₁ htr
+    obtain ⟨q₂', hst', hq₂'⟩ := h₂.trans_match₁ hR₂ hst
+    use q₂', hst', q₁', hq₁', hq₂'
+  · rintro s a q₂ q₂' ⟨q₁, hR₁, hR₂⟩ hst
+    obtain ⟨q₁', hst', hR₂'⟩:= h₂.trans_match₂ hR₂ hst
+    obtain ⟨s', htr, hR₁'⟩ := h₁.trans_match₂ hR₁ hst'
+    use s', htr, q₁'
+
+lemma Bisim.comp {M₁ : NFA A σ1} {M₂ : NFA A σ₂} {M₃ : NFA A σ₃}  :
+    M₁.Bisim M₂ → M₂.Bisim M₃ → M₁.Bisim M₃ := by
+  rintro ⟨_, hsim₁⟩ ⟨_, hsim₂⟩
+  exact ⟨_, Bisimul.comp hsim₁ hsim₂⟩
+
 lemma bisimul_eval_one (hsim : Bisimul R M₁ M₂) :
     R.set_eq Q₁ Q₂ → R.set_eq (M₁.stepSet Q₁ a) (M₂.stepSet Q₂ a) := by
   rintro ⟨h1, h2⟩; constructor <;> simp only [stepSet, mem_iUnion, exists_prop,
@@ -698,6 +795,11 @@ theorem bisimul_accepts :
   · apply bisimul_accepts₁ hsim
   · apply bisimul_accepts₁ hsim.symm
 
+theorem bisim_accepts :
+    Bisim M₁ M₂ → M₁.accepts = M₂.accepts := by
+  rintro ⟨R, hsimul⟩
+  exact bisimul_accepts hsimul
+
 end NFA
 
 def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | x ∈ m }
@@ -721,8 +823,6 @@ theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
   simp_rw [←Array.getElem?_toList]
   exact List.nodup_iff_getElem?_ne_getElem?
 
-  -- List.nodup_iff_getElem?_ne_getElem?
-
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
   rcases a with ⟨l⟩
   simp only [List.pop_toArray, mem_toArray]
@@ -735,11 +835,82 @@ theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ 
   case append_singleton l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
     List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.some.injEq]; tauto
 
+theorem Std.HashSet.toSet_toList[BEq α] [LawfulBEq α] [Hashable α] (m : HashSet α) : m.toSet = { x | x ∈ m.toList } := by
+  ext x; simp
 
--- TODO: state in in pure Lean using `toList`, and decude this one
 theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
   {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :
     motive b ∅ →
     (∀ b x s, x ∉ s → motive b s → motive (f b x) (s ∪ {x})) →
     motive (m.fold f b) m.toSet := by
-  sorry
+  rintro hemp hind
+  rw [Std.HashSet.fold_eq_foldl_toList, toSet_toList]
+  have := m.distinct_toList
+  revert this
+  induction m.toList using List.reverseRecOn
+  case nil =>
+    simp_all
+  case append_singleton xs x ih =>
+    rintro hd
+    simp_all only [union_singleton, List.foldl_cons, List.mem_cons]
+    simp [List.pairwise_append] at hd
+    rcases hd with ⟨hd, hnew⟩
+    have hnew : x ∉ xs := by aesop
+    specialize ih (by simp [hd])
+    specialize hind _ x { x | x ∈ xs } hnew ih
+    convert hind using 1
+    · exact List.foldl_concat f b x xs
+    · ext; simp; aesop
+
+def Std.HashMap.toPFun [BEq α] [Hashable α] (m : HashMap α β) (x : α) : Option β := m[x]?
+
+theorem Std.HashMap.toPFun_toList[BEq α] [LawfulBEq α] [Hashable α] (m : HashMap α β) :
+    m.toPFun = λ k ↦ m.toList.find? (λ x ↦ x.1 == k) |>.map Prod.snd := by
+  ext x y; simp [toPFun]
+  simp [Std.HashMap.find?_toList_eq_some_iff_getKey?_eq_some_and_getElem?_eq_some]
+  rintro hlk
+  have : m[x]?.isSome := by aesop
+  rw [←Std.HashMap.contains_eq_isSome_getElem?] at this
+  rw [Std.HashMap.contains_eq_isSome_getKey?] at this
+  revert this
+  rcases (m.getKey? x) <;> simp
+
+theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Hashable α]
+  {f : γ → α → β → γ} {m : HashMap α β} {motive : γ → (α → Option β) → Prop} :
+    motive b (λ _ ↦ none) →
+    (∀ b x y m, m x = none → motive b m → motive (f b x y) (Function.update m x y)) →
+    motive (m.fold f b) m.toPFun := by
+  rintro hemp hind
+  rw [Std.HashMap.fold_eq_foldl_toList, toPFun_toList]
+  have := m.distinct_keys_toList
+  revert this
+  induction m.toList using List.reverseRecOn
+  case nil =>
+    simp_all
+  case append_singleton xs xy ih =>
+    rcases xy with ⟨x, y⟩
+    rintro hd
+    simp_all
+    simp [List.pairwise_append] at hd
+    rcases hd with ⟨hd, hnew⟩
+    let f := fun k => Option.map Prod.snd (List.find? (fun x => x.1 == k) xs)
+    specialize ih (by simp [hd])
+    have hnewf : f x = none := by
+      simp [f]; grind
+    specialize hind _ x y _ hnewf ih
+    convert hind using 1
+    ext a b; simp
+    rw [Function.update_apply]
+    split_ifs with hcond
+    · subst hcond; constructor
+      · rintro ⟨a', hf | hf⟩
+        · obtain h := List.find?_some hf
+          simp at h; subst h
+          grind [List.mem_of_find?_eq_some]
+        · grind
+      · simp only [Option.some.injEq, true_and]
+        rintro rfl
+        aesop
+    · simp [f]; grind
+
+#min_imports

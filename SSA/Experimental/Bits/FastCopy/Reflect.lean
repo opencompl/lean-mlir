@@ -7,13 +7,10 @@ We use `bv_circuit_nnf_copy` to convert the expression into negation normal form
 
 Authors: Siddharth Bhat
 -/
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.Fin.Basic
+
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 import SSA.Experimental.Bits.FastCopy.Defs
 import SSA.Experimental.Bits.FastCopy.Attr
-import Lean.Meta.ForEachExpr
-import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 
 import Lean
 
@@ -513,10 +510,10 @@ attribute [bv_circuit_nnf_copy] Nat.succ_eq_add_one
 /--
 warning: 'ne_eq' does not have [simp] attribute
 ---
-warning: declaration uses 'sorry'
----
 info: w : ℕ
 ⊢ (∀ (x x_1 : BitVec w), x_1 ≤ x) ∧ ∀ (x x_1 : BitVec w), x ≤ x_1 ∨ x_1 < x ∨ x ≤ x_1 ∨ x ≠ x_1
+---
+warning: declaration uses 'sorry'
 -/
 #guard_msgs in example : ∀ (a b : BitVec w),  ¬ (a < b ∨ a > b ∧ a ≤ b ∧ a > b ∧ (¬ (a ≠ b))) := by
  bv_nnf; trace_state; sorry
@@ -524,10 +521,10 @@ info: w : ℕ
 /--
 warning: 'ne_eq' does not have [simp] attribute
 ---
-warning: declaration uses 'sorry'
----
 info: w : ℕ
 ⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+---
+warning: declaration uses 'sorry'
 -/
 #guard_msgs in example : ∀ (a b : BitVec w), a &&& b = 0#w → a = b := by
  bv_nnf; trace_state; sorry

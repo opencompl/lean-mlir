@@ -1,0 +1,47 @@
+name: Update mathlib version
+on:
+  schedule:
+    - cron: '44 * * * *'
+
+permissions: write-all
+
+jobs:
+  build:
+    name: Update Mathlib Version
+    permissions: write-all
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.PAT}}
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib Date
+        id: mldate
+        run: |
+           echo "date=nightly-testing-`date +20%y-%m-%d`"
+           echo "date=nightly-testing-`date +20%y-%m-%d`" >> $GITHUB_OUTPUT
+
+      - name: Set Mathlib Date
+        run: |
+           sed -e "s/nightly-testing.*\"/${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           cat lakefile.toml
+
+      - name: Lake Update Mathlib
+        run: |
+           lake update mathlib
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: ${{steps.mldate.outputs.date}}"
+          token: ${{secrets.PAT}}

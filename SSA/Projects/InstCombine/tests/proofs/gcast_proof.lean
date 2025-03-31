@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gcast_proof
 theorem test2_thm (e : IntW 8) : zext 64 (zext 32 (zext 16 e)) ⊑ zext 64 e := by
@@ -666,5 +667,3 @@ theorem test95_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

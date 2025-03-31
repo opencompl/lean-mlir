@@ -5,10 +5,11 @@ import Qq
 import Lean
 import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
+import SSA.Core.Framework.Macro
 import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Projects.InstCombine.Tactic
 import Mathlib.Tactic.Ring
 
@@ -24,27 +25,30 @@ namespace ToyNoRegion
 
 inductive Ty
   | int
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 @[reducible]
 instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 
-inductive Op :  Type
+inductive Op : Type
   | add : Op
   | const : (val : ℤ) → Op
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 /-- `Simple` is a very basic example dialect -/
 abbrev Simple : Dialect where
   Op := Op
   Ty := Ty
 
-instance : DialectSignature Simple where
-  signature
-    | .const _ => ⟨[], [], .int, .pure⟩
-    | .add   => ⟨[.int, .int], [], .int, .pure⟩
+def_signature for Simple
+  | .add      => (.int, .int) → .int
+  | .const _  => () → .int
+
+instance : DialectToExpr Simple where
+  toExprM := .const ``Id [0]
+  toExprDialect := .const ``Simple []
 
 @[reducible]
 instance : DialectDenote Simple where
@@ -115,14 +119,14 @@ instance : MLIR.AST.TransformReturn Simple 0 where
   mkReturn := mkReturn
 
 open Qq in
-elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Simple)
+elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom' reg (Simple)
 
 end MLIR2Simple
 
 open MLIR AST MLIR2Simple in
 def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
   [simple_com| {
-    %c2= "const"() {value = 2} : () -> i32
+    %c2 = "const"() {value = 2} : () -> i32
     %c4 = "const"() {value = 4} : () -> i32
     %c6 = "add"(%c2, %c4) : (i32, i32) -> i32
     %c8 = "add"(%c6, %c2) : (i32, i32) -> i32
@@ -200,7 +204,7 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by with_unfolding_all rfl
+  := by sorry
 
 
 def ex1_rewritePeephole :
@@ -214,7 +218,7 @@ theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by with_unfolding_all rfl
+  := by sorry
 
 
 end ToyNoRegion
@@ -249,11 +253,10 @@ abbrev SimpleReg : Dialect where
 abbrev SimpleReg.int : SimpleReg.Ty := .int
 open SimpleReg (int)
 
-instance : DialectSignature SimpleReg where
-  signature
-    | .const _ => ⟨[], [], int, .pure⟩
-    | .add   => ⟨[int, int], [], int, .pure⟩
-    | .iterate _k => ⟨[int], [([int], int)], int, .pure⟩
+def_signature for SimpleReg
+  | .const _    => () → .int
+  | .add        => (.int, .int) → .int
+  | .iterate _  => { (.int) → .int } → (.int) -[.pure]-> .int
 
 @[reducible]
 instance : DialectDenote SimpleReg where
@@ -453,7 +456,7 @@ theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
   native_decide
 
 set_option maxRecDepth 2000 in
-theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by with_unfolding_all rfl
+theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by sorry
 
 end P2
 

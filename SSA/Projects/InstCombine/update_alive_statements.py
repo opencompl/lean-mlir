@@ -14,6 +14,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 
+set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false"""
 
@@ -22,6 +23,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.LLVM.Semantics
 
+set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false"""
 
@@ -58,6 +60,8 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> (str, str):
     f = open(filename, "w")
 
     f.write("".join(preamble))
+    f.write("set_option linter.unusedTactic false\n\n")
+    f.write("set_option linter.style.nameCheck false\n\n")
     rewritten = []
     name = ""
     for line in proof:

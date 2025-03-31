@@ -1,13 +1,11 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.Fin.Basic
-import Mathlib.Tactic.LiftLets
-import SSA.Projects.InstCombine.ForLean
-import SSA.Experimental.Bits.FastCopy.Defs
-import SSA.Experimental.Bits.FastCopy.BitStream
+
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
+import SSA.Experimental.Bits.FastCopy.Defs
+
+import Mathlib.Tactic.LiftLets
 
 open Copy
 
@@ -34,11 +32,18 @@ def liftLast3 n : Fin 3 → Fin (n + 3)
 | 1 => n + 1
 | 2 => Fin.last (n + 2)
 def liftMaxSuccSucc1 (n m : Nat) : Fin (n + 1) → Fin (max n m + 3) :=
-  fun k => if _ : k = n then max n m else k.castLE (by omega)
+  fun k => if _ : k = Fin.last n then (max n m).cast else k.castLE (by omega)
 def liftMaxSuccSucc2 (n m : Nat) : Fin (m + 1) → Fin (max n m + 3) :=
-  fun k => if _ : k = m then max n m + 1 else k.castLE (by omega)
+  fun k => if _ : k = Fin.last m then max n m + 1 else k.castLE (by omega)
 def liftExcept3 n : Fin n → Fin (n + 3) :=
   fun k => Fin.castLE (by omega) k
+
+@[simp] lemma liftMaxSuccSucc1_cast {x : Fin n} : liftMaxSuccSucc1 n m x.castSucc = x.castLE (by omega) := by
+  rcases x
+  simp [liftMaxSuccSucc1, Fin.last]; omega
+@[simp] lemma liftMaxSuccSucc2_cast {x : Fin m} : liftMaxSuccSucc2 n m x.castSucc = x.castLE (by omega) := by
+  rcases x
+  simp [liftMaxSuccSucc2, Fin.last]; omega
 
 /-!
 # Term Language

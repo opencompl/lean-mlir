@@ -1050,20 +1050,20 @@ attribute [bv_circuit_nnf] GT.gt GE.ge
 attribute [bv_circuit_nnf] Nat.succ_eq_add_one
 
 /--
-warning: declaration uses 'sorry'
----
 info: w : ℕ
 ⊢ (∀ (x x_1 : BitVec w), x_1 ≤ x) ∧ ∀ (x x_1 : BitVec w), x ≤ x_1 ∨ x_1 < x ∨ x ≤ x_1 ∨ x ≠ x_1
+---
+warning: declaration uses 'sorry'
 -/
 #guard_msgs in example : ∀ (a b : BitVec w),  ¬ (a < b ∨ a > b ∧ a ≤ b ∧ a > b ∧ (¬ (a ≠ b))) := by
  bv_nnf;
  trace_state; sorry
 
 /--
-warning: declaration uses 'sorry'
----
 info: w : ℕ
 ⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+---
+warning: declaration uses 'sorry'
 -/
 #guard_msgs in example : ∀ (a b : BitVec w), a &&& b = 0#w → a = b := by
  bv_nnf; trace_state; sorry
@@ -1613,12 +1613,12 @@ def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
   input := f i.input
 
 def univ [DecidableEq ι] [Fintype ι] (n : Nat) :
-    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } := 
+    { univ : Finset (Inputs ι n) // ∀ x : Inputs ι n, x ∈ univ } :=
   let ixs : Finset (Fin n) := Finset.univ
   let inputs : Finset ι := Finset.univ
-  let out := ixs.biUnion 
+  let out := ixs.biUnion
       (fun ix => inputs.map ⟨fun input => Inputs.mk ix input, by intros a b; simp⟩)
-  ⟨out, by 
+  ⟨out, by
     intros i
     obtain ⟨ix, input⟩ := i
     simp [out]

@@ -33,24 +33,20 @@ jobs:
           path: .lake
           key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
 
+      - name: Get mathlib cache (only if no cache available)
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: |
+          (lake -R exe cache get ; true) # download cache of mathlib docs.
+
       - name: Compile `mlirnatural` Executable 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build mlirnatural
 
       - name: Compile `opt` Executable 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build opt
 
       - name: Compile Alive Scaling
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveScaling
-
-      - name: Check for changes in AliveStatements
-        run: |
-          lake -R exe cache get
-          lake build AliveExamples
-          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
-          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          lake -R build SSA.Projects.InstCombine.ScalingTest

@@ -685,7 +685,7 @@ instance : ToExpr (Var Γ ty) where
         thus reduction should be safe. -/
     mkVar Ty Γ ty i
 
-instance : HVector.ToExpr (Var Γ) where
+instance : HVector.ToExprPi (Var Γ) where
   toTypeExpr := mkApp2 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ)
 
 end ToExpr

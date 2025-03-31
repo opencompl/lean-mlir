@@ -1,15 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Fintype.Sum
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Ring
-import SSA.Experimental.Bits.FastCopy.Defs
-import SSA.Experimental.Bits.FastCopy.BitStream
 
+import SSA.Experimental.Bits.FastCopy.Defs
 
 namespace Copy
 

@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gsignbithshlhandhicmpeqhzero_proof
 theorem scalar_i32_signbit_shl_and_eq_X_is_constant1_thm (e : IntW 32) :
@@ -50,5 +51,3 @@ theorem scalar_i32_signbit_shl_and_eq_nonzero_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

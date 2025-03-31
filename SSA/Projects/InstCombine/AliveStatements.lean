@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 
+set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 
@@ -777,6 +778,7 @@ theorem bv_290__292 :
 
 theorem bv_820 :
     ∀ (e e_1 : LLVM.IntW 9), LLVM.sdiv (LLVM.sub e_1 (LLVM.srem e_1 e)) e ⊑ LLVM.sdiv e_1 e := by
+  stop -- this triggers a Lean bug https://github.com/leanprover/lean4/issues/7612
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
