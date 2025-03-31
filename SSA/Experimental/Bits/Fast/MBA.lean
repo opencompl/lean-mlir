@@ -1,4 +1,4 @@
-import SSA.Experimental.Bits.Fast.Attr
+import SSA.Experimental.Bits.Frontend.Attr
 import Lean
 import Lean.ToExpr
 

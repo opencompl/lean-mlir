@@ -3,13 +3,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.FastCopy.Defs
+import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Projects.InstCombine.ForStd
 
 import Mathlib.Tactic.LiftLets
-
-open Copy
-
-namespace AutoStructs
 
 -- A bunch of maps from `Fin n` to `Fin m` that we use to
 -- lift and project variables when we interpret formulas
@@ -45,37 +42,6 @@ def liftExcept3 n : Fin n → Fin (n + 3) :=
   rcases x
   simp [liftMaxSuccSucc2, Fin.last]; omega
 
-/-!
-# Term Language
-This file defines the term language the decision procedure operates on,
-and the denotation of these terms into operations on bitstreams -/
-
-instance : Inhabited Term where
-  default := .zero
-
--- From the FastCopy module
-open Term
-
-/-- `t.arity` is the max free variable id that occurs in the given term `t`,
-and thus is an upper bound on the number of free variables that occur in `t`.
-
-Note that the upper bound is not perfect:
-a term like `var 10` only has a single free variable, but its arity will be `11` -/
-@[simp] def Term.arity : Term → Nat
-| (var n) => n+1
-| zero => 0
-| one => 0
-| negOne => 0
-| ofNat _ => 0
-| Term.and t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.or t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.not t => arity t
-| add t₁ t₂ => max (arity t₁) (arity t₂)
-| sub t₁ t₂ => max (arity t₁) (arity t₂)
-| neg t => arity t
-| shiftL t _ => arity t
-
 /--
 Evaluate a term `t` to the BitVec it represents.
 
@@ -83,7 +49,7 @@ This differs from `Term.eval` in that `Term.evalFin` uses `Term.arity` to
 determine the number of free variables that occur in the given term,
 and only require that many bitstream values to be given in `vars`.
 -/
-@[simp] def _root_.Copy.Term.evalFinBV (t : Term) (vars : Fin (arity t) → BitVec w) : BitVec w :=
+@[simp] def Term.evalFinBV (t : Term) (vars : Fin (arity t) → BitVec w) : BitVec w :=
   match t with
   | .var n => vars (Fin.last n)
   | .zero    => BitVec.zero w
@@ -123,7 +89,7 @@ lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.a
   simp only
   congr; ext1; simp_all
 
-@[simp] def _root_.Copy.Term.evalNat (t : Term) (vars : Nat → BitVec w) : BitVec w :=
+@[simp] def Term.evalNat (t : Term) (vars : Nat → BitVec w) : BitVec w :=
   match t with
   | .var n => vars n
   | .zero    => BitVec.zero w
@@ -155,7 +121,7 @@ lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.a
   | .neg t       => -(t.evalNat vars)
   | .shiftL a n => (a.evalNat vars) <<< n
 
-def _root_.Copy.Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
+def Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
   { bvs : BitVecs (t.arity + 1) | t.evalFinBV (fun n => bvs.bvs.get n) = bvs.bvs.get t.arity }
 
 inductive RelationOrdering
@@ -252,7 +218,7 @@ def Formula.arity : Formula → Nat
 | binop _ φ1 φ2 => max φ1.arity φ2.arity
 
 @[simp]
-def _root_.Copy.WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
+def WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
   match wp with
   | .eq => w = n
   | .neq => w ≠ n
