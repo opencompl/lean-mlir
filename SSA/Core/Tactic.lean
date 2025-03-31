@@ -43,6 +43,43 @@ Essentially, this silences "no goals to be solved" errors -/
 macro "only_goal" t:tacticSeq : tactic =>
   `(tactic| first | done | $t)
 
+
+-- TODO: it's unclear how much of this is actually necessary, as just `simp [DialectDenote.denote]`
+--        already seems to do a pretty good job of simplifying.
+/--
+Simplify an application of `DialectDenote.denote`, assuming the corresponding
+semantics have been defined using `def_denote` (or has the same structure as
+  if it were defined using `def_denote`).
+-/
+simproc [simp] denote_op (DialectDenote.denote _ _ _) := fun e => do
+  let mkApp2 denoteOp args regArgs := e
+    | return .continue
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying: {e}") (collapsed := false) <| do
+    let some args ← HVector.toElemExprs args
+      | trace[LeanMLIR.Elab] "{crossEmoji} Failed to reflect: {← whnf args}"
+        return .continue
+    trace[LeanMLIR.Elab] "{checkEmoji} Succesfully reflected arguments: {args}"
+    let some regArgs ← HVector.toElemExprs regArgs
+      | trace[LeanMLIR.Elab] "{crossEmoji} Failed to reflect: {regArgs}"
+        return .continue
+    trace[LeanMLIR.Elab] "{checkEmoji} Succesfully reflected regions: {regArgs}"
+    /- We reduce `denoteOp` with `whnfD`, keeping in mind that if the semantics
+    were defined with `def_denote`, then the unfolded, uncurried expression
+    always starts with two lambdas, and lambdas block reduction of their body.
+    Hence, we're guaranteed *not* to reduce the clean, curried, semantic expression.
+    -/
+    let denoteOp ← whnfD denoteOp
+
+    trace[LeanMLIR.Elab] "Reduced to: {denoteOp}"
+    lambdaBoundedTelescope denoteOp 2 <| fun fvars body => do
+      -- Assert that we indeed have those two lambdas
+      if fvars.size != 2 then return .continue
+
+      let semantics := body.getBoundedAppFn (args.size + regArgs.size)
+      let semantics := mkAppN semantics (args.map Prod.snd)
+      -- let semantics := mkAppN semantics regArgs -- TODO: properly apply regArgs (which involves currying)
+      return .visit { expr := semantics }
+
 /--
 `simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
 
