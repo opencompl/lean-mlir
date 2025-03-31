@@ -86,7 +86,7 @@ simproc [simp] denote_op (DialectDenote.denote _ _ _) := fun e => do
 In it's bare form, it only simplifies away the core framework definitions (e.g., `Expr.denote`), but
 we can also pass it dialect-specific definitions to unfold, as in:
 `simp_peephole [foo, bar, baz]` -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
+macro "simp_peephole_aux" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
       /- Then, unfold the definition of the denotation of a program -/
@@ -138,6 +138,17 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
     ))
 
 /--
+`elim_valuation Γv` will attempt to replace the valuation `Γv` in the local context
+with a single fresh variable for each element of the valuation.
+-/
+macro "elim_valuation" Γv:ident : tactic =>
+  `(tactic|(
+      simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+      repeat (generalize_or_fail at $Γv)
+      clear $Γv
+  ))
+
+/--
 `simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
 that are evaluated with the valuation `ΓV`.
 
@@ -150,14 +161,21 @@ by introducing a new universally quantified (Lean) variable to the goal for ever
 -/
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
   `(tactic|(
-      simp_peephole [$ts,*]
+      simp_peephole_aux [$ts,*]
       -- `simp_peephole` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
-      only_goal
-        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
-        repeat (generalize_or_fail at $Γv)
-        clear $Γv
+      only_goal elim_valuation $Γv
   ))
+
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
+  `(tactic|
+    first
+    | intro (V : Valuation _)
+      simp_peephole [ $ts,* ] at V
+    | funext (V : Valuation _)
+      simp_peephole [ $ts,* ] at V
+    | simp_peephole_aux [$ts,*]
+  )
 
 /-- `simp_peephole` with no extra user defined theorems. -/
 macro "simp_peephole" "at" Γv:ident : tactic => `(tactic| simp_peephole [] at $Γv)
