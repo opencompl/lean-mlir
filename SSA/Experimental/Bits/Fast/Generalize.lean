@@ -121,13 +121,6 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVEx
   | _ => bvLogicalExpr
 
 
-structure ExistsForAllConfig where
-  expr : BVLogicalExpr
-  existsVars : List Nat
-  forAllVars : List Nat
-  numAttempts: Nat
-
-
 instance : ToString BVExpr.PackedBitVec where
   toString bitvec := toString bitvec.bv
 
