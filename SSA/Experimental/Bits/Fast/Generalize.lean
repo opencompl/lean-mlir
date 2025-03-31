@@ -84,7 +84,32 @@ def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.P
         return .some equations
 
 
-def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) : BVLogicalExpr :=
+---- Test Solver function ----
+def simpleArith : BVLogicalExpr :=
+  let x := BVExpr.const (BitVec.ofNat 5 2)
+  let y := BVExpr.const (BitVec.ofNat 5 4)
+  let z : BVExpr 5 := BVExpr.var 0
+  let sum : BVExpr 5 := BVExpr.bin x BVBinOp.add z
+  BoolExpr.literal (BVPred.bin sum BVBinPred.eq y)
+
+syntax (name := testExSolver) "test_solver" : tactic
+@[tactic testExSolver]
+def testSolverImpl : Tactic := fun _ => do
+  let res ← solver simpleArith
+  match res with
+    | none => pure ()
+    | some counterex =>
+        for (id, var) in counterex do
+          logInfo m! "Results: {id}={var.bv}"
+  pure ()
+
+theorem test_solver : False := by
+  test_solver
+
+
+
+def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) :
+          BVLogicalExpr :=
   let rec substituteBVExpr {w: Nat} (bvExpr : BVExpr w) : BVExpr w :=
     match bvExpr with
     | .var idx =>
@@ -152,30 +177,6 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
               existsForAll (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
 
 
-
----- Test Solver function ----
-def simpleArith : BVLogicalExpr :=
-  let x := BVExpr.const (BitVec.ofNat 5 2)
-  let y := BVExpr.const (BitVec.ofNat 5 4)
-  let z : BVExpr 5 := BVExpr.var 0
-  let sum : BVExpr 5 := BVExpr.bin x BVBinOp.add z
-  BoolExpr.literal (BVPred.bin sum BVBinPred.eq y)
-
-syntax (name := testExSolver) "test_solver" : tactic
-@[tactic testExSolver]
-def testSolverImpl : Tactic := fun _ => do
-  let res ← solver simpleArith
-  match res with
-    | none => pure ()
-    | some counterex =>
-        for (id, var) in counterex do
-          logInfo m! "Results: {id}={var.bv}"
-  pure ()
-
-theorem test_solver : False := by
-  test_solver
-
-
 ---- Test ExistsForAll function ---
 def leftShiftRightShiftOne : BVLogicalExpr :=
   let bitwidth := 4
@@ -235,3 +236,18 @@ def testExFaImpl : Tactic := fun _ => do
 
 theorem test_exists_for_all : False := by
   test_exists_for_all
+
+
+def binaryOperators : List BVBinOp :=
+  [BVBinOp.add, BVBinOp.mul]
+
+
+def inductive_synthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BVExpr w)) (target: BVExpr w) (depth: Nat) :
+                      TermElabM (Option (List (BVExpr w))) := do
+    match depth with
+      | 1 => return none -- enumerative synthesis
+      | _ =>
+            let res : List (BVExpr w) := []
+            for (const, value) in constants.toArray do
+              logInfo m! "Hello"
+            return some []
