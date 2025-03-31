@@ -185,6 +185,18 @@ def mkOfElems (u₁ u₂ : Level) (α f : Expr) (elems : Array (Expr × Expr)) :
     )
   return res.snd
 
+open Lean Meta in
+partial def toElemExprs : Expr → MetaM (Option (Array (Expr × Expr))) :=
+  go #[]
+where go (es : Array (Expr × Expr)) (e : Expr) : (OptionT MetaM _) := do
+  let e ← whnfD e
+  match_expr e with
+  | HVector.cons _α _f _as a x xs  => do
+      let es := es.push (a, x)
+      go es xs
+  | HVector.nil _ _ => return es
+  | _               => OptionT.fail
+
 instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
     Lean.ToExpr (HVector A as) :=
