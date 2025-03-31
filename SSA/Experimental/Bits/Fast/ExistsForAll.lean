@@ -53,10 +53,10 @@ def reconstructCounterExample' (var2Cnf : Std.HashMap BVBit Nat) (assignment : A
 
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
-def cadicalTimeoutSec : Nat := 1000
 def solver (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    --TODO: Can this function return a model class like in Python?
+    let cadicalTimeoutSec : Nat := 1000
     let cfg: BVDecideConfig := {timeout := 10}
+
     IO.FS.withTempFile fun _ lratFile => do
       let ctx ← BVDecide.Frontend.TacticContext.new lratFile cfg
       logInfo m! "Bitblasting BVLogicalExpr to AIG"
@@ -102,8 +102,7 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVEx
         BVExpr.shiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
     | .arithShiftRight lhs rhs =>
         BVExpr.arithShiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
-    | _ => bvExpr --TODO: handle other constructors
-
+    | _ => bvExpr --TODO: handle other constructors?
 
   match bvLogicalExpr with
   | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (substituteBVExpr lhs) op (substituteBVExpr rhs))
@@ -114,7 +113,6 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVEx
   | .ite op1 op2 op3 =>
       BoolExpr.ite (substitute op1 assignment) (substitute op2 assignment) (substitute op3 assignment)
   | _ => bvLogicalExpr
-
 
 
 structure ExistsForAllConfig where
@@ -145,13 +143,21 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
               existsForAll (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
 
 
+instance : ToString BVExpr.PackedBitVec where
+  toString bitvec := toString bitvec.bv
+
+instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.HashMap α β) where
+  toString map :=
+    "{" ++ String.intercalate ", " (map.toList.map (λ (k, v) => toString k ++ " → " ++ toString v)) ++ "}"
+
+
+
 def bvExpr : BVLogicalExpr :=
   let x := BVExpr.const (BitVec.ofNat 5 2)
   let y := BVExpr.const (BitVec.ofNat 5 4)
   let z : BVExpr 5 := BVExpr.var 0
   let sum : BVExpr 5 := BVExpr.bin x BVBinOp.add z
   BoolExpr.literal (BVPred.bin sum BVBinPred.eq y)
-
 
 syntax (name := testExSolver) "test_solver" : tactic
 @[tactic testExSolver]
@@ -193,8 +199,8 @@ def addConst : BVLogicalExpr :=
 syntax (name := testExFa) "test_exists_for_all" : tactic
 @[tactic testExFa]
 def testExFaImpl : Tactic := fun _ => do
-  -- let res ← existsForAll leftShiftRightShift [100, 101, 102, 103] [0]
-  let res ← existsForAll addConst [100] [0]
+  let res ← existsForAll leftShiftRightShift [100, 101, 102, 103] [0]
+  -- let res ← existsForAll addConst [100] [0]
   match res with
     | none => pure ()
     | some counterex =>
@@ -204,38 +210,3 @@ def testExFaImpl : Tactic := fun _ => do
 
 theorem test_exists_for_all : False := by
   test_exists_for_all
-
-
-
-
-
-
-
--- structure Solver where
---   constraints : IO.Ref (List BVLogicalExpr)
---   modelRef : IO.Ref (Std.HashMap Expr BVExpr.PackedBitVec)
-
--- namespace Solver
-
--- def new : IO Solver := do
---   let constraints ← IO.mkRef ([] : List BVLogicalExpr)
---   let modelRef ← IO.mkRef ({} : Std.HashMap Expr BVExpr.PackedBitVec)
---   return { constraints, modelRef }
-
--- def add (s : Solver) (expr : BVLogicalExpr) : IO Unit := do
---   s.constraints.modify (λ cs => expr :: cs)
-
-
--- def generateModel (s : Solver) : IO (Std.HashMap Expr BVExpr.PackedBitVec) := do
---   --TODO
---   return {}
-
--- def check (s : Solver) : IO Bool := do
---   --TODO: Invoke the solver function and update the model
---   return True
-
-
--- def model (s : Solver) : IO (Std.HashMap Expr BVExpr.PackedBitVec) := do
---   s.modelRef.get
-
--- end Solver
