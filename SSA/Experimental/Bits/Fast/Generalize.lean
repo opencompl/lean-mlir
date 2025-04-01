@@ -239,7 +239,7 @@ theorem test_exists_for_all : False := by
 
 
 def binaryOperators : List BVBinOp :=
-  [BVBinOp.add] -- TODO: Needs to support subtractions
+  [BVBinOp.add] -- TODO: Needs to support subtraction and more operators
 
 instance : Inhabited BVExpr.PackedBitVec where
   default := { bv := BitVec.ofNat 0 0 }
@@ -251,32 +251,29 @@ def Std.Tactic.BVDecide.BVExpr.getConst! : BVExpr w → BitVec w
 partial def inductive_synthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) (depth: Nat) :
                       TermElabM ( List (BVExpr w)) := do
     match depth with
-      | 1 => return [] -- enumerative synthesis
+      | 1 => return [] --TODO: enumerative synthesis
       | _ =>
             let mut res : List (BVExpr w) := []
+
             for (constId, constVal) in constants.toArray do
               if constVal == target then
                 res := BVExpr.var constId :: res
               else
               let constExpr := BVExpr.const constVal
+
               for op in binaryOperators do
                 let auxId := constId + 1
-                let aux : BVExpr w := BVExpr.var auxId
-
-                let lhs := BVExpr.bin constExpr op aux
+                let lhs := BVExpr.bin constExpr op (BVExpr.var auxId)
                 let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq (BVExpr.const target))
-                let solver_res ← solve bvLogicalExpr
 
-                match solver_res with
-                  | none => continue
-                  | some assignment =>
-                      let newTarget := assignment[auxId]!
-                      let remainingExprs ← inductive_synthesis expr inputs constants (BitVec.ofNat w newTarget.bv.toNat) (depth-1)
-                      for remainingExpr in remainingExprs do
-                        res := BVExpr.bin (BVExpr.var constId) op remainingExpr :: res
+                if let some assignment ← solve bvLogicalExpr then
+                  let newTarget := assignment[auxId]!.bv.toNat
+                  let remainingExprs ← inductive_synthesis expr inputs constants (BitVec.ofNat w newTarget) (depth - 1)
+
+                  res := res ++ remainingExprs.map (λ rem => BVExpr.bin (BVExpr.var constId) op rem)
+
 
             return res
-
 
 
 syntax (name := testInductive) "test_inductive_synthesis" : tactic
@@ -294,9 +291,6 @@ def testInductiveSynthesis : Tactic := fun _ => do
   let expr := BVExpr.bin (BVExpr.bin x BVBinOp.add c1) BVBinOp.add (BVExpr.bin y BVBinOp.add c2)
 
   let res ← inductive_synthesis expr [0, 1] constants target 3
-  -- let res ← existsForAll leftShiftRightShiftTwo [100, 101, 102, 103] [0]
-  -- let res ← existsForAll addConst [100] [0]
-  -- let res ← existsForAll addInfeasible [100] [0]
   logInfo m! "Results: {res}"
   pure ()
 
