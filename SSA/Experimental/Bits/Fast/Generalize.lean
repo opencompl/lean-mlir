@@ -331,9 +331,9 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
             return res
 
 
-syntax (name := testInductive) "test_inductive_synthesis" : tactic
-@[tactic testInductive]
-def testInductiveSynthesis : Tactic := fun _ => do
+syntax (name := testExprSynthesis) "test_expression_synthesis" : tactic
+@[tactic testExprSynthesis]
+def testExpressionSynthesis : Tactic := fun _ => do
   let bitwidth := 8
   let x : BVExpr bitwidth := BVExpr.var 0
   let y : BVExpr bitwidth := BVExpr.var 1
@@ -350,4 +350,4 @@ def testInductiveSynthesis : Tactic := fun _ => do
   pure ()
 
 theorem test_inductive : False := by
-  test_inductive_synthesis
+  test_expression_synthesis
