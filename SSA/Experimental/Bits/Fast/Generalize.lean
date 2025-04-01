@@ -254,11 +254,6 @@ def testExFaImpl : Tactic := fun _ => do
 theorem test_exists_for_all : False := by
   test_exists_for_all
 
-
-def binaryOperators : List BVBinOp :=
-  [BVBinOp.add] -- TODO: Needs to support subtraction and more operators
-
-
 def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) :
                       TermElabM ( List (BVExpr w)) := do
       --- Special constants
@@ -301,6 +296,11 @@ def negate (bvExpr: BVExpr w) : BVExpr w:=
   -- Two's complement value = 1 + Not(Var)
   BVExpr.bin (BVExpr.const (BitVec.ofNat w 1)) BVBinOp.add (BVExpr.un BVUnOp.not bvExpr)
 
+
+def binaryOperators : List BVBinOp :=
+  [BVBinOp.add] -- TODO: Needs to support more operators
+
+
 partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) (depth: Nat) :
                       TermElabM ( List (BVExpr w)) := do
     match depth with
@@ -326,19 +326,22 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
               if constVal == target then
                 res := BVExpr.var constId :: res
               else
-              let constExpr := BVExpr.const constVal
+                let constExpr := BVExpr.const constVal
 
-              let auxId := constId + 1
-              let auxVar := BVExpr.var auxId
+                let auxId := constId + 1
+                let auxVar := BVExpr.var auxId
 
-              for op in binaryOperators do
-                let remainingExprs ← processOp op (fun op => BVExpr.bin constExpr op auxVar) constId auxId
-                res := res ++ remainingExprs
+                for op in binaryOperators do
+                  let remainingExprs ← processOp op (fun op => BVExpr.bin constExpr op auxVar) constId auxId
+                  res := res ++ remainingExprs
 
-              --- Process subtraction operation
-              -- Bug: It resolves correctly but since we use BVBinOp.add, it's not yet clear that an operation actually represents a subtraction
-              let subtractionRes ← processOp BVBinOp.add (fun op => BVExpr.bin constExpr op (negate auxVar)) constId auxId
-              res := res ++ subtractionRes
+                /-
+                 Process subtraction operation
+                 TODO: Bug: It resolves correctly but since we use BVBinOp.add, it's not yet clear when an operation actually represents a subtraction
+                 So 'var101 + ((0x00#8 + var100) + (0x00#8 + var101))' is actually var101 - ((0x00#8 + var100) + (0x00#8 + var101))
+                -/
+                let subtractionRes ← processOp BVBinOp.add (fun op => BVExpr.bin constExpr op (negate auxVar)) constId auxId
+                res := res ++ subtractionRes
 
             return res
 
