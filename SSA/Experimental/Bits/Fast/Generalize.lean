@@ -61,16 +61,13 @@ def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.Pa
 
     IO.FS.withTempFile fun _ lratFile => do
       let ctx ← BVDecide.Frontend.TacticContext.new lratFile cfg
-      logInfo m! "Bitblasting BVLogicalExpr to AIG"
       let entry ← IO.lazyPure (fun _ => bvExpr.bitblast)
 
-      logInfo m! "Converting AIG to CNF"
       let (cnf, map) ← IO.lazyPure (fun _ =>
             let (entry, map) := entry.relabelNat'
             let cnf := AIG.toCNF entry
             (cnf, map))
 
-      logInfo m! "Obtaining external proof certificate"
       let res ← runExternal cnf ctx.solver ctx.lratPath
           (trimProofs := true)
           (timeout := cadicalTimeoutSec)
@@ -78,10 +75,8 @@ def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.Pa
 
       match res with
       | .ok _ =>
-        logInfo m! "SAT solver found a proof."
         return none
       | .error assignment =>
-        logInfo m! "SAT solver found a counter example."
         let equations := reconstructCounterExample' map assignment entry.aig.decls.size
         return .some equations
 
@@ -163,8 +158,8 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat Subs
       BoolExpr.not (substitute boolExpr assignment)
   | .gate op lhs rhs =>
       BoolExpr.gate op (substitute lhs assignment) (substitute rhs assignment)
-  | .ite op1 op2 op3 =>
-      BoolExpr.ite (substitute op1 assignment) (substitute op2 assignment) (substitute op3 assignment)
+  | .ite constVar auxVar op3 =>
+      BoolExpr.ite (substitute constVar assignment) (substitute auxVar assignment) (substitute op3 assignment)
   | _ => bvLogicalExpr
 
 
@@ -302,6 +297,10 @@ def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: S
         return validCombos
 
 
+def negate (bvExpr: BVExpr w) : BVExpr w:=
+  -- Two's complement value = 1 + Not(Var)
+  BVExpr.bin (BVExpr.const (BitVec.ofNat w 1)) BVBinOp.add (BVExpr.un BVUnOp.not bvExpr)
+
 partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) (depth: Nat) :
                       TermElabM ( List (BVExpr w)) := do
     match depth with
@@ -310,23 +309,36 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
       | _ =>
             let mut res : List (BVExpr w) := []
 
+            let processOp (op: BVBinOp) (f : BVBinOp → BVExpr w) (constId: Nat) (auxVarId: Nat) : TermElabM (List (BVExpr w)) := do
+                let lhs := f op
+                let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq (BVExpr.const target))
+
+                if let some assignment ← solve bvLogicalExpr then
+                  let newTarget := assignment[auxVarId]!.bv.toNat
+                  let results ← inductiveSynthesis expr inputs constants (BitVec.ofNat w newTarget) (depth - 1)
+
+                  return results.map (λ rem => BVExpr.bin (BVExpr.var constId) op rem)
+
+                return []
+
+
             for (constId, constVal) in constants.toArray do
               if constVal == target then
                 res := BVExpr.var constId :: res
               else
               let constExpr := BVExpr.const constVal
 
+              let auxId := constId + 1
+              let auxVar := BVExpr.var auxId
+
               for op in binaryOperators do
-                let auxId := constId + 1
-                let lhs := BVExpr.bin constExpr op (BVExpr.var auxId)
-                let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq (BVExpr.const target))
+                let remainingExprs ← processOp op (fun op => BVExpr.bin constExpr op auxVar) constId auxId
+                res := res ++ remainingExprs
 
-                if let some assignment ← solve bvLogicalExpr then
-                  let newTarget := assignment[auxId]!.bv.toNat
-                  let remainingExprs ← inductiveSynthesis expr inputs constants (BitVec.ofNat w newTarget) (depth - 1)
-
-                  res := res ++ remainingExprs.map (λ rem => BVExpr.bin (BVExpr.var constId) op rem)
-
+              --- Process subtraction operation
+              -- Bug: It resolves correctly but since we use BVBinOp.add, it's not yet clear that an operation actually represents a subtraction
+              let subtractionRes ← processOp BVBinOp.add (fun op => BVExpr.bin constExpr op (negate auxVar)) constId auxId
+              res := res ++ subtractionRes
 
             return res
 
@@ -346,7 +358,7 @@ def testExpressionSynthesis : Tactic := fun _ => do
   let expr := BVExpr.bin (BVExpr.bin x BVBinOp.add c1) BVBinOp.add (BVExpr.bin y BVBinOp.add c2)
 
   let res ← inductiveSynthesis expr [0, 1] constants target 3
-  logInfo m! "Results: {res}"
+  logInfo m! "Results: {res} of length: {res.length}"
   pure ()
 
 theorem test_inductive : False := by
