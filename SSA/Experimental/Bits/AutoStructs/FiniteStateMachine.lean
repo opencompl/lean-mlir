@@ -1,16 +1,6 @@
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.FinEnum
-import Mathlib.Data.Fintype.Sum
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Ring
-import SSA.Experimental.Bits.AutoStructs.Defs
-import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.FastCopy.Circuit
+
+import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.FastCopy.FiniteStateMachine
-import SSA.Experimental.Bits.FastCopy.BitStream
 
 open Sum
 
