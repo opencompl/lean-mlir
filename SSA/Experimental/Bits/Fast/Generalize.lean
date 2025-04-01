@@ -346,9 +346,14 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
             return res
 
 
-syntax (name := testExprSynthesis) "test_expression_synthesis" : tactic
-@[tactic testExprSynthesis]
-def testExpressionSynthesis : Tactic := fun _ => do
+structure ExpressionSynthesisTestConfig where
+  {w : Nat}
+  bvExpr: BVExpr w
+  inputs: List Nat
+  constants: Std.HashMap Nat (BitVec w)
+  target: BitVec w
+
+def exprSynthesisTestOne : ExpressionSynthesisTestConfig :=
   let bitwidth := 8
   let x : BVExpr bitwidth := BVExpr.var 0
   let y : BVExpr bitwidth := BVExpr.var 1
@@ -359,8 +364,14 @@ def testExpressionSynthesis : Tactic := fun _ => do
   let target := BitVec.ofNat bitwidth 24
 
   let expr := BVExpr.bin (BVExpr.bin x BVBinOp.add c1) BVBinOp.add (BVExpr.bin y BVBinOp.add c2)
+  {bvExpr := expr, inputs := [0, 1], constants := constants, target:= target}
 
-  let res ← inductiveSynthesis expr [0, 1] constants target 3
+
+syntax (name := testExprSynthesis) "test_expression_synthesis" : tactic
+@[tactic testExprSynthesis]
+def testExpressionSynthesis : Tactic := fun _ => do
+  let config := exprSynthesisTestOne
+  let res ← inductiveSynthesis config.bvExpr config.inputs config.constants config.target 3
   logInfo m! "Results: {res} of length: {res.length}"
   pure ()
 
