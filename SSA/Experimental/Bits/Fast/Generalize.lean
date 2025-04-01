@@ -7,6 +7,8 @@ import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Lean
 
+import SSA.Core.Util
+
 open Lean
 open Std.Sat
 open Std.Tactic.BVDecide
@@ -107,26 +109,43 @@ theorem test_solver : False := by
   test_solver
 
 
+instance : Inhabited BVExpr.PackedBitVec where
+  default := { bv := BitVec.ofNat 0 0 }
 
-def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVExpr.PackedBitVec) :
-          BVLogicalExpr :=
-  let rec substituteBVExpr {w: Nat} (bvExpr : BVExpr w) : BVExpr w :=
+
+inductive SubstitutionValue where
+    | nat (n : Nat) : SubstitutionValue
+    | packedBV  (bv: BVExpr.PackedBitVec) : SubstitutionValue
+
+instance : Inhabited SubstitutionValue where
+  default := SubstitutionValue.nat 0
+
+
+def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat SubstitutionValue :=
+  Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
+
+def natToSubstitutionValue (map: Std.HashMap Nat Nat) : Std.HashMap Nat SubstitutionValue :=
+  Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.nat item.snd)) map.toList)
+
+def substituteBVExpr (bvExpr: BVExpr w) (assignment: Std.HashMap Nat SubstitutionValue) : BVExpr w :=
     match bvExpr with
     | .var idx =>
-      match assignment[idx]? with
-      | some packedBitVec =>
-          BVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
-      | _ => bvExpr
+      if assignment.contains idx then
+          let value := assignment[idx]!
+          match value with
+          | SubstitutionValue.nat n => BVExpr.var n
+          | .packedBV packedBitVec =>  BVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
+      else bvExpr
     | .bin lhs op rhs =>
-        BVExpr.bin (substituteBVExpr lhs) op (substituteBVExpr rhs)
+        BVExpr.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment)
     | .un op operand =>
-        BVExpr.un op (substituteBVExpr operand)
+        BVExpr.un op (substituteBVExpr operand assignment)
     | .shiftLeft lhs rhs =>
-        BVExpr.shiftLeft (substituteBVExpr lhs) (substituteBVExpr rhs)
+        BVExpr.shiftLeft (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
     | .shiftRight lhs rhs =>
-        BVExpr.shiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
+        BVExpr.shiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
     | .arithShiftRight lhs rhs =>
-        BVExpr.arithShiftRight (substituteBVExpr lhs) (substituteBVExpr rhs)
+        BVExpr.arithShiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
     -- | .zeroExtend v expr =>
     --     BVExpr.zeroExtend v (substituteBVExpr expr)
     -- | .extract start len expr =>
@@ -135,8 +154,11 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat BVEx
     --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
     | _ => bvExpr --TODO: Handle other constructors
 
+
+def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat SubstitutionValue) :
+          BVLogicalExpr :=
   match bvLogicalExpr with
-  | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (substituteBVExpr lhs) op (substituteBVExpr rhs))
+  | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment))
   | .not boolExpr =>
       BoolExpr.not (substitute boolExpr assignment)
   | .gate op lhs rhs =>
@@ -164,7 +186,7 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
         return none
       | some assignment =>
         let existsVals := assignment.filter fun c _ => existsVars.contains c
-        let substExpr := substitute bvExpr existsVals
+        let substExpr := substitute bvExpr (packedBitVecToSubstitutionValue existsVals)
         let forAllRes ← solve (BoolExpr.not substExpr)
 
         match forAllRes with
@@ -172,7 +194,7 @@ partial def existsForAll (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllV
             return some existsVals
           | some counterEx =>
               logInfo s! "Found counterexample {counterEx}; rerunning"
-              let newExpr := substitute bvExpr counterEx
+              let newExpr := substitute bvExpr (packedBitVecToSubstitutionValue counterEx)
               logInfo s! "New expr: {newExpr}"
               existsForAll (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
 
@@ -208,7 +230,7 @@ def addId : BVLogicalExpr :=
   let x: BVExpr bitwidth := BVExpr.var 0
   let c1: BVExpr bitwidth := BVExpr.var 100
 
-  -- x + c1 == c1
+  -- x + c1 == x
   let lhs := BVExpr.bin x BVBinOp.add c1
   BoolExpr.literal (BVPred.bin lhs BVBinPred.eq x)
 
@@ -223,9 +245,9 @@ def addInfeasible : BVLogicalExpr :=
 syntax (name := testExFa) "test_exists_for_all" : tactic
 @[tactic testExFa]
 def testExFaImpl : Tactic := fun _ => do
-  let res ← existsForAll leftShiftRightShiftOne [100, 101] [0]
+  -- let res ← existsForAll leftShiftRightShiftOne [100, 101] [0]
   -- let res ← existsForAll leftShiftRightShiftTwo [100, 101, 102, 103] [0]
-  -- let res ← existsForAll addConst [100] [0]
+  let res ← existsForAll addId [100] [0]
   -- let res ← existsForAll addInfeasible [100] [0]
   match res with
     | none => pure ()
@@ -241,17 +263,50 @@ theorem test_exists_for_all : False := by
 def binaryOperators : List BVBinOp :=
   [BVBinOp.add] -- TODO: Needs to support subtraction and more operators
 
-instance : Inhabited BVExpr.PackedBitVec where
-  default := { bv := BitVec.ofNat 0 0 }
 
-def Std.Tactic.BVDecide.BVExpr.getConst! : BVExpr w → BitVec w
-  | .const val => val
-  | _ => panic! "BVExpr is not a constant"
+def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) :
+                      TermElabM ( List (BVExpr w)) := do
+      --- Special constants
+      let zero := {bv := BitVec.ofNat w 0: BVExpr.PackedBitVec}
+      let one := {bv := BitVec.ofNat w 1: BVExpr.PackedBitVec}
+      let minusOne := {bv := BitVec.neg (BitVec.ofNat w 1)}
 
-partial def inductive_synthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) (depth: Nat) :
+      let specialConstants := [zero, one, minusOne]
+
+      let inputCombinations := productsList (List.replicate inputs.length specialConstants)
+      let constsPermutation := List.permutations constants.keys
+
+      let inputsAndConstants := List.product inputCombinations constsPermutation
+
+      let rec addConstraints (expr: BVLogicalExpr) (constraints: List (Nat × BitVec w)) : BVLogicalExpr :=
+            match constraints with
+            | [] => expr
+            | x::xs =>
+                let newConstraint := BoolExpr.literal (BVPred.bin (BVExpr.var x.fst) BVBinPred.eq (BVExpr.const x.snd))
+                addConstraints (BoolExpr.gate Gate.and expr newConstraint) xs
+
+
+      let mut validCombos : List (BVExpr w) := []
+      for combo in inputsAndConstants do
+          let inputsSubstitutions := packedBitVecToSubstitutionValue (Std.HashMap.ofList (List.zip inputs combo.fst))
+          let constantsSubstitutions := natToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo.snd))
+
+          let substitutedExpr := substituteBVExpr origExpr (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
+          let firstConstraint := BoolExpr.literal (BVPred.bin (substitutedExpr) BVBinPred.eq (BVExpr.const target))
+
+          let newExpr := addConstraints firstConstraint constants.toList
+
+          if let some _ ← solve newExpr then
+            validCombos := substitutedExpr :: validCombos
+
+        return validCombos
+
+
+partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) (depth: Nat) :
                       TermElabM ( List (BVExpr w)) := do
     match depth with
-      | 1 => return [] --TODO: enumerative synthesis
+      | 1 => let res ← enumerativeSynthesis expr inputs constants target
+             return res
       | _ =>
             let mut res : List (BVExpr w) := []
 
@@ -268,7 +323,7 @@ partial def inductive_synthesis (expr: BVExpr w) (inputs: List Nat) (constants: 
 
                 if let some assignment ← solve bvLogicalExpr then
                   let newTarget := assignment[auxId]!.bv.toNat
-                  let remainingExprs ← inductive_synthesis expr inputs constants (BitVec.ofNat w newTarget) (depth - 1)
+                  let remainingExprs ← inductiveSynthesis expr inputs constants (BitVec.ofNat w newTarget) (depth - 1)
 
                   res := res ++ remainingExprs.map (λ rem => BVExpr.bin (BVExpr.var constId) op rem)
 
@@ -290,7 +345,7 @@ def testInductiveSynthesis : Tactic := fun _ => do
 
   let expr := BVExpr.bin (BVExpr.bin x BVBinOp.add c1) BVBinOp.add (BVExpr.bin y BVBinOp.add c2)
 
-  let res ← inductive_synthesis expr [0, 1] constants target 3
+  let res ← inductiveSynthesis expr [0, 1] constants target 3
   logInfo m! "Results: {res}"
   pure ()
 
