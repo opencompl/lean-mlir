@@ -503,6 +503,12 @@ private theorem Predicate.evalSlt_denote_true_iff {w : Nat} (a b : Term) (vars :
 private theorem BitVec.ForLean.ule_iff_ult_or_eq (x y : BitVec w) : x ≤ y ↔ (x = y ∨ x < y) := by
   constructor <;> bv_omega
 
+private theorem BitVec.ForLean.ule_iff_ult_or_eq' (x y : BitVec w) : (x ≤ᵤ y) = (decide (x = y ∨ x < y)) := by
+  simp only [· ≤ᵤ ·]
+  by_cases hx : x = y ∨ x < y
+  case pos => simp [hx]; bv_omega
+  case neg => simp [hx]; bv_omega
+
 private theorem BitVec.sle_iff_slt_or_eq (x y : BitVec w) : x.sle y ↔ (decide (x = y) ∨ x.slt y) := by
   simp [BitVec.slt, BitVec.sle]
   constructor
@@ -517,6 +523,8 @@ private theorem BitVec.sle_iff_slt_or_eq (x y : BitVec w) : x.sle y ↔ (decide 
   · intros h
     rcases h with rfl | h  <;> omega
 
+theorem BitVec.ult_notation_eq_decide_ult (x y : BitVec w) : (x <ᵤ y) = decide (x < y) := by
+  simp [BitVec.lt_def, BitVec.ult_toNat]
 /--
 The semantics of a predicate:
 The predicate, when evaluated, at index `i` is false iff the denotation is true.
@@ -529,7 +537,12 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
     cases p with
     | eq => simp [eval, denote]; apply evalEq_denote_false_iff
     | neq => simp [eval, denote]; apply evalNeq_denote
-    | ult => simp [eval, denote]; sorry -- apply evalUlt_denote_false_iff
+    | ult => 
+      simp [eval, denote]
+      rw [BitVec.ult_notation_eq_decide_ult]
+      by_cases h: Term.denote w a vars < Term.denote w b vars
+      case pos => simp only [h, decide_true, Bool.not_true]; rw [evalUlt_denote_false_iff]; exact h
+      case neg => simp only [h, decide_false, Bool.not_false]; rw [evalUlt_denote_true_iff]; simpa using h
     | slt =>
       simp [eval, denote];
       by_cases h : Term.denote w a vars <ₛ Term.denote w b vars
@@ -545,20 +558,19 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
     | ule =>
       simp [eval, denote];
       simp only [evalLor, BitStream.and_eq]
-      sorry
-      -- rw [BitVec.ForLean.ule_iff_ult_or_eq]
-      -- by_cases heq : Term.denote w a vars = Term.denote w b vars
-      -- · rw [heq]
-      --   simp [evalEq_denote_false_iff a b vars |>.mpr heq]
-      -- · simp [heq]
-      --   by_cases hlt : Term.denote w a vars < Term.denote w b vars
-      --   · simp [hlt]
-      --     simp [evalUlt_denote_false_iff a b vars |>.mpr hlt]
-      --   · simp [hlt]
-      --     have := evalEq_denote_false_iff a b vars |>.not |>.mpr heq
-      --     simp only [this, true_and]
-      --     have := evalUlt_denote_false_iff a b vars |>.not |>.mpr hlt
-      --     simp only [this]
+      rw [BitVec.ForLean.ule_iff_ult_or_eq' (Term.denote w a vars) (Term.denote w b vars)]
+      by_cases heq : Term.denote w a vars = Term.denote w b vars
+      · rw [heq]
+        simp [evalEq_denote_false_iff a b vars |>.mpr heq]
+      · simp [heq]
+        by_cases hlt : Term.denote w a vars < Term.denote w b vars
+        · simp [hlt]
+          simp [evalUlt_denote_false_iff a b vars |>.mpr hlt]
+        · simp [hlt]
+          have := evalEq_denote_false_iff a b vars |>.not |>.mpr heq
+          simp only [this, true_and]
+          have := evalUlt_denote_false_iff a b vars |>.not |>.mpr hlt
+          simp only [this]
     | sle =>
       simp [eval, denote]
       simp only [evalLor, BitStream.and_eq]
