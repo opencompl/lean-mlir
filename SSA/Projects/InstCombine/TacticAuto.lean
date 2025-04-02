@@ -345,8 +345,10 @@ macro "bv_bench_automata": tactic =>
            BitVec.ofNat_eq_ofNat, BitVec.two_mul]
         all_goals (
           tac_bench (config := { outputType := .csv }) [
+            "bv_normalize" : (bv_normalize; done),
             "presburger" : (bv_automata_classic; done),
             "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
+            "circuitLean" : (bv_automata_circuit (config := { backend := .lean /- maxIter -/ 4 }); done),
             "circuit" : (bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
             "normCircuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 })); done),
             "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
