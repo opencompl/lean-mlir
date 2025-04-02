@@ -47,7 +47,7 @@ jobs:
 
       - name: Compile Decide Experiment 🧐
         run: |
-          lake -R build SSA.Experimental.Bits.Decide SSA.Experimental.Bits.Fast.Decide
+          lake -R build SSA.Experimental.Bits.Fast.Decide
 
       - name: Compile Hacker's Delight Theorems 🧮
         run: |
