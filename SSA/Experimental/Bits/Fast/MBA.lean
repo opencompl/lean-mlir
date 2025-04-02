@@ -2,6 +2,8 @@ import SSA.Experimental.Bits.Frontend.Attr
 import Lean
 import Lean.ToExpr
 
+initialize Lean.registerTraceClass `Bits.MBA
+
 @[simp]
 theorem BitVec.zero_concat (b : Bool) : (0#0).concat b = BitVec.ofBool b := by
   apply BitVec.eq_of_getLsbD_eq
@@ -630,8 +632,6 @@ theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (w : Na
   simp
   apply h
 
-#check Eqn.forall_width_reflect_zero_of_width_one_denote_zero
-
 @[simp]
 theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by
   simp [EnvFin] at *
@@ -874,7 +874,7 @@ def reflectEqn (e : Expr) : M (WidthExpr × Eqn) := do
     | throwError "expected top-level equality, but found {e}"
   let_expr BitVec w := ty
     | throwError "expected equality of bitvectors, but found {indentD ty}"
-  logInfo m!"found top-level equality LHS '{lhs}'"
+  trace[Bits.MBA] m!"found top-level equality LHS '{lhs}'"
   return (w, ← reflectEqnAux lhs)
 
 def runM (x : M α) : MetaM (α × State) := x.run {}
@@ -919,18 +919,18 @@ def mbaTac (g : MVarId) : TermElabM (List MVarId) := do
       | throwError m!"unable to apply `BitVec.eq_of_sub_zero`."
     let .some g ← runBvMbaPreprocess  g
       | do
-         logInfo "goal closed by Mba normalizer."
+         trace[Bits.MBA] "goal closed by Mba normalizer."
          return []
-    logInfo m!"Normalized goal state to {indentD g}"
+    trace[Bits.MBA] m!"Normalized goal state to {indentD g}"
     let ((widthExpr, eqn), reflectState) ← g.withContext do runM <| reflectEqn (← g.getType)
-    logInfo m!"found expression of width: '{indentD widthExpr}'"
+    trace[Bits.MBA] m!"found expression of width: '{indentD widthExpr}'"
     let env ← State.envToExpr widthExpr reflectState
-    logInfo m!"replacing goal with reflected version. Equation: {indentD <| repr eqn}"
-    logInfo m!"Environment: {indentD (toMessageData reflectState.e2ix.toList)}"
+    trace[Bits.MBA] m!"replacing goal with reflected version. Equation: {indentD <| repr eqn}"
+    trace[Bits.MBA] m!"Environment: {indentD (toMessageData reflectState.e2ix.toList)}"
     -- let reflectedLhs ← mkAppM ``Eqn.reflect #[Eqn.toExpr eqn, env]
     -- let reflectedRhs := mkApp2 (mkConst ``BitVec.ofInt) widthExpr (toExpr (0 : Int))
     -- let g ← g.replaceTargetDefEq (← mkEq reflectedLhs reflectedRhs)
-    -- logInfo m!"Replaced. {indentD g}"
+    -- trace[Bits.MBA] m!"Replaced. {indentD g}"
     -- apply: Eqn.forall_width_reflect_zero_of_width_one_denote_zero
 
     let gs ← g.withContext do g.apply (mkAppN (mkConst ``Eqn.forall_width_reflect_zero_of_width_one_denote_zero []) #[Eqn.toExpr eqn, widthExpr, env])
@@ -938,7 +938,7 @@ def mbaTac (g : MVarId) : TermElabM (List MVarId) := do
       | throwError m!"expected single goal after applying reflection theorem, found {gs}"
     let dec ← mkDecideProof <| ← g.getType
     if ← isDefEq (mkMVar g) dec then
-      logInfo "successfully decided!"
+      trace[Bits.MBA] "successfully decided!"
       return []
     else
       logWarning "failed to prove theorem using decision procedure, statement is false."

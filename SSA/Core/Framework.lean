@@ -1657,7 +1657,7 @@ def Ctxt.Substitution (Γ Δ : Ctxt d.Ty) : Type :=
 @[coe] def Ctxt.Substitution.ofValuation
     (V : Valuation (Ty:=(TermModel d Δ).Ty) (TermModelTy.mk <$> Γ)) :
     Γ.Substitution d Δ := fun ⟨v, h⟩ =>
-  V ⟨v, by simp only [get?] at h; simp only [List.get?_eq_getElem?] at h; simp [h]⟩
+  V ⟨v, by simp only [get?] at h; simp [h]⟩
 
 /-- A context homomorphism trivially induces a substitution  -/
 @[coe] def Ctxt.Substitution.ofHom {Γ Δ : Ctxt d.Ty} (f : Γ.Hom Δ) : Γ.Substitution d Δ :=
@@ -1676,9 +1676,9 @@ def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution
   Ctxt.Substitution.ofValuation <|
     (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
       ExprTree.fvar ⟨v, by
-        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map, List.get?_eq_getElem?,
+        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map,
           List.getElem?_map, Option.map_eq_some'] at h
-        simp only [Ctxt.get?, List.get?_eq_getElem?]
+        simp only [Ctxt.get?]
         rcases h with ⟨ty', h_get, h_map⟩
         injection h_map with ty_eq_ty'
         subst ty_eq_ty'
@@ -1794,8 +1794,8 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
     (hw : Ctxt.get? Δ_out w = .some t)
     (ma : Mapping Δ_in Γ_out) :
   matchVar lets v (matchLets := .var matchLets matchE)
-    ⟨w + 1, by simp only [Ctxt.get?, Ctxt.snoc, List.get?_eq_getElem?,
-      List.getElem?_cons_succ]; simp only [Ctxt.get?, List.get?_eq_getElem?] at hw; apply hw⟩ ma =
+    ⟨w + 1, by simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_succ];
+               simp only [Ctxt.get?] at hw; apply hw⟩ ma =
   matchVar lets v matchLets ⟨w, hw⟩ ma := by
     conv =>
       lhs
@@ -2118,7 +2118,8 @@ theorem denote_matchVar2_of_subset
       apply ih h_sub h_matchVar
 
     | ⟨0, h_w⟩ =>
-      obtain rfl : t = _ := by simp[List.get?] at h_w; apply h_w.symm
+      obtain rfl : t = _ := by simp only [Ctxt.get?, Ctxt.snoc, List.length_cons, Nat.zero_lt_succ,
+        List.getElem?_eq_getElem, List.getElem_cons_zero, Option.some.injEq] at h_w; apply h_w.symm
       have ⟨args, h_pure, h_matchArgs⟩ := matchVar_var_last h_matchVar
       rw [← Vout.property v _ h_pure]
       simp only [Ctxt.get?, Var.zero_eq_last, Lets.denote_var_last_pure]
@@ -2233,7 +2234,7 @@ theorem mem_matchVar
     apply hvarMap'
   | .var matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
     revert hMatchLets
-    simp only [Ctxt.get?, Ctxt.snoc, List.get?_cons_zero, Option.some.injEq] at hw
+    simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_zero, Option.some.injEq] at hw
     subst hw
     simp only [Lets.vars, Ctxt.get?, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
       Sigma.exists, forall_exists_index, and_imp]
@@ -2443,13 +2444,13 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
-      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [List.get?_eq_get, Ctxt.ofList]⟩
+      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [List.getElem?_eq_getElem, Ctxt.ofList]⟩
       ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
   · intro h t v
     rcases v with ⟨i, hi⟩
     try simp only [Erased.out_mk] at hi
-    rcases List.get?_eq_some_iff.1 hi with ⟨h', rfl⟩
+    rcases List.getElem?_eq_some_iff.1 hi with ⟨h', rfl⟩
     simp at h'
     convert h ⟨i, h'⟩
   · intro h i

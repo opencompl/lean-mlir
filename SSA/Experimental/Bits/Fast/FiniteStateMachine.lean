@@ -113,7 +113,7 @@ def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.
   out := out ++ "**State Transition:**" ++  Format.line
   let as : List fsm.α := Finset.univ |>.toListUnsafe
   let mut ts := f!""
-  for (_i, a) in List.enum as do
+  for (a, _i) in List.zipIdx as do
     ts := ts ++ Format.align true ++ f!"{fα a}: '{(formatCircuit formatSum (fsm.nextBitCirc (some a)))}'" ++ Format.line
   out := out ++ Format.group (Format.nest 2 ts)
   return out

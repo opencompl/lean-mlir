@@ -10,17 +10,16 @@ Authors: Siddharth Bhat
 import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 
+set_option linter.unusedVariables false
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
   intros
   bv_automata_gen (config := {backend := .circuit_cadical} )
-#print eq1
 
 /-- Can solve implicitly quantified expressions by directly invoking bv_automata3. -/
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
-#print eq1
 
 open NNF in
 
@@ -180,14 +179,9 @@ example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
 theorem eq_gen (w : Nat) (a b : BitVec w) : (a &&& b = 0#w) → ((a + b) = (a ||| b)) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-#print eq_gen
-
-
 /-- Can exploit hyps -/
 theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
-
-#print eq_gen
 
 section BvAutomataTests
 
@@ -409,8 +403,6 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 info: 'width_1_char_2_add_four' depends on axioms: [propext, Classical.choice, Quot.sound, Reflect.BvDecide.decideIfZerosMAx]
 -/
 #guard_msgs in #print axioms width_1_char_2_add_four
-
-set_option trace.profiler true  in
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by

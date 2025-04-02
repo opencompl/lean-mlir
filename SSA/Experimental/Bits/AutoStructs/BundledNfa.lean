@@ -96,5 +96,3 @@ lemma lift_accepts (M : NFA' n) (f : Fin n → Fin m) :
 lemma proj_accepts (M : NFA' m) (f : Fin n → Fin m) :
     (M.proj f).accepts = BitVecs.transport f '' M.accepts := by
   simp [accepts, accepts', proj]
-
-#min_imports

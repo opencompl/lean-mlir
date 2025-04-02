@@ -23,6 +23,8 @@ def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
   List Ty
 
+abbrev Ctxt.toList (Γ : Ctxt Ty) : List Ty := Γ
+
 namespace Ctxt
 
 variable {Ty : Type}
@@ -57,7 +59,7 @@ def ofList : List Ty → Ctxt Ty :=
 -- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
 def get? : Ctxt Ty → Nat → Option Ty :=
-  List.get?
+  GetElem?.getElem? (coll := List _)
 
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
@@ -109,7 +111,7 @@ def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var [] t → α :=
   fun ⟨_, h⟩ => by
-    simp only [get?, List.get?_eq_getElem?, List.getElem?_nil, reduceCtorEq] at h
+    simp only [get?, List.getElem?_nil, reduceCtorEq] at h
 
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
@@ -132,7 +134,7 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
       simp only [get?, map, List.getElem?_map, Option.map_eq_some']
-      simp only [get?, List.get?_eq_getElem?] at h
+      simp only [get?] at h
       simp [h]
     ⟩
 
@@ -169,7 +171,8 @@ def casesOn
   match v with
     | ⟨0, h⟩ =>
         _root_.cast (by
-          simp only [get?, snoc, List.get?_cons_zero, Option.some.injEq] at h
+          simp only [get?, snoc, List.length_cons, Nat.zero_lt_succ, List.getElem?_eq_getElem,
+            List.getElem_cons_zero, Option.some.injEq] at h
           subst h
           simp_all only [get?, zero_eq_last]
           ) <| @last Γ t
@@ -288,7 +291,7 @@ infixl:50 "::ᵥ" => Valuation.snoc
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) = fun t var => match var with
       | ⟨0, hvar⟩ => by
-          simp only [get?, Ctxt.snoc, List.get?_cons_zero, Option.some.injEq] at hvar
+          simp only [get?, Ctxt.snoc, List.getElem?_cons_zero, Option.some.injEq] at hvar
           exact (hvar ▸ x)
       | ⟨.succ i, hvar⟩ => s ⟨i, hvar⟩ := by
   funext t' v
@@ -322,7 +325,7 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
     (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
     (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by
-      simp only [get?, Ctxt.snoc, List.get?_cons_succ] at hvar; exact hvar⟩ :=
+      simp only [get?, Ctxt.snoc, List.getElem?_cons_succ] at hvar; exact hvar⟩ :=
   rfl
 
 /-- There is only one distinct valuation for the empty context -/
@@ -475,7 +478,8 @@ def toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
   ⟨d.val + 1, by
     intro i _ h_get_snoc
     rcases d with ⟨d, h_get_d⟩
-    simp only [get?, List.get?, Nat.add_eq, ← h_get_d h_get_snoc]
+    simp only [get?, Nat.add_eq, ← h_get_d h_get_snoc]
+    rfl
   ⟩
 
 /-- Removing a type from the left context corresponds to incrementing the difference by 1 -/
@@ -484,7 +488,6 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     intro i t h_get
     rcases d with ⟨d, h_get_d⟩
     specialize @h_get_d (i+1) t
-    simp only [get?, List.get?] at h_get_d
     rw [←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
@@ -499,9 +502,6 @@ def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
     rcases d with ⟨d, h_get_d⟩
     simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some',
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] at h_get_d ⊢
-    simp only [List.get?_eq_getElem?] at h_get_d
-    simp only [List.get?_eq_getElem?, List.getElem?_map, Option.map_eq_some', forall_exists_index,
-      and_imp, forall_apply_eq_imp_iff₂]
     intros a b c
     simp [h_get_d c]
   ⟩
@@ -532,7 +532,7 @@ def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
 theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     Valid Γ₁ Γ₂ d := by
   intro i t h_get
-  simp [←h_valid h_get, snoc, List.get?]
+  simp [←h_valid h_get, snoc, List.getElem?_cons]
 
 lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by

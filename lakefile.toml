@@ -10,7 +10,7 @@ rev = "nightly-testing-2025-04-01"
 [[require]]
 name = "Cli"
 git = "https://github.com/mhuisi/lean4-cli.git"
-rev = "nightly"
+rev = "main"
 
 [[require]]
 name = "leanwuzla"

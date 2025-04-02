@@ -6,6 +6,8 @@ import SSA.Experimental.Bits.Frontend.Syntax
 import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
+initialize Lean.registerTraceClass `Bits.Frontend
+
 namespace Tactic
 open Lean Meta Elab Tactic
 
@@ -465,32 +467,32 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     -- Next, after reverting, we have a goal which we want to reflect.
     -- we convert this goal to NNF
     let .some g ← NNF.runNNFSimpSet g
-      | logInfo m!"Converting to negation normal form automatically closed goal."
+      | trace[Bits.Frontend] m!"Converting to negation normal form automatically closed goal."
         return[]
-    logInfo m!"goal after NNF: {indentD g}"
+    trace[Bits.Frontend] m!"goal after NNF: {indentD g}"
 
     let .some g ← Simplifications.runPreprocessing g
-      | logInfo m!"Preprocessing automatically closed goal."
+      | trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
         return[]
-    logInfo m!"goal after preprocessing: {indentD g}"
+    trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
 
     -- finally, we perform reflection.
     let result ← reflectPredicateAux ∅ (← g.getType) w
     result.bvToIxMap.throwWarningIfUninterpretedExprs
 
-    logInfo m!"predicate (repr): {indentD (repr result.e)}"
+    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr result.e)}"
 
     let bvToIxMapVal ← result.bvToIxMap.toExpr w
 
     let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
-    logInfo m!"goal after reflection: {indentD g}"
+    trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
 
 
     match cfg.backend with
     | .dryrun =>
         g.assign (← mkSorry (← g.getType) (synthetic := false))
-        logInfo "Closing goal with 'sorry' for dry-run"
+        trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
     | .automata =>
       let (mapFv, g) ← generalizeMap g bvToIxMapVal;
@@ -519,7 +521,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       return [g]
     | .circuit_cadical maxIter =>
       let fsm := predicateEvalEqFSM result.e |>.toFSM
-      logInfo f!"{fsm.format}'"
+      trace[Bits.Frontend] f!"{fsm.format}'"
       let isTrueForall ← fsm.decideIfZerosMCadical maxIter
       if isTrueForall
       then do
@@ -533,7 +535,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         return [g]
     | .circuit_lean =>
       let fsm := predicateEvalEqFSM result.e |>.toFSM
-      logInfo f!"{fsm.format}'"
+      trace[Bits.Frontend] f!"{fsm.format}'"
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
       if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold && cfg.stateSpaceSizeThreshold != 0 then
@@ -546,7 +548,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       let g ←
         -- Fixed width problem
         if h : wVal?.isSome ∧ cfg.fastFixedWidth then
-          logInfo m!"using special fixed-width procedure for fixed bitwidth '{w}'."
+          trace[Bits.Frontend] m!"using special fixed-width procedure for fixed bitwidth '{w}'."
           let wVal := wVal?.get h.left
           let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq_fixedWidth)
             | throwError m!"Failed to apply `Predicate.denote_of_eval_eq_fixedWidth` on goal '{indentD g}'"
@@ -585,7 +587,7 @@ def evalBvAutomataCircuit : Tactic := fun
     match gs  with
     | [] => return ()
     | [g] => do
-      logInfo m!"goal being decided via boolean reflection: {indentD g}"
+      trace[Bits.Frontend] m!"goal being decided via boolean reflection: {indentD g}"
       evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig })
     | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
@@ -631,13 +633,13 @@ def evalBvAutomataFragmentNoUninterpreted : Tactic := fun
       -- Next, after reverting, we have a goal which we want to reflect.
       -- we convert this goal to NNF
       let .some g ← NNF.runNNFSimpSet g
-        | logInfo m!"Converting to negation normal form automatically closed goal."
+        | trace[Bits.Frontend] m!"Converting to negation normal form automatically closed goal."
           return ()
-      logInfo m!"goal after NNF: {indentD g}"
+      trace[Bits.Frontend] m!"goal after NNF: {indentD g}"
       let .some g ← Simplifications.runPreprocessing g
-        | logInfo m!"Preprocessing automatically closed goal."
+        | trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
           return ()
-      logInfo m!"goal after preprocessing: {indentD g}"
+      trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
       -- finally, we perform reflection.
       let result ← reflectPredicateAux ∅ (← g.getType) w
       -- Order the expressions so we get stable error messages.
@@ -680,21 +682,21 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
       -- Next, after reverting, we have a goal which we want to reflect.
       -- we convert this goal to NNF
       let .some g ← NNF.runNNFSimpSet g
-        | logInfo m!"Converting to negation normal form automatically closed goal."
+        | trace[Bits.Frontend] m!"Converting to negation normal form automatically closed goal."
           return ()
-      logInfo m!"goal after NNF: {indentD g}"
+      trace[Bits.Frontend] m!"goal after NNF: {indentD g}"
 
       let .some g ← Simplifications.runPreprocessing g
-        | logInfo m!"Preprocessing automatically closed goal."
+        | trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
           return ()
-      logInfo m!"goal after preprocessing: {indentD g}"
+      trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
       -- finally, we perform reflection.
       let result ← reflectPredicateAux ∅ (← g.getType) w
       let bvToIxMapVal ← result.bvToIxMap.toExpr w
 
       let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
       let g ← g.replaceTargetDefEq target
-      logInfo m!"goal after reflection: {indentD g}"
+      trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
       return ()
 | _  => throwUnsupportedSyntax
 
