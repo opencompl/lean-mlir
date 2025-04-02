@@ -1,5 +1,5 @@
 name = "SSA"
-precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
+# precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
 defaultTargets = ["SSA"]
 
 [[require]]

@@ -4,51 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
 import SSA.Experimental.Bits.Fast.BitStream
-
-/-!
-# Term Language
-This file defines the term language the decision procedure operates on,
-and the denotation of these terms into operations on bitstreams -/
-
-/-- A `Term` is an expression in the language our decision procedure operates on,
-it represent an infinite bitstream (with free variables) -/
-inductive Term : Type
-| var : Nat → Term
-/-- The constant `0` -/
-| zero : Term
-/-- The constant `-1` -/
-| negOne : Term
-/-- The constant `1` -/
-| one : Term
-/-- The constant `n` from a bitvector expression -/
-| ofNat (n : Nat) : Term
-/-- Bitwise and -/
-| and : Term → Term → Term
-/-- Bitwise or -/
-| or : Term → Term → Term
-/-- Bitwise xor -/
-| xor : Term → Term → Term
-/-- Bitwise complement -/
-| not : Term → Term
-/-- Append a single bit the start (i.e., least-significant end) of the bitstream -/
-| ls (b : Bool) : Term → Term
-/-- Addition -/
-| add : Term → Term → Term
-/-- Subtraction -/
-| sub : Term → Term → Term
-/-- Negation -/
-| neg : Term → Term
--- /-- Increment (i.e., add one) -/
--- | incr : Term → Term
--- /-- Decrement (i.e., subtract one) -/
--- | decr : Term → Term
-/-- shift left by `k` bits. -/
-| shiftL : Term → Nat → Term
--- /-- logical shift right by `k` bits. -/
--- | lshiftR : Term → Nat → Term
--- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
---   hence, I don't anticipate us implementing it.
-deriving Repr
+import SSA.Experimental.Bits.Frontend.Defs
 
 open Term
 
@@ -71,7 +27,6 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | or t₁ t₂    => (t₁.eval vars) ||| (t₂.eval vars)
   | xor t₁ t₂   => (t₁.eval vars) ^^^ (t₂.eval vars)
   | not t       => ~~~(t.eval vars)
-  | ls b t      => (Term.eval t vars).concat b
   | add t₁ t₂   => (Term.eval t₁ vars) + (Term.eval t₂ vars)
   | sub t₁ t₂   => (Term.eval t₁ vars) - (Term.eval t₂ vars)
   | neg t       => -(Term.eval t vars)
@@ -79,36 +34,6 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
 --   | decr t      => BitStream.decr (Term.eval t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.eval t vars) n
  -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
-
-instance : Add Term := ⟨add⟩
-instance : Sub Term := ⟨sub⟩
-instance : One Term := ⟨one⟩
-instance : Zero Term := ⟨zero⟩
-instance : Neg Term := ⟨neg⟩
-
-/-- `t.arity` is the max free variable id that occurs in the given term `t`,
-and thus is an upper bound on the number of free variables that occur in `t`.
-
-Note that the upper bound is not perfect:
-a term like `var 10` only has a single free variable, but its arity will be `11` -/
-@[simp] def Term.arity : Term → Nat
-| (var n) => n+1
-| zero => 0
-| one => 0
-| negOne => 0
-| ofNat _ => 0
-| Term.and t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.or t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.not t => arity t
-| ls _ t => arity t
-| add t₁ t₂ => max (arity t₁) (arity t₂)
-| sub t₁ t₂ => max (arity t₁) (arity t₂)
-| neg t => arity t
--- | incr t => arity t
--- | decr t => arity t
-| shiftL t .. => arity t
--- | repeatBit t => arity t
 
 /--
 Evaluate a term `t` to the BitStream it represents.
@@ -137,7 +62,6 @@ and only require that many bitstream values to be given in `vars`.
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ ^^^ x₂
   | not t     => ~~~(t.evalFin vars)
-  | ls b t    => (t.evalFin vars).concat b
   | add t₁ t₂ =>
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
@@ -151,42 +75,6 @@ and only require that many bitstream values to be given in `vars`.
  --  | decr t      => BitStream.decr (Term.evalFin t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
-
-
-/--
-The fragment of predicate logic that we support in `bv_automata`.
-Currently, we support equality, conjunction, disjunction, and negation.
-This can be expanded to also support arithmetic constraints such as unsigned-less-than.
-
-Meaning of the denotation:
-
-`p w = false` iff the predicate holds *at* width w
--/
--- a < b <=> a - b < 0
--- a <= 0 <=> a < 0 ∨ a = 0
--- a > b <=> b < a <=> b - a < 0
-inductive Predicate : Type where
-/-- Assert that the bitwidth equals `n` -/
-| widthEq (n : Nat) : Predicate
-/-- Assert that the bitwidth does not equal `n` -/
-| widthNeq (n : Nat) : Predicate
-/-- Assert that the bitwidth is less than 'n' -/
-| widthLt (n : Nat) : Predicate
-/-- Assert that the bitwidth is less than or equal to 'n' -/
-| widthLe (n : Nat) : Predicate
-/-- Assert that the bitwidth is greater than 'n' -/
-| widthGt (n : Nat) : Predicate
-/-- Assert that the bitwidth is greater than or equal to 'n' -/
-| widthGe (n : Nat) : Predicate
-| eq (t₁ t₂ : Term) : Predicate
-| neq (t₁ t₂ : Term) : Predicate
-| ult (t₁ t₂ : Term) : Predicate
-| ule (t₁ t₂ : Term) : Predicate
-| slt (t₁ t₂ : Term) : Predicate
-| sle (t₁ t₂ : Term) : Predicate
-| land  (p q : Predicate) : Predicate
-| lor (p q : Predicate) : Predicate
-deriving Repr
 
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
@@ -231,7 +119,7 @@ private theorem not_not_xor_not (a b : Bool) : ! ((!a).xor (!b)) = (a == b) := b
   decide
 
 /--
-info: BitVec.slt_eq_not_carry {w : ℕ} (x y : BitVec w) : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
+info: BitVec.slt_eq_not_carry {w : ℕ} {x y : BitVec w} : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
 -/
 #guard_msgs in #check BitVec.slt_eq_not_carry
 
@@ -256,28 +144,28 @@ when truncated to index `i`, is true.
 -/
 def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
-  | widthEq n => BitStream.falseIffEq n
-  | widthNeq n => BitStream.falseIffNeq n
-  | widthLt n => BitStream.falseIffLt n
-  | widthLe n => BitStream.falseIffLe n
-  | widthGt n => BitStream.falseIffGt n
-  | widthGe n => BitStream.falseIffGe n
-  | eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
+  | .width .eq n => BitStream.falseIffEq n
+  | .width .neq n => BitStream.falseIffNeq n
+  | .width .lt n => BitStream.falseIffLt n
+  | .width .le n => BitStream.falseIffLe n
+  | .width .gt n => BitStream.falseIffGt n
+  | .width .ge n => BitStream.falseIffGe n
+  | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
+  | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
+  | binary .eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
   /-
   If it is ever not equal, then we want to stay not equals for ever.
   So, if the 'a = b' returns 'false' at some index 'i', we will stay false
   for all indexes '≥ i'.
   -/
-  | neq t1 t2 => Predicate.evalNeq (t1.eval vars) (t2.eval vars)
-  | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
-  | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
-  | ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
-  | ule t₁ t₂ =>
+  | binary .neq t1 t2 => Predicate.evalNeq (t1.eval vars) (t2.eval vars)
+  | binary .ult t₁ t₂ => Predicate.evalUlt (t₁.eval vars) (t₂.eval vars)
+  | binary .ule t₁ t₂ =>
      Predicate.evalLor
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalUlt (t₁.eval vars) (t₂.eval vars))
-  | slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
-  | sle t₁ t₂ => Predicate.evalLor
+  | binary .slt t₁ t₂ => Predicate.evalSlt (t₁.eval vars) (t₂.eval vars)
+  | binary .sle t₁ t₂ => Predicate.evalLor
        (Predicate.evalEq (t₁.eval vars) (t₂.eval vars))
        (Predicate.evalSlt (t₁.eval vars) (t₂.eval vars))
 
@@ -300,32 +188,21 @@ theorem all_zeroes_of_scanOr_eventually_all_zeroes (b : BitStream) (h : ∃ (N :
 
 end Predicate
 
-@[simp] def Predicate.arity : Predicate → Nat
-| .widthEq _ | .widthNeq _ | .widthGe _ | .widthGt _ | .widthLt _ | .widthLe _ => 0
-| .eq t1 t2 => max t1.arity t2.arity
-| .lor p q => max p.arity q.arity
-| .land p q => max p.arity q.arity
-| .neq t₁ t₂ => max t₁.arity t₂.arity
-| .ult t₁ t₂ => max t₁.arity t₂.arity
-| .ule t₁ t₂ => t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity)
-| .slt t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity))
-| .sle t₁ t₂ => (t₁.arity ⊔ t₂.arity ⊔ (t₁.arity ⊔ t₂.arity) ⊔ (t₁.arity ⊔ t₂.arity))
-
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 -- TODO: remove this from the @[simp] set.
 @[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
-| widthEq n => BitStream.falseIffEq n
-| widthNeq n => BitStream.falseIffNeq n
-| widthLt n => BitStream.falseIffLt n
-| widthLe n => BitStream.falseIffLe n
-| widthGt n => BitStream.falseIffGt n
-| widthGe n => BitStream.falseIffGe n
-| .eq t₁ t₂ =>
+| .width .eq n => BitStream.falseIffEq n
+| .width .neq n => BitStream.falseIffNeq n
+| .width .lt n => BitStream.falseIffLt n
+| .width .le n => BitStream.falseIffLe n
+| .width .gt n => BitStream.falseIffGt n
+| .width .ge n => BitStream.falseIffGe n
+| .binary .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     Predicate.evalEq x₁ x₂
-| .neq t₁ t₂  =>
+| .binary .neq t₁ t₂  =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     Predicate.evalNeq x₁ x₂
@@ -340,19 +217,19 @@ match p with
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor x₁ x₂
-| .slt p q =>
+| .binary .slt p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalSlt x₁ x₂
-| .sle p q =>
+| .binary .sle p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor (Predicate.evalSlt x₁ x₂) (Predicate.evalEq x₁ x₂)
-| .ult p q =>
+| .binary .ult p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   (Predicate.evalUlt x₁ x₂)
-| .ule p q =>
+| .binary .ule p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor (Predicate.evalUlt x₁ x₂) (Predicate.evalEq x₁ x₂)
