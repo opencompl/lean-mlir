@@ -229,7 +229,7 @@ private theorem not_not_xor_not (a b : Bool) : ! ((!a).xor (!b)) = (a == b) := b
   decide
 
 /--
-info: BitVec.slt_eq_not_carry {w : ℕ} (x y : BitVec w) : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
+info: BitVec.slt_eq_not_carry {w : ℕ} {x y : BitVec w} : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
 -/
 #guard_msgs in #check BitVec.slt_eq_not_carry
 

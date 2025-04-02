@@ -27,7 +27,7 @@ theorem Array.take_ge_size {a : Array α} {n} (h : n ≥ a.size) : a.take n = a 
   simp [Array.take, Array.extract]
   have heq : min n a.size = a.size := by omega
   rw [heq]
-  have h := Array.extract_size a
+  have h := @Array.extract_size _ a
   rewrite [Array.extract] at h
   simp_all
 
