@@ -254,6 +254,14 @@ def testExFaImpl : Tactic := fun _ => do
 theorem test_exists_for_all : False := by
   test_exists_for_all
 
+
+def addConstraints (expr: BVLogicalExpr) (constraints: List (BoolExpr BVPred)) : BVLogicalExpr :=
+      match constraints with
+      | [] => expr
+      | x::xs =>
+          addConstraints (BoolExpr.gate Gate.and expr x) xs
+
+
 def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat (BitVec w)) (target: BitVec w) :
                       TermElabM ( List (BVExpr w)) := do
       --- Special constants
@@ -268,14 +276,6 @@ def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: S
 
       let inputsAndConstants := List.product inputCombinations constsPermutation
 
-      let rec addConstraints (expr: BVLogicalExpr) (constraints: List (Nat × BitVec w)) : BVLogicalExpr :=
-            match constraints with
-            | [] => expr
-            | x::xs =>
-                let newConstraint := BoolExpr.literal (BVPred.bin (BVExpr.var x.fst) BVBinPred.eq (BVExpr.const x.snd))
-                addConstraints (BoolExpr.gate Gate.and expr newConstraint) xs
-
-
       let mut validCombos : List (BVExpr w) := []
       for combo in inputsAndConstants do
           let inputsSubstitutions := packedBitVecToSubstitutionValue (Std.HashMap.ofList (List.zip inputs combo.fst))
@@ -284,7 +284,8 @@ def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: S
           let substitutedExpr := substituteBVExpr origExpr (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
           let firstConstraint := BoolExpr.literal (BVPred.bin (substitutedExpr) BVBinPred.eq (BVExpr.const target))
 
-          let newExpr := addConstraints firstConstraint constants.toList
+          let newConstraints := constants.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd)))
+          let newExpr := addConstraints firstConstraint newConstraints
 
           if let some _ ← solve newExpr then
             validCombos := substitutedExpr :: validCombos
@@ -377,3 +378,74 @@ def testExpressionSynthesis : Tactic := fun _ => do
 
 theorem test_inductive : False := by
   test_expression_synthesis
+
+
+
+def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
+              TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    -- expr is negated for helper
+  let rec helper (expr: BVLogicalExpr) (depth : Nat)
+          : TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+        match depth with
+          | 0 => return []
+          | n + 1 =>
+              let solution ← solve expr
+
+              match solution with
+              | none => return []
+              | some assignment =>
+                   let constVals := assignment.filter fun c _ => consts.contains c
+                   let newConstraints := constVals.toList.map (fun c => BoolExpr.not (BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv))))
+
+                   let res ← helper (addConstraints expr newConstraints) n
+                   return [constVals] ++ res
+
+
+  helper (BoolExpr.not bvExpr) num
+
+structure PreconditionSynthesisTestConfig where
+  expr: BVLogicalExpr
+
+
+
+def preconditionSynthesisEx1 : BVLogicalExpr :=
+  let bitwidth := 4
+  let x : BVExpr bitwidth := BVExpr.var 0
+  let c1 : BVExpr bitwidth := BVExpr.var 100
+  let c2 : BVExpr bitwidth := BVExpr.var 101
+  let c3 : BVExpr bitwidth := BVExpr.var 102
+
+  -- LHS: LShR(x << c1, c2) << c3
+  let lhs := BVExpr.shiftLeft (BVExpr.shiftRight (BVExpr.shiftLeft x c1) c2) c3
+
+  -- RHS: x & (LShR(-1 << c1, c2) << c3)
+  let negOne : BVExpr bitwidth := BVExpr.const (BitVec.neg (BitVec.ofNat bitwidth 1))
+  let rhs := BVExpr.bin x BVBinOp.and (BVExpr.shiftLeft (BVExpr.shiftRight (BVExpr.shiftLeft negOne c1) c2) c3)
+
+  BoolExpr.literal (BVPred.bin lhs BVBinPred.eq rhs)
+
+def negativeExNoneExpected : BVLogicalExpr :=
+  let bitwidth := 4
+  let x  : BVExpr bitwidth := BVExpr.var 0
+  let y  : BVExpr bitwidth := BVExpr.var 1
+  let c1 : BVExpr bitwidth := BVExpr.var 100
+  let c2 : BVExpr bitwidth := BVExpr.var 101
+
+  -- LHS: (x + c1) - (y + c2)
+  let lhs := BVExpr.bin (BVExpr.bin x BVBinOp.add c1) BVBinOp.add (negate (BVExpr.bin y BVBinOp.add c2))
+
+  -- RHS: x - y + (c1 - c2)
+  let rhs := BVExpr.bin (BVExpr.bin x BVBinOp.add (negate y)) BVBinOp.add (BVExpr.bin c1 BVBinOp.add (negate c2))
+
+  BoolExpr.literal (BVPred.bin lhs BVBinPred.eq rhs)
+
+syntax (name := testNegativeExample) "test_negative_examples" : tactic
+@[tactic testNegativeExample]
+def testNegativeEx : Tactic := fun _ => do
+  -- let res ← getNegativeExamples preconditionSynthesisEx1 [100, 101, 102] 3
+  let res ← getNegativeExamples negativeExNoneExpected [100, 101] 3
+  logInfo m! "Results: {res} of length: {res.length}"
+  pure ()
+
+theorem test_negative_ex : False := by
+  test_negative_examples
