@@ -406,6 +406,7 @@ def StreamWithoutNones' (α : Type) : Type :=
   Quot (Bisim : Stream α → Stream α → Prop)
 
 instance StreamSetoid (α : Type) : Setoid (Stream α) where
+  r := Bisim
   iseqv := Equivalence.mk (@Bisim.rfl α) Bisim.symm Bisim.trans
 
 def StreamWithoutNones (α : Type) : Type :=
