@@ -1,13 +1,11 @@
-
 import SSA.Experimental.Bits.AutoStructs.ForLean
-import SSA.Experimental.Bits.FastCopy.FiniteStateMachine
+import SSA.Experimental.Bits.Fast.FiniteStateMachine
 
 open Sum
 
 section FSM
 variable {α β α' β' : Type} {γ : β → Type}
 
-namespace Copy
 namespace FSM
 
 attribute [instance] FSM.i FSM.dec_eq
