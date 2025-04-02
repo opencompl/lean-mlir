@@ -124,12 +124,6 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
       add_pos_iff, Nat.lt_one_iff, pos_of_gt, or_true, Nat.one_mod_two_pow, Nat.mod_mul_mod]
     rw [Nat.mul_comm]
 
-def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
-  simp only [BitVec.msb, getMsbD, allOnes]
-  simp only [getLsbD_ofNatLT, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
-    decide_eq_true_eq]
-  rw [Nat.sub_lt_iff_lt_add] <;> omega
-
 -- @[simp]
 def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
   simp only [toNat_eq, toNat_neg, toNat_allOnes, toNat_ofNat]
@@ -270,11 +264,6 @@ lemma eq_zero_of_toNat_mod_eq_zero {x : BitVec w} (hx : x.toNat % 2^w = 0) : x =
   rw [Nat.mod_eq_of_lt xlt] at hx
   subst hx
   rfl
-
-theorem toNat_one (hw : w ≠ 0 := by omega): BitVec.toNat (1 : BitVec w) = 1 := by
-  simp only [ofNat_eq_ofNat, toNat_ofNat]
-  apply Nat.mod_eq_of_lt
-  apply Nat.one_lt_pow <;> omega
 
 theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): BitVec.intMin w = 1 := by
   cases w
