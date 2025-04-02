@@ -4,9 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
-import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
-import SSA.Experimental.Bits.FastCopy.Reflect
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
 import SSA.Core.Tactic.TacBench
@@ -183,13 +182,6 @@ macro "bool_to_prop" : tactic =>
     )
    )
 
-macro "bv_automata_classic" : tactic =>
-  `(tactic|
-    (
-      bv_automata_classic_nf
-    )
-   )
-
 /--
 There are 2 main kinds of operations on BitVecs
 1. Boolean operations (^^^, &&&, |||) which can be solved by extensionality.
@@ -231,7 +223,7 @@ macro "bv_auto": tactic =>
           | bv_distrib
           | bv_ring
           | bv_of_bool
-          | bool_to_prop; bv_automata_classic_nf
+          | bool_to_prop; bv_automata_classic
           | bv_decide
       )
    )
@@ -316,13 +308,13 @@ macro "bv_bench": tactic =>
             "bv_decide" : (bv_decide; done),
             "bv_auto" : (bv_auto; done),
             -- Verified, Lean-based.
-            "bv_automata_circuit_lean_prop" : (bool_to_prop; bv_automata_circuit; done),
-            "bv_automata_circuit_lean" : (bv_automata_circuit; done),
-            "bv_normalize_automata_circuit_lean" : ((try (solve | bv_normalize)); (try bv_automata_circuit); done),
+            "bv_automata_circuit_lean_prop" : (bool_to_prop; bv_automata_gen; done),
+            "bv_automata_circuit_lean" : (bv_automata_gen (config := {backend := .circuit_lean}); done),
+            "bv_normalize_automata_circuit_lean" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := {backend := .circuit_lean}); done); done),
             -- Cadical based, currently unverified.
-            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
-            "bv_automata_circuit_cadical" : (bv_automata_circuit (config := { backend := .cadical /- maxIter-/ 4 }); done),
-            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4})); done),
+            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4 }); done),
+            "bv_automata_circuit_cadical" : (bv_automata_gen (config := { backend := .circuit_cadical /- maxIter-/ 4 }); done),
+            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4})); done),
             -- MBA algorithm.
             "bv_mba" : (bv_mba; done),
             "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done),
@@ -348,9 +340,9 @@ macro "bv_bench_automata": tactic =>
             "bv_normalize" : (bv_normalize; done),
             "presburger" : (bv_automata_classic; done),
             "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
-            "circuitLean" : (bv_automata_circuit (config := { backend := .lean /- maxIter -/ 4 }); done),
-            "circuit" : (bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 }); done),
-            "normCircuit" : ((try (solve | bv_normalize)); (try bv_automata_circuit (config := { backend := .cadical /- maxIter -/ 4 })); done),
+            "circuitLean" : (bv_automata_gen (config := { backend := .cicuit_lean /- maxIter -/ 4 }); done),
+            "circuit" : (bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4 }); done),
+            "normCircuit" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4 })); done),
             "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
             "width_ok" : (bv_automata_fragment_width_legal),
             "reflect_ok" : (bv_automata_fragment_reflect),

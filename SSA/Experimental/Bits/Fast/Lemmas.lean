@@ -20,14 +20,14 @@ abbrev List.ofFn' (f : Nat → α) (size : Nat) : List α :=
   List.ofFn (n := size) (fun i => f i)
 
 
-lemma Term.evalFin_eq_eval (t : Term) 
+lemma Term.evalFin_eq_eval (t : Term)
    (varsList : List BitStream) (varsFin : Fin t.arity → BitStream)
    (hvars : ∀ (i : Fin t.arity), varsList.getD i default = (varsFin i)) :
     Term.evalFin t varsFin = Term.eval t varsList := by
   induction t generalizing varsList <;>
     dsimp [Term.evalFin, Term.eval, arity] at *
   case var i => rw [← hvars]; simp
-  case and a b ha hb => 
+  case and a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
@@ -63,11 +63,6 @@ lemma Term.evalFin_eq_eval (t : Term)
   case not a ha => rw [ha varsList _ hvars]
   case neg a ha => rw [ha varsList _ hvars]
   case shiftL k a ha => rw [ha varsList _ hvars]
-  case ls a b ha =>
-    rw [ha varsList]
-    intros i
-    -- TODO: make this into simp normal form
-    rw [hvars]
   case add a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
@@ -92,34 +87,29 @@ lemma Term.evalFin_eq_eval (t : Term)
       rfl
 
 /-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
-#guard_msgs in #print axioms Term.evalFin_eq_eval 
+#guard_msgs in #print axioms Term.evalFin_eq_eval
 
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
    (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :
     Predicate.evalFin p varsFin  = Predicate.eval p varsList := by
   induction p generalizing varsList <;>
-    dsimp [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
-  case eq =>
-    simp [evalEq]
-    rw [Term.evalFin_eq_eval _ varsList]
-    · rw [Term.evalFin_eq_eval _ varsList]
+    dsimp -failIfUnchanged [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
+  case width rel n =>
+    rcases rel <;> dsimp -failIfUnchanged [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
+  case binary ap t₁ t₂ =>
+    rcases ap <;>
+    · dsimp [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
+      simp [evalEq, evalNeq, evalUlt, evalSlt, evalLor]
+      rw [Term.evalFin_eq_eval _ varsList]
+      · rw [Term.evalFin_eq_eval _ varsList]
+        try rw [BitStream.and_comm]
+        · intros i
+          rw [hvars ⟨i, by omega⟩]
+          rfl
       · intros i
         rw [hvars ⟨i, by omega⟩]
         rfl
-    · intros i
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-  case neq =>
-    simp [evalNeq]
-    rw [Term.evalFin_eq_eval _ varsList]
-    · rw [Term.evalFin_eq_eval _ varsList]
-      · intros i
-        rw [hvars ⟨i, by omega⟩]
-        rfl
-    · intros i
-      rw [hvars ⟨i, by omega⟩]
-      rfl
   case land p q hp hq =>
     simp [evalLand]
     rw [hp varsList]
@@ -134,50 +124,6 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     simp [evalLor]
     rw [hp varsList]
     · rw [hq varsList]
-      · intros i
-        rw [hvars ⟨i, by omega⟩]
-        rfl
-    · intros i
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-  case ult =>
-    simp [evalUlt]
-    rw [Term.evalFin_eq_eval _ varsList]
-    · rw [Term.evalFin_eq_eval _ varsList]
-      intros i 
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-    · intros i
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-  case slt =>
-    simp [evalSlt]
-    rw [Term.evalFin_eq_eval _ varsList]
-    · rw [Term.evalFin_eq_eval _ varsList]
-      intros i 
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-    · intros i
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-  case ule =>
-    simp [evalUlt, evalEq]
-    rw [Term.evalFin_eq_eval _ varsList]
-    · rw [Term.evalFin_eq_eval _ varsList]
-      · simp [evalLor]
-        rw [BitStream.and_comm]
-      · intros i
-        rw [hvars ⟨i, by omega⟩]
-        rfl
-    · intros i
-      rw [hvars ⟨i, by omega⟩]
-      rfl
-  case sle =>
-    simp [evalUlt, evalEq]
-    rw [Term.evalFin_eq_eval _ varsList]
-    · rw [Term.evalFin_eq_eval _ varsList]
-      · simp [evalSlt, evalLor]
-        rw [BitStream.and_comm]
       · intros i
         rw [hvars ⟨i, by omega⟩]
         rfl
