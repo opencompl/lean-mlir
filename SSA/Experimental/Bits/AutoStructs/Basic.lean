@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import Mathlib.Algebra.Group.Nat.Range
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
-import SSA.Experimental.Bits.AutoStructs.FinEnum
+import SSA.Experimental.Bits.FinEnum
 
 set_option grind.warning false
 
