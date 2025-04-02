@@ -604,7 +604,7 @@ lemma BitVec.cons_ugt_iff {w} {bv1 bv2 : BitVec w} :
   nth_rw 2 [Nat.mul_comm]
   have _ := bv1.isLt
   have _ := bv2.isLt
-  repeat rw [←Nat.mul_add_lt_is_or] <;> try assumption
+  repeat rw [←Nat.two_pow_add_eq_or_of_lt] <;> try assumption
   cases b1 <;> cases b2 <;> simp <;> omega
 
 @[simp]
@@ -737,7 +737,7 @@ private lemma BitVec.sle_iff_slt_or_eq {w : ℕ} (bv1 bv2 : BitVec w):
 
 theorem Nat.add_lt_is_or {a} (a_lt : a < 2^i) :
     2^i + a = 2^i ||| a := by
-  have _ := Nat.mul_add_lt_is_or a_lt 1
+  have _ := Nat.two_pow_add_eq_or_of_lt a_lt 1
   simp_all
 
 @[simp]
@@ -2067,5 +2067,3 @@ theorem Formula.denote_of_isUniversal {p : Predicate}
 
 -- /-- info: true -/
 -- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> RawCNFA.isUniversal
-
-#min_imports

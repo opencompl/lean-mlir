@@ -24,6 +24,8 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 
 import Lean
 
+initialize Lean.registerTraceClass `Bits.Fast
+
 /-
 TODO:
 - [?] BitVec.ofInt
@@ -113,7 +115,7 @@ theorem BitStream.toBitVec_and (a b : BitStream) :
     (a &&& b).toBitVec w = a.toBitVec w &&& b.toBitVec w := by
   apply BitVec.eq_of_getLsbD_eq
   intros i hi
-  simp? [hi]
+  simp [hi]
 
 @[simp]
 theorem BitStream.toBitVec_or (a b : BitStream) :
@@ -244,7 +246,7 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
     simp [eval, denote]
     cases x? : vars[x]?
     case none => simp [default, denote]
-    case some x => simp [BitVec.signExtend_eq_setWidth_of_lt]
+    case some x => simp [BitVec.signExtend_eq_setWidth_of_le]
   case zero => simp [eval, denote]
   case negOne => simp [eval, denote]; rw [← BitVec.negOne_eq_allOnes]
   case one => simp [eval, denote]
@@ -537,7 +539,7 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
     cases p with
     | eq => simp [eval, denote]; apply evalEq_denote_false_iff
     | neq => simp [eval, denote]; apply evalNeq_denote
-    | ult => 
+    | ult =>
       simp [eval, denote]
       rw [BitVec.ult_notation_eq_decide_ult]
       by_cases h: Term.denote w a vars < Term.denote w b vars
@@ -841,7 +843,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     (c0K : Circuit (Vars p.α arity iter))
     (cK : Circuit (Vars p.α arity iter))
     (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
-  logInfo s!"## K-induction (iter {iter})"
+  trace[Bits.Fast] s!"## K-induction (iter {iter})"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
     return false
@@ -852,13 +854,13 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
   let formatEmpty : Empty → Format := fun e => e.elim
   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-  logInfo m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
+  trace[Bits.Fast] m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
   if ← checkCircuitSatAux cKWithInit
   then
-    IO.println s!"Safety property failed on initial state."
+    trace[Bits.Fast] s!"Safety property failed on initial state."
     return false
   else
-    IO.println s!"Safety property succeeded on initial state. Building next state circuit..."
+    trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
     -- circuit of the output at state (k+1)
     let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
       cK.bind fun v =>
@@ -876,8 +878,8 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     let tStart ← IO.monoMsNow
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    logInfo s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
-    logInfo s!"Establishing inductive invariant with cadical..."
+    trace[Bits.Fast] s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
+    trace[Bits.Fast] s!"Establishing inductive invariant with cadical..."
     let tStart ← IO.monoMsNow
     -- c = 0 => c' = 0
     -- !c => !c'
@@ -891,16 +893,16 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
        | .inputs i => .inputs (i.castLe (by omega))
     let safetyProperty := safetyProperty ||| impliesCircuit
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
-    logInfo m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
+    trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     -- let le : Bool := sorry
     let le ← checkCircuitTautoAux safetyProperty
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if le then
-      logInfo s!"Inductive invariant established! (time={tElapsedSec}s)"
+      trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
       return true
     else
-      logInfo s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
+      trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
       decideIfZerosAuxTermElabM (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
 
 -- def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
@@ -913,7 +915,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
 def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
   -- decideIfZerosM Circuit.impliesCadical fsm
-  withTraceNode `bv_automata_circuit (fun _ => return "k-induction") (collapsed := true) do
+  withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
     let safety : Circuit (Vars fsm.α arity 0) := .fals
     decideIfZerosAuxTermElabM 0 maxIter fsm c c safety

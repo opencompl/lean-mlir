@@ -158,7 +158,7 @@ theorem processOneElem_grow (st : worklist.St A S) (final : S → Bool) (a : A) 
 
 def worklist.initState (inits : Array S) (hinits : inits.toList.Nodup) (final? : S → Bool) : worklist.St A S :=
   let m := RawCNFA.empty (A := A)
-  let mapm := inits.foldl (init := (Std.HashMap.empty, m)) fun (map, m) sa =>
+  let mapm := inits.foldl (init := (Std.HashMap.emptyWithCapacity, m)) fun (map, m) sa =>
     let (s, m) := m.newState
     let m := m.addInitial s
     let m := if final? sa then m.addFinal s else m

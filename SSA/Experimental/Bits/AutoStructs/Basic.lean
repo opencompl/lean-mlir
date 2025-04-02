@@ -628,5 +628,3 @@ end basics
   representation of (a00, a01, .., a0k)(a10, a11, .., a1k)...(an0, an1, .., ank)
   is (a00 a10 ... an0 a01 a11 ... an1 ...... ank)
 -/
-
-#min_imports

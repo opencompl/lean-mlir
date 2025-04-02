@@ -912,5 +912,3 @@ theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Has
         rintro rfl
         aesop
     · simp [f]; grind
-
-#min_imports
