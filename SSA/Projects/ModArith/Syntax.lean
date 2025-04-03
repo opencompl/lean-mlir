@@ -22,7 +22,6 @@ This function maps from an MLIR type to our `ModArith` dialect’s type.
 We support:
   - `R` (a textual marker) → `.modLike`
   - `int` → `.integer`
-  - `index` → `.index`
 You can rename or expand these patterns as needed.
 -/
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (ModArith q) (ModArith q).Ty
@@ -30,8 +29,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (ModArith q) (ModArith q).T
     return .modLike
   | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _ =>
     return .integer
-  | MLIR.AST.MLIRType.index =>
-    return .index
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (ModArith q) 0 where
@@ -42,18 +39,7 @@ A helper to construct a constant integer expression (in Lean’s sense of “pla
 -/
 def cstInt {Γ : Ctxt _} (z : Int) : Expr (ModArith q) Γ .pure .integer :=
   Expr.mk
-    (op      := .const_int z)
-    (ty_eq   := rfl)
-    (eff_le  := by constructor)
-    (args    := .nil)
-    (regArgs := .nil)
-
-/--
-A helper to construct a constant index expression (Lean’s `Nat`).
--/
-def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (ModArith q) Γ .pure .index :=
-  Expr.mk
-    (op      := .const_idx i)
+    (op      := .const Ty.integer z)
     (ty_eq   := rfl)
     (eff_le  := by constructor)
     (args    := .nil)
@@ -67,7 +53,7 @@ def cstMod {Γ : Ctxt _} (z : Int) : Expr (ModArith q) Γ .pure .modLike :=
   -- For now, we can just do a raw `.const` to embed `↑z : ZMod q`.
   let zmod : ZMod q := z
   Expr.mk
-    (op      := .const zmod)
+    (op      := .const Ty.modLike zmod)
     (ty_eq   := rfl)
     (eff_le  := by constructor)
     (args    := .nil)
@@ -168,10 +154,8 @@ def mkExpr (Γ : Ctxt (ModArith q).Ty) (opStx : MLIR.AST.Op 0)
         -- check result type from `opStx.res`
         match opStx.res with
         | [(_, MLIR.AST.MLIRType.int .Signless _sz2)] =>
-          -- ok, produce cstInt
+          -- produce cstInt
           return ⟨.pure, .integer, cstInt val⟩
-        | [(_, MLIR.AST.MLIRType.index)] =>
-          return ⟨.pure, .index, cstIdx val.toNat⟩
         | other =>
           throw <| .generic s!"arith.constant: unsupported result type {repr other}"
       | tyOther =>
