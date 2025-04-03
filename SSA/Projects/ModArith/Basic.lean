@@ -21,11 +21,10 @@ open ZMod
 
   We assume `q > 1` as a fact. We denote our base ring as: `R = ZMod q`.
 
-  The dialect's type system includes (for example) `index`, `integer`, and
+  The dialect's type system includes (for example) `integer`, and
   a specialized type `modLike` for elements in `ZMod q`.
 
-  Operations: Add, Sub, Mul, and constants for this ring, plus integers and
-  indices.
+  Operations: Add, Sub, Mul, and constants for this ring, and integers.
 -/
 
 section CommRing
@@ -45,19 +44,15 @@ end CommRing
 ## Dialect type definitions
 
 Here, we define a small type system for the `ModArith` dialect:
-  1. `index` – if you also want natural-number indices (mirroring MLIR’s index).
-  2. `integer` – for full-range integers in Lean (ℤ).
-  3. `modLike` – for our ring `ZMod q`.
+  1. `integer` – for full-range integers in Lean (ℤ).
+  2. `modLike` – for our ring `ZMod q`.
 
 You can freely add more types or rename them according to your needs.
 -/
 inductive Ty (q : ℕ) where
-| index
 | integer
 | modLike
-deriving DecidableEq, Repr
-
-instance : Inhabited (Ty q) := ⟨Ty.index⟩
+deriving DecidableEq, Repr, Inhabited
 
 /--
 We provide a `TyDenote` instance: this is how we translate each
@@ -65,7 +60,6 @@ dialect type into an actual Lean type.
 -/
 instance : TyDenote (Ty q) where
 toType
-| Ty.index   => Nat
 | Ty.integer => Int
 | Ty.modLike => R q  -- i.e. `ZMod q`
 
@@ -74,15 +68,13 @@ toType
 
 Here are some sample operations. Adjust as appropriate for the
 `modarith` dialect: e.g. you might have add/sub/mul, an operation for
-returning constants mod q, an integer constant, index constant, etc.
+returning constants mod q, an integer constant, etc.
 -/
 inductive Op (q : ℕ) where
 | add : Op q        -- (modLike, modLike) → modLike
 | sub : Op q        -- (modLike, modLike) → modLike
 | mul : Op q        -- (modLike, modLike) → modLike
-| const (c : R q) : Op q  -- produce a constant in ZMod q
-| const_int (c : Int) : Op q  -- produce a constant integer
-| const_idx (c : Nat) : Op q  -- produce a constant index
+| const (ty : Ty q) (c : ⟦ty⟧) : Op q  -- produce a constant
 
 /--
 For each operation, we specify its input `sig` (a list of
@@ -93,18 +85,14 @@ def Op.sig : Op q → List (Ty q)
 | .add            => [Ty.modLike, Ty.modLike]
 | .sub            => [Ty.modLike, Ty.modLike]
 | .mul            => [Ty.modLike, Ty.modLike]
-| .const _        => []
-| .const_int _    => []
-| .const_idx _    => []
+| .const _ _      => []
 
 @[simp, reducible]
 def Op.outTy : Op q → Ty q
 | .add         => Ty.modLike
 | .sub         => Ty.modLike
 | .mul         => Ty.modLike
-| .const _     => Ty.modLike
-| .const_int _ => Ty.integer
-| .const_idx _ => Ty.index
+| .const ty _   => ty
 
 /-- Put them together into a `Signature`. -/
 @[simp, reducible]
@@ -139,12 +127,6 @@ denote
   | .mul, arg, _ =>
       -- Mul mod q
       (fun args : R q × R q => args.1 * args.2) arg.toPair
-  | .const c, _, _ =>
-      -- A constant in ZMod q
-      c
-  | .const_int c, _, _ =>
-      -- A plain integer (ℤ)
-      c
-  | .const_idx c, _, _ =>
-      -- A plain index (ℕ)
+  | .const _ c, _, _ =>
+      -- A constant
       c
