@@ -235,7 +235,6 @@ instance : DialectSignature Comb := ⟨Op.signature⟩
 def HVector.toList : HVector f (List.replicate n a) → List (f a) :=
   sorry
 
-
 @[simp]
 instance : DialectDenote (Comb) where
     denote
@@ -281,7 +280,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Comb.Ty
 instance instTransformTy : MLIR.AST.TransformTy Comb 0 where
   mkTy := mkTy
 
-def add {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (List.replicate (arity + 1) (.bv w)))  : Expr (Comb) Γ .pure (.bv w) :=
+def add {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (List.replicate (arity + 1) (.bv w))) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .add w arity)
     (ty_eq := by rfl)
@@ -433,6 +432,10 @@ def xor {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (List.replicate (arity 
     (args := a)
     (regArgs := .nil)
 
+def toHVector {Γ : Ctxt _} (arity: Nat) : List ((ty : Comb.Ty) × Γ.Var ty) → HVector (Γ.Var) (List.replicate (arity + 1) (ty)) :=
+  sorry
+
+
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Comb) (Σ eff ty, Expr (Comb) Γ eff ty) := do
   match opStx.name with
@@ -551,9 +554,10 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       else
         let ⟨.bv w, _⟩ := args[0] -- TODO: this should be provably in range
           | sorry -- throwError "Unexpected type"
-        let args : List (Γ.Var (.bv w)) ← args.mapM
-          sorry -- assert that every var is of type bv w
-        return ⟨_, .bv w, add w (args.length + 1)⟩
+        let args' : HVector Γ.Var (List.replicate (args.length + 1) (.bv w)) ← args.mapM _
+          sorry
+          -- sorry -- assert that every var is of type bv w
+        return ⟨_, .bv w, add (args.length) args'⟩
     else
       throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
