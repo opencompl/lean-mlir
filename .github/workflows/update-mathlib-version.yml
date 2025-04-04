@@ -25,23 +25,23 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Get Mathlib Date
-        id: mldate
+      - name: Get Mathlib Date (Today)
+        id: mldate_today
         run: |
-           echo "date=nightly-testing-`date +20%y-%m-%d`"
-           echo "date=nightly-testing-`date +20%y-%m-%d`" >> $GITHUB_OUTPUT
+           echo "date=`date +20%y-%m-%d`"
+           echo "date=`date +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
-      - name: Set Mathlib Date
+      - name: Set Mathlib Date (Today)
         run: |
-           sed -e "s/nightly-testing.*\"/${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly-testing.*\"/nightly-testing${{steps.mldate_today.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate_today.outputs.date}}\"/" -i lean-toolchain
            cat lakefile.toml
-
-      - name: Lake Update Mathlib
-        run: |
+           cat lean-toolchain
            lake update mathlib
 
-      - name: Create Pull Request
+      - name: Create Pull Request (Today)
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "chore: ${{steps.mldate.outputs.date}}"
+          title: "chore: ${{steps.mldate_today.outputs.date}}"
+          branch: "chore: ${{steps.mldate_today.outputs.date}}"
           token: ${{secrets.PAT}}
