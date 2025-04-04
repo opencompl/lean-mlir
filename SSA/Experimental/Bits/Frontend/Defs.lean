@@ -91,7 +91,7 @@ inductive WidthPredicate
 | le
 | gt
 | ge
-deriving Repr
+deriving Repr, Inhabited
 
 /--
 The fragment of predicate logic that we support in `bv_automata`.
@@ -111,7 +111,7 @@ inductive Predicate : Type where
 | binary (p : BinaryPredicate) (t₁ t₂ : Term)
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
-deriving Repr
+deriving Repr, Inhabited
 
 -- TODO: This ugly definition is here to make the `predicateEvalEqFSM` function compile wihtout change.
 @[simp] def Predicate.arity : Predicate → Nat
