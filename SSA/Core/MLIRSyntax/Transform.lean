@@ -105,9 +105,9 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
         namemapping stored in the monad -/
     throw <| .indexOutOfBounds name index n
   else
-    let t := List.get Γ ⟨index, Nat.lt_of_not_le h⟩
+    let t := Γ.toList[index]'(Nat.lt_of_not_le h)
     if h : t = expectedType then
-      return ⟨index, by simp only [get?, ← h]; rw [←List.get?_eq_get]⟩
+      return ⟨index, by simp only [get?, ← h]; rw [←List.getElem?_eq_getElem]⟩
     else
       throw <| .typeError expectedType t
 

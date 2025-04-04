@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import Batteries.Data.Fin.Basic
 import Batteries.Data.Fin.Lemmas
+import SSA.Experimental.Bits.Frontend.Defs
 import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
@@ -12,8 +13,6 @@ import Mathlib.Tactic.FinCases
 
 set_option grind.warning false
 
-open Copy
-open AutoStructs
 open Mathlib
 
 @[simp] theorem Language.mem_setOf_eq {x : List α} {p : List α → Prop} :
@@ -580,7 +579,7 @@ def NFA.autUnsignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) unsignedCmpState
 def NFA'.autUnsignedCmp (cmp: RelationOrdering) : NFA' 2 :=
   ⟨_, NFA.autUnsignedCmp cmp⟩
 
-def AutoStructs.RelationOrdering.urel (cmp : RelationOrdering) : BVRel :=
+def RelationOrdering.urel (cmp : RelationOrdering) : BVRel :=
   match cmp with
   | .lt => fun _ bv1 bv2 => bv1 <ᵤ bv2
   | .le => fun _ bv1 bv2 => bv1 ≤ᵤ bv2
@@ -605,7 +604,7 @@ lemma BitVec.cons_ugt_iff {w} {bv1 bv2 : BitVec w} :
   nth_rw 2 [Nat.mul_comm]
   have _ := bv1.isLt
   have _ := bv2.isLt
-  repeat rw [←Nat.mul_add_lt_is_or] <;> try assumption
+  repeat rw [←Nat.two_pow_add_eq_or_of_lt] <;> try assumption
   cases b1 <;> cases b2 <;> simp <;> omega
 
 @[simp]
@@ -617,7 +616,7 @@ set_option maxHeartbeats 1000000 in
 lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsignedCmpSA cmp.urel := by
   let getState {w} (bv1 bv2 : BitVec w) : NFA.unsignedCmpState :=
     if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
-  constructor <;> simp [NFA.autUnsignedCmp, autUnsignedCmp, autUnsignedCmpSA, AutoStructs.RelationOrdering.urel]
+  constructor <;> simp [NFA.autUnsignedCmp, autUnsignedCmp, autUnsignedCmpSA, RelationOrdering.urel]
   · cases cmp <;> simp [BitVec.ule_iff_ult_or_eq]; tauto
   · rintro (_ | _ | _) <;> simp
   · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
@@ -715,7 +714,7 @@ def NFA.autSignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) signedCmpState whe
 def NFA'.autSignedCmp (cmp: RelationOrdering) : NFA' 2 :=
   ⟨_, NFA.autSignedCmp cmp⟩
 
-def AutoStructs.RelationOrdering.srel (cmp : RelationOrdering) : BVRel :=
+def RelationOrdering.srel (cmp : RelationOrdering) : BVRel :=
   match cmp with
   | .lt => fun _ bv1 bv2 => bv1 <ₛ bv2
   | .le => fun _ bv1 bv2 => bv1 ≤ₛ bv2
@@ -738,7 +737,7 @@ private lemma BitVec.sle_iff_slt_or_eq {w : ℕ} (bv1 bv2 : BitVec w):
 
 theorem Nat.add_lt_is_or {a} (a_lt : a < 2^i) :
     2^i + a = 2^i ||| a := by
-  have _ := Nat.mul_add_lt_is_or a_lt 1
+  have _ := Nat.two_pow_add_eq_or_of_lt a_lt 1
   simp_all
 
 @[simp]
@@ -764,7 +763,7 @@ set_option maxHeartbeats 1000000 in
 lemma NFA'.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpSA cmp.srel := by
   let getState {w} (bv1 bv2 : BitVec w) : NFA.signedCmpState :=
     if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
-  constructor <;> simp [NFA.autSignedCmp, autSignedCmp, autSignedCmpSA, AutoStructs.RelationOrdering.srel]
+  constructor <;> simp [NFA.autSignedCmp, autSignedCmp, autSignedCmpSA, RelationOrdering.srel]
   · cases cmp <;> simp [BitVec.sle_iff_slt_or_eq]; tauto
   · rintro (_ | _ | _) <;> simp
   · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
@@ -1005,7 +1004,7 @@ lemma CNFA.autMsbSet_bv_language : autMsbSet.bv_recognizes langMsb := by
   use NFA'.autMsbSet, autMsbSet_spec
   exact autMsbSet_accepts
 
-def _root_.Copy.WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
+def WidthPredicate.final? (wp : WidthPredicate) (n : Nat) (s : State) : Bool :=
   decide (wp.sat s n)
 
 def RawCNFA.autWidth (wp : WidthPredicate) (n : Nat) : RawCNFA (BitVec 0) :=
@@ -1250,29 +1249,29 @@ lemma CNFA.autWidth_bv_language :
 
 end nfas_relations
 
-def AutoStructs.Relation.autOfRelation : Relation → CNFA 2
+def Relation.autOfRelation : Relation → CNFA 2
 | .eq => CNFA.autEq
 | .signed ord => CNFA.autSignedCmp ord
 | .unsigned ord => CNFA.autUnsignedCmp ord
 
-def AutoStructs.Relation.absAutOfRelation (rel : Relation) : NFA' 2 :=
+def Relation.absAutOfRelation (rel : Relation) : NFA' 2 :=
   match rel with
   | .eq => NFA'.autEq
   | .unsigned cmp => NFA'.autUnsignedCmp cmp
   | .signed cmp => NFA'.autSignedCmp cmp
 
-lemma autOfRelation_spec (r : AutoStructs.Relation) :
+lemma autOfRelation_spec (r : Relation) :
   r.autOfRelation.Sim r.absAutOfRelation := by
-  simp [AutoStructs.Relation.autOfRelation, AutoStructs.Relation.absAutOfRelation]
+  simp [Relation.autOfRelation, Relation.absAutOfRelation]
   rcases r
   · exact CNFA.autEq_spec
   · exact CNFA.autSignedCmp_spec
   · exact CNFA.autUnsignedCmp_spec
 
 @[simp]
-lemma autOfRelation_accepts (r : AutoStructs.Relation) :
+lemma autOfRelation_accepts (r : Relation) :
     r.absAutOfRelation.accepts = r.language := by
-  simp [AutoStructs.Relation.absAutOfRelation]
+  simp [Relation.absAutOfRelation]
   rcases r with ⟨⟩ | ⟨cmp⟩ | ⟨cmp⟩ <;> simp
   · rw [NFA'.correct2_spec NFA'.autEq_correct]
     simp [langRel2, NFA'.eqRel, evalRelation]
@@ -1283,7 +1282,7 @@ lemma autOfRelation_accepts (r : AutoStructs.Relation) :
     simp [langRel2, evalRelation, RelationOrdering.urel]
     cases cmp <;> simp
 
-lemma CNFA.autOfRelation_bv_language (r : AutoStructs.Relation) :
+lemma CNFA.autOfRelation_bv_language (r : Relation) :
     (r.autOfRelation).bv_recognizes r.language := by
   rw [bv_recognizes_equiv]
   use r.absAutOfRelation, autOfRelation_spec r
@@ -1960,8 +1959,6 @@ lemma formula_predicate_match {p : Predicate} :
   case binary pred t₁ t₂ =>
     cases pred <;> simp only [Predicate.denote, formula_predicate_term_match,
       List.getElem!_eq_getElem?_getD, formula_of_predicate, Formula.sat', evalRelation]
-    · simp [instLTBitVec, BitVec.ult]
-    · simp [instLEBitVec, BitVec.ule]
   case width rel w' =>
      cases rel <;> simp [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
   case land p₁ p₂ ih₁ ih₂ =>
@@ -2070,5 +2067,3 @@ theorem Formula.denote_of_isUniversal {p : Predicate}
 
 -- /-- info: true -/
 -- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> RawCNFA.isUniversal
-
-#min_imports
