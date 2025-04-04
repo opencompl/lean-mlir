@@ -63,6 +63,7 @@ theorem list_perm_trick (x y a b c : List α) :
   have := h1.trans (hi.trans this)
   aesop
 
+@[inline]
 def worklist.St.addOrCreateState (st : worklist.St A S) (final? : Bool) (sa : S) : State × worklist.St A S :=
   match heq : st.map[sa]? with
   | some s => (s, st)
@@ -119,6 +120,7 @@ theorem addOrCreateState_grow (st : worklist.St A S) (b : Bool) (sa : S) :
   apply Std.HashMap.insert_keys_perm_new
   apply Std.HashMap.get?_none_not_mem; assumption
 
+@[inline]
 def processOneElem (final : S → Bool) (s : State) (st : worklist.St A S) : A × S → worklist.St A S :=
   fun (a', sa') =>
     let (s', st') := st.addOrCreateState _ _ (final sa') sa'
@@ -262,6 +264,28 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
       st0.m -- never happens
   | none => st0.m -- never happens
   termination_by st0.meas
+
+def new_worklistRun' (final : S → Bool) (inits : Array S) (hinits : inits.toList.Nodup)
+    (f : ((st : worklist.St A S) → A × S → worklist.St A S) → S → worklist.St A S → worklist.St A S ) : RawCNFA A :=
+  let st0 := worklist.initState _ _ inits hinits final
+  go st0
+where go (st0 : worklist.St A S) : RawCNFA A :=
+  if hemp : st0.worklist.isEmpty then st0.m else
+  let sa? := st0.worklist.back?
+  match heq : sa? with
+  | some sa =>
+    let wl := st0.worklist.pop
+    let st1 := { st0 with worklist := wl,
+                          worklist_nodup := by simp [wl]; apply List.dropLast_nodup; exact st0.worklist_nodup;
+                          worklist_incl := by intros _ hin; apply Array.mem_of_mem_pop at hin; apply st0.worklist_incl; assumption }
+    if let some s := st1.map.get? sa then
+      let st2 := f (processOneElem _ _ final s) sa st1
+      -- let st2 := a.foldl (init := st1) (processOneElem _ _ final s)
+      go st2
+    else
+      st0.m -- never happens
+  | none => st0.m -- never happens
+  decreasing_by sorry
 
 def worklist.St.visited (st : worklist.St A S) : Set S := { s : S | s ∈ st.map ∧ s ∉ st.worklist }
 
@@ -458,6 +482,12 @@ lemma worklistRun'_wf :
 def worklistRun (final : S → Bool) (inits : Array S)
     (hinits : inits.toList.Nodup) (f : S → Array (BitVec n × S)) : CNFA n :=
   ⟨worklistRun' _ S final inits hinits f, worklistRun'_wf (BitVec n) S⟩
+
+def new_worklistRun (final : S → Bool) (inits : Array S)
+    (hinits : inits.toList.Nodup)
+    (f : ((st : worklist.St (BitVec n) S) → (BitVec n) × S → worklist.St (BitVec n) S) → S → worklist.St (BitVec n) S → worklist.St (BitVec n) S )
+     : CNFA n :=
+  ⟨new_worklistRun' _ S final inits hinits f, sorry⟩
 
 end worklist
 
