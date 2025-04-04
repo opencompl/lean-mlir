@@ -56,6 +56,12 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ
 
+
+instance : GetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
+  inferInstanceAs (GetElem (List _) ..)
+instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
+  inferInstanceAs (GetElem? (List _) ..)
+
 -- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
 def get? : Ctxt Ty → Nat → Option Ty :=
@@ -417,6 +423,26 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   subst x
   rfl
 
+/-- Show that a valuation is equivalent to a `HVector` -/
+def Valuation.equivHVector {Γ : Ctxt Ty} : Valuation Γ ≃ HVector toType Γ where
+  toFun V   := HVector.ofFn _ _ <| fun i => V ⟨i, by simp⟩
+  invFun    := Valuation.ofHVector
+  left_inv V := by
+    funext t v
+    simp only [Fin.getElem_fin, get?]
+    induction Γ
+    case nil =>
+      rcases v with ⟨_, _⟩
+      contradiction
+    case snoc Γ u ih =>
+      cases v
+      case last   => rfl
+      case toSnoc => apply ih (fun t v => V v.toSnoc)
+  right_inv vs := by
+    simp only [Fin.getElem_fin, get?]
+    induction vs
+    case nil => rfl
+    case cons Γ t v vs ih => simp [HVector.ofFn, ofHVector, ih]
 
 end Valuation
 

@@ -10,7 +10,6 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Projects.InstCombine.Tactic
 import Mathlib.Tactic.Ring
 
 open BitVec
@@ -42,19 +41,17 @@ abbrev Simple : Dialect where
   Op := Op
   Ty := Ty
 
-def_signature for Simple
-  | .add      => (.int, .int) → .int
-  | .const _  => () → .int
-
 instance : DialectToExpr Simple where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``Simple []
 
-@[reducible]
-instance : DialectDenote Simple where
-  denote
-    | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
+def_signature for Simple
+  | .add      => (.int, .int) → .int
+  | .const _  => () → .int
+
+def_denote for Simple
+  | .const n => BitVec.ofInt 32 n
+  | .add     => fun a b => a + b
 
 def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .pure .int  :=
   Expr.mk
@@ -257,6 +254,22 @@ def_signature for SimpleReg
   | .const _    => () → .int
   | .add        => (.int, .int) → .int
   | .iterate _  => { (.int) → .int } → (.int) -[.pure]-> .int
+
+def_denote for SimpleReg
+  | .const n    => BitVec.ofInt 32 n
+  | .add        => fun a b => a + b
+  | .iterate k  => fun x f => f^[k] x
+
+/-
+TODO: the current `denote` function puts the regular arguments *before* the regions,
+      which is then preserved by `def_denote` prettification,
+      but the `def_signature` syntax suggests the other order.
+      Some solutions:
+      * Flip the signature syntax (but that'd look ugly!)
+      * Flip the order in `hvectorFun(…)` elab (but that's inelegant)
+      * Flip the order in `denote`s definition (the "elegant" solution,
+          but that's a pretty big refactor!)
+-/
 
 @[reducible]
 instance : DialectDenote SimpleReg where
