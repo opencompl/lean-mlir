@@ -1,5 +1,6 @@
 import Mathlib.Data.Fintype.Prod
 import SSA.Experimental.Bits.AutoStructs.Worklist
+import SSA.Experimental.Bits.AutoStructs.OrdArray
 
 import Mathlib.Tactic.ApplyFun
 
@@ -243,13 +244,27 @@ lemma product.inits_spec :
   rw [prodArray_spec Prod.mk]
   rintro _ _ _ _ ⟨rfl, rfl⟩; trivial
 
+def new_product (final? : Bool → Bool → Bool) (m₁ m₂ : CNFA n) : CNFA n :=
+  new_worklistRun (m₁.m.states × m₂.m.states) final (product.inits m₁ m₂)
+    (by exact product.inits_nodup) f
+where @[inline] final (ss : m₁.m.states × m₂.m.states) := final? (ss.1 ∈ m₁.m.finals) (ss.2 ∈ m₂.m.finals)
+      @[inline] f add (ss : m₁.m.states × m₂.m.states) st := Id.run do
+        let (s₁, s₂) := ss
+        let mut st := st
+        for a in FinEnum.toList (α := BitVec n) do
+          for s₁' in m₁.m.tr s₁ a do
+            for s₂' in m₂.m.tr s₂ a do
+              st ← add st (a, (⟨s₁', sorry⟩, ⟨s₂', sorry⟩))
+        pure st
+
+@[implemented_by new_product]
 def product (final? : Bool → Bool → Bool) (m₁ m₂ : CNFA n) : CNFA n :=
   worklistRun (m₁.m.states × m₂.m.states) final (product.inits m₁ m₂)
     (by exact product.inits_nodup) f
 where final (ss : m₁.m.states × m₂.m.states) := final? (ss.1 ∈ m₁.m.finals) (ss.2 ∈ m₂.m.finals)
       f (ss : m₁.m.states × m₂.m.states) :=
         let (s1, s2) := ss
-        (FinEnum.toList (α := BitVec n)).foldl (init := Array.empty) fun as a =>
+        (FinEnum.toList (α := BitVec n)).foldl (init := Array.emptyWithCapacity 128) fun as a =>
           product.prodArray' (λ s₁ s₂ ↦ (a, (s₁, s₂)))
             (fun s' => m₁.wf.trans_tgt_lt (s := s1) (a := a)) (fun s' => m₂.wf.trans_tgt_lt (s := s2) (a := a)) as
 
@@ -268,7 +283,7 @@ lemma product.f_spec {m₁ m₂ : CNFA n} {s₁ : m₁.m.states} {s₂ : m₂.m.
             (fun _ => m₁.wf.trans_tgt_lt (s := s₁) (a := a)) (fun _ => m₂.wf.trans_tgt_lt (s := s₂) (a := a)) as) ↔
         (a, (s₁', s₂')) ∈ as ∨ a ∈ (FinEnum.toList (α := BitVec n)) ∧ s₁'.val ∈ m₁.m.tr s₁ a ∧ s₂'.val ∈ m₂.m.tr s₂ a by
     rintro a s₁' s₂'; rw [f, heq]
-    · simp; rintro h; apply Array.not_mem_empty at h; trivial
+    · simp
     · exact List.dedup_eq_self.mp rfl
     · exact FinEnum.nodup_toList
     · rintro _ _ _ h; apply Array.not_mem_empty at h; trivial
@@ -455,6 +470,72 @@ theorem BitVec.any_iff_exists {bv : BitVec w} :
 def CNFA.determinize.inits (m : CNFA n) : Array (BitVec m.m.stateMax) :=
   #[BitVec.ofFn (fun n => n ∈ m.m.initials)]
 
+instance [Fintype α] [BEq α] [Hashable α] : Fintype (Std.HashSet α) :=
+  sorry
+
+-- It's false, but we should be able to not need it
+instance [BEq α] [LawfulBEq α] [Hashable α] : LawfulBEq (Std.HashSet α) :=
+  sorry
+
+-- I think if the way we combine the hashing function is commutative, then this
+-- instance should also satisfy `LawfulHashable` and we should be fine!
+instance [BEq α] [Hashable α] : Hashable (Std.HashSet α) where
+  hash m := m.fold (init := 0) fun h x => h ^^^ hash x
+
+-- Is it necessary? maybe rework the worklist function to only use `==`
+instance [BEq α] [Hashable α] : DecidableEq (Std.HashSet α) :=
+  sorry
+
+
+def CNFA.determinize' (m : CNFA n) : CNFA n :=
+  worklistRun (Std.HashSet m.m.states)
+    (fun ss => ss.any fun s => s ∈ m.m.finals)
+    #[m.m.initials.attachWith (λ s ↦ s ∈ m.m.states) (by aesop)]
+    (by apply List.nodup_singleton)
+    f
+where
+  f := fun (ss : Std.HashSet m.m.states) =>
+        (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
+          let ss' := m.transSet ss a
+          ts.push (a, ss')
+
+@[inline]
+def CNFA.transOrdArray (m : CNFA n) (ss : OrdArray m.m.states) (a : BitVec n) : OrdArray m.m.states :=
+  ss.arr.foldl (init := OrdArray.empty) fun ss' (s : m.m.states) =>
+    let ssn := (m.m.tr s a).attachWith (λ s ↦ s ∈ m.m.states) (by simp only; rintro x hx; aesop)
+    let ssn := OrdArray.fromArray ssn.toArray
+    ss'.insertMany ssn
+
+def CNFA.new_determinize'' (m : CNFA n) : CNFA n :=
+  new_worklistRun (OrdArray m.m.states)
+    (fun ss => ss.arr.any fun s => s ∈ m.m.finals)
+    #[OrdArray.fromArray $ (m.m.initials.attachWith (fun s => s ∈ m.m.states)) sorry |>.toArray]
+    (by apply List.nodup_singleton)
+    f
+where
+  f := fun add (ss : OrdArray m.m.states) st => Id.run do
+         let mut st := st
+         for a in FinEnum.toList (BitVec n) do
+           st ← add st (a, m.transOrdArray ss a)
+         pure st
+
+        -- (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
+        --   let ss' := m.transOrdArray ss a
+        --   ts.push (a, ss')
+
+def CNFA.determinize'' (m : CNFA n) : CNFA n :=
+  worklistRun (OrdArray m.m.states)
+    (fun ss => ss.arr.any fun s => s ∈ m.m.finals)
+    #[OrdArray.fromArray $ (m.m.initials.attachWith (fun s => s ∈ m.m.states)) sorry |>.toArray]
+    (by apply List.nodup_singleton)
+    f
+where
+  f := fun (ss : OrdArray m.m.states) =>
+        (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
+          let ss' := m.transOrdArray ss a
+          ts.push (a, ss')
+
+@[implemented_by CNFA.new_determinize'']
 def CNFA.determinize (m : CNFA n) : CNFA n :=
   worklistRun (BitVec m.m.stateMax)
     (fun ss => ss.any fun n b => b == true && n ∈ m.m.finals)
