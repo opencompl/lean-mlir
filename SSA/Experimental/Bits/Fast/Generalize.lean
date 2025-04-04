@@ -451,7 +451,7 @@ def generateSketches (symVars: List (BVExpr w)) : List (BVExpr w) := Id.run do
           let mut res : List (BVExpr w) := []
           for op in binaryOperations do
             for sketch in remSketches do
-              res := (BVExpr.bin x op sketch) :: res
+              res := (op x sketch) :: res
 
           res
 
@@ -553,10 +553,12 @@ def preconditionSynthesis (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
               if let some _ ← solve gteExpr then
                   preconditionCandidates := gteZero substitutedSymbolicVarsExpr :: preconditionCandidates
 
-          --TODO: need to filter candidates
+          let mut validCandidates : List BVLogicalExpr := []
+          for candidate in preconditionCandidates do
+              if let none ← solve (BoolExpr.gate Gate.and candidate (BoolExpr.not bvExpr)) then
+                  validCandidates := candidate :: validCandidates
 
-
-          return preconditionCandidates
+          return validCandidates
 
 structure PreconditionSynthesisTestConfig where
   expr: BVLogicalExpr
@@ -591,7 +593,7 @@ def testPrecondSynthesis : Tactic := fun _ => do
   -- let res ← getNegativeExamples preconditionSynthesisEx1 [100, 101, 102] 3
   let ex := preconditionSynthesisEx1
   let res ← preconditionSynthesis ex.expr ex.positiveExample ex.bitWidth 2
-  logInfo m! "Results: {res} of length: {res.length}"
+  logInfo m! " Precondition synthesis results: {res} of length: {res.length}"
   pure ()
 
 theorem test_precondition_synthesis : False := by
