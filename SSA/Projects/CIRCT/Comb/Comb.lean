@@ -432,9 +432,16 @@ def xor {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (List.replicate (arity 
     (args := a)
     (regArgs := .nil)
 
-def toHVector {Γ : Ctxt _} (arity: Nat) : List ((ty : Comb.Ty) × Γ.Var ty) → HVector (Γ.Var) (List.replicate (arity + 1) (ty)) :=
-  sorry
+def List.toHVector {Γ : Ctxt _} : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → HVector (Γ.Var) (l.map (·.1))
+| [] => .nil
+| ⟨_, var⟩::rest => .cons var (toHVector rest)
 
+def toHVector {Γ : Ctxt _} ty : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
+| [], h => .nil
+| ⟨ty', var⟩::rest, h =>
+  have hty : ty' = ty := sorry
+  have hrest : rest.all (·.1 = ty) := sorry
+  .cons (hty ▸ var) (toHVector _ rest hrest)
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Comb) (Σ eff ty, Expr (Comb) Γ eff ty) := do
@@ -547,17 +554,19 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | _ => throw <| .generic s!"type mismatch"
       | _ => throw <| .generic s!"type mismatch"
     }
-    else if "Comb.add" = opStx.name then do
+     else if "Comb.add" = opStx.name then do
       let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
       if h : args.length = 0 then
         sorry -- throwError "BAD"
       else
         let ⟨.bv w, _⟩ := args[0] -- TODO: this should be provably in range
           | sorry -- throwError "Unexpected type"
-        let args' : HVector Γ.Var (List.replicate (args.length + 1) (.bv w)) ← args.mapM _
-          sorry
-          -- sorry -- assert that every var is of type bv w
-        return ⟨_, .bv w, add (args.length) args'⟩
+        if hall : args.all (·.1 = .bv w) then
+          let argsᵥ := toHVector (.bv w) _ hall
+          have heq : args.length - 1 + 1 = args.length := by omega
+          return ⟨_, .bv w, add (args.length - 1) (heq ▸ argsᵥ)⟩
+        else
+          sorry -- throwError "Unexpect type"
     else
       throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
