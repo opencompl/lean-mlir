@@ -131,7 +131,7 @@ instance [ToMessageData α] : ToMessageData (ReflectResult α) where
 /--
 info: ∀ {w : Nat} (a b : BitVec w),
   @Eq (BitVec w) (@HAdd.hAdd (BitVec w) (BitVec w) (BitVec w) (@instHAdd (BitVec w) (@BitVec.instAdd w)) a b)
-    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+    (BitVec.ofNat w (@OfNat.ofNat Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))) : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a b: BitVec w), a + b = 0#w
@@ -139,7 +139,7 @@ info: ∀ {w : Nat} (a b : BitVec w),
 /--
 info: ∀ {w : Nat} (a : BitVec w),
   @Eq (BitVec w) (@Neg.neg (BitVec w) (@BitVec.instNeg w) a)
-    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+    (BitVec.ofNat w (@OfNat.ofNat Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))) : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a : BitVec w), - a = 0#w
@@ -147,7 +147,7 @@ info: ∀ {w : Nat} (a : BitVec w),
 /--
 info: ∀ {w : Nat} (a : BitVec w) (n : Nat),
   @Eq (BitVec w) (@HShiftLeft.hShiftLeft (BitVec w) Nat (BitVec w) (@BitVec.instHShiftLeftNat w) a n)
-    (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+    (BitVec.ofNat w (@OfNat.ofNat Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))) : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a : BitVec w) (n : Nat), a <<< n = 0#w
@@ -155,21 +155,23 @@ info: ∀ {w : Nat} (a : BitVec w) (n : Nat),
 
 /--
 info: ∀ {w : Nat} (a : BitVec w),
-  @LT.lt (BitVec w) (@instLTBitVec w) a (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+  @LT.lt (BitVec w) (@instLTBitVec w) a
+    (BitVec.ofNat w (@OfNat.ofNat Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))) : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a : BitVec w),  a  < 0#w
 
 /--
 info: ∀ {w : Nat} (a : BitVec w),
-  @LE.le (BitVec w) (@instLEBitVec w) a (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0))) : Prop
+  @LE.le (BitVec w) (@instLEBitVec w) a
+    (BitVec.ofNat w (@OfNat.ofNat Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))) : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a : BitVec w),  a  ≤ 0#w
 
 /--
 info: ∀ {w : Nat} (a : BitVec w),
-  @Eq Bool (@BitVec.slt w a (BitVec.ofNat w (@OfNat.ofNat Nat 0 (instOfNatNat 0)))) true : Prop
+  @Eq Bool (@BitVec.slt w a (BitVec.ofNat w (@OfNat.ofNat Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))) true : Prop
 -/
 #guard_msgs in set_option pp.explicit true in
 #check ∀ {w : Nat} (a : BitVec w),  a.slt 0#w
