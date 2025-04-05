@@ -455,7 +455,31 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .hList l, "Comb.concat" => return ⟨_, .bv l.sum, concat v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"Comb.add" | op@"Comb.and" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.xor" | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
+  | op@"Comb.add" | op@"Comb.and" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.xor" =>
+      let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
+      if hl: args.length = 0 then
+        sorry -- throwError "BAD"
+      else
+        let ⟨.bv w, _⟩ := args[0]
+        -- TODO: this should be provably in range
+          | by
+              simp at hl
+              sorry
+
+            sorry -- throwError "Unexpected type"
+        if hall : args.all (·.1 = .bv w) then
+          let argsᵥ := toHVector (.bv w) _ hall
+          have heq : args.length - 1 + 1 = args.length := by omega
+          match op with
+          | "Comb.add" => return ⟨_, .bv w, add (args.length - 1) (heq ▸ argsᵥ)⟩
+          | "Comb.and" => return ⟨_, .bv w, and (args.length - 1) (heq ▸ argsᵥ)⟩
+          | "Comb.mul" => return ⟨_, .bv w, mul (args.length - 1) (heq ▸ argsᵥ)⟩
+          | "Comb.or" => return ⟨_, .bv w, or (args.length - 1) (heq ▸ argsᵥ)⟩
+          | "Comb.xor" => return ⟨_, .bv w, xor (args.length - 1) (heq ▸ argsᵥ)⟩
+          | _ => throw <| .generic s!"type mismatch"
+        else
+          throw <| .generic s!"unexpected operation" -- throwError "Unexpect type"
+  | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -554,19 +578,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | _ => throw <| .generic s!"type mismatch"
       | _ => throw <| .generic s!"type mismatch"
     }
-     else if "Comb.add" = opStx.name then do
-      let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
-      if h : args.length = 0 then
-        sorry -- throwError "BAD"
-      else
-        let ⟨.bv w, _⟩ := args[0] -- TODO: this should be provably in range
-          | sorry -- throwError "Unexpected type"
-        if hall : args.all (·.1 = .bv w) then
-          let argsᵥ := toHVector (.bv w) _ hall
-          have heq : args.length - 1 + 1 = args.length := by omega
-          return ⟨_, .bv w, add (args.length - 1) (heq ▸ argsᵥ)⟩
-        else
-          sorry -- throwError "Unexpect type"
     else
       throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
