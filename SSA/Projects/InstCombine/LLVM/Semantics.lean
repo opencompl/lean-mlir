@@ -116,13 +116,9 @@ theorem sub?_eq : LLVM.sub? a b  = some (a - b) := rfl
 def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  -- Signed extensions and difference
-  let sx' := BitVec.signExtend (w+1) x'
-  let sy' := BitVec.signExtend (w+1) y'
-  let sdiff := sx' - sy'
-  if flags.nsw ∧ (sdiff.msb ≠ sdiff.getMsbD 1) then
+  if flags.nsw ∧ BitVec.ssubOverflow x' y' then
     none
-  else if flags.nuw ∧ (x' < y') then
+  else if flags.nuw ∧ BitVec.usubOverflow x' y' then
     none
   else
     sub? x' y'
