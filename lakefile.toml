@@ -41,6 +41,10 @@ name = "bv-circuit-profile"
 root = "SSA.Experimental.Bits.Fast.Profile"
 
 [[lean_exe]]
+name = "bv-automata-profile"
+root = "SSA.Experimental.Bits.AutoStructs.Profile"
+
+[[lean_exe]]
 name = "opt"
 root = "SSA.Projects.InstCombine.LLVM.Opt"
 supportInterpreter = true
