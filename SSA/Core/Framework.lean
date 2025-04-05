@@ -2255,6 +2255,7 @@ theorem mem_matchVar
       dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
       rcases h with ⟨rfl, _⟩
       exact hl
+    exact inferInstance
 end
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
