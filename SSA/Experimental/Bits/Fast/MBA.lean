@@ -249,7 +249,7 @@ theorem Factor.getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs
       apply Classical.byContradiction
       intros hcontra
       simp at hcontra
-      have := BitVec.getLsbD_ge (env ⟨n, by simp⟩) (i + 1) (by omega)
+      have := BitVec.getLsbD_of_ge (env ⟨n, by simp⟩) (i + 1) (by omega)
       simp [this] at h
     case and x y hx hy =>
       simp [reflectFin]
@@ -698,9 +698,9 @@ theorem BitVec.eq_iff_sub_zero (x y : BitVec w) : x = y ↔ x - y = 0 := by
     simp [h]
   · intros h
     obtain h : (x - y) + y = y := by simp [h]
-    obtain h : (x + (-y)) + y = y := by simp [← BitVec.sub_toAdd, h]
+    obtain h : (x + (-y)) + y = y := by simp [← BitVec.sub_eq_add_neg, h]
     obtain h : x + (-y + y) = y := by simp [← BitVec.add_assoc, h]
-    simp [BitVec.add_comm _ y, ← BitVec.sub_toAdd] at h
+    simp [BitVec.add_comm _ y, ← BitVec.sub_eq_add_neg] at h
     exact h
 
 theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
@@ -750,7 +750,7 @@ theorem BitVec.neg_ofInt {w : Nat} (i : Int) :
     - (BitVec.ofInt w i) = BitVec.ofInt w (-i) := by
   symm
   rw [BitVec.eq_iff_sub_zero]
-  rw [BitVec.sub_toAdd, BitVec.neg_neg]
+  rw [BitVec.sub_eq_add_neg, BitVec.neg_neg]
   rw [← BitVec.ofInt_add]
   simp [show -i + i = 0 by omega]
 
@@ -758,7 +758,7 @@ theorem BitVec.neg_ofInt {w : Nat} (i : Int) :
 theorem BitVec.neg_add {x y : BitVec w} : - (x + y) = (-x) + (-y) := by
   rw [BitVec.neg_eq_zero_sub]
   simp only [sub_distrib_add, BitVec.zero_sub]
-  exact BitVec.sub_toAdd (-x) y
+  exact BitVec.sub_eq_add_neg (-x) y
 
 @[bv_mba_preprocess]
 theorem BitVec.neg_sub {x y : BitVec w} : - (x - y) = (-x) + y := by
@@ -779,12 +779,12 @@ theorem BitVec.neg_mul_eq_neg_left_mul {w : Nat} (x y : BitVec w) :
     - (x * y) = (- x) * y := by
   symm
   rw [BitVec.eq_iff_sub_zero]
-  rw [BitVec.sub_toAdd]
+  rw [BitVec.sub_eq_add_neg]
   rw [BitVec.neg_neg]
   rw [← BitVec.mul_distrib_add_right]
   have : -x + x = 0 := by
     rw [BitVec.add_comm]
-    rw [← BitVec.sub_toAdd]
+    rw [← BitVec.sub_eq_add_neg]
     simp
   simp [this]
 

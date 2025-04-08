@@ -175,13 +175,9 @@ def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
   simp only [msb_one, neg_eq, @msb_allOnes w (by omega)]
   simp only [neg_allOnes]
   simp only [udiv_one_eq_self]
-  simp only [negOne_eq_allOnes]
+  simp only [neg_one_eq_allOnes]
   have : ¬ (w = 1) := by omega
   simp [this]
-
-theorem sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
-  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
-  simp [BitVec.ofNat, Fin.ofNat', add_comm]
 
 open BitVec
 
@@ -231,7 +227,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
           simp only [_root_.neg_zero]
           assumption
         · rw [neg_ne_iff_ne_neg]
-          rw [← negOne_eq_allOnes] at hao
+          rw [← neg_one_eq_allOnes] at hao
           assumption
       · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
@@ -290,7 +286,7 @@ theorem ult_toNat (x y : BitVec n) :
 
 theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
     BitVec.getLsbD x i = false := by
-  have rk : _ := @BitVec.getLsbD_ge w x i hi
+  have rk : _ := @BitVec.getLsbD_of_ge w x i hi
   apply rk
 
 theorem intMin_slt_zero (h : 0 < w) :
@@ -439,7 +435,7 @@ theorem one_shiftLeft_mul {x y : BitVec w} :
 @[simp]
 theorem mul_allOnes {x : BitVec w} :
     x * BitVec.allOnes w = -x := by
-  simp [← BitVec.negOne_eq_allOnes]
+  simp [← BitVec.neg_one_eq_allOnes]
 
 @[simp]
 theorem allOnes_sshiftRight {w n : Nat} :

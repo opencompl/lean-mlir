@@ -164,7 +164,7 @@ macro "bv_bitwise" : tactic =>
   `(tactic|
     (
       ext
-      simp (config := {failIfUnchanged := false}) [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
+      simp (config := {failIfUnchanged := false}) [BitVec.neg_one_eq_allOnes, BitVec.allOnes_sub_eq_xor];
       try bv_decide
       done
     )
@@ -174,7 +174,7 @@ macro "bool_to_prop" : tactic =>
   `(tactic|
     (
       simp -failIfUnchanged only
-        [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+        [BitVec.two_mul, ←BitVec.neg_one_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
       try rw [Bool.eq_iff_iff]
       simp -failIfUnchanged only
         [Bool.or_eq_true_iff, Bool.and_eq_true_iff, beq_iff_eq, BitVec.ofBool_or_ofBool,
@@ -194,7 +194,7 @@ macro "bv_ring" : tactic =>
   `(tactic|
     (
       simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
-        ← BitVec.negOne_eq_allOnes]
+        ← BitVec.neg_one_eq_allOnes]
       try ring_nf
       try rfl
       done
@@ -205,7 +205,7 @@ macro "bv_ac" : tactic =>
   `(tactic|
     (
       simp (config := {failIfUnchanged := false}) only [← BitVec.allOnes_sub_eq_xor,
-        ← BitVec.negOne_eq_allOnes]
+        ← BitVec.neg_one_eq_allOnes]
       ac_nf
       done
     )
