@@ -248,7 +248,7 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
     case none => simp [default, denote]
     case some x => simp [BitVec.signExtend_eq_setWidth_of_le]
   case zero => simp [eval, denote]
-  case negOne => simp [eval, denote]; rw [← BitVec.negOne_eq_allOnes]
+  case negOne => simp [eval, denote]; rw [← BitVec.neg_one_eq_allOnes]
   case one => simp [eval, denote]
   case ofNat n => simp [eval, denote]
   case and a b ha hb  => simp [eval, denote, ha, hb]

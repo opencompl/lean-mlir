@@ -209,7 +209,7 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
         rw [ih]
         simp; omega
       · simp [hw]
-        apply BitVec.getLsbD_ge
+        apply BitVec.getLsbD_of_ge
         omega
 
 
@@ -692,7 +692,7 @@ theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
     induction' n with n ih
     · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
-    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add]; 
+    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
 @[refl]

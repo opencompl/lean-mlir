@@ -326,7 +326,7 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case var => rfl
   case zero => unfold BitStream.ofBitVec; rintro _ _; simp
   case negOne =>
-    unfold BitStream.ofBitVec; rintro _ _; simp [BitVec.negOne_eq_allOnes]; left; assumption
+    unfold BitStream.ofBitVec; rintro _ _; simp [BitVec.neg_one_eq_allOnes]; left; assumption
   case one =>
     unfold BitStream.ofBitVec; rintro k hk; simp
     cases k <;> simp_all

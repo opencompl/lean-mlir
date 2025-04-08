@@ -182,7 +182,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                   simp only [Nat.succ_eq_add_one, toNat_allOnes]
                   omega
                 subst heqallones
-                simp [BitVec.sdiv_one_allOnes, BitVec.negOne_eq_allOnes]
+                simp [BitVec.sdiv_one_allOnes, BitVec.neg_one_eq_allOnes]
               · have heqzero : x = 0#_ := BitVec.eq_zero_of_toNat_mod_eq_zero (by omega)
                 subst heqzero
                 simp [BitVec.sdiv_zero]
