@@ -15,12 +15,8 @@ Nothing in the formalization itself should depend on the exact pointer-width,
 but this assumption does affect which optimizations are admitted.
 
 -/
-namespace SideEffects
+namespace StructuredLLVM
 
-/-
-TODO: pointer provenance a la https://web.ist.utl.pt/nuno.lopes/pubs/alive2-mem-cav21.pdf
--/
-def LLVM.Ptr : Type := BitVec 64
 abbrev Width := Nat
 
 namespace SLLVM
