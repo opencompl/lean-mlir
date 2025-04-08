@@ -2,6 +2,8 @@
 import Std.Sat.AIG.CNF
 import Std.Sat.AIG.RelabelNat
 import Std.Tactic.BVDecide.Bitblast.BVExpr
+import Lean.Elab.Tactic.BVDecide.Frontend.BVDecide.Reify
+
 import Lean.Elab.Term
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
@@ -10,6 +12,7 @@ import Lean
 import SSA.Core.Util
 
 open Lean
+open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
 
@@ -596,5 +599,93 @@ def testPrecondSynthesis : Tactic := fun _ => do
   logInfo m! " Precondition synthesis results: {res} of length: {res.length}"
   pure ()
 
-theorem test_precondition_synthesis : False := by
-  test_precondition_synthesis
+-- theorem test_precondition_synthesis : False := by
+--   test_precondition_synthesis
+
+
+def x := BitVec.ofNat 128 7
+def prop : Prop := BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x)) =  BitVec.extractLsb' 0 64 x
+
+#check (BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x)) =  BitVec.extractLsb' 0 64 x)
+
+
+
+partial def toBVExpr (x : Expr) : MetaM (Option (BVExpr w)) := do
+  go x
+  where
+
+  go (x : Expr) : MetaM (Option (BVExpr w)) := do
+    match_expr x with
+    | Nat =>
+      getNat? x
+    | BitVec.ofNat _ vExpr =>
+      getNat? vExpr
+    | HAnd.hAnd _ _ _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr BVBinOp.and
+    | HXor.hXor _ _ _ _ lhsExpr rhsExpr =>
+      binaryReflection lhsExpr rhsExpr BVBinOp.xor
+    | HAdd.hAdd _ _ _ _ lhsExpr rhsExpr =>
+      binaryReflection lhsExpr rhsExpr BVBinOp.add
+    | HMul.hMul _ _ _ _ lhsExpr rhsExpr =>
+      binaryReflection lhsExpr rhsExpr BVBinOp.mul
+    | HDiv.hDiv _ _ _ _ lhsExpr rhsExpr =>
+      binaryReflection lhsExpr rhsExpr BVBinOp.udiv
+    | HMod.hMod _ _ _ _ lhsExpr rhsExpr =>
+      binaryReflection lhsExpr rhsExpr BVBinOp.umod
+    | Complement.complement _ _ innerExpr =>
+      let some inner ← go innerExpr | return none
+      return some (BVExpr.un BVUnOp.not inner)
+    | HShiftLeft.hShiftLeft _ _ _ _ innerExpr distanceExpr =>
+      let some inner ← go innerExpr | return none
+      let some distance ← go distanceExpr | return none
+      some (BVExpr.shiftLeft inner distance)
+    | _ => return none
+
+
+  getNat? (expr : Expr) : MetaM (Option (BVExpr w)) := do
+        let v ← getNatValue? expr
+        match v with
+        | some n => return some (BVExpr.const (BitVec.ofNat w n))
+        | _ => return none
+
+  getNatOrBvValue? (ty : Expr) (expr : Expr) : MetaM (Option Nat) := do
+    match_expr ty with
+    | Nat =>
+      getNatValue? expr
+    | BitVec _ =>
+      let some ⟨_, distance⟩ ← getBitVecValue? expr | return none
+      return some distance.toNat
+    | _ => return none
+
+  binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : MetaM (Option (BVExpr w)) := do
+    let some lhs ← go lhsExpr | return none
+    let some rhs ← go rhsExpr | return none
+    let bvExpr : BVExpr w := BVExpr.bin lhs op rhs
+    return some bvExpr
+
+
+elab "#reducewidth" h:term : command =>
+  open Lean Lean.Elab Command Term in
+  liftTermElabM do
+      let hExpr ← Term.elabTerm h none
+      logInfo m! " hexpr: {hExpr}"
+      match_expr hExpr with
+      | Eq _ lhsExpr rhsExpr =>
+          --  let lhs ← toBVExpr lhsExpr
+        -- let_expr Bool := α | return none
+        -- let_expr Bool.true := rhsExpr | return none
+        -- We now know that `h : lhsExpr = true`
+        -- We attempt to reify lhsExpr into a BVLogicalExpr, then prove that evaluating
+        -- this BVLogicalExpr must eval to true due to `h`
+            -- let some bvLogical ← ReifiedBVLogical.of lhsExpr | return none
+            logInfo m! "LHS: {lhsExpr}; RHS: {rhsExpr}"
+        -- let some bvLogical ← ReifiedBVLogical.of lhsExpr | return none
+      | _ =>
+            logInfo m! "Could not match"
+      pure ()
+
+
+
+#reducewidth BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x)) =  BitVec.extractLsb' 0 64 x
+
+#check 0xffffffffffffffff0000000000000000#128
