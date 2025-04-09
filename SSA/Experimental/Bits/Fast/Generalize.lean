@@ -589,18 +589,18 @@ def testPrecondSynthesis : Tactic := fun _ => do
 -- theorem test_precondition_synthesis : False := by
 --   test_precondition_synthesis
 
+structure BVExprWrapper where
+  width : Nat
+  bvExpr: BVExpr width
 
 
 structure ReduceWidthState where
   maxFreeVarId : Nat
   maxSymVarId :  Nat
-  freeVarToId : Std.HashMap Expr Nat
-  symVarToVal : Std.HashMap Nat (BitVec w)
+  freeVarToBVExprWrapper : Std.HashMap Expr BVExprWrapper
+  freeBVExprVarIdToExpr : Std.HashMap Nat Expr
+  symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
 deriving Inhabited
-
-structure BVExprWrapper where
-  width : Nat
-  bvExpr: BVExpr width
 
 abbrev ReduceWidthM := StateRefT ReduceWidthState MetaM
 
@@ -652,8 +652,32 @@ partial def toBVExpr (expr : Expr) : ReduceWidthM (Option (BVExprWrapper)) := do
     | BitVec.rotateRight _ innerExpr distanceExpr =>
         rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
     | _ =>
-        let .fvar id := x | throwError m! "Unknown expression: {x}"
-        return some {bvExpr := BVExpr.var 1, width := 2}
+        let currState: ReduceWidthState ← get
+        let natVal ← getNatValue? x
+        let width := 64 -- TODO: don't hardcode the width
+
+        match natVal with
+        | some v =>
+              let newId := currState.maxSymVarId + 1
+              let bv := BitVec.ofNat width v
+              let newExpr := BVExpr.var newId
+
+              let updatedState : ReduceWidthState := { currState with maxSymVarId := newId, symVarToVal := currState.symVarToVal.insert newId {bv := bv: BVExpr.PackedBitVec}}
+              set updatedState
+              return some {bvExpr := newExpr, width := width}
+        | _ =>
+            let .fvar name := x | throwError m! "Unknown expression: {x}"
+
+            let existingVar? := currState.freeVarToBVExprWrapper[x]?
+            match existingVar? with
+            | some val => return val
+            | none =>
+                let newId := currState.maxFreeVarId + 1
+                let newWrappedExpr : BVExprWrapper := {bvExpr := BVExpr.var newId, width := width}
+
+                let updatedState : ReduceWidthState := {currState with maxFreeVarId := newId, freeVarToBVExprWrapper := currState.freeVarToBVExprWrapper.insert x newWrappedExpr, freeBVExprVarIdToExpr := currState.freeBVExprVarIdToExpr.insert newId x}
+                set updatedState
+                return some newWrappedExpr
 
 
   rotateReflection (innerExpr: Expr) (distanceExpr : Expr) (rotateOp: Nat → BVUnOp)
@@ -721,9 +745,9 @@ elab "#reducewidth" h:term : command =>
 
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
-           let initialState : ReduceWidthState := { maxFreeVarId := 0, maxSymVarId := 1000, symVarToVal := Std.HashMap.emptyWithCapacity, freeVarToId := Std.HashMap.emptyWithCapacity}
+           let initialState : ReduceWidthState := { maxFreeVarId := 0, maxSymVarId := 1000, symVarToVal := Std.HashMap.emptyWithCapacity, freeBVExprVarIdToExpr := Std.HashMap.emptyWithCapacity, freeVarToBVExprWrapper := Std.HashMap.emptyWithCapacity}
            let some (bvExpr, state) ← (parseExprs lhsExpr rhsExpr).run' initialState | throwError "Unsupported expression provided"
-           logInfo m! "bvExpr: {bvExpr}"
+           logInfo m! "bvExpr: {bvExpr}, state :{state.freeBVExprVarIdToExpr}"
       | _ =>
             logInfo m! "Could not match"
       pure ()
@@ -733,5 +757,5 @@ variable {x y z : BitVec 64}
 #check x
 #reduce x
 
-#reducewidth x <<< 3#64  = y
-#reducewidth (BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 ((BitVec.ofNat 64 7))) =  BitVec.extractLsb' 0 64 (BitVec.ofNat 64 7))
+#reducewidth x <<< 3  = y
+#reducewidth   BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x)) = BitVec.extractLsb' 0 64 x
