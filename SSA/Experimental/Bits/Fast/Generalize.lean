@@ -327,19 +327,6 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
       | _ =>
             let mut res : List (BVExpr w) := []
 
-            let processOp (op: BVBinOp) (f : BVBinOp → BVExpr w) (constId: Nat) (auxVarId: Nat) : TermElabM (List (BVExpr w)) := do
-                let lhs := f op
-                let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq (BVExpr.const target))
-
-                if let some assignment ← solve bvLogicalExpr then
-                  let newTarget := assignment[auxVarId]!.bv.toNat
-                  let results ← inductiveSynthesis expr inputs constants (BitVec.ofNat w newTarget) (depth - 1)
-
-                  return results.map (λ rem => BVExpr.bin (BVExpr.var constId) op rem)
-
-                return []
-
-
             for (constId, constVal) in constants.toArray do
               if constVal == target then
                 res := BVExpr.var constId :: res
@@ -604,16 +591,25 @@ def testPrecondSynthesis : Tactic := fun _ => do
 
 
 
+structure ReduceWidthState where
+  maxFreeVarId : Nat
+  maxSymVarId :  Nat
+  freeVarToId : Std.HashMap Expr Nat
+  symVarToVal : Std.HashMap Nat (BitVec w)
+deriving Inhabited
+
 structure BVExprWrapper where
   width : Nat
   bvExpr: BVExpr width
 
-partial def toBVExpr (expr : Expr) : MetaM (Option (BVExprWrapper)) := do
+abbrev ReduceWidthM := StateRefT ReduceWidthState MetaM
+
+partial def toBVExpr (expr : Expr) : ReduceWidthM (Option (BVExprWrapper)) := do
   logInfo m! "matching {expr}"
   go expr
   where
 
-  go (x : Expr) : MetaM (Option (BVExprWrapper)) := do
+  go (x : Expr) : ReduceWidthM (Option (BVExprWrapper)) := do
     match_expr x with
     | Nat =>
       getConstantBVExpr? (Expr.lit (Literal.natVal 64))  x --TODO: Is this reasonable? It's a hack to make shifting by constant values work
@@ -655,30 +651,32 @@ partial def toBVExpr (expr : Expr) : MetaM (Option (BVExprWrapper)) := do
         rotateReflection innerExpr distanceExpr BVUnOp.rotateLeft
     | BitVec.rotateRight _ innerExpr distanceExpr =>
         rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
-    | _ => return none
+    | _ =>
+        let .fvar id := x | throwError m! "Unknown expression: {x}"
+        return some {bvExpr := BVExpr.var 1, width := 2}
 
 
   rotateReflection (innerExpr: Expr) (distanceExpr : Expr) (rotateOp: Nat → BVUnOp)
-          : MetaM (Option (BVExprWrapper)) := do
+          : ReduceWidthM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← getNatValue? distanceExpr | return none
       return some {bvExpr := BVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
 
 
   shiftReflection (innerExpr : Expr) (distanceExpr : Expr) (shiftOp : {m n : Nat} → BVExpr m → BVExpr n → BVExpr m)
-        : MetaM (Option (BVExprWrapper)) := do
+        : ReduceWidthM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← go distanceExpr | return none
       return some {bvExpr :=  shiftOp inner.bvExpr distance.bvExpr, width := inner.width}
 
 
-  getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : MetaM (Option (BVExprWrapper)) := do
+  getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : ReduceWidthM (Option (BVExprWrapper)) := do
         let some n  ← getNatValue? nExpr | return none
         let some v ← getNatValue? vExpr | return none
 
         return some {bvExpr := BVExpr.const (BitVec.ofNat n v), width := n}
 
-  binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : MetaM (Option (BVExprWrapper)) := do
+  binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : ReduceWidthM (Option (BVExprWrapper)) := do
     let some lhs ← go lhsExpr | return none
     let some rhs ← go rhsExpr | return none
 
@@ -689,32 +687,43 @@ partial def toBVExpr (expr : Expr) : MetaM (Option (BVExprWrapper)) := do
       return none
 
 
+def parseExprs (lhsExpr rhsExpr : Expr) : ReduceWidthM (Option (BVLogicalExpr × ReduceWidthState)) := do
+  let lhsRes ← toBVExpr lhsExpr
+  let rhsRes ← toBVExpr rhsExpr
+
+  match lhsRes, rhsRes with
+      | some lhsWrapper, some rhsWrapper =>
+          let lhsExpr := lhsWrapper.bvExpr
+          let rhsExpr := rhsWrapper.bvExpr
+          logInfo m! "Matched LHS: {lhsExpr}; RHS: {rhsExpr}"
+
+          if h : lhsWrapper.width = rhsWrapper.width then
+              let rhs' := h ▸ rhsWrapper.bvExpr
+              let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhsExpr BVBinPred.eq rhs')
+              logInfo m! "BVLogicalExpr: {bvLogicalExpr}"
+              let state ← get
+              return some (bvLogicalExpr, state)
+      | some lhsWrapper, _ =>
+                logInfo m! "Extracted lhs: {lhsWrapper.bvExpr} but could not extract rhs: {rhsExpr}"
+      | _, some rhsWrapper =>
+                logInfo m! "Extracted rhs: {rhsWrapper.bvExpr} but could not extract lhs: {lhsExpr}"
+      | _, _ =>
+                logInfo m! "Could not extract lhs: {lhsExpr} or rhs: {rhsExpr}"
+  return none
+
+
 elab "#reducewidth" h:term : command =>
   open Lean Lean.Elab Command Term in
-  withoutModifyingEnv $ liftTermElabM do
+  withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
       let hExpr ← Term.elabTerm h none
+      let hExpr ← instantiateMVars (← whnfR  hExpr)
       logInfo m! "hexpr: {hExpr}"
+
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
-           let lhsRes ← toBVExpr lhsExpr
-           let rhsRes ← toBVExpr lhsExpr
-           match lhsRes, rhsRes with
-           | some lhsWrapper, some rhsWrapper =>
-                let lhsExpr := lhsWrapper.bvExpr
-                let rhsExpr := rhsWrapper.bvExpr
-                logInfo m! "Matched LHS: {lhsExpr}; RHS: {rhsExpr}"
-
-                if h : lhsWrapper.width = rhsWrapper.width then
-                  let rhs' := h ▸ rhsWrapper.bvExpr
-                  let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhsExpr BVBinPred.eq rhs')
-                  logInfo m! "BVLogicalExpr: {bvLogicalExpr}"
-
-           | some lhsWrapper, _ =>
-                logInfo m! "Extracted lhs: {lhsWrapper.bvExpr} but could not extract rhs: {rhsExpr}"
-           | _, some rhsWrapper =>
-                logInfo m! "Extracted rhs: {rhsWrapper.bvExpr} but could not extract lhs: {lhsExpr}"
-           | _, _ =>
-                logInfo m! "Could not extract lhs: {lhsExpr} or rhs: {rhsExpr}"
+           let initialState : ReduceWidthState := { maxFreeVarId := 0, maxSymVarId := 1000, symVarToVal := Std.HashMap.emptyWithCapacity, freeVarToId := Std.HashMap.emptyWithCapacity}
+           let some (bvExpr, state) ← (parseExprs lhsExpr rhsExpr).run' initialState | throwError "Unsupported expression provided"
+           logInfo m! "bvExpr: {bvExpr}"
       | _ =>
             logInfo m! "Could not match"
       pure ()
@@ -722,4 +731,7 @@ elab "#reducewidth" h:term : command =>
 
 variable {x y z : BitVec 64}
 #check x
-#reducewidth BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ (BitVec.ofNat 64 7))) =  BitVec.extractLsb' 0 64 (BitVec.ofNat 64 7)
+#reduce x
+
+#reducewidth x <<< 3#64  = y
+#reducewidth (BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 ((BitVec.ofNat 64 7))) =  BitVec.extractLsb' 0 64 (BitVec.ofNat 64 7))
