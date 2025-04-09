@@ -609,6 +609,9 @@ def prop : Prop := BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x))
 #check (BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x)) =  BitVec.extractLsb' 0 64 x)
 
 
+structure BVExprWrapper where
+  width : Nat
+  bvExpr: BVExpr width
 
 partial def toBVExpr (x : Expr) : MetaM (Option (BVExpr w)) := do
   go x
@@ -617,45 +620,70 @@ partial def toBVExpr (x : Expr) : MetaM (Option (BVExpr w)) := do
   go (x : Expr) : MetaM (Option (BVExpr w)) := do
     match_expr x with
     | Nat =>
-      getNat? x
+      getConstantBVExpr? x
     | BitVec.ofNat _ vExpr =>
-      getNat? vExpr
+      getConstantBVExpr? vExpr
     | HAnd.hAnd _ _ _ lhsExpr rhsExpr =>
         binaryReflection lhsExpr rhsExpr BVBinOp.and
     | HXor.hXor _ _ _ _ lhsExpr rhsExpr =>
-      binaryReflection lhsExpr rhsExpr BVBinOp.xor
+        binaryReflection lhsExpr rhsExpr BVBinOp.xor
     | HAdd.hAdd _ _ _ _ lhsExpr rhsExpr =>
-      binaryReflection lhsExpr rhsExpr BVBinOp.add
+        binaryReflection lhsExpr rhsExpr BVBinOp.add
     | HMul.hMul _ _ _ _ lhsExpr rhsExpr =>
-      binaryReflection lhsExpr rhsExpr BVBinOp.mul
+        binaryReflection lhsExpr rhsExpr BVBinOp.mul
     | HDiv.hDiv _ _ _ _ lhsExpr rhsExpr =>
-      binaryReflection lhsExpr rhsExpr BVBinOp.udiv
+        binaryReflection lhsExpr rhsExpr BVBinOp.udiv
     | HMod.hMod _ _ _ _ lhsExpr rhsExpr =>
-      binaryReflection lhsExpr rhsExpr BVBinOp.umod
+        binaryReflection lhsExpr rhsExpr BVBinOp.umod
     | Complement.complement _ _ innerExpr =>
-      let some inner ← go innerExpr | return none
-      return some (BVExpr.un BVUnOp.not inner)
+        let some inner ← go innerExpr | return none
+        return some (BVExpr.un BVUnOp.not inner)
     | HShiftLeft.hShiftLeft _ _ _ _ innerExpr distanceExpr =>
-      let some inner ← go innerExpr | return none
-      let some distance ← go distanceExpr | return none
-      some (BVExpr.shiftLeft inner distance)
+        shiftReflection innerExpr distanceExpr BVExpr.shiftLeft
+    | HShiftRight.hShiftRight _ _ _ _ innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr BVExpr.shiftRight
+    | BitVec.sshiftRight _ _ innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr BVExpr.arithShiftRight
+    | BitVec.sshiftRight' _ _ innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr BVExpr.arithShiftRight
+    -- | HAppend.hAppend _ _ _ _ lhsExpr rhsExpr =>
+    --     let some lhs ← go lhsExpr | return none
+    --     let some rhs ← go rhsExpr | return none
+    --     return some (BVExpr.append lhs rhs rfl) -- TODO: Fix error with width
+    -- | BitVec.extractLsb' _ startExpr lenExpr innerExpr  =>
+    --     let some start ← getNatValue? startExpr | return none
+    --     let some len ← getNatValue? lenExpr | return none
+    --     let some inner ← go innerExpr | return none
+    --     return some (BVExpr.extract start len inner) -- TODO: width error
+    | BitVec.rotateLeft _ innerExpr distanceExpr =>
+        rotateReflection innerExpr distanceExpr BVUnOp.rotateLeft
+    | BitVec.rotateRight _ innerExpr distanceExpr =>
+        rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
     | _ => return none
 
 
-  getNat? (expr : Expr) : MetaM (Option (BVExpr w)) := do
+  rotateReflection (innerExpr: Expr) (distanceExpr : Expr) (rotateOp: Nat → BVUnOp)
+          : MetaM (Option (BVExpr w)) := do
+      let some inner ← go innerExpr | return none
+      let some distance ← getNatValue? distanceExpr | return none
+      let bvExpr : BVExpr w := BVExpr.un (rotateOp distance) inner
+      return some bvExpr
+
+
+  shiftReflection (innerExpr : Expr) (distanceExpr : Expr) (shiftOp : {m n : Nat} → BVExpr m → BVExpr n → BVExpr m)
+        : MetaM (Option (BVExpr w)) := do
+      let some inner ← go innerExpr | return none
+      let some distance ← go distanceExpr | return none
+      let bvExpr : BVExpr w := shiftOp inner distance
+      return some bvExpr
+
+
+  getConstantBVExpr? (expr : Expr) : MetaM (Option (BVExpr w)) := do
         let v ← getNatValue? expr
         match v with
         | some n => return some (BVExpr.const (BitVec.ofNat w n))
         | _ => return none
 
-  getNatOrBvValue? (ty : Expr) (expr : Expr) : MetaM (Option Nat) := do
-    match_expr ty with
-    | Nat =>
-      getNatValue? expr
-    | BitVec _ =>
-      let some ⟨_, distance⟩ ← getBitVecValue? expr | return none
-      return some distance.toNat
-    | _ => return none
 
   binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : MetaM (Option (BVExpr w)) := do
     let some lhs ← go lhsExpr | return none
@@ -671,15 +699,9 @@ elab "#reducewidth" h:term : command =>
       logInfo m! " hexpr: {hExpr}"
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
-          --  let lhs ← toBVExpr lhsExpr
-        -- let_expr Bool := α | return none
-        -- let_expr Bool.true := rhsExpr | return none
-        -- We now know that `h : lhsExpr = true`
-        -- We attempt to reify lhsExpr into a BVLogicalExpr, then prove that evaluating
-        -- this BVLogicalExpr must eval to true due to `h`
-            -- let some bvLogical ← ReifiedBVLogical.of lhsExpr | return none
-            logInfo m! "LHS: {lhsExpr}; RHS: {rhsExpr}"
-        -- let some bvLogical ← ReifiedBVLogical.of lhsExpr | return none
+           let lhs ← toBVExpr  lhsExpr
+           let rhs ← toBVExpr lhsExpr
+           logInfo m! "LHS: {lhsExpr}; RHS: {rhsExpr}"
       | _ =>
             logInfo m! "Could not match"
       pure ()
