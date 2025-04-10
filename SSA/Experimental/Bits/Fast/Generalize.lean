@@ -597,8 +597,8 @@ structure BVExprWrapper where
 structure ReduceWidthState where
   maxFreeVarId : Nat
   maxSymVarId :  Nat
-  freeVarToBVExprWrapper : Std.HashMap Expr BVExprWrapper
-  freeBVExprVarIdToExpr : Std.HashMap Nat Expr
+  freeVarToBVExprWrapper : Std.HashMap FVarId BVExprWrapper
+  freeBVExprVarIdToExpr : Std.HashMap Nat FVarId
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
 deriving Inhabited
 
@@ -606,14 +606,25 @@ instance : ToString BVExprWrapper where
   toString w :=
       s!" BVExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr}}"
 
-instance : ToString ReduceWidthState where
-  toString s :=
+instance : ToString FVarId where
+  toString f := s! "{f.name}"
+
+
+def printReduceState (s: ReduceWidthState) :=
     s!"ReduceWidthState:\n" ++
     s!"  maxFreeVarId: {s.maxFreeVarId}\n" ++
     s!"  maxSymVarId: {s.maxSymVarId}\n" ++
     s!"  freeVarToBVExprWrapper: {s.freeVarToBVExprWrapper}\n" ++
     s!"  freeBVExprVarIdToExpr: {s.freeBVExprVarIdToExpr}\n" ++
     s!"  symVarToVal: {s.symVarToVal}"
+
+
+instance : ToMessageData ReduceWidthState where
+  toMessageData s := printReduceState s
+
+
+instance : ToString ReduceWidthState where
+  toString s := printReduceState s
 
 
 abbrev ReduceWidthM := StateRefT ReduceWidthState MetaM
@@ -682,9 +693,9 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ReduceWidthM (Option (BV
               set updatedState
               return some {bvExpr := newExpr, width := targetWidth}
         | _ =>
-            let .fvar _ := x | throwError m! "Unknown expression: {x}"
+            let .fvar name := x | throwError m! "Unknown expression: {x}"
 
-            let existingVar? := currState.freeVarToBVExprWrapper[x]?
+            let existingVar? := currState.freeVarToBVExprWrapper[name]?
             match existingVar? with
             | some val => return val
             | none =>
@@ -692,7 +703,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ReduceWidthM (Option (BV
                 let newExpr : BVExpr targetWidth :=  BVExpr.var newId
                 let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := targetWidth}
 
-                let updatedState : ReduceWidthState := {currState with maxFreeVarId := newId, freeVarToBVExprWrapper := currState.freeVarToBVExprWrapper.insert x newWrappedExpr, freeBVExprVarIdToExpr := currState.freeBVExprVarIdToExpr.insert newId x}
+                let updatedState : ReduceWidthState := {currState with maxFreeVarId := newId, freeVarToBVExprWrapper := currState.freeVarToBVExprWrapper.insert name newWrappedExpr, freeBVExprVarIdToExpr := currState.freeBVExprVarIdToExpr.insert newId name}
                 set updatedState
                 return some newWrappedExpr
 
@@ -736,7 +747,8 @@ def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ReduceWidthM (Optio
       | some lhsWrapper, some rhsWrapper =>
           let lhsExpr := lhsWrapper.bvExpr
           let rhsExpr := rhsWrapper.bvExpr
-          logInfo m! "Matched LHS: {lhsExpr}; RHS: {rhsExpr}"
+          logInfo m! "Matched LHS: {lhsExpr}<{lhsWrapper.width}>; RHS: {rhsExpr}<{rhsWrapper.width}>"
+
 
           if h : lhsWrapper.width = rhsWrapper.width then
               let rhs' := h ▸ rhsWrapper.bvExpr
@@ -767,7 +779,7 @@ elab "#reducewidth" expr:term " : " target:term : command =>
       | Eq _ lhsExpr rhsExpr =>
            let initialState : ReduceWidthState := { maxFreeVarId := 0, maxSymVarId := 1000, symVarToVal := Std.HashMap.emptyWithCapacity, freeBVExprVarIdToExpr := Std.HashMap.emptyWithCapacity, freeVarToBVExprWrapper := Std.HashMap.emptyWithCapacity}
            let some (bvExpr, state) ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState | throwError "Unsupported expression provided"
-           logInfo m! "bvExpr: {bvExpr}, state: {state.freeVarToBVExprWrapper}"
+           logInfo m! "bvExpr: {bvExpr}, state: {state}"
 
            let some results ← existsForAll bvExpr state.symVarToVal.keys state.freeBVExprVarIdToExpr.keys | throwError m! "Could not reduce {expr} to width {targetWidth}"
            logInfo m! "Results: {results}"
@@ -781,8 +793,6 @@ variable {x y z : BitVec 64}
 
 #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0xffff00#64 : 4
 
-#reducewidth (BitVec.extractLsb' 64 64 (BitVec.extractLsb' 64 128 (x ++ x)) = BitVec.extractLsb' 0 64 x) : 8
 #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
-
 
 #eval { maxFreeVarId := 0, maxSymVarId := 1000, symVarToVal := Std.HashMap.emptyWithCapacity, freeBVExprVarIdToExpr := Std.HashMap.emptyWithCapacity, freeVarToBVExprWrapper := Std.HashMap.emptyWithCapacity: ReduceWidthState}
