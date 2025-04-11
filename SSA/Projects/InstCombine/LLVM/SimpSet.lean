@@ -14,4 +14,4 @@ register_simp_attr simp_llvm_case_bash
 
 register_simp_attr simp_llvm_split
 
-register_simp_attr bv_ofBool
+register_sigit checjmp_attr bv_ofBool

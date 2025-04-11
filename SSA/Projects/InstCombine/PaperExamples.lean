@@ -62,7 +62,6 @@ theorem bitvec_AddSub_1309 :
     simp_alive_undef
     simp_alive_case_bash
     simp
-
 /--
 info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/

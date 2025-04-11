@@ -2378,7 +2378,7 @@ theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ₁ 
 with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
 def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
-    (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
+    (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars) --here why needed and not reverse or why at all because I assume reverse is trivial  ?
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
     Option (Com d Γ₂ eff t₂) := do
   let ⟨Γ₃, targetLets, target', t', vm⟩ ← splitProgramAt pos target

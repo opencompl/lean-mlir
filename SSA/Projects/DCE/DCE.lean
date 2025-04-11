@@ -456,6 +456,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure .nat :=
 
 attribute [local simp] Ctxt.snoc
 
+
 def ex1_pre_dce : Com Ex ∅ .pure .nat :=
   Com.var (cst 1) <|
   Com.var (cst 2) <|
@@ -464,9 +465,22 @@ def ex1_pre_dce : Com Ex ∅ .pure .nat :=
 /-- TODO: how do we evaluate 'ex1_post_dce' within Lean? :D -/
 def ex1_post_dce : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce).val
 
+def ex1_post_dce1 : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce)
+
 def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
   Com.var (cst 1) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def ex1_post_dce_expectedSarah : Com Ex ∅ .pure .nat :=
+  Com.var (cst 2) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+theorem checkIfCorrect :
+  ex1_post_dce1 = ex1_post_dce_expectedSarah := by native_decide
+
+
+
+
 
 end Examples
 end DCE

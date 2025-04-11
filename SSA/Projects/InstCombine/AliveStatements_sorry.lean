@@ -9,7 +9,9 @@ set_option linter.unusedTactic false
 theorem bv_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
       LLVM.add (LLVM.add (LLVM.xor (LLVM.and e_2 e_1) e_1) (LLVM.const? w 1)) e ⊑ LLVM.sub e (LLVM.or e_2 (LLVM.not e_1)) := by
-  sorry
+  sorry 
+
+
 
 theorem bv_AddSub_1152 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.add e_1 e ⊑ LLVM.xor e_1 e := by

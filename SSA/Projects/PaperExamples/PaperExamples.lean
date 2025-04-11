@@ -190,19 +190,72 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       /- goals accomplished 🎉 -/
     }
 
+
 def ex1_rewritePeepholeAt :
-    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
+    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs -- here : first of all why is here a 1 ?
 
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
+  -- %c0 = 0
+  Com.var ( cst 0) <|
+  -- %out_dead = %x + %c0
+  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+  -- ret %c0 --isnt that x then ? ask
+  Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
+  := by
+  /- unfold ex1_rewritePeepholeAt rewritePeepholeAt,  I manually added
+  simp
+  unfold rewriteAt
+  simp_peephole
+  split -/
+  with_unfolding_all rfl
+
+
+-- my example to understand how the peephole rewrites works
+-- ask alex
+
+--sarah added this example
+def ex1_rewritePeepholeAt2 :
+    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 0 lhs -- here : first of all why is here a 1 ?
+
+theorem hex1_rewritePeephole2 : ex1_rewritePeepholeAt2 = (
   -- %c0 = 0
   Com.var (cst 0) <|
   -- %out_dead = %x + %c0
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
-  Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by with_unfolding_all rfl
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩) --. bc doesnt rewrite and thus returns
+  := by
+  /- unfold ex1_rewritePeepholeAt rewritePeepholeAt,  I manually added
+  simp
+  unfold rewriteAt
+  simp_peephole
+  split -/
+  with_unfolding_all rfl
 
 
+
+/-
+
+open MLIR AST MLIR2Simple in
+/-- x + 0 -/
+def lhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
+  [simple_com| {
+    ^bb0(%x : i32):
+      %c0 = "const" () { value = 0 : i32 } : () -> i32
+      %out = "add" (%x, %c0) : (i32, i32) -> i32
+      "return" (%out) : (i32) -> (i32)
+  }]
+
+/-- x -/
+def rhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
+  [simple_com| {
+    ^bb0(%x : i32):
+      "return" (%x) : (i32) -> (i32)
+  }]
+
+
+
+-/
 def ex1_rewritePeephole :
     Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
 
@@ -215,7 +268,7 @@ theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by with_unfolding_all rfl
-
+--ASK : Isnt that returning x bc else I dont understand it
 
 end ToyNoRegion
 
@@ -416,7 +469,13 @@ info: {
 #guard_msgs in #eval egLhs
 
 def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
-  (rewritePeepholeRecursively (fuel := 100) p2 egLhs).val
+  (rewritePeepholeRecursively (fuel := 100) p2 egLhs).val -- ask
+
+
+def lhs2 : Com SimpleReg [int] .pure int :=
+  Com.var (cst 0) <| -- %c0
+  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 /--
 info: {
@@ -448,7 +507,7 @@ def expectedRhs : Com SimpleReg [int] .pure int :=
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
+theorem rewriteDidSomething : runRewriteOnLhs ≠ egLhs := by
   simp [runRewriteOnLhs, lhs]
   native_decide
 

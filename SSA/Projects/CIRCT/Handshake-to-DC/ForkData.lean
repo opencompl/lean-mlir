@@ -98,7 +98,7 @@ theorem corec₂_corec2 (s : Stream γ) (f : Stream γ -> Option α × Option β
 -- whether the stream has something in there
 def map_to_unit_pair (x : Stream α) (z : Stream α × Stream Unit) : Prop :=
     x = z.1 ∧ x.map (·.map (λ _ => ())) = z.2
-
+Ú
 theorem tail_iterate'' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n m = s (n + m) := by
   induction n generalizing m; dsimp [Stream'.iterate]; simp
   dsimp [Stream'.iterate]

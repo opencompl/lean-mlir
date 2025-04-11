@@ -13,11 +13,12 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.FastCopy.Reflect
-import SSA.Experimental.Bits.AutoStructs.Tactic
+import SSA.Experimenta%l.Bits.AutoStructs.Tactic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
 import SSA.Core.Tactic.TacBench
 import Leanwuzla
+
 /-
 def eg1 :=
   [llvm(64)| {
@@ -29,7 +30,6 @@ def eg1 :=
   }].denote
 -/
 
-
 def eg22 :=
   [RV64_com| {
     ^entry (%X: !i64, %Y: !i64):
@@ -38,10 +38,9 @@ def eg22 :=
   }].denote
 
 
-
 def eg21_b :=
   [llvm(64)| {
-^bb0(%X : i64, %Y : i64):
+^bb0(X : i64, %Y : i64):
       %v1 = llvm.add %Y, %X : i64
       llvm.return %v1 : i64
   }]
@@ -72,6 +71,7 @@ theorem add_llvm_eq_bc :
 
 def lh_riscv : HVector TyDenote.toType [toRISCV.Ty.bv,toRISCV.Ty.bv ] :=
   HVector.cons ((BitVec.ofNat 64 20)) <| HVector.cons ( (BitVec.ofNat 64 2)) .nil -- hvector from which we will create the valuation
+
 def test_add_riscv : BitVec 64 := eg22 (Ctxt.Valuation.ofHVector lh_riscv)
 #eval test_add_riscv
 
@@ -91,6 +91,8 @@ theorem translation_add :
       x = eg22 (Ctxt.Valuation.ofHVector lh_riscv) := by
     rw [add_riscv_eq_bv]
     apply add_llvm_eq_bc
+
+
 
 -- diffrent step where I attempt to have only one proof
 theorem translation_add_combined :
