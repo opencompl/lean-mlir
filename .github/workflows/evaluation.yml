@@ -38,7 +38,8 @@ jobs:
 
       - name: Install Python Modules
         run: |
-          sudo apt install python3-matplotlib python3-pandas python3-num2words
+          sudo apt update
+          sudo apt install -y python3-matplotlib python3-pandas python3-num2words
 
       - name: Build
         run: |

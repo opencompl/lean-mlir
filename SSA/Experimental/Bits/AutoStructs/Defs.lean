@@ -126,7 +126,7 @@ def Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
 
 inductive RelationOrdering
 | lt | le | gt | ge
-deriving Repr
+deriving Repr, Fintype
 
 inductive Relation
 | eq

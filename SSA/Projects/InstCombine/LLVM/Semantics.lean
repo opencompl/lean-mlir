@@ -116,13 +116,9 @@ theorem sub?_eq : LLVM.sub? a b  = some (a - b) := rfl
 def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  -- Signed extensions and difference
-  let sx' := BitVec.signExtend (w+1) x'
-  let sy' := BitVec.signExtend (w+1) y'
-  let sdiff := sx' - sy'
-  if flags.nsw ∧ (sdiff.msb ≠ sdiff.getMsbD 1) then
+  if flags.nsw ∧ BitVec.ssubOverflow x' y' then
     none
-  else if flags.nuw ∧ (x' < y') then
+  else if flags.nuw ∧ BitVec.usubOverflow x' y' then
     none
   else
     sub? x' y'
@@ -149,24 +145,10 @@ theorem mul?_eq : LLVM.mul? a b  = some (a * b) := rfl
 def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let w1 := w-1
-  let w2 := 2*w
-  -- For multiplication, we do the "naive" approach of doubling the size, doing the multiplication, and comparing to the range.
-  -- Signed Wrap
-  let sx' := x'.signExtend w2
-  let sy' := y'.signExtend w2
-  let smul := sx' * sy'
-  let slbound := (BitVec.twoPow w w1).signExtend w2 -- signed lower bound := -2^(w-1)
-  let shbound := BitVec.twoPow w2 w1 -- signed higher bound + 1 := 2^(w-1)
-  -- Unsigned Wrap
-  let ux' := x'.zeroExtend w2
-  let uy' := y'.zeroExtend w2
-  let umul := ux' * uy'
-  let uhbound := shbound <<< 1
 
-  if flags.nsw ∧ ((smul <ₛ slbound) ∨ (smul ≥ₛ shbound)) then
+  if flags.nsw ∧ BitVec.smulOverflow x' y' then
     none
-  else if flags.nuw ∧ umul ≥ uhbound then
+  else if flags.nuw ∧ BitVec.umulOverflow x' y' then
     none
   else
     mul? x' y'

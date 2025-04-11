@@ -326,7 +326,7 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
   case var => rfl
   case zero => unfold BitStream.ofBitVec; rintro _ _; simp
   case negOne =>
-    unfold BitStream.ofBitVec; rintro _ _; simp [BitVec.negOne_eq_allOnes]; left; assumption
+    unfold BitStream.ofBitVec; rintro _ _; simp [BitVec.neg_one_eq_allOnes]; left; assumption
   case one =>
     unfold BitStream.ofBitVec; rintro k hk; simp
     cases k <;> simp_all
@@ -438,18 +438,12 @@ lemma CNFA.ofFSM_spec (p : FSM arity) :
   apply bisim_comp
   · apply worklistRun_spec
   use (λ s q ↦ q = bitVecToFinFun s)
+  simp [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM]
   constructor
-  · simp [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM]
-  · simp only [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM, BitVec.truncate_eq_setWidth,
-    Set.setOf_eq_eq_singleton, Set.top_eq_univ, ofFSM.f_spec, Set.mem_setOf_eq, Array.mem_toArray,
-    List.mem_singleton, Set.setOf_true]
-    constructor <;> simp
-  · simp only [nfa', nfa, ofFSM.f_spec, Array.mem_toArray, List.mem_singleton,
-    Set.setOf_eq_eq_singleton, Set.setOf_true, Set.mem_setOf_eq, exists_eq_right]
-    aesop
-  · simp only [nfa', nfa, ofFSM.f_spec, Array.mem_toArray, List.mem_singleton,
-    Set.setOf_eq_eq_singleton, Set.setOf_true, Set.mem_setOf_eq]
-    rintro q₁ q₂ a q₂' rfl hst
+  · simp
+  · constructor <;> simp
+  · aesop
+  · rintro q₁ q₂ a q₂' rfl hst
     use (finFunToBitVec q₂')
     simpa [hst]
 
@@ -487,15 +481,21 @@ def CNFA.autEq : CNFA 2 :=
   ⟨RawCNFA.autEq, by simp [RawCNFA.autEq]; aesop⟩
 
 def NFA.autEq : NFA (BitVec 2) Unit :=
-  { start := ⊤, accept := ⊤, step := fun () a => if a = 0 ∨ a = 3 then ⊤ else ⊥ }
+  { start := ⊤, accept := ⊤, step _ a := { _s' | if a = 0 ∨ a = 3 then true else false }}
 
 def NFA'.autEq : NFA' 2 :=
-  ⟨Unit, { start := ⊤, accept := ⊤, step := fun () a => if a = 0 ∨ a = 3 then ⊤ else ⊥ }⟩
+  ⟨Unit, NFA.autEq⟩
+
+instance : Fintype (NFA'.autEq).σ := by simp [NFA'.autEq]; infer_instance
+instance : DecidableEq (NFA'.autEq).σ := by simp [NFA'.autEq]; infer_instance
+instance : DecidableNFA (NFA'.autEq).M := by
+  simp [NFA'.autEq, NFA.autEq]; constructor <;> infer_instance
+instance : DecidableNFA' (NFA'.autEq) where
 
 def NFA'.eqRel : BVRel := fun _ x y => x = y
 
 lemma NFA'.autEq_correct : autEq.correct2 (fun _ => eqRel) eqRel := by
-  constructor <;> simp [autEq, eqRel]
+  constructor <;> simp [autEq, NFA.autEq, eqRel]
   rintro ⟨⟩ ⟨a⟩ w bv1 bv2
   fin_cases a <;> simp [NFA.stepSet]
 
@@ -514,16 +514,8 @@ def autEq_equiv : CNFA.autEq.m.states ≃ NFA'.autEq.σ where
   left_inv := by rintro ⟨x, hx⟩; symm; simp at hx; simp [hx]
   right_inv := by rintro ⟨⟩; simp
 
-local macro "go" : tactic =>
-  `(tactic | simp [CNFA.autEq, RawCNFA.autEq, NFA'.autEq, NFA.autEq, autEq_equiv,
-       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
-       RawCNFA.empty, RawCNFA.tr, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
-
 lemma CNFA.autEq_spec : autEq.Sim NFA'.autEq := by
-  apply simulFun_sim autEq_equiv; constructor
-  · rintro ⟨⟩; go
-  · rintro ⟨⟩; go
-  · rintro a ⟨⟩ ⟨⟩; fin_cases a <;> go
+  apply simulFun_sim autEq_equiv; constructor <;> native_decide +revert
 
 -- Automata recognizing unsigned comparisons
 
@@ -564,20 +556,29 @@ lemma CNFA.autUnsignedCmp_states cmp : s ∈ (autUnsignedCmp cmp).m.states ↔  
 
 inductive NFA.unsignedCmpState : Type where
 | eq | gt | lt
+deriving Fintype, DecidableEq
 
-def NFA.unsignedCmpStep (q : NFA.unsignedCmpState) (a : BitVec 2) : Set NFA.unsignedCmpState :=
+def NFA.unsignedCmpStep (q : NFA.unsignedCmpState) (a : BitVec 2) : List NFA.unsignedCmpState :=
   match q, a with
-  | .eq, 0 => { .eq } | .eq, 3 => { .eq } | .eq, 1 => { .gt } | .eq, 2 => { .lt }
-  | .gt, 0 => { .gt } | .gt, 1 => { .gt } | .gt, 3 => { .gt } | .gt, 2 => { .lt }
-  | .lt, 0 => { .lt } | .lt, 1 => { .gt } | .lt, 2 => { .lt } | .lt, 3 => { .lt }
+  | .eq, 0 => [ .eq ] | .eq, 3 => [ .eq ] | .eq, 1 => [ .gt ] | .eq, 2 => [ .lt ]
+  | .gt, 0 => [ .gt ] | .gt, 1 => [ .gt ] | .gt, 3 => [ .gt ] | .gt, 2 => [ .lt ]
+  | .lt, 0 => [ .lt ] | .lt, 1 => [ .gt ] | .lt, 2 => [ .lt ] | .lt, 3 => [ .lt ]
 
 def NFA.autUnsignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) unsignedCmpState where
-  step := unsignedCmpStep
-  start := {.eq}
-  accept := match cmp with | .lt => {.lt} | .le => {.lt, .eq} | .gt => {.gt} | .ge => {.gt, .eq}
+  step s a := { s' | s' ∈ unsignedCmpStep s a }
+  start := {s | s = .eq }
+  accept := { s | s ∈ match cmp with | .lt => [unsignedCmpState.lt] | .le => [.lt, .eq] | .gt => [.gt] | .ge => [.gt, .eq] }
 
 def NFA'.autUnsignedCmp (cmp: RelationOrdering) : NFA' 2 :=
   ⟨_, NFA.autUnsignedCmp cmp⟩
+
+@[simp] lemma NFA'.autUnsignedCmp_σ (cmp : RelationOrdering) : (NFA'.autUnsignedCmp cmp).σ = NFA.unsignedCmpState := by rcases cmp <;> rfl
+
+instance {cmp} : Fintype (NFA'.autUnsignedCmp cmp).σ := by simp; infer_instance
+instance {cmp} : DecidableEq (NFA'.autUnsignedCmp cmp).σ := by simp; infer_instance
+instance {cmp} : DecidableNFA (NFA'.autUnsignedCmp cmp).M := by
+  simp only [NFA'.autUnsignedCmp, NFA.autUnsignedCmp]; constructor <;> infer_instance
+instance {cmp} : DecidableNFA' (NFA'.autUnsignedCmp cmp) where
 
 def RelationOrdering.urel (cmp : RelationOrdering) : BVRel :=
   match cmp with
@@ -617,7 +618,7 @@ lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsign
   let getState {w} (bv1 bv2 : BitVec w) : NFA.unsignedCmpState :=
     if bv1 >ᵤ bv2 then .gt else if bv2 >ᵤ bv1 then .lt else .eq
   constructor <;> simp [NFA.autUnsignedCmp, autUnsignedCmp, autUnsignedCmpSA, RelationOrdering.urel]
-  · cases cmp <;> simp [BitVec.ule_iff_ult_or_eq]; tauto
+  · rintro _ _ _; cases cmp <;> simp [BitVec.ule_iff_ult_or_eq]; tauto
   · rintro (_ | _ | _) <;> simp
   · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
     · constructor
@@ -697,22 +698,31 @@ lemma CNFA.SignedCmp_states cmp : s ∈ (autSignedCmp cmp).m.states ↔  s < 5 :
 
 inductive NFA.signedCmpState : Type where
 | eq | gt | lt | ltfin | gtfin
+deriving DecidableEq, Fintype
 
-def NFA.signedCmpStep (q : NFA.signedCmpState) (a : BitVec 2) : Set NFA.signedCmpState :=
+def NFA.signedCmpStep (q : NFA.signedCmpState) (a : BitVec 2) : List NFA.signedCmpState :=
   match q, a with
-  | .eq, 0 => { .eq } | .eq, 3 => { .eq } | .eq, 1 => { .gt, .ltfin } | .eq, 2 => { .lt, .gtfin }
-  | .gt, 0 => { .gt, .gtfin } | .gt, 1 => { .gt, .ltfin } | .gt, 3 => { .gt, .gtfin } | .gt, 2 => { .lt, .gtfin }
-  | .lt, 0 => { .lt, .ltfin } | .lt, 1 => { .gt, .ltfin } | .lt, 2 => { .lt, .gtfin } | .lt, 3 => { .lt, .ltfin }
+  | .eq, 0 => [ .eq ] | .eq, 3 => [.eq] | .eq, 1 => [.gt, .ltfin] | .eq, 2 => [ .lt, .gtfin ]
+  | .gt, 0 => [ .gt, .gtfin ] | .gt, 1 => [ .gt, .ltfin ] | .gt, 3 => [ .gt, .gtfin ] | .gt, 2 => [ .lt, .gtfin ]
+  | .lt, 0 => [ .lt, .ltfin ] | .lt, 1 => [ .gt, .ltfin ] | .lt, 2 => [ .lt, .gtfin ] | .lt, 3 => [ .lt, .ltfin ]
   | .gtfin, _ => ∅
   | .ltfin, _ => ∅
 
 def NFA.autSignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) signedCmpState where
-  step := signedCmpStep
-  start := {.eq}
-  accept := match cmp with | .lt => {.ltfin} | .le => {.ltfin, .eq} | .gt => {.gtfin} | .ge => {.gtfin, .eq}
+  step s a := { s' | s' ∈ signedCmpStep s a }
+  start := { s | s = signedCmpState.eq }
+  accept := { s | s ∈ match cmp with | .lt => [NFA.signedCmpState.ltfin] | .le => [.ltfin, .eq] | .gt => [.gtfin] | .ge => [.gtfin, .eq] }
 
 def NFA'.autSignedCmp (cmp: RelationOrdering) : NFA' 2 :=
   ⟨_, NFA.autSignedCmp cmp⟩
+
+@[simp] lemma NFA'.autSignedCmp_σ (cmp : RelationOrdering) : (NFA'.autSignedCmp cmp).σ = NFA.signedCmpState := by rcases cmp <;> rfl
+
+instance {cmp} : Fintype (NFA'.autSignedCmp cmp).σ := by simp; infer_instance
+instance {cmp} : DecidableEq (NFA'.autSignedCmp cmp).σ := by simp; infer_instance
+instance {cmp} : DecidableNFA (NFA'.autSignedCmp cmp).M := by
+  simp only [NFA'.autSignedCmp, NFA.autSignedCmp]; constructor <;> infer_instance
+instance {cmp} : DecidableNFA' (NFA'.autSignedCmp cmp) where
 
 def RelationOrdering.srel (cmp : RelationOrdering) : BVRel :=
   match cmp with
@@ -815,21 +825,9 @@ def unsigned_equiv cmp : (CNFA.autUnsignedCmp cmp).m.states ≃ (NFA'.autUnsigne
     · simp at hx; simp [State] at *; omega
   right_inv := by simp; rintro x; rcases x <;> rfl
 
-
-local macro "go" : tactic =>
-  `(tactic | simp only [CNFA.autUnsignedCmp, RawCNFA.autUnsignedCmp, NFA'.autUnsignedCmp, NFA.autUnsignedCmp,
-       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
-       RawCNFA.empty, RawCNFA.tr, NFA.unsignedCmpStep ])
-
-set_option debug.skipKernelTC true in
-set_option maxHeartbeats 0 in
 lemma CNFA.autUnsignedCmp_spec {cmp} : (CNFA.autUnsignedCmp cmp).Sim (NFA'.autUnsignedCmp cmp) := by
   apply simulFun_sim (unsigned_equiv cmp)
-  constructor
-  · rintro q; rcases cmp <;> rcases q <;> go <;> simp <;> native_decide
-  · rintro q; rcases cmp <;> rcases q <;> simp only [unsigned_equiv] <;> go <;> simp
-  · rintro a q q'; rcases cmp <;> rcases q <;> rcases q' <;> fin_cases a
-      <;> (unfold NFA'.autUnsignedCmp NFA.autUnsignedCmp NFA.unsignedCmpStep instFinEnumBitVec_sSA unsigned_equiv; simp; native_decide)
+  constructor <;> native_decide +revert
 
 def signed_equiv cmp : (CNFA.autSignedCmp cmp).m.states ≃ (NFA'.autSignedCmp cmp).σ where
   toFun := fun ⟨s, hs⟩ =>
@@ -857,29 +855,9 @@ def signed_equiv cmp : (CNFA.autSignedCmp cmp).m.states ≃ (NFA'.autSignedCmp c
     · simp at hx; simp [State] at *; omega
   right_inv := by simp; rintro x; rcases x <;> rfl
 
-local macro "go" : tactic =>
-  `(tactic | simp only [CNFA.autSignedCmp, RawCNFA.autSignedCmp, RawCNFA.autSignedCmp.m, NFA'.autSignedCmp, NFA.autSignedCmp,
-       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
-       RawCNFA.empty, RawCNFA.tr, NFA.signedCmpStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
-
-@[simp]
-lemma CNFA.autSignedCmp_tr {cmp} :
-    s' ∈ (autSignedCmp cmp).m.tr s a ↔ s' ∈ RawCNFA.autSignedCmp.m.1.tr s a := by
-  simp only [autSignedCmp, RawCNFA.autSignedCmp]
-  rcases cmp <;> simp
-
-set_option debug.skipKernelTC true in
-set_option maxHeartbeats 0 in
 lemma CNFA.autSignedCmp_spec {cmp} : (CNFA.autSignedCmp cmp).Sim (NFA'.autSignedCmp cmp) := by
   apply simulFun_sim (signed_equiv cmp)
-  constructor
-  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go <;> simp
-  · rintro q; rcases cmp <;> rcases q <;> simp only [signed_equiv] <;> go <;> simp
-  · rintro a q q'
-    simp [NFA'.autSignedCmp, NFA.autSignedCmp, signed_equiv] at q q' ⊢
-    rcases q <;> rcases q' <;> fin_cases a <;>
-      (simp [NFA'.autSignedCmp, NFA.autSignedCmp, NFA.signedCmpStep, instFinEnumBitVec_sSA];
-       native_decide)
+  constructor <;> native_decide +revert
 
 def RawCNFA.autMsbSet : RawCNFA (BitVec 1) :=
   let m := RawCNFA.empty
@@ -900,19 +878,26 @@ def CNFA.autMsbSet : CNFA 1 :=
 
 inductive NFA.msbState : Type where
 | i | f
+deriving DecidableEq, Fintype
 
-def NFA.msbStep (q : NFA.msbState) (a : BitVec 1) : Set NFA.msbState :=
+def NFA.msbStep (q : NFA.msbState) (a : BitVec 1) : List NFA.msbState :=
   match q, a with
-  | .i, 0 => {.i}
-  | .i, 1 => {.i, .f}
-  | _, _ => ∅
+  | .i, 0 => [.i]
+  | .i, 1 => [.i, .f]
+  | _, _ => []
 
-def NFA.msb : NFA (BitVec 1) msbState where
-  step := msbStep
+def NFA.autMsbSet : NFA (BitVec 1) msbState where
+  step s a := { s' | s' ∈ msbStep s a }
   start := {.i}
   accept := {.f}
 
-def NFA'.autMsbSet : NFA' 1 := ⟨_, NFA.msb⟩
+def NFA'.autMsbSet : NFA' 1 := ⟨_, NFA.autMsbSet⟩
+
+instance : Fintype (NFA'.autMsbSet).σ := by simp [NFA'.autMsbSet]; infer_instance
+instance : DecidableEq (NFA'.autMsbSet).σ := by simp [NFA'.autMsbSet]; infer_instance
+instance : DecidableNFA (NFA'.autMsbSet).M := by
+  simp [NFA'.autMsbSet, NFA.autMsbSet]; constructor <;> infer_instance
+instance : DecidableNFA' (NFA'.autMsbSet) where
 
 def NFA.msbLang : Language (BitVec 1) := { bvs  | bvs.getLast? = some 1 }
 
@@ -921,18 +906,18 @@ def NFA.msbSA (q : msbState) : Language (BitVec 1) :=
   | .i => ⊤
   | .f => msbLang
 
-def NFA.msbCorrect : msb.correct msbSA msbLang := by
+def NFA.msbCorrect : NFA.autMsbSet.correct msbSA msbLang := by
   constructor
-  · simp [msb, msbSA]
+  · simp [NFA.autMsbSet, msbSA]
   · intros w; induction w using List.reverseRecOn
     case nil =>
-      simp [msb, msbSA, msbLang]; intros q; cases q <;> simp
+      simp [NFA.autMsbSet, msbSA, msbLang]; intros q; cases q <;> simp
     case append_singleton w a ih =>
-      have h : msb.eval w = { q | w ∈ msbSA q } := by ext; simp [ih]
+      have h : NFA.autMsbSet.eval w = { q | w ∈ msbSA q } := by ext; simp [ih]
       simp [h]; rintro (_ | _)
-      · simp [msb, msbSA, msbLang, stepSet, msbStep]
+      · simp [NFA.autMsbSet, msbSA, msbLang, stepSet, msbStep]
         use .i; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA]
-      · simp [msb, msbSA, msbLang, stepSet, msbStep]; constructor
+      · simp [NFA.autMsbSet, msbSA, msbLang, stepSet, msbStep]; constructor
         · intro ⟨q, hq⟩; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
           cases q <;> simp_all
         · rintro rfl; use .i; simp
@@ -954,17 +939,9 @@ def autMsb_equiv : CNFA.autMsbSet.m.states ≃ NFA'.autMsbSet.σ where
   left_inv := by simp; rintro x; fin_cases x <;> rfl
   right_inv := by simp; rintro x; rcases x <;> rfl
 
-local macro "go" : tactic =>
-  `(tactic | simp [CNFA.autMsbSet, RawCNFA.autMsbSet, NFA'.autMsbSet, NFA.msb,
-       RawCNFA.newState, RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.addTrans,
-       RawCNFA.empty, RawCNFA.tr, NFA.msbStep, Std.HashMap.getD_insert, instFinEnumBitVec_sSA ])
-
 lemma CNFA.autMsbSet_spec : CNFA.autMsbSet.Sim NFA'.autMsbSet := by
   apply simulFun_sim autMsb_equiv
-  constructor
-  · rintro q; rcases q <;> simp only [autMsb_equiv] <;> go
-  · rintro q; rcases q <;> simp only [autMsb_equiv] <;> go
-  · rintro a q q'; rcases q <;> rcases q' <;> fin_cases a <;> simp only [autMsb_equiv] <;> go
+  constructor <;> native_decide +revert
 
 @[simp]
 lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by

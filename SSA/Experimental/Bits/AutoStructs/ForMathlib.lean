@@ -912,3 +912,10 @@ theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Has
         rintro rfl
         aesop
     · simp [f]; grind
+
+class DecidableNFA [Fintype σ] [Fintype α] [DecidableEq σ] [DecidableEq α] (m : NFA α σ) where
+  decidable_start : Decidable (q ∈ m.start)
+  decidable_accept : Decidable (q ∈ m.accept)
+  decidable_step : Decidable (s' ∈ m.step s a)
+
+attribute [instance]   DecidableNFA.decidable_start DecidableNFA.decidable_accept DecidableNFA.decidable_step

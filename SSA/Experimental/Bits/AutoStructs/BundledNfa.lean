@@ -1,4 +1,5 @@
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
+import SSA.Experimental.Bits.FinEnum
 
 structure NFA' (n : Nat) where
   σ : Type
@@ -96,3 +97,7 @@ lemma lift_accepts (M : NFA' n) (f : Fin n → Fin m) :
 lemma proj_accepts (M : NFA' m) (f : Fin n → Fin m) :
     (M.proj f).accepts = BitVecs.transport f '' M.accepts := by
   simp [accepts, accepts', proj]
+
+end NFA'
+
+class DecidableNFA' (M : NFA' α) [Fintype M.σ] [DecidableEq M.σ] [DecidableNFA M.M]
