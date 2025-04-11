@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Lean
 import SSA.Core.Framework
-import SSA.Projects.SLLVM.Dialect.Attr
+import SSA.Core.Framework.Macro
 
 /-! # SLLVM Dialect
 We formalize an IR consisting of `arith + ptr + scf` MLIR dialects.
@@ -17,44 +17,75 @@ but this assumption does affect which optimizations are admitted.
 -/
 namespace StructuredLLVM
 
-abbrev Width := Nat
-
 namespace SLLVM
 
-inductive Ty
+/-! ## Basic Syntax -/
+
+section Pre
+variable (Width : Type)
+
+inductive PreTy
   | bitvec (w : Width)
   | ptr
   | unit
+  deriving DecidableEq, BEq, Repr
 
-inductive Op
+inductive PreOp
   | bv_add (w : Width)    -- Add two signless integers
   | ptr_add               -- Add a signless integer to a pointer
-  | load (ty : Ty)
-  | store (ty : Ty)
+  | load (ty : PreTy Width)
+  | store (ty : PreTy Width)
+  deriving DecidableEq, BEq, Repr
 
-structure State where
-  memory : LLVM.Ptr → BitVec 8
+end Pre
 
 end SLLVM
 
-abbrev SLLVMMonad := StateM SLLVM.State
+/-! ## Meta Dialect -/
 
-def SLLVM : Dialect where
-  Op := SLLVM.Op
-  Ty := SLLVM.Ty
+def NatOrFVar := Nat ⊕ Lean.FVarId
+
+abbrev MetaSLLVM : Dialect where
+  Op := SLLVM.PreOp NatOrFVar
+  Ty := SLLVM.PreTy NatOrFVar
+
+instance : BEq NatOrFVar := inferInstanceAs <| BEq (_ ⊕ _)
+-- instance : BEq MetaSLLVM.Ty := inferInstanceAs <| BEq (SLLVM.PreTy _)
+-- instance : BEq MetaSLLVM.Op := inferInstanceAs <| BEq (SLLVM.PreOp _)
+
+deriving instance DecidableEq for Lean.FVarId
+instance : DecidableEq NatOrFVar := inferInstanceAs <| DecidableEq (_ ⊕ _)
+-- instance : DecidableEq MetaSLLVM.Ty := inferInstanceAs <| DecidableEq (SLLVM.PreTy _)
+-- instance : DecidableEq MetaSLLVM.Op := inferInstanceAs <| DecidableEq (SLLVM.PreOp _)
+
+instance : OfNat NatOrFVar n := ⟨.inl n⟩
+instance : Repr NatOrFVar := inferInstanceAs <| Repr (_ ⊕ _)
+-- instance : Repr MetaSLLVM.Op := inferInstanceAs <| Repr (SLLVM.PreOp _)
+-- instance : Repr MetaSLLVM.Ty := inferInstanceAs <| Repr (SLLVM.PreTy _)
+
+/-! ## Effects Monad -/
+
+abbrev SLLVMMonad :=
+  Id -- TODO: effect monad
+  -- StateM SLLVM.State
+
+abbrev SLLVM : Dialect where
+  Op := SLLVM.PreOp Nat
+  Ty := SLLVM.PreTy Nat
   m := SLLVMMonad
 
-section Imaginary
+section Signature
 
-open Dialect -- Bring macros into scope
-open Qq
-
-structure MetaSignature (Ty : Q(Type)) where
-  (arguments : List Q($Ty))
-  (regions : (List Q($Ty)) × Q($Ty) )
-  (outType : Q($Ty))
+def_signature for MetaSLLVM
+  | .bv_add w => (.bitvec w, .bitvec w) → .bitvec w
+  | .ptr_add  => (.ptr, .bitvec 64) -> .ptr
+  | .load t   => (.ptr) -[.impure]-> t
+  | .store t  => (.ptr, t) -[.impure]-> .unit
 
 def_signature for SLLVM
-  | .bv_add w => (bitvec w, bitvec w) -> bitvec w
+  | .bv_add w => (.bitvec w, .bitvec w) → .bitvec w
+  | .ptr_add  => (.ptr, .bitvec 64) -> .ptr
+  | .load t   => (.ptr) -[.impure]-> t
+  | .store t  => (.ptr, t) -[.impure]-> .unit
 
-end Imaginary
+end Signature
