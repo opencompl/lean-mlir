@@ -253,29 +253,7 @@ partial def comOfExpr (e : Lean.Expr) : ExceptM (Σ Γ eff ty, Com MetaSLLVM Γ 
         .ok ⟨Γ, eff, β, Com.var e body'⟩
   | _ => .error m!"Expected an application of Com.var or Com.ret, found:\n\t{e}"
 
-end Meta
-
-
-section Tactic
-open Lean Elab Tactic
-
 instance : MonadLift Meta.ExceptM MetaM where
   monadLift := fun
     | .error e  => throwError e
     | .ok v     => return v
-
-elab "print_com" : tactic => withMainContext <| do
-  let goal ← getMainTarget
-  let some ⟨_α, lhs, rhs⟩ := goal.eq?
-    | return ()
-  let mut lhs := lhs
-  if lhs.isAppOf ``Com.denote then
-    match lhs.getAppArgs[9]? with
-      | some x => lhs := x
-      | none => return ()
-  else
-    return ()
-
-  let ⟨Γ , eff, ty, lhsCom⟩ ← Meta.comOfExpr lhs
-  logInfo m!"{repr lhsCom}"
-  return ()
