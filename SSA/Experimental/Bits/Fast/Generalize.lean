@@ -542,6 +542,9 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
     | some max =>
           let negativeExamples ← getNegativeExamples bvExpr constants 3
 
+          if negativeExamples.isEmpty then
+            return []
+
           let symbolicVarIds : List Nat := (List.range constants.length).map (fun c => max + c)
           let symbolicVars : List (BVExpr bitwidth) := symbolicVarIds.map (fun c => BVExpr.var c)
 
@@ -560,7 +563,6 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
                                                             let comboSet := Std.HashSet.ofList combo
                                                             comboSet.size > 1 && comboSet != specialConstantsSet
                                                       )
-          logInfo m! "Input combinations: {inputCombinations} with length: {inputCombinations.length}"
 
           let mut preconditionCandidates : List BVLogicalExpr := []
 
@@ -892,20 +894,27 @@ elab "#generalize" expr:term: command =>
            let exprSynthesisResults ← expressionSynthesis lhs rhs 3
            logInfo m! "Expression synthesis results: {exprSynthesisResults}"
 
+          /-
+          Here, we evaluate generate preconditions for different combinations of target values on the RHS.
+          If we have only one target on the RHS, then we're just going through the list of the generated expressions.
+          -/
            let resultsCombo := productsList exprSynthesisResults.values
-           logInfo m! "Results combo: {resultsCombo}"
 
            for combo in resultsCombo do
+              -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
               let zippedCombo := Std.HashMap.ofList (List.zip rhs.symVars.keys combo)
-              logInfo m! "Zipped combo: {zippedCombo}"
-
               let substitutedBVLogicalExpr := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
-              let preconditions ← generatePreconditions substitutedBVLogicalExpr reducedWidthValues targetWidth 2
 
-              logInfo m! "If {preconditions} then {substitutedBVLogicalExpr} "
+              let positiveExample := reducedWidthValues.filter (fun k  _  => ! zippedCombo.contains k)
+              let preconditions ← generatePreconditions substitutedBVLogicalExpr positiveExample targetWidth 2
+
+              logInfo m! "Expr: {substitutedBVLogicalExpr} has preconditions: {preconditions}"
+              -- The most general form has the fewest number of preconditions
       | _ =>
             logInfo m! "Could not match"
       pure ()
 
-#generalize (x + 5) + (y + 1)  =  x + y + 6 --TODO:  we need better handling for
--- #generalize (x + 5) - (y + 1)  =  x - y + 4 -- TODO: expression synthesis generates runaways chains for this; we need to make it smarter
+#generalize (x + 5) + (y + 1)  =  x + y + 6
+#generalize (x + 5) - (y + 1)  =  x - y + 4
+
+--TODO: how to support lt in expressions? Don't think we can express (x < 3) as a BVExpr
