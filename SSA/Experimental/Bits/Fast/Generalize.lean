@@ -536,7 +536,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
 
     let constants := positiveExample.keys
     let maxConstantId := constants.max?
-
+    -- TODO: Make the width a component for preconditions
     match maxConstantId with
     | none => return []
     | some max =>
@@ -909,12 +909,13 @@ elab "#generalize" expr:term: command =>
               let preconditions ← generatePreconditions substitutedBVLogicalExpr positiveExample targetWidth 2
 
               logInfo m! "Expr: {substitutedBVLogicalExpr} has preconditions: {preconditions}"
-              -- The most general form has the fewest number of preconditions
       | _ =>
             logInfo m! "Could not match"
       pure ()
 
+
 #generalize (x + 5) + (y + 1)  =  x + y + 6
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 
---TODO: how to support lt in expressions? Don't think we can express (x < 3) as a BVExpr
+variable {x: BitVec 32}
+#generalize (x <<< 10) <<< 14 = x <<< 24 --TODO: The exists/for-all solution is correct, but it prevents us from getting a good solution
