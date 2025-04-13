@@ -468,18 +468,11 @@ def ex1_post_dce : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce).val
 def ex1_post_dce1 : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce)
 
 def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
-  Com.var (cst 1) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-
-def ex1_post_dce_expectedSarah : Com Ex ∅ .pure .nat :=
   Com.var (cst 2) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-theorem checkIfCorrect :
-  ex1_post_dce1 = ex1_post_dce_expectedSarah := by native_decide
-
-
-
+theorem checkDCEasExpected :
+  ex1_post_dce1 = ex1_post_dce_expected := by native_decide
 
 
 end Examples
