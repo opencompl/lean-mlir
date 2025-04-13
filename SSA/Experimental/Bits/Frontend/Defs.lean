@@ -6,10 +6,14 @@ import Mathlib.Order.Notation
 This file defines the term language the decision procedure operates on,
 and the denotation of these terms into operations on bitstreams -/
 
+/-- The sort of widths, which are natural numbers. -/
+inductive Width : Type
+| var : Nat → Width
+
 /-- A `Term` is an expression in the language our decision procedure operates on,
 it represent an infinite bitstream (with free variables) -/
 inductive Term : Type
-| var : Nat → Term
+| var : (v : Nat) → Term
 /-- The constant `0` -/
 | zero : Term
 /-- The constant `-1` -/
@@ -42,6 +46,7 @@ inductive Term : Type
 -- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
 --   hence, I don't anticipate us implementing it.
+-- | append : Term → Term → Term
 deriving Repr, Inhabited
 
 open Term
