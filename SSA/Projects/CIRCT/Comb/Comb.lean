@@ -232,7 +232,7 @@ def Op.signature : Op → Signature (Ty) :=
   fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
 
 instance : DialectSignature Comb := ⟨Op.signature⟩
-def HVector.toList : HVector f (List.replicate n a) → List (f a) :=
+def HVector.toList : HVector f (List.replicate n a) → List (f a) := by
   sorry
 
 @[simp]
@@ -437,8 +437,8 @@ def xor {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (List.replicate (arity 
 def ofList {Γ : Ctxt _} ty : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
 | [], h => .nil
 | ⟨ty', var⟩::rest, h =>
-  have hty : ty' = ty := sorry
-  have hrest : rest.all (·.1 = ty) := sorry
+  have hty : ty' = ty := by simp_all
+  have hrest : rest.all (·.1 = ty) := by simp_all
   .cons (hty ▸ var) (ofList _ rest hrest)
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
