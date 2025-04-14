@@ -432,16 +432,14 @@ def xor {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (List.replicate (arity 
     (args := a)
     (regArgs := .nil)
 
-def List.toHVector {Γ : Ctxt _} : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → HVector (Γ.Var) (l.map (·.1))
-| [] => .nil
-| ⟨_, var⟩::rest => .cons var (toHVector rest)
 
-def toHVector {Γ : Ctxt _} ty : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
+/-- Convert a list of dependent pairs into an HVector -/
+def ofList {Γ : Ctxt _} ty : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
 | [], h => .nil
 | ⟨ty', var⟩::rest, h =>
   have hty : ty' = ty := sorry
   have hrest : rest.all (·.1 = ty) := sorry
-  .cons (hty ▸ var) (toHVector _ rest hrest)
+  .cons (hty ▸ var) (ofList _ rest hrest)
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Comb) (Σ eff ty, Expr (Comb) Γ eff ty) := do
@@ -457,28 +455,48 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.add" | op@"Comb.and" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.xor" =>
       let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
-      if hl: args.length = 0 then
-        sorry -- throwError "BAD"
+      if hl: args.length ≤ 0 then
+        throw <| .generic s!"empty list of arguments for '{repr opStx.args}'"
       else
-        let ⟨.bv w, _⟩ := args[0]
-        -- TODO: this should be provably in range
-          | by
-              simp at hl
-              sorry
-
-            sorry -- throwError "Unexpected type"
-        if hall : args.all (·.1 = .bv w) then
-          let argsᵥ := toHVector (.bv w) _ hall
-          have heq : args.length - 1 + 1 = args.length := by omega
-          match op with
-          | "Comb.add" => return ⟨_, .bv w, add (args.length - 1) (heq ▸ argsᵥ)⟩
-          | "Comb.and" => return ⟨_, .bv w, and (args.length - 1) (heq ▸ argsᵥ)⟩
-          | "Comb.mul" => return ⟨_, .bv w, mul (args.length - 1) (heq ▸ argsᵥ)⟩
-          | "Comb.or" => return ⟨_, .bv w, or (args.length - 1) (heq ▸ argsᵥ)⟩
-          | "Comb.xor" => return ⟨_, .bv w, xor (args.length - 1) (heq ▸ argsᵥ)⟩
-          | _ => throw <| .generic s!"type mismatch"
-        else
-          throw <| .generic s!"unexpected operation" -- throwError "Unexpect type"
+        have hl' : (0 : Nat) < args.length := by
+          simp [Nat.gt_of_not_le (n := args.length) (m := 0) hl]
+        match args[0], op with
+        | ⟨.bv w, _⟩, "Comb.add" =>
+          if hall : args.all (·.1 = .bv w) then
+            let argsᵥ := ofList (.bv w) _ hall
+            have heq : args.length - 1 + 1 = args.length := by omega
+            return ⟨_, .bv w, add (args.length - 1) (heq ▸ argsᵥ)⟩
+          else
+            throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+        | ⟨.bv w, _⟩, "Comb.and" =>
+            if hall : args.all (·.1 = .bv w) then
+              let argsᵥ := ofList (.bv w) _ hall
+              have heq : args.length - 1 + 1 = args.length := by omega
+              return ⟨_, .bv w, and (args.length - 1) (heq ▸ argsᵥ)⟩
+            else
+              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+        | ⟨.bv w, _⟩, "Comb.mul" =>
+            if hall : args.all (·.1 = .bv w) then
+              let argsᵥ := ofList (.bv w) _ hall
+              have heq : args.length - 1 + 1 = args.length := by omega
+              return ⟨_, .bv w, mul (args.length - 1) (heq ▸ argsᵥ)⟩
+            else
+              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+        | ⟨.bv w, _⟩, "Comb.or" =>
+            if hall : args.all (·.1 = .bv w) then
+              let argsᵥ := ofList (.bv w) _ hall
+              have heq : args.length - 1 + 1 = args.length := by omega
+              return ⟨_, .bv w, or (args.length - 1) (heq ▸ argsᵥ)⟩
+            else
+              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+        | ⟨.bv w, _⟩, "Comb.xor" =>
+            if hall : args.all (·.1 = .bv w) then
+              let argsᵥ := ofList (.bv w) _ hall
+              have heq : args.length - 1 + 1 = args.length := by omega
+              return ⟨_, .bv w, xor (args.length - 1) (heq ▸ argsᵥ)⟩
+            else
+              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+        | _, _ => throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
   | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.replicate" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
