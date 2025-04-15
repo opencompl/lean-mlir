@@ -154,11 +154,11 @@ end Lattice
 
 Said differently, this is a functor from the category of EffectKind (with `e1 ≤ e2` as its arrows)
 to Lean (with `e1.toMonad x → e2.toMonad x` as its arrows). -/
-def liftEffect [Monad m] {e1 e2 : EffectKind} {α : Type}
+def liftEffect [Pure m] {e1 e2 : EffectKind} {α : Type}
     (hle : e1 ≤ e2) (v1 : e1.toMonad m α) : e2.toMonad m α :=
   match e1, e2, hle with
     | .pure, .pure, _ | .impure, .impure, _ => v1
-    | .pure, .impure, _ => return v1
+    | .pure, .impure, _ => Pure.pure v1
 
 instance instMonadLiftOfLe {e1 e2 : EffectKind} (h : e1 ≤ e2) [Monad m] :
     MonadLiftT (e1.toMonad m) (e2.toMonad m) where
@@ -167,38 +167,38 @@ instance instMonadLiftOfLe {e1 e2 : EffectKind} (h : e1 ≤ e2) [Monad m] :
 instance (eff : EffectKind) {m} [Monad m] : MonadLiftT (eff.toMonad m) m :=
   instMonadLiftOfLe (le_impure eff)
 
-@[simp] theorem liftEffect_rfl [Monad m] (hle : eff ≤ eff) :
+@[simp] theorem liftEffect_rfl [Pure m] (hle : eff ≤ eff) :
     liftEffect hle (α := α) (m := m) = id := by cases eff <;> rfl
 
-@[simp] theorem liftEffect_pure_impure [Monad m] (hle : pure ≤ impure) :
+@[simp] theorem liftEffect_pure_impure [Pure m] (hle : pure ≤ impure) :
     liftEffect hle (α := α) (m := m) = Pure.pure :=
   rfl
 
 /-- Forded version of `liftEffect_pure_impure` -/
-theorem liftEffect_eq_pure_cast {m : Type → Type} [Monad m]
+theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
     {eff : EffectKind} (eff_eq : eff = .pure) (eff_le : eff ≤ .impure) :
     liftEffect eff_le = fun (x : eff.toMonad m α) =>
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
-@[simp] theorem liftEffect_pure [Monad m] {e} (hle : e ≤ pure) :
+@[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
     liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
   cases hle; rfl
 
-@[simp] theorem liftEffect_impure [Monad m] {e} (hle : e ≤ impure) :
+@[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
     liftEffect hle (α := α) (m := m) = match e with
-      | .pure => fun v => return v
+      | .pure => fun v => Pure.pure v
       | .impure => id := by
   cases e <;> rfl
 
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
-theorem liftEffect_eq_id (hle : eff ≤ eff) [Monad m] :
+theorem liftEffect_eq_id (hle : eff ≤ eff) [Pure m] :
     liftEffect hle (α := α) (m := m) = id := by
   cases eff <;> rfl
 
 /-- toMonad is functorial: it preserves composition. -/
-def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
+def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h12 : e1 ≤ e2)
     (h23 : e2 ≤ e3)
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
