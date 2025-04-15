@@ -12,7 +12,7 @@ def NatOrFVar.toExpr : NatOrFVar → Lean.Expr
   | .inr fvarId => Lean.Expr.fvar fvarId
 
 namespace Meta
-open Lean Elab Tactic
+open Lean Meta Elab Tactic
 open Qq
 
 #check Com.denote
@@ -62,11 +62,21 @@ def metaDenoteCom {Γ : Ctxt MetaSLLVM.Ty} {eff} {t}
       metaDenoteCom V body
   | _ => none
 
-simproc reduceComDenote (Com.denote (d := SLLVM) _) := fun e => do
-  let_expr Com.denote _d _sig _tyDen _den _mon _Γ _eff _t com := e
+simproc reduceComDenote (Com.denote (d := SLLVM) _ _) := fun e => do
+  let_expr Com.denote _d _sig _tyDen _den _mon _Γ _eff _t com V := e
     | return .continue
 
-  logInfo "Bla!"
+  let com ← whnfD com
+  let .ok ⟨Γ, eff, ty, com⟩ := comOfExpr com
+    | trace[LeanMLIR.Elab] "Failed to reflect Com: {com}"
+      return .continue
+
+  -- TODO construct `V : MetaValuation`
+  let V := ⟨_⟩
+  let .some ⟨{ isPoisonExpr, valueExpr }⟩ := metaDenoteCom V com
+    | return .continue
+  logInfo m!"Poison: {isPoisonExpr}"
+  logInfo m!"Value: {valueExpr}"
   return .continue
 
 -- elab "print_com" : tactic => withMainContext <| do
