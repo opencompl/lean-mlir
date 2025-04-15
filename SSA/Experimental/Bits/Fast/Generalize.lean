@@ -710,7 +710,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         binaryReflection lhsExpr rhsExpr BVBinOp.umod
     | Complement.complement _ _ innerExpr =>
         let some inner ← go innerExpr | return none
-        return some {bvExpr:= BVExpr.un BVUnOp.not inner.bvExpr, width := inner.width}
+        return some {bvExpr := BVExpr.un BVUnOp.not inner.bvExpr, width := inner.width}
     | HShiftLeft.hShiftLeft _ _ _ _ innerExpr distanceExpr =>
         shiftReflection innerExpr distanceExpr BVExpr.shiftLeft
     | HShiftRight.hShiftRight _ _ _ _ innerExpr distanceExpr =>
@@ -724,7 +724,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         let some rhs ← go rhsExpr | return none
         return some {bvExpr := BVExpr.append lhs.bvExpr rhs.bvExpr rfl}
     | BitVec.extractLsb' _ _ _ _ =>
-           throwError m! "Does not support BitVec.extractLsb' operations"
+        throwError m! "Does not support BitVec.extractLsb' operations"
         -- let some start ← getNatValue? startExpr | return none
         -- let some len ← getNatValue? lenExpr | return none
         -- let some inner ← go innerExpr | return none
@@ -789,6 +789,33 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         let some v ← getNatValue? vExpr | return none
 
         return some {bvExpr := BVExpr.const (BitVec.ofNat n v), width := n}
+
+  getBitVecValue? (e : Expr) : MetaM (Option ((n : Nat) × BitVec n)) := OptionT.run do
+    match_expr e with
+    | BitVec.ofNat nExpr vExpr =>
+      let n ← getNatValue? nExpr
+      let v ← getNatValue? vExpr
+      return ⟨n, BitVec.ofNat n v⟩
+    | BitVec.ofNatLT nExpr vExpr _ =>
+      let n ← getNatValue? nExpr
+      let v ← getNatValue? vExpr
+      return ⟨n, BitVec.ofNat n v⟩
+    | BitVec.ofInt nExpr vExpr =>
+      let n ← getNatValue? nExpr
+      let v ← getIntValue? vExpr
+      return ⟨n, BitVec.ofInt n v⟩
+    | BitVec.allOnes nExpr =>
+      let n ← getNatValue? nExpr
+      return ⟨n, BitVec.allOnes n⟩
+    -- | BitVec.zeroExtend _ nExpr vExpr =>
+    --   let n ← getNatValue? nExpr
+    --   let v ← getBitVecValue? vExpr
+    --   return ⟨n, BitVec.zeroExtend n v.snd⟩
+    | _ =>
+      let (v, type) ← getOfNatValue? e ``BitVec
+      let n ← getNatValue? (← whnfD type.appArg!)
+      return ⟨n, BitVec.ofNat n v⟩
+
 
   binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : ParseBVExprM (Option (BVExprWrapper)) := do
     let some lhs ← go lhsExpr | return none
@@ -856,6 +883,7 @@ variable {x y z : BitVec 64}
 
 #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
 
+-- #reducewidth ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128 : 8
 
 def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BVExpr.PackedBitVec)
              : ParsedBVExpr := Id.run do
@@ -869,7 +897,7 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 4 -- TODO: We should try a range of widths
+      let targetWidth := 8 -- TODO: We should try a range of widths
 
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
@@ -914,8 +942,26 @@ elab "#generalize" expr:term: command =>
       pure ()
 
 
-#generalize (x + 5) + (y + 1)  =  x + y + 6
-#generalize (x + 5) - (y + 1)  =  x - y + 4
+variable {x y : BitVec 32}
+-- #generalize (x + 5) + (y + 1)  =  x + y + 6
+-- #generalize (x + 5) - (y + 1)  =  x - y + 4
 
-variable {x: BitVec 32}
-#generalize (x <<< 10) <<< 14 = x <<< 24 --TODO: The exists/for-all solution is correct, but it prevents us from getting a good solution
+
+-- #generalize (x <<< 3) <<< 4 = x <<< 7 --TODO: The exists/for-all solution is correct, but it prevents us from getting a good solution
+-- #generalize (x + (BitVec.ofInt 32 (-1))) >>> 1 = x >>> 1 -- #61223; we need to do something about bit shifts
+-- #generalize (x + (x || (0 - x))) = x &&& (x + (-1)) -- #57351
+-- #generalize (x >>> 1 ) / (1 % x) = x >>> 1 --- #62163
+--#generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
+
+
+-- #generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
+
+
+----- Examples -------
+-- (𝑥 : i32 & 15) ≠ 15) & (𝑥 <𝑢 16) ⇒ 𝑥 <𝑢 15
+-- (𝑥 : i32 & 1) ≠ 0 |= (𝑥 + (−1) ) ≫𝑢 1 ⇒ 𝑥 ≫𝑢 1
+-- 𝑥 : i32 <𝑠 (𝑥 ⊕ (−1) ) ⇒ 𝑥 <𝑠 0
+-- (42 /𝑠 𝑥 : i8) = 0 ⇒ (𝑥 + 0xD5) <𝑢 0xAB
+-- ( (𝑥 : i32 %𝑠 8) <𝑠 0) ? ( (𝑥 %𝑠 8) +nsw 8) : (𝑥 %𝑠 8) ⇒ 𝑥 & 7 --TODO: Dealing with conditionals?; Not sure how to deal with the ternary operator in Lean
+-- ( (𝑥 : i32 & 0xFFFF0000) = 0x11220000) | ( (𝑥 & 0xFFFFFF00) = 0x11223300) ⇒ (𝑥 & 0xFFFF0000) = 0x11220000 -- TODO: need to deal with boolean equal and neq
+-- (y : i128 + (𝑥 : i128 × (−1) ≪𝑢 64) ) ≪ 64 ⇒ y ≪ 64 -- Hydra width-independence failure
