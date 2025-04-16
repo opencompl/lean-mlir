@@ -158,7 +158,7 @@ inductive Op
 | xor (w : Nat) (arity : Nat)
 deriving DecidableEq, Repr, Lean.ToExpr
 
-def CombDialect : Dialect where
+abbrev CombDialect : Dialect where
   Op := Op
   Ty := Ty
 
