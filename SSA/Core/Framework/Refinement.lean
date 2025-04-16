@@ -215,4 +215,39 @@ namespace LawfulDialectRefines.FactInstances
 scoped instance [TyDenote d.Ty] [LawfulDialectRefines d] {t : d.Ty} : Fact (IsTypeCompatible t t) where
   out := LawfulDialectRefines.isTypeCompatible_rfl t
 
+/-!
+**How to define refinement on computations?**
+
+So far, when verifying the Alive peephole rewrites, we've used the following
+definition of refinement, where `c` and `d` are LLVM programs with the same
+context and return type:
+```
+  ∀ V, c.denote V ⊑ d.denote V
+```
+Saying that `c` is refined by `d` when for any valuation `V` the denotation of
+`c` under `V` is refined by the denotation of `d` under `V`.
+
+Of course, this definition really only makes sense if `c` and `d` can be evaluated
+under the exact same contexts. Thus, to generalize this to multiple dialects, we'd
+instead write something like
+```
+  ∀ V₁ V₂, V₁ ⊑ V₂ → c.denote V₁ ⊑ d.denote V₂
+```
+
+Now, the second definition is *not* in general equivalent to the first.
+However, if we add the following assumption, that the denotation is monotone
+w.r.t. refinement, then we can prove that the two definitions are logically
+equivalent:
+```
+  ∀ V₁ V₂, V₁ ⊑ V₂ → c.denote V₁ ⊑ c.denote V₂
+```
+
+It's slightly annoying to have this extra proof burden. Then again, semantics
+really ought to be monotone in this way, so it might not be bad to force a proof.
+In particular, VeLLVM had a bug in it's semantics which meant it was *not* monotone,
+but this really was a bug. The intention of LLVM semantics is that they are monotone.
+
+
+-/
+
 end LawfulDialectRefines.FactInstances
