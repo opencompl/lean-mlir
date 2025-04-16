@@ -22,7 +22,7 @@ macro "simp_alive_ssa" : tactic =>
         intros Γv
 
         /- Simplify away the core framework -/
-        simp_peephole [InstCombine.Op.denote] at Γv
+        simp_peephole [InstCombine.Op.denote] using Γv
 
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get,

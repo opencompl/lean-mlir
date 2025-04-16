@@ -436,7 +436,7 @@ theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int)
   Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
     simp only [EffectKind.toMonad_impure, for_, Ctxt.get?, Expr.denote, HVector.denote_cons,
       Com.denote_ret, Id.pure_eq, HVector.denote_nil, EffectKind.liftEffect_rfl, id_eq]
-    simp_peephole at Γv
+    simp_peephole using Γv
     simp [Scf.LoopBody.counterDecorator.constant_iterate]
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.

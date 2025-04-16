@@ -46,7 +46,7 @@ open Ctxt in
 theorem equiv_arg1 (x1Stream x2Stream : Stream Bool) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
   let v := (@Valuation.ofPair MLIR2Handshake.Ty _ (MLIR2Handshake.Ty.stream MLIR2Handshake.Ty2.bool) (MLIR2Handshake.Ty.stream MLIR2Handshake.Ty2.bool) x1Stream x2Stream)
-  simp_peephole at v
+  simp_peephole using v
   unfold Handshake.branch
   unfold Handshake.merge
   sorry

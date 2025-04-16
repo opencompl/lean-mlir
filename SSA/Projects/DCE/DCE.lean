@@ -470,5 +470,8 @@ def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
 theorem checkDCEasExpected :
   ex1_post_dce = ex1_post_dce_expected := by native_decide
 
+
+
+
 end Examples
 end DCE

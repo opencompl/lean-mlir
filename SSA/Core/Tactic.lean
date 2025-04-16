@@ -101,7 +101,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
     ))
 
 /--
-`simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
+`simp_peephole using ΓV` simplifies away the framework overhead of denoting expressions/programs,
 that are evaluated with the valuation `ΓV`.
 
 The actual simplification happens in the `simp_peephole` tactic defined above.
@@ -111,7 +111,7 @@ The present tactic tries to eliminate the valuation completely,
 by introducing a new universally quantified (Lean) variable to the goal for every
 (object) variable `v`.
 -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "using" Γv:ident : tactic =>
   `(tactic|(
       simp_peephole [$ts,*]
       -- `simp_peephole` might close trivial goals, so we use `only_goal` to ensure we only run
@@ -123,7 +123,37 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
   ))
 
 /-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" "at" Γv:ident : tactic => `(tactic| simp_peephole [] at $Γv)
+macro "simp_peephole" "using" Γv:ident : tactic => `(tactic| simp_peephole [] using $Γv)
 macro "simp_peephole"               : tactic => `(tactic| simp_peephole [])
+
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" h:Lean.Parser.Tactic.locationHyp : tactic =>
+  `(tactic|
+      (
+      simp (config := {failIfUnchanged := false}) only [
+        Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
+        DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
+        Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil,
+        Ctxt.Valuation.snoc_last, Ctxt.map,
+        Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, HVector.getN, HVector.get, HVector.toSingle, HVector.toPair, HVector.toTuple,
+        DialectDenote.denote, Expr.op_mk, Expr.args_mk,
+        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
+        Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
+        List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,
+        bind_assoc, pairBind,
+        Com.letPure, Expr.denote_castPureToEff,
+        Com.denote_var, Com.denote_ret, Expr.denote_unfold, HVector.denote,
+        EffectKind.toMonad_pure, EffectKind.toMonad_impure,
+        EffectKind.liftEffect_rfl,
+        Id.pure_eq, Id.bind_eq, id_eq,
+        (HVector.denote_cons), (HVector.denote_nil),
+        $ts,*] at $h
+    ))
+/-- `simp_peephole at` with no extra user defined theorems. -/
+macro "simp_peephole" "at" h:Lean.Parser.Tactic.locationHyp : tactic => `(tactic| simp_peephole [] at $h)
+
+
+
 
 end SSA
