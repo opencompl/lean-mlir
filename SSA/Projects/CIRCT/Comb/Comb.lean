@@ -391,14 +391,12 @@ def xor {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (DialectSignature.sig (
 
 
 /-- Convert a list of dependent pairs into an HVector -/
--- def ofList {Γ : Ctxt _} ty : (l : List ((ty : CombDialect.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
--- | [], h => .nil
--- | ⟨ty', var⟩::rest, h =>
---   have hty : ty' = ty := by sorry
---   have hrest : rest.all .1 := by simp_all
---   .cons (hty ▸ var) (ofList _ rest hrest)
-
-
+def ofList {Γ : Ctxt _} ty : (l : List ((ty : CombDialect.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
+| [], h => .nil
+| ⟨ty', var⟩::rest, h =>
+  have hty : ty' = ty := by simp_all
+  have hrest : rest.all (·.1 = ty) := by simp_all
+  .cons (hty ▸ var) (ofList _ rest hrest)
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM CombDialect (Σ eff ty, Expr CombDialect Γ eff ty) := do
