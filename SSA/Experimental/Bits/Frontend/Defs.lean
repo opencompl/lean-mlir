@@ -9,39 +9,44 @@ and the denotation of these terms into operations on bitstreams -/
 /-- The sort of widths, which are natural numbers. -/
 inductive Width : Type
 | var : Nat → Width
+deriving Repr, Inhabited
+
+/-- Denote a width variable into a concrete width. -/
+def Width.denote (ws : List Nat) : Width → Nat
+| var n => ws.getD n default
 
 /-- A `Term` is an expression in the language our decision procedure operates on,
 it represent an infinite bitstream (with free variables) -/
-inductive Term : Type
-| var : (v : Nat) → Term
+inductive Term : Width → Type
+| var : (w : Width) → (v : Nat) → Term w
 /-- The constant `0` -/
-| zero : Term
+| zero (w : Width) : Term w
 /-- The constant `-1` -/
-| negOne : Term
+| negOne (w : Width) : Term w
 /-- The constant `1` -/
-| one : Term
+| one (w : Width) : Term w
 /-- The constant `n` from a bitvector expression -/
-| ofNat (n : Nat) : Term
+| ofNat (w : Width) (n : Nat) : Term w
 /-- Bitwise and -/
-| and : Term → Term → Term
+| and : Term w → Term w → Term w
 /-- Bitwise or -/
-| or : Term → Term → Term
+| or : Term w → Term w → Term w
 /-- Bitwise xor -/
-| xor : Term → Term → Term
+| xor : Term w → Term w → Term w
 /-- Bitwise complement -/
-| not : Term → Term
+| not : Term w → Term w
 /-- Addition -/
-| add : Term → Term → Term
+| add : Term w → Term w → Term w
 /-- Subtraction -/
-| sub : Term → Term → Term
+| sub : Term w → Term w → Term w
 /-- Negation -/
-| neg : Term → Term
+| neg : Term w → Term w
 -- /-- Increment (i.e., add one) -/
 -- | incr : Term → Term
 -- /-- Decrement (i.e., subtract one) -/
 -- | decr : Term → Term
 /-- shift left by `k` bits. -/
-| shiftL : Term → Nat → Term
+| shiftL : Term w → Nat → Term w
 -- /-- logical shift right by `k` bits. -/
 -- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
@@ -51,23 +56,23 @@ deriving Repr, Inhabited
 
 open Term
 
-instance : Add Term := ⟨add⟩
-instance : Sub Term := ⟨sub⟩
-instance : One Term := ⟨one⟩
-instance : Zero Term := ⟨zero⟩
-instance : Neg Term := ⟨neg⟩
+instance : Add (Term w) := ⟨add⟩
+instance : Sub (Term w) := ⟨sub⟩
+instance : One (Term w) := ⟨one w⟩
+instance : Zero (Term w) := ⟨zero w⟩
+instance : Neg (Term w) := ⟨neg⟩
 
 /-- `t.arity` is the max free variable id that occurs in the given term `t`,
 and thus is an upper bound on the number of free variables that occur in `t`.
 
 Note that the upper bound is not perfect:
 a term like `var 10` only has a single free variable, but its arity will be `11` -/
-@[simp] def Term.arity : Term → Nat
-| (var n) => n+1
-| zero => 0
-| one => 0
-| negOne => 0
-| ofNat _ => 0
+@[simp] def Term.arity : Term w → Nat
+| (var w n) => n+1
+| zero w => 0
+| one w => 0
+| negOne w => 0
+| ofNat w _ => 0
 | Term.and t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.or t₁ t₂ => max (arity t₁) (arity t₂)
 | Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
@@ -113,7 +118,7 @@ Meaning of the denotation:
 inductive Predicate : Type where
 /-- Assert relationship between bitwidth and `n` -/
 | width (wp : WidthPredicate) (n : Nat) : Predicate
-| binary (p : BinaryPredicate) (t₁ t₂ : Term)
+| binary (p : BinaryPredicate) (t₁ t₂ : Term w)
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
 deriving Repr
@@ -132,26 +137,31 @@ deriving Repr
 
 
 /-- toBitVec a Term into its underlying bitvector -/
-def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
+def Term.denote 
+    {w : Width}
+    (t : Term w)
+    (ws : List Nat)
+    (vars : List (BitVec (w.denote ws))) :
+    BitVec (w.denote ws) :=
   match t with
-  | ofNat n => BitVec.ofNat w n
-  | var n => vars.getD n default
-  | zero => 0#w
-  | negOne => -1#w
-  | one  => 1#w
-  | and a b => (a.denote w vars) &&& (b.denote w vars)
-  | or a b => (a.denote w vars) ||| (b.denote w vars)
-  | xor a b => (a.denote w vars) ^^^ (b.denote w vars)
-  | not a => ~~~ (a.denote w vars)
-  | add a b => (a.denote w vars) + (b.denote w vars)
-  | sub a b => (a.denote w vars) - (b.denote w vars)
-  | neg a => - (a.denote w vars)
+  | ofNat w n => BitVec.ofNat (w.denote ws) n
+  | var w n => vars.getD n default
+  | zero w => 0#(w.denote ws)
+  | negOne w => -1#(w.denote ws)
+  | one w => 1#(w.denote ws)
+  | and a b => (a.denote ws vars) &&& (b.denote ws vars)
+  | or a b => (a.denote ws vars) ||| (b.denote ws vars)
+  | xor a b => (a.denote ws vars) ^^^ (b.denote ws vars)
+  | not a => ~~~ (a.denote ws vars)
+  | add a b => (a.denote ws vars) + (b.denote ws vars)
+  | sub a b => (a.denote ws vars) - (b.denote ws vars)
+  | neg a => - (a.denote ws vars)
   -- | incr a => (a.denote w vars) + 1#w
   -- | decr a => (a.denote w vars) - 1#w
-  | shiftL a n => (a.denote w vars) <<< n
+  | shiftL a n => (a.denote ws vars) <<< n
 
 
-def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
+def Predicate.denote (p : Predicate) (ws : List Nat) (vars : List (BitVec w)) : Prop :=
   match p with
   | .width .ge k => k ≤ w -- w ≥ k
   | .width .gt k => k < w -- w > k
@@ -161,9 +171,9 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .width .eq k => w = k
   | .binary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
   | .binary .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
-  | .binary .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
-  | .binary .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
-  | .binary .ule  t₁ t₂ => ((t₁.denote w vars).ule (t₂.denote w vars)) = true
+  | .binary .sle  t₁ t₂ => ((t₁.denote ws vars).sle (t₂.denote w vars)) = true
+  | .binary .slt  t₁ t₂ => ((t₁.denote ws vars).slt (t₂.denote w vars)) = true
+  | .binary .ule  t₁ t₂ => ((t₁.denote ws vars).ule (t₂.denote w vars)) = true
   | .binary .ult  t₁ t₂ => (t₁.denote w vars).ult (t₂.denote w vars) = true
   | .land  p q => p.denote w vars ∧ q.denote w vars
   | .lor  p q => p.denote w vars ∨ q.denote w vars
