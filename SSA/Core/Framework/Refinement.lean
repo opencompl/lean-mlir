@@ -17,7 +17,7 @@ The notation typeclass for heterogenous refinement relations.
 This enables the notation `a ⊑ b`, where `a : α` and `b : β`.
 
 NOTE: This typeclass is not intended for dialect implementors. Please implement
-`DialectRefines` instead, from which appropriate `HRefinement` instances will
+`DialectRefinement` instead, from which appropriate `HRefinement` instances will
 be inferred.
 -/
 class HRefinement (α β : Type) where
@@ -37,7 +37,7 @@ The homogenous version of `HRefinement`.
 This enables the notation `a ⊑ b`, where `a, b : α`.
 
 NOTE: This typeclass is not intended for dialect implementors. Please implement
-`DialectRefines` instead.
+`DialectRefinement` instead.
 -/
 class Refinement (α : Type) where
   IsRefinedBy : α → α → Prop
@@ -48,9 +48,9 @@ instance [Refinement α] : HRefinement α α where
 /-
 TODO: Do we actually need `Refinement`?
 We don't expect users to derive instances of `HRefinement` themselves to begin
-with: we expect them to use `DialectRefines` (which might be heterogeneous or homogeneous).
+with: we expect them to use `DialectRefinement` (which might be heterogeneous or homogeneous).
 Then, we--the framework authors--write all the various notations derived from the
-`DialectRefines` instance.
+`DialectRefinement` instance.
 
 For now, we've used the homogeneous `Refinement` to define refinement of `Expr`s
 and `Coms` in a single dialect.
@@ -73,13 +73,13 @@ heterogenous instances (where the former should have a high-priority annotation)
 /-! ### Dialect Refinement -/
 
 /--
-`DialectHRefines` defines an heterogenous refinement relation accross two dialects.
+`DialectHRefinement` defines an heterogenous refinement relation accross two dialects.
 
-Various instances of the ` ⊑ ` refinement notation will be derived from `DialectHRefines`.
+Various instances of the ` ⊑ ` refinement notation will be derived from `DialectHRefinement`.
 In particular, this class defines refinement for monadic values, from which
 refinement of pure values `x, y` is defined as `pure x ⊑ pure y.`
 -/
-class DialectHRefines (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote d'.Ty] where
+class DialectHRefinement (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote d'.Ty] where
   /--
   `IsTypeCompatible t u` implies that the semantics of types `t` and `u` are comparable,
   in the sense that it is valid to ask whether an inhabitant of `⟦t⟧` is refined
@@ -87,7 +87,7 @@ class DialectHRefines (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote d'.
 
   When using the `· ⊑ ·` refinement notation, the precondition that the relevant
   types are compatible is stated using the `Fact` typeclass.
-  Hence, when defining an instance of `DialectHRefines` it is also expected that
+  Hence, when defining an instance of `DialectHRefinement` it is also expected that
   you provide relevant instances of `Fact (IsTypeCompatible _ _)`.
   Do recall that, as per the `Fact` documentation, such instances ought to be
   either `local` or `scoped`!
@@ -95,7 +95,7 @@ class DialectHRefines (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote d'.
   IsTypeCompatible : d.Ty → d'.Ty → Prop
   -- TODO: the following ought to be `IsRefinedBy` by the naming convention.
   IsRefinedBy {t u} : IsTypeCompatible t u → d.m ⟦t⟧ → d'.m ⟦u⟧ → Prop
-open DialectHRefines
+open DialectHRefinement
 
 /-!
 **IsTypeCompatible Rationale**:
@@ -126,7 +126,7 @@ where the original and rewritten types are not exactly the same.
 Of course, adding such capabilities to the rewriter does raise some more questions:
 we'd likely have to incorporate some form of casting from the new type to the original,
 to ensure the rewritten program is still well-typed. We might have to encode the
-meaning of such casts as part of the `DialectHRefines` typeclass, which *might*
+meaning of such casts as part of the `DialectHRefinement` typeclass, which *might*
 actually be easier with an explicit `IsTypeCompatible` relation, rather than
 implicitly encoding type compatibility as part of the refinement definition.
 It is exactly between compatible types that we should be allowed to implicitly
@@ -148,13 +148,13 @@ In the bundled version, we could shorten that to simply:
 ```
 -/
 
-namespace DialectHRefines
-variable {d d'} [TyDenote d.Ty] [TyDenote d'.Ty] [DialectHRefines d d']
+namespace DialectHRefinement
+variable {d d'} [TyDenote d.Ty] [TyDenote d'.Ty] [DialectHRefinement d d']
 variable {t : d.Ty} {u : d'.Ty} [h : Fact (IsTypeCompatible t u)]
 
 /-- Refinement for monadic values -/
 instance instRefinementMonadic : HRefinement (d.m ⟦t⟧) (d'.m ⟦u⟧) where
-  IsRefinedBy := DialectHRefines.IsRefinedBy h.out
+  IsRefinedBy := DialectHRefinement.IsRefinedBy h.out
 
 variable [Pure d.m] [Pure d'.m]
 
@@ -194,26 +194,26 @@ section Lemmas
 
 end Lemmas
 
-end DialectHRefines
+end DialectHRefinement
 
--- TODO: homogeneous `DialectRefines` convenience class
+-- TODO: homogeneous `DialectRefinement` convenience class
 
 /--
 A lawful homogenous (i.e., within a single dialect) refinement instance is one where
 the type compatiblity relation is reflexive.
 
-NOTE: any use of `LawfulDialectRefines` in a bound should likely be followed by
-`open LawfulDialectRefines.FactInstances` to make the relevant (scoped) `Fact`
+NOTE: any use of `LawfulDialectRefinement` in a bound should likely be followed by
+`open LawfulDialectRefinement.FactInstances` to make the relevant (scoped) `Fact`
 instances available.
 -/
-class LawfulDialectRefines (d : Dialect) [TyDenote d.Ty] extends DialectHRefines d d where
+class LawfulDialectRefinement (d : Dialect) [TyDenote d.Ty] extends DialectHRefinement d d where
   isTypeCompatible_rfl : ∀ t, IsTypeCompatible t t
 
-namespace LawfulDialectRefines.FactInstances
+namespace LawfulDialectRefinement.FactInstances
 
 /-- See `Fact` documentation for why this must be a scoped instance -/
-scoped instance [TyDenote d.Ty] [LawfulDialectRefines d] {t : d.Ty} : Fact (IsTypeCompatible t t) where
-  out := LawfulDialectRefines.isTypeCompatible_rfl t
+scoped instance [TyDenote d.Ty] [LawfulDialectRefinement d] {t : d.Ty} : Fact (IsTypeCompatible t t) where
+  out := LawfulDialectRefinement.isTypeCompatible_rfl t
 
 /-!
 **How to define refinement on computations?**
@@ -250,4 +250,4 @@ but this really was a bug. The intention of LLVM semantics is that they are mono
 
 -/
 
-end LawfulDialectRefines.FactInstances
+end LawfulDialectRefinement.FactInstances

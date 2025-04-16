@@ -751,8 +751,8 @@ end Lemmas
 ## Refinement
 -/
 section Refinement
-variable [LawfulDialectRefines d]
-open LawfulDialectRefines.FactInstances
+variable [LawfulDialectRefinement d]
+open LawfulDialectRefinement.FactInstances
 
 /-
 HACK: `EffectKind.toMonad` is reducible, which causes some issues.
@@ -769,16 +769,16 @@ attribute [local semireducible] EffectKind.toMonad
 An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: IsRefinedBy (Expr d Γ eff t) where
-  isRefinedBy e₁ e₂ :=
+instance: Refinement (Expr d Γ eff t) where
+  IsRefinedBy e₁ e₂ :=
     ∀ V, e₁.denote V ⊑ e₂.denote V
 
 /--
 A program `c₁` is refined by a program `c₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: IsRefinedBy (Com d Γ eff t) where
-  isRefinedBy c₁ c₂ :=
+instance: Refinement (Com d Γ eff t) where
+  IsRefinedBy c₁ c₂ :=
     ∀ V, c₁.denote V ⊑ c₂.denote V
 
 end Refinement
