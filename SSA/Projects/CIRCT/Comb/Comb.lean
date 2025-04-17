@@ -18,19 +18,6 @@ inductive IcmpPredicate where
   | uge
 deriving Inhabited, DecidableEq, Repr
 
-instance : ToString IcmpPredicate where
-  toString
-  | .eq  => "eq"
-  | .ne  => "ne"
-  | .slt => "slt"
-  | .sle => "sle"
-  | .sgt => "sgt"
-  | .sge => "sge"
-  | .ult => "ult"
-  | .ule => "ule"
-  | .ugt => "ugt"
-  | .uge => "uge"
-
 /-- Variadic `add` operation with a list of bitvectors with width `w` as input -/
 def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.add (0#w) l
@@ -133,7 +120,7 @@ inductive Ty
 | bool : Ty
 | nat : Ty
 | hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
-| icmpPred (s : String) : Ty
+| icmpPred : Ty
 deriving DecidableEq, Repr, Lean.ToExpr
 
 inductive Op
@@ -143,7 +130,7 @@ inductive Op
 | divs (w : Nat)
 | divu (w : Nat)
 | extract (w : Nat) (n : Nat)
-| icmp (p : String) (w : Nat)
+| icmp (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat) (arity : Nat)
@@ -169,7 +156,7 @@ def_signature for Comb where
   | .divs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .divu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .extract w n => (Ty.bv w) → (Ty.bv (w - n))
-  | .icmp p w => (Ty.icmpPred p, Ty.bv w, Ty.bv w) → (Ty.bool)
+  | .icmp w => (Ty.icmpPred, Ty.bv w, Ty.bv w) → (Ty.bool)
   | .mods w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .modu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .mul w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
@@ -189,7 +176,7 @@ instance : TyDenote (Dialect.Ty Comb) where
   | .nat  => Nat
   | .bool => Bool
   | .hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
-  | .icmpPred _=> CombOp.IcmpPredicate
+  | .icmpPred => CombOp.IcmpPredicate
 
 def HVector.replicateToList {α : Type} {f : α → Type} {a : α} :
     {n : Nat} → HVector f (List.replicate n a) → List (f a)
@@ -203,7 +190,7 @@ def_denote for Comb where
   | .divs _ => fun xs => CombOp.divs xs
   | .divu _ => fun xs => CombOp.divu xs
   | .extract _ n => fun xs => CombOp.extract xs n
-  | .icmp _ _ => fun xs => CombOp.icmp xs
+  | .icmp _ => fun xs => CombOp.icmp xs
   | .mods _ => fun xs => CombOp.mods xs
   | .modu _ => fun xs => CombOp.modu xs
   | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
@@ -229,9 +216,9 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
       return .nat
     | ["BitVec", r] =>
       return .bv (r.toNat!)
-    | ["IcmpPred", r] =>
+    | ["IcmpPred"] =>
       -- match icmp
-      return .icmpPred r
+      return .icmpPred
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
@@ -287,9 +274,9 @@ def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred op)) : Expr (Comb) Γ .pure (.bool) :=
+def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
-    (op := .icmp op w)
+    (op := .icmp w)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons k <| .cons a <| .cons b <| .nil)
@@ -529,7 +516,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .bv w₁, .bv w₂, .icmpPred s, "Comb.icmp" =>
+      | .bv w₁, .bv w₂, .icmpPred, "Comb.icmp" =>
         if h : w₁ = w₂ then
           let v₂ := v₂.cast (by rw [h])
           return ⟨_, .bool, icmp v₁ v₂ v₃⟩
