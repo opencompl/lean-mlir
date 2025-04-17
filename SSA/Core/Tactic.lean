@@ -5,6 +5,7 @@ import SSA.Core.Framework
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Core.Tactic.TacBench
+import SSA.Core.Tactic.SimpSet
 import Qq
 import Lean.Meta.KAbstract
 import Lean.Elab.Tactic.ElabTerm
@@ -43,62 +44,76 @@ Essentially, this silences "no goals to be solved" errors -/
 macro "only_goal" t:tacticSeq : tactic =>
   `(tactic| first | done | $t)
 
+attribute [simp_denote]
+  Int.ofNat_eq_coe Nat.cast_zero DerivedCtxt.snoc DerivedCtxt.ofCtxt
+  DerivedCtxt.ofCtxt_empty Valuation.snoc_last
+  Var.zero_eq_last Var.succ_eq_toSnoc
+  Ctxt.empty Ctxt.empty_eq Ctxt.snoc Ctxt.Valuation.nil
+  Ctxt.Valuation.snoc_last Ctxt.map
+  Ctxt.Valuation.snoc_eval Ctxt.ofList Ctxt.Valuation.snoc_toSnoc
+  HVector.map HVector.getN HVector.get HVector.toSingle HVector.toPair HVector.toTuple
+  DialectDenote.denote Expr.op_mk Expr.args_mk
+  DialectMorphism.mapOp DialectMorphism.mapTy List.map Ctxt.snoc List.map
+  Function.comp Valuation.ofPair Valuation.ofHVector Function.uncurry
+  List.length_singleton Fin.zero_eta List.map_eq_map List.map_cons List.map_nil
+  bind_assoc pairBind
+  /- `castPureToEff` -/
+  Com.letPure Expr.denote_castPureToEff
+  /- Unfold denotation -/
+  Com.denote_var Com.denote_ret Expr.denote_unfold HVector.denote
+  /- Effect massaging -/
+  EffectKind.toMonad_pure EffectKind.toMonad_impure
+  EffectKind.liftEffect_rfl
+  Id.pure_eq Id.bind_eq id_eq
+
+/-!
+NOTE (Here Be Dragons 🐉):
+`HVector.denote` has a typeclass assumption `TyDenote (Dialect.Ty d)`, where `d : Dialect`.
+However, we tend to define `d` as an `abbrev`, so that our goal statement might have
+`HVector.denote` where the concrete instance is `instTyDenote : TyDenote Ty`,
+  and `Ty` is the expression that `d` was defined with.
+
+We've observed `simp [HVector.denote]` not working in such situations.
+  Even more surprising, `rw [HVector.denote]` *did* succeed in rewriting.
+According to Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358861409):
+> simp [(X)] is a standard trick to fix simp [X] not working
+
+By default, it seems that `simp` will synthesize typeclass arguments of a lemma, and then
+use the *default* instance to determine whether a simp-lemma applies to the current goal.
+Writing `simp [(X)]`, on the other hand, is equivalent to writing `simp [@X _ _ _]`
+  (for as many underscores as `X` takes arguments, implicit or explicit).
+The parentheses seems to enable `simp` to unify typeclass arguments as well, and thus the
+  simp-lemma applies even for non-standard instances.
+
+We've replicated this effect by defining `HVector.denote_{nil,cons}'`, as analogues
+to their non-primed lemmas, which instead take all instances as regular implicit
+arguments, thus guiding `simp` to unify against non-standard instances.
+-/
+section
+variable {d : Dialect} {instSig : DialectSignature d}
+  {instTyDenote : TyDenote d.Ty} {instDenote : DialectDenote d}
+  {instMonad : Monad d.m}
+
+@[simp_denote] lemma HVector.denote_nil'
+    (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2) []) :
+    HVector.denote T = HVector.nil := by
+  cases T; simp [HVector.denote]
+
+@[simp_denote] lemma HVector.denote_cons'
+    (t : Ctxt d.Ty × d.Ty) (ts : List (Ctxt d.Ty × d.Ty))
+    (a : Com d t.1 .impure t.2) (as : HVector (fun t => Com d t.1 .impure t.2) ts) :
+    HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
+  simp [HVector.denote]
+
+end
+
 /--
 `simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
-
-In it's bare form, it only simplifies away the core framework definitions (e.g., `Expr.denote`), but
-we can also pass it dialect-specific definitions to unfold, as in:
-`simp_peephole [foo, bar, baz]` -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
-  `(tactic|
-      (
-      /- Then, unfold the definition of the denotation of a program -/
-      simp (config := {failIfUnchanged := false}) only [
-        Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
-        DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
-        Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil,
-        Ctxt.Valuation.snoc_last, Ctxt.map,
-        Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-        HVector.map, HVector.getN, HVector.get, HVector.toSingle, HVector.toPair, HVector.toTuple,
-        DialectDenote.denote, Expr.op_mk, Expr.args_mk,
-        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
-        Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
-        List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,
-        bind_assoc, pairBind,
-        /- `castPureToEff` -/
-        Com.letPure, Expr.denote_castPureToEff,
-        /- Unfold denotation -/
-        Com.denote_var, Com.denote_ret, Expr.denote_unfold, HVector.denote,
-        /- Effect massaging -/
-        EffectKind.toMonad_pure, EffectKind.toMonad_impure,
-        EffectKind.liftEffect_rfl,
-        Id.pure_eq, Id.bind_eq, id_eq,
-        /-
-        NOTE (Here Be Dragons 🐉): the parenthesis in `(HVector.denote_cons)` are significant!
-        `HVector.denote` has a typeclass assumption `TyDenote (Dialect.Ty d)`, where `d : Dialect`.
-        However, we tend to define `d` as an `abbrev`, so that our goal statement might have
-        `HVector.denote` where the concrete instance is `instTyDenote : TyDenote Ty`,
-          and `Ty` is the expression that `d` was defined with.
-
-        We've observed `simp [HVector.denote]` not working in such situations.
-          Even more surprising, `rw [HVector.denote]` *did* succeed in rewriting.
-        According to Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358861409):
-        > simp [(X)] is a standard trick to fix simp [X] not working
-
-        By default, it seems that `simp` will synthesize typeclass arguments of a lemma, and then
-        use the *default* instance to determine whether a simp-lemma applies to the current goal.
-        Writing `simp [(X)]`, on the other hand, is equivalent to writing `simp [@X _ _ _]`
-          (for as many underscores as `X` takes arguments, implicit or explicit).
-        The parentheses seems to enable `simp` to unify typeclass arguments as well, and thus the
-          simp-lemma applies even for non-standard instances.
-
-        One caveat: `simp [(X)]` only works if `X` is a lemma, *not* if `X` is a definition to be
-        unfolded. Thus, we replace `HVector.denote` with its equation lemmas
-          `(HVector.denote_cons)` and `(HVector.denote_nil)` -/
-        (HVector.denote_cons), (HVector.denote_nil),
-        $ts,*]
-    ))
+-/
+macro "simp_peephole" : tactic =>
+  `(tactic|(
+      simp (config := {failIfUnchanged := false}) only [simp_denote]
+  ))
 
 /--
 `simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
@@ -111,9 +126,9 @@ The present tactic tries to eliminate the valuation completely,
 by introducing a new universally quantified (Lean) variable to the goal for every
 (object) variable `v`.
 -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
+macro "simp_peephole" "at" Γv:ident : tactic =>
   `(tactic|(
-      simp_peephole [$ts,*]
+      simp_peephole
       -- `simp_peephole` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
       only_goal
@@ -121,9 +136,5 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         repeat (generalize_or_fail at $Γv)
         clear $Γv
   ))
-
-/-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" "at" Γv:ident : tactic => `(tactic| simp_peephole [] at $Γv)
-macro "simp_peephole"               : tactic => `(tactic| simp_peephole [])
 
 end SSA
