@@ -392,11 +392,6 @@ def ofList {Γ : Ctxt _} ty : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → (h : 
   have hrest : rest.all (·.1 = ty) := by simp_all
   .cons (hty ▸ var) (ofList _ rest hrest)
 
-def ofList' {α : Type u} {f : α → Type v} :
-    (xs : List (Σ a, f a)) → HVector f (xs.map Sigma.fst)
-  | ⟨_, x⟩ :: xs => .cons x (ofList' xs)
-  | [] => .nil
-
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM Comb (Σ eff ty, Expr Comb Γ eff ty) := do
   match opStx.name with
