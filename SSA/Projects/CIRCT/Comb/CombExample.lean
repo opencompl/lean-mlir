@@ -7,8 +7,6 @@ import SSA.Core.HVector
 import SSA.Core.EffectKind
 import SSA.Core.Util
 
-namespace CIRCTStream
-
 open MLIR AST in
 
 unseal String.splitOnAux in
@@ -60,9 +58,9 @@ def CombEg4 := [Comb_com| {
 
 
 def CombEg5 := [Comb_com| {
-    ^entry(%0: !List_4):
-      %1 = "Comb.add" (%0) : (!List_4) -> !BitVec_4
-      "return" (%1) : (!BitVec_4) -> ()
+    ^entry(%0: !BitVec_4, %1 : !BitVec_4):
+      %2 = "Comb.add" (%0, %1) : (!BitVec_4, !BitVec_4) -> !BitVec_4
+      "return" (%2) : (!BitVec_4) -> ()
     }]
 
 #print CombEg5
@@ -71,20 +69,12 @@ def CombEg5 := [Comb_com| {
 #check CombEg5
 #print axioms CombEg5
 
-
-
 def l : List (BitVec 4) := [BitVec.ofNat 4 1, BitVec.ofNat 4 2, BitVec.ofNat 4 3, BitVec.ofNat 4 4]
 
-def lh : HVector TyDenote.toType [MLIR2Comb.Ty.list 4] := HVector.cons l .nil
+def bv1 : BitVec 4 := BitVec.ofNat 4 5 -- 0010
+def bv2 : BitVec 4 := BitVec.ofNat 4 1 -- 0011
 
-#check HVector.cons
+def test5 : BitVec 4 :=
+  CombEg5.denote (Ctxt.Valuation.ofPair bv1 bv2)
 
-def test : BitVec 4 := CombEg5.denote (Ctxt.Valuation.ofHVector lh)
-
-#eval test
-
--- def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
--- def u : DC.TokenStream := ofList [some (), none, some (), some (), none]
-
--- def test2 : DC.TokenStream :=
---   BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
+#eval test5
