@@ -18,6 +18,19 @@ inductive IcmpPredicate where
   | uge
 deriving Inhabited, DecidableEq, Repr
 
+instance : ToString IcmpPredicate where
+  toString
+  | .eq  => "eq"
+  | .ne  => "ne"
+  | .slt => "slt"
+  | .sle => "sle"
+  | .sgt => "sgt"
+  | .sge => "sge"
+  | .ult => "ult"
+  | .ule => "ule"
+  | .ugt => "ugt"
+  | .uge => "uge"
+
 /-- Variadic `add` operation with a list of bitvectors with width `w` as input -/
 def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.add (0#w) l
@@ -48,18 +61,19 @@ def extract (x : BitVec w) (lb : Nat) : BitVec (w - lb) :=
   BitVec.truncate (w - lb) (BitVec.ushiftRight x lb)
 
 /-- Boolean comparison between two input BitVecs -/
-def icmp {w : Nat} (c : IcmpPredicate) (x y : BitVec w) : Bool :=
-  match c with
-    | .eq  => (x == y)
-    | .ne => (x != y)
-    | .sgt => (y.slt x)
-    | .sge => (y.sle x)
-    | .slt => (x.slt y)
-    | .sle => (x.sle y)
-    | .ugt => (x > y)
-    | .uge => (x ≥ y)
-    | .ult => (x < y)
-    | .ule => (x ≤ y)
+def icmp {w : Nat} (p : IcmpPredicate) (x y : BitVec w) : Bool :=
+  match p with
+  | .eq  => (x == y)
+  | .ne => (x != y)
+  | .sgt => (y.slt x)
+  | .sge => (y.sle x)
+  | .slt => (x.slt y)
+  | .sle => (x.sle y)
+  | .ugt => (x > y)
+  | .uge => (x ≥ y)
+  | .ult => (x < y)
+  | .ule => (x ≤ y)
+
 
 /-- Signed modulo -/
 def mods (x y : BitVec w) : BitVec w :=
@@ -130,7 +144,7 @@ inductive Op
 | divs (w : Nat)
 | divu (w : Nat)
 | extract (w : Nat) (n : Nat)
-| icmp (w : Nat)
+| icmp (p : String) (w : Nat)
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat) (arity : Nat)
@@ -156,7 +170,7 @@ def_signature for Comb where
   | .divs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .divu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .extract w n => (Ty.bv w) → (Ty.bv (w - n))
-  | .icmp w => (Ty.icmpPred, Ty.bv w, Ty.bv w) → (Ty.bool)
+  | .icmp _ w => (Ty.bv w, Ty.bv w) → (Ty.bool)
   | .mods w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .modu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .mul w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
@@ -183,6 +197,20 @@ def HVector.replicateToList {α : Type} {f : α → Type} {a : α} :
   | 0, _ => []
   | n+1, HVector.cons x xs => x :: replicateToList xs
 
+def ofString? (s : String) : Option CombOp.IcmpPredicate :=
+  match s with
+  | "eq" => some .eq
+  | "ne" => some .ne
+  | "slt" => some .slt
+  | "sle" => some .sle
+  | "sgt" => some .sgt
+  | "sge" => some .sge
+  | "ult" => some .ult
+  | "ule" => some .ule
+  | "ugt" => some .ugt
+  | "uge" => some .uge
+  | _     => none
+
 def_denote for Comb where
   | .add _ _ => fun xs => CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
@@ -190,7 +218,9 @@ def_denote for Comb where
   | .divs _ => fun xs => CombOp.divs xs
   | .divu _ => fun xs => CombOp.divu xs
   | .extract _ n => fun xs => CombOp.extract xs n
-  | .icmp _ => fun xs => CombOp.icmp xs
+  | .icmp p _ => fun xs =>
+      let p' := Option.get! (ofString? p)
+      CombOp.icmp p' xs
   | .mods _ => fun xs => CombOp.mods xs
   | .modu _ => fun xs => CombOp.modu xs
   | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
@@ -274,12 +304,12 @@ def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred)) : Expr (Comb) Γ .pure (.bool) :=
+def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (p : String): Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
-    (op := .icmp w)
+    (op := .icmp p w)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := .cons k <| .cons a <| .cons b <| .nil)
+    (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
 def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
@@ -509,19 +539,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           throw <| .generic s!"type mismatch"
       | _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"Comb.icmp" | op@"Comb.mux" =>
+  | op@"Comb.mux" =>
     match opStx.args with
     | v₁Stx::v₂Stx::v₃Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .bv w₁, .bv w₂, .icmpPred, "Comb.icmp" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bool, icmp v₁ v₂ v₃⟩
-        else
-          throw <| .generic s!"type mismatch"
       | .bv w₁, .bv w₂, .bool, "Comb.mux" =>
         if h : w₁ = w₂ then
           /- mux should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
@@ -548,7 +572,24 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | _ => throw <| .generic s!"type mismatch"
     }
     else
-      throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      match (opStx.name).splitOn "_" with
+      | ["Comb.icmp", p] =>
+        match opStx.args with
+        | v₁Stx::v₂Stx::[] =>
+          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+          let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+          match ofString? p with
+          | some p' =>
+              match ty₁, ty₂ with
+              | .bv w₁, .bv w₂ =>
+                  if h : w₁ = w₂ then
+                    let v₂ := v₂.cast (by rw [h])
+                    return ⟨_, .bool, icmp v₁ v₂ p⟩
+                  else throw <| .generic s!"type mismatch"
+              | _, _ => throw <| .generic s!"type mismatch"
+          | none  => throw <| .generic s!"unknown icmp predicate"
+        | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
+      | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (Comb) 0 where
   mkExpr := mkExpr
