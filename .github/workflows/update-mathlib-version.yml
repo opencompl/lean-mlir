@@ -34,8 +34,10 @@ jobs:
       - name: Set Mathlib Date (Today)
         run: |
            sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate_today.outputs.date}}\"/" -i lakefile.toml
-           sed -e "s/nightly.*/nightly-${{steps.mldate_today.outputs.date}}\"/" -i lean-toolchain
+           sed -e "s/nightly.*/nightly-${{steps.mldate_today.outputs.date}}/" -i lean-toolchain
+           echo "## lakefile.toml"
            cat lakefile.toml
+           echo "## lean-toolchain"
            cat lean-toolchain
            lake update mathlib
 
