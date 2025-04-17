@@ -48,14 +48,6 @@ def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
      let xsSum := concat xs
      x ++ xsSum
 
-/-- Signed division -/
-def divs (x y : BitVec w) : BitVec w :=
-  BitVec.sdiv x y
-
-/-- Unsigned division -/
-def divu (x y : BitVec w) : BitVec w :=
-  BitVec.udiv x y
-
 /-- Extract the `lb` lower bits from BitVec `x` -/
 def extract (x : BitVec w) (lb : Nat) : BitVec (w - lb) :=
   BitVec.truncate (w - lb) (BitVec.ushiftRight x lb)
@@ -73,15 +65,6 @@ def icmp {w : Nat} (p : IcmpPredicate) (x y : BitVec w) : Bool :=
   | .uge => (x ≥ y)
   | .ult => (x < y)
   | .ule => (x ≤ y)
-
-
-/-- Signed modulo -/
-def mods (x y : BitVec w) : BitVec w :=
-  BitVec.smod x y
-
-/-- Unsigned modulo -/
-def modu (x y : BitVec w) : BitVec w :=
-  BitVec.umod x y
 
 /-- Variadic `mul` operation with a list of bitvectors with width `w` as input -/
 def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
@@ -107,17 +90,9 @@ def replicate (x : BitVec w) (n : Nat) : BitVec (w * n) :=
 def shl (x y : BitVec w) : BitVec w :=
   x <<< y
 
-/-- Signed shift right -/
-def shrs (x y : BitVec w) : BitVec w :=
-  BitVec.sshiftRight' x y
-
 /-- Unsigned shift right -/
 def shru (x y : BitVec w) : BitVec w :=
   BitVec.ushiftRight x y.toNat
-
-/-- Subtraction -/
-def sub (x y : BitVec w) : BitVec w :=
-  x - y
 
 /-- Variadic `xor` operation with a list of bitvectors with width `w` as input -/
 def xor {w : Nat} (l : List (BitVec w)) : BitVec w :=
@@ -215,23 +190,23 @@ def_denote for Comb where
   | .add _ _ => fun xs => CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
   | .concat _ => fun xs => CombOp.concat xs
-  | .divs _ => fun xs => CombOp.divs xs
-  | .divu _ => fun xs => CombOp.divu xs
+  | .divs _ => BitVec.sdiv
+  | .divu _ => BitVec.udiv
   | .extract _ n => fun xs => CombOp.extract xs n
   | .icmp p _ => fun xs =>
       let p' := Option.get! (ofString? p)
       CombOp.icmp p' xs
-  | .mods _ => fun xs => CombOp.mods xs
-  | .modu _ => fun xs => CombOp.modu xs
+  | .mods _ => BitVec.smod
+  | .modu _ => BitVec.umod
   | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
   | .mux _ => fun xs => CombOp.mux xs
   | .or _ _ => fun xs => CombOp.or (HVector.replicateToList (f := TyDenote.toType) xs)
   | .parity _ => fun xs => CombOp.parity xs
   | .replicate _ n => fun xs => CombOp.replicate xs n
-  | .shl _ => fun xs => CombOp.shl xs
-  | .shrs _ => fun xs => CombOp.shrs xs
-  | .shru _ => fun xs => CombOp.shru xs
-  | .sub _ => fun xs => CombOp.sub xs
+  | .shl _ => fun bv => CombOp.shl bv
+  | .shrs _ => BitVec.sshiftRight'
+  | .shru _ => fun bv => CombOp.shru bv
+  | .sub _ => BitVec.sub
   | .xor _ _ => fun xs => CombOp.xor (HVector.replicateToList (f := TyDenote.toType) xs)
 
 end Dialect
