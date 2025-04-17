@@ -56,6 +56,12 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ
 
+
+instance : GetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
+  inferInstanceAs (GetElem (List _) ..)
+instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
+  inferInstanceAs (GetElem? (List _) ..)
+
 -- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
 def get? : Ctxt Ty → Nat → Option Ty :=
@@ -133,7 +139,7 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
-      simp only [get?, map, List.getElem?_map, Option.map_eq_some']
+      simp only [get?, map, List.getElem?_map, Option.map_eq_some_iff]
       simp only [get?] at h
       simp [h]
     ⟩
@@ -417,6 +423,26 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   subst x
   rfl
 
+/-- Show that a valuation is equivalent to a `HVector` -/
+def Valuation.equivHVector {Γ : Ctxt Ty} : Valuation Γ ≃ HVector toType Γ where
+  toFun V   := HVector.ofFn _ _ <| fun i => V ⟨i, by simp⟩
+  invFun    := Valuation.ofHVector
+  left_inv V := by
+    funext t v
+    simp only [Fin.getElem_fin, get?]
+    induction Γ
+    case nil =>
+      rcases v with ⟨_, _⟩
+      contradiction
+    case snoc Γ u ih =>
+      cases v
+      case last   => rfl
+      case toSnoc => apply ih (fun t v => V v.toSnoc)
+  right_inv vs := by
+    simp only [Fin.getElem_fin, get?]
+    induction vs
+    case nil => rfl
+    case cons Γ t v vs ih => simp [HVector.ofFn, ofHVector, ih]
 
 end Valuation
 
@@ -500,7 +526,7 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some',
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some_iff,
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] at h_get_d ⊢
     intros a b c
     simp [h_get_d c]
