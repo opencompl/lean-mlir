@@ -45,8 +45,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "chore: ${{steps.mldate.outputs.date}}"
+          title: "chore: update to lean nightly ${{steps.mldate.outputs.date}}"
           branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
+          body: "automatic update of mathlib + lean via GitHub action."
           token: ${{secrets.PAT}}
 
   mathlib1d:
@@ -87,6 +88,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "chore: ${{steps.mldate.outputs.date}}"
+          title: "chore: update to lean nightly ${{steps.mldate.outputs.date}}"
           branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
+          body: "automatic update of mathlib + lean via GitHub action."
           token: ${{secrets.PAT}}
