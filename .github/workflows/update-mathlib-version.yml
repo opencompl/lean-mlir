@@ -7,8 +7,8 @@ on:
 permissions: write-all
 
 jobs:
-  build:
-    name: Update Mathlib Version
+  mathlibtoday:
+    name: Update Mathlib Version (Today)
     permissions: write-all
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
@@ -26,25 +26,193 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Get Mathlib Date (Today)
-        id: mldate_today
+      - name: Get Mathlib Date
+        id: mldate
         run: |
            echo "date=`date +20%y-%m-%d`"
            echo "date=`date +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
-      - name: Set Mathlib Date (Today)
+      - name: Set Mathlib Date
         run: |
-           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate_today.outputs.date}}\"/" -i lakefile.toml
-           sed -e "s/nightly.*/nightly-${{steps.mldate_today.outputs.date}}/" -i lean-toolchain
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
            echo "## lakefile.toml"
            cat lakefile.toml
            echo "## lean-toolchain"
            cat lean-toolchain
            lake update mathlib
 
-      - name: Create Pull Request (Today)
+      - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "chore: ${{steps.mldate_today.outputs.date}}"
-          branch: "chore: ${{steps.mldate_today.outputs.date}}"
+          title: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "chore: ${{steps.mldate.outputs.date}}"
           token: ${{secrets.PAT}}
+
+  mathlibyesterday:
+    name: update mathlib version (yesterday)
+    permissions: write-all
+    # exclude expensive self-hosted runner. reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.pat}}
+
+      - name: install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -ssf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$home/.elan/bin" >> $github_path
+
+      - name: get mathlib date
+        id: mldate
+        run: |
+           echo "date=`date -d '-1 day' +20%y-%m-%d`"
+           echo "date=`date -d '-1 day' +20%y-%m-%d`" >> $github_output
+
+      - name: set mathlib date
+        run: |
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
+           echo "## lakefile.toml"
+           cat lakefile.toml
+           echo "## lean-toolchain"
+           cat lean-toolchain
+           lake update mathlib
+
+      - name: create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "chore: ${{steps.mldate.outputs.date}}"
+          token: ${{secrets.pat}}
+
+  mathlib2dago:
+    name: update mathlib version (2 days ago)
+    permissions: write-all
+    # exclude expensive self-hosted runner. reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.pat}}
+
+      - name: install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -ssf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$home/.elan/bin" >> $github_path
+
+      - name: get mathlib date
+        id: mldate
+        run: |
+           echo "date=`date -d '-2 day' +20%y-%m-%d`"
+           echo "date=`date -d '-2 day' +20%y-%m-%d`" >> $github_output
+
+      - name: set mathlib date
+        run: |
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
+           echo "## lakefile.toml"
+           cat lakefile.toml
+           echo "## lean-toolchain"
+           cat lean-toolchain
+           lake update mathlib
+
+      - name: create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "chore: ${{steps.mldate.outputs.date}}"
+          token: ${{secrets.pat}}
+
+  mathlib3dago:
+    name: update mathlib version (3 days ago)
+    permissions: write-all
+    # exclude expensive self-hosted runner. reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.pat}}
+
+      - name: install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -ssf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$home/.elan/bin" >> $github_path
+
+      - name: get mathlib date
+        id: mldate
+        run: |
+           echo "date=`date -d '-3 day' +20%y-%m-%d`"
+           echo "date=`date -d '-3 day' +20%y-%m-%d`" >> $github_output
+
+      - name: set mathlib date
+        run: |
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
+           echo "## lakefile.toml"
+           cat lakefile.toml
+           echo "## lean-toolchain"
+           cat lean-toolchain
+           lake update mathlib
+
+      - name: create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "chore: ${{steps.mldate.outputs.date}}"
+          token: ${{secrets.pat}}
+
+  mathlib4dago:
+    name: update mathlib version (4 days ago)
+    permissions: write-all
+    # exclude expensive self-hosted runner. reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.pat}}
+
+      - name: install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -ssf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$home/.elan/bin" >> $github_path
+
+      - name: get mathlib date
+        id: mldate
+        run: |
+           echo "date=`date -d '-4 day' +20%y-%m-%d`"
+           echo "date=`date -d '-4 day' +20%y-%m-%d`" >> $github_output
+
+      - name: set mathlib date
+        run: |
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
+           echo "## lakefile.toml"
+           cat lakefile.toml
+           echo "## lean-toolchain"
+           cat lean-toolchain
+           lake update mathlib
+
+      - name: create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "chore: ${{steps.mldate.outputs.date}}"
+          token: ${{secrets.pat}}
