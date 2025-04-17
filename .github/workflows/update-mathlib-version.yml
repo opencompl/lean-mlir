@@ -49,7 +49,6 @@ jobs:
           branch: "chore: ${{steps.mldate.outputs.date}}"
           token: ${{secrets.PAT}}
 
-
   mathlib1d:
     name: Update Mathlib Version (1d earlier)
     permissions: write-all
