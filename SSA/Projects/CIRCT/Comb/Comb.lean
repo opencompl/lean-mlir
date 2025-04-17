@@ -408,7 +408,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .bv w, "Comb.parity" => return ⟨_, .bool, parity v₁⟩
       | .hList l, "Comb.concat" => return ⟨_, .bv l.sum, concat v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
-    | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <| .generic s!"expected one operand found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.add" | op@"Comb.and" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.xor" =>
       let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
       if hl: args.length ≤ 0 then
@@ -513,7 +513,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         else
           throw <| .generic s!"type mismatch"
       | _, _, _=> throw <| .generic s!"type mismatch"
-    | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.mux" =>
     match opStx.args with
     | v₁Stx::v₂Stx::v₃Stx::[] =>
@@ -529,7 +529,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         else
           throw <| .generic s!"type mismatch"
       | _, _, _, _=> throw <| .generic s!"type mismatch"
-    | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ =>
     if "Comb.replicate" = opStx.name
     then {
