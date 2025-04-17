@@ -84,7 +84,7 @@ end
 where the context of the valuation is a concrete list of types, into a sequence
 of quantifiers `∀ (x0 : ⟦t₁⟧) (x1 : ⟦t₂⟧) ... (xn : ⟦tₙ⟧)`.
 -/
-simproc [simp_denote] elimValuation (∀ (_V : Ctxt.Valuation _), _) := fun e => do
+simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => do
   let .forallE _name VTy@(mkApp3 (.const ``Ctxt.Valuation _) Ty instTyDenote Γ) body _info := e
     | return .continue
 
@@ -119,13 +119,17 @@ simproc [simp_denote] elimValuation (∀ (_V : Ctxt.Valuation _), _) := fun e =>
 
 /--
 `simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
+
+NOTE: crucial rewrites (in particular, `Com.denote_var`) will only apply if the
+dialect monad `d.m` is known to be lawful. If `simp_peephole` is not simplifying
+as expected, first verify that a `LawfulMonad d.m` instance is synthesizable.
 -/
 macro "simp_peephole" : tactic =>
   `(tactic|(
       -- First, we ensure potential quantification over a Valuation is made explicit
       first
       | apply funext (α := Ctxt.Valuation _)
-      | show ∀ (V : Ctxt.Valuation _), _
+      | show ∀ (_ : Ctxt.Valuation _), _
       | skip
       -- Then, we simplify with the `simp_denote` simpset
       simp (config := {failIfUnchanged := false}) only [simp_denote]
