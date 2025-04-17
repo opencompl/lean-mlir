@@ -1,7 +1,9 @@
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.MLIRSyntax.EDSL
-
+import SSA.Core.Framework
+import SSA.Core.Framework.Macro
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.EDSL2
 
 open MLIR AST Ctxt
 
@@ -12,7 +14,7 @@ This file is still in a **highly experimental** state
 
 -/
 namespace CIRCTStream
-namespace Handshake
+namespace HandshakeOp
 
 /-!
 ## Operation Semantics
@@ -32,12 +34,10 @@ Note that consuming `none`s is still allowed (and in fact neccessary to make pro
 def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
   Stream.corec₂ (β := Stream α × Stream Bool) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
-
       let c₀ := c 0
       let c' := c.tail
       let x₀ := x 0
       let x' := x.tail
-
       match c₀, x₀ with
         | none, _ => (none, none, (x, c'))
         | _, none => (none, none, (x', c))
@@ -174,8 +174,7 @@ def sync (x y : Stream α) : Stream α × Stream α :=
 -- The number of operands corresponds to the number of tuple elements.
 -- Similar to join, the output is ready when all inputs are ready.
 
-end Handshake
-end CIRCTStream
+end HandshakeOp
 
 /-!
 ## LeanMLIR Dialect Definitions
@@ -189,67 +188,78 @@ section Dialect
 inductive Ty2
   | int : Ty2
   | bool : Ty2
-deriving Inhabited, DecidableEq, Repr
+  | token : Ty2
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
--- what was this for again?
-inductive Op
-| merge (t : Ty2)
-| branch (t : Ty2)
-| fst (t : Ty2)
-| snd (t : Ty2)
-deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
 | stream (ty2 : Ty2) : Ty -- A stream of values of type `ty2`.
 | stream2 (ty2 : Ty2) : Ty -- A product of streams of values of type `ty2`.
-deriving Inhabited, DecidableEq, Repr
+| stream2token (ty2 : Ty2) : Ty -- A product of a stream of values of type `ty2` and a stream of values of type `token`
+| stream2bool (ty2 : Ty2) : Ty -- A product of a stream of values of type `ty2` and a stream of values of type `bool`
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : TyDenote Ty2 where
 toType := fun
 |  Ty2.int => Int
 |  Ty2.bool => Bool
+|  Ty2.token => Unit
 
-open TyDenote (toType) in
-instance instHandshakeTyDenote : TyDenote Ty where
-toType := fun
-| Ty.stream ty2 => CIRCTStream.Stream (toType ty2)
-| Ty.stream2 ty2 => CIRCTStream.Stream (toType ty2) × CIRCTStream.Stream (toType ty2)
+inductive Op
+| fst (t : Ty2)
+| snd (t : Ty2)
+| branch (t : Ty2)
+| merge (t : Ty2)
+| altMerge (t : Ty2)
+| fork (t : Ty2)
+| controlMerge (t : Ty2)
+| join (t : Ty2)
+| mux (t : Ty2)
+| sink (t : Ty2)
+| source (t : Ty2)
+| sync (t : Ty2)
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
-
-set_option linter.dupNamespace false in
 abbrev Handshake : Dialect where
   Op := Op
   Ty := Ty
 
-open TyDenote (toType)
+def_signature for Handshake where
+| .fst t => (Ty.stream2 t) → Ty.stream t
+| .snd t => (Ty.stream2 t) → Ty.stream t
+| .branch t => (Ty.stream t, Ty.stream Ty2.bool) → Ty.stream2 t
+| .merge t => (Ty.stream t, Ty.stream t) → Ty.stream t
+| .altMerge t => (Ty.stream t, Ty.stream t) → Ty.stream t
+| .fork t => (Ty.stream t) → Ty.stream2 t -- returns the product
+| .controlMerge t => (Ty.stream t, Ty.stream t) → (Ty.stream2bool t)
+| .join t => (Ty.stream t, Ty.stream t) → (Ty.stream Ty2.token)
+| .mux t => (Ty.stream t, Ty.stream t, Ty.stream Ty2.bool) → Ty.stream t
+| .sink t => (Ty.stream t) → (Ty.stream Ty2.token)
+| .source t => () → (Ty.stream t)
+| .sync t => (Ty.stream t, Ty.stream t) → Ty.stream2 t
 
--- arg type CONF
-@[simp, reducible]
-def Op.sig : Op  → List Ty
-| .branch t₁ => [Ty.stream t₁, Ty.stream Ty2.bool]
-| .merge t₁ => [Ty.stream t₁, Ty.stream t₁]
-| .fst t | .snd t => [Ty.stream2 t]
+instance instHandshakeTyDenote : TyDenote Ty where
+toType := fun
+| Ty.stream ty2 => CIRCTStream.Stream (TyDenote.toType ty2)
+| Ty.stream2 ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType ty2)
+| Ty.stream2token ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType Ty2.token)
+| Ty.stream2bool ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType Ty2.bool)
 
--- return type CONF
-@[simp, reducible]
-def Op.outTy : Op → Ty
-  | .branch t₁ => Ty.stream2 t₁
-  | .merge t₁ => Ty.stream t₁
-  | .fst t | .snd t => Ty.stream t
+def_denote for Handshake where
+| .fst t => fun xs => xs.fst
+| .snd t => fun xs => xs.snd
+| .branch t => fun xs => HandshakeOp.branch xs
+| .merge t => fun xs => HandshakeOp.merge xs
+| .altMerge t => fun xs =>HandshakeOp.altMerge xs
+| .fork t => fun xs => HandshakeOp.fork xs
+| .controlMerge t => fun xs => HandshakeOp.controlMerge xs
+| .join t => fun xs => HandshakeOp.join xs
+| .mux t => fun xs => HandshakeOp.mux xs
+| .sink t => fun xs => HandshakeOp.sink xs
+| .source t => fun xs => sorry
+| .sync t => fun xs => HandshakeOp.sync xs
 
-@[simp, reducible]
-def Op.signature : Op → Signature (Ty) :=
-  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
 
-instance : DialectSignature Handshake := ⟨Op.signature⟩
-
-@[simp]
-instance : DialectDenote (Handshake) where
-    denote
-    | .branch _, arg, _ => CIRCTStream.Handshake.branch (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .merge _, arg, _  => CIRCTStream.Handshake.merge (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .fst _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).fst
-    | .snd _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).snd
 
 end Dialect
 
@@ -259,8 +269,6 @@ Implement the necessary typeclasses for the `handshake` dialect to
 be recognized by the LeanMLIR generic syntax parser, and
 defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
-
-
 
 
 def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
@@ -354,8 +362,11 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Handshake
 instance : MLIR.AST.TransformReturn (Handshake) 0 where
   mkReturn := mkReturn
 
+instance : DialectToExpr Handshake where
+  toExprM := .const ``Id [0]
+  toExprDialect := .const ``Handshake []
+
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[handshake_com| " reg:mlir_region "]" : term => do
-  SSA.elabIntoCom reg q(Handshake)
+elab "[handshake_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg Handshake
 
 end MLIR2Handshake
