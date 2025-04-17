@@ -42,8 +42,8 @@ def test2 : BitVec 4 :=
 #eval test2
 
 def CombEg3 := [Comb_com| {
-  ^entry(%0: !BitVec_4, %3: !IcmpPred_eq):
-    %2 = "Comb.icmp" (%0, %0, %3) : (!BitVec_4, !BitVec_4, !IcmpPred_eq) -> !Bool
+  ^entry(%0: !BitVec_4, %3: !IcmpPred):
+    %2 = "Comb.icmp" (%0, %0, %3) : (!BitVec_4, !BitVec_4, !IcmpPred) -> !Bool
     "return" (%2) : (!Bool) -> ()
   }]
 
