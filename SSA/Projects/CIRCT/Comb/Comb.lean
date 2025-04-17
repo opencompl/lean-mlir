@@ -578,8 +578,11 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Comb)
 instance : MLIR.AST.TransformReturn (Comb) 0 where
   mkReturn := mkReturn
 
+instance : DialectToExpr Comb where
+  toExprM := .const ``Id [0]
+  toExprDialect := .const ``Comb []
+
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[Comb_com| " reg:mlir_region "]" : term => do
-  SSA.elabIntoCom' reg Comb
+elab "[Comb_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg Comb
 
 end MLIR2Comb
