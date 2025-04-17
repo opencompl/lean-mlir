@@ -117,6 +117,7 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
       proof? := some proof
     }
 
+open Lean.Parser.Tactic (location)
 /--
 `simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
 
@@ -124,16 +125,15 @@ NOTE: crucial rewrites (in particular, `Com.denote_var`) will only apply if the
 dialect monad `d.m` is known to be lawful. If `simp_peephole` is not simplifying
 as expected, first verify that a `LawfulMonad d.m` instance is synthesizable.
 -/
-macro "simp_peephole" : tactic =>
+macro "simp_peephole" loc:(location)? : tactic =>
   `(tactic|(
       -- First, we ensure potential quantification over a Valuation is made explicit
       first
-      | apply funext (α := Ctxt.Valuation _)
-      | show ∀ (_ : Ctxt.Valuation _), _
+      | rw [funext_iff (α := Ctxt.Valuation _)] $[$loc]?
+      | change ∀ (_ : Ctxt.Valuation _), _ $[$loc]?
       | skip
       -- Then, we simplify with the `simp_denote` simpset
-      simp (config := {failIfUnchanged := false}) only [simp_denote]
+      simp (config := {failIfUnchanged := false}) only [simp_denote] $[$loc]?
   ))
-
 
 end SSA
