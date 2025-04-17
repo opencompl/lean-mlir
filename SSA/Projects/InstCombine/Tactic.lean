@@ -13,39 +13,12 @@ open MLIR AST
 attribute [simp_denote]
   InstCombine.Op.denote
   HVector.getN HVector.get HVector.cons_get_zero
+  beq_self_eq_true Option.isSome_some
+  -- Fold integers into their canonical form.
+  Nat.cast_ofNat Nat.cast_one Int.reduceNegSucc Int.reduceNeg
 
-/-- Eliminate the SSA structure of the program
-- We first simplify `Com.refinement` to see the context `Γv`.
-- We `simp_peephole Γv` to simplify context accesses by variables.
-- We simplify the translation overhead.
--/
-macro "simp_alive_ssa" : tactic =>
-  `(tactic|
-      (
-        /- Simplify away the core framework -/
-        simp_peephole
+@[deprecated "use `simp_peephole` instead" (since := "2025-05-16")]
+macro "simp_alive_ssa" : tactic => `(tactic| simp_peephole)
 
-        simp (config := {failIfUnchanged := false}) only [
-            InstCombine.Op.denote, HVector.getN, HVector.get,
-            beq_self_eq_true, Option.isSome_some, HVector.cons_get_zero
-          ]
-
-        -- Fold integers into their canonical form.
-        simp (config := {failIfUnchanged := false }) only [Nat.cast_ofNat,
-          Nat.cast_one, Int.reduceNegSucc, Int.reduceNeg]
-      )
-  )
-
-/--
-`simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
-programs into statements about just bitvectors.
-
-That is, the tactic expects a goal of the form: `Com.Refinement com₁ com₂`
-That is, goals of the form `Com.refine, com₁.denote Γv ⊑ com₂.denote Γv `,
-where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
-macro "simp_alive_peephole" : tactic =>
-  `(tactic|
-      (
-        simp_alive_ssa
-      )
-   )
+@[deprecated "use `simp_peephole` instead" (since := "2025-05-16")]
+macro "simp_alive_peephole" : tactic => `(tactic| simp_peephole)
