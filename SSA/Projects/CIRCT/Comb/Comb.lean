@@ -158,11 +158,11 @@ inductive Op
 | xor (w : Nat) (arity : Nat)
 deriving DecidableEq, Repr, Lean.ToExpr
 
-abbrev CombDialect : Dialect where
+abbrev Comb : Dialect where
   Op := Op
   Ty := Ty
 
-def_signature for CombDialect where
+def_signature for Comb where
   | .add w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .and w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .concat l => (Ty.hList l) → (Ty.bv l.sum)
@@ -183,7 +183,7 @@ def_signature for CombDialect where
   | .sub w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .xor w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
 
-instance : TyDenote (Dialect.Ty CombDialect) where
+instance : TyDenote (Dialect.Ty Comb) where
   toType := fun
   | .bv w => BitVec w
   | .nat  => Nat
@@ -196,7 +196,7 @@ def HVector.replicateToList {α : Type} {f : α → Type} {a : α} :
   | 0, _ => []
   | n+1, HVector.cons x xs => x :: replicateToList xs
 
-def_denote for CombDialect where
+def_denote for Comb where
   | .add _ _ => fun xs => CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
   | .concat _ => fun xs => CombOp.concat xs
@@ -220,7 +220,7 @@ def_denote for CombDialect where
 end Dialect
 
 /-- we currently do not support the parsing of heterogeneous vectors -/
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM CombDialect Ty
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["Bool"] =>
@@ -234,11 +234,11 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM CombDialect Ty
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
-instance instTransformTy : MLIR.AST.TransformTy CombDialect 0 where
+instance instTransformTy : MLIR.AST.TransformTy Comb 0 where
   mkTy := mkTy
 
 
-def add {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def add {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .add w arity)
     (ty_eq := by rfl)
@@ -246,7 +246,7 @@ def add {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.b
     (args := a) -- cast a to the right type
     (regArgs := .nil)
 
-def and {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def and {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .and w arity)
     (ty_eq := by rfl)
@@ -254,7 +254,7 @@ def and {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.b
     (args := a)
     (regArgs := .nil)
 
-def concat {l : List Nat} {Γ : Ctxt _} (ls : Γ.Var (.hList l)): Expr (CombDialect) Γ .pure (.bv (l.sum)) :=
+def concat {l : List Nat} {Γ : Ctxt _} (ls : Γ.Var (.hList l)): Expr (Comb) Γ .pure (.bv (l.sum)) :=
   Expr.mk
     (op := .concat l)
     (ty_eq := rfl)
@@ -262,7 +262,7 @@ def concat {l : List Nat} {Γ : Ctxt _} (ls : Γ.Var (.hList l)): Expr (CombDial
     (args := .cons ls <| .nil)
     (regArgs := .nil)
 
-def divs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def divs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .divs w)
     (ty_eq := rfl)
@@ -270,7 +270,7 @@ def divs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .divu w)
     (ty_eq := rfl)
@@ -278,7 +278,7 @@ def divu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (CombDialect) Γ .pure (.bv (w - n)) :=
+def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (Comb) Γ .pure (.bv (w - n)) :=
   Expr.mk
     (op := .extract w n)
     (ty_eq := rfl)
@@ -286,7 +286,7 @@ def extract {Γ : Ctxt _} (a : Γ.Var (.bv w)) (n : Nat) : Expr (CombDialect) Γ
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred op)) : Expr (CombDialect) Γ .pure (.bool) :=
+def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.icmpPred op)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
     (op := .icmp op w)
     (ty_eq := rfl)
@@ -294,7 +294,7 @@ def icmp {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (k : Γ.Var (.i
     (args := .cons k <| .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .mods w)
     (ty_eq := rfl)
@@ -302,7 +302,7 @@ def mods {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .modu w)
     (ty_eq := rfl)
@@ -310,7 +310,7 @@ def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def mul {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def mul {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .mul w arity)
     (ty_eq := rfl)
@@ -318,7 +318,7 @@ def mul {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.b
     (args := a)
     (regArgs := .nil)
 
-def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (.bool)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (.bool)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .mux w)
     (ty_eq := rfl)
@@ -326,7 +326,7 @@ def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (
     (args := .cons a <| .cons b <| .cons cond <| .nil)
     (regArgs := .nil)
 
-def or {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def or {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .or w arity)
     (ty_eq := rfl)
@@ -334,7 +334,7 @@ def or {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv
     (args := a)
     (regArgs := .nil)
 
-def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bool) :=
+def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bool) :=
   Expr.mk
     (op := .parity w)
     (ty_eq := rfl)
@@ -342,7 +342,7 @@ def parity {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bo
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv (w * n)) :=
+def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv (w * n)) :=
   Expr.mk
     (op := .replicate w n)
     (ty_eq := rfl)
@@ -350,7 +350,7 @@ def replicate {Γ : Ctxt _} (a : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def shl {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def shl {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .shl w)
     (ty_eq := rfl)
@@ -358,7 +358,7 @@ def shl {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDial
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def shrs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def shrs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .shrs w)
     (ty_eq := rfl)
@@ -366,7 +366,7 @@ def shrs {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def shru {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def shru {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .shru w)
     (ty_eq := rfl)
@@ -374,7 +374,7 @@ def shru {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def sub {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDialect) Γ .pure (.bv w) :=
+def sub {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .sub w)
     (ty_eq := rfl)
@@ -382,7 +382,7 @@ def sub {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDial
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def xor {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def xor {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (Comb) Γ .pure (.bv w) :=
   Expr.mk
     (op := .xor w arity)
     (ty_eq := rfl)
@@ -392,7 +392,7 @@ def xor {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.b
 
 
 /-- Convert a list of dependent pairs into an HVector -/
-def ofList {Γ : Ctxt _} ty : (l : List ((ty : CombDialect.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
+def ofList {Γ : Ctxt _} ty : (l : List ((ty : Comb.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
 | [], h => .nil
 | ⟨ty', var⟩::rest, h =>
   have hty : ty' = ty := by simp_all
@@ -405,7 +405,7 @@ def ofList' {α : Type u} {f : α → Type v} :
   | [] => .nil
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
-    MLIR.AST.ReaderM CombDialect (Σ eff ty, Expr CombDialect Γ eff ty) := do
+    MLIR.AST.ReaderM Comb (Σ eff ty, Expr Comb Γ eff ty) := do
   match opStx.name with
   | op@"Comb.parity" | op@"Comb.concat" =>
     match opStx.args with
@@ -428,35 +428,35 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           if hall : args.all (·.1 = .bv w) then
             let argsᵥ := ofList (.bv w) _ hall
             have heq : args.length - 1 + 1 = args.length := by omega
-            return ⟨_, .bv w, add (args.length - 1) (heq ▸ argsᵥ)⟩
+            return ⟨_, .bv w, add args.length (heq ▸ argsᵥ)⟩
           else
             throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
         | ⟨.bv w, _⟩, "Comb.and" =>
             if hall : args.all (·.1 = .bv w) then
               let argsᵥ := ofList (.bv w) _ hall
               have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w, and (args.length - 1) (heq ▸ argsᵥ)⟩
+              return ⟨_, .bv w, and args.length (heq ▸ argsᵥ)⟩
             else
               throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
         | ⟨.bv w, _⟩, "Comb.mul" =>
             if hall : args.all (·.1 = .bv w) then
               let argsᵥ := ofList (.bv w) _ hall
               have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w, mul (args.length - 1) (heq ▸ argsᵥ)⟩
+              return ⟨_, .bv w, mul args.length (heq ▸ argsᵥ)⟩
             else
               throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
         | ⟨.bv w, _⟩, "Comb.or" =>
             if hall : args.all (·.1 = .bv w) then
               let argsᵥ := ofList (.bv w) _ hall
               have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w, or (args.length - 1) (heq ▸ argsᵥ)⟩
+              return ⟨_, .bv w, or args.length (heq ▸ argsᵥ)⟩
             else
               throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
         | ⟨.bv w, _⟩, "Comb.xor" =>
             if hall : args.all (·.1 = .bv w) then
               let argsᵥ := ofList (.bv w) _ hall
               have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w, xor (args.length - 1) (heq ▸ argsᵥ)⟩
+              return ⟨_, .bv w, xor args.length (heq ▸ argsᵥ)⟩
             else
               throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
         | _, _ => throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
