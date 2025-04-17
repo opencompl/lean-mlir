@@ -10,6 +10,10 @@ import SSA.Core.Tactic
 
 open MLIR AST
 
+attribute [simp_denote]
+  InstCombine.Op.denote
+  HVector.getN HVector.get HVector.cons_get_zero
+
 /-- Eliminate the SSA structure of the program
 - We first simplify `Com.refinement` to see the context `Γv`.
 - We `simp_peephole Γv` to simplify context accesses by variables.
@@ -18,11 +22,8 @@ open MLIR AST
 macro "simp_alive_ssa" : tactic =>
   `(tactic|
       (
-        /- access the valuation -/
-        intros Γv
-
         /- Simplify away the core framework -/
-        simp_peephole [InstCombine.Op.denote] at Γv
+        simp_peephole
 
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get,

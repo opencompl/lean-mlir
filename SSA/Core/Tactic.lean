@@ -16,34 +16,6 @@ open Ctxt (Var Valuation DerivedCtxt)
 
 open Lean Elab Tactic Meta
 
-/--
-Check if an expression is contained in the current goal and fail otherwise.
-This tactic does not modify the goal state.
- -/
-local elab "contains? " ts:term : tactic => withMainContext do
-  let tgt ← getMainTarget
-  if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
-
-/-- Look for a variable in the context and generalize it, fail otherwise. -/
-local macro "generalize_or_fail" "at" ll:ident : tactic =>
-  `(tactic|
-      (
-        -- We first check with `contains?` if the term is present in the goal.
-        -- This is needed as `generalize` never fails and just introduces a new
-        -- metavariable in case no variable is found. `contains?` will instead
-        -- fail if the term is not present in the goal.
-        contains? ($ll (_ : Var ..))
-        generalize ($ll (_ : Var ..)) = e at *;
-        simp (config := {failIfUnchanged := false}) only [TyDenote.toType] at e
-        revert e
-      )
-  )
-
-/-- `only_goal $t` runs `$t` on the current goal, but only if there is a goal to be solved.
-Essentially, this silences "no goals to be solved" errors -/
-macro "only_goal" t:tacticSeq : tactic =>
-  `(tactic| first | done | $t)
-
 attribute [simp_denote]
   Int.ofNat_eq_coe Nat.cast_zero DerivedCtxt.snoc DerivedCtxt.ofCtxt
   DerivedCtxt.ofCtxt_empty Valuation.snoc_last
@@ -108,33 +80,56 @@ variable {d : Dialect} {instSig : DialectSignature d}
 end
 
 /--
+`elimValuation` simplifies universal quantifiers `∀ (V : Valuation [t₁, ..., tₙ])`,
+where the context of the valuation is a concrete list of types, into a sequence
+of quantifiers `∀ (x0 : ⟦t₁⟧) (x1 : ⟦t₂⟧) ... (xn : ⟦tₙ⟧)`.
+-/
+simproc [simp_denote] elimValuation (∀ (_V : Ctxt.Valuation _), _) := fun e => do
+  let .forallE _name VTy@(mkApp3 (.const ``Ctxt.Valuation _) Ty instTyDenote Γ) body _info := e
+    | return .continue
+
+  let some (_, Γelems) := Γ.listLit?
+    | return .continue
+  let Γelems := Γelems.toArray.reverse
+  let xsTypes := Γelems.map (mkApp3 (mkConst ``TyDenote.toType) Ty instTyDenote)
+  let declInfo := xsTypes.mapIdx fun i ty =>
+    let x := if i == 0 then "e" else s!"e_{i}"
+    (Name.mkSimple x, ty)
+
+  withLocalDeclsDND declInfo <| fun xs => do
+    let V := Valuation.mkOfElems Ty instTyDenote Γelems xs
+    let newType ← mkForallFVars xs (body.instantiate1 V)
+    let proof :=
+      let mp  :=
+        ←withLocalDeclD .anonymous e <| fun eProof => do
+          mkLambdaFVars #[eProof] <|← mkLambdaFVars xs <| mkApp eProof V
+      let mpr :=
+        ←withLocalDeclD .anonymous newType <| fun newProof =>
+          withLocalDeclD .anonymous VTy <| fun V => do
+            let xs ← Γelems.reverse.mapIdxM fun i ty =>
+              let v := Ctxt.mkVar Ty Γ ty (toExpr i) none
+              pure <| mkApp2 V ty v
+            mkLambdaFVars #[newProof, V] <| mkAppN newProof xs.reverse
+      mkApp3 (mkConst ``propext) e newType <|
+        mkApp4 (mkConst ``Iff.intro) e newType mp mpr
+    return .visit {
+      expr := newType,
+      proof? := some proof
+    }
+
+/--
 `simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
 -/
 macro "simp_peephole" : tactic =>
   `(tactic|(
+      -- First, we ensure potential quantification over a Valuation is made explicit
+      first
+      | apply funext (α := Ctxt.Valuation _)
+      | show ∀ (V : Ctxt.Valuation _), _
+      | skip
+      -- Then, we simplify with the `simp_denote` simpset
       simp (config := {failIfUnchanged := false}) only [simp_denote]
   ))
 
-/--
-`simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
-that are evaluated with the valuation `ΓV`.
-
-The actual simplification happens in the `simp_peephole` tactic defined above.
-After simplifying, the goal state should only contain occurences of valuation `ΓV` directly applied
-to some variable `v : Var Γ ty`.
-The present tactic tries to eliminate the valuation completely,
-by introducing a new universally quantified (Lean) variable to the goal for every
-(object) variable `v`.
--/
-macro "simp_peephole" "at" Γv:ident : tactic =>
-  `(tactic|(
-      simp_peephole
-      -- `simp_peephole` might close trivial goals, so we use `only_goal` to ensure we only run
-      -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
-      only_goal
-        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
-        repeat (generalize_or_fail at $Γv)
-        clear $Γv
-  ))
 
 end SSA
