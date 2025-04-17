@@ -237,15 +237,16 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM CombDialect Ty
 instance instTransformTy : MLIR.AST.TransformTy CombDialect 0 where
   mkTy := mkTy
 
-def add {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (DialectSignature.sig (Op.add w arity))) : Expr (CombDialect) Γ .pure (.bv w) :=
+
+def add {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
   Expr.mk
     (op := .add w arity)
     (ty_eq := by rfl)
     (eff_le := by constructor)
-    (args := a)
+    (args := a) -- cast a to the right type
     (regArgs := .nil)
 
-def and {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (DialectSignature.sig (Op.add w arity))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def and {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
   Expr.mk
     (op := .and w arity)
     (ty_eq := by rfl)
@@ -309,7 +310,7 @@ def modu {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDia
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def mul {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (DialectSignature.sig (Op.add w arity)))  : Expr (CombDialect) Γ .pure (.bv w) :=
+def mul {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
   Expr.mk
     (op := .mul w arity)
     (ty_eq := rfl)
@@ -325,7 +326,7 @@ def mux {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) (cond : Γ.Var (
     (args := .cons a <| .cons b <| .cons cond <| .nil)
     (regArgs := .nil)
 
-def or {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (DialectSignature.sig (Op.add w arity))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def or {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
   Expr.mk
     (op := .or w arity)
     (ty_eq := rfl)
@@ -381,7 +382,7 @@ def sub {Γ : Ctxt _} (a : Γ.Var (.bv w)) (b : Γ.Var (.bv w)) : Expr (CombDial
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def xor {Γ : Ctxt _} (arity: Nat) (a : HVector (Γ.Var) (DialectSignature.sig (Op.add w arity))) : Expr (CombDialect) Γ .pure (.bv w) :=
+def xor {Γ : Ctxt _} (arity: Nat) (a : HVector Γ.Var (List.replicate arity (.bv w))) : Expr (CombDialect) Γ .pure (.bv w) :=
   Expr.mk
     (op := .xor w arity)
     (ty_eq := rfl)
@@ -397,6 +398,11 @@ def ofList {Γ : Ctxt _} ty : (l : List ((ty : CombDialect.Ty) × Γ.Var ty)) �
   have hty : ty' = ty := by simp_all
   have hrest : rest.all (·.1 = ty) := by simp_all
   .cons (hty ▸ var) (ofList _ rest hrest)
+
+def ofList' {α : Type u} {f : α → Type v} :
+    (xs : List (Σ a, f a)) → HVector f (xs.map Sigma.fst)
+  | ⟨_, x⟩ :: xs => .cons x (ofList' xs)
+  | [] => .nil
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM CombDialect (Σ eff ty, Expr CombDialect Γ eff ty) := do
