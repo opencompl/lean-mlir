@@ -2,6 +2,7 @@ name: Update mathlib version
 on:
   schedule:
     - cron: '44 * * * *'
+  workflow_dispatch:
 
 permissions: write-all
 
