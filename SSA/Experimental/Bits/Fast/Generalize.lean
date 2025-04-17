@@ -652,7 +652,6 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
               if let none ← solve (BoolExpr.gate Gate.and candidate (BoolExpr.not bvExpr)) then
                   validCandidates := candidate :: validCandidates
 
-          -- TODO: Combining conditions
 
           return validCandidates
 
@@ -974,6 +973,7 @@ elab "#generalize" expr:term: command =>
 
             -- Next, filter out any expressions that don't evaluate to the values in the original bitwidth
             let mut filteredExprs : Std.HashMap Nat (List (BVExpr lhs.width)) := Std.HashMap.emptyWithCapacity
+            logInfo m! "Filtering with lhs: {parsedBVExpr.lhs.symVars} and rhs: {parsedBVExpr.rhs.symVars}"
             for (targetVar, result) in exprSynthesisResults.toArray do
               let targetVal := parsedBVExpr.rhs.symVars[targetVar]!
               for res in result do
@@ -1011,12 +1011,12 @@ variable {x y : BitVec 32}
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 #generalize (x >>> 1 ) / ((BitVec.ofNat 32 1) % x) = x >>> 1 --- #62163
 
-#generalize (x <<< 3) <<< 4 = x <<< 7 
+#generalize (x <<< 3) <<< 4 = x <<< 7
 #generalize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00FFFF00
 
--- #generalize (x + (BitVec.ofInt 32 (-1))) >>> 1 = x >>> 1 -- #61223; we need to do something about bit shifts
--- #generalize (x &&& 1 || (x  &&& 1 || (0 - x))) = x &&& (x + (-1)) -- #57351
---#generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
+#generalize (x + (BitVec.ofInt 32 (-1))) >>> 1 = x >>> 1 -- #61223; we need to do something about bit shifts
+#generalize (x &&& 1 || (x  &&& 1 || (0 - x))) = x &&& (x + (-1)) -- #57351
+#generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
 -- #generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
 
 
