@@ -441,7 +441,7 @@ def two_ne_macro (w : Nat) :=
     llvm.return %1 : i1
   }]
 
-def two_ne_stmt (a b : LLVM.IntW w) :
+def two_ne_stmt (b a : LLVM.IntW w) :
     @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne b a)
       (LLVM.icmp LLVM.IntPredicate.ne b a) := by
   simp

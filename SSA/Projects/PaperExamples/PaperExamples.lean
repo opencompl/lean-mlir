@@ -183,8 +183,7 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
         (Com.ret { val := 0, property := ex1.proof_3 }))) =
       Com.denote (Com.ret { val := 0, property := _ })
       -/
-      funext Γv
-      simp_peephole [add, cst] at Γv
+      simp_peephole
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
       simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero]
@@ -194,28 +193,32 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
 def ex1_rewritePeepholeAt :
     Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
 
-theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
-  -- %c0 = 0
-  Com.var (cst 0) <|
-  -- %out_dead = %x + %c0
-  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
-  -- ret %c0
-  Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by sorry
+theorem hex1_rewritePeephole :
+  ex1_rewritePeepholeAt
+  = (
+    -- %c0 = 0
+    Com.var (cst 0) <|
+    -- %out_dead = %x + %c0
+    Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+    -- ret %c0
+    Com.ret ⟨2, by simp [Ctxt.snoc]⟩) := by
+  native_decide
 
 
 def ex1_rewritePeephole :
     Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
 
 set_option maxRecDepth 2000 in
-theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
-  -- %c0 = 0
-  Com.var (cst 0) <|
-  -- %out_dead = %x + %c0
-  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
-  -- ret %c0
-  Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by sorry
+theorem Hex1_rewritePeephole :
+    ex1_rewritePeephole
+    = (
+      -- %c0 = 0
+      Com.var (cst 0) <|
+      -- %out_dead = %x + %c0
+      Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+      -- ret %c0
+      Com.ret ⟨2, by simp [Ctxt.snoc]⟩) := by
+  native_decide
 
 
 end ToyNoRegion
@@ -282,6 +285,7 @@ instance : DialectDenote SimpleReg where
       -- let f_k := Nat.iterate f' k
       -- f_k x
 
+@[simp_denote]
 def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure int  :=
   Expr.mk
     (op := .const n)
@@ -290,6 +294,7 @@ def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure int  :=
     (args := .nil)
     (regArgs := .nil)
 
+@[simp_denote]
 def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure int :=
   Expr.mk
     (op := .add)
@@ -298,6 +303,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure int :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
+@[simp_denote]
 def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [int] .impure int) :
     Expr SimpleReg Γ .pure int :=
   Expr.mk
@@ -329,40 +335,8 @@ open Ctxt (Var Valuation DerivedCtxt) in
 def p1 : PeepholeRewrite SimpleReg [int] int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
-      funext Γv
-      simp only [show Ty = SimpleReg.Ty from rfl, show Op = SimpleReg.Op from rfl]
-      /-
-      Com.denote
-        (Com.var
-          (iterate 0 { val := 0, property := lhs.proof_1 }
-            (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0,
-            property := lhs.proof_1 }) (Com.ret { val := 0, property :=
-            lhs.proof_2 })))
-          (Com.ret { val := 0, property := lhs.proof_2 }))
-        Γv =
-      Com.denote (Com.ret { val := 0, property := rhs.proof_1 }) Γv
-      -/
-      simp_peephole [add, iterate, (HVector.denote_nil), (HVector.denote_cons)] at Γv
-
-      /-
-        For some reason, `simp only [HVector.denote]` fails (which explains why `simp_peephole`
-        isn't working), while `rw [HVector.denote]` is able to do the rewrite just fine.
-
-        Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358857932) suggests this might be related to typeclass instances:
-          `simp` will synthesize the instance for a lemma, and then try to match the lemma with this
-            canonical instance against the goal, while `rw` does proper unification.
-
-        Indeed, our goal mentions `instTyDenoteTy : TyDenote Ty`, whereas `HVector.denote` has an
-          argument of type `TyDenote (SimpleReg.Ty)`. Now, one would think that `SimpleReg.Ty = Ty`
-          is a def-eq, and indeed it is.
-          Thus, `instTyDenoteTy = (inferInstance : TyDenote SimpleReg.Ty)` is also true by def-eq,
-          yet, `rw [show instTyDenoteTy = (inferInstance : TyDenote SimpleReg.Ty) from rfl]` fails
-          with the claim that `motive is not type correct`
-        Even more curiousl
-
-      -/
-
-      /-  ∀ (a : BitVec 32), (fun v => v + v)^[0] a = a -/
+      simp_peephole
+      -- ∀ (a : BitVec 32), (fun v => v + v)^[0] a = a
       simp [Function.iterate_zero]
   }
 
@@ -395,11 +369,9 @@ def rhs : Com SimpleReg [int] .pure int :=
 def p2 : PeepholeRewrite SimpleReg [int] int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
-      funext Γv
-      simp_peephole [add, cst] at Γv
-      /-  ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
-      intros a
-      simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero, BitVec.zero_add]
+      simp_peephole
+      --  ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a
+      simp
   }
 
 /--
@@ -465,11 +437,10 @@ def expectedRhs : Com SimpleReg [int] .pure int :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
-  simp [runRewriteOnLhs, lhs]
   native_decide
 
-set_option maxRecDepth 2000 in
-theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by sorry
+theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by
+  native_decide
 
 end P2
 

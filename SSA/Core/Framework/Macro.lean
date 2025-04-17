@@ -509,6 +509,8 @@ elab "def_denote" " for " dialect:term (" where ")? alts:matchAltsExpr : command
   -- Re-assemble match alternatives
   let matchAlts ← Elab.mkMatchAltsExpr matchAlts
 
-  elabCommand <|← `(instance : DialectDenote $dialect where
+  elabCommand <|← `(
+    @[simp_denote]
+    instance : DialectDenote $dialect where
       denote := fun op => match op with $matchAlts:matchAlts
   )

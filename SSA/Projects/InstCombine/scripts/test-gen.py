@@ -83,7 +83,7 @@ def {name}_after := [llvm|
 set_option debug.skipKernelTC true in
 theorem {name}_proof : {name}_before ⊑ {name}_after := by
   unfold {name}_before {name}_after
-  simp_alive_peephole
+  simp_peephole
   intros
   ---BEGIN {name}
   all_goals (try extract_goal ; sorry)
