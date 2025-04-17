@@ -46,7 +46,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           title: "chore: ${{steps.mldate.outputs.date}}"
-          branch: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
           token: ${{secrets.PAT}}
 
   mathlib1d:
@@ -88,5 +88,5 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           title: "chore: ${{steps.mldate.outputs.date}}"
-          branch: "chore: ${{steps.mldate.outputs.date}}"
+          branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
           token: ${{secrets.PAT}}
