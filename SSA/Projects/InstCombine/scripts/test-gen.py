@@ -1,4 +1,4 @@
-SSA/Projects/InstCombine/scripts/test-gen.pySSA/Projects/InstCombine/scripts/test-gen.py#!/usr/bin/env python3
+#!/usr/bin/env python3
 from xdsl.dialects.llvm import ReturnOp, LLVMPointerType
 from xdsl.utils.exceptions import ParseError
 from xdsl.dialects.llvm import FuncOp
@@ -240,4 +240,3 @@ if __name__ == "__main__":
     remove()
     with Pool(300) as p:
         p.map(process_file, os.listdir(directory))
-        
