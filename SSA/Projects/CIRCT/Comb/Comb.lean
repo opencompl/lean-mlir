@@ -192,20 +192,20 @@ def_denote for Comb where
   | .concat _ => fun xs => CombOp.concat xs
   | .divs _ => BitVec.sdiv
   | .divu _ => BitVec.udiv
-  | .extract _ n => fun xs => CombOp.extract xs n
-  | .icmp p _ => fun xs =>
+  | .extract _ _ => fun x => CombOp.extract x _
+  | .icmp p _ => fun x y =>
       let p' := Option.get! (ofString? p)
-      CombOp.icmp p' xs
+      CombOp.icmp p' x y
   | .mods _ => BitVec.smod
   | .modu _ => BitVec.umod
   | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .mux _ => fun xs => CombOp.mux xs
+  | .mux _ => fun x y => CombOp.mux x y
   | .or _ _ => fun xs => CombOp.or (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .parity _ => fun xs => CombOp.parity xs
+  | .parity _ => fun x => CombOp.parity x
   | .replicate _ n => fun xs => CombOp.replicate xs n
-  | .shl _ => fun bv => CombOp.shl bv
+  | .shl _ => fun x y => CombOp.shl x y
   | .shrs _ => BitVec.sshiftRight'
-  | .shru _ => fun bv => CombOp.shru bv
+  | .shru _ => fun x y => CombOp.shru x y
   | .sub _ => BitVec.sub
   | .xor _ _ => fun xs => CombOp.xor (HVector.replicateToList (f := TyDenote.toType) xs)
 
