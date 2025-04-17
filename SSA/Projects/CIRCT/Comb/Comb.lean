@@ -230,6 +230,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
     | ["BitVec", r] =>
       return .bv (r.toNat!)
     | ["IcmpPred", r] =>
+      -- match icmp
       return .icmpPred r
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType

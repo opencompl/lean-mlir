@@ -21,21 +21,30 @@ def CombEg1 := [Comb_com| {
 #check CombEg1.denote
 #print axioms CombEg1
 
-unseal String.splitOnAux in
 def CombEg2 := [Comb_com| {
-  ^entry(%0: !IcmpPred_dv):
-    "return" (%0) : (!IcmpPred_dv) -> ()
-  }]
+    ^entry(%0: !BitVec_4, %1 : !BitVec_4):
+      %2 = "Comb.add" (%0, %1) : (!BitVec_4, !BitVec_4) -> !BitVec_4
+      "return" (%2) : (!BitVec_4) -> ()
+    }]
 
-#check CombEg2
+#print CombEg2
 #eval CombEg2
 #reduce CombEg2
-#check CombEg2.denote
+#check CombEg2
 #print axioms CombEg2
 
+def bv1 : BitVec 4 := BitVec.ofNat 4 5 -- 0010
+def bv2 : BitVec 4 := BitVec.ofNat 4 1 -- 0011
+
+def test2 : BitVec 4 :=
+  CombEg2.denote (Ctxt.Valuation.ofPair bv1 bv2)
+
+#eval test2
+
 def CombEg3 := [Comb_com| {
-  ^entry(%0: !IcmpPred_neq):
-    "return" (%0) : (!IcmpPred_neq) -> ()
+  ^entry(%0: !BitVec_4, %3: !IcmpPred_eq):
+    %2 = "Comb.icmp" (%0, %0, %3) : (!BitVec_4, !BitVec_4, !IcmpPred_eq) -> !Bool
+    "return" (%2) : (!Bool) -> ()
   }]
 
 #check CombEg3
@@ -44,37 +53,10 @@ def CombEg3 := [Comb_com| {
 #check CombEg3.denote
 #print axioms CombEg3
 
-def CombEg4 := [Comb_com| {
-  ^entry(%0: !BitVec_4):
-    -- %1 = "Comb.modu" (%0, %0) : (!bv_4, !BitVec_4) -> (!BitVec_4)
-    "return" (%0) : (!BitVec_4) -> ()
-  }]
+def bv1' : BitVec 4 := BitVec.ofNat 4 5 -- 0010
+def eqOp : CombOp.IcmpPredicate := CombOp.IcmpPredicate.ne
 
-#check CombEg4
-#eval CombEg4
-#reduce CombEg4
-#check CombEg4.denote
-#print axioms CombEg4
+def test3 : Bool :=
+  CombEg3.denote (Ctxt.Valuation.ofPair eqOp bv1')
 
-
-def CombEg5 := [Comb_com| {
-    ^entry(%0: !BitVec_4, %1 : !BitVec_4):
-      %2 = "Comb.add" (%0, %1) : (!BitVec_4, !BitVec_4) -> !BitVec_4
-      "return" (%2) : (!BitVec_4) -> ()
-    }]
-
-#print CombEg5
-#eval CombEg5
-#reduce CombEg5
-#check CombEg5
-#print axioms CombEg5
-
-def l : List (BitVec 4) := [BitVec.ofNat 4 1, BitVec.ofNat 4 2, BitVec.ofNat 4 3, BitVec.ofNat 4 4]
-
-def bv1 : BitVec 4 := BitVec.ofNat 4 5 -- 0010
-def bv2 : BitVec 4 := BitVec.ofNat 4 1 -- 0011
-
-def test5 : BitVec 4 :=
-  CombEg5.denote (Ctxt.Valuation.ofPair bv1 bv2)
-
-#eval test5
+#eval test3
