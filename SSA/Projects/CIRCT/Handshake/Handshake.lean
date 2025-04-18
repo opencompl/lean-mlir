@@ -216,7 +216,6 @@ inductive Op
 | join (t : Ty2)
 | mux (t : Ty2)
 | sink (t : Ty2)
-| source (t : Ty2)
 | sync (t : Ty2)
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
@@ -235,7 +234,6 @@ def_signature for Handshake where
 | .join t => (Ty.stream t, Ty.stream t) → (Ty.stream Ty2.token)
 | .mux t => (Ty.stream t, Ty.stream t, Ty.stream Ty2.bool) → Ty.stream t
 | .sink t => (Ty.stream t) → (Ty.stream Ty2.token)
-| .source t => () → (Ty.stream t)
 | .sync t => (Ty.stream t, Ty.stream t) → Ty.stream2 t
 
 instance instHandshakeTyDenote : TyDenote Ty where
@@ -246,18 +244,17 @@ toType := fun
 | Ty.stream2bool ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType Ty2.bool)
 
 def_denote for Handshake where
-| .fst t => fun xs => xs.fst
-| .snd t => fun xs => xs.snd
-| .branch t => fun xs => HandshakeOp.branch xs
-| .merge t => fun xs => HandshakeOp.merge xs
-| .altMerge t => fun xs =>HandshakeOp.altMerge xs
-| .fork t => fun xs => HandshakeOp.fork xs
-| .controlMerge t => fun xs => HandshakeOp.controlMerge xs
-| .join t => fun xs => HandshakeOp.join xs
-| .mux t => fun xs => HandshakeOp.mux xs
-| .sink t => fun xs => HandshakeOp.sink xs
-| .source t => fun xs => sorry
-| .sync t => fun xs => HandshakeOp.sync xs
+| .fst _ => fun s => s.fst
+| .snd _ => fun s => s.snd
+| .branch _ => fun s c => HandshakeOp.branch s c
+| .merge _ => fun s₁ s₂ => HandshakeOp.merge s₁ s₂
+| .altMerge _ => fun s₁ s₂ =>HandshakeOp.altMerge s₁ s₂
+| .fork _ => fun s => HandshakeOp.fork s
+| .controlMerge _ => fun s₁ s₂ => HandshakeOp.controlMerge s₁ s₂
+| .join _ => fun s₁ s₂ => HandshakeOp.join s₁ s₂
+| .mux _ => fun s₁ s₂ c => HandshakeOp.mux s₁ s₂ c
+| .sink _ => fun s => HandshakeOp.sink s
+| .sync _ => fun s₁ s₂ => HandshakeOp.sync s₁ s₂
 
 
 
