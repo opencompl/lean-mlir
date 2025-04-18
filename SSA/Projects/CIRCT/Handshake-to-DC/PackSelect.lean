@@ -55,12 +55,12 @@ def packSelect := [DC_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => (vals.get? i).join
 
-def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
-def y : DC.ValueStream Int := ofList [some 1, some 2, none, none, some 3]
-def z : DC.ValueStream Int := ofList [some 1, some 2, none, none, some 3]
-def c : DC.ValueStream Bool := ofList [true, true, none, none, false]
+def x : DCOp.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
+def y : DCOp.ValueStream Int := ofList [some 1, some 2, none, none, some 3]
+def z : DCOp.ValueStream Int := ofList [some 1, some 2, none, none, some 3]
+def c : DCOp.ValueStream Bool := ofList [true, true, none, none, false]
 
 
 
-def test : DC.ValueStream Int :=
+def test : DCOp.ValueStream Int :=
   packSelect.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons z <| .cons y <| .cons x <| .nil))
