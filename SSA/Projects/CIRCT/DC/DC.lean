@@ -108,7 +108,6 @@ deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 inductive Op
 | fst
 | snd
-| pair (t : Ty2)
 | fstVal (t : Ty2)
 | sndVal (t : Ty2)
 | merge
@@ -131,7 +130,6 @@ def_signature for DC where
   | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
   | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
   | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
-  | .pair t => (Ty.valuestream t, Ty.valuestream t) → Ty.valuestream2 t
   | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream Ty2.bool
   | .branch => (Ty.valuestream Ty2.bool) → Ty.tokenstream2
   | .fork => (Ty.tokenstream) → Ty.tokenstream2
@@ -157,20 +155,19 @@ toType := fun
 
 
 def_denote for DC where
-  | .fst => fun xs => xs.fst
-  | .fstVal _ => fun xs => xs.fst
-  | .snd => fun xs => xs.snd
-  | .sndVal _ => fun xs => xs.snd
-  | .pair _ => fun xs => sorry
-  | .merge => fun xs => DCOp.merge xs
-  | .branch => fun xs => DCOp.branch xs
-  | .fork => fun xs => DCOp.fork xs
-  | .join => fun xs => DCOp.join xs
-  | .select => fun xs => DCOp.select xs
-  | .sink => fun xs => DCOp.sink xs
-  | .source => fun xs => DCOp.source xs
-  | .pack _ => fun xs => DCOp.pack xs
-  | .unpack _ => fun xs => DCOp.unpack xs
+  | .fst => fun s => s.fst
+  | .fstVal _ => fun s => s.fst
+  | .snd => fun s => s.snd
+  | .sndVal _ => fun s => s.snd
+  | .merge => fun s₁ s₂ => DCOp.merge s₁ s₂
+  | .branch => fun s => DCOp.branch s
+  | .fork => fun s => DCOp.fork s
+  | .join => fun s₁ s₂ => DCOp.join s₁ s₂
+  | .select => fun s₁ s₂ c => DCOp.select s₁ s₂ c
+  | .sink => fun s => DCOp.sink s
+  | .source => fun s => DCOp.source s
+  | .pack _ => fun s₁ s₂ => DCOp.pack s₁ s₂
+  | .unpack _ => fun s => DCOp.unpack s
 
 end Dialect
 
@@ -302,14 +299,6 @@ def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokens
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def pair {r} {Γ : Ctxt _} (a b: Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.valuestream2 r)  :=
-  Expr.mk
-    (op := .pair r)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
-    (regArgs := .nil)
-
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (DC) (Σ eff ty, Expr (DC) Γ eff ty) := do
   match opStx.name with
@@ -333,16 +322,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream .bool, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.pair"  =>
+  | op@"DC.merge" | op@"DC.join" | op@"DC.pack"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
       | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream .bool, merge v₁ v₂⟩
-      | .valuestream r, .valuestream r', "DC.pair" =>
-        if h: r = r' then return ⟨_, .valuestream2 r, pair v₁ (by subst r ; exact v₂)⟩
-        else throw <| .generic s!"type mismatch"
       | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
