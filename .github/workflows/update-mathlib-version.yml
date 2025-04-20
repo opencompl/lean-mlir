@@ -8,10 +8,10 @@ permissions: write-all
 
 jobs:
   mathlibtoday:
-    name: Update Mathlib Version (Today)
+    name: Update Mathlib & Lean
     strategy:
       matrix:
-        days-before: [0, 1]
+        daysbefore: [0, 1]
     permissions: write-all
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
@@ -32,8 +32,8 @@ jobs:
       - name: Get Mathlib Date
         id: mldate
         run: |
-           echo "date=`date -d '-${{matrix.daybefore}} day' +20%y-%m-%d`"
-           echo "date=`date -d '-${{matrix.daybefore}} day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
+           echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`"
+           echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
       - name: Set Mathlib Date
         run: |
