@@ -36,9 +36,8 @@ jobs:
            echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
       - name: Check if lean toolchain is already newer or equally old
-        id: mldate
         run: |
-           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d'` -le "2025-04-20" ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
+           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d'` -ge ${{steps.mldate.outputs.date}} ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
 
       - name: Set Mathlib Date
         run: |
