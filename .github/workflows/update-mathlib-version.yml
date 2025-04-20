@@ -9,6 +9,9 @@ permissions: write-all
 jobs:
   mathlibtoday:
     name: Update Mathlib Version (Today)
+    strategy:
+      matrix:
+        days-before: [0, 1]
     permissions: write-all
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
@@ -29,51 +32,8 @@ jobs:
       - name: Get Mathlib Date
         id: mldate
         run: |
-           echo "date=`date +20%y-%m-%d`"
-           echo "date=`date +20%y-%m-%d`" >> $GITHUB_OUTPUT
-
-      - name: Set Mathlib Date
-        run: |
-           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
-           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
-           echo "## lakefile.toml"
-           cat lakefile.toml
-           echo "## lean-toolchain"
-           cat lean-toolchain
-           lake update mathlib
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          title: "chore: update to lean nightly ${{steps.mldate.outputs.date}}"
-          branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
-          body: "automatic update of mathlib + lean via GitHub action."
-          token: ${{secrets.PAT}}
-
-  mathlib1d:
-    name: Update Mathlib Version (1d earlier)
-    permissions: write-all
-    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
-    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
-        with:
-          token: ${{secrets.PAT}}
-
-      - name: Install elan 🕑
-        run: |
-          set -o pipefail
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
-          ~/.elan/bin/lean --version
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Get Mathlib Date
-        id: mldate
-        run: |
-           echo "date=`date -d '-1 day' +20%y-%m-%d`"
-           echo "date=`date -d '-1 day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
+           echo "date=`date -d '-{matrix.daybefore} day' +20%y-%m-%d`"
+           echo "date=`date -d '-{matrix.daybefore} day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
       - name: Set Mathlib Date
         run: |
