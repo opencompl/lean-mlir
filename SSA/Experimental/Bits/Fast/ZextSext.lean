@@ -52,10 +52,19 @@ def BVExpr.eval {natEnv : Fin n → Nat} (bvEnv : BVEnv bvCard natEnv) :
 inductive BVPredicate (ctx : BVTyCtx natCard bvCard) : Type
 | eq (a : BVExpr ctx w) (b : BVExpr ctx w)
 
-def BVPredicate.eval {natEnv : Fin natCard → Nat} (ctx : BVTyCtx natCard bvCard)
+def BVPredicate.eval {natEnv : Fin natCard → Nat} {ctx : BVTyCtx natCard bvCard}
     (bvEnv : BVEnv ctx natEnv) :
   BVPredicate ctx → Prop
 | .eq a b => a.eval bvEnv = b.eval bvEnv
+
+def BVPredicate.decide (ctx : BVTyCtx natCard bvCard) :
+  BVPredicate ctx → Bool 
+| .eq a b => false
+
+theorem BVPredicate.eval_of_decide (ctx : BVTyCtx natCard bvCard)
+    (p : BVPredicate ctx) (h : p.decide = true) :
+  ∀ (bvEnv : BVEnv ctx natEnv), p.eval bvEnv := by
+  sorry
 
 inductive Expr
 
