@@ -45,30 +45,9 @@ class Refinement (α : Type) where
 instance [Refinement α] : HRefinement α α where
   IsRefinedBy := Refinement.IsRefinedBy
 
-/-
-TODO: Do we actually need `Refinement`?
-We don't expect users to derive instances of `HRefinement` themselves to begin
-with: we expect them to use `DialectRefinement` (which might be heterogeneous or homogeneous).
-Then, we--the framework authors--write all the various notations derived from the
-`DialectRefinement` instance.
-
-For now, we've used the homogeneous `Refinement` to define refinement of `Expr`s
-and `Coms` in a single dialect.
-
-However, in future we'll likely want to generalize this instance to refinement of
-`Com`s and `Expr`s accross two dialects (the definition of which could then be
-specialized to the case where `d₁ = d₂` to recover the homogenous version).
-It's unclear whether we'll still need `Refinement` then.
-
-Then again, the homogenous refinement relation will likely involve quantification
-over *two* valuations, plus an assumption of some form of refinement between
-those valuations. It's very possible that the specialization of this definition
-to the case where the dialects are the same is considerably less nice to work
-with than the current homogenous definition (and it's certainly unlikely to be
-logically equivalent, in general). So, we might want to have separate homo- and
-heterogenous instances (where the former should have a high-priority annotation).
--/
-
+/-- Equality induces a trivial (homogenous) refinement relation on any type `α`. -/
+def Refinement.ofEq : Refinement α where
+  IsRefinedBy := Eq
 
 /-! ### Dialect Refinement -/
 

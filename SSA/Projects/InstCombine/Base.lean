@@ -30,6 +30,8 @@ open BitVec
 
 open LLVM
 
+/-! ### Types -/
+
 abbrev Width φ := ConcreteOrMVar Nat φ
 
 inductive MTy (φ : Nat)
@@ -38,46 +40,7 @@ inductive MTy (φ : Nat)
 
 abbrev Ty := MTy 0
 
-@[match_pattern] abbrev Ty.bitvec (w : Nat) : Ty := MTy.bitvec (.concrete w)
-
-instance : Repr (MTy φ) where
-  reprPrec
-    | .bitvec (.concrete w), _ => "i" ++ repr w
-    | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
-
-instance : Lean.ToFormat (MTy φ) where
-  format := repr
-
-instance : ToString (MTy φ) where
-  toString t := repr t |>.pretty
-
-def Ty.width : Ty → Nat
-  | .bitvec w => w
-
-@[simp]
-theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
-  rcases ty with ⟨w|i⟩
-  · rfl
-  · exact i.elim0
-
-@[simp]
-def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
-
-instance : TyDenote Ty where
-toType := fun
-  | .bitvec w => LLVM.IntW w
-
-instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
-  coe z := match ty with
-    | .bitvec w => some <| BitVec.ofInt w z
-
-instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
-  default := match ty with
-    | .bitvec _ => pure default
-
-instance : Repr (BitVec n) where
-  reprPrec
-    | v, n => reprPrec (BitVec.toInt v) n
+/-! ### Operations -/
 
 /-- Homogeneous, unary operations -/
 inductive MOp.UnaryOp (φ : Nat) : Type
@@ -362,14 +325,21 @@ def MOp.outTy : MOp φ → MTy φ
 | .unary w op => op.outTy w
 | .icmp _ _ => .bitvec 1
 
+/-! ## Dialect -/
+
 /-- `MetaLLVM φ` is the `LLVM` dialect with at most `φ` metavariables -/
 abbrev MetaLLVM (φ : Nat) : Dialect where
   Op := MOp φ
   Ty := MTy φ
 
-abbrev LLVM : Dialect where
+def LLVM : Dialect where
   Op := Op
   Ty := Ty
+
+/-! ### Basic Instances -/
+
+instance : Monad (MetaLLVM φ).m := by unfold MetaLLVM; infer_instance
+instance : Monad LLVM.m := by unfold LLVM; infer_instance
 
 instance {φ} : DialectSignature (MetaLLVM φ) where
   signature op := ⟨op.sig, [], op.outTy, .pure⟩
@@ -379,9 +349,64 @@ instance : DialectSignature LLVM where
 instance {φ} : DialectToExpr (MetaLLVM φ) where
   toExprM := .const ``Id [0]
   toExprDialect := .app (.const ``MetaLLVM []) (Lean.toExpr φ)
+
+instance : Lean.ToExpr (LLVM.Op) := by unfold LLVM; infer_instance
+instance : Lean.ToExpr (LLVM.Ty) := by unfold LLVM; infer_instance
 instance : DialectToExpr LLVM where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``LLVM []
+
+/-! ### Type Formatting -/
+
+instance : Repr (MTy φ) where
+  reprPrec
+    | .bitvec (.concrete w), _ => "i" ++ repr w
+    | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
+instance : Repr LLVM.Ty := by unfold LLVM; infer_instance
+
+instance : Lean.ToFormat (MTy φ) where
+  format := repr
+instance : Lean.ToFormat LLVM.Ty := by unfold LLVM; infer_instance
+
+instance : ToString (MTy φ) where
+  toString t := repr t |>.pretty
+instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
+
+/-! ### Type Semantics -/
+
+@[match_pattern] abbrev Ty.bitvec (w : Nat) : LLVM.Ty :=
+  MTy.bitvec (.concrete w)
+
+def Ty.width : LLVM.Ty → Nat
+  | .bitvec w => w
+
+@[simp]
+theorem Ty.width_eq (ty : LLVM.Ty) : .bitvec (width ty) = ty := by
+  rcases ty with ⟨w|i⟩
+  · rfl
+  · exact i.elim0
+
+@[simp] -- TODO: this def should not live here
+def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
+
+instance : TyDenote LLVM.Ty where
+  toType := fun
+    | .bitvec w => LLVM.IntW w
+
+instance (ty : LLVM.Ty) : Coe ℤ (TyDenote.toType ty) where
+  coe z := match ty with
+    | .bitvec w => .value <| BitVec.ofInt w z
+
+instance (ty : LLVM.Ty) : Inhabited (TyDenote.toType ty) where
+  default := match ty with
+    | .bitvec _ => pure default
+
+-- TODO: this instance should not live here
+instance : Repr (BitVec n) where
+  reprPrec
+    | v, n => reprPrec (BitVec.toInt v) n
+
+/-! ### Operation Semantics -/
 
 @[simp]
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
