@@ -251,3 +251,49 @@ but this really was a bug. The intention of LLVM semantics is that they are mono
 -/
 
 end LawfulDialectRefinement.FactInstances
+
+
+
+
+/-!
+## A Note on Dialect Reducability
+
+We've been defining dialects as `abbrev`s throughout the project, mostly as a way
+to avoid having to redefine a bunch of instances for the components of a dialect.
+
+I now believe this usage of abbrev is an anti-pattern, since reducability can
+badly interact with the typeclass resolver. Consider the following MWE:
+```lean
+abbrev MweDialect : Dialect where
+  Op := Empty
+  Ty := Unit
+
+def nat : MweDialect.Ty := ()
+
+instance : Monad MweDialect.m := inferInstanceAs (Monad Id)
+instance : TyDenote MweDialect.Ty where
+  toType
+  | () => Nat
+
+instance : DialectHRefinement MweDialect MweDialect where
+  IsTypeCompatible := Eq
+  IsRefinedBy := @fun
+    | (), (), _, x, y => x = y
+
+instance : Fact (IsTypeCompatible nat nat) where
+  out := rfl
+
+-- The `#check` works, the instance exists
+#check (instRefinementPure : HRefinement ⟦nat⟧ ⟦nat⟧)
+-- Yet, it is unable to be synthesized
+#synth HRefinement ⟦nat⟧ ⟦nat⟧
+```
+
+When we turn `MweDialect` from an `abbrev` into a `def`, the `#synth` line
+starts working again!
+
+I've reported a further minimized example to core:
+  [#7984](https://github.com/leanprover/lean4/issues/7984)
+For now, let's work around this issue by just not defining our dialects
+as abbrevs.
+-/
