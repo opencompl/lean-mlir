@@ -2,6 +2,18 @@ import Std.Tactic.BVDecide
 import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 
+/-!
+Reduction of multiple widths to automata.
+Key ideas:
+  + We denote into `getLsbD`, instead of asserting full equality.
+  + We, at the meta-level, make assumptions about the relationships between widths,
+    and about the relationship between the index and the width.
+
++ God damn it, I've tried like three different ways of encoding this stuff,
+  and they all fail in subtle ways? :( I need a whiteboard and rubber ducking to
+  figure out how to do this.
+-/
+
 inductive NatExpr (n : Nat) : Type
 | var : (v : Fin n) → NatExpr n
 | add : NatExpr n → NatExpr n → NatExpr n
