@@ -10,6 +10,7 @@ jobs:
   mathlibtoday:
     name: Update Mathlib & Lean
     strategy:
+      fail-fast: false
       matrix:
         daysbefore: [0, 1, 2]
     permissions: write-all
