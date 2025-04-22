@@ -23,10 +23,21 @@ scoped instance : Refinement (BitVec w) := .ofEq
 instance : HRefinement (IntW w) (IntW w) :=
   inferInstanceAs <| HRefinement (PoisonOr _) (PoisonOr _)
 
-@[simp_denote]
+@[simp_llvm_option, simp_llvm]
 theorem isRefinedBy_iff (x y : LLVM.IntW w) :
     x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
   rfl
+
+/-- Under the scoped instance above, refinement on BitVecs is just equality -/
+@[simp_llvm_case_bash, simp_llvm_split]
+theorem bitvec_isRefinedBy_iff (x y : BitVec w) :
+    x ⊑ y ↔ x = y := by rfl
+
+/-- Refinement of `IntW`s is reflexive -/
+@[simp_llvm_split]
+theorem isRefinedBy_refl (x : PoisonOr (BitVec w)) : x ⊑ x :=
+  PoisonOr.isRefinedBy_refl (fun _ => rfl) x
+
 end IntW
 
 open PoisonOr (value poison)

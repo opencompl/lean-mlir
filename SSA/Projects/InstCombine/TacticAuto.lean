@@ -14,15 +14,12 @@ import Leanwuzla
 open Lean
 open Lean.Elab.Tactic
 
-attribute [simp_llvm_case_bash]
-  BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
+attribute [simp_llvm_case_bash, simp_llvm_split]
   bind_assoc forall_const
-  Option.bind_eq_bind Option.none_bind Option.bind_none Option.some_bind Option.pure_def
+  PoisonOr.poison_bind PoisonOr.value_bind PoisonOr.bind_poison PoisonOr.pure_def
   Nat.cast_one
 
 attribute [simp_llvm_split]
-  BitVec.Refinement.some_some BitVec.Refinement.refl Option.some_bind''
-  BitVec.Refinement.none_left Option.some_bind Option.bind_none Option.none_bind
   Option.some.injEq if_if_eq_if_and if_if_eq_if_or
 /- `reduceOfInt` and `Nat.cast_one` are somewhat questionable additions to this simp-set.
    They are not needed for the case-bashing to succeed, but they are simp-lemmas that were
@@ -41,8 +38,8 @@ elab "ensure_only_goal" : tactic =>
 
 /--
 `simp_alive_case_bash` transforms a goal of the form
-  `∀ (x₁ : Option (BitVec _)) ... (xₙ : Option (BitVec _)), ...`
-into a goal about just `BitVec`s, by doing a case distinction on each `Option`.
+  `∀ (x₁ : PoisonOr (BitVec _)) ... (xₙ : PoisonOr (BitVec _)), ...`
+into a goal about just `BitVec`s, by doing a case distinction on each `PoisonOr`.
 
 Then, we `simp`lify each goal, following the assumption that the `none` cases
 should generally be trivial, hopefully leaving us with just a single goal:
@@ -51,12 +48,12 @@ syntax "simp_alive_case_bash'" : tactic
 macro_rules
   | `(tactic| simp_alive_case_bash') => `(tactic|
     first
-    | fail_if_success (intro (v : Option (_)))
+    | fail_if_success (intro (v : PoisonOr (_)))
       -- If there is no variable to introduce, `intro` fails, so the first branch succeeds,
       -- but does nothing. This is similar to `try`, except `first ...` does not swallow any errors
       -- that occur in the later tactics
-    | intro (v : Option (_))    -- Introduce the variable,
-      rcases v with _|x         -- Do the case distinction
+    | intro (v : PoisonOr (_))    -- Introduce the variable,
+      cases' v with x         -- Do the case distinction
       <;> simp (config:={failIfUnchanged := false}) -implicitDefEqProofs only [simp_llvm_case_bash]
       --  ^^^^^^^^^^^^^^^^^^^^^^^^ Simplify, in the hopes that the `none` case is trivially closed
       <;> simp_alive_case_bash'  -- Recurse, to case bash the next variable (if it exists)
@@ -92,20 +89,19 @@ macro_rules
     )
   )
 
+open PoisonOr in
+attribute [simp_llvm_option, simp_llvm_split]
+  bind_assoc PoisonOr.value_bind Bool.false_eq_true false_and reduceIte
+  poison_isRefinedBy value_isRefinedBy_value
+  not_value_isRefinedBy_poison isRefinedBy_poison
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
 macro "simp_alive_undef" : tactic =>
-  `(tactic|
-      (
-        simp (config := {failIfUnchanged := false}) only [
-            simp_llvm_option,
-            BitVec.Refinement, bind_assoc,
-            Bool.false_eq_true, false_and, reduceIte,
-            (BitVec.ofInt_ofNat),
-            Option.some_bind''
-          ]
-      )
-  )
+  `(tactic|(
+      simp (config := {failIfUnchanged := false}) only [
+        simp_llvm_option, (BitVec.ofInt_ofNat),
+      ]
+  ))
 
 /- Simplify away the `InstCombine` specific semantics. -/
 macro "simp_alive_ops" : tactic =>
