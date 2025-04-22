@@ -3,6 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 --import SSA.Core.WellTypedFramework
 import SSA.Core.Framework
+import SSA.Core.Tactic.SimpSet
 import SSA.Core.Util
 import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
@@ -392,6 +393,8 @@ def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 instance : TyDenote LLVM.Ty where
   toType := fun
     | .bitvec w => LLVM.IntW w
+
+@[simp_denote] lemma toType_bitvec : TyDenote.toType (Ty.bitvec w) = LLVM.IntW w := rfl
 
 instance (ty : LLVM.Ty) : Coe ℤ (TyDenote.toType ty) where
   coe z := match ty with
