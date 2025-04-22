@@ -340,7 +340,9 @@ def LLVM : Dialect where
 /-! ### Basic Instances -/
 
 instance : Monad (MetaLLVM φ).m := by unfold MetaLLVM; infer_instance
+instance : LawfulMonad (MetaLLVM φ).m := by unfold MetaLLVM; infer_instance
 instance : Monad LLVM.m := by unfold LLVM; infer_instance
+instance : LawfulMonad LLVM.m := by unfold LLVM; infer_instance
 
 instance {φ} : DialectSignature (MetaLLVM φ) where
   signature op := ⟨op.sig, [], op.outTy, .pure⟩
