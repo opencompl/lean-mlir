@@ -1,6 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import SSA.Core.Tactic.SimpSet
 import SSA.Core.Util.Poison
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.SimpSet
@@ -16,9 +17,17 @@ namespace LLVM
 
 def IntW w := PoisonOr <| BitVec w
 
-@[reducible] local instance : Refinement (BitVec w) := .ofEq
+namespace IntW
+
+scoped instance : Refinement (BitVec w) := .ofEq
 instance : HRefinement (IntW w) (IntW w) :=
   inferInstanceAs <| HRefinement (PoisonOr _) (PoisonOr _)
+
+@[simp_denote]
+theorem isRefinedBy_iff (x y : LLVM.IntW w) :
+    x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
+  rfl
+end IntW
 
 open PoisonOr (value poison)
 
