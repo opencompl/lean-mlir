@@ -58,8 +58,12 @@ def bind₂ (a : PoisonOr α) (b : PoisonOr β) (f : α → β → PoisonOr γ) 
 
 section Lemmas
 --TODO: these lemmas should all be tagged `simp_denote` once that simpset is merged to main
-@[simp] theorem bind_poison : poison >>= f = poison := rfl
-@[simp] theorem bind_value : value a >>= f = f a := rfl
+@[simp] theorem pure_def : pure = @value α := rfl
+
+@[simp] theorem poison_bind : poison >>= f = poison := rfl
+@[simp] theorem value_bind : value a >>= f = f a := rfl
+@[simp] theorem bind_poison : a? >>= (fun _ => @poison β) = poison := by
+  cases a? <;> rfl
 
 @[simp] theorem bind₂_poison_left : bind₂ poison b? f = poison := rfl
 @[simp] theorem bind₂_poison_right : bind₂ a? poison f = poison := by
@@ -67,6 +71,16 @@ section Lemmas
 @[simp] theorem bind₂_value : bind₂ (value a) (value b) f = f a b := rfl
 end Lemmas
 
+instance : LawfulMonad PoisonOr where
+  map_const := by intros; rfl
+  id_map := by rintro _ (_|_) <;> rfl
+  seqLeft_eq := by rintro _ _ (_|_) _ <;> rfl
+  seqRight_eq := by rintro _ _ (_|_) (_|_) <;> rfl
+  pure_seq := by intros; rfl
+  bind_pure_comp := by intros; rfl
+  bind_map := by intros; rfl
+  pure_bind _ _ := value_bind
+  bind_assoc := by rintro _ _ _ (_|_) _ _ <;> rfl
 
 /-! ### Refinement -/
 inductive IsRefinedBy [HRefinement α β] : PoisonOr α → PoisonOr β → Prop
