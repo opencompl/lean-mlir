@@ -191,7 +191,10 @@ section OfPartsLemmas
 @[simp] theorem isPoison_value : isPoison (value a) = false := rfl
 @[simp] theorem getValue_value [Inhabited α] {a : α} : (value a).getValue = a := rfl
 
-
+@[simp] theorem isPoison_ofParts_bind :
+    (ofParts xPoison x >>= f).isPoison =
+      (xPoison || (f x).isPoison) := by
+  cases xPoison <;> simp
 
 theorem isPoison_ite [Decidable c] :
     (isPoison (if c then x else y))
@@ -204,15 +207,21 @@ theorem isPoison_ite [Decidable c] :
   simp only [isPoison_ite, isPoison_poison, Bool.and_true]
   cases decide c <;> rfl
 
-theorem ofParts_isPoison_getValue [Inhabited α] (x : PoisonOr α) :
+theorem ofParts_isPoison_getValue {i : Inhabited α} (x : PoisonOr α) :
     ofParts (x.isPoison) (x.getValue) = x := by
   cases x <;> rfl
+
+theorem isRefinedBy_iff_ofParts_isRefinedBy_ofParts
+    {i : HRefinement α β} [Inhabited α] [Inhabited β]
+    {x : PoisonOr α} {y : PoisonOr β} :
+    x ⊑ y ↔ ofParts (x.isPoison) (x.getValue) ⊑ ofParts (y.isPoison) (y.getValue) := by
+  simp [ofParts_isPoison_getValue]
 
 theorem ofParts_isRefinedBy_ofParts_iff [HRefinement α β]
     (isPoison : Bool) (val : α) (isPoison' : Bool) (val' : β) :
     ofParts isPoison val ⊑ ofParts isPoison' val' ↔
       (isPoison' = true → isPoison = true)
-      ∧ (isPoison = false → isPoison' = false → val ⊑ val') := by
+      ∧ (isPoison = false → val ⊑ val') := by
   cases isPoison <;> cases isPoison' <;> simp
 
 @[simp]
