@@ -721,11 +721,11 @@ construct an expression of type `Valuation Γ`.
 -/
 def Valuation.mkOfElems (Ty instTyDenote : Expr) (Γ : Array Expr) (xs : Array Expr) : Expr :=
   @id (Id _) <| do
-    let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
     let mut V_acc := mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
+    let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
     for (ty, x) in Γ.zip xs do
-      Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
       V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ_acc ty V_acc x
+      Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
     V_acc
 
 end ToExpr
