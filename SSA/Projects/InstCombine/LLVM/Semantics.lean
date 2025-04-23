@@ -613,4 +613,55 @@ def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
   let x' <- x
   sext? w' x'
 
+/-! ## `PoisonOr.ofParts` lemmas-/
+section OfParts
+open PoisonOr
+variable {xPoison yPoison : Bool} {x y : BitVec w}
+
+@[simp]
+theorem isPoison_ofParts_bind :
+    (ofParts xPoison x >>= f).isPoison =
+      (xPoison || (f x).isPoison) := by
+  cases xPoison <;> simp
+
+theorem ofParts_and :
+    LLVM.and (ofParts xPoison x) (ofParts yPoison y)
+    = ofParts (xPoison || yPoison) (x &&& y) := by
+  rw [← ofParts_isPoison_getValue (and ..)]
+  simp [LLVM.and, and?]
+  rw [ofParts_eq_iff]
+  and_intros
+  · rfl
+  · simp only [Bool.or_eq_false_iff, and_imp]
+    repeat rintro rfl
+    simp
+
+theorem ofParts_add {flags} :
+    LLVM.add (ofParts xPoison x) (ofParts yPoison y) flags
+    = ofParts (
+        xPoison || yPoison
+        || flags.nsw && BitVec.saddOverflow x y
+        || flags.nuw && BitVec.uaddOverflow x y) (x + y) := by
+  rw [← ofParts_isPoison_getValue (add _ _ _)]
+  simp only [add, add?,
+    isPoison_ofParts_bind, isPoison_ite_poison,
+    Bool.decide_and,
+    Bool.decide_eq_true, isPoison_value, Bool.or_false]
+  repeat rw [ofParts_getValue_bind_eq (by bv_decide)]
+
+
+
+  conv in ofParts _ _ => {
+    arg 1
+    tactic => ac_nf
+  }
+  rw [ofParts_eq_iff]
+  and_intros
+  · ac_nf
+  · simp only [Bool.or_eq_false_iff, and_imp]
+    repeat rintro rfl
+    simp
+
+end OfParts
+
 end LLVM

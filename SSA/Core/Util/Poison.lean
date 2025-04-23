@@ -40,6 +40,11 @@ def casesOn'.{u} {α : Type} {motive : PoisonOr α → Sort u}
   | .poison => poison
   | .value a => value a
 
+@[simp] theorem value_inj {a b : α} : value a = value b ↔ a = b := by
+  constructor
+  · rintro ⟨⟩; rfl
+  · exact fun h => h ▸ rfl
+
 /-! ### Formatting & Priting instances -/
 instance [ToString α] : ToString (PoisonOr α) where
   toString
@@ -144,3 +149,87 @@ instance {α β : Type} [HRefinement α β] [DecidableRel (· ⊑ · : α → β
   | .value a, .value b => decidable_of_decidable_of_iff (p := a ⊑ b) <| by simp
 
 end Refinement
+
+/-! ## OfParts -/
+
+/--
+`poisonIf isPoison elseValue` returns `poison` if `isPoison` is `true`,
+and `elseValue` otherwise.
+-/
+def poisonIf (isPoison : Bool) (elseValue : PoisonOr α) : PoisonOr α :=
+  if isPoison then poison else elseValue
+
+/--
+Construct an element of `PoisonOr α`, given a Boolean `isPoison` which indicates
+whether it's poison, and a value `val` for if it's not poison.
+
+That is, returns `poison` if `isPoison` is `true`, and `value val` otherwise.
+
+See also [`poisonIf`].
+-/
+def ofParts (isPoison : Bool) (val : α) : PoisonOr α :=
+  poisonIf isPoison <| value val
+
+/-- Returns whether the element is poison. -/
+def isPoison : PoisonOr α → Bool
+  | poison => true
+  | value _ => false
+
+/-- Returns the value of the element, or a default value if it is poison. -/
+def getValue [Inhabited α] : PoisonOr α → α
+  | poison => default
+  | value a => a
+
+section OfPartsLemmas
+
+@[simp] theorem poisonIf_true : poisonIf true x = poison := rfl
+@[simp] theorem poisonIf_false : poisonIf false x = x := rfl
+@[simp] theorem ofParts_true : ofParts true val = poison := rfl
+@[simp] theorem ofParts_false : ofParts false val = value val := rfl
+
+@[simp] theorem isPoison_poison : isPoison (@poison α) = true := rfl
+@[simp] theorem isPoison_value : isPoison (value a) = false := rfl
+@[simp] theorem getValue_value [Inhabited α] {a : α} : (value a).getValue = a := rfl
+
+
+
+theorem isPoison_ite [Decidable c] :
+    (isPoison (if c then x else y))
+    = ((decide c && x.isPoison) || (!decide c && y.isPoison)) := by
+  by_cases hc : c <;> simp [hc]
+
+@[simp] theorem isPoison_ite_poison [Decidable c] :
+    isPoison (if c then poison else x)
+    = ((decide c) || x.isPoison) := by
+  simp only [isPoison_ite, isPoison_poison, Bool.and_true]
+  cases decide c <;> rfl
+
+theorem ofParts_isPoison_getValue [Inhabited α] (x : PoisonOr α) :
+    ofParts (x.isPoison) (x.getValue) = x := by
+  cases x <;> rfl
+
+theorem ofParts_isRefinedBy_ofParts_iff [HRefinement α β]
+    (isPoison : Bool) (val : α) (isPoison' : Bool) (val' : β) :
+    ofParts isPoison val ⊑ ofParts isPoison' val' ↔
+      (isPoison' = true → isPoison = true)
+      ∧ (isPoison = false → isPoison' = false → val ⊑ val') := by
+  cases isPoison <;> cases isPoison' <;> simp
+
+@[simp]
+theorem ofParts_eq_iff {isPoison isPoison' : Bool} {val val' : α} :
+  ofParts isPoison val = ofParts isPoison' val' ↔
+    (isPoison = isPoison') ∧ (isPoison = false → val = val') := by
+  cases isPoison <;> cases isPoison' <;> simp [poison, value]
+
+theorem ofParts_getValue_bind_eq {isPoison xPoison : Bool} {x : α} {f : α → PoisonOr β}
+    [Inhabited α] [Inhabited β]
+    (h : xPoison = true → isPoison = true) :
+    ofParts isPoison (ofParts xPoison x >>= f).getValue = ofParts isPoison (f x).getValue := by
+  simp only [ofParts_eq_iff, true_and]
+  rintro rfl
+  obtain rfl : xPoison = false := by simpa using h
+  simp
+
+end OfPartsLemmas
+
+end PoisonOr
