@@ -720,14 +720,13 @@ of values `xs`, such that `xs[i]` is an expression of type `Γ[i]`,
 construct an expression of type `Valuation Γ`.
 -/
 def Valuation.mkOfElems (Ty instTyDenote : Expr) (Γ : Array Expr) (xs : Array Expr) : Expr :=
-  let nil := (
-    mkApp (.const ``List.nil [0]) Ty,
-    mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
-  )
-  Prod.snd <| (Γ.zip xs).foldl (init := nil) fun (Γ, V) (ty, x) => (
-      mkApp3 (.const ``List.cons [0]) Ty ty Γ,
-      mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ ty V x
-  )
+  @id (Id _) <| do
+    let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
+    let mut V_acc := mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
+    for (ty, x) in Γ.zip xs do
+      Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
+      V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ_acc ty V_acc x
+    V_acc
 
 end ToExpr
 
