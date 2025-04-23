@@ -457,7 +457,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   ·
     simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
     Nat.self_sub_mod]
-    have h' := @Int.add_emod_self (-1) (2^w)
+    have h' := @Int.add_emod_right (-1) (2^w)
     rw [← h', ← Int.tmod_eq_emod_of_nonneg (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
       Int.add_comm]
     norm_cast

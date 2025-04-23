@@ -710,7 +710,7 @@ theorem BitVec.eq_of_sub_zero {x y : BitVec w} (h : x - y = 0#w) :  x = y := by
 theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
     x - (y - z) = x - y + z := by
   apply BitVec.eq_of_toInt_eq
-  simp only [BitVec.toInt_sub, Int.sub_bmod_bmod, BitVec.toInt_add, Int.bmod_add_bmod_congr]
+  simp only [BitVec.toInt_sub, Int.sub_bmod_bmod, BitVec.toInt_add, Int.bmod_add_bmod]
   congr
   omega
 
@@ -718,7 +718,7 @@ theorem BitVec.sub_distrib_sub (x y z : BitVec w) :
 theorem BitVec.sub_distrib_add (x y z : BitVec w) :
     x - (y + z) = x - y - z := by
   apply BitVec.eq_of_toInt_eq
-  simp only [BitVec.toInt_sub, BitVec.toInt_add, Int.sub_bmod_bmod, Int.bmod_sub_bmod_congr]
+  simp only [BitVec.toInt_sub, BitVec.toInt_add, Int.sub_bmod_bmod, Int.bmod_sub_bmod]
   congr 1
   omega
 
