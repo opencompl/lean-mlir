@@ -626,13 +626,13 @@ partial def countModel (expr : BVLogicalExpr) (constants: Std.HashSet Nat): Term
 
 
 def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap Nat BVExpr.PackedBitVec) (negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (bitwidth: Nat)
-              : TermElabM BVLogicalExpr := do
+              : TermElabM (Option BVLogicalExpr) := do
 
     let constants := positiveExample.keys
     let maxConstantId := constants.max?
     -- TODO: Make the width a component for preconditions
     match maxConstantId with
-    | none => return BoolExpr.const False
+    | none => return none
     | some max =>
           let symbolicVarIds : List Nat := (List.range constants.length).map (fun c => max + c)
           let symbolicVars : List (BVExpr bitwidth) := symbolicVarIds.map (fun c => BVExpr.var c)
@@ -742,12 +742,22 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
 
           logInfo m! "Candidate by model count: {candidateByModelCount}"
 
-          let mut combinedPred : BVLogicalExpr := BoolExpr.const False
+          let mut combinedPred : Option BVLogicalExpr := none
 
+          let mut count := 0
           for (_, candidate) in candidateByModelCount do
-              if let some _ ← solve (BoolExpr.gate Gate.and combinedPred (BoolExpr.not candidate)) then
-                  combinedPred := BoolExpr.gate Gate.or combinedPred candidate
+            match combinedPred with
+            | none =>
+                combinedPred := some candidate
+                count := count + 1
+            | some wp =>
+                if let some _ ← solve (BoolExpr.gate Gate.and wp (BoolExpr.not candidate)) then
+                    combinedPred := some (BoolExpr.gate Gate.or wp candidate)
+                    count := count + 1
+                else
+                    logInfo m! "Candidate {candidate} is already covered by {combinedPred}"
 
+          logInfo m! "Candidates by model count size: {candidateByModelCount.length}; combined count: {count}"
           return combinedPred
 
 
@@ -1113,7 +1123,7 @@ elab "#generalize" expr:term: command =>
                 let precondition ← generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples targetWidth
 
                 logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {precondition}"
-                --TODO: we then need to verify width independence
+                break -- TODO: we then need to verify width independence
       | _ =>
             logInfo m! "Could not match"
       pure ()
