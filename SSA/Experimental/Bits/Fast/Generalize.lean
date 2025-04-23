@@ -450,14 +450,14 @@ structure ParsedBVLogicalExpr where
 def changeBVExprWidth (bvExpr: BVExpr w) (target: Nat) : BVExpr target := Id.run do
   match bvExpr with
   | .var idx => (BVExpr.var idx : BVExpr target)
-  | .const val => BVExpr.const (val.zeroExtend target) -- TODO: We need a sign-extend depending on whether we're increasing the width and the value is negative
-  | .extract start len expr => (BVExpr.extract start target expr)
+  | .const val => BVExpr.const (val.zeroExtend target) -- TODO: Do we need a sign-extend depending on whether we're increasing the width and the value is negative
+  | .extract start len expr => BVExpr.extract start target (changeBVExprWidth expr (start + target))
   | .bin lhs op rhs => BVExpr.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target)
   | .un op operand => BVExpr.un op (changeBVExprWidth operand target)
   | .shiftLeft lhs rhs =>  BVExpr.shiftLeft (changeBVExprWidth lhs target)  (changeBVExprWidth rhs target)
   | .shiftRight lhs rhs =>  BVExpr.shiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
   | .arithShiftRight lhs rhs => BVExpr.arithShiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
-  | _ =>  BVExpr.var 10101 -- TODO: Fix this to properly support 'append' and 'replicate'
+  | _ => BVExpr.const (BitVec.zero target) -- TODO: How to handle 'append' and 'replicate'?
 
 def changeWidth (bvLogicalExpr: BVLogicalExpr) (target: Nat): BVLogicalExpr :=
   match bvLogicalExpr with
@@ -742,6 +742,22 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
                   combinedPred := BoolExpr.gate Gate.or combinedPred candidate
 
           return combinedPred
+
+
+syntax (name := testModelCount) "test_model_count" : tactic
+@[tactic testModelCount]
+def modelCountTest : Tactic := fun _ => do
+
+  -- let count ← countModel leftShiftRightShiftOne (Std.HashSet.ofList [100, 101])
+  let count ← countModel addId (Std.HashSet.ofList [100])
+
+  logInfo m! "Model count: {count}"
+  pure ()
+
+theorem test_model_count : False := by
+  test_model_count
+
+
 
 structure PreconditionSynthesisTestConfig where
   expr: BVLogicalExpr
@@ -1037,7 +1053,7 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 8 -- TODO: We should try a range of widths
+      let targetWidth := 4 -- TODO: We should try a range of widths
 
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
@@ -1088,9 +1104,10 @@ elab "#generalize" expr:term: command =>
                     logInfo m! "General form: {substitutedBVLogicalExpr} has no preconditions."
                     break
 
-                let preconditions ← generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples targetWidth
+                let precondition ← generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples targetWidth
 
-                logInfo m! "Expr: {substitutedBVLogicalExpr} has preconditions: {preconditions}"
+                logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {precondition}"
+                --TODO: we then need to verify width independence
       | _ =>
             logInfo m! "Could not match"
       pure ()
