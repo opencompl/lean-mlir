@@ -1,5 +1,6 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
-import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.SimpSet
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
