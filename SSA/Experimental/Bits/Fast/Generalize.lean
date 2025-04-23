@@ -567,6 +567,11 @@ def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
 
   helper (BoolExpr.not bvExpr) num
 
+instance : BEq BVLogicalExpr where
+  beq := fun a b => toString a == toString b
+
+instance : Hashable BVLogicalExpr where
+  hash a := hash (toString a)
 
 def negativeExNoneExpected : BVLogicalExpr :=
   let bitwidth := 4
@@ -716,8 +721,10 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
                   preconditionCandidates := gteZero substitutedSymbolicVarsExpr :: preconditionCandidates
 
           let mut validCandidates : List BVLogicalExpr := []
-          logInfo m! "Precondition candidates: {preconditionCandidates}"
-          for candidate in preconditionCandidates do
+
+          let preconditionCandidatesSet := Std.HashSet.ofList preconditionCandidates
+          logInfo m! "Precondition candidates: {preconditionCandidatesSet.toList}"
+          for candidate in preconditionCandidatesSet do
               if let none ← solve (BoolExpr.gate Gate.and candidate (BoolExpr.not bvExpr)) then
                   validCandidates := candidate :: validCandidates
 
@@ -756,7 +763,6 @@ def modelCountTest : Tactic := fun _ => do
 
 theorem test_model_count : False := by
   test_model_count
-
 
 
 structure PreconditionSynthesisTestConfig where
@@ -822,7 +828,7 @@ syntax (name := testPreconditionSynthesis) "test_precondition_synthesis" : tacti
 @[tactic testPreconditionSynthesis]
 def testPrecondSynthesis : Tactic := fun _ => do
 
-  let ex ←  preconditionSynthesisEx1
+  let ex ←  preconditionSynthesisEx2
   let res ← generatePreconditions ex.expr ex.positiveExample ex.negativeExamples ex.bitWidth
   logInfo m! " Precondition synthesis result for {ex.expr}: {res}"
   pure ()
