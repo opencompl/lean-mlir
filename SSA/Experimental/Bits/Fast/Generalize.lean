@@ -52,7 +52,7 @@ instance : ToString FVarId where
   toString f := s! "{f.name}"
 
 instance : Inhabited ParsedBVExprState where
-  default := {maxFreeVarId := 0, maxSymVarId := 1000, originalWidth := 64, inputBVExprVarToExpr := {}, symVarToVal := {}, inputVarToBVExpr := {}}
+  default := {maxFreeVarId := 0, maxSymVarId := 1000, originalWidth := 32, inputBVExprVarToExpr := {}, symVarToVal := {}, inputVarToBVExpr := {}}
 
 def printParsedBVExprState (s: ParsedBVExprState) :=
     s!"ParsedBVExprState:\n" ++
@@ -112,27 +112,47 @@ def changeWidth (bvLogicalExpr: BVLogicalExpr) (target: Nat): BVLogicalExpr :=
 instance : Inhabited BVExpr.PackedBitVec where
   default := { bv := BitVec.ofNat 0 0 }
 
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) : BVExpr w → BitVec targetWidth
+
+/-
+This function expects that targetWidth >= w
+-/
+def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: BVExpr w) : BitVec targetWidth :=
+  match expr with
   | .var idx =>
     let packedBv := assignments[idx]!
-    /-
-    This formulation improves performance, as in a well formed expression the condition always holds
-    so there is no need for the more involved `BitVec.truncate` logic.
-    -/
     if h : packedBv.w = targetWidth then
       h ▸ packedBv.bv
     else
-      packedBv.bv.zeroExtend targetWidth
-  | .const val => val.zeroExtend targetWidth
-  | .extract start len expr => (BitVec.extractLsb' start len (evalBVExpr assignments targetWidth expr)).zeroExtend targetWidth
+      packedBv.bv.signExtend targetWidth
+  | .const val => val.signExtend targetWidth
+  | .extract start len expr => (BitVec.extractLsb' start len (evalBVExpr assignments targetWidth expr)).signExtend targetWidth
   | .bin lhs op rhs => op.eval (evalBVExpr assignments targetWidth lhs) (evalBVExpr assignments targetWidth rhs)
   | .un op operand => op.eval (evalBVExpr assignments targetWidth operand)
-  | .append lhs rhs h => (h ▸ ((evalBVExpr assignments w lhs) ++ (evalBVExpr assignments w rhs))).zeroExtend targetWidth
-  | .replicate n expr h => (h ▸ (BitVec.replicate n (evalBVExpr assignments w expr))).zeroExtend targetWidth
-  | .shiftLeft lhs rhs => (evalBVExpr assignments targetWidth lhs) <<< (evalBVExpr assignments targetWidth rhs)
-  | .shiftRight lhs rhs => (evalBVExpr assignments targetWidth lhs) >>> (evalBVExpr assignments targetWidth rhs)
+  | .append lhs rhs h => (h ▸ ((evalBVExpr assignments w lhs) ++ (evalBVExpr assignments w rhs))).signExtend targetWidth
+  | .replicate n expr h => (h ▸ (BitVec.replicate n (evalBVExpr assignments w expr))).signExtend targetWidth
+  | .shiftLeft lhs rhs => BitVec.shiftLeft (evalBVExpr assignments targetWidth lhs) (evalBVExpr assignments targetWidth rhs).toNat
+  | .shiftRight lhs rhs => BitVec.ushiftRight (evalBVExpr assignments targetWidth lhs) (evalBVExpr assignments targetWidth rhs).toNat
   | .arithShiftRight lhs rhs => BitVec.sshiftRight' (evalBVExpr assignments targetWidth lhs) (evalBVExpr assignments targetWidth rhs)
 
+
+--- Testing evalBVExpr
+--Result after evaluating (((0xff#8 << var1001) >> var1002) << var1003)
+-- with constants: {1001 → 0x00000008#32, 1002 → 0x00000010#32, 1003 → 0x00000008#32} = 0x00000000#32 and target == 0x00ffff00#32
+
+-- def assignments := Std.HashMap.ofList [(1001, {bv := 0x00000008#32: BVExpr.PackedBitVec}),
+--                                        ((1002, {bv := 0x00000010#32: BVExpr.PackedBitVec})),
+--                                        ((1003, {bv := 0x00000008#32: BVExpr.PackedBitVec}))]
+
+-- def constFF := BVExpr.const (BitVec.ofNat 8 0xff)
+-- def shift1 : BVExpr 8 := BVExpr.shiftLeft constFF (BVExpr.var 1001 : BVExpr 8)
+-- def shift2 : BVExpr 8 := BVExpr.shiftRight shift1 (BVExpr.var 1002 : BVExpr 8)
+
+-- def finalShift : BVExpr 8 := BVExpr.shiftLeft shift2 (BVExpr.var 1003 : BVExpr 8)
+-- #eval evalBVExpr assignments 32 finalShift
+
+-- #eval (0x00000010#32).toNat
+-- #eval ((0xffff#32).shiftLeft (0x00000008#32).toNat).ushiftRight (0x00000010#32).toNat
+-- #eval (((BitVec.ofInt 32 (-1)).shiftLeft 8).ushiftRight 16).shiftLeft 8
 
 def add (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
   BVExpr.bin op1 BVBinOp.add op2
@@ -204,7 +224,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         match (natVal, bitVal) with
         | (some v, none) =>
               let newId := currState.maxSymVarId + 1
-              let bv := BitVec.ofNat targetWidth v
+              let bv : BitVec currState.originalWidth := BitVec.ofNat currState.originalWidth v
               let newExpr : BVExpr targetWidth := BVExpr.var newId
 
               let updatedState : ParsedBVExprState := { currState with maxSymVarId := newId, symVarToVal := currState.symVarToVal.insert newId {bv := bv: BVExpr.PackedBitVec}}
@@ -244,8 +264,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         : ParseBVExprM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← go distanceExpr | return none
-      let targetWidthExpr : BVExpr distance.width := BVExpr.const (BitVec.ofNat distance.width targetWidth)
-      return some {bvExpr :=  shiftOp inner.bvExpr (BVExpr.bin distance.bvExpr BVBinOp.umod targetWidthExpr), width := inner.width}
+      return some {bvExpr :=  shiftOp inner.bvExpr distance.bvExpr, width := inner.width}
 
 
   getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : ParseBVExprM (Option (BVExprWrapper)) := do
@@ -542,6 +561,8 @@ elab "#reducewidth" expr:term " : " target:term : command =>
 
 
 variable {x y z : BitVec 64}
+#eval BitVec.ofNat 64 16
+
 #reducewidth (x + 0 = x) : 4
 
 #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
@@ -578,7 +599,7 @@ def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: S
       logInfo m! "Running enumerative synthesis"
       let zero := {bv := BitVec.ofNat w 0: BVExpr.PackedBitVec}
       let one := {bv := BitVec.ofNat w 1: BVExpr.PackedBitVec}
-      let minusOne := {bv := BitVec.neg (BitVec.ofNat w 1)}
+      let minusOne := {bv := BitVec.ofInt w (-1) : BVExpr.PackedBitVec}
 
       let specialConstants := [zero, one, minusOne]
 
@@ -593,18 +614,23 @@ def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: S
           let constantsSubstitutions := natToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo.snd))
 
           let substitutedExpr := substituteBVExpr origExpr (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
+          let evaluatedExpr : BitVec target.w := evalBVExpr constants target.w substitutedExpr
 
-          if h : w = target.w then
-            let bv' := h ▸ target.bv
+          if evaluatedExpr == target.bv then
+            validCombos := substitutedExpr :: validCombos
+          -- if h : w = target.w then
+          --   let bv' := h ▸ target.bv
 
-            let firstConstraint := BoolExpr.literal (BVPred.bin (substitutedExpr) BVBinPred.eq (BVExpr.const bv'))
-            let newConstraints := constants.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv)))
-            let newExpr := addConstraints firstConstraint newConstraints
+          --   logInfo m! "Subsitituted expr: {substitutedExpr}"
 
-            if let some _ ← solve newExpr then
-              validCombos := substitutedExpr :: validCombos
+          --   let firstConstraint := BoolExpr.literal (BVPred.bin (substitutedExpr) BVBinPred.eq (BVExpr.const bv'))
+          --   let newConstraints := constants.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv)))
+          --   let newExpr := addConstraints firstConstraint newConstraints
 
-        return validCombos
+          --   if let some _ ← solve newExpr then
+          --     validCombos := substitutedExpr :: validCombos
+
+      return validCombos
 
 
 partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
@@ -663,25 +689,32 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
     let mut results : Std.HashMap Nat (List (BVExpr reducedWidth)) := Std.HashMap.emptyWithCapacity
 
 
-    let filterExprs (exprs : List (BVExpr reducedWidth)) (target : BVExpr.PackedBitVec) : List (BVExpr reducedWidth) :=
-        exprs.filter (λ e =>
-                let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w e
-                evaluatedVal == target.bv
-        )
-         --TODO: we can filter expressions further by checking if they are already subsumed by existing ones. This will help avoid adding functionally equivalent expressions.
+    let filterExprs (exprs : List (BVExpr reducedWidth)) (target : BVExpr.PackedBitVec) : TermElabM (List (BVExpr reducedWidth)) := do
+        let mut res : List (BVExpr reducedWidth) := []
+
+        for expr in exprs do
+          let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
+          if evaluatedVal == target.bv then
+            res := expr :: res
+
+          --TODO: we can filter expressions further by checking if they are already subsumed by existing ones. This will help avoid adding functionally equivalent expressions.
+
+        return res
+
 
     for (targetId, targetVal) in origWidthConstantsExpr.rhs.symVars.toArray do
         -- Inductive synthesis can use the constants in original widths since it does not invoke the solver;
         let exprs := (← inductiveSynthesis origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
 
-        let mut filteredExprs := filterExprs exprs targetVal
+        let mut filteredExprs ← filterExprs exprs targetVal
         match filteredExprs with
-        | [] => logInfo m! "Inductive synthesis failed; performing enumerative synthesis"
+        | [] =>
+                logInfo m! "Inductive synthesis failed; performing enumerative synthesis"
                 let enumSynthesisRes ← enumerativeSynthesis reducedWidthConstantsExpr.lhs.bvExpr reducedWidthConstantsExpr.lhs.inputVars.keys reducedWidthConstantsExpr.lhs.symVars reducedWidthConstantsExpr.rhs.symVars[targetId]!
-                filteredExprs := filterExprs enumSynthesisRes targetVal
+                filteredExprs ← filterExprs enumSynthesisRes targetVal
 
                 if filteredExprs.isEmpty then
-                  throwError m! "Could not synthesize an expression for {targetId} from {reducedWidthConstantsExpr.lhs.bvExpr}"
+                  throwError m! "Could not synthesize an expression for var{targetId} from {reducedWidthConstantsExpr.lhs.bvExpr}"
 
                 results := results.insert targetId filteredExprs
         | _  => results := results.insert targetId filteredExprs
@@ -739,10 +772,12 @@ elab "#iosynthesize" expr:term: command =>
       pure ()
 
 
-variable {x y : BitVec 64}
+variable {x y : BitVec 32}
 #iosynthesize x + 10 + y + 14 = 24
-#iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64
-#iosynthesize (x &&& ((BitVec.ofInt 64 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y)
+#iosynthesize (x <<< 3) <<< 4 = x <<< 7
+#iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
+#iosynthesize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y)
+
 
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
