@@ -139,7 +139,7 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
-      simp only [get?, map, List.getElem?_map, Option.map_eq_some']
+      simp only [get?, map, List.getElem?_map, Option.map_eq_some_iff]
       simp only [get?] at h
       simp [h]
     ⟩
@@ -526,7 +526,7 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some',
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some_iff,
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] at h_get_d ⊢
     intros a b c
     simp [h_get_d c]
@@ -720,14 +720,13 @@ of values `xs`, such that `xs[i]` is an expression of type `Γ[i]`,
 construct an expression of type `Valuation Γ`.
 -/
 def Valuation.mkOfElems (Ty instTyDenote : Expr) (Γ : Array Expr) (xs : Array Expr) : Expr :=
-  let nil := (
-    mkApp (.const ``List.nil [0]) Ty,
-    mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
-  )
-  Prod.snd <| (Γ.zip xs).foldl (init := nil) fun (Γ, V) (ty, x) => (
-      mkApp3 (.const ``List.cons [0]) Ty ty Γ,
-      mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ ty V x
-  )
+  @id (Id _) <| do
+    let mut V_acc := mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
+    let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
+    for (ty, x) in Γ.zip xs do
+      V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ_acc ty V_acc x
+      Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
+    V_acc
 
 end ToExpr
 

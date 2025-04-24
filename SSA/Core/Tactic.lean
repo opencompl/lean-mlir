@@ -102,7 +102,7 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
     let proof :=
       let mp  :=
         ←withLocalDeclD .anonymous e <| fun eProof => do
-          mkLambdaFVars #[eProof] <|← mkLambdaFVars xs <| mkApp eProof V
+          mkLambdaFVars (#[eProof] ++  xs) <| mkApp eProof V
       let mpr :=
         ←withLocalDeclD .anonymous newType <| fun newProof =>
           withLocalDeclD .anonymous VTy <| fun V => do
