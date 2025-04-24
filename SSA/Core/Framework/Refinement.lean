@@ -30,7 +30,17 @@ class HRefinement (α β : Type) where
   -/
   IsRefinedBy : α → β → Prop
 
-@[inherit_doc] infix:50 " ⊑ "  => HRefinement.IsRefinedBy
+/-!
+For now, we define `· ⊑ ·` as a *scoped* notation, meaning you have to write
+`open RefinementNotation` to use it. This is an interim solution until we finish
+porting the existing LLVM dialect automation to use the generic refinement
+typeclass rather than it's own `⊑` notation.
+Once that is done, we will make the notation global.
+-/
+namespace RefinementNotation
+@[inherit_doc] scoped infix:50 " ⊑ "  => HRefinement.IsRefinedBy
+end RefinementNotation
+open RefinementNotation
 
 /--
 The homogenous version of `HRefinement`.
