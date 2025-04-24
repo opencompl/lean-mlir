@@ -11,6 +11,9 @@ import Lean
 
 import SSA.Core.Util
 
+namespace Generalize
+
+
 open Lean
 open Lean.Meta
 open Std.Sat
@@ -136,19 +139,21 @@ def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth:
 
 
 --- Testing evalBVExpr
---Result after evaluating (((0xff#8 << var1001) >> var1002) << var1003)
--- with constants: {1001 → 0x00000008#32, 1002 → 0x00000010#32, 1003 → 0x00000008#32} = 0x00000000#32 and target == 0x00ffff00#32
 
+--(((0xff#8 << 0x00#8) >> var1002) << var1001)
 -- def assignments := Std.HashMap.ofList [(1001, {bv := 0x00000008#32: BVExpr.PackedBitVec}),
 --                                        ((1002, {bv := 0x00000010#32: BVExpr.PackedBitVec})),
 --                                        ((1003, {bv := 0x00000008#32: BVExpr.PackedBitVec}))]
 
--- def constFF := BVExpr.const (BitVec.ofNat 8 0xff)
--- def shift1 : BVExpr 8 := BVExpr.shiftLeft constFF (BVExpr.var 1001 : BVExpr 8)
+-- def zero := BVExpr.const (BitVec.ofNat 8 0)
+-- def one := BVExpr.const (BitVec.ofNat 8 1 )
+-- def minusOne := BVExpr.const (BitVec.ofInt 8 (-1))
+
+-- def shift1 : BVExpr 8 := BVExpr.shiftLeft minusOne (BVExpr.var 1001 : BVExpr 8)
 -- def shift2 : BVExpr 8 := BVExpr.shiftRight shift1 (BVExpr.var 1002 : BVExpr 8)
 
 -- def finalShift : BVExpr 8 := BVExpr.shiftLeft shift2 (BVExpr.var 1003 : BVExpr 8)
--- #eval evalBVExpr assignments 32 finalShift
+-- #eval evalBVExpr assignments 32 shift2
 
 -- #eval (0x00000010#32).toNat
 -- #eval ((0xffff#32).shiftLeft (0x00000008#32).toNat).ushiftRight (0x00000010#32).toNat
@@ -595,40 +600,36 @@ def generateSketches (symVars: List (BVExpr w)) : List (BVExpr w) := Id.run do
 
 def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
                       TermElabM ( List (BVExpr w)) := do
-      --- Special constants
+
       logInfo m! "Running enumerative synthesis"
-      let zero := {bv := BitVec.ofNat w 0: BVExpr.PackedBitVec}
-      let one := {bv := BitVec.ofNat w 1: BVExpr.PackedBitVec}
-      let minusOne := {bv := BitVec.ofInt w (-1) : BVExpr.PackedBitVec}
+      let zero := BVExpr.const (BitVec.ofNat w 0)
+      let one := BVExpr.const (BitVec.ofNat w 1 )
+      let minusOne := BVExpr.const (BitVec.ofInt w (-1))
 
       let specialConstants := [zero, one, minusOne]
 
       let inputCombinations := productsList (List.replicate inputs.length specialConstants)
-      let constsPermutation := List.permutations constants.keys
 
-      let inputsAndConstants := List.product inputCombinations constsPermutation
+      let constantVars : List (BVExpr w) := constants.keys.map (λ c => BVExpr.var c)
+      let specialConstantsSet := Std.HashSet.ofList specialConstants
+      let constantCombinations := (productsList (List.replicate constants.keys.length (constantVars ++ specialConstants))).filter (λ combo =>
+                                                                                                                                      let constantsSet := Std.HashSet.ofList combo
+                                                                                                                                      ! (constantsSet.all (λ c => specialConstantsSet.contains c)))
+      let inputsAndConstants := List.product inputCombinations constantCombinations
 
+      logInfo m! "inputs and constants has with length {inputsAndConstants.length}"
       let mut validCombos : List (BVExpr w) := []
+
       for combo in inputsAndConstants do
-          let inputsSubstitutions := packedBitVecToSubstitutionValue (Std.HashMap.ofList (List.zip inputs combo.fst))
-          let constantsSubstitutions := natToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo.snd))
+          let inputsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip inputs combo.fst))
+          let constantsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo.snd))
 
           let substitutedExpr := substituteBVExpr origExpr (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
           let evaluatedExpr : BitVec target.w := evalBVExpr constants target.w substitutedExpr
 
           if evaluatedExpr == target.bv then
             validCombos := substitutedExpr :: validCombos
-          -- if h : w = target.w then
-          --   let bv' := h ▸ target.bv
 
-          --   logInfo m! "Subsitituted expr: {substitutedExpr}"
-
-          --   let firstConstraint := BoolExpr.literal (BVPred.bin (substitutedExpr) BVBinPred.eq (BVExpr.const bv'))
-          --   let newConstraints := constants.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv)))
-          --   let newExpr := addConstraints firstConstraint newConstraints
-
-          --   if let some _ ← solve newExpr then
-          --     validCombos := substitutedExpr :: validCombos
 
       return validCombos
 
@@ -655,28 +656,33 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
               if constId == parent then -- Avoid runaway expressions
                 continue
 
+              let newVar := BVExpr.var constId
               if constVal == target then
-                res := BVExpr.var constId :: res
+                res := newVar :: res
                 continue
+
 
               let newTarget := (updatePackedBVWidth target constVal.w)
 
               if h : constVal.w = newTarget.w then
                 let targetBv := h ▸ newTarget.bv
 
+                if BitVec.not constVal.bv == targetBv then
+                  res := BVExpr.un BVUnOp.not newVar :: res
+
                 -- C + X = Target
                 let addRes ← inductiveSynthesis expr inputs constants {bv := targetBv - constVal.bv} (depth-1) constId
-                res := res ++ addRes.map (λ resExpr => BVExpr.bin (BVExpr.var constId) BVBinOp.add resExpr)
+                res := res ++ addRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add resExpr)
 
                 -- C - X = Target
                 let subRes ← inductiveSynthesis expr inputs constants {bv := constVal.bv - targetBv} (depth-1) constId
-                res := res ++ subRes.map (λ resExpr => BVExpr.bin (BVExpr.var constId) BVBinOp.add (negate resExpr))
+                res := res ++ subRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add (negate resExpr))
 
                 -- X - C = Target
                 let subRes' ← inductiveSynthesis expr inputs constants {bv := targetBv + constVal.bv}  (depth-1) constId
-                res := res ++ subRes'.map (λ resExpr => BVExpr.bin (resExpr) BVBinOp.add (negate (BVExpr.var constId)))
+                res := res ++ subRes'.map (λ resExpr => BVExpr.bin (resExpr) BVBinOp.add (negate newVar))
 
-                --TODO: Also use unary and bitwise operators, include multiplication and division
+                --TODO: Include multiplication and division; bitwise operators?
                 else
                     throwError m! "Width mismatch for expr : {expr} and target: {target}"
             return res
@@ -694,8 +700,10 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
 
         for expr in exprs do
           let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
+
           if evaluatedVal == target.bv then
-            res := expr :: res
+              res := expr :: res
+
 
           --TODO: we can filter expressions further by checking if they are already subsumed by existing ones. This will help avoid adding functionally equivalent expressions.
 
@@ -706,7 +714,7 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
         -- Inductive synthesis can use the constants in original widths since it does not invoke the solver;
         let exprs := (← inductiveSynthesis origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
 
-        let mut filteredExprs ← filterExprs exprs targetVal
+        let mut filteredExprs := [] --filterExprs exprs targetVal
         match filteredExprs with
         | [] =>
                 logInfo m! "Inductive synthesis failed; performing enumerative synthesis"
@@ -753,7 +761,7 @@ elab "#iosynthesize" expr:term: command =>
            let mut constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
 
            if constantAssignments.isEmpty then
-             logInfo m! "Constant values in width {targetWidth}: {constantAssignments}"
+             logInfo m! "Constant values in width {targetWidth} {constantAssignments}"
              constantAssignments := state.symVarToVal :: constantAssignments
            else
              logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
@@ -768,17 +776,25 @@ elab "#iosynthesize" expr:term: command =>
             logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {exprSynthesisResults}"
 
       | _ =>
-            logInfo m! "Could not match"
+            throwError m! "Could not match"
       pure ()
 
 
 variable {x y : BitVec 32}
+#iosynthesize x + 10 + y + 1 = 10
 #iosynthesize x + 10 + y + 14 = 24
-#iosynthesize (x <<< 3) <<< 4 = x <<< 7
+
 #iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
 #iosynthesize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y)
 
+#iosynthesize (x <<< 3) <<< 4 = x <<< 7
+#iosynthesize (x + 5) + (y + 1)  =  x + y + 6
+#iosynthesize (x + 5) - (y + 1)  =  x - y + 4
 
+-- #iosynthesize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) == (x <<< 8) &&& 0xFF00#32
+
+-- zext( (trunc(𝑎 : i32) ≪ 8) ) ⇒
+-- (𝑎 ≪ 8) & 0xFF00
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
               TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
@@ -1158,3 +1174,6 @@ variable {x y : BitVec 32}
 -- ( (𝑥 : i32 %𝑠 8) <𝑠 0) ? ( (𝑥 %𝑠 8) +nsw 8) : (𝑥 %𝑠 8) ⇒ 𝑥 & 7 --TODO: Dealing with conditionals?; Not sure how to deal with the ternary operator in Lean
 -- ( (𝑥 : i32 & 0xFFFF0000) = 0x11220000) | ( (𝑥 & 0xFFFFFF00) = 0x11223300) ⇒ (𝑥 & 0xFFFF0000) = 0x11220000 -- TODO: need to deal with boolean equal and neq
 -- (y : i128 + (𝑥 : i128 × (−1) ≪𝑢 64) ) ≪ 64 ⇒ y ≪ 64 -- Hydra width-independence failure
+
+
+end Generalize
