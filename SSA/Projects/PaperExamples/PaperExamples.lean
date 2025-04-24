@@ -20,11 +20,14 @@ theorem BitVec.ofInt_zero (w : ℕ) :
     BitVec.ofInt w 0 = 0 :=
   rfl
 
+
 namespace ToyNoRegion
+
 
 inductive Ty
   | int
   deriving DecidableEq, Repr, Lean.ToExpr
+
 
 @[reducible]
 instance : TyDenote Ty where
@@ -44,6 +47,10 @@ abbrev Simple : Dialect where
 instance : DialectToExpr Simple where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``Simple []
+
+
+instance : ToString (ToyNoRegion.Ty) where
+  toString t := repr t |>.pretty
 
 def_signature for Simple
   | .add      => (.int, .int) → .int

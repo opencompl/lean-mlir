@@ -5,11 +5,11 @@ import SSA.Core.MLIRSyntax.AST
 
 namespace MLIR.AST
 
-inductive TransformError (Ty : Type)
+inductive TransformError
   | nameAlreadyDeclared (var : String)
   | undeclaredName (var : String)
   | indexOutOfBounds (name : String) (index len : Nat)
-  | typeError (expected got : Ty)
+  | typeError (expected got : String)
   | widthError {φ} (expected got : Width φ)
   | unsupportedUnaryOp
   | unsupportedBinaryOp (error : String)
@@ -19,7 +19,7 @@ inductive TransformError (Ty : Type)
 
 namespace TransformError
 
-instance [Repr Ty] : Repr (TransformError Ty) where
+instance : Repr (TransformError) where
   reprPrec err _ := match err with
     | nameAlreadyDeclared var => f!"Already declared {var}, shadowing is not allowed"
     | undeclaredName name => f!"Undeclared name '{name}'"

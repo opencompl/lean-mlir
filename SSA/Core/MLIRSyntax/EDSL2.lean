@@ -50,7 +50,7 @@ def elabIntoComObj (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
 
   withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} parsing AST") <| do
     let res ← match mkCom ast with
-      | .error (e : TransformError d.Ty) => throwError (repr e)
+      | .error (e : TransformError) => throwError (repr e)
       | .ok res => pure res
     trace[LeanMLIR.Elab] "context: {repr res.1}"
     pure res
