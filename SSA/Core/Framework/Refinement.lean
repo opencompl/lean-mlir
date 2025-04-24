@@ -70,20 +70,10 @@ refinement of pure values `x, y` is defined as `pure x ⊑ pure y.`
 -/
 class DialectHRefinement (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote d'.Ty] where
   /--
-  `IsTypeCompatible t u` implies that the semantics of types `t` and `u` are comparable,
-  in the sense that it is valid to ask whether an inhabitant of `⟦t⟧` is refined
-  by an inhabitant of `⟦u⟧`.
-
-  When using the `· ⊑ ·` refinement notation, the precondition that the relevant
-  types are compatible is stated using the `Fact` typeclass.
-  Hence, when defining an instance of `DialectHRefinement` it is also expected that
-  you provide relevant instances of `Fact (IsTypeCompatible _ _)`.
-  Do recall that, as per the `Fact` documentation, such instances ought to be
-  either `local` or `scoped`!
+  We say that `a` is refined by `b`, written as `a ⊑ b`, when
+  every observable behaviour of `b` is allowed by `a`.
   -/
-  IsTypeCompatible : d.Ty → d'.Ty → Prop
-  -- TODO: the following ought to be `IsRefinedBy` by the naming convention.
-  IsRefinedBy {t u} : IsTypeCompatible t u → d.m ⟦t⟧ → d'.m ⟦u⟧ → Prop
+  IsRefinedBy {t : d.Ty} {u : d'.Ty} : d.m ⟦t⟧ → d'.m ⟦u⟧ → Prop
 open DialectHRefinement
 
 /-!
@@ -138,12 +128,12 @@ In the bundled version, we could shorten that to simply:
 -/
 
 namespace DialectHRefinement
-variable {d d'} [TyDenote d.Ty] [TyDenote d'.Ty] [DialectHRefinement d d']
-variable {t : d.Ty} {u : d'.Ty} [h : Fact (IsTypeCompatible t u)]
+variable {d d' : Dialect} [TyDenote d.Ty] [TyDenote d'.Ty] [DialectHRefinement d d']
+variable {t : d.Ty} {u : d'.Ty}
 
 /-- Refinement for monadic values -/
 instance instRefinementMonadic : HRefinement (d.m ⟦t⟧) (d'.m ⟦u⟧) where
-  IsRefinedBy := DialectHRefinement.IsRefinedBy h.out
+  IsRefinedBy := DialectHRefinement.IsRefinedBy
 
 variable [Pure d.m] [Pure d'.m]
 
@@ -185,24 +175,15 @@ end Lemmas
 
 end DialectHRefinement
 
--- TODO: homogeneous `DialectRefinement` convenience class
-
 /--
-A lawful homogenous (i.e., within a single dialect) refinement instance is one where
-the type compatiblity relation is reflexive.
-
-NOTE: any use of `LawfulDialectRefinement` in a bound should likely be followed by
-`open LawfulDialectRefinement.FactInstances` to make the relevant (scoped) `Fact`
-instances available.
+A lawful homogenous (i.e., within a single dialect) refinement instance is one
+where refinement is reflexive and transitive (i.e., it is a preorder).
 -/
-class LawfulDialectRefinement (d : Dialect) [TyDenote d.Ty] extends DialectHRefinement d d where
-  isTypeCompatible_rfl : ∀ t, IsTypeCompatible t t
+class LawfulDialectRefinement (d : Dialect) [TyDenote d.Ty] [DialectHRefinement d d] where
+  isRefinedBy_rfl : ∀ {t : d.Ty} (x : d.m ⟦t⟧), x ⊑ x
+  isRefinedBy_trans : ∀ {t u v : d.Ty} (x : d.m ⟦t⟧) (y : d.m ⟦u⟧) (z : d.m ⟦v⟧),
+    x ⊑ y → y ⊑ z → x ⊑ z
 
-namespace LawfulDialectRefinement.FactInstances
-
-/-- See `Fact` documentation for why this must be a scoped instance -/
-scoped instance [TyDenote d.Ty] [LawfulDialectRefinement d] {t : d.Ty} : Fact (IsTypeCompatible t t) where
-  out := LawfulDialectRefinement.isTypeCompatible_rfl t
 
 /-!
 **How to define refinement on computations?**
@@ -236,10 +217,11 @@ really ought to be monotone in this way, so it might not be bad to force a proof
 In particular, VeLLVM had a bug in it's semantics which meant it was *not* monotone,
 but this really was a bug. The intention of LLVM semantics is that they are monotone.
 
-
+Note that regardless, the statement of this property requires a notion of semantics,
+and thus cannot be stated in the current file, unless we re-order the imports,
+which might not actually be a bad idea.
 -/
 
-end LawfulDialectRefinement.FactInstances
 
 
 
