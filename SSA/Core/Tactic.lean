@@ -153,7 +153,4 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" h:Lean.Par
 /-- `simp_peephole at` with no extra user defined theorems. -/
 macro "simp_peephole" "at" h:Lean.Parser.Tactic.locationHyp : tactic => `(tactic| simp_peephole [] at $h)
 
-
-
-
 end SSA
