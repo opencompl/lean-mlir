@@ -122,14 +122,14 @@ section PreOrder
 variable {α : Type} [HRefinement α α]
 
 /--
-Refinement on poison values is reflexive if refinement of the underlying values is reflexive.
+Refinement on poison values is reflexive iff refinement of the underlying values is reflexive.
 -/
 theorem isRefinedBy_refl (h : ∀ (a : α), a ⊑ a) :
     ∀ (a? : PoisonOr α), a? ⊑ a? := by
   intro a; cases a <;> simp [h]
 
 /--
-Refinement on poison values is transitive if refinement of the underlying values is transitive.
+Refinement on poison values is transitive iff refinement of the underlying values is transitive.
 -/
 theorem isRefinedBy_trans (h : ∀ (a b c : α), a ⊑ b → b ⊑ c → a ⊑ c) :
     ∀ (a? b? c? : PoisonOr α), a? ⊑ b? → b? ⊑ c? → a? ⊑ c? := by
@@ -149,6 +149,36 @@ instance {α β : Type} [HRefinement α β] [DecidableRel (· ⊑ · : α → β
   | .value a, .value b => decidable_of_decidable_of_iff (p := a ⊑ b) <| by simp
 
 end Refinement
+
+/-! ## isPoison & getValue-/
+
+
+/-- Returns whether the element is poison. -/
+def isPoison : PoisonOr α → Bool
+  | poison => true
+  | value _ => false
+
+/-- Returns the value of the element, or a default value if it is poison. -/
+def getValue [Inhabited α] : PoisonOr α → α
+  | poison => default
+  | value a => a
+
+section Lemmas
+variable {a : α}
+
+@[simp] theorem isPoison_poison : isPoison (@poison α) = true := rfl
+@[simp] theorem isPoison_value : isPoison (value a) = false := rfl
+@[simp] theorem getValue_value [Inhabited α] : (value a).getValue = a := rfl
+
+variable {i : HRefinement α β} (a : PoisonOr α) (b : PoisonOr β) in
+theorem isRefinedBy_iff {i : Inhabited α} {i :Inhabited β} :
+    a ⊑ b
+    ↔ (b.isPoison → a.isPoison)
+      ∧ (a.isPoison = false → a.getValue ⊑ b.getValue) := by
+  cases a <;> cases b <;> simp
+
+end Lemmas
+
 
 /-! ## OfParts -/
 
@@ -170,26 +200,12 @@ See also [`poisonIf`].
 def ofParts (isPoison : Bool) (val : α) : PoisonOr α :=
   poisonIf isPoison <| value val
 
-/-- Returns whether the element is poison. -/
-def isPoison : PoisonOr α → Bool
-  | poison => true
-  | value _ => false
-
-/-- Returns the value of the element, or a default value if it is poison. -/
-def getValue [Inhabited α] : PoisonOr α → α
-  | poison => default
-  | value a => a
-
 section OfPartsLemmas
 
 @[simp] theorem poisonIf_true : poisonIf true x = poison := rfl
 @[simp] theorem poisonIf_false : poisonIf false x = x := rfl
 @[simp] theorem ofParts_true : ofParts true val = poison := rfl
 @[simp] theorem ofParts_false : ofParts false val = value val := rfl
-
-@[simp] theorem isPoison_poison : isPoison (@poison α) = true := rfl
-@[simp] theorem isPoison_value : isPoison (value a) = false := rfl
-@[simp] theorem getValue_value [Inhabited α] {a : α} : (value a).getValue = a := rfl
 
 @[simp] theorem isPoison_ofParts_bind :
     (ofParts xPoison x >>= f).isPoison =
