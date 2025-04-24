@@ -40,6 +40,11 @@ def casesOn'.{u} {α : Type} {motive : PoisonOr α → Sort u}
   | .poison => poison
   | .value a => value a
 
+@[simp] theorem value_inj {a b : α} : value a = value b ↔ a = b := by
+  constructor
+  · rintro ⟨⟩; rfl
+  · exact fun h => h ▸ rfl
+
 /-! ### Formatting & Priting instances -/
 instance [ToString α] : ToString (PoisonOr α) where
   toString
@@ -82,6 +87,29 @@ instance : LawfulMonad PoisonOr where
   pure_bind _ _ := value_bind
   bind_assoc := by rintro _ _ _ (_|_) _ _ <;> rfl
 
+/-! ## isPoison & getValue-/
+
+/-- Returns whether the element is poison. -/
+def isPoison : PoisonOr α → Bool
+  | poison => true
+  | value _ => false
+
+/-- Returns the value of the element, or a default value if it is poison. -/
+def getValue [Inhabited α] : PoisonOr α → α
+  | poison => default
+  | value a => a
+
+section Lemmas
+variable {a : α}
+
+@[simp] theorem isPoison_poison : isPoison (@poison α) = true := rfl
+@[simp] theorem isPoison_value : isPoison (value a) = false := rfl
+
+@[simp] theorem getValue_value [Inhabited α] : (value a).getValue = a := rfl
+@[simp] theorem getValue_poison [Inhabited α] : (@poison α).getValue = default := rfl
+
+end Lemmas
+
 /-! ### Refinement -/
 inductive IsRefinedBy [HRefinement α β] : PoisonOr α → PoisonOr β → Prop
   /-- `poison` is refined by anything -/
@@ -90,7 +118,7 @@ inductive IsRefinedBy [HRefinement α β] : PoisonOr α → PoisonOr β → Prop
   | bothValues : a ⊑ b → IsRefinedBy (value a) (value b)
 
 section Refinement
-variable {a b} [HRefinement α β] (a? : PoisonOr α) (b? : PoisonOr β)
+variable [HRefinement α β] (a? : PoisonOr α) (b? : PoisonOr β)
 
 instance : HRefinement (PoisonOr α) (PoisonOr β) where
   IsRefinedBy := IsRefinedBy
@@ -107,14 +135,21 @@ instance : HRefinement (PoisonOr α) (PoisonOr β) where
 @[simp] theorem not_value_isRefinedBy_poison (a : α) : ¬value a ⊑ (@poison β) := by
   rintro ⟨⟩
 
---TODO: this was not tagged `@[simp]` originally, but it seems like it'd make a good simp-lemma
+--TODO: The `Option` analogue of this lemma was not tagged `@[simp]`,
+--      but it seems like it'd make a good simp-lemma.
 theorem isRefinedBy_poison : a? ⊑ (@poison β) ↔ a? = poison := by
   cases a?
   · simp
   · simp only [not_value_isRefinedBy_poison, false_iff]; rintro ⟨⟩
 
+theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
+    a? ⊑ b?
+    ↔ (b?.isPoison → a?.isPoison)
+      ∧ (a?.isPoison = false → a?.getValue ⊑ b?.getValue) := by
+  cases a? <;> cases b? <;> simp
+
 section PreOrder
-variable {α : Type} [HRefinement α α]
+variable {α : Type} [HRefinement α α] {a? : PoisonOr α}
 
 /--
 Refinement on poison values is reflexive if refinement of the underlying values is reflexive.
@@ -144,3 +179,6 @@ instance {α β : Type} [HRefinement α β] [DecidableRel (· ⊑ · : α → β
   | .value a, .value b => decidable_of_decidable_of_iff (p := a ⊑ b) <| by simp
 
 end Refinement
+
+
+end PoisonOr
