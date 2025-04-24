@@ -2,21 +2,66 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.Tactic.SimpLLVM
 import SSA.Projects.InstCombine.LLVM.Semantics
 
 set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 
+open PoisonOr
+
+-- set_option trace.LeanMLIR.Elab true in
+-- set_option pp.analyze true in
 theorem bv_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
       LLVM.add (LLVM.add (LLVM.xor (LLVM.and e_1 e) e) (LLVM.const? w 1)) e_2 ⊑ LLVM.sub e_2 (LLVM.or e_1 (LLVM.not e)) := by
+  simp_llvm
+  intros;
+  simp only [PoisonOr.ofParts_isRefinedBy_ofParts_iff]
+  and_intros
+  · bv_decide
+  simp only [Bool.or_self_left, Bool.or_eq_false_iff, BitVec.ofInt_ofNat, and_imp]
+  repeat rintro rfl
+  simp_llvm
+  stop
+
+  simp only [Bool.false_eq_true, false_and, reduceIte, value_bind,
+    LLVM.IntW.forall_iff_forall_ofParts]
+  intros;
+  rw [isRefinedBy_iff_ofParts_isRefinedBy_ofParts]
+  -- ^^ TODO: this cannot be simp, as it would recurse infinitely.
+  --          We should write a simproc, that checks if either side is already ofParts,
+  --          and applies the rewrite if not.
+  --          `rw` has the downside of not working under binders (hence the `intros`)
+  simp only [isPoison_ofParts_bind, isPoison_value]
+  repeat rw [ofParts_getValue_bind_eq (by bv_decide)]
+  simp only [getValue_value, ofParts_isRefinedBy_ofParts_iff, LLVM.IntW.bitvec_isRefinedBy_iff]
+
+  and_intros
+  · bv_decide
+  · simp only [Bool.or_false, Bool.or_self_left, Bool.or_eq_false_iff, BitVec.ofInt_ofNat, and_imp,
+    forall_self_imp]
+    repeat rintro rfl
+    -- simp only [forall_const]
+    alive_auto
+
+
+
+
+
+
+
+  stop
+
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
   simp_alive_split
   try alive_auto
   all_goals sorry
+
+#exit
 
 theorem bv_AddSub_1152 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.add e_1 e ⊑ LLVM.xor e_1 e := by
