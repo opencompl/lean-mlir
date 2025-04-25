@@ -151,7 +151,7 @@ inductive MOp (φ : Nat) : Type
   | unary   (w : Width φ) (op : MOp.UnaryOp φ) :  MOp φ
   | binary  (w : Width φ) (op : MOp.BinaryOp) :  MOp φ
   | select  (w : Width φ) : MOp φ
-  | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
+  | icmp    (c : IntPred) (w : Width φ) : MOp φ
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
@@ -310,7 +310,7 @@ namespace Op
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
 @[match_pattern] abbrev copy   : Nat → Op := MOp.copy   ∘ .concrete
 
-@[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
+@[match_pattern] abbrev icmp (c : IntPred)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
 /- This operation is separate from the others because it takes in a flag: nneg. -/
