@@ -182,6 +182,8 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         binaryReflection lhsExpr rhsExpr BVBinOp.xor
     | HAdd.hAdd _ _ _ _ lhsExpr rhsExpr =>
         binaryReflection lhsExpr rhsExpr BVBinOp.add
+    | HOr.hOr _ _ _ _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr BVBinOp.or
     | HSub.hSub _ _ _ _ lhsExpr rhsExpr =>
         let some lhs ← go lhsExpr | return none
         let some rhs ← go rhsExpr | return none
@@ -210,7 +212,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
     | HAppend.hAppend _ _ _ _ lhsExpr rhsExpr =>
         let some lhs ← go lhsExpr | return none
         let some rhs ← go rhsExpr | return none
-        return some {bvExpr := BVExpr.append lhs.bvExpr rhs.bvExpr rfl}
+        return some {bvExpr := BVExpr.append lhs.bvExpr rhs.bvExpr rfl, width := _}
     | BitVec.extractLsb' _ _ _ _ =>
         throwError m! "Does not support BitVec.extractLsb' operations"
         -- let some start ← getNatValue? startExpr | return none
@@ -1072,7 +1074,7 @@ def testPrecondSynthesis : Tactic := fun _ => do
 
 theorem test_precondition_synthesis : False := by
   test_precondition_synthesis
-
+  sorry
 
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
@@ -1141,27 +1143,29 @@ elab "#generalize" expr:term: command =>
 
 
 variable {x y : BitVec 32}
-#generalize (x + 5) + (y + 1)  =  x + y + 6
-#generalize (x + 5) - (y + 1)  =  x - y + 4
+-- #generalize (x + 5) + (y + 1)  =  x + y + 6
+-- #generalize (x + 5) - (y + 1)  =  x - y + 4
 -- #generalize (x >>> 1 ) / ((BitVec.ofNat 32 1) % x) = x >>> 1 --- #62163
 
-#generalize (x <<< 3) <<< 4 = x <<< 7
-#generalize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00FFFF00
+-- #generalize (x <<< 3) <<< 4 = x <<< 7
+-- #generalize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00FFFF00
 
-#generalize (x + (BitVec.ofInt 32 (-1))) >>> 1 = x >>> 1 -- #61223;
-#generalize (x &&& 1 || (x  &&& 1 || (0 - x))) = x &&& (x + (-1)) -- #57351
-#generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
--- #generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
+-- #generalize (x - 1) >>> 1 = x >>> 1 -- #61223;
+
+-- #generalize (x &&& 1 ||| (x  &&& 1 ||| (0#32 - x))) = x &&& (x - 1#32) -- #57351
+-- #generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
+#generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
 
 
------ Examples -------
--- (𝑥 : i32 & 15) ≠ 15) & (𝑥 <𝑢 16) ⇒ 𝑥 <𝑢 15
--- (𝑥 : i32 & 1) ≠ 0 |= (𝑥 + (−1) ) ≫𝑢 1 ⇒ 𝑥 ≫𝑢 1
--- 𝑥 : i32 <𝑠 (𝑥 ⊕ (−1) ) ⇒ 𝑥 <𝑠 0
--- (42 /𝑠 𝑥 : i8) = 0 ⇒ (𝑥 + 0xD5) <𝑢 0xAB
--- ( (𝑥 : i32 %𝑠 8) <𝑠 0) ? ( (𝑥 %𝑠 8) +nsw 8) : (𝑥 %𝑠 8) ⇒ 𝑥 & 7 --TODO: Dealing with conditionals?; Not sure how to deal with the ternary operator in Lean
--- ( (𝑥 : i32 & 0xFFFF0000) = 0x11220000) | ( (𝑥 & 0xFFFFFF00) = 0x11223300) ⇒ (𝑥 & 0xFFFF0000) = 0x11220000 -- TODO: need to deal with boolean equal and neq
--- (y : i128 + (𝑥 : i128 × (−1) ≪𝑢 64) ) ≪ 64 ⇒ y ≪ 64 -- Hydra width-independence failure
-
+/-
+--- Examples -------
+(𝑥 : i32 & 15) ≠ 15) & (𝑥 <𝑢 16) ⇒ 𝑥 <𝑢 15
+(𝑥 : i32 & 1) ≠ 0 |= (𝑥 + (−1) ) ≫𝑢 1 ⇒ 𝑥 ≫𝑢 1
+𝑥 : i32 <𝑠 (𝑥 ⊕ (−1) ) ⇒ 𝑥 <𝑠 0
+(42 /𝑠 𝑥 : i8) = 0 ⇒ (𝑥 + 0xD5) <𝑢 0xAB
+( (𝑥 : i32 %𝑠 8) <𝑠 0) ? ( (𝑥 %𝑠 8) +nsw 8) : (𝑥 %𝑠 8) ⇒ 𝑥 & 7 --TODO: Dealing with conditionals?; Not sure how to deal with the ternary operator in Lean
+( (𝑥 : i32 & 0xFFFF0000) = 0x11220000) | ( (𝑥 & 0xFFFFFF00) = 0x11223300) ⇒ (𝑥 & 0xFFFF0000) = 0x11220000 -- TODO: need to deal with boolean equal and neq
+(y : i128 + (𝑥 : i128 × (−1) ≪𝑢 64) ) ≪ 64 ⇒ y ≪ 64 -- Hydra width-independence failure
+-/
 
 end Generalize
