@@ -582,7 +582,7 @@ variable {x y z : BitVec 64}
 -- - #reducewidth ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128 : 8
 
 def binaryOperations : List (BVExpr w → BVExpr w → BVExpr w) :=
-  [add, subtract] -- TODO: Needs to support more operators
+  [add, subtract] -- TODO: Support more operators
 
 
 def generateSketches (symVars: List (BVExpr w)) : List (BVExpr w) := Id.run do
@@ -598,7 +598,7 @@ def generateSketches (symVars: List (BVExpr w)) : List (BVExpr w) := Id.run do
 
           res
 
-def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
+def enumerativeSynthesis (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
                       TermElabM ( List (BVExpr w)) := do
 
       logInfo m! "Running enumerative synthesis"
@@ -611,25 +611,44 @@ def enumerativeSynthesis (origExpr: BVExpr w)  (inputs: List Nat)  (constants: S
       let inputCombinations := productsList (List.replicate inputs.length specialConstants)
 
       let constantVars : List (BVExpr w) := constants.keys.map (λ c => BVExpr.var c)
-      let specialConstantsSet := Std.HashSet.ofList specialConstants
-      let constantCombinations := (productsList (List.replicate constants.keys.length (constantVars ++ specialConstants))).filter (λ combo =>
-                                                                                                                                      let constantsSet := Std.HashSet.ofList combo
-                                                                                                                                      ! (constantsSet.all (λ c => specialConstantsSet.contains c)))
-      let inputsAndConstants := List.product inputCombinations constantCombinations
+      let constantsPermutation := List.permutations constantVars
 
-      logInfo m! "inputs and constants has with length {inputsAndConstants.length}"
+      let inputsAndConstants := List.product inputCombinations constantsPermutation
+      logInfo m! "inputs and constants has length {inputsAndConstants.length}"
+
       let mut validCombos : List (BVExpr w) := []
 
+      -- First process the LHS sketch. Here, we only replace inputs with special constants and symbolic constants with other symbolic constants to reduce the search space.
+      --
       for combo in inputsAndConstants do
           let inputsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip inputs combo.fst))
           let constantsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo.snd))
 
-          let substitutedExpr := substituteBVExpr origExpr (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
+          let substitutedExpr := substituteBVExpr lhsSketch (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
           let evaluatedExpr : BitVec target.w := evalBVExpr constants target.w substitutedExpr
 
           if evaluatedExpr == target.bv then
             validCombos := substitutedExpr :: validCombos
 
+      if !validCombos.isEmpty then
+          return validCombos
+
+      -- Then process the enumerated sketches. We replace symbolic constants with both special constants and other symbolic constants.
+      --- This enables us synthesize values like Cx + 0 = Target
+      -- TODO: Do we want to process enumerated sketches even if we already have valid combo(s)?
+      let enumeratedSketches := generateSketches constantVars
+      let specialConstantsSet := Std.HashSet.ofList specialConstants
+      let constantsCombinations := (productsList (List.replicate constants.keys.length (constantVars ++ specialConstants))).filter (λ combo => let constantsSet := Std.HashSet.ofList combo
+                                                                                                                                               ! (constantsSet.all (λ c => specialConstantsSet.contains c)))
+      for combo in constantsCombinations do
+        let constantsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo))
+
+        for sketch in enumeratedSketches do
+          let substitutedExpr := substituteBVExpr sketch constantsSubstitutions
+          let evaluatedExpr : BitVec target.w := evalBVExpr constants target.w substitutedExpr
+
+            if evaluatedExpr == target.bv then
+              validCombos := substitutedExpr :: validCombos
 
       return validCombos
 
@@ -701,12 +720,11 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
         for expr in exprs do
           let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
 
+          logInfo m! "Evaluated {expr} with values {origWidthConstantsExpr.lhs.symVars} and got result: {evaluatedVal}; Target = {target.bv}"
           if evaluatedVal == target.bv then
               res := expr :: res
 
-
           --TODO: we can filter expressions further by checking if they are already subsumed by existing ones. This will help avoid adding functionally equivalent expressions.
-
         return res
 
 
@@ -714,13 +732,16 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
         -- Inductive synthesis can use the constants in original widths since it does not invoke the solver;
         let exprs := (← inductiveSynthesis origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
 
-        let mut filteredExprs := [] --filterExprs exprs targetVal
+        let mut filteredExprs ← filterExprs exprs targetVal
         match filteredExprs with
         | [] =>
                 logInfo m! "Inductive synthesis failed; performing enumerative synthesis"
                 let enumSynthesisRes ← enumerativeSynthesis reducedWidthConstantsExpr.lhs.bvExpr reducedWidthConstantsExpr.lhs.inputVars.keys reducedWidthConstantsExpr.lhs.symVars reducedWidthConstantsExpr.rhs.symVars[targetId]!
-                filteredExprs ← filterExprs enumSynthesisRes targetVal
 
+                if enumSynthesisRes.isEmpty then
+                  throwError m! "No candidate expressions generated from enumerative synthesis"
+
+                filteredExprs ← filterExprs enumSynthesisRes targetVal
                 if filteredExprs.isEmpty then
                   throwError m! "Could not synthesize an expression for var{targetId} from {reducedWidthConstantsExpr.lhs.bvExpr}"
 
@@ -781,20 +802,16 @@ elab "#iosynthesize" expr:term: command =>
 
 
 variable {x y : BitVec 32}
-#iosynthesize x + 10 + y + 1 = 10
+#iosynthesize x + 10 + 1 =  x + 9 + 2
 #iosynthesize x + 10 + y + 14 = 24
 
-#iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
 #iosynthesize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y)
 
 #iosynthesize (x <<< 3) <<< 4 = x <<< 7
 #iosynthesize (x + 5) + (y + 1)  =  x + y + 6
 #iosynthesize (x + 5) - (y + 1)  =  x - y + 4
-
+#iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
 -- #iosynthesize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) == (x <<< 8) &&& 0xFF00#32
-
--- zext( (trunc(𝑎 : i32) ≪ 8) ) ⇒
--- (𝑎 ≪ 8) & 0xFF00
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
               TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
