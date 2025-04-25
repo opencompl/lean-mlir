@@ -638,8 +638,8 @@ def enumerativeSynthesis (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: 
       -- TODO: Do we want to process enumerated sketches even if we already have valid combo(s)?
       let enumeratedSketches := generateSketches constantVars
       let specialConstantsSet := Std.HashSet.ofList specialConstants
-      let constantsCombinations := (productsList (List.replicate constants.keys.length (constantVars ++ specialConstants))).filter (λ combo => let constantsSet := Std.HashSet.ofList combo
-                                                                                                                                               ! (constantsSet.all (λ c => specialConstantsSet.contains c)))
+      let constantsCombinations := (productsList (List.replicate constants.keys.length (constantVars ++ specialConstants))).filter (λ combo => let comboSet := Std.HashSet.ofList combo
+                                                                                                                                               !(comboSet.all (λ c => specialConstantsSet.contains c)))
       for combo in constantsCombinations do
         let constantsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo))
 
@@ -896,6 +896,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
 
           let zero := BVExpr.const (BitVec.ofNat bitwidth 0)
           let one := BVExpr.const (BitVec.ofNat bitwidth 1)
+          let minusOne := BVExpr.const (BitVec.ofInt bitwidth (-1))
 
           let specialConstants := [zero, one]
           let sketchInputs := (constants.map (fun c => BVExpr.var c)) ++ specialConstants
@@ -905,25 +906,22 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           let specialConstantsSet := Std.HashSet.ofList specialConstants
           inputCombinations := inputCombinations.filter (fun combo =>
                                                             let comboSet := Std.HashSet.ofList combo
-                                                            comboSet.size > 1 && comboSet != specialConstantsSet
+                                                            !(comboSet.all (λ c => specialConstantsSet.contains c))
                                                       )
 
           let mut preconditionCandidates : List BVLogicalExpr := []
-
+          let zeroBv := BitVec.ofNat bitwidth 0
           -- Check for power of 2: const & (const - 1) == 0
           for (const, _) in positiveExample.toArray do
-            let lhs := BVExpr.bin (BVExpr.var const) BVBinOp.and (BVExpr.bin (BVExpr.var const) BVBinOp.add (negate one))
-            let powerOf2 := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq zero)
+            let lhs := BVExpr.bin (BVExpr.var const) BVBinOp.and (BVExpr.bin (BVExpr.var const) BVBinOp.add minusOne)
 
-            let substitutedExpr := substitute powerOf2 (packedBitVecToSubstitutionValue positiveExample)
-            if let some _ ← solve substitutedExpr then
-                preconditionCandidates := powerOf2 :: preconditionCandidates
+            let evaluatedExpr := evalBVExpr positiveExample bitwidth lhs
+            if evaluatedExpr == zeroBv then
+              let powerOf2 := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq zero)
+              preconditionCandidates := powerOf2 :: preconditionCandidates
 
           let eqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
-
-          let neqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.not (BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero))
 
           let ltZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.ult zero)
@@ -940,40 +938,26 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           for sketch in expressionSketches do
             for combo in inputCombinations do
               let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
-              let substitutedSymbolicVarsExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
+              let substitutedExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
 
-              let positiveExpr := substituteBVExpr substitutedSymbolicVarsExpr (packedBitVecToSubstitutionValue positiveExample)
+              let evaluatedPositiveEx := evalBVExpr positiveExample bitwidth substitutedExpr
 
-              let mut eqToExpr := eqToZero positiveExpr
-              let mut ltExpr := ltZero positiveExpr
-              let mut gtExpr := gtZero positiveExpr
-              let mut lteExpr := lteZero positiveExpr
-              let mut gteExpr := gteZero positiveExpr
+              let evaluatedNegativeExs := negativeExamples.map (λ neg => evalBVExpr neg bitwidth substitutedExpr)
 
-              for negativeEx in negativeExamples do
-                  let negativeExpr := substituteBVExpr substitutedSymbolicVarsExpr (packedBitVecToSubstitutionValue negativeEx)
+               if (evaluatedPositiveEx == 0) && evaluatedNegativeExs.all (λ val => val != 0) then
+                   preconditionCandidates := eqToZero substitutedExpr :: preconditionCandidates
 
-                  eqToExpr := addConstraints eqToExpr [neqToZero negativeExpr]
-                  ltExpr := addConstraints ltExpr [gteZero negativeExpr]
-                  gtExpr := addConstraints gtExpr [lteZero negativeExpr]
-                  lteExpr := addConstraints lteExpr [gtZero negativeExpr]
-                  gteExpr := addConstraints gteExpr [ltZero negativeExpr]
+               if (evaluatedPositiveEx < 0) && evaluatedNegativeExs.all (λ val => val >= 0) then
+                  preconditionCandidates := ltZero substitutedExpr :: preconditionCandidates
 
-              -- TODO: we can evaluate these directly and do without calling the solver; just compare the evaluated values with zero.
-              if let some _ ← solve eqToExpr then
-                  preconditionCandidates := eqToZero substitutedSymbolicVarsExpr :: preconditionCandidates
+               if (evaluatedPositiveEx <= 0) && evaluatedNegativeExs.all (λ val => val > 0) then
+                  preconditionCandidates := lteZero substitutedExpr :: preconditionCandidates
 
-              if let some _ ← solve ltExpr then
-                  preconditionCandidates := ltZero substitutedSymbolicVarsExpr :: preconditionCandidates
+               if (evaluatedPositiveEx > 0) && evaluatedNegativeExs.all (λ val => val <= 0) then
+                  preconditionCandidates := gtZero substitutedExpr :: preconditionCandidates
 
-              if let some _ ← solve gtExpr then
-                  preconditionCandidates := gtZero substitutedSymbolicVarsExpr :: preconditionCandidates
-
-              if let some _ ← solve lteExpr then
-                  preconditionCandidates := lteZero substitutedSymbolicVarsExpr :: preconditionCandidates
-
-              if let some _ ← solve gteExpr then
-                  preconditionCandidates := gteZero substitutedSymbolicVarsExpr :: preconditionCandidates
+               if (evaluatedPositiveEx >= 0) && evaluatedNegativeExs.all (λ val => val < 0) then
+                  preconditionCandidates := gteZero substitutedExpr :: preconditionCandidates
 
           let mut validCandidates : List BVLogicalExpr := []
 
@@ -1016,19 +1000,6 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           logInfo m! "Candidates by model count size: {candidateByModelCount.length}; combined count: {count}"
           return combinedPred
 
-
-syntax (name := testModelCount) "test_model_count" : tactic
-@[tactic testModelCount]
-def modelCountTest : Tactic := fun _ => do
-
-  -- let count ← countModel leftShiftRightShiftOne (Std.HashSet.ofList [100, 101])
-  let count ← countModel addId (Std.HashSet.ofList [100])
-
-  logInfo m! "Model count: {count}"
-  pure ()
-
-theorem test_model_count : False := by
-  test_model_count
 
 
 structure PreconditionSynthesisTestConfig where
