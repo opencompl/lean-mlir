@@ -1088,7 +1088,8 @@ elab "#generalize" expr:term: command =>
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
            let initialState : ParsedBVExprState := default
-           let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState | throwError "Unsupported expression provided"
+           let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
+             | throwError "Unsupported expression provided"
 
            let bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
            let state := parsedBVLogicalExpr.state
@@ -1113,7 +1114,7 @@ elab "#generalize" expr:term: command =>
             logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {exprSynthesisResults}"
 
             /-
-            Here, we evaluate generate preconditions for different combinations of target values on the RHS.
+            Here, we evaluate generated preconditions for different combinations of target values on the RHS.
             If we have only one target on the RHS, then we're just going through the list of the generated expressions.
             -/
             let resultsCombo := productsList exprSynthesisResults.values
@@ -1137,10 +1138,8 @@ elab "#generalize" expr:term: command =>
                 | some weakPC =>
                         logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
                         break -- TODO: we then need to verify width independence
-      | _ =>
-            logInfo m! "Could not match"
+      | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
       pure ()
-
 
 variable {x y : BitVec 32}
 -- #generalize (x + 5) + (y + 1)  =  x + y + 6
