@@ -228,6 +228,17 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         rotateReflection innerExpr distanceExpr BVUnOp.rotateLeft
     | BitVec.rotateRight _ innerExpr distanceExpr =>
         rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
+    | Neg.neg _ _ a =>
+          let currState: ParsedBVExprState ← get
+          let newId := currState.maxSymVarId + 1
+          let newExpr : BVExpr targetWidth := BVExpr.var newId
+
+          let some (bvProd) ← getBitVecValue? a| return none
+
+          let updatedState : ParsedBVExprState := { currState with maxSymVarId := newId, originalWidth := bvProd.fst, symVarToVal := currState.symVarToVal.insert newId {bv := -bvProd.snd: BVExpr.PackedBitVec}}
+          set updatedState
+
+          return some {bvExpr := newExpr, width := targetWidth}
     | _ =>
         let currState: ParsedBVExprState ← get
         let natVal ← getNatValue? x
@@ -307,10 +318,14 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
     | BitVec.allOnes nExpr =>
       let n ← getNatValue? nExpr
       return ⟨n, BitVec.allOnes n⟩
-    -- | BitVec.zeroExtend _ nExpr vExpr =>
-    --   let n ← getNatValue? nExpr
-    --   let v ← getBitVecValue? vExpr
-    --   return ⟨n, BitVec.zeroExtend n v.snd⟩
+    | BitVec.zeroExtend _ nExpr vExpr =>
+      let n ← getNatValue? nExpr
+      let v ← getBitVecValue? vExpr
+      return ⟨n, BitVec.zeroExtend n v.snd⟩
+    | BitVec.truncate _ nExpr vExpr =>
+      let n ← getNatValue? nExpr
+      let v ← getBitVecValue? vExpr
+      return ⟨n, BitVec.truncate n v.snd⟩
     | _ =>
       let (v, type) ← getOfNatValue? e ``BitVec
       let n ← getNatValue? (← whnfD type.appArg!)
@@ -587,6 +602,7 @@ variable {x y z : BitVec 64}
 
 #reducewidth x = 10 : 8
 
+#reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
 
 def binaryOperations : List (BVExpr w → BVExpr w → BVExpr w) :=
   [add, subtract] -- TODO: Support more operators
@@ -818,7 +834,9 @@ variable {x y : BitVec 32}
 #iosynthesize (x + 5) + (y + 1)  =  x + y + 6
 #iosynthesize (x + 5) - (y + 1)  =  x - y + 4
 #iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
--- #iosynthesize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) == (x <<< 8) &&& 0xFF00#32
+#iosynthesize ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
+
+
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (shiftConstraints: Option BVLogicalExpr) (consts: List Nat) (num: Nat) :
               TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
@@ -895,7 +913,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
 
-    let constants := positiveExample.keys -- widthId :: positiveExample.keys.  Incorporating the width leads to an exponential increase in time taken
+    let constants := widthId :: positiveExample.keys --.  Incorporating the width leads to an exponential increase in time taken
 
     let maxConstantId := constants.max?
     match maxConstantId with
@@ -1150,6 +1168,7 @@ elab "#generalize" expr:term: command =>
                 let substitutedBVLogicalExpr := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
 
                 let mut positiveExample := constantAssignment.filter (fun k  _  => ! zippedCombo.contains k)
+
                 let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr shiftConstraints positiveExample.keys 3
 
                 if negativeExamples.isEmpty then
@@ -1157,8 +1176,6 @@ elab "#generalize" expr:term: command =>
                     break
 
                 logInfo m! "Negative examples: {negativeExamples}"
-                -- Use the width as a component for precondition synthesis
-                -- positiveExample := positiveExample.insert 9481 {bv := BitVec.ofNat targetWidth targetWidth: BVExpr.PackedBitVec}
                 let precondition ← generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples (9481, targetWidth)
 
                 match precondition with
@@ -1171,6 +1188,8 @@ elab "#generalize" expr:term: command =>
 
 variable {x y : BitVec 32}
 
+#generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
+#generalize (x + (-1)) >>> 1 = x >>> 1 -- #61223;
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 #generalize (x + 5) + (y + 1)  =  x + y + 6
 #generalize (x <<< 3) <<< 4 = x <<< 7
@@ -1180,8 +1199,7 @@ variable {x y : BitVec 32}
 #generalize (x &&& 1 ||| (x  &&& 1 ||| (0#32 - x))) = x &&& (x - 1#32) -- #57351
 #generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
 
-#generalize (x + (-1)) >>> 1 = x >>> 1 -- #61223;
-#generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
+#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) == (x <<< 8) &&& 0xFF00#32
 
 /-
 --- Examples -------
