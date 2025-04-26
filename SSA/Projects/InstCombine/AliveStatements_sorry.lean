@@ -91,38 +91,38 @@ theorem bv_AndOrXor_144 :
 
 theorem bv_AndOrXor_698 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e e_1) (LLVM.const? w 0))
-          (LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e e_2) (LLVM.const? w 0)) ⊑
-        LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e (LLVM.or e_1 e_2)) (LLVM.const? w 0) := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.eq (LLVM.and e e_1) (LLVM.const? w 0))
+          (LLVM.icmp LLVM.IntPred.eq (LLVM.and e e_2) (LLVM.const? w 0)) ⊑
+        LLVM.icmp LLVM.IntPred.eq (LLVM.and e (LLVM.or e_1 e_2)) (LLVM.const? w 0) := by
   sorry
 
 theorem bv_AndOrXor_709 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e e_1) e_1) (LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e e_2) e_2) ⊑
-        LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e (LLVM.or e_1 e_2)) (LLVM.or e_1 e_2) := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.eq (LLVM.and e e_1) e_1) (LLVM.icmp LLVM.IntPred.eq (LLVM.and e e_2) e_2) ⊑
+        LLVM.icmp LLVM.IntPred.eq (LLVM.and e (LLVM.or e_1 e_2)) (LLVM.or e_1 e_2) := by
   sorry
 
 theorem bv_AndOrXor_716 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e e_1) e) (LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e e_2) e) ⊑
-        LLVM.icmp LLVM.IntPredicate.eq (LLVM.and e (LLVM.and e_1 e_2)) e := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.eq (LLVM.and e e_1) e) (LLVM.icmp LLVM.IntPred.eq (LLVM.and e e_2) e) ⊑
+        LLVM.icmp LLVM.IntPred.eq (LLVM.and e (LLVM.and e_1 e_2)) e := by
   sorry
 
 theorem bv_AndOrXor_794 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPredicate.sgt e e_1) (LLVM.icmp LLVM.IntPredicate.ne e e_1) ⊑
-        LLVM.icmp LLVM.IntPredicate.sgt e e_1 := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.sgt e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑
+        LLVM.icmp LLVM.IntPred.sgt e e_1 := by
   sorry
 
 theorem bv_AndOrXor_827 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPredicate.eq e (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPredicate.eq e_1 (LLVM.const? w 0)) ⊑
-        LLVM.icmp LLVM.IntPredicate.eq (LLVM.or e e_1) (LLVM.const? w 0) := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.eq e (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPred.eq e_1 (LLVM.const? w 0)) ⊑
+        LLVM.icmp LLVM.IntPred.eq (LLVM.or e e_1) (LLVM.const? w 0) := by
   sorry
 
 theorem bv_AndOrXor_887_2 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPredicate.eq e e_1) (LLVM.icmp LLVM.IntPredicate.ne e e_1) ⊑ LLVM.const? 1 0 := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.eq e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.const? 1 0 := by
   sorry
 
 theorem bv_AndOrXor_1230__A__B___A__B :
@@ -159,31 +159,31 @@ theorem bv_AndOrXor_1294_A__B__A__B___A__B :
 
 theorem bv_AndOrXor_1683_1 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPredicate.ugt e e_1) (LLVM.icmp LLVM.IntPredicate.eq e e_1) ⊑
-        LLVM.icmp LLVM.IntPredicate.uge e e_1 := by
+      LLVM.or (LLVM.icmp LLVM.IntPred.ugt e e_1) (LLVM.icmp LLVM.IntPred.eq e e_1) ⊑
+        LLVM.icmp LLVM.IntPred.uge e e_1 := by
   sorry
 
 theorem bv_AndOrXor_1683_2 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPredicate.uge e e_1) (LLVM.icmp LLVM.IntPredicate.ne e e_1) ⊑ LLVM.const? 1 1 := by
+      LLVM.or (LLVM.icmp LLVM.IntPred.uge e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.const? 1 1 := by
   sorry
 
 theorem bv_AndOrXor_1704 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPredicate.eq e_1 (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPredicate.ult e e_1) ⊑
-        LLVM.icmp LLVM.IntPredicate.uge (LLVM.add e_1 (LLVM.const? w (-1))) e := by
+      LLVM.or (LLVM.icmp LLVM.IntPred.eq e_1 (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPred.ult e e_1) ⊑
+        LLVM.icmp LLVM.IntPred.uge (LLVM.add e_1 (LLVM.const? w (-1))) e := by
   sorry
 
 theorem bv_AndOrXor_1705 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPredicate.eq e_1 (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPredicate.ugt e_1 e) ⊑
-        LLVM.icmp LLVM.IntPredicate.uge (LLVM.add e_1 (LLVM.const? w (-1))) e := by
+      LLVM.or (LLVM.icmp LLVM.IntPred.eq e_1 (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPred.ugt e_1 e) ⊑
+        LLVM.icmp LLVM.IntPred.uge (LLVM.add e_1 (LLVM.const? w (-1))) e := by
   sorry
 
 theorem bv_AndOrXor_1733 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPredicate.ne e (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPredicate.ne e_1 (LLVM.const? w 0)) ⊑
-        LLVM.icmp LLVM.IntPredicate.ne (LLVM.or e e_1) (LLVM.const? w 0) := by
+      LLVM.or (LLVM.icmp LLVM.IntPred.ne e (LLVM.const? w 0)) (LLVM.icmp LLVM.IntPred.ne e_1 (LLVM.const? w 0)) ⊑
+        LLVM.icmp LLVM.IntPred.ne (LLVM.or e e_1) (LLVM.const? w 0) := by
   sorry
 
 theorem bv_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
@@ -287,7 +287,7 @@ theorem bv_AndOrXor_2443 :
 
 theorem bv_AndOrXor_2453 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.icmp LLVM.IntPredicate.slt e_1 e) (LLVM.const? 1 (-1)) ⊑ LLVM.icmp LLVM.IntPredicate.sge e_1 e := by
+      LLVM.xor (LLVM.icmp LLVM.IntPred.slt e_1 e) (LLVM.const? 1 (-1)) ⊑ LLVM.icmp LLVM.IntPred.sge e_1 e := by
   sorry
 
 theorem bv_AndOrXor_2475 :
@@ -339,8 +339,8 @@ theorem bv_AndOrXor_2658 :
 
 theorem bv_AndOrXor_2663 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.icmp LLVM.IntPredicate.ule e e_1) (LLVM.icmp LLVM.IntPredicate.ne e e_1) ⊑
-        LLVM.icmp LLVM.IntPredicate.uge e e_1 := by
+      LLVM.xor (LLVM.icmp LLVM.IntPred.ule e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑
+        LLVM.icmp LLVM.IntPred.uge e e_1 := by
   sorry
 
 theorem bv_152 :
