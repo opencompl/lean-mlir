@@ -774,13 +774,7 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
     return results
 
 def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BVExpr.PackedBitVec)
-             : ParsedBVExpr := Id.run do
-    let mut updatedSymVars : Std.HashMap Nat BVExpr.PackedBitVec := Std.HashMap.emptyWithCapacity
-
-    for (id, _) in bvExpr.symVars.toArray do
-      updatedSymVars := updatedSymVars.insert id assignments[id]!
-
-    return {bvExpr with symVars := updatedSymVars}
+             : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
 
 elab "#iosynthesize" expr:term: command =>
@@ -805,7 +799,7 @@ elab "#iosynthesize" expr:term: command =>
            let mut constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
 
            if constantAssignments.isEmpty then
-             logInfo m! "Constant values in width {targetWidth} {constantAssignments}"
+             logInfo m! "Could not synthesize new constant values in width {targetWidth}"
              constantAssignments := state.symVarToVal :: constantAssignments
            else
              logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
