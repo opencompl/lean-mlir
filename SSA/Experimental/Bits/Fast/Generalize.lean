@@ -895,7 +895,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
 
-    let constants := widthId :: positiveExample.keys
+    let constants := positiveExample.keys -- widthId :: positiveExample.keys.  Incorporating the width leads to an exponential increase in time taken
 
     let maxConstantId := constants.max?
     match maxConstantId with
@@ -940,20 +940,11 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           let eqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
 
-          let neqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.not (BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero))
-
           let ltZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.ult zero)
 
           let gtZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (BoolExpr.not (ltZero expr))
-
-          let gteZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate  Gate.or (eqToZero expr) (gtZero expr)
-
-          let lteZero (expr : BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate  Gate.or (eqToZero expr) (ltZero expr)
 
           let widthSubstitutionVal := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat bitwidth bitwidth))])
           for sketch in expressionSketches do
@@ -961,7 +952,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
               let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
               let substitutedExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
 
-              let widthSubstitutedExpr := substituteBVExpr  substitutedExpr widthSubstitutionVal
+              let widthSubstitutedExpr := substituteBVExpr substitutedExpr widthSubstitutionVal
 
               let evaluatedPositiveEx := evalBVExpr positiveExample bitwidth widthSubstitutedExpr
 
@@ -975,36 +966,6 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
 
                if (evaluatedPositiveEx > 0) && evaluatedNegativeExs.all (λ val => val <= 0) then
                   preconditionCandidates := gtZero substitutedExpr :: preconditionCandidates
-
-              -- let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
-              -- let substitutedSymbolicVarsExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
-              -- logInfo m! "Expr before width substitution: {substitutedSymbolicVarsExpr}"
-
-              -- let widthSubstitutedExpr := substituteBVExpr substitutedSymbolicVarsExpr widthSubstitutionVal
-              -- logInfo m! "Expr after width substitution: {widthSubstitutedExpr}"
-
-              -- let positiveExpr := substituteBVExpr widthSubstitutedExpr (packedBitVecToSubstitutionValue positiveExample)
-
-              -- let mut eqToExpr := eqToZero positiveExpr
-              -- let mut ltExpr := ltZero positiveExpr
-              -- let mut gtExpr := gtZero positiveExpr
-
-              -- for negativeEx in negativeExamples do
-              --     let negativeExpr := substituteBVExpr widthSubstitutedExpr (packedBitVecToSubstitutionValue negativeEx)
-
-              --     eqToExpr := addConstraints eqToExpr [neqToZero negativeExpr]
-              --     ltExpr := addConstraints ltExpr [gteZero negativeExpr]
-              --     gtExpr := addConstraints gtExpr [lteZero negativeExpr]
-
-              -- -- TODO: Can we evaluate these directly and do without calling the solver; just compare the evaluated values with zero.
-              -- if let some _ ← solve eqToExpr then
-              --     preconditionCandidates := eqToZero substitutedSymbolicVarsExpr :: preconditionCandidates
-
-              -- if let some _ ← solve ltExpr then
-              --     preconditionCandidates := ltZero substitutedSymbolicVarsExpr :: preconditionCandidates
-
-              -- if let some _ ← solve gtExpr then
-              --     preconditionCandidates := gtZero substitutedSymbolicVarsExpr :: preconditionCandidates
 
           let mut validCandidates : List BVLogicalExpr := []
 
@@ -1076,7 +1037,7 @@ def preconditionSynthesisEx1 : TermElabM PreconditionSynthesisTestConfig := do
                                              (101, {bv := BitVec.ofNat bitwidth  16, w := bitwidth : BVExpr.PackedBitVec}),
                                              (102, {bv := BitVec.ofNat bitwidth  8, w := bitwidth : BVExpr.PackedBitVec})]
 
-  let negativeExamples ← getNegativeExamples expr positiveExample.keys 3
+  let negativeExamples ← getNegativeExamples expr none positiveExample.keys 3
   return {expr := expr, positiveExample := positiveExample, negativeExamples := negativeExamples, bitWidth := bitwidth}
 
 def preconditionSynthesisEx2 : TermElabM PreconditionSynthesisTestConfig := do
