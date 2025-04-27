@@ -159,133 +159,86 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         return ⟨_, .bv l.sum,
           (Expr.mk (op := .concat l) (ty_eq := rfl) (eff_le := by constructor)
             (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (l.sum)))⟩
-      | _, _ => throw <| .generic s!"type mismatch"
+      | _, _ => throw <| .generic s!"type mismatch for {opStx.name}"
     | _ => throw <| .generic s!"expected one operand found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.add" | op@"Comb.and" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.xor" =>
       let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
       if hl: args.length ≤ 0 then
         throw <| .generic s!"empty list of arguments for '{repr opStx.args}'"
       else
-        have hl' : (0 : Nat) < args.length := by
-          simp [Nat.gt_of_not_le (n := args.length) (m := 0) hl]
-        match args[0], op with
-        | ⟨.bv w, _⟩, "Comb.add" =>
+        match args[0] with
+        | ⟨.bv w, _⟩ =>
           if hall : args.all (·.1 = .bv w) then
-            let argsᵥ := ofList (.bv w) _ hall
-            have heq : args.length - 1 + 1 = args.length := by omega
-            return ⟨_, .bv w,
-              (Expr.mk (op := .add w args.length) (ty_eq := rfl) (eff_le := by constructor)
-                (args := (heq ▸ argsᵥ)) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
+            match op with
+            | "Comb.add" =>
+                return ⟨_, .bv w,
+                  (Expr.mk (op := .add w args.length) (ty_eq := rfl) (eff_le := by constructor)
+                    (args := ofList (.bv w) _ hall) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
+            | "Comb.and" =>
+                return ⟨_, .bv w,
+                (Expr.mk (op := .and w args.length) (ty_eq := rfl) (eff_le := by constructor)
+                  (args := ofList (.bv w) _ hall) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
+            | "Comb.mul" =>
+                return ⟨_, .bv w,
+                (Expr.mk (op := .mul w args.length) (ty_eq := rfl) (eff_le := by constructor)
+                  (args := ofList (.bv w) _ hall) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
+            | "Comb.or" =>
+                return ⟨_, .bv w,
+                (Expr.mk (op := .or w args.length) (ty_eq := rfl) (eff_le := by constructor)
+                  (args := ofList (.bv w) _ hall) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
+            | "Comb.xor" =>
+                return ⟨_, .bv w,
+                (Expr.mk (op := .xor w args.length) (ty_eq := rfl) (eff_le := by constructor)
+                  (args := ofList (.bv w) _ hall) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
+            | _ => throw <| .generic s!"Unknown operation"
           else
             throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
-        | ⟨.bv w, _⟩, "Comb.and" =>
-            if hall : args.all (·.1 = .bv w) then
-              let argsᵥ := ofList (.bv w) _ hall
-              have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w,
-              (Expr.mk (op := .and w args.length) (ty_eq := rfl) (eff_le := by constructor)
-                (args := (heq ▸ argsᵥ)) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
-            else
-              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
-        | ⟨.bv w, _⟩, "Comb.mul" =>
-            if hall : args.all (·.1 = .bv w) then
-              let argsᵥ := ofList (.bv w) _ hall
-              have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w,
-              (Expr.mk (op := .mul w args.length) (ty_eq := rfl) (eff_le := by constructor)
-                (args := (heq ▸ argsᵥ)) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
-            else
-              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
-        | ⟨.bv w, _⟩, "Comb.or" =>
-            if hall : args.all (·.1 = .bv w) then
-              let argsᵥ := ofList (.bv w) _ hall
-              have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w,
-              (Expr.mk (op := .or w args.length) (ty_eq := rfl) (eff_le := by constructor)
-                (args := (heq ▸ argsᵥ)) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
-            else
-              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
-        | ⟨.bv w, _⟩, "Comb.xor" =>
-            if hall : args.all (·.1 = .bv w) then
-              let argsᵥ := ofList (.bv w) _ hall
-              have heq : args.length - 1 + 1 = args.length := by omega
-              return ⟨_, .bv w,
-              (Expr.mk (op := .xor w args.length) (ty_eq := rfl) (eff_le := by constructor)
-                (args := (heq ▸ argsᵥ)) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w))⟩
-            else
-              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
-        | _, _ => throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+        | _ => throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
   | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-      match ty₁, ty₂, op with
-      | .bv w₁, .bv w₂, "Comb.divs" =>
+      match ty₁, ty₂ with
+      | .bv w₁, .bv w₂=>
         if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
+          match op with
+          | "Comb.divs" =>
+            return ⟨_, .bv w₁,
               (Expr.mk (op := .divs w₁) (ty_eq := rfl) (eff_le := by constructor)
-                (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.divu" =>
+            return ⟨_, .bv w₁,
+                (Expr.mk (op := .divu w₁) (ty_eq := rfl) (eff_le := by constructor)
+                  (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.mods" =>
+            return ⟨_, .bv w₁,
+              (Expr.mk (op := .mods w₁) (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.modu" =>
+            return ⟨_, .bv w₁,
+              (Expr.mk (op := .modu w₁) (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.shl" =>
+            return ⟨_, .bv w₁,
+              (Expr.mk (op := .shl w₁) (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.shrs" =>
+            return ⟨_, .bv w₁,
+              (Expr.mk (op := .shrs w₁) (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.shru" =>
+            return ⟨_, .bv w₁,
+              (Expr.mk (op := .shru w₁) (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | "Comb.sub" =>
+            return ⟨_, .bv w₁,
+              (Expr.mk (op := .sub w₁) (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+          | _ => throw <| .generic s!"Unknown operation"
         else
           throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.divu" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-              (Expr.mk (op := .divu w₁) (ty_eq := rfl) (eff_le := by constructor)
-                (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.mods" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .mods w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.modu" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .modu w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.shl" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .shl w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.shrs" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .shrs w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.shru" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .shru w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | .bv w₁, .bv w₂, "Comb.sub" =>
-        if h : w₁ = w₂ then
-          let v₂ := v₂.cast (by rw [h])
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .sub w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | _, _, _=> throw <| .generic s!"type mismatch"
+      | _, _ => throw <| .generic s!"type mismatch in {opStx.name}"
     | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.mux" =>
     match opStx.args with
