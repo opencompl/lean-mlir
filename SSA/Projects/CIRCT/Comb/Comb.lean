@@ -264,42 +264,40 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       match opStx.args with
       | v₁Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-        match ty₁ with
-        | .bv w₁ =>
-          let n' := n.toNat!
-          return ⟨_, .bv (w₁ * n'),
-            (Expr.mk (op := .replicate w₁ n') (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w₁ * n')))⟩
-        | _ => throw <| .generic s!"type mismatch in {repr opStx}"
+        match ty₁, n.toNat? with
+        | .bv w, some n' =>
+          return ⟨_, .bv (w - n'),
+            (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
+              (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
+        | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
+        | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.extract", n] =>
       match opStx.args with
         | v₁Stx::[] =>
           let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-          match ty₁ with
-          | .bv w =>
-            let n' := n.toNat!
+          match ty₁, n.toNat? with
+          | .bv w, some n' =>
             return ⟨_, .bv (w - n'),
               (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
                 (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
-          | _ => throw <| .generic s!"type mismatch in {repr opStx}"
+          | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
+          | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
         | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.icmp", p] =>
       match opStx.args with
       | v₁Stx::v₂Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-        match ofString? p with
-        | some p' =>
-            match ty₁, ty₂ with
-            | .bv w₁, .bv w₂ =>
-                if h : w₁ = w₂ then
-                  return ⟨_, .bool,
-                    (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
-                      (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
-                else throw <| .generic s!"type mismatch in {repr opStx}"
-            | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
-        | none  => throw <| .generic s!"unknown icmp predicate"
+        match ty₁, ty₂, (ofString? p) with
+        | .bv w₁, .bv w₂, some p' =>
+          if h : w₁ = w₂ then
+            return ⟨_, .bool,
+              (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
+          else throw <| .generic s!"type mismatch in {repr opStx}"
+        | _, _, none => throw <| .generic s!"unknown predicate in {repr opStx}"
+        | _, _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
     | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
