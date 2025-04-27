@@ -1,5 +1,4 @@
 import SSA.Experimental.Bits.AutoStructs.Basic
-import Mathlib.Tactic.LiftLets
 
 set_option grind.warning false
 

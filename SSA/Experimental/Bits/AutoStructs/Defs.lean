@@ -6,8 +6,6 @@ import SSA.Experimental.Bits.AutoStructs.ForMathlib
 import SSA.Experimental.Bits.Frontend.Defs
 import SSA.Projects.InstCombine.ForStd
 
-import Mathlib.Tactic.LiftLets
-
 -- A bunch of maps from `Fin n` to `Fin m` that we use to
 -- lift and project variables when we interpret formulas
 def liftMaxSucc1 (n m : Nat) : Fin (n + 1) → Fin (max n m + 2) :=
