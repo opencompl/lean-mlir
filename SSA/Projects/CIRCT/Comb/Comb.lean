@@ -98,9 +98,7 @@ def_denote for Comb where
   | .divs _ => BitVec.sdiv
   | .divu _ => BitVec.udiv
   | .extract _ _ => fun x => CombOp.extract x _
-  | .icmp p _ => fun x y =>
-      let p' := Option.get! (ofString? p)
-      CombOp.icmp p' x y
+  | .icmp p _ => fun x y => CombOp.icmp (Option.get! (ofString? p)) x y
   | .mods _ => BitVec.smod
   | .modu _ => BitVec.umod
   | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
@@ -116,6 +114,8 @@ def_denote for Comb where
 
 end Dialect
 
+    -- (OfNat.ofNat x) = (ConcreteOrMVar.concrete x : ConcreteOrMVar Nat φ) := rfl
+
 /-- we currently do not support the parsing of heterogeneous vectors -/
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
   | MLIR.AST.MLIRType.undefined s => do
@@ -124,12 +124,12 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
       return .bool
     | ["Nat"] =>
       return .nat
-    | ["BitVec", r] =>
-      return .bv (r.toNat!)
     | ["IcmpPred"] =>
-      -- match icmp
       return .icmpPred
     | _ => throw .unsupportedType
+  | MLIR.AST.MLIRType.int s w =>
+
+    sorry
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy Comb 0 where
@@ -274,16 +274,16 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.extract", n] =>
       match opStx.args with
-        | v₁Stx::[] =>
-          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-          match ty₁, n.toNat? with
-          | .bv w, some n' =>
-            return ⟨_, .bv (w - n'),
-              (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
-                (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
-          | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
-          | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
-        | _ => throw <| .generic s!"type mismatch in {repr opStx}"
+      | v₁Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        match ty₁, n.toNat? with
+        | .bv w, some n' =>
+          return ⟨_, .bv (w - n'),
+            (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
+              (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
+        | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
+        | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
+      | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.icmp", p] =>
       match opStx.args with
       | v₁Stx::v₂Stx::[] =>
@@ -295,7 +295,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             return ⟨_, .bool,
               (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
                 (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
-          else throw <| .generic s!"type mismatch in {repr opStx}"
+          else throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
         | _, _, none => throw <| .generic s!"unknown predicate in {repr opStx}"
         | _, _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
