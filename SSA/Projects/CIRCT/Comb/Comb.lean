@@ -249,15 +249,14 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       match ty₁, ty₂, ty₃, op with
       | .bv w₁, .bv w₂, .bool, "Comb.mux" =>
         if h : w₁ = w₂ then
-          /- mux currently only works if w₁ = w₂
-          it should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
-          let v₂ := v₂.cast (by rw [h])
+          /- mux currently only works if w₁ = w₂, since we need to fix the output type of the operation
+            it should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
           return ⟨_, .bv w₁,
             (Expr.mk (op := .mux w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons v₂ <| .cons v₃ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
+              (args := .cons v₁ <| .cons (h ▸ v₂) <| .cons v₃ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
         else
           throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | _, _, _, _=> throw <| .generic s!"type mismatch"
+      | _, _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   |  _ =>
     match (opStx.name).splitOn "_" with
@@ -283,8 +282,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             return ⟨_, .bv (w - n'),
               (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
                 (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
-          | _ => throw <| .generic s!"type mismatch"
-        | _ => throw <| .generic s!"type mismatch"
+          | _ => throw <| .generic s!"type mismatch in {repr opStx}"
+        | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.icmp", p] =>
       match opStx.args with
       | v₁Stx::v₂Stx::[] =>
@@ -295,12 +294,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             match ty₁, ty₂ with
             | .bv w₁, .bv w₂ =>
                 if h : w₁ = w₂ then
-                  let v₂ := v₂.cast (by rw [h])
                   return ⟨_, .bool,
                     (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
-                      (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
-                else throw <| .generic s!"type mismatch"
-            | _, _ => throw <| .generic s!"type mismatch"
+                      (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
+                else throw <| .generic s!"type mismatch in {repr opStx}"
+            | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
         | none  => throw <| .generic s!"unknown icmp predicate"
       | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
     | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
