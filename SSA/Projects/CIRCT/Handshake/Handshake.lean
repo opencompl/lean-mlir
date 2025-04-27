@@ -4,6 +4,7 @@ import SSA.Core.Framework
 import SSA.Core.Framework.Macro
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL2
+import SSA.Core.Tactic.SimpSet
 
 open MLIR AST Ctxt
 
