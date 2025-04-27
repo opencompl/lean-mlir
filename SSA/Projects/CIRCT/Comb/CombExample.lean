@@ -78,3 +78,24 @@ def bv2'' : BitVec 4 := BitVec.ofNat 4 3
 
 def test4 : Bool :=
   CombEg4.denote (Ctxt.Valuation.ofPair bv2'' bv1'')
+
+#eval test4
+
+def CombEg5 := [Comb_com| {
+  ^entry(%0: !BitVec_1, %2: !BitVec_1):
+    %1 = "Comb.replicate_3" (%0) : (!BitVec_1) -> (!BitVec_3)
+    "return" (%1) : (!BitVec_3) -> ()
+}]
+
+#check CombEg5
+#eval CombEg5
+#reduce CombEg5
+#check CombEg5.denote
+#print axioms CombEg5
+
+def bv0 : BitVec 1 := BitVec.ofNat 1 1
+
+def test5 : BitVec 3 :=
+  CombEg5.denote (Ctxt.Valuation.ofPair bv0 bv0)
+
+#eval test5

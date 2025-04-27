@@ -259,29 +259,22 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
       | _, _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | _ =>
-    if "Comb.replicate" = opStx.name
-    then {
-      match (opStx.name).splitOn "_" with
-      | [_, n] =>
-        match opStx.args with
-        | v₁Stx::[] =>
-          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-          match ty₁ with
-          | .bv w₁ =>
-            let n' := n.toNat!
-            return ⟨_, .bv (w₁ * n'),
-              (Expr.mk (op := .replicate w₁ n') (ty_eq := rfl) (eff_le := by constructor)
-                (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w₁ * n')))⟩
-          | _ => throw <| .generic s!"type mismatch"
-        | _ => throw <| .generic s!"type mismatch"
-      | _ => throw <| .generic s!"type mismatch"
-    }
-    else if "Comb.extract" = opStx.name
-    then {
-      match (opStx.name).splitOn "_" with
-      | [_, n] =>
-        match opStx.args with
+  |  _ =>
+    match (opStx.name).splitOn "_" with
+    | ["Comb.replicate", n]=>
+      match opStx.args with
+      | v₁Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        match ty₁ with
+        | .bv w₁ =>
+          let n' := n.toNat!
+          return ⟨_, .bv (w₁ * n'),
+            (Expr.mk (op := .replicate w₁ n') (ty_eq := rfl) (eff_le := by constructor)
+              (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w₁ * n')))⟩
+        | _ => throw <| .generic s!"type mismatch in {repr opStx}"
+      | _ => throw <| .generic s!"type mismatch in {repr opStx}"
+    | ["Comb.extract", n] =>
+      match opStx.args with
         | v₁Stx::[] =>
           let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
           match ty₁ with
@@ -292,29 +285,26 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
           | _ => throw <| .generic s!"type mismatch"
         | _ => throw <| .generic s!"type mismatch"
-      | _ => throw <| .generic s!"type mismatch"
-    }
-    else
-      match (opStx.name).splitOn "_" with
-      | ["Comb.icmp", p] =>
-        match opStx.args with
-        | v₁Stx::v₂Stx::[] =>
-          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-          let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-          match ofString? p with
-          | some p' =>
-              match ty₁, ty₂ with
-              | .bv w₁, .bv w₂ =>
-                  if h : w₁ = w₂ then
-                    let v₂ := v₂.cast (by rw [h])
-                    return ⟨_, .bool,
-                      (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
-                        (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
-                  else throw <| .generic s!"type mismatch"
-              | _, _ => throw <| .generic s!"type mismatch"
-          | none  => throw <| .generic s!"unknown icmp predicate"
-        | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
-      | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+    | ["Comb.icmp", p] =>
+      match opStx.args with
+      | v₁Stx::v₂Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+        match ofString? p with
+        | some p' =>
+            match ty₁, ty₂ with
+            | .bv w₁, .bv w₂ =>
+                if h : w₁ = w₂ then
+                  let v₂ := v₂.cast (by rw [h])
+                  return ⟨_, .bool,
+                    (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
+                      (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
+                else throw <| .generic s!"type mismatch"
+            | _, _ => throw <| .generic s!"type mismatch"
+        | none  => throw <| .generic s!"unknown icmp predicate"
+      | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+
 
 instance : MLIR.AST.TransformExpr (Comb) 0 where
   mkExpr := mkExpr
