@@ -714,6 +714,20 @@ instance : ToExpr (Var Γ ty) where
 instance : HVector.ToExprPi (Var Γ) where
   toTypeExpr := mkApp2 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ)
 
+/--
+Given an array `Γ` of types (i.e., expressions of type `Ty`), and an array
+of values `xs`, such that `xs[i]` is an expression of type `Γ[i]`,
+construct an expression of type `Valuation Γ`.
+-/
+def Valuation.mkOfElems (Ty instTyDenote : Expr) (Γ : Array Expr) (xs : Array Expr) : Expr :=
+  @id (Id _) <| do
+    let mut V_acc := mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
+    let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
+    for (ty, x) in Γ.zip xs do
+      V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ_acc ty V_acc x
+      Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
+    V_acc
+
 end ToExpr
 
 end Ctxt
