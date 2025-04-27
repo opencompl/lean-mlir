@@ -67,8 +67,7 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike, .polynomialLi
         (Com.ret { val := 0, property := ex1.proof_3 }))) =
       Com.denote (Com.ret { val := 0, property := _ })
       -/
-      funext Γv
-      simp_peephole [] at Γv
+      simp_peephole
       /- ⊢ ∀ (a b : R 2 3), b + a = a + b -/
       intros a b
       rw [add_comm]
@@ -116,7 +115,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
      rhs := rhs
   , correct :=
     by
-      funext Γv
       unfold a_plus_generator_eq_a rhs
        /-
       Com.denote
@@ -142,9 +140,9 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
           Γv =
         Com.denote (Com.ret { val := 0, property := rhs.proof_2 }) Γv
        -/
-      simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def] at Γv
+      simp_peephole
       /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial q n 1 (2**n) + 1) = a -/
-      simp [R.fromPoly, R.monomial]
+      simp only [R.monomial, R.fromPoly, Int.toNat_natCast, Int.cast_one, ROfZComputable_def]
       /- ⊢ a + ((Ideal.Quotient.mk (Ideal.span {f q n})) ((Polynomial.monomial
       (2**n)) 1) + 1) = a -/
       intros a

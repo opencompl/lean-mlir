@@ -57,7 +57,7 @@ def alive_AddSub_1043_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddSub_1043_tgt w  := by
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1043
 
 
@@ -85,7 +85,7 @@ def alive_AddSub_1152_tgt  :=
 }]
 theorem alive_AddSub_1152   : alive_AddSub_1152_src ⊑ alive_AddSub_1152_tgt := by
   unfold alive_AddSub_1152_src alive_AddSub_1152_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1152
 
 
@@ -114,7 +114,7 @@ def alive_AddSub_1156_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1156  (w : Nat)   : alive_AddSub_1156_src w  ⊑ alive_AddSub_1156_tgt w  := by
   unfold alive_AddSub_1156_src alive_AddSub_1156_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1156
 
 
@@ -148,7 +148,7 @@ def alive_AddSub_1164_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1164  (w : Nat)   : alive_AddSub_1164_src w  ⊑ alive_AddSub_1164_tgt w  := by
   unfold alive_AddSub_1164_src alive_AddSub_1164_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1164
 
 
@@ -191,7 +191,7 @@ def alive_AddSub_1165_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1165  (w : Nat)   : alive_AddSub_1165_src w  ⊑ alive_AddSub_1165_tgt w  := by
   unfold alive_AddSub_1165_src alive_AddSub_1165_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1165
 
 
@@ -225,7 +225,7 @@ def alive_AddSub_1176_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1176  (w : Nat)   : alive_AddSub_1176_src w  ⊑ alive_AddSub_1176_tgt w  := by
   unfold alive_AddSub_1176_src alive_AddSub_1176_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1176
 
 
@@ -261,7 +261,7 @@ def alive_AddSub_1202_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1202  (w : Nat)   : alive_AddSub_1202_src w  ⊑ alive_AddSub_1202_tgt w  := by
   unfold alive_AddSub_1202_src alive_AddSub_1202_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1202
 
 
@@ -297,7 +297,7 @@ def alive_AddSub_1295_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1295  (w : Nat)   : alive_AddSub_1295_src w  ⊑ alive_AddSub_1295_tgt w  := by
   unfold alive_AddSub_1295_src alive_AddSub_1295_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1295
 
 
@@ -333,7 +333,7 @@ def alive_AddSub_1309_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1309  (w : Nat)   : alive_AddSub_1309_src w  ⊑ alive_AddSub_1309_tgt w  := by
   unfold alive_AddSub_1309_src alive_AddSub_1309_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1309
 
 
@@ -367,7 +367,7 @@ def alive_AddSub_1539_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1539  (w : Nat)   : alive_AddSub_1539_src w  ⊑ alive_AddSub_1539_tgt w  := by
   unfold alive_AddSub_1539_src alive_AddSub_1539_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1539
 
 
@@ -396,7 +396,7 @@ def alive_AddSub_1539_2_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1539_2  (w : Nat)   : alive_AddSub_1539_2_src w  ⊑ alive_AddSub_1539_2_tgt w  := by
   unfold alive_AddSub_1539_2_src alive_AddSub_1539_2_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1539_2
 
 
@@ -424,7 +424,7 @@ def alive_AddSub_1556_tgt  :=
 }]
 theorem alive_AddSub_1556   : alive_AddSub_1556_src ⊑ alive_AddSub_1556_tgt := by
   unfold alive_AddSub_1556_src alive_AddSub_1556_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1556
 
 
@@ -454,7 +454,7 @@ def alive_AddSub_1560_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1560  (w : Nat)   : alive_AddSub_1560_src w  ⊑ alive_AddSub_1560_tgt w  := by
   unfold alive_AddSub_1560_src alive_AddSub_1560_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1560
 
 
@@ -490,7 +490,7 @@ def alive_AddSub_1564_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1564  (w : Nat)   : alive_AddSub_1564_src w  ⊑ alive_AddSub_1564_tgt w  := by
   unfold alive_AddSub_1564_src alive_AddSub_1564_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1564
 
 
@@ -523,7 +523,7 @@ def alive_AddSub_1574_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1574  (w : Nat)   : alive_AddSub_1574_src w  ⊑ alive_AddSub_1574_tgt w  := by
   unfold alive_AddSub_1574_src alive_AddSub_1574_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1574
 
 
@@ -556,7 +556,7 @@ def alive_AddSub_1614_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1614  (w : Nat)   : alive_AddSub_1614_src w  ⊑ alive_AddSub_1614_tgt w  := by
   unfold alive_AddSub_1614_src alive_AddSub_1614_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1614
 
 
@@ -589,7 +589,7 @@ def alive_AddSub_1619_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1619  (w : Nat)   : alive_AddSub_1619_src w  ⊑ alive_AddSub_1619_tgt w  := by
   unfold alive_AddSub_1619_src alive_AddSub_1619_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1619
 
 
@@ -625,7 +625,7 @@ def alive_AddSub_1624_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1624  (w : Nat)   : alive_AddSub_1624_src w  ⊑ alive_AddSub_1624_tgt w  := by
   unfold alive_AddSub_1624_src alive_AddSub_1624_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AddSub_1624
 
 
@@ -660,7 +660,7 @@ def alive_AndOrXor_135_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_135  (w : Nat)   : alive_AndOrXor_135_src w  ⊑ alive_AndOrXor_135_tgt w  := by
   unfold alive_AndOrXor_135_src alive_AndOrXor_135_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_135
 
 
@@ -695,7 +695,7 @@ def alive_AndOrXor_144_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_144  (w : Nat)   : alive_AndOrXor_144_src w  ⊑ alive_AndOrXor_144_tgt w  := by
   unfold alive_AndOrXor_144_src alive_AndOrXor_144_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_144
 
 
@@ -750,7 +750,7 @@ def alive_AndOrXor_698_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_698  (w : Nat)   : alive_AndOrXor_698_src w  ⊑ alive_AndOrXor_698_tgt w  := by
   unfold alive_AndOrXor_698_src alive_AndOrXor_698_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_698
 
 
@@ -798,7 +798,7 @@ def alive_AndOrXor_709_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_709  (w : Nat)   : alive_AndOrXor_709_src w  ⊑ alive_AndOrXor_709_tgt w  := by
   unfold alive_AndOrXor_709_src alive_AndOrXor_709_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_709
 
 
@@ -846,7 +846,7 @@ def alive_AndOrXor_716_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_716  (w : Nat)   : alive_AndOrXor_716_src w  ⊑ alive_AndOrXor_716_tgt w  := by
   unfold alive_AndOrXor_716_src alive_AndOrXor_716_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_716
 
 
@@ -882,7 +882,7 @@ def alive_AndOrXor_794_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_794  (w : Nat)   : alive_AndOrXor_794_src w  ⊑ alive_AndOrXor_794_tgt w  := by
   unfold alive_AndOrXor_794_src alive_AndOrXor_794_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_794
 
 
@@ -926,7 +926,7 @@ def alive_AndOrXor_827_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_827  (w : Nat)   : alive_AndOrXor_827_src w  ⊑ alive_AndOrXor_827_tgt w  := by
   unfold alive_AndOrXor_827_src alive_AndOrXor_827_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_827
 
 
@@ -963,7 +963,7 @@ def alive_AndOrXor_887_2_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_887_2  (w : Nat)   : alive_AndOrXor_887_2_src w  ⊑ alive_AndOrXor_887_2_tgt w  := by
   unfold alive_AndOrXor_887_2_src alive_AndOrXor_887_2_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_887_2
 
 
@@ -1006,7 +1006,7 @@ def alive_AndOrXor_1230__A__B___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1230__A__B___A__B  (w : Nat)   : alive_AndOrXor_1230__A__B___A__B_src w  ⊑ alive_AndOrXor_1230__A__B___A__B_tgt w  := by
   unfold alive_AndOrXor_1230__A__B___A__B_src alive_AndOrXor_1230__A__B___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1230__A__B___A__B
 
 
@@ -1048,7 +1048,7 @@ def alive_AndOrXor_1241_AB__AB__AB_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1241_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1241_AB__AB__AB_src w  ⊑ alive_AndOrXor_1241_AB__AB__AB_tgt w  := by
   unfold alive_AndOrXor_1241_AB__AB__AB_src alive_AndOrXor_1241_AB__AB__AB_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1241_AB__AB__AB
 
 
@@ -1090,7 +1090,7 @@ def alive_AndOrXor_1247_AB__AB__AB_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1247_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1247_AB__AB__AB_src w  ⊑ alive_AndOrXor_1247_AB__AB__AB_tgt w  := by
   unfold alive_AndOrXor_1247_AB__AB__AB_src alive_AndOrXor_1247_AB__AB__AB_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1247_AB__AB__AB
 
 
@@ -1125,7 +1125,7 @@ def alive_AndOrXor_1253_A__AB___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1253_A__AB___A__B  (w : Nat)   : alive_AndOrXor_1253_A__AB___A__B_src w  ⊑ alive_AndOrXor_1253_A__AB___A__B_tgt w  := by
   unfold alive_AndOrXor_1253_A__AB___A__B_src alive_AndOrXor_1253_A__AB___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1253_A__AB___A__B
 
 
@@ -1163,7 +1163,7 @@ def alive_AndOrXor_1280_ABA___AB_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1280_ABA___AB  (w : Nat)   : alive_AndOrXor_1280_ABA___AB_src w  ⊑ alive_AndOrXor_1280_ABA___AB_tgt w  := by
   unfold alive_AndOrXor_1280_ABA___AB_src alive_AndOrXor_1280_ABA___AB_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1280_ABA___AB
 
 
@@ -1206,7 +1206,7 @@ def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C  (w : Nat)   : alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src w  ⊑ alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt w  := by
   unfold alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1288_A__B__B__C__A___A__B__C
 
 
@@ -1248,7 +1248,7 @@ def alive_AndOrXor_1294_A__B__A__B___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1294_A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_1294_A__B__A__B___A__B_src w  ⊑ alive_AndOrXor_1294_A__B__A__B___A__B_tgt w  := by
   unfold alive_AndOrXor_1294_A__B__A__B___A__B_src alive_AndOrXor_1294_A__B__A__B___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1294_A__B__A__B___A__B
 
 
@@ -1284,7 +1284,7 @@ def alive_AndOrXor_1683_1_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1683_1  (w : Nat)   : alive_AndOrXor_1683_1_src w  ⊑ alive_AndOrXor_1683_1_tgt w  := by
   unfold alive_AndOrXor_1683_1_src alive_AndOrXor_1683_1_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1683_1
 
 
@@ -1321,7 +1321,7 @@ def alive_AndOrXor_1683_2_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1683_2  (w : Nat)   : alive_AndOrXor_1683_2_src w  ⊑ alive_AndOrXor_1683_2_tgt w  := by
   unfold alive_AndOrXor_1683_2_src alive_AndOrXor_1683_2_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1683_2
 
 
@@ -1363,7 +1363,7 @@ def alive_AndOrXor_1704_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1704  (w : Nat)   : alive_AndOrXor_1704_src w  ⊑ alive_AndOrXor_1704_tgt w  := by
   unfold alive_AndOrXor_1704_src alive_AndOrXor_1704_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1704
 
 
@@ -1405,7 +1405,7 @@ def alive_AndOrXor_1705_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1705  (w : Nat)   : alive_AndOrXor_1705_src w  ⊑ alive_AndOrXor_1705_tgt w  := by
   unfold alive_AndOrXor_1705_src alive_AndOrXor_1705_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1705
 
 
@@ -1449,7 +1449,7 @@ def alive_AndOrXor_1733_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1733  (w : Nat)   : alive_AndOrXor_1733_src w  ⊑ alive_AndOrXor_1733_tgt w  := by
   unfold alive_AndOrXor_1733_src alive_AndOrXor_1733_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_1733
 
 
@@ -1485,7 +1485,7 @@ def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2  (w : Nat)   : alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src w  ⊑ alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt w  := by
   unfold alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2063__X__C1__C2____X__C2__C1__C2
 
 
@@ -1523,7 +1523,7 @@ def alive_AndOrXor_2113___A__B__A___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2113___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2113___A__B__A___A__B_src w  ⊑ alive_AndOrXor_2113___A__B__A___A__B_tgt w  := by
   unfold alive_AndOrXor_2113___A__B__A___A__B_src alive_AndOrXor_2113___A__B__A___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2113___A__B__A___A__B
 
 
@@ -1561,7 +1561,7 @@ def alive_AndOrXor_2118___A__B__A___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2118___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2118___A__B__A___A__B_src w  ⊑ alive_AndOrXor_2118___A__B__A___A__B_tgt w  := by
   unfold alive_AndOrXor_2118___A__B__A___A__B_src alive_AndOrXor_2118___A__B__A___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2118___A__B__A___A__B
 
 
@@ -1603,7 +1603,7 @@ def alive_AndOrXor_2123___A__B__A__B___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2123___A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_2123___A__B__A__B___A__B_src w  ⊑ alive_AndOrXor_2123___A__B__A__B___A__B_tgt w  := by
   unfold alive_AndOrXor_2123___A__B__A__B___A__B_src alive_AndOrXor_2123___A__B__A__B___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2123___A__B__A__B___A__B
 
 
@@ -1651,7 +1651,7 @@ def alive_AndOrXor_2188_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2188  (w : Nat)   : alive_AndOrXor_2188_src w  ⊑ alive_AndOrXor_2188_tgt w  := by
   unfold alive_AndOrXor_2188_src alive_AndOrXor_2188_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2188
 
 
@@ -1691,7 +1691,7 @@ def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C  (w : Nat)   : alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src w  ⊑ alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt w  := by
   unfold alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2231__A__B__B__C__A___A__B__C
 
 
@@ -1729,7 +1729,7 @@ def alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2243__B__C__A__B___B__A__C  (w : Nat)   : alive_AndOrXor_2243__B__C__A__B___B__A__C_src w  ⊑ alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt w  := by
   unfold alive_AndOrXor_2243__B__C__A__B___B__A__C_src alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2243__B__C__A__B___B__A__C
 
 
@@ -1772,7 +1772,7 @@ def alive_AndOrXor_2247__A__B__A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2247__A__B__A__B  (w : Nat)   : alive_AndOrXor_2247__A__B__A__B_src w  ⊑ alive_AndOrXor_2247__A__B__A__B_tgt w  := by
   unfold alive_AndOrXor_2247__A__B__A__B_src alive_AndOrXor_2247__A__B__A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2247__A__B__A__B
 
 
@@ -1804,7 +1804,7 @@ def alive_AndOrXor_2263_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2263  (w : Nat)   : alive_AndOrXor_2263_src w  ⊑ alive_AndOrXor_2263_tgt w  := by
   unfold alive_AndOrXor_2263_src alive_AndOrXor_2263_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2263
 
 
@@ -1845,7 +1845,7 @@ def alive_AndOrXor_2264_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2264  (w : Nat)   : alive_AndOrXor_2264_src w  ⊑ alive_AndOrXor_2264_tgt w  := by
   unfold alive_AndOrXor_2264_src alive_AndOrXor_2264_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2264
 
 
@@ -1881,7 +1881,7 @@ def alive_AndOrXor_2265_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2265  (w : Nat)   : alive_AndOrXor_2265_src w  ⊑ alive_AndOrXor_2265_tgt w  := by
   unfold alive_AndOrXor_2265_src alive_AndOrXor_2265_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2265
 
 
@@ -1922,7 +1922,7 @@ def alive_AndOrXor_2284_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2284  (w : Nat)   : alive_AndOrXor_2284_src w  ⊑ alive_AndOrXor_2284_tgt w  := by
   unfold alive_AndOrXor_2284_src alive_AndOrXor_2284_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2284
 
 
@@ -1963,7 +1963,7 @@ def alive_AndOrXor_2285_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2285  (w : Nat)   : alive_AndOrXor_2285_src w  ⊑ alive_AndOrXor_2285_tgt w  := by
   unfold alive_AndOrXor_2285_src alive_AndOrXor_2285_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2285
 
 
@@ -2005,7 +2005,7 @@ def alive_AndOrXor_2297_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2297  (w : Nat)   : alive_AndOrXor_2297_src w  ⊑ alive_AndOrXor_2297_tgt w  := by
   unfold alive_AndOrXor_2297_src alive_AndOrXor_2297_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2297
 
 
@@ -2039,7 +2039,7 @@ def alive_AndOrXor_2367_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2367  (w : Nat)   : alive_AndOrXor_2367_src w  ⊑ alive_AndOrXor_2367_tgt w  := by
   unfold alive_AndOrXor_2367_src alive_AndOrXor_2367_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2367
 
 
@@ -2081,7 +2081,7 @@ def alive_AndOrXor_2416_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2416  (w : Nat)   : alive_AndOrXor_2416_src w  ⊑ alive_AndOrXor_2416_tgt w  := by
   unfold alive_AndOrXor_2416_src alive_AndOrXor_2416_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2416
 
 
@@ -2123,7 +2123,7 @@ def alive_AndOrXor_2417_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2417  (w : Nat)   : alive_AndOrXor_2417_src w  ⊑ alive_AndOrXor_2417_tgt w  := by
   unfold alive_AndOrXor_2417_src alive_AndOrXor_2417_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2417
 
 
@@ -2162,7 +2162,7 @@ def alive_AndOrXor_2429_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2429  (w : Nat)   : alive_AndOrXor_2429_src w  ⊑ alive_AndOrXor_2429_tgt w  := by
   unfold alive_AndOrXor_2429_src alive_AndOrXor_2429_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2429
 
 
@@ -2201,7 +2201,7 @@ def alive_AndOrXor_2430_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2430  (w : Nat)   : alive_AndOrXor_2430_src w  ⊑ alive_AndOrXor_2430_tgt w  := by
   unfold alive_AndOrXor_2430_src alive_AndOrXor_2430_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2430
 
 
@@ -2240,7 +2240,7 @@ def alive_AndOrXor_2443_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2443  (w : Nat)   : alive_AndOrXor_2443_src w  ⊑ alive_AndOrXor_2443_tgt w  := by
   unfold alive_AndOrXor_2443_src alive_AndOrXor_2443_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2443
 
 
@@ -2274,7 +2274,7 @@ def alive_AndOrXor_2453_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2453  (w : Nat)   : alive_AndOrXor_2453_src w  ⊑ alive_AndOrXor_2453_tgt w  := by
   unfold alive_AndOrXor_2453_src alive_AndOrXor_2453_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2453
 
 
@@ -2309,7 +2309,7 @@ def alive_AndOrXor_2475_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2475  (w : Nat)   : alive_AndOrXor_2475_src w  ⊑ alive_AndOrXor_2475_tgt w  := by
   unfold alive_AndOrXor_2475_src alive_AndOrXor_2475_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2475
 
 
@@ -2344,7 +2344,7 @@ def alive_AndOrXor_2486_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2486  (w : Nat)   : alive_AndOrXor_2486_src w  ⊑ alive_AndOrXor_2486_tgt w  := by
   unfold alive_AndOrXor_2486_src alive_AndOrXor_2486_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2486
 
 
@@ -2379,7 +2379,7 @@ def alive_AndOrXor_2581__BAB___A__B_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2581__BAB___A__B  (w : Nat)   : alive_AndOrXor_2581__BAB___A__B_src w  ⊑ alive_AndOrXor_2581__BAB___A__B_tgt w  := by
   unfold alive_AndOrXor_2581__BAB___A__B_src alive_AndOrXor_2581__BAB___A__B_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2581__BAB___A__B
 
 
@@ -2414,7 +2414,7 @@ def alive_AndOrXor_2587__BAA___B__A_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2587__BAA___B__A  (w : Nat)   : alive_AndOrXor_2587__BAA___B__A_src w  ⊑ alive_AndOrXor_2587__BAA___B__A_tgt w  := by
   unfold alive_AndOrXor_2587__BAA___B__A_src alive_AndOrXor_2587__BAA___B__A_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2587__BAA___B__A
 
 
@@ -2450,7 +2450,7 @@ def alive_AndOrXor_2595_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2595  (w : Nat)   : alive_AndOrXor_2595_src w  ⊑ alive_AndOrXor_2595_tgt w  := by
   unfold alive_AndOrXor_2595_src alive_AndOrXor_2595_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2595
 
 
@@ -2498,7 +2498,7 @@ def alive_AndOrXor_2607_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2607  (w : Nat)   : alive_AndOrXor_2607_src w  ⊑ alive_AndOrXor_2607_tgt w  := by
   unfold alive_AndOrXor_2607_src alive_AndOrXor_2607_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2607
 
 
@@ -2546,7 +2546,7 @@ def alive_AndOrXor_2617_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2617  (w : Nat)   : alive_AndOrXor_2617_src w  ⊑ alive_AndOrXor_2617_tgt w  := by
   unfold alive_AndOrXor_2617_src alive_AndOrXor_2617_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2617
 
 
@@ -2587,7 +2587,7 @@ def alive_AndOrXor_2627_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2627  (w : Nat)   : alive_AndOrXor_2627_src w  ⊑ alive_AndOrXor_2627_tgt w  := by
   unfold alive_AndOrXor_2627_src alive_AndOrXor_2627_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2627
 
 
@@ -2623,7 +2623,7 @@ def alive_AndOrXor_2647_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2647  (w : Nat)   : alive_AndOrXor_2647_src w  ⊑ alive_AndOrXor_2647_tgt w  := by
   unfold alive_AndOrXor_2647_src alive_AndOrXor_2647_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2647
 
 
@@ -2670,7 +2670,7 @@ def alive_AndOrXor_2658_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2658  (w : Nat)   : alive_AndOrXor_2658_src w  ⊑ alive_AndOrXor_2658_tgt w  := by
   unfold alive_AndOrXor_2658_src alive_AndOrXor_2658_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2658
 
 
@@ -2706,7 +2706,7 @@ def alive_AndOrXor_2663_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2663  (w : Nat)   : alive_AndOrXor_2663_src w  ⊑ alive_AndOrXor_2663_tgt w  := by
   unfold alive_AndOrXor_2663_src alive_AndOrXor_2663_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_AndOrXor_2663
 
 
@@ -2736,7 +2736,7 @@ def alive_152_tgt  (w : Nat)  :=
 }]
 theorem alive_152  (w : Nat)   : alive_152_src w  ⊑ alive_152_tgt w  := by
   unfold alive_152_src alive_152_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_152
 
 
@@ -2772,7 +2772,7 @@ def alive_229_tgt  (w : Nat)  :=
 }]
 theorem alive_229  (w : Nat)   : alive_229_src w  ⊑ alive_229_tgt w  := by
   unfold alive_229_src alive_229_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_229
 
 
@@ -2812,7 +2812,7 @@ def alive_239_tgt  (w : Nat)  :=
 }]
 theorem alive_239  (w : Nat)   : alive_239_src w  ⊑ alive_239_tgt w  := by
   unfold alive_239_src alive_239_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_239
 
 
@@ -2846,7 +2846,7 @@ def alive_275_tgt  :=
 }]
 theorem alive_275   : alive_275_src ⊑ alive_275_tgt := by
   unfold alive_275_src alive_275_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_275
 
 
@@ -2880,7 +2880,7 @@ def alive_275_2_tgt  :=
 }]
 theorem alive_275_2   : alive_275_2_src ⊑ alive_275_2_tgt := by
   unfold alive_275_2_src alive_275_2_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_275_2
 
 
@@ -2921,7 +2921,7 @@ def alive_276_tgt  (w : Nat)  :=
 }]
 theorem alive_276  (w : Nat)   : alive_276_src w  ⊑ alive_276_tgt w  := by
   unfold alive_276_src alive_276_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_276
 
 
@@ -2962,7 +2962,7 @@ def alive_276_2_tgt  (w : Nat)  :=
 }]
 theorem alive_276_2  (w : Nat)   : alive_276_2_src w  ⊑ alive_276_2_tgt w  := by
   unfold alive_276_2_src alive_276_2_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_276_2
 
 
@@ -2990,7 +2990,7 @@ def alive_283_tgt  :=
 }]
 theorem alive_283   : alive_283_src ⊑ alive_283_tgt := by
   unfold alive_283_src alive_283_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_283
 
 
@@ -3024,7 +3024,7 @@ def alive_290__292_tgt  (w : Nat)  :=
 }]
 theorem alive_290__292  (w : Nat)   : alive_290__292_src w  ⊑ alive_290__292_tgt w  := by
   unfold alive_290__292_src alive_290__292_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_290__292
 
 
@@ -3060,7 +3060,7 @@ def alive_820_tgt  :=
 }]
 theorem alive_820   : alive_820_src ⊑ alive_820_tgt := by
   unfold alive_820_src alive_820_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_820
 
 
@@ -3096,7 +3096,7 @@ def alive_820'_tgt  :=
 }]
 theorem alive_820'   : alive_820'_src ⊑ alive_820'_tgt := by
   unfold alive_820'_src alive_820'_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_820'
 
 
@@ -3126,7 +3126,7 @@ def alive_1030_tgt  (w : Nat)  :=
 }]
 theorem alive_1030  (w : Nat)   : alive_1030_src w  ⊑ alive_1030_tgt w  := by
   unfold alive_1030_src alive_1030_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_1030
 
 
@@ -3161,7 +3161,7 @@ def alive_Select_858_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select_858_tgt 1  := by
   unfold alive_Select_858_src alive_Select_858_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_Select_858
 
 -- Name:Select:859'
@@ -3195,7 +3195,7 @@ def alive_Select_859'_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w ⊑ alive_Select_859'_tgt 1  := by
   unfold alive_Select_859'_src alive_Select_859'_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_Select_859'
 
 -- Name:Select:1100
@@ -3223,7 +3223,7 @@ def alive_Select_1100_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_1100  (w : Nat)   : alive_Select_1100_src w  ⊑ alive_Select_1100_tgt w  := by
   unfold alive_Select_1100_src alive_Select_1100_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_select_1100
 
 
@@ -3252,7 +3252,7 @@ def alive_Select_1105_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_1105  (w : Nat)   : alive_Select_1105_src w  ⊑ alive_Select_1105_tgt w  := by
   unfold alive_Select_1105_src alive_Select_1105_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_Select_1105
 
 
@@ -3286,7 +3286,7 @@ def alive_InstCombineShift__239_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__239  (w : Nat)   : alive_InstCombineShift__239_src w  ⊑ alive_InstCombineShift__239_tgt w  := by
   unfold alive_InstCombineShift__239_src alive_InstCombineShift__239_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__239
 
 
@@ -3320,7 +3320,7 @@ def alive_InstCombineShift__279_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__279  (w : Nat)   : alive_InstCombineShift__279_src w  ⊑ alive_InstCombineShift__279_tgt w  := by
   unfold alive_InstCombineShift__279_src alive_InstCombineShift__279_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__279
 
 
@@ -3366,7 +3366,7 @@ def alive_InstCombineShift__440_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__440  (w : Nat)   : alive_InstCombineShift__440_src w  ⊑ alive_InstCombineShift__440_tgt w  := by
   unfold alive_InstCombineShift__440_src alive_InstCombineShift__440_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__440
 
 
@@ -3412,7 +3412,7 @@ def alive_InstCombineShift__476_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__476  (w : Nat)   : alive_InstCombineShift__476_src w  ⊑ alive_InstCombineShift__476_tgt w  := by
   unfold alive_InstCombineShift__476_src alive_InstCombineShift__476_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__476
 
 
@@ -3447,7 +3447,7 @@ def alive_InstCombineShift__497_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__497  (w : Nat)   : alive_InstCombineShift__497_src w  ⊑ alive_InstCombineShift__497_tgt w  := by
   unfold alive_InstCombineShift__497_src alive_InstCombineShift__497_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__497
 
 
@@ -3482,7 +3482,7 @@ def alive_InstCombineShift__497'''_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__497'''  (w : Nat)   : alive_InstCombineShift__497'''_src w  ⊑ alive_InstCombineShift__497'''_tgt w  := by
   unfold alive_InstCombineShift__497'''_src alive_InstCombineShift__497'''_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__497'''
 
 
@@ -3516,5 +3516,5 @@ def alive_InstCombineShift__582_tgt  (w : Nat)  :=
 }]
 theorem alive_InstCombineShift__582  (w : Nat)   : alive_InstCombineShift__582_src w  ⊑ alive_InstCombineShift__582_tgt w  := by
   unfold alive_InstCombineShift__582_src alive_InstCombineShift__582_tgt
-  simp_alive_peephole
+  simp_peephole
   apply bv_InstCombineShift__582
