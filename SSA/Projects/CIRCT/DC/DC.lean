@@ -16,8 +16,6 @@ def TokenStream := Stream Unit
 instance : ToString TokenStream where
   toString s := toString (Stream.toList 100 s)
 
-/- First thing we need it to pop a value from the stream of int -/
-
 def popReady (s : ValueStream (BitVec w)) (n : Nat) : BitVec w :=
   if 0 < n then
     match s.head with
