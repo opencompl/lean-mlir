@@ -127,9 +127,10 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
     | ["IcmpPred"] =>
       return .icmpPred
     | _ => throw .unsupportedType
-  | MLIR.AST.MLIRType.int s w =>
-
-    sorry
+  | MLIR.AST.MLIRType.int _ w =>
+    match w with
+    | .concrete w' => return .bv w'
+    | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy Comb 0 where
