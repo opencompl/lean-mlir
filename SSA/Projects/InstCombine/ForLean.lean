@@ -291,7 +291,7 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
 
 theorem intMin_slt_zero (h : 0 < w) :
     BitVec.slt (intMin w) 0 := by
-  simp only [BitVec.slt, toInt_intMin, Int.ofNat_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
+  simp only [BitVec.slt, toInt_intMin, Int.natCast_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
     toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
   norm_cast
   simp [h]
