@@ -129,7 +129,7 @@ def runParser (parser : @ParseFun ParseOutput) (fileName : String) : IO (Option 
     throw <| IO.userError ("Expected `LEAN_PATH` environment variable to be set. " ++
     " Are you running via `lake exec opt`?")
   initSearchPath (← Lean.findSysroot) packagePaths
-  let modules : Array Import := #[⟨`SSA.Core.MLIRSyntax.EDSL, false⟩]
+  let modules : Array Import := #[⟨`SSA.Core.MLIRSyntax.EDSL, false, false⟩]
   let env ← importModules modules {}
   let filePath := System.mkFilePath [fileName]
   if !(← isFile filePath) then

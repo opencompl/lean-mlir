@@ -1,5 +1,6 @@
 import SSA.Core.Framework
 import SSA.Core.Framework.Macro
+import SSA.Core.Tactic.SimpSet
 
 /-!
 ## Variadic Example Dialect

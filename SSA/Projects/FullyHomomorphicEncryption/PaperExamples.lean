@@ -142,7 +142,7 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
        -/
       simp_peephole
       /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial q n 1 (2**n) + 1) = a -/
-      simp only [R.monomial, R.fromPoly, Int.toNat_ofNat, Int.cast_one, ROfZComputable_def]
+      simp only [R.monomial, R.fromPoly, Int.toNat_natCast, Int.cast_one, ROfZComputable_def]
       /- ⊢ a + ((Ideal.Quotient.mk (Ideal.span {f q n})) ((Polynomial.monomial
       (2**n)) 1) + 1) = a -/
       intros a

@@ -226,7 +226,7 @@ def urem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (regArgs := .nil)
 
 @[simp_llvm_wrap]
-def icmp {Γ : Ctxt _} (w : ℕ) (pred : LLVM.IntPredicate) (l r : Nat)
+def icmp {Γ : Ctxt _} (w : ℕ) (pred : LLVM.IntPred) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))

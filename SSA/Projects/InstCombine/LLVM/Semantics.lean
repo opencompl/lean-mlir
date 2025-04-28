@@ -395,7 +395,7 @@ def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w := do
   let c ← c?
   if c = 1#1 then x? else y?
 
-inductive IntPredicate where
+inductive IntPred where
   | eq
   | ne
   | ugt
@@ -408,7 +408,7 @@ inductive IntPredicate where
   | sle
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
-instance : ToString IntPredicate where
+instance : ToString IntPred where
   toString
   | .eq => "eq"
   | .ne => "ne"
@@ -441,7 +441,7 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
-def icmp' {w : Nat} (c : IntPredicate) (x y : BitVec w) : Bool :=
+def icmp' {w : Nat} (c : IntPred) (x y : BitVec w) : Bool :=
   match c with
     | .eq => (x == y)
     | .ne => (x != y)
@@ -476,7 +476,7 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
-def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
+def icmp? {w : Nat} (c : IntPred) (x y : BitVec w) : IntW 1 :=
   some ↑(icmp' c x y)
 
 @[simp]
@@ -492,7 +492,7 @@ theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
   icmp? .sgt a b =  some (BitVec.ofBool (a >ₛ b)) := rfl
 
 @[simp_llvm_option]
-def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
+def icmp {w : Nat} (c : IntPred) (x y : IntW w) : IntW 1 := do
   let x' ← x
   let y' ← y
   icmp? c x' y'
