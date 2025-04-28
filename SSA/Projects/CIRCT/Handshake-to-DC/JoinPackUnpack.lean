@@ -1,4 +1,5 @@
-import SSA.Projects.CIRCT.DC.DC
+import SSA.Projects.CIRCT.DCxComb.DCxComb
+
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim

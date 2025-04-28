@@ -1,4 +1,4 @@
-import SSA.Projects.CIRCT.DC.DC
+import SSA.Projects.CIRCT.DCxComb.DCxComb
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
@@ -20,9 +20,9 @@ namespace Stream.Bisim
 
 -- removed unused inputs
 unseal String.splitOnAux in
-def forkToken := [DC_com| {
+def forkToken := [DCxComb_com| {
   ^entry(%0: !TokenStream):
-    %dcFork = "DC.fork" (%0) : (!TokenStream) -> (!TokenStream2)
+    %dcFork = "DCxCombOp.fork" (%0) : (!TokenStream) -> (!TokenStream2)
     "return" (%dcFork) : (!TokenStream2) -> ()
   }]
 

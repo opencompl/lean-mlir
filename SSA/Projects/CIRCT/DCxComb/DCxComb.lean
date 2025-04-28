@@ -207,7 +207,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCxComb DCxComb.Ty
       | some w' => return .valuetokenstream w'
       | _ => throw .unsupportedType
     | _ => throw .unsupportedType
-  | _ => throw .unsupportedType
+  | _ => throw <| .generic s!"unkwown type"
 
 instance instTransformTy : MLIR.AST.TransformTy DCxComb 0 where
   mkTy := mkTy

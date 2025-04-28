@@ -1,13 +1,18 @@
-import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Handshake.Handshake
+import SSA.Projects.CIRCT.DCxComb.DCxComb
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
 import SSA.Core.Tactic
+import SSA.Core.ErasedContext
+import SSA.Core.HVector
+import SSA.Core.EffectKind
+import SSA.Core.Util
+
 
 namespace CIRCTStream
 namespace Stream.Bisim
 
-theorem corec₂_eq_tok (x : DCOp.TokenStream):
+theorem corec₂_eq_tok (x : DCxCombOp.TokenStream):
   (corec₂ x fun x => Id.run (x 0, x 0, tail x)) = (corec₂ x fun x => Id.run (x 0, x 0, x.tail)) := by
   apply corec₂_eq_corec₂_of
   rotate_left 2
@@ -32,18 +37,18 @@ theorem EqIsBisim {α} : @IsBisim α Eq := by
   intros a; exists 0; exists 0
   and_intros; all_goals first | rfl | intros _ h; cases h
 
-theorem fork_hs_dc_equiv_fst (x : DCOp.TokenStream):
-    (DCOp.fork (x)).fst ~ (Handshake.fork (x)).fst := by
-  simp [Bisim, DCOp.fork, Handshake.fork]
+theorem fork_hs_dc_equiv_fst (x : DCxCombOp.TokenStream):
+    (DCxCombOp.fork (x)).fst ~ (HandshakeOp.fork (x)).fst := by
+  simp [Bisim, DCxCombOp.fork, HandshakeOp.fork]
   exists Eq
   and_intros
   · rw [corec₂_eq_tok]
     rfl
   · apply EqIsBisim
 
-theorem fork_hs_dc_equiv_snd (x : DCOp.TokenStream):
-    (DCOp.fork (x)).snd ~ (Handshake.fork (x)).snd := by
-  simp [Bisim, DCOp.fork, Handshake.fork]
+theorem fork_hs_dc_equiv_snd (x : DCxCombOp.TokenStream):
+    (DCxCombOp.fork (x)).snd ~ (HandshakeOp.fork (x)).snd := by
+  simp [Bisim, DCxCombOp.fork, HandshakeOp.fork]
   exists Eq
   and_intros
   · rw [corec₂_eq_tok]
@@ -55,36 +60,39 @@ theorem fork_hs_dc_equiv_snd (x : DCOp.TokenStream):
 
 /- step 1: write dc circuit -/
 
+open MLIR AST in
+
+
+
 unseal String.splitOnAux in
-def DCFork := [DC_com| {
-  ^entry(%0 : !ValueStream_Int):
-    %unpack12 = "DC.unpack" (%0) : (!ValueStream_Int) -> (!ValueTokenStream_Int)
-    %unpack1 = "DC.fstVal" (%unpack12) : (!ValueTokenStream_Int) -> (!ValueStream_Int)
-    %unpack2 = "DC.sndVal" (%unpack12) : (!ValueTokenStream_Int) -> (!TokenStream)
-    %fork12 = "DC.fork" (%unpack2) : (!TokenStream) -> (!TokenStream2)
-    %fork1 = "DC.fst" (%fork12) : (!TokenStream2) -> (!TokenStream)
-    %fork2 = "DC.snd" (%fork12) : (!TokenStream2) -> (!TokenStream)
-    %pack1 = "DC.pack" (%unpack1, %fork1) : (!ValueStream_Int, !TokenStream) -> (!ValueStream_Int)
-    %pack2 = "DC.pack" (%unpack1, %fork2) : (!ValueStream_Int, !TokenStream) -> (!ValueStream_Int)
-    %pack12 = "DC.pair" (%pack1, %pack2) : (!ValueStream_Int, !ValueStream_Int) -> (!ValueStream2_Int)
-    "return" (%pack12) : (!ValueStream2_Int) -> ()
+def DCxCombFork := [DCxComb_com| {
+  ^entry(%0 : !ValueStream_8):
+    %unpack12 = "DCxComb.unpack" (%0) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    %unpack1 = "DCxComb.fstVal" (%unpack12) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %unpack2 = "DCxComb.sndVal" (%unpack12) : (!ValueTokenStream_8) -> (!TokenStream)
+    %fork12 = "DCxComb.fork" (%unpack2) : (!TokenStream) -> (!TokenStream2)
+    %fork1 = "DCxComb.fst" (%fork12) : (!TokenStream2) -> (!TokenStream)
+    %fork2 = "DCxComb.snd" (%fork12) : (!TokenStream2) -> (!TokenStream)
+    %pack1 = "DCxComb.pack" (%unpack1, %fork1) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    %pack2 = "DCxComb.pack" (%unpack1, %fork2) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    "return" (%pack2) : (!ValueStream_8) -> ()
   }]
 
 /- step 2: denote dc circuit -/
 
-#check DCFork
-#eval DCFork
-#reduce DCFork
-#check DCFork.denote
-#print axioms DCFork
+#check DCxCombFork
+#eval DCxCombFork
+#reduce DCxCombFork
+#check DCxCombFork.denote
+#print axioms DCxCombFork
 
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => (vals.get? i).join
 
-def x : DCOp.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
+def x : DCxCombOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 5, none]
 
-def test : DCOp.ValueStream Int × DCOp.ValueStream Int :=
-  DCFork.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
+def test : DCxCombOp.ValueStream (BitVec 8)  :=
+  DCxCombFork.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 /- step 3: prove equivalence -/
 
@@ -112,7 +120,7 @@ theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s
   tail_iterate''
 
 open Ctxt in
-theorem equiv_fork_fst (streamInt : DCOp.ValueStream Int) :
+theorem equiv_fork_fst (streamInt : DCOp.ValueStream (Int)) :
   (Handshake.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
   simp only [MLIR2DC.instDialectDenoteDC, EffectKind.toMonad_impure, DCFork,
     EffectKind.pure_sup_pure_eq, DerivedCtxt.ofCtxt, DerivedCtxt.snoc.eq_1, get?.eq_1,
