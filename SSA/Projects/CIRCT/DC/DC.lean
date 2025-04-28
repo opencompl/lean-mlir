@@ -16,6 +16,16 @@ def TokenStream := Stream Unit
 instance : ToString TokenStream where
   toString s := toString (Stream.toList 100 s)
 
+/- First thing we need it to pop a value from the stream of int -/
+
+def popReady (s : ValueStream (BitVec w)) (n : Nat) : BitVec w :=
+  if 0 < n then
+    match s.head with
+    | some e => e
+    | _ => popReady s.tail (n - 1)
+  else
+    0#w
+
 def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream :=
   Stream.corec₂ (β := Stream (BitVec w)) (x)
     fun x => Id.run <| do
@@ -96,23 +106,21 @@ namespace MLIR2DC
 
 section Dialect
 
-inductive Ty2
-  | bv (w : Nat) : Ty2
-deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 inductive Ty
+| bv (w : Nat) : Ty
 | tokenstream : Ty
 | tokenstream2 : Ty
-| valuestream (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
-| valuestream2 (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
-| valuetokenstream (Ty2 : Ty2) : Ty -- A product of streams of values of type `Ty2`.
+| valuestream (w : Nat) : Ty -- A stream of BitVec w
+| valuestream2 (w : Nat) : Ty -- A stream of BitVec w
+| valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec w
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 inductive Op
 | fst
 | snd
-| fstVal (t : Ty2)
-| sndVal (t : Ty2)
+| fstVal (w : Nat)
+| sndVal (w : Nat)
 | merge
 | branch
 | fork
@@ -120,8 +128,9 @@ inductive Op
 | select
 | sink
 | source
-| pack (t : Ty2)
-| unpack (t : Ty2)
+| pack (w : Nat)
+| unpack (w : Nat)
+| popReady (w : Nat) (n : Nat)
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 abbrev DC : Dialect where
@@ -133,27 +142,25 @@ def_signature for DC where
   | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
   | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
   | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
-  | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream (Ty2.bv 1)
-  | .branch => (Ty.valuestream (Ty2.bv 1)) → Ty.tokenstream2
+  | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream 1
+  | .branch => (Ty.valuestream 1) → Ty.tokenstream2
   | .fork => (Ty.tokenstream) → Ty.tokenstream2
   | .join => (Ty.tokenstream, Ty.tokenstream) → Ty.tokenstream
-  | .select => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream (Ty2.bv 1)) → Ty.tokenstream
+  | .select => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream 1) → Ty.tokenstream
   | .sink => (Ty.tokenstream) → Ty.tokenstream
   | .source => () → Ty.tokenstream
   | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
-
-instance : TyDenote Ty2 where
-toType := fun
-| Ty2.bv w => BitVec w
+  | .popReady w _ => (Ty.valuestream w) → Ty.bv w
 
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
+| Ty.bv w => BitVec w
 | Ty.tokenstream => CIRCTStream.DCOp.TokenStream
 | Ty.tokenstream2 => CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream
-| Ty.valuestream Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2)
-| Ty.valuestream2 Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2) × CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2)
-| Ty.valuetokenstream Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2) × CIRCTStream.DCOp.TokenStream
+| Ty.valuestream w => CIRCTStream.DCOp.ValueStream (BitVec w)
+| Ty.valuestream2 w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.ValueStream (BitVec w)
+| Ty.valuetokenstream w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.TokenStream
 
 
 def_denote for DC where
@@ -170,34 +177,47 @@ def_denote for DC where
   | .source => fun s => DCOp.source s
   | .pack _ => fun s₁ s₂ => DCOp.pack s₁ s₂
   | .unpack _ => fun s => DCOp.unpack s
+  | .popReady _ n => fun s => DCOp.popReady s n
 
 end Dialect
 
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
+  | MLIR.AST.MLIRType.int _ w => do
+    match w with
+    | .concrete w' => return .bv w'
+    | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["TokenStream"] =>
       return .tokenstream
     | ["TokenStream2"] =>
       return .tokenstream2
-    | ["ValueStream", "i", w] =>
+    | ["ValueStream", w] =>
       match w.toNat? with
-      | some w' => return .valuestream (.bv w')
+      | some w' => return .valuestream w'
       | _ => throw .unsupportedType
-    | ["ValueStream2", "i", w] =>
+    | ["ValueStream2", w] =>
       match w.toNat? with
-      | some w' => return .valuestream2 (.bv w')
+      | some w' => return .valuestream2 w'
       | _ => throw .unsupportedType
-    | ["ValueTokenStream", "i", w] =>
+    | ["ValueTokenStream", w] =>
     match w.toNat? with
-      | some w' => return .valuetokenstream (.bv w')
+      | some w' => return .valuetokenstream w'
       | _ => throw .unsupportedType
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where
   mkTy := mkTy
+
+def popReady {Γ : Ctxt _} (a : Γ.Var (.valuestream w)) (n : Nat) : Expr (DC) Γ .pure (.bv w) :=
+  Expr.mk
+    (op := .popReady w n)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
 
 def source : Expr (DC) Γ .pure (.tokenstream) :=
   Expr.mk
@@ -231,7 +251,7 @@ def pack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.tokenstre
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def branch {Γ : Ctxt _} (a : Γ.Var (.valuestream (.bv 1))) : Expr (DC) Γ .pure (.tokenstream2) :=
+def branch {Γ : Ctxt _} (a : Γ.Var (.valuestream 1)) : Expr (DC) Γ .pure (.tokenstream2) :=
   Expr.mk
     (op := .branch)
     (ty_eq := rfl)
@@ -255,7 +275,7 @@ def join {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.toke
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream (.bv 1)) :=
+def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream 1) :=
   Expr.mk
     (op := .merge)
     (ty_eq := rfl)
@@ -263,7 +283,7 @@ def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.val
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def select {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) (c : Γ.Var (.valuestream (.bv 1))) : Expr (DC) Γ .pure (.tokenstream) :=
+def select {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) (c : Γ.Var (.valuestream 1)) : Expr (DC) Γ .pure (.tokenstream) :=
   Expr.mk
     (op := .select)
     (ty_eq := rfl)
@@ -323,7 +343,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .tokenstream, "DC.sink" => return ⟨_, .tokenstream, sink v₁⟩
       | .valuestream r, "DC.unpack"  => return ⟨_, .valuetokenstream r, unpack v₁⟩
       | .tokenstream, "DC.fork"  => return ⟨_, .tokenstream2, fork v₁⟩
-      | .valuestream (.bv 1), "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
+      | .valuestream 1, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"DC.merge" | op@"DC.join" | op@"DC.pack"  =>
@@ -332,7 +352,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream (.bv 1), merge v₁ v₂⟩
+      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream 1, merge v₁ v₂⟩
       | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
@@ -344,10 +364,23 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .tokenstream, .tokenstream, .valuestream (.bv 1), "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
+      | .tokenstream, .tokenstream, .valuestream 1, "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
       | _, _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+  | _ =>
+    match (opStx.name).splitOn "_" with
+    | ["DC.popReady", n] =>
+      match n.toNat? with
+      | some n' =>
+        match opStx.args with
+        | v₁Stx::[] =>
+          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+          match ty₁ with
+          | .valuestream w => return ⟨_, .bv w, popReady v₁ n'⟩
+          | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
+        | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
+      | _ => throw <| .unsupportedOp s!"unsupported stream size for {repr opStx}"
+    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (DC) 0 where
   mkExpr := mkExpr

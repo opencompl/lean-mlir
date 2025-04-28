@@ -31,13 +31,13 @@ def test1 : DCOp.TokenStream :=
 
 unseal String.splitOnAux in
 def BranchEg := [DC_com| {
-  ^entry(%0: !TokenStream, %1: !ValueStream_i_8, %2: !ValueStream_i_1):
-    %truefalse = "DC.branch" (%2) : (!ValueStream_i_1) -> (!TokenStream2)
+  ^entry(%0: !TokenStream, %1: !ValueStream_8, %2: !ValueStream_1):
+    %truefalse = "DC.branch" (%2) : (!ValueStream_1) -> (!TokenStream2)
     %truet = "DC.fst" (%truefalse) : (!TokenStream2) -> (!TokenStream)
     %falset = "DC.snd" (%truefalse) : (!TokenStream2) -> (!TokenStream)
-    %packtrue = "DC.pack" (%1, %truet) : (!ValueStream_i_8, !TokenStream) -> (!ValueStream_i_8)
-    %packfalse = "DC.pack" (%1, %falset) : (!ValueStream_i_8, !TokenStream) -> (!ValueStream_i_8)
-    %out = "DC.select" (%truet, %falset, %2) : (!TokenStream, !TokenStream, !ValueStream_i_1) -> (!TokenStream)
+    %packtrue = "DC.pack" (%1, %truet) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    %packfalse = "DC.pack" (%1, %falset) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    %out = "DC.select" (%truet, %falset, %2) : (!TokenStream, !TokenStream, !ValueStream_1) -> (!TokenStream)
     "return" (%0) : (!TokenStream) -> ()
   }]
 

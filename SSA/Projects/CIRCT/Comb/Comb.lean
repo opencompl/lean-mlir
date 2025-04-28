@@ -263,7 +263,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   |  _ =>
     match (opStx.name).splitOn "_" with
-    | ["Comb.replicate", n]=>
+    | ["Comb.replicate", n] =>
       match opStx.args with
       | v₁Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
