@@ -9,8 +9,6 @@ import SSA.Core.Util
 
 namespace CIRCTStream
 
-#exit
-
 open MLIR AST in
 
 unseal String.splitOnAux in
@@ -26,7 +24,7 @@ def SourceEg := [DC_com| {
 #check SourceEg.denote
 #print axioms SourceEg
 
-def test1 : DC.TokenStream :=
+def test1 : DCOp.TokenStream :=
   SourceEg.denote (Ctxt.Valuation.nil)
 
 
@@ -51,9 +49,9 @@ def BranchEg := [DC_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => (vals.get? i).join
 
-def c : DC.ValueStream Bool := ofList [some true, none, some false, some true, some false]
-def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
-def u : DC.TokenStream := ofList [some (), none, some (), some (), none]
+def c : DCOp.ValueStream Bool := ofList [some true, none, some false, some true, some false]
+def x : DCOp.ValueStream Int := ofList [some 1, none, some 2, some 3, none]
+def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
 
-def test2 : DC.TokenStream :=
+def test2 : DCOp.TokenStream :=
   BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
