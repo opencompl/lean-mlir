@@ -267,9 +267,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         match ty₁, n.toNat? with
         | .bv w, some n' =>
-          return ⟨_, .bv (w - n'),
-            (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
+          return ⟨_, .bv (w * n'),
+            (Expr.mk (op := .replicate w n') (ty_eq := rfl) (eff_le := by constructor)
+              (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w * n')))⟩
         | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
         | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"type mismatch in {repr opStx}"

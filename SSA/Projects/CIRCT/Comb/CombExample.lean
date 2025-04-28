@@ -22,9 +22,9 @@ def CombEg1 := [Comb_com| {
 #print axioms CombEg1
 
 def CombEg2 := [Comb_com| {
-    ^entry(%0: !BitVec_4, %1 : !BitVec_4):
-      %2 = "Comb.add" (%0, %1) : (!BitVec_4, !BitVec_4) -> !BitVec_4
-      "return" (%2) : (!BitVec_4) -> ()
+    ^entry(%0: i4, %1 : i4):
+      %2 = "Comb.add" (%0, %1) : (i4, i4) -> i4
+      "return" (%2) : (i4) -> ()
     }]
 
 #print CombEg2
@@ -42,8 +42,8 @@ def test2 : BitVec 4 :=
 #eval test2
 
 def CombEg3 := [Comb_com| {
-  ^entry(%0: !BitVec_4, %1 : !BitVec_4):
-    %2 = "Comb.icmp_slt" (%0, %1) : (!BitVec_4, !BitVec_4) -> !Bool
+  ^entry(%0: i4, %1 : i4):
+    %2 = "Comb.icmp_slt" (%0, %1) : (i4, i4) -> !Bool
     "return" (%2) : (!Bool) -> ()
   }]
 
@@ -62,8 +62,8 @@ def test3 : Bool :=
 #eval test3
 
 def CombEg4 := [Comb_com| {
-  ^entry(%0: !BitVec_4, %1 : !BitVec_4):
-    %2 = "Comb.icmp_eq" (%0, %1) : (!BitVec_4, !BitVec_4) -> !Bool
+  ^entry(%0: i4, %1 : i4):
+    %2 = "Comb.icmp_eq" (%0, %1) : (i4, i4) -> !Bool
     "return" (%2) : (!Bool) -> ()
   }]
 
@@ -82,9 +82,9 @@ def test4 : Bool :=
 #eval test4
 
 def CombEg5 := [Comb_com| {
-  ^entry(%0: !BitVec_1, %2: !BitVec_1):
-    %1 = "Comb.replicate_3" (%0) : (!BitVec_1) -> (!BitVec_3)
-    "return" (%1) : (!BitVec_3) -> ()
+  ^entry(%0: i1, %1: i1):
+    %2 = "Comb.replicate_3" (%0) : (i1) -> (i3)
+    "return" (%2) : (i3) -> ()
 }]
 
 #check CombEg5
