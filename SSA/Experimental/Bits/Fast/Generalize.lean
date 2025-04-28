@@ -1170,7 +1170,8 @@ elab "#generalize" expr:term: command =>
                     break
 
                 logInfo m! "Negative examples: {negativeExamples}"
-                let precondition ← generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples (9481, targetWidth)
+                let widthId := 9481
+                let precondition ← generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples (widthId, targetWidth)
 
                 match precondition with
                 | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr}"
