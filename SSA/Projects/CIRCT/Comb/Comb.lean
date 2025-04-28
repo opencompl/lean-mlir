@@ -11,6 +11,7 @@ section Dialect
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `w`.
+| typeSum (w₁ w₂ : Nat) : Ty
 | bool : Ty
 | nat : Ty
 | hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
@@ -28,7 +29,7 @@ inductive Op
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat) (arity : Nat)
-| mux (w : Nat)
+| mux (w₁ : Nat) (w₂ : Nat)
 | or (w : Nat) (arity : Nat)
 | parity (w : Nat)
 | replicate (w : Nat) (n : Nat)
@@ -54,7 +55,7 @@ def_signature for Comb where
   | .mods w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .modu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .mul w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .mux w => (Ty.bv w, Ty.bv w, Ty.bool) → (Ty.bv w)
+  | .mux w₁ w₂ => (Ty.bv w₁, Ty.bv w₂, Ty.bool) → (Ty.typeSum w₁ w₂)
   | .or w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .parity w => (Ty.bv w) → (Ty.bool)
   | .replicate w n => (Ty.bv w) → (Ty.bv (w * n))
@@ -69,6 +70,7 @@ instance : TyDenote (Dialect.Ty Comb) where
   | .bv w => BitVec w
   | .nat  => Nat
   | .bool => Bool
+  | .typeSum w₁ w₂ => BitVec w₁ ⊕ BitVec w₂
   | .hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
   | .icmpPred => CombOp.IcmpPredicate
 
@@ -102,7 +104,7 @@ def_denote for Comb where
   | .mods _ => BitVec.smod
   | .modu _ => BitVec.umod
   | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .mux _ => fun x y => CombOp.mux x y
+  | .mux _ _ => fun x y => CombOp.mux x y
   | .or _ _ => fun xs => CombOp.or (HVector.replicateToList (f := TyDenote.toType) xs)
   | .parity _ => fun x => CombOp.parity x
   | .replicate _ n => fun xs => CombOp.replicate xs n
@@ -114,7 +116,6 @@ def_denote for Comb where
 
 end Dialect
 
-    -- (OfNat.ofNat x) = (ConcreteOrMVar.concrete x : ConcreteOrMVar Nat φ) := rfl
 
 /-- we currently do not support the parsing of heterogeneous vectors -/
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
@@ -126,6 +127,10 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
       return .nat
     | ["IcmpPred"] =>
       return .icmpPred
+    | ["TypeSum", w₁, w₂] =>
+      match w₁.toNat?, w₂.toNat? with
+      | some w₁', some w₂' => return .typeSum w₁' w₂'
+      | _, _ => throw .unsupportedType
     | _ => throw .unsupportedType
   | MLIR.AST.MLIRType.int _ w =>
     match w with
@@ -249,14 +254,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
       | .bv w₁, .bv w₂, .bool, "Comb.mux" =>
-        if h : w₁ = w₂ then
-          /- mux currently only works if w₁ = w₂, since we need to fix the output type of the operation
-            it should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
-          return ⟨_, .bv w₁,
-            (Expr.mk (op := .mux w₁) (ty_eq := rfl) (eff_le := by constructor)
-              (args := .cons v₁ <| .cons (h ▸ v₂) <| .cons v₃ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv w₁))⟩
-        else
-          throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
+        /- mux currently only works if w₁ = w₂, since we need to fix the output type of the operation
+          it should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
+        return ⟨_, .typeSum w₁ w₂,
+          (Expr.mk (op := .mux w₁ w₂) (ty_eq := rfl) (eff_le := by constructor)
+            (args := .cons v₁ <| .cons v₂ <| .cons v₃ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.typeSum w₁ w₂))⟩
       | _, _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   |  _ =>

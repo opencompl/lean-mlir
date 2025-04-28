@@ -70,9 +70,9 @@ def icmp {w : Nat} (p : IcmpPredicate) (x y : BitVec w) : Bool :=
 def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.mul (1#w) l
 
-/- Generic `mux` operation for any type α -/
-def mux (x y : α) (cond : Bool) : α :=
-  bif cond then x else y
+/- Generic `mux` operation for any types α, β -/
+def mux (x : BitVec w₁) (y : BitVec w₂) (cond : Bool) : BitVec w₁ ⊕ BitVec w₂ :=
+  if cond then .inl x else .inr y
 
 /-- Variadic `or` operation with a list of bitvectors with width `w` as input -/
 def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
