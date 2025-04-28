@@ -13,6 +13,9 @@ def ValueStream := Stream
 
 def TokenStream := Stream Unit
 
+instance : ToString TokenStream where
+  toString s := toString (Stream.toList 100 s)
+
 def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream :=
   Stream.corec₂ (β := Stream (BitVec w)) (x)
     fun x => Id.run <| do

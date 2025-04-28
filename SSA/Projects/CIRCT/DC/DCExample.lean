@@ -27,6 +27,7 @@ def SourceEg := [DC_com| {
 def test1 : DCOp.TokenStream :=
   SourceEg.denote (Ctxt.Valuation.nil)
 
+#eval test1
 
 unseal String.splitOnAux in
 def BranchEg := [DC_com| {
