@@ -20,8 +20,6 @@ inductive Ty
 | valuestream2 (w : Nat) : Ty -- A stream of BitVec w
 | valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec w
 | typeSum (w₁ w₂ : Nat) : Ty
-| bool : Ty
-| nat : Ty
 | hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
 | icmpPred : Ty
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
@@ -34,7 +32,7 @@ inductive Op
 | merge
 | branch
 | fork
-| join
+| join (arity : Nat)
 | pair (w : Nat)
 | select
 | sink
@@ -42,6 +40,7 @@ inductive Op
 | pack (w : Nat)
 | unpack (w : Nat)
 | popReady (w : Nat) (n : Nat)
+| pushReady (w : Nat) (n : Nat)
 | add (w : Nat) (arity : Nat)
 | and (w : Nat) (arity : Nat)
 | concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
@@ -75,7 +74,7 @@ def_signature for DCxComb where
   | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream 1
   | .branch => (Ty.valuestream 1) → Ty.tokenstream2
   | .fork => (Ty.tokenstream) → Ty.tokenstream2
-  | .join => (Ty.tokenstream, Ty.tokenstream) → Ty.tokenstream
+  | .join n => ${List.replicate n (Ty.tokenstream)} → Ty.tokenstream
   | .select => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream 1) → Ty.tokenstream
   | .sink => (Ty.tokenstream) → Ty.tokenstream
   | .source => () → Ty.tokenstream
@@ -83,19 +82,20 @@ def_signature for DCxComb where
   | .pair w => (Ty.valuestream w, Ty.valuestream w) → Ty.valuestream2 w
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
   | .popReady w _ => (Ty.valuestream w) → Ty.bv w
+  | .pushReady w n => (Ty.bv w) → (Ty.valuestream n)
   | .add w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .and w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .concat l => (Ty.hList l) → (Ty.bv l.sum)
   | .divs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .divu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .extract w n => (Ty.bv w) → (Ty.bv (w - n))
-  | .icmp _ w => (Ty.bv w, Ty.bv w) → (Ty.bool)
+  | .icmp _ w => (Ty.bv w, Ty.bv w) → (Ty.bv 1)
   | .mods w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .modu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .mul w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .mux w₁ w₂ => (Ty.bv w₁, Ty.bv w₂, Ty.bool) → (Ty.typeSum w₁ w₂)
+  | .mux w₁ w₂ => (Ty.bv w₁, Ty.bv w₂, Ty.bv 1) → (Ty.typeSum w₁ w₂)
   | .or w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .parity w => (Ty.bv w) → (Ty.bool)
+  | .parity w => (Ty.bv w) → (Ty.bv 1)
   | .replicate w n => (Ty.bv w) → (Ty.bv (w * n))
   | .shl w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .shrs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
@@ -111,8 +111,6 @@ toType := fun
 | Ty.valuestream w => CIRCTStream.DCxCombOp.ValueStream (BitVec w)
 | Ty.valuestream2 w => CIRCTStream.DCxCombOp.ValueStream (BitVec w) × CIRCTStream.DCxCombOp.ValueStream (BitVec w)
 | Ty.valuetokenstream w => CIRCTStream.DCxCombOp.ValueStream (BitVec w) × CIRCTStream.DCxCombOp.TokenStream
-| .nat  => Nat
-| .bool => Bool
 | .typeSum w₁ w₂ => BitVec w₁ ⊕ BitVec w₂
 | .hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
 | .icmpPred => CIRCTStream.DCxCombOp.IcmpPredicate
@@ -136,6 +134,7 @@ def ofString? (s : String) : Option CIRCTStream.DCxCombOp.IcmpPredicate :=
   | "uge" => some .uge
   | _     => none
 
+
 def_denote for DCxComb where
   | .fst => fun s => s.fst
   | .fstVal _ => fun s => s.fst
@@ -144,7 +143,7 @@ def_denote for DCxComb where
   | .merge => fun s₁ s₂ => CIRCTStream.DCxCombOp.merge s₁ s₂
   | .branch => fun s => CIRCTStream.DCxCombOp.branch s
   | .fork => fun s => CIRCTStream.DCxCombOp.fork s
-  | .join => fun s₁ s₂ => CIRCTStream.DCxCombOp.join s₁ s₂
+  | .join _ => fun xs => CIRCTStream.DCxCombOp.join (HVector.replicateToList (f := TyDenote.toType) xs)
   | .select => fun s₁ s₂ c => CIRCTStream.DCxCombOp.select s₁ s₂ c
   | .sink => fun s => CIRCTStream.DCxCombOp.sink s
   | .source => fun s => CIRCTStream.DCxCombOp.source s
@@ -152,6 +151,7 @@ def_denote for DCxComb where
   | .pair _ => fun s₁ s₂ => (s₁, s₂)
   | .unpack _ => fun s => CIRCTStream.DCxCombOp.unpack s
   | .popReady _ n => fun s => CIRCTStream.DCxCombOp.popReady s n
+  | .pushReady _ n => fun s => CIRCTStream.DCxCombOp.pushReady s n
   | .add _ _ => fun xs => CIRCTStream.DCxCombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CIRCTStream.DCxCombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
   | .concat _ => fun xs => CIRCTStream.DCxCombOp.concat xs
@@ -183,10 +183,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCxComb DCxComb.Ty
     | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
-    | ["Bool"] =>
-      return .bool
-    | ["Nat"] =>
-      return .nat
     | ["IcmpPred"] =>
       return .icmpPred
     | ["TypeSum", w₁, w₂] =>
@@ -271,14 +267,6 @@ def fork (a : Γ.Var (.tokenstream)) : Expr (DCxComb) Γ .pure (.tokenstream2) :
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def join {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DCxComb) Γ .pure (.tokenstream) :=
-  Expr.mk
-    (op := .join)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
-    (regArgs := .nil)
-
 def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DCxComb) Γ .pure (.valuestream 1) :=
   Expr.mk
     (op := .merge)
@@ -352,15 +340,28 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
       | .bv w, "DCxComb.parity" =>
-        return ⟨_, .bool,
+        return ⟨_, .bv 1,
           (Expr.mk (op := .parity w) (ty_eq := rfl) (eff_le := by constructor)
-            (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.bool))⟩
+            (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.bv 1))⟩
       | .hList l, "DCxComb.concat" =>
         return ⟨_, .bv l.sum,
           (Expr.mk (op := .concat l) (ty_eq := rfl) (eff_le := by constructor)
             (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.bv (l.sum)))⟩
       | _, _ => throw <| .generic s!"type mismatch for {opStx.name}"
     | _ => throw <| .generic s!"expected one operand found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | op@"DCxComb.join" =>
+    let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
+    if hl: args.length ≤ 0 then
+      throw <| .generic s!"empty list of arguments for '{repr opStx.args}'"
+    else
+      match args[0] with
+      | ⟨.tokenstream, _⟩ =>
+        if hall : args.all (·.1 = .tokenstream) then
+          return ⟨_, .tokenstream,
+            (Expr.mk (op := .join args.length) (ty_eq := rfl) (eff_le := by constructor)
+              (args := ofList (.tokenstream) _ hall) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.tokenstream))⟩
+        else throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+      | _ => throw <| .generic s!"type mismatch for {opStx.name}"
   | op@"DCxComb.add" | op@"DCxComb.and" | op@"DCxComb.mul" | op@"DCxComb.or" | op@"DCxComb.xor" =>
       let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
       if hl: args.length ≤ 0 then
@@ -447,7 +448,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .bv w₁, .bv w₂, .bool, "DCxComb.mux" =>
+      | .bv w₁, .bv w₂, .bv 1, "DCxComb.mux" =>
         /- mux currently only works if w₁ = w₂, since we need to fix the output type of the operation
           it should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
         return ⟨_, .typeSum w₁ w₂,
@@ -475,14 +476,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream 1, "DCxComb.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DCxComb.merge" | op@"DCxComb.join" | op@"DCxComb.pack" | op@"DCxComb.pair"  =>
+  | op@"DCxComb.merge" | op@"DCxComb.pack" | op@"DCxComb.pair"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
       | .tokenstream, .tokenstream, "DCxComb.merge" => return ⟨_, .valuestream 1, merge v₁ v₂⟩
-      | .tokenstream, .tokenstream, "DCxComb.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DCxComb.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
       | .valuestream r, .valuestream r', "DCxComb.pair" =>
         if h: r = r' then return ⟨_, .valuestream2 r, pair v₁ (by subst r ; exact v₂)⟩
@@ -501,6 +501,20 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ =>
     match (opStx.name).splitOn "_" with
+    | ["DCxComb.pushReady", n] =>
+      match n.toNat? with
+      | some n' =>
+        match opStx.args with
+        | v₁Stx::[] =>
+          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+          match ty₁ with
+          | .bv w =>
+            return ⟨_, .valuestream n',
+              (Expr.mk (op := .pushReady w n') (ty_eq := rfl) (eff_le := by constructor)
+                (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.valuestream n'))⟩
+          | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
+        | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
+      | _ => throw <| .unsupportedOp s!"unsupported stream size for {repr opStx}"
     | ["DCxComb.popReady", n] =>
       match n.toNat? with
       | some n' =>
@@ -544,9 +558,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match ty₁, ty₂, (ofString? p) with
         | .bv w₁, .bv w₂, some p' =>
           if h : w₁ = w₂ then
-            return ⟨_, .bool,
+            return ⟨_, .bv 1,
               (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
-                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (DCxComb) Γ .pure (.bool))⟩
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (DCxComb) Γ .pure (.bv 1))⟩
           else throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
         | _, _, none => throw <| .generic s!"unknown predicate in {repr opStx}"
         | _, _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
