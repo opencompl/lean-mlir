@@ -11,7 +11,6 @@ namespace MLIRDCxComb
 
 section Dialect
 
-
 inductive Ty
 | bv (w : Nat) : Ty
 | tokenstream : Ty
@@ -19,7 +18,6 @@ inductive Ty
 | valuestream (w : Nat) : Ty -- A stream of BitVec w
 | valuestream2 (w : Nat) : Ty -- A stream of BitVec w
 | valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec w
-| typeSum (w₁ w₂ : Nat) : Ty
 | hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
 | icmpPred : Ty
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
@@ -51,7 +49,7 @@ inductive Op
 | mods (w : Nat)
 | modu (w : Nat)
 | mul (w : Nat) (arity : Nat)
-| mux (w₁ : Nat) (w₂ : Nat)
+| mux (w : Nat)
 | or (w : Nat) (arity : Nat)
 | parity (w : Nat)
 | replicate (w : Nat) (n : Nat)
@@ -93,7 +91,7 @@ def_signature for DCxComb where
   | .mods w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .modu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .mul w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .mux w₁ w₂ => (Ty.bv w₁, Ty.bv w₂, Ty.bv 1) → (Ty.typeSum w₁ w₂)
+  | .mux w => (Ty.bv w, Ty.bv w, Ty.bv 1) → (Ty.bv w)
   | .or w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .parity w => (Ty.bv w) → (Ty.bv 1)
   | .replicate w n => (Ty.bv w) → (Ty.bv (w * n))
@@ -111,7 +109,6 @@ toType := fun
 | Ty.valuestream w => CIRCTStream.DCxCombOp.ValueStream (BitVec w)
 | Ty.valuestream2 w => CIRCTStream.DCxCombOp.ValueStream (BitVec w) × CIRCTStream.DCxCombOp.ValueStream (BitVec w)
 | Ty.valuetokenstream w => CIRCTStream.DCxCombOp.ValueStream (BitVec w) × CIRCTStream.DCxCombOp.TokenStream
-| .typeSum w₁ w₂ => BitVec w₁ ⊕ BitVec w₂
 | .hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
 | .icmpPred => CIRCTStream.DCxCombOp.IcmpPredicate
 
@@ -162,7 +159,7 @@ def_denote for DCxComb where
   | .mods _ => BitVec.smod
   | .modu _ => BitVec.umod
   | .mul _ _ => fun xs => CIRCTStream.DCxCombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .mux _ _ => fun x y => CIRCTStream.DCxCombOp.mux x y
+  | .mux _ => fun x y => CIRCTStream.DCxCombOp.mux x y
   | .or _ _ => fun xs => CIRCTStream.DCxCombOp.or (HVector.replicateToList (f := TyDenote.toType) xs)
   | .parity _ => fun x => CIRCTStream.DCxCombOp.parity x
   | .replicate _ n => fun xs => CIRCTStream.DCxCombOp.replicate xs n
@@ -185,10 +182,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCxComb DCxComb.Ty
     match s.splitOn "_" with
     | ["IcmpPred"] =>
       return .icmpPred
-    | ["TypeSum", w₁, w₂] =>
-      match w₁.toNat?, w₂.toNat? with
-      | some w₁', some w₂' => return .typeSum w₁' w₂'
-      | _, _ => throw .unsupportedType
     | ["TokenStream"] =>
       return .tokenstream
     | ["TokenStream2"] =>
@@ -451,9 +444,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .bv w₁, .bv w₂, .bv 1, "DCxComb.mux" =>
         /- mux currently only works if w₁ = w₂, since we need to fix the output type of the operation
           it should work even if w₁ ≠ w₂ but i need to think about how to implement that in an elegant way -/
-        return ⟨_, .typeSum w₁ w₂,
-          (Expr.mk (op := .mux w₁ w₂) (ty_eq := rfl) (eff_le := by constructor)
-            (args := .cons v₁ <| .cons v₂ <| .cons v₃ <| .nil) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.typeSum w₁ w₂))⟩
+        if h : w₁ = w₂ then
+          return ⟨_, .bv w₁,
+            (Expr.mk (op := .mux w₁) (ty_eq := rfl) (eff_le := by constructor)
+              (args := .cons v₁ <| .cons (h ▸ v₂) <| .cons v₃ <| .nil) (regArgs := .nil) : Expr (DCxComb) Γ .pure (.bv w₁))⟩
+        else throw <| .generic s!"bitvec sizes do not match"
       | _, _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"DCxComb.source" =>

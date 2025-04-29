@@ -16,9 +16,12 @@ def popExample := [DCxComb_com| {
   ^entry(%0 : !ValueStream_8):
     %unpack = "DCxComb.unpack" (%0) : (!ValueStream_8) -> (!ValueTokenStream_8)
     %value = "DCxComb.fstVal" (%unpack) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %token = "DCxComb.sndVal" (%unpack) : (!ValueTokenStream_8) -> (!TokenStream)
     %readyValue = "DCxComb.popReady_10" (%value) : (!ValueStream_8) -> (i8)
     %addValue = "DCxComb.add" (%readyValue, %readyValue) : (i8, i8) -> (i8)
-    "return" (%addValue) : (i8) -> ()
+    %pushValue = "DCxComb.pushReady_8" (%addValue) : (i8) -> (!ValueStream_8)
+    -- correct pushready to take a stream in innpu
+    "return" (%pushValue) : (!ValueStream_8) -> ()
   }]
 
 #check popExample
@@ -32,7 +35,12 @@ def ofList (vals : List (Option α)) : Stream α :=
 
 def x : DCxCombOp.ValueStream (BitVec 8) := ofList [none, some 5, none, some 2, some 3, none]
 
-def test2 : BitVec 8 :=
+def test2 : Stream (BitVec 8) :=
   popExample.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
-#eval test2
+#eval test2.take 10
+
+-- expect: [none, some 10, none, some 4, some 6, none]
+
+-- fc := fcomb.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
+-- dc.denote (map fc → HVector (.cons y <| .nil))

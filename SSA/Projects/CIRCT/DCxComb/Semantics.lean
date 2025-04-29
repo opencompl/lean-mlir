@@ -35,6 +35,21 @@ def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream 
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
 
+
+-- stream : ... some x, none, some y, none, none ...
+-- cycles : ... [checkReady] x, [checkReady] -
+-- cycles: state transition relations: State -> Option value -> Option value -> Option value -> State -> Prop
+
+-- hardware semantics: stream based semantics for hardware, timing sensitive, you will have a similar transformation
+-- when going from latency insensitive streams to combinational streams.
+
+-- purely combinational region!
+
+-- symbolic eval at dc level, use pack/unpack nodes and evaluate region in between and extract a fun from
+-- there is basically the solution (denote comb-only region)--> only lift the fun once
+-- we'll start with modelling everything as streams and move on with life
+
+
 def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
   Stream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -173,8 +188,8 @@ def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.mul (1#w) l
 
 /- Generic `mux` operation for any types α, β -/
-def mux (x : BitVec w₁) (y : BitVec w₂) (cond : BitVec 1) : BitVec w₁ ⊕ BitVec w₂ :=
-  if cond.msb then .inl x else .inr y
+def mux (x : BitVec w) (y : BitVec w) (cond : BitVec 1) : BitVec w :=
+  if cond.msb then x else y
 
 /-- Variadic `or` operation with a list of bitvectors with width `w` as input -/
 def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
@@ -199,5 +214,15 @@ def shru (x y : BitVec w) : BitVec w :=
 /-- Variadic `xor` operation with a list of bitvectors with width `w` as input -/
 def xor {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.xor (BitVec.zero w) l
+
+def typeSum_l (ts : BitVec w₁ ⊕ BitVec w₂) : BitVec w₁ :=
+  match ts.getLeft? with
+  | some bv => bv
+  | none => 0#w₁
+
+def typeSum_r (ts : BitVec w₁ ⊕ BitVec w₂) : BitVec w₂ :=
+  match ts.getRight? with
+  | some bv => bv
+  | none => 0#w₂
 
 end DCxCombOp

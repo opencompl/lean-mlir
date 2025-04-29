@@ -29,6 +29,11 @@ namespace Stream.Bisim
 --     return %1, %arg8 : i64, none
 -- }
 
+-- idea: convert combinational parts of the circuit into a single function f (xomething) that describes what happens to the streams
+
+-- s := stream (Option BitVec w)
+-- let fcomb : BitVec w → Bitvec w
+-- we apply fcomb to every elm in s: map fcomb → s
 
 -- also changed to return a single value, the third arg is not used anyways
 unseal String.splitOnAux in
@@ -71,7 +76,7 @@ def joinPackUnpack := [DCxComb_com| {
     %readyValBis1 = "DCxComb.popReady_100" (%unpackBis1val) : (!ValueStream_64) -> (i64)
     %muxOut = "DCxComb.mux" (%readyValBis0, %readyValBis1, %readyValP) : (i64, i64, i1) -> (i64)
     -- // CHECK:           %[[VAL_18:.*]] = dc.pack %[[VAL_16]], %[[VAL_17]] : i64
-    %streamVal = "DCxComb.pushReady_64" (%muxOut) : (i64) -> (!ValueStream_64)
+    -- %streamVal = "DCxComb.pushReady_64" (%muxOut) : (i64) -> (!ValueStream_64)
     -- %packBis = "DCxComb.pack" (%muxOut, %joinPackBis) : (!ValueStream_64, !TokenStream) -> (!ValueStream_64)
     "return" (%0) : (!ValueStream_64) -> ()
   }]
