@@ -35,21 +35,6 @@ def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream 
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
 
-
--- stream : ... some x, none, some y, none, none ...
--- cycles : ... [checkReady] x, [checkReady] -
--- cycles: state transition relations: State -> Option value -> Option value -> Option value -> State -> Prop
-
--- hardware semantics: stream based semantics for hardware, timing sensitive, you will have a similar transformation
--- when going from latency insensitive streams to combinational streams.
-
--- purely combinational region!
-
--- symbolic eval at dc level, use pack/unpack nodes and evaluate region in between and extract a fun from
--- there is basically the solution (denote comb-only region)--> only lift the fun once
--- we'll start with modelling everything as streams and move on with life
-
-
 def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
   Stream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with

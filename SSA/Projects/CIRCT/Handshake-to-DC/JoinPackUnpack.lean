@@ -29,11 +29,6 @@ namespace Stream.Bisim
 --     return %1, %arg8 : i64, none
 -- }
 
--- idea: convert combinational parts of the circuit into a single function f (xomething) that describes what happens to the streams
-
--- s := stream (Option BitVec w)
--- let fcomb : BitVec w → Bitvec w
--- we apply fcomb to every elm in s: map fcomb → s
 
 -- also changed to return a single value, the third arg is not used anyways
 unseal String.splitOnAux in
