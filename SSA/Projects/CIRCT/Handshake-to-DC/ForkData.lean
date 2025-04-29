@@ -75,9 +75,9 @@ def DCxCombFork := [DCxComb_com| {
     %fork2 = "DCxComb.snd" (%fork12) : (!TokenStream2) -> (!TokenStream)
     %pack1 = "DCxComb.pack" (%unpack1, %fork1) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
     %pack2 = "DCxComb.pack" (%unpack1, %fork2) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
-    "return" (%pack2) : (!ValueStream_8) -> ()
+    %pack12 = "DCxComb.pair" (%pack1, %pack2) : (!ValueStream_8, !ValueStream_8) -> (!ValueStream2_8)
+    "return" (%pack12) : (!ValueStream2_8) -> ()
   }]
-
 /- step 2: denote dc circuit -/
 
 #check DCxCombFork
@@ -91,7 +91,7 @@ def ofList (vals : List (Option α)) : Stream α :=
 
 def x : DCxCombOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 5, none]
 
-def test : DCxCombOp.ValueStream (BitVec 8)  :=
+def test : CIRCTStream.DCxCombOp.ValueStream (BitVec 8) × CIRCTStream.DCxCombOp.ValueStream (BitVec 8)  :=
   DCxCombFork.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 /- step 3: prove equivalence -/
@@ -120,19 +120,20 @@ theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s
   tail_iterate''
 
 open Ctxt in
-theorem equiv_fork_fst (streamInt : DCOp.ValueStream (Int)) :
-  (Handshake.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
-  simp only [MLIR2DC.instDialectDenoteDC, EffectKind.toMonad_impure, DCFork,
+theorem equiv_fork_fst (streamInt : DCxCombOp.ValueStream (BitVec 8)) :
+  (HandshakeOp.fork streamInt).fst ~ (DCxCombFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
+  simp [EffectKind.toMonad_impure, DCxCombFork,
     EffectKind.pure_sup_pure_eq, DerivedCtxt.ofCtxt, DerivedCtxt.snoc.eq_1, get?.eq_1,
     Var.zero_eq_last, zero_add, Var.succ_eq_toSnoc, Nat.reduceAdd, Valuation.ofHVector,
     Ctxt.ofList.eq_1, Com.denote_var, EffectKind.toMonad_pure, Com.denote_ret, Id.pure_eq,
     Id.bind_eq]
-  unfold Handshake.fork DCOp.pack DCOp.unpack DCOp.fork
-  simp_peephole
-  unfold Bisim; exists Eq
-  rw [corec₂_corec1]
-  and_intros
-  · sorry
+  sorry
+  -- unfold HandshakeOp.fork DCxCombOp.pack DCxCombOp.unpack DCxCombOp.fork
+  -- simp_peephole
+  -- unfold Bisim; exists Eq
+  -- rw [corec₂_corec1]
+  -- and_intros
+  -- · sorry
     -- · intros a b hm
       -- and_intros
       -- all_goals
@@ -186,7 +187,7 @@ theorem equiv_fork_fst (streamInt : DCOp.ValueStream (Int)) :
     --     unfold Stream'.map Stream'.get
     --     dsimp only
     --     rw [tail_iterate']
-  · apply EqIsBisim
+  -- · apply EqIsBisim
 
 theorem stream_pair_1 (s : Stream α) (f : Stream α → Option α × Option α × Stream α):
     (corec₂ s f).1 = corec s (fun x => let ⟨f1, _, f2⟩ := f x; (f1, f2)) := by
@@ -205,10 +206,10 @@ def IsBisim' (R' : Stream α → Stream α → Prop) : Prop :=
     ∧ (∀ i < n, a.get i = none)
     ∧ (∀ j < m, b.get j = none)
 
-theorem corec₂_eq_corec_of_corec₂ (streamInt: DCOp.ValueStream Int) :
+theorem corec₂_eq_corec_of_corec₂ (streamInt: DCxCombOp.ValueStream (BitVec w)) :
     (corec₂ streamInt fun x => (x 0, x 0, x.tail)).1 ≈
     corec
-      ((corec₂ streamInt fun (x : DCOp.ValueStream Int) =>
+      ((corec₂ streamInt fun (x : DCxCombOp.ValueStream (BitVec w)) =>
             (match x 0 with
               | some val => (x 0, some (), x.tail)
               | none => (none, none, x.tail))).1,

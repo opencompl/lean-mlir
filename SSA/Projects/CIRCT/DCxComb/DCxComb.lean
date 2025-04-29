@@ -35,6 +35,7 @@ inductive Op
 | branch
 | fork
 | join
+| pair (w : Nat)
 | select
 | sink
 | source
@@ -79,6 +80,7 @@ def_signature for DCxComb where
   | .sink => (Ty.tokenstream) → Ty.tokenstream
   | .source => () → Ty.tokenstream
   | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
+  | .pair w => (Ty.valuestream w, Ty.valuestream w) → Ty.valuestream2 w
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
   | .popReady w _ => (Ty.valuestream w) → Ty.bv w
   | .add w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
@@ -147,9 +149,10 @@ def_denote for DCxComb where
   | .sink => fun s => CIRCTStream.DCxCombOp.sink s
   | .source => fun s => CIRCTStream.DCxCombOp.source s
   | .pack _ => fun s₁ s₂ => CIRCTStream.DCxCombOp.pack s₁ s₂
+  | .pair _ => fun s₁ s₂ => (s₁, s₂)
   | .unpack _ => fun s => CIRCTStream.DCxCombOp.unpack s
   | .popReady _ n => fun s => CIRCTStream.DCxCombOp.popReady s n
-    | .add _ _ => fun xs => CIRCTStream.DCxCombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
+  | .add _ _ => fun xs => CIRCTStream.DCxCombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CIRCTStream.DCxCombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
   | .concat _ => fun xs => CIRCTStream.DCxCombOp.concat xs
   | .divs _ => BitVec.sdiv
@@ -324,6 +327,15 @@ def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DCxComb) Γ .pure (.t
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+
+def pair {r} {Γ : Ctxt _} (a b: Γ.Var (.valuestream r)) : Expr (DCxComb) Γ .pure (.valuestream2 r)  :=
+  Expr.mk
+    (op := .pair r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
 def ofList {Γ : Ctxt _} ty : (l : List ((ty : DCxComb.Ty) × Γ.Var ty)) → (h : l.all (·.1 = ty)) → HVector (Γ.Var) (List.replicate l.length ty)
 | [], h => .nil
 | ⟨ty', var⟩::rest, h =>
@@ -463,7 +475,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream 1, "DCxComb.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DCxComb.merge" | op@"DCxComb.join" | op@"DCxComb.pack"  =>
+  | op@"DCxComb.merge" | op@"DCxComb.join" | op@"DCxComb.pack" | op@"DCxComb.pair"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -472,6 +484,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .tokenstream, .tokenstream, "DCxComb.merge" => return ⟨_, .valuestream 1, merge v₁ v₂⟩
       | .tokenstream, .tokenstream, "DCxComb.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DCxComb.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
+      | .valuestream r, .valuestream r', "DCxComb.pair" =>
+        if h: r = r' then return ⟨_, .valuestream2 r, pair v₁ (by subst r ; exact v₂)⟩
+        else throw <| .generic s!"type mismatch"
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"DCxComb.select" =>
