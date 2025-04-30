@@ -47,7 +47,7 @@ abbrev Comb : Dialect where
 def_signature for Comb where
   | .add w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .and w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .concat l => ${l.map Ty.bv} → (Ty.bv l.sum)
+  | .concat l => (Ty.hList l) → (Ty.bv l.sum)
   | .divs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .divu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .extract w n => (Ty.bv w) → (Ty.bv (w - n))
@@ -96,7 +96,7 @@ def ofString? (s : String) : Option CombOp.IcmpPredicate :=
 def_denote for Comb where
   | .add _ _ => fun xs => CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .concat _ => fun xs => CombOp.concat _
+  | .concat _ => fun xs => CombOp.concat xs
   | .divs _ => BitVec.sdiv
   | .divu _ => BitVec.udiv
   | .extract _ _ => fun x => CombOp.extract x _

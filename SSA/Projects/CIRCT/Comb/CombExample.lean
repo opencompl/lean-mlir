@@ -101,9 +101,9 @@ def test5 : BitVec 3 :=
 #eval test5
 
 def CombEg6 := [Comb_com| {
-    ^entry (%0 : i2, %1 : i4, %2 : !Bool):
-      %3 = "Comb.mux" (%0, %1, %2) : (i2, i4, !Bool) -> !TypeSum_2_4
-      "return" (%3) : (!TypeSum_2_4) -> ()
+    ^entry (%0 : i4, %1 : i4, %2 : i1):
+      %3 = "Comb.mux" (%0, %1, %2) : (i4, i4, i1) -> (i4)
+      "return" (%3) : (i4) -> ()
 }]
 
 #check CombEg6
@@ -112,9 +112,9 @@ def CombEg6 := [Comb_com| {
 #check CombEg6.denote
 #print axioms CombEg6
 
-def bv6₁ : BitVec 2 := BitVec.ofNat 2 1
+def bv6₁ : BitVec 4 := BitVec.ofNat 4 1
 def bv6₂ : BitVec 4 := BitVec.ofNat 4 3
-def bv6c : Bool := true
+def bv6c : BitVec 1 := 1
 
-def test6 : BitVec 2 ⊕ BitVec 4 :=
+def test6 : BitVec 4 :=
   CombEg6.denote (Ctxt.Valuation.ofHVector (.cons bv6c <| .cons bv6₂ <| .cons bv6₁ <| .nil))

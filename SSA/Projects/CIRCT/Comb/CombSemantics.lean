@@ -39,8 +39,6 @@ def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
 def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.and (0#w) l
 
-def concatTwo (x : BitVec w₁) (y : BitVec w₂): BitVec (w₁ + w₂) := x ++ y
-
 /-- Concatenate a list of bitvecs `xs`, where the length of bitvec `xs[i]` is given by
   element `ls[i]` in a list of nat `ls` -/
 def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
