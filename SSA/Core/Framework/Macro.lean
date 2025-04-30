@@ -3,6 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core.Framework
 import SSA.Core.Framework.Trace
+import SSA.Core.Tactic.SimpSet
 
 /-! ## `def_signature` elaborator
 This file defines `def_signature` elaborator that makes it easier to define the
