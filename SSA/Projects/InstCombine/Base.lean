@@ -233,50 +233,51 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
 
 end MOp
 
-namespace Op
+namespace LLVM.Op
 
-@[match_pattern] abbrev unary   (w : Nat) (op : MOp.UnaryOp 0)  : Op := MOp.unary (.concrete w) op
-@[match_pattern] abbrev binary  (w : Nat) (op : MOp.BinaryOp) : Op := MOp.binary (.concrete w) op
+@[match_pattern] abbrev unary  (w : Nat) (op : MOp.UnaryOp 0) : LLVM.Op :=
+  MOp.unary (.concrete w) op
 
-@[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
-@[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
-@[match_pattern] abbrev sext   : Nat → Nat → Op := fun w w' => MOp.sext (.concrete w) (.concrete w')
-@[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
-@[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
-@[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
-@[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
-@[match_pattern] abbrev copy   : Nat → Op := MOp.copy   ∘ .concrete
+@[match_pattern] abbrev binary (w : Nat) (op : MOp.BinaryOp) : LLVM.Op :=
+  MOp.binary (.concrete w) op
 
-@[match_pattern] abbrev icmp (c : IntPred)   : Nat → Op  := MOp.icmp c ∘ .concrete
-@[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
+@[match_pattern] abbrev and    : Nat → LLVM.Op := MOp.and    ∘ .concrete
+@[match_pattern] abbrev not    : Nat → LLVM.Op := MOp.not    ∘ .concrete
+@[match_pattern] abbrev sext   : Nat → Nat → LLVM.Op := fun w w' => MOp.sext (.concrete w) (.concrete w')
+@[match_pattern] abbrev xor    : Nat → LLVM.Op := MOp.xor    ∘ .concrete
+@[match_pattern] abbrev urem   : Nat → LLVM.Op := MOp.urem   ∘ .concrete
+@[match_pattern] abbrev srem   : Nat → LLVM.Op := MOp.srem   ∘ .concrete
+@[match_pattern] abbrev select : Nat → LLVM.Op := MOp.select ∘ .concrete
+@[match_pattern] abbrev neg    : Nat → LLVM.Op := MOp.neg    ∘ .concrete
+@[match_pattern] abbrev copy   : Nat → LLVM.Op := MOp.copy   ∘ .concrete
+
+@[match_pattern] abbrev icmp (c : IntPred)   : Nat → LLVM.Op  := MOp.icmp c ∘ .concrete
+@[match_pattern] abbrev const (w : Nat) (val : ℤ) : LLVM.Op        := MOp.const (.concrete w) val
 
 /- This operation is separate from the others because it takes in a flag: nneg. -/
-@[match_pattern] abbrev zext (w w': Nat) (flag : NonNegFlag := {nneg := false}) : Op := MOp.zext (.concrete w) (.concrete w') flag
+@[match_pattern] abbrev zext (w w': Nat) (flag : NonNegFlag := {nneg := false}) : LLVM.Op :=
+  MOp.zext (.concrete w) (.concrete w') flag
 
 /- This operation is separate from the others because it takes in a flag: disjoint. -/
-@[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
+@[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : LLVM.Op :=
+  MOp.or (.concrete w) flag
 
 /- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
-@[match_pattern] abbrev trunc (w w': Nat) (noWrapFlags: NoWrapFlags :=
-   {nsw := false , nuw := false}) : Op := MOp.trunc (.concrete w) (.concrete w') noWrapFlags
+@[match_pattern] abbrev trunc (w w': Nat) (flags: NoWrapFlags := {}) : LLVM.Op :=
+  MOp.trunc (.concrete w) (.concrete w') flags
 
-@[match_pattern] abbrev shl (w : Nat) (flags: NoWrapFlags :=
-   {nsw := false , nuw := false}) : Op:=  MOp.shl (.concrete w) flags
-@[match_pattern] abbrev add (w : Nat) (flags: NoWrapFlags :=
-   {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
-@[match_pattern] abbrev mul (w : Nat) (flags: NoWrapFlags :=
-   {nsw := false , nuw := false}) : Op:=  MOp.mul (.concrete w) flags
-@[match_pattern] abbrev sub (w : Nat) (flags: NoWrapFlags :=
-   {nsw := false , nuw := false}) : Op:=  MOp.sub (.concrete w) flags
+@[match_pattern] abbrev shl (w : Nat) (flags: NoWrapFlags := {}) : LLVM.Op := MOp.shl (.concrete w) flags
+@[match_pattern] abbrev add (w : Nat) (flags: NoWrapFlags := {}) : LLVM.Op := MOp.add (.concrete w) flags
+@[match_pattern] abbrev mul (w : Nat) (flags: NoWrapFlags := {}) : LLVM.Op := MOp.mul (.concrete w) flags
+@[match_pattern] abbrev sub (w : Nat) (flags: NoWrapFlags := {}) : LLVM.Op := MOp.sub (.concrete w) flags
 
 /- These operations are separate from the others because they take in 1 flag: exact.-/
-@[match_pattern] abbrev lshr (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.lshr (.concrete w) flag
-@[match_pattern] abbrev ashr (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.ashr (.concrete w) flag
-@[match_pattern] abbrev sdiv (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.sdiv (.concrete w) flag
-@[match_pattern] abbrev udiv (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.udiv (.concrete w) flag
+@[match_pattern] abbrev lshr (w : Nat) (flag : ExactFlag := {} ) : LLVM.Op := MOp.lshr (.concrete w) flag
+@[match_pattern] abbrev ashr (w : Nat) (flag : ExactFlag := {} ) : LLVM.Op := MOp.ashr (.concrete w) flag
+@[match_pattern] abbrev sdiv (w : Nat) (flag : ExactFlag := {} ) : LLVM.Op := MOp.sdiv (.concrete w) flag
+@[match_pattern] abbrev udiv (w : Nat) (flag : ExactFlag := {} ) : LLVM.Op := MOp.udiv (.concrete w) flag
 
-end Op
+end LLVM.Op
 
 /-! ### Basic Instances -/
 
@@ -366,7 +367,7 @@ def MOp.UnaryOp.outTy (w : Width φ) : MOp.UnaryOp φ → MTy φ
 def MOp.outTy : MOp φ → MTy φ
 | .binary w _ | .select w | .const w _ =>
   .bitvec w
-| .unary w op => op.outTy w
+| .unary w op => UnaryOp.outTy w op
 | .icmp _ _ => .bitvec 1
 
 instance {φ} : DialectSignature (MetaLLVM φ) where
@@ -420,28 +421,28 @@ end LLVM.Ty
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
     (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
-  | Op.const _ val    => const? _ val
-  | Op.copy _         =>               (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.not _          => LLVM.not      (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.neg _          => LLVM.neg      (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.trunc w w'    flags => LLVM.trunc w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flags
-  | Op.zext w w' flag => LLVM.zext  w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flag
-  | Op.sext w w'      => LLVM.sext  w' (op.getN 0 (by simp [DialectSignature.sig, signature]))
-  | Op.and _          => LLVM.and      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.or _ flag      => LLVM.or       (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.xor _          => LLVM.xor      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.shl _ flags    => LLVM.shl      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.lshr _ flag    => LLVM.lshr     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.ashr _ flag    => LLVM.ashr     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.sub _ flags    => LLVM.sub      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.add _ flags    => LLVM.add      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.mul _ flags    => LLVM.mul      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
-  | Op.sdiv _ flag    => LLVM.sdiv     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.udiv _ flag    => LLVM.udiv     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
-  | Op.urem _         => LLVM.urem     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.srem _         => LLVM.srem     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.icmp c _       => LLVM.icmp  c  (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
-  | Op.select _       => LLVM.select   (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) (op.getN 2 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.const _ val    => const? _ val
+  | LLVM.Op.copy _         =>               (op.getN 0 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.not _          => LLVM.not      (op.getN 0 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.neg _          => LLVM.neg      (op.getN 0 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.trunc w w'    flags => LLVM.trunc w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flags
+  | LLVM.Op.zext w w' flag => LLVM.zext  w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flag
+  | LLVM.Op.sext w w'      => LLVM.sext  w' (op.getN 0 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.and _          => LLVM.and      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.or _ flag      => LLVM.or       (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
+  | LLVM.Op.xor _          => LLVM.xor      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.shl _ flags    => LLVM.shl      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
+  | LLVM.Op.lshr _ flag    => LLVM.lshr     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
+  | LLVM.Op.ashr _ flag    => LLVM.ashr     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
+  | LLVM.Op.sub _ flags    => LLVM.sub      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
+  | LLVM.Op.add _ flags    => LLVM.add      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
+  | LLVM.Op.mul _ flags    => LLVM.mul      (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flags
+  | LLVM.Op.sdiv _ flag    => LLVM.sdiv     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
+  | LLVM.Op.udiv _ flag    => LLVM.udiv     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) flag
+  | LLVM.Op.urem _         => LLVM.urem     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.srem _         => LLVM.srem     (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.icmp c _       => LLVM.icmp  c  (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.select _       => LLVM.select   (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) (op.getN 2 (by simp [DialectSignature.sig, signature]))
 
 instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args

@@ -200,6 +200,7 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length)
    concrete_test.eval values'
 -/
 
+open LLVM.Ty in
 def InstCombine.mkValuation (ctxt : Context)
   (values : List.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
@@ -208,8 +209,8 @@ match ctxt, values with
     let valsVec : List.Vector (Option Int) tys.length := ⟨vals,by aesop⟩
     let valuation' := mkValuation tys valsVec
     match ty with
-      | .bitvec w =>
-        let newTy : ⟦Ty.bitvec w⟧ :=
+      | bitvec w =>
+        let newTy : ⟦bitvec w⟧ :=
           Option.map (BitVec.ofInt w) val
         Ctxt.Valuation.snoc valuation' newTy
 
@@ -239,10 +240,11 @@ def CocreteCliTest.signature (test : ConcreteCliTest) :
 def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
   s!"{test.context.reverse} → {test.ty}"
 
+open LLVM.Ty in
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
   toString :=
     match test.ty with
-    | .bitvec w => inferInstanceAs (ToString (Option <| BitVec w)) |>.toString
+    | bitvec w => inferInstanceAs (ToString (Option <| BitVec w)) |>.toString
 
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121

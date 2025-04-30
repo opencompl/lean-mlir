@@ -8,6 +8,7 @@ import SSA.Experimental.Bits.ForLean
 
 open BitVec
 open MLIR AST
+open InstCombine (LLVM)
 
 namespace AliveHandwritten
 
@@ -95,13 +96,13 @@ Proof:
 -/
 open ComWrappers
 def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- r = -/ Com.var (sdiv w /- c1-/ 0 /-%X -/ 1) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- inc = -/ Com.var (add w /-c1 -/ 0 /-X-/ 1) <|
   /- c3 = -/ Com.var (const w 3) <|
@@ -338,8 +339,8 @@ Proof
 open ComWrappers
 def MulDivRem290_lhs (w : ℕ) :
   Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w,
-    /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w,
+    /- %Y -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- poty = -/ Com.var (shl w /- c1 -/ 0 /-%Y -/ 1) <|
   /- r = -/ Com.var (mul w /- poty -/ 0 /-%X -/ 3) <|
@@ -347,8 +348,8 @@ def MulDivRem290_lhs (w : ℕ) :
 
 def MulDivRem290_rhs (w : ℕ) :
     Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w]
-    .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w, /- %Y -/ LLVM.Ty.bitvec w]
+    .pure (LLVM.Ty.bitvec w) :=
   /- r = -/ Com.var (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
@@ -384,10 +385,10 @@ open ComWrappers
 
 def AndOrXor2515_lhs (w : ℕ):
   Com InstCombine.LLVM
-    [/- C1 -/ InstCombine.Ty.bitvec w,
-     /- C2 -/ InstCombine.Ty.bitvec w,
-     /- C3 -/ InstCombine.Ty.bitvec w,
-     /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- C1 -/ LLVM.Ty.bitvec w,
+     /- C2 -/ LLVM.Ty.bitvec w,
+     /- C3 -/ LLVM.Ty.bitvec w,
+     /- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- e1  = -/ Com.var (xor w /-x-/ 0 /-C1-/ 3) <|
   /- op0 = -/ Com.var (lshr w /-e1-/ 0 /-C2-/ 3) <|
   /- r   = -/ Com.var (xor w /-op0-/ 0 /-C3-/ 3) <|
@@ -395,10 +396,10 @@ def AndOrXor2515_lhs (w : ℕ):
 
 def AndOrXor2515_rhs (w : ℕ) :
   Com InstCombine.LLVM
-    [/- C1 -/ InstCombine.Ty.bitvec w,
-     /- C2 -/ InstCombine.Ty.bitvec w,
-     /- C3 -/ InstCombine.Ty.bitvec w,
-     /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- C1 -/ LLVM.Ty.bitvec w,
+     /- C2 -/ LLVM.Ty.bitvec w,
+     /- C3 -/ LLVM.Ty.bitvec w,
+     /- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- o = -/ Com.var (lshr w /-X-/ 0 /-C2-/ 2) <|
   /- p = -/ Com.var (lshr w /-C1-/ 4 /-C2-/ 3) <|
   /- q = -/ Com.var (xor w /-p-/ 0 /-C3-/ 3) <|
@@ -467,7 +468,7 @@ Name: Select:746
 open ComWrappers
 def Select746_lhs (w : ℕ):
   Com InstCombine.LLVM
-    [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- A -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c0     = -/ Com.var (const w 0) <|
   /- c      = -/ Com.var (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
   /- minus  = -/ Com.var (sub w /-c0-/ 1 /-A-/ 2) <|
@@ -479,7 +480,7 @@ def Select746_lhs (w : ℕ):
 
 def Select746_rhs (w : ℕ):
   Com InstCombine.LLVM
-    [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- A -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c0     = -/ Com.var (const w 0) <|
   /- c      = -/ Com.var (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
   /- minus  = -/ Com.var (sub w /-c0-/ 1 /-A-/ 2) <|

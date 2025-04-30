@@ -250,7 +250,7 @@ instance : AST.TransformReturn (MetaLLVM φ) φ where
   Finally, we show how to instantiate a family of programs to a concrete program
 -/
 
-open InstCombine Qq in
+open InstCombine LLVM Qq in
 def MetaLLVM.instantiate (vals : Vector Expr φ) : DialectMetaMorphism (MetaLLVM φ) q(LLVM) where
   mapTy := fun
   | .bitvec w =>
@@ -317,7 +317,7 @@ macro "deftest" name:ident " := " test_reg:mlir_region : command => do
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
 
 section Test
-open InstCombine Ty
+open InstCombine.LLVM.Ty (bitvec)
 
 /-- Assert that the elaborator respects variable ordering correctly -/
 private def variable_order1 : Com LLVM [bitvec 2, bitvec 1]  .pure (bitvec 1) := [llvm()| {
