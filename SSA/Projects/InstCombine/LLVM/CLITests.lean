@@ -211,7 +211,7 @@ match ctxt, values with
     match ty with
       | bitvec w =>
         let newTy : ⟦bitvec w⟧ :=
-          Option.map (BitVec.ofInt w) val
+          PoisonOr.ofOption <| Option.map (BitVec.ofInt w) val
         Ctxt.Valuation.snoc valuation' newTy
 
 def ConcreteCliTest.eval (test : ConcreteCliTest)
@@ -244,7 +244,7 @@ open LLVM.Ty in
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
   toString :=
     match test.ty with
-    | bitvec w => inferInstanceAs (ToString (Option <| BitVec w)) |>.toString
+    | bitvec w => inferInstanceAs (ToString (PoisonOr <| BitVec w)) |>.toString
 
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121

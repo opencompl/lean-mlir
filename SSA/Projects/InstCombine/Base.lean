@@ -403,11 +403,11 @@ instance : TyDenote LLVM.Ty where
 
 instance (ty : LLVM.Ty) : Coe ℤ (TyDenote.toType ty) where
   coe z := match ty with
-    | bitvec w => some <| BitVec.ofInt w z
+    | bitvec w => .value <| BitVec.ofInt w z
 
 instance (ty : LLVM.Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
-    | bitvec _ => default
+    | bitvec _ => (default : LLVM.IntW _)
 
 -- TODO: this instance should not live here
 instance : Repr (BitVec n) where
