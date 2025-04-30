@@ -67,7 +67,9 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MetaLLVM φ) ((MetaLLVM φ
     return .bitvec w
   | _ => throw .unsupportedType -- "Unsupported type"
 
-instance instTransformTy : MLIR.AST.TransformTy (MetaLLVM φ) φ where
+instance instTransformTy : AST.TransformTy (MetaLLVM φ) φ where
+  mkTy := mkTy
+instance : AST.TransformTy (LLVM) 0 where
   mkTy := mkTy
 
 def getOutputWidth (opStx : MLIR.AST.Op φ) (op : String) :
@@ -230,6 +232,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 
 instance : AST.TransformExpr (MetaLLVM φ) φ where
   mkExpr := mkExpr
+instance : AST.TransformExpr LLVM 0 where
+  mkExpr := mkExpr
 
 def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     MLIR.AST.ReaderM (MetaLLVM φ) (Σ eff ty, Com (MetaLLVM φ) Γ eff ty) :=
@@ -243,6 +247,8 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
 instance : AST.TransformReturn (MetaLLVM φ) φ where
+  mkReturn := mkReturn
+instance : AST.TransformReturn LLVM 0 where
   mkReturn := mkReturn
 
 /-!
