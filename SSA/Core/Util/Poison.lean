@@ -160,15 +160,11 @@ theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
 section PreOrder
 variable {α : Type} {a? : PoisonOr α}
 
-@[simp] theorem isRefinedBy_self : a? ⊑ a? := by
-  cases a? <;> simp
-
 /--
 Refinement on poison values is reflexive
 -/
-theorem isRefinedBy_refl :
-    ∀ (a? : PoisonOr α), a? ⊑ a? := by
-  intro a; cases a <;> simp
+@[simp] theorem isRefinedBy_self : a? ⊑ a? := by
+  cases a? <;> simp
 
 /--
 Refinement on poison values is transitive
