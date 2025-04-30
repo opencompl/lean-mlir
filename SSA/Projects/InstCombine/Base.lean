@@ -329,6 +329,7 @@ instance : ToString (MOp φ) where
 --   toString o := repr o |>.pretty
 
 instance : ToString LLVM.Op := by unfold LLVM; infer_instance
+instance : Repr LLVM.Op := by unfold LLVM; infer_instance
 
 /-! ### Type Formatting -/
 
