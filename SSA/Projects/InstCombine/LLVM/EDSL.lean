@@ -34,7 +34,7 @@ def mkBinOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.BinaryOp)
     .nil
   ⟩
 
-def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
+def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPred)
     (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (.bitvec 1) :=
   ⟨
     .icmp p w,
@@ -106,7 +106,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     else
       let v₂ : Γ.Var (.bitvec w) := (by simpa using hty) ▸ v₂
 
-      let (op : MOp.BinaryOp ⊕ LLVM.IntPredicate) ← match opStx.name with
+      let (op : MOp.BinaryOp ⊕ LLVM.IntPred) ← match opStx.name with
         | "llvm.and"    => pure <| Sum.inl .and
         | "llvm.or"     => do
           let isDisjoint? := opStx.attrs.getAttr "isDisjoint"
@@ -170,16 +170,16 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
               | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, true⟩)
               | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
               | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
-        | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPredicate.eq
-        | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPredicate.ne
-        | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPredicate.ugt
-        | "llvm.icmp.uge" => pure <| Sum.inr LLVM.IntPredicate.uge
-        | "llvm.icmp.ult" => pure <| Sum.inr LLVM.IntPredicate.ult
-        | "llvm.icmp.ule" => pure <| Sum.inr LLVM.IntPredicate.ule
-        | "llvm.icmp.sgt" => pure <| Sum.inr LLVM.IntPredicate.sgt
-        | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPredicate.sge
-        | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPredicate.slt
-        | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
+        | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPred.eq
+        | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPred.ne
+        | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPred.ugt
+        | "llvm.icmp.uge" => pure <| Sum.inr LLVM.IntPred.uge
+        | "llvm.icmp.ult" => pure <| Sum.inr LLVM.IntPred.ult
+        | "llvm.icmp.ule" => pure <| Sum.inr LLVM.IntPred.ule
+        | "llvm.icmp.sgt" => pure <| Sum.inr LLVM.IntPred.sgt
+        | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPred.sge
+        | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPred.slt
+        | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPred.sle
         | opstr => throw <|
           .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
       return match op with
