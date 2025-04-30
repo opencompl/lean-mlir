@@ -656,7 +656,7 @@ Moreover, recall that `simp only` **does not** generate equation lemmas.
 *but* if equation lemmas are present, then `simp only` *uses* the equation lemmas.
 
 Hence, we build the equation lemmas by invoking the correct Lean meta magic,
-so that `simp only` (which we use in `simp_peephole` can find them!)
+so that `simp only` (which we use in `simp_peephole`) can find them!
 
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
 args, since there now are equation lemmas for it.
@@ -751,8 +751,14 @@ end Lemmas
 ## Refinement
 -/
 section Refinement
-variable [LawfulDialectRefinement d]
-open LawfulDialectRefinement.FactInstances
+variable [DialectHRefinement d d] [LawfulDialectRefinement d]
+open RefinementNotation
+
+/-
+
+^entry(%x : i64, y : r64) :
+  %z = "llvm.add"(%y, %y) : (i999, i999) -> i999
+-/
 
 /-
 HACK: `EffectKind.toMonad` is reducible, which causes some issues.
