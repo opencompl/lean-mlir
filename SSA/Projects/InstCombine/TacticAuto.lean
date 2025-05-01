@@ -110,19 +110,18 @@ macro "simp_alive_undef" : tactic =>
       )
   )
 
+attribute [simp_llvm] BitVec.ofInt_neg_one pure_bind
+
 /- Simplify away the `InstCombine` specific semantics. -/
 macro "simp_alive_ops" : tactic =>
-  `(tactic|
-      (
-        simp (config := {failIfUnchanged := false}) only [
-            simp_llvm,
-            BitVec.ofInt_neg_one,
-            (BitVec.ofInt_ofNat),
-            pure_bind,
-            bind_if_then_none_eq_if_bind, bind_if_else_none_eq_if_bind
-          ]
-      )
-  )
+  `(tactic|(
+      simp (config := {failIfUnchanged := false}) only [
+          simp_llvm,
+          (BitVec.ofInt_ofNat),
+          (PoisonOr.bind_if_then_poison_eq_ite_bind),
+          (PoisonOr.bind_if_else_poison_eq_ite_bind)
+        ]
+    ))
 
 /-
 This tactic attempts to shift ofBool to the outer-most level,

@@ -12,6 +12,7 @@ import Lean
 
 namespace AlivePaperExamples
 open BitVec
+open PoisonOr.Syntax
 
 -- Example proof of shift + mul, this is one of the hardest alive examples.
 -- (alive_simplifyMulDivRem290)

@@ -72,6 +72,16 @@ section Lemmas
 @[simp] theorem bind_poison : a? >>= (fun _ => @poison β) = poison := by
   cases a? <;> rfl
 
+@[simp]
+theorem bind_if_then_poison_eq_ite_bind (p : Prop) [Decidable p] (x : PoisonOr α) :
+    bind (self := no_index inferInstance) (if p then poison else x) f = if p then poison else x >>= f := by
+  split <;> simp
+
+@[simp]
+theorem bind_if_else_poison_eq_ite_bind (p : Prop) [Decidable p] (x : PoisonOr α) :
+    (if p then x else poison) >>= f = if p then x >>= f else poison := by
+  split <;> simp
+
 @[simp] theorem bind₂_poison_left : bind₂ poison b? f = poison := rfl
 @[simp] theorem bind₂_poison_right : bind₂ a? poison f = poison := by
   cases a? <;> simp [bind₂]
