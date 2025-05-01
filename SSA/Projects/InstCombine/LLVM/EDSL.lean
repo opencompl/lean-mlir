@@ -67,7 +67,9 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MetaLLVM φ) ((MetaLLVM φ
     return .bitvec w
   | _ => throw .unsupportedType -- "Unsupported type"
 
-instance instTransformTy : MLIR.AST.TransformTy (MetaLLVM φ) φ where
+instance instTransformTy : AST.TransformTy (MetaLLVM φ) φ where
+  mkTy := mkTy
+instance : AST.TransformTy (LLVM) 0 where
   mkTy := mkTy
 
 def getOutputWidth (opStx : MLIR.AST.Op φ) (op : String) :
@@ -230,6 +232,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 
 instance : AST.TransformExpr (MetaLLVM φ) φ where
   mkExpr := mkExpr
+instance : AST.TransformExpr LLVM 0 where
+  mkExpr := mkExpr
 
 def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     MLIR.AST.ReaderM (MetaLLVM φ) (Σ eff ty, Com (MetaLLVM φ) Γ eff ty) :=
@@ -244,13 +248,15 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 
 instance : AST.TransformReturn (MetaLLVM φ) φ where
   mkReturn := mkReturn
+instance : AST.TransformReturn LLVM 0 where
+  mkReturn := mkReturn
 
 /-!
   ## Instantiation
   Finally, we show how to instantiate a family of programs to a concrete program
 -/
 
-open InstCombine Qq in
+open InstCombine LLVM Qq in
 def MetaLLVM.instantiate (vals : Vector Expr φ) : DialectMetaMorphism (MetaLLVM φ) q(LLVM) where
   mapTy := fun
   | .bitvec w =>
@@ -317,7 +323,7 @@ macro "deftest" name:ident " := " test_reg:mlir_region : command => do
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
 
 section Test
-open InstCombine Ty
+open InstCombine.LLVM.Ty (bitvec)
 
 /-- Assert that the elaborator respects variable ordering correctly -/
 private def variable_order1 : Com LLVM [bitvec 2, bitvec 1]  .pure (bitvec 1) := [llvm()| {

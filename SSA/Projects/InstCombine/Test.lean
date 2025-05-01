@@ -8,6 +8,8 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
+open InstCombine (LLVM)
+
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
   in the following
@@ -253,7 +255,7 @@ def one_inst_macro (w: Nat) :=
   }]
 
 def one_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
@@ -283,7 +285,7 @@ def two_inst_macro (w: Nat) :=
   }]
 
 def two_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.var (not w 1) <|
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
@@ -315,7 +317,7 @@ def three_inst_macro (w: Nat) :=
   }]
 
 def three_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.var (not w 0) <|
   Com.var (not w 0) <|
@@ -347,7 +349,7 @@ def one_inst_concrete_macro :=
   }]
 
 def one_inst_concrete_com :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure (LLVM.Ty.bitvec 1) :=
   Com.var (not 1 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
@@ -377,7 +379,7 @@ def two_inst_concrete_macro :=
   }]
 
 def two_inst_concrete_com (w : ℕ) :
-  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.var (not w 1) <|
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
@@ -409,7 +411,7 @@ def three_inst_concrete_macro :=
   }]
 
 def three_inst_concrete_com :
-  Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
+  Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure (LLVM.Ty.bitvec 1) :=
   Com.var (not 1 0) <|
   Com.var (not 1 0) <|
   Com.var (not 1 0) <|
