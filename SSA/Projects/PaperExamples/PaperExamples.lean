@@ -6,6 +6,7 @@ import Lean
 import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
 import SSA.Core.Framework.Macro
+import SSA.Core.Rewriter
 import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser

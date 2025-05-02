@@ -7,6 +7,7 @@ End-to-end showcase of the framework for verifying rewrites about FHE semantics.
 Authors: Andrés Goens<andres@goens.org>
 -/
 import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.Rewriter
 import SSA.Core.Tactic
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 import SSA.Projects.FullyHomomorphicEncryption.Statements
