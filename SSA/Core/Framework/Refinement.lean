@@ -115,7 +115,7 @@ end DialectHRefinement
 A lawful homogenous (i.e., within a single dialect) refinement instance is one
 where refinement is reflexive and transitive (i.e., it is a preorder).
 -/
-class LawfulDialectRefinement (d : Dialect) [TyDenote d.Ty] [DialectHRefinement d d] where
+class PreorderDialectRefinement (d : Dialect) [TyDenote d.Ty] [DialectHRefinement d d] where
   isRefinedBy_rfl : ∀ {t : d.Ty} (x : d.m ⟦t⟧), x ⊑ x
   isRefinedBy_trans : ∀ {t u v : d.Ty} (x : d.m ⟦t⟧) (y : d.m ⟦u⟧) (z : d.m ⟦v⟧),
     x ⊑ y → y ⊑ z → x ⊑ z
