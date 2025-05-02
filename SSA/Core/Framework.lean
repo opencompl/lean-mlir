@@ -751,7 +751,7 @@ end Lemmas
 ## Refinement
 -/
 section Refinement
-variable [DialectHRefinement d d] [LawfulDialectRefinement d]
+variable [DialectHRefinement d d]
 open RefinementNotation
 
 /--
