@@ -303,23 +303,13 @@ lemma formula_language_case_atom :
       simp [List.Vector.transport, liftMaxSucc1] at h1
       unfold n; simp +zetaDelta; rw [←h1]
       congr; ext1 k
-      split_ifs with h
-      · exfalso
-        have _ : k < t1.arity := by simp
-        have _ : k = t1.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-        omega
-      · congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
+      congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
     have ht2 : bvsb.bvs.get (Fin.last (n+1)) = t2.evalFinBV fun n => bvsb.bvs.get n := by
       unfold Term.language at h2
       simp [List.Vector.transport, liftMaxSucc2] at h2
       unfold n; simp +zetaDelta only [Formula.arity, Fin.natCast_self]; rw [←h2]
       congr; ext1 k
-      split_ifs with h
-      · exfalso
-        have _ : k < t2.arity := by simp
-        have _ : k = t2.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-        omega
-      · congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
+      congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
     have hw : bvsb.w = bvs.w := by rw [←heqb]; simp
     have heq1 : (t1.evalFinBV fun n => bvsb.bvs.get n) =
         hw ▸ t1.evalFinBV fun n => bvs.bvs.get $ n.castLE (by simp) := by
@@ -359,21 +349,11 @@ lemma formula_language_case_atom :
         rw [List.Vector.append_get_ge (by dsimp; rw [Nat.mod_eq_of_lt]; omega)]
         rw [helper1 (by ext; simp; rw [Nat.mod_eq_of_lt] <;> omega)]
         unfold bv1
-        congr; ext1 k; split_ifs
-        · exfalso
-          have _ : k < t1.arity := by simp
-          have _ : k = t1.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-          omega
-        · simp; congr 1
+        congr;
       · unfold l2 Term.language; simp [List.Vector.transport, liftMaxSucc2]
         rw [helper2 (by ext; simp)]
         unfold bv2
-        congr; ext1 k; split_ifs
-        · exfalso
-          have _ : k < t2.arity := by simp
-          have _ : k = t2.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-          omega
-        · simp; congr 1
+        congr
     · ext1; simp
       next i =>
         simp [List.Vector.transport, liftExcept2]
