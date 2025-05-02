@@ -234,3 +234,16 @@ def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
+
+/-!
+## `toMonad` coercion
+-/
+
+/--
+Coerce a value of type `eff.toMonad m α` into a monadic value `m α`, by applying
+either `pure` or the identity, depending on the effect `eff`.
+
+NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
+-/
+abbrev coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
+  liftEffect (le_impure eff)
