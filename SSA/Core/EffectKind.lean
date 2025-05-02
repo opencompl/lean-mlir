@@ -245,5 +245,6 @@ either `pure` or the identity, depending on the effect `eff`.
 
 NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
 -/
-abbrev coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
+@[simp]
+def coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
   liftEffect (le_impure eff)
