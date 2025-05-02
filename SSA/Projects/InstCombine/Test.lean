@@ -11,8 +11,6 @@ open MLIR AST
 open InstCombine (LLVM)
 open PoisonOr.Syntax
 
-#exit -- disable temporarily until cadical bug in lean is resolved
-
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
   in the following
