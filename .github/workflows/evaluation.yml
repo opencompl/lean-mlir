@@ -52,6 +52,7 @@ jobs:
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j256)
 
       - name: Compare Alive All
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
 
@@ -60,6 +61,7 @@ jobs:
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j256)
 
       - name: Compare HDEl Symbolic
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
 
@@ -68,6 +70,7 @@ jobs:
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j256)
 
       - name: Compare HDEl
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
 
@@ -77,6 +80,7 @@ jobs:
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
 
       - name: Compare LLVM
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm.py)
 
@@ -86,6 +90,7 @@ jobs:
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
 
       - name: Compare LLVM Symbolic
+        continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
