@@ -40,7 +40,7 @@ def DIV_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64
   else
     rs1_val.sdiv rs2_val
 
-
+-- old proof strategy
 theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv  (rs2_val : BitVec 64) (rs1_val : BitVec 64)  :
   DIV_pure64_signed (rs2_val) (rs1_val ) = DIV_pure64_signed_bv (rs2_val) (rs1_val ) := by
     unfold DIV_pure64_signed DIV_pure64_signed_bv
@@ -53,4 +53,29 @@ theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv  (rs2_val : BitVec 64) (rs1_va
         exact h1
       apply BitVec.eq_of_toInt_eq
       simp only [Int.reduceSub, h', ↓reduceIte, Int.reduceNeg, BitVec.toInt_ofInt, h]
-      simp [BitVec.toInt_sdiv]  
+      simp [BitVec.toInt_sdiv]
+      sorry
+
+
+-- new proof strategy
+example
+    (rs2_val rs1_val : BitVec 64)
+    (h : ¬rs2_val = 0#64) :
+    (if 9223372036854775807 < rs1_val.toInt.tdiv rs2_val.toInt then -9223372036854775808
+        else rs1_val.toInt.tdiv rs2_val.toInt).bmod 18446744073709551616 =
+    (rs1_val.toInt.tdiv rs2_val.toInt).bmod 18446744073709551616 := by
+  by_cases h : rs1_val = .intMin _ ∧ rs2_val = -1#64
+  · obtain ⟨rs1, rs2⟩ := h
+    subst rs1 rs2
+    simp [BitVec.toInt_intMin]
+  · have := BitVec.toInt_sdiv_of_ne_or_ne rs1_val rs2_val <| by
+      rw [← Decidable.not_and_iff_not_or_not]
+      exact h
+    rw[← this]
+    split
+    case neg.isTrue iT =>
+      have intMax : (BitVec.intMax 64).toInt =  9223372036854775807 := by native_decide
+      rw [← intMax] at iT
+      sorry -- HERE TO DO
+    case neg.isFalse iF =>
+      rfl
