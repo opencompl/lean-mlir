@@ -10,8 +10,6 @@ Authors: Siddharth Bhat
 import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 
-#exit -- disable temporarily until cadical bug in lean is resolved
-
 set_option linter.unusedVariables false
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
