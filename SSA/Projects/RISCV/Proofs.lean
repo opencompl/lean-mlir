@@ -13,8 +13,7 @@ theorem extractLsb'_eq_setWidth {x : BitVec w} : x.extractLsb' 0 n = x.setWidth 
 theorem extractLsb'_ofInt_eq_ofInt {x : Int } {w w' : Nat}  {h : w ≤ w'} :
     (BitVec.extractLsb' 0 w (BitVec.ofInt w' x)) = (BitVec.ofInt w x) := by
   rw [extractLsb'_eq_setWidth]
-  rw [← BitVec.signExtend_eq_setWidth_of_le _ (by omega)] -- somehow Lean doesnt find this loogle lemma evenough I imported the library and the lemma exsit
-  -- because I applied it in my project.
+  rw [← BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
   apply BitVec.eq_of_toInt_eq
   simp  [BitVec.toInt_signExtend]
   simp [h]
@@ -54,4 +53,4 @@ theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv  (rs2_val : BitVec 64) (rs1_va
         exact h1
       apply BitVec.eq_of_toInt_eq
       simp only [Int.reduceSub, h', ↓reduceIte, Int.reduceNeg, BitVec.toInt_ofInt, h]
-      --simp [BitVec.toInt_sdiv]  -- same here, I can't find the lemma evenot
+      simp [BitVec.toInt_sdiv]  
