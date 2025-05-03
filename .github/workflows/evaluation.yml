@@ -95,5 +95,6 @@ jobs:
           (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
       - name: Collect Stats
+        continue-on-error: true
         run: |
           (cd bv-evaluation/for-paper/tools; python3 ./collect-stats.py)
