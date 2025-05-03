@@ -42,51 +42,52 @@ jobs:
           sudo apt install -y python3-matplotlib python3-pandas python3-num2words
 
       - name: Build
+        continue-on-error: true
         run: |
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build
 
-      - name: Run LLVM Symbolic
-        continue-on-error: true
+      - name: Run Alive Symbolic
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j256)
+
+      - name: Compare Alive All
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
+
+      - name: Run HDel Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j256)
+
+      - name: Compare HDEl Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
+
+      - name: Run HDel
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j256)
+
+      - name: Compare HDEl
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
 
       - name: Run LLVM
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
 
-      - name: Run Alive Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j256)
-
-      - name: Run HDel Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j256)
-
-      - name: Run HDel
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j256)
-
-      - name: Compare LLVM Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
-
-      - name: Compare HDEl Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
-
       - name: Compare LLVM
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm.py)
 
-      - name: Compare HDEl
+      - name: Run LLVM Symbolic
+        continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
 
-      - name: Compare Alive All
+      - name: Compare LLVM Symbolic
         run: |
-          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
+          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
       - name: Collect Stats
         run: |
