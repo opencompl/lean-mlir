@@ -238,15 +238,13 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       by_cases a_0 : a = 0; subst a_0; simp at c
       by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
       rw [BitVec.toNat_eq] at a_0
-      intro h
-      subst h
-      simp [h]
       simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at a_0 a_1
       by_cases w_1 : w = 1
       · subst w_1
         have hh := BitVec.eq_zero_or_eq_one a
         simp [a_0] at hh
         simp [a_1] at hh
+        simp [hh]
       have w_gt_1 : 1 < w := by omega
       have el_one: 1 % 2^w = 1 := by
         simp only [Nat.one_lt_two_pow (n := w) (by omega), Nat.mod_eq_of_lt]
@@ -264,7 +262,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       · rw [Nat.add_mod_of_add_mod_lt] at h
         simp only [el_one, toNat_mod_cancel] at h
         simp_all
-        simp [toNat_eq] at a_0
         simp [toNat_eq, show 0 < w by omega] at a_1
         omega
         simp only [el_one, toNat_mod_cancel]
