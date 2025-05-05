@@ -70,6 +70,7 @@ theorem bitvec_AddSub_1309 :
   }] := by
     simp_alive_peephole
     simp_alive_undef
+    simp_alive_ops
     simp_alive_case_bash
     simp
 
