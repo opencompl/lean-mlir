@@ -634,7 +634,7 @@ def enumerativeSynthesis (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: 
       let inputCombinations := productsList (List.replicate inputs.length specialConstants)
 
       let constantVars : List (BVExpr w) := constants.keys.map (λ c => BVExpr.var c)
-      let constantsPermutation := List.permutations constantVars
+      let constantsPermutation := productsList (List.replicate constantVars.length constantVars)
 
       let inputsAndConstants := List.product inputCombinations constantsPermutation
       logInfo m! "inputs and constants has length {inputsAndConstants.length}"
@@ -834,7 +834,6 @@ variable {x y : BitVec 32}
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (shiftConstraints: Option BVLogicalExpr) (consts: List Nat) (num: Nat) :
               TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    -- expr is negated for helper
   let rec helper (expr: BVLogicalExpr) (depth : Nat)
           : TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
         match depth with
@@ -952,6 +951,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           let eqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
 
+
           let ltZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.ult zero)
 
@@ -985,8 +985,8 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           logInfo m! "Precondition candidates: {preconditionCandidatesSet.toList}"
 
           for candidate in preconditionCandidatesSet do
-              let weightSubstitutedCandidate := substitute candidate widthSubstitutionVal
-              if let none ← solve (BoolExpr.gate Gate.and weightSubstitutedCandidate (BoolExpr.not bvExpr)) then
+              let widthtSubstitutedCandidate := substitute candidate widthSubstitutionVal
+              if let none ← solve (BoolExpr.gate Gate.and widthtSubstitutedCandidate (BoolExpr.not bvExpr)) then
                   validCandidates := candidate :: validCandidates
 
           if validCandidates.isEmpty then -- TODO: if we have precondition candidates but none is valid, we can then look at joining them with ands.
@@ -1099,12 +1099,11 @@ theorem test_precondition_synthesis : False := by
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 4 -- TODO: We should try a range of widths
+      let targetWidth := 4 -- TODO: Only reduce the width if it's more than 8 bits?
 
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
       logInfo m! "hexpr: {hExpr}"
-
 
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
@@ -1163,6 +1162,7 @@ elab "#generalize" expr:term: command =>
 
                 let mut positiveExample := constantAssignment.filter (fun k  _  => ! zippedCombo.contains k)
 
+                logInfo m! "Finding negative examples for {substitutedBVLogicalExpr}"
                 let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr shiftConstraints positiveExample.keys 3
 
                 if negativeExamples.isEmpty then
@@ -1181,30 +1181,43 @@ elab "#generalize" expr:term: command =>
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
       pure ()
 
-variable {x y : BitVec 32}
 
+#eval (0 ^^^ 33 ||| 7) ^^^ 12
+#eval (0 ^^^ 33) ||| 7
+
+variable {x y : BitVec 8}
+-- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y --- PASSED add_or_sub_comb_i8_negative_y_sub_thm
+#generalize (x ||| 33#8) ^^^ 12#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-40) ^^^ 47#8 --- or_xor_or_thm
+-- #generalize (x ^^^ 33#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 43#8 --- PASSED xor_or_xor_thm
+-- #generalize  x ^^^ 33#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8 --- PASSED xor_or2_thm
+#generalize x ^^^ 32#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8 --- xor_or_thm
+-- #generalize (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) --  PASSED not_or_xor_thm
+#generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8 -- lshr_shl_demand1_thm
+
+variable {x : BitVec 16}
+#generalize BitVec.ofInt 16 (-32624) <<< x >>> 4#16 &&& 4094#16 = 2057#16 <<< x &&& 4094#16 -- shl_lshr_demand6_thm
+
+variable {x y z: BitVec 32}
+#generalize (x &&& 32#32) + 145#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof/test2_thm
+#generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 --- gxor2_proof/test3_thm
+-- #generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- gxor2_proof/test5_thm
+#generalize (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y --- or_and_xor_not_constant_commute0_thm
+#generalize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| x * 42#32 ^^^ z * 42#32 = x * 42#32 ^^^ z * 42#32 ||| y * 42#32 -- or_xor_tree_1110_thm
+#generalize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32 ---  or_xor_tree_1111_thm
+#generalize (0#32 - x ||| x) = x -- add_or_sub_comb_i32_commuted1_nuw_thm
+#generalize x <<< 6#32 <<< 28#32 = 0#32   --shl_shl_thm
+#generalize 1#32 <<< (31#32 - x) = BitVec.ofInt (32) (-2147483648) >>> x --  shl_sub_i32_thm
+#generalize BitVec.truncate 24 (x >>> 12#32) <<< 3#24 = BitVec.truncate 24 (x >>> 9#32) &&& BitVec.ofInt 24 -- shl_trunc_bigger_ashr_thm
+#generalize BitVec.truncate 8 (x >>> 5#32) <<< 3#8 = BitVec.truncate 8 (x >>> 2#32) &&& BitVec.ofInt 8 (-8) --- shl_trunc_bigger_lshr_thm
 #generalize  ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
 #generalize (x + (-1)) >>> 1 = x >>> 1 -- #61223;
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 #generalize (x + 5) + (y + 1)  =  x + y + 6
 #generalize (x <<< 3) <<< 4 = x <<< 7
-#generalize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00FFFF00
-
-
+#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
 #generalize (x &&& 1 ||| (x  &&& 1 ||| (0#32 - x))) = x &&& (x - 1#32) -- #57351
 #generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- #41801
+#generalize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00FFFF00
 
-#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) == (x <<< 8) &&& 0xFF00#32
-
-/-
---- Examples -------
-(𝑥 : i32 & 15) ≠ 15) & (𝑥 <𝑢 16) ⇒ 𝑥 <𝑢 15
-(𝑥 : i32 & 1) ≠ 0 |= (𝑥 + (−1) ) ≫𝑢 1 ⇒ 𝑥 ≫𝑢 1
-𝑥 : i32 <𝑠 (𝑥 ⊕ (−1) ) ⇒ 𝑥 <𝑠 0
-(42 /𝑠 𝑥 : i8) = 0 ⇒ (𝑥 + 0xD5) <𝑢 0xAB
-( (𝑥 : i32 %𝑠 8) <𝑠 0) ? ( (𝑥 %𝑠 8) +nsw 8) : (𝑥 %𝑠 8) ⇒ 𝑥 & 7 --TODO: Dealing with conditionals?; Not sure how to deal with the ternary operator in Lean
-( (𝑥 : i32 & 0xFFFF0000) = 0x11220000) | ( (𝑥 & 0xFFFFFF00) = 0x11223300) ⇒ (𝑥 & 0xFFFF0000) = 0x11220000 -- TODO: need to deal with boolean equal and neq
-(y : i128 + (𝑥 : i128 × (−1) ≪𝑢 64) ) ≪ 64 ⇒ y ≪ 64 -- Hydra width-independence failure
--/
 
 end Generalize
