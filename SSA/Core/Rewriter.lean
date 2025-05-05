@@ -11,6 +11,7 @@ open Ctxt (Var VarSet Valuation)
 open TyDenote (toType)
 open EffectKind (liftEffect)
 open AList
+open RefinementNotation
 
 variable {d} [s : DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [DecidableEq d.Ty]
   [Monad d.m] [LawfulMonad d.m]
@@ -681,9 +682,10 @@ theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ₁ 
   rw [denote_splitProgramAtAux hres s]
   cases eff <;> simp
 
-/-
-  ## Rewriting
+/-!
+## Rewriting
 -/
+variable [DialectHRefinement d d]
 
 /-- `rewriteAt lhs rhs hlhs pos target`, searches for `lhs` at position `pos` of
 `target`. If it can match the variables, it inserts `rhs` into the program
@@ -751,10 +753,10 @@ variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [M
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable
 -/
-structure PeepholeRewrite (Γ : List d.Ty) (t : d.Ty) where
-  lhs : Com d (.ofList Γ) .pure t
-  rhs : Com d (.ofList Γ) .pure t
-  correct : lhs.denote = rhs.denote
+structure PeepholeRewrite (Γ : Ctxt d.Ty) (t : d.Ty) where
+  lhs : Com d Γ .pure t
+  rhs : Com d Γ .pure t
+  correct : lhs ⊑ rhs
 
 instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
