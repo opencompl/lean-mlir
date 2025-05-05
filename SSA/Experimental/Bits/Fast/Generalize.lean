@@ -1206,13 +1206,13 @@ variable {x y z: BitVec 32}
 -- #generalize (x &&& 1 ||| (x  &&& 1 ||| (0#32 - x))) = x &&& (x - 1#32) -- #57351
 -- #generalize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y) -- SLOW and failing#41801
 -- #generalize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00FFFF00 -- PASSED
-#generalize (x &&& 32#32) + 145#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof/test2_thm
-#generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 --- gxor2_proof/test3_thm
--- #generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- gxor2_proof/test5_thm
-#generalize (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y --- or_and_xor_not_constant_commute0_thm
 #generalize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| x * 42#32 ^^^ z * 42#32 = x * 42#32 ^^^ z * 42#32 ||| y * 42#32 -- or_xor_tree_1110_thm
 #generalize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32 ---  or_xor_tree_1111_thm
-#generalize (0#32 - x ||| x) = x -- add_or_sub_comb_i32_commuted1_nuw_thm
+#generalize (x &&& 32#32) + 145#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof/test2_thm
+#generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 --- gxor2_proof/test3_thm
+
+-- #generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- gxor2_proof/test5_thm
+-- #generalize (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y --- PASSED or_and_xor_not_constant_commute0_thm
 #generalize x <<< 6#32 <<< 28#32 = 0#32   --shl_shl_thm
 #generalize 1#32 <<< (31#32 - x) = BitVec.ofInt (32) (-2147483648) >>> x --  shl_sub_i32_thm
 #generalize BitVec.truncate 24 (x >>> 12#32) <<< 3#24 = BitVec.truncate 24 (x >>> 9#32) &&& BitVec.ofInt 24 -- shl_trunc_bigger_ashr_thm
