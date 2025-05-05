@@ -10,6 +10,8 @@ and the denotation of these terms into operations on bitstreams -/
 it represent an infinite bitstream (with free variables) -/
 inductive Term : Type
 | var : Nat → Term
+/-- Return the MSB of a term. -/
+| msb : Term → Term
 /-- The constant `0` -/
 | zero : Term
 /-- The constant `-1` -/
@@ -60,6 +62,7 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 @[simp] def Term.arity : Term → Nat
 | (var n) => n+1
 | zero => 0
+| msb _ => 1
 | one => 0
 | negOne => 0
 | ofNat _ => 0
@@ -125,10 +128,10 @@ deriving Repr, Inhabited
 | .lor p q => max p.arity q.arity
 | .land p q => max p.arity q.arity
 
-
 /-- toBitVec a Term into its underlying bitvector -/
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   match t with
+  | msb x => (BitVec.ofBool (x.denote w vars).msb).signExtend w
   | ofNat n => BitVec.ofNat w n
   | var n => vars.getD n default
   | zero => 0#w
