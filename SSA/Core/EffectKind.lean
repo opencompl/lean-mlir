@@ -252,7 +252,3 @@ NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
 @[simp, simp_denote]
 def coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
   liftEffect (le_impure eff)
-
-section CoeToMonad
-
--- theorem coeToMonad
