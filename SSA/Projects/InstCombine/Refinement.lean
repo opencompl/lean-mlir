@@ -15,13 +15,13 @@ instance : DialectHRefinement LLVM LLVM where
         else
           false
 
-@[simp_denote]
+@[simp, simp_denote]
 theorem isRefinedBy_iff_of_width_eq (x y : LLVM.IntW w) :
     DialectHRefinement.IsRefinedBy (d := LLVM) (d' := LLVM) (t := bitvec w) (u := bitvec w) x y
     ↔ x ⊑ y := by
   simp [DialectHRefinement.IsRefinedBy]
 
-@[simp_denote]
+@[simp, simp_denote]
 theorem isRefinedBy_iff_of_width_neq {x : LLVM.IntW w} {y : LLVM.IntW v} (h : w ≠ v) :
     DialectHRefinement.IsRefinedBy (d := LLVM) (d' := LLVM) (t := bitvec w) (u := bitvec v) x y
     ↔ False := by

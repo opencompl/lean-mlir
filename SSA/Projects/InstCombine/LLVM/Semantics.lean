@@ -22,7 +22,7 @@ namespace IntW
 instance : Inhabited (IntW w) := by unfold IntW; infer_instance
 
 instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
-@[simp_llvm]
+@[simp, simp_llvm]
 theorem isRefinedBy_iff (x y : LLVM.IntW w) :
     x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
   rfl
