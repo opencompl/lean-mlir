@@ -17,8 +17,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-
-open PoisonOr.Syntax
 """
 
 alive_statements_preamble_sorry = """/-
@@ -29,8 +27,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-
-open PoisonOr.Syntax
 """
 
 def getProofs(lines: List[str]) -> Tuple[List[str], List[List[str]]]:

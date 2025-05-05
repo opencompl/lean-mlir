@@ -1,6 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import SSA.Core.Framework.Refinement
 
 /-!
 # Poison Semantics
@@ -133,10 +134,8 @@ inductive IsRefinedBy : PoisonOr α → PoisonOr α → Prop
 section Refinement
 variable (a? b? : PoisonOr α)
 
-namespace Syntax
-scoped infix:50 " ⊑ " => IsRefinedBy
-end Syntax
-open Syntax
+instance : Refinement (PoisonOr α) where
+  IsRefinedBy := IsRefinedBy
 
 @[simp] theorem poison_isRefinedBy : (@poison α) ⊑ b? :=
   IsRefinedBy.poisonLeft
@@ -147,10 +146,10 @@ open Syntax
   · rintro ⟨⟩; assumption
   · exact IsRefinedBy.bothValues
 
-@[simp] theorem not_value_isRefinedBy_poison (a : α) : ¬value a ⊑ (@poison _) := by
+@[simp] theorem not_value_isRefinedBy_poison (a : α) : ¬value a ⊑ (@poison α) := by
   rintro ⟨⟩
 
-theorem isRefinedBy_poison_iff : a? ⊑ (@poison _) ↔ a? = poison := by
+theorem isRefinedBy_poison_iff : a? ⊑ (@poison α) ↔ a? = poison := by
   cases a?
   · simp
   · simp only [not_value_isRefinedBy_poison, false_iff]; rintro ⟨⟩
