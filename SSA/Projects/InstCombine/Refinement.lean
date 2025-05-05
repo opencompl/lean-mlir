@@ -7,7 +7,6 @@ import SSA.Core.Util.Poison
 namespace InstCombine
 open LLVM.Ty
 
-@[simp_llvm]
 instance : DialectHRefinement LLVM LLVM where
   IsRefinedBy := @fun
     | bitvec w, bitvec w', (x : LLVM.IntW _), (y : LLVM.IntW _) =>
@@ -16,8 +15,14 @@ instance : DialectHRefinement LLVM LLVM where
         else
           false
 
--- abbrev Com.Refinement (src tgt : Com LLVM Γ .pure t)
---     (h : TyDenote.toType t = PoisonOr α := by rfl) : Prop :=
---   ∀ Γv, (h ▸ src.denote Γv) ⊑ (h ▸ tgt.denote Γv)
+@[simp_denote]
+theorem isRefinedBy_iff_of_width_eq (x y : LLVM.IntW w) :
+    DialectHRefinement.IsRefinedBy (d := LLVM) (d' := LLVM) (t := bitvec w) (u := bitvec w) x y
+    ↔ x ⊑ y := by
+  simp [DialectHRefinement.IsRefinedBy]
 
--- infixr:90 " ⊑ "  => Com.Refinement
+@[simp_denote]
+theorem isRefinedBy_iff_of_width_neq {x : LLVM.IntW w} {y : LLVM.IntW v} (h : w ≠ v) :
+    DialectHRefinement.IsRefinedBy (d := LLVM) (d' := LLVM) (t := bitvec w) (u := bitvec v) x y
+    ↔ False := by
+  simp [DialectHRefinement.IsRefinedBy, h]
