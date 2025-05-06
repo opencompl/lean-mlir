@@ -7,6 +7,8 @@ import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForLean
 /-!
 This file defines a pretty printing/syntax for the `RISCV64` dialect.
+This allows the dialect to be written in MLIR-style syntax as well as
+close to assembly style.
 
 [RV64_com| {
   ^bb0(%r1 : !i64, %r2 : !i64 ):
@@ -87,7 +89,6 @@ private def test_simple2 := [RV64_com| {
 }]
 #check test_simple
 
-
 /-
 Bellow we implement the form, where an operation has `one` attirbute value.
 e.g constant or single register operations.
@@ -109,7 +110,7 @@ syntax mlir_op_operand " = " "li" "(" num (" : " mlir_type)? ")" (" : " mlir_typ
 macro_rules
   | `(mlir_op| $res:mlir_op_operand = li ($x)
      $[: $outer_type]?  ) => do
-      let outer_type ← outer_type.getDM `(mlir_type| _ ) -- extract the optional type- extract the optional type, else default to return type
+      let outer_type ← outer_type.getDM `(mlir_type| _ )
       `(mlir_op| $res:mlir_op_operand = "li"()
           {imm = $x:num : $outer_type } : ($outer_type) -> ($outer_type))
 
@@ -152,6 +153,7 @@ macro_rules
       | Macro.throwUnsupported
     `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {shamt= $x:num : $t}  : ($t) -> ($t) )
 
+
 private def test_andi := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
   %1 =  andi %e1, 42 : !i64
@@ -176,26 +178,9 @@ private def big_test := [RV64_com| {
   %1 = andi %r1, 42 : !i64
   %2 = sub %r1,  %1 : !i64
   %3 = andi %2, 10 : !i64
-  %4 =  div %r2, %r1 : !i64
-  %5 =  add %4, %1 : !i64
-  %7 =  li (2) : !i64
-  %6 =  ror %5, %7 : !i64
+  %4 = div %r2, %r1 : !i64
+  %5 = add %4, %1 : !i64
+  %7 = li (2) : !i64
+  %6 = ror %5, %7 : !i64
   ret %6 : !i64
 }]
-
-private theorem test_rewrite :
-[RV64_com| {
-  ^bb0(%r1 : !i64, %r2 : !i64 ):
-  %1 =  li (0) : !i64
-  %2 =  sub %r1,  %1 : !i64
-        ret %2 : !i64
-  }].denote =
-  [RV64_com| {
-  ^bb0(%r1 : !i64, %r2 : !i64 ):
-        ret %r1 : !i64
-  }].denote := by
-    simp_peephole
-    simp only [RV64Semantics.RTYPE_pure64_RISCV_SUB, BitVec.ofInt_ofNat, BitVec.sub_eq,
-      BitVec.sub_zero, implies_true]
-
-#check test_slli

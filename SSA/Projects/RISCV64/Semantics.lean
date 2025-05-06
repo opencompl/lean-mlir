@@ -3,8 +3,8 @@ set_option maxHeartbeats 1000000000000000000
 /-!
   ## Dialect semantics
   This file contains the semantics for each modelled `RISCV-64` dialect instruction
-  as defined by
-  This give us the guarantee that the dialect semantics faithfully implements the intended
+  as defined by the Sail-lean RiscV modell.
+  This give us the guarantee that the dialect semantics faithfully implement the intended
   Risc-V semantics.
   The semantic defintions do not contain toInt and toNat when possible. For this
   we rewrote the Sail semantics into pure bit vector only operations including a proof
