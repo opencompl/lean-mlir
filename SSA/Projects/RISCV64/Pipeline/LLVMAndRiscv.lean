@@ -97,7 +97,7 @@ def extractllvmArgs : LLVMRiscV.Op → LLVM.Op
 
 def extractriscvArgs : LLVMRiscV.Op → RISCV64.RV64.Op
   | .riscv riscvOp => riscvOp
-  | _ => .const 0 -- fallback case if function gets called on LLVM ops.
+  | _ => .li 0 -- fallback case if function gets called on LLVM ops.
 
 
 

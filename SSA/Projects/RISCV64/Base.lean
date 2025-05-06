@@ -23,7 +23,7 @@ And operations out of selected RISC-V extension:
     - `Zicond` : extension for conditional operations https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
 inductive Op
-| li : (val : Int) → Op
+|   li : (val : Int) → Op
 |  lui (imm : BitVec 20)
 |  auipc (imm : BitVec 20)
 |  addi (imm : BitVec 12)
