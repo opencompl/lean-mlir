@@ -937,21 +937,10 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
                                                             !(comboSet.all (λ c => specialConstantsSet.contains c))
                                                       )
 
-          let mut preconditionCandidates : List BVLogicalExpr := []
           let zeroBv := BitVec.ofNat bitwidth 0
-
-          -- Check for power of 2: const & (const - 1) == 0
-          for (const, _) in positiveExample.toArray do
-            let lhs := BVExpr.bin (BVExpr.var const) BVBinOp.and (BVExpr.bin (BVExpr.var const) BVBinOp.add minusOne)
-
-            let evaluatedExpr := evalBVExpr positiveExample bitwidth lhs
-            if evaluatedExpr == zeroBv then
-              let powerOf2 := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq zero)
-              preconditionCandidates := powerOf2 :: preconditionCandidates
 
           let eqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
-
 
           let ltZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.ult zero)
@@ -960,67 +949,88 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
             BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (BoolExpr.not (ltZero expr))
 
           let widthSubstitutionVal := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat bitwidth bitwidth))])
-          for sketch in expressionSketches do
-            for combo in inputCombinations do
-              let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
-              let substitutedExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
 
-              let widthSubstitutedExpr := substituteBVExpr substitutedExpr widthSubstitutionVal
+          let preconditionCandidates ← withTraceNode `Generalize (fun _ => return "Generated valid expression sketches") do
+            let mut preconditionCandidates : List BVLogicalExpr := []
+            -- Check for power of 2: const & (const - 1) == 0
+            for (const, _) in positiveExample.toArray do
+              let lhs := BVExpr.bin (BVExpr.var const) BVBinOp.and (BVExpr.bin (BVExpr.var const) BVBinOp.add minusOne)
 
-              let evaluatedPositiveEx := evalBVExpr positiveExample bitwidth widthSubstitutedExpr
+              let evaluatedExpr := evalBVExpr positiveExample bitwidth lhs
+              if evaluatedExpr == zeroBv then
+                let powerOf2 := BoolExpr.literal (BVPred.bin lhs BVBinPred.eq zero)
+                preconditionCandidates := powerOf2 :: preconditionCandidates
 
-              let evaluatedNegativeExs := negativeExamples.map (λ neg => evalBVExpr neg bitwidth widthSubstitutedExpr)
 
-               if (evaluatedPositiveEx == 0) && evaluatedNegativeExs.all (λ val => val != 0) then
-                   preconditionCandidates := eqToZero substitutedExpr :: preconditionCandidates
+            for sketch in expressionSketches do
+              for combo in inputCombinations do
+                let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
+                let substitutedExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
 
-               if (evaluatedPositiveEx < 0) && evaluatedNegativeExs.all (λ val => val >= 0) then
-                  preconditionCandidates := ltZero substitutedExpr :: preconditionCandidates
+                let widthSubstitutedExpr := substituteBVExpr substitutedExpr widthSubstitutionVal
 
-               if (evaluatedPositiveEx > 0) && evaluatedNegativeExs.all (λ val => val <= 0) then
-                  preconditionCandidates := gtZero substitutedExpr :: preconditionCandidates
+                let evaluatedPositiveEx := evalBVExpr positiveExample bitwidth widthSubstitutedExpr
 
-          let mut validCandidates : List BVLogicalExpr := []
+                let evaluatedNegativeExs := negativeExamples.map (λ neg => evalBVExpr neg bitwidth widthSubstitutedExpr)
+
+                if (evaluatedPositiveEx == 0) && evaluatedNegativeExs.all (λ val => val != 0) then
+                    preconditionCandidates := eqToZero substitutedExpr :: preconditionCandidates
+
+                if (evaluatedPositiveEx < 0) && evaluatedNegativeExs.all (λ val => val >= 0) then
+                    preconditionCandidates := ltZero substitutedExpr :: preconditionCandidates
+
+                if (evaluatedPositiveEx > 0) && evaluatedNegativeExs.all (λ val => val <= 0) then
+                    preconditionCandidates := gtZero substitutedExpr :: preconditionCandidates
+
+            pure preconditionCandidates
 
           let preconditionCandidatesSet := Std.HashSet.ofList preconditionCandidates
           logInfo m! "Precondition candidates: {preconditionCandidatesSet.toList}"
 
-          for candidate in preconditionCandidatesSet do
-              let widthtSubstitutedCandidate := substitute candidate widthSubstitutionVal
-              if let none ← solve (BoolExpr.gate Gate.and widthtSubstitutedCandidate (BoolExpr.not bvExpr)) then
-                  validCandidates := candidate :: validCandidates
+          let validCandidates ← withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
+            let mut validCandidates : List BVLogicalExpr := []
+            for candidate in preconditionCandidatesSet do
+                let widthtSubstitutedCandidate := substitute candidate widthSubstitutionVal
+                if let none ← solve (BoolExpr.gate Gate.and widthtSubstitutedCandidate (BoolExpr.not bvExpr)) then
+                    validCandidates := candidate :: validCandidates
+
+            pure validCandidates
 
           if validCandidates.isEmpty then -- TODO: if we have precondition candidates but none is valid, we can then look at joining them with ands.
             return none
 
 
           --- Rank valid candidates by model counting
-          let mut candidateByModelCount : List (Nat × BVLogicalExpr) := []
-          let constantsSet := Std.HashSet.ofList constants
-          for candidate in validCandidates do
-            let count ← countModel candidate constantsSet
-            candidateByModelCount := (count, candidate) :: candidateByModelCount
+          let candidateByModelCount ← withTraceNode `Generalize (fun _ => return "Ranked candidates by model count") do
+            let mut candidateByModelCount : List (Nat × BVLogicalExpr) := []
+            let constantsSet := Std.HashSet.ofList constants
+            for candidate in validCandidates do
+              let count ← countModel candidate constantsSet
+              candidateByModelCount := (count, candidate) :: candidateByModelCount
 
-          candidateByModelCount := candidateByModelCount.mergeSort (λ a b => a.fst > b.fst)
+            candidateByModelCount := candidateByModelCount.mergeSort (λ a b => a.fst > b.fst)
+            pure candidateByModelCount
 
           logInfo m! "Candidate by model count: {candidateByModelCount}"
 
-          let mut combinedPred : Option BVLogicalExpr := none
+          let combinedPred ← withTraceNode `Generalize (fun _ => return "Combined predicates") do
+            let mut combinedPred : Option BVLogicalExpr := none
+            let mut count := 0
+            for (_, candidate) in candidateByModelCount do
+              match combinedPred with
+              | none =>
+                  combinedPred := some candidate
+                  count := count + 1
+              | some wp =>
+                  if let some _ ← solve (BoolExpr.gate Gate.and wp (BoolExpr.not candidate)) then
+                      combinedPred := some (BoolExpr.gate Gate.or wp candidate)
+                      count := count + 1
+                  else
+                      logInfo m! "Candidate {candidate} is already covered by {combinedPred}"
 
-          let mut count := 0
-          for (_, candidate) in candidateByModelCount do
-            match combinedPred with
-            | none =>
-                combinedPred := some candidate
-                count := count + 1
-            | some wp =>
-                if let some _ ← solve (BoolExpr.gate Gate.and wp (BoolExpr.not candidate)) then
-                    combinedPred := some (BoolExpr.gate Gate.or wp candidate)
-                    count := count + 1
-                else
-                    logInfo m! "Candidate {candidate} is already covered by {combinedPred}"
+            logInfo m! "Candidates by model count size: {candidateByModelCount.length}; combined count: {count}"
+            pure combinedPred
 
-          logInfo m! "Candidates by model count size: {candidateByModelCount.length}; combined count: {count}"
           return combinedPred
 
 
@@ -1182,7 +1192,7 @@ elab "#generalize" expr:term: command =>
                   match precondition with
                   | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr}"
                   | some weakPC =>
-                          logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
+                          trace[Generalize] m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
                           break -- TODO: we then need to verify width independence
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
       pure ()
