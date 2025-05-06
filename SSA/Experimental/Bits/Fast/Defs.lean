@@ -102,6 +102,8 @@ def BTerm.evalFin (t : BTerm) (vars : Fin (arity t) → BitStream) : BitStream :
     x₁ ^^^ x₂
   | msb x => x.evalFin vars
 
+
+
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
 -/
@@ -229,11 +231,11 @@ match p with
 | .boolBinary .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    Predicate.evalEq x₁ x₂
+    x₁ ^^^ x₂
 | .boolBinary .neq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
-    Predicate.evalNeq x₁ x₂
+    ~~~ (x₁ ^^^ x₂)
 | .binary .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))

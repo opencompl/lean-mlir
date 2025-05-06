@@ -1150,6 +1150,10 @@ private theorem falseUptoIncluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0
 
 end FSM
 
+
+structure FSMBTermSolution (b : BTerm) extends FSM (Fin b.arity) where
+  ( good : b.evalFin = toFSM.eval )
+
 open Term
 
 /--
@@ -1333,6 +1337,34 @@ def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l)
   let out := fsmLor slt eq
   out
 
+def btermEvalEqFSM : ∀ (t : BTerm), FSMBTermSolution t
+ | .msb t => {
+      toFSM := (termEvalEqFSM t).toFSM,
+      good := by
+        simp [BTerm.evalFin]
+        rw [← FSMTermSolution.good]
+  }
+ | .tru => {
+    toFSM := FSM.negOne
+    good := by
+      ext i
+      simp [BTerm.evalFin]
+  }
+ | .fals => {
+    toFSM := FSM.zero
+    good := by
+      ext i
+      simp [BTerm.evalFin]
+ }
+ | .xor a b => {
+    toFSM := composeBinaryAux FSM.xor (btermEvalEqFSM a).toFSM (btermEvalEqFSM b).toFSM
+    good := by
+      ext i
+      simp [BTerm.evalFin]
+      rw [(btermEvalEqFSM a).good, (btermEvalEqFSM b).good]
+  }
+
+
 
 /--
 Evaluating the eq predicate equals the FSM value.
@@ -1457,6 +1489,24 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
           ext x i
           simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good, Predicate.evalLor, Predicate.evalUlt, Predicate.evalEq]
       }
+  | .boolBinary .eq a b =>
+    let a := btermEvalEqFSM a
+    let b := btermEvalEqFSM b
+    {
+      toFSM := composeBinaryAux FSM.xor a.toFSM b.toFSM
+      good := by
+        ext x i
+        simp [Predicate.evalEq, a.good, b.good]
+    }
+  | .boolBinary .neq a b =>
+    let a := btermEvalEqFSM a
+    let b := btermEvalEqFSM b
+    {
+      toFSM := composeUnaryAux FSM.not <| composeBinaryAux FSM.xor a.toFSM b.toFSM
+      good := by
+        ext x i
+        simp [Predicate.evalEq, a.good, b.good]
+    }
 
 /-- info: 'predicateEvalEqFSM' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms predicateEvalEqFSM
