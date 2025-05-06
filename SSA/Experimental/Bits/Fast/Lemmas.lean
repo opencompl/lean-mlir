@@ -89,6 +89,25 @@ lemma Term.evalFin_eq_eval (t : Term)
 /-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms Term.evalFin_eq_eval
 
+lemma BTerm.evalFin_eq_eval (b : BTerm)
+   (varsList : List BitStream) (varsFin : Fin b.arity → BitStream)
+   (hvars : ∀ (i : Fin b.arity), varsList.getD i default = (varsFin i)) :
+    BTerm.evalFin b varsFin = BTerm.eval b varsList := by
+  induction b generalizing varsList
+  case msb a =>
+    simp [BTerm.evalFin]
+    apply Term.evalFin_eq_eval
+    assumption
+  case tru => simp [BTerm.evalFin, BTerm.eval]
+  case fals => simp [BTerm.evalFin, BTerm.eval]
+  case xor a b ha hb =>
+      simp [BTerm.evalFin, BTerm.eval]
+      rw [ha varsList, hb varsList]
+      · intros i
+        exact (hvars ⟨i, by simp⟩)
+      · intros i
+        exact (hvars ⟨i, by simp⟩)
+
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
    (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :
@@ -130,6 +149,24 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     · intros i
       rw [hvars ⟨i, by omega⟩]
       rfl
+  case boolBinary op t₁ t₂ =>
+      rcases op
+      case eq =>
+        simp [Predicate.eval]
+        rw [BTerm.evalFin_eq_eval _ varsList,
+          BTerm.evalFin_eq_eval _ varsList]
+        · intros i
+          exact hvars ⟨i, by simp⟩
+        · intros i
+          exact hvars ⟨i, by simp⟩
+      case neq =>
+        simp [Predicate.eval]
+        rw [BTerm.evalFin_eq_eval _ varsList,
+          BTerm.evalFin_eq_eval _ varsList]
+        · intros i
+          exact hvars ⟨i, by simp⟩
+        · intros i
+          exact hvars ⟨i, by simp⟩
 
 /-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.evalFin_eq_eval
