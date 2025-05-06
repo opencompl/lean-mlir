@@ -1,4 +1,3 @@
-
 import SSA.Projects.RISCV64.Semantics
 import SSA.Core.Framework
 set_option maxHeartbeats 1000000000000000000
@@ -10,11 +9,12 @@ namespace RISCV64
 
 /-!
 ## Dialect operation definitions
-Modelled operations such that their inputs arguments are up to two register content values. Any other attributes e.g flags
-are encoded as part of the op-code.
+Each instruction operates on up to two registers. Any other attributes not
+passed via registers, e.g., flags and immediates are encoded as part of the op-code.
 
-We modell the RV64I base instruction set: https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc, therefore allow for an 64-bit address space.
-And operations out of selected RISC-V extension:
+We modell the RV64I base instruction set: https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc,
+therefore allow for an 64-bit address space.
+Additionally, we modell operations out of selected RISC-V ISA extension:
     - `M`: standart integer division and multiplication instruction extension
 
     - `B`: extension for bit manipulation (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions)
@@ -55,7 +55,7 @@ inductive Op
   | sraiw (shamt : BitVec 5)
   | slt
   | sltu
-  -- RISC-V `M` extension instructions (multiply& divide)
+  -- RISC-V `M` extension instructions (multiply & divide)
   | mul    -- performs signed multiplication on 64 x 64 bits and returns the lower 64 bits of the result .
   | mulu   -- performs unsigned multiplication on 64 x 64 bits and returns the lower 64 bits of the result .
   | mulw
@@ -313,7 +313,7 @@ instance : DialectDenote (RV64) where
   denote
   |.li imm, _ , _ => BitVec.ofInt 64 imm
   |.addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  |.lui imm, regs , _ => UTYPE_pure64_lui imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  |.lui imm, regs , _ => UTYPE_pure64_lui imm
   |.auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   |.slliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SLLIW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   |.srliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SRLIW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))

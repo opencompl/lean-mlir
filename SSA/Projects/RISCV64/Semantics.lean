@@ -3,7 +3,7 @@ set_option maxHeartbeats 1000000000000000000
 /-!
   ## Dialect semantics
   This file contains the semantics for each modelled `RISCV-64` dialect instruction
-  as defined by
+  as defined by : https://github.com/riscv/sail-riscv
   This give us the guarantee that the dialect semantics faithfully implements the intended
   Risc-V semantics.
   The semantic defintions do not contain toInt and toNat when possible. For this
@@ -319,14 +319,5 @@ def ZBA_RTYPE_pure64_RISCV_SH2ADD (rs2_val : BitVec 64) (rs1_val : BitVec 64) : 
 
 def ZBA_RTYPE_pure64_RISCV_SH3ADD(rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.add (rs1_val <<< 3#2) rs2_val
-
-/-
-to complete in the future:
-extend with
-ZBB_RYTPE_pure64_RISCV_
-|pack
-|packh
-slli.uw
- -/
 
 end RV64Semantics
