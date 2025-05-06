@@ -15,8 +15,6 @@ def Term.quote (t : _root_.Term) : Expr :=
   | zero => mkConst ``Term.zero
   | one => mkConst ``Term.one
   | negOne => mkConst ``Term.negOne
--- | decr t => mkApp (mkConst ``Term.decr) (t.quote)
-  -- | incr t => mkApp (mkConst ``Term.incr) (t.quote)
   | neg t => mkApp (mkConst ``Term.neg) (t.quote)
   | not t => mkApp (mkConst ``Term.not) (t.quote)
   | sub t₁ t₂ => mkApp2 (mkConst ``Term.sub) (t₁.quote) (t₂.quote)
@@ -25,6 +23,14 @@ def Term.quote (t : _root_.Term) : Expr :=
   | or t₁ t₂ => mkApp2 (mkConst ``Term.or) (t₁.quote) (t₂.quote)
   | and t₁ t₂ => mkApp2 (mkConst ``Term.and) (t₁.quote) (t₂.quote)
   | shiftL t₁ n => mkApp2 (mkConst ``Term.shiftL) (t₁.quote) (mkNatLit n)
+
+open Lean in
+def BTerm.quote (t : BTerm) : Expr :=
+  match t with
+  | .tru => (mkConst ``BTerm.tru)
+  | .fals => (mkConst ``BTerm.fals)
+  | .xor a b => mkApp2 (mkConst ``BTerm.xor) a.quote b.quote
+  | .msb x => mkApp (mkConst ``BTerm.msb) x.quote
 
 open Lean in
 def mkConstBin (atp : Name) : Expr :=
@@ -45,6 +51,8 @@ def Predicate.quote (p : Predicate) : Expr :=
   | .binary .ule a b => mkApp2 (mkConstBin ``BinaryPredicate.ule) (Term.quote a) (Term.quote b)
   | .binary .slt a b => mkApp2 (mkConstBin ``BinaryPredicate.slt) (Term.quote a) (Term.quote b)
   | .binary .sle a b => mkApp2 (mkConstBin ``BinaryPredicate.sle) (Term.quote a) (Term.quote b)
+  | .boolBinary .eq a b => mkApp2 (mkConstBin ``BoolBinaryPredicate.eq) a.quote b.quote
+  | .boolBinary .neq a b => mkApp2 (mkConstBin ``BoolBinaryPredicate.neq) a.quote b.quote
   | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
   | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
 

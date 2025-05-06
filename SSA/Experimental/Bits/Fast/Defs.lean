@@ -35,6 +35,7 @@ def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
   | shiftL t n  => BitStream.shiftLeft (Term.eval t vars) n
  -- | repeatBit t => BitStream.repeatBit (Term.eval t vars)
 
+
 /--
 Evaluate a term `t` to the BitStream it represents.
 
@@ -75,6 +76,31 @@ and only require that many bitstream values to be given in `vars`.
  --  | decr t      => BitStream.decr (Term.evalFin t vars)
   | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
+
+
+/--
+Evaluate a term `t` to the BitStream it represents,
+given a value for the free variables in `t`.
+
+Note that we don't keep track of how many free variable occur in `t`,
+so eval requires us to give a value for each possible variable.
+-/
+def BTerm.eval (t : BTerm) (vars : List BitStream) : BitStream :=
+  match t with
+  | tru => BitStream.negOne
+  | fals => BitStream.zero
+  | xor a b => a.eval vars ^^^ b.eval vars
+  | msb x => x.eval vars
+
+def BTerm.evalFin (t : BTerm) (vars : Fin (arity t) → BitStream) : BitStream :=
+  match t with
+  | tru => BitStream.negOne
+  | fals => BitStream.zero
+  | xor a b =>
+    let x₁ := a.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := b.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    x₁ ^^^ x₂
+  | msb x => x.evalFin vars
 
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.
@@ -152,6 +178,8 @@ def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   | .width .ge n => BitStream.falseIffGe n
   | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
   | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
+  | boolBinary .eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
+  | boolBinary .neq t₁ t₂ => Predicate.evalNeq (t₁.eval vars) (t₂.eval vars)
   | binary .eq t₁ t₂ => Predicate.evalEq (t₁.eval vars) (t₂.eval vars)
   /-
   If it is ever not equal, then we want to stay not equals for ever.
@@ -198,6 +226,14 @@ match p with
 | .width .le n => BitStream.falseIffLe n
 | .width .gt n => BitStream.falseIffGt n
 | .width .ge n => BitStream.falseIffGe n
+| .boolBinary .eq t₁ t₂ =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    Predicate.evalEq x₁ x₂
+| .boolBinary .neq t₁ t₂ =>
+    let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+    Predicate.evalNeq x₁ x₂
 | .binary .eq t₁ t₂ =>
     let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))

@@ -1,6 +1,8 @@
 import Mathlib.Algebra.Notation.Defs
 import Mathlib.Order.Notation
 
+
+
 /-!
 # Term Language
 This file defines the term language the decision procedure operates on,
@@ -10,8 +12,6 @@ and the denotation of these terms into operations on bitstreams -/
 it represent an infinite bitstream (with free variables) -/
 inductive Term : Type
 | var : Nat → Term
-/-- Return the MSB of a term. -/
-| msb : Term → Term
 /-- The constant `0` -/
 | zero : Term
 /-- The constant `-1` -/
@@ -46,6 +46,13 @@ inductive Term : Type
 --   hence, I don't anticipate us implementing it.
 deriving Repr, Inhabited
 
+inductive BTerm : Type
+| msb : Term → BTerm
+| tru : BTerm
+| fals : BTerm
+| xor : BTerm → BTerm → BTerm
+deriving Repr, Inhabited
+
 open Term
 
 instance : Add Term := ⟨add⟩
@@ -62,7 +69,6 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 @[simp] def Term.arity : Term → Nat
 | (var n) => n+1
 | zero => 0
-| msb _ => 1
 | one => 0
 | negOne => 0
 | ofNat _ => 0
@@ -78,6 +84,12 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 | shiftL t .. => arity t
 -- | repeatBit t => arity t
 
+@[simp] def BTerm.arity : BTerm → Nat
+| .msb t => (t.arity)
+| .tru => 0
+| .fals => 0
+| .xor a b =>  max (arity a) (arity b)
+
 inductive BinaryPredicate
 | eq
 | neq
@@ -86,6 +98,12 @@ inductive BinaryPredicate
 | slt
 | sle
 deriving Repr
+
+
+inductive BoolBinaryPredicate
+| eq
+| neq
+deriving Repr, Inhabited
 
 inductive WidthPredicate
 | eq
@@ -112,6 +130,7 @@ inductive Predicate : Type where
 /-- Assert relationship between bitwidth and `n` -/
 | width (wp : WidthPredicate) (n : Nat) : Predicate
 | binary (p : BinaryPredicate) (t₁ t₂ : Term)
+| boolBinary (p : BoolBinaryPredicate) (t₁ t₂ : BTerm)
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
 deriving Repr, Inhabited
@@ -119,6 +138,8 @@ deriving Repr, Inhabited
 -- TODO: This ugly definition is here to make the `predicateEvalEqFSM` function compile wihtout change.
 @[simp] def Predicate.arity : Predicate → Nat
 | .width _ _ => 0
+| .boolBinary .eq t1 t2 => max t1.arity t2.arity
+| .boolBinary .neq t1 t2 => max t1.arity t2.arity
 | .binary .eq t1 t2 => max t1.arity t2.arity
 | .binary .neq t₁ t₂ => max t₁.arity t₂.arity
 | .binary .ult t₁ t₂ => max t₁.arity t₂.arity
@@ -131,7 +152,6 @@ deriving Repr, Inhabited
 /-- toBitVec a Term into its underlying bitvector -/
 def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   match t with
-  | msb x => (BitVec.ofBool (x.denote w vars).msb).signExtend w
   | ofNat n => BitVec.ofNat w n
   | var n => vars.getD n default
   | zero => 0#w
@@ -149,6 +169,14 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
   | shiftL a n => (a.denote w vars) <<< n
 
 
+/-- toBitVec a Term into its underlying bitvector -/
+def BTerm.denote (w : Nat) (t : BTerm) (vars : List (BitVec w)) : Bool :=
+  match t with
+  | .msb x => (x.denote w vars).msb
+  | .tru => Bool.true
+  | .fals => Bool.false
+  | .xor a b => (a.denote w vars).xor (b.denote w vars)
+
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
   match p with
   | .width .ge k => k ≤ w -- w ≥ k
@@ -157,6 +185,8 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .width .lt k => w < k
   | .width .neq k => w ≠ k
   | .width .eq k => w = k
+  | .boolBinary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
+  | .boolBinary .neq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
   | .binary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
   | .binary .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
   | .binary .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
