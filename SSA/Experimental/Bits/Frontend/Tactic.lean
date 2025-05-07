@@ -207,10 +207,10 @@ partial def reflectBoolUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       return { bvToIxMap := map, e := BTerm.fals }
   | Bool.xor a b =>
       let ⟨map, l⟩ ← reflectBoolUnchecked map w a
-      let ⟨map, r⟩ ← reflectBoolUnchecked map w a
+      let ⟨map, r⟩ ← reflectBoolUnchecked map w b
       return { bvToIxMap := map, e := BTerm.xor l r }
   | _ =>
-    let (e, map) := map.findOrInsertBVExpr e
+    let (e, map) := map.findOrInsertBoolExpr e
     return { bvToIxMap := map, e := e }
 
 /--
