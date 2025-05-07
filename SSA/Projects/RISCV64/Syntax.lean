@@ -124,9 +124,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM RV64 RV64.Ty
 instance instTransformTy : MLIR.AST.TransformTy RV64 0 where
   mkTy := mkTy
 
-#check Expr.mk
-#check mkTy
-
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   MLIR.AST.ReaderM (RV64) (Σ eff ty, Expr (RV64) Γ eff ty) := do
     match opStx.args with
@@ -602,7 +599,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
 
-        | .bv , .bv , "mulw" => do 
+        | .bv , .bv , "mulw" => do
           return ⟨ .pure, .bv ,⟨ .mulw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
@@ -674,10 +671,8 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (RV64)
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
-
 instance : MLIR.AST.TransformReturn (RV64) 0 where
   mkReturn := mkReturn
-
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[RV64_com| " reg:mlir_region "]" : term => do

@@ -35,7 +35,8 @@ section Monads
   errors.
 -/
 
-abbrev ExceptM  (d : Dialect) := Except (TransformError d.Ty)
+abbrev ExceptM  (d : Dialect) := Except (TransformError)
+--abbrev ExceptM  (d : Dialect) := Except (TransformError d.Ty)
 abbrev BuilderM (d : Dialect) := StateT NameMapping (ExceptM d)
 abbrev ReaderM  (d : Dialect) := ReaderT NameMapping (ExceptM d)
 
@@ -95,7 +96,7 @@ def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
   Throws an error if the name is not present in the mapping (this indicates the name may be free),
   or if the type of the variable in the context is different from `expectedType`
 -/
-def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
+def getValFromCtxt [ToString d.Ty] (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
     ReaderM d (Ctxt.Var Γ expectedType) := do
   let index := (←read).lookup name
   let some index := index | throw <| .undeclaredName name
@@ -109,7 +110,7 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
     if h : t = expectedType then
       return ⟨index, by simp only [get?, ← h]; rw [←List.getElem?_eq_getElem]⟩
     else
-      throw <| .typeError expectedType t
+      throw <| .typeError (toString (expectedType)) (toString (t))
 
 def BuilderM.isOk {α : Type} (x : BuilderM d α) : Bool :=
   match x.run [] with
@@ -120,6 +121,8 @@ def BuilderM.isErr {α : Type} (x : BuilderM d α) : Bool :=
   match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
+
+variable [ToString d.Ty]
 
 def TypedSSAVal.mkTy [TransformTy d φ] : TypedSSAVal φ → ExceptM d d.Ty
   | (.name _, ty) => TransformTy.mkTy ty

@@ -2,6 +2,9 @@ import SSA.Core.MLIRSyntax.Parser
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Init.Data.Repr
 
+-- Fixing Parser: Black hole
+-- RISCV Com → Format ✓
+
 open MLIR AST InstCombine
 def regionTransform (region : Region 0) : Except ParseError
   (Σ (Γ' : Context) (eff : EffectKind) (ty : LLVM.Ty), Com LLVM Γ' eff ty) :=

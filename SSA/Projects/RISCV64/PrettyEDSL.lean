@@ -36,7 +36,6 @@ syntax "remu" : MLIR.Pretty.uniform_op
 syntax "rem" : MLIR.Pretty.uniform_op
 syntax "li" : MLIR.Pretty.uniform_op
 syntax "ret" : MLIR.Pretty.uniform_op
-
 syntax "sext.b" : MLIR.Pretty.uniform_op
 syntax "sext.h" : MLIR.Pretty.uniform_op
 syntax "zext.h" : MLIR.Pretty.uniform_op
@@ -84,17 +83,16 @@ private def test_simple2 := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
   %1 =  add %e1, %e2 : !i64
   %2 =  sub %1, %1 : !i64
-  -- %3 =  const  %1 : !i64
         ret %2  : !i64
 }]
 #check test_simple
 
 /-
-Bellow we implement the form, where an operation has `one` attirbute value.
+Bellow we implement the case, where an operation has `one` attirbute value.
 e.g constant or single register operations.
+TO DO: doesn't parse and pretty print negative numerals atm
 -/
 
--- to do: doesnt parse negative numerals atm
 syntax mlir_op_operand " = " "const" "(" num (" : " mlir_type )? ")"
   (" : " mlir_type)? : mlir_op
 macro_rules
@@ -103,7 +101,6 @@ macro_rules
       let outer_type ← outer_type.getDM `(mlir_type| _)
       `(mlir_op| $res:mlir_op_operand = "const"()
           {val = $x:num :  $outer_type} : ( $outer_type) -> ( $outer_type) )
-
 
 syntax mlir_op_operand " = " "li" "(" num (" : " mlir_type)? ")" (" : " mlir_type)?
   : mlir_op

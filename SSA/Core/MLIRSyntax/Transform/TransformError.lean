@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.MLIRSyntax.AST
 
 namespace MLIR.AST
-
-inductive TransformError (Ty : Type)
+/-
+changing transform error to not depend on the dialect.
+-/
+inductive TransformError
   | nameAlreadyDeclared (var : String)
   | undeclaredName (var : String)
   | indexOutOfBounds (name : String) (index len : Nat)
-  | typeError (expected got : Ty)
+  | typeError (expected got : String)
   | widthError {φ} (expected got : Width φ)
   | unsupportedUnaryOp
   | unsupportedBinaryOp (error : String)
@@ -19,7 +21,8 @@ inductive TransformError (Ty : Type)
 
 namespace TransformError
 
-instance [Repr Ty] : Repr (TransformError Ty) where
+-- removed the type here
+instance : Repr (TransformError) where
   reprPrec err _ := match err with
     | nameAlreadyDeclared var => f!"Already declared {var}, shadowing is not allowed"
     | undeclaredName name => f!"Undeclared name '{name}'"
