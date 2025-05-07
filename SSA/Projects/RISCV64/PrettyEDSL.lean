@@ -78,21 +78,24 @@ syntax "sh3add" :  MLIR.Pretty.uniform_op
 
 private def test_simple := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
-  %1 =  add %e1, %e2 : !i64
-        ret %1 : !i64
+  %1 = add %e1, %e2 : !i64
+       ret %1 : !i64
 }]
 private def test_simple2 := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
-  %1 =  add %e1, %e2 : !i64
-  %2 =  sub %1, %1 : !i64
-        ret %2  : !i64
+  %1 = add %e1, %e2 : !i64
+  %2 = sub %1, %1 : !i64
+       ret %2  : !i64
 }]
 #check test_simple
 
 /-
-Bellow we implement the case, where an operation has `one` attirbute value.
+Bellow we implement the case, where an operation has
+`one` attirbute value.
 e.g constant or single register operations.
-WIP: extend pretty print for negative numerals/immediates. Somehow always threw an error, but is wip.
+WIP: extend pretty print for negative
+numerals/immediates. Somehow they always
+throw an error, but is wip.
 -/
 
 syntax mlir_op_operand " = " "const" "(" num (" : " mlir_type )? ")"
@@ -150,36 +153,35 @@ macro_rules
       | Macro.throwUnsupported
     `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {shamt= $x:num : $t}  : ($t) -> ($t) )
 
-
 /-! # Testing -/
 private def test_andi := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
-  %1 =  andi %e1, 42 : !i64
-        ret %1 : !i64
+  %1 = andi %e1, 42 : !i64
+  ret %1 : !i64
 }]
 
 private def test_slli := [RV64_com| {
-  ^bb0(%e1 : !i64, %e2 : !i64 ):
-  %1 =  slli %e1, 42 : !i64
-        ret %1 : !i64
+ ^bb0(%e1 : !i64, %e2 : !i64 ):
+ %1 = slli %e1, 42 : !i64
+ ret %1 : !i64
 }]
 
 private def test_li := [RV64_com| {
-  ^bb0(%e1 : !i64):
-  %1 =  li (42) : !i64
-  %2 =  li (42) : !i64
+ ^bb0(%e1 : !i64):
+ %1 = li (42) : !i64
+ %2 = li (42) : !i64
   ret %1 : !i64
 }]
 
 private def big_test := [RV64_com| {
-  ^bb0(%r1 : !i64, %r2 : !i64 ):
-  %1 = andi %r1, 42 : !i64
-  %2 = sub %r1,  %1 : !i64
-  %3 = andi %2, 10 : !i64
-  %4 = div %r2, %r1 : !i64
-  %5 = add %4, %1 : !i64
-  %7 = li (2) : !i64
-  %6 = ror %5, %7 : !i64
-  ret %6 : !i64
+ ^bb0(%r1 : !i64, %r2 : !i64 ):
+ %1 = andi %r1, 42 : !i64
+ %2 = sub %r1,  %1 : !i64
+ %3 = andi %2, 10 : !i64
+ %4 = div %r2, %r1 : !i64
+ %5 = add %4, %1 : !i64
+ %7 = li (2) : !i64
+ %6 = ror %5, %7 : !i64
+ ret %6 : !i64
 }]
 #eval big_test

@@ -6,8 +6,8 @@ open RISCV64
 
 namespace RISCVExpr
 /-!
-Defining functions to simplify Expression making for the RISC-V operations that
-are targeted during lowering so far. This helps in comparing output with expected ouput and
+Defining functions to simplify Expression making for some of the RISC-V operations.
+This helps in comparing output with expected ouput and
 avoids writting huge `Expr`.
 
 -/
@@ -110,7 +110,6 @@ def rem {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
 end RISCVExpr
 
 namespace RiscvMkExpr
-
 -- string representation of MLIR type into corresponding RISCV type
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM RV64 RV64.Ty
   | MLIR.AST.MLIRType.undefined s => do
@@ -129,7 +128,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match opStx.name with
         | "li" => do
             let some att := opStx.attrs.getAttr "imm"
-              | throw <| .unsupportedOp s!"no attirbute in li, need to specify immediate {repr opStx}"
+              | throw <| .unsupportedOp s!"no attribute in li, need to specify immediate {repr opStx}"
             match att with
               | .int val ty =>
                 let opTy@(.bv) ← mkTy ty
@@ -149,7 +148,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match ty₁, opStx.name with
         | .bv, "srai" => do
           let some att := opStx.attrs.getAttr "shamt"
-             | throw <| .unsupportedOp s!"no attirbute in srai {repr opStx}"
+             | throw <| .unsupportedOp s!"no attribute in srai {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -165,7 +164,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "bclri" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in bclri {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in bclri {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -181,7 +180,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "bexti" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in bexti {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in bexti {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -197,7 +196,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "bseti" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in bseti {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in bseti {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -213,7 +212,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "binvi" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in binvi {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in binvi {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -229,7 +228,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "addiw" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in addiw {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in addiw {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -245,7 +244,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "lui" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in lui {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in lui {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -261,7 +260,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "auipc" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in auipc {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in auipc {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -277,7 +276,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "slliw" => do
           let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attirbute in slliw {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in slliw {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -293,7 +292,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "srliw" => do
           let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attirbute in srliw {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in srliw {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -309,7 +308,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "sraiw" => do
           let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attirbute in sraiw {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in sraiw {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -325,7 +324,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "slli" => do
           let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attirbute in slli{repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in slli{repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -341,7 +340,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "srli" => do
           let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attirbute in srli {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in srli {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -357,7 +356,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "addi" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in addi {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in addi {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -373,7 +372,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "slti" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in slti {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in slti {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -389,7 +388,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "sltiu" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in sltiu {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in sltiu {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -405,7 +404,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "andi" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in andi {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in andi {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -421,7 +420,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "ori" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in ori {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in ori {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -437,7 +436,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
         | .bv, "xori" => do
           let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attirbute in xori {repr opStx}"
+            | throw <| .unsupportedOp s!"no attribute in xori {repr opStx}"
           match att with
           | .int val ty =>
             let opTy@(.bv) ← mkTy ty
@@ -596,7 +595,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             return ⟨ .pure, .bv ,⟨ .mulhsu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-
         | .bv , .bv , "mulw" => do
           return ⟨ .pure, .bv ,⟨ .mulw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
@@ -622,7 +620,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
         | .bv, .bv, "remwu" =>
-            return ⟨ .pure, .bv ,⟨ .remw, by rfl, by constructor,
+            return ⟨ .pure, .bv ,⟨ .remwu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
         | .bv, .bv, "add.uw" =>
@@ -654,7 +652,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
         | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
-    | _ => throw <| .unsupportedOp s!"wrong number of arguemnts, more than 2 arguemnts  {repr opStx}"
+    | _ => throw <| .unsupportedOp s!"wrong number of arguments, more than 2 arguemnts  {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (RV64) 0 where
   mkExpr := mkExpr
