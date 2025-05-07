@@ -52,8 +52,8 @@ def Predicate.quote (p : Predicate) : Expr :=
   | .binary .ule a b => mkApp2 (mkConstBin ``BinaryPredicate.ule) (Term.quote a) (Term.quote b)
   | .binary .slt a b => mkApp2 (mkConstBin ``BinaryPredicate.slt) (Term.quote a) (Term.quote b)
   | .binary .sle a b => mkApp2 (mkConstBin ``BinaryPredicate.sle) (Term.quote a) (Term.quote b)
-  | .boolBinary .eq a b => mkApp2 (mkConstBin ``BoolBinaryPredicate.eq) a.quote b.quote
-  | .boolBinary .neq a b => mkApp2 (mkConstBin ``BoolBinaryPredicate.neq) a.quote b.quote
+  | .boolBinary .eq a b => mkApp3 (mkConst ``Predicate.boolBinary) (mkConst ``BoolBinaryPredicate.eq) a.quote b.quote
+  | .boolBinary .neq a b => mkApp3 (mkConst ``Predicate.boolBinary) (mkConst ``BoolBinaryPredicate.neq) a.quote b.quote
   | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
   | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
 

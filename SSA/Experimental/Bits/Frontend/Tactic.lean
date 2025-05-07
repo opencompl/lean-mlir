@@ -303,11 +303,12 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 
 partial def reflectBoolPredicateAux (map : ReflectMap) (e : Expr) : MetaM (ReflectResult Predicate) := do
   match_expr e with
-  | Eq α a b => do
+  | Eq α ea eb => do
      let_expr Bool := α
        | throwError m!"expected to be called on boolean equality, but called on '{e}'"
-     let ⟨map, a⟩ ← reflectBoolUnchecked map a
-     let ⟨map, b⟩ ← reflectBoolUnchecked map b
+     let ⟨map, a⟩ ← reflectBoolUnchecked map ea
+     let ⟨map, b⟩ ← reflectBoolUnchecked map eb
+     logInfo m!"reflecting {e} : ({repr a} ~ {ea}) = ({repr b} ~ {eb})"
      return { bvToIxMap := map, e := Predicate.boolBinary .eq a b }
   | _ => throwError m!"expected boolean predicate, found '{e}'"
 
