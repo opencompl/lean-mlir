@@ -501,15 +501,14 @@ which is then indeed `rfl` equal to `true`.
 def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
-  if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-  else if hgt: ws.size > 1 then
+  if hgt: ws.size > 1 then
     let (w1, wExample1) := ws[0]
     let (w2, wExample2) := ws[1]
     let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
     throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
   else
     -- we have exactly one width
-    let (w, wExample) := ws[0]
+    let w := if h : ws.size = 0 then mkNatLit 0 else (ws[0]).fst
 
     -- We can now revert hypotheses that are of this bitwidth.
     let g ← revertBvHyps g
@@ -643,6 +642,7 @@ def evalBvAutomataCircuit : Tactic := fun
     | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
+/-
 /-- A tactic that succeeds if we have multiple widths. -/
 syntax (name := bvAutomataFragmentWidthLegal) "bv_automata_fragment_width_legal" : tactic
 @[tactic bvAutomataFragmentWidthLegal]
@@ -717,15 +717,15 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
   g.withContext do
     let ws ← findExprBitwidths (← g.getType)
     let ws := ws.toArray
-    if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-    else if hgt: ws.size > 1 then
+    -- if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
+    if hgt: ws.size > 1 then
       let (w1, wExample1) := ws[0]
       let (w2, wExample2) := ws[1]
       let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
       throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
     else
-      -- we have exactly one width
-      let (w, wExample) := ws[0]
+      -- Pick the width, and set the width to be dummy 0 if no widths are in play.
+      let w := if h0 : ws.size = 0 then mkNatLit 0 else ws[0].fst
 
       -- We can now revert hypotheses that are of this bitwidth.
       let g ← revertBvHyps g
@@ -750,7 +750,6 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
       trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
       return ()
 | _  => throwUnsupportedSyntax
+-/
 
 end Tactic
-
-macro "bv_automata_classic" : tactic => `(tactic| (bv_automata_gen (config := {backend := .automata})))
