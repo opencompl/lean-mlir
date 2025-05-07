@@ -39,6 +39,8 @@ def add {w : Nat} (l : List (BitVec w)) : BitVec w :=
 def and {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.and (0#w) l
 
+def concatTwo (x : BitVec w₁) (y : BitVec w₂): BitVec (w₁ + w₂) := x ++ y
+
 /-- Concatenate a list of bitvecs `xs`, where the length of bitvec `xs[i]` is given by
   element `ls[i]` in a list of nat `ls` -/
 def concat {ls : List Nat} (xs : HVector BitVec ls) : BitVec (List.sum ls) :=
@@ -71,8 +73,8 @@ def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.mul (1#w) l
 
 /- Generic `mux` operation for any types α, β -/
-def mux (x : BitVec w₁) (y : BitVec w₂) (cond : Bool) : BitVec w₁ ⊕ BitVec w₂ :=
-  if cond then .inl x else .inr y
+def mux (x : BitVec w) (y : BitVec w) (cond : BitVec q) : BitVec w :=
+  if cond.msb then x else y
 
 /-- Variadic `or` operation with a list of bitvectors with width `w` as input -/
 def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
