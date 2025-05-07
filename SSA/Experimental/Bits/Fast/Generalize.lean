@@ -744,7 +744,6 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
         for expr in exprs do
           let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
 
-          trace[Generalize] m! "Evaluated {expr} with values {origWidthConstantsExpr.lhs.symVars} and got result: {evaluatedVal}; Target = {target.bv}"
           if evaluatedVal == target.bv then
               res := expr :: res
 
@@ -907,7 +906,7 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
 
-    let constants := positiveExample.keys --.  Incorporating the width leads to an exponential increase in time taken
+    let constants := widthId :: positiveExample.keys --.  Incorporating the width leads to an exponential increase in time taken
 
     let maxConstantId := constants.max?
     match maxConstantId with
@@ -1115,9 +1114,12 @@ elab "#generalize" expr:term: command =>
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
       logInfo m! "hexpr: {hExpr}"
+      let timeoutMs := 120000
 
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
+           let startTime ← Core.liftIOCore IO.monoMsNow
+
            let initialState : ParsedBVExprState := default
            let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
              | throwError "Unsupported expression provided"
@@ -1192,8 +1194,15 @@ elab "#generalize" expr:term: command =>
                   match precondition with
                   | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr}"
                   | some weakPC =>
-                          trace[Generalize] m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
+                          logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
                           break -- TODO: we then need to verify width independence
+
+                  let currentTime ← Core.liftIOCore IO.monoMsNow
+                  let elapsedTime := currentTime - startTime
+
+                  trace[Generalize] m! "Elapsed time: {elapsedTime/1000}s"
+                  if elapsedTime >= timeoutMs then
+                      throwError m! "Synthesis Timeout Failure: Exceeded timeout of {timeoutMs/1000}s"
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
       pure ()
 
