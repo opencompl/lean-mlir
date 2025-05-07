@@ -107,6 +107,8 @@ lemma BTerm.evalFin_eq_eval (b : BTerm)
         exact (hvars ⟨i, by simp⟩)
       · intros i
         exact (hvars ⟨i, by simp⟩)
+  case var n =>
+      simp [BTerm.evalFin, BTerm.eval, ← hvars]
 
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)

@@ -1338,6 +1338,9 @@ def fsmSle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l)
   out
 
 def btermEvalEqFSM : ∀ (t : BTerm), FSMBTermSolution t
+ | .var n =>
+    { toFSM := FSM.var n,
+      good := by ext; simp [BTerm.evalFin] }
  | .msb t => {
       toFSM := (termEvalEqFSM t).toFSM,
       good := by
@@ -1363,8 +1366,6 @@ def btermEvalEqFSM : ∀ (t : BTerm), FSMBTermSolution t
       simp [BTerm.evalFin]
       rw [(btermEvalEqFSM a).good, (btermEvalEqFSM b).good]
   }
-
-
 
 /--
 Evaluating the eq predicate equals the FSM value.
