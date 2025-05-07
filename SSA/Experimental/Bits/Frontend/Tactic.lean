@@ -4,7 +4,7 @@ import SSA.Experimental.Bits.Frontend.Preprocessing
 import SSA.Experimental.Bits.Frontend.Syntax
 
 import SSA.Experimental.Bits.Fast.Reflect
-import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
+-- import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
 initialize Lean.registerTraceClass `Bits.Frontend
 
@@ -497,30 +497,31 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
     | .automata =>
-      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
-      let (_, g) ← g.revert #[mapFv]
-      -- Apply Predicate.denote_of_eval_eq.
-      let wVal? ← Meta.getNatValue? w
-      let g ←
-        -- TODO FIXME
-        if false then
-          pure g
-        else
-          -- Generic width problem.
-          if !w.isFVar then
-            let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
-            let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
-            let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
-            logWarning  msg
+      throwError "ERROR: Disabled automata tactic when developing zext/sext extensions."
+      -- let (mapFv, g) ← generalizeMap g bvToIxMapVal;
+      -- let (_, g) ← g.revert #[mapFv]
+      -- -- Apply Predicate.denote_of_eval_eq.
+      -- let wVal? ← Meta.getNatValue? w
+      -- let g ←
+      --   -- TODO FIXME
+      --   if false then
+      --     pure g
+      --   else
+      --     -- Generic width problem.
+      --     if !w.isFVar then
+      --       let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
+      --       let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
+      --       let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
+      --       logWarning  msg
 
-          let [g] ← g.apply <| (mkConst ``Formula.denote_of_isUniversal)
-            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-          pure g
-      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      return [g]
+      --     let [g] ← g.apply <| (mkConst ``Formula.denote_of_isUniversal)
+      --       | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+      --     pure g
+      -- let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+      --   | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      -- let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+      --   | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      -- return [g]
     | .circuit_cadical maxIter =>
       let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
