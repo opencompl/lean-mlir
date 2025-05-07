@@ -195,19 +195,21 @@ def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM (Refl
 
 abbrev foo : Bool := (true : Bool) ^^ (true : Bool)
 
-set_option pp.all true in
-#print foo
 
+mutual
 
-partial def reflectBoolUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult BTerm) := do
+partial def reflectBoolUnchecked (map : ReflectMap)  (e : Expr) : MetaM (ReflectResult BTerm) := do
   match_expr e with
+  | BitVec.msb w x =>
+    let ⟨map, x⟩ ← reflectBVUnchecked map w x
+    return { bvToIxMap := map, e := BTerm.msb x }
   | Bool.true =>
       return { bvToIxMap := map, e := BTerm.tru }
   | Bool.false =>
       return { bvToIxMap := map, e := BTerm.fals }
   | Bool.xor a b =>
-      let ⟨map, l⟩ ← reflectBoolUnchecked map w a
-      let ⟨map, r⟩ ← reflectBoolUnchecked map w b
+      let ⟨map, l⟩ ← reflectBoolUnchecked map a
+      let ⟨map, r⟩ ← reflectBoolUnchecked map b
       return { bvToIxMap := map, e := BTerm.xor l r }
   | _ =>
     let (e, map) := map.findOrInsertBoolExpr e
@@ -290,12 +292,24 @@ partial def reflectBVUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM 
     let (e, map) := map.findOrInsertBVExpr e
     return { bvToIxMap := map, e := e }
 
+end
+
 set_option pp.explicit true in
 /--
 info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec w) a b) (@Eq (BitVec w) a b)) : Prop
 -/
 #guard_msgs in
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
+
+partial def reflectBoolPredicateAux (map : ReflectMap) (e : Expr) : MetaM (ReflectResult Predicate) := do
+  match_expr e with
+  | Eq α a b => do
+     let_expr Bool := α
+       | throwError m!"expected to be called on boolean equality, but called on '{e}'"
+     let ⟨map, a⟩ ← reflectBoolUnchecked map a
+     let ⟨map, b⟩ ← reflectBoolUnchecked map b
+     return { bvToIxMap := map, e := Predicate.boolBinary .eq a b }
+  | _ => throwError m!"expected boolean predicate, found '{e}'"
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected : Expr) : MetaM (ReflectResult Predicate) := do
@@ -342,11 +356,11 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
           let b ← reflectBVUnchecked a.bvToIxMap w b
           return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
         | _ =>
-          throwError m!"unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+          reflectBoolPredicateAux bvToIxMap e
       | _ =>
-        throwError m!"only boolean conditionals allowed are 'bv.\{u,s}l\{t,e} bv = true'. Found {indentD e}."
+          reflectBoolPredicateAux bvToIxMap e
     | _ =>
-      throwError m!"unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+      throwError m!"unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true' or 'bool = bool'. Found {indentD e}"
   | Ne α a b =>
     /- Support width constraints with α = Nat -/
     match_expr α with
