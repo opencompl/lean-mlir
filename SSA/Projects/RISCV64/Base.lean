@@ -292,7 +292,8 @@ def Op.signature : Op → Signature (Ty) :=
   fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
 
 /--
-Bundling the `Ops`and `Ty`into a dialect and abbreviating `RISCV64` into a dialect named `RV64`.
+Bundling the `Ops`and `Ty`into a dialect and abbreviating `RISCV64`
+into a dialect named `RV64`.
 We pass our `Op.signature` as an instance -/
 @[simp]
 abbrev RV64 : Dialect where
@@ -303,9 +304,12 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 /--
 ## Dialect semantics
-We assign semantics defined in `RV64` to each operation. This defines the meaning of each operation in Lean.
-When writting RISC-V-like abstract MLIR ISA intuitively we write `op  arg1 arg2`. The `RISCV64` semantics are defined to
-first process the second operand then the first. Therefore we first pass `.get 1` then `.get 0` into the
+We assign semantics defined in `RV64` to each operation.
+This defines the meaning of each operation in Lean.
+When writting RISC-V-like abstract MLIR ISA intuitively
+we write `op  arg1 arg2`.
+The `RISCV64` semantics are defined to first process the second operand
+then the first. Therefore we first pass `.get 1` then `.get 0` into the
 functions that define our semantics.
 -/
 @[simp, reducible]
