@@ -119,7 +119,7 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
   case binary ap t₁ t₂ =>
     rcases ap <;>
     · dsimp [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
-      simp [evalEq, evalNeq, evalUlt, evalSlt, evalLor]
+      simp [evalBVEq, evalBVNeq, evalUlt, evalSlt, evalLor]
       rw [Term.evalFin_eq_eval _ varsList]
       · rw [Term.evalFin_eq_eval _ varsList]
         try rw [BitStream.and_comm]

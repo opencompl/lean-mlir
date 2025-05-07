@@ -1289,7 +1289,7 @@ theorem eval_fsmEq_eq_evalFin_Predicate_eq (t₁ t₂ : Term) :
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
-  simp [fsmEq, Predicate.evalEq, a.good, b.good]
+  simp [fsmEq, Predicate.evalBVEq, a.good, b.good]
 
 def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux FSM.scanAnd <| composeUnaryAux (FSM.ls true) <| composeBinaryAux FSM.nxor a b
@@ -1301,7 +1301,7 @@ theorem eval_fsmNeq_eq_evalFin_Predicate_neq (t₁ t₂ : Term) :
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
   generalize hb : termEvalEqFSM t₂ = b
-  simp [fsmNeq, Predicate.evalNeq, a.good, b.good]
+  simp [fsmNeq, Predicate.evalBVNeq, a.good, b.good]
 
 def fsmLand (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeBinaryAux FSM.or a b
@@ -1467,7 +1467,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
             Predicate.evalLor, fsmLor,
             Predicate.evalSlt, fsmSlt, Predicate.evalUlt,
             fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq,
-            Predicate.evalEq, fsmEq, a.good, b.good]
+            Predicate.evalBVEq, fsmEq, a.good, b.good]
       }
    | .binary .ult t₁ t₂ =>
       let a := termEvalEqFSM t₁
@@ -1487,25 +1487,25 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
         toFSM := fsmUle a.toFSM b.toFSM
         good := by
           ext x i
-          simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good, Predicate.evalLor, Predicate.evalUlt, Predicate.evalEq]
+          simp [fsmUle, fsmUlt, fsmEq, fsmLor, a.good, b.good, Predicate.evalLor, Predicate.evalUlt, Predicate.evalBVEq]
       }
   | .boolBinary .eq a b =>
     let a := btermEvalEqFSM a
     let b := btermEvalEqFSM b
     {
-      toFSM := composeBinaryAux FSM.xor a.toFSM b.toFSM
+      toFSM := composeUnaryAux FSM.scanOr (composeBinaryAux FSM.xor a.toFSM b.toFSM)
       good := by
         ext x i
-        simp [Predicate.evalEq, a.good, b.good]
+        simp [Predicate.evalBitstreamEq, a.good, b.good]
     }
   | .boolBinary .neq a b =>
     let a := btermEvalEqFSM a
     let b := btermEvalEqFSM b
     {
-      toFSM := composeUnaryAux FSM.not <| composeBinaryAux FSM.xor a.toFSM b.toFSM
+      toFSM := composeUnaryAux FSM.scanAnd <| composeBinaryAux FSM.nxor a.toFSM b.toFSM
       good := by
         ext x i
-        simp [Predicate.evalEq, a.good, b.good]
+        simp [Predicate.evalBitstreamNeq, a.good, b.good]
     }
 
 /-- info: 'predicateEvalEqFSM' depends on axioms: [propext, Classical.choice, Quot.sound] -/
