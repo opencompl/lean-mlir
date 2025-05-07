@@ -96,13 +96,6 @@ structure ParsedBVLogicalExpr where
 abbrev ParseBVExprM := StateRefT ParsedBVExprState MetaM
 
 def changeBVExprWidth (bvExpr: BVExpr w) (target: Nat) : BVExpr target := Id.run do
-
-  --   let packedBv := assignments[idx]!
-  --   if h : packedBv.w = targetWidth then
-  --     h ▸ packedBv.bv
-  --   else
-  --     packedBv.bv.signExtend targetWidth
-
   match bvExpr with
   | .var idx => (BVExpr.var idx : BVExpr target)
   | .const val => BVExpr.const (val.signExtend target)
@@ -195,6 +188,16 @@ def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth:
   let h : 0 < assignments.valuesArray.size := sorry
   let rArrayAssignments : BVExpr.Assignment  := RArray.ofArray assignments.valuesArray h
   BVExpr.eval rArrayAssignments substitutedBvExpr
+
+
+def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: BVLogicalExpr) : Bool :=
+  let newWidthExpr := changeBVLogicalExprWidth expr targetWidth
+  let substitutedBvExpr := substitute newWidthExpr (packedBitVecToSubstitutionValue assignments)
+
+  let h : 0 < assignments.valuesArray.size := sorry
+  let rArrayAssignments : BVExpr.Assignment  := RArray.ofArray assignments.valuesArray h
+  BVLogicalExpr.eval rArrayAssignments substitutedBvExpr
+
 
 --- Testing evalBVExpr
 
@@ -337,6 +340,15 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
       let some distance ← getNatValue? distanceExpr | return none
       return some {bvExpr := BVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
 
+  binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : ParseBVExprM (Option (BVExprWrapper)) := do
+    let some lhs ← go lhsExpr | return none
+    let some rhs ← go rhsExpr | return none
+
+    if h : lhs.width = rhs.width then
+      let rhs' := h ▸ rhs.bvExpr  -- cast rhs to BVExpr lhs.width
+      return some {bvExpr := BVExpr.bin lhs.bvExpr op rhs', width := lhs.width}
+    else
+      return none
 
   shiftReflection (innerExpr : Expr) (distanceExpr : Expr) (shiftOp : {m n : Nat} → BVExpr m → BVExpr n → BVExpr m)
         : ParseBVExprM (Option (BVExprWrapper)) := do
@@ -385,17 +397,6 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
       let (v, type) ← getOfNatValue? e ``BitVec
       let n ← getNatValue? (← whnfD type.appArg!)
       return ⟨n, BitVec.ofNat n v⟩
-
-
-  binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : ParseBVExprM (Option (BVExprWrapper)) := do
-    let some lhs ← go lhsExpr | return none
-    let some rhs ← go rhsExpr | return none
-
-    if h : lhs.width = rhs.width then
-      let rhs' := h ▸ rhs.bvExpr  -- cast rhs to BVExpr lhs.width
-      return some {bvExpr := BVExpr.bin lhs.bvExpr op rhs', width := lhs.width}
-    else
-      return none
 
 
 def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ParseBVExprM (Option ParsedBVLogicalExpr) := do
@@ -519,8 +520,45 @@ def addConstraints (expr: BVLogicalExpr) (constraints: List BVLogicalExpr) : BVL
           addConstraints (BoolExpr.gate Gate.and expr x) xs
 
 
-partial def existsForAll (origExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat) (numExamples: Nat := 1):
+partial def existsForAll (origExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1):
                   TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+
+    let rec getBVExprConstraints {w} (bvExpr : BVExpr w) : TermElabM (List BVLogicalExpr) :=
+        match bvExpr with
+        | .shiftRight (n := wbv) lhs rhs | .shiftLeft (n := wbv) lhs rhs | .arithShiftRight (n := wbv) lhs rhs =>
+              match rhs with
+              | BVExpr.var _ =>
+                  if h : w = wbv then
+                  let widthBV := h ▸ (BitVec.ofNat w w)
+                  let zeroBV := h ▸ (BitVec.ofNat w 0)
+                  let ltWidth := BoolExpr.literal (BVPred.bin (rhs) BVBinPred.ult (BVExpr.const (widthBV)))
+                  let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin (rhs) BVBinPred.eq (BVExpr.const zeroBV)))
+                  return ( (← getBVExprConstraints lhs) ++ [ltWidth, neqZero])
+                else
+                  throwError m! "Could not add shift constraints for {bvExpr}"
+              | _ => return (← getBVExprConstraints lhs) ++ (← getBVExprConstraints rhs)
+        | .bin lhs op rhs  =>
+              if op == BVBinOp.or || op == BVBinOp.and then
+                match rhs with
+                | BVExpr.var _ =>
+                    let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin (rhs) BVBinPred.eq (BVExpr.const (BitVec.ofNat w 0))))
+                    let neqOne := BoolExpr.not (BoolExpr.literal (BVPred.bin (rhs) BVBinPred.eq (BVExpr.const (BitVec.ofNat w 1))))
+                    return ( (← getBVExprConstraints lhs) ++ [neqZero, neqOne])
+                | _ => return (← getBVExprConstraints lhs) ++ (← getBVExprConstraints rhs)
+              else return (← getBVExprConstraints lhs) ++ (← getBVExprConstraints rhs)
+        | .un _ operand =>
+              return (← getBVExprConstraints operand)
+        | _ => return []
+
+    let rec getIdentityAndAbsorptionConstraints  (bvLogicalExpr: BVLogicalExpr) : TermElabM (List BVLogicalExpr) :=
+        match bvLogicalExpr with
+        | .literal (BVPred.bin lhs _ rhs) => return (← getBVExprConstraints lhs) ++ (← getBVExprConstraints rhs)
+        | .not boolExpr => getIdentityAndAbsorptionConstraints boolExpr
+        | .gate _ lhs rhs => return (← getIdentityAndAbsorptionConstraints lhs) ++ (← getIdentityAndAbsorptionConstraints rhs)
+        | .ite constVar auxVar op3 =>
+            return (← getIdentityAndAbsorptionConstraints constVar) ++ (← getIdentityAndAbsorptionConstraints auxVar) ++ (← getIdentityAndAbsorptionConstraints op3)
+        | _ => pure []
+
 
     let rec constantsSynthesis (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
             : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
@@ -545,9 +583,12 @@ partial def existsForAll (origExpr: BVLogicalExpr) (existsVars: List Nat) (forAl
                 constantsSynthesis (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
 
     let mut res : List (Std.HashMap Nat BVExpr.PackedBitVec) := []
+    let identityAndAbsorptionConstraints ← getIdentityAndAbsorptionConstraints origExpr
+    let mut targetExpr := (BoolExpr.gate Gate.and origExpr (addConstraints (BoolExpr.const True) (identityAndAbsorptionConstraints)))
+
     match numExamples with
     | 0 => return res
-    | n + 1 =>  let consts ← constantsSynthesis origExpr existsVars forAllVars
+    | n + 1 =>  let consts ← constantsSynthesis targetExpr existsVars forAllVars
                 match consts with
                 | none => return res
                 | some assignment =>
@@ -738,14 +779,11 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
         let mut res : List (BVExpr reducedWidth) := []
 
         for expr in exprs do
-          logInfo m! "Changed width expr: {changeBVExprWidth expr target.w}"
           let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
-          logInfo m! "Evaluated {expr} with values {origWidthConstantsExpr.lhs.symVars} and got result: {evaluatedVal}; Target = {target.bv}"
 
           if evaluatedVal == target.bv then
               res := expr :: res
 
-          --TODO: we can filter expressions further by checking if they are already subsumed by existing ones. This will help avoid adding functionally equivalent expressions.
         return res
 
 
@@ -898,13 +936,13 @@ partial def countModel (expr : BVLogicalExpr) (constants: Std.HashSet Nat): Term
           return 1 + (← countModel (BoolExpr.gate Gate.and expr constrainedBVExpr) constants)
 
 
-def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap Nat BVExpr.PackedBitVec) (negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
+def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reducedWidthBVLogicalExpr: BVLogicalExpr) (positiveExample: Std.HashMap Nat BVExpr.PackedBitVec) (negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
               : TermElabM (Option BVLogicalExpr) := do
 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
 
-    let constants := positiveExample.keys --.  Incorporating the width leads to an exponential increase in time taken
+    let constants := widthId :: positiveExample.keys --.  Incorporating the width leads to an exponential increase in time taken
 
     let maxConstantId := constants.max?
     match maxConstantId with
@@ -984,15 +1022,24 @@ def generatePreconditions (bvExpr: BVLogicalExpr) (positiveExample: Std.HashMap 
           let preconditionCandidatesSet := Std.HashSet.ofList preconditionCandidates
           logInfo m! "Precondition candidates: {preconditionCandidatesSet.toList}"
 
-          -- Filter the candidates by testing them on the original width
 
           let validCandidates ← withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
             let mut validCandidates : List BVLogicalExpr := []
+            let mut filteredCount := 0
+
+            let originalWidth := originalBVLogicalExpr.state.originalWidth
+
             for candidate in preconditionCandidatesSet do
-                let widthtSubstitutedCandidate := substitute candidate widthSubstitutionVal
-                if let none ← solve (BoolExpr.gate Gate.and widthtSubstitutedCandidate (BoolExpr.not bvExpr)) then
+                let widthSubstitutedCandidate := substitute candidate widthSubstitutionVal
+
+                if originalWidth != bitwidth && not (evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth widthSubstitutedCandidate) then
+                  filteredCount := filteredCount + 1
+                  continue
+
+                if let none ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthBVLogicalExpr)) then
                     validCandidates := candidate :: validCandidates
 
+            logInfo m! "Original had {preconditionCandidatesSet.size} candidates and filtered out {filteredCount} before invoking the SAT solver"
             pure validCandidates
 
           if validCandidates.isEmpty then -- TODO: if we have precondition candidates but none is valid, we can then look at joining them with ands.
@@ -1092,24 +1139,10 @@ def preconditionSynthesisEx2 : TermElabM PreconditionSynthesisTestConfig := do
   return {expr := expr, positiveExample := positiveExample, negativeExamples := negativeExamples, bitWidth := bitwidth}
 
 
-
-syntax (name := testPreconditionSynthesis) "test_precondition_synthesis" : tactic
-@[tactic testPreconditionSynthesis]
-def testPrecondSynthesis : Tactic := fun _ => do
-
-  let ex ←  preconditionSynthesisEx2
-  let res ← generatePreconditions ex.expr ex.positiveExample ex.negativeExamples (1010101,  ex.bitWidth)
-  logInfo m! " Precondition synthesis result for {ex.expr}: {res}"
-  pure ()
-
-theorem test_precondition_synthesis : False := by
-  test_precondition_synthesis
-  sorry
-
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 4 -- TODO: Only reduce the width if it's more than 8 bits?
+      let targetWidth := 4
 
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
@@ -1143,16 +1176,20 @@ elab "#generalize" expr:term: command =>
                 none
 
            let mut constantAssignments := []
-           match shiftConstraints with
-           | none => constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
-           | some constraint => constantAssignments ← existsForAll (BoolExpr.gate Gate.and bvLogicalExpr constraint) state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
+           let originalWidth := state.originalWidth
 
+           if originalWidth > targetWidth then
+            match shiftConstraints with
+            | none => constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
+            | some constraint => constantAssignments ← existsForAll (BoolExpr.gate Gate.and bvLogicalExpr constraint) state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
 
+           let mut positiveExampleWidth := targetWidth
            if constantAssignments.isEmpty then
-             logInfo m! "Could not synthesize new constant values in width {targetWidth}"
-             constantAssignments := state.symVarToVal :: constantAssignments
-           else
-             logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
+              logInfo m! "Did not synthesize new constant values in width {targetWidth}. Processing in width: {originalWidth}"
+              constantAssignments := state.symVarToVal :: constantAssignments
+              positiveExampleWidth := originalWidth
+            else
+              logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
 
            for constantAssignment in constantAssignments do
             let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
@@ -1162,7 +1199,7 @@ elab "#generalize" expr:term: command =>
 
             let exprSynthesisResults ←  withTraceNode `Generalize (fun _ => return "Synthesised expressions") do
                                             synthesizeExpressions parsedBVLogicalExpr reducedWidthBVLogicalExpr 3
-            trace[Generalize] m! "Expression synthesis results for assignment: {constantAssignment} is {exprSynthesisResults}"
+            logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {exprSynthesisResults}"
 
             /-
             Here, we evaluate generated preconditions for different combinations of target values on the RHS.
@@ -1189,7 +1226,7 @@ elab "#generalize" expr:term: command =>
                   let widthId := 9481
 
                   let precondition ← withTraceNode `Generalize (fun _ => return m! "Attempted to generate weak precondition for {substitutedBVLogicalExpr}") do
-                                generatePreconditions substitutedBVLogicalExpr positiveExample negativeExamples (widthId, targetWidth)
+                                generatePreconditions parsedBVLogicalExpr substitutedBVLogicalExpr positiveExample negativeExamples (widthId, positiveExampleWidth)
 
                   match precondition with
                   | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr}"
