@@ -91,6 +91,7 @@ def BTerm.eval (t : BTerm) (vars : List BitStream) : BitStream :=
   | fals => BitStream.zero
   | xor a b => a.eval vars ^^^ b.eval vars
   | msb x => x.eval vars
+  | var n => vars.getD n default
 
 def BTerm.evalFin (t : BTerm) (vars : Fin (arity t) → BitStream) : BitStream :=
   match t with
@@ -101,8 +102,7 @@ def BTerm.evalFin (t : BTerm) (vars : Fin (arity t) → BitStream) : BitStream :
     let x₂ := b.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
     x₁ ^^^ x₂
   | msb x => x.evalFin vars
-
-
+  | var n => vars (Fin.last n)
 
 /--
 If they are equal so far, then `t1 ^^^ t2`.scanOr will be 0.

@@ -31,6 +31,7 @@ def BTerm.quote (t : BTerm) : Expr :=
   | .fals => (mkConst ``BTerm.fals)
   | .xor a b => mkApp2 (mkConst ``BTerm.xor) a.quote b.quote
   | .msb x => mkApp (mkConst ``BTerm.msb) x.quote
+  | .var n => mkApp (mkConst ``BTerm.var) (mkNatLit n)
 
 open Lean in
 def mkConstBin (atp : Name) : Expr :=

@@ -63,7 +63,7 @@ abbrev ReflectedExpr := Expr
 Insert expression 'e' into the reflection map. This returns the map,
 as well as the denoted term.
 -/
-def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : _root_.Term × ReflectMap :=
+def ReflectMap.findOrInsertBVExpr (m : ReflectMap) (e : Expr) : _root_.Term × ReflectMap :=
   let (ix, m) := match m.exprs.get? e with
     | some ix =>  (ix, m)
     | none =>
@@ -71,6 +71,18 @@ def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : _root_.Term × Ref
       (ix, { m with exprs := m.exprs.insert e ix })
   -- let e :=  mkApp (mkConst ``Term.var) (mkNatLit ix)
   (Term.var ix, m)
+
+/--
+Insert expression 'e' into the reflection map. This returns the map,
+as well as the denoted term.
+-/
+def ReflectMap.findOrInsertBoolExpr (m : ReflectMap) (e : Expr) : BTerm × ReflectMap :=
+  let (ix, m) := match m.exprs.get? e with
+    | some ix =>  (ix, m)
+    | none =>
+      let ix := m.exprs.size
+      (ix, { m with exprs := m.exprs.insert e ix })
+  (BTerm.var ix, m)
 
 
 /--
@@ -178,9 +190,28 @@ info: ∀ {w : Nat} (a : BitVec w),
 
 
 def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
-  let (e, map) := map.findOrInsertExpr e
+  let (e, map) := map.findOrInsertBVExpr e
   return { bvToIxMap := map, e := e }
 
+abbrev foo : Bool := (true : Bool) ^^ (true : Bool)
+
+set_option pp.all true in
+#print foo
+
+
+partial def reflectBoolUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult BTerm) := do
+  match_expr e with
+  | Bool.true =>
+      return { bvToIxMap := map, e := BTerm.tru }
+  | Bool.false =>
+      return { bvToIxMap := map, e := BTerm.fals }
+  | Bool.xor a b =>
+      let ⟨map, l⟩ ← reflectBoolUnchecked map w a
+      let ⟨map, r⟩ ← reflectBoolUnchecked map w a
+      return { bvToIxMap := map, e := BTerm.xor l r }
+  | _ =>
+    let (e, map) := map.findOrInsertBVExpr e
+    return { bvToIxMap := map, e := e }
 
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
@@ -189,7 +220,7 @@ and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
 -/
-partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
+partial def reflectBVUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
   if let some (v, _bvTy) ← getOfNatValue? e ``BitVec then
     return { bvToIxMap := map, e := Term.ofNat v }
   -- TODO: bitvector contants.
@@ -198,7 +229,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
     let i ← getIntValue? iExpr
     match i with
     | _ =>
-      let (e, map) := map.findOrInsertExpr e
+      let (e, map) := map.findOrInsertBVExpr e
       return { bvToIxMap := map, e := e }
   | BitVec.ofNat _wExpr nExpr =>
     let n ← getNatValue? nExpr
@@ -215,48 +246,48 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       reflectAtomUnchecked map w e
 
   | HAnd.hAnd _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.and a.e b.e
       return { b with e := out }
   | HOr.hOr _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.or a.e b.e
       return { b with e := out }
   | HXor.hXor _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.xor a.e b.e
       return { b with e := out }
   | Complement.complement _bv _inst a =>
-      let a ← reflectTermUnchecked map w a
+      let a ← reflectBVUnchecked map w a
       let out := Term.not a.e
       return { a with e := out }
   | HAdd.hAdd _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.add a.e b.e
       return { b with e := out }
   | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
-      let a ← reflectTermUnchecked map w a
+      let a ← reflectBVUnchecked map w a
       let some n ← getNatValue? n
         | throwError m!"expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
       return { a with e := Term.shiftL a.e n }
 
   | HSub.hSub _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.sub a.e b.e
       return { b with e := out }
   | Neg.neg _bv _inst a =>
-      let a ← reflectTermUnchecked map w a
+      let a ← reflectBVUnchecked map w a
       let out := Term.neg a.e
       return { a with e := out }
   -- incr
   -- decr
   | _ =>
-    let (e, map) := map.findOrInsertExpr e
+    let (e, map) := map.findOrInsertBVExpr e
     return { bvToIxMap := map, e := e }
 
 set_option pp.explicit true in
@@ -282,35 +313,38 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       return { bvToIxMap := bvToIxMap, e := out }
 
     | BitVec w =>
-      let a ←  reflectTermUnchecked bvToIxMap w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ←  reflectBVUnchecked bvToIxMap w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .eq a.e b.e }
     | Bool =>
       -- Sadly, recall that slt, sle are of type 'BitVec w → BitVec w → Bool',
       -- so we get goal states of them form 'a <ₛb = true'.
       -- So we need to match on 'Eq _ true' where '_' is 'slt'.
       -- This makes me unhappy too, but c'est la vie.
-      let_expr true := b
-        | throwError m!"only boolean conditionals allowed are 'bv.\{u,s}l\{t,e} bv = true'. Found {indentD e}."
-      match_expr a with
-      | BitVec.slt w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .slt a.e b.e }
-      | BitVec.sle w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .sle a.e b.e }
-      | BitVec.ult w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ult a.e b.e }
-      | BitVec.ule w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
+      -- TODO: this can be fixed now, since we have a boolean fragment.
+      match_expr b with
+      | true =>
+        match_expr a with
+        | BitVec.slt w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .slt a.e b.e }
+        | BitVec.sle w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .sle a.e b.e }
+        | BitVec.ult w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ult a.e b.e }
+        | BitVec.ule w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
+        | _ =>
+          throwError m!"unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
       | _ =>
-        throwError m!"unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+        throwError m!"only boolean conditionals allowed are 'bv.\{u,s}l\{t,e} bv = true'. Found {indentD e}."
     | _ =>
       throwError m!"unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
   | Ne α a b =>
@@ -325,20 +359,20 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       let out := Predicate.width .neq natVal
       return { bvToIxMap := bvToIxMap, e := out }
     | BitVec w =>
-      let a ← reflectTermUnchecked bvToIxMap w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked bvToIxMap w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .neq a.e b.e }
     | _ =>
       throwError m!"Expected typeclass to be 'BitVec w' / 'Nat', found '{indentD α}' in {e} when matching against 'Ne'"
   | LT.lt α _inst a b =>
     let_expr BitVec w := α | throwError m!"Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
-    let a ← reflectTermUnchecked bvToIxMap w a
-    let b ← reflectTermUnchecked a.bvToIxMap w b
+    let a ← reflectBVUnchecked bvToIxMap w a
+    let b ← reflectBVUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ult a.e b.e }
   | LE.le α _inst a b =>
     let_expr BitVec w := α | throwError m!"Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LE.le'"
-    let a ← reflectTermUnchecked bvToIxMap w a
-    let b ← reflectTermUnchecked a.bvToIxMap w b
+    let a ← reflectBVUnchecked bvToIxMap w a
+    let b ← reflectBVUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
   | Or p q =>
     let p ← reflectPredicateAux bvToIxMap p wExpected

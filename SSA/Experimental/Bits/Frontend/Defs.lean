@@ -51,6 +51,7 @@ inductive BTerm : Type
 | tru : BTerm
 | fals : BTerm
 | xor : BTerm → BTerm → BTerm
+| var : Nat → BTerm
 deriving Repr, Inhabited
 
 open Term
@@ -86,6 +87,7 @@ a term like `var 10` only has a single free variable, but its arity will be `11`
 
 @[simp] def BTerm.arity : BTerm → Nat
 | .msb t => (t.arity)
+| .var n => (n + 1)
 | .tru => 0
 | .fals => 0
 | .xor a b =>  max (arity a) (arity b)
@@ -170,12 +172,13 @@ def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
 
 
 /-- toBitVec a Term into its underlying bitvector -/
-def BTerm.denote (w : Nat) (t : BTerm) (vars : List (BitVec w)) : Bool :=
+def BTerm.denote (w : Nat) (t : BTerm) (vars : List (BitVec w)) (bvars : List Bool) : Bool :=
   match t with
+  | .var x => bvars.getD x false
   | .msb x => (x.denote w vars).msb
   | .tru => Bool.true
   | .fals => Bool.false
-  | .xor a b => (a.denote w vars).xor (b.denote w vars)
+  | .xor a b => (a.denote w vars bvars).xor (b.denote w vars bvars)
 
 def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
   match p with
