@@ -7,21 +7,24 @@ open RV64Semantics
 namespace RISCV64
 /-! ## The `RISCV64` dialect -/
 
-/-!
-## Dialect operation definitions
-Each instruction operates on up to two registers. Any other attributes not
-passed via registers, e.g., flags and immediates are encoded as part of the op-code.
+/-! ## Dialect operation definitions -/
+/--
+`Op` models the RV64I base instruction set [1] plus selected RISC-V ISA extensions:
+`M` for standard integer division and multiplication [2],
+`B` for bit manipulation instructions (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions) [3],
+and `Zicond` for conditional operations [4].
 
-We modell the RV64I base instruction set: https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc,
-therefore allow for an 64-bit address space.
-Additionally, we modell operations out of selected RISC-V ISA extension:
-    - `M`: standart integer division and multiplication instruction extension
+We model RV64 as an SSA IR, meaning that instructions won't specify any registers
+(instead, they'll later receive SSA values).
+However, any other attributes (e.g., flags or immediate values) are still encoded as part of the operation.
 
-    - `B`: extension for bit manipulation (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions)
-            here: https://github.com/riscv/riscv-isa-manual/blob/main/src/b-st-ext.adoc
+[1] https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc
+[2] https://github.com/riscv/riscv-isa-manual/blob/main/src/m-st-ext.adoc
+[3] https://github.com/riscv/riscv-isa-manual/blob/main/src/b-st-ext.adoc
+[4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 
-    - `Zicond` : extension for conditional operations https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
+
 inductive Op
   | li : (val : Int) → Op
   | lui (imm : BitVec 20)
@@ -45,7 +48,7 @@ inductive Op
   | sllw
   | srlw
   | sraw
-  -- fence
+  -- fence missing, future work.
   | slti (imm : BitVec 12)
   | sltiu (imm : BitVec 12)
   | srli (shamt : BitVec 6)
@@ -78,7 +81,7 @@ inductive Op
   | sh1add
   | sh2add
   | sh3add
-  -- slli.uw missing
+  -- slli.uw missing, future work.
   -- part of the RISC-V `Zbb` & `Zbkb` extension
   | rol
   | ror
@@ -88,9 +91,8 @@ inductive Op
   | sext.h
   | zext.h
   /-
-  in the future:
-  |pack
-  |packh
+  |pack missing, future work.
+  |packh missing, future work.
   -/
   -- part of the RISC-V `Zbs` extension
   | bclr
@@ -106,10 +108,12 @@ inductive Op
   | czero.nez
   deriving DecidableEq, Repr
 
+
+/-!## Dialect type definitions -/
 /--
-## Dialect type definitions
-Defining a type system for the `RISCV64` dialect. `bv` represents bit vector.
--/
+`Ty` models the types of the RV64 dialect.
+Recall that RV64I has a fixed 64-bit address space, so we choose to only have 64-bit wide bitvectors.
+ `bv` represents the type of 64-bit wide bitvectors -/
 inductive Ty
   | bv : Ty
   deriving DecidableEq, Repr, Inhabited
@@ -117,9 +121,9 @@ inductive Ty
 instance : ToString (Ty) where
   toString t := repr t |>.pretty
 
-/-!
+/--
 Connecting the `bv` type to its underlying Lean type `BitVec 64`. By providing a `TyDenote` instance,
-we define how the `RISCV64` types transalte into actual Lean types.
+we define how the `RISCV64` types translate into actual Lean types.
 -/
 instance : TyDenote Ty where
   toType := fun
@@ -129,8 +133,8 @@ instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
   | .bv  => 0#64
 
+/-! ## Dialect operation definitions-/
 /--
-## Dialect operation definitions
 Specifing the signature of each `RISCV64` operation. `Sig` refers to the input types
 for each operation as a list of types.
 
@@ -150,15 +154,15 @@ def Op.sig : Op → List Ty
   |.ror => [Ty.bv, Ty.bv]
   |.remwu  => [Ty.bv, Ty.bv]
   |.remu  =>  [Ty.bv, Ty.bv]
-  |.addiw (imm : BitVec 12) => [Ty.bv]
-  |.lui (imm : BitVec 20) => [Ty.bv]
-  |.auipc (imm : BitVec 20)  => [Ty.bv]
-  |.slliw (shamt : BitVec 5)  => [Ty.bv]
-  |.srliw (shamt : BitVec 5) => [Ty.bv]
-  |.sraiw (shamt : BitVec 5) => [Ty.bv]
-  |.slli (shamt : BitVec 6) => [Ty.bv]
-  |.srli (shamt : BitVec 6) => [Ty.bv]
-  |.srai (shamt : BitVec 6) => [Ty.bv]
+  |.addiw _imm => [Ty.bv]
+  |.lui _imm => [Ty.bv]
+  |.auipc _imm => [Ty.bv]
+  |.slliw _shamt => [Ty.bv]
+  |.srliw _shamt => [Ty.bv]
+  |.sraiw _shamt => [Ty.bv]
+  |.slli _shamt => [Ty.bv]
+  |.srli _shamt => [Ty.bv]
+  |.srai _shamt => [Ty.bv]
   |.addw => [Ty.bv, Ty.bv]
   |.subw => [Ty.bv, Ty.bv]
   |.sllw => [Ty.bv, Ty.bv]
@@ -181,12 +185,12 @@ def Op.sig : Op → List Ty
   |.div  =>  [Ty.bv, Ty.bv]
   |.divw  =>  [Ty.bv, Ty.bv]
   |.divwu  =>  [Ty.bv, Ty.bv]
-  |.addi (imm : BitVec 12) => [Ty.bv]
-  |.slti (imm : BitVec 12) => [Ty.bv]
-  |.sltiu (imm : BitVec 12) => [Ty.bv]
-  |.andi (imm : BitVec 12) => [Ty.bv]
-  |.ori (imm : BitVec 12) => [Ty.bv]
-  |.xori (imm : BitVec 12) => [Ty.bv]
+  |.addi _imm => [Ty.bv]
+  |.slti _imm => [Ty.bv]
+  |.sltiu _imm => [Ty.bv]
+  |.andi _imm => [Ty.bv]
+  |.ori _imm => [Ty.bv]
+  |.xori _imm => [Ty.bv]
   |.czero.eqz =>  [Ty.bv, Ty.bv]
   |.czero.nez =>  [Ty.bv, Ty.bv]
   |.sext.b => [Ty.bv]
@@ -196,10 +200,10 @@ def Op.sig : Op → List Ty
   |.bext => [Ty.bv, Ty.bv]
   |.binv => [Ty.bv, Ty.bv]
   |.bset  => [Ty.bv, Ty.bv]
-  |.bclri (shamt : BitVec 6) => [Ty.bv]
-  |.bexti (shamt : BitVec 6) => [Ty.bv]
-  |.binvi (shamt : BitVec 6) => [Ty.bv]
-  |.bseti (shamt : BitVec 6) => [Ty.bv]
+  |.bclri _shamt => [Ty.bv]
+  |.bexti _shamt => [Ty.bv]
+  |.binvi _shamt => [Ty.bv]
+  |.bseti _shamt => [Ty.bv]
   |.rolw => [Ty.bv, Ty.bv]
   |.rorw => [Ty.bv, Ty.bv]
   |.add.uw => [Ty.bv, Ty.bv]
@@ -226,15 +230,15 @@ def Op.outTy : Op  → Ty
   |.ror => Ty.bv
   |.remwu => Ty.bv
   |.remu =>  Ty.bv
-  |.addiw (imm : BitVec 12) => Ty.bv
-  |.lui (imm : BitVec 20) => Ty.bv
-  |.auipc (imm : BitVec 20) => Ty.bv
-  |.slliw (shamt : BitVec 5) => Ty.bv
-  |.srliw (shamt : BitVec 5) => Ty.bv
-  |.sraiw (shamt : BitVec 5) => Ty.bv
-  |.slli (shamt : BitVec 6) => Ty.bv
-  |.srli (shamt : BitVec 6) => Ty.bv
-  |srai (shamt : BitVec 6) => Ty.bv
+  |.addiw _imm => Ty.bv
+  |.lui _imm => Ty.bv
+  |.auipc _imm => Ty.bv
+  |.slliw _shamt => Ty.bv
+  |.srliw _shamt => Ty.bv
+  |.sraiw _shamt => Ty.bv
+  |.slli _shamt => Ty.bv
+  |.srli _shamt => Ty.bv
+  |srai _shamt => Ty.bv
   |.addw => Ty.bv
   |.subw => Ty.bv
   |.sllw => Ty.bv
@@ -257,12 +261,12 @@ def Op.outTy : Op  → Ty
   |.div => Ty.bv
   |.divw => Ty.bv
   |.divwu => Ty.bv
-  |.addi (imm : BitVec 12) => Ty.bv
-  |.slti (imm : BitVec 12) => Ty.bv
-  |.sltiu (imm : BitVec 12) => Ty.bv
-  |.andi (imm : BitVec 12) => Ty.bv
-  |.ori (imm : BitVec 12) => Ty.bv
-  |.xori (imm : BitVec 12) => Ty.bv
+  |.addi _imm => Ty.bv
+  |.slti _imm => Ty.bv
+  |.sltiu _imm => Ty.bv
+  |.andi _imm => Ty.bv
+  |.ori _imm => Ty.bv
+  |.xori _imm => Ty.bv
   |.czero.eqz => Ty.bv
   |.czero.nez => Ty.bv
   |.sext.b => Ty.bv
@@ -272,10 +276,10 @@ def Op.outTy : Op  → Ty
   |.bext => Ty.bv
   |.binv => Ty.bv
   |.bset => Ty.bv
-  |.bclri (shamt : BitVec 6) => Ty.bv
-  |.bexti (shamt : BitVec 6) => Ty.bv
-  |.binvi (shamt : BitVec 6) => Ty.bv
-  |.bseti (shamt : BitVec 6) => Ty.bv
+  |.bclri _shamt => Ty.bv
+  |.bexti _shamt => Ty.bv
+  |.binvi _shamt => Ty.bv
+  |.bseti _shamt => Ty.bv
   |.rolw => Ty.bv
   |.rorw => Ty.bv
   |.add.uw => Ty.bv
@@ -302,8 +306,8 @@ abbrev RV64 : Dialect where
 
 instance : DialectSignature RV64 := ⟨Op.signature⟩
 
+/-! ## Dialect semantics-/
 /--
-## Dialect semantics
 We assign semantics defined in `RV64` to each operation.
 This defines the meaning of each operation in Lean.
 When writting RISC-V-like abstract MLIR ISA intuitively
