@@ -845,7 +845,7 @@ elab "#iosynthesize" expr:term: command =>
       pure ()
 
 
-variable {x y : BitVec 32}
+variable {x y z: BitVec 32}
 #iosynthesize x + 10 + 1 =  x + 9 + 2
 #iosynthesize x + 10 + y + 14 = 24
 
@@ -858,6 +858,8 @@ variable {x y : BitVec 32}
 #iosynthesize ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
 #iosynthesize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32
 #iosynthesize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32)
+#iosynthesize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32
+
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
               TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
@@ -941,7 +943,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
             BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
 
           let gtZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            let shiftDistance : BVExpr bitwidth := BVExpr.const (BitVec.ofNat bitwidth (bitwidth - 1))
+            let shiftDistance : BVExpr bitwidth := BVExpr.bin (BVExpr.var widthId) BVBinOp.add (negate one)
             let mask := BVExpr.shiftLeft one shiftDistance
             let maskAndExpr : BVExpr bitwidth := BVExpr.bin expr BVBinOp.and mask  -- It's positive if (expr && (1 << width -1) == 0)
 
@@ -1008,7 +1010,6 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
           logInfo m! "Original had {preconditionCandidatesSet.size} candidates and filtered out {preconditionCandidatesSet.size - validCandidates.length} before invoking the SAT solver. Remaining candidates: {validCandidates}"
           if validCandidates.isEmpty then -- TODO: if we have precondition candidates but none is valid, we can then look at joining them with ands.
             return none
-
 
           --- Rank valid candidates by model counting
           let candidateByModelCount ← withTraceNode `Generalize (fun _ => return "Ranked candidates by model count") do
