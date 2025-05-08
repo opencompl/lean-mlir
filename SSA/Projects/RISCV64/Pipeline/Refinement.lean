@@ -1,5 +1,5 @@
 
-import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscV
+import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscv
 
 open LLVMRiscV
 /-!

@@ -1,4 +1,4 @@
-import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscV
+import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscv
 import SSA.Projects.RISCV64.Pipeline.Refinement
 import Lean
 
@@ -10,13 +10,16 @@ open InstCombine(LLVM) -- analog to RISC-V
 Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/
 set_option Elab.async false
-
+/-
   --  (Ctxt.Valuation.nil::ᵥe) (Ctxt.Var.last [] (Ty.llvm (InstCombine.MTy.bitvec 64)))
 @[simp_denote]
 private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
   rfl
-
 #check Ctxt.Valuation.snoc
+-/
+@[simp_denote]
+private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
+  rfl
 
 
 /-! # Instruction lowering patterns

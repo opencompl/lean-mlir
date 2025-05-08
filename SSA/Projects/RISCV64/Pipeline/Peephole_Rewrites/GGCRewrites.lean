@@ -56,7 +56,7 @@ def peep0  : PeepholeRewrite LLVMPlusRiscV [.llvm (.bitvec 64)] (.llvm (.bitvec 
       sorry
   }
 
-def test_peep0 := rewriteAtMulti
+def test_peep0 :=  rewritePeephole_multi (10)  (peep_00_r) (peep0)
 
 /-
 optimization found in the gcc backend

@@ -353,7 +353,7 @@ theorem REMW_pure64_unsigned_eq_REMW_pure64_unsigned_bv (rs2_val : BitVec 64) (r
   unfold  REMW_pure64_unsigned REMW_pure64_unsigned_bv
   rw [extractLsb'_ofInt_eq_ofInt (h:= by simp)]
   split
-  · case isTrue ht =>
+  case isTrue ht =>
       congr
       rw [BitVec.extractLsb,BitVec.extractLsb]
       simp only [Nat.sub_zero, Nat.reduceAdd]
@@ -378,7 +378,7 @@ theorem REMW_pure64_unsigned_eq_REMW_pure64_unsigned_bv (rs2_val : BitVec 64) (r
       have helper : ((4294967296 : Nat) : Int) = (4294967296 : Int) := rfl
       rw [← helper]
       rw [Int.emod_bmod (x := (rs1_val.toNat : Int)) (n := (4294967296))]
-  · case isFalse hf =>
+  case isFalse hf =>
       congr
       simp only [Nat.sub_zero, Nat.reduceAdd, BitVec.extractLsb_toNat, Nat.shiftRight_zero,
         Nat.reducePow, Int.ofNat_emod, Nat.cast_ofNat, BitVec.umod_eq]
