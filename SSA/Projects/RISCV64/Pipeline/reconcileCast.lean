@@ -57,12 +57,7 @@ def cast_eliminiation_riscv : RiscVPeepholeRewriteRefine [Ty.riscv (.bv)] :=
      , correct := by
       simp_peephole
       intro e
-      sorry
-      /-simp [liftM, monadLift, MonadLift.monadLift,
-        builtin.unrealized_conversion_cast.riscvToLLVM,
-        builtin.unrealized_conversion_cast.LLVMToriscv, Option.getD_some, transformVarRISCV,
-        LLVMPlusRiscV, Ctxt.get?.eq_1, Ctxt.Var.zero_eq_last, Ctxt.Valuation.snoc_last,
-        EffectKind.return_impure_toMonad_eq, Option.pure_def, BitVec.Refinement.refl] -/
+      simp [liftM, builtin.unrealized_conversion_cast.LLVMToriscv,builtin.unrealized_conversion_cast.riscvToLLVM]
       }
 
 
@@ -89,19 +84,13 @@ def double_cast_elimination_LLVM_to_RISCV : LLVMPeepholeRewriteRefine [Ty.llvm (
 
 
 /-
-
 def ADD_LLVM_flags :=
   [llvm(64)| {
 ^bb0(%X : i64, %Y : i64):
          %v1 = llvm.add %X, %Y overflow<nsw> : i64
            llvm.return %v1 : i64
   }].denote
-
-
 -/
-
-
-
 
 /-
 These where the cast for the old dialect where we explictily modelled a hybrid LLLVM and RISC-V dialect

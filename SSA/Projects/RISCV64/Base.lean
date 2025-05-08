@@ -1,5 +1,6 @@
 
 import SSA.Projects.RISCV64.Semantics
+import SSA.Projects.RISCV64.removeToIntToNat
 import SSA.Core.Framework
 import SSA.Core.Framework.Macro
 set_option maxHeartbeats 100000000
@@ -326,41 +327,41 @@ def_denote for RV64 where
   |.addiw imm => λ rs1 =>  ADDIW_pure64 imm rs1
   |.lui imm => λ rs1 => UTYPE_pure64_lui imm rs1
   |.auipc imm => λ rs1 => UTYPE_pure64_AUIPC imm rs1
-  |.slliw shamt => λ rs1 => SHIFTIWOP_pure64_RISCV_SLLIW shamt rs1
-  |.srliw shamt => λ rs1 => SHIFTIWOP_pure64_RISCV_SRLIW shamt rs1
-  |.sraiw shamt => λ rs1 => SHIFTIWOP_pure64_RISCV_SRAIW shamt rs1
-  |.srli shamt => λ rs1 => SHIFTIOP_pure64_RISCV_SRLI shamt rs1
-  |.slli shamt => λ rs1 => SHIFTIOP_pure64_RISCV_SRLI shamt rs1
-  |.srai shamt => λ rs1 => SHIFTIOP_pure64_RISCV_SRAI shamt  rs1
+  |.slliw shamt => λ rs1 => pure_semantics.SHIFTIWOP_pure64_RISCV_SLLIW_bv shamt rs1
+  |.srliw shamt => λ rs1 => pure_semantics.SHIFTIWOP_pure64_RISCV_SRLIW_bv shamt rs1
+  |.sraiw shamt => λ rs1 => pure_semantics.SHIFTIWOP_pure64_RISCV_SRAIW_bv shamt rs1
+  |.srli shamt => λ rs1 => pure_semantics.SHIFTIOP_pure64_RISCV_SRLI_bv shamt rs1
+  |.slli shamt => λ rs1 => pure_semantics.SHIFTIOP_pure64_RISCV_SLLI_bv shamt rs1
+  |.srai shamt => λ rs1 => pure_semantics.SHIFTIOP_pure64_RISCV_SRAI_bv shamt  rs1
   |.addw => λ rs1 rs2 => RTYPEW_pure64_RISCV_SUBW rs2  rs1
   |.subw => λ rs1 rs2 => RTYPEW_pure64_RISCV_SUBW rs2 rs1
-  |.sllw => λ rs1 rs2 => RTYPEW_pure64_RISCV_SLLW rs2 rs1
-  |.srlw => λ rs1 rs2 => RTYPEW_pure64_RISCV_SRLW rs2  rs1
-  |.sraw => λ rs1 rs2 => RTYPEW_pure64_RISCV_SRAW rs2 rs1
+  |.sllw => λ rs1 rs2 => pure_semantics.RTYPEW_pure64_RISCV_SLLW_bv rs2 rs1
+  |.srlw => λ rs1 rs2 => pure_semantics.RTYPEW_pure64_RISCV_SRLW_bv rs2  rs1
+  |.sraw => λ rs1 rs2 => pure_semantics.RTYPEW_pure64_RISCV_SRAW_bv rs2 rs1
   |.add => λ rs1 rs2 => RTYPE_pure64_RISCV_ADD rs2 rs1
   |.slt => λ rs1 rs2 => RTYPE_pure64_RISCV_SLT rs2 rs1
   |.sltu => λ rs1 rs2 => RTYPE_pure64_RISCV_SLTU rs2 rs1
   |.and => λ rs1 rs2 => RTYPE_pure64_RISCV_AND rs2 rs1
   |.or => λ rs1 rs2 => RTYPE_pure64_RISCV_OR rs2 rs1
   |.xor => λ rs1 rs2 => RTYPE_pure64_RISCV_XOR rs2 rs1
-  |.sll => λ rs1 rs2 => RTYPE_pure64_RISCV_SLL rs2 rs1
-  |.srl => λ rs1 rs2 => RTYPE_pure64_RISCV_SRL rs2 rs1
+  |.sll => λ rs1 rs2 => pure_semantics.RTYPE_pure64_RISCV_SLL_bv rs2 rs1
+  |.srl => λ rs1 rs2 => pure_semantics.RTYPE_pure64_RISCV_SRL_bv rs2 rs1
   |.sub => λ rs1 rs2 => RTYPE_pure64_RISCV_SUB rs2 rs1
-  |.sra => λ rs1 rs2 => RTYPE_pure64_RISCV_SRA rs2 rs1
-  |.remw => λ rs1 rs2 => REMW_pure64_signed rs2 rs1
-  |.remwu => λ rs1 rs2 => REMW_pure64_unsigned rs2 rs1
-  |.rem => λ rs1 rs2 => REM_pure64_signed rs2 rs1
-  |.remu => λ rs1 rs2 => REM_pure64_unsigned rs2 rs1
-  |.mulu => λ rs1 rs2 => MUL_pure64_fff rs2 rs1
-  |.mulhu => λ rs1 rs2 =>  MUL_pure64_tff rs2 rs1
-  |.mul => λ rs1 rs2 => MUL_pure64_ftt rs2 rs1
-  |.mulhsu => λ rs1 rs2 => MUL_pure64_ttf rs2 rs1
-  |.mulh => λ rs1 rs2 => MUL_pure64_ttt rs2 rs1
-  |.mulw => λ rs1 rs2 => MULW_pure64 rs2 rs1
-  |.div => λ rs1 rs2 => DIV_pure64_signed rs2 rs1
-  |.divu => λ rs1 rs2 => DIV_pure64_unsigned rs2 rs1
-  |.divw => λ rs1 rs2 => DIVW_pure64_signed rs2 rs1
-  |.divwu => λ rs1 rs2 => DIVW_pure64_unsigned rs2 rs1
+  |.sra => λ rs1 rs2 =>  pure_semantics.RTYPE_pure64_RISCV_SRA_bv rs2 rs1
+  |.remw => λ rs1 rs2 => pure_semantics.REMW_pure64_signed_bv rs2 rs1
+  |.remwu => λ rs1 rs2 => pure_semantics.REMW_pure64_unsigned_bv rs2 rs1
+  |.rem => λ rs1 rs2 => pure_semantics.REM_pure64_signed_bv rs2 rs1
+  |.remu => λ rs1 rs2 => pure_semantics.REM_pure64_unsigned rs2 rs1
+  |.mulu => λ rs1 rs2 => pure_semantics.MUL_pure64_fff_bv rs2 rs1
+  |.mulhu => λ rs1 rs2 => pure_semantics.MUL_pure64_tff_bv rs2 rs1
+  |.mul => λ rs1 rs2 => pure_semantics.MUL_pure64_ftt_bv rs2 rs1
+  |.mulhsu => λ rs1 rs2 =>  pure_semantics.MUL_pure64_ttf_bv rs2 rs1
+  |.mulh => λ rs1 rs2 => pure_semantics.MUL_pure64_ttt_bv rs2 rs1
+  |.mulw => λ rs1 rs2 => pure_semantics.MULW_pure64_bv rs2 rs1
+  |.div => λ rs1 rs2 => pure_semantics.DIV_pure64_signed_bv rs2 rs1
+  |.divu => λ rs1 rs2 => pure_semantics.DIV_pure64_unsigned_bv rs2 rs1
+  |.divw => λ rs1 rs2 => pure_semantics.DIVW_pure64_signed rs2 rs1 -- still need to rewrite it
+  |.divwu => λ rs1 rs2 => DIVW_pure64_unsigned rs2 rs1 -- same here
   |.addi imm => λ rs1 => ITYPE_pure64_RISCV_ADDI  imm rs1
   |.slti imm => λ rs1 => ITYPE_pure64_RISCV_SLTI  imm rs1
   |.sltiu imm => λ rs1 => ITYPE_pure64_RISCV_SLTIU  imm rs1
@@ -372,18 +373,18 @@ def_denote for RV64 where
   |.sext.b => λ rs1 => ZBB_EXTOP_pure64_RISCV_SEXTB rs1
   |.sext.h => λ rs1 => ZBB_EXTOP_pure64_RISCV_SEXTH rs1
   |.zext.h => λ rs1 => ZBB_EXTOP_pure64_RISCV_ZEXTH rs1
-  |.bclr => λ rs1 rs2 => ZBS_RTYPE_pure64_RISCV_BCLR rs2 rs1
-  |.bext => λ rs1 rs2=> ZBS_RTYPE_pure64_RISCV_BEXT rs2 rs1
-  |.binv => λ rs1 rs2 => ZBS_RTYPE_pure64_BINV rs2 rs1
-  |.bset => λ rs1 rs2=> ZBS_RTYPE_pure64_RISCV_BSET rs2 rs1
-  |.bclri shamt => λ rs1 => ZBS_IOP_pure64_RISCV_BCLRI shamt rs1
-  |.bexti shamt => λ rs1 => ZBS_IOP_pure64_RISCV_BEXTI shamt rs1
-  |.binvi shamt => λ rs1 => ZBS_IOP_pure64_RISCV_BINVI shamt rs1
-  |.bseti shamt  => λ rs1 => ZBS_IOP_pure64_RISCV_BSETI shamt rs1
+  |.bclr => λ rs1 rs2 => pure_semantics.ZBS_RTYPE_pure64_RISCV_BCLR_bv rs2 rs1
+  |.bext => λ rs1 rs2=> pure_semantics.ZBS_RTYPE_pure64_RISCV_BEXT_bv rs2 rs1
+  |.binv => λ rs1 rs2 => pure_semantics.ZBS_RTYPE_pure64_BINV_bv rs2 rs1
+  |.bset => λ rs1 rs2=> pure_semantics.ZBS_RTYPE_pure64_RISCV_BSET_bv rs2 rs1
+  |.bclri shamt => λ rs1 => pure_semantics.ZBS_IOP_pure64_RISCV_BCLRI_bv shamt rs1
+  |.bexti shamt => λ rs1 => pure_semantics.ZBS_IOP_pure64_RISCV_BEXTI_bv shamt rs1
+  |.binvi shamt => λ rs1 => pure_semantics.ZBS_IOP_pure64_RISCV_BINVI_bv shamt rs1
+  |.bseti shamt  => λ rs1 => pure_semantics.ZBS_IOP_pure64_RISCV_BSETI_bv shamt rs1
   |.rolw => λ rs1 rs2 => ZBB_RTYPEW_pure64_RISCV_ROLW rs2 rs1
   |.rorw => λ rs1 rs2 => ZBB_RTYPEW_pure64_RISCV_RORW rs2 rs1
-  |.rol => λ rs1 rs2 => ZBB_RTYPE_pure64_RISCV_ROL rs2 rs1
-  |.ror => λ rs1 rs2 => ZBB_RTYPE_pure64_RISCV_ROR rs2 rs1
+  |.rol => λ rs1 rs2 => pure_semantics.ZBB_RTYPE_pure64_RISCV_ROL_bv rs2 rs1
+  |.ror => λ rs1 rs2 => pure_semantics.ZBB_RTYPE_pure64_RISCV_ROR_bv rs2 rs1
   |.add.uw => λ rs1 rs2 => ZBA_RTYPEUW_pure64_RISCV_ADDUW rs2 rs1
   |.sh1add.uw => λ rs1 rs2 => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW rs2 rs1
   |.sh2add.uw => λ rs1 rs2 => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW rs2 rs1
@@ -391,11 +392,6 @@ def_denote for RV64 where
   |.sh1add => λ rs1 rs2 => ZBA_RTYPE_pure64_RISCV_SH1ADD rs2 rs1
   |.sh2add => λ rs1 rs2 => ZBA_RTYPE_pure64_RISCV_SH2ADD rs2 rs1
   |.sh3add => λ rs1 rs2 => ZBA_RTYPE_pure64_RISCV_SH3ADD rs2 rs1
-
-
-
-
-
 
 /-
 @[simp, reducible]
