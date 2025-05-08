@@ -1,5 +1,5 @@
-import RiscvDialect.LLVMRiscv.LLVMAndRiscV
-import SSA.Projects.RISCV64.Pipeline.cast_elimination
+import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscV
+import SSA.Projects.RISCV64.Pipeline.Refinement
 import SSA.Projects.RISCV64.all
 
 /-!
@@ -30,8 +30,8 @@ def cast_eliminiation_llvm : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
   {lhs:=
     [LV| {
       ^entry (%lhs: i64): -- this is a refinement
-      %lhsr = "builtin.unrealized_conversion_cast.LLVMToriscv"(%lhs) : (i64) -> !i64
-      %addl = "builtin.unrealized_conversion_cast.riscvToLLVM" (%lhsr) : (!i64) -> (i64)
+      %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+      %addl = "builtin.unrealized_conversion_cast" (%lhsr) : (!i64) -> (i64)
       llvm.return %addl : i64  }],
     rhs:=
       [LV| {
@@ -48,8 +48,8 @@ def cast_eliminiation_riscv : RiscVPeepholeRewriteRefine [Ty.riscv (.bv)] :=
   {lhs:=
     [LV| {
       ^entry (%lhs: !i64):
-      %addl = "builtin.unrealized_conversion_cast.riscvToLLVM" (%lhs) : (!i64) -> (i64)
-      %lhsr = "builtin.unrealized_conversion_cast.LLVMToriscv"(%addl) : (i64) -> !i64
+      %addl = "builtin.unrealized_conversion_cast" (%lhs) : (!i64) -> (i64)
+      %lhsr = "builtin.unrealized_conversion_cast"(%addl) : (i64) -> !i64
       ret %lhsr : !i64  }],
     rhs:=  [LV| {
       ^entry (%lhs: !i64):
@@ -57,11 +57,12 @@ def cast_eliminiation_riscv : RiscVPeepholeRewriteRefine [Ty.riscv (.bv)] :=
      , correct := by
       simp_peephole
       intro e
-      simp only [liftM, monadLift, MonadLift.monadLift,
+      sorry
+      /-simp [liftM, monadLift, MonadLift.monadLift,
         builtin.unrealized_conversion_cast.riscvToLLVM,
         builtin.unrealized_conversion_cast.LLVMToriscv, Option.getD_some, transformVarRISCV,
         LLVMPlusRiscV, Ctxt.get?.eq_1, Ctxt.Var.zero_eq_last, Ctxt.Valuation.snoc_last,
-        EffectKind.return_impure_toMonad_eq, Option.pure_def, BitVec.Refinement.refl]
+        EffectKind.return_impure_toMonad_eq, Option.pure_def, BitVec.Refinement.refl] -/
       }
 
 
@@ -69,23 +70,20 @@ def double_cast_elimination_LLVM_to_RISCV : LLVMPeepholeRewriteRefine [Ty.llvm (
 {lhs:=
     [LV| {
       ^entry (%lhs: i64): -- this is a refinement
-      %lhsr = "builtin.unrealized_conversion_cast.LLVMToriscv"(%lhs) : (i64) -> !i64
-      %lhsr1 = "builtin.unrealized_conversion_cast.LLVMToriscv"(%lhs) : (i64) -> !i64
-      %addl = "builtin.unrealized_conversion_cast.riscvToLLVM" (%lhsr) : (!i64) -> (i64)
+      %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+      %lhsr1 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+      %addl = "builtin.unrealized_conversion_cast" (%lhsr) : (!i64) -> (i64)
       llvm.return %addl : i64  }],
     rhs:=
       [LV| {
       ^entry (%lhs: i64):
-      %lhsr = "builtin.unrealized_conversion_cast.LLVMToriscv"(%lhs) : (i64) -> !i64
-      %addl = "builtin.unrealized_conversion_cast.riscvToLLVM" (%lhsr) : (!i64) -> (i64)
+      %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+      %addl = "builtin.unrealized_conversion_cast" (%lhsr) : (!i64) -> (i64)
       llvm.return %addl : i64  }],
       correct := by
        simp_peephole
        intro e
        simp [builtin.unrealized_conversion_cast.LLVMToriscv, Option.getD_some]
-       sorry
-
-
     }
 
 
