@@ -22,6 +22,15 @@ namespace IntW
 instance : Inhabited (IntW w) := by unfold IntW; infer_instance
 
 instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
+
+/--
+`isRefinedBy_iff` rewrites refinement of `LLVM.IntW` values into refinement
+of `PoisonOr _` values, effectively unfolding the `LLVM.IntW` definition (and
+the Refinement instance).
+
+By making this a simp-lemma, we ensure all `PoisonOr` simp-lemmas apply without
+having to duplicate that API for `LLVM.IntW`.
+-/
 @[simp, simp_llvm]
 theorem isRefinedBy_iff (x y : LLVM.IntW w) :
     x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
