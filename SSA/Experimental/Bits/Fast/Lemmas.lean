@@ -111,10 +111,9 @@ lemma BTerm.evalFin_eq_eval (b : BTerm)
       simp [BTerm.evalFin, BTerm.eval, ← hvars]
 
 lemma Predicate.evalFin_eq_eval (p : Predicate)
-   (varsList : List BitStream) (bvarsList : List BitStream)
-   (varsFin : Fin p.arity → BitStream) (bvarsFin : Fin p.arity → BitStream)
+   (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
    (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :
-    Predicate.evalFin p varsFin  bvarsFin = Predicate.eval p varsList bvarsList := by
+    Predicate.evalFin p varsFin  = Predicate.eval p varsList := by
   induction p generalizing varsList <;>
     dsimp -failIfUnchanged [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
   case width rel n =>
@@ -155,12 +154,23 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
   case boolBinary op t₁ t₂ =>
       rcases op
       case eq =>
-        sorry
+        simp [Predicate.eval]
+        rw [BTerm.evalFin_eq_eval _ varsList,
+          BTerm.evalFin_eq_eval _ varsList]
+        · intros i
+          exact hvars ⟨i, by simp⟩
+        · intros i
+          exact hvars ⟨i, by simp⟩
       case neq =>
         simp [Predicate.eval]
-        sorry
+        rw [BTerm.evalFin_eq_eval _ varsList,
+          BTerm.evalFin_eq_eval _ varsList]
+        · intros i
+          exact hvars ⟨i, by simp⟩
+        · intros i
+          exact hvars ⟨i, by simp⟩
 
-/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, sorryAx, Quot.sound] -/
+/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.evalFin_eq_eval
 
 

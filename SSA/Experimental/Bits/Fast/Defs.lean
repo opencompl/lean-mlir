@@ -180,7 +180,7 @@ Evaluate a term predicate `p` to the BitStream it represents,
 where the predicate is `true` at index `i` if and only if the predicate,
 when truncated to index `i`, is true.
 -/
-def Predicate.eval (p : Predicate) (vars : List BitStream) (bvars : List BitStream) : BitStream :=
+def Predicate.eval (p : Predicate) (vars : List BitStream) : BitStream :=
   match p with
   | .width .eq n => BitStream.falseIffEq n
   | .width .neq n => BitStream.falseIffNeq n
@@ -188,11 +188,11 @@ def Predicate.eval (p : Predicate) (vars : List BitStream) (bvars : List BitStre
   | .width .le n => BitStream.falseIffLe n
   | .width .gt n => BitStream.falseIffGt n
   | .width .ge n => BitStream.falseIffGe n
-  | lor p q => Predicate.evalLor (p.eval vars bvars) (q.eval vars bvars)
-  | land p q => Predicate.evalLand (p.eval vars bvars) (q.eval vars bvars)
+  | lor p q => Predicate.evalLor (p.eval vars) (q.eval vars)
+  | land p q => Predicate.evalLand (p.eval vars) (q.eval vars)
   /- boolean operations. -/
-  | boolBinary .eq t₁ t₂ => Predicate.evalBitstreamEq (t₁.eval bvars) (t₂.eval bvars)
-  | boolBinary .neq t₁ t₂ => Predicate.evalBitstreamNeq (t₁.eval bvars) (t₂.eval bvars)
+  | boolBinary .eq t₁ t₂ => Predicate.evalBitstreamEq (t₁.eval vars) (t₂.eval vars)
+  | boolBinary .neq t₁ t₂ => Predicate.evalBitstreamNeq (t₁.eval vars) (t₂.eval vars)
   /- bitstream operations. -/
   | binary .eq t₁ t₂ => Predicate.evalBVEq (t₁.eval vars) (t₂.eval vars)
   /-
@@ -232,9 +232,7 @@ end Predicate
 
 /-- Denote a predicate into a bitstream, where the ith bit tells us if it is true in the ith state -/
 -- TODO: remove this from the @[simp] set.
-@[simp] def Predicate.evalFin (p : Predicate)
-    (vars : Fin (arity p) → BitStream)
-    (bvars : Fin p.arity → BitStream) : BitStream :=
+@[simp] def Predicate.evalFin (p : Predicate) (vars : Fin (arity p) → BitStream) : BitStream :=
 match p with
 | .width .eq n => BitStream.falseIffEq n
 | .width .neq n => BitStream.falseIffNeq n
@@ -262,17 +260,13 @@ match p with
 | .land p q =>
   -- if both `p` and `q` are logically true (i.e. the predicate is `false`),
   -- only then should we return a `false`.
-  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i)) (fun i => vars (Fin.castLE (by simp [arity]) i))
-
-  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i)) (fun i => vars (Fin.castLE (by simp [arity]) i))
-
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLand x₁ x₂
 | .lor p q =>
   -- If either of the predicates are `false`, then result is `false`.
-  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i)) (fun i => vars (Fin.castLE (by simp [arity]) i))
-
-  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i)) (fun i => vars (Fin.castLE (by simp [arity]) i))
-
+  let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+  let x₂ := q.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
   Predicate.evalLor x₁ x₂
 | .binary .slt p q =>
   let x₁ := p.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))

@@ -85,28 +85,18 @@ def ReflectMap.findOrInsertBoolExpr (m : ReflectMap) (e : Expr) : BTerm × Refle
   (BTerm.var ix, m)
 
 
-#check Reflect.Map.empty
-
-#check Reflect.Map.append
-
-/--
-Convert the meta-level "list of expressions" into an object level list
-repeatedly calling `Reflect.Map.empty` and `Reflect.Map.append`.
--/
-let mkExprOfArrayExpr (ty : Expr) (xs : List Expr) : MetaM ReflectedExpr := do
-  let mut out := mkApp (mkConst ``Reflect.Map.empty) ty
-  for x in xs do
-    out := mkAppN (mkConst ``Reflect.Map.append) #[ty, x, out]
-  return out
-
-
 /--
 Convert the meta-level `ReflectMap` into an object level `Reflect.Map` by
 repeatedly calling `Reflect.Map.empty` and `Reflect.Map.set`.
 -/
 def ReflectMap.toExpr (xs : ReflectMap) (w : Expr) : MetaM ReflectedExpr := do
+  let mut out := mkApp (mkConst ``Reflect.Map.empty) w
   let exprs := xs.exprs.toArray.qsort (fun ei ej => ei.2 < ej.2)
-  mkExprOfArrayExpr (mkApp (mkConst ``BitVec) w) exprs
+  for (e, _) in exprs do
+    -- The 'exprs' will be in order, with 0..n
+    /- Append the expressions into the array -/
+    out := mkAppN (mkConst ``Reflect.Map.append) #[w, e, out]
+  return out
 
 instance : ToMessageData ReflectMap where
   toMessageData exprs := Id.run do
