@@ -635,8 +635,8 @@ theorem Predicate.width_eq_implies_iff (wn : Nat) {p : Nat → Prop} :
 
 /-- To prove that `p` holds, it suffices to show that `p.eval ... = false`. -/
 theorem Predicate.denote_of_eval_eq {p : Predicate}
-    (heval : ∀ (w : Nat) (vars : List BitStream), p.eval vars w = false) :
-    ∀ (w : Nat) (vars : List (BitVec w)), p.denote w vars := by
+    (heval : ∀ (w : Nat) (vars : List BitStream) (bvars : List BitStream), p.eval vars bvars w = false) :
+    ∀ (w : Nat) (vars : List (BitVec w)) (bvars : List Bool), p.denote vars bvars w := by
   intros w vars
   apply p.eval_eq_denote w vars |>.mp (heval w <| vars.map BitStream.ofBitVec)
 

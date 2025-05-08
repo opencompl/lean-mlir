@@ -180,7 +180,7 @@ def BTerm.denote (w : Nat) (t : BTerm) (vars : List (BitVec w)) (bvars : List Bo
   | .fals => Bool.false
   | .xor a b => (a.denote w vars bvars).xor (b.denote w vars bvars)
 
-def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :=
+def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) (bvars : List Bool) : Prop :=
   match p with
   | .width .ge k => k ≤ w -- w ≥ k
   | .width .gt k => k < w -- w > k
@@ -188,13 +188,13 @@ def Predicate.denote (p : Predicate) (w : Nat) (vars : List (BitVec w)) : Prop :
   | .width .lt k => w < k
   | .width .neq k => w ≠ k
   | .width .eq k => w = k
-  | .boolBinary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
-  | .boolBinary .neq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
+  | .boolBinary .eq t₁ t₂ => t₁.denote w vars bvars = t₂.denote w vars bvars
+  | .boolBinary .neq t₁ t₂ => t₁.denote w vars bvars = t₂.denote w vars bvars
   | .binary .eq t₁ t₂ => t₁.denote w vars = t₂.denote w vars
   | .binary .neq t₁ t₂ => t₁.denote w vars ≠ t₂.denote w vars
   | .binary .sle  t₁ t₂ => ((t₁.denote w vars).sle (t₂.denote w vars)) = true
   | .binary .slt  t₁ t₂ => ((t₁.denote w vars).slt (t₂.denote w vars)) = true
   | .binary .ule  t₁ t₂ => ((t₁.denote w vars).ule (t₂.denote w vars)) = true
   | .binary .ult  t₁ t₂ => (t₁.denote w vars).ult (t₂.denote w vars) = true
-  | .land  p q => p.denote w vars ∧ q.denote w vars
-  | .lor  p q => p.denote w vars ∨ q.denote w vars
+  | .land  p q => p.denote w vars bvars ∧ q.denote w vars bvars
+  | .lor  p q => p.denote w vars bvars ∨ q.denote w vars bvars

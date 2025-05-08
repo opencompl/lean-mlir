@@ -57,9 +57,6 @@ def Predicate.quote (p : Predicate) : Expr :=
   | land p q => mkApp2 (mkConst ``Predicate.land) (Predicate.quote p) (Predicate.quote q)
   | lor p q => mkApp2 (mkConst ``Predicate.lor) (Predicate.quote p) (Predicate.quote q)
 
-
-def Reflect.Map.empty : List (BitVec w) := []
-
-def Reflect.Map.append (w : Nat) (s : BitVec w)  (m : List (BitVec w)) : List (BitVec w) := m.append [s]
-
-def Reflect.Map.get (ix : ℕ) (_ : BitVec w)  (m : List (BitVec w)) : BitVec w := m[ix]!
+def Reflect.Map.empty (α : Type) : List α := []
+def Reflect.Map.append (α : Type) (s : α)  (m : List α) : List α := m.append [s]
+def Reflect.Map.get (α : Type) [Inhabited α] (ix : ℕ) (m : List α) : α := m[ix]!
