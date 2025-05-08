@@ -20,73 +20,85 @@ abbrev List.ofFn' (f : Nat → α) (size : Nat) : List α :=
   List.ofFn (n := size) (fun i => f i)
 
 
-lemma Term.evalFin_eq_eval (t : Term)
+lemma Term.evalFin_eq_eval {k : TermKind} (t : Term k)
    (varsList : List BitStream) (varsFin : Fin t.arity → BitStream)
    (hvars : ∀ (i : Fin t.arity), varsList.getD i default = (varsFin i)) :
     Term.evalFin t varsFin = Term.eval t varsList := by
-  induction t generalizing varsList <;>
-    dsimp [Term.evalFin, Term.eval, arity] at *
-  case var i => rw [← hvars]; simp
+  induction t generalizing varsList  <;>
+    simp [Term.evalFin, Term.eval, arity] at *
+  case var i => rw [← hvars]
   case and a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
   case or a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
   case xor a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
-  case not a ha => rw [ha varsList _ hvars]
-  case neg a ha => rw [ha varsList _ hvars]
-  case shiftL k a ha => rw [ha varsList _ hvars]
+  case not a ha =>
+    rw [ha varsList]
+    intros i
+    have := hvars ⟨i, by simp⟩
+    simp [this]
+  case neg a ha =>
+    rw [ha varsList]
+    intros i
+    have := hvars ⟨i, by simp⟩
+    simp [this]
+  case shiftL k a ha =>
+    rw [ha varsList]
+    intros i
+    have := hvars ⟨i, by simp⟩
+    simp [this]
   case add a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
   case sub a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
 
-/-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
+/-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms Term.evalFin_eq_eval
 
 lemma BTerm.evalFin_eq_eval (b : BTerm)
@@ -170,7 +182,7 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
         · intros i
           exact hvars ⟨i, by simp⟩
 
-/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
+/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.evalFin_eq_eval
 
 

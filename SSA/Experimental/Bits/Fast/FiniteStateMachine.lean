@@ -793,7 +793,7 @@ def repeatBit : FSM Unit where
 end FSM
 
 /-- An `FSMTermSolution `t` is an FSM with a witness that the FSM evaluates to the same value as `t` does -/
-structure FSMTermSolution (t : Term) extends FSM (Fin t.arity) where
+structure FSMTermSolution (t : Term .bv) extends FSM (Fin t.arity) where
   ( good : t.evalFin = toFSM.eval )
 
 
@@ -811,7 +811,7 @@ def composeUnaryAux
 /-- Compose two automata together, where `q` is an FSMTermSolution -/
 def composeUnary
     (p : FSM Unit)
-    {t : Term}
+    {t : Term .bv}
     (q : FSMTermSolution t) :
     FSM (Fin t.arity) := composeUnaryAux p q.toFSM
 
@@ -830,7 +830,7 @@ def composeBinaryAux
 /-- Compose two binary opeators -/
 def composeBinary
     (p : FSM Bool)
-    {t₁ t₂ : Term}
+    {t₁ t₂ : Term .bv}
     (q₁ : FSMTermSolution t₁)
     (q₂ : FSMTermSolution t₂) :
     FSM (Fin (max t₁.arity t₂.arity)) := composeBinaryAux p q₁.toFSM q₂.toFSM
@@ -845,7 +845,7 @@ def composeBinary
 
 @[simp] lemma composeUnary_eval
     (p : FSM Unit)
-    {t : Term}
+    {t : Term .bv}
     (q : FSMTermSolution t)
     (x : Fin t.arity → BitStream) :
     (composeUnary p q).eval x = p.eval (λ _ => t.evalFin x) := by
@@ -865,7 +865,7 @@ def composeBinary
 
 @[simp] lemma composeBinary_eval
     (p : FSM Bool)
-    {t₁ t₂ : Term}
+    {t₁ t₂ : Term .bv}
     (q₁ : FSMTermSolution t₁)
     (q₂ : FSMTermSolution t₂)
     (x : Fin (max t₁.arity t₂.arity) → BitStream) :
@@ -1159,13 +1159,13 @@ open Term
 /--
 Note that **this is the value that is run by decide**.
 -/
-def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
+def termEvalEqFSM : ∀ (t : Term .bv), FSMTermSolution t
   | ofNat n =>
     { toFSM := FSM.ofNat n,
       good := by ext; simp [Term.evalFin] }
   | var n =>
     { toFSM := FSM.var n,
-      good := by ext; simp [Term.evalFin] }
+      good := by ext; simp [Term.evalFin]; simp [Fin.last] }
   | zero =>
     { toFSM := FSM.zero,
       good := by ext; simp [Term.evalFin] }
@@ -1272,7 +1272,7 @@ def fsmUlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux (FSM.ls true) <| (composeUnaryAux FSM.not <| composeBinaryAux FSM.borrow a b)
 
 @[simp]
-theorem eval_fsmUlt_eq_evalFin_Predicate_ult (t₁ t₂ : Term) :
+theorem eval_fsmUlt_eq_evalFin_Predicate_ult (t₁ t₂ : Term .bv) :
    (fsmUlt (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .ult t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
@@ -1284,7 +1284,7 @@ def fsmEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 
 /-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
 @[simp]
-theorem eval_fsmEq_eq_evalFin_Predicate_eq (t₁ t₂ : Term) :
+theorem eval_fsmEq_eq_evalFin_Predicate_eq (t₁ t₂ : Term .bv) :
    (fsmEq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .eq t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
@@ -1296,7 +1296,7 @@ def fsmNeq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
 
 /-- Evaluation FSM.eq is the same as evaluating Predicate.eq.evalFin. -/
 @[simp]
-theorem eval_fsmNeq_eq_evalFin_Predicate_neq (t₁ t₂ : Term) :
+theorem eval_fsmNeq_eq_evalFin_Predicate_neq (t₁ t₂ : Term .bv) :
    (fsmNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval = (Predicate.binary .neq t₁ t₂).evalFin  := by
   ext x i
   generalize ha : termEvalEqFSM t₁ = a
@@ -1318,7 +1318,7 @@ def fsmUle (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l)
 def fsmMsbEq (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l)) :=
   composeUnaryAux (FSM.ls false) <| composeBinaryAux FSM.xor a b
 
--- theorem fsmMsbNeq_eq_Predicate_MsbNeq (t₁ t₂ : Term) :
+-- theorem fsmMsbNeq_eq_Predicate_MsbNeq (t₁ t₂ : Term .bv) :
 --   (Predicate.msbNeq t₁ t₂).evalFin = (fsmMsbNeq (termEvalEqFSM t₁).toFSM (termEvalEqFSM t₂).toFSM).eval := sorry
 
 def fsmSlt (a : FSM (Fin k)) (b : FSM (Fin l)) : FSM (Fin (k ⊔ l ⊔ (k ⊔ l))) :=

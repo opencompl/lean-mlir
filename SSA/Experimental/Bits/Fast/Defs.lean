@@ -16,7 +16,7 @@ given a value for the free variables in `t`.
 Note that we don't keep track of how many free variable occur in `t`,
 so eval requires us to give a value for each possible variable.
 -/
-def Term.eval (t : Term) (vars : List BitStream) : BitStream :=
+def Term.eval (t : Term .bv) (vars : List BitStream) : BitStream :=
   match t with
   | var n       => vars.getD n default
   | zero        => BitStream.zero
@@ -43,9 +43,9 @@ This differs from `Term.eval` in that `Term.evalFin` uses `Term.arity` to
 determine the number of free variables that occur in the given term,
 and only require that many bitstream values to be given in `vars`.
 -/
-@[simp] def Term.evalFin (t : Term) (vars : Fin (arity t) → BitStream) : BitStream :=
+@[simp] def Term.evalFin (t : Term .bv) (vars : Fin (arity t) → BitStream) : BitStream :=
   match t with
-  | var n => vars (Fin.last n)
+  | var n => vars (⟨n, by simp⟩) -- Fin.last n)
   | zero    => BitStream.zero
   | one     => BitStream.one
   | negOne  => BitStream.negOne
@@ -62,7 +62,7 @@ and only require that many bitstream values to be given in `vars`.
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ ^^^ x₂
-  | not t     => ~~~(t.evalFin vars)
+  | not t     => ~~~(t.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i)))
   | add t₁ t₂ =>
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
@@ -71,10 +71,10 @@ and only require that many bitstream values to be given in `vars`.
       let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
       x₁ - x₂
-  | neg t       => -(Term.evalFin t vars)
+  | neg t       => -(Term.evalFin t (fun i => vars (Fin.castLE (by simp [arity]) i)))
  --  | incr t      => BitStream.incr (Term.evalFin t vars)
  --  | decr t      => BitStream.decr (Term.evalFin t vars)
-  | shiftL t n  => BitStream.shiftLeft (Term.evalFin t vars) n
+  | shiftL t n  => BitStream.shiftLeft (Term.evalFin t (fun i => vars (Fin.castLE (by simp [arity]) i))) n
   -- | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
 
 

@@ -8,7 +8,7 @@ def mkBoolLit (b : Bool) : Expr :=
   | false => mkConst ``false
 
 open Lean in
-def Term.quote (t : _root_.Term) : Expr :=
+def Term.quote (t : _root_.Term .bv) : Expr :=
   match t with
   | ofNat n => mkApp (mkConst ``Term.ofNat) (mkNatLit n)
   | var n => mkApp (mkConst ``Term.var) (mkNatLit n)

@@ -2,6 +2,8 @@ import Mathlib.Algebra.Notation.Defs
 import Mathlib.Order.Notation
 
 
+inductive TermKind : Type
+| bv
 
 /-!
 # Term Language
@@ -10,36 +12,36 @@ and the denotation of these terms into operations on bitstreams -/
 
 /-- A `Term` is an expression in the language our decision procedure operates on,
 it represent an infinite bitstream (with free variables) -/
-inductive Term : Type
-| var : Nat → Term
+inductive Term : TermKind → Type
+| var : Nat → Term .bv
 /-- The constant `0` -/
-| zero : Term
+| zero : Term .bv
 /-- The constant `-1` -/
-| negOne : Term
+| negOne : Term .bv
 /-- The constant `1` -/
-| one : Term
+| one : Term .bv
 /-- The constant `n` from a bitvector expression -/
-| ofNat (n : Nat) : Term
+| ofNat (n : Nat) : Term .bv
 /-- Bitwise and -/
-| and : Term → Term → Term
+| and : Term .bv → Term .bv → Term .bv
 /-- Bitwise or -/
-| or : Term → Term → Term
+| or : Term .bv → Term .bv → Term .bv
 /-- Bitwise xor -/
-| xor : Term → Term → Term
+| xor : Term .bv → Term .bv → Term .bv
 /-- Bitwise complement -/
-| not : Term → Term
+| not : Term .bv → Term .bv
 /-- Addition -/
-| add : Term → Term → Term
+| add : Term .bv → Term .bv → Term .bv
 /-- Subtraction -/
-| sub : Term → Term → Term
+| sub : Term .bv → Term .bv → Term .bv
 /-- Negation -/
-| neg : Term → Term
+| neg : Term .bv → Term .bv
 -- /-- Increment (i.e., add one) -/
 -- | incr : Term → Term
 -- /-- Decrement (i.e., subtract one) -/
 -- | decr : Term → Term
 /-- shift left by `k` bits. -/
-| shiftL : Term → Nat → Term
+| shiftL : Term .bv → Nat → Term .bv
 -- /-- logical shift right by `k` bits. -/
 -- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
@@ -47,7 +49,7 @@ inductive Term : Type
 deriving Repr, Inhabited
 
 inductive BTerm : Type
-| msb : Term → BTerm
+| msb : Term .bv → BTerm
 | tru : BTerm
 | fals : BTerm
 | xor : BTerm → BTerm → BTerm
@@ -56,34 +58,35 @@ deriving Repr, Inhabited
 
 open Term
 
-instance : Add Term := ⟨add⟩
-instance : Sub Term := ⟨sub⟩
-instance : One Term := ⟨one⟩
-instance : Zero Term := ⟨zero⟩
-instance : Neg Term := ⟨neg⟩
+instance : Add (Term .bv) := ⟨add⟩
+instance : Sub (Term .bv) := ⟨sub⟩
+instance : One (Term .bv) := ⟨one⟩
+instance : Zero (Term .bv) := ⟨zero⟩
+instance : Neg (Term .bv) := ⟨neg⟩
 
 /-- `t.arity` is the max free variable id that occurs in the given term `t`,
 and thus is an upper bound on the number of free variables that occur in `t`.
 
 Note that the upper bound is not perfect:
 a term like `var 10` only has a single free variable, but its arity will be `11` -/
-@[simp] def Term.arity : Term → Nat
-| (var n) => n+1
-| zero => 0
-| one => 0
-| negOne => 0
-| ofNat _ => 0
-| Term.and t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.or t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.not t => arity t
-| add t₁ t₂ => max (arity t₁) (arity t₂)
-| sub t₁ t₂ => max (arity t₁) (arity t₂)
-| neg t => arity t
--- | incr t => arity t
--- | decr t => arity t
-| shiftL t .. => arity t
--- | repeatBit t => arity t
+@[simp] def Term.arity {k : TermKind} (t : Term k) : Nat :=
+  match k, t with
+  | .bv, (var n) => n+1
+  | .bv, zero => 0
+  | .bv, one => 0
+  | .bv, negOne => 0
+  | .bv, ofNat _ => 0
+  | .bv, Term.and t₁ t₂ => max (arity t₁) (arity t₂)
+  | .bv, Term.or t₁ t₂ => max (arity t₁) (arity t₂)
+  | .bv, Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
+  | .bv, Term.not t => arity t
+  | .bv, add t₁ t₂ => max (arity t₁) (arity t₂)
+  | .bv, sub t₁ t₂ => max (arity t₁) (arity t₂)
+  | .bv, neg t => arity t
+  --.bv,  | incr t => arity t
+  --.bv,  | decr t => arity t
+  | .bv, shiftL t .. => arity t
+  --.bv,  | repeatBit t => arity t
 
 @[simp] def BTerm.arity : BTerm → Nat
 | .msb t => (t.arity)
@@ -131,7 +134,7 @@ Meaning of the denotation:
 inductive Predicate : Type where
 /-- Assert relationship between bitwidth and `n` -/
 | width (wp : WidthPredicate) (n : Nat) : Predicate
-| binary (p : BinaryPredicate) (t₁ t₂ : Term)
+| binary (p : BinaryPredicate) (t₁ t₂ : Term .bv)
 | boolBinary (p : BoolBinaryPredicate) (t₁ t₂ : BTerm)
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
@@ -152,7 +155,7 @@ deriving Repr, Inhabited
 | .land p q => max p.arity q.arity
 
 /-- toBitVec a Term into its underlying bitvector -/
-def Term.denote (w : Nat) (t : Term) (vars : List (BitVec w)) : BitVec w :=
+def Term.denote (w : Nat) (t : Term .bv) (vars : List (BitVec w)) : BitVec w :=
   match t with
   | ofNat n => BitVec.ofNat w n
   | var n => vars.getD n default
