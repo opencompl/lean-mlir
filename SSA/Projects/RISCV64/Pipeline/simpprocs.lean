@@ -10,32 +10,11 @@ open InstCombine(LLVM) -- analog to RISC-V
 Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/
 set_option Elab.async false
-/-
-  --  (Ctxt.Valuation.nil::ᵥe) (Ctxt.Var.last [] (Ty.llvm (InstCombine.MTy.bitvec 64)))
-@[simp_denote]
-private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
-  rfl
-#check Ctxt.Valuation.snoc
--/
+
 @[simp_denote]
 private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
   rfl
 
-
-/-! # Instruction lowering patterns
-    This file contains a collection of instruction lowerings that are performed by
-    LLVM and make explicit what is performed by the LLVM backkend.
-     -/
-/-
-f: Ctxt.Valuation.snoc, xs: [Ty,
- instTyDenoteTyLLVMPlusRiscV,
- [],
- Ty.llvm (InstCombine.Ty.bitvec 64),
- Ctxt.Valuation.nil,
- e,
- Ty.llvm (InstCombine.Ty.bitvec 64),
- Ctxt.Var.last [] (Ty.llvm (InstCombine.MTy.bitvec 64))]
--/
 open Lean Meta Elab in
 simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.snoc _ _) (Ctxt.Var.last _ _)) := fun e => do
   -- logInfo m!"Matched (Valuation.snoc s x) (Ctxt.Var.last Γ t) with {e}"
@@ -44,32 +23,11 @@ simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.snoc _ _) (Ctxt.Var
   let ty := xs[0]!
   let s := xs[4]!
   let x := xs[xs.size - 1 - 2]!
-  -- logInfo m!"x: {x}"
-  -- TODO: @alexkeizer, don't kill me for this :D I was lazy, so I just write down the full implicit match.
-  -- We should probably decide which arguments are implicit, and then only pass these as explicit args.
   let proof ← mkAppOptM ``valuation_var_last_eq.lemma #[.some ty, .none, .none, .none, .some s, .some x]
   return .visit {
     expr := x,
-    -- proof? := ← mkSorry (← mkEq x rhs) .true -- TODO: replace with call to valuation_var_last_eq.lemma.
     proof? := proof
   }
-  -- let_expr ((Ctxt.Valuation.snoc _V x) (Ctxt.Var.last _ _)) := x
-
-  -- let args ←
-  -- let_expr ((Ctxt.Valuation.snoc _V x) (Ctxt.Var.last _ _)) := x
-
-
-
-
--- open Lean Meta Elab in
--- simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.snoc _ _) (Ctxt.Var.last _ _)) := fun e => do
---   let_expr Ctxt.Valuation.snoc Ty instDenote Γ t s x _v := e
---     | return .continue
---   return .visit {
---     expr := x,
---     proof? := some <| mkAppN (mkConst ``valuation_var_last_eq.lemma) #[Ty, instDenote, Γ, t, s, x]
---   }
-
 
 theorem riscVArgsFromHybrid_nil_eq : riscvArgsFromHybrid (HVector.nil) = HVector.nil := rfl
 
@@ -80,9 +38,7 @@ set_option pp.explicit true in
 #check llvmArgsFromHybrid
 #check HVector.cons
 #synth Lean.ToExpr (List Lean.Expr)
-
 #check Lean.instToExprListOfToLevel
-
 
 open Lean Meta Elab in
 /-- Convert a `List Expr` into an `Expr` by building calls to `List.nil` and `List.cons`.
@@ -93,44 +49,13 @@ Instead, we want a shallow serialization, where we just build `List.cons (.const
 -/
 def listExprToExprShallow (type : Option Expr) : List Expr → MetaM Expr
 | .nil => mkAppOptM ``List.nil #[type]
-| .cons x xs => do mkAppOptM ``List.cons #[type, x, ← listExprToExprShallow type xs]
+| .cons x xs => do
+  let tailExpr ← listExprToExprShallow type xs -- sarah split this step up for her to understand it.
+  mkAppOptM ``List.cons #[type, x, tailExpr]
 
 open Lean Meta Elab in
-#check Lean.Environment
-
-def f (n : Nat) : Bool := n % 2 == 0
-
-def g : ∀ (_ : Nat), Bool := fun n => n % 2 == 0
-def h : ∀ (w : Nat), BitVec w  :=
-  -- | value
-  fun (w : Nat) => 0#w
-
-def h' : (w : Nat) → BitVec w  :=
-  -- | value
-  fun (w : Nat) => 0#w
-
--- let x := xdef in rest <-> (fun x => rest) xdef
-
-/-#
-Let versus Lambda in DTT (dependent type theory)
-namespace LetVersusLam
-inductive Matrix : Nat → Nat → Type where
-| id : (n : Nat) → Matrix n n
-
-def f (n : Nat) : Matrix n n :=
-  let m := n
-  let out : Matrix m n := Matrix.id n -- n : Nat, m : Nat, m = n |- Matrix.id n is well-typed
-  out
-
-def f' (n : Nat) : Matrix n n :=
-  (fun m =>
-    -- n : Nat, m : Nat |- Matrix.id n is well typed
-    let out : Matrix m n := Matrix.id n
-    out) n
-end LetVersusLam
--/
-
 #eval show String from toString (`Nat.Abs)
+
 
 @[simp_denote]
 def llvmArgsFromHybrid_nil_eq :
@@ -142,7 +67,16 @@ def llvmArgsFromHybrid_cons_eq.lemma {ty  : LLVM.Ty} {tys : List LLVM.Ty}
   (llvmArgsFromHybrid (tys := ty :: tys) (HVector.cons x xs)) =
   HVector.cons (f := TyDenote.toType) (a := ty) (as := tys) x (llvmArgsFromHybrid xs)
    := rfl
+/-
 
+open Lean Meta Elab in
+/-- Extract out the raw LLVM type from the. -/
+def extractLLVMTy (x : Expr) : SimpM Expr := do
+  let_expr Ty.llvm xRealTy := (← reduce x)
+    | throwError m! "expected type of {x} to be `Ty.llvm _`, but got {x}"
+  return xRealTy
+-/
+/-
 
 open Lean Meta Elab in
 /-- Extract out the raw LLVM type from the. -/
@@ -182,6 +116,29 @@ simproc [simp_denote] llvmArgsFromHybrid_cons_eq (llvmArgsFromHybrid _) := fun e
     expr := rhs,
     proof? := .some proof
   }
+-/
+open Lean Meta Elab Qq in
+simproc [simp_denote] llvmArgsFromHybrid_cons_eq (llvmArgsFromHybrid (_) ) := fun e => do
+-- TODO: This ought to be .cons rather than a wildcard -------------^^^
+--       Unfortunately, then it the simproc again stops being applied when we'd
+--       expect it to, despite liberal use of `no_index`.
+  let_expr llvmArgsFromHybrid tys' lhs := e
+    | return .continue
+  let_expr HVector.cons _α _f _as _a x xs := lhs
+    | return .continue
+
+  let ty : Q(LLVM.Ty) ← mkFreshExprMVar q(LLVM.Ty)
+  let tys : Q(List LLVM.Ty) ← mkFreshExprMVar q(List LLVM.Ty)
+  let expected : Expr := q($ty :: $tys)
+  withTransparency (.default) <| do
+    if !(← isDefEq tys' expected) then
+      throwError "Failed to unify {tys'} with {expected}"
+  let expr : Lean.Expr :=
+    let x : Q(⟦$ty⟧) := x
+    let xs : Q(HVector TyDenote.toType (List.map LLVMRiscV.Ty.llvm $tys)) := xs
+    q(HVector.cons (f := TyDenote.toType) (a := $ty) (as := $tys) $x (llvmArgsFromHybrid $xs))
+  let proof := mkAppN (mkConst ``llvmArgsFromHybrid_cons_eq.lemma []) #[ty, tys, x, xs]
+  return .visit { expr, proof? := some proof }
 
 @[simp_denote]
 def riscvArgsFromHybrid_nil_eq :
@@ -245,15 +202,36 @@ def and_llvm := [LV| {
   }]
 def and_riscv := [LV| {
     ^entry (%lhs: i64):
-      %1 = llvm.and %lhs, %lhs : i64
+      %1 = llvm.or %lhs, %lhs : i64
       llvm.return %1 : i64
   }]
+def riscv_and1 := [LV| {
+    ^entry (%lhs: !i64):
+      %1 = and %lhs, %lhs : !i64
+      ret %1 : !i64
+  }]
+def riscv_and2 := [LV| {
+    ^entry (%lhs: !i64):
+      %1 = or %lhs, %lhs : !i64
+      ret %1 : !i64
+  }]
+
+-- example to see whether liftM gets introduced with riscv type of rewrites
+def llvm_and_lower_riscv1 : RiscVPeepholeRewriteRefine [Ty.riscv (.bv)] :=
+  {lhs:= riscv_and1 , rhs:= riscv_and2 ,
+   correct := by
+    unfold riscv_and1 riscv_and2
+    simp_peephole
+    simp [liftM, builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
+
+    }
+-- example to see whether liftM gets introduced with riscv type of rewrites
 def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
   {lhs:= and_llvm , rhs:= and_riscv ,
    correct := by
     unfold and_llvm and_riscv
     simp_peephole
-    simp [builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
+    simp [liftM, builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
     simp [LLVM.and, RTYPE_pure64_RISCV_AND]
     rintro (_|foo) (_|bar)
     · simp

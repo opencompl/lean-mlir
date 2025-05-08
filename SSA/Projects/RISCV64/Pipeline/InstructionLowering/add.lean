@@ -53,7 +53,7 @@ def llvm_add_lower_riscv_noflags : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 6
     set_option pp.analyze true in
     simp_peephole
     simp [builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv, RTYPE_pure64_RISCV_AND]
-    -- intros a b
+    --intros a b
     simp [LLVM.add, RTYPE_pure64_RISCV_ADD]
     rintro (_|_) (_|_)
     . simp

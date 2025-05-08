@@ -1,4 +1,5 @@
 import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscv
+import SSA.Projects.DCE.DCE
 
 open LLVMRiscV
 open RV64Semantics -- needed to use RISC-V semantics in simp tactic
@@ -56,7 +57,19 @@ def peep0  : PeepholeRewrite LLVMPlusRiscV [.llvm (.bitvec 64)] (.llvm (.bitvec 
       sorry
   }
 
-def test_peep0 :=  rewritePeephole_multi (10)  (peep_00_r) (peep0)
+def test_peep0 :  Com LLVMPlusRiscV (Ctxt.ofList [.llvm (.bitvec 64)]) .pure (.llvm (.bitvec 64)) := sorry   -- (Ctxt.ofList [.llvm (.bitvec 64)]) .pure (.llvm (.bitvec 64))  :=  rewritePeephole_multi (20) [peep0] peep_00_r
+
+
+
+/-
+
+#eval! test_peep0
+
+def dce := DCE.dce' test_peep0
+
+def dce2 :   := DCE.dce' dce
+
+#eval! dce -/
 
 /-
 optimization found in the gcc backend
