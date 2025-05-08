@@ -234,3 +234,29 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
 @[simp_denote]
 theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
   (s.snoc x) (Ctxt.Var.toSnoc v) = s v := rfl
+
+def and_llvm := [LV| {
+    ^entry (%lhs: i64):
+      %1 = llvm.and %lhs, %lhs : i64
+      llvm.return %1 : i64
+  }]
+def and_riscv := [LV| {
+    ^entry (%lhs: i64):
+      %1 = llvm.and %lhs, %lhs : i64
+      llvm.return %1 : i64
+  }]
+def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
+  {lhs:= and_llvm , rhs:= and_riscv ,
+   correct := by
+    unfold and_llvm and_riscv
+    simp_peephole
+    simp [builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
+    simp [LLVM.and, RTYPE_pure64_RISCV_AND]
+    rintro (_|foo) (_|bar)
+    · simp
+    · simp
+    · simp
+    · simp
+      simp only [LLVM.and?, BitVec.Refinement.some_some]
+      bv_decide
+    }

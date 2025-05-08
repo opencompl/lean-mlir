@@ -1,7 +1,63 @@
-import RiscvDialect.Peephole_Optimizations.RISCVRewrites
--- this file contains the rewrites employed in the GCC compiler, its called match.pd and contains several peephole optimizations employed in the GCC compiler.
--- the goal is to implement and verfiy all and especially integrate all of them into our instruction selection pipeline.
-open RISCV64
+import SSA.Projects.RISCV64.Pipeline.LLVMAndRiscv
+
+open LLVMRiscV
+open RV64Semantics -- needed to use RISC-V semantics in simp tactic
+open InstCombine(LLVM)
+/--
+# Peephole Optimizations
+This file contains Peephole Rewrites insipred by the rewrites LLVM performs.
+This collection of rewrites will be used as patterns within the Risc-V peephole optimizartion pass.
+Additionally they are insipred by the LLVM rewrites. -/
+
+/-
+the peephole optimization wrapper defined in the lean-mlir project.
+  def RiscVToLLVMPeepholeRewriteRefine.toPeepholeUNSOUND (self : RiscVPeepholeRewriteRefine Γ) : PeepholeRewrite LLVMPlusRiscV Γ (Ty.riscv (.bv)) :=
+  {
+    lhs := self.lhs
+    rhs := self.rhs
+    correct := by sorry
+  }
+
+rewrite machinery:
+  def rewritePeephole_go_multi (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
+    (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
+  match fuel with
+  | 0 => target
+  | fuel' + 1 =>
+    let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
+    rewritePeephole_go_multi fuel' prs (ix + 1) target'
+
+def rewritePeephole_multi (fuel : ℕ)
+   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+    rewritePeephole_go_multi fuel prs 0 target
+
+-/
+
+def peep_00_r:=
+      [LV|{
+      ^bb0(%X : i64):
+      %1 = llvm.add %X, %X : i64
+      %2 = llvm.sub %X, %X : i64
+      %3 = llvm.add %1, %2 : i64
+      llvm.return %3 : i64
+  }]
+def peep_00_l:=
+      [LV|{
+      ^bb0(%X : i64):
+      %1 = llvm.add %X, %X : i64
+      llvm.return %1 : i64
+  }]
+
+def peep0  : PeepholeRewrite LLVMPlusRiscV [.llvm (.bitvec 64)] (.llvm (.bitvec 64)) :=
+  {lhs :=  peep_00_r , rhs := peep_00_l ,
+    correct :=  by
+      unfold peep_00_r peep_00_l
+      simp_peephole
+      sorry
+  }
+
+def test_peep0 := rewriteAtMulti
+
 /-
 optimization found in the gcc backend
 

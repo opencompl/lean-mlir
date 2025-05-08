@@ -2495,6 +2495,20 @@ def rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
         | none => target
       else target
 
+/- debug: section where I modified the file -/
+def rewritePeephole_go_multi (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
+    (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
+  match fuel with
+  | 0 => target
+  | fuel' + 1 =>
+    let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
+    rewritePeephole_go_multi fuel' prs (ix + 1) target'
+
+def rewritePeephole_multi (fuel : ℕ)
+   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+    rewritePeephole_go_multi fuel prs 0 target
+
+
 
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂  eff t₂) :
