@@ -223,7 +223,6 @@ def llvm_and_lower_riscv1 : RiscVPeepholeRewriteRefine [Ty.riscv (.bv)] :=
     unfold riscv_and1 riscv_and2
     simp_peephole
     simp [liftM, builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
-
     }
 -- example to see whether liftM gets introduced with riscv type of rewrites
 def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
