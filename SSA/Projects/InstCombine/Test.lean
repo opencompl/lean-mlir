@@ -51,25 +51,32 @@ def bb0 : Region 0 := [mlir_region|
 
 /--
 info: def bb0 : Region 0 :=
-Region.mk "bb0" [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32)]
-  [Op.mk "llvm.mlir.constant" [(SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)] [] []
-      (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 8 (MLIRType.int Signedness.Signless 32))]),
-    Op.mk "llvm.mlir.constant" [(SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)] [] []
-      (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 31 (MLIRType.int Signedness.Signless 32))]),
-    Op.mk "llvm.ashr" [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
-        (SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)]
-      [] (AttrDict.mk []),
-    Op.mk "llvm.and" [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
-        (SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
-      [] (AttrDict.mk []),
-    Op.mk "llvm.add" [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
-        (SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
-      [] (AttrDict.mk []),
-    Op.mk "llvm.return" [] [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)] []
-      (AttrDict.mk [])]
+{ name := "bb0", args := [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32)],
+  ops :=
+    [{ name := "llvm.mlir.constant", res := [(SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)],
+        args := [], regions := [],
+        attrs := AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 8 (MLIRType.int Signedness.Signless 32))] },
+      { name := "llvm.mlir.constant", res := [(SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)],
+        args := [], regions := [],
+        attrs := AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 31 (MLIRType.int Signedness.Signless 32))] },
+      { name := "llvm.ashr", res := [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)],
+        args :=
+          [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
+            (SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "llvm.and", res := [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)],
+        args :=
+          [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
+            (SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "llvm.add", res := [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)],
+        args :=
+          [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
+            (SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "llvm.return", res := [],
+        args := [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)], regions := [],
+        attrs := AttrDict.mk [] }] }
 -/
 #guard_msgs in #print bb0
 
