@@ -4,6 +4,8 @@ import SSA.Projects.DCE.DCE
 open LLVMRiscV
 open RV64Semantics -- needed to use RISC-V semantics in simp tactic
 open InstCombine(LLVM)
+
+set_option maxRecDepth 10000000
 /--
 # Peephole Optimizations
 This file contains Peephole Rewrites insipred by the rewrites LLVM performs.
@@ -27,12 +29,33 @@ rewrite machinery:
   | fuel' + 1 =>
     let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
     rewritePeephole_go_multi fuel' prs (ix + 1) target'
+-- we fold each rewriter over the target program thereforeI assume that fuel should be themaximum between the number of rewrites
+and the size of the program.
 
 def rewritePeephole_multi (fuel : ℕ)
    (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
     rewritePeephole_go_multi fuel prs 0 target
-
 -/
+
+
+
+/- This section defines the fuel parameter for the rewriter.
+I defined it as the maximum between the avaiable rewrites and the program size.
+Hence the rewriter loops over the rewrites and at each program position tries to match the rewrite.-/
+
+/- to  do: buld this machinery into the rewriter directly.
+
+e.g
+def nr_of_rewrites := 10
+def fuel_def {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty} (p: Com d Γ eff t) : Nat := max (Com.size p) nr_of_rewrites
+
+def rewritePeephole_multi
+   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+    rewritePeephole_go_multi (fuel_def target) prs 0 target
+-/
+
+def nr_of_rewrites := 10
+def fuel_def {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty} (p: Com d Γ eff t) : Nat := max (Com.size p) nr_of_rewrites
 
 def peep_00_r:=
       [LV|{
@@ -48,28 +71,18 @@ def peep_00_l:=
       %1 = llvm.add %X, %X : i64
       llvm.return %1 : i64
   }]
-
 def peep0  : PeepholeRewrite LLVMPlusRiscV [.llvm (.bitvec 64)] (.llvm (.bitvec 64)) :=
   {lhs :=  peep_00_r , rhs := peep_00_l ,
     correct :=  by
-      unfold peep_00_r peep_00_l
-      simp_peephole
-      sorry
+     sorry
   }
-
-def test_peep0 :  Com LLVMPlusRiscV (Ctxt.ofList [.llvm (.bitvec 64)]) .pure (.llvm (.bitvec 64)) := sorry   -- (Ctxt.ofList [.llvm (.bitvec 64)]) .pure (.llvm (.bitvec 64))  :=  rewritePeephole_multi (20) [peep0] peep_00_r
-
-
-
-/-
-
+def test_peep0 :  Com LLVMPlusRiscV (Ctxt.ofList [.llvm (.bitvec 64)]) .pure (.llvm (.bitvec 64)) :=
+  rewritePeephole_multi (fuel_def peep_00_r) [peep0] peep_00_r
 #eval! test_peep0
-
-def dce := DCE.dce' test_peep0
-
-def dce2 :   := DCE.dce' dce
-
-#eval! dce -/
+def test_pep0_dce:= (DCE.dce' test_peep0)
+#eval! test_pep0_dce
+def test_pep0_dce_dce := (DCE.dce' test_pep0_dce.val)
+#eval! test_pep0_dce_dce
 
 /-
 optimization found in the gcc backend

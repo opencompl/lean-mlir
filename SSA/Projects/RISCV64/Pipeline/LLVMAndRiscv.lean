@@ -14,32 +14,30 @@ namespace LLVMRiscV
 /-! # Hybrid dialect
 This file contains a hybrid dialect combining
 SSA.Projects.RISCV64 and SSA.Projects.InstCombine.
-This allows us to have a dialect containing both dialects and allows us to use the
+This allows us to have a hybrid dialect containing both dialects and allows us to use the
 rewriter to perform rewrites across the two dialects within this hybrid dialect.
 
 To make the intermixing of the type system of each dialect possible, we
 inserted unrealized_conversion_cast.
   see: section (UnrealizedConversionCastOp)
   https://mlir.llvm.org/docs/Dialects/Builtin/#builtinunrealized_conversion_cast-unrealizedconversioncastop
-
  -/
 
--- TODO: move into LLVM.
+-- added this to define an instance for LLVM.Ty from InstCombine instance.
 instance : DecidableEq LLVM.Ty :=
   fun a b => by
     simp only [LLVM] at a b
     exact (inferInstanceAs (DecidableEq (InstCombine.MTy 0)) a b)
 
-inductive Ty where
-  | llvm : (LLVM.Ty) -> Ty
-  | riscv : (Dialect.Ty RISCV64.RV64) -> Ty
-  deriving DecidableEq, Repr
-
--- TODO: move into LLVM.
 instance : DecidableEq LLVM.Op :=
   fun a b => by
     simp only [LLVM] at a b
     exact (inferInstanceAs (DecidableEq (InstCombine.MOp 0)) a b)
+
+inductive Ty where
+  | llvm : (LLVM.Ty) -> Ty
+  | riscv : (Dialect.Ty RISCV64.RV64) -> Ty
+  deriving DecidableEq, Repr
 
 inductive Op where
   | llvm : (Dialect.Op LLVM) -> Op
@@ -49,7 +47,7 @@ inductive Op where
   deriving DecidableEq, Repr
 
 -- semantics of an unrealized conversion cast from Risc-V to LLVM.
-def builtin.unrealized_conversion_cast.riscvToLLVM (toCast : BitVec 64 ): Option (BitVec 64 ) := some toCast
+def builtin.unrealized_conversion_cast.riscvToLLVM (toCast : BitVec 64 ) : Option (BitVec 64 ) := some toCast
 /--
 Casting a some x to x. The none (poison case) will be harded coded to zero bit vector as any
 values refines a poison value.
@@ -94,7 +92,7 @@ instance : DialectDenote (LLVMPlusRiscV) where
   | .llvm (llvmOp), args , .nil  => DialectDenote.denote llvmOp (llvmArgsFromHybrid args) .nil
   | .riscv (riscvOp), args , .nil  => DialectDenote.denote riscvOp (riscvArgsFromHybrid args) .nil
   | .builtin.unrealized_conversion_cast.riscvToLLVM, elemToCast, _  =>
-    let toCast : (BitVec 64) := (elemToCast.getN 0 (by simp [DialectSignature.sig, signature]))
+    let toCast : (BitVec 64) := (elemToCast.getN 0 (by simp [DialectSignature.sig, signature])) -- wrapping the Option in the newly introduced PoisonOr wrapper.
     let casted : Option (BitVec 64) := builtin.unrealized_conversion_cast.riscvToLLVM toCast
     PoisonOr.ofOption casted
   | .builtin.unrealized_conversion_cast.LLVMToriscv, (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec 64)]), _  =>
@@ -127,7 +125,7 @@ def _root_.HVector.foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a →
   | [],   b, .nil       => return b
   | t::_, b, .cons a as => do foldlM f (← f t b a) as
 
-/-- Simultaneous map on the type and value level of an HVector. -/
+/-! Simultaneous map on the type and value level of an HVector. -/
 @[simp_denote]
 def _root_.HVector.ubermap {A : α → Type} {B : β → Type}
     {l : List α}
@@ -138,9 +136,8 @@ def _root_.HVector.ubermap {A : α → Type} {B : β → Type}
   | [], .nil => .nil
   | _t :: _ts, .cons a as => HVector.cons (f a) (HVector.ubermap F f as)
 
-/--
-Simultaneous map on the type and value level of an HVector while performing monadic effects for value translation.
--/
+/-!
+Simultaneous map on the type and value level of an HVector while performing monadic effects for value translation.-/
 @[simp_denote]
 def _root_.HVector.ubermapM [Monad m] {A : α → Type} {B : β → Type}
     {l : List α}
@@ -211,7 +208,6 @@ SSA.Core.MLIRSyntax.Transform.lean
 There I modified the transform error to not dependend on a dialect anymore.
 Before each dialect had its own ExceptM which did not allow me to perform staged parsing.
 -/
-
 #check MLIR.AST.ExceptM
 
 instance : MLIR.AST.TransformTy (LLVMPlusRiscV) 0 where
@@ -264,7 +260,8 @@ instance : MLIR.AST.TransformExpr (LLVMPlusRiscV ) 0   where
 @[simp_denote]
 def transformVarLLVM (v :  Ctxt.Var (ctxtTransformToLLVM Γ) ty) :   Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty) :=
   match v with
-  | ⟨h, ty⟩ =>  ⟨h, by sorry ⟩
+  | ⟨h, ty⟩ =>  ⟨h, by
+    sorry⟩
 
 @[simp_denote]
 def transformVarRISCV (v :  Ctxt.Var (ctxtTransformToRiscV Γ) ty) :   Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
@@ -304,7 +301,7 @@ Additionaly these are examples on writting down the hybrid dialect.
 
 def RISCVReturn := [LV|{
   ^entry (%0 : !i64 ):
-  "ret" (%0) : ( !i64 ) -> ()
+  "ret" (%0) : (!i64) -> ()
 }]
 #check RISCVReturn
 
@@ -365,8 +362,7 @@ def add_flag_test := [LV| {
       llvm.return %v : i64
   }]
   #check llvm_const_add_neg_add
-
-
+  
   def riscv_const_add_neg_add_unpretty :=
   [LV| {
       ^bb0(%X : !i64):
