@@ -178,6 +178,20 @@ dsimproc [simp_denote] reduceIsRefinedBy (_ ⊑ _) := fun e => do
       let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
         #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
       return .visit expr
+  | instRefinementPure d d' tyDenote tyDenote' instRefinement t u instPure instPure' =>
+      let a :=
+        let Ty := mkApp (mkConst ``Dialect.Ty) d
+        let m := mkApp (mkConst ``Dialect.m) d
+        let α := mkApp3 (mkConst ``TyDenote.toType) Ty tyDenote t
+        mkApp4 (.const ``pure [0, 0]) m instPure α a
+      let b :=
+        let Ty := mkApp (mkConst ``Dialect.Ty) d'
+        let m := mkApp (mkConst ``Dialect.m) d'
+        let β := mkApp3 (mkConst ``TyDenote.toType) Ty tyDenote u
+        mkApp4 (.const ``pure [0, 0]) m instPure' β b
+      let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
+        #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
+      return .visit expr
   | instRefinementEffect d d' tyDenote tyDenote' instRefinement t u instPure instPure' eff eff' =>
       let a :=
         let Ty := mkApp (mkConst ``Dialect.Ty) d
