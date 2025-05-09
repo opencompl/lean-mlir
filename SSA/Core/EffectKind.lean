@@ -1,3 +1,5 @@
+import SSA.Core.Tactic.SimpSet
+import Lean
 import Mathlib.Order.Lattice
 
 /- Kinds of effects, either pure or impure -/
@@ -15,8 +17,8 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
 
 section Lemmas
 
-@[simp] theorem toMonad_pure    : pure.toMonad m = Id := rfl
-@[simp] theorem toMonad_impure  : impure.toMonad m = m := rfl
+@[simp, simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
+@[simp, simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
 
 end Lemmas
 
@@ -140,14 +142,14 @@ instance : Min EffectKind where
   min := inf
 
 @[simp] theorem pure_sup_pure_eq  : max pure pure = pure    := rfl
-@[simp] theorem pure_sup_pure_eq'  : max pure pure = pure    := rfl
+@[simp] theorem pure_sup_pure_eq' : max pure pure = pure    := rfl
 
-@[simp] theorem impure_sup_eq     : max impure e  = impure  := rfl
-@[simp] theorem sup_impure_eq     : max e impure  = impure  := by cases e <;> rfl
+@[simp] theorem impure_sup_eq : max impure e  = impure  := rfl
+@[simp] theorem sup_impure_eq : max e impure  = impure  := by cases e <;> rfl
 
-@[simp] theorem impure_inf_impure_eq  : min impure impure = impure  := rfl
-@[simp] theorem pure_inf_eq           : min pure e = pure           := rfl
-@[simp] theorem inf_pure_eq           : min e pure = pure           := by cases e <;> rfl
+@[simp] theorem impure_inf_impure_eq : min impure impure = impure  := rfl
+@[simp] theorem pure_inf_eq      : min pure e = pure           := rfl
+@[simp] theorem inf_pure_eq      : min e pure = pure           := by cases e <;> rfl
 
 -- TODO: these proofs are currently quite slow, they could probablye be sped up quite a bit
 instance : Lattice EffectKind where
@@ -197,10 +199,12 @@ instance : MonadLiftT (pure.toMonad m) (eff.toMonad m)   := instMonadLiftOfLe (p
 
 end MonadLift
 
-@[simp] theorem liftEffect_rfl [Pure m] (hle : eff ≤ eff) :
+@[simp, simp_denote]
+theorem liftEffect_rfl [Pure m] (hle : eff ≤ eff) :
     liftEffect hle (α := α) (m := m) = id := by cases eff <;> rfl
 
-@[simp] theorem liftEffect_pure_impure [Pure m] (hle : pure ≤ impure) :
+@[simp, simp_denote]
+theorem liftEffect_pure_impure [Pure m] (hle : pure ≤ impure) :
     liftEffect hle (α := α) (m := m) = Pure.pure :=
   rfl
 
@@ -245,6 +249,6 @@ either `pure` or the identity, depending on the effect `eff`.
 
 NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
 -/
-@[simp]
+@[simp, simp_denote]
 def coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
   liftEffect (le_impure eff)

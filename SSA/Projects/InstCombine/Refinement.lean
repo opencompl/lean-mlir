@@ -4,11 +4,25 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Projects.InstCombine.Base
 import SSA.Core.Util.Poison
 
-open InstCombine (LLVM)
-open PoisonOr.Syntax
+namespace InstCombine
+open LLVM.Ty
 
-abbrev Com.Refinement (src tgt : Com LLVM Γ .pure t)
-    (h : TyDenote.toType t = PoisonOr α := by rfl) : Prop :=
-  ∀ Γv, (h ▸ src.denote Γv) ⊑ (h ▸ tgt.denote Γv)
+instance : DialectHRefinement LLVM LLVM where
+  IsRefinedBy := @fun
+    | bitvec w, bitvec w', (x : LLVM.IntW _), (y : LLVM.IntW _) =>
+        if h : w = w' then
+          x ⊑ h ▸ y
+        else
+          false
 
-infixr:90 " ⊑ "  => Com.Refinement
+@[simp, simp_denote]
+theorem isRefinedBy_iff_of_width_eq (x y : LLVM.IntW w) :
+    DialectHRefinement.IsRefinedBy (d := LLVM) (d' := LLVM) (t := bitvec w) (u := bitvec w) x y
+    ↔ x ⊑ y := by
+  simp [DialectHRefinement.IsRefinedBy]
+
+@[simp, simp_denote]
+theorem isRefinedBy_iff_of_width_neq {x : LLVM.IntW w} {y : LLVM.IntW v} (h : w ≠ v) :
+    DialectHRefinement.IsRefinedBy (d := LLVM) (d' := LLVM) (t := bitvec w) (u := bitvec v) x y
+    ↔ False := by
+  simp [DialectHRefinement.IsRefinedBy, h]

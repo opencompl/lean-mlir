@@ -7,8 +7,6 @@ set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 
-open PoisonOr.Syntax
-
 theorem bv_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
       LLVM.add (LLVM.add (LLVM.xor (LLVM.and e_1 e) e) (LLVM.const? w 1)) e_2 ⊑ LLVM.sub e_2 (LLVM.or e_1 (LLVM.not e)) := by
