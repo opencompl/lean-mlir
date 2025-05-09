@@ -12,7 +12,6 @@ import Lean
 
 namespace AlivePaperExamples
 open BitVec
-open PoisonOr.Syntax
 
 -- Example proof of shift + mul, this is one of the hardest alive examples.
 -- (alive_simplifyMulDivRem290)
@@ -71,6 +70,7 @@ theorem bitvec_AddSub_1309 :
   }] := by
     simp_alive_peephole
     simp_alive_undef
+    simp_alive_ops
     simp_alive_case_bash
     simp
 

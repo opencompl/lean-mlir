@@ -8,6 +8,7 @@ import SSA.Projects.InstCombine.ForStd
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
 
+namespace InstCombine
 open MLIR AST
 
 attribute [simp_denote]

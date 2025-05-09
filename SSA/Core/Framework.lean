@@ -752,7 +752,6 @@ end Lemmas
 -/
 section Refinement
 variable [DialectHRefinement d d]
-open RefinementNotation
 
 /--
 An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their

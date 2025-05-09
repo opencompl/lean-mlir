@@ -9,7 +9,6 @@ import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
 open InstCombine (LLVM)
-open PoisonOr.Syntax
 
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
