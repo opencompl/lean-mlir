@@ -52,3 +52,7 @@ supportInterpreter = true
 [[lean_exe]]
 name = "ssaLLVMEnumerator"
 root = "SSA.Projects.InstCombine.LLVM.Enumerator"
+
+[[lean_lib]]
+name = "Tests"
+root = "SSA.Tests.Tests"
