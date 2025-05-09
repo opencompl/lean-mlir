@@ -37,3 +37,13 @@ warning: declaration uses 'sorry'
   simp only [simp_denote, simp_llvm]
   guard_target =ₛ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y
   sorry
+
+-- and for plain bitvectors (without monads)
+/--
+warning: declaration uses 'sorry'
+-/
+#guard_msgs in example {w : Nat} (x y : ⟦LLVM.Ty.bitvec w⟧) :
+    x ⊑ y := by
+  simp only [simp_denote, simp_llvm]
+  guard_target =ₛ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y
+  sorry
