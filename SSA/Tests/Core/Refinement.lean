@@ -1,6 +1,7 @@
 import SSA.Core.Framework.Refinement
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.Refinement
+import SSA.Projects.InstCombine.Tactic
 
 open InstCombine
 
@@ -21,6 +22,18 @@ variable {w : Nat} (x y : LLVM.m ⟦LLVM.Ty.bitvec w⟧)
 -- the generic `PoisonOr` helper.
 /-- warning: declaration uses 'sorry' -/
 #guard_msgs in example {w : Nat} (x y : LLVM.m ⟦LLVM.Ty.bitvec w⟧) : x ⊑ y := by
+  simp only [simp_denote, simp_llvm]
+  guard_target =ₛ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y
+  sorry
+
+-- `simp_denote` should still simplify in the presence of *concrete* effects.
+/--
+warning: declaration uses 'sorry'
+-/
+#guard_msgs in example {w : Nat}
+    (x : EffectKind.pure.toMonad LLVM.m ⟦LLVM.Ty.bitvec w⟧)
+    (y : EffectKind.impure.toMonad LLVM.m ⟦LLVM.Ty.bitvec w⟧) :
+    x ⊑ y := by
   simp only [simp_denote, simp_llvm]
   guard_target =ₛ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y
   sorry
