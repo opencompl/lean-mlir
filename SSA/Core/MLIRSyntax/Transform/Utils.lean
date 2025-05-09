@@ -48,8 +48,17 @@ def getIntAttr (attr : String) : Except (TransformError Ty) (Int × MLIRType φ)
 
 /-! ## Arguments -/
 
-structure ParsedArgs (Γ : Ctxt d.Ty) where
-  ofList :: toList : List (Σ t, Γ.Var t)
+/--
+`ParsedArgs Γ` wraps a list of variables in context `Γ`.
+-/
+structure ParsedArgs (Γ : Ctxt d.Ty) (n? : Option Nat := none) where
+  toList : List (Σ t, Γ.Var t)
+  length_eq : match n? with
+    | some n => toList.length = n
+    | none => True
+
+def ParsedArgs.ofList {Γ : Ctxt d.Ty} : List (Σ t, Γ.Var t) → ParsedArgs Γ :=
+  (⟨·, by constructor⟩)
 
 /--
 Translates the arguments of `op` into intrinsically well-typed variables in the
@@ -61,7 +70,7 @@ def parseArgs (Γ : Ctxt d.Ty) : ReaderM d (ParsedArgs Γ) :=
   ParsedArgs.ofList <$> op.args.mapM (TypedSSAVal.mkVal Γ)
 
 namespace ParsedArgs
-variable {Γ : Ctxt d.Ty} (args : ParsedArgs Γ)
+variable {Γ : Ctxt d.Ty} {n?} (args : ParsedArgs Γ n?)
 
 /-- Returns the list of types of each argument. -/
 def types : List d.Ty := args.toList.map Sigma.fst
@@ -90,7 +99,31 @@ def withSignature (sig : List d.Ty) : Except (TransformError d.Ty) (HVector Γ.V
     -- TODO: we could figure out why exactly these aren't equal and throw a more
     --       informative error
 
+/-! ### Arity -/
+
+/-- Throw an error if there are not exactly `n` arguments -/
+def assumeArity (n : Nat) : Except (TransformError d.Ty) (ParsedArgs Γ n) :=
+  if h : n? = some n then
+    return h ▸ args
+  else if h : args.toList.length = n then
+    return ⟨args.toList, h⟩
+  else
+    throw <| .generic s!"Expected exactly {n} argument(s), but found {args.toList.length}"
+
+def withArity : Σ n, ParsedArgs Γ (some n) :=
+  ⟨args.toList.length, ⟨args.toList, rfl⟩⟩
+
+-- After checking the arity, we can access elements with static bounds checks
+instance (n : Nat) : GetElem (ParsedArgs Γ (some n)) Nat (Σ t, Γ.Var t) (fun _ i => i < n) where
+  getElem args i h := args.toList.get ⟨i, by simpa [args.length_eq]⟩
+
+-- We can always forget the arity, if needed
+instance (n : Nat) : CoeHead (ParsedArgs Γ (some n)) (ParsedArgs Γ) where
+  coe args := .ofList args.toList
+
 end ParsedArgs
+
+/-! ## Expression Construction -/
 
 /--
 `op.mkExprOf parsedOp` constructs an `Expr` of the given parsed
