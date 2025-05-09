@@ -5,16 +5,17 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForLean
+
 /-!
 This file defines a pretty printing/syntax for the `RISCV64` dialect.
 This allows the dialect to be written in MLIR-style syntax as well as
 assembly-like style.
 
 [RV64_com| {
-  ^bb0(%r1 : !i64, %r2 : !i64 ):
-  %1 =  const (0) : !i64
-  %2 =  sub %r1,  %1 : !i64
-        ret %2 : !i64
+    ^bb0 (%r1 : !i64, %r2 : !i64 ):
+    %1 = const (0) : !i64
+    %2 = sub %r1, %1 : !i64
+         ret %2 : !i64
 
 We use the functionalities defined in `SSA.Core.MLIRSyntax.PrettyEDSL`.
 For operands with immediates or shift amounts encoded as part of the opcode,
@@ -87,11 +88,10 @@ private def test_simple2 := [RV64_com| {
   %2 = sub %1, %1 : !i64
        ret %2  : !i64
 }]
-#check test_simple
 
 /-
 Bellow we implement the case, where an operation has
-`one` attirbute value.
+one attribute value.
 e.g constant or single register operations.
 WIP: extend pretty print for negative
 numerals/immediates. Somehow they always
@@ -105,7 +105,7 @@ macro_rules
       $[: $outer_type]? ) => do
       let outer_type ← outer_type.getDM `(mlir_type| _)
       `(mlir_op| $res:mlir_op_operand = "const"()
-          {val = $x:num :  $outer_type} : ( $outer_type) -> ( $outer_type) )
+          {val = $x:num :  $outer_type} : ($outer_type) -> ($outer_type) )
 
 syntax mlir_op_operand " = " "li" "(" num (" : " mlir_type)? ")" (" : " mlir_type)?
   : mlir_op
@@ -116,48 +116,48 @@ macro_rules
       `(mlir_op| $res:mlir_op_operand = "li"()
           {imm = $x:num : $outer_type } : ($outer_type) -> ($outer_type))
 
-declare_syntax_cat MLIR.One.Attr.One.Arg.Imm.op
-syntax "bclri" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "bexti" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "bseti" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "binvi" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "addiw" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "lui" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "auipc": MLIR.One.Attr.One.Arg.Imm.op
-syntax "addi" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "slti" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "sltiu" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "andi": MLIR.One.Attr.One.Arg.Imm.op
-syntax "ori" : MLIR.One.Attr.One.Arg.Imm.op
-syntax "xori" : MLIR.One.Attr.One.Arg.Imm.op
+declare_syntax_cat MLIR.Pretty.RV.opWithImmediate
+syntax "bclri" : MLIR.Pretty.RV.opWithImmediate
+syntax "bexti" : MLIR.Pretty.RV.opWithImmediate
+syntax "bseti" : MLIR.Pretty.RV.opWithImmediate
+syntax "binvi" : MLIR.Pretty.RV.opWithImmediate
+syntax "addiw" : MLIR.Pretty.RV.opWithImmediate
+syntax "lui" : MLIR.Pretty.RV.opWithImmediate
+syntax "auipc": MLIR.Pretty.RV.opWithImmediate
+syntax "addi" : MLIR.Pretty.RV.opWithImmediate
+syntax "slti" : MLIR.Pretty.RV.opWithImmediate
+syntax "sltiu" : MLIR.Pretty.RV.opWithImmediate
+syntax "andi": MLIR.Pretty.RV.opWithImmediate
+syntax "ori" : MLIR.Pretty.RV.opWithImmediate
+syntax "xori" : MLIR.Pretty.RV.opWithImmediate
 
-syntax mlir_op_operand  " = " MLIR.One.Attr.One.Arg.Imm.op mlir_op_operand "," num (":" mlir_type)? : mlir_op
+syntax mlir_op_operand  " = " MLIR.Pretty.RV.opWithImmediate mlir_op_operand "," num (":" mlir_type)? : mlir_op
 macro_rules
-| `(mlir_op| $res:mlir_op_operand = $op1:MLIR.One.Attr.One.Arg.Imm.op $reg1 , $x : $t)  => do
+| `(mlir_op| $res:mlir_op_operand = $op1:MLIR.Pretty.RV.opWithImmediate $reg1 , $x : $t)  => do
     let some opName := MLIR.EDSL.Pretty.extractOpName op1.raw
       | Macro.throwUnsupported
-    `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {imm = $x:num : $t }  : ($t) -> ($t) )
+    `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {imm = $x:num : $t}  : ($t) -> ($t) )
 
-declare_syntax_cat MLIR.One.Attr.One.Arg.Shamt.op
-syntax "slli" : MLIR.One.Attr.One.Arg.Shamt.op
-syntax "srai" : MLIR.One.Attr.One.Arg.Shamt.op
-syntax "slliw" : MLIR.One.Attr.One.Arg.Shamt.op
-syntax "srliw" : MLIR.One.Attr.One.Arg.Shamt.op
-syntax "sraiw" : MLIR.One.Attr.One.Arg.Shamt.op
-syntax "srli" : MLIR.One.Attr.One.Arg.Shamt.op
+declare_syntax_cat MLIR.Pretty.RV.opWithShamt
+syntax "slli" : MLIR.Pretty.RV.opWithShamt
+syntax "srai" : MLIR.Pretty.RV.opWithShamt
+syntax "slliw" : MLIR.Pretty.RV.opWithShamt
+syntax "srliw" : MLIR.Pretty.RV.opWithShamt
+syntax "sraiw" : MLIR.Pretty.RV.opWithShamt
+syntax "srli" : MLIR.Pretty.RV.opWithShamt
 
-syntax mlir_op_operand  " = " MLIR.One.Attr.One.Arg.Shamt.op mlir_op_operand "," num (":" mlir_type)? : mlir_op
+syntax mlir_op_operand  " = " MLIR.Pretty.RV.opWithShamt mlir_op_operand "," num (":" mlir_type)? : mlir_op
 macro_rules
-| `(mlir_op| $res:mlir_op_operand = $op1:MLIR.One.Attr.One.Arg.Shamt.op $reg1 , $x  : $t )  => do
+| `(mlir_op| $res:mlir_op_operand = $op1:MLIR.Pretty.RV.opWithShamt $reg1 , $x  : $t )  => do
     let some opName := MLIR.EDSL.Pretty.extractOpName op1.raw
       | Macro.throwUnsupported
-    `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {shamt= $x:num : $t}  : ($t) -> ($t) )
+    `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {shamt = $x:num : $t}  : ($t) -> ($t) )
 
 /-! # Testing -/
 private def test_andi := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
   %1 = andi %e1, 42 : !i64
-  ret %1 : !i64
+       ret %1 : !i64
 }]
 
 private def test_slli := [RV64_com| {
@@ -170,7 +170,7 @@ private def test_li := [RV64_com| {
  ^bb0(%e1 : !i64):
  %1 = li (42) : !i64
  %2 = li (42) : !i64
-  ret %1 : !i64
+      ret %1 : !i64
 }]
 
 private def big_test := [RV64_com| {
@@ -182,6 +182,5 @@ private def big_test := [RV64_com| {
  %5 = add %4, %1 : !i64
  %7 = li (2) : !i64
  %6 = ror %5, %7 : !i64
- ret %6 : !i64
+      ret %6 : !i64
 }]
-#eval big_test

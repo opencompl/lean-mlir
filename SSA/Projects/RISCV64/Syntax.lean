@@ -6,10 +6,9 @@ open RISCV64
 
 namespace RISCVExpr
 /-!
-Defining functions to simplify Expression making for some of the RISC-V operations.
+This file defines functions to simplify Expression making for some of the RISC-V operations.
 This helps in comparing output with expected ouput and
 avoids writting huge `Expr`.
-
 -/
 def add {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
   Expr.mk
@@ -110,95 +109,89 @@ def rem {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
 end RISCVExpr
 
 namespace RiscvMkExpr
--- string representation of MLIR type into corresponding RISCV type
+
+/-! String representation of MLIR type into corresponding RISCV type -/
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM RV64 RV64.Ty
-  | MLIR.AST.MLIRType.undefined s => do
-    match s with
-    | "i64" => return .bv
-    | _ => throw .unsupportedType
+  | MLIR.AST.MLIRType.undefined "i64" => do return .bv
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy RV64 0 where
   mkTy := mkTy
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
-  MLIR.AST.ReaderM (RV64) (Σ eff ty, Expr (RV64) Γ eff ty) := do
-    match opStx.args with
-    | []  => do
-        match opStx.name with
-        | "li" => do
-            let some att := opStx.attrs.getAttr "imm"
-              | throw <| .unsupportedOp s!"no attribute in li, need to specify immediate {repr opStx}"
-            match att with
-              | .int val ty =>
-                let opTy@(.bv) ← mkTy ty
+    MLIR.AST.ReaderM (RV64) (Σ eff ty, Expr (RV64) Γ eff ty) := do
+  match opStx.args with
+  | []  => do
+    match opStx.name with
+    | "li" => do
+      let some att := opStx.attrs.getAttr "imm"
+          | throw <| .generic s!"no attribute in li, need to specify immediate {repr opStx}"
+      match att with
+      | .int val ty =>
+        let opTy@(.bv) ← mkTy ty
                 return ⟨.pure, opTy, ⟨
                   .li (val),
                   by
-                  simp[DialectSignature.outTy, signature]
-                ,
+                  simp [DialectSignature.outTy, signature],
                   by constructor,
                   .nil,
                   .nil
                 ⟩⟩
-              | _ => throw <| .unsupportedOp s!"unsupported attribute in li while parsing {repr opStx}"
-        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-    | v₁Stx::[] =>
-       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-        match ty₁, opStx.name with
-        | .bv, "srai" => do
-          let some att := opStx.attrs.getAttr "shamt"
-             | throw <| .unsupportedOp s!"no attribute in srai {repr opStx}"
-          match att with
-          | .int val ty =>
-            let opTy@(.bv) ← mkTy ty
+      | _ => throw <| .generic s!"unsupported attribute in li while parsing {repr opStx}"
+    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+  | v₁Stx::[] =>
+     let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      match ty₁, opStx.name with
+      | .bv, "srai" => do
+        let some att := opStx.attrs.getAttr "shamt"
+            | throw <| .generic s!"no attribute in srai {repr opStx}"
+        match att with
+        | .int val ty =>
+          let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .srai (BitVec.ofInt 6 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "bclri" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in bclri {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "bclri" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in bclri {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .bclri (BitVec.ofInt 6 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "bexti" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in bexti {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "bexti" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in bexti {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .bexti (BitVec.ofInt 6 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "bseti" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in bseti {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "bseti" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in bseti {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .bseti (BitVec.ofInt 6 val),
@@ -209,449 +202,434 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "binvi" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in binvi {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "binvi" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in binvi {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .binvi (BitVec.ofInt 6 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "addiw" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in addiw {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "addiw" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in addiw {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .addiw (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "lui" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in lui {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "lui" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in lui {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .lui (BitVec.ofInt 20 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "auipc" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in auipc {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "auipc" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in auipc {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .auipc (BitVec.ofInt 20 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp[DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "slliw" => do
-          let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attribute in slliw {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "slliw" => do
+        let some att := opStx.attrs.getAttr "shamt"
+            | throw <| .generic s!"no attribute in slliw {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .slliw (BitVec.ofInt 5 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "srliw" => do
-          let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attribute in srliw {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "srliw" => do
+        let some att := opStx.attrs.getAttr "shamt"
+            | throw <| .generic s!"no attribute in srliw {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .srliw (BitVec.ofInt 5 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "sraiw" => do
-          let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attribute in sraiw {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "sraiw" => do
+        let some att := opStx.attrs.getAttr "shamt"
+            | throw <| .generic s!"no attribute in sraiw {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .sraiw (BitVec.ofInt 5 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "slli" => do
-          let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attribute in slli{repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "slli" => do
+        let some att := opStx.attrs.getAttr "shamt"
+            | throw <|.generic s!"no attribute in slli{repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .slli (BitVec.ofInt 6 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "srli" => do
-          let some att := opStx.attrs.getAttr "shamt"
-            | throw <| .unsupportedOp s!"no attribute in srli {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "srli" => do
+        let some att := opStx.attrs.getAttr "shamt"
+            | throw <| .generic s!"no attribute in srli {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .srli (BitVec.ofInt 6 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "addi" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in addi {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "addi" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in addi {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .addi (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "slti" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in slti {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "slti" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in slti {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .slti (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "sltiu" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in sltiu {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "sltiu" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in sltiu {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .sltiu (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp[DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "andi" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in andi {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "andi" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in andi {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .andi (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "ori" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in ori {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "ori" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in ori {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .ori (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp [DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "xori" => do
-          let some att := opStx.attrs.getAttr "imm"
-            | throw <| .unsupportedOp s!"no attribute in xori {repr opStx}"
-          match att with
-          | .int val ty =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "xori" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in xori {repr opStx}"
+        match att with
+        | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
               .xori (BitVec.ofInt 12 val),
               by
-              simp[DialectSignature.outTy, signature]
-             ,
+              simp[DialectSignature.outTy, signature],
               by constructor,
               .cons v₁ <| .nil,
               .nil
             ⟩⟩
-          | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-        | .bv, "sext.b" =>
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "sext.b" =>
             return ⟨ .pure, .bv ,⟨ .sext.b, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
-        | .bv, "sext.h" =>
+      | .bv, "sext.h" =>
             return ⟨ .pure, .bv ,⟨ .sext.h, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
-        | .bv, "zext.h" =>
+      | .bv, "zext.h" =>
             return ⟨ .pure, .bv ,⟨ .zext.h, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
-        |_ , _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-    | v₁Stx::v₂Stx:: [] =>
-        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-        let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-        match ty₁, ty₂, opStx.name with
-        | .bv, .bv, "rem" =>
+      |_ , _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+  | v₁Stx::v₂Stx:: [] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+      match ty₁, ty₂, opStx.name with
+      | .bv, .bv, "rem" =>
           return ⟨.pure, .bv ,⟨ .rem, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
               .nil ⟩⟩
-        | .bv, .bv, "ror" =>
+      | .bv, .bv, "ror" =>
           return ⟨.pure, .bv ,⟨ .ror, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
               .nil ⟩⟩
-        | .bv, .bv, "rol" =>
+      | .bv, .bv, "rol" =>
           return ⟨.pure, .bv ,⟨ .rol, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
               .nil ⟩⟩
-        | .bv, .bv, "remu" =>
+      | .bv, .bv, "remu" =>
           return ⟨.pure, .bv ,⟨ .remu, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
               .nil ⟩⟩
-        | .bv, .bv, "sra" =>
+      | .bv, .bv, "sra" =>
           return ⟨.pure, .bv ,⟨ .sra, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
               .nil ⟩⟩
-        | .bv, .bv, "addw" =>
+      | .bv, .bv, "addw" =>
           return ⟨.pure, .bv ,⟨ .addw, by rfl ,by constructor,
              .cons v₁ <| .cons v₂ <| .nil,
               .nil ⟩⟩
-        | .bv , .bv , "subw" =>
+      | .bv , .bv , "subw" =>
               return ⟨ .pure, .bv ,⟨ .subw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "sllw" =>
+      | .bv , .bv , "sllw" =>
               return ⟨ .pure, .bv ,⟨ .sllw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "srlw" =>
+      | .bv , .bv , "srlw" =>
               return ⟨ .pure, .bv ,⟨ .srlw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "sraw" =>
+      | .bv , .bv , "sraw" =>
               return ⟨ .pure, .bv ,⟨ .sraw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "add" =>
+      | .bv , .bv , "add" =>
               return ⟨ .pure, .bv ,⟨ .add, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "or" =>
+      | .bv , .bv , "or" =>
               return ⟨ .pure, .bv ,⟨ .or, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "xor" =>
+      | .bv , .bv , "xor" =>
               return ⟨ .pure, .bv ,⟨ .xor, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "sll" =>
+      | .bv , .bv , "sll" =>
               return ⟨ .pure, .bv ,⟨ .sll, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "srl" =>
+      | .bv , .bv , "srl" =>
               return ⟨ .pure, .bv ,⟨ .srl, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "sub" =>
+      | .bv , .bv , "sub" =>
               return ⟨ .pure, .bv ,⟨ .sub, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "slt" =>
+      | .bv , .bv , "slt" =>
               return ⟨ .pure, .bv ,⟨ .slt, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "sltu" =>
+      | .bv , .bv , "sltu" =>
               return ⟨ .pure, .bv ,⟨ .sltu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "and" =>
+      | .bv , .bv , "and" =>
               return ⟨ .pure, .bv ,⟨ .and, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "czero.eqz" =>
+      | .bv , .bv , "czero.eqz" =>
               return ⟨ .pure, .bv ,⟨ .czero.eqz, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "czero.nez" =>
+      | .bv , .bv , "czero.nez" =>
               return ⟨ .pure, .bv ,⟨ .czero.nez, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "bclr" =>
+      | .bv , .bv , "bclr" =>
               return ⟨ .pure, .bv ,⟨ .bclr, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "bext" =>
+      | .bv , .bv , "bext" =>
               return ⟨ .pure, .bv ,⟨ .bext, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "binv" =>
+      | .bv , .bv , "binv" =>
               return ⟨ .pure, .bv ,⟨ .binv, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "bset" =>
+      | .bv , .bv , "bset" =>
               return ⟨ .pure, .bv ,⟨ .bset, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "rolw" =>
+      | .bv , .bv , "rolw" =>
               return ⟨ .pure, .bv ,⟨ .rolw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "rorw" =>
+      | .bv , .bv , "rorw" =>
               return ⟨ .pure, .bv ,⟨ .rorw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "mul" =>
+      | .bv , .bv , "mul" =>
             return ⟨ .pure, .bv ,⟨ .mul, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "mulu" =>
+      | .bv , .bv , "mulu" =>
             return ⟨ .pure, .bv ,⟨ .mulu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "mulh" =>
+      | .bv , .bv , "mulh" =>
             return ⟨ .pure, .bv ,⟨ .mulh, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "mulhu" =>
+      | .bv , .bv , "mulhu" =>
             return ⟨ .pure, .bv ,⟨ .mulhu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "mulhsu" =>
+      | .bv , .bv , "mulhsu" =>
             return ⟨ .pure, .bv ,⟨ .mulhsu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv , .bv , "mulw" => do
+      | .bv , .bv , "mulw" => do
           return ⟨ .pure, .bv ,⟨ .mulw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "divw" =>
+      | .bv, .bv, "divw" =>
           return ⟨ .pure, .bv ,⟨ .divw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "divwu" =>
+      | .bv, .bv, "divwu" =>
             return ⟨ .pure, .bv ,⟨ .divwu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "div" =>
+      | .bv, .bv, "div" =>
             return ⟨ .pure, .bv ,⟨ .div, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "divu" =>
+      | .bv, .bv, "divu" =>
             return ⟨ .pure, .bv ,⟨ .divu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "remw" =>
+      | .bv, .bv, "remw" =>
             return ⟨ .pure, .bv ,⟨ .remw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "remwu" =>
+      | .bv, .bv, "remwu" =>
             return ⟨ .pure, .bv ,⟨ .remwu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "add.uw" =>
+      | .bv, .bv, "add.uw" =>
             return ⟨ .pure, .bv ,⟨ .add.uw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "sh1add.uw" =>
+      | .bv, .bv, "sh1add.uw" =>
             return ⟨ .pure, .bv ,⟨ .sh1add.uw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "sh2add.uw" =>
+      | .bv, .bv, "sh2add.uw" =>
             return ⟨ .pure, .bv ,⟨ .sh2add.uw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "sh3add.uw" =>
+      | .bv, .bv, "sh3add.uw" =>
             return ⟨ .pure, .bv ,⟨ .sh3add.uw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "sh1add" =>
+      | .bv, .bv, "sh1add" =>
             return ⟨ .pure, .bv ,⟨ .sh1add, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "sh2add" =>
+      | .bv, .bv, "sh2add" =>
             return ⟨ .pure, .bv ,⟨ .sh2add, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | .bv, .bv, "sh3add" =>
+      | .bv, .bv, "sh3add" =>
             return ⟨ .pure, .bv ,⟨ .sh3add, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-        | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
+      | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
     | _ => throw <| .unsupportedOp s!"wrong number of arguments, more than 2 arguemnts  {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (RV64) 0 where
