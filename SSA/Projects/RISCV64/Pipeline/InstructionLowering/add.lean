@@ -45,6 +45,8 @@ def add_llvm_nsw_nuw_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bit
       %1 = llvm.add   %lhs, %rhs overflow<nsw,nuw>   : i64
       llvm.return %1 : i64
   }]
+
+
 /- example of very manula proof ->try to extract patterns for automation-/
 def llvm_add_lower_riscv_noflags : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
   {lhs:= add_llvm_no_flags , rhs:= add_riscv ,
@@ -52,14 +54,20 @@ def llvm_add_lower_riscv_noflags : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 6
     unfold add_llvm_no_flags add_riscv
     set_option pp.analyze true in
     simp_peephole
-    simp [builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv, RTYPE_pure64_RISCV_AND]
+    simp only [builtin.unrealized_conversion_cast.riscvToLLVM,
+      builtin.unrealized_conversion_cast.LLVMToriscv, BitVec.Refinement.some_some]
     --intros a b
     simp [LLVM.add, RTYPE_pure64_RISCV_ADD]
     rintro (_|_) (_|_)
+    .
+      simp [bind, PoisonOr.ofOption, PoisonOr.ofOption ,PoisonOr.poison]
+      congr
+
+
+/-
     . simp
     . simp
-    . simp
-    . simp [LLVM.add?, BitVec.Refinement.refl]
+    . simp [LLVM.add?, BitVec.Refinement.refl]-/
 
   }
 
@@ -70,7 +78,6 @@ def llvm_add_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 
     set_option pp.analyze true in
     simp_peephole
     simp [builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv, RTYPE_pure64_RISCV_AND]
-    -- intros a b
     simp [LLVM.add, RTYPE_pure64_RISCV_ADD]
     rintro (_|_) (_|_) ;
     . simp
