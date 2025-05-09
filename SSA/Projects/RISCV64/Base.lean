@@ -1,8 +1,11 @@
 import SSA.Projects.RISCV64.Semantics
 import SSA.Core.Framework
+/- This file has a number of very large inductive types, which seem to cause Lean to run out of heartbeats.
+We avoid the issue by increasing the heartbeats. Since this applies to most inductives in this file, we do so globally.
+Additionally, this file contains definitions that match on these large inductive types,. These also causes Lean to require
+more heartbeats.  -/
 set_option maxHeartbeats 1000000000000000000
-/- needed because are working with large inductive types in Lean.
-As all the inductive in this file are rather large this option was set for the whole file. -/
+
 open RV64Semantics
 
 namespace RISCV64
@@ -47,7 +50,7 @@ inductive Op
   | sllw
   | srlw
   | sraw
-  -- fence
+  -- fence missing, future work.
   | slti (imm : BitVec 12)
   | sltiu (imm : BitVec 12)
   | srli (shamt : BitVec 6)
@@ -131,8 +134,8 @@ instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
   | .bv  => 0#64
 
+/-! ## Dialect operation definitions-/
 /--
-## Dialect operation definitions
 Specifing the signature of each `RISCV64` operation. `Sig` refers to the input types
 for each operation as a list of types.
 
