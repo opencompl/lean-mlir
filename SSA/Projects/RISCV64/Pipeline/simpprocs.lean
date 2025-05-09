@@ -215,34 +215,33 @@ def riscv_and2 := [LV| {
       %1 = or %lhs, %lhs : !i64
       ret %1 : !i64
   }]
+  def add_riscv1 := [LV| {
+    ^entry (%lhs: i64, %rhs: i64 ):
+      %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+      %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i64) -> !i64
+      %add1 = add %lhsr, %rhsr : !i64
+      %addl = "builtin.unrealized_conversion_cast" (%add1) : (!i64) -> (i64)
+      llvm.return %addl : i64
+  }]
+
+def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+    ^entry (%lhs: i64, %rhs: i64 ):
+      %1 = llvm.add   %lhs, %rhs  : i64
+      llvm.return %1 : i64
+  }]
+
 
 #check some
 
 @[simp_denote]
 theorem liftM_eq_some (α : Type u) : @liftM Id Option _  α = some := by rfl
 
-/-
--- example to see whether liftM gets introduced with riscv type of rewrites
-def llvm_and_lower_riscv1 : RiscVPeepholeRewriteRefine [Ty.riscv (.bv)] :=
-  {lhs:= riscv_and1 , rhs:= riscv_and2 ,
+def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
+  {lhs:= add_llvm_no_flags , rhs:= add_riscv1 ,
    correct := by
-    unfold riscv_and1 riscv_and2
-    simp_peephole
-    simp only [liftM_eq_some, BitVec.Refinement.some_some]
-
-     --simp [liftM, builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
-    } -/
-
-
--- example to see whether liftM gets introduced with riscv type of rewrites
-/-
-def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
-  {lhs:= and_llvm , rhs:= and_riscv ,
-   correct := by
-    unfold and_llvm and_riscv
+    unfold  add_llvm_no_flags add_riscv1
     simp_peephole
     simp [liftM, builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
-    simp [LLVM.and, RTYPE_pure64_RISCV_AND]
     rintro (_|foo) (_|bar)
     · simp
     · simp
@@ -251,4 +250,3 @@ def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
       simp only [LLVM.and?, BitVec.Refinement.some_some]
       bv_decide
     }
--/

@@ -15,8 +15,8 @@ structure LLVMPeepholeRewriteRefine (Γ : Ctxt Ty) where
 structure RiscVPeepholeRewriteRefine (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
-  --correct : ∀ V, BitVec.Refinement (lhs.denote V : Option _) (rhs.denote V : Option _)
-  correct : ∀ V, BitVec.Refinement (lhs.denote V ) (rhs.denote V)
+  correct : ∀ V, BitVec.Refinement (lhs.denote V : Option _) (rhs.denote V : Option _)
+
 /--
 ##  Wrapper for peephole rewriter
 -/
