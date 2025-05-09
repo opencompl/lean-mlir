@@ -11,6 +11,8 @@ inductive TransformError (Ty : Type)
   | indexOutOfBounds (name : String) (index len : Nat)
   | typeError (expected got : Ty)
   | widthError {φ} (expected got : Width φ)
+  -- TODO: `unsupportedUnaryOp` or `unsupportedBinaryOp` should just be instances
+  --       of `unsupportedOp`
   | unsupportedUnaryOp
   | unsupportedBinaryOp (error : String)
   | unsupportedOp (error : String)

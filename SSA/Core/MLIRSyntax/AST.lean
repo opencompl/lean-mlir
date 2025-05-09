@@ -165,6 +165,14 @@ def argNames : List SSAVal :=
 def argTypes : List (MLIRType φ) :=
   op.args.map Prod.snd
 
+/--
+`op.getAttr? "foo"` returns the value of the `foo` attribute if present,
+or `none` otherwise.
+
+See also `Op.getAttr`, which returns an error on failure. -/
+def getAttr? : String → Option (AttrValue φ) :=
+  op.attrs.getAttr
+
 end Op
 
 instance : Coe String SSAVal where
