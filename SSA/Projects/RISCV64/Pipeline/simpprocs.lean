@@ -241,7 +241,13 @@ def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.
    correct := by
     unfold  add_llvm_no_flags add_riscv1
     simp_peephole
-    simp [liftM, builtin.unrealized_conversion_cast.riscvToLLVM,  builtin.unrealized_conversion_cast.LLVMToriscv]
+   -- simp only  [liftM]
+    simp only  [builtin.unrealized_conversion_cast.riscvToLLVM]
+    simp only  [ builtin.unrealized_conversion_cast.LLVMToriscv]
+    intro x; cases x;
+
+
+
     rintro (_|foo) (_|bar)
     · simp
     · simp

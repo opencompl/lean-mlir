@@ -10,7 +10,7 @@ from LLVM to RISCV and eliminate them in a subsequent pass to completely lower t
 structure LLVMPeepholeRewriteRefine (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec 64))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec 64))
-  correct : ∀ V, BitVec.Refinement (lhs.denote V : Option _) (rhs.denote V : Option _)
+  correct : ∀ V, PoisonOr.IsRefinedBy (lhs.denote V ) (rhs.denote V )
 
 structure RiscVPeepholeRewriteRefine (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
