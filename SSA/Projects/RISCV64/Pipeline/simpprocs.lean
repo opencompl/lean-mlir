@@ -230,8 +230,8 @@ def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 6
       llvm.return %1 : i64
   }]
 
-
-#check some
+@[simp]
+theorem poisonOr_mk_some_eq_value (x : α) : { toOption := some x } = PoisonOr.value x := rfl
 
 @[simp_denote]
 theorem liftM_eq_some (α : Type u) : @liftM Id Option _  α = some := by rfl
@@ -241,11 +241,25 @@ def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.
    correct := by
     unfold  add_llvm_no_flags add_riscv1
     simp_peephole
-   -- simp only  [liftM]
-    simp only  [builtin.unrealized_conversion_cast.riscvToLLVM]
-    simp only  [ builtin.unrealized_conversion_cast.LLVMToriscv]
-    intro x; cases x;
+    simp only [builtin.unrealized_conversion_cast.riscvToLLVM]
+    simp only [builtin.unrealized_conversion_cast.LLVMToriscv, poisonOr_mk_some_eq_value, PoisonOr.IsRefinedBy]
+    intro x1 x2; -- i dont know 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    intro x; cases x;
 
 
     rintro (_|foo) (_|bar)
