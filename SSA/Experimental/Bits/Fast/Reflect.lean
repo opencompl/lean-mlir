@@ -239,7 +239,7 @@ theorem BitStream.toBitVec_concat(a : BitStream) :
 /--
 Evaluating the term and then coercing the term to a bitvector is equal to denoting the term directly.
 -/
-@[simp] theorem Term.eval_eq_denote (t : Term) (w : Nat) (vars : List (BitVec w)) :
+@[simp] theorem Term.eval_eq_denote {k : TermKind} (t : Term k) (w : Nat) (vars : List (BitVec w)) :
     (t.eval (vars.map BitStream.ofBitVec)).toBitVec w = t.denote w vars := by
   induction t generalizing w vars
   case var x =>
@@ -264,7 +264,7 @@ Evaluating the term and then coercing the term to a bitvector is equal to denoti
 This says that calling 'eval' at an index equals calling 'denote' and grabbing the bitstream
  at that index, as long as the value is inbounds, and if not, it's going to be 'false'
  -/
-theorem Term.eval_eq_denote_apply (t : Term) {w : Nat} {vars : List (BitVec w)}
+theorem Term.eval_eq_denote_apply (t : Term k) {w : Nat} {vars : List (BitVec w)}
     {i : Nat} (hi : i < w) :
     (t.eval (vars.map BitStream.ofBitVec)) i = (t.denote w vars).getLsbD i := by
   have := t.eval_eq_denote w vars
@@ -279,7 +279,7 @@ theorem Term.eval_eq_denote_apply (t : Term) {w : Nat} {vars : List (BitVec w)}
 This says that calling 'eval' at an index equals calling 'denote' and grabbing the bitstream
  at that index, as long as the value is inbounds, and if not, it's going to be 'false'
  -/
-theorem Term.denote_eq_eval_land_lt (t : Term) {w : Nat} {vars : List (BitVec w)}
+theorem Term.denote_eq_eval_land_lt (t : Term k) {w : Nat} {vars : List (BitVec w)}
     {i : Nat} :
     (t.denote w vars).getLsbD i = ((t.eval (vars.map BitStream.ofBitVec)) i && (decide (i < w))) := by
   have := t.eval_eq_denote w vars
@@ -302,12 +302,12 @@ def Predicate.cost (p : Predicate) : Nat :=
 
 
 /-
-if 'evalEq' evaluates to 'false', then indeed the denotations of the terms are equal.
+if 'evalBVEq' evaluates to 'false', then indeed the denotations of the terms are equal.
 -/
-theorem Predicate.evalEq_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
-    evalEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+theorem Predicate.evalBVEq_denote_false_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
+    evalBVEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
     Term.denote w a vars = Term.denote w b vars := by
-  simp [evalEq]
+  simp [evalBVEq]
   constructor
   · intros h
     /- Dear god, this proof is ugly. -/
@@ -326,13 +326,13 @@ theorem Predicate.evalEq_denote_false_iff {w : Nat} (a b : Term) (vars : List (B
     · simp
       rw [Term.eval_eq_denote_apply a (by omega), Term.eval_eq_denote_apply b (by omega), h]
 
-/-- evalEq is true iff evalNeq is false -/
-theorem Predicate.evalEq_iff_not_evalNeq (a b : BitStream) :
-    ∀ (w : Nat), evalEq a b w ↔ ¬ (evalNeq a b w) := by
+/-- evalBVEq is true iff evalBVNeq is false -/
+theorem Predicate.evalBVEq_iff_not_evalNeq (a b : BitStream) :
+    ∀ (w : Nat), evalBVEq a b w ↔ ¬ (evalBVNeq a b w) := by
   intros w
   rcases w with rfl | w
-  · simp [evalEq, evalNeq]
-  · simp [evalEq, evalNeq]
+  · simp [evalBVEq, evalBVNeq]
+  · simp [evalBVEq, evalBVNeq]
     by_cases hab : a w = b w
     · simp [hab]
       by_cases heq : (BitStream.concat false (a ^^^ b)).scanOr w
@@ -360,30 +360,30 @@ theorem Predicate.evalEq_iff_not_evalNeq (a b : BitStream) :
 
 
 /-- 'evalNeq' correctly witnesses when terms are disequal -/
-theorem Predicate.evalNeq_denote {w : Nat} (a b : Term) (vars : List (BitVec w)) :
-    evalNeq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
+theorem Predicate.evalNeq_denote {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
+    evalBVNeq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
     Term.denote w a vars ≠ Term.denote w b vars := by
   constructor
   · intros h
-    apply Predicate.evalEq_denote_false_iff .. |>.not.mp
+    apply Predicate.evalBVEq_denote_false_iff .. |>.not.mp
     simp only [Bool.not_eq_false]
-    have := Predicate.evalEq_iff_not_evalNeq
+    have := Predicate.evalBVEq_iff_not_evalNeq
       (a.eval (List.map BitStream.ofBitVec vars))
       (b.eval (List.map BitStream.ofBitVec vars))
     apply this .. |>.mpr
     simp [h]
   · intros h
-    have this' := Predicate.evalEq_denote_false_iff .. |>.not.mpr h
+    have this' := Predicate.evalBVEq_denote_false_iff .. |>.not.mpr h
     simp at this'
-    have := Predicate.evalEq_iff_not_evalNeq
+    have := Predicate.evalBVEq_iff_not_evalNeq
       (a.eval (List.map BitStream.ofBitVec vars))
       (b.eval (List.map BitStream.ofBitVec vars)) w |>.mp this'
     simpa using this
 
-theorem Predicate.evalEq_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
-    evalEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
+theorem Predicate.evalBVEq_denote_true_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
+    evalBVEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
     Term.denote w a vars ≠ Term.denote w b vars := by
-  rw [Predicate.evalEq_iff_not_evalNeq]
+  rw [Predicate.evalBVEq_iff_not_evalNeq]
   simp [evalNeq_denote]
 
 
@@ -393,7 +393,7 @@ private theorem BitVec.lt_eq_decide_ult {x y : BitVec w} : (x < y) = decide (x.u
 private theorem BitVec.lt_iff_ult {x y : BitVec w} : (x < y) ↔ (x.ult y) := by
   simp [BitVec.lt_def, BitVec.ult_toNat]
 
-theorem Predicate.evalUlt_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+theorem Predicate.evalUlt_denote_false_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
     evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
     (Term.denote w a vars < Term.denote w b vars) := by
   simp [evalUlt, Term.eval_eq_denote_apply, BitVec.lt_eq_decide_ult, BitVec.ult_eq_not_carry]
@@ -402,7 +402,7 @@ theorem Predicate.evalUlt_denote_false_iff {w : Nat} (a b : Term) (vars : List (
   · simp [evalUlt, BitVec.of_length_zero, BitVec.lt_eq_decide_ult, BitVec.ult_eq_not_carry]
     simp [BitStream.borrow, BitStream.subAux_eq_BitVec_carry (w := w + 1)]
 
-theorem Predicate.evalUlt_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+theorem Predicate.evalUlt_denote_true_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
     evalUlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
       (Term.denote w b vars) ≤ (Term.denote w a vars) := by
   obtain ⟨h₁, h₂⟩ := evalUlt_denote_false_iff a b vars
@@ -418,7 +418,7 @@ theorem Predicate.evalUlt_denote_true_iff {w : Nat} (a b : Term) (vars : List (B
     specialize (h₁ h')
     bv_omega
 
-private theorem evalMsbEq_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+private theorem evalMsbEq_denote_false_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
     Predicate.evalMsbEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
    ((Term.denote w a vars).msb = (Term.denote w b vars).msb) := by
   simp [Predicate.evalMsbEq]
@@ -426,7 +426,7 @@ private theorem evalMsbEq_denote_false_iff {w : Nat} (a b : Term) (vars : List (
   · simp [BitVec.of_length_zero]
   · simp [BitVec.msb_eq_getLsbD_last, Term.eval_eq_denote_apply]
 
-private theorem evalMsbEq_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+private theorem evalMsbEq_denote_true_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
     Predicate.evalMsbEq (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
    ((Term.denote w a vars).msb ≠ (Term.denote w b vars).msb) := by
   simp [Predicate.evalMsbEq]
@@ -447,7 +447,7 @@ constructor
   exact h' this
 
 /-- TODO: Minimize this proof by a metric fuckton. -/
-private theorem Predicate.evalSlt_denote_false_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+private theorem Predicate.evalSlt_denote_false_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
     evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = false ↔
     (Term.denote w a vars <ₛ Term.denote w b vars) := by
   simp [evalSlt, BitStream.not_eq, BitStream.xor_eq, Bool.not_bne', beq_eq_false_iff_ne, ne_eq]
@@ -495,7 +495,7 @@ private theorem Predicate.evalSlt_denote_false_iff {w : Nat} (a b : Term) (vars 
       simp [hUlt']
       simp [evalMsbEq_denote_false_iff .. |>.mp h']
 
-private theorem Predicate.evalSlt_denote_true_iff {w : Nat} (a b : Term) (vars : List (BitVec w)) :
+private theorem Predicate.evalSlt_denote_true_iff {w : Nat} (a b : Term k) (vars : List (BitVec w)) :
     evalSlt (a.eval (List.map BitStream.ofBitVec vars)) (b.eval (List.map BitStream.ofBitVec vars)) w = true ↔
     ¬ (Term.denote w a vars <ₛ Term.denote w b vars) := by
   rw [eq_true_iff_of_eq_false_iff]
@@ -537,7 +537,7 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
   case width wp n => cases wp <;> simp [eval, denote]
   case binary p a b =>
     cases p with
-    | eq => simp [eval, denote]; apply evalEq_denote_false_iff
+    | eq => simp [eval, denote]; apply evalBVEq_denote_false_iff
     | neq => simp [eval, denote]; apply evalNeq_denote
     | ult =>
       simp [eval, denote]
@@ -563,13 +563,13 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
       rw [BitVec.ForLean.ule_iff_ult_or_eq' (Term.denote w a vars) (Term.denote w b vars)]
       by_cases heq : Term.denote w a vars = Term.denote w b vars
       · rw [heq]
-        simp [evalEq_denote_false_iff a b vars |>.mpr heq]
+        simp [evalBVEq_denote_false_iff a b vars |>.mpr heq]
       · simp [heq]
         by_cases hlt : Term.denote w a vars < Term.denote w b vars
         · simp [hlt]
           simp [evalUlt_denote_false_iff a b vars |>.mpr hlt]
         · simp [hlt]
-          have := evalEq_denote_false_iff a b vars |>.not |>.mpr heq
+          have := evalBVEq_denote_false_iff a b vars |>.not |>.mpr heq
           simp only [this, true_and]
           have := evalUlt_denote_false_iff a b vars |>.not |>.mpr hlt
           simp only [this]
@@ -580,12 +580,12 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
       rcases hSle : Term.denote w a vars ≤ₛ Term.denote w b vars
       · simp [hSle] at h ⊢
         obtain ⟨h₁, h₂⟩ := h
-        simp [evalEq_denote_true_iff .. |>.mpr h₁]
+        simp [evalBVEq_denote_true_iff .. |>.mpr h₁]
         rw [evalSlt_denote_true_iff .. |>.mpr]
         simp [h₂]
       · simp [hSle] at h ⊢
         intros hEq
-        simp [evalEq_denote_true_iff .. |>.mp hEq] at h
+        simp [evalBVEq_denote_true_iff .. |>.mp hEq] at h
         apply evalSlt_denote_false_iff .. |>.mpr h
   case land p q hp hq => simp [eval, denote, hp, hq, evalLand]
   case lor p q hp hq =>
@@ -607,6 +607,13 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
         simp [this]
       · have := hq .. |>.mpr hq'
         simp [this]
+
+  case boolBinary p a b =>
+    cases p with
+    | eq =>
+      simp [eval, denote]; sorry
+    | neq =>
+      simp [eval, denote]; sorry
 
 -- /-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 -- #guard_msgs in #print axioms Predicate.eval_eq_denote

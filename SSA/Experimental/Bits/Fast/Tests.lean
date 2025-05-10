@@ -12,6 +12,15 @@ import SSA.Experimental.Bits.Fast.MBA
 
 set_option linter.unusedVariables false
 
+section BooleanProblems
+set_option trace.Bits.Frontend true in
+theorem foo (a : Bool) : (a = true) → (a ≠ false) := by
+   -- bv_automata_gen (config := {backend := .circuit_cadical})
+   bv_automata_gen (config := {backend := .dryrun})
+
+#print foo
+end BooleanProblems
+
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
   intros
