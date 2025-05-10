@@ -660,7 +660,7 @@ def generateSketches (symVars: List (BVExpr w)) : List (BVExpr w) := Id.run do
 
           res
 
-def enumerativeSynthesis (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
+def enumerativeSearch (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
                       TermElabM ( List (BVExpr w)) := do
 
       logInfo m! "Running enumerative synthesis"
@@ -715,7 +715,7 @@ def enumerativeSynthesis (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: 
       return validCombos
 
 
-partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
+partial def deductiveSearch (expr: BVExpr w) (inputs: List Nat) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
                       TermElabM ( List (BVExpr w)) := do
 
     let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
@@ -754,15 +754,15 @@ partial def inductiveSynthesis (expr: BVExpr w) (inputs: List Nat) (constants: S
                   res := BVExpr.un BVUnOp.not newVar :: res
 
                 -- C + X = Target
-                let addRes ← inductiveSynthesis expr inputs constants {bv := targetBv - constVal.bv} (depth-1) constId
+                let addRes ← deductiveSearch expr inputs constants {bv := targetBv - constVal.bv} (depth-1) constId
                 res := res ++ addRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add resExpr)
 
                 -- C - X = Target
-                let subRes ← inductiveSynthesis expr inputs constants {bv := constVal.bv - targetBv} (depth-1) constId
+                let subRes ← deductiveSearch expr inputs constants {bv := constVal.bv - targetBv} (depth-1) constId
                 res := res ++ subRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add (negate resExpr))
 
                 -- X - C = Target
-                let subRes' ← inductiveSynthesis expr inputs constants {bv := targetBv + constVal.bv}  (depth-1) constId
+                let subRes' ← deductiveSearch expr inputs constants {bv := targetBv + constVal.bv}  (depth-1) constId
                 res := res ++ subRes'.map (λ resExpr => BVExpr.bin (resExpr) BVBinOp.add (negate newVar))
 
                 --TODO: Include multiplication and division; bitwise operators?
@@ -791,14 +791,14 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
 
 
     for (targetId, targetVal) in origWidthConstantsExpr.rhs.symVars.toArray do
-        -- Inductive synthesis can use the constants in original widths since it does not invoke the solver;
-        let exprs := (← inductiveSynthesis origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
+        -- Deductive search can use the constants in original widths since it does not invoke the solver;
+        let exprs := (← deductiveSearch origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
 
         let mut filteredExprs ← filterExprs exprs targetVal
         match filteredExprs with
         | [] =>
-                logInfo m! "Inductive synthesis failed for {targetId}; performing enumerative synthesis"
-                let enumSynthesisRes ← enumerativeSynthesis reducedWidthConstantsExpr.lhs.bvExpr reducedWidthConstantsExpr.lhs.inputVars.keys reducedWidthConstantsExpr.lhs.symVars reducedWidthConstantsExpr.rhs.symVars[targetId]!
+                logInfo m! "Deductive search failed for {targetId}; performing enumerative synthesis"
+                let enumSynthesisRes ← enumerativeSearch reducedWidthConstantsExpr.lhs.bvExpr reducedWidthConstantsExpr.lhs.inputVars.keys reducedWidthConstantsExpr.lhs.symVars reducedWidthConstantsExpr.rhs.symVars[targetId]!
 
                 if enumSynthesisRes.isEmpty then
                   throwError m! "No candidate expressions generated from enumerative synthesis"
@@ -1091,7 +1091,7 @@ elab "#generalize" expr:term: command =>
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
       logInfo m! "hexpr: {hExpr}"
-      let timeoutMs := 120000
+      let timeoutMs := 600000
 
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
