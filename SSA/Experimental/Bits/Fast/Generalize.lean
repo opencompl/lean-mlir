@@ -978,7 +978,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
               let powerOf2Expr :=  BVExpr.bin (BVExpr.var const) BVBinOp.and (BVExpr.bin (BVExpr.var const) BVBinOp.add minusOne)
               let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos bitwidth powerOf2Expr)
 
-              if powerOfTwoResults.all (λ val => val == 0) then
+              if powerOfTwoResults.any (λ val => val == 0) then
                 let powerOf2 := BoolExpr.literal (BVPred.bin powerOf2Expr BVBinPred.eq zero)
                 preconditionCandidates := powerOf2 :: preconditionCandidates
 
@@ -999,17 +999,17 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
                 sketchResults := sketchResults.insert resultsString
 
-                if (evaluatedPositiveExs.all ( λ val => val == 0)) && evaluatedNegativeExs.all (λ val => val != 0) then
+                if (evaluatedPositiveExs.any ( λ val => val == 0)) && evaluatedNegativeExs.all (λ val => val != 0) then
                   preconditionCandidates := eqToZero substitutedExpr :: preconditionCandidates
 
-                if (evaluatedPositiveExs.all ( λ val => val < 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val > 0) then
+                if (evaluatedPositiveExs.any ( λ val => val < 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val > 0) then
                   let mut cand := lteZero substitutedExpr
                   if (evaluatedPositiveExs.all ( λ val => val < 0)) then
                     cand := ltZero substitutedExpr
 
                   preconditionCandidates := cand :: preconditionCandidates
 
-                if (evaluatedPositiveExs.all ( λ val => val > 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val < 0) then
+                if (evaluatedPositiveExs.any ( λ val => val > 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val < 0) then
                   let mut cand := gteZero substitutedExpr
                   if (evaluatedPositiveExs.all ( λ val => val > 0)) then
                       cand := gtZero substitutedExpr
