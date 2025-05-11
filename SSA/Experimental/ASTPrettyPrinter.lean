@@ -240,12 +240,14 @@ def unexpandRegionmk : Unexpander
                 if res == Array.empty
                 then
                   throw ()
+                  -- TODO: This was disabled as it did not compile
                   -- match (operands[0]!) with
                   --   | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
                   --     ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = $op_function_name $mlir_op_operands,* : $ty))
                   --   | _ => throw ()
                 else
                   throw ()
+                  -- TODO: This was disabled as it did not compile
                   -- match (res[0]!) with
                   --  | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
                   --    ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = $op_function_name $mlir_op_operands,* : $ty))
