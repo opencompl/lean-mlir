@@ -31,10 +31,14 @@ def unexpandAffineMapmk : Unexpander
   | `($_ [affine_tuple|($xs,*)] [affine_tuple|($ys,*)]) =>
     `([affine_map|affine_map< ($xs,*) -> ($ys,*)>])
   | _ => throw ()
+/-- info: [affine_expr|foo] : AffineExpr -/
+#guard_msgs in #check [affine_expr|foo]
 
-#check [affine_expr|foo]
-#check [affine_tuple| (a,b,c) ]
-#check [affine_map|affine_map<(a,b)->(c,d)>]
+/-- info: [affine_tuple|(a,b,c)] : AffineTuple -/
+#guard_msgs in #check [affine_tuple| (a,b,c) ]
+
+/-- info: [affine_map|affine_map<(a,b)->(c,d)>] : AffineMap -/
+#guard_msgs in #check [affine_map|affine_map<(a,b)->(c,d)>]
 
 
 -- EDSL OPERANDS
@@ -42,7 +46,12 @@ def unexpandAffineMapmk : Unexpander
 -- TODO?: unexpander for [mlir_op_operand | $$($q)]
 
 
-#check [mlir_op_operand| %0]
+-- TODO: this should become: [mlir_op_operand| %x] : MLIR.SSAVal
+/--
+info: SSAVal.name (EDSL.IntToString 0) : SSAVal
+-/
+#guard_msgs in #check [mlir_op_operand| %0]
+
 @[app_unexpander AST.SSAVal] -- broken?
 def unexpandSSAValSSSAVal: Unexpander
   | `($_ $xstr:str) =>
@@ -53,8 +62,17 @@ def unexpandSSAValSSSAVal: Unexpander
     | _ => throw ()
   | _ => throw ()
 
-#check [mlir_op_operand| %x]
-#check [mlir_op_operand| %0]
+-- TODO: This should become: [mlir_op_operand| %x] : MLIR.SSAVal
+/--
+info: SSAVal.name "x" : SSAVal
+-/
+#guard_msgs in #check [mlir_op_operand| %x]
+
+-- TODO: This should become: [mlir_op_operand| %0] : MLIR.SSAVal
+/--
+info: SSAVal.name (EDSL.IntToString 0) : SSAVal
+-/
+#guard_msgs in #check [mlir_op_operand| %0]
 
 
 -- EDSL OP-SUCCESSOR-ARGS
@@ -71,7 +89,10 @@ def unexpandBBNamemk : Unexpander
     `([mlir_op_successor_arg| ^ $xraw:ident ])
   | _ => throw ()
 
-#check [mlir_op_successor_arg| ^bb]
+/--
+info: [mlir_op_successor_arg|^bb] : BBName
+-/
+#guard_msgs in #check [mlir_op_successor_arg| ^bb]
 
 
 -- EDSL MLIR TYPES
