@@ -1,0 +1,38 @@
+1: "PR35618"
+9: "PR35618" has pointer type input
+
+4: "PR35618" has unsupported operation: llvm.alloca
+
+4: "PR35618" has unsupported operation: llvm.alloca
+
+4: "PR35618" has unsupported operation: llvm.load
+
+4: "PR35618" has unsupported operation: llvm.load
+
+4: "PR35618" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "PR35618" has unsupported operation: llvm.store
+
+4: "PR35618" has unsupported operation: llvm.store
+
+4: "PR35618" has unsupported operation: llvm.return
+
+1: "PR35618_asan"
+9: "PR35618_asan" has pointer type input
+
+4: "PR35618_asan" has unsupported operation: llvm.alloca
+
+4: "PR35618_asan" has unsupported operation: llvm.alloca
+
+4: "PR35618_asan" has unsupported operation: llvm.load
+
+4: "PR35618_asan" has unsupported operation: llvm.load
+
+4: "PR35618_asan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "PR35618_asan" has unsupported operation: llvm.store
+
+4: "PR35618_asan" has unsupported operation: llvm.store
+
+4: "PR35618_asan" has unsupported operation: llvm.return
+

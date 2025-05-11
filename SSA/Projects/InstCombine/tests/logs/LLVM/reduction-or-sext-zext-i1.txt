@@ -1,0 +1,65 @@
+1: "reduce_or_self"
+4: "reduce_or_self" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_or_sext"
+4: "reduce_or_sext" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_or_zext"
+4: "reduce_or_zext" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_or_sext_same"
+4: "reduce_or_sext_same" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_or_zext_long"
+4: "reduce_or_zext_long" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_or_zext_long_external_use"
+4: "reduce_or_zext_long_external_use" has unsupported operation: llvm.mlir.addressof
+
+4: "reduce_or_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_or_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_or_zext_long_external_use" has unsupported operation: llvm.store
+
+1: "reduce_or_zext_external_use"
+4: "reduce_or_zext_external_use" has unsupported operation: llvm.mlir.addressof
+
+4: "reduce_or_zext_external_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_or_zext_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_or_zext_external_use" has unsupported operation: llvm.store
+
+1: "reduce_or_pointer_cast"
+9: "reduce_or_pointer_cast" has pointer type input
+
+4: "reduce_or_pointer_cast" has unsupported operation: llvm.load
+
+4: "reduce_or_pointer_cast" has unsupported operation: llvm.load
+
+1: "reduce_or_pointer_cast_wide"
+9: "reduce_or_pointer_cast_wide" has pointer type input
+
+4: "reduce_or_pointer_cast_wide" has unsupported operation: llvm.load
+
+4: "reduce_or_pointer_cast_wide" has unsupported operation: llvm.load
+
+4: "reduce_or_pointer_cast_wide" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "reduce_or_pointer_cast_ne"
+9: "reduce_or_pointer_cast_ne" has pointer type input
+
+4: "reduce_or_pointer_cast_ne" has unsupported operation: llvm.load
+
+4: "reduce_or_pointer_cast_ne" has unsupported operation: llvm.load
+
+1: "reduce_or_pointer_cast_ne_wide"
+9: "reduce_or_pointer_cast_ne_wide" has pointer type input
+
+4: "reduce_or_pointer_cast_ne_wide" has unsupported operation: llvm.load
+
+4: "reduce_or_pointer_cast_ne_wide" has unsupported operation: llvm.load
+
+4: "reduce_or_pointer_cast_ne_wide" has unsupported operation: builtin.unregistered: llvm.bitcast
+

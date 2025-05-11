@@ -1,0 +1,74 @@
+1: "half_fptoui_i17_i16"
+4: "half_fptoui_i17_i16" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "half_fptoui_i17_i15"
+4: "half_fptoui_i17_i15" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "half_fptoui_i32_i16"
+4: "half_fptoui_i32_i16" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "half_fptoui_i32_i17"
+4: "half_fptoui_i32_i17" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "half_fptoui_4xi32_4xi16"
+4: "half_fptoui_4xi32_4xi16" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "bfloat_fptoui_i129_i128"
+4: "bfloat_fptoui_i129_i128" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "bfloat_fptoui_i128_i127"
+4: "bfloat_fptoui_i128_i127" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "float_fptoui_i129_i128"
+4: "float_fptoui_i129_i128" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "use"
+5: "use" is empty
+
+1: "float_fptoui_i129_i128_use"
+4: "float_fptoui_i129_i128_use" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+4: "float_fptoui_i129_i128_use" has unsupported operation: llvm.call
+
+1: "float_fptoui_i128_i127"
+4: "float_fptoui_i128_i127" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "double_fptoui_i1025_i1024"
+4: "double_fptoui_i1025_i1024" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "double_fptoui_i1024_i1023"
+4: "double_fptoui_i1024_i1023" has unsupported operation: builtin.unregistered: llvm.fptoui
+
+1: "half_fptosi_i17_i16"
+4: "half_fptosi_i17_i16" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "half_fptosi_i18_i17"
+4: "half_fptosi_i18_i17" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "half_fptosi_i32_i17"
+4: "half_fptosi_i32_i17" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "half_fptosi_i32_i18"
+4: "half_fptosi_i32_i18" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "half_fptosi_4xi32_4xi17"
+4: "half_fptosi_4xi32_4xi17" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "bfloat_fptosi_i129_i128"
+4: "bfloat_fptosi_i129_i128" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "bfloat_fptosi_i130_i129"
+4: "bfloat_fptosi_i130_i129" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "float_fptosi_i130_i129"
+4: "float_fptosi_i130_i129" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "float_fptosi_i129_i128"
+4: "float_fptosi_i129_i128" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "double_fptosi_i1026_i1025"
+4: "double_fptosi_i1026_i1025" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+1: "double_fptosi_i1025_i1024"
+4: "double_fptosi_i1025_i1024" has unsupported operation: builtin.unregistered: llvm.fptosi
+

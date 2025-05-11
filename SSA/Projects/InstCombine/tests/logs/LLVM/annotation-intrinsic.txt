@@ -1,0 +1,11 @@
+1: "annotated"
+9: "annotated" has pointer type input
+
+4: "annotated" has unsupported operation: llvm.mlir.undef
+
+4: "annotated" has unsupported operation: llvm.mlir.undef
+
+4: "annotated" has unsupported operation: llvm.load
+
+4: "annotated" has unsupported operation: builtin.unregistered: llvm.intr.annotation
+

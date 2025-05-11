@@ -1,0 +1,234 @@
+1: "icmp_power2_and_icmp_shifted_mask_2147483648_1610612736"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_2147483648_1610612736"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_2147483648_2147483647"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_2147483648_2147483647"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_2147483648_805306368"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_2147483648_805306368"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_1073741824_1073741823"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_1073741824_1073741823"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_8_7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_8_6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "icmp_power2_and_icmp_shifted_mask_8_5_gap_in_mask_fail"
+7: "icmp_power2_and_icmp_shifted_mask_8_5_gap_in_mask_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_5_gap_in_mask_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_8_5_gap_in_mask_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_8_3_gap_between_masks_fail"
+7: "icmp_power2_and_icmp_shifted_mask_8_3_gap_between_masks_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_3_gap_between_masks_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_8_3_gap_between_masks_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_256_239_gap_in_mask_fail"
+7: "icmp_power2_and_icmp_shifted_mask_256_239_gap_in_mask_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_256_239_gap_in_mask_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_256_239_gap_in_mask_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_8_112_mask_to_left_fail"
+7: "icmp_power2_and_icmp_shifted_mask_8_112_mask_to_left_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_112_mask_to_left_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_8_112_mask_to_left_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_8_56_mask_overlap_fail"
+7: "icmp_power2_and_icmp_shifted_mask_8_56_mask_overlap_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_56_mask_overlap_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_8_56_mask_overlap_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_8_24_mask_overlap_fail"
+7: "icmp_power2_and_icmp_shifted_mask_8_24_mask_overlap_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_24_mask_overlap_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_8_24_mask_overlap_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_8_12_mask_overlap_fail"
+7: "icmp_power2_and_icmp_shifted_mask_8_12_mask_overlap_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_swapped_8_12_mask_overlap_fail"
+7: "icmp_power2_and_icmp_shifted_mask_swapped_8_12_mask_overlap_fail" is unchanged by InstCombine
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_2147483647"
+8: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_2147483647" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_2147483647"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_2147483647" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_1610612736_2147483647"
+8: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_1610612736_2147483647" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_1610612736_2147483647"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_1610612736_2147483647" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_splat_poison_2147483648_1610612736_2147483647"
+8: "icmp_power2_and_icmp_shifted_mask_vector_splat_poison_2147483648_1610612736_2147483647" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_poison_2147483648_1610612736_2147483647"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_poison_2147483648_1610612736_2147483647" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647"
+4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_power2_and_icmp_shifted_mask_vector_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647"
+4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: llvm.mlir.undef
+
+4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "icmp_power2_and_icmp_shifted_mask_vector_swapped_splat_undef_2147483648_1610612736_2147483647" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_128_others"
+8: "icmp_power2_and_icmp_shifted_mask_vector_128_others" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_128_others"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_128_others" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_64_others"
+8: "icmp_power2_and_icmp_shifted_mask_vector_64_others" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_64_others"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_64_others" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_2147482647_gap_in_mask_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_2147482647_gap_in_mask_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_2147482647_gap_in_mask_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_2147482647_gap_in_mask_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_1073741823_gap_between_masks_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_2147483648_1073741823_gap_between_masks_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_1073741823_gap_between_masks_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_2147483648_1073741823_gap_between_masks_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_128_1_of_7_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_128_1_of_7_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_128_1_of_7_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_128_1_of_7_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_128_0_of_6_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_128_0_of_6_fail" contains vectors which are unsupported
+
+1: "icmp_power2_and_icmp_shifted_mask_vector_swapped_128_0_of_6_fail"
+8: "icmp_power2_and_icmp_shifted_mask_vector_swapped_128_0_of_6_fail" contains vectors which are unsupported
+

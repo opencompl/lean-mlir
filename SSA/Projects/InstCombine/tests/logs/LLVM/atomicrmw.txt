@@ -1,0 +1,454 @@
+1: "atomic_add_zero"
+9: "atomic_add_zero" has pointer type input
+
+4: "atomic_add_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_or_zero"
+9: "atomic_or_zero" has pointer type input
+
+4: "atomic_or_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_sub_zero"
+9: "atomic_sub_zero" has pointer type input
+
+4: "atomic_sub_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_and_allones"
+9: "atomic_and_allones" has pointer type input
+
+4: "atomic_and_allones" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_umin_uint_max"
+9: "atomic_umin_uint_max" has pointer type input
+
+4: "atomic_umin_uint_max" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_umax_zero"
+9: "atomic_umax_zero" has pointer type input
+
+4: "atomic_umax_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_min_smax_char"
+9: "atomic_min_smax_char" has pointer type input
+
+4: "atomic_min_smax_char" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_max_smin_char"
+9: "atomic_max_smin_char" has pointer type input
+
+4: "atomic_max_smin_char" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fsub_zero"
+9: "atomic_fsub_zero" has pointer type input
+
+4: "atomic_fsub_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fadd_zero"
+9: "atomic_fadd_zero" has pointer type input
+
+4: "atomic_fadd_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fsub_canon"
+9: "atomic_fsub_canon" has pointer type input
+
+4: "atomic_fsub_canon" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fadd_canon"
+9: "atomic_fadd_canon" has pointer type input
+
+4: "atomic_fadd_canon" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_sub_zero_volatile"
+9: "atomic_sub_zero_volatile" has pointer type input
+
+4: "atomic_sub_zero_volatile" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_syncscope"
+9: "atomic_syncscope" has pointer type input
+
+4: "atomic_syncscope" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_seq_cst"
+9: "atomic_seq_cst" has pointer type input
+
+4: "atomic_seq_cst" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_add_non_zero"
+9: "atomic_add_non_zero" has pointer type input
+
+4: "atomic_add_non_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_xor_zero"
+9: "atomic_xor_zero" has pointer type input
+
+4: "atomic_xor_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_release"
+9: "atomic_release" has pointer type input
+
+4: "atomic_release" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_acq_rel"
+9: "atomic_acq_rel" has pointer type input
+
+4: "atomic_acq_rel" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_or_allones"
+9: "sat_or_allones" has pointer type input
+
+4: "sat_or_allones" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_and_zero"
+9: "sat_and_zero" has pointer type input
+
+4: "sat_and_zero" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_umin_uint_min"
+9: "sat_umin_uint_min" has pointer type input
+
+4: "sat_umin_uint_min" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_umax_uint_max"
+9: "sat_umax_uint_max" has pointer type input
+
+4: "sat_umax_uint_max" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_min_smin_char"
+9: "sat_min_smin_char" has pointer type input
+
+4: "sat_min_smin_char" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_max_smax_char"
+9: "sat_max_smax_char" has pointer type input
+
+4: "sat_max_smax_char" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fadd_nan"
+9: "sat_fadd_nan" has pointer type input
+
+4: "sat_fadd_nan" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fsub_nan"
+9: "sat_fsub_nan" has pointer type input
+
+4: "sat_fsub_nan" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fsub_nan_unused"
+9: "sat_fsub_nan_unused" has pointer type input
+
+4: "sat_fsub_nan_unused" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "sat_fsub_nan_unused" has unsupported operation: llvm.return
+
+1: "xchg_unused_monotonic"
+9: "xchg_unused_monotonic" has pointer type input
+
+4: "xchg_unused_monotonic" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_monotonic" has unsupported operation: llvm.return
+
+1: "xchg_unused_release"
+9: "xchg_unused_release" has pointer type input
+
+4: "xchg_unused_release" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_release" has unsupported operation: llvm.return
+
+1: "xchg_unused_under_aligned"
+9: "xchg_unused_under_aligned" has pointer type input
+
+4: "xchg_unused_under_aligned" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_under_aligned" has unsupported operation: llvm.return
+
+1: "xchg_unused_over_aligned"
+9: "xchg_unused_over_aligned" has pointer type input
+
+4: "xchg_unused_over_aligned" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_over_aligned" has unsupported operation: llvm.return
+
+1: "xchg_unused_seq_cst"
+9: "xchg_unused_seq_cst" has pointer type input
+
+4: "xchg_unused_seq_cst" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_seq_cst" has unsupported operation: llvm.return
+
+1: "xchg_unused_volatile"
+9: "xchg_unused_volatile" has pointer type input
+
+4: "xchg_unused_volatile" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_volatile" has unsupported operation: llvm.return
+
+1: "sat_or_allones_unused"
+9: "sat_or_allones_unused" has pointer type input
+
+4: "sat_or_allones_unused" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "sat_or_allones_unused" has unsupported operation: llvm.return
+
+1: "undef_operand_unused"
+9: "undef_operand_unused" has pointer type input
+
+4: "undef_operand_unused" has unsupported operation: llvm.mlir.undef
+
+4: "undef_operand_unused" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "undef_operand_unused" has unsupported operation: llvm.return
+
+1: "undef_operand_used"
+9: "undef_operand_used" has pointer type input
+
+4: "undef_operand_used" has unsupported operation: llvm.mlir.undef
+
+4: "undef_operand_used" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fmax_inf"
+9: "sat_fmax_inf" has pointer type input
+
+4: "sat_fmax_inf" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "no_sat_fmax_inf"
+9: "no_sat_fmax_inf" has pointer type input
+
+4: "no_sat_fmax_inf" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fmin_inf"
+9: "sat_fmin_inf" has pointer type input
+
+4: "sat_fmin_inf" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "no_sat_fmin_inf"
+9: "no_sat_fmin_inf" has pointer type input
+
+4: "no_sat_fmin_inf" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_add_zero_preserve_md"
+9: "atomic_add_zero_preserve_md" has pointer type input
+
+4: "atomic_add_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_or_zero_preserve_md"
+9: "atomic_or_zero_preserve_md" has pointer type input
+
+4: "atomic_or_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_sub_zero_preserve_md"
+9: "atomic_sub_zero_preserve_md" has pointer type input
+
+4: "atomic_sub_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_and_allones_preserve_md"
+9: "atomic_and_allones_preserve_md" has pointer type input
+
+4: "atomic_and_allones_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_umin_uint_max_preserve_md"
+9: "atomic_umin_uint_max_preserve_md" has pointer type input
+
+4: "atomic_umin_uint_max_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_umax_zero_preserve_md"
+9: "atomic_umax_zero_preserve_md" has pointer type input
+
+4: "atomic_umax_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_min_smax_char_preserve_md"
+9: "atomic_min_smax_char_preserve_md" has pointer type input
+
+4: "atomic_min_smax_char_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_max_smin_char_preserve_md"
+9: "atomic_max_smin_char_preserve_md" has pointer type input
+
+4: "atomic_max_smin_char_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fsub_zero_preserve_md"
+9: "atomic_fsub_zero_preserve_md" has pointer type input
+
+4: "atomic_fsub_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fadd_zero_preserve_md"
+9: "atomic_fadd_zero_preserve_md" has pointer type input
+
+4: "atomic_fadd_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fsub_canon_preserve_md"
+9: "atomic_fsub_canon_preserve_md" has pointer type input
+
+4: "atomic_fsub_canon_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_fadd_canon_preserve_md"
+9: "atomic_fadd_canon_preserve_md" has pointer type input
+
+4: "atomic_fadd_canon_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_sub_zero_volatile_preserve_md"
+9: "atomic_sub_zero_volatile_preserve_md" has pointer type input
+
+4: "atomic_sub_zero_volatile_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_syncscope_preserve_md"
+9: "atomic_syncscope_preserve_md" has pointer type input
+
+4: "atomic_syncscope_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_seq_cst_preserve_md"
+9: "atomic_seq_cst_preserve_md" has pointer type input
+
+4: "atomic_seq_cst_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_add_non_zero_preserve_md"
+9: "atomic_add_non_zero_preserve_md" has pointer type input
+
+4: "atomic_add_non_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_xor_zero_preserve_md"
+9: "atomic_xor_zero_preserve_md" has pointer type input
+
+4: "atomic_xor_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_release_preserve_md"
+9: "atomic_release_preserve_md" has pointer type input
+
+4: "atomic_release_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "atomic_acq_rel_preserve_md"
+9: "atomic_acq_rel_preserve_md" has pointer type input
+
+4: "atomic_acq_rel_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_or_allones_preserve_md"
+9: "sat_or_allones_preserve_md" has pointer type input
+
+4: "sat_or_allones_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_and_zero_preserve_md"
+9: "sat_and_zero_preserve_md" has pointer type input
+
+4: "sat_and_zero_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_umin_uint_min_preserve_md"
+9: "sat_umin_uint_min_preserve_md" has pointer type input
+
+4: "sat_umin_uint_min_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_umax_uint_max_preserve_md"
+9: "sat_umax_uint_max_preserve_md" has pointer type input
+
+4: "sat_umax_uint_max_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_min_smin_char_preserve_md"
+9: "sat_min_smin_char_preserve_md" has pointer type input
+
+4: "sat_min_smin_char_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_max_smax_char_preserve_md"
+9: "sat_max_smax_char_preserve_md" has pointer type input
+
+4: "sat_max_smax_char_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fadd_nan_preserve_md"
+9: "sat_fadd_nan_preserve_md" has pointer type input
+
+4: "sat_fadd_nan_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fsub_nan_preserve_md"
+9: "sat_fsub_nan_preserve_md" has pointer type input
+
+4: "sat_fsub_nan_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fsub_nan_unused_preserve_md"
+9: "sat_fsub_nan_unused_preserve_md" has pointer type input
+
+4: "sat_fsub_nan_unused_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "sat_fsub_nan_unused_preserve_md" has unsupported operation: llvm.return
+
+1: "xchg_unused_monotonic_preserve_md"
+9: "xchg_unused_monotonic_preserve_md" has pointer type input
+
+4: "xchg_unused_monotonic_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_monotonic_preserve_md" has unsupported operation: llvm.return
+
+1: "xchg_unused_release_preserve_md"
+9: "xchg_unused_release_preserve_md" has pointer type input
+
+4: "xchg_unused_release_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_release_preserve_md" has unsupported operation: llvm.return
+
+1: "xchg_unused_under_aligned_preserve_md"
+9: "xchg_unused_under_aligned_preserve_md" has pointer type input
+
+4: "xchg_unused_under_aligned_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_under_aligned_preserve_md" has unsupported operation: llvm.return
+
+1: "xchg_unused_over_aligned_preserve_md"
+9: "xchg_unused_over_aligned_preserve_md" has pointer type input
+
+4: "xchg_unused_over_aligned_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_over_aligned_preserve_md" has unsupported operation: llvm.return
+
+1: "xchg_unused_seq_cst_preserve_md"
+9: "xchg_unused_seq_cst_preserve_md" has pointer type input
+
+4: "xchg_unused_seq_cst_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_seq_cst_preserve_md" has unsupported operation: llvm.return
+
+1: "xchg_unused_volatile_preserve_md"
+9: "xchg_unused_volatile_preserve_md" has pointer type input
+
+4: "xchg_unused_volatile_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "xchg_unused_volatile_preserve_md" has unsupported operation: llvm.return
+
+1: "sat_or_allones_unused_preserve_md"
+9: "sat_or_allones_unused_preserve_md" has pointer type input
+
+4: "sat_or_allones_unused_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "sat_or_allones_unused_preserve_md" has unsupported operation: llvm.return
+
+1: "undef_operand_unused_preserve_md"
+9: "undef_operand_unused_preserve_md" has pointer type input
+
+4: "undef_operand_unused_preserve_md" has unsupported operation: llvm.mlir.undef
+
+4: "undef_operand_unused_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+4: "undef_operand_unused_preserve_md" has unsupported operation: llvm.return
+
+1: "undef_operand_used_preserve_md"
+9: "undef_operand_used_preserve_md" has pointer type input
+
+4: "undef_operand_used_preserve_md" has unsupported operation: llvm.mlir.undef
+
+4: "undef_operand_used_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fmax_inf_preserve_md"
+9: "sat_fmax_inf_preserve_md" has pointer type input
+
+4: "sat_fmax_inf_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "no_sat_fmax_inf_preserve_md"
+9: "no_sat_fmax_inf_preserve_md" has pointer type input
+
+4: "no_sat_fmax_inf_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "sat_fmin_inf_preserve_md"
+9: "sat_fmin_inf_preserve_md" has pointer type input
+
+4: "sat_fmin_inf_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+
+1: "no_sat_fmin_inf_preserve_md"
+9: "no_sat_fmin_inf_preserve_md" has pointer type input
+
+4: "no_sat_fmin_inf_preserve_md" has unsupported operation: builtin.unregistered: llvm.atomicrmw
+

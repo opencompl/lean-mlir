@@ -1,0 +1,188 @@
+1: "good1"
+4: "good1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "good1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "good2"
+4: "good2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "good2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "good3"
+4: "good3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "good3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "good4"
+4: "good4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "good4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good4" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "good4" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "good5"
+4: "good5" has unsupported operation: llvm.mlir.undef
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "good5" has unsupported operation: llvm.mlir.undef
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "good5" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "splat_undef1"
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "splat_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "splat_undef2"
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "splat_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bad3"
+4: "bad3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bad3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bad4"
+4: "bad4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bad4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "splat_undef3"
+4: "splat_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_undef3" has unsupported operation: llvm.mlir.undef
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "splat_undef3" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "bad6"
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bad6" has unsupported operation: llvm.mlir.undef
+
+4: "bad6" has unsupported operation: llvm.mlir.undef
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad6" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "bad7"
+4: "bad7" has unsupported operation: llvm.mlir.undef
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bad7" has unsupported operation: llvm.mlir.undef
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bad7" has unsupported operation: builtin.unregistered: llvm.fadd
+

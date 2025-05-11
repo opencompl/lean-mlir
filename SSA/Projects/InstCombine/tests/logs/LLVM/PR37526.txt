@@ -1,0 +1,13 @@
+1: "PR37526"
+9: "PR37526" has pointer type input
+
+4: "PR37526" has unsupported operation: llvm.load
+
+4: "PR37526" has unsupported operation: llvm.load
+
+4: "PR37526" has unsupported operation: llvm.load
+
+4: "PR37526" has unsupported operation: llvm.store
+
+4: "PR37526" has unsupported operation: llvm.return
+

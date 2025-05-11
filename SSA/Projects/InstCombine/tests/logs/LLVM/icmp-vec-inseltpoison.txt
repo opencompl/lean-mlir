@@ -1,0 +1,157 @@
+1: "sge"
+8: "sge" contains vectors which are unsupported
+
+1: "uge"
+8: "uge" contains vectors which are unsupported
+
+1: "sle"
+8: "sle" contains vectors which are unsupported
+
+1: "ule"
+8: "ule" contains vectors which are unsupported
+
+1: "ult_min_signed_value"
+8: "ult_min_signed_value" contains vectors which are unsupported
+
+1: "sge_zero"
+8: "sge_zero" contains vectors which are unsupported
+
+1: "uge_zero"
+8: "uge_zero" contains vectors which are unsupported
+
+1: "sle_zero"
+8: "sle_zero" contains vectors which are unsupported
+
+1: "ule_zero"
+8: "ule_zero" contains vectors which are unsupported
+
+1: "sge_weird"
+8: "sge_weird" contains vectors which are unsupported
+
+1: "uge_weird"
+8: "uge_weird" contains vectors which are unsupported
+
+1: "sle_weird"
+8: "sle_weird" contains vectors which are unsupported
+
+1: "ule_weird"
+8: "ule_weird" contains vectors which are unsupported
+
+1: "sge_min"
+7: "sge_min" is unchanged by InstCombine
+
+1: "uge_min"
+7: "uge_min" is unchanged by InstCombine
+
+1: "sle_max"
+7: "sle_max" is unchanged by InstCombine
+
+1: "ule_max"
+7: "ule_max" is unchanged by InstCombine
+
+1: "PR27756_1"
+8: "PR27756_1" contains vectors which are unsupported
+
+1: "PR27756_2"
+8: "PR27756_2" contains vectors which are unsupported
+
+1: "PR27756_3"
+8: "PR27756_3" contains vectors which are unsupported
+
+1: "PR27786"
+4: "PR27786" has unsupported operation: llvm.mlir.addressof
+
+4: "PR27786" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "PR27786" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "same_shuffle_inputs_icmp"
+4: "same_shuffle_inputs_icmp" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_icmp" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "same_shuffle_inputs_fcmp"
+4: "same_shuffle_inputs_fcmp" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "same_shuffle_inputs_fcmp" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use_v4i8"
+5: "use_v4i8" is empty
+
+1: "same_shuffle_inputs_icmp_extra_use1"
+4: "same_shuffle_inputs_icmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_icmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_icmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "same_shuffle_inputs_icmp_extra_use1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "same_shuffle_inputs_icmp_extra_use1" has unsupported operation: llvm.call
+
+1: "use_v2i8"
+5: "use_v2i8" is empty
+
+1: "same_shuffle_inputs_icmp_extra_use2"
+4: "same_shuffle_inputs_icmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_icmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_icmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "same_shuffle_inputs_icmp_extra_use2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "same_shuffle_inputs_icmp_extra_use2" has unsupported operation: llvm.call
+
+1: "same_shuffle_inputs_icmp_extra_use3"
+4: "same_shuffle_inputs_icmp_extra_use3" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "same_shuffle_inputs_icmp_extra_use3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "same_shuffle_inputs_icmp_extra_use3" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "same_shuffle_inputs_icmp_extra_use3" has unsupported operation: llvm.call
+
+4: "same_shuffle_inputs_icmp_extra_use3" has unsupported operation: llvm.call
+
+1: "splat_icmp"
+4: "splat_icmp" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_icmp" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_icmp_poison"
+4: "splat_icmp_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_icmp_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_icmp_larger_size"
+4: "splat_icmp_larger_size" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_icmp_larger_size" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_fcmp_smaller_size"
+4: "splat_fcmp_smaller_size" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_fcmp_smaller_size" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "splat_fcmp_smaller_size" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_icmp_extra_use"
+4: "splat_icmp_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_icmp_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "splat_icmp_extra_use" has unsupported operation: llvm.call
+
+1: "not_splat_icmp"
+4: "not_splat_icmp" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "not_splat_icmp" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "not_splat_icmp2"
+4: "not_splat_icmp2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "not_splat_icmp2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+

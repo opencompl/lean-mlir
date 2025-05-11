@@ -1,0 +1,34 @@
+1: "x"
+4: "x" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_neg"
+4: "test_neg" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_neg" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_2"
+4: "test_2" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_2_neg"
+4: "test_2_neg" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_2_neg" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_2_neg" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_3"
+4: "test_3" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_4"
+4: "test_4" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "test_4_neg"
+4: "test_4_neg" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_4_neg" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "test_4_neg" has unsupported operation: builtin.unregistered: llvm.fadd
+

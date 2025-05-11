@@ -1,0 +1,41 @@
+1: "use"
+5: "use" is empty
+
+1: "sub_to_and"
+2: llvm.func
+2: llvm.or
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
+
+1: "sub_to_and_extra_use_sub"
+4: "sub_to_and_extra_use_sub" has unsupported operation: llvm.call
+
+1: "sub_to_and_extra_use_and"
+4: "sub_to_and_extra_use_and" has unsupported operation: llvm.call
+
+1: "sub_to_and_extra_use_or"
+4: "sub_to_and_extra_use_or" has unsupported operation: llvm.call
+
+1: "sub_to_and_or_commuted"
+2: llvm.func
+2: llvm.or
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
+
+1: "sub_to_and_and_commuted"
+2: llvm.func
+2: llvm.or
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
+
+1: "sub_to_and_vec"
+8: "sub_to_and_vec" contains vectors which are unsupported
+
+1: "sub_to_and_extra_use_and_or"
+4: "sub_to_and_extra_use_and_or" has unsupported operation: llvm.call
+
+4: "sub_to_and_extra_use_and_or" has unsupported operation: llvm.call
+

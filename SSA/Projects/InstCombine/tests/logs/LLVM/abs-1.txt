@@ -1,0 +1,270 @@
+1: "abs"
+5: "abs" is empty
+
+1: "labs"
+5: "labs" is empty
+
+1: "llabs"
+5: "llabs" is empty
+
+1: "test_abs"
+4: "test_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_labs"
+4: "test_labs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "test_llabs"
+4: "test_llabs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_1"
+4: "abs_canonical_1" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_2"
+4: "abs_canonical_2" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_2_vec_poison_elts"
+4: "abs_canonical_2_vec_poison_elts" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_3"
+4: "abs_canonical_3" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_4"
+4: "abs_canonical_4" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_5"
+4: "abs_canonical_5" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_6"
+4: "abs_canonical_6" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_7"
+4: "abs_canonical_7" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_8"
+4: "abs_canonical_8" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_9"
+4: "abs_canonical_9" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_canonical_10"
+4: "abs_canonical_10" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_1"
+4: "nabs_canonical_1" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_2"
+4: "nabs_canonical_2" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_2_vec_poison_elts"
+4: "nabs_canonical_2_vec_poison_elts" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_3"
+4: "nabs_canonical_3" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_4"
+4: "nabs_canonical_4" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_5"
+4: "nabs_canonical_5" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_6"
+4: "nabs_canonical_6" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_7"
+4: "nabs_canonical_7" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_8"
+4: "nabs_canonical_8" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_9"
+4: "nabs_canonical_9" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_canonical_10"
+4: "nabs_canonical_10" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_abs_commute0"
+4: "shifty_abs_commute0" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_abs_commute0_nsw"
+4: "shifty_abs_commute0_nsw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_abs_commute0_nuw"
+4: "shifty_abs_commute0_nuw" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "shifty_abs_commute1"
+4: "shifty_abs_commute1" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_abs_commute2"
+4: "shifty_abs_commute2" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_abs_commute3"
+4: "shifty_abs_commute3" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "extra_use"
+5: "extra_use" is empty
+
+1: "extra_use_i1"
+5: "extra_use_i1" is empty
+
+1: "shifty_abs_too_many_uses"
+4: "shifty_abs_too_many_uses" has unsupported operation: llvm.call
+
+1: "shifty_sub"
+4: "shifty_sub" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_sub_nsw_commute"
+4: "shifty_sub_nsw_commute" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "shifty_sub_nuw_vec_commute"
+4: "shifty_sub_nuw_vec_commute" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "shifty_sub_nsw_nuw"
+4: "shifty_sub_nsw_nuw" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "negate_abs"
+4: "negate_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "negate_nabs"
+4: "negate_nabs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_must_be_positive"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: llvm.return
+
+1: "abs_swapped"
+4: "abs_swapped" has unsupported operation: llvm.call
+
+4: "abs_swapped" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_swapped"
+4: "nabs_swapped" has unsupported operation: llvm.call
+
+4: "nabs_swapped" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_different_constants"
+4: "abs_different_constants" has unsupported operation: llvm.call
+
+4: "abs_different_constants" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_different_constants"
+4: "nabs_different_constants" has unsupported operation: llvm.call
+
+4: "nabs_different_constants" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "infinite_loop_constant_expression_abs"
+4: "infinite_loop_constant_expression_abs" has unsupported operation: llvm.mlir.addressof
+
+4: "infinite_loop_constant_expression_abs" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "infinite_loop_constant_expression_abs" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_extra_use_icmp"
+4: "abs_extra_use_icmp" has unsupported operation: llvm.call
+
+4: "abs_extra_use_icmp" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_extra_use_sub"
+4: "abs_extra_use_sub" has unsupported operation: llvm.call
+
+4: "abs_extra_use_sub" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_extra_use_icmp_sub"
+4: "abs_extra_use_icmp_sub" has unsupported operation: llvm.call
+
+4: "abs_extra_use_icmp_sub" has unsupported operation: llvm.call
+
+1: "nabs_extra_use_icmp"
+4: "nabs_extra_use_icmp" has unsupported operation: llvm.call
+
+4: "nabs_extra_use_icmp" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_extra_use_sub"
+4: "nabs_extra_use_sub" has unsupported operation: llvm.call
+
+4: "nabs_extra_use_sub" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_extra_use_icmp_sub"
+4: "nabs_extra_use_icmp_sub" has unsupported operation: llvm.call
+
+4: "nabs_extra_use_icmp_sub" has unsupported operation: llvm.call
+
+1: "nabs_diff_signed_slt"
+7: "nabs_diff_signed_slt" is unchanged by InstCombine
+
+1: "nabs_diff_signed_sle"
+8: "nabs_diff_signed_sle" contains vectors which are unsupported
+
+1: "abs_diff_signed_sgt"
+4: "abs_diff_signed_sgt" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sgt" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_sge"
+4: "abs_diff_signed_sge" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sge" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sge" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_slt_no_nsw"
+7: "abs_diff_signed_slt_no_nsw" is unchanged by InstCombine
+
+1: "abs_diff_signed_sgt_nsw_nuw"
+4: "abs_diff_signed_sgt_nsw_nuw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_sgt_nuw"
+4: "abs_diff_signed_sgt_nuw" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_sgt_nuw_extra_use1"
+4: "abs_diff_signed_sgt_nuw_extra_use1" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sgt_nuw_extra_use1" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_sgt_nuw_extra_use2"
+4: "abs_diff_signed_sgt_nuw_extra_use2" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sgt_nuw_extra_use2" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_sgt_nuw_extra_use3"
+4: "abs_diff_signed_sgt_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sgt_nuw_extra_use3" has unsupported operation: llvm.call
+
+4: "abs_diff_signed_sgt_nuw_extra_use3" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_slt_swap_wrong_pred1"
+2: llvm.func
+2: llvm.icmp
+2: llvm.sub
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "abs_diff_signed_slt_swap_wrong_pred2"
+7: "abs_diff_signed_slt_swap_wrong_pred2" is unchanged by InstCombine
+
+1: "abs_diff_signed_slt_swap_wrong_op"
+7: "abs_diff_signed_slt_swap_wrong_op" is unchanged by InstCombine
+
+1: "abs_diff_signed_slt_swap"
+4: "abs_diff_signed_slt_swap" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "abs_diff_signed_sle_swap"
+4: "abs_diff_signed_sle_swap" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "nabs_diff_signed_sgt_swap"
+4: "nabs_diff_signed_sgt_swap" has unsupported operation: llvm.call
+
+1: "nabs_diff_signed_sge_swap"
+4: "nabs_diff_signed_sge_swap" has unsupported operation: llvm.call
+
+4: "nabs_diff_signed_sge_swap" has unsupported operation: llvm.call
+
+1: "abs_diff_signed_slt_no_nsw_swap"
+7: "abs_diff_signed_slt_no_nsw_swap" is unchanged by InstCombine
+

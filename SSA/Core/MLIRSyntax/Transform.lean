@@ -58,6 +58,12 @@ end Monads
   returns with `TransformReturn`.
   - These three automatically give an instance of `TransformDialect`.
 -/
+
+/- TODO: the above mentions a `TransformDialect`, but such a class does not
+          exist. Was it removed for some reason, or did we just not implement it?
+          It would be nice to not have to spell out the three different classes
+          in, e.g., `mkCom` -/
+
 class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
   mkTy   : MLIRType φ → ExceptM d d.Ty
 
@@ -99,9 +105,9 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
         namemapping stored in the monad -/
     throw <| .indexOutOfBounds name index n
   else
-    let t := List.get Γ ⟨index, Nat.lt_of_not_le h⟩
+    let t := Γ.toList[index]'(Nat.lt_of_not_le h)
     if h : t = expectedType then
-      return ⟨index, by simp only [get?, ← h]; rw [←List.get?_eq_get]⟩
+      return ⟨index, by simp only [get?, ← h]; rw [←List.getElem?_eq_getElem]⟩
     else
       throw <| .typeError expectedType t
 
@@ -116,13 +122,13 @@ def BuilderM.isErr {α : Type} (x : BuilderM d α) : Bool :=
   | Except.error _ => false
 
 def TypedSSAVal.mkTy [TransformTy d φ] : TypedSSAVal φ → ExceptM d d.Ty
-  | (.SSAVal _, ty) => TransformTy.mkTy ty
+  | (.name _, ty) => TransformTy.mkTy ty
 
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/
 def TypedSSAVal.mkVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
     ReaderM d (Σ (ty : d.Ty), Ctxt.Var Γ ty)
-| (.SSAVal valStx, tyStx) => do
+| (.name valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let var ← getValFromCtxt Γ valStx ty
     return ⟨ty, var⟩
@@ -133,7 +139,7 @@ def TypedSSAVal.mkVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : Ty
     to cut infinite regress. -/
 def TypedSSAVal.mkVal' [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
     ReaderM d (Σ (ty : d.Ty), Ctxt.Var Γ ty)
-| (.SSAVal valStx, tyStx) => do
+| (.name valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let var ← getValFromCtxt Γ valStx ty
     return ⟨ty, var⟩
@@ -142,7 +148,7 @@ def TypedSSAVal.mkVal' [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : T
     by adding the passed name to the name mapping stored in the monad state -/
 def TypedSSAVal.newVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
     BuilderM d (Σ (Γ' : DerivedCtxt Γ) (ty : d.Ty), Ctxt.Var Γ'.ctxt ty)
-| (.SSAVal valStx, tyStx) => do
+| (.name valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let ⟨Γ, var⟩ ← addValToMapping Γ valStx ty
     return ⟨Γ, ty, var⟩

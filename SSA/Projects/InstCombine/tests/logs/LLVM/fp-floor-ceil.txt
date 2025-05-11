@@ -1,0 +1,110 @@
+1: "floor_x_ole"
+4: "floor_x_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "floor_x_ule"
+4: "floor_x_ule" has unsupported operation after optimization: builtin.unregistered: llvm.intr.floor
+
+4: "floor_x_ule" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "floor_x_ogt"
+4: "floor_x_ogt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.floor
+
+4: "floor_x_ogt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "floor_x_ugt"
+4: "floor_x_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_oge"
+4: "x_floor_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_uge"
+4: "x_floor_uge" has unsupported operation after optimization: builtin.unregistered: llvm.intr.floor
+
+4: "x_floor_uge" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_olt"
+4: "x_floor_olt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.floor
+
+4: "x_floor_olt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_ult"
+4: "x_floor_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_olt_vec"
+8: "x_floor_olt_vec" contains vectors which are unsupported
+
+1: "x_floor_ole_neg"
+4: "x_floor_ole_neg" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "x_floor_ole_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_ogt_neg"
+4: "x_floor_ogt_neg" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "x_floor_ogt_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_ueq_neg"
+4: "x_floor_ueq_neg" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "x_floor_ueq_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_floor_une_neg"
+4: "x_floor_une_neg" has unsupported operation: builtin.unregistered: llvm.intr.floor
+
+4: "x_floor_une_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ceil_x_oge"
+4: "ceil_x_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ceil_x_uge"
+4: "ceil_x_uge" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ceil
+
+4: "ceil_x_uge" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "ceil_x_olt"
+4: "ceil_x_olt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ceil
+
+4: "ceil_x_olt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "ceil_x_ult"
+4: "ceil_x_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_ole"
+4: "x_ceil_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_ule"
+4: "x_ceil_ule" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ceil
+
+4: "x_ceil_ule" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_ogt"
+4: "x_ceil_ogt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ceil
+
+4: "x_ceil_ogt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_ugt"
+4: "x_ceil_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_ogt_vec"
+8: "x_ceil_ogt_vec" contains vectors which are unsupported
+
+1: "x_ceil_oge_neg"
+4: "x_ceil_oge_neg" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "x_ceil_oge_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_olt_neg"
+4: "x_ceil_olt_neg" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "x_ceil_olt_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_oeq_neg"
+4: "x_ceil_oeq_neg" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "x_ceil_oeq_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "x_ceil_one_neg"
+4: "x_ceil_one_neg" has unsupported operation: builtin.unregistered: llvm.intr.ceil
+
+4: "x_ceil_one_neg" has unsupported operation: builtin.unregistered: llvm.fcmp
+

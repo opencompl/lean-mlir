@@ -1,0 +1,217 @@
+1: "fcmp_ord_and_uno"
+4: "fcmp_ord_and_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq"
+4: "fcmp_ord_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ugt"
+4: "fcmp_ord_and_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_uge"
+4: "fcmp_ord_and_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ult"
+4: "fcmp_ord_and_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ule"
+4: "fcmp_ord_and_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_une"
+4: "fcmp_ord_and_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_true"
+4: "fcmp_ord_and_true" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_vector"
+4: "fcmp_ord_and_ueq_vector" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_vector" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_different_value0"
+4: "fcmp_ord_and_ueq_different_value0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_different_value0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_different_value1"
+4: "fcmp_ord_and_ueq_different_value1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_different_value1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "foo"
+5: "foo" is empty
+
+1: "fcmp_ord_and_ueq_commute0"
+4: "fcmp_ord_and_ueq_commute0" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_ueq_commute0" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_ueq_commute0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_commute0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_commute1"
+4: "fcmp_ord_and_ueq_commute1" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_ueq_commute1" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_ueq_commute1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_commute1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_x_x_and_ult"
+4: "fcmp_oeq_x_x_and_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_oeq_x_x_and_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_preserve_flags"
+4: "fcmp_ord_and_ueq_preserve_flags" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_preserve_flags" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_preserve_subset_flags0"
+4: "fcmp_ord_and_ueq_preserve_subset_flags0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_preserve_subset_flags0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_preserve_subset_flags1"
+4: "fcmp_ord_and_ueq_preserve_subset_flags1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_preserve_subset_flags1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_flags_lhs"
+4: "fcmp_ord_and_ueq_flags_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_flags_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_ueq_flags_rhs"
+4: "fcmp_ord_and_ueq_flags_rhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_ueq_flags_rhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fabs_ueq"
+4: "fcmp_ord_and_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fcmp_ord_and_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_fabs_and_ueq"
+4: "fcmp_ord_fabs_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_fabs_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fabs_ueq_commute0"
+4: "fcmp_ord_and_fabs_ueq_commute0" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_fabs_ueq_commute0" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_fabs_ueq_commute0" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fcmp_ord_and_fabs_ueq_commute0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fabs_ueq_commute0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fabs_ueq_commute1"
+4: "fcmp_ord_and_fabs_ueq_commute1" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_fabs_ueq_commute1" has unsupported operation: llvm.call
+
+4: "fcmp_ord_and_fabs_ueq_commute1" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fcmp_ord_and_fabs_ueq_commute1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fabs_ueq_commute1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fabs_ueq_vector"
+4: "fcmp_ord_and_fabs_ueq_vector" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fcmp_ord_and_fabs_ueq_vector" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fabs_ueq_vector" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_fabs_and_fabs_ueq"
+4: "fcmp_ord_fabs_and_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fcmp_ord_fabs_and_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_fabs_and_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fneg_ueq"
+4: "fcmp_ord_and_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fcmp_ord_and_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_fneg_and_ueq"
+4: "fcmp_ord_fneg_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_fneg_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_fneg_and_fneg_ueq"
+4: "fcmp_ord_fneg_and_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fcmp_ord_fneg_and_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_fneg_and_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fneg_fabs_ueq"
+4: "fcmp_ord_and_fneg_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fcmp_ord_and_fneg_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fcmp_ord_and_fneg_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fneg_fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_copysign_ueq"
+4: "fcmp_ord_and_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fcmp_ord_and_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_copysign_ord_and_ueq"
+4: "fcmp_copysign_ord_and_ueq" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fcmp_copysign_ord_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_copysign_ord_and_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_copysign_ueq_commute"
+4: "fcmp_ord_and_copysign_ueq_commute" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fcmp_ord_and_copysign_ueq_commute" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_copysign_ueq_commute" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_copysign_fneg_ueq"
+4: "fcmp_ord_and_copysign_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fcmp_ord_and_copysign_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_copysign_fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ord_and_fneg_copysign_ueq"
+4: "fcmp_ord_and_fneg_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fcmp_ord_and_fneg_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fcmp_ord_and_fneg_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp_ord_and_fneg_copysign_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+

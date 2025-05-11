@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Batteries.Tactic.Basic
 import Mathlib.Tactic.TypeStar
-
+import Qq
 
 /-- An heterogeneous vector -/
 inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
@@ -12,7 +12,7 @@ inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
 
 namespace HVector
 
-variable {A B : α → Type*} {as : List α}
+variable {α : Type u} {A B : α → Type*} {as : List α}
 
 /-
   # Definitions
@@ -43,10 +43,32 @@ def map' {A : α → Type*} {B : β → Type*} (f' : α → β) (f : ∀ (a : α
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map' f' f as)
 
+/-- Folds a function over an hvector from the left, where the accumulator has a fixed type. -/
 def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
     ∀ {l : List α}, B → HVector A l → B
   | [],   b, .nil       => b
   | t::_, b, .cons a as => foldl f (f t b a) as
+
+def foldr {β : Type*} (f : ∀ (a : α), A a → β → β) :
+    ∀ {l : List α}, (init : β) → HVector A l → β
+  | [],   b, .nil       => b
+  | t::_, b, .cons a as =>
+    let b' := foldr f b as
+    f t a b'
+
+/--
+Folds a function over an hvector from the left, where the type of the
+accumulator depends on the elements processed.
+
+In particular, the type of the accumulator after processing i elements is obtained
+by folding `fType` over the first i elements of `as`, and applying `B` to the
+result of that fold.
+-/
+def foldld {β : Type*} (B : β → Type*) (fType : β → α → β)
+    (fElem : {b : β} → {a : α} → B b → A a → B (fType b a)) :
+    {as : List α} → HVector A as → {b : β} → (init : B b) → B (as.foldl fType b)
+  | [], .nil, _, init         => init
+  | _::_, .cons a as, _, init => foldld B fType fElem as (fElem init a)
 
 def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .nil, i => i.elim0
@@ -115,6 +137,11 @@ theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
   cases h; cases t₁; cases t₂; rfl
 syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
+@[simp]
+theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :
+   (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := by
+  rfl
+
 -- Copied from core for List
 macro_rules
   | `([ $elems,* ]ₕ) => do
@@ -122,11 +149,78 @@ macro_rules
       match i, skip with
       | 0,   _     => pure result
       | i+1, true  => expandListLit i false result
-      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps.get! i⟩) $result))
+      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps[i]!⟩) $result))
     if elems.elemsAndSeps.size < 64 then
       expandListLit elems.elemsAndSeps.size false (← ``(HVector.nil))
     else
       `(%[ $elems,* | List.nil ])
 
 infixl:50 "::ₕ" => HVector.cons
+
+
+/-!
+  ## OfFn
+-/
+
+def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]) :
+    HVector A as :=
+  match as with
+  | _ :: as => f (0 : Fin (_ + 1)) ::ₕ ofFn A as (fun i => f i.succ)
+  | [] => .nil
+
+@[simp] theorem ofFn_nil : ofFn A [] f = .nil := by rfl
+
+/-
+  # ToExpr and other Meta helpers
+-/
+section ToExprPi
+open Lean Qq
+
+class ToExprPi {α : Type u} (A : α → Type v) [∀ a, ToExpr (A a)] where
+  /-- The expression representing `A` -/
+  toTypeExpr : Expr
+
+variable {A : α → Type v}
+
+/--
+Given an array of elements, such that `elems[i].snd` is of type `f elems[i].fst`,
+construct an expression of type `@HVector α f _`, where
+* `α : Type u₁`, and
+* `f : α → Type u₂`
+-/
+def mkOfElems (u₁ u₂ : Level) (α f : Expr) (elems : Array (Expr × Expr)) : MetaM Expr := do
+  let us := [u₁, u₂]
+  let init := (
+    mkApp (.const ``List.nil [u₁]) α,
+    mkApp2 (.const ``HVector.nil us) α f
+  )
+  let res := elems.foldr (init := init) fun (a, elem) (as, vec) => (
+      mkApp3 (.const ``List.nil [u₁]) α a as,
+      mkApp6 (.const ``HVector.cons us) α f as a elem vec
+    )
+  return res.snd
+
+instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
+    [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] :
+    Lean.ToExpr (HVector A as) :=
+  let α := toTypeExpr α
+  let AE := ToExprPi.toTypeExpr A
+  let us := [toLevel.{u}, toLevel.{v}]
+  let rec toExpr : {as : List _} → HVector A as → Lean.Expr
+  | [], .nil =>
+    mkApp2 (.const ``HVector.nil us) α AE
+  | a::as, .cons x xs =>
+    let a := Lean.toExpr a
+    let as := Lean.toExpr as
+    let x := Lean.toExpr x
+    let xs := toExpr xs
+    mkApp6 (.const ``HVector.cons us) α AE as a x xs
+  { toTypeExpr :=
+      let as := Lean.toExpr as
+      mkApp2 (.const ``HVector us) AE as
+    toExpr }
+
+end ToExprPi
+
+
 end HVector

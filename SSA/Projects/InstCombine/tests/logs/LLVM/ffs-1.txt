@@ -1,0 +1,54 @@
+1: "ffs"
+5: "ffs" is empty
+
+1: "ffsl"
+5: "ffsl" is empty
+
+1: "ffsll"
+5: "ffsll" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation: llvm.call
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.call
+
+1: "test_simplify4"
+4: "test_simplify4" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify5"
+4: "test_simplify5" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify6"
+4: "test_simplify6" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify7"
+4: "test_simplify7" has unsupported operation: llvm.call
+
+1: "test_simplify8"
+4: "test_simplify8" has unsupported operation: llvm.call
+
+1: "test_simplify9"
+4: "test_simplify9" has unsupported operation: llvm.call
+
+1: "test_simplify10"
+4: "test_simplify10" has unsupported operation: llvm.call
+
+1: "test_simplify11"
+4: "test_simplify11" has unsupported operation: llvm.call
+
+1: "test_simplify12"
+4: "test_simplify12" has unsupported operation: llvm.call
+
+1: "test_simplify13"
+4: "test_simplify13" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "test_simplify14"
+4: "test_simplify14" has unsupported operation: llvm.call
+
+1: "test_simplify15"
+4: "test_simplify15" has unsupported operation: llvm.call
+

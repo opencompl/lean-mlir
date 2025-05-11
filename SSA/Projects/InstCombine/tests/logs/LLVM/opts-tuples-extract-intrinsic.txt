@@ -1,0 +1,2 @@
+3: opts-tuples-extract-intrinsic.ll: parsing has failed
+

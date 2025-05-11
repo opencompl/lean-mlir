@@ -1,0 +1,198 @@
+1: "usei32"
+5: "usei32" is empty
+
+1: "test0"
+4: "test0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test0" has unsupported operation: llvm.extractvalue
+
+1: "test1_extrause0"
+4: "test1_extrause0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test1_extrause0" has unsupported operation: llvm.extractvalue
+
+4: "test1_extrause0" has unsupported operation: llvm.call
+
+4: "test1_extrause0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test1_extrause0" has unsupported operation: llvm.extractvalue
+
+4: "test1_extrause0" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test2_extrause1"
+4: "test2_extrause1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test2_extrause1" has unsupported operation: llvm.extractvalue
+
+4: "test2_extrause1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test2_extrause1" has unsupported operation: llvm.extractvalue
+
+4: "test2_extrause1" has unsupported operation: llvm.call
+
+4: "test2_extrause1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test3_extrause2"
+4: "test3_extrause2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3_extrause2" has unsupported operation: llvm.extractvalue
+
+4: "test3_extrause2" has unsupported operation: llvm.call
+
+4: "test3_extrause2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3_extrause2" has unsupported operation: llvm.extractvalue
+
+4: "test3_extrause2" has unsupported operation: llvm.call
+
+4: "test3_extrause2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: llvm.extractvalue
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test4" has unsupported operation: llvm.extractvalue
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.extractvalue
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: llvm.extractvalue
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.extractvalue
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test7" has unsupported operation: llvm.extractvalue
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test7" has unsupported operation: llvm.extractvalue
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test8" has unsupported operation: llvm.extractvalue
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test8" has unsupported operation: llvm.extractvalue
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test9" has unsupported operation: llvm.extractvalue
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test9" has unsupported operation: llvm.extractvalue
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test10"
+4: "test10" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test10" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test10" has unsupported operation: llvm.extractvalue
+
+1: "test11"
+4: "test11" has unsupported operation: llvm.extractvalue
+
+4: "test11" has unsupported operation: llvm.extractvalue
+
+4: "test11" has unsupported operation: llvm.call
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "extractvalue_of_constant_phi"
+4: "extractvalue_of_constant_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "extractvalue_of_constant_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "extractvalue_of_constant_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "extractvalue_of_one_constant_phi"
+4: "extractvalue_of_one_constant_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "extractvalue_of_one_constant_phi" has unsupported operation: llvm.extractvalue
+
+4: "extractvalue_of_one_constant_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "extractvalue_of_one_constant_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "extractvalue_of_constant_phi_multi_index"
+4: "extractvalue_of_constant_phi_multi_index" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "extractvalue_of_constant_phi_multi_index" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "extractvalue_of_constant_phi_multi_index" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "extractvalue_of_one_constant_phi_multi_index"
+4: "extractvalue_of_one_constant_phi_multi_index" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "extractvalue_of_one_constant_phi_multi_index" has unsupported operation: llvm.extractvalue
+
+4: "extractvalue_of_one_constant_phi_multi_index" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "extractvalue_of_one_constant_phi_multi_index" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "extractvalue_of_constant_phi_multiuse"
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.mlir.undef
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.mlir.undef
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.insertvalue
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "extractvalue_of_constant_phi_multiuse" has unsupported operation: llvm.extractvalue
+

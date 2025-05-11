@@ -1,0 +1,157 @@
+1: "copysign_fneg_x"
+4: "copysign_fneg_x" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_fabs_x"
+4: "copysign_fabs_x" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_fneg_fabs_x"
+4: "copysign_fneg_fabs_x" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_fneg_y"
+4: "copysign_fneg_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "copysign_fneg_y" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_fabs_y"
+4: "copysign_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "copysign_fneg_fabs_y"
+4: "copysign_fneg_fabs_y" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "copysign_fneg_fabs_y" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg_copysign"
+4: "fneg_copysign" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_copysign" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fneg_fabs_copysign"
+4: "fneg_fabs_copysign" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fneg_fabs_copysign" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fabs_copysign"
+4: "fabs_copysign" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fneg_copysign_vector"
+4: "fneg_copysign_vector" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_copysign_vector" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fneg_fabs_copysign_vector"
+4: "fneg_fabs_copysign_vector" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fneg_fabs_copysign_vector" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fabs_copysign_vector"
+4: "fabs_copysign_vector" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fneg_copysign_flags"
+4: "fneg_copysign_flags" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_copysign_flags" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fneg_fabs_copysign_flags"
+4: "fneg_fabs_copysign_flags" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fneg_fabs_copysign_flags" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg_nsz_copysign"
+4: "fneg_nsz_copysign" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_nsz_copysign" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "fneg_fabs_copysign_flags_none_fabs"
+4: "fneg_fabs_copysign_flags_none_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fneg_fabs_copysign_flags_none_fabs" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fabs_copysign_flags"
+4: "fabs_copysign_flags" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_all_flags"
+4: "fabs_copysign_all_flags" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_copysign_no_flags_copysign_user"
+9: "fabs_copysign_no_flags_copysign_user" has pointer type input
+
+4: "fabs_copysign_no_flags_copysign_user" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fabs_copysign_no_flags_copysign_user" has unsupported operation: llvm.store
+
+4: "fabs_copysign_no_flags_copysign_user" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fneg_fabs_copysign_drop_flags"
+4: "fneg_fabs_copysign_drop_flags" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fneg_fabs_copysign_drop_flags" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fneg_copysign_multi_use"
+9: "fneg_copysign_multi_use" has pointer type input
+
+4: "fneg_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fneg_copysign_multi_use" has unsupported operation: llvm.store
+
+4: "fneg_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "fabs_copysign_multi_use"
+9: "fabs_copysign_multi_use" has pointer type input
+
+4: "fabs_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fabs_copysign_multi_use" has unsupported operation: llvm.store
+
+4: "fabs_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fabs_flags_copysign_multi_use"
+9: "fabs_flags_copysign_multi_use" has pointer type input
+
+4: "fabs_flags_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "fabs_flags_copysign_multi_use" has unsupported operation: llvm.store
+
+4: "fabs_flags_copysign_multi_use" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "fneg_fabs_copysign_multi_use_fabs"
+9: "fneg_fabs_copysign_multi_use_fabs" has pointer type input
+
+4: "fneg_fabs_copysign_multi_use_fabs" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "fneg_fabs_copysign_multi_use_fabs" has unsupported operation: llvm.store
+
+1: "copysign_pos"
+4: "copysign_pos" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_neg"
+4: "copysign_neg" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_negzero"
+4: "copysign_negzero" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_negnan"
+4: "copysign_negnan" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_neginf"
+4: "copysign_neginf" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_splat"
+4: "copysign_splat" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+1: "copysign_vec4"
+4: "copysign_vec4" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "copysign_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "copysign_vec4" has unsupported operation: llvm.mlir.undef
+
+4: "copysign_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "copysign_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "copysign_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "copysign_vec4" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "copysign_vec4" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+

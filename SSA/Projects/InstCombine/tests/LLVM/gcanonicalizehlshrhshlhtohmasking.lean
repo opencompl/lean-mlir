@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gcanonicalizehlshrhshlhtohmasking_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gcanonicalizehlshrhshlhtohmasking_statements
-                                                    
+
 def positive_samevar_before := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
@@ -24,22 +24,19 @@ def positive_samevar_before := [llvm|
 def positive_samevar_after := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg63 : i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.shl %0, %arg63 overflow<nsw> : i8
   %2 = llvm.and %1, %arg62 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_after := by
   unfold positive_samevar_before positive_samevar_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar
-  apply positive_samevar_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar
 
 
@@ -47,7 +44,7 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
 def positive_sameconst_before := [llvm|
 {
 ^0(%arg61 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.lshr %arg61, %0 : i8
   %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
@@ -56,19 +53,16 @@ def positive_sameconst_before := [llvm|
 def positive_sameconst_after := [llvm|
 {
 ^0(%arg61 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-8 : i8) : i8
   %1 = llvm.and %arg61, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameconst_after := by
   unfold positive_sameconst_before positive_sameconst_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst
@@ -78,8 +72,8 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
 def positive_biggerlshr_before := [llvm|
 {
 ^0(%arg60 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.lshr %arg60, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -88,23 +82,20 @@ def positive_biggerlshr_before := [llvm|
 def positive_biggerlshr_after := [llvm|
 {
 ^0(%arg60 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 24 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(24 : i8) : i8
   %2 = llvm.lshr %arg60, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_proof : positive_biggerlshr_before ⊑ positive_biggerlshr_after := by
   unfold positive_biggerlshr_before positive_biggerlshr_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr
-  apply positive_biggerlshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr
 
 
@@ -112,8 +103,8 @@ theorem positive_biggerlshr_proof : positive_biggerlshr_before ⊑ positive_bigg
 def positive_biggershl_before := [llvm|
 {
 ^0(%arg59 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.lshr %arg59, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
@@ -122,23 +113,20 @@ def positive_biggershl_before := [llvm|
 def positive_biggershl_after := [llvm|
 {
 ^0(%arg59 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(-64 : i8) : i8
   %2 = llvm.shl %arg59, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_proof : positive_biggershl_before ⊑ positive_biggershl_after := by
   unfold positive_biggershl_before positive_biggershl_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl
-  apply positive_biggershl_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl
 
 
@@ -147,29 +135,26 @@ def positive_samevar_shlnuw_before := [llvm|
 {
 ^0(%arg57 : i8, %arg58 : i8):
   %0 = llvm.lshr %arg57, %arg58 : i8
-  %1 = llvm.shl %0, %arg58 : i8
+  %1 = llvm.shl %0, %arg58 overflow<nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
 def positive_samevar_shlnuw_after := [llvm|
 {
 ^0(%arg57 : i8, %arg58 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg58 : i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.shl %0, %arg58 overflow<nsw> : i8
   %2 = llvm.and %1, %arg57 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ positive_samevar_shlnuw_after := by
   unfold positive_samevar_shlnuw_before positive_samevar_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_shlnuw
-  apply positive_samevar_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw
 
 
@@ -177,28 +162,25 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
 def positive_sameconst_shlnuw_before := [llvm|
 {
 ^0(%arg56 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.lshr %arg56, %0 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nuw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
 def positive_sameconst_shlnuw_after := [llvm|
 {
 ^0(%arg56 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-8 : i8) : i8
   %1 = llvm.and %arg56, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ positive_sameconst_shlnuw_after := by
   unfold positive_sameconst_shlnuw_before positive_sameconst_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_shlnuw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw
@@ -208,33 +190,30 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
 def positive_biggerlshr_shlnuw_before := [llvm|
 {
 ^0(%arg55 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.lshr %arg55, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %3 = llvm.shl %2, %1 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggerlshr_shlnuw_after := [llvm|
 {
 ^0(%arg55 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 24 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(24 : i8) : i8
   %2 = llvm.lshr %arg55, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuw_proof : positive_biggerlshr_shlnuw_before ⊑ positive_biggerlshr_shlnuw_after := by
   unfold positive_biggerlshr_shlnuw_before positive_biggerlshr_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_shlnuw
-  apply positive_biggerlshr_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuw
 
 
@@ -242,33 +221,30 @@ theorem positive_biggerlshr_shlnuw_proof : positive_biggerlshr_shlnuw_before ⊑
 def positive_biggershl_shlnuw_before := [llvm|
 {
 ^0(%arg54 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.lshr %arg54, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %3 = llvm.shl %2, %1 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggershl_shlnuw_after := [llvm|
 {
 ^0(%arg54 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
-  %2 = llvm.shl %arg54, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(-64 : i8) : i8
+  %2 = llvm.shl %arg54, %0 overflow<nuw> : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuw_proof : positive_biggershl_shlnuw_before ⊑ positive_biggershl_shlnuw_after := by
   unfold positive_biggershl_shlnuw_before positive_biggershl_shlnuw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_shlnuw
-  apply positive_biggershl_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuw
 
 
@@ -277,29 +253,26 @@ def positive_samevar_shlnsw_before := [llvm|
 {
 ^0(%arg52 : i8, %arg53 : i8):
   %0 = llvm.lshr %arg52, %arg53 : i8
-  %1 = llvm.shl %0, %arg53 : i8
+  %1 = llvm.shl %0, %arg53 overflow<nsw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
 def positive_samevar_shlnsw_after := [llvm|
 {
 ^0(%arg52 : i8, %arg53 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg53 : i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.shl %0, %arg53 overflow<nsw> : i8
   %2 = llvm.and %1, %arg52 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ positive_samevar_shlnsw_after := by
   unfold positive_samevar_shlnsw_before positive_samevar_shlnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_shlnsw
-  apply positive_samevar_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnsw
 
 
@@ -307,28 +280,25 @@ theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ posit
 def positive_sameconst_shlnsw_before := [llvm|
 {
 ^0(%arg51 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.lshr %arg51, %0 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nsw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
 def positive_sameconst_shlnsw_after := [llvm|
 {
 ^0(%arg51 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-8 : i8) : i8
   %1 = llvm.and %arg51, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ positive_sameconst_shlnsw_after := by
   unfold positive_sameconst_shlnsw_before positive_sameconst_shlnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_shlnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw
@@ -338,33 +308,30 @@ theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ p
 def positive_biggerlshr_shlnsw_before := [llvm|
 {
 ^0(%arg50 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.lshr %arg50, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggerlshr_shlnsw_after := [llvm|
 {
 ^0(%arg50 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 24 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(24 : i8) : i8
   %2 = llvm.lshr %arg50, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnsw_proof : positive_biggerlshr_shlnsw_before ⊑ positive_biggerlshr_shlnsw_after := by
   unfold positive_biggerlshr_shlnsw_before positive_biggerlshr_shlnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_shlnsw
-  apply positive_biggerlshr_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnsw
 
 
@@ -372,33 +339,30 @@ theorem positive_biggerlshr_shlnsw_proof : positive_biggerlshr_shlnsw_before ⊑
 def positive_biggershl_shlnsw_before := [llvm|
 {
 ^0(%arg49 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.lshr %arg49, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggershl_shlnsw_after := [llvm|
 {
 ^0(%arg49 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
-  %2 = llvm.shl %arg49, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(64 : i8) : i8
+  %2 = llvm.shl %arg49, %0 overflow<nsw,nuw> : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnsw_proof : positive_biggershl_shlnsw_before ⊑ positive_biggershl_shlnsw_after := by
   unfold positive_biggershl_shlnsw_before positive_biggershl_shlnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_shlnsw
-  apply positive_biggershl_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnsw
 
 
@@ -407,29 +371,26 @@ def positive_samevar_shlnuwnsw_before := [llvm|
 {
 ^0(%arg47 : i8, %arg48 : i8):
   %0 = llvm.lshr %arg47, %arg48 : i8
-  %1 = llvm.shl %0, %arg48 : i8
+  %1 = llvm.shl %0, %arg48 overflow<nsw,nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
 def positive_samevar_shlnuwnsw_after := [llvm|
 {
 ^0(%arg47 : i8, %arg48 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg48 : i8
+  %0 = llvm.mlir.constant(-1 : i8) : i8
+  %1 = llvm.shl %0, %arg48 overflow<nsw> : i8
   %2 = llvm.and %1, %arg47 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑ positive_samevar_shlnuwnsw_after := by
   unfold positive_samevar_shlnuwnsw_before positive_samevar_shlnuwnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_shlnuwnsw
-  apply positive_samevar_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuwnsw
 
 
@@ -437,28 +398,25 @@ theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑
 def positive_sameconst_shlnuwnsw_before := [llvm|
 {
 ^0(%arg46 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.lshr %arg46, %0 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
 def positive_sameconst_shlnuwnsw_after := [llvm|
 {
 ^0(%arg46 : i8):
-  %0 = "llvm.mlir.constant"() <{value = -8 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(-8 : i8) : i8
   %1 = llvm.and %arg46, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before ⊑ positive_sameconst_shlnuwnsw_after := by
   unfold positive_sameconst_shlnuwnsw_before positive_sameconst_shlnuwnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_shlnuwnsw
   all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw
@@ -468,33 +426,30 @@ theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before
 def positive_biggerlshr_shlnuwnsw_before := [llvm|
 {
 ^0(%arg45 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
   %2 = llvm.lshr %arg45, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggerlshr_shlnuwnsw_after := [llvm|
 {
 ^0(%arg45 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 24 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(24 : i8) : i8
   %2 = llvm.lshr %arg45, %0 : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuwnsw_proof : positive_biggerlshr_shlnuwnsw_before ⊑ positive_biggerlshr_shlnuwnsw_after := by
   unfold positive_biggerlshr_shlnuwnsw_before positive_biggerlshr_shlnuwnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_shlnuwnsw
-  apply positive_biggerlshr_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuwnsw
 
 
@@ -502,33 +457,30 @@ theorem positive_biggerlshr_shlnuwnsw_proof : positive_biggerlshr_shlnuwnsw_befo
 def positive_biggershl_shlnuwnsw_before := [llvm|
 {
 ^0(%arg44 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
   %2 = llvm.lshr %arg44, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggershl_shlnuwnsw_after := [llvm|
 {
 ^0(%arg44 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
-  %2 = llvm.shl %arg44, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(64 : i8) : i8
+  %2 = llvm.shl %arg44, %0 overflow<nsw,nuw> : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before ⊑ positive_biggershl_shlnuwnsw_after := by
   unfold positive_biggershl_shlnuwnsw_before positive_biggershl_shlnuwnsw_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_shlnuwnsw
-  apply positive_biggershl_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuwnsw
 
 
@@ -536,7 +488,7 @@ theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before
 def positive_samevar_lshrexact_before := [llvm|
 {
 ^0(%arg42 : i8, %arg43 : i8):
-  %0 = llvm.lshr %arg42, %arg43 : i8
+  %0 = llvm.lshr exact %arg42, %arg43 : i8
   %1 = llvm.shl %0, %arg43 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
@@ -547,16 +499,13 @@ def positive_samevar_lshrexact_after := [llvm|
   "llvm.return"(%arg42) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_lshrexact_proof : positive_samevar_lshrexact_before ⊑ positive_samevar_lshrexact_after := by
   unfold positive_samevar_lshrexact_before positive_samevar_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_lshrexact
-  apply positive_samevar_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_lshrexact
 
 
@@ -564,8 +513,8 @@ theorem positive_samevar_lshrexact_proof : positive_samevar_lshrexact_before ⊑
 def positive_sameconst_lshrexact_before := [llvm|
 {
 ^0(%arg41 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg41, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg41, %0 : i8
   %2 = llvm.shl %1, %0 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -576,16 +525,13 @@ def positive_sameconst_lshrexact_after := [llvm|
   "llvm.return"(%arg41) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_lshrexact_proof : positive_sameconst_lshrexact_before ⊑ positive_sameconst_lshrexact_after := by
   unfold positive_sameconst_lshrexact_before positive_sameconst_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_lshrexact
-  apply positive_sameconst_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_lshrexact
 
 
@@ -593,9 +539,9 @@ theorem positive_sameconst_lshrexact_proof : positive_sameconst_lshrexact_before
 def positive_biggerlshr_lshrexact_before := [llvm|
 {
 ^0(%arg40 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %2 = llvm.lshr %arg40, %0 : i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr exact %arg40, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -603,21 +549,18 @@ def positive_biggerlshr_lshrexact_before := [llvm|
 def positive_biggerlshr_lshrexact_after := [llvm|
 {
 ^0(%arg40 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg40, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg40, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_lshrexact_proof : positive_biggerlshr_lshrexact_before ⊑ positive_biggerlshr_lshrexact_after := by
   unfold positive_biggerlshr_lshrexact_before positive_biggerlshr_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_lshrexact
-  apply positive_biggerlshr_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_lshrexact
 
 
@@ -625,9 +568,9 @@ theorem positive_biggerlshr_lshrexact_proof : positive_biggerlshr_lshrexact_befo
 def positive_biggershl_lshrexact_before := [llvm|
 {
 ^0(%arg39 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %2 = llvm.lshr %arg39, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.lshr exact %arg39, %0 : i8
   %3 = llvm.shl %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -635,21 +578,18 @@ def positive_biggershl_lshrexact_before := [llvm|
 def positive_biggershl_lshrexact_after := [llvm|
 {
 ^0(%arg39 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
   %1 = llvm.shl %arg39, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_lshrexact_proof : positive_biggershl_lshrexact_before ⊑ positive_biggershl_lshrexact_after := by
   unfold positive_biggershl_lshrexact_before positive_biggershl_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_lshrexact
-  apply positive_biggershl_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_lshrexact
 
 
@@ -657,8 +597,8 @@ theorem positive_biggershl_lshrexact_proof : positive_biggershl_lshrexact_before
 def positive_samevar_shlnsw_lshrexact_before := [llvm|
 {
 ^0(%arg37 : i8, %arg38 : i8):
-  %0 = llvm.lshr %arg37, %arg38 : i8
-  %1 = llvm.shl %0, %arg38 : i8
+  %0 = llvm.lshr exact %arg37, %arg38 : i8
+  %1 = llvm.shl %0, %arg38 overflow<nsw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -668,16 +608,13 @@ def positive_samevar_shlnsw_lshrexact_after := [llvm|
   "llvm.return"(%arg37) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnsw_lshrexact_proof : positive_samevar_shlnsw_lshrexact_before ⊑ positive_samevar_shlnsw_lshrexact_after := by
   unfold positive_samevar_shlnsw_lshrexact_before positive_samevar_shlnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_shlnsw_lshrexact
-  apply positive_samevar_shlnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnsw_lshrexact
 
 
@@ -685,9 +622,9 @@ theorem positive_samevar_shlnsw_lshrexact_proof : positive_samevar_shlnsw_lshrex
 def positive_sameconst_shlnsw_lshrexact_before := [llvm|
 {
 ^0(%arg36 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg36, %0 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg36, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nsw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -697,16 +634,13 @@ def positive_sameconst_shlnsw_lshrexact_after := [llvm|
   "llvm.return"(%arg36) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnsw_lshrexact_proof : positive_sameconst_shlnsw_lshrexact_before ⊑ positive_sameconst_shlnsw_lshrexact_after := by
   unfold positive_sameconst_shlnsw_lshrexact_before positive_sameconst_shlnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_shlnsw_lshrexact
-  apply positive_sameconst_shlnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw_lshrexact
 
 
@@ -714,31 +648,28 @@ theorem positive_sameconst_shlnsw_lshrexact_proof : positive_sameconst_shlnsw_ls
 def positive_biggerlshr_shlnsw_lshrexact_before := [llvm|
 {
 ^0(%arg35 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %2 = llvm.lshr %arg35, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr exact %arg35, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggerlshr_shlnsw_lshrexact_after := [llvm|
 {
 ^0(%arg35 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg35, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg35, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnsw_lshrexact_proof : positive_biggerlshr_shlnsw_lshrexact_before ⊑ positive_biggerlshr_shlnsw_lshrexact_after := by
   unfold positive_biggerlshr_shlnsw_lshrexact_before positive_biggerlshr_shlnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_shlnsw_lshrexact
-  apply positive_biggerlshr_shlnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnsw_lshrexact
 
 
@@ -746,31 +677,28 @@ theorem positive_biggerlshr_shlnsw_lshrexact_proof : positive_biggerlshr_shlnsw_
 def positive_biggershl_shlnsw_lshrexact_before := [llvm|
 {
 ^0(%arg34 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %2 = llvm.lshr %arg34, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.lshr exact %arg34, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggershl_shlnsw_lshrexact_after := [llvm|
 {
 ^0(%arg34 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.shl %arg34, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.shl %arg34, %0 overflow<nsw,nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnsw_lshrexact_proof : positive_biggershl_shlnsw_lshrexact_before ⊑ positive_biggershl_shlnsw_lshrexact_after := by
   unfold positive_biggershl_shlnsw_lshrexact_before positive_biggershl_shlnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_shlnsw_lshrexact
-  apply positive_biggershl_shlnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnsw_lshrexact
 
 
@@ -778,8 +706,8 @@ theorem positive_biggershl_shlnsw_lshrexact_proof : positive_biggershl_shlnsw_ls
 def positive_samevar_shlnuw_lshrexact_before := [llvm|
 {
 ^0(%arg32 : i8, %arg33 : i8):
-  %0 = llvm.lshr %arg32, %arg33 : i8
-  %1 = llvm.shl %0, %arg33 : i8
+  %0 = llvm.lshr exact %arg32, %arg33 : i8
+  %1 = llvm.shl %0, %arg33 overflow<nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -789,16 +717,13 @@ def positive_samevar_shlnuw_lshrexact_after := [llvm|
   "llvm.return"(%arg32) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuw_lshrexact_proof : positive_samevar_shlnuw_lshrexact_before ⊑ positive_samevar_shlnuw_lshrexact_after := by
   unfold positive_samevar_shlnuw_lshrexact_before positive_samevar_shlnuw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_shlnuw_lshrexact
-  apply positive_samevar_shlnuw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw_lshrexact
 
 
@@ -806,9 +731,9 @@ theorem positive_samevar_shlnuw_lshrexact_proof : positive_samevar_shlnuw_lshrex
 def positive_sameconst_shlnuw_lshrexact_before := [llvm|
 {
 ^0(%arg31 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg31, %0 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg31, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nuw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -818,16 +743,13 @@ def positive_sameconst_shlnuw_lshrexact_after := [llvm|
   "llvm.return"(%arg31) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuw_lshrexact_proof : positive_sameconst_shlnuw_lshrexact_before ⊑ positive_sameconst_shlnuw_lshrexact_after := by
   unfold positive_sameconst_shlnuw_lshrexact_before positive_sameconst_shlnuw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_shlnuw_lshrexact
-  apply positive_sameconst_shlnuw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw_lshrexact
 
 
@@ -835,31 +757,28 @@ theorem positive_sameconst_shlnuw_lshrexact_proof : positive_sameconst_shlnuw_ls
 def positive_biggerlshr_shlnuw_lshrexact_before := [llvm|
 {
 ^0(%arg30 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %2 = llvm.lshr %arg30, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr exact %arg30, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggerlshr_shlnuw_lshrexact_after := [llvm|
 {
 ^0(%arg30 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg30, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg30, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuw_lshrexact_proof : positive_biggerlshr_shlnuw_lshrexact_before ⊑ positive_biggerlshr_shlnuw_lshrexact_after := by
   unfold positive_biggerlshr_shlnuw_lshrexact_before positive_biggerlshr_shlnuw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_shlnuw_lshrexact
-  apply positive_biggerlshr_shlnuw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuw_lshrexact
 
 
@@ -867,31 +786,28 @@ theorem positive_biggerlshr_shlnuw_lshrexact_proof : positive_biggerlshr_shlnuw_
 def positive_biggershl_shlnuw_lshrexact_before := [llvm|
 {
 ^0(%arg29 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %2 = llvm.lshr %arg29, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.lshr exact %arg29, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggershl_shlnuw_lshrexact_after := [llvm|
 {
 ^0(%arg29 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.shl %arg29, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.shl %arg29, %0 overflow<nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuw_lshrexact_proof : positive_biggershl_shlnuw_lshrexact_before ⊑ positive_biggershl_shlnuw_lshrexact_after := by
   unfold positive_biggershl_shlnuw_lshrexact_before positive_biggershl_shlnuw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_shlnuw_lshrexact
-  apply positive_biggershl_shlnuw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuw_lshrexact
 
 
@@ -899,8 +815,8 @@ theorem positive_biggershl_shlnuw_lshrexact_proof : positive_biggershl_shlnuw_ls
 def positive_samevar_shlnuwnsw_lshrexact_before := [llvm|
 {
 ^0(%arg27 : i8, %arg28 : i8):
-  %0 = llvm.lshr %arg27, %arg28 : i8
-  %1 = llvm.shl %0, %arg28 : i8
+  %0 = llvm.lshr exact %arg27, %arg28 : i8
+  %1 = llvm.shl %0, %arg28 overflow<nsw,nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -910,16 +826,13 @@ def positive_samevar_shlnuwnsw_lshrexact_after := [llvm|
   "llvm.return"(%arg27) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_samevar_shlnuwnsw_lshrexact_proof : positive_samevar_shlnuwnsw_lshrexact_before ⊑ positive_samevar_shlnuwnsw_lshrexact_after := by
   unfold positive_samevar_shlnuwnsw_lshrexact_before positive_samevar_shlnuwnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_samevar_shlnuwnsw_lshrexact
-  apply positive_samevar_shlnuwnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuwnsw_lshrexact
 
 
@@ -927,9 +840,9 @@ theorem positive_samevar_shlnuwnsw_lshrexact_proof : positive_samevar_shlnuwnsw_
 def positive_sameconst_shlnuwnsw_lshrexact_before := [llvm|
 {
 ^0(%arg26 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg26, %0 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg26, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -939,16 +852,13 @@ def positive_sameconst_shlnuwnsw_lshrexact_after := [llvm|
   "llvm.return"(%arg26) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_sameconst_shlnuwnsw_lshrexact_proof : positive_sameconst_shlnuwnsw_lshrexact_before ⊑ positive_sameconst_shlnuwnsw_lshrexact_after := by
   unfold positive_sameconst_shlnuwnsw_lshrexact_before positive_sameconst_shlnuwnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_sameconst_shlnuwnsw_lshrexact
-  apply positive_sameconst_shlnuwnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw_lshrexact
 
 
@@ -956,31 +866,28 @@ theorem positive_sameconst_shlnuwnsw_lshrexact_proof : positive_sameconst_shlnuw
 def positive_biggerlshr_shlnuwnsw_lshrexact_before := [llvm|
 {
 ^0(%arg25 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %2 = llvm.lshr %arg25, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %0 = llvm.mlir.constant(6 : i8) : i8
+  %1 = llvm.mlir.constant(3 : i8) : i8
+  %2 = llvm.lshr exact %arg25, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggerlshr_shlnuwnsw_lshrexact_after := [llvm|
 {
 ^0(%arg25 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.lshr %arg25, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.lshr exact %arg25, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggerlshr_shlnuwnsw_lshrexact_proof : positive_biggerlshr_shlnuwnsw_lshrexact_before ⊑ positive_biggerlshr_shlnuwnsw_lshrexact_after := by
   unfold positive_biggerlshr_shlnuwnsw_lshrexact_before positive_biggerlshr_shlnuwnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggerlshr_shlnuwnsw_lshrexact
-  apply positive_biggerlshr_shlnuwnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerlshr_shlnuwnsw_lshrexact
 
 
@@ -988,31 +895,28 @@ theorem positive_biggerlshr_shlnuwnsw_lshrexact_proof : positive_biggerlshr_shln
 def positive_biggershl_shlnuwnsw_lshrexact_before := [llvm|
 {
 ^0(%arg24 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
-  %2 = llvm.lshr %arg24, %0 : i8
-  %3 = llvm.shl %2, %1 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.mlir.constant(6 : i8) : i8
+  %2 = llvm.lshr exact %arg24, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw,nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
 def positive_biggershl_shlnuwnsw_lshrexact_after := [llvm|
 {
 ^0(%arg24 : i8):
-  %0 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
-  %1 = llvm.shl %arg24, %0 : i8
+  %0 = llvm.mlir.constant(3 : i8) : i8
+  %1 = llvm.shl %arg24, %0 overflow<nsw,nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
+set_option debug.skipKernelTC true in
 theorem positive_biggershl_shlnuwnsw_lshrexact_proof : positive_biggershl_shlnuwnsw_lshrexact_before ⊑ positive_biggershl_shlnuwnsw_lshrexact_after := by
   unfold positive_biggershl_shlnuwnsw_lshrexact_before positive_biggershl_shlnuwnsw_lshrexact_after
   simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
   intros
-  try simp
   ---BEGIN positive_biggershl_shlnuwnsw_lshrexact
-  apply positive_biggershl_shlnuwnsw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuwnsw_lshrexact
 
 

@@ -1,0 +1,128 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "t0_bad"
+4: "t0_bad" has unsupported operation: llvm.call
+
+1: "t0_bad_logical"
+4: "t0_bad_logical" has unsupported operation: llvm.call
+
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t1" has unsupported operation: llvm.call
+
+1: "t1_logical"
+4: "t1_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t1_logical" has unsupported operation: llvm.call
+
+1: "t2"
+4: "t2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t2" has unsupported operation: llvm.call
+
+1: "t2_logical"
+4: "t2_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t2_logical" has unsupported operation: llvm.call
+
+1: "t3_oneuse0"
+4: "t3_oneuse0" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t3_oneuse0" has unsupported operation: llvm.call
+
+4: "t3_oneuse0" has unsupported operation: llvm.call
+
+1: "t3_oneuse0_logical"
+4: "t3_oneuse0_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t3_oneuse0_logical" has unsupported operation: llvm.call
+
+4: "t3_oneuse0_logical" has unsupported operation: llvm.call
+
+1: "t4_oneuse1"
+4: "t4_oneuse1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t4_oneuse1" has unsupported operation: llvm.call
+
+4: "t4_oneuse1" has unsupported operation: llvm.call
+
+1: "t4_oneuse1_logical"
+4: "t4_oneuse1_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t4_oneuse1_logical" has unsupported operation: llvm.call
+
+4: "t4_oneuse1_logical" has unsupported operation: llvm.call
+
+1: "t5_oneuse2_bad"
+4: "t5_oneuse2_bad" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t5_oneuse2_bad" has unsupported operation: llvm.call
+
+4: "t5_oneuse2_bad" has unsupported operation: llvm.call
+
+4: "t5_oneuse2_bad" has unsupported operation: llvm.call
+
+1: "t5_oneuse2_bad_logical"
+4: "t5_oneuse2_bad_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t5_oneuse2_bad_logical" has unsupported operation: llvm.call
+
+4: "t5_oneuse2_bad_logical" has unsupported operation: llvm.call
+
+4: "t5_oneuse2_bad_logical" has unsupported operation: llvm.call
+
+1: "t6_commutativity0"
+4: "t6_commutativity0" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t6_commutativity0" has unsupported operation: llvm.call
+
+1: "t6_commutativity0_logical"
+4: "t6_commutativity0_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t6_commutativity0_logical" has unsupported operation: llvm.call
+
+1: "t7_commutativity1"
+4: "t7_commutativity1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+1: "t7_commutativity1_logical"
+4: "t7_commutativity1_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t7_commutativity1_logical" has unsupported operation: llvm.call
+
+1: "t7_commutativity3"
+4: "t7_commutativity3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t7_commutativity3" has unsupported operation: llvm.call
+
+1: "t7_commutativity3_logical"
+4: "t7_commutativity3_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t7_commutativity3_logical" has unsupported operation: llvm.call
+
+1: "t8"
+4: "t8" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t8" has unsupported operation: llvm.call
+
+1: "t8_logical"
+4: "t8_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t8_logical" has unsupported operation: llvm.call
+
+1: "t9"
+4: "t9" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t9" has unsupported operation: llvm.call
+
+1: "t9_logical"
+4: "t9_logical" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t9_logical" has unsupported operation: llvm.call
+

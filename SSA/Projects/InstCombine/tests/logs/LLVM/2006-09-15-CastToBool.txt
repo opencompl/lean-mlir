@@ -1,0 +1,5 @@
+1: "test"
+9: "test" has pointer type input
+
+4: "test" has unsupported operation: llvm.load
+

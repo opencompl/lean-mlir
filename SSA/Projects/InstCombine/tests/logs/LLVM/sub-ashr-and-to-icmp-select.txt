@@ -1,0 +1,81 @@
+1: "sub_ashr_and_i8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "sub_ashr_and_i16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "sub_ashr_and_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "sub_ashr_and_i64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "sub_ashr_and_i32_nuw_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "sub_ashr_and_i32_commute"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.and
+2: llvm.return
+
+1: "sub_ashr_and_i32_vec"
+8: "sub_ashr_and_i32_vec" contains vectors which are unsupported
+
+1: "sub_ashr_and_i32_vec_nuw_nsw"
+8: "sub_ashr_and_i32_vec_nuw_nsw" contains vectors which are unsupported
+
+1: "sub_ashr_and_i32_vec_commute"
+8: "sub_ashr_and_i32_vec_commute" contains vectors which are unsupported
+
+1: "sub_ashr_and_i32_extra_use_sub"
+9: "sub_ashr_and_i32_extra_use_sub" has pointer type input
+
+4: "sub_ashr_and_i32_extra_use_sub" has unsupported operation: llvm.store
+
+1: "sub_ashr_and_i32_extra_use_and"
+9: "sub_ashr_and_i32_extra_use_and" has pointer type input
+
+4: "sub_ashr_and_i32_extra_use_and" has unsupported operation: llvm.store
+
+1: "sub_ashr_and_i32_extra_use_ashr"
+9: "sub_ashr_and_i32_extra_use_ashr" has pointer type input
+
+4: "sub_ashr_and_i32_extra_use_ashr" has unsupported operation: llvm.store
+
+1: "sub_ashr_and_i32_no_nuw_nsw"
+7: "sub_ashr_and_i32_no_nuw_nsw" is unchanged by InstCombine
+
+1: "sub_ashr_and_i32_vec_poison"
+8: "sub_ashr_and_i32_vec_poison" contains vectors which are unsupported
+
+1: "sub_ashr_and_i32_shift_wrong_bit"
+7: "sub_ashr_and_i32_shift_wrong_bit" is unchanged by InstCombine
+

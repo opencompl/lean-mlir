@@ -1,0 +1,92 @@
+1: "fabs_sqrt_src_maybe_nan"
+4: "fabs_sqrt_src_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_maybe_nan_lhs"
+4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "select_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "select_maybe_nan_rhs"
+4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "select_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_fadd"
+4: "nnan_fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_fadd_maybe_nan_lhs"
+4: "nnan_fadd_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd_maybe_nan_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_fadd_maybe_nan_rhs"
+4: "nnan_fadd_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fadd_maybe_nan_rhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_fmul"
+4: "nnan_fmul" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fmul" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "nnan_fmul" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_fsub"
+4: "nnan_fsub" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fsub" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fsub" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "nnan_fsub" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "func"
+5: "func" is empty
+
+1: "nnan_fneg"
+4: "nnan_fneg" has unsupported operation: llvm.call
+
+1: "nnan_unary_fneg"
+4: "nnan_unary_fneg" has unsupported operation: llvm.call
+
+1: "fpext_maybe_nan"
+4: "fpext_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fptrunc_maybe_nan"
+4: "fptrunc_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fptrunc
+
+4: "fptrunc_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_fdiv"
+4: "nnan_fdiv" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fdiv" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "nnan_fdiv" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_frem"
+4: "nnan_frem" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_frem" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "nnan_frem" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "nnan_frem" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "llvm.canonicalize.f64"
+5: "llvm.canonicalize.f64" is empty
+

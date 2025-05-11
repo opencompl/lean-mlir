@@ -1,0 +1,45 @@
+1: "x12"
+4: "x12" has unsupported operation: llvm.mlir.addressof
+
+4: "x12" has unsupported operation: llvm.getelementptr
+
+4: "x12" has unsupported operation: llvm.getelementptr
+
+1: "x1y"
+4: "x1y" has unsupported operation: llvm.mlir.addressof
+
+4: "x1y" has unsupported operation: llvm.getelementptr
+
+4: "x1y" has unsupported operation: llvm.getelementptr
+
+4: "x1y" has unsupported operation: llvm.getelementptr
+
+1: "xzy"
+4: "xzy" has unsupported operation: llvm.mlir.addressof
+
+4: "xzy" has unsupported operation: llvm.getelementptr
+
+4: "xzy" has unsupported operation: llvm.getelementptr
+
+1: "zerox"
+4: "zerox" has unsupported operation: llvm.mlir.addressof
+
+4: "zerox" has unsupported operation: llvm.getelementptr
+
+4: "zerox" has unsupported operation: llvm.getelementptr
+
+1: "twoloads"
+4: "twoloads" has unsupported operation: llvm.mlir.addressof
+
+4: "twoloads" has unsupported operation: llvm.getelementptr
+
+4: "twoloads" has unsupported operation: llvm.getelementptr
+
+4: "twoloads" has unsupported operation: llvm.getelementptr
+
+4: "twoloads" has unsupported operation: llvm.getelementptr
+
+4: "twoloads" has unsupported operation: llvm.load
+
+4: "twoloads" has unsupported operation: llvm.load
+

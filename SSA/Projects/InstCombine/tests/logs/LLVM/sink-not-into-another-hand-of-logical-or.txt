@@ -1,0 +1,42 @@
+1: "use1"
+5: "use1" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t0_commutative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t1"
+4: "t1" has unsupported operation: llvm.call
+
+1: "t1_commutative"
+4: "t1_commutative" has unsupported operation: llvm.call
+
+1: "n2"
+7: "n2" is unchanged by InstCombine
+
+1: "n3"
+4: "n3" has unsupported operation: llvm.call
+
+1: "t4"
+4: "t4" has unsupported operation: llvm.call
+
+1: "t4_commutative"
+4: "t4_commutative" has unsupported operation: llvm.call
+

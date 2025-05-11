@@ -1,0 +1,135 @@
+1: "PR29126"
+4: "PR29126" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR29126" has unsupported operation: llvm.mlir.undef
+
+4: "PR29126" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR29126" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR29126" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR29126" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "PR29126" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "twoInserts"
+4: "twoInserts" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "twoInserts" has unsupported operation: llvm.mlir.undef
+
+4: "twoInserts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoInserts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoInserts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoInserts" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoInserts" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffleRetain"
+4: "shuffleRetain" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffleRetain" has unsupported operation: llvm.mlir.undef
+
+4: "shuffleRetain" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuffleRetain" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuffleRetain" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuffleRetain" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shuffleRetain" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "disguisedSelect"
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "disguisedSelect" has unsupported operation: llvm.mlir.undef
+
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "disguisedSelect" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "notSelectButNoMaskDifference"
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "notSelectButNoMaskDifference" has unsupported operation: llvm.mlir.undef
+
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "notSelectButNoMaskDifference" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "tooRisky"
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "tooRisky" has unsupported operation: llvm.mlir.undef
+
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "tooRisky" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "twoShufUses"
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "twoShufUses" has unsupported operation: llvm.mlir.undef
+
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "twoShufUses" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "longerMask"
+4: "longerMask" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "longerMask" has unsupported operation: llvm.mlir.undef
+
+4: "longerMask" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "longerMask" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "longerMask" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "longerMask" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "longerMask" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shorterMask"
+4: "shorterMask" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shorterMask" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shorterMask" has unsupported operation: builtin.unregistered: llvm.insertelement
+

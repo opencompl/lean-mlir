@@ -1,0 +1,7 @@
+1: "f"
+9: "f" has pointer type input
+
+4: "f" has unsupported operation: llvm.load
+
+4: "f" has unsupported operation: llvm.store
+

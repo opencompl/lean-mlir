@@ -1,0 +1,10 @@
+1: "icmp"
+4: "icmp" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "fcmp"
+4: "fcmp" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fcmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "fcmp" has unsupported operation: builtin.unregistered: llvm.intr.assume
+

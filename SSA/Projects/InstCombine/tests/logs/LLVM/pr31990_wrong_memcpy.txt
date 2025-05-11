@@ -1,0 +1,17 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.alloca
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.call
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "bar"
+9: "bar" has pointer type input
+
+1: "gaz"
+9: "gaz" has pointer type input
+

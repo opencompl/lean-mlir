@@ -1,0 +1,726 @@
+1: "test_scalar_uadd_canonical"
+4: "test_scalar_uadd_canonical" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_canonical"
+4: "test_vector_uadd_canonical" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_sadd_canonical"
+4: "test_scalar_sadd_canonical" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_canonical"
+4: "test_vector_sadd_canonical" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_uadd_combine"
+4: "test_scalar_uadd_combine" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_combine"
+4: "test_vector_uadd_combine" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_combine_non_splat"
+4: "test_vector_uadd_combine_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+4: "test_vector_uadd_combine_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_overflow"
+4: "test_scalar_uadd_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+4: "test_scalar_uadd_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_overflow"
+8: "test_vector_uadd_overflow" contains vectors which are unsupported
+
+1: "test_scalar_sadd_both_positive"
+4: "test_scalar_sadd_both_positive" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_both_positive"
+4: "test_vector_sadd_both_positive" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_both_negative"
+4: "test_scalar_sadd_both_negative" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_both_negative"
+4: "test_vector_sadd_both_negative" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_different_sign"
+4: "test_scalar_sadd_different_sign" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+4: "test_scalar_sadd_different_sign" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_overflow"
+4: "test_scalar_sadd_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+4: "test_scalar_sadd_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_uadd_neg_neg"
+4: "test_scalar_uadd_neg_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_neg_neg"
+8: "test_vector_uadd_neg_neg" contains vectors which are unsupported
+
+1: "test_scalar_uadd_nneg_nneg"
+4: "test_scalar_uadd_nneg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_nneg_nneg"
+8: "test_vector_uadd_nneg_nneg" contains vectors which are unsupported
+
+1: "test_scalar_uadd_neg_nneg"
+4: "test_scalar_uadd_neg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_neg_nneg"
+4: "test_vector_uadd_neg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_never_overflows"
+4: "test_scalar_uadd_never_overflows" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_never_overflows"
+8: "test_vector_uadd_never_overflows" contains vectors which are unsupported
+
+1: "test_scalar_uadd_always_overflows"
+4: "test_scalar_uadd_always_overflows" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_vector_uadd_always_overflows"
+8: "test_vector_uadd_always_overflows" contains vectors which are unsupported
+
+1: "test_scalar_sadd_neg_nneg"
+4: "test_scalar_sadd_neg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_neg_nneg"
+8: "test_vector_sadd_neg_nneg" contains vectors which are unsupported
+
+1: "test_scalar_sadd_nneg_neg"
+4: "test_scalar_sadd_nneg_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_nneg_neg"
+8: "test_vector_sadd_nneg_neg" contains vectors which are unsupported
+
+1: "test_scalar_sadd_neg_neg"
+4: "test_scalar_sadd_neg_neg" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_neg_neg"
+4: "test_vector_sadd_neg_neg" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_always_overflows_low"
+4: "test_scalar_sadd_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_always_overflows_high"
+4: "test_scalar_sadd_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_uadd_sub_nuw_lost_no_ov"
+4: "test_scalar_uadd_sub_nuw_lost_no_ov" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_urem_no_ov"
+4: "test_scalar_uadd_urem_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_urem_may_ov"
+4: "test_scalar_uadd_urem_may_ov" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_udiv_known_bits"
+4: "test_scalar_uadd_udiv_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_sadd_srem_no_ov"
+4: "test_scalar_sadd_srem_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_srem_may_ov"
+4: "test_scalar_sadd_srem_may_ov" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_srem_and_no_ov"
+4: "test_scalar_sadd_srem_and_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_usub_canonical"
+4: "test_scalar_usub_canonical" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_ssub_canonical"
+4: "test_scalar_ssub_canonical" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_ssub_canonical"
+4: "test_vector_ssub_canonical" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_ssub_canonical_min_non_splat"
+4: "test_vector_ssub_canonical_min_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_ssub_canonical_min"
+4: "test_scalar_ssub_canonical_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_vector_ssub_canonical_min"
+4: "test_vector_ssub_canonical_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_scalar_usub_combine"
+4: "test_scalar_usub_combine" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_simplify_decrement"
+4: "test_simplify_decrement" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "use.i1"
+5: "use.i1" is empty
+
+1: "test_simplify_decrement_ne"
+4: "test_simplify_decrement_ne" has unsupported operation: llvm.call
+
+4: "test_simplify_decrement_ne" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_simplify_decrement_vec"
+4: "test_simplify_decrement_vec" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_simplify_decrement_vec_poison"
+4: "test_simplify_decrement_vec_poison" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_simplify_decrement_invalid_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_invalid_simplify_sub2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_invalid_simplify_eq2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_invalid_simplify_select_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_invalid_simplify_other"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.sub
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "test_vector_usub_combine"
+4: "test_vector_usub_combine" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_combine_non_splat"
+4: "test_vector_usub_combine_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "test_vector_usub_combine_non_splat" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_overflow"
+4: "test_scalar_usub_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+4: "test_scalar_usub_overflow" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_overflow"
+8: "test_vector_usub_overflow" contains vectors which are unsupported
+
+1: "test_scalar_ssub_both_positive"
+4: "test_scalar_ssub_both_positive" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_ssub_both_positive"
+4: "test_vector_ssub_both_positive" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_ssub_both_negative"
+4: "test_scalar_ssub_both_negative" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_ssub_both_negative"
+4: "test_vector_ssub_both_negative" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_ssub_different_sign"
+4: "test_scalar_ssub_different_sign" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+4: "test_scalar_ssub_different_sign" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_sadd_ssub"
+4: "test_scalar_sadd_ssub" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_sadd_ssub"
+4: "test_vector_sadd_ssub" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_ssub_overflow"
+4: "test_scalar_ssub_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+4: "test_scalar_ssub_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_usub_nneg_neg"
+4: "test_scalar_usub_nneg_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_nneg_neg"
+8: "test_vector_usub_nneg_neg" contains vectors which are unsupported
+
+1: "test_scalar_usub_neg_nneg"
+4: "test_scalar_usub_neg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_neg_nneg"
+8: "test_vector_usub_neg_nneg" contains vectors which are unsupported
+
+1: "test_scalar_usub_nneg_nneg"
+4: "test_scalar_usub_nneg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_nneg_nneg"
+4: "test_vector_usub_nneg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_never_overflows"
+4: "test_scalar_usub_never_overflows" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_never_overflows"
+8: "test_vector_usub_never_overflows" contains vectors which are unsupported
+
+1: "test_scalar_usub_always_overflows"
+4: "test_scalar_usub_always_overflows" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_always_overflows"
+8: "test_vector_usub_always_overflows" contains vectors which are unsupported
+
+1: "test_scalar_ssub_neg_neg"
+4: "test_scalar_ssub_neg_neg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_vector_ssub_neg_neg"
+8: "test_vector_ssub_neg_neg" contains vectors which are unsupported
+
+1: "test_scalar_ssub_nneg_nneg"
+4: "test_scalar_ssub_nneg_nneg" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_vector_ssub_nneg_nneg"
+8: "test_vector_ssub_nneg_nneg" contains vectors which are unsupported
+
+1: "test_scalar_ssub_neg_nneg"
+4: "test_scalar_ssub_neg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_vector_ssub_neg_nneg"
+4: "test_vector_ssub_neg_nneg" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "test_scalar_ssub_always_overflows_low"
+4: "test_scalar_ssub_always_overflows_low" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_scalar_ssub_always_overflows_high"
+4: "test_scalar_ssub_always_overflows_high" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_scalar_usub_add_nuw_no_ov"
+4: "test_scalar_usub_add_nuw_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_add_nuw_nsw_no_ov"
+4: "test_scalar_usub_add_nuw_nsw_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_add_nuw_eq"
+4: "test_scalar_usub_add_nuw_eq" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_add_nuw_may_ov"
+4: "test_scalar_usub_add_nuw_may_ov" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_urem_must_ov"
+4: "test_scalar_usub_urem_must_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_urem_must_zero"
+4: "test_scalar_usub_urem_must_zero" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_add_nuw_known_bits"
+4: "test_scalar_usub_add_nuw_known_bits" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_add_nuw_inferred"
+4: "test_scalar_usub_add_nuw_inferred" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_add_nuw_no_ov"
+8: "test_vector_usub_add_nuw_no_ov" contains vectors which are unsupported
+
+1: "test_vector_usub_add_nuw_no_ov_nonsplat1"
+8: "test_vector_usub_add_nuw_no_ov_nonsplat1" contains vectors which are unsupported
+
+1: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison"
+4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_vector_usub_add_nuw_no_ov_nonsplat1_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test_vector_usub_add_nuw_no_ov_nonsplat2"
+4: "test_vector_usub_add_nuw_no_ov_nonsplat2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_vector_usub_add_nuw_no_ov_nonsplat3"
+4: "test_vector_usub_add_nuw_no_ov_nonsplat3" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_ssub_add_nsw_no_ov"
+4: "test_scalar_ssub_add_nsw_no_ov" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_scalar_ssub_add_nsw_may_ov"
+4: "test_scalar_ssub_add_nsw_may_ov" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_vector_ssub_add_nsw_no_ov_splat"
+8: "test_vector_ssub_add_nsw_no_ov_splat" contains vectors which are unsupported
+
+1: "test_vector_ssub_add_nsw_no_ov_nonsplat1"
+8: "test_vector_ssub_add_nsw_no_ov_nonsplat1" contains vectors which are unsupported
+
+1: "test_vector_ssub_add_nsw_no_ov_nonsplat2"
+4: "test_vector_ssub_add_nsw_no_ov_nonsplat2" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_vector_ssub_add_nsw_no_ov_nonsplat3"
+4: "test_vector_ssub_add_nsw_no_ov_nonsplat3" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "test_scalar_usub_add"
+4: "test_scalar_usub_add" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test_scalar_usub_add_extra_use"
+9: "test_scalar_usub_add_extra_use" has pointer type input
+
+4: "test_scalar_usub_add_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "test_scalar_usub_add_extra_use" has unsupported operation: llvm.store
+
+1: "test_scalar_usub_add_commuted"
+4: "test_scalar_usub_add_commuted" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test_scalar_usub_add_commuted_wrong"
+4: "test_scalar_usub_add_commuted_wrong" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_add_const"
+4: "test_scalar_usub_add_const" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test_scalar_usub_sub"
+4: "test_scalar_usub_sub" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "test_scalar_usub_sub_extra_use"
+9: "test_scalar_usub_sub_extra_use" has pointer type input
+
+4: "test_scalar_usub_sub_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+4: "test_scalar_usub_sub_extra_use" has unsupported operation: llvm.store
+
+1: "test_vector_usub_sub"
+4: "test_vector_usub_sub" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "test_scalar_usub_sub_wrong"
+4: "test_scalar_usub_sub_wrong" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_usub_sub_wrong2"
+4: "test_scalar_usub_sub_wrong2" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "test_scalar_uadd_sub"
+4: "test_scalar_uadd_sub" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_sub_extra_use"
+9: "test_scalar_uadd_sub_extra_use" has pointer type input
+
+4: "test_scalar_uadd_sub_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+4: "test_scalar_uadd_sub_extra_use" has unsupported operation: llvm.store
+
+1: "test_scalar_uadd_sub_commuted"
+4: "test_scalar_uadd_sub_commuted" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_sub_commuted_wrong"
+4: "test_scalar_uadd_sub_commuted_wrong" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "test_scalar_uadd_sub_const"
+4: "test_scalar_uadd_sub_const" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "scalar_uadd_eq_zero"
+4: "scalar_uadd_eq_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "scalar_uadd_ne_zero"
+4: "scalar_uadd_ne_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "scalar_usub_eq_zero"
+4: "scalar_usub_eq_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "scalar_usub_ne_zero"
+4: "scalar_usub_ne_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.usub.sat
+
+1: "uadd_sat"
+4: "uadd_sat" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped"
+4: "uadd_sat_flipped" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped2"
+4: "uadd_sat_flipped2" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped3"
+7: "uadd_sat_flipped3" is unchanged by InstCombine
+
+1: "uadd_sat_flipped3_neg_no_nuw"
+7: "uadd_sat_flipped3_neg_no_nuw" is unchanged by InstCombine
+
+1: "uadd_sat_negative_one"
+4: "uadd_sat_negative_one" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped4_vector"
+4: "uadd_sat_flipped4_vector" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped4_poison_vector"
+4: "uadd_sat_flipped4_poison_vector" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped4_poison_vector_compare"
+4: "uadd_sat_flipped4_poison_vector_compare" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_flipped4_poison_vector_compare2"
+8: "uadd_sat_flipped4_poison_vector_compare2" contains vectors which are unsupported
+
+1: "uadd_sat_flipped_too_big"
+7: "uadd_sat_flipped_too_big" is unchanged by InstCombine
+
+1: "uadd_sat_flipped_wrong_bounds"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_flipped_wrong_bounds2"
+7: "uadd_sat_flipped_wrong_bounds2" is unchanged by InstCombine
+
+1: "uadd_sat_flipped_wrong_bounds3"
+7: "uadd_sat_flipped_wrong_bounds3" is unchanged by InstCombine
+
+1: "uadd_sat_flipped_wrong_bounds4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_flipped_wrong_bounds5"
+7: "uadd_sat_flipped_wrong_bounds5" is unchanged by InstCombine
+
+1: "uadd_sat_flipped_wrong_bounds6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_flipped_wrong_bounds7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_flipped_wrong_bounds8"
+7: "uadd_sat_flipped_wrong_bounds8" is unchanged by InstCombine
+
+1: "uadd_sat_nonstrict"
+4: "uadd_sat_nonstrict" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_commute_add"
+4: "uadd_sat_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_ugt"
+4: "uadd_sat_ugt" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_uge"
+4: "uadd_sat_uge" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_ugt_commute_add"
+4: "uadd_sat_ugt_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_commute_select"
+4: "uadd_sat_commute_select" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_commute_select_nonstrict"
+4: "uadd_sat_commute_select_nonstrict" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_commute_select_commute_add"
+4: "uadd_sat_commute_select_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_commute_select_ugt"
+4: "uadd_sat_commute_select_ugt" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_commute_select_ugt_commute_add"
+4: "uadd_sat_commute_select_ugt_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "not_uadd_sat"
+7: "not_uadd_sat" is unchanged by InstCombine
+
+1: "not_uadd_sat2"
+7: "not_uadd_sat2" is unchanged by InstCombine
+
+1: "uadd_sat_not"
+4: "uadd_sat_not" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_nonstrict"
+4: "uadd_sat_not_nonstrict" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_commute_add"
+4: "uadd_sat_not_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_ugt"
+4: "uadd_sat_not_ugt" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_uge"
+4: "uadd_sat_not_uge" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_ugt_commute_add"
+4: "uadd_sat_not_ugt_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_ugt_commute_add_partial_poison"
+4: "uadd_sat_not_ugt_commute_add_partial_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "uadd_sat_not_ugt_commute_add_partial_poison" has unsupported operation: llvm.mlir.undef
+
+4: "uadd_sat_not_ugt_commute_add_partial_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "uadd_sat_not_ugt_commute_add_partial_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "uadd_sat_not_commute_select"
+4: "uadd_sat_not_commute_select" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_commute_select_nonstrict"
+4: "uadd_sat_not_commute_select_nonstrict" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_commute_select_commute_add"
+4: "uadd_sat_not_commute_select_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_commute_select_ugt"
+4: "uadd_sat_not_commute_select_ugt" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_commute_select_ugt_commute_add"
+4: "uadd_sat_not_commute_select_ugt_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_not_commute_select_uge_commute_add"
+4: "uadd_sat_not_commute_select_uge_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_constant"
+4: "uadd_sat_constant" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_constant_commute"
+4: "uadd_sat_constant_commute" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_canon"
+4: "uadd_sat_canon" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_canon_y"
+4: "uadd_sat_canon_y" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_canon_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_canon_y_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_constant_vec"
+4: "uadd_sat_constant_vec" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_constant_vec_commute"
+4: "uadd_sat_constant_vec_commute" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_constant_vec_commute_undefs"
+4: "uadd_sat_constant_vec_commute_undefs" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "get_i32"
+5: "get_i32" is empty
+
+1: "get_v2i8"
+5: "get_v2i8" is empty
+
+1: "unsigned_sat_variable_using_min_add"
+4: "unsigned_sat_variable_using_min_add" has unsupported operation: llvm.call
+
+4: "unsigned_sat_variable_using_min_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "unsigned_sat_variable_using_min_commute_add"
+4: "unsigned_sat_variable_using_min_commute_add" has unsupported operation: llvm.call
+
+4: "unsigned_sat_variable_using_min_commute_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "unsigned_sat_variable_using_min_commute_select"
+4: "unsigned_sat_variable_using_min_commute_select" has unsupported operation: llvm.call
+
+4: "unsigned_sat_variable_using_min_commute_select" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "unsigned_sat_variable_using_min_commute_add_select"
+4: "unsigned_sat_variable_using_min_commute_add_select" has unsupported operation: llvm.call
+
+4: "unsigned_sat_variable_using_min_commute_add_select" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "unsigned_sat_variable_using_wrong_min"
+4: "unsigned_sat_variable_using_wrong_min" has unsupported operation: llvm.call
+
+4: "unsigned_sat_variable_using_wrong_min" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "unsigned_sat_variable_using_wrong_value"
+4: "unsigned_sat_variable_using_wrong_value" has unsupported operation: llvm.call
+
+4: "unsigned_sat_variable_using_wrong_value" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "unsigned_sat_constant_using_min"
+4: "unsigned_sat_constant_using_min" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "unsigned_sat_constant_using_min_splat"
+4: "unsigned_sat_constant_using_min_splat" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "unsigned_sat_constant_using_min_wrong_constant"
+4: "unsigned_sat_constant_using_min_wrong_constant" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "uadd_sat_via_add"
+4: "uadd_sat_via_add" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_via_add_nonstrict"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_via_add_swapped_select"
+4: "uadd_sat_via_add_swapped_select" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_via_add_swapped_select_strict"
+7: "uadd_sat_via_add_swapped_select_strict" is unchanged by InstCombine
+
+1: "uadd_sat_via_add_swapped_cmp"
+4: "uadd_sat_via_add_swapped_cmp" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_via_add_swapped_cmp_nonstrict"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "uadd_sat_via_add_swapped_cmp_nonstric"
+4: "uadd_sat_via_add_swapped_cmp_nonstric" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "uadd_sat_via_add_swapped_cmp_select_nonstrict"
+7: "uadd_sat_via_add_swapped_cmp_select_nonstrict" is unchanged by InstCombine
+

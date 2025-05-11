@@ -1,0 +1,196 @@
+1: "store_of_undef"
+9: "store_of_undef" has pointer type input
+
+4: "store_of_undef" has unsupported operation: llvm.return
+
+1: "store_of_poison"
+9: "store_of_poison" has pointer type input
+
+4: "store_of_poison" has unsupported operation: llvm.return
+
+1: "store_into_undef"
+9: "store_into_undef" has pointer type input
+
+4: "store_into_undef" has unsupported operation: llvm.mlir.undef
+
+4: "store_into_undef" has unsupported operation: llvm.store
+
+4: "store_into_undef" has unsupported operation: llvm.return
+
+1: "store_into_null"
+9: "store_into_null" has pointer type input
+
+4: "store_into_null" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "store_into_null" has unsupported operation: llvm.mlir.zero
+
+4: "store_into_null" has unsupported operation: llvm.store
+
+4: "store_into_null" has unsupported operation: llvm.return
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: llvm.return
+
+1: "store_at_gep_off_null_inbounds"
+4: "store_at_gep_off_null_inbounds" has unsupported operation: llvm.mlir.zero
+
+4: "store_at_gep_off_null_inbounds" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "store_at_gep_off_null_inbounds" has unsupported operation: llvm.getelementptr
+
+4: "store_at_gep_off_null_inbounds" has unsupported operation: llvm.store
+
+4: "store_at_gep_off_null_inbounds" has unsupported operation: llvm.return
+
+1: "store_at_gep_off_null_not_inbounds"
+4: "store_at_gep_off_null_not_inbounds" has unsupported operation: llvm.mlir.zero
+
+4: "store_at_gep_off_null_not_inbounds" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "store_at_gep_off_null_not_inbounds" has unsupported operation: llvm.getelementptr
+
+4: "store_at_gep_off_null_not_inbounds" has unsupported operation: llvm.store
+
+4: "store_at_gep_off_null_not_inbounds" has unsupported operation: llvm.return
+
+1: "store_at_gep_off_no_null_opt"
+4: "store_at_gep_off_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "store_at_gep_off_no_null_opt" has unsupported operation: llvm.getelementptr
+
+4: "store_at_gep_off_no_null_opt" has unsupported operation: llvm.store
+
+4: "store_at_gep_off_no_null_opt" has unsupported operation: llvm.return
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test3" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test4" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test5"
+9: "test5" has pointer type input
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test5" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test5" has unsupported operation: llvm.store
+
+4: "test5" has unsupported operation: llvm.return
+
+1: "test6"
+9: "test6" has pointer type input
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.store
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test6" has unsupported operation: llvm.getelementptr
+
+4: "test6" has unsupported operation: llvm.store
+
+4: "test6" has unsupported operation: llvm.load
+
+4: "test6" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test6" has unsupported operation: llvm.return
+
+1: "dse1"
+9: "dse1" has pointer type input
+
+4: "dse1" has unsupported operation: llvm.store
+
+4: "dse1" has unsupported operation: llvm.return
+
+1: "dse2"
+9: "dse2" has pointer type input
+
+4: "dse2" has unsupported operation: llvm.store
+
+4: "dse2" has unsupported operation: llvm.return
+
+1: "dse3"
+9: "dse3" has pointer type input
+
+4: "dse3" has unsupported operation: llvm.store
+
+4: "dse3" has unsupported operation: llvm.return
+
+1: "dse4"
+9: "dse4" has pointer type input
+
+4: "dse4" has unsupported operation: llvm.store
+
+4: "dse4" has unsupported operation: llvm.return
+
+1: "dse5"
+9: "dse5" has pointer type input
+
+4: "dse5" has unsupported operation: llvm.store
+
+4: "dse5" has unsupported operation: llvm.store
+
+4: "dse5" has unsupported operation: llvm.return
+
+1: "write_back1"
+9: "write_back1" has pointer type input
+
+4: "write_back1" has unsupported operation: llvm.return
+
+1: "write_back2"
+9: "write_back2" has pointer type input
+
+4: "write_back2" has unsupported operation: llvm.return
+
+1: "write_back3"
+9: "write_back3" has pointer type input
+
+4: "write_back3" has unsupported operation: llvm.return
+
+1: "write_back4"
+9: "write_back4" has pointer type input
+
+4: "write_back4" has unsupported operation: llvm.return
+
+1: "write_back5"
+9: "write_back5" has pointer type input
+
+4: "write_back5" has unsupported operation: llvm.load
+
+4: "write_back5" has unsupported operation: llvm.store
+
+4: "write_back5" has unsupported operation: llvm.return
+
+1: "write_back6"
+9: "write_back6" has pointer type input
+
+4: "write_back6" has unsupported operation: llvm.load
+
+4: "write_back6" has unsupported operation: llvm.return
+
+1: "write_back7"
+9: "write_back7" has pointer type input
+
+4: "write_back7" has unsupported operation: llvm.load
+
+4: "write_back7" has unsupported operation: llvm.return
+
+1: "store_to_constant"
+4: "store_to_constant" has unsupported operation: llvm.return
+
+1: "store_to_readonly_noalias"
+9: "store_to_readonly_noalias" has pointer type input
+
+4: "store_to_readonly_noalias" has unsupported operation: llvm.return
+

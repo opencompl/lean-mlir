@@ -1,0 +1,52 @@
+1: "test_fmul"
+4: "test_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test_fmul" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_fmul_fast"
+4: "test_fmul_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_fmul_reassoc_nsz"
+4: "test_fmul_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_fmul_reassoc"
+4: "test_fmul_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test_fmul_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test_fadd"
+4: "test_fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test_fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadd_fast"
+4: "test_fadd_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadd_reassoc_nsz"
+4: "test_fadd_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadd_reassoc"
+4: "test_fadd_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test_fadd_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadds_cancel_"
+4: "test_fadds_cancel_" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test_fadds_cancel_" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test_fadds_cancel_" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadds_cancel_fast"
+4: "test_fadds_cancel_fast" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadds_cancel_reassoc_nsz"
+4: "test_fadds_cancel_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test_fadds_cancel_reassoc"
+4: "test_fadds_cancel_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test_fadds_cancel_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test_fadds_cancel_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+

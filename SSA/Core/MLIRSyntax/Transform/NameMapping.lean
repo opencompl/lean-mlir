@@ -14,13 +14,13 @@ abbrev NameMapping := List String
 namespace NameMapping
 
 def lookup (nm : NameMapping) (name : String) : Option Nat :=
-  nm.indexOf? name
+  nm.idxOf? name
 
 /--
   Add a new name to the mapping, assuming the name is not present in the list yet.
   If the name is already present, return `none`
 -/
-def add (nm : NameMapping) (name : String) : Option NameMapping := 
+def add (nm : NameMapping) (name : String) : Option NameMapping :=
   match nm.lookup name with
     | none => some <| name::nm
     | some _ => none

@@ -1,0 +1,344 @@
+1: "test4"
+4: "test4" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "test6"
+4: "test6" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "lshr8_i32"
+4: "lshr8_i32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "lshr16_v2i32"
+4: "lshr16_v2i32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "lshr24_i32"
+4: "lshr24_i32" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "lshr12_i32"
+4: "lshr12_i32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "lshr8_i32_use"
+9: "lshr8_i32_use" has pointer type input
+
+4: "lshr8_i32_use" has unsupported operation: llvm.store
+
+4: "lshr8_i32_use" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shl16_i64"
+4: "shl16_i64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shl16_v2i64"
+4: "shl16_v2i64" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl16_v2i64" has unsupported operation: llvm.mlir.undef
+
+4: "shl16_v2i64" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl16_v2i64" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl16_v2i64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shl56_i64"
+4: "shl56_i64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "shl42_i64"
+4: "shl42_i64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shl8_i32_use"
+9: "shl8_i32_use" has pointer type input
+
+4: "shl8_i32_use" has unsupported operation: llvm.store
+
+4: "shl8_i32_use" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "swap_shl16_i64"
+4: "swap_shl16_i64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "swap_shl16_i64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "variable_lshr_v2i32"
+4: "variable_lshr_v2i32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "variable_shl_i64"
+4: "variable_shl_i64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "variable_shl_i64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "variable_shl_not_masked_enough_i64"
+4: "variable_shl_not_masked_enough_i64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test7"
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "test7" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "test7_vector"
+8: "test7_vector" contains vectors which are unsupported
+
+1: "test8"
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "test8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "test8_vector"
+8: "test8_vector" contains vectors which are unsupported
+
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.undef
+
+1: "bs_and16i"
+4: "bs_and16i" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and16"
+4: "bs_and16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or16"
+4: "bs_or16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor16"
+4: "bs_xor16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and32i"
+4: "bs_and32i" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and32"
+4: "bs_and32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or32"
+4: "bs_or32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor32"
+4: "bs_xor32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and64i"
+4: "bs_and64i" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and64"
+4: "bs_and64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or64"
+4: "bs_or64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor64"
+4: "bs_xor64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and32vec"
+4: "bs_and32vec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or32vec"
+4: "bs_or32vec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor32vec"
+4: "bs_xor32vec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and32ivec"
+4: "bs_and32ivec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or32ivec"
+4: "bs_or32ivec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor32ivec"
+4: "bs_xor32ivec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and64_multiuse1"
+4: "bs_and64_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_and64_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and64_multiuse2"
+4: "bs_and64_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_and64_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and64_multiuse3"
+4: "bs_and64_multiuse3" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_and64_multiuse3" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and64i_multiuse"
+4: "bs_and64i_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_lhs_bs16"
+4: "bs_and_lhs_bs16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or_lhs_bs16"
+4: "bs_or_lhs_bs16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor_lhs_bs16"
+4: "bs_xor_lhs_bs16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_rhs_bs16"
+4: "bs_and_rhs_bs16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or_rhs_bs16"
+4: "bs_or_rhs_bs16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor_rhs_bs16"
+4: "bs_xor_rhs_bs16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_rhs_bs32"
+4: "bs_and_rhs_bs32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or_rhs_bs32"
+4: "bs_or_rhs_bs32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor_rhs_bs32"
+4: "bs_xor_rhs_bs32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_rhs_bs64"
+4: "bs_and_rhs_bs64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or_rhs_bs64"
+4: "bs_or_rhs_bs64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor_rhs_bs64"
+4: "bs_xor_rhs_bs64" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_rhs_i32vec"
+4: "bs_and_rhs_i32vec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_or_rhs_i32vec"
+4: "bs_or_rhs_i32vec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_xor_rhs_i32vec"
+4: "bs_xor_rhs_i32vec" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_rhs_bs64_multiuse1"
+4: "bs_and_rhs_bs64_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_and_rhs_bs64_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_and_rhs_bs64_multiuse2"
+4: "bs_and_rhs_bs64_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_and_rhs_bs64_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_all_operand64"
+4: "bs_all_operand64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_all_operand64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_all_operand64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_all_operand64_multiuse_both"
+4: "bs_all_operand64_multiuse_both" has unsupported operation: llvm.mlir.addressof
+
+4: "bs_all_operand64_multiuse_both" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_all_operand64_multiuse_both" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_all_operand64_multiuse_both" has unsupported operation: llvm.call
+
+4: "bs_all_operand64_multiuse_both" has unsupported operation: llvm.call
+
+1: "bs_and_constexpr"
+9: "bs_and_constexpr" has pointer type input
+
+4: "bs_and_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "bs_and_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "bs_and_constexpr" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bs_and_constexpr" has unsupported operation: llvm.store
+
+4: "bs_and_constexpr" has unsupported operation: llvm.return
+
+1: "bs_and_bs_constexpr"
+9: "bs_and_bs_constexpr" has pointer type input
+
+4: "bs_and_bs_constexpr" has unsupported operation: llvm.mlir.addressof
+
+4: "bs_and_bs_constexpr" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "bs_and_bs_constexpr" has unsupported operation: llvm.store
+
+4: "bs_and_bs_constexpr" has unsupported operation: llvm.return
+
+1: "bs_active_high8"
+4: "bs_active_high8" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_high7"
+4: "bs_active_high7" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_high4"
+8: "bs_active_high4" contains vectors which are unsupported
+
+1: "bs_active_high_different"
+8: "bs_active_high_different" contains vectors which are unsupported
+
+1: "bs_active_high_different_negative"
+4: "bs_active_high_different_negative" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_high_poison"
+4: "bs_active_high_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "bs_active_high_poison" has unsupported operation: llvm.mlir.undef
+
+4: "bs_active_high_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bs_active_high_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bs_active_high_poison" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_high8_multiuse"
+4: "bs_active_high8_multiuse" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_high7_multiuse"
+4: "bs_active_high7_multiuse" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_byte_6h"
+4: "bs_active_byte_6h" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_byte_3h"
+4: "bs_active_byte_3h" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_byte_3h_v2"
+8: "bs_active_byte_3h_v2" contains vectors which are unsupported
+
+1: "bs_active_byte_78h"
+4: "bs_active_byte_78h" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_low1"
+4: "bs_active_low1" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_low8"
+8: "bs_active_low8" contains vectors which are unsupported
+
+1: "bs_active_low_different"
+8: "bs_active_low_different" contains vectors which are unsupported
+
+1: "bs_active_low_different_negative"
+4: "bs_active_low_different_negative" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_low_undef"
+4: "bs_active_low_undef" has unsupported operation: llvm.mlir.undef
+
+4: "bs_active_low_undef" has unsupported operation: llvm.mlir.undef
+
+4: "bs_active_low_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bs_active_low_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "bs_active_low_undef" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_low8_multiuse"
+4: "bs_active_low8_multiuse" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_low7_multiuse"
+4: "bs_active_low7_multiuse" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_byte_4l"
+4: "bs_active_byte_4l" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_byte_2l"
+4: "bs_active_byte_2l" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bswap
+
+1: "bs_active_byte_2l_v2"
+8: "bs_active_byte_2l_v2" contains vectors which are unsupported
+
+1: "bs_active_byte_12l"
+4: "bs_active_byte_12l" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "use.i64"
+5: "use.i64" is empty
+

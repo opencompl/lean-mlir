@@ -1,0 +1,192 @@
+1: "and_signbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "and_nosignbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "or_signbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "or_nosignbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "xor_signbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "xor_nosignbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "add_signbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "add_nosignbit_select_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.return
+
+1: "and_signbit_select_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "and_nosignbit_select_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "or_signbit_select_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "or_nosignbit_select_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "xor_signbit_select_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "xor_nosignbit_select_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.lshr
+2: llvm.return
+
+1: "add_signbit_select_lshr"
+7: "add_signbit_select_lshr" is unchanged by InstCombine
+
+1: "add_nosignbit_select_lshr"
+7: "add_nosignbit_select_lshr" is unchanged by InstCombine
+
+1: "and_signbit_select_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "and_nosignbit_select_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "or_signbit_select_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "or_nosignbit_select_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "xor_signbit_select_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "xor_nosignbit_select_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.ashr
+2: llvm.return
+
+1: "add_signbit_select_ashr"
+7: "add_signbit_select_ashr" is unchanged by InstCombine
+
+1: "add_nosignbit_select_ashr"
+7: "add_nosignbit_select_ashr" is unchanged by InstCombine
+

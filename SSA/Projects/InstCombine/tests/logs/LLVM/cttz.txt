@@ -1,0 +1,83 @@
+1: "use"
+5: "use" is empty
+
+1: "cttz_zext_zero_undef"
+4: "cttz_zext_zero_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_zext_zero_def"
+4: "cttz_zext_zero_def" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_zext_zero_undef_extra_use"
+4: "cttz_zext_zero_undef_extra_use" has unsupported operation: llvm.call
+
+4: "cttz_zext_zero_undef_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_zext_zero_undef_vec"
+4: "cttz_zext_zero_undef_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_zext_zero_def_vec"
+4: "cttz_zext_zero_def_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sext_zero_undef"
+4: "cttz_sext_zero_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sext_zero_def"
+4: "cttz_sext_zero_def" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sext_zero_undef_extra_use"
+4: "cttz_sext_zero_undef_extra_use" has unsupported operation: llvm.call
+
+4: "cttz_sext_zero_undef_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sext_zero_undef_vec"
+4: "cttz_sext_zero_undef_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_sext_zero_def_vec"
+4: "cttz_sext_zero_def_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit"
+4: "cttz_of_lowest_set_bit" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_commuted"
+4: "cttz_of_lowest_set_bit_commuted" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_poison_flag"
+4: "cttz_of_lowest_set_bit_poison_flag" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_vec"
+4: "cttz_of_lowest_set_bit_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_vec_undef"
+4: "cttz_of_lowest_set_bit_vec_undef" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_wrong_const"
+4: "cttz_of_lowest_set_bit_wrong_const" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_wrong_operand"
+4: "cttz_of_lowest_set_bit_wrong_operand" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_lowest_set_bit_wrong_intrinsic"
+4: "cttz_of_lowest_set_bit_wrong_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "cttz_of_power_of_two"
+4: "cttz_of_power_of_two" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_power_of_two_zero_poison"
+4: "cttz_of_power_of_two_zero_poison" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_power_of_two_wrong_intrinsic"
+4: "cttz_of_power_of_two_wrong_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "cttz_of_power_of_two_wrong_constant_1"
+4: "cttz_of_power_of_two_wrong_constant_1" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_of_power_of_two_wrong_constant_2"
+4: "cttz_of_power_of_two_wrong_constant_2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_assume"
+4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "cttz_assume" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+

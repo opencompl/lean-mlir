@@ -1,0 +1,120 @@
+1: "umax_of_add_nuw"
+4: "umax_of_add_nuw" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_comm"
+4: "umax_of_add_nuw_comm" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_nsw_lhs"
+4: "umax_of_add_nuw_nsw_lhs" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_nsw_lhs_comm"
+4: "umax_of_add_nuw_nsw_lhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_nsw_rhs"
+4: "umax_of_add_nuw_nsw_rhs" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_nsw_rhs_comm"
+4: "umax_of_add_nuw_nsw_rhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_nsw"
+4: "umax_of_add_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nuw_nsw_comm"
+4: "umax_of_add_nuw_nsw_comm" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add_nsw"
+4: "umax_of_add_nsw" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_of_add"
+4: "umax_of_add" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin_of_add_nuw"
+4: "umin_of_add_nuw" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_comm"
+4: "umin_of_add_nuw_comm" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_nsw_lhs"
+4: "umin_of_add_nuw_nsw_lhs" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_nsw_lhs_comm"
+4: "umin_of_add_nuw_nsw_lhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_nsw_rhs"
+4: "umin_of_add_nuw_nsw_rhs" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_nsw_rhs_comm"
+4: "umin_of_add_nuw_nsw_rhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_nsw"
+4: "umin_of_add_nuw_nsw" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nuw_nsw_comm"
+4: "umin_of_add_nuw_nsw_comm" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add_nsw"
+4: "umin_of_add_nsw" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_of_add"
+4: "umin_of_add" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "smax_of_add_nuw"
+4: "smax_of_add_nuw" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw"
+4: "smax_of_add_nsw" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_comm"
+4: "smax_of_add_nsw_comm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_nuw_lhs"
+4: "smax_of_add_nsw_nuw_lhs" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_nuw_lhs_comm"
+4: "smax_of_add_nsw_nuw_lhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_nuw_rhs"
+4: "smax_of_add_nsw_nuw_rhs" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_nuw_rhs_comm"
+4: "smax_of_add_nsw_nuw_rhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_nuw"
+4: "smax_of_add_nsw_nuw" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add_nsw_nuw_comm"
+4: "smax_of_add_nsw_nuw_comm" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_of_add"
+4: "smax_of_add" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin_of_add_nuw"
+4: "smin_of_add_nuw" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw"
+4: "smin_of_add_nsw" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_comm"
+4: "smin_of_add_nsw_comm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_nuw_lhs"
+4: "smin_of_add_nsw_nuw_lhs" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_nuw_lhs_comm"
+4: "smin_of_add_nsw_nuw_lhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_nuw_rhs"
+4: "smin_of_add_nsw_nuw_rhs" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_nuw_rhs_comm"
+4: "smin_of_add_nsw_nuw_rhs_comm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_nuw"
+4: "smin_of_add_nsw_nuw" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add_nsw_nuw_comm"
+4: "smin_of_add_nsw_nuw_comm" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_of_add"
+4: "smin_of_add" has unsupported operation: builtin.unregistered: llvm.intr.smin
+

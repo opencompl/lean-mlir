@@ -1,0 +1,241 @@
+1: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized"
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_olt_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized"
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_uge_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized"
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_oge_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized"
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_fcmp_ult_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized"
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized"
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized"
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized"
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_positive_zero_fcmp_olt_smallest_normalized"
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: llvm.store
+
+4: "denormal_input_positive_zero_fcmp_olt_smallest_normalized" has unsupported operation: llvm.return
+
+1: "denormal_input_ieee"
+4: "denormal_input_ieee" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_ieee" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "denormal_input_ieee" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_ieee" has unsupported operation: llvm.store
+
+4: "denormal_input_ieee" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "denormal_input_ieee" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_ieee" has unsupported operation: llvm.store
+
+4: "denormal_input_ieee" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "denormal_input_ieee" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_ieee" has unsupported operation: llvm.store
+
+4: "denormal_input_ieee" has unsupported operation: llvm.return
+
+1: "denormal_input_preserve_sign_f32_only"
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: llvm.mlir.addressof
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: llvm.store
+
+4: "denormal_input_preserve_sign_f32_only" has unsupported operation: llvm.return
+
+1: "wrong_fcmp_type_ole"
+4: "wrong_fcmp_type_ole" has unsupported operation: llvm.mlir.addressof
+
+4: "wrong_fcmp_type_ole" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "wrong_fcmp_type_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "wrong_fcmp_type_ole" has unsupported operation: llvm.store
+
+4: "wrong_fcmp_type_ole" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "wrong_fcmp_type_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "wrong_fcmp_type_ole" has unsupported operation: llvm.store
+
+4: "wrong_fcmp_type_ole" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "wrong_fcmp_type_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "wrong_fcmp_type_ole" has unsupported operation: llvm.store
+
+4: "wrong_fcmp_type_ole" has unsupported operation: llvm.return
+
+1: "missing_fabs"
+4: "missing_fabs" has unsupported operation: llvm.mlir.addressof
+
+4: "missing_fabs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "missing_fabs" has unsupported operation: llvm.store
+
+4: "missing_fabs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "missing_fabs" has unsupported operation: llvm.store
+
+4: "missing_fabs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "missing_fabs" has unsupported operation: llvm.store
+
+4: "missing_fabs" has unsupported operation: llvm.return
+

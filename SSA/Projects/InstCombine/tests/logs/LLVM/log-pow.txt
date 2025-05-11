@@ -1,0 +1,115 @@
+1: "log_pow"
+4: "log_pow" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "log_pow" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log_powi_const"
+4: "log_powi_const" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "log_powi_const" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log_powi_nonconst"
+4: "log_powi_nonconst" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "log_powi_nonconst" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "log_powi_nonconst" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "logf64_powi_nonconst"
+4: "logf64_powi_nonconst" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "logf64_powi_nonconst" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "logf64_powi_nonconst" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "logf_powfi_const"
+4: "logf_powfi_const" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "logf_powfi_const" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "logf_powfi_nonconst"
+4: "logf_powfi_nonconst" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "logf_powfi_nonconst" has unsupported operation: builtin.unregistered: llvm.sitofp
+
+4: "logf_powfi_nonconst" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log_powi_not_fast"
+4: "log_powi_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.powi
+
+4: "log_powi_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "log10f_powf"
+4: "log10f_powf" has unsupported operation: builtin.unregistered: llvm.intr.log10
+
+4: "log10f_powf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log2v_powv"
+4: "log2v_powv" has unsupported operation: builtin.unregistered: llvm.intr.log2
+
+4: "log2v_powv" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log_pow_not_fast"
+4: "log_pow_not_fast" has unsupported operation: llvm.call
+
+4: "log_pow_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "function_pointer"
+9: "function_pointer" has pointer type input
+
+4: "function_pointer" has unsupported operation: llvm.call
+
+4: "function_pointer" has unsupported operation: llvm.call
+
+1: "log10_exp"
+4: "log10_exp" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "logv_exp2v"
+4: "logv_exp2v" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log2f_exp10f"
+4: "log2f_exp10f" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log_exp2_not_fast"
+4: "log_exp2_not_fast" has unsupported operation: llvm.call
+
+4: "log_exp2_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+1: "pr43617"
+9: "pr43617" has pointer type input
+
+4: "pr43617" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "pr43617" has unsupported operation: llvm.call
+
+4: "pr43617" has unsupported operation: builtin.unregistered: llvm.intr.log
+
+4: "pr43617" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "log"
+5: "log" is empty
+
+1: "logf"
+5: "logf" is empty
+
+1: "log2f"
+5: "log2f" is empty
+
+1: "log10"
+5: "log10" is empty
+
+1: "exp"
+5: "exp" is empty
+
+1: "exp2"
+5: "exp2" is empty
+
+1: "exp10f"
+5: "exp10f" is empty
+
+1: "pow"
+5: "pow" is empty
+
+1: "powf"
+5: "powf" is empty
+

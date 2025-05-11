@@ -1,0 +1,41 @@
+1: "memcmp"
+9: "memcmp" has pointer type input
+
+1: "fold_memcmp_cst_cst"
+9: "fold_memcmp_cst_cst" has pointer type input
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_cst" has unsupported operation: llvm.return
+
+1: "fold_memcmp_cst_var"
+9: "fold_memcmp_cst_var" has pointer type input
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.getelementptr
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.store
+
+4: "fold_memcmp_cst_var" has unsupported operation: llvm.return
+

@@ -13,17 +13,17 @@ mkShell {
     pkgs.black
     pkgs.llvmPackages_19.mlir
     pkgs.llvmPackages_19.bintools-unwrapped
+    pkgs.bitwuzla
     pkgs.vscode
     (vscode-with-extensions.override {
-    vscodeExtensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      {
-        name = "lean4";
-        publisher = "leanprover";
-        version = "latest";
-        sha256 = "sha256-V2ZjimjLdWjy2ARQY9d5bASOxImVQcSVY/sqMIogiDw=";
-      }
-    ];
-    })
+      vscodeExtensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          name = "lean4";
+          publisher = "leanprover";
+          version = "latest";
+          sha256 = "sha256-EA/m4l4TRnq002e6DZerXJhnOnyF628mqBjm+kiiElA=";
+        }
+    ];})
   ];
 shellHook = ''
 # lake exe cache get!

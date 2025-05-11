@@ -1,0 +1,508 @@
+1: "use"
+5: "use" is empty
+
+1: "rem_signed"
+4: "rem_signed" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "rem_signed_vec"
+4: "rem_signed_vec" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "rem_unsigned"
+4: "rem_unsigned" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "big_divisor"
+4: "big_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "biggest_divisor"
+4: "biggest_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem_with_sext_bool_divisor"
+4: "urem_with_sext_bool_divisor" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem_with_sext_bool_divisor_vec"
+4: "urem_with_sext_bool_divisor_vec" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "big_divisor_vec"
+4: "big_divisor_vec" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem1"
+4: "urem1" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "srem1"
+4: "srem1" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem2"
+4: "urem2" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "urem3"
+4: "urem3" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "sdiv_mul_sdiv"
+4: "sdiv_mul_sdiv" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "udiv_mul_udiv"
+4: "udiv_mul_udiv" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.return
+
+1: "vec_power_of_2_constant_splat_divisor"
+8: "vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
+
+1: "weird_vec_power_of_2_constant_splat_divisor"
+8: "weird_vec_power_of_2_constant_splat_divisor" contains vectors which are unsupported
+
+1: "test3a"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "test3a_vec"
+8: "test3a_vec" contains vectors which are unsupported
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.shl
+2: llvm.urem
+2: llvm.return
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.srem
+2: llvm.return
+
+1: "test8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.srem
+2: llvm.return
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.urem
+2: llvm.return
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.sext
+2: llvm.urem
+2: llvm.trunc
+2: llvm.return
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.mul
+2: llvm.urem
+2: llvm.return
+
+1: "test12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.srem
+2: llvm.return
+
+1: "test13"
+2: llvm.func
+2: llvm.srem
+2: llvm.return
+
+1: "test14"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "test15"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.zext
+2: llvm.zext
+2: llvm.urem
+2: llvm.return
+
+1: "test16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.add
+2: llvm.urem
+2: llvm.return
+
+1: "test17"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.return
+
+1: "test18"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
+
+1: "test19"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.add
+2: llvm.urem
+2: llvm.return
+
+1: "test19_commutative0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.add
+2: llvm.urem
+2: llvm.return
+
+1: "test19_commutative1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.add
+2: llvm.urem
+2: llvm.return
+
+1: "test19_commutative2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.shl
+2: llvm.and
+2: llvm.add
+2: llvm.urem
+2: llvm.return
+
+1: "test20"
+8: "test20" contains vectors which are unsupported
+
+1: "test21"
+9: "test21" has pointer type input
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test21" has unsupported operation: llvm.load
+
+4: "test21" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "pr27968_0"
+9: "pr27968_0" has pointer type input
+
+4: "pr27968_0" has unsupported operation: llvm.mlir.addressof
+
+4: "pr27968_0" has unsupported operation: llvm.getelementptr
+
+4: "pr27968_0" has unsupported operation: llvm.mlir.addressof
+
+4: "pr27968_0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr27968_0" has unsupported operation: llvm.load
+
+4: "pr27968_0" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr27968_0" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pr27968_1"
+9: "pr27968_1" has pointer type input
+
+4: "pr27968_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr27968_1" has unsupported operation: llvm.load
+
+4: "pr27968_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr27968_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pr27968_2"
+9: "pr27968_2" has pointer type input
+
+4: "pr27968_2" has unsupported operation: llvm.mlir.addressof
+
+4: "pr27968_2" has unsupported operation: llvm.getelementptr
+
+4: "pr27968_2" has unsupported operation: llvm.mlir.addressof
+
+4: "pr27968_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr27968_2" has unsupported operation: llvm.load
+
+4: "pr27968_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr27968_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pr27968_3"
+9: "pr27968_3" has pointer type input
+
+4: "pr27968_3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pr27968_3" has unsupported operation: llvm.load
+
+4: "pr27968_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "pr27968_3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test22"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.srem
+2: llvm.return
+
+1: "test23"
+8: "test23" contains vectors which are unsupported
+
+1: "test24"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.icmp
+2: llvm.return
+
+1: "test24_vec"
+8: "test24_vec" contains vectors which are unsupported
+
+1: "test25"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "test25_vec"
+8: "test25_vec" contains vectors which are unsupported
+
+1: "test26"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "test27"
+9: "test27" has pointer type input
+
+4: "test27" has unsupported operation: llvm.store
+
+1: "test28"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "positive_and_odd_eq"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "negative_and_odd_eq"
+7: "negative_and_odd_eq" is unchanged by InstCombine
+
+1: "positive_and_odd_ne"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.srem
+2: llvm.icmp
+2: llvm.return
+
+1: "negative_and_odd_ne"
+7: "negative_and_odd_ne" is unchanged by InstCombine
+
+1: "PR34870"
+4: "PR34870" has unsupported operation: builtin.unregistered: llvm.frem
+
+1: "srem_constant_dividend_select_of_constants_divisor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.srem
+2: llvm.return
+
+1: "srem_constant_dividend_select_of_constants_divisor_use"
+4: "srem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: llvm.call
+
+1: "srem_constant_dividend_select_of_constants_divisor_0_arm"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.srem
+2: llvm.return
+
+1: "srem_constant_dividend_select_divisor1"
+7: "srem_constant_dividend_select_divisor1" is unchanged by InstCombine
+
+1: "srem_constant_dividend_select_divisor2"
+7: "srem_constant_dividend_select_divisor2" is unchanged by InstCombine
+
+1: "srem_constant_dividend_select_of_constants_divisor_vec"
+8: "srem_constant_dividend_select_of_constants_divisor_vec" contains vectors which are unsupported
+
+1: "srem_constant_dividend_select_of_constants_divisor_vec_ub1"
+8: "srem_constant_dividend_select_of_constants_divisor_vec_ub1" contains vectors which are unsupported
+
+1: "srem_constant_dividend_select_of_constants_divisor_vec_ub2"
+4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: llvm.mlir.undef
+
+4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "srem_constant_dividend_select_of_constants_divisor_vec_ub2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "srem_select_of_constants_divisor"
+7: "srem_select_of_constants_divisor" is unchanged by InstCombine
+
+1: "urem_constant_dividend_select_of_constants_divisor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
+
+1: "urem_constant_dividend_select_of_constants_divisor_use"
+4: "urem_constant_dividend_select_of_constants_divisor_use" has unsupported operation: llvm.call
+
+1: "urem_constant_dividend_select_of_constants_divisor_0_arm"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
+
+1: "urem_constant_dividend_select_divisor1"
+7: "urem_constant_dividend_select_divisor1" is unchanged by InstCombine
+
+1: "urem_constant_dividend_select_divisor2"
+7: "urem_constant_dividend_select_divisor2" is unchanged by InstCombine
+
+1: "urem_constant_dividend_select_of_constants_divisor_vec"
+8: "urem_constant_dividend_select_of_constants_divisor_vec" contains vectors which are unsupported
+
+1: "urem_constant_dividend_select_of_constants_divisor_vec_ub1"
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: llvm.mlir.undef
+
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "urem_constant_dividend_select_of_constants_divisor_vec_ub1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "urem_constant_dividend_select_of_constants_divisor_vec_ub2"
+8: "urem_constant_dividend_select_of_constants_divisor_vec_ub2" contains vectors which are unsupported
+
+1: "urem_select_of_constants_divisor"
+7: "urem_select_of_constants_divisor" is unchanged by InstCombine
+
+1: "PR62401"
+4: "PR62401" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "rem_pow2_or_zero"
+4: "rem_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "rem_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "rem_pow2"
+4: "rem_pow2" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "rem_pow2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "rem_pow2_domcond"
+4: "rem_pow2_domcond" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "rem_pow2_domcond" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "rem_pow2_domcond_in_else"
+4: "rem_pow2_domcond_in_else" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "rem_pow2_domcond_in_else" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "rem_pow2_or_zero_domcond"
+4: "rem_pow2_or_zero_domcond" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "rem_pow2_or_zero_domcond" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "rem_pow2_non_domcond"
+4: "rem_pow2_non_domcond" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "rem_pow2_non_domcond" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "rem_pow2_non_domcond" has unsupported operation: builtin.unregistered: llvm.br
+

@@ -1,0 +1,16 @@
+1: "use"
+9: "use" has pointer type input
+
+1: "f"
+4: "f" has unsupported operation: llvm.mlir.addressof
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "f" has unsupported operation: llvm.getelementptr
+
+4: "f" has unsupported operation: llvm.getelementptr
+
+4: "f" has unsupported operation: llvm.call
+
+4: "f" has unsupported operation: llvm.return
+

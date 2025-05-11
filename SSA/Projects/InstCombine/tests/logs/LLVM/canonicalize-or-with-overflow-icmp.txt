@@ -1,0 +1,117 @@
+1: "use"
+5: "use" is empty
+
+1: "ckd_add_unsigned"
+4: "ckd_add_unsigned" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "ckd_add_unsigned" has unsupported operation after optimization: llvm.extractvalue
+
+4: "ckd_add_unsigned" has unsupported operation after optimization: llvm.extractvalue
+
+1: "ckd_add_unsigned_commuted"
+4: "ckd_add_unsigned_commuted" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "ckd_add_unsigned_commuted" has unsupported operation after optimization: llvm.extractvalue
+
+4: "ckd_add_unsigned_commuted" has unsupported operation after optimization: llvm.extractvalue
+
+1: "ckd_add_unsigned_imply_true"
+4: "ckd_add_unsigned_imply_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "ckd_add_unsigned_imply_true" has unsupported operation after optimization: llvm.extractvalue
+
+4: "ckd_add_unsigned_imply_true" has unsupported operation after optimization: llvm.extractvalue
+
+1: "canonicalize_or_sadd_with_overflow_icmp"
+4: "canonicalize_or_sadd_with_overflow_icmp" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp" has unsupported operation after optimization: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp" has unsupported operation after optimization: llvm.extractvalue
+
+1: "canonicalize_or_ssub_with_overflow_icmp"
+4: "canonicalize_or_ssub_with_overflow_icmp" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "canonicalize_or_ssub_with_overflow_icmp" has unsupported operation after optimization: llvm.extractvalue
+
+4: "canonicalize_or_ssub_with_overflow_icmp" has unsupported operation after optimization: llvm.extractvalue
+
+1: "canonicalize_or_uadd_with_overflow_icmp"
+4: "canonicalize_or_uadd_with_overflow_icmp" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "canonicalize_or_uadd_with_overflow_icmp" has unsupported operation after optimization: llvm.extractvalue
+
+4: "canonicalize_or_uadd_with_overflow_icmp" has unsupported operation after optimization: llvm.extractvalue
+
+1: "canonicalize_or_sadd_with_overflow_icmp_eq"
+4: "canonicalize_or_sadd_with_overflow_icmp_eq" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp_eq" has unsupported operation after optimization: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_eq" has unsupported operation after optimization: llvm.extractvalue
+
+1: "canonicalize_or_uadd_with_overflow_icmp_ne"
+4: "canonicalize_or_uadd_with_overflow_icmp_ne" has unsupported operation after optimization: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "canonicalize_or_uadd_with_overflow_icmp_ne" has unsupported operation after optimization: llvm.extractvalue
+
+4: "canonicalize_or_uadd_with_overflow_icmp_ne" has unsupported operation after optimization: llvm.extractvalue
+
+1: "canonicalize_or_sadd_with_overflow_icmp_mismatched_pred"
+4: "canonicalize_or_sadd_with_overflow_icmp_mismatched_pred" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp_mismatched_pred" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_mismatched_pred" has unsupported operation: llvm.extractvalue
+
+1: "canonicalize_or_sadd_with_overflow_icmp_non_constant1"
+4: "canonicalize_or_sadd_with_overflow_icmp_non_constant1" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp_non_constant1" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_non_constant1" has unsupported operation: llvm.extractvalue
+
+1: "canonicalize_or_sadd_with_overflow_icmp_non_constant2"
+4: "canonicalize_or_sadd_with_overflow_icmp_non_constant2" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp_non_constant2" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_non_constant2" has unsupported operation: llvm.extractvalue
+
+1: "canonicalize_or_sadd_with_overflow_icmp_multiuse"
+4: "canonicalize_or_sadd_with_overflow_icmp_multiuse" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_multiuse" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_multiuse" has unsupported operation: llvm.call
+
+1: "canonicalize_or_sadd_with_overflow_icmp_overflow"
+4: "canonicalize_or_sadd_with_overflow_icmp_overflow" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "canonicalize_or_sadd_with_overflow_icmp_overflow" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_sadd_with_overflow_icmp_overflow" has unsupported operation: llvm.extractvalue
+
+1: "canonicalize_or_uadd_with_overflow_icmp_overflow"
+4: "canonicalize_or_uadd_with_overflow_icmp_overflow" has unsupported operation: builtin.unregistered: llvm.intr.uadd.with.overflow
+
+4: "canonicalize_or_uadd_with_overflow_icmp_overflow" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_uadd_with_overflow_icmp_overflow" has unsupported operation: llvm.extractvalue
+
+1: "canonicalize_or_ssub_with_overflow_icmp_overflow"
+4: "canonicalize_or_ssub_with_overflow_icmp_overflow" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "canonicalize_or_ssub_with_overflow_icmp_overflow" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_ssub_with_overflow_icmp_overflow" has unsupported operation: llvm.extractvalue
+
+1: "canonicalize_or_smul_with_overflow_icmp"
+4: "canonicalize_or_smul_with_overflow_icmp" has unsupported operation: builtin.unregistered: llvm.intr.smul.with.overflow
+
+4: "canonicalize_or_smul_with_overflow_icmp" has unsupported operation: llvm.extractvalue
+
+4: "canonicalize_or_smul_with_overflow_icmp" has unsupported operation: llvm.extractvalue
+

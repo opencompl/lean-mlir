@@ -1,0 +1,122 @@
+1: "pow2_32_assume"
+4: "pow2_32_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "not_pow2_32_assume"
+4: "not_pow2_32_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_64_assume"
+4: "pow2_64_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "not_pow2_64_assume"
+4: "not_pow2_64_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_16_assume"
+4: "pow2_16_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "not_pow2_16_assume"
+4: "not_pow2_16_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_8_assume"
+4: "pow2_8_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "not_pow2_8_assume"
+4: "not_pow2_8_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_32_br"
+4: "pow2_32_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_pow2_32_br"
+4: "not_pow2_32_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pow2_64_br"
+4: "pow2_64_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_pow2_64_br"
+4: "not_pow2_64_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pow2_16_br"
+4: "pow2_16_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_pow2_16_br"
+4: "not_pow2_16_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pow2_8_br"
+4: "pow2_8_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_pow2_8_br"
+4: "not_pow2_8_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pow2_32_nonconst_assume"
+4: "pow2_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "pow2_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "pow2_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_32_gtnonconst_assume"
+4: "pow2_32_gtnonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "pow2_32_gtnonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "pow2_32_gtnonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "not_pow2_32_nonconst_assume"
+4: "not_pow2_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "not_pow2_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "not_pow2_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_or_zero_32_nonconst_assume"
+4: "pow2_or_zero_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "pow2_or_zero_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "pow2_or_zero_32_nonconst_assume" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "pow2_32_nonconst_assume_br"
+4: "pow2_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "pow2_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "pow2_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_pow2_32_nonconst_assume_br"
+4: "not_pow2_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "not_pow2_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "not_pow2_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pow2_or_zero_32_nonconst_assume_br"
+4: "pow2_or_zero_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "pow2_or_zero_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "pow2_or_zero_32_nonconst_assume_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pow2_32_nonconst_br1_br"
+4: "pow2_32_nonconst_br1_br" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "pow2_32_nonconst_br1_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "pow2_32_nonconst_br1_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_pow2_32_nonconst_br1_br"
+4: "not_pow2_32_nonconst_br1_br" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "not_pow2_32_nonconst_br1_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "not_pow2_32_nonconst_br1_br" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "maybe_pow2_32_noncont"
+4: "maybe_pow2_32_noncont" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "maybe_pow2_32_noncont" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "maybe_pow2_32_noncont" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "maybe_pow2_32_noncont" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "maybe_pow2_32_noncont" has unsupported operation: builtin.unregistered: llvm.cond_br
+

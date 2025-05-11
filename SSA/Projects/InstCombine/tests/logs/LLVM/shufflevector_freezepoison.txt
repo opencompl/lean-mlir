@@ -1,0 +1,73 @@
+1: "shuffle_op0_freeze_poison"
+4: "shuffle_op0_freeze_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffle_op0_freeze_poison" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_op0_freeze_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_op1_freeze_poison"
+4: "shuffle_op1_freeze_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffle_op1_freeze_poison" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_op1_freeze_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_op0_freeze_poison_use"
+4: "shuffle_op0_freeze_poison_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffle_op0_freeze_poison_use" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_op0_freeze_poison_use" has unsupported operation: llvm.call
+
+4: "shuffle_op0_freeze_poison_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_op1_freeze_poison_use"
+4: "shuffle_op1_freeze_poison_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffle_op1_freeze_poison_use" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_op1_freeze_poison_use" has unsupported operation: llvm.call
+
+4: "shuffle_op1_freeze_poison_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_op0_freeze_undef"
+4: "shuffle_op0_freeze_undef" has unsupported operation: llvm.mlir.undef
+
+4: "shuffle_op0_freeze_undef" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_op0_freeze_undef" has unsupported operation: llvm.call
+
+4: "shuffle_op0_freeze_undef" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_op1_freeze_undef"
+4: "shuffle_op1_freeze_undef" has unsupported operation: llvm.mlir.undef
+
+4: "shuffle_op1_freeze_undef" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_op1_freeze_undef" has unsupported operation: llvm.call
+
+4: "shuffle_op1_freeze_undef" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_bc1"
+4: "shuffle_bc1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffle_bc1" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_bc1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuffle_bc1" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shuffle_bc2"
+4: "shuffle_bc2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuffle_bc2" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "shuffle_bc2" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuffle_bc2" has unsupported operation: llvm.call
+
+4: "shuffle_bc2" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use"
+5: "use" is empty
+

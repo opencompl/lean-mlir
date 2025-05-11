@@ -1,0 +1,179 @@
+1: "barrier"
+5: "barrier" is empty
+
+1: "use.v2i8"
+5: "use.v2i8" is empty
+
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "or_ugt"
+2: llvm.func
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_ule"
+8: "or_ule" contains vectors which are unsupported
+
+1: "or_slt_pos"
+7: "or_slt_pos" is unchanged by InstCombine
+
+1: "or_sle_pos"
+4: "or_sle_pos" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+1: "or_sle_fail_maybe_neg"
+7: "or_sle_fail_maybe_neg" is unchanged by InstCombine
+
+1: "or_eq_noundef"
+7: "or_eq_noundef" is unchanged by InstCombine
+
+1: "or_eq_notY_eq_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_eq_notY_eq_0_fail_multiuse"
+4: "or_eq_notY_eq_0_fail_multiuse" has unsupported operation: llvm.call
+
+1: "or_ne_notY_eq_1s"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_ne_notY_eq_1s_fail_bad_not"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_ne_vecC"
+8: "or_ne_vecC" contains vectors which are unsupported
+
+1: "or_eq_fail_maybe_undef"
+7: "or_eq_fail_maybe_undef" is unchanged by InstCombine
+
+1: "or_ne_noundef"
+7: "or_ne_noundef" is unchanged by InstCombine
+
+1: "or_ne_noundef_fail_reuse"
+4: "or_ne_noundef_fail_reuse" has unsupported operation: llvm.call
+
+1: "or_slt_intmin"
+7: "or_slt_intmin" is unchanged by InstCombine
+
+1: "or_slt_intmin_2"
+7: "or_slt_intmin_2" is unchanged by InstCombine
+
+1: "or_sle_intmin_indirect_2"
+4: "or_sle_intmin_indirect_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_sle_intmin_indirect_2" has unsupported operation: llvm.call
+
+1: "or_sge_intmin"
+7: "or_sge_intmin" is unchanged by InstCombine
+
+1: "or_sgt_intmin_indirect"
+4: "or_sgt_intmin_indirect" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "or_sgt_intmin_indirect" has unsupported operation: llvm.call
+
+1: "or_sgt_intmin_2"
+7: "or_sgt_intmin_2" is unchanged by InstCombine
+
+1: "or_simplify_ule"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_simplify_uge"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_simplify_ule_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_simplify_ugt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_simplify_ult"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "or_simplify_ugt_fail"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "pr64610"
+9: "pr64610" has pointer type input
+
+1: "icmp_eq_x_invertable_y2_todo"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_eq_x_invertable_y2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+
+1: "PR38139"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.icmp
+2: llvm.return
+

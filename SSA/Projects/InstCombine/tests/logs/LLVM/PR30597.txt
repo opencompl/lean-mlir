@@ -1,0 +1,10 @@
+1: "dot_ref_s"
+9: "dot_ref_s" has pointer type input
+
+1: "function"
+9: "function" has pointer type input
+
+4: "function" has unsupported operation: llvm.load
+
+4: "function" has unsupported operation: llvm.inttoptr
+

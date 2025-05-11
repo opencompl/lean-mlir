@@ -1,0 +1,12 @@
+1: "blah"
+9: "blah" has pointer type input
+
+4: "blah" has unsupported operation: llvm.mlir.addressof
+
+4: "blah" has unsupported operation: llvm.call
+
+4: "blah" has unsupported operation: llvm.return
+
+1: "objc_msgSend_stret"
+9: "objc_msgSend_stret" has pointer type input
+

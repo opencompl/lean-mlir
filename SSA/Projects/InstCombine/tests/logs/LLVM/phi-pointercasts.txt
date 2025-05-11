@@ -1,0 +1,234 @@
+1: "test_bitcast_1"
+9: "test_bitcast_1" has pointer type input
+
+4: "test_bitcast_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_1" has unsupported operation: llvm.call
+
+4: "test_bitcast_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_1" has unsupported operation: llvm.store
+
+4: "test_bitcast_1" has unsupported operation: llvm.return
+
+1: "test_bitcast_2"
+9: "test_bitcast_2" has pointer type input
+
+4: "test_bitcast_2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_2" has unsupported operation: llvm.call
+
+4: "test_bitcast_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_2" has unsupported operation: llvm.store
+
+4: "test_bitcast_2" has unsupported operation: llvm.return
+
+1: "test_bitcast_3"
+9: "test_bitcast_3" has pointer type input
+
+4: "test_bitcast_3" has unsupported operation: llvm.load
+
+4: "test_bitcast_3" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_3" has unsupported operation: llvm.call
+
+4: "test_bitcast_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_3" has unsupported operation: llvm.store
+
+4: "test_bitcast_3" has unsupported operation: llvm.return
+
+1: "test_bitcast_loads_in_different_bbs"
+9: "test_bitcast_loads_in_different_bbs" has pointer type input
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: llvm.load
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: llvm.call
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: llvm.load
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: llvm.store
+
+4: "test_bitcast_loads_in_different_bbs" has unsupported operation: llvm.return
+
+1: "test_gep_1"
+9: "test_gep_1" has pointer type input
+
+4: "test_gep_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_gep_1" has unsupported operation: llvm.call
+
+4: "test_gep_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_gep_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_gep_1" has unsupported operation: llvm.store
+
+4: "test_gep_1" has unsupported operation: llvm.return
+
+1: "test_bitcast_not_foldable"
+9: "test_bitcast_not_foldable" has pointer type input
+
+4: "test_bitcast_not_foldable" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_not_foldable" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_not_foldable" has unsupported operation: llvm.call
+
+4: "test_bitcast_not_foldable" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_not_foldable" has unsupported operation: llvm.store
+
+4: "test_bitcast_not_foldable" has unsupported operation: llvm.return
+
+1: "test_bitcast_with_extra_use"
+9: "test_bitcast_with_extra_use" has pointer type input
+
+4: "test_bitcast_with_extra_use" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_with_extra_use" has unsupported operation: llvm.call
+
+4: "test_bitcast_with_extra_use" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_with_extra_use" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_with_extra_use" has unsupported operation: llvm.store
+
+4: "test_bitcast_with_extra_use" has unsupported operation: llvm.return
+
+1: "test_bitcast_different_bases"
+9: "test_bitcast_different_bases" has pointer type input
+
+4: "test_bitcast_different_bases" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_different_bases" has unsupported operation: llvm.call
+
+4: "test_bitcast_different_bases" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_different_bases" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_different_bases" has unsupported operation: llvm.store
+
+4: "test_bitcast_different_bases" has unsupported operation: llvm.return
+
+1: "test_bitcast_gep_chains"
+9: "test_bitcast_gep_chains" has pointer type input
+
+4: "test_bitcast_gep_chains" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_bitcast_gep_chains" has unsupported operation: llvm.call
+
+4: "test_bitcast_gep_chains" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_gep_chains" has unsupported operation: llvm.call
+
+4: "test_bitcast_gep_chains" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_bitcast_gep_chains" has unsupported operation: llvm.store
+
+4: "test_bitcast_gep_chains" has unsupported operation: llvm.return
+
+1: "test_4_incoming_values_different_bases_1"
+9: "test_4_incoming_values_different_bases_1" has pointer type input
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: llvm.call
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: llvm.store
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: llvm.return
+
+4: "test_4_incoming_values_different_bases_1" has unsupported operation: llvm.return
+
+1: "test_4_incoming_values_different_bases_2"
+9: "test_4_incoming_values_different_bases_2" has pointer type input
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: llvm.call
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: llvm.store
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: llvm.return
+
+4: "test_4_incoming_values_different_bases_2" has unsupported operation: llvm.return
+
+1: "test_4_incoming_values_different_bases_3"
+9: "test_4_incoming_values_different_bases_3" has pointer type input
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: llvm.call
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: llvm.store
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: llvm.return
+
+4: "test_4_incoming_values_different_bases_3" has unsupported operation: llvm.return
+
+1: "test_addrspacecast_1"
+9: "test_addrspacecast_1" has pointer type input
+
+4: "test_addrspacecast_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_addrspacecast_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_addrspacecast_1" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test_addrspacecast_1" has unsupported operation: llvm.call
+
+4: "test_addrspacecast_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_addrspacecast_1" has unsupported operation: builtin.unregistered: llvm.addrspacecast
+
+4: "test_addrspacecast_1" has unsupported operation: llvm.store
+
+4: "test_addrspacecast_1" has unsupported operation: llvm.return
+
+1: "use"
+9: "use" has pointer type input
+
+1: "use.i32"
+9: "use.i32" has pointer type input
+
+1: "use.i8.addrspace1"
+9: "use.i8.addrspace1" has pointer type input
+

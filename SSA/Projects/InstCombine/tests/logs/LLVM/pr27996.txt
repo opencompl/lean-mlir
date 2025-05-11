@@ -1,0 +1,31 @@
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.zero
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.load
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "foo" has unsupported operation: llvm.store
+
+4: "foo" has unsupported operation: llvm.store
+

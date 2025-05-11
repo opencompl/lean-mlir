@@ -1,0 +1,56 @@
+1: "bit_ceil_32"
+4: "bit_ceil_32" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_64"
+4: "bit_ceil_64" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_32_minus_1"
+4: "bit_ceil_32_minus_1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_32_plus_1"
+4: "bit_ceil_32_plus_1" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_plus_2"
+4: "bit_ceil_plus_2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_32_neg"
+4: "bit_ceil_32_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_not"
+4: "bit_ceil_not" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_commuted_operands"
+4: "bit_ceil_commuted_operands" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_wrong_select_constant"
+4: "bit_ceil_wrong_select_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_32_wrong_cond"
+4: "bit_ceil_32_wrong_cond" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_wrong_sub_constant"
+4: "bit_ceil_wrong_sub_constant" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "bit_ceil_32_shl_used_twice"
+9: "bit_ceil_32_shl_used_twice" has pointer type input
+
+4: "bit_ceil_32_shl_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "bit_ceil_32_shl_used_twice" has unsupported operation: llvm.store
+
+1: "bit_ceil_32_sub_used_twice"
+9: "bit_ceil_32_sub_used_twice" has pointer type input
+
+4: "bit_ceil_32_sub_used_twice" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+4: "bit_ceil_32_sub_used_twice" has unsupported operation: llvm.store
+
+1: "bit_ceil_v4i32"
+4: "bit_ceil_v4i32" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "pr91691"
+4: "pr91691" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "pr91691_keep_nsw"
+4: "pr91691_keep_nsw" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+

@@ -1,0 +1,93 @@
+1: "sqrt_div_fast"
+4: "sqrt_div_fast" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_div"
+4: "sqrt_div" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_div_reassoc_arcp"
+4: "sqrt_div_reassoc_arcp" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_reassoc_arcp" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_reassoc_arcp" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_div_reassoc_missing"
+4: "sqrt_div_reassoc_missing" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_reassoc_missing" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_reassoc_missing" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_div_reassoc_missing2"
+4: "sqrt_div_reassoc_missing2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_reassoc_missing2" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_reassoc_missing2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_div_reassoc_missing3"
+4: "sqrt_div_reassoc_missing3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_reassoc_missing3" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_reassoc_missing3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_div_arcp_missing"
+4: "sqrt_div_arcp_missing" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_arcp_missing" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_arcp_missing" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_div_arcp_missing2"
+4: "sqrt_div_arcp_missing2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_arcp_missing2" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_arcp_missing2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_div_arcp_missing3"
+4: "sqrt_div_arcp_missing3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_arcp_missing3" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_arcp_missing3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "use"
+5: "use" is empty
+
+1: "sqrt_div_fast_multiple_uses_1"
+4: "sqrt_div_fast_multiple_uses_1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_fast_multiple_uses_1" has unsupported operation: llvm.call
+
+4: "sqrt_div_fast_multiple_uses_1" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_fast_multiple_uses_1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_div_fast_multiple_uses_2"
+4: "sqrt_div_fast_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_div_fast_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_div_fast_multiple_uses_2" has unsupported operation: llvm.call
+
+4: "sqrt_div_fast_multiple_uses_2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_non_div_operator"
+4: "sqrt_non_div_operator" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "sqrt_non_div_operator" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_non_div_operator" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_non_div_operator" has unsupported operation: builtin.unregistered: llvm.fptrunc
+

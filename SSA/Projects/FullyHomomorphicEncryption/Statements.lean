@@ -100,7 +100,7 @@ theorem R.monomial_zero_c_eq_zero : R.monomial (q := q) (n := n) 0 c = 0 := by
 theorem R.fromTensor_eq_concat_zero (tensor : List Int) :
   R.fromTensor (q := q) (n := n) tensor = R.fromTensor (q := q) (n := n) (tensor ++ [0]) := by
   unfold R.fromTensor
-  rw [List.enum_append, List.enumFrom_singleton, List.foldl_concat]
+  rw [List.zipIdx_append, List.zipIdx_singleton, List.foldl_concat]
   simp [R.monomial_zero_c_eq_zero]
 
 

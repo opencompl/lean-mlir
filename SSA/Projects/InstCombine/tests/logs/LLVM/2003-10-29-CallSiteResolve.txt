@@ -1,0 +1,13 @@
+1: "bar"
+5: "bar" is empty
+
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.zero
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+

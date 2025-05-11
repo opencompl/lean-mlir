@@ -1,0 +1,246 @@
+1: "test1"
+9: "test1" has pointer type input
+
+4: "test1" has unsupported operation: llvm.load
+
+1: "test2"
+9: "test2" has pointer type input
+
+4: "test2" has unsupported operation: llvm.load
+
+4: "test2" has unsupported operation: llvm.load
+
+1: "test3"
+9: "test3" has pointer type input
+
+4: "test3" has unsupported operation: llvm.load
+
+1: "test4"
+9: "test4" has pointer type input
+
+4: "test4" has unsupported operation: llvm.load
+
+1: "test5"
+9: "test5" has pointer type input
+
+4: "test5" has unsupported operation: llvm.load
+
+1: "test6"
+9: "test6" has pointer type input
+
+4: "test6" has unsupported operation: llvm.load
+
+1: "test7"
+9: "test7" has pointer type input
+
+4: "test7" has unsupported operation: llvm.load
+
+4: "test7" has unsupported operation: llvm.load
+
+1: "test8"
+9: "test8" has pointer type input
+
+4: "test8" has unsupported operation: llvm.load
+
+4: "test8" has unsupported operation: llvm.load
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test9" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test9" has unsupported operation: llvm.store
+
+1: "test9_no_null_opt"
+4: "test9_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "test9_no_null_opt" has unsupported operation: llvm.load
+
+1: "test10"
+4: "test10" has unsupported operation: llvm.mlir.zero
+
+4: "test10" has unsupported operation: llvm.load
+
+1: "test10_no_null_opt"
+4: "test10_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "test10_no_null_opt" has unsupported operation: llvm.load
+
+1: "test11"
+4: "test11" has unsupported operation: llvm.mlir.zero
+
+4: "test11" has unsupported operation: llvm.load
+
+1: "test11_no_null_opt"
+4: "test11_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "test11_no_null_opt" has unsupported operation: llvm.load
+
+1: "test12"
+4: "test12" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test12" has unsupported operation: llvm.mlir.zero
+
+4: "test12" has unsupported operation: llvm.store
+
+1: "test12_no_null_opt"
+4: "test12_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "test12_no_null_opt" has unsupported operation: llvm.store
+
+1: "test13"
+4: "test13" has unsupported operation: llvm.mlir.zero
+
+4: "test13" has unsupported operation: llvm.store
+
+1: "test13_no_null_opt"
+4: "test13_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "test13_no_null_opt" has unsupported operation: llvm.store
+
+1: "test14"
+4: "test14" has unsupported operation: llvm.mlir.zero
+
+4: "test14" has unsupported operation: llvm.store
+
+1: "test14_no_null_opt"
+4: "test14_no_null_opt" has unsupported operation: llvm.mlir.zero
+
+4: "test14_no_null_opt" has unsupported operation: llvm.store
+
+1: "test15"
+4: "test15" has unsupported operation: llvm.mlir.addressof
+
+4: "test15" has unsupported operation: llvm.mlir.addressof
+
+4: "test15" has unsupported operation: llvm.load
+
+4: "test15" has unsupported operation: llvm.load
+
+1: "test16"
+4: "test16" has unsupported operation: llvm.mlir.addressof
+
+4: "test16" has unsupported operation: llvm.mlir.addressof
+
+4: "test16" has unsupported operation: llvm.load
+
+1: "test17"
+4: "test17" has unsupported operation: llvm.mlir.addressof
+
+4: "test17" has unsupported operation: llvm.mlir.addressof
+
+4: "test17" has unsupported operation: llvm.load
+
+1: "test22"
+4: "test22" has unsupported operation: llvm.mlir.addressof
+
+4: "test22" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test22" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test22" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test22" has unsupported operation: llvm.store
+
+1: "test23"
+4: "test23" has unsupported operation: llvm.mlir.addressof
+
+4: "test23" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test23" has unsupported operation: llvm.store
+
+4: "test23" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test23" has unsupported operation: llvm.store
+
+4: "test23" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "clobber"
+5: "clobber" is empty
+
+1: "test18"
+9: "test18" has pointer type input
+
+4: "test18" has unsupported operation: llvm.load
+
+4: "test18" has unsupported operation: llvm.call
+
+4: "test18" has unsupported operation: llvm.store
+
+1: "test19"
+9: "test19" has pointer type input
+
+4: "test19" has unsupported operation: llvm.load
+
+4: "test19" has unsupported operation: llvm.call
+
+4: "test19" has unsupported operation: llvm.store
+
+1: "test20"
+9: "test20" has pointer type input
+
+4: "test20" has unsupported operation: llvm.store
+
+1: "test21"
+9: "test21" has pointer type input
+
+4: "test21" has unsupported operation: llvm.store
+
+1: "pr27490a"
+9: "pr27490a" has pointer type input
+
+4: "pr27490a" has unsupported operation: llvm.load
+
+4: "pr27490a" has unsupported operation: llvm.store
+
+4: "pr27490a" has unsupported operation: llvm.return
+
+1: "pr27490b"
+9: "pr27490b" has pointer type input
+
+4: "pr27490b" has unsupported operation: llvm.load
+
+4: "pr27490b" has unsupported operation: llvm.store
+
+4: "pr27490b" has unsupported operation: llvm.return
+
+1: "no_atomic_vector_load"
+9: "no_atomic_vector_load" has pointer type input
+
+4: "no_atomic_vector_load" has unsupported operation: llvm.load
+
+4: "no_atomic_vector_load" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "no_atomic_vector_store"
+9: "no_atomic_vector_store" has pointer type input
+
+4: "no_atomic_vector_store" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "no_atomic_vector_store" has unsupported operation: llvm.store
+
+4: "no_atomic_vector_store" has unsupported operation: llvm.return
+
+1: "atomic_load_from_constant_global"
+4: "atomic_load_from_constant_global" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "atomic_load_from_constant_global" has unsupported operation after optimization: llvm.load
+
+1: "atomic_load_from_constant_global_bitcast"
+4: "atomic_load_from_constant_global_bitcast" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "atomic_load_from_constant_global_bitcast" has unsupported operation after optimization: llvm.load
+
+1: "atomic_load_from_non_constant_global"
+4: "atomic_load_from_non_constant_global" has unsupported operation: llvm.mlir.addressof
+
+4: "atomic_load_from_non_constant_global" has unsupported operation: llvm.load
+
+4: "atomic_load_from_non_constant_global" has unsupported operation: llvm.return
+
+1: "volatile_load_from_constant_global"
+4: "volatile_load_from_constant_global" has unsupported operation: llvm.mlir.addressof
+
+4: "volatile_load_from_constant_global" has unsupported operation: llvm.load
+
+4: "volatile_load_from_constant_global" has unsupported operation: llvm.return
+

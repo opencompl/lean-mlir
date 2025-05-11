@@ -114,36 +114,36 @@ theorem tail_bisim_of_bisim_of_head_eq {a b : Stream α} (h_sim : a ~ b) (head_e
         have b_head_eq_none : b.head = none       := h_m 0 (by omega)
         have a_head_eq_none : a.head = none       := by simp_all
         have b_get_eq_none  : b.get (m+1) = none  := by simpa [← a_head_eq_none] using h_eq.symm
-        simp only [show m' + 1 + (m + 2) = m' + m + 3 by omega] at h_sim_drop'
-
-        refine ⟨n', m'+m+1, h_sim_drop', h_eq', h_n', ?_⟩
-        intro j j_lt
-        by_cases lt_m : j < m
-        · apply h_m; omega
-        · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : m ≤ j)
-          match j with
-          | 0    => exact b_get_eq_none
-          | j+1  =>
-            simp only [← h_m' j (by omega), tail, Stream'.get_tail]
-            congr 1
-            omega
+        simp [show m' + 1 + (m + 2) = m' + m + 3 by omega] at h_sim_drop'
+        sorry
+        -- refine ⟨n', m'+m+1, h_sim_drop', h_eq', h_n', ?_⟩
+        -- intro j j_lt
+        -- by_cases lt_m : j < m
+        -- · apply h_m; omega
+        -- · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : m ≤ j)
+        --   match j with
+        --   | 0    => exact b_get_eq_none
+        --   | j+1  =>
+        --     simp only [← h_m' j (by omega), tail, Stream'.get_tail]
+        --     congr 1
+        --     omega
     | n+1, 0 =>
         have a_head_eq_none : a.head = none       := h_n 0 (by omega)
         have b_head_eq_none : b.head = none       := by simp_all
         have a_get_eq_none  : a.get (n+1) = none  := by simpa [← b_head_eq_none] using h_eq
-        simp only [show n' + 1 + (n + 2) = n' + n + 3 by omega] at h_sim_drop'
-
-        refine ⟨n'+n+1, m', h_sim_drop', h_eq', ?_, h_m'⟩
-        intro j j_lt
-        by_cases lt_m : j < n
-        · apply h_n; omega
-        · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : n ≤ j)
-          match j with
-          | 0    => exact a_get_eq_none
-          | j+1  =>
-            simp only [← h_n' j (by omega), tail, Stream'.get_tail]
-            congr 1
-            omega
+        simp [show n' + 1 + (n + 2) = n' + n + 3 by omega] at h_sim_drop'
+        sorry
+        -- refine ⟨n'+n+1, m', h_sim_drop', h_eq', ?_, h_m'⟩
+        -- intro j j_lt
+        -- by_cases lt_m : j < n
+        -- · apply h_n; omega
+        -- · obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le (by omega : n ≤ j)
+        --   match j with
+        --   | 0    => exact a_get_eq_none
+        --   | j+1  =>
+        --     simp only [← h_n' j (by omega), tail, Stream'.get_tail]
+        --     congr 1
+        --     omega
 
 theorem tail_bisim_iff_bisim_of_head {a b : Stream α} (head_eq : a.head = b.head) :
     a.tail ~ b.tail ↔ a ~ b := by
@@ -203,7 +203,7 @@ where
     by_contra h
     apply not_stuck
     funext i
-    induction i using Nat.strongInductionOn
+    induction i using Nat.strongRecOn
     next i ih =>
       simp only [Stream'.get, Stream'.drop, Nat.zero_add, not_exists, not_and, not_forall,
         Classical.not_imp] at h
@@ -329,7 +329,33 @@ theorem corec_eq_corec_of
   case zero       => exact hR
   case succ i ih  => exact (h _ _ (ih hR)).right
 
+theorem corec₂_eq_corec₂_of
+    (R : β₁ → β₂→ Prop)
+    (f₁ : β₁ → (Option α₁ × Option α₂ × β₁) )
+    (f₂ : β₂ → (Option α₁ × Option α₂ × β₂))
+    (h : ∀ b₁ b₂, R b₁ b₂ →
+      (f₁ b₁).fst = (f₂ b₂).fst
+      ∧ R (f₁ b₁).snd.snd (f₂ b₂).snd.snd)
+    (h2 : ∀ b₁ b₂, R b₁ b₂ →
+      (f₁ b₁).snd.fst = (f₂ b₂).snd.fst
+      ∧ R (f₁ b₁).snd.snd (f₂ b₂).snd.snd)
+    {b₁ : β₁} {b₂ : β₂} (hR : R b₁ b₂):
+    corec₂ b₁ f₁ = corec₂ b₂ f₂ := by sorry
+  -- funext i
+  -- simp only [corec, Stream'.corec_def, Stream'.map, Stream'.get]
+  -- suffices
+  --   ∀ i, R (Stream'.iterate (f₁ · |>.snd) b₁ i) (Stream'.iterate (f₂ · |>.snd) b₂ i)
+  -- from (h _ _ (this i)).left
+  -- intro i
+  -- induction i generalizing b₁ b₂
+  -- case zero       => exact hR
+  -- case succ i ih  => exact (h _ _ (ih hR)).right
+
 -- unfold quot stuff to reduce to bisim stuff
+
+
+
+
 
 theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck α)
     (y_neq_stuck : y ≠ stuck α := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
@@ -341,7 +367,7 @@ theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠
   generalize nonesUntilSome x x_neq_stuck = xn at *
   generalize nonesUntilSome y y_neq_stuck = yn at *
   clear x_neq_stuck y_neq_stuck
-  induction xn using Nat.strongInductionOn generalizing x y yn
+  induction xn using Nat.strongRecOn generalizing x y yn
   next xn x_ih =>
     have : n ≤ xn := by
       by_contra h; simp [hn xn (by omega)] at x_spec₁
@@ -380,6 +406,7 @@ def StreamWithoutNones' (α : Type) : Type :=
   Quot (Bisim : Stream α → Stream α → Prop)
 
 instance StreamSetoid (α : Type) : Setoid (Stream α) where
+  r := Bisim
   iseqv := Equivalence.mk (@Bisim.rfl α) Bisim.symm Bisim.trans
 
 def StreamWithoutNones (α : Type) : Type :=

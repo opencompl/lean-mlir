@@ -1,0 +1,52 @@
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify1" has unsupported operation: builtin.unregistered: llvm.intr.memmove
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify2" has unsupported operation: builtin.unregistered: llvm.intr.memmove
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: llvm.mlir.addressof
+
+4: "test_simplify3" has unsupported operation: builtin.unregistered: llvm.intr.memmove
+
+1: "test_no_simplify1"
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify1" has unsupported operation: llvm.call
+
+1: "test_no_simplify2"
+4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify2" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_simplify2" has unsupported operation: llvm.call
+
+1: "test_no_simplify3"
+9: "test_no_simplify3" has pointer type input
+
+4: "test_no_simplify3" has unsupported operation: llvm.call
+
+1: "test_no_incompatible_attr"
+9: "test_no_incompatible_attr" has pointer type input
+
+4: "test_no_incompatible_attr" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_incompatible_attr" has unsupported operation: llvm.mlir.addressof
+
+4: "test_no_incompatible_attr" has unsupported operation: builtin.unregistered: llvm.intr.memmove
+
+1: "__memmove_chk"
+9: "__memmove_chk" has pointer type input
+

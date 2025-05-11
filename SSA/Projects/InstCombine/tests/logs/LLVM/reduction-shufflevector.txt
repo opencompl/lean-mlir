@@ -1,0 +1,128 @@
+1: "reduce_add"
+4: "reduce_add" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.add
+
+1: "reduce_or"
+4: "reduce_or" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.or
+
+1: "reduce_and"
+4: "reduce_and" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.and
+
+1: "reduce_xor"
+4: "reduce_xor" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.xor
+
+1: "reduce_umax"
+4: "reduce_umax" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "reduce_umin"
+4: "reduce_umin" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
+
+1: "reduce_smax"
+4: "reduce_smax" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
+
+1: "reduce_smin"
+4: "reduce_smin" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
+
+1: "reduce_fmax"
+4: "reduce_fmax" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmax
+
+1: "reduce_fmin"
+4: "reduce_fmin" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmin
+
+1: "reduce_fadd"
+4: "reduce_fadd" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+1: "reduce_fmul"
+4: "reduce_fmul" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmul
+
+1: "reduce_add_failed"
+4: "reduce_add_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_add_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_add_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.add
+
+1: "reduce_or_failed"
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_or_failed" has unsupported operation: llvm.mlir.undef
+
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_or_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.or
+
+1: "reduce_and_failed"
+4: "reduce_and_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_and_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_and_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.and
+
+1: "reduce_xor_failed"
+4: "reduce_xor_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_xor_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_xor_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.xor
+
+1: "reduce_umax_failed"
+4: "reduce_umax_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_umax_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umax
+
+1: "reduce_umin_failed"
+4: "reduce_umin_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_umin_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_umin_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.umin
+
+1: "reduce_smax_failed"
+4: "reduce_smax_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_smax_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_smax_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smax
+
+1: "reduce_smin_failed"
+4: "reduce_smin_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_smin_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_smin_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.smin
+
+1: "reduce_fmax_failed"
+4: "reduce_fmax_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_fmax_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_fmax_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmax
+
+1: "reduce_fmin_failed"
+4: "reduce_fmin_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_fmin_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_fmin_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmin
+
+1: "reduce_fadd_failed"
+4: "reduce_fadd_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_fadd_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_fadd_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fadd
+
+1: "reduce_fmul_failed"
+4: "reduce_fmul_failed" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "reduce_fmul_failed" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "reduce_fmul_failed" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmul
+

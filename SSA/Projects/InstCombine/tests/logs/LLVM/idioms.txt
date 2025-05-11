@@ -1,0 +1,7 @@
+1: "test_asr"
+4: "test_asr" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_asr" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_asr" has unsupported operation: builtin.unregistered: llvm.br
+

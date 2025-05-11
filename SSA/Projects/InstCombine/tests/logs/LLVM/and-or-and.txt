@@ -1,0 +1,50 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.or
+2: llvm.and
+2: llvm.return
+
+1: "or_test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "or_test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.or
+2: llvm.return
+

@@ -1,0 +1,20 @@
+1: "foo1"
+2: llvm.func
+2: llvm.sub
+2: llvm.return
+
+1: "foo2"
+2: llvm.func
+2: llvm.mul
+2: llvm.return
+
+1: "foo3"
+2: llvm.func
+2: llvm.udiv
+2: llvm.return
+
+1: "foo4"
+2: llvm.func
+2: llvm.sdiv
+2: llvm.return
+

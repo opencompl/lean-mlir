@@ -1,0 +1,7 @@
+1: "foo"
+4: "foo" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "foo" has unsupported operation after optimization: llvm.getelementptr
+
+4: "foo" has unsupported operation after optimization: llvm.load
+

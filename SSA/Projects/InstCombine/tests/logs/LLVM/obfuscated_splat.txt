@@ -1,0 +1,26 @@
+1: "test_undef"
+9: "test_undef" has pointer type input
+
+4: "test_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_undef" has unsupported operation: llvm.load
+
+4: "test_undef" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "test_undef" has unsupported operation: llvm.store
+
+4: "test_undef" has unsupported operation: llvm.return
+
+1: "test_poison"
+9: "test_poison" has pointer type input
+
+4: "test_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_poison" has unsupported operation: llvm.load
+
+4: "test_poison" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "test_poison" has unsupported operation: llvm.store
+
+4: "test_poison" has unsupported operation: llvm.return
+

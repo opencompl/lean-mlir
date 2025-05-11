@@ -1,0 +1,15 @@
+1: "avg_lsb"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.lshr
+2: llvm.return
+
+1: "avg_lsb_mismatch"
+7: "avg_lsb_mismatch" is unchanged by InstCombine
+
+1: "avg_lsb_vector"
+8: "avg_lsb_vector" contains vectors which are unsupported
+

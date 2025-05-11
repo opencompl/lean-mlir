@@ -1,0 +1,498 @@
+⚠ [880/2570] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:107:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:825:8: declaration uses 'sorry'
+⚠ [883/2570] Replayed SSA.Experimental.Bits.Fast.Tactic
+warning: ././././SSA/Experimental/Bits/Fast/Tactic.lean:349:4: declaration uses 'sorry'
+⚠ [899/2570] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:27:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:30:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:32:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:34:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:37:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:39:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:41:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:53:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:52:2: Apply builder was used for a theorem with conclusion A ↔ B.
+You probably want to use the simp builder or create an alias that applies the theorem in one direction.
+Use `set_option aesop.warn.applyIff false` to disable this warning.
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:57:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:60:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:71:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:70:2: Apply builder was used for a theorem with conclusion A ↔ B.
+You probably want to use the simp builder or create an alias that applies the theorem in one direction.
+Use `set_option aesop.warn.applyIff false` to disable this warning.
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:76:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:80:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:85:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/ForLean.lean:99:37: declaration uses 'sorry'
+⚠ [905/2570] Replayed SSA.Experimental.Bits.AutoStructs.Basic
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:461:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Basic.lean:1070:4: declaration uses 'sorry'
+⚠ [2562/2570] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:28:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:30:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:41:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:53:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:79:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:166:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:183:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:210:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:262:8: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:274:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:302:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:305:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:318:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/Constructions.lean:321:4: declaration uses 'sorry'
+⚠ [2564/2570] Replayed SSA.Experimental.Bits.AutoStructs.FormulaToAuto
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:381:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:409:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:446:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:551:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:659:4: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:702:6: declaration uses 'sorry'
+warning: ././././SSA/Experimental/Bits/AutoStructs/FormulaToAuto.lean:750:6: declaration uses 'sorry'
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 3.275320 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x &&& y)
+    is not definitionally equal to the right-hand side
+      ~~~x ||| ~~~y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x &&& y) = ~~~x ||| ~~~y MSGEND
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 115.533160 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.249310 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 63.849369 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 111.396540 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x &&& y)
+    is not definitionally equal to the right-hand side
+      ~~~x ||| ~~~y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x &&& y) = ~~~x ||| ~~~y MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.715310 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.571810 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ||| ~~~y).toNat
+     b := ↑2 ^ w
+     c := ↑(x &&& y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 83.603630 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 53.985399 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 9.779850 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.407171 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x &&& y) == ~~~x ||| ~~~y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x &&& y) == ~~~x ||| ~~~y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 280.463838 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 2.765590 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x ||| y)
+    is not definitionally equal to the right-hand side
+      ~~~x &&& ~~~y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ||| y) = ~~~x &&& ~~~y MSGEND
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 114.722849 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 16.016430 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 64.435240 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 111.109950 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x ||| y)
+    is not definitionally equal to the right-hand side
+      ~~~x &&& ~~~y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ||| y) = ~~~x &&& ~~~y MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.737500 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.463930 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x &&& ~~~y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ||| y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 83.135699 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 54.359360 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 10.376240 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 68.645660 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x ||| y) == ~~~x &&& ~~~y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x ||| y) == ~~~x &&& ~~~y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 280.904269 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 3.003860 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x + 1)
+    is not definitionally equal to the right-hand side
+      ~~~x - 1
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(x + 1) = ~~~x - 1 MSGEND
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 207.253928 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.810671 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 101.321099 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 150.960590 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(1 + x)
+    is not definitionally equal to the right-hand side
+      -1 + ~~~x
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(1 + x) = -1 + ~~~x MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.611320 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.286989 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + 1 % 2 ^ w) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 122.953280 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 93.221830 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_normalize PASS, TIME_ELAPSED 6.123410 ms, 
+  TACBENCH bv_decide PASS, TIME_ELAPSED 5.856260 ms, 
+  TACBENCH bv_auto PASS, TIME_ELAPSED 888.483376 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 5.100970 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x - 1)
+    is not definitionally equal to the right-hand side
+      ~~~x + 1
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(x - 1) = ~~~x + 1 MSGEND
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 207.910250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 15.774869 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 102.859529 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 152.182250 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(-1 + x)
+    is not definitionally equal to the right-hand side
+      1 + ~~~x
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(-1 + x) = 1 + ~~~x MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.742520 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 7.361500 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + 1 % 2 ^ w) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 122.554259 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 94.602910 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 13.422790 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 72.032101 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x + -1#w) == ~~~x + 1#w)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x + -1#w) == ~~~x + 1#w) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 768.650785 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 2.548270 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(-x)
+    is not definitionally equal to the right-hand side
+      x - 1
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(-x) = x - 1 MSGEND
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 189.927061 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 10.291009 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 74.768799 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 163.249030 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(-x)
+    is not definitionally equal to the right-hand side
+      -1 + x
+    w : ℕ
+    x : BitVec w
+    ⊢ ~~~(-x) = -1 + x MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.336380 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.648030 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(x.toNat + (2 ^ w - 1 % 2 ^ w)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(2 ^ w - x.toNat) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 98.430859 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 70.787700 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 10.730530 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 69.182978 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(-x) == x + -1#w)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(-x) == x + -1#w) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 699.136339 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 3.878800 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      ~~~x ^^^ y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y MSGEND
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 103.891840 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 13.978250 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 54.329039 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 106.989120 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      ~~~x ^^^ y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.882550 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.109120 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ^^^ y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 72.090650 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 46.232910 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.712129 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.271280 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x ^^^ y) == ~~~x ^^^ y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x ^^^ y) == ~~~x ^^^ y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 257.772309 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 3.766320 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      ~~~x ^^^ y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y MSGEND
+  TACBENCH bv_bitwise PASS, TIME_ELAPSED 104.207370 ms, 
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 14.027290 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 54.511419 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 106.717880 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x ^^^ y)
+    is not definitionally equal to the right-hand side
+      ~~~x ^^^ y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x ^^^ y) = ~~~x ^^^ y MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 11.849090 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 4.061550 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(~~~x ^^^ y).toNat
+     b := ↑2 ^ w
+     c := ↑(x ^^^ y).toNat MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 72.187150 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 46.167649 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 8.717810 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 67.144260 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool
+       (~~~(x ^^^ y) == ~~~x ^^^ y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x ^^^ y) == ~~~x ^^^ y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 257.835109 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 2.995880 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x + y)
+    is not definitionally equal to the right-hand side
+      ~~~x - y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x + y) = ~~~x - y MSGEND
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 157.119490 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.126529 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 53.823120 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 154.969880 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x + y)
+    is not definitionally equal to the right-hand side
+      -y + ~~~x
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x + y) = -y + ~~~x MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.488770 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.377770 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + y.toNat) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 76.762519 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 47.619760 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.549930 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.108182 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(x + y) == ~~~x + -y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x + y) == ~~~x + -y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 796.890315 ms, 
+TACEND
+TACSTART
+  TACBENCH rfl FAIL, TIME_ELAPSED 2.494870 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x - y)
+    is not definitionally equal to the right-hand side
+      ~~~x + y
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x - y) = ~~~x + y MSGEND
+  TACBENCH bv_bitwise FAIL, TIME_ELAPSED 156.878639 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ac FAIL, TIME_ELAPSED 12.195540 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_distrib FAIL, TIME_ELAPSED 54.962060 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_ring FAIL, TIME_ELAPSED 157.266159 ms, MSGSTART 
+    tactic 'rfl' failed, the left-hand side
+      ~~~(x - y)
+    is not definitionally equal to the right-hand side
+      y + ~~~x
+    w : ℕ
+    x y : BitVec w
+    ⊢ ~~~(x - y) = y + ~~~x MSGEND
+  TACBENCH bv_of_bool FAIL, TIME_ELAPSED 12.631870 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_omega FAIL, TIME_ELAPSED 6.448970 ms, MSGSTART 
+    omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      c ≥ 0
+      b - c ≥ 1
+      a ≥ 0
+      a - b ≤ -1
+      a - b + c ≥ 0
+    where
+     a := ↑(2 ^ w - 1 - x.toNat + y.toNat) % ↑(2 ^ w)
+     b := ↑2 ^ w
+     c := ↑(x.toNat + (2 ^ w - y.toNat)) % ↑(2 ^ w) MSGEND
+  TACBENCH bv_automata_classic PASS, TIME_ELAPSED 77.938710 ms, 
+  TACBENCH simp FAIL, TIME_ELAPSED 49.062139 ms, MSGSTART 
+    simp made no progress MSGEND
+  TACBENCH bv_normalize FAIL, TIME_ELAPSED 11.649380 ms, MSGSTART 
+    internal exception #4 MSGEND
+  TACBENCH bv_decide FAIL, TIME_ELAPSED 70.331620 ms, MSGSTART 
+    The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [BitVec.ofBool (~~~(x + -y) == ~~~x + y)]
+    Consider the following assignment:
+    BitVec.ofBool (~~~(x + -y) == ~~~x + y) = 0x0#1
+     MSGEND
+  TACBENCH bv_auto PASS, TIME_ELAPSED 684.837697 ms, 
+TACEND

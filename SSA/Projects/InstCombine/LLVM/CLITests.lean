@@ -23,8 +23,8 @@ instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β
         return (a, b)
       | _ => .none
 
-abbrev MContext φ := Ctxt <| MTy φ
-abbrev Context := MContext 0
+abbrev MContext φ := Ctxt <| (MetaLLVM φ).Ty
+abbrev Context := Ctxt LLVM.Ty
 abbrev MCom φ := Com (MetaLLVM φ)
 abbrev MExpr φ := Expr (MetaLLVM φ)
 
@@ -103,9 +103,9 @@ instance {test : CliTest} : Decidable test.concrete :=
 structure ConcreteCliTest where
   name : Name
   context : Context
-  ty : Ty
+  ty : LLVM.Ty
   -- TODO: add support for impure CLI tests
-  code : MCom 0 context .pure ty
+  code : Com LLVM context .pure ty
 
 def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars)
     (hMvars : mvars = 0) : InstCombine.MTy 0 :=
@@ -200,21 +200,22 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length)
    concrete_test.eval values'
 -/
 
-def InstCombine.mkValuation (ctxt : MContext 0)
-  (values : Mathlib.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
+open LLVM.Ty in
+def InstCombine.mkValuation (ctxt : Context)
+  (values : List.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
   | [], ⟨[],_⟩ => Ctxt.Valuation.nil
   | ty::tys, ⟨val::vals,hlen⟩ =>
-    let valsVec : Mathlib.Vector (Option Int) tys.length := ⟨vals,by aesop⟩
+    let valsVec : List.Vector (Option Int) tys.length := ⟨vals,by aesop⟩
     let valuation' := mkValuation tys valsVec
     match ty with
-      | .bitvec (.concrete w) =>
-         let newTy : toType (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)) :=
-           Option.map (BitVec.ofInt w) val
-         Ctxt.Valuation.snoc valuation' newTy
+      | bitvec w =>
+        let newTy : ⟦bitvec w⟧ :=
+          PoisonOr.ofOption <| Option.map (BitVec.ofInt w) val
+        Ctxt.Valuation.snoc valuation' newTy
 
 def ConcreteCliTest.eval (test : ConcreteCliTest)
-    (values : Mathlib.Vector (Option Int) test.context.length) :
+    (values : List.Vector (Option Int) test.context.length) :
  IO ⟦test.ty⟧ := do
   let valuesStack := values.reverse -- we reverse values since context is a stack
   let valuation := InstCombine.mkValuation test.context valuesStack
@@ -223,14 +224,14 @@ def ConcreteCliTest.eval (test : ConcreteCliTest)
 def ConcreteCliTest.eval? (test : ConcreteCliTest) (values : Array (Option Int)) :
   IO (Except String ⟦test.ty⟧) := do
     if h : values.size = test.context.length then
-      let valuesVec : Mathlib.Vector (Option Int) test.context.length := h ▸ (Vector.ofArray values)
+      let valuesVec : List.Vector (Option Int) test.context.length := h ▸ (Vector.ofArray values)
       return Except.ok <| (← test.eval valuesVec)
     else
       return Except.error (s!"Invalid input length: {values} has length {values.size}, " ++
         s!" required {test.context.length}")
 
 def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) :
-    Cli.ParseableType (Mathlib.Vector Int test.context.length)
+    Cli.ParseableType (List.Vector Int test.context.length)
   := inferInstance
 
 def CocreteCliTest.signature (test : ConcreteCliTest) :
@@ -239,10 +240,11 @@ def CocreteCliTest.signature (test : ConcreteCliTest) :
 def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
   s!"{test.context.reverse} → {test.ty}"
 
+open LLVM.Ty in
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
- toString := match test.ty with
-   | .bitvec w => inferInstanceAs (ToString (Option <| BitVec w)) |>.toString
-
+  toString :=
+    match test.ty with
+    | bitvec w => inferInstanceAs (ToString (PoisonOr <| BitVec w)) |>.toString
 
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121

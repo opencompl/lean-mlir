@@ -1,0 +1,53 @@
+1: "use"
+5: "use" is empty
+
+1: "a_or_b"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "a_or_b_not_inv"
+7: "a_or_b_not_inv" is unchanged by InstCombine
+
+1: "a_or_b_const"
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "a_or_b_const2"
+2: llvm.func
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "a_or_b_nullptr"
+9: "a_or_b_nullptr" has pointer type input
+
+4: "a_or_b_nullptr" has unsupported operation: llvm.mlir.zero
+
+1: "a_or_b_multiple_uses"
+4: "a_or_b_multiple_uses" has unsupported operation: llvm.call
+
+1: "a_or_b_multiple_uses_2"
+4: "a_or_b_multiple_uses_2" has unsupported operation: llvm.call
+
+4: "a_or_b_multiple_uses_2" has unsupported operation: llvm.call
+

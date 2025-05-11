@@ -10,29 +10,131 @@ import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.BitStream
 
+
 open Term
 
-lemma evalFin_eq_eval (t : Term) (vars : Nat → BitStream) :
-    Term.evalFin t (fun i => vars i) = Term.eval t vars := by
-  induction t <;>
-  dsimp [Term.evalFin, Term.eval, arity] at * <;> simp [*]
+/--
+Build a list `[f 0, f 1, ... ]`  of length `size`.
+-/
+abbrev List.ofFn' (f : Nat → α) (size : Nat) : List α :=
+  List.ofFn (n := size) (fun i => f i)
+
+
+lemma Term.evalFin_eq_eval (t : Term)
+   (varsList : List BitStream) (varsFin : Fin t.arity → BitStream)
+   (hvars : ∀ (i : Fin t.arity), varsList.getD i default = (varsFin i)) :
+    Term.evalFin t varsFin = Term.eval t varsList := by
+  induction t generalizing varsList <;>
+    dsimp [Term.evalFin, Term.eval, arity] at *
+  case var i => rw [← hvars]; simp
+  case and a b ha hb =>
+    rw [ha varsList]
+    · rw [hb varsList]
+      intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+    · intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+  case or a b ha hb =>
+    rw [ha varsList]
+    · rw [hb varsList]
+      intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+    · intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+  case xor a b ha hb =>
+    rw [ha varsList]
+    · rw [hb varsList]
+      intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+    · intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+  case not a ha => rw [ha varsList _ hvars]
+  case neg a ha => rw [ha varsList _ hvars]
+  case shiftL k a ha => rw [ha varsList _ hvars]
+  case add a b ha hb =>
+    rw [ha varsList]
+    · rw [hb varsList]
+      intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+    · intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+  case sub a b ha hb =>
+    rw [ha varsList]
+    · rw [hb varsList]
+      intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+    · intros i
+      have := hvars ⟨i, by omega⟩
+      rw [this]
+      rfl
+
+/-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms Term.evalFin_eq_eval
+
+lemma Predicate.evalFin_eq_eval (p : Predicate)
+   (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
+   (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :
+    Predicate.evalFin p varsFin  = Predicate.eval p varsList := by
+  induction p generalizing varsList <;>
+    dsimp -failIfUnchanged [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
+  case width rel n =>
+    rcases rel <;> dsimp -failIfUnchanged [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
+  case binary ap t₁ t₂ =>
+    rcases ap <;>
+    · dsimp [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
+      simp [evalEq, evalNeq, evalUlt, evalSlt, evalLor]
+      rw [Term.evalFin_eq_eval _ varsList]
+      · rw [Term.evalFin_eq_eval _ varsList]
+        try rw [BitStream.and_comm]
+        · intros i
+          rw [hvars ⟨i, by omega⟩]
+          rfl
+      · intros i
+        rw [hvars ⟨i, by omega⟩]
+        rfl
+  case land p q hp hq =>
+    simp [evalLand]
+    rw [hp varsList]
+    · rw [hq varsList]
+      · intros i
+        rw [hvars ⟨i, by omega⟩]
+        rfl
+    · intros i
+      rw [hvars ⟨i, by omega⟩]
+      rfl
+  case lor p q hp hq =>
+    simp [evalLor]
+    rw [hp varsList]
+    · rw [hq varsList]
+      · intros i
+        rw [hvars ⟨i, by omega⟩]
+        rfl
+    · intros i
+      rw [hvars ⟨i, by omega⟩]
+      rfl
+
+/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms Predicate.evalFin_eq_eval
+
 
 lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by
-  simp [Function.funext_iff]
-
-lemma eval_eq_iff_xor_eq_zero (t₁ t₂ : Term) :
-    t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = fun _ => BitStream.zero := by
-  simp only [Function.funext_iff, Term.eval, Term.evalFin,
-    ← eq_iff_xor_eq_zero, ← evalFin_eq_eval]
-  constructor
-  · intro h seq
-    ext j
-    simp only [arity.eq_7, BitStream.xor_eq, BitStream.zero_eq, bne_eq_false_iff_eq]
-    apply congr_fun
-    simpa using h (fun j => if hj : j < (arity (t₁.xor t₂)) then seq ⟨j, hj⟩ else fun _ => false)
-  · intro h seq
-    ext j
-    have := h (seq ·)
-    apply_fun (· j) at this
-    simpa
+  simp [funext_iff]

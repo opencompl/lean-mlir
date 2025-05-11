@@ -1,0 +1,10 @@
+1: "a"
+4: "a" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "a" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "b"
+4: "b" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "b" has unsupported operation: builtin.unregistered: llvm.fptosi
+

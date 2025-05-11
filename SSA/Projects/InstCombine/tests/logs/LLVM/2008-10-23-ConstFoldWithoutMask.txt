@@ -1,0 +1,5 @@
+1: "tstid"
+4: "tstid" has unsupported operation after optimization: llvm.inttoptr
+
+4: "tstid" has unsupported operation after optimization: builtin.unregistered: llvm.ptrtoint
+

@@ -1,0 +1,23 @@
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "fold_memchr_a12345_1_1"
+4: "fold_memchr_a12345_1_1" has unsupported operation: llvm.mlir.addressof
+
+1: "fold_memchr_a12345_2_1"
+4: "fold_memchr_a12345_2_1" has unsupported operation: llvm.mlir.zero
+
+1: "fold_memchr_ax_257_1"
+4: "fold_memchr_ax_257_1" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_ax_257_1" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memchr_ax_257_1" has unsupported operation: llvm.load
+
+1: "fold_memchr_ax_c_1"
+4: "fold_memchr_ax_c_1" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_ax_c_1" has unsupported operation: llvm.mlir.zero
+
+4: "fold_memchr_ax_c_1" has unsupported operation: llvm.load
+

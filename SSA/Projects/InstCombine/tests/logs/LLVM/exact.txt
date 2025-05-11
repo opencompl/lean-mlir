@@ -1,0 +1,218 @@
+1: "sdiv1"
+7: "sdiv1" is unchanged by InstCombine
+
+1: "sdiv2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.return
+
+1: "sdiv2_vec"
+8: "sdiv2_vec" contains vectors which are unsupported
+
+1: "sdiv3"
+4: "sdiv3" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "sdiv4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.mul
+2: llvm.return
+
+1: "sdiv5"
+4: "sdiv5" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "sdiv6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.mul
+2: llvm.return
+
+1: "udiv1"
+2: llvm.func
+2: llvm.udiv
+2: llvm.mul
+2: llvm.return
+
+1: "udiv2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.udiv
+2: llvm.return
+
+1: "ashr1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr1_vec"
+8: "ashr1_vec" contains vectors which are unsupported
+
+1: "ashr_icmp1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "ashr_icmp2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.icmp
+2: llvm.return
+
+1: "ashr_icmp2_vec"
+8: "ashr_icmp2_vec" contains vectors which are unsupported
+
+1: "pr9998"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.ashr
+2: llvm.sext
+2: llvm.icmp
+2: llvm.return
+
+1: "pr9998vec"
+8: "pr9998vec" contains vectors which are unsupported
+
+1: "udiv_icmp1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_icmp1_vec"
+8: "udiv_icmp1_vec" contains vectors which are unsupported
+
+1: "udiv_icmp2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.icmp
+2: llvm.return
+
+1: "udiv_icmp2_vec"
+8: "udiv_icmp2_vec" contains vectors which are unsupported
+
+1: "sdiv_icmp1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_icmp1_vec"
+8: "sdiv_icmp1_vec" contains vectors which are unsupported
+
+1: "sdiv_icmp2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_icmp2_vec"
+8: "sdiv_icmp2_vec" contains vectors which are unsupported
+
+1: "sdiv_icmp3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_icmp3_vec"
+8: "sdiv_icmp3_vec" contains vectors which are unsupported
+
+1: "sdiv_icmp4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_icmp4_vec"
+8: "sdiv_icmp4_vec" contains vectors which are unsupported
+
+1: "sdiv_icmp5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_icmp5_vec"
+8: "sdiv_icmp5_vec" contains vectors which are unsupported
+
+1: "sdiv_icmp6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.icmp
+2: llvm.return
+
+1: "sdiv_icmp6_vec"
+8: "sdiv_icmp6_vec" contains vectors which are unsupported
+
+1: "mul_of_udiv"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.mul
+2: llvm.return
+
+1: "mul_of_sdiv"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.mul
+2: llvm.return
+
+1: "mul_of_sdiv_non_splat"
+8: "mul_of_sdiv_non_splat" contains vectors which are unsupported
+
+1: "mul_of_sdiv_fail_missing_exact"
+7: "mul_of_sdiv_fail_missing_exact" is unchanged by InstCombine
+
+1: "mul_of_udiv_fail_bad_remainder"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.mul
+2: llvm.return
+
+1: "mul_of_sdiv_fail_ub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.mul
+2: llvm.return
+
+1: "mul_of_sdiv_fail_ub_non_splat"
+7: "mul_of_sdiv_fail_ub_non_splat" is unchanged by InstCombine
+

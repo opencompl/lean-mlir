@@ -1,0 +1,2 @@
+3: gep-object-size-less-than-or-equal-typesize.ll: parsing has failed
+

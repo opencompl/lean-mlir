@@ -1,0 +1,75 @@
+1: "use"
+5: "use" is empty
+
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "pat"
+4: "pat" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test01"
+4: "test01" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test01" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test01" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test01" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test01" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test01" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test02"
+4: "test02" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test02" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test02" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test02" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test02" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test02" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "logical_and_not"
+4: "logical_and_not" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_and_or"
+4: "logical_and_or" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_or_not"
+4: "logical_or_not" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_and_not_use1"
+4: "logical_and_not_use1" has unsupported operation: llvm.call
+
+4: "logical_and_not_use1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "logical_and_not_use2"
+4: "logical_and_not_use2" has unsupported operation: llvm.call
+
+4: "logical_and_not_use2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "dom_true"
+4: "dom_true" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "dom_false"
+4: "dom_false" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "dom_true_phi"
+4: "dom_true_phi" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "dom_true_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "dom_true_phi" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "same_dest"
+4: "same_dest" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "not_dom"
+4: "not_dom" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "not_dom" has unsupported operation: builtin.unregistered: llvm.br
+

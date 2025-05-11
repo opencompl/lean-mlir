@@ -1,0 +1,37 @@
+1: "salvage_load"
+9: "salvage_load" has pointer type input
+
+4: "salvage_load" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "salvage_load" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "salvage_load" has unsupported operation: llvm.return
+
+1: "salvage_bitcast"
+9: "salvage_bitcast" has pointer type input
+
+4: "salvage_bitcast" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "salvage_bitcast" has unsupported operation: llvm.return
+
+1: "salvage_gep0"
+9: "salvage_gep0" has pointer type input
+
+4: "salvage_gep0" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "salvage_gep0" has unsupported operation: llvm.return
+
+1: "salvage_gep1"
+9: "salvage_gep1" has pointer type input
+
+4: "salvage_gep1" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "salvage_gep1" has unsupported operation: llvm.return
+
+1: "salvage_gep2"
+9: "salvage_gep2" has pointer type input
+
+4: "salvage_gep2" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "salvage_gep2" has unsupported operation: llvm.return
+

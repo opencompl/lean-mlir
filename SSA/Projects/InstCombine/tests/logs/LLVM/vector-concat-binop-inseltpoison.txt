@@ -1,0 +1,95 @@
+1: "add"
+4: "add" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sub"
+4: "sub" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "mul"
+4: "mul" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "and"
+4: "and" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "and" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "or"
+4: "or" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "or" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "xor"
+4: "xor" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "xor" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "shl"
+4: "shl" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "lshr"
+4: "lshr" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use"
+5: "use" is empty
+
+1: "ashr"
+4: "ashr" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "ashr" has unsupported operation: llvm.call
+
+4: "ashr" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "sdiv"
+4: "sdiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "srem"
+4: "srem" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "udiv"
+4: "udiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "urem"
+4: "urem" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "fadd"
+4: "fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fadd" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "fsub"
+4: "fsub" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fsub" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "use2"
+5: "use2" is empty
+
+1: "fmul"
+4: "fmul" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fmul" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "fmul" has unsupported operation: llvm.call
+
+4: "fmul" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "fdiv"
+4: "fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "fdiv" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "frem"
+4: "frem" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "frem" has unsupported operation: builtin.unregistered: llvm.frem
+
+4: "frem" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "PR33026"
+8: "PR33026" contains vectors which are unsupported
+

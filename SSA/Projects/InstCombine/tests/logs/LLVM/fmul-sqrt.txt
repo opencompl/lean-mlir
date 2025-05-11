@@ -1,0 +1,111 @@
+1: "use"
+5: "use" is empty
+
+1: "sqrt_a_sqrt_b"
+4: "sqrt_a_sqrt_b" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_a_sqrt_b" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_a_sqrt_b" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_a_sqrt_b_multiple_uses"
+4: "sqrt_a_sqrt_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_a_sqrt_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_a_sqrt_b_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_a_sqrt_b_multiple_uses" has unsupported operation: llvm.call
+
+1: "sqrt_a_sqrt_b_reassoc_nnan"
+4: "sqrt_a_sqrt_b_reassoc_nnan" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_a_sqrt_b_reassoc_nnan" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "sqrt_a_sqrt_b_reassoc"
+4: "sqrt_a_sqrt_b_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_a_sqrt_b_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_a_sqrt_b_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_a_sqrt_b_sqrt_c_sqrt_d_reassoc"
+4: "sqrt_a_sqrt_b_sqrt_c_sqrt_d_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_a_sqrt_b_sqrt_c_sqrt_d_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_a_sqrt_b_sqrt_c_sqrt_d_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_a_sqrt_b_sqrt_c_sqrt_d_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "rsqrt_squared"
+4: "rsqrt_squared" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "rsqrt_x_reassociate_extra_use"
+9: "rsqrt_x_reassociate_extra_use" has pointer type input
+
+4: "rsqrt_x_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "rsqrt_x_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "rsqrt_x_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "rsqrt_x_reassociate_extra_use" has unsupported operation: llvm.store
+
+1: "x_add_y_rsqrt_reassociate_extra_use"
+9: "x_add_y_rsqrt_reassociate_extra_use" has pointer type input
+
+4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "x_add_y_rsqrt_reassociate_extra_use" has unsupported operation: llvm.store
+
+1: "sqrt_divisor_squared"
+4: "sqrt_divisor_squared" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_divisor_squared" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_dividend_squared"
+4: "sqrt_dividend_squared" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_dividend_squared" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_divisor_squared_extra_use"
+4: "sqrt_divisor_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_divisor_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_divisor_squared_extra_use" has unsupported operation: llvm.call
+
+4: "sqrt_divisor_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "sqrt_dividend_squared_extra_use"
+4: "sqrt_dividend_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_dividend_squared_extra_use" has unsupported operation: llvm.call
+
+4: "sqrt_dividend_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "sqrt_dividend_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "sqrt_divisor_not_enough_FMF"
+4: "sqrt_divisor_not_enough_FMF" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "sqrt_divisor_not_enough_FMF" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "sqrt_divisor_not_enough_FMF" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "rsqrt_squared_extra_use"
+4: "rsqrt_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "rsqrt_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "rsqrt_squared_extra_use" has unsupported operation: llvm.call
+
+4: "rsqrt_squared_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+

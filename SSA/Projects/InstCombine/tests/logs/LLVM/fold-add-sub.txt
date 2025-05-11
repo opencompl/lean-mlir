@@ -1,0 +1,63 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "test_add_nsw"
+4: "test_add_nsw" has unsupported operation: llvm.call
+
+4: "test_add_nsw" has unsupported operation: llvm.call
+
+1: "test_add_nsw_no_prop"
+4: "test_add_nsw_no_prop" has unsupported operation: llvm.call
+
+4: "test_add_nsw_no_prop" has unsupported operation: llvm.call
+
+1: "test_add"
+4: "test_add" has unsupported operation: llvm.call
+
+4: "test_add" has unsupported operation: llvm.call
+
+1: "test_add_fail"
+4: "test_add_fail" has unsupported operation: llvm.call
+
+4: "test_add_fail" has unsupported operation: llvm.call
+
+1: "test_add_nuw"
+4: "test_add_nuw" has unsupported operation: llvm.call
+
+4: "test_add_nuw" has unsupported operation: llvm.call
+
+1: "test_add_nuw_no_prop"
+4: "test_add_nuw_no_prop" has unsupported operation: llvm.call
+
+4: "test_add_nuw_no_prop" has unsupported operation: llvm.call
+
+1: "test_sub_nuw"
+4: "test_sub_nuw" has unsupported operation: llvm.call
+
+4: "test_sub_nuw" has unsupported operation: llvm.call
+
+1: "test_sub_nuw_no_prop"
+4: "test_sub_nuw_no_prop" has unsupported operation: llvm.call
+
+4: "test_sub_nuw_no_prop" has unsupported operation: llvm.call
+
+1: "test_sub_nsw"
+4: "test_sub_nsw" has unsupported operation: llvm.call
+
+4: "test_sub_nsw" has unsupported operation: llvm.call
+
+1: "test_sub_nsw_no_prop"
+4: "test_sub_nsw_no_prop" has unsupported operation: llvm.call
+
+4: "test_sub_nsw_no_prop" has unsupported operation: llvm.call
+
+1: "test_sub_none"
+4: "test_sub_none" has unsupported operation: llvm.call
+
+4: "test_sub_none" has unsupported operation: llvm.call
+
+1: "test_sub_none_fail"
+4: "test_sub_none_fail" has unsupported operation: llvm.call
+
+4: "test_sub_none_fail" has unsupported operation: llvm.call
+

@@ -1,0 +1,659 @@
+1: "use"
+5: "use" is empty
+
+1: "test0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.return
+
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.xor
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.xor
+2: llvm.return
+
+1: "test4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "test5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "test7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "test9"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test9vec"
+8: "test9vec" contains vectors which are unsupported
+
+1: "test10"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test11"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "test12"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test12vec"
+8: "test12vec" contains vectors which are unsupported
+
+1: "test18"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.sub
+2: llvm.return
+
+1: "test19"
+2: llvm.func
+2: llvm.xor
+2: llvm.xor
+2: llvm.return
+
+1: "test20"
+4: "test20" has unsupported operation: llvm.mlir.addressof
+
+4: "test20" has unsupported operation: llvm.mlir.addressof
+
+4: "test20" has unsupported operation: llvm.store
+
+4: "test20" has unsupported operation: llvm.store
+
+4: "test20" has unsupported operation: llvm.return
+
+1: "test22"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
+
+1: "fold_zext_xor_sandwich"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.zext
+2: llvm.xor
+2: llvm.return
+
+1: "fold_zext_xor_sandwich_vec"
+8: "fold_zext_xor_sandwich_vec" contains vectors which are unsupported
+
+1: "test23"
+2: llvm.func
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test24"
+2: llvm.func
+2: llvm.xor
+2: llvm.icmp
+2: llvm.return
+
+1: "test25"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test27"
+2: llvm.func
+2: llvm.xor
+2: llvm.xor
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "test28"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.return
+
+1: "test28vec"
+8: "test28vec" contains vectors which are unsupported
+
+1: "test28_sub"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.xor
+2: llvm.return
+
+1: "test28_subvec"
+8: "test28_subvec" contains vectors which are unsupported
+
+1: "test29"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "test29vec"
+8: "test29vec" contains vectors which are unsupported
+
+1: "test29vec2"
+8: "test29vec2" contains vectors which are unsupported
+
+1: "test30"
+4: "test30" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test30" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test30vec"
+4: "test30vec" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test30vec" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test30vec2"
+4: "test30vec2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test30vec2" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "or_xor_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_xor_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_xor_commute3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_xor_commute4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_xor_extra_use"
+9: "or_xor_extra_use" has pointer type input
+
+4: "or_xor_extra_use" has unsupported operation: llvm.store
+
+1: "and_xor_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "and_xor_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "and_xor_commute3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "and_xor_commute4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "and_xor_extra_use"
+9: "and_xor_extra_use" has pointer type input
+
+4: "and_xor_extra_use" has unsupported operation: llvm.store
+
+1: "xor_or_not"
+9: "xor_or_not" has pointer type input
+
+4: "xor_or_not" has unsupported operation: llvm.store
+
+1: "xor_or_not_uses"
+9: "xor_or_not_uses" has pointer type input
+
+4: "xor_or_not_uses" has unsupported operation: llvm.store
+
+1: "xor_and_not"
+9: "xor_and_not" has pointer type input
+
+4: "xor_and_not" has unsupported operation: llvm.store
+
+1: "xor_and_not_uses"
+9: "xor_and_not_uses" has pointer type input
+
+4: "xor_and_not_uses" has unsupported operation: llvm.store
+
+1: "test39"
+4: "test39" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test40"
+4: "test40" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test41"
+4: "test41" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test42"
+4: "test42" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "test43"
+4: "test43" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test44"
+4: "test44" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test45"
+4: "test45" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test46"
+4: "test46" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test47"
+4: "test47" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "test48"
+4: "test48" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test48vec"
+4: "test48vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test49"
+4: "test49" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test49vec"
+4: "test49vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test50"
+4: "test50" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test50vec"
+4: "test50vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "test51"
+4: "test51" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "test51vec"
+4: "test51vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "or_or_xor"
+2: llvm.func
+2: llvm.or
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_or_xor_commute1"
+2: llvm.func
+2: llvm.or
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_or_xor_commute2"
+2: llvm.func
+2: llvm.or
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_or_xor_commute3"
+8: "or_or_xor_commute3" contains vectors which are unsupported
+
+1: "or_or_xor_use1"
+9: "or_or_xor_use1" has pointer type input
+
+4: "or_or_xor_use1" has unsupported operation: llvm.store
+
+1: "or_or_xor_use2"
+9: "or_or_xor_use2" has pointer type input
+
+4: "or_or_xor_use2" has unsupported operation: llvm.store
+
+1: "not_is_canonical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.add
+2: llvm.shl
+2: llvm.return
+
+1: "not_shl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.xor
+2: llvm.return
+
+1: "not_shl_vec"
+8: "not_shl_vec" contains vectors which are unsupported
+
+1: "not_shl_extra_use"
+4: "not_shl_extra_use" has unsupported operation: llvm.call
+
+1: "not_shl_wrong_const"
+7: "not_shl_wrong_const" is unchanged by InstCombine
+
+1: "not_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "not_lshr_vec"
+8: "not_lshr_vec" contains vectors which are unsupported
+
+1: "not_lshr_extra_use"
+4: "not_lshr_extra_use" has unsupported operation: llvm.call
+
+1: "not_lshr_wrong_const"
+7: "not_lshr_wrong_const" is unchanged by InstCombine
+
+1: "ashr_not"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.return
+
+1: "not_ashr"
+7: "not_ashr" is unchanged by InstCombine
+
+1: "not_ashr_vec"
+8: "not_ashr_vec" contains vectors which are unsupported
+
+1: "not_ashr_extra_use"
+4: "not_ashr_extra_use" has unsupported operation: llvm.call
+
+1: "not_ashr_wrong_const"
+7: "not_ashr_wrong_const" is unchanged by InstCombine
+
+1: "xor_andn_commute1"
+8: "xor_andn_commute1" contains vectors which are unsupported
+
+1: "xor_andn_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_andn_commute3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_andn_commute4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.udiv
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_orn"
+8: "xor_orn" contains vectors which are unsupported
+
+1: "xor_orn_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.udiv
+2: llvm.xor
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "xor_orn_commute2"
+9: "xor_orn_commute2" has pointer type input
+
+1: "xor_orn_commute2_1use"
+9: "xor_orn_commute2_1use" has pointer type input
+
+4: "xor_orn_commute2_1use" has unsupported operation: llvm.store
+
+1: "xor_orn_commute3"
+9: "xor_orn_commute3" has pointer type input
+
+1: "xor_orn_commute3_1use"
+9: "xor_orn_commute3_1use" has pointer type input
+
+4: "xor_orn_commute3_1use" has unsupported operation: llvm.store
+
+1: "xor_orn_2use"
+9: "xor_orn_2use" has pointer type input
+
+4: "xor_orn_2use" has unsupported operation: llvm.store
+
+4: "xor_orn_2use" has unsupported operation: llvm.store
+
+1: "ctlz_pow2"
+4: "ctlz_pow2" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "cttz_pow2"
+4: "cttz_pow2" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_pow2_or_zero"
+4: "ctlz_pow2_or_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "ctlz_pow2_wrong_const"
+4: "ctlz_pow2_wrong_const" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "tryFactorization_xor_ashr_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "tryFactorization_xor_lshr_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "tryFactorization_xor_ashr_lshr_negative_lhs"
+7: "tryFactorization_xor_ashr_lshr_negative_lhs" is unchanged by InstCombine
+
+1: "tryFactorization_xor_lshr_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.xor
+2: llvm.return
+
+1: "tryFactorization_xor_ashr_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.ashr
+2: llvm.ashr
+2: llvm.xor
+2: llvm.return
+
+4: "PR96857_xor_with_noundef" has unsupported operation: noundef
+
+1: "PR96857_xor_without_noundef"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.xor
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "or_disjoint_with_xor"
+2: llvm.func
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "xor_with_or_disjoint_ab"
+2: llvm.func
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "xor_with_or_disjoint_ba"
+2: llvm.func
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+
+1: "or_disjoint_with_xor_vec"
+8: "or_disjoint_with_xor_vec" contains vectors which are unsupported
+
+1: "xor_with_or_disjoint_vec"
+8: "xor_with_or_disjoint_vec" contains vectors which are unsupported
+
+1: "select_or_disjoint_xor"
+7: "select_or_disjoint_xor" is unchanged by InstCombine
+
+1: "select_or_disjoint_xor_vec"
+8: "select_or_disjoint_xor_vec" contains vectors which are unsupported
+
+1: "select_or_disjoint_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.shl
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "select_or_disjoint_or_vec"
+8: "select_or_disjoint_or_vec" contains vectors which are unsupported
+
+1: "or_multi_use_disjoint_with_xor"
+7: "or_multi_use_disjoint_with_xor" is unchanged by InstCombine
+
+1: "or_multi_use_disjoint_with_xor_vec"
+7: "or_multi_use_disjoint_with_xor_vec" is unchanged by InstCombine
+
+1: "add_with_or"
+7: "add_with_or" is unchanged by InstCombine
+
+1: "add_with_or_vec"
+7: "add_with_or_vec" is unchanged by InstCombine
+

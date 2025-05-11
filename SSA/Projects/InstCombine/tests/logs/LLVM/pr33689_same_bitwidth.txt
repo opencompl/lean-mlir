@@ -1,0 +1,19 @@
+1: "f"
+4: "f" has unsupported operation: llvm.mlir.addressof
+
+4: "f" has unsupported operation: llvm.alloca
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "f" has unsupported operation: llvm.load
+
+4: "f" has unsupported operation: llvm.store
+
+4: "f" has unsupported operation: llvm.load
+
+4: "f" has unsupported operation: llvm.store
+
+4: "f" has unsupported operation: llvm.return
+

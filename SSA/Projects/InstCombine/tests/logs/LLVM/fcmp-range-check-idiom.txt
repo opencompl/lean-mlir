@@ -1,0 +1,158 @@
+1: "use"
+5: "use" is empty
+
+1: "test_and_olt"
+4: "test_and_olt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_ole"
+4: "test_and_ole" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_or_ogt"
+4: "test_or_ogt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_or_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_or_oge"
+4: "test_or_oge" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_or_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_ult"
+4: "test_and_ult" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_ule"
+4: "test_and_ule" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_or_ugt"
+4: "test_or_ugt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_or_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_or_uge"
+4: "test_or_uge" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_or_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_commuted"
+4: "test_and_olt_commuted" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_commuted" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_subnormal"
+4: "test_and_olt_subnormal" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_subnormal" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_infinity"
+4: "test_and_olt_infinity" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_infinity" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_zero"
+4: "test_and_olt_zero" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_zero" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_and_ole_zero"
+4: "test_and_ole_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_logical"
+4: "test_and_olt_logical" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_logical" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_poison"
+4: "test_and_olt_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_nan"
+4: "test_and_olt_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_and_ult_nan"
+4: "test_and_ult_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_and_ult_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_or_ogt_nan"
+4: "test_or_ogt_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_or_ogt_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_or_ugt_nan"
+4: "test_or_ugt_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_or_ugt_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_and_ogt"
+4: "test_and_ogt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_and_ogt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_or_olt"
+4: "test_or_olt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_or_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_multiuse"
+4: "test_and_olt_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_multiuse" has unsupported operation: llvm.call
+
+4: "test_and_olt_multiuse" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_mismatched_lhs"
+4: "test_and_olt_mismatched_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_mismatched_lhs" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_same_sign"
+4: "test_and_olt_same_sign" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_same_sign" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_mismatched_mag"
+4: "test_and_olt_mismatched_mag" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_mismatched_mag" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_wrong_pred2"
+4: "test_and_olt_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test_and_olt_wrong_pred2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation"
+4: "test_and_olt_fmf_propagation" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation_union"
+4: "test_and_olt_fmf_propagation_union" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation_union_logical_rhs_poison"
+4: "test_and_olt_fmf_propagation_union_logical_rhs_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union_logical_rhs_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation_union_logical_lhs_poison"
+4: "test_and_olt_fmf_propagation_union_logical_lhs_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union_logical_lhs_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test_and_olt_fmf_propagation_union_logical_both_poison"
+4: "test_and_olt_fmf_propagation_union_logical_both_poison" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "test_and_olt_fmf_propagation_union_logical_both_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+

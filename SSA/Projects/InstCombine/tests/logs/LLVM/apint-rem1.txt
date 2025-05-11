@@ -1,0 +1,22 @@
+1: "test1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.urem
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.urem
+2: llvm.return
+
+1: "test3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.urem
+2: llvm.return
+

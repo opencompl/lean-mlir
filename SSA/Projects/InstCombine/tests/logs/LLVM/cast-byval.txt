@@ -1,0 +1,17 @@
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: llvm.load
+
+1: "bar"
+4: "bar" has unsupported operation: llvm.mlir.addressof
+
+4: "bar" has unsupported operation: llvm.call
+
+1: "qux"
+9: "qux" has pointer type input
+
+4: "qux" has unsupported operation: llvm.mlir.addressof
+
+4: "qux" has unsupported operation: llvm.call
+

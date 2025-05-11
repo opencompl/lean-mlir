@@ -1,0 +1,163 @@
+1: "narrow_sext_and"
+2: llvm.func
+2: llvm.sext
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_and"
+2: llvm.func
+2: llvm.zext
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_sext_or"
+2: llvm.func
+2: llvm.sext
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_or"
+2: llvm.func
+2: llvm.zext
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_sext_xor"
+2: llvm.func
+2: llvm.sext
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_xor"
+2: llvm.func
+2: llvm.zext
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_sext_add"
+2: llvm.func
+2: llvm.sext
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_add"
+2: llvm.func
+2: llvm.zext
+2: llvm.add
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_sext_sub"
+2: llvm.func
+2: llvm.sext
+2: llvm.sub
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_sub"
+2: llvm.func
+2: llvm.zext
+2: llvm.sub
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_sext_mul"
+2: llvm.func
+2: llvm.sext
+2: llvm.mul
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_mul"
+2: llvm.func
+2: llvm.zext
+2: llvm.mul
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_sext_and_commute"
+8: "narrow_sext_and_commute" contains vectors which are unsupported
+
+1: "narrow_zext_and_commute"
+8: "narrow_zext_and_commute" contains vectors which are unsupported
+
+1: "narrow_sext_or_commute"
+8: "narrow_sext_or_commute" contains vectors which are unsupported
+
+1: "narrow_zext_or_commute"
+8: "narrow_zext_or_commute" contains vectors which are unsupported
+
+1: "narrow_sext_xor_commute"
+8: "narrow_sext_xor_commute" contains vectors which are unsupported
+
+1: "narrow_zext_xor_commute"
+8: "narrow_zext_xor_commute" contains vectors which are unsupported
+
+1: "narrow_sext_add_commute"
+8: "narrow_sext_add_commute" contains vectors which are unsupported
+
+1: "narrow_zext_add_commute"
+8: "narrow_zext_add_commute" contains vectors which are unsupported
+
+1: "narrow_sext_sub_commute"
+8: "narrow_sext_sub_commute" contains vectors which are unsupported
+
+1: "narrow_zext_sub_commute"
+8: "narrow_zext_sub_commute" contains vectors which are unsupported
+
+1: "narrow_sext_mul_commute"
+8: "narrow_sext_mul_commute" contains vectors which are unsupported
+
+1: "narrow_zext_mul_commute"
+8: "narrow_zext_mul_commute" contains vectors which are unsupported
+
+1: "narrow_zext_ashr_keep_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_ashr_keep_trunc2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_ashr_keep_trunc3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+
+1: "narrow_zext_ashr_keep_trunc_vector"
+8: "narrow_zext_ashr_keep_trunc_vector" contains vectors which are unsupported
+
+1: "dont_narrow_zext_ashr_keep_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sext
+2: llvm.sext
+2: llvm.add
+2: llvm.ashr
+2: llvm.trunc
+2: llvm.return
+

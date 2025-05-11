@@ -1,0 +1,6 @@
+1: "test1"
+4: "test1" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+

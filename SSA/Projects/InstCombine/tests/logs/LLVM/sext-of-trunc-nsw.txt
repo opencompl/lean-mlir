@@ -1,0 +1,81 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use4"
+5: "use4" is empty
+
+1: "usevec"
+5: "usevec" is empty
+
+1: "t0"
+4: "t0" has unsupported operation: llvm.call
+
+1: "t1"
+4: "t1" has unsupported operation: llvm.call
+
+1: "n2"
+4: "n2" has unsupported operation: llvm.call
+
+1: "t3_vec"
+4: "t3_vec" has unsupported operation: llvm.call
+
+1: "t4_vec_nonsplat"
+4: "t4_vec_nonsplat" has unsupported operation: llvm.call
+
+1: "t5_extrause"
+4: "t5_extrause" has unsupported operation: llvm.call
+
+4: "t5_extrause" has unsupported operation: llvm.call
+
+1: "narrow_source_matching_signbits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.sext
+2: llvm.return
+
+1: "narrow_source_not_matching_signbits"
+7: "narrow_source_not_matching_signbits" is unchanged by InstCombine
+
+1: "wide_source_matching_signbits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.sext
+2: llvm.return
+
+1: "wide_source_not_matching_signbits"
+7: "wide_source_not_matching_signbits" is unchanged by InstCombine
+
+1: "same_source_matching_signbits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.sext
+2: llvm.return
+
+1: "same_source_not_matching_signbits"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.shl
+2: llvm.trunc
+2: llvm.sext
+2: llvm.return
+
+1: "same_source_matching_signbits_extra_use"
+4: "same_source_matching_signbits_extra_use" has unsupported operation: llvm.call
+
+1: "same_source_not_matching_signbits_extra_use"
+4: "same_source_not_matching_signbits_extra_use" has unsupported operation: llvm.call
+

@@ -1,0 +1,106 @@
+1: "vector"
+8: "vector" contains vectors which are unsupported
+
+1: "vector_poison"
+8: "vector_poison" contains vectors which are unsupported
+
+1: "in_constant_varx_mone_invmask"
+8: "in_constant_varx_mone_invmask" contains vectors which are unsupported
+
+1: "in_constant_varx_6_invmask"
+8: "in_constant_varx_6_invmask" contains vectors which are unsupported
+
+1: "in_constant_varx_6_invmask_nonsplat"
+8: "in_constant_varx_6_invmask_nonsplat" contains vectors which are unsupported
+
+1: "in_constant_varx_6_invmask_poison"
+4: "in_constant_varx_6_invmask_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "in_constant_varx_6_invmask_poison" has unsupported operation: llvm.mlir.undef
+
+4: "in_constant_varx_6_invmask_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "in_constant_varx_6_invmask_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "in_constant_varx_6_invmask_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "in_constant_mone_vary_invmask"
+8: "in_constant_mone_vary_invmask" contains vectors which are unsupported
+
+1: "in_constant_6_vary_invmask"
+8: "in_constant_6_vary_invmask" contains vectors which are unsupported
+
+1: "in_constant_6_vary_invmask_nonsplat"
+8: "in_constant_6_vary_invmask_nonsplat" contains vectors which are unsupported
+
+1: "in_constant_6_vary_invmask_poison"
+4: "in_constant_6_vary_invmask_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "in_constant_6_vary_invmask_poison" has unsupported operation: llvm.mlir.undef
+
+4: "in_constant_6_vary_invmask_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "in_constant_6_vary_invmask_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "in_constant_6_vary_invmask_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "gen4"
+5: "gen4" is empty
+
+1: "c_1_0_0"
+8: "c_1_0_0" contains vectors which are unsupported
+
+1: "c_0_1_0"
+8: "c_0_1_0" contains vectors which are unsupported
+
+1: "c_0_0_1"
+4: "c_0_0_1" has unsupported operation: llvm.call
+
+4: "c_0_0_1" has unsupported operation: llvm.call
+
+1: "c_1_1_0"
+8: "c_1_1_0" contains vectors which are unsupported
+
+1: "c_1_0_1"
+4: "c_1_0_1" has unsupported operation: llvm.call
+
+1: "c_0_1_1"
+4: "c_0_1_1" has unsupported operation: llvm.call
+
+1: "c_1_1_1"
+4: "c_1_1_1" has unsupported operation: llvm.call
+
+4: "c_1_1_1" has unsupported operation: llvm.call
+
+1: "commutativity_constant_varx_6_invmask"
+8: "commutativity_constant_varx_6_invmask" contains vectors which are unsupported
+
+1: "commutativity_constant_6_vary_invmask"
+8: "commutativity_constant_6_vary_invmask" contains vectors which are unsupported
+
+1: "use4"
+5: "use4" is empty
+
+1: "n_oneuse_D_is_ok"
+4: "n_oneuse_D_is_ok" has unsupported operation: llvm.call
+
+1: "n_oneuse_A"
+4: "n_oneuse_A" has unsupported operation: llvm.call
+
+1: "n_oneuse_AD"
+4: "n_oneuse_AD" has unsupported operation: llvm.call
+
+4: "n_oneuse_AD" has unsupported operation: llvm.call
+
+1: "n_third_var"
+7: "n_third_var" is unchanged by InstCombine
+
+1: "n_third_var_const"
+7: "n_third_var_const" is unchanged by InstCombine
+
+1: "n_badxor_splat"
+7: "n_badxor_splat" is unchanged by InstCombine
+
+1: "n_badxor"
+7: "n_badxor" is unchanged by InstCombine
+

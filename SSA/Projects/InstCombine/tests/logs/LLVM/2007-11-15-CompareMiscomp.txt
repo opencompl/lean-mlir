@@ -1,0 +1,19 @@
+1: "test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: llvm.return
+
+1: "test_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

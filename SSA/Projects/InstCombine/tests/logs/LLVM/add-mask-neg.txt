@@ -1,0 +1,52 @@
+1: "dec_mask_neg_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "dec_mask_commute_neg_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sdiv
+2: llvm.sub
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "dec_commute_mask_neg_i32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "dec_mask_neg_multiuse_i32"
+4: "dec_mask_neg_multiuse_i32" has unsupported operation: llvm.call
+
+1: "dec_mask_multiuse_neg_i32"
+4: "dec_mask_multiuse_neg_i32" has unsupported operation: llvm.call
+
+1: "dec_mask_neg_v2i32"
+8: "dec_mask_neg_v2i32" contains vectors which are unsupported
+
+1: "dec_mask_neg_v2i32_poison"
+8: "dec_mask_neg_v2i32_poison" contains vectors which are unsupported
+
+1: "dec_mask_multiuse_neg_multiuse_v2i32"
+4: "dec_mask_multiuse_neg_multiuse_v2i32" has unsupported operation: llvm.call
+
+4: "dec_mask_multiuse_neg_multiuse_v2i32" has unsupported operation: llvm.call
+
+1: "use"
+5: "use" is empty
+
+1: "usev"
+5: "usev" is empty
+

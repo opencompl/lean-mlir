@@ -1,0 +1,125 @@
+1: "select_noFMF_nfabs_lt"
+4: "select_noFMF_nfabs_lt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_noFMF_nfabs_lt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_lt_fmfProp"
+4: "select_nsz_nfabs_lt_fmfProp" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nfabs_lt_fmfProp" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_lt_fmfProp"
+4: "select_nsz_nnan_nfabs_lt_fmfProp" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_lt_fmfProp" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_ult"
+4: "select_nsz_nfabs_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_ult" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_ult"
+4: "select_nsz_nnan_nfabs_ult" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_ult" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_ole"
+4: "select_nsz_nfabs_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_ole" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_ole"
+4: "select_nsz_nnan_nfabs_ole" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_ole" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_ule"
+4: "select_nsz_nfabs_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_ule" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_ule"
+4: "select_nsz_nnan_nfabs_ule" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_ule" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_noFMF_nfabs_gt"
+4: "select_noFMF_nfabs_gt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_noFMF_nfabs_gt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_gt_fmfProp"
+4: "select_nsz_nfabs_gt_fmfProp" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nfabs_gt_fmfProp" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_gt_fmfProp"
+4: "select_nsz_nnan_nfabs_gt_fmfProp" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_gt_fmfProp" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_ogt"
+4: "select_nsz_nfabs_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_ogt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_ogt"
+4: "select_nsz_nnan_nfabs_ogt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_ogt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_ugt"
+4: "select_nsz_nfabs_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_ugt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_ugt"
+4: "select_nsz_nnan_nfabs_ugt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_ugt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_oge"
+4: "select_nsz_nfabs_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_oge" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_oge"
+4: "select_nsz_nnan_nfabs_oge" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_oge" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nfabs_uge"
+4: "select_nsz_nfabs_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_nfabs_uge" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_nnan_nfabs_uge"
+4: "select_nsz_nnan_nfabs_uge" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "select_nsz_nnan_nfabs_uge" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_noFMF_fsubfabs_le"
+4: "select_noFMF_fsubfabs_le" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_noFMF_fsubfabs_le" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "select_noFMF_fsubfabs_olt"
+4: "select_noFMF_fsubfabs_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_noFMF_fsubfabs_olt" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "select_noFMF_fsubfabs_ult"
+4: "select_noFMF_fsubfabs_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_noFMF_fsubfabs_ult" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "select_nsz_fnegfabs_olt"
+4: "select_nsz_fnegfabs_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_fnegfabs_olt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "select_nsz_fnegfabs_ult"
+4: "select_nsz_fnegfabs_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_nsz_fnegfabs_ult" has unsupported operation: builtin.unregistered: llvm.fneg
+

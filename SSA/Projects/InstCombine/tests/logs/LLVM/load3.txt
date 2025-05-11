@@ -1,0 +1,15 @@
+1: "test1"
+9: "test1" has pointer type input
+
+1: "test2"
+4: "test2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test2" has unsupported operation after optimization: llvm.load
+
+1: "test3"
+4: "test3" has unsupported operation: llvm.mlir.addressof
+
+4: "test3" has unsupported operation: llvm.store
+
+4: "test3" has unsupported operation: llvm.return
+

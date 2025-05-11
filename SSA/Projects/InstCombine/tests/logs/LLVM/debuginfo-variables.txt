@@ -1,0 +1,58 @@
+1: "escape32"
+5: "escape32" is empty
+
+1: "test_sext_zext"
+2: llvm.func
+2: llvm.zext
+2: llvm.sext
+2: llvm.return
+
+1: "test_used_sext_zext"
+4: "test_used_sext_zext" has unsupported operation: llvm.call
+
+1: "test_cast_select"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.zext
+2: llvm.return
+
+1: "test_or"
+4: "test_or" has unsupported operation: llvm.return
+
+1: "test_xor"
+4: "test_xor" has unsupported operation: llvm.return
+
+1: "test_sub_neg"
+4: "test_sub_neg" has unsupported operation: llvm.return
+
+1: "test_sub_pos"
+4: "test_sub_pos" has unsupported operation: llvm.return
+
+1: "test_shl"
+4: "test_shl" has unsupported operation: llvm.return
+
+1: "test_lshr"
+4: "test_lshr" has unsupported operation: llvm.return
+
+1: "test_ashr"
+4: "test_ashr" has unsupported operation: llvm.return
+
+1: "test_mul"
+4: "test_mul" has unsupported operation: llvm.return
+
+1: "test_sdiv"
+4: "test_sdiv" has unsupported operation: llvm.return
+
+1: "test_srem"
+4: "test_srem" has unsupported operation: llvm.return
+
+1: "test_ptrtoint"
+9: "test_ptrtoint" has pointer type input
+
+4: "test_ptrtoint" has unsupported operation: llvm.return
+
+1: "test_and"
+4: "test_and" has unsupported operation: llvm.return
+

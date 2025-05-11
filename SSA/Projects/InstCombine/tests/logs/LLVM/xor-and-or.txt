@@ -1,0 +1,122 @@
+1: "xor_logic_and_logic_or1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_logic_and_logic_or2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_logic_and_logic_or3"
+4: "xor_logic_and_logic_or3" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "xor_logic_and_logic_or4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_logic_and_logic_or_vector1"
+8: "xor_logic_and_logic_or_vector1" contains vectors which are unsupported
+
+1: "xor_logic_and_logic_or_vector2"
+4: "xor_logic_and_logic_or_vector2" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "xor_logic_and_logic_or_vector_poison1"
+4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_logic_and_logic_or_vector_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "xor_logic_and_logic_or_vector_poison2"
+8: "xor_logic_and_logic_or_vector_poison2" contains vectors which are unsupported
+
+1: "xor_and_logic_or1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_and_logic_or2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_and_logic_or_vector"
+8: "xor_and_logic_or_vector" contains vectors which are unsupported
+
+1: "xor_and_logic_or_vector_poison"
+4: "xor_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "xor_and_logic_or_vector_poison" has unsupported operation: llvm.mlir.undef
+
+4: "xor_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_and_logic_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "xor_logic_and_or1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_logic_and_or2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_logic_and_or_vector"
+8: "xor_logic_and_or_vector" contains vectors which are unsupported
+
+1: "xor_logic_and_or_vector_poison"
+4: "xor_logic_and_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "xor_logic_and_or_vector_poison" has unsupported operation: llvm.mlir.undef
+
+4: "xor_logic_and_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_logic_and_or_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "xor_and_or"
+2: llvm.func
+2: llvm.or
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "xor_and_or_vector"
+8: "xor_and_or_vector" contains vectors which are unsupported
+
+1: "xor_and_or_negative_oneuse"
+4: "xor_and_or_negative_oneuse" has unsupported operation: llvm.call
+
+1: "use"
+5: "use" is empty
+

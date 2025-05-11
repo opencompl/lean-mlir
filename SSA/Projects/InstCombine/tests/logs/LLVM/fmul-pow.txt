@@ -1,0 +1,156 @@
+1: "use"
+5: "use" is empty
+
+1: "pow_ab_a"
+4: "pow_ab_a" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_a" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow_ab_a_reassoc"
+4: "pow_ab_a_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_a_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_a_reassoc_commute"
+4: "pow_ab_a_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_a_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_a_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_a_reassoc_use"
+4: "pow_ab_a_reassoc_use" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_a_reassoc_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_a_reassoc_use" has unsupported operation: llvm.call
+
+1: "pow_ab_recip_a"
+4: "pow_ab_recip_a" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "pow_ab_recip_a" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_recip_a" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow_ab_recip_a_reassoc"
+4: "pow_ab_recip_a_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_recip_a_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_recip_a_reassoc_commute"
+4: "pow_ab_recip_a_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_recip_a_reassoc_commute" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_recip_a_reassoc_use1"
+4: "pow_ab_recip_a_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "pow_ab_recip_a_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_recip_a_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_recip_a_reassoc_use1" has unsupported operation: llvm.call
+
+1: "pow_ab_recip_a_reassoc_use2"
+4: "pow_ab_recip_a_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_recip_a_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "pow_ab_recip_a_reassoc_use2" has unsupported operation: llvm.call
+
+1: "pow_ab_recip_a_reassoc_use3"
+4: "pow_ab_recip_a_reassoc_use3" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "pow_ab_recip_a_reassoc_use3" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_recip_a_reassoc_use3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_recip_a_reassoc_use3" has unsupported operation: llvm.call
+
+4: "pow_ab_recip_a_reassoc_use3" has unsupported operation: llvm.call
+
+1: "pow_ab_pow_cb"
+4: "pow_ab_pow_cb" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow_ab_pow_cb_reassoc"
+4: "pow_ab_pow_cb_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_pow_cb_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_pow_cb_reassoc_use1"
+4: "pow_ab_pow_cb_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_pow_cb_reassoc_use1" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb_reassoc_use1" has unsupported operation: llvm.call
+
+1: "pow_ab_pow_cb_reassoc_use2"
+4: "pow_ab_pow_cb_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_pow_cb_reassoc_use2" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb_reassoc_use2" has unsupported operation: llvm.call
+
+1: "pow_ab_pow_cb_reassoc_use3"
+4: "pow_ab_pow_cb_reassoc_use3" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb_reassoc_use3" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_cb_reassoc_use3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_pow_cb_reassoc_use3" has unsupported operation: llvm.call
+
+4: "pow_ab_pow_cb_reassoc_use3" has unsupported operation: llvm.call
+
+1: "pow_ab_pow_ac"
+4: "pow_ab_pow_ac" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_ac" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_pow_ac" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "pow_ab_x_pow_ac_reassoc"
+4: "pow_ab_x_pow_ac_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_x_pow_ac_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_reassoc"
+4: "pow_ab_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_ab_reassoc_extra_use"
+4: "pow_ab_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_reassoc_extra_use" has unsupported operation: llvm.call
+
+1: "pow_ab_x_pow_ac_reassoc_extra_use"
+4: "pow_ab_x_pow_ac_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_x_pow_ac_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "pow_ab_x_pow_ac_reassoc_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_x_pow_ac_reassoc_extra_use" has unsupported operation: llvm.call
+
+1: "pow_ab_x_pow_ac_reassoc_multiple_uses"
+4: "pow_ab_x_pow_ac_reassoc_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_x_pow_ac_reassoc_multiple_uses" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+4: "pow_ab_x_pow_ac_reassoc_multiple_uses" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ab_x_pow_ac_reassoc_multiple_uses" has unsupported operation: llvm.call
+
+4: "pow_ab_x_pow_ac_reassoc_multiple_uses" has unsupported operation: llvm.call
+

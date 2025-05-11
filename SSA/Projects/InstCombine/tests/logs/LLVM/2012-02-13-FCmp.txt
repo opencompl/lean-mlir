@@ -1,0 +1,28 @@
+1: "printf"
+9: "printf" has pointer type input
+
+1: "_Z8tempCastj"
+4: "_Z8tempCastj" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z8tempCastj" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z8tempCastj" has unsupported operation: llvm.call
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "_Z8tempCastj" has unsupported operation: llvm.call
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.fptosi
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z8tempCastj" has unsupported operation: builtin.unregistered: llvm.br
+

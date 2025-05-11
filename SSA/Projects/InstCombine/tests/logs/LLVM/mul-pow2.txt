@@ -1,0 +1,66 @@
+1: "use_i8"
+5: "use_i8" is empty
+
+1: "mul_selectp2_x"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.mul
+2: llvm.return
+
+1: "mul_selectp2_x_propegate_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.mul
+2: llvm.return
+
+1: "mul_selectp2_x_multiuse_fixme"
+4: "mul_selectp2_x_multiuse_fixme" has unsupported operation: llvm.call
+
+1: "mul_selectp2_x_non_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: builtin.unregistered: llvm.select
+2: llvm.mul
+2: llvm.return
+
+1: "mul_selectp2_x_non_const_multiuse"
+4: "mul_selectp2_x_non_const_multiuse" has unsupported operation: llvm.call
+
+1: "mul_x_selectp2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: builtin.unregistered: llvm.select
+2: llvm.mul
+2: llvm.return
+
+1: "mul_select_nonp2_x_fail"
+7: "mul_select_nonp2_x_fail" is unchanged by InstCombine
+
+1: "mul_x_selectp2_vec"
+8: "mul_x_selectp2_vec" contains vectors which are unsupported
+
+1: "shl_add_log_may_cause_poison_pr62175_fail"
+7: "shl_add_log_may_cause_poison_pr62175_fail" is unchanged by InstCombine
+
+1: "shl_add_log_may_cause_poison_pr62175_with_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
+
+1: "shl_add_log_may_cause_poison_pr62175_with_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.mul
+2: llvm.return
+

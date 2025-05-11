@@ -1,0 +1,142 @@
+1: "use_i32"
+5: "use_i32" is empty
+
+1: "use_i64"
+5: "use_i64" is empty
+
+1: "rev8"
+4: "rev8" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev16"
+4: "rev16" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev32"
+4: "rev32" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev32_bswap"
+4: "rev32_bswap" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev64"
+4: "rev64" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev8_xor"
+4: "rev8_xor" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev8_xor_vector"
+4: "rev8_xor_vector" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev8_mul_and_urem"
+7: "rev8_mul_and_urem" is unchanged by InstCombine
+
+1: "rev8_mul_and_mul"
+7: "rev8_mul_and_mul" is unchanged by InstCombine
+
+1: "rev8_mul_and_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.zext
+2: llvm.mul
+2: llvm.and
+2: llvm.mul
+2: llvm.and
+2: llvm.or
+2: llvm.mul
+2: llvm.lshr
+2: llvm.trunc
+2: llvm.return
+
+1: "shuf_4bits"
+4: "shuf_4bits" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_4bits" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "shuf_load_4bits"
+9: "shuf_load_4bits" has pointer type input
+
+4: "shuf_load_4bits" has unsupported operation: llvm.load
+
+4: "shuf_load_4bits" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "shuf_bitcast_twice_4bits"
+4: "shuf_bitcast_twice_4bits" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "shuf_4bits_not_reverse"
+4: "shuf_4bits_not_reverse" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_4bits_not_reverse" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_4bits_not_reverse" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "use"
+5: "use" is empty
+
+1: "shuf_4bits_extra_use"
+4: "shuf_4bits_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_4bits_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_4bits_extra_use" has unsupported operation: llvm.call
+
+4: "shuf_4bits_extra_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "rev_i1"
+4: "rev_i1" has unsupported operation: llvm.call
+
+1: "rev_v2i1"
+8: "rev_v2i1" contains vectors which are unsupported
+
+1: "rev_i2"
+4: "rev_i2" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "PR59897"
+4: "PR59897" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_xor_lhs_rev16"
+4: "rev_xor_lhs_rev16" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_and_rhs_rev32"
+4: "rev_and_rhs_rev32" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_or_rhs_rev32"
+4: "rev_or_rhs_rev32" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_or_rhs_rev64"
+4: "rev_or_rhs_rev64" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_xor_rhs_rev64"
+4: "rev_xor_rhs_rev64" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_xor_rhs_i32vec"
+4: "rev_xor_rhs_i32vec" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_and_rhs_rev64_multiuse1"
+4: "rev_and_rhs_rev64_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "rev_and_rhs_rev64_multiuse1" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_and_rhs_rev64_multiuse2"
+4: "rev_and_rhs_rev64_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "rev_and_rhs_rev64_multiuse2" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_all_operand64"
+4: "rev_all_operand64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+4: "rev_all_operand64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+4: "rev_all_operand64" has unsupported operation after optimization: builtin.unregistered: llvm.intr.bitreverse
+
+1: "rev_all_operand64_multiuse_both"
+4: "rev_all_operand64_multiuse_both" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "rev_all_operand64_multiuse_both" has unsupported operation: builtin.unregistered: llvm.intr.bitreverse
+
+4: "rev_all_operand64_multiuse_both" has unsupported operation: llvm.call
+
+4: "rev_all_operand64_multiuse_both" has unsupported operation: llvm.call
+

@@ -1,0 +1,135 @@
+1: "oppositesign"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "zero_sign_bit"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "zero_sign_bit2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "bounded"
+5: "bounded" is empty
+
+1: "__gxx_personality_v0"
+5: "__gxx_personality_v0" is empty
+
+1: "add_bounded_values"
+4: "add_bounded_values" has unsupported operation: llvm.mlir.undef
+
+4: "add_bounded_values" has unsupported operation: llvm.call
+
+4: "add_bounded_values" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "add_bounded_values" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+1: "add_bounded_values_2"
+4: "add_bounded_values_2" has unsupported operation: llvm.mlir.undef
+
+4: "add_bounded_values_2" has unsupported operation: llvm.call
+
+4: "add_bounded_values_2" has unsupported operation: builtin.unregistered: llvm.invoke
+
+4: "add_bounded_values_2" has unsupported operation: builtin.unregistered: llvm.landingpad
+
+1: "ripple_nsw1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "ripple_nsw2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "ripple_nsw3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "ripple_nsw4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "ripple_nsw5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "ripple_nsw6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.or
+2: llvm.add
+2: llvm.return
+
+1: "ripple_no_nsw1"
+7: "ripple_no_nsw1" is unchanged by InstCombine
+
+1: "ripple_no_nsw2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.and
+2: llvm.add
+2: llvm.return
+
+1: "ripple_no_nsw3"
+7: "ripple_no_nsw3" is unchanged by InstCombine
+
+1: "ripple_no_nsw4"
+7: "ripple_no_nsw4" is unchanged by InstCombine
+
+1: "ripple_no_nsw5"
+7: "ripple_no_nsw5" is unchanged by InstCombine
+
+1: "ripple_no_nsw6"
+7: "ripple_no_nsw6" is unchanged by InstCombine
+
+1: "PR38021"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.add
+2: llvm.return
+

@@ -1,0 +1,71 @@
+1: "type_pun_zeroth"
+4: "type_pun_zeroth" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_zeroth" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "type_pun_first"
+4: "type_pun_first" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_first" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "type_pun_misaligned"
+4: "type_pun_misaligned" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "type_pun_misaligned" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "type_pun_misaligned" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_misaligned" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "type_pun_pointer"
+4: "type_pun_pointer" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_pointer" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "type_pun_pointer" has unsupported operation: llvm.inttoptr
+
+1: "type_pun_float"
+4: "type_pun_float" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_float" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "type_pun_double"
+4: "type_pun_double" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_double" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "type_pun_float_i32"
+4: "type_pun_float_i32" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "type_pun_float_i32" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_float_i32" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "type_pun_float_i32" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_float_i32" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "type_pun_float_i32" has unsupported operation: llvm.insertvalue
+
+4: "type_pun_float_i32" has unsupported operation: llvm.insertvalue
+
+1: "type_pun_i32_ctrl"
+4: "type_pun_i32_ctrl" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "type_pun_i32_ctrl" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "type_pun_i32_ctrl" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "type_pun_i32_ctrl" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "type_pun_i32_ctrl" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "type_pun_i32_ctrl" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "type_pun_unhandled"
+4: "type_pun_unhandled" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "type_pun_unhandled" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "type_pun_unhandled" has unsupported operation: builtin.unregistered: llvm.bitcast
+

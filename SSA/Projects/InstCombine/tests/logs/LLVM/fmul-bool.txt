@@ -1,0 +1,11 @@
+1: "fmul_bool"
+4: "fmul_bool" has unsupported operation after optimization: builtin.unregistered: llvm.uitofp
+
+4: "fmul_bool" has unsupported operation after optimization: builtin.unregistered: llvm.fmul
+
+1: "fmul_bool_vec"
+8: "fmul_bool_vec" contains vectors which are unsupported
+
+1: "fmul_bool_vec_commute"
+4: "fmul_bool_vec_commute" has unsupported operation: builtin.unregistered: llvm.fmul
+

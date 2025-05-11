@@ -1,7 +1,6 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Algebra.GroupPower.IterateHom
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Tactic.Linarith
 import SSA.Core.Framework
@@ -41,17 +40,23 @@ def Scf (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : D
   Ty := d.Ty
   m  := d.m
 
-instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]  [Monad d.m] :
-    Monad (Scf d).m :=
-  inferInstanceAs (Monad d.m)
-
-instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : TyDenote (Scf d).Ty :=
-  inferInstanceAs (TyDenote d.Ty)
-
-example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] :
-  DecidableEq (Scf d).Ty := by infer_instance
-
 namespace Scf
+
+section InheritedInstances
+variable {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
+
+instance [inst : Monad d.m] : Monad (Scf d).m := inst
+instance [Monad d.m] [inst : LawfulMonad d.m] : LawfulMonad (Scf d).m := inst
+
+instance : TyDenote (Scf d).Ty := inferInstanceAs (TyDenote d.Ty)
+
+instance [DecidableEq d.Op] [DecidableEq d.Ty] : DecidableEq (Scf d).Op :=
+  inferInstanceAs (DecidableEq <| Scf.Op ..)
+
+-- Assert that a `DecidableEq (Scf d).Ty` instance already exists
+example [DecidableEq d.Ty] : DecidableEq (Scf d).Ty := inferInstance
+
+end InheritedInstances
 
 instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] :
     Coe d.Op (Scf d).Op where
@@ -312,7 +317,7 @@ export Arith (Arith)
 /-- Compose Scf on top of Arith -/
 abbrev ScfArith := Scf Arith
 
-def cst (n : ℤ) : Expr ScfArith Γ .pure .int  :=
+@[simp_denote] def cst (n : ℤ) : Expr ScfArith Γ .pure .int  :=
   Expr.mk
     (op := .coe <| .const n)
     (ty_eq := rfl)
@@ -320,7 +325,7 @@ def cst (n : ℤ) : Expr ScfArith Γ .pure .int  :=
     (args := .nil)
     (regArgs := .nil)
 
-def cst_nat (n : ℕ) : Expr ScfArith Γ .pure .nat  :=
+@[simp_denote] def cst_nat (n : ℕ) : Expr ScfArith Γ .pure .nat  :=
   Expr.mk
     (op := .coe <| .const_nat n)
     (ty_eq := rfl)
@@ -328,7 +333,7 @@ def cst_nat (n : ℕ) : Expr ScfArith Γ .pure .nat  :=
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr ScfArith Γ .pure .int :=
+@[simp_denote] def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .add)
     (ty_eq := rfl)
@@ -336,7 +341,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr ScfArith Γ .pure .int :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def add_nat (e₁ e₂ : Var Γ .nat) : Expr ScfArith Γ .pure .nat :=
+@[simp_denote] def add_nat (e₁ e₂ : Var Γ .nat) : Expr ScfArith Γ .pure .nat :=
   Expr.mk
     (op := .coe <| .add_nat)
     (ty_eq := rfl)
@@ -344,7 +349,7 @@ def add_nat (e₁ e₂ : Var Γ .nat) : Expr ScfArith Γ .pure .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) :
+@[simp_denote] def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) :
     Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .axpy)
@@ -353,7 +358,7 @@ def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) :
     (args := .cons a <| .cons x <| .cons b .nil)
     (regArgs := .nil)
 
-def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr ScfArith Γ .pure .int :=
+@[simp_denote] def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .neg)
     (ty_eq := rfl)
@@ -361,8 +366,7 @@ def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr ScfArith Γ .pure .int :=
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Arith.Ty.int)
+@[simp_denote] def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Arith.Ty.int)
     (body : Com ScfArith [.int] .impure .int) : Expr ScfArith Γ .impure .int :=
   Expr.mk
     (op := .iterate k)
@@ -371,7 +375,7 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Arith.Ty.int)
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
 
-def if_ {Γ : Ctxt _} {t t': Arith.Ty}
+@[simp_denote] def if_ {Γ : Ctxt _} {t t': Arith.Ty}
   (cond : Var Γ Arith.Ty.bool) (v : Var Γ t) (then_ else_ : Com ScfArith [t] .impure t') :
     Expr ScfArith Γ .impure t' :=
   Expr.mk
@@ -381,6 +385,7 @@ def if_ {Γ : Ctxt _} {t t': Arith.Ty}
     (args := .cons cond <| .cons v .nil)
     (regArgs := HVector.cons then_ <| HVector.cons else_ <| HVector.nil)
 
+@[simp_denote]
 def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com ScfArith [t] .impure t) :
     Expr ScfArith Γ .impure t :=
   Expr.mk
@@ -390,7 +395,7 @@ def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com ScfArith [t] .im
     (args := .cons v .nil)
     (regArgs := HVector.cons body <| HVector.nil)
 
-def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
+@[simp_denote] def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
     (start step : Var Γ Arith.Ty.int)
     (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com ScfArith [.int, t] .impure t) :
       Expr ScfArith Γ .impure t :=
@@ -407,38 +412,30 @@ theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond 
     (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v then_) Γv := by
-  simp only [EffectKind.toMonad_impure, if_, Expr.denote, HVector.denote_cons, HVector.denote_nil,
-    EffectKind.liftEffect_rfl, id_eq, run]
-  simp_peephole [hcond] at Γv
-  simp [ite_true]
 -- TODO: make a `PeepholeRewrite` for `if_true`.
+  simp_peephole
+  simp [hcond]
 
 /-- 'if' condition of a false variable evaluates to the else region body. -/
 theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = false)
     (v : Var Γ t) (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v else_) Γv := by
-  simp only [EffectKind.toMonad_impure, if_, Expr.denote, HVector.denote_cons, HVector.denote_nil,
-    EffectKind.liftEffect_rfl, id_eq, run]
-  simp_peephole [hcond] at Γv
-  simp [ite_true]
-
--- TODO: make a `PeepholeRewrite` for `if_false`.
-
+  -- TODO: make a `PeepholeRewrite` for `if_false`.
+  simp_peephole
+  simp [hcond]
 
 /-- a region that returns the value immediately -/
-abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) :
+@[simp_denote] def RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) :
     Com ScfArith Γ .impure t := .ret v
 
 /-- a for loop whose body immediately returns the loop variable is the same as
   just fetching the loop variable. -/
 theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int)
     (niters : Var Γ .nat) (v : Var Γ t) :
-  Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
-    simp only [EffectKind.toMonad_impure, for_, Ctxt.get?, Expr.denote, HVector.denote_cons,
-      Com.denote_ret, Id.pure_eq, HVector.denote_nil, EffectKind.liftEffect_rfl, id_eq]
-    simp_peephole at Γv
-    simp [Scf.LoopBody.counterDecorator.constant_iterate]
+    Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
+  simp_peephole
+  simp [Scf.LoopBody.counterDecorator.constant_iterate]
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
@@ -486,11 +483,11 @@ abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int�
 
 open Scf in
 open Arith in
-theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
-  simp only [lhs, rhs, for_, axpy, cst, add]
-  simp_peephole at Γv
+theorem correct : Com.denote (lhs v0) = Com.denote (rhs v0) := by
+  unfold lhs rhs
+  simp_peephole
+
   intros A B
-  simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
   rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
 
@@ -549,8 +546,9 @@ theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.V
   simp [Ctxt.Valuation.snoc, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
-  simp only [EffectKind.toMonad_impure, lhs, for_, Ctxt.get?, Var.zero_eq_last, rhs, axpy]
-  simp_peephole at Γv
+  unfold lhs rhs
+  simp_peephole
+
 
 /-- info:
 'ScfFunctor.ForReversal.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -597,20 +595,20 @@ def rhs : Com ScfArith [/- v0 -/ t] .impure t :=
 
 open Scf in
 theorem correct :
-    Com.denote (lhs rgn niters1 niters2 start1) Γv =
-      Com.denote (rhs rgn niters1 niters2 start1) Γv := by
-  simp [lhs, rhs, for_, axpy, cst]
-  simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+    Com.denote (lhs rgn niters1 niters2 start1) =
+      Com.denote (rhs rgn niters1 niters2 start1) := by
+  unfold lhs rhs
+  simp_peephole
   intros a
   rw [Nat.add_comm, Function.iterate_add_apply]
   congr
   rw [LoopBody.counterDecorator.iterate_fst_val]
   linarith
 
-/-- info:
-'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms correct
+--/-- info:
+--'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+---/
+--#guard_msgs in #print axioms correct
 
 
 end ForFusion

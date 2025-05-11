@@ -1,0 +1,27 @@
+1: "foo_simple"
+9: "foo_simple" has pointer type input
+
+4: "foo_simple" has unsupported operation: llvm.mlir.undef
+
+4: "foo_simple" has unsupported operation: llvm.insertvalue
+
+1: "foo_ovwrt_chain"
+9: "foo_ovwrt_chain" has pointer type input
+
+4: "foo_ovwrt_chain" has unsupported operation: llvm.mlir.undef
+
+4: "foo_ovwrt_chain" has unsupported operation: llvm.insertvalue
+
+4: "foo_ovwrt_chain" has unsupported operation: llvm.insertvalue
+
+4: "foo_ovwrt_chain" has unsupported operation: llvm.insertvalue
+
+1: "foo_use_as_second_operand"
+4: "foo_use_as_second_operand" has unsupported operation: llvm.mlir.undef
+
+4: "foo_use_as_second_operand" has unsupported operation: llvm.mlir.undef
+
+4: "foo_use_as_second_operand" has unsupported operation: llvm.insertvalue
+
+4: "foo_use_as_second_operand" has unsupported operation: llvm.insertvalue
+

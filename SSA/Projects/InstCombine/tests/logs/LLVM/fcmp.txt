@@ -1,0 +1,835 @@
+1: "use"
+5: "use" is empty
+
+1: "fpext_fpext"
+4: "fpext_fpext" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fpext_constant"
+4: "fpext_constant" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fpext_constant_vec_splat"
+4: "fpext_constant_vec_splat" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fpext_constant_lossy"
+4: "fpext_constant_lossy" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fpext_constant_lossy" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fpext_constant_denorm"
+4: "fpext_constant_denorm" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "fpext_constant_denorm" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_constant_swap_pred"
+4: "fneg_constant_swap_pred" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_constant_swap_pred"
+4: "unary_fneg_constant_swap_pred" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_constant_swap_pred_vec"
+4: "fneg_constant_swap_pred_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_constant_swap_pred_vec"
+4: "unary_fneg_constant_swap_pred_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_constant_swap_pred_vec_poison"
+4: "fneg_constant_swap_pred_vec_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_fmf"
+4: "fneg_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_fmf"
+4: "unary_fneg_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fneg_fmf_vec"
+4: "fcmp_fneg_fmf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_fneg_swap_pred"
+4: "fneg_fneg_swap_pred" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_unary_fneg_swap_pred"
+4: "unary_fneg_unary_fneg_swap_pred" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_fneg_swap_pred"
+4: "unary_fneg_fneg_swap_pred" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_unary_fneg_swap_pred"
+4: "fneg_unary_fneg_swap_pred" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_fneg_swap_pred_vec"
+4: "fneg_fneg_swap_pred_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_unary_fneg_swap_pred_vec"
+4: "unary_fneg_unary_fneg_swap_pred_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_fneg_swap_pred_vec"
+4: "unary_fneg_fneg_swap_pred_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_unary_fneg_swap_pred_vec"
+4: "fneg_unary_fneg_swap_pred_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_fneg_swap_pred_vec_poison"
+4: "fneg_fneg_swap_pred_vec_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "unary_fneg_fneg_swap_pred_vec_poison"
+4: "unary_fneg_fneg_swap_pred_vec_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_unary_fneg_swap_pred_vec_poison"
+4: "fneg_unary_fneg_swap_pred_vec_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "test8" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+1: "fabs_uge"
+4: "fabs_uge" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_uge" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "fabs_olt"
+4: "fabs_olt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.fabs
+
+4: "fabs_olt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ole"
+4: "fabs_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ule"
+4: "fabs_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ogt"
+4: "fabs_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ugt"
+4: "fabs_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_oge"
+4: "fabs_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ult"
+4: "fabs_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ult_nnan"
+8: "fabs_ult_nnan" contains vectors which are unsupported
+
+1: "fabs_une"
+4: "fabs_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_oeq"
+4: "fabs_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_one"
+4: "fabs_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ueq"
+4: "fabs_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_ord"
+4: "fabs_ord" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fabs_uno"
+4: "fabs_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test17"
+9: "test17" has pointer type input
+
+4: "test17" has unsupported operation: llvm.call
+
+4: "test17" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test18_undef_unordered"
+4: "test18_undef_unordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test18_undef_unordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test18_undef_ordered"
+4: "test18_undef_ordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test18_undef_ordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test19_undef_unordered"
+4: "test19_undef_unordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test19_undef_unordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test19_undef_ordered"
+4: "test19_undef_ordered" has unsupported operation after optimization: llvm.mlir.undef
+
+4: "test19_undef_ordered" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "test20_recipX_olt_0"
+4: "test20_recipX_olt_0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test21_recipX_ole_0"
+4: "test21_recipX_ole_0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test22_recipX_ogt_0"
+4: "test22_recipX_ogt_0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test23_recipX_oge_0"
+4: "test23_recipX_oge_0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test24_recipX_noninf_cmp"
+4: "test24_recipX_noninf_cmp" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "test24_recipX_noninf_cmp" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test25_recipX_noninf_div"
+4: "test25_recipX_noninf_div" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "test25_recipX_noninf_div" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test26_recipX_unorderd"
+4: "test26_recipX_unorderd" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+4: "test26_recipX_unorderd" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "test27_recipX_gt_vecsplat"
+4: "test27_recipX_gt_vecsplat" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set"
+4: "is_signbit_set" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "is_signbit_set_1"
+4: "is_signbit_set_1" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set_2"
+4: "is_signbit_set_2" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set_3"
+4: "is_signbit_set_3" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set_anyzero"
+4: "is_signbit_set_anyzero" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "is_signbit_clear"
+4: "is_signbit_clear" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_clear" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_clear_1"
+4: "is_signbit_clear_1" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_clear_1" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_clear_2"
+4: "is_signbit_clear_2" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_clear_2" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_clear_3"
+4: "is_signbit_clear_3" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_clear_3" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set_extra_use"
+9: "is_signbit_set_extra_use" has pointer type input
+
+4: "is_signbit_set_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_extra_use" has unsupported operation: llvm.store
+
+4: "is_signbit_set_extra_use" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_clear_nonzero"
+4: "is_signbit_clear_nonzero" has unsupported operation: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_clear_nonzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set_simplify_zero"
+4: "is_signbit_set_simplify_zero" has unsupported operation after optimization: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_simplify_zero" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "is_signbit_set_simplify_nan"
+4: "is_signbit_set_simplify_nan" has unsupported operation after optimization: builtin.unregistered: llvm.intr.copysign
+
+4: "is_signbit_set_simplify_nan" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "lossy_oeq"
+8: "lossy_oeq" contains vectors which are unsupported
+
+1: "lossy_one"
+9: "lossy_one" has pointer type input
+
+4: "lossy_one" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_one" has unsupported operation: llvm.store
+
+4: "lossy_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ueq"
+4: "lossy_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_une"
+4: "lossy_une" has unsupported operation after optimization: builtin.unregistered: llvm.fpext
+
+4: "lossy_une" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ogt"
+4: "lossy_ogt" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_oge"
+9: "lossy_oge" has pointer type input
+
+4: "lossy_oge" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_oge" has unsupported operation: llvm.store
+
+4: "lossy_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_olt"
+4: "lossy_olt" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ole"
+4: "lossy_ole" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ugt"
+4: "lossy_ugt" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_uge"
+9: "lossy_uge" has pointer type input
+
+4: "lossy_uge" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_uge" has unsupported operation: llvm.store
+
+4: "lossy_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ult"
+4: "lossy_ult" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ule"
+4: "lossy_ule" has unsupported operation: builtin.unregistered: llvm.fpext
+
+4: "lossy_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_ord"
+4: "lossy_ord" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "lossy_uno"
+4: "lossy_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_oeq"
+4: "fneg_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ogt"
+4: "fneg_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_oge"
+4: "fneg_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_olt"
+9: "fneg_olt" has pointer type input
+
+4: "fneg_olt" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_olt" has unsupported operation: llvm.store
+
+4: "fneg_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ole"
+4: "fneg_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_one"
+4: "fneg_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ord"
+4: "fneg_ord" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_uno"
+4: "fneg_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ueq"
+4: "fneg_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ugt"
+4: "fneg_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_uge"
+9: "fneg_uge" has pointer type input
+
+4: "fneg_uge" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_uge" has unsupported operation: llvm.store
+
+4: "fneg_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ult"
+4: "fneg_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ule"
+4: "fneg_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_une"
+4: "fneg_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_oeq_swap"
+4: "fneg_oeq_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_oeq_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ogt_swap"
+4: "fneg_ogt_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ogt_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_oge_swap"
+4: "fneg_oge_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_oge_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_olt_swap"
+9: "fneg_olt_swap" has pointer type input
+
+4: "fneg_olt_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_olt_swap" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_olt_swap" has unsupported operation: llvm.store
+
+4: "fneg_olt_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ole_swap"
+4: "fneg_ole_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ole_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_one_swap"
+4: "fneg_one_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_one_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ord_swap"
+4: "fneg_ord_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ord_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_uno_swap"
+4: "fneg_uno_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_uno_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ueq_swap"
+4: "fneg_ueq_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ueq_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ugt_swap"
+4: "fneg_ugt_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ugt_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_uge_swap"
+9: "fneg_uge_swap" has pointer type input
+
+4: "fneg_uge_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_uge_swap" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "fneg_uge_swap" has unsupported operation: llvm.store
+
+4: "fneg_uge_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ult_swap"
+4: "fneg_ult_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ult_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_ule_swap"
+4: "fneg_ule_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_ule_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fneg_une_swap"
+4: "fneg_une_swap" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "fneg_une_swap" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "bitcast_eq0"
+4: "bitcast_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_eq0" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "bitcast_ne0"
+8: "bitcast_ne0" contains vectors which are unsupported
+
+1: "bitcast_eq0_use"
+4: "bitcast_eq0_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_eq0_use" has unsupported operation: llvm.call
+
+4: "bitcast_eq0_use" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "bitcast_nonint_eq0"
+4: "bitcast_nonint_eq0" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_nonint_eq0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "bitcast_gt0"
+4: "bitcast_gt0" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_gt0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "bitcast_1vec_eq0"
+4: "bitcast_1vec_eq0" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "bitcast_1vec_eq0" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ugt"
+4: "fcmp_fadd_zero_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_uge"
+4: "fcmp_fadd_zero_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ogt"
+4: "fcmp_fadd_zero_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_oge"
+4: "fcmp_fadd_zero_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ult"
+4: "fcmp_fadd_zero_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ule"
+4: "fcmp_fadd_zero_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_olt"
+4: "fcmp_fadd_zero_olt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ole"
+4: "fcmp_fadd_zero_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_oeq"
+4: "fcmp_fadd_zero_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_one"
+4: "fcmp_fadd_zero_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ueq"
+4: "fcmp_fadd_zero_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_une"
+4: "fcmp_fadd_zero_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_ord"
+4: "fcmp_fadd_zero_ord" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_uno"
+4: "fcmp_fadd_zero_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_neg_zero"
+4: "fcmp_fadd_neg_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_switched"
+4: "fcmp_fadd_zero_switched" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_zero_vec"
+4: "fcmp_fadd_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fast_fadd_fast_zero"
+4: "fcmp_fast_fadd_fast_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fast_fadd_zero"
+4: "fcmp_fast_fadd_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_fadd_fast_zero"
+4: "fcmp_fadd_fast_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_sel_x_negx"
+4: "fcmp_ueq_sel_x_negx" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_sel_x_negx"
+4: "fcmp_une_sel_x_negx" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_sel_x_negx"
+4: "fcmp_oeq_sel_x_negx" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_sel_x_negx"
+4: "fcmp_one_sel_x_negx" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_sel_x_negx_nzero"
+4: "fcmp_ueq_sel_x_negx_nzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_sel_x_negx_nzero"
+4: "fcmp_une_sel_x_negx_nzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_sel_x_negx_nzero"
+4: "fcmp_oeq_sel_x_negx_nzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_sel_x_negx_nzero"
+4: "fcmp_one_sel_x_negx_nzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_sel_x_negx_vec"
+4: "fcmp_ueq_sel_x_negx_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_sel_x_negx_vec"
+4: "fcmp_une_sel_x_negx_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_sel_x_negx_vec"
+4: "fcmp_oeq_sel_x_negx_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_sel_x_negx_vec"
+4: "fcmp_one_sel_x_negx_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_sel_x_negx_with_any_fpzero_ninf_vec"
+4: "fcmp_oeq_sel_x_negx_with_any_fpzero_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_sel_x_negx_with_any_fpzero_ninf_vec"
+4: "fcmp_one_sel_x_negx_with_any_fpzero_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_sel_x_negx_with_any_fpzero_ninf_vec"
+4: "fcmp_ueq_sel_x_negx_with_any_fpzero_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_sel_x_negx_with_any_fpzero_ninf_vec"
+4: "fcmp_une_sel_x_negx_with_any_fpzero_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_sel_x_negx_with_any_fpzero_nnan_vec"
+4: "fcmp_oeq_sel_x_negx_with_any_fpzero_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_sel_x_negx_with_any_fpzero_nnan_vec"
+4: "fcmp_one_sel_x_negx_with_any_fpzero_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_sel_x_negx_with_any_fpzero_nnan_vec"
+4: "fcmp_ueq_sel_x_negx_with_any_fpzero_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_sel_x_negx_with_any_fpzero_nnan_vec"
+4: "fcmp_une_sel_x_negx_with_any_fpzero_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_fsub_nnan_const_extra_use"
+4: "fcmp_ueq_fsub_nnan_const_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ueq_fsub_nnan_const_extra_use" has unsupported operation: llvm.call
+
+4: "fcmp_ueq_fsub_nnan_const_extra_use" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_fsub_ninf_const_extra_use"
+4: "fcmp_oeq_fsub_ninf_const_extra_use" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_oeq_fsub_ninf_const_extra_use" has unsupported operation: llvm.call
+
+4: "fcmp_oeq_fsub_ninf_const_extra_use" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_fsub_const"
+4: "fcmp_oeq_fsub_const" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_oeq_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oge_fsub_const"
+4: "fcmp_oge_fsub_const" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_oge_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ole_fsub_const"
+4: "fcmp_ole_fsub_const" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ole_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_fsub_const"
+4: "fcmp_ueq_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_uge_fsub_const"
+4: "fcmp_uge_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ule_fsub_const"
+4: "fcmp_ule_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ugt_fsub_const"
+4: "fcmp_ugt_fsub_const" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ugt_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ult_fsub_const"
+4: "fcmp_ult_fsub_const" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ult_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_fsub_const"
+4: "fcmp_une_fsub_const" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_une_fsub_const" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_uge_fsub_const_ninf_vec"
+4: "fcmp_uge_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ule_fsub_const_ninf_vec"
+4: "fcmp_ule_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_fsub_const_ninf_vec"
+4: "fcmp_ueq_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oge_fsub_const_ninf_vec"
+4: "fcmp_oge_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ole_fsub_const_ninf_vec"
+4: "fcmp_ole_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_fsub_const_ninf_vec"
+4: "fcmp_oeq_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ogt_fsub_const_ninf_vec"
+4: "fcmp_ogt_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_olt_fsub_const_ninf_vec"
+4: "fcmp_olt_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_fsub_const_ninf_vec"
+4: "fcmp_one_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ugt_fsub_const_ninf_vec"
+4: "fcmp_ugt_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ult_fsub_const_ninf_vec"
+4: "fcmp_ult_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_fsub_const_ninf_vec"
+4: "fcmp_une_fsub_const_ninf_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_uge_fsub_const_nnan_vec"
+4: "fcmp_uge_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ule_fsub_const_nnan_vec"
+4: "fcmp_ule_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ueq_fsub_const_nnan_vec"
+4: "fcmp_ueq_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oge_fsub_const_nnan_vec"
+4: "fcmp_oge_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ole_fsub_const_nnan_vec"
+4: "fcmp_ole_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_oeq_fsub_const_nnan_vec"
+4: "fcmp_oeq_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ogt_fsub_const_nnan_vec"
+4: "fcmp_ogt_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_olt_fsub_const_nnan_vec"
+4: "fcmp_olt_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_one_fsub_const_nnan_vec"
+4: "fcmp_one_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ugt_fsub_const_nnan_vec"
+4: "fcmp_ugt_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ult_fsub_const_nnan_vec"
+4: "fcmp_ult_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_une_fsub_const_nnan_vec"
+4: "fcmp_une_fsub_const_nnan_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ugt_fsub_const_vec_denormal_positive-zero"
+4: "fcmp_ugt_fsub_const_vec_denormal_positive-zero" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ugt_fsub_const_vec_denormal_positive-zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ogt_fsub_const_vec_denormal_dynamic"
+4: "fcmp_ogt_fsub_const_vec_denormal_dynamic" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ogt_fsub_const_vec_denormal_dynamic" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_ogt_fsub_const_vec_denormal_preserve-sign"
+4: "fcmp_ogt_fsub_const_vec_denormal_preserve-sign" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "fcmp_ogt_fsub_const_vec_denormal_preserve-sign" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_olt"
+4: "fcmp_sqrt_zero_olt" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sqrt
+
+4: "fcmp_sqrt_zero_olt" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult"
+4: "fcmp_sqrt_zero_ult" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_fmf"
+4: "fcmp_sqrt_zero_ult_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_fmf_sqrt_ninf"
+4: "fcmp_sqrt_zero_ult_fmf_sqrt_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_nzero"
+4: "fcmp_sqrt_zero_ult_nzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_vec"
+4: "fcmp_sqrt_zero_ult_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_vec_mixed_zero"
+4: "fcmp_sqrt_zero_ult_vec_mixed_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ole"
+4: "fcmp_sqrt_zero_ole" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ule"
+4: "fcmp_sqrt_zero_ule" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ogt"
+4: "fcmp_sqrt_zero_ogt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ugt"
+4: "fcmp_sqrt_zero_ugt" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_oge"
+4: "fcmp_sqrt_zero_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_uge"
+4: "fcmp_sqrt_zero_uge" has unsupported operation after optimization: builtin.unregistered: llvm.intr.sqrt
+
+4: "fcmp_sqrt_zero_uge" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_oeq"
+4: "fcmp_sqrt_zero_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ueq"
+4: "fcmp_sqrt_zero_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_one"
+4: "fcmp_sqrt_zero_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_une"
+4: "fcmp_sqrt_zero_une" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ord"
+4: "fcmp_sqrt_zero_ord" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_uno"
+4: "fcmp_sqrt_zero_uno" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_uno_fmf"
+4: "fcmp_sqrt_zero_uno_fmf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_uno_fmf_sqrt_ninf"
+4: "fcmp_sqrt_zero_uno_fmf_sqrt_ninf" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_var"
+4: "fcmp_sqrt_zero_ult_var" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "fcmp_sqrt_zero_ult_var" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "fcmp_sqrt_zero_ult_nonzero"
+4: "fcmp_sqrt_zero_ult_nonzero" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "fcmp_sqrt_zero_ult_nonzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+

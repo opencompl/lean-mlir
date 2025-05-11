@@ -1,19 +1,15 @@
 name = "SSA"
+# precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
 defaultTargets = ["SSA"]
 
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
-rev = "nightly-testing-2024-09-30"
+rev = "nightly-testing-2025-05-10"
 
 [[require]]
 name = "Cli"
 git = "https://github.com/mhuisi/lean4-cli.git"
-rev = "nightly"
-
-[[require]]
-name = "doc-gen4"
-git = "https://github.com/leanprover/doc-gen4"
 rev = "main"
 
 [[require]]
@@ -41,6 +37,14 @@ name = "mlirnatural"
 root = "SSA.MLIRNatural"
 
 [[lean_exe]]
+name = "bv-circuit-profile"
+root = "SSA.Experimental.Bits.Fast.Profile"
+
+[[lean_exe]]
+name = "bv-automata-profile"
+root = "SSA.Experimental.Bits.AutoStructs.Profile"
+
+[[lean_exe]]
 name = "opt"
 root = "SSA.Projects.InstCombine.LLVM.Opt"
 supportInterpreter = true
@@ -48,3 +52,7 @@ supportInterpreter = true
 [[lean_exe]]
 name = "ssaLLVMEnumerator"
 root = "SSA.Projects.InstCombine.LLVM.Enumerator"
+
+[[lean_lib]]
+name = "Tests"
+root = "SSA.Tests.Tests"

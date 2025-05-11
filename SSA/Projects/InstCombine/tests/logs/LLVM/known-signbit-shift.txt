@@ -1,0 +1,27 @@
+1: "test_shift_nonnegative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "test_shift_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.and
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "test_no_sign_bit_conflict1"
+4: "test_no_sign_bit_conflict1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+1: "test_no_sign_bit_conflict2"
+4: "test_no_sign_bit_conflict2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+

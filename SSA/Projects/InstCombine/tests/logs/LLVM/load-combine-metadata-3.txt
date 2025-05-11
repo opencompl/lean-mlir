@@ -1,0 +1,9 @@
+1: "test_load_load_combine_metadata"
+9: "test_load_load_combine_metadata" has pointer type input
+
+4: "test_load_load_combine_metadata" has unsupported operation: llvm.load
+
+4: "test_load_load_combine_metadata" has unsupported operation: llvm.store
+
+4: "test_load_load_combine_metadata" has unsupported operation: llvm.return
+

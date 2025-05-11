@@ -1,0 +1,120 @@
+1: "test01"
+9: "test01" has pointer type input
+
+4: "test01" has unsupported operation: llvm.store
+
+4: "test01" has unsupported operation: llvm.store
+
+4: "test01" has unsupported operation: llvm.return
+
+1: "test02_keep"
+9: "test02_keep" has pointer type input
+
+4: "test02_keep" has unsupported operation: builtin.unregistered: llvm.intr.experimental.noalias.scope.decl
+
+4: "test02_keep" has unsupported operation: llvm.store
+
+4: "test02_keep" has unsupported operation: llvm.store
+
+4: "test02_keep" has unsupported operation: llvm.return
+
+1: "test03"
+9: "test03" has pointer type input
+
+4: "test03" has unsupported operation: llvm.store
+
+4: "test03" has unsupported operation: llvm.store
+
+4: "test03" has unsupported operation: llvm.return
+
+1: "test04_keep"
+9: "test04_keep" has pointer type input
+
+4: "test04_keep" has unsupported operation: builtin.unregistered: llvm.intr.experimental.noalias.scope.decl
+
+4: "test04_keep" has unsupported operation: llvm.store
+
+4: "test04_keep" has unsupported operation: llvm.store
+
+4: "test04_keep" has unsupported operation: llvm.return
+
+1: "test05_keep"
+9: "test05_keep" has pointer type input
+
+4: "test05_keep" has unsupported operation: builtin.unregistered: llvm.intr.experimental.noalias.scope.decl
+
+4: "test05_keep" has unsupported operation: llvm.store
+
+4: "test05_keep" has unsupported operation: llvm.store
+
+4: "test05_keep" has unsupported operation: llvm.return
+
+1: "test06"
+9: "test06" has pointer type input
+
+4: "test06" has unsupported operation: llvm.store
+
+4: "test06" has unsupported operation: llvm.store
+
+4: "test06" has unsupported operation: llvm.return
+
+1: "test07"
+9: "test07" has pointer type input
+
+4: "test07" has unsupported operation: llvm.store
+
+4: "test07" has unsupported operation: llvm.store
+
+4: "test07" has unsupported operation: llvm.return
+
+1: "test08"
+9: "test08" has pointer type input
+
+4: "test08" has unsupported operation: llvm.store
+
+4: "test08" has unsupported operation: llvm.store
+
+4: "test08" has unsupported operation: llvm.return
+
+1: "test11"
+9: "test11" has pointer type input
+
+4: "test11" has unsupported operation: llvm.store
+
+4: "test11" has unsupported operation: llvm.return
+
+1: "test12"
+9: "test12" has pointer type input
+
+4: "test12" has unsupported operation: llvm.store
+
+4: "test12" has unsupported operation: llvm.return
+
+1: "test13"
+9: "test13" has pointer type input
+
+4: "test13" has unsupported operation: llvm.store
+
+4: "test13" has unsupported operation: llvm.return
+
+1: "test14"
+9: "test14" has pointer type input
+
+4: "test14" has unsupported operation: llvm.store
+
+4: "test14" has unsupported operation: llvm.return
+
+1: "test15"
+9: "test15" has pointer type input
+
+4: "test15" has unsupported operation: llvm.store
+
+4: "test15" has unsupported operation: llvm.return
+
+1: "test16"
+9: "test16" has pointer type input
+
+4: "test16" has unsupported operation: llvm.store
+
+4: "test16" has unsupported operation: llvm.return
+

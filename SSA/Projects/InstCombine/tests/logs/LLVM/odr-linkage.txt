@@ -1,0 +1,17 @@
+1: "test"
+4: "test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "test" has unsupported operation after optimization: llvm.load
+
+4: "test" has unsupported operation after optimization: llvm.load
+
+4: "test" has unsupported operation after optimization: llvm.load
+
+4: "test" has unsupported operation after optimization: llvm.load
+

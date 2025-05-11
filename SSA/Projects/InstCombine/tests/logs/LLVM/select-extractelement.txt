@@ -1,0 +1,89 @@
+1: "v4float_user"
+5: "v4float_user" is empty
+
+1: "extract_one_select"
+4: "extract_one_select" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_two_select"
+4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "extract_two_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "extract_one_select_user"
+4: "extract_one_select_user" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_one_select_user" has unsupported operation: llvm.call
+
+1: "extract_one_vselect_user"
+4: "extract_one_vselect_user" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_one_vselect_user" has unsupported operation: llvm.call
+
+1: "extract_one_vselect"
+4: "extract_one_vselect" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_two_vselect"
+4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "extract_two_vselect" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "simple_vector_select"
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "simple_vector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "extract_cond"
+4: "extract_cond" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "extract_cond" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "splat_cond"
+4: "splat_cond" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "splat_cond" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "extra_use"
+5: "extra_use" is empty
+
+1: "extract_cond_extra_use"
+4: "extract_cond_extra_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "extract_cond_extra_use" has unsupported operation: llvm.call
+
+1: "extract_cond_variable_index"
+4: "extract_cond_variable_index" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+1: "extract_cond_type_mismatch"
+4: "extract_cond_type_mismatch" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "extract_cond_type_mismatch" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "inf_loop_partial_undef"
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "inf_loop_partial_undef" has unsupported operation: llvm.mlir.undef
+
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "inf_loop_partial_undef" has unsupported operation: llvm.mlir.undef
+
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "inf_loop_partial_undef" has unsupported operation: builtin.unregistered: llvm.extractelement
+

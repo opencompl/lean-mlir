@@ -1,0 +1,492 @@
+1: "ashr_lshr_exact_ashr_only"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_no_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_exact_both"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_exact_lshr_only"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr2_i128"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_splat_vec"
+8: "ashr_lshr_splat_vec" contains vectors which are unsupported
+
+1: "ashr_lshr_splat_vec2"
+8: "ashr_lshr_splat_vec2" contains vectors which are unsupported
+
+1: "ashr_lshr_splat_vec3"
+8: "ashr_lshr_splat_vec3" contains vectors which are unsupported
+
+1: "ashr_lshr_splat_vec4"
+8: "ashr_lshr_splat_vec4" contains vectors which are unsupported
+
+1: "ashr_lshr_nonsplat_vec"
+8: "ashr_lshr_nonsplat_vec" contains vectors which are unsupported
+
+1: "ashr_lshr_nonsplat_vec2"
+8: "ashr_lshr_nonsplat_vec2" contains vectors which are unsupported
+
+1: "ashr_lshr_nonsplat_vec3"
+8: "ashr_lshr_nonsplat_vec3" contains vectors which are unsupported
+
+1: "ashr_lshr_nonsplat_vec4"
+8: "ashr_lshr_nonsplat_vec4" contains vectors which are unsupported
+
+1: "ashr_lshr_cst"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_cst2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_inv"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_inv2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_inv_splat_vec"
+8: "ashr_lshr_inv_splat_vec" contains vectors which are unsupported
+
+1: "ashr_lshr_inv_nonsplat_vec"
+8: "ashr_lshr_inv_nonsplat_vec" contains vectors which are unsupported
+
+1: "ashr_lshr_vec_poison"
+8: "ashr_lshr_vec_poison" contains vectors which are unsupported
+
+1: "ashr_lshr_vec_poison2"
+8: "ashr_lshr_vec_poison2" contains vectors which are unsupported
+
+1: "ashr_lshr_wrong_cst"
+7: "ashr_lshr_wrong_cst" is unchanged by InstCombine
+
+1: "ashr_lshr_wrong_cst2"
+7: "ashr_lshr_wrong_cst2" is unchanged by InstCombine
+
+1: "ashr_lshr_wrong_cond"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_shift_wrong_pred"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_shift_wrong_pred2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_wrong_operands"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_no_ashr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_shift_amt_mismatch"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_shift_base_mismatch"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_no_lshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.add
+2: llvm.ashr
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "ashr_lshr_vec_wrong_pred"
+8: "ashr_lshr_vec_wrong_pred" contains vectors which are unsupported
+
+1: "ashr_lshr_inv_vec_wrong_pred"
+8: "ashr_lshr_inv_vec_wrong_pred" contains vectors which are unsupported
+
+1: "lshr_sub_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_sub_wrong_amount"
+7: "lshr_sub_wrong_amount" is unchanged by InstCombine
+
+1: "lshr_sub"
+7: "lshr_sub" is unchanged by InstCombine
+
+1: "lshr_sub_nsw_extra_use"
+9: "lshr_sub_nsw_extra_use" has pointer type input
+
+4: "lshr_sub_nsw_extra_use" has unsupported operation: llvm.store
+
+1: "lshr_sub_nsw_splat"
+8: "lshr_sub_nsw_splat" contains vectors which are unsupported
+
+1: "lshr_sub_nsw_splat_poison"
+4: "lshr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "lshr_sub_nsw_splat_poison" has unsupported operation: llvm.mlir.undef
+
+4: "lshr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "lshr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ashr_sub_nsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_sub_wrong_amount"
+7: "ashr_sub_wrong_amount" is unchanged by InstCombine
+
+1: "ashr_sub"
+7: "ashr_sub" is unchanged by InstCombine
+
+1: "ashr_sub_nsw_extra_use"
+9: "ashr_sub_nsw_extra_use" has pointer type input
+
+4: "ashr_sub_nsw_extra_use" has unsupported operation: llvm.store
+
+1: "ashr_sub_nsw_splat"
+8: "ashr_sub_nsw_splat" contains vectors which are unsupported
+
+1: "ashr_sub_nsw_splat_poison"
+4: "ashr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ashr_sub_nsw_splat_poison" has unsupported operation: llvm.mlir.undef
+
+4: "ashr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ashr_sub_nsw_splat_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ashr_known_pos_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_known_pos_exact_vec"
+8: "ashr_known_pos_exact_vec" contains vectors which are unsupported
+
+1: "lshr_mul_times_3_div_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_times_3_div_2_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_times_3_div_2_no_flags"
+7: "lshr_mul_times_3_div_2_no_flags" is unchanged by InstCombine
+
+1: "mul_times_3_div_2_multiuse_lshr"
+4: "mul_times_3_div_2_multiuse_lshr" has unsupported operation: llvm.call
+
+1: "lshr_mul_times_3_div_2_exact_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_times_5_div_4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_times_5_div_4_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "lshr_mul_times_5_div_4_no_flags"
+7: "lshr_mul_times_5_div_4_no_flags" is unchanged by InstCombine
+
+1: "mul_times_5_div_4_multiuse_lshr"
+4: "mul_times_5_div_4_multiuse_lshr" has unsupported operation: llvm.call
+
+1: "lshr_mul_times_5_div_4_exact_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.return
+
+1: "ashr_mul_times_3_div_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_mul_times_3_div_2_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_mul_times_3_div_2_no_flags"
+7: "ashr_mul_times_3_div_2_no_flags" is unchanged by InstCombine
+
+1: "ashr_mul_times_3_div_2_no_nsw"
+7: "ashr_mul_times_3_div_2_no_nsw" is unchanged by InstCombine
+
+1: "mul_times_3_div_2_multiuse_ashr"
+4: "mul_times_3_div_2_multiuse_ashr" has unsupported operation: llvm.call
+
+1: "ashr_mul_times_3_div_2_exact_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_mul_times_5_div_4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_mul_times_5_div_4_exact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.return
+
+1: "ashr_mul_times_5_div_4_no_flags"
+7: "ashr_mul_times_5_div_4_no_flags" is unchanged by InstCombine
+
+1: "mul_times_5_div_4_multiuse_ashr"
+4: "mul_times_5_div_4_multiuse_ashr" has unsupported operation: llvm.call
+
+1: "ashr_mul_times_5_div_4_exact_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.ashr
+2: llvm.return
+
+1: "lsb_mask_sign_zext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "lsb_mask_sign_zext_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "lsb_mask_sign_zext_wrong_cst1"
+7: "lsb_mask_sign_zext_wrong_cst1" is unchanged by InstCombine
+
+1: "lsb_mask_sign_zext_wrong_cst2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.lshr
+2: llvm.return
+
+1: "lsb_mask_sign_zext_wrong_cst3"
+7: "lsb_mask_sign_zext_wrong_cst3" is unchanged by InstCombine
+
+1: "lsb_mask_sign_zext_multiuse"
+4: "lsb_mask_sign_zext_multiuse" has unsupported operation: llvm.call
+
+1: "lsb_mask_sign_sext"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "lsb_mask_sign_sext_commuted"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "lsb_mask_sign_sext_wrong_cst1"
+7: "lsb_mask_sign_sext_wrong_cst1" is unchanged by InstCombine
+
+1: "lsb_mask_sign_sext_wrong_cst2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.xor
+2: llvm.and
+2: llvm.ashr
+2: llvm.return
+
+1: "lsb_mask_sign_sext_wrong_cst3"
+7: "lsb_mask_sign_sext_wrong_cst3" is unchanged by InstCombine
+
+1: "lsb_mask_sign_sext_multiuse"
+4: "lsb_mask_sign_sext_multiuse" has unsupported operation: llvm.call
+
+1: "use"
+5: "use" is empty
+

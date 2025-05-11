@@ -1,0 +1,12 @@
+1: "test1"
+4: "test1" has unsupported operation: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: llvm.call
+
+1: "__sinpi"
+5: "__sinpi" is empty
+
+1: "__cospi"
+5: "__cospi" is empty
+

@@ -1,0 +1,192 @@
+1: "umin_of_nots"
+4: "umin_of_nots" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "smin_of_nots"
+4: "smin_of_nots" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "compute_min_2"
+4: "compute_min_2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "extra_use"
+5: "extra_use" is empty
+
+1: "umin_not_1_extra_use"
+4: "umin_not_1_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin_not_1_extra_use" has unsupported operation: llvm.call
+
+1: "umin_not_2_extra_use"
+4: "umin_not_2_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umin_not_2_extra_use" has unsupported operation: llvm.call
+
+4: "umin_not_2_extra_use" has unsupported operation: llvm.call
+
+1: "umin3_not"
+4: "umin3_not" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin3_not" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin3_not_more_uses"
+4: "umin3_not_more_uses" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin3_not_more_uses" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "umin3_not_more_uses" has unsupported operation: llvm.call
+
+4: "umin3_not_more_uses" has unsupported operation: llvm.call
+
+1: "use8"
+5: "use8" is empty
+
+1: "umin3_not_all_ops_extra_uses"
+4: "umin3_not_all_ops_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umin3_not_all_ops_extra_uses" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+4: "umin3_not_all_ops_extra_uses" has unsupported operation: llvm.call
+
+4: "umin3_not_all_ops_extra_uses" has unsupported operation: llvm.call
+
+4: "umin3_not_all_ops_extra_uses" has unsupported operation: llvm.call
+
+1: "compute_min_3"
+4: "compute_min_3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+4: "compute_min_3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "compute_min_arithmetic"
+4: "compute_min_arithmetic" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "fake_use"
+5: "fake_use" is empty
+
+1: "compute_min_pessimization"
+4: "compute_min_pessimization" has unsupported operation: llvm.call
+
+4: "compute_min_pessimization" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "max_of_nots"
+4: "max_of_nots" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "max_of_nots" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "abs_of_min_of_not"
+4: "abs_of_min_of_not" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "abs_of_min_of_not" has unsupported operation: builtin.unregistered: llvm.intr.abs
+
+1: "max_of_nots_vec"
+4: "max_of_nots_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "max_of_nots_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "max_of_nots_weird_type_vec"
+4: "max_of_nots_weird_type_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "max_of_nots_weird_type_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "max_of_min"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_of_min_swap"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "min_of_max"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "min_of_max_swap"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "max_of_min_vec"
+8: "max_of_min_vec" contains vectors which are unsupported
+
+1: "use"
+5: "use" is empty
+
+1: "cmyk"
+4: "cmyk" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk" has unsupported operation: llvm.call
+
+4: "cmyk" has unsupported operation: llvm.return
+
+1: "cmyk2"
+4: "cmyk2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk2" has unsupported operation: llvm.call
+
+4: "cmyk2" has unsupported operation: llvm.return
+
+1: "cmyk3"
+4: "cmyk3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk3" has unsupported operation: llvm.call
+
+4: "cmyk3" has unsupported operation: llvm.return
+
+1: "cmyk4"
+4: "cmyk4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk4" has unsupported operation: llvm.call
+
+4: "cmyk4" has unsupported operation: llvm.return
+
+1: "cmyk5"
+4: "cmyk5" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk5" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+4: "cmyk5" has unsupported operation: llvm.call
+
+4: "cmyk5" has unsupported operation: llvm.return
+
+1: "cmyk6"
+4: "cmyk6" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "cmyk6" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+4: "cmyk6" has unsupported operation: llvm.call
+
+4: "cmyk6" has unsupported operation: llvm.return
+

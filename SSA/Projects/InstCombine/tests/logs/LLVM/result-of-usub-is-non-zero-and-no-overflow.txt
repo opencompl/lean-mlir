@@ -1,0 +1,338 @@
+1: "use8"
+5: "use8" is empty
+
+1: "use64"
+5: "use64" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "useagg"
+5: "useagg" is empty
+
+1: "t0_noncanonical_ignoreme"
+4: "t0_noncanonical_ignoreme" has unsupported operation: llvm.call
+
+4: "t0_noncanonical_ignoreme" has unsupported operation: llvm.call
+
+4: "t0_noncanonical_ignoreme" has unsupported operation: llvm.call
+
+1: "t0_noncanonical_ignoreme_logical"
+4: "t0_noncanonical_ignoreme_logical" has unsupported operation: llvm.call
+
+4: "t0_noncanonical_ignoreme_logical" has unsupported operation: llvm.call
+
+4: "t0_noncanonical_ignoreme_logical" has unsupported operation: llvm.call
+
+1: "t1"
+4: "t1" has unsupported operation: llvm.call
+
+4: "t1" has unsupported operation: llvm.call
+
+4: "t1" has unsupported operation: llvm.call
+
+1: "t1_logical"
+4: "t1_logical" has unsupported operation: llvm.call
+
+4: "t1_logical" has unsupported operation: llvm.call
+
+4: "t1_logical" has unsupported operation: llvm.call
+
+1: "t1_strict"
+4: "t1_strict" has unsupported operation: llvm.call
+
+4: "t1_strict" has unsupported operation: llvm.call
+
+4: "t1_strict" has unsupported operation: llvm.call
+
+1: "t1_strict_logical"
+4: "t1_strict_logical" has unsupported operation: llvm.call
+
+4: "t1_strict_logical" has unsupported operation: llvm.call
+
+4: "t1_strict_logical" has unsupported operation: llvm.call
+
+1: "t2"
+4: "t2" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "t2" has unsupported operation: llvm.call
+
+4: "t2" has unsupported operation: llvm.extractvalue
+
+4: "t2" has unsupported operation: llvm.call
+
+4: "t2" has unsupported operation: llvm.extractvalue
+
+4: "t2" has unsupported operation: llvm.call
+
+4: "t2" has unsupported operation: llvm.call
+
+1: "t2_logical"
+4: "t2_logical" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "t2_logical" has unsupported operation: llvm.call
+
+4: "t2_logical" has unsupported operation: llvm.extractvalue
+
+4: "t2_logical" has unsupported operation: llvm.call
+
+4: "t2_logical" has unsupported operation: llvm.extractvalue
+
+4: "t2_logical" has unsupported operation: llvm.call
+
+4: "t2_logical" has unsupported operation: llvm.call
+
+1: "t3_commutability0"
+4: "t3_commutability0" has unsupported operation: llvm.call
+
+4: "t3_commutability0" has unsupported operation: llvm.call
+
+4: "t3_commutability0" has unsupported operation: llvm.call
+
+1: "t3_commutability0_logical"
+4: "t3_commutability0_logical" has unsupported operation: llvm.call
+
+4: "t3_commutability0_logical" has unsupported operation: llvm.call
+
+4: "t3_commutability0_logical" has unsupported operation: llvm.call
+
+1: "t4_commutability1"
+4: "t4_commutability1" has unsupported operation: llvm.call
+
+4: "t4_commutability1" has unsupported operation: llvm.call
+
+4: "t4_commutability1" has unsupported operation: llvm.call
+
+1: "t4_commutability1_logical"
+4: "t4_commutability1_logical" has unsupported operation: llvm.call
+
+4: "t4_commutability1_logical" has unsupported operation: llvm.call
+
+4: "t4_commutability1_logical" has unsupported operation: llvm.call
+
+1: "t5_commutability2"
+4: "t5_commutability2" has unsupported operation: llvm.call
+
+4: "t5_commutability2" has unsupported operation: llvm.call
+
+4: "t5_commutability2" has unsupported operation: llvm.call
+
+1: "t5_commutability2_logical"
+4: "t5_commutability2_logical" has unsupported operation: llvm.call
+
+4: "t5_commutability2_logical" has unsupported operation: llvm.call
+
+4: "t5_commutability2_logical" has unsupported operation: llvm.call
+
+1: "t6_commutability"
+4: "t6_commutability" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "t6_commutability" has unsupported operation: llvm.call
+
+4: "t6_commutability" has unsupported operation: llvm.extractvalue
+
+4: "t6_commutability" has unsupported operation: llvm.call
+
+4: "t6_commutability" has unsupported operation: llvm.extractvalue
+
+4: "t6_commutability" has unsupported operation: llvm.call
+
+4: "t6_commutability" has unsupported operation: llvm.call
+
+1: "t6_commutability_logical"
+4: "t6_commutability_logical" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "t6_commutability_logical" has unsupported operation: llvm.call
+
+4: "t6_commutability_logical" has unsupported operation: llvm.extractvalue
+
+4: "t6_commutability_logical" has unsupported operation: llvm.call
+
+4: "t6_commutability_logical" has unsupported operation: llvm.extractvalue
+
+4: "t6_commutability_logical" has unsupported operation: llvm.call
+
+4: "t6_commutability_logical" has unsupported operation: llvm.call
+
+1: "t7"
+4: "t7" has unsupported operation: llvm.call
+
+4: "t7" has unsupported operation: llvm.call
+
+4: "t7" has unsupported operation: llvm.call
+
+1: "t7_logical"
+4: "t7_logical" has unsupported operation: llvm.call
+
+4: "t7_logical" has unsupported operation: llvm.call
+
+4: "t7_logical" has unsupported operation: llvm.call
+
+1: "t7_nonstrict"
+4: "t7_nonstrict" has unsupported operation: llvm.call
+
+4: "t7_nonstrict" has unsupported operation: llvm.call
+
+4: "t7_nonstrict" has unsupported operation: llvm.call
+
+1: "t7_nonstrict_logical"
+4: "t7_nonstrict_logical" has unsupported operation: llvm.call
+
+4: "t7_nonstrict_logical" has unsupported operation: llvm.call
+
+4: "t7_nonstrict_logical" has unsupported operation: llvm.call
+
+1: "t8"
+4: "t8" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "t8" has unsupported operation: llvm.call
+
+4: "t8" has unsupported operation: llvm.extractvalue
+
+4: "t8" has unsupported operation: llvm.call
+
+4: "t8" has unsupported operation: llvm.extractvalue
+
+4: "t8" has unsupported operation: llvm.call
+
+1: "t8_logical"
+4: "t8_logical" has unsupported operation: builtin.unregistered: llvm.intr.usub.with.overflow
+
+4: "t8_logical" has unsupported operation: llvm.call
+
+4: "t8_logical" has unsupported operation: llvm.extractvalue
+
+4: "t8_logical" has unsupported operation: llvm.call
+
+4: "t8_logical" has unsupported operation: llvm.extractvalue
+
+4: "t8_logical" has unsupported operation: llvm.call
+
+1: "t9_commutative"
+4: "t9_commutative" has unsupported operation: llvm.call
+
+4: "t9_commutative" has unsupported operation: llvm.call
+
+4: "t9_commutative" has unsupported operation: llvm.call
+
+1: "t9_commutative_logical"
+4: "t9_commutative_logical" has unsupported operation: llvm.call
+
+4: "t9_commutative_logical" has unsupported operation: llvm.call
+
+4: "t9_commutative_logical" has unsupported operation: llvm.call
+
+1: "t10"
+9: "t10" has pointer type input
+
+4: "t10" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t10" has unsupported operation: llvm.call
+
+4: "t10" has unsupported operation: llvm.call
+
+4: "t10" has unsupported operation: llvm.call
+
+1: "t10_logical"
+9: "t10_logical" has pointer type input
+
+4: "t10_logical" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t10_logical" has unsupported operation: llvm.call
+
+4: "t10_logical" has unsupported operation: llvm.call
+
+4: "t10_logical" has unsupported operation: llvm.call
+
+1: "t11_commutative"
+9: "t11_commutative" has pointer type input
+
+4: "t11_commutative" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t11_commutative" has unsupported operation: llvm.call
+
+4: "t11_commutative" has unsupported operation: llvm.call
+
+4: "t11_commutative" has unsupported operation: llvm.call
+
+1: "t11_commutative_logical"
+9: "t11_commutative_logical" has pointer type input
+
+4: "t11_commutative_logical" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t11_commutative_logical" has unsupported operation: llvm.call
+
+4: "t11_commutative_logical" has unsupported operation: llvm.call
+
+4: "t11_commutative_logical" has unsupported operation: llvm.call
+
+1: "t12"
+9: "t12" has pointer type input
+
+4: "t12" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t12" has unsupported operation: llvm.call
+
+4: "t12" has unsupported operation: llvm.call
+
+4: "t12" has unsupported operation: llvm.call
+
+1: "t12_logical"
+9: "t12_logical" has pointer type input
+
+4: "t12_logical" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t12_logical" has unsupported operation: llvm.call
+
+4: "t12_logical" has unsupported operation: llvm.call
+
+4: "t12_logical" has unsupported operation: llvm.call
+
+1: "t13"
+9: "t13" has pointer type input
+
+4: "t13" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t13" has unsupported operation: llvm.call
+
+4: "t13" has unsupported operation: llvm.call
+
+4: "t13" has unsupported operation: llvm.call
+
+1: "t13_logical"
+9: "t13_logical" has pointer type input
+
+4: "t13_logical" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "t13_logical" has unsupported operation: llvm.call
+
+4: "t13_logical" has unsupported operation: llvm.call
+
+4: "t13_logical" has unsupported operation: llvm.call
+
+1: "t14_bad"
+4: "t14_bad" has unsupported operation: llvm.call
+
+4: "t14_bad" has unsupported operation: llvm.call
+
+4: "t14_bad" has unsupported operation: llvm.call
+
+1: "t14_bad_logical"
+4: "t14_bad_logical" has unsupported operation: llvm.call
+
+4: "t14_bad_logical" has unsupported operation: llvm.call
+
+4: "t14_bad_logical" has unsupported operation: llvm.call
+
+1: "base_ult_offset"
+4: "base_ult_offset" has unsupported operation: llvm.call
+
+1: "base_ult_offset_logical"
+4: "base_ult_offset_logical" has unsupported operation: llvm.call
+
+1: "base_uge_offset"
+4: "base_uge_offset" has unsupported operation: llvm.call
+
+1: "base_uge_offset_logical"
+4: "base_uge_offset_logical" has unsupported operation: llvm.call
+

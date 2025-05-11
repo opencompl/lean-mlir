@@ -1,0 +1,136 @@
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags_nuw_only"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags_sub_nsw_sub"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags_nuw_first"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags_nuw_second"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags_nuw_nsw_first"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t1_flags_nuw_nsw_second"
+2: llvm.func
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "n2"
+4: "n2" has unsupported operation: llvm.call
+
+1: "t3_c0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t4_c1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t5_c2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t6_c0_extrause"
+4: "t6_c0_extrause" has unsupported operation: llvm.call
+
+1: "t7_c1_extrause"
+4: "t7_c1_extrause" has unsupported operation: llvm.call
+
+1: "t8_c2_extrause"
+4: "t8_c2_extrause" has unsupported operation: llvm.call
+
+1: "t9_c0_c2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t10_c1_c2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "t11_c0_c2_extrause"
+4: "t11_c0_c2_extrause" has unsupported operation: llvm.call
+
+1: "t12_c1_c2_exrause"
+4: "t12_c1_c2_exrause" has unsupported operation: llvm.call
+
+1: "constantexpr0"
+9: "constantexpr0" has pointer type input
+
+4: "constantexpr0" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr0" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "constantexpr1"
+9: "constantexpr1" has pointer type input
+
+4: "constantexpr1" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr1" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "constantexpr2"
+9: "constantexpr2" has pointer type input
+
+4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "constantexpr2" has unsupported operation: llvm.mlir.addressof
+
+4: "constantexpr2" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+1: "pr49870"
+4: "pr49870" has unsupported operation: llvm.mlir.addressof
+
+4: "pr49870" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+

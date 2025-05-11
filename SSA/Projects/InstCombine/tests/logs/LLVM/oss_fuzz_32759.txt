@@ -1,0 +1,5 @@
+1: "oss_fuzz_32759"
+4: "oss_fuzz_32759" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "oss_fuzz_32759" has unsupported operation: builtin.unregistered: llvm.br
+

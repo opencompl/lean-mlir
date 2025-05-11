@@ -1,0 +1,115 @@
+1: "select_icmp_insertelement_eq"
+4: "select_icmp_insertelement_eq" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "select_icmp_insertelement_ne"
+4: "select_icmp_insertelement_ne" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "select_icmp_shufflevector_identity"
+8: "select_icmp_shufflevector_identity" contains vectors which are unsupported
+
+1: "select_icmp_shufflevector_select"
+4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "select_icmp_shufflevector_select" has unsupported operation: llvm.mlir.undef
+
+4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_icmp_shufflevector_select" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "select_icmp_shufflevector_lanecrossing"
+4: "select_icmp_shufflevector_lanecrossing" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "select_icmp_shufflevector_lanecrossing" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "fn"
+5: "fn" is empty
+
+1: "select_icmp_call_possibly_lanecrossing"
+4: "select_icmp_call_possibly_lanecrossing" has unsupported operation: llvm.call
+
+1: "select_fcmp_fadd_oeq_not_zero"
+4: "select_fcmp_fadd_oeq_not_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_oeq_not_zero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_une_not_zero"
+4: "select_fcmp_fadd_une_not_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_une_not_zero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_ueq_nnan_not_zero"
+4: "select_fcmp_fadd_ueq_nnan_not_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_ueq_nnan_not_zero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_one_nnan_not_zero"
+4: "select_fcmp_fadd_one_nnan_not_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_one_nnan_not_zero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_ueq"
+4: "select_fcmp_fadd_ueq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_ueq" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_one"
+4: "select_fcmp_fadd_one" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_one" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_oeq_zero"
+4: "select_fcmp_fadd_oeq_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_oeq_zero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_une_zero"
+4: "select_fcmp_fadd_une_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_une_zero" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_oeq_not_zero_vec"
+4: "select_fcmp_fadd_oeq_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_oeq_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_une_not_zero_vec"
+4: "select_fcmp_fadd_une_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_une_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_ueq_nnan_not_zero_vec"
+4: "select_fcmp_fadd_ueq_nnan_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_ueq_nnan_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_one_nnan_not_zero_vec"
+4: "select_fcmp_fadd_one_nnan_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_one_nnan_not_zero_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_ueq_vec"
+4: "select_fcmp_fadd_ueq_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_ueq_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_one_vec"
+4: "select_fcmp_fadd_one_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_one_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_oeq_zero_vec"
+4: "select_fcmp_fadd_oeq_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_oeq_zero_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "select_fcmp_fadd_une_zero_vec"
+4: "select_fcmp_fadd_une_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "select_fcmp_fadd_une_zero_vec" has unsupported operation: builtin.unregistered: llvm.fadd
+

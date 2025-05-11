@@ -2,7 +2,7 @@ name: docs
 on:
   push:
     branches:
-      - "main"
+      - "main-disabled"
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -13,6 +13,8 @@ permissions:
 jobs:
   build:
     name: build and deploy documentation.
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️

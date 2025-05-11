@@ -1,0 +1,29 @@
+1: "readnone_but_may_throw"
+5: "readnone_but_may_throw" is empty
+
+1: "f_0"
+9: "f_0" has pointer type input
+
+4: "f_0" has unsupported operation: llvm.store
+
+4: "f_0" has unsupported operation: llvm.call
+
+4: "f_0" has unsupported operation: llvm.store
+
+4: "f_0" has unsupported operation: llvm.return
+
+1: "f_1"
+9: "f_1" has pointer type input
+
+4: "f_1" has unsupported operation: llvm.store
+
+4: "f_1" has unsupported operation: llvm.call
+
+4: "f_1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "f_1" has unsupported operation: llvm.store
+
+4: "f_1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "f_1" has unsupported operation: llvm.return
+

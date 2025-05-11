@@ -1,0 +1,32 @@
+1: "use.i8"
+5: "use.i8" is empty
+
+1: "use.v2i8"
+5: "use.v2i8" is empty
+
+1: "src_add_eq_p2"
+4: "src_add_eq_p2" has unsupported operation: llvm.call
+
+1: "src_add_eq_p2_fail_multiuse"
+4: "src_add_eq_p2_fail_multiuse" has unsupported operation: llvm.call
+
+4: "src_add_eq_p2_fail_multiuse" has unsupported operation: llvm.call
+
+1: "src_xor_ne_zero"
+4: "src_xor_ne_zero" has unsupported operation: llvm.call
+
+1: "src_xor_ne_zero_fail_different_p2"
+4: "src_xor_ne_zero_fail_different_p2" has unsupported operation: llvm.call
+
+1: "src_sub_ne_p2"
+4: "src_sub_ne_p2" has unsupported operation: llvm.call
+
+1: "src_sub_eq_zero"
+4: "src_sub_eq_zero" has unsupported operation: llvm.call
+
+1: "src_sub_eq_zero_fail_commuted"
+4: "src_sub_eq_zero_fail_commuted" has unsupported operation: llvm.call
+
+1: "src_sub_eq_zero_fail_non_p2"
+4: "src_sub_eq_zero_fail_non_p2" has unsupported operation: llvm.call
+

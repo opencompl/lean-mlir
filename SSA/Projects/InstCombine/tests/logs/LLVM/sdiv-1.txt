@@ -1,0 +1,15 @@
+1: "a"
+7: "a" is unchanged by InstCombine
+
+1: "b"
+4: "b" has unsupported operation: llvm.call
+
+1: "c"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sdiv
+2: llvm.return
+

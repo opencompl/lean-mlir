@@ -1,0 +1,154 @@
+1: "test_v4i32_xor_repeated_and_0"
+8: "test_v4i32_xor_repeated_and_0" contains vectors which are unsupported
+
+1: "test_v4i32_xor_repeated_and_1"
+8: "test_v4i32_xor_repeated_and_1" contains vectors which are unsupported
+
+1: "test_v4i32_xor_bswap_splatconst"
+4: "test_v4i32_xor_bswap_splatconst" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test_v4i32_xor_bswap_const"
+4: "test_v4i32_xor_bswap_const" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test_v4i32_xor_bswap_const_poison"
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_bswap_const_poison" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test_v4i32_demorgan_and"
+8: "test_v4i32_demorgan_and" contains vectors which are unsupported
+
+1: "test_v4i32_demorgan_or"
+8: "test_v4i32_demorgan_or" contains vectors which are unsupported
+
+1: "test_v4i32_not_ashr_not"
+8: "test_v4i32_not_ashr_not" contains vectors which are unsupported
+
+1: "test_v4i32_not_ashr_not_poison"
+8: "test_v4i32_not_ashr_not_poison" contains vectors which are unsupported
+
+1: "test_v4i32_not_ashr_negative_splatconst"
+8: "test_v4i32_not_ashr_negative_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_not_ashr_negative_const"
+8: "test_v4i32_not_ashr_negative_const" contains vectors which are unsupported
+
+1: "test_v4i32_not_ashr_negative_const_poison"
+4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_ashr_negative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test_v4i32_not_lshr_nonnegative_splatconst"
+8: "test_v4i32_not_lshr_nonnegative_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_not_lshr_nonnegative_const"
+8: "test_v4i32_not_lshr_nonnegative_const" contains vectors which are unsupported
+
+1: "test_v4i32_not_lshr_nonnegative_const_poison"
+4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_lshr_nonnegative_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test_v4i32_not_sub_splatconst"
+8: "test_v4i32_not_sub_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_not_sub_const"
+8: "test_v4i32_not_sub_const" contains vectors which are unsupported
+
+1: "test_v4i32_not_sub_const_poison"
+4: "test_v4i32_not_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_v4i32_not_sub_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_not_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_not_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test_v4i32_xor_signmask_sub_splatconst"
+8: "test_v4i32_xor_signmask_sub_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_xor_signmask_sub_const"
+8: "test_v4i32_xor_signmask_sub_const" contains vectors which are unsupported
+
+1: "test_v4i32_xor_signmask_sub_const_poison"
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_sub_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test_v4i32_xor_signmask_add_splatconst"
+8: "test_v4i32_xor_signmask_add_splatconst" contains vectors which are unsupported
+
+1: "test_v4i32_xor_signmask_add_const"
+8: "test_v4i32_xor_signmask_add_const" contains vectors which are unsupported
+
+1: "test_v4i32_xor_signmask_add_const_poison"
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test_v4i32_xor_signmask_add_const_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+

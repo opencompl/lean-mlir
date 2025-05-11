@@ -1,0 +1,38 @@
+1: "gen8"
+5: "gen8" is empty
+
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+4: "t0" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t0" has unsupported operation: llvm.call
+
+1: "t1"
+4: "t1" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t1" has unsupported operation: llvm.call
+
+1: "t2"
+4: "t2" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t2" has unsupported operation: llvm.call
+
+4: "t2" has unsupported operation: llvm.call
+
+1: "t3"
+4: "t3" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "t3" has unsupported operation: llvm.call
+
+4: "t3" has unsupported operation: llvm.call
+
+1: "n4_maybezero"
+4: "n4_maybezero" has unsupported operation: llvm.call
+
+1: "n5_wrongnonzero"
+4: "n5_wrongnonzero" has unsupported operation: builtin.unregistered: llvm.intr.assume
+
+4: "n5_wrongnonzero" has unsupported operation: llvm.call
+

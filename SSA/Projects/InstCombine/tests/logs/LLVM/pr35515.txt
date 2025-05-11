@@ -1,0 +1,11 @@
+1: "func_24"
+4: "func_24" has unsupported operation: llvm.mlir.addressof
+
+4: "func_24" has unsupported operation: llvm.mlir.addressof
+
+4: "func_24" has unsupported operation: llvm.getelementptr
+
+4: "func_24" has unsupported operation: llvm.mlir.addressof
+
+4: "func_24" has unsupported operation: llvm.load
+

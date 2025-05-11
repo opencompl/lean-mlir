@@ -12,7 +12,7 @@ import Mathlib.Data.Vector.Basic
 inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | concrete (a : α)
   | mvar (i : Fin φ)
-  deriving DecidableEq, Repr, Inhabited
+  deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 instance [ToString α] : ToString (ConcreteOrMVar α n) where
   toString
@@ -43,10 +43,17 @@ def instantiateOne (a : α) : ConcreteOrMVar α (φ+1) → ConcreteOrMVar α φ
       (.concrete a)       -- `i = Fin.last`
       (fun j => .mvar j)  -- `i = Fin.castSucc j`
 
-/-- Instantiate all meta-variables -/
-def instantiate (as : Mathlib.Vector α φ) : ConcreteOrMVar α φ → α
+/-- Instantiate all meta-variables using values -/
+def instantiate (as : List.Vector α φ) : ConcreteOrMVar α φ → α
   | .concrete w => w
   | .mvar i => as.get i
+
+open Lean in
+/-- Instantiate all meta-variables using Lean expressions,
+resulting in a Lean expression of type `α`. -/
+def metaInstantiate [ToExpr α] (as : Vector Lean.Expr φ) : ConcreteOrMVar α φ → Lean.Expr
+  | .concrete w => toExpr w
+  | .mvar i => as[i]
 
 /-- We choose ConcreteOrMVar.concrete to be our simp normal form. -/
 @[simp]
@@ -54,14 +61,14 @@ def ofNat_eq_concrete (x : Nat) :
     (OfNat.ofNat x) = (ConcreteOrMVar.concrete x : ConcreteOrMVar Nat φ) := rfl
 
 @[simp]
-def instantiate_ofNat_eq (as : Mathlib.Vector Nat φ) (x : Nat) :
+def instantiate_ofNat_eq (as : List.Vector Nat φ) (x : Nat) :
    ConcreteOrMVar.instantiate as (OfNat.ofNat x) = x := rfl
 
 @[simp]
 lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
     ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
   simp [instantiate]
-  simp [Mathlib.Vector.get]
+  simp [List.Vector.get]
 
 @[simp]
 lemma instantiate_mvar_zero' :

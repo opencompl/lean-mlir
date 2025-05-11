@@ -1,0 +1,51 @@
+1: "remove_malloc"
+4: "remove_malloc" has unsupported operation after optimization: llvm.call
+
+4: "remove_malloc" has unsupported operation after optimization: llvm.call
+
+1: "remove_calloc"
+4: "remove_calloc" has unsupported operation after optimization: llvm.call
+
+4: "remove_calloc" has unsupported operation after optimization: llvm.call
+
+1: "remove_aligned_alloc"
+4: "remove_aligned_alloc" has unsupported operation after optimization: llvm.call
+
+4: "remove_aligned_alloc" has unsupported operation after optimization: llvm.call
+
+1: "remove_strdup"
+9: "remove_strdup" has pointer type input
+
+1: "remove_new"
+9: "remove_new" has pointer type input
+
+1: "remove_new_array"
+9: "remove_new_array" has pointer type input
+
+1: "calloc"
+5: "calloc" is empty
+
+1: "malloc"
+5: "malloc" is empty
+
+1: "aligned_alloc"
+5: "aligned_alloc" is empty
+
+1: "strdup"
+9: "strdup" has pointer type input
+
+1: "free"
+9: "free" has pointer type input
+
+1: "_Znwm"
+5: "_Znwm" is empty
+
+1: "_ZdlPv"
+9: "_ZdlPv" has pointer type input
+
+1: "_Znam"
+5: "_Znam" is empty
+
+1: "_ZdaPv"
+9: "_ZdaPv" has pointer type input
+

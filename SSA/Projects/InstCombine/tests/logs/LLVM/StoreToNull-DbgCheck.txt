@@ -1,0 +1,7 @@
+1: "_Z3foov"
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "_Z3foov" has unsupported operation: llvm.store
+
+4: "_Z3foov" has unsupported operation: llvm.return
+

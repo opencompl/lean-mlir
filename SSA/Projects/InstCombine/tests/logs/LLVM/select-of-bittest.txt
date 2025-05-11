@@ -1,0 +1,265 @@
+1: "and_lshr_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_lshr_and_splatvec"
+8: "and_lshr_and_splatvec" contains vectors which are unsupported
+
+1: "and_lshr_and_vec_v0"
+8: "and_lshr_and_vec_v0" contains vectors which are unsupported
+
+1: "and_lshr_and_vec_v1"
+8: "and_lshr_and_vec_v1" contains vectors which are unsupported
+
+1: "and_lshr_and_vec_v2"
+8: "and_lshr_and_vec_v2" contains vectors which are unsupported
+
+1: "and_lshr_and_vec_poison"
+4: "and_lshr_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "and_lshr_and_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "and_lshr_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_lshr_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_lshr_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "and_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_and_splatvec"
+8: "and_and_splatvec" contains vectors which are unsupported
+
+1: "and_and_vec"
+8: "and_and_vec" contains vectors which are unsupported
+
+1: "and_and_vec_poison"
+4: "and_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "and_and_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "and_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "and_and_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "f_var0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "f_var0_commutative_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "f_var0_splatvec"
+8: "f_var0_splatvec" contains vectors which are unsupported
+
+1: "f_var0_vec"
+8: "f_var0_vec" contains vectors which are unsupported
+
+1: "f_var0_vec_poison"
+4: "f_var0_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "f_var0_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "f_var0_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var0_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var0_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "f_var1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "f_var1_commutative_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "f_var1_vec"
+8: "f_var1_vec" contains vectors which are unsupported
+
+1: "f_var1_vec_poison"
+8: "f_var1_vec_poison" contains vectors which are unsupported
+
+1: "f_var2"
+7: "f_var2" is unchanged by InstCombine
+
+1: "f_var2_splatvec"
+7: "f_var2_splatvec" is unchanged by InstCombine
+
+1: "f_var2_vec"
+7: "f_var2_vec" is unchanged by InstCombine
+
+1: "f_var2_vec_poison"
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "f_var2_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var2_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var2_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "f_var3"
+7: "f_var3" is unchanged by InstCombine
+
+1: "f_var3_commutative_and"
+7: "f_var3_commutative_and" is unchanged by InstCombine
+
+1: "f_var3_splatvec"
+7: "f_var3_splatvec" is unchanged by InstCombine
+
+1: "f_var3_vec_poison"
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "f_var3_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var3_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "f_var3_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "use32"
+5: "use32" is empty
+
+1: "use1"
+5: "use1" is empty
+
+1: "n_var0_oneuse"
+4: "n_var0_oneuse" has unsupported operation: llvm.call
+
+4: "n_var0_oneuse" has unsupported operation: llvm.call
+
+4: "n_var0_oneuse" has unsupported operation: llvm.call
+
+4: "n_var0_oneuse" has unsupported operation: llvm.call
+
+1: "n_var1_oneuse"
+4: "n_var1_oneuse" has unsupported operation: llvm.call
+
+4: "n_var1_oneuse" has unsupported operation: llvm.call
+
+4: "n_var1_oneuse" has unsupported operation: llvm.call
+
+1: "n0"
+7: "n0" is unchanged by InstCombine
+
+1: "n1"
+7: "n1" is unchanged by InstCombine
+
+1: "n2"
+7: "n2" is unchanged by InstCombine
+
+1: "n3"
+7: "n3" is unchanged by InstCombine
+
+1: "n4"
+7: "n4" is unchanged by InstCombine
+
+1: "n5"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n6"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n7"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.icmp
+2: llvm.lshr
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+

@@ -1,0 +1,72 @@
+1: "test1"
+2: llvm.func
+2: llvm.icmp
+2: llvm.zext
+2: llvm.icmp
+2: llvm.zext
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "shrink_xor"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.trunc
+2: llvm.return
+
+1: "shrink_xor_vec"
+8: "shrink_xor_vec" contains vectors which are unsupported
+
+1: "shrink_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "shrink_or_vec"
+8: "shrink_or_vec" contains vectors which are unsupported
+
+1: "shrink_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: llvm.trunc
+2: llvm.return
+
+1: "shrink_and_vec"
+8: "shrink_and_vec" contains vectors which are unsupported
+
+1: "searchArray1"
+9: "searchArray1" has pointer type input
+
+4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "searchArray1" has unsupported operation: llvm.getelementptr
+
+4: "searchArray1" has unsupported operation: llvm.load
+
+4: "searchArray1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "searchArray2"
+9: "searchArray2" has pointer type input
+
+4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "searchArray2" has unsupported operation: llvm.getelementptr
+
+4: "searchArray2" has unsupported operation: llvm.load
+
+4: "searchArray2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+1: "shrinkLogicAndPhi1"
+4: "shrinkLogicAndPhi1" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "shrinkLogicAndPhi1" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "shrinkLogicAndPhi2"
+4: "shrinkLogicAndPhi2" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "shrinkLogicAndPhi2" has unsupported operation: builtin.unregistered: llvm.br
+

@@ -1,0 +1,381 @@
+1: "gen1"
+5: "gen1" is empty
+
+1: "cond_eq_and"
+7: "cond_eq_and" is unchanged by InstCombine
+
+1: "cond_eq_and_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "cond_eq_or"
+7: "cond_eq_or" is unchanged by InstCombine
+
+1: "cond_eq_or_const"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "xor_and"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_and2"
+8: "xor_and2" contains vectors which are unsupported
+
+1: "xor_and3"
+4: "xor_and3" has unsupported operation: llvm.mlir.addressof
+
+4: "xor_and3" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "xor_and3" has unsupported operation: llvm.mlir.undef
+
+4: "xor_and3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_and3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "xor_or"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.xor
+2: llvm.return
+
+1: "xor_or2"
+8: "xor_or2" contains vectors which are unsupported
+
+1: "xor_or3"
+4: "xor_or3" has unsupported operation: llvm.mlir.addressof
+
+4: "xor_or3" has unsupported operation: builtin.unregistered: llvm.ptrtoint
+
+4: "xor_or3" has unsupported operation: llvm.mlir.undef
+
+4: "xor_or3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "xor_or3" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "and_orn_cmp_1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "and_orn_cmp_1_partial_logical"
+7: "and_orn_cmp_1_partial_logical" is unchanged by InstCombine
+
+1: "and_orn_cmp_1_partial_logical_commute"
+4: "and_orn_cmp_1_partial_logical_commute" has unsupported operation: llvm.call
+
+1: "andn_or_cmp_2_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andn_or_cmp_2_partial_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "andn_or_cmp_2_partial_logical_commute"
+4: "andn_or_cmp_2_partial_logical_commute" has unsupported operation: llvm.call
+
+1: "not_logical_or"
+7: "not_logical_or" is unchanged by InstCombine
+
+1: "not_logical_or2"
+7: "not_logical_or2" is unchanged by InstCombine
+
+1: "bools_logical_commute0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute0_and1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute0_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute0_and1_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute1_and1"
+4: "bools_logical_commute1_and1" has unsupported operation: llvm.call
+
+1: "bools_logical_commute1_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute1_and1_and2"
+4: "bools_logical_commute1_and1_and2" has unsupported operation: llvm.call
+
+1: "bools_logical_commute2"
+8: "bools_logical_commute2" contains vectors which are unsupported
+
+1: "bools_logical_commute2_and1"
+8: "bools_logical_commute2_and1" contains vectors which are unsupported
+
+1: "bools_logical_commute2_and2"
+8: "bools_logical_commute2_and2" contains vectors which are unsupported
+
+1: "bools_logical_commute2_and1_and2"
+8: "bools_logical_commute2_and1_and2" contains vectors which are unsupported
+
+1: "bools_logical_commute3"
+4: "bools_logical_commute3" has unsupported operation: builtin.unregistered: llvm.freeze
+
+1: "bools_logical_commute3_and1"
+4: "bools_logical_commute3_and1" has unsupported operation: llvm.call
+
+1: "bools_logical_commute3_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools_logical_commute3_and1_and2"
+4: "bools_logical_commute3_and1_and2" has unsupported operation: llvm.call
+
+1: "bools2_logical_commute0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute0_and1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute0_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute0_and1_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute1_and1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute1_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute1_and1_and2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute2_and1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute2_and2"
+4: "bools2_logical_commute2_and2" has unsupported operation: llvm.call
+
+1: "bools2_logical_commute2_and1_and2"
+4: "bools2_logical_commute2_and1_and2" has unsupported operation: llvm.call
+
+1: "bools2_logical_commute3"
+4: "bools2_logical_commute3" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "bools2_logical_commute3_nopoison" has unsupported operation: noundef
+
+1: "bools2_logical_commute3_and1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bools2_logical_commute3_and2"
+4: "bools2_logical_commute3_and2" has unsupported operation: llvm.call
+
+1: "bools2_logical_commute3_and1_and2"
+4: "bools2_logical_commute3_and1_and2" has unsupported operation: llvm.call
+
+1: "orn_and_cmp_1_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orn_and_cmp_1_partial_logical"
+7: "orn_and_cmp_1_partial_logical" is unchanged by InstCombine
+
+1: "orn_and_cmp_1_partial_logical_commute"
+4: "orn_and_cmp_1_partial_logical_commute" has unsupported operation: llvm.call
+
+1: "orn_and_cmp_2_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orn_and_cmp_2_partial_logical"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.icmp
+2: llvm.icmp
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "orn_and_cmp_2_partial_logical_commute"
+4: "orn_and_cmp_2_partial_logical_commute" has unsupported operation: llvm.call
+
+1: "not_logical_and"
+7: "not_logical_and" is unchanged by InstCombine
+
+1: "not_logical_and2"
+7: "not_logical_and2" is unchanged by InstCombine
+

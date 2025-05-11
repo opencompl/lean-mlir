@@ -1,0 +1,35 @@
+1: "float_load"
+9: "float_load" has pointer type input
+
+4: "float_load" has unsupported operation: llvm.load
+
+4: "float_load" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "i32_load"
+9: "i32_load" has pointer type input
+
+4: "i32_load" has unsupported operation: llvm.load
+
+4: "i32_load" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "double_load"
+9: "double_load" has pointer type input
+
+4: "double_load" has unsupported operation: llvm.load
+
+4: "double_load" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "i64_load"
+9: "i64_load" has pointer type input
+
+4: "i64_load" has unsupported operation: llvm.load
+
+4: "i64_load" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "ptr_load"
+9: "ptr_load" has pointer type input
+
+4: "ptr_load" has unsupported operation: llvm.load
+
+4: "ptr_load" has unsupported operation: llvm.inttoptr
+

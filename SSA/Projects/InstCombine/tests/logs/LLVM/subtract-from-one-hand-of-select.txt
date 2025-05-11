@@ -1,0 +1,24 @@
+1: "t0_sub_from_trueval"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "t1_sub_from_falseval"
+2: llvm.func
+2: builtin.unregistered: llvm.select
+2: llvm.sub
+2: llvm.return
+
+1: "t2_vec"
+8: "t2_vec" contains vectors which are unsupported
+
+1: "use8"
+5: "use8" is empty
+
+1: "n3_extrause"
+4: "n3_extrause" has unsupported operation: llvm.call
+
+1: "n4_wrong_hands"
+7: "n4_wrong_hands" is unchanged by InstCombine
+

@@ -1,0 +1,168 @@
+1: "malloc"
+5: "malloc" is empty
+
+1: "calloc"
+5: "calloc" is empty
+
+1: "realloc"
+9: "realloc" has pointer type input
+
+1: "_Znam"
+5: "_Znam" is empty
+
+1: "_Znwm"
+5: "_Znwm" is empty
+
+1: "strdup"
+9: "strdup" has pointer type input
+
+1: "aligned_alloc"
+5: "aligned_alloc" is empty
+
+1: "memalign"
+5: "memalign" is empty
+
+1: "_ZnamSt11align_val_t"
+5: "_ZnamSt11align_val_t" is empty
+
+1: "my_malloc"
+5: "my_malloc" is empty
+
+1: "my_calloc"
+5: "my_calloc" is empty
+
+1: "malloc_nonconstant_size"
+4: "malloc_nonconstant_size" has unsupported operation: llvm.call
+
+1: "malloc_constant_size"
+4: "malloc_constant_size" has unsupported operation: llvm.call
+
+1: "aligned_alloc_constant_size"
+4: "aligned_alloc_constant_size" has unsupported operation: llvm.call
+
+1: "aligned_alloc_unknown_size_nonzero"
+4: "aligned_alloc_unknown_size_nonzero" has unsupported operation: llvm.call
+
+1: "aligned_alloc_unknown_size_possibly_zero"
+4: "aligned_alloc_unknown_size_possibly_zero" has unsupported operation: llvm.call
+
+1: "aligned_alloc_unknown_align"
+4: "aligned_alloc_unknown_align" has unsupported operation: llvm.call
+
+1: "foo"
+9: "foo" has pointer type input
+
+1: "aligned_alloc_dynamic_args"
+4: "aligned_alloc_dynamic_args" has unsupported operation: llvm.call
+
+4: "aligned_alloc_dynamic_args" has unsupported operation: llvm.call
+
+4: "aligned_alloc_dynamic_args" has unsupported operation: llvm.call
+
+4: "aligned_alloc_dynamic_args" has unsupported operation: llvm.call
+
+1: "memalign_constant_size"
+4: "memalign_constant_size" has unsupported operation: llvm.call
+
+1: "memalign_unknown_size_nonzero"
+4: "memalign_unknown_size_nonzero" has unsupported operation: llvm.call
+
+1: "memalign_unknown_size_possibly_zero"
+4: "memalign_unknown_size_possibly_zero" has unsupported operation: llvm.call
+
+1: "memalign_unknown_align"
+4: "memalign_unknown_align" has unsupported operation: llvm.call
+
+1: "malloc_constant_size2"
+4: "malloc_constant_size2" has unsupported operation: llvm.call
+
+1: "malloc_constant_size3"
+4: "malloc_constant_size3" has unsupported operation: llvm.call
+
+1: "malloc_constant_zero_size"
+4: "malloc_constant_zero_size" has unsupported operation: llvm.call
+
+1: "realloc_nonconstant_size"
+9: "realloc_nonconstant_size" has pointer type input
+
+4: "realloc_nonconstant_size" has unsupported operation: llvm.call
+
+1: "realloc_constant_zero_size"
+9: "realloc_constant_zero_size" has pointer type input
+
+4: "realloc_constant_zero_size" has unsupported operation: llvm.call
+
+1: "realloc_constant_size"
+9: "realloc_constant_size" has pointer type input
+
+4: "realloc_constant_size" has unsupported operation: llvm.call
+
+1: "calloc_nonconstant_size"
+4: "calloc_nonconstant_size" has unsupported operation: llvm.call
+
+1: "calloc_nonconstant_size2"
+4: "calloc_nonconstant_size2" has unsupported operation: llvm.call
+
+1: "calloc_nonconstant_size3"
+4: "calloc_nonconstant_size3" has unsupported operation: llvm.call
+
+1: "calloc_constant_zero_size"
+4: "calloc_constant_zero_size" has unsupported operation: llvm.call
+
+1: "calloc_constant_zero_size2"
+4: "calloc_constant_zero_size2" has unsupported operation: llvm.call
+
+1: "calloc_constant_zero_size3"
+4: "calloc_constant_zero_size3" has unsupported operation: llvm.call
+
+1: "calloc_constant_zero_size4"
+4: "calloc_constant_zero_size4" has unsupported operation: llvm.call
+
+1: "calloc_constant_zero_size5"
+4: "calloc_constant_zero_size5" has unsupported operation: llvm.call
+
+1: "calloc_constant_size"
+4: "calloc_constant_size" has unsupported operation: llvm.call
+
+1: "calloc_constant_size_overflow"
+4: "calloc_constant_size_overflow" has unsupported operation: llvm.call
+
+1: "op_new_nonconstant_size"
+4: "op_new_nonconstant_size" has unsupported operation: llvm.call
+
+1: "op_new_constant_size"
+4: "op_new_constant_size" has unsupported operation: llvm.call
+
+1: "op_new_constant_size2"
+4: "op_new_constant_size2" has unsupported operation: llvm.call
+
+1: "op_new_constant_zero_size"
+4: "op_new_constant_zero_size" has unsupported operation: llvm.call
+
+1: "strdup_constant_str"
+4: "strdup_constant_str" has unsupported operation: llvm.mlir.addressof
+
+4: "strdup_constant_str" has unsupported operation: llvm.call
+
+1: "strdup_notconstant_str"
+9: "strdup_notconstant_str" has pointer type input
+
+4: "strdup_notconstant_str" has unsupported operation: llvm.call
+
+1: "ossfuzz_23214"
+4: "ossfuzz_23214" has unsupported operation: llvm.call
+
+1: "op_new_align"
+4: "op_new_align" has unsupported operation: llvm.call
+
+1: "my_malloc_constant_size"
+4: "my_malloc_constant_size" has unsupported operation: llvm.call
+
+1: "my_calloc_constant_size"
+4: "my_calloc_constant_size" has unsupported operation: llvm.call
+
+1: "virtual_constant_size"
+9: "virtual_constant_size" has pointer type input
+
+4: "virtual_constant_size" has unsupported operation: llvm.call
+

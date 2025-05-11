@@ -1,0 +1,16 @@
+1: "t"
+9: "t" has pointer type input
+
+4: "t" has unsupported operation: llvm.alloca
+
+4: "t" has unsupported operation: llvm.load
+
+4: "t" has unsupported operation: llvm.store
+
+4: "t" has unsupported operation: llvm.call
+
+4: "t" has unsupported operation: llvm.return
+
+1: "foo"
+9: "foo" has pointer type input
+

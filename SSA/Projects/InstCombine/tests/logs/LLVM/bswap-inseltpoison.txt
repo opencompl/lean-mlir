@@ -1,0 +1,41 @@
+1: "shuf_4bytes"
+4: "shuf_4bytes" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shuf_load_4bytes"
+9: "shuf_load_4bytes" has pointer type input
+
+4: "shuf_load_4bytes" has unsupported operation: llvm.load
+
+4: "shuf_load_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shuf_bitcast_twice_4bytes"
+4: "shuf_bitcast_twice_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "use"
+5: "use" is empty
+
+1: "shuf_4bytes_extra_use"
+4: "shuf_4bytes_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_4bytes_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_4bytes_extra_use" has unsupported operation: llvm.call
+
+4: "shuf_4bytes_extra_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_16bytes"
+4: "shuf_16bytes" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_16bytes" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_16bytes" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_2bytes_widening"
+4: "shuf_2bytes_widening" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_2bytes_widening" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_2bytes_widening" has unsupported operation: builtin.unregistered: llvm.bitcast
+

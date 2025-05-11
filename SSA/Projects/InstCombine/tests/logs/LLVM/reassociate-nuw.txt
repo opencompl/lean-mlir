@@ -1,0 +1,123 @@
+1: "reassoc_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "reassoc_sub_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "reassoc_mul_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.return
+
+1: "no_reassoc_add_nuw_none"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "no_reassoc_add_none_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "reassoc_x2_add_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "reassoc_x2_mul_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.mul
+2: llvm.mul
+2: llvm.return
+
+1: "reassoc_x2_sub_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.sub
+2: llvm.sub
+2: llvm.sub
+2: llvm.return
+
+1: "tryFactorization_add_nuw_mul_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_nuw_mul_nuw_int_max"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_mul_nuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_nuw_mul"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_nuw_mul_nuw_mul_nuw_var"
+2: llvm.func
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_nuw_mul_mul_nuw_var"
+2: llvm.func
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_nuw_mul_nuw_mul_var"
+2: llvm.func
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+
+1: "tryFactorization_add_mul_nuw_mul_var"
+2: llvm.func
+2: llvm.mul
+2: llvm.mul
+2: llvm.add
+2: llvm.return
+

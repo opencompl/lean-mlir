@@ -1,0 +1,17 @@
+1: "bcopy"
+9: "bcopy" has pointer type input
+
+1: "bcopy_memmove"
+9: "bcopy_memmove" has pointer type input
+
+4: "bcopy_memmove" has unsupported operation: llvm.call
+
+4: "bcopy_memmove" has unsupported operation: llvm.return
+
+1: "bcopy_memmove2"
+9: "bcopy_memmove2" has pointer type input
+
+4: "bcopy_memmove2" has unsupported operation: llvm.call
+
+4: "bcopy_memmove2" has unsupported operation: llvm.return
+

@@ -1,0 +1,14 @@
+1: "test1"
+2: llvm.func
+2: llvm.and
+2: llvm.and
+2: llvm.xor
+2: llvm.return
+
+1: "test2"
+2: llvm.func
+2: llvm.and
+2: llvm.or
+2: llvm.xor
+2: llvm.return
+

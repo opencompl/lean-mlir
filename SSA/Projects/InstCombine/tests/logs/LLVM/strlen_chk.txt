@@ -1,0 +1,33 @@
+1: "__strlen_chk"
+9: "__strlen_chk" has pointer type input
+
+1: "unknown_str_known_object_size"
+9: "unknown_str_known_object_size" has pointer type input
+
+4: "unknown_str_known_object_size" has unsupported operation: llvm.call
+
+1: "known_str_known_object_size"
+9: "known_str_known_object_size" has pointer type input
+
+1: "known_str_too_small_object_size"
+9: "known_str_too_small_object_size" has pointer type input
+
+4: "known_str_too_small_object_size" has unsupported operation: llvm.mlir.addressof
+
+4: "known_str_too_small_object_size" has unsupported operation: llvm.call
+
+1: "known_str_no_nul"
+9: "known_str_no_nul" has pointer type input
+
+4: "known_str_no_nul" has unsupported operation: llvm.mlir.addressof
+
+4: "known_str_no_nul" has unsupported operation: llvm.call
+
+1: "unknown_str_unknown_object_size"
+9: "unknown_str_unknown_object_size" has pointer type input
+
+4: "unknown_str_unknown_object_size" has unsupported operation: llvm.call
+
+1: "strlen"
+9: "strlen" has pointer type input
+

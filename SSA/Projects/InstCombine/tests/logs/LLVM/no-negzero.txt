@@ -1,0 +1,21 @@
+1: "mysqrt"
+4: "mysqrt" has unsupported operation: llvm.alloca
+
+4: "mysqrt" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "mysqrt" has unsupported operation: llvm.call
+
+4: "mysqrt" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "mysqrt" has unsupported operation: llvm.store
+
+4: "mysqrt" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "mysqrt" has unsupported operation: llvm.load
+
+1: "fabs"
+5: "fabs" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+

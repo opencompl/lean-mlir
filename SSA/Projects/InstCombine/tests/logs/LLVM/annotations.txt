@@ -1,0 +1,106 @@
+1: "fold_to_new_instruction"
+9: "fold_to_new_instruction" has pointer type input
+
+1: "fold_to_new_instruction2"
+9: "fold_to_new_instruction2" has pointer type input
+
+1: "do_not_add_annotation_to_existing_instr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.add
+2: llvm.add
+2: llvm.return
+
+1: "copy_1_byte"
+9: "copy_1_byte" has pointer type input
+
+4: "copy_1_byte" has unsupported operation: llvm.load
+
+4: "copy_1_byte" has unsupported operation: llvm.store
+
+4: "copy_1_byte" has unsupported operation: llvm.return
+
+1: "memcpy"
+9: "memcpy" has pointer type input
+
+1: "libcallcopy_1_byte"
+9: "libcallcopy_1_byte" has pointer type input
+
+4: "libcallcopy_1_byte" has unsupported operation: llvm.load
+
+4: "libcallcopy_1_byte" has unsupported operation: llvm.store
+
+4: "libcallcopy_1_byte" has unsupported operation: llvm.return
+
+1: "__memcpy_chk"
+9: "__memcpy_chk" has pointer type input
+
+1: "libcallcopy_1_byte_chk"
+9: "libcallcopy_1_byte_chk" has pointer type input
+
+4: "libcallcopy_1_byte_chk" has unsupported operation: llvm.load
+
+4: "libcallcopy_1_byte_chk" has unsupported operation: llvm.store
+
+4: "libcallcopy_1_byte_chk" has unsupported operation: llvm.return
+
+1: "move_1_byte"
+9: "move_1_byte" has pointer type input
+
+4: "move_1_byte" has unsupported operation: llvm.load
+
+4: "move_1_byte" has unsupported operation: llvm.store
+
+4: "move_1_byte" has unsupported operation: llvm.return
+
+1: "memmove"
+9: "memmove" has pointer type input
+
+1: "libcallmove_1_byte"
+9: "libcallmove_1_byte" has pointer type input
+
+4: "libcallmove_1_byte" has unsupported operation: llvm.load
+
+4: "libcallmove_1_byte" has unsupported operation: llvm.store
+
+4: "libcallmove_1_byte" has unsupported operation: llvm.return
+
+1: "__memmove_chk"
+9: "__memmove_chk" has pointer type input
+
+1: "libcallmove_1_byte_chk"
+9: "libcallmove_1_byte_chk" has pointer type input
+
+4: "libcallmove_1_byte_chk" has unsupported operation: llvm.load
+
+4: "libcallmove_1_byte_chk" has unsupported operation: llvm.store
+
+4: "libcallmove_1_byte_chk" has unsupported operation: llvm.return
+
+1: "set_1_byte"
+9: "set_1_byte" has pointer type input
+
+4: "set_1_byte" has unsupported operation: llvm.store
+
+4: "set_1_byte" has unsupported operation: llvm.return
+
+1: "memset"
+9: "memset" has pointer type input
+
+1: "libcall_set_1_byte"
+9: "libcall_set_1_byte" has pointer type input
+
+4: "libcall_set_1_byte" has unsupported operation: llvm.store
+
+4: "libcall_set_1_byte" has unsupported operation: llvm.return
+
+1: "__memset_chk"
+9: "__memset_chk" has pointer type input
+
+1: "libcall_set_1_byte_chk"
+9: "libcall_set_1_byte_chk" has pointer type input
+
+4: "libcall_set_1_byte_chk" has unsupported operation: llvm.store
+
+4: "libcall_set_1_byte_chk" has unsupported operation: llvm.return
+

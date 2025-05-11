@@ -1,0 +1,66 @@
+1: "use"
+5: "use" is empty
+
+1: "use2"
+5: "use2" is empty
+
+1: "select_clz_to_ctz"
+4: "select_clz_to_ctz" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_preserve_flag"
+4: "select_clz_to_ctz_preserve_flag" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_constant_for_zero"
+4: "select_clz_to_ctz_constant_for_zero" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_vec"
+4: "select_clz_to_ctz_vec" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_extra_use"
+4: "select_clz_to_ctz_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+4: "select_clz_to_ctz_extra_use" has unsupported operation: llvm.call
+
+1: "select_clz_to_ctz_and_commuted"
+4: "select_clz_to_ctz_and_commuted" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_icmp_ne"
+4: "select_clz_to_ctz_icmp_ne" has unsupported operation: llvm.call
+
+4: "select_clz_to_ctz_icmp_ne" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_i64"
+4: "select_clz_to_ctz_i64" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_wrong_sub"
+4: "select_clz_to_ctz_wrong_sub" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "select_clz_to_ctz_i64_wrong_xor"
+4: "select_clz_to_ctz_i64_wrong_xor" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "select_clz_to_ctz_i64_wrong_icmp_cst"
+4: "select_clz_to_ctz_i64_wrong_icmp_cst" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "select_clz_to_ctz_i64_wrong_icmp_pred"
+4: "select_clz_to_ctz_i64_wrong_icmp_pred" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "select_clz_to_ctz_vec_with_undef"
+4: "select_clz_to_ctz_vec_with_undef" has unsupported operation: llvm.mlir.undef
+
+4: "select_clz_to_ctz_vec_with_undef" has unsupported operation: llvm.mlir.undef
+
+4: "select_clz_to_ctz_vec_with_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_clz_to_ctz_vec_with_undef" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "select_clz_to_ctz_vec_with_undef" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "select_clz_to_ctz_wrong_constant_for_zero"
+4: "select_clz_to_ctz_wrong_constant_for_zero" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "PR45762"
+4: "PR45762" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "PR45762_logical"
+4: "PR45762_logical" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+

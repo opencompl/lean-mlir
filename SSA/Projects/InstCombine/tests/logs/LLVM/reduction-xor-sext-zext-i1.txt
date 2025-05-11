@@ -1,0 +1,47 @@
+1: "reduce_xor_self"
+4: "reduce_xor_self" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_self" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "reduce_xor_sext"
+4: "reduce_xor_sext" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_sext" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "reduce_xor_zext"
+4: "reduce_xor_zext" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_zext" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "reduce_xor_sext_same"
+4: "reduce_xor_sext_same" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_sext_same" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "reduce_xor_zext_long"
+4: "reduce_xor_zext_long" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_zext_long" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+1: "reduce_xor_zext_long_external_use"
+4: "reduce_xor_zext_long_external_use" has unsupported operation: llvm.mlir.addressof
+
+4: "reduce_xor_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "reduce_xor_zext_long_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_xor_zext_long_external_use" has unsupported operation: llvm.store
+
+1: "reduce_xor_zext_external_use"
+4: "reduce_xor_zext_external_use" has unsupported operation: llvm.mlir.addressof
+
+4: "reduce_xor_zext_external_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "reduce_xor_zext_external_use" has unsupported operation: builtin.unregistered: llvm.intr.ctpop
+
+4: "reduce_xor_zext_external_use" has unsupported operation: builtin.unregistered: llvm.extractelement
+
+4: "reduce_xor_zext_external_use" has unsupported operation: llvm.store
+

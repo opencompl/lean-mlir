@@ -1,0 +1,91 @@
+1: "oeq_self"
+4: "oeq_self" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "une_self"
+4: "une_self" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_zero"
+4: "ord_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_nonzero"
+4: "ord_nonzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_self"
+4: "ord_self" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_zero"
+4: "uno_zero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_nonzero"
+4: "uno_nonzero" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_self"
+4: "uno_self" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_zero_vec"
+4: "ord_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_nonzero_vec"
+4: "ord_nonzero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_self_vec"
+4: "ord_self_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_zero_vec"
+4: "uno_zero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_nonzero_vec"
+4: "uno_nonzero_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_self_vec"
+4: "uno_self_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_vec_with_nan"
+4: "uno_vec_with_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "uno_vec_with_poison"
+4: "uno_vec_with_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "ord_vec_with_poison"
+4: "ord_vec_with_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ord_vec_with_poison" has unsupported operation: llvm.mlir.undef
+
+4: "ord_vec_with_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ord_vec_with_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ord_vec_with_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "nnan_ops_to_fcmp_ord"
+4: "nnan_ops_to_fcmp_ord" has unsupported operation after optimization: builtin.unregistered: llvm.fmul
+
+4: "nnan_ops_to_fcmp_ord" has unsupported operation after optimization: builtin.unregistered: llvm.fdiv
+
+4: "nnan_ops_to_fcmp_ord" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "nnan_ops_to_fcmp_uno"
+4: "nnan_ops_to_fcmp_uno" has unsupported operation after optimization: builtin.unregistered: llvm.fmul
+
+4: "nnan_ops_to_fcmp_uno" has unsupported operation after optimization: builtin.unregistered: llvm.fdiv
+
+4: "nnan_ops_to_fcmp_uno" has unsupported operation after optimization: builtin.unregistered: llvm.fcmp
+
+1: "negative_zero_oeq"
+4: "negative_zero_oeq" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "negative_zero_oge"
+4: "negative_zero_oge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "negative_zero_uge"
+4: "negative_zero_uge" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "negative_zero_olt_vec"
+4: "negative_zero_olt_vec" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "negative_zero_une_vec_poison"
+4: "negative_zero_une_vec_poison" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "negative_zero_ule_vec_mixed"
+4: "negative_zero_ule_vec_mixed" has unsupported operation: builtin.unregistered: llvm.fcmp
+

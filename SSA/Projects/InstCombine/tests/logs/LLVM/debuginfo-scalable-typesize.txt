@@ -1,0 +1,2 @@
+3: debuginfo-scalable-typesize.ll: parsing has failed
+

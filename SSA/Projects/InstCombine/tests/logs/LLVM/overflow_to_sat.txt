@@ -1,0 +1,214 @@
+1: "uadd"
+4: "uadd" has unsupported operation: builtin.unregistered: llvm.intr.uadd.sat
+
+1: "usub"
+4: "usub" has unsupported operation: builtin.unregistered: llvm.intr.usub.sat
+
+1: "sadd_x_lt_min"
+4: "sadd_x_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_x_lt_min" has unsupported operation: llvm.extractvalue
+
+4: "sadd_x_lt_min" has unsupported operation: llvm.extractvalue
+
+1: "sadd_x_lt_max"
+4: "sadd_x_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_x_le_min"
+4: "sadd_x_le_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_x_le_min" has unsupported operation: llvm.extractvalue
+
+4: "sadd_x_le_min" has unsupported operation: llvm.extractvalue
+
+1: "sadd_x_le_max"
+4: "sadd_x_le_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_x_gt_min"
+4: "sadd_x_gt_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_x_gt_max"
+4: "sadd_x_gt_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_x_gt_max" has unsupported operation: llvm.extractvalue
+
+4: "sadd_x_gt_max" has unsupported operation: llvm.extractvalue
+
+1: "sadd_x_ge_min"
+4: "sadd_x_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_x_ge_max"
+4: "sadd_x_ge_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_x_ge_max" has unsupported operation: llvm.extractvalue
+
+4: "sadd_x_ge_max" has unsupported operation: llvm.extractvalue
+
+1: "sadd_y_lt_min"
+4: "sadd_y_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_y_lt_min" has unsupported operation: llvm.extractvalue
+
+4: "sadd_y_lt_min" has unsupported operation: llvm.extractvalue
+
+1: "sadd_y_lt_max"
+4: "sadd_y_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_y_le_min"
+4: "sadd_y_le_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_y_le_min" has unsupported operation: llvm.extractvalue
+
+4: "sadd_y_le_min" has unsupported operation: llvm.extractvalue
+
+1: "sadd_y_le_max"
+4: "sadd_y_le_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_y_gt_min"
+4: "sadd_y_gt_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_y_gt_max"
+4: "sadd_y_gt_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_y_gt_max" has unsupported operation: llvm.extractvalue
+
+4: "sadd_y_gt_max" has unsupported operation: llvm.extractvalue
+
+1: "sadd_y_ge_min"
+4: "sadd_y_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "sadd_y_ge_max"
+4: "sadd_y_ge_max" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_y_ge_max" has unsupported operation: llvm.extractvalue
+
+4: "sadd_y_ge_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_lt_min"
+4: "ssub_x_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_lt_min" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_lt_min" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_lt_max"
+4: "ssub_x_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_x_le_min"
+4: "ssub_x_le_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_le_min" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_le_min" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_le_max"
+4: "ssub_x_le_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_le_max" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_le_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_lt2_min"
+4: "ssub_x_lt2_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_lt2_min" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_lt2_min" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_lt2_max"
+4: "ssub_x_lt2_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_x_gt_min"
+4: "ssub_x_gt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_gt_min" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_gt_min" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_gt_max"
+4: "ssub_x_gt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_gt_max" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_gt_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_ge_min"
+4: "ssub_x_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_x_ge_max"
+4: "ssub_x_ge_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_ge_max" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_ge_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_x_gt2_min"
+4: "ssub_x_gt2_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_x_gt2_max"
+4: "ssub_x_gt2_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_x_gt2_max" has unsupported operation: llvm.extractvalue
+
+4: "ssub_x_gt2_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_y_lt_min"
+4: "ssub_y_lt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_y_lt_max"
+4: "ssub_y_lt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_y_lt_max" has unsupported operation: llvm.extractvalue
+
+4: "ssub_y_lt_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_y_le_min"
+4: "ssub_y_le_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_y_le_max"
+4: "ssub_y_le_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_y_le_max" has unsupported operation: llvm.extractvalue
+
+4: "ssub_y_le_max" has unsupported operation: llvm.extractvalue
+
+1: "ssub_y_gt_min"
+4: "ssub_y_gt_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_y_gt_min" has unsupported operation: llvm.extractvalue
+
+4: "ssub_y_gt_min" has unsupported operation: llvm.extractvalue
+
+1: "ssub_y_gt_max"
+4: "ssub_y_gt_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "ssub_y_ge_min"
+4: "ssub_y_ge_min" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_y_ge_min" has unsupported operation: llvm.extractvalue
+
+4: "ssub_y_ge_min" has unsupported operation: llvm.extractvalue
+
+1: "ssub_y_ge_max"
+4: "ssub_y_ge_max" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "sadd_i32"
+4: "sadd_i32" has unsupported operation: builtin.unregistered: llvm.intr.sadd.sat
+
+1: "ssub_i32"
+4: "ssub_i32" has unsupported operation: builtin.unregistered: llvm.intr.ssub.sat
+
+1: "sadd_bounds"
+4: "sadd_bounds" has unsupported operation: builtin.unregistered: llvm.intr.sadd.with.overflow
+
+4: "sadd_bounds" has unsupported operation: llvm.extractvalue
+
+4: "sadd_bounds" has unsupported operation: llvm.extractvalue
+
+1: "ssub_bounds"
+4: "ssub_bounds" has unsupported operation: builtin.unregistered: llvm.intr.ssub.with.overflow
+
+4: "ssub_bounds" has unsupported operation: llvm.extractvalue
+
+4: "ssub_bounds" has unsupported operation: llvm.extractvalue
+

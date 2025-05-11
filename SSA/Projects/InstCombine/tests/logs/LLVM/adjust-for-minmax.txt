@@ -1,0 +1,111 @@
+1: "smax1"
+4: "smax1" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin1"
+4: "smin1" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax2"
+4: "smax2" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin2"
+4: "smin2" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smax3"
+4: "smax3" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax3_vec"
+4: "smax3_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin3"
+4: "smin3" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin3_vec"
+4: "smin3_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umax3"
+4: "umax3" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax3_vec"
+4: "umax3_vec" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin3"
+4: "umin3" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin3_vec"
+4: "umin3_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "smax4"
+4: "smax4" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax4_vec"
+4: "smax4_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin4"
+4: "smin4" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin4_vec"
+4: "smin4_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umax4"
+4: "umax4" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax4_vec"
+4: "umax4_vec" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin4"
+4: "umin4" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin4_vec"
+4: "umin4_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "smax_sext"
+4: "smax_sext" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smax_sext_vec"
+4: "smax_sext_vec" has unsupported operation: builtin.unregistered: llvm.intr.smax
+
+1: "smin_sext"
+4: "smin_sext" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "smin_sext_vec"
+4: "smin_sext_vec" has unsupported operation: builtin.unregistered: llvm.intr.smin
+
+1: "umax_sext"
+4: "umax_sext" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_sext_vec"
+4: "umax_sext_vec" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin_sext"
+4: "umin_sext" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_sext_vec"
+4: "umin_sext_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umax_sext2"
+4: "umax_sext2" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_sext2_vec"
+4: "umax_sext2_vec" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin_sext2"
+4: "umin_sext2" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_sext2_vec"
+4: "umin_sext2_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umax_zext"
+4: "umax_zext" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umax_zext_vec"
+4: "umax_zext_vec" has unsupported operation: builtin.unregistered: llvm.intr.umax
+
+1: "umin_zext"
+4: "umin_zext" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "umin_zext_vec"
+4: "umin_zext_vec" has unsupported operation: builtin.unregistered: llvm.intr.umin
+
+1: "scalar_select_of_vectors"
+7: "scalar_select_of_vectors" is unchanged by InstCombine
+

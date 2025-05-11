@@ -1,0 +1,32 @@
+1: "t0_umul"
+4: "t0_umul" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "t0_umul" has unsupported operation: llvm.extractvalue
+
+1: "t1_commutative"
+4: "t1_commutative" has unsupported operation: builtin.unregistered: llvm.freeze
+
+4: "t1_commutative" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "t1_commutative" has unsupported operation: llvm.extractvalue
+
+1: "n2_wrong_size"
+4: "n2_wrong_size" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "n2_wrong_size" has unsupported operation: llvm.extractvalue
+
+1: "n3_wrong_pred"
+4: "n3_wrong_pred" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "n3_wrong_pred" has unsupported operation after optimization: llvm.extractvalue
+
+1: "n4_not_and"
+4: "n4_not_and" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "n4_not_and" has unsupported operation after optimization: llvm.extractvalue
+
+1: "n5_not_zero"
+4: "n5_not_zero" has unsupported operation: builtin.unregistered: llvm.intr.umul.with.overflow
+
+4: "n5_not_zero" has unsupported operation: llvm.extractvalue
+

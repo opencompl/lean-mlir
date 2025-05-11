@@ -1,0 +1,10 @@
+1: "strncmp"
+9: "strncmp" has pointer type input
+
+1: "test_nosimplify"
+4: "test_nosimplify" has unsupported operation: llvm.mlir.addressof
+
+4: "test_nosimplify" has unsupported operation: llvm.mlir.addressof
+
+4: "test_nosimplify" has unsupported operation: llvm.call
+

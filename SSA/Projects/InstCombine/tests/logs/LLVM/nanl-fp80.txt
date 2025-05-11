@@ -1,0 +1,18 @@
+1: "nanl_empty"
+4: "nanl_empty" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nanl_empty" has unsupported operation after optimization: llvm.call
+
+1: "nanl_dec"
+4: "nanl_dec" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nanl_dec" has unsupported operation after optimization: llvm.call
+
+1: "nanl_hex"
+4: "nanl_hex" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "nanl_hex" has unsupported operation after optimization: llvm.call
+
+1: "nanl"
+9: "nanl" has pointer type input
+

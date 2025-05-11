@@ -1,0 +1,17 @@
+1: "PR6486"
+4: "PR6486" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR6486" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "PR6486" has unsupported operation after optimization: llvm.load
+
+1: "PR16462_1"
+4: "PR16462_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR16462_1" has unsupported operation after optimization: llvm.mlir.addressof
+
+1: "PR16462_2"
+4: "PR16462_2" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR16462_2" has unsupported operation after optimization: llvm.mlir.addressof
+

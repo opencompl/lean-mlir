@@ -1,0 +1,9 @@
+1: "vselect1"
+4: "vselect1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "vselect1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "vselect1" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "vselect1" has unsupported operation: builtin.unregistered: llvm.bitcast
+

@@ -15,11 +15,12 @@ https://eprint.iacr.org/2012/144
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
 import Mathlib.RingTheory.Polynomial.Quotient
-import Mathlib.RingTheory.Ideal.Quotient
-import Mathlib.RingTheory.Ideal.QuotientOperations
+import Mathlib.RingTheory.Ideal.Defs
+import Mathlib.RingTheory.Ideal.Basic
 import Mathlib.Data.ZMod.Defs
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
+import Mathlib.Algebra.Polynomial.RingDivision
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
@@ -93,7 +94,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
     Preorder.toLT, WithBot.preorder, OfNat.ofNat]
   simp only [degree_one, Nat.cast_pow, Nat.cast_ofNat]
   norm_cast
-  exact Fin.size_pos'
+  exact Fin.pos'
 
 /-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by
@@ -401,7 +402,7 @@ theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
   a.repLength ≤ (R.representative q n a).natDegree + 1 := by
   simp only [repLength]
   generalize hdegree : degree (representative q n a) = d
-  cases' d with d <;> simp [natDegree, hdegree, WithBot.unbot', WithBot.recBotCoe]
+  cases' d with d <;> simp [natDegree, hdegree, WithBot.unbotD, WithBot.recBotCoe]
 
 theorem R.repLength_lt_n_plus_1 [Fact (q > 1)]: forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
@@ -456,7 +457,7 @@ noncomputable def R.leadingTerm {q n} (a : R q n) : R q n :=
     | .some deg =>  R.monomial (a.coeff deg) deg
 
 noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
-  coeffs.enum.foldl (init := 0) fun res (i,c) =>
+  coeffs.zipIdx.foldl (init := 0) fun res (c, i) =>
     res + R.monomial ↑c i
 
 /- `fromTensor (cs ++ [c])` equals `(fromTensor xs) + c X^n` -/
@@ -468,29 +469,29 @@ theorem R.fromTensor_snoc (q n : Nat) (c : Int) (cs : List Int) :
       simp[fromTensor]
     case append_singleton xs x _hxs =>
       simp[fromTensor]
-      repeat rw[List.enum_append]
+      repeat rw[List.zipIdx_append]
       repeat rw[List.foldl_append]
-      simp[List.enumFrom]
+      simp[List.zipIdx]
 
 /-- A definition of fromTensor that operates on Z/qZ[X], to provide a relationship between
     R and Z/qZ[X] as the polynomial in R is built.
 -/
 noncomputable def R.fromTensor' (coeffs : List Int) : (ZMod q)[X] :=
-  coeffs.enum.foldl (init := 0) fun res (i,c) =>
+  coeffs.zipIdx.foldl (init := 0) fun res (c, i) =>
     res + (Polynomial.monomial i ↑c)
 
 theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n) (p : (ZMod q)[X])
   (H : R.fromPoly (q := q) (n := n) p = rp) :
-  ((List.enumFrom k coeffs).foldl (init := rp) fun res (i,c) =>
+  ((List.zipIdx (n := k) coeffs).foldl (init := rp) fun res (c, i) =>
     res + R.monomial ↑c i) =
   R.fromPoly (q := q) (n := n)
-    ((List.enumFrom k coeffs).foldl (init := p) fun res (i,c) =>
+    ((List.zipIdx (n := k) coeffs).foldl (init := p) fun res (c, i) =>
       res + (Polynomial.monomial i ↑c)) := by
       induction coeffs generalizing p rp k
       case nil =>
-        simp only [List.enumFrom_nil, List.foldl_nil, H]
+        simp only [List.zipIdx_nil, List.foldl_nil, H]
       case cons head tail tail_ih =>
-        simp only [List.enumFrom_cons, List.foldl_cons]
+        simp only [List.zipIdx_cons, List.foldl_cons]
         specialize tail_ih (k := k + 1)
             (rp := (rp + monomial (↑head) k)) (p := (p + ↑(Polynomial.monomial k ↑head)))
         apply tail_ih
@@ -504,8 +505,8 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} [Fact (q > 1)] {coeffs : List
   R.fromPoly (q := q) (n := n) (R.fromTensor' coeffs) := by
     simp only [fromTensor, fromTensor']
     induction coeffs
-    · simp [List.enum]
-    · simp only [List.enum_cons]
+    · simp [List.zipIdx]
+    · simp only [List.zipIdx_cons]
       apply fromTensor_eq_fromTensor'_fromPoly_aux
       simp [monomial]
 
@@ -589,11 +590,10 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {coeffs : List Int} :
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp only [fromTensor]
     induction coeffs using List.reverseRecOn
-    case nil => simp [List.enum, fromTensorFinsupp]
+    case nil => simp [List.zipIdx, fromTensorFinsupp]
     case append_singleton c cs hcs =>
-      simp only [List.enum_append, List.enumFrom_cons, List.enumFrom_nil, List.foldl_append,
-        List.foldl_cons, List.foldl_nil, R.fromTensorFinsupp_concat_monomial]
-      rw [hcs]
+      simp only [List.zipIdx_append, zero_add, List.zipIdx_cons, List.zipIdx_nil, List.foldl_append,
+        List.foldl_cons, List.foldl_nil, fromTensorFinsupp_concat_monomial, map_add, hcs]
       congr
 
 end FinnSupp

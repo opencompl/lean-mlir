@@ -1,0 +1,12 @@
+1: "foo"
+9: "foo" has pointer type input
+
+1: "toplevel"
+4: "toplevel" has unsupported operation: llvm.alloca
+
+4: "toplevel" has unsupported operation: builtin.unregistered: llvm.intr.dbg.declare
+
+4: "toplevel" has unsupported operation: llvm.call
+
+4: "toplevel" has unsupported operation: llvm.return
+

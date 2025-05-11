@@ -1,0 +1,273 @@
+1: "use"
+5: "use" is empty
+
+1: "strcmp_memcmp"
+9: "strcmp_memcmp" has pointer type input
+
+4: "strcmp_memcmp" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp" has unsupported operation: llvm.call
+
+1: "strcmp"
+9: "strcmp" has pointer type input
+
+1: "strcmp_memcmp2"
+9: "strcmp_memcmp2" has pointer type input
+
+4: "strcmp_memcmp2" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp2" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp3"
+9: "strcmp_memcmp3" has pointer type input
+
+4: "strcmp_memcmp3" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp3" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp4"
+9: "strcmp_memcmp4" has pointer type input
+
+4: "strcmp_memcmp4" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp4" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp5"
+9: "strcmp_memcmp5" has pointer type input
+
+4: "strcmp_memcmp5" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp5" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp6"
+9: "strcmp_memcmp6" has pointer type input
+
+4: "strcmp_memcmp6" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp6" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp7"
+9: "strcmp_memcmp7" has pointer type input
+
+4: "strcmp_memcmp7" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp7" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp8"
+9: "strcmp_memcmp8" has pointer type input
+
+4: "strcmp_memcmp8" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp8" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp9"
+9: "strcmp_memcmp9" has pointer type input
+
+4: "strcmp_memcmp9" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp9" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp"
+9: "strncmp_memcmp" has pointer type input
+
+4: "strncmp_memcmp" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp" has unsupported operation: llvm.call
+
+1: "strncmp"
+9: "strncmp" has pointer type input
+
+1: "strncmp_memcmp2"
+9: "strncmp_memcmp2" has pointer type input
+
+4: "strncmp_memcmp2" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp2" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp3"
+9: "strncmp_memcmp3" has pointer type input
+
+4: "strncmp_memcmp3" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp3" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp4"
+9: "strncmp_memcmp4" has pointer type input
+
+4: "strncmp_memcmp4" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp4" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp5"
+9: "strncmp_memcmp5" has pointer type input
+
+4: "strncmp_memcmp5" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp5" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp6"
+9: "strncmp_memcmp6" has pointer type input
+
+4: "strncmp_memcmp6" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp6" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp7"
+9: "strncmp_memcmp7" has pointer type input
+
+4: "strncmp_memcmp7" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp7" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp8"
+9: "strncmp_memcmp8" has pointer type input
+
+4: "strncmp_memcmp8" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp8" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp9"
+9: "strncmp_memcmp9" has pointer type input
+
+4: "strncmp_memcmp9" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp9" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp10"
+9: "strncmp_memcmp10" has pointer type input
+
+4: "strncmp_memcmp10" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp10" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp11"
+9: "strncmp_memcmp11" has pointer type input
+
+4: "strncmp_memcmp11" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp11" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp12"
+9: "strncmp_memcmp12" has pointer type input
+
+4: "strncmp_memcmp12" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp12" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp13"
+9: "strncmp_memcmp13" has pointer type input
+
+4: "strncmp_memcmp13" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp13" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp14"
+9: "strncmp_memcmp14" has pointer type input
+
+4: "strncmp_memcmp14" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp14" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad"
+9: "strcmp_memcmp_bad" has pointer type input
+
+4: "strcmp_memcmp_bad" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad2"
+9: "strcmp_memcmp_bad2" has pointer type input
+
+4: "strcmp_memcmp_bad2" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad2" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad3"
+9: "strcmp_memcmp_bad3" has pointer type input
+
+4: "strcmp_memcmp_bad3" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad3" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad4"
+9: "strcmp_memcmp_bad4" has pointer type input
+
+4: "strcmp_memcmp_bad4" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad4" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad5"
+9: "strcmp_memcmp_bad5" has pointer type input
+
+4: "strcmp_memcmp_bad5" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad5" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad6"
+9: "strcmp_memcmp_bad6" has pointer type input
+
+4: "strcmp_memcmp_bad6" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad7"
+9: "strcmp_memcmp_bad7" has pointer type input
+
+4: "strcmp_memcmp_bad7" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad7" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_bad8"
+9: "strcmp_memcmp_bad8" has pointer type input
+
+4: "strcmp_memcmp_bad8" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_bad8" has unsupported operation: llvm.call
+
+4: "strcmp_memcmp_bad8" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp_bad"
+9: "strncmp_memcmp_bad" has pointer type input
+
+4: "strncmp_memcmp_bad" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp_bad" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp_bad1"
+9: "strncmp_memcmp_bad1" has pointer type input
+
+4: "strncmp_memcmp_bad1" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp_bad1" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp_bad2"
+9: "strncmp_memcmp_bad2" has pointer type input
+
+4: "strncmp_memcmp_bad2" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp_bad2" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp_bad3"
+9: "strncmp_memcmp_bad3" has pointer type input
+
+4: "strncmp_memcmp_bad3" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp_bad3" has unsupported operation: llvm.call
+
+1: "strncmp_memcmp_bad4"
+9: "strncmp_memcmp_bad4" has pointer type input
+
+4: "strncmp_memcmp_bad4" has unsupported operation: llvm.mlir.addressof
+
+4: "strncmp_memcmp_bad4" has unsupported operation: llvm.call
+
+4: "strncmp_memcmp_bad4" has unsupported operation: llvm.call
+
+1: "strcmp_memcmp_msan"
+9: "strcmp_memcmp_msan" has pointer type input
+
+4: "strcmp_memcmp_msan" has unsupported operation: llvm.mlir.addressof
+
+4: "strcmp_memcmp_msan" has unsupported operation: llvm.call
+
+1: "memcmp"
+9: "memcmp" has pointer type input
+

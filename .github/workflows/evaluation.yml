@@ -1,0 +1,104 @@
+name: Evaluation
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Evaluation of Tactics & Decision Procedures
+    # Use expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-self-hosted-runners
+    runs-on: self-hosted
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Install Python Modules
+        run: |
+          sudo apt update
+          sudo apt install -y python3-matplotlib python3-pandas python3-num2words ripgrep
+
+      - name: Get Cache
+        continue-on-error: true
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+
+      - name: Build
+        continue-on-error: true
+        run: |
+          lake -R build
+
+      - name: Run Alive Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j256)
+
+      - name: Compare Alive All
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
+
+      - name: Run HDel Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j256)
+
+      - name: Compare HDEl Symbolic
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
+
+      - name: Run HDel
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j256)
+
+      - name: Compare HDEl
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+
+      - name: Run LLVM
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j128)
+
+      - name: Compare LLVM
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-llvm.py)
+
+      - name: Run LLVM Symbolic
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j128)
+
+      - name: Compare LLVM Symbolic
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
+
+      - name: Collect Stats
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation/for-paper/tools; python3 ./collect-stats.py)

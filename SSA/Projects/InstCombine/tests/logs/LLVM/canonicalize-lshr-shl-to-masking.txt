@@ -1,0 +1,383 @@
+1: "positive_samevar"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_shlnuw"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_shlnuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_shlnuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_shlnuw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_shlnsw"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_shlnsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_shlnsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_shlnsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_shlnuwnsw"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_shlnuwnsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_shlnuwnsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_shlnuwnsw"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_lshrexact"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_shlnsw_lshrexact"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_shlnsw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_shlnsw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_shlnsw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_shlnuw_lshrexact"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_shlnuw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_shlnuw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_shlnuw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_shlnuwnsw_lshrexact"
+2: llvm.func
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_sameconst_shlnuwnsw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggerlshr_shlnuwnsw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_biggershl_shlnuwnsw_lshrexact"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.shl
+2: llvm.return
+
+1: "positive_samevar_vec"
+8: "positive_samevar_vec" contains vectors which are unsupported
+
+1: "positive_sameconst_vec"
+8: "positive_sameconst_vec" contains vectors which are unsupported
+
+1: "positive_sameconst_vec_undef0"
+4: "positive_sameconst_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "positive_sameconst_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "positive_sameconst_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_sameconst_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_sameconst_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_sameconst_vec_undef1"
+4: "positive_sameconst_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_sameconst_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_sameconst_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_sameconst_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_sameconst_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_sameconst_vec_undef2"
+4: "positive_sameconst_vec_undef2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "positive_sameconst_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_sameconst_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_sameconst_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_sameconst_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_biggerlshr_vec"
+8: "positive_biggerlshr_vec" contains vectors which are unsupported
+
+1: "positive_biggerlshr_vec_undef0"
+4: "positive_biggerlshr_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_biggerlshr_vec_undef1"
+4: "positive_biggerlshr_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_biggerlshr_vec_undef2"
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggerlshr_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_biggershl_vec"
+8: "positive_biggershl_vec" contains vectors which are unsupported
+
+1: "positive_biggershl_vec_undef0"
+4: "positive_biggershl_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef0" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_biggershl_vec_undef1"
+4: "positive_biggershl_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef1" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_biggershl_vec_undef2"
+4: "positive_biggershl_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: llvm.mlir.undef
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "positive_biggershl_vec_undef2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "positive_sameconst_multiuse"
+4: "positive_sameconst_multiuse" has unsupported operation: llvm.call
+
+1: "positive_biggerlshr_multiuse"
+4: "positive_biggerlshr_multiuse" has unsupported operation: llvm.call
+
+1: "positive_biggershl_multiuse"
+4: "positive_biggershl_multiuse" has unsupported operation: llvm.call
+
+1: "positive_biggerlshr_vec_nonsplat"
+7: "positive_biggerlshr_vec_nonsplat" is unchanged by InstCombine
+
+1: "positive_biggerLlshr_vec_nonsplat"
+7: "positive_biggerLlshr_vec_nonsplat" is unchanged by InstCombine
+
+1: "negative_twovars"
+7: "negative_twovars" is unchanged by InstCombine
+
+1: "use32"
+5: "use32" is empty
+
+1: "negative_oneuse"
+4: "negative_oneuse" has unsupported operation: llvm.call
+

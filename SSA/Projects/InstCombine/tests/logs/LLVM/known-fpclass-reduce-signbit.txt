@@ -1,0 +1,43 @@
+1: "vector_reduce_maximum_signbit"
+8: "vector_reduce_maximum_signbit" contains vectors which are unsupported
+
+1: "vector_reduce_maximum_signbit_fail_maybe_nan"
+4: "vector_reduce_maximum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "vector_reduce_maximum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmaximum
+
+4: "vector_reduce_maximum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "vector_reduce_minimum_signbit"
+8: "vector_reduce_minimum_signbit" contains vectors which are unsupported
+
+1: "vector_reduce_minimum_signbit_fail_maybe_nan"
+4: "vector_reduce_minimum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "vector_reduce_minimum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fminimum
+
+4: "vector_reduce_minimum_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "vector_reduce_max_signbit"
+8: "vector_reduce_max_signbit" contains vectors which are unsupported
+
+1: "vector_reduce_max_signbit_fail_maybe_nan"
+4: "vector_reduce_max_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "vector_reduce_max_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmax
+
+4: "vector_reduce_max_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "vector_reduce_min_signbit"
+8: "vector_reduce_min_signbit" contains vectors which are unsupported
+
+1: "vector_reduce_min_signbit_fail_maybe_nan"
+4: "vector_reduce_min_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "vector_reduce_min_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.intr.vector.reduce.fmin
+
+4: "vector_reduce_min_signbit_fail_maybe_nan" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "vector_reduce_min_signbit_nnan_from_fmf"
+8: "vector_reduce_min_signbit_nnan_from_fmf" contains vectors which are unsupported
+

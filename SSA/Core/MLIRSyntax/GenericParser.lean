@@ -237,29 +237,29 @@ syntax "%" ident : mlir_op_operand
 syntax "[mlir_op_operand|" mlir_op_operand "]" : term
 macro_rules
   | `([mlir_op_operand| $$($q)]) => return q
-  | `([mlir_op_operand| % $x:ident]) => `(SSAVal.SSAVal $(Lean.quote (x.getId.toString)))
-  | `([mlir_op_operand| % $n:num]) => `(SSAVal.SSAVal (IntToString $n))
+  | `([mlir_op_operand| % $x:ident]) => `(SSAVal.name $(Lean.quote (x.getId.toString)))
+  | `([mlir_op_operand| % $n:num]) => `(SSAVal.name (IntToString $n))
 
 section Test
 
 private def operand0 := [mlir_op_operand| %x]
 /--
 info: private def MLIR.EDSL.operand0 : SSAVal :=
-SSAVal.SSAVal "x"
+SSAVal.name "x"
 -/
 #guard_msgs in #print operand0
 
 private def operand1 := [mlir_op_operand| %x]
 /--
 info: private def MLIR.EDSL.operand1 : SSAVal :=
-SSAVal.SSAVal "x"
+SSAVal.name "x"
 -/
 #guard_msgs in #print operand1
 
 private def operand2 := [mlir_op_operand| %0]
 /--
 info: private def MLIR.EDSL.operand2 : SSAVal :=
-SSAVal.SSAVal (IntToString 0)
+SSAVal.name (IntToString 0)
 -/
 #guard_msgs in #print operand2
 
@@ -634,15 +634,15 @@ macro_rules
 
 macro_rules
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:str > ]) => do
-  let dialect := Lean.quote dialect.getId.toString
+  let dialect := Lean.quote dialect.getId.eraseMacroScopes.toString
   `(AttrValue.opaque_ $dialect $opaqueData)
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:ident > ]) => do
-  let d := Lean.quote dialect.getId.toString
+  let d := Lean.quote dialect.getId.eraseMacroScopes.toString
   let g : TSyntax `str := Lean.Syntax.mkStrLit (toString opaqueData.getId)
   `(AttrValue.opaque_ $d $g)
 macro_rules
 | `([mlir_attr_val| #opaque< $dialect:ident, $opaqueData:str> : $t:mlir_type ]) => do
-  let dialect := Lean.quote dialect.getId.toString
+  let dialect := Lean.quote dialect.getId.eraseMacroScopes.toString
   `(AttrValue.opaqueElementsAttr $dialect $opaqueData $(⟨t⟩))
 
 macro_rules
@@ -923,9 +923,10 @@ private def op1 : Op φ :=
 /--
 info: private def MLIR.EDSL.op1 : {φ : ℕ} → Op φ :=
 fun {φ} =>
-  Op.mk "foo" []
-    [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32), (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
-    [] (AttrDict.mk [])
+  { name := "foo", res := [],
+    args :=
+      [(SSAVal.name "x", MLIRType.int Signedness.Signless 32), (SSAVal.name "y", MLIRType.int Signedness.Signless 32)],
+    regions := [], attrs := AttrDict.mk [] }
 -/
 #guard_msgs in #print op1
 
@@ -934,9 +935,10 @@ private def op2 : Op φ :=
 /--
 info: private def MLIR.EDSL.op2 : {φ : ℕ} → Op φ :=
 fun {φ} =>
-  Op.mk "foo" [(SSAVal.SSAVal "z", MLIRType.int Signedness.Signless 32)]
-    [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32), (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
-    [] (AttrDict.mk [])
+  { name := "foo", res := [(SSAVal.name "z", MLIRType.int Signedness.Signless 32)],
+    args :=
+      [(SSAVal.name "x", MLIRType.int Signedness.Signless 32), (SSAVal.name "y", MLIRType.int Signedness.Signless 32)],
+    regions := [], attrs := AttrDict.mk [] }
 -/
 #guard_msgs in #print op2
 
@@ -949,7 +951,7 @@ following example:
 private def bbop1 : SSAVal × MLIRTy φ := [mlir_bb_operand| %x : i32 ]
 /--
 info: private def MLIR.EDSL.bbop1 : {φ : ℕ} → SSAVal × MLIRTy φ :=
-fun {φ} => (SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32)
+fun {φ} => (SSAVal.name "x", MLIRType.int Signedness.Signless 32)
 -/
 #guard_msgs in #print bbop1
 
@@ -963,14 +965,17 @@ private def bb1NoArgs : Region φ :=
 /--
 info: private def MLIR.EDSL.bb1NoArgs : {φ : ℕ} → Region φ :=
 fun {φ} =>
-  Region.mk "entry" []
-    [Op.mk "foo" []
-        [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32),
-          (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
-        [] (AttrDict.mk []),
-      Op.mk "bar" [(SSAVal.SSAVal "z", MLIRType.int Signedness.Signless 32)]
-        [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32)] [] (AttrDict.mk []),
-      Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
+  { name := "entry", args := [],
+    ops :=
+      [{ name := "foo", res := [],
+          args :=
+            [(SSAVal.name "x", MLIRType.int Signedness.Signless 32),
+              (SSAVal.name "y", MLIRType.int Signedness.Signless 32)],
+          regions := [], attrs := AttrDict.mk [] },
+        { name := "bar", res := [(SSAVal.name "z", MLIRType.int Signedness.Signless 32)],
+          args := [(SSAVal.name "x", MLIRType.int Signedness.Signless 32)], regions := [], attrs := AttrDict.mk [] },
+        { name := "std.return", res := [], args := [(SSAVal.name "x0", MLIRType.int Signedness.Signless 42)],
+          regions := [], attrs := AttrDict.mk [] }] }
 -/
 #guard_msgs in #print bb1NoArgs
 
@@ -991,14 +996,18 @@ private def bb2SingleArg : Region φ :=
 /--
 info: private def MLIR.EDSL.bb2SingleArg : {φ : ℕ} → Region φ :=
 fun {φ} =>
-  Region.mk "entry" [(SSAVal.SSAVal "argp", MLIRType.int Signedness.Signless 32)]
-    [Op.mk "foo" []
-        [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32),
-          (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
-        [] (AttrDict.mk []),
-      Op.mk "bar" [(SSAVal.SSAVal "z", MLIRType.int Signedness.Signless 32)]
-        [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32)] [] (AttrDict.mk []),
-      Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]-/
+  { name := "entry", args := [(SSAVal.name "argp", MLIRType.int Signedness.Signless 32)],
+    ops :=
+      [{ name := "foo", res := [],
+          args :=
+            [(SSAVal.name "x", MLIRType.int Signedness.Signless 32),
+              (SSAVal.name "y", MLIRType.int Signedness.Signless 32)],
+          regions := [], attrs := AttrDict.mk [] },
+        { name := "bar", res := [(SSAVal.name "z", MLIRType.int Signedness.Signless 32)],
+          args := [(SSAVal.name "x", MLIRType.int Signedness.Signless 32)], regions := [], attrs := AttrDict.mk [] },
+        { name := "std.return", res := [], args := [(SSAVal.name "x0", MLIRType.int Signedness.Signless 42)],
+          regions := [], attrs := AttrDict.mk [] }] }
+-/
 #guard_msgs in #print bb2SingleArg
 
 
@@ -1010,24 +1019,30 @@ private def bb3MultipleArgs : Region φ :=
       "std.return"(%x0) : (i42) -> ()
   }]
 /--
-info: Region.mk "entry"
-  [(SSAVal.SSAVal "argp", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32)),
-    (SSAVal.SSAVal "argq", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 64))]
-  [Op.mk "foo" []
-      [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32)),
-        (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32))]
-      [] (AttrDict.mk []),
-    Op.mk "bar" [(SSAVal.SSAVal "z", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32))]
-      [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32))] [] (AttrDict.mk []),
-    Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 42))] []
-      (AttrDict.mk [])]-/
+info: { name := "entry",
+  args :=
+    [(SSAVal.name "argp", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32)),
+      (SSAVal.name "argq", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 64))],
+  ops :=
+    [{ name := "foo", res := [],
+        args :=
+          [(SSAVal.name "x", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32)),
+            (SSAVal.name "y", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32))],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "bar", res := [(SSAVal.name "z", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32))],
+        args := [(SSAVal.name "x", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32))], regions := [],
+        attrs := AttrDict.mk [] },
+      { name := "std.return", res := [],
+        args := [(SSAVal.name "x0", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 42))], regions := [],
+        attrs := AttrDict.mk [] }] }
+-/
 #guard_msgs in #reduce bb3MultipleArgs
 
 
 private def rgn0 : Region φ := ([mlir_region|  { }])
 /--
 info: private def MLIR.EDSL.rgn0 : {φ : ℕ} → Region φ :=
-fun {φ} => Region.mk "entry" [] []
+fun {φ} => { name := "entry", args := [], ops := [] }
 -/
 #guard_msgs in #print rgn0
 
@@ -1039,8 +1054,10 @@ private def rgn1 : Region φ :=
 /--
 info: private def MLIR.EDSL.rgn1 : {φ : ℕ} → Region φ :=
 fun {φ} =>
-  Region.mk "entry" []
-    [Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
+  { name := "entry", args := [],
+    ops :=
+      [{ name := "std.return", res := [], args := [(SSAVal.name "x0", MLIRType.int Signedness.Signless 42)],
+          regions := [], attrs := AttrDict.mk [] }] }
 -/
 #guard_msgs in #print rgn1
 
@@ -1052,8 +1069,10 @@ private def rgn2 : Region φ :=
 /--
 info: private def MLIR.EDSL.rgn2 : {φ : ℕ} → Region φ :=
 fun {φ} =>
-  Region.mk "entry" []
-    [Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
+  { name := "entry", args := [],
+    ops :=
+      [{ name := "std.return", res := [], args := [(SSAVal.name "x0", MLIRType.int Signedness.Signless 42)],
+          regions := [], attrs := AttrDict.mk [] }] }
 -/
 #guard_msgs in #print rgn2
 
@@ -1066,8 +1085,10 @@ private def rgn3 : Region φ :=
 /--
 info: private def MLIR.EDSL.rgn1 : {φ : ℕ} → Region φ :=
 fun {φ} =>
-  Region.mk "entry" []
-    [Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
+  { name := "entry", args := [],
+    ops :=
+      [{ name := "std.return", res := [], args := [(SSAVal.name "x0", MLIRType.int Signedness.Signless 42)],
+          regions := [], attrs := AttrDict.mk [] }] }
 -/
 #guard_msgs in #print rgn1
 
@@ -1078,9 +1099,10 @@ private def opcall1 : Op φ := [mlir_op| "foo" (%x, %y) : (i32, i32) -> (i32) ]
 /--
 info: private def MLIR.EDSL.opcall1 : {φ : ℕ} → Op φ :=
 fun {φ} =>
-  Op.mk "foo" []
-    [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32), (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
-    [] (AttrDict.mk [])
+  { name := "foo", res := [],
+    args :=
+      [(SSAVal.name "x", MLIRType.int Signedness.Signless 32), (SSAVal.name "y", MLIRType.int Signedness.Signless 32)],
+    regions := [], attrs := AttrDict.mk [] }
 -/
 #guard_msgs in #print opcall1
 
@@ -1090,11 +1112,14 @@ private def oprgn0 : Op φ := [mlir_op|
  "func"() ({ ^entry: %x = "foo.add"() : () -> (i64) } ) : () -> ()
 ]
 /--
-info: Op.mk "func" [] []
-  [Region.mk "entry" []
-      [Op.mk "foo.add" [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 64))] [] []
-          (AttrDict.mk [])]]
-  (AttrDict.mk [])
+info: { name := "func", res := [], args := [],
+  regions :=
+    [{ name := "entry", args := [],
+        ops :=
+          [{ name := "foo.add",
+              res := [(SSAVal.name "x", MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 64))], args := [],
+              regions := [], attrs := AttrDict.mk [] }] }],
+  attrs := AttrDict.mk [] }
 -/
 #guard_msgs in #reduce oprgn0
 
@@ -1113,21 +1138,28 @@ private def opRgnAttr0 : Op φ := [mlir_op|
 /--
 info: private def MLIR.EDSL.opRgnAttr0 : {φ : ℕ} → Op φ :=
 fun {φ} =>
-  Op.mk "module" [] []
-    [Region.mk "entry" []
-        [Op.mk "func" [] []
-            [Region.mk "bb0"
-                [(SSAVal.SSAVal "arg0", MLIRType.int Signedness.Signless 32),
-                  (SSAVal.SSAVal "arg1", MLIRType.int Signedness.Signless 32)]
-                [Op.mk "std.addi" [(SSAVal.SSAVal "zero", MLIRType.int Signedness.Signless 64)]
-                    [(SSAVal.SSAVal "arg0", MLIRType.int Signedness.Signless 32),
-                      (SSAVal.SSAVal "arg1", MLIRType.int Signedness.Signless 16)]
-                    [] (AttrDict.mk []),
-                  Op.mk "std.return" [] [(SSAVal.SSAVal "zero", MLIRType.int Signedness.Signless 32)] []
-                    (AttrDict.mk [])]]
-            (AttrDict.mk [AttrEntry.mk "sym_name" (AttrValue.str "add")]),
-          Op.mk "module_terminator" [] [] [] (AttrDict.mk [])]]
-    (AttrDict.mk [])
+  { name := "module", res := [], args := [],
+    regions :=
+      [{ name := "entry", args := [],
+          ops :=
+            [{ name := "func", res := [], args := [],
+                regions :=
+                  [{ name := "bb0",
+                      args :=
+                        [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
+                          (SSAVal.name "arg1", MLIRType.int Signedness.Signless 32)],
+                      ops :=
+                        [{ name := "std.addi", res := [(SSAVal.name "zero", MLIRType.int Signedness.Signless 64)],
+                            args :=
+                              [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
+                                (SSAVal.name "arg1", MLIRType.int Signedness.Signless 16)],
+                            regions := [], attrs := AttrDict.mk [] },
+                          { name := "std.return", res := [],
+                            args := [(SSAVal.name "zero", MLIRType.int Signedness.Signless 32)], regions := [],
+                            attrs := AttrDict.mk [] }] }],
+                attrs := AttrDict.mk [AttrEntry.mk "sym_name" (AttrValue.str "add")] },
+              { name := "module_terminator", res := [], args := [], regions := [], attrs := AttrDict.mk [] }] }],
+    attrs := AttrDict.mk [] }
 -/
 #guard_msgs in #print opRgnAttr0
 
@@ -1182,7 +1214,9 @@ section Test
 private def mod1 : Op φ := [mlir_op| module { }]
 /--
 info: private def MLIR.EDSL.mod1 : {φ : ℕ} → Op φ :=
-fun {φ} => Op.mk "module" [] [] [Region.fromOps [Op.empty "module_terminator"]] AttrDict.empty
+fun {φ} =>
+  { name := "module", res := [], args := [], regions := [Region.fromOps [Op.empty "module_terminator"]],
+    attrs := AttrDict.empty }
 -/
 #guard_msgs in #print mod1
 
@@ -1190,8 +1224,12 @@ private def mod2 : Op φ := [mlir_op| module { "dummy.dummy"(): () -> () }]
 /--
 info: private def MLIR.EDSL.mod2 : {φ : ℕ} → Op φ :=
 fun {φ} =>
-  Op.mk "module" [] [] [Region.fromOps [Op.mk "dummy.dummy" [] [] [] (AttrDict.mk []), Op.empty "module_terminator"]]
-    AttrDict.empty
+  { name := "module", res := [], args := [],
+    regions :=
+      [Region.fromOps
+          [{ name := "dummy.dummy", res := [], args := [], regions := [], attrs := AttrDict.mk [] },
+            Op.empty "module_terminator"]],
+    attrs := AttrDict.empty }
 -/
 #guard_msgs in #print mod2
 

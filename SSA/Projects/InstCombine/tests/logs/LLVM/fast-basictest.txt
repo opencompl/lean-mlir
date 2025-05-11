@@ -1,0 +1,296 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test1_minimal"
+4: "test1_minimal" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test1_reassoc"
+4: "test1_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test1_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test2_no_FMF"
+4: "test2_no_FMF" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2_no_FMF" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2_no_FMF" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test2_reassoc"
+4: "test2_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test2_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test7"
+4: "test7" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test7" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test7_unary_fneg"
+4: "test7_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test7_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test7_reassoc_nsz"
+4: "test7_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test7_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test7_reassoc"
+4: "test7_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test7_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test7_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test8_reassoc_nsz"
+4: "test8_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test8_reassoc"
+4: "test8_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test8_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test9_reassoc_nsz"
+4: "test9_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test9_reassoc"
+4: "test9_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test9_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test9_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test10"
+4: "test10" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test10_reassoc_nsz"
+4: "test10_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test10_reassoc"
+4: "test10_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test10_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test10_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test11"
+4: "test11" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test11" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test11_reassoc_nsz"
+4: "test11_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test11_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test11_reassoc"
+4: "test11_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test11_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test11_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test11_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test11_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test12"
+4: "test12" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test12" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test12_unary_fneg"
+4: "test12_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test12_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test12_reassoc_nsz"
+4: "test12_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test12_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test12_reassoc"
+4: "test12_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test12_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test12_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test12_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test13"
+4: "test13" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test13" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test13" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test13_reassoc_nsz"
+4: "test13_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test13_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test13_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test13_reassoc"
+4: "test13_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test13_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test13_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test14"
+4: "test14" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test14_reassoc"
+4: "test14_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test15"
+4: "test15" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test15_unary_fneg"
+4: "test15_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test15_reassoc_nsz"
+4: "test15_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test15_reassoc"
+4: "test15_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test15_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test15_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test16"
+4: "test16" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test16_unary_fneg"
+4: "test16_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test16_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test16_reassoc_nsz"
+4: "test16_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fneg
+
+4: "test16_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test16_reassoc"
+4: "test16_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test16_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test16_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test17"
+4: "test17" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test17_unary_fneg"
+4: "test17_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test17_reassoc_nsz"
+4: "test17_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test17_reassoc"
+4: "test17_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test17_reassoc" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+1: "test17_unary_fneg_no_FMF"
+4: "test17_unary_fneg_no_FMF" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17_unary_fneg_no_FMF" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test17_reassoc_unary_fneg"
+4: "test17_reassoc_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "test17_reassoc_unary_fneg" has unsupported operation: builtin.unregistered: llvm.fmul
+
+1: "test18"
+4: "test18" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test18" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test18_reassoc"
+4: "test18_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test18_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test18_reassoc" has unsupported operation: builtin.unregistered: llvm.fadd
+
+1: "test19"
+4: "test19" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test19" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test19_reassoc_nsz"
+4: "test19_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fadd
+
+4: "test19_reassoc_nsz" has unsupported operation: builtin.unregistered: llvm.fneg
+
+1: "test19_reassoc"
+4: "test19_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test19_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+
+4: "test19_reassoc" has unsupported operation: builtin.unregistered: llvm.fsub
+

@@ -1,0 +1,9 @@
+1: "trunc_add_nsw"
+8: "trunc_add_nsw" contains vectors which are unsupported
+
+1: "trunc_add_no_nsw"
+8: "trunc_add_no_nsw" contains vectors which are unsupported
+
+1: "trunc_add_mixed"
+7: "trunc_add_mixed" is unchanged by InstCombine
+

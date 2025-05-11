@@ -1,0 +1,150 @@
+1: "pow_libcall_half_no_FMF"
+4: "pow_libcall_half_no_FMF" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_half_no_FMF"
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_intrinsic_half_no_FMF" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "pow_libcall_half_approx"
+4: "pow_libcall_half_approx" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_half_approx"
+4: "pow_intrinsic_half_approx" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_half_approx" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_intrinsic_half_approx" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "powf_intrinsic_half_fast"
+4: "powf_intrinsic_half_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "pow_libcall_half_no_FMF_base_ninf"
+4: "pow_libcall_half_no_FMF_base_ninf" has unsupported operation: builtin.unregistered: llvm.uitofp
+
+4: "pow_libcall_half_no_FMF_base_ninf" has unsupported operation: llvm.call
+
+4: "pow_libcall_half_no_FMF_base_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "pow_libcall_half_ninf"
+4: "pow_libcall_half_ninf" has unsupported operation: llvm.call
+
+4: "pow_libcall_half_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "pow_intrinsic_half_ninf"
+4: "pow_intrinsic_half_ninf" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_half_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+1: "pow_libcall_half_nsz"
+4: "pow_libcall_half_nsz" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_half_nsz"
+4: "pow_intrinsic_half_nsz" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_half_nsz" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+1: "pow_libcall_half_ninf_nsz"
+4: "pow_libcall_half_ninf_nsz" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_half_ninf_nsz"
+4: "pow_intrinsic_half_ninf_nsz" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "pow_libcall_half_fast"
+4: "pow_libcall_half_fast" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_half_fast"
+4: "pow_intrinsic_half_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+1: "pow_libcall_neghalf_no_FMF"
+4: "pow_libcall_neghalf_no_FMF" has unsupported operation: llvm.call
+
+1: "pow_libcall_neghalf_reassoc_ninf"
+4: "pow_libcall_neghalf_reassoc_ninf" has unsupported operation: llvm.call
+
+4: "pow_libcall_neghalf_reassoc_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_libcall_neghalf_reassoc_ninf" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_libcall_neghalf_afn"
+4: "pow_libcall_neghalf_afn" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_neghalf_no_FMF"
+4: "pow_intrinsic_neghalf_no_FMF" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_intrinsic_neghalf_reassoc"
+4: "pow_intrinsic_neghalf_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_neghalf_reassoc" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_intrinsic_neghalf_reassoc" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "pow_intrinsic_neghalf_reassoc" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_intrinsic_neghalf_afn"
+4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "pow_intrinsic_neghalf_afn" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_libcall_neghalf_ninf"
+4: "pow_libcall_neghalf_ninf" has unsupported operation: llvm.call
+
+4: "pow_libcall_neghalf_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_libcall_neghalf_ninf" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_intrinsic_neghalf_ninf"
+4: "pow_intrinsic_neghalf_ninf" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_neghalf_ninf" has unsupported operation: builtin.unregistered: llvm.intr.fabs
+
+4: "pow_intrinsic_neghalf_ninf" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_libcall_neghalf_nsz"
+4: "pow_libcall_neghalf_nsz" has unsupported operation: llvm.call
+
+1: "pow_intrinsic_neghalf_nsz"
+4: "pow_intrinsic_neghalf_nsz" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_neghalf_nsz" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "pow_intrinsic_neghalf_nsz" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_intrinsic_neghalf_ninf_nsz"
+4: "pow_intrinsic_neghalf_ninf_nsz" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_neghalf_ninf_nsz" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_libcall_neghalf_ninf_nsz"
+4: "pow_libcall_neghalf_ninf_nsz" has unsupported operation: llvm.call
+
+4: "pow_libcall_neghalf_ninf_nsz" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_libcall_neghalf_fast"
+4: "pow_libcall_neghalf_fast" has unsupported operation: llvm.call
+
+4: "pow_libcall_neghalf_fast" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow_intrinsic_neghalf_fast"
+4: "pow_intrinsic_neghalf_fast" has unsupported operation: builtin.unregistered: llvm.intr.sqrt
+
+4: "pow_intrinsic_neghalf_fast" has unsupported operation: builtin.unregistered: llvm.fdiv
+
+1: "pow"
+5: "pow" is empty
+
+1: "powf"
+5: "powf" is empty
+
+1: "sqrt"
+5: "sqrt" is empty
+
+1: "sqrtf"
+5: "sqrtf" is empty
+

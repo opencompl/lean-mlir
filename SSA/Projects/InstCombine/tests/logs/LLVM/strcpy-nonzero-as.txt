@@ -1,0 +1,55 @@
+1: "strcpy"
+9: "strcpy" has pointer type input
+
+1: "stpcpy"
+9: "stpcpy" has pointer type input
+
+1: "strncpy"
+9: "strncpy" has pointer type input
+
+1: "stpncpy"
+9: "stpncpy" has pointer type input
+
+1: "test_strcpy_to_memcpy"
+9: "test_strcpy_to_memcpy" has pointer type input
+
+4: "test_strcpy_to_memcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strcpy_to_memcpy" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_strcpy_to_memcpy" has unsupported operation: llvm.return
+
+1: "test_stpcpy_to_memcpy"
+9: "test_stpcpy_to_memcpy" has pointer type input
+
+4: "test_stpcpy_to_memcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_stpcpy_to_memcpy" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_stpcpy_to_memcpy" has unsupported operation: llvm.return
+
+1: "test_stpcpy_to_strcpy"
+9: "test_stpcpy_to_strcpy" has pointer type input
+
+4: "test_stpcpy_to_strcpy" has unsupported operation: llvm.call
+
+4: "test_stpcpy_to_strcpy" has unsupported operation: llvm.return
+
+1: "test_strncpy_to_memcpy"
+9: "test_strncpy_to_memcpy" has pointer type input
+
+4: "test_strncpy_to_memcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_strncpy_to_memcpy" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_strncpy_to_memcpy" has unsupported operation: llvm.return
+
+1: "test_stpncpy_to_memcpy"
+9: "test_stpncpy_to_memcpy" has pointer type input
+
+4: "test_stpncpy_to_memcpy" has unsupported operation: llvm.mlir.addressof
+
+4: "test_stpncpy_to_memcpy" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+4: "test_stpncpy_to_memcpy" has unsupported operation: llvm.return
+

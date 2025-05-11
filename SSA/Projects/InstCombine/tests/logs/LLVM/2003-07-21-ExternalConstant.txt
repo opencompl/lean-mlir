@@ -1,0 +1,28 @@
+1: "bzero"
+9: "bzero" has pointer type input
+
+1: "bcopy"
+9: "bcopy" has pointer type input
+
+1: "bcmp"
+9: "bcmp" has pointer type input
+
+1: "fputs"
+9: "fputs" has pointer type input
+
+1: "fputs_unlocked"
+9: "fputs_unlocked" has pointer type input
+
+1: "function"
+4: "function" has unsupported operation: llvm.mlir.addressof
+
+4: "function" has unsupported operation: llvm.alloca
+
+4: "function" has unsupported operation: llvm.load
+
+4: "function" has unsupported operation: llvm.store
+
+4: "function" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "function" has unsupported operation: llvm.load
+

@@ -1,0 +1,258 @@
+1: "powf_expf"
+4: "powf_expf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_expf" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+1: "powf_expf_libcall"
+4: "powf_expf_libcall" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_expf_libcall" has unsupported operation: llvm.call
+
+1: "pow_exp"
+4: "pow_exp" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_exp" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+1: "pow_exp_not_intrinsic"
+4: "pow_exp_not_intrinsic" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_exp_not_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+1: "powl_expl"
+4: "powl_expl" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powl_expl" has unsupported operation: builtin.unregistered: llvm.intr.exp
+
+1: "powl_expl_not_fast"
+4: "powl_expl_not_fast" has unsupported operation: llvm.call
+
+4: "powl_expl_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_exp2f"
+4: "powf_exp2f" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_exp2f" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "powf_exp2f_not_intrinsic"
+4: "powf_exp2f_not_intrinsic" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_exp2f_not_intrinsic" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "pow_exp2"
+4: "pow_exp2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_exp2" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "pow_exp2_libcall"
+4: "pow_exp2_libcall" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_exp2_libcall" has unsupported operation: llvm.call
+
+1: "powl_exp2l"
+4: "powl_exp2l" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powl_exp2l" has unsupported operation: builtin.unregistered: llvm.intr.exp2
+
+1: "powl_exp2l_not_fast"
+4: "powl_exp2l_not_fast" has unsupported operation: llvm.call
+
+4: "powl_exp2l_not_fast" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "powf_exp10f"
+4: "powf_exp10f" has unsupported operation: llvm.call
+
+4: "powf_exp10f" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_exp10"
+4: "pow_exp10" has unsupported operation: llvm.call
+
+4: "pow_exp10" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "pow_exp10l"
+4: "pow_exp10l" has unsupported operation: llvm.call
+
+4: "pow_exp10l" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "reuse_fast"
+9: "reuse_fast" has pointer type input
+
+4: "reuse_fast" has unsupported operation: llvm.call
+
+4: "reuse_fast" has unsupported operation: llvm.call
+
+4: "reuse_fast" has unsupported operation: llvm.store
+
+1: "reuse_libcall"
+9: "reuse_libcall" has pointer type input
+
+4: "reuse_libcall" has unsupported operation: llvm.call
+
+4: "reuse_libcall" has unsupported operation: llvm.call
+
+4: "reuse_libcall" has unsupported operation: llvm.store
+
+1: "function_pointer"
+9: "function_pointer" has pointer type input
+
+4: "function_pointer" has unsupported operation: llvm.call
+
+4: "function_pointer" has unsupported operation: builtin.unregistered: llvm.intr.pow
+
+1: "use_d"
+5: "use_d" is empty
+
+1: "use_f"
+5: "use_f" is empty
+
+1: "pow_ok_base"
+4: "pow_ok_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_base" has unsupported operation: llvm.call
+
+1: "pow_ok_base_fast"
+4: "pow_ok_base_fast" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_base_fast" has unsupported operation: llvm.call
+
+1: "pow_ok_base2"
+4: "pow_ok_base2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_base2" has unsupported operation: llvm.call
+
+1: "pow_ok_base3"
+4: "pow_ok_base3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_base3" has unsupported operation: llvm.call
+
+1: "pow_ok_ten_base"
+4: "pow_ok_ten_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_ten_base" has unsupported operation: llvm.call
+
+1: "pow_ok_denorm_base"
+4: "pow_ok_denorm_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_denorm_base" has unsupported operation: llvm.call
+
+1: "powf_ok_base"
+4: "powf_ok_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_ok_base" has unsupported operation: llvm.call
+
+1: "powf_ok_base2"
+4: "powf_ok_base2" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_ok_base2" has unsupported operation: llvm.call
+
+1: "powf_ok_base3"
+4: "powf_ok_base3" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_ok_base3" has unsupported operation: llvm.call
+
+1: "powf_ok_ten_base"
+4: "powf_ok_ten_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_ok_ten_base" has unsupported operation: llvm.call
+
+1: "powf_ok_denorm_base"
+4: "powf_ok_denorm_base" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_ok_denorm_base" has unsupported operation: llvm.call
+
+1: "pow_zero_base"
+4: "pow_zero_base" has unsupported operation: llvm.call
+
+1: "pow_zero_base2"
+4: "pow_zero_base2" has unsupported operation: llvm.call
+
+1: "pow_inf_base"
+4: "pow_inf_base" has unsupported operation: llvm.call
+
+1: "pow_nan_base"
+4: "pow_nan_base" has unsupported operation: llvm.call
+
+1: "pow_negative_base"
+4: "pow_negative_base" has unsupported operation: llvm.call
+
+1: "pow_multiuse"
+4: "pow_multiuse" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_multiuse" has unsupported operation: llvm.call
+
+4: "pow_multiuse" has unsupported operation: llvm.call
+
+1: "pow_ok_base_no_afn"
+4: "pow_ok_base_no_afn" has unsupported operation: llvm.call
+
+1: "pow_ok_base_no_nnan"
+4: "pow_ok_base_no_nnan" has unsupported operation: llvm.call
+
+1: "pow_ok_base_no_ninf"
+4: "pow_ok_base_no_ninf" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "pow_ok_base_no_ninf" has unsupported operation: llvm.call
+
+1: "powf_zero_base"
+4: "powf_zero_base" has unsupported operation: llvm.call
+
+1: "powf_zero_base2"
+4: "powf_zero_base2" has unsupported operation: llvm.call
+
+1: "powf_inf_base"
+4: "powf_inf_base" has unsupported operation: llvm.call
+
+1: "powf_nan_base"
+4: "powf_nan_base" has unsupported operation: llvm.call
+
+1: "powf_negative_base"
+4: "powf_negative_base" has unsupported operation: llvm.call
+
+1: "powf_multiuse"
+4: "powf_multiuse" has unsupported operation: builtin.unregistered: llvm.fmul
+
+4: "powf_multiuse" has unsupported operation: llvm.call
+
+4: "powf_multiuse" has unsupported operation: llvm.call
+
+1: "powf_ok_base_no_afn"
+4: "powf_ok_base_no_afn" has unsupported operation: llvm.call
+
+1: "powl_long_dbl_no_fold"
+4: "powl_long_dbl_no_fold" has unsupported operation: llvm.call
+
+1: "expf"
+5: "expf" is empty
+
+1: "exp"
+5: "exp" is empty
+
+1: "expl"
+5: "expl" is empty
+
+1: "exp2f"
+5: "exp2f" is empty
+
+1: "exp2"
+5: "exp2" is empty
+
+1: "exp2l"
+5: "exp2l" is empty
+
+1: "exp10f"
+5: "exp10f" is empty
+
+1: "exp10"
+5: "exp10" is empty
+
+1: "exp10l"
+5: "exp10l" is empty
+
+1: "powf"
+5: "powf" is empty
+
+1: "pow"
+5: "pow" is empty
+
+1: "powl"
+5: "powl" is empty
+

@@ -1,0 +1,57 @@
+1: "lshr_ctlz_true"
+4: "lshr_ctlz_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "shl_nuw_ctlz_true"
+4: "shl_nuw_ctlz_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "shl_nuw_nsw_ctlz_true"
+4: "shl_nuw_nsw_ctlz_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.ctlz
+
+1: "lshr_exact_cttz_true"
+4: "lshr_exact_cttz_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "shl_cttz_true"
+4: "shl_cttz_true" has unsupported operation after optimization: builtin.unregistered: llvm.intr.cttz
+
+1: "vec2_lshr_ctlz_true"
+8: "vec2_lshr_ctlz_true" contains vectors which are unsupported
+
+1: "vec2_shl_nuw_ctlz_true"
+8: "vec2_shl_nuw_ctlz_true" contains vectors which are unsupported
+
+1: "vec2_shl_nuw_nsw_ctlz_true"
+8: "vec2_shl_nuw_nsw_ctlz_true" contains vectors which are unsupported
+
+1: "vec2_lshr_exact_cttz_true"
+8: "vec2_lshr_exact_cttz_true" contains vectors which are unsupported
+
+1: "vec2_shl_cttz_true"
+8: "vec2_shl_cttz_true" contains vectors which are unsupported
+
+1: "vec2_shl_nsw_ctlz_true_neg"
+4: "vec2_shl_nsw_ctlz_true_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "vec2_lshr_ctlz_false_neg"
+4: "vec2_lshr_ctlz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "vec2_shl_ctlz_false_neg"
+4: "vec2_shl_ctlz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "vec2_lshr_cttz_false_neg"
+4: "vec2_lshr_cttz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "vec2_shl_cttz_false_neg"
+4: "vec2_shl_cttz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "lshr_ctlz_faslse_neg"
+4: "lshr_ctlz_faslse_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "shl_ctlz_false_neg"
+4: "shl_ctlz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "lshr_cttz_false_neg"
+4: "lshr_cttz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+
+1: "shl_cttz_false_neg"
+4: "shl_cttz_false_neg" has unsupported operation: builtin.unregistered: llvm.intr.cttz
+

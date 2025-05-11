@@ -1,0 +1,81 @@
+1: "strchr"
+9: "strchr" has pointer type input
+
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "strchr_to_memchr_n_equals_len"
+4: "strchr_to_memchr_n_equals_len" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strchr_to_memchr_n_equals_len" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strchr_to_memchr_n_equals_len" has unsupported operation after optimization: llvm.call
+
+1: "memchr_n_equals_len"
+4: "memchr_n_equals_len" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "memchr_n_equals_len" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "memchr_n_equals_len" has unsupported operation after optimization: llvm.call
+
+1: "memchr_n_less_than_len"
+4: "memchr_n_less_than_len" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "memchr_n_less_than_len" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "memchr_n_less_than_len" has unsupported operation after optimization: llvm.call
+
+1: "memchr_n_more_than_len"
+4: "memchr_n_more_than_len" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "memchr_n_more_than_len" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "memchr_n_more_than_len" has unsupported operation after optimization: llvm.call
+
+1: "memchr_no_zero_cmp"
+4: "memchr_no_zero_cmp" has unsupported operation: llvm.mlir.addressof
+
+4: "memchr_no_zero_cmp" has unsupported operation: llvm.call
+
+1: "memchr_no_zero_cmp2"
+4: "memchr_no_zero_cmp2" has unsupported operation: llvm.mlir.addressof
+
+4: "memchr_no_zero_cmp2" has unsupported operation: llvm.getelementptr
+
+4: "memchr_no_zero_cmp2" has unsupported operation: llvm.mlir.zero
+
+1: "memchr_n_equals_len_minsize"
+4: "memchr_n_equals_len_minsize" has unsupported operation: llvm.mlir.addressof
+
+4: "memchr_n_equals_len_minsize" has unsupported operation: llvm.mlir.zero
+
+4: "memchr_n_equals_len_minsize" has unsupported operation: llvm.call
+
+1: "memchr_n_equals_len2_minsize"
+4: "memchr_n_equals_len2_minsize" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "memchr_n_equals_len2_minsize" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "memchr_n_equals_len2_minsize" has unsupported operation after optimization: llvm.call
+
+1: "strchr_to_memchr_2_non_cont_ranges"
+4: "strchr_to_memchr_2_non_cont_ranges" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strchr_to_memchr_2_non_cont_ranges" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strchr_to_memchr_2_non_cont_ranges" has unsupported operation after optimization: llvm.call
+
+1: "strchr_to_memchr_2_non_cont_ranges_char_dup"
+4: "strchr_to_memchr_2_non_cont_ranges_char_dup" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "strchr_to_memchr_2_non_cont_ranges_char_dup" has unsupported operation after optimization: llvm.mlir.zero
+
+4: "strchr_to_memchr_2_non_cont_ranges_char_dup" has unsupported operation after optimization: llvm.call
+
+1: "strchr_to_memchr_3_non_cont_ranges"
+4: "strchr_to_memchr_3_non_cont_ranges" has unsupported operation: llvm.mlir.addressof
+
+4: "strchr_to_memchr_3_non_cont_ranges" has unsupported operation: llvm.mlir.zero
+
+4: "strchr_to_memchr_3_non_cont_ranges" has unsupported operation: llvm.call
+

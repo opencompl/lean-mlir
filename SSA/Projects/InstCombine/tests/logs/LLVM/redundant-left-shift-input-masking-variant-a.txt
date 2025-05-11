@@ -1,0 +1,179 @@
+1: "use32"
+5: "use32" is empty
+
+1: "t0_basic"
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+4: "t0_basic" has unsupported operation: llvm.call
+
+1: "t1_bigger_shift"
+4: "t1_bigger_shift" has unsupported operation: llvm.call
+
+4: "t1_bigger_shift" has unsupported operation: llvm.call
+
+4: "t1_bigger_shift" has unsupported operation: llvm.call
+
+4: "t1_bigger_shift" has unsupported operation: llvm.call
+
+1: "t2_bigger_mask"
+4: "t2_bigger_mask" has unsupported operation: llvm.call
+
+4: "t2_bigger_mask" has unsupported operation: llvm.call
+
+4: "t2_bigger_mask" has unsupported operation: llvm.call
+
+4: "t2_bigger_mask" has unsupported operation: llvm.call
+
+4: "t2_bigger_mask" has unsupported operation: llvm.call
+
+1: "use3xi32"
+5: "use3xi32" is empty
+
+1: "t3_vec_splat"
+4: "t3_vec_splat" has unsupported operation: llvm.call
+
+4: "t3_vec_splat" has unsupported operation: llvm.call
+
+4: "t3_vec_splat" has unsupported operation: llvm.call
+
+4: "t3_vec_splat" has unsupported operation: llvm.call
+
+4: "t3_vec_splat" has unsupported operation: llvm.call
+
+1: "t4_vec_nonsplat"
+4: "t4_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t4_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t4_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t4_vec_nonsplat" has unsupported operation: llvm.call
+
+4: "t4_vec_nonsplat" has unsupported operation: llvm.call
+
+1: "t5_vec_poison"
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "t5_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: llvm.mlir.undef
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "t5_vec_poison" has unsupported operation: llvm.call
+
+4: "t5_vec_poison" has unsupported operation: llvm.call
+
+4: "t5_vec_poison" has unsupported operation: llvm.call
+
+4: "t5_vec_poison" has unsupported operation: llvm.call
+
+4: "t5_vec_poison" has unsupported operation: llvm.call
+
+1: "gen32"
+5: "gen32" is empty
+
+1: "t6_commutativity0"
+4: "t6_commutativity0" has unsupported operation: llvm.call
+
+4: "t6_commutativity0" has unsupported operation: llvm.call
+
+4: "t6_commutativity0" has unsupported operation: llvm.call
+
+4: "t6_commutativity0" has unsupported operation: llvm.call
+
+4: "t6_commutativity0" has unsupported operation: llvm.call
+
+1: "t7_commutativity1"
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+4: "t7_commutativity1" has unsupported operation: llvm.call
+
+1: "t8_commutativity2"
+4: "t8_commutativity2" has unsupported operation: llvm.call
+
+4: "t8_commutativity2" has unsupported operation: llvm.call
+
+4: "t8_commutativity2" has unsupported operation: llvm.call
+
+4: "t8_commutativity2" has unsupported operation: llvm.call
+
+4: "t8_commutativity2" has unsupported operation: llvm.call
+
+4: "t8_commutativity2" has unsupported operation: llvm.call
+
+1: "t9_nuw"
+4: "t9_nuw" has unsupported operation: llvm.call
+
+4: "t9_nuw" has unsupported operation: llvm.call
+
+4: "t9_nuw" has unsupported operation: llvm.call
+
+4: "t9_nuw" has unsupported operation: llvm.call
+
+1: "t10_nsw"
+4: "t10_nsw" has unsupported operation: llvm.call
+
+4: "t10_nsw" has unsupported operation: llvm.call
+
+4: "t10_nsw" has unsupported operation: llvm.call
+
+4: "t10_nsw" has unsupported operation: llvm.call
+
+1: "t11_nuw_nsw"
+4: "t11_nuw_nsw" has unsupported operation: llvm.call
+
+4: "t11_nuw_nsw" has unsupported operation: llvm.call
+
+4: "t11_nuw_nsw" has unsupported operation: llvm.call
+
+4: "t11_nuw_nsw" has unsupported operation: llvm.call
+
+1: "n12_not_minus_one"
+4: "n12_not_minus_one" has unsupported operation: llvm.call
+
+4: "n12_not_minus_one" has unsupported operation: llvm.call
+
+4: "n12_not_minus_one" has unsupported operation: llvm.call
+
+4: "n12_not_minus_one" has unsupported operation: llvm.call
+
+1: "n13_not_minus_one"
+4: "n13_not_minus_one" has unsupported operation: llvm.call
+
+4: "n13_not_minus_one" has unsupported operation: llvm.call
+
+4: "n13_not_minus_one" has unsupported operation: llvm.call
+
+4: "n13_not_minus_one" has unsupported operation: llvm.call
+

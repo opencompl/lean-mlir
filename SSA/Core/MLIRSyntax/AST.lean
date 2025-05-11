@@ -37,17 +37,17 @@ inductive BBName
 
 /-- An ssa value is a variable name -/
 inductive SSAVal : Type where
-  | SSAVal : String -> SSAVal
+  | name : String -> SSAVal
 deriving DecidableEq, Repr
 
 def SSAValToString (s: SSAVal): String :=
   match s with
-  | SSAVal.SSAVal str => str
+  | SSAVal.name str => str
 
 instance : ToString SSAVal where
   toString := SSAValToString
 
-inductive Signedness :=
+inductive Signedness where
   | Signless -- i*
   | Unsigned -- u*
   | Signed   -- si*
@@ -57,7 +57,7 @@ abbrev Width φ := ConcreteOrMVar Nat φ
 abbrev Width.concrete : Nat → Width φ := ConcreteOrMVar.concrete
 abbrev Width.mvar : Fin φ → Width φ := ConcreteOrMVar.mvar
 
-inductive MLIRType (φ : Nat) : Type _ :=
+inductive MLIRType (φ : Nat) : Type _ where
   | int: Signedness -> Width φ -> MLIRType φ
   | float: Nat -> MLIRType φ
   | tensor1d: MLIRType φ -- tensor of int values.
@@ -86,7 +86,7 @@ def MLIRType.i (width : Nat) : MLIRTy φ := MLIRType.int Signedness.Signless wid
 abbrev TypedSSAVal := SSAVal × MLIRType φ
 
 mutual
-inductive AttrValue :=
+inductive AttrValue where
   | symbol: String -> AttrValue -- symbol ref attr
   | str : String -> AttrValue
   | int : Int -> MLIRType φ -> AttrValue
@@ -106,12 +106,12 @@ inductive AttrValue :=
 
 -- https://mlir.llvm.org/docs/LangRef/#attributes
 -- | TODO: add support for mutually inductive records / structures
-inductive AttrEntry  :=
+inductive AttrEntry where
   | mk: (key: String)
       -> (value: AttrValue)
       -> AttrEntry
 
-inductive AttrDict :=
+inductive AttrDict where
   | mk: List AttrEntry -> AttrDict
 
 end
@@ -125,22 +125,19 @@ def AttrDict.getAttr {φ} : AttrDict φ → String →  Option (AttrValue φ)
 -- We define "AttrVal" to be just the basic attributes outside of any dialect
 abbrev AttrVal (φ := 0) := AttrValue φ
 
-
 mutual
--- | TODO: make this `record` when mutual records are allowed?
 -- | TODO: make these arguments optional?
-inductive Op where
-  | mk: (name: String)
-        -> (res: List <| TypedSSAVal φ)
-        -> (args: List <| TypedSSAVal φ)
-        -> (regions: List Region)
-        -> (attrs: AttrDict φ)
-        -> Op
+structure Op where
+  (name: String)
+  (res: List <| TypedSSAVal φ)
+  (args: List <| TypedSSAVal φ)
+  (regions: List Region)
+  (attrs: AttrDict φ)
 
-inductive Region where
-  | mk: (name: String)
-        -> (args: List <| TypedSSAVal φ)
-        -> (ops: List Op) -> Region
+structure Region where
+  (name: String)
+  (args: List <| TypedSSAVal φ)
+  (ops: List Op)
 
 end
 
@@ -153,35 +150,25 @@ inductive Module where
         -> (attrs: List <| AttrDefn φ)
         ->  Module
 
-def Op.name {φ} : Op φ -> String
-  | Op.mk name .. => name
+namespace Op
+variable {φ} (op : Op φ)
 
-def Op.res {φ} : Op φ -> List (TypedSSAVal φ)
-  | Op.mk _ res .. => res
+def resNames : List SSAVal :=
+  op.res.map Prod.fst
 
-def Op.resNames {φ} : Op φ → List SSAVal
-  | Op.mk _ res .. => res.map Prod.fst
+def resTypes : List (MLIRType φ) :=
+  op.res.map Prod.snd
 
-def Op.resTypes {φ} : Op φ → List (MLIRType φ)
-  | Op.mk _ res .. => res.map Prod.snd
+def argNames : List SSAVal :=
+  op.args.map Prod.fst
 
-def Op.args {φ} : Op φ -> List (TypedSSAVal φ)
-  | Op.mk _ _ args .. => args
+def argTypes : List (MLIRType φ) :=
+  op.args.map Prod.snd
 
-def Op.argNames {φ} : Op φ → List SSAVal
-  | Op.mk _ _ args .. => args.map Prod.fst
-
-def Op.argTypes {φ} : Op φ → List (MLIRType φ)
-  | Op.mk _ _ args .. => args.map Prod.snd
-
-def Op.regions {φ} : Op φ -> List (Region φ)
-  | Op.mk _ _ _ regions _ => regions
-
-def Op.attrs {φ} : Op φ -> (AttrDict φ)
-| Op.mk _ _ _ _ attrs => attrs
+end Op
 
 instance : Coe String SSAVal where
-  coe (s: String) := SSAVal.SSAVal s
+  coe (s: String) := SSAVal.name s
 
 instance : Coe String (AttrValue φ) where
   coe (s: String) := AttrValue.str s
@@ -209,18 +196,6 @@ instance : Coe (List (AttrEntry φ)) (AttrDict φ) where
  instance : Coe (AttrDict φ) (List (AttrEntry φ)) where
   coe
   | AttrDict.mk as => as
-
-def Region.name (region : Region φ) : BBName :=
-  match region with
-  | Region.mk name _ _ => BBName.mk name
-
-def Region.args : Region φ → List (TypedSSAVal φ)
-  | .mk _ args _ => args
-
-def Region.ops (region: Region φ) : List (Op φ) :=
-  match region with
-  | Region.mk _ _ ops => ops
-
 
 mutual
 partial def docAttrVal {φ} : AttrValue φ → Format
@@ -265,7 +240,7 @@ instance : Repr (AttrDefn φ) where
 
 instance : Repr SSAVal where
   reprPrec x _ := match x with
-    | SSAVal.SSAVal name => f!"%{name}"
+    | SSAVal.name name => f!"%{name}"
 
 instance : ToFormat SSAVal where
   format := repr

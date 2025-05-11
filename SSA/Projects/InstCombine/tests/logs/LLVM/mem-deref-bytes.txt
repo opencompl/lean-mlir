@@ -1,0 +1,100 @@
+1: "memcmp"
+9: "memcmp" has pointer type input
+
+1: "memcpy"
+9: "memcpy" has pointer type input
+
+1: "memmove"
+9: "memmove" has pointer type input
+
+1: "memset"
+9: "memset" has pointer type input
+
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "memcmp_const_size_set_deref"
+9: "memcmp_const_size_set_deref" has pointer type input
+
+4: "memcmp_const_size_set_deref" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref"
+9: "memcmp_const_size_update_deref" has pointer type input
+
+4: "memcmp_const_size_update_deref" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref2"
+9: "memcmp_const_size_update_deref2" has pointer type input
+
+4: "memcmp_const_size_update_deref2" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref3"
+9: "memcmp_const_size_update_deref3" has pointer type input
+
+4: "memcmp_const_size_update_deref3" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref4"
+9: "memcmp_const_size_update_deref4" has pointer type input
+
+4: "memcmp_const_size_update_deref4" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref5"
+9: "memcmp_const_size_update_deref5" has pointer type input
+
+4: "memcmp_const_size_update_deref5" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref6"
+9: "memcmp_const_size_update_deref6" has pointer type input
+
+4: "memcmp_const_size_update_deref6" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_update_deref7"
+9: "memcmp_const_size_update_deref7" has pointer type input
+
+4: "memcmp_const_size_update_deref7" has unsupported operation: llvm.call
+
+1: "memcmp_const_size_no_update_deref"
+9: "memcmp_const_size_no_update_deref" has pointer type input
+
+4: "memcmp_const_size_no_update_deref" has unsupported operation: llvm.call
+
+1: "memcmp_nonconst_size"
+9: "memcmp_nonconst_size" has pointer type input
+
+4: "memcmp_nonconst_size" has unsupported operation: llvm.call
+
+1: "memcpy_const_size_set_deref"
+9: "memcpy_const_size_set_deref" has pointer type input
+
+4: "memcpy_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "memmove_const_size_set_deref"
+9: "memmove_const_size_set_deref" has pointer type input
+
+4: "memmove_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memmove
+
+1: "memset_const_size_set_deref"
+9: "memset_const_size_set_deref" has pointer type input
+
+4: "memset_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memset
+
+1: "memchr_const_size_set_deref"
+9: "memchr_const_size_set_deref" has pointer type input
+
+4: "memchr_const_size_set_deref" has unsupported operation: llvm.call
+
+1: "llvm_memcpy_const_size_set_deref"
+9: "llvm_memcpy_const_size_set_deref" has pointer type input
+
+4: "llvm_memcpy_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memcpy
+
+1: "llvm_memmove_const_size_set_deref"
+9: "llvm_memmove_const_size_set_deref" has pointer type input
+
+4: "llvm_memmove_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memmove
+
+1: "llvm_memset_const_size_set_deref"
+9: "llvm_memset_const_size_set_deref" has pointer type input
+
+4: "llvm_memset_const_size_set_deref" has unsupported operation: builtin.unregistered: llvm.intr.memset
+

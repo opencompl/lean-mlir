@@ -1,0 +1,12 @@
+1: "isascii"
+5: "isascii" is empty
+
+1: "test_simplify1"
+4: "test_simplify1" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify2"
+4: "test_simplify2" has unsupported operation after optimization: llvm.call
+
+1: "test_simplify3"
+4: "test_simplify3" has unsupported operation after optimization: llvm.call
+

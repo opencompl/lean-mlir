@@ -1,0 +1,26 @@
+1: "use8"
+5: "use8" is empty
+
+1: "t0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.return
+
+1: "t1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.ashr
+2: llvm.return
+
+1: "t2_vec"
+8: "t2_vec" contains vectors which are unsupported
+
+1: "t3_vec_poison"
+8: "t3_vec_poison" contains vectors which are unsupported
+
+1: "n4"
+4: "n4" has unsupported operation: llvm.call
+

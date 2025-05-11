@@ -1,0 +1,15 @@
+1: "test"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.udiv
+2: builtin.unregistered: llvm.select
+2: llvm.udiv
+2: llvm.add
+2: llvm.return
+
+1: "PR34856"
+8: "PR34856" contains vectors which are unsupported
+

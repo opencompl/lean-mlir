@@ -1,0 +1,71 @@
+1: "tanAtanInverseFast"
+4: "tanAtanInverseFast" has unsupported operation: llvm.call
+
+1: "atanhTanhInverseFast"
+4: "atanhTanhInverseFast" has unsupported operation: llvm.call
+
+1: "sinhAsinhInverseFast"
+4: "sinhAsinhInverseFast" has unsupported operation: llvm.call
+
+1: "asinhSinhInverseFast"
+4: "asinhSinhInverseFast" has unsupported operation: llvm.call
+
+1: "coshAcoshInverseFast"
+4: "coshAcoshInverseFast" has unsupported operation: llvm.call
+
+1: "indirectTanCall"
+9: "indirectTanCall" has pointer type input
+
+4: "indirectTanCall" has unsupported operation: llvm.call
+
+4: "indirectTanCall" has unsupported operation: llvm.call
+
+1: "tanAtanInverse"
+4: "tanAtanInverse" has unsupported operation: llvm.call
+
+4: "tanAtanInverse" has unsupported operation: llvm.call
+
+1: "atanhTanhInverse"
+4: "atanhTanhInverse" has unsupported operation: llvm.call
+
+4: "atanhTanhInverse" has unsupported operation: llvm.call
+
+1: "sinhAsinhInverse"
+4: "sinhAsinhInverse" has unsupported operation: llvm.call
+
+4: "sinhAsinhInverse" has unsupported operation: llvm.call
+
+1: "asinhSinhInverse"
+4: "asinhSinhInverse" has unsupported operation: llvm.call
+
+4: "asinhSinhInverse" has unsupported operation: llvm.call
+
+1: "coshAcoshInverse"
+4: "coshAcoshInverse" has unsupported operation: llvm.call
+
+4: "coshAcoshInverse" has unsupported operation: llvm.call
+
+1: "asinhf"
+5: "asinhf" is empty
+
+1: "sinhf"
+5: "sinhf" is empty
+
+1: "acoshf"
+5: "acoshf" is empty
+
+1: "coshf"
+5: "coshf" is empty
+
+1: "tanhf"
+5: "tanhf" is empty
+
+1: "atanhf"
+5: "atanhf" is empty
+
+1: "tanf"
+5: "tanf" is empty
+
+1: "atanf"
+5: "atanf" is empty
+

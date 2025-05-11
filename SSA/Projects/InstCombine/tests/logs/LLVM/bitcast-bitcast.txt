@@ -1,0 +1,2 @@
+3: bitcast-bitcast.ll: parsing has failed
+

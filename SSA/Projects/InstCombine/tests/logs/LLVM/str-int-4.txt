@@ -1,0 +1,361 @@
+1: "strtol"
+9: "strtol" has pointer type input
+
+1: "strtoll"
+9: "strtoll" has pointer type input
+
+1: "fold_strtol"
+9: "fold_strtol" has pointer type input
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtol" has unsupported operation: llvm.store
+
+4: "fold_strtol" has unsupported operation: llvm.return
+
+1: "call_strtol"
+9: "call_strtol" has pointer type input
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.call
+
+4: "call_strtol" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol" has unsupported operation: llvm.store
+
+4: "call_strtol" has unsupported operation: llvm.return
+
+1: "fold_strtoll"
+9: "fold_strtoll" has pointer type input
+
+4: "fold_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "fold_strtoll" has unsupported operation: llvm.store
+
+4: "fold_strtoll" has unsupported operation: llvm.return
+
+1: "call_strtoll"
+9: "call_strtoll" has pointer type input
+
+4: "call_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtoll" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "call_strtoll" has unsupported operation: llvm.call
+
+4: "call_strtoll" has unsupported operation: llvm.store
+
+4: "call_strtoll" has unsupported operation: llvm.call
+
+4: "call_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "call_strtoll" has unsupported operation: llvm.store
+
+4: "call_strtoll" has unsupported operation: llvm.call
+
+4: "call_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "call_strtoll" has unsupported operation: llvm.store
+
+4: "call_strtoll" has unsupported operation: llvm.call
+
+4: "call_strtoll" has unsupported operation: llvm.getelementptr
+
+4: "call_strtoll" has unsupported operation: llvm.store
+
+4: "call_strtoll" has unsupported operation: llvm.return
+
+1: "call_strtol_trailing_space"
+9: "call_strtol_trailing_space" has pointer type input
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.mlir.addressof
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.call
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.store
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.call
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.store
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.call
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.getelementptr
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.store
+
+4: "call_strtol_trailing_space" has unsupported operation: llvm.return
+

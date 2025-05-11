@@ -1,0 +1,79 @@
+1: "static_hem"
+4: "static_hem" has unsupported operation: llvm.mlir.addressof
+
+4: "static_hem" has unsupported operation: llvm.getelementptr
+
+4: "static_hem" has unsupported operation: llvm.load
+
+1: "hem"
+4: "hem" has unsupported operation: llvm.mlir.addressof
+
+4: "hem" has unsupported operation: llvm.getelementptr
+
+4: "hem" has unsupported operation: llvm.load
+
+1: "hem_2d"
+4: "hem_2d" has unsupported operation: llvm.mlir.addressof
+
+4: "hem_2d" has unsupported operation: llvm.getelementptr
+
+4: "hem_2d" has unsupported operation: llvm.load
+
+1: "foo"
+4: "foo" has unsupported operation: llvm.mlir.addressof
+
+4: "foo" has unsupported operation: llvm.load
+
+1: "bar"
+4: "bar" has unsupported operation: llvm.alloca
+
+4: "bar" has unsupported operation: llvm.call
+
+4: "bar" has unsupported operation: llvm.load
+
+1: "static_hem_store"
+4: "static_hem_store" has unsupported operation: llvm.mlir.addressof
+
+4: "static_hem_store" has unsupported operation: llvm.getelementptr
+
+4: "static_hem_store" has unsupported operation: llvm.store
+
+4: "static_hem_store" has unsupported operation: llvm.return
+
+1: "hem_store"
+4: "hem_store" has unsupported operation: llvm.mlir.addressof
+
+4: "hem_store" has unsupported operation: llvm.getelementptr
+
+4: "hem_store" has unsupported operation: llvm.store
+
+4: "hem_store" has unsupported operation: llvm.return
+
+1: "hem_2d_store"
+4: "hem_2d_store" has unsupported operation: llvm.mlir.addressof
+
+4: "hem_2d_store" has unsupported operation: llvm.getelementptr
+
+4: "hem_2d_store" has unsupported operation: llvm.store
+
+4: "hem_2d_store" has unsupported operation: llvm.return
+
+1: "foo_store"
+4: "foo_store" has unsupported operation: llvm.mlir.addressof
+
+4: "foo_store" has unsupported operation: llvm.store
+
+4: "foo_store" has unsupported operation: llvm.return
+
+1: "bar_store"
+4: "bar_store" has unsupported operation: llvm.alloca
+
+4: "bar_store" has unsupported operation: llvm.call
+
+4: "bar_store" has unsupported operation: llvm.store
+
+4: "bar_store" has unsupported operation: llvm.return
+
+1: "kip"
+9: "kip" has pointer type input
+

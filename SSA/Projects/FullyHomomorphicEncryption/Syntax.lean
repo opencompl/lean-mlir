@@ -84,12 +84,12 @@ def ROfZComputable_impl (z : ℤ) : R q n :=
           constructor
           · intros ha
             simp at ha
-            simp [ha]
+            simp +zetaDelta [ha]
           · intros hb
             simp at hb
             obtain ⟨ha, hz⟩ := hb
             subst ha
-            simp [hz]
+            simp +zetaDelta [hz]
         )
       : (ZMod q)[X]
   }

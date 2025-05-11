@@ -1,0 +1,52 @@
+1: "_Z3foov"
+4: "_Z3foov" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z3foov" has unsupported operation: llvm.mlir.addressof
+
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "_Z3foov" has unsupported operation: llvm.return
+
+4: "_Z3foov" has unsupported operation: llvm.getelementptr
+
+4: "_Z3foov" has unsupported operation: llvm.getelementptr
+
+4: "_Z3foov" has unsupported operation: llvm.load
+
+4: "_Z3foov" has unsupported operation: llvm.load
+
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "_Z3foov" has unsupported operation: llvm.store
+
+4: "_Z3foov" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "store_bitcasted_load"
+9: "store_bitcasted_load" has pointer type input
+
+4: "store_bitcasted_load" has unsupported operation: llvm.load
+
+1: "bitcasted_store"
+9: "bitcasted_store" has pointer type input
+
+4: "bitcasted_store" has unsupported operation: llvm.load
+
+4: "bitcasted_store" has unsupported operation: llvm.store
+
+4: "bitcasted_store" has unsupported operation: llvm.return
+
+1: "bitcasted_minmax_with_select_of_pointers"
+9: "bitcasted_minmax_with_select_of_pointers" has pointer type input
+
+4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: llvm.load
+
+4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: llvm.load
+
+4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: builtin.unregistered: llvm.fcmp
+
+4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: llvm.store
+
+4: "bitcasted_minmax_with_select_of_pointers" has unsupported operation: llvm.return
+

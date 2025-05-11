@@ -1,0 +1,125 @@
+1: "icmp_ugt_32"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ule_64"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ugt_16"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_ule_16x2"
+8: "icmp_ule_16x2" contains vectors which are unsupported
+
+1: "icmp_ule_16x2_nonzero"
+8: "icmp_ule_16x2_nonzero" contains vectors which are unsupported
+
+1: "icmp_ule_12x2"
+8: "icmp_ule_12x2" contains vectors which are unsupported
+
+1: "icmp_ult_8"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "icmp_uge_8x2"
+8: "icmp_uge_8x2" contains vectors which are unsupported
+
+1: "icmp_ugt_16x2"
+8: "icmp_ugt_16x2" contains vectors which are unsupported
+
+1: "fold_icmp_shl_nuw_c1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c2_non_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c2_div_non_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c2_indivisible"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_c2_without_nuw"
+7: "fold_icmp_shl_c2_without_nuw" is unchanged by InstCombine
+
+1: "fold_icmp_shl_nuw_c2_precondition1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c2_precondition2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_icmp_shl_nuw_c2_precondition3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.icmp
+2: llvm.return
+

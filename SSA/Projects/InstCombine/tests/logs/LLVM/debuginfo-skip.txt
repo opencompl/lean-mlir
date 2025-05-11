@@ -1,0 +1,7 @@
+1: "foo"
+4: "foo" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+
+4: "foo" has unsupported operation: builtin.unregistered: llvm.intr.dbg.value
+

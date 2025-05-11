@@ -1,0 +1,360 @@
+1: "land_land_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_land_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_band_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "land_band_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "land_lor_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_lor_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_bor_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "land_bor_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "band_land_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "band_land_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "band_lor_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "band_lor_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_land_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_land_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_band_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "lor_band_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "lor_lor_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_lor_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_bor_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "lor_bor_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "bor_land_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bor_land_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bor_lor_left1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bor_lor_left2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_land_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_land_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_band_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "land_band_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "land_lor_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_lor_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "land_lor_right1_vec"
+8: "land_lor_right1_vec" contains vectors which are unsupported
+
+1: "land_lor_right2_vec"
+8: "land_lor_right2_vec" contains vectors which are unsupported
+
+1: "land_bor_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "land_bor_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "band_land_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "band_land_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "band_lor_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "band_lor_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.and
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_land_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_land_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_band_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "lor_band_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.and
+2: llvm.return
+
+1: "lor_lor_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_lor_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "lor_bor_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "lor_bor_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: builtin.unregistered: llvm.select
+2: llvm.or
+2: llvm.return
+
+1: "bor_land_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bor_land_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bor_lor_right1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "bor_lor_right2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.or
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "PR50500_trueval"
+4: "PR50500_trueval" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR50500_trueval" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+1: "PR50500_falseval"
+4: "PR50500_falseval" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "PR50500_falseval" has unsupported operation: builtin.unregistered: llvm.shufflevector
+

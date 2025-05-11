@@ -1,0 +1,6 @@
+1: "strcat"
+9: "strcat" has pointer type input
+
+1: "test_strcat"
+9: "test_strcat" has pointer type input
+

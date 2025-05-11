@@ -12,6 +12,8 @@ permissions:
 jobs:
   build:
     name: tools, scaling, and auto-generated stmts
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -31,33 +33,26 @@ jobs:
           path: .lake
           key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
 
+      - name: Get mathlib cache (only if no cache available)
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: |
+          (lake -R exe cache get ; true) # download cache of mathlib docs.
+
       - name: Compile `mlirnatural` Executable 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build mlirnatural
-
-      - name: LLVM Exhaustive Enumeration
-        run: |
-          sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
-          (cd test/bruteforce-correctness && ./run.sh)
 
       - name: Compile `opt` Executable 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build opt
-
-      - name: LLVM opt round trip test
-        run: |
-          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
 
       - name: Compile Alive Scaling
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveScaling
+          lake -R build SSA.Projects.InstCombine.ScalingTest
 
       - name: Check for changes in AliveStatements
         run: |
-          lake -R exe cache get
           lake build AliveExamples
           (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
           bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash

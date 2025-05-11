@@ -1,0 +1,42 @@
+1: "test"
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test" has unsupported operation: llvm.return
+
+1: "bork"
+5: "bork" is empty
+
+1: "bar"
+5: "bar" is empty
+
+1: "zap"
+5: "zap" is empty
+

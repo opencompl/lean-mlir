@@ -1,0 +1,226 @@
+1: "use"
+5: "use" is empty
+
+1: "ult_2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_16_splat"
+8: "ult_16_splat" contains vectors which are unsupported
+
+1: "ult_3"
+7: "ult_3" is unchanged by InstCombine
+
+1: "ult_2_use"
+4: "ult_2_use" has unsupported operation: llvm.call
+
+1: "PR52260"
+4: "PR52260" has unsupported operation after optimization: llvm.mlir.addressof
+
+4: "PR52260" has unsupported operation after optimization: llvm.getelementptr
+
+4: "PR52260" has unsupported operation after optimization: llvm.load
+
+1: "ult_192"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "ult_2044_splat"
+8: "ult_2044_splat" contains vectors which are unsupported
+
+1: "ult_96"
+7: "ult_96" is unchanged by InstCombine
+
+1: "ult_192_use"
+4: "ult_192_use" has unsupported operation: llvm.call
+
+1: "ugt_3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_7_splat"
+8: "ugt_7_splat" contains vectors which are unsupported
+
+1: "ugt_4"
+7: "ugt_4" is unchanged by InstCombine
+
+1: "ugt_3_use"
+4: "ugt_3_use" has unsupported operation: llvm.call
+
+1: "ugt_253"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "ugt_2043_splat"
+8: "ugt_2043_splat" contains vectors which are unsupported
+
+1: "ugt_252"
+7: "ugt_252" is unchanged by InstCombine
+
+1: "ugt_253_use"
+4: "ugt_253_use" has unsupported operation: llvm.call
+
+1: "slt_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "slt_0_splat"
+8: "slt_0_splat" contains vectors which are unsupported
+
+1: "slt_1"
+7: "slt_1" is unchanged by InstCombine
+
+1: "slt_0_use"
+4: "slt_0_use" has unsupported operation: llvm.call
+
+1: "sgt_n1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "sgt_n1_splat"
+8: "sgt_n1_splat" contains vectors which are unsupported
+
+1: "sgt_0"
+7: "sgt_0" is unchanged by InstCombine
+
+1: "sgt_n1_use"
+4: "sgt_n1_use" has unsupported operation: llvm.call
+
+1: "trunc_eq_i32_i8"
+7: "trunc_eq_i32_i8" is unchanged by InstCombine
+
+1: "trunc_eq_v2i32_v2i8"
+7: "trunc_eq_v2i32_v2i8" is unchanged by InstCombine
+
+1: "trunc_ne_i64_i10"
+7: "trunc_ne_i64_i10" is unchanged by InstCombine
+
+1: "shl1_trunc_eq0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "shl1_trunc_ne0"
+8: "shl1_trunc_ne0" contains vectors which are unsupported
+
+1: "shl1_trunc_eq0_use1"
+4: "shl1_trunc_eq0_use1" has unsupported operation: llvm.call
+
+1: "shl1_trunc_ne0_use2"
+4: "shl1_trunc_ne0_use2" has unsupported operation: llvm.call
+
+1: "shl2_trunc_eq0"
+7: "shl2_trunc_eq0" is unchanged by InstCombine
+
+1: "shl2_trunc_ne0"
+7: "shl2_trunc_ne0" is unchanged by InstCombine
+
+1: "shl3_trunc_eq0"
+7: "shl3_trunc_eq0" is unchanged by InstCombine
+
+1: "shl4_trunc_ne0"
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shl4_trunc_ne0" has unsupported operation: llvm.mlir.undef
+
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "shl4_trunc_ne0" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "shl1_trunc_sgt0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "shl1_trunc_eq1"
+4: "shl1_trunc_eq1" has unsupported operation: llvm.call
+
+1: "shl1_trunc_ne32"
+4: "shl1_trunc_ne32" has unsupported operation: llvm.call
+
+1: "shl2_trunc_eq8_i32"
+7: "shl2_trunc_eq8_i32" is unchanged by InstCombine
+
+1: "shl2_trunc_ne8_i32"
+7: "shl2_trunc_ne8_i32" is unchanged by InstCombine
+
+1: "shl1_trunc_sgt4"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.trunc
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_nuw"
+7: "eq_nuw" is unchanged by InstCombine
+
+1: "ult_nuw"
+7: "ult_nuw" is unchanged by InstCombine
+
+1: "ule_nuw"
+4: "ule_nuw" has unsupported operation: llvm.call
+
+1: "ugt_nuw"
+7: "ugt_nuw" is unchanged by InstCombine
+
+1: "uge_nuw"
+4: "uge_nuw" has unsupported operation: llvm.call
+
+1: "uge_nuw_i48"
+4: "uge_nuw_i48" has unsupported operation: llvm.call
+
+1: "sgt_nuw_fail"
+7: "sgt_nuw_fail" is unchanged by InstCombine
+
+1: "ne_nsw"
+7: "ne_nsw" is unchanged by InstCombine
+
+1: "slt_nsw"
+7: "slt_nsw" is unchanged by InstCombine
+
+1: "sle_nsw"
+4: "sle_nsw" has unsupported operation: llvm.call
+
+1: "sgt_nsw"
+7: "sgt_nsw" is unchanged by InstCombine
+
+1: "sge_nsw"
+4: "sge_nsw" has unsupported operation: llvm.call
+
+1: "sge_nsw_i48"
+4: "sge_nsw_i48" has unsupported operation: llvm.call
+
+1: "uge_nsw"
+8: "uge_nsw" contains vectors which are unsupported
+
+1: "uge_nsw_non_splat"
+8: "uge_nsw_non_splat" contains vectors which are unsupported
+

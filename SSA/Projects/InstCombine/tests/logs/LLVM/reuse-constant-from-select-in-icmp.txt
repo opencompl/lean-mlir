@@ -1,0 +1,149 @@
+1: "p0_ult_65536"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p1_ugt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p2_slt_65536"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p3_sgt"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p4_vec_splat_ult_65536"
+8: "p4_vec_splat_ult_65536" contains vectors which are unsupported
+
+1: "p5_vec_splat_ugt"
+8: "p5_vec_splat_ugt" contains vectors which are unsupported
+
+1: "p6_vec_splat_slt_65536"
+8: "p6_vec_splat_slt_65536" contains vectors which are unsupported
+
+1: "p7_vec_splat_sgt"
+8: "p7_vec_splat_sgt" contains vectors which are unsupported
+
+1: "p8_vec_nonsplat_poison0"
+8: "p8_vec_nonsplat_poison0" contains vectors which are unsupported
+
+1: "p9_vec_nonsplat_poison1"
+4: "p9_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p9_vec_nonsplat_poison1" has unsupported operation: llvm.mlir.undef
+
+4: "p9_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p9_vec_nonsplat_poison1" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p10_vec_nonsplat_poison2"
+4: "p10_vec_nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "p10_vec_nonsplat_poison2" has unsupported operation: llvm.mlir.undef
+
+4: "p10_vec_nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "p10_vec_nonsplat_poison2" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "p11_vec_nonsplat"
+8: "p11_vec_nonsplat" contains vectors which are unsupported
+
+1: "use1"
+5: "use1" is empty
+
+1: "n12_extrause"
+4: "n12_extrause" has unsupported operation: llvm.call
+
+1: "p13_commutativity0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p14_commutativity1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "p15_commutativity2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n17_ult_zero"
+7: "n17_ult_zero" is unchanged by InstCombine
+
+1: "n18_ugt_allones"
+7: "n18_ugt_allones" is unchanged by InstCombine
+
+1: "n19_slt_int_min"
+7: "n19_slt_int_min" is unchanged by InstCombine
+
+1: "n20_sgt_int_max"
+7: "n20_sgt_int_max" is unchanged by InstCombine
+
+1: "n21_equality"
+7: "n21_equality" is unchanged by InstCombine
+
+1: "t22_sign_check"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "t22_sign_check2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.icmp
+2: builtin.unregistered: llvm.select
+2: llvm.return
+
+1: "n23_type_mismatch"
+7: "n23_type_mismatch" is unchanged by InstCombine
+
+1: "n24_ult_65534"
+7: "n24_ult_65534" is unchanged by InstCombine
+
+1: "n25_all_good0"
+7: "n25_all_good0" is unchanged by InstCombine
+
+1: "n26_all_good1"
+7: "n26_all_good1" is unchanged by InstCombine
+
+1: "ult_inf_loop"
+7: "ult_inf_loop" is unchanged by InstCombine
+
+1: "ult_inf_loop_vec"
+8: "ult_inf_loop_vec" contains vectors which are unsupported
+

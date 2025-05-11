@@ -1,0 +1,69 @@
+1: "t0_basic"
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "t1_vec"
+8: "t1_vec" contains vectors which are unsupported
+
+1: "t2_symmetry"
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "gen8"
+5: "gen8" is empty
+
+1: "t3_commutative"
+4: "t3_commutative" has unsupported operation: llvm.call
+
+1: "t4_commutative"
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "t5_commutative"
+4: "t5_commutative" has unsupported operation: llvm.call
+
+1: "use8"
+5: "use8" is empty
+
+1: "t6_extrause"
+4: "t6_extrause" has unsupported operation: llvm.call
+
+1: "n7_different_y"
+7: "n7_different_y" is unchanged by InstCombine
+
+1: "n8_wrong_pred0"
+7: "n8_wrong_pred0" is unchanged by InstCombine
+
+1: "n9_wrong_pred1"
+7: "n9_wrong_pred1" is unchanged by InstCombine
+
+1: "n10_wrong_pred2"
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "n11_wrong_pred3"
+2: llvm.func
+2: llvm.add
+2: llvm.icmp
+2: llvm.return
+
+1: "n12_wrong_pred4"
+7: "n12_wrong_pred4" is unchanged by InstCombine
+
+1: "n13_wrong_pred5"
+7: "n13_wrong_pred5" is unchanged by InstCombine
+
+1: "n14_wrong_pred6"
+7: "n14_wrong_pred6" is unchanged by InstCombine
+
+1: "n15_wrong_pred7"
+7: "n15_wrong_pred7" is unchanged by InstCombine
+

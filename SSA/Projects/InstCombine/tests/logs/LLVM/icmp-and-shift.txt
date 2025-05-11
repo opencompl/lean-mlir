@@ -1,0 +1,414 @@
+1: "use"
+5: "use" is empty
+
+1: "icmp_eq_and_pow2_shl1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_shl1_vec"
+8: "icmp_eq_and_pow2_shl1_vec" contains vectors which are unsupported
+
+1: "icmp_ne_and_pow2_shl1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and_pow2_shl1_vec"
+8: "icmp_ne_and_pow2_shl1_vec" contains vectors which are unsupported
+
+1: "icmp_eq_and_pow2_shl_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_shl_pow2_vec"
+8: "icmp_eq_and_pow2_shl_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_ne_and_pow2_shl_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and_pow2_shl_pow2_vec"
+8: "icmp_ne_and_pow2_shl_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_eq_and_pow2_shl_pow2_negative1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_shl_pow2_negative2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_shl_pow2_negative3"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_minus1_shl1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_minus1_shl1_vec"
+8: "icmp_eq_and_pow2_minus1_shl1_vec" contains vectors which are unsupported
+
+1: "icmp_ne_and_pow2_minus1_shl1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and_pow2_minus1_shl1_vec"
+8: "icmp_ne_and_pow2_minus1_shl1_vec" contains vectors which are unsupported
+
+1: "icmp_eq_and_pow2_minus1_shl_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_minus1_shl_pow2_vec"
+8: "icmp_eq_and_pow2_minus1_shl_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_ne_and_pow2_minus1_shl_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and_pow2_minus1_shl_pow2_vec"
+8: "icmp_ne_and_pow2_minus1_shl_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_eq_and_pow2_minus1_shl1_negative1"
+7: "icmp_eq_and_pow2_minus1_shl1_negative1" is unchanged by InstCombine
+
+1: "icmp_eq_and_pow2_minus1_shl1_negative2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and1_lshr_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and1_lshr_pow2_vec"
+8: "icmp_eq_and1_lshr_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_ne_and1_lshr_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and1_lshr_pow2_vec"
+8: "icmp_ne_and1_lshr_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_eq_and_pow2_lshr_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_lshr_pow2_case2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and_pow2_lshr_pow2_vec"
+8: "icmp_eq_and_pow2_lshr_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_ne_and_pow2_lshr_pow2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and_pow2_lshr_pow2_case2"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_ne_and_pow2_lshr_pow2_vec"
+8: "icmp_ne_and_pow2_lshr_pow2_vec" contains vectors which are unsupported
+
+1: "icmp_eq_and1_lshr_pow2_minus_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.zext
+2: llvm.return
+
+1: "icmp_eq_and1_lshr_pow2_negative2"
+7: "icmp_eq_and1_lshr_pow2_negative2" is unchanged by InstCombine
+
+1: "eq_and_shl_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "ne_and_shl_one_commute"
+4: "ne_and_shl_one_commute" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "ne_and_shl_one_commute" has unsupported operation: llvm.mlir.undef
+
+4: "ne_and_shl_one_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "ne_and_shl_one_commute" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "ne_and_lshr_minval"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mul
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "eq_and_lshr_minval_commute"
+4: "eq_and_lshr_minval_commute" has unsupported operation: llvm.call
+
+4: "eq_and_lshr_minval_commute" has unsupported operation: llvm.call
+
+1: "eq_and_shl_two"
+7: "eq_and_shl_two" is unchanged by InstCombine
+
+1: "slt_and_shl_one"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_eq_lhs"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_eq_lhs_fail_eq_nonzero"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_eq_lhs_fail_multiuse_shl"
+4: "fold_eq_lhs_fail_multiuse_shl" has unsupported operation: llvm.call
+
+1: "fold_ne_rhs"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "fold_ne_rhs_fail_multiuse_and"
+4: "fold_ne_rhs_fail_multiuse_and" has unsupported operation: llvm.call
+
+1: "fold_ne_rhs_fail_shift_not_1s"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.xor
+2: llvm.shl
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_shr_and_1_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_shr_and_1_ne_0_samesign"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_const_shr_and_1_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_not_const_shr_and_1_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_const_shr_exact_and_1_ne_0"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_const_shr_and_2_ne_0_negative"
+7: "test_const_shr_and_2_ne_0_negative" is unchanged by InstCombine
+
+1: "test_const_shr_and_1_ne_0_v8i8_splat_negative"
+8: "test_const_shr_and_1_ne_0_v8i8_splat_negative" contains vectors which are unsupported
+
+1: "test_const_shr_and_1_ne_0_v8i8_nonsplat_negative"
+8: "test_const_shr_and_1_ne_0_v8i8_nonsplat_negative" contains vectors which are unsupported
+
+1: "test_const_shr_and_1_ne_0_i1_negative"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.icmp
+2: llvm.return
+
+1: "test_const_shr_and_1_ne_0_multi_use_lshr_negative"
+7: "test_const_shr_and_1_ne_0_multi_use_lshr_negative" is unchanged by InstCombine
+
+1: "test_const_shr_and_1_ne_0_multi_use_and_negative"
+7: "test_const_shr_and_1_ne_0_multi_use_and_negative" is unchanged by InstCombine
+

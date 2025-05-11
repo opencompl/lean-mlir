@@ -1,0 +1,23 @@
+1: "memchr"
+9: "memchr" has pointer type input
+
+1: "call_memchr_ax_2_uimax_p1"
+4: "call_memchr_ax_2_uimax_p1" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memchr_ax_2_uimax_p1" has unsupported operation: llvm.call
+
+1: "call_memchr_ax_2_uimax_p2"
+4: "call_memchr_ax_2_uimax_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "call_memchr_ax_2_uimax_p2" has unsupported operation: llvm.call
+
+1: "fold_memchr_a12345_3_uimax_p2"
+4: "fold_memchr_a12345_3_uimax_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_a12345_3_uimax_p2" has unsupported operation: llvm.getelementptr
+
+1: "fold_memchr_a12345_c_uimax_p2"
+4: "fold_memchr_a12345_c_uimax_p2" has unsupported operation: llvm.mlir.addressof
+
+4: "fold_memchr_a12345_c_uimax_p2" has unsupported operation: llvm.call
+

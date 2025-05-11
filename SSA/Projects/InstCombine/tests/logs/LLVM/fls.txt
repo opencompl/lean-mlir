@@ -1,0 +1,24 @@
+1: "myfls"
+4: "myfls" has unsupported operation after optimization: llvm.call
+
+1: "myflsl"
+4: "myflsl" has unsupported operation after optimization: llvm.call
+
+1: "myflsll"
+4: "myflsll" has unsupported operation after optimization: llvm.call
+
+1: "flsnotconst"
+4: "flsnotconst" has unsupported operation: builtin.unregistered: llvm.intr.ctlz
+
+1: "flszero"
+4: "flszero" has unsupported operation after optimization: llvm.call
+
+1: "fls"
+5: "fls" is empty
+
+1: "flsl"
+5: "flsl" is empty
+
+1: "flsll"
+5: "flsll" is empty
+

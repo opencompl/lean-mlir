@@ -1,0 +1,19 @@
+1: "foo"
+9: "foo" has pointer type input
+
+4: "foo" has unsupported operation: llvm.return
+
+1: "bar"
+4: "bar" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+1: "test"
+4: "test" has unsupported operation: llvm.mlir.zero
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test" has unsupported operation: builtin.unregistered: llvm.unreachable
+
+4: "test" has unsupported operation: llvm.call
+
+4: "test" has unsupported operation: llvm.return
+

@@ -1,0 +1,30 @@
+1: "umul_min_max"
+4: "umul_min_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+4: "umul_min_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "umul_min_max_comm"
+4: "umul_min_max_comm" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+4: "umul_min_max_comm" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "umul_min_max_nuw_nsw"
+4: "umul_min_max_nuw_nsw" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umax
+
+4: "umul_min_max_nuw_nsw" has unsupported operation after optimization: builtin.unregistered: llvm.intr.umin
+
+1: "smul_min_max"
+4: "smul_min_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+4: "smul_min_max" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
+
+1: "smul_min_max_comm"
+4: "smul_min_max_comm" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+4: "smul_min_max_comm" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
+
+1: "smul_min_max_nuw_nsw"
+4: "smul_min_max_nuw_nsw" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smax
+
+4: "smul_min_max_nuw_nsw" has unsupported operation after optimization: builtin.unregistered: llvm.intr.smin
+

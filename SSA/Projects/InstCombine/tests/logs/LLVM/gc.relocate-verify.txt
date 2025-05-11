@@ -1,0 +1,2 @@
+3: gc.relocate-verify.ll: parsing has failed
+

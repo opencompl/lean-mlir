@@ -2,6 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Union
 import SSA.Core.HVector
 
 /--
@@ -22,9 +23,19 @@ def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
   List Ty
 
+abbrev Ctxt.toList (Γ : Ctxt Ty) : List Ty := Γ
+
 namespace Ctxt
 
 variable {Ty : Type}
+
+/-! ### Inherited Instances-/
+/-- `inherit_instance Foo` wil define an instance of `[Foo Ty] → Foo (Ctxt Ty)`,
+  assuming an instance of `Foo` exists for `List` -/
+local macro "inherit_instance" cls:term : command =>
+  `(instance {Ty : Type} [$cls Ty] : $cls (Ctxt Ty) := inferInstanceAs <| $cls (List Ty))
+inherit_instance Repr
+inherit_instance Lean.ToMessageData
 
 -- def empty : Ctxt := Erased.mk []
 def empty : Ctxt Ty := []
@@ -45,10 +56,16 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ
 
+
+instance : GetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
+  inferInstanceAs (GetElem (List _) ..)
+instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
+  inferInstanceAs (GetElem? (List _) ..)
+
 -- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
 def get? : Ctxt Ty → Nat → Option Ty :=
-  List.get?
+  GetElem?.getElem? (coll := List _)
 
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
@@ -85,7 +102,7 @@ def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
 /-- constructor for Var. -/
-def Var.mk (Γ : Ctxt Ty) (t : Ty) (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
+def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
   ⟨i, hi⟩
 
 namespace Var
@@ -100,7 +117,7 @@ def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var [] t → α :=
   fun ⟨_, h⟩ => by
-    simp only [get?, List.get?_eq_getElem?, List.getElem?_nil, reduceCtorEq] at h
+    simp only [get?, List.getElem?_nil, reduceCtorEq] at h
 
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
@@ -122,8 +139,8 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
-      simp only [get?, map, List.getElem?_map, Option.map_eq_some']
-      simp only [get?, List.get?_eq_getElem?] at h
+      simp only [get?, map, List.getElem?_map, Option.map_eq_some_iff]
+      simp only [get?] at h
       simp [h]
     ⟩
 
@@ -160,7 +177,8 @@ def casesOn
   match v with
     | ⟨0, h⟩ =>
         _root_.cast (by
-          simp only [get?, snoc, List.get?_cons_zero, Option.some.injEq] at h
+          simp only [get?, snoc, List.length_cons, Nat.zero_lt_succ, List.getElem?_eq_getElem,
+            List.getElem_cons_zero, Option.some.injEq] at h
           subst h
           simp_all only [get?, zero_eq_last]
           ) <| @last Γ t
@@ -279,7 +297,7 @@ infixl:50 "::ᵥ" => Valuation.snoc
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) = fun t var => match var with
       | ⟨0, hvar⟩ => by
-          simp only [get?, Ctxt.snoc, List.get?_cons_zero, Option.some.injEq] at hvar
+          simp only [get?, Ctxt.snoc, List.getElem?_cons_zero, Option.some.injEq] at hvar
           exact (hvar ▸ x)
       | ⟨.succ i, hvar⟩ => s ⟨i, hvar⟩ := by
   funext t' v
@@ -313,7 +331,7 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
     (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
     (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by
-      simp only [get?, Ctxt.snoc, List.get?_cons_succ] at hvar; exact hvar⟩ :=
+      simp only [get?, Ctxt.snoc, List.getElem?_cons_succ] at hvar; exact hvar⟩ :=
   rfl
 
 /-- There is only one distinct valuation for the empty context -/
@@ -322,7 +340,7 @@ theorem Valuation.eq_nil (V : Valuation (empty : Ctxt Ty)) : V = Valuation.nil :
 
 @[simp]
 theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.snoc t)) :
-    snoc (fun t v' => V v'.toSnoc) (V <|.last ..) = V := by
+    snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) = V := by
   funext _ v
   cases v using Var.casesOn <;> rfl
 
@@ -405,6 +423,26 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   subst x
   rfl
 
+/-- Show that a valuation is equivalent to a `HVector` -/
+def Valuation.equivHVector {Γ : Ctxt Ty} : Valuation Γ ≃ HVector toType Γ where
+  toFun V   := HVector.ofFn _ _ <| fun i => V ⟨i, by simp⟩
+  invFun    := Valuation.ofHVector
+  left_inv V := by
+    funext t v
+    simp only [Fin.getElem_fin, get?]
+    induction Γ
+    case nil =>
+      rcases v with ⟨_, _⟩
+      contradiction
+    case snoc Γ u ih =>
+      cases v
+      case last   => rfl
+      case toSnoc => apply ih (fun t v => V v.toSnoc)
+  right_inv vs := by
+    simp only [Fin.getElem_fin, get?]
+    induction vs
+    case nil => rfl
+    case cons Γ t v vs ih => simp [HVector.ofFn, ofHVector, ih]
 
 end Valuation
 
@@ -466,7 +504,8 @@ def toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
   ⟨d.val + 1, by
     intro i _ h_get_snoc
     rcases d with ⟨d, h_get_d⟩
-    simp only [get?, List.get?, Nat.add_eq, ← h_get_d h_get_snoc]
+    simp only [get?, Nat.add_eq, ← h_get_d h_get_snoc]
+    rfl
   ⟩
 
 /-- Removing a type from the left context corresponds to incrementing the difference by 1 -/
@@ -475,8 +514,6 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     intro i t h_get
     rcases d with ⟨d, h_get_d⟩
     specialize @h_get_d (i+1) t
-    simp only [get?, List.get?, add_eq_zero, and_false, false_and, imp_self,
-      implies_true] at h_get_d
     rw [←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
@@ -489,11 +526,8 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some',
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some_iff,
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] at h_get_d ⊢
-    simp only [List.get?_eq_getElem?] at h_get_d
-    simp only [List.get?_eq_getElem?, List.getElem?_map, Option.map_eq_some', forall_exists_index,
-      and_imp, forall_apply_eq_imp_iff₂]
     intros a b c
     simp [h_get_d c]
   ⟩
@@ -524,7 +558,7 @@ def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
 theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     Valid Γ₁ Γ₂ d := by
   intro i t h_get
-  simp [←h_valid h_get, snoc, List.get?]
+  simp [←h_valid h_get, snoc, List.getElem?_cons]
 
 lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
@@ -636,5 +670,64 @@ abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
 instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
   coe v := dropUntilDiff.toHom v
 
+
+/-!
+# ToExpr
+-/
+section ToExpr
+open Lean Qq
+variable [ToExpr Ty] {Γ : Ctxt Ty} {ty : Ty}
+
+instance : ToExpr (Ctxt Ty) :=
+  inferInstanceAs <| ToExpr (List Ty)
+
+/-- Construct an expression of type `Var Γ ty`.
+
+If no proof `hi : Γ.get? i = some ty` is provided,
+it's assumed to be true by rfl. -/
+def mkVar (Ty : Q(Type)) (Γ : Q(Ctxt $Ty)) (ty : Q($Ty)) (i : Q(Nat))
+    (hi? : Option Q(($Γ).get? $i = some $ty) := none) :
+    Q(($Γ).Var $ty) :=
+  let optTy := mkApp (.const ``Option [0]) Ty
+  let someTy := mkApp2 (.const ``Option.some [0]) Ty ty
+  let P :=
+    let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ (.bvar 0)
+    let eq := mkApp3 (.const ``Eq [1]) optTy getE someTy
+    Expr.lam `i (mkConst ``Nat) eq .default
+  let hi := hi?.getD <| /- : Γ.get? i = some ty := rfl -/
+    mkApp2 (.const ``rfl [1]) optTy someTy
+  mkApp4 (.const ``Subtype.mk [1]) (mkConst ``Nat) P i hi
+
+instance : ToExpr (Var Γ ty) where
+  toTypeExpr := mkApp3 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ) (toExpr ty)
+  toExpr := fun ⟨i, _hi⟩ =>
+    let Ty := toTypeExpr Ty
+    let Γ := toExpr Γ
+    let ty := toExpr ty
+    let i := toExpr i
+    /- Folklore suggests an explicit proof (instead of `rfl`) would be more
+        efficient, as the kernel might not know what to reduce.
+        In this case, though, `ty` should be in normal form by construction,
+        thus reduction should be safe. -/
+    mkVar Ty Γ ty i
+
+instance : HVector.ToExprPi (Var Γ) where
+  toTypeExpr := mkApp2 (mkConst ``Var) (toTypeExpr Ty) (toExpr Γ)
+
+/--
+Given an array `Γ` of types (i.e., expressions of type `Ty`), and an array
+of values `xs`, such that `xs[i]` is an expression of type `Γ[i]`,
+construct an expression of type `Valuation Γ`.
+-/
+def Valuation.mkOfElems (Ty instTyDenote : Expr) (Γ : Array Expr) (xs : Array Expr) : Expr :=
+  @id (Id _) <| do
+    let mut V_acc := mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
+    let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
+    for (ty, x) in Γ.zip xs do
+      V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ_acc ty V_acc x
+      Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
+    V_acc
+
+end ToExpr
 
 end Ctxt

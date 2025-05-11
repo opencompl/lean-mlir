@@ -1,0 +1,152 @@
+1: "test_direct_implication"
+4: "test_direct_implication" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_direct_implication" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_direct_implication" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_inverted_implication"
+4: "test_inverted_implication" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inverted_implication" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inverted_implication" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_edge_dominance"
+4: "test_edge_dominance" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_edge_dominance" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_direct_implication_complex_cfg"
+4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_direct_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_inverted_implication_complex_cfg"
+4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_inverted_implication_complex_cfg" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_multiple_predecessors"
+4: "test_multiple_predecessors" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_multiple_predecessors" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_multiple_predecessors" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_multiple_predecessors_wrong_value"
+4: "test_multiple_predecessors_wrong_value" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors_wrong_value" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_multiple_predecessors_wrong_value" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors_wrong_value" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_multiple_predecessors_wrong_value" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_multiple_predecessors_no_edge_domination"
+4: "test_multiple_predecessors_no_edge_domination" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors_no_edge_domination" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors_no_edge_domination" has unsupported operation: builtin.unregistered: llvm.cond_br
+
+4: "test_multiple_predecessors_no_edge_domination" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_multiple_predecessors_no_edge_domination" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch"
+4: "test_switch" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_direct_edge"
+4: "test_switch_direct_edge" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_direct_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_direct_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_duplicate_direct_edge"
+4: "test_switch_duplicate_direct_edge" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_duplicate_direct_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_subset"
+4: "test_switch_subset" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_subset" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_subset" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_wrong_value"
+4: "test_switch_wrong_value" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_wrong_value" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_wrong_value" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_wrong_value" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_inverted"
+4: "test_switch_inverted" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_inverted" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_inverted" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_inverted" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_duplicate_edge"
+4: "test_switch_duplicate_edge" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_duplicate_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_duplicate_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_default_edge"
+4: "test_switch_default_edge" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_default_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_default_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_default_edge" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_default_edge_direct"
+4: "test_switch_default_edge_direct" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_default_edge_direct" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_default_edge_direct" has unsupported operation: builtin.unregistered: llvm.br
+
+1: "test_switch_default_edge_duplicate"
+4: "test_switch_default_edge_duplicate" has unsupported operation: builtin.unregistered: llvm.switch
+
+4: "test_switch_default_edge_duplicate" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_default_edge_duplicate" has unsupported operation: builtin.unregistered: llvm.br
+
+4: "test_switch_default_edge_duplicate" has unsupported operation: builtin.unregistered: llvm.br
+

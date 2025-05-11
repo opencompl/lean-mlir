@@ -1,0 +1,259 @@
+1: "test1"
+4: "test1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test1_vector"
+4: "test1_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test1_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "test1_trunc_extra_use"
+4: "test1_trunc_extra_use" has unsupported operation: llvm.call
+
+1: "test2"
+4: "test2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test2_vector"
+4: "test2_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test2_vector_poison"
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "test2_vector_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vector_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vector_poison" has unsupported operation: llvm.mlir.undef
+
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+4: "test2_vector_poison" has unsupported operation: builtin.unregistered: llvm.insertelement
+
+1: "test3"
+4: "test3" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test3_vector"
+4: "test3_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test3_vector_poison"
+4: "test3_vector_poison" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test4"
+4: "test4" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test4_vector"
+4: "test4_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test5"
+4: "test5" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test5_vector"
+4: "test5_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test6"
+4: "test6" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test6_vector"
+4: "test6_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "extra_use"
+5: "extra_use" is empty
+
+1: "bswap32_and_first"
+4: "bswap32_and_first" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap32_and_first_extra_use"
+4: "bswap32_and_first_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "bswap32_and_first_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bswap32_and_first_extra_use" has unsupported operation: llvm.call
+
+1: "bswap32_shl_first"
+4: "bswap32_shl_first" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap32_shl_first_extra_use"
+4: "bswap32_shl_first_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.fshl
+
+4: "bswap32_shl_first_extra_use" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+4: "bswap32_shl_first_extra_use" has unsupported operation: llvm.call
+
+1: "test8"
+4: "test8" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test9"
+4: "test9" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test10"
+4: "test10" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "test10_vector"
+4: "test10_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u64_as_u32"
+4: "PR39793_bswap_u64_as_u32" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u64_as_u32_trunc"
+4: "PR39793_bswap_u64_as_u32_trunc" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u64_as_u16"
+4: "PR39793_bswap_u64_as_u16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u64_as_u16_vector"
+4: "PR39793_bswap_u64_as_u16_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u64_as_u16_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "PR39793_bswap_u50_as_u16"
+4: "PR39793_bswap_u50_as_u16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u32_as_u16"
+4: "PR39793_bswap_u32_as_u16" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR39793_bswap_u32_as_u16_trunc"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.and
+2: llvm.shl
+2: llvm.and
+2: llvm.or
+2: llvm.trunc
+2: llvm.return
+
+1: "partial_bswap"
+4: "partial_bswap" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "partial_bswap_vector"
+4: "partial_bswap_vector" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "partial_bitreverse"
+4: "partial_bitreverse" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap_and_mask_0"
+4: "bswap_and_mask_0" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap_and_mask_1"
+2: llvm.func
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.mlir.constant
+2: llvm.lshr
+2: llvm.lshr
+2: llvm.and
+2: llvm.or
+2: llvm.return
+
+1: "bswap_and_mask_2"
+4: "bswap_and_mask_2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "bswap_trunc"
+4: "bswap_trunc" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shuf_4bytes"
+4: "shuf_4bytes" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+4: "shuf_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shuf_load_4bytes"
+9: "shuf_load_4bytes" has pointer type input
+
+4: "shuf_load_4bytes" has unsupported operation: llvm.load
+
+4: "shuf_load_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "shuf_bitcast_twice_4bytes"
+4: "shuf_bitcast_twice_4bytes" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "use"
+5: "use" is empty
+
+1: "shuf_4bytes_extra_use"
+4: "shuf_4bytes_extra_use" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_4bytes_extra_use" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_4bytes_extra_use" has unsupported operation: llvm.call
+
+4: "shuf_4bytes_extra_use" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_16bytes"
+4: "shuf_16bytes" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_16bytes" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_16bytes" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "shuf_2bytes_widening"
+4: "shuf_2bytes_widening" has unsupported operation: builtin.unregistered: llvm.mlir.poison
+
+4: "shuf_2bytes_widening" has unsupported operation: builtin.unregistered: llvm.shufflevector
+
+4: "shuf_2bytes_widening" has unsupported operation: builtin.unregistered: llvm.bitcast
+
+1: "funnel_unary"
+4: "funnel_unary" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "funnel_binary"
+4: "funnel_binary" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "funnel_and"
+4: "funnel_and" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "trunc_bswap_i160"
+9: "trunc_bswap_i160" has pointer type input
+
+4: "trunc_bswap_i160" has unsupported operation: llvm.load
+
+1: "PR47191_problem1"
+4: "PR47191_problem1" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR47191_problem2"
+4: "PR47191_problem2" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR47191_problem3"
+4: "PR47191_problem3" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR47191_problem4"
+4: "PR47191_problem4" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR50910"
+4: "PR50910" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR60690_call_fshl"
+4: "PR60690_call_fshl" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
+1: "PR60690_call_fshr"
+4: "PR60690_call_fshr" has unsupported operation: builtin.unregistered: llvm.intr.bswap
+
