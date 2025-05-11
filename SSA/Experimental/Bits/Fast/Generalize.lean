@@ -753,7 +753,7 @@ partial def deductiveSearch (expr: BVExpr w) (inputs: List Nat) (constants: Std.
                 if BitVec.not constVal.bv == targetBv then
                   res := BVExpr.un BVUnOp.not newVar :: res
 
-                -- C + X = Target
+                -- C + X = Target; New target = Target - X.
                 let addRes ← deductiveSearch expr inputs constants {bv := targetBv - constVal.bv} (depth-1) constId
                 res := res ++ addRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add resExpr)
 
@@ -791,7 +791,7 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
 
 
     for (targetId, targetVal) in origWidthConstantsExpr.rhs.symVars.toArray do
-        -- Deductive search can use the constants in original widths since it does not invoke the solver;
+        -- Deductive search can use the constants in original widths since it does not invoke the solver; -- TODO: we can keep this in the reduced bitwidth now that we generate multiple positive examples
         let exprs := (← deductiveSearch origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
 
         let mut filteredExprs ← filterExprs exprs targetVal
