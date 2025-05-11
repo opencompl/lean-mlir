@@ -243,8 +243,10 @@ def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.
     simp_peephole
     simp only [builtin.unrealized_conversion_cast.riscvToLLVM]
     simp only [builtin.unrealized_conversion_cast.LLVMToriscv, poisonOr_mk_some_eq_value, PoisonOr.IsRefinedBy]
-    intro x1 x2; -- i dont know 
-
+    intro x1 x2
+    cases x1
+    cases x2
+    simp
 
 
 
