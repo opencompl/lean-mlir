@@ -113,7 +113,16 @@ inductive MOp (φ : Nat) : Type
   | icmp    (c : IntPred) (w : Width φ) : MOp φ
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
-deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
+deriving DecidableEq, Inhabited, Lean.ToExpr
+
+instance : Repr (MOp 0) where
+   reprPrec op p :=
+     match op with
+     | .unary w op => repr "unary"
+     | .binary w op => repr "binary"
+     | .select  w => repr "select"
+     | .icmp  pred w => repr "icmp"
+     | .const  w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
 
 /-! ## Dialect -/
 
