@@ -189,7 +189,7 @@ def AttrDictToneg_num(attrDict : TSyntax `term) : UnexpandM (TSyntax `MLIR.EDSL.
     | _ => throw ()
 
 
-@[app_unexpander  AST.Region.mk]
+@[app_unexpander AST.Region.mk]
 def unexpandRegionmk : Unexpander
   |  `($_ $xstr:str [$[$argsList],*] [$[$opsList],*]) => do
       let xraw := mkIdent $ Name.mkSimple xstr.getString
