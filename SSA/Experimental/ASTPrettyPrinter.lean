@@ -5,7 +5,7 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 open Lean PrettyPrinter Delaborator SubExpr MLIR AST Elab Term Syntax
 open PrettyPrinter
 
--- AFFINE SYTAX
+-- AFFINE SYNTAX
 -- ============
 
 @[app_unexpander AST.AffineExpr.Var]
@@ -39,11 +39,11 @@ def unexpandAffineMapmk : Unexpander
 
 -- EDSL OPERANDS
 -- ==============
--- TODO?: unexpander for [mlir_op_operatand | $$($q)]
+-- TODO?: unexpander for [mlir_op_operand | $$($q)]
 
 
 #check [mlir_op_operand| %0]
-@[app_unexpander AST.SSAVal.SSAVal]
+@[app_unexpander AST.SSAVal] -- broken?
 def unexpandSSAValSSSAVal: Unexpander
   | `($_ $xstr:str) =>
     let xraw := mkIdent $ Name.mkSimple xstr.getString
@@ -160,17 +160,17 @@ def stringToMLIRuniform_op(op_name : String): UnexpandM (TSyntax `MLIR.Pretty.un
     | "llvm.copy"   => `(MLIR.Pretty.uniform_op|llvm.copy)
     | "llvm.neg"    => `(MLIR.Pretty.uniform_op|llvm.neg)
     | "llvm.not"    => `(MLIR.Pretty.uniform_op|llvm.not)
-    | "llvm.add"    => `(MLIR.Pretty.uniform_op|llvm.add)
+    --| "llvm.add"    => `(MLIR.Pretty.exact_op|llvm.add)
     | "llvm.and"    => `(MLIR.Pretty.uniform_op|llvm.and)
-    | "llvm.ashr"   => `(MLIR.Pretty.uniform_op|llvm.ashr)
-    | "llvm.lshr"   => `(MLIR.Pretty.uniform_op|llvm.lshr)
-    | "llvm.mul"    => `(MLIR.Pretty.uniform_op|llvm.mul)
-    | "llvm.or"     => `(MLIR.Pretty.uniform_op|llvm.or)
-    | "llvm.sdiv"   => `(MLIR.Pretty.uniform_op|llvm.sdiv)
-    | "llvm.shl"    => `(MLIR.Pretty.uniform_op|llvm.shl)
+    --| "llvm.ashr"   => `(MLIR.Pretty.uniform_op|llvm.ashr)
+    --| "llvm.lshr"   => `(MLIR.Pretty.uniform_op|llvm.lshr)
+    --| "llvm.mul"    => `(MLIR.Pretty.uniform_op|llvm.mul)
+    --| "llvm.or"     => `(MLIR.Pretty.uniform_op|llvm.or)
+    --| "llvm.sdiv"   => `(MLIR.Pretty.uniform_op|llvm.sdiv)
+    --| "llvm.shl"    => `(MLIR.Pretty.uniform_op|llvm.shl)
     | "llvm.srem"   => `(MLIR.Pretty.uniform_op|llvm.srem)
-    | "llvm.sub"    => `(MLIR.Pretty.uniform_op|llvm.sub)
-    | "llvm.udiv"   => `(MLIR.Pretty.uniform_op|llvm.udiv)
+    --| "llvm.sub"    => `(MLIR.Pretty.uniform_op|llvm.sub)
+    --| "llvm.udiv"   => `(MLIR.Pretty.uniform_op|llvm.udiv)
     | "llvm.urem"   => `(MLIR.Pretty.uniform_op|llvm.urem)
     | "llvm.xor"    => `(MLIR.Pretty.uniform_op|llvm.xor)
     | _ => throw ()
@@ -206,7 +206,7 @@ def unexpandRegionmk : Unexpander
           | `(Op.mk $name:str [$[$res],*] [$[$operands],*] [$[$rgnsList],*] $attrDict) =>
               if name.getString == "llvm.mlir.constant"
               then
-                match (res.get! 0) with
+                match (res[0]!) with
                   | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
                     let neg ← AttrDictToneg_num attrDict
                     ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = llvm.mlir.constant ($neg) : $ty))
@@ -218,15 +218,17 @@ def unexpandRegionmk : Unexpander
                 | _ => panic! ""
                 if res == Array.empty
                 then
-                  match (operands.get! 0) with
-                    | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
-                      ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = $op_function_name $mlir_op_operands,* : $ty))
-                    | _ => throw ()
+                  throw ()
+                  -- match (operands[0]!) with
+                  --   | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
+                  --     ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = $op_function_name $mlir_op_operands,* : $ty))
+                  --   | _ => throw ()
                 else
-                  match (res.get! 0) with
-                    | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
-                      ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = $op_function_name $mlir_op_operands,* : $ty))
-                    | _ => throw ()
+                  throw ()
+                  -- match (res[0]!) with
+                  --  | `(([mlir_op_operand| $arg], [mlir_type| $ty])) =>
+                  --    ops := ops.push (← `(mlir_op| $arg:mlir_op_operand = $op_function_name $mlir_op_operands,* : $ty))
+                  --  | _ => throw ()
           | _ => pure ()
       let rgn_ops ← `(mlir_ops| $[ $ops ]*)
       `([mlir_region|{^$xraw:ident ($[$args],*) : $rgn_ops}])
