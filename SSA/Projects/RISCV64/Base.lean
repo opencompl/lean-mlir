@@ -2,7 +2,7 @@ import SSA.Projects.RISCV64.Semantics
 import SSA.Core.Framework
 /- This file has a number of very large inductive types, which seem to cause Lean to run out of heartbeats.
 We avoid the issue by increasing the heartbeats. Since this applies to most inductives in this file, we do so globally.
-Additionally, this file contains definitions that match on these large inductive types,. These also causes Lean to require
+Additionally, this file contains definitions that match on these large inductive types. These also causes Lean to require
 more heartbeats.  -/
 set_option maxHeartbeats 1000000000000000000
 
