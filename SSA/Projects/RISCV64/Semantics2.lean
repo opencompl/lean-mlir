@@ -11,9 +11,8 @@ ToInt/ToNat calls hinder proof automation by bv_decide.
 To guarantee faithfullness to the semantics defined by the Sail-Lean RiscV64 model,
 we provide a proof with each rewrite that shows, that the toInt/ toNat free
 version is semantically equivalent to the defintion extracted from
-the Sail RiscV 64 modell in Lean. [1]
+the Sail RiscV 64 modell in Lean.
 
-[1]:
 
 The instruction semantics suffixed by "bv" indicates that it is
 the purely bit vector defintion where we removed
@@ -642,5 +641,5 @@ theorem MUL_pure64_ttt_eq_MUL_pure64_ttt_bv (rs2_val : BitVec 64) (rs1_val : Bit
     simp only [BitVec.ofInt_toInt, extractLsb'_eq_setWidth]
     rw [extractLsb_setWidth_of_lt (hi := 127) (lo := 64) (v := 128) (x := BitVec.signExtend 129 rs1_val * BitVec.signExtend 129 rs2_val) (by omega)]
     simp
--- wait until accepted then add divison etc 
+-- wait until accepted then add divison etc
 end pure_semantics
