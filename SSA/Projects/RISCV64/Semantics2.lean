@@ -20,7 +20,7 @@ toInt/toNat calls.
 -/
 
 /-! ## Helper Bit Vector Lemmas  -/
-/- The lemmas bellow are helper lemmas used within proofs throughout the file -/
+/- The lemmas below are helper lemmas used within proofs throughout the file. -/
 
 theorem sshiftRight_eq_sshiftRight_extractLsb {w : Nat}
     {lw : Nat} (hll : 2^lw = w) (hlw : lw > 0 )
