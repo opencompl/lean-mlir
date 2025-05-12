@@ -99,11 +99,13 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨false⟩        => "udiv"
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
-    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    --(if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    (if prec >= max_prec then 1 else 2) f!"llvm.{op}"))
     prec
 
 instance : Repr (MOp.BinaryOp) where
   reprPrec := reprWithoutFlags
+
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
@@ -114,7 +116,7 @@ inductive MOp (φ : Nat) : Type
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving DecidableEq, Inhabited, Lean.ToExpr
-
+/-
 instance : Repr (MOp 0) where
    reprPrec op p :=
      match op with
@@ -122,7 +124,21 @@ instance : Repr (MOp 0) where
      | .binary w op => repr "binary"
      | .select  w => repr "select"
      | .icmp  pred w => repr "icmp"
+     | .const  w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }" -/
+
+
+-- attempt to fix the parser to output the addition etc.
+/- I know try to reimplement this by just matching on the constants.-/
+instance : Repr (MOp 0) where
+   reprPrec op p :=
+     match op with
+     | .unary w op => f!"\"{repr op}\""
+     | .binary w op => f!"\"{repr op}\""
+     | .select  w => repr "select"
+     | .icmp  pred w => repr "icmp"
      | .const  w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
+
+
 
 /-! ## Dialect -/
 
