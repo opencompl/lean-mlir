@@ -92,7 +92,7 @@ def toHVector : HVector Γ.Var args.types :=
 `parsedArgs.withSignature sig` returns an HVector of variables with the given
 signature, assuming that:
 * their are exactly as many arguments as the signature calls for, and
-* each argument if of the respective type in the signature.
+* each argument is of the respective type in the signature.
 
 Throws an error if either of these assumptions is broken.
 -/
