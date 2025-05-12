@@ -36,7 +36,12 @@ jobs:
            echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`"
            echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
 
+      - name: install zsh
+        run: |
+          sudo apt-get update; sudo apt-get install zsh
+
       - name: Check if lean toolchain is already newer or equally old
+        shell: zsh {0}
         run: |
            if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d'` -le ${{steps.mldate.outputs.date}} ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
 
