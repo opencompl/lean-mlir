@@ -162,28 +162,4 @@ def mkExprOf (Γ : Ctxt d.Ty) (parsedOp : d.Op)
       this ▸ .nil
     ⟩⟩
 
-/-!
-## Where should `mkExprOf` live?
-
-At first, I defined `mkExprOf` in the `ParsedArgs` namespace, and made it
-take a `ParsedArgs` argument.The idea behind this is that we sometimes need to parse
-the argument type annotations to construct the concrete parsed operation
-(e.g., in the LLVM dialect we do this because an `Op` carries the width of the
-vectors it operates on). By taking in a `ParsedArgs` in `mkExprOf`, we then avoid
-having the re-parse these arguments, which would be wasteful.
-However, we've this loses any information about regions! Taking those in separately
-would be quite annoying for the vast majority of operations that don't need to
-parse their regions. `op.parseArgs.mkExprOf _ _` is acceptable, but
-`op.parseArgs.mkExprOf (op.parseRegions)` is way too boilerplate-y.
-
-Thus, instead I've moved to `Op.mkExprOf` which takes an `Op` argument, and an
-*optional* `ParsedArgs` argument. This generalizes nicely to being able to parse
-regions later. Plus it has the benefit of making the simple case (`Op` not depending
-on the type annotations) simpler (`op.mkExprOf Γ (...)`) and the complex case not
-that much worse `op.mkExprOf (args? := args) _ (...)`. Furthermore, we might even
-have operations that want to inspect their region types (e.g., `SCF.if`), in which
-case this generalizes nicely to a second optional `regions?` argument.
--/
-
-
 end Op
