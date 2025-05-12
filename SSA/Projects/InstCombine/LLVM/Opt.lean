@@ -10,7 +10,6 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
       let icom'' := icom.snd.snd
       let icom_output := (icom'')
       IO.println s!"OK: parsed"
-      IO.println s!"{repr icom}"
       IO.println s!"{repr icom_output}"
       return 0
 def mainCmd := `[Cli|
