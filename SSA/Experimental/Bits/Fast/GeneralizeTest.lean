@@ -9,14 +9,11 @@ variable {x y : BitVec 8}
 -- #generalize (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) --  PASSED not_or_xor_thm
 -- #generalize (x ^^^ 33#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 43#8 --- PASSED xor_or_xor_thm
 -- #generalize  x ^^^ 33#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8 --- PASSED xor_or2_thm
+-- #generalize (x <<< 3) <<< 4 = x <<< 7
 
-
-#generalize x ^^^ 32#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8 --- xor_or_thm. Can't generate precondition
-#generalize (x ||| 33#8) ^^^ 12#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-40) ^^^ 47#8 --- or_xor_or_thm. Can't generate precondition
-#generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8 -- lshr_shl_demand1_thm. Can't generate precondition
-
-variable {x : BitVec 16}
-#generalize BitVec.ofInt 16 (-32624) <<< x >>> 4#16 &&& 4094#16 = 2057#16 <<< x &&& 4094#16 -- Expression synthesis failure. shl_lshr_demand6_thm
+-- #generalize x ^^^ 32#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8 --- xor_or_thm. Can't generate precondition
+-- #generalize (x ||| 33#8) ^^^ 12#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-40) ^^^ 47#8 --- or_xor_or_thm. Can't generate precondition
+-- #generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8 -- lshr_shl_demand1_thm. Can't generate precondition
 
 variable {x y z: BitVec 32}
 -- #generalize (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y --- PASSED or_and_xor_not_constant_commute0_thm
@@ -25,13 +22,14 @@ variable {x y z: BitVec 32}
 -- #generalize ((x >>> 4#32 &&& 8#32) + y) <<< 4#32 = (x &&& 128#32) + y <<< 4#32 --#PASSED gshlhbo_proof/shl_add_and_lshr_thm
 -- #generalize (x + (y >>> 5#32 &&& 127#32)) <<< 5#32 = (y &&& 4064#32) + x <<< 5#32 --- PASSED gshlhbo_proof/lshr_add_and_shl_thm
 -- #generalize x <<< 6#32 <<< 28#32 = 0#32   -- PASSED but takes seven minutes to run due to model counting; shl_shl_thm
-
+ #generalize x + (x ||| (0 - x )) = x &&& (x + BitVec.ofInt 32 (-1))
 -- #generalize (x + 5) - (y + 1)  =  x - y + 4
 -- #generalize (x + 5) + (y + 1)  =  x + y + 6
 -- #generalize (x <<< 3) <<< 4 = x <<< 7
 
 
 -- Failing
+
 -- #generalize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 -- Precondition synthesis failure g2008h07h08hSubAnd_proof#a_thm --Can't generate preconditions
 -- #generalize BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) -- Precondition synthesis failure #41801
 
