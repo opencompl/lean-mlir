@@ -73,7 +73,7 @@ theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat }{x y : BitVec w } (h 
   rw [BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
 
 
-@[simp] -- we tag the lemma as a simp lemma
+@[simp]
 theorem extractLsb'_eq_setWidth {x : BitVec w} : x.extractLsb' 0 n = x.setWidth n := by
   ext i hi
   simp?
