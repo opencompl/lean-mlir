@@ -110,7 +110,7 @@ end RISCVExpr
 
 namespace RiscvMkExpr
 
-/-! String representation of MLIR type into corresponding RISCV type -/
+/-- `mkTy` returns a RISCV type given the string representation of MLIR type -/
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM RV64 RV64.Ty
   | MLIR.AST.MLIRType.undefined "i64" => do return .bv
   | _ => throw .unsupportedType
