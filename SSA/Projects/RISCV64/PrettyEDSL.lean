@@ -136,7 +136,7 @@ macro_rules
 | `(mlir_op| $res:mlir_op_operand = $op1:MLIR.Pretty.RV.opWithImmediate $reg1 , $x : $t)  => do
     let some opName := MLIR.EDSL.Pretty.extractOpName op1.raw
       | Macro.throwUnsupported
-    `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {imm = $x:num : $t}  : ($t) -> ($t) )
+    `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {imm = $x:num : $t} : ($t) -> ($t) )
 
 declare_syntax_cat MLIR.Pretty.RV.opWithShamt
 syntax "slli" : MLIR.Pretty.RV.opWithShamt
