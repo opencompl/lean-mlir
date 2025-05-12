@@ -47,6 +47,10 @@ jobs:
         run: |
           lake -R build opt
 
+       - name: LLVM opt round trip test
+        run: |
+          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
+          
       - name: Compile Alive Scaling
         run: |
           lake -R build SSA.Projects.InstCombine.ScalingTest

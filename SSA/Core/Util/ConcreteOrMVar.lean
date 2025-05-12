@@ -14,11 +14,26 @@ inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | mvar (i : Fin φ)
   deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
-instance [ToString α] : ToString (ConcreteOrMVar α n) where
-  toString
-  | .concrete a => s!"concrete({a})"
-  | .mvar i => s!"mvar({i})"
-/-- A coercion from the concrete type `α` to the `ConcreteOrMVar` -/
+-- TODO: consolidate into a single "toGeneric", that converts these
+-- back into MLIR data structures.
+instance : Repr (ConcreteOrMVar Nat φ) where
+  reprPrec x _prec :=
+    match x with
+    | .concrete a => f!"i{a}"
+    | .mvar i => f!"mvar({i})"
+
+open Lean in
+instance : ToFormat (ConcreteOrMVar Nat φ) where
+  format x :=
+    match x with
+    | .concrete a => f!"i{a}"
+    | .mvar i => f!"mvar({i})"
+
+instance : ToString (ConcreteOrMVar Nat φ) where
+  toString x :=
+    match x with
+    | .concrete a => s!"i{a}"
+    | .mvar i => s!"mvar({i})"
 instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 
 /- In the specific case of `α := Nat`, we'd like to be able to use nat literals -/

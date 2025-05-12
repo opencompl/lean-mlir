@@ -130,7 +130,8 @@ def runParser (parser : @ParseFun ParseOutput) (fileName : String) : IO (Option 
     " Are you running via `lake exec opt`?")
   initSearchPath (← Lean.findSysroot) packagePaths
   let modules : Array Import := #[⟨`SSA.Core.MLIRSyntax.EDSL, false⟩]
-  let env ← importModules modules {}
+  -- let env ← importModules modules {}
+  let env ← importModules (loadExts := true)  modules {}
   let filePath := System.mkFilePath [fileName]
   if !(← isFile filePath) then
     throw <| IO.userError s!"File {fileName} does not exist"

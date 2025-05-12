@@ -140,7 +140,7 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨false⟩        => "udiv"
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
-    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    (if prec >= max_prec then 1 else 2) f!"llvm.{op}"))
     prec
 
 instance : Repr (MOp.BinaryOp) where
@@ -154,7 +154,18 @@ inductive MOp (φ : Nat) : Type
   | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
-deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
+deriving DecidableEq, Inhabited, Lean.ToExpr
+
+instance : Repr (MOp 0) where
+   reprPrec op p :=
+     match op with
+     | .unary w op => f!"\"{repr op}\""
+     | .binary w op => f!"\"{repr op}\""
+     | .select  w => repr "select"
+     | .icmp  pred w => repr "icmp"
+     | .const  w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
+
+
 
 namespace MOp
 
