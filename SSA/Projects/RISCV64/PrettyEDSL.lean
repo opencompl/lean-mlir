@@ -146,7 +146,7 @@ syntax "srliw" : MLIR.Pretty.RV.opWithShamt
 syntax "sraiw" : MLIR.Pretty.RV.opWithShamt
 syntax "srli" : MLIR.Pretty.RV.opWithShamt
 
-syntax mlir_op_operand  " = " MLIR.Pretty.RV.opWithShamt mlir_op_operand "," num (":" mlir_type)? : mlir_op
+syntax mlir_op_operand " = " MLIR.Pretty.RV.opWithShamt mlir_op_operand "," num (":" mlir_type)? : mlir_op
 macro_rules
 | `(mlir_op| $res:mlir_op_operand = $op1:MLIR.Pretty.RV.opWithShamt $reg1 , $x  : $t )  => do
     let some opName := MLIR.EDSL.Pretty.extractOpName op1.raw
