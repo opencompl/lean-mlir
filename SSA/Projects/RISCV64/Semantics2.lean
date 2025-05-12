@@ -71,8 +71,6 @@ theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat }{x y : BitVec w } (h 
   rw [BitVec.ofInt_toInt_eq_signExtend]
   rw [BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
   rw [BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
-
-
 @[simp]
 theorem extractLsb'_eq_setWidth {x : BitVec w} : x.extractLsb' 0 n = x.setWidth n := by
   ext i hi
