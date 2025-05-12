@@ -105,7 +105,7 @@ macro_rules
       $[: $outer_type]? ) => do
       let outer_type ← outer_type.getDM `(mlir_type| _)
       `(mlir_op| $res:mlir_op_operand = "const"()
-          {val = $x:num :  $outer_type} : ($outer_type) -> ($outer_type) )
+          {val = $x:num : $outer_type} : ($outer_type) -> ($outer_type) )
 
 syntax mlir_op_operand " = " "li" "(" num (" : " mlir_type)? ")" (" : " mlir_type)?
   : mlir_op
