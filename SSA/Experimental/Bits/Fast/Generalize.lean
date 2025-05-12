@@ -676,7 +676,6 @@ def enumerativeSearch (lhsSketch: BVExpr w) (lhsSketchOnly: Bool) (inputs: List 
       let constantsPermutation := productsList (List.replicate constantVars.length constantVars)
 
       let inputsAndConstants := List.product inputCombinations constantsPermutation
-      logInfo m! "inputs and constants has length {inputsAndConstants.length}"
 
       let mut validCombos : List (BVExpr w) := []
 
@@ -775,6 +774,7 @@ partial def deductiveSearch (expr: BVExpr w) (inputs: List Nat) (constants: Std.
               else
                     throwError m! "Width mismatch for expr : {expr} and target: {target}"
             return res
+
 
 
 def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: ParsedBVLogicalExpr) (depth: Nat) :
@@ -1066,21 +1066,24 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
               let combinations := generateCombinations numConjunctions candidates.toList
               candidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
 
+            let mut failedEvalCheckCount := 0
             for candidate in candidates do
-                  let origWidthSubstitutedCandidate := substitute candidate origWidthSubstitutionVal
-                  -- logInfo m! "Original width: {originalWidth}, bit width: {bitwidth}; evaluated {origWidthSubstitutedCandidate} with {originalBVLogicalExpr.lhs.symVars} gives {evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate}"
-                  if originalWidth != bitwidth && not (evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate) then
-                    continue
+              let origWidthSubstitutedCandidate := substitute candidate origWidthSubstitutionVal
+              -- logInfo m! "Original width: {originalWidth}, bit width: {bitwidth}; evaluated {origWidthSubstitutedCandidate} with {originalBVLogicalExpr.lhs.symVars} gives {evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate}"
+              if originalWidth != bitwidth && not (evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate) then
+                failedEvalCheckCount := failedEvalCheckCount + 1
+                continue
 
-                  let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
-                  let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
+              let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
+              let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
 
-                  if let none ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
-                      validCandidates := candidate :: validCandidates
+              if let none ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
+                validCandidates := candidate :: validCandidates
 
-                  if numConjunctions >= 1 && !validCandidates.isEmpty then
-                    break
+              if numConjunctions >= 1 && !validCandidates.isEmpty then
+                  break
 
+            logInfo m! "{failedEvalCheckCount} precondition candidates failed the eval check"
             pure validCandidates
 
           logInfo m! "Original had {preconditionCandidatesSet.size} candidates and filtered out {preconditionCandidatesSet.size - validCandidates.length}  Remaining candidates: {validCandidates}"
