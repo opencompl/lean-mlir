@@ -31,7 +31,7 @@ the Refinement instance).
 By making this a simp-lemma, we ensure all `PoisonOr` simp-lemmas apply without
 having to duplicate that API for `LLVM.IntW`.
 -/
-@[simp, simp_llvm]
+@[simp, simp_llvm, simp_llvm]
 theorem isRefinedBy_iff (x y : LLVM.IntW w) :
     x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
   rfl
@@ -47,10 +47,10 @@ The ‘and’ instruction returns the bitwise logical and of its two operands.
 def and? {w : Nat} (x y : BitVec w) : IntW w :=
   .value <| x &&& y
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem and?_eq : LLVM.and? a b  = .value (a &&& b) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def and {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
@@ -64,14 +64,14 @@ operands.
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
   .value <| x ||| y
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem or?_eq : LLVM.or? a b  = .value (a ||| b) := rfl
 
 structure DisjointFlag where
   disjoint : Bool := false
   deriving Repr, DecidableEq, Lean.ToExpr
 
-@[simp_llvm_option]
+@[simp_llvm]
 def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -89,10 +89,10 @@ is the “~” operator in C.
 def xor? {w : Nat} (x y : BitVec w) : IntW w :=
   .value <| x ^^^ y
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem xor?_eq : LLVM.xor? a b  = .value (a ^^^ b) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
@@ -107,7 +107,7 @@ Because LLVM integers use a two’s complement representation, this instruction 
 def add? {w : Nat} (x y : BitVec w) : IntW w :=
   .value <| x + y
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem add?_eq : LLVM.add? a b  = .value (a + b) := rfl
 
 structure NoWrapFlags where
@@ -115,7 +115,7 @@ structure NoWrapFlags where
   nuw : Bool := false
   deriving Repr, DecidableEq, Lean.ToExpr
 
-@[simp_llvm_option]
+@[simp_llvm]
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -135,10 +135,10 @@ Because LLVM integers use a two’s complement representation, this instruction 
 def sub? {w : Nat} (x y : BitVec w) : IntW w :=
   .value <| x - y
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem sub?_eq : LLVM.sub? a b  = .value (a - b) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -164,10 +164,10 @@ sign-extended or zero-extended as appropriate to the width of the full product.
 def mul? {w : Nat} (x y : BitVec w) : IntW w :=
   .value <| x * y
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem mul?_eq : LLVM.mul? a b  = .value (a * b) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -195,7 +195,7 @@ structure ExactFlag where
   exact : Bool := false
   deriving Repr, DecidableEq, Lean.ToExpr
 
-@[simp_llvm_option]
+@[simp_llvm]
 def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -237,7 +237,7 @@ theorem sdiv?_eq_value_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
   simp [LLVM.sdiv?]
   tauto
 
-@[simp_llvm_option]
+@[simp_llvm]
 def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -268,7 +268,7 @@ def urem? {w : Nat} (x y : BitVec w) : IntW w :=
   else
     .value <| x % y
 
-@[simp_llvm_option]
+@[simp_llvm]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
@@ -330,7 +330,7 @@ def srem? {w : Nat} (x y : BitVec w) : IntW w :=
   else
     .value <| BitVec.srem x y
 
-@[simp_llvm_option]
+@[simp_llvm]
 def srem {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
@@ -352,7 +352,7 @@ def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   else .value (op1 <<< op2)
 
 
-@[simp_llvm_option]
+@[simp_llvm]
 def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -380,7 +380,7 @@ def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   then .poison
   else .value (op1 >>> op2)
 
-@[simp_llvm_option]
+@[simp_llvm]
 def lshr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -404,7 +404,7 @@ def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   then .poison
   else .value (op1.sshiftRight' op2)
 
-@[simp_llvm_option]
+@[simp_llvm]
 def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
@@ -416,7 +416,7 @@ def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
-@[simp_llvm_option]
+@[simp_llvm]
 def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w := do
   let c ← c?
   if c = 1#1 then x? else y?
@@ -517,7 +517,7 @@ theorem icmp?_slt_eq {w : Nat} {a b : BitVec w} :
 theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
   icmp? .sgt a b = .value (BitVec.ofBool (a >ₛ b)) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def icmp {w : Nat} (c : IntPred) (x y : IntW w) : IntW 1 := do
   let x' ← x
   let y' ← y
@@ -544,17 +544,17 @@ TODO: double-check that truncating works the same as MLIR (signedness, overflow,
 def const? (w : Nat) (i : Int): IntW w :=
   .value <| BitVec.ofInt w i
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem const?_eq : LLVM.const? w i = .value (BitVec.ofInt w i) := rfl
 
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
   .value (~~~x)
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem not?_eq : LLVM.not? a = .value (~~~ a) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def not {w : Nat} (x : IntW w) : IntW w := do
   let x' ← x
   not? x'
@@ -563,10 +563,10 @@ def not {w : Nat} (x : IntW w) : IntW w := do
 def neg? {w : Nat} (x : BitVec w) : IntW w := do
   .value <| (-.) x
 
-@[simp_llvm_option]
+@[simp_llvm]
 theorem neg?_eq : LLVM.neg? a = .value (-a) := rfl
 
-@[simp_llvm_option]
+@[simp_llvm]
 def neg {w : Nat} (x : IntW w) : IntW w := do
   let x' ← x
   neg? x'
@@ -576,7 +576,7 @@ def neg {w : Nat} (x : IntW w) : IntW w := do
 def trunc? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   .value <| (BitVec.truncate w' x)
 
-@[simp_llvm_option]
+@[simp_llvm]
 def trunc {w: Nat} (w': Nat) (x: IntW w) (noWrapFlags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w' := do
   let x' <- x
   if noWrapFlags.nsw ∧ ((x'.truncate w').signExtend w ≠ x') then
@@ -594,7 +594,7 @@ structure NonNegFlag where
 def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   .value <| (BitVec.zeroExtend w' x)
 
-@[simp_llvm_option]
+@[simp_llvm]
 def zext {w: Nat} (w': Nat) (x: IntW w) (flag : NonNegFlag := {nneg := false}) : IntW w' := do
   let x' <- x
   if flag.nneg ∧ x'.msb then
@@ -606,7 +606,7 @@ def zext {w: Nat} (w': Nat) (x: IntW w) (flag : NonNegFlag := {nneg := false}) :
 def sext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
   .value <| (BitVec.signExtend w' x)
 
-@[simp_llvm_option]
+@[simp_llvm]
 def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
   let x' <- x
   sext? w' x'
