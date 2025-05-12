@@ -660,7 +660,7 @@ def generateSketches (symVars: List (BVExpr w)) : List (BVExpr w) := Id.run do
 
           res
 
-def enumerativeSearch (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
+def enumerativeSearch (lhsSketch: BVExpr w) (lhsSketchOnly: Bool) (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
                       TermElabM ( List (BVExpr w)) := do
 
       logInfo m! "Running enumerative synthesis"
@@ -692,7 +692,7 @@ def enumerativeSearch (lhsSketch: BVExpr w)  (inputs: List Nat)  (constants: Std
           if evaluatedExpr == target.bv then
             validCombos := substitutedExpr :: validCombos
 
-      if !validCombos.isEmpty then
+      if lhsSketchOnly then
           return validCombos
 
       -- Then process the enumerated sketches. We replace symbolic constants with both special constants and other symbolic constants.
@@ -750,6 +750,7 @@ partial def deductiveSearch (expr: BVExpr w) (inputs: List Nat) (constants: Std.
               if h : constVal.w = newTarget.w then
                 let targetBv := h ▸ newTarget.bv
 
+                -- ~C = T
                 if BitVec.not constVal.bv == targetBv then
                   res := BVExpr.un BVUnOp.not newVar :: res
 
@@ -765,8 +766,13 @@ partial def deductiveSearch (expr: BVExpr w) (inputs: List Nat) (constants: Std.
                 let subRes' ← deductiveSearch expr inputs constants {bv := targetBv + constVal.bv}  (depth-1) constId
                 res := res ++ subRes'.map (λ resExpr => BVExpr.bin (resExpr) BVBinOp.add (negate newVar))
 
-                --TODO: Include multiplication and division; bitwise operators?
-                else
+                -- X * C = Target
+                if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
+                  let mulRes ← deductiveSearch expr inputs constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
+                  res := res ++ mulRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.mul resExpr)
+
+                --TODO: Include division; bitwise operators?
+              else
                     throwError m! "Width mismatch for expr : {expr} and target: {target}"
             return res
 
@@ -777,28 +783,31 @@ def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: Par
     let reducedWidth := reducedWidthConstantsExpr.lhs.width
     let mut results : Std.HashMap Nat (List (BVExpr reducedWidth)) := Std.HashMap.emptyWithCapacity
 
-
     let filterExprs (exprs : List (BVExpr reducedWidth)) (target : BVExpr.PackedBitVec) : TermElabM (List (BVExpr reducedWidth)) := do
         let mut res : List (BVExpr reducedWidth) := []
-
         for expr in (Std.HashSet.ofList exprs) do
           let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
           -- logInfo m! "Evaluated {expr} with values {origWidthConstantsExpr.lhs.symVars} and got result: {evaluatedVal}; Target = {target.bv}"
           if evaluatedVal == target.bv then
-              res := expr :: res
+            res := expr :: res
 
+        --- TODO: Filter commutative expressions
         return res
 
+    let inputVars := origWidthConstantsExpr.lhs.inputVars.keys
+    let reducedWidthLhs := reducedWidthConstantsExpr.lhs
+    let reducedWidthRhs := reducedWidthConstantsExpr.rhs
 
     for (targetId, targetVal) in origWidthConstantsExpr.rhs.symVars.toArray do
         -- Deductive search can use the constants in original widths since it does not invoke the solver; -- TODO: we can keep this in the reduced bitwidth now that we generate multiple positive examples
-        let exprs := (← deductiveSearch origWidthConstantsExpr.lhs.bvExpr origWidthConstantsExpr.lhs.inputVars.keys origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
+        let deductiveSearchRes := (← deductiveSearch origWidthConstantsExpr.lhs.bvExpr inputVars origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
+        let lhsSketchRes ← enumerativeSearch reducedWidthLhs.bvExpr True inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]!
 
-        let mut filteredExprs ← filterExprs exprs targetVal
+        let mut filteredExprs ← filterExprs (deductiveSearchRes ++ lhsSketchRes) targetVal
         match filteredExprs with
         | [] =>
-                logInfo m! "Deductive search failed for {targetId}; performing enumerative synthesis"
-                let enumSynthesisRes ← enumerativeSearch reducedWidthConstantsExpr.lhs.bvExpr reducedWidthConstantsExpr.lhs.inputVars.keys reducedWidthConstantsExpr.lhs.symVars reducedWidthConstantsExpr.rhs.symVars[targetId]!
+                logInfo m! "Could not synthesize an expression for {targetId} using deductive search and a sketch of the LHS; performing full enumerative synthesis"
+                let enumSynthesisRes ← enumerativeSearch reducedWidthLhs.bvExpr False inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]!
 
                 if enumSynthesisRes.isEmpty then
                   throwError m! "No candidate expressions generated from enumerative synthesis"
@@ -867,33 +876,19 @@ variable {x y z: BitVec 32}
 #iosynthesize (x + 5) + (y + 1)  =  x + y + 6
 #iosynthesize (x + 5) - (y + 1)  =  x - y + 4
 #iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
-#iosynthesize ~~~(BitVec.zeroExtend 128 (BitVec.allOnes 64) <<< 64) = 0x0000000000000000ffffffffffffffff#128
 #iosynthesize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32
 #iosynthesize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32)
 #iosynthesize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32
+#iosynthesize  ((x >>> 4#32 &&& 8#32) + y) <<< 4#32 = (x &&& 128#32) + y <<< 4#32
 
+def x' := 5
+def y' := 7
+#eval ((x' >>> 3 &&& 7) + y') <<< 3
+#eval (x' &&& (BitVec.ofInt 32 (-1) >>> 3 &&& 7 <<< 3)) + y' <<< 3
+#eval (x' &&& (3 * 7 * 3)) + y' <<< 3
 
-def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (num: Nat) :
-              TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-  let identityAndAbsorptionConstraints ← getIdentityAndAbsorptionConstraints bvExpr
-  let targetExpr := BoolExpr.gate Gate.and (BoolExpr.not bvExpr) (addConstraints (BoolExpr.const True) (identityAndAbsorptionConstraints))
-  return (← helper targetExpr num)
-  where
-        helper (expr: BVLogicalExpr) (depth : Nat)
-          : TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-        match depth with
-          | 0 => return []
-          | n + 1 =>
-              let solution ← solve expr
-
-              match solution with
-              | none => return []
-              | some assignment =>
-                   let constVals := assignment.filter fun c _ => consts.contains c
-                   let newConstraints := constVals.toList.map (fun c => BoolExpr.not (BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv))))
-
-                   let res ← helper (addConstraints expr newConstraints) n
-                   return [constVals] ++ res
+#eval ((x' >>> 7 &&& 8) + y') <<< 7
+#eval (x' &&& (7 * 8 * 7)) + y' <<< 7
 
 instance : BEq BVLogicalExpr where
   beq := fun a b => toString a == toString b
@@ -913,8 +908,40 @@ partial def countModel (expr : BVLogicalExpr) (constants: Std.HashSet Nat): Term
           let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
           return 1 + (← countModel (BoolExpr.gate Gate.and expr constrainedBVExpr) constants)
 
+
+def generateCombinations (num: Nat) (values: List α) : List (List α) :=
+    match num, values with
+    | 0, _ => [[]]
+    | _, [] => []
+    | n + 1, x::xs =>
+            let combosWithoutX := (generateCombinations (n + 1) xs)
+            let combosWithX := (generateCombinations n xs).map (λ combo => x :: combo)
+            combosWithoutX ++ combosWithX
+
+def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) :
+              TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+  let identityAndAbsorptionConstraints ← getIdentityAndAbsorptionConstraints bvExpr
+  let targetExpr := BoolExpr.gate Gate.and (BoolExpr.not bvExpr) (addConstraints (BoolExpr.const True) (identityAndAbsorptionConstraints))
+  return (← helper targetExpr numEx)
+  where
+        helper (expr: BVLogicalExpr) (depth : Nat)
+          : TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+        match depth with
+          | 0 => return []
+          | n + 1 =>
+              let solution ← solve expr
+
+              match solution with
+              | none => return []
+              | some assignment =>
+                   let constVals := assignment.filter fun c _ => consts.contains c
+                   let newConstraints := constVals.toList.map (fun c => BoolExpr.not (BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv))))
+
+                   let res ← helper (addConstraints expr newConstraints) n
+                   return [constVals] ++ res
+
 def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reducedWidthBVLogicalExpr: BVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
-              : TermElabM (Option BVLogicalExpr) := do
+              (numConjunctions: Nat := 0) : TermElabM (Option BVLogicalExpr) := do
 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
@@ -952,21 +979,27 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
           let eqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
             BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
 
-          let gtZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
+          let positive (expr: BVExpr bitwidth) : BVLogicalExpr :=
             let shiftDistance : BVExpr bitwidth := BVExpr.bin (BVExpr.var widthId) BVBinOp.add (negate one)
             let mask := BVExpr.shiftLeft one shiftDistance
             let maskAndExpr : BVExpr bitwidth := BVExpr.bin expr BVBinOp.and mask  -- It's positive if (expr && (1 << width -1) == 0)
 
-            BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (eqToZero maskAndExpr)
+            eqToZero maskAndExpr
 
-          let ltZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (BoolExpr.not (gtZero expr))
+          let strictlyGTZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
+            BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (positive expr)
 
           let gteZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate Gate.or (eqToZero expr) (gtZero expr)
+             positive expr
+
+          let negative (expr: BVExpr bitwidth) : BVLogicalExpr :=
+            BoolExpr.not (positive expr)
+
+          let strictlyLTZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
+            negative expr
 
           let lteZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate Gate.or (eqToZero expr) (ltZero expr)
+            BoolExpr.gate Gate.or (eqToZero expr) (negative expr)
 
           let reducedWidthSubstitutionVal := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat bitwidth bitwidth))])
 
@@ -1006,14 +1039,14 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
                 if (evaluatedPositiveExs.any ( λ val => val < 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val > 0) then
                   let mut cand := lteZero substitutedExpr
                   if (evaluatedPositiveExs.all ( λ val => val < 0)) then
-                    cand := ltZero substitutedExpr
+                    cand := strictlyLTZero substitutedExpr
 
                   preconditionCandidates := cand :: preconditionCandidates
 
                 if (evaluatedPositiveExs.any ( λ val => val > 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val < 0) then
                   let mut cand := gteZero substitutedExpr
                   if (evaluatedPositiveExs.all ( λ val => val > 0)) then
-                      cand := gtZero substitutedExpr
+                      cand := strictlyGTZero substitutedExpr
 
                   preconditionCandidates := cand :: preconditionCandidates
 
@@ -1027,22 +1060,33 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
             let originalWidth := originalBVLogicalExpr.state.originalWidth
             let origWidthSubstitutionVal := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat originalWidth originalWidth))])
 
-            for candidate in preconditionCandidatesSet do
-                let origWidthSubstitutedCandidate := substitute candidate origWidthSubstitutionVal
-                -- logInfo m! "Original width: {originalWidth}, bit width: {bitwidth}; evaluated {origWidthSubstitutedCandidate} with {originalBVLogicalExpr.lhs.symVars} gives {evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate}"
-                if originalWidth != bitwidth && not (evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate) then
-                  continue
+            let mut candidates := preconditionCandidatesSet
 
-                let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
-                let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
+            if numConjunctions >= 1 then
+              let combinations := generateCombinations numConjunctions candidates.toList
+              candidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
 
-                if let none ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
-                    validCandidates := candidate :: validCandidates
+            for candidate in candidates do
+                  let origWidthSubstitutedCandidate := substitute candidate origWidthSubstitutionVal
+                  -- logInfo m! "Original width: {originalWidth}, bit width: {bitwidth}; evaluated {origWidthSubstitutedCandidate} with {originalBVLogicalExpr.lhs.symVars} gives {evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate}"
+                  if originalWidth != bitwidth && not (evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate) then
+                    continue
+
+                  let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
+                  let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
+
+                  if let none ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
+                      validCandidates := candidate :: validCandidates
+
+                  if numConjunctions >= 1 && !validCandidates.isEmpty then
+                    break
 
             pure validCandidates
 
           logInfo m! "Original had {preconditionCandidatesSet.size} candidates and filtered out {preconditionCandidatesSet.size - validCandidates.length}  Remaining candidates: {validCandidates}"
-          if validCandidates.isEmpty then -- TODO: if we have precondition candidates but none is valid, we can then look at joining them with ands.
+
+
+          if validCandidates.isEmpty then
             return none
 
           if validCandidates.length == 1 then
@@ -1181,7 +1225,7 @@ elab "#generalize" expr:term: command =>
 
               return False
 
-            if !(← preconditionSuccess) then
+            if !(← preconditionSuccess) then -- TODO: It'll be good if we can progressively increase the number of conjunctions for generating preconditions
               throwError m! "Could not generalize {bvLogicalExpr}"
 
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
