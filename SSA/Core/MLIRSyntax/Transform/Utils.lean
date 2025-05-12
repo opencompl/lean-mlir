@@ -23,6 +23,12 @@ def getAttr (attr : String) : Except (TransformError Ty) (AttrValue φ) := do
   return val
 
 /--
+`op.hasAttr attr` returns whether the given attribute is present.
+-/
+def hasAttr (attr : String) : Bool :=
+  (op.getAttr? attr).isSome
+
+/--
 `op.getBoolAttr attr` returns the value of a Boolean attribute.
 
 Throws an error if the attribute is not present, or if the value of the attribute
