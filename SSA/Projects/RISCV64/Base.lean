@@ -1,5 +1,9 @@
 import SSA.Projects.RISCV64.Semantics
 import SSA.Core.Framework
+/- This file has a number of very large inductive types, which seem to cause Lean to run out of heartbeats.
+We avoid the issue by increasing the heartbeats. Since this applies to most inductives in this file, we do so globally.
+Additionally, this file contains definitions that match on these large inductive types. These also causes Lean to require
+more heartbeats.  -/
 set_option maxHeartbeats 1000000000000000000
 
 open RV64Semantics
@@ -7,20 +11,21 @@ open RV64Semantics
 namespace RISCV64
 /-! ## The `RISCV64` dialect -/
 
-/-!
-## Dialect operation definitions
-Each instruction operates on up to two registers. Any other attributes not
-passed via registers, e.g., flags and immediates are encoded as part of the op-code.
+/-! ## Dialect operation definitions -/
+/--
+`Op` models the RV64I base instruction set [1] plus selected RISC-V ISA extensions:
+`M` for standard integer division and multiplication [2],
+`B` for bit manipulation instructions (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions) [3],
+and `Zicond` for conditional operations [4].
 
-We modell the RV64I base instruction set: https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc,
-therefore allow for an 64-bit address space.
-Additionally, we modell operations out of selected RISC-V ISA extension:
-    - `M`: standart integer division and multiplication instruction extension
+We model RV64 as an SSA IR, meaning that instructions won't specify any registers
+(instead, they'll later receive SSA values).
+However, any other attributes (e.g., flags or immediate values) are still encoded as part of the operation.
 
-    - `B`: extension for bit manipulation (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions)
-            here: https://github.com/riscv/riscv-isa-manual/blob/main/src/b-st-ext.adoc
-
-    - `Zicond` : extension for conditional operations https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
+[1] https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc
+[2] https://github.com/riscv/riscv-isa-manual/blob/main/src/m-st-ext.adoc
+[3] https://github.com/riscv/riscv-isa-manual/blob/main/src/b-st-ext.adoc
+[4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
 inductive Op
   | li : (val : Int) → Op
@@ -45,7 +50,7 @@ inductive Op
   | sllw
   | srlw
   | sraw
-  -- fence
+  -- fence missing, future work.
   | slti (imm : BitVec 12)
   | sltiu (imm : BitVec 12)
   | srli (shamt : BitVec 6)
@@ -129,8 +134,8 @@ instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
   | .bv  => 0#64
 
+/-! ## Dialect operation definitions-/
 /--
-## Dialect operation definitions
 Specifing the signature of each `RISCV64` operation. `Sig` refers to the input types
 for each operation as a list of types.
 
