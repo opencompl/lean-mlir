@@ -498,7 +498,7 @@ private theorem zero_lt_toInt_iff {x : BitVec w} :
 
 def alive_simplifySelect764 (w : Nat) :
     Select746_lhs w ⊑ Select746_rhs w := by
-  simp only [Select746_lhs, Select746_rhs, simp_llvm_wrap]
+  simp only [Select746_lhs, Select746_rhs]
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
