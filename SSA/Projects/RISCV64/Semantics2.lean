@@ -642,4 +642,5 @@ theorem MUL_pure64_ttt_eq_MUL_pure64_ttt_bv (rs2_val : BitVec 64) (rs1_val : Bit
     simp only [BitVec.ofInt_toInt, extractLsb'_eq_setWidth]
     rw [extractLsb_setWidth_of_lt (hi := 127) (lo := 64) (v := 128) (x := BitVec.signExtend 129 rs1_val * BitVec.signExtend 129 rs2_val) (by omega)]
     simp
+-- wait until accepted then add divison etc 
 end pure_semantics
