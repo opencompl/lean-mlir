@@ -999,8 +999,9 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
                 sketchResults := sketchResults.insert resultsString
 
-                if (evaluatedPositiveExs.any ( λ val => val == 0)) && evaluatedNegativeExs.all (λ val => val != 0) then
+                if (evaluatedPositiveExs.all ( λ val => val == 0)) && evaluatedNegativeExs.all (λ val => val != 0) then
                   preconditionCandidates := eqToZero substitutedExpr :: preconditionCandidates
+                  continue
 
                 if (evaluatedPositiveExs.any ( λ val => val < 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val > 0) then
                   let mut cand := lteZero substitutedExpr
