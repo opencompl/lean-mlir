@@ -3,8 +3,6 @@ import Cli
 
 def functionn {α : Type} (x : α) : α := x
 
-
-
 def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   let fileName := args.positionalArg! "file" |>.as! String
   let icom? ← parseComFromFile fileName
