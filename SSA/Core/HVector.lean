@@ -226,13 +226,13 @@ end ToExprPi
   ## Folding and mapping over HVectors, monadic and non-monadic.
 -/
 section mapHVec
-def _root_.HVector.foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
+def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
     ∀ {l : List α}, (init : B) → (as : HVector A l) → m B
   | [],   b, .nil       => return b
   | t::_, b, .cons a as => do foldlM f (← f t b a) as
 
 /-! Simultaneous map on the type and value level of an HVector. -/
-def _root_.HVector.ubermap {A : α → Type} {B : β → Type}
+def ubermap {A : α → Type} {B : β → Type}
     {l : List α}
     (F : α → β)
     (f : {a : α} → (v : A a) → B (F a) )
@@ -244,7 +244,7 @@ def _root_.HVector.ubermap {A : α → Type} {B : β → Type}
 /-!
 Simultaneous map on the type and value level of an HVector while
 performing monadic effects for value translation.-/
-def _root_.HVector.ubermapM [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
+def ubermapM [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
     {l : List α}
     {F : α → β}
     (f : (a : α) → (v : A a) → m (B (F a)) )
