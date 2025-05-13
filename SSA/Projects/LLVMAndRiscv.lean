@@ -16,8 +16,9 @@ open InstCombine(LLVM)
 namespace LLVMRiscV
 
 
-/-! # Hybrid dialect -/
-/-
+/-! 
+# Hybrid dialect 
+
 This file contains a hybrid dialect combining
 SSA.Projects.RISCV64 and SSA.Projects.InstCombine.
 Modelling two dialects within a larger hybrid dialect allows us
