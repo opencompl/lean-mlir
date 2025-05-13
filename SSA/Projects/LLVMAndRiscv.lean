@@ -15,6 +15,7 @@ import SSA.Core.HVector
 open InstCombine(LLVM)
 namespace LLVMRiscV
 
+
 /-! # Hybrid dialect -/
 /-
 This file contains a hybrid dialect combining
@@ -133,11 +134,11 @@ def ctxtTransformToRiscV (Γ : Ctxt LLVMPlusRiscV.Ty) :=
 theorem outTy_map_signature_eq {s : Signature α} {f : α → β} :
   Signature.outTy (f <$> s) = f s.outTy := rfl
 
-
 /- We tag the following definitions as `simp` and `simp_denote`
    so that `simp_peephole` and `simp` include them during simplification. -/
 attribute [simp, simp_denote] outTy_map_signature_eq
-attribute [simp, simp_denote] _root_.HVector.ubermapM
-attribute [simp, simp_denote] _root_.HVector.ubermap
+
+attribute [simp, simp_denote] HVector.ubermapM
+attribute [simp, simp_denote] HVector.ubermap
 
 end LLVMRiscV

@@ -226,6 +226,7 @@ end ToExprPi
   ## Folding and mapping over HVectors, monadic and non-monadic.
 -/
 section mapHVec
+
 def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
     ∀ {l : List α}, (init : B) → (as : HVector A l) → m B
   | [],   b, .nil       => return b
