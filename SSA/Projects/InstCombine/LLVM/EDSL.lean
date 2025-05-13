@@ -72,7 +72,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 
   let mkExprOf := opStx.mkExprOf (args? := args) Γ
   match opStx.name with
-    -- Tertiary Operations
+    -- Ternary Operations
     | "llvm.select" =>
         let args ← args.assumeArity 3
         let w := getVarWidth args[1]
