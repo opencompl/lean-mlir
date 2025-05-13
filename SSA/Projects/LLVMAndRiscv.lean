@@ -10,6 +10,7 @@ import SSA.Projects.RISCV64.Syntax
 import SSA.Projects.RISCV64.Base
 import SSA.Projects.RISCV64.Semantics
 import SSA.Projects.RISCV64.PrettyEDSL
+import SSA.Core.HVector
 
 open InstCombine(LLVM)
 namespace LLVMRiscV
@@ -132,33 +133,11 @@ def ctxtTransformToRiscV (Γ : Ctxt LLVMPlusRiscV.Ty) :=
 theorem outTy_map_signature_eq {s : Signature α} {f : α → β} :
   Signature.outTy (f <$> s) = f s.outTy := rfl
 
-def _root_.HVector.foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
-    ∀ {l : List α}, (init : B) → (as : HVector A l) → m B
-  | [],   b, .nil       => return b
-  | t::_, b, .cons a as => do foldlM f (← f t b a) as
 
-/-! Simultaneous map on the type and value level of an HVector. -/
-@[simp_denote]
-def _root_.HVector.ubermap {A : α → Type} {B : β → Type}
-    {l : List α}
-    (F : α → β)
-    (f : {a : α} → (v : A a) → B (F a) )
-    (as : HVector A l) : (HVector B (F <$> l)) :=
-  match l, as with
-  | [], .nil => .nil
-  | _t :: _ts, .cons a as => HVector.cons (f a) (HVector.ubermap F f as)
-
-/-!
-Simultaneous map on the type and value level of an HVector while
-performing monadic effects for value translation.-/
-@[simp_denote]
-def _root_.HVector.ubermapM [Monad m] {A : α → Type} {B : β → Type}
-    {l : List α}
-    {F : α → β}
-    (f : (a : α) → (v : A a) → m (B (F a)) )
-    (as : HVector A l) : m (HVector B (F <$> l)) :=
-  match l, as with
-  | [], .nil => return .nil
-  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.ubermapM f as)
+/- We tag the following definitions as `simp` and `simp_denote`
+   so that `simp_peephole` and `simp` include them during simplification. -/
+attribute [simp, simp_denote] outTy_map_signature_eq
+attribute [simp, simp_denote] _root_.HVector.ubermapM
+attribute [simp, simp_denote] _root_.HVector.ubermap
 
 end LLVMRiscV
