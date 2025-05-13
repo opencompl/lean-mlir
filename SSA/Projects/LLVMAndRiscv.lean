@@ -161,5 +161,4 @@ def _root_.HVector.ubermapM [Monad m] {A : α → Type} {B : β → Type}
   | [], .nil => return .nil
   | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.ubermapM f as)
 
-
 end LLVMRiscV
