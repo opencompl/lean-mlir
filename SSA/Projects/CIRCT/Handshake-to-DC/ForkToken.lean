@@ -1,4 +1,4 @@
-import SSA.Projects.CIRCT.DCxComb.DCxComb
+import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
@@ -20,9 +20,9 @@ namespace Stream.Bisim
 
 -- removed unused inputs
 unseal String.splitOnAux in
-def forkToken := [DCxComb_com| {
+def forkToken := [DC_com| {
   ^entry(%0: !TokenStream):
-    %dcFork = "DCxComb.fork" (%0) : (!TokenStream) -> (!TokenStream2)
+    %dcFork = "DC.fork" (%0) : (!TokenStream) -> (!TokenStream2)
     "return" (%dcFork) : (!TokenStream2) -> ()
   }]
 
@@ -35,11 +35,11 @@ def forkToken := [DCxComb_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => (vals.get? i).join
 
-def x : DCxCombOp.TokenStream := ofList [some (), none, some (), some (), none]
+def x : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
 
-def test : DCxCombOp.TokenStream × DCxCombOp.TokenStream :=
+def test : DCOp.TokenStream × DCOp.TokenStream :=
   forkToken.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 open Ctxt in
-theorem equiv_forkToken (streamT : DCxCombOp.TokenStream) :
-  (HandshakeOp.fork streamT).fst ~ (forkToken.denote (Valuation.ofHVector (.cons streamT <| .nil))).fst := by sorry
+theorem equiv_forkToken (streamT : DCOp.TokenStream) :
+  (Handshake.fork streamT).fst ~ (forkToken.denote (Valuation.ofHVector (.cons streamT <| .nil))).fst := by sorry
