@@ -8,7 +8,7 @@ This file contains the `RV64` instruction semantics in a form that does
 not contain BitVec.toInt and BitVec.toNat. This file should replace
 the Semantics file in RISCV64 when complete.
 ToInt/ToNat calls hinder proof automation by bv_decide.
-To guarantee faithfullness to the semantics defined by the Sail-Lean RiscV64 model,
+faithfulness
 we provide a proof with each rewrite that shows, that the toInt/ toNat free
 version is semantically equivalent to the defintion extracted from
 the Sail RiscV 64 modell in Lean.
