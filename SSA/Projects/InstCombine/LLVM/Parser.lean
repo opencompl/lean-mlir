@@ -13,3 +13,7 @@ def regionTransform (region : Region 0) : Except ParseError
 def parseComFromFile (fileName : String) :
  IO (Option (Σ (Γ' : Context) (eff : EffectKind) (ty : InstCombine.Ty), Com LLVM Γ' eff ty)) := do
  parseRegionFromFile fileName regionTransform
+
+def parseComFromFileRiscV (fileName : String) :
+ IO (Option (Σ (Γ' : Context) (eff : EffectKind) (ty : InstCombine.Ty), Com LLVM Γ' eff ty)) := do
+ parseRegionFromFile fileName regionTransform
