@@ -1,6 +1,9 @@
 /- we import these specific mathlib libraries to use Nat.cast_ofNat and neg_neg lemmas. -/
 import Mathlib.Order.Lattice
 import Mathlib.Data.Nat.Cast.Defs
+import SSA.Projects.InstCombine.ForLean
+
+open BitVec
 
 /-!
   ## Dialect semantics bit-vectorization
@@ -19,89 +22,6 @@ the purely bit vector defintion where we removed
 toInt/toNat calls.
 -/
 
-/-! ## Helper Bit Vector Lemmas  -/
-/- The lemmas below are helper lemmas used within proofs throughout the file. -/
-
-theorem sshiftRight_eq_sshiftRight_extractLsb {w : Nat}
-    {lw : Nat} (hll : 2^lw = w) (hlw : lw > 0 )
-    (x y : BitVec w)(h : BitVec.toNat y < 2^lw ) :
-        x.sshiftRight y.toNat = x.sshiftRight (y.extractLsb (lw - 1) 0).toNat := by
-  apply BitVec.eq_of_toNat_eq
-  simp
-  suffices y.toNat = (y.toNat % 2 ^ (lw - 1 + 1)) by
-    rw [← this ]
-  have : (lw - 1 + 1) = lw := by omega
-  rw [this, hll]
-  rw [Nat.mod_eq_of_lt]
-  rw [hll] at h
-  exact h
-
-theorem sshiftRight_eq_setWidth_extractLsb_signExtend {w : Nat} (n : Nat) (x : BitVec w) :
-    x.sshiftRight n =
-    ((x.signExtend (w + n)).extractLsb (w - 1 + n) n).setWidth w := by
-  ext i hi
-  simp [BitVec.getElem_sshiftRight]
-  simp [show i ≤ w - 1 by omega]
-  simp [BitVec.getLsbD_signExtend]
-  by_cases hni : (n + i) < w <;> simp [hni] <;> omega
-
-theorem BitVec.ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} : BitVec.ofInt w' x.toInt
-      = x.signExtend w' := by
-  apply BitVec.eq_of_toInt_eq
-  by_cases hw' : w' ≤ w
-  · simp
-    rw [BitVec.toInt_signExtend_eq_toInt_bmod_of_le _ hw']
-  · simp only [not_le] at hw'
-    rw [BitVec.toInt_ofInt]
-    rw [BitVec.toInt_signExtend_of_le (by omega)]
-    have hxlt := @BitVec.two_mul_toInt_lt w x
-    have hxle := @BitVec.le_two_mul_toInt w x
-    have : 2^w < 2^w' := by apply Nat.pow_lt_pow_of_lt (by simp) (by assumption)
-    have : - 2^w' < - 2^w := by
-      apply Int.neg_lt_neg
-      norm_cast
-    rw [Int.bmod_eq_of_le_mul_two] <;> push_cast <;> omega
-
-theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat }{x y : BitVec w } (h : w' ≤ w):
-    BitVec.ofNat w' (x.toNat * y.toNat) = BitVec.ofInt w' (x.toInt * y.toInt) := by
-  rw [BitVec.ofNat_mul]
-  simp
-  rw [BitVec.ofInt_mul]
-  rw [BitVec.ofInt_toInt_eq_signExtend]
-  rw [BitVec.ofInt_toInt_eq_signExtend]
-  rw [BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
-  rw [BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
-@[simp]
-theorem extractLsb'_eq_setWidth {x : BitVec w} : x.extractLsb' 0 n = x.setWidth n := by
-  ext i hi
-  simp?
-
-theorem extractLsb'_ofInt_eq_ofInt {x : Int} {w w' : Nat}  {h : w ≤ w'} :
-    (BitVec.extractLsb' 0 w (BitVec.ofInt w' x)) = (BitVec.ofInt w x) := by
-  simp only [extractLsb'_eq_setWidth]
-  rw [← BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
-  apply BitVec.eq_of_toInt_eq
-  simp only [BitVec.toInt_signExtend, BitVec.toInt_ofInt, h, inf_of_le_left]
-  rw [Int.bmod_bmod_of_dvd]
-  apply Nat.pow_dvd_pow 2 h
-
-theorem extractLsb'_ofInt_eq_ofInt_ofNat {x : Nat} {w w' : Nat}  {h : w ≤ w'} :
-    (BitVec.extractLsb' 0 w (BitVec.ofInt w' x)) = (BitVec.ofInt w x) := by
-  apply extractLsb'_ofInt_eq_ofInt
-  exact h
-
-theorem BitVec.setWidth_signExtend_eq_self {w w' : Nat} {x : BitVec w} (h : w ≤ w') : (x.signExtend w').setWidth w = x := by
-  ext i hi
-  simp  [hi, BitVec.getLsbD_signExtend]
-  omega
-
-theorem extractLsb_setWidth_of_lt (x : BitVec w) (hi lo v : Nat) (hilo : lo < hi) (hhi : hi < v):
-    BitVec.extractLsb hi lo (BitVec.setWidth v x) = BitVec.extractLsb hi lo x := by
-  simp only [BitVec.extractLsb]
-  ext k
-  simp only [BitVec.getElem_extractLsb', BitVec.getLsbD_setWidth, Bool.and_eq_right_iff_imp,
-    decide_eq_true_eq]
-  omega
 
 /- Proof in process. The following lemma does not yet exist in Lean's bit vector library.
 We are confident that this holds and the lemma is in process of being proven and
@@ -386,13 +306,10 @@ theorem REMW_pure64_unsigned_eq_REMW_pure64_unsigned_bv (rs2_val : BitVec 64) (r
         lhs
         rw [show (0#32).toNat = 0 by omega]
       rw [← BitVec.setWidth_eq_extractLsb' (by simp)] at ht
-      rw [ht]
-      rw [BitVec.umod_zero]
-      rw [← BitVec.toInt_inj]
+      rw [ht, BitVec.umod_zero, ← BitVec.toInt_inj]
       simp only [Int.reducePow, BitVec.toInt_ofInt, Nat.reducePow, BitVec.toInt_setWidth]
       have helper : ((4294967296 : Nat) : Int) = (4294967296 : Int) := rfl
-      rw [← helper]
-      rw [Int.emod_bmod (x := (rs1_val.toNat : Int)) (n := (4294967296))]
+      rw [← helper, Int.emod_bmod (x := (rs1_val.toNat : Int)) (n := (4294967296))]
   case isFalse hf =>
       congr
       simp only [Nat.sub_zero, Nat.reduceAdd, BitVec.extractLsb_toNat, Nat.shiftRight_zero,
@@ -479,10 +396,9 @@ theorem REM_pure64_signed_eq_REM_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val
       BitVec.eq_of_toInt_eq ht
     split <;> simp
   case isFalse hf =>
-    rw [← BitVec.toInt_srem ]
-    rw [BitVec.ofInt_toInt]
+    rw [← BitVec.toInt_srem, BitVec.ofInt_toInt]
 
-def MULW_pure64 (rs2_val : BitVec 64) (rs1_val :BitVec 64) : BitVec 64 :=
+def MULW_pure64 (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64
     (BitVec.extractLsb 31 0
       (BitVec.extractLsb' 0 64
@@ -540,7 +456,7 @@ def MUL_pure64_tff (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
 def MUL_pure64_tff_bv  (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
    BitVec.extractLsb 127 64 (BitVec.extractLsb' 0 128 ((BitVec.zeroExtend 128 rs1_val)  * (BitVec.zeroExtend 128 rs2_val)))
 
-theorem MUL_pure64_tff_eq_MUL_pure64_tff_bv  (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+theorem MUL_pure64_tff_eq_MUL_pure64_tff_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
     MUL_pure64_tff (rs2_val) (rs1_val) = MUL_pure64_tff_bv (rs2_val) (rs1_val) := by
   unfold  MUL_pure64_tff MUL_pure64_tff_bv
   suffices (BitVec.extractLsb' 0 128 (BitVec.ofInt 129 (↑rs1_val.toNat * ↑rs2_val.toNat))) =
@@ -616,7 +532,7 @@ theorem MUL_pure64_ftt_eq_MUL_pure64_ftt_bv (rs2_val : BitVec 64) (rs1_val : Bit
   rw [BitVec.ofInt_mul]
   simp only [BitVec.ofInt_toInt]
   rw [BitVec.setWidth_mul _ _ (by omega)]
-  rw [BitVec.setWidth_signExtend_eq_self (by simp),BitVec.setWidth_signExtend_eq_self (by simp)]
+  rw [setWidth_signExtend_eq_self (by simp),BitVec.setWidth_signExtend_eq_self (by simp)]
   ac_nf
 
 def MUL_pure64_ttt (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
