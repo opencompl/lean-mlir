@@ -100,6 +100,8 @@ def source : TokenStream :=
 
 end DCOp
 
+end CIRCTStream
+
 namespace MLIR2DC
 
 section Dialect
@@ -166,16 +168,16 @@ def_denote for DC where
   | .fstVal _ => fun s => s.fst
   | .snd => fun s => s.snd
   | .sndVal _ => fun s => s.snd
-  | .merge => fun s₁ s₂ => DCOp.merge s₁ s₂
-  | .branch => fun s => DCOp.branch s
-  | .fork => fun s => DCOp.fork s
-  | .join => fun s₁ s₂ => DCOp.join s₁ s₂
-  | .select => fun s₁ s₂ c => DCOp.select s₁ s₂ c
-  | .sink => fun s => DCOp.sink s
-  | .source => fun s => DCOp.source s
-  | .pack _ => fun s₁ s₂ => DCOp.pack s₁ s₂
-  | .unpack _ => fun s => DCOp.unpack s
-  | .popReady _ n => fun s => DCOp.popReady s n
+  | .merge => fun s₁ s₂ => CIRCTStream.DCOp.merge s₁ s₂
+  | .branch => fun s => CIRCTStream.DCOp.branch s
+  | .fork => fun s => CIRCTStream.DCOp.fork s
+  | .join => fun s₁ s₂ => CIRCTStream.DCOp.join s₁ s₂
+  | .select => fun s₁ s₂ c => CIRCTStream.DCOp.select s₁ s₂ c
+  | .sink => fun s => CIRCTStream.DCOp.sink s
+  | .source => fun s => CIRCTStream.DCOp.source s
+  | .pack _ => fun s₁ s₂ => CIRCTStream.DCOp.pack s₁ s₂
+  | .unpack _ => fun s => CIRCTStream.DCOp.unpack s
+  | .popReady _ n => fun s => CIRCTStream.DCOp.popReady s n
 
 end Dialect
 
