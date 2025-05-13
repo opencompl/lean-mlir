@@ -4,7 +4,7 @@ import SSA.Experimental.Bits.Frontend.Preprocessing
 import SSA.Experimental.Bits.Frontend.Syntax
 
 import SSA.Experimental.Bits.Fast.Reflect
-import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
+-- import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
 initialize Lean.registerTraceClass `Bits.Frontend
 
@@ -63,7 +63,7 @@ abbrev ReflectedExpr := Expr
 Insert expression 'e' into the reflection map. This returns the map,
 as well as the denoted term.
 -/
-def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : _root_.Term × ReflectMap :=
+def ReflectMap.findOrInsertBVExpr (m : ReflectMap) (e : Expr) : _root_.Term × ReflectMap :=
   let (ix, m) := match m.exprs.get? e with
     | some ix =>  (ix, m)
     | none =>
@@ -71,6 +71,18 @@ def ReflectMap.findOrInsertExpr (m : ReflectMap) (e : Expr) : _root_.Term × Ref
       (ix, { m with exprs := m.exprs.insert e ix })
   -- let e :=  mkApp (mkConst ``Term.var) (mkNatLit ix)
   (Term.var ix, m)
+
+/--
+Insert expression 'e' into the reflection map. This returns the map,
+as well as the denoted term.
+-/
+def ReflectMap.findOrInsertBoolExpr (m : ReflectMap) (e : Expr) : BTerm × ReflectMap :=
+  let (ix, m) := match m.exprs.get? e with
+    | some ix =>  (ix, m)
+    | none =>
+      let ix := m.exprs.size
+      (ix, { m with exprs := m.exprs.insert e ix })
+  (BTerm.var ix, m)
 
 
 /--
@@ -178,9 +190,30 @@ info: ∀ {w : Nat} (a : BitVec w),
 
 
 def reflectAtomUnchecked (map : ReflectMap) (_w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
-  let (e, map) := map.findOrInsertExpr e
+  let (e, map) := map.findOrInsertBVExpr e
   return { bvToIxMap := map, e := e }
 
+abbrev foo : Bool := (true : Bool) ^^ (true : Bool)
+
+
+mutual
+
+partial def reflectBoolUnchecked (map : ReflectMap)  (e : Expr) : MetaM (ReflectResult BTerm) := do
+  match_expr e with
+  | BitVec.msb w x =>
+    let ⟨map, x⟩ ← reflectBVUnchecked map w x
+    return { bvToIxMap := map, e := BTerm.msb x }
+  | Bool.true =>
+      return { bvToIxMap := map, e := BTerm.tru }
+  | Bool.false =>
+      return { bvToIxMap := map, e := BTerm.fals }
+  | Bool.xor a b =>
+      let ⟨map, l⟩ ← reflectBoolUnchecked map a
+      let ⟨map, r⟩ ← reflectBoolUnchecked map b
+      return { bvToIxMap := map, e := BTerm.xor l r }
+  | _ =>
+    let (e, map) := map.findOrInsertBoolExpr e
+    return { bvToIxMap := map, e := e }
 
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
@@ -189,7 +222,7 @@ and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
 -/
-partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
+partial def reflectBVUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult _root_.Term) := do
   if let some (v, _bvTy) ← getOfNatValue? e ``BitVec then
     return { bvToIxMap := map, e := Term.ofNat v }
   -- TODO: bitvector contants.
@@ -198,7 +231,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
     let i ← getIntValue? iExpr
     match i with
     | _ =>
-      let (e, map) := map.findOrInsertExpr e
+      let (e, map) := map.findOrInsertBVExpr e
       return { bvToIxMap := map, e := e }
   | BitVec.ofNat _wExpr nExpr =>
     let n ← getNatValue? nExpr
@@ -215,49 +248,51 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
       reflectAtomUnchecked map w e
 
   | HAnd.hAnd _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.and a.e b.e
       return { b with e := out }
   | HOr.hOr _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.or a.e b.e
       return { b with e := out }
   | HXor.hXor _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.xor a.e b.e
       return { b with e := out }
   | Complement.complement _bv _inst a =>
-      let a ← reflectTermUnchecked map w a
+      let a ← reflectBVUnchecked map w a
       let out := Term.not a.e
       return { a with e := out }
   | HAdd.hAdd _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.add a.e b.e
       return { b with e := out }
   | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
-      let a ← reflectTermUnchecked map w a
+      let a ← reflectBVUnchecked map w a
       let some n ← getNatValue? n
         | throwError m!"expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
       return { a with e := Term.shiftL a.e n }
 
   | HSub.hSub _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked map w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       let out := Term.sub a.e b.e
       return { b with e := out }
   | Neg.neg _bv _inst a =>
-      let a ← reflectTermUnchecked map w a
+      let a ← reflectBVUnchecked map w a
       let out := Term.neg a.e
       return { a with e := out }
   -- incr
   -- decr
   | _ =>
-    let (e, map) := map.findOrInsertExpr e
+    let (e, map) := map.findOrInsertBVExpr e
     return { bvToIxMap := map, e := e }
+
+end
 
 set_option pp.explicit true in
 /--
@@ -265,6 +300,17 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 -/
 #guard_msgs in
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
+
+partial def reflectBoolPredicateAux (map : ReflectMap) (e : Expr) : MetaM (ReflectResult Predicate) := do
+  match_expr e with
+  | Eq α ea eb => do
+     let_expr Bool := α
+       | throwError m!"expected to be called on boolean equality, but called on '{e}'"
+     let ⟨map, a⟩ ← reflectBoolUnchecked map ea
+     let ⟨map, b⟩ ← reflectBoolUnchecked map eb
+     logInfo m!"reflecting {e} : ({repr a} ~ {ea}) = ({repr b} ~ {eb})"
+     return { bvToIxMap := map, e := Predicate.boolBinary .eq a b }
+  | _ => throwError m!"expected boolean predicate, found '{e}'"
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected : Expr) : MetaM (ReflectResult Predicate) := do
@@ -282,37 +328,40 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       return { bvToIxMap := bvToIxMap, e := out }
 
     | BitVec w =>
-      let a ←  reflectTermUnchecked bvToIxMap w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ←  reflectBVUnchecked bvToIxMap w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .eq a.e b.e }
     | Bool =>
       -- Sadly, recall that slt, sle are of type 'BitVec w → BitVec w → Bool',
       -- so we get goal states of them form 'a <ₛb = true'.
       -- So we need to match on 'Eq _ true' where '_' is 'slt'.
       -- This makes me unhappy too, but c'est la vie.
-      let_expr true := b
-        | throwError m!"only boolean conditionals allowed are 'bv.\{u,s}l\{t,e} bv = true'. Found {indentD e}."
-      match_expr a with
-      | BitVec.slt w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .slt a.e b.e }
-      | BitVec.sle w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .sle a.e b.e }
-      | BitVec.ult w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ult a.e b.e }
-      | BitVec.ule w a b =>
-        let a ← reflectTermUnchecked bvToIxMap w a
-        let b ← reflectTermUnchecked a.bvToIxMap w b
-        return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
+      -- TODO: this can be fixed now, since we have a boolean fragment.
+      match_expr b with
+      | true =>
+        match_expr a with
+        | BitVec.slt w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .slt a.e b.e }
+        | BitVec.sle w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .sle a.e b.e }
+        | BitVec.ult w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ult a.e b.e }
+        | BitVec.ule w a b =>
+          let a ← reflectBVUnchecked bvToIxMap w a
+          let b ← reflectBVUnchecked a.bvToIxMap w b
+          return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
+        | _ =>
+          reflectBoolPredicateAux bvToIxMap e
       | _ =>
-        throwError m!"unknown boolean conditional, expected 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+          reflectBoolPredicateAux bvToIxMap e
     | _ =>
-      throwError m!"unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true'. Found {indentD e}"
+      throwError m!"unknown equality kind, expected 'bv = bv' or 'bv.slt bv = true' or 'bv.sle bv = true' or 'bool = bool'. Found {indentD e}"
   | Ne α a b =>
     /- Support width constraints with α = Nat -/
     match_expr α with
@@ -325,20 +374,20 @@ partial def reflectPredicateAux (bvToIxMap : ReflectMap) (e : Expr) (wExpected :
       let out := Predicate.width .neq natVal
       return { bvToIxMap := bvToIxMap, e := out }
     | BitVec w =>
-      let a ← reflectTermUnchecked bvToIxMap w a
-      let b ← reflectTermUnchecked a.bvToIxMap w b
+      let a ← reflectBVUnchecked bvToIxMap w a
+      let b ← reflectBVUnchecked a.bvToIxMap w b
       return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .neq a.e b.e }
     | _ =>
       throwError m!"Expected typeclass to be 'BitVec w' / 'Nat', found '{indentD α}' in {e} when matching against 'Ne'"
   | LT.lt α _inst a b =>
     let_expr BitVec w := α | throwError m!"Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LT.lt'"
-    let a ← reflectTermUnchecked bvToIxMap w a
-    let b ← reflectTermUnchecked a.bvToIxMap w b
+    let a ← reflectBVUnchecked bvToIxMap w a
+    let b ← reflectBVUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ult a.e b.e }
   | LE.le α _inst a b =>
     let_expr BitVec w := α | throwError m!"Expected typeclass to be BitVec w, found '{indentD α}' in {indentD e} when matching against 'LE.le'"
-    let a ← reflectTermUnchecked bvToIxMap w a
-    let b ← reflectTermUnchecked a.bvToIxMap w b
+    let a ← reflectBVUnchecked bvToIxMap w a
+    let b ← reflectBVUnchecked a.bvToIxMap w b
     return { bvToIxMap := b.bvToIxMap, e := Predicate.binary .ule a.e b.e }
   | Or p q =>
     let p ← reflectPredicateAux bvToIxMap p wExpected
@@ -453,15 +502,14 @@ which is then indeed `rfl` equal to `true`.
 def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   let ws ← findExprBitwidths (← g.getType)
   let ws := ws.toArray
-  if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-  else if hgt: ws.size > 1 then
+  if hgt: ws.size > 1 then
     let (w1, wExample1) := ws[0]
     let (w2, wExample2) := ws[1]
     let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
     throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
   else
     -- we have exactly one width
-    let (w, wExample) := ws[0]
+    let w := if h : ws.size = 0 then mkNatLit 0 else (ws[0]).fst
 
     -- We can now revert hypotheses that are of this bitwidth.
     let g ← revertBvHyps g
@@ -497,30 +545,31 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
     | .automata =>
-      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
-      let (_, g) ← g.revert #[mapFv]
-      -- Apply Predicate.denote_of_eval_eq.
-      let wVal? ← Meta.getNatValue? w
-      let g ←
-        -- TODO FIXME
-        if false then
-          pure g
-        else
-          -- Generic width problem.
-          if !w.isFVar then
-            let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
-            let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
-            let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
-            logWarning  msg
+      throwError "ERROR: Disabled automata tactic when developing zext/sext extensions."
+      -- let (mapFv, g) ← generalizeMap g bvToIxMapVal;
+      -- let (_, g) ← g.revert #[mapFv]
+      -- -- Apply Predicate.denote_of_eval_eq.
+      -- let wVal? ← Meta.getNatValue? w
+      -- let g ←
+      --   -- TODO FIXME
+      --   if false then
+      --     pure g
+      --   else
+      --     -- Generic width problem.
+      --     if !w.isFVar then
+      --       let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
+      --       let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
+      --       let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
+      --       logWarning  msg
 
-          let [g] ← g.apply <| (mkConst ``Formula.denote_of_isUniversal)
-            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-          pure g
-      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      return [g]
+      --     let [g] ← g.apply <| (mkConst ``Formula.denote_of_isUniversal)
+      --       | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
+      --     pure g
+      -- let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
+      --   | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      -- let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
+      --   | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+      -- return [g]
     | .circuit_cadical maxIter =>
       let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
@@ -594,6 +643,7 @@ def evalBvAutomataCircuit : Tactic := fun
     | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
+/-
 /-- A tactic that succeeds if we have multiple widths. -/
 syntax (name := bvAutomataFragmentWidthLegal) "bv_automata_fragment_width_legal" : tactic
 @[tactic bvAutomataFragmentWidthLegal]
@@ -668,15 +718,15 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
   g.withContext do
     let ws ← findExprBitwidths (← g.getType)
     let ws := ws.toArray
-    if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-    else if hgt: ws.size > 1 then
+    -- if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
+    if hgt: ws.size > 1 then
       let (w1, wExample1) := ws[0]
       let (w2, wExample2) := ws[1]
       let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
       throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
     else
-      -- we have exactly one width
-      let (w, wExample) := ws[0]
+      -- Pick the width, and set the width to be dummy 0 if no widths are in play.
+      let w := if h0 : ws.size = 0 then mkNatLit 0 else ws[0].fst
 
       -- We can now revert hypotheses that are of this bitwidth.
       let g ← revertBvHyps g
@@ -701,7 +751,6 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
       trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
       return ()
 | _  => throwUnsupportedSyntax
+-/
 
 end Tactic
-
-macro "bv_automata_classic" : tactic => `(tactic| (bv_automata_gen (config := {backend := .automata})))

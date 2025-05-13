@@ -20,74 +20,107 @@ abbrev List.ofFn' (f : Nat → α) (size : Nat) : List α :=
   List.ofFn (n := size) (fun i => f i)
 
 
-lemma Term.evalFin_eq_eval (t : Term)
+lemma Term.evalFin_eq_eval {k : TermKind} (t : Term k)
    (varsList : List BitStream) (varsFin : Fin t.arity → BitStream)
    (hvars : ∀ (i : Fin t.arity), varsList.getD i default = (varsFin i)) :
     Term.evalFin t varsFin = Term.eval t varsList := by
-  induction t generalizing varsList <;>
-    dsimp [Term.evalFin, Term.eval, arity] at *
-  case var i => rw [← hvars]; simp
+  induction t generalizing varsList  <;>
+    simp [Term.evalFin, Term.eval, arity] at *
+  case var i => rw [← hvars]
   case and a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
   case or a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
   case xor a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
-  case not a ha => rw [ha varsList _ hvars]
-  case neg a ha => rw [ha varsList _ hvars]
-  case shiftL k a ha => rw [ha varsList _ hvars]
+  case not a ha =>
+    rw [ha varsList]
+    intros i
+    have := hvars ⟨i, by simp⟩
+    simp [this]
+  case neg a ha =>
+    rw [ha varsList]
+    intros i
+    have := hvars ⟨i, by simp⟩
+    simp [this]
+  case shiftL k a ha =>
+    rw [ha varsList]
+    intros i
+    have := hvars ⟨i, by simp⟩
+    simp [this]
   case add a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
   case sub a b ha hb =>
     rw [ha varsList]
     · rw [hb varsList]
       intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
     · intros i
-      have := hvars ⟨i, by omega⟩
+      have := hvars ⟨i, by simp⟩
       rw [this]
       rfl
 
-/-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
+/-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms Term.evalFin_eq_eval
+
+lemma BTerm.evalFin_eq_eval (b : BTerm)
+   (varsList : List BitStream) (varsFin : Fin b.arity → BitStream)
+   (hvars : ∀ (i : Fin b.arity), varsList.getD i default = (varsFin i)) :
+    BTerm.evalFin b varsFin = BTerm.eval b varsList := by
+  induction b generalizing varsList
+  case msb a =>
+    simp [BTerm.evalFin]
+    apply Term.evalFin_eq_eval
+    assumption
+  case tru => simp [BTerm.evalFin, BTerm.eval]
+  case fals => simp [BTerm.evalFin, BTerm.eval]
+  case xor a b ha hb =>
+      simp [BTerm.evalFin, BTerm.eval]
+      rw [ha varsList, hb varsList]
+      · intros i
+        exact (hvars ⟨i, by simp⟩)
+      · intros i
+        exact (hvars ⟨i, by simp⟩)
+  case var n =>
+      simp [BTerm.evalFin, BTerm.eval, ← hvars]
 
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
@@ -100,7 +133,7 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
   case binary ap t₁ t₂ =>
     rcases ap <;>
     · dsimp [Predicate.evalFin, Predicate.eval, Predicate.arity] at *
-      simp [evalEq, evalNeq, evalUlt, evalSlt, evalLor]
+      simp [evalBVEq, evalBVNeq, evalUlt, evalSlt, evalLor]
       rw [Term.evalFin_eq_eval _ varsList]
       · rw [Term.evalFin_eq_eval _ varsList]
         try rw [BitStream.and_comm]
@@ -130,8 +163,26 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     · intros i
       rw [hvars ⟨i, by omega⟩]
       rfl
+  case boolBinary op t₁ t₂ =>
+      rcases op
+      case eq =>
+        simp [Predicate.eval]
+        rw [BTerm.evalFin_eq_eval _ varsList,
+          BTerm.evalFin_eq_eval _ varsList]
+        · intros i
+          exact hvars ⟨i, by simp⟩
+        · intros i
+          exact hvars ⟨i, by simp⟩
+      case neq =>
+        simp [Predicate.eval]
+        rw [BTerm.evalFin_eq_eval _ varsList,
+          BTerm.evalFin_eq_eval _ varsList]
+        · intros i
+          exact hvars ⟨i, by simp⟩
+        · intros i
+          exact hvars ⟨i, by simp⟩
 
-/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
+/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms Predicate.evalFin_eq_eval
 
 
