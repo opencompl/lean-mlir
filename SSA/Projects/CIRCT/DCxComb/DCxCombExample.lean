@@ -39,8 +39,3 @@ def test2 : Stream (BitVec 8) :=
   popExample.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 #eval test2.take 10
-
--- expect: [none, some 10, none, some 4, some 6, none]
-
--- fc := fcomb.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
--- dc.denote (map fc → HVector (.cons y <| .nil))
