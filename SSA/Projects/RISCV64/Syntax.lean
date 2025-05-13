@@ -4,110 +4,6 @@ import SSA.Projects.RISCV64.Base
 open MLIR AST Ctxt
 open RISCV64
 
-namespace RISCVExpr
-/-!
-This file defines functions to simplify Expression making for some of the RISC-V operations.
-This helps in comparing output with expected ouput and
-avoids writting huge `Expr`.
--/
-def add {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.add)
-    (eff_le := by constructor)
-    (ty_eq := rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def sub {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.sub)
-    (eff_le := by constructor)
-    (ty_eq := rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def and {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.and)
-    (eff_le := by constructor)
-    (ty_eq := rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def or {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.or)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def xor  {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.xor)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def sll  {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.sll)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def sra  {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.sll)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def mul {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.mul)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def div {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.div)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def divu {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.divu)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def remu {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.remu)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-def rem {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
-  Expr.mk
-    (op := Op.rem)
-    (eff_le := by constructor)
-    (ty_eq := by rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := HVector.nil)
-
-end RISCVExpr
-
 namespace RiscvMkExpr
 
 /-- `mkTy` returns a RISCV type given the string representation of MLIR type -/
@@ -652,3 +548,107 @@ open Qq MLIR AST Lean Elab Term Meta in
 elab "[RV64_com| " reg:mlir_region "]" : term => do
   SSA.elabIntoCom reg q(RV64)
 end RiscvMkExpr
+
+namespace RISCVExpr
+/-!
+The section below defines functions to simplify Expression making for some of the RISC-V operations.
+This helps in comparing output with expected ouput and
+avoids writting huge `Expr`.
+-/
+def add {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.add)
+    (eff_le := by constructor)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def sub {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.sub)
+    (eff_le := by constructor)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def and {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.and)
+    (eff_le := by constructor)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def or {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.or)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def xor  {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.xor)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def sll  {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.sll)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def sra  {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.sll)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def mul {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.mul)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def div {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.div)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def divu {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.divu)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def remu {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.remu)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+def rem {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
+  Expr.mk
+    (op := Op.rem)
+    (eff_le := by constructor)
+    (ty_eq := by rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := HVector.nil)
+
+end RISCVExpr
