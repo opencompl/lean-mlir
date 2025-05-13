@@ -8,6 +8,7 @@ import SSA.Experimental.Bits.ForLean
 
 open BitVec
 open MLIR AST
+open InstCombine (LLVM)
 
 namespace AliveHandwritten
 
@@ -95,13 +96,13 @@ Proof:
 -/
 open ComWrappers
 def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- r = -/ Com.var (sdiv w /- c1-/ 0 /-%X -/ 1) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- inc = -/ Com.var (add w /-c1 -/ 0 /-X-/ 1) <|
   /- c3 = -/ Com.var (const w 3) <|
@@ -113,11 +114,11 @@ def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
 def alive_simplifyMulDivRem805 (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
+  simp_alive_ops
   simp_alive_undef
   simp_alive_case_bash
-  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, Option.some_bind]
+  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, PoisonOr.value_bind]
   cases w
   case zero =>
     intros x
@@ -128,8 +129,8 @@ def alive_simplifyMulDivRem805 (w : Nat) :
     by_cases hx:(x = 0)
     case pos =>
       subst hx
-      rw [LLVM.sdiv?_denom_zero_eq_none]
-      apply Refinement.none_left
+      rw [LLVM.sdiv?_denom_zero_eq_poison]
+      apply PoisonOr.poison_isRefinedBy
     case neg =>
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
@@ -159,7 +160,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 ofBool_false, ofNat_eq_ofNat, Nat.reducePow, Fin.mk_one, Fin.isValue, ofFin_ofNat,
                 Option.some.injEq] at hugt
               contradiction
-          rw [LLVM.sdiv?_eq_some_of_neq_allOnes (hy := by tauto)]
+          rw [LLVM.sdiv?_eq_value_of_neq_allOnes (hy := by tauto)]
           · have hcases := Nat.cases_of_lt_mod_add hugt
               (by simp)
               (by apply BitVec.isLt)
@@ -218,61 +219,58 @@ info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
 def alive_simplifyMulDivRem805' (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
+  simp_alive_ops
   simp_alive_undef
   simp_alive_case_bash
   simp_alive_ops
   simp only [ofNat_eq_ofNat, Bool.or_eq_true, beq_iff_eq, Bool.and_eq_true, bne_iff_ne, ne_eq,
     EffectKind.return_impure_toMonad_eq, Option.pure_def, Bool.false_eq_true, ge_iff_le, false_and,
-    toNat_ofNat, _root_.or_self, ↓reduceIte, Option.some_bind]
+    toNat_ofNat, _root_.or_self, ↓reduceIte, PoisonOr.value_bind]
   intros a
   simp only [ofBool_1_iff_true]
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
   split_ifs with c
-  simp only [Refinement.none_left]
-  simp only [Refinement.none_left]
-  by_cases h : 3#w >ᵤ 1#w + a
-  · simp only [h, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
-    by_cases a_0 : a = 0; subst a_0; simp at c
-    by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
-    rw [BitVec.toNat_eq] at a_0
-    intro h
-    subst h
-    simp [h]
-    simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at a_0 a_1
-    by_cases w_1 : w = 1
-    · subst w_1
-      have hh := BitVec.eq_zero_or_eq_one a
-      simp [a_0] at hh
-      simp [a_1] at hh
-    have w_gt_1 : 1 < w := by omega
-    have el_one: 1 % 2^w = 1 := by
-      simp only [Nat.one_lt_two_pow (n := w) (by omega), Nat.mod_eq_of_lt]
-    have el_three: 3 % 2^w = 3 := by
-      rw [Nat.mod_eq_of_lt];
-      have x := @Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega);
-      omega
-    unfold BitVec.ult at h
-    simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, decide_eq_true_eq] at h
-    simp only [el_three] at h
-    by_cases a_allones : a = allOnes w
-    · have x := sdiv_one_allOnes w_gt_1
-      rw [a_allones]
-      simp [x]
-    · rw [Nat.add_mod_of_add_mod_lt] at h
-      simp only [el_one, toNat_mod_cancel] at h
-      simp_all
-      simp [toNat_eq] at a_0
-      simp [toNat_eq, show 0 < w by omega] at a_1
-      omega
-      simp only [el_one, toNat_mod_cancel]
-      rw [BitVec.toNat_eq] at a_allones
-      rw [BitVec.toNat_allOnes] at a_allones
-      omega
-  · simp_all
+  · apply PoisonOr.poison_isRefinedBy
+  · apply PoisonOr.poison_isRefinedBy
+  · by_cases h : 3#w >ᵤ 1#w + a
+    · simp only [h, ofBool_true, ofNat_eq_ofNat, PoisonOr.value_isRefinedBy_value]
+      by_cases a_0 : a = 0; subst a_0; simp at c
+      by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
+      rw [BitVec.toNat_eq] at a_0
+      simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at a_0 a_1
+      by_cases w_1 : w = 1
+      · subst w_1
+        have hh := BitVec.eq_zero_or_eq_one a
+        simp [a_0] at hh
+        simp [a_1] at hh
+        simp [hh]
+      have w_gt_1 : 1 < w := by omega
+      have el_one: 1 % 2^w = 1 := by
+        simp only [Nat.one_lt_two_pow (n := w) (by omega), Nat.mod_eq_of_lt]
+      have el_three: 3 % 2^w = 3 := by
+        rw [Nat.mod_eq_of_lt];
+        have x := @Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega);
+        omega
+      unfold BitVec.ult at h
+      simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, decide_eq_true_eq] at h
+      simp only [el_three] at h
+      by_cases a_allones : a = allOnes w
+      · have x := sdiv_one_allOnes w_gt_1
+        rw [a_allones]
+        simp [x]
+      · rw [Nat.add_mod_of_add_mod_lt] at h
+        simp only [el_one, toNat_mod_cancel] at h
+        simp_all
+        simp [toNat_eq, show 0 < w by omega] at a_1
+        omega
+        simp only [el_one, toNat_mod_cancel]
+        rw [BitVec.toNat_eq] at a_allones
+        rw [BitVec.toNat_allOnes] at a_allones
+        omega
+    · simp_all
   · rename_i h
-    simp only [h, ofBool_false, ofNat_eq_ofNat, Refinement.some_some]
+    simp only [h, ofBool_false, ofNat_eq_ofNat, PoisonOr.value_isRefinedBy_value]
     simp only [Bool.not_eq_true] at h
     have a_ne_zero : a ≠ 0 := by
       intro a_zero
@@ -338,8 +336,8 @@ Proof
 open ComWrappers
 def MulDivRem290_lhs (w : ℕ) :
   Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w,
-    /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w,
+    /- %Y -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- poty = -/ Com.var (shl w /- c1 -/ 0 /-%Y -/ 1) <|
   /- r = -/ Com.var (mul w /- poty -/ 0 /-%X -/ 3) <|
@@ -347,15 +345,14 @@ def MulDivRem290_lhs (w : ℕ) :
 
 def MulDivRem290_rhs (w : ℕ) :
     Com InstCombine.LLVM
-    [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w]
-    .pure (InstCombine.Ty.bitvec w) :=
+    [/- %X -/ LLVM.Ty.bitvec w, /- %Y -/ LLVM.Ty.bitvec w]
+    .pure (LLVM.Ty.bitvec w) :=
   /- r = -/ Com.var (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def alive_simplifyMulDivRem290 (w : Nat) :
   MulDivRem290_lhs w ⊑ MulDivRem290_rhs w := by
   unfold MulDivRem290_lhs MulDivRem290_rhs
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
@@ -384,10 +381,10 @@ open ComWrappers
 
 def AndOrXor2515_lhs (w : ℕ):
   Com InstCombine.LLVM
-    [/- C1 -/ InstCombine.Ty.bitvec w,
-     /- C2 -/ InstCombine.Ty.bitvec w,
-     /- C3 -/ InstCombine.Ty.bitvec w,
-     /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- C1 -/ LLVM.Ty.bitvec w,
+     /- C2 -/ LLVM.Ty.bitvec w,
+     /- C3 -/ LLVM.Ty.bitvec w,
+     /- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- e1  = -/ Com.var (xor w /-x-/ 0 /-C1-/ 3) <|
   /- op0 = -/ Com.var (lshr w /-e1-/ 0 /-C2-/ 3) <|
   /- r   = -/ Com.var (xor w /-op0-/ 0 /-C3-/ 3) <|
@@ -395,10 +392,10 @@ def AndOrXor2515_lhs (w : ℕ):
 
 def AndOrXor2515_rhs (w : ℕ) :
   Com InstCombine.LLVM
-    [/- C1 -/ InstCombine.Ty.bitvec w,
-     /- C2 -/ InstCombine.Ty.bitvec w,
-     /- C3 -/ InstCombine.Ty.bitvec w,
-     /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- C1 -/ LLVM.Ty.bitvec w,
+     /- C2 -/ LLVM.Ty.bitvec w,
+     /- C3 -/ LLVM.Ty.bitvec w,
+     /- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- o = -/ Com.var (lshr w /-X-/ 0 /-C2-/ 2) <|
   /- p = -/ Com.var (lshr w /-C1-/ 4 /-C2-/ 3) <|
   /- q = -/ Com.var (xor w /-p-/ 0 /-C3-/ 3) <|
@@ -408,7 +405,6 @@ def AndOrXor2515_rhs (w : ℕ) :
 def alive_simplifyAndOrXor2515 (w : Nat) :
   AndOrXor2515_lhs w ⊑ AndOrXor2515_rhs w := by
   simp only [AndOrXor2515_lhs, AndOrXor2515_rhs]
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
@@ -467,7 +463,7 @@ Name: Select:746
 open ComWrappers
 def Select746_lhs (w : ℕ):
   Com InstCombine.LLVM
-    [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- A -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c0     = -/ Com.var (const w 0) <|
   /- c      = -/ Com.var (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
   /- minus  = -/ Com.var (sub w /-c0-/ 1 /-A-/ 2) <|
@@ -479,7 +475,7 @@ def Select746_lhs (w : ℕ):
 
 def Select746_rhs (w : ℕ):
   Com InstCombine.LLVM
-    [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    [/- A -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c0     = -/ Com.var (const w 0) <|
   /- c      = -/ Com.var (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
   /- minus  = -/ Com.var (sub w /-c0-/ 1 /-A-/ 2) <|
@@ -488,51 +484,50 @@ def Select746_rhs (w : ℕ):
   /- abs2   = -/ Com.var (select w /-c3-/ 0/-A-/ 5 /-minus-/ 2) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
+--TODO: upstream (some of) these lemmas
+private theorem ofBool_eq_one (x : Bool) :
+    ofBool x = 1#1 ↔ x = true := by
+  cases x <;> simp [ofBool]
+
+private theorem zero_lt_toInt_iff {x : BitVec w} :
+    0 < x.toInt ↔ (x.msb = false ∧ x ≠ 0#w) := by
+  have : x ≠ 0#w ↔ x.toInt ≠ 0 := by
+    simp [← toInt_inj]
+  simp only [msb_eq_toInt, decide_eq_false_iff_not, not_lt, ne_eq, this]
+  omega
+
 def alive_simplifySelect764 (w : Nat) :
-  Select746_lhs w ⊑ Select746_rhs w := by
+    Select746_lhs w ⊑ Select746_rhs w := by
   simp only [Select746_lhs, Select746_rhs]
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
-  intros A
-  rcases A with rfl | A  <;> simp [Option.bind, Bind.bind]
-  by_cases zero_sgt_A : 0#w >ₛ A
-  · simp [zero_sgt_A]
-  · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
-    by_cases neg_A_sgt_zero : -A >ₛ 0#w
-    · simp only [reduceEq, ↓reduceIte, _root_.neg_neg, neg_A_sgt_zero, ofBool_true, ofNat_eq_ofNat]
-      by_cases A_sgt_zero : A >ₛ 0#w
-      simp [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
-      · by_cases A_eq_zero : A = 0
-        simp only [A_eq_zero, ofNat_eq_ofNat, BitVec.neg_zero]
-        by_cases A_eq_intMin : A = intMin w
-        simp only [A_eq_intMin, BitVec.neg_intMin]
-        have A_ne_intMin : A ≠ intMin w := by
-          simp [A_eq_intMin]
-        have A_ne_zero : A ≠ 0 := by
-          simp only [ofNat_eq_ofNat] at A_eq_zero
-          simp [A_eq_zero]
-        rw [sgt_zero_eq_not_neg_sgt_zero A A_ne_intMin A_ne_zero] at A_sgt_zero
-        simp only at neg_A_sgt_zero
-        simp [neg_A_sgt_zero] at A_sgt_zero
-      simp [A_sgt_zero]
-    · simp only [reduceEq, ↓reduceIte, _root_.neg_neg, neg_A_sgt_zero, ofBool_false,
-      ofNat_eq_ofNat]
-      by_cases A_sgt_zero : A >ₛ 0#w
-      · simp [A_sgt_zero]
-      ·
-        by_cases A_eq_zero : A = 0
-        · simp [A_eq_zero, ofNat_eq_ofNat, sgt_same, ofBool_false,
-          BitVec.neg_zero, Refinement.refl]
-        by_cases A_eq_intMin : A = intMin w
-        · simp [A_eq_intMin, sgt_same, intMin_not_gt_zero, BitVec.neg_intMin]
-        · have neg_not_sgt_zero : ¬(-A >ₛ 0#w) = true → (A >ₛ 0#w) = true
-            := (sgt_zero_eq_not_neg_sgt_zero A A_eq_intMin A_eq_zero).mpr
-          apply neg_not_sgt_zero at neg_A_sgt_zero
-          simp only at neg_A_sgt_zero
-          simp only [Bool.not_eq_true] at A_sgt_zero
-          rw [A_sgt_zero] at neg_A_sgt_zero
-          contradiction
+  simp_alive_ops
+  simp_alive_case_bash
+  intro A
+  simp only [BitVec.slt, ofBool_eq_one, toInt_zero, decide_eq_true_eq, BitVec.zero_sub]
+  split
+  next => simp
+  next A_ge_zero =>
+    simp only [PoisonOr.value_bind, _root_.neg_neg]
+    by_cases A_eq_zero : A = 0#w
+    · simp [A_eq_zero]
+    · have A_bne_zero : A != 0#w := by
+        simp [bne, A_eq_zero]
+      have A_bne_intMin : A != intMin w := by
+        rcases w with _|w
+        · simp [BitVec.of_length_zero] at A_eq_zero
+        simp only [bne_iff_ne, ne_eq]
+        rintro rfl
+        simp_all only [toInt_intMin, add_tsub_cancel_right, Int.natCast_emod, Nat.cast_pow,
+          Nat.cast_ofNat, Int.neg_neg_iff_pos, not_lt, intMin_eq_zero_iff, Nat.add_eq_zero,
+          one_ne_zero, and_false, not_false_eq_true, bne_iff_ne, ne_eq]
+        rw [Int.emod_eq_of_lt (by omega) (by omega)] at A_ge_zero
+        norm_cast at A_ge_zero
+        apply Nat.not_lt_of_le A_ge_zero <| Nat.two_pow_pos w
+      simp only [zero_lt_toInt_iff, msb_neg, A_bne_zero, A_bne_intMin,
+        Bool.true_and, bne_eq_false_iff_eq, ne_eq,
+        neg_eq_zero_iff, A_eq_zero, not_false_eq_true, and_true]
+      cases A.msb <;> simp
 
 /-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/

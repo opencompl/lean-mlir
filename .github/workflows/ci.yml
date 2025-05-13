@@ -45,6 +45,10 @@ jobs:
         run: |
           lake -R build SSA
 
+      - name: Test Library
+        run: |
+          lake -R build SSA.Tests.Tests
+
       - name: Compile Decide Experiment 🧐
         run: |
           lake -R build SSA.Experimental.Bits.Fast.Decide

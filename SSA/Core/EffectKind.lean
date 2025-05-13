@@ -1,3 +1,5 @@
+import SSA.Core.Tactic.SimpSet
+import Lean
 import Mathlib.Order.Lattice
 
 /- Kinds of effects, either pure or impure -/
@@ -8,7 +10,6 @@ deriving Repr, DecidableEq, Lean.ToExpr
 
 namespace EffectKind
 
-@[reducible]
 def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
   match e with
   | pure => Id
@@ -16,8 +17,8 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
 
 section Lemmas
 
-@[simp] theorem toMonad_pure    : pure.toMonad m = Id := rfl
-@[simp] theorem toMonad_impure  : impure.toMonad m = m := rfl
+@[simp, simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
+@[simp, simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
 
 end Lemmas
 
@@ -28,11 +29,28 @@ variable {e : EffectKind} {m : Type → Type}
 NOTE: The `Monad` instance below also implies `Functor`, `Applicative`, etc.
 If `m` is a `Functor`, but not a full `Monad`, then `e.toMonad m` should still be a functor too.
 However, actually having these instances causes diamond problems with the aforementioned instances
-implied by `Monad`. Thus, we just assume `m` is always a monad.
+implied by `Monad`. Thus, we generally assume `m` is a monad, and add a low priority
+instance for `Pure`.
+
+Similarly, there is some overlap between the instance that says `pure.toMonad m` is a
+(lawful) monad, irrespective of whether `m` is a monad or not, and the broader instances
+for `e.toMonad m`. For some reason, the latter were not being picked up [1], so we add
+lower priority to the `pure.toMonad m` instances, too.
+
+[1]: reported at https://github.com/leanprover/lean4/issues/7984#issuecomment-2847319540
 -/
 
-instance [Monad m] : Monad (e.toMonad m) := by cases e <;> infer_instance
-instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by cases e <;> infer_instance
+instance (priority := low) : Monad (pure.toMonad m) := by unfold toMonad; infer_instance
+instance (priority := low) : LawfulMonad (pure.toMonad m) := by unfold toMonad; infer_instance
+
+instance (priority := low) [Pure m] : Pure (e.toMonad m) := by
+  unfold toMonad; cases e <;> infer_instance
+
+instance [Monad m] : Monad (e.toMonad m) := by
+  unfold toMonad; cases e <;> infer_instance
+
+instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
+  unfold toMonad; cases e <;> infer_instance
 
 end Instances
 
@@ -124,14 +142,14 @@ instance : Min EffectKind where
   min := inf
 
 @[simp] theorem pure_sup_pure_eq  : max pure pure = pure    := rfl
-@[simp] theorem pure_sup_pure_eq'  : max pure pure = pure    := rfl
+@[simp] theorem pure_sup_pure_eq' : max pure pure = pure    := rfl
 
-@[simp] theorem impure_sup_eq     : max impure e  = impure  := rfl
-@[simp] theorem sup_impure_eq     : max e impure  = impure  := by cases e <;> rfl
+@[simp] theorem impure_sup_eq : max impure e  = impure  := rfl
+@[simp] theorem sup_impure_eq : max e impure  = impure  := by cases e <;> rfl
 
-@[simp] theorem impure_inf_impure_eq  : min impure impure = impure  := rfl
-@[simp] theorem pure_inf_eq           : min pure e = pure           := rfl
-@[simp] theorem inf_pure_eq           : min e pure = pure           := by cases e <;> rfl
+@[simp] theorem impure_inf_impure_eq : min impure impure = impure  := rfl
+@[simp] theorem pure_inf_eq      : min pure e = pure           := rfl
+@[simp] theorem inf_pure_eq      : min e pure = pure           := by cases e <;> rfl
 
 -- TODO: these proofs are currently quite slow, they could probablye be sped up quite a bit
 instance : Lattice EffectKind where
@@ -154,53 +172,83 @@ end Lattice
 
 Said differently, this is a functor from the category of EffectKind (with `e1 ≤ e2` as its arrows)
 to Lean (with `e1.toMonad x → e2.toMonad x` as its arrows). -/
-def liftEffect [Monad m] {e1 e2 : EffectKind} {α : Type}
+def liftEffect [Pure m] {e1 e2 : EffectKind} {α : Type}
     (hle : e1 ≤ e2) (v1 : e1.toMonad m α) : e2.toMonad m α :=
   match e1, e2, hle with
     | .pure, .pure, _ | .impure, .impure, _ => v1
-    | .pure, .impure, _ => return v1
+    | .pure, .impure, _ => Pure.pure v1
 
-instance instMonadLiftOfLe {e1 e2 : EffectKind} (h : e1 ≤ e2) [Monad m] :
+section MonadLift
+variable {m} [Monad m]
+
+/-!
+NOTE: Normally one ought to implement `MonadLift n _`, rather than `MonadLiftT`.
+However, the former declares `n` to be a semiOutParam, meaning the type of each
+instance must have `n` fully concrete. In the following instances, we have
+meta-variables in the type of `n`, so we have to implement `MonadLiftT` instead.
+-/
+
+instance instMonadLiftOfLe {e1 e2 : EffectKind} (h : e1 ≤ e2) :
     MonadLiftT (e1.toMonad m) (e2.toMonad m) where
   monadLift := liftEffect h
 
-instance (eff : EffectKind) {m} [Monad m] : MonadLiftT (eff.toMonad m) m :=
-  instMonadLiftOfLe (le_impure eff)
+variable (eff : EffectKind)
+instance : MonadLiftT (eff.toMonad m) m                  := instMonadLiftOfLe (le_impure eff)
+instance : MonadLiftT (eff.toMonad m) (impure.toMonad m) := instMonadLiftOfLe (le_impure eff)
+instance : MonadLiftT (pure.toMonad m) (eff.toMonad m)   := instMonadLiftOfLe (pure_le eff)
 
-@[simp] theorem liftEffect_rfl [Monad m] (hle : eff ≤ eff) :
+end MonadLift
+
+@[simp, simp_denote]
+theorem liftEffect_rfl [Pure m] (hle : eff ≤ eff) :
     liftEffect hle (α := α) (m := m) = id := by cases eff <;> rfl
 
-@[simp] theorem liftEffect_pure_impure [Monad m] (hle : pure ≤ impure) :
+@[simp, simp_denote]
+theorem liftEffect_pure_impure [Pure m] (hle : pure ≤ impure) :
     liftEffect hle (α := α) (m := m) = Pure.pure :=
   rfl
 
 /-- Forded version of `liftEffect_pure_impure` -/
-theorem liftEffect_eq_pure_cast {m : Type → Type} [Monad m]
+theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
     {eff : EffectKind} (eff_eq : eff = .pure) (eff_le : eff ≤ .impure) :
     liftEffect eff_le = fun (x : eff.toMonad m α) =>
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
-@[simp] theorem liftEffect_pure [Monad m] {e} (hle : e ≤ pure) :
+@[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
     liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
   cases hle; rfl
 
-@[simp] theorem liftEffect_impure [Monad m] {e} (hle : e ≤ impure) :
+@[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
     liftEffect hle (α := α) (m := m) = match e with
-      | .pure => fun v => return v
+      | .pure => fun v => Pure.pure v
       | .impure => id := by
   cases e <;> rfl
 
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
-theorem liftEffect_eq_id (hle : eff ≤ eff) [Monad m] :
+theorem liftEffect_eq_id (hle : eff ≤ eff) [Pure m] :
     liftEffect hle (α := α) (m := m) = id := by
   cases eff <;> rfl
 
 /-- toMonad is functorial: it preserves composition. -/
-def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
+def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h12 : e1 ≤ e2)
     (h23 : e2 ≤ e3)
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
+
+/-!
+## `toMonad` coercion
+-/
+
+/--
+Coerce a value of type `eff.toMonad m α` into a monadic value `m α`, by applying
+either `pure` or the identity, depending on the effect `eff`.
+
+NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
+-/
+@[simp, simp_denote]
+def coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
+  liftEffect (le_impure eff)

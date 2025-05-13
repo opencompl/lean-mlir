@@ -6,8 +6,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import SSA.Core.EffectKind
-import Mathlib.Control.Monad.Basic
 import SSA.Core.Framework.Dialect
+import SSA.Core.Framework.Refinement
+
+import Mathlib.Control.Monad.Basic
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Piecewise
 
@@ -189,6 +191,7 @@ structure Zipper (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_mid : Ctxt d.Ty) (ty
 
 
 
+/-! ### Repr instance -/
 section Repr
 open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
@@ -267,6 +270,7 @@ instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
 
 end Repr
 
+/-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
 mutual -- DecEq
 
@@ -652,7 +656,7 @@ Moreover, recall that `simp only` **does not** generate equation lemmas.
 *but* if equation lemmas are present, then `simp only` *uses* the equation lemmas.
 
 Hence, we build the equation lemmas by invoking the correct Lean meta magic,
-so that `simp only` (which we use in `simp_peephole` can find them!)
+so that `simp only` (which we use in `simp_peephole`) can find them!
 
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
 args, since there now are equation lemmas for it.
@@ -742,6 +746,30 @@ theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.d
   simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_var]
 
 end Lemmas
+
+/-!
+## Refinement
+-/
+section Refinement
+variable [DialectHRefinement d d]
+
+/--
+An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
+respective denotations under every valuation are in the refinement relation.
+-/
+instance: Refinement (Expr d Γ eff t) where
+  IsRefinedBy e₁ e₂ :=
+    ∀ V, e₁.denote V ⊑ e₂.denote V
+
+/--
+A program `c₁` is refined by a program `c₂` (of the same dialect) if their
+respective denotations under every valuation are in the refinement relation.
+-/
+instance: Refinement (Com d Γ eff t) where
+  IsRefinedBy c₁ c₂ :=
+    ∀ V, c₁.denote V ⊑ c₂.denote V
+
+end Refinement
 
 /-!
 ## `changeVars`

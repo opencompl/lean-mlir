@@ -5,7 +5,7 @@ defaultTargets = ["SSA"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
-rev = "nightly-testing-2025-04-28"
+rev = "nightly-testing-2025-05-12"
 
 [[require]]
 name = "Cli"
@@ -52,3 +52,7 @@ supportInterpreter = true
 [[lean_exe]]
 name = "ssaLLVMEnumerator"
 root = "SSA.Projects.InstCombine.LLVM.Enumerator"
+
+[[lean_lib]]
+name = "Tests"
+root = "SSA.Tests.Tests"
