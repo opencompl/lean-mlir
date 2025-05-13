@@ -1195,7 +1195,8 @@ elab "#generalize" expr:term: command =>
            let positiveExamples := constantAssignments.map (fun assignment => assignment.filter (fun key _ => parsedBVLogicalExpr.lhs.symVars.contains key))
 
            let preconditionSuccess : TermElabM Bool :=  withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
-              for combo in resultsCombo do
+              for combo in resultsCombo do -- TODO: We can make this more clever and first see if there's any combination that does not need a precondition before we attempt to generate preconditions
+
                   -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
                   let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
                   let substitutedBVLogicalExpr := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
