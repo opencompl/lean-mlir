@@ -65,7 +65,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     let args ← args.assumeArity 2
     return getVarWidth args[0]
 
-  /- `unW` is the (lazily computed) width, assuming a unary operation -/
+  /- `unW` is the (lazily computed) width, assuming an unary operation -/
   let unW := do
     let args ← args.assumeArity 1
     return getVarWidth args[0]
