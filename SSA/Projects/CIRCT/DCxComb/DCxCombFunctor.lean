@@ -20,10 +20,6 @@ class HasTy (d : Dialect) (DenotedTy : Type) [TyDenote d.Ty] [DialectSignature d
     ty : d.Ty
     denote_eq : toType ty = DenotedTy := by rfl
 
-abbrev HasBool (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Bool
-abbrev HasInt (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Int
-abbrev HasNat (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Nat
-
 -- DCxComb contains operations of two types: comb and dc
 inductive DC.Op (Op' Ty' : Type) (m') [TyDenote Ty'] [DialectSignature ⟨Op', Ty', m'⟩]
     [DialectDenote ⟨Op', Ty', m'⟩] : Type _
@@ -44,3 +40,32 @@ def DC (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Di
 
 /-- compose DC on top of Comb-/
 abbrev DCComb := DC MLIR2Comb.Comb
+
+-- the only ops where dc and comb meet are pack and unpack, so we only need to re-define
+-- the semantics for that
+
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCComb DCComb.Ty
+  | MLIR.AST.MLIRType.int _ w => do
+    match w with
+    | .concrete w' => return .bv w'
+    | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
+  | MLIR.AST.MLIRType.undefined s => do
+    match s.splitOn "_" with
+    | ["TokenStream"] =>
+      return .tokenstream
+    | ["TokenStream2"] =>
+      return .tokenstream2
+    | ["ValueStream", w] =>
+      match w.toNat? with
+      | some w' => return .valuestream w'
+      | _ => throw .unsupportedType
+    | ["ValueStream2", w] =>
+      match w.toNat? with
+      | some w' => return .valuestream2 w'
+      | _ => throw .unsupportedType
+    | ["ValueTokenStream", w] =>
+    match w.toNat? with
+      | some w' => return .valuetokenstream w'
+      | _ => throw .unsupportedType
+    | _ => throw .unsupportedType
+  | _ => throw .unsupportedType
