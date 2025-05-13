@@ -454,15 +454,13 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   by_cases h : w = 0
   · subst h
     simp
-  ·
-    simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
+  · simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
     Nat.self_sub_mod]
     have h' := @Int.add_emod_right (-1) (2^w)
     rw [← h', ← Int.tmod_eq_emod_of_nonneg (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
       Int.add_comm]
     norm_cast
-    simp only [Nat.cast_pow, Nat.cast_ofNat, Int.reduceNeg]
-    simp only [Int.reduceNegSucc, Int.reduceNeg]
+    simp only [Nat.cast_pow, Nat.cast_ofNat, Int.reduceNeg, Int.reduceNegSucc, Int.reduceNeg]
     rw [Int.add_neg_eq_sub]
     norm_cast
     rw [Int.subNatNat_eq_coe]
@@ -486,8 +484,8 @@ theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
     by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
 
 theorem sshiftRight_eq_sshiftRight_extractLsb {w : Nat}
-    {lw : Nat} (hll : 2^lw = w) (hlw : lw > 0)
-    (x y : BitVec w) (h : BitVec.toNat y < 2^lw) :
+    {lw : Nat} {x y : BitVec w} {hll : 2^lw = w} {hlw : lw > 0}
+    {h : BitVec.toNat y < 2^lw} :
         x.sshiftRight y.toNat = x.sshiftRight (y.extractLsb (lw - 1) 0).toNat := by
   apply BitVec.eq_of_toNat_eq
   simp only [Nat.sub_zero, BitVec.extractLsb_toNat, Nat.shiftRight_zero]
@@ -498,15 +496,15 @@ theorem sshiftRight_eq_sshiftRight_extractLsb {w : Nat}
   rw [hll] at h
   exact h
 
-theorem sshiftRight_eq_setWidth_extractLsb_signExtend {w : Nat} (n : Nat) (x : BitVec w) :
+theorem sshiftRight_eq_setWidth_extractLsb_signExtend {w : Nat} {n : Nat} (x : BitVec w) :
     x.sshiftRight n =
     ((x.signExtend (w + n)).extractLsb (w - 1 + n) n).setWidth w := by
   ext i hi
   simp [BitVec.getElem_sshiftRight, show i ≤ w - 1 by omega, BitVec.getLsbD_signExtend]
   by_cases hni : (n + i) < w <;> simp [hni] <;> omega
 
-theorem ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} : BitVec.ofInt w' x.toInt
-      = x.signExtend w' := by
+theorem ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} :
+    BitVec.ofInt w' x.toInt = x.signExtend w' := by
   apply BitVec.eq_of_toInt_eq
   by_cases hw' : w' ≤ w
   · simp
@@ -521,7 +519,7 @@ theorem ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} : BitVec.ofInt w' 
       norm_cast
     rw [Int.bmod_eq_of_le_mul_two] <;> push_cast <;> omega
 
-theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat }{x y : BitVec w} (h : w' ≤ w):
+theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat } {x y : BitVec w} (h : w' ≤ w):
     BitVec.ofNat w' (x.toNat * y.toNat) = BitVec.ofInt w' (x.toInt * y.toInt) := by
   rw [BitVec.ofNat_mul]
   simp
