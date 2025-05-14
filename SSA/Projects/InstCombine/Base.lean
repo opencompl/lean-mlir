@@ -25,9 +25,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
   see https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 -/
 
-class Serialize (α : Type u) where
-  serialized : α → Std.Format
-
 namespace InstCombine
 
 open BitVec
