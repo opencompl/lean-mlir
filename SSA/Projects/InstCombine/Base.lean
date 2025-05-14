@@ -25,6 +25,10 @@ import SSA.Projects.InstCombine.LLVM.Semantics
   see https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 -/
 
+class Serialize (α : Type u) where
+  serialized : α → Std.Format
+
+
 namespace InstCombine
 
 open BitVec
@@ -99,7 +103,9 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨false⟩        => "udiv"
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
-    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    (if prec >= max_prec then 1 else 2) f!"llvm.{op}"))
+    /- TO DO: I am not sure if changing this statement is the best way since it affects every use of Repr for the InstCombine dialect
+    I'm thinking of coming up with an alternative approach.-/
     prec
 
 instance : Repr (MOp.BinaryOp) where
@@ -116,12 +122,12 @@ inductive MOp (φ : Nat) : Type
 deriving DecidableEq, Inhabited, Lean.ToExpr
 
 instance : Repr (MOp 0) where
-   reprPrec op p :=
+   reprPrec op _p :=
      match op with
-     | .unary w op => repr "unary"
-     | .binary w op => repr "binary"
-     | .select  w => repr "select"
-     | .icmp  pred w => repr "icmp"
+     | .unary _w op => f!"\"{repr op}\""
+     | .binary _w op => f!"\"{repr op}\""
+     | .select  _w => repr "select"
+     | .icmp  _pred _w => repr "icmp"
      | .const  w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
 
 /-! ## Dialect -/
