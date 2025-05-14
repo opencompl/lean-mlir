@@ -195,7 +195,7 @@ instance : MLIR.AST.TransformTy LLVMPlusRiscV 0 where
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   MLIR.AST.ReaderM (LLVMPlusRiscV) (Σ eff ty, Expr LLVMPlusRiscV Γ eff ty) := do
-  if (opStx.name = "builtin.unrealized_conversion_cast" ) then
+  if (opStx.name = "builtin.unrealized_conversion_cast") then
     match opStx.args with
     | v₁Stx :: [] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -221,7 +221,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         let v ← transformExprRISCV expr
         return ⟨eff, .riscv ty , v⟩
 
-instance : MLIR.AST.TransformExpr (LLVMPlusRiscV ) 0   where
+instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
   mkExpr := mkExpr
 
 -- TO DO: finish this proof. Did not really know how to do yet. But convinced it is provable.
@@ -240,7 +240,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (LLVMPlusR
     let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
     match llvmParseReturn with
     | .ok ⟨eff, ty, Com.ret v⟩ =>
-      return ⟨eff, .llvm ty, Com.ret (transformVarLLVM v) ⟩
+      return ⟨eff, .llvm ty, Com.ret (transformVarLLVM v)⟩
     | _ =>
       let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn  (ctxtTransformToRiscV Γ) opStx (← read)
       match com with
