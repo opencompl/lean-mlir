@@ -33,6 +33,10 @@ instance : ToString (ConcreteOrMVar Nat φ) where
     | .concrete a => s!"i{a}"
     | .mvar i => s!"mvar({i})"
 
+
+/-- A coercion from the concrete type `α` to the `ConcreteOrMVar` -/
+instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
+
 /- In the specific case of `α := Nat`, we'd like to be able to use nat literals -/
 instance : OfNat (ConcreteOrMVar Nat φ) n := ⟨.concrete n⟩
 
