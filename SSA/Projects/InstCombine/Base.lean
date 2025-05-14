@@ -102,7 +102,10 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨false⟩        => "udiv"
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
-    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    (if prec >= max_prec then 1 else 2) f!"llvm.{op}"))
+    /- I changed this to llvm, which allows for pretty printing but obviously affects every use of Repr for an Op of type MOp.BinaryOp. TO DO: discuss this,
+    other option would be an explicit serialize typeclass that does the same as Repr but uses and we can leave Repr to still use
+    ((f!"InstCombine.MOp.BinaryOp.{op}"))  -/
     prec
 
 instance : Repr (MOp.BinaryOp) where
@@ -118,43 +121,11 @@ inductive MOp (φ : Nat) : Type
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
-
-open Std (Format) in
-def serialize (op : MOp.BinaryOp) : Std.Format :=
-  let opStr  : String := match op with
-    | .and                => "and"
-    | .or   ⟨false⟩        => "or"
-    | .or   ⟨true⟩         => "or disjoint"
-    | .xor                => "xor"
-    | .shl  ⟨false, false⟩ => "shl"
-    | .shl  ⟨nsw, nuw⟩     => toString f!"shl {nsw} {nuw}"
-    | .lshr ⟨false⟩        => "lshr"
-    | .lshr ⟨true⟩         => "lshr exact"
-    | .ashr ⟨false⟩        => "ashr"
-    | .ashr ⟨true⟩         => "ashr exact"
-    | .urem               => "urem"
-    | .srem               => "srem"
-    | .add  ⟨false, false⟩ => "add"
-    | .add  ⟨nsw, nuw⟩     => toString f!"add {nsw} {nuw}"
-    | .mul  ⟨false, false⟩ => "mul"
-    | .mul  ⟨nsw, nuw⟩     => toString f!"mul {nsw} {nuw}"
-    | .sub  ⟨false, false⟩ => "sub"
-    | .sub  ⟨nsw, nuw⟩     => toString f!"sub {nsw} {nuw}"
-    | .sdiv ⟨false⟩        => "sdiv"
-    | .sdiv ⟨true⟩         => "sdiv exact"
-    | .udiv ⟨false⟩        => "udiv"
-    | .udiv ⟨true⟩         => "udiv exact"
-  let opStr := "llvm." ++ opStr
-  Format.text opStr
-
-instance : Serialize (MOp.BinaryOp) where
-  serialized := serialize
-
 instance : Repr (MOp 0) where
    reprPrec op _p :=
      match op with
      | .unary _w op => f!"\"{repr  op}\""
-     | .binary _w op => f!"\"{Serialize.serialized  op}\""
+     | .binary _w op => f!"\"{repr  op}\""
      | .select  _w => repr "select"
      | .icmp  _pred _w => repr "icmp"
      | .const w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
