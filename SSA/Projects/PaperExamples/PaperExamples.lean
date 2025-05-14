@@ -41,6 +41,9 @@ abbrev Simple : Dialect where
   Op := Op
   Ty := Ty
 
+instance : ToString Ty where
+  toString t := repr t |>.pretty
+
 instance : DialectToExpr Simple where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``Simple []
