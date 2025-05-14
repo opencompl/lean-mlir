@@ -707,7 +707,8 @@ toType := fun
   | .tensor => List Int
   | .polynomialLike => (R q n)
 
-
+instance : ToString (Ty q n) where
+  toString t := repr t |>.pretty
 /--
 The operation type of the `Poly` dialect. Operations are parametrized by the
 two parameters `p` and `n` that characterize the ring `R q n`.
