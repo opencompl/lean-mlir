@@ -141,6 +141,14 @@ def LLVM : Dialect where
   Op := MOp 0
   Ty := MTy 0
 
+/-- Defining an instance for LLVM.Ty from InstCombine.Ty instance.-/
+instance : DecidableEq LLVM.Ty :=
+  inferInstanceAs <| DecidableEq (InstCombine.MTy _)
+
+/-- Defining an instance for LLVM.Op from InstCombine.Op instance. -/
+instance : DecidableEq LLVM.Op :=
+    inferInstanceAs <| DecidableEq (InstCombine.MOp 0)
+
 @[deprecated "Use `LLVM.Op` instead" (since:="2025-04-30")] abbrev Op := LLVM.Op
 @[deprecated "Use `LLVM.Ty` instead" (since:="2025-04-30")] abbrev Ty := LLVM.Ty
 
