@@ -25,6 +25,9 @@ import SSA.Projects.InstCombine.LLVM.Semantics
   see https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 -/
 
+class Serialize (α : Type u) where
+  serialized : α → Std.Format
+
 namespace InstCombine
 
 open BitVec
@@ -114,6 +117,47 @@ inductive MOp (φ : Nat) : Type
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
+
+
+open Std (Format) in
+def serialize (op : MOp.BinaryOp) : Std.Format :=
+  let opStr  : String := match op with
+    | .and                => "and"
+    | .or   ⟨false⟩        => "or"
+    | .or   ⟨true⟩         => "or disjoint"
+    | .xor                => "xor"
+    | .shl  ⟨false, false⟩ => "shl"
+    | .shl  ⟨nsw, nuw⟩     => toString f!"shl {nsw} {nuw}"
+    | .lshr ⟨false⟩        => "lshr"
+    | .lshr ⟨true⟩         => "lshr exact"
+    | .ashr ⟨false⟩        => "ashr"
+    | .ashr ⟨true⟩         => "ashr exact"
+    | .urem               => "urem"
+    | .srem               => "srem"
+    | .add  ⟨false, false⟩ => "add"
+    | .add  ⟨nsw, nuw⟩     => toString f!"add {nsw} {nuw}"
+    | .mul  ⟨false, false⟩ => "mul"
+    | .mul  ⟨nsw, nuw⟩     => toString f!"mul {nsw} {nuw}"
+    | .sub  ⟨false, false⟩ => "sub"
+    | .sub  ⟨nsw, nuw⟩     => toString f!"sub {nsw} {nuw}"
+    | .sdiv ⟨false⟩        => "sdiv"
+    | .sdiv ⟨true⟩         => "sdiv exact"
+    | .udiv ⟨false⟩        => "udiv"
+    | .udiv ⟨true⟩         => "udiv exact"
+  let opStr := "llvm." ++ opStr
+  Format.text opStr
+
+instance : Serialize (MOp.BinaryOp) where
+  serialized := serialize
+
+instance : Repr (MOp 0) where
+   reprPrec op _p :=
+     match op with
+     | .unary _w op => f!"\"{repr  op}\""
+     | .binary _w op => f!"\"{Serialize.serialized  op}\""
+     | .select  _w => repr "select"
+     | .icmp  _pred _w => repr "icmp"
+     | .const w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
 
 /-! ## Dialect -/
 
@@ -385,6 +429,7 @@ namespace LLVM.Ty
 
 def width : LLVM.Ty → Nat
   | bitvec w => w
+
 
 @[simp]
 theorem width_eq (ty : LLVM.Ty) : .bitvec (width ty) = ty := by
