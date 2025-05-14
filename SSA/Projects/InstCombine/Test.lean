@@ -99,6 +99,16 @@ def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 -/
 
 /--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, "llvm.mlir.constant" { value = 8 : i32 } : () → (i32)⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
+
+/--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
