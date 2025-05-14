@@ -1,6 +1,5 @@
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.RISCV64.Base
-import SSA.Core.HVector
 
 open InstCombine(LLVM)
 namespace LLVMRiscV
