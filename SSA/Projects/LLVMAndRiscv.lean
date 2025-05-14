@@ -127,6 +127,13 @@ attribute [simp, simp_denote] outTy_map_signature_eq
 attribute [simp, simp_denote] HVector.mapM'
 attribute [simp, simp_denote] HVector.map'
 
+/--  This function lifts an expression from the `InstCombine` dialect into the corresponding
+  expression in the hybrid dialect `LLVMPlusRiscV`.
+  The hybrid dialect models LLVM-type operations, so this function transforms an InstCombine expression
+  into an equivalent LLVM expression within the hybrid dialect. It is invoked in the hybrid dialect parser,
+  where we attempt to reuse the existing LLVM parser, which returns a `Com` in the `InstCombine` dialect.
+  To integrate the parsed `InstCombine` expression back into the hybrid dialect, we invoke this function.
+ -/
 @[simp_denote]
 def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ) eff ty) :
   MLIR.AST.ReaderM (LLVMPlusRiscV) (Expr LLVMPlusRiscV Γ eff (.llvm ty)) :=
@@ -153,6 +160,14 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
           (ty_eq := ty_eq1 ▸ rfl)
           (args := args')
           (regArgs := HVector.nil)
+
+/--
+  This function is analogous to `transformExprLLVM`. It lifts an expression
+  in the `RISCV64.RV64` dialect into an expression in the `LLVMPlusRiscV` hybrid dialect.
+  This function is used in the hybrid dialect parser after successfully parsing a RISC-V expression of type Com.
+  To lift it back into the hybrid dialect — that is, to convert it into a RISC-V computation
+  representation within the hybrid dialect — we invoke this function.
+.-/
 
 @[simp_denote]
 def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) :
@@ -183,15 +198,17 @@ def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) 
 
 instance : MLIR.AST.TransformTy LLVMPlusRiscV 0 where
   mkTy tStx := do
+  try
+    let llvmParse ← InstcombineTransformDialect.mkTy tStx
+    return .llvm llvmParse
+  catch _llvmErr =>
     try
-      let llvmParse ← InstcombineTransformDialect.mkTy tStx
-      return .llvm llvmParse
-    catch _llvmErr =>
-      try
-        let riscvParse ← RiscvMkExpr.mkTy tStx
-        return .riscv riscvParse
-      catch _riscvErr =>
-        throw <| .generic s!"Unable to parse type as either LLVM type or RISCV type."
+      let riscvParse ← RiscvMkExpr.mkTy tStx
+      return .riscv riscvParse
+    catch _riscvErr =>
+        throw <|.generic s!" INTERNAL ERROR : While trying to transform from MLIR AST to dialect specific AST
+         the transformation failed. The errors thrown are:
+          s!{(toString (repr _riscvErr))} and s!{(toString (repr _llvmErr ))}"
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   MLIR.AST.ReaderM (LLVMPlusRiscV) (Σ eff ty, Expr LLVMPlusRiscV Γ eff ty) := do
@@ -209,7 +226,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .nil,
                 .nil⟩⟩
       | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}" -- to do : use alexs simplified parser
   else
     let llvmParse := InstcombineTransformDialect.mkExpr (ctxtTransformToLLVM  Γ) opStx (← read)
     match llvmParse with
@@ -226,29 +243,34 @@ instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
 
 -- TO DO: finish this proof. Did not really know how to do yet. But convinced it is provable.
 @[simp_denote]
-def transformVarLLVM (v :  Ctxt.Var (ctxtTransformToLLVM Γ) ty) :   Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty) :=
+def transformVarLLVM (v :  Ctxt.Var (ctxtTransformToLLVM Γ) ty) : Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty) :=
   match v with
   | ⟨h, ty⟩ =>  ⟨h, by sorry ⟩
 
 @[simp_denote]
-def transformVarRISCV (v :  Ctxt.Var (ctxtTransformToRiscV Γ) ty) :   Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
+def transformVarRISCV (v :  Ctxt.Var (ctxtTransformToRiscV Γ) ty) : Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
   match v with
   | ⟨h, ty⟩ =>  ⟨h, sorry ⟩
 
-def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (LLVMPlusRiscV)
-    (Σ eff ty, Com LLVMPlusRiscV Γ eff ty) := do
-    let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
-    match llvmParseReturn with
-    | .ok ⟨eff, ty, Com.ret v⟩ =>
-      return ⟨eff, .llvm ty, Com.ret (transformVarLLVM v)⟩
-    | _ =>
+def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRiscV
+  (Σ eff ty, Com LLVMPlusRiscV Γ eff ty) := do
+  let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
+  match llvmParseReturn with
+  | .ok ⟨eff, ty, Com.ret v⟩ =>
+    return ⟨eff, .llvm ty, Com.ret (transformVarLLVM v)⟩
+  | .error e =>
+    match e with
+    | .unsupportedOp _s=>
       let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn  (ctxtTransformToRiscV Γ) opStx (← read)
       match com with
-      |Com.ret v =>
+      | Com.ret v =>
         return ⟨eff, .riscv ty, Com.ret (transformVarRISCV v) ⟩
-      |_ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
+      | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
+    | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type.
+        LLVM parser threw error diffrent from unsupported Op"
+  | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
 
-instance : MLIR.AST.TransformReturn (LLVMPlusRiscV) 0 where
+instance : MLIR.AST.TransformReturn LLVMPlusRiscV 0 where
   mkReturn := mkReturn
 
 open Qq MLIR AST Lean Elab Term Meta in

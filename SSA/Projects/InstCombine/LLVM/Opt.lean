@@ -6,9 +6,9 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   let icom? ← parseComFromFile fileName
   match icom? with
     | none => return 1
-    | some (Sigma.mk _Γ icom) => do
+    | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
       IO.println s!"OK: parsed"
-      IO.println s!"{repr icom}"
+      IO.println s!"{toString c}"
       return 0
 
 def mainCmd := `[Cli|
