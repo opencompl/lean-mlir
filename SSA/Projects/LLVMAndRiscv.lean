@@ -1,15 +1,5 @@
-import SSA.Core.MLIRSyntax.EDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
-import SSA.Core.Framework
-import SSA.Core.Util
-import SSA.Core.Util.ConcreteOrMVar
-import SSA.Projects.InstCombine.ForStd
-import SSA.Projects.InstCombine.LLVM.Semantics
-import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.RISCV64.Syntax
+import SSA.Projects.InstCombine.Base
 import SSA.Projects.RISCV64.Base
-import SSA.Projects.RISCV64.Semantics
-import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Core.HVector
 
 open InstCombine(LLVM)
