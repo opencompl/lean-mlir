@@ -232,27 +232,17 @@ def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
   | [],   b, .nil       => return b
   | t::_, b, .cons a as => do foldlM f (← f t b a) as
 
-/-! Simultaneous map on the type and value level of an HVector. -/
-def ubermap {A : α → Type} {B : β → Type}
-    {l : List α}
-    (F : α → β)
-    (f : {a : α} → (v : A a) → B (F a) )
-    (as : HVector A l) : (HVector B (F <$> l)) :=
-  match l, as with
-  | [], .nil => .nil
-  | _t :: _ts, .cons a as => HVector.cons (f a) (HVector.ubermap F f as)
-
 /-!
 Simultaneous map on the type and value level of an HVector while
 performing monadic effects for value translation.-/
-def ubermapM [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
+def mapM' [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
     {l : List α}
     {F : α → β}
     (f : (a : α) → (v : A a) → m (B (F a)) )
     (as : HVector A l) : m (HVector B (F <$> l)) :=
   match l, as with
   | [], .nil => return .nil
-  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.ubermapM f as)
+  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM' f as)
 
 end mapHVec
 
