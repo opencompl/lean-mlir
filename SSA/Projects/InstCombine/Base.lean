@@ -134,7 +134,6 @@ instance : DecidableEq LLVM.Ty :=
 instance : DecidableEq LLVM.Op :=
     inferInstanceAs <| DecidableEq (InstCombine.MOp 0)
 
-
 @[deprecated "Use `LLVM.Op` instead" (since:="2025-04-30")] abbrev Op := LLVM.Op
 @[deprecated "Use `LLVM.Ty` instead" (since:="2025-04-30")] abbrev Ty := LLVM.Ty
 
