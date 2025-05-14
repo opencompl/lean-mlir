@@ -102,8 +102,10 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> (str, str):
   simp_alive_ops
   simp_alive_case_bash
   simp_alive_split
-  try bv_auto
-  all_goals sorry'''
+  all_goals
+    solve
+    | bv_auto
+    | sorry'''
 
     print(stmt)
 
