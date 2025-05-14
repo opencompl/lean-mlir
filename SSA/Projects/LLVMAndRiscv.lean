@@ -16,8 +16,8 @@ open InstCombine(LLVM)
 namespace LLVMRiscV
 
 
-/-! 
-# Hybrid dialect 
+/-!
+# Hybrid dialect
 
 This file contains a hybrid dialect combining
 SSA.Projects.RISCV64 and SSA.Projects.InstCombine.
@@ -39,13 +39,13 @@ inductive Ty where
 inductive Op where
   | llvm : LLVM.Op -> Op
   | riscv : RISCV64.RV64.Op -> Op
-  | builtin.unrealized_conversion_cast.riscvToLLVM : Op
-  | builtin.unrealized_conversion_cast.LLVMToriscv : Op
+  | castRiscv : Op
+  | castLLVM : Op
   deriving DecidableEq, Repr
 
 /-- Semantics of an unrealized conversion cast from RISC-V 64 to LLVM.
 We wrap `BitVec 64`in `Option (BitVec 64)` -/
-def builtin.unrealized_conversion_cast.riscvToLLVM (toCast : BitVec 64) : PoisonOr (BitVec 64) :=
+def castriscvToLLVM (toCast : BitVec 64) : PoisonOr (BitVec 64) :=
   .value toCast
 
 /--
@@ -54,7 +54,7 @@ This cast attempts to lower an `(Option (BitVec 64))` to a concrete `(BitVec 64)
 If the value is `some`, we extract the underlying `BitVec`.
 If it is `none` (e.g., an LLVM poison value), we default to the zero `BitVec`.
 -/
-def builtin.unrealized_conversion_cast.LLVMToriscv (toCast : PoisonOr (BitVec 64)) : BitVec 64 :=
+def castLLVMToriscv (toCast : PoisonOr (BitVec 64)) : BitVec 64 :=
   toCast.toOption.getD 0#64
 
 @[simp]
@@ -72,9 +72,9 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
   signature
   | .llvm llvmOp => .llvm <$> DialectSignature.signature llvmOp
   | .riscv riscvOp => .riscv <$> DialectSignature.signature riscvOp
-  | .builtin.unrealized_conversion_cast.riscvToLLVM =>
+  | .castRiscv =>
       {sig := [Ty.riscv .bv], outTy := Ty.llvm (.bitvec 64), regSig := []}
-  | .builtin.unrealized_conversion_cast.LLVMToriscv =>
+  | .castLLVM =>
       {sig := [Ty.llvm (.bitvec 64)], outTy := (Ty.riscv .bv), regSig := []}
 
 instance : ToString LLVMPlusRiscV.Ty  where
@@ -99,15 +99,15 @@ instance : DialectDenote (LLVMPlusRiscV) where
       DialectDenote.denote llvmOp (llvmArgsFromHybrid args) .nil
   | .riscv (riscvOp), args, .nil =>
       DialectDenote.denote riscvOp (riscvArgsFromHybrid args) .nil
-  | .builtin.unrealized_conversion_cast.riscvToLLVM, elemToCast, _ =>
+  | .castRiscv, elemToCast, _ =>
     let toCast : BitVec 64 :=
       elemToCast.getN 0 (by simp [DialectSignature.sig, signature]) -- adapting to the newly introduced PoisonOr wrapper.
-    builtin.unrealized_conversion_cast.riscvToLLVM toCast
-  | .builtin.unrealized_conversion_cast.LLVMToriscv,
+    castriscvToLLVM toCast
+  | .castLLVM,
     (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec 64)]), _ =>
     let toCast : PoisonOr (BitVec 64) :=
       elemToCast.getN 0 (by simp [DialectSignature.sig, signature])
-    builtin.unrealized_conversion_cast.LLVMToriscv toCast
+    castLLVMToriscv toCast
 
 @[simp_denote]
 def ctxtTransformToLLVM  (Γ : Ctxt LLVMPlusRiscV.Ty) :=
