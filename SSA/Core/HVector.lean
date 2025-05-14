@@ -70,7 +70,6 @@ def foldld {β : Type*} (B : β → Type*) (fType : β → α → β)
   | [], .nil, _, init         => init
   | _::_, .cons a as, _, init => foldld B fType fElem as (fElem init a)
 
-
 def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
     ∀ {l : List α}, (init : B) → (as : HVector A l) → m B
   | [],   b, .nil       => return b
