@@ -1,5 +1,7 @@
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.RISCV64.Base
+import SSA.Projects.RISCV64.Syntax
+import SSA.Projects.InstCombine.LLVM.EDSL
 
 open InstCombine(LLVM)
 namespace LLVMRiscV
@@ -124,5 +126,133 @@ theorem outTy_map_signature_eq {s : Signature α} {f : α → β} :
 attribute [simp, simp_denote] outTy_map_signature_eq
 attribute [simp, simp_denote] HVector.mapM'
 attribute [simp, simp_denote] HVector.map'
+
+@[simp_denote]
+def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ) eff ty) :
+  MLIR.AST.ReaderM (LLVMPlusRiscV) (Expr LLVMPlusRiscV Γ eff (.llvm ty)) :=
+    match e with
+    | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
+        let args' : HVector (Ctxt.Var Γ) (.llvm <$> DialectSignature.sig op1) ←
+          args1.mapM' fun t v => do
+            match h : Γ.get? v.val with
+            | some ty' => do
+              match hty : ty' with
+              | .riscv _ =>
+                throw <| .generic s!"INTERNAL ERROR: This case is impossible, LLVM expression is pointing to RISCV variable."
+              | .llvm originalLLVMTy =>
+                if hty' : originalLLVMTy = t then
+                  return ⟨v.val, by rw [h, hty']⟩
+                else
+                  throw <|.generic s!"INTERNAL ERROR: This case is impossible, LLVM expression is pointing to an incorrect bitwidth LLVM argument."
+            | none =>
+              -- this is impossible, because ctxtTransformToLLVM is a `List.map`, which always maintains length.
+              throw <| .generic s!"INTERNAL ERROR: This case is impossible, as 'ctxtTransformToLLVM' is length-preserving."
+        return Expr.mk
+          (op := Op.llvm op1)
+          (eff_le := eff_le1)
+          (ty_eq := ty_eq1 ▸ rfl)
+          (args := args')
+          (regArgs := HVector.nil)
+
+@[simp_denote]
+def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) :
+  MLIR.AST.ReaderM LLVMPlusRiscV (Expr LLVMPlusRiscV Γ eff (.riscv ty)) :=
+    match e with
+    | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
+        let args' : HVector (Ctxt.Var Γ) (.riscv <$> DialectSignature.sig op1) ←
+          args1.mapM' fun t v => do
+            match h : Γ.get? v.val with
+            | some ty' => do
+              match hty : ty' with
+              | .llvm _ =>
+                throw <| .generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to LLVM variable."
+              | .riscv originalRISCVTy =>
+                if hty' : originalRISCVTy = t then
+                  return ⟨v.val, by rw [h, hty']⟩
+                else
+                  throw <|.generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to an incorrect bitwidth LLVM argument."
+            | none =>
+              -- this is impossible, because ctxtTransformToLLVM is a `List.map`, which always maintains length.
+              throw <| .generic s!"INTERNAL ERROR: This case is impossible, as 'ctxtTransformToLLVM' is length-preserving."
+        return Expr.mk
+          (op := Op.riscv op1)
+          (eff_le := eff_le1)
+          (ty_eq := ty_eq1 ▸ rfl)
+          (args := args')
+          (regArgs := HVector.nil)
+
+instance : MLIR.AST.TransformTy LLVMPlusRiscV 0 where
+  mkTy tStx := do
+    try
+      let llvmParse ← InstcombineTransformDialect.mkTy tStx
+      return .llvm llvmParse
+    catch _llvmErr =>
+      try
+        let riscvParse ← RiscvMkExpr.mkTy tStx
+        return .riscv riscvParse
+      catch _riscvErr =>
+        throw <| .generic s!"Unable to parse type as either LLVM type or RISCV type."
+
+def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
+  MLIR.AST.ReaderM (LLVMPlusRiscV) (Σ eff ty, Expr LLVMPlusRiscV Γ eff ty) := do
+  if (opStx.name = "builtin.unrealized_conversion_cast" ) then
+    match opStx.args with
+    | v₁Stx :: [] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      match ty₁ with
+      | .riscv (.bv) =>
+              return ⟨ .pure,  .llvm (.bitvec 64) ,⟨ .castRiscv , by rfl, by constructor,
+               .cons v₁ <| .nil,
+                .nil⟩⟩
+      | .llvm (.bitvec 64) =>
+              return ⟨ .pure, .riscv (.bv) ,⟨ .castLLVM , by rfl, by constructor,
+               .cons v₁ <| .nil,
+                .nil⟩⟩
+      | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+  else
+    let llvmParse := InstcombineTransformDialect.mkExpr (ctxtTransformToLLVM  Γ) opStx (← read)
+    match llvmParse with
+      | .ok ⟨eff, ty, expr⟩ => do
+        let v ← transformExprLLVM expr
+        return ⟨eff, .llvm ty, v⟩
+      | .error  (_) => do
+        let ⟨eff, ty , expr⟩ ← RiscvMkExpr.mkExpr (ctxtTransformToRiscV Γ) opStx (← read)
+        let v ← transformExprRISCV expr
+        return ⟨eff, .riscv ty , v⟩
+
+instance : MLIR.AST.TransformExpr (LLVMPlusRiscV ) 0   where
+  mkExpr := mkExpr
+
+-- TO DO: finish this proof. Did not really know how to do yet. But convinced it is provable.
+@[simp_denote]
+def transformVarLLVM (v :  Ctxt.Var (ctxtTransformToLLVM Γ) ty) :   Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty) :=
+  match v with
+  | ⟨h, ty⟩ =>  ⟨h, by sorry ⟩
+
+@[simp_denote]
+def transformVarRISCV (v :  Ctxt.Var (ctxtTransformToRiscV Γ) ty) :   Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
+  match v with
+  | ⟨h, ty⟩ =>  ⟨h, sorry ⟩
+
+def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (LLVMPlusRiscV)
+    (Σ eff ty, Com LLVMPlusRiscV Γ eff ty) := do
+    let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
+    match llvmParseReturn with
+    | .ok ⟨eff, ty, Com.ret v⟩ =>
+      return ⟨eff, .llvm ty, Com.ret (transformVarLLVM v) ⟩
+    | _ =>
+      let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn  (ctxtTransformToRiscV Γ) opStx (← read)
+      match com with
+      |Com.ret v =>
+        return ⟨eff, .riscv ty, Com.ret (transformVarRISCV v) ⟩
+      |_ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
+
+instance : MLIR.AST.TransformReturn (LLVMPlusRiscV) 0 where
+  mkReturn := mkReturn
+
+open Qq MLIR AST Lean Elab Term Meta in
+elab "[LV|" reg:mlir_region "]" : term => do
+  SSA.elabIntoCom reg q(LLVMPlusRiscV)
 
 end LLVMRiscV
