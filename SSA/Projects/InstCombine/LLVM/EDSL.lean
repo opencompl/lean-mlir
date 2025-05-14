@@ -110,7 +110,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     | "llvm.trunc" => mkExprOf <| trunc (← unW) (← getOutputWidth opStx "trunc") (← parseOverflowFlags opStx)
     -- Constant
     | "llvm.mlir.constant" =>
-      let ⟨val, ty⟩ ← opStx.getIntAttr (Ty := (MetaLLVM φ).Ty) "value"
+      let ⟨val, ty⟩ ← opStx.getIntAttr "value"
       let opTy@(.bitvec w) ← mkTy ty
       mkExprOf <| const w val
     -- Fallback

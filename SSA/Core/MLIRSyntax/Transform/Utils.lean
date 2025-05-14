@@ -10,14 +10,14 @@ namespace MLIR.AST
 
 namespace Op
 variable {φ} (op : Op φ)
-variable {d : Dialect} [DialectSignature d] [DecidableEq d.Ty] [TransformTy d φ][ToString d.Ty]
+variable {d : Dialect} [DialectSignature d] [DecidableEq d.Ty] [TransformTy d φ] [ToString d.Ty]
 
 /-! ## Attributes-/
 
 /--
 `op.getAttr attr` returns the value of an attribute, if present,
 or throw an error otherwise. -/
-def getAttr (attr : String) : Except (TransformError) (AttrValue φ) := do
+def getAttr (attr : String) : Except TransformError (AttrValue φ) := do
   let some val := op.getAttr? attr
     | .error <| .generic s!"Missing attribute `{attr}`"
   return val
@@ -34,7 +34,19 @@ def hasAttr (attr : String) : Bool :=
 Throws an error if the attribute is not present, or if the value of the attribute
 has the wrong type.
 -/
-def getBoolAttr (attr : String) : Except (TransformError) (Int × MLIRType φ) := do
+def getBoolAttr (attr : String) : Except TransformError Bool := do
+  let .bool b ← op.getAttr attr
+    | .error <| .generic s!"Expected attribute `{attr}` to be of type Bool, but found:\n\
+        \t{attr}"
+  return b
+
+/--
+`op.getIntAttr attr` returns the value of an integer attribute.
+
+Throws an error if the attribute is not present, or if the value of the attribute
+has the wrong type.
+-/
+def getIntAttr (attr : String) : Except TransformError (Int × MLIRType φ) := do
   let .int val ty ← op.getAttr attr
     | .error <| .generic s!"Expected attribute `{attr}` to be of type Int, but found:\n\
         \t{attr}"
