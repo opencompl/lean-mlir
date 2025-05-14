@@ -159,7 +159,7 @@ lemma enc_dec : Function.LeftInverse (α := BitVecs' n) enc dec := by
   by_cases hin : k < (List.length bvs')
   · simp
     rw [List.getElem?_eq_getElem] <;> simp_all only [List.length_finRange, List.getElem_finRange,
-      Fin.cast_mk, Option.map_some', List.getElem?_eq_getElem, Option.some.injEq]
+      Fin.cast_mk, Option.map_some, List.getElem?_eq_getElem, Option.some.injEq]
     ext1; simp_all
   · simp; repeat rw [List.getElem?_eq_none] <;> simp_all
 

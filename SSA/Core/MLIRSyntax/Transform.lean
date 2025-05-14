@@ -39,6 +39,9 @@ abbrev ExceptM  (d : Dialect) := Except (TransformError d.Ty)
 abbrev BuilderM (d : Dialect) := StateT NameMapping (ExceptM d)
 abbrev ReaderM  (d : Dialect) := ReaderT NameMapping (ExceptM d)
 
+instance : Inhabited (ReaderT NameMapping (ExceptM d) α) where
+  default := throw <| .generic ""
+
 instance {d : Dialect} : MonadLift (ReaderM d) (BuilderM d) where
   monadLift x := do (ReaderT.run x (←get) : ExceptM ..)
 

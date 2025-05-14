@@ -6,6 +6,7 @@ import SSA.Projects.InstCombine.LLVM.CLITests
 import Cli
 
 open Lean
+open InstCombine.LLVM.Ty (bitvec)
 
 -- Note that this application of 4 here doesn't really do anything, parameters not supported for now
 @[reducible]
@@ -19,8 +20,8 @@ def runTest (test : ConcreteCliTest) (arg : String) : IO Bool := do
     let res ← test.eval (p.map Option.some)
     -- Add the first match to help lean reduce the TyDenote instance
     match test.ty, res with
-      | .bitvec _, .some val => IO.println s!"result: {val}"
-      | .bitvec _, .none => IO.println s!"no result (undefined behavior)"
+      | bitvec _, .value val => IO.println s!"result: {val}"
+      | bitvec _, .poison => IO.println s!"no result (undefined behavior)"
     return true
 
 def listAllTests : IO Unit := do

@@ -6,8 +6,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import SSA.Core.EffectKind
-import Mathlib.Control.Monad.Basic
 import SSA.Core.Framework.Dialect
+import SSA.Core.Framework.Refinement
+
+import Mathlib.Control.Monad.Basic
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Piecewise
 
@@ -189,6 +191,7 @@ structure Zipper (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_mid : Ctxt d.Ty) (ty
 
 
 
+/-! ### Repr instance -/
 section Repr
 open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
@@ -267,6 +270,7 @@ instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
 
 end Repr
 
+/-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
 mutual -- DecEq
 
@@ -652,7 +656,7 @@ Moreover, recall that `simp only` **does not** generate equation lemmas.
 *but* if equation lemmas are present, then `simp only` *uses* the equation lemmas.
 
 Hence, we build the equation lemmas by invoking the correct Lean meta magic,
-so that `simp only` (which we use in `simp_peephole` can find them!)
+so that `simp only` (which we use in `simp_peephole`) can find them!
 
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
 args, since there now are equation lemmas for it.
@@ -742,6 +746,30 @@ theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.d
   simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_var]
 
 end Lemmas
+
+/-!
+## Refinement
+-/
+section Refinement
+variable [DialectHRefinement d d]
+
+/--
+An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
+respective denotations under every valuation are in the refinement relation.
+-/
+instance: Refinement (Expr d Γ eff t) where
+  IsRefinedBy e₁ e₂ :=
+    ∀ V, e₁.denote V ⊑ e₂.denote V
+
+/--
+A program `c₁` is refined by a program `c₂` (of the same dialect) if their
+respective denotations under every valuation are in the refinement relation.
+-/
+instance: Refinement (Com d Γ eff t) where
+  IsRefinedBy c₁ c₂ :=
+    ∀ V, c₁.denote V ⊑ c₂.denote V
+
+end Refinement
 
 /-!
 ## `changeVars`
@@ -1299,7 +1327,7 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
     cases v using Var.casesOn with
     | toSnoc v =>
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_toSnoc, Option.mem_def,
-        Option.map_eq_some', Option.bind, Bind.bind] at he
+        Option.map_eq_some_iff, Option.bind, Bind.bind] at he
       let f' : Valuation Γ_out → ⟦t⟧ → eff.toMonad d.m α := fun Γv val => do
         let Ve ← e.denote Γv
         let Γv':= (Γv.snoc Ve)
@@ -1323,7 +1351,7 @@ theorem Lets.denote_getExpr [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty}
     (f : Valuation Γ₂ → ⟦t⟧ → eff.toMonad d.m α) →
     (lets.denote s) >>= (fun Γv => f Γv (e.denote Γv))
     = (lets.denote s) >>= (fun Γv => f Γv (Γv v)) := by
-  simp only [getPureExpr, Option.map_eq_map, Option.map_eq_some'] at he
+  simp only [getPureExpr, Option.map_eq_map, Option.map_eq_some_iff] at he
   rcases he with ⟨e', he, rfl⟩
   apply denote_getPureExprAux
   assumption
@@ -1677,7 +1705,7 @@ def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution
     (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
       ExprTree.fvar ⟨v, by
         simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map,
-          List.getElem?_map, Option.map_eq_some'] at h
+          List.getElem?_map, Option.map_eq_some_iff] at h
         simp only [Ctxt.get?]
         rcases h with ⟨ty', h_get, h_map⟩
         injection h_map with ty_eq_ty'
@@ -1841,7 +1869,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
     exact Set.Subset.refl _
 
   · intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
-    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some_iff] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
     have hind : ma'.entries ⊆ _ := ih_matchArg ma' varMap <| by
       simp; exact h2
@@ -1964,7 +1992,7 @@ theorem denote_matchVar_matchArg
   | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
     intro h_sub f₁ f₂ hf hmatchVar hvarMap
     simp only [HVector.map, HVector.cons.injEq]
-    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some_iff] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
     · apply subset_entries_matchArg (d:=d)
@@ -2056,7 +2084,7 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
         = some ⟨matchExpr.op, matchExpr.ty_eq, matchExpr.eff_le, args, matchExpr.regArgs⟩
       ∧ matchArg lets matchLets args matchExpr.args ma = some ma' := by
   unfold matchVar
-  simp only [Option.bind_eq_bind, Option.bind_eq_some, forall_exists_index, and_imp]
+  simp only [Option.bind_eq_bind, Option.bind_eq_some_iff, forall_exists_index, and_imp]
   rintro ⟨op', ty_eq', eff_le', args', regArgs'⟩ h_pure h
   rw [h_pure]
   split_ifs at h with regArgs_eq
@@ -2175,7 +2203,7 @@ theorem mem_matchVar_matchArg
   match l, argsₗ, argsᵣ/- , ma, varMap, hvarMap -/ with
   | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp
   | .cons t ts, .cons vₗ argsₗ, .cons vᵣ args /-, ma, varMap, h -/ => by
-    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some_iff] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
       Finset.mem_biUnion, Sigma.exists]
@@ -2241,7 +2269,7 @@ theorem mem_matchVar
     intro _ _ hl h_v'
     obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
       unfold matchVar at hvarMap
-      simp only [bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+      simp only [bind, Option.mem_def, Option.bind_eq_some_iff] at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
     rw [← Option.dite_none_right_eq_some] at he₂

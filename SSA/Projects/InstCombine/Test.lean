@@ -8,6 +8,8 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
+open InstCombine (LLVM)
+
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
   in the following
@@ -49,25 +51,32 @@ def bb0 : Region 0 := [mlir_region|
 
 /--
 info: def bb0 : Region 0 :=
-Region.mk "bb0" [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32)]
-  [Op.mk "llvm.mlir.constant" [(SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)] [] []
-      (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 8 (MLIRType.int Signedness.Signless 32))]),
-    Op.mk "llvm.mlir.constant" [(SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)] [] []
-      (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 31 (MLIRType.int Signedness.Signless 32))]),
-    Op.mk "llvm.ashr" [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
-        (SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)]
-      [] (AttrDict.mk []),
-    Op.mk "llvm.and" [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
-        (SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
-      [] (AttrDict.mk []),
-    Op.mk "llvm.add" [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)]
-      [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
-        (SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
-      [] (AttrDict.mk []),
-    Op.mk "llvm.return" [] [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)] []
-      (AttrDict.mk [])]
+{ name := "bb0", args := [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32)],
+  ops :=
+    [{ name := "llvm.mlir.constant", res := [(SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)],
+        args := [], regions := [],
+        attrs := AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 8 (MLIRType.int Signedness.Signless 32))] },
+      { name := "llvm.mlir.constant", res := [(SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)],
+        args := [], regions := [],
+        attrs := AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 31 (MLIRType.int Signedness.Signless 32))] },
+      { name := "llvm.ashr", res := [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)],
+        args :=
+          [(SSAVal.name "arg0", MLIRType.int Signedness.Signless 32),
+            (SSAVal.name (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "llvm.and", res := [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)],
+        args :=
+          [(SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
+            (SSAVal.name (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "llvm.add", res := [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)],
+        args :=
+          [(SSAVal.name (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
+            (SSAVal.name (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)],
+        regions := [], attrs := AttrDict.mk [] },
+      { name := "llvm.return", res := [],
+        args := [(SSAVal.name (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)], regions := [],
+        attrs := AttrDict.mk [] }] }
 -/
 #guard_msgs in #print bb0
 
@@ -241,7 +250,7 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := rfl
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
-example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
+example (w Γv) : (GenericWidth w).denote Γv = .value (BitVec.ofNat w 0) := rfl
 
 open ComWrappers
 
@@ -253,18 +262,17 @@ def one_inst_macro (w: Nat) :=
   }]
 
 def one_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def one_inst_stmt (e : LLVM.IntW w) :
-    @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by
+    (LLVM.not e) ⊑ (LLVM.not e) := by
   simp
 
 def one_inst_com_proof (w : Nat) :
     one_inst_com w ⊑ one_inst_com w := by
   unfold one_inst_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply one_inst_stmt
 
@@ -283,19 +291,18 @@ def two_inst_macro (w: Nat) :=
   }]
 
 def two_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.var (not w 1) <|
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
 
 def two_inst_stmt (e : LLVM.IntW w) :
-    @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by
+    (LLVM.not e) ⊑ (LLVM.not e) := by
   simp
 
 def two_inst_com_proof (w : Nat) :
     two_inst_com w ⊑ two_inst_com w := by
   unfold two_inst_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply two_inst_stmt
 
@@ -315,21 +322,20 @@ def three_inst_macro (w: Nat) :=
   }]
 
 def three_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.var (not w 0) <|
   Com.var (not w 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def three_inst_stmt (e : LLVM.IntW w) :
-    @BitVec.Refinement (BitVec w) (LLVM.not (LLVM.not (LLVM.not e)))
-      (LLVM.not (LLVM.not (LLVM.not e))) := by
+    (LLVM.not (LLVM.not (LLVM.not e)))
+      ⊑ (LLVM.not (LLVM.not (LLVM.not e))) := by
   simp
 
 def three_inst_com_proof (w : Nat) :
     three_inst_com w ⊑ three_inst_com w := by
   unfold three_inst_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply three_inst_stmt
 
@@ -347,18 +353,17 @@ def one_inst_concrete_macro :=
   }]
 
 def one_inst_concrete_com :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure (LLVM.Ty.bitvec 1) :=
   Com.var (not 1 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def one_inst_concrete_stmt :
-    @BitVec.Refinement (BitVec 1) (LLVM.not e) (LLVM.not e) := by
+    (LLVM.not e) ⊑ (LLVM.not e) := by
   simp
 
 def one_inst_concrete_com_proof :
     one_inst_concrete_com ⊑ one_inst_concrete_com := by
   unfold one_inst_concrete_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
@@ -377,19 +382,18 @@ def two_inst_concrete_macro :=
   }]
 
 def two_inst_concrete_com (w : ℕ) :
-  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   Com.var (not w 0) <|
   Com.var (not w 1) <|
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
 
 def two_inst_concrete_stmt (e : LLVM.IntW w) :
-    @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by
+    (LLVM.not e) ⊑ (LLVM.not e) := by
   simp
 
 def two_inst_concrete_com_proof :
     two_inst_concrete_com w ⊑ two_inst_concrete_com w := by
   unfold two_inst_concrete_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
@@ -409,21 +413,20 @@ def three_inst_concrete_macro :=
   }]
 
 def three_inst_concrete_com :
-  Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
+  Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure (LLVM.Ty.bitvec 1) :=
   Com.var (not 1 0) <|
   Com.var (not 1 0) <|
   Com.var (not 1 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def three_inst_concrete_stmt (e : LLVM.IntW 1) :
-    @BitVec.Refinement (BitVec 1) (LLVM.not (LLVM.not (LLVM.not e)))
-      (LLVM.not (LLVM.not (LLVM.not e))) := by
+    (LLVM.not (LLVM.not (LLVM.not e)))
+      ⊑ (LLVM.not (LLVM.not (LLVM.not e))) := by
   simp
 
 def three_inst_concrete_com_proof :
     three_inst_concrete_com ⊑ three_inst_concrete_com := by
   unfold three_inst_concrete_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
@@ -441,9 +444,9 @@ def two_ne_macro (w : Nat) :=
     llvm.return %1 : i1
   }]
 
-def two_ne_stmt (a b : LLVM.IntW w) :
-    @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne b a)
-      (LLVM.icmp LLVM.IntPredicate.ne b a) := by
+def two_ne_stmt (b a : LLVM.IntW w) :
+    (LLVM.icmp LLVM.IntPred.ne b a)
+      ⊑ (LLVM.icmp LLVM.IntPred.ne b a) := by
   simp
 
 def two_ne_macro_proof (w : Nat) :
@@ -467,16 +470,8 @@ def constant_macro (w : Nat) :=
     llvm.return %8
   }]
 
-def constant_stmt :
-    @BitVec.Refinement (BitVec w)
-      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? _  2) (LLVM.const? _  1))
-        (LLVM.const? _  0)) (LLVM.const? _  (-1))) (LLVM.const? _  (-2)))
-      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? _  2) (LLVM.const? _  1))
-        (LLVM.const? _  0)) (LLVM.const? _  (-1))) (LLVM.const? _  (-2))) := by
-  simp
-
 def constant_macro_proof (w : Nat) :
     constant_macro w ⊑ constant_macro w := by
   unfold constant_macro
   simp_alive_ssa
-  apply constant_stmt
+  apply PoisonOr.isRefinedBy_self

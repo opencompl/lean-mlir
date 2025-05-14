@@ -75,11 +75,11 @@ def mux := [DC_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => (vals.get? i).join
 
-def a : DC.ValueStream Bool := ofList [true, true, none, none, false]
-def b : DC.ValueStream Bool := ofList [true, true, none, none, false]
-def c : DC.ValueStream Bool := ofList [true, true, none, none, false]
-def d : DC.ValueStream Bool := ofList [true, true, none, none, false]
-def e : DC.ValueStream Bool := ofList [true, true, none, none, false]
+def a : DCOp.ValueStream Bool := ofList [true, true, none, none, false]
+def b : DCOp.ValueStream Bool := ofList [true, true, none, none, false]
+def c : DCOp.ValueStream Bool := ofList [true, true, none, none, false]
+def d : DCOp.ValueStream Bool := ofList [true, true, none, none, false]
+def e : DCOp.ValueStream Bool := ofList [true, true, none, none, false]
 
-def test : DC.ValueStream Bool :=
+def test : DCOp.ValueStream Bool :=
   mux.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .cons c <| .cons d <| .cons e <| .nil))

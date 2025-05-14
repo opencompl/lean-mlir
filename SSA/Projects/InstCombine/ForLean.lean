@@ -1,5 +1,6 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
-import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.SimpSet
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
@@ -291,7 +292,7 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
 
 theorem intMin_slt_zero (h : 0 < w) :
     BitVec.slt (intMin w) 0 := by
-  simp only [BitVec.slt, toInt_intMin, Int.ofNat_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
+  simp only [BitVec.slt, toInt_intMin, Int.natCast_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
     toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
   norm_cast
   simp [h]
@@ -456,7 +457,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   ·
     simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
     Nat.self_sub_mod]
-    have h' := @Int.add_emod_self (-1) (2^w)
+    have h' := @Int.add_emod_right (-1) (2^w)
     rw [← h', ← Int.tmod_eq_emod_of_nonneg (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
       Int.add_comm]
     norm_cast

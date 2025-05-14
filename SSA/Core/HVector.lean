@@ -43,6 +43,7 @@ def map' {A : α → Type*} {B : β → Type*} (f' : α → β) (f : ∀ (a : α
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map' f' f as)
 
+/-- Folds a function over an hvector from the left, where the accumulator has a fixed type. -/
 def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
     ∀ {l : List α}, B → HVector A l → B
   | [],   b, .nil       => b
@@ -54,6 +55,37 @@ def foldr {β : Type*} (f : ∀ (a : α), A a → β → β) :
   | t::_, b, .cons a as =>
     let b' := foldr f b as
     f t a b'
+
+/--
+Folds a function over an hvector from the left, where the type of the
+accumulator depends on the elements processed.
+
+In particular, the type of the accumulator after processing i elements is obtained
+by folding `fType` over the first i elements of `as`, and applying `B` to the
+result of that fold.
+-/
+def foldld {β : Type*} (B : β → Type*) (fType : β → α → β)
+    (fElem : {b : β} → {a : α} → B b → A a → B (fType b a)) :
+    {as : List α} → HVector A as → {b : β} → (init : B b) → B (as.foldl fType b)
+  | [], .nil, _, init         => init
+  | _::_, .cons a as, _, init => foldld B fType fElem as (fElem init a)
+
+def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
+    ∀ {l : List α}, (init : B) → (as : HVector A l) → m B
+  | [],   b, .nil       => return b
+  | t::_, b, .cons a as => do foldlM f (← f t b a) as
+
+/--
+Simultaneous map on the type and value level of an HVector while
+performing monadic effects for value translation.-/
+def mapM' [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
+    {l : List α}
+    {F : α → β}
+    (f : (a : α) → (v : A a) → m (B (F a)) )
+    (as : HVector A l) : m (HVector B (F <$> l)) :=
+  match l, as with
+  | [], .nil => return .nil
+  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM' f as)
 
 def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .nil, i => i.elim0
@@ -206,6 +238,5 @@ instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     toExpr }
 
 end ToExprPi
-
 
 end HVector
