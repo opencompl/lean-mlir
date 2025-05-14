@@ -1,6 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import SSA.Core.Framework.Trace
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 
@@ -16,20 +17,92 @@ simplifying trivial refinements in the process.
 macro "simp_llvm" : tactic => `(tactic|(
   simp (config := {failIfUnchanged := false}) only [
     simp_llvm,
-    (BitVec.ofInt_ofNat),
-    (PoisonOr.bind_if_then_poison_eq_ite_bind),
-    (PoisonOr.bind_if_else_poison_eq_ite_bind)]
+    (BitVec.ofInt_ofNat)]
 ))
 
 attribute [simp_llvm]
-  PoisonOr.value_bind PoisonOr.value_isRefinedBy_iff PoisonOr.isRefinedBy_poison_iff
-  PoisonOr.value_ne_poison PoisonOr.poison_ne_value
+  -- PoisonOr.isRefinedBy_poison_iff PoisonOr.value_isRefinedBy_iff
+  PoisonOr.poison_isRefinedBy PoisonOr.value_isRefinedBy_value
+  PoisonOr.value_ne_poison PoisonOr.poison_ne_value PoisonOr.value_inj
+  PoisonOr.value_bind
+  PoisonOr.bind_if_then_poison_eq_ite_bind
+  PoisonOr.bind_if_else_poison_eq_ite_bind
   bind_assoc Bool.false_eq_true false_and reduceIte
 
 @[deprecated "use `simp_llvm` instead" (since := "2025-05-12")]
 macro "simp_alive_ops" : tactic => `(tactic| simp_llvm)
 @[deprecated "use `simp_llvm` instead" (since := "2025-05-12")]
 macro "simp_alive_undef" : tactic => `(tactic| simp_llvm)
+
+/-! ## `intros_llvm` -/
+
+/--
+`intros_llvm` is a simple wrapper around `intros` which whill preserve the names
+of quantified variables *and keeps them accessible*.
+
+Crucially, this means this tactic is *not hygienic*, and should likely be
+avoided in manual proofs, but we use it in automatically generated proofs to
+improve readability.
+-/
+elab "intros_llvm" : tactic => withMainContext do
+  let target ← getMainTarget
+  let rec getIdents (names : Array Ident) : Expr → Array Ident
+    | .forallE x _ body _ => getIdents (names.push <| mkIdent x) body
+    | _ => names
+  let names := getIdents #[] target
+  evalTactic <|<- `(tactic| intros $names*)
+
+/-! ## `elim_poison_bind`-/
+
+open PoisonOr in
+/-- Specialized theorem for use in `elim_poison_bind`.
+By specializing it to exactly the shape of goal we need, we both reduce some
+boilerplate in its application, and potentially make the proof slightly faster
+to check (as the kernel won't need to reduce anything).
+-/
+theorem LLVM.IntW.bind_isRefinedBy_iff {w : Nat}
+    (x : PoisonOr (BitVec w)) (f : BitVec w → PoisonOr (BitVec w))
+    (rhs : PoisonOr (BitVec w)) :
+    bind x f ⊑ rhs ↔ (∀ x', x = value x' → f x' ⊑ rhs) := by
+  cases x <;> simp
+
+open Meta in
+/--
+`simp_llvm_bind` repeatedly tries to apply `LLVM.IntW.bind_isRefinedBy_if`,
+to show that a `PoisonOr`-typed variable *must* be a value (rather than poison).
+
+Whenever the application succeeds, we introduce the new `BitVec` variable using
+the same (accessible) name as the `PoisonOr` variable it replaces.
+-/
+elab "simp_llvm_bind" : tactic => do
+  let mut loop := true
+  while loop do
+    loop ← withMainContext do
+      let w ← mkFreshExprMVar none
+      let x ← mkFreshExprMVar none
+      let f ← mkFreshExprMVar none
+      let rhs ← mkFreshExprMVar none
+      let lem ← mkAppM ``Iff.mpr #[mkApp4 (mkConst ``LLVM.IntW.bind_isRefinedBy_iff) w x f rhs]
+      let newGoals ←
+        try (← getMainGoal).apply lem
+        catch e =>
+          trace[LeanMLIR.Elab] e.toMessageData
+          return false
+
+      let x := (← instantiateMVars x).consumeMData
+      if !x.isFVar then
+        trace[LeanMLIR.Elab] "Expected an fvar, but found: ${x}. Aborting..."
+        return false
+
+      replaceMainGoal newGoals
+      let xId := mkIdent (← getUnusedUserName `x)
+      evalTactic <|<- `(tactic| (
+        intro ($xId : BitVec _) h;
+        subst h;  -- Eliminate the old variable
+        simp (config:={failIfUnchanged := false}) -implicitDefEqProofs only [simp_llvm]
+        -- ^^ simplify
+      ))
+      return true
 
 /-! ## Case Bashing-/
 
