@@ -201,6 +201,38 @@ instance {α : Type} [DecidableEq α] :
   | .value _, .poison => .isFalse <| by simp
   | .value a, .value b => decidable_of_decidable_of_iff (p := a = b) <| by simp
 
+/-! ### if-then-else -/
+section Ite
+variable {c : Prop} [Decidable c] (a? b? : PoisonOr α) (a : α)
+
+@[simp]
+theorem if_then_poison_isRefinedBy_iff  :
+    (if c then poison else a? : no_index _) ⊑ b? ↔ ¬c → a? ⊑ b? := by
+  split <;> simp [*]
+
+@[simp]
+theorem if_else_poison_isRefinedBy_iff  :
+    (if c then a? else poison : no_index _) ⊑ b? ↔ c → a? ⊑ b? := by
+  split <;> simp [*]
+
+@[simp]
+theorem value_isRefinedBy_if_then_poison_iff :
+    value a ⊑ (if c then poison else b? : no_index _) ↔ ¬c ∧ (value a ⊑ b?) := by
+  split <;> simp [*]
+
+@[simp]
+theorem value_isRefinedBy_if_else_poison_iff :
+    value a ⊑ (if c then poison else b? : no_index _) ↔ ¬c ∧ (value a ⊑ b?) := by
+  split <;> simp [*]
+
+/-
+TODO: we should consider writing a simproc that canonicalizes
+`if c then a? else poison` to `if ¬c then poison else a?` whenever `a?` is not
+poison, which would allow us to remove all if_else_poison lemmas.
+-/
+
+end Ite
+
 end Refinement
 
 

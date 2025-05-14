@@ -117,3 +117,31 @@ macro "simp_alive_ops" : tactic =>
           (BitVec.ofInt_ofNat)
         ]
     ))
+
+attribute [simp_llvm]
+  -- Poison lemmas
+  PoisonOr.not_value_isRefinedBy_poison
+  -- Poison ite lemmas
+  PoisonOr.if_then_poison_isRefinedBy_iff
+  PoisonOr.if_else_poison_isRefinedBy_iff
+  PoisonOr.value_isRefinedBy_if_then_poison_iff
+  PoisonOr.value_isRefinedBy_if_else_poison_iff
+  -- Prop
+  not_false_eq_true ne_eq
+  true_and and_true false_and and_false
+  true_or or_true false_or or_false
+  imp_false implies_true
+  or_self and_self
+  not_or not_and
+  -- Bool
+  Bool.or_eq_true Bool.and_eq_true
+  beq_iff_eq bne_iff_ne
+
+macro "simp_alive_split" : tactic => `(tactic|(
+  all_goals
+    try intros
+    simp -failIfUnchanged -implicitDefEqProofs +contextual only [
+      simp_llvm_split, simp_llvm
+    ]
+    try intros -- introduce any new hypotheses that may have been added
+  ))
