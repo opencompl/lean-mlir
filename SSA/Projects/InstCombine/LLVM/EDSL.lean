@@ -24,7 +24,7 @@ instance instTransformTy : AST.TransformTy (MetaLLVM φ) φ := { mkTy }
 instance : AST.TransformTy (LLVM) 0 := { mkTy }
 
 def getOutputWidth (opStx : MLIR.AST.Op φ) (op : String) :
-    Except (TransformError) (Width φ) := do
+    Except TransformError (Width φ) := do
   match opStx.res with
   | res::[] =>
     match res.2 with
