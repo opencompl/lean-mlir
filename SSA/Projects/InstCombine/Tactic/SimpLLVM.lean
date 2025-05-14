@@ -103,15 +103,17 @@ macro "simp_alive_undef" : tactic =>
       )
   )
 
-attribute [simp_llvm] BitVec.ofInt_neg_one pure_bind
+attribute [simp_llvm]
+  pure_bind
+  BitVec.ofInt_neg_one
+  PoisonOr.bind_if_then_poison_eq_ite_bind
+  PoisonOr.bind_if_else_poison_eq_ite_bind
 
 /- Simplify away the `InstCombine` specific semantics. -/
 macro "simp_alive_ops" : tactic =>
   `(tactic|(
       simp (config := {failIfUnchanged := false}) only [
           simp_llvm,
-          (BitVec.ofInt_ofNat),
-          (PoisonOr.bind_if_then_poison_eq_ite_bind),
-          (PoisonOr.bind_if_else_poison_eq_ite_bind)
+          (BitVec.ofInt_ofNat)
         ]
     ))
