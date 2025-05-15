@@ -514,8 +514,11 @@ theorem MUL_pure64_ttt_eq_MUL_pure64_ttt_bv (rs2_val : BitVec 64) (rs1_val : Bit
   rw [extractLsb_setWidth_of_lt (hi := 127) (lo := 64) (v := 128) (x := BitVec.signExtend 129 rs1_val * BitVec.signExtend 129 rs2_val) (by omega)]
   simp
 
-
--- wip: need to remove toInts and toNats
+/- Work in Progress: For the two division operations that operate on a word,
+ the translation into the bit vector domain—excluding the use of toInts and toNats—will
+  be added in the future. These specific operations were skipped for now, as they
+  are not required for the current project (instruction selection).
+-/
 def DIVW_pure64_signed (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64
     (BitVec.extractLsb' 0 32
@@ -529,25 +532,95 @@ def DIVW_pure64_signed (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :
           if (BitVec.extractLsb 31 0 rs2_val).toInt = 0 then -1
           else (BitVec.extractLsb 31 0 rs1_val).toInt.tdiv (BitVec.extractLsb 31 0 rs2_val).toInt)))
 
--- wip: need to remove toInts and toNats
 def DIVW_pure64_unsigned (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64
     (BitVec.extractLsb' 0 32
       (BitVec.ofInt 33
       (if (rs2_val.toNat: Int)  % 4294967296 = 0 then -1
-        else ((rs1_val.toNat : Int) % 4294967296).tdiv ((rs2_val.toNat : Int) % 4294967296))))
+        else ((rs1_val.toNat : Int) % 4294967296).tdiv
+          ((rs2_val.toNat : Int) % 4294967296))))
 
 def DIV_pure64_signed (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64
+    (BitVec.ofInt 65
+      (if ((2^63)-1) < if rs2_val.toInt = 0 then -1 else rs1_val.toInt.tdiv rs2_val.toInt then
+         -(2^63)
+      else if rs2_val.toInt = 0 then -1 else rs1_val.toInt.tdiv rs2_val.toInt))
+
+def DIV_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   if rs2_val = 0#64 then
     -1#64
   else
     rs1_val.sdiv rs2_val
 
+theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+  DIV_pure64_signed rs2_val rs1_val = DIV_pure64_signed_bv rs2_val rs1_val := by
+    unfold DIV_pure64_signed DIV_pure64_signed_bv
+    rw [extractLsb'_ofInt_eq_ofInt (h:= by simp)]
+    by_cases h1 : rs2_val = 0#64
+    case pos => simp [h1]
+    case neg =>
+      have h' : rs2_val.toInt ≠ 0 := by
+        have h1 := (BitVec.toInt_ne).mpr h1
+        exact h1
+      apply BitVec.eq_of_toInt_eq
+      simp only [Int.reduceSub, h', ↓reduceIte, Int.reduceNeg, BitVec.toInt_ofInt,
+        h1, Int.reducePow, Int.reduceSub, Int.reduceNeg, Nat.reducePow, BitVec.toInt_sdiv]
+      by_cases h : rs1_val = .intMin _ ∧ rs2_val = -1#64
+      case pos =>
+          obtain ⟨rfl, rfl⟩ := h
+          simp only [BitVec.toInt_intMin, Nat.add_one_sub_one, Nat.reducePow, Nat.reduceMod,
+            Nat.cast_ofNat, Int.reduceNeg, BitVec.reduceNeg, BitVec.reduceToInt, Int.tdiv_neg,
+            Int.tdiv_one, neg_neg, Int.reduceLT, ↓reduceIte, Int.reduceBmod]
+      case neg =>
+          have := BitVec.toInt_sdiv_of_ne_or_ne rs1_val rs2_val <| by
+              rw [← Decidable.not_and_iff_not_or_not]
+              exact h
+          rw[← this]
+          split
+          case isTrue iT =>
+            have intMax : (BitVec.intMax 64).toInt =  9223372036854775807 := by native_decide
+            have h3 : (rs1_val.sdiv rs2_val).toInt ≤2 ^ 63  - 1 := by
+                apply  BitVec.toInt_le
+            simp only [Int.reducePow, Int.reduceSub] at h3
+            exact (not_le_of_lt iT h3).elim
+          case isFalse iF =>
+          rfl
+
 def DIV_pure64_unsigned (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  if rs2_val = 0#64 then
-    (-1)
-  else
-    rs1_val.udiv rs2_val
+  BitVec.extractLsb' 0 64
+    (BitVec.ofInt 65
+    (if ((rs2_val.toNat):Int) = 0 then -1 else (rs1_val.toNat : Int).tdiv (rs2_val.toNat: Int)))
+
+def DIV_pure64_unsigned_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  if rs2_val = 0#64 then -1 else rs1_val.udiv rs2_val
+
+theorem DIV_pure64_unsigned_eq_DIV_pure64_unsigned_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    DIV_pure64_unsigned rs2_val rs1_val  = DIV_pure64_unsigned_bv rs2_val rs1_val := by
+  unfold DIV_pure64_unsigned DIV_pure64_unsigned_bv
+  split
+  case isTrue ht =>
+      simp only [Int.reduceNeg, BitVec.reduceOfInt, extractLsb'_eq_setWidth, Nat.reduceLeDiff,
+        BitVec.setWidth_ofNat_of_le, BitVec.reduceOfNat, BitVec.ofNat_eq_ofNat, BitVec.reduceNeg,
+        BitVec.udiv_eq]
+      simp only [Int.natCast_eq_zero] at ht
+      have h3 := BitVec.eq_of_toNat_eq (x := rs2_val) (y:= 0) ht
+      simp only [h3, BitVec.ofNat_eq_ofNat, ↓reduceIte]
+  case isFalse hf =>
+      simp only [extractLsb'_eq_setWidth, BitVec.ofNat_eq_ofNat, BitVec.reduceNeg]
+      split
+      case isTrue htt =>
+          simp at hf
+          bv_omega
+      · rw [BitVec.setWidth_eq_extractLsb' (by simp)]
+        rw [extractLsb'_ofInt_eq_ofInt (h:= by simp)]
+        apply BitVec.eq_of_toInt_eq
+        simp only [BitVec.toInt_ofInt]
+        have aa := BitVec.isLt (rs1_val.udiv rs2_val)
+        rw [BitVec.udiv.eq_1 ]
+        rw[← Int.ofNat_tdiv]
+        rw [BitVec.toInt_eq_toNat_bmod]
+        simp
 
 def ITYPE_pure64_RISCV_ADDI (imm : BitVec 12) (rs1_val : BitVec 64) : BitVec 64 :=
   let immext : BitVec 64 := (BitVec.signExtend 64 imm) ;
@@ -582,7 +655,15 @@ def ZICOND_RTYPE_pure64_RISCV_RISCV_CZERO_NEZ (rs2_val : BitVec 64) (rs1_val : B
   if rs2_val = BitVec.zero 64 then rs1_val else BitVec.zero 64
 
 def ZBS_RTYPE_pure64_RISCV_BCLR (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  BitVec.and rs1_val (BitVec.not ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb  5 0 rs2_val)))
+  BitVec.and rs1_val (BitVec.not ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val)))
+
+def ZBS_RTYPE_pure64_RISCV_BCLR_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.and rs1_val (BitVec.not ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val)))
+
+theorem ZBS_RTYPE_pure64_RISCV_BCLR_eq_ZBS_RTYPE_pure64_RISCV_BCLR_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBS_RTYPE_pure64_RISCV_BCLR rs2_val rs1_val = ZBS_RTYPE_pure64_RISCV_BCLR_bv rs2_val rs1_val := by
+  unfold ZBS_RTYPE_pure64_RISCV_BCLR ZBS_RTYPE_pure64_RISCV_BCLR_bv
+  bv_normalize
 
 def ZBB_EXTOP_pure64_RISCV_SEXTB (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64 (BitVec.extractLsb 7 0 rs1_val)
@@ -593,7 +674,7 @@ def ZBB_EXTOP_pure64_RISCV_SEXTH (rs1_val : BitVec 64) : BitVec 64 :=
 def ZBB_EXTOP_pure64_RISCV_ZEXTH (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.zeroExtend 64 (BitVec.extractLsb 15 0 rs1_val)
 
-def ZBS_RTYPE_pure64_RISCV_BEXT (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64  :=
+def ZBS_RTYPE_pure64_RISCV_BEXT (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.setWidth 64
     (match
       BitVec.and rs1_val ((BitVec.setWidth 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val)) !=
@@ -601,28 +682,98 @@ def ZBS_RTYPE_pure64_RISCV_BEXT (rs2_val : BitVec 64) (rs1_val : BitVec 64) : Bi
     | true => 1#1
     | false => 0#1)
 
- def ZBS_RTYPE_pure64_BINV (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+def ZBS_RTYPE_pure64_RISCV_BEXT_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.setWidth 64
+    (match
+      BitVec.and rs1_val ( (BitVec.setWidth 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val)) !=
+        0#64 with
+    | true => 1#1
+    | false => 0#1)
+
+theorem ZBS_RTYPE_pure64_RISCV_BEXT_eq_ZBS_RTYPE_pure64_RISCV_BEXT_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBS_RTYPE_pure64_RISCV_BEXT rs2_val rs1_val = ZBS_RTYPE_pure64_RISCV_BEXT_bv rs2_val rs1_val := by
+  unfold ZBS_RTYPE_pure64_RISCV_BEXT  ZBS_RTYPE_pure64_RISCV_BEXT_bv
+  simp
+
+ def ZBS_RTYPE_pure64_BINV (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.xor rs1_val
+    (BitVec.shiftLeft
+      (BitVec.zeroExtend 64 1#1) (BitVec.extractLsb 5 0 rs2_val).toNat)
+
+ def ZBS_RTYPE_pure64_BINV_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
   BitVec.xor rs1_val ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val))
 
+theorem ZBS_RTYPE_pure64_BINV_eq_ZBS_RTYPE_pure64_BINV_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBS_RTYPE_pure64_BINV rs2_val rs1_val = ZBS_RTYPE_pure64_BINV_bv rs2_val rs1_val := by
+  unfold ZBS_RTYPE_pure64_BINV ZBS_RTYPE_pure64_BINV_bv
+  bv_decide
+
 def ZBS_RTYPE_pure64_RISCV_BSET (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
-    BitVec.or rs1_val ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val))
+  BitVec.or rs1_val (BitVec.shiftLeft
+    (BitVec.zeroExtend 64 1#1) (BitVec.extractLsb 5 0 rs2_val).toNat)
+
+def ZBS_RTYPE_pure64_RISCV_BSET_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.or rs1_val ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val))
+
+theorem ZBS_RTYPE_pure64_RISCV_BSET_eq_ZBS_RTYPE_pure64_RISCV_BSET_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBS_RTYPE_pure64_RISCV_BSET rs2_val rs1_val = ZBS_RTYPE_pure64_RISCV_BSET_bv rs2_val rs1_val := by
+  unfold ZBS_RTYPE_pure64_RISCV_BSET ZBS_RTYPE_pure64_RISCV_BSET_bv
+  simp
 
 def ZBS_IOP_pure64_RISCV_BCLRI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
     BitVec.and rs1_val (BitVec.not ((BitVec.setWidth 64 1#1) <<< shamt))
 
-def ZBS_IOP_pure64_RISCV_BEXTI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
-    BitVec.setWidth 64
-      (match (BitVec.and (rs1_val) ((BitVec.setWidth 64 1#1) <<< shamt)) != 0#64 with
+def ZBS_IOP_pure64_RISCV_BCLRI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :=
+  BitVec.and rs1_val (BitVec.not ((BitVec.setWidth 64 1#1) <<< shamt))
+
+theorem ZBS_IOP_pure64_RISCV_BCLRI_eq_ZBS_IOP_pure64_RISCV_BCLRI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :
+    ZBS_IOP_pure64_RISCV_BCLRI shamt rs1_val = ZBS_IOP_pure64_RISCV_BCLRI_bv shamt rs1_val := by
+  unfold ZBS_IOP_pure64_RISCV_BCLRI ZBS_IOP_pure64_RISCV_BCLRI_bv
+  simp
+
+def ZBS_IOP_pure64_RISCV_BEXTI (shamt : BitVec 6) (rs1_val : BitVec 64) :=
+  BitVec.setWidth 64
+      (match (BitVec.and rs1_val (BitVec.shiftLeft (BitVec.setWidth 64 1#1) shamt.toNat)) != 0#64 with
       | true => 1#1
       | false => 0#1)
 
-def ZBS_IOP_pure64_RISCV_BINVI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
+def ZBS_IOP_pure64_RISCV_BEXTI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :=
+  BitVec.setWidth 64
+      (match (BitVec.and rs1_val ( (BitVec.setWidth 64 1#1) <<< shamt)) != 0#64 with
+      | true => 1#1
+      | false => 0#1)
+
+theorem ZBS_IOP_pure64_RISCV_BEXTI_eq_ZBS_IOP_pure64_RISCV_BEXTI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :
+    ZBS_IOP_pure64_RISCV_BEXTI shamt rs1_val = ZBS_IOP_pure64_RISCV_BEXTI_bv shamt rs1_val := by
+  unfold ZBS_IOP_pure64_RISCV_BEXTI  ZBS_IOP_pure64_RISCV_BEXTI_bv
+  simp
+
+def ZBS_IOP_pure64_RISCV_BINVI (shamt : BitVec 6) (rs1_val : BitVec 64) :=
+  BitVec.xor rs1_val  (BitVec.shiftLeft (BitVec.zeroExtend 64 1#1) shamt.toNat)
+
+def ZBS_IOP_pure64_RISCV_BINVI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :=
   BitVec.xor rs1_val  ((BitVec.zeroExtend 64 1#1) <<< shamt)
 
-def ZBS_IOP_pure64_RISCV_BSETI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
+theorem ZBS_IOP_pure64_RISCV_BINVI_eq_ZBS_IOP_pure64_RISCV_BINVI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :
+    ZBS_IOP_pure64_RISCV_BINVI shamt rs1_val = ZBS_IOP_pure64_RISCV_BINVI_bv shamt rs1_val := by
+  unfold ZBS_IOP_pure64_RISCV_BINVI ZBS_IOP_pure64_RISCV_BINVI_bv
+  rfl
+
+def ZBS_IOP_pure64_RISCV_BSETI (shamt : BitVec 6) (rs1_val : BitVec 64) :=
+  BitVec.or rs1_val (BitVec.shiftLeft (BitVec.zeroExtend 64 1#1) shamt.toNat)
+
+def ZBS_IOP_pure64_RISCV_BSETI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :=
   BitVec.or rs1_val ((BitVec.zeroExtend 64 1#1) <<< shamt)
 
--- wip: remove toNats
+theorem ZBS_IOP_pure64_RISCV_BSETI_eq_ZBS_IOP_pure64_RISCV_BSETI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :
+    ZBS_IOP_pure64_RISCV_BSETI shamt rs1_val = ZBS_IOP_pure64_RISCV_BSETI_bv shamt rs1_val := by
+  unfold ZBS_IOP_pure64_RISCV_BSETI  ZBS_IOP_pure64_RISCV_BSETI_bv
+  simp
+
+/- Work in Progress: For the two instructions RORW and ROLW, there is no corresponding
+bit vector operation semantics. This is because it is not yet clear how such a translation
+into the bit vector domain without toNat and toInts would look like. Additionally there are
+not crucial for our current project. -/
 def ZBB_RTYPEW_pure64_RISCV_RORW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend (64)
       (BitVec.or (BitVec.ushiftRight (BitVec.setWidth 32 rs1_val) (rs2_val.toNat % 32))
@@ -631,7 +782,6 @@ def ZBB_RTYPEW_pure64_RISCV_RORW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : B
               32 % 2 ^ (5 + 1)) %
             2 ^ 5)))
 
--- wip: remove toNats
 def ZBB_RTYPEW_pure64_RISCV_ROLW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64
     (BitVec.or (BitVec.shiftLeft (BitVec.setWidth 32 rs1_val) (BitVec.extractLsb 4 0 rs2_val).toNat)
@@ -640,13 +790,31 @@ def ZBB_RTYPEW_pure64_RISCV_ROLW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : B
             (BitVec.ofInt 6 32)))
           (BitVec.extractLsb 4 0 rs2_val)))).toNat))
 
- def ZBB_RTYPE_pure64_RISCV_ROL (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  BitVec.or (BitVec.shiftLeft  rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
+ def ZBB_RTYPE_pure64_RISCV_ROL (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.or (BitVec.shiftLeft rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
+    (BitVec.ushiftRight rs1_val (BitVec.extractLsb' 0 6 (BitVec.ofInt 7 64) - BitVec.extractLsb 5 0 rs2_val).toNat)
+
+ def ZBB_RTYPE_pure64_RISCV_ROL_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.or (BitVec.shiftLeft rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
     (rs1_val >>> (BitVec.extractLsb' 0 6 (64#7) - BitVec.extractLsb 5 0 rs2_val))
 
- def ZBB_RTYPE_pure64_RISCV_ROR (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  BitVec.or (rs1_val >>> (BitVec.extractLsb 5 0 rs2_val))
-    (rs1_val <<< ((BitVec.extractLsb' 0 6 (BitVec.ofInt (7) (64)) - BitVec.extractLsb 5 0 rs2_val)))
+theorem ZBB_RTYPE_pure64_RISCV_ROL_eq_ZBB_RTYPE_pure64_RISCV_ROL_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBB_RTYPE_pure64_RISCV_ROL rs2_val rs1_val =  ZBB_RTYPE_pure64_RISCV_ROL_bv rs2_val rs1_val := by
+  unfold ZBB_RTYPE_pure64_RISCV_ROL ZBB_RTYPE_pure64_RISCV_ROL_bv
+  simp
+
+ def ZBB_RTYPE_pure64_RISCV_ROR (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.or (BitVec.ushiftRight rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
+    (BitVec.shiftLeft rs1_val ((BitVec.extractLsb' 0 6 (BitVec.ofInt 7 64) - BitVec.extractLsb 5 0 rs2_val)).toNat)
+
+ def ZBB_RTYPE_pure64_RISCV_ROR_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+  BitVec.or ( rs1_val >>> (BitVec.extractLsb 5 0 rs2_val))
+    (rs1_val <<< ((BitVec.extractLsb' 0 6 (BitVec.ofInt 7 64) - BitVec.extractLsb 5 0 rs2_val)))
+
+theorem ZBB_RTYPE_pure64_RISCV_ROR_eq_ZBB_RTYPE_pure64_RISCV_ROR_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBB_RTYPE_pure64_RISCV_ROR rs2_val rs1_val = ZBB_RTYPE_pure64_RISCV_ROR_bv rs2_val rs1_val := by
+  unfold ZBB_RTYPE_pure64_RISCV_ROR  ZBB_RTYPE_pure64_RISCV_ROR_bv
+  simp
 
  def ZBA_RTYPEUW_pure64_RISCV_ADDUW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.zeroExtend 64 (BitVec.extractLsb 31 0 rs1_val) <<< 0#2 + rs2_val

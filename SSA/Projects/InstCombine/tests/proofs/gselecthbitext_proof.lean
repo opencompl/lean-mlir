@@ -195,9 +195,9 @@ theorem test_zext4_thm (e e_1 : IntW 1) :
 
 
 theorem test_op_op_thm (e e_1 e_2 : IntW 32) :
-  select (icmp IntPredicate.sgt e_2 (const? 32 0)) (sext 32 (icmp IntPredicate.sgt e_1 (const? 32 0)))
-      (sext 32 (icmp IntPredicate.sgt e (const? 32 0))) ⊑
-    sext 32 (icmp IntPredicate.sgt (select (icmp IntPredicate.sgt e_2 (const? 32 0)) e_1 e) (const? 32 0)) := by
+  select (icmp IntPred.sgt e_2 (const? 32 0)) (sext 32 (icmp IntPred.sgt e_1 (const? 32 0)))
+      (sext 32 (icmp IntPred.sgt e (const? 32 0))) ⊑
+    sext 32 (icmp IntPred.sgt (select (icmp IntPred.sgt e_2 (const? 32 0)) e_1 e) (const? 32 0)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

@@ -64,7 +64,7 @@ theorem addhshlhsdivhnegative1_thm (e : IntW 32) :
 
 theorem addhshlhsdivhnegative2_thm (e : IntW 32) :
   add (shl (LLVM.sdiv e (const? 32 (-2147483648))) (const? 32 31)) e ⊑
-    add (select (icmp IntPredicate.eq e (const? 32 (-2147483648))) (const? 32 (-2147483648)) (const? 32 0)) e := by
+    add (select (icmp IntPred.eq e (const? 32 (-2147483648))) (const? 32 (-2147483648)) (const? 32 0)) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
