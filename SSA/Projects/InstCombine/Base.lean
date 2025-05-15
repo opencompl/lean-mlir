@@ -99,7 +99,7 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨false⟩        => "udiv"
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
-    (if prec >= max_prec then 1 else 2) f!"llvm.{op}"))
+    (if prec >= max_prec then 1 else 2) f!"InstCombine.{op}"))
 /- Changed this to use the "llvm" prefix for better pretty-printing.
 This affects every use of `Repr` for `MOp.BinaryOp`, which may not be desirable.
 TODO: Consider whether this change is acceptable globally.
@@ -121,14 +121,44 @@ inductive MOp (φ : Nat) : Type
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
-instance : Repr (MOp 0) where
-   reprPrec op _p :=
+def toStringWithoutFlags (op : MOp.BinaryOp) : String :=
+  let op  : String := match op with
+    | .and                => "and"
+    | .or   ⟨false⟩        => "or"
+    | .or   ⟨true⟩         => "or disjoint"
+    | .xor                => "xor"
+    | .shl  ⟨false, false⟩ => "shl"
+    | .shl  ⟨nsw, nuw⟩     => toString f!"shl {nsw} {nuw}"
+    | .lshr ⟨false⟩        => "lshr"
+    | .lshr ⟨true⟩         => "lshr exact"
+    | .ashr ⟨false⟩        => "ashr"
+    | .ashr ⟨true⟩         => "ashr exact"
+    | .urem               => "urem"
+    | .srem               => "srem"
+    | .add  ⟨false, false⟩ => "add"
+    | .add  ⟨nsw, nuw⟩     => toString f!"add {nsw} {nuw}"
+    | .mul  ⟨false, false⟩ => "mul"
+    | .mul  ⟨nsw, nuw⟩     => toString f!"mul {nsw} {nuw}"
+    | .sub  ⟨false, false⟩ => "sub"
+    | .sub  ⟨nsw, nuw⟩     => toString f!"sub {nsw} {nuw}"
+    | .sdiv ⟨false⟩        => "sdiv"
+    | .sdiv ⟨true⟩         => "sdiv exact"
+    | .udiv ⟨false⟩        => "udiv"
+    | .udiv ⟨true⟩         => "udiv exact"
+  s!"llvm.{op}"
+
+instance : ToString (MOp.BinaryOp) where
+  toString := toStringWithoutFlags
+
+
+instance : ToString (MOp 0) where
+   toString  op :=
      match op with
-     | .unary _w op => f!"\"{repr  op}\""
-     | .binary _w op => f!"\"{repr  op}\""
-     | .select  _w => repr "select"
-     | .icmp  _pred _w => repr "icmp"
-     | .const w val => f!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
+     | .unary _w op => s!"\"{repr op}\""
+     | .binary _w op => s!"\"{toString  op}\""
+     | .select  _w =>  "select"
+     | .icmp  _pred _w =>  "icmp"
+     | .const w val => s!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
 
 /-! ## Dialect -/
 

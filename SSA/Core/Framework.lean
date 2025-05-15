@@ -267,8 +267,49 @@ def Lets.repr (prec : Nat) : Lets d eff Γ t → Format
 instance : Repr (Expr d Γ eff t) := ⟨flip Expr.repr⟩
 instance : Repr (Com d Γ eff t) := ⟨flip Com.repr⟩
 instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
-
 end Repr
+
+/- # ToString instances for Com and Expr  -/
+section ToString
+variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty][ToString d.Ty][ToString d.Op]
+
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
+  let args := (List.range ts.length).zip ts |>.map
+    (fun (i, t) => s!"%{i} : {toString t}") -- assumes toString function for types. -- tried using it with naming but then difficult to track.
+  "(" ++ String.intercalate ", " args ++ ")"
+
+  partial def Expr.toString1 [ToString d.Op] : Expr d Γ eff t → String
+    | Expr.mk (op : d.Op) _ _ args regArgs =>
+        let outTy : d.Ty  := DialectSignature.outTy op
+        let argTys := DialectSignature.sig op
+
+      s!"{toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({toString outTy})"
+
+partial def comToStringAux : Com d Γ eff t → String
+    | .ret v => s!"return {repr v } : ({toString t}) → ()" -- this line is safe to use repr
+    | .var e body =>
+      s!"%{repr <|(Γ.length)} = {Expr.toString1 e }" ++ "\n" ++
+      comToStringAux body
+
+-- skip region args for the momennt.
+partial def Com.toString (_com : Com d Γ eff t) : String :=
+    "{ \n"
+    ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n" -- first we format the context
+    ++ (comToStringAux _com) ++ -- then we print the com
+    "\n }"
+
+
+
+instance : ToString (Com d Γ eff t)  where toString := Com.toString
+instance : ToString (Expr d Γ eff t) where toString := Expr.toString1
+
+end ToString
+
+
+
+
+
 
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
