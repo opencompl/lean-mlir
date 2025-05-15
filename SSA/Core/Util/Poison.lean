@@ -232,7 +232,7 @@ theorem value_isRefinedBy_if_else_poison_iff :
 
 /-!
 Fallback theorems for generic if-then-else; other theorems should be preferred
-as they give simpler rhs's for their specialiazed situations.
+as they give simpler rhs's for their specialized situations.
 -/
 theorem ite_isRefinedBy_iff {x? y? z? : PoisonOr α} :
     ite c x? y? ⊑ z?
