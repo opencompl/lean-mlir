@@ -35,7 +35,7 @@ section Monads
   errors.
 -/
 
-abbrev ExceptM  (d : Dialect) := Except TransformError
+abbrev ExceptM  (_ : Dialect) := Except TransformError
 abbrev BuilderM (d : Dialect) := StateT NameMapping (ExceptM d)
 abbrev ReaderM  (d : Dialect) := ReaderT NameMapping (ExceptM d)
 
