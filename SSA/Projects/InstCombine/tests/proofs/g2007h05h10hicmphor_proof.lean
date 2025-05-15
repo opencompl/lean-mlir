@@ -12,8 +12,8 @@ set_option Elab.async false
 
 section g2007h05h10hicmphor_proof
 theorem test_thm (e : IntW 32) :
-  LLVM.or (icmp IntPredicate.ugt e (const? 32 255)) (icmp IntPredicate.sgt e (const? 32 255)) ⊑
-    icmp IntPredicate.ugt e (const? 32 255) := by
+  LLVM.or (icmp IntPred.ugt e (const? 32 255)) (icmp IntPred.sgt e (const? 32 255)) ⊑
+    icmp IntPred.ugt e (const? 32 255) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,8 +23,8 @@ theorem test_thm (e : IntW 32) :
 
 
 theorem test_logical_thm (e : IntW 32) :
-  select (icmp IntPredicate.ugt e (const? 32 255)) (const? 1 1) (icmp IntPredicate.sgt e (const? 32 255)) ⊑
-    icmp IntPredicate.ugt e (const? 32 255) := by
+  select (icmp IntPred.ugt e (const? 32 255)) (const? 1 1) (icmp IntPred.sgt e (const? 32 255)) ⊑
+    icmp IntPred.ugt e (const? 32 255) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
