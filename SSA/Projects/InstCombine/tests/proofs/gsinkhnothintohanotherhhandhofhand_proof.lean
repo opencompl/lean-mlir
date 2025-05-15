@@ -12,8 +12,8 @@ set_option Elab.async false
 
 section gsinkhnothintohanotherhhandhofhand_proof
 theorem t0_thm (e e_1 e_2 e_3 : IntW 8) (e_4 : IntW 1) :
-  select (LLVM.and (LLVM.xor e_4 (const? 1 1)) (icmp IntPredicate.eq e_3 e_2)) e_1 e ⊑
-    select (LLVM.or (icmp IntPredicate.ne e_3 e_2) e_4) e e_1 := by
+  select (LLVM.and (LLVM.xor e_4 (const? 1 1)) (icmp IntPred.eq e_3 e_2)) e_1 e ⊑
+    select (LLVM.or (icmp IntPred.ne e_3 e_2) e_4) e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,8 +23,8 @@ theorem t0_thm (e e_1 e_2 e_3 : IntW 8) (e_4 : IntW 1) :
 
 
 theorem n2_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  LLVM.and (LLVM.xor e_2 (const? 1 1)) (icmp IntPredicate.eq e_1 e) ⊑
-    LLVM.and (icmp IntPredicate.eq e_1 e) (LLVM.xor e_2 (const? 1 1)) := by
+  LLVM.and (LLVM.xor e_2 (const? 1 1)) (icmp IntPred.eq e_1 e) ⊑
+    LLVM.and (icmp IntPred.eq e_1 e) (LLVM.xor e_2 (const? 1 1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

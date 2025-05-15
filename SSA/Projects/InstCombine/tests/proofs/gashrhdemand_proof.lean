@@ -24,7 +24,7 @@ theorem srem2_ashr_mask_thm (e : IntW 32) :
 
 theorem srem8_ashr_mask_thm (e : IntW 32) :
   LLVM.and (ashr (LLVM.srem e (const? 32 8)) (const? 32 31)) (const? 32 2) ⊑
-    select (icmp IntPredicate.ugt (LLVM.and e (const? 32 (-2147483641))) (const? 32 (-2147483648))) (const? 32 2)
+    select (icmp IntPred.ugt (LLVM.and e (const? 32 (-2147483641))) (const? 32 (-2147483648))) (const? 32 2)
       (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
