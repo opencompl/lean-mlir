@@ -19,6 +19,7 @@ jobs:
       pull-requests: write
     # Use expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-self-hosted-runners
+    runs-on: ubuntu-latest
     #runs-on: self-hosted
     steps:
       - name: Checkout 🛎️
