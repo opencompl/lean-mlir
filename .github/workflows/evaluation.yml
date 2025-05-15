@@ -41,8 +41,7 @@ jobs:
       - name: Install Python Modules
         run: |
           sudo apt update
-          sudo apt install -y python3-matplotlib python3-pandas python3-num2words ripgrep
-          sudo apt install npm
+          sudo apt install -y python3-matplotlib python3-pandas python3-num2words ripgrep npm
           sudo npm install fs
 
       - name: Get Cache
