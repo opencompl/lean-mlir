@@ -301,8 +301,8 @@ partial def Com.ToStringBody : Com d Γ eff t → String
 /- This function implements a toString instance for the type `Com`.  -/
 partial def Com.toString (_com : Com d Γ eff t) : String :=
    "{ \n"
-  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n" -- first we format the context
-  ++ (Com.ToStringBody _com) ++ -- then we print the com
+  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
+  ++ (Com.ToStringBody _com) ++ 
    "\n }"
 
 instance : ToString (Com d Γ eff t)  where toString := Com.toString
