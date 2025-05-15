@@ -102,15 +102,21 @@ jobs:
               body: fs.readFileSync('bv-evaluation/llvm-stats', 'utf8')
             })
 
-      - name: Run LLVM Symbolic
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j48)
+      - name: Upload LLVM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LLVM evaluation
+          path: bv-evaluation/results
 
-      - name: Compare LLVM Symbolic
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
+#      - name: Run LLVM Symbolic
+#        continue-on-error: true
+#        run: |
+#          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j48)
+#
+#      - name: Compare LLVM Symbolic
+#        continue-on-error: true
+#        run: |
+#          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
       - name: Collect Stats
         continue-on-error: true
