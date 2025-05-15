@@ -295,10 +295,10 @@ theorem trunc_shl_shl_var_thm (e e_1 : IntW 64) :
 theorem PR44545_thm (e e_1 : IntW 32) :
   add
       (trunc 16
-        (select (icmp IntPredicate.eq e_1 (const? 32 0)) (const? 32 0)
+        (select (icmp IntPred.eq e_1 (const? 32 0)) (const? 32 0)
           (add e (const? 32 1) { «nsw» := true, «nuw» := true })))
       (const? 16 (-1)) { «nsw» := true, «nuw» := false } ⊑
-    select (icmp IntPredicate.eq e_1 (const? 32 0)) (const? 16 (-1)) (trunc 16 e) := by
+    select (icmp IntPred.eq e_1 (const? 32 0)) (const? 16 (-1)) (trunc 16 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -341,7 +341,7 @@ theorem drop_both_trunc_thm (e e_1 : IntW 16) :
 
 
 theorem trunc_nuw_xor_thm (e e_1 : IntW 8) :
-  trunc 1 (LLVM.xor e_1 e) { «nsw» := false, «nuw» := true } ⊑ icmp IntPredicate.ne e_1 e := by
+  trunc 1 (LLVM.xor e_1 e) { «nsw» := false, «nuw» := true } ⊑ icmp IntPred.ne e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -351,7 +351,7 @@ theorem trunc_nuw_xor_thm (e e_1 : IntW 8) :
 
 
 theorem trunc_nsw_xor_thm (e e_1 : IntW 8) :
-  trunc 1 (LLVM.xor e_1 e) { «nsw» := true, «nuw» := false } ⊑ icmp IntPredicate.ne e_1 e := by
+  trunc 1 (LLVM.xor e_1 e) { «nsw» := true, «nuw» := false } ⊑ icmp IntPred.ne e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

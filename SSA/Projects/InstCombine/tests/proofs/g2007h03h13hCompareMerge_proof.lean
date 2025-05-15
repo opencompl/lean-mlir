@@ -12,7 +12,7 @@ set_option Elab.async false
 
 section g2007h03h13hCompareMerge_proof
 theorem test_thm (e e_1 : IntW 32) :
-  LLVM.or (icmp IntPredicate.slt e_1 e) (icmp IntPredicate.eq e_1 e) ⊑ icmp IntPredicate.sle e_1 e := by
+  LLVM.or (icmp IntPred.slt e_1 e) (icmp IntPred.eq e_1 e) ⊑ icmp IntPred.sle e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -22,7 +22,7 @@ theorem test_thm (e e_1 : IntW 32) :
 
 
 theorem test_logical_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.slt e_1 e) (const? 1 1) (icmp IntPredicate.eq e_1 e) ⊑ icmp IntPredicate.sle e_1 e := by
+  select (icmp IntPred.slt e_1 e) (const? 1 1) (icmp IntPred.eq e_1 e) ⊑ icmp IntPred.sle e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

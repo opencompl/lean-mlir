@@ -11,7 +11,7 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 
 section g2004h08h10hBoolSetCC_proof
-theorem test_thm (e : IntW 1) : icmp IntPredicate.ult e (const? 1 0) ⊑ const? 1 0 := by
+theorem test_thm (e : IntW 1) : icmp IntPred.ult e (const? 1 0) ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

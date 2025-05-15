@@ -12,7 +12,7 @@ set_option Elab.async false
 
 section gsminhicmp_proof
 theorem eq_smin1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (select (icmp IntPredicate.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPredicate.sle e_1 e := by
+  icmp IntPred.eq (select (icmp IntPred.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPred.sle e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -22,7 +22,7 @@ theorem eq_smin1_thm (e e_1 : IntW 32) :
 
 
 theorem eq_smin2_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (select (icmp IntPredicate.slt e_1 e) e_1 e) e ⊑ icmp IntPredicate.sle e e_1 := by
+  icmp IntPred.eq (select (icmp IntPred.slt e_1 e) e_1 e) e ⊑ icmp IntPred.sle e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -32,9 +32,9 @@ theorem eq_smin2_thm (e e_1 : IntW 32) :
 
 
 theorem eq_smin3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
-    icmp IntPredicate.sle (add e_1 (const? 32 3)) e := by
+  icmp IntPred.eq (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPred.sle (add e_1 (const? 32 3)) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -44,9 +44,9 @@ theorem eq_smin3_thm (e e_1 : IntW 32) :
 
 
 theorem eq_smin4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
-    icmp IntPredicate.sle (add e_1 (const? 32 3)) e := by
+  icmp IntPred.eq (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPred.sle (add e_1 (const? 32 3)) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -56,7 +56,7 @@ theorem eq_smin4_thm (e e_1 : IntW 32) :
 
 
 theorem sge_smin1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sge (select (icmp IntPredicate.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPredicate.sge e e_1 := by
+  icmp IntPred.sge (select (icmp IntPred.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPred.sge e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -66,7 +66,7 @@ theorem sge_smin1_thm (e e_1 : IntW 32) :
 
 
 theorem sge_smin2_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sge (select (icmp IntPredicate.slt e_1 e) e_1 e) e ⊑ icmp IntPredicate.sge e_1 e := by
+  icmp IntPred.sge (select (icmp IntPred.slt e_1 e) e_1 e) e ⊑ icmp IntPred.sge e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -76,9 +76,9 @@ theorem sge_smin2_thm (e e_1 : IntW 32) :
 
 
 theorem sge_smin3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sle (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
-    icmp IntPredicate.sge e (add e_1 (const? 32 3)) := by
+  icmp IntPred.sle (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPred.sge e (add e_1 (const? 32 3)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -88,9 +88,9 @@ theorem sge_smin3_thm (e e_1 : IntW 32) :
 
 
 theorem sge_smin4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sle (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
-    icmp IntPredicate.sge e (add e_1 (const? 32 3)) := by
+  icmp IntPred.sle (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPred.sge e (add e_1 (const? 32 3)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -100,7 +100,7 @@ theorem sge_smin4_thm (e e_1 : IntW 32) :
 
 
 theorem ne_smin1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (select (icmp IntPredicate.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPredicate.sgt e_1 e := by
+  icmp IntPred.ne (select (icmp IntPred.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPred.sgt e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -110,7 +110,7 @@ theorem ne_smin1_thm (e e_1 : IntW 32) :
 
 
 theorem ne_smin2_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (select (icmp IntPredicate.slt e_1 e) e_1 e) e ⊑ icmp IntPredicate.sgt e e_1 := by
+  icmp IntPred.ne (select (icmp IntPred.slt e_1 e) e_1 e) e ⊑ icmp IntPred.sgt e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -120,9 +120,9 @@ theorem ne_smin2_thm (e e_1 : IntW 32) :
 
 
 theorem ne_smin3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
-    icmp IntPredicate.sgt (add e_1 (const? 32 3)) e := by
+  icmp IntPred.ne (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPred.sgt (add e_1 (const? 32 3)) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -132,9 +132,9 @@ theorem ne_smin3_thm (e e_1 : IntW 32) :
 
 
 theorem ne_smin4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
-    icmp IntPredicate.sgt (add e_1 (const? 32 3)) e := by
+  icmp IntPred.ne (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPred.sgt (add e_1 (const? 32 3)) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -144,7 +144,7 @@ theorem ne_smin4_thm (e e_1 : IntW 32) :
 
 
 theorem slt_smin1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.slt (select (icmp IntPredicate.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPredicate.slt e e_1 := by
+  icmp IntPred.slt (select (icmp IntPred.slt e_1 e) e_1 e) e_1 ⊑ icmp IntPred.slt e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -154,7 +154,7 @@ theorem slt_smin1_thm (e e_1 : IntW 32) :
 
 
 theorem slt_smin2_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.slt (select (icmp IntPredicate.slt e_1 e) e_1 e) e ⊑ icmp IntPredicate.slt e_1 e := by
+  icmp IntPred.slt (select (icmp IntPred.slt e_1 e) e_1 e) e ⊑ icmp IntPred.slt e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -164,9 +164,9 @@ theorem slt_smin2_thm (e e_1 : IntW 32) :
 
 
 theorem slt_smin3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sgt (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
-    icmp IntPredicate.slt e (add e_1 (const? 32 3)) := by
+  icmp IntPred.sgt (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+    icmp IntPred.slt e (add e_1 (const? 32 3)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -176,9 +176,9 @@ theorem slt_smin3_thm (e e_1 : IntW 32) :
 
 
 theorem slt_smin4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sgt (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
-    icmp IntPredicate.slt e (add e_1 (const? 32 3)) := by
+  icmp IntPred.sgt (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+    icmp IntPred.slt e (add e_1 (const? 32 3)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -188,7 +188,7 @@ theorem slt_smin4_thm (e e_1 : IntW 32) :
 
 
 theorem sle_smin1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sle (select (icmp IntPredicate.slt e_1 e) e_1 e) e_1 ⊑ const? 1 1 := by
+  icmp IntPred.sle (select (icmp IntPred.slt e_1 e) e_1 e) e_1 ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -198,7 +198,7 @@ theorem sle_smin1_thm (e e_1 : IntW 32) :
 
 
 theorem sle_smin2_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sle (select (icmp IntPredicate.slt e_1 e) e_1 e) e ⊑ const? 1 1 := by
+  icmp IntPred.sle (select (icmp IntPred.slt e_1 e) e_1 e) e ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -208,8 +208,8 @@ theorem sle_smin2_thm (e e_1 : IntW 32) :
 
 
 theorem sle_smin3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sge (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+  icmp IntPred.sge (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
     const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
@@ -220,8 +220,8 @@ theorem sle_smin3_thm (e e_1 : IntW 32) :
 
 
 theorem sle_smin4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sge (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+  icmp IntPred.sge (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
     const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
@@ -232,7 +232,7 @@ theorem sle_smin4_thm (e e_1 : IntW 32) :
 
 
 theorem sgt_smin1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sgt (select (icmp IntPredicate.slt e_1 e) e_1 e) e_1 ⊑ const? 1 0 := by
+  icmp IntPred.sgt (select (icmp IntPred.slt e_1 e) e_1 e) e_1 ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -242,7 +242,7 @@ theorem sgt_smin1_thm (e e_1 : IntW 32) :
 
 
 theorem sgt_smin2_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.sgt (select (icmp IntPredicate.slt e_1 e) e_1 e) e ⊑ const? 1 0 := by
+  icmp IntPred.sgt (select (icmp IntPred.slt e_1 e) e_1 e) e ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -252,8 +252,8 @@ theorem sgt_smin2_thm (e e_1 : IntW 32) :
 
 
 theorem sgt_smin3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.slt (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
+  icmp IntPred.slt (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt (add e_1 (const? 32 3)) e) (add e_1 (const? 32 3)) e) ⊑
     const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
@@ -264,8 +264,8 @@ theorem sgt_smin3_thm (e e_1 : IntW 32) :
 
 
 theorem sgt_smin4_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.slt (add e_1 (const? 32 3))
-      (select (icmp IntPredicate.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
+  icmp IntPred.slt (add e_1 (const? 32 3))
+      (select (icmp IntPred.slt e (add e_1 (const? 32 3))) e (add e_1 (const? 32 3))) ⊑
     const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
