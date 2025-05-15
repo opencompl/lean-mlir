@@ -72,15 +72,6 @@ jobs:
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
 
-      - name: Run HDel
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j48)
-
-      - name: Compare HDEl
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
-
       - name: Run LLVM
         continue-on-error: true
         run: |
@@ -95,6 +86,7 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           script: |
+            const fs = require('fs')
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -107,6 +99,16 @@ jobs:
         with:
           name: LLVM evaluation
           path: bv-evaluation/results
+
+      - name: Run HDel
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j48)
+
+      - name: Compare HDEl
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+
 
 #      - name: Run LLVM Symbolic
 #        continue-on-error: true
