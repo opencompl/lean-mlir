@@ -1,11 +1,82 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import SSA.Core.Framework.Trace
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 
 open Lean
 open Lean.Elab.Tactic
+
+/-! ## `elim_poison_bind`-/
+
+open PoisonOr in
+/-- Specialized theorem for use in `elim_poison_bind`.
+By specializing it to exactly the shape of goal we need, we both reduce some
+boilerplate in its application, and potentially make the proof slightly faster
+to check (as the kernel won't need to reduce anything).
+-/
+theorem LLVM.IntW.bind_isRefinedBy_of {v w : Nat}
+    (x : PoisonOr (BitVec v)) (f : BitVec v → PoisonOr (BitVec w))
+    (rhs : PoisonOr (BitVec w)) :
+    (∀ x', x = value x' → f x' ⊑ rhs) → bind x f ⊑ rhs := by
+  cases x <;> simp
+
+open Meta in
+/--
+`simp_alive_case_bash` repeatedly tries to apply `LLVM.IntW.bind_isRefinedBy_if`,
+to show that a `PoisonOr`-typed variable *must* be a value (rather than poison).
+
+Whenever the application succeeds, we introduce the new `BitVec` variable using
+the same (accessible) name as the `PoisonOr` variable it replaces.
+-/
+elab "simp_alive_case_bash" : tactic => do
+  let (_, goal) ← (← getMainGoal).intros
+  replaceMainGoal [goal]
+  let mut newXs := #[]
+  while true do
+    let res? ← withMainContext do
+      let v ← mkFreshExprMVar none
+      let w ← mkFreshExprMVar none
+      let x ← mkFreshExprMVar none
+      let f ← mkFreshExprMVar none
+      let rhs ← mkFreshExprMVar none
+      let lem := mkApp5 (mkConst ``LLVM.IntW.bind_isRefinedBy_of) v w x f rhs
+      let oldGoal ← getMainGoal
+      let newGoals ←
+        try oldGoal.apply lem
+        catch e =>
+          trace[LeanMLIR.Elab] e.toMessageData
+          return none -- exit the loop
+
+      let x := (← instantiateMVars x).consumeMData
+      if !x.isFVar then
+        trace[LeanMLIR.Elab] "Expected an fvar, but found: {x}. Aborting..."
+        oldGoal.eraseAssignment -- undo the application
+        return none -- exit the loop
+      let [ goal ] := newGoals
+        | throwError "Expected exactly one subgoal, but found: {newGoals}"
+
+      let (x, goal) ← goal.intro (← getUnusedUserName `x)
+      replaceMainGoal [goal]
+      evalTactic <|<- `(tactic| (
+        intro h; subst h; -- Eliminate the old variable
+        simp (config:={failIfUnchanged := false}) -implicitDefEqProofs only [
+          simp_llvm, simp_llvm_case_bash]
+        -- ^^ simplify
+      ))
+      return some x -- continue the loop
+    if let some x := res? then
+      newXs := newXs.push x
+    else
+      break
+
+  if !(← getUnsolvedGoals).isEmpty then
+    -- Now revert all newly introduced BitVec variables
+    let ⟨_, goal⟩ ← (← getMainGoal).revert newXs
+    replaceMainGoal [goal]
+
+/-! ## Case Bashing-/
 
 attribute [simp_llvm_case_bash]
   bind_assoc forall_const Nat.cast_one
@@ -61,34 +132,6 @@ macro_rules
                                 --   we are left with a universally quantified goal of the form:
                                 --   `∀ (x₁ : BitVec _) ... (xₙ : BitVec _), ...`
     )
-
-def revertIntW (g : MVarId) : MetaM (Array FVarId × MVarId) := do
-  let type ← g.getType
-  let (_, fvars) ← type.forEachWhere Expr.isFVar collector |>.run {}
-  g.revert fvars.toArray
-where
-  collector (e : Expr) : StateT (Std.HashSet FVarId) MetaM Unit := do
-    let fvarId := e.fvarId!
-    let typ ← fvarId.getType
-    match_expr typ with
-    | LLVM.IntW _ =>
-      modify fun s => s.insert fvarId
-    | _ => return ()
-
-elab "revert_intw" : tactic => do
-  let g ← getMainGoal
-  let (_, g') ← revertIntW g
-  replaceMainGoal [g']
-
-syntax "simp_alive_case_bash" : tactic
-macro_rules
-  | `(tactic| simp_alive_case_bash) => `(tactic|
-    (
-      revert_intw
-      simp_alive_case_bash'
-    )
-  )
-
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
 macro "simp_alive_undef" : tactic =>

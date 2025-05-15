@@ -45,8 +45,8 @@ def casesOn'.{u} {α : Type} {motive : PoisonOr α → Sort u}
   · rintro ⟨⟩; rfl
   · exact fun h => h ▸ rfl
 
-theorem poison_ne_value (a : α) : poison ≠ value a := by rintro ⟨⟩
-theorem value_ne_poison (a : α) : value a ≠ poison := by rintro ⟨⟩
+@[simp] theorem poison_ne_value (a : α) : poison ≠ value a := by rintro ⟨⟩
+@[simp] theorem value_ne_poison (a : α) : value a ≠ poison := by rintro ⟨⟩
 
 @[simp]
 theorem ite_value_value {c : Prop} [Decidable c] {a b : α} :
