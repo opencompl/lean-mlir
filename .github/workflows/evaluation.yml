@@ -42,6 +42,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-matplotlib python3-pandas python3-num2words ripgrep
+          sudo apt install npm
+          sudo npm install fs
 
       - name: Get Cache
         continue-on-error: true
@@ -89,8 +91,6 @@ jobs:
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
-
-      - run: npm install fs
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
