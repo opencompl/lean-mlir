@@ -99,7 +99,7 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨false⟩        => "udiv"
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
-    (if prec >= max_prec then 1 else 2) f!"InstCombine.{op}"))
+    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
 /- Changed this to use the "llvm" prefix for better pretty-printing.
 This affects every use of `Repr` for `MOp.BinaryOp`, which may not be desirable.
 TODO: Consider whether this change is acceptable globally.

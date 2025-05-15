@@ -298,9 +298,7 @@ partial def Com.toString (_com : Com d Γ eff t) : String :=
     ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n" -- first we format the context
     ++ (comToStringAux _com) ++ -- then we print the com
     "\n }"
-
-
-
+    
 instance : ToString (Com d Γ eff t)  where toString := Com.toString
 instance : ToString (Expr d Γ eff t) where toString := Expr.toString1
 

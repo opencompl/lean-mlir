@@ -5,20 +5,19 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Vector.Basic
 -- import Mathlib.Tactic
 
-
 /--
   A general type that is either a concrete known value of type `α`, or one of `φ` metavariables
  -/
 inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | concrete (a : α)
   | mvar (i : Fin φ)
-  deriving DecidableEq, Inhabited, Lean.ToExpr
-
+  deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+/-
 instance : Repr (ConcreteOrMVar Nat φ) where
   reprPrec x _prec :=
     match x with
     | .concrete a => f!"i{a}"
-    | .mvar i => f!"mvar({i})"
+    | .mvar i => f!"mvar({i})" -/
 
 open Lean in
 instance : ToFormat (ConcreteOrMVar Nat φ) where
