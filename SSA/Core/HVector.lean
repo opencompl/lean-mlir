@@ -70,6 +70,23 @@ def foldld {β : Type*} (B : β → Type*) (fType : β → α → β)
   | [], .nil, _, init         => init
   | _::_, .cons a as, _, init => foldld B fType fElem as (fElem init a)
 
+def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
+    ∀ {l : List α}, (init : B) → (as : HVector A l) → m B
+  | [],   b, .nil       => return b
+  | t::_, b, .cons a as => do foldlM f (← f t b a) as
+
+/--
+Simultaneous map on the type and value level of an HVector while
+performing monadic effects for value translation.-/
+def mapM' [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
+    {l : List α}
+    {F : α → β}
+    (f : (a : α) → (v : A a) → m (B (F a)) )
+    (as : HVector A l) : m (HVector B (F <$> l)) :=
+  match l, as with
+  | [], .nil => return .nil
+  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM' f as)
+
 def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .nil, i => i.elim0
   | .cons x  _, ⟨0,   _⟩  => x
@@ -221,6 +238,5 @@ instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     toExpr }
 
 end ToExprPi
-
 
 end HVector

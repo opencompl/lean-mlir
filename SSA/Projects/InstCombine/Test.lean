@@ -273,7 +273,6 @@ def one_inst_stmt (e : LLVM.IntW w) :
 def one_inst_com_proof (w : Nat) :
     one_inst_com w ⊑ one_inst_com w := by
   unfold one_inst_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply one_inst_stmt
 
@@ -304,7 +303,6 @@ def two_inst_stmt (e : LLVM.IntW w) :
 def two_inst_com_proof (w : Nat) :
     two_inst_com w ⊑ two_inst_com w := by
   unfold two_inst_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply two_inst_stmt
 
@@ -338,7 +336,6 @@ def three_inst_stmt (e : LLVM.IntW w) :
 def three_inst_com_proof (w : Nat) :
     three_inst_com w ⊑ three_inst_com w := by
   unfold three_inst_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply three_inst_stmt
 
@@ -367,7 +364,6 @@ def one_inst_concrete_stmt :
 def one_inst_concrete_com_proof :
     one_inst_concrete_com ⊑ one_inst_concrete_com := by
   unfold one_inst_concrete_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
@@ -398,7 +394,6 @@ def two_inst_concrete_stmt (e : LLVM.IntW w) :
 def two_inst_concrete_com_proof :
     two_inst_concrete_com w ⊑ two_inst_concrete_com w := by
   unfold two_inst_concrete_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
@@ -432,7 +427,6 @@ def three_inst_concrete_stmt (e : LLVM.IntW 1) :
 def three_inst_concrete_com_proof :
     three_inst_concrete_com ⊑ three_inst_concrete_com := by
   unfold three_inst_concrete_com
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   apply three_inst_concrete_stmt
 

@@ -75,12 +75,16 @@ section Lemmas
 
 @[simp]
 theorem bind_if_then_poison_eq_ite_bind (p : Prop) [Decidable p] (x : PoisonOr α) :
-    bind (self := no_index inferInstance) (if p then poison else x) f = if p then poison else x >>= f := by
+    (if p then poison else x : no_index _) >>= f = if p then poison else x >>= f := by
+-- /---------------------------^^^^^^^^^^
+-- NOTE: the if-then-else has an implicit type argument, which will be `PoisonOr α`,
+-- that is normally indexed in the discr_tree. Since we want this rewrite to apply
+-- when this type is, say, LLVM.IntW, we ensure it is not indexed, using `no_index`
   split <;> simp
 
 @[simp]
 theorem bind_if_else_poison_eq_ite_bind (p : Prop) [Decidable p] (x : PoisonOr α) :
-    (if p then x else poison) >>= f = if p then x >>= f else poison := by
+    (if p then x else poison : no_index _) >>= f = if p then x >>= f else poison := by
   split <;> simp
 
 @[simp] theorem bind₂_poison_left : bind₂ poison b? f = poison := rfl

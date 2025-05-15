@@ -106,6 +106,9 @@ inductive Ty
 | valuetokenstream (Ty2 : Ty2) : Ty -- A product of streams of values of type `Ty2`.
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
+instance : ToString Ty where
+  toString t := repr t |>.pretty
+  
 inductive Op
 | fst
 | snd

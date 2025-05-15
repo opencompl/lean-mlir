@@ -206,6 +206,9 @@ toType := fun
 |  Ty2.bool => Bool
 |  Ty2.token => Unit
 
+instance : ToString Ty where
+  toString t := repr t |>.pretty
+
 inductive Op
 | fst (t : Ty2)
 | snd (t : Ty2)

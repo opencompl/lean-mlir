@@ -35,9 +35,12 @@ section Monads
   errors.
 -/
 
-abbrev ExceptM  (d : Dialect) := Except (TransformError d.Ty)
+abbrev ExceptM  (_ : Dialect) := Except TransformError
 abbrev BuilderM (d : Dialect) := StateT NameMapping (ExceptM d)
 abbrev ReaderM  (d : Dialect) := ReaderT NameMapping (ExceptM d)
+
+instance : Inhabited (ReaderT NameMapping (ExceptM d) α) where
+  default := throw <| .generic ""
 
 instance {d : Dialect} : MonadLift (ReaderM d) (BuilderM d) where
   monadLift x := do (ReaderT.run x (←get) : ExceptM ..)
@@ -89,6 +92,8 @@ def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
   set nm
   return ⟨DerivedCtxt.ofCtxt Γ |>.snoc ty, Ctxt.Var.last ..⟩
 
+variable [ToString d.Ty]
+
 /--
   Look up a name from the name mapping, and return the corresponding variable in the given context.
 
@@ -109,7 +114,7 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
     if h : t = expectedType then
       return ⟨index, by simp only [get?, ← h]; rw [←List.getElem?_eq_getElem]⟩
     else
-      throw <| .typeError expectedType t
+      throw <| .typeError (toString expectedType) (toString t)
 
 def BuilderM.isOk {α : Type} (x : BuilderM d α) : Bool :=
   match x.run [] with

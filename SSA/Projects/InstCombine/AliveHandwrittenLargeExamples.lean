@@ -114,7 +114,6 @@ def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
 def alive_simplifyMulDivRem805 (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_ops
   simp_alive_undef
@@ -220,7 +219,6 @@ info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
 def alive_simplifyMulDivRem805' (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_ops
   simp_alive_undef
@@ -355,7 +353,6 @@ def MulDivRem290_rhs (w : ℕ) :
 def alive_simplifyMulDivRem290 (w : Nat) :
   MulDivRem290_lhs w ⊑ MulDivRem290_rhs w := by
   unfold MulDivRem290_lhs MulDivRem290_rhs
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
@@ -408,7 +405,6 @@ def AndOrXor2515_rhs (w : ℕ) :
 def alive_simplifyAndOrXor2515 (w : Nat) :
   AndOrXor2515_lhs w ⊑ AndOrXor2515_rhs w := by
   simp only [AndOrXor2515_lhs, AndOrXor2515_rhs]
-  simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
@@ -502,7 +498,7 @@ private theorem zero_lt_toInt_iff {x : BitVec w} :
 
 def alive_simplifySelect764 (w : Nat) :
     Select746_lhs w ⊑ Select746_rhs w := by
-  simp only [Select746_lhs, Select746_rhs, simp_llvm_wrap]
+  simp only [Select746_lhs, Select746_rhs]
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
