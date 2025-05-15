@@ -15,6 +15,8 @@ permissions:
 jobs:
   build:
     name: Evaluation of Tactics & Decision Procedures
+    permissions:
+      pull-requests: write
     # Use expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-self-hosted-runners
     runs-on: self-hosted
@@ -51,6 +53,34 @@ jobs:
         run: |
           lake -R build
 
+      - name: Run LLVM
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j48)
+
+      - name: Compare LLVM
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
+
+      - uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs')
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: fs.readFileSync('bv-evaluation/llvm-stats', 'utf8')
+            })
+
+      - name: Upload LLVM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LLVM evaluation
+          path: bv-evaluation/results
+
       - name: Run Alive Symbolic
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j48)
@@ -78,25 +108,15 @@ jobs:
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
 
-      - name: Run LLVM
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j48)
+#    - name: Run LLVM Symbolic
+#        continue-on-error: true
+#        run: |
+#          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j48)
 
-      - name: Compare LLVM
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py)
-
-      - name: Run LLVM Symbolic
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j48)
-
-      - name: Compare LLVM Symbolic
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
+#      - name: Compare LLVM Symbolic
+#        continue-on-error: true
+#        run: |
+#          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
       - name: Collect Stats
         continue-on-error: true
