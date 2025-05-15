@@ -100,13 +100,7 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
     (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
-/- Changed this to use the "llvm" prefix for better pretty-printing.
-This affects every use of `Repr` for `MOp.BinaryOp`, which may not be desirable.
-TODO: Consider whether this change is acceptable globally.
-An alternative would be to introduce a separate `Serialize` typeclass that is same as `Repr` but uses the "llvm.{op}" format,
-while keeping `Repr` more verbose "InstCombine.MOp.BinaryOp.{op}". -/
-
-    prec
+  prec
 
 instance : Repr (MOp.BinaryOp) where
   reprPrec := reprWithoutFlags
@@ -150,11 +144,13 @@ def toStringWithoutFlags (op : MOp.BinaryOp) : String :=
 instance : ToString (MOp.BinaryOp) where
   toString := toStringWithoutFlags
 
+instance : ToString (MOp.UnaryOp (φ : Nat)) where
+  toString t := repr t |>.pretty
 
 instance : ToString (MOp 0) where
    toString  op :=
      match op with
-     | .unary _w op => s!"\"{repr op}\""
+     | .unary _w op => s!"\"{toString op}\""
      | .binary _w op => s!"\"{toString  op}\""
      | .select  _w =>  "select"
      | .icmp  _pred _w =>  "icmp"

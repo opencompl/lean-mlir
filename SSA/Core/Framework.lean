@@ -276,38 +276,39 @@ variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty][ToString d.Ty][ToStrin
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
   let args := (List.range ts.length).zip ts |>.map
-    (fun (i, t) => s!"%{i} : {toString t}") -- assumes toString function for types. -- tried using it with naming but then difficult to track.
+    (fun (i, t) => s!"%{i} : {toString t}")
   "(" ++ String.intercalate ", " args ++ ")"
+/--
+Converts an expression to its string representation.
+Assumes that `toString` instances exist for both the dialect's operations (`d.Op`)
+and types (`d.Ty`). The output includes the operation name, argument list,
+their types, and the resulting output type.
+-/
+partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
+  | Expr.mk (op : d.Op) _ _ args _regArgs =>
+    let outTy : d.Ty  := DialectSignature.outTy op
+    let argTys := DialectSignature.sig op
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({ToString.toString outTy})"
 
-  partial def Expr.toString1 [ToString d.Op] : Expr d Γ eff t → String
-    | Expr.mk (op : d.Op) _ _ args regArgs =>
-        let outTy : d.Ty  := DialectSignature.outTy op
-        let argTys := DialectSignature.sig op
+/-- This function recursivly converts the body of a `Com` into its string representation.
+Each bound variable is printed with its index and corresponding expression. -/
+partial def Com.ToStringBody : Com d Γ eff t → String
+  | .ret v => s!"return {_root_.repr v } : ({toString t}) → ()"
+  | .var e body =>
+    s!"%{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+    Com.ToStringBody body
 
-      s!"{toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({toString outTy})"
-
-partial def comToStringAux : Com d Γ eff t → String
-    | .ret v => s!"return {repr v } : ({toString t}) → ()" -- this line is safe to use repr
-    | .var e body =>
-      s!"%{repr <|(Γ.length)} = {Expr.toString1 e }" ++ "\n" ++
-      comToStringAux body
-
--- skip region args for the momennt.
+/- This function implements a toString instance for the type `Com`.  -/
 partial def Com.toString (_com : Com d Γ eff t) : String :=
-    "{ \n"
-    ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n" -- first we format the context
-    ++ (comToStringAux _com) ++ -- then we print the com
-    "\n }"
-    
+   "{ \n"
+  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n" -- first we format the context
+  ++ (Com.ToStringBody _com) ++ -- then we print the com
+   "\n }"
+
 instance : ToString (Com d Γ eff t)  where toString := Com.toString
-instance : ToString (Expr d Γ eff t) where toString := Expr.toString1
+instance : ToString (Expr d Γ eff t) where toString := Expr.toString
 
 end ToString
-
-
-
-
-
 
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
