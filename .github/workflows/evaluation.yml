@@ -51,6 +51,16 @@ jobs:
         run: |
           lake -R build
 
+      - name: Run LLVM
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j48)
+
+      - name: Compare LLVM
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-llvm.py)
+
       - name: Run Alive Symbolic
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j48)
@@ -77,16 +87,6 @@ jobs:
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
-
-      - name: Run LLVM
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j48)
-
-      - name: Compare LLVM
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py)
 
       - name: Run LLVM Symbolic
         continue-on-error: true
