@@ -54,24 +54,6 @@ jobs:
         run: |
           lake -R build
 
-      - name: Run Alive Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j48)
-
-      - name: Compare Alive All
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
-
-      - name: Run HDel Symbolic
-        run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j48)
-
-      - name: Compare HDEl Symbolic
-        continue-on-error: true
-        run: |
-          (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
-
       - name: Run LLVM
         continue-on-error: true
         run: |
@@ -100,6 +82,15 @@ jobs:
           name: LLVM evaluation
           path: bv-evaluation/results
 
+      - name: Run Alive Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j48)
+
+      - name: Compare Alive All
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-alive.py > /dev/null)
+
       - name: Run HDel
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j48)
@@ -108,6 +99,15 @@ jobs:
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+
+      - name: Run HDel Symbolic
+        run: |
+          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel-sym.py -j48)
+
+      - name: Compare HDEl Symbolic
+        continue-on-error: true
+        run: |
+          (cd bv-evaluation; python3 ./collect-data-hdel-symbolic.py > /dev/null)
 
 
 #      - name: Run LLVM Symbolic
