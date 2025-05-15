@@ -454,20 +454,13 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   by_cases h : w = 0
   · subst h
     simp
-  ·
-    simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
+  · simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
     Nat.self_sub_mod]
     have h' := @Int.add_emod_right (-1) (2^w)
     rw [← h', ← Int.tmod_eq_emod_of_nonneg (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
       Int.add_comm]
     norm_cast
-    simp only [Nat.cast_pow, Nat.cast_ofNat, Int.reduceNeg]
-    simp only [Int.reduceNegSucc, Int.reduceNeg]
-    rw [Int.add_neg_eq_sub]
-    norm_cast
-    rw [Int.subNatNat_eq_coe]
-    simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.succ_eq_add_one, zero_add, Nat.cast_one,
-      Int.pred_toNat]
+    simp only [Int.reduceNegSucc, Int.add_neg_eq_sub, Int.pred_toNat]
     norm_cast
 
 @[simp]
