@@ -73,6 +73,12 @@ jobs:
               body: fs.readFileSync('bv-evaluation/llvm-stats', 'utf8')
             })
 
+      - name: Upload LLVM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LLVM evaluation
+          path: bv-evaluation/results
+
       - name: Run Alive Symbolic
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j48)
