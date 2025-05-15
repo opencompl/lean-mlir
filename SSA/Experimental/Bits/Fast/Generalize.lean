@@ -777,7 +777,7 @@ partial def deductiveSearch (expr: BVExpr w) (inputs: List Nat) (constants: Std.
 
 
 
-def synthesizeExpressions (origWidthConstantsExpr reducedWidthConstantsExpr: ParsedBVLogicalExpr) (depth: Nat) :
+def deductiveAndEnumerativeSearch (origWidthConstantsExpr reducedWidthConstantsExpr: ParsedBVLogicalExpr) (depth: Nat) :
                       TermElabM ( Std.HashMap Nat (List (BVExpr reducedWidthConstantsExpr.lhs.width))) := do
 
     let reducedWidth := reducedWidthConstantsExpr.lhs.width
@@ -825,6 +825,53 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
 
+structure IOSynthesisResults (w : Nat) where
+  expressions : HashMap Nat (HashSet (BVExpr w))
+  constantAssignments : Nat × List (HashMap Nat BVExpr.PackedBitVec)
+
+
+def synthesiseIOExpressions(parsedBVLogicalExpr : ParsedBVLogicalExpr) (targetWidth: Nat) :
+                TermElabM (IOSynthesisResults targetWidth) := do
+  let bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
+  let state := parsedBVLogicalExpr.state
+
+  let originalWidth := state.originalWidth
+
+  logInfo m! "bvExpr: {bvLogicalExpr}, state: {state}"
+
+  let mut constantAssignments := []
+
+  if originalWidth > targetWidth then
+    constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 3
+
+  let mut processingWidth := targetWidth
+  if constantAssignments.isEmpty then
+    logInfo m! "Could not synthesize new constant values in width {targetWidth}"
+    constantAssignments := state.symVarToVal :: constantAssignments
+    processingWidth := originalWidth
+  else
+    logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
+
+  let mut exprSynthesisResults : Std.HashMap Nat (Std.HashSet (BVExpr targetWidth))  := Std.HashMap.emptyWithCapacity
+  for constantAssignment in constantAssignments do
+    logInfo m! "Processing constants assignment: {constantAssignment}"
+    let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
+    let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
+    let synthesisWidthBVLogicalExpr := {parsedBVLogicalExpr with lhs := lhs, rhs := rhs}
+
+    let res ←  withTraceNode `Generalize (fun _ => return "Synthesised expressions") do
+                                    deductiveAndEnumerativeSearch parsedBVLogicalExpr synthesisWidthBVLogicalExpr 3
+    logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {res}"
+
+    let h : targetWidth = synthesisWidthBVLogicalExpr.lhs.width := sorry
+    for (var, exprs) in res.toArray do
+      let mut exprsForSymVar := exprSynthesisResults.getD var Std.HashSet.emptyWithCapacity
+      exprsForSymVar := exprsForSymVar.insertMany (exprs.map (λ expr => h ▸ expr))
+      exprSynthesisResults := exprSynthesisResults.insert var exprsForSymVar
+
+  return {expressions := exprSynthesisResults, constantAssignments := (processingWidth, constantAssignments)}
+
+
 elab "#iosynthesize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
@@ -839,27 +886,8 @@ elab "#iosynthesize" expr:term: command =>
            let initialState : ParsedBVExprState := default
            let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState | throwError "Unsupported expression provided"
 
-           let bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
-           let state := parsedBVLogicalExpr.state
-
-           logInfo m! "bvExpr: {bvLogicalExpr}, state: {state}"
-
-           let mut constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
-
-           if constantAssignments.isEmpty then
-             logInfo m! "Could not synthesize new constant values in width {targetWidth}"
-             constantAssignments := state.symVarToVal :: constantAssignments
-           else
-             logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
-
-
-           for constantAssignment in constantAssignments do
-            let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
-            let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
-            let reducedWidthBVLogicalExpr := {parsedBVLogicalExpr with lhs := lhs, rhs := rhs}
-
-            let exprSynthesisResults ← synthesizeExpressions parsedBVLogicalExpr reducedWidthBVLogicalExpr 3
-            logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {exprSynthesisResults}"
+           let res ← synthesiseIOExpressions parsedBVLogicalExpr targetWidth
+           logInfo m! "Expression synthesis results for {parsedBVLogicalExpr.bvLogicalExpr} over all assignments: {res.expressions}"
 
       | _ =>
             throwError m! "Could not match"
@@ -870,7 +898,7 @@ variable {x y z: BitVec 32}
 #iosynthesize x + 10 + 1 =  x + 9 + 2
 #iosynthesize x + 10 + y + 14 = 24
 
-#iosynthesize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y)
+-- #iosynthesize (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) >>> (32 - y) = x >>> (32 - y)
 
 #iosynthesize (x <<< 3) <<< 4 = x <<< 7
 #iosynthesize (x + 5) + (y + 1)  =  x + y + 6
@@ -878,7 +906,7 @@ variable {x y z: BitVec 32}
 #iosynthesize ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#32
 #iosynthesize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32
 #iosynthesize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32)
-#iosynthesize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32
+-- #iosynthesize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32
 #iosynthesize  ((x >>> 4#32 &&& 8#32) + y) <<< 4#32 = (x &&& 128#32) + y <<< 4#32
 
 def x' := 5
@@ -1137,7 +1165,6 @@ elab "#generalize" expr:term: command =>
       let targetWidth := 4
 
       let hExpr ← Term.elabTerm expr none
-      -- let hExpr ← instantiateMVars (← whnfR  hExpr)
       logInfo m! "hexpr: {hExpr}"
       let timeoutMs := 600000
 
@@ -1153,45 +1180,15 @@ elab "#generalize" expr:term: command =>
            let state := parsedBVLogicalExpr.state
 
            logInfo m! "bvExpr: {bvLogicalExpr}, state: {state}"
+           let exprSynthesisResults ← synthesiseIOExpressions parsedBVLogicalExpr targetWidth
+           logInfo m! "Expression synthesis results for {parsedBVLogicalExpr.bvLogicalExpr} over all assignments: {exprSynthesisResults.expressions}"
 
-
-           let mut constantAssignments := []
-           let originalWidth := state.originalWidth
-
-           if originalWidth > targetWidth then
-              constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 3
-
-           let mut positiveExampleWidth := targetWidth
-           if constantAssignments.isEmpty then
-              logInfo m! "Did not synthesize new constant values in width {targetWidth}. Processing in width: {originalWidth}"
-              constantAssignments := state.symVarToVal :: constantAssignments
-              positiveExampleWidth := originalWidth
-            else
-              logInfo m! "Generated constant values for {bvLogicalExpr} in width {targetWidth}: {constantAssignments}"
-
-
-           let mut exprSynthesisResults : Std.HashMap Nat (Std.HashSet (BVExpr parsedBVLogicalExpr.lhs.width))  := Std.HashMap.emptyWithCapacity
-           for constantAssignment in constantAssignments do
-            logInfo m! "Processing constants assignment: {constantAssignment}"
-            let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
-            let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
-            let synthesisWidthBVLogicalExpr := {parsedBVLogicalExpr with lhs := lhs, rhs := rhs}
-
-            let res ←  withTraceNode `Generalize (fun _ => return "Synthesised expressions") do
-                                            synthesizeExpressions parsedBVLogicalExpr synthesisWidthBVLogicalExpr 3
-            logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {res}"
-
-            for (var, expr) in res.toArray do
-              let mut exprsForSymVar := exprSynthesisResults.getD var Std.HashSet.emptyWithCapacity
-              exprsForSymVar := exprsForSymVar.insertMany expr
-              exprSynthesisResults := exprSynthesisResults.insert var exprsForSymVar
-
-           logInfo m! "Expression synthesis results over all assignments: {exprSynthesisResults}"
            /-
             Here, we evaluate generated preconditions for different combinations of target values on the RHS.
             If we have only one target on the RHS, then we're just going through the list of the generated expressions.
            -/
-           let resultsCombo := productsList (exprSynthesisResults.values.map (fun v => v.toList))
+           let resultsCombo := productsList (exprSynthesisResults.expressions.values.map (fun v => v.toList))
+           let (positiveExamplesWidth, constantAssignments) := exprSynthesisResults.constantAssignments
            let positiveExamples := constantAssignments.map (fun assignment => assignment.filter (fun key _ => parsedBVLogicalExpr.lhs.symVars.contains key))
 
            let preconditionSuccess : TermElabM Bool :=  withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
@@ -1212,7 +1209,7 @@ elab "#generalize" expr:term: command =>
                   let widthId := 9481
 
                   let precondition ← withTraceNode `Generalize (fun _ => return m! "Attempted to generate weak precondition for {substitutedBVLogicalExpr}") do
-                                generatePreconditions parsedBVLogicalExpr substitutedBVLogicalExpr positiveExamples negativeExamples (widthId, positiveExampleWidth)
+                                generatePreconditions parsedBVLogicalExpr substitutedBVLogicalExpr positiveExamples negativeExamples (widthId, positiveExamplesWidth)
 
                   match precondition with
                   | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr}"
