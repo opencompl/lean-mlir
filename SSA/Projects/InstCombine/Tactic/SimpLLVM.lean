@@ -138,6 +138,12 @@ attribute [simp_llvm]
   -- Bool
   Bool.or_eq_true Bool.and_eq_true
   beq_iff_eq bne_iff_ne
+  -- Other general simp lemmas
+  reduceIte
+
+attribute [simp_llvm_split(low)]
+  PoisonOr.ite_isRefinedBy_iff
+  PoisonOr.isRefinedBy_ite_iff
 
 macro "simp_alive_split" : tactic => `(tactic|(
   all_goals

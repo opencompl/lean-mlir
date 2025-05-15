@@ -230,6 +230,24 @@ theorem value_isRefinedBy_if_else_poison_iff :
     value a ⊑ (if c then poison else b? : no_index _) ↔ ¬c ∧ (value a ⊑ b?) := by
   split <;> simp [*]
 
+/-!
+Fallback theorems for generic if-then-else; other theorems should be preferred
+as they give simpler rhs's for their specialiazed situations.
+-/
+theorem ite_isRefinedBy_iff {x? y? z? : PoisonOr α} :
+    ite c x? y? ⊑ z?
+    ↔ let c := c
+      (c → x? ⊑ z?) ∧ (¬c → y? ⊑ z?) := by
+  split <;> simp [*]
+
+theorem isRefinedBy_ite_iff {x? y? z? : PoisonOr α} :
+    x? ⊑ ite c y? z?
+    ↔ let c := c
+      (c → x? ⊑ y?) ∧ (¬c → x? ⊑ z?) := by
+  split <;> simp [*]
+
+
+
 /-
 TODO: we should consider writing a simproc that canonicalizes
 `if c then a? else poison` to `if ¬c then poison else a?` whenever `a?` is not
