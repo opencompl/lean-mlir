@@ -225,7 +225,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .nil,
                 .nil⟩⟩
       | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
-    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}" -- to do : use alexs simplified parser
+    | _ => throw <| .unsupportedOp s!"INTERNAL ERROR: Called conversion cast with
+    wrong number of args {repr opStx}"
   else
     let llvmParse := InstcombineTransformDialect.mkExpr (ctxtTransformToLLVM  Γ) opStx (← read)
     match llvmParse with
