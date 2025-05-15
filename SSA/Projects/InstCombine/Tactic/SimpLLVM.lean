@@ -106,8 +106,6 @@ macro "simp_alive_undef" : tactic =>
 attribute [simp_llvm]
   pure_bind
   BitVec.ofInt_neg_one
-  PoisonOr.bind_if_then_poison_eq_ite_bind
-  PoisonOr.bind_if_else_poison_eq_ite_bind
 
 /- Simplify away the `InstCombine` specific semantics. -/
 macro "simp_alive_ops" : tactic =>
@@ -121,13 +119,17 @@ macro "simp_alive_ops" : tactic =>
 attribute [simp_llvm]
   -- Poison lemmas
   PoisonOr.not_value_isRefinedBy_poison
+  PoisonOr.value_bind
   -- Poison ite lemmas
+  PoisonOr.ite_value_value
+  PoisonOr.bind_if_then_poison_eq_ite_bind
+  PoisonOr.bind_if_else_poison_eq_ite_bind
   PoisonOr.if_then_poison_isRefinedBy_iff
   PoisonOr.if_else_poison_isRefinedBy_iff
   PoisonOr.value_isRefinedBy_if_then_poison_iff
   PoisonOr.value_isRefinedBy_if_else_poison_iff
   -- Prop
-  not_false_eq_true ne_eq
+  not_false_eq_true not_true_eq_false ne_eq
   true_and and_true false_and and_false
   true_or or_true false_or or_false
   imp_false implies_true
