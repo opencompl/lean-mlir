@@ -89,7 +89,8 @@ jobs:
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
-          echo "LLVM_STATS=$(cat bv-evaluation/llvm-stats)" >> $GITHUB_ENV
+
+      - run: npm install fs
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -99,7 +100,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `${{env.LLVM_STATS}}`
+              body: fs.readFileSync('bv-evaluation/llvm-stats', 'utf8')
             })
 
       - name: Run LLVM Symbolic
