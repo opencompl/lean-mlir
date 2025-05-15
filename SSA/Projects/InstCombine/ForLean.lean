@@ -495,7 +495,8 @@ theorem sshiftRight_eq_setWidth_extractLsb_signExtend {w : Nat} {n : Nat} (x : B
     x.sshiftRight n =
     ((x.signExtend (w + n)).extractLsb (w - 1 + n) n).setWidth w := by
   ext i hi
-  simp [BitVec.getElem_sshiftRight, show i ≤ w - 1 by omega, BitVec.getLsbD_signExtend]
+  simp only [getElem_sshiftRight, getElem_setWidth, getLsbD_extract, add_tsub_cancel_right,
+    show i ≤ w - 1 by omega, decide_true, getLsbD_signExtend, Bool.true_and]
   by_cases hni : (n + i) < w <;> simp [hni] <;> omega
 
 theorem ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} :
@@ -517,7 +518,7 @@ theorem ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} :
 theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat } {x y : BitVec w} (h : w' ≤ w):
     BitVec.ofNat w' (x.toNat * y.toNat) = BitVec.ofInt w' (x.toInt * y.toInt) := by
   rw [BitVec.ofNat_mul]
-  simp
+  simp only [ofNat_toNat]
   rw [BitVec.ofInt_mul, BitVec.ofInt_toInt_eq_signExtend, BitVec.ofInt_toInt_eq_signExtend,
       BitVec.signExtend_eq_setWidth_of_le _ (by omega),
       BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
@@ -545,8 +546,7 @@ theorem extractLsb_setWidth_of_lt (x : BitVec w) (hi lo v : Nat) (hilo : lo < hi
     BitVec.extractLsb hi lo (BitVec.setWidth v x) = BitVec.extractLsb hi lo x := by
   simp only [BitVec.extractLsb]
   ext k
-  simp only [BitVec.getElem_extractLsb', BitVec.getLsbD_setWidth, Bool.and_eq_right_iff_imp,
-    decide_eq_true_eq]
+  simp
   omega
 
 theorem setWidth_signExtend_eq_self {w w' : Nat} {x : BitVec w} (h : w ≤ w') : (x.signExtend w').setWidth w = x := by
