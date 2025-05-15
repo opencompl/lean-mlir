@@ -1390,7 +1390,7 @@ theorem xor_sext_sext_thm (e : IntW 4) (e_1 : IntW 8) :
 
 
 theorem PR56294_thm (e : IntW 8) :
-  icmp IntPredicate.ne (LLVM.and (zext 32 (icmp IntPredicate.eq e (const? 8 2))) (zext 32 (LLVM.and e (const? 8 1))))
+  icmp IntPred.ne (LLVM.and (zext 32 (icmp IntPred.eq e (const? 8 2))) (zext 32 (LLVM.and e (const? 8 1))))
       (const? 32 0) ⊑
     const? 1 0 := by
     simp_alive_undef
@@ -1498,7 +1498,7 @@ theorem canonicalize_logic_first_xor_0_nswnuw_thm (e : IntW 8) :
 
 
 theorem test_and_xor_freely_invertable_thm (e : IntW 1) (e_1 e_2 : IntW 32) :
-  LLVM.and (LLVM.xor (icmp IntPredicate.sgt e_2 e_1) e) e ⊑ LLVM.and (icmp IntPredicate.sle e_2 e_1) e := by
+  LLVM.and (LLVM.xor (icmp IntPred.sgt e_2 e_1) e) e ⊑ LLVM.and (icmp IntPred.sle e_2 e_1) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

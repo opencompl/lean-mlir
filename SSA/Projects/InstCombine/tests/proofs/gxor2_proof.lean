@@ -12,8 +12,8 @@ set_option Elab.async false
 
 section gxor2_proof
 theorem test0_thm (e : IntW 32) :
-  icmp IntPredicate.sgt (LLVM.xor e (const? 32 (-2147483648))) (const? 32 (-1)) ⊑
-    icmp IntPredicate.slt e (const? 32 0) := by
+  icmp IntPred.sgt (LLVM.xor e (const? 32 (-2147483648))) (const? 32 (-1)) ⊑
+    icmp IntPred.slt e (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,7 +23,7 @@ theorem test0_thm (e : IntW 32) :
 
 
 theorem test1_thm (e : IntW 32) :
-  icmp IntPredicate.slt (LLVM.xor e (const? 32 12345)) (const? 32 0) ⊑ icmp IntPredicate.slt e (const? 32 0) := by
+  icmp IntPred.slt (LLVM.xor e (const? 32 12345)) (const? 32 0) ⊑ icmp IntPred.slt e (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

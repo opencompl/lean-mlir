@@ -32,7 +32,7 @@ theorem test2_thm (e e_1 : IntW 32) : LLVM.xor (LLVM.and e_1 e) (LLVM.or e_1 e) 
 
 theorem PR38781_thm (e e_1 : IntW 32) :
   LLVM.and (LLVM.xor (lshr e_1 (const? 32 31)) (const? 32 1)) (LLVM.xor (lshr e (const? 32 31)) (const? 32 1)) ⊑
-    zext 32 (icmp IntPredicate.sgt (LLVM.or e_1 e) (const? 32 (-1))) := by
+    zext 32 (icmp IntPred.sgt (LLVM.or e_1 e) (const? 32 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
