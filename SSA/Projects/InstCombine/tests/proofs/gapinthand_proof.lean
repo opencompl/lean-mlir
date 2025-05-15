@@ -39,8 +39,8 @@ theorem test3_thm (e : IntW 23) : LLVM.and (LLVM.and e (const? 23 127)) (const? 
 
 
 theorem test4_thm (e : IntW 37) :
-  icmp IntPredicate.ne (LLVM.and e (const? 37 (-2147483648))) (const? 37 0) ⊑
-    icmp IntPredicate.ugt e (const? 37 2147483647) := by
+  icmp IntPred.ne (LLVM.and e (const? 37 (-2147483648))) (const? 37 0) ⊑
+    icmp IntPred.ugt e (const? 37 2147483647) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -86,8 +86,8 @@ theorem test10_thm (e : IntW 123) : LLVM.and (LLVM.and e (const? 123 127)) (cons
 
 
 theorem test11_thm (e : IntW 737) :
-  icmp IntPredicate.ne (LLVM.and e (const? 737 (-2147483648))) (const? 737 0) ⊑
-    icmp IntPredicate.ugt e (const? 737 2147483647) := by
+  icmp IntPred.ne (LLVM.and e (const? 737 (-2147483648))) (const? 737 0) ⊑
+    icmp IntPred.ugt e (const? 737 2147483647) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
