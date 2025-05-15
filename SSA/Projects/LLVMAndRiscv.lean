@@ -18,7 +18,7 @@ currently only operates within one dialect.
 
 To make the intermixing of the type system across the dialects work,
 we insert unrealized_conversion_cast like MLIR does during lowering.
-see: section (UnrealizedConversionCastOp)
+see_: section (UnrealizedConversionCastOp)
 https://mlir.llvm.org/docs/Dialects/Builtin/#builtinunrealized_conversion_cast-unrealizedconversioncastop
  -/
 
@@ -243,21 +243,23 @@ instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
 
 -- TO DO: finish this proof. Did not really know how to do yet. But convinced it is provable.
 @[simp_denote]
-def transformVarLLVM (v :  Ctxt.Var (ctxtTransformToLLVM Γ) ty) : Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty) :=
-  match v with
-  | ⟨h, ty⟩ =>  ⟨h, by sorry ⟩
+def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) : MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty)) :=
+  if h : Γ.get? v.1 = some (LLVMRiscV.Ty.llvm ty) then
+   return ⟨_ , h⟩
+  else
+    sorry
 
 @[simp_denote]
-def transformVarRISCV (v :  Ctxt.Var (ctxtTransformToRiscV Γ) ty) : Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
+def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty) (h : Γ.get? v.1 = some (LLVMRiscV.Ty.riscv riscv)) : Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
   match v with
   | ⟨h, ty⟩ =>  ⟨h, sorry ⟩
 
 def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRiscV
   (Σ eff ty, Com LLVMPlusRiscV Γ eff ty) := do
   let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
-  match llvmParseReturn with
+  match h : llvmParseReturn with
   | .ok ⟨eff, ty, Com.ret v⟩ =>
-    return ⟨eff, .llvm ty, Com.ret (transformVarLLVM v)⟩
+    return ⟨eff, .llvm ty, Com.ret (← transformVarLLVM v)⟩
   | .error e =>
     match e with
     | .unsupportedOp _s=>
