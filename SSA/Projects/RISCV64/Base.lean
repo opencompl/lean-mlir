@@ -145,7 +145,7 @@ encounters a `sig` it can replace it by its definition.
 -/
 @[simp, reducible]
 def Op.sig : Op → List Ty
-  |.li _ => []
+  | .li _ => []
   |.mulu  => [Ty.bv, Ty.bv]
   |.mulh  => [Ty.bv, Ty.bv]
   |.mulhu  => [Ty.bv, Ty.bv]
@@ -221,7 +221,7 @@ Again, we mark  it as `simp` and `reducible`.
 -/
 @[simp, reducible]
 def Op.outTy : Op  → Ty
-  |.li _ => Ty.bv
+  | .li _ => Ty.bv
   |.mulu => Ty.bv
   |.mulh => Ty.bv
   |.mulhu => Ty.bv
