@@ -168,7 +168,6 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
   To lift it back into the hybrid dialect — that is, to convert it into a RISC-V computation
   representation within the hybrid dialect — we invoke this function.
 .-/
-
 @[simp_denote]
 def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) :
   MLIR.AST.ReaderM LLVMPlusRiscV (Expr LLVMPlusRiscV Γ eff (.riscv ty)) :=
@@ -241,32 +240,33 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
 instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
   mkExpr := mkExpr
 
--- TO DO: finish this proof. Did not really know how to do yet. But convinced it is provable.
 @[simp_denote]
 def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) : MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty)) :=
   if h : Γ.get? v.1 = some (LLVMRiscV.Ty.llvm ty) then
    return ⟨_ , h⟩
   else
-    sorry
+    throw <| .generic s!"TransformVarLLVM FAILED: Tried to convert a variable of wrong type."
 
 @[simp_denote]
-def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty) (h : Γ.get? v.1 = some (LLVMRiscV.Ty.riscv riscv)) : Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty) :=
-  match v with
-  | ⟨h, ty⟩ =>  ⟨h, sorry ⟩
+def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty): MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty)) :=
+  if h : Γ.get? v.1 = some (LLVMRiscV.Ty.riscv ty) then
+   return ⟨_ , h⟩
+  else
+     throw <| .generic s!"TransformVarRISCV FAILED: Tried to convert a variable of wrong type."
 
 def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRiscV
   (Σ eff ty, Com LLVMPlusRiscV Γ eff ty) := do
   let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
-  match h : llvmParseReturn with
+  match llvmParseReturn with
   | .ok ⟨eff, ty, Com.ret v⟩ =>
     return ⟨eff, .llvm ty, Com.ret (← transformVarLLVM v)⟩
   | .error e =>
     match e with
     | .unsupportedOp _s=>
-      let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn  (ctxtTransformToRiscV Γ) opStx (← read)
+      let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn (ctxtTransformToRiscV Γ) opStx (← read)
       match com with
       | Com.ret v =>
-        return ⟨eff, .riscv ty, Com.ret (transformVarRISCV v) ⟩
+        return ⟨eff, .riscv ty, Com.ret (← transformVarRISCV v)⟩
       | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
     | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type.
         LLVM parser threw error diffrent from unsupported Op"
