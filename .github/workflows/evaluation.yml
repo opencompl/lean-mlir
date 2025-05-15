@@ -88,7 +88,7 @@ jobs:
       - name: Compare LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py | too llvm-stats)
+          (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
           echo "LLVM_STATS=$(cat bv-evaluation)" >> $GITHUB_ENV
 
       - uses: actions/github-script@v6
