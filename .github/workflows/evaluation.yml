@@ -86,7 +86,19 @@ jobs:
       - name: Compare LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py)
+          (cd bv-evaluation; python3 ./collect-data-llvm.py | too llvm-stats)
+          echo "LLVM_STATS=$(cat bv-evaluation)" >> $GITHUB_ENV
+
+      - uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${{env.LLVM_STATS}}`
+            })
 
       - name: Run LLVM Symbolic
         continue-on-error: true
