@@ -89,7 +89,7 @@ jobs:
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
-          echo "LLVM_STATS=$(cat bv-evaluation)" >> $GITHUB_ENV
+          echo "LLVM_STATS=$(cat bv-evaluation/llvm-stats)" >> $GITHUB_ENV
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
