@@ -5,7 +5,7 @@ import SSA.Core.Framework.Trace
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 
-open Lean
+open Lean Meta
 open Lean.Elab.Tactic
 
 /-! ## `elim_poison_bind`-/
@@ -22,7 +22,81 @@ theorem LLVM.IntW.bind_isRefinedBy_of {v w : Nat}
     (∀ x', x = value x' → f x' ⊑ rhs) → bind x f ⊑ rhs := by
   cases x <;> simp
 
-open Meta in
+open PoisonOr in
+theorem LLVM.IntW.bind_isRefinedBy_iff {v w : Nat}
+    (x : PoisonOr (BitVec v)) (f : BitVec v → PoisonOr (BitVec w))
+    (rhs : PoisonOr (BitVec w)) :
+    bind x f ⊑ rhs ↔ (∀ x', x = value x' → f x' ⊑ rhs) := by
+  cases x <;> simp
+
+/-!
+NOTE:
+
+The strategy for `elimBindIsRefinedBy` works, but sadly it only works when the
+refinement is at the top-level of the goal. This is true for *most* goals, except
+for those where `select` is involved. For those, we can get an `if` where neither
+branch is a trivial poison, and thus which cannot be trivially eliminated.
+The only solution in such a case is to rely on `ite_isRefinedBy_iff` to break
+up the `if c then x? else y? ⊑ z?` into two separate obligations
+  `c → x? ⊑ z?` and `c → y? ⊑ z?`.
+We could keep these obligations into a single goal, as `_ ∧ _`, but then there
+is no obvious way to keep applyin `elimBindIsRefinedBy`. We'd have to rephrase
+this transformation in a way that can apply to sub-expressions, too, e.g., by
+turning it into a simproc.
+
+Alternativaly, we can admit that this rewrite is really just `split`ting the goal
+and abandon the no-subgoals maxim. At least, we could use subgoals internally,
+but collect them in a list, and at the end replace all goals with a single
+`_ ∧ _ ∧ ...` conjunction of all subgoals.
+
+
+-/
+
+/--
+Repeatedly (try to) apply `bind_isRefinedBy_of`, such that at the end there
+are no more `bind`s to the left of the `⊑`.
+
+Returns an array of all fvars that were introduced into the local context of the
+main goal in the process. Note that not all those fvar ids are still valid, as
+some may have been eliminated in the process as well!
+-/
+partial def elimBindIsRefinedBy (introed : Array FVarId) : TacticM (Array FVarId) := do
+  withMainContext do
+    let m := mkFreshExprMVar none
+    let x ← m
+    let oldGoal ← getMainGoal
+    let newGoals ←
+      try
+        oldGoal.apply <|
+          mkApp5 (mkConst ``LLVM.IntW.bind_isRefinedBy_of) (← m) (← m) x (← m) (← m)
+      catch e =>
+        trace[LeanMLIR.Elab] e.toMessageData
+        return introed
+
+    let x := (← instantiateMVars x).consumeMData
+    if !x.isFVar then
+      trace[LeanMLIR.Elab] "Expected an fvar, but found: {x}. Aborting..."
+      oldGoal.eraseAssignment -- undo the application
+      return introed
+    let [ goal ] := newGoals
+      | throwError "Expected exactly one subgoal, but found: {newGoals}"
+
+    let (x, goal) ← goal.intro (← getUnusedUserName `x)
+    replaceMainGoal [goal]
+    let introed := introed.push x
+    evalTactic <|<- `(tactic| (
+      intro h; subst h; -- Eliminate the old variable
+      simp -failIfUnchanged -implicitDefEqProofs +contextual only [
+        simp_llvm, simp_llvm_case_bash, *]
+      -- ^^ simplify
+    ))
+    match ← getUnsolvedGoals with
+    | [] => return introed
+    | goal :: _ =>
+      let (newIntroed, goal) ← goal.intros
+      replaceMainGoal [goal]
+      elimBindIsRefinedBy <| introed ++ newIntroed
+
 /--
 `simp_alive_case_bash` repeatedly tries to apply `LLVM.IntW.bind_isRefinedBy_if`,
 to show that a `PoisonOr`-typed variable *must* be a value (rather than poison).
@@ -31,49 +105,17 @@ Whenever the application succeeds, we introduce the new `BitVec` variable using
 the same (accessible) name as the `PoisonOr` variable it replaces.
 -/
 elab "simp_alive_case_bash" : tactic => do
-  let (_, goal) ← (← getMainGoal).intros
+  let (introed, goal) ← (← getMainGoal).intros
   replaceMainGoal [goal]
-  let mut newXs := #[]
-  while true do
-    let res? ← withMainContext do
-      let v ← mkFreshExprMVar none
-      let w ← mkFreshExprMVar none
-      let x ← mkFreshExprMVar none
-      let f ← mkFreshExprMVar none
-      let rhs ← mkFreshExprMVar none
-      let lem := mkApp5 (mkConst ``LLVM.IntW.bind_isRefinedBy_of) v w x f rhs
-      let oldGoal ← getMainGoal
-      let newGoals ←
-        try oldGoal.apply lem
-        catch e =>
-          trace[LeanMLIR.Elab] e.toMessageData
-          return none -- exit the loop
 
-      let x := (← instantiateMVars x).consumeMData
-      if !x.isFVar then
-        trace[LeanMLIR.Elab] "Expected an fvar, but found: {x}. Aborting..."
-        oldGoal.eraseAssignment -- undo the application
-        return none -- exit the loop
-      let [ goal ] := newGoals
-        | throwError "Expected exactly one subgoal, but found: {newGoals}"
-
-      let (x, goal) ← goal.intro (← getUnusedUserName `x)
-      replaceMainGoal [goal]
-      evalTactic <|<- `(tactic| (
-        intro h; subst h; -- Eliminate the old variable
-        simp (config:={failIfUnchanged := false}) -implicitDefEqProofs only [
-          simp_llvm, simp_llvm_case_bash]
-        -- ^^ simplify
-      ))
-      return some x -- continue the loop
-    if let some x := res? then
-      newXs := newXs.push x
-    else
-      break
+  let introed ← elimBindIsRefinedBy introed
 
   if !(← getUnsolvedGoals).isEmpty then
-    -- Now revert all newly introduced BitVec variables
-    let ⟨_, goal⟩ ← (← getMainGoal).revert newXs
+    -- Now revert all introed variables which haven't been eliminated
+    let goal ← getMainGoal
+    let lctx ← goal.withContext getLCtx
+    let introed := introed.filter lctx.contains
+    let ⟨_, goal⟩ ← goal.revert introed
     replaceMainGoal [goal]
 
 /-! ## Case Bashing-/
