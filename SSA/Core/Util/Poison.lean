@@ -246,33 +246,6 @@ theorem isRefinedBy_ite_iff {x? y? z? : PoisonOr α} :
       (c → x? ⊑ y?) ∧ (¬c → x? ⊑ z?) := by
   split <;> simp [*]
 
-/-
-TODO: we could use the following simproc:
-```lean
-open Lean Meta in
-/--
-Canonicalize `if c then _ else poison` to `if ¬c then poison else _`, whenever
-the then-branch isn't already `poison`.
--/
-simproc commIfElsePoison (@ite (no_index _) _ _ _ poison) := fun e => do
-  let_expr ite α c inst a b := e | return .continue
-  if a.isAppOf ``PoisonOr.poison then
-    return .continue
-  let u ← getLevel α
-  let expr :=
-    let c' := mkNot c
-    let inst' := mkApp2 (mkConst ``instDecidableNot) c inst
-    mkAppN (.const ``ite [u]) #[α, c', inst', b, a]
-  let proof := mkAppN (.const ``ite_not [u]) #[α, c, inst, b, a]
-  let proof ← mkEqSymm proof
-  return .visit { expr, proof? := some proof }
-```
-
-This would allow us to remove all if_else_poison lemmas, but it's not actually
-safe to add this to the default simpset, as it causes an infinite loop in
-combination with `ite_not` or `Classical.ite_not`.
--/
-
 end Ite
 
 end Refinement

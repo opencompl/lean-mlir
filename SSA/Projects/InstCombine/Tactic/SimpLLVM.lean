@@ -116,6 +116,8 @@ macro "simp_alive_ops" : tactic =>
         ]
     ))
 
+/-! ## `simp_alive_split` -/
+
 attribute [simp_llvm]
   -- Poison lemmas
   PoisonOr.not_value_isRefinedBy_poison
@@ -144,6 +146,75 @@ attribute [simp_llvm]
 attribute [simp_llvm_split(low)]
   PoisonOr.ite_isRefinedBy_iff
   PoisonOr.isRefinedBy_ite_iff
+
+section ItePoison
+open Lean Meta PoisonOr
+
+/-!
+### if-then-else and poison
+We will now define simprocs and lemmas that normalize `if-then-else` expressions
+involving poison. Together, they ensure that any occurence of `poison` in a
+nested sequence of `if-then-else`s is pulled towards the top-level then branch,
+for any further simp lemmas to easily match on.
+-/
+
+/--
+Canonicalize `if c then _ else poison` to `if ¬c then poison else _`, whenever
+the then-branch isn't already `poison`.
+
+NOTE: this simproc causes an infinite loop if paired with either `ite_not` or
+`Classical.ite_not`, both of which are in the global simpset. Neither of those
+should thus be added to `simp_llvm`.
+-/
+simproc [simp_llvm] commIfElsePoison (ite (α := no_index _) _ _ poison) := fun e => do
+  let_expr ite α c inst x y := e | return .continue
+  if x.isAppOf ``PoisonOr.poison then
+    return .continue
+  let u ← getLevel α
+  let expr :=
+    let c' := mkNot c
+    let inst' := mkApp2 (mkConst ``instDecidableNot) c inst
+    mkAppN (.const ``ite [u]) #[α, c', inst', y, x]
+  let proof := mkAppN (.const ``ite_not [u]) #[α, c, inst, y, x]
+  let proof ← mkEqSymm proof
+  return .visit { expr, proof? := some proof }
+
+/-- auxiliary lemma used in `assocIfElseIfThenPoison` simproc -/
+private theorem if_else_if_then_poison_eq {α : Type} (c₁ c₂ : Prop) [Decidable c₁] [Decidable c₂]
+      (x y : PoisonOr α):
+    (if c₁ then x else (if c₂ then poison else y)) =
+    (if ¬c₁ ∧ c₂ then poison else (if c₁ then x else y)) := by
+  split <;> simp [*]
+
+/--
+Canonicalize using `if_else_if_then_poison_eq`, if the then branch (`x` in the
+lemma) is not already poison.
+-/
+simproc [simp_llvm] assocIfElseIfThenPoison
+    (ite (α := no_index _) _ _ (ite (α := no_index _) _ poison _)) := fun e => do
+  let_expr ite _α c₁ _inst₁ x py := e | return .continue
+  if x.isAppOf ``PoisonOr.poison then
+    return .continue
+  let_expr ite _ c₂ _inst₂ p y := py | return .continue
+
+  let c' := mkAnd (mkNot c₁) c₂
+  let expr ← mkAppM ``ite #[c', p, ← mkAppM ``ite #[c₁, x, y]]
+  let proof ← mkAppM ``if_else_if_then_poison_eq #[c₁, c₂, x, y]
+  return .visit { expr, proof? := proof }
+
+/--
+Normalize a nested `if` in the `then` branch. Note: in this case it's impossible
+for the first then branch to already be poison (since it's an if-then-else),
+thus there is no need for a simproc; a regular simp lemma suffices
+-/
+@[simp_llvm]
+theorem PoisonOr.if_then_if_then_poison_eq {α : Type} (c₁ c₂ : Prop) [Decidable c₁] [Decidable c₂]
+      (x y : PoisonOr α):
+    (if c₁ then (if c₂ then poison else x) else y) =
+    (if c₁ ∧ c₂ then poison else (if c₁ then x else y)) := by
+  split <;> simp [*]
+
+end ItePoison
 
 macro "simp_alive_split" : tactic => `(tactic|(
   all_goals
