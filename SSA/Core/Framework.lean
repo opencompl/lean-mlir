@@ -294,13 +294,13 @@ partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
 partial def Com.ToStringBody : Com d Γ eff t → String
-  | .ret v => s!"{toString d}.return {_root_.repr v } : ({toString t}) → ()"
+  | .ret v => s!".return {_root_.repr v } : ({toString t}) → ()"
   | .var e body =>
     s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
     Com.ToStringBody body
 
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
-partial def Com.toString (_com : Com d Γ eff t) : String :=
+partial def Com.toString (com : Com d Γ eff t) : String :=
    "{ \n"
   ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
   ++ (Com.ToStringBody com) ++
