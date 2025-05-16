@@ -15,7 +15,8 @@ a poison value can be refined by any concrete value. -/
 structure LLVMPeepholeRewriteRefine (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec 64))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec 64))
-  correct : ∀ V, PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V)
+  correct : ∀ V,
+    PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V)
 
 /-- `RiscVPeepholeRewriteRefine` defines a `PeepholeRewrite` structure
 for RISC-V `Com`s within the hybrid dialect. The refinement relation
@@ -24,7 +25,8 @@ RISC-V computations are bitvectors. -/
 structure RiscVPeepholeRewriteRefine (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
-  correct : ∀ V, BitVec.Refinement (lhs.denote V : Option _) (rhs.denote V : Option _)
+  correct : ∀ V,
+    BitVec.Refinement (lhs.denote V : Option _) (rhs.denote V : Option _)
 
 /-!
 ##  Wrapper for the Peephole rewriter
@@ -45,7 +47,8 @@ valid refinement. We still hint the unsoudness of the Peephole
 Rewrite because in fact the proof is not provided and can't be
 provided until the Peephole Rewriter accepts refinements.
  -/
-def LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND (self : LLVMPeepholeRewriteRefine Γ) :
+def LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND
+  (self : LLVMPeepholeRewriteRefine Γ) :
    PeepholeRewrite LLVMPlusRiscV Γ (Ty.llvm (.bitvec 64))  :=
   {
     lhs := self.lhs
@@ -53,7 +56,8 @@ def LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND (self : LLVMPeepholeRewri
     correct := by sorry
   }
 
-  def RiscVToLLVMPeepholeRewriteRefine.toPeepholeUNSOUND (self : RiscVPeepholeRewriteRefine Γ) :
+  def RiscVToLLVMPeepholeRewriteRefine.toPeepholeUNSOUND
+  (self : RiscVPeepholeRewriteRefine Γ) :
     PeepholeRewrite LLVMPlusRiscV Γ (Ty.riscv (.bv)) :=
   {
     lhs := self.lhs
