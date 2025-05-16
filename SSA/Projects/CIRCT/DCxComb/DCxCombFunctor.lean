@@ -56,6 +56,7 @@ instance : DialectSignature DCxComb where
 -- this function does not actually sync, it "only" lifts the HVector of Streams we
 -- have e.g. in a variadic input into a single stream, where each element of the stream is an HVector
 -- representing the entry at that point for
+-- HVector (fun i => Stream (BitVec i)) l = "map each i in l to construct a Stream BitVec"
 def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
     Stream' (HVector (fun i => Option (BitVec i)) l) :=
   fun n =>
@@ -63,19 +64,20 @@ def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
   | .nil => .nil
   | .cons x xs => HVector.cons (x n) (hv_cast_gen' xs n)
 
+-- problem: we need a proof that this is actually true (i.e., none of the streams in
+-- h is full of nones)
 -- this function *actually* does the syncing! we take an HVector of Streams and lift it into
 -- a Stream that returns none until all the input stream are ready
 def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
-    Stream (HVector (fun i => BitVec i) l) := sorry
+    Stream (HVector (fun i => BitVec i) l) :=
+    sorry
   -- let toSync := hv_cast_gen' h
   -- fun n =>
   --   match toSync n with
   --   | -- keep waiting
   --   none =>
-
   --     sorry
   --   | some x' => sorry
-
 
   -- fun n =>
   --   let synced := (hv_cast_gen' h) n -- take the n-th entry for each stream in h
@@ -91,9 +93,7 @@ def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
 
 def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) :=
-
-
-    by
+  by
   cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
   case sub w =>
     dsimp [DialectSignature.sig, signature] at *
