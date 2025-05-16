@@ -299,7 +299,7 @@ partial def Com.ToStringBody : Com d Γ eff t → String
     s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
     Com.ToStringBody body
 
-/- This function implements a toString instance for the type `Com`.  -/
+/- `Com.toString` implements a toString instance for the type `Com`.  -/
 partial def Com.toString (_com : Com d Γ eff t) : String :=
    "{ \n"
   ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
