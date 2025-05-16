@@ -53,35 +53,41 @@ instance : DialectSignature DCxComb where
     -- DCxComb.
     | .dc o => MLIR2DC.instDialectSignatureDC.signature o
 
+-- this function does not actually sync, it "only" lifts the HVector of Streams we
+-- have e.g. in a variadic input into a single stream, where each element of the stream is an HVector
+-- representing the entry at that point for
 def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
     Stream' (HVector (fun i => Option (BitVec i)) l) :=
-  match H : l with
-  | nil =>
-    fun i => ( H.symm ▸ .nil (f := (fun i => Option (BitVec i))))
-    match H : h with
-    | nil => fun _ =>
-        have : l = [] := by
-          cases H
-        .nil (f := (fun i => Option (BitVec i)))
-    | cons x xs =>
-      fun i =>
-        match x i with
-        | .none => none
-        | .some y => HVector.cons x (hv_cast_gen xs)
-
-    sorry
-
-
-def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
-    Stream (HVector (fun i => BitVec i) l) :=
+  fun n =>
   match h with
-  | nil => nil
-  | cons x xs =>
-    fun i =>
-      match x i with
-      | .none => none
-      | .some y => HVector.cons x (hv_cast_gen xs)
-      --always none except for when all the streams are ready (synced)
+  | .nil => .nil
+  | .cons x xs => HVector.cons (x n) (hv_cast_gen' xs n)
+
+-- this function *actually* does the syncing! we take an HVector of Streams and lift it into
+-- a Stream that returns none until all the input stream are ready
+def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
+    Stream (HVector (fun i => BitVec i) l) := sorry
+  -- let toSync := hv_cast_gen' h
+  -- fun n =>
+  --   match toSync n with
+  --   | -- keep waiting
+  --   none =>
+
+  --     sorry
+  --   | some x' => sorry
+
+
+  -- fun n =>
+  --   let synced := (hv_cast_gen' h) n -- take the n-th entry for each stream in h
+  --   -- scroll through every elements in synced and make sure that they're
+  --   -- actually allready
+  --   match synced with
+  --   | .nil => none
+  --   | .cons x xs => isReady xs
+  --       -- match x with
+  --       -- | some x'=> some (.cons x' xs')
+  --       -- | _ => none
+
 
 def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) :=
