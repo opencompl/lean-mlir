@@ -117,3 +117,22 @@ macro "simp_alive_ops" : tactic =>
           (BitVec.ofInt_ofNat)
         ]
     ))
+
+/-! ## `llvm_intros` -/
+
+/--
+`intros_llvm x` will introduce as many binders as possible without unfolding
+definitions, just like `intros` (without passing any identifiers) would.
+However, unlike `intros`, `intros_llvm x` will give the new variables
+*accessible* names, with `x` as a prefix.
+
+This tactic is intended for use with the `simp_llvm..` / `simp_alive..` family
+of tactics, hence the name.
+-/
+elab "intros_llvm" x:ident : tactic => do
+  let x := x.getId
+  let ⟨newFVars, newGoal⟩ ← (← getMainGoal).intros
+  let mut goal := newGoal
+  for fvar in newFVars do
+    goal ← goal.rename fvar (← Meta.getUnusedUserName x)
+  replaceMainGoal [goal]
