@@ -353,7 +353,6 @@ instance : Lean.ToFormat LLVM.Ty := by unfold LLVM; infer_instance
 
 instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
-
 instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
 
 /-! ### Signature -/
