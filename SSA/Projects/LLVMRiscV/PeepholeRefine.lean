@@ -1,12 +1,22 @@
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 
 open LLVMRiscV
-/-
-This file contains the defintions of the Peephole Rewrite
+/-!
+This file contains the definitions of the Peephole Rewrite
 structures for LLVM and RISCV `Com`s. The LLVMPeepholeRewrite
 structure is leveraged to lower a LLVM program to a RISCV program
 where the rewrites are performed within the LLVMAndRiscv hybrid dialect.
--/
+Additionally this file defines the wrapper structures used to pass our
+hybrid dialect rewrites to the Peephole Rewriter. The current
+Peephole Rewriter requires a proof that the return values of
+the source and target programs are equal. However, since we
+are working with refinement semantics (e.g., a poison value may
+be refined by any value), we cannot provide such a proof. Once
+the Rewriter supports refinement, this file should no longer require
+a `sorry`. To still leverage the rewrite functionality, we wrap
+our rewrites into a form accepted by the Peephole Rewriter.
+ -/
+
 
 /-- `LLVMPeepholeRewriteRefine` defines the `PeepholeRewrite`
 structure for LLVM `Com`s. The refinement is based on the
@@ -18,47 +28,22 @@ structure LLVMPeepholeRewriteRefine (Γ : Ctxt Ty) where
   correct : ∀ V,
     PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V)
 
-/-- `RiscVPeepholeRewriteRefine` defines a `PeepholeRewrite` structure
-for RISC-V `Com`s within the hybrid dialect. The refinement relation
-is defined using bitvector refinement, since the return values of
-RISC-V computations are bitvectors. -/
-structure RiscVPeepholeRewriteRefine (Γ : Ctxt Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
-  rhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
-  correct : ∀ V,
-    BitVec.Refinement (lhs.denote V : Option _) (rhs.denote V : Option _)
-
 /-!
-##  Wrapper for the Peephole rewriter
+##  Wrapper for the Peephole Rewriter
 -/
-/- This section defines the wrapper structures used to pass our
-hybrid dialect rewrites to the Peephole Rewriter. The current
-Peephole Rewriter requires a proof that the return values of
-the source and target programs are equal. However, since we
-are working with refinement semantics (e.g., a poison value may
-be refined by any value), we cannot provide such a proof. Once
-the Rewriter supports refinement, this should no longer require
-a `sorry`. To still leverage the rewrite functionality, we wrap
-our rewrites into a form accepted by the Peephole Rewriter, omitting
-the proof of return value equality. This does not compromise our
-correctness guarantees, since the rewrite itself includes a proof
-that, for any two programs of the correct type, the rewrite is a
-valid refinement. We still hint the unsoudness of the Peephole
+ /--
+ `LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND` defines
+a wrapper to pass our rewrites to the Peephole Rewriter.
+We cannot provide the required equality proof therefore
+we sorry the proof. This does not compromise our
+correctness guarantees, since the rewrite itself provide that.
+We still hint the unsoudness of the Peephole
 Rewrite because in fact the proof is not provided and can't be
 provided until the Peephole Rewriter accepts refinements.
  -/
 def LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND
   (self : LLVMPeepholeRewriteRefine Γ) :
    PeepholeRewrite LLVMPlusRiscV Γ (Ty.llvm (.bitvec 64))  :=
-  {
-    lhs := self.lhs
-    rhs := self.rhs
-    correct := by sorry
-  }
-
-  def RiscVToLLVMPeepholeRewriteRefine.toPeepholeUNSOUND
-  (self : RiscVPeepholeRewriteRefine Γ) :
-    PeepholeRewrite LLVMPlusRiscV Γ (Ty.riscv (.bv)) :=
   {
     lhs := self.lhs
     rhs := self.rhs
