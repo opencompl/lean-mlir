@@ -267,6 +267,7 @@ def Lets.repr (prec : Nat) : Lets d eff Γ t → Format
 instance : Repr (Expr d Γ eff t) := ⟨flip Expr.repr⟩
 instance : Repr (Com d Γ eff t) := ⟨flip Com.repr⟩
 instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
+
 end Repr
 
 /- # ToString instances for Com and Expr  -/
@@ -302,7 +303,7 @@ partial def Com.ToStringBody : Com d Γ eff t → String
 partial def Com.toString (_com : Com d Γ eff t) : String :=
    "{ \n"
   ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
-  ++ (Com.ToStringBody _com) ++ 
+  ++ (Com.ToStringBody _com) ++
    "\n }"
 
 instance : ToString (Com d Γ eff t)  where toString := Com.toString

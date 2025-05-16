@@ -100,7 +100,7 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .udiv ⟨true⟩         => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
     (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
-  prec
+    prec
 
 instance : Repr (MOp.BinaryOp) where
   reprPrec := reprWithoutFlags
@@ -434,7 +434,6 @@ namespace LLVM.Ty
 
 def width : LLVM.Ty → Nat
   | bitvec w => w
-
 
 @[simp]
 theorem width_eq (ty : LLVM.Ty) : .bitvec (width ty) = ty := by

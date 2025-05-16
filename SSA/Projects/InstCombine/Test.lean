@@ -98,17 +98,6 @@ def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
   please check that the tested behaviour is actually the desired behaviour
 -/
 
-#eval mkExpr    (Γn 1) op0    ["arg0"]
-/--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
--/
-#guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
-
-/--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
--/
-#guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
-
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
@@ -134,7 +123,6 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
 -/
 #guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
 
-#eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
@@ -150,8 +138,6 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, {
 -/
 #guard_msgs in #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
-#eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
-
 def ops : List (Op 0) := [mlir_ops|
     %0 = llvm.mlir.constant(8) : i32
     %1 = llvm.mlir.constant(31) : i32
@@ -162,7 +148,6 @@ def ops : List (Op 0) := [mlir_ops|
 ]
 def ops' := [op0, op1, op2, op3, op4]
 
-#eval mkExpr    (Γn 1)  (ops[0]) ["arg0"]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
