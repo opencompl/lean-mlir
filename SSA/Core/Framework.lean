@@ -296,7 +296,7 @@ Each bound variable is printed with its index and corresponding expression. -/
 partial def Com.ToStringBody : Com d Γ eff t → String
   | .ret v => s!"return {_root_.repr v } : ({toString t}) → ()"
   | .var e body =>
-    s!"%{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+    s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
     Com.ToStringBody body
 
 /- This function implements a toString instance for the type `Com`.  -/

@@ -25,7 +25,6 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
     let code ← verbose_flag fileName
     return code
   else
-    IO.println s!" no flag passed hence just check wellformedness "
     let code ← wellformed fileName
     return code
 
