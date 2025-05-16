@@ -350,7 +350,6 @@ info: MLIR.AST.MLIRType.undefined "shape.value"
 #guard_msgs in #eval tyUserIdent
 
 private def tyi32NoGap : MLIRTy := [mlir_type| i32]
-
 /--
 info: MLIR.AST.MLIRType.int (MLIR.AST.Signedness.Signless) (ConcreteOrMVar.concrete 32)
 -/

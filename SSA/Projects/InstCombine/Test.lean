@@ -108,7 +108,6 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVa
 -/
 #guard_msgs in #eval mkExpr    (Γn 2) op1    ["0", "arg0"]
 
-#eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
