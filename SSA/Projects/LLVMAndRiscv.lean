@@ -144,15 +144,17 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
             match h : Γ.get? v.val with
             | some ty' => do
               match hty : ty' with
-              | .riscv _ =>
-                throw <| .generic s!"INTERNAL ERROR: This case is impossible, LLVM expression is pointing to RISCV variable."
+              | .riscv _ => /- This is impossible, because mixing LLVM and RiscV variables would've already
+                              been caught by the LLVM parser before invoking this function. -/
+                throw <| .generic s!"INTERNAL ERROR: This case is impossible, LLVM expression is pointing to RISCV variable.
+                Should haven been caught by the LLVM parser."
               | .llvm originalLLVMTy =>
                 if hty' : originalLLVMTy = t then
                   return ⟨v.val, by rw [h, hty']⟩
                 else
                   throw <|.generic s!"INTERNAL ERROR: This case is impossible, LLVM expression is pointing to an incorrect bitwidth LLVM argument."
             | none =>
-              -- this is impossible, because ctxtTransformToLLVM is a `List.map`, which always maintains length.
+              -- This is impossible, because ctxtTransformToLLVM is a `List.map`, which always maintains length.
               throw <| .generic s!"INTERNAL ERROR: This case is impossible, as 'ctxtTransformToLLVM' is length-preserving."
         return Expr.mk
           (op := Op.llvm op1)
@@ -197,8 +199,10 @@ def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) 
               rw [x] at hv
               contradiction
             ⟩ with
-            | .llvm _ =>
-                throw <| .generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to LLVM variable."
+            | .llvm _ => /- This is impossible, because mixing LLVM and RiscV variables would've already been
+                          caught by RISC-V parserbeen caught by the RISC-V parser before invoking this function. -/
+                throw <| .generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to LLVM variable.
+                Should have benn caught by the RISC-V parser."
             | .riscv originalRISCVTy =>
                 if hty' : originalRISCVTy = t then
                   return ⟨v.val, by
@@ -251,8 +255,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
     match ty with
-      | .riscv (.bv) => mkExprOf (args? := args) <| .castRiscv
-      | .llvm (.bitvec 64) => mkExprOf (args? := args) <| .castLLVM
+      | .riscv (.bv) => mkExprOf <| .castRiscv
+      | .llvm (.bitvec 64) => mkExprOf <| .castLLVM
       | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
   else
     let llvmParse := InstcombineTransformDialect.mkExpr (ctxtTransformToLLVM  Γ) opStx (← read)
@@ -269,14 +273,16 @@ instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
   mkExpr := mkExpr
 
 @[simp_denote]
-def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) : MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty)) :=
+def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) :
+     MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty)) :=
   if h : Γ.get? v.1 = some (LLVMRiscV.Ty.llvm ty) then
    return ⟨_ , h⟩
   else
     throw <| .generic s!"TransformVarLLVM FAILED: Tried to convert a variable of wrong type."
 
 @[simp_denote]
-def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty): MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty)) :=
+def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty) :
+    MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty)) :=
   if h : Γ.get? v.1 = some (LLVMRiscV.Ty.riscv ty) then
    return ⟨_ , h⟩
   else
@@ -295,9 +301,9 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
       match com with
       | Com.ret v =>
         return ⟨eff, .riscv ty, Com.ret (← transformVarRISCV v)⟩
-      | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
+      | _ => throw <| .unsupportedOp s!"Unable to parse return as either LLVM type or RISCV type."
     | e => throw e
-  | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
+  | _ => throw <| .generic s!"Unable to parse return as the program is impure and therefore not supported."
 
 instance : MLIR.AST.TransformReturn LLVMPlusRiscV 0 where
   mkReturn := mkReturn
