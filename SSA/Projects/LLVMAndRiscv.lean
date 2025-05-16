@@ -234,14 +234,14 @@ instance : MLIR.AST.TransformTy LLVMPlusRiscV 0 where
   try
     let llvmParse ← InstcombineTransformDialect.mkTy tStx
     return .llvm llvmParse
-  catch _llvmErr =>
+  catch llvmErr =>
     try
       let riscvParse ← RiscvMkExpr.mkTy tStx
       return .riscv riscvParse
-    catch _riscvErr =>
+    catch riscvErr =>
         throw <|.generic s!" INTERNAL ERROR : While trying to transform from MLIR AST to dialect specific AST
          the transformation failed. The errors thrown are:
-          s!{(toString (repr _riscvErr))} and s!{(toString (repr _llvmErr ))}"
+          s!{(toString (repr riscvErr))} and s!{(toString (repr llvmErr ))}"
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   MLIR.AST.ReaderM (LLVMPlusRiscV) (Σ eff ty, Expr LLVMPlusRiscV Γ eff ty) := do
