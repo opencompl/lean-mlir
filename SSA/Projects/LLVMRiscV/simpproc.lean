@@ -157,12 +157,79 @@ def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 6
       llvm.return %1 : i64
   }]
 
-def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= add_llvm_no_flags , rhs:= add_riscv1 ,
+
+/- # Debug: single llvm op -/
+def single_bin_op_lhs := [LV| {
+  ^entry ():
+    %0 = llvm.mlir.constant (0) : i64
+    llvm.return  %0 : i64
+  }]
+def single_bin_op_rhs := [LV| {
+  ^entry ():
+    %0 = llvm.mlir.constant (1) : i64
+    llvm.return  %0 : i64
+  }]
+def single_llvm_bin_op : LLVMPeepholeRewriteRefine [] :=
+    {lhs:= single_bin_op_lhs , rhs:= single_bin_op_rhs
+      ,correct := by
+      unfold  single_bin_op_lhs single_bin_op_rhs
+      simp_peephole
+      simp [PoisonOr.IsRefinedBy] -- can't get rid of the PoisonOr refinement
+      sorry
+
+  }
+
+/- # Debug: single riscv op -/
+def riscv_op_lhs := [LV| {
+  ^entry ():
+    %0 = li (0) : !i64
+    %1 = add %0, %0 : !i64
+    %2 = li (0) : !i64
+    %3 = add %2, %0 : !i64
+    ret  %3 : !i64
+  }]
+
+def riscv_bin_op_rhs := [LV| {
+  ^entry ():
+    %0 = li (1) : !i64
+    %1 = add %0, %0 : !i64
+    %2 = li (0) : !i64
+    %4 = add %2, %1 : !i64
+    %5 = li (0) : !i64
+    %6 = add %4, %5 : !i64
+    ret  %6 : !i64
+  }]
+def riscv_op : PeepholeRewrite LLVMPlusRiscV [] (Ty.riscv (.bv))  :=
+  {lhs:= riscv_op_lhs , rhs:= riscv_bin_op_rhs ,
    correct := by
-    unfold  add_llvm_no_flags add_riscv1
-    simp_peephole /- here I expect simp_peephole to remove the framework overhead
-    and simplify the args to a simple HVector representation.
-     -/
+    unfold riscv_op_lhs riscv_bin_op_rhs
+    simp_peephole
+    unfold RTYPE_pure64_RISCV_ADD
     sorry
   }
+
+/- # Debug: casts -/
+def cast_op_lhs := [LV| {
+  ^entry (%lhs: i64):
+        %0 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+        %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
+    llvm.return  %1 : i64
+  }]
+
+def cast_op_rhs := [LV| {
+  ^entry (%lhs: i64):
+        %0 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
+        %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
+    llvm.return  %1 : i64
+  }]
+def single_cast_op : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
+  {lhs:= cast_op_lhs , rhs:= cast_op_rhs ,
+   correct := by
+    unfold cast_op_lhs cast_op_rhs
+    simp_peephole
+    unfold castriscvToLLVM PoisonOr.value
+    simp_peephole
+    sorry
+  }
+
+
