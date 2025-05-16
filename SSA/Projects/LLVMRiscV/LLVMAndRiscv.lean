@@ -296,7 +296,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
     return ⟨eff, .llvm ty, Com.ret (← transformVarLLVM v)⟩
   | .error e =>
     match e with
-    | .unsupportedOp _s=>
+    | .generic _s=>
       let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn (ctxtTransformToRiscV Γ) opStx (← read)
       match com with
       | Com.ret v =>
