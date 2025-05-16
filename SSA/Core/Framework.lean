@@ -270,7 +270,6 @@ instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
 
 end Repr
 
-
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
 mutual -- DecEq
