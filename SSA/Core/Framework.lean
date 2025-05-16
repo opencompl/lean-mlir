@@ -270,6 +270,47 @@ instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
 
 end Repr
 
+/- # ToString instances for Com and Expr  -/
+section ToString
+variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
+  let args := (List.range ts.length).zip ts |>.map
+    (fun (i, t) => s!"%{i} : {toString t}")
+  "(" ++ String.intercalate ", " args ++ ")"
+/--
+Converts an expression to its string representation.
+Assumes that `toString` instances exist for both the dialect's operations (`d.Op`)
+and types (`d.Ty`). The output includes the operation name, argument list,
+their types, and the resulting output type.
+-/
+partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
+  | Expr.mk (op : d.Op) _ _ args _regArgs =>
+    let outTy : d.Ty := DialectSignature.outTy op
+    let argTys := DialectSignature.sig op
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({ToString.toString outTy})"
+
+/-- This function recursivly converts the body of a `Com` into its string representation.
+Each bound variable is printed with its index and corresponding expression. -/
+partial def Com.ToStringBody : Com d Γ eff t → String
+  | .ret v => s!".return {_root_.repr v } : ({toString t}) → ()"
+  | .var e body =>
+    s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+    Com.ToStringBody body
+
+/- `Com.toString` implements a toString instance for the type `Com`.  -/
+partial def Com.toString (com : Com d Γ eff t) : String :=
+   "{ \n"
+  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
+  ++ (Com.ToStringBody com) ++
+   "\n }"
+
+instance : ToString (Com d Γ eff t)  where toString := Com.toString
+instance : ToString (Expr d Γ eff t) where toString := Expr.toString
+
+end ToString
+
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
 mutual -- DecEq
