@@ -202,7 +202,7 @@ def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) 
             | .llvm _ => /- This is impossible, because mixing LLVM and RiscV variables would've already been
                           caught by RISC-V parserbeen caught by the RISC-V parser before invoking this function. -/
                 throw <| .generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to LLVM variable.
-                Should have benn caught by the RISC-V parser."
+                Should have been caught by the RISC-V parser."
             | .riscv originalRISCVTy =>
                 if hty' : originalRISCVTy = t then
                   return ⟨v.val, by
