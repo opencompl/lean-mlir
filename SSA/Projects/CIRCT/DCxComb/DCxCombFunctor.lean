@@ -36,46 +36,75 @@ abbrev DCxComb : Dialect where
   Op := Op
   Ty := MLIR2DC.DC.Ty
 
-def liftTy : MLIR2Comb.Ty → Option MLIR2DC.Ty
-| .bv w => .some <| .valuestream w
-| .typeSum w₁ w₂ => 
-  if w₁ = w₂ then 
-    -- TODO(yann): We should probably allow value streams with different bit widths in the products.
-    .some <| .valuestream2 w₁
-  else 
-    .none
-| .bool => .some <| .valuestream 1
-| _ => .none
+def liftTy : MLIR2Comb.Ty → MLIR2DC.Ty
+| .bv w => .valuestream w
 
 -- TODO(yann): Currently we use a small hack to use a default void type for types that have no equivalent going from
 -- Comb to DC.  This default value should be a stream to make denotation easier.
 def liftSig (sig : Signature MLIR2Comb.Ty) : Signature MLIR2DC.Ty :=
-  Signature.mk (sig.sig.map ((Option.getD . (.valuestream 0)) ∘ liftTy)) [] (liftTy sig.outTy |>.getD (.valuestream 0))
+  Signature.mk (sig.sig.map liftTy) [] (liftTy sig.outTy)
+-- map bitvecs from comb to streams in dc
 
 instance : DialectSignature DCxComb where
-  signature := fun op => 
+  signature := fun op =>
     match op with
     | .comb o => liftSig (signature o)
     -- TODO(yann): Need to specify the signature instance directly because it is otherwise trying to get the instance of
     -- DCxComb.
     | .dc o => MLIR2DC.instDialectSignatureDC.signature o
 
-def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) : Stream (HVector toType (DialectSignature.sig op)) := by
+def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
+    Stream' (HVector (fun i => Option (BitVec i)) l) :=
+  match H : l with
+  | nil =>
+    fun i => ( H.symm ▸ .nil (f := (fun i => Option (BitVec i))))
+    match H : h with
+    | nil => fun _ =>
+        have : l = [] := by
+          cases H
+        .nil (f := (fun i => Option (BitVec i)))
+    | cons x xs =>
+      fun i =>
+        match x i with
+        | .none => none
+        | .some y => HVector.cons x (hv_cast_gen xs)
+
+    sorry
+
+
+def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
+    Stream (HVector (fun i => BitVec i) l) :=
+  match h with
+  | nil => nil
+  | cons x xs =>
+    fun i =>
+      match x i with
+      | .none => none
+      | .some y => HVector.cons x (hv_cast_gen xs)
+      --always none except for when all the streams are ready (synced)
+
+def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+    Stream (HVector toType (DialectSignature.sig op)) :=
+
+
+    by
   cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
-  all_goals sorry
+  case sub w =>
+    dsimp [DialectSignature.sig, signature] at *
+    --
+    intro i
+    exact none
+  all_goals
+  sorry
 
 def_denote for DCxComb where
-| .comb op => sorry
+| .comb op => -- use the cast to turn inputs into a stream of bv
+
+
+    sorry
 | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
-instance : DialectDenote DCxComb where
-  denote := fun op => 
-    match op with
-    | .comb op => sorry
-    | .dc op => MLIR2DC.instDialectDenoteDC.denote op
-
 -- instance : MLIR.AST.TransformExpr DCxComb 0 where
-
 -- instance : MLIR.AST.TransformReturn (DCxComb) 0 where
 
 -- instance : DialectToExpr DCxComb where
@@ -128,4 +157,32 @@ instance : DialectDenote DCxComb where
 
 -- abbrev DCComb := DC MLIR2Comb.Comb
 
+-- problem with lifting comb to streams: what do we do with the optons?
+-- opt 1. bisimulation modulo options
+-- opt 2. wait for everything to be ready (latency sensitive) → ensure they sync (cfr. pack/unpack). we like this better to claim it's an accurate semantics of dc!
+
+-- un/pack: the unit sig it sends out tells us when the signal is ready
 end DCxCombFunctor
+
+
+/-
+
+     -
+     -
+     0#3
+     -
+     -
+
+   unpack
+
+   -   0
+   -   0
+   1   0
+   -   0
+   -   0
+
+pack syncs depending on the left stream
+
+we will proceed as if this will work.
+
+-/

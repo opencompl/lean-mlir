@@ -11,17 +11,14 @@ section Dialect
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `w`.
-| typeSum (w₁ w₂ : Nat) : Ty
-| bool : Ty
-| nat : Ty
-| hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
-| icmpPred : Ty
+-- | hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
+-- | icmpPred : Ty
 deriving DecidableEq, Repr, Lean.ToExpr
 
 inductive Op
 | add (w : Nat) (arity : Nat)
 | and (w : Nat) (arity : Nat)
-| concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
+-- | concat (w : List Nat) -- len(w) = #args, wi is the width of the i-th arg
 | divs (w : Nat)
 | divu (w : Nat)
 | extract (w : Nat) (n : Nat)
@@ -47,17 +44,17 @@ abbrev Comb : Dialect where
 def_signature for Comb where
   | .add w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .and w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .concat l => (Ty.hList l) → (Ty.bv l.sum)
+  -- | .concat l => (Ty.hList l) → (Ty.bv l.sum)
   | .divs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .divu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .extract w n => (Ty.bv w) → (Ty.bv (w - n))
-  | .icmp _ w => (Ty.bv w, Ty.bv w) → (Ty.bool)
+  | .icmp _ w => (Ty.bv w, Ty.bv w) → (Ty.bv 1)
   | .mods w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .modu w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .mul w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .mux w => (Ty.bv w, Ty.bv w, Ty.bv 1) → (Ty.bv w)
   | .or w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
-  | .parity w => (Ty.bv w) → (Ty.bool)
+  | .parity w => (Ty.bv w) → (Ty.bv 1)
   | .replicate w n => (Ty.bv w) → (Ty.bv (w * n))
   | .shl w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
   | .shrs w => (Ty.bv w, Ty.bv w) → (Ty.bv w)
@@ -68,11 +65,9 @@ def_signature for Comb where
 instance : TyDenote (Dialect.Ty Comb) where
   toType := fun
   | .bv w => BitVec w
-  | .nat  => Nat
-  | .bool => Bool
-  | .typeSum w₁ w₂ => BitVec w₁ ⊕ BitVec w₂
-  | .hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
-  | .icmpPred => CombOp.IcmpPredicate
+  -- | .bool => Bool
+  -- | .hList l => HVector BitVec l -- het list of bitvec whose lengths are contained in l
+  -- | .icmpPred => CombOp.IcmpPredicate
 
 def HVector.replicateToList {α : Type} {f : α → Type} {a : α} :
     {n : Nat} → HVector f (List.replicate n a) → List (f a)
@@ -96,7 +91,7 @@ def ofString? (s : String) : Option CombOp.IcmpPredicate :=
 def_denote for Comb where
   | .add _ _ => fun xs => CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
   | .and _ _ => fun xs => CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .concat _ => fun xs => CombOp.concat xs
+  -- | .concat _ => fun xs => CombOp.concat xs
   | .divs _ => BitVec.sdiv
   | .divu _ => BitVec.udiv
   | .extract _ _ => fun x => CombOp.extract x _
@@ -121,12 +116,10 @@ end Dialect
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Comb Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
-    | ["Bool"] =>
-      return .bool
-    | ["Nat"] =>
-      return .nat
-    | ["IcmpPred"] =>
-      return .icmpPred
+    -- | ["Bool"] =>
+    --   return .bool
+    -- | ["IcmpPred"] =>
+    --   return .icmpPred
     | _ => throw .unsupportedType
   | MLIR.AST.MLIRType.int _ w =>
     match w with
@@ -154,13 +147,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
       | .bv w, "Comb.parity" =>
-        return ⟨_, .bool,
+        return ⟨_, .bv 1,
           (Expr.mk (op := .parity w) (ty_eq := rfl) (eff_le := by constructor)
-            (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bool))⟩
-      | .hList l, "Comb.concat" =>
-        return ⟨_, .bv l.sum,
-          (Expr.mk (op := .concat l) (ty_eq := rfl) (eff_le := by constructor)
-            (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (l.sum)))⟩
+            (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv 1))⟩
+      -- | .hList l, "Comb.concat" =>
+      --   return ⟨_, .bv l.sum,
+      --     (Expr.mk (op := .concat l) (ty_eq := rfl) (eff_le := by constructor)
+      --       (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (l.sum)))⟩
       | _, _ => throw <| .generic s!"type mismatch for {opStx.name}"
     | _ => throw <| .generic s!"expected one operand found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.add" | op@"Comb.and" | op@"Comb.mul" | op@"Comb.or" | op@"Comb.xor" =>
@@ -195,7 +188,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             | _ => throw <| .generic s!"Unknown operation"
           else
             throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
-        | _ => throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
   | op@"Comb.divs" | op@"Comb.divu" | op@"Comb.mods" | op@"Comb.modu" | op@"Comb.shl" | op@"Comb.shrs" | op@"Comb.shru" | op@"Comb.sub"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
@@ -240,7 +232,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           | _ => throw <| .generic s!"Unknown operation"
         else
           throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
-      | _, _ => throw <| .generic s!"type mismatch in {opStx.name}"
     | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"Comb.mux" =>
     match opStx.args with
@@ -271,7 +262,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             (Expr.mk (op := .replicate w n') (ty_eq := rfl) (eff_le := by constructor)
               (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w * n')))⟩
         | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
-        | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.extract", n] =>
       match opStx.args with
@@ -283,7 +273,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             (Expr.mk (op := .extract w n') (ty_eq := rfl) (eff_le := by constructor)
               (args := .cons v₁ <| .nil) (regArgs := .nil) : Expr (Comb) Γ .pure (.bv (w - n')))⟩
         | _, none => throw <| .generic s!"invalid parameter in {repr opStx}"
-        | _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"type mismatch in {repr opStx}"
     | ["Comb.icmp", p] =>
       match opStx.args with
@@ -293,12 +282,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match ty₁, ty₂, (ofString? p) with
         | .bv w₁, .bv w₂, some p' =>
           if h : w₁ = w₂ then
-            return ⟨_, .bool,
+            return ⟨_, .bv 1,
               (Expr.mk (op := .icmp p w₁)  (ty_eq := rfl)  (eff_le := by constructor)
-                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bool))⟩
+                (args := .cons v₁ <| .cons (h ▸ v₂) <| .nil) (regArgs := .nil): Expr (Comb) Γ .pure (.bv 1))⟩
           else throw <| .generic s!"bitvector sizes don't match for '{repr opStx.args}' in {opStx.name}"
         | _, _, none => throw <| .generic s!"unknown predicate in {repr opStx}"
-        | _, _, _ => throw <| .generic s!"type mismatch in {repr opStx}"
       | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
     | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
