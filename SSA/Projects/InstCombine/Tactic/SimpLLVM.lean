@@ -210,8 +210,8 @@ thus there is no need for a simproc; a regular simp lemma suffices
 @[simp_llvm]
 theorem PoisonOr.if_then_if_then_poison_eq {α : Type} (c₁ c₂ : Prop) [Decidable c₁] [Decidable c₂]
       (x y : PoisonOr α):
-    (if c₁ then (if c₂ then poison else x) else y) =
-    (if c₁ ∧ c₂ then poison else (if c₁ then x else y)) := by
+    (if c₁ then (if c₂ then poison else x : no_index _) else y : no_index _) =
+    (if c₁ ∧ c₂ then poison else (if c₁ then x else y : no_index _) : no_index _) := by
   split <;> simp [*]
 
 end ItePoison
