@@ -320,9 +320,9 @@ functions that define our semantics.
 @[simp, reducible]
 instance : DialectDenote (RV64) where
   denote
-  |  .li imm, _ , _ => BitVec.ofInt 64 imm
-  |  .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  |  .lui imm, regs , _ => UTYPE_pure64_lui imm
+  | .li imm, _ , _ => BitVec.ofInt 64 imm
+  | .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .lui imm, regs , _ => UTYPE_pure64_lui imm
   | .auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .slliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SLLIW_bv shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .srliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SRLIW_bv shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
