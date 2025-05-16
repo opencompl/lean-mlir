@@ -296,8 +296,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
       | Com.ret v =>
         return ⟨eff, .riscv ty, Com.ret (← transformVarRISCV v)⟩
       | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
-    | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type.
-        LLVM parser threw error different from unsupported Op"
+    | e => throw e
   | _ => throw <| .generic s!"Unable to parse return as either LLVM type or RISCV type."
 
 instance : MLIR.AST.TransformReturn LLVMPlusRiscV 0 where
