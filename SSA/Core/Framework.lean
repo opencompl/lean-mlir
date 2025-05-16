@@ -303,7 +303,7 @@ partial def Com.ToStringBody : Com d Γ eff t → String
 partial def Com.toString (_com : Com d Γ eff t) : String :=
    "{ \n"
   ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
-  ++ (Com.ToStringBody _com) ++
+  ++ (Com.ToStringBody com) ++
    "\n }"
 
 instance : ToString (Com d Γ eff t)  where toString := Com.toString
