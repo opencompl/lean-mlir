@@ -115,7 +115,7 @@ inductive MOp (φ : Nat) : Type
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
-def toStringWithoutFlags (op : MOp.BinaryOp) : String :=
+def toStringWithFlags (op : MOp.BinaryOp) : String :=
   let op  : String := match op with
     | .and                  => "and"
     | .or   ⟨false⟩         => "or"
@@ -142,7 +142,7 @@ def toStringWithoutFlags (op : MOp.BinaryOp) : String :=
   s!"llvm.{op}"
 
 instance : ToString (MOp.BinaryOp) where
-  toString := toStringWithoutFlags
+  toString := toStringWithFlags
 
 instance : ToString (MOp.UnaryOp (φ : Nat)) where
   toString t := repr t |>.pretty

@@ -1,7 +1,11 @@
 import SSA.Projects.InstCombine.LLVM.Parser
 import Cli
 
-
+/-- `verbose_flag` takes in a filename and assuming the file is wellformed,
+ prints verbose output to the command line. Additionally it prints
+ a string indicating that the verbose flag was set. If the parsing fails,
+ it returns with the exit code of 1 to signalize failure. The exit code 1
+ indicates success. -/
 def verbose_flag (fileName : String ) : IO UInt32 := do
       let icom? ← parseComFromFile fileName
       match icom? with
@@ -14,7 +18,7 @@ def verbose_flag (fileName : String ) : IO UInt32 := do
 def wellformed (fileName : String ) : IO UInt32 := do
     let icom? ← parseComFromFile fileName
     match icom? with
-    | none => IO.println s!"wellformed debug" return 1
+    | none => return 1
     | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
       IO.println s!"{toString c}"
       return 0
