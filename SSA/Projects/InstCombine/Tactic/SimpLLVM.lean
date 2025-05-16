@@ -136,7 +136,7 @@ attribute [simp_llvm]
   true_or or_true false_or or_false
   imp_false implies_true
   or_self and_self
-  not_or not_and
+  not_or not_and Decidable.not_not
   -- Bool
   Bool.or_eq_true Bool.and_eq_true
   beq_iff_eq bne_iff_ne
@@ -219,8 +219,8 @@ end ItePoison
 macro "simp_alive_split" : tactic => `(tactic|(
   all_goals
     try intros
-    simp -failIfUnchanged -implicitDefEqProofs +contextual only [
-      simp_llvm_split, simp_llvm
+    simp_all -failIfUnchanged -implicitDefEqProofs +contextual only [
+      simp_llvm_split, simp_llvm, seval
     ]
     try intros -- introduce any new hypotheses that may have been added
   ))
