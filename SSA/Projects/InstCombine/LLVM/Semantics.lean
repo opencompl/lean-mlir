@@ -75,7 +75,7 @@ structure DisjointFlag where
 def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flag.disjoint ∧ x' &&& y' != 0 then
+  if flag.disjoint ∧ x' &&& y' != 0#w then
     .poison
   else
     or? x' y'
@@ -186,7 +186,7 @@ Division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y = 0 then
+  if y = 0#w then
     .poison
   else
     .value <| x / y
@@ -199,7 +199,7 @@ structure ExactFlag where
 def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flag.exact ∧ x'.umod y' ≠ 0 then
+  if flag.exact ∧ x'.umod y' ≠ 0#w then
     .poison
   else
     udiv? x' y'
@@ -223,13 +223,13 @@ at width 2, -4 / -1 is considered overflow!
 -- is no magnitude to overflow.
 @[simp_llvm]
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+  if y == 0#w || (w != 1 && x == (BitVec.intMin w) && y == -1) then
     .poison
   else
     .value (x.sdiv y)
 
 theorem sdiv?_denom_zero_eq_poison {w : Nat} (x : BitVec w) :
-  LLVM.sdiv? x 0 = .poison := by
+  LLVM.sdiv? x 0#w = .poison := by
   simp [LLVM.sdiv?, BitVec.sdiv]
 
 theorem sdiv?_eq_value_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
@@ -241,7 +241,7 @@ theorem sdiv?_eq_value_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
 def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flag.exact ∧ x'.smod y' ≠ 0 then
+  if flag.exact ∧ x'.smod y' ≠ 0#w then
     .poison
   else
     sdiv? x' y'
@@ -263,7 +263,7 @@ Taking the remainder of a division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y = 0 then
+  if y = 0#w then
     .poison
   else
     .value <| x % y
@@ -325,7 +325,7 @@ We use this equation to define srem.
 -/
 @[simp_llvm]
 def srem? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+  if y == 0#w || (w != 1 && x == (BitVec.intMin w) && y == -1) then
     .poison
   else
     .value <| BitVec.srem x y
