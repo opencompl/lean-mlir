@@ -51,11 +51,6 @@ inductive MOp.UnaryOp (φ : Nat) : Type
   | sext  (w' : Width φ)
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
-instance : ToString (MOp.UnaryOp (φ : Nat)) where
-  toString
-  | .neg   => "and"
-  | _ => "sub"
-
 /-- Homogeneous, binary operations -/
 inductive MOp.BinaryOp : Type
   | and
@@ -110,34 +105,6 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
 instance : Repr (MOp.BinaryOp) where
   reprPrec := reprWithoutFlags
 
--- to   DO : FORMATTING
-instance : ToString MOp.BinaryOp where
-  toString
-  | .and               => "llvm.and"
-  | .or ⟨false⟩       => "llvm.or"
-  | .or ⟨true⟩        => "llvm.or disjoint"
-  | .xor                => "llvm.xor"
-  | .shl  ⟨false, false⟩   => "llvm.shl"
-  | .shl  ⟨nsw, nuw⟩        => s!"llvm.shl {nsw} {nuw}" -- to do check flags
-  | .lshr ⟨false⟩       => "llvm.lshr"
-  | .lshr ⟨true⟩           => "llvm.lshr exact"
-  | .ashr ⟨false⟩        => "llvm.ashr"
-  | .ashr ⟨true⟩           => "llvm.ashr exact"
-  | .urem              => "llvm.urem"
-  | .srem              => "llvm.srem"
-  | .add  ⟨false, false⟩   => "llvm.add"
-  | .add  ⟨nsw, nuw⟩        => s!"llvm.add {nsw} {nuw}"
-  | .mul  ⟨false, false⟩ => "llvm.mul"
-  | .mul  ⟨nsw, nuw⟩       => s!"llvm.mul {nsw} {nuw}"
-  | .sub ⟨false, false⟩   => "llvm.sub"
-  | .sub ⟨nsw, nuw⟩        => s!"llvm.sub {nsw} {nuw}"
-  | .sdiv ⟨false⟩         => "llvm.sdiv"
-  | .sdiv ⟨true⟩           => "llvm.sdiv exact"
-  | .udiv ⟨false⟩         => "llvm.udiv"
-  | .udiv ⟨true⟩           => "llvm.udiv exact"
-
-#eval toString (MOp.BinaryOp.add ⟨true , true⟩)
-
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
   | unary   (w : Width φ) (op : MOp.UnaryOp φ) :  MOp φ
@@ -147,15 +114,6 @@ inductive MOp (φ : Nat) : Type
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
-
-instance : ToString (MOp 0) where
-   toString
-     | .unary _w op => s!"\"{repr  op}\""
-     | .binary _w op => s!"\"{repr  op}\""
-     | .select  _w =>  "select"
-     | .icmp  _pred _w => "icmp"
-     | .const w val => s!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
-
 
 /-! ## Dialect -/
 

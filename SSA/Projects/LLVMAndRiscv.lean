@@ -18,7 +18,7 @@ currently only operates within one dialect.
 
 To make the intermixing of the type system across the dialects work,
 we insert unrealized_conversion_cast like MLIR does during lowering.
-see_: section (UnrealizedConversionCastOp)
+see: section (UnrealizedConversionCastOp)
 https://mlir.llvm.org/docs/Dialects/Builtin/#builtinunrealized_conversion_cast-unrealizedconversioncastop
  -/
 

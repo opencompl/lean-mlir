@@ -268,22 +268,7 @@ instance : Repr (Expr d Γ eff t) := ⟨flip Expr.repr⟩
 instance : Repr (Com d Γ eff t) := ⟨flip Com.repr⟩
 instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
 
--- modified section for sarah
-variable {dd}[DialectSignature dd][ToString dd.Ty][ToString dd.Op]
-
-
-
-
-  /-- Format string for a Com, with the region parentheses and formal argument list. -/
-  partial def Com.toString(com : Com d Γ eff t) : String :=
-    "{\n hi is there a new line "
-
-
-instance : ToString (Com dd Γ eff t)  := ⟨Com.toString⟩
-
 end Repr
-
-
 
 
 /-! ### DecidableEq instance -/
