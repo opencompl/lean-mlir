@@ -223,4 +223,12 @@ macro "simp_alive_split" : tactic => `(tactic|(
       simp_llvm_split, simp_llvm, seval
     ]
     try intros -- introduce any new hypotheses that may have been added
+
+    /- At this point, we should only have pure bitvector if-statements.
+    `bv_decide` supports those natively, but unfortunately these if-statements
+    tend to trigger time outs, whereas splitting them and feeding the subgoals
+    to `bv_decide` seems to work pretty fast, so that's what we do. -/
+    repeat' (split <;> simp_all -failIfUnchanged -implicitDefEqProofs +contextual only [
+      simp_llvm_split, simp_llvm, seval
+    ])
   ))
