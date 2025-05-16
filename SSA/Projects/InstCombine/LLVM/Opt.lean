@@ -32,7 +32,7 @@ def mainCmd := `[Cli|
     opt VIA runMainCmd;
     "opt: apply verified rewrites"
     FLAGS:
-      verbose; "Declares a flag `--verbose`. This is the description of the flag."
+      verbose; "Prints verbose output for debugging using the Repr typeclass to print."
     ARGS:
       file: String; "Input filename"
     ]
