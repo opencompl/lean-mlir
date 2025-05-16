@@ -287,7 +287,7 @@ their types, and the resulting output type.
 -/
 partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
-    let outTy : d.Ty  := DialectSignature.outTy op
+    let outTy : d.Ty := DialectSignature.outTy op
     let argTys := DialectSignature.sig op
     s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({ToString.toString outTy})"
 
