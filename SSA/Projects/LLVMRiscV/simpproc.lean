@@ -164,6 +164,5 @@ def llvm_and_lower_riscv1 : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.
     simp_peephole /- here I expect simp_peephole to remove the framework overhead
     and simplify the args to a simple HVector representation.
      -/
-
     sorry
   }
