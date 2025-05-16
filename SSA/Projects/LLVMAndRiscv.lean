@@ -251,8 +251,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
     match ty with
-      | .riscv (.bv) => mkExprOf <| .castRiscv
-      | .llvm (.bitvec 64) => mkExprOf <| .castLLVM
+      | .riscv (.bv) => mkExprOf (args? := args) <| .castRiscv
+      | .llvm (.bitvec 64) => mkExprOf (args? := args) <| .castLLVM
       | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
   else
     let llvmParse := InstcombineTransformDialect.mkExpr (ctxtTransformToLLVM  Γ) opStx (← read)
