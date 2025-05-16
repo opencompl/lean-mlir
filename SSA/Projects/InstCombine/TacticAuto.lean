@@ -107,7 +107,7 @@ macro "bv_ac" : tactic =>
 macro "bv_auto": tactic =>
   `(tactic|
       (
-        simp (config := { failIfUnchanged := false }) only
+        simp_all (config := { failIfUnchanged := false }) only
           [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
            BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq]
         try solve
