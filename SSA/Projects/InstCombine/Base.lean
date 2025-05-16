@@ -152,8 +152,8 @@ instance : ToString (MOp 0) where
      match op with
      | .unary _w op => s!"\"{toString op}\""
      | .binary _w op => s!"\"{toString  op}\""
-     | .select  _w =>  "select"
-     | .icmp  _pred _w =>  "icmp"
+     | .select  _w => "select"
+     | .icmp  _pred _w => "icmp"
      | .const w val => s!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
 
 /-! ## Dialect -/
