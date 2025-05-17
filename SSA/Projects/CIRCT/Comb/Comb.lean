@@ -149,6 +149,10 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   let binW : AST.ReaderM (Comb) (Nat) := do
     let args ← args.assumeArity 2
     return getVarWidth args[0]
+  -- 3-ary ops
+  let terW : AST.ReaderM (Comb) (Nat) := do
+    let args ← args.assumeArity 3
+    return getVarWidth args[0]
   -- n-ary ops
   let args' ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ) -- will need to find a better way to do this
   if h : args'.length = 0 then
@@ -180,11 +184,12 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | _ => throw <| .generic s!" invalid attribute provided for {repr opStx.args}"
     | ["Comb.mods"] => mkExprOf <| .mods (← binW)
     | ["Comb.modu"] => mkExprOf <| .modu (← binW)
-    | ["Comb.mux"] => mkExprOf <| .mux (← binW)
     | ["Comb.shl"] => mkExprOf <| .shl (← binW)
     | ["Comb.shrs"] => mkExprOf <| .shrs (← binW)
     | ["Comb.shru"] => mkExprOf <| .shru (← binW)
     | ["Comb.sub "] => mkExprOf <| .sub (← binW)
+    -- 3-ary
+    | ["Comb.mux"] => mkExprOf <| .mux (← terW)
     -- n-ary (variadic)
     | ["Comb.add"] => mkExprOf <| .add (← nnW) args'.length
     | ["Comb.and"] => mkExprOf <| .and (← nnW) args'.length
