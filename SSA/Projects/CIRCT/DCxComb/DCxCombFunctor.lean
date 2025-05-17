@@ -60,9 +60,9 @@ instance : DialectSignature DCxComb where
 def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
     Stream' (HVector (fun i => Option (BitVec i)) l) :=
   fun n =>
-  match h with
-  | .nil => .nil
-  | .cons x xs => HVector.cons (x n) (hv_cast_gen' xs n)
+    match h with
+    | .nil => .nil
+    | .cons x xs => HVector.cons (x n) (hv_cast_gen' xs n)
 
 -- problem: we need a proof that this is actually true (i.e., none of the streams in
 -- h is full of nones)
@@ -70,28 +70,23 @@ def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
 -- a Stream that returns none until all the input stream are ready
 -- note that Stream := Stream' (Option β)
 def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream' (Option (BitVec i))) l) :
-    Stream' (Option (HVector (fun i => BitVec i) l)) :=
+    Stream (HVector (fun i => BitVec i) l) :=
   fun n =>
-    let opt_vec := hv_cast_gen' h n
-    match opt_vec with
+    match h with
     | .nil => none
     | .cons x xs =>
-        match x, hv_cast_gen' xs n with
-        | some x', some xs' => some (HVector.cons x' xs')
-        | _, _ => none
-
-
-  -- fun n =>
-  --   let synced := (hv_cast_gen' h) n -- take the n-th entry for each stream in h
-  --   -- scroll through every elements in synced and make sure that they're
-  --   -- actually allready
-  --   match synced with
-  --   | .nil => none
-  --   | .cons x xs => isReady xs
-  --       -- match x with
-  --       -- | some x'=> some (.cons x' xs')
-  --       -- | _ => none
-
+      match x n with
+      | some xc =>
+        match (hv_cast_gen' xs) n with
+        | .nil => none
+        | .cons x' xs' =>
+          match xs' with
+          | .nil => none
+          | .cons x'' xs'' =>
+            match (hv_cast_gen xs) n with
+            | none => none
+            | some xs''' => HVector.cons x'' xs'''
+      | none => none
 
 def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) :=
@@ -107,8 +102,6 @@ def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb 
 
 def_denote for DCxComb where
 | .comb op => -- use the cast to turn inputs into a stream of bv
-
-
     sorry
 | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
