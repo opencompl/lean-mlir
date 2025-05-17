@@ -74,14 +74,14 @@ def is_ready {l : List Nat} (v : HVector (fun i => Option (BitVec i)) l) :
   match v with
         | .nil => some .nil
         | .cons (some x) xs =>
-            match isReady xs with
+            match is_ready xs with
             | some xs' => some (.cons x xs')
             | none => none
         | .cons none _ => none
 
 def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
     Stream (HVector (fun i => BitVec i) l) :=
-  fun n => isReady (hv_cast_gen' h n)
+  fun n => is_ready (hv_cast_gen' h n)
 
 def hv_cast1 (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) :=
