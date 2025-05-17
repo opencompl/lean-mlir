@@ -84,23 +84,22 @@ def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
   fun n => is_ready (hv_cast_gen' h n)
 
 -- hacky versino
-def hv_cast_hacky (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
-    Stream (HVector toType (DialectSignature.sig op)) :=
-  by
-  cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
-  all_goals
-    dsimp [DialectSignature.sig, signature] at *
-    intro i
-    exact none
+-- def hv_cast_hacky {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+--     Stream (HVector toType (DialectSignature.sig op)) :=
+--   by
+--   cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
+--   all_goals
+--     dsimp [DialectSignature.sig, signature] at *
+--     intro i
+--     exact none
 
-def hv_cast (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
-    Stream (HVector toType (DialectSignature.sig op)) :=
-  sorry
+-- more elegant version
+def hv_cast {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+    Stream (HVector toType (DialectSignature.sig op)) := by exact Stream.stuck (HVector toType (DialectSignature.sig op))
 
 def_denote for DCxComb where
-| .comb op => -- use the cast to turn inputs into a stream of bv
-    sorry
-| .dc op => MLIR2DC.instDialectDenoteDC.denote op
+  | .comb op => (hv_cast_hacky (MLIR2Comb.Comb.Op.op h))
+  | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 -- instance : MLIR.AST.TransformExpr DCxComb 0 where
 -- instance : MLIR.AST.TransformReturn (DCxComb) 0 where
