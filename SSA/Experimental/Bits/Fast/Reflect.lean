@@ -773,11 +773,14 @@ deriving DecidableEq, Hashable
 
 namespace Inputs
 
+def elim0 {α : Sort u} (i : Inputs ι 0) : α :=
+  i.ix.elim0
+
 def latest (i : ι) : Inputs ι (n+1) where
   ix := ⟨n, by omega⟩
   input := i
 
-def castLe (i : Inputs ι n) (hn : n ≤ n') : Inputs ι n' where
+def castLe (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
   ix := ⟨i.ix, by omega⟩
   input := i.input
 
@@ -835,6 +838,257 @@ def Vars.format (fσ : σ → Format) (fι : ι → Format) {n : Nat} (v : Vars 
   | .state s => fσ s
   | .inputs is => is.format fι
 
+def Vars.castLe {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m :=
+  match v with
+  | .state s => .state s
+  | .inputs is => .inputs (is.castLe hnm)
+
+structure StateCircuit {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (iter : Nat) where ofFun ::
+  toFun : p.α →  Circuit (Vars p.α arity iter)
+
+/-- Product initial state vector,
+that sets the state to be the intial state as given by the FSM.. -/
+def StateCircuit.zero  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) : StateCircuit p 0 where
+  toFun :=
+    fun a => Circuit.ofBool (p.initCarry a)
+
+/-- Product free state vector, that reads state from the input.. -/
+def StateCircuit.id  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) : StateCircuit p 0 where
+  toFun :=
+    fun a => Circuit.var false (Vars.state a)
+
+
+/-- Make a circuit for one step of transition.  -/
+def StateCircuit.delta  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) : StateCircuit p 1 where
+  toFun :=
+    fun a =>
+      let x := StateCircuit.id p
+      x.toFun a |>.bind fun v =>
+        match v with
+        | .state s =>
+          let d := p.nextBitCirc (some s)
+          d.map fun w =>
+            match w with
+            | .inl a => Vars.state a
+            | .inr i => Vars.inputs (Inputs.mk 0 i)
+        | .inputs i => i.elim0
+
+/-- Allow state circuit to consume more inputs.  -/
+def StateCircuit.castLe  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    (cn : StateCircuit p n)
+    (hnm : n ≤ m) :  StateCircuit p m where
+  toFun := fun state =>
+    (cn.toFun state).map fun v => v.castLe hnm
+
+/-- Move inputs from [0..n) to [d..d+n). -/
+def StateCircuit.translateInputs {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    (cn : StateCircuit p n)
+    (d : Nat) :  StateCircuit p (d + n) where
+  toFun := fun state =>
+    (cn.toFun state).map fun v =>
+      match v with
+      | .state s => .state s
+      | .inputs i => .inputs (Inputs.mk ⟨i.ix + d, by omega⟩ i.input)
+
+
+/-- Compose state circuits of 'n' steps and 'm' steps to get a circuit for 'n + m' steps. -/
+def StateCircuit.compose {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    /- Circuit that runs for [0..n) steps. -/
+    (sFst : StateCircuit p n)
+    /- Circuit that runs for [n..n+m ] steps. -/
+    (sSnd : StateCircuit p m) :
+    StateCircuit p (n + m) where
+  toFun := fun state =>
+    ((sSnd.translateInputs n).toFun state).bind fun v =>
+      match v with
+      | .state s =>
+          (sFst.castLe (show n ≤ n + m by omega)).toFun s
+      | .inputs i => Circuit.var .false (.inputs i)
+
+/-- Build the output circuit from the given state circuit. -/
+def StateCircuit.toOutput {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    /- Circuit that runs for [0..n) steps. -/
+    (sc : StateCircuit p n)
+    /- Circuit that runs for [0..n+1] steps and produces an output. -/
+    : Circuit (Vars p.α arity (n + 1)) :=
+  (p.nextBitCirc none).bind fun v =>
+    match v with
+    | .inl s => (sc.castLe (by omega)).toFun s
+    | .inr i => Circuit.var false (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))
+
+
+
+/-- Build the circuit for n transitions.-/
+def StateCircuit.deltaN  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (n : Nat) : StateCircuit p n :=
+  match n with
+  | 0 => StateCircuit.id p
+  | n' + 1 =>
+    let d := (StateCircuit.delta p)
+    let sn := StateCircuit.deltaN p n'
+    sn.compose d
+
+
+/-- Make circuit that produces output for index 'i'. -/
+def StateCircuit.deltaNOutput {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat)  (hin : i ≤ n): (Circuit (Vars p.α arity (n+1))) :=
+  ((StateCircuit.deltaN p i).castLe (show i ≤ n by omega)).toOutput
+
+
+/-- Take the 'or' of many circuits.-/
+def Circuit.bigOr {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  match cs with
+  | [] => Circuit.fals
+  | c :: cs =>
+    c.or (Circuit.bigOr cs)
+
+/--
+Make the safety circuit at index 'i',
+which runs the program at the initial state on the inputs.
+-/
+def mkSafetyCircuitAuxElem {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars Empty arity (n+1))) :=
+  (StateCircuit.deltaNOutput p n i (by omega)).assignVars fun v hv =>
+    match v with
+    | .state s => .inr <| p.initCarry s
+    | .inputs i => .inl <| .inputs i
+
+/-- Make the list of safety circuits upto length 'n + 1'. -/
+def mkSafetyCircuitAuxList {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+  List (Circuit (Vars Empty arity (n+1))) :=
+  match i with
+  | 0 => []
+  | i' + 1 =>
+    let xs :=  mkSafetyCircuitAuxList p n i' (by omega)
+    xs.cons ((mkSafetyCircuitAuxElem p n i' (by omega)))
+
+/--
+make the circuit that witnesses safety for n steps.
+This builds the safety circuit for 'n' steps, and takes the 'or' of all of these.
+-/
+def mkSafetyCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
+  Circuit.bigOr (mkSafetyCircuitAuxList p n n (by omega))
+
+
+/-- Make the inductive hypothesis circuit at index 'i'. -/
+def mkIndHypAuxElem {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat)(i : Nat)  (hin : i ≤ n): (Circuit (Vars p.α arity (n+1))) :=
+  StateCircuit.deltaNOutput
+
+
+/-- Make the list of safety circuits upto length 'n + 1'. -/
+def mkIndypAuxList {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+  List (Circuit (Vars p.α arity (n+1))) :=
+  match i with
+  | 0 => []
+  | i' + 1 =>
+    let xs :=  mkSafetyCircuitAuxList p n i' (by omega)
+    xs.cons ((mkSafetyCircuitAuxElem p n i' (by omega)))
+
+
+def mkIndHypCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
+  Circuit.bigOr (mkSafetyCircuitAuxList p n n (by omega))
+
+/-#
+TODO:
+- theorem that builds the safety circuit
+- theorem that builds the inductive principle circuit.
+-/
+
+
+-- function that provides the circuit that computes the 'α'th state bit after
+-- niter iterations.
+def mkStateCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (niter : Nat)
+  (p : FSM arity) :
+  p.α → Circuit (Vars p.α arity niter) :=
+  match niter with
+  | 0 => fun a => Circuit.var false (Vars.state a)
+  | niter' + 1 =>
+    fun a =>
+      let prev := mkStateCircuit niter' p a
+      -- compute state bits till previous state.
+      sorry
+
+/-- Safe for `n` iterations. -/
+def mkSafetyProperty {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (niter : Nat)
+  (p : FSM arity)
+  : Circuit (Vars p.α arity niter) :=
+  match niter with
+  | 0 => .fals
+  | n' + 1 =>
+    let safe := mkSafetyProperty n' p
+  sorry
+
 @[nospecialize]
 partial def decideIfZerosAuxTermElabM {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -842,11 +1096,11 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     (p : FSM arity)
     (c0K : Circuit (Vars p.α arity iter))
     (cK : Circuit (Vars p.α arity iter))
-    (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
+    (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM (Option Nat) := do
   trace[Bits.Fast] s!"## K-induction (iter {iter})"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
-    return false
+    return .none
   let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
     match v with
     | .state a => .inr (p.initCarry a) -- assign init state
@@ -858,7 +1112,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   if ← checkCircuitSatAux cKWithInit
   then
     trace[Bits.Fast] s!"Safety property failed on initial state."
-    return false
+    return .none
   else
     trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
     -- circuit of the output at state (k+1)
@@ -900,20 +1154,14 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     let tElapsedSec := (tEnd - tStart) / 1000
     if le then
       trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
-      return true
+      return (.some iter)
     else
       trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
       decideIfZerosAuxTermElabM (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
 
--- def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
---     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
---         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
---     (p : FSM arity) : m Bool :=
---   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
-
 @[nospecialize]
 def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
-   (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM (Option Nat) :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
