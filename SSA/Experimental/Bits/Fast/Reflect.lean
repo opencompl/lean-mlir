@@ -730,32 +730,6 @@ theorem verifyAIG_iff_verifyCert [DecidableEq α] [Fintype α] [Hashable α]
     (h : verifyAIG c.toAIG cert) :
     c.always_false := by sorry
 
-/--
-info: theorem Reflect.BvDecide.foo : ∀ (a b : BitVec 3), a * b = b * a :=
-fun a b =>
-  Decidable.byContradiction fun a_1 =>
-    Std.Tactic.BVDecide.Reflect.Bool.false_of_eq_true_of_eq_false
-      (Eq.trans
-        (Eq.refl
-          (Std.Tactic.BVDecide.BVLogicalExpr.eval
-            (RArray.branch 1 (RArray.leaf { w := 3, bv := a }) (RArray.leaf { w := 3, bv := b }))
-            (Std.Tactic.BVDecide.BoolExpr.literal
-                (Std.Tactic.BVDecide.BVPred.bin
-                  ((Std.Tactic.BVDecide.BVExpr.var 0).bin Std.Tactic.BVDecide.BVBinOp.mul
-                    (Std.Tactic.BVDecide.BVExpr.var 1))
-                  Std.Tactic.BVDecide.BVBinPred.eq
-                  ((Std.Tactic.BVDecide.BVExpr.var 1).bin Std.Tactic.BVDecide.BVBinOp.mul
-                    (Std.Tactic.BVDecide.BVExpr.var 0)))).not))
-        (Eq.mp
-          (Eq.trans
-            (Eq.trans (congrArg Not (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq (a * b) (b * a)))
-              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (a * b == b * a) true))
-            (congrArg (fun x => (!x) = true) (beq_true (a * b == b * a))))
-          a_1))
-      (Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true foo._expr_def_1 foo._cert_def_1 foo._proof_19
-        (RArray.branch 1 (RArray.leaf { w := 3, bv := a }) (RArray.leaf { w := 3, bv := b })))
--/
-#guard_msgs in #print foo
 
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
@@ -772,7 +746,7 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let entrypoint:= c.toAIG
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -791,7 +765,7 @@ def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Ci
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
     let c := ~~~ c -- we're checking TAUTO, so check that negation is UNSAT.
-    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let entrypoint := c.toAIG
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -1078,10 +1052,11 @@ def mkIndHypAuxElem {arity : Type _}
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat)(i : Nat)  (hin : i ≤ n): (Circuit (Vars p.α arity (n+1))) :=
-  StateCircuit.deltaNOutput
+  /- Safe upto state n implies safe at state n. -/
+  (StateCircuit.deltaNOutput p n i hin).implies
+    (StateCircuit.deltaNOutput p n (i+i) (by sorry))
 
-
-/-- Make the list of safety circuits upto length 'n + 1'. -/
+/-- Make the inductive hypothesis circuit. -/
 def mkIndypAuxList {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
@@ -1091,16 +1066,15 @@ def mkIndypAuxList {arity : Type _}
   match i with
   | 0 => []
   | i' + 1 =>
-    let xs :=  mkSafetyCircuitAuxList p n i' (by omega)
-    xs.cons ((mkSafetyCircuitAuxElem p n i' (by omega)))
-
+    let xs :=  mkIndypAuxList p n i' (by omega)
+    xs.cons ((mkIndHypAuxElem p n i' (by omega)))
 
 def mkIndHypCircuit {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  Circuit.bigOr (mkSafetyCircuitAuxList p n n (by omega))
+  Circuit.bigOr (mkIndypAuxList p n n (by omega))
 
 /-#
 TODO:
