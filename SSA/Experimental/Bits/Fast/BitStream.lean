@@ -15,7 +15,7 @@ theorem bmod_eq_of_ge_and_le (z : Int) (m : Nat)
 theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
     (↑n : Int).bmod m = ↑(n % m) := by
   simp only [
-    bmod, ofNat_emod, ite_eq_left_iff,
+    bmod, natCast_emod, ite_eq_left_iff,
     show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
     Nat.mod_eq_of_lt (by omega : n < m)
   ]

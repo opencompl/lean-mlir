@@ -14,10 +14,16 @@ inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | mvar (i : Fin φ)
   deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
-instance [ToString α] : ToString (ConcreteOrMVar α n) where
-  toString
-  | .concrete a => s!"concrete({a})"
-  | .mvar i => s!"mvar({i})"
+/-- ToString instance for the type `ConcreteOrMVar`,
+it prints either a concrete known
+value of type `α`, or a `φ` metavariable as a string.
+ -/
+instance : ToString (ConcreteOrMVar Nat φ) where
+  toString x :=
+    match x with
+    | .concrete a => s!"i{a}"
+    | .mvar i => s!"mvar({i})"
+
 /-- A coercion from the concrete type `α` to the `ConcreteOrMVar` -/
 instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 

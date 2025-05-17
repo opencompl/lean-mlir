@@ -116,6 +116,9 @@ inductive Ty
 | valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec w
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
+instance : ToString Ty where
+  toString t := repr t |>.pretty
+  
 inductive Op
 | fst
 | snd

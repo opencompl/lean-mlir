@@ -70,8 +70,8 @@ theorem logical_or_not_cond_reuse_thm (e e_1 : IntW 1) :
 
 
 theorem logical_or_implies_thm (e : IntW 32) :
-  select (icmp IntPredicate.eq e (const? 32 0)) (const? 1 1) (icmp IntPredicate.eq e (const? 32 42)) ⊑
-    LLVM.or (icmp IntPredicate.eq e (const? 32 0)) (icmp IntPredicate.eq e (const? 32 42)) := by
+  select (icmp IntPred.eq e (const? 32 0)) (const? 1 1) (icmp IntPred.eq e (const? 32 42)) ⊑
+    LLVM.or (icmp IntPred.eq e (const? 32 0)) (icmp IntPred.eq e (const? 32 42)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -81,7 +81,7 @@ theorem logical_or_implies_thm (e : IntW 32) :
 
 
 theorem logical_or_implies_folds_thm (e : IntW 32) :
-  select (icmp IntPredicate.slt e (const? 32 0)) (const? 1 1) (icmp IntPredicate.sge e (const? 32 0)) ⊑
+  select (icmp IntPred.slt e (const? 32 0)) (const? 1 1) (icmp IntPred.sge e (const? 32 0)) ⊑
     const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
@@ -92,8 +92,8 @@ theorem logical_or_implies_folds_thm (e : IntW 32) :
 
 
 theorem logical_and_implies_thm (e : IntW 32) :
-  select (icmp IntPredicate.ne e (const? 32 0)) (icmp IntPredicate.ne e (const? 32 42)) (const? 1 0) ⊑
-    LLVM.and (icmp IntPredicate.ne e (const? 32 0)) (icmp IntPredicate.ne e (const? 32 42)) := by
+  select (icmp IntPred.ne e (const? 32 0)) (icmp IntPred.ne e (const? 32 42)) (const? 1 0) ⊑
+    LLVM.and (icmp IntPred.ne e (const? 32 0)) (icmp IntPred.ne e (const? 32 42)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -103,8 +103,8 @@ theorem logical_and_implies_thm (e : IntW 32) :
 
 
 theorem logical_and_implies_folds_thm (e : IntW 32) :
-  select (icmp IntPredicate.ugt e (const? 32 42)) (icmp IntPredicate.ne e (const? 32 0)) (const? 1 0) ⊑
-    icmp IntPredicate.ugt e (const? 32 42) := by
+  select (icmp IntPred.ugt e (const? 32 42)) (icmp IntPred.ne e (const? 32 0)) (const? 1 0) ⊑
+    icmp IntPred.ugt e (const? 32 42) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -220,8 +220,8 @@ theorem and_or2_wrong_operand_thm (e e_1 e_2 e_3 : IntW 1) :
 
 
 theorem and_or3_thm (e : IntW 1) (e_1 e_2 : IntW 32) (e_3 : IntW 1) :
-  select (LLVM.and e_3 (icmp IntPredicate.eq e_2 e_1)) e e_3 ⊑
-    select e_3 (select (icmp IntPredicate.ne e_2 e_1) (const? 1 1) e) (const? 1 0) := by
+  select (LLVM.and e_3 (icmp IntPred.eq e_2 e_1)) e e_3 ⊑
+    select e_3 (select (icmp IntPred.ne e_2 e_1) (const? 1 1) e) (const? 1 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -231,8 +231,8 @@ theorem and_or3_thm (e : IntW 1) (e_1 e_2 : IntW 32) (e_3 : IntW 1) :
 
 
 theorem and_or3_commuted_thm (e e_1 : IntW 1) (e_2 e_3 : IntW 32) :
-  select (LLVM.and (icmp IntPredicate.eq e_3 e_2) e_1) e e_1 ⊑
-    select e_1 (select (icmp IntPredicate.ne e_3 e_2) (const? 1 1) e) (const? 1 0) := by
+  select (LLVM.and (icmp IntPred.eq e_3 e_2) e_1) e e_1 ⊑
+    select e_1 (select (icmp IntPred.ne e_3 e_2) (const? 1 1) e) (const? 1 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -291,8 +291,8 @@ theorem pr64558_thm (e e_1 : IntW 1) : select (LLVM.and (LLVM.xor e_1 (const? 1 
 
 
 theorem or_and3_thm (e : IntW 1) (e_1 e_2 : IntW 32) (e_3 : IntW 1) :
-  select (LLVM.or e_3 (icmp IntPredicate.eq e_2 e_1)) e_3 e ⊑
-    select e_3 (const? 1 1) (select (icmp IntPredicate.ne e_2 e_1) e (const? 1 0)) := by
+  select (LLVM.or e_3 (icmp IntPred.eq e_2 e_1)) e_3 e ⊑
+    select e_3 (const? 1 1) (select (icmp IntPred.ne e_2 e_1) e (const? 1 0)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -302,8 +302,8 @@ theorem or_and3_thm (e : IntW 1) (e_1 e_2 : IntW 32) (e_3 : IntW 1) :
 
 
 theorem or_and3_commuted_thm (e e_1 : IntW 1) (e_2 e_3 : IntW 32) :
-  select (LLVM.or (icmp IntPredicate.eq e_3 e_2) e_1) e_1 e ⊑
-    select e_1 (const? 1 1) (select (icmp IntPredicate.ne e_3 e_2) e (const? 1 0)) := by
+  select (LLVM.or (icmp IntPred.eq e_3 e_2) e_1) e_1 e ⊑
+    select e_1 (const? 1 1) (select (icmp IntPred.ne e_3 e_2) e (const? 1 0)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -313,7 +313,7 @@ theorem or_and3_commuted_thm (e e_1 : IntW 1) (e_2 e_3 : IntW 32) :
 
 
 theorem test_or_eq_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (LLVM.or e_2 (icmp IntPredicate.eq e_1 e)) e_1 e ⊑ select e_2 e_1 e := by
+  select (LLVM.or e_2 (icmp IntPred.eq e_1 e)) e_1 e ⊑ select e_2 e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -323,7 +323,7 @@ theorem test_or_eq_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
 
 
 theorem test_and_ne_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (LLVM.and e_2 (icmp IntPredicate.ne e_1 e)) e_1 e ⊑ select e_2 e_1 e := by
+  select (LLVM.and e_2 (icmp IntPred.ne e_1 e)) e_1 e ⊑ select e_2 e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -333,7 +333,7 @@ theorem test_and_ne_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
 
 
 theorem test_or_eq_a_b_commuted_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (LLVM.or e_2 (icmp IntPredicate.eq e_1 e)) e e_1 ⊑ select e_2 e e_1 := by
+  select (LLVM.or e_2 (icmp IntPred.eq e_1 e)) e e_1 ⊑ select e_2 e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -343,7 +343,7 @@ theorem test_or_eq_a_b_commuted_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
 
 
 theorem test_and_ne_a_b_commuted_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (LLVM.and e_2 (icmp IntPredicate.ne e_1 e)) e e_1 ⊑ select e_2 e e_1 := by
+  select (LLVM.and e_2 (icmp IntPred.ne e_1 e)) e e_1 ⊑ select e_2 e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -353,8 +353,8 @@ theorem test_and_ne_a_b_commuted_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
 
 
 theorem test_or_eq_different_operands_thm (e e_1 e_2 : IntW 8) :
-  select (LLVM.or (icmp IntPredicate.eq e_2 e_1) (icmp IntPredicate.eq e e_2)) e_2 e ⊑
-    select (icmp IntPredicate.eq e_2 e_1) e_2 e := by
+  select (LLVM.or (icmp IntPred.eq e_2 e_1) (icmp IntPred.eq e e_2)) e_2 e ⊑
+    select (icmp IntPred.eq e_2 e_1) e_2 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -364,7 +364,7 @@ theorem test_or_eq_different_operands_thm (e e_1 e_2 : IntW 8) :
 
 
 theorem test_or_ne_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (LLVM.or e_2 (icmp IntPredicate.ne e_1 e)) e_1 e ⊑ e_1 := by
+  select (LLVM.or e_2 (icmp IntPred.ne e_1 e)) e_1 e ⊑ e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -374,7 +374,7 @@ theorem test_or_ne_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
 
 
 theorem test_logical_or_eq_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (select e_2 (const? 1 1) (icmp IntPredicate.eq e_1 e)) e_1 e ⊑ select e_2 e_1 e := by
+  select (select e_2 (const? 1 1) (icmp IntPred.eq e_1 e)) e_1 e ⊑ select e_2 e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -384,7 +384,7 @@ theorem test_logical_or_eq_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
 
 
 theorem test_logical_and_ne_a_b_thm (e e_1 : IntW 8) (e_2 : IntW 1) :
-  select (select e_2 (icmp IntPredicate.ne e_1 e) (const? 1 0)) e_1 e ⊑ select e_2 e_1 e := by
+  select (select e_2 (icmp IntPred.ne e_1 e) (const? 1 0)) e_1 e ⊑ select e_2 e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

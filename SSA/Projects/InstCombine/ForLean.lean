@@ -1,5 +1,6 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
-import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.SimpSet
 import Mathlib.Tactic.Ring
 import Mathlib.Data.BitVec
 
@@ -453,20 +454,13 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   by_cases h : w = 0
   · subst h
     simp
-  ·
-    simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
+  · simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
     Nat.self_sub_mod]
     have h' := @Int.add_emod_right (-1) (2^w)
     rw [← h', ← Int.tmod_eq_emod_of_nonneg (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
       Int.add_comm]
     norm_cast
-    simp only [Nat.cast_pow, Nat.cast_ofNat, Int.reduceNeg]
-    simp only [Int.reduceNegSucc, Int.reduceNeg]
-    rw [Int.add_neg_eq_sub]
-    norm_cast
-    rw [Int.subNatNat_eq_coe]
-    simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.succ_eq_add_one, zero_add, Nat.cast_one,
-      Int.pred_toNat]
+    simp only [Int.reduceNegSucc, Int.add_neg_eq_sub, Int.pred_toNat]
     norm_cast
 
 @[simp]
@@ -483,6 +477,83 @@ theorem sdiv_allOnes {w : ℕ} {x : BitVec w} :
     simp [BitVec.eq_nil x]
   · rw [BitVec.msb_allOnes (by omega)]
     by_cases h : x.msb <;> simp [h, BitVec.neg_allOnes]
+
+theorem sshiftRight_eq_sshiftRight_extractLsb {w : Nat}
+    {lw : Nat} {x y : BitVec w} {hll : 2^lw = w} {hlw : lw > 0}
+    {h : BitVec.toNat y < 2^lw} :
+        x.sshiftRight y.toNat = x.sshiftRight (y.extractLsb (lw - 1) 0).toNat := by
+  apply BitVec.eq_of_toNat_eq
+  simp only [Nat.sub_zero, BitVec.extractLsb_toNat, Nat.shiftRight_zero]
+  suffices y.toNat = (y.toNat % 2 ^ (lw - 1 + 1)) by
+    rw [← this ]
+  have : (lw - 1 + 1) = lw := by omega
+  rw [this, hll, Nat.mod_eq_of_lt]
+  rw [hll] at h
+  exact h
+
+theorem sshiftRight_eq_setWidth_extractLsb_signExtend {w : Nat} {n : Nat} (x : BitVec w) :
+    x.sshiftRight n =
+    ((x.signExtend (w + n)).extractLsb (w - 1 + n) n).setWidth w := by
+  ext i hi
+  simp only [getElem_sshiftRight, getElem_setWidth, getLsbD_extract, add_tsub_cancel_right,
+    show i ≤ w - 1 by omega, decide_true, getLsbD_signExtend, Bool.true_and]
+  by_cases hni : (n + i) < w <;> simp [hni] <;> omega
+
+theorem ofInt_toInt_eq_signExtend {w w' : Nat} {x : BitVec w} :
+    BitVec.ofInt w' x.toInt = x.signExtend w' := by
+  apply BitVec.eq_of_toInt_eq
+  by_cases hw' : w' ≤ w
+  · simp
+    rw [BitVec.toInt_signExtend_eq_toInt_bmod_of_le _ hw']
+  · simp only [not_le] at hw'
+    rw [BitVec.toInt_ofInt, BitVec.toInt_signExtend_of_le (by omega)]
+    have hxlt := @BitVec.two_mul_toInt_lt w x
+    have hxle := @BitVec.le_two_mul_toInt w x
+    have : 2^w < 2^w' := by apply Nat.pow_lt_pow_of_lt (by simp) (by assumption)
+    have : - 2^w' < - 2^w := by
+      apply Int.neg_lt_neg
+      norm_cast
+    rw [Int.bmod_eq_of_le_mul_two] <;> push_cast <;> omega
+
+theorem toInt_toInt_ofInt_eq_toNat_toNat_ofNa {w w' : Nat } {x y : BitVec w} (h : w' ≤ w):
+    BitVec.ofNat w' (x.toNat * y.toNat) = BitVec.ofInt w' (x.toInt * y.toInt) := by
+  rw [BitVec.ofNat_mul]
+  simp only [ofNat_toNat]
+  rw [BitVec.ofInt_mul, BitVec.ofInt_toInt_eq_signExtend, BitVec.ofInt_toInt_eq_signExtend,
+      BitVec.signExtend_eq_setWidth_of_le _ (by omega),
+      BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
+
+@[simp]
+theorem extractLsb'_eq_setWidth {x : BitVec w} : x.extractLsb' 0 n = x.setWidth n := by
+  ext i hi
+  simp
+
+theorem extractLsb'_ofInt_eq_ofInt {x : Int} {w w' : Nat} {h : w ≤ w'} :
+    (BitVec.extractLsb' 0 w (BitVec.ofInt w' x)) = (BitVec.ofInt w x) := by
+  simp only [extractLsb'_eq_setWidth]
+  rw [← BitVec.signExtend_eq_setWidth_of_le _ (by omega)]
+  apply BitVec.eq_of_toInt_eq
+  simp only [BitVec.toInt_signExtend, BitVec.toInt_ofInt, h, inf_of_le_left]
+  rw [Int.bmod_bmod_of_dvd]
+  apply Nat.pow_dvd_pow 2 h
+
+theorem extractLsb'_ofInt_eq_ofInt_ofNat {x : Nat} {w w' : Nat} {h : w ≤ w'} :
+    (BitVec.extractLsb' 0 w (BitVec.ofInt w' x)) = (BitVec.ofInt w x) := by
+  apply extractLsb'_ofInt_eq_ofInt
+  exact h
+
+theorem extractLsb_setWidth_of_lt (x : BitVec w) (hi lo v : Nat) (hilo : lo < hi) (hhi : hi < v):
+    BitVec.extractLsb hi lo (BitVec.setWidth v x) = BitVec.extractLsb hi lo x := by
+  simp only [BitVec.extractLsb]
+  ext k
+  simp
+  omega
+
+theorem setWidth_signExtend_eq_self {w w' : Nat} {x : BitVec w} (h : w ≤ w') : (x.signExtend w').setWidth w = x := by
+  ext i hi
+  simp  [hi, BitVec.getLsbD_signExtend]
+  omega
+
 end BitVec
 
 namespace Bool
