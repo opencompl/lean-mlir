@@ -11,8 +11,6 @@ section Dialect
 
 inductive Ty
 | bv (w : Nat) : Ty -- A bitvector of width `w`.
--- | hList (l : List Nat) : Ty -- List of bitvecs whose length are defined in l
--- | icmpPred : Ty
 deriving DecidableEq, Repr, Lean.ToExpr
 
 inductive Op
