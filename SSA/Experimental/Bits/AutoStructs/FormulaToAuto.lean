@@ -243,8 +243,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
             rw [ite_cond_eq_true]
             on_goal 2 => simp; omega
             simp [BitVec.getLsbD_cons]
-            rw [ite_cond_eq_false]
-            simp; omega
+            omega
           · ext ar; simp [BitVec.getElem_cons]; rfl
         next hne =>
           have hlt : i < w := by omega
@@ -256,8 +255,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
           simp [BitVec.getLsbD_cons]
-          rw [ite_cond_eq_false]
-          simp; omega
+          omega
       · rw [hq]
         rcases hsa with ⟨-, rfl⟩
         simp [FSM.carryBV, FSM.carry]; congr
@@ -267,8 +265,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
           simp [BitVec.getLsbD_cons]
-          rw [ite_cond_eq_false]
-          simp; omega
+          omega
         · unfold bitVecToFinFun; simp [BitVec.getElem_cons]; rfl
     · rintro hsa; simp [NFA.stepSet]
       use p.carryBV (fun ar => bvn.get (FinEnum.equiv.toFun ar))
