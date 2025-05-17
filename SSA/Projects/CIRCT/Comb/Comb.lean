@@ -161,36 +161,36 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let mkExprOf := opStx.mkExprOf (args? := args) Γ
     match (opStx.name).splitOn "_" with
     -- 1-ary
-    | [".parity"] => mkExprOf <| .parity (← unW)
-    | [".extract", ns] =>
+    | ["Comb.parity"] => mkExprOf <| .parity (← unW)
+    | ["Comb.extract", ns] =>
       match ns.toNat? with
       | some n =>  mkExprOf <| .extract (← unW) n
       | _ => throw <| .generic s!" an integer attribute should be provided for {repr opStx.args}"
-    | [".replicate", ns] =>
+    | ["Comb.replicate", ns] =>
       match ns.toNat? with
       | some n =>  mkExprOf <| .replicate (← unW) n
       | _ => throw <| .generic s!" an integer attribute should be provided for {repr opStx.args}"
     -- 2-ary
-    | [".divs"] => mkExprOf <| .divs (← binW)
-    | [".divu"] => mkExprOf <| .divu (← binW)
-    | [".icmp", ps] =>
+    | ["Comb.divs"] => mkExprOf <| .divs (← binW)
+    | ["Comb.divu"] => mkExprOf <| .divu (← binW)
+    | ["Comb.icmp", ps] =>
       match (ofString? ps) with
       -- we avoid passing p as an IcmpPred type to avoid denoting the type
       | some p => mkExprOf <| .icmp ps (← binW)
       | _ => throw <| .generic s!" invalid attribute provided for {repr opStx.args}"
-    | [".mods"] => mkExprOf <| .mods (← binW)
-    | [".modu"] => mkExprOf <| .modu (← binW)
-    | [".mux"] => mkExprOf <| .mux (← binW)
-    | [".shl"] => mkExprOf <| .shl (← binW)
-    | [".shrs"] => mkExprOf <| .shrs (← binW)
-    | [".shru"] => mkExprOf <| .shru (← binW)
-    | [".sub "] => mkExprOf <| .sub (← binW)
+    | ["Comb.mods"] => mkExprOf <| .mods (← binW)
+    | ["Comb.modu"] => mkExprOf <| .modu (← binW)
+    | ["Comb.mux"] => mkExprOf <| .mux (← binW)
+    | ["Comb.shl"] => mkExprOf <| .shl (← binW)
+    | ["Comb.shrs"] => mkExprOf <| .shrs (← binW)
+    | ["Comb.shru"] => mkExprOf <| .shru (← binW)
+    | ["Comb.sub "] => mkExprOf <| .sub (← binW)
     -- n-ary (variadic)
-    | [".add"] => mkExprOf <| .add (← nnW) args'.length
-    | [".and"] => mkExprOf <| .and (← nnW) args'.length
-    | [".mul"] => mkExprOf <| .mul (← nnW) args'.length
-    | [".or"] => mkExprOf <| .or (← nnW) args'.length
-    | [".xor"] => mkExprOf <| .xor (← nnW) args'.length
+    | ["Comb.add"] => mkExprOf <| .add (← nnW) args'.length
+    | ["Comb.and"] => mkExprOf <| .and (← nnW) args'.length
+    | ["Comb.mul"] => mkExprOf <| .mul (← nnW) args'.length
+    | ["Comb.or"] => mkExprOf <| .or (← nnW) args'.length
+    | ["Comb.xor"] => mkExprOf <| .xor (← nnW) args'.length
     | _ => throw <| .unsupportedOp s!"{repr opStx}"
 
 def mkReturn (Γ : Ctxt Comb.Ty) (opStx : MLIR.AST.Op 0) :

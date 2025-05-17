@@ -11,8 +11,8 @@ open MLIR AST in
 
 unseal String.splitOnAux in
 def CombEg1 := [Comb_com| {
-  ^entry(%0: !i1):
-    "return" (%0) : (!i1) -> ()
+  ^entry(%0: i1):
+    "return" (%0) : (i1) -> ()
   }]
 
 #check CombEg1
