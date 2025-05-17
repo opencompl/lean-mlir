@@ -655,14 +655,14 @@ namespace Reflect
 open Lean Meta Elab Tactic
 
 namespace BvDecide
-open Std Sat AIG in
+open Std Sat AIG
 
 /--
 Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
 bitblasting capabilities.
 -/
 @[nospecialize]
-def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
+def _root_.Circuit.toAIGAux [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ExtendingEntrypoint aig :=
   match c with
   | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
@@ -677,8 +677,8 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
       have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
       ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
   | .and l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIGAux aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIGAux aig
     let lhsRef := lhsRef.cast <| by
       dsimp only at rextend ⊢
       omega
@@ -687,8 +687,8 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
     have Lawful := LawfulOperator.le_size (f := mkAndCached) aig input
     ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
   | .or l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIGAux aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIGAux aig
     let lhsRef := lhsRef.cast <| by
       dsimp only at rextend ⊢
       omega
@@ -697,8 +697,8 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
     have Lawful := LawfulOperator.le_size (f := mkOrCached) aig input
     ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
   | .xor l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIGAux aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIGAux aig
     let lhsRef := lhsRef.cast <| by
       dsimp only at rextend ⊢
       omega
@@ -706,6 +706,57 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
     let ret := aig.mkXorCached input
     have Lawful := LawfulOperator.le_size (f := mkXorCached) aig input
     ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+
+def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α]
+    (c : Circuit α) : Entrypoint α :=
+  (c.toAIGAux .empty).val
+
+/- Proof: Structural recursion on the circuit. -/
+@[simp]
+theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α}
+    {env : α → Bool} :
+    Std.Sat.AIG.denote env c.toAIG = c.eval env := by sorry
+
+open Std Sat AIG Reflect in
+def verifyAIG [DecidableEq α ] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
+  let y := (Entrypoint.relabelNat x)
+  let z := AIG.toCNF y
+  Std.Tactic.BVDecide.Reflect.verifyCert z cert
+
+/- Proof: adapt 'Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true' -/
+theorem verifyAIG_iff_verifyCert [DecidableEq α] [Fintype α] [Hashable α]
+    (c : Circuit α) (cert : String)
+    (h : verifyAIG c.toAIG cert) :
+    c.always_false := by sorry
+
+/--
+info: theorem Reflect.BvDecide.foo : ∀ (a b : BitVec 3), a * b = b * a :=
+fun a b =>
+  Decidable.byContradiction fun a_1 =>
+    Std.Tactic.BVDecide.Reflect.Bool.false_of_eq_true_of_eq_false
+      (Eq.trans
+        (Eq.refl
+          (Std.Tactic.BVDecide.BVLogicalExpr.eval
+            (RArray.branch 1 (RArray.leaf { w := 3, bv := a }) (RArray.leaf { w := 3, bv := b }))
+            (Std.Tactic.BVDecide.BoolExpr.literal
+                (Std.Tactic.BVDecide.BVPred.bin
+                  ((Std.Tactic.BVDecide.BVExpr.var 0).bin Std.Tactic.BVDecide.BVBinOp.mul
+                    (Std.Tactic.BVDecide.BVExpr.var 1))
+                  Std.Tactic.BVDecide.BVBinPred.eq
+                  ((Std.Tactic.BVDecide.BVExpr.var 1).bin Std.Tactic.BVDecide.BVBinOp.mul
+                    (Std.Tactic.BVDecide.BVExpr.var 0)))).not))
+        (Eq.mp
+          (Eq.trans
+            (Eq.trans (congrArg Not (Std.Tactic.BVDecide.Normalize.BitVec.eq_to_beq (a * b) (b * a)))
+              (Std.Tactic.BVDecide.Normalize.Bool.ne_to_beq (a * b == b * a) true))
+            (congrArg (fun x => (!x) = true) (beq_true (a * b == b * a))))
+          a_1))
+      (Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true foo._expr_def_1 foo._cert_def_1 foo._proof_19
+        (RArray.branch 1 (RArray.leaf { w := 3, bv := a }) (RArray.leaf { w := 3, bv := b })))
+-/
+#guard_msgs in #print foo
+
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
 -/
