@@ -69,7 +69,7 @@ def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
 -- this function *actually* does the syncing! we take an HVector of Streams and lift it into
 -- a Stream that returns none until all the input stream are ready
 -- note that Stream := Stream' (Option β)
-def isReady {l : List Nat} (v : HVector (fun i => Option (BitVec i)) l) :
+def is_ready {l : List Nat} (v : HVector (fun i => Option (BitVec i)) l) :
     Option (HVector (fun i => BitVec i) l) :=
   match v with
         | .nil => some .nil
