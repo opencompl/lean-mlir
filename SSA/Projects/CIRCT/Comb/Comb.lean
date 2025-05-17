@@ -202,6 +202,9 @@ def mkReturn (Γ : Ctxt Comb.Ty) (opStx : MLIR.AST.Op 0) :
     let ⟨ty, v⟩ := args[0]
     return ⟨.pure, ty, Com.ret v⟩
 
+instance : MLIR.AST.TransformExpr (Comb) 0 where
+  mkExpr := mkExpr
+
 instance : AST.TransformReturn Comb 0 := { mkReturn }
 
 instance : DialectToExpr Comb where
@@ -209,6 +212,7 @@ instance : DialectToExpr Comb where
   toExprDialect := .const ``Comb []
 
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[Comb_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg Comb
+elab "[Comb_com| " reg:mlir_region "]" : term => do
+  SSA.elabIntoCom' reg Comb
 
 end MLIR2Comb
