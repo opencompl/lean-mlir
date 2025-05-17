@@ -93,9 +93,18 @@ def hv_cast_hacky {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSigna
     intro i
     exact none
 
+def HVector.replicateToList {α : Type} {f : α → Type} {a : α} :
+    {n : Nat} → HVector f (List.replicate n a) → List (f a)
+  | 0, _ => []
+  | n+1, HVector.cons x xs => x :: replicateToList xs
+
 -- more elegant version?
 def hv_cast {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
-    Stream (HVector toType (DialectSignature.sig op)) := by exact Stream.stuck (HVector toType (DialectSignature.sig op))
+    Stream (HVector toType (DialectSignature.sig op)) := by
+  sorry
+      -- have := Stream.ofList (HVector.replicateToList h)
+      -- sorry
+  -- all_goals <;> sorry
 
 def_denote for DCxComb where
   | .comb op => sorry
