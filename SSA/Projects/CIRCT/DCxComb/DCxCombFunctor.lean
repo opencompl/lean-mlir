@@ -84,21 +84,21 @@ def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
   fun n => is_ready (hv_cast_gen' h n)
 
 -- hacky versino
--- def hv_cast_hacky {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
---     Stream (HVector toType (DialectSignature.sig op)) :=
---   by
---   cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
---   all_goals
---     dsimp [DialectSignature.sig, signature] at *
---     intro i
---     exact none
+def hv_cast_hacky {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+    Stream (HVector toType (DialectSignature.sig op)) :=
+  by
+  cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
+  all_goals
+    dsimp [DialectSignature.sig, signature] at *
+    intro i
+    exact none
 
--- more elegant version
+-- more elegant version?
 def hv_cast {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) := by exact Stream.stuck (HVector toType (DialectSignature.sig op))
 
 def_denote for DCxComb where
-  | .comb op => by exact fun x x => none
+  | .comb op => sorry
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 -- instance : MLIR.AST.TransformExpr DCxComb 0 where
