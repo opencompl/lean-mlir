@@ -71,7 +71,7 @@ def mul {w : Nat} (l : List (BitVec w)) : BitVec w :=
   List.foldr BitVec.mul (1#w) l
 
 /- Generic `mux` operation for any types α, β -/
-def mux (x : BitVec w) (y : BitVec w) (cond : BitVec q) : BitVec w :=
+def mux (x : BitVec w) (y : BitVec w) (cond : BitVec 1) : BitVec w :=
   if cond.msb then x else y
 
 /-- Variadic `or` operation with a list of bitvectors with width `w` as input -/
