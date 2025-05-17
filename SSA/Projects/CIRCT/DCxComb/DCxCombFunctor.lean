@@ -84,7 +84,7 @@ def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
   fun n => is_ready (hv_cast_gen' h n)
 
 -- hacky versino
-def hv_cast (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+def hv_cast_hacky (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) :=
   by
   cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
@@ -93,7 +93,9 @@ def hv_cast (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb o
     intro i
     exact none
 
-
+def hv_cast (op) (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+    Stream (HVector toType (DialectSignature.sig op)) :=
+  sorry
 
 def_denote for DCxComb where
 | .comb op => -- use the cast to turn inputs into a stream of bv
