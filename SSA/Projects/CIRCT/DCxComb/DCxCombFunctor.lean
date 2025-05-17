@@ -98,7 +98,7 @@ def hv_cast {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDC
     Stream (HVector toType (DialectSignature.sig op)) := by exact Stream.stuck (HVector toType (DialectSignature.sig op))
 
 def_denote for DCxComb where
-  | .comb op => (hv_cast_hacky (MLIR2Comb.Comb.Op.op h))
+  | .comb op => by exact fun x x => none
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 -- instance : MLIR.AST.TransformExpr DCxComb 0 where
