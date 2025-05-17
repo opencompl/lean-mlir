@@ -579,7 +579,6 @@ lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (s
   split
   next _ =>
     casesm _ ∧ _; subst_eqs
-    dsimp
     split
     next s'' heq =>
       use s''; constructor <;> simp [*]
