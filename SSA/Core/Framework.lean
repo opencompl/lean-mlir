@@ -211,7 +211,7 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
 private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args) where
+  Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
   formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
@@ -274,6 +274,10 @@ end Repr
 section ToString
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
+/-- Format a sequence of types as `(t₁, ..., tₙ)`. Will always display parentheses. -/
+private def formatTypeTupleToString [ToString Ty] (xs : List Ty) : String :=
+  "(" ++ String.intercalate ", " (xs.map toString) ++ ")"
+
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
   let args := (List.range ts.length).zip ts |>.map
@@ -289,14 +293,15 @@ partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
     let outTy : d.Ty := DialectSignature.outTy op
     let argTys := DialectSignature.sig op
-    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({ToString.toString outTy})"
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> {ToString.toString outTy}"
+
 
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
 partial def Com.ToStringBody : Com d Γ eff t → String
-  | .ret v => s!".return {_root_.repr v } : ({toString t}) → ()"
+  | .ret v => s!"\"llvm.return\"({_root_.repr v }) : ({toString t}) -> ()"
   | .var e body =>
-    s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+    s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e}" ++ "\n" ++
     Com.ToStringBody body
 
 /- `Com.toString` implements a toString instance for the type `Com`.  -/

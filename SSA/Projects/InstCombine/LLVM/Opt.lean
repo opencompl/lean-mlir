@@ -1,6 +1,6 @@
 import SSA.Projects.InstCombine.LLVM.Parser
 import Cli
-
+import SSA.Projects.LLVMRiscV.ForOpt
 /-- `verbose_flag` takes in a filename and assuming the file is wellformed,
  prints verbose output to the command line. Additionally it prints
  a string indicating that the verbose flag was set. If the parsing fails,
@@ -28,6 +28,12 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   if args.hasFlag "verbose" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
     let code ← verbose_flag fileName
     return code
+  if args.hasFlag "convert_llvm_to_riscv64" then
+    let code ← convert_llvm_to_riscv64 fileName
+    return code
+  if args.hasFlag "O1" then
+    let code ← peephole_riscv64 fileName
+    return code
   else
     let code ← wellformed fileName
     return code
@@ -37,6 +43,8 @@ def mainCmd := `[Cli|
     "opt: apply verified rewrites"
     FLAGS:
       verbose; "Prints verbose output for debugging using the Repr typeclass to print."
+      convert_llvm_to_riscv64; "Flag `--pass-riscv64`. This applies a lowering pass to RISC-V 64"
+      O1; " Flag `--O1`. This applies a peephole rewrites to RISC-V 64 assembly"
     ARGS:
       file: String; "Input filename"
     ]

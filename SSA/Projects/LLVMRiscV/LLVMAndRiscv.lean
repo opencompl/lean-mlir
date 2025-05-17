@@ -69,7 +69,16 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
       {sig := [Ty.llvm (.bitvec 64)], outTy := (Ty.riscv .bv), regSig := []}
 
 instance : ToString LLVMPlusRiscV.Ty  where
-  toString t := repr t |>.pretty
+  toString := fun
+    | .llvm llvmTy => toString llvmTy
+    | .riscv riscvTy => toString riscvTy
+
+instance : ToString LLVMPlusRiscV.Op  where
+  toString := fun
+  | .llvm llvm    => toString llvm
+  | .riscv riscv  => toString riscv
+  | _  => "builtin.unrealized_conversion_cast"
+
 
 @[simp_denote]
 def llvmArgsFromHybrid : {tys : List LLVM.Ty} →
