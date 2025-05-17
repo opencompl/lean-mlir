@@ -1023,6 +1023,26 @@ def mkSafetyCircuitAuxElem {arity : Type _}
     | .state s => .some <| p.initCarry s
     | .inputs i => .none
 
+structure EnvRelated {p : FSM arity} {n : Nat}
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream) where
+  envBool_eq_envBitstream : ∀ (x : arity) (i : Nat) (hi: i ≤ n),
+    envBool (Vars.inputs (Inputs.mk ⟨i, by omega⟩ x)) = envBitstream x i
+
+
+attribute [simp] EnvRelated.envBool_eq_envBitstream
+
+theorem eval_mkSafetyCircuitAuxElem_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream) :
+    (mkSafetyCircuitAuxElem p n i hin).eval envBool = false ↔
+    p.eval envBitstream i = false := sorry
+
 
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
@@ -1093,7 +1113,7 @@ def mkCircuitAllZeroes
   Circuit.or (mkSafetyCircuit p niter) (mkIndHypCircuit p niter)
 
 
-/- Key theorem that we want: if this is false, then the circuit always produces zeroes.-/
+/- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkCircuitAllZeroes_false
     {arity : Type _}
     [DecidableEq arity]
