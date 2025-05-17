@@ -441,6 +441,45 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   | a::l, f, g => by
     rw [bAnd, eval_foldl_and]; simp
 
+/-- perform the same task as assignVars, but don't change the signature of the circuit. -/
+def assignVars' [DecidableEq α] (c : Circuit α)
+  (f : ∀ (a : α), Option Bool) : Circuit α
+  := match c with
+  | tru => tru
+  | fals => fals
+  | var b x =>
+    match f x with
+    | .some v => Circuit.ofBool (b = v)
+    | .none => var b x
+  | and p q => assignVars' p f &&& assignVars' q f
+  | or p q => assignVars' p f ||| assignVars' q f
+  | xor p q => assignVars' p f ^^^ assignVars' q f
+
+/-- Says how to evaluate asssignVars' in terms of an updated environment. -/
+lemma eval_assignVars'_of_eq [DecidableEq α] {c : Circuit α}
+    {f : (a : α) → Option Bool} {env : α → Bool} {env' : α → Bool}
+    (henv' : env' = (fun x =>
+      match f x with
+      | some v => v
+      | none => env x)) :
+    eval (assignVars' c f) env = c.eval env' := by
+  subst henv'
+  induction c
+  case tru => simp [eval, assignVars']
+  case fals => simp [eval, assignVars']
+  case var b x =>
+    simp [assignVars']
+    rcases fx : f x
+    case none => simp
+    case some v =>
+      rcases v <;> rcases b <;> simp
+  case and p q hp hq =>
+    simp [eval, hp, hq, assignVars']
+  case or p q hp hq =>
+    simp [eval, hp, hq, assignVars']
+  case xor p q hp hq =>
+    simp [eval, hp, hq, assignVars']
+
 def assignVars [DecidableEq α] :
     ∀ (c : Circuit α) (_f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool), Circuit β
   | tru, _ => tru

@@ -724,12 +724,14 @@ def verifyAIG [DecidableEq α ] [Hashable α] (x : Entrypoint α) (cert : String
   let z := AIG.toCNF y
   Std.Tactic.BVDecide.Reflect.verifyCert z cert
 
+def verifyCert [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool :=
+  verifyAIG c.toAIG cert
+
 /- Proof: adapt 'Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true' -/
-theorem verifyAIG_iff_verifyCert [DecidableEq α] [Fintype α] [Hashable α]
+theorem verifyCert_iff_always_false [DecidableEq α] [Fintype α] [Hashable α]
     (c : Circuit α) (cert : String)
     (h : verifyAIG c.toAIG cert) :
     c.always_false := by sorry
-
 
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
@@ -1015,11 +1017,12 @@ def mkSafetyCircuitAuxElem {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
-  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars Empty arity (n+1))) :=
-  (StateCircuit.deltaNOutput p n i (by omega)).assignVars fun v hv =>
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars p.α arity (n+1))) :=
+  (StateCircuit.deltaNOutput p n i (by omega)).assignVars' fun v =>
     match v with
-    | .state s => .inr <| p.initCarry s
-    | .inputs i => .inl <| .inputs i
+    | .state s => .some <| p.initCarry s
+    | .inputs i => .none
+
 
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
@@ -1027,7 +1030,7 @@ def mkSafetyCircuitAuxList {arity : Type _}
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
-  List (Circuit (Vars Empty arity (n+1))) :=
+  List (Circuit (Vars p.α arity (n+1))) :=
   match i with
   | 0 => []
   | i' + 1 =>
@@ -1042,7 +1045,7 @@ def mkSafetyCircuit {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
-  (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkSafetyCircuitAuxList p n n (by omega))
 
 
@@ -1076,43 +1079,28 @@ def mkIndHypCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkIndypAuxList p n n (by omega))
 
-/-#
-TODO:
-- theorem that builds the safety circuit
-- theorem that builds the inductive principle circuit.
+
+/--
+Circuit that says that the FSM will be all zeroes
+This circuit should produce 'false' if safe.
 -/
-
-
--- function that provides the circuit that computes the 'α'th state bit after
--- niter iterations.
-def mkStateCircuit {arity : Type _}
+def mkCircuitAllZeroes
+  {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
-  (niter : Nat)
-  (p : FSM arity) :
-  p.α → Circuit (Vars p.α arity niter) :=
-  match niter with
-  | 0 => fun a => Circuit.var false (Vars.state a)
-  | niter' + 1 =>
-    fun a =>
-      let prev := mkStateCircuit niter' p a
-      -- compute state bits till previous state.
-      sorry
+  (p : FSM arity) (niter : Nat) : Circuit (Vars p.α arity (niter+1)) :=
+  Circuit.or (mkSafetyCircuit p niter) (mkIndHypCircuit p niter)
 
-/-- Safe for `n` iterations. -/
-def mkSafetyProperty {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (niter : Nat)
-  (p : FSM arity)
-  : Circuit (Vars p.α arity niter) :=
-  match niter with
-  | 0 => .fals
-  | n' + 1 =>
-    let safe := mkSafetyProperty n' p
-  sorry
+
+/- Key theorem that we want: if this is false, then the circuit always produces zeroes.-/
+theorem eval_eq_false_of_mkCircuitAllZeroes_false
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (hp : (mkCircuitAllZeroes p n).always_false) :
+    ∀ env i, p.eval env i = false := sorry
 
 @[nospecialize]
 partial def decideIfZerosAuxTermElabM {arity : Type _}
