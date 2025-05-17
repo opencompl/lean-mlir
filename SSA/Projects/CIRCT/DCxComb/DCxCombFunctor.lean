@@ -68,16 +68,18 @@ def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
 -- h is full of nones)
 -- this function *actually* does the syncing! we take an HVector of Streams and lift it into
 -- a Stream that returns none until all the input stream are ready
-def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
-    Stream (HVector (fun i => BitVec i) l) :=
-    sorry
-  -- let toSync := hv_cast_gen' h
-  -- fun n =>
-  --   match toSync n with
-  --   | -- keep waiting
-  --   none =>
-  --     sorry
-  --   | some x' => sorry
+-- note that Stream := Stream' (Option β)
+def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream' (Option (BitVec i))) l) :
+    Stream' (Option (HVector (fun i => BitVec i) l)) :=
+  fun n =>
+    let opt_vec := hv_cast_gen' h n
+    match opt_vec with
+    | .nil => none
+    | .cons x xs =>
+        match x, hv_cast_gen' xs n with
+        | some x', some xs' => some (HVector.cons x' xs')
+        | _, _ => none
+
 
   -- fun n =>
   --   let synced := (hv_cast_gen' h) n -- take the n-th entry for each stream in h
