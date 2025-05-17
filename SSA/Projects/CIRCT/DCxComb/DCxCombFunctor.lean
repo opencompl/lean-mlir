@@ -37,7 +37,7 @@ abbrev DCxComb : Dialect where
   Ty := MLIR2DC.DC.Ty
 
 def liftTy : MLIR2Comb.Ty → MLIR2DC.Ty
-| .bv w => .valuestream w
+| .bitvec w => .valuestream w
 
 -- TODO(yann): Currently we use a small hack to use a default void type for types that have no equivalent going from
 -- Comb to DC.  This default value should be a stream to make denotation easier.
