@@ -1,5 +1,7 @@
 import SSA.Projects.InstCombine.LLVM.Parser
 import Cli
+-- The import below is needed to access transformation flags for the LLVMAndRiscVhybrid dialect.
+import SSA.Projects.LLVMRiscV.ForOpt
 
 /-- `verbose_flag` takes in a filename and assuming the file is wellformed,
  prints verbose output to the command line. Additionally it prints
