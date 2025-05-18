@@ -1055,6 +1055,7 @@ structure EnvRelated {p : FSM arity} {n : Nat}
 
 attribute [simp] EnvRelated.envBool_eq_envBitstream
 
+@[simp]
 theorem eval_mkSafetyCircuitAuxElem_eq_false_iff
     {arity : Type _}
     [DecidableEq arity]
@@ -1074,11 +1075,16 @@ def mkSafetyCircuitAuxList {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
   List (Circuit (Vars p.α arity (n+1))) :=
-  match i with
-  | 0 => []
-  | i' + 1 =>
-    let xs :=  mkSafetyCircuitAuxList p n i' (by omega)
-    xs.cons ((mkSafetyCircuitAuxElem p n i' (by omega)))
+  (List.range n).attach.map (fun i =>
+    mkSafetyCircuitAuxElem p n i.val (by
+      have := i.prop;
+      simp at this
+      omega))
+  -- match i with
+  -- | 0 => []
+  -- | i' + 1 =>
+  --   let xs :=  mkSafetyCircuitAuxList p n i' (by omega)
+  --   xs.cons ((mkSafetyCircuitAuxElem p n i' (by omega)))
 
 /--
 make the circuit that witnesses safety for n steps.
@@ -1091,6 +1097,38 @@ def mkSafetyCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkSafetyCircuitAuxList p n n (by omega))
 
+/--
+Evaluating the safety circuit is false iff
+the bitstreams are false upto index 'n'.
+-/
+@[simp]
+theorem eval_mkSafetyCircuit_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream) :
+    (mkSafetyCircuit p n).eval envBool = false ↔
+    (∀ (i : Nat), i < n → p.eval envBitstream i = false) := by
+  rw [mkSafetyCircuit]
+  rw [Circuit.eval_bigOr_eq_false_iff]
+  rw [mkSafetyCircuitAuxList]
+  simp
+  constructor
+  · intros h i hi
+    rw [← eval_mkSafetyCircuitAuxElem_eq_false_iff
+      (n := n)
+      (i := i)
+      (hin := by omega)
+      (envBool := envBool)]
+    simp [h _ i hi]
+  · intros h c i hi hsafe
+    subst hsafe
+    rw [eval_mkSafetyCircuitAuxElem_eq_false_iff]
+    apply h
+    · omega
 
 /-- Make the inductive hypothesis circuit at index 'i'. -/
 def mkIndHypAuxElem {arity : Type _}
