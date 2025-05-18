@@ -728,7 +728,7 @@ def verifyCert [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cer
   verifyAIG c.toAIG cert
 
 /- Proof: adapt 'Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true' -/
-theorem verifyCert_iff_always_false [DecidableEq α] [Fintype α] [Hashable α]
+theorem always_false_of_cerifyAIG [DecidableEq α] [Fintype α] [Hashable α]
     (c : Circuit α) (cert : String)
     (h : verifyAIG c.toAIG cert) :
     c.always_false := by sorry
@@ -744,7 +744,7 @@ attribute [nospecialize] Circuit.toAIG
 
 open Std Sat AIG Tactic BVDecide Frontend in
 @[nospecialize]
-def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM (Option LratCert) := do
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
@@ -756,13 +756,15 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
       (timeout := cadicalTimeoutSec)
       (binaryProofs := true)
     match out with
-    | .error _model => return true
-    | .ok _cert => return false
+    | .error _model => return .none
+    | .ok cert => return .some cert
 
 
 open Std Sat AIG Tactic BVDecide Frontend in
 @[nospecialize]
-def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+def checkCircuitTautoAuxImpl
+    [DecidableEq α] [Hashable α] [Fintype α]
+    (c : Circuit α) : TermElabM (Option LratCert) := do
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
@@ -775,12 +777,15 @@ def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Ci
       (timeout := cadicalTimeoutSec)
       (binaryProofs := true)
     match out with
-    | .error _model => return false
-    | .ok _cert => return true
+    | .error _model => return none
+    | .ok cert => return some cert
 
+open Std Sat AIG Tactic BVDecide Frontend in
 @[implemented_by checkCircuitTautoAuxImpl, nospecialize]
-def checkCircuitTautoAux {α : Type} [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
-  return false
+def checkCircuitTautoAux {α : Type}
+    [DecidableEq α] [Hashable α] [Fintype α]
+    (c : Circuit α) : TermElabM (Option LratCert) := do
+  return none
 
 /--
 An axiom that tracks that a theorem is true because of our currently unverified
@@ -1009,6 +1014,24 @@ def Circuit.bigOr {α : Type _}
   | c :: cs =>
     c.or (Circuit.bigOr cs)
 
+theorem Circuit.eval_bigOr_eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = false ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = false) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+theorem Circuit.eval_bigOr_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = true ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = true) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
 /--
 Make the safety circuit at index 'i',
 which runs the program at the initial state on the inputs.
@@ -1100,40 +1123,64 @@ def mkIndHypCircuit {arity : Type _}
   Circuit.bigOr (mkIndypAuxList p n n (by omega))
 
 
-/--
-Circuit that says that the FSM will be all zeroes
-This circuit should produce 'false' if safe.
--/
-def mkCircuitAllZeroes
-  {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (niter : Nat) : Circuit (Vars p.α arity (niter+1)) :=
-  Circuit.or (mkSafetyCircuit p niter) (mkIndHypCircuit p niter)
-
-
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
-theorem eval_eq_false_of_mkCircuitAllZeroes_false
+theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
-    (p : FSM arity) (hp : (mkCircuitAllZeroes p n).always_false) :
+    (p : FSM arity)
+    (hs : (mkSafetyCircuit p n).always_false)
+    (hind : (mkIndHypCircuit p n).always_false) :
     ∀ env i, p.eval env i = false := sorry
 
+/-- Version that is better suited to proving. -/
+theorem eval_eq_false_of_verifyCert_mkSafetyCircuit_verifyCert_mk
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (sCert : BVDecide.Frontend.LratCert)
+    (hs : verifyAIG (mkSafetyCircuit p n).toAIG sCert = true)
+    (indCert : BVDecide.Frontend.LratCert)
+    (hind : verifyAIG (mkIndHypCircuit p n).toAIG indCert = true) :
+    ∀ env i, p.eval env i = false := by
+  apply eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false (n := n)
+  · apply always_false_of_cerifyAIG
+    exact hs
+  · apply always_false_of_cerifyAIG
+    exact hind
+
+
+inductive DecideIfZerosOutput
+/-- Safety property fails at this iteration. -/
+| safetyFailure (iter : Nat)
+/-- Was unable to establish invariant even at these many iterations. -/
+| exhaustedIterations (numIters : Nat)
+/-- we have proven both the safety and inductive invariant property. -/
+| proven (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+
+namespace DecideIfZerosOutput
+def isSuccess : DecideIfZerosOutput → Bool
+  | .safetyFailure _ => false
+  | .exhaustedIterations _ => false
+  | .proven .. => true
+end DecideIfZerosOutput
+
 @[nospecialize]
-partial def decideIfZerosAuxTermElabM {arity : Type _}
+partial def decideIfZerosAuxTermElabMOld {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (p : FSM arity)
     (c0K : Circuit (Vars p.α arity iter))
     (cK : Circuit (Vars p.α arity iter))
-    (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM (Option Nat) := do
+    (safetyProperty : Circuit (Vars p.α arity iter)) :
+    TermElabM (DecideIfZerosOutput) := do
   trace[Bits.Fast] s!"## K-induction (iter {iter})"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
-    return .none
+    return .exhaustedIterations maxIter
   let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
     match v with
     | .state a => .inr (p.initCarry a) -- assign init state
@@ -1142,11 +1189,11 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   let formatEmpty : Empty → Format := fun e => e.elim
   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
   trace[Bits.Fast] m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
-  if ← checkCircuitSatAux cKWithInit
-  then
+  match ← checkCircuitSatAux cKWithInit with
+  | .none =>
     trace[Bits.Fast] s!"Safety property failed on initial state."
-    return .none
-  else
+    return .safetyFailure iter
+  | .some safetyCert =>
     trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
     -- circuit of the output at state (k+1)
     let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
@@ -1182,24 +1229,25 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     -- let le : Bool := sorry
-    let le ← checkCircuitTautoAux safetyProperty
+    let tautoCert? ← checkCircuitTautoAux safetyProperty
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    if le then
+    match tautoCert? with
+    | .some tautoCert =>
       trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
-      return (.some iter)
-    else
+      return .proven iter safetyCert tautoCert
+    | .none =>
       trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
+      decideIfZerosAuxTermElabMOld (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
-   (fsm : FSM arity) (maxIter : Nat) : TermElabM (Option Nat) :=
+def _root_.FSM.decideIfZerosMCadicalOld  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
     let safety : Circuit (Vars fsm.α arity 0) := .fals
-    decideIfZerosAuxTermElabM 0 maxIter fsm c c safety
+    decideIfZerosAuxTermElabMOld 0 maxIter fsm c c safety
 
 end BvDecide
 

@@ -524,8 +524,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     | .circuit_cadical maxIter =>
       let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
-      let numItersToDecide? ← fsm.decideIfZerosMCadical maxIter
-      if numItersToDecide?.isSome
+      let cert? ← fsm.decideIfZerosMCadicalOld maxIter
+      if cert?.isSuccess
       then do
         let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
