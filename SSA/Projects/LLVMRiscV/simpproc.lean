@@ -202,6 +202,8 @@ def cast_op_rhs := [LV| {
       llvm.return  %0 : i64
   }]
 
+-- Bellow are the examples where simppeephole does not apply as expected.
+
 attribute [simp_denote] MLIR.AST.Op.ParsedArgs.ofList
 
 -- Here we get the motive not type correct error.
