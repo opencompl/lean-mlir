@@ -45,10 +45,9 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_undef
   simp_alive_case_bash
   simp_alive_split
-  alive_auto
 
 /--
-info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
