@@ -156,7 +156,8 @@ def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 6
       %1 = llvm.add   %lhs, %rhs  : i64
       llvm.return %1 : i64
   }]
-
+@[simp]
+theorem foo (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
 
 /- # Debug: single llvm op -/
 def single_bin_op_lhs := [LV| {
@@ -166,7 +167,7 @@ def single_bin_op_lhs := [LV| {
   }]
 def single_bin_op_rhs := [LV| {
   ^entry ():
-    %0 = llvm.mlir.constant (1) : i64
+    %0 = llvm.mlir.constant (0) : i64
     llvm.return  %0 : i64
   }]
 def single_llvm_bin_op : LLVMPeepholeRewriteRefine [] :=
@@ -174,7 +175,10 @@ def single_llvm_bin_op : LLVMPeepholeRewriteRefine [] :=
       ,correct := by
       unfold  single_bin_op_lhs single_bin_op_rhs
       simp_peephole
-      simp [PoisonOr.IsRefinedBy] -- can't get rid of the PoisonOr refinement
+      simp [foo]
+
+      --simp [LLVM.const?]
+      --simp [PoisonOr.IsRefinedBy] -- can't get rid of the PoisonOr refinement
       sorry
 
   }
@@ -210,26 +214,26 @@ def riscv_op : PeepholeRewrite LLVMPlusRiscV [] (Ty.riscv (.bv))  :=
 
 /- # Debug: casts -/
 def cast_op_lhs := [LV| {
-  ^entry (%lhs: i64):
-        %0 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
-        %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-    llvm.return  %1 : i64
+  ^entry (%lhs: !i64):
+        %0 = "builtin.unrealized_conversion_cast"(%lhs) : (!i64) -> i64
+        --%1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
+    llvm.return  %0 : i64
   }]
 
 def cast_op_rhs := [LV| {
-  ^entry (%lhs: i64):
-        %0 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
-        %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-    llvm.return  %1 : i64
+  ^entry (%lhs: !i64):
+        %0 = "builtin.unrealized_conversion_cast"(%lhs) : (!i64) -> i64
+        --%1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
+    llvm.return  %0 : i64
   }]
-def single_cast_op : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)] :=
+
+def single_cast_op : LLVMPeepholeRewriteRefine [Ty.riscv (.bv)] :=
   {lhs:= cast_op_lhs , rhs:= cast_op_rhs ,
    correct := by
     unfold cast_op_lhs cast_op_rhs
     simp_peephole
+
     unfold castriscvToLLVM PoisonOr.value
     simp_peephole
     sorry
   }
-
-
