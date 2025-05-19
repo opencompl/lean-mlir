@@ -8,7 +8,6 @@ import Lean
 open LLVMRiscV
 open RV64Semantics -- needed to use RISC-V semantics in simp tactic
 open InstCombine(LLVM) -- analog to RISC-V
-
 /-
 Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/
@@ -100,7 +99,6 @@ def extractRiscvTy (x : Expr) : SimpM Expr := do
     | throwError m! "expected type of {x} to be `Ty.riscv _`, but got {x}"
   return xRealTy
 
-
 open Lean Meta Elab in
 simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun e => do
   let_expr riscvArgsFromHybrid _ lhs := e
@@ -157,7 +155,7 @@ def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 6
       llvm.return %1 : i64
   }]
 @[simp]
-theorem foo (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
+theorem PoisonOr_eq_squb (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
 
 /- # Debug: single llvm op -/
 def single_bin_op_lhs := [LV| {
@@ -174,66 +172,60 @@ def single_llvm_bin_op : LLVMPeepholeRewriteRefine [] :=
     {lhs:= single_bin_op_lhs , rhs:= single_bin_op_rhs
       ,correct := by
       unfold  single_bin_op_lhs single_bin_op_rhs
-      simp_peephole
-      simp [foo]
-
-      --simp [LLVM.const?]
-      --simp [PoisonOr.IsRefinedBy] -- can't get rid of the PoisonOr refinement
-      sorry
-
+      simp -- Replace with a general simplification tactic or another meaningful tactic
   }
 
 /- # Debug: single riscv op -/
-def riscv_op_lhs := [LV| {
-  ^entry ():
-    %0 = li (0) : !i64
-    %1 = add %0, %0 : !i64
-    %2 = li (0) : !i64
-    %3 = add %2, %0 : !i64
-    ret  %3 : !i64
-  }]
-
-def riscv_bin_op_rhs := [LV| {
+def riscv_lhs := [LV| {
   ^entry ():
     %0 = li (1) : !i64
-    %1 = add %0, %0 : !i64
-    %2 = li (0) : !i64
-    %4 = add %2, %1 : !i64
-    %5 = li (0) : !i64
-    %6 = add %4, %5 : !i64
-    ret  %6 : !i64
+    ret  %0 : !i64
   }]
-def riscv_op : PeepholeRewrite LLVMPlusRiscV [] (Ty.riscv (.bv))  :=
-  {lhs:= riscv_op_lhs , rhs:= riscv_bin_op_rhs ,
-   correct := by
-    unfold riscv_op_lhs riscv_bin_op_rhs
-    simp_peephole
-    unfold RTYPE_pure64_RISCV_ADD
-    sorry
-  }
+def riscv_rhs := [LV| {
+  ^entry ():
+    %0 = li (0) : !i64
+    ret  %0 : !i64
+  }]
 
 /- # Debug: casts -/
 def cast_op_lhs := [LV| {
   ^entry (%lhs: !i64):
         %0 = "builtin.unrealized_conversion_cast"(%lhs) : (!i64) -> i64
-        --%1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-    llvm.return  %0 : i64
+        --%1 = "builtin.unrealized_conversion_cast" (%0) : (i64) -> (!i64)
+      llvm.return  %0 : i64
   }]
 
 def cast_op_rhs := [LV| {
   ^entry (%lhs: !i64):
         %0 = "builtin.unrealized_conversion_cast"(%lhs) : (!i64) -> i64
-        --%1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-    llvm.return  %0 : i64
+        --%1 = "builtin.unrealized_conversion_cast" (%0) : (i64) -> (!i64)
+      llvm.return  %0 : i64
   }]
 
+attribute [simp_denote] MLIR.AST.Op.ParsedArgs.ofList
+
+-- Here we get the motive not type correct error.
 def single_cast_op : LLVMPeepholeRewriteRefine [Ty.riscv (.bv)] :=
   {lhs:= cast_op_lhs , rhs:= cast_op_rhs ,
    correct := by
     unfold cast_op_lhs cast_op_rhs
     simp_peephole
-
-    unfold castriscvToLLVM PoisonOr.value
-    simp_peephole
+    simp only [MLIR.AST.Op.ParsedArgs.toHVector, MLIR.AST.Op.ParsedArgs.toHVector.go]
+    rw [List.reverse_cons]
     sorry
+  }
+
+/- This example causes an expontially huge proof goal, it is inlining the wholeparsing code.
+simp peephole also does not apply.
+-/
+def test1: LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
+    {lhs:= add_riscv1 , rhs:= add_llvm_no_flags
+      ,correct := by
+      unfold  add_riscv1 add_llvm_no_flags
+      simp_peephole
+      simp only [MLIR.AST.Op.ParsedArgs.toHVector, MLIR.AST.Op.ParsedArgs.toHVector.go]
+      simp only  [castriscvToLLVM]
+      simp_peephole
+      simp only  [PoisonOr_eq_squb]
+      simp [PoisonOr.value_isRefinedBy_value]
   }
