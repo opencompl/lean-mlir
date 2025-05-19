@@ -140,6 +140,7 @@ attribute [simp_llvm]
   -- Bool
   Bool.or_eq_true Bool.and_eq_true
   beq_iff_eq bne_iff_ne
+  BitVec.ofBool_eq_one_iff
   -- Other general simp lemmas
   reduceIte
 
