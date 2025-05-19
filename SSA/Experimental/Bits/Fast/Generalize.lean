@@ -236,6 +236,9 @@ def multiply (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
 def udiv {w} (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
   BVExpr.bin op1 BVBinOp.udiv op2
 
+def umod {w} (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
+  BVExpr.bin op1 BVBinOp.umod op2
+
 
 partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BVExprWrapper)) := do
   go expr
@@ -627,8 +630,6 @@ elab "#reducewidth" expr:term " : " target:term : command =>
 
 
 variable {x y z : BitVec 64}
-#eval 0xf#4 - 0x7#4
-
 #reducewidth (x + 0 = x) : 4
 
 #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
@@ -798,7 +799,6 @@ def deductiveAndEnumerativeSearch (origWidthConstantsExpr reducedWidthConstantsE
           if evaluatedVal == target.bv then
             res := expr :: res
 
-        --- TODO: Filter commutative expressions
         return res
 
     let inputVars := origWidthConstantsExpr.lhs.inputVars.keys
@@ -806,8 +806,7 @@ def deductiveAndEnumerativeSearch (origWidthConstantsExpr reducedWidthConstantsE
     let reducedWidthRhs := reducedWidthConstantsExpr.rhs
 
     for (targetId, targetVal) in origWidthConstantsExpr.rhs.symVars.toArray do
-        -- Deductive search can use the constants in original widths since it does not invoke the solver; -- TODO: we can keep this in the reduced bitwidth now that we generate multiple positive examples
-        let deductiveSearchRes := (← deductiveSearch origWidthConstantsExpr.lhs.bvExpr inputVars origWidthConstantsExpr.lhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
+        let deductiveSearchRes := (← deductiveSearch reducedWidthLhs.bvExpr inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]! depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
         logInfo m! "Deductive search results: {deductiveSearchRes}"
 
         let lhsSketchRes ← enumerativeSearch reducedWidthLhs.bvExpr True inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]!
@@ -871,7 +870,7 @@ def synthesiseIOExpressions(parsedBVLogicalExpr : ParsedBVLogicalExpr) (targetWi
     let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
     let synthesisWidthBVLogicalExpr := {parsedBVLogicalExpr with lhs := lhs, rhs := rhs}
 
-    let res ←  withTraceNode `Generalize (fun _ => return "Synthesised expressions") do
+    let res ←  withTraceNode `Generalize (fun _ => return "Performed enumerative and deductive search") do
                                     deductiveAndEnumerativeSearch parsedBVLogicalExpr synthesisWidthBVLogicalExpr 3
     logInfo m! "Expression synthesis results for assignment: {constantAssignment} is {res}"
 
@@ -884,24 +883,27 @@ def synthesiseIOExpressions(parsedBVLogicalExpr : ParsedBVLogicalExpr) (targetWi
   if exprSynthesisResults.values.any (fun v => v.isEmpty) then
     throwError m! "Could not synthesise expressions for {bvLogicalExpr}"
 
-  let mut filteredExprSynthesisResults : Std.HashMap Nat (List (BVExpr targetWidth)) := Std.HashMap.emptyWithCapacity
-  for (var, expressions) in exprSynthesisResults.toList do
-    let mut filtered : List (BVExpr targetWidth) := []
+  let filteredExprSynthesisResults ←  withTraceNode `Generalize (fun _ => return "Pruned equivalent expressions") do
+    let mut tempResults : Std.HashMap Nat (List (BVExpr targetWidth)) := Std.HashMap.emptyWithCapacity
+    for (var, expressions) in exprSynthesisResults.toList do
+      let mut filtered : List (BVExpr targetWidth) := []
 
-    logInfo m! "Synthesised expressions for {var} before filtering: {expressions}"
-    for expr in expressions do
-      if filtered.isEmpty then
-        filtered := expr :: filtered
-        continue
+      logInfo m! "Synthesised expressions for {var} before filtering: {expressions}"
+      for expr in expressions do
+        if filtered.isEmpty then
+          filtered := expr :: filtered
+          continue
 
-      let newConstraints := filtered.map (fun f =>  BoolExpr.not (BoolExpr.literal (BVPred.bin f BVBinPred.eq expr)))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+        let newConstraints := filtered.map (fun f =>  BoolExpr.not (BoolExpr.literal (BVPred.bin f BVBinPred.eq expr)))
+        let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-      if let some _ ← solve subsumeCheckExpr then
-        filtered := expr :: filtered
+        if let some _ ← solve subsumeCheckExpr then
+          filtered := expr :: filtered
 
-    logInfo m! "Synthesised expressions for {var} after filtering: {filtered}. Removed {expressions.size - filtered.length} expressions."
-    filteredExprSynthesisResults := filteredExprSynthesisResults.insert var filtered
+      logInfo m! "Synthesised expressions for {var} after filtering: {filtered}. Removed {expressions.size - filtered.length} expressions."
+      tempResults := tempResults.insert var filtered
+
+    return tempResults
 
   return {expressions := filteredExprSynthesisResults, constantAssignments := (processingWidth, constantAssignments)}
 
@@ -909,7 +911,7 @@ def synthesiseIOExpressions(parsedBVLogicalExpr : ParsedBVLogicalExpr) (targetWi
 elab "#iosynthesize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 8
+      let targetWidth := 4
 
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
@@ -933,6 +935,7 @@ variable {x y z: BitVec 8}
 #iosynthesize  x <<< 1#8 ^^^ y <<< 1#8 &&& 20#8 = (x ^^^ y &&& 10#8) <<< 1#8
 #iosynthesize x <<< 1#8 + (y <<< 1#8 &&& 119#8) = (x + (y &&& 59#8)) <<< 1#8
 #iosynthesize (x ^^^ 33#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 43#8
+#iosynthesize  x <<< 1#8 ^^^ y <<< 1#8 &&& 20#8 = (x ^^^ y &&& 10#8) <<< 1#8
 
 variable {x y z: BitVec 32}
 #iosynthesize x + 10 + 1 =  x + 9 + 2
@@ -949,16 +952,8 @@ variable {x y z: BitVec 32}
 -- #iosynthesize x * 42#32 ^^^ (y * 42#32 ^^^ z * 42#32) ||| z * 42#32 ^^^ x * 42#32 = z * 42#32 ^^^ x * 42#32 ||| y * 42#32
 -- #iosynthesize  ((x >>> 4#32 &&& 8#32) + y) <<< 4#32 = (x &&& 128#32) + y <<< 4#32
 
-#eval ((BitVec.ofInt 32 (-1) >>> 3) &&& 5) <<< 4
-
-def x' := 5
-def y' := 7
-#eval ((x' >>> 3 &&& 7) + y') <<< 3
-#eval (x' &&& (BitVec.ofInt 32 (-1) >>> 3 &&& 7 <<< 3)) + y' <<< 3
-#eval (x' &&& (3 * 7 * 3)) + y' <<< 3
-
-#eval ((x' >>> 7 &&& 8) + y') <<< 7
-#eval (x' &&& (7 * 8 * 7)) + y' <<< 7
+variable {x y z: BitVec 4}
+#iosynthesize  (x <<< 2#4) ^^^ y <<< 2#4 &&& 8#4 = (x ^^^ y &&& 0xa#4) <<< 2#4
 
 instance : BEq BVLogicalExpr where
   beq := fun a b => toString a == toString b
@@ -1027,7 +1022,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
           logInfo m! "Symbolic vars: {symbolicVars}"
 
-          let expressionSketches := generateSketches symbolicVars [add, subtract]
+          let expressionSketches := generateSketches symbolicVars [add, subtract, umod]
 
           logInfo m! "Generated {expressionSketches.length} sketches: {expressionSketches}"
 
@@ -1241,18 +1236,17 @@ elab "#generalize" expr:term: command =>
                 let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
                 let substitutedBVLogicalExpr := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
 
-                logInfo m! "Finding negative examples for {substitutedBVLogicalExpr}"
                 let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr positiveExamples[0]!.keys 3
-
-                if negativeExamples.isEmpty then do -- Filter observationally equivalent combinations
+                if negativeExamples.isEmpty then do
                     logInfo m! "General form: {substitutedBVLogicalExpr} has no preconditions."
                     return True
 
-                logInfo m! "Negative examples: {negativeExamples}"
+                logInfo m! "Negative examples for {substitutedBVLogicalExpr}: {negativeExamples}"
                 negativeExamplesPerCombo := (substitutedBVLogicalExpr, negativeExamples) :: negativeExamplesPerCombo
 
               -- Then attempt to generate preconditions
               for numConjunctions in (List.range 2) do
+                logInfo m! "Running with {numConjunctions} allowed conjunctions"
                 for (substitutedBVLogicalExpr, negativeExamples)  in negativeExamplesPerCombo do
                     let widthId := 9481
 
