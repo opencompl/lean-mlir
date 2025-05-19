@@ -628,7 +628,6 @@ elab "#reducewidth" expr:term " : " target:term : command =>
             logInfo m! "Could not match"
       pure ()
 
-
 variable {x y z : BitVec 64}
 #reducewidth (x + 0 = x) : 4
 
@@ -805,24 +804,24 @@ def deductiveAndEnumerativeSearch (origWidthConstantsExpr reducedWidthConstantsE
     let reducedWidthLhs := reducedWidthConstantsExpr.lhs
     let reducedWidthRhs := reducedWidthConstantsExpr.rhs
 
-    for (targetId, targetVal) in origWidthConstantsExpr.rhs.symVars.toArray do
-        let deductiveSearchRes := (← deductiveSearch reducedWidthLhs.bvExpr inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]! depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
+    for (targetId, targetVal) in reducedWidthRhs.symVars.toArray do
+        let deductiveSearchRes := (← deductiveSearch reducedWidthLhs.bvExpr inputVars reducedWidthLhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
         logInfo m! "Deductive search results: {deductiveSearchRes}"
 
         let lhsSketchRes ← enumerativeSearch reducedWidthLhs.bvExpr True inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]!
 
-        let mut filteredExprs ← filterExprs (deductiveSearchRes ++ lhsSketchRes) targetVal
+        let mut filteredExprs ← filterExprs (deductiveSearchRes ++ lhsSketchRes) origWidthConstantsExpr.rhs.symVars[targetId]!
         match filteredExprs with
         | [] =>
                 logInfo m! "Could not synthesize an expression for {targetId} using deductive search and a sketch of the LHS; performing full enumerative synthesis"
-                let enumSynthesisRes ← enumerativeSearch reducedWidthLhs.bvExpr False inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]!
+                let enumSynthesisRes ← enumerativeSearch reducedWidthLhs.bvExpr False inputVars reducedWidthLhs.symVars targetVal
 
                 if enumSynthesisRes.isEmpty then
                   logInfo m! "No candidate expressions generated from enumerative synthesis"
                   return Std.HashMap.emptyWithCapacity
 
 
-                filteredExprs ← filterExprs enumSynthesisRes targetVal
+                filteredExprs ← filterExprs enumSynthesisRes origWidthConstantsExpr.rhs.symVars[targetId]!
                 if filteredExprs.isEmpty then
                   logInfo m! "Could not synthesize an expression for var{targetId} from {reducedWidthConstantsExpr.lhs.bvExpr}"
                   return Std.HashMap.emptyWithCapacity
@@ -911,7 +910,7 @@ def synthesiseIOExpressions(parsedBVLogicalExpr : ParsedBVLogicalExpr) (targetWi
 elab "#iosynthesize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 4
+      let targetWidth := 8
 
       let hExpr ← Term.elabTerm expr none
       -- let hExpr ← instantiateMVars (← whnfR  hExpr)
@@ -963,16 +962,17 @@ instance : Hashable BVLogicalExpr where
 
 
 partial def countModel (expr : BVLogicalExpr) (constants: Std.HashSet Nat): TermElabM Nat := do
-    let res ← solve expr
-
-    match res with
-    | none => return 0
-    | some assignment =>
-          let filteredAssignments := assignment.filter (λ c _ => constants.contains c)
-          let newConstraints := filteredAssignments.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv)))
-          let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
-          return 1 + (← countModel (BoolExpr.gate Gate.and expr constrainedBVExpr) constants)
-
+    go 0 expr
+    where
+        go (count: Nat) (expr : BVLogicalExpr) : TermElabM Nat := do
+          let res ← solve expr
+          match res with
+          | none => return count
+          | some assignment =>
+                let filteredAssignments := assignment.filter (λ c _ => constants.contains c)
+                let newConstraints := filteredAssignments.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv)))
+                let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
+                pure (← go (count + 1) (BoolExpr.gate Gate.and expr constrainedBVExpr))
 
 def generateCombinations (num: Nat) (values: List α) : List (List α) :=
     match num, values with
@@ -1117,7 +1117,6 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
             pure preconditionCandidates
 
           let preconditionCandidatesSet := Std.HashSet.ofList preconditionCandidates
-          trace[Generalize] m! "Precondition candidates: {preconditionCandidatesSet.toList}"
 
           let validCandidates ← withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
             let mut validCandidates : List BVLogicalExpr := []
@@ -1164,8 +1163,9 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
             let mut candidateByModelCount : List (Nat × BVLogicalExpr) := []
             let constantsSet := Std.HashSet.ofList constants
             for candidate in validCandidates do
+              let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
               -- let count := 10
-              let count ← countModel candidate constantsSet
+              let count ← countModel widthSubstitutedCandidate constantsSet
               candidateByModelCount := (count, candidate) :: candidateByModelCount
 
             candidateByModelCount := candidateByModelCount.mergeSort (λ a b => a.fst > b.fst)
@@ -1198,7 +1198,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 4
+      let targetWidth := 8
 
       let hExpr ← Term.elabTerm expr none
       logInfo m! "hexpr: {hExpr}"
@@ -1236,7 +1236,7 @@ elab "#generalize" expr:term: command =>
                 let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
                 let substitutedBVLogicalExpr := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
 
-                let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr positiveExamples[0]!.keys 3
+                let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr positiveExamples[0]!.keys 5
                 if negativeExamples.isEmpty then do
                     logInfo m! "General form: {substitutedBVLogicalExpr} has no preconditions."
                     return True
@@ -1270,7 +1270,7 @@ elab "#generalize" expr:term: command =>
 
               return False
 
-            if !(← preconditionSuccess) then -- TODO: It'll be good if we can progressively increase the number of conjunctions for generating preconditions
+            if !(← preconditionSuccess) then
               throwError m! "Could not generalize {bvLogicalExpr}"
 
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
