@@ -72,7 +72,8 @@ instance : ToString LLVMPlusRiscV.Op  where
   toString := fun
   | .llvm llvm    => toString llvm
   | .riscv riscv  => toString riscv
-  | _  => "builtin.unrealized_conversion_cast"
+  | .castLLVM => "builtin.unrealized_conversion_cast"
+  | .castRiscv => "builtin.unrealized_conversion_cast"
 
 @[simp_denote]
 def llvmArgsFromHybrid : {tys : List LLVM.Ty} →
