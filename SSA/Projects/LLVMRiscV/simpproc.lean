@@ -14,7 +14,8 @@ on Lean version "4.20.0-nightly-2025-04-21" -/
 set_option Elab.async false
 
 @[simp_denote]
-private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
+private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty}
+  {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
   rfl
 
 open Lean Meta Elab in
@@ -36,14 +37,15 @@ theorem riscVArgsFromHybrid_nil_eq : riscvArgsFromHybrid (HVector.nil) = HVector
 open Lean Meta Elab in
 /-- Convert a `List Expr` into an `Expr` by building calls to `List.nil` and `List.cons`.
 Note that the `ToExpr` instance of `List` is insufficient, since it perform a *deep expression cast*,
-where it converts any `List α` where `[ToExpr α]` into a `List Expr`. So, when given a list of expressions, like [.const Nat],
-instead of building `[Nat]`, it builds `[Lean.Expr.Const ``Nat]` (i.e.., it seralizes the `Expr` as well!).
+where it converts any `List α` where `[ToExpr α]` into a `List Expr`. So, when given a list of
+expressions, like [.const Nat], instead of building `[Nat]`, it builds `[Lean.Expr.Const ``Nat]`
+(i.e.., it seralizes the `Expr` as well!).
 Instead, we want a shallow serialization, where we just build `List.cons (.const Nat) List.nil`.
 -/
 def listExprToExprShallow (type : Option Expr) : List Expr → MetaM Expr
 | .nil => mkAppOptM ``List.nil #[type]
 | .cons x xs => do
-  let tailExpr ← listExprToExprShallow type xs -- sarah split this step up for her to understand it.
+  let tailExpr ← listExprToExprShallow type xs
   mkAppOptM ``List.cons #[type, x, tailExpr]
 
 open Lean Meta Elab in
@@ -60,7 +62,7 @@ def llvmArgsFromHybrid_cons_eq.lemma {ty  : LLVM.Ty} {tys : List LLVM.Ty}
 
 open Lean Meta Elab Qq in
 simproc [simp_denote] llvmArgsFromHybrid_cons_eq (llvmArgsFromHybrid (_) ) := fun e => do
--- TODO: This ought to be .cons rather than a wildcard -------------^^^
+-- TODO: (comment from Alex)This ought to be .cons rather than a wildcard -------------^^^
 --       Unfortunately, then it the simproc again stops being applied when we'd
 --       expect it to, despite liberal use of `no_index`.
   let_expr llvmArgsFromHybrid tys' lhs := e
@@ -93,7 +95,7 @@ def riscvArgsFromHybrid_cons_eq.lemma {ty  : RISCV64.RV64.Ty} {tys : List RISCV6
    := rfl
 
 open Lean Meta Elab in
-/-- Extract out the raw LLVM type from the. -/
+/-- Extract out the raw LLVM type. -/
 def extractRiscvTy (x : Expr) : SimpM Expr := do
   let_expr Ty.riscv xRealTy := (← reduce x)
     | throwError m! "expected type of {x} to be `Ty.riscv _`, but got {x}"
@@ -123,7 +125,8 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
   let eq ← reduce (← inferType proof)
   logInfo m!"reduced type of proof (i.e. the equality) to {eq}"
   let .some (_ty, _lhs, rhs) := eq.eq?
-    | throwError "unable to reduce application of riscvArgsFromHybrid_cons_eq.lemma to an equality, only reduced to '{eq}'."
+    | throwError "unable to reduce application of riscvArgsFromHybrid_cons_eq.lemma to an
+      equality, only reduced to '{eq}'."
   logInfo m!"final right-hand-side of equality is: {rhs}"
   return .visit {
     expr := rhs,
@@ -137,7 +140,8 @@ theorem poisonOr_mk_some_eq_value (x : α) : { toOption := some x } = PoisonOr.v
 theorem liftM_eq_some (α : Type u) : @liftM Id Option _  α = some := by rfl
 
 @[simp_denote]
-theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty} {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
+theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
+  {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
   (s.snoc x) (Ctxt.Var.toSnoc v) = s v := rfl
 
 def add_riscv1 := [LV| {
@@ -149,11 +153,13 @@ def add_riscv1 := [LV| {
     llvm.return %addl : i64
   }]
 
-def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+  .pure (.llvm (.bitvec 64))  := [LV| {
     ^entry (%lhs: i64, %rhs: i64 ):
       %1 = llvm.add   %lhs, %rhs  : i64
       llvm.return %1 : i64
   }]
+  
 @[simp]
 theorem PoisonOr_eq_squb (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
 
