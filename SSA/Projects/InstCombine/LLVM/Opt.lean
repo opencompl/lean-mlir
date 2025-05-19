@@ -1,5 +1,6 @@
 import SSA.Projects.InstCombine.LLVM.Parser
 import Cli
+import SSA.Projects.LLVMRiscV.ParseAndTransform
 
 /-- `verbose_flag` takes in a filename and assuming the file is wellformed,
  prints verbose output to the command line. Additionally it prints
