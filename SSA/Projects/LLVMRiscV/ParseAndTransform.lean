@@ -26,5 +26,5 @@ def regionTransform_LLVMRiscV (region : Region 0) : Except ParseError
 also used for parsing LLVM `Com`s. -/
 def parseComFromFile_LLVMRiscV(fileName : String) :
  IO (Option (Σ (Γ' :  Ctxt LLVMPlusRiscV.Ty ) (eff : EffectKind)
-  (ty :  LLVMPlusRiscV.Ty), Com LLVMPlusRiscV Γ' eff ty)) := do
+ (ty :  LLVMPlusRiscV.Ty), Com LLVMPlusRiscV Γ' eff ty)) := do
  parseRegionFromFile fileName regionTransform_LLVMRiscV
