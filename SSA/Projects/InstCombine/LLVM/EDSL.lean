@@ -122,7 +122,7 @@ instance : AST.TransformExpr LLVM 0 := { mkExpr }
 def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     MLIR.AST.ReaderM (MetaLLVM φ) (Σ eff ty, Com (MetaLLVM φ) Γ eff ty) := do
   if opStx.name ≠ "llvm.return" then
-    throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
+    throw <| .unsupportedOp s!"Tried to build return out of non-return statement {opStx.name}"
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
