@@ -75,6 +75,11 @@ instance : ToString LLVMPlusRiscV.Op  where
   | .castLLVM => "builtin.unrealized_conversion_cast"
   | .castRiscv => "builtin.unrealized_conversion_cast"
 
+instance : ToString LLVMPlusRiscV.Ty where
+  toString := fun
+  | .llvm llvm    => toString llvm
+  | .riscv riscv  => toString riscv
+
 @[simp_denote]
 def llvmArgsFromHybrid : {tys : List LLVM.Ty} →
   HVector TyDenote.toType (tys.map LLVMRiscV.Ty.llvm) → HVector TyDenote.toType tys
@@ -300,7 +305,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
     return ⟨eff, .llvm ty, Com.ret (← transformVarLLVM v)⟩
   | .error e =>
     match e with
-    | .unsupportedOp _s=>
+    | .generic _s=>
       let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn (ctxtTransformToRiscV Γ) opStx (← read)
       match com with
       | Com.ret v =>
