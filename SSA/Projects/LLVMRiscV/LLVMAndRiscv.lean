@@ -75,6 +75,11 @@ instance : ToString LLVMPlusRiscV.Op  where
   | .castLLVM => "builtin.unrealized_conversion_cast"
   | .castRiscv => "builtin.unrealized_conversion_cast"
 
+instance : ToString LLVMPlusRiscV.Ty where
+  toString := fun
+  | .llvm llvm    => toString llvm
+  | .riscv riscv  => toString riscv
+
 @[simp_denote]
 def llvmArgsFromHybrid : {tys : List LLVM.Ty} →
   HVector TyDenote.toType (tys.map LLVMRiscV.Ty.llvm) → HVector TyDenote.toType tys
