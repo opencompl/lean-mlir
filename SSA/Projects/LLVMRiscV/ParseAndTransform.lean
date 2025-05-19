@@ -14,12 +14,12 @@ seen as an extension of the Opt tool, specific to the LLVMAndRiscV dialect.
 /-- `regionTransform_LLVMRiscV` attempts to transform a region into a `Com` of type `LLVMAndRiscV`.
 It throws an error if the transformation fails. -/
 def regionTransform_LLVMRiscV (region : Region 0) : Except ParseError
-    (Σ (Γ' : Ctxt LLVMPlusRiscV.Ty ) (eff : EffectKind)
-      (ty : LLVMPlusRiscV.Ty ), Com LLVMPlusRiscV Γ' eff ty) :=
+  (Σ (Γ' : Ctxt LLVMPlusRiscV.Ty ) (eff : EffectKind)
+  (ty : LLVMPlusRiscV.Ty ), Com LLVMPlusRiscV Γ' eff ty) :=
   let res := mkCom (d:= LLVMPlusRiscV) region
   match res with
-    | Except.error e => Except.error s!"Error:\n{reprStr e}"
-    | Except.ok res => Except.ok res
+  | Except.error e => Except.error s!"Error:\n{reprStr e}"
+  | Except.ok res => Except.ok res
 
 /-- `parseComFromFile_LLVMRiscV` parses a `Com` from the input file as a `Com` of type
 `LLVMAndRiscV`. It uses the parsing infrastructure provided by the framework, which is
