@@ -14,6 +14,45 @@ instances for a specific dialect.
 This is an alternative implementation to `EDSL.lean`, which aims to compute more with meta-time
 objects, instead of kernel reducing `Expr`s, in an attempt to avoid some of the pittfals
 that kernel reduction causes.
+
+## A Note to Dialect Implementors
+
+To use this elaborator, we first need to register appropriate typeclasses that
+instruct Lean how to transform the various components of your dialect into Lean
+expressions.
+
+To start, we need to tell Lean how to convert the Dialect operations and types.
+This is done through the `Lean.ToExpr` typeclass, and it generally suffices to
+add `deriving Lean.ToExpr` at the end of your `Op` and `Ty` type definitions.
+
+Then, we need to register an expression that represents the dialect itself.
+To this end, we require an instance of `DialectToExpr`, which cannot be derived.
+Luckily, it's pretty straightforward to define using `Qq`, for example:
+```
+open Qq in
+instance : DialectToExpr FooDialect where
+  toExprDialect := q(FooDialect)
+```
+
+If the dialect is pure (i.e., `Dialect.m _` is `Id`), then we're done. However,
+if the monad is anything else, it's crucial that we also register an expression
+for this monad, which also happens in the `DialectToExpr` typeclass, through the
+`toExprM` field. For example, if `FooDialect.m` is defined as `MyEffectM`, then
+the instance would be:
+```
+open Qq in
+instance : DialectToExpr FooDialect where
+  toExprDialect := q(FooDialect)
+  toExprM := q(MyEffectM)
+```
+
+In either case, we should now be ready to register an elaborator that will parse
+programs in our dialect:
+```
+elab "[FooDialect| " reg:mlir_region "]" : term => do
+  SSA.elabIntoCom' reg FooDialect
+```
+
 -/
 
 namespace SSA
