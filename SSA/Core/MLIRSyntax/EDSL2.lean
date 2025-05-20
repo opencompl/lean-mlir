@@ -30,7 +30,6 @@ dialect itself, and a second that represents the dialect monad (i.e., the
 definition of `Dialect.m _`). These are defined as an instance of `DialectToExpr`,
 which cannot be derived. Luckily, these are pretty straightforward to define:
 ```
-open Qq in
 instance : DialectToExpr FooDialect where
   toExprDialect := Expr.const ``FooDialect []
   toExprM := Expr.const ``Id [0]
