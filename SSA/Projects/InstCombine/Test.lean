@@ -473,5 +473,5 @@ def constant_macro (w : Nat) :=
 def constant_macro_proof (w : Nat) :
     constant_macro w ⊑ constant_macro w := by
   unfold constant_macro
-  simp_alive_ssa
-  apply PoisonOr.isRefinedBy_self
+  simp_peephole
+  simp

@@ -23,8 +23,17 @@ attribute [simp_llvm_split]
    so they've been preserved to not change this existing behaviour of `simp_alive_case_bash` -/
 
 attribute [simp_llvm_option]
-  PoisonOr.value_bind PoisonOr.value_isRefinedBy_iff PoisonOr.isRefinedBy_poison_iff
+  PoisonOr.value_bind PoisonOr.isRefinedBy_poison_iff
   PoisonOr.value_ne_poison PoisonOr.poison_ne_value
+
+open PoisonOr in
+@[simp_llvm_option]
+theorem LLVM.IntW.value_isRefinedBy_iff (a : BitVec w) (b? : PoisonOr (BitVec w)) :
+    value a ⊑ b? ↔ b? = value a := by
+  cases b? <;> (
+    simp only [value_isRefinedBy_value, value_inj, isRefinedBy_poison_iff]
+    constructor <;> exact Eq.symm
+  )
 
 /-- `ensure_only_goal` succeeds, doing nothing, when there is exactly *one* goal.
 If there are multiple goals, `ensure_only_goal` fails -/
