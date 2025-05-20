@@ -33,11 +33,7 @@ inductive Op where
   | riscv : RISCV64.RV64.Op -> Op
   | castRiscv : Nat → Op
   | castLLVM : Nat → Op
-<<<<<<< HEAD
-  deriving DecidableEq, Repr
-=======
   deriving DecidableEq, Repr, Lean.ToExpr
->>>>>>> origin/main
 
 /-- Semantics of an unrealized conversion cast from RISC-V 64 to LLVM.
 We wrap `BitVec 64`in `Option (BitVec 64)` -/
