@@ -101,7 +101,7 @@ def extractRiscvTy (x : Expr) : SimpM Expr := do
   let_expr Ty.riscv xRealTy := (← reduce x)
     | throwError m! "expected type of {x} to be `Ty.riscv _`, but got {x}"
   return xRealTy
-/-
+
 open Lean Meta Elab in
 simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun e => do
   let_expr riscvArgsFromHybrid _ lhs := e
@@ -132,7 +132,7 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
   return .visit {
     expr := rhs,
     proof? := .some proof
-  } -/
+  }
 
 @[simp]
 theorem poisonOr_mk_some_eq_value (x : α) : { toOption := some x } = PoisonOr.value x := rfl
@@ -145,8 +145,8 @@ theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t 
   {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
   (s.snoc x) (Ctxt.Var.toSnoc v) = s v := rfl
 
-@[simp]
+@[simp_denote, simp]
 theorem PoisonOr_eq_squb (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
 
-@[simp]
+@[simp_denote, simp]
 theorem toOption_getSome : (PoisonOr.value x).toOption.getD y = x := by rfl

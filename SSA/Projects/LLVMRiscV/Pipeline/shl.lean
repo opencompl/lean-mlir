@@ -1,0 +1,138 @@
+import SSA.Projects.LLVMRiscV.PeepholeRefine
+import SSA.Projects.LLVMRiscV.LLVMAndRiscv
+import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.RISCV64.PrettyEDSL
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import Lean
+
+open LLVMRiscV
+open RV64Semantics -- needed to use RISC-V semantics in simp tactic
+open InstCombine(LLVM) -- analog to RISC-V
+/-! # SHL (shift left) nsw nuw   -/
+
+def shl_llvm: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+    ^entry (%x: i64, %y: i64 ):
+      %1 = llvm.shl  %x, %y : i64 -- value depends on wether to no overflow flag is present or not
+      llvm.return %1 : i64
+  }]
+
+def shl_llvm_nsw: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+    ^entry (%x: i64, %y: i64 ):
+      %1 = llvm.shl  %x, %y overflow<nsw> : i64 -- value depends on wether to no overflow flag is present or not
+      llvm.return %1 : i64
+  }]
+
+def shl_llvm_nuw: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+    ^entry (%x: i64, %y: i64 ):
+      %1 = llvm.shl  %x, %y overflow<nuw> : i64 -- value depends on wether to no overflow flag is present or not
+      llvm.return %1 : i64
+  }]
+
+def shl_llvm_nsw_nuw: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+    ^entry (%x: i64, %y: i64 ):
+      %1 = llvm.shl  %x, %y overflow<nsw,nuw> : i64 -- value depends on wether to no overflow flag is present or not
+      llvm.return %1 : i64
+  }]
+
+-- at the moment unsure how the conversion cast will eliminate
+def shl_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)] .pure (.llvm (.bitvec 64))  := [LV| {
+    ^entry (%reg1: i64, %reg2: i64 ):
+      %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> !i64
+      %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i64) -> !i64
+      %2 = sll  %0, %1 : !i64 -- value depends on wether to no overflow flag is present or not
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def llvm_shl_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+  {lhs := shl_llvm , rhs := shl_riscv, correct := by
+        unfold shl_llvm shl_riscv
+        simp_peephole
+        simp_alive_undef
+        simp [castriscvToLLVM, RTYPE_pure64_RISCV_SLL_bv, castLLVMToriscv, LLVM.shl?]
+        simp_alive_case_bash
+        intro x x'
+        split
+        · case value.value.isTrue htt =>
+          simp
+        · case value.value.isFalse hff =>
+          simp at hff
+          simp
+          rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
+          bv_omega
+         }
+
+
+def llvm_shl_lower_riscv_nsw: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+  {lhs := shl_llvm_nsw , rhs := shl_riscv, correct := by
+        unfold shl_llvm_nsw shl_riscv
+        simp_peephole
+        simp_alive_undef
+        simp [castriscvToLLVM, RTYPE_pure64_RISCV_SLL_bv, castLLVMToriscv, LLVM.shl?]
+        simp_alive_case_bash
+        intro x x'
+        split
+        case value.value.isTrue ht =>
+          simp
+          split
+          case isTrue htt =>
+            simp
+          case isFalse hf =>
+            simp at hf
+            simp [hf]
+            rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
+            bv_omega
+        case value.value.isFalse hf =>
+          simp
+        }
+
+def llvm_shl_lower_riscv_nuw: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+  {lhs := shl_llvm_nuw , rhs := shl_riscv, correct := by
+        unfold shl_llvm_nuw shl_riscv
+        simp_peephole
+        simp_alive_undef
+        simp [castriscvToLLVM, RTYPE_pure64_RISCV_SLL_bv, castLLVMToriscv, LLVM.shl?]
+        simp_alive_case_bash
+        intro x x'
+        split
+        case value.value.isTrue ht =>
+          simp
+          split
+          case isTrue htt =>
+            simp
+          case isFalse hf =>
+            simp at hf
+            simp [hf]
+            rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
+            bv_omega
+        case value.value.isFalse hf =>
+          simp
+            }
+
+def llvm_shl_lower_riscv_nsw_nuw: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+  {lhs := shl_llvm_nsw_nuw , rhs := shl_riscv, correct := by
+        unfold shl_llvm_nsw_nuw shl_riscv
+        simp_peephole
+        simp_alive_undef
+        simp [castriscvToLLVM, RTYPE_pure64_RISCV_SLL_bv, castLLVMToriscv, LLVM.shl?]
+        simp_alive_case_bash
+        intro x x'
+        split
+        case value.value.isTrue ht =>
+          simp
+          split
+          case isTrue htt =>
+            split
+            case isTrue ht =>
+              simp
+            case isFalse hf =>
+              simp at hf
+              simp [hf]
+              rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
+              bv_omega
+          case isFalse hf =>
+            simp
+        case value.value.isFalse hf =>
+          simp
+      }
