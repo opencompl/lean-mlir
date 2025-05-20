@@ -49,8 +49,8 @@ instance : DialectToExpr Simple where
   toExprDialect := .const ``Simple []
 
 def_signature for Simple
-  | .add      => (.int, .int) → .int
   | .const _  => () → .int
+  | .add      => (.int, .int) → .int
 
 def_denote for Simple
   | .const n => BitVec.ofInt 32 n

@@ -9,6 +9,8 @@ open Lean
 namespace MLIR.EDSL
 open Pretty
 
+def PrettyEDSL := ""
+
 syntax "llvm.return"  : MLIR.Pretty.uniform_op
 syntax "llvm.copy"    : MLIR.Pretty.uniform_op
 syntax "llvm.neg"     : MLIR.Pretty.uniform_op

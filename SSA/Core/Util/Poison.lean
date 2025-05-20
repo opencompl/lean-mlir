@@ -40,7 +40,8 @@ def casesOn'.{u} {α : Type} {motive : PoisonOr α → Sort u}
   | .poison => poison
   | .value a => value a
 
-@[simp] theorem value_inj {a b : α} : value a = value b ↔ a = b := by
+@[simp] theorem value_inj {a b : α} :
+    @Eq (no_index _) (value a) (value b) ↔ a = b := by
   constructor
   · rintro ⟨⟩; rfl
   · exact fun h => h ▸ rfl
