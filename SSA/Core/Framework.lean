@@ -2570,6 +2570,26 @@ def rewritePeephole (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   rewritePeephole_go fuel pr 0 target
 
+variable (d : Dialect) [DialectSignature d][DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+/--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
+and later, running at most `fuel` steps. -/
+def rewritePeephole_go_multi (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
+    (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
+  match fuel with
+  | 0 => target
+  | fuel' + 1 =>
+    let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
+    rewritePeephole_go_multi fuel' prs (ix + 1) target'
+
+variable (d : Dialect) [DialectSignature d][DecidableEq (Dialect.Ty d)][DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+/-- rewrite with the list of peephole optimizations `prs` at the `target` program, running at most
+`fuel` steps. -/
+def rewritePeephole_multi (fuel : ℕ)
+   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+    rewritePeephole_go_multi d fuel prs 0 target
+
 /-- `rewritePeephole_go` preserve semantics -/
 theorem denote_rewritePeephole_go (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
