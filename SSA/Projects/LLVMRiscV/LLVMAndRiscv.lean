@@ -25,14 +25,14 @@ https://mlir.llvm.org/docs/Dialects/Builtin/#builtinunrealized_conversion_cast-u
 inductive Ty where
   | llvm : LLVM.Ty -> Ty
   | riscv : RISCV64.RV64.Ty -> Ty
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 inductive Op where
   | llvm : LLVM.Op -> Op
   | riscv : RISCV64.RV64.Op -> Op
   | castRiscv : Op
   | castLLVM : Op
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 /-- Semantics of an unrealized conversion cast from RISC-V 64 to LLVM.
 We wrap `BitVec 64`in `Option (BitVec 64)` -/
@@ -317,8 +317,12 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
 instance : MLIR.AST.TransformReturn LLVMPlusRiscV 0 where
   mkReturn := mkReturn
 
-open Qq MLIR AST Lean Elab Term Meta in
+open Qq in
+instance : DialectToExpr LLVMPlusRiscV where
+  toExprDialect := q(LLVMPlusRiscV)
+  toExprM := q(Id)
+
 elab "[LV|" reg:mlir_region "]" : term => do
-  SSA.elabIntoCom reg q(LLVMPlusRiscV)
+  SSA.elabIntoCom' reg LLVMPlusRiscV
 
 end LLVMRiscV
