@@ -2,7 +2,8 @@ import SSA.Projects.InstCombine.Base
 import SSA.Projects.RISCV64.Base
 import SSA.Projects.RISCV64.Syntax
 import SSA.Projects.InstCombine.LLVM.EDSL
-
+import SSA.Projects.RISCV64.PrettyEDSL
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 open InstCombine(LLVM)
 namespace LLVMRiscV
 
@@ -30,14 +31,14 @@ inductive Ty where
 inductive Op where
   | llvm : LLVM.Op -> Op
   | riscv : RISCV64.RV64.Op -> Op
-  | castRiscv : Op
-  | castLLVM : Op
+  | castRiscv : Nat → Op
+  | castLLVM : Nat → Op
   deriving DecidableEq, Repr
 
 /-- Semantics of an unrealized conversion cast from RISC-V 64 to LLVM.
 We wrap `BitVec 64`in `Option (BitVec 64)` -/
-def castriscvToLLVM (toCast : BitVec 64) : PoisonOr (BitVec 64) :=
-  .value toCast
+def castriscvToLLVM (toCast : BitVec 64) : PoisonOr (BitVec w) :=
+  .value (BitVec.signExtend w toCast)
 
 /--
 Semantics of an unrealized conversion cast from LLVM to RISC-V.
@@ -45,8 +46,8 @@ This cast attempts to lower an `(Option (BitVec 64))` to a concrete `(BitVec 64)
 If the value is `some`, we extract the underlying `BitVec`.
 If it is `none` (e.g., an LLVM poison value), we default to the zero `BitVec`.
 -/
-def castLLVMToriscv (toCast : PoisonOr (BitVec 64)) : BitVec 64 :=
-  toCast.toOption.getD 0#64
+def castLLVMToriscv (toCast : PoisonOr (BitVec w)) : BitVec 64 :=
+  BitVec.setWidth 64 (toCast.toOption.getD 0#w)
 
 @[simp]
 abbrev LLVMPlusRiscV : Dialect where
@@ -63,17 +64,17 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
   signature
   | .llvm llvmOp => .llvm <$> DialectSignature.signature llvmOp
   | .riscv riscvOp => .riscv <$> DialectSignature.signature riscvOp
-  | .castRiscv =>
-      {sig := [Ty.riscv .bv], outTy := Ty.llvm (.bitvec 64), regSig := []}
-  | .castLLVM =>
-      {sig := [Ty.llvm (.bitvec 64)], outTy := (Ty.riscv .bv), regSig := []}
+  | .castRiscv w =>
+      {sig := [Ty.riscv .bv], outTy := Ty.llvm (.bitvec w), regSig := []}
+  | .castLLVM w =>
+      {sig := [Ty.llvm (.bitvec w)], outTy := (Ty.riscv .bv), regSig := []}
 
 instance : ToString LLVMPlusRiscV.Op  where
   toString := fun
   | .llvm llvm    => toString llvm
   | .riscv riscv  => toString riscv
-  | .castLLVM => "builtin.unrealized_conversion_cast"
-  | .castRiscv => "builtin.unrealized_conversion_cast"
+  | .castLLVM _ => "builtin.unrealized_conversion_cast"
+  | .castRiscv _  => "builtin.unrealized_conversion_cast"
 
 instance : ToString LLVMPlusRiscV.Ty where
   toString := fun
@@ -99,13 +100,13 @@ instance : DialectDenote (LLVMPlusRiscV) where
       DialectDenote.denote llvmOp (llvmArgsFromHybrid args) .nil
   | .riscv (riscvOp), args, .nil =>
       DialectDenote.denote riscvOp (riscvArgsFromHybrid args) .nil
-  | .castRiscv, elemToCast, _ =>
+  | .castRiscv _ , elemToCast, _ =>
     let toCast : BitVec 64 :=
       elemToCast.getN 0 (by simp [DialectSignature.sig, signature]) -- adapting to the newly introduced PoisonOr wrapper.
     castriscvToLLVM toCast
-  | .castLLVM,
-    (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec 64)]), _ =>
-    let toCast : PoisonOr (BitVec 64) :=
+  | .castLLVM _,
+    (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec _)]), _ =>
+    let toCast : PoisonOr (BitVec _) :=
       elemToCast.getN 0 (by simp [DialectSignature.sig, signature])
     castLLVMToriscv toCast
 
@@ -264,9 +265,14 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
     match ty with
-      | .riscv (.bv) => mkExprOf <| .castRiscv
-      | .llvm (.bitvec 64) => mkExprOf <| .castLLVM
-      | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .riscv (.bv) =>
+         match opStx.res with
+        | res::[] =>
+           match res.2 with
+          | .int _ w =>  mkExprOf <| .castRiscv w.toConcrete
+          | _ => throw <| .generic s!"A cast operation must output an integer type"
+        | _ => throw <| .generic s!"A cast operation must only have one return type"
+      | .llvm (.bitvec w) => mkExprOf <| (.castLLVM  w.toConcrete)
   else
     let llvmParse := InstcombineTransformDialect.mkExpr (ctxtTransformToLLVM  Γ) opStx (← read)
     match llvmParse with
