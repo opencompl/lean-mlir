@@ -257,7 +257,6 @@ instance : MLIR.AST.TransformTy LLVMPlusRiscV 0 where
          the transformation failed. The errors thrown are:
           s!{(toString (repr riscvErr))} and s!{(toString (repr llvmErr ))}"
 
-
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   MLIR.AST.ReaderM (LLVMPlusRiscV) (Σ eff ty, Expr LLVMPlusRiscV Γ eff ty) := do
   let args ← opStx.parseArgs Γ
@@ -329,67 +328,3 @@ elab "[LV|" reg:mlir_region "]" : term => do
   SSA.elabIntoCom reg q(LLVMPlusRiscV)
 
 end LLVMRiscV
-
-section examples
-
-/- # Examples -/
-
-def cast_riscv64_to_llvm := [LV| {
-  ^entry (%lhs: !i64):
-     %0 = "builtin.unrealized_conversion_cast"(%lhs) : (!i64) -> i64
-    llvm.return  %0 : i64
-  }]
-
-def cast_llvm32_to_riscv := [LV| {
-  ^entry (%lhs: i32):
-      %0 = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> !i64
-      ret  %0 : !i64
-  }]
-
-def riscv64_cast_to_llvm64 := [LV| {
-  ^entry (%lhs: !i64):
-      %0 = "builtin.unrealized_conversion_cast"(%lhs) : (!i64) -> i64
-      llvm.return  %0 : i64
-  }]
-
-def test_alive_AddSub_1556_src := [LV| {
-^bb0(%y : i1, %x : i1):
-      %v1 = llvm.sub %x, %y : i1
-      llvm.return %v1 : i1
-}]
-
-def test_alive_AddSub_riscv_lowered :=
-  [LV| {
-^bb0(%y : i1, %x : i1):
-  %0 = "builtin.unrealized_conversion_cast"(%x) : (i1) -> !i64
-  %1 = "builtin.unrealized_conversion_cast"(%y) : (i1) -> !i64
-  %v1 = sub %0, %1 : !i64
-  %2 = "builtin.unrealized_conversion_cast"(%v1) : (!i64) -> i1
-  llvm.return %2 : i1
-}]
-
-def test_alive_AndOrXor_716_src  :=
-[LV| {
-^bb0(%a : i64, %b : i64, %d : i64):
-  %v1 = llvm.and %a, %b : i64
-  %v2 = llvm.and %a, %d : i64
-  %v3 = llvm.icmp.eq %v1, %a : i64
-  %v4 = llvm.icmp.eq %v2, %a : i64
-  %v5 = llvm.and %v3, %v4 : i1
-  llvm.return %v5 : i1 -- allows modells the input type but why ?
-}]
-
-def test_alive_AndOrXor_716_tgt  (w : Nat)  :=
-[LV| {
-^bb0(%a : i64, %b : i64, %d : i64):
-  %v1 = llvm.and %b, %d : i64
-  %v2 = llvm.and %a, %v1 : i64
-  %v3 = llvm.and %a, %b : i64
-  %v4 = llvm.and %a, %d : i64
-  %v5 = llvm.icmp.eq %v3, %a : i64
-  %v6 = llvm.icmp.eq %v4, %a : i64
-  %v7 = llvm.icmp.eq %v2, %a : i64
-  llvm.return %v7 : i1
-}]
-
-end examples
