@@ -2570,26 +2570,6 @@ def rewritePeephole (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   rewritePeephole_go fuel pr 0 target
 
-variable (d : Dialect) [DialectSignature d][DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
-[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
-/--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
-and later, running at most `fuel` steps. -/
-def rewritePeephole_go_multi (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
-    (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
-  match fuel with
-  | 0 => target
-  | fuel' + 1 =>
-    let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
-    rewritePeephole_go_multi fuel' prs (ix + 1) target'
-
-variable (d : Dialect) [DialectSignature d][DecidableEq (Dialect.Ty d)][DecidableEq (Dialect.Op d)]
-[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
-/-- rewrite with the list of peephole optimizations `prs` at the `target` program, running at most
-`fuel` steps. -/
-def rewritePeephole_multi (fuel : ℕ)
-   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
-    rewritePeephole_go_multi d fuel prs 0 target
-
 /-- `rewritePeephole_go` preserve semantics -/
 theorem denote_rewritePeephole_go (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
@@ -2608,6 +2588,59 @@ theorem denote_rewritePeephole (fuel : ℕ)
 
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
+
+variable {d : Dialect} [DialectSignature d][DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+/--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
+and later, running at most `fuel` steps. -/
+def rewritePeephole_go_multi (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
+    (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
+  match fuel with
+  | 0 => target
+  | fuel' + 1 =>
+    let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
+    rewritePeephole_go_multi fuel' prs (ix + 1) target'
+
+variable {d : Dialect} [DialectSignature d][DecidableEq (Dialect.Ty d)][DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+/-- rewrite with the list of peephole optimizations `prs` at the `target` program, running at most
+`fuel` steps. -/
+def rewritePeephole_multi (fuel : ℕ)
+   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+    rewritePeephole_go_multi fuel prs 0 target
+
+theorem denote_rewritePeephole_go_multi (fuel : ℕ)
+  (prs : List (PeepholeRewrite d Γ t)) (ix : ℕ) (target : Com d Γ₂ eff t₂)  :
+  (rewritePeephole_go_multi fuel prs ix target).denote = target.denote := by
+    induction fuel generalizing ix target
+    case zero =>
+      simp [rewritePeephole_go_multi]
+    case succ fuel' ih =>
+      simp [rewritePeephole_go_multi]
+      let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
+    -- we prove: target'.denote = target.denote
+      have hfold : target'.denote = target.denote := by
+      -- Use induction or a lemma over the fold
+        apply List.foldl_induction (prs := prs) (init := target)
+          (f := fun acc pr => rewritePeepholeAt pr ix acc)
+          (P := fun acc => acc.denote = target.denote)
+        · -- base case: acc = target
+          rfl
+        · -- step case: acc → rewritePeepholeAt preserves denote
+          intro pr acc ih
+          rw [denote_rewritePeepholeAt] -- assume this lemma is already proved
+          exact ih
+    -- now target' is semantically equal to target
+      rw [hfold]
+    -- apply induction hypothesis
+      exact ih (ix + 1) target'
+
+
+theorem denote_rewritePeephole_multi (fuel : ℕ)
+  (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) :
+  (rewritePeephole_multi fuel pr target).denote = target.denote := by
+  simp [rewritePeephole_multi, rewritePeephole_go_multi]
+  sorry
 
 theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
