@@ -26,7 +26,7 @@ https://mlir.llvm.org/docs/Dialects/Builtin/#builtinunrealized_conversion_cast-u
 inductive Ty where
   | llvm : LLVM.Ty -> Ty
   | riscv : RISCV64.RV64.Ty -> Ty
-  deriving DecidableEq, Repr, Lean.ToExpr
+  deriving DecidableEq, Repr
 
 inductive Op where
   | llvm : LLVM.Op -> Op
@@ -323,12 +323,8 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
 instance : MLIR.AST.TransformReturn LLVMPlusRiscV 0 where
   mkReturn := mkReturn
 
-open Qq in
-instance : DialectToExpr LLVMPlusRiscV where
-  toExprDialect := q(LLVMPlusRiscV)
-  toExprM := q(Id)
-
+open Qq MLIR AST Lean Elab Term Meta in
 elab "[LV|" reg:mlir_region "]" : term => do
-  SSA.elabIntoCom' reg LLVMPlusRiscV
+  SSA.elabIntoCom reg q(LLVMPlusRiscV)
 
 end LLVMRiscV

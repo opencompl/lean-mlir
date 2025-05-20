@@ -109,7 +109,7 @@ inductive Op
   /- RISC-V `Zicond` conditional operations extension  -/
   | czero.eqz
   | czero.nez
-  deriving DecidableEq, Repr, Lean.ToExpr
+  deriving DecidableEq, Repr
 
 /--
 ## Dialect type definitions
@@ -117,7 +117,7 @@ Defining a type system for the `RISCV64` dialect. `bv` represents bit vector.
 -/
 inductive Ty
   | bv : Ty
-  deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+  deriving DecidableEq, Repr, Inhabited
 
 instance : ToString (Ty) where
   toString t := repr t |>.pretty
