@@ -560,11 +560,6 @@ theorem neg_accepts (M : NFA α σ) :
     M.neg.accepts = M.acceptsᶜ := by
   simp [neg]
 
-def reverse (M : NFA α σ) : NFA α σ where
-  start := M.accept
-  accept := M.start
-  step q a := { q' | M.step q' a q }
-
 theorem evalFrom_cons {M : NFA α σ} (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (a :: x) = M.evalFrom (M.stepSet S a) x := by
   simp [evalFrom]
