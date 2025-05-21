@@ -179,6 +179,11 @@ theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
     p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 :=
   rfl
 
+/-- compute the next evaluation bit starting with 'initCarry'.
+TODO: write theorems for 'evalWith'.
+-/
+def p.evalWith (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : BitStream :=
+  (p.changeInitCarry c).eval x
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/

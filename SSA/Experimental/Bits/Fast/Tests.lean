@@ -185,6 +185,9 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
 
 section BvAutomataTests
 
+
+(a b c : PackedFloat 5 10) (m : RoundingMode) (hc : c.isNormOrSubnorm = true) :
+a ≤ b → (add a c m) ≤ (add b c m) = true
 /-!
 # Test Cases
 -/
