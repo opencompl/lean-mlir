@@ -5,9 +5,9 @@ import SSA.Projects.InstCombine.TacticAuto
 
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
+import SSA.Core.MLIRSyntax.EDSL2
 
 import SSA.Projects.PaperExamples.PaperExamples
-import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 
 
 open PoisonOr
@@ -144,11 +144,16 @@ this work:
 ## Other things we can talk about
 -/
 
+dkr@amazon.com
+
 -- A simple example of defining a dialect
 #check ToyNoRegion.Simple
 -- How LLVM's pretty syntax works
+#check InstcombineTransformDialect.mkExpr
 #check MLIR.EDSL.PrettyEDSL
 
 
--- LLVM / RiscV Hybrid Dialect
-#check LLVMAndRi
+-- The EDSL machinery/metacode
+#check MLIR.AST.Op
+#check MLIR.AST.TransformExpr
+#check ToyNoRegion.MLIR2Simple.mkExpr
