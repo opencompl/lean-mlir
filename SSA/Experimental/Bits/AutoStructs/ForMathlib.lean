@@ -566,7 +566,7 @@ theorem evalFrom_cons {M : NFA α σ} (S : Set σ) (x : List α) (a : α) :
 
 @[simp]
 theorem reverse_stepSet {M : NFA α σ} {S : Set σ} : M.reverse.stepSet S a = { q | ∃ q' ∈ S, q' ∈ M.step q a } := by
-  simp [reverse, stepSet]; ext q; simp; rfl
+  simp [reverse, stepSet]; ext q; simp
 
 theorem evalFrom_union {M : NFA α σ} {S : Set σ} : M.evalFrom S w = ⋃ s ∈ S, M.evalFrom {s} w := by
   induction w using List.reverseRecOn generalizing S
