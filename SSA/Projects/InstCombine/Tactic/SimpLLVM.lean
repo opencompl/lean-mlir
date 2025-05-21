@@ -6,6 +6,7 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 
 open Lean
 open Lean.Elab.Tactic
+open InstCombine
 
 attribute [simp_llvm_case_bash]
   bind_assoc forall_const Nat.cast_one
