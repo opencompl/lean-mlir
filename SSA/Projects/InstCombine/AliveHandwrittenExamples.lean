@@ -46,6 +46,6 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_ops
   simp_alive_case_bash
   simp_alive_split
-  alive_auto
+  try alive_auto
 
 end AliveHandwritten
