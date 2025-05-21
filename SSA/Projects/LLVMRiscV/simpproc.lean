@@ -131,6 +131,7 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
     proof? := .some proof
   }
 
+/- The following additional lemmas are needed to simplify the proof goals for the hybrid dialect.-/
 @[simp]
 theorem poisonOr_mk_some_eq_value (x : α) : { toOption := some x } = PoisonOr.value x := rfl
 
@@ -141,19 +142,3 @@ theorem liftM_eq_some (α : Type u) : @liftM Id Option _  α = some := by rfl
 theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
   {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
   (s.snoc x) (Ctxt.Var.toSnoc v) = s v := rfl
-
-def add_riscv1 := [LV| {
-  ^entry (%lhs: i64, %rhs: i64 ):
-    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
-    %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i64) -> !i64
-    %add1 = add %lhsr, %rhsr : !i64
-    %addl = "builtin.unrealized_conversion_cast" (%add1) : (!i64) -> (i64)
-    llvm.return %addl : i64
-  }]
-
-def add_llvm_no_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
-  .pure (.llvm (.bitvec 64))  := [LV| {
-    ^entry (%lhs: i64, %rhs: i64 ):
-      %1 = llvm.add   %lhs, %rhs  : i64
-      llvm.return %1 : i64
-  }]
