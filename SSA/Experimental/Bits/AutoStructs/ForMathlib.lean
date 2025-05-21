@@ -560,58 +560,9 @@ theorem neg_accepts (M : NFA α σ) :
     M.neg.accepts = M.acceptsᶜ := by
   simp [neg]
 
-theorem evalFrom_cons {M : NFA α σ} (S : Set σ) (x : List α) (a : α) :
-    M.evalFrom S (a :: x) = M.evalFrom (M.stepSet S a) x := by
-  simp [evalFrom]
-
-@[simp]
-theorem reverse_stepSet {M : NFA α σ} {S : Set σ} : M.reverse.stepSet S a = { q | ∃ q' ∈ S, q' ∈ M.step q a } := by
-  simp [reverse, stepSet]; ext q; simp
-
-theorem evalFrom_union {M : NFA α σ} {S : Set σ} : M.evalFrom S w = ⋃ s ∈ S, M.evalFrom {s} w := by
-  induction w using List.reverseRecOn generalizing S
-  case nil => simp
-  case append_singleton w a ih =>
-    simp only [evalFrom_append_singleton]
-    rw [ih]
-    simp [stepSet]
-
-@[simp]
-theorem reverse_evalFrom {M : NFA α σ} {S : Set σ} : M.reverse.evalFrom S w = { q | ∃ q' ∈ S, q' ∈ M.evalFrom {q} w.reverse } := by
-  induction w using List.reverseRecOn generalizing S
-  case nil => simp
-  case append_singleton w a ih =>
-    simp
-    ext q
-    simp [ih, mem_stepSet]
-    constructor
-    · rintro ⟨q', ⟨q'', hS, hst''⟩, hst'⟩
-      simp [evalFrom_cons]
-      use q'', hS
-      rw [evalFrom_union]; simp_all
-      use q', by (simpa [stepSet]), hst''
-    · simp only [forall_exists_index, and_imp]
-      rintro q' hS hef
-      simp [evalFrom_cons] at hef
-      rw [evalFrom_union] at hef
-      simp only [mem_iUnion, exists_prop] at hef
-      rcases hef with ⟨q'', hst, hef⟩
-      simp [stepSet] at hst
-      use q'', ⟨q', hS, hef⟩
-
 @[simp]
 theorem reverse_accepts {M : NFA α σ} : M.reverse.accepts = M.accepts.reverse := by
-  simp [accepts, eval]; ext w; simp only [Language.mem_reverse]; constructor
-  · simp only [Language.eq_def, mem_setOf_eq, forall_exists_index, and_imp]
-    rintro qf ha qi hi hef
-    use qi, hi
-    rw [evalFrom_union]; simp only [mem_iUnion, exists_prop]
-    use qf, ha
-  · simp only [Language.eq_def, mem_setOf_eq, forall_exists_index, and_imp]
-    rintro qa ha hef
-    rw [evalFrom_union] at hef; simp only [mem_iUnion, exists_prop] at hef
-    rcases hef with ⟨qi, hi, hef⟩
-    use qi, hi, qa, ha
+  ext; simp
 
 /-
 NOTE: all that follows is defined in terms of bit vectors, even though it should
