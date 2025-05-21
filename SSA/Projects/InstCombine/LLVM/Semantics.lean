@@ -20,6 +20,7 @@ def IntW w := PoisonOr <| BitVec w
 namespace IntW
 
 instance : Inhabited (IntW w) := by unfold IntW; infer_instance
+instance : DecidableEq (IntW w) := by unfold IntW; infer_instance
 
 instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
 

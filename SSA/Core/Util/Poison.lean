@@ -17,6 +17,7 @@ when specifying poison semantics in dialects, as it's more self-documenting.
 -/
 structure PoisonOr (α : Type) where
   ofOption :: toOption : Option α
+  deriving DecidableEq
 
 namespace PoisonOr
 
