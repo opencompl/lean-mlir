@@ -2589,7 +2589,7 @@ theorem denote_rewritePeephole (fuel : ℕ)
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
-variable {d : Dialect} [DialectSignature d][DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
 [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
 and later, running at most `fuel` steps. -/
@@ -2601,8 +2601,8 @@ def rewritePeephole_go_multi (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
     let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
     rewritePeephole_go_multi fuel' prs (ix + 1) target'
 
-variable {d : Dialect}[DialectSignature d][DecidableEq (Dialect.Ty d)][DecidableEq (Dialect.Op d)]
-[TyDenote d.Ty][DialectDenote d][Monad d.m] in
+variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /-- rewrite with the list of peephole optimizations `prs` at the `target` program, running at most
 `fuel` steps starting at location 0. -/
 def rewritePeephole_multi (fuel : ℕ)
