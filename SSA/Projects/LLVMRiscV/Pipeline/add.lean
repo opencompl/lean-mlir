@@ -68,7 +68,7 @@ def llvm_add_lower_riscv_noflags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       simp_alive_case_bash
       simp_alive_split
       all_goals
-      simp
+      simp?
   }
 
 def llvm_add_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=

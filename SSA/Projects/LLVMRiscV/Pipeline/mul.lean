@@ -1,3 +1,15 @@
+import SSA.Projects.LLVMRiscV.PeepholeRefine
+import SSA.Projects.LLVMRiscV.LLVMAndRiscv
+import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.RISCV64.PrettyEDSL
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import Lean
+
+open LLVMRiscV
+open RV64Semantics -- needed to use RISC-V semantics in simp tactic
+open InstCombine(LLVM) -- analog to RISC-V
+
 /- # MUL RISCV  -/
 
 def mul_riscv := [LV| {
@@ -37,7 +49,7 @@ def mul_llvm_flags : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       llvm.return %1 : i64
   }]
 
-def llvm_mul_lower_riscv_noflag : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+def llvm_mul_lower_riscv_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_noflag , rhs := mul_riscv ,
     correct :=  by
       unfold mul_llvm_noflag mul_riscv
@@ -57,7 +69,7 @@ def llvm_mul_lower_riscv_noflag : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64
 /- # MUL with  FLAG -/
 
 --nsw and nuw flags
-def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_flags , rhs := mul_riscv ,
     correct :=  by
       unfold mul_llvm_flags mul_riscv
@@ -73,7 +85,7 @@ def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64)
                 simp only [BitVec.Refinement.refl]
        }
 
-def llvm_mul_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+def llvm_mul_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_nsw , rhs := mul_riscv ,
     correct :=  by
       unfold mul_llvm_nsw mul_riscv
@@ -87,7 +99,7 @@ def llvm_mul_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 
               simp [BitVec.Refinement.refl]
        }
 
-def llvm_mul_lower_riscv_nuw_flag : LLVMPeepholeRewriteRefine [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+def llvm_mul_lower_riscv_nuw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_nuw , rhs := mul_riscv ,
     correct :=  by
       unfold mul_llvm_nuw mul_riscv
