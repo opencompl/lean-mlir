@@ -11,8 +11,17 @@ import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
 import Aesop
 
+namespace InstCombine
+
+scoped instance : Refinement (BitVec w) := .ofEq
+@[simp, simp_llvm_split] theorem bv_isRefinedBy_iff (x y : BitVec w) : x ⊑ y ↔ x = y := by rfl
+-- ^^ declare that for pure bitvectors, refinement is just equality
+
+end InstCombine
+
 
 namespace LLVM
+open InstCombine
 open PoisonOr (value poison)
 
 def IntW w := PoisonOr <| BitVec w
