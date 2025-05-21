@@ -2638,7 +2638,7 @@ theorem denote_rewritePeephole_go_multi (fuel : ℕ)
   case zero =>
     simp [rewritePeephole_go_multi]
   case succ hp =>
-    simp[rewritePeephole_go_multi, denote_rewritePeepholeAt, hp,
+    simp[rewritePeephole_go_multi, denote_rewritePeepholeAt,hp ,
       denote_foldl_rewritePeepholeAt]
 
 /- The proof that `rewritePeephole_multi` is semantics preserving  -/
