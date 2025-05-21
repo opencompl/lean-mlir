@@ -581,7 +581,9 @@ lemma CNFA.determinize.f_spec {m : CNFA n} {a : BitVec n} {sa sa' : BitVec m.m.s
     simp [List.foldl_nil, List.not_mem_nil, false_and, iff_false]
   case cons a as ih =>
     rintro acc b sa'
-    simp
+    simp only [List.foldl_cons, List.push_append_toArray, Array.mem_append,
+      Array.mem_toArray, List.mem_cons, Prod.mk.injEq, List.mem_map, existsAndEq,
+      true_and]
     rw [ih]
     simp only [Array.mem_push, Prod.mk.injEq]
     constructor
