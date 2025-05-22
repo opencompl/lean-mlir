@@ -201,6 +201,40 @@ instance [DecidableRel (· ⊑ · : α → α → _)] :
   | .value _, .poison => .isFalse <| by simp
   | .value a, .value b => decidable_of_decidable_of_iff (p := a ⊑ b) <| by simp
 
+
+/-! ### if-then-else -/
+section Ite
+variable {c : Prop} [Decidable c] (a? b? : PoisonOr α) (a : α)
+
+@[simp]
+theorem if_then_poison_isRefinedBy_iff  :
+    (if c then poison else a? : no_index _) ⊑ b? ↔ ¬c → a? ⊑ b? := by
+  split <;> simp [*]
+
+@[simp]
+theorem value_isRefinedBy_if_then_poison_iff :
+    value a ⊑ (if c then poison else b? : no_index _) ↔ ¬c ∧ (value a ⊑ b?) := by
+  split <;> simp [*]
+
+
+/-!
+Fallback theorems for generic if-then-else; other theorems should be preferred
+as they give simpler rhs's for their specialized situations.
+-/
+theorem ite_isRefinedBy_iff {x? y? z? : PoisonOr α} :
+    ite c x? y? ⊑ z?
+    ↔ let c := c
+      (c → x? ⊑ z?) ∧ (¬c → y? ⊑ z?) := by
+  split <;> simp [*]
+
+theorem isRefinedBy_ite_iff {x? y? z? : PoisonOr α} :
+    x? ⊑ ite c y? z?
+    ↔ let c := c
+      (c → x? ⊑ y?) ∧ (¬c → x? ⊑ z?) := by
+  split <;> simp [*]
+
+end Ite
+
 end Refinement
 
 
