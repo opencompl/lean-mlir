@@ -154,7 +154,7 @@ instance : ToString (MOp 0) where
      | .binary _w op => s!"\"{toString  op}\""
      | .select  _w => "select"
      | .icmp  _pred _w => "icmp"
-     | .const w val => s!"\"llvm.mlir.constant\" \{ value = {val} : {w} }"
+     | .const w val => s!"\"llvm.mlir.constant\"() \{value = {val} : {w}}"
 
 /-! ## Dialect -/
 
