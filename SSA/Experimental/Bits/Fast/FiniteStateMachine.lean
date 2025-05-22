@@ -185,6 +185,21 @@ TODO: write theorems for 'evalWith'.
 def evalWith (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : BitStream :=
   (p.changeInitCarry c).eval x
 
+@[simp]
+theorem changeInitCarry_eq_self (p : FSM arity) :
+    p.changeInitCarry p.initCarry = p := by
+  simp [changeInitCarry]
+
+/-- evalWith agrees with eval when we set the carry to the init carry. -/
+theorem evalWith_eq_eval_of_eq_init (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream)
+    (hc : c = p.initCarry) : p.evalWith c x = p.eval x := by
+  simp [hc, evalWith]
+
+@[simp]
+theorem evalWith_initCarry_eq_init (p : FSM arity)
+    : p.evalWith p.initCarry = p.eval := by
+  ext x; simp [evalWith]
+
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
 def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
