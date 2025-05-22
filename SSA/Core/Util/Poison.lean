@@ -17,6 +17,7 @@ when specifying poison semantics in dialects, as it's more self-documenting.
 -/
 structure PoisonOr (α : Type) where
   ofOption :: toOption : Option α
+  deriving DecidableEq
 
 namespace PoisonOr
 
@@ -128,15 +129,14 @@ variable {a : α}
 end Lemmas
 
 /-! ### Refinement -/
-inductive IsRefinedBy : PoisonOr α → PoisonOr α → Prop
+inductive IsRefinedBy [HRefinement α α] : PoisonOr α → PoisonOr α → Prop
   /-- `poison` is refined by anything -/
   | poisonLeft : IsRefinedBy poison b?
-  /-- `value a` is only refined by a `value b` s.t. `a = b`. -/
-  -- TODO: this should be `a ⊑ b` once generic refinement is merged
-  | bothValues : a = b → IsRefinedBy (value a) (value b)
+  /-- `value a` is only refined by a `value b` s.t. `a ⊑ b` -/
+  | bothValues : a ⊑ b → IsRefinedBy (value a) (value b)
 
 section Refinement
-variable (a? b? : PoisonOr α)
+variable [HRefinement α α] (a? b? : PoisonOr α)
 
 instance : Refinement (PoisonOr α) where
   IsRefinedBy := IsRefinedBy
@@ -145,7 +145,7 @@ instance : Refinement (PoisonOr α) where
   IsRefinedBy.poisonLeft
 
 @[simp] theorem value_isRefinedBy_value (a b : α) :
-    value a ⊑ value b ↔ a = b := by
+    value a ⊑ value b ↔ a ⊑ b := by
   constructor
   · rintro ⟨⟩; assumption
   · exact IsRefinedBy.bothValues
@@ -158,48 +158,48 @@ theorem isRefinedBy_poison_iff : a? ⊑ (@poison α) ↔ a? = poison := by
   · simp
   · simp only [not_value_isRefinedBy_poison, false_iff]; rintro ⟨⟩
 
-theorem value_isRefinedBy_iff : value a ⊑ b? ↔ b? = value a := by
-  cases b? <;> (
-    simp only [value_isRefinedBy_value, value_inj, isRefinedBy_poison_iff]
-    constructor <;> exact Eq.symm
-  )
-
 theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
     a? ⊑ b?
     ↔ (b?.isPoison → a?.isPoison)
-      ∧ (a?.isPoison = false → a?.getValue = b?.getValue) := by
+      ∧ (a?.isPoison = false → a?.getValue ⊑ b?.getValue) := by
   cases a? <;> cases b? <;> simp
 
 section PreOrder
-variable {α : Type} {a? : PoisonOr α}
 
 /--
-Refinement on poison values is reflexive
+Refinement on poison values is reflexive, when the underlying refinement is reflexive
 -/
-@[simp] theorem isRefinedBy_self : a? ⊑ a? := by
-  cases a? <;> simp
+instance [Std.Refl (· ⊑ · : α → α → _)] : Std.Refl (· ⊑ · : PoisonOr α → PoisonOr α → _) where
+  refl a? := by cases a? <;> simp [Std.Refl.refl]
+
+@[simp] theorem isRefinedBy_self [Std.Refl (· ⊑ · : α → α → _)] : a? ⊑ a? := Std.Refl.refl _
+
+/--
+Refinement on poison values is transitive, when the underlying refinement is transitive
+-/
+instance [IsTrans α (· ⊑ ·)] : IsTrans (PoisonOr α) (· ⊑ ·) where
+  trans a? b? c? := by
+    cases a?; simp
+    cases b?; simp
+    cases c?; simp
+    simpa using IsTrans.trans _ _ _
 
 /--
 Refinement on poison values is transitive
 -/
-theorem isRefinedBy_trans (a? b? c? : PoisonOr α) :
-    a? ⊑ b? → b? ⊑ c? → a? ⊑ c? := by
-  cases a?
-  · simp
-  · simp only [value_isRefinedBy_iff]
-    rintro rfl
-    simp [value_isRefinedBy_iff]
+theorem isRefinedBy_trans [IsTrans α (· ⊑ ·)] (a? b? c? : PoisonOr α) :
+    a? ⊑ b? → b? ⊑ c? → a? ⊑ c? := IsTrans.trans _ _ _
 
 end PreOrder
 
 /--
 Refinement on poison values is decidable if equality of the underlying values is decidable.
 -/
-instance {α : Type} [DecidableEq α] :
+instance [DecidableRel (· ⊑ · : α → α → _)] :
     DecidableRel (· ⊑ · : PoisonOr α → PoisonOr α → _)
   | .poison, _ => .isTrue <| by simp
   | .value _, .poison => .isFalse <| by simp
-  | .value a, .value b => decidable_of_decidable_of_iff (p := a = b) <| by simp
+  | .value a, .value b => decidable_of_decidable_of_iff (p := a ⊑ b) <| by simp
 
 end Refinement
 

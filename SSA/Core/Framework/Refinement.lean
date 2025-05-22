@@ -43,12 +43,28 @@ NOTE: This typeclass is not intended for dialect implementors. Please implement
 class Refinement (α : Type) where
   IsRefinedBy : α → α → Prop
 
-instance [Refinement α] : HRefinement α α where
+instance instHRefinementOfRefinement [Refinement α] : HRefinement α α where
   IsRefinedBy := Refinement.IsRefinedBy
+
+/-! #### Trivial Refinement -/
+
+section OfEq
 
 /-- Equality induces a trivial (homogenous) refinement relation on any type `α`. -/
 def Refinement.ofEq : Refinement α where
   IsRefinedBy := Eq
+
+instance (priority := low) :
+    Std.Refl (HRefinement.IsRefinedBy (self := @instHRefinementOfRefinement α .ofEq)) where
+  refl _ := rfl
+instance (priority := low) :
+    IsTrans α (HRefinement.IsRefinedBy (self := @instHRefinementOfRefinement α .ofEq)) where
+  trans _ _ _ := Eq.trans
+instance (priority := low) [DecidableEq α] :
+    Decidable (HRefinement.IsRefinedBy (self := @instHRefinementOfRefinement α .ofEq) x y) :=
+  decidable_of_iff (x = y) (by rfl)
+
+end OfEq
 
 /-! ### Dialect Refinement -/
 
