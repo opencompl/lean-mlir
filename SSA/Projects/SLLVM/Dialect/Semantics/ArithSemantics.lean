@@ -19,25 +19,25 @@ def udiv (x y : LLVM.IntW w) (flag : LLVM.ExactFlag) : EffectM (LLVM.IntW w) := 
   if y.canBe 0#w then
     .ub
   else
-    .value <| LLVM.udiv x y flag
+    pure <| LLVM.udiv x y flag
 
 @[simp_sllvm]
 def sdiv (x y : LLVM.IntW w) (flag : LLVM.ExactFlag) : EffectM (LLVM.IntW w) := do
   if y.canBe 0#w then
     .ub
   else
-    .value <| LLVM.sdiv x y flag
+    pure <| LLVM.sdiv x y flag
 
 @[simp_sllvm]
 def urem (x y : LLVM.IntW w) : EffectM (LLVM.IntW w) := do
   if y.canBe 0#w then
     .ub
   else
-    .value <| LLVM.urem x y
+    pure <| LLVM.urem x y
 
 @[simp_sllvm]
 def srem (x y : LLVM.IntW w) : EffectM (LLVM.IntW w) := do
   if y.canBe 0#w then
     .ub
   else
-    .value <| LLVM.srem x y
+    pure <| LLVM.srem x y

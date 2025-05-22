@@ -290,14 +290,17 @@ We provide some generic refinement instances
 -/
 section Instances
 
+namespace Prod
+
 instance [HRefinement α γ] [HRefinement β δ] : HRefinement (α × β) (γ × δ) where
   IsRefinedBy := fun (a, b) (c, d) => a ⊑ c ∧ b ⊑ d
 
 @[simp]
-theorem prod_isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
+theorem isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
     (a : α) (b : β) (c : γ) (d : δ) :
     (a, b) ⊑ (c, d) ↔ a ⊑ c ∧ b ⊑ d := by
   rfl
+end Prod
 
 namespace StateT
 variable {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]

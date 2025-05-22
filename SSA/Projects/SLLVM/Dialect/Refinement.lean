@@ -12,9 +12,6 @@ scoped instance : Refinement (BitVec w) := .ofEq
 @[simp, simp_llvm_split] theorem bv_isRefinedBy_iff (x y : BitVec w) : x ⊑ y ↔ x = y := by rfl
 -- ^^ declare that for pure bitvectors, refinement is just equality
 
-instance (w) : Refinement (EffectM <| LLVM.IntW w) where
-  IsRefinedBy (x y : StateT _ PoisonOr (PoisonOr _)) := x ⊑ y
-
 open HRefinement in
 @[simp, simp_denote]
 theorem isRefinedBy_iff (x y : EffectM <| LLVM.IntW w) :

@@ -12,26 +12,34 @@ structure MemoryState where
   deriving Inhabited
 
 instance : Refinement MemoryState := .ofEq
+@[simp, simp_sllvm]
+theorem MemoryState.isRefinedBy_iff (s t : MemoryState) : s ⊑ t ↔ s = t := by rfl
 
-abbrev EffectM := StateT MemoryState PoisonOr
+def EffectM := StateT MemoryState PoisonOr
 
 namespace EffectM
 
+/-! ## Instances -/
+
+instance : Monad EffectM        := by unfold EffectM; infer_instance
+instance : LawfulMonad EffectM  := by unfold EffectM; infer_instance
+
 /-! ## Constructors -/
 
-abbrev ub : EffectM α := PoisonOr.poison
-abbrev value (a : α) : EffectM α := StateT.lift (PoisonOr.value a)
+abbrev ub : EffectM α := fun _ => PoisonOr.poison
+abbrev poison : EffectM (PoisonOr α) := pure PoisonOr.poison
+abbrev value (a : α) : EffectM (PoisonOr α) := pure (PoisonOr.value a)
 
-@[simp, simp_denote]
-theorem pure_eq : @pure EffectM _ = @value := rfl
+/-! ## Lemmas -/
 
-@[simp, simp_denote]
-theorem lift_isRefinedBy_lift_iff [HRefinement α α] (a b : PoisonOr α) :
-    (StateT.lift a : EffectM α) ⊑ (StateT.lift b : EffectM α) ↔ a ⊑ b := by
-  rw [StateT.isRefinedBy_iff]
-  unfold StateT.lift
-  cases a; simp [-EffectKind.return_impure_toMonad_eq] -- TODO: this lemma causes an infinite loop
-  cases b; simp [-EffectKind.return_impure_toMonad_eq]
+@[simp, simp_sllvm]
+theorem pure_eq (x : α) (s) : (pure x : EffectM _) s = .value (x, s) := rfl
 
-  have (s : MemoryState) : s ⊑ s := by rfl
-  simp [-EffectKind.return_impure_toMonad_eq, this]
+@[simp, simp_sllvm]
+theorem bind_eq (x : EffectM α) (f : α → EffectM β) (s) :
+    (x >>= f) s = x s >>= (fun (x, s) => f x s) := rfl
+
+/-! ## Refinement -/
+
+instance [HRefinement α α] : Refinement (EffectM α) where
+  IsRefinedBy (x y : StateT _ PoisonOr _) := x ⊑ y
