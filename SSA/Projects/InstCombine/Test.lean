@@ -163,7 +163,6 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3)  (ops[2]) ["1", "0", "arg0"]
-#eval mkExpr    (Γn 3)  (ops[2]) ["1", "0", "arg0"]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
