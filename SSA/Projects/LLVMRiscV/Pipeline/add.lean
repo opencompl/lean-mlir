@@ -16,7 +16,6 @@ Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/
 set_option Elab.async true
 
--- note to self : instruction in LLVM need to have hmogeneous types.
 /- # ADD, riscv -/
 def add_riscv := [LV| {
   ^entry (%lhs: i64, %rhs: i64 ):

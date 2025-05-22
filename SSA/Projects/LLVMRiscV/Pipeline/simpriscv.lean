@@ -18,12 +18,10 @@ attribute [simp_riscv]
  RTYPE_pure64_RISCV_SLL_bv RTYPE_pure64_RISCV_SRL_bv RTYPE_pure64_RISCV_SUB
  DIV_pure64_unsigned_bv REM_pure64_unsigned_bv RTYPE_pure64_RISCV_XOR DIV_pure64_signed_bv
 
-
 syntax "simp_riscv" : tactic
 macro "simp_riscv" : tactic =>
   `(tactic|(
       simp (config := {failIfUnchanged := false}) only [
-          simp_riscv,
-
+          simp_riscv
         ]
     ))
