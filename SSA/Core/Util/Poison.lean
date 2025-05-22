@@ -41,13 +41,24 @@ def casesOn'.{u} {α : Type} {motive : PoisonOr α → Sort u}
   | .poison => poison
   | .value a => value a
 
-@[simp] theorem value_inj {a b : α} : value a = value b ↔ a = b := by
+@[simp] theorem value_inj {a b : α} :
+    @Eq (no_index _) (value a) (value b) ↔ a = b := by
+    -- ^^ `value a = value b ↔ _`
   constructor
   · rintro ⟨⟩; rfl
   · exact fun h => h ▸ rfl
 
-theorem poison_ne_value (a : α) : poison ≠ value a := by rintro ⟨⟩
-theorem value_ne_poison (a : α) : value a ≠ poison := by rintro ⟨⟩
+theorem poison_ne_value (a : α) :
+    @Ne (no_index _) poison (value a) := by -- `poison ≠ value a`
+  rintro ⟨⟩
+theorem value_ne_poison (a : α) :
+    @Ne (no_index _) (value a) poison := by -- `value a ≠ poison`
+  rintro ⟨⟩
+
+@[simp]
+theorem ite_value_value {c : Prop} [Decidable c] {a b : α} :
+    (if c then value a else value b : no_index _) = value (if c then a else b) := by
+  split <;> rfl
 
 /-! ### Formatting & Priting instances -/
 instance [ToString α] : ToString (PoisonOr α) where
