@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import SSA.Projects.LLVMRiscV.Pipeline.simpriscv
 import Lean
 
 open LLVMRiscV
@@ -15,6 +16,7 @@ Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/
 set_option Elab.async true
 
+-- note to self : instruction in LLVM need to have hmogeneous types.
 /- # ADD, riscv -/
 def add_riscv := [LV| {
   ^entry (%lhs: i64, %rhs: i64 ):
@@ -62,26 +64,22 @@ def llvm_add_lower_riscv_noflags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
    correct := by
       unfold  add_llvm_no_flags add_riscv
       simp_peephole
-      simp only [PoisonOr_eq_squb]
-      simp [LLVM.add, Bool.false_eq_true, false_and, ↓reduceIte, LLVM.add?, castriscvToLLVM,
-        RTYPE_pure64_RISCV_ADD, castLLVMToriscv, BitVec.add_eq]
+      simp_riscv
+      simp_alive_undef
       simp_alive_case_bash
       simp_alive_split
-      all_goals
-      simp?
+      simp
   }
 
 def llvm_add_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs:= add_llvm_nsw_flags, rhs:= add_riscv ,
    correct := by
-    unfold  add_llvm_nsw_flags add_riscv
+    unfold add_llvm_nsw_flags add_riscv
     simp_peephole
-    simp only [PoisonOr_eq_squb]
-    simp [LLVM.add, Bool.false_eq_true, false_and, ↓reduceIte, LLVM.add?, castriscvToLLVM,
-        RTYPE_pure64_RISCV_ADD, castLLVMToriscv, BitVec.add_eq]
+    simp_riscv
+    simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    all_goals
     simp
   }
 
@@ -91,12 +89,10 @@ def llvm_add_lower_riscv_nuw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
    correct := by
     unfold add_llvm_nuw_flags add_riscv
     simp_peephole
-    simp only [PoisonOr_eq_squb]
-    simp [LLVM.add, Bool.false_eq_true, false_and, ↓reduceIte, LLVM.add?, castriscvToLLVM,
-        RTYPE_pure64_RISCV_ADD, castLLVMToriscv, BitVec.add_eq]
+    simp_riscv
+    simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    all_goals
     simp
 
   }
@@ -106,49 +102,9 @@ def llvm_add_lower_riscv_nuw_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.
    correct := by
     unfold add_llvm_nuw_flags add_riscv
     simp_peephole
-    simp only [PoisonOr_eq_squb]
-    simp [LLVM.add, Bool.false_eq_true, false_and, ↓reduceIte, LLVM.add?, castriscvToLLVM,
-        RTYPE_pure64_RISCV_ADD, castLLVMToriscv, BitVec.add_eq]
+    simp_riscv
+    simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
     simp
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }

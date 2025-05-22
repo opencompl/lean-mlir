@@ -1,10 +1,10 @@
-
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import SSA.Projects.LLVMRiscV.Pipeline.simpriscv
 import Lean
 
 open LLVMRiscV
@@ -60,7 +60,7 @@ def lshr_llvm_exact : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)
     ^entry (%x: i64, %amount: i64 ):
       %1 = llvm.lshr exact %x, %amount : i64 -- value depends on wether to no overflow flag is present or not
       llvm.return %1 : i64 }]
--- TO DO !!!!!! USE ONE STYLE CONSISTENTL · vs cases 
+-- TO DO !!!!!! USE ONE STYLE CONSISTENTL · vs cases
 def llvm_srl_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := lshr_llvm_exact, rhs := srl_riscv,
     correct :=  by

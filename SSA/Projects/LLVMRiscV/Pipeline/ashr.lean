@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import SSA.Projects.LLVMRiscV.Pipeline.simpriscv
 import Lean
 
 open LLVMRiscV
@@ -67,12 +68,9 @@ def llvm_ashr_lower_riscv_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
     correct :=  by
       unfold ashr_llvm_exact_flag ashr_riscv -- think of adding these to simp peephole
       simp_peephole
+      simp_riscv
       simp_alive_undef
-      simp only [BitVec.ushiftRight_eq', BitVec.shiftLeft_eq', BitVec.shiftLeft_ushiftRight,
-        BitVec.reduceAllOnes, ne_eq, true_and, LLVM.ashr?, Nat.cast_ofNat, BitVec.ofNat_eq_ofNat,
-        ge_iff_le, BitVec.sshiftRight_eq', ite_not, castriscvToLLVM, RTYPE_pure64_RISCV_SRA_bv,
-        Nat.sub_zero, Nat.reduceAdd, castLLVMToriscv, BitVec.setWidth_eq, BitVec.extractLsb_toNat,
-        Nat.shiftRight_zero, tsub_zero, Nat.reducePow, BitVec.signExtend_eq] -- TO DO put them all into a simpset for riscv
+      simp [LLVM.ashr?]
       simp_alive_case_bash
       intro x x'
       simp_alive_split

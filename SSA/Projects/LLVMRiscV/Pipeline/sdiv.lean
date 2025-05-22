@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import SSA.Projects.LLVMRiscV.Pipeline.simpriscv
 import Lean
 
 open LLVMRiscV
@@ -33,7 +34,8 @@ def llvm_sdiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     unfold sdiv_llvm_no_exact sdiv_riscv
     simp_peephole
     simp_alive_undef
-    simp [castriscvToLLVM, DIV_pure64_signed_bv, castLLVMToriscv, LLVM.sdiv?]
+    simp_riscv
+    simp [LLVM.sdiv?]
     simp_alive_case_bash
     intro x x'
     by_cases onX2 :  x' = 0#64 <;>  simp [onX2]
@@ -53,9 +55,10 @@ def llvm_sdiv_lower_riscv_exact : LLVMPeepholeRewriteRefine 64  [Ty.llvm (.bitve
     unfold sdiv_llvm_exact sdiv_riscv
     simp_peephole
     simp_alive_undef
-    simp [castriscvToLLVM, DIV_pure64_signed_bv, castLLVMToriscv, LLVM.sdiv?]
+    simp_riscv
     simp_alive_case_bash
     intro x x'
+    simp [LLVM.sdiv?]
     by_cases onX2 : x.smod x' = 0#64 <;>  simp [onX2]
     split
     case pos.isTrue ht =>

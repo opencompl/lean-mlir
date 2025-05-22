@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import SSA.Projects.LLVMRiscV.Pipeline.simpriscv
 import Lean
 
 open LLVMRiscV
@@ -37,7 +38,7 @@ def llvm_rem_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
       unfold rem_llvm rem_riscv
       simp_peephole
       simp_alive_undef
-      simp [castriscvToLLVM, REM_pure64_signed_bv, castLLVMToriscv, LLVM.srem?]
+      simp_riscv
       simp_alive_case_bash
       intro x x'
       simp_alive_split

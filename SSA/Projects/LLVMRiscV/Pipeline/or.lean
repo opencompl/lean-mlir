@@ -4,6 +4,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.Pipeline.simpproc
+import SSA.Projects.LLVMRiscV.Pipeline.simpriscv
 import Lean
 
 open LLVMRiscV
@@ -34,12 +35,12 @@ def llvm_or_lower_riscv1_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     correct :=  by
       unfold or_llvm_noflag or_riscv
       simp_peephole
-      simp [LLVM.or, Bool.false_eq_true, false_and, ↓reduceIte, LLVM.or?, castriscvToLLVM,
-       RTYPE_pure64_RISCV_OR, castLLVMToriscv]
+      simp_riscv
+      simp_alive_undef
       simp_alive_case_bash
       simp_alive_split
       all_goals
-      simp only [toOption_getSome]
+      simp
       bv_decide
 }
 
@@ -58,11 +59,11 @@ def llvm_or_lower_riscv_disjoint : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     correct :=  by
       unfold or_llvm_disjoint or_riscv
       simp_peephole
-      simp [LLVM.or, Bool.false_eq_true, false_and, ↓reduceIte, LLVM.or?, castriscvToLLVM,
-       RTYPE_pure64_RISCV_OR, castLLVMToriscv]
+      simp_riscv
+      simp_alive_undef
       simp_alive_case_bash
       simp_alive_split
       all_goals
-      simp only [toOption_getSome]
+      simp
       bv_decide
 }
