@@ -4,9 +4,6 @@ set_option trace.profiler true
 set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
-variable {x y : BitVec 4}
-#generalize (x ^^^ -1#4 ||| y) &&& (x ^^^ y) = y &&& (x ^^^ -1#4) -- PASSED but trivial precondition
-
 variable {x y : BitVec 8}
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y --- PASSED add_or_sub_comb_i8_negative_y_sub_thm
 #generalize (0#8 - x ||| y) + x = (y ||| 0#8 - x) + x -- PASSED add_or_sub_comb_i8_negative_y_or_thm
@@ -17,25 +14,23 @@ variable {x y : BitVec 8}
 #generalize  x ^^^ 33#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8 --- PASSED xor_or2_thm
 #generalize x ^^^ 32#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 39#8  ---PASSED
 #generalize x <<< 4#8 &&& (y <<< 5#8 &&& 88#8) = x <<< 4#8 &&& (y <<< 5#8 &&& 64#8) --- PASSED gbinophandhshifts_proof/ shl_and_and_fail_thm
-#generalize x <<< 2#8 + (y <<< 2#8 + 48#8) = (y + x) <<< 2#8 + 48#8 ---  PASSED gbinophandhshifts_proof/shl_add_add_thm
+#generalize x >>> 5#8 ||| (y >>> 5#8 ||| BitVec.ofInt 8 (-58)) = (y ||| x) >>> 5#8 ||| BitVec.ofInt 8 (-58) --- PASSED gbinophandhshifts_proof/lshr_or_or_fail_thm
 #generalize x <<< 1#8 &&& y <<< 1#8 + 123#8 = (x &&& y + 61#8) <<< 1#8 ---PASSED gbinophandhshifts_proof/shl_add_and_thm
+#generalize x <<< 2#8 + (y <<< 2#8 + 48#8) = (y + x) <<< 2#8 + 48#8 ---  PASSED gbinophandhshifts_proof/shl_add_add_thm
 #generalize x <<< 1#8 ^^^ (y <<< 1#8 ^^^ 88#8) = (y ^^^ x) <<< 1#8 ^^^ 88#8 --- PASSED gbinophandhshifts_proof/shl_xor_xor_good_mask_thm
 #generalize x <<< 1#8 + (y <<< 1#8 &&& 119#8) = (x + (y &&& 59#8)) <<< 1#8 --- PASSED gbinophandhshifts_proof/shl_and_add_thm
 #generalize x <<< 1#8 ^^^ (y <<< 1#8 ^^^ BitVec.ofInt 8 (-68)) = (y ^^^ x) <<< 1#8 ^^^ BitVec.ofInt 8 (-68) ---PASSED gbinophandhshifts_proof/shl_xor_xor_bad_mask_distribute_thm
+#generalize x <<< 1#8 ^^^ y <<< 1#8 &&& 20#8 = (x ^^^ y &&& 10#8) <<< 1#8  --- PASSED gbinophandhshifts_proof/shl_and_xor_thm
+#generalize x <<< 7#8 ||| BitVec.ofInt 8 (-128) = BitVec.ofInt 8 (-128) -- PASSED gandhorand_proof/or_test2_thm
+#generalize x &&& 3#8 &&& 4#8 = 0#8 --PASSED gand_proof/test8_thm
+#generalize x ^^^ 5#8 ||| x ^^^ 5#8 ^^^ y = x ^^^ 5#8 ||| y -- PASSED gorhxor_proof/xor_common_op_commute2_thm
+#generalize ((x ||| BitVec.ofInt 8 (-2)) ^^^ 13#8 ||| 1#8) ^^^ 12#8 = -1#8 -- PASSED gorhxor_proof/test23_thm
+#generalize x <<< 4#8 &&& (y <<< 4#8 &&& 88#8) = (y &&& x) <<< 4#8 &&& 80#8 ---PASSED  gbinophandhshifts_proof/shl_and_and_th
 #generalize (x <<< 3) <<< 4 = x <<< 7
 
 
 -- -- Failing
-#generalize x <<< 1#8 ^^^ y <<< 1#8 &&& 20#8 = (x ^^^ y &&& 10#8) <<< 1#8  --- gbinophandhshifts_proof/shl_and_xor_thm
-#generalize x <<< 4#8 &&& (y <<< 4#8 &&& 88#8) = (y &&& x) <<< 4#8 &&& 80#8 --- gbinophandhshifts_proof/shl_and_and_thm
 #generalize (x >>> 5#8 ||| BitVec.ofInt 8 (-58)) &&& y >>> 5#8 = (y &&& (x ||| BitVec.ofInt 8 (-64))) >>> 5#8 --- gbinophandhshifts_proof/lshr_or_and_thm
-#generalize x >>> 5#8 ||| (y >>> 5#8 ||| BitVec.ofInt 8 (-58)) = (y ||| x) >>> 5#8 ||| BitVec.ofInt 8 (-58) --- gbinophandhshifts_proof/lshr_or_or_fail_thm
-
-#generalize x <<< 7#8 ||| BitVec.ofInt 8 (-128) = BitVec.ofInt 8 (-128) -- gandhorand_proof/or_test2_thm
-#generalize x &&& 3#8 &&& 4#8 = 0#8 -- gand_proof/test8_thm
-#generalize x ^^^ 5#8 ||| x ^^^ 5#8 ^^^ y = x ^^^ 5#8 ||| y -- gorhxor_proof/xor_common_op_commute2_thm
-#generalize ((x ||| BitVec.ofInt 8 (-2)) ^^^ 13#8 ||| 1#8) ^^^ 12#8 = -1#8 -- gorhxor_proof/test23_thm
-
 #generalize (x ||| 33#8) ^^^ 12#8 ||| 7#8 = x &&& BitVec.ofInt 8 (-40) ^^^ 47#8 --- or_xor_or_thm. Can't generate precondition
 #generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8 -- lshr_shl_demand1_thm. Can't generate precondition
 
@@ -72,5 +67,5 @@ variable {x y z: BitVec 32}
 variable {x y z: BitVec 64}
 #generalize x * x + (x * x ||| 0#64 - x * x) = x * x + -1#64 &&& x * x -- Passing but trivial result add_or_sub_comb_i64_commuted4_thm
 
- variable {x y z: BitVec 232}
- #generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - lshr_lshr_thm
+variable {x y z: BitVec 232}
+#generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - lshr_lshr_thm

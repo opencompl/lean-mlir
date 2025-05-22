@@ -1008,31 +1008,6 @@ def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) 
                    let res ← helper (addConstraints expr newConstraints) n
                    return [constVals] ++ res
 
-def preconditionsCEGIS(expr : BVLogicalExpr) (vars: List Nat) (widthId: Nat) (timeoutMs: Nat := 300000) : TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-  let startTime ← Core.liftIOCore IO.monoMsNow
-  let mut currentExpr := expr
-  let mut negativeExamples : List (Std.HashMap Nat BVExpr.PackedBitVec) := []
-
-  while true do
-    let currentTime ← Core.liftIOCore IO.monoMsNow
-    let elapsed := currentTime - startTime
-
-    if elapsed >= timeoutMs then
-      throwError m! "Precondition Synthesis Timeout Failure: Exceeded timeout of {timeoutMs / 1000}s"
-
-    let solverRes ← solve currentExpr
-    match solverRes with
-    | none => return negativeExamples
-    | some assignment =>
-        let constVals := assignment.filter fun c _ => c != widthId && vars.contains c
-        let newConstraints := constVals.toList.map (fun c => BoolExpr.not (BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv))))
-
-        currentExpr := addConstraints currentExpr newConstraints
-        logInfo m! "Expression with new constraints: {currentExpr}"
-        negativeExamples := constVals :: negativeExamples
-
-
-  return negativeExamples
 
 def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reducedWidthBVLogicalExpr: BVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
               (numConjunctions: Nat := 0) : TermElabM (Option BVLogicalExpr) := do
@@ -1110,26 +1085,8 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
             let mut sketchResults : Std.HashSet String := Std.HashSet.emptyWithCapacity -- Used to filter "observationally equivalent sketches"
 
-            let mut expressions : List BVLogicalExpr := []
             for combo in inputCombinations do
               for sketch in expressionSketches do
-            --     let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
-            --     let substitutedExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
-
-            --     expressions := eqToZero substitutedExpr :: expressions
-            --     expressions := lteZero substitutedExpr :: expressions
-            --     expressions := gteZero substitutedExpr :: expressions
-            --     expressions := strictlyLTZero substitutedExpr :: expressions
-            --     expressions := strictlyGTZero substitutedExpr :: expressions
-
-            -- let widthConstraint := BoolExpr.literal (BVPred.bin (BVExpr.var widthId) BVBinPred.eq (BVExpr.const (BitVec.ofNat bitwidth bitwidth)))
-            -- let expressionsConstraints := addConstraints (BoolExpr.const False) expressions Gate.or
-
-            -- let expr := addConstraints (BoolExpr.not reducedWidthBVLogicalExpr) [widthConstraint, expressionsConstraints]
-            -- let allNegativeExamples ← preconditionsCEGIS expr constants
-
-            -- logInfo m! "Generated all negative examples: {allNegativeExamples}"
-
                 let symbolicVarsSubstitution := Std.HashMap.ofList (List.zip symbolicVarIds combo)
                 let substitutedExpr := substituteBVExpr sketch (bvExprToSubstitutionValue symbolicVarsSubstitution)
 
@@ -1164,11 +1121,10 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
             pure preconditionCandidates
 
           let preconditionCandidatesSet := Std.HashSet.ofList preconditionCandidates
+          let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
 
           let validCandidates ← withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
             let mut validCandidates : List BVLogicalExpr := []
-            -- let originalWidth := originalBVLogicalExpr.state.originalWidth
-            -- let origWidthSubstitutionVal := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat originalWidth originalWidth))])
 
             let mut candidates := preconditionCandidatesSet
             if numConjunctions >= 1 then
@@ -1176,7 +1132,6 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
               candidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
 
             let widthConstraint : BVLogicalExpr := BoolExpr.literal (BVPred.bin (BVExpr.var widthId) BVBinPred.eq (BVExpr.const (BitVec.ofNat bitwidth bitwidth)))
-            let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
 
             logInfo m! "Originally processing {candidates.size} candidates"
             let mut numInvocations := 0
@@ -1198,38 +1153,12 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
                     pure res
 
               candidates := newCandidates
-              -- logInfo m! "Processing {candidates.size} candidates for next iteration"
-            -- for candidate in validCandidates do
-            --     let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
-            --     let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
 
-            --     if let some assignment ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
-            --       throwError m! "Precondition logic has failed o; found an assignment for {candidate}: {assignment}"
             logInfo m! "Invoked the solver {numInvocations} times for {preconditionCandidatesSet.size} potential candidates."
             validCandidates := candidates.toList
-            logInfo m! "Valid candidates length: {validCandidates.length}"
-            -- let mut failedEvalCheckCount := 0
-            -- for candidate in candidates do
-            --   let origWidthSubstitutedCandidate := substitute candidate origWidthSubstitutionVal
-            --   -- logInfo m! "Original width: {originalWidth}, bit width: {bitwidth}; evaluated {origWidthSubstitutedCandidate} with {originalBVLogicalExpr.lhs.symVars} gives {evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate}"
-            --   if originalWidth != bitwidth && not (evalBVLogicalExpr originalBVLogicalExpr.lhs.symVars originalWidth origWidthSubstitutedCandidate) then
-            --     failedEvalCheckCount := failedEvalCheckCount + 1
-            --     continue
-
-            --   let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
-            --   let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
-
-            --   if let none ← solve (BoolExpr.gate Gate.and widthSubstitutedCandidate (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
-            --     validCandidates := candidate :: validCandidates
-
-              -- if numConjunctions >= 1 && !validCandidates.isEmpty then
-              --     break
-
-            -- logInfo m! "{failedEvalCheckCount} precondition candidates failed the eval check"
             pure validCandidates
 
           logInfo m! "Original had {preconditionCandidatesSet.size} candidates. Remaining candidates has length: {validCandidates.length}"
-
 
           if validCandidates.isEmpty then
             return none
@@ -1237,35 +1166,31 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
           if validCandidates.length == 1 then
             return validCandidates[0]?
 
-          ---- Prune expressions
-          -- let prunedResults ← withTraceNode `Generalize (fun _ => return "Pruned equivalent valid precondition candidates") do
-          --   let mut pruned: List BVLogicalExpr:= []
-          --   for cand in validCandidates do
-          --     if pruned.isEmpty then
-          --       pruned := cand :: pruned
-          --       continue
+          -- Prune expressions
+          let prunedResults ← withTraceNode `Generalize (fun _ => return "Pruned equivalent valid precondition candidates") do
+            let mut pruned: List BVLogicalExpr:= []
+            for cand in validCandidates do
+              if pruned.isEmpty then
+                pruned := cand :: pruned
+                continue
 
-          --     let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f cand))
-          --     let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+              let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f cand))
+              let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-          --     if let some _ ← solve subsumeCheckExpr then
-          --       pruned := cand :: pruned
+              if let some _ ← solve subsumeCheckExpr then
+                pruned := cand :: pruned
 
-          --   pure pruned
-
-          -- logInfo m! "Pruned {validCandidates.length - prunedResults.length} equivalent expressions"
-
-
+            pure pruned
+          logInfo m! "Pruned {validCandidates.length - prunedResults.length} equivalent expressions"
 
           --- Rank valid candidates by model counting
-          let candidateByModelCount ← withTraceNode `Generalize (fun _ => return "Ranked candidates by model count") do
+          let candidateByModelCount ← withTraceNode `Generalize (fun _ => return "Ranked candidates by model count") do -- TODO: Do we even need model counting??
             let mut candidateByModelCount : List (Nat × BVLogicalExpr) := []
             let constantsSet := Std.HashSet.ofList constants
-         --   for candidate in prunedResults do
-            for candidate in validCandidates do
+            for candidate in prunedResults do
+            -- for candidate in validCandidates do
               let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
-              -- let count ← countModel widthSubstitutedCandidate constantsSet
-              let count := 10
+              let count ← countModel widthSubstitutedCandidate constantsSet
               candidateByModelCount := (count, candidate) :: candidateByModelCount
 
             candidateByModelCount := candidateByModelCount.mergeSort (λ a b => a.fst > b.fst)
@@ -1281,15 +1206,22 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
               | none =>
                   combinedPred := some candidate
                   count := count + 1
-              | some wp =>
-                  -- if let some _ ← solve (BoolExpr.gate Gate.and wp (BoolExpr.not candidate)) then
-                  --     combinedPred := some (BoolExpr.gate Gate.or wp candidate)
-                  --     count := count + 1
-                  -- else
+              | some wp => --- TODO: we might not need this subsumption logic given that we prune equivalent expressions
+                  if let some _ ← solve (BoolExpr.gate Gate.and wp (BoolExpr.not candidate)) then
+                      combinedPred := some (BoolExpr.gate Gate.or wp candidate)
+                      count := count + 1
+                  else
                       logInfo m! "Candidate {candidate} is already covered by {combinedPred}"
 
             logInfo m! "Candidates by model count size: {candidateByModelCount.length}; combined count: {count}"
             pure combinedPred
+
+          match combinedPred with
+          | some pred =>
+              let widthSubstitutedPred := substitute pred reducedWidthSubstitutionVal
+              if let some assignment ← solve (BoolExpr.gate Gate.and widthSubstitutedPred (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
+                  throwError m! "Precondition logic has failed o; found an assignment for {pred}: {assignment}"
+          | none => return none
 
           return combinedPred
 
@@ -1367,7 +1299,6 @@ elab "#generalize" expr:term: command =>
                     trace[Generalize] m! "Elapsed time: {elapsedTime/1000}s"
                     if elapsedTime >= timeoutMs then
                         throwError m! "Synthesis Timeout Failure: Exceeded timeout of {timeoutMs/1000}s"
-                    break
 
               return False
 
