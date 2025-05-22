@@ -94,21 +94,21 @@ theorem alive_AddSub_1152   : alive_AddSub_1152_src ⊑ alive_AddSub_1152_tgt :=
   %a = shl %b, 1
 
 -/
-def alive_AddSub_1156_src  (w : Nat)   :=
+def alive_AddSub_1156_src :=
 [sllvm| {
 ^bb0(%b : i64):
   %v1 = llvm.add %b, %b : i64
   llvm.return %v1 : i64
 }]
 
-def alive_AddSub_1156_tgt  (w : Nat)  :=
+def alive_AddSub_1156_tgt :=
 [sllvm| {
 ^bb0(%b : i64):
   %v1 = llvm.mlir.constant 1 : i64
   %v2 = llvm.shl %b, %v1 : i64
   llvm.return %v2 : i64
 }]
-theorem alive_AddSub_1156  (w : Nat)   : alive_AddSub_1156_src w  ⊑ alive_AddSub_1156_tgt w  := by
+theorem alive_AddSub_1156 : alive_AddSub_1156_src ⊑ alive_AddSub_1156_tgt := by
   unfold alive_AddSub_1156_src alive_AddSub_1156_tgt
   simp_peephole
   apply bv_AddSub_1156
@@ -125,7 +125,7 @@ theorem alive_AddSub_1156  (w : Nat)   : alive_AddSub_1156_src w  ⊑ alive_AddS
   %c = sub %b, %a
 
 -/
-def alive_AddSub_1164_src  (w : Nat)   :=
+def alive_AddSub_1164_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -134,7 +134,7 @@ def alive_AddSub_1164_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1164_tgt  (w : Nat)  :=
+def alive_AddSub_1164_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -142,7 +142,7 @@ def alive_AddSub_1164_tgt  (w : Nat)  :=
   %v3 = llvm.sub %b, %a : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1164  (w : Nat)   : alive_AddSub_1164_src w  ⊑ alive_AddSub_1164_tgt w  := by
+theorem alive_AddSub_1164 : alive_AddSub_1164_src ⊑ alive_AddSub_1164_tgt := by
   unfold alive_AddSub_1164_src alive_AddSub_1164_tgt
   simp_peephole
   apply bv_AddSub_1164
@@ -162,7 +162,7 @@ theorem alive_AddSub_1164  (w : Nat)   : alive_AddSub_1164_src w  ⊑ alive_AddS
   %c = sub 0, %ab
 
 -/
-def alive_AddSub_1165_src  (w : Nat)   :=
+def alive_AddSub_1165_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -173,7 +173,7 @@ def alive_AddSub_1165_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AddSub_1165_tgt  (w : Nat)  :=
+def alive_AddSub_1165_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.add %a, %b : i64
@@ -185,7 +185,7 @@ def alive_AddSub_1165_tgt  (w : Nat)  :=
   %v7 = llvm.sub %v6, %v1 : i64
   llvm.return %v7 : i64
 }]
-theorem alive_AddSub_1165  (w : Nat)   : alive_AddSub_1165_src w  ⊑ alive_AddSub_1165_tgt w  := by
+theorem alive_AddSub_1165 : alive_AddSub_1165_src ⊑ alive_AddSub_1165_tgt := by
   unfold alive_AddSub_1165_src alive_AddSub_1165_tgt
   simp_peephole
   apply bv_AddSub_1165
@@ -202,7 +202,7 @@ theorem alive_AddSub_1165  (w : Nat)   : alive_AddSub_1165_src w  ⊑ alive_AddS
   %c = sub %a, %b
 
 -/
-def alive_AddSub_1176_src  (w : Nat)   :=
+def alive_AddSub_1176_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -211,7 +211,7 @@ def alive_AddSub_1176_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1176_tgt  (w : Nat)  :=
+def alive_AddSub_1176_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -219,7 +219,7 @@ def alive_AddSub_1176_tgt  (w : Nat)  :=
   %v3 = llvm.sub %a, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1176  (w : Nat)   : alive_AddSub_1176_src w  ⊑ alive_AddSub_1176_tgt w  := by
+theorem alive_AddSub_1176 : alive_AddSub_1176_src ⊑ alive_AddSub_1176_tgt := by
   unfold alive_AddSub_1176_src alive_AddSub_1176_tgt
   simp_peephole
   apply bv_AddSub_1176
@@ -236,7 +236,7 @@ theorem alive_AddSub_1176  (w : Nat)   : alive_AddSub_1176_src w  ⊑ alive_AddS
   %r = sub (C - 1), %x
 
 -/
-def alive_AddSub_1202_src  (w : Nat)   :=
+def alive_AddSub_1202_src :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -245,7 +245,7 @@ def alive_AddSub_1202_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1202_tgt  (w : Nat)  :=
+def alive_AddSub_1202_tgt :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -255,7 +255,7 @@ def alive_AddSub_1202_tgt  (w : Nat)  :=
   %v5 = llvm.sub %v4, %x : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AddSub_1202  (w : Nat)   : alive_AddSub_1202_src w  ⊑ alive_AddSub_1202_tgt w  := by
+theorem alive_AddSub_1202 : alive_AddSub_1202_src ⊑ alive_AddSub_1202_tgt := by
   unfold alive_AddSub_1202_src alive_AddSub_1202_tgt
   simp_peephole
   apply bv_AddSub_1202
@@ -274,7 +274,7 @@ theorem alive_AddSub_1202  (w : Nat)   : alive_AddSub_1202_src w  ⊑ alive_AddS
   %c = or %a, %b
 
 -/
-def alive_AddSub_1295_src  (w : Nat)   :=
+def alive_AddSub_1295_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -283,7 +283,7 @@ def alive_AddSub_1295_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1295_tgt  (w : Nat)  :=
+def alive_AddSub_1295_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -291,7 +291,7 @@ def alive_AddSub_1295_tgt  (w : Nat)  :=
   %v3 = llvm.or %a, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1295  (w : Nat)   : alive_AddSub_1295_src w  ⊑ alive_AddSub_1295_tgt w  := by
+theorem alive_AddSub_1295 : alive_AddSub_1295_src ⊑ alive_AddSub_1295_tgt := by
   unfold alive_AddSub_1295_src alive_AddSub_1295_tgt
   simp_peephole
   apply bv_AddSub_1295
@@ -310,7 +310,7 @@ theorem alive_AddSub_1295  (w : Nat)   : alive_AddSub_1295_src w  ⊑ alive_AddS
   %c = add %a, %b
 
 -/
-def alive_AddSub_1309_src  (w : Nat)   :=
+def alive_AddSub_1309_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -319,7 +319,7 @@ def alive_AddSub_1309_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1309_tgt  (w : Nat)  :=
+def alive_AddSub_1309_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -327,7 +327,7 @@ def alive_AddSub_1309_tgt  (w : Nat)  :=
   %v3 = llvm.add %a, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1309  (w : Nat)   : alive_AddSub_1309_src w  ⊑ alive_AddSub_1309_tgt w  := by
+theorem alive_AddSub_1309 : alive_AddSub_1309_src ⊑ alive_AddSub_1309_tgt := by
   unfold alive_AddSub_1309_src alive_AddSub_1309_tgt
   simp_peephole
   apply bv_AddSub_1309
@@ -344,7 +344,7 @@ theorem alive_AddSub_1309  (w : Nat)   : alive_AddSub_1309_src w  ⊑ alive_AddS
   %r = add %x, %a
 
 -/
-def alive_AddSub_1539_src  (w : Nat)   :=
+def alive_AddSub_1539_src :=
 [sllvm| {
 ^bb0(%a : i64, %x : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -353,7 +353,7 @@ def alive_AddSub_1539_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1539_tgt  (w : Nat)  :=
+def alive_AddSub_1539_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %x : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -361,7 +361,7 @@ def alive_AddSub_1539_tgt  (w : Nat)  :=
   %v3 = llvm.add %x, %a : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1539  (w : Nat)   : alive_AddSub_1539_src w  ⊑ alive_AddSub_1539_tgt w  := by
+theorem alive_AddSub_1539 : alive_AddSub_1539_src ⊑ alive_AddSub_1539_tgt := by
   unfold alive_AddSub_1539_src alive_AddSub_1539_tgt
   simp_peephole
   apply bv_AddSub_1539
@@ -376,21 +376,21 @@ theorem alive_AddSub_1539  (w : Nat)   : alive_AddSub_1539_src w  ⊑ alive_AddS
   %r = add %x, -C
 
 -/
-def alive_AddSub_1539_2_src  (w : Nat)   :=
+def alive_AddSub_1539_2_src :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.sub %x, %C : i64
   llvm.return %v1 : i64
 }]
 
-def alive_AddSub_1539_2_tgt  (w : Nat)  :=
+def alive_AddSub_1539_2_tgt :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.neg %C : i64
   %v2 = llvm.add %x, %v1 : i64
   llvm.return %v2 : i64
 }]
-theorem alive_AddSub_1539_2  (w : Nat)   : alive_AddSub_1539_2_src w  ⊑ alive_AddSub_1539_2_tgt w  := by
+theorem alive_AddSub_1539_2 : alive_AddSub_1539_2_src ⊑ alive_AddSub_1539_2_tgt := by
   unfold alive_AddSub_1539_2_src alive_AddSub_1539_2_tgt
   simp_peephole
   apply bv_AddSub_1539_2
@@ -433,7 +433,7 @@ theorem alive_AddSub_1556   : alive_AddSub_1556_src ⊑ alive_AddSub_1556_tgt :=
   %r = xor %a, -1
 
 -/
-def alive_AddSub_1560_src  (w : Nat)   :=
+def alive_AddSub_1560_src :=
 [sllvm| {
 ^bb0(%a : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -441,14 +441,14 @@ def alive_AddSub_1560_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AddSub_1560_tgt  (w : Nat)  :=
+def alive_AddSub_1560_tgt :=
 [sllvm| {
 ^bb0(%a : i64):
   %v1 = llvm.mlir.constant -1 : i64
   %v2 = llvm.xor %a, %v1 : i64
   llvm.return %v2 : i64
 }]
-theorem alive_AddSub_1560  (w : Nat)   : alive_AddSub_1560_src w  ⊑ alive_AddSub_1560_tgt w  := by
+theorem alive_AddSub_1560 : alive_AddSub_1560_src ⊑ alive_AddSub_1560_tgt := by
   unfold alive_AddSub_1560_src alive_AddSub_1560_tgt
   simp_peephole
   apply bv_AddSub_1560
@@ -465,7 +465,7 @@ theorem alive_AddSub_1560  (w : Nat)   : alive_AddSub_1560_src w  ⊑ alive_AddS
   %r = add %x, (C + 1)
 
 -/
-def alive_AddSub_1564_src  (w : Nat)   :=
+def alive_AddSub_1564_src :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -474,7 +474,7 @@ def alive_AddSub_1564_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1564_tgt  (w : Nat)  :=
+def alive_AddSub_1564_tgt :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -484,7 +484,7 @@ def alive_AddSub_1564_tgt  (w : Nat)  :=
   %v5 = llvm.add %x, %v4 : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AddSub_1564  (w : Nat)   : alive_AddSub_1564_src w  ⊑ alive_AddSub_1564_tgt w  := by
+theorem alive_AddSub_1564 : alive_AddSub_1564_src ⊑ alive_AddSub_1564_tgt := by
   unfold alive_AddSub_1564_src alive_AddSub_1564_tgt
   simp_peephole
   apply bv_AddSub_1564
@@ -501,7 +501,7 @@ theorem alive_AddSub_1564  (w : Nat)   : alive_AddSub_1564_src w  ⊑ alive_AddS
   %r = sub (C - C2), %X
 
 -/
-def alive_AddSub_1574_src  (w : Nat)   :=
+def alive_AddSub_1574_src :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.add %X, %C2 : i64
@@ -509,7 +509,7 @@ def alive_AddSub_1574_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AddSub_1574_tgt  (w : Nat)  :=
+def alive_AddSub_1574_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.add %X, %C2 : i64
@@ -517,7 +517,7 @@ def alive_AddSub_1574_tgt  (w : Nat)  :=
   %v3 = llvm.sub %v2, %X : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1574  (w : Nat)   : alive_AddSub_1574_src w  ⊑ alive_AddSub_1574_tgt w  := by
+theorem alive_AddSub_1574 : alive_AddSub_1574_src ⊑ alive_AddSub_1574_tgt := by
   unfold alive_AddSub_1574_src alive_AddSub_1574_tgt
   simp_peephole
   apply bv_AddSub_1574
@@ -534,7 +534,7 @@ theorem alive_AddSub_1574  (w : Nat)   : alive_AddSub_1574_src w  ⊑ alive_AddS
   %r = sub 0, %Y
 
 -/
-def alive_AddSub_1614_src  (w : Nat)   :=
+def alive_AddSub_1614_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.add %X, %Y : i64
@@ -542,7 +542,7 @@ def alive_AddSub_1614_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AddSub_1614_tgt  (w : Nat)  :=
+def alive_AddSub_1614_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.add %X, %Y : i64
@@ -550,7 +550,7 @@ def alive_AddSub_1614_tgt  (w : Nat)  :=
   %v3 = llvm.sub %v2, %Y : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1614  (w : Nat)   : alive_AddSub_1614_src w  ⊑ alive_AddSub_1614_tgt w  := by
+theorem alive_AddSub_1614 : alive_AddSub_1614_src ⊑ alive_AddSub_1614_tgt := by
   unfold alive_AddSub_1614_src alive_AddSub_1614_tgt
   simp_peephole
   apply bv_AddSub_1614
@@ -567,7 +567,7 @@ theorem alive_AddSub_1614  (w : Nat)   : alive_AddSub_1614_src w  ⊑ alive_AddS
   %r = sub 0, %Y
 
 -/
-def alive_AddSub_1619_src  (w : Nat)   :=
+def alive_AddSub_1619_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.sub %X, %Y : i64
@@ -575,7 +575,7 @@ def alive_AddSub_1619_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AddSub_1619_tgt  (w : Nat)  :=
+def alive_AddSub_1619_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.sub %X, %Y : i64
@@ -583,7 +583,7 @@ def alive_AddSub_1619_tgt  (w : Nat)  :=
   %v3 = llvm.sub %v2, %Y : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1619  (w : Nat)   : alive_AddSub_1619_src w  ⊑ alive_AddSub_1619_tgt w  := by
+theorem alive_AddSub_1619 : alive_AddSub_1619_src ⊑ alive_AddSub_1619_tgt := by
   unfold alive_AddSub_1619_src alive_AddSub_1619_tgt
   simp_peephole
   apply bv_AddSub_1619
@@ -602,7 +602,7 @@ theorem alive_AddSub_1619  (w : Nat)   : alive_AddSub_1619_src w  ⊑ alive_AddS
   %r = and %A, %B
 
 -/
-def alive_AddSub_1624_src  (w : Nat)   :=
+def alive_AddSub_1624_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -611,7 +611,7 @@ def alive_AddSub_1624_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AddSub_1624_tgt  (w : Nat)  :=
+def alive_AddSub_1624_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -619,7 +619,7 @@ def alive_AddSub_1624_tgt  (w : Nat)  :=
   %v3 = llvm.and %A, %B : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AddSub_1624  (w : Nat)   : alive_AddSub_1624_src w  ⊑ alive_AddSub_1624_tgt w  := by
+theorem alive_AddSub_1624 : alive_AddSub_1624_src ⊑ alive_AddSub_1624_tgt := by
   unfold alive_AddSub_1624_src alive_AddSub_1624_tgt
   simp_peephole
   apply bv_AddSub_1624
@@ -637,7 +637,7 @@ theorem alive_AddSub_1624  (w : Nat)   : alive_AddSub_1624_src w  ⊑ alive_AddS
   %r = xor %a, (C1 & C2)
 
 -/
-def alive_AndOrXor_135_src  (w : Nat)   :=
+def alive_AndOrXor_135_src :=
 [sllvm| {
 ^bb0(%X : i64, %C1 : i64, %C2 : i64):
   %v1 = llvm.xor %X, %C1 : i64
@@ -645,7 +645,7 @@ def alive_AndOrXor_135_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_135_tgt  (w : Nat)  :=
+def alive_AndOrXor_135_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C1 : i64, %C2 : i64):
   %v1 = llvm.and %X, %C2 : i64
@@ -654,7 +654,7 @@ def alive_AndOrXor_135_tgt  (w : Nat)  :=
   %v4 = llvm.xor %v1, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_135  (w : Nat)   : alive_AndOrXor_135_src w  ⊑ alive_AndOrXor_135_tgt w  := by
+theorem alive_AndOrXor_135 : alive_AndOrXor_135_src ⊑ alive_AndOrXor_135_tgt := by
   unfold alive_AndOrXor_135_src alive_AndOrXor_135_tgt
   simp_peephole
   apply bv_AndOrXor_135
@@ -672,7 +672,7 @@ theorem alive_AndOrXor_135  (w : Nat)   : alive_AndOrXor_135_src w  ⊑ alive_An
   %r = and %o, C2
 
 -/
-def alive_AndOrXor_144_src  (w : Nat)   :=
+def alive_AndOrXor_144_src :=
 [sllvm| {
 ^bb0(%X : i64, %C1 : i64, %C2 : i64):
   %v1 = llvm.or %X, %C1 : i64
@@ -680,7 +680,7 @@ def alive_AndOrXor_144_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_144_tgt  (w : Nat)  :=
+def alive_AndOrXor_144_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C1 : i64, %C2 : i64):
   %v1 = llvm.and %C1, %C2 : i64
@@ -689,7 +689,7 @@ def alive_AndOrXor_144_tgt  (w : Nat)  :=
   %v4 = llvm.and %v2, %C2 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_144  (w : Nat)   : alive_AndOrXor_144_src w  ⊑ alive_AndOrXor_144_tgt w  := by
+theorem alive_AndOrXor_144 : alive_AndOrXor_144_src ⊑ alive_AndOrXor_144_tgt := by
   unfold alive_AndOrXor_144_src alive_AndOrXor_144_tgt
   simp_peephole
   apply bv_AndOrXor_144
@@ -716,7 +716,7 @@ theorem alive_AndOrXor_144  (w : Nat)   : alive_AndOrXor_144_src w  ⊑ alive_An
 -/
 -- MANUAL FIX: the translation script inferred some of the resulting types to be `i1`
 -- where they should be the meta-variable `_` (https://github.com/opencompl/ssa/issues/169)
-def alive_AndOrXor_698_src  (w : Nat)   :=
+def alive_AndOrXor_698_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64, %d : i64):
   %v1 = llvm.and %a, %b : i64
@@ -729,7 +729,7 @@ def alive_AndOrXor_698_src  (w : Nat)   :=
   llvm.return %v7 : i1
 }]
 
-def alive_AndOrXor_698_tgt  (w : Nat)  :=
+def alive_AndOrXor_698_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64, %d : i64):
   %v1 = llvm.or %b, %d : i64
@@ -744,7 +744,7 @@ def alive_AndOrXor_698_tgt  (w : Nat)  :=
   %v10 = llvm.icmp.eq %v2, %v9 : i64
   llvm.return %v10 : i1
 }]
-theorem alive_AndOrXor_698  (w : Nat)   : alive_AndOrXor_698_src w  ⊑ alive_AndOrXor_698_tgt w  := by
+theorem alive_AndOrXor_698 : alive_AndOrXor_698_src ⊑ alive_AndOrXor_698_tgt := by
   unfold alive_AndOrXor_698_src alive_AndOrXor_698_tgt
   simp_peephole
   apply bv_AndOrXor_698
@@ -769,7 +769,7 @@ theorem alive_AndOrXor_698  (w : Nat)   : alive_AndOrXor_698_src w  ⊑ alive_An
   %r = icmp eq %a3, %or
 
 -/
-def alive_AndOrXor_709_src  (w : Nat)   :=
+def alive_AndOrXor_709_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64, %d : i64):
   %v1 = llvm.and %a, %b : i64
@@ -780,7 +780,7 @@ def alive_AndOrXor_709_src  (w : Nat)   :=
   llvm.return %v5 : i1
 }]
 
-def alive_AndOrXor_709_tgt  (w : Nat)  :=
+def alive_AndOrXor_709_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64, %d : i64):
   %v1 = llvm.or %b, %d : i64
@@ -792,7 +792,7 @@ def alive_AndOrXor_709_tgt  (w : Nat)  :=
   %v7 = llvm.icmp.eq %v2, %v1 : i64
   llvm.return %v7 : i1
 }]
-theorem alive_AndOrXor_709  (w : Nat)   : alive_AndOrXor_709_src w  ⊑ alive_AndOrXor_709_tgt w  := by
+theorem alive_AndOrXor_709 : alive_AndOrXor_709_src ⊑ alive_AndOrXor_709_tgt := by
   unfold alive_AndOrXor_709_src alive_AndOrXor_709_tgt
   simp_peephole
   apply bv_AndOrXor_709
@@ -817,7 +817,7 @@ theorem alive_AndOrXor_709  (w : Nat)   : alive_AndOrXor_709_src w  ⊑ alive_An
   %r = icmp eq %a3, %a
 
 -/
-def alive_AndOrXor_716_src  (w : Nat)   :=
+def alive_AndOrXor_716_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64, %d : i64):
   %v1 = llvm.and %a, %b : i64
@@ -828,7 +828,7 @@ def alive_AndOrXor_716_src  (w : Nat)   :=
   llvm.return %v5 : i1
 }]
 
-def alive_AndOrXor_716_tgt  (w : Nat)  :=
+def alive_AndOrXor_716_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64, %d : i64):
   %v1 = llvm.and %b, %d : i64
@@ -840,7 +840,7 @@ def alive_AndOrXor_716_tgt  (w : Nat)  :=
   %v7 = llvm.icmp.eq %v2, %a : i64
   llvm.return %v7 : i1
 }]
-theorem alive_AndOrXor_716  (w : Nat)   : alive_AndOrXor_716_src w  ⊑ alive_AndOrXor_716_tgt w  := by
+theorem alive_AndOrXor_716 : alive_AndOrXor_716_src ⊑ alive_AndOrXor_716_tgt := by
   unfold alive_AndOrXor_716_src alive_AndOrXor_716_tgt
   simp_peephole
   apply bv_AndOrXor_716
@@ -859,7 +859,7 @@ theorem alive_AndOrXor_716  (w : Nat)   : alive_AndOrXor_716_src w  ⊑ alive_An
   %r = icmp sgt %a, %b
 
 -/
-def alive_AndOrXor_794_src  (w : Nat)   :=
+def alive_AndOrXor_794_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.sgt %a, %b : i64
@@ -868,7 +868,7 @@ def alive_AndOrXor_794_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_AndOrXor_794_tgt  (w : Nat)  :=
+def alive_AndOrXor_794_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.sgt %a, %b : i64
@@ -876,7 +876,7 @@ def alive_AndOrXor_794_tgt  (w : Nat)  :=
   %v3 = llvm.icmp.sgt %a, %b : i64
   llvm.return %v3 : i1
 }]
-theorem alive_AndOrXor_794  (w : Nat)   : alive_AndOrXor_794_src w  ⊑ alive_AndOrXor_794_tgt w  := by
+theorem alive_AndOrXor_794 : alive_AndOrXor_794_src ⊑ alive_AndOrXor_794_tgt := by
   unfold alive_AndOrXor_794_src alive_AndOrXor_794_tgt
   simp_peephole
   apply bv_AndOrXor_794
@@ -897,7 +897,7 @@ theorem alive_AndOrXor_794  (w : Nat)   : alive_AndOrXor_794_src w  ⊑ alive_An
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_AndOrXor_827_src  (w : Nat)   :=
+def alive_AndOrXor_827_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -908,7 +908,7 @@ def alive_AndOrXor_827_src  (w : Nat)   :=
   llvm.return %v5 : i1
 }]
 
-def alive_AndOrXor_827_tgt  (w : Nat)  :=
+def alive_AndOrXor_827_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.or %a, %b : i64
@@ -920,7 +920,7 @@ def alive_AndOrXor_827_tgt  (w : Nat)  :=
   %v7 = llvm.icmp.eq %v1, %v6 : i64
   llvm.return %v7 : i1
 }]
-theorem alive_AndOrXor_827  (w : Nat)   : alive_AndOrXor_827_src w  ⊑ alive_AndOrXor_827_tgt w  := by
+theorem alive_AndOrXor_827 : alive_AndOrXor_827_src ⊑ alive_AndOrXor_827_tgt := by
   unfold alive_AndOrXor_827_src alive_AndOrXor_827_tgt
   simp_peephole
   apply bv_AndOrXor_827
@@ -939,7 +939,7 @@ theorem alive_AndOrXor_827  (w : Nat)   : alive_AndOrXor_827_src w  ⊑ alive_An
   %r = false
 
 -/
-def alive_AndOrXor_887_2_src  (w : Nat)   :=
+def alive_AndOrXor_887_2_src :=
 [sllvm| {
 ^bb0(%a : i64, %C1 : i64):
   %v1 = llvm.icmp.eq %a, %C1 : i64
@@ -948,7 +948,7 @@ def alive_AndOrXor_887_2_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_AndOrXor_887_2_tgt  (w : Nat)  :=
+def alive_AndOrXor_887_2_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %C1 : i64):
   %v1 = llvm.icmp.eq %a, %C1 : i64
@@ -957,7 +957,7 @@ def alive_AndOrXor_887_2_tgt  (w : Nat)  :=
   %v4 = llvm.copy %v3 : i1
   llvm.return %v4 : i1
 }]
-theorem alive_AndOrXor_887_2  (w : Nat)   : alive_AndOrXor_887_2_src w  ⊑ alive_AndOrXor_887_2_tgt w  := by
+theorem alive_AndOrXor_887_2 : alive_AndOrXor_887_2_src ⊑ alive_AndOrXor_887_2_tgt := by
   unfold alive_AndOrXor_887_2_src alive_AndOrXor_887_2_tgt
   simp_peephole
   apply bv_AndOrXor_887_2
@@ -977,7 +977,7 @@ theorem alive_AndOrXor_887_2  (w : Nat)   : alive_AndOrXor_887_2_src w  ⊑ aliv
   %r = xor %or, -1
 
 -/
-def alive_AndOrXor_1230__A__B___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_1230__A__B___A__B_src :=
 [sllvm| {
 ^bb0(%notOp0 : i64, %notOp1 : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -988,7 +988,7 @@ def alive_AndOrXor_1230__A__B___A__B_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_1230__A__B___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_1230__A__B___A__B_tgt :=
 [sllvm| {
 ^bb0(%notOp0 : i64, %notOp1 : i64):
   %v1 = llvm.or %notOp0, %notOp1 : i64
@@ -1000,7 +1000,7 @@ def alive_AndOrXor_1230__A__B___A__B_tgt  (w : Nat)  :=
   %v7 = llvm.xor %v1, %v6 : i64
   llvm.return %v7 : i64
 }]
-theorem alive_AndOrXor_1230__A__B___A__B  (w : Nat)   : alive_AndOrXor_1230__A__B___A__B_src w  ⊑ alive_AndOrXor_1230__A__B___A__B_tgt w  := by
+theorem alive_AndOrXor_1230__A__B___A__B : alive_AndOrXor_1230__A__B___A__B_src ⊑ alive_AndOrXor_1230__A__B___A__B_tgt := by
   unfold alive_AndOrXor_1230__A__B___A__B_src alive_AndOrXor_1230__A__B___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_1230__A__B___A__B
@@ -1021,7 +1021,7 @@ theorem alive_AndOrXor_1230__A__B___A__B  (w : Nat)   : alive_AndOrXor_1230__A__
   %r = xor %A, %B
 
 -/
-def alive_AndOrXor_1241_AB__AB__AB_src  (w : Nat)   :=
+def alive_AndOrXor_1241_AB__AB__AB_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -1032,7 +1032,7 @@ def alive_AndOrXor_1241_AB__AB__AB_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_1241_AB__AB__AB_tgt  (w : Nat)  :=
+def alive_AndOrXor_1241_AB__AB__AB_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -1042,7 +1042,7 @@ def alive_AndOrXor_1241_AB__AB__AB_tgt  (w : Nat)  :=
   %v5 = llvm.xor %A, %B : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AndOrXor_1241_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1241_AB__AB__AB_src w  ⊑ alive_AndOrXor_1241_AB__AB__AB_tgt w  := by
+theorem alive_AndOrXor_1241_AB__AB__AB : alive_AndOrXor_1241_AB__AB__AB_src ⊑ alive_AndOrXor_1241_AB__AB__AB_tgt := by
   unfold alive_AndOrXor_1241_AB__AB__AB_src alive_AndOrXor_1241_AB__AB__AB_tgt
   simp_peephole
   apply bv_AndOrXor_1241_AB__AB__AB
@@ -1063,7 +1063,7 @@ theorem alive_AndOrXor_1241_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1241_AB__AB
   %r = xor %A, %B
 
 -/
-def alive_AndOrXor_1247_AB__AB__AB_src  (w : Nat)   :=
+def alive_AndOrXor_1247_AB__AB__AB_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.and %A, %B : i64
@@ -1074,7 +1074,7 @@ def alive_AndOrXor_1247_AB__AB__AB_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_1247_AB__AB__AB_tgt  (w : Nat)  :=
+def alive_AndOrXor_1247_AB__AB__AB_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.and %A, %B : i64
@@ -1084,7 +1084,7 @@ def alive_AndOrXor_1247_AB__AB__AB_tgt  (w : Nat)  :=
   %v5 = llvm.xor %A, %B : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AndOrXor_1247_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1247_AB__AB__AB_src w  ⊑ alive_AndOrXor_1247_AB__AB__AB_tgt w  := by
+theorem alive_AndOrXor_1247_AB__AB__AB : alive_AndOrXor_1247_AB__AB__AB_src ⊑ alive_AndOrXor_1247_AB__AB__AB_tgt := by
   unfold alive_AndOrXor_1247_AB__AB__AB_src alive_AndOrXor_1247_AB__AB__AB_tgt
   simp_peephole
   apply bv_AndOrXor_1247_AB__AB__AB
@@ -1102,7 +1102,7 @@ theorem alive_AndOrXor_1247_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1247_AB__AB
   %r = and %A, %notB
 
 -/
-def alive_AndOrXor_1253_A__AB___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_1253_A__AB___A__B_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.xor %A, %B : i64
@@ -1110,7 +1110,7 @@ def alive_AndOrXor_1253_A__AB___A__B_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_1253_A__AB___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_1253_A__AB___A__B_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1119,7 +1119,7 @@ def alive_AndOrXor_1253_A__AB___A__B_tgt  (w : Nat)  :=
   %v4 = llvm.and %A, %v2 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_1253_A__AB___A__B  (w : Nat)   : alive_AndOrXor_1253_A__AB___A__B_src w  ⊑ alive_AndOrXor_1253_A__AB___A__B_tgt w  := by
+theorem alive_AndOrXor_1253_A__AB___A__B : alive_AndOrXor_1253_A__AB___A__B_src ⊑ alive_AndOrXor_1253_A__AB___A__B_tgt := by
   unfold alive_AndOrXor_1253_A__AB___A__B_src alive_AndOrXor_1253_A__AB___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_1253_A__AB___A__B
@@ -1138,7 +1138,7 @@ theorem alive_AndOrXor_1253_A__AB___A__B  (w : Nat)   : alive_AndOrXor_1253_A__A
   %r = and %A, %B
 
 -/
-def alive_AndOrXor_1280_ABA___AB_src  (w : Nat)   :=
+def alive_AndOrXor_1280_ABA___AB_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1148,7 +1148,7 @@ def alive_AndOrXor_1280_ABA___AB_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_1280_ABA___AB_tgt  (w : Nat)  :=
+def alive_AndOrXor_1280_ABA___AB_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1157,7 +1157,7 @@ def alive_AndOrXor_1280_ABA___AB_tgt  (w : Nat)  :=
   %v4 = llvm.and %A, %B : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_1280_ABA___AB  (w : Nat)   : alive_AndOrXor_1280_ABA___AB_src w  ⊑ alive_AndOrXor_1280_ABA___AB_tgt w  := by
+theorem alive_AndOrXor_1280_ABA___AB : alive_AndOrXor_1280_ABA___AB_src ⊑ alive_AndOrXor_1280_ABA___AB_tgt := by
   unfold alive_AndOrXor_1280_ABA___AB_src alive_AndOrXor_1280_ABA___AB_tgt
   simp_peephole
   apply bv_AndOrXor_1280_ABA___AB
@@ -1179,7 +1179,7 @@ theorem alive_AndOrXor_1280_ABA___AB  (w : Nat)   : alive_AndOrXor_1280_ABA___AB
   %r = and %op0, %negC
 
 -/
-def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src  (w : Nat)   :=
+def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src :=
 [sllvm| {
 ^bb0(%A : i64, %C : i64, %B : i64):
   %v1 = llvm.xor %A, %B : i64
@@ -1189,7 +1189,7 @@ def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
+def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %C : i64, %B : i64):
   %v1 = llvm.xor %A, %B : i64
@@ -1200,7 +1200,7 @@ def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
   %v6 = llvm.and %v1, %v3 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C  (w : Nat)   : alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src w  ⊑ alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt w  := by
+theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C : alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src ⊑ alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt := by
   unfold alive_AndOrXor_1288_A__B__B__C__A___A__B__C_src alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt
   simp_peephole
   apply bv_AndOrXor_1288_A__B__B__C__A___A__B__C
@@ -1221,7 +1221,7 @@ theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C  (w : Nat)   : alive_AndOrXo
   %r = and %A, %B
 
 -/
-def alive_AndOrXor_1294_A__B__A__B___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_1294_A__B__A__B___A__B_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -1232,7 +1232,7 @@ def alive_AndOrXor_1294_A__B__A__B___A__B_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_1294_A__B__A__B___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_1294_A__B__A__B___A__B_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -1242,7 +1242,7 @@ def alive_AndOrXor_1294_A__B__A__B___A__B_tgt  (w : Nat)  :=
   %v5 = llvm.and %A, %B : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AndOrXor_1294_A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_1294_A__B__A__B___A__B_src w  ⊑ alive_AndOrXor_1294_A__B__A__B___A__B_tgt w  := by
+theorem alive_AndOrXor_1294_A__B__A__B___A__B : alive_AndOrXor_1294_A__B__A__B___A__B_src ⊑ alive_AndOrXor_1294_A__B__A__B___A__B_tgt := by
   unfold alive_AndOrXor_1294_A__B__A__B___A__B_src alive_AndOrXor_1294_A__B__A__B___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_1294_A__B__A__B___A__B
@@ -1261,7 +1261,7 @@ theorem alive_AndOrXor_1294_A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_1294
   %r = icmp uge %a, %b
 
 -/
-def alive_AndOrXor_1683_1_src  (w : Nat)   :=
+def alive_AndOrXor_1683_1_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.ugt %a, %b : i64
@@ -1270,7 +1270,7 @@ def alive_AndOrXor_1683_1_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_AndOrXor_1683_1_tgt  (w : Nat)  :=
+def alive_AndOrXor_1683_1_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.ugt %a, %b : i64
@@ -1278,7 +1278,7 @@ def alive_AndOrXor_1683_1_tgt  (w : Nat)  :=
   %v3 = llvm.icmp.uge %a, %b : i64
   llvm.return %v3 : i1
 }]
-theorem alive_AndOrXor_1683_1  (w : Nat)   : alive_AndOrXor_1683_1_src w  ⊑ alive_AndOrXor_1683_1_tgt w  := by
+theorem alive_AndOrXor_1683_1 : alive_AndOrXor_1683_1_src ⊑ alive_AndOrXor_1683_1_tgt := by
   unfold alive_AndOrXor_1683_1_src alive_AndOrXor_1683_1_tgt
   simp_peephole
   apply bv_AndOrXor_1683_1
@@ -1297,7 +1297,7 @@ theorem alive_AndOrXor_1683_1  (w : Nat)   : alive_AndOrXor_1683_1_src w  ⊑ al
   %r = true
 
 -/
-def alive_AndOrXor_1683_2_src  (w : Nat)   :=
+def alive_AndOrXor_1683_2_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.uge %a, %b : i64
@@ -1306,7 +1306,7 @@ def alive_AndOrXor_1683_2_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_AndOrXor_1683_2_tgt  (w : Nat)  :=
+def alive_AndOrXor_1683_2_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.uge %a, %b : i64
@@ -1315,7 +1315,7 @@ def alive_AndOrXor_1683_2_tgt  (w : Nat)  :=
   %v4 = llvm.copy %v3 : i1
   llvm.return %v4 : i1
 }]
-theorem alive_AndOrXor_1683_2  (w : Nat)   : alive_AndOrXor_1683_2_src w  ⊑ alive_AndOrXor_1683_2_tgt w  := by
+theorem alive_AndOrXor_1683_2 : alive_AndOrXor_1683_2_src ⊑ alive_AndOrXor_1683_2_tgt := by
   unfold alive_AndOrXor_1683_2_src alive_AndOrXor_1683_2_tgt
   simp_peephole
   apply bv_AndOrXor_1683_2
@@ -1336,7 +1336,7 @@ theorem alive_AndOrXor_1683_2  (w : Nat)   : alive_AndOrXor_1683_2_src w  ⊑ al
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_AndOrXor_1704_src  (w : Nat)   :=
+def alive_AndOrXor_1704_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -1346,7 +1346,7 @@ def alive_AndOrXor_1704_src  (w : Nat)   :=
   llvm.return %v4 : i1
 }]
 
-def alive_AndOrXor_1704_tgt  (w : Nat)  :=
+def alive_AndOrXor_1704_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1357,7 +1357,7 @@ def alive_AndOrXor_1704_tgt  (w : Nat)  :=
   %v6 = llvm.icmp.uge %v2, %A : i64
   llvm.return %v6 : i1
 }]
-theorem alive_AndOrXor_1704  (w : Nat)   : alive_AndOrXor_1704_src w  ⊑ alive_AndOrXor_1704_tgt w  := by
+theorem alive_AndOrXor_1704 : alive_AndOrXor_1704_src ⊑ alive_AndOrXor_1704_tgt := by
   unfold alive_AndOrXor_1704_src alive_AndOrXor_1704_tgt
   simp_peephole
   apply bv_AndOrXor_1704
@@ -1378,7 +1378,7 @@ theorem alive_AndOrXor_1704  (w : Nat)   : alive_AndOrXor_1704_src w  ⊑ alive_
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_AndOrXor_1705_src  (w : Nat)   :=
+def alive_AndOrXor_1705_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -1388,7 +1388,7 @@ def alive_AndOrXor_1705_src  (w : Nat)   :=
   llvm.return %v4 : i1
 }]
 
-def alive_AndOrXor_1705_tgt  (w : Nat)  :=
+def alive_AndOrXor_1705_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1399,7 +1399,7 @@ def alive_AndOrXor_1705_tgt  (w : Nat)  :=
   %v6 = llvm.icmp.uge %v2, %A : i64
   llvm.return %v6 : i1
 }]
-theorem alive_AndOrXor_1705  (w : Nat)   : alive_AndOrXor_1705_src w  ⊑ alive_AndOrXor_1705_tgt w  := by
+theorem alive_AndOrXor_1705 : alive_AndOrXor_1705_src ⊑ alive_AndOrXor_1705_tgt := by
   unfold alive_AndOrXor_1705_src alive_AndOrXor_1705_tgt
   simp_peephole
   apply bv_AndOrXor_1705
@@ -1420,7 +1420,7 @@ theorem alive_AndOrXor_1705  (w : Nat)   : alive_AndOrXor_1705_src w  ⊑ alive_
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_AndOrXor_1733_src  (w : Nat)   :=
+def alive_AndOrXor_1733_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -1431,7 +1431,7 @@ def alive_AndOrXor_1733_src  (w : Nat)   :=
   llvm.return %v5 : i1
 }]
 
-def alive_AndOrXor_1733_tgt  (w : Nat)  :=
+def alive_AndOrXor_1733_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -1443,7 +1443,7 @@ def alive_AndOrXor_1733_tgt  (w : Nat)  :=
   %v7 = llvm.icmp.ne %v1, %v6 : i64
   llvm.return %v7 : i1
 }]
-theorem alive_AndOrXor_1733  (w : Nat)   : alive_AndOrXor_1733_src w  ⊑ alive_AndOrXor_1733_tgt w  := by
+theorem alive_AndOrXor_1733 : alive_AndOrXor_1733_src ⊑ alive_AndOrXor_1733_tgt := by
   unfold alive_AndOrXor_1733_src alive_AndOrXor_1733_tgt
   simp_peephole
   apply bv_AndOrXor_1733
@@ -1461,7 +1461,7 @@ theorem alive_AndOrXor_1733  (w : Nat)   : alive_AndOrXor_1733_src w  ⊑ alive_
   %r = xor %or, (C1 & ~C)
 
 -/
-def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src  (w : Nat)   :=
+def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src :=
 [sllvm| {
 ^bb0(%x : i64, %C1 : i64, %C : i64):
   %v1 = llvm.xor %x, %C1 : i64
@@ -1469,7 +1469,7 @@ def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt  (w : Nat)  :=
+def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt :=
 [sllvm| {
 ^bb0(%x : i64, %C1 : i64, %C : i64):
   %v1 = llvm.or %x, %C : i64
@@ -1479,7 +1479,7 @@ def alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt  (w : Nat)  :=
   %v5 = llvm.xor %v1, %v4 : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2  (w : Nat)   : alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src w  ⊑ alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt w  := by
+theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 : alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src ⊑ alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt := by
   unfold alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_src alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2_tgt
   simp_peephole
   apply bv_AndOrXor_2063__X__C1__C2____X__C2__C1__C2
@@ -1498,7 +1498,7 @@ theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2  (w : Nat)   : alive_And
   %r = or %A, %B
 
 -/
-def alive_AndOrXor_2113___A__B__A___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_2113___A__B__A___A__B_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1508,7 +1508,7 @@ def alive_AndOrXor_2113___A__B__A___A__B_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_2113___A__B__A___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_2113___A__B__A___A__B_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1517,7 +1517,7 @@ def alive_AndOrXor_2113___A__B__A___A__B_tgt  (w : Nat)  :=
   %v4 = llvm.or %A, %B : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2113___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2113___A__B__A___A__B_src w  ⊑ alive_AndOrXor_2113___A__B__A___A__B_tgt w  := by
+theorem alive_AndOrXor_2113___A__B__A___A__B : alive_AndOrXor_2113___A__B__A___A__B_src ⊑ alive_AndOrXor_2113___A__B__A___A__B_tgt := by
   unfold alive_AndOrXor_2113___A__B__A___A__B_src alive_AndOrXor_2113___A__B__A___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_2113___A__B__A___A__B
@@ -1536,7 +1536,7 @@ theorem alive_AndOrXor_2113___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2113_
   %r = or %negA, %B
 
 -/
-def alive_AndOrXor_2118___A__B__A___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_2118___A__B__A___A__B_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1546,7 +1546,7 @@ def alive_AndOrXor_2118___A__B__A___A__B_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_2118___A__B__A___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_2118___A__B__A___A__B_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1555,7 +1555,7 @@ def alive_AndOrXor_2118___A__B__A___A__B_tgt  (w : Nat)  :=
   %v4 = llvm.or %v2, %B : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2118___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2118___A__B__A___A__B_src w  ⊑ alive_AndOrXor_2118___A__B__A___A__B_tgt w  := by
+theorem alive_AndOrXor_2118___A__B__A___A__B : alive_AndOrXor_2118___A__B__A___A__B_src ⊑ alive_AndOrXor_2118___A__B__A___A__B_tgt := by
   unfold alive_AndOrXor_2118___A__B__A___A__B_src alive_AndOrXor_2118___A__B__A___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_2118___A__B__A___A__B
@@ -1576,7 +1576,7 @@ theorem alive_AndOrXor_2118___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2118_
   %r = xor %A, %B
 
 -/
-def alive_AndOrXor_2123___A__B__A__B___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_2123___A__B__A__B___A__B_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1587,7 +1587,7 @@ def alive_AndOrXor_2123___A__B__A__B___A__B_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_2123___A__B__A__B___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_2123___A__B__A__B___A__B_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1597,7 +1597,7 @@ def alive_AndOrXor_2123___A__B__A__B___A__B_tgt  (w : Nat)  :=
   %v5 = llvm.xor %A, %B : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AndOrXor_2123___A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_2123___A__B__A__B___A__B_src w  ⊑ alive_AndOrXor_2123___A__B__A__B___A__B_tgt w  := by
+theorem alive_AndOrXor_2123___A__B__A__B___A__B : alive_AndOrXor_2123___A__B__A__B___A__B_src ⊑ alive_AndOrXor_2123___A__B__A__B___A__B_tgt := by
   unfold alive_AndOrXor_2123___A__B__A__B___A__B_src alive_AndOrXor_2123___A__B__A__B___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_2123___A__B__A__B___A__B
@@ -1620,7 +1620,7 @@ theorem alive_AndOrXor_2123___A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_21
   %r = xor %A, %D
 
 -/
-def alive_AndOrXor_2188_src  (w : Nat)   :=
+def alive_AndOrXor_2188_src :=
 [sllvm| {
 ^bb0(%A : i64, %D : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1633,7 +1633,7 @@ def alive_AndOrXor_2188_src  (w : Nat)   :=
   llvm.return %v7 : i64
 }]
 
-def alive_AndOrXor_2188_tgt  (w : Nat)  :=
+def alive_AndOrXor_2188_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %D : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1645,7 +1645,7 @@ def alive_AndOrXor_2188_tgt  (w : Nat)  :=
   %v7 = llvm.xor %A, %D : i64
   llvm.return %v7 : i64
 }]
-theorem alive_AndOrXor_2188  (w : Nat)   : alive_AndOrXor_2188_src w  ⊑ alive_AndOrXor_2188_tgt w  := by
+theorem alive_AndOrXor_2188 : alive_AndOrXor_2188_src ⊑ alive_AndOrXor_2188_tgt := by
   unfold alive_AndOrXor_2188_src alive_AndOrXor_2188_tgt
   simp_peephole
   apply bv_AndOrXor_2188
@@ -1666,7 +1666,7 @@ theorem alive_AndOrXor_2188  (w : Nat)   : alive_AndOrXor_2188_src w  ⊑ alive_
   %r = or %op0, %C
 
 -/
-def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src  (w : Nat)   :=
+def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src :=
 [sllvm| {
 ^bb0(%A : i64, %C : i64, %B : i64):
   %v1 = llvm.xor %A, %B : i64
@@ -1676,7 +1676,7 @@ def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
+def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %C : i64, %B : i64):
   %v1 = llvm.xor %A, %B : i64
@@ -1685,7 +1685,7 @@ def alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
   %v4 = llvm.or %v1, %C : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C  (w : Nat)   : alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src w  ⊑ alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt w  := by
+theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C : alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src ⊑ alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt := by
   unfold alive_AndOrXor_2231__A__B__B__C__A___A__B__C_src alive_AndOrXor_2231__A__B__B__C__A___A__B__C_tgt
   simp_peephole
   apply bv_AndOrXor_2231__A__B__B__C__A___A__B__C
@@ -1705,7 +1705,7 @@ theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C  (w : Nat)   : alive_AndOrX
   %r = or %B, %a
 
 -/
-def alive_AndOrXor_2243__B__C__A__B___B__A__C_src  (w : Nat)   :=
+def alive_AndOrXor_2243__B__C__A__B___B__A__C_src :=
 [sllvm| {
 ^bb0(%A : i64, %C : i64, %B : i64):
   %v1 = llvm.or %B, %C : i64
@@ -1714,7 +1714,7 @@ def alive_AndOrXor_2243__B__C__A__B___B__A__C_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt  (w : Nat)  :=
+def alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %C : i64, %B : i64):
   %v1 = llvm.and %A, %C : i64
@@ -1723,7 +1723,7 @@ def alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt  (w : Nat)  :=
   %v4 = llvm.or %B, %v1 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2243__B__C__A__B___B__A__C  (w : Nat)   : alive_AndOrXor_2243__B__C__A__B___B__A__C_src w  ⊑ alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt w  := by
+theorem alive_AndOrXor_2243__B__C__A__B___B__A__C : alive_AndOrXor_2243__B__C__A__B___B__A__C_src ⊑ alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt := by
   unfold alive_AndOrXor_2243__B__C__A__B___B__A__C_src alive_AndOrXor_2243__B__C__A__B___B__A__C_tgt
   simp_peephole
   apply bv_AndOrXor_2243__B__C__A__B___B__A__C
@@ -1743,7 +1743,7 @@ theorem alive_AndOrXor_2243__B__C__A__B___B__A__C  (w : Nat)   : alive_AndOrXor_
   %r = xor %a, -1
 
 -/
-def alive_AndOrXor_2247__A__B__A__B_src  (w : Nat)   :=
+def alive_AndOrXor_2247__A__B__A__B_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1754,7 +1754,7 @@ def alive_AndOrXor_2247__A__B__A__B_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_2247__A__B__A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_2247__A__B__A__B_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.and %A, %B : i64
@@ -1766,7 +1766,7 @@ def alive_AndOrXor_2247__A__B__A__B_tgt  (w : Nat)  :=
   %v7 = llvm.xor %v1, %v6 : i64
   llvm.return %v7 : i64
 }]
-theorem alive_AndOrXor_2247__A__B__A__B  (w : Nat)   : alive_AndOrXor_2247__A__B__A__B_src w  ⊑ alive_AndOrXor_2247__A__B__A__B_tgt w  := by
+theorem alive_AndOrXor_2247__A__B__A__B : alive_AndOrXor_2247__A__B__A__B_src ⊑ alive_AndOrXor_2247__A__B__A__B_tgt := by
   unfold alive_AndOrXor_2247__A__B__A__B_src alive_AndOrXor_2247__A__B__A__B_tgt
   simp_peephole
   apply bv_AndOrXor_2247__A__B__A__B
@@ -1783,7 +1783,7 @@ theorem alive_AndOrXor_2247__A__B__A__B  (w : Nat)   : alive_AndOrXor_2247__A__B
   %r = or %op0, %B
 
 -/
-def alive_AndOrXor_2263_src  (w : Nat)   :=
+def alive_AndOrXor_2263_src :=
 [sllvm| {
 ^bb0(%B : i64, %op0 : i64):
   %v1 = llvm.xor %op0, %B : i64
@@ -1791,14 +1791,14 @@ def alive_AndOrXor_2263_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_2263_tgt  (w : Nat)  :=
+def alive_AndOrXor_2263_tgt :=
 [sllvm| {
 ^bb0(%B : i64, %op0 : i64):
   %v1 = llvm.xor %op0, %B : i64
   %v2 = llvm.or %op0, %B : i64
   llvm.return %v2 : i64
 }]
-theorem alive_AndOrXor_2263  (w : Nat)   : alive_AndOrXor_2263_src w  ⊑ alive_AndOrXor_2263_tgt w  := by
+theorem alive_AndOrXor_2263 : alive_AndOrXor_2263_src ⊑ alive_AndOrXor_2263_tgt := by
   unfold alive_AndOrXor_2263_src alive_AndOrXor_2263_tgt
   simp_peephole
   apply bv_AndOrXor_2263
@@ -1818,7 +1818,7 @@ theorem alive_AndOrXor_2263  (w : Nat)   : alive_AndOrXor_2263_src w  ⊑ alive_
   %r = or %A, %nb
 
 -/
-def alive_AndOrXor_2264_src  (w : Nat)   :=
+def alive_AndOrXor_2264_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1828,7 +1828,7 @@ def alive_AndOrXor_2264_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_2264_tgt  (w : Nat)  :=
+def alive_AndOrXor_2264_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1839,7 +1839,7 @@ def alive_AndOrXor_2264_tgt  (w : Nat)  :=
   %v6 = llvm.or %A, %v2 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2264  (w : Nat)   : alive_AndOrXor_2264_src w  ⊑ alive_AndOrXor_2264_tgt w  := by
+theorem alive_AndOrXor_2264 : alive_AndOrXor_2264_src ⊑ alive_AndOrXor_2264_tgt := by
   unfold alive_AndOrXor_2264_src alive_AndOrXor_2264_tgt
   simp_peephole
   apply bv_AndOrXor_2264
@@ -1858,7 +1858,7 @@ theorem alive_AndOrXor_2264  (w : Nat)   : alive_AndOrXor_2264_src w  ⊑ alive_
   %r = or %A, %B
 
 -/
-def alive_AndOrXor_2265_src  (w : Nat)   :=
+def alive_AndOrXor_2265_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.and %A, %B : i64
@@ -1867,7 +1867,7 @@ def alive_AndOrXor_2265_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2265_tgt  (w : Nat)  :=
+def alive_AndOrXor_2265_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.and %A, %B : i64
@@ -1875,7 +1875,7 @@ def alive_AndOrXor_2265_tgt  (w : Nat)  :=
   %v3 = llvm.or %A, %B : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AndOrXor_2265  (w : Nat)   : alive_AndOrXor_2265_src w  ⊑ alive_AndOrXor_2265_tgt w  := by
+theorem alive_AndOrXor_2265 : alive_AndOrXor_2265_src ⊑ alive_AndOrXor_2265_tgt := by
   unfold alive_AndOrXor_2265_src alive_AndOrXor_2265_tgt
   simp_peephole
   apply bv_AndOrXor_2265
@@ -1895,7 +1895,7 @@ theorem alive_AndOrXor_2265  (w : Nat)   : alive_AndOrXor_2265_src w  ⊑ alive_
   %r = or %A, %not
 
 -/
-def alive_AndOrXor_2284_src  (w : Nat)   :=
+def alive_AndOrXor_2284_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.or %A, %B : i64
@@ -1905,7 +1905,7 @@ def alive_AndOrXor_2284_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_2284_tgt  (w : Nat)  :=
+def alive_AndOrXor_2284_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1916,7 +1916,7 @@ def alive_AndOrXor_2284_tgt  (w : Nat)  :=
   %v6 = llvm.or %A, %v2 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2284  (w : Nat)   : alive_AndOrXor_2284_src w  ⊑ alive_AndOrXor_2284_tgt w  := by
+theorem alive_AndOrXor_2284 : alive_AndOrXor_2284_src ⊑ alive_AndOrXor_2284_tgt := by
   unfold alive_AndOrXor_2284_src alive_AndOrXor_2284_tgt
   simp_peephole
   apply bv_AndOrXor_2284
@@ -1936,7 +1936,7 @@ theorem alive_AndOrXor_2284  (w : Nat)   : alive_AndOrXor_2284_src w  ⊑ alive_
   %r = or %A, %not
 
 -/
-def alive_AndOrXor_2285_src  (w : Nat)   :=
+def alive_AndOrXor_2285_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.xor %A, %B : i64
@@ -1946,7 +1946,7 @@ def alive_AndOrXor_2285_src  (w : Nat)   :=
   llvm.return %v4 : i64
 }]
 
-def alive_AndOrXor_2285_tgt  (w : Nat)  :=
+def alive_AndOrXor_2285_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1957,7 +1957,7 @@ def alive_AndOrXor_2285_tgt  (w : Nat)  :=
   %v6 = llvm.or %A, %v2 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2285  (w : Nat)   : alive_AndOrXor_2285_src w  ⊑ alive_AndOrXor_2285_tgt w  := by
+theorem alive_AndOrXor_2285 : alive_AndOrXor_2285_src ⊑ alive_AndOrXor_2285_tgt := by
   unfold alive_AndOrXor_2285_src alive_AndOrXor_2285_tgt
   simp_peephole
   apply bv_AndOrXor_2285
@@ -1978,7 +1978,7 @@ theorem alive_AndOrXor_2285  (w : Nat)   : alive_AndOrXor_2285_src w  ⊑ alive_
   %r = xor %na, %B
 
 -/
-def alive_AndOrXor_2297_src  (w : Nat)   :=
+def alive_AndOrXor_2297_src :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.and %A, %B : i64
@@ -1989,7 +1989,7 @@ def alive_AndOrXor_2297_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_2297_tgt  (w : Nat)  :=
+def alive_AndOrXor_2297_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %B : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -1999,7 +1999,7 @@ def alive_AndOrXor_2297_tgt  (w : Nat)  :=
   %v5 = llvm.xor %v2, %B : i64
   llvm.return %v5 : i64
 }]
-theorem alive_AndOrXor_2297  (w : Nat)   : alive_AndOrXor_2297_src w  ⊑ alive_AndOrXor_2297_tgt w  := by
+theorem alive_AndOrXor_2297 : alive_AndOrXor_2297_src ⊑ alive_AndOrXor_2297_tgt := by
   unfold alive_AndOrXor_2297_src alive_AndOrXor_2297_tgt
   simp_peephole
   apply bv_AndOrXor_2297
@@ -2017,7 +2017,7 @@ theorem alive_AndOrXor_2297  (w : Nat)   : alive_AndOrXor_2297_src w  ⊑ alive_
   %r = or %i, C1
 
 -/
-def alive_AndOrXor_2367_src  (w : Nat)   :=
+def alive_AndOrXor_2367_src :=
 [sllvm| {
 ^bb0(%A : i64, %C1 : i64, %op1 : i64):
   %v1 = llvm.or %A, %C1 : i64
@@ -2025,7 +2025,7 @@ def alive_AndOrXor_2367_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_2367_tgt  (w : Nat)  :=
+def alive_AndOrXor_2367_tgt :=
 [sllvm| {
 ^bb0(%A : i64, %C1 : i64, %op1 : i64):
   %v1 = llvm.or %A, %op1 : i64
@@ -2033,7 +2033,7 @@ def alive_AndOrXor_2367_tgt  (w : Nat)  :=
   %v3 = llvm.or %v1, %C1 : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AndOrXor_2367  (w : Nat)   : alive_AndOrXor_2367_src w  ⊑ alive_AndOrXor_2367_tgt w  := by
+theorem alive_AndOrXor_2367 : alive_AndOrXor_2367_src ⊑ alive_AndOrXor_2367_tgt := by
   unfold alive_AndOrXor_2367_src alive_AndOrXor_2367_tgt
   simp_peephole
   apply bv_AndOrXor_2367
@@ -2053,7 +2053,7 @@ theorem alive_AndOrXor_2367  (w : Nat)   : alive_AndOrXor_2367_src w  ⊑ alive_
   %r = or %nx, %ny
 
 -/
-def alive_AndOrXor_2416_src  (w : Nat)   :=
+def alive_AndOrXor_2416_src :=
 [sllvm| {
 ^bb0(%nx : i64, %y : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2064,7 +2064,7 @@ def alive_AndOrXor_2416_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_2416_tgt  (w : Nat)  :=
+def alive_AndOrXor_2416_tgt :=
 [sllvm| {
 ^bb0(%nx : i64, %y : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2075,7 +2075,7 @@ def alive_AndOrXor_2416_tgt  (w : Nat)  :=
   %v6 = llvm.or %nx, %v2 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2416  (w : Nat)   : alive_AndOrXor_2416_src w  ⊑ alive_AndOrXor_2416_tgt w  := by
+theorem alive_AndOrXor_2416 : alive_AndOrXor_2416_src ⊑ alive_AndOrXor_2416_tgt := by
   unfold alive_AndOrXor_2416_src alive_AndOrXor_2416_tgt
   simp_peephole
   apply bv_AndOrXor_2416
@@ -2095,7 +2095,7 @@ theorem alive_AndOrXor_2416  (w : Nat)   : alive_AndOrXor_2416_src w  ⊑ alive_
   %r = and %nx, %ny
 
 -/
-def alive_AndOrXor_2417_src  (w : Nat)   :=
+def alive_AndOrXor_2417_src :=
 [sllvm| {
 ^bb0(%nx : i64, %y : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2106,7 +2106,7 @@ def alive_AndOrXor_2417_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_2417_tgt  (w : Nat)  :=
+def alive_AndOrXor_2417_tgt :=
 [sllvm| {
 ^bb0(%nx : i64, %y : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2117,7 +2117,7 @@ def alive_AndOrXor_2417_tgt  (w : Nat)  :=
   %v6 = llvm.and %nx, %v2 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2417  (w : Nat)   : alive_AndOrXor_2417_src w  ⊑ alive_AndOrXor_2417_tgt w  := by
+theorem alive_AndOrXor_2417 : alive_AndOrXor_2417_src ⊑ alive_AndOrXor_2417_tgt := by
   unfold alive_AndOrXor_2417_src alive_AndOrXor_2417_tgt
   simp_peephole
   apply bv_AndOrXor_2417
@@ -2136,7 +2136,7 @@ theorem alive_AndOrXor_2417  (w : Nat)   : alive_AndOrXor_2417_src w  ⊑ alive_
   %r = or %nx, %ny
 
 -/
-def alive_AndOrXor_2429_src  (w : Nat)   :=
+def alive_AndOrXor_2429_src :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.and %x, %y : i64
@@ -2145,7 +2145,7 @@ def alive_AndOrXor_2429_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2429_tgt  (w : Nat)  :=
+def alive_AndOrXor_2429_tgt :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2156,7 +2156,7 @@ def alive_AndOrXor_2429_tgt  (w : Nat)  :=
   %v6 = llvm.or %v2, %v4 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2429  (w : Nat)   : alive_AndOrXor_2429_src w  ⊑ alive_AndOrXor_2429_tgt w  := by
+theorem alive_AndOrXor_2429 : alive_AndOrXor_2429_src ⊑ alive_AndOrXor_2429_tgt := by
   unfold alive_AndOrXor_2429_src alive_AndOrXor_2429_tgt
   simp_peephole
   apply bv_AndOrXor_2429
@@ -2175,7 +2175,7 @@ theorem alive_AndOrXor_2429  (w : Nat)   : alive_AndOrXor_2429_src w  ⊑ alive_
   %r = and %nx, %ny
 
 -/
-def alive_AndOrXor_2430_src  (w : Nat)   :=
+def alive_AndOrXor_2430_src :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.or %x, %y : i64
@@ -2184,7 +2184,7 @@ def alive_AndOrXor_2430_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2430_tgt  (w : Nat)  :=
+def alive_AndOrXor_2430_tgt :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2195,7 +2195,7 @@ def alive_AndOrXor_2430_tgt  (w : Nat)  :=
   %v6 = llvm.and %v2, %v4 : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2430  (w : Nat)   : alive_AndOrXor_2430_src w  ⊑ alive_AndOrXor_2430_tgt w  := by
+theorem alive_AndOrXor_2430 : alive_AndOrXor_2430_src ⊑ alive_AndOrXor_2430_tgt := by
   unfold alive_AndOrXor_2430_src alive_AndOrXor_2430_tgt
   simp_peephole
   apply bv_AndOrXor_2430
@@ -2214,7 +2214,7 @@ theorem alive_AndOrXor_2430  (w : Nat)   : alive_AndOrXor_2430_src w  ⊑ alive_
   %r = ashr %x, %y
 
 -/
-def alive_AndOrXor_2443_src  (w : Nat)   :=
+def alive_AndOrXor_2443_src :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2225,7 +2225,7 @@ def alive_AndOrXor_2443_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_AndOrXor_2443_tgt  (w : Nat)  :=
+def alive_AndOrXor_2443_tgt :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2234,7 +2234,7 @@ def alive_AndOrXor_2443_tgt  (w : Nat)  :=
   %v4 = llvm.ashr %x, %y : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2443  (w : Nat)   : alive_AndOrXor_2443_src w  ⊑ alive_AndOrXor_2443_tgt w  := by
+theorem alive_AndOrXor_2443 : alive_AndOrXor_2443_src ⊑ alive_AndOrXor_2443_tgt := by
   unfold alive_AndOrXor_2443_src alive_AndOrXor_2443_tgt
   simp_peephole
   apply bv_AndOrXor_2443
@@ -2252,7 +2252,7 @@ theorem alive_AndOrXor_2443  (w : Nat)   : alive_AndOrXor_2443_src w  ⊑ alive_
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_AndOrXor_2453_src  (w : Nat)   :=
+def alive_AndOrXor_2453_src :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.icmp.slt %x, %y : i64
@@ -2261,14 +2261,14 @@ def alive_AndOrXor_2453_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_AndOrXor_2453_tgt  (w : Nat)  :=
+def alive_AndOrXor_2453_tgt :=
 [sllvm| {
 ^bb0(%y : i64, %x : i64):
   %v1 = llvm.icmp.slt %x, %y : i64
   %v2 = llvm.icmp.sge %x, %y : i64
   llvm.return %v2 : i1
 }]
-theorem alive_AndOrXor_2453  (w : Nat)   : alive_AndOrXor_2453_src w  ⊑ alive_AndOrXor_2453_tgt w  := by
+theorem alive_AndOrXor_2453 : alive_AndOrXor_2453_src ⊑ alive_AndOrXor_2453_tgt := by
   unfold alive_AndOrXor_2453_src alive_AndOrXor_2453_tgt
   simp_peephole
   apply bv_AndOrXor_2453
@@ -2285,7 +2285,7 @@ theorem alive_AndOrXor_2453  (w : Nat)   : alive_AndOrXor_2453_src w  ⊑ alive_
   %r = add %x, (-1 - C)
 
 -/
-def alive_AndOrXor_2475_src  (w : Nat)   :=
+def alive_AndOrXor_2475_src :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.sub %C, %x : i64
@@ -2294,7 +2294,7 @@ def alive_AndOrXor_2475_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2475_tgt  (w : Nat)  :=
+def alive_AndOrXor_2475_tgt :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.sub %C, %x : i64
@@ -2303,7 +2303,7 @@ def alive_AndOrXor_2475_tgt  (w : Nat)  :=
   %v4 = llvm.add %x, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2475  (w : Nat)   : alive_AndOrXor_2475_src w  ⊑ alive_AndOrXor_2475_tgt w  := by
+theorem alive_AndOrXor_2475 : alive_AndOrXor_2475_src ⊑ alive_AndOrXor_2475_tgt := by
   unfold alive_AndOrXor_2475_src alive_AndOrXor_2475_tgt
   simp_peephole
   apply bv_AndOrXor_2475
@@ -2320,7 +2320,7 @@ theorem alive_AndOrXor_2475  (w : Nat)   : alive_AndOrXor_2475_src w  ⊑ alive_
   %r = sub (-1 - C), %x
 
 -/
-def alive_AndOrXor_2486_src  (w : Nat)   :=
+def alive_AndOrXor_2486_src :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.add %x, %C : i64
@@ -2329,7 +2329,7 @@ def alive_AndOrXor_2486_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2486_tgt  (w : Nat)  :=
+def alive_AndOrXor_2486_tgt :=
 [sllvm| {
 ^bb0(%x : i64, %C : i64):
   %v1 = llvm.add %x, %C : i64
@@ -2338,7 +2338,7 @@ def alive_AndOrXor_2486_tgt  (w : Nat)  :=
   %v4 = llvm.sub %v3, %x : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2486  (w : Nat)   : alive_AndOrXor_2486_src w  ⊑ alive_AndOrXor_2486_tgt w  := by
+theorem alive_AndOrXor_2486 : alive_AndOrXor_2486_src ⊑ alive_AndOrXor_2486_tgt := by
   unfold alive_AndOrXor_2486_src alive_AndOrXor_2486_tgt
   simp_peephole
   apply bv_AndOrXor_2486
@@ -2356,7 +2356,7 @@ theorem alive_AndOrXor_2486  (w : Nat)   : alive_AndOrXor_2486_src w  ⊑ alive_
   %r = and %a, %nop1
 
 -/
-def alive_AndOrXor_2581__BAB___A__B_src  (w : Nat)   :=
+def alive_AndOrXor_2581__BAB___A__B_src :=
 [sllvm| {
 ^bb0(%a : i64, %op1 : i64):
   %v1 = llvm.or %a, %op1 : i64
@@ -2364,7 +2364,7 @@ def alive_AndOrXor_2581__BAB___A__B_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_2581__BAB___A__B_tgt  (w : Nat)  :=
+def alive_AndOrXor_2581__BAB___A__B_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %op1 : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2373,7 +2373,7 @@ def alive_AndOrXor_2581__BAB___A__B_tgt  (w : Nat)  :=
   %v4 = llvm.and %a, %v2 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2581__BAB___A__B  (w : Nat)   : alive_AndOrXor_2581__BAB___A__B_src w  ⊑ alive_AndOrXor_2581__BAB___A__B_tgt w  := by
+theorem alive_AndOrXor_2581__BAB___A__B : alive_AndOrXor_2581__BAB___A__B_src ⊑ alive_AndOrXor_2581__BAB___A__B_tgt := by
   unfold alive_AndOrXor_2581__BAB___A__B_src alive_AndOrXor_2581__BAB___A__B_tgt
   simp_peephole
   apply bv_AndOrXor_2581__BAB___A__B
@@ -2391,7 +2391,7 @@ theorem alive_AndOrXor_2581__BAB___A__B  (w : Nat)   : alive_AndOrXor_2581__BAB_
   %r = and %na, %op1
 
 -/
-def alive_AndOrXor_2587__BAA___B__A_src  (w : Nat)   :=
+def alive_AndOrXor_2587__BAA___B__A_src :=
 [sllvm| {
 ^bb0(%a : i64, %op1 : i64):
   %v1 = llvm.and %a, %op1 : i64
@@ -2399,7 +2399,7 @@ def alive_AndOrXor_2587__BAA___B__A_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_AndOrXor_2587__BAA___B__A_tgt  (w : Nat)  :=
+def alive_AndOrXor_2587__BAA___B__A_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %op1 : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2408,7 +2408,7 @@ def alive_AndOrXor_2587__BAA___B__A_tgt  (w : Nat)  :=
   %v4 = llvm.and %v2, %op1 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_AndOrXor_2587__BAA___B__A  (w : Nat)   : alive_AndOrXor_2587__BAA___B__A_src w  ⊑ alive_AndOrXor_2587__BAA___B__A_tgt w  := by
+theorem alive_AndOrXor_2587__BAA___B__A : alive_AndOrXor_2587__BAA___B__A_src ⊑ alive_AndOrXor_2587__BAA___B__A_tgt := by
   unfold alive_AndOrXor_2587__BAA___B__A_src alive_AndOrXor_2587__BAA___B__A_tgt
   simp_peephole
   apply bv_AndOrXor_2587__BAA___B__A
@@ -2427,7 +2427,7 @@ theorem alive_AndOrXor_2587__BAA___B__A  (w : Nat)   : alive_AndOrXor_2587__BAA_
   %r = xor %a, %b
 
 -/
-def alive_AndOrXor_2595_src  (w : Nat)   :=
+def alive_AndOrXor_2595_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -2436,7 +2436,7 @@ def alive_AndOrXor_2595_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2595_tgt  (w : Nat)  :=
+def alive_AndOrXor_2595_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -2444,7 +2444,7 @@ def alive_AndOrXor_2595_tgt  (w : Nat)  :=
   %v3 = llvm.xor %a, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AndOrXor_2595  (w : Nat)   : alive_AndOrXor_2595_src w  ⊑ alive_AndOrXor_2595_tgt w  := by
+theorem alive_AndOrXor_2595 : alive_AndOrXor_2595_src ⊑ alive_AndOrXor_2595_tgt := by
   unfold alive_AndOrXor_2595_src alive_AndOrXor_2595_tgt
   simp_peephole
   apply bv_AndOrXor_2595
@@ -2467,7 +2467,7 @@ theorem alive_AndOrXor_2595  (w : Nat)   : alive_AndOrXor_2595_src w  ⊑ alive_
   %r = xor %a, %b
 
 -/
-def alive_AndOrXor_2607_src  (w : Nat)   :=
+def alive_AndOrXor_2607_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2480,7 +2480,7 @@ def alive_AndOrXor_2607_src  (w : Nat)   :=
   llvm.return %v7 : i64
 }]
 
-def alive_AndOrXor_2607_tgt  (w : Nat)  :=
+def alive_AndOrXor_2607_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2492,7 +2492,7 @@ def alive_AndOrXor_2607_tgt  (w : Nat)  :=
   %v7 = llvm.xor %a, %b : i64
   llvm.return %v7 : i64
 }]
-theorem alive_AndOrXor_2607  (w : Nat)   : alive_AndOrXor_2607_src w  ⊑ alive_AndOrXor_2607_tgt w  := by
+theorem alive_AndOrXor_2607 : alive_AndOrXor_2607_src ⊑ alive_AndOrXor_2607_tgt := by
   unfold alive_AndOrXor_2607_src alive_AndOrXor_2607_tgt
   simp_peephole
   apply bv_AndOrXor_2607
@@ -2515,7 +2515,7 @@ theorem alive_AndOrXor_2607  (w : Nat)   : alive_AndOrXor_2607_src w  ⊑ alive_
   %r = xor %a, %b
 
 -/
-def alive_AndOrXor_2617_src  (w : Nat)   :=
+def alive_AndOrXor_2617_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2528,7 +2528,7 @@ def alive_AndOrXor_2617_src  (w : Nat)   :=
   llvm.return %v7 : i64
 }]
 
-def alive_AndOrXor_2617_tgt  (w : Nat)  :=
+def alive_AndOrXor_2617_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2540,7 +2540,7 @@ def alive_AndOrXor_2617_tgt  (w : Nat)  :=
   %v7 = llvm.xor %a, %b : i64
   llvm.return %v7 : i64
 }]
-theorem alive_AndOrXor_2617  (w : Nat)   : alive_AndOrXor_2617_src w  ⊑ alive_AndOrXor_2617_tgt w  := by
+theorem alive_AndOrXor_2617 : alive_AndOrXor_2617_src ⊑ alive_AndOrXor_2617_tgt := by
   unfold alive_AndOrXor_2617_src alive_AndOrXor_2617_tgt
   simp_peephole
   apply bv_AndOrXor_2617
@@ -2561,7 +2561,7 @@ theorem alive_AndOrXor_2617  (w : Nat)   : alive_AndOrXor_2617_src w  ⊑ alive_
   %r = xor %and, %c
 
 -/
-def alive_AndOrXor_2627_src  (w : Nat)   :=
+def alive_AndOrXor_2627_src :=
 [sllvm| {
 ^bb0(%a : i64, %c : i64, %b : i64):
   %v1 = llvm.xor %a, %c : i64
@@ -2570,7 +2570,7 @@ def alive_AndOrXor_2627_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2627_tgt  (w : Nat)  :=
+def alive_AndOrXor_2627_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %c : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2581,7 +2581,7 @@ def alive_AndOrXor_2627_tgt  (w : Nat)  :=
   %v6 = llvm.xor %v3, %c : i64
   llvm.return %v6 : i64
 }]
-theorem alive_AndOrXor_2627  (w : Nat)   : alive_AndOrXor_2627_src w  ⊑ alive_AndOrXor_2627_tgt w  := by
+theorem alive_AndOrXor_2627 : alive_AndOrXor_2627_src ⊑ alive_AndOrXor_2627_tgt := by
   unfold alive_AndOrXor_2627_src alive_AndOrXor_2627_tgt
   simp_peephole
   apply bv_AndOrXor_2627
@@ -2600,7 +2600,7 @@ theorem alive_AndOrXor_2627  (w : Nat)   : alive_AndOrXor_2627_src w  ⊑ alive_
   %r = or %a, %b
 
 -/
-def alive_AndOrXor_2647_src  (w : Nat)   :=
+def alive_AndOrXor_2647_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -2609,7 +2609,7 @@ def alive_AndOrXor_2647_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_AndOrXor_2647_tgt  (w : Nat)  :=
+def alive_AndOrXor_2647_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -2617,7 +2617,7 @@ def alive_AndOrXor_2647_tgt  (w : Nat)  :=
   %v3 = llvm.or %a, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_AndOrXor_2647  (w : Nat)   : alive_AndOrXor_2647_src w  ⊑ alive_AndOrXor_2647_tgt w  := by
+theorem alive_AndOrXor_2647 : alive_AndOrXor_2647_src ⊑ alive_AndOrXor_2647_tgt := by
   unfold alive_AndOrXor_2647_src alive_AndOrXor_2647_tgt
   simp_peephole
   apply bv_AndOrXor_2647
@@ -2639,7 +2639,7 @@ theorem alive_AndOrXor_2647  (w : Nat)   : alive_AndOrXor_2647_src w  ⊑ alive_
   %r = xor %and, -1
 
 -/
-def alive_AndOrXor_2658_src  (w : Nat)   :=
+def alive_AndOrXor_2658_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2651,7 +2651,7 @@ def alive_AndOrXor_2658_src  (w : Nat)   :=
   llvm.return %v6 : i64
 }]
 
-def alive_AndOrXor_2658_tgt  (w : Nat)  :=
+def alive_AndOrXor_2658_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.and %a, %b : i64
@@ -2664,7 +2664,7 @@ def alive_AndOrXor_2658_tgt  (w : Nat)  :=
   %v8 = llvm.xor %v1, %v7 : i64
   llvm.return %v8 : i64
 }]
-theorem alive_AndOrXor_2658  (w : Nat)   : alive_AndOrXor_2658_src w  ⊑ alive_AndOrXor_2658_tgt w  := by
+theorem alive_AndOrXor_2658 : alive_AndOrXor_2658_src ⊑ alive_AndOrXor_2658_tgt := by
   unfold alive_AndOrXor_2658_src alive_AndOrXor_2658_tgt
   simp_peephole
   apply bv_AndOrXor_2658
@@ -2683,7 +2683,7 @@ theorem alive_AndOrXor_2658  (w : Nat)   : alive_AndOrXor_2658_src w  ⊑ alive_
   %r = icmp uge %a, %b
 
 -/
-def alive_AndOrXor_2663_src  (w : Nat)   :=
+def alive_AndOrXor_2663_src :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.ule %a, %b : i64
@@ -2692,7 +2692,7 @@ def alive_AndOrXor_2663_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_AndOrXor_2663_tgt  (w : Nat)  :=
+def alive_AndOrXor_2663_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.icmp.ule %a, %b : i64
@@ -2700,7 +2700,7 @@ def alive_AndOrXor_2663_tgt  (w : Nat)  :=
   %v3 = llvm.icmp.uge %a, %b : i64
   llvm.return %v3 : i1
 }]
-theorem alive_AndOrXor_2663  (w : Nat)   : alive_AndOrXor_2663_src w  ⊑ alive_AndOrXor_2663_tgt w  := by
+theorem alive_AndOrXor_2663 : alive_AndOrXor_2663_src ⊑ alive_AndOrXor_2663_tgt := by
   unfold alive_AndOrXor_2663_src alive_AndOrXor_2663_tgt
   simp_peephole
   apply bv_AndOrXor_2663
@@ -2715,7 +2715,7 @@ theorem alive_AndOrXor_2663  (w : Nat)   : alive_AndOrXor_2663_src w  ⊑ alive_
   %r = sub 0, %x
 
 -/
-def alive_152_src  (w : Nat)   :=
+def alive_152_src :=
 [sllvm| {
 ^bb0(%x : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -2723,14 +2723,14 @@ def alive_152_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_152_tgt  (w : Nat)  :=
+def alive_152_tgt :=
 [sllvm| {
 ^bb0(%x : i64):
   %v1 = llvm.mlir.constant 0 : i64
   %v2 = llvm.sub %v1, %x : i64
   llvm.return %v2 : i64
 }]
-theorem alive_152  (w : Nat)   : alive_152_src w  ⊑ alive_152_tgt w  := by
+theorem alive_152 : alive_152_src ⊑ alive_152_tgt := by
   unfold alive_152_src alive_152_tgt
   simp_peephole
   apply bv_152
@@ -2749,7 +2749,7 @@ theorem alive_152  (w : Nat)   : alive_152_src w  ⊑ alive_152_tgt w  := by
   %r = add %tmp, %mul
 
 -/
-def alive_229_src  (w : Nat)   :=
+def alive_229_src :=
 [sllvm| {
 ^bb0(%X : i64, %C1 : i64, %Op1 : i64):
   %v1 = llvm.add %X, %C1 : i64
@@ -2757,7 +2757,7 @@ def alive_229_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_229_tgt  (w : Nat)  :=
+def alive_229_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C1 : i64, %Op1 : i64):
   %v1 = llvm.mul %C1, %Op1 : i64
@@ -2766,7 +2766,7 @@ def alive_229_tgt  (w : Nat)  :=
   %v4 = llvm.add %v2, %v1 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_229  (w : Nat)   : alive_229_src w  ⊑ alive_229_tgt w  := by
+theorem alive_229 : alive_229_src ⊑ alive_229_tgt := by
   unfold alive_229_src alive_229_tgt
   simp_peephole
   apply bv_229
@@ -2785,7 +2785,7 @@ theorem alive_229  (w : Nat)   : alive_229_src w  ⊑ alive_229_tgt w  := by
   %r = mul %X, %Y
 
 -/
-def alive_239_src  (w : Nat)   :=
+def alive_239_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -2796,7 +2796,7 @@ def alive_239_src  (w : Nat)   :=
   llvm.return %v5 : i64
 }]
 
-def alive_239_tgt  (w : Nat)  :=
+def alive_239_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.mlir.constant 0 : i64
@@ -2806,7 +2806,7 @@ def alive_239_tgt  (w : Nat)  :=
   %v5 = llvm.mul %X, %Y : i64
   llvm.return %v5 : i64
 }]
-theorem alive_239  (w : Nat)   : alive_239_src w  ⊑ alive_239_tgt w  := by
+theorem alive_239 : alive_239_src ⊑ alive_239_tgt := by
   unfold alive_239_src alive_239_tgt
   simp_peephole
   apply bv_239
@@ -2895,7 +2895,7 @@ theorem alive_275_2   : alive_275_2_src ⊑ alive_275_2_tgt := by
 
 -/
 -- MANUAL FIX: https://github.com/opencompl/ssa/issues/169
-def alive_276_src  (w : Nat)   :=
+def alive_276_src :=
 [sllvm| {
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.sdiv %X, %Y : i5
@@ -2905,7 +2905,7 @@ def alive_276_src  (w : Nat)   :=
   llvm.return %v4 : i5
 }]
 
-def alive_276_tgt  (w : Nat)  :=
+def alive_276_tgt :=
 [sllvm| {
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.srem %X, %Y : i5
@@ -2915,7 +2915,7 @@ def alive_276_tgt  (w : Nat)  :=
   %v5 = llvm.sub %v1, %X : i5
   llvm.return %v5 : i5
 }]
-theorem alive_276  (w : Nat)   : alive_276_src w  ⊑ alive_276_tgt w  := by
+theorem alive_276 : alive_276_src ⊑ alive_276_tgt := by
   unfold alive_276_src alive_276_tgt
   simp_peephole
   apply bv_276
@@ -2936,7 +2936,7 @@ theorem alive_276  (w : Nat)   : alive_276_src w  ⊑ alive_276_tgt w  := by
 
 -/
 -- MANUAL FIX: https://github.com/opencompl/ssa/issues/169
-def alive_276_2_src  (w : Nat)   :=
+def alive_276_2_src :=
 [sllvm| {
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.udiv %X, %Y : i5
@@ -2946,7 +2946,7 @@ def alive_276_2_src  (w : Nat)   :=
   llvm.return %v4 : i5
 }]
 
-def alive_276_2_tgt  (w : Nat)  :=
+def alive_276_2_tgt :=
 [sllvm| {
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.urem %X, %Y : i5
@@ -2956,7 +2956,7 @@ def alive_276_2_tgt  (w : Nat)  :=
   %v5 = llvm.sub %v1, %X : i5
   llvm.return %v5 : i5
 }]
-theorem alive_276_2  (w : Nat)   : alive_276_2_src w  ⊑ alive_276_2_tgt w  := by
+theorem alive_276_2 : alive_276_2_src ⊑ alive_276_2_tgt := by
   unfold alive_276_2_src alive_276_2_tgt
   simp_peephole
   apply bv_276_2
@@ -3001,7 +3001,7 @@ theorem alive_283   : alive_283_src ⊑ alive_283_tgt := by
   %r = shl %Op1, %Y
 
 -/
-def alive_290__292_src  (w : Nat)   :=
+def alive_290__292_src :=
 [sllvm| {
 ^bb0(%Y : i64, %Op1 : i64):
   %v1 = llvm.mlir.constant 1 : i64
@@ -3010,7 +3010,7 @@ def alive_290__292_src  (w : Nat)   :=
   llvm.return %v3 : i64
 }]
 
-def alive_290__292_tgt  (w : Nat)  :=
+def alive_290__292_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %Op1 : i64):
   %v1 = llvm.mlir.constant 1 : i64
@@ -3018,7 +3018,7 @@ def alive_290__292_tgt  (w : Nat)  :=
   %v3 = llvm.shl %Op1, %Y : i64
   llvm.return %v3 : i64
 }]
-theorem alive_290__292  (w : Nat)   : alive_290__292_src w  ⊑ alive_290__292_tgt w  := by
+theorem alive_290__292 : alive_290__292_src ⊑ alive_290__292_tgt := by
   unfold alive_290__292_src alive_290__292_tgt
   simp_peephole
   apply bv_290__292
@@ -3105,7 +3105,7 @@ theorem alive_820'   : alive_820'_src ⊑ alive_820'_tgt := by
   %r = sub 0, %X
 
 -/
-def alive_1030_src  (w : Nat)   :=
+def alive_1030_src :=
 [sllvm| {
 ^bb0(%X : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -3113,14 +3113,14 @@ def alive_1030_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_1030_tgt  (w : Nat)  :=
+def alive_1030_tgt :=
 [sllvm| {
 ^bb0(%X : i64):
   %v1 = llvm.mlir.constant 0 : i64
   %v2 = llvm.sub %v1, %X : i64
   llvm.return %v2 : i64
 }]
-theorem alive_1030  (w : Nat)   : alive_1030_src w  ⊑ alive_1030_tgt w  := by
+theorem alive_1030 : alive_1030_src ⊑ alive_1030_tgt := by
   unfold alive_1030_src alive_1030_tgt
   simp_peephole
   apply bv_1030
@@ -3138,7 +3138,7 @@ theorem alive_1030  (w : Nat)   : alive_1030_src w  ⊑ alive_1030_tgt w  := by
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_Select_858_src  (w : Nat)   :=
+def alive_Select_858_src :=
 [sllvm| {
 ^bb0(%a : i1, %b : i1):
   %v1 = llvm.mlir.constant -1 :  i1
@@ -3147,7 +3147,7 @@ def alive_Select_858_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_Select_858_tgt  (w : Nat)  :=
+def alive_Select_858_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -3155,7 +3155,7 @@ def alive_Select_858_tgt  (w : Nat)  :=
   %v3 = llvm.and %v2, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select_858_tgt 1  := by
+theorem alive_Select_858 : alive_Select_858_src ⊑ alive_Select_858_tgt := by
   unfold alive_Select_858_src alive_Select_858_tgt
   simp_peephole
   apply bv_Select_858
@@ -3172,7 +3172,7 @@ theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select
 
 -/
 -- MANUAL FIX (https://github.com/opencompl/ssa/issues/169)
-def alive_Select_859'_src  (w : Nat)   :=
+def alive_Select_859'_src :=
 [sllvm| {
 ^bb0(%a : i1, %b : i1):
   %v1 = llvm.mlir.constant -1 :  i1
@@ -3181,7 +3181,7 @@ def alive_Select_859'_src  (w : Nat)   :=
   llvm.return %v3 : i1
 }]
 
-def alive_Select_859'_tgt  (w : Nat)  :=
+def alive_Select_859'_tgt :=
 [sllvm| {
 ^bb0(%a : i64, %b : i64):
   %v1 = llvm.mlir.constant -1 : i64
@@ -3189,7 +3189,7 @@ def alive_Select_859'_tgt  (w : Nat)  :=
   %v3 = llvm.or %v2, %b : i64
   llvm.return %v3 : i64
 }]
-theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w ⊑ alive_Select_859'_tgt 1  := by
+theorem alive_Select_859' : alive_Select_859'_src ⊑ alive_Select_859'_tgt := by
   unfold alive_Select_859'_src alive_Select_859'_tgt
   simp_peephole
   apply bv_Select_859'
@@ -3203,7 +3203,7 @@ theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w ⊑ alive_Selec
   %r = %X
 
 -/
-def alive_Select_1100_src  (w : Nat)   :=
+def alive_Select_1100_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.mlir.constant 1 :  i1
@@ -3211,13 +3211,13 @@ def alive_Select_1100_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_Select_1100_tgt  (w : Nat)  :=
+def alive_Select_1100_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.copy %X : i64
   llvm.return %v1 : i64
 }]
-theorem alive_Select_1100  (w : Nat)   : alive_Select_1100_src w  ⊑ alive_Select_1100_tgt w  := by
+theorem alive_Select_1100 : alive_Select_1100_src ⊑ alive_Select_1100_tgt := by
   unfold alive_Select_1100_src alive_Select_1100_tgt
   simp_peephole
   apply bv_select_1100
@@ -3232,7 +3232,7 @@ theorem alive_Select_1100  (w : Nat)   : alive_Select_1100_src w  ⊑ alive_Sele
   %r = %Y
 
 -/
-def alive_Select_1105_src  (w : Nat)   :=
+def alive_Select_1105_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.mlir.constant 0 :  i1
@@ -3240,13 +3240,13 @@ def alive_Select_1105_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_Select_1105_tgt  (w : Nat)  :=
+def alive_Select_1105_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64):
   %v1 = llvm.copy %Y : i64
   llvm.return %v1 : i64
 }]
-theorem alive_Select_1105  (w : Nat)   : alive_Select_1105_src w  ⊑ alive_Select_1105_tgt w  := by
+theorem alive_Select_1105 : alive_Select_1105_src ⊑ alive_Select_1105_tgt := by
   unfold alive_Select_1105_src alive_Select_1105_tgt
   simp_peephole
   apply bv_Select_1105
@@ -3263,7 +3263,7 @@ theorem alive_Select_1105  (w : Nat)   : alive_Select_1105_src w  ⊑ alive_Sele
   %r = and %X, (-1 u>> C)
 
 -/
-def alive_InstCombineShift__239_src  (w : Nat)   :=
+def alive_InstCombineShift__239_src :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64):
   %v1 = llvm.shl %X, %C : i64
@@ -3271,7 +3271,7 @@ def alive_InstCombineShift__239_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_InstCombineShift__239_tgt  (w : Nat)  :=
+def alive_InstCombineShift__239_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64):
   %v1 = llvm.shl %X, %C : i64
@@ -3280,7 +3280,7 @@ def alive_InstCombineShift__239_tgt  (w : Nat)  :=
   %v4 = llvm.and %X, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_InstCombineShift__239  (w : Nat)   : alive_InstCombineShift__239_src w  ⊑ alive_InstCombineShift__239_tgt w  := by
+theorem alive_InstCombineShift__239 : alive_InstCombineShift__239_src ⊑ alive_InstCombineShift__239_tgt := by
   unfold alive_InstCombineShift__239_src alive_InstCombineShift__239_tgt
   simp_peephole
   apply bv_InstCombineShift__239
@@ -3297,7 +3297,7 @@ theorem alive_InstCombineShift__239  (w : Nat)   : alive_InstCombineShift__239_s
   %r = and %X, (-1 << C)
 
 -/
-def alive_InstCombineShift__279_src  (w : Nat)   :=
+def alive_InstCombineShift__279_src :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64):
   %v1 = llvm.lshr %X, %C : i64
@@ -3305,7 +3305,7 @@ def alive_InstCombineShift__279_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_InstCombineShift__279_tgt  (w : Nat)  :=
+def alive_InstCombineShift__279_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64):
   %v1 = llvm.lshr %X, %C : i64
@@ -3314,7 +3314,7 @@ def alive_InstCombineShift__279_tgt  (w : Nat)  :=
   %v4 = llvm.and %X, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_InstCombineShift__279  (w : Nat)   : alive_InstCombineShift__279_src w  ⊑ alive_InstCombineShift__279_tgt w  := by
+theorem alive_InstCombineShift__279 : alive_InstCombineShift__279_src ⊑ alive_InstCombineShift__279_tgt := by
   unfold alive_InstCombineShift__279_src alive_InstCombineShift__279_tgt
   simp_peephole
   apply bv_InstCombineShift__279
@@ -3337,7 +3337,7 @@ theorem alive_InstCombineShift__279  (w : Nat)   : alive_InstCombineShift__279_s
   %r = xor %a, %y2
 
 -/
-def alive_InstCombineShift__440_src  (w : Nat)   :=
+def alive_InstCombineShift__440_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.lshr %X, %C : i64
@@ -3348,7 +3348,7 @@ def alive_InstCombineShift__440_src  (w : Nat)   :=
 }]
 
 set_option maxHeartbeats 400000 in
-def alive_InstCombineShift__440_tgt  (w : Nat)  :=
+def alive_InstCombineShift__440_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.shl %C2, %C : i64
@@ -3360,7 +3360,7 @@ def alive_InstCombineShift__440_tgt  (w : Nat)  :=
   %v7 = llvm.xor %v2, %v3 : i64
   llvm.return %v7 : i64
 }]
-theorem alive_InstCombineShift__440  (w : Nat)   : alive_InstCombineShift__440_src w  ⊑ alive_InstCombineShift__440_tgt w  := by
+theorem alive_InstCombineShift__440 : alive_InstCombineShift__440_src ⊑ alive_InstCombineShift__440_tgt := by
   unfold alive_InstCombineShift__440_src alive_InstCombineShift__440_tgt
   simp_peephole
   apply bv_InstCombineShift__440
@@ -3383,7 +3383,7 @@ theorem alive_InstCombineShift__440  (w : Nat)   : alive_InstCombineShift__440_s
   %r = or %a, %s2
 
 -/
-def alive_InstCombineShift__476_src  (w : Nat)   :=
+def alive_InstCombineShift__476_src :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.lshr %X, %C : i64
@@ -3394,7 +3394,7 @@ def alive_InstCombineShift__476_src  (w : Nat)   :=
 }]
 
 set_option maxHeartbeats 400000 in
-def alive_InstCombineShift__476_tgt  (w : Nat)  :=
+def alive_InstCombineShift__476_tgt :=
 [sllvm| {
 ^bb0(%Y : i64, %X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.shl %Y, %C : i64
@@ -3406,7 +3406,7 @@ def alive_InstCombineShift__476_tgt  (w : Nat)  :=
   %v7 = llvm.or %v3, %v1 : i64
   llvm.return %v7 : i64
 }]
-theorem alive_InstCombineShift__476  (w : Nat)   : alive_InstCombineShift__476_src w  ⊑ alive_InstCombineShift__476_tgt w  := by
+theorem alive_InstCombineShift__476 : alive_InstCombineShift__476_src ⊑ alive_InstCombineShift__476_tgt := by
   unfold alive_InstCombineShift__476_src alive_InstCombineShift__476_tgt
   simp_peephole
   apply bv_InstCombineShift__476
@@ -3424,7 +3424,7 @@ theorem alive_InstCombineShift__476  (w : Nat)   : alive_InstCombineShift__476_s
   %r = xor %s2, (C2 u>> C)
 
 -/
-def alive_InstCombineShift__497_src  (w : Nat)   :=
+def alive_InstCombineShift__497_src :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.xor %X, %C2 : i64
@@ -3432,7 +3432,7 @@ def alive_InstCombineShift__497_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_InstCombineShift__497_tgt  (w : Nat)  :=
+def alive_InstCombineShift__497_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.lshr %X, %C : i64
@@ -3441,7 +3441,7 @@ def alive_InstCombineShift__497_tgt  (w : Nat)  :=
   %v4 = llvm.xor %v1, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_InstCombineShift__497  (w : Nat)   : alive_InstCombineShift__497_src w  ⊑ alive_InstCombineShift__497_tgt w  := by
+theorem alive_InstCombineShift__497 : alive_InstCombineShift__497_src ⊑ alive_InstCombineShift__497_tgt := by
   unfold alive_InstCombineShift__497_src alive_InstCombineShift__497_tgt
   simp_peephole
   apply bv_InstCombineShift__497
@@ -3459,7 +3459,7 @@ theorem alive_InstCombineShift__497  (w : Nat)   : alive_InstCombineShift__497_s
   %r = add %s2, (C2 << C)
 
 -/
-def alive_InstCombineShift__497'''_src  (w : Nat)   :=
+def alive_InstCombineShift__497'''_src :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.add %X, %C2 : i64
@@ -3467,7 +3467,7 @@ def alive_InstCombineShift__497'''_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_InstCombineShift__497'''_tgt  (w : Nat)  :=
+def alive_InstCombineShift__497'''_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64, %C2 : i64):
   %v1 = llvm.shl %X, %C : i64
@@ -3476,7 +3476,7 @@ def alive_InstCombineShift__497'''_tgt  (w : Nat)  :=
   %v4 = llvm.add %v1, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_InstCombineShift__497'''  (w : Nat)   : alive_InstCombineShift__497'''_src w  ⊑ alive_InstCombineShift__497'''_tgt w  := by
+theorem alive_InstCombineShift__497''' : alive_InstCombineShift__497'''_src ⊑ alive_InstCombineShift__497'''_tgt := by
   unfold alive_InstCombineShift__497'''_src alive_InstCombineShift__497'''_tgt
   simp_peephole
   apply bv_InstCombineShift__497'''
@@ -3493,7 +3493,7 @@ theorem alive_InstCombineShift__497'''  (w : Nat)   : alive_InstCombineShift__49
   %r = and %X, (-1 u>> C)
 
 -/
-def alive_InstCombineShift__582_src  (w : Nat)   :=
+def alive_InstCombineShift__582_src :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64):
   %v1 = llvm.shl %X, %C : i64
@@ -3501,7 +3501,7 @@ def alive_InstCombineShift__582_src  (w : Nat)   :=
   llvm.return %v2 : i64
 }]
 
-def alive_InstCombineShift__582_tgt  (w : Nat)  :=
+def alive_InstCombineShift__582_tgt :=
 [sllvm| {
 ^bb0(%X : i64, %C : i64):
   %v1 = llvm.shl %X, %C : i64
@@ -3510,7 +3510,7 @@ def alive_InstCombineShift__582_tgt  (w : Nat)  :=
   %v4 = llvm.and %X, %v3 : i64
   llvm.return %v4 : i64
 }]
-theorem alive_InstCombineShift__582  (w : Nat)   : alive_InstCombineShift__582_src w  ⊑ alive_InstCombineShift__582_tgt w  := by
+theorem alive_InstCombineShift__582 : alive_InstCombineShift__582_src ⊑ alive_InstCombineShift__582_tgt := by
   unfold alive_InstCombineShift__582_src alive_InstCombineShift__582_tgt
   simp_peephole
   apply bv_InstCombineShift__582
