@@ -899,7 +899,7 @@ def StateCircuit.id  {arity : Type _}
     [Hashable arity]
     (p : FSM arity) : StateCircuit p 0 where
   toFun :=
-    fun a => Circuit.var false (Vars.state a)
+    fun a => Circuit.var true (Vars.state a)
 
 
 /-- Make a circuit for one step of transition.  -/
@@ -963,7 +963,7 @@ def StateCircuit.compose {arity : Type _}
       match v with
       | .state s =>
           (sFst.castLe (show n ≤ n + m by omega)).toFun s
-      | .inputs i => Circuit.var .false (.inputs i)
+      | .inputs i => Circuit.var .true (.inputs i)
 
 /-- Build the output circuit from the given state circuit. -/
 def StateCircuit.toOutput {arity : Type _}
@@ -978,7 +978,7 @@ def StateCircuit.toOutput {arity : Type _}
   (p.nextBitCirc none).bind fun v =>
     match v with
     | .inl s => (sc.castLe (by omega)).toFun s
-    | .inr i => Circuit.var false (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))
+    | .inr i =>  Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))
 
 
 
@@ -1115,8 +1115,8 @@ def mkSafetyCircuitAuxList {arity : Type _}
       omega))
 
 /--
-make the circuit that witnesses safety for n steps.
-This builds the safety circuit for 'n' steps, and takes the 'or' of all of these.
+make the circuit that witnesses safety for (n+1) steps.
+This builds the safety circuit for 'n+1' steps, and takes the 'or' of all of these.
 -/
 def mkSafetyCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]

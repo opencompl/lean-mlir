@@ -37,7 +37,7 @@ structure FSM (arity : Type) : Type 1 where
   which may refer to the current input bits *and* the current state bits
   as free variables in the circuit.
 
-  `nextBitCirc none` computes the current output bit.
+  `nextBitCirc none` computes the current output bit as a function of the state and inputs.
   `nextBitCirc (some a)`, computes the *one* bit of the new state that corresponds to `a : α`. -/
   ( nextBitCirc : Option α → Circuit (α ⊕ arity) )
 
