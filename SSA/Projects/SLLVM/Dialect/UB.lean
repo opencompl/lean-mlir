@@ -3,24 +3,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
 import SSA.Core.Util.Poison
+import SSA.Projects.SLLVM.Tactic.SimpSet
 
 namespace LeanMLIR
 
-def UBOr := PoisonOr
+abbrev UBOr := PoisonOr
 
 namespace UBOr
 
 /-! ## Constructors -/
 
-def ub : UBOr α := PoisonOr.poison
-def value : α → UBOr α := PoisonOr.value
+abbrev ub : UBOr α := PoisonOr.poison
+abbrev value : α → UBOr α := PoisonOr.value
 
-/-! ## Monad -/
-
-instance : Monad UBOr := inferInstanceAs (Monad PoisonOr)
-instance : LawfulMonad UBOr := inferInstanceAs (LawfulMonad PoisonOr)
-
-@[simp, simp_denote]
-theorem pure_eq : @pure UBOr _ = @value := rfl
 
 end UBOr
