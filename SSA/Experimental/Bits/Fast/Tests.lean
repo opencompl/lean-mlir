@@ -21,7 +21,7 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-open NNF in
+set_option trace.Bits.Fast true
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
@@ -186,8 +186,6 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
 section BvAutomataTests
 
 
-(a b c : PackedFloat 5 10) (m : RoundingMode) (hc : c.isNormOrSubnorm = true) :
-a ≤ b → (add a c m) ≤ (add b c m) = true
 /-!
 # Test Cases
 -/

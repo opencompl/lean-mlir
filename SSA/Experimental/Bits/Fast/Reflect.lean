@@ -963,7 +963,7 @@ def StateCircuit.compose {arity : Type _}
       match v with
       | .state s =>
           (sFst.castLe (show n ≤ n + m by omega)).toFun s
-      | .inputs i => Circuit.var .true (.inputs i)
+      | .inputs i => Circuit.var .false (.inputs i)
 
 /-- Build the output circuit from the given state circuit. -/
 def StateCircuit.toOutput {arity : Type _}
@@ -1026,6 +1026,7 @@ def Circuit.bigOr {α : Type _}
   | c :: cs =>
     c.or (Circuit.bigOr cs)
 
+@[simp]
 theorem Circuit.eval_bigOr_eq_false_iff
     (cs : List (Circuit α)) (env : α → Bool):
     (Circuit.bigOr cs).eval env = false ↔
@@ -1035,6 +1036,7 @@ theorem Circuit.eval_bigOr_eq_false_iff
   case cons a as ih =>
     simp [bigOr, ih]
 
+@[simp]
 theorem Circuit.eval_bigOr_eq_true_iff
     (cs : List (Circuit α)) (env : α → Bool):
     (Circuit.bigOr cs).eval env = true ↔
@@ -1043,6 +1045,36 @@ theorem Circuit.eval_bigOr_eq_true_iff
   case nil => simp [bigOr]
   case cons a as ih =>
     simp [bigOr, ih]
+
+/-- Take the and of many circuits.-/
+def Circuit.bigAnd {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  match cs with
+  | [] => Circuit.tru
+  | c :: cs =>
+    c.and (Circuit.bigAnd cs)
+
+@[simp]
+theorem Circuit.eval_bigAnd_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigAnd cs).eval env = true ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = true) := by
+  induction cs
+  case nil => simp [bigAnd]
+  case cons a as ih =>
+    simp [bigAnd, ih]
+
+@[simp]
+theorem Circuit.eval_bigAnd_eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigAnd cs).eval env = false ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = false) := by
+  induction cs
+  case nil => simp [bigAnd]
+  case cons a as ih =>
+    simp only [bigAnd, Circuit.eval.eq_4, Bool.and_eq_false_imp, ih, List.mem_cons,
+      exists_eq_or_imp]
+    by_cases h : a.eval env <;> simp [h]
 
 /--
 Make the safety circuit at index 'i',
@@ -1219,7 +1251,7 @@ def mkIndHypCircuit {arity : Type _}
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  Circuit.bigOr (mkIndypAuxList p n n (by omega))
+  Circuit.bigAnd (mkIndypAuxList p n n (by omega))
 
 @[simp]
 theorem eval_mkIndHypCircuit_eq_false_iff
@@ -1234,7 +1266,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff
     (∀ (i : Nat), i < n → p.eval envBitstream i = false →
       p.eval envBitstream (i + 1) = false) := by
   rw [mkIndHypCircuit]
-  rw [Circuit.eval_bigOr_eq_false_iff]
+  rw [Circuit.eval_bigAnd_eq_false_iff]
   rw [mkIndypAuxList]
   sorry
 
@@ -1375,41 +1407,58 @@ partial def decideIfZerosAuxTermElabMNew {arity : Type _}
     (iter : Nat) (maxIter : Nat)
     (p : FSM arity) :
     TermElabM (DecideIfZerosOutput) := do
-  trace[Bits.Fast] s!"## K-induction (iter {iter})"
+  trace[Bits.Fast] s!"K-induction (iter={iter})"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
     return .exhaustedIterations maxIter
+  let tStart ← IO.monoMsNow
   let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit p iter
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.Fast] m!"Built safety circuit in '{tElapsedSec}s'"
+
   let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
   let formatEmpty : Empty → Format := fun e => e.elim
   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-  trace[Bits.Fast] m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
-  match ← checkCircuitUnsatAux cSafety with
+  trace[Bits.Fast] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+  let tStart ← IO.monoMsNow
+  let safetyCert? ← checkCircuitUnsatAux cSafety
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.Fast] m!"Checked safety property in {tElapsedSec} seconds."
+  match safetyCert? with
   | .none =>
     trace[Bits.Fast] s!"Safety property failed on initial state."
     return .safetyFailure iter
   | .some safetyCert =>
-    trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
-    let cIndHyp := mkIndHypCircuit p iter
+    trace[Bits.Fast] s!"Safety property succeeded on initial state. Building induction circuit..."
+
     let tStart ← IO.monoMsNow
-    trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
-    -- let le : Bool := sorry
-    let tautoCert? ← checkCircuitTautoAux cIndHyp
+    let cIndHyp := mkIndHypCircuit p iter
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    match tautoCert? with
-    | .some tautoCert =>
-      trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
-      return .proven iter safetyCert tautoCert
+    trace[Bits.Fast] m!"Built induction circuit in '{tElapsedSec}s'"
+
+    let tStart ← IO.monoMsNow
+    trace[Bits.Fast] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
+    -- let le : Bool := sorry
+    let indCert? ← checkCircuitUnsatAux cIndHyp
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.Fast] s!"Checked inductive invariant in '{tElapsedSec}s'."
+    match indCert? with
+    | .some indCert =>
+      trace[Bits.Fast] s!"Inductive invariant established."
+      return .proven iter safetyCert indCert
     | .none =>
-      trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Trying next iteration ({iter+1})..."
+      trace[Bits.Fast] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
       decideIfZerosAuxTermElabMNew (iter + 1) maxIter p
 
 @[nospecialize]
 def _root_.FSM.decideIfZerosMCadicalNew  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
-  withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
+  withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     decideIfZerosAuxTermElabMNew 0 maxIter fsm
 
 end BvDecide

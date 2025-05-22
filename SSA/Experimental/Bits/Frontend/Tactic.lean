@@ -525,16 +525,17 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       let cert? ← fsm.decideIfZerosMCadicalNew maxIter
-      if cert?.isSuccess
-      then do
+      match cert? with
+      | .proven niter safetyCert indCert =>
         let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
         else
           throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
-      else
-        throwError m!"failed to prove goal, since decideIfZerosM established that theorem is not true."
-        return [g]
+      | .safetyFailure iter =>
+        throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
+      | .exhaustedIterations niter =>
+        throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
     | .circuit_lean =>
       let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
