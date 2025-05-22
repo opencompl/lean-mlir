@@ -299,13 +299,17 @@ theorem prod_isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
     (a, b) ⊑ (c, d) ↔ a ⊑ c ∧ b ⊑ d := by
   rfl
 
-instance [HRefinement (m (α × σ)) (n (β × σ))] : HRefinement (StateT σ m α) (StateT σ n β) where
+namespace StateT
+variable {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
+
+instance : HRefinement (StateT σ m α) (StateT σ n β) where
   IsRefinedBy f g := ∀ s, f s ⊑ g s
 
 -- @[simp] -- I'm not sure if this ought to be simp, as it unfolds the monad
-theorem stateT_isRefinedBy_iff {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
-    (f : StateT σ m α) (g : StateT σ n β) :
+theorem isRefinedBy_iff (f : StateT σ m α) (g : StateT σ n β) :
     f ⊑ g ↔ ∀ s, f s ⊑ g s := by
   rfl
+
+end StateT
 
 end Instances

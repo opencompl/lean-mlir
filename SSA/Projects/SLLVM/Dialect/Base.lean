@@ -58,6 +58,9 @@ abbrev Ty.bitvec : Nat → SLLVM.Ty :=
 
 @[simp_denote] theorem toType_bitvec : TyDenote.toType (Ty.bitvec w) = LLVM.IntW w := rfl
 
+@[simp, simp_denote]
+theorem m_eq : SLLVM.m α = EffectM α := by rfl
+
 end SLLVM
 
 /-! ### Signature -/
@@ -71,9 +74,6 @@ instance : DialectSignature SLLVM where
           | udiv .. | sdiv .. | urem .. | srem .. => .impure
           | _ => .pure
     }
-
-instance : TyDenote SLLVM.Ty := inferInstanceAs (TyDenote LLVM.Ty)
-instance : Monad (SLLVM.m)   := by unfold SLLVM; infer_instance
 
 open InstCombine.LLVM.Op in
 instance : DialectDenote SLLVM where
