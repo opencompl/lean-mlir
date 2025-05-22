@@ -222,6 +222,11 @@ dsimproc [simp_denote] reduceIsRefinedBy (_ ⊑ _) := fun e => do
       let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
         #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
       return .visit expr
+  | instHRefinementOfRefinement α instRefinement =>
+      match_expr instRefinement with
+      | Refinement.ofEq _α =>
+          return .visit <| mkApp3 (.const ``Eq [1]) α a b
+      | _ => return .continue
   | _ => return .continue
 
 end SimpDenote
