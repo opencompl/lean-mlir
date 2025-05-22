@@ -465,7 +465,7 @@ info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
     %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add (%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add(%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %2 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
@@ -479,7 +479,7 @@ info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
     %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %2 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
@@ -492,7 +492,7 @@ unsafe def ex1_post_cse_post_dce :
 info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %1 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %1 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %1 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
