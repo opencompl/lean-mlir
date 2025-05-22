@@ -8,7 +8,22 @@ import Lean
 open LLVMRiscV
 open RV64Semantics
 open InstCombine(LLVM)
-/- This file contains simplification procedures needed for the hybrid dialect.-/
+/-
+This file contains simplification procedures to simplify proof goals within the
+LLVMAndRiscV dialect.
+These simpprocs are needed because the usually simplifier fails to remove the framework overhead
+given the new additional mappings used for the hybrid dialect.
+
+llvmArgsFromHybrid _ = .bitvec 64, similar
+totype _  = BitVec 64
+
+To a human reader, it's obvious that these two sides should be equal by substituting a value of type
+(.llvm (.bitvec 64)) (or simply (.bv) in the latter case) for _. However, Lean cannot determine what
+value to substitute for the _ during unification. As a result, the simplifier fails to simplify such
+statements in a proof goal. With the simpprocs we explicitly tell the simplfier how to simplify such
+patterns specificaly for riscvArgsFromHybrid and llvmArgsFromHybrid.
+
+ -/
 
 /-
 Disabled due to simproc implementation not being re-evaluated correctly
@@ -35,20 +50,6 @@ simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.snoc _ _) (Ctxt.Var
 theorem riscVArgsFromHybrid_nil_eq : riscvArgsFromHybrid (HVector.nil) = HVector.nil := rfl
 
 open Lean Meta Elab in
-/-- Convert a `List Expr` into an `Expr` by building calls to `List.nil` and `List.cons`.
-Note that the `ToExpr` instance of `List` is insufficient, since it perform a *deep expression cast*,
-where it converts any `List α` where `[ToExpr α]` into a `List Expr`. So, when given a list of
-expressions, like [.const Nat], instead of building `[Nat]`, it builds `[Lean.Expr.Const ``Nat]`
-(i.e.., it seralizes the `Expr` as well!).
-Instead, we want a shallow serialization, where we just build `List.cons (.const Nat) List.nil`.
--/
-def listExprToExprShallow (type : Option Expr) : List Expr → MetaM Expr
-| .nil => mkAppOptM ``List.nil #[type]
-| .cons x xs => do
-  let tailExpr ← listExprToExprShallow type xs
-  mkAppOptM ``List.cons #[type, x, tailExpr]
-
-open Lean Meta Elab in
 @[simp_denote]
 def llvmArgsFromHybrid_nil_eq :
   (llvmArgsFromHybrid HVector.nil) = HVector.nil := rfl
@@ -62,9 +63,9 @@ def llvmArgsFromHybrid_cons_eq.lemma {ty  : LLVM.Ty} {tys : List LLVM.Ty}
 
 open Lean Meta Elab Qq in
 simproc [simp_denote] llvmArgsFromHybrid_cons_eq (llvmArgsFromHybrid (_) ) := fun e => do
--- TODO: (comment from Alex)This ought to be .cons rather than a wildcard -------------^^^
+-- TODO: This ought to be .cons rather than a wildcard --------------^^^
 --       Unfortunately, then it the simproc again stops being applied when we'd
---       expect it to, despite liberal use of `no_index`.
+--       expect it to, despite liberal use of `no_index`. (commented by Alex)
   let_expr llvmArgsFromHybrid tys' lhs := e
     | return .continue
   let_expr HVector.cons _α _f _as _a x xs := lhs
@@ -112,7 +113,7 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
   let xsRealTys ←  xsRealTys.mapM extractRiscvTy
   logInfo m!"found (llvmArgsFromHybrid (HVector.cons ({x} : {xRealTy}) ({xs} : {xsRealTys})"
   let llvmTypeType := mkApp (mkConst ``Dialect.Ty []) (mkConst ``RISCV64.RV64 [])
-  let xsRealTys ← listExprToExprShallow (.some llvmTypeType) xsRealTys
+  let xsRealTys ←  Lean.Meta.mkListLit llvmTypeType xsRealTys
   logInfo m!"calling {``riscvArgsFromHybrid_cons_eq.lemma} with {xRealTy}, {xsRealTys}, {x}, {xs}"
   logInfo m!"XXXX"
   let proof := mkAppN (mkConst ``riscvArgsFromHybrid_cons_eq.lemma []) #[xRealTy, xsRealTys, x, xs]
@@ -132,12 +133,6 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
   }
 
 /- The following additional lemmas are needed to simplify the proof goals for the hybrid dialect.-/
-@[simp]
-theorem poisonOr_mk_some_eq_value (x : α) : { toOption := some x } = PoisonOr.value x := rfl
-
-@[simp_denote]
-theorem liftM_eq_some (α : Type u) : @liftM Id Option _  α = some := by rfl
-
 @[simp_denote]
 theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
   {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :

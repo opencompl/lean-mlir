@@ -126,6 +126,9 @@ variable {a : α}
 @[simp] theorem getValue_value [Inhabited α] : (value a).getValue = a := rfl
 @[simp] theorem getValue_poison [Inhabited α] : (@poison α).getValue = default := rfl
 
+@[simp] theorem mk_some (x : α) : { toOption := some x } = PoisonOr.value x := rfl
+@[simp] theorem mk_none : { toOption := none (α := α) } = PoisonOr.poison := rfl
+
 end Lemmas
 
 /-! ### Refinement -/
