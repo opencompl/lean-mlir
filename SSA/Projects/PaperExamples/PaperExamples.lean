@@ -251,7 +251,7 @@ inductive Op :  Type
 instance : Repr Op where
   reprPrec
     | .add, _ => "ToyRegion.Op.add"
-    | .const n , _ => f!"ToyRegion.Op.const {n} "
+    | .const n , _ => f!"ToyRegion.Op.const {n}"
     | .iterate n , _ => f!"ToyRegion.Op.iterate {n} "
 
 /-- A simple example dialect with regions -/
