@@ -22,7 +22,7 @@ our rewrites into a form accepted by the Peephole Rewriter.
 structure for LLVM `Com`s. The refinement is based on the
 dedicated refinement relation for the `PoisonOr` type, where
 a poison value can be refined by any concrete value. -/
-structure LLVMPeepholeRewriteRefine (w : InstCombine.Width 0) (Γ : Ctxt Ty) where
+structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w.toConcrete))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w.toConcrete))
   correct : ∀ V,
