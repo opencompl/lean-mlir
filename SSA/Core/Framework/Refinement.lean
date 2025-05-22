@@ -279,3 +279,33 @@ Note that regardless, the statement of this property requires a notion of semant
 and thus cannot be stated in the current file, unless we re-order the imports,
 which might not actually be a bad idea.
 -/
+
+/-!
+## Monad Refinement
+-/
+
+/-!
+## Instances
+We provide some generic refinement instances
+-/
+section Instances
+
+instance [HRefinement α γ] [HRefinement β δ] : HRefinement (α × β) (γ × δ) where
+  IsRefinedBy := fun (a, b) (c, d) => a ⊑ c ∧ b ⊑ d
+
+@[simp]
+theorem prod_isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
+    (a : α) (b : β) (c : γ) (d : δ) :
+    (a, b) ⊑ (c, d) ↔ a ⊑ c ∧ b ⊑ d := by
+  rfl
+
+instance [HRefinement (m (α × σ)) (n (β × σ))] : HRefinement (StateT σ m α) (StateT σ n β) where
+  IsRefinedBy f g := ∀ s, f s ⊑ g s
+
+-- @[simp] -- I'm not sure if this ought to be simp, as it unfolds the monad
+theorem stateT_isRefinedBy_iff {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
+    (f : StateT σ m α) (g : StateT σ n β) :
+    f ⊑ g ↔ ∀ s, f s ⊑ g s := by
+  rfl
+
+end Instances
