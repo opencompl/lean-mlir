@@ -399,11 +399,11 @@ def egLhs : Com SimpleReg [int] .pure int :=
 /--
 info: {
   ^entry(%0 : ToyRegion.Ty.int):
-    %1 = ToyRegion.Op.const 0  : () → (ToyRegion.Ty.int)
+    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
     %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
     %3 = ToyRegion.Op.iterate 0 (%2) ({
       ^entry(%0 : ToyRegion.Ty.int):
-        %1 = ToyRegion.Op.const 0  : () → (ToyRegion.Ty.int)
+        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
         %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
         return %2 : (ToyRegion.Ty.int) → ()
     }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
@@ -418,11 +418,11 @@ def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
 /--
 info: {
   ^entry(%0 : ToyRegion.Ty.int):
-    %1 = ToyRegion.Op.const 0  : () → (ToyRegion.Ty.int)
+    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
     %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
     %3 = ToyRegion.Op.iterate 0 (%0) ({
       ^entry(%0 : ToyRegion.Ty.int):
-        %1 = ToyRegion.Op.const 0  : () → (ToyRegion.Ty.int)
+        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
         %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
         return %0 : (ToyRegion.Ty.int) → ()
     }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
