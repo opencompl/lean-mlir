@@ -27,10 +27,41 @@ existing LLVM dialect, *but* it refines the semantics to include a proper model
 of (side-effecting) UB.
 -/
 
+/-! ### Dialect definition -/
+
 def SLLVM : Dialect where
   Op := LLVM.Op
   Ty := LLVM.Ty
   m := UBOr
+
+namespace SLLVM
+
+instance : DecidableEq SLLVM.Op := by unfold SLLVM; infer_instance
+instance : DecidableEq SLLVM.Ty := by unfold SLLVM; infer_instance
+instance : ToString SLLVM.Op    := by unfold SLLVM; infer_instance
+instance : ToString SLLVM.Ty    := by unfold SLLVM; infer_instance
+instance : Repr SLLVM.Op        := by unfold SLLVM; infer_instance
+instance : Repr SLLVM.Ty        := by unfold SLLVM; infer_instance
+instance : Lean.ToExpr SLLVM.Op := by unfold SLLVM; infer_instance
+instance : Lean.ToExpr SLLVM.Ty := by unfold SLLVM; infer_instance
+
+instance : TyDenote SLLVM.Ty    := by unfold SLLVM; infer_instance
+instance : Monad SLLVM.m        := by unfold SLLVM; infer_instance
+instance : LawfulMonad SLLVM.m  := by unfold SLLVM; infer_instance
+
+open Qq in instance : DialectToExpr SLLVM where
+  toExprDialect := q(SLLVM)
+  toExprM := q(Id.{0})
+
+@[match_pattern]
+abbrev Ty.bitvec : Nat → SLLVM.Ty :=
+  InstCombine.LLVM.Ty.bitvec
+
+@[simp_denote] theorem toType_bitvec : TyDenote.toType (Ty.bitvec w) = LLVM.IntW w := rfl
+
+end SLLVM
+
+/-! ### Signature -/
 
 open InstCombine.LLVM.Op in
 /-- The signature of each operation is the same as in LLVM. -/

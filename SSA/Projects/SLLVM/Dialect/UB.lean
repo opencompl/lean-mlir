@@ -18,5 +18,9 @@ def value : α → UBOr α := PoisonOr.value
 /-! ## Monad -/
 
 instance : Monad UBOr := inferInstanceAs (Monad PoisonOr)
+instance : LawfulMonad UBOr := inferInstanceAs (LawfulMonad PoisonOr)
+
+@[simp, simp_denote]
+theorem pure_eq : @pure UBOr _ = @value := rfl
 
 end UBOr
