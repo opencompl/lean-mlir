@@ -411,7 +411,7 @@ info: {
 }
 -/
 #guard_msgs in #eval egLhs
-#eval egLhs
+
 def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
   (rewritePeepholeRecursively (fuel := 100) p2 egLhs).val
 
