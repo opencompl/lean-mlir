@@ -19,14 +19,15 @@ our rewrites into a form accepted by the Peephole Rewriter.
 
 instance : Refinement (BitVec w) := .ofEq
 @[simp] theorem bv_isRefinedBy_iff (x y : BitVec w) : x ⊑ y ↔ x = y := by rfl
+-- ^^ declare that for pure bitvectors, refinement is just equality
 
 /-- `LLVMPeepholeRewriteRefine` defines the `PeepholeRewrite`
 structure for LLVM `Com`s. The refinement is based on the
 dedicated refinement relation for the `PoisonOr` type, where
 a poison value can be refined by any concrete value. -/
-structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : Ctxt Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
-  rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
+structure LLVMPeepholeRewriteRefine ( w : InstCombine.Width 0) (Γ : Ctxt Ty) where
+  lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w.toConcrete))
+  rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w.toConcrete))
   correct : ∀ V,
     PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V)
 
