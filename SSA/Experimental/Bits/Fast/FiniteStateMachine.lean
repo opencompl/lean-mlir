@@ -182,7 +182,7 @@ theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
 /-- compute the next evaluation bit starting with 'initCarry'.
 TODO: write theorems for 'evalWith'.
 -/
-def p.evalWith (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : BitStream :=
+def evalWith (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : BitStream :=
   (p.changeInitCarry c).eval x
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
