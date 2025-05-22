@@ -21,6 +21,7 @@ open BitVec
 -/
 
 namespace RV64Semantics
+
 @[simp_riscv]
 def ADDIW_pure64 (imm : BitVec 12) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64 (BitVec.setWidth 32 (BitVec.add (BitVec.signExtend 64 imm) rs1_val))
