@@ -29,7 +29,7 @@ structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : Ctxt Ty) where
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
   correct : ∀ V,
     PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V)
-    
+
 /-!
 ##  Wrapper for the Peephole Rewriter
 -/
