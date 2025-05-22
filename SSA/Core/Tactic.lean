@@ -132,8 +132,17 @@ macro "simp_peephole" loc:(location)? : tactic =>
       | rw [funext_iff (α := Ctxt.Valuation _)] $[$loc]?
       | change ∀ (_ : Ctxt.Valuation _), _ $[$loc]?
       | skip
+
       -- Then, we simplify with the `simp_denote` simpset
       simp (config := {failIfUnchanged := false}) only [simp_denote] $[$loc]?
   ))
+
+/-
+TODO: Implement a check for `LawfulMonad`.
+If a dialect's monad doesn't implement LawfulMonad, then currently `simp_peephole`
+just silently fails to apply `Com.denote_var`, leaving the goal state messy
+without any indication on what's wrong. We should catch this, and show a failed
+to synthesize error.
+-/
 
 end SSA
