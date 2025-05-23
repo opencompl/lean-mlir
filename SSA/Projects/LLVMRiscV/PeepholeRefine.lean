@@ -19,7 +19,6 @@ our rewrites into a form accepted by the Peephole Rewriter.
 
 instance : Refinement (BitVec w) := .ofEq
 @[simp] theorem bv_isRefinedBy_iff (x y : BitVec w) : x ⊑ y ↔ x = y := by rfl
--- ^^ declare that for pure bitvectors, refinement is just equality
 
 /-- `LLVMPeepholeRewriteRefine` defines the `PeepholeRewrite`
 structure for LLVM `Com`s. The refinement is based on the
