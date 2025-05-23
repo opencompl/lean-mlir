@@ -40,7 +40,7 @@ def llvm_ashr_lower_riscv_no_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
   Ty.llvm (.bitvec 64)] :=
   {lhs := ashr_llvm_no_flag , rhs := ashr_riscv ,
     correct := by
-    unfold ashr_llvm_no_flag ashr_riscv -- think of adding these to simp peephole
+    unfold ashr_llvm_no_flag ashr_riscv
     simp_peephole
     simp_alive_undef
     simp_riscv
@@ -51,25 +51,30 @@ def llvm_ashr_lower_riscv_no_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
     case value.value.isTrue ht =>
       simp
     case value.value.isFalse hf =>
-      simp
-      simp [Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, BitVec.not_le] at hf
+      simp only [BitVec.sshiftRight_eq', Nat.sub_zero, Nat.reduceAdd, PoisonOr.toOption_getSome,
+        BitVec.setWidth_eq, BitVec.extractLsb_toNat, Nat.shiftRight_zero, tsub_zero, Nat.reducePow,
+        BitVec.signExtend_eq, PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
+      simp only [Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, BitVec.not_le] at hf
       rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
       bv_omega
   }
--- to do come up with a strategy / structure
+  
 def llvm_ashr_lower_riscv_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64),
   Ty.llvm (.bitvec 64)] :=
   {lhs := ashr_llvm_exact_flag, rhs := ashr_riscv ,
     correct := by
-    unfold ashr_llvm_exact_flag ashr_riscv -- think of adding these to simp peephole
+    unfold ashr_llvm_exact_flag ashr_riscv
     simp_peephole
     simp_riscv
     simp_alive_undef
-    simp [LLVM.ashr?]
+    simp only [BitVec.ushiftRight_eq', BitVec.shiftLeft_eq', BitVec.shiftLeft_ushiftRight,
+      BitVec.reduceAllOnes, ne_eq, true_and, LLVM.ashr?, Nat.cast_ofNat, BitVec.ofNat_eq_ofNat,
+      ge_iff_le, BitVec.sshiftRight_eq', ite_not, Nat.sub_zero, Nat.reduceAdd, BitVec.setWidth_eq,
+      BitVec.extractLsb_toNat, Nat.shiftRight_zero, tsub_zero, Nat.reducePow, BitVec.signExtend_eq]
     simp_alive_case_bash
     intro x x'
     simp_alive_split
-    simp
+    simp only [PoisonOr.toOption_getSome]
     rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
     bv_omega
   }

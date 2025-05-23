@@ -42,7 +42,7 @@ def llvm_or_lower_riscv1_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.or_eq, BitVec.signExtend_eq]
     bv_decide
   }
 
@@ -68,6 +68,6 @@ def llvm_or_lower_riscv_disjoint : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       simp_alive_case_bash
       simp_alive_split
       all_goals
-      simp
+      simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.or_eq, BitVec.signExtend_eq]
       bv_decide
 }

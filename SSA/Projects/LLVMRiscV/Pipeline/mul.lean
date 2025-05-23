@@ -26,7 +26,7 @@ def mul_riscv := [LV| {
 
 /- # MUL NO FLAG  -/
 
-def mul_llvm_noflag : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def mul_llvm_noflag : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     .pure (.llvm (.bitvec 64))  := [LV| {
     ^entry (%x: i64, %amount: i64 ):
       %1 = llvm.mul %x, %amount : i64
@@ -35,7 +35,7 @@ def mul_llvm_noflag : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)
 
 /- # MUL FLAGS -/
 
-def mul_llvm_nsw : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def mul_llvm_nsw : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     .pure (.llvm (.bitvec 64))  := [LV| {
     ^entry (%x: i64, %amount: i64 ):
       %1 = llvm.mul %x, %amount overflow<nsw> : i64
@@ -65,7 +65,7 @@ def llvm_mul_lower_riscv_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    simp
+    simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.signExtend_eq]
     bv_auto
   }
 
@@ -81,7 +81,7 @@ def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
     simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    simp
+    simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.signExtend_eq]
     bv_auto
    }
 
@@ -94,7 +94,7 @@ def llvm_mul_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
     simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    simp
+    simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.signExtend_eq]
     bv_auto
   }
 
@@ -107,6 +107,6 @@ def llvm_mul_lower_riscv_nuw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
     simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    simp
+    simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.signExtend_eq]
     bv_auto
   }
