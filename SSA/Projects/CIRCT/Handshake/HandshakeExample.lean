@@ -9,7 +9,6 @@ import SSA.Core.Util
 
 namespace CIRCTStream
 
-#exit
 
 open MLIR AST in
 
@@ -47,8 +46,6 @@ theorem equiv_arg1 (x1Stream x2Stream : Stream Bool) : x1Stream ≈ BranchEg1.de
   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
   let v := (@Valuation.ofPair MLIR2Handshake.Ty _ (MLIR2Handshake.Ty.stream MLIR2Handshake.Ty2.bool) (MLIR2Handshake.Ty.stream MLIR2Handshake.Ty2.bool) x1Stream x2Stream)
   simp_peephole at v
-  unfold Handshake.branch
-  unfold Handshake.merge
   sorry
 
 theorem determinate :
