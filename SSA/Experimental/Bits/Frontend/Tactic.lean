@@ -479,14 +479,14 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
 
     -- finally, we perform reflection.
-    let result ← reflectPredicateAux ∅ (← g.getType) w
-    result.bvToIxMap.throwWarningIfUninterpretedExprs
+    let predicate ← reflectPredicateAux ∅ (← g.getType) w
+    predicate.bvToIxMap.throwWarningIfUninterpretedExprs
 
-    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr result.e)}"
+    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
 
-    let bvToIxMapVal ← result.bvToIxMap.toExpr w
+    let bvToIxMapVal ← predicate.bvToIxMap.toExpr w
 
-    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
+    let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
 
@@ -522,14 +522,21 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       return [g]
     | .circuit_cadical maxIter =>
-      let fsm := predicateEvalEqFSM result.e |>.toFSM
+      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       let cert? ← fsm.decideIfZerosMCadicalNew maxIter
       match cert? with
       | .proven niter safetyCert indCert =>
-        throwError m!"goal state after having proven is: {g}"
-        let gs ← g.apply (mkConst ``Predicate.eval_eq_denote [])
-        let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
+        let safetyCertExpr := Lean.mkStrLit safetyCert
+        let indCertExpr := Lean.mkStrLit indCert
+        let gs ← g.apply (← mkAppM ``Predicate.denote_of_verifyAIG_of_verifyAIG 
+          #[predicate.e.quote, 
+            Lean.mkNatLit niter, 
+            safetyCertExpr,
+            ← Meta.mkEqRefl safetyCertExpr,
+            Lean.mkStrLit indCert,
+            ← Meta.mkEqRefl indCertExpr])
+        -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
         else
@@ -539,7 +546,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       | .exhaustedIterations niter =>
         throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
     | .circuit_lean =>
-      let fsm := predicateEvalEqFSM result.e |>.toFSM
+      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"

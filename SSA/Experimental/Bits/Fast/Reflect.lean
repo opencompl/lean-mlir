@@ -724,7 +724,7 @@ theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hasha
     Std.Sat.AIG.denote env c.toAIG = c.eval env := by sorry
 
 open Std Sat AIG Reflect in
-def verifyAIG [DecidableEq α ] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
+def verifyAIG [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
   let y := (Entrypoint.relabelNat x)
   let z := AIG.toCNF y
   Std.Tactic.BVDecide.Reflect.verifyCert z cert
@@ -1396,7 +1396,7 @@ theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
     exact hind
 
 /-- Prove that predicate is true iff the cerritificates check out. -/
-theorem Preciate.denote_of_verifyAIG_of_verifyAIG {arity : Type}
+theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG {arity : Type}
     {w : Nat} {vars : List (BitVec w)}
     [DecidableEq arity]
     [Fintype arity]
@@ -1414,6 +1414,8 @@ theorem Preciate.denote_of_verifyAIG_of_verifyAIG {arity : Type}
     apply eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq (n := n) (sCert := sCert) (indCert := indCert) (hs := hs) (hind := hind)
   · intros i
     simp
+
+#check Predicate.denote_of_verifyAIG_of_verifyAIG
 
 
 

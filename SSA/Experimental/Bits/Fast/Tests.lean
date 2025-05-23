@@ -12,6 +12,8 @@ import SSA.Experimental.Bits.Fast.MBA
 
 set_option linter.unusedVariables false
 
+set_option trace.Bits.Fast true
+
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
   intros
@@ -21,7 +23,14 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-set_option trace.Bits.Fast true
+#eval Reflect.BvDecide.verifyAIG
+      (Reflect.BvDecide.mkSafetyCircuit
+          (predicateEvalEqFSM
+              (Predicate.binary BinaryPredicate.eq ((Term.var 0).add (Term.var 1))
+                ((Term.var 1).add (Term.var 0)))).toFSM
+          3).toAIG
+      "3 0 1 2 0\n"
+
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
