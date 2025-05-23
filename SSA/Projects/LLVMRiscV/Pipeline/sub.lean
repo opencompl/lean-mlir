@@ -41,7 +41,8 @@ def llvm_sub_lower_riscv_no_flag_self: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sub, LLVM.sub?]
+    simp_alive_undef
+    simp
   }
 
 def llvm_sub: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
@@ -57,7 +58,7 @@ def sub_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       %0 = "builtin.unrealized_conversion_cast"(%x) : (i64) -> !i64
       %1 = "builtin.unrealized_conversion_cast"(%y) : (i64) -> !i64
       %2 = sub %0, %1 : !i64
-      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      %3 = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
       llvm.return %3 : i64
   }]
 
@@ -65,7 +66,8 @@ def llvm_sub_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
   {lhs := llvm_sub , rhs := sub_riscv, correct := by
       unfold llvm_sub sub_riscv
       simp_peephole
-      simp [LLVM.sub, castriscvToLLVM, RTYPE_pure64_RISCV_SUB,castLLVMToriscv, LLVM.sub?]
+      simp_riscv
+      simp_alive_undef
       simp_alive_case_bash
       simp_alive_split
       simp
@@ -80,11 +82,12 @@ def llvm_sub_nsw: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       llvm.return %1 : i64
   }]
 
-def llvm_sub_nsw_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
+def llvm_sub_nsw_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := llvm_sub_nsw , rhs := sub_riscv, correct := by
      unfold llvm_sub_nsw sub_riscv
      simp_peephole
-     simp [LLVM.sub, castriscvToLLVM, RTYPE_pure64_RISCV_SUB,castLLVMToriscv, LLVM.sub?]
+     simp_alive_undef
+     simp_riscv
      simp_alive_case_bash
      simp_alive_split
      simp
@@ -102,7 +105,7 @@ def llvm_sub_nuw_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
     unfold llvm_sub_nuw sub_riscv
     simp_peephole
     simp_riscv
-    simp [LLVM.sub, LLVM.sub?]
+    simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
     simp
@@ -119,7 +122,7 @@ def llvm_sub_nsw_nuw_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     unfold llvm_sub_nsw_nuw sub_riscv
     simp_peephole
     simp_riscv
-    simp [LLVM.sub, LLVM.sub?]
+    simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
     simp

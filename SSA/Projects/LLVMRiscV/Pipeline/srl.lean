@@ -44,7 +44,8 @@ def llvm_srl_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
       simp_peephole
       simp_alive_undef
       simp_riscv
-      simp [castriscvToLLVM, RTYPE_pure64_RISCV_SRL_bv, castLLVMToriscv,  LLVM.lshr?]
+      simp only [LLVM.lshr?, Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, Nat.sub_zero,
+        Nat.reduceAdd, BitVec.setWidth_eq, BitVec.signExtend_eq]
       simp_alive_case_bash
       intro x x'
       split
