@@ -43,12 +43,28 @@ NOTE: This typeclass is not intended for dialect implementors. Please implement
 class Refinement (α : Type) where
   IsRefinedBy : α → α → Prop
 
-instance [Refinement α] : HRefinement α α where
+instance instHRefinementOfRefinement [Refinement α] : HRefinement α α where
   IsRefinedBy := Refinement.IsRefinedBy
+
+/-! #### Trivial Refinement -/
+
+section OfEq
 
 /-- Equality induces a trivial (homogenous) refinement relation on any type `α`. -/
 def Refinement.ofEq : Refinement α where
   IsRefinedBy := Eq
+
+instance (priority := low) :
+    Std.Refl (HRefinement.IsRefinedBy (self := @instHRefinementOfRefinement α .ofEq)) where
+  refl _ := rfl
+instance (priority := low) :
+    IsTrans α (HRefinement.IsRefinedBy (self := @instHRefinementOfRefinement α .ofEq)) where
+  trans _ _ _ := Eq.trans
+instance (priority := low) [DecidableEq α] :
+    Decidable (HRefinement.IsRefinedBy (self := @instHRefinementOfRefinement α .ofEq) x y) :=
+  decidable_of_iff (x = y) (by rfl)
+
+end OfEq
 
 /-! ### Dialect Refinement -/
 
@@ -206,6 +222,11 @@ dsimproc [simp_denote] reduceIsRefinedBy (_ ⊑ _) := fun e => do
       let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
         #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
       return .visit expr
+  | instHRefinementOfRefinement α instRefinement =>
+      match_expr instRefinement with
+      | Refinement.ofEq _α =>
+          return .visit <| mkApp3 (.const ``Eq [1]) α a b
+      | _ => return .continue
   | _ => return .continue
 
 end SimpDenote
@@ -258,3 +279,40 @@ Note that regardless, the statement of this property requires a notion of semant
 and thus cannot be stated in the current file, unless we re-order the imports,
 which might not actually be a bad idea.
 -/
+
+/-!
+## Monad Refinement
+-/
+
+/-!
+## Instances
+We provide some generic refinement instances
+-/
+section Instances
+
+namespace Prod
+
+instance [HRefinement α γ] [HRefinement β δ] : HRefinement (α × β) (γ × δ) where
+  IsRefinedBy := fun (a, b) (c, d) => a ⊑ c ∧ b ⊑ d
+
+@[simp]
+theorem isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
+    (a : α) (b : β) (c : γ) (d : δ) :
+    (a, b) ⊑ (c, d) ↔ a ⊑ c ∧ b ⊑ d := by
+  rfl
+end Prod
+
+namespace StateT
+variable {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
+
+instance : HRefinement (StateT σ m α) (StateT σ n β) where
+  IsRefinedBy f g := ∀ s, f s ⊑ g s
+
+-- @[simp] -- I'm not sure if this ought to be simp, as it unfolds the monad
+theorem isRefinedBy_iff (f : StateT σ m α) (g : StateT σ n β) :
+    f ⊑ g ↔ ∀ s, f s ⊑ g s := by
+  rfl
+
+end StateT
+
+end Instances

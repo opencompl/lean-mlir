@@ -211,7 +211,7 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
 private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args) where
+  Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
   formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
@@ -279,6 +279,11 @@ partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
   let args := (List.range ts.length).zip ts |>.map
     (fun (i, t) => s!"%{i} : {toString t}")
   "(" ++ String.intercalate ", " args ++ ")"
+
+-- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
+private def formatTypeTupleToString [ToString Ty] (xs : List Ty) : String :=
+  "(" ++ String.intercalate ", " (xs.map toString) ++ ")"
+
 /--
 Converts an expression to its string representation.
 Assumes that `toString` instances exist for both the dialect's operations (`d.Op`)
@@ -289,14 +294,14 @@ partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
     let outTy : d.Ty := DialectSignature.outTy op
     let argTys := DialectSignature.sig op
-    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({ToString.toString outTy})"
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({ToString.toString outTy})"
 
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
 partial def Com.ToStringBody : Com d Γ eff t → String
-  | .ret v => s!".return {_root_.repr v } : ({toString t}) → ()"
+  | .ret v => s!"  \"return\"({_root_.repr v }) : ({toString t}) -> ()"
   | .var e body =>
-    s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+    s!"  %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
     Com.ToStringBody body
 
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
@@ -798,7 +803,7 @@ variable [DialectHRefinement d d]
 An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: Refinement (Expr d Γ eff t) where
+instance: HRefinement (Expr d Γ eff₁ t) (Expr d Γ eff₂ t) where
   IsRefinedBy e₁ e₂ :=
     ∀ V, e₁.denote V ⊑ e₂.denote V
 
@@ -806,7 +811,7 @@ instance: Refinement (Expr d Γ eff t) where
 A program `c₁` is refined by a program `c₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: Refinement (Com d Γ eff t) where
+instance : HRefinement (Com d Γ eff₁ t) (Com d Γ eff₂ t) where
   IsRefinedBy c₁ c₂ :=
     ∀ V, c₁.denote V ⊑ c₂.denote V
 
