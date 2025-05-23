@@ -436,6 +436,29 @@ axiom decideIfZerosMAx {p : Prop} : p
 
 end BvDecide
 
+def getBoolLit? : Expr → Option Bool
+  | Expr.const ``Bool.true _  => some true
+  | Expr.const ``Bool.false _ => some false
+  | _                         => none
+
+open Lean Meta in
+def mkEqRflNativeDecideProof (aEqBMVar : MVarId) : MetaM Expr := do
+  let eqTy ← instantiateMVars (← aEqBMVar.getType)
+  let .some (αTy, a₁, a₂) ← Lean.Meta.matchEq? eqTy
+    | throwError "expected equality type, but found type '{eqTy}'"
+  if ! (← isDefEq αTy (mkConst ``Bool)) then
+     throwError "expected equality of booleans, but found '{αTy}' equality in '{eqTy}'"
+  let some a₂Bool := getBoolLit? a₂
+    | throwError "expected a constant boolean on the RHS of the equality but found '{a₂}' in '{eqTy}'"
+    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
+  let a₁Def : Expr := sorry
+  let proof ← mkAppM ``Lean.ofReduceBool #[a₁Def, a₂, ← mkEqRefl a₂]
+  if ! (← isDefEq (mkMVar aEqBMVar) proof) then
+    throwError "expected proof to be defeq to the goal, but found '{proof}'"
+  else
+    return mkMVar aEqBMVar
+
+
 
 /--
 Reflect an expression of the form:
@@ -533,9 +556,9 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
           #[predicate.e.quote, 
             Lean.mkNatLit niter, 
             safetyCertExpr,
-            ← Meta.mkEqRefl safetyCertExpr,
+            ← Meta.mkEqRefl (toExpr true), -- TODO: change to 'ofReduceBool'.
             Lean.mkStrLit indCert,
-            ← Meta.mkEqRefl indCertExpr])
+            ← Meta.mkEqRefl (toExpr false)]) -- TODO: change to 'ofReduceBool'.
         -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
@@ -574,7 +597,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
             let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
             let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
             logWarning  msg
-
           let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
             | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
           pure g

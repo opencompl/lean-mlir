@@ -1409,15 +1409,14 @@ theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG {arity : Type}
     (hind : verifyAIG (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n).toAIG indCert = true) :
     p.denote w vars := by
   apply Predicate.denote_of_eval
-  rw [← Predicate.evalFin_eq_eval p (varsList := (List.map BitStream.ofBitVec vars)) (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
+  rw [← Predicate.evalFin_eq_eval p
+    (varsList := (List.map BitStream.ofBitVec vars))
+    (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
   · rw [(predicateEvalEqFSM p).good]
-    apply eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq (n := n) (sCert := sCert) (indCert := indCert) (hs := hs) (hind := hind)
+    apply eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
+      (n := n) (sCert := sCert) (indCert := indCert) (hs := hs) (hind := hind)
   · intros i
     simp
-
-#check Predicate.denote_of_verifyAIG_of_verifyAIG
-
-
 
 inductive DecideIfZerosOutput
 /-- Safety property fails at this iteration. -/
