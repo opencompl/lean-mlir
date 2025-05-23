@@ -37,8 +37,7 @@ def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     simp_peephole
     simp_alive_undef
     simp_riscv
-    simp only [LLVM.urem?, BitVec.ofNat_eq_ofNat, BitVec.setWidth_eq, BitVec.umod_eq,
-      BitVec.signExtend_eq]
+    simp_alive_ops
     simp_alive_case_bash
     intro x x'
     split
@@ -46,4 +45,5 @@ def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       simp
     case value.value.isFalse hf =>
       simp[hf]
+      bv_omega 
   }

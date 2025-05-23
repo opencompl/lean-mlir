@@ -26,8 +26,8 @@ def udiv_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     ^entry (%reg1: i64, %reg2: i64 ):
       %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> !i64
       %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i64) -> !i64
-      %2 = divu  %0, %1 : !i64
-      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      %2 = divu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
       llvm.return %3 : i64
   }]
 
@@ -37,8 +37,7 @@ def llvm_udiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     simp_peephole
     simp_alive_undef
     simp_riscv
-    simp only [LLVM.udiv?, BitVec.ofNat_eq_ofNat, BitVec.setWidth_eq, BitVec.reduceNeg,
-      BitVec.udiv_eq, BitVec.signExtend_eq]
+    simp_alive_ops
     simp_alive_case_bash
     intro x x'
     split
@@ -46,7 +45,8 @@ def llvm_udiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       simp
     case value.value.isFalse hf =>
       simp [hf]
-      }
+      bv_omega
+  }
 
 /-! # UDIV exact   -/
 
@@ -63,8 +63,7 @@ def llvm_udiv_lower_riscv_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
     simp_peephole
     simp_alive_undef
     simp_riscv
-    simp only [BitVec.umod_eq, BitVec.ofNat_eq_ofNat, ne_eq, true_and, LLVM.udiv?, ite_not,
-      BitVec.setWidth_eq, BitVec.reduceNeg, BitVec.udiv_eq, BitVec.signExtend_eq]
+    simp_alive_ops
     simp_alive_case_bash
     intro x x'
     split
@@ -78,4 +77,5 @@ def llvm_udiv_lower_riscv_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
         simp [hf]
     case value.value.isFalse hf =>
         simp [hf]
+        bv_omega
     }

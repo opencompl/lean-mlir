@@ -26,12 +26,12 @@ def xor_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       %x1 = "builtin.unrealized_conversion_cast"(%x) : (i64) -> !i64
       %x2 = "builtin.unrealized_conversion_cast"(%y) : (i64) -> !i64
       %1 = xor %x1, %x2 : !i64
-      %2 = "builtin.unrealized_conversion_cast" (%1) : (!i64) -> (i64)
+      %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i64)
       llvm.return %2 : i64
   }]
 
   def llvm_xor_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs := llvm_xor , rhs := xor_riscv, correct := by
+  {lhs := llvm_xor, rhs := xor_riscv, correct := by
     unfold llvm_xor xor_riscv
     simp_peephole
     simp_alive_undef
