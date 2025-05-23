@@ -885,12 +885,22 @@ structure EnvOutRelated {arity : Type _} {α : Type _}
 
 attribute [simp] EnvOutRelated.envBool_eq_envBitstream
 
-def envBool_of_envBitStream
+/-- Environment with no state variables. -/
+def envBoolEmpty_of_envBitstream
    (envBitstream : arity → BitStream)
    (n : Nat) : Vars Empty arity (n + 1) → Bool :=
   fun x =>
     match x with
     | .state s => s.elim
+    | .inputs (.mk a i) => envBitstream i a
+
+/-- Environment with chosen state variables of the FSM. -/
+def envBoolStart_of_envBitstream (p : FSM α)
+   (envBitstream : arity → BitStream)
+   (n : Nat) : Vars p.α arity (n + 1) → Bool :=
+  fun x =>
+    match x with
+    | .state s => p.initCarry s
     | .inputs (.mk a i) => envBitstream i a
 
 /-- make the init carry of the FSM from the envBool. -/
@@ -901,10 +911,10 @@ def initCarry_of_envBool {p : FSM α}
 @[simp]
 theorem EnvOutRelated_envBool_of_envBitStream_of_self {arity : Type _}
     (envBitstream : arity → BitStream) :
-    EnvOutRelated (envBool_of_envBitStream envBitstream n) envBitstream := by
+    EnvOutRelated (envBoolEmpty_of_envBitstream envBitstream n) envBitstream := by
   constructor
   intros x i hi
-  rw [envBool_of_envBitStream]
+  rw [envBoolEmpty_of_envBitstream]
 
 
 structure StateCircuit {arity : Type _}
@@ -1335,8 +1345,8 @@ theorem eval_mkIndHypCircuit_eq_false_iff
     (envBool : Vars p.α arity (n + 1) → Bool)
     (envBitstream : arity → BitStream) :
     (mkIndHypCircuit p n).eval envBool = false ↔
-    (∀ (i : Nat), i < n → p.eval envBitstream i = false →
-      p.eval envBitstream (i + 1) = false) := by
+   -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
+    (∃ (i : Nat), i < n ∧ ((∀ (j : Nat), j < i → p.eval envBitstream j = false) → p.eval envBitstream i = false)) := by
   rw [mkIndHypCircuit]
   rw [Circuit.eval_bigAnd_eq_false_iff]
   simp [mkIndHypAuxList]
@@ -1351,10 +1361,17 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     (p : FSM arity)
     (hs : (mkSafetyCircuit p n).always_false)
     (hind : (mkIndHypCircuit p n).always_false) :
-    ∀ env i, p.eval env i = false := by
+    ∀ envBitstream i, p.eval envBitstream i = false := by
   simp at hs hind
   intros env i
-  sorry
+  let envBoolStart := envBoolStart_of_envBitstream p env n
+  specialize (hind envBoolStart)
+  let envBoolEmpty := envBoolEmpty_of_envBitstream env n
+  rw [eval_mkIndHypCircuit_eq_false_iff (envBitstream := env)] at hind
+  specialize (hs envBoolEmpty)
+  rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := env)] at hs
+  · sorry
+  · sorry
 
 /-- Version that is better suited to proving. -/
 theorem eval_eq_false_of_verifyCert_mkSafetyCircuit_verifyCert_mk
