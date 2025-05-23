@@ -878,9 +878,9 @@ def Vars.castLe {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m :=
 
 /-- Relate boolean and bitstream environments. -/
 structure EnvOutRelated {arity : Type _} {α : Type _}
-    (envBool : Vars α arity (n + 1) → Bool)
+    (envBool : Vars α arity n → Bool)
     (envBitstream : arity → BitStream) where
-  envBool_eq_envBitstream : ∀ (x : arity) (i : Nat) (hi: i ≤ n),
+  envBool_eq_envBitstream : ∀ (x : arity) (i : Nat) (hi: i < n),
     envBool (Vars.inputs (Inputs.mk ⟨i, by omega⟩ x)) = envBitstream x i
 
 attribute [simp] EnvOutRelated.envBool_eq_envBitstream
@@ -1029,6 +1029,24 @@ def StateCircuit.compose {arity : Type _}
       | .state s =>
           (sFst.castLe (show n ≤ n + m by omega)).toFun s
       | .inputs i => Circuit.var .false (.inputs i)
+
+/-- How to evaluate composition of circuits. -/
+theorem StateCircuit.eval_compose {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {a : p.α} (envBool : Vars p.α arity (n + m) → Bool)
+    (envBitstream : arity → BitStream)
+    (sFst : StateCircuit p n) (sSnd : StateCircuit p m)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream)
+    :
+    ((StateCircuit.compose sFst sSnd).toFun a).eval envBool =
+      (sSnd.toFun a).eval (fun v =>
+        match v with
+        | .state s => (sFst.toFun s).eval (fun v => envBool (v.castLe (by omega)))
+        | .inputs i => envBool <| .inputs <| i.castLe (by omega)
+      ):= by
+  sorry
 
 /-- Build the output circuit from the given state circuit. -/
 def StateCircuit.toOutput {arity : Type _}
