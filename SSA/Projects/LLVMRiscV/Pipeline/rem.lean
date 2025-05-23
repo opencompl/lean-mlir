@@ -24,7 +24,7 @@ def rem_llvm : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   }]
 
 def rem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
-  .pure (.llvm (.bitvec 64))  := [LV| {
+  .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%reg1: i64, %reg2: i64 ):
       %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> !i64
       %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i64) -> !i64

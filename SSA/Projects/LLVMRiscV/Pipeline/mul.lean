@@ -74,7 +74,7 @@ def llvm_mul_lower_riscv_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
 --nsw and nuw flags
 def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_flags, rhs := mul_riscv ,
-    correct :=  by
+    correct := by
     unfold mul_llvm_flags mul_riscv
     simp_peephole
     simp_riscv
@@ -87,7 +87,7 @@ def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
 
 def llvm_mul_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_nsw, rhs := mul_riscv ,
-    correct :=  by
+    correct := by
     unfold mul_llvm_nsw mul_riscv
     simp_peephole
     simp_riscv
@@ -100,7 +100,7 @@ def llvm_mul_lower_riscv_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
 
 def llvm_mul_lower_riscv_nuw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := mul_llvm_nuw, rhs := mul_riscv ,
-    correct :=  by
+    correct := by
     unfold mul_llvm_nuw mul_riscv
     simp_peephole
     simp_riscv

@@ -34,7 +34,7 @@ def or_riscv := [LV| {
 
 def llvm_or_lower_riscv1_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := or_llvm_noflag, rhs := or_riscv ,
-    correct :=  by
+    correct := by
     unfold or_llvm_noflag or_riscv
     simp_peephole
     simp_riscv
@@ -52,7 +52,7 @@ def llvm_or_lower_riscv1_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
 This allows an or to be treated as an addition.  -/
 
 def or_llvm_disjoint : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
-    .pure (.llvm (.bitvec 64))  := [LV| {
+    .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64 ):
       %1 = llvm.or disjoint   %x, %y : i64
       llvm.return %1 : i64
@@ -60,7 +60,7 @@ def or_llvm_disjoint : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
 
 def llvm_or_lower_riscv_disjoint : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64) , Ty.llvm (.bitvec 64)] :=
   {lhs := or_llvm_disjoint, rhs := or_riscv ,
-    correct :=  by
+    correct := by
       unfold or_llvm_disjoint or_riscv
       simp_peephole
       simp_riscv
