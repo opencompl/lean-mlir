@@ -2634,7 +2634,7 @@ lemma denote_foldl_rewritePeepholeAt
 
 /- The proof that applying `rewritePeephole_go_multi` preserves the semantics of the target program
 to which the peephole rewrites get applied. -/
-theorem denote_rewritePeephole_go_multi (fuel : ℕ)
+theorem denote_multiRewritePeepholeAt (fuel : ℕ)
   (prs : List (PeepholeRewrite d Γ t)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
     (multiRewritePeepholeAt fuel prs ix target).denote = target.denote := by
   induction fuel generalizing prs ix target
@@ -2645,10 +2645,10 @@ theorem denote_rewritePeephole_go_multi (fuel : ℕ)
       denote_foldl_rewritePeepholeAt]
 
 /- The proof that `rewritePeephole_multi` is semantics preserving  -/
-theorem denote_rewritePeephole_multi (fuel : ℕ)
+theorem denote_multiRewritePeephole (fuel : ℕ)
   (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) :
     (multiRewritePeephole fuel prs target).denote = target.denote := by
-  simp [multiRewritePeephole, denote_rewritePeephole_go_multi]
+  simp [multiRewritePeephole, denote_multiRewritePeepholeAt]
 
 theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
