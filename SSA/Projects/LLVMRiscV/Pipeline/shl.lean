@@ -62,9 +62,9 @@ def llvm_shl_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty
         simp_alive_case_bash
         intro x x'
         split
-        · case value.value.isTrue htt =>
+        case value.value.isTrue htt =>
           simp
-        · case value.value.isFalse hff =>
+        case value.value.isFalse hff =>
           simp at hff
           simp
           rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
