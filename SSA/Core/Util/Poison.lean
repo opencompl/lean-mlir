@@ -140,6 +140,11 @@ variable {a : α}
 @[simp] theorem mk_some (x : α) : { toOption := some x } = PoisonOr.value x := rfl
 @[simp] theorem mk_none : { toOption := none (α := α) } = PoisonOr.poison := rfl
 
+@[simp_denote, simp]
+theorem toOption_getSome : (PoisonOr.value x).toOption.getD y = x := by rfl
+@[simp_denote, simp]
+theorem toOption_getNone : (PoisonOr.poison).toOption.getD y = y := by rfl
+
 end Lemmas
 
 /-! ### Refinement -/
@@ -177,6 +182,9 @@ theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
     ↔ (b?.isPoison → a?.isPoison)
       ∧ (a?.isPoison = false → a?.getValue ⊑ b?.getValue) := by
   cases a? <;> cases b? <;> simp
+
+@[simp, simp_denote]
+theorem PoisonOr.eq_squb [HRefinement α α] (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
 
 section PreOrder
 
