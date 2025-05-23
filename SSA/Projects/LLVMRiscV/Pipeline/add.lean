@@ -17,7 +17,7 @@ Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/
 set_option Elab.async true
 
-/- # ADD, riscv -/
+/- # ADD, RiscV  -/
 def add_riscv := [LV| {
   ^entry (%lhs: i64, %rhs: i64 ):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
