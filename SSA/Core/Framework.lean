@@ -803,7 +803,7 @@ variable [DialectHRefinement d d]
 An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: Refinement (Expr d Γ eff t) where
+instance: HRefinement (Expr d Γ eff₁ t) (Expr d Γ eff₂ t) where
   IsRefinedBy e₁ e₂ :=
     ∀ V, e₁.denote V ⊑ e₂.denote V
 
@@ -811,7 +811,7 @@ instance: Refinement (Expr d Γ eff t) where
 A program `c₁` is refined by a program `c₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: Refinement (Com d Γ eff t) where
+instance : HRefinement (Com d Γ eff₁ t) (Com d Γ eff₂ t) where
   IsRefinedBy c₁ c₂ :=
     ∀ V, c₁.denote V ⊑ c₂.denote V
 
