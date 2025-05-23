@@ -609,6 +609,10 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
       · have := hq .. |>.mpr hq'
         simp [this]
 
+theorem Predicate.denote_of_eval {w : Nat} {p : Predicate} {vars : List (BitVec w)}
+    (heval : (p.eval (vars.map BitStream.ofBitVec) w = false)) : p.denote w vars := by
+  apply Predicate.eval_eq_denote w p vars |>.mp heval
+
 -- /-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 -- #guard_msgs in #print axioms Predicate.eval_eq_denote
 
@@ -1374,12 +1378,12 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   · sorry
 
 /-- Version that is better suited to proving. -/
-theorem eval_eq_false_of_verifyCert_mkSafetyCircuit_verifyCert_mk
+theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq 
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
-    (p : FSM arity)
+    {p : FSM arity}
     (sCert : BVDecide.Frontend.LratCert)
     (hs : verifyAIG (mkSafetyCircuit p n).toAIG sCert = true)
     (indCert : BVDecide.Frontend.LratCert)
@@ -1390,6 +1394,28 @@ theorem eval_eq_false_of_verifyCert_mkSafetyCircuit_verifyCert_mk
     exact hs
   · apply always_false_of_cerifyAIG
     exact hind
+
+/-- Prove that predicate is true iff the cerritificates check out. -/
+theorem Preciate.denote_of_verifyAIG_of_verifyAIG {arity : Type}
+    {w : Nat} {vars : List (BitVec w)}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : Predicate)
+    (n : Nat)
+    (sCert : BVDecide.Frontend.LratCert)
+    (hs : verifyAIG (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n).toAIG sCert = true)
+    (indCert : BVDecide.Frontend.LratCert)
+    (hind : verifyAIG (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n).toAIG indCert = true) :
+    p.denote w vars := by
+  apply Predicate.denote_of_eval
+  rw [← Predicate.evalFin_eq_eval p (varsList := (List.map BitStream.ofBitVec vars)) (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
+  · rw [(predicateEvalEqFSM p).good]
+    apply eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq (n := n) (sCert := sCert) (indCert := indCert) (hs := hs) (hind := hind)
+  · intros i
+    simp
+
+
 
 inductive DecideIfZerosOutput
 /-- Safety property fails at this iteration. -/
@@ -1494,19 +1520,19 @@ def _root_.FSM.decideIfZerosMCadicalOld  {arity : Type _} [DecidableEq arity]  [
 partial def decideIfZerosAuxTermElabMNew {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
-    (p : FSM arity) :
+    (fsm : FSM arity) :
     TermElabM (DecideIfZerosOutput) := do
   trace[Bits.Fast] s!"K-induction (iter={iter})"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
     return .exhaustedIterations maxIter
   let tStart ← IO.monoMsNow
-  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit p iter
+  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit fsm iter
   let tEnd ← IO.monoMsNow
   let tElapsedSec := (tEnd - tStart) / 1000
   trace[Bits.Fast] m!"Built safety circuit in '{tElapsedSec}s'"
 
-  let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
+  let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
   let formatEmpty : Empty → Format := fun e => e.elim
   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
   trace[Bits.Fast] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
@@ -1523,7 +1549,7 @@ partial def decideIfZerosAuxTermElabMNew {arity : Type _}
     trace[Bits.Fast] s!"Safety property succeeded on initial state. Building induction circuit..."
 
     let tStart ← IO.monoMsNow
-    let cIndHyp := mkIndHypCircuit p iter
+    let cIndHyp := mkIndHypCircuit fsm iter
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     trace[Bits.Fast] m!"Built induction circuit in '{tElapsedSec}s'"
@@ -1541,7 +1567,7 @@ partial def decideIfZerosAuxTermElabMNew {arity : Type _}
       return .proven iter safetyCert indCert
     | .none =>
       trace[Bits.Fast] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
-      decideIfZerosAuxTermElabMNew (iter + 1) maxIter p
+      decideIfZerosAuxTermElabMNew (iter + 1) maxIter fsm
 
 @[nospecialize]
 def _root_.FSM.decideIfZerosMCadicalNew  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]

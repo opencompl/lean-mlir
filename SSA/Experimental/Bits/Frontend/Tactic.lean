@@ -527,6 +527,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       let cert? ← fsm.decideIfZerosMCadicalNew maxIter
       match cert? with
       | .proven niter safetyCert indCert =>
+        throwError m!"goal state after having proven is: {g}"
+        let gs ← g.apply (mkConst ``Predicate.eval_eq_denote [])
         let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
