@@ -29,23 +29,22 @@ open RV64Semantics
 
 --  PeepholeRewrite ExOp [.nat, .nat] .nat:=
 
-def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty.riscv (.bv)) :=
-  {lhs:=
-    [LV| {
+def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty.riscv (.bv)) where
+  lhs := [LV| {
       ^entry (%lhs: !i64):
       %addl = "builtin.unrealized_conversion_cast" (%lhs) : (!i64) -> (i64)
       %lhsr = "builtin.unrealized_conversion_cast"(%addl) : (i64) -> !i64
-      ret %lhsr : !i64  }],
-    rhs:=  [LV| {
+      ret %lhsr : !i64  
+    }]
+  rhs := [LV| {
       ^entry (%lhs: !i64):
-      ret %lhs : !i64  }]
-     ,correct := by
-      simp_peephole
-      intro e
-      simp_riscv
-      simp
-      }
-
+      ret %lhs : !i64  
+    }]
+  correct := by  
+    simp_peephole
+    intro e
+    simp_riscv
+    simp
 
 def double_cast_elimination_LLVM_to_RISCV : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] :=
 {lhs:=
