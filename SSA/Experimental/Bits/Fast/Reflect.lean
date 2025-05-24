@@ -716,12 +716,39 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α]
     (c : Circuit α) : Entrypoint α :=
   (c.toAIGAux .empty).val
 
+@[simp]
+theorem _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α}
+    {env : α → Bool}
+    {aig : AIG α} :
+    Std.Sat.AIG.denote env (c.toAIGAux aig) = c.eval env := by
+  induction c generalizing env aig
+  case tru =>
+    simp [Circuit.toAIGAux]
+  case fals =>
+    simp [Circuit.toAIGAux]
+  case var negated v =>
+    simp [Circuit.toAIGAux]
+    rcases negated with rfl | rfl <;> simp
+  case and l r hl hr =>
+    rw [Circuit.toAIGAux]
+    obtain ⟨lEntry, lProperty⟩ := l.toAIGAux aig
+    simp only [Ref.cast_eq, denote_mkAndCached, denote_projected_entry, Circuit.eval]
+    obtain ⟨rEntry, rProperty⟩ := r.toAIGAux lEntry.aig
+    simp?
+    sorry
+  case or l r hl hr =>
+    sorry
+  case xor l r hl hr =>
+    sorry
+
 /- Proof: Structural recursion on the circuit. -/
 @[simp]
 theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
     {c : Circuit α}
     {env : α → Bool} :
-    Std.Sat.AIG.denote env c.toAIG = c.eval env := by sorry
+    Std.Sat.AIG.denote env c.toAIG = c.eval env := by
+  apply c.denote_toAIGAux_eq_eval
 
 open Std Sat AIG Reflect in
 def verifyAIG [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
