@@ -84,9 +84,8 @@ example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
   -- bv_automata_gen (config := {backend := .circuit_cadical 20 } )
 
 
-example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
-  -- bv_automata_gen (config := {backend := .circuit_cadical} )
-  sorry
+theorem foo (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
 
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a ≠ 0#w) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )

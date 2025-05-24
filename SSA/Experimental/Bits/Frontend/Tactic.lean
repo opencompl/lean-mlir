@@ -447,9 +447,9 @@ Assumes that the mvar has type 'a = <true>' or 'a = <false>',
 and closes this goal with 'native_decide' of a 'rfl' proof.
 Assigns to the MVarId a proof.
 -/
-def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : MetaM Expr := do
+def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : TermElabM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
-  let auxDeclName ← mkAuxName `_mkEqRflNativeDecideProof 0
+  let auxDeclName ← Term.mkAuxName `_mkEqRflNativeDecideProof
   let decl := Declaration.defnDecl {
     name := auxDeclName
     levelParams := []
@@ -596,8 +596,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         let indCertExpr := Lean.mkStrLit indCert
         let prf ← g.withContext do
           -- (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
-          let safetyCertTy ← 
-            Expr.mkVerifyCircuit 
+          let safetyCertTy ←
+            Expr.mkVerifyCircuit
               (← Expr.mkMkSafetyCircuit
                 (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
                 (toExpr niter)) safetyCertExpr
