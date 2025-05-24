@@ -41,8 +41,6 @@ theorem x : Reflect.BvDecide.verifyAIG
           3).toAIG
       "3 0 1 2 0\n" = true := y
 
-#print x._proof_1
-
 
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by

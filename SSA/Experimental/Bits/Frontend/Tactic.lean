@@ -441,22 +441,37 @@ def getBoolLit? : Expr → Option Bool
   | Expr.const ``Bool.false _ => some false
   | _                         => none
 
-open Lean Meta in
-def mkEqRflNativeDecideProof (aEqBMVar : MVarId) : MetaM Expr := do
+open Lean Meta Elab Tactic in
+/--
+Assumes that the mvar has type 'a = <true>' or 'a = <false>',
+and closes this goal with 'native_decide' of a 'rfl' proof.
+Assigns to the MVarId a proof.
+-/
+def mkEqRflNativeDecideProof (aEqBMVar : MVarId) : MetaM Unit := do
   let eqTy ← instantiateMVars (← aEqBMVar.getType)
   let .some (αTy, a₁, a₂) ← Lean.Meta.matchEq? eqTy
-    | throwError "expected equality type, but found type '{eqTy}'"
+    | throwError m!"expected equality type, but found type '{eqTy}'"
   if ! (← isDefEq αTy (mkConst ``Bool)) then
-     throwError "expected equality of booleans, but found '{αTy}' equality in '{eqTy}'"
-  let some a₂Bool := getBoolLit? a₂
-    | throwError "expected a constant boolean on the RHS of the equality but found '{a₂}' in '{eqTy}'"
+     throwError m!"expected equality of booleans, but found '{αTy}' equality in '{eqTy}'"
+  let some _a₂Bool := getBoolLit? a₂
+    | throwError m!"expected a constant boolean on the RHS of the equality but found '{a₂}' in '{eqTy}'"
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
-  let a₁Def : Expr := sorry
-  let proof ← mkAppM ``Lean.ofReduceBool #[a₁Def, a₂, ← mkEqRefl a₂]
+  let auxDeclName ← mkAuxName `_mkEqRflNativeDecideProof 0
+  let decl := Declaration.defnDecl {
+    name := auxDeclName
+    levelParams := []
+    type := mkConst ``Bool
+    value := a₁
+    hints := .abbrev
+    safety := .safe
+  }
+  addAndCompile decl
+  let a₁Def : Expr := mkConst auxDeclName
+  let rflProof ← mkEqRefl a₂
+  let proof ← mkAppM ``Lean.ofReduceBool #[a₁Def, a₂, rflProof]
   if ! (← isDefEq (mkMVar aEqBMVar) proof) then
-    throwError "expected proof to be defeq to the goal, but found '{proof}'"
-  else
-    return mkMVar aEqBMVar
+    throwError m!"expected proof {proof} to be assignable to goal {aEqBMVar}, but found '{proof}'"
+  return ()
 
 
 
@@ -552,13 +567,18 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       | .proven niter safetyCert indCert =>
         let safetyCertExpr := Lean.mkStrLit safetyCert
         let indCertExpr := Lean.mkStrLit indCert
-        let gs ← g.apply (← mkAppM ``Predicate.denote_of_verifyAIG_of_verifyAIG 
-          #[predicate.e.quote, 
-            Lean.mkNatLit niter, 
+        let safetyCertProof ← mkFreshExprMVar .none
+        let indCertProof ← mkFreshExprMVar .none
+        let gs ← g.apply (← mkAppM ``Predicate.denote_of_verifyAIG_of_verifyAIG
+          #[predicate.e.quote,
+            Lean.mkNatLit niter,
             safetyCertExpr,
-            ← Meta.mkEqRefl (toExpr true), -- TODO: change to 'ofReduceBool'.
-            Lean.mkStrLit indCert,
-            ← Meta.mkEqRefl (toExpr false)]) -- TODO: change to 'ofReduceBool'.
+            safetyCertProof,
+            -- ← Meta.mkEqRefl (toExpr true), -- TODO: change to 'ofReduceBool'.
+            indCertExpr,
+            indCertProof])
+        mkEqRflNativeDecideProof safetyCertProof.mvarId!
+        mkEqRflNativeDecideProof indCertProof.mvarId!
         -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
