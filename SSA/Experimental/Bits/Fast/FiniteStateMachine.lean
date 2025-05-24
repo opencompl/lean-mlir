@@ -37,7 +37,7 @@ structure FSM (arity : Type) : Type 1 where
   which may refer to the current input bits *and* the current state bits
   as free variables in the circuit.
 
-  `nextBitCirc none` computes the current output bit.
+  `nextBitCirc none` computes the current output bit as a function of the state and inputs.
   `nextBitCirc (some a)`, computes the *one* bit of the new state that corresponds to `a : α`. -/
   ( nextBitCirc : Option α → Circuit (α ⊕ arity) )
 
@@ -179,6 +179,26 @@ theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
     p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 :=
   rfl
 
+/-- compute the next evaluation bit starting with 'initCarry'.
+TODO: write theorems for 'evalWith'.
+-/
+def evalWith (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : BitStream :=
+  (p.changeInitCarry c).eval x
+
+@[simp]
+theorem changeInitCarry_eq_self (p : FSM arity) :
+    p.changeInitCarry p.initCarry = p := by
+  simp [changeInitCarry]
+
+/-- evalWith agrees with eval when we set the carry to the init carry. -/
+theorem evalWith_eq_eval_of_eq_init (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream)
+    (hc : c = p.initCarry) : p.evalWith c x = p.eval x := by
+  simp [hc, evalWith]
+
+@[simp]
+theorem evalWith_initCarry_eq_init (p : FSM arity)
+    : p.evalWith p.initCarry = p.eval := by
+  ext x; simp [evalWith]
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/

@@ -12,6 +12,8 @@ import SSA.Experimental.Bits.Fast.MBA
 
 set_option linter.unusedVariables false
 
+set_option trace.Bits.Fast true
+
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
   intros
@@ -21,7 +23,25 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-open NNF in
+def lhs : Bool := Reflect.BvDecide.verifyAIG
+      (Reflect.BvDecide.mkSafetyCircuit
+          (predicateEvalEqFSM
+              (Predicate.binary BinaryPredicate.eq ((Term.var 0).add (Term.var 1))
+                ((Term.var 1).add (Term.var 0)))).toFSM
+          3).toAIG
+      "3 0 1 2 0\n"
+
+theorem y : lhs = true := Lean.ofReduceBool _ _ rfl
+
+theorem x : Reflect.BvDecide.verifyAIG
+      (Reflect.BvDecide.mkSafetyCircuit
+          (predicateEvalEqFSM
+              (Predicate.binary BinaryPredicate.eq ((Term.var 0).add (Term.var 1))
+                ((Term.var 1).add (Term.var 0)))).toFSM
+          3).toAIG
+      "3 0 1 2 0\n" = true := y
+
+
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
@@ -64,9 +84,8 @@ example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
   -- bv_automata_gen (config := {backend := .circuit_cadical 20 } )
 
 
-example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
-  -- bv_automata_gen (config := {backend := .circuit_cadical} )
-  sorry
+theorem foo (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
 
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a ≠ 0#w) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
@@ -184,6 +203,7 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
 section BvAutomataTests
+
 
 /-!
 # Test Cases
@@ -410,6 +430,6 @@ theorem e_331 (x y : BitVec w):
 set_option maxHeartbeats 0 in
 theorem e_2500 (a b c d e f g h i j k l m n o p q r s t u v x y z : BitVec w):
     7 * ( ~~~f ||| (d ^^^ e)) - 6 * ( ~~~(d &&&  ~~~e) &&& (e ^^^ f)) - 11 * ( ~~~(d &&&  ~~~e) &&& (d ^^^ (e ^^^ f))) - 1 * (f ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((e &&&  ~~~f) |||  ~~~(d ||| ( ~~~e &&& f))) - 3 * (f |||  ~~~(d |||  ~~~e)) + 1 *  ~~~(e ^^^ f) + 1 *  ~~~(d &&& (e ||| f)) + 5 * ( ~~~(d |||  ~~~e) ||| (d ^^^ (e ^^^ f))) + 1 * (e ^^^  ~~~(d ||| (e &&& f))) + 1 *  ~~~(d ||| ( ~~~e &&& f)) - 1 * ( ~~~d ||| (e ^^^ f)) + 4 * (e ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((d &&&  ~~~e) |||  ~~~(e ^^^ f)) + 4 * (f ^^^ ( ~~~d ||| ( ~~~e ||| f))) + 4 * ((e &&&  ~~~f) ^^^ (d ||| (e ^^^ f))) + 7 * ((d &&&  ~~~e) ||| (e ^^^ f)) + 2 * ((d ||| e) &&& (e ^^^ f)) + 3 * (e ^^^  ~~~( ~~~d ||| (e ^^^ f))) - 6 * (e ^^^  ~~~(d &&& f)) - 1 * (e ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^ (d &&& (e ||| f))) + 4 * ((d &&& f) ^^^ (e ||| f)) + 1 * (e &&& (d |||  ~~~f)) - 2 *  ~~~(d &&&  ~~~e) + 7 * (f ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 3 * ((d &&& e) |||  ~~~(e ^^^ f)) - 1 *  ~~~( ~~~d &&& ( ~~~e ||| f)) - 5 * (f ^^^ ( ~~~d ||| (e &&& f))) - 1 * (d ||| (e ||| f)) + 5 * (d &&&  ~~~f) + 7 * (f ||| (d &&& e)) - 1 * ( ~~~d &&& (e ||| f)) + 1 * ( ~~~(d ||| e) ||| (d ^^^ (e ^^^ f))) + 7 * (e ^^^  ~~~( ~~~d &&& (e ^^^ f))) + 1 * ((d |||  ~~~e) &&& (d ^^^ (e ^^^ f))) + 11 *  ~~~(d ||| (e ^^^ f)) + 4 * (e ^^^ (d &&& (e ^^^ f))) - 1 * ( ~~~d ||| ( ~~~e ||| f)) + 5 * ((d &&&  ~~~e) |||  ~~~(d ^^^ (e ^^^ f))) - 11 * (e ^^^ ( ~~~d ||| (e ^^^ f))) - 1 * (d &&& (e ||| f)) - 1 * (f ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 * (e ^^^ ( ~~~d &&& (e ||| f))) + 7 * (e ^^^ (d &&&  ~~~f)) + 1 *  ~~~( ~~~d &&& ( ~~~e &&& f)) - 1 * (e ^^^ (d ||| (e &&& f))) + 1 * (e ^^^ (d &&& ( ~~~e ||| f))) - 1 * (f ^^^ ( ~~~d &&& ( ~~~e ||| f))) - 1 * (d ||| ( ~~~e &&& f)) - 6 * (e ^^^  ~~~(d |||  ~~~f)) + 3 *  ~~~(d ||| f) + 4 * (e |||  ~~~(d ^^^ f)) - 2 *  ~~~(d &&& ( ~~~e ||| f)) - 6 * f - 1 * (e |||  ~~~(d |||  ~~~f)) + 5 * ((d ^^^ e) |||  ~~~(d ^^^ f)) - 2 * (f ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^  ~~~(d |||  ~~~e)) - 11 * (e ||| (d &&&  ~~~f)) + 11 *  ~~~(d &&& (e &&& f)) - 3 * (e ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 5 * ((d &&& e) ||| (e ^^^ f)) + 1 * ((e &&&  ~~~f) ^^^ ( ~~~d ||| (e ^^^ f))) - 3 * (f ^^^  ~~~(d &&& ( ~~~e &&& f))) - 1 *  ~~~(d &&& ( ~~~e &&& f)) + 4 *  ~~~( ~~~d &&& (e &&& f)) - 6 * ((d ||| e) &&&  ~~~(e ^^^ f)) - 11 * ( ~~~e &&& (d ^^^ f)) - 7 * (f &&& (d |||  ~~~e)) + 5 * (d &&& ( ~~~e ||| f)) + 11 *  ~~~(e ||| f) - 7 * (f ^^^  ~~~(d &&& e)) + 1 * ((d ^^^ e) &&& (d ^^^ f)) - 39 *  ~~~(d ||| (e ||| f)) - 29 *  ~~~(d ||| ( ~~~e ||| f)) - 54 *  ~~~( ~~~d ||| (e ||| f)) - 32 *  ~~~( ~~~d ||| ( ~~~e ||| f)) + 19 * ( ~~~d &&& ( ~~~e &&& f)) - 60 * ( ~~~d &&& (e &&& f)) - 31 * (d &&& ( ~~~e &&& f)) + 33 * (d &&& (e &&& f)) =  - 1 * (e ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 *  ~~~(d ^^^ f) := by
-  bv_automata_gen (config := {backend := .circuit_cadical 5 } )
+  bv_automata_gen (config := {backend := .circuit_cadical 1 } )
 
 end BvAutomataTests

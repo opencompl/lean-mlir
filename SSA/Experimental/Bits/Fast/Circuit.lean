@@ -20,11 +20,11 @@ inductive Circuit (α : Type u) : Type u
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
   | xor : Circuit α → Circuit α → Circuit α
-deriving Repr, DecidableEq 
+deriving Repr, DecidableEq
 
 open Lean in
 def formatCircuit {α : Type u} (formatVar : α → Format)  (c : Circuit α) : Lean.Format :=
-  match c with 
+  match c with
   | .tru => "T"
   | .fals => "F"
   | .var b v =>
@@ -441,6 +441,37 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   | a::l, f, g => by
     rw [bAnd, eval_foldl_and]; simp
 
+/-- perform the same task as assignVars, but don't change the signature of the circuit. -/
+def assignAllVars [DecidableEq α] (c : Circuit α)
+  (f : α → Bool) : Circuit Empty
+  := match c with
+  | tru => tru
+  | fals => fals
+  | var b x =>
+    let v := f x
+    Circuit.ofBool (b = v)
+  | and p q => assignAllVars p f &&& assignAllVars q f
+  | or p q => assignAllVars p f ||| assignAllVars q f
+  | xor p q => assignAllVars p f ^^^ assignAllVars q f
+
+/-- Says how to evaluate asssignVars' in terms of an updated environment. -/
+@[simp]
+lemma eval_assignAllVars [DecidableEq α] {c : Circuit α} {f : α → Bool} :
+    eval (assignAllVars c f) env = c.eval f := by
+  induction c
+  case tru => simp [eval, assignAllVars]
+  case fals => simp [eval, assignAllVars]
+  case var b x =>
+    simp [assignAllVars]
+    rcases fx : f x <;> rcases b <;> simp
+  case and p q hp hq =>
+    simp [eval, hp, hq, assignAllVars]
+  case or p q hp hq =>
+    simp [eval, hp, hq, assignAllVars]
+  case xor p q hp hq =>
+    simp [eval, hp, hq, assignAllVars]
+
+
 def assignVars [DecidableEq α] :
     ∀ (c : Circuit α) (_f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool), Circuit β
   | tru, _ => tru
@@ -770,14 +801,25 @@ lemma nonempty_iff [DecidableEq α] (c : Circuit α) :
     nonempty c ↔ ∃ x, eval c x :=
   by rw [nonempty, ← (nonemptyAux c c.vars rfl).2]
 
+
 lemma nonempty_eq_false_iff [DecidableEq α] (c : Circuit α) :
     nonempty c = false ↔ ∀ x, ¬ eval c x := by
   apply not_iff_not.1
   simpa using nonempty_iff c
 
+def always_false [DecidableEq α] (c : Circuit α) : Bool :=
+   nonempty c = false
+
+@[simp]
+lemma always_false_iff [DecidableEq α] (c : Circuit α) :
+    always_false c ↔ ∀ x, ¬ eval c x := by
+rw [always_false]
+simp [nonempty_eq_false_iff]
+
 def always_true [DecidableEq α] (c : Circuit α) : Bool :=
   !(nonempty (~~~ c))
 
+@[simp]
 lemma always_true_iff [DecidableEq α] (c : Circuit α) :
     always_true c ↔ ∀ x, eval c x := by
   simp [always_true, nonempty_eq_false_iff, not_not]
@@ -809,32 +851,32 @@ lemma le_iff_implies : ∀ (c₁ c₂ : Circuit α), c₁ ≤ c₂ ↔ (∀ f, e
 section Optimizer
 variable {α : Type u} [DecidableEq α]
 
-def optimize : Circuit α → Circuit α 
+def optimize : Circuit α → Circuit α
 | .tru => .tru
-| .fals => .fals 
+| .fals => .fals
 | .var b v => .var b v
-| .or l r => 
+| .or l r =>
    let l := optimize l
-   let r := optimize r 
+   let r := optimize r
    if l == r
    then l
    else l ||| r
-| .and l r => 
+| .and l r =>
    let l := optimize l
-   let r := optimize r 
-   if l == r then l 
+   let r := optimize r
+   if l == r then l
    else l &&& r
-| .xor l r => 
+| .xor l r =>
   let l := optimize l
-  let r := optimize r 
+  let r := optimize r
   if l == r
   then .fals
-  else 
-    match l, r with 
-    | .var b v, .var b' v' => 
-       if v == v' 
-       then .ofBool <| b.xor b' 
-       else l ^^^ r 
+  else
+    match l, r with
+    | .var b v, .var b' v' =>
+       if v == v'
+       then .ofBool <| b.xor b'
+       else l ^^^ r
     | _, _ => l ^^^ r
 end Optimizer
 

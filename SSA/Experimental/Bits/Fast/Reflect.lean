@@ -236,6 +236,7 @@ theorem BitStream.toBitVec_concat(a : BitStream) :
       | w + 1 => (a.toBitVec w).concat b  := by
   rcases w with rfl | w <;> simp
 
+
 /--
 Evaluating the term and then coercing the term to a bitvector is equal to denoting the term directly.
 -/
@@ -608,6 +609,10 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
       · have := hq .. |>.mpr hq'
         simp [this]
 
+theorem Predicate.denote_of_eval {w : Nat} {p : Predicate} {vars : List (BitVec w)}
+    (heval : (p.eval (vars.map BitStream.ofBitVec) w = false)) : p.denote w vars := by
+  apply Predicate.eval_eq_denote w p vars |>.mp heval
+
 -- /-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 -- #guard_msgs in #print axioms Predicate.eval_eq_denote
 
@@ -655,14 +660,14 @@ namespace Reflect
 open Lean Meta Elab Tactic
 
 namespace BvDecide
-open Std Sat AIG in
+open Std Sat AIG
 
 /--
 Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
 bitblasting capabilities.
 -/
 @[nospecialize]
-def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
+def _root_.Circuit.toAIGAux [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ExtendingEntrypoint aig :=
   match c with
   | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
@@ -677,35 +682,210 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
       have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
       ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
   | .and l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
-    let lhsRef := lhsRef.cast <| by
-      dsimp only at rextend ⊢
+    let laig := l.toAIGAux aig
+    let raig := r.toAIGAux laig.val.aig
+    let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
+    let ret := raig.val.aig.mkAndCached input
+    have Lawful := LawfulOperator.le_size (f := mkAndCached) raig.val.aig input
+    ⟨ret, by
+      simp [ret]
+      apply Nat.le_trans _
+      apply mkAndCached_le_size
+      have hl' := laig.property
+      have hr' := raig.property
       omega
-    let input := ⟨lhsRef, rhsRef⟩
-    let ret := aig.mkAndCached input
-    have Lawful := LawfulOperator.le_size (f := mkAndCached) aig input
-    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+    ⟩
   | .or l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
-    let lhsRef := lhsRef.cast <| by
-      dsimp only at rextend ⊢
-      omega
-    let input := ⟨lhsRef, rhsRef⟩
-    let ret := aig.mkOrCached input
-    have Lawful := LawfulOperator.le_size (f := mkOrCached) aig input
-    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+    let laig := l.toAIGAux aig
+    let raig := r.toAIGAux laig.val.aig
+    let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
+    let ret := raig.val.aig.mkOrCached input
+    have Lawful := LawfulOperator.le_size (f := mkOrCached) raig.val.aig input
+    ⟨ret, by
+      simp [ret]
+      apply Nat.le_trans _
+      apply mkOrCached_le_size
+      have hl' := laig.property
+      have hr' := raig.property
+      omega⟩
   | .xor l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
-    let lhsRef := lhsRef.cast <| by
-      dsimp only at rextend ⊢
+    let laig := l.toAIGAux aig
+    let raig := r.toAIGAux laig.val.aig
+    let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
+    let ret := raig.val.aig.mkXorCached input
+    have Lawful := LawfulOperator.le_size (f := mkXorCached) raig.val.aig input
+    ⟨ret, by
+      simp [ret]
+      apply Nat.le_trans _
+      apply mkXorCached_le_size
+      have hl' := laig.property
+      have hr' := raig.property
+      omega⟩
+
+/-- The AIG preserves the size of the inputs. -/
+theorem _root_.Circuit.toAIGAux_le_size [DecidableEq α] [Fintype α] [Hashable α]
+  (c : Circuit α) (input : AIG α) :
+  ∀ (idx : Nat) (_h : idx < input.decls.size), idx < (c.toAIGAux input).val.aig.decls.size := by
+  intro idx h
+  induction c generalizing input
+  case tru =>
+    simp [Circuit.toAIGAux]
+    have := LawfulOperator.le_size (f := mkConstCached) input true
+    omega
+  case fals =>
+    simp [Circuit.toAIGAux]
+    have := LawfulOperator.le_size (f := mkConstCached) input false
+    omega
+  case var negated v =>
+    simp [Circuit.toAIGAux]
+    rcases negated with rfl | rfl
+    case true =>
+      simp only [↓reduceIte]; have := LawfulOperator.le_size (f := mkAtomCached) input v
       omega
-    let input := ⟨lhsRef, rhsRef⟩
-    let ret := aig.mkXorCached input
-    have Lawful := LawfulOperator.le_size (f := mkXorCached) aig input
-    ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
+    case false =>
+      simp
+      have := mkNotCached_le_size (aig := (input.mkAtomCached v).aig)
+        (gate := (input.mkAtomCached v).ref)
+      apply Nat.lt_of_lt_of_le _ this
+      have := mkAtomCached_le_size (aig := input) v
+      omega
+  case and l r hl hr =>
+    simp only [Circuit.toAIGAux, Ref.cast_eq]
+    apply Nat.lt_of_lt_of_le _
+    apply mkAndCached_le_size
+    apply hr
+    apply hl
+    exact h
+  case or l r hl hr =>
+    simp only [Circuit.toAIGAux, Ref.cast_eq]
+    apply Nat.lt_of_lt_of_le _
+    apply mkOrCached_le_size
+    apply hr
+    apply hl
+    exact h
+  case xor l r hl hr =>
+    simp only [Circuit.toAIGAux, Ref.cast_eq]
+    apply Nat.lt_of_lt_of_le _
+    apply mkXorCached_le_size
+    apply hr
+    apply hl
+    exact h
+
+-- h1 : idx < input.decls.size
+-- h2 : idx < (↑((l.and r).toAIGAux input)).aig.decls.size
+-- ⊢ idx < (↑(l.toAIGAux input)).aig.decls.size
+/--
+We preserve the values of the AIG that are not touched by our current circuit.
+-/
+theorem _root_.Circuit.toAIGAux_decl_eq [DecidableEq α] [Fintype α] [Hashable α]
+  (c : Circuit α) (input : AIG α) :
+  ∀ (idx : Nat) (h1) (h2), (c.toAIGAux input).val.aig.decls[idx]'h2 = input.decls[idx] := by
+  intro idx h1 h2
+  induction c generalizing input
+  case tru =>
+    simp [Circuit.toAIGAux]
+    rw [mkConstCached_decl_eq]
+  case fals =>
+    simp [Circuit.toAIGAux]
+    rw [mkConstCached_decl_eq]
+  case var negated v =>
+    simp [Circuit.toAIGAux]
+    rcases negated with rfl | rfl
+    case true =>
+      simp only [↓reduceIte]; rw [mkAtomCached_decl_eq]
+    case false =>
+      simp
+      rw [mkNotCached_decl_eq]
+      rw [mkAtomCached_decl_eq]
+      have := mkAtomCached_le_size input v
+      omega
+  case and l r hl hr =>
+    simp only [Circuit.toAIGAux, Ref.cast_eq]
+    rw [mkAndCached_decl_eq]
+    rw [hr]
+    rw [hl]
+    apply Circuit.toAIGAux_le_size
+    omega
+    apply Circuit.toAIGAux_le_size
+    apply Circuit.toAIGAux_le_size
+    omega
+  case or l r hl hr =>
+    simp only [Circuit.toAIGAux, Ref.cast_eq]
+    rw [mkOrCached_decl_eq]
+    rw [hr]
+    rw [hl]
+    apply Circuit.toAIGAux_le_size
+    omega
+    apply Circuit.toAIGAux_le_size
+    apply Circuit.toAIGAux_le_size
+    omega
+  case xor l r hl hr =>
+    simp only [Circuit.toAIGAux, Ref.cast_eq]
+    rw [mkXorCached_decl_eq]
+    rw [hr]
+    rw [hl]
+    apply Circuit.toAIGAux_le_size
+    omega
+    apply Circuit.toAIGAux_le_size
+    apply Circuit.toAIGAux_le_size
+    omega
+
+def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α]
+    (c : Circuit α) : Entrypoint α :=
+  (c.toAIGAux .empty).val
+
+open Std Sat AIG
+
+@[simp]
+theorem _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α}
+    {env : α → Bool}
+    {aig : AIG α} : -- TODO: I need a theorem that says that toAIG *extends*.
+    ⟦(c.toAIGAux aig).val.aig, (c.toAIGAux aig).val.ref, env⟧ = c.eval env := by
+  induction c generalizing env aig
+  case tru =>
+    simp [Circuit.toAIGAux]
+  case fals =>
+    simp [Circuit.toAIGAux]
+  case var negated v =>
+    simp [Circuit.toAIGAux]
+    rcases negated with rfl | rfl <;> simp
+  case and l r hl hr =>
+    rw [Circuit.toAIGAux]
+    rw [denote_mkAndCached]
+    simp only [Ref.cast_eq, denote_projected_entry, Circuit.eval]
+    rw [hr]
+    congr
+    -- TODO: write theorem in terms of any AIG entrypoint.
+    sorry
+  case or l r hl hr =>
+    sorry
+  case xor l r hl hr =>
+    sorry
+
+/- Proof: Structural recursion on the circuit. -/
+@[simp]
+theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α}
+    {env : α → Bool} :
+    Std.Sat.AIG.denote env c.toAIG = c.eval env := by
+  apply c.denote_toAIGAux_eq_eval
+
+open Std Sat AIG Reflect in
+def verifyAIG [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
+  let y := (Entrypoint.relabelNat x)
+  let z := AIG.toCNF y
+  Std.Tactic.BVDecide.Reflect.verifyCert z cert
+
+def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
+  (cert : String) : Bool := verifyAIG c.toAIG cert
+
+/- Proof: adapt 'Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true' -/
+theorem always_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable α]
+    (c : Circuit α) (cert : String)
+    (h : verifyCircuit c cert) :
+    c.always_false := by sorry
+
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
 -/
@@ -717,11 +897,11 @@ attribute [nospecialize] Circuit.toAIG
 
 open Std Sat AIG Tactic BVDecide Frontend in
 @[nospecialize]
-def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+def checkCircuitUnsatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM (Option LratCert) := do
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let entrypoint:= c.toAIG
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -729,18 +909,20 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
       (timeout := cadicalTimeoutSec)
       (binaryProofs := true)
     match out with
-    | .error _model => return true
-    | .ok _cert => return false
+    | .error _model => return .none
+    | .ok cert => return .some cert
 
 
 open Std Sat AIG Tactic BVDecide Frontend in
 @[nospecialize]
-def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
+def checkCircuitTautoAuxImpl
+    [DecidableEq α] [Hashable α] [Fintype α]
+    (c : Circuit α) : TermElabM (Option LratCert) := do
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
     let c := ~~~ c -- we're checking TAUTO, so check that negation is UNSAT.
-    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let entrypoint := c.toAIG
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -748,12 +930,15 @@ def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Ci
       (timeout := cadicalTimeoutSec)
       (binaryProofs := true)
     match out with
-    | .error _model => return false
-    | .ok _cert => return true
+    | .error _model => return none
+    | .ok cert => return some cert
 
+open Std Sat AIG Tactic BVDecide Frontend in
 @[implemented_by checkCircuitTautoAuxImpl, nospecialize]
-def checkCircuitTautoAux {α : Type} [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM Bool := do
-  return false
+def checkCircuitTautoAux {α : Type}
+    [DecidableEq α] [Hashable α] [Fintype α]
+    (c : Circuit α) : TermElabM (Option LratCert) := do
+  return none
 
 /--
 An axiom that tracks that a theorem is true because of our currently unverified
@@ -773,11 +958,14 @@ deriving DecidableEq, Hashable
 
 namespace Inputs
 
+def elim0 {α : Sort u} (i : Inputs ι 0) : α :=
+  i.ix.elim0
+
 def latest (i : ι) : Inputs ι (n+1) where
   ix := ⟨n, by omega⟩
   input := i
 
-def castLe (i : Inputs ι n) (hn : n ≤ n') : Inputs ι n' where
+def castLe (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
   ix := ⟨i.ix, by omega⟩
   input := i.input
 
@@ -835,18 +1023,579 @@ def Vars.format (fσ : σ → Format) (fι : ι → Format) {n : Nat} (v : Vars 
   | .state s => fσ s
   | .inputs is => is.format fι
 
+def Vars.castLe {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m :=
+  match v with
+  | .state s => .state s
+  | .inputs is => .inputs (is.castLe hnm)
+
+/-- Relate boolean and bitstream environments. -/
+structure EnvOutRelated {arity : Type _} {α : Type _}
+    (envBool : Vars α arity n → Bool)
+    (envBitstream : arity → BitStream) where
+  envBool_eq_envBitstream : ∀ (x : arity) (i : Nat) (hi: i < n),
+    envBool (Vars.inputs (Inputs.mk ⟨i, by omega⟩ x)) = envBitstream x i
+
+attribute [simp] EnvOutRelated.envBool_eq_envBitstream
+
+/-- Environment with no state variables. -/
+def envBoolEmpty_of_envBitstream
+   (envBitstream : arity → BitStream)
+   (n : Nat) : Vars Empty arity (n + 1) → Bool :=
+  fun x =>
+    match x with
+    | .state s => s.elim
+    | .inputs (.mk a i) => envBitstream i a
+
+/-- Environment with chosen state variables of the FSM. -/
+def envBoolStart_of_envBitstream (p : FSM α)
+   (envBitstream : arity → BitStream)
+   (n : Nat) : Vars p.α arity (n + 1) → Bool :=
+  fun x =>
+    match x with
+    | .state s => p.initCarry s
+    | .inputs (.mk a i) => envBitstream i a
+
+/-- make the init carry of the FSM from the envBool. -/
+def initCarry_of_envBool {p : FSM α}
+  (envBool : Vars p.α arity n → Bool) :
+  p.α → Bool := fun a => envBool (.state a)
+
+@[simp]
+theorem EnvOutRelated_envBool_of_envBitStream_of_self {arity : Type _}
+    (envBitstream : arity → BitStream) :
+    EnvOutRelated (envBoolEmpty_of_envBitstream envBitstream n) envBitstream := by
+  constructor
+  intros x i hi
+  rw [envBoolEmpty_of_envBitstream]
+
+
+structure StateCircuit {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (iter : Nat) where ofFun ::
+  toFun : p.α →  Circuit (Vars p.α arity iter)
+
+/-- Product initial state vector,
+that sets the state to be the intial state as given by the FSM.. -/
+def StateCircuit.zero {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) : StateCircuit p 0 where
+  toFun :=
+    fun a => Circuit.ofBool (p.initCarry a)
+
+@[simp]
+theorem StateCircuit.zero_eval {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {a : p.α} (envBool : Vars p.α arity 0 → Bool) :
+    ((StateCircuit.zero p).toFun a).eval envBool = p.initCarry a := by
+  simp only [zero, Circuit.ofBool]
+  rcases h : p.initCarry a <;> simp [h]
+
+/-- Product free state vector, that reads state from the input.. -/
+def StateCircuit.id  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) : StateCircuit p 0 where
+  toFun :=
+    fun a => Circuit.var true (Vars.state a)
+
+@[simp]
+theorem StateCircuit.id_eval {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {a : p.α} {envBool : Vars p.α arity 0 → Bool} :
+    ((StateCircuit.id p).toFun a).eval envBool = (envBool (Vars.state a)) := by
+  simp only [id, Circuit.ofBool]
+  rcases h : p.initCarry a <;> simp [h]
+
+/-- Make a circuit for one step of transition.  -/
+def StateCircuit.delta  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) : StateCircuit p 1 where
+  toFun :=
+    fun a =>
+      let x := StateCircuit.id p
+      x.toFun a |>.bind fun v =>
+        match v with
+        | .state s =>
+          let d := p.nextBitCirc (some s)
+          d.map fun w =>
+            match w with
+            | .inl a => Vars.state a
+            | .inr i => Vars.inputs (Inputs.mk 0 i)
+        | .inputs i => i.elim0
+
+@[simp]
+theorem StateCircuit.delta_eval {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {a : p.α} (envBool : Vars p.α arity 1 → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream)
+    :
+    ((StateCircuit.delta p).toFun a).eval envBool =
+     p.evalWith (initCarry_of_envBool envBool) envBitstream 1 := by
+  simp [delta, Circuit.eval_bind, Circuit.eval_map]
+  sorry
+
+/-- Allow state circuit to consume more inputs.  -/
+def StateCircuit.castLe  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    (cn : StateCircuit p n)
+    (hnm : n ≤ m) :  StateCircuit p m where
+  toFun := fun state =>
+    (cn.toFun state).map fun v => v.castLe hnm
+
+/-- Move inputs from [0..n) to [d..d+n). -/
+def StateCircuit.translateInputs {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    (cn : StateCircuit p n)
+    (d : Nat) : StateCircuit p (d + n) where
+  toFun := fun state =>
+    (cn.toFun state).map fun v =>
+      match v with
+      | .state s => .state s
+      | .inputs i => .inputs (Inputs.mk ⟨i.ix + d, by omega⟩ i.input)
+
+
+/-- Compose state circuits of 'n' steps and 'm' steps to get a circuit for 'n + m' steps. -/
+def StateCircuit.compose {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    /- Circuit that runs for [0..n) steps. -/
+    (sFst : StateCircuit p n)
+    /- Circuit that runs for [n..n+m ] steps. -/
+    (sSnd : StateCircuit p m) :
+    StateCircuit p (n + m) where
+  toFun := fun state =>
+    ((sSnd.translateInputs n).toFun state).bind fun v =>
+      match v with
+      | .state s =>
+          (sFst.castLe (show n ≤ n + m by omega)).toFun s
+      | .inputs i => Circuit.var .false (.inputs i)
+
+/-- How to evaluate composition of circuits. -/
+theorem StateCircuit.eval_compose {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {a : p.α} (envBool : Vars p.α arity (n + m) → Bool)
+    (envBitstream : arity → BitStream)
+    (sFst : StateCircuit p n) (sSnd : StateCircuit p m)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream)
+    :
+    ((StateCircuit.compose sFst sSnd).toFun a).eval envBool =
+      (sSnd.toFun a).eval (fun v =>
+        match v with
+        | .state s => (sFst.toFun s).eval (fun v => envBool (v.castLe (by omega)))
+        | .inputs i => envBool <| .inputs <| i.castLe (by omega)
+      ):= by
+  sorry
+
+/-- Build the output circuit from the given state circuit. -/
+def StateCircuit.toOutput {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    /- Circuit that runs for [0..n) steps. -/
+    (sc : StateCircuit p n)
+    /- Circuit that runs for [0..n+1] steps and produces an output. -/
+    : Circuit (Vars p.α arity (n + 1)) :=
+  (p.nextBitCirc none).bind fun v =>
+    match v with
+    | .inl s => (sc.castLe (by omega)).toFun s
+    | .inr i =>  Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))
+
+
+/-- Build the circuit for n transitions.-/
+def StateCircuit.deltaN  {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (n : Nat) : StateCircuit p n :=
+  match n with
+  | 0 => StateCircuit.id p
+  | n' + 1 =>
+    let d := (StateCircuit.delta p)
+    let sn := StateCircuit.deltaN p n'
+    sn.compose d
+
+
+/-- Make circuit that produces output for index 'i'. -/
+def StateCircuit.deltaNOutput {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat)  (hin : i ≤ n): (Circuit (Vars p.α arity (n+1))) :=
+  ((StateCircuit.deltaN p i).castLe (show i ≤ n by omega)).toOutput
+
+
+@[simp]
+theorem StateCircuit.eval_deltaNOutput_eq
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (envInit : p.α → Bool)
+    (hEnvInit : envInit = initCarry_of_envBool envBool)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream)
+    :
+    (deltaNOutput p n i hin).eval envBool = p.evalWith envInit envBitstream i := by
+  sorry
+
+
+/-- Take the 'or' of many circuits.-/
+def Circuit.bigOr {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  match cs with
+  | [] => Circuit.fals
+  | c :: cs =>
+    c ||| (Circuit.bigOr cs)
+
+@[simp]
+theorem Circuit.eval_bigOr_eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = false ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = false) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+@[simp]
+theorem Circuit.eval_bigOr_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = true ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = true) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+/-- Take the and of many circuits.-/
+def Circuit.bigAnd {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  match cs with
+  | [] => Circuit.tru
+  | c :: cs =>
+    c &&& (Circuit.bigAnd cs)
+
+@[simp]
+theorem Circuit.eval_bigAnd_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigAnd cs).eval env = true ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = true) := by
+  induction cs
+  case nil => simp [bigAnd]
+  case cons a as ih =>
+    simp [bigAnd, ih]
+
+@[simp]
+theorem Circuit.eval_bigAnd_eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigAnd cs).eval env = false ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = false) := by
+  induction cs
+  case nil => simp [bigAnd]
+  case cons a as ih =>
+    simp only [bigAnd, Circuit.eval.eq_4, Bool.and_eq_false_imp, ih, List.mem_cons,
+      exists_eq_or_imp]
+    by_cases h : a.eval env <;> simp [h]
+
+/--
+Make the safety circuit at index 'i',
+which runs the program at the initial state on the inputs.
+See that this fixes the state to 'Empty'.
+-/
+def mkSafetyCircuitAuxElem {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars Empty arity (n+1))) :=
+  (StateCircuit.deltaNOutput p n i (by omega)).bind fun v =>
+    match v with
+    | .state s => Circuit.ofBool <| p.initCarry s
+    | .inputs i => Circuit.var true (.inputs i)
+
+
+@[simp]
+theorem eval_mkSafetyCircuitAuxElem_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (envBool : Vars Empty arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    (mkSafetyCircuitAuxElem p n i hin).eval envBool = false ↔
+    p.eval envBitstream i = false := by
+  simp [mkSafetyCircuitAuxElem]
+  simp [Circuit.eval_bind]
+  rw [StateCircuit.eval_deltaNOutput_eq (envInit := p.initCarry) (envBitstream := envBitstream)]
+  · simp
+  · -- TODO: extract out theorems here.
+    ext i
+    simp [initCarry_of_envBool]
+    rcases h : (p.initCarry i) <;> simp [h]
+  ·  -- TODO: extract out theorems here.
+    constructor
+    simp
+    apply hEnvBitstream.envBool_eq_envBitstream
+
+/-- Make the list of safety circuits upto length 'n + 1'. -/
+def mkSafetyCircuitAuxList {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) :
+  List (Circuit (Vars Empty arity (n+1))) :=
+  (List.range n).attach.map (fun i =>
+    mkSafetyCircuitAuxElem p n i.val (by
+      have := i.prop;
+      simp at this
+      omega))
+
+/--
+make the circuit that witnesses safety for (n+1) steps.
+This builds the safety circuit for 'n+1' steps, and takes the 'or' of all of these.
+-/
+def mkSafetyCircuit {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
+  Circuit.bigOr (mkSafetyCircuitAuxList p n)
+
+#check mkSafetyCircuit
+#print Reflect.BvDecide.mkSafetyCircuit
+
+/--
+Evaluating the safety circuit is false iff
+the bitstreams are false upto index 'n'.
+-/
+@[simp]
+theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars Empty arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    (mkSafetyCircuit p n).eval envBool = false ↔
+    (∀ (i : Nat), i < n → p.eval envBitstream i = false) := by
+  rw [mkSafetyCircuit]
+  rw [Circuit.eval_bigOr_eq_false_iff]
+  rw [mkSafetyCircuitAuxList]
+  simp
+  constructor
+  · intros hc i hi
+    specialize hc _ i hi rfl
+    rw [eval_mkSafetyCircuitAuxElem_eq_false_iff
+      (envBitstream := envBitstream)
+      (hEnvBitstream := hEnvBitstream)
+    ] at hc
+    apply hc
+  · intros heval circ i hi hCirc
+    subst hCirc
+    rw [eval_mkSafetyCircuitAuxElem_eq_false_iff (hEnvBitstream := hEnvBitstream)]
+    apply heval
+    omega
+
+/-- LHS of the inductive hypothesis circuit, which is a list of transitions. -/
+def mkIndHypAuxElemLhsList  {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+    List (Circuit (Vars p.α arity (n+1))) :=
+  (List.range i).attach.map (fun i =>
+    StateCircuit.deltaNOutput p n i.val (by
+      have := i.prop;
+      simp at this
+      omega))
+
+/-- The ⋁ of the inductive hypothesis LHS elements, which is the LHS of the indhyp. -/
+def mkIndHypAuxElemLhs {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+    Circuit (Vars p.α arity (n+1)) :=
+  Circuit.bigOr <| mkIndHypAuxElemLhsList p n i hin
+
+/-- The RHS of the indhyp, which states that the state at i + 1 is safe. -/
+def mkIndHypAuxElemRhs {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+    Circuit (Vars p.α arity (n+1)) :=
+  StateCircuit.deltaNOutput p n i (by omega)
+
+/-- Make the inductive hypothesis circuit at index 'i'. -/
+def mkIndHypAuxElem {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+  Circuit (Vars p.α arity (n+1)) :=
+  /- Safe upto state n implies safe at state n. -/
+  (~~~ ((~~~ mkIndHypAuxElemLhs p n i hin)).implies
+    (~~~ (mkIndHypAuxElemRhs p n (i+1) (by sorry))))
+
+/-- The induction hypothesis circuit is false, iff
+the invariant holding upto i implies it holds at 'i+1'.
+-/
+@[simp]
+theorem eval_mkIndHypAuxElem_eq_false_iff {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream) :
+    (Circuit.eval (mkIndHypAuxElem p n i hin) envBool = false) ↔
+    ((∀ (j : Nat), (j < i) → p.evalWith (initCarry_of_envBool envBool) envBitstream j = false) →
+     p.evalWith (initCarry_of_envBool envBool) envBitstream (i + 1) = false) := by
+  sorry
+
+/-- Make the inductive hypothesis circuit. -/
+def mkIndHypAuxList {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+  List (Circuit (Vars p.α arity (n+1))) :=
+  (List.range n).attach.map (fun i =>
+    mkIndHypAuxElem p n i.val (by
+      have := i.prop;
+      simp at this
+      omega))
+
+def mkIndHypCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
+  Circuit.bigAnd (mkIndHypAuxList p n n (by omega))
+
+@[simp]
+theorem eval_mkIndHypCircuit_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream) :
+    (mkIndHypCircuit p n).eval envBool = false ↔
+   -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
+    (∃ (i : Nat), i < n ∧ ((∀ (j : Nat), j < i → p.eval envBitstream j = false) → p.eval envBitstream i = false)) := by
+  rw [mkIndHypCircuit]
+  rw [Circuit.eval_bigAnd_eq_false_iff]
+  simp [mkIndHypAuxList]
+  sorry
+
+/- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
+theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (hs : (mkSafetyCircuit p n).always_false)
+    (hind : (mkIndHypCircuit p n).always_false) :
+    ∀ envBitstream i, p.eval envBitstream i = false := by
+  simp at hs hind
+  intros env i
+  let envBoolStart := envBoolStart_of_envBitstream p env n
+  specialize (hind envBoolStart)
+  let envBoolEmpty := envBoolEmpty_of_envBitstream env n
+  rw [eval_mkIndHypCircuit_eq_false_iff (envBitstream := env)] at hind
+  specialize (hs envBoolEmpty)
+  rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := env)] at hs
+  · sorry
+  · sorry
+
+/-- Version that is better suited to proving. -/
+theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity}
+    (sCert : BVDecide.Frontend.LratCert)
+    (hs : verifyCircuit (mkSafetyCircuit p n) cert = true)
+    (indCert : BVDecide.Frontend.LratCert)
+    (hind : verifyCircuit (mkIndHypCircuit p n) indCert = true) :
+    ∀ env i, p.eval env i = false := by
+  apply eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false (n := n)
+  · apply always_false_of_verifyCircuit
+    exact hs
+  · apply always_false_of_verifyCircuit
+    exact hind
+
+/-- Prove that predicate is true iff the cerritificates check out. -/
+theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG
+    {w : Nat}
+    {vars : List (BitVec w)}
+    (p : Predicate)
+    (n : Nat)
+    (sCert : BVDecide.Frontend.LratCert)
+    (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
+    (indCert : BVDecide.Frontend.LratCert)
+    (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
+    p.denote w vars := by
+  apply Predicate.denote_of_eval
+  rw [← Predicate.evalFin_eq_eval p
+    (varsList := (List.map BitStream.ofBitVec vars))
+    (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
+  · rw [(predicateEvalEqFSM p).good]
+    apply eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
+      (n := n) (sCert := sCert) (indCert := indCert) (hs := hs) (hind := hind)
+  · intros i
+    simp
+
+inductive DecideIfZerosOutput
+/-- Safety property fails at this iteration. -/
+| safetyFailure (iter : Nat)
+/-- Was unable to establish invariant even at these many iterations. -/
+| exhaustedIterations (numIters : Nat)
+/-- we have proven both the safety and inductive invariant property. -/
+| proven (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+
+namespace DecideIfZerosOutput
+def isSuccess : DecideIfZerosOutput → Bool
+  | .safetyFailure _ => false
+  | .exhaustedIterations _ => false
+  | .proven .. => true
+end DecideIfZerosOutput
+
+/-
 @[nospecialize]
-partial def decideIfZerosAuxTermElabM {arity : Type _}
+partial def decideIfZerosAuxTermElabMOld {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (p : FSM arity)
     (c0K : Circuit (Vars p.α arity iter))
     (cK : Circuit (Vars p.α arity iter))
-    (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
+    (safetyProperty : Circuit (Vars p.α arity iter)) :
+    TermElabM (DecideIfZerosOutput) := do
   trace[Bits.Fast] s!"## K-induction (iter {iter})"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
-    return false
+    return .exhaustedIterations maxIter
   let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
     match v with
     | .state a => .inr (p.initCarry a) -- assign init state
@@ -855,11 +1604,11 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   let formatEmpty : Empty → Format := fun e => e.elim
   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
   trace[Bits.Fast] m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
-  if ← checkCircuitSatAux cKWithInit
-  then
+  match ← checkCircuitUnsatAux cKWithInit with
+  | .none =>
     trace[Bits.Fast] s!"Safety property failed on initial state."
-    return false
-  else
+    return .safetyFailure iter
+  | .some safetyCert =>
     trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
     -- circuit of the output at state (k+1)
     let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
@@ -895,30 +1644,87 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     -- let le : Bool := sorry
-    let le ← checkCircuitTautoAux safetyProperty
+    let tautoCert? ← checkCircuitTautoAux safetyProperty
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    if le then
+    match tautoCert? with
+    | .some tautoCert =>
       trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
-      return true
-    else
+      return .proven iter safetyCert tautoCert
+    | .none =>
       trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
-
--- def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
---     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
---         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
---     (p : FSM arity) : m Bool :=
---   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
+      decideIfZerosAuxTermElabMOld (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
-   (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
+def _root_.FSM.decideIfZerosMCadicalOld  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
     let safety : Circuit (Vars fsm.α arity 0) := .fals
-    decideIfZerosAuxTermElabM 0 maxIter fsm c c safety
+    decideIfZerosAuxTermElabMOld 0 maxIter fsm c c safety
+-/
+
+
+@[nospecialize]
+partial def decideIfZerosAuxTermElabMNew {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat) (maxIter : Nat)
+    (fsm : FSM arity) :
+    TermElabM (DecideIfZerosOutput) := do
+  trace[Bits.Fast] s!"K-induction (iter={iter})"
+  if iter ≥ maxIter && maxIter != 0 then
+    throwError s!"ran out of iterations, quitting"
+    return .exhaustedIterations maxIter
+  let tStart ← IO.monoMsNow
+  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit fsm iter
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.Fast] m!"Built safety circuit in '{tElapsedSec}s'"
+
+  let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+  let formatEmpty : Empty → Format := fun e => e.elim
+  let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+  trace[Bits.Fast] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+  let tStart ← IO.monoMsNow
+  let safetyCert? ← checkCircuitUnsatAux cSafety
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.Fast] m!"Checked safety property in {tElapsedSec} seconds."
+  match safetyCert? with
+  | .none =>
+    trace[Bits.Fast] s!"Safety property failed on initial state."
+    return .safetyFailure iter
+  | .some safetyCert =>
+    trace[Bits.Fast] s!"Safety property succeeded on initial state. Building induction circuit..."
+
+    let tStart ← IO.monoMsNow
+    let cIndHyp := mkIndHypCircuit fsm iter
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.Fast] m!"Built induction circuit in '{tElapsedSec}s'"
+
+    let tStart ← IO.monoMsNow
+    trace[Bits.Fast] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
+    -- let le : Bool := sorry
+    let indCert? ← checkCircuitUnsatAux cIndHyp
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.Fast] s!"Checked inductive invariant in '{tElapsedSec}s'."
+    match indCert? with
+    | .some indCert =>
+      trace[Bits.Fast] s!"Inductive invariant established."
+      return .proven iter safetyCert indCert
+    | .none =>
+      trace[Bits.Fast] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
+      decideIfZerosAuxTermElabMNew (iter + 1) maxIter fsm
+
+@[nospecialize]
+def _root_.FSM.decideIfZerosMCadicalNew  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
+  -- decideIfZerosM Circuit.impliesCadical fsm
+  withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
+    decideIfZerosAuxTermElabMNew 0 maxIter fsm
 
 end BvDecide
 
