@@ -729,13 +729,13 @@ def verifyAIG [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String)
   let z := AIG.toCNF y
   Std.Tactic.BVDecide.Reflect.verifyCert z cert
 
-def verifyCert [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool :=
-  verifyAIG c.toAIG cert
+def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
+  (cert : String) : Bool := verifyAIG c.toAIG cert
 
 /- Proof: adapt 'Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true' -/
-theorem always_false_of_cerifyAIG [DecidableEq α] [Fintype α] [Hashable α]
+theorem always_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable α]
     (c : Circuit α) (cert : String)
-    (h : verifyAIG c.toAIG cert) :
+    (h : verifyCircuit c cert) :
     c.always_false := by sorry
 
 /-!
@@ -1240,6 +1240,9 @@ def mkSafetyCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
   Circuit.bigOr (mkSafetyCircuitAuxList p n)
 
+#check mkSafetyCircuit
+#print Reflect.BvDecide.mkSafetyCircuit 
+
 /--
 Evaluating the safety circuit is false iff
 the bitstreams are false upto index 'n'.
@@ -1385,28 +1388,26 @@ theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
     [Hashable arity]
     {p : FSM arity}
     (sCert : BVDecide.Frontend.LratCert)
-    (hs : verifyAIG (mkSafetyCircuit p n).toAIG sCert = true)
+    (hs : verifyCircuit (mkSafetyCircuit p n) cert = true)
     (indCert : BVDecide.Frontend.LratCert)
-    (hind : verifyAIG (mkIndHypCircuit p n).toAIG indCert = true) :
+    (hind : verifyCircuit (mkIndHypCircuit p n) indCert = true) :
     ∀ env i, p.eval env i = false := by
   apply eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false (n := n)
-  · apply always_false_of_cerifyAIG
+  · apply always_false_of_verifyCircuit
     exact hs
-  · apply always_false_of_cerifyAIG
+  · apply always_false_of_verifyCircuit
     exact hind
 
 /-- Prove that predicate is true iff the cerritificates check out. -/
-theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG {arity : Type}
-    {w : Nat} {vars : List (BitVec w)}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
+theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG 
+    {w : Nat}
+    {vars : List (BitVec w)}
     (p : Predicate)
     (n : Nat)
     (sCert : BVDecide.Frontend.LratCert)
-    (hs : verifyAIG (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n).toAIG sCert = true)
+    (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
     (indCert : BVDecide.Frontend.LratCert)
-    (hind : verifyAIG (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n).toAIG indCert = true) :
+    (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
     p.denote w vars := by
   apply Predicate.denote_of_eval
   rw [← Predicate.evalFin_eq_eval p

@@ -447,33 +447,60 @@ Assumes that the mvar has type 'a = <true>' or 'a = <false>',
 and closes this goal with 'native_decide' of a 'rfl' proof.
 Assigns to the MVarId a proof.
 -/
-def mkEqRflNativeDecideProof (aEqBMVar : MVarId) : MetaM Unit := do
-  let eqTy ← instantiateMVars (← aEqBMVar.getType)
-  let .some (αTy, a₁, a₂) ← Lean.Meta.matchEq? eqTy
-    | throwError m!"expected equality type, but found type '{eqTy}'"
-  if ! (← isDefEq αTy (mkConst ``Bool)) then
-     throwError m!"expected equality of booleans, but found '{αTy}' equality in '{eqTy}'"
-  let some _a₂Bool := getBoolLit? a₂
-    | throwError m!"expected a constant boolean on the RHS of the equality but found '{a₂}' in '{eqTy}'"
+def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : MetaM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let auxDeclName ← mkAuxName `_mkEqRflNativeDecideProof 0
   let decl := Declaration.defnDecl {
     name := auxDeclName
     levelParams := []
     type := mkConst ``Bool
-    value := a₁
+    value := lhsExpr
     hints := .abbrev
     safety := .safe
   }
   addAndCompile decl
-  let a₁Def : Expr := mkConst auxDeclName
-  let rflProof ← mkEqRefl a₂
-  let proof ← mkAppM ``Lean.ofReduceBool #[a₁Def, a₂, rflProof]
-  if ! (← isDefEq (mkMVar aEqBMVar) proof) then
-    throwError m!"expected proof {proof} to be assignable to goal {aEqBMVar}, but found '{proof}'"
-  return ()
+  let lhsDef : Expr := mkConst auxDeclName
+  let rflProof ← mkEqRefl (toExpr rhs)
+  mkAppM ``Lean.ofReduceBool #[lhsDef, toExpr rhs, rflProof]
 
 
+/-- info: predicateEvalEqFSM (p : Predicate) : FSMPredicateSolution p -/
+#guard_msgs in #check predicateEvalEqFSM
+def Expr.mkPredicateEvalEqFSM (p : Expr) : Expr :=
+    mkApp (.const ``predicateEvalEqFSM []) p
+
+/--
+info: FSMPredicateSolution.toFSM {p : Predicate} (self : FSMPredicateSolution p) : FSM (Fin p.arity)
+-/
+#guard_msgs in #check FSMPredicateSolution.toFSM
+def Expr.mkToFSM (self : Expr) : MetaM Expr :=
+  mkAppM ``FSMPredicateSolution.toFSM #[self]
+
+
+
+/--
+info: Reflect.BvDecide.mkSafetyCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity)
+  (n : ℕ) : Circuit (Reflect.BvDecide.Vars Empty arity (n + 1))
+-/
+#guard_msgs in #check Reflect.BvDecide.mkSafetyCircuit
+def Expr.mkMkSafetyCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``Reflect.BvDecide.mkSafetyCircuit #[fsm, n]
+
+/--
+info: Reflect.BvDecide.mkIndHypCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity)
+  (n : ℕ) : Circuit (Reflect.BvDecide.Vars p.α arity (n + 1))
+-/
+#guard_msgs in #check Reflect.BvDecide.mkIndHypCircuit
+def Expr.mkMkIndHypCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``Reflect.BvDecide.mkIndHypCircuit #[fsm, n]
+
+/--
+info: Reflect.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) :
+  Bool
+-/
+#guard_msgs in #check Reflect.BvDecide.verifyCircuit
+def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
+  mkAppM ``Reflect.BvDecide.verifyCircuit #[c, cert]
 
 /--
 Reflect an expression of the form:
@@ -567,18 +594,43 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       | .proven niter safetyCert indCert =>
         let safetyCertExpr := Lean.mkStrLit safetyCert
         let indCertExpr := Lean.mkStrLit indCert
-        let safetyCertProof ← mkFreshExprMVar .none
-        let indCertProof ← mkFreshExprMVar .none
-        let gs ← g.apply (← mkAppM ``Predicate.denote_of_verifyAIG_of_verifyAIG
-          #[predicate.e.quote,
-            Lean.mkNatLit niter,
-            safetyCertExpr,
-            safetyCertProof,
-            -- ← Meta.mkEqRefl (toExpr true), -- TODO: change to 'ofReduceBool'.
-            indCertExpr,
-            indCertProof])
-        mkEqRflNativeDecideProof safetyCertProof.mvarId!
-        mkEqRflNativeDecideProof indCertProof.mvarId!
+        let prf ← g.withContext do
+          -- (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
+          let safetyCertTy ← 
+            Expr.mkVerifyCircuit 
+              (← Expr.mkMkSafetyCircuit
+                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
+                (toExpr niter)) safetyCertExpr
+          check safetyCertTy
+          logInfo m!"safety cert type: {indentD safetyCertTy}"
+          let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
+          -- (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
+          check safetyCertProof
+          logInfo m!"safety cert proof: {indentD safetyCertProof}"
+          let indCertTy ←
+            Expr.mkVerifyCircuit
+              (← Expr.mkMkIndHypCircuit
+                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
+                (toExpr niter)) indCertExpr
+          check indCertTy
+          logInfo m!"inductive cert type: {indentD indCertTy}"
+          let indCertProof ← mkEqRflNativeDecideProof indCertTy true
+          check indCertProof
+          logInfo m!"inductive cert proof: {indentD indCertProof}"
+          let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG [])
+            #[w,
+              bvToIxMapVal,
+              predicate.e.quote,
+              Lean.mkNatLit niter,
+              safetyCertExpr,
+              safetyCertProof,
+              indCertExpr,
+              indCertProof]
+          let prf ← instantiateMVars prf
+          check prf
+          logInfo m!"proof: {indentD prf}"
+          pure prf
+        let gs ← g.apply prf
         -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
