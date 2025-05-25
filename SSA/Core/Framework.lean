@@ -895,13 +895,10 @@ def Com.changeVars : Com d Γ eff ty →
 @[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure ty) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = c.denote Γv := by
   induction c using Com.recPure
-  · simp_all [denoteLets, denote]
-  ·
-    apply Id.ext
-    simp_all [denoteLets, denote]
-    apply Id.ext
-    congr
-    -- This does not yet work
+  · simp
+  · rename_i a
+    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq,
+      Id.bind_eq, returnVar_var, a, denote]
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
@@ -1304,11 +1301,9 @@ assignment of that variable in the input valuation -/
   induction com using Com.recPure
   · simp
   · rw [outContextHom_var]
-    apply Id.ext
-    simp [denoteLets, *]
-    -- this does not yet work
-
-
+    rename_i a
+    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var,
+    Valuation.cast_rfl, Id.pure_eq, Id.bind_eq, Ctxt.Hom.unSnoc_apply, Valuation.snoc_toSnoc, a]
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
