@@ -745,13 +745,22 @@ section Lemmas
     (Com.var e body).denote =
     fun Γv => (e.denote Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
   funext Γv
-  cases eff <;> simp [denote]
+  cases eff
+  · apply Id.ext
+    simp only [EffectKind.toMonad_pure, Id.run_bind, denote]
+    congr
+  · simp [denote]
 
 @[simp] lemma Com.denoteLets_var (e : Expr d Γ eff t) (body : Com d _ eff u) [LawfulMonad d.m] :
     (Com.var e body).denoteLets =
         (fun V => e.denote V >>= fun Ve => body.denoteLets (V.snoc Ve)) := by
   funext V
-  cases eff <;> simp [denoteLets, bind_pure]
+  cases eff
+  · apply Id.ext
+    simp only [outContext_var, denoteLets, EffectKind.toMonad_pure, Valuation.cast_rfl,
+      EffectKind.return_pure_toMonad_eq, Id.run_bind]
+    congr
+  · simp [denoteLets, bind_pure]
 
 @[simp] lemma Com.denoteImpure_ret [Monad d.m] [DialectDenote d] {Γ : Ctxt d.Ty} (x : Γ.Var t) :
   (Com.ret (d:=d) (eff := eff) x).denoteImpure = fun Γv => return (Γv x) := rfl
@@ -885,7 +894,14 @@ def Com.changeVars : Com d Γ eff ty →
 
 @[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure ty) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = c.denote Γv := by
-  induction c using Com.recPure <;> simp_all [denoteLets, denote]
+  induction c using Com.recPure
+  · simp_all [denoteLets, denote]
+  ·
+    apply Id.ext
+    simp_all [denoteLets, denote]
+    apply Id.ext
+    congr
+    -- This does not yet work
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
@@ -1044,12 +1060,20 @@ section Lemmas
 @[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
   funext V; simp only [EffectKind.return_impure_toMonad_eq]
-  induction com using Com.recPure <;> simp_all
+  induction com using Com.recPure
+  · simp
+  · apply Id.ext
+    simp_all
+    rfl
 
 @[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
     denoteLets (com.castPureToEff eff)
     = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
-  funext V; induction com using Com.recPure <;> simp_all
+  funext V; induction com using Com.recPure
+  · simp
+  · apply Id.ext
+    simp_all
+    rfl
 
 end Lemmas
 
@@ -1279,7 +1303,12 @@ assignment of that variable in the input valuation -/
     com.denoteLets V (com.outContextHom v) = V v := by
   induction com using Com.recPure
   · simp
-  · rw [outContextHom_var]; simp [denoteLets, *]
+  · rw [outContextHom_var]
+    apply Id.ext
+    simp [denoteLets, *]
+    -- this does not yet work
+
+
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
@@ -1389,7 +1418,11 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
         EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
         bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
         Valuation.snoc_last]
-      cases eff <;> simp
+      cases eff
+      · apply Id.ext
+        simp
+        rfl
+      · simp
 
 theorem Lets.denote_getExpr [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty}
     {lets : Lets d Γ₁ eff Γ₂} {t : d.Ty}
@@ -2143,7 +2176,9 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
 @[simp] lemma Lets.denote_var_last_pure (lets : Lets d Γ_in .pure Γ_out)
     (e : Expr d Γ_out .pure ty) (V_in : Valuation Γ_in) :
     Lets.denote (var lets e) V_in (Var.last ..) = e.denote (lets.denote V_in) := by
+  apply Id.ext
   simp [Lets.denote]
+  congr
 
 @[simp] lemma Expr.denote_eq_denote_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
     {Γv : Valuation Γ} {Δv : Valuation Δ}
@@ -2419,7 +2454,9 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
     cases eff
     case pure =>
       rw [denote_splitProgramAtAux hres s]
+      apply Id.ext
       simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      congr
     case impure =>
       rw [denote_splitProgramAtAux hres s]
       simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
@@ -2438,7 +2475,11 @@ theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ₁ 
     (hres : res ∈ splitProgramAt pos prog) (s : Valuation Γ₁) :
      (res.2.1.denote s) >>= res.2.2.1.denote = prog.denote s := by
   rw [denote_splitProgramAtAux hres s]
-  cases eff <;> simp
+  cases eff
+  · apply Id.ext
+    simp
+    congr
+  · simp
 
 /-
   ## Rewriting
