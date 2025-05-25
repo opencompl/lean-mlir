@@ -1312,6 +1312,20 @@ def StateCircuit.toOutput {arity : Type _}
     | .inl s => (sc.castLe (by omega)).toFun s
     | .inr i =>  Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))
 
+/-- Surely a better theorem exists, but what? -/
+theorem StateCircuit.eval_toOutput
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {a : p.α} (envBool : Vars p.α arity (n + 1) → Bool)
+    (sc : StateCircuit p n)
+    :
+    (sc.toOutput).eval envBool =
+    ((p.nextBitCirc none).bind fun v =>
+      match v with
+      | .inl s => (sc.castLe (by omega)).toFun s
+      | .inr i =>  Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))).eval envBool := rfl
+
 
 /-- Build the circuit for n transitions.-/
 def StateCircuit.deltaN  {arity : Type _}
