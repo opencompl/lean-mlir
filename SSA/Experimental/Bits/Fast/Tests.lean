@@ -297,6 +297,7 @@ def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
 /--
 info: 'test24' depends on axioms: [propext,
  sorryAx,
+ Circuit.denote_toAIGAux_eq_eval,
  Classical.choice,
  Lean.ofReduceBool,
  Quot.sound,
@@ -423,6 +424,7 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 /--
 info: 'width_1_char_2_add_four' depends on axioms: [propext,
  sorryAx,
+ Circuit.denote_toAIGAux_eq_eval,
  Classical.choice,
  Lean.ofReduceBool,
  Quot.sound,

@@ -836,34 +836,42 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α]
 
 open Std Sat AIG
 
+
 @[simp]
-theorem _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
+axiom _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
     {c : Circuit α}
     {env : α → Bool}
     {aig : AIG α} : -- TODO: I need a theorem that says that toAIG *extends*.
-    ⟦(c.toAIGAux aig).val.aig, (c.toAIGAux aig).val.ref, env⟧ = c.eval env := by
-  induction c generalizing env aig
-  case tru =>
-    simp [Circuit.toAIGAux]
-  case fals =>
-    simp [Circuit.toAIGAux]
-  case var negated v =>
-    simp [Circuit.toAIGAux]
-    rcases negated with rfl | rfl <;> simp
-  case and l r hl hr =>
-    rw [Circuit.toAIGAux]
-    rw [denote_mkAndCached]
-    simp only [Ref.cast_eq, denote_projected_entry, Circuit.eval]
-    rw [hr]
-    congr
-    -- TODO: write theorem in terms of any AIG entrypoint.
-    sorry
-  case or l r hl hr =>
-    -- TODO: write theorem in terms of any AIG entrypoint.
-    sorry
-  case xor l r hl hr =>
-    -- TODO: write theorem in terms of any AIG entrypoint.
-    sorry
+    ⟦(c.toAIGAux aig).val.aig, (c.toAIGAux aig).val.ref, env⟧ = c.eval env
+
+-- @[simp]
+-- theorem _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
+--     {c : Circuit α}
+--     {env : α → Bool}
+--     {aig : AIG α} : -- TODO: I need a theorem that says that toAIG *extends*.
+--     ⟦(c.toAIGAux aig).val.aig, (c.toAIGAux aig).val.ref, env⟧ = c.eval env := by
+--   induction c generalizing env aig
+--   case tru =>
+--     simp [Circuit.toAIGAux]
+--   case fals =>
+--     simp [Circuit.toAIGAux]
+--   case var negated v =>
+--     simp [Circuit.toAIGAux]
+--     rcases negated with rfl | rfl <;> simp
+--   case and l r hl hr =>
+--     rw [Circuit.toAIGAux]
+--     rw [denote_mkAndCached]
+--     simp only [Ref.cast_eq, denote_projected_entry, Circuit.eval]
+--     rw [hr]
+--     congr
+--     -- TODO: write theorem in terms of any AIG entrypoint.
+--     sorry
+--   case or l r hl hr =>
+--     -- TODO: write theorem in terms of any AIG entrypoint.
+--     sorry
+--   case xor l r hl hr =>
+--     -- TODO: write theorem in terms of any AIG entrypoint.
+--     sorry
 
 /-- The denotations of the AIG and the circuit agree. -/
 @[simp]
