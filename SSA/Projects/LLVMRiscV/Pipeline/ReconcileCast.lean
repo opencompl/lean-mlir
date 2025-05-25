@@ -7,9 +7,8 @@ open LLVMRiscV
 
 /-!
 ## Functionality
-This file contains rewrites for the Peephole Rewriter to eliminate unrealized conversion cast.
-The rewrites bellow are registered and similar to dead code elimination/ constant folding
-unrealized conversion cast get eliminated.
+This file contains rewrites for the Peephole Rewriter to eliminate unrealized conversion casts.
+The rewrites below are registered fold-away pairs of unrealized conversion casts.
 
 An `unrealized conversion cast` in MLIR is an operation inserted during the lowering
 from one dialect to another dialect to temporary guarantee compatible between type
