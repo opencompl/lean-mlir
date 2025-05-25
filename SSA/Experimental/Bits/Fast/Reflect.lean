@@ -1934,6 +1934,19 @@ def mkIndHypCircuit {arity : Type _}
   Circuit.bigAnd (mkIndHypAuxList p n)
 
 @[simp]
+theorem Inputs.castLe_eq_self {α : Type _} {n : Nat} (i : Inputs α n) (h : n ≤ n) :
+    i.castLe h = i := by
+  simp [Inputs.castLe]
+
+/-- casting to the same width equals vars-/
+@[simp]
+theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n ≤ n) :
+    v.castLe h = v := by
+  rcases v with x | i
+  · simp [Vars.castLe]
+  · simp [Vars.castLe]
+
+@[simp]
 theorem eval_mkIndHypCircuit_eq_false_iff
     {arity : Type _}
     [DecidableEq arity]
@@ -1941,14 +1954,46 @@ theorem eval_mkIndHypCircuit_eq_false_iff
     [Hashable arity]
     (p : FSM arity) (n : Nat)
     (envBool : Vars p.α arity (n + 1) → Bool)
-    (envBitstream : arity → BitStream) :
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     (mkIndHypCircuit p n).eval envBool = false ↔
    -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
-    (∃ (i : Nat), i < n ∧ ((∀ (j : Nat), j < i → p.eval envBitstream j = false) → p.eval envBitstream i = false)) := by
+    (∃ (i : Nat), i < n ∧
+      ((∀ (j : Nat), j < i → p.evalWith (fun s => envBool (.state s)) envBitstream j = false) →
+      p.evalWith (fun s => envBool (.state s)) envBitstream i = false)) := by
   rw [mkIndHypCircuit]
   rw [Circuit.eval_bigAnd_eq_false_iff]
   simp [mkIndHypAuxList]
-  sorry
+  constructor
+  · intros h
+    obtain ⟨c, hc, ha⟩ := h
+    obtain ⟨i, ⟨hi, hc⟩⟩ := hc
+    subst hc
+    simp [Circuit.eval_map] at ha
+    rw [eval_mkIndHypAuxElem_eq_false_iff (envBitstream := envBitstream)] at ha
+    · exists i
+    · -- TODO: write this as a theorem that encapsulates that environments are related
+      -- upon casting of the input.
+      constructor
+      intros x j hj
+      apply hEnvBitstream.envBool_eq_envBitstream
+  · intros h
+    obtain ⟨i, hi, hEval⟩ := h
+    exists ((mkIndHypAuxElem p i).map (fun v => v.castLe (by omega)))
+    simp [Circuit.eval_map]
+    constructor
+    · exists i
+      simp [hi]
+    · rw [eval_mkIndHypAuxElem_eq_false_iff (envBitstream := envBitstream)]
+      · intros hLhs
+        specialize (hEval hLhs)
+        apply hEval
+      · -- TODO: write this as a theorem that encapsulates that environments are related
+        -- upon casting of the input.
+        constructor
+        intros x j hj
+        apply hEnvBitstream.envBool_eq_envBitstream
+
 
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
