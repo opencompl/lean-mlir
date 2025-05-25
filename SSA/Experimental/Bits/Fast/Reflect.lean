@@ -1238,6 +1238,14 @@ def StateCircuit.castLe  {arity : Type _}
   toFun := fun state =>
     (cn.toFun state).map fun v => v.castLe hnm
 
+@[simp]
+theorem StateCircuit.toFun_castLe {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {n m : Nat} (cn : StateCircuit p n) (hnm : n ≤ m) :
+    (cn.castLe hnm).toFun = (fun i => (cn.toFun i).map (fun v => v.castLe hnm)) := rfl
+
 /-- Move inputs from [0..n) to [d..d+n). -/
 def StateCircuit.translateInputs {arity : Type _}
     [DecidableEq arity]
@@ -1286,16 +1294,15 @@ theorem StateCircuit.eval_compose {arity : Type _}
         | .inputs i => envBool <| .inputs <| Inputs.mk ⟨i.ix + n, by omega⟩ i.input
       ):= by
   simp only [compose]
-  simp [Circuit.eval_bind, Circuit.eval_map]
-  simp [StateCircuit.translateInputs]
-  simp [StateCircuit.castLe]
-  simp [Circuit.eval_map]
+  simp only [toFun_castLe, Circuit.eval_bind]
+  simp only [translateInputs]
+  simp only [Circuit.eval_map]
   congr 1
   ext i
   rcases i with s | i
-  · simp
-    simp [Circuit.eval_map]
-  · simp
+  · simp only
+    simp only [Circuit.eval_map]
+  · simp only [Circuit.eval, ↓reduceIte]
 
 /-- Build the output circuit from the given state circuit. -/
 def StateCircuit.toOutput {arity : Type _}
@@ -1317,15 +1324,21 @@ theorem StateCircuit.eval_toOutput
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
-    {p : FSM arity} {a : p.α} (envBool : Vars p.α arity (n + 1) → Bool)
+    {p : FSM arity} (envBool : Vars p.α arity (n + 1) → Bool)
     (sc : StateCircuit p n)
     :
     (sc.toOutput).eval envBool =
     ((p.nextBitCirc none).eval (fun x =>
       match x with
       | .inl s => (sc.toFun s).eval (fun i => envBool <| i.castLe (by omega))
-      | .inr i => envBool <| Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))) := sorry
-    XXXXXXXXXXXXXXXXXx
+      | .inr i => envBool <| Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))) := by
+  simp only [toOutput, toFun_castLe]
+  simp only [Circuit.eval_bind]
+  congr
+  ext x
+  rcases x with s | i
+  · simp  [Circuit.eval_map]
+  · simp
 
 /-- Build the circuit for n transitions.-/
 def StateCircuit.deltaN  {arity : Type _}
