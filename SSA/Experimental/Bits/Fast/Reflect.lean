@@ -859,11 +859,13 @@ theorem _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Ha
     -- TODO: write theorem in terms of any AIG entrypoint.
     sorry
   case or l r hl hr =>
+    -- TODO: write theorem in terms of any AIG entrypoint.
     sorry
   case xor l r hl hr =>
+    -- TODO: write theorem in terms of any AIG entrypoint.
     sorry
 
-/- Proof: Structural recursion on the circuit. -/
+/-- The denotations of the AIG and the circuit agree. -/
 @[simp]
 theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
     {c : Circuit α}
@@ -871,20 +873,74 @@ theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hasha
     Std.Sat.AIG.denote env c.toAIG = c.eval env := by
   apply c.denote_toAIGAux_eq_eval
 
+/-- If the circuit is UNSAT, then the AIG is UNSAT. -/
+theorem Circuit.eval_eq_false_iff_toAIG_unsat [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α} :
+    (∀ env, c.eval env = false) ↔ c.toAIG.Unsat := by
+  rw [Entrypoint.Unsat, UnsatAt]
+  simp [← Circuit.denote_toAIG_eq_eval]
+
 open Std Sat AIG Reflect in
+/-- Verify the AIG by converting to CNF and checking the LRAT certificate against it. -/
 def verifyAIG [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
   let y := (Entrypoint.relabelNat x)
   let z := AIG.toCNF y
   Std.Tactic.BVDecide.Reflect.verifyCert z cert
 
+
+
+open Std Tactic BVDecide Reflect AIG in
+/--
+This theorem tracks that Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff does not need a [Nonempty α]
+to preserve unsatisfiability.
+@hargoniX uses [Nonempty α] to convert a partial inverse to the relabelling.
+However, this is un-necessary: One can case split on `Nonempty α`, and:
+- When it is nonempty, we can apply the relabelling directly to show unsatisfiability.
+- When it is empty, we show that the relabelling preserves unsatisfiability
+  by showing that the relabelling is a no-op.
+-/
+axiom relabelNat_unsatAt_iff₂  [DecidableEq α] [Hashable α]
+    {aig : AIG α} {hidx1} {hidx2} :
+    (aig.relabelNat).UnsatAt idx invert hidx1 ↔ aig.UnsatAt idx invert hidx2
+
+theorem relabelNat_unsat_iff₂  [DecidableEq α] [Hashable α]
+{entry : Entrypoint α} :
+    (entry.relabelNat).Unsat ↔ entry.Unsat:= by
+  simp only [Entrypoint.Unsat, Entrypoint.relabelNat]
+  rw [relabelNat_unsatAt_iff₂]
+
+/--
+info: Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff {α : Type} [DecidableEq α] [Hashable α] {entry : Entrypoint α}
+  [Nonempty α] : entry.relabelNat.Unsat ↔ entry.Unsat
+-/
+#guard_msgs in #check Entrypoint.relabelNat_unsat_iff
+
+open Std Tactic Sat AIG Reflect BitVec in
+/-- Verifying the AIG implies that the AIG is unsat at the entrypoint. -/
+theorem verifyAIG_correct [DecidableEq α] [Fintype α] [Hashable α]
+    {entry : Entrypoint α} {cert : String}
+    (h : verifyAIG entry cert) :
+    entry.Unsat := by
+  rw [verifyAIG] at h
+  rw [← relabelNat_unsat_iff₂]
+  rw [← AIG.toCNF_equisat entry.relabelNat]
+  apply Std.Tactic.BVDecide.Reflect.verifyCert_correct (cert := cert) _ h
+
+/-- Verify the circuit by translating to AIG. -/
 def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
   (cert : String) : Bool := verifyAIG c.toAIG cert
 
-/- Proof: adapt 'Std.Tactic.BVDecide.Reflect.unsat_of_verifyBVExpr_eq_true' -/
+/- If circuit verification succeeds, then the circuit is unsat. -/
 theorem always_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable α]
-    (c : Circuit α) (cert : String)
+    {c : Circuit α} {cert : String}
     (h : verifyCircuit c cert) :
-    c.always_false := by sorry
+    c.always_false := by
+  simp
+  intros env
+  simp [verifyCircuit] at h
+  apply Circuit.eval_eq_false_iff_toAIG_unsat .. |>.mpr
+  apply verifyAIG_correct h
+
 
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
@@ -1005,6 +1061,12 @@ inductive Vars (σ : Type) (ι : Type) (n : Nat)
 | state (s : σ)
 | inputs (is : Inputs ι n)
 deriving DecidableEq, Hashable
+
+instance [Inhabited σ] : Inhabited (Vars σ ι n) where
+  default := .state (default)
+
+instance  [Inhabited ι] : Inhabited (Vars σ ι (n + 1)) where
+  default := .inputs (Inputs.latest default)
 
 instance [DecidableEq σ] [DecidableEq ι] [Fintype σ] [Fintype ι] : Fintype (Vars σ ι n) where
   elems :=
@@ -1323,7 +1385,7 @@ theorem Circuit.eval_bigAnd_eq_false_iff
   case cons a as ih =>
     simp only [bigAnd, Circuit.eval.eq_4, Bool.and_eq_false_imp, ih, List.mem_cons,
       exists_eq_or_imp]
-    by_cases h : a.eval env <;> simp [h]
+    by_cases h : a.eval env <;> simp [h, ih]
 
 /--
 Make the safety circuit at index 'i',
