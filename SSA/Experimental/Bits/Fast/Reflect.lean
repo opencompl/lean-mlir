@@ -898,6 +898,8 @@ However, this is un-necessary: One can case split on `Nonempty α`, and:
 - When it is nonempty, we can apply the relabelling directly to show unsatisfiability.
 - When it is empty, we show that the relabelling preserves unsatisfiability
   by showing that the relabelling is a no-op.
+- Alternative proof strategy: Implement a 'RelabelNat' that case splits on
+  'NonEmpty α', and when it is empty, returns the original AIG.
 -/
 axiom relabelNat_unsatAt_iff₂  [DecidableEq α] [Hashable α]
     {aig : AIG α} {hidx1} {hidx2} :
