@@ -1178,7 +1178,7 @@ def StateCircuit.id  {arity : Type _}
     fun a => Circuit.var true (Vars.state a)
 
 @[simp]
-theorem StateCircuit.id_eval {arity : Type _}
+theorem StateCircuit.eval_id {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -1216,15 +1216,16 @@ theorem StateCircuit.eval_delta {arity : Type _}
     (hEnvBitstream : EnvOutRelated envBool envBitstream)
     :
     ((StateCircuit.delta p).toFun a).eval envBool =
-     (p.nextBit (initCarry_of_envBool envBool) (fun i => envBitstream i 0)).1 a := by
-  simp [delta, Circuit.eval_bind]
-  simp [FSM.nextBit]
-  simp [Circuit.eval_map]
+    p.delta (fun s => envBool (Vars.state s)) envBitstream a
+      := by
+  simp only [delta, Fin.isValue, Circuit.eval_bind, eval_id, FSM.delta_eq_carryWith_one]
+  simp only [Fin.isValue, FSM.carryWith]
+  simp only [Fin.isValue, Circuit.eval_map]
   congr
   ext x
   rcases x with state | x
-  · simp [initCarry_of_envBool]
-  · simp
+  · simp only [FSM.carry_zero, FSM.initCarry_changeInitCarry_eq, Sum.elim_inl]
+  · simp only [Fin.isValue, FSM.carry_zero, FSM.initCarry_changeInitCarry_eq, Sum.elim_inr]
     apply hEnvBitstream.envBool_eq_envBitstream
 
 /-- Allow state circuit to consume more inputs.  -/
@@ -1259,7 +1260,6 @@ def StateCircuit.translateInputs {arity : Type _}
       match v with
       | .state s => .state s
       | .inputs i => .inputs (Inputs.mk ⟨i.ix + d, by omega⟩ i.input)
-
 
 /-- Compose state circuits of 'n' steps and 'm' steps to get a circuit for 'n + m' steps. -/
 def StateCircuit.compose {arity : Type _}
@@ -1319,12 +1319,13 @@ def StateCircuit.toOutput {arity : Type _}
     | .inl s => (sc.castLe (by omega)).toFun s
     | .inr i =>  Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))
 
-/-- Surely a better theorem exists, but what? -/
-theorem StateCircuit.eval_toOutput
+theorem StateCircuit.eval_toOutput_eq_
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
     {p : FSM arity} (envBool : Vars p.α arity (n + 1) → Bool)
+    -- (envBitstream : arity → BitStream)
+    -- (hEnvBitstream : EnvOutRelated envBool envBitstream)
     (sc : StateCircuit p n)
     :
     (sc.toOutput).eval envBool =
@@ -1340,6 +1341,27 @@ theorem StateCircuit.eval_toOutput
   · simp  [Circuit.eval_map]
   · simp
 
+@[simp]
+theorem StateCircuit.eval_toOutput_eq
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} (envBool : Vars p.α arity (n + 1) → Bool)
+    (sc : StateCircuit p n)
+    :
+    (sc.toOutput).eval envBool =
+    p.outputWith
+      (fun s => (sc.toFun s).eval (fun i => envBool <| i.castLe (by omega)))
+      (fun i => envBool <| Vars.inputs (Inputs.mk ⟨n, by omega⟩ i)) := by
+  simp only [toOutput, toFun_castLe]
+  simp only [Circuit.eval_bind]
+  congr
+  ext x
+  rcases x with s | i
+  · simp  [Circuit.eval_map]
+  · simp
+
+
 /-- Build the circuit for n transitions.-/
 def StateCircuit.deltaN  {arity : Type _}
     [DecidableEq arity]
@@ -1352,7 +1374,24 @@ def StateCircuit.deltaN  {arity : Type _}
   | n' + 1 =>
     let d := (StateCircuit.delta p)
     let sn := StateCircuit.deltaN p n'
-    sn.compose d
+    (d.compose sn).castLe (by omega)
+
+@[simp]
+theorem StateCircuit.eval_deltaN_eq {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  {p : FSM arity} (envBool : Vars p.α arity n → Bool)
+  (envBitstream : arity → BitStream)
+  (hEnvBitstream : EnvOutRelated envBool envBitstream)
+  (s : p.α)
+  :
+  ((StateCircuit.deltaN p n).toFun s).eval envBool =
+    p.carryWith (fun s => envBool <| .state s) envBitstream n s := by
+  induction n
+  case zero =>
+    simp [StateCircuit.deltaN, StateCircuit.id, Circuit.eval_map]
+  sorry
 
 
 /-- Make circuit that produces output for index 'i'. -/
@@ -1362,7 +1401,6 @@ def StateCircuit.deltaNOutput {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (n : Nat) (i : Nat)  (hin : i ≤ n): (Circuit (Vars p.α arity (n+1))) :=
   ((StateCircuit.deltaN p i).castLe (show i ≤ n by omega)).toOutput
-
 
 @[simp]
 theorem StateCircuit.eval_deltaNOutput_eq
@@ -1378,6 +1416,8 @@ theorem StateCircuit.eval_deltaNOutput_eq
     (hEnvBitstream : EnvOutRelated envBool envBitstream)
     :
     (deltaNOutput p n i hin).eval envBool = p.evalWith envInit envBitstream i := by
+  rw [deltaNOutput]
+  simp only [eval_toOutput_eq, toFun_castLe]
   sorry
 
 
@@ -1440,58 +1480,149 @@ theorem Circuit.eval_bigAnd_eq_false_iff
     by_cases h : a.eval env <;> simp [h, ih]
 
 /--
-Make the safety circuit at index 'i',
-which runs the program at the initial state on the inputs.
-See that this fixes the state to 'Empty'.
+Make the circuit that produces the state vector after 'n' iterations.
+This needs 'n' bits of input.
 -/
-def mkSafetyCircuitAuxElem {arity : Type _}
+def mkRealStateVectorCircuit {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
-  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars Empty arity (n+1))) :=
-  (StateCircuit.deltaNOutput p n i (by omega)).bind fun v =>
-    match v with
-    | .state s => Circuit.ofBool <| p.initCarry s
-    | .inputs i => Circuit.var true (.inputs i)
+  (p : FSM arity) (n : Nat) : p.α → Circuit (Vars Empty arity n) := fun s =>
+  match n with
+  | 0 => Circuit.ofBool (p.initCarry s)
+  | n + 1 =>
+    (p.nextBitCirc (some s)).bind fun v =>
+      match v with
+      | .inl s' => (mkRealStateVectorCircuit p n s').map fun w =>
+        match w with
+        | .state s'' => Vars.state s''
+        | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
+      | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
+theorem mkRealStateVectorCircuit_eq_eval {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) (s : p.α)
+    (envBool : Vars Empty arity n → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+  (mkRealStateVectorCircuit p n s).eval envBool =
+  p.carryWith (fun s => p.initCarry s) envBitstream n s := by
+  induction n generalizing s
+  case zero =>
+    simp only [mkRealStateVectorCircuit, Circuit.ofBool, FSM.carryWith_zero_eq]
+    rcases h : p.initCarry s <;> simp [h]
+  case succ m hm =>
+    simp only [mkRealStateVectorCircuit, Fin.coe_eq_castSucc, Circuit.eval_bind,
+      FSM.carryWith_initCarry_eq_carry]
+    simp only [FSM.carry, FSM.nextBit]
+    congr
+    ext x
+    rcases x with a | i
+    · simp only [Circuit.eval_map, Sum.elim_inl]
+      rw [hm]
+      · rfl
+      · -- TODO: write this as a theorem that encapsuates that environments are related
+        -- upon casting of the input.
+        constructor
+        intros x i hi
+        simp only [Fin.castSucc_mk]
+        apply hEnvBitstream.envBool_eq_envBitstream
+    · simp only [Circuit.eval, ↓reduceIte, Sum.elim_inr]
+      apply hEnvBitstream.envBool_eq_envBitstream
+
+
+/--
+Make the circuit that produces the output value after 'n' iterations.
+This needs 'n+1' bits of input.
+-/
+def mkEvalCircuit {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
+  p.nextBitCirc none |>.bind fun v =>
+    match v with
+    | .inl s => (mkRealStateVectorCircuit p n s).map fun w =>
+      match w with
+      | .state s' => Vars.state s'
+      | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
+    | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
 @[simp]
-theorem eval_mkSafetyCircuitAuxElem_eq_false_iff
+theorem eval_mkEvalCircuit_eq_false_iff
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
-    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (p : FSM arity) (n : Nat)
     (envBool : Vars Empty arity (n + 1) → Bool)
     (envBitstream : arity → BitStream)
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
-    (mkSafetyCircuitAuxElem p n i hin).eval envBool = false ↔
-    p.eval envBitstream i = false := by
-  simp [mkSafetyCircuitAuxElem]
+    -- Make a safety circuit, that computes the evaluation of the FSM.
+    (mkEvalCircuit p n).eval envBool =
+      p.eval envBitstream n  := by
+  simp [mkEvalCircuit]
   simp [Circuit.eval_bind]
-  rw [StateCircuit.eval_deltaNOutput_eq (envInit := p.initCarry) (envBitstream := envBitstream)]
-  · simp
-  · -- TODO: extract out theorems here.
-    ext i
-    simp [initCarry_of_envBool]
-    rcases h : (p.initCarry i) <;> simp [h]
-  ·  -- TODO: extract out theorems here.
-    constructor
-    simp
+  rw [FSM.eval, FSM.nextBit]
+  simp
+  congr
+  ext x
+  rcases x with a | i
+  · simp [Circuit.eval_map]
+    rw [mkRealStateVectorCircuit_eq_eval (envBitstream := envBitstream)]
+    · simp
+    · -- TODO: write this as a theorem that encapsulates that environments are related
+      -- upon casting of the input.
+      constructor
+      intros x i hi
+      simp only [Fin.castSucc_mk]
+      apply hEnvBitstream.envBool_eq_envBitstream
+  · simp [initCarry_of_envBool]
     apply hEnvBitstream.envBool_eq_envBitstream
+
+-- /-
+-- Make the safety circuit at index 'i',
+-- which runs the program at the initial state on the inputs.
+-- See that this fixes the state to 'Empty'.
+-- -/
+-- def mkSafetyCircuitAuxElem {arity : Type _}
+--   [DecidableEq arity]
+--   [Fintype arity]
+--   [Hashable arity]
+--   (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars Empty arity (n+1))) :=
+--   (StateCircuit.deltaNOutput p n i (by omega)).bind fun v =>
+--     match v with
+--     | .state s => Circuit.ofBool <| p.initCarry s
+--     | .inputs i => Circuit.var true (.inputs i)
+
+
+-- @[simp]
+-- theorem eval_mkSafetyCircuitAuxElem_eq_false_iff
+--     {arity : Type _}
+--     [DecidableEq arity]
+--     [Fintype arity]
+--     [Hashable arity]
+--     (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+--     (envBool : Vars Empty arity (n + 1) → Bool)
+--     (envBitstream : arity → BitStream)
+--     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+--     (mkEvalCircuit p n).eval envBool =
+--     p.eval envBitstream n = false := by
 
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (n : Nat) :
-  List (Circuit (Vars Empty arity (n+1))) :=
-  (List.range n).attach.map (fun i =>
-    mkSafetyCircuitAuxElem p n i.val (by
-      have := i.prop;
-      simp at this
-      omega))
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    List (Circuit (Vars Empty arity (n+1))) :=
+  let ys := (List.range n).attach
+  ys.map fun i =>
+    (mkEvalCircuit p i.val).map (fun vs => vs.castLe (by
+      have := i.property; simp at this; omega
+    ))
 
 /--
 make the circuit that witnesses safety for (n+1) steps.
@@ -1525,16 +1656,117 @@ theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
   constructor
   · intros hc i hi
     specialize hc _ i hi rfl
-    rw [eval_mkSafetyCircuitAuxElem_eq_false_iff
+    simp [Circuit.eval_map] at hc
+    rw [eval_mkEvalCircuit_eq_false_iff
       (envBitstream := envBitstream)
-      (hEnvBitstream := hEnvBitstream)
     ] at hc
-    apply hc
+    · apply hc
+    · -- TODO: write this as a theorem that encapsulates that environments are related
+      -- upon casting of the input.
+      constructor
+      intros x j hj
+      apply hEnvBitstream.envBool_eq_envBitstream
   · intros heval circ i hi hCirc
     subst hCirc
-    rw [eval_mkSafetyCircuitAuxElem_eq_false_iff (hEnvBitstream := hEnvBitstream)]
-    apply heval
-    omega
+    simp [Circuit.eval_map]
+    rw [eval_mkEvalCircuit_eq_false_iff]
+    · apply heval
+      omega
+    · constructor
+      intros x j hj
+      apply hEnvBitstream.envBool_eq_envBitstream
+
+/-! ## Arbitrary State Vector Builder
+
+This section builds a circuit that produces the state vector after 'n' iterations,
+starting with a state vector that is given by the circuit itself.
+
+-/
+/--
+Make the circuit that produces the state vector after 'n' iterations,
+starting with a state vector that is given by the circuit itself.
+-/
+def mkStateVectorWithCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : p.α → Circuit (Vars p.α arity n) := fun s =>
+  match n with
+  | 0 => Circuit.var true (Vars.state s)
+  | n + 1 =>
+    (p.nextBitCirc (some s)).bind fun v =>
+      match v with
+      | .inl s' => (mkStateVectorWithCircuit p n s').map fun w =>
+        match w with
+        | .state s'' => Vars.state s''
+        | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
+      | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
+
+theorem mkStateVectorWithCircuit_eq_evalWith {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) (s : p.α)
+    (envBool : Vars p.α arity n → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+  (mkStateVectorWithCircuit p n s).eval envBool =
+  p.carryWith (fun s => envBool (Vars.state s)) envBitstream n s := by
+  induction n generalizing s
+  case zero =>
+    simp only [mkStateVectorWithCircuit, Circuit.ofBool, FSM.carryWith_zero_eq]
+    rcases h : envBool (Vars.state s) <;> simp [h]
+  case succ m hm =>
+    simp only [mkStateVectorWithCircuit, Fin.coe_eq_castSucc, Circuit.eval_bind,
+      FSM.carryWith_initCarry_eq_carry]
+    congr
+    ext x
+    rcases x with a | i
+    · simp only [Circuit.eval_map, Sum.elim_inl]
+      rw [hm]
+      · rfl
+      · -- Theorem: If the environments are related, then the evaluation of the circuit
+        -- with the state vector is consistent with the evaluation of the FSM.
+        constructor
+        intros x i hi
+        simp only [Fin.castSucc_mk]
+        apply hEnvBitstream.envBool_eq_envBitstream
+    · simp only [Circuit.eval, ↓reduceIte, Sum.elim_inr]
+      apply hEnvBitstream.envBool_eq_envBitstream
+
+/-
+Make the safety circuit at index 'i',
+which runs the program at the initial state on the inputs.
+See that this fixes the state to 'Empty'.
+-/
+def mkEvalWithCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : (Circuit (Vars p.α arity (n+1))) :=
+  p.nextBitCirc none |>.bind fun v =>
+    match v with
+    | .inl s => (mkStateVectorWithCircuit p n s).map fun w =>
+      match w with
+      | .state s' => Vars.state s'
+      | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
+    | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
+
+@[simp]
+theorem eval_mkEvalWithCircuit_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (envBool : Vars p.α arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    (mkEvalWithCircuit p n).eval envBool =
+    p.evalWith (fun s => envBool (.state s)) envBitstream i := by
+  simp [mkEvalWithCircuit]
+  simp [Circuit.eval_bind]
+  sorry
 
 /-- LHS of the inductive hypothesis circuit, which is a list of transitions. -/
 def mkIndHypAuxElemLhsList  {arity : Type _}
