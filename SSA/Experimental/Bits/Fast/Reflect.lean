@@ -1133,12 +1133,20 @@ def initCarry_of_envBool {p : FSM α}
   p.α → Bool := fun a => envBool (.state a)
 
 @[simp]
-theorem EnvOutRelated_envBool_of_envBitStream_of_self {arity : Type _}
+theorem EnvOutRelated_envBoolEmpty_of_envBitStream_of_self {arity : Type _}
     (envBitstream : arity → BitStream) :
     EnvOutRelated (envBoolEmpty_of_envBitstream envBitstream n) envBitstream := by
   constructor
   intros x i hi
   rw [envBoolEmpty_of_envBitstream]
+
+@[simp]
+theorem EnvOutRelated_envBoolStart_of_envBitStream_of_self {arity : Type _} {α : Type _}
+    (p : FSM α) (envBitstream : arity → BitStream) :
+    EnvOutRelated (envBoolStart_of_envBitstream p envBitstream n) envBitstream := by
+  constructor
+  intros x i hi
+  rw [envBoolStart_of_envBitstream]
 
 -- structure StateCircuit {arity : Type _}
 --     [DecidableEq arity]
@@ -1994,6 +2002,57 @@ theorem eval_mkIndHypCircuit_eq_false_iff
         intros x j hj
         apply hEnvBitstream.envBool_eq_envBitstream
 
+theorem ind_principle (bound : Nat)
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (s0 : p.α → Bool)
+    (hBase : ∀ (envBitstream) (i : Nat), i < bound → p.evalWith s0 envBitstream i = false)
+    (hInd : ∀ (carry : p.α → Bool) (envBitstream),
+       ∃ (k : Nat), k < bound ∧ ((∀ (j : Nat), j < k → p.evalWith carry envBitstream j = false) →
+        p.evalWith carry envBitstream k = false)) :
+    ∀ k envBitstream, p.evalWith s0 envBitstream k = false := by
+  intros k envBitstream
+  have := hInd p.initCarry envBitstream
+  obtain ⟨kInd, hkIndLt, hkInd⟩ := this
+  by_cases hk : k < kInd
+  · apply hBase envBitstream k (by omega)
+  · have : ∃ δ, k = kInd + δ := by
+      exact Nat.exists_eq_add_of_le (by omega)
+    obtain ⟨δ, hδ⟩ := this
+    subst hδ
+    clear hkInd
+    revert envBitstream s0
+    clear hk
+    induction δ with
+    | zero =>
+      intros s0 hBase envBitstream
+      apply hBase
+      omega
+    | succ δ ih =>
+      intros s0 hBase envBitstream
+      rw [show (kInd + (δ + 1) = (kInd + δ) + 1) by omega]
+      rw [FSM.evalWith_succ_eq_evalWith_delta']
+      apply ih
+      intros envBitstream'
+      intros i hi
+      specialize hInd  (p.delta' s0 fun s => envBitstream s 0) envBitstream'
+      sorry
+
+  -- by_cases hk : k < bound
+  -- · apply hBase envBitstream k hk
+  -- · simp at hk
+  --   have : ∃ δ, k = bound + δ := by
+  --     exact Nat.exists_eq_add_of_le hk
+  --   obtain ⟨δ, hδ⟩ := this
+  --   subst hδ
+  --   induction δ with
+  --   | zero =>
+
+  --     sorry
+  --   | succ δ ih => sorry
 
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
@@ -2006,15 +2065,39 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     (hind : (mkIndHypCircuit p n).always_false) :
     ∀ envBitstream i, p.eval envBitstream i = false := by
   simp at hs hind
-  intros env i
-  let envBoolStart := envBoolStart_of_envBitstream p env n
-  specialize (hind envBoolStart)
-  let envBoolEmpty := envBoolEmpty_of_envBitstream env n
-  rw [eval_mkIndHypCircuit_eq_false_iff (envBitstream := env)] at hind
-  specialize (hs envBoolEmpty)
-  rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := env)] at hs
-  · sorry
-  · sorry
+  intros envBitstream i
+  induction i generalizing hs hind
+  case zero => -- base case, i = 0
+    let envBoolStart := envBoolStart_of_envBitstream p envBitstream n
+    let envBoolEmpty := envBoolEmpty_of_envBitstream envBitstream n
+    specialize (hs envBoolEmpty)
+    rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := envBitstream)] at hs
+    · rcases n with rfl | n
+      · specialize hind envBoolStart
+        rw [eval_mkIndHypCircuit_eq_false_iff (envBitstream := envBitstream)] at hind
+        · simp [envBoolStart, envBoolEmpty] at hind
+        · simp [envBoolStart]
+      · apply hs
+        simp
+    · simp [envBoolEmpty]
+  case succ i ih =>
+    rw [← FSM.evalWith_eq_eval_of_eq_init (carryState := p.initCarry) (hc := rfl)]
+    rw [evalWith_evalWith_eq_false_iff (envBitstream := envBitstream)]
+
+    · simp [envBoolStart]
+
+    -- let envBoolStart := envBoolStart_of_envBitstream p envBitstream n
+    -- let envBoolEmpty := envBoolEmpty_of_envBitstream envBitstream n
+    -- specialize (hs envBoolEmpty)
+    -- rw [eval_mkSafetyCircuit_eq_false_iff] at hs
+    -- if the safety circuit is false, then the inductive hypothesis is false.
+    -- so we can use the inductive hypothesis to prove the next step.
+    -- specialize (hind envBoolStart)
+    -- rw [eval_mkIndHypCircuit_eq_false_iff] at hind
+    -- rcases hind with ⟨j, hj, hEval⟩
+
+    -- simp [envBoolStart, envBoolEmpty] at hEval
+
 
 /-- Version that is better suited to proving. -/
 theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq

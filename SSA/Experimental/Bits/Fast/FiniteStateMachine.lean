@@ -243,15 +243,14 @@ theorem carryWith_carryWith_one_eq_succ_carryWith (carryState : p.α → Bool) (
   rw [← carryWith]
   congr
 
-
-theorem carryWith_carryWith_eq_carryWith (carryState : p.α → Bool) (x : arity → BitStream) :
-      p.carryWith (p.carryWith carryState x n) (fun a i => x a (n + i)) m =
-      p.carryWith carryState x (n + m) := by
-  induction n generalizing carryState x
-  case zero =>
-    simp
-  case succ n ih =>
-    sorry
+-- theorem carryWith_carryWith_eq_carryWith (carryState : p.α → Bool) (x : arity → BitStream) :
+--       p.carryWith (p.carryWith carryState x n) (fun a i => x a (n + i)) m =
+--       p.carryWith carryState x (n + m) := by
+--   induction n generalizing carryState x
+--   case zero =>
+--     simp
+--   case succ n ih =>
+--     sorry
 
 theorem carryWith_eq_carry_of_eq_initCarry (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) (n : Nat)
     (hc : carryState = p.initCarry) :
@@ -272,6 +271,33 @@ TODO: write theorems for 'evalWith'.
 -/
 def evalWith (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) : BitStream :=
   (p.changeInitCarry carryState).eval x
+
+/-- One step transition of the FSM.-/
+def delta' (p : FSM arity) (carryState : p.α → Bool) (x : arity → Bool) : p.α → Bool :=
+  fun s => (p.nextBitCirc (some s)).eval fun v =>
+    Sum.elim carryState (fun a => x a) v
+
+
+/-- Evaluating at (n + 1) equals evaluating at n with a different state-/
+theorem evalWith_succ_eq_evalWith_delta' (p : FSM arity) (carryState : p.α → Bool)
+      (x : arity → BitStream) :
+  p.evalWith carryState x (n + 1) =
+  p.evalWith (p.delta' carryState (fun s => x s 0)) (fun s i => x s (i + 1)) n := by
+  -- Proof goes here
+  simp [evalWith, delta', carryWith]
+  rw [eval_changeInitCarry_succ]
+  congr
+
+/-- Evaluating at (n + 1) equals evaluating at n with a different state-/
+theorem evalWith_succ_eq_delta'_evalWith (p : FSM arity) (carryState : p.α → Bool)
+      (x : arity → BitStream) :
+  p.evalWith carryState x (n + 1) =
+  p.delta' (p.evalWith carryState x n) (fun a => x a (n + 1)) := by
+  -- Proof goes here
+  simp [evalWith, delta', carryWith]
+  rw [eval_changeInitCarry_succ]
+  congr
+
 
 /-- compute the output of the FSM, given the carry state and the environment of the immediate next bits. -/
 def outputWith (p : FSM arity) (carryState : p.α → Bool) (env : arity → Bool) : Bool :=
