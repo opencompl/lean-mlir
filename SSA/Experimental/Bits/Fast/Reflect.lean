@@ -1207,7 +1207,7 @@ def StateCircuit.delta  {arity : Type _}
         | .inputs i => i.elim0
 
 @[simp]
-theorem StateCircuit.delta_eval {arity : Type _}
+theorem StateCircuit.eval_delta {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -1216,9 +1216,16 @@ theorem StateCircuit.delta_eval {arity : Type _}
     (hEnvBitstream : EnvOutRelated envBool envBitstream)
     :
     ((StateCircuit.delta p).toFun a).eval envBool =
-     p.evalWith (initCarry_of_envBool envBool) envBitstream 1 := by
-  simp [delta, Circuit.eval_bind, Circuit.eval_map]
-  sorry
+     (p.nextBit (initCarry_of_envBool envBool) (fun i => envBitstream i 0)).1 a := by
+  simp [delta, Circuit.eval_bind]
+  simp [FSM.nextBit]
+  simp [Circuit.eval_map]
+  congr
+  ext x
+  rcases x with state | x
+  · simp [initCarry_of_envBool]
+  · simp
+    apply hEnvBitstream.envBool_eq_envBitstream
 
 /-- Allow state circuit to consume more inputs.  -/
 def StateCircuit.castLe  {arity : Type _}
@@ -1262,7 +1269,7 @@ def StateCircuit.compose {arity : Type _}
       match v with
       | .state s =>
           (sFst.castLe (show n ≤ n + m by omega)).toFun s
-      | .inputs i => Circuit.var .false (.inputs i)
+      | .inputs i => Circuit.var .true (.inputs i)
 
 /-- How to evaluate composition of circuits. -/
 theorem StateCircuit.eval_compose {arity : Type _}
@@ -1270,17 +1277,16 @@ theorem StateCircuit.eval_compose {arity : Type _}
     [Fintype arity]
     [Hashable arity]
     {p : FSM arity} {a : p.α} (envBool : Vars p.α arity (n + m) → Bool)
-    (envBitstream : arity → BitStream)
     (sFst : StateCircuit p n) (sSnd : StateCircuit p m)
-    (hEnvBitstream : EnvOutRelated envBool envBitstream)
     :
     ((StateCircuit.compose sFst sSnd).toFun a).eval envBool =
       (sSnd.toFun a).eval (fun v =>
         match v with
         | .state s => (sFst.toFun s).eval (fun v => envBool (v.castLe (by omega)))
-        | .inputs i => envBool <| .inputs <| i.castLe (by omega)
+        | .inputs i => envBool <| .inputs <| Inputs.mk ⟨i.ix + n, by omega⟩ i.input
       ):= by
-  simp [StateCircuit.compose, Circuit.eval_bind, Circuit.eval_map]
+  simp only [compose]
+  simp [Circuit.eval_bind, Circuit.eval_map]
   simp [StateCircuit.translateInputs]
   simp [StateCircuit.castLe]
   simp [Circuit.eval_map]
