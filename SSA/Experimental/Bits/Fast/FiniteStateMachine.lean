@@ -160,6 +160,10 @@ def changeInitCarry (p : FSM arity) (c : p.α → Bool) : FSM arity :=
 theorem initCarry_changeInitCarry_eq (p : FSM arity) (c : p.α → Bool) :
     (p.changeInitCarry c).initCarry = c := rfl
 
+@[simp]
+theorem nextBitCirc_changeInitCarry_eq (p : FSM arity) (c : p.α → Bool) :
+    (p.changeInitCarry c).nextBitCirc = p.nextBitCirc := rfl
+
 theorem carry_changeInitCarry_succ
     (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : ∀ n,
     (p.changeInitCarry c).carry x (n+1) =

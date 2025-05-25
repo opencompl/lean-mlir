@@ -1499,7 +1499,7 @@ def mkRealStateVectorCircuit {arity : Type _}
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
       | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
-theorem mkRealStateVectorCircuit_eq_eval {arity : Type _}
+theorem mkRealStateVectorCircuit_eval_eq {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -1571,7 +1571,7 @@ theorem eval_mkEvalCircuit_eq_false_iff
   ext x
   rcases x with a | i
   · simp [Circuit.eval_map]
-    rw [mkRealStateVectorCircuit_eq_eval (envBitstream := envBitstream)]
+    rw [mkRealStateVectorCircuit_eval_eq (envBitstream := envBitstream)]
     · simp
     · -- TODO: write this as a theorem that encapsulates that environments are related
       -- upon casting of the input.
@@ -1702,7 +1702,7 @@ def mkStateVectorWithCircuit {arity : Type _}
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
       | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
-theorem mkStateVectorWithCircuit_eq_evalWith {arity : Type _}
+theorem eval_mkStateVectorWithCircuit_eq_carryWith {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -1758,49 +1758,67 @@ theorem eval_mkEvalWithCircuit_eq_false_iff
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
-    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (p : FSM arity) (n : Nat)
     (envBool : Vars p.α arity (n + 1) → Bool)
     (envBitstream : arity → BitStream)
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     (mkEvalWithCircuit p n).eval envBool =
-    p.evalWith (fun s => envBool (.state s)) envBitstream i := by
+    p.evalWith (fun s => envBool (.state s)) envBitstream n := by
   simp [mkEvalWithCircuit]
-  simp [Circuit.eval_bind]
-  sorry
+  simp [Circuit.eval_bind, Circuit.eval_map]
+  rw [FSM.evalWith, FSM.eval, FSM.nextBit]
+  simp
+  congr
+  ext x
+  rcases x with a | i
+  · simp [Circuit.eval_map, Sum.elim_inl]
+    rw [eval_mkStateVectorWithCircuit_eq_carryWith]
+    · rw [FSM.carryWith]
+    · -- TODO extract out into generic theory.
+      constructor
+      intros x j hj
+      simp only [Fin.castSucc_mk]
+      apply hEnvBitstream.envBool_eq_envBitstream
+  · simp only [Circuit.eval_map, Sum.elim_inr]
+    simp only [Circuit.eval, ↓reduceIte]
+    apply hEnvBitstream.envBool_eq_envBitstream
 
-/-- LHS of the inductive hypothesis circuit, which is a list of transitions. -/
+/-- LHS of the inductive hypothesis circuit,
+  which is a list of circuits that produce the output at the 'i'th state for 0 <= i < n
+. -/
 def mkIndHypAuxElemLhsList  {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+    (p : FSM arity) (n : Nat) :
     List (Circuit (Vars p.α arity (n+1))) :=
-  (List.range i).attach.map (fun i =>
-    StateCircuit.deltaNOutput p n i.val (by
-      have := i.prop;
-      simp at this
-      omega))
+  (List.range n).attach.map (fun i => -- produces circuits with i = 0...n-1, which need at most 'n' bits.
+    (mkEvalWithCircuit p i.val).map (fun vs =>
+      vs.castLe (by
+        have := i.property; simp at this; omega
+      ))
+  )
 
 /-- The ⋁ of the inductive hypothesis LHS elements, which is the LHS of the indhyp. -/
 def mkIndHypAuxElemLhs {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+    (p : FSM arity) (n : Nat) :
     Circuit (Vars p.α arity (n+1)) :=
-  Circuit.bigOr <| mkIndHypAuxElemLhsList p n i hin
+  Circuit.bigOr <| mkIndHypAuxElemLhsList p n
 
 /-- The RHS of the indhyp, which states that the state at i + 1 is safe. -/
 def mkIndHypAuxElemRhs {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+    (p : FSM arity) (n : Nat) :
     Circuit (Vars p.α arity (n+1)) :=
-  StateCircuit.deltaNOutput p n i (by omega)
+  mkEvalWithCircuit p n
 
 /-- Make the inductive hypothesis circuit at index 'i'. -/
 def mkIndHypAuxElem {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+  (p : FSM arity) (n : Nat) :
   Circuit (Vars p.α arity (n+1)) :=
   /- Safe upto state n implies safe at state n. -/
-  (~~~ ((~~~ mkIndHypAuxElemLhs p n i hin)).implies
-    (~~~ (mkIndHypAuxElemRhs p n (i+1) (by sorry))))
+  (~~~ ((~~~ mkIndHypAuxElemLhs p n)).implies
+    (~~~ (mkIndHypAuxElemRhs p n)))
 
 /-- The induction hypothesis circuit is false, iff
 the invariant holding upto i implies it holds at 'i+1'.
@@ -1808,12 +1826,13 @@ the invariant holding upto i implies it holds at 'i+1'.
 @[simp]
 theorem eval_mkIndHypAuxElem_eq_false_iff {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
+    (p : FSM arity) (n : Nat)
     (envBool : Vars p.α arity (n + 1) → Bool)
     (envBitstream : arity → BitStream) :
-    (Circuit.eval (mkIndHypAuxElem p n i hin) envBool = false) ↔
-    ((∀ (j : Nat), (j < i) → p.evalWith (initCarry_of_envBool envBool) envBitstream j = false) →
-     p.evalWith (initCarry_of_envBool envBool) envBitstream (i + 1) = false) := by
+    (Circuit.eval (mkIndHypAuxElem p n) envBool = false) ↔
+    ((∀ (j : Nat), (j < n) → p.evalWith (initCarry_of_envBool envBool) envBitstream j = false) →
+     p.evalWith (initCarry_of_envBool envBool) envBitstream n = false) := by
+  simp [mkIndHypAuxElem, mkIndHypAuxElemLhs, mkIndHypAuxElemRhs]
   sorry
 
 /-- Make the inductive hypothesis circuit. -/
@@ -1821,20 +1840,20 @@ def mkIndHypAuxList {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
-  (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) :
+  (p : FSM arity) (n : Nat) :
   List (Circuit (Vars p.α arity (n+1))) :=
   (List.range n).attach.map (fun i =>
-    mkIndHypAuxElem p n i.val (by
-      have := i.prop;
-      simp at this
-      omega))
+    (mkIndHypAuxElem p i.val).map (fun vs =>
+      vs.castLe (by
+        have := i.property; simp at this; omega
+      )))
 
 def mkIndHypCircuit {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  Circuit.bigAnd (mkIndHypAuxList p n n (by omega))
+  Circuit.bigAnd (mkIndHypAuxList p n)
 
 @[simp]
 theorem eval_mkIndHypCircuit_eq_false_iff
