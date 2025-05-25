@@ -1280,7 +1280,16 @@ theorem StateCircuit.eval_compose {arity : Type _}
         | .state s => (sFst.toFun s).eval (fun v => envBool (v.castLe (by omega)))
         | .inputs i => envBool <| .inputs <| i.castLe (by omega)
       ):= by
-  sorry
+  simp [StateCircuit.compose, Circuit.eval_bind, Circuit.eval_map]
+  simp [StateCircuit.translateInputs]
+  simp [StateCircuit.castLe]
+  simp [Circuit.eval_map]
+  congr 1
+  ext i
+  rcases i with s | i
+  · simp
+    simp [Circuit.eval_map]
+  · simp
 
 /-- Build the output circuit from the given state circuit. -/
 def StateCircuit.toOutput {arity : Type _}
