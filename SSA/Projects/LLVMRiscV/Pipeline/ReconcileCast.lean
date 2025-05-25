@@ -32,24 +32,3 @@ def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty
     intro e
     simp_riscv
     simp
-
-def double_cast_elimination_LLVM_to_RISCV : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs:= [LV| {
-      ^entry (%lhs: i64): -- this is a refinement
-      %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
-      %lhsr1 = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
-      %addl = "builtin.unrealized_conversion_cast" (%lhsr) : (!i64) -> (i64)
-      llvm.return %addl : i64
-    }]
-  rhs:= [LV| {
-      ^entry (%lhs: i64):
-      %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
-      %addl = "builtin.unrealized_conversion_cast" (%lhsr) : (!i64) -> (i64)
-      llvm.return %addl : i64
-    }]
-  correct := by
-      simp_peephole
-      intro e
-      simp_riscv
-      simp
-  
