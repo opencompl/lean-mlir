@@ -1321,11 +1321,11 @@ theorem StateCircuit.eval_toOutput
     (sc : StateCircuit p n)
     :
     (sc.toOutput).eval envBool =
-    ((p.nextBitCirc none).bind fun v =>
-      match v with
-      | .inl s => (sc.castLe (by omega)).toFun s
-      | .inr i =>  Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))).eval envBool := rfl
-
+    ((p.nextBitCirc none).eval (fun x =>
+      match x with
+      | .inl s => (sc.toFun s).eval (fun i => envBool <| i.castLe (by omega))
+      | .inr i => envBool <| Vars.inputs (Inputs.mk ⟨n, by omega⟩ i))) := sorry
+    XXXXXXXXXXXXXXXXXx
 
 /-- Build the circuit for n transitions.-/
 def StateCircuit.deltaN  {arity : Type _}
