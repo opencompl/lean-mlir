@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.Framework.Macro
 
 import SSA.Projects.InstCombine.Base
-import SSA.Projects.SLLVM.Dialect.UB
 import SSA.Projects.SLLVM.Dialect.Semantics
 
 namespace LeanMLIR
@@ -32,7 +31,7 @@ of (side-effecting) UB.
 def SLLVM : Dialect where
   Op := LLVM.Op
   Ty := LLVM.Ty
-  m := UBOr
+  m := EffectM
 
 namespace SLLVM
 
@@ -59,6 +58,9 @@ abbrev Ty.bitvec : Nat → SLLVM.Ty :=
 
 @[simp_denote] theorem toType_bitvec : TyDenote.toType (Ty.bitvec w) = LLVM.IntW w := rfl
 
+@[simp, simp_denote]
+theorem m_eq : SLLVM.m α = EffectM α := by rfl
+
 end SLLVM
 
 /-! ### Signature -/
@@ -72,9 +74,6 @@ instance : DialectSignature SLLVM where
           | udiv .. | sdiv .. | urem .. | srem .. => .impure
           | _ => .pure
     }
-
-instance : TyDenote SLLVM.Ty := inferInstanceAs (TyDenote LLVM.Ty)
-instance : Monad (SLLVM.m) := inferInstanceAs (Monad PoisonOr)
 
 open InstCombine.LLVM.Op in
 instance : DialectDenote SLLVM where
