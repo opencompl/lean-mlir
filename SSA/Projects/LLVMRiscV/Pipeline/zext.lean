@@ -30,7 +30,9 @@ def llvm_sext_lower_riscv_i1_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitv
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_and,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -58,7 +60,9 @@ def llvm_zext_lower_riscv_i1_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_and,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -86,7 +90,9 @@ def llvm_sext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_and,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -114,7 +120,9 @@ def llvm_sext_lower_riscv_i1_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_eq,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -142,7 +150,9 @@ def llvm_sext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_eq,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -170,7 +180,9 @@ def llvm_sext_lower_riscv_i8_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_and,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -198,7 +210,9 @@ def llvm_sext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.reduceSignExtend, BitVec.and_eq, BitVec.signExtend_and,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -227,7 +241,10 @@ def llvm_zext_lower_riscv_i16_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.shiftLeft_eq', BitVec.toNat_ofNat, Nat.reducePow, Nat.reduceMod,
+      BitVec.ushiftRight_eq', BitVec.signExtend_eq, PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -256,6 +273,8 @@ def llvm_zext_lower_riscv_i16_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.zext?]
+    simp only [LLVM.zext?, BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome,
+      BitVec.shiftLeft_eq', BitVec.toNat_ofNat, Nat.reducePow, Nat.reduceMod,
+      BitVec.ushiftRight_eq', PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }

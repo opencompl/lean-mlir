@@ -62,7 +62,9 @@ def llvm_sext_lower_riscv_i1_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [ LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.mod_succ, BitVec.sshiftRight_eq', PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -91,7 +93,9 @@ def llvm_sext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [ LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.mod_succ, BitVec.sshiftRight_eq', PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -120,7 +124,9 @@ def llvm_sext_lower_riscv_i1_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.mod_succ, BitVec.sshiftRight_eq', BitVec.signExtend_eq,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -149,7 +155,9 @@ def llvm_sext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.reduceMod, BitVec.sshiftRight_eq', BitVec.signExtend_eq,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -178,7 +186,9 @@ def llvm_sext_lower_riscv_i8_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.reduceMod, BitVec.sshiftRight_eq', PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -207,7 +217,9 @@ def llvm_sext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.reduceMod, BitVec.sshiftRight_eq', PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -236,7 +248,9 @@ def llvm_sext_lower_riscv_i16_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.reduceMod, BitVec.sshiftRight_eq', PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
 
@@ -265,6 +279,8 @@ def llvm_sext_lower_riscv_i16_to_i64 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp [LLVM.sext?]
+    simp only [LLVM.sext?, PoisonOr.toOption_getSome, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      Nat.reducePow, Nat.reduceMod, BitVec.sshiftRight_eq', PoisonOr.value_isRefinedBy_value,
+      InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
