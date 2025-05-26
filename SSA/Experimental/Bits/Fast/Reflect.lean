@@ -1127,6 +1127,28 @@ def envBoolStart_of_envBitstream (p : FSM α)
     | .state s => p.initCarry s
     | .inputs (.mk a i) => envBitstream i a
 
+/-- Environment with chosen state variables of the FSM. -/
+def envBool_of_envBitstream_of_state
+   (envBitstream : arity → BitStream)
+   (state : α → Bool)
+   (n : Nat) : Vars α arity (n + 1) → Bool :=
+  fun x =>
+    match x with
+    | .state s => state s
+    | .inputs (.mk a i) => envBitstream i a
+
+@[simp]
+theorem envBool_of_envBitstream_of_state_eq₁ {arity : Type _} {α : Type _}
+    (envBitstream : arity → BitStream) (state : α → Bool) (n : Nat)
+    (s : α) :
+    envBool_of_envBitstream_of_state envBitstream state n (.state s) = state s := rfl
+
+@[simp]
+theorem envBool_of_envBitstream_of_state_eq₂ {arity : Type _} {α : Type _}
+    (envBitstream : arity → BitStream) (state : α → Bool) (n : Nat)
+    (i : Inputs arity (n + 1)) :
+    envBool_of_envBitstream_of_state envBitstream state n (.inputs i) =
+    envBitstream i.input i.ix := rfl
 
 def Bitstream_of_envBool
   (envBool : Vars α arity n → Bool) :
@@ -1157,6 +1179,15 @@ theorem EnvOutRelated_envBoolStart_of_envBitStream_of_self {arity : Type _} {α 
   constructor
   intros x i hi
   rw [envBoolStart_of_envBitstream]
+
+@[simp]
+theorem EnvOutRelated_envBoolStart_ofenvBitstream_of_state_of_self
+    {arity : Type _} {α : Type _}
+    (envBitstream : arity → BitStream) (state : α → Bool) :
+    EnvOutRelated (envBool_of_envBitstream_of_state envBitstream state n) envBitstream := by
+  constructor
+  intros x i hi
+  rw [envBool_of_envBitstream_of_state]
 
 @[simp]
 theorem EnvOutRelated_self_Bitstream_of_envBool
@@ -2015,8 +2046,7 @@ theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n �
   · simp [Vars.castLe]
   · simp [Vars.castLe]
 
-@[simp]
-theorem eval_mkIndHypCircuit_eq_false_iff
+theorem eval_mkIndHypCircuit_eq_false_iff_
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -2064,10 +2094,43 @@ theorem eval_mkIndHypCircuit_eq_false_iff
         apply hEnvBitstream.envBool_eq_envBitstream
 
 /--
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_
+
+@[simp]
+theorem eval_mkIndHypCircuit_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
+   -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
+    (∀ envBitstream state,
+      (∃ (i : Nat), i < n ∧
+      ((∀ (j : Nat), j < i → p.evalWith state envBitstream j = false) →
+      p.evalWith state envBitstream i = false))) := by
+  constructor
+  · intros h envBitstream state
+    let envBool := envBool_of_envBitstream_of_state envBitstream state n
+    specialize h (envBool)
+    rw [eval_mkIndHypCircuit_eq_false_iff_ (envBitstream := envBitstream)] at h
+    · obtain ⟨i, hi, hEval⟩ := h
+      exists i
+    · simp [envBool]
+  · intros h envBool
+    rw [eval_mkIndHypCircuit_eq_false_iff_ (envBitstream := Bitstream_of_envBool envBool)]
+    · let envBitstream := Bitstream_of_envBool envBool
+      specialize h envBitstream (fun s => envBool (.state s))
+      obtain ⟨i, hi, hEval⟩ := h
+      exists i
+    · simp
+
+/--
 info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff
-
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
@@ -2183,7 +2246,7 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   --   rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := envBitstream)] at hs
   --   · rcases n with rfl | n
   --     · specialize hind envBoolStart
-  --       rw [eval_mkIndHypCircuit_eq_false_iff (envBitstream := envBitstream)] at hind
+  --       rw [eval_mkIndHypCircuit_eq_false_iff_ (envBitstream := envBitstream)] at hind
   --       · simp [envBoolStart, envBoolEmpty] at hind
   --       · simp [envBoolStart]
   --     · apply hs
@@ -2202,7 +2265,7 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   --   -- if the safety circuit is false, then the inductive hypothesis is false.
   --   -- so we can use the inductive hypothesis to prove the next step.
   --   -- specialize (hind envBoolStart)
-  --   -- rw [eval_mkIndHypCircuit_eq_false_iff] at hind
+  --   -- rw [eval_mkIndHypCircuit_eq_false_iff_] at hind
   --   -- rcases hind with ⟨j, hj, hEval⟩
 
   --   -- simp [envBoolStart, envBoolEmpty] at hEval
