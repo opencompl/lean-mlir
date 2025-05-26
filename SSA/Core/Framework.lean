@@ -2634,12 +2634,12 @@ variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [Decida
 [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
 and later, running at most `fuel` steps. -/
-def multiRewritePeepholeAt (fuel : ℕ) (prs : List (PeepholeRewrite d Γ t))
+def multiRewritePeepholeAt (fuel : ℕ) (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty))
     (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
   match fuel with
   | 0 => target
   | fuel' + 1 =>
-    let target' := prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target
+    let target' := prs.foldl (fun acc ⟨_Γ, _ty, pr⟩ => rewritePeepholeAt pr ix acc) target
     multiRewritePeepholeAt fuel' prs (ix + 1) target'
 
 variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
@@ -2647,31 +2647,33 @@ variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [Decida
 /-- rewrite with the list of peephole optimizations `prs` at the `target` program, running at most
 `fuel` steps starting at location 0. -/
 def multiRewritePeephole (fuel : ℕ)
-    (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+    (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   multiRewritePeepholeAt fuel prs 0 target
 
 /-- helper lemma for the proof of `denote_rewritePeephole_go_multi`. It proofs that folding
 a list of semantics preserving peephole rewrites over the target program does preserve the semantics
 of the target program. -/
 lemma denote_foldl_rewritePeepholeAt
-  (prs : List (PeepholeRewrite d Γ t)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
-    (prs.foldl (fun acc pr => rewritePeepholeAt pr ix acc) target).denote = target.denote := by
+  (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
+    (prs.foldl (fun acc ⟨_Γ, _ty, pr⟩=> rewritePeepholeAt pr ix acc) target).denote = target.denote := by
   induction prs generalizing target
   case nil =>
     simp
-  case cons pr rest ih =>
-    simp only [List.foldl]
-    have h : (rewritePeepholeAt pr ix target).denote = target.denote :=
+  case cons prog rest ih =>
+    match prog with
+    | ⟨Γ, ty, pr⟩ =>
+      simp only [List.foldl]
+      have h : (rewritePeepholeAt pr ix target).denote = target.denote :=
       denote_rewritePeepholeAt pr ix target
-    let mid := rewritePeepholeAt pr ix target
-    have h' := ih mid
-    rw [←h'] at h
-    exact h
+      let mid := rewritePeepholeAt pr ix target
+      have h' := ih mid
+      rw [←h'] at h
+      exact h
 
 /- The proof that applying `rewritePeephole_go_multi` preserves the semantics of the target program
 to which the peephole rewrites get applied. -/
 theorem denote_multiRewritePeepholeAt (fuel : ℕ)
-  (prs : List (PeepholeRewrite d Γ t)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
+  (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
     (multiRewritePeepholeAt fuel prs ix target).denote = target.denote := by
   induction fuel generalizing prs ix target
   case zero =>
@@ -2682,7 +2684,7 @@ theorem denote_multiRewritePeepholeAt (fuel : ℕ)
 
 /- The proof that `rewritePeephole_multi` is semantics preserving  -/
 theorem denote_multiRewritePeephole (fuel : ℕ)
-  (prs : List (PeepholeRewrite d Γ t)) (target : Com d Γ₂ eff t₂) :
+  (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) :
     (multiRewritePeephole fuel prs target).denote = target.denote := by
   simp [multiRewritePeephole, denote_multiRewritePeepholeAt]
 

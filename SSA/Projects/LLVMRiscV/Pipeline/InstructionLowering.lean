@@ -52,14 +52,10 @@ def icmp_match_32 := List.map  LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUN
   [icmp_uge_riscv_eq_icmp_uge_llvm_i32, icmp_slt_riscv_eq_icmp_slt_llvm_i32, icmp_sle_riscv_eq_icmp_sle_llvm_i32]
 
 -- to do: find a way to combine the list indepednet of input and outpt types.
-def loweringPass_simple:=
+def loweringPass_simple :=
   List.flatten [
-    add_match,
-    and_match,
-    ashr_match,
-    mul_match,
-    or_match,
-    rem_match,
+    add_match
+
   ]
 def loweringPass_64 :=
   List.flatten [
@@ -69,6 +65,35 @@ def loweringPass_32 :=
   List.flatten [
     icmp_match_32
   ]
+
+def add_match2 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  [
+    ⟨[Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)], Ty.llvm (.bitvec 64),
+      LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_noflags⟩,
+    ⟨[Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)], Ty.llvm (.bitvec 64),
+      LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nsw_flag⟩,
+    ⟨[Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)], Ty.llvm (.bitvec 64),
+      LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_flag⟩,
+    ⟨[Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)], Ty.llvm (.bitvec 64),
+      LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_nsw_flag⟩,
+       ⟨[Ty.llvm (.bitvec 64),Ty.llvm (.bitvec 64)], Ty.llvm (.bitvec 1),
+      LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ugt_riscv_eq_icmp_ugt_llvm_i64⟩
+
+  ]
+
+--variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+--[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+
+/-
+def list {Γ : List LLVMPlusRiscV.Ty} {t : LLVMPlusRiscV.Ty} : List (PeepholeRewrite LLVMPlusRiscV (Γ) (t)) :=
+  List.flatten [
+    add_match,
+    and_match,
+    ashr_match,
+    mul_match,
+    or_match,
+    rem_match,
+  ] -/
 
 def reconcile_cast_pass :=  List.cons cast_eliminiation_riscv <| List.nil
 
@@ -120,7 +145,7 @@ obsereved best scheduling of the passes, pass ordering problem,
 here I first rewriter the binarop operations using the same operand twice.
 Then eliminate deadcode. Then apply the lowering pass and then the cast_elimination pass.  -/
 def test_peep0_single :  Com LLVMPlusRiscV (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) .pure (.llvm (.bitvec 64)) :=
-  multiRewritePeephole (fuel_def llvm00)  (loweringPass_simple) llvm00
+  multiRewritePeephole (fuel_def llvm00)  (add_match2) llvm00
 
 #eval! test_peep0_single
 def test_pep0_dce:= (DCE.dce' test_peep0_single)
