@@ -2183,22 +2183,30 @@ theorem ind_principle₃ {motive : Nat → Prop} (bound : Nat) (hbound : 0 < bou
       omega
 
 /-- State 't' is reachable from 's' in 'n' steps. -/
-def ReachableInExactlyN {arity : Type _}
+def ReachableInNEq {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (s t : p.α → Bool) (n : Nat) : Prop :=
   ∃ envBitstream , p.carryWith s envBitstream n = t
 
-/-- State 't' is reachable from 's' in 'n' steps. -/
-def ReachableInAtMostN {arity : Type _}
+/-- State 't' is reachable from 's' in 'i < n' steps. -/
+def ReachableInNLt {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
-  ∃ i ≤ n, ∃ envBitstream , p.carryWith s envBitstream i = t
+  ∃ i < n, ∃ envBitstream , p.carryWith s envBitstream i = t
 
-/-- State is safe. -/
+/-- A state is reachable if there is some distance at which it is reached. -/
+def Reachable {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s t: p.α → Bool) : Prop :=
+  ∃ n, ReachableInNEq p s t n
+
+/-- State is safe, i.e. all outputs after this are safe. -/
 def Safe {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
@@ -2206,22 +2214,57 @@ def Safe {arity : Type _}
   (p : FSM arity) (s : p.α → Bool) : Prop :=
   ∀ env, p.outputWith s env = false
 
-theorem eval_mkSafetyCircuit_eq_false_iff' {arity : Type _}
+/--
+Safety says that if the state is reachable from the initial state in n steps,
+then it is safe.
+-/
+theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt
+    {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (envBool : Vars Empty arity (n + 1) → Bool)
-    (envBitstream : arity → BitStream)
-    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
-    (mkSafetyCircuit p n).eval envBool = false ↔
-    (∀ t, ReachableInAtMostN p p.initCarry t n → Safe p t) := by
-  unfold ReachableInAtMostN Safe
+    (p : FSM arity) (n : Nat):
+    (∀ envBool, (mkSafetyCircuit p n).eval envBool = false) ↔
+    (∀ t, ReachableInNLt p p.initCarry t n → Safe p t) := by
+  unfold ReachableInNLt Safe
   constructor
   · intros h t ht env
-    obtain ⟨i, hi, envBitstream', hEnvbitstream'⟩ := ht
-    rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := envBitstream')] at h
-    · sorry
-    · apply hEnvBitstream.envBool_eq_envBitstream
-  · sorry
+    obtain ⟨i, hi, envBitstream, hEnvbitstream⟩ := ht
+    simp at h
+    simp [FSM.eval_eq_outputWith_carryWith] at h
+    rw [← hEnvbitstream]
+    rw [FSM.carryWith_eq_carry_of_eq_initCarry]
+    let e' : arity → BitStream :=
+        fun a k =>
+          if k = i then env a
+          else envBitstream a k
+    specialize h e' i hi
+    /- Prove that carry only reads the initial part of its input. -/
+    have : p.carry envBitstream i = p.carry e' i := by
+      apply FSM.carry_congrEnv
+      intros a k hk
+      simp [e', show ¬ (k = i) by omega]
+    rw [this]
+    have : env = fun a => e' a i := by ext a; simp [e']
+    rw [this]
+    apply h
+    congr
+  · intros h env
+    revert env
+    simp
+    intros envBitstream i hi
+    specialize h ((p.carryWith p.initCarry envBitstream i))
+    rw [FSM.eval_eq_outputWith_carryWith]
+    apply h
+    exists i
+    simp [hi]
+
+theorem eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe
+    {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (s t : p.α → Bool) (n : Nat):
+    (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
+    ((∀ t, ReachableInNLt p s t n → Safe p t) →
+     (∀ t, ReachableInNEq p s t n → Safe p t)) := by
+  sorry
 
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false

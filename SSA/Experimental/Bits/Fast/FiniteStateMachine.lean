@@ -265,12 +265,72 @@ theorem carryWith_initCarry_eq_carry (p : FSM arity) (x : arity → BitStream) (
   ext s
   simp [carryWith, changeInitCarry]
 
+theorem carry_eq_carryWith_initCarry (p : FSM arity) (x : arity → BitStream) (n : Nat) :
+    p.carry x n = p.carryWith p.initCarry x n := by
+  simp [carryWith_initCarry_eq_carry]
+
+/-- The 'carry' only looks at the first 'i' bits, and so we can
+replace the env with another env that is equivalent upto i bits.
+-/
+theorem carry_congrEnv {p : FSM arity}
+    {x y : arity → BitStream} {n : Nat} (h : ∀ a i, i < n → x a i = y a i) :
+    p.carry x n = p.carry y n := by
+  induction n
+  case zero => simp [carry]
+  case succ n ih =>
+    rw [carry]
+    rw [ih]
+    conv =>
+      rhs
+      rw [carry]
+    · congr
+      ext a
+      apply h
+      omega
+    · intros i k hk
+      apply h
+      omega
+
+/-- carryWith's environment can be changed -/
+theorem carryWith_congrEnv {p : FSM arity}
+    {carryState : p.α → Bool} {x y : arity → BitStream} {n : Nat}
+    (h : ∀ a i, i < n → x a i = y a i) :
+    p.carryWith carryState x n = p.carryWith carryState y n := by
+  ext a
+  rw [carryWith, carryWith]
+  rw [carry_congrEnv h]
 
 /-- compute the next evaluation bit starting with 'initCarry'.
 TODO: write theorems for 'evalWith'.
 -/
 def evalWith (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) : BitStream :=
   (p.changeInitCarry carryState).eval x
+
+/-- `eval` produces the same results as long as
+the environment are equivalent up to `n` bits.
+-/
+theorem eval_congrEnv {p : FSM arity}
+    {x y : arity → BitStream} {n : Nat} (h : ∀ a i, i ≤ n → x a i = y a i) :
+    p.eval x n = p.eval y n := by
+  simp [eval]
+  congr
+  · ext i
+    rw [carry_congrEnv]
+    intros a i hi
+    apply h _ _ (by omega)
+  · ext i
+    apply h
+    omega
+
+/-- `evalWith` procuces the same results as long as
+the environment are equivalent up to `n` bits.
+-/
+theorem evalWith_congrEnv {p : FSM arity}
+    {x y : arity → BitStream} {carryState : p.α → Bool} {n : Nat}
+    (h : ∀ a i, i ≤ n → x a i = y a i) :
+    p.evalWith carryState x n = p.evalWith carryState y n := by
+  rw [evalWith, evalWith]
+  apply eval_congrEnv h
 
 /-- One step transition of the FSM.-/
 def delta' (p : FSM arity) (carryState : p.α → Bool) (x : arity → Bool) : p.α → Bool :=
@@ -287,6 +347,7 @@ theorem evalWith_succ_eq_evalWith_delta' (p : FSM arity) (carryState : p.α → 
   simp [evalWith, delta', carryWith]
   rw [eval_changeInitCarry_succ]
   congr
+
 
 /-- Evaluating at (n + 1) equals evaluating at n with a different state-/
 theorem evalWith_succ_eq (p : FSM arity) (carryState : p.α → Bool)
@@ -307,12 +368,15 @@ def outputWith (p : FSM arity) (carryState : p.α → Bool) (env : arity → Boo
 theorem evalWith_eq_eval_of_eq_init (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream)
     (hc : carryState = p.initCarry) : p.evalWith carryState x = p.eval x := by
   simp [hc, evalWith]
-
-
 @[simp]
 theorem evalWith_initCarry_eq_init (p : FSM arity)
     : p.evalWith p.initCarry = p.eval := by
   ext x; simp [evalWith]
+
+/-- rewrite an 'eval' in terms of 'evalWith'. -/
+theorem eval_eq_evalWith_initCarry  (p : FSM arity) :
+    p.eval x = p.evalWith p.initCarry x := by
+  simp
 
 /-- Write 'evalWith' in terms of an output followed by a carry. -/
 theorem evalWith_eq_outputWith_carryWith
@@ -322,6 +386,15 @@ theorem evalWith_eq_outputWith_carryWith
   -- Proof goes here
   simp only [evalWith, eval, changeInitCarry, nextBit, outputWith]
   congr
+
+/-- rewrite an 'eval' in terms of an 'outputWith' + 'carryWith'.
+most detailed decomposition of an FSM available.
+-/
+theorem eval_eq_outputWith_carryWith (p : FSM arity) :
+  p.eval x n =
+  p.outputWith (p.carryWith p.initCarry x n) (fun a => x a n) := by
+  simp only [carryWith_initCarry_eq_carry]
+  apply evalWith_eq_outputWith_carryWith
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
