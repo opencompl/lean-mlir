@@ -2002,6 +2002,98 @@ theorem eval_mkIndHypCircuit_eq_false_iff
         intros x j hj
         apply hEnvBitstream.envBool_eq_envBitstream
 
+/-- induction principle with a uniform bound 'bound' in place. -/
+@[elab_as_elim]
+theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
+  (hBase : ∀ i < bound, motive i)
+  (hInd : ∀ (j : Nat),
+    ((∀ (δ : Nat), δ < bound → motive (j + δ)) → motive (j + bound))) :
+  ∀ k, motive k := by
+  intros k
+  induction k using Nat.strong_induction_on
+  case h k ihk =>
+    by_cases hK : k < bound
+    · apply hBase
+      omega
+    · have : ∃ δ, k = δ + bound := by exists (k - bound); omega
+      obtain ⟨δ, hδ⟩ := this
+      subst hδ
+      apply hInd
+      intros ε  hε
+      apply ihk
+      omega
+
+/-- induction principle with a uniform multiplicative 'bound' in place. -/
+@[elab_as_elim]
+theorem ind_principle₃ {motive : Nat → Prop} (bound : Nat) (hbound : 0 < bound)
+  (hInd : ∀ (k : Nat), (∀ (j : Nat), j < bound * k → motive j) →
+    (∀ (j : Nat), j < bound * (k + 1) → motive j)) :
+  ∀ n, motive n := by
+  intros n
+  have : ∃ k r, r < bound ∧ n = bound * k + r := by
+    exists n / bound
+    exists n % bound
+    simp [Nat.mod_lt _ hbound]
+    exact Eq.symm (Nat.div_add_mod n bound)
+  obtain ⟨k, r, hr, hnr⟩ := this
+  revert n r
+  induction k using Nat.strong_induction_on
+  case h k hk =>
+    intros n r hr hn
+    rw [hn]
+    apply hInd (k := k)
+    · intros j hj
+      apply hk (m := j / bound) (r := j % bound)
+      · apply Nat.div_lt_of_lt_mul
+        simp [hj]
+      · apply Nat.mod_lt
+        simp [hbound]
+      · rw [Nat.div_add_mod]
+    · simp [Nat.mul_succ]
+      omega
+
+
+/-- induction principle with a non-uniform bound 'bound' in place. -/
+theorem ind_principle' {motive : Nat → Prop} (bound : Nat)
+  (hBase : ∀ i < bound, motive i)
+  (hInd : ∀ (j : Nat), ∃ (bound' : Nat), bound' < bound ∧
+    ((∀ (δ : Nat), δ < bound' → motive (j + δ)) → motive (j + bound'))) :
+  ∀ k, motive k := by
+  by_cases hbound : 0 < bound
+  · intros k
+    induction k using ind_principle₃ bound hbound with
+    | @hInd n ihn k hk =>
+        by_cases hk₂ : k < bound * n
+        · apply ihn _ hk₂
+        · have : ∃ δ, k = bound * n + δ := by
+            exact Nat.exists_eq_add_of_le (by omega)
+          obtain ⟨δ, hδ⟩ := this
+
+  · simp [show bound = 0 by omega] at hInd
+
+
+theorem ind_principle (bound : Nat)
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (s0 : p.α → Bool)
+    (hBase : ∀ (envBitstream) (i : Nat), i < bound → p.evalWith s0 envBitstream i = false)
+    (hInd : ∀ (carry : p.α → Bool) (envBitstream),
+       ∃ (k : Nat), k < bound ∧ ((∀ (j : Nat), j < k → p.evalWith carry envBitstream j = false) →
+        p.evalWith carry envBitstream k = false)) :
+    ∀ k envBitstream, p.evalWith s0 envBitstream k = false := by
+  induction bound using Nat.strong_induction_on
+  case h N ihN =>
+    intros k envBitstream
+    induction k
+    case zero =>
+      apply hBase envBitstream 0 (by omega)
+
+
+
+
 theorem ind_principle (bound : Nat)
     {arity : Type _}
     [DecidableEq arity]
@@ -2038,8 +2130,10 @@ theorem ind_principle (bound : Nat)
       apply ih
       intros envBitstream'
       intros i hi
-      specialize hInd  (p.delta' s0 fun s => envBitstream s 0) envBitstream'
-      sorry
+      apply ind_principle (bound := bound)
+      · apply ih
+
+      · sorry
 
   -- by_cases hk : k < bound
   -- · apply hBase envBitstream k hk
