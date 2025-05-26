@@ -34,6 +34,8 @@ attribute [simp_sllvm]
   decide_eq_true_iff
   -- Id
   Id
+  -- Refinement
+  StateT.isRefinedBy_iff Prod.isRefinedBy_iff
   -- Other general simp lemmas
   reduceIte bind_assoc
 
