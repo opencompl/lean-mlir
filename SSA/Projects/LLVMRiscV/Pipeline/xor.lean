@@ -1,16 +1,8 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
-import SSA.Projects.LLVMRiscV.LLVMAndRiscv
-import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 
-import Lean
-
 open LLVMRiscV
-open RV64Semantics
-open InstCombine(LLVM)
 
 /-! # XOR   -/
 def llvm_xor: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]

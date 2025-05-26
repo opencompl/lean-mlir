@@ -1,16 +1,8 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
-import SSA.Projects.LLVMRiscV.LLVMAndRiscv
-import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 
-import Lean
-
 open LLVMRiscV
-open RV64Semantics
-open InstCombine(LLVM)
 
 /-! # UDIV no exact  -/
 
@@ -44,7 +36,9 @@ def llvm_udiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     case value.value.isTrue ht =>
       simp
     case value.value.isFalse hf =>
-      simp [hf]
+      simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.ofNat_eq_ofNat,
+        BitVec.reduceNeg, BitVec.udiv_eq, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff, right_eq_ite_iff]
       bv_omega
   }
 
@@ -72,10 +66,10 @@ def llvm_udiv_lower_riscv_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
       case isTrue ht =>
         simp
       case isFalse hf =>
-        simp only [PoisonOr.toOption_getSome, PoisonOr.value_isRefinedBy_value,
-          InstCombine.bv_isRefinedBy_iff, right_eq_ite_iff]
-        simp [hf]
+        simp
     case value.value.isFalse hf =>
-        simp [hf]
+        simp only [BitVec.ofNat_eq_ofNat, PoisonOr.toOption_getSome, BitVec.signExtend_eq,
+          BitVec.reduceNeg, BitVec.udiv_eq, PoisonOr.if_then_poison_isRefinedBy_iff,
+          PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff, right_eq_ite_iff]
         bv_omega
     }

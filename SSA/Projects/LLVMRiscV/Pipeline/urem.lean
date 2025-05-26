@@ -1,16 +1,9 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
-import SSA.Projects.LLVMRiscV.LLVMAndRiscv
-import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 
-import Lean
-
 open LLVMRiscV
-open RV64Semantics
-open InstCombine(LLVM)
+
 
 /-! # UREM  -/
 
@@ -44,6 +37,8 @@ def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     case value.value.isTrue ht =>
       simp
     case value.value.isFalse hf =>
-      simp[hf]
-      bv_omega 
+      simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.ofNat_eq_ofNat,
+        BitVec.umod_eq, PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff,
+        right_eq_ite_iff]
+      bv_omega
   }
