@@ -2045,7 +2045,7 @@ theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n �
   · simp [Vars.castLe]
   · simp [Vars.castLe]
 
-theorem eval_mkIndHypCircuit_eq_false_iff_
+theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -2093,12 +2093,12 @@ theorem eval_mkIndHypCircuit_eq_false_iff_
         apply hEnvBitstream.envBool_eq_envBitstream
 
 /--
-info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_' depends on axioms: [propext, Quot.sound]
 -/
-#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_
+#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate_
 
 @[simp]
-theorem eval_mkIndHypCircuit_eq_false_iff
+theorem eval_mkIndHypCircuit_eq_false_iff_intermediate
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -2114,17 +2114,35 @@ theorem eval_mkIndHypCircuit_eq_false_iff
   · intros h envBitstream state
     let envBool := envBool_of_envBitstream_of_state envBitstream state n
     specialize h (envBool)
-    rw [eval_mkIndHypCircuit_eq_false_iff_ (envBitstream := envBitstream)] at h
+    rw [eval_mkIndHypCircuit_eq_false_iff_intermediate_ (envBitstream := envBitstream)] at h
     · obtain ⟨i, hi, hEval⟩ := h
       exists i
     · simp [envBool]
   · intros h envBool
-    rw [eval_mkIndHypCircuit_eq_false_iff_ (envBitstream := Bitstream_of_envBool envBool)]
+    rw [eval_mkIndHypCircuit_eq_false_iff_intermediate_ (envBitstream := Bitstream_of_envBool envBool)]
     · let envBitstream := Bitstream_of_envBool envBool
       specialize h envBitstream (fun s => envBool (.state s))
       obtain ⟨i, hi, hEval⟩ := h
       exists i
     · simp
+
+@[simp]
+theorem eval_mkIndHypCircuit_eq_false_iff_intermediate'
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (hInd : ∀ envBool, (mkIndHypCircuit p n).eval envBool = false) :
+   -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
+    (∀ envBitstream state,
+      (((∀ (j : Nat), j < n → p.evalWith state envBitstream j = false) →
+      p.evalWith state envBitstream n = false))) := by
+  intros envBitstream state hpeval
+  rw [eval_mkIndHypCircuit_eq_false_iff_intermediate] at hInd
+  specialize hInd (envBitstream := envBitstream) (state := state)
+  obtain ⟨i, hi, hEval⟩ := hInd
+  sorry
 
 
 def mkAllStates (α : Type) [Fintype α] [DecidableEq α] : Finset (α → Bool) :=
@@ -2194,9 +2212,9 @@ theorem mkAllEnvBitstreams_complete {arity : Type _}
 
 
 /--
-info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate' depends on axioms: [propext, Quot.sound]
 -/
-#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff
+#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
@@ -2350,7 +2368,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt
 --       ((∀ (j : Nat), j < i → p.evalWith state envBitstream j = false) →
 --       p.evalWith state envBitstream i = false)))
 
-theorem eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe
+theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
     {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity)  (n : Nat):
@@ -2359,7 +2377,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe
       (ReachableInNEq p s t i → Safe p t)))) := by
   constructor
   · intros h env
-    simp only [eval_mkIndHypCircuit_eq_false_iff] at h
+    simp only [eval_mkIndHypCircuit_eq_false_iff_intermediate] at h
     simp only [FSM.evalWith_eq_outputWith_carryWith] at h
     simp [ReachableInNEq, ReachableInNLt]
 
@@ -2392,7 +2410,7 @@ theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   ∀ (t : p.α → Bool), Reachable p p.initCarry t → Safe p t := by
   simp only [Circuit.always_false_iff, Bool.not_eq_true] at hsafe hind
   rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt] at hsafe
-  rw [eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe] at hind
+  rw [eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe] at hind
   intros t
   rw [Reachable_eq_ReachableInNEq]
   intros hReachableIn
@@ -2405,21 +2423,8 @@ theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     obtain ⟨δ, hδ⟩ := this
     subst hδ
     clear hk
-    induction δ with
-    | zero =>
-      simp at hReachableIn
-      obtain ⟨l, hl, hind⟩ := hind p.initCarry t
-      apply hind
-      · intros hReachL
-        apply hsafe
-        simp [ReachableInNLt] at ⊢ hReachL
-        obtain ⟨i, hi, hReachL⟩ := hReachL
-        exists i
-        simp [show i < n by omega, hReachL]
-      ·
-      sorry
-    | succ δ ihδ =>
-      sorry
+    sorry
+
     -- simp only [not_lt] at hk
     -- specialize hind p.initCarry t
     -- obtain ⟨l, hl, hind⟩ := hind
