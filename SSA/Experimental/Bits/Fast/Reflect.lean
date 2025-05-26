@@ -1589,6 +1589,12 @@ theorem eval_mkEvalCircuit_eq_false_iff
   · simp [initCarry_of_envBool]
     apply hEnvBitstream.envBool_eq_envBitstream
 
+/--
+info: 'Reflect.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkEvalCircuit_eq_false_iff
+
+
 -- /-
 -- Make the safety circuit at index 'i',
 -- which runs the program at the initial state on the inputs.
@@ -1682,6 +1688,11 @@ theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
     · constructor
       intros x j hj
       apply hEnvBitstream.envBool_eq_envBitstream
+
+/--
+info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff
 
 /-! ## Arbitrary State Vector Builder
 
@@ -2002,6 +2013,12 @@ theorem eval_mkIndHypCircuit_eq_false_iff
         intros x j hj
         apply hEnvBitstream.envBool_eq_envBitstream
 
+/--
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff
+
+
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
 theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
@@ -2026,7 +2043,7 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
 /-- induction principle with a uniform multiplicative 'bound' in place. -/
 @[elab_as_elim]
 theorem ind_principle₃ {motive : Nat → Prop} (bound : Nat) (hbound : 0 < bound)
-  (hInd : ∀ (k : Nat), (∀ (j : Nat), j < bound * k → motive j) →
+  (hInd : ∀ (k : Nat), (∀ (j : Nat), j < bound * k → motive j) → 
     (∀ (j : Nat), j < bound * (k + 1) → motive j)) :
   ∀ n, motive n := by
   intros n
@@ -2053,11 +2070,18 @@ theorem ind_principle₃ {motive : Nat → Prop} (bound : Nat) (hbound : 0 < bou
       omega
 
 
+-- bound = 1:
+--- + n=0:motive 0
+--- + n=1: hInd 1
+---     * bound' = 0: motive 1
+---     * bound' = 1: motive 1 => motive 2
+
 /-- induction principle with a non-uniform bound 'bound' in place. -/
 theorem ind_principle' {motive : Nat → Prop} (bound : Nat)
   (hBase : ∀ i < bound, motive i)
   (hInd : ∀ (j : Nat), ∃ (bound' : Nat), bound' < bound ∧
-    ((∀ (δ : Nat), δ < bound' → motive (j + δ)) → motive (j + bound'))) :
+    ((∀ (δ : Nat), δ < bound' → motive (j + δ)) →
+      motive (j + bound'))) :
   ∀ k, motive k := by
   by_cases hbound : 0 < bound
   · intros k
