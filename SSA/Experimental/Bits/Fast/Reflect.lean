@@ -1746,7 +1746,6 @@ info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff_' depends on axioms: [
 Evaluating the safety circuit is false iff
 the bitstreams are false upto index 'n'.
 -/
-@[simp]
 theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat) :
@@ -1903,7 +1902,6 @@ def mkIndHypAuxElemLhs {arity : Type _}
     Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr <| mkIndHypAuxElemLhsList p n
 
-@[simp]
 theorem eval_mkIndHypAuxElemLhs_eq_false_iff {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat)
@@ -2127,6 +2125,73 @@ theorem eval_mkIndHypCircuit_eq_false_iff
       exists i
     · simp
 
+
+def mkAllStates (α : Type) [Fintype α] [DecidableEq α] : Finset (α → Bool) :=
+  Fintype.elems
+
+/-- mkAllStates is complete. -/
+theorem mkAllStates_complete (α : Type) [Fintype α] [DecidableEq α] :
+  ∀ (s : α → Bool), s ∈ mkAllStates α := sorry
+
+-- #check Finset.inf
+
+/-- Make all bitstreams of length 'n', which are zero after length n. -/
+def mkAllBitstreams (n : Nat) : List (BitStream) :=
+  match n with
+  | 0 => [BitStream.zero]
+  | n' + 1 =>
+    let bs := mkAllBitstreams n'
+    bs.flatMap fun b =>
+      [b.concat true, b.concat false]
+
+/-- Every bitstream exists in the list. -/
+theorem mkAllBitstreams_complete (n : Nat) :
+  ∀ (b : BitStream), ∃ b' : BitStream, b' ∈ mkAllBitstreams n ∧
+    (∀ (i : Nat), i < n → b' i = b i) := by
+  induction n
+  case zero =>
+    intros b
+    simp [mkAllBitstreams]
+  case succ n' ih =>
+    intros b
+    rw [mkAllBitstreams]
+    simp
+    let b0 := b 0
+    specialize ih b.tail
+    obtain ⟨k, hkMem, hk⟩ := ih
+    exists (k.concat b0)
+    constructor
+    · exists k
+      simp [hkMem]
+      rcases b0 <;> simp
+    · intros i hi
+      rcases i with rfl | i
+      · simp [b0]
+      · simp
+        rw [hk]
+        · simp [BitStream.tail]
+        · omega
+
+
+/-- Make all bitstream environments
+  that show all possible values upto length 'n'. -/
+def mkAllEnvBitstreams {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity] (n : Nat) : List (arity → BitStream) := sorry
+
+/-- every bitstream exists in mkAllEnvBitstreams_complete. -/
+theorem mkAllEnvBitstreams_complete {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity] (n : Nat) :
+  ∀ (env : arity → BitStream),
+    ∃ env' ∈ mkAllEnvBitstreams n,
+    ∀ (a : arity) (i : Nat), i < n → env a i = env' a i := sorry
+
+
+
+
 /--
 info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
 -/
@@ -2206,7 +2271,15 @@ def Reachable {arity : Type _}
   (p : FSM arity) (s t: p.α → Bool) : Prop :=
   ∃ n, ReachableInNEq p s t n
 
-/-- State is safe, i.e. all outputs after this are safe. -/
+/-- State is reachable iff there exists a #steps 'n'
+that it can be reached in. -/
+theorem Reachable_eq_ReachableInNEq {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity] (p : FSM arity) (s t : p.α → Bool) :
+  (Reachable p s t) =  ∃ n, ReachableInNEq p s t n := rfl
+
+  /-- State is safe, i.e. all outputs after this are safe. -/
 def Safe {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
@@ -2228,7 +2301,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt
   constructor
   · intros h t ht env
     obtain ⟨i, hi, envBitstream, hEnvbitstream⟩ := ht
-    simp at h
+    simp [eval_mkSafetyCircuit_eq_false_iff] at h
     simp [FSM.eval_eq_outputWith_carryWith] at h
     rw [← hEnvbitstream]
     rw [FSM.carryWith_eq_carry_of_eq_initCarry]
@@ -2249,7 +2322,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt
     congr
   · intros h env
     revert env
-    simp
+    simp [eval_mkSafetyCircuit_eq_false_iff]
     intros envBitstream i hi
     specialize h ((p.carryWith p.initCarry envBitstream i))
     rw [FSM.eval_eq_outputWith_carryWith]
@@ -2262,9 +2335,46 @@ theorem eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (s t : p.α → Bool) (n : Nat):
     (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
-    ((∀ t, ReachableInNLt p s t n → Safe p t) →
-     (∀ t, ReachableInNEq p s t n → Safe p t)) := by
+    ((∀ t, ∃ i, (ReachableInNLt p s t i → Safe p t) →
+      (ReachableInNEq p s t i → Safe p t))) := by
+  constructor
+  · intros h env
+    rw [Safe]
+    simp only [eval_mkIndHypCircuit_eq_false_iff] at h
+    simp only [FSM.evalWith_eq_outputWith_carryWith] at h
+    simp [ReachableInNEq, ReachableInNLt]
+    -- have allVals : List Int :=
+    --   (mkAllBitstreams n).flatMap fun b =>
+    --     (mkAllStates p.α).toList.flatMap fun s =>
+    --       let ⟨i, hi⟩ := h b s
+    --       i
+    sorry
+    -- -- rw [ReachableInNEq] at hReachableInEq
+    -- obtain ⟨envBitstream, ht⟩ := hReachableInEq
+    -- subst ht
+    -- specialize (h envBitstream s)
+    -- obtain ⟨i, hi, hEval⟩ := h
+  · sorry
+
+/-
+We rewrite our theorems in terms of our concepts:
+All reachable states are safe.
+-/
+theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
+  {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat)
+  (hs : (mkSafetyCircuit p n).always_false)
+  (hind : (mkIndHypCircuit p n).always_false) :
+  ∀ s : p.α → Bool, Reachable p p.initCarry s → Safe p s := by
+  simp only [Circuit.always_false_iff, Bool.not_eq_true] at hs hind
+  rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt] at hs
+  -- rw [eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe] at hind
+  -- intro s
   sorry
+
 
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
@@ -2276,43 +2386,12 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     (hs : (mkSafetyCircuit p n).always_false)
     (hind : (mkIndHypCircuit p n).always_false) :
     ∀ envBitstream i, p.eval envBitstream i = false := by
-  simp at hs hind
-  intros envBitstream i
-  rw [← eval_mkSafetyCircuit_eq_false_iff] at hs
-
-  sorry
-  -- induction i generalizing hs hind
-  -- case zero => -- base case, i = 0
-  --   let envBoolStart := envBoolStart_of_envBitstream p envBitstream n
-  --   let envBoolEmpty := envBoolEmpty_of_envBitstream envBitstream n
-  --   specialize (hs envBoolEmpty)
-  --   rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := envBitstream)] at hs
-  --   · rcases n with rfl | n
-  --     · specialize hind envBoolStart
-  --       rw [eval_mkIndHypCircuit_eq_false_iff_ (envBitstream := envBitstream)] at hind
-  --       · simp [envBoolStart, envBoolEmpty] at hind
-  --       · simp [envBoolStart]
-  --     · apply hs
-  --       simp
-  --   · simp [envBoolEmpty]
-  -- case succ i ih =>
-  --   rw [← FSM.evalWith_eq_eval_of_eq_init (carryState := p.initCarry) (hc := rfl)]
-  --   rw [evalWith_evalWith_eq_false_iff (envBitstream := envBitstream)]
-
-  --   · simp [envBoolStart]
-
-  --   -- let envBoolStart := envBoolStart_of_envBitstream p envBitstream n
-  --   -- let envBoolEmpty := envBoolEmpty_of_envBitstream envBitstream n
-  --   -- specialize (hs envBoolEmpty)
-  --   -- rw [eval_mkSafetyCircuit_eq_false_iff] at hs
-  --   -- if the safety circuit is false, then the inductive hypothesis is false.
-  --   -- so we can use the inductive hypothesis to prove the next step.
-  --   -- specialize (hind envBoolStart)
-  --   -- rw [eval_mkIndHypCircuit_eq_false_iff_] at hind
-  --   -- rcases hind with ⟨j, hj, hEval⟩
-
-  --   -- simp [envBoolStart, envBoolEmpty] at hEval
-
+  have := safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false p n hs hind
+  simp [Safe, Reachable] at this
+  intros envBitStream i
+  rw [FSM.eval_eq_outputWith_carryWith]
+  apply this (p.carryWith p.initCarry envBitStream i) i
+  simp [ReachableInNEq]
 
 /-- Version that is better suited to proving. -/
 theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
