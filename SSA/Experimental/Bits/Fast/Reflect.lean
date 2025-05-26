@@ -962,8 +962,9 @@ attribute [nospecialize] Circuit.toAIG
 -- attribute [nospecialize] Std.Sat.AIG.Entrypoint.relabelNat'
 
 open Std Sat AIG Tactic BVDecide Frontend in
-@[nospecialize]
-def checkCircuitUnsatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit α) : TermElabM (Option LratCert) := do
+-- @[nospecialize]
+def checkCircuitUnsatAux [DecidableEq α] [Hashable α] [Fintype α]
+    (c : Circuit α) : TermElabM (Option LratCert) := do
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
@@ -979,38 +980,38 @@ def checkCircuitUnsatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circui
     | .ok cert => return .some cert
 
 
-open Std Sat AIG Tactic BVDecide Frontend in
-@[nospecialize]
-def checkCircuitTautoAuxImpl
-    [DecidableEq α] [Hashable α] [Fintype α]
-    (c : Circuit α) : TermElabM (Option LratCert) := do
-  let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
-  IO.FS.withTempFile fun _ lratFile => do
-    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    let c := ~~~ c -- we're checking TAUTO, so check that negation is UNSAT.
-    let entrypoint := c.toAIG
-    let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
-    let cnf := toCNF entrypoint
-    let out ← runExternal cnf cfg.solver cfg.lratPath
-      (trimProofs := true)
-      (timeout := cadicalTimeoutSec)
-      (binaryProofs := true)
-    match out with
-    | .error _model => return none
-    | .ok cert => return some cert
+-- open Std Sat AIG Tactic BVDecide Frontend in
+-- @[nospecialize]
+-- def checkCircuitTautoAuxImpl
+--     [DecidableEq α] [Hashable α] [Fintype α]
+--     (c : Circuit α) : TermElabM (Option LratCert) := do
+--   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
+--   IO.FS.withTempFile fun _ lratFile => do
+--     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+--     let c := ~~~ c -- we're checking TAUTO, so check that negation is UNSAT.
+--     let entrypoint := c.toAIG
+--     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
+--     let cnf := toCNF entrypoint
+--     let out ← runExternal cnf cfg.solver cfg.lratPath
+--       (trimProofs := true)
+--       (timeout := cadicalTimeoutSec)
+--       (binaryProofs := true)
+--     match out with
+--     | .error _model => return none
+--     | .ok cert => return some cert
 
-open Std Sat AIG Tactic BVDecide Frontend in
-@[implemented_by checkCircuitTautoAuxImpl, nospecialize]
-def checkCircuitTautoAux {α : Type}
-    [DecidableEq α] [Hashable α] [Fintype α]
-    (c : Circuit α) : TermElabM (Option LratCert) := do
-  return none
+-- open Std Sat AIG Tactic BVDecide Frontend in
+-- @[implemented_by checkCircuitTautoAuxImpl, nospecialize]
+-- def checkCircuitTautoAux {α : Type}
+--     [DecidableEq α] [Hashable α] [Fintype α]
+--     (c : Circuit α) : TermElabM (Option LratCert) := do
+--   return none
 
-/--
-An axiom that tracks that a theorem is true because of our currently unverified
-'decideIfZerosM' decision procedure.
--/
-axiom decideIfZerosMAx {p : Prop} : p
+-- /--
+-- An axiom that tracks that a theorem is true because of our currently unverified
+-- 'decideIfZerosM' decision procedure.
+-- -/
+-- axiom decideIfZerosMAx {p : Prop} : p
 
 /--
 An inductive type representing the variables in the unrolled FSM circuit,
@@ -2263,6 +2264,20 @@ def ReachableInNLt {arity : Type _}
   (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
   ∃ i < n, ∃ envBitstream , p.carryWith s envBitstream i = t
 
+/-- If it is reachable in at least 'n' steps,
+then it is reachable in at least 'm' steps when 'n < m'. -/
+theorem ReachableInNLt_of_ReachableInNLt_of_le {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
+  (h : ReachableInNLt p s t n) (hm : n ≤ m) :
+  ReachableInNLt p s t m := by
+  obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+  exists i
+  simp [show i < m by omega]
+  exists envBitstream
+
 /-- A state is reachable if there is some distance at which it is reached. -/
 def Reachable {arity : Type _}
   [DecidableEq arity]
@@ -2330,19 +2345,25 @@ theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt
     exists i
     simp [hi]
 
+-- (∀ envBitstream state,
+--       (∃ (i : Nat), i < n ∧
+--       ((∀ (j : Nat), j < i → p.evalWith state envBitstream j = false) →
+--       p.evalWith state envBitstream i = false)))
+
 theorem eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe
     {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (s t : p.α → Bool) (n : Nat):
+    (p : FSM arity)  (n : Nat):
     (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
-    ((∀ t, ∃ i, (ReachableInNLt p s t i → Safe p t) →
-      (ReachableInNEq p s t i → Safe p t))) := by
+    ((∀ s, ∃ i < n, (∀ t, (ReachableInNLt p s t i → Safe p t) →
+      (ReachableInNEq p s t i → Safe p t)))) := by
   constructor
   · intros h env
-    rw [Safe]
     simp only [eval_mkIndHypCircuit_eq_false_iff] at h
     simp only [FSM.evalWith_eq_outputWith_carryWith] at h
     simp [ReachableInNEq, ReachableInNLt]
+
+
     -- have allVals : List Int :=
     --   (mkAllBitstreams n).flatMap fun b =>
     --     (mkAllStates p.α).toList.flatMap fun s =>
@@ -2366,15 +2387,42 @@ theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat)
-  (hs : (mkSafetyCircuit p n).always_false)
+  (hsafe : (mkSafetyCircuit p n).always_false)
   (hind : (mkIndHypCircuit p n).always_false) :
-  ∀ s : p.α → Bool, Reachable p p.initCarry s → Safe p s := by
-  simp only [Circuit.always_false_iff, Bool.not_eq_true] at hs hind
-  rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt] at hs
-  -- rw [eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe] at hind
-  -- intro s
-  sorry
-
+  ∀ (t : p.α → Bool), Reachable p p.initCarry t → Safe p t := by
+  simp only [Circuit.always_false_iff, Bool.not_eq_true] at hsafe hind
+  rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt] at hsafe
+  rw [eval_mkIndHypCircuit_eq_false_iff_Safe_of_Safe] at hind
+  intros t
+  rw [Reachable_eq_ReachableInNEq]
+  intros hReachableIn
+  obtain ⟨k, hReachableIn⟩ := hReachableIn
+  by_cases hk : k < n
+  · apply hsafe t
+    exists k
+  · simp at hk
+    have : ∃ δ, k = δ + n := by exists (k - n); omega
+    obtain ⟨δ, hδ⟩ := this
+    subst hδ
+    clear hk
+    induction δ with
+    | zero =>
+      simp at hReachableIn
+      obtain ⟨l, hl, hind⟩ := hind p.initCarry t
+      apply hind
+      · intros hReachL
+        apply hsafe
+        simp [ReachableInNLt] at ⊢ hReachL
+        obtain ⟨i, hi, hReachL⟩ := hReachL
+        exists i
+        simp [show i < n by omega, hReachL]
+      ·
+      sorry
+    | succ δ ihδ =>
+      sorry
+    -- simp only [not_lt] at hk
+    -- specialize hind p.initCarry t
+    -- obtain ⟨l, hl, hind⟩ := hind
 
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
@@ -2401,7 +2449,7 @@ theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
     [Hashable arity]
     {p : FSM arity}
     (sCert : BVDecide.Frontend.LratCert)
-    (hs : verifyCircuit (mkSafetyCircuit p n) cert = true)
+    (hs : verifyCircuit (mkSafetyCircuit p n) sCert = true)
     (indCert : BVDecide.Frontend.LratCert)
     (hind : verifyCircuit (mkIndHypCircuit p n) indCert = true) :
     ∀ env i, p.eval env i = false := by
