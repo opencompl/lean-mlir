@@ -32,10 +32,10 @@ def shl_llvm_nsw_nuw := [LV| {
 
 def shl_riscv := [LV| {
     ^entry (%reg1: i64, %reg2: i64 ):
-    %0 = "builtin.unrealized_conversion_cast" (%reg1) : (i64) -> (!i64)
-    %1 = "builtin.unrealized_conversion_cast" (%reg2) : (i64) -> (!i64)
+    %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i64) -> (!i64)
     %2 = sll %0, %1 : !i64
-    %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+    %3 = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
     llvm.return %3 : i64
   }]
 
@@ -54,8 +54,11 @@ def llvm_shl_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty
       case value.value.isTrue htt =>
         simp
       case value.value.isFalse hff =>
-        simp at hff
-        simp
+        simp only [Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, BitVec.not_le] at hff
+        simp only [BitVec.shiftLeft_eq', Nat.sub_zero, Nat.reduceAdd, PoisonOr.toOption_getSome,
+          BitVec.setWidth_eq, BitVec.extractLsb_toNat, Nat.shiftRight_zero, tsub_zero,
+          Nat.reducePow, BitVec.signExtend_eq, PoisonOr.value_isRefinedBy_value,
+          InstCombine.bv_isRefinedBy_iff]
         rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
         bv_omega
 
@@ -105,8 +108,11 @@ def llvm_shl_lower_riscv_nuw: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
         case isTrue ht =>
           simp
         case isFalse hf =>
-          simp at hf
-          simp [hf]
+          simp only [Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, BitVec.not_le] at hf
+          simp only [BitVec.shiftLeft_eq', Nat.sub_zero, Nat.reduceAdd, PoisonOr.toOption_getSome,
+            BitVec.setWidth_eq, BitVec.extractLsb_toNat, Nat.shiftRight_zero, tsub_zero,
+            Nat.reducePow, BitVec.signExtend_eq, PoisonOr.value_isRefinedBy_value,
+            InstCombine.bv_isRefinedBy_iff] -- to do
           rw [Nat.mod_eq_of_lt (a:= x'.toNat) (b:= 64)]
           bv_omega
 

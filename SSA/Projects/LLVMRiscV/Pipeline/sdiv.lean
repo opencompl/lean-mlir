@@ -14,10 +14,10 @@ def sdiv_llvm_no_exact := [LV| {
 
 def sdiv_riscv := [LV| {
     ^entry (%reg1: i64, %reg2: i64):
-    %0 = "builtin.unrealized_conversion_cast" (%reg1) : (i64) -> (!i64)
-    %1 = "builtin.unrealized_conversion_cast" (%reg2) : (i64) -> (!i64)
+    %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i64) -> (!i64)
     %2 = div %0, %1 : !i64
-    %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+    %3 = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
     llvm.return %3 : i64
   }]
 
@@ -54,5 +54,5 @@ def llvm_sdiv_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     intro x x'
     by_cases onX2 : x' = 0#64 <;> simp [onX2]
     by_cases hx : x.smod x' = 0#64
-    simp [hx]
-    split<;> simp
+    simp [hx] -- to do 
+    split <;> simp
