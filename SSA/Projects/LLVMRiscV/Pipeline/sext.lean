@@ -22,7 +22,7 @@ def sext_llvm_i1_to_i8 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i1_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 1)] :=
-  {lhs:= sext_llvm_i1_to_i8 , rhs:= sext_riscv_i1_to_i8 ,
+  {lhs:= sext_llvm_i1_to_i8, rhs:= sext_riscv_i1_to_i8,
    correct := by
     unfold sext_llvm_i1_to_i8 sext_riscv_i1_to_i8
     simp_peephole
@@ -53,7 +53,7 @@ def sext_llvm_i1_to_i16 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i1_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 1)] :=
-  {lhs:= sext_llvm_i1_to_i16 , rhs:= sext_riscv_i1_to_i16 ,
+  {lhs:= sext_llvm_i1_to_i16, rhs:= sext_riscv_i1_to_i16,
    correct := by
     unfold sext_llvm_i1_to_i16 sext_riscv_i1_to_i16
     simp_peephole
@@ -84,7 +84,7 @@ def sext_llvm_i1_to_i32 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 1)] :=
-  {lhs:= sext_llvm_i1_to_i32 , rhs:= sext_riscv_i1_to_i32 ,
+  {lhs:= sext_llvm_i1_to_i32, rhs:= sext_riscv_i1_to_i32,
    correct := by
     unfold sext_llvm_i1_to_i32 sext_riscv_i1_to_i32
     simp_peephole
@@ -115,7 +115,7 @@ def sext_llvm_i1_to_i64 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i1_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] :=
-  {lhs:= sext_llvm_i1_to_i64 , rhs:= sext_riscv_i1_to_i64 ,
+  {lhs:= sext_llvm_i1_to_i64, rhs:= sext_riscv_i1_to_i64,
    correct := by
     unfold sext_llvm_i1_to_i64 sext_riscv_i1_to_i64
     simp_peephole
@@ -146,7 +146,7 @@ def sext_llvm_i8_to_i64 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 8)] :=
-  {lhs:=sext_llvm_i8_to_i64 , rhs:= sext_riscv_i8_to_i64 ,
+  {lhs:=sext_llvm_i8_to_i64, rhs:= sext_riscv_i8_to_i64,
    correct := by
     unfold sext_llvm_i8_to_i64 sext_riscv_i8_to_i64
     simp_peephole
@@ -177,7 +177,7 @@ def sext_llvm_i8_to_i16 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i8_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 8)] :=
-  {lhs:= sext_llvm_i8_to_i16 , rhs:= sext_riscv_i8_to_i16,
+  {lhs:= sext_llvm_i8_to_i16, rhs:= sext_riscv_i8_to_i16,
    correct := by
     unfold sext_llvm_i8_to_i16 sext_riscv_i8_to_i16
     simp_peephole
@@ -208,7 +208,7 @@ def sext_llvm_i8_to_i32 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 8)] :=
-  {lhs:= sext_llvm_i8_to_i32 , rhs:= sext_riscv_i8_to_i32,
+  {lhs:= sext_llvm_i8_to_i32, rhs:= sext_riscv_i8_to_i32,
    correct := by
     unfold sext_llvm_i8_to_i32 sext_riscv_i8_to_i32
     simp_peephole
@@ -239,7 +239,7 @@ def sext_llvm_i16_to_i32 := [LV| {
   }]
 
 def llvm_sext_lower_riscv_i16_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 16)] :=
-  {lhs:= sext_llvm_i16_to_i32 , rhs:= sext_riscv_i16_to_i32,
+  {lhs:= sext_llvm_i16_to_i32, rhs:= sext_riscv_i16_to_i32,
    correct := by
     unfold sext_llvm_i16_to_i32 sext_riscv_i16_to_i32
     simp_peephole
