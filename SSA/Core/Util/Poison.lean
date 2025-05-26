@@ -184,7 +184,7 @@ theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
   cases a? <;> cases b? <;> simp
 
 @[simp, simp_denote]
-theorem PoisonOr.eq_squb [HRefinement α α] (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
+theorem eq_squb (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
 
 section PreOrder
 

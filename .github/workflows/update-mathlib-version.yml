@@ -55,6 +55,11 @@ jobs:
            cat lean-toolchain
            lake update mathlib
 
+      - name: Merge pre-existing pull request
+        continue-on-error: true
+        run: |
+           git merge origin/auto-mathlib-update-${{steps.mldate.outputs.date}}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:

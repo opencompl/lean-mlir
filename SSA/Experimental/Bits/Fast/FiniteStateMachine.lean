@@ -1541,13 +1541,14 @@ theorem decideIfZerosAuxM_Id_eq_decideIfZerosAux {arity : Type _}
     ) p c = decideIfZerosAux p c := by
   rw [decideIfZerosAuxM, decideIfZerosAux]
   by_cases h : c.eval p.initCarry
-  case pos => simp [h]
+  case pos => simp [h]; rfl
   case neg =>
     simp [h]
     clear h
     by_cases h : (c.bind (p.nextBitCirc ∘ some)).fst ≤ c
     case pos =>
       simp [h]
+      rfl
     case neg =>
       simp [h]
       have _wf :=  decideIfZeroAux_wf h
