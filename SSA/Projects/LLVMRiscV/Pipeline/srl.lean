@@ -73,5 +73,6 @@ def llvm_srl_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
       case isTrue ht =>
         simp
       case isFalse hf =>
-        simp
+        simp only [Nat.sub_zero, Nat.reduceAdd, PoisonOr.toOption_getSome, BitVec.signExtend_eq,
+          PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
         bv_decide
