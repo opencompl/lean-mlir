@@ -29,6 +29,9 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   if args.hasFlag "verbose" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
     let code ← verbose_flag fileName
     return code
+  if args.hasFlag "passriscv64" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
+    let code ← lower_to_riscv64 fileName
+    return code
   else
     let code ← wellformed fileName
     return code
@@ -38,6 +41,7 @@ def mainCmd := `[Cli|
     "opt: apply verified rewrites"
     FLAGS:
       verbose; "Prints verbose output for debugging using the Repr typeclass to print."
+      passriscv64; "This applies a lowering pass to an RISC-V 64 SSA-assebmly IR"
     ARGS:
       file: String; "Input filename"
     ]

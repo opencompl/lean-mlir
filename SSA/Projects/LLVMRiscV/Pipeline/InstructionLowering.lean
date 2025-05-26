@@ -92,7 +92,7 @@ def llvm00:=
       [LV|{
       ^bb0(%X : i64, %Y : i64 ):
       %1 = llvm.add %X, %Y : i64
-      --%2 = llvm.sub %X, %X : i64 -- this instruction atm is encoded as a separate pattern.
+      --%2 = llvm.sub %X, %X : i64 -- this instruction isn ot yet suppported but is in a PR.
       %3 = llvm.add %1, %Y : i64
       %4 = llvm.add %3, %Y : i64
       %5 = llvm.add %3, %4 : i64
@@ -103,13 +103,16 @@ def llvm01:=
       [LV|{
       ^bb0(%X : i64, %Y : i64 ):
       %1 = llvm.icmp.ugt %X, %Y : i64
-      --%2 = llvm.sub %X, %X : i64 -- this instruction atm is encoded as a separate pattern.
+      --%2 = llvm.sub %X, %X : i64 -- this instruction isn ot yet suppported but is in a PR.
       llvm.return %1 : i1
   }]
 
 set_option maxRecDepth 10000000
 
-def fuel_def {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty} (p: Com d Γ eff t) : Nat := max (Com.size p) 10
+def fuel_def {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
+  (p: Com d Γ eff t) : Nat := max (Com.size p) 10
+  -- should be com size times the number of rewrite patterns
+
 /-
 experiment 01:
 obsereved best scheduling of the passes, pass ordering problem,
@@ -122,8 +125,7 @@ def test_peep0_single :  Com LLVMPlusRiscV (Ctxt.ofList [.llvm (.bitvec 64),.llv
 def test_pep0_dce:= (DCE.dce' test_peep0_single)
 #eval! test_pep0_dce
 
--- here we do not perform cse because cse is unsafe
- unsafe def selectionPipeFuel100Safe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))  ):=
+ def selectionPipeFuel100Safe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))  ):=
   let initial_dead_code :=  (DCE.dce' prog).val; -- first we eliminate the inital inefficenices in the code.
   let lowerConst := (multiRewritePeephole (100) (loweringPass_simple) initial_dead_code);
   let lower_binOp_self := (multiRewritePeephole (100) (loweringPass_simple) lowerConst); --then we lower all single one operand instructions.
@@ -135,9 +137,10 @@ def test_pep0_dce:= (DCE.dce' test_peep0_single)
   let reconcile_Cast := multiRewritePeephole (100) (reconcile_cast_pass) remove_llvm_instr;
   let remove_dead_Cast := (DCE.dce' reconcile_Cast).val; -- to do think of whether this makes a diff.
   let minimal_cast := (DCE.dce' remove_dead_Cast).val; -- to do: unsrue why apply cast elimination twice
-  let optimize_eq_cast := (CSE.cse' minimal_cast).val; -- this simplifies when an operand gets casted multiple times.
-  let out := (DCE.dce' optimize_eq_cast).val;
-  out
+  --let optimize_eq_cast := (CSE.cse' minimal_cast).val; -- this simplifies when an operand gets casted multiple times.
+  --let out := (DCE.dce' optimize_eq_cast).val;
+  --out
+  minimal_cast
 
 -- NEED TO CANCONOALIZE THE CASTS
 #eval! toString (selectionPipeFuel100Safe llvm01)
