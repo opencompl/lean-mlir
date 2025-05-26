@@ -38,7 +38,7 @@ def llvm_trunc_riscv_i64_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome, BitVec.signExtend_eq]
     bv_decide
   }
 
@@ -66,7 +66,7 @@ def llvm_trunc_riscv_i64_to_i32_nuw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome, BitVec.signExtend_eq]
     bv_decide
   }
 
@@ -94,7 +94,7 @@ def llvm_trunc_riscv_i64_to_i32_nsw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome, BitVec.signExtend_eq]
     bv_decide
   }
 
@@ -122,7 +122,7 @@ def llvm_trunc_riscv_i64_to_i32_nuw_nsw : LLVMPeepholeRewriteRefine 32 [Ty.llvm 
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome, BitVec.signExtend_eq]
     bv_decide
   }
 
@@ -152,7 +152,7 @@ def llvm_trunc_riscv_i32_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 3
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome]
     bv_decide
   }
 
@@ -180,7 +180,7 @@ def llvm_trunc_riscv_i32_to_i8_nuw : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitv
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome]
     bv_decide
   }
 
@@ -208,7 +208,7 @@ def llvm_trunc_riscv_i32_to_i8_nsw : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitv
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome]
     bv_decide
   }
 
@@ -236,7 +236,7 @@ def llvm_trunc_riscv_i32_to_i8_nuw_nsw : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome]
     bv_decide
   }
 
@@ -267,6 +267,6 @@ def llvm_trunc_riscv_i32_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp
-    bv_decide 
+    simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome]
+    bv_decide
   }
