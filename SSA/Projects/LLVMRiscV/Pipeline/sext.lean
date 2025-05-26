@@ -7,7 +7,7 @@ open LLVMRiscV
 /- # sext instruction lowering-/
 
 def sext_riscv_i1_to_i8 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i1) -> (!i64)
     %1 = slli %0, 63 : !i64
     %2 = srai %1, 63 : !i64
@@ -16,7 +16,7 @@ def sext_riscv_i1_to_i8 := [LV| {
   }]
 
 def sext_llvm_i1_to_i8 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = llvm.sext %arg: i1 to i8
     llvm.return %0: i8
   }]
@@ -38,7 +38,7 @@ def llvm_sext_lower_riscv_i1_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitv
   }
 
 def sext_riscv_i1_to_i16 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i1) -> (!i64)
     %1 = slli %0, 63 : !i64
     %2 = srai %1, 63 : !i64
@@ -47,7 +47,7 @@ def sext_riscv_i1_to_i16 := [LV| {
   }]
 
 def sext_llvm_i1_to_i16 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = llvm.sext %arg: i1 to i16
     llvm.return %0: i16
   }]
@@ -69,7 +69,7 @@ def llvm_sext_lower_riscv_i1_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bi
   }
 
 def sext_riscv_i1_to_i32 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i1) -> (!i64)
     %1 = slli %0, 63 : !i64
     %2 = srai %1, 63 : !i64
@@ -78,7 +78,7 @@ def sext_riscv_i1_to_i32 := [LV| {
   }]
 
 def sext_llvm_i1_to_i32 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = llvm.sext %arg: i1 to i32
     llvm.return %0: i32
   }]
@@ -100,7 +100,7 @@ def llvm_sext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
   }
 
 def sext_riscv_i1_to_i64 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i1) -> (!i64)
     %1 = slli %0, 63 : !i64
     %2 = srai %1, 63 : !i64
@@ -109,7 +109,7 @@ def sext_riscv_i1_to_i64 := [LV| {
   }]
 
 def sext_llvm_i1_to_i64 := [LV| {
-  ^entry (%arg: i1 ):
+  ^entry (%arg: i1):
     %0 = llvm.sext %arg: i1 to i64
     llvm.return %0: i64
   }]
@@ -140,7 +140,7 @@ def sext_riscv_i8_to_i64 := [LV| {
   }]
 
 def sext_llvm_i8_to_i64 := [LV| {
-  ^entry (%arg: i8 ):
+  ^entry (%arg: i8):
     %0 = llvm.sext %arg: i8 to i64
     llvm.return %0: i64
   }]
