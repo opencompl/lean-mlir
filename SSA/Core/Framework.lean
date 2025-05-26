@@ -2660,15 +2660,14 @@ lemma denote_foldl_rewritePeepholeAt
   case nil =>
     simp
   case cons prog rest ih =>
-    match prog with
-    |⟨Γ, ty, pr⟩ =>
-      simp only [List.foldl]
-      have h : (rewritePeepholeAt pr ix target).denote = target.denote :=
-        denote_rewritePeepholeAt pr ix target
-      let mid := rewritePeepholeAt pr ix target
-      have h' := ih mid
-      rw [←h'] at h
-      exact h
+    let ⟨Γ, ty, pr⟩ := prog
+    simp only [List.foldl]
+    have h : (rewritePeepholeAt pr ix target).denote = target.denote :=
+      denote_rewritePeepholeAt pr ix target
+    let mid := rewritePeepholeAt pr ix target
+    have h' := ih mid
+    rw [←h'] at h
+    exact h
 
 /- The proof that applying `rewritePeephole_go_multi` preserves the semantics of the target program
 to which the peephole rewrites get applied. -/
