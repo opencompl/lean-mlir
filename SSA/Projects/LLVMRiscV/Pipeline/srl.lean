@@ -11,7 +11,7 @@ attribute [-simp] BitVec.ushiftRight_eq' BitVec.shiftLeft_eq' BitVec.sshiftRight
 
 /- # SRL, not exact
 Logical right shift operation in LLVM: if exact flag is set,
-then returns poison if any non zero bit is shifted  -/
+then returns poison if any nonzero bit is shifted  -/
 
 def lshr_llvm_no_flag := [LV| {
     ^entry (%x: i64, %amount: i64):
@@ -44,8 +44,9 @@ def llvm_srl_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
     case value.value.isTrue htt =>
       simp
     case value.value.isFalse hff =>
-      simp at hff
-      simp
+      simp only [BitVec.not_le] at hff
+      simp only [PoisonOr.toOption_getSome, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff]
       bv_decide
 
 def lshr_llvm_exact := [LV| {
