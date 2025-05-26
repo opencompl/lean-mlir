@@ -292,7 +292,7 @@ theorem evalWith_succ_eq_evalWith_delta' (p : FSM arity) (carryState : p.α → 
 theorem evalWith_succ_eq_delta'_evalWith (p : FSM arity) (carryState : p.α → Bool)
       (x : arity → BitStream) :
   p.evalWith carryState x (n + 1) =
-  p.delta' (p.evalWith carryState x n) (fun a => x a (n + 1)) := by
+  p.evalWith (p.delta' carryState (fun s => x s 0)) (fun s i => x s (i + 1)) n := by
   -- Proof goes here
   simp [evalWith, delta', carryWith]
   rw [eval_changeInitCarry_succ]
