@@ -49,7 +49,7 @@ If it is `none` (e.g., an LLVM poison value), we default to the zero `BitVec`.
 -/
 @[simp_riscv]
 def castLLVMToriscv (toCast : PoisonOr (BitVec w)) : BitVec 64 :=
-  BitVec.signExtend 64 (toCast.toOption.getD 0#w)
+  BitVec.setWidth 64 (toCast.toOption.getD 0#w)
 
 @[simp]
 abbrev LLVMPlusRiscV : Dialect where
