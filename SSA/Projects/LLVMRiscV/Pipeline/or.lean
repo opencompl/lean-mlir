@@ -54,12 +54,12 @@ def llvm_or_lower_riscv_disjoint : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
   lhs := or_llvm_disjoint
   rhs := or_riscv
   correct := by
-      unfold or_llvm_disjoint or_riscv
-      simp_peephole
-      simp_riscv
-      simp_alive_undef
-      simp_alive_case_bash
-      simp_alive_split
-      all_goals
-      simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.or_eq, BitVec.signExtend_eq]
-      bv_decide
+    unfold or_llvm_disjoint or_riscv
+    simp_peephole
+    simp_riscv
+    simp_alive_undef
+    simp_alive_case_bash
+    simp_alive_split
+    all_goals
+    simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.or_eq, BitVec.signExtend_eq]
+    bv_decide

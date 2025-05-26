@@ -28,12 +28,12 @@ def llvm_rem_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
   lhs := rem_llvm
   rhs := rem_riscv
   correct := by
-      unfold rem_llvm rem_riscv
-      simp_peephole
-      simp_alive_undef
-      simp_alive_ops
-      simp_riscv
-      simp_alive_case_bash
-      intro x x'
-      simp_alive_split
-      simp
+    unfold rem_llvm rem_riscv
+    simp_peephole
+    simp_alive_undef
+    simp_alive_ops
+    simp_riscv
+    simp_alive_case_bash
+    intro x x'
+    simp_alive_split
+    simp
