@@ -32,7 +32,7 @@ def llvm_sdiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     simp_alive_ops
     simp_alive_case_bash
     intro x x'
-    by_cases onX2 : x' = 0#64 <;>  simp [onX2]
+    by_cases onX2 : x' = 0#64 <;> simp [onX2]
 
 /-! # SDIV exact  -/
 def sdiv_llvm_exact := [LV| {
@@ -54,5 +54,6 @@ def llvm_sdiv_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     intro x x'
     by_cases onX2 : x' = 0#64 <;> simp [onX2]
     by_cases hx : x.smod x' = 0#64
-    simp [hx] -- to do 
+    simp only [hx, ↓reduceIte, Nat.ofNat_pos, PoisonOr.if_then_poison_isRefinedBy_iff, not_and,
+      PoisonOr.isRefinedBy_self, implies_true] -- to do
     split <;> simp
