@@ -289,7 +289,7 @@ theorem evalWith_succ_eq_evalWith_delta' (p : FSM arity) (carryState : p.α → 
   congr
 
 /-- Evaluating at (n + 1) equals evaluating at n with a different state-/
-theorem evalWith_succ_eq_delta'_evalWith (p : FSM arity) (carryState : p.α → Bool)
+theorem evalWith_succ_eq (p : FSM arity) (carryState : p.α → Bool)
       (x : arity → BitStream) :
   p.evalWith carryState x (n + 1) =
   p.evalWith (p.delta' carryState (fun s => x s 0)) (fun s i => x s (i + 1)) n := by
@@ -308,11 +308,20 @@ theorem evalWith_eq_eval_of_eq_init (p : FSM arity) (carryState : p.α → Bool)
     (hc : carryState = p.initCarry) : p.evalWith carryState x = p.eval x := by
   simp [hc, evalWith]
 
+
 @[simp]
 theorem evalWith_initCarry_eq_init (p : FSM arity)
     : p.evalWith p.initCarry = p.eval := by
   ext x; simp [evalWith]
 
+/-- Write 'evalWith' in terms of an output followed by a carry. -/
+theorem evalWith_eq_outputWith_carryWith
+    (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) (n : Nat) :
+    p.evalWith carryState x n =
+    p.outputWith (p.carryWith carryState x n) (fun a => x a n)  := by
+  -- Proof goes here
+  simp only [evalWith, eval, changeInitCarry, nextBit, outputWith]
+  congr
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/

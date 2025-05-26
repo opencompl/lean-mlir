@@ -1127,6 +1127,16 @@ def envBoolStart_of_envBitstream (p : FSM α)
     | .state s => p.initCarry s
     | .inputs (.mk a i) => envBitstream i a
 
+
+def Bitstream_of_envBool
+  (envBool : Vars α arity n → Bool) :
+  (arity → BitStream) :=
+  fun a =>
+    fun k =>
+      if hk : k < n
+      then envBool (.inputs (Inputs.mk ⟨k, by omega⟩ a))
+      else false
+
 /-- make the init carry of the FSM from the envBool. -/
 def initCarry_of_envBool {p : FSM α}
   (envBool : Vars p.α arity n → Bool) :
@@ -1147,6 +1157,14 @@ theorem EnvOutRelated_envBoolStart_of_envBitStream_of_self {arity : Type _} {α 
   constructor
   intros x i hi
   rw [envBoolStart_of_envBitstream]
+
+@[simp]
+theorem EnvOutRelated_self_Bitstream_of_envBool
+    (envBool : Vars α arity n → Bool) :
+    EnvOutRelated envBool (Bitstream_of_envBool envBool) := by
+  constructor
+  intros x i hi
+  simp [Bitstream_of_envBool, hi]
 
 -- structure StateCircuit {arity : Type _}
 --     [DecidableEq arity]
@@ -1653,8 +1671,7 @@ def mkSafetyCircuit {arity : Type _}
 Evaluating the safety circuit is false iff
 the bitstreams are false upto index 'n'.
 -/
-@[simp]
-theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
+theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat)
     (envBool : Vars Empty arity (n + 1) → Bool)
@@ -1688,6 +1705,39 @@ theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
     · constructor
       intros x j hj
       apply hEnvBitstream.envBool_eq_envBitstream
+
+/--
+info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff_
+
+/--
+Evaluating the safety circuit is false iff
+the bitstreams are false upto index 'n'.
+-/
+@[simp]
+theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    (∀ envBool, (mkSafetyCircuit p n).eval envBool = false) ↔
+    (∀ envBitstream, ∀ (i : Nat), i < n → p.eval envBitstream i = false) := by
+  constructor
+  · intros h envBitstream i  hi
+    let envBool := envBoolEmpty_of_envBitstream envBitstream n
+    specialize h envBool
+    rw [eval_mkSafetyCircuit_eq_false_iff_
+      (envBitstream := envBitstream)
+    ] at h
+    · apply h
+      omega
+    · simp [envBool]
+  · intros h envBool
+    rw [eval_mkSafetyCircuit_eq_false_iff_
+      (envBitstream := Bitstream_of_envBool envBool)
+    ]
+    · intros i hi
+      apply h (Bitstream_of_envBool envBool) i hi
+    · simp
 
 /--
 info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
@@ -2068,6 +2118,48 @@ theorem ind_principle₃ {motive : Nat → Prop} (bound : Nat) (hbound : 0 < bou
       · rw [Nat.div_add_mod]
     · simp [Nat.mul_succ]
       omega
+
+/-- State 't' is reachable from 's' in 'n' steps. -/
+def ReachableInExactlyN {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s t : p.α → Bool) (n : Nat) : Prop :=
+  ∃ envBitstream , p.carryWith s envBitstream n = t
+
+/-- State 't' is reachable from 's' in 'n' steps. -/
+def ReachableInAtMostN {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
+  ∃ i ≤ n, ∃ envBitstream , p.carryWith s envBitstream i = t
+
+/-- State is safe. -/
+def Safe {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s : p.α → Bool) : Prop :=
+  ∀ env, p.outputWith s env = false
+
+theorem eval_mkSafetyCircuit_eq_false_iff' {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars Empty arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    (mkSafetyCircuit p n).eval envBool = false ↔
+    (∀ t, ReachableInAtMostN p p.initCarry t n → Safe p t) := by
+  unfold ReachableInAtMostN Safe
+  constructor
+  · intros h t ht env
+    obtain ⟨i, hi, envBitstream', hEnvbitstream'⟩ := ht
+    rw [eval_mkSafetyCircuit_eq_false_iff (envBitstream := envBitstream')] at h
+    · sorry
+    · apply hEnvBitstream.envBool_eq_envBitstream
+  · sorry
+
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     {arity : Type _}
@@ -2080,6 +2172,8 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     ∀ envBitstream i, p.eval envBitstream i = false := by
   simp at hs hind
   intros envBitstream i
+  rw [← eval_mkSafetyCircuit_eq_false_iff] at hs
+
   sorry
   -- induction i generalizing hs hind
   -- case zero => -- base case, i = 0
