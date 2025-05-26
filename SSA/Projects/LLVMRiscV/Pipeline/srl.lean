@@ -32,21 +32,21 @@ def llvm_srl_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
   lhs := lshr_llvm_no_flag
   rhs := srl_riscv
   correct :=  by
-      unfold lshr_llvm_no_flag srl_riscv
-      simp_peephole
-      simp_alive_undef
-      simp_riscv
-      simp only [LLVM.lshr?, Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, Nat.sub_zero,
-        Nat.reduceAdd, BitVec.setWidth_eq, BitVec.signExtend_eq]
-      simp_alive_case_bash
-      intro x x'
-      split
-      case value.value.isTrue htt =>
-        simp
-      case value.value.isFalse hff =>
-        simp at hff
-        simp
-        bv_decide
+    unfold lshr_llvm_no_flag srl_riscv
+    simp_peephole
+    simp_alive_undef
+    simp_riscv
+    simp only [LLVM.lshr?, Nat.cast_ofNat, BitVec.ofNat_eq_ofNat, ge_iff_le, Nat.sub_zero,
+      Nat.reduceAdd, BitVec.setWidth_eq, BitVec.signExtend_eq]
+    simp_alive_case_bash
+    intro x x'
+    split
+    case value.value.isTrue htt =>
+      simp
+    case value.value.isFalse hff =>
+      simp at hff
+      simp
+      bv_decide
 
 def lshr_llvm_exact := [LV| {
     ^entry (%x: i64, %amount: i64):
