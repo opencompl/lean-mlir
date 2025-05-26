@@ -21,7 +21,7 @@ def trunc_llvm_i64_to_i32 := [LV| {
   }]
 
 def trunc_riscv_to_i32 := [LV| {
-  ^entry (%lhs: i64 ):
+  ^entry (%lhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
     %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
     llvm.return %2 : i32
@@ -73,7 +73,7 @@ def trunc_llvm_i64_to_i32_nsw := [LV| {
   }]
 
 def trunc_riscv_to_i32_nsw := [LV| {
-  ^entry (%lhs: i64 ):
+  ^entry (%lhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
     %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
     llvm.return %2 : i32
@@ -99,7 +99,7 @@ def trunc_llvm_i64_to_i32_nsw_nuw := [LV| {
   }]
 
 def trunc_riscv_to_i32_nsw_nuw := [LV| {
-  ^entry (%lhs: i64 ):
+  ^entry (%lhs: i64):
   %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
   %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
     llvm.return %2 : i32
@@ -127,7 +127,7 @@ def trunc_llvm_i32_to_i8 := [LV| {
   }]
 
 def trunc_riscv_i8_to_i32 := [LV| {
-  ^entry (%lhs: i32 ):
+  ^entry (%lhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
     %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i8)
     llvm.return %2 : i8
@@ -153,7 +153,7 @@ def trunc_llvm_i32_to_i8_nuw := [LV| {
   }]
 
 def trunc_riscv_i32_to_i8_nuw := [LV| {
-  ^entry (%lhs: i32 ):
+  ^entry (%lhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
     %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i8)
     llvm.return %2 : i8
@@ -205,7 +205,7 @@ def trunc_llvm_i32_to_i8_nsw_nuw := [LV| {
   }]
 
 def trunc_riscv_i32_to_i8_nsw_nuw := [LV| {
-  ^entry (%lhs: i32 ):
+  ^entry (%lhs: i32):
   %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
   %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i8)
     llvm.return %2 : i8
@@ -223,7 +223,6 @@ def llvm_trunc_riscv_i32_to_i8_nuw_nsw : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.
     simp_alive_split
     all_goals simp
   }
-
 
 /- # trunc operation from i32 to i16 without nuw and nsw flags yet
  The flag support will be added in the future. The proof structure is exact the same as above. -/
@@ -253,3 +252,4 @@ def llvm_trunc_riscv_i32_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec
     simp_alive_split
     all_goals simp
   }
+
