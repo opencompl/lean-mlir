@@ -19,7 +19,7 @@ systems. It is stating that an element should be casted to type B from type A.
 def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty.riscv (.bv)) where
   lhs := [LV| {
       ^entry (%arg: !i64):
-      %0 = "builtin.unrealized_conversion_cast" (%arg) : (!i64) -> (i64)
+      %0 = "builtin.unrealized_conversion_cast"(%arg) : (!i64) -> (i64)
       %1 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!i64)
       ret %1 : !i64
     }]
