@@ -2280,6 +2280,25 @@ def ReachableInNLt {arity : Type _}
   (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
   ∃ i < n, ∃ envBitstream , p.carryWith s envBitstream i = t
 
+/-- reachable in `< n` steps, iff there is an 'i' such that reachable in `=i` steps. -/
+theorem ReachableInNLt_iff_ReachableInNEq {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s t: p.α → Bool) (n : Nat) :
+  ReachableInNLt p s t n ↔ ∃ i < n, ReachableInNEq p s t i := by
+  constructor
+  · intros h
+    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+    exists i
+    simp [hi]
+    exists envBitstream
+  · intros h
+    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+    exists i
+    simp [hi]
+    exists envBitstream
+
 /-- State 't' is reachable from 's' in 'i < n' steps. -/
 def ReachableInNLe {arity : Type _}
   [DecidableEq arity]
@@ -2287,6 +2306,48 @@ def ReachableInNLe {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
   ∃ i ≤ n, ∃ envBitstream , p.carryWith s envBitstream i = t
+
+theorem ReachableInNLe_iff_ReachableInNEq {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s t: p.α → Bool) (n : Nat) :
+  ReachableInNLe p s t n ↔ ∃ i ≤ n, ReachableInNEq p s t i := by
+  constructor
+  · intros h
+    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+    exists i
+    simp [hi]
+    exists envBitstream
+  · intros h
+    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+    exists i
+    simp [hi]
+    exists envBitstream
+
+theorem ReachableInNLe_of_ReachbleInNEq_of_le {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
+  (h : ReachableInNEq p s t n) (hm : n ≤ m) :
+  ReachableInNLe p s t m := by
+  obtain ⟨envBitstream, hCarry⟩ := h
+  exists n
+  simp [show n ≤ m by omega]
+  exists envBitstream
+
+theorem ReachableInNLe_of_reachableInNLt_of_le {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
+  (h : ReachableInNLt p s t n) (hm : n ≤ m) :
+  ReachableInNLe p s t m := by
+  obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+  exists i
+  simp [show i ≤ m by omega]
+  exists envBitstream
 
 /-- If it is reachable in at least 'n' steps,
 then it is reachable in at least 'm' steps when 'n < m'. -/
@@ -2300,6 +2361,30 @@ theorem ReachableInNLt_of_ReachableInNLt_of_le {arity : Type _}
   obtain ⟨i, hi, envBitstream, hCarry⟩ := h
   exists i
   simp [show i < m by omega]
+  exists envBitstream
+
+theorem ReachableInNLt_of_ReachableInNLe_of_lt {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
+    (h : ReachableInNLe p s t n) (hm : n < m) :
+    ReachableInNLt p s t m := by
+  obtain ⟨i, hi, envBitstream, hCarry⟩ := h
+  exists i
+  simp [show i < m by omega]
+  exists envBitstream
+
+theorem ReachableInNLt_of_ReachableInNEq_of_lt {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
+    (h : ReachableInNEq p s t n) (hm : n < m) :
+    ReachableInNLt p s t m := by
+  obtain ⟨envBitstream, hCarry⟩ := h
+  exists n
+  simp [show n < m by omega]
   exists envBitstream
 
 /-- A state that has been run for 'i < n' times from 's' is reachable from 's'-/
@@ -2426,6 +2511,76 @@ info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_S
 -/
 #guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
 
+/-- If 't' is reachable from 's' in 'N ≥ n' steps, then there
+is a state 'u' such that 's → u' in 'n' steps, and 'u → t' in 'N - n' steps. -/
+theorem ReachableInNEq_ReachableInNEq_sub_of_ReachableInNEq_of_le
+  {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) {s t : p.α → Bool} {n N : Nat}
+  (hReachableN : ReachableInNEq p s t N)
+  (hLe : n ≤ N) :
+  ∃ u, ReachableInNEq p s u n ∧ ReachableInNEq p u t (N - n) := by
+  obtain ⟨envBitstream, hCarry⟩ := hReachableN
+  rw [show N = n + (N - n) by omega] at hCarry
+  exists p.carryWith s envBitstream n
+  constructor
+  · exists envBitstream
+  · rw [← FSM.carryWith_carryWith_eq_carryWith_add] at hCarry
+    rw [ReachableInNEq]
+    rw [← hCarry]
+    exists (fun a i => envBitstream a (n + i))
+
+/-- If 't' is reachable from 's' in 'N ≥ n' steps, then there
+is a state 'u' such that 's → u' in 'N-n' steps, and 'u → t' in 'n' steps.
+-/
+theorem ReachableInNEq_sub_ReachableInNEq_of_ReachableInNEq_of_le
+  {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) {s t : p.α → Bool} {n N : Nat}
+  (hReachableN : ReachableInNEq p s t N)
+  (hLe : n ≤ N) :
+  ∃ u, ReachableInNEq p s u (N - n) ∧ ReachableInNEq p u t n := by
+  have := ReachableInNEq_ReachableInNEq_sub_of_ReachableInNEq_of_le p hReachableN
+    (n := N - n) (hLe := by omega)
+  obtain ⟨u, hu₁, hu₂⟩ := this
+  exists u
+  simp only [hu₁, true_and]
+  simp only [show N - (N - n) = n by omega] at hu₂
+  simp only [hu₂]
+
+
+theorem safe_of_reachableInNEq_of_reachableLe_safe_of_safe_of_reachableLt
+    {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (hsafe : ∀ t, ReachableInNLe p p.initCarry t n → Safe p t)
+    (hind : (∀ s t, (ReachableInNLt p s t n → Safe p t)) →
+      (∀ s t, (ReachableInNEq p s t n → Safe p t)))
+    (t : p.α → Bool) (m : Nat) :
+    ReachableInNEq p p.initCarry t m → Safe p t := by
+  intros hReachableN
+  revert t
+  induction m using Nat.strong_induction_on
+  case h M hM =>
+    intros t hReachableN
+    by_cases hMLt : M ≤ n
+    · apply hsafe
+      apply ReachableInNLe_of_ReachbleInNEq_of_le hReachableN
+      omega
+    · simp at hMLt
+      have := ReachableInNEq_sub_ReachableInNEq_of_ReachableInNEq_of_le p hReachableN
+        (n := n) (hLe := by omega)
+      obtain ⟨u, hu₁, hu₂⟩ := this
+      apply hind (s := u)
+      · intros x y hxy
+        obtain ⟨i, hi, hxy⟩ := ReachableInNLt_iff_ReachableInNEq p x y n |>.mp hxy
+        apply hM (m := i) (by omega)
+        · sorry
+      · apply hu₂
 
 theorem safe_of_reachable_of_reachableLe_safe_of_safe_of_reachableLt
     {arity : Type _}
@@ -2435,7 +2590,10 @@ theorem safe_of_reachable_of_reachableLe_safe_of_safe_of_reachableLt
     (hind : (∀ s t, (ReachableInNLt p s t n → Safe p t)) →
       (∀ s t, (ReachableInNEq p s t n → Safe p t))) :
   ∀ t, Reachable p p.initCarry t → Safe p t := by
-  sorry
+  intros t hReachable
+  rw [Reachable_eq_ReachableInNEq] at hReachable
+  obtain ⟨n, hReachableN⟩ := hReachable
+  apply safe_of_reachableInNEq_of_reachableLe_safe_of_safe_of_reachableLt <;> assumption
 
 /-
 We rewrite our theorems in terms of our concepts:
