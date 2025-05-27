@@ -379,6 +379,18 @@ theorem evalWith_eq_outputWith_carryWith
   simp only [evalWith, eval, changeInitCarry, nextBit, outputWith]
   congr
 
+/-- Write 'evalWith' in terms of an output followed by a carry. -/
+theorem evalWith_eq_outputWith_carryWith_of_eq
+    {p : FSM arity} {carryState : p.α → Bool} {n : Nat}
+    (env : arity → BitStream)
+    (outEnv : arity → Bool)
+    (henv : (fun a => env a n) = outEnv) :
+    p.evalWith carryState env n =
+    p.outputWith (p.carryWith carryState env n) outEnv  := by
+  -- Proof goes here
+  subst henv
+  rw [evalWith_eq_outputWith_carryWith]
+
 
 /-- rewrite an 'eval' in terms of an 'outputWith' + 'carryWith'.
 most detailed decomposition of an FSM available.

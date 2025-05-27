@@ -2302,6 +2302,17 @@ theorem ReachableInNLt_of_ReachableInNLt_of_le {arity : Type _}
   simp [show i < m by omega]
   exists envBitstream
 
+/-- A state that has been run for 'i < n' times from 's' is reachable from 's'-/
+theorem ReachableInNLt_of_carryWith_of_lt {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    {p : FSM arity} {s : p.α → Bool} {env : arity → BitStream} {i n : Nat} (h : i < n) :
+    ReachableInNLt p s (p.carryWith s env i) n := by
+  unfold ReachableInNLt
+  exists i
+  simp [h]
+
 /-- A state is reachable if there is some distance at which it is reached. -/
 def Reachable {arity : Type _}
   [DecidableEq arity]
@@ -2377,29 +2388,44 @@ theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe
 theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
     {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity)  (n : Nat):
-    (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
-    ((∀ s, ∃ i < n, (∀ t, (ReachableInNLt p s t i → Safe p t) →
-      (ReachableInNEq p s t i → Safe p t)))) := by
-  constructor
-  · intros h env
-    simp only [eval_mkIndHypCircuit_eq_false_iff_intermediate] at h
-    simp only [FSM.evalWith_eq_outputWith_carryWith] at h
-    simp [ReachableInNEq, ReachableInNLt]
+    (p : FSM arity)  (n : Nat)
+    (hInd : ∀ envBool, (mkIndHypCircuit p n).eval envBool = false) :
+    ((∀ s t, (ReachableInNLt p s t n → Safe p t)) →
+      (∀ s t, (ReachableInNEq p s t n → Safe p t))) := by
+  have := eval_mkIndHypCircuit_eq_false_iff_intermediate' p n (by
+    apply hInd
+  )
+  intros hLt s t
+  rw [Safe]
+  intros hEq -- values provided when output is computed.
+  intros env
+  rw [ReachableInNEq] at hEq
+  obtain ⟨envOutput, ht⟩ := hEq
+  subst ht
+  let envOutput' := fun a k =>
+    if k = n then env a
+    else envOutput a k
+  rw [FSM.carryWith_congrEnv (y := envOutput') (h := by
+    intros a i hi
+    simp [envOutput', show ¬ (i = n) by omega]
+  )]
+  rw [← FSM.evalWith_eq_outputWith_carryWith_of_eq]
+  · apply this
+    simp [Safe] at hLt
+    simp [FSM.evalWith_eq_outputWith_carryWith]
+    intros envLt state j hj
+    apply hLt (s := state)
+    · apply ReachableInNLt_of_carryWith_of_lt
+      omega
+  · simp [envOutput']
 
+/--
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
 
-    -- have allVals : List Int :=
-    --   (mkAllBitstreams n).flatMap fun b =>
-    --     (mkAllStates p.α).toList.flatMap fun s =>
-    --       let ⟨i, hi⟩ := h b s
-    --       i
-    sorry
-    -- -- rw [ReachableInNEq] at hReachableInEq
-    -- obtain ⟨envBitstream, ht⟩ := hReachableInEq
-    -- subst ht
-    -- specialize (h envBitstream s)
-    -- obtain ⟨i, hi, hEval⟩ := h
-  · sorry
 
 /-
 We rewrite our theorems in terms of our concepts:
