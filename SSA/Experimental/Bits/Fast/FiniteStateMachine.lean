@@ -243,14 +243,6 @@ theorem carryWith_carryWith_one_eq_succ_carryWith (carryState : p.α → Bool) (
   rw [← carryWith]
   congr
 
--- theorem carryWith_carryWith_eq_carryWith (carryState : p.α → Bool) (x : arity → BitStream) :
---       p.carryWith (p.carryWith carryState x n) (fun a i => x a (n + i)) m =
---       p.carryWith carryState x (n + m) := by
---   induction n generalizing carryState x
---   case zero =>
---     simp
---   case succ n ih =>
---     sorry
 
 theorem carryWith_eq_carry_of_eq_initCarry (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) (n : Nat)
     (hc : carryState = p.initCarry) :
@@ -387,6 +379,7 @@ theorem evalWith_eq_outputWith_carryWith
   simp only [evalWith, eval, changeInitCarry, nextBit, outputWith]
   congr
 
+
 /-- rewrite an 'eval' in terms of an 'outputWith' + 'carryWith'.
 most detailed decomposition of an FSM available.
 -/
@@ -395,6 +388,47 @@ theorem eval_eq_outputWith_carryWith (p : FSM arity) :
   p.outputWith (p.carryWith p.initCarry x n) (fun a => x a n) := by
   simp only [carryWith_initCarry_eq_carry]
   apply evalWith_eq_outputWith_carryWith
+
+/-- carryWith commutes with delta -/
+theorem carryWith_delta_eq_delta_carryWith
+  {carryState : p.α → Bool} {x : arity → BitStream} {n : Nat} :
+  p.carryWith (p.delta carryState x) (fun a i => x a (i + 1)) n =
+  p.delta (p.carryWith carryState x n) (fun a i => x a (n + i)) := by
+  revert x carryState
+  induction n
+  case zero => simp
+  case succ n ih =>
+    intros x carryState
+    rw [← carryWith_delta_eq_succ_carryWith]
+    rw [ih]
+    simp
+    congr
+
+/-- carryWith's compose, and so can be added. -/
+theorem carryWith_carryWith_eq_carryWith_add (carryState : p.α → Bool) (x : arity → BitStream) :
+      p.carryWith (p.carryWith carryState x n) (fun a i => x a (n + i)) m =
+      p.carryWith carryState x (n + m) := by
+  revert n x carryState
+  induction m
+  case zero =>
+    simp
+  case succ m ih =>
+    intros n carryState x
+    rw [show n + (m + 1) = (n + m) + 1 by omega]
+    repeat rw [← carryWith_delta_eq_succ_carryWith]
+    repeat rw [carryWith_delta_eq_delta_carryWith]
+    rw [ih]
+    congr
+
+theorem evalWith_add_eq_evalWith_carryWith
+  (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) (n : Nat) :
+  p.evalWith carryState x (n + m) =
+  p.evalWith (p.carryWith carryState x n) (fun a i => x a (n + i)) m  := by
+  conv =>
+    lhs
+    rw [evalWith_eq_outputWith_carryWith]
+    rw [← carryWith_carryWith_eq_carryWith_add]
+    rw [← evalWith_eq_outputWith_carryWith]
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/

@@ -2163,7 +2163,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate'
     (((((∀ envBitstream state (j : Nat), j < n → p.evalWith state envBitstream j = false))) →
     (∀ envBitstream state, p.evalWith state envBitstream n = false))) := by
   intros hAssume envBitstream state
-  simp at hInd
+  simp [eval_mkIndHypCircuit_eq_false_iff_intermediate] at hInd
   have hIndCur := hInd envBitstream state
   obtain ⟨iCur, hiCur, hIndCur⟩ := hIndCur
   by_cases hiCur' : iCur = n
@@ -2175,7 +2175,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate'
     rw [this]
     rw [FSM.evalWith_succ_eq]
     apply eval_mkIndHypCircuit_eq_false_iff_intermediate'
-    · simp
+    · simp [eval_mkIndHypCircuit_eq_false_iff_intermediate]
       intros envBs' state'
       exists iCur
       simp [show iCur ≤ n - 1 by omega]
@@ -2203,7 +2203,8 @@ info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate' depends 
 theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
   (hBase : ∀ i < bound, motive i)
   (hInd : ∀ (j : Nat),
-    ((∀ (δ : Nat), δ < bound → motive (j + δ)) → motive (j + bound))) :
+    bound ≤ j →
+    ((∀ (k : Nat), j - bound < k → k < j → motive k) → motive j)) :
   ∀ k, motive k := by
   intros k
   induction k using Nat.strong_induction_on
@@ -2215,9 +2216,53 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
       obtain ⟨δ, hδ⟩ := this
       subst hδ
       apply hInd
+      omega
       intros ε  hε
       apply ihk
+
+  theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false'' {n : Nat}
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (hs : (mkSafetyCircuit p n).always_false)
+    (hind : (mkIndHypCircuit p n).always_false)
+    (envBitstream : arity → BitStream) (i : Nat) :  p.eval envBitstream i = false := by
+  simp [eval_mkSafetyCircuit_eq_false_iff]  at hs
+  have hInd' := eval_mkIndHypCircuit_eq_false_iff_intermediate' p n
+    (by
+      simp only [Circuit.always_false_iff, Bool.not_eq_true] at hind
+      apply hind
+    )
+  revert envBitstream
+  by_cases hn : n = 0
+  · subst hn
+    intros envBitstream
+    rw [FSM.eval_eq_evalWith_initCarry]
+    rw [show i = i + 0 by simp]
+    rw [FSM.evalWith_add_eq_evalWith_carryWith]
+    apply hInd'
+    intros _ _ j hcontra
+    simp at hcontra
+  · by_cases hi : i ≤ n
+    · intros envBitstream
+      apply hs
       omega
+    · intros envBistream
+      rw [FSM.eval_eq_evalWith_initCarry]
+      -- have : i' = (i' - n) + n := by omega
+      have : i = n + (i - n) := by omega
+      rw [this]
+      rw [FSM.evalWith_add_eq_evalWith_carryWith]
+      have hi : i - n < i := by omega
+      apply eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false''
+        (n := n) (i := i - n)
+      · simp [eval_mkSafetyCircuit_eq_false_iff]
+        intros env i hi
+        sorry
+      · simp; sorry
+    termination_by  i
 
 /-- State 't' is reachable from 's' in 'n' steps. -/
 def ReachableInNEq {arity : Type _}
