@@ -2427,6 +2427,16 @@ info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_S
 #guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
 
 
+theorem safe_of_reachable_of_reachableLe_safe_of_safe_of_reachableLt
+    {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (hsafe : ∀ t, ReachableInNLe p p.initCarry t n → Safe p t)
+    (hind : (∀ s t, (ReachableInNLt p s t n → Safe p t)) →
+      (∀ s t, (ReachableInNEq p s t n → Safe p t))) :
+  ∀ t, Reachable p p.initCarry t → Safe p t := by
+  sorry
+
 /-
 We rewrite our theorems in terms of our concepts:
 All reachable states are safe.
@@ -2440,26 +2450,25 @@ theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   (hsafe : (mkSafetyCircuit p n).always_false)
   (hind : (mkIndHypCircuit p n).always_false) :
   ∀ (t : p.α → Bool), Reachable p p.initCarry t → Safe p t := by
-  simp only [Circuit.always_false_iff, Bool.not_eq_true] at hsafe hind
-  rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe] at hsafe
-  rw [eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe] at hind
-  intros t
-  rw [Reachable_eq_ReachableInNEq]
-  intros hReachableIn
-  obtain ⟨k, hReachableIn⟩ := hReachableIn
-  by_cases hk : k ≤ n
-  · apply hsafe t
-    exists k
-  · simp at hk
-    have : ∃ δ, k = δ + n := by exists (k - n); omega
-    obtain ⟨δ, hδ⟩ := this
-    subst hδ
-    clear hk
-    sorry
+  apply safe_of_reachable_of_reachableLe_safe_of_safe_of_reachableLt
+  · simp only [Circuit.always_false_iff, Bool.not_eq_true] at hsafe
+    rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe] at hsafe
+    apply hsafe
+  · simp only [Circuit.always_false_iff, Bool.not_eq_true] at hind
+    have :=
+      eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe p n
+        (by
+          apply hind
+        )
+    apply this
 
-    -- simp only [not_lt] at hk
-    -- specialize hind p.initCarry t
-    -- obtain ⟨l, hl, hind⟩ := hind
+/--
+info: 'Reflect.BvDecide.safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
 
 /- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
 theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
