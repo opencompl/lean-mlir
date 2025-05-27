@@ -23,26 +23,6 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-def lhs : Bool := Reflect.BvDecide.verifyAIG
-      (Reflect.BvDecide.mkSafetyCircuit
-          (predicateEvalEqFSM
-              (Predicate.binary BinaryPredicate.eq ((Term.var 0).add (Term.var 1))
-                ((Term.var 1).add (Term.var 0)))).toFSM
-          3).toAIG
-      "3 0 1 2 0\n"
-
-theorem y : lhs = true := Lean.ofReduceBool _ _ rfl
-
-theorem x : Reflect.BvDecide.verifyAIG
-      (Reflect.BvDecide.mkSafetyCircuit
-          (predicateEvalEqFSM
-              (Predicate.binary BinaryPredicate.eq ((Term.var 0).add (Term.var 1))
-                ((Term.var 1).add (Term.var 0)))).toFSM
-          3).toAIG
-      "3 0 1 2 0\n" = true := y
-
-
-
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 

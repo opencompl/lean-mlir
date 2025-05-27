@@ -1681,7 +1681,7 @@ def mkSafetyCircuitAuxList {arity : Type _}
     [Hashable arity]
     (p : FSM arity) (n : Nat) :
     List (Circuit (Vars Empty arity (n+1))) :=
-  let ys := (List.range n).attach
+  let ys := (List.range (n+1)).attach
   ys.map fun i =>
     (mkEvalCircuit p i.val).map (fun vs => vs.castLe (by
       have := i.property; simp at this; omega
@@ -1710,14 +1710,14 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
     (envBitstream : arity → BitStream)
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     (mkSafetyCircuit p n).eval envBool = false ↔
-    (∀ (i : Nat), i < n → p.eval envBitstream i = false) := by
+    (∀ (i : Nat), i ≤ n → p.eval envBitstream i = false) := by
   rw [mkSafetyCircuit]
   rw [Circuit.eval_bigOr_eq_false_iff]
   rw [mkSafetyCircuitAuxList]
   simp
   constructor
   · intros hc i hi
-    specialize hc _ i hi rfl
+    specialize hc _ i (by omega) rfl
     simp [Circuit.eval_map] at hc
     rw [eval_mkEvalCircuit_eq_false_iff
       (envBitstream := envBitstream)
@@ -1751,7 +1751,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat) :
     (∀ envBool, (mkSafetyCircuit p n).eval envBool = false) ↔
-    (∀ envBitstream, ∀ (i : Nat), i < n → p.eval envBitstream i = false) := by
+    (∀ envBitstream, ∀ (i : Nat), i ≤ n → p.eval envBitstream i = false) := by
   constructor
   · intros h envBitstream i  hi
     let envBool := envBoolEmpty_of_envBitstream envBitstream n
@@ -2019,7 +2019,7 @@ def mkIndHypAuxList {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (n : Nat) :
   List (Circuit (Vars p.α arity (n+1))) :=
-  (List.range n).attach.map (fun i =>
+  (List.range (n+1)).attach.map (fun i =>
     (mkIndHypAuxElem p i.val).map (fun vs =>
       vs.castLe (by
         have := i.property; simp at this; omega
@@ -2056,7 +2056,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     (mkIndHypCircuit p n).eval envBool = false ↔
    -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
-    (∃ (i : Nat), i < n ∧
+    (∃ (i : Nat), i ≤ n ∧
       ((∀ (j : Nat), j < i → p.evalWith (fun s => envBool (.state s)) envBitstream j = false) →
       p.evalWith (fun s => envBool (.state s)) envBitstream i = false)) := by
   rw [mkIndHypCircuit]
@@ -2070,6 +2070,8 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_
     simp [Circuit.eval_map] at ha
     rw [eval_mkIndHypAuxElem_eq_false_iff (envBitstream := envBitstream)] at ha
     · exists i
+      simp [show i ≤ n by omega]
+      apply ha
     · -- TODO: write this as a theorem that encapsulates that environments are related
       -- upon casting of the input.
       constructor
@@ -2081,7 +2083,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_
     simp [Circuit.eval_map]
     constructor
     · exists i
-      simp [hi]
+      simp [hi, show i < n + 1 by omega]
     · rw [eval_mkIndHypAuxElem_eq_false_iff (envBitstream := envBitstream)]
       · intros hLhs
         specialize (hEval hLhs)
@@ -2107,7 +2109,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate
     (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
    -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
     (∀ envBitstream state,
-      (∃ (i : Nat), i < n ∧
+      (∃ (i : Nat), i ≤ n ∧
       ((∀ (j : Nat), j < i → p.evalWith state envBitstream j = false) →
       p.evalWith state envBitstream i = false))) := by
   constructor
@@ -2126,7 +2128,30 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate
       exists i
     · simp
 
-@[simp]
+/-- The smaller IndHyp circuit at 'n' being true implies that the larger
+IndHyp circuit at 'm > n' is also true. -/
+theorem mkIndHypCircuit_eq_false_of_mkIndHypCircuit_eq_false_of_le
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (hInd : ∀ envBool, (mkIndHypCircuit p n).eval envBool = false)
+    (hlt : n ≤ m) :
+    ∀ envBool, (mkIndHypCircuit p m).eval envBool = false := by
+  rw [eval_mkIndHypCircuit_eq_false_iff_intermediate]
+  rw [eval_mkIndHypCircuit_eq_false_iff_intermediate] at hInd
+  intros envBitstream state
+  specialize hInd envBitstream state
+  obtain ⟨j, hj, hIndCur⟩ := hInd
+  exists j
+  simp [show j ≤ m by omega]
+  intros k
+  apply hIndCur
+  apply k
+
+-- | produce a uniform bound, which shows that if we have the property upto 'n',
+-- then we can demonstrate it at 'n'.
 theorem eval_mkIndHypCircuit_eq_false_iff_intermediate'
     {arity : Type _}
     [DecidableEq arity]
@@ -2135,81 +2160,38 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate'
     (p : FSM arity) (n : Nat)
     (hInd : ∀ envBool, (mkIndHypCircuit p n).eval envBool = false) :
    -- There is an 'i < n', such that if for all states upto 'i', we produce false, then 'i + 1' also produces false.
-    (∀ envBitstream state,
-      (((∀ (j : Nat), j < n → p.evalWith state envBitstream j = false) →
-      p.evalWith state envBitstream n = false))) := by
-  intros envBitstream state hpeval
-  rw [eval_mkIndHypCircuit_eq_false_iff_intermediate] at hInd
-  specialize hInd (envBitstream := envBitstream) (state := state)
-  obtain ⟨i, hi, hEval⟩ := hInd
-  sorry
+    (((((∀ envBitstream state (j : Nat), j < n → p.evalWith state envBitstream j = false))) →
+    (∀ envBitstream state, p.evalWith state envBitstream n = false))) := by
+  intros hAssume envBitstream state
+  simp at hInd
+  have hIndCur := hInd envBitstream state
+  obtain ⟨iCur, hiCur, hIndCur⟩ := hIndCur
+  by_cases hiCur' : iCur = n
+  · subst hiCur'
+    apply hIndCur
+    apply hAssume
+  · have : iCur < n := by exact Nat.lt_of_le_of_ne hiCur hiCur'
+    have : n = (n - 1) + 1 := by omega
+    rw [this]
+    rw [FSM.evalWith_succ_eq]
+    apply eval_mkIndHypCircuit_eq_false_iff_intermediate'
+    · simp
+      intros envBs' state'
+      exists iCur
+      simp [show iCur ≤ n - 1 by omega]
+      intros hLtICur'
+      apply hAssume
+      omega
+    · intros envBs' state' j hj
+      apply hAssume
+      omega
 
-
-def mkAllStates (α : Type) [Fintype α] [DecidableEq α] : Finset (α → Bool) :=
-  Fintype.elems
-
-/-- mkAllStates is complete. -/
-theorem mkAllStates_complete (α : Type) [Fintype α] [DecidableEq α] :
-  ∀ (s : α → Bool), s ∈ mkAllStates α := sorry
-
--- #check Finset.inf
-
-/-- Make all bitstreams of length 'n', which are zero after length n. -/
-def mkAllBitstreams (n : Nat) : List (BitStream) :=
-  match n with
-  | 0 => [BitStream.zero]
-  | n' + 1 =>
-    let bs := mkAllBitstreams n'
-    bs.flatMap fun b =>
-      [b.concat true, b.concat false]
-
-/-- Every bitstream exists in the list. -/
-theorem mkAllBitstreams_complete (n : Nat) :
-  ∀ (b : BitStream), ∃ b' : BitStream, b' ∈ mkAllBitstreams n ∧
-    (∀ (i : Nat), i < n → b' i = b i) := by
-  induction n
-  case zero =>
-    intros b
-    simp [mkAllBitstreams]
-  case succ n' ih =>
-    intros b
-    rw [mkAllBitstreams]
-    simp
-    let b0 := b 0
-    specialize ih b.tail
-    obtain ⟨k, hkMem, hk⟩ := ih
-    exists (k.concat b0)
-    constructor
-    · exists k
-      simp [hkMem]
-      rcases b0 <;> simp
-    · intros i hi
-      rcases i with rfl | i
-      · simp [b0]
-      · simp
-        rw [hk]
-        · simp [BitStream.tail]
-        · omega
-
-
-/-- Make all bitstream environments
-  that show all possible values upto length 'n'. -/
-def mkAllEnvBitstreams {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity] (n : Nat) : List (arity → BitStream) := sorry
-
-/-- every bitstream exists in mkAllEnvBitstreams_complete. -/
-theorem mkAllEnvBitstreams_complete {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity] (n : Nat) :
-  ∀ (env : arity → BitStream),
-    ∃ env' ∈ mkAllEnvBitstreams n,
-    ∀ (a : arity) (i : Nat), i < n → env a i = env' a i := sorry
-
-
-
+/--
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate'' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate'
 
 /--
 info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate' depends on axioms: [propext, Quot.sound]
@@ -2237,35 +2219,6 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
       apply ihk
       omega
 
-/-- induction principle with a uniform multiplicative 'bound' in place. -/
-@[elab_as_elim]
-theorem ind_principle₃ {motive : Nat → Prop} (bound : Nat) (hbound : 0 < bound)
-  (hInd : ∀ (k : Nat), (∀ (j : Nat), j < bound * k → motive j) →
-    (∀ (j : Nat), j < bound * (k + 1) → motive j)) :
-  ∀ n, motive n := by
-  intros n
-  have : ∃ k r, r < bound ∧ n = bound * k + r := by
-    exists n / bound
-    exists n % bound
-    simp [Nat.mod_lt _ hbound]
-    exact Eq.symm (Nat.div_add_mod n bound)
-  obtain ⟨k, r, hr, hnr⟩ := this
-  revert n r
-  induction k using Nat.strong_induction_on
-  case h k hk =>
-    intros n r hr hn
-    rw [hn]
-    apply hInd (k := k)
-    · intros j hj
-      apply hk (m := j / bound) (r := j % bound)
-      · apply Nat.div_lt_of_lt_mul
-        simp [hj]
-      · apply Nat.mod_lt
-        simp [hbound]
-      · rw [Nat.div_add_mod]
-    · simp [Nat.mul_succ]
-      omega
-
 /-- State 't' is reachable from 's' in 'n' steps. -/
 def ReachableInNEq {arity : Type _}
   [DecidableEq arity]
@@ -2281,6 +2234,14 @@ def ReachableInNLt {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
   ∃ i < n, ∃ envBitstream , p.carryWith s envBitstream i = t
+
+/-- State 't' is reachable from 's' in 'i < n' steps. -/
+def ReachableInNLe {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
+  ∃ i ≤ n, ∃ envBitstream , p.carryWith s envBitstream i = t
 
 /-- If it is reachable in at least 'n' steps,
 then it is reachable in at least 'm' steps when 'n < m'. -/
@@ -2324,13 +2285,13 @@ def Safe {arity : Type _}
 Safety says that if the state is reachable from the initial state in n steps,
 then it is safe.
 -/
-theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt
+theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe
     {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat):
     (∀ envBool, (mkSafetyCircuit p n).eval envBool = false) ↔
-    (∀ t, ReachableInNLt p p.initCarry t n → Safe p t) := by
-  unfold ReachableInNLt Safe
+    (∀ t, ReachableInNLe p p.initCarry t n → Safe p t) := by
+  unfold ReachableInNLe Safe
   constructor
   · intros h t ht env
     obtain ⟨i, hi, envBitstream, hEnvbitstream⟩ := ht
@@ -2409,13 +2370,13 @@ theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
   (hind : (mkIndHypCircuit p n).always_false) :
   ∀ (t : p.α → Bool), Reachable p p.initCarry t → Safe p t := by
   simp only [Circuit.always_false_iff, Bool.not_eq_true] at hsafe hind
-  rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLt] at hsafe
+  rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe] at hsafe
   rw [eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe] at hind
   intros t
   rw [Reachable_eq_ReachableInNEq]
   intros hReachableIn
   obtain ⟨k, hReachableIn⟩ := hReachableIn
-  by_cases hk : k < n
+  by_cases hk : k ≤ n
   · apply hsafe t
     exists k
   · simp at hk
