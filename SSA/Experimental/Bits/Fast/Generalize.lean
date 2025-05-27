@@ -28,6 +28,9 @@ instance : BEq BVExpr.PackedBitVec where
               else
                 false
 
+instance : Hashable BVExpr.PackedBitVec where
+  hash pbv := hash pbv.bv
+
 structure BVExprWrapper where
   width : Nat
   bvExpr: BVExpr width
@@ -39,6 +42,7 @@ structure ParsedBVExprState where
   inputBVExprVarToExpr : Std.HashMap Nat FVarId
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
+  valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 
 instance : ToString BVExpr.PackedBitVec where
@@ -62,7 +66,7 @@ instance : Inhabited BVExprWrapper where
   default := {bvExpr := BVExpr.const (BitVec.ofNat 0 0), width := 0}
 
 instance : Inhabited ParsedBVExprState where
-  default := {maxFreeVarId := 0, maxSymVarId := 1000, originalWidth := 32, inputBVExprVarToExpr := {}, symVarToVal := {}, inputVarToBVExpr := {}}
+  default := {maxFreeVarId := 0, maxSymVarId := 1000, originalWidth := 32, inputBVExprVarToExpr := {}, symVarToVal := {}, inputVarToBVExpr := {}, valToSymVar:= {}}
 
 def printParsedBVExprState (s: ParsedBVExprState) :=
     s!"ParsedBVExprState:\n" ++
@@ -334,20 +338,32 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
 
         match (natVal, bitVal) with
         | (some v, none) =>
-              let newId := currState.maxSymVarId + 1
-              let bv : BitVec currState.originalWidth := BitVec.ofNat currState.originalWidth v
-              let newExpr : BVExpr targetWidth := BVExpr.var newId
+              let pbv : BVExpr.PackedBitVec := {bv := BitVec.ofNat currState.originalWidth v}
+              let existingVal :=  currState.valToSymVar[pbv]?
 
-              let updatedState : ParsedBVExprState := { currState with maxSymVarId := newId, symVarToVal := currState.symVarToVal.insert newId {bv := bv: BVExpr.PackedBitVec}}
-              set updatedState
-              return some {bvExpr := newExpr, width := targetWidth}
+              match existingVal with
+              | none => let newId := currState.maxSymVarId + 1
+                        let newExpr : BVExpr targetWidth := BVExpr.var newId
+
+                        let updatedState : ParsedBVExprState := { currState with maxSymVarId := newId, symVarToVal := currState.symVarToVal.insert newId pbv, valToSymVar := currState.valToSymVar.insert pbv newId}
+                        set updatedState
+                        return some {bvExpr := newExpr, width := targetWidth}
+              | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
+                            return some {bvExpr := newExpr, width := targetWidth}
+
         | (none, some bvProd) =>
-              let newId := currState.maxSymVarId + 1
-              let newExpr : BVExpr targetWidth := BVExpr.var newId
+              let pbv : BVExpr.PackedBitVec := {bv := bvProd.snd: BVExpr.PackedBitVec}
+              let existingVal :=  currState.valToSymVar[pbv]?
 
-              let updatedState : ParsedBVExprState := { currState with maxSymVarId := newId, originalWidth := bvProd.fst, symVarToVal := currState.symVarToVal.insert newId {bv := bvProd.snd: BVExpr.PackedBitVec}}
-              set updatedState
-              return some {bvExpr := newExpr, width := targetWidth}
+              match existingVal with
+              | none => let newId := currState.maxSymVarId + 1
+                        let newExpr : BVExpr targetWidth := BVExpr.var newId
+
+                        let updatedState : ParsedBVExprState := { currState with maxSymVarId := newId, originalWidth := bvProd.fst, symVarToVal := currState.symVarToVal.insert newId pbv, valToSymVar := currState.valToSymVar.insert pbv newId}
+                        set updatedState
+                        return some {bvExpr := newExpr, width := targetWidth}
+              | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
+                            return some {bvExpr := newExpr, width := targetWidth}
         | _ =>
             let .fvar name := x | throwError m! "Unknown expression: {x}"
 
@@ -763,11 +779,11 @@ partial def deductiveSearch (expr: BVExpr w) (constants: Std.HashMap Nat BVExpr.
             for (constId, constVal) in constants.toArray do
               let newVar := BVExpr.var constId
 
-              if constId == parent then -- Avoid runaway expressions
-                continue
-
               if constVal == target then
                 res := newVar :: res
+                continue
+                
+              if constId == parent then -- Avoid runaway expressions
                 continue
 
               if target.bv == 0 then
@@ -964,6 +980,7 @@ variable {x y z: BitVec 8}
 #iosynthesize x <<< 1#8 + (y <<< 1#8 &&& 119#8) = (x + (y &&& 59#8)) <<< 1#8
 #iosynthesize (x ^^^ 33#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ 43#8
 #iosynthesize  x <<< 1#8 ^^^ y <<< 1#8 &&& 20#8 = (x ^^^ y &&& 10#8) <<< 1#8
+#iosynthesize x <<< 7#8 ||| BitVec.ofInt 8 (-128) = BitVec.ofInt 8 (-128)
 
 variable {x y z: BitVec 32}
 -- #iosynthesize x + 10 + 1 =  x + 9 + 2
