@@ -20,11 +20,11 @@ def lshr_llvm_no_flag := [LV| {
   }]
 
 def srl_riscv := [LV| {
-    ^entry (%x: i64, %amount: i64 ):
-    %base = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
-    %shamt = "builtin.unrealized_conversion_cast" (%amount) : (i64) -> (!i64)
+    ^entry (%x: i64, %amount: i64):
+    %base = "builtin.unrealized_conversion_cast"(%x) : (i64) -> (!i64)
+    %shamt = "builtin.unrealized_conversion_cast"(%amount) : (i64) -> (!i64)
     %res = srl %base, %shamt : !i64
-    %y= "builtin.unrealized_conversion_cast" (%res) : (!i64) -> (i64)
+    %y= "builtin.unrealized_conversion_cast"(%res) : (!i64) -> (i64)
     llvm.return %y : i64
   }]
 
