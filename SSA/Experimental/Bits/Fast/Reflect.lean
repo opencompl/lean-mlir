@@ -1036,6 +1036,11 @@ def castLe (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
   ix := ⟨i.ix, by omega⟩
   input := i.input
 
+/-- casts bits in `[0..n)` to `[m-n..m)` by shifting the index. -/
+def castShift (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
+  ix := ⟨m - 1 - i.ix, by omega⟩
+  input := i.input
+
 def map (f : ι → ι') (i : Inputs ι n) : Inputs ι' n where
   ix := i.ix
   input := f i.input
@@ -1101,14 +1106,31 @@ def Vars.castLe {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m :=
   | .state s => .state s
   | .inputs is => .inputs (is.castLe hnm)
 
+def Vars.castShift {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m :=
+  match v with
+  | .state s => .state s
+  | .inputs is => .inputs (is.castShift hnm)
+
 /-- Relate boolean and bitstream environments. -/
 structure EnvOutRelated {arity : Type _} {α : Type _}
     (envBool : Vars α arity n → Bool)
     (envBitstream : arity → BitStream) where
-  envBool_eq_envBitstream : ∀ (x : arity) (i : Nat) (hi: i < n),
+  envBool_inputs_mk_eq_envBitStream : ∀ (x : arity) (i : Nat) (hi: i < n),
     envBool (Vars.inputs (Inputs.mk ⟨i, by omega⟩ x)) = envBitstream x i
 
-attribute [simp] EnvOutRelated.envBool_eq_envBitstream
+
+theorem EnvOutRelated.envBool_inputs_mk_castShift_eq_envBitStream
+   (envBool : Vars α arity m → Bool)
+   (envBitstream : arity → BitStream)
+   (hEnvBitstream : EnvOutRelated envBool envBitstream)
+   (hnm : n ≤ m) (x : arity) (i : Nat) (hi : i < n) :
+   (envBool ((Vars.inputs (Inputs.mk ⟨i, by omega⟩ x : Inputs _ n) :  Vars _ _ n).castShift hnm))=
+   envBitstream x (m - 1 - i) := by 
+  rw [← hEnvBitstream.envBool_inputs_mk_eq_envBitStream]
+  rfl
+
+
+attribute [simp] EnvOutRelated.envBool_inputs_mk_eq_envBitStream
 
 /-- Environment with no state variables. -/
 def envBoolEmpty_of_envBitstream
@@ -1283,7 +1305,7 @@ theorem EnvOutRelated_self_Bitstream_of_envBool
 --   rcases x with state | x
 --   · simp only [FSM.carry_zero, FSM.initCarry_changeInitCarry_eq, Sum.elim_inl]
 --   · simp only [Fin.isValue, FSM.carry_zero, FSM.initCarry_changeInitCarry_eq, Sum.elim_inr]
---     apply hEnvBitstream.envBool_eq_envBitstream
+--     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 -- /-- Allow state circuit to consume more inputs.  -/
 -- def StateCircuit.castLe  {arity : Type _}
@@ -1585,9 +1607,9 @@ theorem mkRealStateVectorCircuit_eval_eq {arity : Type _}
         constructor
         intros x i hi
         simp only [Fin.castSucc_mk]
-        apply hEnvBitstream.envBool_eq_envBitstream
+        apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
     · simp only [Circuit.eval, ↓reduceIte, Sum.elim_inr]
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 
 /--
@@ -1635,9 +1657,9 @@ theorem eval_mkEvalCircuit_eq_false_iff
       constructor
       intros x i hi
       simp only [Fin.castSucc_mk]
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
   · simp [initCarry_of_envBool]
-    apply hEnvBitstream.envBool_eq_envBitstream
+    apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /--
 info: 'Reflect.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
@@ -1727,7 +1749,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
       -- upon casting of the input.
       constructor
       intros x j hj
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
   · intros heval circ i hi hCirc
     subst hCirc
     simp [Circuit.eval_map]
@@ -1736,7 +1758,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
       omega
     · constructor
       intros x j hj
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /--
 info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
@@ -1829,9 +1851,9 @@ theorem eval_mkStateVectorWithCircuit_eq_carryWith {arity : Type _}
         constructor
         intros x i hi
         simp only [Fin.castSucc_mk]
-        apply hEnvBitstream.envBool_eq_envBitstream
+        apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
     · simp only [Circuit.eval, ↓reduceIte, Sum.elim_inr]
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /-
 Make the safety circuit at index 'i',
@@ -1877,10 +1899,10 @@ theorem eval_mkEvalWithCircuit_eq
       constructor
       intros x j hj
       simp only [Fin.castSucc_mk]
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
   · simp only [Circuit.eval_map, Sum.elim_inr]
     simp only [Circuit.eval, ↓reduceIte]
-    apply hEnvBitstream.envBool_eq_envBitstream
+    apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /-- LHS of the inductive hypothesis circuit,
   which is a list of circuits that produce the output at the 'i'th state for 0 <= i < n
@@ -1889,9 +1911,10 @@ def mkIndHypAuxElemLhsList  {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat) :
     List (Circuit (Vars p.α arity (n+1))) :=
+  /- We should be careful. What we should do is to map the circuits, so that the bits at index `0..i` get mapped to `n-i..n`. -/
   (List.range n).attach.map (fun i => -- produces circuits with i = 0...n-1, which need at most 'n' bits.
     (mkEvalWithCircuit p i.val).map (fun vs =>
-      vs.castLe (by
+      vs.castShift (by
         have := i.property; simp at this; omega
       ))
   )
@@ -1902,6 +1925,7 @@ def mkIndHypAuxElemLhs {arity : Type _}
     (p : FSM arity) (n : Nat) :
     Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr <| mkIndHypAuxElemLhsList p n
+
 
 theorem eval_mkIndHypAuxElemLhs_eq_false_iff {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1923,7 +1947,7 @@ theorem eval_mkIndHypAuxElemLhs_eq_false_iff {arity : Type _}
       -- upon casting of the input.
       constructor
       intros x i hi
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
   · intros h
     intros c i hi hCirc
     subst hCirc
@@ -1935,7 +1959,7 @@ theorem eval_mkIndHypAuxElemLhs_eq_false_iff {arity : Type _}
       -- upon casting of the input.
       constructor
       intros x j hj
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /-- The RHS of the indhyp, which states that the state at i + 1 is safe. -/
 def mkIndHypAuxElemRhs {arity : Type _}
@@ -1962,7 +1986,7 @@ constructor
     -- upon casting of the input.
     constructor
     intros x i hi
-    apply hEnvBitstream.envBool_eq_envBitstream
+    apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 · intros h
   rw [mkIndHypAuxElemRhs]
   rw [eval_mkEvalWithCircuit_eq (envBitstream := envBitstream) (hEnvBitstream := hEnvBitstream)]
@@ -2076,7 +2100,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_
       -- upon casting of the input.
       constructor
       intros x j hj
-      apply hEnvBitstream.envBool_eq_envBitstream
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
   · intros h
     obtain ⟨i, hi, hEval⟩ := h
     exists ((mkIndHypAuxElem p i).map (fun v => v.castLe (by omega)))
@@ -2092,10 +2116,10 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_
         -- upon casting of the input.
         constructor
         intros x j hj
-        apply hEnvBitstream.envBool_eq_envBitstream
+        apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /--
-info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_' depends on axioms: [propext, Quot.sound]
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_' depends on axioms: [propext, sorryAx, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate_
 
@@ -2189,13 +2213,14 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate'
 
 /--
 info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate'' depends on axioms: [propext,
+ sorryAx,
  Classical.choice,
  Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate'
 
 /--
-info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate' depends on axioms: [propext, Quot.sound]
+info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate' depends on axioms: [propext, sorryAx, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate
 
@@ -2507,6 +2532,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
 
 /--
 info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe' depends on axioms: [propext,
+ sorryAx,
  Classical.choice,
  Quot.sound]
 -/

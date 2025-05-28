@@ -149,7 +149,6 @@ example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
   fail_if_success bv_automata_gen
   sorry
 
-
 example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 example (w : Nat) (a : BitVec w) : (w = 0) → (a = 0#w ∨ a = 1#w) := by
@@ -213,6 +212,10 @@ theorem sub_eq_mul_and_not_sub_xor (x y : BitVec w):
   -- simp only [BitVec.ofNat_eq_ofNat, Simplifications.BitVec.two_mul_eq_add_add]
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
+
+
+def bar (x y : BitVec w) : x + y = ((x &&& y))  + (x ||| y) := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
 
 /- See that such problems have large gen sizes, but small state spaces -/
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
@@ -442,6 +445,6 @@ set_option maxHeartbeats 0 in
 -- set_option debug.skipKernelTC true in
 theorem e_2500 (a b c d e f g h i j k l m n o p q r s t u v x y z : BitVec w):
     7 * ( ~~~f ||| (d ^^^ e)) - 6 * ( ~~~(d &&&  ~~~e) &&& (e ^^^ f)) - 11 * ( ~~~(d &&&  ~~~e) &&& (d ^^^ (e ^^^ f))) - 1 * (f ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((e &&&  ~~~f) |||  ~~~(d ||| ( ~~~e &&& f))) - 3 * (f |||  ~~~(d |||  ~~~e)) + 1 *  ~~~(e ^^^ f) + 1 *  ~~~(d &&& (e ||| f)) + 5 * ( ~~~(d |||  ~~~e) ||| (d ^^^ (e ^^^ f))) + 1 * (e ^^^  ~~~(d ||| (e &&& f))) + 1 *  ~~~(d ||| ( ~~~e &&& f)) - 1 * ( ~~~d ||| (e ^^^ f)) + 4 * (e ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((d &&&  ~~~e) |||  ~~~(e ^^^ f)) + 4 * (f ^^^ ( ~~~d ||| ( ~~~e ||| f))) + 4 * ((e &&&  ~~~f) ^^^ (d ||| (e ^^^ f))) + 7 * ((d &&&  ~~~e) ||| (e ^^^ f)) + 2 * ((d ||| e) &&& (e ^^^ f)) + 3 * (e ^^^  ~~~( ~~~d ||| (e ^^^ f))) - 6 * (e ^^^  ~~~(d &&& f)) - 1 * (e ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^ (d &&& (e ||| f))) + 4 * ((d &&& f) ^^^ (e ||| f)) + 1 * (e &&& (d |||  ~~~f)) - 2 *  ~~~(d &&&  ~~~e) + 7 * (f ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 3 * ((d &&& e) |||  ~~~(e ^^^ f)) - 1 *  ~~~( ~~~d &&& ( ~~~e ||| f)) - 5 * (f ^^^ ( ~~~d ||| (e &&& f))) - 1 * (d ||| (e ||| f)) + 5 * (d &&&  ~~~f) + 7 * (f ||| (d &&& e)) - 1 * ( ~~~d &&& (e ||| f)) + 1 * ( ~~~(d ||| e) ||| (d ^^^ (e ^^^ f))) + 7 * (e ^^^  ~~~( ~~~d &&& (e ^^^ f))) + 1 * ((d |||  ~~~e) &&& (d ^^^ (e ^^^ f))) + 11 *  ~~~(d ||| (e ^^^ f)) + 4 * (e ^^^ (d &&& (e ^^^ f))) - 1 * ( ~~~d ||| ( ~~~e ||| f)) + 5 * ((d &&&  ~~~e) |||  ~~~(d ^^^ (e ^^^ f))) - 11 * (e ^^^ ( ~~~d ||| (e ^^^ f))) - 1 * (d &&& (e ||| f)) - 1 * (f ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 * (e ^^^ ( ~~~d &&& (e ||| f))) + 7 * (e ^^^ (d &&&  ~~~f)) + 1 *  ~~~( ~~~d &&& ( ~~~e &&& f)) - 1 * (e ^^^ (d ||| (e &&& f))) + 1 * (e ^^^ (d &&& ( ~~~e ||| f))) - 1 * (f ^^^ ( ~~~d &&& ( ~~~e ||| f))) - 1 * (d ||| ( ~~~e &&& f)) - 6 * (e ^^^  ~~~(d |||  ~~~f)) + 3 *  ~~~(d ||| f) + 4 * (e |||  ~~~(d ^^^ f)) - 2 *  ~~~(d &&& ( ~~~e ||| f)) - 6 * f - 1 * (e |||  ~~~(d |||  ~~~f)) + 5 * ((d ^^^ e) |||  ~~~(d ^^^ f)) - 2 * (f ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^  ~~~(d |||  ~~~e)) - 11 * (e ||| (d &&&  ~~~f)) + 11 *  ~~~(d &&& (e &&& f)) - 3 * (e ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 5 * ((d &&& e) ||| (e ^^^ f)) + 1 * ((e &&&  ~~~f) ^^^ ( ~~~d ||| (e ^^^ f))) - 3 * (f ^^^  ~~~(d &&& ( ~~~e &&& f))) - 1 *  ~~~(d &&& ( ~~~e &&& f)) + 4 *  ~~~( ~~~d &&& (e &&& f)) - 6 * ((d ||| e) &&&  ~~~(e ^^^ f)) - 11 * ( ~~~e &&& (d ^^^ f)) - 7 * (f &&& (d |||  ~~~e)) + 5 * (d &&& ( ~~~e ||| f)) + 11 *  ~~~(e ||| f) - 7 * (f ^^^  ~~~(d &&& e)) + 1 * ((d ^^^ e) &&& (d ^^^ f)) - 39 *  ~~~(d ||| (e ||| f)) - 29 *  ~~~(d ||| ( ~~~e ||| f)) - 54 *  ~~~( ~~~d ||| (e ||| f)) - 32 *  ~~~( ~~~d ||| ( ~~~e ||| f)) + 19 * ( ~~~d &&& ( ~~~e &&& f)) - 60 * ( ~~~d &&& (e &&& f)) - 31 * (d &&& ( ~~~e &&& f)) + 33 * (d &&& (e &&& f)) =  - 1 * (e ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 *  ~~~(d ^^^ f) := by
-  bv_automata_gen (config := {backend := .circuit_cadical 1 } )
+  bv_automata_gen (config := {backend := .circuit_cadical 2 } )
 
 end BvAutomataTests
