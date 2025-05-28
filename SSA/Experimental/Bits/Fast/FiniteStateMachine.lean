@@ -1736,11 +1736,13 @@ theorem decideIfZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
   simp [hx, h]
 
 
+-- c: circuit that produces output upto the k-th state.
 def decideIfZerosAux {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α) : Bool :=
   if c.eval p.initCarry
   then false
   else
+    -- compute circuit that produces output at the (k+1)th state.
     have c' := (c.bind (p.nextBitCirc ∘ some)).fst
     if h : c' ≤ c then true
     else

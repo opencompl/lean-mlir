@@ -2128,6 +2128,7 @@ theorem eval_mkIndHypCircuit_eq_false_iff_intermediate
       exists i
     · simp
 
+
 /-- The smaller IndHyp circuit at 'n' being true implies that the larger
 IndHyp circuit at 'm > n' is also true. -/
 theorem mkIndHypCircuit_eq_false_of_mkIndHypCircuit_eq_false_of_le
