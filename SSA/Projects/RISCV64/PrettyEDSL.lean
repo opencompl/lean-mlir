@@ -5,7 +5,7 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForLean
-
+import SSA.Core.MLIRSyntax.GenericParser
 /-!
 This file defines a pretty printing/syntax for the `RISCV64` dialect.
 This allows the dialect to be written in MLIR-style syntax as well as
@@ -116,6 +116,10 @@ macro_rules
       `(mlir_op| $res:mlir_op_operand = "li"()
           {imm = $x:num : $outer_type } : ($outer_type) -> ($outer_type))
 
+
+
+
+
 declare_syntax_cat MLIR.Pretty.RV.opWithImmediate
 syntax "bclri" : MLIR.Pretty.RV.opWithImmediate
 syntax "bexti" : MLIR.Pretty.RV.opWithImmediate
@@ -133,7 +137,7 @@ syntax "xori" : MLIR.Pretty.RV.opWithImmediate
 
 syntax mlir_op_operand  " = " MLIR.Pretty.RV.opWithImmediate mlir_op_operand "," num (":" mlir_type)? : mlir_op
 macro_rules
-| `(mlir_op| $res:mlir_op_operand = $op1:MLIR.Pretty.RV.opWithImmediate $reg1 , $x : $t)  => do
+| `(mlir_op| $res:mlir_op_operand = $op1:MLIR.Pretty.RV.opWithImmediate $reg1 , $x:num : $t)  => do
     let some opName := MLIR.EDSL.Pretty.extractOpName op1.raw
       | Macro.throwUnsupported
     `(mlir_op| $res:mlir_op_operand = $opName ($reg1) {imm = $x:num : $t} : ($t) -> ($t) )
