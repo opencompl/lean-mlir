@@ -2664,10 +2664,10 @@ lemma denote_foldl_rewritePeepholeAt
     simp only [List.foldl]
     have h : (rewritePeepholeAt pr ix target).denote = target.denote :=
       denote_rewritePeepholeAt pr ix target
-      let mid := rewritePeepholeAt pr ix target
-      have h' := ih mid
-      rw [←h'] at h
-      exact h
+    let mid := rewritePeepholeAt pr ix target
+    have h' := ih mid
+    rw [←h'] at h
+    exact h
 
 /- The proof that applying `rewritePeephole_go_multi` preserves the semantics of the target program
 to which the peephole rewrites get applied. -/
