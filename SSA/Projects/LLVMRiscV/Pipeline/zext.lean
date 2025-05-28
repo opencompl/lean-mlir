@@ -1,6 +1,7 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -20,7 +21,7 @@ def zext_llvm_i1_to_i8 := [LV| {
     llvm.return %0: i8
   }]
 
-def llvm_sext_lower_riscv_i1_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 1)] :=
+def llvm_zext_lower_riscv_i1_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 1)] :=
   {lhs:= zext_llvm_i1_to_i8, rhs:= zext_riscv_i1_to_i8,
    correct := by
     unfold zext_llvm_i1_to_i8  zext_riscv_i1_to_i8
@@ -80,7 +81,7 @@ def zext_llvm_i1_to_i32 := [LV| {
     llvm.return %0: i32
   }]
 
-def llvm_sext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 1)] :=
+def llvm_zext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 1)] :=
   {lhs:= zext_llvm_i1_to_i32, rhs:= zext_riscv_i1_to_i32,
    correct := by
     unfold zext_llvm_i1_to_i32 zext_riscv_i1_to_i32
@@ -110,7 +111,7 @@ def zext_llvm_i1_to_i64 := [LV| {
     llvm.return %0: i64
   }]
 
-def llvm_sext_lower_riscv_i1_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] :=
+def llvm_zext_lower_riscv_i1_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] :=
   {lhs:= zext_llvm_i1_to_i64, rhs:= zext_riscv_i1_to_i64,
    correct := by
     unfold zext_llvm_i1_to_i64 zext_riscv_i1_to_i64
@@ -140,7 +141,7 @@ def zext_llvm_i8_to_i64 := [LV| {
     llvm.return %0: i64
   }]
 
-def llvm_sext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 8)] :=
+def llvm_zext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 8)] :=
   {lhs:= zext_llvm_i8_to_i64, rhs:= zext_riscv_i8_to_i64,
    correct := by
     unfold zext_llvm_i8_to_i64 zext_riscv_i8_to_i64
@@ -170,7 +171,7 @@ def zext_llvm_i8_to_i16 := [LV| {
     llvm.return %0: i16
   }]
 
-def llvm_sext_lower_riscv_i8_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 8)] :=
+def llvm_zext_lower_riscv_i8_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 8)] :=
   {lhs:= zext_llvm_i8_to_i16, rhs:= zext_riscv_i8_to_i16,
    correct := by
     unfold zext_llvm_i8_to_i16 zext_riscv_i8_to_i16
@@ -200,7 +201,7 @@ def zext_llvm_i8_to_i32 := [LV| {
     llvm.return %0: i32
   }]
 
-def llvm_sext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 8)] :=
+def llvm_zext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 8)] :=
   {lhs:= zext_llvm_i8_to_i32, rhs:= zext_riscv_i8_to_i32,
    correct := by
     unfold zext_llvm_i8_to_i32 zext_riscv_i8_to_i32
@@ -278,3 +279,15 @@ def llvm_zext_lower_riscv_i16_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
       BitVec.ushiftRight_eq', PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
     bv_decide
   }
+
+def zext_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+    [ mkRewriteUn 1 8 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i1_to_i8),
+      mkRewriteUn 1 16 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i1_to_i16),
+      mkRewriteUn 1 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i1_to_i32),
+      mkRewriteUn 1 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i1_to_i64),
+      mkRewriteUn 8 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i8_to_i64),
+      mkRewriteUn 8 16 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i8_to_i16),
+      mkRewriteUn 8 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i8_to_i32),
+      mkRewriteUn 16 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i16_to_i32),
+      mkRewriteUn 16 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_i16_to_i64),
+    ]

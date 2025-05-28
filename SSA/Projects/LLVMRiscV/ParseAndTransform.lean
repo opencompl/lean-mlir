@@ -39,7 +39,7 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       | EffectKind.pure =>
         match retTy with
         | Ty.llvm (.bitvec _w)  =>
-          let lowered :=  selectionPipeFuel100Safe c
+          let lowered :=  selectionPipeFuelSafe c
           IO.println s!"{repr lowered}"
           return 0
         | _ =>

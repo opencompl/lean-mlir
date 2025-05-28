@@ -2,6 +2,7 @@ import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -18,14 +19,14 @@ def or_llvm_noflag := [LV| {
 
 def or_riscv := [LV| {
     ^entry (%r1: i64, %r2: i64):
-      %0 = "builtin.unrealized_conversion_cast"(%r1) : (i64) -> !i64
-      %1 = "builtin.unrealized_conversion_cast"(%r2) : (i64) -> !i64
+      %0 = "builtin.unrealized_conversion_cast"(%r1) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast"(%r2) : (i64) -> (!i64)
       %2 = or %0, %1 : !i64
       %3= "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
       llvm.return %3 : i64
   }]
 
-def llvm_or_lower_riscv1_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def llvm_or_lower_riscv_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := or_llvm_noflag
   rhs := or_riscv
   correct := by
@@ -63,3 +64,7 @@ def llvm_or_lower_riscv_disjoint : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     all_goals
     simp only [PoisonOr.toOption_getSome, BitVec.setWidth_eq, BitVec.or_eq, BitVec.signExtend_eq]
     bv_decide
+
+def or_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+    [llvm_or_lower_riscv_noflag, llvm_or_lower_riscv_disjoint]

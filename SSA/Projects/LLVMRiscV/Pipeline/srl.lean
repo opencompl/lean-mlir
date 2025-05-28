@@ -1,6 +1,7 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -77,3 +78,7 @@ def llvm_srl_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
         simp only [Nat.sub_zero, Nat.reduceAdd, PoisonOr.toOption_getSome, BitVec.signExtend_eq,
           PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
         bv_decide
+
+def srl_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_srl_lower_riscv_exact, llvm_srl_lower_riscv]

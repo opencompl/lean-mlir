@@ -30,7 +30,7 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
     let code ← verbose_flag fileName
     return code
   if args.hasFlag "passriscv64" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
-    let code ← lower_to_riscv64 fileName
+    let code ← passriscv64 fileName
     return code
   else
     let code ← wellformed fileName
