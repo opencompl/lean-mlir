@@ -171,8 +171,8 @@ Steps required:
 -- human effort to first translate LLVM IR sequence into corresponsing LLVM dialect
 sequence for Lean-MLIR (1).
 
--- Then what is actual effort is the convert the assembly sequence into SSA form
-and from there into the dialect form and keep checking that translated into ssa correctly (2).
+-- Then what is the actual effort is the convert the assembly sequence into SSA form
+and from there into the dialect form and keep checking that it got translated into ssa correctly (2).
 
 -- Finally add the cast at the beginning and at the end to convert the types
 .-/
