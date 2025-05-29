@@ -191,8 +191,23 @@ def test1 := [LV| {
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i64) -> (!i64)
     %1 = "li"() {imm = -1 : !i64}  : (!i64) -> (!i64)
     %2 = slli  %1, 32 : !i64
-    %3 = addi  %2, 32 : !i64
+    %3 = "addi"(%2) {imm = -1 : !i64}  : (!i64) -> (!i64)
     %4 = add %0, %3 : !i64
     %res = "builtin.unrealized_conversion_cast"(%4) : (!i64) -> (i64)
     llvm.return %res : i64
   }]
+
+def llvm_test1_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] :=
+  {lhs:= test1_llvm_input, rhs:= test1,
+   correct := by
+    unfold test1_llvm_input test1
+    simp_peephole
+    simp_riscv
+    simp_alive_undef
+    simp_alive_case_bash
+    simp_alive_split
+    all_goals
+    simp [LLVM.const?, LLVM.add?, PoisonOr.toOption_getSome, BitVec.signExtend_eq,
+      PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
+
+  }
