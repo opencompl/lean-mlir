@@ -40,11 +40,56 @@ def select_llvm_64 := [LV| {
     llvm.return %0 : i64
   }]
 
-def select_riscv_select_llvm_64  : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+def select_riscv_select_llvm_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
   lhs:= select_llvm_64
   rhs:= select_riscv
   correct := by
     unfold select_riscv select_llvm_64
+    simp_peephole
+    simp_riscv
+    simp [LLVM.select]
+    simp_alive_case_bash
+    case value.poison.poison =>
+      intro x
+      split <;> simp
+    case value.poison.value =>
+      intro x x'
+      split <;> simp <;> bv_decide
+    case value.value.poison =>
+      intro x x'
+      split <;> simp <;> bv_decide
+    case value.value.value =>
+      intro x x' x''
+      split <;> simp <;> bv_decide
+
+/- # select, RiscV (leveraging bit-wise operations)  -/
+def select_riscv_32 := [LV| {
+  ^entry (%cond : i1, %arg0: i32, %arg1: i32):
+    %0 = "builtin.unrealized_conversion_cast" (%arg0) : (i32) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast" (%arg1) : (i32) -> (!i64)
+    %2 = "builtin.unrealized_conversion_cast" (%cond) : (i1) -> (!i64)
+    %3 = slli %2, 63 : !i64
+    %4 = srai %3, 63 : !i64 --propagating the condition bit to all bits within the 64 bit vector
+    %5 = and %0, %4 : !i64 -- mask the value_true with the condition
+    %6 = li (18446744073709551615) : !i64
+    %7 = xor %6, %4: !i64
+    %8 = and %7, %1 : !i64 -- mask the value_false with the condition
+    %9 = or %5, %8 : !i64 -- return either value_true or value_false
+    %10 = "builtin.unrealized_conversion_cast" (%9) : (!i64) -> (i32)
+    llvm.return %10 : i32
+  }]
+
+def select_llvm_32 := [LV| {
+    ^entry (%cond : i1, %arg0: i32, %arg1: i32):
+    %0 = "llvm.select"(%cond, %arg0, %arg1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+    llvm.return %0 : i32
+  }]
+
+def select_riscv_select_llvm_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
+  lhs:= select_llvm_32
+  rhs:= select_riscv_32
+  correct := by
+    unfold select_llvm_32 select_riscv_32
     simp_peephole
     simp_riscv
     simp [LLVM.select]
