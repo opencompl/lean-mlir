@@ -1,7 +1,7 @@
 from pathlib import Path
 """
-# This script generates Lean proofs for constant lowering of RISC-V li instructions.
-It generates a riscv lefthandside and an llvm constant right hand side for each integer in the 
+# This script generates Lean proofs for constant lowering of LLVM constants.
+It generates a LLVM righthandside and a RISC-V lefthandside for each integer in the 
 range [-max_val, max_val].
 Additionally, it generates a proof that the two are equivalent as follows :
 
