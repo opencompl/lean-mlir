@@ -10,6 +10,24 @@ Authors: Siddharth Bhat
 import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 
+
+set_option trace.Bits.Fast true
+
+open Lean Meta Elab Tactic in
+#eval show TermElabM Unit from do
+  let fsm : FSM (Fin 1) := FSM.mk (α := Unit)
+    (initCarry :=
+      fun
+      | _ => false)
+    (nextBitCirc :=
+      fun
+      | .some () => .var true (.inr 0) -- stores input in state variables.
+      | .none => .var true (.inl ()) -- spits out the output.
+    )
+  let _ ← fsm.decideIfZerosMCadical 0
+  logInfo "foo"
+  return ()
+
 set_option linter.unusedVariables false
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/

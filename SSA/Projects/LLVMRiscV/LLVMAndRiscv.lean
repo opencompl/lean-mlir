@@ -37,6 +37,7 @@ inductive Op where
 
 /-- Semantics of an unrealized conversion cast from RISC-V 64 to LLVM.
 We wrap `BitVec 64`in `Option (BitVec 64)` -/
+@[simp_riscv]
 def castriscvToLLVM (toCast : BitVec 64) : PoisonOr (BitVec w) :=
   .value (BitVec.signExtend w toCast)
 
@@ -46,8 +47,9 @@ This cast attempts to lower an `(Option (BitVec 64))` to a concrete `(BitVec 64)
 If the value is `some`, we extract the underlying `BitVec`.
 If it is `none` (e.g., an LLVM poison value), we default to the zero `BitVec`.
 -/
+@[simp_riscv]
 def castLLVMToriscv (toCast : PoisonOr (BitVec w)) : BitVec 64 :=
-  BitVec.setWidth 64 (toCast.toOption.getD 0#w)
+  BitVec.signExtend 64 (toCast.toOption.getD 0#w)
 
 @[simp]
 abbrev LLVMPlusRiscV : Dialect where
