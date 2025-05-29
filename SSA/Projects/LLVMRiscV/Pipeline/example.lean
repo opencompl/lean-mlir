@@ -166,4 +166,33 @@ define i64 @add_lo_negone(i64 %0) {
 
 Would require me to manually translate it and then check it.
 
+
+Steps required:
+-- human effort to first translate LLVM IR sequence into corresponsing LLVM dialect
+sequence for Lean-MLIR (1).
+
+-- Then what is actual effort is the convert the assembly sequence into SSA form
+and from there into the dialect form and keep checking that translated into ssa correctly (2).
+
+-- Finally add the cast at the beginning and at the end to convert the types
 .-/
+
+-- (1)
+def test1_llvm_input := [LV| {
+  ^entry (%arg: i64):
+    %0 = llvm.mlir.constant(-4294967297) : i64
+    %1 = llvm.add %arg, %0 overflow<nsw> : i64
+    llvm.return %1: i64
+  }]
+
+-- (2)
+def test1 := [LV| {
+  ^entry (%arg: i64):
+    %0 = "builtin.unrealized_conversion_cast"(%arg) : (i64) -> (!i64)
+    %1 = "li"() {imm = -1 : !i64}  : (!i64) -> (!i64)
+    %2 = slli  %1, 32 : !i64
+    %3 = addi  %2, 32 : !i64
+    %4 = add %0, %3 : !i64
+    %res = "builtin.unrealized_conversion_cast"(%4) : (!i64) -> (i64)
+    llvm.return %res : i64
+  }]
