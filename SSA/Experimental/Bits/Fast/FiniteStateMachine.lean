@@ -1476,9 +1476,11 @@ theorem decideIfZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
 
 def decideIfZerosAux {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α) : Bool :=
-  if c.eval p.initCarry
-  then false
+  -- c = false ↔ ∀ i < n, ∀ env, p.eval env i = 0
+  if c.eval p.initCarry -- check that ∀ i < n, p.eval env i = 0.
+  then false -- violation.
   else
+    -- [c' = false] ↔ ∀ i < (n + 1), ∀ env, p.eval env i = 0
     have c' := (c.bind (p.nextBitCirc ∘ some)).fst
     if h : c' ≤ c then true
     else
