@@ -53,14 +53,24 @@ def select_riscv_select_llvm_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
       intro x
       split <;> simp
     case value.poison.value =>
-      intro x x'
-      split <;> simp <;> bv_decide
+      simp [PoisonOr.toOption_getSome, PoisonOr.toOption_getNone, BitVec.and_zero,
+        BitVec.or_zero, PoisonOr.if_then_poison_isRefinedBy_iff, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff]
+      bv_decide
     case value.value.poison =>
+      simp
       intro x x'
-      split <;> simp <;> bv_decide
+      split
+      · simp only [PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
+        bv_decide
+      · simp
     case value.value.value =>
       intro x x' x''
-      split <;> simp <;> bv_decide
+      simp only [PoisonOr.ite_value_value, PoisonOr.toOption_getSome,
+        PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
+      split
+      · bv_decide
+      · bv_decide
 
 /- # select, RiscV (leveraging bit-wise operations)  -/
 def select_riscv_32 := [LV| {
@@ -96,13 +106,31 @@ def select_riscv_select_llvm_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec
     simp_alive_case_bash
     case value.poison.poison =>
       intro x
-      split <;> simp
+      split
+      · simp
+      · simp
     case value.poison.value =>
       intro x x'
-      split <;> simp <;> bv_decide
+      split
+      · simp
+      · simp only [PoisonOr.toOption_getSome, PoisonOr.toOption_getNone, BitVec.reduceSignExtend,
+        BitVec.and_zero, BitVec.or_zero, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff]
+        bv_decide
     case value.value.poison =>
       intro x x'
-      split <;> simp <;> bv_decide
+      split
+      · simp only [PoisonOr.toOption_getNone, BitVec.reduceSignExtend, PoisonOr.toOption_getSome,
+        BitVec.zero_and, BitVec.zero_or, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff]
+        bv_decide
+      · simp
     case value.value.value =>
       intro x x' x''
-      split <;> simp <;> bv_decide
+      split
+      · simp only [PoisonOr.toOption_getSome, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff]
+        bv_decide
+      · simp only [PoisonOr.toOption_getSome, PoisonOr.value_isRefinedBy_value,
+        InstCombine.bv_isRefinedBy_iff]
+        bv_decide
