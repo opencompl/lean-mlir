@@ -44,6 +44,9 @@ abbrev Comb : Dialect where
   Op := Op
   Ty := Ty
 
+instance : ToString Ty where
+  toString t := repr t |>.pretty
+  
 def_signature for Comb where
   | .add w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)
   | .and w n => ${List.replicate n (Ty.bv w)} → (Ty.bv w)

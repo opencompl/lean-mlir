@@ -840,53 +840,63 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (p : FSM arity)
+    -- c0K = 0 <-> ∀ i ≤ iter, p.eval env i = 0
     (c0K : Circuit (Vars p.α arity iter))
+    -- cK = 0 <-> ∀ p.eval env iter = 0
     (cK : Circuit (Vars p.α arity iter))
+    -- (safetyProperty = 1) <->
+    --   (∃ k < K,
+    --      (∀ i < k, p.eval env i = 0) → (∀ j ≤ K, p.eval env j = 0))
     (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
-  trace[Bits.Fast] s!"## K-induction (iter {iter})"
-  if iter ≥ maxIter && maxIter != 0 then
-    throwError s!"ran out of iterations, quitting"
-    return false
-  let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
-    match v with
-    | .state a => .inr (p.initCarry a) -- assign init state
-    | .inputs is => .inl (.inputs is)
+  trace[Bits.Fast] s!"### K-induction (iter {iter}) ###"
   let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
   let formatEmpty : Empty → Format := fun e => e.elim
   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-  trace[Bits.Fast] m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
-  if ← checkCircuitSatAux cKWithInit
+  trace[Bits.Fast] m!"c0K: {formatCircuit (Vars.format formatα formatArity) c0K}"
+  trace[Bits.Fast] m!"cK: {formatCircuit (Vars.format formatα formatArity) cK}"
+  if iter ≥ maxIter && maxIter != 0 then
+    throwError s!"ran out of iterations, quitting"
+    return false
+  let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
+    cK.bind fun v =>
+      match v with
+      | .state a => p.nextBitCirc (some a) |>.map fun v =>
+        match v with
+        | .inl a => .state a
+        | .inr x => .inputs <| Inputs.latest x
+      | .inputs i => .var true (.inputs (i.castLe (by omega)))
+  trace[Bits.Fast] m!"cKSucc: {formatCircuit (Vars.format formatα formatArity) cKSucc}"
+  -- circuit of the output at state (k+1)
+  -- circuit of the outputs from 0..K, all ORd together, ignoring the new 'arity' output.
+  let c0KAdapted : Circuit (Vars p.α arity (iter + 1)) := c0K.map fun v =>
+      match v with
+      | .state a => .state a
+      | .inputs i => .inputs (i.castLe (by omega))
+  trace[Bits.Fast] m!"c0KAdapted: {formatCircuit (Vars.format formatα formatArity) c0K}"
+  let c0KSucc : Circuit (Vars p.α arity (iter + 1)) :=  (c0KAdapted ||| cKSucc)
+  let c0KSuccWithInit : Circuit (Vars Empty arity (iter+1)) := c0KSucc.assignVars fun v _hv =>
+    match v with
+    | .state a => .inr (p.initCarry a) -- assign init state
+    | .inputs is => .inl (.inputs is)
+  trace[Bits.Fast] m!"safety circuit / c0KSuccWithInit: {formatCircuit (Vars.format formatEmpty formatArity) c0KSuccWithInit}"
+  let c0KWithInit : Circuit (Vars Empty arity (iter)) := c0K.assignVars fun v _hv =>
+    match v with
+    | .state a => .inr (p.initCarry a) -- assign init state
+    | .inputs is => .inl (.inputs is)
+  trace[Bits.Fast] m!"safety circuit / c0KWithInit: {formatCircuit (Vars.format formatEmpty formatArity) c0KWithInit}"
+  if ← checkCircuitSatAux c0KSuccWithInit
   then
     trace[Bits.Fast] s!"Safety property failed on initial state."
     return false
   else
     trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
-    -- circuit of the output at state (k+1)
-    let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
-      cK.bind fun v =>
-        match v with
-        | .state a => p.nextBitCirc (some a) |>.map fun v =>
-          match v with
-          | .inl a => .state a
-          | .inr x => .inputs <| Inputs.latest x
-        | .inputs i => .var true (.inputs (i.castLe (by omega)))
-    -- circuit of the outputs from 0..K, all ORd together, ignoring the new 'arity' output.
-    let c0KAdapted : Circuit (Vars p.α arity (iter + 1)) := c0K.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
     let tStart ← IO.monoMsNow
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.Fast] s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
-    trace[Bits.Fast] s!"Establishing inductive invariant with cadical..."
-    let tStart ← IO.monoMsNow
-    -- c = 0 => c' = 0
-    -- !c => !c'
-    -- !!c || !c'
-    -- c || !c'
-    -- c' => c
-    let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ cKSucc
+    -- [(c0K = 0 => c0KSucc = 0)] <-> [(!c => !c') = 1]
+    -- [(!!c || !c')= 1]
+    -- [(c || !c') = 1] ← { this is the formula we use }
+    trace[Bits.Fast] s!"C0KAdapted: {formatCircuit (Vars.format formatα formatArity) c0KAdapted}"
+    trace[Bits.Fast] s!"CKSucc: {formatCircuit (Vars.format formatα formatArity) cKSucc}"
+    let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ c0KSucc
     let safetyProperty := safetyProperty.map fun v =>
        match v with
        | .state a => .state a
@@ -894,6 +904,11 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     let safetyProperty := safetyProperty ||| impliesCircuit
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.Fast] s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
+    trace[Bits.Fast] s!"Establishing inductive invariant with cadical..."
+    let tStart ← IO.monoMsNow
     -- let le : Bool := sorry
     let le ← checkCircuitTautoAux safetyProperty
     let tEnd ← IO.monoMsNow
@@ -903,19 +918,14 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
       return true
     else
       trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
+      decideIfZerosAuxTermElabM (iter + 1) maxIter p c0KSucc cKSucc safetyProperty
 
--- def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
---     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
---         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
---     (p : FSM arity) : m Bool :=
---   decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
 
 @[nospecialize]
 def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
   -- decideIfZerosM Circuit.impliesCadical fsm
-  withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
+  withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
     let safety : Circuit (Vars fsm.α arity 0) := .fals
     decideIfZerosAuxTermElabM 0 maxIter fsm c c safety

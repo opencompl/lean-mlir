@@ -13,7 +13,7 @@ set_option Elab.async false
 section gsubhashrhandhtohicmphselect_proof
 theorem sub_ashr_and_i8_thm (e e_1 : IntW 8) :
   LLVM.and (ashr (sub e_1 e { «nsw» := true, «nuw» := false }) (const? 8 7)) e ⊑
-    select (icmp IntPredicate.slt e_1 e) e (const? 8 0) := by
+    select (icmp IntPred.slt e_1 e) e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -24,7 +24,7 @@ theorem sub_ashr_and_i8_thm (e e_1 : IntW 8) :
 
 theorem sub_ashr_and_i16_thm (e e_1 : IntW 16) :
   LLVM.and (ashr (sub e_1 e { «nsw» := true, «nuw» := false }) (const? 16 15)) e ⊑
-    select (icmp IntPredicate.slt e_1 e) e (const? 16 0) := by
+    select (icmp IntPred.slt e_1 e) e (const? 16 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -35,7 +35,7 @@ theorem sub_ashr_and_i16_thm (e e_1 : IntW 16) :
 
 theorem sub_ashr_and_i32_thm (e e_1 : IntW 32) :
   LLVM.and (ashr (sub e_1 e { «nsw» := true, «nuw» := false }) (const? 32 31)) e ⊑
-    select (icmp IntPredicate.slt e_1 e) e (const? 32 0) := by
+    select (icmp IntPred.slt e_1 e) e (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -46,7 +46,7 @@ theorem sub_ashr_and_i32_thm (e e_1 : IntW 32) :
 
 theorem sub_ashr_and_i64_thm (e e_1 : IntW 64) :
   LLVM.and (ashr (sub e_1 e { «nsw» := true, «nuw» := false }) (const? 64 63)) e ⊑
-    select (icmp IntPredicate.slt e_1 e) e (const? 64 0) := by
+    select (icmp IntPred.slt e_1 e) e (const? 64 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -57,7 +57,7 @@ theorem sub_ashr_and_i64_thm (e e_1 : IntW 64) :
 
 theorem sub_ashr_and_i32_nuw_nsw_thm (e e_1 : IntW 32) :
   LLVM.and (ashr (sub e_1 e { «nsw» := true, «nuw» := true }) (const? 32 31)) e ⊑
-    select (icmp IntPredicate.slt e_1 e) e (const? 32 0) := by
+    select (icmp IntPred.slt e_1 e) e (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -68,7 +68,7 @@ theorem sub_ashr_and_i32_nuw_nsw_thm (e e_1 : IntW 32) :
 
 theorem sub_ashr_and_i32_commute_thm (e e_1 : IntW 32) :
   LLVM.and e_1 (ashr (sub e e_1 { «nsw» := true, «nuw» := false }) (const? 32 31)) ⊑
-    select (icmp IntPredicate.slt e e_1) e_1 (const? 32 0) := by
+    select (icmp IntPred.slt e e_1) e_1 (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

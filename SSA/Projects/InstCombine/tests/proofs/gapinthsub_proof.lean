@@ -93,7 +93,7 @@ theorem test9_thm (e : IntW 42) : sub e (mul (const? 42 3) e) ⊑ mul e (const? 
 
 
 theorem test11_thm (e e_1 : IntW 9) :
-  icmp IntPredicate.ne (sub e_1 e) (const? 9 0) ⊑ icmp IntPredicate.ne e_1 e := by
+  icmp IntPred.ne (sub e_1 e) (const? 9 0) ⊑ icmp IntPred.ne e_1 e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -149,7 +149,7 @@ theorem test19_thm (e e_1 : IntW 39) : add (sub e_1 e) e ⊑ e_1 := by
 
 
 theorem test20_thm (e e_1 : IntW 33) :
-  icmp IntPredicate.ne (sub e_1 e) e_1 ⊑ icmp IntPredicate.ne e (const? 33 0) := by
+  icmp IntPred.ne (sub e_1 e) e_1 ⊑ icmp IntPred.ne e (const? 33 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -159,7 +159,7 @@ theorem test20_thm (e e_1 : IntW 33) :
 
 
 theorem test21_thm (e e_1 : IntW 256) :
-  icmp IntPredicate.ne (sub e_1 e) e_1 ⊑ icmp IntPredicate.ne e (const? 256 0) := by
+  icmp IntPred.ne (sub e_1 e) e_1 ⊑ icmp IntPred.ne e (const? 256 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

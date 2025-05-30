@@ -111,21 +111,21 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVa
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.ashr) (%0, %2) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.and) (%3, %1) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.and)(%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.add) (%4, %3) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.add)(%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 
@@ -160,21 +160,19 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVa
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.ashr) (%0, %2) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3)  (ops[2]) ["1", "0", "arg0"]
-
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.and) (%3, %1) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.and)(%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4)  (ops[3]) ["2", "1", "0", "arg0"]
-
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.add) (%4, %3) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.add)(%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5)  (ops[4]) ["3", "2", "1", "0", "arg0"]
 
@@ -473,5 +471,5 @@ def constant_macro (w : Nat) :=
 def constant_macro_proof (w : Nat) :
     constant_macro w ⊑ constant_macro w := by
   unfold constant_macro
-  simp_alive_ssa
-  apply PoisonOr.isRefinedBy_self
+  simp_peephole
+  simp

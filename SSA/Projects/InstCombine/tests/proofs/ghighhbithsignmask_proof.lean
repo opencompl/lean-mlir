@@ -61,7 +61,7 @@ theorem n9_thm (e : IntW 64) :
 
 
 theorem n10_thm (e : IntW 64) :
-  sub (const? 64 1) (lshr e (const? 64 63)) ⊑ zext 64 (icmp IntPredicate.sgt e (const? 64 (-1))) := by
+  sub (const? 64 1) (lshr e (const? 64 63)) ⊑ zext 64 (icmp IntPred.sgt e (const? 64 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

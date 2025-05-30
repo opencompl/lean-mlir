@@ -14,6 +14,41 @@ instances for a specific dialect.
 This is an alternative implementation to `EDSL.lean`, which aims to compute more with meta-time
 objects, instead of kernel reducing `Expr`s, in an attempt to avoid some of the pittfals
 that kernel reduction causes.
+
+## A Note to Dialect Implementors
+
+To use this elaborator, we first need to register appropriate typeclasses that
+instruct Lean how to transform the various components of your dialect into Lean
+expressions.
+
+To start, we need to tell Lean how to convert the Dialect operations and types.
+This is done through the `Lean.ToExpr` typeclass, and it generally suffices to
+add `deriving Lean.ToExpr` at the end of your `Op` and `Ty` type definitions.
+
+Then, we need to register two specific expressions, one that represents the
+dialect itself, and a second that represents the dialect monad (i.e., the
+definition of `Dialect.m _`). These are defined as an instance of `DialectToExpr`,
+which cannot be derived. Luckily, these are pretty straightforward to define:
+```
+instance : DialectToExpr FooDialect where
+  toExprDialect := Expr.const ``FooDialect []
+  toExprM := Expr.const ``Id [0]
+```
+
+See the documentation of `Expr.const` for more detail, but briefly: the first
+argument is the name of a constant (i.e., a definition), the second is a list
+of universe parameters. Dialect will generally not be universe polymorphic, so
+an empty list should suffice. The `Id` monad, on the other hand, *is* universe
+polymorphic, so we specify that we want `Id.{0}`.
+
+
+With these instances defined, we can register an elaborator that will parse
+programs in our dialect:
+```
+elab "[FooDialect| " reg:mlir_region "]" : term => do
+  SSA.elabIntoCom' reg FooDialect
+```
+
 -/
 
 namespace SSA
@@ -50,7 +85,7 @@ def elabIntoComObj (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
 
   withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} parsing AST") <| do
     let res ← match mkCom ast with
-      | .error (e : TransformError d.Ty) => throwError (repr e)
+      | .error (e : TransformError) => throwError (repr e)
       | .ok res => pure res
     trace[LeanMLIR.Elab] "context: {repr res.1}"
     pure res

@@ -24,7 +24,7 @@ instance instTransformTy : AST.TransformTy (MetaLLVM φ) φ := { mkTy }
 instance : AST.TransformTy (LLVM) 0 := { mkTy }
 
 def getOutputWidth (opStx : MLIR.AST.Op φ) (op : String) :
-    Except (TransformError (MetaLLVM φ).Ty) (Width φ) := do
+    Except TransformError (Width φ) := do
   match opStx.res with
   | res::[] =>
     match res.2 with
@@ -110,7 +110,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     | "llvm.trunc" => mkExprOf <| trunc (← unW) (← getOutputWidth opStx "trunc") (← parseOverflowFlags opStx)
     -- Constant
     | "llvm.mlir.constant" =>
-      let ⟨val, ty⟩ ← opStx.getIntAttr (Ty := (MetaLLVM φ).Ty) "value"
+      let ⟨val, ty⟩ ← opStx.getIntAttr "value"
       let opTy@(.bitvec w) ← mkTy ty
       mkExprOf <| const w val
     -- Fallback
@@ -122,7 +122,7 @@ instance : AST.TransformExpr LLVM 0 := { mkExpr }
 def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     MLIR.AST.ReaderM (MetaLLVM φ) (Σ eff ty, Com (MetaLLVM φ) Γ eff ty) := do
   if opStx.name ≠ "llvm.return" then
-    throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
+    throw <| .unsupportedOp s!"Tried to build return out of non-return statement {opStx.name}"
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]

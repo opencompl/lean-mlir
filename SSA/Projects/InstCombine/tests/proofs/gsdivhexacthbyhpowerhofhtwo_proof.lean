@@ -22,7 +22,7 @@ theorem t0_thm (e : IntW 8) :
 
 
 theorem n2_thm (e : IntW 8) :
-  LLVM.sdiv e (const? 8 (-128)) ⊑ zext 8 (icmp IntPredicate.eq e (const? 8 (-128))) := by
+  LLVM.sdiv e (const? 8 (-128)) ⊑ zext 8 (icmp IntPred.eq e (const? 8 (-128))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

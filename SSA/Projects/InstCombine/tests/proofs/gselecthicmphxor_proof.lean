@@ -12,7 +12,7 @@ set_option Elab.async false
 
 section gselecthicmphxor_proof
 theorem select_icmp_eq_pow2_thm (e : IntW 8) :
-  select (icmp IntPredicate.eq (LLVM.and e (const? 8 4)) (const? 8 0)) e (LLVM.xor e (const? 8 4)) ⊑
+  select (icmp IntPred.eq (LLVM.and e (const? 8 4)) (const? 8 0)) e (LLVM.xor e (const? 8 4)) ⊑
     LLVM.and e (const? 8 (-5)) := by
     simp_alive_undef
     simp_alive_ops
@@ -23,7 +23,7 @@ theorem select_icmp_eq_pow2_thm (e : IntW 8) :
 
 
 theorem select_icmp_eq_pow2_flipped_thm (e : IntW 8) :
-  select (icmp IntPredicate.eq (LLVM.and e (const? 8 4)) (const? 8 0)) (LLVM.xor e (const? 8 4)) e ⊑
+  select (icmp IntPred.eq (LLVM.and e (const? 8 4)) (const? 8 0)) (LLVM.xor e (const? 8 4)) e ⊑
     LLVM.or e (const? 8 4) := by
     simp_alive_undef
     simp_alive_ops
@@ -34,7 +34,7 @@ theorem select_icmp_eq_pow2_flipped_thm (e : IntW 8) :
 
 
 theorem select_icmp_ne_pow2_thm (e : IntW 8) :
-  select (icmp IntPredicate.ne (LLVM.and e (const? 8 4)) (const? 8 0)) (LLVM.xor e (const? 8 4)) e ⊑
+  select (icmp IntPred.ne (LLVM.and e (const? 8 4)) (const? 8 0)) (LLVM.xor e (const? 8 4)) e ⊑
     LLVM.and e (const? 8 (-5)) := by
     simp_alive_undef
     simp_alive_ops
@@ -45,7 +45,7 @@ theorem select_icmp_ne_pow2_thm (e : IntW 8) :
 
 
 theorem select_icmp_ne_pow2_flipped_thm (e : IntW 8) :
-  select (icmp IntPredicate.ne (LLVM.and e (const? 8 4)) (const? 8 0)) e (LLVM.xor e (const? 8 4)) ⊑
+  select (icmp IntPred.ne (LLVM.and e (const? 8 4)) (const? 8 0)) e (LLVM.xor e (const? 8 4)) ⊑
     LLVM.or e (const? 8 4) := by
     simp_alive_undef
     simp_alive_ops
@@ -56,8 +56,8 @@ theorem select_icmp_ne_pow2_flipped_thm (e : IntW 8) :
 
 
 theorem select_icmp_ne_not_pow2_thm (e : IntW 8) :
-  select (icmp IntPredicate.ne (LLVM.and e (const? 8 5)) (const? 8 0)) (LLVM.xor e (const? 8 5)) e ⊑
-    select (icmp IntPredicate.eq (LLVM.and e (const? 8 5)) (const? 8 0)) e (LLVM.xor e (const? 8 5)) := by
+  select (icmp IntPred.ne (LLVM.and e (const? 8 5)) (const? 8 0)) (LLVM.xor e (const? 8 5)) e ⊑
+    select (icmp IntPred.eq (LLVM.and e (const? 8 5)) (const? 8 0)) e (LLVM.xor e (const? 8 5)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -67,7 +67,7 @@ theorem select_icmp_ne_not_pow2_thm (e : IntW 8) :
 
 
 theorem select_icmp_slt_zero_smin_thm (e : IntW 8) :
-  select (icmp IntPredicate.slt e (const? 8 0)) e (LLVM.xor e (const? 8 (-128))) ⊑ LLVM.or e (const? 8 (-128)) := by
+  select (icmp IntPred.slt e (const? 8 0)) e (LLVM.xor e (const? 8 (-128))) ⊑ LLVM.or e (const? 8 (-128)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -77,7 +77,7 @@ theorem select_icmp_slt_zero_smin_thm (e : IntW 8) :
 
 
 theorem select_icmp_slt_zero_smin_flipped_thm (e : IntW 8) :
-  select (icmp IntPredicate.slt e (const? 8 0)) (LLVM.xor e (const? 8 (-128))) e ⊑ LLVM.and e (const? 8 127) := by
+  select (icmp IntPred.slt e (const? 8 0)) (LLVM.xor e (const? 8 (-128))) e ⊑ LLVM.and e (const? 8 127) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -87,7 +87,7 @@ theorem select_icmp_slt_zero_smin_flipped_thm (e : IntW 8) :
 
 
 theorem select_icmp_sgt_allones_smin_thm (e : IntW 8) :
-  select (icmp IntPredicate.sgt e (const? 8 (-1))) e (LLVM.xor e (const? 8 (-128))) ⊑ LLVM.and e (const? 8 127) := by
+  select (icmp IntPred.sgt e (const? 8 (-1))) e (LLVM.xor e (const? 8 (-128))) ⊑ LLVM.and e (const? 8 127) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -97,7 +97,7 @@ theorem select_icmp_sgt_allones_smin_thm (e : IntW 8) :
 
 
 theorem select_icmp_sgt_allones_smin_flipped_thm (e : IntW 8) :
-  select (icmp IntPredicate.sgt e (const? 8 (-1))) (LLVM.xor e (const? 8 (-128))) e ⊑
+  select (icmp IntPred.sgt e (const? 8 (-1))) (LLVM.xor e (const? 8 (-128))) e ⊑
     LLVM.or e (const? 8 (-128)) := by
     simp_alive_undef
     simp_alive_ops
@@ -108,8 +108,8 @@ theorem select_icmp_sgt_allones_smin_flipped_thm (e : IntW 8) :
 
 
 theorem select_icmp_sgt_not_smin_thm (e : IntW 8) :
-  select (icmp IntPredicate.sgt e (const? 8 (-1))) e (LLVM.xor e (const? 8 (-127))) ⊑
-    select (icmp IntPredicate.slt e (const? 8 0)) (LLVM.xor e (const? 8 (-127))) e := by
+  select (icmp IntPred.sgt e (const? 8 (-1))) e (LLVM.xor e (const? 8 (-127))) ⊑
+    select (icmp IntPred.slt e (const? 8 0)) (LLVM.xor e (const? 8 (-127))) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

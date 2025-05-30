@@ -115,6 +115,47 @@ inductive MOp (φ : Nat) : Type
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited, Lean.ToExpr
 
+def toStringWithFlags (op : MOp.BinaryOp) : String :=
+  let op  : String := match op with
+    | .and                  => "and"
+    | .or   ⟨false⟩         => "or"
+    | .or   ⟨true⟩          => "or disjoint"
+    | .xor                  => "xor"
+    | .shl  ⟨false, false⟩  => "shl"
+    | .shl  ⟨nsw, nuw⟩      => toString f!"shl {nsw} {nuw}"
+    | .lshr ⟨false⟩         => "lshr"
+    | .lshr ⟨true⟩          => "lshr exact"
+    | .ashr ⟨false⟩         => "ashr"
+    | .ashr ⟨true⟩          => "ashr exact"
+    | .urem                 => "urem"
+    | .srem                 => "srem"
+    | .add  ⟨false, false⟩  => "add"
+    | .add  ⟨nsw, nuw⟩      => toString f!"add {nsw} {nuw}"
+    | .mul  ⟨false, false⟩  => "mul"
+    | .mul  ⟨nsw, nuw⟩      => toString f!"mul {nsw} {nuw}"
+    | .sub  ⟨false, false⟩  => "sub"
+    | .sub  ⟨nsw, nuw⟩      => toString f!"sub {nsw} {nuw}"
+    | .sdiv ⟨false⟩         => "sdiv"
+    | .sdiv ⟨true⟩          => "sdiv exact"
+    | .udiv ⟨false⟩         => "udiv"
+    | .udiv ⟨true⟩          => "udiv exact"
+  s!"llvm.{op}"
+
+instance : ToString (MOp.BinaryOp) where
+  toString := toStringWithFlags
+
+instance : ToString (MOp.UnaryOp (φ : Nat)) where
+  toString t := repr t |>.pretty
+
+instance : ToString (MOp 0) where
+   toString  op :=
+     match op with
+     | .unary _w op => s!"\"{toString op}\""
+     | .binary _w op => s!"\"{toString  op}\""
+     | .select  _w => "select"
+     | .icmp  _pred _w => "icmp"
+     | .const w val => s!"\"llvm.mlir.constant\"() \{value = {val} : {w}}"
+
 /-! ## Dialect -/
 
 /-- `MetaLLVM φ` is the `LLVM` dialect with at most `φ` metavariables -/
@@ -125,6 +166,14 @@ abbrev MetaLLVM (φ : Nat) : Dialect where
 def LLVM : Dialect where
   Op := MOp 0
   Ty := MTy 0
+
+/-- Defining an instance for LLVM.Ty from InstCombine.Ty instance.-/
+instance : DecidableEq LLVM.Ty :=
+  inferInstanceAs <| DecidableEq (InstCombine.MTy _)
+
+/-- Defining an instance for LLVM.Op from InstCombine.Op instance. -/
+instance : DecidableEq LLVM.Op :=
+    inferInstanceAs <| DecidableEq (InstCombine.MOp 0)
 
 @[deprecated "Use `LLVM.Op` instead" (since:="2025-04-30")] abbrev Op := LLVM.Op
 @[deprecated "Use `LLVM.Ty` instead" (since:="2025-04-30")] abbrev Ty := LLVM.Ty

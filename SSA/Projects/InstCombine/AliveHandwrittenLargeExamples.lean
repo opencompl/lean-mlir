@@ -130,7 +130,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
     case pos =>
       subst hx
       rw [LLVM.sdiv?_denom_zero_eq_poison]
-      apply PoisonOr.poison_isRefinedBy
+      simp
     case neg =>
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
@@ -231,8 +231,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp only [ofBool_1_iff_true]
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
   split_ifs with c
-  · apply PoisonOr.poison_isRefinedBy
-  · apply PoisonOr.poison_isRefinedBy
+  · simp
+  · simp
   · by_cases h : 3#w >ᵤ 1#w + a
     · simp only [h, ofBool_true, ofNat_eq_ofNat, PoisonOr.value_isRefinedBy_value]
       by_cases a_0 : a = 0; subst a_0; simp at c
@@ -305,7 +305,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
         Nat.add_comm, Nat.sub_add_cancel, Nat.mod_self] at h
       norm_num at h
       omega
-    rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
+    simp [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:

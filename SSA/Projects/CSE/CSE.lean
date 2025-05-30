@@ -73,7 +73,7 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   subst exprEq
                   simp only [Lets.denote_var_last_pure]
                   simp only [Lets.denote_var,
-                    EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq, heneedleΓ]
+                    EffectKind.toMonad_pure, Id.run_pure, Id.run_bind, heneedleΓ]
                   congr
                 }⟩
             | .isFalse _neq => .none
@@ -90,6 +90,7 @@ theorem Lets.denote_var
   Lets.denote (Lets.var lets e) V =
     (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
   simp [Lets.denote, eq_rec_constant]
+  rfl
 
 /-- Remap the last variable in a context, to get a new context without the last variable -/
 def _root_.Ctxt.Hom.remapLast [TyDenote d.Ty]  {α : d.Ty} (Γ : Ctxt d.Ty) (var : Γ.Var α) :
@@ -396,7 +397,7 @@ unsafe def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
     ⟨com', by {
       intros V
       specialize (hcom' V)
-      simp only [EffectKind.toMonad_pure, Lets.denote, Id.pure_eq] at hcom'
+      simp only [EffectKind.toMonad_pure, Lets.denote, Id.run_pure] at hcom'
       assumption
     }⟩
 
@@ -465,7 +466,7 @@ info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
     %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add (%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add(%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %2 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
@@ -479,7 +480,7 @@ info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
     %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %2 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
@@ -492,7 +493,7 @@ unsafe def ex1_post_cse_post_dce :
 info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %1 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %1 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %1 : (CSE.Examples.ExTy.nat) → ()
 }
 -/

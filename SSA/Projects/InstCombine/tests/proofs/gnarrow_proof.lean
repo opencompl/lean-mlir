@@ -12,7 +12,7 @@ set_option Elab.async false
 
 section gnarrow_proof
 theorem test1_thm (e e_1 : IntW 32) :
-  trunc 1 (LLVM.and (zext 32 (icmp IntPredicate.slt e_1 e)) (zext 32 (icmp IntPredicate.sgt e_1 e))) ⊑
+  trunc 1 (LLVM.and (zext 32 (icmp IntPred.slt e_1 e)) (zext 32 (icmp IntPred.sgt e_1 e))) ⊑
     const? 1 0 := by
     simp_alive_undef
     simp_alive_ops

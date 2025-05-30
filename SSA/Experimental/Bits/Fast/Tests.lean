@@ -10,6 +10,24 @@ Authors: Siddharth Bhat
 import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 
+
+set_option trace.Bits.Fast true
+
+open Lean Meta Elab Tactic in
+#eval show TermElabM Unit from do
+  let fsm : FSM (Fin 1) := FSM.mk (α := Unit)
+    (initCarry :=
+      fun
+      | _ => false)
+    (nextBitCirc :=
+      fun
+      | .some () => .var true (.inr 0) -- stores input in state variables.
+      | .none => .var true (.inl ()) -- spits out the output.
+    )
+  let _ ← fsm.decideIfZerosMCadical 0
+  logInfo "done test."
+  return ()
+
 set_option linter.unusedVariables false
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
@@ -22,6 +40,19 @@ theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
 open NNF in
+
+example (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
+
+  -- [] C0KAdapted: (or v:s0 v:s1)
+  -- [] CKSucc: (or (or v:s0 v:s1) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ v:s2)))
+
+  -- [] C0KAdapted: (or (or v:s0 v:s1) (or (or v:s0 v:s1) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ v:s2))))
+  -- [] CKSucc: (or (or (or v:s0 v:s1) (xor v:⟨i0@1⟩ (xor v:⟨i0@1⟩ v:s2))) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ (and v:⟨i0@1⟩ v:s2))))
+
+  -- [] induction hyp circuit: (or (or (or v:s0 v:s1) (or (or v:s0 v:s1) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ v:s2)))) (and (and (and !v:s0 !v:s1) (xor !v:⟨i0@1⟩ (xor v:⟨i0@1⟩ v:s2))) (xor !v:⟨i0@0⟩ (xor v:⟨i0@0⟩ (and v:⟨i0@1⟩ v:s2)))))
+example (w : Nat) (a b : BitVec w) : a = a + 0 := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
