@@ -2056,8 +2056,8 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
   (p : FSM arity) (n : Nat) :
   (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
   (∀ (state : p.α → Bool) (envBitstream : arity → BitStream),
-    ((∀ i < n + 1, p.evalWith state envBitstream i = false) →
-     (∀ i < n + 2, p.evalWith state envBitstream i = false))) := by
+    ((∀ i ≤ n, p.evalWith state envBitstream i = false) →
+     (∀ i ≤ n + 1, p.evalWith state envBitstream i = false))) := by
   constructor
   · intros h
     intros state envBitstream hlhs j hj
@@ -2074,7 +2074,12 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
     intros envBool
     rw [eval_mkIndHypCircuit_eq_false_iff_]
     let envBitstream := Bitstream_of_envBool envBool
-    · apply h (state := fun s => envBool (.state s)) envBitstream
+    · intros hCirc j hj
+      apply h (state := fun s => envBool (.state s)) envBitstream
+      intros k hk
+      apply hCirc
+      · omega
+      · omega
     · simp
 
 @[simp]
@@ -2093,415 +2098,27 @@ theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n �
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
 theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
-  (hBase : ∀ i < bound, motive i)
-  (hInd : ∀ (j : Nat),
-    bound ≤ j →
-    ((∀ (k : Nat), j - bound < k → k < j → motive k) → motive j)) :
+  (hBase : ∀ i ≤ bound, motive i)
+  (hInd : ∀ (i : Nat),
+    bound < i →
+    ((∀ (k : Nat), k < bound → motive (i - k - 1)) → motive i)) :
   ∀ k, motive k := by
   intros k
   induction k using Nat.strong_induction_on
   case h k ihk =>
-    by_cases hK : k < bound
+    by_cases hK : k ≤ bound
     · apply hBase
       omega
-    · have : ∃ δ, k = δ + bound := by exists (k - bound); omega
+    · have : ∃ δ, k = δ + (bound) := by exists (k - (bound)); omega
       obtain ⟨δ, hδ⟩ := this
       subst hδ
       apply hInd
       omega
       intros ε  hε
       apply ihk
-
-  theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false'' {n : Nat}
-    {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    (p : FSM arity)
-    (hs : (mkSafetyCircuit p n).always_false)
-    (hind : (mkIndHypCircuit p n).always_false)
-    (envBitstream : arity → BitStream) (i : Nat) :  p.eval envBitstream i = false := by
-  simp [eval_mkSafetyCircuit_eq_false_iff] at hs
-  simp [eval_mkIndHypCircuit_eq_false_iff] at hind
-  rw [FSM.eval_eq_evalWith_initCarry]
-  induction i using ind_principle₂ n
-  case hBase i hi =>
-    apply hs
-    omega
-  case hInd j hjLt hjInd => 
-    sorry
-    XXXXX
-    -- apply hind
-    -- intros i hi
-    -- apply hjInd
-
-/-- State 't' is reachable from 's' in 'n' steps. -/
-def ReachableInNEq {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s t : p.α → Bool) (n : Nat) : Prop :=
-  ∃ envBitstream , p.carryWith s envBitstream n = t
-
-/-- State 't' is reachable from 's' in 'i < n' steps. -/
-def ReachableInNLt {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
-  ∃ i < n, ∃ envBitstream , p.carryWith s envBitstream i = t
-
-/-- reachable in `< n` steps, iff there is an 'i' such that reachable in `=i` steps. -/
-theorem ReachableInNLt_iff_ReachableInNEq {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s t: p.α → Bool) (n : Nat) :
-  ReachableInNLt p s t n ↔ ∃ i < n, ReachableInNEq p s t i := by
-  constructor
-  · intros h
-    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-    exists i
-    simp [hi]
-    exists envBitstream
-  · intros h
-    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-    exists i
-    simp [hi]
-    exists envBitstream
-
-/-- State 't' is reachable from 's' in 'i < n' steps. -/
-def ReachableInNLe {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s t: p.α → Bool) (n : Nat) : Prop :=
-  ∃ i ≤ n, ∃ envBitstream , p.carryWith s envBitstream i = t
-
-theorem ReachableInNLe_iff_ReachableInNEq {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s t: p.α → Bool) (n : Nat) :
-  ReachableInNLe p s t n ↔ ∃ i ≤ n, ReachableInNEq p s t i := by
-  constructor
-  · intros h
-    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-    exists i
-    simp [hi]
-    exists envBitstream
-  · intros h
-    obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-    exists i
-    simp [hi]
-    exists envBitstream
-
-theorem ReachableInNLe_of_ReachbleInNEq_of_le {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
-  (h : ReachableInNEq p s t n) (hm : n ≤ m) :
-  ReachableInNLe p s t m := by
-  obtain ⟨envBitstream, hCarry⟩ := h
-  exists n
-  simp [show n ≤ m by omega]
-  exists envBitstream
-
-theorem ReachableInNLe_of_reachableInNLt_of_le {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
-  (h : ReachableInNLt p s t n) (hm : n ≤ m) :
-  ReachableInNLe p s t m := by
-  obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-  exists i
-  simp [show i ≤ m by omega]
-  exists envBitstream
-
-/-- If it is reachable in at least 'n' steps,
-then it is reachable in at least 'm' steps when 'n < m'. -/
-theorem ReachableInNLt_of_ReachableInNLt_of_le {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
-  (h : ReachableInNLt p s t n) (hm : n ≤ m) :
-  ReachableInNLt p s t m := by
-  obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-  exists i
-  simp [show i < m by omega]
-  exists envBitstream
-
-theorem ReachableInNLt_of_ReachableInNLe_of_lt {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
-    (h : ReachableInNLe p s t n) (hm : n < m) :
-    ReachableInNLt p s t m := by
-  obtain ⟨i, hi, envBitstream, hCarry⟩ := h
-  exists i
-  simp [show i < m by omega]
-  exists envBitstream
-
-theorem ReachableInNLt_of_ReachableInNEq_of_lt {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    {p : FSM arity} {s t: p.α → Bool} {n m : Nat}
-    (h : ReachableInNEq p s t n) (hm : n < m) :
-    ReachableInNLt p s t m := by
-  obtain ⟨envBitstream, hCarry⟩ := h
-  exists n
-  simp [show n < m by omega]
-  exists envBitstream
-
-/-- A state that has been run for 'i < n' times from 's' is reachable from 's'-/
-theorem ReachableInNLt_of_carryWith_of_lt {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    {p : FSM arity} {s : p.α → Bool} {env : arity → BitStream} {i n : Nat} (h : i < n) :
-    ReachableInNLt p s (p.carryWith s env i) n := by
-  unfold ReachableInNLt
-  exists i
-  simp [h]
-
-/-- A state is reachable if there is some distance at which it is reached. -/
-def Reachable {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s t: p.α → Bool) : Prop :=
-  ∃ n, ReachableInNEq p s t n
-
-/-- State is reachable iff there exists a #steps 'n'
-that it can be reached in. -/
-theorem Reachable_eq_ReachableInNEq {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity] (p : FSM arity) (s t : p.α → Bool) :
-  (Reachable p s t) =  ∃ n, ReachableInNEq p s t n := rfl
-
-  /-- State is safe, i.e. all outputs after this are safe. -/
-def Safe {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s : p.α → Bool) : Prop :=
-  ∀ env, p.outputWith s env = false
-
-/--
-Safety says that if the state is reachable from the initial state in n steps,
-then it is safe.
--/
-theorem eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe
-    {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat):
-    (∀ envBool, (mkSafetyCircuit p n).eval envBool = false) ↔
-    (∀ t, ReachableInNLe p p.initCarry t n → Safe p t) := by
-  unfold ReachableInNLe Safe
-  constructor
-  · intros h t ht env
-    obtain ⟨i, hi, envBitstream, hEnvbitstream⟩ := ht
-    simp [eval_mkSafetyCircuit_eq_false_iff] at h
-    simp [FSM.eval_eq_outputWith_carryWith] at h
-    rw [← hEnvbitstream]
-    rw [FSM.carryWith_eq_carry_of_eq_initCarry]
-    let e' : arity → BitStream :=
-        fun a k =>
-          if k = i then env a
-          else envBitstream a k
-    specialize h e' i hi
-    /- Prove that carry only reads the initial part of its input. -/
-    have : p.carry envBitstream i = p.carry e' i := by
-      apply FSM.carry_congrEnv
-      intros a k hk
-      simp [e', show ¬ (k = i) by omega]
-    rw [this]
-    have : env = fun a => e' a i := by ext a; simp [e']
-    rw [this]
-    apply h
-    congr
-  · intros h env
-    revert env
-    simp [eval_mkSafetyCircuit_eq_false_iff]
-    intros envBitstream i hi
-    specialize h ((p.carryWith p.initCarry envBitstream i))
-    rw [FSM.eval_eq_outputWith_carryWith]
-    apply h
-    exists i
-    simp [hi]
-
--- (∀ envBitstream state,
---       (∃ (i : Nat), i < n ∧
---       ((∀ (j : Nat), j < i → p.evalWith state envBitstream j = false) →
---       p.evalWith state envBitstream i = false)))
-
-theorem eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
-    {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity)  (n : Nat)
-    (hInd : ∀ envBool, (mkIndHypCircuit p n).eval envBool = false) :
-    ((∀ s t, (ReachableInNLt p s t n → Safe p t)) →
-      (∀ s t, (ReachableInNEq p s t n → Safe p t))) := by
-  have := eval_mkIndHypCircuit_eq_false_iff_intermediate' p n (by
-    apply hInd
-  )
-  intros hLt s t
-  rw [Safe]
-  intros hEq -- values provided when output is computed.
-  intros env
-  rw [ReachableInNEq] at hEq
-  obtain ⟨envOutput, ht⟩ := hEq
-  subst ht
-  let envOutput' := fun a k =>
-    if k = n then env a
-    else envOutput a k
-  rw [FSM.carryWith_congrEnv (y := envOutput') (h := by
-    intros a i hi
-    simp [envOutput', show ¬ (i = n) by omega]
-  )]
-  rw [← FSM.evalWith_eq_outputWith_carryWith_of_eq]
-  · apply this
-    simp [Safe] at hLt
-    simp [FSM.evalWith_eq_outputWith_carryWith]
-    intros envLt state j hj
-    apply hLt (s := state)
-    · apply ReachableInNLt_of_carryWith_of_lt
       omega
-  · simp [envOutput']
 
-/--
-info: 'Reflect.BvDecide.eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe' depends on axioms: [propext,
- sorryAx,
- Classical.choice,
- Quot.sound]
--/
-#guard_msgs in #print axioms eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe
-
-/-- If 't' is reachable from 's' in 'N ≥ n' steps, then there
-is a state 'u' such that 's → u' in 'n' steps, and 'u → t' in 'N - n' steps. -/
-theorem ReachableInNEq_ReachableInNEq_sub_of_ReachableInNEq_of_le
-  {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) {s t : p.α → Bool} {n N : Nat}
-  (hReachableN : ReachableInNEq p s t N)
-  (hLe : n ≤ N) :
-  ∃ u, ReachableInNEq p s u n ∧ ReachableInNEq p u t (N - n) := by
-  obtain ⟨envBitstream, hCarry⟩ := hReachableN
-  rw [show N = n + (N - n) by omega] at hCarry
-  exists p.carryWith s envBitstream n
-  constructor
-  · exists envBitstream
-  · rw [← FSM.carryWith_carryWith_eq_carryWith_add] at hCarry
-    rw [ReachableInNEq]
-    rw [← hCarry]
-    exists (fun a i => envBitstream a (n + i))
-
-/-- If 't' is reachable from 's' in 'N ≥ n' steps, then there
-is a state 'u' such that 's → u' in 'N-n' steps, and 'u → t' in 'n' steps.
--/
-theorem ReachableInNEq_sub_ReachableInNEq_of_ReachableInNEq_of_le
-  {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) {s t : p.α → Bool} {n N : Nat}
-  (hReachableN : ReachableInNEq p s t N)
-  (hLe : n ≤ N) :
-  ∃ u, ReachableInNEq p s u (N - n) ∧ ReachableInNEq p u t n := by
-  have := ReachableInNEq_ReachableInNEq_sub_of_ReachableInNEq_of_le p hReachableN
-    (n := N - n) (hLe := by omega)
-  obtain ⟨u, hu₁, hu₂⟩ := this
-  exists u
-  simp only [hu₁, true_and]
-  simp only [show N - (N - n) = n by omega] at hu₂
-  simp only [hu₂]
-
-
-theorem safe_of_reachableInNEq_of_reachableLe_safe_of_safe_of_reachableLt
-    {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (hsafe : ∀ t, ReachableInNLe p p.initCarry t n → Safe p t)
-    (hind : (∀ s t, (ReachableInNLt p s t n → Safe p t)) →
-      (∀ s t, (ReachableInNEq p s t n → Safe p t)))
-    (t : p.α → Bool) (m : Nat) :
-    ReachableInNEq p p.initCarry t m → Safe p t := by
-  intros hReachableN
-  revert t
-  induction m using Nat.strong_induction_on
-  case h M hM =>
-    intros t hReachableN
-    by_cases hMLt : M ≤ n
-    · apply hsafe
-      apply ReachableInNLe_of_ReachbleInNEq_of_le hReachableN
-      omega
-    · simp at hMLt
-      have := ReachableInNEq_sub_ReachableInNEq_of_ReachableInNEq_of_le p hReachableN
-        (n := n) (hLe := by omega)
-      obtain ⟨u, hu₁, hu₂⟩ := this
-      apply hind (s := u)
-      · intros x y hxy
-        obtain ⟨i, hi, hxy⟩ := ReachableInNLt_iff_ReachableInNEq p x y n |>.mp hxy
-        apply hM (m := i) (by omega)
-        · sorry
-      · apply hu₂
-
-theorem safe_of_reachable_of_reachableLe_safe_of_safe_of_reachableLt
-    {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (hsafe : ∀ t, ReachableInNLe p p.initCarry t n → Safe p t)
-    (hind : (∀ s t, (ReachableInNLt p s t n → Safe p t)) →
-      (∀ s t, (ReachableInNEq p s t n → Safe p t))) :
-  ∀ t, Reachable p p.initCarry t → Safe p t := by
-  intros t hReachable
-  rw [Reachable_eq_ReachableInNEq] at hReachable
-  obtain ⟨n, hReachableN⟩ := hReachable
-  apply safe_of_reachableInNEq_of_reachableLe_safe_of_safe_of_reachableLt <;> assumption
-
-/-
-We rewrite our theorems in terms of our concepts:
-All reachable states are safe.
--/
-theorem safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
-  {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (n : Nat)
-  (hsafe : (mkSafetyCircuit p n).always_false)
-  (hind : (mkIndHypCircuit p n).always_false) :
-  ∀ (t : p.α → Bool), Reachable p p.initCarry t → Safe p t := by
-  apply safe_of_reachable_of_reachableLe_safe_of_safe_of_reachableLt
-  · simp only [Circuit.always_false_iff, Bool.not_eq_true] at hsafe
-    rw [eval_mkSafetyCircuit_eq_false_iff_Safe_of_ReachableInNLe] at hsafe
-    apply hsafe
-  · simp only [Circuit.always_false_iff, Bool.not_eq_true] at hind
-    have :=
-      eval_mkIndHypCircuit_eq_false_iff_intermediate_Safe_of_Safe p n
-        (by
-          apply hind
-        )
-    apply this
-
-/--
-info: 'Reflect.BvDecide.safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false' depends on axioms: [propext,
- sorryAx,
- Classical.choice,
- Quot.sound]
--/
-#guard_msgs in #print axioms safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
-
-/- Key theorem that we want: if this is false, then the circuit always produces zeroes. -/
-theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
+  theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false {n : Nat}
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -2509,13 +2126,41 @@ theorem eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
     (p : FSM arity)
     (hs : (mkSafetyCircuit p n).always_false)
     (hind : (mkIndHypCircuit p n).always_false) :
-    ∀ envBitstream i, p.eval envBitstream i = false := by
-  have := safe_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false p n hs hind
-  simp [Safe, Reachable] at this
-  intros envBitStream i
-  rw [FSM.eval_eq_outputWith_carryWith]
-  apply this (p.carryWith p.initCarry envBitStream i) i
-  simp [ReachableInNEq]
+    ∀ (envBitstream : arity → BitStream) (i : Nat), p.eval envBitstream i = false := by
+  intros envBitstream i
+  simp [eval_mkSafetyCircuit_eq_false_iff] at hs
+  simp [eval_mkIndHypCircuit_eq_false_iff] at hind
+  rw [FSM.eval_eq_evalWith_initCarry]
+  induction i using Nat.strong_induction_on
+  case h i hStrongI =>
+    induction i using ind_principle₂ n
+    case hBase i hi =>
+      apply hs
+      omega
+    case hInd j hjLt hjInd =>
+      rw [show j = (j - (n + 1)) + (n + 1) by omega]
+      rw [FSM.evalWith_add_eq_evalWith_carryWith]
+      apply hind
+      · intros i hi
+        rw [← FSM.evalWith_add_eq_evalWith_carryWith]
+        rw [show j - (n + 1)  + i = j - (n + 1 - i) by omega]
+        rw [show j - (n + 1 - i) = j - ((n - i)) - 1 by omega]
+        by_cases hi : i = 0
+        · subst hi
+          simp
+          apply hStrongI
+          omega
+        · apply hjInd
+          · omega
+          · intros k hk; apply hStrongI; omega
+      · omega
+
+/--
+info: 'Reflect.BvDecide.eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
 
 /-- Version that is better suited to proving. -/
 theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
@@ -2571,92 +2216,9 @@ def isSuccess : DecideIfZerosOutput → Bool
   | .proven .. => true
 end DecideIfZerosOutput
 
-/-
-@[nospecialize]
-partial def decideIfZerosAuxTermElabMOld {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (iter : Nat) (maxIter : Nat)
-    (p : FSM arity)
-    (c0K : Circuit (Vars p.α arity iter))
-    (cK : Circuit (Vars p.α arity iter))
-    (safetyProperty : Circuit (Vars p.α arity iter)) :
-    TermElabM (DecideIfZerosOutput) := do
-  trace[Bits.Fast] s!"## K-induction (iter {iter})"
-  if iter ≥ maxIter && maxIter != 0 then
-    throwError s!"ran out of iterations, quitting"
-    return .exhaustedIterations maxIter
-  let cKWithInit : Circuit (Vars Empty arity iter) := cK.assignVars fun v _hv =>
-    match v with
-    | .state a => .inr (p.initCarry a) -- assign init state
-    | .inputs is => .inl (.inputs is)
-  let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
-  let formatEmpty : Empty → Format := fun e => e.elim
-  let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-  trace[Bits.Fast] m!"safety property circuit: {formatCircuit (Vars.format formatEmpty formatArity) cKWithInit}"
-  match ← checkCircuitUnsatAux cKWithInit with
-  | .none =>
-    trace[Bits.Fast] s!"Safety property failed on initial state."
-    return .safetyFailure iter
-  | .some safetyCert =>
-    trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
-    -- circuit of the output at state (k+1)
-    let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
-      cK.bind fun v =>
-        match v with
-        | .state a => p.nextBitCirc (some a) |>.map fun v =>
-          match v with
-          | .inl a => .state a
-          | .inr x => .inputs <| Inputs.latest x
-        | .inputs i => .var true (.inputs (i.castLe (by omega)))
-    -- circuit of the outputs from 0..K, all ORd together, ignoring the new 'arity' output.
-    let c0KAdapted : Circuit (Vars p.α arity (iter + 1)) := c0K.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
-    let tStart ← IO.monoMsNow
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.Fast] s!"Built state circuit of size: '{c0KAdapted.size + cKSucc.size}' (time={tElapsedSec}s)"
-    trace[Bits.Fast] s!"Establishing inductive invariant with cadical..."
-    let tStart ← IO.monoMsNow
-    -- c = 0 => c' = 0
-    -- !c => !c'
-    -- !!c || !c'
-    -- c || !c'
-    -- c' => c
-    let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ cKSucc
-    let safetyProperty := safetyProperty.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
-    let safetyProperty := safetyProperty ||| impliesCircuit
-    -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
-    trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
-    -- let le : Bool := sorry
-    let tautoCert? ← checkCircuitTautoAux safetyProperty
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    match tautoCert? with
-    | .some tautoCert =>
-      trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
-      return .proven iter safetyCert tautoCert
-    | .none =>
-      trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabMOld (iter + 1) maxIter p (c0KAdapted ||| cKSucc) cKSucc safetyProperty
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosMCadicalOld  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
-   (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
-  -- decideIfZerosM Circuit.impliesCadical fsm
-  withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := true) do
-    let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
-    let safety : Circuit (Vars fsm.α arity 0) := .fals
-    decideIfZerosAuxTermElabMOld 0 maxIter fsm c c safety
--/
-
-
-@[nospecialize]
-partial def decideIfZerosAuxTermElabMNew {arity : Type _}
+partial def decideIfZerosAuxVerified {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (fsm : FSM arity) :
@@ -2706,14 +2268,14 @@ partial def decideIfZerosAuxTermElabMNew {arity : Type _}
       return .proven iter safetyCert indCert
     | .none =>
       trace[Bits.Fast] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
-      decideIfZerosAuxTermElabMNew (iter + 1) maxIter fsm
+      decideIfZerosAuxVerified (iter + 1) maxIter fsm
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosMCadicalNew  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+def _root_.FSM.decideIfZerosVerified  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    decideIfZerosAuxTermElabMNew 0 maxIter fsm
+    decideIfZerosAuxVerified 0 maxIter fsm
 
 end BvDecide
 
