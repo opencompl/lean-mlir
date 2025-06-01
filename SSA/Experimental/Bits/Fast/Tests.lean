@@ -10,9 +10,25 @@ Authors: Siddharth Bhat
 import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 
-set_option linter.unusedVariables false
 
 set_option trace.Bits.Fast true
+
+open Lean Meta Elab Tactic in
+#eval show TermElabM Unit from do
+  let fsm : FSM (Fin 1) := FSM.mk (α := Unit)
+    (initCarry :=
+      fun
+      | _ => false)
+    (nextBitCirc :=
+      fun
+      | .some () => .var true (.inr 0) -- stores input in state variables.
+      | .none => .var true (.inl ()) -- spits out the output.
+    )
+  let _ ← fsm.decideIfZerosMCadical 0
+  logInfo "done test."
+  return ()
+
+set_option linter.unusedVariables false
 
 /-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
@@ -21,6 +37,21 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 
 /-- Can solve implicitly quantified expressions by directly invoking bv_automata3. -/
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
+
+open NNF in
+
+example (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
+  bv_automata_gen (config := {backend := .circuit_cadical} )
+
+  -- [] C0KAdapted: (or v:s0 v:s1)
+  -- [] CKSucc: (or (or v:s0 v:s1) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ v:s2)))
+
+  -- [] C0KAdapted: (or (or v:s0 v:s1) (or (or v:s0 v:s1) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ v:s2))))
+  -- [] CKSucc: (or (or (or v:s0 v:s1) (xor v:⟨i0@1⟩ (xor v:⟨i0@1⟩ v:s2))) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ (and v:⟨i0@1⟩ v:s2))))
+
+  -- [] induction hyp circuit: (or (or (or v:s0 v:s1) (or (or v:s0 v:s1) (xor v:⟨i0@0⟩ (xor v:⟨i0@0⟩ v:s2)))) (and (and (and !v:s0 !v:s1) (xor !v:⟨i0@1⟩ (xor v:⟨i0@1⟩ v:s2))) (xor !v:⟨i0@0⟩ (xor v:⟨i0@0⟩ (and v:⟨i0@1⟩ v:s2)))))
+example (w : Nat) (a b : BitVec w) : a = a + 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
 example (w : Nat) (a b : BitVec w) : a + b = b + a := by
@@ -64,8 +95,9 @@ example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
   -- bv_automata_gen (config := {backend := .circuit_cadical 20 } )
 
 
-theorem foo (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
-  bv_automata_gen (config := {backend := .circuit_cadical} )
+example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
+  -- bv_automata_gen (config := {backend := .circuit_cadical} )
+  sorry
 
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a ≠ 0#w) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
@@ -121,7 +153,6 @@ example (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
   -- TODO: I don't understand this metaprogramming error, I must be building the term weirdly...
 
-set_option profiler true in
 /-- a <=s b and b <=s a implies a = b-/
 example (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
@@ -148,6 +179,7 @@ I'm actually not sure why I need to rule out bitwidth 0? Mysterious!
 example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
   fail_if_success bv_automata_gen
   sorry
+
 
 example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
@@ -184,7 +216,6 @@ theorem eq4 (w : Nat) (a b : BitVec w) (h : a &&& b = 0#w) : a + b = a ||| b := 
 
 section BvAutomataTests
 
-
 /-!
 # Test Cases
 -/
@@ -212,10 +243,6 @@ theorem sub_eq_mul_and_not_sub_xor (x y : BitVec w):
   -- simp only [BitVec.ofNat_eq_ofNat, Simplifications.BitVec.two_mul_eq_add_add]
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-
-
-def bar (x y : BitVec w) : x + y = ((x &&& y))  + (x ||| y) := by
-  bv_automata_gen (config := {backend := .circuit_cadical} )
 
 /- See that such problems have large gen sizes, but small state spaces -/
 def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
@@ -278,15 +305,7 @@ def test2_gen (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := 
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
-/--
-info: 'test24' depends on axioms: [propext,
- sorryAx,
- Circuit.denote_toAIGAux_eq_eval,
- Classical.choice,
- Lean.ofReduceBool,
- Quot.sound,
- Reflect.BvDecide.relabelNat_unsatAt_iff₂]
--/
+/-- info: 'test24' depends on axioms: [propext, Quot.sound, Reflect.BvDecide.decideIfZerosMAx] -/
 #guard_msgs in #print axioms test24
 
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
@@ -406,13 +425,7 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
   bv_automata_gen (config := {backend := .circuit_cadical} )
 
 /--
-info: 'width_1_char_2_add_four' depends on axioms: [propext,
- sorryAx,
- Circuit.denote_toAIGAux_eq_eval,
- Classical.choice,
- Lean.ofReduceBool,
- Quot.sound,
- Reflect.BvDecide.relabelNat_unsatAt_iff₂]
+info: 'width_1_char_2_add_four' depends on axioms: [propext, Classical.choice, Quot.sound, Reflect.BvDecide.decideIfZerosMAx]
 -/
 #guard_msgs in #print axioms width_1_char_2_add_four
 
@@ -425,26 +438,9 @@ theorem e_331 (x y : BitVec w):
   -- bv_automata_gen (config := {genSizeThreshold := 2000, stateSpaceSizeThreshold := 100})
   bv_automata_gen (config := {backend := .circuit_cadical 5 } )
 
--- set_option trace.profiler true in
-/--
-error: ran out of iterations, quitting
----
-trace: [Bits.Fast] K-induction (iter=0)
-[Bits.Fast] Built safety circuit in '0s'
-[Bits.Fast] safety circuit: F
-[Bits.Fast] Checked safety property in 0 seconds.
-[Bits.Fast] Safety property succeeded on initial state. Building induction circuit...
-[Bits.Fast] Built induction circuit in '0s'
-[Bits.Fast] induction circuit: T
-[Bits.Fast] Checked inductive invariant in '0s'.
-[Bits.Fast] Unable to establish inductive invariant. Trying next iteration (1)...
-[Bits.Fast] K-induction (iter=1)
--/
-#guard_msgs in
 set_option maxHeartbeats 0 in
--- set_option debug.skipKernelTC true in
 theorem e_2500 (a b c d e f g h i j k l m n o p q r s t u v x y z : BitVec w):
     7 * ( ~~~f ||| (d ^^^ e)) - 6 * ( ~~~(d &&&  ~~~e) &&& (e ^^^ f)) - 11 * ( ~~~(d &&&  ~~~e) &&& (d ^^^ (e ^^^ f))) - 1 * (f ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((e &&&  ~~~f) |||  ~~~(d ||| ( ~~~e &&& f))) - 3 * (f |||  ~~~(d |||  ~~~e)) + 1 *  ~~~(e ^^^ f) + 1 *  ~~~(d &&& (e ||| f)) + 5 * ( ~~~(d |||  ~~~e) ||| (d ^^^ (e ^^^ f))) + 1 * (e ^^^  ~~~(d ||| (e &&& f))) + 1 *  ~~~(d ||| ( ~~~e &&& f)) - 1 * ( ~~~d ||| (e ^^^ f)) + 4 * (e ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((d &&&  ~~~e) |||  ~~~(e ^^^ f)) + 4 * (f ^^^ ( ~~~d ||| ( ~~~e ||| f))) + 4 * ((e &&&  ~~~f) ^^^ (d ||| (e ^^^ f))) + 7 * ((d &&&  ~~~e) ||| (e ^^^ f)) + 2 * ((d ||| e) &&& (e ^^^ f)) + 3 * (e ^^^  ~~~( ~~~d ||| (e ^^^ f))) - 6 * (e ^^^  ~~~(d &&& f)) - 1 * (e ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^ (d &&& (e ||| f))) + 4 * ((d &&& f) ^^^ (e ||| f)) + 1 * (e &&& (d |||  ~~~f)) - 2 *  ~~~(d &&&  ~~~e) + 7 * (f ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 3 * ((d &&& e) |||  ~~~(e ^^^ f)) - 1 *  ~~~( ~~~d &&& ( ~~~e ||| f)) - 5 * (f ^^^ ( ~~~d ||| (e &&& f))) - 1 * (d ||| (e ||| f)) + 5 * (d &&&  ~~~f) + 7 * (f ||| (d &&& e)) - 1 * ( ~~~d &&& (e ||| f)) + 1 * ( ~~~(d ||| e) ||| (d ^^^ (e ^^^ f))) + 7 * (e ^^^  ~~~( ~~~d &&& (e ^^^ f))) + 1 * ((d |||  ~~~e) &&& (d ^^^ (e ^^^ f))) + 11 *  ~~~(d ||| (e ^^^ f)) + 4 * (e ^^^ (d &&& (e ^^^ f))) - 1 * ( ~~~d ||| ( ~~~e ||| f)) + 5 * ((d &&&  ~~~e) |||  ~~~(d ^^^ (e ^^^ f))) - 11 * (e ^^^ ( ~~~d ||| (e ^^^ f))) - 1 * (d &&& (e ||| f)) - 1 * (f ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 * (e ^^^ ( ~~~d &&& (e ||| f))) + 7 * (e ^^^ (d &&&  ~~~f)) + 1 *  ~~~( ~~~d &&& ( ~~~e &&& f)) - 1 * (e ^^^ (d ||| (e &&& f))) + 1 * (e ^^^ (d &&& ( ~~~e ||| f))) - 1 * (f ^^^ ( ~~~d &&& ( ~~~e ||| f))) - 1 * (d ||| ( ~~~e &&& f)) - 6 * (e ^^^  ~~~(d |||  ~~~f)) + 3 *  ~~~(d ||| f) + 4 * (e |||  ~~~(d ^^^ f)) - 2 *  ~~~(d &&& ( ~~~e ||| f)) - 6 * f - 1 * (e |||  ~~~(d |||  ~~~f)) + 5 * ((d ^^^ e) |||  ~~~(d ^^^ f)) - 2 * (f ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^  ~~~(d |||  ~~~e)) - 11 * (e ||| (d &&&  ~~~f)) + 11 *  ~~~(d &&& (e &&& f)) - 3 * (e ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 5 * ((d &&& e) ||| (e ^^^ f)) + 1 * ((e &&&  ~~~f) ^^^ ( ~~~d ||| (e ^^^ f))) - 3 * (f ^^^  ~~~(d &&& ( ~~~e &&& f))) - 1 *  ~~~(d &&& ( ~~~e &&& f)) + 4 *  ~~~( ~~~d &&& (e &&& f)) - 6 * ((d ||| e) &&&  ~~~(e ^^^ f)) - 11 * ( ~~~e &&& (d ^^^ f)) - 7 * (f &&& (d |||  ~~~e)) + 5 * (d &&& ( ~~~e ||| f)) + 11 *  ~~~(e ||| f) - 7 * (f ^^^  ~~~(d &&& e)) + 1 * ((d ^^^ e) &&& (d ^^^ f)) - 39 *  ~~~(d ||| (e ||| f)) - 29 *  ~~~(d ||| ( ~~~e ||| f)) - 54 *  ~~~( ~~~d ||| (e ||| f)) - 32 *  ~~~( ~~~d ||| ( ~~~e ||| f)) + 19 * ( ~~~d &&& ( ~~~e &&& f)) - 60 * ( ~~~d &&& (e &&& f)) - 31 * (d &&& ( ~~~e &&& f)) + 33 * (d &&& (e &&& f)) =  - 1 * (e ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 *  ~~~(d ^^^ f) := by
-  bv_automata_gen (config := {backend := .circuit_cadical 2 } )
+  bv_automata_gen (config := {backend := .circuit_cadical 5 } )
 
 end BvAutomataTests

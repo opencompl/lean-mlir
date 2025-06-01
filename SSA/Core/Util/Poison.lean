@@ -17,6 +17,7 @@ when specifying poison semantics in dialects, as it's more self-documenting.
 -/
 structure PoisonOr (α : Type) where
   ofOption :: toOption : Option α
+  deriving DecidableEq
 
 namespace PoisonOr
 
@@ -40,13 +41,24 @@ def casesOn'.{u} {α : Type} {motive : PoisonOr α → Sort u}
   | .poison => poison
   | .value a => value a
 
-@[simp] theorem value_inj {a b : α} : value a = value b ↔ a = b := by
+@[simp] theorem value_inj {a b : α} :
+    @Eq (no_index _) (value a) (value b) ↔ a = b := by
+    -- ^^ `value a = value b ↔ _`
   constructor
   · rintro ⟨⟩; rfl
   · exact fun h => h ▸ rfl
 
-theorem poison_ne_value (a : α) : poison ≠ value a := by rintro ⟨⟩
-theorem value_ne_poison (a : α) : value a ≠ poison := by rintro ⟨⟩
+theorem poison_ne_value (a : α) :
+    @Ne (no_index _) poison (value a) := by -- `poison ≠ value a`
+  rintro ⟨⟩
+theorem value_ne_poison (a : α) :
+    @Ne (no_index _) (value a) poison := by -- `value a ≠ poison`
+  rintro ⟨⟩
+
+@[simp]
+theorem ite_value_value {c : Prop} [Decidable c] {a b : α} :
+    (if c then value a else value b : no_index _) = value (if c then a else b) := by
+  split <;> rfl
 
 /-! ### Formatting & Priting instances -/
 instance [ToString α] : ToString (PoisonOr α) where
@@ -125,18 +137,25 @@ variable {a : α}
 @[simp] theorem getValue_value [Inhabited α] : (value a).getValue = a := rfl
 @[simp] theorem getValue_poison [Inhabited α] : (@poison α).getValue = default := rfl
 
+@[simp] theorem mk_some (x : α) : { toOption := some x } = PoisonOr.value x := rfl
+@[simp] theorem mk_none : { toOption := none (α := α) } = PoisonOr.poison := rfl
+
+@[simp_denote, simp]
+theorem toOption_getSome : (PoisonOr.value x).toOption.getD y = x := by rfl
+@[simp_denote, simp]
+theorem toOption_getNone : (PoisonOr.poison).toOption.getD y = y := by rfl
+
 end Lemmas
 
 /-! ### Refinement -/
-inductive IsRefinedBy : PoisonOr α → PoisonOr α → Prop
+inductive IsRefinedBy [HRefinement α α] : PoisonOr α → PoisonOr α → Prop
   /-- `poison` is refined by anything -/
   | poisonLeft : IsRefinedBy poison b?
-  /-- `value a` is only refined by a `value b` s.t. `a = b`. -/
-  -- TODO: this should be `a ⊑ b` once generic refinement is merged
-  | bothValues : a = b → IsRefinedBy (value a) (value b)
+  /-- `value a` is only refined by a `value b` s.t. `a ⊑ b` -/
+  | bothValues : a ⊑ b → IsRefinedBy (value a) (value b)
 
 section Refinement
-variable (a? b? : PoisonOr α)
+variable [HRefinement α α] (a? b? : PoisonOr α)
 
 instance : Refinement (PoisonOr α) where
   IsRefinedBy := IsRefinedBy
@@ -145,7 +164,7 @@ instance : Refinement (PoisonOr α) where
   IsRefinedBy.poisonLeft
 
 @[simp] theorem value_isRefinedBy_value (a b : α) :
-    value a ⊑ value b ↔ a = b := by
+    value a ⊑ value b ↔ a ⊑ b := by
   constructor
   · rintro ⟨⟩; assumption
   · exact IsRefinedBy.bothValues
@@ -158,48 +177,85 @@ theorem isRefinedBy_poison_iff : a? ⊑ (@poison α) ↔ a? = poison := by
   · simp
   · simp only [not_value_isRefinedBy_poison, false_iff]; rintro ⟨⟩
 
-theorem value_isRefinedBy_iff : value a ⊑ b? ↔ b? = value a := by
-  cases b? <;> (
-    simp only [value_isRefinedBy_value, value_inj, isRefinedBy_poison_iff]
-    constructor <;> exact Eq.symm
-  )
-
 theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
     a? ⊑ b?
     ↔ (b?.isPoison → a?.isPoison)
-      ∧ (a?.isPoison = false → a?.getValue = b?.getValue) := by
+      ∧ (a?.isPoison = false → a?.getValue ⊑ b?.getValue) := by
   cases a? <;> cases b? <;> simp
 
+@[simp, simp_denote]
+theorem eq_squb (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
+
 section PreOrder
-variable {α : Type} {a? : PoisonOr α}
 
 /--
-Refinement on poison values is reflexive
+Refinement on poison values is reflexive, when the underlying refinement is reflexive
 -/
-@[simp] theorem isRefinedBy_self : a? ⊑ a? := by
-  cases a? <;> simp
+instance [Std.Refl (· ⊑ · : α → α → _)] : Std.Refl (· ⊑ · : PoisonOr α → PoisonOr α → _) where
+  refl a? := by cases a? <;> simp [Std.Refl.refl]
+
+@[simp] theorem isRefinedBy_self [Std.Refl (· ⊑ · : α → α → _)] : a? ⊑ a? := Std.Refl.refl _
+
+/--
+Refinement on poison values is transitive, when the underlying refinement is transitive
+-/
+instance [IsTrans α (· ⊑ ·)] : IsTrans (PoisonOr α) (· ⊑ ·) where
+  trans a? b? c? := by
+    cases a?; simp
+    cases b?; simp
+    cases c?; simp
+    simpa using IsTrans.trans _ _ _
 
 /--
 Refinement on poison values is transitive
 -/
-theorem isRefinedBy_trans (a? b? c? : PoisonOr α) :
-    a? ⊑ b? → b? ⊑ c? → a? ⊑ c? := by
-  cases a?
-  · simp
-  · simp only [value_isRefinedBy_iff]
-    rintro rfl
-    simp [value_isRefinedBy_iff]
+theorem isRefinedBy_trans [IsTrans α (· ⊑ ·)] (a? b? c? : PoisonOr α) :
+    a? ⊑ b? → b? ⊑ c? → a? ⊑ c? := IsTrans.trans _ _ _
 
 end PreOrder
 
 /--
 Refinement on poison values is decidable if equality of the underlying values is decidable.
 -/
-instance {α : Type} [DecidableEq α] :
+instance [DecidableRel (· ⊑ · : α → α → _)] :
     DecidableRel (· ⊑ · : PoisonOr α → PoisonOr α → _)
   | .poison, _ => .isTrue <| by simp
   | .value _, .poison => .isFalse <| by simp
-  | .value a, .value b => decidable_of_decidable_of_iff (p := a = b) <| by simp
+  | .value a, .value b => decidable_of_decidable_of_iff (p := a ⊑ b) <| by simp
+
+
+/-! ### if-then-else -/
+section Ite
+variable {c : Prop} [Decidable c] (a? b? : PoisonOr α) (a : α)
+
+@[simp]
+theorem if_then_poison_isRefinedBy_iff  :
+    (if c then poison else a? : no_index _) ⊑ b? ↔ ¬c → a? ⊑ b? := by
+  split <;> simp [*]
+
+@[simp]
+theorem value_isRefinedBy_if_then_poison_iff :
+    value a ⊑ (if c then poison else b? : no_index _) ↔ ¬c ∧ (value a ⊑ b?) := by
+  split <;> simp [*]
+
+
+/-!
+Fallback theorems for generic if-then-else; other theorems should be preferred
+as they give simpler rhs's for their specialized situations.
+-/
+theorem ite_isRefinedBy_iff {x? y? z? : PoisonOr α} :
+    ite c x? y? ⊑ z?
+    ↔ let c := c
+      (c → x? ⊑ z?) ∧ (¬c → y? ⊑ z?) := by
+  split <;> simp [*]
+
+theorem isRefinedBy_ite_iff {x? y? z? : PoisonOr α} :
+    x? ⊑ ite c y? z?
+    ↔ let c := c
+      (c → x? ⊑ y?) ∧ (¬c → x? ⊑ z?) := by
+  split <;> simp [*]
+
+end Ite
 
 end Refinement
 
