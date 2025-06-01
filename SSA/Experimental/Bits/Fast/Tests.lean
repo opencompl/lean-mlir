@@ -439,7 +439,12 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'width_1_char_2_add_four' depends on axioms: [propext, Classical.choice, Quot.sound, Reflect.BvDecide.decideIfZerosMAx]
+info: 'width_1_char_2_add_four' depends on axioms: [propext,
+ Circuit.denote_toAIGAux_eq_eval,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Quot.sound,
+ ReflectVerif.BvDecide.relabelNat_unsatAt_iff₂]
 -/
 #guard_msgs in #print axioms width_1_char_2_add_four
 
