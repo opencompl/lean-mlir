@@ -662,7 +662,7 @@ Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
 bitblasting capabilities.
 -/
 @[nospecialize]
-def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
+def toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ExtendingEntrypoint aig :=
   match c with
   | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
@@ -677,8 +677,8 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
       have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
       ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
   | .and l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := toAIG l aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := toAIG r aig
     let lhsRef := lhsRef.cast <| by
       dsimp only at rextend ⊢
       omega
@@ -687,8 +687,8 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
     have Lawful := LawfulOperator.le_size (f := mkAndCached) aig input
     ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
   | .or l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := toAIG l aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := toAIG r aig
     let lhsRef := lhsRef.cast <| by
       dsimp only at rextend ⊢
       omega
@@ -697,8 +697,8 @@ def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circui
     have Lawful := LawfulOperator.le_size (f := mkOrCached) aig input
     ⟨ret, by dsimp only [ret] at lextend rextend ⊢; omega⟩
   | .xor l r =>
-    let ⟨⟨aig, lhsRef⟩, lextend⟩ := l.toAIG aig
-    let ⟨⟨aig, rhsRef⟩, rextend⟩ := r.toAIG aig
+    let ⟨⟨aig, lhsRef⟩, lextend⟩ := toAIG l aig
+    let ⟨⟨aig, rhsRef⟩, rextend⟩ := toAIG r aig
     let lhsRef := lhsRef.cast <| by
       dsimp only at rextend ⊢
       omega
@@ -712,7 +712,7 @@ Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
 
 def cadicalTimeoutSec : Nat := 1000
 
-attribute [nospecialize] Circuit.toAIG
+attribute [nospecialize] toAIG
 -- attribute [nospecialize] Std.Sat.AIG.Entrypoint.relabelNat'
 
 open Std Sat AIG Tactic BVDecide Frontend in
@@ -721,7 +721,7 @@ def checkCircuitSatAux [DecidableEq α] [Hashable α] [Fintype α] (c : Circuit 
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let ⟨entrypoint, _hEntrypoint⟩ := toAIG c AIG.empty
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -740,7 +740,7 @@ def checkCircuitTautoAuxImpl [DecidableEq α] [Hashable α] [Fintype α] (c : Ci
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
     let c := ~~~ c -- we're checking TAUTO, so check that negation is UNSAT.
-    let ⟨entrypoint, _hEntrypoint⟩ := c.toAIG AIG.empty
+    let ⟨entrypoint, _hEntrypoint⟩ := toAIG c AIG.empty
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -922,7 +922,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
 
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+def FSM.decideIfZerosMCadical  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := false) do

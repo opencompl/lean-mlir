@@ -4,6 +4,7 @@ import SSA.Experimental.Bits.Frontend.Preprocessing
 import SSA.Experimental.Bits.Frontend.Syntax
 
 import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Experimental.Bits.Fast.ReflectVerif
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
 initialize Lean.registerTraceClass `Bits.Frontend
@@ -16,11 +17,14 @@ inductive CircuitBackend
 | automata
 /-- Pure lean implementation, verified. -/
 | circuit_lean
-/-- bv_decide based backend. Currently unverified. -/
-| circuit_cadical (maxIter : Nat := 4)
+/-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
+| circuit_cadical_unverified (maxIter : Nat := 4)
+/-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
+| circuit_cadical_verified (maxIter : Nat := 4)
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
 deriving Repr, DecidableEq
+
 
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
@@ -479,14 +483,14 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
 
     -- finally, we perform reflection.
-    let result ← reflectPredicateAux ∅ (← g.getType) w
-    result.bvToIxMap.throwWarningIfUninterpretedExprs
+    let predicate ← reflectPredicateAux ∅ (← g.getType) w
+    predicate.bvToIxMap.throwWarningIfUninterpretedExprs
 
-    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr result.e)}"
+    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
 
-    let bvToIxMapVal ← result.bvToIxMap.toExpr w
+    let bvToIxMapVal ← predicate.bvToIxMap.toExpr w
 
-    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
+    let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
 
@@ -521,8 +525,62 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       return [g]
-    | .circuit_cadical maxIter =>
-      let fsm := predicateEvalEqFSM result.e |>.toFSM
+    | .circuit_cadical_verified maxIter =>
+      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
+      trace[Bits.Frontend] f!"{fsm.format}'"
+      let cert? ← fsm.decideIfZerosVerified maxIter
+      match cert? with
+      | .proven niter safetyCert indCert =>
+        let safetyCertExpr := Lean.mkStrLit safetyCert
+        let indCertExpr := Lean.mkStrLit indCert
+        let prf ← g.withContext do
+          -- (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
+          let safetyCertTy ←
+            Expr.mkVerifyCircuit
+              (← Expr.mkMkSafetyCircuit
+                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
+                (toExpr niter)) safetyCertExpr
+          check safetyCertTy
+          logInfo m!"safety cert type: {indentD safetyCertTy}"
+          let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
+          -- (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
+          check safetyCertProof
+          logInfo m!"safety cert proof: {indentD safetyCertProof}"
+          let indCertTy ←
+            Expr.mkVerifyCircuit
+              (← Expr.mkMkIndHypCircuit
+                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
+                (toExpr niter)) indCertExpr
+          check indCertTy
+          logInfo m!"inductive cert type: {indentD indCertTy}"
+          let indCertProof ← mkEqRflNativeDecideProof indCertTy true
+          check indCertProof
+          logInfo m!"inductive cert proof: {indentD indCertProof}"
+          let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG [])
+            #[w,
+              bvToIxMapVal,
+              predicate.e.quote,
+              Lean.mkNatLit niter,
+              safetyCertExpr,
+              safetyCertProof,
+              indCertExpr,
+              indCertProof]
+          let prf ← instantiateMVars prf
+          check prf
+          logInfo m!"proof: {indentD prf}"
+          pure prf
+        let gs ← g.apply prf
+        -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
+        if gs.isEmpty
+        then return gs
+        else
+          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+      | .safetyFailure iter =>
+        throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
+      | .exhaustedIterations niter =>
+        throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
+    | .circuit_cadical_unverified maxIter =>
+      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       let isTrueForall ← fsm.decideIfZerosMCadical maxIter
       if isTrueForall
@@ -536,7 +594,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         throwError m!"failed to prove goal, since decideIfZerosM established that theorem is not true."
         return [g]
     | .circuit_lean =>
-      let fsm := predicateEvalEqFSM result.e |>.toFSM
+      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"

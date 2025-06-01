@@ -656,7 +656,7 @@ TODO(@bollu): For now, we don't reflects constants properly, since we don't have
 TODO(@bollu): We also assume that the goals are in negation normal form, and if we not, we bail out. We should make sure that we write a tactic called `nnf` that transforms goals to negation normal form.
 -/
 
-namespace Reflect
+namespace ReflectVerif
 open Lean Meta Elab Tactic
 
 namespace BvDecide
@@ -1662,7 +1662,7 @@ theorem eval_mkEvalCircuit_eq_false_iff
     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /--
-info: 'Reflect.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+info: 'ReflectVerif.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkEvalCircuit_eq_false_iff
 
@@ -1718,9 +1718,6 @@ def mkSafetyCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
   Circuit.bigOr (mkSafetyCircuitAuxList p n)
 
-#check mkSafetyCircuit
-#print Reflect.BvDecide.mkSafetyCircuit
-
 /--
 Evaluating the safety circuit is false iff
 the bitstreams are false upto index 'n'.
@@ -1761,7 +1758,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
       apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /--
-info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
+info: 'ReflectVerif.BvDecide.eval_mkSafetyCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff_
 
@@ -1793,7 +1790,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
     · simp
 
 /--
-info: 'Reflect.BvDecide.eval_mkSafetyCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+info: 'ReflectVerif.BvDecide.eval_mkSafetyCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff
 
@@ -2156,7 +2153,7 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
       · omega
 
 /--
-info: 'Reflect.BvDecide.eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false' depends on axioms: [propext,
+info: 'ReflectVerif.BvDecide.eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
 -/
@@ -2279,4 +2276,4 @@ def _root_.FSM.decideIfZerosVerified  {arity : Type _} [DecidableEq arity]  [Fin
 
 end BvDecide
 
-end Reflect
+end ReflectVerif
