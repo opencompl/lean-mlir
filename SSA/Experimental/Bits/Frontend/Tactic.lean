@@ -440,6 +440,72 @@ axiom decideIfZerosMAx {p : Prop} : p
 
 end BvDecide
 
+def getBoolLit? : Expr → Option Bool
+  | Expr.const ``Bool.true _  => some true
+  | Expr.const ``Bool.false _ => some false
+  | _                         => none
+
+open Lean Meta Elab Tactic in
+/--
+Assumes that the mvar has type 'a = <true>' or 'a = <false>',
+and closes this goal with 'native_decide' of a 'rfl' proof.
+Assigns to the MVarId a proof.
+-/
+def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : TermElabM Expr := do
+    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
+  let auxDeclName ← Term.mkAuxName `_mkEqRflNativeDecideProof
+  let decl := Declaration.defnDecl {
+    name := auxDeclName
+    levelParams := []
+    type := mkConst ``Bool
+    value := lhsExpr
+    hints := .abbrev
+    safety := .safe
+  }
+  addAndCompile decl
+  let lhsDef : Expr := mkConst auxDeclName
+  let rflProof ← mkEqRefl (toExpr rhs)
+  mkAppM ``Lean.ofReduceBool #[lhsDef, toExpr rhs, rflProof]
+
+
+/-- info: predicateEvalEqFSM (p : Predicate) : FSMPredicateSolution p -/
+#guard_msgs in #check predicateEvalEqFSM
+def Expr.mkPredicateEvalEqFSM (p : Expr) : Expr :=
+    mkApp (.const ``predicateEvalEqFSM []) p
+
+/--
+info: FSMPredicateSolution.toFSM {p : Predicate} (self : FSMPredicateSolution p) : FSM (Fin p.arity)
+-/
+#guard_msgs in #check FSMPredicateSolution.toFSM
+def Expr.mkToFSM (self : Expr) : MetaM Expr :=
+  mkAppM ``FSMPredicateSolution.toFSM #[self]
+
+
+
+/--
+info: ReflectVerif.BvDecide.mkSafetyCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : ℕ) : Circuit (ReflectVerif.BvDecide.Vars Empty arity (n + 1))
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.mkSafetyCircuit
+def Expr.mkMkSafetyCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.mkSafetyCircuit #[fsm, n]
+
+/--
+info: ReflectVerif.BvDecide.mkIndHypCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : ℕ) : Circuit (ReflectVerif.BvDecide.Vars p.α arity (n + 2))
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.mkIndHypCircuit
+def Expr.mkMkIndHypCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.mkIndHypCircuit #[fsm, n]
+
+/--
+info: ReflectVerif.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
+  (cert : String) : Bool
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.verifyCircuit
+def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.verifyCircuit #[c, cert]
+
 
 /--
 Reflect an expression of the form:
@@ -582,7 +648,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     | .circuit_cadical_unverified maxIter =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
-      let isTrueForall ← fsm.decideIfZerosMCadical maxIter
+      let isTrueForall ← fsm.decideIfZerosMUnverified maxIter
       if isTrueForall
       then do
         let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
