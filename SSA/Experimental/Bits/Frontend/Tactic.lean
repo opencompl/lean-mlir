@@ -436,71 +436,6 @@ axiom decideIfZerosMAx {p : Prop} : p
 
 end BvDecide
 
-def getBoolLit? : Expr → Option Bool
-  | Expr.const ``Bool.true _  => some true
-  | Expr.const ``Bool.false _ => some false
-  | _                         => none
-
-open Lean Meta Elab Tactic in
-/--
-Assumes that the mvar has type 'a = <true>' or 'a = <false>',
-and closes this goal with 'native_decide' of a 'rfl' proof.
-Assigns to the MVarId a proof.
--/
-def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : TermElabM Expr := do
-    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
-  let auxDeclName ← Term.mkAuxName `_mkEqRflNativeDecideProof
-  let decl := Declaration.defnDecl {
-    name := auxDeclName
-    levelParams := []
-    type := mkConst ``Bool
-    value := lhsExpr
-    hints := .abbrev
-    safety := .safe
-  }
-  addAndCompile decl
-  let lhsDef : Expr := mkConst auxDeclName
-  let rflProof ← mkEqRefl (toExpr rhs)
-  mkAppM ``Lean.ofReduceBool #[lhsDef, toExpr rhs, rflProof]
-
-
-/-- info: predicateEvalEqFSM (p : Predicate) : FSMPredicateSolution p -/
-#guard_msgs in #check predicateEvalEqFSM
-def Expr.mkPredicateEvalEqFSM (p : Expr) : Expr :=
-    mkApp (.const ``predicateEvalEqFSM []) p
-
-/--
-info: FSMPredicateSolution.toFSM {p : Predicate} (self : FSMPredicateSolution p) : FSM (Fin p.arity)
--/
-#guard_msgs in #check FSMPredicateSolution.toFSM
-def Expr.mkToFSM (self : Expr) : MetaM Expr :=
-  mkAppM ``FSMPredicateSolution.toFSM #[self]
-
-
-
-/--
-info: Reflect.BvDecide.mkSafetyCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity)
-  (n : ℕ) : Circuit (Reflect.BvDecide.Vars Empty arity (n + 1))
--/
-#guard_msgs in #check Reflect.BvDecide.mkSafetyCircuit
-def Expr.mkMkSafetyCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``Reflect.BvDecide.mkSafetyCircuit #[fsm, n]
-
-/--
-info: Reflect.BvDecide.mkIndHypCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity)
-  (n : ℕ) : Circuit (Reflect.BvDecide.Vars p.α arity (n + 1))
--/
-#guard_msgs in #check Reflect.BvDecide.mkIndHypCircuit
-def Expr.mkMkIndHypCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``Reflect.BvDecide.mkIndHypCircuit #[fsm, n]
-
-/--
-info: Reflect.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) :
-  Bool
--/
-#guard_msgs in #check Reflect.BvDecide.verifyCircuit
-def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
-  mkAppM ``Reflect.BvDecide.verifyCircuit #[c, cert]
 
 /--
 Reflect an expression of the form:
@@ -544,14 +479,14 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
 
     -- finally, we perform reflection.
-    let predicate ← reflectPredicateAux ∅ (← g.getType) w
-    predicate.bvToIxMap.throwWarningIfUninterpretedExprs
+    let result ← reflectPredicateAux ∅ (← g.getType) w
+    result.bvToIxMap.throwWarningIfUninterpretedExprs
 
-    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
+    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr result.e)}"
 
-    let bvToIxMapVal ← predicate.bvToIxMap.toExpr w
+    let bvToIxMapVal ← result.bvToIxMap.toExpr w
 
-    let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
+    let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
 
@@ -587,61 +522,21 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       return [g]
     | .circuit_cadical maxIter =>
-      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
+      let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
-      let cert? ← fsm.decideIfZerosMCadicalNew maxIter
-      match cert? with
-      | .proven niter safetyCert indCert =>
-        let safetyCertExpr := Lean.mkStrLit safetyCert
-        let indCertExpr := Lean.mkStrLit indCert
-        let prf ← g.withContext do
-          -- (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
-          let safetyCertTy ←
-            Expr.mkVerifyCircuit
-              (← Expr.mkMkSafetyCircuit
-                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
-                (toExpr niter)) safetyCertExpr
-          check safetyCertTy
-          logInfo m!"safety cert type: {indentD safetyCertTy}"
-          let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
-          -- (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
-          check safetyCertProof
-          logInfo m!"safety cert proof: {indentD safetyCertProof}"
-          let indCertTy ←
-            Expr.mkVerifyCircuit
-              (← Expr.mkMkIndHypCircuit
-                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
-                (toExpr niter)) indCertExpr
-          check indCertTy
-          logInfo m!"inductive cert type: {indentD indCertTy}"
-          let indCertProof ← mkEqRflNativeDecideProof indCertTy true
-          check indCertProof
-          logInfo m!"inductive cert proof: {indentD indCertProof}"
-          let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG [])
-            #[w,
-              bvToIxMapVal,
-              predicate.e.quote,
-              Lean.mkNatLit niter,
-              safetyCertExpr,
-              safetyCertProof,
-              indCertExpr,
-              indCertProof]
-          let prf ← instantiateMVars prf
-          check prf
-          logInfo m!"proof: {indentD prf}"
-          pure prf
-        let gs ← g.apply prf
-        -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
+      let isTrueForall ← fsm.decideIfZerosMCadical maxIter
+      if isTrueForall
+      then do
+        let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
         if gs.isEmpty
         then return gs
         else
           throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
-      | .safetyFailure iter =>
-        throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
-      | .exhaustedIterations niter =>
-        throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
+      else
+        throwError m!"failed to prove goal, since decideIfZerosM established that theorem is not true."
+        return [g]
     | .circuit_lean =>
-      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
+      let fsm := predicateEvalEqFSM result.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
@@ -669,6 +564,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
             let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
             let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
             logWarning  msg
+
           let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
             | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
           pure g
