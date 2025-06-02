@@ -131,4 +131,4 @@ def llvm01:=
     llvm.return %1 : i1
   }]
 
-#eval! (selectionPipeFuelSafe llvm00)
+--#eval! (selectionPipeFuelSafe llvm00)
