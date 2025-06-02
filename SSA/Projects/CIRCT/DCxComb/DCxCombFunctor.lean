@@ -32,6 +32,18 @@ inductive Op : Type _
   | dc (o : MLIR2DC.DC.Op)
   deriving DecidableEq, Repr
 
+-- inductive Ty : Type _ -- do the same as Op
+--   | comb (o : MLIR2Comb.Comb.Op)
+--   | dc (o : MLIR2DC.DC.Op)
+--   deriving DecidableEq, Repr
+
+
+-- we also want bitvecs in the types of the functor. consider an input given by user:
+-- comb.add (%1: i64) (%2: i64) → under the hp. that it will automagically be lifted to streams
+-- but then we need to differentiate this from
+-- comb.add (%1: caluestream i64) (%2: valuestream i64)
+-- which is a mess, so we need bv. (even though their denotation is the same!!)
+
 abbrev DCxComb : Dialect where
   Op := Op
   Ty := MLIR2DC.DC.Ty
@@ -45,10 +57,11 @@ def liftSig (sig : Signature MLIR2Comb.Ty) : Signature MLIR2DC.Ty :=
   Signature.mk (sig.sig.map liftTy) [] (liftTy sig.outTy)
 -- map bitvecs from comb to streams in dc
 
+
 instance : DialectSignature DCxComb where
   signature := fun op =>
     match op with
-    | .comb o => liftSig (signature o)
+    | .comb o => liftSig (signature o) -- does not assume that regsig is empty
     -- TODO(yann): Need to specify the signature instance directly because it is otherwise trying to get the instance of
     -- DCxComb.
     | .dc o => MLIR2DC.instDialectSignatureDC.signature o
@@ -79,9 +92,64 @@ def is_ready {l : List Nat} (v : HVector (fun i => Option (BitVec i)) l) :
             | none => none
         | .cons none _ => none
 
+-- HVector toType [bv64, bv64] → ⟦bv64⟧
+
+-- HVector toType [stream_bv64, stream_bv64] → ⟦stream_bv64⟧
+
+open MLIR2Comb
+
+example : toType (Ty.bitvec 64 : Comb.Ty) = BitVec 64 := rfl
+
+example : toType (liftTy (Ty.bitvec 64 : Comb.Ty)) = Stream' (Option <| BitVec 64) := rfl
+
+/-
+  · f is the semantics of the comb operation
+  · argTys is the list of the arg types for the comb op
+  · mapping the types that live in the functor to the comb op arg types
+    e.g. binary op: f = bv w → bv w → bv w
+      liftComb lifts this to be valstr w → valstr w → valstr w
+-/
+open MLIR2Comb in
+variable {m} [Pure m] in
+def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty} {eff : EffectKind}
+    (f : HVector toType argTys → eff.toMonad m ⟦outTy⟧) :
+    HVector toType (liftTy <$> argTys) → m ⟦liftTy outTy⟧ := fun args =>
+  pure <| Stream.corec _ _
+
+/-- Given a stream of values α, Peel off the heads of all the streams. -/
+def heads {l : List Nat}
+    (h : HVector (fun i => Stream α) l) : HVector (fun i => Option α) l := sorry
+
 def hv_cast_gen {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
     Stream (HVector (fun i => BitVec i) l) :=
   fun n => is_ready (hv_cast_gen' h n)
+
+def ofList (vals : List (Option α)) : Stream α :=
+  fun i => (vals.get? i).join
+
+#eval hv_cast_gen (
+        (ofList [none, none, some 1#64]) ::ₕ
+        ((ofList [some 0#64, some 1#64, none]) ::ₕ .nil))
+      |>.take 10
+
+-- def hv_cast_gen'' {l : List Nat} (h : HVector toType (l.map MLIR2DC.Ty.valuestream)) :
+--     Stream' (HVector toType (l.map MLIR2Comb.Ty.bitvec)) :=
+--   fun n =>
+--     let vals := heads h
+
+--     match hmap : l.map MLIR2DC.Ty.valuestream with
+--     | .nil =>
+--         have empty_cast : [] = l := by sorry
+--         empty_cast ▸ .nil
+--     | .cons x xs => by
+--         cases l
+--         · grind
+--         · dsimp at *
+--           rename_i hd tl
+--           have : toType (MLIR2DC.Ty.valuestream hd) = toType (MLIR2Comb.Ty.bitvec hd)  := by sorry
+--           exact HVector.cons (this.mp x)
+        --HVector.cons (toType x) (hv_cast_gen' xs n)
+
 
 -- hacky versino
 def hv_cast_hacky {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
@@ -96,18 +164,45 @@ def hv_cast_hacky {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSigna
 def HVector.replicateToList {α : Type} {f : α → Type} {a : α} :
     {n : Nat} → HVector f (List.replicate n a) → List (f a)
   | 0, _ => []
-  | n+1, HVector.cons x xs => x :: replicateToList xs
+  | n + 1, HVector.cons x xs => x :: replicateToList xs
 
 -- more elegant version?
-def hv_cast {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
+def hv_cast' {op : MLIR2Comb.Comb.Op} (h : HVector toType (instDialectSignatureDCxComb.sig (Op.comb op))) :
     Stream (HVector toType (DialectSignature.sig op)) := by
-  sorry
+  cases op <;> dsimp [DialectSignature.sig, signature, liftSig, liftTy] at h
+  · case add w arity =>
+    by_cases ha : arity = 2
+    ·
+      sorry
+    · exact fun _ => none -- no variadic support atm, nor 1/0
+  all_goals sorry
       -- have := Stream.ofList (HVector.replicateToList h)
       -- sorry
   -- all_goals <;> sorry
 
+
+-- def hvector_ubercast
+--     {l : List α} {f : α → Type}
+--     {m : List β} {g : β → Type}
+--     {old : HVector g m}
+--     (new : HVector f l)
+--     (h : ∀ (i : Nat), l[i]?.map f = m[i]?.map g) :
+--     old = (sorry : HVector g m = HVector f l) ▸ new := sorry
+
+-- example (op : Comb.Op) : DialectSignature.effectKind op = .pure := rfl
+example (op : Comb.Op) : DialectSignature.effectKind (d := DCxComb) (.comb op) = .pure := rfl
+
+
+-- example (op : Comb.Op) : DialectSignature.regSig op = [] := rfl
+example (op : Comb.Op) : DialectSignature.regSig (d := DCxComb) (.comb op) = [] := rfl
+
+
+-- TODO: renamed HVector.cast
+def vecCast (h : as = bs) : HVector A as → HVector A bs := (h ▸ ·)
+
 def_denote for DCxComb where
-  | .comb op => sorry
+  | .comb op =>
+      liftComb (DialectDenote.denote op · (vecCast (by cases op <;> rfl) HVector.nil))
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 -- instance : MLIR.AST.TransformExpr DCxComb 0 where
