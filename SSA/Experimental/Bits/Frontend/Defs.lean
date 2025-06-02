@@ -42,7 +42,7 @@ inductive Term : Type
 -- | lshiftR : Term → Nat → Term
 -- bollu: I don't think we can do ashiftr, because it's output is 'irregular',
 --   hence, I don't anticipate us implementing it.
-deriving Repr, Inhabited
+deriving Repr, Inhabited, Lean.ToExpr
 
 open Term
 
@@ -82,7 +82,7 @@ inductive BinaryPredicate
 | ule
 | slt
 | sle
-deriving Repr
+deriving Repr, Lean.ToExpr
 
 inductive WidthPredicate
 | eq
@@ -91,7 +91,7 @@ inductive WidthPredicate
 | le
 | gt
 | ge
-deriving Repr, Inhabited
+deriving Repr, Inhabited, Lean.ToExpr
 
 /--
 The fragment of predicate logic that we support in `bv_automata`.
@@ -111,7 +111,7 @@ inductive Predicate : Type where
 | binary (p : BinaryPredicate) (t₁ t₂ : Term)
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
-deriving Repr, Inhabited
+deriving Repr, Inhabited, Lean.ToExpr
 
 -- TODO: This ugly definition is here to make the `predicateEvalEqFSM` function compile wihtout change.
 @[simp] def Predicate.arity : Predicate → Nat
