@@ -17,7 +17,7 @@ sequence compared to LLVM's native lowering, it allows us to support lowering
 the instruction within our framework.
 -/
 
-/- # select, RiscV (leveraging bit-wise operations)  -/
+/-! # select, RiscV (leveraging bit-wise operations)  -/
 def select_riscv := [LV| {
   ^entry (%cond : i1, %arg0: i64, %arg1: i64):
     %0 = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!i64)
@@ -40,14 +40,15 @@ def select_llvm_64 := [LV| {
     llvm.return %0 : i64
   }]
 
-def select_riscv_select_llvm_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
-  lhs:= select_llvm_64
-  rhs:= select_riscv
+def select_riscv_select_llvm_64 : LLVMPeepholeRewriteRefine 64
+  [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := select_llvm_64
+  rhs := select_riscv
   correct := by
     unfold select_riscv select_llvm_64
     simp_peephole
     simp_riscv
-    simp [LLVM.select]
+    simp_alive_undef
     simp_alive_case_bash
     case value.poison.poison =>
       intro x
@@ -95,9 +96,10 @@ def select_llvm_32 := [LV| {
     llvm.return %0 : i32
   }]
 
-def select_riscv_select_llvm_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
-  lhs:= select_llvm_32
-  rhs:= select_riscv_32
+def select_riscv_select_llvm_32 : LLVMPeepholeRewriteRefine 32
+    [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
+  lhs := select_llvm_32
+  rhs := select_riscv_32
   correct := by
     unfold select_llvm_32 select_riscv_32
     simp_peephole
