@@ -19,6 +19,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.urem
 import SSA.Projects.LLVMRiscV.Pipeline.xor
 import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
+import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
@@ -62,7 +63,8 @@ def rewrittingPatterns2 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
     udiv_match,
     urem_match,
     xor_match,
-    zext_match
+    zext_match,
+    select_match
   ]
 
 /-- Defines an array containing only the rewrite pattern which eliminates cast.-/
@@ -100,7 +102,8 @@ a maximal of 100 steps is performed. Currently we need to set this limit to avoi
     (@rewrittingPatterns2 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) rmInitialDeadCode);
   let lowerPart2 := (multiRewritePeephole 100
     (@rewrittingPatterns (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) lowerPart1);
-  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+  let lowerConst :=  multiRewritePeephole 100 (const_match) lowerPart2
+  let postLoweringDCE := (DCE.dce' lowerConst).val;
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
   let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val; -- Rerun it to ensure that all dead code is removed.
@@ -131,4 +134,4 @@ def llvm01:=
     llvm.return %1 : i1
   }]
 
-#eval! (selectionPipeFuelSafe llvm00)
+ #eval! (selectionPipeFuelSafe llvm01)

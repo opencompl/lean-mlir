@@ -1,11 +1,11 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
-
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 open LLVMRiscV
 set_option Elab.async true
 
-/!-
+/-!
 This file contains the instruction lowering for the `llvm.select` instruction.
 
 LLVM version 11.0 lowers `select` to a conditional branch regardless of the
@@ -136,3 +136,9 @@ def select_riscv_select_llvm_32 : LLVMPeepholeRewriteRefine 32
       · simp only [PoisonOr.toOption_getSome, PoisonOr.value_isRefinedBy_value,
         InstCombine.bv_isRefinedBy_iff]
         bv_decide
+
+def select_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  [⟨[Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64),Ty.llvm (.bitvec 1)],
+   Ty.llvm (.bitvec 64),(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_64)⟩,
+  ⟨[Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32),Ty.llvm (.bitvec 1)],
+   Ty.llvm (.bitvec 32),(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_32)⟩]
