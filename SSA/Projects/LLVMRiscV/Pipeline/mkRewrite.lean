@@ -2,13 +2,19 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 
 open LLVMRiscV
-/- In this file we define helper functions for our peephole rewriter such that we can reduce the overhead
-to generate a peephole rewrite. We call this function from within each individual instruction module.
+
+/- This file defines helper functions/wrapper to simplify the creation of
+   `PeepholeRewrite` instances for the instruction selection pipeline.
+   The functions are used to create rewrites for binary and unary operations
+   that take two or one input operands, respectively, and produce an output
+   operand of a specified width. The functions return a dependent pair containing
+   the input types, output type, and the rewrite itself.
 -/
 def mkRewriteBin
   (inWidth : Nat)
   (outWidth : Nat)
-  (rw : PeepholeRewrite LLVMPlusRiscV [Ty.llvm (.bitvec inWidth), Ty.llvm (.bitvec inWidth)] (Ty.llvm (.bitvec outWidth))) :
+  (rw : PeepholeRewrite LLVMPlusRiscV [Ty.llvm (.bitvec inWidth), Ty.llvm (.bitvec inWidth)]
+  (Ty.llvm (.bitvec outWidth))) :
   Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
   ⟨[Ty.llvm (.bitvec inWidth), Ty.llvm (.bitvec inWidth)],
    Ty.llvm (.bitvec outWidth),

@@ -42,9 +42,8 @@ for your rewrite labellingthe list with the name of the instruction.
 3.) Add the list to the final instruction selection array.
 -/
 
-
-
-def rewritting_patterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+def rewritting_patterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+    List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     add_match,
     and_match,
@@ -55,7 +54,8 @@ def rewritting_patterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} : 
     rem_match,
     sdiv_match]
 
-def rewritting_patterns2 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+def rewritting_patterns2 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+    List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     sext_match,
     shl_match,
@@ -107,11 +107,13 @@ def llvm01:=
       llvm.return %1 : i1
   }]
 
-set_option maxRecDepth 10000000
+set_option maxRecDepth 10000000 -- we set this to avoid the recursion depth error when using the peephole rewriter 
 
+/-- Calculates the amount of steps to be performed within the peephole rewriter for a
+given compuation p-/
 def fuel_def {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
   (p: Com d Γ eff t) : Nat := max (Com.size p) 10
-  -- should be com size times the number of rewrite patterns
+
 
 /-
 experiment 01:
