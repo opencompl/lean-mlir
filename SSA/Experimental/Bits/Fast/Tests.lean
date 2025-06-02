@@ -103,6 +103,10 @@ set_option trace.Bits.FastVerif true in
 example (w : Nat) (a : BitVec w) : (a = 0#w) ∨ (a = a + 0#w)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 20 (version := .V2) } )
 
+set_option trace.Bits.FastVerif true in
+example (w : Nat) (a : BitVec w) : a = 1#w   := by
+  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified 20 (version := .V2) } )
+
 
 example (w : Nat) (a b : BitVec w) : (a = 0#w) ∨ (a + b = b + a) := by
   -- bv_automata_gen (config := {backend := .circuit_cadical_verified} )
