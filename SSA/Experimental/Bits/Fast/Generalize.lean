@@ -1223,7 +1223,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
                     preconditionCandidates := preconditionCandidates.insert cand
 
-                -- Now let's check if we have a valid candidate
+                -- Check if we have a valid candidate at the start
                 if preconditionCandidates.size > origCandidatesSize then
                   validCandidates ← validateCandidates preconditionCandidates visited
                   match validCandidates with
@@ -1255,10 +1255,6 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
                               else
                                 throwError m! "Invalid width for lhs:{lhs} and rhs:{rhs}"
                             pure res
-
-                      if (intermediateNegValues.length != cacheValue.negativeExampleValues.length) || ((intermediateNegValues.length != negativeExamples.length))then
-                          logInfo m! "Current level: {currentLevel} and processing:{bvExpr} with var:{var}"
-                          throwError m! "negativeExamples: {negativeExamples}; intermediateNegValues: {intermediateNegValues}; cacheValue.negativeExamples {cacheValue.negativeExampleValues}"
 
                       let negCombos := List.zip intermediateNegValues cacheValue.negativeExampleValues --- Zip each negative example computation with the corresponding constant value for the negative example
                       let evaluatedNegativeExs ← processCombos negCombos negativeExamples
@@ -1339,7 +1335,7 @@ elab "#generalize" expr:term: command =>
            let mut constantAssignments := []
 
            if originalWidth > targetWidth then
-              constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 3
+              constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
 
            let mut processingWidth := targetWidth
            if constantAssignments.isEmpty then
@@ -1414,9 +1410,11 @@ elab "#generalize" expr:term: command =>
                 let lhsAssignments := constantAssignment.filter (fun k _ => lhs.symVars.contains k)
                 let rhsAssignments := constantAssignment.filter (fun k _ => rhs.symVars.contains k)
 
-                for (targetId, targetVal) in rhsAssignments do
+                for (targetId, targetVal) in rhsAssignments do --- TODO: Break if we get empty results for any constants.
                   let deductiveSearchRes ← deductiveSearch lhs.bvExpr lhs.symVars targetVal 3 1234
-                  let lhsSketchRes ←  enumerativeSearch lhs.bvExpr True lhs.inputVars.keys lhs.symVars targetVal
+
+                  -- TODO: We actually don't need to do this sketch thing per target. Instesd, we can add the sketches and use a map of the values, and see which evaluate to the value.
+                  let lhsSketchRes ←  enumerativeSearch lhs.bvExpr True lhs.inputVars.keys lhs.symVars targetVal -- TODO: We don't need to combine the deductive search results with the enumerative search; we can do one at a time.
 
                   let synthesisRes := h ▸ (deductiveSearchRes ++ lhsSketchRes)
                   if !synthesisRes.isEmpty then
@@ -1438,11 +1436,11 @@ elab "#generalize" expr:term: command =>
                                 return Std.HashSet.emptyWithCapacity
                     | none => visited := negExCheck.fst
 
-                let mut rhsVarsByValue : Std.HashMap (BitVec processingWidth) (List Nat) := Std.HashMap.emptyWithCapacity
+
+                let mut rhsVarByValue : Std.HashMap (BitVec processingWidth) Nat := Std.HashMap.emptyWithCapacity
                 for (var, value) in rhsAssignments.toArray do
-                  let vars := rhsVarsByValue.getD var []
                   let h : value.w = processingWidth := sorry
-                  rhsVarsByValue := rhsVarsByValue.insert (h ▸ value.bv) (var::vars)
+                  rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
 
                 let mut allLHSVars := specialConstants
                 for (var, value) in lhsAssignments.toArray do
@@ -1465,18 +1463,17 @@ elab "#generalize" expr:term: command =>
 
                     for (lhsVar, lhsVal) in allLHSVars.toArray do
                       for op in ops do
-                        let evaluatedExpr := evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar)
-                        let rhsVarsForValue := rhsVarsByValue[evaluatedExpr]?
+                        let evaluatedExprVal := evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar)
+                        let rhsVarsForValue := rhsVarByValue[evaluatedExprVal]?
 
                         match rhsVarsForValue with
-                        | some rhsVars =>
+                        | some rhsVar =>
                             matchedTarget := true
-                            for rhsVar in rhsVars do
-                              let existingCandidates := exprSynthesisResults.getD rhsVar []
-                              exprSynthesisResults := exprSynthesisResults.insert rhsVar ((op bvExpr lhsVar)::existingCandidates)
+                            let existingCandidates := exprSynthesisResults.getD rhsVar []
+                            exprSynthesisResults := exprSynthesisResults.insert rhsVar ((op bvExpr lhsVar)::existingCandidates)
                         | none =>
                           let mut newExpr :=  op bvExpr lhsVar
-                          if evaluatedExpr == h ▸ packedBV.bv then
+                          if evaluatedExprVal == h ▸ packedBV.bv then
                             newExpr := bvExpr
                           currentCache := currentCache.insert newExpr {bv := (evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar))}
 
