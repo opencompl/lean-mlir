@@ -1218,6 +1218,15 @@ This section builds a circuit that produces the state vector after 'n' iteration
 starting with a state vector that is given by the circuit itself.
 
 -/
+
+
+def mkStateVectorIdCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) : p.α → Circuit (Vars p.α arity 0) := 
+  fun s => Circuit.var true (Vars.state s)
+
 /--
 Make the circuit that produces the state vector after 'n' iterations,
 starting with a state vector that is given by the circuit itself.
@@ -1497,6 +1506,28 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
       · omega
     · simp
 
+
+/-- Make a circuit that checks if two states are equal. -/
+def mkStateEqCircuit
+  {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) : Circuit (Vars p.α arity i) :=
+  Circuit.bigOr <| FinEnum.toList p.α |>.map fun a => (s a) ^^^ (t a)
+
+
+/-- if the state circuit is false, then the states are equal under all evaluations. -/
+theorem mkStateEqCircuit_eq_zero_iff {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) :
+  (∀ envBool, (mkStateEqCircuit p s t).eval envBool = false) ↔
+  (∀ (a : p.α) (envBool : Vars p.α arity i → Bool), (s a).eval envBool = (t a).eval envBool) := by
+  simp [mkStateEqCircuit, Circuit.eval_bigOr_eq_false_iff]
+  constructor 
+  · intros h a envBool
+    apply h
+  · intros h envBool a
+    apply h
+
 @[simp]
 theorem Inputs.castLe_eq_self {α : Type _} {n : Nat} (i : Inputs α n) (h : n ≤ n) :
     i.castLe h = i := by
@@ -1509,6 +1540,30 @@ theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n �
   rcases v with x | i
   · simp [Vars.castLe]
   · simp [Vars.castLe]
+
+/--
+make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
+We take 'i+1' so that we take at least one input.
+This circuit produces false iff...
+-/
+def mkUniqueStateCircuitAux {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) : Circuit (Vars p.α arity (i+1)) :=
+   let ins := mkStateVectorIdCircuit p
+   let outs := mkStateVectorWithCircuit p (i+1)
+   (mkStateEqCircuit p outs (fun s => (ins s).map  (fun v => v.castLe (by omega))))
+
+/--
+make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
+This circuit produce false iff there are two states that are equal in [1..i+1] inputs
+-/
+def mkUniqueStatesCircuit {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) : Circuit (Vars p.α arity (i+1)) :=
+  let xs := List.range (i + 1) |>.attach
+  Circuit.bigOr <| xs.map fun j => 
+    (mkUniqueStateCircuitAux p j.val).map (fun v => 
+      v.castLe (by have := j.property; simp at this; omega))
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
