@@ -24,7 +24,7 @@ open Lean Meta Elab Tactic in
       | .some () => .var true (.inr 0) -- stores input in state variables.
       | .none => .var true (.inl ()) -- spits out the output.
     )
-  let _ ← fsm.decideIfZerosVerified 0
+  let _ ← fsm.decideIfZerosVerifiedV1 0
   logInfo "done test."
   return ()
 

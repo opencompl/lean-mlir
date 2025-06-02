@@ -1565,6 +1565,28 @@ def mkUniqueStatesCircuit {arity : Type _}
     (mkUniqueStateCircuitAux p j.val).map (fun v => 
       v.castLe (by have := j.property; simp at this; omega))
 
+/--
+Make an induction hypothesis, that states that:
+  (∀ i, i ≤ n, p.evalWith s i = false ∧ (∀ j ≤ n, s ≠ p.evalWith s j)) →
+  (∀ i, i ≤ n + 1, p.evalWith s i = false
+
+  That is, we only perform K-induction on *simple paths*.
+-/
+def mkIndHypUniqueStatesCircuit {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+2)) :=
+  -- truth table of this circuit:
+  -- safe upto n | safe upto n+1 | output
+  --   0         |  0            | 0
+  --   0         |  1            | 1
+  --   1         |  0            | 0
+  --   1         |  1            | 0
+  mkUnsatImpliesCircuit
+    (((mkUniqueStatesCircuit p n) ||| (mkEvalWithNCircuit p n)).map (fun vs => vs.castLe (by omega)))
+    (mkEvalWithNCircuit p (n + 1))
+
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
 theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
@@ -1632,6 +1654,16 @@ info: 'ReflectVerif.BvDecide.eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyC
 -/
 #guard_msgs in #print axioms eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false
 
+axiom eval_eq_false_of_mkIndHypUniqueStatesCircuit_false_of_mkSafetyCircuit_false {n : Nat}
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (hs : (mkSafetyCircuit p n).always_false)
+    (hind : (mkIndHypUniqueStatesCircuit p n).always_false) :
+    ∀ (envBitstream : arity → BitStream) (i : Nat), p.eval envBitstream i = false
+
 /-- Version that is better suited to proving. -/
 theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
     {arity : Type _}
@@ -1688,7 +1720,7 @@ end DecideIfZerosOutput
 
 
 @[nospecialize]
-partial def decideIfZerosAuxVerified {arity : Type _}
+partial def decideIfZerosAuxVerifiedV1 {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (fsm : FSM arity) :
@@ -1738,14 +1770,76 @@ partial def decideIfZerosAuxVerified {arity : Type _}
       return .proven iter safetyCert indCert
     | .none =>
       trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
-      decideIfZerosAuxVerified (iter + 1) maxIter fsm
+      decideIfZerosAuxVerifiedV1 (iter + 1) maxIter fsm
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosVerified  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+def _root_.FSM.decideIfZerosVerifiedV1  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    decideIfZerosAuxVerified 0 maxIter fsm
+    decideIfZerosAuxVerifiedV1 0 maxIter fsm
+
+
+
+@[nospecialize]
+partial def decideIfZerosAuxVerifiedV2 {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat) (maxIter : Nat)
+    (fsm : FSM arity) :
+    TermElabM (DecideIfZerosOutput) := do
+  trace[Bits.FastVerif] s!"K-induction (iter={iter})"
+  if iter ≥ maxIter && maxIter != 0 then
+    throwError s!"ran out of iterations, quitting"
+    return .exhaustedIterations maxIter
+  let tStart ← IO.monoMsNow
+  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit fsm iter
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
+
+  let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+  let formatEmpty : Empty → Format := fun e => e.elim
+  let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+  trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+  let tStart ← IO.monoMsNow
+  let safetyCert? ← checkCircuitUnsatAux cSafety
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
+  match safetyCert? with
+  | .none =>
+    trace[Bits.FastVerif] s!"Safety property failed on initial state."
+    return .safetyFailure iter
+  | .some safetyCert =>
+    trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
+
+    let tStart ← IO.monoMsNow
+    let cIndHyp := mkIndHypUniqueStatesCircuit fsm iter
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+
+    let tStart ← IO.monoMsNow
+    trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
+    -- let le : Bool := sorry
+    let indCert? ← checkCircuitUnsatAux cIndHyp
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
+    match indCert? with
+    | .some indCert =>
+      trace[Bits.FastVerif] s!"Inductive invariant established."
+      return .proven iter safetyCert indCert
+    | .none =>
+      trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
+      decideIfZerosAuxVerifiedV2 (iter + 1) maxIter fsm
+
+@[nospecialize]
+def _root_.FSM.decideIfZerosVerifiedV2  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
+  -- decideIfZerosM Circuit.impliesCadical fsm
+  withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
+    decideIfZerosAuxVerifiedV2 0 maxIter fsm
 
 end BvDecide
 
