@@ -93,8 +93,8 @@ set_option maxRecDepth 10000000 -- we set this to avoid the recursion depth erro
 to `multiRewritePeephole` and limits the fuel to 100. This means per program and potential rewrite location,
 a maximal of 100 steps is performed. Currently we need to set this limit to avoid a stackoverflow in LeanMLIR.
 -/
- def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog :
-    Com LLVMPlusRiscV (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
+ def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
   let lowerPart1 := (multiRewritePeephole 100
     (@rewrittingPatterns2 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) rmInitialDeadCode);

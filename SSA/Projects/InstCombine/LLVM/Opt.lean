@@ -41,7 +41,7 @@ def mainCmd := `[Cli|
     "opt: apply verified rewrites"
     FLAGS:
       verbose; "Prints verbose output for debugging using the Repr typeclass to print."
-      passriscv64; "This applies a lowering pass to an RISC-V 64 SSA-assebmly IR"
+      passriscv64; "Lowering pass to a RISC-V 64 SSA-assembly IR"
     ARGS:
       file: String; "Input filename"
     ]
