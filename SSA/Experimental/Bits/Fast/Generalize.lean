@@ -1182,7 +1182,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
             let specialConstants : Std.HashMap (BVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
                 (one, {bv := BitVec.ofNat bitwidth 1}),
-                (minusOne, {bv := BitVec.ofInt bitwidth (-1)}),
+                -- (minusOne, {bv := BitVec.ofInt bitwidth (-1)}),
                 (BVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
 
             for (sc, val) in specialConstants.toArray do
@@ -1335,7 +1335,7 @@ elab "#generalize" expr:term: command =>
            let mut constantAssignments := []
 
            if originalWidth > targetWidth then
-              constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
+              constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 2
 
            let mut processingWidth := targetWidth
            if constantAssignments.isEmpty then
