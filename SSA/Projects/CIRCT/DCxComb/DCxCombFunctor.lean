@@ -111,10 +111,19 @@ example : toType (liftTy (Ty.bitvec 64 : Comb.Ty)) = Stream' (Option <| BitVec 6
 -/
 open MLIR2Comb in
 variable {m} [Pure m] in
-def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty} {eff : EffectKind}
-    (f : HVector toType argTys → eff.toMonad m ⟦outTy⟧) :
-    HVector toType (liftTy <$> argTys) → m ⟦liftTy outTy⟧ := fun args =>
-  pure <| Stream.corec _ _
+def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty}
+    (f : HVector toType argTys → ⟦outTy⟧) :
+    HVector toType (liftTy <$> argTys) → ⟦liftTy outTy⟧ := fun args =>
+  let B := fun
+    | .valuestream w => BitVec w
+    | _ => BitVec 0
+  have h := by
+    intro i
+    simp [Fin.instGetElemFinVal, liftTy]
+    rfl
+  Stream.transpose (B := B) args h
+    |>.map fun args =>
+      f (args.cast (by simp) (by intros; simp[B, liftTy]; rfl))
 
 /-- Given a stream of values α, Peel off the heads of all the streams. -/
 def heads {l : List Nat}
@@ -202,7 +211,11 @@ def vecCast (h : as = bs) : HVector A as → HVector A bs := (h ▸ ·)
 
 def_denote for DCxComb where
   | .comb op =>
-      liftComb (DialectDenote.denote op · (vecCast (by cases op <;> rfl) HVector.nil))
+      let opDenote :=
+        (DialectDenote.denote op · (vecCast (by cases op <;> rfl) HVector.nil))
+      let opDenote : HVector _ _ → ⟦_⟧ :=
+        EffectKind.coe_toMonad ∘ opDenote
+      liftComb opDenote
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 -- instance : MLIR.AST.TransformExpr DCxComb 0 where

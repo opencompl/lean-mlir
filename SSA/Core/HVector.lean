@@ -179,6 +179,18 @@ def castFun {A B : α → Type u} {as}
     let xs := xs.castFun (fun i => h i.succ)
     x ::ₕ xs
 
+def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
+    (h_len : as.length = bs.length)
+    (h_elem : ∀ i (_ : i < as.length), A as[i] = B bs[i])
+    (xs : HVector A as) : HVector B bs :=
+  match bs, xs with
+  | [], .nil        => .nil
+  | _::_, x ::ₕ xs  =>
+      have h₀ := h_elem 0 (by simp)
+      let xs := xs.cast (by simpa using h_len)
+                        (fun i => by simpa using h_elem i.succ)
+      (h₀ ▸ x) ::ₕ xs
+
 /-
   # Theorems
 -/
