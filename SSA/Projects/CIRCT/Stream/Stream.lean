@@ -77,6 +77,11 @@ def transpose' {A : α → Type} {as : List α}
     let xs := xs.map fun _ x => x.dropFirstNone
     let out := xs.mapM fun _ x => x.head
     -- ^^ `out` is `none` if *any* of `x.head` is `none`.
+    let xs :=
+      if out.isSome
+        then xs.map fun _ x => x.tail
+        else xs
+
     (out, xs)
 
 /--
