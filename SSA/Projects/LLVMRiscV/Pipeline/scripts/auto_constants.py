@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pathlib import Path
 """
 # This script generates Lean proofs for constant lowering of LLVM constants.
@@ -6,9 +7,9 @@ range [-max_val, max_val].
 Additionally, it generates a proof that the two are equivalent as follows :
 
 def llvm_const_lower_riscv_li0 : LLVMPeepholeRewriteRefine 64 [] :=
-  {lhs:= const_llvm_o, rhs:= li_riscv_o,
+  {lhs:= constLlvm_0, rhs:= liRiscv_0,
    correct := by
-    unfold const_llvm_0 li_riscv_
+    unfold constLlvm_0 liRiscv_0
     simp_peephole
     simp_riscv
     simp_alive_ops
@@ -21,28 +22,28 @@ import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 
- open LLVMRiscV\n 
+open LLVMRiscV\n 
     """
     body = ""
     rewrite_names = []
     for i in range(-max_val, max_val + 1):
-        name_suffix = f"n{-i}" if i < 0 else str(i)
-        li_def = f"""def li_riscv_{name_suffix} := [LV| {{
+        name_suffix = f"N{-i}" if i < 0 else str(i)
+        li_def = f"""def liRiscv{name_suffix} := [LV| {{
     ^entry ():
-      %0 = "li"() {{imm = {i} : !i64}}  : (!i64) -> (!i64)
+      %0 = "li"() {{imm = {i} : !i64}} : (!i64) -> (!i64)
       %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
       llvm.return %1 : i64
-  }}]\n"""
+  }}]\n\n"""
 
-        llvm_def = f"""def const_llvm_{name_suffix} : Com  LLVMPlusRiscV [] .pure (.llvm (.bitvec 64))  := [LV| {{
+        llvm_def = f"""def constLlvm{name_suffix} : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {{
     ^entry ():
       %1 = llvm.mlir.constant ({i}) : i64
       llvm.return %1 : i64
-  }}]\n"""
+  }}]\n\n"""
         proof = f"""def llvm_const_lower_riscv_li{name_suffix} : LLVMPeepholeRewriteRefine 64 [] :=
-  {{lhs:= const_llvm_{name_suffix}, rhs:= li_riscv_{name_suffix},
+  {{lhs := constLlvm{name_suffix}, rhs:= liRiscv{name_suffix},
    correct := by
-    unfold const_llvm_{name_suffix} li_riscv_{name_suffix}
+    unfold constLlvm{name_suffix} liRiscv{name_suffix}
     simp_peephole
     simp_riscv
     simp_alive_ops
