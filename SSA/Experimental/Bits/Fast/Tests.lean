@@ -73,10 +73,12 @@ example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
 
 
+-- Check that this example produces 'normCircuitVerified: ok, normCircuitUnverified: ok'
 example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a)  := by
   bv_bench_automata
   sorry
 
+-- Check that this example produces 'normCircuitVerified: err, normCircuitUnverified: err
 example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a + a)  := by
   bv_bench_automata
   sorry
