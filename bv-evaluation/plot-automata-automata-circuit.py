@@ -220,7 +220,7 @@ def plot(args):
 
 
     # print available solver
-    print(df["tactic"].unique())
+    print(list(df["tactic"].unique().head(100)))
     # Series: 'tactic' [str]
     # [
     #     "width_ok"
@@ -232,20 +232,24 @@ def plot(args):
     # ]
 
     solver_colors : dict[str, str] = {
-        "normCircuit": material_blue,
+        "normCircuitVerified": material_yellow,
+        "normCircuitUnverified": material_blue,
         "normPresburger": material_green,
         "bv_decide": material_purple,
         "bv_normalize": material_red,
         #"reflect_ok": material_yellow,
     }
     solver_names : dict[str, str] = {
-        "normCircuit": "k-induction",
+        "normCircuitVerified": "k-induction (verified)",
+        "normCircuitUnverified": "k-induction (unverified)",
         "normPresburger": "bv_automata_classic",
         "bv_decide": "bv_decide",
         "bv_normalize": "bv_normalize",
         # "reflect_ok": "Reflect",
     }
     solver_latex_names : dict[str, str] = {
+        "normCircuitVerified": "NormCircuitVerified",
+        "normCircuitUnverified": "NormCircuitUnverified",
         "normCircuit": "NormCircuit",
         "normPresburger": "NormPresburger",
         "bv_decide": "BvDecide",
