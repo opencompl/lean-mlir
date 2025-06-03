@@ -46,7 +46,6 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags :=
   | .some y => match y with
     | .opaque_ "llvm.overflow" "nsw" => return ⟨true, false⟩
     | .opaque_ "llvm.overflow" "nuw" => return ⟨false, true⟩
-    | .opaque_ "llvm.overflow" "none" => return ⟨false, false⟩
     | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"]
     | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] =>
         return ⟨true, true⟩
