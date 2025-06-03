@@ -57,7 +57,7 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags :=
 Maps integer predicate codes (as defined in the MLIR LLVM dialect) to their corresponding
 `LLVM.IntPred` constructors.
 This reflects MLIR’s encoding of predicates as numeric values in attributes-/
-def toMLIRICmpPredicate (n : Int) : AST.ReaderM (MetaLLVM φ) (LLVM.IntPred) := do
+def parseIcmpPredicate (n : Int) : AST.ReaderM (MetaLLVM φ) (LLVM.IntPred) := do
   match n with
   | 0 => return .eq
   | 1 => return .ne
@@ -121,7 +121,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
      -- Alternative representation of icmp instructions like in MLIR generic syntax
     | "llvm.icmp" =>
       let ⟨n, ty⟩ ← opStx.getIntAttr "predicate"
-      mkExprOf <| icmp (← toMLIRICmpPredicate n) (← binW)
+      mkExprOf <| icmp (← parseIcmpPredicate n) (← binW)
     -- Unary Operations
     | "llvm.not"   => mkExprOf <| .not (← unW)
     | "llvm.neg"   => mkExprOf <| neg (← unW)
