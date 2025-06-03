@@ -688,76 +688,6 @@ variable {x y z : BitVec 32}
 #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 
-def generateSketches (symVars: List (BVExpr w)) (operations : List (BVExpr w → BVExpr w → BVExpr w)) : List (BVExpr w) := Id.run do
-    match symVars with
-      | [] | _::[] => symVars
-      | x::xs =>
-          let remSketches := generateSketches xs operations
-          let mut res : List (BVExpr w) := []
-          for op in operations do
-            for sketch in remSketches do
-              res := (op x sketch) :: res
-
-          res
-
-def bvExpr : BVExpr 4 := BVExpr.var 1001
-#eval generateSketches [bvExpr, BVExpr.var 1002] [add, multiply, udiv, umod]
-#eval generateSketches [bvExpr, BVExpr.var 1002, BVExpr.var 1003] [add, multiply, udiv, umod]
-
-def enumerativeSearch (lhsSketch: BVExpr w) (lhsSketchOnly: Bool) (inputs: List Nat)  (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) :
-                      TermElabM ( List (BVExpr w)) := do
-
-      logInfo m! "Running enumerative synthesis"
-      let zero := BVExpr.const (BitVec.ofNat w 0)
-      let one := BVExpr.const (BitVec.ofNat w 1 )
-      let minusOne := BVExpr.const (BitVec.ofInt w (-1))
-
-      let specialConstants := [zero, one, minusOne]
-
-      let inputCombinations := productsList (List.replicate inputs.length specialConstants)
-
-      let constantVars : List (BVExpr w) := constants.keys.map (λ c => BVExpr.var c)
-      let constantsPermutation := productsList (List.replicate constantVars.length constantVars)
-
-      let inputsAndConstants := List.product inputCombinations constantsPermutation
-
-      let mut validCombos : List (BVExpr w) := []
-
-      -- First process the LHS sketch. Here, we only replace inputs with special constants and symbolic constants with other symbolic constants to reduce the search space.
-      --
-      for combo in inputsAndConstants do
-          let inputsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip inputs combo.fst))
-          let constantsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo.snd))
-
-          let substitutedExpr := substituteBVExpr lhsSketch (Std.HashMap.union inputsSubstitutions constantsSubstitutions)
-          let evaluatedExpr : BitVec target.w := evalBVExpr constants target.w substitutedExpr
-
-          if evaluatedExpr == target.bv then
-            validCombos := substitutedExpr :: validCombos
-
-      if lhsSketchOnly then
-          return validCombos
-
-      -- Then process the enumerated sketches. We replace symbolic constants with both special constants and other symbolic constants.
-      --- This enables us synthesize values like Cx + 0 = Target
-      -- TODO: Do we want to process enumerated sketches even if we already have valid combo(s)?
-      let enumeratedSketches := generateSketches constantVars [add, subtract, multiply, udiv]
-      let specialConstantsSet := Std.HashSet.ofList specialConstants
-      let constantsCombinations := (productsList (List.replicate constants.keys.length (constantVars ++ specialConstants))).filter (λ combo => let comboSet := Std.HashSet.ofList combo
-                                                                                                                                               !(comboSet.all (λ c => specialConstantsSet.contains c)))
-      for combo in constantsCombinations do
-        let constantsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip constants.keys combo))
-
-        for sketch in enumeratedSketches do
-          let substitutedExpr := substituteBVExpr sketch constantsSubstitutions
-          let evaluatedExpr : BitVec target.w := evalBVExpr constants target.w substitutedExpr
-
-            if evaluatedExpr == target.bv then
-              validCombos := substitutedExpr :: validCombos
-
-      return validCombos
-
-
 partial def deductiveSearch (expr: BVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
                       TermElabM ( List (BVExpr w)) := do
 
@@ -825,53 +755,6 @@ partial def deductiveSearch (expr: BVExpr w) (constants: Std.HashMap Nat BVExpr.
 
 
 
-def deductiveAndEnumerativeSearch (origWidthConstantsExpr reducedWidthConstantsExpr: ParsedBVLogicalExpr) (depth: Nat) :
-                      TermElabM ( Std.HashMap Nat (List (BVExpr reducedWidthConstantsExpr.lhs.width))) := do
-
-    let reducedWidth := reducedWidthConstantsExpr.lhs.width
-    let mut results : Std.HashMap Nat (List (BVExpr reducedWidth)) := Std.HashMap.emptyWithCapacity
-
-    let filterExprs (exprs : List (BVExpr reducedWidth)) (target : BVExpr.PackedBitVec) : TermElabM (List (BVExpr reducedWidth)) := do
-        let mut res : List (BVExpr reducedWidth) := []
-        for expr in (Std.HashSet.ofList exprs) do
-          let evaluatedVal := evalBVExpr origWidthConstantsExpr.lhs.symVars target.w expr
-          -- logInfo m! "Evaluated {expr} with values {origWidthConstantsExpr.lhs.symVars} and got result: {evaluatedVal}; Target = {target.bv}"
-          if evaluatedVal == target.bv then
-            res := expr :: res
-
-        return res
-
-    let inputVars := origWidthConstantsExpr.lhs.inputVars.keys
-    let reducedWidthLhs := reducedWidthConstantsExpr.lhs
-    let reducedWidthRhs := reducedWidthConstantsExpr.rhs
-
-    for (targetId, targetVal) in reducedWidthRhs.symVars.toArray do
-        let deductiveSearchRes := (← deductiveSearch reducedWidthLhs.bvExpr reducedWidthLhs.symVars targetVal depth 1234).map (λ c => changeBVExprWidth c reducedWidth)
-        logInfo m! "Deductive search results: {deductiveSearchRes}"
-
-        let lhsSketchRes ← enumerativeSearch reducedWidthLhs.bvExpr True inputVars reducedWidthLhs.symVars reducedWidthRhs.symVars[targetId]!
-
-        let mut filteredExprs ← filterExprs (deductiveSearchRes ++ lhsSketchRes) origWidthConstantsExpr.rhs.symVars[targetId]!
-        match filteredExprs with
-        | [] =>
-                logInfo m! "Could not synthesize an expression for {targetId} using deductive search and a sketch of the LHS; performing full enumerative synthesis"
-                let enumSynthesisRes ← enumerativeSearch reducedWidthLhs.bvExpr False inputVars reducedWidthLhs.symVars targetVal
-
-                if enumSynthesisRes.isEmpty then
-                  logInfo m! "No candidate expressions generated from enumerative synthesis"
-                  return Std.HashMap.emptyWithCapacity
-
-
-                filteredExprs ← filterExprs enumSynthesisRes origWidthConstantsExpr.rhs.symVars[targetId]!
-                if filteredExprs.isEmpty then
-                  logInfo m! "Could not synthesize an expression for var{targetId} from {reducedWidthConstantsExpr.lhs.bvExpr}"
-                  return Std.HashMap.emptyWithCapacity
-
-                results := results.insert targetId filteredExprs
-        | _  => results := results.insert targetId filteredExprs
-
-    return results
-
 def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BVExpr.PackedBitVec)
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
@@ -931,10 +814,9 @@ def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) 
                    let res ← helper (addConstraints expr newConstraints) n
                    return [constVals] ++ res
 
-def pruneEquivalentExprs (expressions: Std.HashSet (BVExpr w)) : TermElabM (List (BVExpr w)) := do
+def pruneEquivalentExprs (expressions: List (BVExpr w)) : TermElabM (List (BVExpr w)) := do
       let mut filtered : List (BVExpr w) := []
 
-      logInfo m! "Received {expressions.size} expressions for pruning"
       for expr in expressions do
         if filtered.isEmpty then
           filtered := expr :: filtered
@@ -946,7 +828,7 @@ def pruneEquivalentExprs (expressions: Std.HashSet (BVExpr w)) : TermElabM (List
         if let some _ ← solve subsumeCheckExpr then
           filtered := expr :: filtered
 
-      logInfo m! "Removed {expressions.size - filtered.length} expressions after pruning"
+      logInfo m! "Removed {expressions.length - filtered.length} expressions after pruning"
 
       return filtered
 
@@ -1077,7 +959,7 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
 
             let specialConstants : Std.HashMap (BVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
                 (one, {bv := BitVec.ofNat bitwidth 1}),
-                -- (minusOne, {bv := BitVec.ofInt bitwidth (-1)}),
+                (minusOne, {bv := BitVec.ofInt bitwidth (-1)}),
                 (BVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
 
             for (sc, val) in specialConstants.toArray do
@@ -1203,30 +1085,6 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
           return combinedPred
 
 
--- def filterForNoNegativeExamples (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) (visitedBVLogicalExprs : Std.HashSet BVLogicalExpr)
---         : TermElabM (Std.HashSet BVLogicalExpr × Option BVLogicalExpr) := do -- Returns the visited and an optional one if it has no negative example; pretty messy but it works for now
--- /-
---   Here, we evaluate generated preconditions for different combinations of target values on the RHS.
---   If we have only one target on the RHS, then we're just going through the list of the generated expressions.
--- -/
---   let resultsCombo := productsList exprSynthesisResults.values
---   let mut visited := visitedBVLogicalExprs
-
---   for combo in resultsCombo do
---     -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
---     let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
---     let substitutedBVLogicalExpr := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
-
---     if !visited.contains substitutedBVLogicalExpr then
---       let negativeExample ← getNegativeExamples substitutedBVLogicalExpr parsedBVLogicalExpr.lhs.symVars.keys 1
-
---       if negativeExample.isEmpty then
---         return (visited, some substitutedBVLogicalExpr)
-
---       visited := visited.insert substitutedBVLogicalExpr
-
---   return (visited, none)
-
 structure PreconditionCheckResults where
   needsPrecondition : Bool
   exprs : List BVLogicalExpr
@@ -1265,13 +1123,246 @@ def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVar
 
   pure res
 
-def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (BVExpr w))) : TermElabM (Std.HashMap Nat (List (BVExpr w))) := do
+def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (BVExpr w))) (origBVLogicalExpr : ParsedBVLogicalExpr) (processingWidth: Nat)
+                            : TermElabM (Std.HashMap Nat (List (BVExpr w))) := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
           let mut tempResults : Std.HashMap Nat (List (BVExpr w)) := Std.HashMap.emptyWithCapacity
+          let origWidth := origBVLogicalExpr.state.originalWidth
+          let origRhsSymVars := origBVLogicalExpr.rhs.symVars
+          let origLhsSymVars := origBVLogicalExpr.lhs.symVars
+
           for (var, expressions) in exprSynthesisResults.toList do
-              tempResults := tempResults.insert var (← pruneEquivalentExprs (Std.HashSet.ofList expressions))
+              let mut prunedExprs ← pruneEquivalentExprs expressions
+
+              if origWidth != processingWidth && origWidth <= 128 then  -- Remove any that don't evaluate to the expr in the original width. We constrain the width because shifting by large values crash Lean
+                let origPackedBV := origRhsSymVars[var]!
+                let h : origPackedBV.w = origWidth := sorry
+
+                let mut prunedExprs' : List (BVExpr w) := []
+                for expr in prunedExprs do
+                  let evaluatedVal := evalBVExpr origLhsSymVars origWidth expr
+                  if evaluatedVal == (h ▸ origPackedBV.bv) then
+                    prunedExprs' := expr :: prunedExprs'
+
+                prunedExprs := prunedExprs'
+
+              tempResults := tempResults.insert var prunedExprs --.reverse
           pure tempResults
 
+structure GeneralizerState where
+  processingWidth : Nat
+  targetWidth : Nat
+  parsedBVLogicalExpr : ParsedBVLogicalExpr
+  needsPreconditionsExprs : List BVLogicalExpr
+  visitedSubstitutions : Std.HashSet BVLogicalExpr
+  bottomUpEnumerationCache : Std.HashMap (BVExpr processingWidth) BVExpr.PackedBitVec
+
+abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
+
+def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
+  logInfo m! "Expression synthesis results : {exprSynthesisResults}"
+  let combinations := productsList exprSynthesisResults.values
+  logInfo m! "combinations : {combinations}"
+  let mut substitutions := []
+
+  let state ← get
+  let parsedBVLogicalExpr := state.parsedBVLogicalExpr
+  let mut visited := state.visitedSubstitutions
+
+  for combo in combinations do
+    -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
+    let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
+    let substitution := substitute parsedBVLogicalExpr.bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
+    if !visited.contains substitution then
+      substitutions := substitution :: substitutions
+      visited := visited.insert substitution
+
+  let mut needsPreconditionExprs := state.needsPreconditionsExprs
+  for subst in substitutions do
+    let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
+    if negativeExample.isEmpty then
+      return some subst
+    needsPreconditionExprs := subst :: needsPreconditionExprs
+
+  let updatedState := {state with visitedSubstitutions := visited, needsPreconditionsExprs := needsPreconditionExprs}
+  set updatedState
+
+  return none
+
+def bottomUpEnumerateFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) (ops: List (BVExpr w → BVExpr w → BVExpr w)) : GeneralizerStateM (Std.HashMap Nat (List (BVExpr w))) := do
+    let zero := BitVec.ofNat w 0
+    let one := BitVec.ofNat w 1
+    let minusOne := BitVec.ofInt w (-1)
+
+    let specialConstants : Std.HashMap (BVExpr w) BVExpr.PackedBitVec := Std.HashMap.ofList [
+      (BVExpr.const one, {bv := one}),
+      (BVExpr.const minusOne, {bv := minusOne})
+    ]
+
+    let mut rhsVarByValue : Std.HashMap (BitVec w) Nat := Std.HashMap.emptyWithCapacity
+    for (var, value) in rhsSymVars.toArray do
+      let h : value.w = w := sorry
+      rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
+
+
+    let state ← get
+    let h : state.processingWidth = w := sorry
+    let mut previousLevelCache := state.bottomUpEnumerationCache
+
+    if previousLevelCache.isEmpty then
+      previousLevelCache := h ▸ allLhsVars
+
+    let mut currentCache := Std.HashMap.emptyWithCapacity
+
+    let mut res : Std.HashMap Nat (List (BVExpr w)):= Std.HashMap.emptyWithCapacity
+    for (bvExpr, packedBV) in previousLevelCache.toArray do
+      let h' : packedBV.w = w := sorry
+
+      let packedBVExpr : BVExpr w := BVExpr.const (h' ▸ packedBV.bv)
+
+      for (lhsVar, lhsVal) in allLhsVars.toArray do
+        for op in ops do
+          let evaluatedRes := evalBVExpr lhsSymVars w (op packedBVExpr lhsVar)
+
+          let mut newExpr : BVExpr w := op (h ▸ bvExpr) lhsVar
+          let rhsVarForValue := rhsVarByValue[evaluatedRes]?
+
+          match rhsVarForValue with
+          | some rhsVar =>
+              let existingCandidates := res.getD rhsVar []
+              res := res.insert rhsVar (newExpr::existingCandidates)
+          | none =>
+            if evaluatedRes == h' ▸ packedBV.bv then
+              newExpr := h ▸ bvExpr
+            currentCache := currentCache.insert newExpr {bv := evaluatedRes : BVExpr.PackedBitVec}
+
+    set {state with bottomUpEnumerationCache := h ▸ currentCache}
+    pure res
+
+
+def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)): GeneralizerStateM (Option BVLogicalExpr) :=  do
+    let state ← get
+    let parsedBVLogicalExpr := state.parsedBVLogicalExpr
+    let processingWidth := state.processingWidth
+
+    let mut exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth)) := Std.HashMap.emptyWithCapacity
+
+    for constantAssignment in constantAssignments do
+        logInfo m! "Processing constants assignment: {constantAssignment}"
+        let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
+        let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
+        let h : lhs.width = processingWidth := sorry
+
+        let lhsAssignments := constantAssignment.filter (fun k _ => lhs.symVars.contains k)
+        let rhsAssignments := constantAssignment.filter (fun k _ => rhs.symVars.contains k)
+
+        logInfo m! "Performing deductive search"
+        for (targetId, targetVal) in rhsAssignments do
+          let deductiveSearchRes ← deductiveSearch lhs.bvExpr lhsAssignments targetVal 3 1234
+          match deductiveSearchRes with
+          | [] => break
+          | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (h ▸ deductiveSearchRes)
+
+        if exprSynthesisResults.size == rhsAssignments.size then
+          exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+          match (← checkForNoPreconditionRequired exprSynthesisResults) with
+          | some expr => return (some expr)
+          | none => logInfo m! "Could not find a generalized form from just deductive search"
+
+
+        logInfo m! "Performing enumerative search using a sketch of the LHS"
+        let lhsSketchResults := lhsSketchEnumeration lhs.bvExpr lhs.inputVars.keys lhsAssignments rhsAssignments
+        for (var, exprs) in lhsSketchResults.toArray do
+          let existingExprs := exprSynthesisResults.getD var []
+          exprSynthesisResults := exprSynthesisResults.insert var ((h ▸ exprs) ++ existingExprs)
+
+        if !lhsSketchResults.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
+          let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
+          match preconditionCheckResults with
+          | some expr => return (some expr)
+          | none => logInfo m! "Could not find a generalized form from a sketch of the LHS"
+
+
+        logInfo m! "Performing bottom-up enumerative search one level at a time"
+        let zero := BitVec.ofNat processingWidth 0
+        let one := BitVec.ofNat processingWidth 1
+        let minusOne := BitVec.ofInt processingWidth (-1)
+
+        let specialConstants : Std.HashMap (BVExpr state.processingWidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
+          (BVExpr.const one, {bv := one}),
+          (BVExpr.const minusOne, {bv := minusOne})
+        ]
+
+        let mut allLHSVars := specialConstants
+        for (var, value) in lhsAssignments.toArray do
+          allLHSVars := allLHSVars.insert (BVExpr.var var) value
+          allLHSVars := allLHSVars.insert (BVExpr.un BVUnOp.not ((BVExpr.var var))) {bv := BitVec.not (value.bv)}
+
+        let ops := [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
+
+        let mut currentLevel := 1
+        while currentLevel < lhs.symVars.size do
+          logInfo m! "Expression Synthesis Processing level {currentLevel}"
+
+          let bottomUpRes ← bottomUpEnumerateFromCache allLHSVars lhsAssignments rhsAssignments ops
+          for (var, exprs) in bottomUpRes.toArray do
+            let existingExprs := exprSynthesisResults.getD var []
+            exprSynthesisResults := exprSynthesisResults.insert var (exprs ++ existingExprs)
+
+          if !bottomUpRes.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
+            let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
+            match preconditionCheckResults with
+            | some expr => return some expr
+            | none => logInfo m! "Could not find a generalized form from processing level {currentLevel}"
+
+
+          currentLevel :=  currentLevel + 1
+
+    return none
+
+def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions := 0) : GeneralizerStateM (Option ( BVLogicalExpr × BVLogicalExpr)) := do
+  let state ← get
+  let parsedBVLogicalExpr := state.parsedBVLogicalExpr
+
+  let positiveExamples := constantAssignments.map (fun assignment => assignment.filter (fun key _ => parsedBVLogicalExpr.lhs.symVars.contains key))
+
+  for numConjunctions in (List.range (maxConjunctions + 1)) do
+    logInfo m! "Running with {numConjunctions} allowed conjunctions"
+    for expr in state.needsPreconditionsExprs.reverse do
+        let widthId := 9481
+        let negativeExamples ← getNegativeExamples expr positiveExamples[0]!.keys 3
+        logInfo m! "Negative examples for {expr} : {negativeExamples}"
+
+        let precondition ← withTraceNode `Generalize (fun _ => return m! "Attempted to generate weak precondition for {expr}") do
+                      generatePreconditions parsedBVLogicalExpr expr positiveExamples negativeExamples (widthId, state.processingWidth) numConjunctions
+
+        match precondition with
+        | none => logInfo m! "Could not generate precondition for expr: {expr} with negative examples: {negativeExamples}"
+        | some weakPC =>
+                logInfo m! "Expr: {expr} has weak precondition: {weakPC}"
+                return some (weakPC, expr)
+
+  return none
+
+def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option String) := do
+    let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
+        synthesizeAndCheckNoPreconditionNeeded constantAssignments
+
+    match exprWithNoPrecondition with
+    | some generalized => return some (s! "General form {generalized} has no precondition")
+    | none =>
+              let state ← get
+              logInfo m! "Needs precondition: {(← get).needsPreconditionsExprs}"
+              if state.needsPreconditionsExprs.isEmpty then
+                throwError m! "Could not synthesise constant expressions for {state.parsedBVLogicalExpr.bvLogicalExpr}"
+
+              let preconditionRes ← withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
+                checkForPreconditions constantAssignments
+
+              match preconditionRes with
+              | some (pc, expr) => return some s! "Expr {expr} has weak precondition: {pc}"
+              | none => return none
+    -- TODO:  verify width independence
 
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
@@ -1284,197 +1375,235 @@ elab "#generalize" expr:term: command =>
 
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
-           let startTime ← Core.liftIOCore IO.monoMsNow
+            let startTime ← Core.liftIOCore IO.monoMsNow
 
-           -- Parse the input expression
-           let initialState : ParsedBVExprState := default
-           let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
-             | throwError "Unsupported expression provided"
+            -- Parse the input expression
+            let initialState : ParsedBVExprState := default
+            let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
+              | throwError "Unsupported expression provided"
 
-           let mut bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
-           let state := parsedBVLogicalExpr.state
-           logInfo m! "bvExpr: {bvLogicalExpr}, state: {state}"
-
-           let originalWidth := state.originalWidth
-           let mut constantAssignments := []
+            let mut bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
+            let parsedBVState := parsedBVLogicalExpr.state
+            let originalWidth := parsedBVState.originalWidth
 
            -- TODO: Verify correctness in the original width
 
-           --- Synthesize constants in a lower width if needed
-           if originalWidth > targetWidth then
-              constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 2
+            let mut constantAssignments := []
+            --- Synthesize constants in a lower width if needed
+            if originalWidth > targetWidth then
+              constantAssignments ← existsForAll bvLogicalExpr parsedBVState.symVarToVal.keys parsedBVState.inputBVExprVarToExpr.keys 1
 
-           let mut processingWidth := targetWidth
-           if constantAssignments.isEmpty then
+            let mut processingWidth := targetWidth
+            if constantAssignments.isEmpty then
               logInfo m! "Did not synthesize new constant values in width {targetWidth}"
-              constantAssignments := state.symVarToVal :: constantAssignments
+              constantAssignments := parsedBVState.symVarToVal :: constantAssignments
               processingWidth := originalWidth
 
-           -- We initially return the BVLogicalExpr in the target width; Revert to the original width if necessary
-           if processingWidth != targetWidth then
-            bvLogicalExpr := changeBVLogicalExprWidth bvLogicalExpr processingWidth
-           logInfo m! "Using values for {bvLogicalExpr} in width {processingWidth}: {constantAssignments}"
+            if processingWidth != targetWidth then
+                -- Revert to the original width if necessary
+              bvLogicalExpr := changeBVLogicalExprWidth bvLogicalExpr processingWidth
+              logInfo m! "Using values for {bvLogicalExpr} in width {processingWidth}: {constantAssignments}"
+
+            let initialGeneralizerState : GeneralizerState :=
+              { processingWidth           := processingWidth
+              , targetWidth               := targetWidth
+              , parsedBVLogicalExpr       := { parsedBVLogicalExpr with bvLogicalExpr := bvLogicalExpr }
+              , needsPreconditionsExprs   := []
+              , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
+              , bottomUpEnumerationCache  := Std.HashMap.emptyWithCapacity
+              }
+
+            let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
+              match generalizeRes with
+              | some res => logInfo m! "{res}"
+              | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
 
-           let preconditionCheckResults  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
-              let mut exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth)) := Std.HashMap.emptyWithCapacity
-              let mut visited : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
+          --  --- Synthesize constants in a lower width if needed
+          --  if originalWidth > targetWidth then
+          --     constantAssignments ← existsForAll bvLogicalExpr state.symVarToVal.keys state.inputBVExprVarToExpr.keys 1
 
-              let checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : TermElabM PreconditionCheckResults := do
-                logInfo m! "Expression synthesis results : {exprSynthesisResults}"
-                let combinations := productsList exprSynthesisResults.values
-                let mut substitutions := Std.HashSet.emptyWithCapacity
+          --  let mut processingWidth := targetWidth
+          --  if constantAssignments.isEmpty then
+          --     logInfo m! "Did not synthesize new constant values in width {targetWidth}"
+          --     constantAssignments := state.symVarToVal :: constantAssignments
+          --     processingWidth := originalWidth
 
-                for combo in combinations do
-                  -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
-                  let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
-                  let substitution := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
-                  if !visited.contains substitution then
-                    substitutions := substitutions.insert substitution
-
-                for subst in substitutions do
-                  let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
-                  if negativeExample.isEmpty then
-                    return { needsPrecondition := false, exprs := [subst]}
-
-                return {needsPrecondition := true, exprs := substitutions.toList }
+          --  -- Revert to the original width if necessary
+          --  if processingWidth != targetWidth then
+          --   bvLogicalExpr := changeBVLogicalExprWidth bvLogicalExpr processingWidth
+          --  logInfo m! "Using values for {bvLogicalExpr} in width {processingWidth}: {constantAssignments}"
 
 
-              for constantAssignment in constantAssignments do
-                  logInfo m! "Processing constants assignment: {constantAssignment}"
-                  let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
-                  let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
-                  let h : lhs.width = processingWidth := sorry
-
-                  let lhsAssignments := constantAssignment.filter (fun k _ => lhs.symVars.contains k)
-                  let rhsAssignments := constantAssignment.filter (fun k _ => rhs.symVars.contains k)
-
-                  ---- Begin with a deductive search
-                  logInfo m! "Performing deductive search"
-                  for (targetId, targetVal) in rhsAssignments do
-                    let deductiveSearchRes ← deductiveSearch lhs.bvExpr lhs.symVars targetVal 3 1234 -- TODO: should this be lhsAssignments
-                    match deductiveSearchRes with
-                    | [] => break
-                    | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (h ▸ deductiveSearchRes)
-
-                  if exprSynthesisResults.size == rhsAssignments.size then
-                    exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
-                    let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
-                    if !preconditionCheckResults.needsPrecondition then
-                      return preconditionCheckResults
-
-                    visited := visited.insertMany (Std.HashSet.ofList preconditionCheckResults.exprs)
+          --  let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
+          --       (synthesizeAndCheckNoPreconditionNeeded constantAssignments).run' initialGeneralizerState
 
 
-                  logInfo m! "Performing enumerative search using a sketch of the LHS"
-                  let lhsSketchResults := lhsSketchEnumeration lhs.bvExpr lhs.inputVars.keys lhs.symVars rhs.symVars
-                  if !lhsSketchResults.isEmpty then
-                    exprSynthesisResults ← pruneConstantExprsSynthesisResults (Std.HashMap.union exprSynthesisResults (h ▸ lhsSketchResults))
-                    let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
 
-                    if !preconditionCheckResults.needsPrecondition then
-                      return preconditionCheckResults
+          --  let preconditionCheckResults  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
+          --     let mut exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth)) := Std.HashMap.emptyWithCapacity
+          --     let mut visited : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
 
-                    visited := visited.insertMany (Std.HashSet.ofList preconditionCheckResults.exprs)
+          --     let checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : TermElabM PreconditionCheckResults := do
+          --       logInfo m! "Expression synthesis results : {exprSynthesisResults}"
+          --       let combinations := productsList exprSynthesisResults.values
+          --       logInfo m! "combinations : {combinations}"
+          --       let mut substitutions := []
 
+          --       for combo in combinations do
+          --         -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
+          --         let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
+          --         let substitution := substitute bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
+          --         if !visited.contains substitution then
+          --           substitutions := substitution :: substitutions
+          --         else
+          --           logInfo m! "{substitution} has been visited"
 
-                  logInfo m! "Performing bottom-up enumerative search one level at a time"
-                  let zero := BitVec.ofNat processingWidth 0
-                  let one := BitVec.ofNat processingWidth 1
-                  let minusOne := BitVec.ofInt processingWidth (-1)
+          --       for subst in substitutions do
+          --         let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
+          --         if negativeExample.isEmpty then
+          --           return { needsPrecondition := false, exprs := [subst]}
 
-                  let specialConstants : Std.HashMap (BVExpr processingWidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
-                    (BVExpr.const one, {bv := one}),
-                    (BVExpr.const minusOne, {bv := minusOne})
-                  ]
-
-                  let mut rhsVarByValue : Std.HashMap (BitVec processingWidth) Nat := Std.HashMap.emptyWithCapacity
-                  for (var, value) in rhsAssignments.toArray do
-                    let h : value.w = processingWidth := sorry
-                    rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
-
-                  let mut allLHSVars := specialConstants
-                  for (var, value) in lhsAssignments.toArray do
-                    allLHSVars := allLHSVars.insert (BVExpr.var var) value
-                    allLHSVars := allLHSVars.insert (BVExpr.un BVUnOp.not ((BVExpr.var var))) {bv := BitVec.not (value.bv)}
-
-                  let mut previousLevelCache := allLHSVars
-                  let ops := [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
-
-                  let mut currentLevel := 1
-                  while currentLevel < lhs.symVars.size do
-                    logInfo m! "Expression Synthesis Processing level {currentLevel}"
-                    let mut currentCache := Std.HashMap.emptyWithCapacity
-
-                    let mut matchedTarget : Bool := false
-                    for (bvExpr, packedBV) in previousLevelCache.toArray do
-                      let h : packedBV.w = processingWidth := sorry
-                      let packedBVExpr : BVExpr processingWidth := BVExpr.const (h ▸ packedBV.bv)
-
-                      for (lhsVar, lhsVal) in allLHSVars.toArray do
-                        for op in ops do
-                          let evaluatedExprVal := evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar)
-                          let rhsVarsForValue := rhsVarByValue[evaluatedExprVal]?
-
-                          match rhsVarsForValue with
-                          | some rhsVar =>
-                              matchedTarget := true
-                              let existingCandidates := exprSynthesisResults.getD rhsVar []
-                              exprSynthesisResults := exprSynthesisResults.insert rhsVar ((op bvExpr lhsVar)::existingCandidates)
-                          | none =>
-                            let mut newExpr :=  op bvExpr lhsVar
-                            if evaluatedExprVal == h ▸ packedBV.bv then
-                              newExpr := bvExpr
-                            currentCache := currentCache.insert newExpr {bv := (evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar))}
+          --       return {needsPrecondition := true, exprs := substitutions.reverse }
 
 
-                    if matchedTarget then
-                      exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
-                      let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
-                      if !preconditionCheckResults.needsPrecondition then
-                        return preconditionCheckResults
+          --     for constantAssignment in constantAssignments do
+          --         logInfo m! "Processing constants assignment: {constantAssignment}"
+          --         let lhs := updateConstantValues parsedBVLogicalExpr.lhs constantAssignment
+          --         let rhs := updateConstantValues parsedBVLogicalExpr.rhs constantAssignment
+          --         let h : lhs.width = processingWidth := sorry
 
-                      visited := visited.insertMany (Std.HashSet.ofList preconditionCheckResults.exprs)
+          --         let lhsAssignments := constantAssignment.filter (fun k _ => lhs.symVars.contains k)
+          --         let rhsAssignments := constantAssignment.filter (fun k _ => rhs.symVars.contains k)
 
-                    previousLevelCache := currentCache
-                    currentLevel :=  currentLevel + 1
+          --         ---- Begin with a deductive search
+          --         logInfo m! "Performing deductive search"
+          --         for (targetId, targetVal) in rhsAssignments do
+          --           let deductiveSearchRes ← deductiveSearch lhs.bvExpr lhsAssignments targetVal 3 1234
+          --           match deductiveSearchRes with
+          --           | [] => break
+          --           | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (h ▸ deductiveSearchRes)
 
-              if visited.isEmpty then
-                throwError m! "Could not synthesise constant expressions for {bvLogicalExpr}"
+          --         if exprSynthesisResults.size == rhsAssignments.size then
+          --           exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+          --           let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
+          --           if !preconditionCheckResults.needsPrecondition then
+          --             return preconditionCheckResults
 
-              return {needsPrecondition := true, exprs := visited.toList}
+          --           visited := visited.insertMany (Std.HashSet.ofList preconditionCheckResults.exprs)
 
-           if preconditionCheckResults.needsPrecondition then
-            let positiveExamples := constantAssignments.map (fun assignment => assignment.filter (fun key _ => parsedBVLogicalExpr.lhs.symVars.contains key))
-            let preconditionSuccess ← withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
-                for numConjunctions in (List.range 1) do
-                  logInfo m! "Running with {numConjunctions} allowed conjunctions"
-                  for substitutedBVLogicalExpr in preconditionCheckResults.exprs do
-                      let widthId := 9481
-                      let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr positiveExamples[0]!.keys 3
-                      logInfo m! "Negative examples for {substitutedBVLogicalExpr} : {negativeExamples}"
 
-                      let precondition ← withTraceNode `Generalize (fun _ => return m! "Attempted to generate weak precondition for {substitutedBVLogicalExpr}") do
-                                    generatePreconditions parsedBVLogicalExpr substitutedBVLogicalExpr positiveExamples negativeExamples (widthId, processingWidth) numConjunctions
+          --         logInfo m! "Performing enumerative search using a sketch of the LHS"
+          --         let lhsSketchResults := lhsSketchEnumeration lhs.bvExpr lhs.inputVars.keys lhsAssignments rhsAssignments
+          --         if !lhsSketchResults.isEmpty then
+          --           for (var, exprs) in lhsSketchResults.toArray do
+          --             let existingExprs := exprSynthesisResults.getD var []
+          --             exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ (h ▸ exprs))
 
-                      match precondition with
-                      | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr} with negative examples: {negativeExamples}"
-                      | some weakPC =>
-                              logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
-                              return true -- TODO: we then need to verify width independence
+          --           let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
+          --           if !preconditionCheckResults.needsPrecondition then
+          --             return preconditionCheckResults
 
-                      let currentTime ← Core.liftIOCore IO.monoMsNow
-                      let elapsedTime := currentTime - startTime
+          --           visited := visited.insertMany (Std.HashSet.ofList preconditionCheckResults.exprs)
 
-                      trace[Generalize] m! "Elapsed time: {elapsedTime/1000}s"
-                      if elapsedTime >= timeoutMs then
-                          throwError m! "Synthesis Timeout Failure: Exceeded timeout of {timeoutMs/1000}s"
 
-                throwError m! "Could not generalize {bvLogicalExpr}"
-           else
-            match preconditionCheckResults.exprs with
-            | [] => throwError m! "Invalid state reached. Expected a bvLogicalExpr"
-            | x::xs => logInfo m! "General form {x} has no preconditions."
+          --         logInfo m! "Performing bottom-up enumerative search one level at a time"
+          --         let zero := BitVec.ofNat processingWidth 0
+          --         let one := BitVec.ofNat processingWidth 1
+          --         let minusOne := BitVec.ofInt processingWidth (-1)
+
+          --         let specialConstants : Std.HashMap (BVExpr processingWidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
+          --           (BVExpr.const one, {bv := one}),
+          --           (BVExpr.const minusOne, {bv := minusOne})
+          --         ]
+
+          --         let mut rhsVarByValue : Std.HashMap (BitVec processingWidth) Nat := Std.HashMap.emptyWithCapacity
+          --         for (var, value) in rhsAssignments.toArray do
+          --           let h : value.w = processingWidth := sorry
+          --           rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
+
+          --         let mut allLHSVars := specialConstants
+          --         for (var, value) in lhsAssignments.toArray do
+          --           allLHSVars := allLHSVars.insert (BVExpr.var var) value
+          --           allLHSVars := allLHSVars.insert (BVExpr.un BVUnOp.not ((BVExpr.var var))) {bv := BitVec.not (value.bv)}
+
+          --         let mut previousLevelCache := allLHSVars
+          --         let ops := [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
+
+          --         let mut currentLevel := 1
+          --         while currentLevel < lhs.symVars.size do
+          --           logInfo m! "Expression Synthesis Processing level {currentLevel}"
+          --           let mut currentCache := Std.HashMap.emptyWithCapacity
+
+          --           let mut matchedTarget : Bool := false
+          --           for (bvExpr, packedBV) in previousLevelCache.toArray do
+          --             let h : packedBV.w = processingWidth := sorry
+          --             let packedBVExpr : BVExpr processingWidth := BVExpr.const (h ▸ packedBV.bv)
+
+          --             for (lhsVar, lhsVal) in allLHSVars.toArray do
+          --               for op in ops do
+          --                 let evaluatedExprVal := evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar)
+          --                 let rhsVarsForValue := rhsVarByValue[evaluatedExprVal]?
+
+          --                 match rhsVarsForValue with
+          --                 | some rhsVar =>
+          --                     matchedTarget := true
+          --                     let existingCandidates := exprSynthesisResults.getD rhsVar []
+          --                     exprSynthesisResults := exprSynthesisResults.insert rhsVar ((op bvExpr lhsVar)::existingCandidates)
+          --                 | none =>
+          --                   let mut newExpr :=  op bvExpr lhsVar
+          --                   if evaluatedExprVal == h ▸ packedBV.bv then
+          --                     newExpr := bvExpr
+          --                   currentCache := currentCache.insert newExpr {bv := (evalBVExpr lhsAssignments processingWidth (op packedBVExpr lhsVar))}
+
+
+          --           if matchedTarget then
+          --             exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+          --             let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
+          --             if !preconditionCheckResults.needsPrecondition then
+          --               return preconditionCheckResults
+
+          --             visited := visited.insertMany (Std.HashSet.ofList preconditionCheckResults.exprs)
+
+          --           previousLevelCache := currentCache
+          --           currentLevel :=  currentLevel + 1
+
+          --     if visited.isEmpty then
+          --       throwError m! "Could not synthesise constant expressions for {bvLogicalExpr}"
+
+          --     return {needsPrecondition := true, exprs := visited.toList}
+
+          --  if preconditionCheckResults.needsPrecondition then
+          --   let positiveExamples := constantAssignments.map (fun assignment => assignment.filter (fun key _ => parsedBVLogicalExpr.lhs.symVars.contains key))
+          --   let preconditionSuccess ← withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
+          --       for numConjunctions in (List.range 1) do
+          --         logInfo m! "Running with {numConjunctions} allowed conjunctions"
+          --         for substitutedBVLogicalExpr in preconditionCheckResults.exprs do
+          --             let widthId := 9481
+          --             let negativeExamples ← getNegativeExamples substitutedBVLogicalExpr positiveExamples[0]!.keys 3
+          --             logInfo m! "Negative examples for {substitutedBVLogicalExpr} : {negativeExamples}"
+
+          --             let precondition ← withTraceNode `Generalize (fun _ => return m! "Attempted to generate weak precondition for {substitutedBVLogicalExpr}") do
+          --                           generatePreconditions parsedBVLogicalExpr substitutedBVLogicalExpr positiveExamples negativeExamples (widthId, processingWidth) numConjunctions
+
+          --             match precondition with
+          --             | none => logInfo m! "Could not generate precondition for expr: {substitutedBVLogicalExpr} with negative examples: {negativeExamples}"
+          --             | some weakPC =>
+          --                     logInfo m! "Expr: {substitutedBVLogicalExpr} has weak precondition: {weakPC}"
+          --                     return true -- TODO: we then need to verify width independence
+
+          --             let currentTime ← Core.liftIOCore IO.monoMsNow
+          --             let elapsedTime := currentTime - startTime
+
+          --             trace[Generalize] m! "Elapsed time: {elapsedTime/1000}s"
+          --             if elapsedTime >= timeoutMs then
+          --                 throwError m! "Synthesis Timeout Failure: Exceeded timeout of {timeoutMs/1000}s"
+
+          --       throwError m! "Could not generalize {bvLogicalExpr}"
+          --  else
+          --   match preconditionCheckResults.exprs with
+          --   | [] => throwError m! "Invalid state reached. Expected a bvLogicalExpr"
+          --   | x::xs => logInfo m! "General form {x} has no preconditions."
 
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
       pure ()
@@ -1487,5 +1616,9 @@ variable {x y : BitVec 8}
 -- #generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8
 -- #generalize (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13)
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+#generalize x <<< 7#8 ||| BitVec.ofInt 8 (-128) = BitVec.ofInt 8 (-128)
 -- #generalize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32
+
+variable {x y z: BitVec 232}
+#generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - lshr_lshr_thm; #17
 end Generalize
