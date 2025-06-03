@@ -1,6 +1,7 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -41,3 +42,7 @@ def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
         right_eq_ite_iff]
       bv_omega
   }
+
+def urem_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_urem_lower_riscv]

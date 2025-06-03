@@ -1,6 +1,7 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -521,3 +522,12 @@ def icmp_sle_riscv_eq_icmp_sle_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
       BitVec.signExtend_xor]
     bv_decide
   }
+
+def icmp_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+   [icmp_ugt_riscv_eq_icmp_ugt_llvm_i64, icmp_uge_riscv_eq_icmp_uge_llvm_i64,
+    icmp_sle_riscv_eq_icmp_sle_llvm_i64]
+  ++
+ List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+    [icmp_uge_riscv_eq_icmp_uge_llvm_i32, icmp_slt_riscv_eq_icmp_slt_llvm_i32,
+    icmp_sle_riscv_eq_icmp_sle_llvm_i32]
