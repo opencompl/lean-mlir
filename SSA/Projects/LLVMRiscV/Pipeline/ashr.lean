@@ -71,5 +71,5 @@ def llvm_ashr_lower_riscv_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
     bv_omega
 
 def ashr_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_ashr_lower_riscv_no_flag,llvm_ashr_lower_riscv_flag]

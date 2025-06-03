@@ -524,10 +524,10 @@ def icmp_sle_riscv_eq_icmp_sle_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   }
 
 def icmp_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewriteBin 64 1 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
    [icmp_ugt_riscv_eq_icmp_ugt_llvm_i64, icmp_uge_riscv_eq_icmp_uge_llvm_i64,
     icmp_sle_riscv_eq_icmp_sle_llvm_i64]
   ++
- List.map (fun x => mkRewriteBin 32 1 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+ List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
     [icmp_uge_riscv_eq_icmp_uge_llvm_i32, icmp_slt_riscv_eq_icmp_slt_llvm_i32,
     icmp_sle_riscv_eq_icmp_sle_llvm_i32]

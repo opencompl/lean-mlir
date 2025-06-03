@@ -38,8 +38,8 @@ For future extensions on how to add a new rewrite to the instruction selection p
      such an issue, add your rewrite to a new array.
 -/
 
-
-def rewrittingPatterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+/- Array containing the first batch of rewrites-/
+def rewritingPatterns0 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     add_match,
@@ -51,7 +51,9 @@ def rewrittingPatterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
     rem_match,
     sdiv_match]
 
-def rewrittingPatterns2 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+/- Array containing the second batch of rewrites. We split it up in tw oarrays to avoid a stackoverflow, when
+invoking the rewriter with large size arrays.-/
+def rewritingPatterns1 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     sext_match,
@@ -73,9 +75,9 @@ def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ t
 Pipeline structure:
  DCE (avoid lowering unnecessary instructions)
   ->
-    lowerPart1 (lowering instruction of contained in the first array `rewrittingPatterns`)
+    lowerPart1 (lowering instruction of contained in the first array `rewritingPatterns0`)
         ->
-          lowerPart2 (lowering instruction of contained in the array `rewrittingPatterns2`)
+          lowerPart2 (lowering instruction of contained in the array `rewritingPatterns1`)
               ->
                 DCE (to remove the llvm instructions)
                     ->
@@ -97,9 +99,9 @@ a maximal of 100 steps is performed. Currently we need to set this limit to avoi
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
   let lowerPart1 := (multiRewritePeephole 100
-    (@rewrittingPatterns2 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) rmInitialDeadCode);
+    (@rewritingPatterns1 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) rmInitialDeadCode);
   let lowerPart2 := (multiRewritePeephole 100
-    (@rewrittingPatterns (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) lowerPart1);
+    (@rewritingPatterns0 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) lowerPart1);
   let postLoweringDCE := (DCE.dce' lowerPart2).val;
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;

@@ -10,21 +10,7 @@ open LLVMRiscV
    operand of a specified width. The functions return a dependent pair containing
    the input types, output type, and the rewrite itself.
 -/
-def mkRewriteBin
-  (inWidth : Nat)
-  (outWidth : Nat)
-  (rw : PeepholeRewrite LLVMPlusRiscV [Ty.llvm (.bitvec inWidth), Ty.llvm (.bitvec inWidth)]
-  (Ty.llvm (.bitvec outWidth))) :
-  Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
-  ⟨[Ty.llvm (.bitvec inWidth), Ty.llvm (.bitvec inWidth)],
-   Ty.llvm (.bitvec outWidth),
-   rw⟩
-
-def mkRewriteUn
-  (inWidth : Nat)
-  (outWidth : Nat)
-  (rw : PeepholeRewrite LLVMPlusRiscV [Ty.llvm (.bitvec inWidth)] (Ty.llvm (.bitvec outWidth))) :
-  Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
-  ⟨[Ty.llvm (.bitvec inWidth)],
-   Ty.llvm (.bitvec outWidth),
-   rw⟩
+def mkRewrite {Γ ty}
+    (rw : PeepholeRewrite LLVMPlusRiscV Γ ty) :
+    Σ Γ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
+  ⟨_, _, rw⟩

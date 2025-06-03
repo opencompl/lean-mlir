@@ -287,13 +287,13 @@ def llvm_sext_lower_riscv_i16_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.b
   }
 
 def sext_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-    [ mkRewriteUn 1 8 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i8),
-      mkRewriteUn 1 16 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i16),
-      mkRewriteUn 1 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i32),
-      mkRewriteUn 1 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i64),
-      mkRewriteUn 8 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i64),
-      mkRewriteUn 8 16 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i16),
-      mkRewriteUn 8 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i32),
-      mkRewriteUn 16 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_i32),
-      mkRewriteUn 16 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_i64),
+    [  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i8),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i16),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i32),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i64),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i64),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i16),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i32),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_i32),
+       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_i64),
    ]
