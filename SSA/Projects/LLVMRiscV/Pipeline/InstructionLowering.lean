@@ -19,7 +19,10 @@ import SSA.Projects.LLVMRiscV.Pipeline.urem
 import SSA.Projects.LLVMRiscV.Pipeline.xor
 import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
+<<<<<<< HEAD
 import SSA.Projects.LLVMRiscV.Pipeline.select
+=======
+>>>>>>> origin/main
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
@@ -39,8 +42,13 @@ For future extensions on how to add a new rewrite to the instruction selection p
      such an issue, add your rewrite to a new array.
 -/
 
+<<<<<<< HEAD
 
 def rewrittingPatterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+=======
+/- Array containing the first batch of rewrites-/
+def rewritingPatterns0 :
+>>>>>>> origin/main
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     add_match,
@@ -52,7 +60,13 @@ def rewrittingPatterns {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
     rem_match,
     sdiv_match]
 
+<<<<<<< HEAD
 def rewrittingPatterns2 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+=======
+/- Array containing the second batch of rewrites. We split it up in tw oarrays to avoid a stackoverflow, when
+invoking the rewriter with large size arrays.-/
+def rewritingPatterns1 :
+>>>>>>> origin/main
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     sext_match,
@@ -63,8 +77,12 @@ def rewrittingPatterns2 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
     udiv_match,
     urem_match,
     xor_match,
+<<<<<<< HEAD
     zext_match,
     select_match
+=======
+    zext_match
+>>>>>>> origin/main
   ]
 
 /-- Defines an array containing only the rewrite pattern which eliminates cast.-/
@@ -75,9 +93,15 @@ def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ t
 Pipeline structure:
  DCE (avoid lowering unnecessary instructions)
   ->
+<<<<<<< HEAD
     lowerPart1 (lowering instruction of contained in the first array `rewrittingPatterns`)
         ->
           lowerPart2 (lowering instruction of contained in the array `rewrittingPatterns2`)
+=======
+    lowerPart1 (lowering instruction of contained in the first array `rewritingPatterns0`)
+        ->
+          lowerPart2 (lowering instruction of contained in the array `rewritingPatterns1`)
+>>>>>>> origin/main
               ->
                 DCE (to remove the llvm instructions)
                     ->
@@ -98,12 +122,20 @@ a maximal of 100 steps is performed. Currently we need to set this limit to avoi
  def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
+<<<<<<< HEAD
   let lowerPart1 := (multiRewritePeephole 100
     (@rewrittingPatterns2 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) rmInitialDeadCode);
   let lowerPart2 := (multiRewritePeephole 100
     (@rewrittingPatterns (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) lowerPart1);
   let lowerConst :=  multiRewritePeephole 100 (const_match) lowerPart2
   let postLoweringDCE := (DCE.dce' lowerConst).val;
+=======
+  let lowerPart1 := multiRewritePeephole 100
+    rewritingPatterns1  rmInitialDeadCode;
+  let lowerPart2 := multiRewritePeephole 100
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+>>>>>>> origin/main
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
   let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val; -- Rerun it to ensure that all dead code is removed.
@@ -134,4 +166,8 @@ def llvm01:=
     llvm.return %1 : i1
   }]
 
+<<<<<<< HEAD
  #eval! (selectionPipeFuelSafe llvm01)
+=======
+--#eval! (selectionPipeFuelSafe llvm00)
+>>>>>>> origin/main

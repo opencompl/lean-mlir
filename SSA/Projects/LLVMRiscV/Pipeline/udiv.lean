@@ -76,5 +76,9 @@ def llvm_udiv_lower_riscv_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
     }
 
 def udiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+<<<<<<< HEAD
   List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+=======
+  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+>>>>>>> origin/main
   [llvm_udiv_lower_riscv_flag, llvm_udiv_lower_riscv_no_flag]

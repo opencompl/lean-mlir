@@ -97,6 +97,10 @@ def llvm_add_lower_riscv_nuw_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.
 /- this defines the peephole rewrites for the add instruction which will be merged with all
 the other rewrites  -/
 def add_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+<<<<<<< HEAD
   List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+=======
+  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+>>>>>>> origin/main
   [llvm_add_lower_riscv_noflags,llvm_add_lower_riscv_nsw_flag, llvm_add_lower_riscv_nuw_flag,
   llvm_add_lower_riscv_nuw_nsw_flag]

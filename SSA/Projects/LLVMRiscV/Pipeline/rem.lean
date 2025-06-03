@@ -39,5 +39,9 @@ def llvm_rem_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
     simp
 
 def rem_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+<<<<<<< HEAD
    List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+=======
+   List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+>>>>>>> origin/main
   [llvm_rem_lower_riscv]
