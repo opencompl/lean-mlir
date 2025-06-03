@@ -39,7 +39,7 @@ For future extensions on how to add a new rewrite to the instruction selection p
 -/
 
 /- Array containing the first batch of rewrites-/
-def rewritingPatterns0 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+def rewritingPatterns0 :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     add_match,
@@ -53,7 +53,7 @@ def rewritingPatterns0 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
 
 /- Array containing the second batch of rewrites. We split it up in tw oarrays to avoid a stackoverflow, when
 invoking the rewriter with large size arrays.-/
-def rewritingPatterns1 {_Γ : List LLVMPlusRiscV.Ty} {_t : LLVMPlusRiscV.Ty} :
+def rewritingPatterns1 :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.flatten [
     sext_match,
