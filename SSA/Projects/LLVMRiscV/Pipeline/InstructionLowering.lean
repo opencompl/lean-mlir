@@ -98,10 +98,10 @@ a maximal of 100 steps is performed. Currently we need to set this limit to avoi
  def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
-  let lowerPart1 := (multiRewritePeephole 100
-    (@rewritingPatterns1 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) rmInitialDeadCode);
-  let lowerPart2 := (multiRewritePeephole 100
-    (@rewritingPatterns0 (Ctxt.ofList [.llvm (.bitvec 64),.llvm (.bitvec 64)]) (.llvm (.bitvec 64))) lowerPart1);
+  let lowerPart1 := multiRewritePeephole 100
+    rewritingPatterns1  rmInitialDeadCode;
+  let lowerPart2 := multiRewritePeephole 100
+    rewritingPatterns0 lowerPart1;
   let postLoweringDCE := (DCE.dce' lowerPart2).val;
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
