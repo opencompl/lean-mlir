@@ -223,8 +223,8 @@ def plot(args):
 
     solver_latex_names = {
         "mba": "MBA",
-        "kinduction_verifked": "KInduction",
-        "kinduction_unverified": "KInduction",
+        "kinduction_verifked": "KInductionVerified",
+        "kinduction_unverified": "KInductionUnverified",
         "bv_automata_classic": "Presburger",
         "bv_decide": "BvDecide"
     }
