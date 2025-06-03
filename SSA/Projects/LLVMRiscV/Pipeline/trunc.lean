@@ -266,17 +266,6 @@ def llvm_trunc_riscv_i32_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec
   }
 
 def trunc_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-<<<<<<< HEAD
-    [mkRewriteUn 32 16 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i16),
-      mkRewriteUn 64 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nuw_nsw),
-      mkRewriteUn 64 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nuw),
-      mkRewriteUn 64 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nsw),
-      mkRewriteUn 64 32 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32),
-      mkRewriteUn 32 8 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nuw_nsw),
-      mkRewriteUn 32 8 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nsw),
-      mkRewriteUn 32 8 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nuw),
-      mkRewriteUn 32 8 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8)]
-=======
     [ mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i16),
       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nuw_nsw),
       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nuw),
@@ -286,4 +275,3 @@ def trunc_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nsw),
       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nuw),
       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8)]
->>>>>>> origin/main

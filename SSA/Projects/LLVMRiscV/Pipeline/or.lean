@@ -66,9 +66,5 @@ def llvm_or_lower_riscv_disjoint : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
     bv_decide
 
 def or_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-<<<<<<< HEAD
-  List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-=======
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
->>>>>>> origin/main
     [llvm_or_lower_riscv_noflag, llvm_or_lower_riscv_disjoint]
