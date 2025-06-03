@@ -5,7 +5,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 open LLVMRiscV
 set_option Elab.async true
 
-/!-
+/-!
 This file contains the instruction lowering for the `llvm.select` instruction.
 
 LLVM version 11.0 lowers `select` to a conditional branch regardless of the

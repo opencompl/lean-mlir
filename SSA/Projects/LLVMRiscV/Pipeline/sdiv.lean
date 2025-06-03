@@ -1,6 +1,7 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -8,7 +9,7 @@ open LLVMRiscV
 
 def sdiv_llvm_no_exact := [LV| {
     ^entry (%x: i64, %y: i64):
-    %1 = llvm.sdiv  %x, %y : i64
+    %1 = llvm.sdiv %x, %y : i64
     llvm.return %1 : i64
   }]
 
@@ -57,3 +58,7 @@ def llvm_sdiv_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     simp only [hx, ↓reduceIte, Nat.ofNat_pos, PoisonOr.if_then_poison_isRefinedBy_iff, not_and,
       PoisonOr.isRefinedBy_self, implies_true] -- to do
     split <;> simp
+
+def sdiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_sdiv_lower_riscv_no_flag, llvm_sdiv_lower_riscv_exact]
