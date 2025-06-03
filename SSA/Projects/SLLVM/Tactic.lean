@@ -4,7 +4,7 @@ import SSA.Projects.InstCombine.Tactic.SimpLLVM
 import SSA.Projects.SLLVM.Tactic.SimpSet
 
 macro "simp_sllvm" : tactic => `(tactic|(
-  simp -failIfUnchanged only [simp_sllvm, simp_llvm, simp_llvm_option]
+  simp -failIfUnchanged only [simp_sllvm, simp_llvm, simp_llvm]
 ))
 
 attribute [simp_sllvm]
