@@ -123,9 +123,9 @@ def llvm_sub_nsw_nuw_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     simp
 
 def sub_match: List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-   List.map (fun x => mkRewriteBin 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_sub_lower_riscv_no_flag, llvm_sub_nsw_lower_riscv,
    llvm_sub_nuw_lower_riscv, llvm_sub_nsw_nuw_lower_riscv ]
   ++
-  [mkRewriteUn 64 64 (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND
+  [ mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND
   llvm_sub_lower_riscv_no_flag_self)]
