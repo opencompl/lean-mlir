@@ -14,4 +14,3 @@ def mkRewrite {Γ ty}
     (rw : PeepholeRewrite LLVMPlusRiscV Γ ty) :
     Σ Γ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
   ⟨_, _, rw⟩
-

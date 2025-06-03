@@ -29,7 +29,6 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   if args.hasFlag "verbose" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
     let code ← verbose_flag fileName
     return code
-
   if args.hasFlag "passriscv64" then -- lowering pass to a RISC-V 64 SSA-assembly IR
     let code ← passriscv64 fileName
     return code
