@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Usage: ./process.sh <input_file>
-
+cd $(dirname "$0")
 INPUT_FILE="$1"
 
 if [[ -z "$INPUT_FILE" ]]; then

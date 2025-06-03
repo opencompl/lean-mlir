@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-
+cd $(dirname "$0")
 INPUT_FILE="$1"
 
 awk '

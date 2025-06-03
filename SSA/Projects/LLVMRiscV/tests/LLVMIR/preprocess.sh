@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Use it as follows:
  #./preprocess.sh <input_file>
-
+cd $(dirname "$0")
 INPUT_FILE="$1"
 
 if [[ -z "$INPUT_FILE" ]]; then
