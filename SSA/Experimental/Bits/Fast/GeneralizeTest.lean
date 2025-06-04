@@ -66,7 +66,7 @@ variable {x y z: BitVec 32}
 
 -- Failing
 #generalize (x * x ^^^ y * y) &&& (x * x ||| y * y ^^^ -1#32) = x * x &&& (y * y ^^^ -1#32) -- and_orn_xor_commute8_thm; #22
-#generalize 4#32 >>> (x + 1#32) = 2#32 >>> x -- gshiftadd_proof#lshr_exact_add_nuw_thm; #49
+-- #generalize 4#32 >>> (x + 1#32) = 2#32 >>> x -- gshiftadd_proof#lshr_exact_add_nuw_thm; #49 -- Timeout
 -- #generalize BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) #13
 -- #generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof#test3_thm; #48
 

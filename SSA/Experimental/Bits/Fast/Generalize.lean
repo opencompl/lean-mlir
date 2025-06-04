@@ -1336,7 +1336,6 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
         match precondition with
         | none => logInfo m! "Could not generate precondition for expr: {expr} with negative examples: {negativeExamples}"
         | some weakPC =>
-                logInfo m! "Expr: {expr} has weak precondition: {weakPC}"
                 return some (weakPC, expr)
 
         let currentTime ← Core.liftIOCore IO.monoMsNow
