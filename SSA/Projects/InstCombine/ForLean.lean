@@ -207,31 +207,10 @@ lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a >
     have ha1' : a.toNat ≠ 1 := toNat_neq_of_neq_ofNat ha1
     omega
 
-def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
+def one_sdiv_eq_zero { w : Nat} {a : BitVec w} (ha1 : a ≠ 1)
     (hao : a ≠ allOnes w) :
     BitVec.sdiv (1#w) a = 0#w := by
-  rcases w with ⟨rfl | ⟨rfl | w⟩⟩
-  case zero => simp [BitVec.eq_nil a]
-  case succ w' =>
-    cases w'
-    case zero =>
-      rcases eq_zero_or_eq_one a with ⟨rfl | rfl⟩ <;> (simp only [Nat.reduceAdd, ofNat_eq_ofNat, ne_eq,
-        not_true_eq_false] at ha0)
-      case inr h => subst h; contradiction
-    case succ w' =>
-      simp only [BitVec.sdiv, lt_add_iff_pos_left, add_pos_iff, zero_lt_one,
-        or_true, msb_one, neg_eq]
-      by_cases h : a.msb <;> simp [h]
-      · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
-        apply BitVec.gt_one_of_neq_0_neq_1
-        · rw [neg_ne_iff_ne_neg]
-          simp only [_root_.neg_zero]
-          assumption
-        · rw [neg_ne_iff_ne_neg]
-          rw [← neg_one_eq_allOnes] at hao
-          assumption
-      · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
-        apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
+  simp_all [one_sdiv, ← BitVec.neg_one_eq_allOnes]
 
 def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
   by_cases w_0 : w = 0; subst w_0; rfl

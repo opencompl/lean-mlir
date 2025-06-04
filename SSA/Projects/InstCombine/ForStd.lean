@@ -100,8 +100,68 @@ theorem Int.natCast_pred_of_pos (x : Nat) (h : 0 < x) :
       (-·), Int.neg, Int.negOfNat, Int.subNatNat]
     simp
 
+@[simp]
 theorem ofBool_eq_one_iff (b : Bool) :
     ofBool b = 1#1 ↔ b = true := by
   cases b <;> simp
+
+theorem one_udiv (x : BitVec w) :
+    (1#w) / x = if x = 1#w then 1#w else 0#w := by
+  rcases w with _|w
+  · simp
+  · apply eq_of_toNat_eq
+    have : x = 1#_ ↔ x.toNat = 1 := by
+      constructor
+      · rintro rfl; simp
+      · intro h; apply eq_of_toNat_eq; simp [h]
+    simp only [toNat_udiv, toNat_ofNat, Nat.zero_lt_succ, Nat.one_mod_two_pow, this]
+    match x.toNat with
+    | 0 | 1 | x + 2 => simp
+
+theorem one_sdiv (x : BitVec w) :
+    (1#w).sdiv x =
+      if x = 1#w then
+        1#w
+      else if x = -1#w then
+        -1#w
+      else
+        0#w := by
+  simp [BitVec.sdiv]
+  by_cases hw : w = 1
+  · subst hw
+    match x with
+    | 0#1 | 1#1 => rfl
+  · simp only [hw, decide_false]
+    by_cases hx : x = 1#w
+    · subst hx
+      simp [hw]
+    by_cases hx : x = -1#w
+    · subst hx
+      have : w ≠ 0 := by rintro rfl; contradiction
+      have : (1#w != 0#w) = true := by simp [*]
+      have : (1#w != intMin _) = true := by
+        simp only [bne_iff_ne, ne_eq, intMin]
+        intro contra
+        have : (twoPow w (w - 1)).toNat = 1 := by
+          simp [← contra]; omega
+        obtain ⟨_, rfl⟩ := Nat.exists_eq_add_of_lt (by omega : 1 < w)
+        rw [toNat_twoPow, Nat.mod_eq_of_lt] at this
+        · simp at this
+        · simp; omega
+      simp [*, BitVec.msb_neg]
+    · simp [*]
+      cases hx : x.msb
+      · simp [one_udiv, *]
+      · simp [one_udiv, *]
+        intro h_neg_x
+        exfalso
+        apply ‹x ≠ -1#w›
+        rw [← BitVec.neg_neg (x := x), h_neg_x]
+
+theorem eq_ofNat_iff_toNat_eq (x : BitVec w) (n : Nat) :
+    x = BitVec.ofNat w n ↔ x.toNat = n % 2 ^ w := by
+  constructor
+  · rintro rfl; simp
+  · intro h; apply BitVec.eq_of_toNat_eq; simpa
 
 end BitVec
