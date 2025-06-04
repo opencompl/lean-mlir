@@ -275,6 +275,7 @@ end Repr
 
 /- # ToString instances for Com and Expr  -/
 section ToString
+
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
