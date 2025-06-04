@@ -4,5 +4,5 @@ set_option trace.profiler true
 set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
-variable {x y : BitVec 32}
-#generalize (x * x ^^^ y * y) &&& (x * x ||| y * y ^^^ -1#32) = x * x &&& (y * y ^^^ -1#32) -- and_orn_xor_commute8_thm; #22
+variable {x y : BitVec 67}
+#generalize (x ||| y >>> 66#67) &&& 2#67 = x &&& 2#67 -- gapinthandhorhand_proof#test4_thm #22

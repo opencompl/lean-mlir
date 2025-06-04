@@ -4,5 +4,5 @@ set_option trace.profiler true
 set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
-variable {x y : BitVec 8}
-#generalize 2#8 <<< (x ||| 3#8) = 16#8 <<< x --  gshiftadd_proof#shl_fold_or_disjoint_cnt_thm; #46
+variable {x y : BitVec 64}
+#generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46
