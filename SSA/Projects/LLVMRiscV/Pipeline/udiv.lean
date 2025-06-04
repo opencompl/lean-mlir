@@ -1,6 +1,7 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
@@ -73,3 +74,7 @@ def llvm_udiv_lower_riscv_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
           PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff, right_eq_ite_iff]
         bv_omega
     }
+
+def udiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_udiv_lower_riscv_flag, llvm_udiv_lower_riscv_no_flag]

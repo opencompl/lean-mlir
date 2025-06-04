@@ -46,6 +46,7 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags :=
   | .some y => match y with
     | .opaque_ "llvm.overflow" "nsw" => return ⟨true, false⟩
     | .opaque_ "llvm.overflow" "nuw" => return ⟨false, true⟩
+    | .opaque_ "llvm.overflow" "none" => return ⟨false, false⟩
     | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"]
     | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] =>
         return ⟨true, true⟩
@@ -53,6 +54,23 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags :=
         We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
     | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. \
         We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+/--
+Maps integer predicate codes (as defined in the MLIR LLVM dialect) to their corresponding
+`LLVM.IntPred` constructors.
+This reflects MLIR’s encoding of predicates as numeric values in attributes-/
+def parseIcmpPredicate (n : Int) : AST.ReaderM (MetaLLVM φ) (LLVM.IntPred) := do
+  match n with
+  | 0 => return .eq
+  | 1 => return .ne
+  | 8 => return .ugt
+  | 9 => return .uge
+  | 6 => return .ult
+  | 7 => return .ule
+  | 4 => return .sgt
+  | 5 => return .sge
+  | 2 => return .slt
+  | 3 => return .sle
+  | _ => throw <| .generic s!"The icmp predicate {n} is not supported"
 
 open InstCombine.MOp in
 def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
@@ -101,6 +119,10 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     | "llvm.icmp.sge" => mkExprOf <| icmp .sge (← binW)
     | "llvm.icmp.slt" => mkExprOf <| icmp .slt (← binW)
     | "llvm.icmp.sle" => mkExprOf <| icmp .sle (← binW)
+     -- Alternative representation of icmp instructions like in MLIR generic syntax
+    | "llvm.icmp" =>
+      let ⟨n, ty⟩ ← opStx.getIntAttr "predicate"
+      mkExprOf <| icmp (← parseIcmpPredicate n) (← binW)
     -- Unary Operations
     | "llvm.not"   => mkExprOf <| .not (← unW)
     | "llvm.neg"   => mkExprOf <| neg (← unW)

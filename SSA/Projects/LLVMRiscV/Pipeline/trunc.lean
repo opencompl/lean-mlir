@@ -1,16 +1,10 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
-import SSA.Projects.LLVMRiscV.LLVMAndRiscv
-import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
-
-import Lean
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
-open RV64Semantics
-open InstCombine(LLVM)
+
 
 /- # trunc operation from i64 to i32 incl. nuw and nsw flags -/
 
@@ -134,7 +128,7 @@ def trunc_llvm_i32_to_i8 := [LV| {
     llvm.return %0 : i8
   }]
 
-def trunc_riscv_i8_to_i32 := [LV| {
+def trunc_riscv_i32_to_i8 := [LV| {
   ^entry (%lhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
     %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i8)
@@ -142,9 +136,9 @@ def trunc_riscv_i8_to_i32 := [LV| {
   }]
 
 def llvm_trunc_riscv_i32_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 32)] :=
-  {lhs:= trunc_llvm_i32_to_i8, rhs:= trunc_riscv_i8_to_i32,
+  {lhs:= trunc_llvm_i32_to_i8, rhs:= trunc_riscv_i32_to_i8,
    correct := by
-    unfold trunc_llvm_i32_to_i8  trunc_riscv_i8_to_i32
+    unfold trunc_llvm_i32_to_i8  trunc_riscv_i32_to_i8
     simp_peephole
     simp_riscv
     simp_alive_undef
@@ -270,3 +264,14 @@ def llvm_trunc_riscv_i32_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec
     simp only [BitVec.truncate_eq_setWidth, PoisonOr.toOption_getSome]
     bv_decide
   }
+
+def trunc_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+    [ mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i16),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nuw_nsw),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nuw),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32_nsw),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i64_to_i32),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nuw_nsw),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nsw),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8_nuw),
+      mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i8)]
