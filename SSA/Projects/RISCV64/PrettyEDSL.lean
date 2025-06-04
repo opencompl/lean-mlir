@@ -88,7 +88,7 @@ private def test_simple2 := [RV64_com| {
   %2 = sub %1, %1 : !i64
        ret %2  : !i64
 }]
-
+#eval! test_simple2
 /-
 Bellow we implement the case, where an operation has
 one attribute value.
