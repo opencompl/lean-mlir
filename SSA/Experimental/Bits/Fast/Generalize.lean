@@ -335,6 +335,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         let currState: ParsedBVExprState ← get
         let natVal ← getNatValue? x
         let bitVal ← getBitVecValue? x
+        let zeroExpr : BVExpr targetWidth := BVExpr.const (BitVec.ofNat targetWidth 0)
 
         match (natVal, bitVal) with
         | (some v, none) =>
@@ -794,8 +795,7 @@ def generateCombinations (num: Nat) (values: List α) : List (List α) :=
 
 def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) :
               TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-  let identityAndAbsorptionConstraints ← getIdentityAndAbsorptionConstraints bvExpr
-  let targetExpr := BoolExpr.gate Gate.and (BoolExpr.not bvExpr) (addConstraints (BoolExpr.const True) (identityAndAbsorptionConstraints))
+  let targetExpr := (BoolExpr.not bvExpr)
   return (← helper targetExpr numEx)
   where
         helper (expr: BVLogicalExpr) (depth : Nat)
@@ -1130,7 +1130,7 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (L
           for (var, expressions) in exprSynthesisResults.toList do
               let mut prunedExprs ← pruneEquivalentExprs expressions
 
-              if origWidth != processingWidth && origWidth <= 128 then  -- Remove any that don't evaluate to the expr in the original width. We constrain the width because shifting by large values crash Lean
+              if origWidth != processingWidth && origWidth <= 32 then  -- Remove any that don't evaluate to the expr in the original width. We constrain the width because shifting by large values crash Lean
                 let origPackedBV := origRhsSymVars[var]!
                 let h : origPackedBV.w = origWidth := sorry
 
@@ -1426,7 +1426,8 @@ elab "#generalize" expr:term: command =>
 
 #eval 5 ^^^ 88
 
-variable {x y : BitVec 8}
+variable {x y : BitVec 32}
+-- #generalize 6#32 <<< (x + 5#32) = 192#32 <<< x -- gshiftadd_proof#shl_add_nuw_thm; #42
 -- #generalize x <<< 6#32 <<< 28#32 = 0#32
 -- #generalize (x &&& 12#32 ^^^ 15#32) &&& 1#32 = 1#32
 -- #generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8
@@ -1436,5 +1437,5 @@ variable {x y : BitVec 8}
 -- #generalize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32
 
 variable {x y z: BitVec 232}
-#generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - lshr_lshr_thm; #17
+-- #generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - lshr_lshr_thm; #17
 end Generalize
