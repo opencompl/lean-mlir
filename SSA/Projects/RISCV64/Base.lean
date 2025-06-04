@@ -314,7 +314,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li imm => s! "li { imm }"
+  | .li imm => s! "li \{immediate = { imm.toInt } : !i20 }"
   | .mulu => "mulu"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
@@ -324,15 +324,15 @@ def opToString (op : RISCV64.Op) : String :=
   | .ror => "ror"
   | .remwu => "remwu"
   | .remu => "remu"
-  | .addiw (_imm : BitVec 12) => s!"addiw \{immediate = { _imm.toInt } : !riscv.reg }"
-  | .lui (_imm : BitVec 20) => s!"lui \{immediate = { _imm.toInt } : !riscv.reg }"
-  | .auipc (_imm : BitVec 20) => s!"auipc \{imm = { _imm.toInt } : !riscv.reg }"
-  | .slliw (_shamt : BitVec 5) => s!"slliw \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .srliw (_shamt : BitVec 5) => s!"srliw \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .sraiw (_shamt : BitVec 5) => s!"sraiw \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .slli (_shamt : BitVec 6) => s!"slli \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .srli (_shamt : BitVec 6) => s!"srli \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .srai (_shamt : BitVec 6) => s!"srai \{shamt = { _shamt.toInt } : !riscv.reg }"
+  | .addiw (_imm : BitVec 12) => s!"addiw \{immediate = { _imm.toInt} : i12 } : !riscv.reg }"
+  | .lui (_imm : BitVec 20) => s!"lui \{immediate = { _imm.toInt} : i20 } : !riscv.reg }"
+  | .auipc (_imm : BitVec 20) => s!"auipc \{imm = { _imm.toInt} : i20 } : !riscv.reg }"
+  | .slliw (_shamt : BitVec 5) => s!"slliw \{shamt = { _shamt.toInt} : i5 } : !riscv.reg }"
+  | .srliw (_shamt : BitVec 5) => s!"srliw \{shamt = { _shamt.toInt} : i5 } : !riscv.reg }"
+  | .sraiw (_shamt : BitVec 5) => s!"sraiw \{shamt = { _shamt.toInt} :i5 } : !riscv.reg }"
+  | .slli (_shamt : BitVec 6) => s!"slli \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .srli (_shamt : BitVec 6) => s!"srli \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .srai (_shamt : BitVec 6) => s!"srai \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
   | .addw => "addw"
   | .subw => "subw"
   | .sllw => "sllw"
@@ -370,10 +370,10 @@ def opToString (op : RISCV64.Op) : String :=
   | .bext => "bext"
   | .binv => "binv"
   | .bset => "bset"
-  | .bclri (_shamt : BitVec 6) => s!"bclri \{immediate = { _shamt.toInt } : !riscv.reg }"
-  | .bexti (_shamt : BitVec 6) =>s!"bexti \{immediate = { _shamt.toInt } : !riscv.reg }"
-  | .binvi (_shamt : BitVec 6) => s!"binvi \{immediate = { _shamt.toInt } : !riscv.reg }"
-  | .bseti (_shamt : BitVec 6) => s!"bseti \{immediate = { _shamt.toInt } : !riscv.reg }"
+  | .bclri (_shamt : BitVec 6) => s!"bclri \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .bexti (_shamt : BitVec 6) =>s!"bexti \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .binvi (_shamt : BitVec 6) => s!"binvi \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .bseti (_shamt : BitVec 6) => s!"bseti \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
   | .rolw => "rolw"
   | .rorw => "rorw"
   | .add.uw => "add.uw"
@@ -401,7 +401,7 @@ functions that define our semantics.
 @[simp, reducible]
 instance : DialectDenote (RV64) where
   denote
-  | .li imm, _ , _ => BitVec.ofInt 64 imm
+  | .li imm, _ , _ => BitVec.setWidth 64 imm
   | .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .lui imm, regs , _ => UTYPE_pure64_lui imm
   | .auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
