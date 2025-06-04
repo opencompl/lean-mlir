@@ -28,7 +28,7 @@ However, any other attributes (e.g., flags or immediate values) are still encode
 [4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
 inductive Op
-  | li : (val : Int) → Op
+  | li : (val : BitVec 20) → Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
