@@ -46,12 +46,7 @@ theorem eq3 (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified } )
 
 /--
-info: 'eq3' depends on axioms: [propext,
- Circuit.denote_toAIGAux_eq_eval,
- Classical.choice,
- Lean.ofReduceBool,
- Quot.sound,
- ReflectVerif.BvDecide.relabelNat_unsatAt_iff₂]
+info: 'eq3' depends on axioms: [propext, Circuit.denote_toAIGAux_eq_eval, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms eq3
 
@@ -312,12 +307,7 @@ def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'test24' depends on axioms: [propext,
- Circuit.denote_toAIGAux_eq_eval,
- Classical.choice,
- Lean.ofReduceBool,
- Quot.sound,
- ReflectVerif.BvDecide.relabelNat_unsatAt_iff₂]
+info: 'test24' depends on axioms: [propext, Circuit.denote_toAIGAux_eq_eval, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms test24
 
@@ -443,8 +433,7 @@ info: 'width_1_char_2_add_four' depends on axioms: [propext,
  Circuit.denote_toAIGAux_eq_eval,
  Classical.choice,
  Lean.ofReduceBool,
- Quot.sound,
- ReflectVerif.BvDecide.relabelNat_unsatAt_iff₂]
+ Quot.sound]
 -/
 #guard_msgs in #print axioms width_1_char_2_add_four
 
