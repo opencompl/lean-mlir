@@ -2330,8 +2330,7 @@ def llvm_const_lower_riscv_li50 : LLVMPeepholeRewriteRefine 64 [] :=
     simp
   }
 
-def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
- List.map (fun x =>  ⟨[], Ty.llvm (.bitvec 64), (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)⟩)
+def all_const_llvm_const_lower_riscv_li : List (LLVMPeepholeRewriteRefine 64 []) :=
  [
   llvm_const_lower_riscv_liN50,
   llvm_const_lower_riscv_liN49,
