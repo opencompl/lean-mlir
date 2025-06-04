@@ -21,6 +21,7 @@ import SSA.Experimental.Bits.Frontend.Syntax
 import SSA.Experimental.Bits.Frontend.Preprocessing
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
+import SSA.Experimental.Bits.Fast.ForLean
 
 import Lean
 
@@ -327,15 +328,12 @@ However, this is un-necessary: One can case split on `Nonempty α`, and:
 - Alternative proof strategy: Implement a 'RelabelNat' that case splits on
   'NonEmpty α', and when it is empty, returns the original AIG.
 -/
-axiom relabelNat_unsatAt_iff₂  [DecidableEq α] [Hashable α]
-    {aig : AIG α} {hidx1} {hidx2} :
-    (aig.relabelNat).UnsatAt idx invert hidx1 ↔ aig.UnsatAt idx invert hidx2
 
 theorem relabelNat_unsat_iff₂  [DecidableEq α] [Hashable α]
 {entry : Entrypoint α} :
     (entry.relabelNat).Unsat ↔ entry.Unsat:= by
   simp only [Entrypoint.Unsat, Entrypoint.relabelNat]
-  rw [relabelNat_unsatAt_iff₂]
+  rw [relabelNat_unsat_iff']
 
 /--
 info: Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff {α : Type} [DecidableEq α] [Hashable α] {entry : Entrypoint α}
