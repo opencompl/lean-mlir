@@ -1085,10 +1085,6 @@ def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reduced
           return combinedPred
 
 
-structure PreconditionCheckResults where
-  needsPrecondition : Bool
-  exprs : List BVLogicalExpr
-
 def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (BVExpr w)) := Id.run do
   let zero := BVExpr.const (BitVec.ofNat w 0)
   let one := BVExpr.const (BitVec.ofNat w 1 )
@@ -1146,7 +1142,7 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (L
 
                 prunedExprs := prunedExprs'
 
-              tempResults := tempResults.insert var prunedExprs --.reverse
+              tempResults := tempResults.insert var prunedExprs.reverse
           pure tempResults
 
 structure GeneralizerState where
@@ -1164,7 +1160,6 @@ abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
   logInfo m! "Expression synthesis results : {exprSynthesisResults}"
   let combinations := productsList exprSynthesisResults.values
-  logInfo m! "combinations : {combinations}"
   let mut substitutions := []
 
   let state ← get
@@ -1180,7 +1175,7 @@ def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List
       visited := visited.insert substitution
 
   let mut needsPreconditionExprs := state.needsPreconditionsExprs
-  for subst in substitutions do
+  for subst in substitutions.reverse do -- We reverse in a few places so we can process in roughly increasing cost
     let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
     if negativeExample.isEmpty then
       return some subst
@@ -1276,7 +1271,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
         let lhsSketchResults := lhsSketchEnumeration lhs.bvExpr lhs.inputVars.keys lhsAssignments rhsAssignments
         for (var, exprs) in lhsSketchResults.toArray do
           let existingExprs := exprSynthesisResults.getD var []
-          exprSynthesisResults := exprSynthesisResults.insert var ((h ▸ exprs) ++ existingExprs)
+          exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ (h ▸ exprs))
 
         if !lhsSketchResults.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
           let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
@@ -1309,7 +1304,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
           let bottomUpRes ← bottomUpEnumerateFromCache allLHSVars lhsAssignments rhsAssignments ops
           for (var, exprs) in bottomUpRes.toArray do
             let existingExprs := exprSynthesisResults.getD var []
-            exprSynthesisResults := exprSynthesisResults.insert var (exprs ++ existingExprs)
+            exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ exprs)
 
           if !bottomUpRes.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
             let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
@@ -1360,7 +1355,6 @@ def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec
     | some generalized => return some (s! "General form {generalized} has no precondition")
     | none =>
               let state ← get
-              logInfo m! "Needs precondition: {(← get).needsPreconditionsExprs}"
               if state.needsPreconditionsExprs.isEmpty then
                 throwError m! "Could not synthesise constant expressions for {state.parsedBVLogicalExpr.bvLogicalExpr}"
 
@@ -1438,8 +1432,8 @@ variable {x y : BitVec 8}
 -- #generalize (x &&& 12#32 ^^^ 15#32) &&& 1#32 = 1#32
 -- #generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8
 -- #generalize (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13)
-#generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
-#generalize x <<< 7#8 ||| BitVec.ofInt 8 (-128) = BitVec.ofInt 8 (-128)
+-- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+-- #generalize x <<< 7#8 ||| BitVec.ofInt 8 (-128) = BitVec.ofInt 8 (-128)
 -- #generalize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32
 
 variable {x y z: BitVec 232}
