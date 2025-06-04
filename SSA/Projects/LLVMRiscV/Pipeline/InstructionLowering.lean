@@ -19,6 +19,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.urem
 import SSA.Projects.LLVMRiscV.Pipeline.xor
 import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
+import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
@@ -64,7 +65,8 @@ def rewritingPatterns1 :
     udiv_match,
     urem_match,
     xor_match,
-    zext_match
+    zext_match,
+    select_match
   ]
 
 /-- Defines an array containing only the rewrite pattern which eliminates cast.-/
@@ -136,5 +138,6 @@ def llvm01:=
     %2 = llvm.sub %X, %X : i64
     llvm.return %1 : i1
   }]
+
 
 --#eval! (selectionPipeFuelSafe llvm00)

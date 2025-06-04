@@ -21,6 +21,7 @@ def generate_lean_proofs(max_val=25):
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV\n 
     """
@@ -52,7 +53,7 @@ open LLVMRiscV\n
         rewrite_names.append(f"llvm_const_lower_riscv_li{name_suffix}")
         body += li_def + llvm_def + proof + "\n"
     #create an array to hold all the rewrites to later pass to the rewriter 
-    array_definition = "def all_const_llvm_const_lower_riscv_li : List (LLVMPeepholeRewriteRefine 64 []) :=\n  [\n"
+    array_definition = "def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=\n List.map (fun x =>  ⟨[], Ty.llvm (.bitvec 64), (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)⟩)\n [\n"
     array_definition += ",\n  ".join(rewrite_names)
     array_definition += "\n  ]\n\n"
     return header + body + array_definition
