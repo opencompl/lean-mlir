@@ -401,7 +401,7 @@ functions that define our semantics.
 @[simp, reducible]
 instance : DialectDenote (RV64) where
   denote
-  | .li imm, _ , _ => BitVec.setWidth 64 imm
+  | .li imm, _ , _ =>  BitVec.signExtend 64 (imm)
   | .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .lui imm, regs , _ => UTYPE_pure64_lui imm
   | .auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
