@@ -25,7 +25,6 @@ def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream 
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
 
-
 -- ifeally we spit out a tuple of bitvec, but it's less usable
 -- the output of this is synced
 def unpack2 (x : ValueStream (BitVec w)) (y : ValueStream (BitVec w)) : VariadicValueStream w × TokenStream :=

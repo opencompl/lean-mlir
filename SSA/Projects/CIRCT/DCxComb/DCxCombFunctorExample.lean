@@ -12,8 +12,9 @@ namespace CIRCTStream
 open MLIR AST in
 
 unseal String.splitOnAux in
-def popExample := [DCComb_com| {
-  ^entry():
-
-    "return" () : () -> ()
+def ex1 := [DCxComb_com| {
+  ^entry(%0 : !TokenStream):
+    "return" (%0) : (!TokenStream) -> ()
   }]
+
+#check ex1
