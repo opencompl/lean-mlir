@@ -12,6 +12,8 @@ open Ctxt(Var)
 
 namespace DCxCombFunctor
 
+open MLIR2Comb MLIR2DC
+
 open CIRCTStream
 
 open TyDenote
@@ -159,21 +161,233 @@ def_denote for DCxComb where
       liftComb opDenote
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
--- instance : MLIR.AST.TransformExpr DCxComb 0 where
--- instance : MLIR.AST.TransformReturn (DCxComb) 0 where
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCxComb DCxComb.Ty
+  | MLIR.AST.MLIRType.int _ w => do
+    match w with
+    | .concrete w' => return .bitvec w'
+    | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
+  | MLIR.AST.MLIRType.undefined s => do
+    match s.splitOn "_" with
+    | ["TokenStream"] =>
+      return .tokenstream
+    | ["TokenStream2"] =>
+      return .tokenstream2
+    | ["ValueStream", w] =>
+      match w.toNat? with
+      | some w' => return .valuestream w'
+      | _ => throw .unsupportedType
+    | ["ValueStream2", w] =>
+      match w.toNat? with
+      | some w' => return .valuestream2 w'
+      | _ => throw .unsupportedType
+    | ["ValueTokenStream", w] =>
+    match w.toNat? with
+      | some w' => return .valuetokenstream w'
+      | _ => throw .unsupportedType
+    | _ => throw .unsupportedType
+  | _ => throw .unsupportedType
 
--- instance : DialectToExpr DCxComb where
---   toExprM := .const ``Id [0]
---   toExprDialect := .const ``DCxComb []
+instance instTransformTy : MLIR.AST.TransformTy DCxComb 0 where
+  mkTy := mkTy
 
--- open Qq MLIR AST Lean Elab Term Meta in
--- elab "[DCxComb_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg DCxComb
+open Qq Lean Meta Elab.Term Elab Command
+open MLIR
 
--- explain how to denote comb and dc
--- pb; pack and unpack are meaningless, we're lifting every comb op into a stream op whihc is sub-optimal
--- it basically defeats the purpose of having pack and unpack
--- we can encode handshake semantics implicitly or explicitly
--- if we use streams this is implicit and we don't need pack/unpack
+def getVarWidth {Γ : Ctxt DCxComb.Ty} : (Σ t, Γ.Var t) → Nat
+  | ⟨.bitvec w, _⟩ => w
+  | ⟨.tokenstream, _⟩ => 1
+  | ⟨.tokenstream2, _⟩ => 1
+  | ⟨.valuestream w, _⟩ => w
+  | ⟨.valuestream2 w, _⟩ => w
+  | ⟨.valuetokenstream w, _⟩ => w
+
+def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM DCxComb (Σ eff ty, Expr DCxComb Γ eff ty) := do
+  let args ← opStx.parseArgs Γ
+  -- 1-ary ops
+  let unW : AST.ReaderM (DCxComb) (Nat) := do
+    let args ← args.assumeArity 1
+    return getVarWidth args[0]
+  -- 2-ary ops
+  let binW : AST.ReaderM (DCxComb) (Nat) := do
+    let args ← args.assumeArity 2
+    return getVarWidth args[0]
+  -- 3-ary ops
+  let terW : AST.ReaderM (DCxComb) (Nat) := do
+    let args ← args.assumeArity 3
+    return getVarWidth args[0]
+   -- n-ary ops
+  let args' ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ) -- will need to find a better way to do this
+  if h : args'.length = 0 then
+    throw <| .generic s!" empty list of argument provided for the variadic op {repr opStx.args}"
+  else
+    let nnW : AST.ReaderM (Comb) (Nat) := do
+      let args ← args.assumeArity args'.length
+      return getVarWidth args[0]
+    let mkExprOf := opStx.mkExprOf (args? := args) Γ
+    if opStx.args.length > 0 then
+      throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    else
+    match (opStx.name).splitOn "_" with
+    | ["DCxComb.source"] =>
+      -- mkExprOf <| Op.dc (MLIR2DC.Op.source) does not work, we'll do old school for now
+      return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.source))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .nil) (regArgs := .nil)⟩
+    | [op@"DCxComb.sink"] | [op@"DCxComb.unpack"] | [op@"DCxComb.fork"] | [op@"DCxComb.branch"] | [op@"DCxComb.fst"] | [op@"DCxComb.snd"] | [op@"DCxComb.fstVal"] | [op@"DCxComb.sndVal"] =>
+      match opStx.args with
+      | v₁Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        match ty₁, op with
+        | .tokenstream2, "DCxComb.fst" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.fst))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | .tokenstream2, "DCxComb.snd"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.snd))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | .valuetokenstream r, "DCxComb.fstVal" => return ⟨_, .valuestream r, Expr.mk (op := Op.dc (MLIR2DC.Op.fstVal r))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | .valuetokenstream r, "DCxComb.sndVal"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.sndVal r))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | .tokenstream, "DCxComb.sink" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.sink))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | .valuestream r, "DCxComb.unpack"  => sorry
+        | .tokenstream, "DCxComb.fork"  => return ⟨_, .tokenstream2, Expr.mk (op := Op.dc (MLIR2DC.Op.fork))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | .valuestream 1, "DCxComb.branch"  => return ⟨_, .tokenstream2, Expr.mk (op := Op.dc (MLIR2DC.Op.branch))
+              (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
+        | _, _ => throw <| .generic s!"type mismatch"
+      | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | [op@"DCxComb.merge"] | [op@"DCxComb.join"] | [op@"DCxComb.pack"]  =>
+      match opStx.args with
+      | v₁Stx::v₂Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+        match ty₁, ty₂, op with
+        | .tokenstream, .tokenstream, "DCxComb.merge" => return ⟨_, .valuestream 1, Expr.mk (op := Op.dc (MLIR2DC.Op.merge))
+          (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil)⟩
+        | .tokenstream, .tokenstream, "DCxComb.join"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.join))
+          (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil)⟩
+        | .valuestream r, .tokenstream, "DCxComb.pack"  => sorry
+        | _, _, _ => throw <| .generic s!"type mismatch"
+      | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | [op@"DCxComb.select"] =>
+      match opStx.args with
+      | v₁Stx::v₂Stx::v₃Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+        let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
+        match ty₁, ty₂, ty₃, op with
+        | .tokenstream, .tokenstream, .valuestream 1, "DCxComb.select" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.select))
+          (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .cons v₃ <| .nil) (regArgs := .nil)⟩
+        | _, _, _, _=> throw <| .generic s!"type mismatch"
+      | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | [op@"DCxComb.parity"] => -- [op@"DCxComb.concat"] =>
+      match opStx.args with
+      | v₁Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        match ty₁, op with
+        | .bitvec w, "Comb.parity" => return ⟨_, .bitvec 1, Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w))
+          (ty_eq := sorry)  (eff_le := by constructor) (args := sorry) (regArgs := .nil)⟩
+        -- | .hList l, "Comb.concat" => return ⟨_, .bitvec l.sum, Expr.mk (op := Op.comb (MLIR2Comb.Op.c w))
+          -- (ty_eq := sorry)  (eff_le := by constructor) (args := sorry) (regArgs := .nil)⟩
+        | _, _ => throw <| .generic s!"type mismatch"
+      | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | [op@"Comb.add"] | [op@"Comb.and"] | [op@"Comb.mul"] | [op@"Comb.or"] | [op@"Comb.xor"] =>
+        let args ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ)
+        if hl: args.length ≤ 0 then
+          throw <| .generic s!"empty list of arguments for '{repr opStx.args}'"
+        else
+          have hl' : (0 : Nat) < args.length := by
+            simp [Nat.gt_of_not_le (n := args.length) (m := 0) hl]
+          match args[0], op with
+          | ⟨.bitvec w, _⟩, "Comb.add" =>
+            if hall : args.all (·.1 = .bitvec w) then sorry
+              -- let argsᵥ := ofList (.bitvec w) _ hall
+              -- have heq : args.length - 1 + 1 = args.length := by omega
+              -- return ⟨_, .bitvec w, add args.length (heq ▸ argsᵥ)⟩
+            else
+              throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+          | ⟨.bitvec w, _⟩, "Comb.and" =>
+              if hall : args.all (·.1 = .bitvec w) then sorry
+                -- let argsᵥ := ofList (.bitvec w) _ hall
+                -- have heq : args.length - 1 + 1 = args.length := by omega
+                -- return ⟨_, .bitvec w, and args.length (heq ▸ argsᵥ)⟩
+              else
+                throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+          | ⟨.bitvec w, _⟩, "Comb.mul" =>
+              if hall : args.all (·.1 = .bitvec w) then sorry
+                -- let argsᵥ := ofList (.bitvec w) _ hall
+                -- have heq : args.length - 1 + 1 = args.length := by omega
+                -- return ⟨_, .bitvec w, mul args.length (heq ▸ argsᵥ)⟩
+              else
+                throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+          | ⟨.bitvec w, _⟩, "Comb.or" =>
+              if hall : args.all (·.1 = .bitvec w) then sorry
+                -- let argsᵥ := ofList (.bitvec w) _ hall
+                -- have heq : args.length - 1 + 1 = args.length := by omega
+                -- return ⟨_, .bitvec w, or args.length (heq ▸ argsᵥ)⟩
+              else
+                throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+          | ⟨.bitvec w, _⟩, "Comb.xor" =>
+              if hall : args.all (·.1 = .bitvec w) then
+                sorry
+                -- let argsᵥ := ofList (.bitvec w) _ hall
+                -- have heq : args.length - 1 + 1 = args.length := by omega
+                -- return ⟨_, .bitvec w, xor args.length (heq ▸ argsᵥ)⟩
+              else
+                throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+          | _, _ => throw <| .generic s!"Unexpected argument types for '{repr opStx.args}'"
+    | [op@"Comb.divs"] | [op@"Comb.divu"] | [op@"Comb.mods"] | [op@"Comb.modu"] | [op@"Comb.replicate"] | [op@"Comb.shl"] | [op@"Comb.shrs"] | [op@"Comb.shru"] | [op@"Comb.sub"]  =>
+      match opStx.args with
+      | v₁Stx::v₂Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+        match ty₁, ty₂, op with
+        /- more checks need to be added here to ensure the consistency of operations and bitvec sizes -/
+        -- | .bitvec w₁, .bitvec w₂, "Comb.concat" =>
+        --   return ⟨_, .bitvec (w₁ + w₂), concat v₁ v₂⟩
+        | .bitvec w₁, .bitvec w₂, "Comb.divs" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.divu" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.mods" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.modu" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.shl" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.shrs" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.shru" => sorry
+        | .bitvec w₁, .bitvec w₂, "Comb.sub" => sorry
+        | _, _, _=> throw <| .generic s!"type mismatch"
+      | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | [op@"Comb.icmp"] | [op@"Comb.mux"] =>
+      match opStx.args with
+      | v₁Stx::v₂Stx::v₃Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+        let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
+        sorry
+        -- match ty₁, ty₂, ty₃, op with
+        -- -- problem: icmp
+        -- --  | .bitvec w₁, .bitvec w₂, Op.dc (MLIR2DC.Op.select), "Comb.icmp" => sorry
+        -- --     throw <| .generic s!"type mismatch"
+        -- | .bitvec w₁, .bitvec w₂, .bitvec 1, "Comb.mux" => sorry
+        --     throw <| .generic s!"type mismatch"
+        -- | _, _, _, _=> throw <| .generic s!"type mismatch"
+      | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ =>
+    -- handle replicate
+      -- if "Comb.replicate" = opStx.name
+      -- then {
+      --   match (opStx.name).splitOn "_" with
+      --   | [_, n] =>
+      --     match opStx.args with
+      --     | v₁Stx::[] =>
+      --       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      --       match ty₁ with
+      --       | .bitvec w₁ =>
+      --         let n' := n.toNat!
+      --         return ⟨_, .bitvec (w₁ * n'), replicate v₁ (n := n')⟩
+      --       | _ => throw <| .generic s!"type mismatch"
+      --     | _ => throw <| .generic s!"type mismatch"
+      --   | _ => throw <| .generic s!"type mismatch"
+      -- }
+      -- else
+        throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 /- compose DC on top of Comb-/
 
@@ -185,7 +399,7 @@ def_denote for DCxComb where
 -- def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCComb DCComb.Ty
 --   | MLIR.AST.MLIRType.int _ w => do
 --     match w with
---     | .concrete w' => return .bv w'
+--     | .concrete w' => return .bitvec w'
 --     | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
 --   | MLIR.AST.MLIRType.undefined s => do
 --     match s.splitOn "_" with

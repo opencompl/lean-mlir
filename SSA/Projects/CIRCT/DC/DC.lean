@@ -108,7 +108,7 @@ section Dialect
 
 
 inductive Ty
-| bv (w : Nat) : Ty
+| bitvec (w : Nat) : Ty
 | tokenstream : Ty
 | tokenstream2 : Ty
 | valuestream (w : Nat) : Ty -- A stream of BitVec w
@@ -118,7 +118,7 @@ deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : ToString Ty where
   toString t := repr t |>.pretty
-  
+
 inductive Op
 | fst
 | snd
@@ -154,11 +154,11 @@ def_signature for DC where
   | .source => () → Ty.tokenstream
   | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
-  | .popReady w _ => (Ty.valuestream w) → Ty.bv w
+  | .popReady w _ => (Ty.valuestream w) → Ty.bitvec w
 
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
-| Ty.bv w => BitVec w
+| Ty.bitvec w => BitVec w
 | Ty.tokenstream => CIRCTStream.DCOp.TokenStream
 | Ty.tokenstream2 => CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream
 | Ty.valuestream w => CIRCTStream.DCOp.ValueStream (BitVec w)
@@ -188,7 +188,7 @@ end Dialect
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
   | MLIR.AST.MLIRType.int _ w => do
     match w with
-    | .concrete w' => return .bv w'
+    | .concrete w' => return .bitvec w'
     | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
@@ -214,7 +214,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where
   mkTy := mkTy
 
-def popReady {Γ : Ctxt _} (a : Γ.Var (.valuestream w)) (n : Nat) : Expr (DC) Γ .pure (.bv w) :=
+def popReady {Γ : Ctxt _} (a : Γ.Var (.valuestream w)) (n : Nat) : Expr (DC) Γ .pure (.bitvec w) :=
   Expr.mk
     (op := .popReady w n)
     (ty_eq := rfl)
@@ -379,7 +379,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | v₁Stx::[] =>
           let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
           match ty₁ with
-          | .valuestream w => return ⟨_, .bv w, popReady v₁ n'⟩
+          | .valuestream w => return ⟨_, .bitvec w, popReady v₁ n'⟩
           | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
         | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
       | _ => throw <| .unsupportedOp s!"unsupported stream size for {repr opStx}"
