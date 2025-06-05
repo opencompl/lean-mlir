@@ -28,7 +28,7 @@ However, any other attributes (e.g., flags or immediate values) are still encode
 [4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
 inductive Op
-  | li : (val : Int) → Op
+  | li : (val : BitVec 20) → Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
@@ -120,7 +120,8 @@ inductive Ty
   deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 instance : ToString (Ty) where
-  toString t := repr t |>.pretty
+  toString t := match t with
+  | Ty.bv => "bv"
 
 /-!
 Connecting the `bv` type to its underlying Lean type `BitVec 64`. By providing a `TyDenote` instance,
@@ -133,6 +134,10 @@ instance : TyDenote Ty where
 instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
   | .bv  => 0#64
+
+instance : ToString (Ty) where
+  toString t :=  match t with
+  | Ty.bv => "!riscv.reg"
 
 /-! ## Dialect operation definitions-/
 /--
@@ -309,7 +314,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li _ => "li"
+  | .li imm => s! "li \{immediate = { imm.toInt } : i20 }"
   | .mulu => "mulu"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
@@ -319,15 +324,15 @@ def opToString (op : RISCV64.Op) : String :=
   | .ror => "ror"
   | .remwu => "remwu"
   | .remu => "remu"
-  | .addiw (_imm : BitVec 12) => s!"addiw \{imm = { _imm.toInt } : !riscv.reg }"
-  | .lui (_imm : BitVec 20) => s!"lui \{imm = { _imm.toInt } : !riscv.reg }"
-  | .auipc (_imm : BitVec 20) => s!"auipc \{imm = { _imm.toInt } : !riscv.reg }"
-  | .slliw (_shamt : BitVec 5) => s!"slliw \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .srliw (_shamt : BitVec 5) => s!"srliw \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .sraiw (_shamt : BitVec 5) => s!"sraiw \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .slli (_shamt : BitVec 6) => s!"slli \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .srli (_shamt : BitVec 6) => s!"srli \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .srai (_shamt : BitVec 6) => s!"srai \{shamt = { _shamt.toInt } : !riscv.reg }"
+  | .addiw (_imm : BitVec 12) => s!"addiw \{immediate = { _imm.toInt} : i12 } : !riscv.reg }"
+  | .lui (_imm : BitVec 20) => s!"lui \{immediate = { _imm.toInt} : i20 } : !riscv.reg }"
+  | .auipc (_imm : BitVec 20) => s!"auipc \{imm = { _imm.toInt} : i20 } : !riscv.reg }"
+  | .slliw (_shamt : BitVec 5) => s!"slliw \{shamt = { _shamt.toInt} : i5 } : !riscv.reg }"
+  | .srliw (_shamt : BitVec 5) => s!"srliw \{shamt = { _shamt.toInt} : i5 } : !riscv.reg }"
+  | .sraiw (_shamt : BitVec 5) => s!"sraiw \{shamt = { _shamt.toInt} :i5 } : !riscv.reg }"
+  | .slli (_shamt : BitVec 6) => s!"slli \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .srli (_shamt : BitVec 6) => s!"srli \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .srai (_shamt : BitVec 6) => s!"srai \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
   | .addw => "addw"
   | .subw => "subw"
   | .sllw => "sllw"
@@ -350,12 +355,12 @@ def opToString (op : RISCV64.Op) : String :=
   | .div => "div"
   | .divw => "divw"
   | .divwu => "diwu"
-  | .addi (_imm : BitVec 12) => s!"addi \{imm = { _imm.toInt } : !riscv.reg }"
-  | .slti (_imm : BitVec 12) => s!"slti \{imm = { _imm.toInt } : !riscv.reg }"
-  | .sltiu (_imm : BitVec 12) => s!"sltiu \{imm = { _imm.toInt } : !riscv.reg }"
-  | .andi (_imm : BitVec 12) => s!"andi \{imm = { _imm.toInt } : !riscv.reg }"
-  | .ori (_imm : BitVec 12) => s!"ori \{imm = { _imm.toInt } : !riscv.reg }"
-  | .xori (_imm : BitVec 12) => s!"xori \{imm = { _imm.toInt } : !riscv.reg }"
+  | .addi (_imm : BitVec 12) => s!"addi \{immediate = { _imm.toInt } : !riscv.reg }"
+  | .slti (_imm : BitVec 12) => s!"slti \{immediate = { _imm.toInt } : !riscv.reg }"
+  | .sltiu (_imm : BitVec 12) => s!"sltiu \{immediate = { _imm.toInt } : !riscv.reg }"
+  | .andi (_imm : BitVec 12) => s!"andi \{immediate = { _imm.toInt } : !riscv.reg }"
+  | .ori (_imm : BitVec 12) => s!"ori \{immediate = { _imm.toInt } : !riscv.reg }"
+  | .xori (_imm : BitVec 12) => s!"xori \{immediate = { _imm.toInt } : !riscv.reg }"
   | .czero.eqz => "czero.eqz"
   | .czero.nez => "czero.nez"
   | .sext.b => "sext.b"
@@ -365,10 +370,10 @@ def opToString (op : RISCV64.Op) : String :=
   | .bext => "bext"
   | .binv => "binv"
   | .bset => "bset"
-  | .bclri (_shamt : BitVec 6) => s!"bclri \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .bexti (_shamt : BitVec 6) =>s!"bexti \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .binvi (_shamt : BitVec 6) => s!"binvi \{shamt = { _shamt.toInt } : !riscv.reg }"
-  | .bseti (_shamt : BitVec 6) => s!"bseti \{shamt = { _shamt.toInt } : !riscv.reg }"
+  | .bclri (_shamt : BitVec 6) => s!"bclri \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .bexti (_shamt : BitVec 6) =>s!"bexti \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .binvi (_shamt : BitVec 6) => s!"binvi \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .bseti (_shamt : BitVec 6) => s!"bseti \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
   | .rolw => "rolw"
   | .rorw => "rorw"
   | .add.uw => "add.uw"
@@ -378,7 +383,7 @@ def opToString (op : RISCV64.Op) : String :=
   | .sh1add => "sh1add"
   | .sh2add => "sh2add"
   | .sh3add => "sh3add"
-  s!"riscv.{op}"
+  s!"\"riscv.{op}\""
 
 instance : ToString (Op) where
   toString := opToString
@@ -396,7 +401,7 @@ functions that define our semantics.
 @[simp, reducible]
 instance : DialectDenote (RV64) where
   denote
-  | .li imm, _ , _ => BitVec.ofInt 64 imm
+  | .li imm, _ , _ =>  BitVec.signExtend 64 (imm)
   | .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .lui imm, regs , _ => UTYPE_pure64_lui imm
   | .auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
