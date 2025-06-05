@@ -115,23 +115,79 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
   simp_alive_ssa
-  simp_alive_ops
-  simp_alive_undef
+  simp_llvm
   simp_alive_case_bash
-  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, PoisonOr.value_bind]
+  simp only [BitVec.one_sdiv]
+  simp only [ofNat_eq_ofNat, Bool.or_eq_true, beq_iff_eq, Bool.and_eq_true, bne_iff_ne, ne_eq,
+    ofBool_eq_one_iff, PoisonOr.ite_value_value, PoisonOr.if_then_poison_isRefinedBy_iff,
+    _root_.not_or, _root_.not_and, and_imp, PoisonOr.value_isRefinedBy_value,
+    InstCombine.bv_isRefinedBy_iff]
+  simp only [BitVec.ult, toNat_add, toNat_ofNat, Nat.mod_add_mod, decide_eq_true_eq]
+  intros x h₁ h₂
+  rcases w with _|_|w
+  · simp only [BitVec.eq_nil, not_true] at h₁
+  · match x with
+    | 1#1 => simp_all
+  · rw [Nat.mod_eq_of_lt (a := 3) (by
+      have := Nat.two_pow_pos w
+      simp [Nat.pow_succ];
+      omega)]
+
+    split
+    next h₁ =>
+      subst h₁
+      simp only [toNat_ofNat, lt_add_iff_pos_left, add_pos_iff, Nat.ofNat_pos, or_true,
+        Nat.one_mod_two_pow, Nat.reduceAdd, left_eq_ite_iff, not_lt, one_eq_zero_iff,
+        Nat.add_eq_zero, one_ne_zero, and_false, _root_.and_self, imp_false, not_le]
+      rw [Nat.mod_eq_of_lt]
+      · decide
+      · have := Nat.two_pow_pos w
+        simp [Nat.pow_succ]; omega
+    next h₁ =>
+      split
+      next h₂ =>
+        subst h₂
+        suffices (1 + (2 ^ (w + 1 + 1) - 1)) % 2 ^ (w + 1 + 1) < 3 by simpa
+        have := Nat.two_pow_pos w
+        rw [Nat.add_sub_of_le (by omega), Nat.mod_eq_of_lt]
+        · simp
+        · simp
+
+        calc
+          (1 + (2 ^ (w + 1 + 1) - 1)) % 2 ^ (w + 1 + 1)
+            = (2 ^ (w + 1 + 1)) % _ := by rw [Nat.add_sub_of_le]
+          _ = (2 ^ (w + 2)) % 2 ^ (w + 1 + 1) := by ac_rfl
+          _ < 3                               := sorry
+      next h₂ =>
+        simp
+
+
+    · simp_all
+    · rw [Nat.mod_eq_of_lt (by omega)] at *
+      contradiction
+    · simp_all
+    · simp_all
+    · simp_all
+
   cases w
   case zero =>
     intros x
-    simp only [BitVec.eq_nil]
-    simp [LLVM.sdiv?]
+    simp [BitVec.eq_nil x]
   case succ w' =>
     intros x
-    by_cases hx:(x = 0)
+    by_cases hx : x = 0#_
     case pos =>
       subst hx
-      rw [LLVM.sdiv?_denom_zero_eq_poison]
       simp
     case neg =>
+      simp [hx]
+      intro hx'
+      rw [BitVec.one_sdiv]
+      simp [BitVec.eq_ofNat_iff_toNat_eq]
+
+
+      stop
+
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
@@ -151,65 +207,45 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       case succ w'' =>
         have htwopow_pos : 2^w'' > 0 := Nat.pow_pos (by omega)
         rw [Nat.mod_eq_of_lt (a := 3) (by omega)]
+        simp only [ofNat_eq_ofNat, Nat.reduceBneDiff, Bool.true_and, Bool.or_eq_true, beq_iff_eq,
+          Bool.and_eq_true, lt_add_iff_pos_left, add_pos_iff, Nat.ofNat_pos, or_true, msb_one,
+          Nat.add_eq_right, Nat.add_eq_zero, one_ne_zero, and_false, decide_false,
+          ne_intMin_of_lt_of_msb_false, false_and, or_false, toNat_add, toNat_ofNat,
+          Nat.one_mod_two_pow, ofBool_eq_one_iff, decide_eq_true_eq, PoisonOr.ite_value_value,
+          PoisonOr.if_then_poison_isRefinedBy_iff, PoisonOr.value_isRefinedBy_value,
+          InstCombine.bv_isRefinedBy_iff]
+        rintro h
+        rw [BitVec.one_sdiv]
+        split_ifs
+        · simp_all
+        · simp_all
+        · simp_all
+        · simp_all
+        · simp_all
+        · simp_all
+
+        stop
+
+        -- simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, Nat.reducePow, Fin.zero_eta,
+        --   Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq,
+        --   decide_eq_true_eq, eq_iff_iff, iff_false, not_lt] at hugt
         split
-        case isTrue hugt =>
-          have hugt :
-            (1 + BitVec.toNat x) % 2 ^ Nat.succ (Nat.succ w'') < 3 := by
-              by_contra hcontra
-              simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, hcontra, decide_false,
-                ofBool_false, ofNat_eq_ofNat, Nat.reducePow, Fin.mk_one, Fin.isValue, ofFin_ofNat,
-                Option.some.injEq] at hugt
-              contradiction
-          rw [LLVM.sdiv?_eq_value_of_neq_allOnes (hy := by tauto)]
-          · have hcases := Nat.cases_of_lt_mod_add hugt
-              (by simp)
-              (by apply BitVec.isLt)
-            rcases hcases with ⟨h1, h2⟩ | ⟨h1, h2⟩
-            · have h2 : BitVec.toNat x < 2 := by omega
-              have hneq0 : BitVec.toNat x ≠ 0 := BitVec.toNat_neq_zero_of_neq_zero hx
-              have h1 : BitVec.toNat x = 1 := by omega
-              have h1 : x = 1 := by
-                apply BitVec.eq_of_toNat_eq
-                simp only [h1, ofNat_eq_ofNat, toNat_ofNat]
-                rw [Nat.mod_eq_of_lt (by omega)]
-              subst h1
-              simp [BitVec.sdiv_one_one]
-            · have hcases : (1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') ∨
-                  1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') + 1) := by
-                omega
-              rcases hcases with heqallones | heqzero
-              · have heqallones : x = allOnes (Nat.succ (Nat.succ w'')) := by
-                  apply BitVec.eq_of_toNat_eq
-                  simp only [Nat.succ_eq_add_one, toNat_allOnes]
-                  omega
-                subst heqallones
-                simp [BitVec.sdiv_one_allOnes, BitVec.neg_one_eq_allOnes]
-              · have heqzero : x = 0#_ := BitVec.eq_zero_of_toNat_mod_eq_zero (by omega)
-                subst heqzero
-                simp [BitVec.sdiv_zero]
-          · exact intMin_neq_one (by omega)
-        case isFalse hugt =>
-          simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, Nat.reducePow, Fin.zero_eta,
-            Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq,
-            decide_eq_true_eq, eq_iff_iff, iff_false, not_lt] at hugt
-          unfold LLVM.sdiv? -- TODO: devar this; write theorem to unfold sdiv?
-          split <;> simp
-          case isFalse hsdiv =>
-            clear hsdiv
-            apply BitVec.one_sdiv (ha0 := by assumption)
-            · by_contra hone
-              subst hone
-              simp only [ofNat_eq_ofNat, toNat_ofNat,
-                Nat.add_mod_mod, Nat.reduceAdd] at hugt
-              rw [Nat.mod_eq_of_lt (a := 2) (by omega)] at hugt
-              contradiction
-            · by_contra hAllOnes
-              subst hAllOnes
-              rw [toNat_allOnes] at hugt
-              rw [Nat.add_sub_of_le (by omega)] at hugt
-              simp only [Nat.mod_self, Nat.ofNat_pos, decide_true,
-                ofBool_true, ofNat_eq_ofNat] at hugt
-              contradiction
+        case isFalse hsdiv =>
+          clear hsdiv
+          apply BitVec.one_sdiv (ha0 := by assumption)
+          · by_contra hone
+            subst hone
+            simp only [ofNat_eq_ofNat, toNat_ofNat,
+              Nat.add_mod_mod, Nat.reduceAdd] at hugt
+            rw [Nat.mod_eq_of_lt (a := 2) (by omega)] at hugt
+            contradiction
+          · by_contra hAllOnes
+            subst hAllOnes
+            rw [toNat_allOnes] at hugt
+            rw [Nat.add_sub_of_le (by omega)] at hugt
+            simp only [Nat.mod_self, Nat.ofNat_pos, decide_true,
+              ofBool_true, ofNat_eq_ofNat] at hugt
+            contradiction
 
 /--
 info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms: [propext, Classical.choice, Quot.sound]
