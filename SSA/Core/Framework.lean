@@ -277,8 +277,6 @@ end Repr
 section ToString
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
-
-
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
   let args := (List.range ts.length).zip ts |>.map
