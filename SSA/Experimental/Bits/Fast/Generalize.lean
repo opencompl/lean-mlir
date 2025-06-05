@@ -100,6 +100,9 @@ structure ParsedBVLogicalExpr where
 abbrev ParseBVExprM := StateRefT ParsedBVExprState MetaM
 
 def changeBVExprWidth (bvExpr: BVExpr w) (target: Nat) : BVExpr target := Id.run do
+  if h : w = target then
+    return (h ▸ bvExpr)
+
   match bvExpr with
   | .var idx => (BVExpr.var idx : BVExpr target)
   | .const val => BVExpr.const (val.signExtend target)
@@ -1258,7 +1261,6 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
           | some expr => return (some expr)
           | none => logInfo m! "Could not find a generalized form from just deductive search"
 
-
         logInfo m! "Performing enumerative search using a sketch of the LHS"
         let lhsSketchResults := lhsSketchEnumeration lhs.bvExpr lhs.inputVars.keys lhsAssignments rhsAssignments
         for (var, exprs) in lhsSketchResults.toArray do
@@ -1266,11 +1268,11 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
           exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ (h ▸ exprs))
 
         if !lhsSketchResults.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
-          let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
+          exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+          let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
           match preconditionCheckResults with
           | some expr => return (some expr)
           | none => logInfo m! "Could not find a generalized form from a sketch of the LHS"
-
 
         logInfo m! "Performing bottom-up enumerative search one level at a time"
         let zero := BitVec.ofNat processingWidth 0
@@ -1299,11 +1301,11 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
             exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ exprs)
 
           if !bottomUpRes.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
-            let preconditionCheckResults ← checkForNoPreconditionRequired (← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth)
+            exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+            let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
             match preconditionCheckResults with
             | some expr => return some expr
             | none => logInfo m! "Could not find a generalized form from processing level {currentLevel}"
-
 
           currentLevel :=  currentLevel + 1
 
