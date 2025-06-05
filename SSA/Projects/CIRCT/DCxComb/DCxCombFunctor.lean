@@ -231,27 +231,27 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     match (opStx.name).splitOn "_" with
     | ["DCxComb.source"] =>
       -- mkExprOf <| Op.dc (MLIR2DC.Op.source) does not work, we'll do old school for now
-      return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.source))
+      return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.source)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .nil) (regArgs := .nil)⟩
     | [op@"DCxComb.sink"] | [op@"DCxComb.unpack"] | [op@"DCxComb.fork"] | [op@"DCxComb.branch"] | [op@"DCxComb.fst"] | [op@"DCxComb.snd"] | [op@"DCxComb.fstVal"] | [op@"DCxComb.sndVal"] =>
       match opStx.args with
       | v₁Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         match ty₁, op with
-        | .tokenstream2, "DCxComb.fst" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.fst))
+        | .tokenstream2, "DCxComb.fst" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.fst)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
-        | .tokenstream2, "DCxComb.snd"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.snd))
+        | .tokenstream2, "DCxComb.snd"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.snd)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
-        | .valuetokenstream r, "DCxComb.fstVal" => return ⟨_, .valuestream r, Expr.mk (op := Op.dc (MLIR2DC.Op.fstVal r))
+        | .valuetokenstream r, "DCxComb.fstVal" => return ⟨_, .valuestream r, Expr.mk (op := Op.dc (MLIR2DC.Op.fstVal r)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
-        | .valuetokenstream r, "DCxComb.sndVal"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.sndVal r))
+        | .valuetokenstream r, "DCxComb.sndVal"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.sndVal r)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
-        | .tokenstream, "DCxComb.sink" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.sink))
+        | .tokenstream, "DCxComb.sink" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.sink)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
         | .valuestream r, "DCxComb.unpack"  => sorry
-        | .tokenstream, "DCxComb.fork"  => return ⟨_, .tokenstream2, Expr.mk (op := Op.dc (MLIR2DC.Op.fork))
+        | .tokenstream, "DCxComb.fork"  => return ⟨_, .tokenstream2, Expr.mk (op := Op.dc (MLIR2DC.Op.fork)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
-        | .valuestream 1, "DCxComb.branch"  => return ⟨_, .tokenstream2, Expr.mk (op := Op.dc (MLIR2DC.Op.branch))
+        | .valuestream 1, "DCxComb.branch"  => return ⟨_, .tokenstream2, Expr.mk (op := Op.dc (MLIR2DC.Op.branch)) (eff := .pure)
               (ty_eq := rfl) (eff_le := by constructor)  (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
         | _, _ => throw <| .generic s!"type mismatch"
       | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
@@ -261,9 +261,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
         match ty₁, ty₂, op with
-        | .tokenstream, .tokenstream, "DCxComb.merge" => return ⟨_, .valuestream 1, Expr.mk (op := Op.dc (MLIR2DC.Op.merge))
+        | .tokenstream, .tokenstream, "DCxComb.merge" => return ⟨_, .valuestream 1, Expr.mk (op := Op.dc (MLIR2DC.Op.merge)) (eff := .pure)
           (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil)⟩
-        | .tokenstream, .tokenstream, "DCxComb.join"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.join))
+        | .tokenstream, .tokenstream, "DCxComb.join"  => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.join)) (eff := .pure)
           (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil)⟩
         | .valuestream r, .tokenstream, "DCxComb.pack"  => sorry
         | _, _, _ => throw <| .generic s!"type mismatch"
@@ -275,7 +275,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
         let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
         match ty₁, ty₂, ty₃, op with
-        | .tokenstream, .tokenstream, .valuestream 1, "DCxComb.select" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.select))
+        | .tokenstream, .tokenstream, .valuestream 1, "DCxComb.select" => return ⟨_, .tokenstream, Expr.mk (op := Op.dc (MLIR2DC.Op.select)) (eff := .pure)
           (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .cons v₃ <| .nil) (regArgs := .nil)⟩
         | _, _, _, _=> throw <| .generic s!"type mismatch"
       | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
@@ -284,7 +284,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | v₁Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         match ty₁, op with
-        | .bitvec w, "Comb.parity" => return ⟨_, .bitvec 1, Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w))
+        | .bitvec w, "Comb.parity" => return ⟨_, .bitvec 1, Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w)) (eff := .pure)
           (ty_eq := sorry)  (eff_le := by constructor) (args := sorry) (regArgs := .nil)⟩
         -- | .hList l, "Comb.concat" => return ⟨_, .bitvec l.sum, Expr.mk (op := Op.comb (MLIR2Comb.Op.c w))
           -- (ty_eq := sorry)  (eff_le := by constructor) (args := sorry) (regArgs := .nil)⟩
