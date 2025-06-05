@@ -166,7 +166,6 @@ def substituteBVExpr (bvExpr: BVExpr w) (assignment: Std.HashMap Nat Substitutio
     --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
     | _ => bvExpr --TODO: Handle other constructors
 
-
 def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat SubstitutionValue) :
           BVLogicalExpr :=
   match bvLogicalExpr with
@@ -179,6 +178,11 @@ def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat Subs
       BoolExpr.ite (substitute constVar assignment) (substitute auxVar assignment) (substitute op3 assignment)
   | _ => bvLogicalExpr
 
+
+def sameBothSides (bvLogicalExpr : BVLogicalExpr) : Bool :=
+    match bvLogicalExpr with
+  | .literal (BVPred.bin lhs _ rhs) => lhs == rhs
+  | _ => false
 
 /-
 This function expects that targetWidth >= w
@@ -815,22 +819,25 @@ def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) 
                    return [constVals] ++ res
 
 def pruneEquivalentExprs (expressions: List (BVExpr w)) : TermElabM (List (BVExpr w)) := do
-      let mut filtered : List (BVExpr w) := []
+      let res ← withTraceNode `Generalize (fun _ => return "Pruned equivalent expressions") do
+        let mut filtered : List (BVExpr w) := []
 
-      for expr in expressions do
-        if filtered.isEmpty then
-          filtered := expr :: filtered
-          continue
+        for expr in expressions do
+          if filtered.isEmpty then
+            filtered := expr :: filtered
+            continue
 
-        let newConstraints := filtered.map (fun f =>  BoolExpr.not (BoolExpr.literal (BVPred.bin f BVBinPred.eq expr)))
-        let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+          let newConstraints := filtered.map (fun f =>  BoolExpr.not (BoolExpr.literal (BVPred.bin f BVBinPred.eq expr)))
+          let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-        if let some _ ← solve subsumeCheckExpr then
-          filtered := expr :: filtered
+          if let some _ ← solve subsumeCheckExpr then
+            filtered := expr :: filtered
 
-      logInfo m! "Removed {expressions.length - filtered.length} expressions after pruning"
+        logInfo m! "Removed {expressions.length - filtered.length} expressions after pruning"
 
-      return filtered
+        return filtered
+
+      pure res
 
 structure PreconditionSynthesisCacheValue where
   positiveExampleValues : List BVExpr.PackedBitVec
@@ -1123,26 +1130,11 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (L
                             : TermElabM (Std.HashMap Nat (List (BVExpr w))) := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
           let mut tempResults : Std.HashMap Nat (List (BVExpr w)) := Std.HashMap.emptyWithCapacity
-          let origWidth := origBVLogicalExpr.state.originalWidth
-          let origRhsSymVars := origBVLogicalExpr.rhs.symVars
-          let origLhsSymVars := origBVLogicalExpr.lhs.symVars
 
           for (var, expressions) in exprSynthesisResults.toList do
               let mut prunedExprs ← pruneEquivalentExprs expressions
-
-              if origWidth != processingWidth && origWidth <= 32 then  -- Remove any that don't evaluate to the expr in the original width. We constrain the width because shifting by large values crash Lean
-                let origPackedBV := origRhsSymVars[var]!
-                let h : origPackedBV.w = origWidth := sorry
-
-                let mut prunedExprs' : List (BVExpr w) := []
-                for expr in prunedExprs do
-                  let evaluatedVal := evalBVExpr origLhsSymVars origWidth expr
-                  if evaluatedVal == (h ▸ origPackedBV.bv) then
-                    prunedExprs' := expr :: prunedExprs'
-
-                prunedExprs := prunedExprs'
-
               tempResults := tempResults.insert var prunedExprs.reverse
+
           pure tempResults
 
 structure GeneralizerState where
@@ -1170,7 +1162,7 @@ def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List
     -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
     let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
     let substitution := substitute parsedBVLogicalExpr.bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
-    if !visited.contains substitution then
+    if !visited.contains substitution && !(sameBothSides substitution) then
       substitutions := substitution :: substitutions
       visited := visited.insert substitution
 
@@ -1426,7 +1418,9 @@ elab "#generalize" expr:term: command =>
 
 #eval 5 ^^^ 88
 
-variable {x y : BitVec 32}
+-- variable {x y : BitVec 32}
+-- #generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- PASSED gxor2_proof/test5_thm; #18
+
 -- #generalize 6#32 <<< (x + 5#32) = 192#32 <<< x -- gshiftadd_proof#shl_add_nuw_thm; #42
 -- #generalize x <<< 6#32 <<< 28#32 = 0#32
 -- #generalize (x &&& 12#32 ^^^ 15#32) &&& 1#32 = 1#32

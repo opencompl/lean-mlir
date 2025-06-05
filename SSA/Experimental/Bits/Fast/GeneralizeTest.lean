@@ -68,15 +68,15 @@ variable {x y z: BitVec 232}
 
 -- Failing
 variable {x y z: BitVec 8}
-#generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8 -- lshr_shl_demand1_thm. Can't generate precondition; #15
+-- #generalize 28#8 >>> x <<< 3#8 ||| 7#8 = BitVec.ofInt 8 (-32) >>> x ||| 7#8 -- lshr_shl_demand1_thm. Can't generate precondition; #15
 -- #generalize ((x ||| BitVec.ofInt 8 (-2)) ^^^ 13#8 ||| 1#8) ^^^ 12#8 = -1#8 -- Timeout gorhxor_proof/test23_thm #32
 -- #generalize 40#8 <<< x >>> 3#8 ||| BitVec.ofInt 8 (-32) = 5#8 <<< x ||| BitVec.ofInt 8 (-32) -- gshiftshift_proof#shl_lshr_demand1_thm; #45
 
 
 
 variable {x y z: BitVec 32}
-#generalize (x &&& 7#32) <<< 3#32 ||| x <<< 2#32 &&& 28#32 = x <<< 3#32 &&& 56#32 ||| x <<< 2#32 &&& 28#32 -- gorhshiftedhmasks#or_and_shift_shift_and_thm #49
-#generalize BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y)  --#13
-#generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof#test3_thm; #48
-#generalize x <<< 3#32 &&& 15#32 ||| x <<< 5#32 &&& 60#32 = x <<< 3#32 &&& 8#32 ||| x <<< 5#32 &&& 32#32 -- gorhshiftedhmasks_proof#or_and_shifts1_thm; #50
-#generalize 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x ---- gshlhsub#shl_sub_i32_thm #47
+-- #generalize (x &&& 7#32) <<< 3#32 ||| x <<< 2#32 &&& 28#32 = x <<< 3#32 &&& 56#32 ||| x <<< 2#32 &&& 28#32 -- gorhshiftedhmasks#or_and_shift_shift_and_thm #49
+-- #generalize BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y)  --#13
+-- #generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof#test3_thm; #48
+-- #generalize x <<< 3#32 &&& 15#32 ||| x <<< 5#32 &&& 60#32 = x <<< 3#32 &&& 8#32 ||| x <<< 5#32 &&& 32#32 -- gorhshiftedhmasks_proof#or_and_shifts1_thm; #50
+-- #generalize 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x ---- gshlhsub#shl_sub_i32_thm #47
