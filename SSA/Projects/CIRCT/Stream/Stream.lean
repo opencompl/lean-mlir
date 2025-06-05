@@ -21,6 +21,9 @@ namespace Stream
 def map {α β : Type} (s : Stream α) (f : α → β) : Stream β :=
   fun i => (s i).map f
 
+def mapOpt {α β : Type} (s : Stream α) (f : α → (Option β)) : Stream β :=
+  fun i => (s i).bind f
+
 def corec {α} {β} (s0 : β) (f : β → (Option α × β)) : Stream α :=
   Stream'.corec (f · |>.fst) (f · |>.snd) s0
 

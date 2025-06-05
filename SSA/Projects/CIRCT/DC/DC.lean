@@ -13,6 +13,8 @@ def ValueStream := Stream
 
 def TokenStream := Stream Unit
 
+def VariadicValueStream (w : Nat) := CIRCTStream.Stream (List (BitVec w))
+
 instance : ToString TokenStream where
   toString s := toString (Stream.toList 100 s)
 
@@ -23,6 +25,18 @@ def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream 
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
 
+
+-- ifeally we spit out a tuple of bitvec, but it's less usable
+-- the output of this is synced
+def unpack2 (x : ValueStream (BitVec w)) (y : ValueStream (BitVec w)) : VariadicValueStream w × TokenStream :=
+  Stream.corec₂ (β := CIRCTStream.Stream (BitVec w) × CIRCTStream.Stream (BitVec w)) (x, y)
+    fun (x, y) => Id.run <| do
+      match x 0, y 0 with
+      | some x', some y' => return (some [x', y'], some .unit, (x.tail, y.tail))
+      | some _, none => return (none, none, (x, y.tail))
+      | none, some _ => return (none, none, (x.tail, y)) -- the mid return is the one that returns some if we have a sync
+      | none, none => return (none, none, (x.tail, y.tail))
+
 def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
   Stream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -30,6 +44,14 @@ def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
     | some _, none => (none, (x, y.tail)) -- wait to sync with the token stream
     | none, some _ => (none, (x.tail, y)) -- wait to sync with the value stream
     | none, none => (none, (x.tail, y.tail))
+
+def pack2 (x : VariadicValueStream α × TokenStream) : (ValueStream (BitVec α)) × (ValueStream (BitVec α))  :=
+  Stream.corec₂ (β := VariadicValueStream α × TokenStream) (x) fun ⟨x, y⟩ =>
+    match x 0, y 0 with
+    | some x', some _ => (x'[0]?, x'[1]?, (x.tail, y.tail))
+    | some _, none => (none, none, (x, y.tail))
+    | none, some _ => (none, none, (x.tail, y)) -- wait to sync with the value stream
+    | none, none => (none, none, (x.tail, y.tail)) -- wait to sync with the value stream
 
 def branch (x : ValueStream (BitVec 1)): TokenStream × TokenStream  :=
   Stream.corec₂ (β := ValueStream (BitVec 1)) x fun x =>
@@ -104,7 +126,8 @@ inductive Ty
 | tokenstream2 : Ty
 | valuestream (w : Nat) : Ty -- A stream of BitVec w
 | valuestream2 (w : Nat) : Ty -- A stream of BitVec w
-| valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec w
+| valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec wvariadicvaluevokenvstream
+| variadicvaluetokenstream (w : Nat) : Ty -- variadicvaluevokenvstream
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : ToString Ty where
@@ -115,6 +138,9 @@ inductive Op
 | snd
 | fstVal (w : Nat)
 | sndVal (w : Nat)
+| fstVal' (w : Nat)
+| sndVal' (w : Nat)
+| tokVal' (w : Nat)
 | merge
 | branch
 | fork
@@ -123,7 +149,9 @@ inductive Op
 | sink
 | source
 | pack (w : Nat)
+| pack2 (w : Nat)
 | unpack (w : Nat)
+| unpack2 (w : Nat)
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 abbrev DC : Dialect where
@@ -133,8 +161,11 @@ abbrev DC : Dialect where
 def_signature for DC where
   | .fst => (Ty.tokenstream2) → (Ty.tokenstream)
   | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
+  | .fstVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
   | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
   | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
+  | .sndVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
+  | .tokVal' t => (Ty.variadicvaluetokenstream t) → Ty.tokenstream
   | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream 1
   | .branch => (Ty.valuestream 1) → Ty.tokenstream2
   | .fork => (Ty.tokenstream) → Ty.tokenstream2
@@ -143,7 +174,10 @@ def_signature for DC where
   | .sink => (Ty.tokenstream) → Ty.tokenstream
   | .source => () → Ty.tokenstream
   | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
+  | .pack2 t => (Ty.variadicvaluetokenstream t) → Ty.valuestream2 t
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
+  | .unpack2 t => (Ty.valuestream t, Ty.valuestream t) → Ty.variadicvaluetokenstream t
+
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
 | Ty.tokenstream => CIRCTStream.DCOp.TokenStream
@@ -151,13 +185,17 @@ toType := fun
 | Ty.valuestream w => CIRCTStream.DCOp.ValueStream (BitVec w)
 | Ty.valuestream2 w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.ValueStream (BitVec w)
 | Ty.valuetokenstream w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.TokenStream
+| Ty.variadicvaluetokenstream w => CIRCTStream.DCOp.VariadicValueStream w × CIRCTStream.DCOp.TokenStream
 
 
 def_denote for DC where
   | .fst => fun s => s.fst
   | .fstVal _ => fun s => s.fst
+  | .fstVal' _ => fun s => s.fst.mapOpt (·[0]?)
   | .snd => fun s => s.snd
   | .sndVal _ => fun s => s.snd
+  | .sndVal' _ => fun s => s.fst.mapOpt (·[0]?)
+  | .tokVal' _ => fun s => s.snd
   | .merge => fun s₁ s₂ => CIRCTStream.DCOp.merge s₁ s₂
   | .branch => fun s => CIRCTStream.DCOp.branch s
   | .fork => fun s => CIRCTStream.DCOp.fork s
@@ -166,10 +204,11 @@ def_denote for DC where
   | .sink => fun s => CIRCTStream.DCOp.sink s
   | .source => fun s => CIRCTStream.DCOp.source s
   | .pack _ => fun s₁ s₂ => CIRCTStream.DCOp.pack s₁ s₂
+  | .pack2 _ => fun s₁ => CIRCTStream.DCOp.pack2 s₁
   | .unpack _ => fun s => CIRCTStream.DCOp.unpack s
+  | .unpack2 _ => fun s => CIRCTStream.DCOp.unpack2 s
 
 end Dialect
-
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
   | MLIR.AST.MLIRType.undefined s => do
@@ -189,6 +228,10 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
     | ["ValueTokenStream", w] =>
     match w.toNat? with
       | some w' => return .valuetokenstream w'
+      | _ => throw .unsupportedType
+    | ["VariadicValueTokenStream", w] =>
+    match w.toNat? with
+      | some w' => return .variadicvaluetokenstream w'
       | _ => throw .unsupportedType
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
@@ -220,12 +263,28 @@ def unpack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) : Expr (DC) Γ .pure 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+def unpack2 {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.variadicvaluetokenstream r) :=
+  Expr.mk
+    (op := .unpack2 r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
 def pack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream r) :=
   Expr.mk
     (op := .pack r)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+def pack2 {r} {Γ : Ctxt _} (a : Γ.Var (.variadicvaluetokenstream r)) : Expr (DC) Γ .pure (.valuestream2 r) :=
+  Expr.mk
+    (op := .pack2 r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a  <| .nil)
     (regArgs := .nil)
 
 def branch {Γ : Ctxt _} (a : Γ.Var (.valuestream 1)) : Expr (DC) Γ .pure (.tokenstream2) :=
@@ -291,6 +350,8 @@ def sndVal {r} {Γ : Ctxt _} (a : Γ.Var (.valuetokenstream r))  : Expr (DC) Γ 
     (eff_le := by constructor)
     (args := .cons a <| .nil)
     (regArgs := .nil)
+
+
 
 def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokenstream)  :=
   Expr.mk
