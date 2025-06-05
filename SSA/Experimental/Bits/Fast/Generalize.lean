@@ -1153,33 +1153,34 @@ structure GeneralizerState where
 abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
 def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
-  logInfo m! "Expression synthesis results : {exprSynthesisResults}"
-  let combinations := productsList exprSynthesisResults.values
-  let mut substitutions := []
+  withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
+  -- logInfo m! "Expression synthesis results : {exprSynthesisResults}"
+    let combinations := productsList exprSynthesisResults.values
+    let mut substitutions := []
 
-  let state ← get
-  let parsedBVLogicalExpr := state.parsedBVLogicalExpr
-  let mut visited := state.visitedSubstitutions
+    let state ← get
+    let parsedBVLogicalExpr := state.parsedBVLogicalExpr
+    let mut visited := state.visitedSubstitutions
 
-  for combo in combinations do
-    -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
-    let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
-    let substitution := substitute parsedBVLogicalExpr.bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
-    if !visited.contains substitution && !(sameBothSides substitution) then
-      substitutions := substitution :: substitutions
-      visited := visited.insert substitution
+    for combo in combinations do
+      -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
+      let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
+      let substitution := substitute parsedBVLogicalExpr.bvLogicalExpr (bvExprToSubstitutionValue zippedCombo)
+      if !visited.contains substitution && !(sameBothSides substitution) then
+        substitutions := substitution :: substitutions
+        visited := visited.insert substitution
 
-  let mut needsPreconditionExprs := state.needsPreconditionsExprs
-  for subst in substitutions.reverse do -- We reverse in a few places so we can process in roughly increasing cost
-    let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
-    if negativeExample.isEmpty then
-      return some subst
-    needsPreconditionExprs := subst :: needsPreconditionExprs
+    let mut needsPreconditionExprs := state.needsPreconditionsExprs
+    for subst in substitutions.reverse do -- We reverse in a few places so we can process in roughly increasing cost
+      let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
+      if negativeExample.isEmpty then
+        return some subst
+      needsPreconditionExprs := subst :: needsPreconditionExprs
 
-  let updatedState := {state with visitedSubstitutions := visited, needsPreconditionsExprs := needsPreconditionExprs}
-  set updatedState
+    let updatedState := {state with visitedSubstitutions := visited, needsPreconditionsExprs := needsPreconditionExprs}
+    set updatedState
 
-  return none
+    return none
 
 def bottomUpEnumerateFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) (ops: List (BVExpr w → BVExpr w → BVExpr w)) : GeneralizerStateM (Std.HashMap Nat (List (BVExpr w))) := do
     let zero := BitVec.ofNat w 0
