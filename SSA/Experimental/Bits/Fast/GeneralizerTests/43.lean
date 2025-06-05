@@ -5,4 +5,4 @@ set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
 variable {x y : BitVec 32}
-#generalize 6#32 <<< (x + 5#32) = 192#32 <<< x -- gshiftadd_proof#shl_add_nuw_thm; #42
+#generalize 63#32 - (x &&& 31#32) = x &&& 31#32 ^^^ 63#32 -- gsubhxor_proof#low_mask_nsw_nuw_thm; #43
