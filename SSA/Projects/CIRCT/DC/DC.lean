@@ -16,14 +16,6 @@ def TokenStream := Stream Unit
 instance : ToString TokenStream where
   toString s := toString (Stream.toList 100 s)
 
-def popReady (s : ValueStream (BitVec w)) (n : Nat) : BitVec w :=
-  if 0 < n then
-    match s.head with
-    | some e => e
-    | _ => popReady s.tail (n - 1)
-  else
-    0#w
-
 def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream :=
   Stream.corec₂ (β := Stream (BitVec w)) (x)
     fun x => Id.run <| do
@@ -108,7 +100,6 @@ section Dialect
 
 
 inductive Ty
-| bitvec (w : Nat) : Ty
 | tokenstream : Ty
 | tokenstream2 : Ty
 | valuestream (w : Nat) : Ty -- A stream of BitVec w
@@ -133,7 +124,6 @@ inductive Op
 | source
 | pack (w : Nat)
 | unpack (w : Nat)
-| popReady (w : Nat) (n : Nat)
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 abbrev DC : Dialect where
@@ -154,11 +144,8 @@ def_signature for DC where
   | .source => () → Ty.tokenstream
   | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
-  | .popReady w _ => (Ty.valuestream w) → Ty.bitvec w
-
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
-| Ty.bitvec w => BitVec w
 | Ty.tokenstream => CIRCTStream.DCOp.TokenStream
 | Ty.tokenstream2 => CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream
 | Ty.valuestream w => CIRCTStream.DCOp.ValueStream (BitVec w)
@@ -180,16 +167,11 @@ def_denote for DC where
   | .source => fun s => CIRCTStream.DCOp.source s
   | .pack _ => fun s₁ s₂ => CIRCTStream.DCOp.pack s₁ s₂
   | .unpack _ => fun s => CIRCTStream.DCOp.unpack s
-  | .popReady _ n => fun s => CIRCTStream.DCOp.popReady s n
 
 end Dialect
 
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
-  | MLIR.AST.MLIRType.int _ w => do
-    match w with
-    | .concrete w' => return .bitvec w'
-    | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["TokenStream"] =>
@@ -213,14 +195,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
 
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where
   mkTy := mkTy
-
-def popReady {Γ : Ctxt _} (a : Γ.Var (.valuestream w)) (n : Nat) : Expr (DC) Γ .pure (.bitvec w) :=
-  Expr.mk
-    (op := .popReady w n)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .nil)
-    (regArgs := .nil)
 
 def source : Expr (DC) Γ .pure (.tokenstream) :=
   Expr.mk
@@ -370,20 +344,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .tokenstream, .tokenstream, .valuestream 1, "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
       | _, _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | _ =>
-    match (opStx.name).splitOn "_" with
-    | ["DC.popReady", n] =>
-      match n.toNat? with
-      | some n' =>
-        match opStx.args with
-        | v₁Stx::[] =>
-          let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-          match ty₁ with
-          | .valuestream w => return ⟨_, .bitvec w, popReady v₁ n'⟩
-          | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
-        | _ =>  throw <| .unsupportedOp s!"unsupported type for  {repr opStx}"
-      | _ => throw <| .unsupportedOp s!"unsupported stream size for {repr opStx}"
-    | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+  | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (DC) 0 where
   mkExpr := mkExpr

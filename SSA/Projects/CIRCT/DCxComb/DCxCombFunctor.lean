@@ -84,6 +84,7 @@ def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
 -- this function *actually* does the syncing! we take an HVector of Streams and lift it into
 -- a Stream that returns none until all the input stream are ready
 -- note that Stream := Stream' (Option β)
+-- latency insensitive op
 def is_ready {l : List Nat} (v : HVector (fun i => Option (BitVec i)) l) :
     Option (HVector (fun i => BitVec i) l) :=
   match v with
@@ -110,6 +111,7 @@ example : toType (liftTy (Ty.bitvec 64 : Comb.Ty)) = Stream' (Option <| BitVec 6
   · mapping the types that live in the functor to the comb op arg types
     e.g. binary op: f = bv w → bv w → bv w
       liftComb lifts this to be valstr w → valstr w → valstr w
+  · this is actually latency insensitive
 -/
 open MLIR2Comb in
 variable {m} [Pure m] in
@@ -152,6 +154,7 @@ example (op : Comb.Op) : DialectSignature.regSig (d := DCxComb) (.comb op) = [] 
 -- TODO: renamed HVector.cast
 def vecCast (h : as = bs) : HVector A as → HVector A bs := (h ▸ ·)
 
+-- semantics is defined already here, no need to redefine it later
 def_denote for DCxComb where
   | .comb op =>
       let opDenote :=
@@ -162,10 +165,6 @@ def_denote for DCxComb where
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCxComb DCxComb.Ty
-  | MLIR.AST.MLIRType.int _ w => do
-    match w with
-    | .concrete w' => return .bitvec w'
-    | .mvar _ => throw <| .generic s!"Bitvec size can't be an mvar"
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["TokenStream"] =>
@@ -194,7 +193,6 @@ open Qq Lean Meta Elab.Term Elab Command
 open MLIR
 
 def getVarWidth {Γ : Ctxt DCxComb.Ty} : (Σ t, Γ.Var t) → Nat
-  | ⟨.bitvec w, _⟩ => w
   | ⟨.tokenstream, _⟩ => 1
   | ⟨.tokenstream2, _⟩ => 1
   | ⟨.valuestream w, _⟩ => w
@@ -216,7 +214,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   let terW : AST.ReaderM (DCxComb) (Nat) := do
     let args ← args.assumeArity 3
     return getVarWidth args[0]
-   -- n-ary ops
+  -- n-ary ops
   let args' ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ) -- will need to find a better way to do this
   if h : args'.length = 0 then
     throw <| .generic s!" empty list of argument provided for the variadic op {repr opStx.args}"
@@ -284,8 +282,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | v₁Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
         match ty₁, op with
-        | .bitvec w, "Comb.parity" => return ⟨_, .bitvec 1, Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w)) (eff := .pure)
-          (ty_eq := sorry)  (eff_le := by constructor) (args := sorry) (regArgs := .nil)⟩
+        | .valuestream w, "DCxComb.parity" => return ⟨_, .valuestream 1, (Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w)) (eff := .pure)
+          (ty_eq := rfl)  (eff_le := by sorry) (args := .cons v₁ <| .nil) (regArgs := .nil))⟩
         -- | .hList l, "Comb.concat" => return ⟨_, .bitvec l.sum, Expr.mk (op := Op.comb (MLIR2Comb.Op.c w))
           -- (ty_eq := sorry)  (eff_le := by constructor) (args := sorry) (regArgs := .nil)⟩
         | _, _ => throw <| .generic s!"type mismatch"
@@ -298,8 +296,10 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           have hl' : (0 : Nat) < args.length := by
             simp [Nat.gt_of_not_le (n := args.length) (m := 0) hl]
           match args[0], op with
-          | ⟨.bitvec w, _⟩, "Comb.add" =>
+          | ⟨.valuestream w, _⟩, "Comb.add" =>
             if hall : args.all (·.1 = .bitvec w) then sorry
+          --   (Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w)) (eff := .pure)
+          -- (ty_eq := rfl)  (eff_le := by sorry) (args := .cons v₁ <| .nil) (regArgs := .nil))⟩
               -- let argsᵥ := ofList (.bitvec w) _ hall
               -- have heq : args.length - 1 + 1 = args.length := by omega
               -- return ⟨_, .bitvec w, add args.length (heq ▸ argsᵥ)⟩
