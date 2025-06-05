@@ -138,7 +138,10 @@ Another option, which would be more complicated, but correct by construction, is
 "eval region $x". Assuming the `op` is pure, `OpDenoteM α` could then be evaluated both purely or
 impurely.
 -/
-
+class DialectPrint (d : Dialect) where
+  printOpName : d.Op → String
+  printTy : d.Ty → String
+  printAttributes : d.Op → String
 
 /- # Datastructures -/
 section DataStructures
@@ -273,6 +276,8 @@ end Repr
 /- # ToString instances for Com and Expr  -/
 section ToString
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+
+
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
