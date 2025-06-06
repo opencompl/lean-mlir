@@ -74,7 +74,7 @@ def printParsedBVExprState (s: ParsedBVExprState) :=
     s!"  maxSymVarId: {s.maxSymVarId}\n" ++
     s!"  inputVarToBVExpr: {s.inputVarToBVExpr}\n" ++
     s!"  inputBVExprVarToExpr: {s.inputBVExprVarToExpr}\n" ++
-    s!"  symVarToVal: {s.symVarToVal}¬"
+    s!"  symVarToVal: {s.symVarToVal}"
 
 instance : ToMessageData ParsedBVExprState where
   toMessageData s := printParsedBVExprState s
@@ -342,7 +342,6 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         let currState: ParsedBVExprState ← get
         let natVal ← getNatValue? x
         let bitVal ← getBitVecValue? x
-        let zeroExpr : BVExpr targetWidth := BVExpr.const (BitVec.ofNat targetWidth 0)
 
         match (natVal, bitVal) with
         | (some v, none) =>
@@ -1129,7 +1128,7 @@ def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVar
 
   pure res
 
-def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (BVExpr w))) (origBVLogicalExpr : ParsedBVLogicalExpr) (processingWidth: Nat)
+def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (BVExpr w)))
                             : TermElabM (Std.HashMap Nat (List (BVExpr w))) := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
           let mut tempResults : Std.HashMap Nat (List (BVExpr w)) := Std.HashMap.emptyWithCapacity
@@ -1154,7 +1153,7 @@ abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
 def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
-  -- logInfo m! "Expression synthesis results : {exprSynthesisResults}"
+    logInfo m! "Expression synthesis results : {exprSynthesisResults}"
     let combinations := productsList exprSynthesisResults.values
     let mut substitutions := []
 
@@ -1257,7 +1256,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
           | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (h ▸ deductiveSearchRes)
 
         if exprSynthesisResults.size == rhsAssignments.size then
-          exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+          exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
           match (← checkForNoPreconditionRequired exprSynthesisResults) with
           | some expr => return (some expr)
           | none => logInfo m! "Could not find a generalized form from just deductive search"
@@ -1269,7 +1268,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
           exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ (h ▸ exprs))
 
         if !lhsSketchResults.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
-          exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+          exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
           let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
           match preconditionCheckResults with
           | some expr => return (some expr)
@@ -1302,7 +1301,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
             exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ exprs)
 
           if !bottomUpRes.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
-            exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults parsedBVLogicalExpr processingWidth
+            exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
             let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
             match preconditionCheckResults with
             | some expr => return some expr
