@@ -585,12 +585,26 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
         getBVExprConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr := Id.run do
                 match bvExpr with
                 | .shiftRight lhs rhs | .shiftLeft lhs rhs | .arithShiftRight lhs rhs =>
-                      match rhs with
-                      | BVExpr.var id =>
-                          if !symVars.contains id then  -- we're dealing with an input variable
+                      match (lhs, rhs) with
+                      | (BVExpr.var lhsId, BVExpr.var rhsId) =>
+                          let mut constraints := []
+
+                          if symVars.contains lhsId then
+                            constraints := getLhsShiftConstraints lhs ++ constraints
+
+                          if symVars.contains rhsId then
+                            constraints := getRhsShiftConstraints rhs ++ constraints
+                          pure constraints
+                      | (BVExpr.var lhsId, _) =>
+                          if !symVars.contains lhsId then
+                            getBVExprConstraints rhs
+                          else
+                            (getLhsShiftConstraints lhs) ++ (getBVExprConstraints rhs)
+                      | (_, BVExpr.var rhsId) =>
+                          if !symVars.contains rhsId then
                             getBVExprConstraints lhs
                           else
-                             ((getBVExprConstraints lhs) ++ (getShiftConstraints rhs))
+                          (getBVExprConstraints lhs)  ++ (getRhsShiftConstraints rhs)
                       | _ => ((getBVExprConstraints lhs) ++ (getBVExprConstraints rhs))
                 | .bin lhs op rhs  =>
                       match (lhs, rhs) with
@@ -618,7 +632,11 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
                       getBVExprConstraints operand
                 | _ =>  []
 
-        getShiftConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr :=
+        getLhsShiftConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr :=
+          let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin bvExpr BVBinPred.eq (BVExpr.const ((BitVec.ofNat w 0)))))
+          [neqZero]
+
+        getRhsShiftConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr :=
           let ltWidth := BoolExpr.literal (BVPred.bin bvExpr BVBinPred.ult (BVExpr.const (BitVec.ofNat w w)))
           let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin bvExpr BVBinPred.eq (BVExpr.const ((BitVec.ofNat w 0)))))
 
@@ -877,7 +895,7 @@ instance : ToString PreconditionSynthesisCacheValue where
     s! "⟨positiveExampleValues := {val.positiveExampleValues}, negativeExampleValues := {val.negativeExampleValues}⟩"
 
 def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reducedWidthBVLogicalExpr: BVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
-              (numConjunctions: Nat := 0) : TermElabM (Option BVLogicalExpr) := do
+              (numConjunctions: Nat) : TermElabM (Option BVLogicalExpr) := do
 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
@@ -1338,7 +1356,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
 
     return none
 
-def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions := 0) : GeneralizerStateM (Option ( BVLogicalExpr × BVLogicalExpr)) := do
+def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat) : GeneralizerStateM (Option ( BVLogicalExpr × BVLogicalExpr)) := do
   let state ← get
   let parsedBVLogicalExpr := state.parsedBVLogicalExpr
 
@@ -1370,6 +1388,7 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
 def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option String) := do
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
         synthesizeAndCheckNoPreconditionNeeded constantAssignments
+    let maxConjunctions : ℕ := 1
 
     match exprWithNoPrecondition with
     | some generalized => return some (s! "General form {generalized} has no precondition")
@@ -1379,7 +1398,7 @@ def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec
                 throwError m! "Could not synthesise constant expressions for {state.parsedBVLogicalExpr.bvLogicalExpr}"
 
               let preconditionRes ← withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
-                checkForPreconditions constantAssignments
+                checkForPreconditions constantAssignments maxConjunctions
 
               match preconditionRes with
               | some (pc, expr) => return some s! "Expr {expr} has weak precondition: {pc}"
