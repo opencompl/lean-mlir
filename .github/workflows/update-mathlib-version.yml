@@ -43,7 +43,7 @@ jobs:
       - name: Check if lean toolchain is already newer or equally old
         shell: zsh {0}
         run: |
-           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d'` -le ${{steps.mldate.outputs.date}} ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
+           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d' | sed -e 's/-//g' ` -le `echo ${{steps.mldate.outputs.date}} | sed -e 's/-//g'` ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
 
       - name: Set Mathlib Date
         run: |
