@@ -607,21 +607,21 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
                 (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
                 (toExpr niter)) safetyCertExpr
           check safetyCertTy
-          logInfo m!"safety cert type: {indentD safetyCertTy}"
+          -- logInfo m!"safety cert type: {indentD safetyCertTy}"
           let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
           -- (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
           check safetyCertProof
-          logInfo m!"safety cert proof: {indentD safetyCertProof}"
+          -- logInfo m!"safety cert proof: {indentD safetyCertProof}"
           let indCertTy ←
             Expr.mkVerifyCircuit
               (← Expr.mkMkIndHypCircuit
                 (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
                 (toExpr niter)) indCertExpr
           check indCertTy
-          logInfo m!"inductive cert type: {indentD indCertTy}"
+          -- logInfo m!"inductive cert type: {indentD indCertTy}"
           let indCertProof ← mkEqRflNativeDecideProof indCertTy true
           check indCertProof
-          logInfo m!"inductive cert proof: {indentD indCertProof}"
+          -- logInfo m!"inductive cert proof: {indentD indCertProof}"
           let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG [])
             #[w,
               bvToIxMapVal,
@@ -633,7 +633,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
               indCertProof]
           let prf ← instantiateMVars prf
           check prf
-          logInfo m!"proof: {indentD prf}"
+          -- logInfo m!"proof: {indentD prf}"
           pure prf
         let gs ← g.apply prf
         -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
