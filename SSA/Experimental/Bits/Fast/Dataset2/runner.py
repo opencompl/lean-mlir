@@ -172,12 +172,9 @@ def get_git_root():
 def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
-import SSA.Core.Tactic.TacBench
+import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
-import SSA.Experimental.Bits.Fast.Reflect
-import SSA.Experimental.Bits.FastCopy.Reflect
--- import SSA.Experimental.Bits.AutoStructs.Tactic
--- import SSA.Experimental.Bits.AutoStructs.ForLean
+import SSA.Core.Tactic.TacBench
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 9000
@@ -208,11 +205,12 @@ class UnitTest:
     solver : str
 
     solver_mba = "mba"
-    solver_kinduction = "kinduction"
+    solver_kinduction_unverified = "kinduction_unverified"
+    solver_kinduction_verified = "kinduction_verifked"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_mba, solver_kinduction, solver_bv_automata_classic, solver_bv_decide]
-    
+    solvers = [solver_mba, solver_kinduction_unverified, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
+
     def __init__(self, ix, test, solver):
         self.ix = ix
         self.test = test
@@ -224,15 +222,17 @@ class UnitTest:
         interpolant = """by tac_bench (config := {{ outputType := .csv }}) ["{solver}" : {call}]; sorry"""
         if solver == UnitTest.solver_mba:
             return interpolant.format(solver=solver, call="bv_mba")
-        elif solver == UnitTest.solver_kinduction:
-            return interpolant.format(solver=solver, call="bv_automata_circuit (config := {backend := .cadical})")
+        elif solver == UnitTest.solver_kinduction_unverified:
+            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .circuit_cadical_unverified 5 })")
+        elif solver == UnitTest.solver_kinduction_verified:
+            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .circuit_cadical_verified 5 })")
         elif solver == UnitTest.solver_bv_automata_classic:
-            return interpolant.format(solver=solver, call="bv_automata_classic_nf")
+            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .automata })")
         elif solver == UnitTest.solver_bv_decide:
             return interpolant.format(solver=solver, call="bv_decide")
         else:
             raise RuntimeError(f"expected solver to be one of '{UnitTest.solvers}', found '{solver}'")
-    
+
     def write(self, f):
         f.write(test_file_preamble())
         out = f"private theorem thm :\n    "

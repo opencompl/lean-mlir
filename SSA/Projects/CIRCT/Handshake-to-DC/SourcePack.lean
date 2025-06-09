@@ -37,7 +37,7 @@ def sourcePack := [DC_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => (vals.get? i).join
 
-def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
+def x : DCOp.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
 
-def test : DC.ValueStream Int :=
+def test : DCOp.ValueStream Int :=
   sourcePack.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))

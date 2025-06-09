@@ -12,7 +12,7 @@ set_option Elab.async false
 
 section g2007h06h21hDivCompareMiscomp_proof
 theorem test_thm (e : IntW 32) :
-  icmp IntPredicate.ult (LLVM.udiv e (const? 32 4)) (const? 32 1073741824) ⊑ const? 1 1 := by
+  icmp IntPred.ult (LLVM.udiv e (const? 32 4)) (const? 32 1073741824) ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

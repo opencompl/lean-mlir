@@ -12,7 +12,7 @@ set_option Elab.async false
 
 section gcomparehudiv_proof
 theorem test1_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (LLVM.udiv e_1 e) (const? 32 0) ⊑ icmp IntPredicate.ugt e e_1 := by
+  icmp IntPred.eq (LLVM.udiv e_1 e) (const? 32 0) ⊑ icmp IntPred.ugt e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -22,7 +22,7 @@ theorem test1_thm (e e_1 : IntW 32) :
 
 
 theorem test2_thm (e : IntW 32) :
-  icmp IntPredicate.eq (LLVM.udiv (const? 32 64) e) (const? 32 0) ⊑ icmp IntPredicate.ugt e (const? 32 64) := by
+  icmp IntPred.eq (LLVM.udiv (const? 32 64) e) (const? 32 0) ⊑ icmp IntPred.ugt e (const? 32 64) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -32,7 +32,7 @@ theorem test2_thm (e : IntW 32) :
 
 
 theorem test3_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (LLVM.udiv e_1 e) (const? 32 0) ⊑ icmp IntPredicate.ule e e_1 := by
+  icmp IntPred.ne (LLVM.udiv e_1 e) (const? 32 0) ⊑ icmp IntPred.ule e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -42,7 +42,7 @@ theorem test3_thm (e e_1 : IntW 32) :
 
 
 theorem test4_thm (e : IntW 32) :
-  icmp IntPredicate.ne (LLVM.udiv (const? 32 64) e) (const? 32 0) ⊑ icmp IntPredicate.ult e (const? 32 65) := by
+  icmp IntPred.ne (LLVM.udiv (const? 32 64) e) (const? 32 0) ⊑ icmp IntPred.ult e (const? 32 65) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -52,7 +52,7 @@ theorem test4_thm (e : IntW 32) :
 
 
 theorem test5_thm (e : IntW 32) :
-  icmp IntPredicate.ne (LLVM.udiv (const? 32 (-1)) e) (const? 32 0) ⊑ const? 1 1 := by
+  icmp IntPred.ne (LLVM.udiv (const? 32 (-1)) e) (const? 32 0) ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -62,7 +62,7 @@ theorem test5_thm (e : IntW 32) :
 
 
 theorem test6_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (LLVM.udiv (const? 32 5) e) (const? 32 0) ⊑ icmp IntPredicate.ult e (const? 32 6) := by
+  icmp IntPred.ugt (LLVM.udiv (const? 32 5) e) (const? 32 0) ⊑ icmp IntPred.ult e (const? 32 6) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -72,7 +72,7 @@ theorem test6_thm (e : IntW 32) :
 
 
 theorem test7_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (LLVM.udiv (const? 32 8) e) (const? 32 8) ⊑ const? 1 0 := by
+  icmp IntPred.ugt (LLVM.udiv (const? 32 8) e) (const? 32 8) ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -82,7 +82,7 @@ theorem test7_thm (e : IntW 32) :
 
 
 theorem test8_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (LLVM.udiv (const? 32 4) e) (const? 32 3) ⊑ icmp IntPredicate.ult e (const? 32 2) := by
+  icmp IntPred.ugt (LLVM.udiv (const? 32 4) e) (const? 32 3) ⊑ icmp IntPred.ult e (const? 32 2) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -92,7 +92,7 @@ theorem test8_thm (e : IntW 32) :
 
 
 theorem test9_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (LLVM.udiv (const? 32 4) e) (const? 32 2) ⊑ icmp IntPredicate.ult e (const? 32 2) := by
+  icmp IntPred.ugt (LLVM.udiv (const? 32 4) e) (const? 32 2) ⊑ icmp IntPred.ult e (const? 32 2) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -102,7 +102,7 @@ theorem test9_thm (e : IntW 32) :
 
 
 theorem test10_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (LLVM.udiv (const? 32 4) e) (const? 32 1) ⊑ icmp IntPredicate.ult e (const? 32 3) := by
+  icmp IntPred.ugt (LLVM.udiv (const? 32 4) e) (const? 32 1) ⊑ icmp IntPred.ult e (const? 32 3) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -112,7 +112,7 @@ theorem test10_thm (e : IntW 32) :
 
 
 theorem test11_thm (e : IntW 32) :
-  icmp IntPredicate.ult (LLVM.udiv (const? 32 4) e) (const? 32 1) ⊑ icmp IntPredicate.ugt e (const? 32 4) := by
+  icmp IntPred.ult (LLVM.udiv (const? 32 4) e) (const? 32 1) ⊑ icmp IntPred.ugt e (const? 32 4) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -122,7 +122,7 @@ theorem test11_thm (e : IntW 32) :
 
 
 theorem test12_thm (e : IntW 32) :
-  icmp IntPredicate.ult (LLVM.udiv (const? 32 4) e) (const? 32 2) ⊑ icmp IntPredicate.ugt e (const? 32 2) := by
+  icmp IntPred.ult (LLVM.udiv (const? 32 4) e) (const? 32 2) ⊑ icmp IntPred.ugt e (const? 32 2) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -132,7 +132,7 @@ theorem test12_thm (e : IntW 32) :
 
 
 theorem test13_thm (e : IntW 32) :
-  icmp IntPredicate.ult (LLVM.udiv (const? 32 4) e) (const? 32 3) ⊑ icmp IntPredicate.ugt e (const? 32 1) := by
+  icmp IntPred.ult (LLVM.udiv (const? 32 4) e) (const? 32 3) ⊑ icmp IntPred.ugt e (const? 32 1) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -142,7 +142,7 @@ theorem test13_thm (e : IntW 32) :
 
 
 theorem test14_thm (e : IntW 32) :
-  icmp IntPredicate.ult (LLVM.udiv (const? 32 4) e) (const? 32 4) ⊑ icmp IntPredicate.ugt e (const? 32 1) := by
+  icmp IntPred.ult (LLVM.udiv (const? 32 4) e) (const? 32 4) ⊑ icmp IntPred.ugt e (const? 32 1) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -152,7 +152,7 @@ theorem test14_thm (e : IntW 32) :
 
 
 theorem test15_thm (e : IntW 32) :
-  icmp IntPredicate.ugt (LLVM.udiv (const? 32 4) e) (const? 32 (-1)) ⊑ const? 1 0 := by
+  icmp IntPred.ugt (LLVM.udiv (const? 32 4) e) (const? 32 (-1)) ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -162,7 +162,7 @@ theorem test15_thm (e : IntW 32) :
 
 
 theorem test16_thm (e : IntW 32) :
-  icmp IntPredicate.ult (LLVM.udiv (const? 32 4) e) (const? 32 (-1)) ⊑ const? 1 1 := by
+  icmp IntPred.ult (LLVM.udiv (const? 32 4) e) (const? 32 (-1)) ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

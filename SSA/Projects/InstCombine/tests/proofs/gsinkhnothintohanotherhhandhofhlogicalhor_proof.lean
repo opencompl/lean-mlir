@@ -12,8 +12,8 @@ set_option Elab.async false
 
 section gsinkhnothintohanotherhhandhofhlogicalhor_proof
 theorem t0_thm (e e_1 e_2 e_3 : IntW 8) (e_4 : IntW 1) :
-  select (select (LLVM.xor e_4 (const? 1 1)) (const? 1 1) (icmp IntPredicate.eq e_3 e_2)) e_1 e ⊑
-    select (select e_4 (icmp IntPredicate.ne e_3 e_2) (const? 1 0)) e e_1 := by
+  select (select (LLVM.xor e_4 (const? 1 1)) (const? 1 1) (icmp IntPred.eq e_3 e_2)) e_1 e ⊑
+    select (select e_4 (icmp IntPred.ne e_3 e_2) (const? 1 0)) e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -23,8 +23,8 @@ theorem t0_thm (e e_1 e_2 e_3 : IntW 8) (e_4 : IntW 1) :
 
 
 theorem t0_commutative_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 e_4 : IntW 8) :
-  select (select (icmp IntPredicate.eq e_4 e_3) (const? 1 1) (LLVM.xor e_2 (const? 1 1))) e_1 e ⊑
-    select (select (icmp IntPredicate.ne e_4 e_3) e_2 (const? 1 0)) e e_1 := by
+  select (select (icmp IntPred.eq e_4 e_3) (const? 1 1) (LLVM.xor e_2 (const? 1 1))) e_1 e ⊑
+    select (select (icmp IntPred.ne e_4 e_3) e_2 (const? 1 0)) e e_1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash

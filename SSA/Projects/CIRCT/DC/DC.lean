@@ -1,10 +1,13 @@
-import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-
+import SSA.Core.Framework
+import SSA.Core.Framework.Macro
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.EDSL2
+import SSA.Core.Tactic.SimpSet
 
 namespace CIRCTStream
-namespace DC
+namespace DCOp
 
 def ValueStream := Stream
 
@@ -84,8 +87,7 @@ def sink (x : TokenStream) : TokenStream :=
 def source : TokenStream :=
   Stream.corec () fun () => (some (), ())
 
-end DC
-end CIRCTStream
+end DCOp
 
 namespace MLIR2DC
 
@@ -94,12 +96,22 @@ section Dialect
 inductive Ty2
   | int : Ty2
   | bool : Ty2
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
+inductive Ty
+| tokenstream : Ty
+| tokenstream2 : Ty
+| valuestream (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
+| valuestream2 (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
+| valuetokenstream (Ty2 : Ty2) : Ty -- A product of streams of values of type `Ty2`.
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
+
+instance : ToString Ty where
+  toString t := repr t |>.pretty
+  
 inductive Op
 | fst
 | snd
-| pair (t : Ty2)
 | fstVal (t : Ty2)
 | sndVal (t : Ty2)
 | merge
@@ -111,99 +123,57 @@ inductive Op
 | source
 | pack (t : Ty2)
 | unpack (t : Ty2)
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
-inductive Ty
-| tokenstream : Ty
-| tokenstream2 : Ty
-| valuestream (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
-| valuestream2 (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
-| valuetokenstream (Ty2 : Ty2) : Ty -- A product of streams of values of type `Ty2`.
-deriving Inhabited, DecidableEq, Repr
+abbrev DC : Dialect where
+  Op := Op
+  Ty := Ty
+
+def_signature for DC where
+  | .fst => (Ty.tokenstream2) → (Ty.tokenstream)
+  | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
+  | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
+  | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
+  | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream Ty2.bool
+  | .branch => (Ty.valuestream Ty2.bool) → Ty.tokenstream2
+  | .fork => (Ty.tokenstream) → Ty.tokenstream2
+  | .join => (Ty.tokenstream, Ty.tokenstream) → Ty.tokenstream
+  | .select => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream Ty2.bool) → Ty.tokenstream
+  | .sink => (Ty.tokenstream) → Ty.tokenstream
+  | .source => () → Ty.tokenstream
+  | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
+  | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
 
 instance : TyDenote Ty2 where
 toType := fun
 | Ty2.int => Int
 | Ty2.bool => Bool
 
-open TyDenote (toType) in
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
-| Ty.tokenstream => CIRCTStream.DC.TokenStream
-| Ty.tokenstream2 => CIRCTStream.DC.TokenStream × CIRCTStream.DC.TokenStream
-| Ty.valuestream Ty2 => CIRCTStream.DC.ValueStream (toType Ty2)
-| Ty.valuestream2 Ty2 => CIRCTStream.DC.ValueStream (toType Ty2) × CIRCTStream.DC.ValueStream (toType Ty2)
-| Ty.valuetokenstream Ty2 => CIRCTStream.DC.ValueStream (toType Ty2) × CIRCTStream.DC.TokenStream
+| Ty.tokenstream => CIRCTStream.DCOp.TokenStream
+| Ty.tokenstream2 => CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream
+| Ty.valuestream Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2)
+| Ty.valuestream2 Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2) × CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2)
+| Ty.valuetokenstream Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2) × CIRCTStream.DCOp.TokenStream
 
-abbrev DC : Dialect where
-  Op := Op
-  Ty := Ty
 
-open TyDenote (toType)
-
--- arg type CONF
-@[simp, reducible]
-def Op.sig : Op  → List Ty
-  | .fst => [Ty.tokenstream2]
-  | .fstVal t => [Ty.valuetokenstream t]
-  | .snd => [Ty.tokenstream2]
-  | .sndVal t => [Ty.valuetokenstream t]
-  | .pair t => [Ty.valuestream t, Ty.valuestream t]
-  | .merge => [Ty.tokenstream, Ty.tokenstream]
-  | .branch => [Ty.valuestream Ty2.bool]
-  | .fork => [Ty.tokenstream]
-  | .join => [Ty.tokenstream, Ty.tokenstream]
-  | .select => [Ty.tokenstream, Ty.tokenstream, Ty.valuestream Ty2.bool]
-  | .sink => [Ty.tokenstream]
-  | .source => []
-  | .pack t => [Ty.valuestream t, Ty.tokenstream]
-  | .unpack t => [Ty.valuestream t]
-
--- return type CONF
-@[simp, reducible]
-def Op.outTy : Op → Ty
-  | .fst => Ty.tokenstream
-  | .fstVal t => Ty.valuestream t
-  | .sndVal _ => Ty.tokenstream
-  | .snd => Ty.tokenstream
-  | .pair t => Ty.valuestream2 t
-  | .merge => Ty.valuestream Ty2.bool
-  | .branch => Ty.tokenstream2
-  | .fork => Ty.tokenstream2
-  | .join => Ty.tokenstream
-  | .select => Ty.tokenstream
-  | .sink => Ty.tokenstream
-  | .source => Ty.tokenstream
-  | .pack t => Ty.valuestream t
-  | .unpack t => Ty.valuetokenstream t
-
-@[simp, reducible]
-def Op.signature : Op → Signature (Ty) :=
-  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
-
-instance : DialectSignature DC := ⟨Op.signature⟩
-
-@[simp]
-instance : DialectDenote (DC) where
-    denote
-    | .fst, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).fst
-    | .snd, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).snd
-    | .fstVal _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature])).fst
-    | .sndVal _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature]) ).snd
-    | .pair _, arg, _ => (arg.getN 0 (by simp [DialectSignature.sig, signature]), arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .unpack _, arg, _ => CIRCTStream.DC.unpack (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .pack _, arg, _  => CIRCTStream.DC.pack (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .branch, arg, _  => CIRCTStream.DC.branch (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .fork, arg, _  => CIRCTStream.DC.fork (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .join, arg, _  => CIRCTStream.DC.join (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .merge, arg, _  => CIRCTStream.DC.merge (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature]))
-    | .select, arg, _  => CIRCTStream.DC.select (arg.getN 0 (by simp [DialectSignature.sig, signature])) (arg.getN 1 (by simp [DialectSignature.sig, signature])) (arg.getN 2 (by simp [DialectSignature.sig, signature]))
-    | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0 (by simp [DialectSignature.sig, signature]))
-    | .source, _, _  => CIRCTStream.DC.source
+def_denote for DC where
+  | .fst => fun s => s.fst
+  | .fstVal _ => fun s => s.fst
+  | .snd => fun s => s.snd
+  | .sndVal _ => fun s => s.snd
+  | .merge => fun s₁ s₂ => DCOp.merge s₁ s₂
+  | .branch => fun s => DCOp.branch s
+  | .fork => fun s => DCOp.fork s
+  | .join => fun s₁ s₂ => DCOp.join s₁ s₂
+  | .select => fun s₁ s₂ c => DCOp.select s₁ s₂ c
+  | .sink => fun s => DCOp.sink s
+  | .source => fun s => DCOp.source s
+  | .pack _ => fun s₁ s₂ => DCOp.pack s₁ s₂
+  | .unpack _ => fun s => DCOp.unpack s
 
 end Dialect
-
-
 
 def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
   | "Int" => return (.int)
@@ -333,14 +303,6 @@ def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokens
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def pair {r} {Γ : Ctxt _} (a b: Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.valuestream2 r)  :=
-  Expr.mk
-    (op := .pair r)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
-    (regArgs := .nil)
-
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (DC) (Σ eff ty, Expr (DC) Γ eff ty) := do
   match opStx.name with
@@ -364,16 +326,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream .bool, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.pair"  =>
+  | op@"DC.merge" | op@"DC.join" | op@"DC.pack"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
       | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream .bool, merge v₁ v₂⟩
-      | .valuestream r, .valuestream r', "DC.pair" =>
-        if h: r = r' then return ⟨_, .valuestream2 r, pair v₁ (by subst r ; exact v₂)⟩
-        else throw <| .generic s!"type mismatch"
       | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
@@ -406,8 +365,11 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (DC)
 instance : MLIR.AST.TransformReturn (DC) 0 where
   mkReturn := mkReturn
 
+instance : DialectToExpr DC where
+  toExprM := .const ``Id [0]
+  toExprDialect := .const ``DC []
+
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[DC_com| " reg:mlir_region "]" : term => do
-  SSA.elabIntoCom reg q(DC)
+elab "[DC_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg DC
 
 end MLIR2DC

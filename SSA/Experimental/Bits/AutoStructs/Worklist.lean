@@ -579,7 +579,6 @@ lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (s
   split
   next _ =>
     casesm _ ∧ _; subst_eqs
-    dsimp
     split
     next s'' heq =>
       use s''; constructor <;> simp [*]
@@ -855,9 +854,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
         suffices hccl : processOneElem_mot inits final f s sa (f sa).size (Array.foldl (processOneElem A S final s) st1 (f sa)) by
           obtain ⟨_, _, inv', hsim'⟩ := hccl
           have hemp : {(sa1, a, sa') | sa1 = sa ∧ ∃ k, (f sa).size ≤ k ∧ (f sa)[k]? = some (a, sa')} = ∅ := by
-            ext sa'; simp_all; rintro rfl k hge hsome
-            suffices hccl : (f sa'.1)[k]? = none by simp_all
-            apply Array.getElem?_size_le; assumption
+            ext sa'; simp_all
           simp_all +zetaDelta only [ge_iff_le, st2]
         apply Array.foldl_induction
         { simp only [st1, wl']

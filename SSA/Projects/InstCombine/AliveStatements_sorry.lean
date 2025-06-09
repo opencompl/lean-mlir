@@ -110,8 +110,7 @@ theorem bv_AndOrXor_716 :
 
 theorem bv_AndOrXor_794 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPred.sgt e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑
-        LLVM.icmp LLVM.IntPred.sgt e e_1 := by
+      LLVM.and (LLVM.icmp LLVM.IntPred.sgt e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.icmp LLVM.IntPred.sgt e e_1 := by
   sorry
 
 theorem bv_AndOrXor_827 :
@@ -121,8 +120,7 @@ theorem bv_AndOrXor_827 :
   sorry
 
 theorem bv_AndOrXor_887_2 :
-    ∀ (e e_1 : LLVM.IntW w),
-      LLVM.and (LLVM.icmp LLVM.IntPred.eq e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.const? 1 0 := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.icmp LLVM.IntPred.eq e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.const? 1 0 := by
   sorry
 
 theorem bv_AndOrXor_1230__A__B___A__B :
@@ -159,13 +157,11 @@ theorem bv_AndOrXor_1294_A__B__A__B___A__B :
 
 theorem bv_AndOrXor_1683_1 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPred.ugt e e_1) (LLVM.icmp LLVM.IntPred.eq e e_1) ⊑
-        LLVM.icmp LLVM.IntPred.uge e e_1 := by
+      LLVM.or (LLVM.icmp LLVM.IntPred.ugt e e_1) (LLVM.icmp LLVM.IntPred.eq e e_1) ⊑ LLVM.icmp LLVM.IntPred.uge e e_1 := by
   sorry
 
 theorem bv_AndOrXor_1683_2 :
-    ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.icmp LLVM.IntPred.uge e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.const? 1 1 := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.icmp LLVM.IntPred.uge e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.const? 1 1 := by
   sorry
 
 theorem bv_AndOrXor_1704 :
@@ -339,8 +335,7 @@ theorem bv_AndOrXor_2658 :
 
 theorem bv_AndOrXor_2663 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.icmp LLVM.IntPred.ule e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑
-        LLVM.icmp LLVM.IntPred.uge e e_1 := by
+      LLVM.xor (LLVM.icmp LLVM.IntPred.ule e e_1) (LLVM.icmp LLVM.IntPred.ne e e_1) ⊑ LLVM.icmp LLVM.IntPred.uge e e_1 := by
   sorry
 
 theorem bv_152 :

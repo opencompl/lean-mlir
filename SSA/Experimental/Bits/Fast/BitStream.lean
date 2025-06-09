@@ -15,7 +15,7 @@ theorem bmod_eq_of_ge_and_le (z : Int) (m : Nat)
 theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
     (↑n : Int).bmod m = ↑(n % m) := by
   simp only [
-    bmod, ofNat_emod, ite_eq_left_iff,
+    bmod, natCast_emod, ite_eq_left_iff,
     show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
     Nat.mod_eq_of_lt (by omega : n < m)
   ]
@@ -937,3 +937,176 @@ variable (i : Nat)
 end Lemmas
 
 end OfInt
+
+/--
+Denote a bitstream into the underlying bitvector, by using toBitVec
+def denote (s : BitStream) (w : Nat) : BitVec w := s.toBitVec w
+-/
+
+@[simp] theorem toBitVec_zero : BitStream.toBitVec w BitStream.zero = 0#w := by
+  induction w
+  case zero => simp [toBitVec, zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, zero]
+    have : 0#(n + 1) = BitVec.cons false 0#n := by simp
+    rw [this, ih]
+
+@[simp] theorem toBitVec_negOne : BitStream.toBitVec w BitStream.negOne = BitVec.allOnes w := by
+  induction w
+  case zero => simp [toBitVec, zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, zero]
+    rw [ih]
+    apply BitVec.eq_of_getLsbD_eq
+    simp only [BitVec.getLsbD_cons, BitVec.getLsbD_allOnes, Bool.if_true_left]
+    intros i hi
+    simp only [hi, decide_true, Bool.or_eq_true, decide_eq_true_eq]
+    omega
+
+@[simp] theorem toBitVec_one : BitStream.toBitVec w BitStream.one = 1#w := by
+  induction w
+  case zero => simp [toBitVec, zero]
+  case succ n ih =>
+    simp [toBitVec, toBitVec, one]
+    rw [ih]
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    simp [BitVec.getLsbD_cons]
+    by_cases hi' : i = n
+    · simp [hi']
+      by_cases hn : n = 0 <;> simp [hn]
+    · simp [hi']
+      omega
+
+@[simp]
+theorem toBitVec_ofNat : BitStream.toBitVec w (BitStream.ofNat n) = BitVec.ofNat w n := by
+  simp [toBitVec, ofNat]
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  simp [BitVec.getLsbD_ofNat]
+
+@[simp]
+theorem toBitVec_and (a b : BitStream) :
+    (a &&& b).toBitVec w = a.toBitVec w &&& b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+
+@[simp]
+theorem toBitVec_or (a b : BitStream) :
+    (a ||| b).toBitVec w = a.toBitVec w ||| b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+
+@[simp]
+theorem toBitVec_xor (a b : BitStream) :
+    (a ^^^ b).toBitVec w = a.toBitVec w ^^^ b.toBitVec w := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  intros hi
+  simp [hi]
+
+@[simp]
+theorem toBitVec_not (a : BitStream) :
+    (~~~ a).toBitVec w = ~~~ (a.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+
+theorem BitVec.add_getElem_zero {x y : BitVec w} (hw : 0 < w) : (x + y)[0] =
+    ((x[0] ^^ y[0])) := by
+  simp [hw, BitVec.getElem_add hw]
+
+theorem BitVec.add_getElem_succ (x y : BitVec w) (hw : i + 1 < w) : (x + y)[i + 1] =
+    (x[i + 1] ^^ (y[i + 1]) ^^ BitVec.carry (i + 1) x y false) := by
+  simp [hw, BitVec.getElem_add hw]
+
+/-- TODO: simplify this proof, something too complex is going on here. -/
+@[simp] theorem toBitVec_add' (a b : BitStream) (w i : Nat) (hi : i < w) :
+    ((a + b).toBitVec w).getLsbD i = ((a.toBitVec w) + (b.toBitVec w)).getLsbD i ∧
+    (a.addAux b i).2 = (BitVec.carry (i + 1) (a.toBitVec w) (b.toBitVec w) false) := by
+  simp [hi]
+  rw [add_eq_addAux]
+  induction i
+  case zero =>
+    simp
+    rw [BitVec.add_getElem_zero hi]
+    simp [hi]
+    simp [BitVec.carry_succ, hi]
+  case succ i ih =>
+    simp
+    rw [BitVec.add_getElem_succ _ _ hi]
+    have : i < w := by omega
+    specialize ih this
+    obtain ⟨ih₁, ih₂⟩ := ih
+    rw [ih₂]
+    simp [hi]
+    rw [BitVec.carry_succ (i + 1)]
+    simp [hi]
+
+@[simp] theorem toBitVec_add (a b : BitStream) :
+    (a + b).toBitVec w = (a.toBitVec w) + (b.toBitVec w) := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  obtain ⟨h₁, h₂⟩ := toBitVec_add' a b w i hi
+  exact h₁
+
+@[simp]
+theorem toBitVec_neg (a : BitStream) :
+    (- a).toBitVec w = - (a.toBitVec w) := by
+  simp [neg_eq_not_add_one, toBitVec_add, BitVec.neg_eq_not_add]
+
+@[simp]
+theorem toBitVec_sub (a b : BitStream) :
+    (a - b).toBitVec w = (a.toBitVec w) - (b.toBitVec w) := by
+  simp [BitVec.sub_eq_add_neg, sub_eq_add_neg]
+
+@[simp] theorem subAux_eq_BitVec_carry (a b : BitStream) (w i : Nat) (hi : i < w) :
+    (a.subAux b i).2 = !(BitVec.carry (i + 1) (a.toBitVec w) ((~~~b).toBitVec w) true) := by
+  induction i
+  case zero =>
+    simp
+    simp [BitVec.carry_succ, subAux, hi, Bool.atLeastTwo]
+    rcases a 0 <;> rcases b 0 <;> rfl
+  case succ i ih =>
+    have : i < w := by omega
+    specialize ih this
+    rw [BitVec.carry_succ (i + 1)]
+    simp [hi]
+    rw [subAux, ih]
+    simp
+    rcases a (i + 1) <;> rcases b (i + 1) <;> simp
+
+@[simp]
+theorem toBitVec_shiftL (a : BitStream) (k : Nat) :
+    (a.shiftLeft k).toBitVec w = (a.toBitVec w).shiftLeft k := by
+  apply BitVec.eq_of_getLsbD_eq
+  intros i hi
+  simp [hi]
+  by_cases hk : i < k
+  · simp [hk]
+  · simp [hk]; omega
+
+@[simp]
+theorem toBitVec_concat_zero (a : BitStream) :
+    (a.concat b).toBitVec 0 = 0#0 := by simp [toBitVec]
+
+@[simp]
+theorem toBitVec_concat_succ (a : BitStream) :
+    (a.concat b).toBitVec (w + 1) = (a.toBitVec w).concat b := by
+  apply BitVec.eq_of_getLsbD_eq
+  simp
+  intros i hi
+  simp [hi]
+  rcases i with rfl | i
+  · simp
+  · simp; omega
+
+@[simp]
+theorem toBitVec_concat(a : BitStream) :
+    (a.concat b).toBitVec w =
+      match w with
+      | 0 => 0#0
+      | w + 1 => (a.toBitVec w).concat b  := by
+  rcases w with rfl | w <;> simp

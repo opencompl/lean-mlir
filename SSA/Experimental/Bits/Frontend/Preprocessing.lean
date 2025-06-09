@@ -385,7 +385,7 @@ simproc [bv_automata_nnf] boolEqIff (@Eq Bool _ _) := fun e => do
 
 
 /--
-info: w : ℕ
+trace: w : ℕ
 ⊢ (∀ (x x_1 : BitVec w), x_1.ule x = true) ∧
     ∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x.ule x_1 = true ∨ x ≠ x_1
 ---
@@ -396,7 +396,7 @@ warning: declaration uses 'sorry'
  trace_state; sorry
 
 /--
-info: w : ℕ
+trace: w : ℕ
 ⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ---
 warning: declaration uses 'sorry'
