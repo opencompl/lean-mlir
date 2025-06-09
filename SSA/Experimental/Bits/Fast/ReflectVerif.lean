@@ -336,8 +336,8 @@ theorem relabelNat_unsat_iff₂  [DecidableEq α] [Hashable α]
   rw [relabelNat_unsat_iff']
 
 /--
-info: Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff {α : Type} [DecidableEq α] [Hashable α] {entry : Entrypoint α}
-  [Nonempty α] : entry.relabelNat.Unsat ↔ entry.Unsat
+info: Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff {α : Type} [DecidableEq α] [Hashable α] {entry : Entrypoint α} :
+  entry.relabelNat.Unsat ↔ entry.Unsat
 -/
 #guard_msgs in #check Entrypoint.relabelNat_unsat_iff
 
@@ -541,7 +541,7 @@ theorem EnvOutRelated.envBool_inputs_mk_castShift_eq_envBitStream
    (hEnvBitstream : EnvOutRelated envBool envBitstream)
    (hnm : n ≤ m) (x : arity) (i : Nat) (hi : i < n) :
    (envBool ((Vars.inputs (Inputs.mk ⟨i, by omega⟩ x : Inputs _ n) :  Vars _ _ n).castShift hnm))=
-   envBitstream x (m - 1 - i) := by 
+   envBitstream x (m - 1 - i) := by
   rw [← hEnvBitstream.envBool_inputs_mk_eq_envBitStream]
   rfl
 
