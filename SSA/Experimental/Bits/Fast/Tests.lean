@@ -54,8 +54,17 @@ info: 'eq3' depends on axioms: [propext, Circuit.denote_toAIGAux_eq_eval, Classi
 example (w : Nat) (a b : BitVec w) : a = a + 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
-example (w : Nat) (a b : BitVec w) : a + b = b + a := by
+theorem check_axioms (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
+
+/--
+info: 'check_axioms' depends on axioms: [propext,
+ Circuit.denote_toAIGAux_eq_eval,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms check_axioms
 
 example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )

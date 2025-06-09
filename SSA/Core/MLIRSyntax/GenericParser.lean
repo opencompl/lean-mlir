@@ -744,7 +744,7 @@ AttrValue.float 23e-4 (MLIRType.float 64)
 private def attrVal11Escape : AttrVal := [mlir_attr_val| $(attrVal10Float) ]
 /--
 info: private def MLIR.EDSL.attrVal11Escape : AttrVal :=
-MLIR.EDSL.attrVal10Float
+attrVal10Float
 -/
 #guard_msgs in #print attrVal11Escape
 
