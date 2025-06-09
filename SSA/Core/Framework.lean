@@ -142,7 +142,9 @@ class DialectPrint (d : Dialect) where
   printOpName : d.Op → String
   printTy : d.Ty → String
   printAttributes : d.Op → String
-
+  printDialect : String
+  printReturn : d.Ty → String
+  printFunc : d.Ty → String
 /- # Datastructures -/
 section DataStructures
 
@@ -207,6 +209,14 @@ private def Format.parenIfNonempty (l : String) (r : String) (separator : Format
   | [] => ""
   | _  =>  l ++ (Format.joinSep xs separator) ++ r
 
+/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
+the "()" if the list is empty. -/
+private def Format.parenIfNonemptyForPrint (l : String) (r : String) (separator : Format)
+    (xs : List Format) : Format :=
+  match xs with
+  | [] => "() "
+  | _  =>  l ++ (Format.joinSep xs separator) ++ r
+
 /-- Format a sequence of types as `(t₁, ..., tₙ)`. Will always display parentheses. -/
 private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
@@ -215,6 +225,17 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
 private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
+  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+    match Γ with
+    | .nil => []
+    | .cons .. =>
+      match args with
+      | .cons a as => (repr a) :: (formatArgTupleAux as)
+
+/-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
+private def formatArgTupleForPrint [Repr Ty] {Γ : Ctxt Ty}
+    (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
+  Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args) where
   formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
@@ -319,6 +340,48 @@ instance : ToString (Expr d Γ eff t) where toString := Expr.toString
 
 end ToString
 
+/- # ToString instances for Com and Expr  -/
+section DialectPrint
+variable {d} [DialectPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
+  let args := (List.range ts.length).zip ts |>.map
+    (fun (i, t) => s!"%{i} : {DialectPrint.printTy t}")
+  "(" ++ String.intercalate ", " args ++ ")"
+
+-- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
+private def formatTypeTuplePrint [ToString d.Ty] (xs : List d.Ty) : String :=
+  "(" ++ String.intercalate ", " (xs.map DialectPrint.printTy) ++ ")"
+
+/--
+Converts an expression within a dialect to its MLIR string representation.
+Since MLIR generic syntax uses "" to denote operations, this function, this functions uses
+the DialectPrint typeclass of each dialect to print the various parts of an expressiom such as
+operation and types. Lastly, it arranges the expression printing according to MLIR syntax.
+-/
+partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
+  | Expr.mk (op : d.Op) _ _ args _regArgs =>
+    let outTy : d.Ty := DialectSignature.outTy op
+    let argTys := DialectSignature.sig op
+    s!"\"{DialectPrint.printOpName op}\"{formatArgTupleForPrint args}{DialectPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({DialectPrint.printTy outTy})"
+
+/-- This function recursivly converts the body of a `Com` into its string representation.
+Each bound variable is printed with its index and corresponding expression. -/
+partial def Com.ToPrintBody : Com d Γ eff t → String
+  | .ret v => s!"  \"{DialectPrint.printReturn t}\"({_root_.repr v }) : ({DialectPrint.printTy t}) -> ()"
+  | .var e body =>
+    s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
+    Com.ToPrintBody body
+
+/- `Com.toString` implements a toString instance for the type `Com`.  -/
+partial def Com.toPrint (com : Com d Γ eff t) : String :=
+   "builtin.module { \n"
+  ++ DialectPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ)) ++ ":" ++ "\n"
+  ++ (Com.ToPrintBody com) ++
+   "\n }"
+
+end DialectPrint
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
 mutual -- DecEq

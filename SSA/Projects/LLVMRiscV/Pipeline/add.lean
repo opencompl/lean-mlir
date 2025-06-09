@@ -83,10 +83,10 @@ def llvm_add_lower_riscv_nuw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
     all_goals simp
 
 def llvm_add_lower_riscv_nuw_nsw_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs:= add_llvm_nuw_flags
+  lhs:= add_llvm_nsw_nuw_flags
   rhs:= add_riscv
   correct := by
-    unfold add_llvm_nuw_flags add_riscv
+    unfold add_llvm_nsw_nuw_flags add_riscv
     simp_peephole
     simp_riscv
     simp_alive_undef

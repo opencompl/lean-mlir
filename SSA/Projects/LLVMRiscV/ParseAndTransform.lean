@@ -33,7 +33,7 @@ def parseComFromFile_LLVMRiscV(fileName : String) :
 /-- This function parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
 Next, it calls the instruction lowering function `selectionPipeFuelSafe` on the parsed `Com` and
 prints it to standart output. If any of the steps fail ,we print an error message and return exit code 1  -/
-def passriscv64 (fileName : String) : IO UInt32 := do
+unsafe def passriscv64 (fileName : String) : IO UInt32 := do
     let icom? ← parseComFromFile_LLVMRiscV fileName
     match icom? with
     | none => return 1
@@ -42,9 +42,9 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       | EffectKind.pure =>
         match retTy with
         | Ty.llvm (.bitvec _w)  =>
-          let lowered := selectionPipeFuelSafe c /- calls the instruction selector defined in `
+          let lowered := selectionPipeFuelWithCSE c /- calls the instruction selector defined in `
                                                   InstructionLowering`-/
-          IO.println s!"{toString lowered}"
+          IO.println s!"{Com.toPrint lowered}"
           return 0
         | _ =>
         IO.println s!" debug: WRONG RETURN TYPE : expected Ty.llvm (Ty.bitvec 64) "
