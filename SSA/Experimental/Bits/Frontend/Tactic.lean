@@ -20,7 +20,7 @@ inductive CircuitBackend
 /-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
 | circuit_cadical_unverified (maxIter : Nat := 4)
 /-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
-| circuit_cadical_verified (maxIter : Nat := 4)
+| circuit_cadical_verified (maxIter : Nat := 4) (checkTypes? : Bool := false)
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
 deriving Repr, DecidableEq
@@ -507,6 +507,12 @@ def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
   mkAppM ``ReflectVerif.BvDecide.verifyCircuit #[c, cert]
 
 
+/-- Check the type of e if check? is true. -/
+def debugCheck (check? : Bool) (e : Expr)  : MetaM Unit :=
+    if check?
+    then check e
+    else return ()
+
 /--
 Reflect an expression of the form:
   ∀ ⟦(w : Nat)⟧ (← focus)
@@ -591,7 +597,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
         | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
       return [g]
-    | .circuit_cadical_verified maxIter =>
+    | .circuit_cadical_verified maxIter checkTypes? =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
       let cert? ← fsm.decideIfZerosVerified maxIter
@@ -606,21 +612,21 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
               (← Expr.mkMkSafetyCircuit
                 (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
                 (toExpr niter)) safetyCertExpr
-          check safetyCertTy
+          debugCheck checkTypes? safetyCertTy
           -- logInfo m!"safety cert type: {indentD safetyCertTy}"
           let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
           -- (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
-          check safetyCertProof
+          debugCheck checkTypes? safetyCertProof
           -- logInfo m!"safety cert proof: {indentD safetyCertProof}"
           let indCertTy ←
             Expr.mkVerifyCircuit
               (← Expr.mkMkIndHypCircuit
                 (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
                 (toExpr niter)) indCertExpr
-          check indCertTy
+          debugCheck checkTypes? indCertTy
           -- logInfo m!"inductive cert type: {indentD indCertTy}"
           let indCertProof ← mkEqRflNativeDecideProof indCertTy true
-          check indCertProof
+          debugCheck checkTypes? indCertProof
           -- logInfo m!"inductive cert proof: {indentD indCertProof}"
           let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG [])
             #[w,
@@ -632,7 +638,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
               indCertExpr,
               indCertProof]
           let prf ← instantiateMVars prf
-          check prf
+          debugCheck checkTypes? prf
           -- logInfo m!"proof: {indentD prf}"
           pure prf
         let gs ← g.apply prf
