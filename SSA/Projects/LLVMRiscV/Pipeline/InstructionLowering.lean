@@ -71,7 +71,7 @@ def rewritingPatterns1 :
 
 /-- Defines an array containing only the rewrite pattern which eliminates cast.-/
 def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
-  := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩ <| List.nil
+  := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩ <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
 
 def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
   := List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)) all_const_llvm_const_lower_riscv_li
@@ -99,7 +99,7 @@ set_option maxRecDepth 10000000 -- we set this to avoid the recursion depth erro
 to `multiRewritePeephole` and limits the fuel to 100. This means per program and potential rewrite location,
 a maximal of 100 steps is performed. Currently we need to set this limit to avoid a stackoverflow in LeanMLIR.
 -/
- def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
+def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
   let loweredConst := multiRewritePeephole 100
@@ -112,13 +112,35 @@ a maximal of 100 steps is performed. Currently we need to set this limit to avoi
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
   let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val; -- Rerun it to ensure that all dead code is removed.
-  /-
-  let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
-  We do not use it atm since we get an error when
-   trying to call an unsafe function with the opt tool
-  let out := (DCE.dce' optimize_eq_cast).val;
-  out -/
+  --let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
+  --We do not use it atm since we get an error when
+  -- trying to call an unsafe function with the opt tool
+  --let out := (DCE.dce' optimize_eq_cast).val;
+  --let out2 := (DCE.dce' out).val;
+ -- out2
   remove_dead_Cast2
+
+unsafe def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
+  let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
+  let loweredConst := multiRewritePeephole 100
+    const_match rmInitialDeadCode; -- Lower the instructions in the first array.
+  let lowerPart1 := multiRewritePeephole 100
+    rewritingPatterns1  loweredConst;
+  let lowerPart2 := multiRewritePeephole 100
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
+  let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
+  let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val; -- Rerun it to ensure that all dead code is removed.
+  let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
+  --We do not use it atm since we get an error when
+  -- trying to call an unsafe function with the opt tool
+  let out := (DCE.dce' optimize_eq_cast).val;
+  let out2 := (DCE.dce' out).val;
+  out2
+  --remove_dead_Cast2
+
 
 /- Below are two example programs to test our instruction selector.-/
 def llvm00:=
@@ -139,5 +161,11 @@ def llvm01:=
     llvm.return %1 : i1
   }]
 
-
---#eval! (selectionPipeFuelSafe llvm00)
+def llvm02:=
+  [LV|{
+    ^bb0(%X : i64, %Y : i64 ):
+    %1 = llvm.mlir.constant 9 : i64
+    %2 = llvm.sub %X, %X : i64
+    llvm.return %1 : i64
+  }]
+#eval! (selectionPipeFuelSafe llvm02)

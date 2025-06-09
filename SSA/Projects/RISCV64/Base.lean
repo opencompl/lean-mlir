@@ -315,7 +315,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li imm => s! "li \{immediate = { imm.toInt } : i20 }"
+  | .li _imm => s! "li"
   | .mulu => "mulu"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
@@ -325,15 +325,15 @@ def opToString (op : RISCV64.Op) : String :=
   | .ror => "ror"
   | .remwu => "remwu"
   | .remu => "remu"
-  | .addiw (_imm : BitVec 12) => s!"addiw \{immediate = { _imm.toInt} : i12 } : !riscv.reg }"
-  | .lui (_imm : BitVec 20) => s!"lui \{immediate = { _imm.toInt} : i20 } : !riscv.reg }"
-  | .auipc (_imm : BitVec 20) => s!"auipc \{imm = { _imm.toInt} : i20 } : !riscv.reg }"
-  | .slliw (_shamt : BitVec 5) => s!"slliw \{shamt = { _shamt.toInt} : i5 } : !riscv.reg }"
-  | .srliw (_shamt : BitVec 5) => s!"srliw \{shamt = { _shamt.toInt} : i5 } : !riscv.reg }"
-  | .sraiw (_shamt : BitVec 5) => s!"sraiw \{shamt = { _shamt.toInt} :i5 } : !riscv.reg }"
-  | .slli (_shamt : BitVec 6) => s!"slli \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
-  | .srli (_shamt : BitVec 6) => s!"srli \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
-  | .srai (_shamt : BitVec 6) => s!"srai \{shamt = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .addiw (_imm : BitVec 12) => "addiw"
+  | .lui (_imm : BitVec 20) => "lui"
+  | .auipc (_imm : BitVec 20) => "auipc"
+  | .slliw (_shamt : BitVec 5) => "slliw"
+  | .srliw (_shamt : BitVec 5) => "srliw "
+  | .sraiw (_shamt : BitVec 5) => "sraiw"
+  | .slli (_shamt : BitVec 6) => "slli"
+  | .srli (_shamt : BitVec 6) => "srli"
+  | .srai (_shamt : BitVec 6) => "srai"
   | .addw => "addw"
   | .subw => "subw"
   | .sllw => "sllw"
@@ -371,10 +371,10 @@ def opToString (op : RISCV64.Op) : String :=
   | .bext => "bext"
   | .binv => "binv"
   | .bset => "bset"
-  | .bclri (_shamt : BitVec 6) => s!"bclri \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
-  | .bexti (_shamt : BitVec 6) =>s!"bexti \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
-  | .binvi (_shamt : BitVec 6) => s!"binvi \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
-  | .bseti (_shamt : BitVec 6) => s!"bseti \{immediate = { _shamt.toInt} : i6 } : !riscv.reg }"
+  | .bclri (_shamt : BitVec 6) => "bclri"
+  | .bexti (_shamt : BitVec 6) =>"bexti"
+  | .binvi (_shamt : BitVec 6) => "binvi"
+  | .bseti (_shamt : BitVec 6) => "bseti"
   | .rolw => "rolw"
   | .rorw => "rorw"
   | RISCV64.Op.add.uw => "add.uw"
@@ -384,11 +384,42 @@ def opToString (op : RISCV64.Op) : String :=
   | .sh1add => "sh1add"
   | .sh2add => "sh2add"
   | .sh3add => "sh3add"
-  s!"\"riscv.{op}\""
+  op
+
+def attributesToPrint: RISCV64.Op → String
+  | .li imm => s! "\{immediate = { imm.toInt } : i20 }"
+  | .addiw (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt} : i12 }"
+  | .lui (_imm : BitVec 20) => s!"\{immediate = { _imm.toInt} : i20 } "
+  | .auipc (_imm : BitVec 20) => s!"\{imm = { _imm.toInt} : i20 }"
+  | .slliw (_shamt : BitVec 5) => s!"\{shamt = { _shamt.toInt} : i5 }"
+  | .srliw (_shamt : BitVec 5) => s!"\{shamt = { _shamt.toInt} : i5 }"
+  | .sraiw (_shamt : BitVec 5) => s!"\{shamt = { _shamt.toInt} :i5 }"
+  | .slli (_shamt : BitVec 6) => s!"\{shamt = { _shamt.toInt} : i6 }"
+  | .srli (_shamt : BitVec 6) => s!"\{shamt = { _shamt.toInt} : i6 }"
+  | .srai (_shamt : BitVec 6) => s!"\{shamt = { _shamt.toInt} : i6 }"
+  | .addi (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .slti (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .sltiu (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .andi (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .ori (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .xori (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .bclri (_shamt : BitVec 6) => s!"\{immediate = { _shamt.toInt} : i6 }"
+  | .bexti (_shamt : BitVec 6) =>s!"\{immediate = { _shamt.toInt} : i6 }"
+  | .binvi (_shamt : BitVec 6) => s!"\{immediate = { _shamt.toInt} : i6 }"
+  | .bseti (_shamt : BitVec 6) => s!"\{immediate = { _shamt.toInt} : i6 }"
+  | _ => ""
 
 instance : ToString (Op) where
   toString := opToString
 
+instance : DialectPrint (RV64) where
+  printOpName
+  | op => "riscv." ++ toString op
+  printTy := toString
+  printAttributes := attributesToPrint
+  printDialect:= "riscv"
+  printReturn _ := "riscv.ret"
+  printFunc _ := "riscv_func.func @f"
 /--
 ## Dialect semantics
 We assign semantics defined in `RV64` to each operation.

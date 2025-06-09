@@ -6,12 +6,17 @@
 
 ;copy paste your mlir basic block and run lake exe opt SSA/Projects/LLVMRiscV/tests/Parsing/arithbb0.mlir
 ; from the root folder.
-
+define i32 @exact(i32 %a, i32 %b) {
+entry:
+  %res = ashr exact i32 %a, %b
+  ret i32 %res
+}
 define i32 @select32(i32 %a, i32 %b, i1 %cond) {
 entry:
   %res = select i1 %cond, i32 %a, i32 %b
   ret i32 %res
 }
+
 
 define i64 @select64(i64 %a, i64 %b, i1 %cond) {
 entry:

@@ -16,4 +16,4 @@ mlir-opt --mlir-print-op-generic | \
 
 # Navigate up to the appropriate directory and run opt tool
 cd ../../../../../ && \
-lake exe opt SSA/Projects/LLVMRiscV/tests/LLVMIR/out.mlir
+lake exe opt --passriscv64 SSA/Projects/LLVMRiscV/tests/LLVMIR/out.mlir

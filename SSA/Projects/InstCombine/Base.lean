@@ -139,7 +139,7 @@ def toStringWithFlags (op : MOp.BinaryOp) : String :=
     | .sdiv ⟨true⟩          => "sdiv exact"
     | .udiv ⟨false⟩         => "udiv"
     | .udiv ⟨true⟩          => "udiv exact"
-  s!"llvm.{op}"
+  op
 
 instance : ToString (MOp.BinaryOp) where
   toString := toStringWithFlags
@@ -150,11 +150,11 @@ instance : ToString (MOp.UnaryOp (φ : Nat)) where
 instance : ToString (MOp 0) where
    toString  op :=
      match op with
-     | .unary _w op => s!"\"{toString op}\""
-     | .binary _w op => s!"\"{toString  op}\""
+     | .unary _w op => s!"{toString op}"
+     | .binary _w op => s!"{toString  op}"
      | .select  _w => "select"
      | .icmp  _pred _w => "icmp"
-     | .const w val => s!"\"llvm.mlir.constant\"() \{value = {val} : {w}}"
+     | .const _w _val => s!"mlir.constant"
 
 /-! ## Dialect -/
 
@@ -376,6 +376,21 @@ instance : ToString (MOp φ) where
 --       this is not likely to be what we want
 -- instance : ToString Op where
 --   toString o := repr o |>.pretty
+def printOverflowFlags (flags : NoWrapFlags) : String :=
+  match flags with
+  | ⟨false, false⟩ => "<{overflowFlags = #llvm.overflow<none>}>"
+  | ⟨true, false⟩  => "<{overflowFlags = #llvm.overflow<nsw>}>"
+  | ⟨false, true⟩  => "<{overflowFlags = #llvm.overflow<nuw>}>"
+  | ⟨true, true⟩   => "<{overflowFlags = #llvm.overflow<nsw,nuw>}>"
+
+def attributesToPrint (op : LLVM.Op) : String :=
+  match op with
+  | .const w v => s!"\{value = {v} : {w}}"
+  | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
+  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f -- overflowflag support
+  | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
+  | .icmp ty _ => s!"{ty}"
+  |_ => ""
 
 def printOverflowFlags (flags : NoWrapFlags) : String :=
   match flags with

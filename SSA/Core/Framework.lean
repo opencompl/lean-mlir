@@ -207,6 +207,14 @@ private def Format.parenIfNonempty (l : String) (r : String) (separator : Format
   | [] => ""
   | _  =>  l ++ (Format.joinSep xs separator) ++ r
 
+/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
+the "()" if the list is empty. -/
+private def Format.parenIfNonemptyForPrint (l : String) (r : String) (separator : Format)
+    (xs : List Format) : Format :=
+  match xs with
+  | [] => "() "
+  | _  =>  l ++ (Format.joinSep xs separator) ++ r
+
 /-- Format a sequence of types as `(t₁, ..., tₙ)`. Will always display parentheses. -/
 private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"

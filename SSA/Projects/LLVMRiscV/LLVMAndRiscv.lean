@@ -78,6 +78,26 @@ instance : ToString LLVMPlusRiscV.Op  where
   | .castLLVM _ => "builtin.unrealized_conversion_cast"
   | .castRiscv _  => "builtin.unrealized_conversion_cast"
 
+instance LLVMAndRiscvPrint : DialectPrint (LLVMPlusRiscV) where
+  printOpName
+    |.llvm llvmOp => DialectPrint.printOpName llvmOp
+    |.riscv riscvOp => DialectPrint.printOpName riscvOp
+    |_ => "builtin.unrealized_conversion_cast"
+  printTy
+    | .llvm llvmTy => DialectPrint.printTy llvmTy
+    | .riscv riscvTy => DialectPrint.printTy riscvTy
+  printAttributes
+    |.llvm llvmOp => DialectPrint.printAttributes llvmOp
+    |.riscv riscvOp => DialectPrint.printAttributes riscvOp
+    |_ => ""
+  printDialect := "riscv"
+  printReturn ty := match ty with
+    | .llvm llvmTy => DialectPrint.printReturn llvmTy
+    | .riscv riscvTy =>  DialectPrint.printReturn riscvTy
+  printFunc ty := match ty with
+    | .llvm llvmTy => DialectPrint.printFunc llvmTy
+    | .riscv riscvTy => DialectPrint.printFunc riscvTy
+
 instance : ToString LLVMPlusRiscV.Ty where
   toString := fun
   | .llvm llvm    => toString llvm
