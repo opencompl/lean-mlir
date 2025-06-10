@@ -75,8 +75,7 @@ variable {x y z: BitVec 8}
 
 
 variable {x y z: BitVec 32}
--- #generalize (x &&& 7#32) <<< 3#32 ||| x <<< 2#32 &&& 28#32 = x <<< 3#32 &&& 56#32 ||| x <<< 2#32 &&& 28#32 -- gorhshiftedhmasks#or_and_shift_shift_and_thm #49
--- #generalize BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y)  --#13
--- #generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof#test3_thm; #48
--- #generalize x <<< 3#32 &&& 15#32 ||| x <<< 5#32 &&& 60#32 = x <<< 3#32 &&& 8#32 ||| x <<< 5#32 &&& 32#32 -- gorhshiftedhmasks_proof#or_and_shifts1_thm; #50
--- #generalize 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x ---- gshlhsub#shl_sub_i32_thm #47
+#generalize 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x ---- gshlhsub#shl_sub_i32_thm #47
+#generalize BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y)  --#13
+#generalize (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof#test3_thm; #48
+#generalize (x &&& 7#32) <<< 3#32 ||| x <<< 2#32 &&& 28#32 = x <<< 3#32 &&& 56#32 ||| x <<< 2#32 &&& 28#32 -- gorhshiftedhmasks#or_and_shift_shift_and_thm #49
