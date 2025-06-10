@@ -1045,6 +1045,9 @@ def mkEvalCircuit {arity : Type _}
       | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
     | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
+-- TODO: rewrite mkEvalCircuit in terms of 'mkEvalWithCircuit' followed by a 'bind' that changes variables or some such.
+
+
 @[simp]
 theorem eval_mkEvalCircuit_eq_false_iff
     {arity : Type _}
@@ -1126,6 +1129,12 @@ def mkSafetyCircuitAuxList {arity : Type _}
     ))
 
 /--
+Circuits are extentionally equivalent iff they evaluate the same on all environments.
+-/
+def CircuitExt (c d : Circuit α) : Prop :=
+   ∀ env, c.eval env = d.eval env
+
+/--
 make the circuit that witnesses safety for (n+1) steps.
 This builds the safety circuit for 'n+1' steps, and takes the 'or' of all of these.
 -/
@@ -1133,6 +1142,17 @@ def mkSafetyCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
   Circuit.bigOr (mkSafetyCircuitAuxList p n)
+
+/-- mkSafetyCircuit at step 'n+1' equals making a safety circuit upto 'n' and then
+adjoining another step. -/
+theorem mkSafetyCircuit_succ_eq_mkSafetyCircuit_or
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) :
+  mkSafetyCircuit p (n + 1) =
+     (mkEvalCircuit p (n + 1) ||| (mkSafetyCircuit p n).map (fun vs => vs.castLe (by omega))) := by
+  simp [mkSafetyCircuit, mkSafetyCircuitAuxList]
+  sorry
+
 
 /--
 Evaluating the safety circuit is false iff
@@ -1332,6 +1352,10 @@ def mkEvalWithNCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkEvalWithNCircuitAuxList p n)
 
+-- TODO: write mkEvalWithNSuccCircuit
+-- TODO: show that mkEvalWithCircuit can be derived from mkEvalWithNCircuit followed by an 'assignVars'.
+-- This will allow us to cache 'mkEvalWithNCircuit'.
+
 @[simp]
 theorem eval_mkEvalWithNCircuit_eq_false_iff
     {arity : Type _}
@@ -1420,6 +1444,7 @@ def mkIndHypCircuit {arity : Type _}
   mkUnsatImpliesCircuit
     ((mkEvalWithNCircuit p n).map (fun vs => vs.castLe (by omega)))
     (mkEvalWithNCircuit p (n + 1))
+
 
 /-- induction hyp circuit. -/
 theorem eval_mkIndHypCircuit_eq_false_iff_ {arity : Type _}
