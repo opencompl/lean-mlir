@@ -759,14 +759,61 @@ def mkCarryWithCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : p.α → Circuit (Vars p.α arity n) := fun s =>
   match n with
   | 0 => Circuit.var true (Vars.state s)
-  | n + 1 =>
+  | k + 1 =>
     (p.nextBitCirc (some s)).bind fun v =>
+      match v with
+      | .inl s' => (mkCarryWithCircuit p k s').map fun w =>
+        match w with
+        | .state s'' => Vars.state s''
+        | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
+      | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨k, by omega⟩ a))
+
+/-- Show how to compute mkCarryWith circuit at the base case. -/
+theorem mkCarryWithCircuit_zero_eq {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (s : p.α) :
+  (mkCarryWithCircuit p 0 s) = Circuit.var true (Vars.state s) := rfl
+
+/-- show how to compute mkCarryWith at the next step. -/
+theorem mkCarryWithCircuit_succ_eq {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+  mkCarryWithCircuit p (n + 1) = fun s =>
+    (p.nextBitCirc (some s)).bind
+      fun (v : p.α ⊕ arity) =>
+      show Circuit (Vars p.α arity (n + 1)) from
       match v with
       | .inl s' => (mkCarryWithCircuit p n s').map fun w =>
         match w with
         | .state s'' => Vars.state s''
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
-      | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
+      | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a)) := rfl
+
+/-- Forded version of `mkCarryWithCircuit_succ_eq` that takes an arbitrary circuit `carryN`
+which is equal to the recursive call of `mkCarryWithCircuit p n` -/
+theorem mkCarryWithCircuit_succ_eq_of_eq {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (carryN : p.α → Circuit (Vars p.α arity n))
+    (hCarryN : carryN = mkCarryWithCircuit p n) :
+  mkCarryWithCircuit p (n + 1) = fun s =>
+    (p.nextBitCirc (some s)).bind
+      fun (v : p.α ⊕ arity) =>
+      show Circuit (Vars p.α arity (n + 1)) from
+      match v with
+      | .inl s' => (carryN s').map fun w =>
+        match w with
+        | .state s'' => Vars.state s''
+        | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
+      | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a)) := by
+  subst hCarryN
+  simp [mkCarryWithCircuit_succ_eq]
 
 theorem eval_mkCarryWithCircuit_eq_carryWith {arity : Type _}
     [DecidableEq arity]
