@@ -1038,6 +1038,32 @@ def mkCircuitWithInitCarry {arity : Type _}
     | .state s => Circuit.ofBool (p.initCarry s)
     | .inputs i => Circuit.var true (Vars.inputs i)
 
+/-- Show how 'mkCircuitWithInitCarry' evaluates the circuit with respect to an
+arbitrary environment: It substitutes the state vector with the initCarry,
+and leaves other data alone. -/
+@[simp]
+theorem mkCircuitWithInitCarry_eval_eq {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) {n : Nat}
+    (evalCirc : Circuit (Vars p.α arity n))
+    (envBool : Vars Empty arity n → Bool) :
+  (mkCircuitWithInitCarry p evalCirc).eval envBool =
+  evalCirc.eval (fun v =>
+    match v with
+    | .state s => p.initCarry s
+    | .inputs i => envBool (.inputs i)) := by
+  simp [mkCircuitWithInitCarry]
+  simp [Circuit.eval_bind, Circuit.eval_map]
+  congr
+  funext x
+  rcases x with a | i
+  · simp only [Circuit.eval, ↓reduceIte, Vars.state]
+    rcases p.initCarry a <;> simp
+  · simp only [Circuit.eval, ↓reduceIte, Vars.inputs]
+
+
 /--
 Make the circuit that evaluates the FSM at step 'n',
 in terms of 'mkEvalWithCircuit'.
@@ -1049,6 +1075,41 @@ def mkEvalCircuit' {arity : Type _}
     (p : FSM arity) (n : Nat) :
     Circuit (Vars Empty arity (n + 1)) :=
   mkCircuitWithInitCarry p (mkEvalWithCircuit p n)
+
+
+
+@[simp]
+theorem eval_mkEvalCircuit'_eq_false_iff
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars Empty arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    -- Make a safety circuit, that computes the evaluation of the FSM.
+    (mkEvalCircuit p n).eval envBool =
+      p.eval envBitstream n  := by
+  simp [mkEvalCircuit]
+  simp [Circuit.eval_bind]
+  rw [FSM.eval, FSM.nextBit]
+  simp
+  congr
+  ext x
+  rcases x with a | i
+  · simp [Circuit.eval_map]
+    rw [mkCarryCircuit_eval_eq (envBitstream := envBitstream)]
+    · simp
+    · -- TODO: write this as a theorem that encapsulates that environments are related
+      -- upon casting of the input.
+      constructor
+      intros x i hi
+      simp only [Fin.castSucc_mk]
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
+  · simp [initCarry_of_envBool]
+    apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
+
 
 
 theorem eval_mkEvalCircuit_eq_eval_mkEvalCircuit' {arity : Type _}
