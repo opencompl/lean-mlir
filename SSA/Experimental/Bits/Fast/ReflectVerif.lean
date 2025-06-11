@@ -940,9 +940,6 @@ def mkEvalCircuit {arity : Type _}
       | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
     | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
--- TODO: rewrite mkEvalCircuit in terms of 'mkEvalWithCircuit' followed by a 'bind' that changes variables or some such.
-
-
 @[simp]
 theorem eval_mkEvalCircuit_eq_false_iff
     {arity : Type _}
@@ -980,6 +977,42 @@ info: 'ReflectVerif.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms:
 -/
 #guard_msgs in #print axioms eval_mkEvalCircuit_eq_false_iff
 
+
+/--
+Make the circuit that sets the state vector to be the init carry of the FSM.
+-/
+def mkCircuitWithInitCarry {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) {n : Nat} (evalCirc : Circuit (Vars p.α arity n)) : Circuit (Vars Empty arity n) :=
+  evalCirc.bind fun v =>
+    match v with
+    | .state s => Circuit.ofBool (p.initCarry s)
+    | .inputs i => Circuit.var true (Vars.inputs i)
+
+/--
+Make the circuit that evaluates the FSM at step 'n',
+in terms of 'mkEvalWithCircuit'.
+-/
+def mkEvalCircuit' {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    Circuit (Vars Empty arity (n + 1)) :=
+  mkCircuitWithInitCarry p (mkEvalWithCircuit p n)
+
+
+theorem eval_mkEvalCircuit_eq_eval_mkEvalCircuit' {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars Empty arity (n + 1) → Bool) :
+  (mkEvalCircuit p n).eval envBool =
+  (mkEvalCircuit' p n).eval envBool := by
+  sorry
 
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
