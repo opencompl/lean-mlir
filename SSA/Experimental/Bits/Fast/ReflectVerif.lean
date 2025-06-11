@@ -978,7 +978,7 @@ theorem Circuit.eval_bigAnd_eq_false_iff
 Make the circuit that produces the state vector after 'n' iterations.
 This needs 'n' bits of input.
 -/
-def mkRealStateVectorCircuit {arity : Type _}
+def mkCarryCircuit {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
@@ -988,13 +988,13 @@ def mkRealStateVectorCircuit {arity : Type _}
   | n + 1 =>
     (p.nextBitCirc (some s)).bind fun v =>
       match v with
-      | .inl s' => (mkRealStateVectorCircuit p n s').map fun w =>
+      | .inl s' => (mkCarryCircuit p n s').map fun w =>
         match w with
         | .state s'' => Vars.state s''
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
       | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
-theorem mkRealStateVectorCircuit_eval_eq {arity : Type _}
+theorem mkCarryCircuit_eval_eq {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -1002,14 +1002,14 @@ theorem mkRealStateVectorCircuit_eval_eq {arity : Type _}
     (envBool : Vars Empty arity n → Bool)
     (envBitstream : arity → BitStream)
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
-  (mkRealStateVectorCircuit p n s).eval envBool =
+  (mkCarryCircuit p n s).eval envBool =
   p.carryWith (fun s => p.initCarry s) envBitstream n s := by
   induction n generalizing s
   case zero =>
-    simp only [mkRealStateVectorCircuit, Circuit.ofBool, FSM.carryWith_zero_eq]
+    simp only [mkCarryCircuit, Circuit.ofBool, FSM.carryWith_zero_eq]
     rcases h : p.initCarry s <;> simp [h]
   case succ m hm =>
-    simp only [mkRealStateVectorCircuit, Fin.coe_eq_castSucc, Circuit.eval_bind,
+    simp only [mkCarryCircuit, Fin.coe_eq_castSucc, Circuit.eval_bind,
       FSM.carryWith_initCarry_eq_carry]
     simp only [FSM.carry, FSM.nextBit]
     congr
@@ -1039,7 +1039,7 @@ def mkEvalCircuit {arity : Type _}
     (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
   p.nextBitCirc none |>.bind fun v =>
     match v with
-    | .inl s => (mkRealStateVectorCircuit p n s).map fun w =>
+    | .inl s => (mkCarryCircuit p n s).map fun w =>
       match w with
       | .state s' => Vars.state s'
       | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
@@ -1069,7 +1069,7 @@ theorem eval_mkEvalCircuit_eq_false_iff
   ext x
   rcases x with a | i
   · simp [Circuit.eval_map]
-    rw [mkRealStateVectorCircuit_eval_eq (envBitstream := envBitstream)]
+    rw [mkCarryCircuit_eval_eq (envBitstream := envBitstream)]
     · simp
     · -- TODO: write this as a theorem that encapsulates that environments are related
       -- upon casting of the input.
@@ -1085,35 +1085,6 @@ info: 'ReflectVerif.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms:
 -/
 #guard_msgs in #print axioms eval_mkEvalCircuit_eq_false_iff
 
-
--- /-
--- Make the safety circuit at index 'i',
--- which runs the program at the initial state on the inputs.
--- See that this fixes the state to 'Empty'.
--- -/
--- def mkSafetyCircuitAuxElem {arity : Type _}
---   [DecidableEq arity]
---   [Fintype arity]
---   [Hashable arity]
---   (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n) : (Circuit (Vars Empty arity (n+1))) :=
---   (StateCircuit.deltaNOutput p n i (by omega)).bind fun v =>
---     match v with
---     | .state s => Circuit.ofBool <| p.initCarry s
---     | .inputs i => Circuit.var true (.inputs i)
-
-
--- @[simp]
--- theorem eval_mkSafetyCircuitAuxElem_eq_false_iff
---     {arity : Type _}
---     [DecidableEq arity]
---     [Fintype arity]
---     [Hashable arity]
---     (p : FSM arity) (n : Nat) (i : Nat) (hin : i ≤ n)
---     (envBool : Vars Empty arity (n + 1) → Bool)
---     (envBitstream : arity → BitStream)
---     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
---     (mkEvalCircuit p n).eval envBool =
---     p.eval envBitstream n = false := by
 
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
@@ -1152,7 +1123,6 @@ theorem mkSafetyCircuit_succ_eq_mkSafetyCircuit_or
      (mkEvalCircuit p (n + 1) ||| (mkSafetyCircuit p n).map (fun vs => vs.castLe (by omega))) := by
   simp [mkSafetyCircuit, mkSafetyCircuitAuxList]
   sorry
-
 
 /--
 Evaluating the safety circuit is false iff
@@ -1240,7 +1210,7 @@ starting with a state vector that is given by the circuit itself.
 Make the circuit that produces the state vector after 'n' iterations,
 starting with a state vector that is given by the circuit itself.
 -/
-def mkStateVectorWithCircuit {arity : Type _}
+def mkCarryWithCircuit {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
@@ -1250,13 +1220,13 @@ def mkStateVectorWithCircuit {arity : Type _}
   | n + 1 =>
     (p.nextBitCirc (some s)).bind fun v =>
       match v with
-      | .inl s' => (mkStateVectorWithCircuit p n s').map fun w =>
+      | .inl s' => (mkCarryWithCircuit p n s').map fun w =>
         match w with
         | .state s'' => Vars.state s''
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
       | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
-theorem eval_mkStateVectorWithCircuit_eq_carryWith {arity : Type _}
+theorem eval_mkCarryWithCircuit_eq_carryWith {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -1264,14 +1234,14 @@ theorem eval_mkStateVectorWithCircuit_eq_carryWith {arity : Type _}
     (envBool : Vars p.α arity n → Bool)
     (envBitstream : arity → BitStream)
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
-  (mkStateVectorWithCircuit p n s).eval envBool =
+  (mkCarryWithCircuit p n s).eval envBool =
   p.carryWith (fun s => envBool (Vars.state s)) envBitstream n s := by
   induction n generalizing s
   case zero =>
-    simp only [mkStateVectorWithCircuit, Circuit.ofBool, FSM.carryWith_zero_eq]
+    simp only [mkCarryWithCircuit, Circuit.ofBool, FSM.carryWith_zero_eq]
     rcases h : envBool (Vars.state s) <;> simp [h]
   case succ m hm =>
-    simp only [mkStateVectorWithCircuit, Fin.coe_eq_castSucc, Circuit.eval_bind,
+    simp only [mkCarryWithCircuit, Fin.coe_eq_castSucc, Circuit.eval_bind,
       FSM.carryWith_initCarry_eq_carry]
     congr
     ext x
@@ -1300,7 +1270,7 @@ def mkEvalWithCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : (Circuit (Vars p.α arity (n+1))) :=
   p.nextBitCirc none |>.bind fun v =>
     match v with
-    | .inl s => (mkStateVectorWithCircuit p n s).map fun w =>
+    | .inl s => (mkCarryWithCircuit p n s).map fun w =>
       match w with
       | .state s' => Vars.state s'
       | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
@@ -1326,7 +1296,7 @@ theorem eval_mkEvalWithCircuit_eq
   ext x
   rcases x with a | i
   · simp [Circuit.eval_map, Sum.elim_inl]
-    rw [eval_mkStateVectorWithCircuit_eq_carryWith]
+    rw [eval_mkCarryWithCircuit_eq_carryWith]
     · rw [FSM.carryWith]
     · -- TODO extract out into generic theory.
       constructor
