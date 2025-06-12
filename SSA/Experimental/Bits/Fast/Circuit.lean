@@ -131,6 +131,28 @@ def simplifyAnd : Circuit α → Circuit α → Circuit α
 
 instance : AndOp (Circuit α) := ⟨Circuit.simplifyAnd⟩
 
+theorem and_def {α : Type _} (c d : Circuit α) :
+  (c &&& d) = Circuit.simplifyAnd c d := rfl
+
+@[simp] lemma tru_and (c : Circuit α) :
+  Circuit.tru &&& c = c := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.tru]
+
+@[simp] lemma fals_and (c : Circuit α) :
+  Circuit.fals &&& c = Circuit.fals := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.fals]
+  rcases c <;> simp
+
+@[simp] lemma and_fals (c : Circuit α) :
+  c &&& Circuit.fals = Circuit.fals := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.fals]
+  rcases c <;> simp
+
+@[simp] lemma and_tru (c : Circuit α) :
+  c &&& Circuit.tru = c := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.tru]
+  rcases c <;> simp
+
 @[simp] lemma eval_and : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     (eval (c₁ &&& c₂) f) = ((eval c₁ f) && (eval c₂ f)) := by
   intros c₁ c₂ f
@@ -272,6 +294,14 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | and c₁ c₂, f => (map c₁ f) &&& (map c₂ f)
   | or c₁ c₂, f => (map c₁ f) ||| (map c₂ f)
   | xor c₁ c₂, f => (map c₁ f) ^^^ (map c₂ f)
+
+@[simp]
+theorem map_tru (f : α → β) :
+    Circuit.tru.map f = Circuit.tru := rfl
+
+@[simp]
+theorem map_fals (f : α → β) :
+    Circuit.fals.map f = Circuit.fals := rfl
 
 lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
     eval (map c f) g = eval c (λ x => g (f x)) := by
@@ -941,6 +971,9 @@ theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
     Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₃ → Circuit.Equiv c₁ c₃ := by
   intros c₁ c₂ c₃ h₁ h₂ f
   rw [h₁ f, h₂ f]
+
+theorem eval_eq_of_Equiv {c₁ c₂ : Circuit α} (h : Circuit.Equiv c₁ c₂) (f : α → Bool) :
+    eval c₁ f = eval c₂ f := h f
 
 end Equiv
 
