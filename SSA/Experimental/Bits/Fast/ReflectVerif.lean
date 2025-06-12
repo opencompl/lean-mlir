@@ -977,60 +977,6 @@ theorem eval_mkEvalWithNCircuit_eq_true_iff
     apply Iff.not
     apply eval_mkEvalWithNCircuit_eq_false_iff (hEnvBitstream := hEnvBitstream)
 
-/--
-Make the circuit that produces the output value after 'n' iterations.
-This needs 'n+1' bits of input.
--/
-def mkEvalCircuit {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
-  p.nextBitCirc none |>.bind fun v =>
-    match v with
-    | .inl s => (mkCarryCircuit p n s).map fun w =>
-      match w with
-      | .state s' => Vars.state s'
-      | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
-    | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
-
-@[simp]
-theorem eval_mkEvalCircuit_eq
-    {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (envBool : Vars Empty arity (n + 1) → Bool)
-    (envBitstream : arity → BitStream)
-    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
-    -- Make a safety circuit, that computes the evaluation of the FSM.
-    (mkEvalCircuit p n).eval envBool =
-      p.eval envBitstream n  := by
-  simp [mkEvalCircuit]
-  simp [Circuit.eval_bind]
-  rw [FSM.eval, FSM.nextBit]
-  simp
-  congr
-  ext x
-  rcases x with a | i
-  · simp [Circuit.eval_map]
-    rw [mkCarryCircuit_eval_eq (envBitstream := envBitstream)]
-    · simp
-    · -- TODO: write this as a theorem that encapsulates that environments are related
-      -- upon casting of the input.
-      constructor
-      intros x i hi
-      simp only [Fin.castSucc_mk]
-      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-  · simp [initCarry_of_envBool]
-    apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-
-/--
-info: 'ReflectVerif.BvDecide.eval_mkEvalCircuit_eq' depends on axioms: [propext, Quot.sound]
--/
-#guard_msgs in #print axioms eval_mkEvalCircuit_eq
-
 
 /--
 Make the circuit that sets the state vector to be the init carry of the FSM.
@@ -1109,36 +1055,6 @@ theorem eval_mkEvalCircuit'_eq
     simp only [Fin.castSucc_mk]
     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
-/--
-calling mkEvalCircuit has the same value as mkEvalCircuit'.
-The difference is that:
-+  'mkEvalCircuit' builds the circuit with the 'initCarry' hardcoded
-   and uses `mkCarryCircuit` to build the carry circuit,
-+ `mkEvalCircuit'` builds the circuit with `mkCarryWithCircuit`, which
-  leaves the initial state symbolic. It then fixes the symbolic state to the
-  initial state by using `mkCircuitWithInitCarry`.
-  This approach allows us to incrementally build the circuit,
-  by keeping as a cache the `mkEvalWithNCircuit`, and finally building
-  the evaluation circuit by using `mkCircuitWithInitCarry`.
--/
-theorem eval_mkEvalCircuit_eq_eval_mkEvalCircuit' {arity : Type _}
-    [DecidableEq arity]
-    [Fintype arity]
-    [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (envBool : Vars Empty arity (n + 1) → Bool) :
-  (mkEvalCircuit p n).eval envBool =
-  (mkEvalCircuit' p n).eval envBool := by
-  let envBitstream := Bitstream_of_envBool envBool
-  have hEnvBitstream : EnvOutRelated envBool envBitstream := by
-     subst envBitstream; simp
-  rw [eval_mkEvalCircuit_eq (envBool := envBool)
-    (envBitstream := envBitstream)
-    (hEnvBitstream := hEnvBitstream),
-    eval_mkEvalCircuit'_eq (envBool := envBool)
-      (envBitstream := envBitstream)
-      (hEnvBitstream := hEnvBitstream)]
-
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
     [DecidableEq arity]
@@ -1151,12 +1067,6 @@ def mkSafetyCircuitAuxList {arity : Type _}
     (mkEvalCircuit' p i.val).map (fun vs => vs.castLe (by
       have := i.property; simp at this; omega
     ))
-
-/--
-Circuits are extentionally equivalent iff they evaluate the same on all environments.
--/
-def CircuitExt (c d : Circuit α) : Prop :=
-   ∀ env, c.eval env = d.eval env
 
 /--
 make the circuit that witnesses safety for (n+1) steps.
@@ -1242,6 +1152,43 @@ theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
 info: 'ReflectVerif.BvDecide.eval_mkSafetyCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff
+
+/--
+the circuit that witnesses safety for (n+1),
+by building an arbitrary safety circuit, and
+then using the carry circuit to set the state vector.
+-/
+def mkSafetyCircuit' {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    Circuit (Vars Empty arity (n + 1)) :=
+  mkCircuitWithInitCarry p (mkEvalWithNCircuit p n)
+
+/--
+This tells us that mkSafetyCircuit' evaluates to false
+iff the underlying FSM is unsafe up to n steps.
+-/
+theorem mkSafetyCircuit'_eval_eq_false_iff {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (envBool : Vars Empty arity (n + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    (mkSafetyCircuit' p n).eval envBool = false ↔
+    (∀ i ≤ n, p.eval envBitstream i = false) := by
+  rw [mkSafetyCircuit']
+  rw [mkCircuitWithInitCarry_eval_eq]
+  rw [eval_mkEvalWithNCircuit_eq_false_iff]
+  constructor
+  · intros h i hi
+    apply h
+    omega
+  · intros hCirc i hi
+    apply hCirc
+    omega
+  · constructor
+    intros x j hj
+    apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /-! ## Arbitrary State Vector Builder
 
