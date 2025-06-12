@@ -1102,6 +1102,18 @@ theorem eval_mkEvalCircuit'_eq
     simp only [Fin.castSucc_mk]
     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
+/--
+calling mkEvalCircuit has the same value as mkEvalCircuit'.
+The difference is that:
++  'mkEvalCircuit' builds the circuit with the 'initCarry' hardcoded
+   and uses `mkCarryCircuit` to build the carry circuit,
++ `mkEvalCircuit'` builds the circuit with `mkCarryWithCircuit`, which
+  leaves the initial state symbolic. It then fixes the symbolic state to the
+  initial state by using `mkCircuitWithInitCarry`.
+  This approach allows us to incrementally build the circuit,
+  by keeping as a cache the `mkEvalWithNCircuit`, and finally building
+  the evaluation circuit by using `mkCircuitWithInitCarry`.
+-/
 theorem eval_mkEvalCircuit_eq_eval_mkEvalCircuit' {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -1110,7 +1122,15 @@ theorem eval_mkEvalCircuit_eq_eval_mkEvalCircuit' {arity : Type _}
     (envBool : Vars Empty arity (n + 1) → Bool) :
   (mkEvalCircuit p n).eval envBool =
   (mkEvalCircuit' p n).eval envBool := by
-  sorry
+  let envBitstream := Bitstream_of_envBool envBool
+  have hEnvBitstream : EnvOutRelated envBool envBitstream := by
+     subst envBitstream; simp
+  rw [eval_mkEvalCircuit_eq (envBool := envBool)
+    (envBitstream := envBitstream)
+    (hEnvBitstream := hEnvBitstream),
+    eval_mkEvalCircuit'_eq (envBool := envBool)
+      (envBitstream := envBitstream)
+      (hEnvBitstream := hEnvBitstream)]
 
 /-- Make the list of safety circuits upto length 'n + 1'. -/
 def mkSafetyCircuitAuxList {arity : Type _}
