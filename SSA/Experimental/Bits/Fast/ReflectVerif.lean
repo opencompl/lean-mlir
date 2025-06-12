@@ -659,9 +659,33 @@ theorem Circuit.bigOr_cons_eq {α : Type _}
     simp [bigOr, ih]
 
 
+/-- append to the bigOr list is equivalent to a circuit
+that is the bigOr of the circuit and the |||
+-/
+theorem Circuit.bigOr_append_equiv_or_bigOr {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) :
+    Circuit.Equiv (Circuit.bigOr (cs ++ [c])) (c ||| Circuit.bigOr cs) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+    ext env
+    have := Circuit.eval_eq_of_Equiv ih
+    simp
+    rw [this]
+    simp [Circuit.eval_or]
+    rcases (a.eval env) <;> simp
 -- bigOr [a, b]
 -- = a ||| (bigOr [b])
 -- = a ||| (b ||| fals)
+
+theorem Circuit.bigOr_append_equiv_bigOr_cons {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) :
+    Circuit.Equiv (Circuit.bigOr (cs ++ [c])) (Circuit.bigOr (c :: cs)) := by
+  rw [Circuit.bigOr_cons_eq]
+  apply Circuit.Equiv_trans
+  · apply Circuit.bigOr_append_equiv_or_bigOr
+  · apply Circuit.Equiv_refl
 
 @[simp]
 theorem Circuit.eval_bigOr_eq_false_iff
