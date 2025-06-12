@@ -636,38 +636,6 @@ theorem EnvOutRelated_self_Bitstream_of_envBool
   intros x i hi
   simp [Bitstream_of_envBool, hi]
 
-/-- Take the 'or' of many circuits.-/
-def Circuit.bigOr {α : Type _}
-    (cs : List (Circuit α)) : Circuit α :=
-  match cs with
-  | [] => Circuit.fals
-  | c :: cs =>
-    c ||| (Circuit.bigOr cs)
-
--- bigOr [a, b]
--- = a ||| (bigOr [b])
--- = a ||| (b ||| fals)
-
-@[simp]
-theorem Circuit.eval_bigOr_eq_false_iff
-    (cs : List (Circuit α)) (env : α → Bool):
-    (Circuit.bigOr cs).eval env = false ↔
-    (∀ (c : Circuit α), c ∈ cs → c.eval env = false) := by
-  induction cs
-  case nil => simp [bigOr]
-  case cons a as ih =>
-    simp [bigOr, ih]
-
-@[simp]
-theorem Circuit.eval_bigOr_eq_true_iff
-    (cs : List (Circuit α)) (env : α → Bool):
-    (Circuit.bigOr cs).eval env = true ↔
-    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = true) := by
-  induction cs
-  case nil => simp [bigOr]
-  case cons a as ih =>
-    simp [bigOr, ih]
-
 def Circuit.bigOr' {α : Type _}
     (cs : List (Circuit α)) : Circuit α :=
   go cs Circuit.fals where
