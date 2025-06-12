@@ -988,7 +988,7 @@ def mkEvalCircuit {arity : Type _}
     | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
 
 @[simp]
-theorem eval_mkEvalCircuit_eq_false_iff
+theorem eval_mkEvalCircuit_eq
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -1020,9 +1020,9 @@ theorem eval_mkEvalCircuit_eq_false_iff
     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /--
-info: 'ReflectVerif.BvDecide.eval_mkEvalCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
+info: 'ReflectVerif.BvDecide.eval_mkEvalCircuit_eq' depends on axioms: [propext, Quot.sound]
 -/
-#guard_msgs in #print axioms eval_mkEvalCircuit_eq_false_iff
+#guard_msgs in #print axioms eval_mkEvalCircuit_eq
 
 
 /--
@@ -1076,10 +1076,11 @@ def mkEvalCircuit' {arity : Type _}
     Circuit (Vars Empty arity (n + 1)) :=
   mkCircuitWithInitCarry p (mkEvalWithCircuit p n)
 
-
-
+/--
+we show that `mkEvalCircuit'` equals
+-/
 @[simp]
-theorem eval_mkEvalCircuit'_eq_false_iff
+theorem eval_mkEvalCircuit'_eq
     {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
@@ -1089,28 +1090,17 @@ theorem eval_mkEvalCircuit'_eq_false_iff
     (envBitstream : arity → BitStream)
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     -- Make a safety circuit, that computes the evaluation of the FSM.
-    (mkEvalCircuit p n).eval envBool =
+    (mkEvalCircuit' p n).eval envBool =
       p.eval envBitstream n  := by
-  simp [mkEvalCircuit]
-  simp [Circuit.eval_bind]
-  rw [FSM.eval, FSM.nextBit]
-  simp
-  congr
-  ext x
-  rcases x with a | i
-  · simp [Circuit.eval_map]
-    rw [mkCarryCircuit_eval_eq (envBitstream := envBitstream)]
-    · simp
-    · -- TODO: write this as a theorem that encapsulates that environments are related
-      -- upon casting of the input.
-      constructor
-      intros x i hi
-      simp only [Fin.castSucc_mk]
-      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-  · simp [initCarry_of_envBool]
+  simp [mkEvalCircuit']
+  rw [eval_mkEvalWithCircuit_eq (envBitstream := envBitstream)]
+  · rw [FSM.evalWith_eq_eval_of_eq_init]
+    funext x
+    simp
+  · constructor
+    intros x i hi
+    simp only [Fin.castSucc_mk]
     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-
-
 
 theorem eval_mkEvalCircuit_eq_eval_mkEvalCircuit' {arity : Type _}
     [DecidableEq arity]
@@ -1180,7 +1170,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
   · intros hc i hi
     specialize hc _ i (by omega) rfl
     simp [Circuit.eval_map] at hc
-    rw [eval_mkEvalCircuit_eq_false_iff
+    rw [eval_mkEvalCircuit_eq
       (envBitstream := envBitstream)
     ] at hc
     · apply hc
@@ -1192,7 +1182,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
   · intros heval circ i hi hCirc
     subst hCirc
     simp [Circuit.eval_map]
-    rw [eval_mkEvalCircuit_eq_false_iff]
+    rw [eval_mkEvalCircuit_eq]
     · apply heval
       omega
     · constructor
