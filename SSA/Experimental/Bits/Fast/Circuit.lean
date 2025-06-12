@@ -954,29 +954,33 @@ section Equiv
 Two circuits are equivalent if they evaluate to the same result for all possible inputs.
 -/
 def Equiv (c₁ c₂ : Circuit α) : Prop :=
-  ∀ (f : α → Bool),
-    eval c₁ f = eval c₂ f
+    eval c₁ = eval c₂
 
 @[simp]
 theorem Equiv_refl : ∀ (c : Circuit α), Circuit.Equiv c c := by
-  intro c f
+  intro c
+  ext v
   simp [eval]
 
 @[symm]
 theorem Equiv_symm : ∀ {c₁ c₂ : Circuit α}, Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₁ := by
-  intros c₁ c₂ h f
-  rw [h f]
+  intros c₁ c₂ h
+  ext env
+  rw [h]
 
 theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
     Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₃ → Circuit.Equiv c₁ c₃ := by
-  intros c₁ c₂ c₃ h₁ h₂ f
-  rw [h₁ f, h₂ f]
+  intros c₁ c₂ c₃ h₁ h₂
+  ext env
+  rw [h₁, h₂]
 
 theorem eval_eq_of_Equiv {c₁ c₂ : Circuit α} (h : Circuit.Equiv c₁ c₂) (f : α → Bool) :
-    eval c₁ f = eval c₂ f := h f
+    eval c₁ f = eval c₂ f := by rw [h]
 
 theorem Equiv_of_eval_eq {c₁ c₂ : Circuit α} (h : ∀ f, eval c₁ f = eval c₂ f) :
-    Circuit.Equiv c₁ c₂ := h
+    Circuit.Equiv c₁ c₂ := by
+    ext v
+    apply h
 
 end Equiv
 

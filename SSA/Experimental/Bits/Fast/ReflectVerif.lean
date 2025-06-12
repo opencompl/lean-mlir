@@ -886,7 +886,8 @@ def mkCarryWithSuccCircuit {arity : Type _}
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
       | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
   property := by
-    intros a env
+    intros a
+    ext env
     rw [mkCarryWithCircuit]
     simp
     simp [Circuit.eval_bind]
