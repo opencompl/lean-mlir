@@ -644,6 +644,21 @@ def Circuit.bigOr {α : Type _}
   | c :: cs =>
     c ||| (Circuit.bigOr cs)
 
+@[simp]
+theorem Circuit.bigOr_nil_eq {α : Type _} :
+    Circuit.bigOr (α := α) [] = Circuit.fals := by
+  simp [bigOr]
+
+@[simp]
+theorem Circuit.bigOr_cons_eq {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) :
+    Circuit.bigOr (c :: cs) = c ||| Circuit.bigOr cs := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+
 -- bigOr [a, b]
 -- = a ||| (bigOr [b])
 -- = a ||| (b ||| fals)
@@ -990,6 +1005,13 @@ match n with
     )))
 
 @[simp]
+theorem mkEvalWithNCircuitAuxList_zero_eq {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) :
+    mkEvalWithNCircuitAuxList p 0 = [mkEvalWithCircuit p 0] := by
+  simp [mkEvalWithNCircuitAuxList]
+
+@[simp]
 theorem mkEvalWithNCircuitAuxList_succ_eq {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat) :
@@ -1004,7 +1026,21 @@ theorem mkEvalWithNCircuitAuxList_succ_eq {arity : Type _}
 def mkEvalWithNCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  Circuit.bigOr' (mkEvalWithNCircuitAuxList p n)
+  Circuit.bigOr (mkEvalWithNCircuitAuxList p n)
+
+theorem Circuit.map_or  (f : α → β) (c d : Circuit α) :
+  (c ||| d).map f = (c.map f) ||| (d.map f) := by
+  sorry
+
+theorem Circuit.bigOr_map (f : α → β) (cs : List (Circuit α)) :
+  (Circuit.bigOr cs).map f =
+  Circuit.bigOr (cs.map (fun c => c.map f)) := by
+  induction cs
+  case nil => simp [Circuit.bigOr]
+  case cons a as ih =>
+    simp [Circuit.bigOr, ih]
+    rw [Circuit.map_or]
+    rfl
 
 
 def mkEvalWithNCircuitSucc {arity : Type _}
@@ -1026,10 +1062,14 @@ def mkEvalWithNCircuitSucc {arity : Type _}
       rhs
       rw [mkEvalWithNCircuit]
       simp
-
-
-
-
+    congr
+    rw [mkEvalWithNCircuit]
+    congr
+    induction n
+    · simp [mkEvalWithNCircuitAuxList]
+      rw [Circuit.map_or]
+      rfl
+    · sorry
 
 
 -- TODO: write mkEvalWithNSuccCircuit

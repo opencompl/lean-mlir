@@ -150,6 +150,32 @@ def simplifyOr : Circuit α → Circuit α → Circuit α
 
 instance : OrOp (Circuit α) := ⟨Circuit.simplifyOr⟩
 
+theorem or_def {α : Type _} (c d : Circuit α) :
+  (c ||| d) = Circuit.simplifyOr c d := rfl
+
+@[simp]
+lemma fals_or (c : Circuit α) :
+  Circuit.fals ||| c = c := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.fals]
+  rcases c <;> simp
+
+@[simp]
+lemma tru_or (c : Circuit α) :
+  Circuit.tru ||| c = Circuit.tru := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.tru]
+
+@[simp]
+lemma or_fals (c : Circuit α) :
+  c ||| Circuit.fals = c := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.fals]
+  rcases c <;> simp
+
+@[simp]
+lemma or_tru (c : Circuit α) :
+  c ||| Circuit.tru = Circuit.tru := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.tru]
+  rcases c <;> simp
+
 @[simp] lemma eval_or : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     (eval (c₁ ||| c₂) f) = ((eval c₁ f) || (eval c₂ f)) := by
   intros c₁ c₂ f
@@ -250,6 +276,18 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
 lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
     eval (map c f) g = eval c (λ x => g (f x)) := by
   induction c <;> simp [*, Circuit.map, eval] at *
+
+@[simp]
+lemma fals_map (f : α → β) :
+  fals.map f = Circuit.fals := rfl
+
+@[simp]
+lemma var_map (f : α → β) (b : Bool) (x : α) :
+  (Circuit.var b x).map f = Circuit.var b (f x) := rfl
+
+@[simp]
+lemma tru_map (f : α → β) :
+  Circuit.tru.map f = Circuit.tru := rfl
 
 def simplify : ∀ (_c : Circuit α), Circuit α
   | tru => tru
