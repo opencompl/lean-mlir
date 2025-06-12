@@ -1069,91 +1069,6 @@ def mkSafetyCircuitAuxList {arity : Type _}
     ))
 
 /--
-make the circuit that witnesses safety for (n+1) steps.
-This builds the safety circuit for 'n+1' steps, and takes the 'or' of all of these.
--/
-def mkSafetyCircuit {arity : Type _}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
-  Circuit.bigOr (mkSafetyCircuitAuxList p n)
-
-/--
-Evaluating the safety circuit is false iff
-the bitstreams are false upto index 'n'.
--/
-theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (envBool : Vars Empty arity (n + 1) → Bool)
-    (envBitstream : arity → BitStream)
-    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
-    (mkSafetyCircuit p n).eval envBool = false ↔
-    (∀ (i : Nat), i ≤ n → p.eval envBitstream i = false) := by
-  rw [mkSafetyCircuit]
-  rw [Circuit.eval_bigOr_eq_false_iff]
-  rw [mkSafetyCircuitAuxList]
-  simp
-  constructor
-  · intros hc i hi
-    specialize hc _ i (by omega) rfl
-    simp [Circuit.eval_map] at hc
-    rw [eval_mkEvalCircuit'_eq
-      (envBitstream := envBitstream)
-    ] at hc
-    · apply hc
-    · -- TODO: write this as a theorem that encapsulates that environments are related
-      -- upon casting of the input.
-      constructor
-      intros x j hj
-      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-  · intros heval circ i hi hCirc
-    subst hCirc
-    simp [Circuit.eval_map]
-    rw [eval_mkEvalCircuit'_eq]
-    · apply heval
-      omega
-    · constructor
-      intros x j hj
-      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-
-/--
-info: 'ReflectVerif.BvDecide.eval_mkSafetyCircuit_eq_false_iff_' depends on axioms: [propext, Quot.sound]
--/
-#guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff_
-
-/--
-Evaluating the safety circuit is false iff
-the bitstreams are false upto index 'n'.
--/
-theorem eval_mkSafetyCircuit_eq_false_iff {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat) :
-    (∀ envBool, (mkSafetyCircuit p n).eval envBool = false) ↔
-    (∀ envBitstream, ∀ (i : Nat), i ≤ n → p.eval envBitstream i = false) := by
-  constructor
-  · intros h envBitstream i  hi
-    let envBool := envBoolEmpty_of_envBitstream envBitstream n
-    specialize h envBool
-    rw [eval_mkSafetyCircuit_eq_false_iff_
-      (envBitstream := envBitstream)
-    ] at h
-    · apply h
-      omega
-    · simp [envBool]
-  · intros h envBool
-    rw [eval_mkSafetyCircuit_eq_false_iff_
-      (envBitstream := Bitstream_of_envBool envBool)
-    ]
-    · intros i hi
-      apply h (Bitstream_of_envBool envBool) i hi
-    · simp
-
-/--
-info: 'ReflectVerif.BvDecide.eval_mkSafetyCircuit_eq_false_iff' depends on axioms: [propext, Quot.sound]
--/
-#guard_msgs in #print axioms eval_mkSafetyCircuit_eq_false_iff
-
-/--
 the circuit that witnesses safety for (n+1),
 by building an arbitrary safety circuit, and
 then using the carry circuit to set the state vector.
@@ -1375,7 +1290,7 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
     (hind : (mkIndHypCircuit p n).always_false) :
     ∀ (envBitstream : arity → BitStream) (i : Nat), p.eval envBitstream i = false := by
   intros envBitstream i
-  simp [eval_mkSafetyCircuit_eq_false_iff] at hs
+  simp only [Circuit.always_false_iff, Bool.not_eq_true, mkSafetyCircuit'_eval_eq_false_iff] at hs
   simp [eval_mkIndHypCircuit_eq_false_iff] at hind
   rw [FSM.eval_eq_evalWith_initCarry]
   induction i using Nat.strong_induction_on
@@ -1475,7 +1390,7 @@ partial def decideIfZerosAuxVerified {arity : Type _}
     throwError s!"ran out of iterations, quitting"
     return .exhaustedIterations maxIter
   let tStart ← IO.monoMsNow
-  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit fsm iter
+  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit' fsm iter
   let tEnd ← IO.monoMsNow
   let tElapsedSec := (tEnd - tStart) / 1000
   trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
