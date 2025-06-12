@@ -1017,8 +1017,9 @@ def mkEvalWithCircuit_of_mkCarryWithCircuit {arity : Type _}
     [Hashable arity]
     (p : FSM arity) (n : Nat)
     (carryN : p.α → Circuit (Vars p.α arity n))
-    (hCarryN : carryN = mkCarryWithCircuit p n) :
-    { c : Circuit (Vars p.α arity (n + 1)) // c = mkEvalWithCircuit p n } where
+    (hCarryN : ∀ (a : p.α), Circuit.Equiv (carryN a) (mkCarryWithCircuit p n a)) :
+    { c : Circuit (Vars p.α arity (n + 1)) //
+      Circuit.Equiv c (mkEvalWithCircuit p n) } where
   val :=   p.nextBitCirc none |>.bind fun v =>
     match v with
     | .inl s => (carryN s).map fun w =>
@@ -1027,8 +1028,15 @@ def mkEvalWithCircuit_of_mkCarryWithCircuit {arity : Type _}
       | .inputs i => Vars.inputs (Inputs.mk ⟨i.ix, by omega⟩ i.input)
     | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
   property := by
-    subst hCarryN
-    rfl
+    ext v
+    rw [mkEvalWithCircuit]
+    simp [Circuit.eval_bind]
+    congr
+    ext x
+    rcases x with a | i
+    · simp [Circuit.eval_map]
+      rw [hCarryN]
+    · simp
 
 @[simp]
 theorem eval_mkEvalWithCircuit_eq
@@ -1123,6 +1131,28 @@ theorem mkEvalWithNCircuit_succ_Eqiv_mkEvalWithNCircuit_or {arity : Type _}
       exists (n + 1)
       exists (by omega)
       simp [Circuit.eval_map, h]
+
+/--
+Build the circuit of evaluation at [0..n+1],
+usig the circuit of evaluation at [0..n] and the
+circuit of evaluation at 'n+1'.
+-/
+def mkEvalWithNCircuitSucc_of_mkEvalWithNCircuit_mkEvalWithCircuit_succ {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (mkEvalWith : Circuit (Vars p.α arity (n + 2)))
+    (hMkEvalWith : Circuit.Equiv mkEvalWith (mkEvalWithCircuit p (n + 1)))
+    (mkEvalWithN : Circuit (Vars p.α arity (n + 1)))
+    (hMkEvalWithN : Circuit.Equiv mkEvalWithN (mkEvalWithNCircuit p n))
+     :
+    { c : Circuit (Vars p.α arity (n + 2)) //
+      Circuit.Equiv c (mkEvalWithNCircuit p (n + 1)) } where
+  val :=  mkEvalWithN.map (fun v => v.castLe (by omega)) ||| mkEvalWith
+  property := by
+    ext env
+    rw [mkEvalWithNCircuit_succ_Eqiv_mkEvalWithNCircuit_or]
+    simp [Circuit.eval_map]
+    rw [hMkEvalWithN, hMkEvalWith]
 
 @[simp]
 theorem eval_mkEvalWithNCircuit_eq_false_iff
@@ -1640,6 +1670,41 @@ def mkZero {arity : Type _}
   hEvalWithN := by simp
 
 
+/-- make the 'carryWith' circuit of the successor, by using the current
+circuit state. -/
+def mkSuccCarryWith {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) (n : Nat)
+    (prev : KInductionCircuits fsm n) :
+    { f : fsm.α → Circuit (Vars fsm.α arity (n + 1)) //
+      ∀ (a : fsm.α), Circuit.Equiv (f a) (mkCarryWithCircuit fsm (n + 1) a) } :=
+  mkCarryWithSuccCircuit fsm n prev.cCarryWith prev.hCarryWith
+
+/--
+make the 'evalWith' circuit of the successor, by using the current
+circuit state.
+-/
+def mkSuccEvalWith {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) (n : Nat)
+    (prev : KInductionCircuits fsm n) :
+    { c : Circuit (Vars fsm.α arity (n + 2)) //
+      Circuit.Equiv c (mkEvalWithCircuit fsm (n + 1)) } :=
+  let carry := mkSuccCarryWith fsm n prev
+  mkEvalWithCircuit_of_mkCarryWithCircuit fsm (n + 1)
+    carry.val carry.prop
+
+/-- make the 'evalWithN' circuit for the (n+1)th iteration. -/
+def mkSuccEvalWithN {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) (n : Nat)
+    (prev : KInductionCircuits fsm n) :
+    { c : Circuit (Vars fsm.α arity (n + 2)) //
+      Circuit.Equiv c (mkEvalWithNCircuit fsm (n + 1)) } :=
+  let c := mkSuccEvalWith fsm n prev
+  mkEvalWithNCircuitSucc_of_mkEvalWithNCircuit_mkEvalWithCircuit_succ
+    fsm n c.val c.prop prev.cEvalWithN prev.hEvalWithN
+
 -- NOTE [Circuit Equivalence As a quotient]:
 -- We ideally should have a notion of `Circuit.equiv`, which says that
 -- circuits are equivalent if they denote the same function.
@@ -1653,14 +1718,17 @@ def mkSucc {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (fsm : FSM arity)
     (prev : KInductionCircuits fsm n) :
-    KInductionCircuits fsm (n + 1) where
-  cCarryWith := mkCarryWithSuccCircuit fsm n prev.cCarryWith prev.hCarryWith
-  hCarryWith := by
-    generalize mkCarryWithSuccCircuit fsm n prev.cCarryWith prev.hCarryWith = x
-    simp [x.property]
-  cEvalWithN := sorry
-  hEvalWithN := sorry
-
+    KInductionCircuits fsm (n + 1) :=
+  let cCarryWith := mkCarryWithSuccCircuit fsm n
+      prev.cCarryWith prev.hCarryWith
+  let hCarryWith := cCarryWith.property
+  let cEvalWithN := mkSuccEvalWithN fsm n prev
+  let hEvalWithN := cEvalWithN.property
+  { cCarryWith,
+    hCarryWith,
+    cEvalWithN,
+    hEvalWithN
+  }
 end KInductionCircuits
 
 
