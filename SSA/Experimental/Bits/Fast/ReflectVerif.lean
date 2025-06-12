@@ -919,6 +919,17 @@ def mkEvalWithNCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkEvalWithNCircuitAuxList p n)
 
+
+def mkEvalWithNCircuitSucc {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat)
+  (evalN : Circuit (Vars p.α arity (n+1)))
+  (hEvalN : evalN = mkEvalWithNCircuit p n)
+  (carryWith : p.α → Circuit (Vars p.α arity (n+2)))
+  (hCarryWith : carryWith = mkCarryWithCircuit p (n + 2)) :
+  Circuit (Vars p.α arity (n + 2)) := sorry
+
+
 -- TODO: write mkEvalWithNSuccCircuit
 -- TODO: show that mkEvalWithCircuit can be derived from mkEvalWithNCircuit followed by an 'assignVars'.
 -- This will allow us to cache 'mkEvalWithNCircuit'.
@@ -1431,6 +1442,107 @@ partial def decideIfZerosAuxVerified {arity : Type _}
     | .none =>
       trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
       decideIfZerosAuxVerified (iter + 1) maxIter fsm
+
+/-- structure for incrementally building the k-induction circuits. -/
+structure KInductionCircuits {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] (fsm : FSM arity) (n : Nat) where
+  cCarryWith : fsm.α → Circuit (Vars fsm.α arity n)
+  hCarryWith : cCarryWith = mkCarryWithCircuit fsm n
+
+  cEvalWithN : Circuit (Vars fsm.α arity (n + 1))
+  hEvalWithN : cEvalWithN = mkEvalWithNCircuit fsm n
+
+namespace KInductionCircuits
+/-- Make the carry circuit for the k-induction circuits. -/
+def mkZero {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) :
+    KInductionCircuits fsm 0 where
+  cCarryWith := mkCarryWithCircuit fsm 0
+  hCarryWith := rfl
+  cEvalWithN := mkEvalWithNCircuit fsm 0
+  hEvalWithN := rfl
+
+
+-- NOTE [Circuit Equivalence As a quotient]:
+-- We ideally should have a notion of `Circuit.equiv`, which says that
+-- circuits are equivalent if they denote the same function.
+--
+-- However, for now, don't bother. We change the direction we compute the `bigOr`
+-- of the circuits, so that the latest circuit is the one that is at the outermost
+-- layer of the `bigOr`. This way, we can stick a new circuit as
+-- `circUptoN+1 = circN+1 || (...circUptoN...)`.
+
+def mkSucc {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity)
+    (prev : KInductionCircuits fsm n) :
+    KInductionCircuits fsm (n + 1) where
+  cCarryWith := mkCarryWithSuccCircuit fsm n prev.cCarryWith prev.hCarryWith
+  hCarryWith := by
+    generalize mkCarryWithSuccCircuit fsm n prev.cCarryWith prev.hCarryWith = x
+    simp [x.property]
+  cEvalWithN := sorry
+  hEvalWithN := sorry
+
+end KInductionCircuits
+
+
+@[nospecialize]
+partial def decideIfZerosAuxVerified' {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (iter : Nat) (maxIter : Nat)
+    (fsm : FSM arity)
+    (carryWith : fsm.α → Circuit (Vars fsm.α arity (iter)))
+    (hCarryWith : carryWith = mkCarryWithCircuit fsm iter) :
+    TermElabM (DecideIfZerosOutput) := do
+  trace[Bits.FastVerif] s!"K-induction (iter={iter})"
+  if iter ≥ maxIter && maxIter != 0 then
+    throwError s!"ran out of iterations, quitting"
+    return .exhaustedIterations maxIter
+  let tStart ← IO.monoMsNow
+  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit' fsm iter
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
+
+  let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+  let formatEmpty : Empty → Format := fun e => e.elim
+  let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+  trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+  let tStart ← IO.monoMsNow
+  let safetyCert? ← checkCircuitUnsatAux cSafety
+  let tEnd ← IO.monoMsNow
+  let tElapsedSec := (tEnd - tStart) / 1000
+  trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
+  match safetyCert? with
+  | .none =>
+    trace[Bits.FastVerif] s!"Safety property failed on initial state."
+    return .safetyFailure iter
+  | .some safetyCert =>
+    trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
+
+    let tStart ← IO.monoMsNow
+    let cIndHyp := mkIndHypCircuit fsm iter
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+
+    let tStart ← IO.monoMsNow
+    trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
+    -- let le : Bool := sorry
+    let indCert? ← checkCircuitUnsatAux cIndHyp
+    let tEnd ← IO.monoMsNow
+    let tElapsedSec := (tEnd - tStart) / 1000
+    trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
+    match indCert? with
+    | .some indCert =>
+      trace[Bits.FastVerif] s!"Inductive invariant established."
+      return .proven iter safetyCert indCert
+    | .none =>
+      trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
+      decideIfZerosAuxVerified (iter + 1) maxIter fsm
+
 
 @[nospecialize]
 def _root_.FSM.decideIfZerosVerified  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
