@@ -777,7 +777,6 @@ def mkCarryWith0Circuit {arity : Type _}
     { f : p.α → Circuit (Vars p.α arity 0) // f = mkCarryWithCircuit p 0 } :=
   ⟨mkCarryWithCircuit p 0, rfl⟩
 
-
 /--
 make the CarryWith circuit for step (n+1), incrementally,
 using the carryWith circuit at step n.
@@ -1149,7 +1148,7 @@ def mkSafetyCircuitAuxList {arity : Type _}
     List (Circuit (Vars Empty arity (n+1))) :=
   let ys := (List.range (n+1)).attach
   ys.map fun i =>
-    (mkEvalCircuit p i.val).map (fun vs => vs.castLe (by
+    (mkEvalCircuit' p i.val).map (fun vs => vs.castLe (by
       have := i.property; simp at this; omega
     ))
 
@@ -1167,16 +1166,6 @@ def mkSafetyCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars Empty arity (n+1)) :=
   Circuit.bigOr (mkSafetyCircuitAuxList p n)
-
-/-- mkSafetyCircuit at step 'n+1' equals making a safety circuit upto 'n' and then
-adjoining another step. -/
-theorem mkSafetyCircuit_succ_eq_mkSafetyCircuit_or
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : Nat) :
-  mkSafetyCircuit p (n + 1) =
-     (mkEvalCircuit p (n + 1) ||| (mkSafetyCircuit p n).map (fun vs => vs.castLe (by omega))) := by
-  simp [mkSafetyCircuit, mkSafetyCircuitAuxList]
-  sorry
 
 /--
 Evaluating the safety circuit is false iff
@@ -1198,7 +1187,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
   · intros hc i hi
     specialize hc _ i (by omega) rfl
     simp [Circuit.eval_map] at hc
-    rw [eval_mkEvalCircuit_eq
+    rw [eval_mkEvalCircuit'_eq
       (envBitstream := envBitstream)
     ] at hc
     · apply hc
@@ -1210,7 +1199,7 @@ theorem eval_mkSafetyCircuit_eq_false_iff_ {arity : Type _}
   · intros heval circ i hi hCirc
     subst hCirc
     simp [Circuit.eval_map]
-    rw [eval_mkEvalCircuit_eq]
+    rw [eval_mkEvalCircuit'_eq]
     · apply heval
       omega
     · constructor
