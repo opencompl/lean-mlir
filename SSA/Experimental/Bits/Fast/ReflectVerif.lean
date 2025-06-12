@@ -1736,9 +1736,7 @@ end KInductionCircuits
 partial def decideIfZerosAuxVerified' {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
-    (fsm : FSM arity)
-    (carryWith : fsm.α → Circuit (Vars fsm.α arity (iter)))
-    (hCarryWith : carryWith = mkCarryWithCircuit fsm iter) :
+    (fsm : FSM arity) :
     TermElabM (DecideIfZerosOutput) := do
   trace[Bits.FastVerif] s!"K-induction (iter={iter})"
   if iter ≥ maxIter && maxIter != 0 then
