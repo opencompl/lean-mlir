@@ -860,8 +860,9 @@ def mkCarryWith0Circuit {arity : Type _}
     [Fintype arity]
     [Hashable arity]
     (p : FSM arity) :
-    { f : p.α → Circuit (Vars p.α arity 0) // f = mkCarryWithCircuit p 0 } :=
-  ⟨mkCarryWithCircuit p 0, rfl⟩
+    { f : p.α → Circuit (Vars p.α arity 0) //
+      ∀ (a : p.α), Circuit.Equiv (f a) (mkCarryWithCircuit p 0 a) } :=
+  ⟨mkCarryWithCircuit p 0, by simp⟩
 
 /--
 make the CarryWith circuit for step (n+1), incrementally,
@@ -873,8 +874,9 @@ def mkCarryWithSuccCircuit {arity : Type _}
     [Hashable arity]
     (p : FSM arity) (n : Nat)
     (carryN : p.α → Circuit (Vars p.α arity n))
-    (hCarryN : carryN = mkCarryWithCircuit p n) :
-    { f : p.α → Circuit (Vars p.α arity (n + 1)) // f = mkCarryWithCircuit p (n + 1) } where
+    (hCarryN : ∀ (a : p.α), Circuit.Equiv (carryN a) (mkCarryWithCircuit p n a)) :
+    { f : p.α → Circuit (Vars p.α arity (n + 1)) //
+      ∀ (a : p.α), Circuit.Equiv (f a) (mkCarryWithCircuit p (n + 1) a) } where
   val := fun s =>
     (p.nextBitCirc (some s)).bind fun v =>
       match v with
@@ -884,9 +886,16 @@ def mkCarryWithSuccCircuit {arity : Type _}
         | .inputs i => Vars.inputs (Inputs.mk (i.ix) i.input)
       | .inr a => Circuit.var true (Vars.inputs (Inputs.mk ⟨n, by omega⟩ a))
   property := by
-    subst hCarryN
-    simp [mkCarryWithCircuit]
-
+    intros a env
+    rw [mkCarryWithCircuit]
+    simp
+    simp [Circuit.eval_bind]
+    congr 1
+    ext v
+    rcases v with a' | i
+    · simp [Circuit.eval_map]
+      rw [hCarryN]
+    · simp
 
 theorem eval_mkCarryWithCircuit_eq_carryWith {arity : Type _}
     [DecidableEq arity]
@@ -994,87 +1003,16 @@ theorem eval_mkEvalWithCircuit_eq
 def mkEvalWithNCircuitAuxList {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : List (Circuit (Vars p.α arity (n+1))) :=
-match n with
-| 0 => [mkEvalWithCircuit p 0]
-| n + 1 =>
-  let eval' := mkEvalWithNCircuitAuxList p n
-  let eval := mkEvalWithCircuit p (n + 1)
-  eval :: (eval'.map fun c =>
-    c.map (fun vs => vs.castShift (by
-      omega
-    )))
-
-@[simp]
-theorem mkEvalWithNCircuitAuxList_zero_eq {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) :
-    mkEvalWithNCircuitAuxList p 0 = [mkEvalWithCircuit p 0] := by
-  simp [mkEvalWithNCircuitAuxList]
-
-@[simp]
-theorem mkEvalWithNCircuitAuxList_succ_eq {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat) :
-    mkEvalWithNCircuitAuxList p (n + 1) =
-    mkEvalWithCircuit p (n + 1) ::
-    (mkEvalWithNCircuitAuxList p n).map fun c =>
-      c.map (fun vs => vs.castShift (by
-        omega
-      )) := by
-  simp [mkEvalWithNCircuitAuxList]
+  let ys := (List.range (n+1)).attach
+  ys.map fun i =>
+    (mkEvalWithCircuit p i.val).map (fun vs => vs.castLe (by
+      have := i.property; simp at this; omega
+    ))
 
 def mkEvalWithNCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkEvalWithNCircuitAuxList p n)
-
-theorem Circuit.map_or  (f : α → β) (c d : Circuit α) :
-  (c ||| d).map f = (c.map f) ||| (d.map f) := by
-  sorry
-
-theorem Circuit.bigOr_map (f : α → β) (cs : List (Circuit α)) :
-  (Circuit.bigOr cs).map f =
-  Circuit.bigOr (cs.map (fun c => c.map f)) := by
-  induction cs
-  case nil => simp [Circuit.bigOr]
-  case cons a as ih =>
-    simp [Circuit.bigOr, ih]
-    rw [Circuit.map_or]
-    rfl
-
-
-def mkEvalWithNCircuitSucc {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (p : FSM arity) (n : Nat)
-    (evalN : Circuit (Vars p.α arity (n+1)))
-    (hEvalN : evalN = mkEvalWithNCircuit p n)
-    (evalWith : Circuit (Vars p.α arity (n+2)))
-    (hEvalWith : evalWith = mkEvalWithCircuit p (n + 1)) :
-    {c : Circuit (Vars p.α arity (n + 2)) //
-      c = mkEvalWithNCircuit p (n + 1) } where
-  val := evalWith ||| (evalN.map (fun vs => vs.castShift (by
-    omega
-  )))
-  property := by
-    subst hEvalN
-    subst hEvalWith
-    conv =>
-      rhs
-      rw [mkEvalWithNCircuit]
-      simp
-    congr
-    rw [mkEvalWithNCircuit]
-    congr
-    induction n
-    · simp [mkEvalWithNCircuitAuxList]
-      rw [Circuit.map_or]
-      rfl
-    · sorry
-
-
--- TODO: write mkEvalWithNSuccCircuit
--- TODO: show that mkEvalWithCircuit can be derived from mkEvalWithNCircuit followed by an 'assignVars'.
--- This will allow us to cache 'mkEvalWithNCircuit'.
 
 @[simp]
 theorem eval_mkEvalWithNCircuit_eq_false_iff
@@ -1088,7 +1026,7 @@ theorem eval_mkEvalWithNCircuit_eq_false_iff
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     ((mkEvalWithNCircuit p n).eval envBool = false) ↔
     (∀ i < n + 1, p.evalWith (fun s => envBool (.state s)) envBitstream i = false) := by
-  simp [mkEvalWithNCircuit, Circuit.eval_bigOr'eq_false_iff, mkEvalWithNCircuitAuxList]
+  simp [mkEvalWithNCircuit, Circuit.eval_bigOr_eq_false_iff, mkEvalWithNCircuitAuxList]
   constructor
   · intros hc
     intros i hi
@@ -1129,7 +1067,6 @@ theorem eval_mkEvalWithNCircuit_eq_true_iff
         ¬ (∀ i < n + 1, p.evalWith (fun s => envBool (.state s)) envBitstream i = false) by simp]
     apply Iff.not
     apply eval_mkEvalWithNCircuit_eq_false_iff (hEnvBitstream := hEnvBitstream)
-
 
 /--
 Make the circuit that sets the state vector to be the init carry of the FSM.
@@ -1589,10 +1526,10 @@ partial def decideIfZerosAuxVerified {arity : Type _}
 structure KInductionCircuits {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity] (fsm : FSM arity) (n : Nat) where
   cCarryWith : fsm.α → Circuit (Vars fsm.α arity n)
-  hCarryWith : cCarryWith = mkCarryWithCircuit fsm n
-
+  hCarryWith : ∀ (a : fsm.α),
+    Circuit.Equiv (cCarryWith a) (mkCarryWithCircuit fsm n a)
   cEvalWithN : Circuit (Vars fsm.α arity (n + 1))
-  hEvalWithN : cEvalWithN = mkEvalWithNCircuit fsm n
+  hEvalWithN : Circuit.Equiv cEvalWithN (mkEvalWithNCircuit fsm n)
 
 namespace KInductionCircuits
 /-- Make the carry circuit for the k-induction circuits. -/
@@ -1601,9 +1538,9 @@ def mkZero {arity : Type _}
     (fsm : FSM arity) :
     KInductionCircuits fsm 0 where
   cCarryWith := mkCarryWithCircuit fsm 0
-  hCarryWith := rfl
+  hCarryWith := by intros a; simp
   cEvalWithN := mkEvalWithNCircuit fsm 0
-  hEvalWithN := rfl
+  hEvalWithN := by simp
 
 
 -- NOTE [Circuit Equivalence As a quotient]:

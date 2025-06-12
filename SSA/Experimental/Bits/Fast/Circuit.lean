@@ -975,6 +975,9 @@ theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
 theorem eval_eq_of_Equiv {c₁ c₂ : Circuit α} (h : Circuit.Equiv c₁ c₂) (f : α → Bool) :
     eval c₁ f = eval c₂ f := h f
 
+theorem Equiv_of_eval_eq {c₁ c₂ : Circuit α} (h : ∀ f, eval c₁ f = eval c₂ f) :
+    Circuit.Equiv c₁ c₂ := h
+
 end Equiv
 
 end Circuit
