@@ -1168,7 +1168,7 @@ def mkSafetyCircuit' {arity : Type _}
 This tells us that mkSafetyCircuit' evaluates to false
 iff the underlying FSM is unsafe up to n steps.
 -/
-theorem mkSafetyCircuit'_eval_eq_false_iff {arity : Type _}
+theorem eval_mkSafetyCircuit'_eq_false_iff_ {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (p : FSM arity) (n : Nat)
     (envBool : Vars Empty arity (n + 1) → Bool)
@@ -1189,6 +1189,30 @@ theorem mkSafetyCircuit'_eval_eq_false_iff {arity : Type _}
   · constructor
     intros x j hj
     apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
+
+@[simp]
+theorem mkSafetyCircuit'_eval_eq_false_iff {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    (∀ envBool, (mkSafetyCircuit' p n).eval envBool = false) ↔
+    (∀ envBitstream, ∀ i ≤ n, p.eval envBitstream i = false) := by
+  constructor
+  · intros h envBitstream i hi
+    let envBool := envBoolEmpty_of_envBitstream envBitstream n
+    specialize h envBool
+    rw [eval_mkSafetyCircuit'_eq_false_iff_
+      (envBitstream := envBitstream)
+    ] at h
+    · apply h
+      omega
+    · simp [envBool]
+  · intros hCirc envBool
+    rw [eval_mkSafetyCircuit'_eq_false_iff_
+      (envBitstream := Bitstream_of_envBool envBool)
+    ]
+    · intros i hi
+      apply hCirc (Bitstream_of_envBool envBool) i hi
+    · simp
 
 /-! ## Arbitrary State Vector Builder
 
@@ -1347,7 +1371,7 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
     [Fintype arity]
     [Hashable arity]
     (p : FSM arity)
-    (hs : (mkSafetyCircuit p n).always_false)
+    (hs : (mkSafetyCircuit' p n).always_false)
     (hind : (mkIndHypCircuit p n).always_false) :
     ∀ (envBitstream : arity → BitStream) (i : Nat), p.eval envBitstream i = false := by
   intros envBitstream i
@@ -1393,7 +1417,7 @@ theorem eval_eq_false_of_verifyAIG_eq_of_verifyAIG_eq
     [Hashable arity]
     {p : FSM arity}
     (sCert : BVDecide.Frontend.LratCert)
-    (hs : verifyCircuit (mkSafetyCircuit p n) sCert = true)
+    (hs : verifyCircuit (mkSafetyCircuit' p n) sCert = true)
     (indCert : BVDecide.Frontend.LratCert)
     (hind : verifyCircuit (mkIndHypCircuit p n) indCert = true) :
     ∀ env i, p.eval env i = false := by
@@ -1410,7 +1434,7 @@ theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG
     (p : Predicate)
     (n : Nat)
     (sCert : BVDecide.Frontend.LratCert)
-    (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
+    (hs : verifyCircuit (mkSafetyCircuit' (predicateEvalEqFSM p).toFSM n) sCert = true)
     (indCert : BVDecide.Frontend.LratCert)
     (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
     p.denote w vars := by
