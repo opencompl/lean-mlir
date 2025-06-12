@@ -452,6 +452,17 @@ def castLe (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
   ix := ⟨i.ix, by omega⟩
   input := i.input
 
+@[simp]
+theorem castLe_eq_self {α : Type _} {n : Nat} (i : Inputs α n) (h : n ≤ n) :
+    i.castLe h = i := by
+  simp [Inputs.castLe]
+
+@[simp]
+theorem castLe_castLe_eq_castLe {α : Type _} {p q r : Nat}
+  (i : Inputs α p) (h : p ≤ q) (h' : q ≤ r) :
+    (i.castLe h).castLe h' = i.castLe (by omega) := by
+  simp [Inputs.castLe]
+
 /-- casts bits in `[0..n)` to `[m-n..m)` by shifting the index. -/
 def castShift (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
   ix := ⟨m - 1 - i.ix, by omega⟩
@@ -526,6 +537,24 @@ def Vars.castShift {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m
   match v with
   | .state s => .state s
   | .inputs is => .inputs (is.castShift hnm)
+
+/-- casting to the same width equals vars-/
+@[simp]
+theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n ≤ n) :
+    v.castLe h = v := by
+  rcases v with x | i
+  · simp [Vars.castLe]
+  · simp [Vars.castLe]
+
+/-- casting to the same width equals vars-/
+@[simp]
+theorem Vars.castLe_castLe_eq_castLe_self {α : Type _} {p q r : Nat}
+  (v : Vars α σ p) (h : p ≤ q) (h' : q ≤ r) :
+    (v.castLe h).castLe h' = v.castLe (by omega) := by
+  rcases v with x | i
+  · simp [Vars.castLe]
+  · simp [Vars.castLe]
+
 
 /-- Relate boolean and bitstream environments. -/
 structure EnvOutRelated {arity : Type _} {α : Type _}
@@ -686,6 +715,14 @@ theorem Circuit.bigOr_append_equiv_bigOr_cons {α : Type _}
   apply Circuit.Equiv_trans
   · apply Circuit.bigOr_append_equiv_or_bigOr
   · apply Circuit.Equiv_refl
+
+theorem Circuit.eval_bigOr_eq_decide
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = decide (∃ c ∈ cs, c.eval env = true) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
 
 @[simp]
 theorem Circuit.eval_bigOr_eq_false_iff
@@ -1039,6 +1076,54 @@ def mkEvalWithNCircuit {arity : Type _}
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
   Circuit.bigOr (mkEvalWithNCircuitAuxList p n)
 
+/-- mkEvalWithNCircuit evaluated at (n + 1) equals
+mkEvalWithNCircuit evaluated at n, or'd with
+mkEvalWithCircuit evaluated at (n + 1). -/
+theorem mkEvalWithNCircuit_succ_Eqiv_mkEvalWithNCircuit_or {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    Circuit.Equiv
+      (mkEvalWithNCircuit p (n + 1))
+      ((mkEvalWithNCircuit p n).map (fun v => v.castLe (by omega)) ||| (mkEvalWithCircuit p (n + 1))) := by
+  simp [mkEvalWithNCircuit, mkEvalWithNCircuitAuxList]
+  ext env
+  rw [NNF.bool_eq_iff]
+  rw [Circuit.eval_bigOr_eq_true_iff]
+  simp [Circuit.eval_map]
+  constructor
+  · intros h
+    obtain ⟨hc, a, ha⟩ := h
+    obtain ⟨i, hi⟩ := a
+    obtain ⟨j, hj⟩ := hi
+    subst hj
+    simp [Circuit.eval_map] at ha
+    by_cases hi : i = n + 1
+    · subst hi
+      right
+      rw [← ha]
+      simp
+    · left
+      exists (mkEvalWithCircuit p i).map (fun v => v.castLe (by omega))
+      constructor
+      · exists i
+        exists (by omega)
+      · simp [Circuit.eval_map, ha]
+  · intros h
+    rcases h with h | h
+    · obtain ⟨c, ⟨⟨i, hi, hc'⟩, hc⟩ ⟩ := h
+      subst hc'
+      simp [Circuit.eval_map] at hc ⊢
+      exists (mkEvalWithCircuit p i).map (fun v => v.castLe (by omega))
+      constructor
+      · exists i
+        exists (by omega)
+      · simp [Circuit.eval_map, hc]
+    · exists (mkEvalWithCircuit p (n + 1)).map (fun v => v.castLe (by omega))
+      simp [h]
+      exists (n + 1)
+      exists (by omega)
+      simp [Circuit.eval_map, h]
+
 @[simp]
 theorem eval_mkEvalWithNCircuit_eq_false_iff
     {arity : Type _}
@@ -1358,19 +1443,6 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
       · omega
       · omega
     · simp
-
-@[simp]
-theorem Inputs.castLe_eq_self {α : Type _} {n : Nat} (i : Inputs α n) (h : n ≤ n) :
-    i.castLe h = i := by
-  simp [Inputs.castLe]
-
-/-- casting to the same width equals vars-/
-@[simp]
-theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n ≤ n) :
-    v.castLe h = v := by
-  rcases v with x | i
-  · simp [Vars.castLe]
-  · simp [Vars.castLe]
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]

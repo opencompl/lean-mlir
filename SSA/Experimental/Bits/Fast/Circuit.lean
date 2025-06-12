@@ -295,6 +295,21 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | or c₁ c₂, f => (map c₁ f) ||| (map c₂ f)
   | xor c₁ c₂, f => (map c₁ f) ^^^ (map c₂ f)
 
+/--
+Map of 'identity' does not change the evaluation of the circuit.
+Funnily, it *can* structually change the circuit,
+since it rebuilds the circuit, while simplifying it during rebuilding.
+-/
+@[simp]
+theorem eval_map_id_eq (c : Circuit α) (env : α → Bool) :
+    (Circuit.map c (id : α → α)).eval env = c.eval env := by
+  induction c <;> simp [Circuit.map, *] at *
+
+@[simp]
+theorem eval_map_id_eq' {c : Circuit α} {f : α → Bool} :
+    eval (map c fun v => v) f = eval c f := by
+  induction c <;> simp [Circuit.map, *] at *
+
 @[simp]
 theorem map_tru (f : α → β) :
     Circuit.tru.map f = Circuit.tru := rfl
