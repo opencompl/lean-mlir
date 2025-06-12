@@ -947,11 +947,27 @@ theorem eval_mkEvalWithCircuit_eq
 def mkEvalWithNCircuitAuxList {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : List (Circuit (Vars p.α arity (n+1))) :=
-  let ys := (List.range (n+1)).attach
-  ys.map fun i =>
-    (mkEvalWithCircuit p i.val).map (fun vs => vs.castLe (by
-      have := i.property; simp at this; omega
-    ))
+match n with
+| 0 => [mkEvalWithCircuit p 0]
+| n + 1 =>
+  let eval' := mkEvalWithNCircuitAuxList p n
+  let eval := mkEvalWithCircuit p (n + 1)
+  eval :: (eval'.map fun c =>
+    c.map (fun vs => vs.castShift (by
+      omega
+    )))
+
+@[simp]
+theorem mkEvalWithNCircuitAuxList_succ_eq {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat) :
+    mkEvalWithNCircuitAuxList p (n + 1) =
+    mkEvalWithCircuit p (n + 1) ::
+    (mkEvalWithNCircuitAuxList p n).map fun c =>
+      c.map (fun vs => vs.castShift (by
+        omega
+      )) := by
+  simp [mkEvalWithNCircuitAuxList]
 
 def mkEvalWithNCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -960,13 +976,28 @@ def mkEvalWithNCircuit {arity : Type _}
 
 
 def mkEvalWithNCircuitSucc {arity : Type _}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : Nat)
-  (evalN : Circuit (Vars p.α arity (n+1)))
-  (hEvalN : evalN = mkEvalWithNCircuit p n)
-  (carryWith : p.α → Circuit (Vars p.α arity (n+2)))
-  (hCarryWith : carryWith = mkCarryWithCircuit p (n + 2)) :
-  Circuit (Vars p.α arity (n + 2)) := sorry
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (n : Nat)
+    (evalN : Circuit (Vars p.α arity (n+1)))
+    (hEvalN : evalN = mkEvalWithNCircuit p n)
+    (evalWith : Circuit (Vars p.α arity (n+2)))
+    (hEvalWith : evalWith = mkEvalWithCircuit p (n + 1)) :
+    {c : Circuit (Vars p.α arity (n + 2)) //
+      c = mkEvalWithNCircuit p (n + 1) } where
+  val := evalWith ||| (evalN.map (fun vs => vs.castShift (by
+    omega
+  )))
+  property := by
+    subst hEvalN
+    subst hEvalWith
+    conv =>
+      rhs
+      rw [mkEvalWithNCircuit]
+      simp
+
+
+
+
 
 
 -- TODO: write mkEvalWithNSuccCircuit
