@@ -880,4 +880,30 @@ def optimize : Circuit α → Circuit α
     | _, _ => l ^^^ r
 end Optimizer
 
+section Equiv
+
+/--
+Two circuits are equivalent if they evaluate to the same result for all possible inputs.
+-/
+def Equiv (c₁ c₂ : Circuit α) : Prop :=
+  ∀ (f : α → Bool),
+    eval c₁ f = eval c₂ f
+
+@[simp]
+theorem Equiv_refl : ∀ (c : Circuit α), Circuit.Equiv c c := by
+  intro c f
+  simp [eval]
+
+@[symm]
+theorem Equiv_symm : ∀ {c₁ c₂ : Circuit α}, Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₁ := by
+  intros c₁ c₂ h f
+  rw [h f]
+
+theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
+    Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₃ → Circuit.Equiv c₁ c₃ := by
+  intros c₁ c₂ c₃ h₁ h₂ f
+  rw [h₁ f, h₂ f]
+
+end Equiv
+
 end Circuit

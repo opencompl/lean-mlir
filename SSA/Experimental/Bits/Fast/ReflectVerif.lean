@@ -644,6 +644,10 @@ def Circuit.bigOr {α : Type _}
   | c :: cs =>
     c ||| (Circuit.bigOr cs)
 
+-- bigOr [a, b]
+-- = a ||| (bigOr [b])
+-- = a ||| (b ||| fals)
+
 @[simp]
 theorem Circuit.eval_bigOr_eq_false_iff
     (cs : List (Circuit α)) (env : α → Bool):
@@ -663,6 +667,73 @@ theorem Circuit.eval_bigOr_eq_true_iff
   case nil => simp [bigOr]
   case cons a as ih =>
     simp [bigOr, ih]
+
+def Circuit.bigOr' {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  go cs Circuit.fals where
+  go : List (Circuit α) → Circuit α → Circuit α
+  | [], acc => acc
+  | c :: cs, acc =>
+    go cs (c ||| acc)
+-- go [a, b] fals
+-- = go [b] (a ||| fals)
+-- = go [] (b ||| (a ||| fals))
+-- = b ||| (a ||| fals)
+
+
+@[simp]
+theorem Circuit.bigOr'.go_append_eq {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) (acc : Circuit α):
+    Circuit.bigOr'.go (cs ++ [c]) acc = c ||| Circuit.bigOr'.go cs acc := by
+  induction cs generalizing acc
+  case nil => simp [bigOr', bigOr'.go]
+  case cons a as ih =>
+    simp [bigOr', bigOr'.go, ih]
+
+theorem Circuit.bigOr'.append_eq {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)):
+    Circuit.bigOr' (cs ++ [c]) = c ||| Circuit.bigOr' cs := by
+  simp [bigOr', bigOr'.go_append_eq]
+
+theorem Circuit.bigOr'.go_eval_eq_false_iff
+    (cs : List (Circuit α)) (acc : Circuit α) (env : α → Bool):
+    (Circuit.bigOr'.go cs acc).eval env = false ↔
+    ((∀ (c : Circuit α), c ∈ cs → c.eval env = false) ∧ acc.eval env = false) := by
+  induction cs generalizing acc
+  case nil => simp [bigOr'.go]
+  case cons a as ih =>
+    simp [bigOr', bigOr'.go, go, ih]
+    tauto
+
+theorem Circuit.bigOr'.go_eval_eq_true_iff
+    (cs : List (Circuit α)) (acc : Circuit α) (env : α → Bool):
+    (Circuit.bigOr'.go cs acc).eval env = true ↔
+    ((∃ (c : Circuit α), c ∈ cs ∧ c.eval env = true) ∨ acc.eval env = true) := by
+  induction cs generalizing acc
+  case nil => simp [bigOr'.go]
+  case cons a as ih =>
+    simp [bigOr', bigOr'.go, go, ih]
+    constructor
+    · intros h
+      rcases h with h | h | h <;> simp [h]
+    · intros h
+      rcases h with (h | h) | h <;> simp [h]
+
+theorem Circuit.eval_bigOr'eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr' cs).eval env = false ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = false) := by
+  rw [bigOr']
+  rw [Circuit.bigOr'.go_eval_eq_false_iff]
+  simp
+
+theorem Circuit.bigOr'_eval_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr' cs).eval env = true ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = true) := by
+  rw [bigOr']
+  rw [Circuit.bigOr'.go_eval_eq_true_iff]
+  simp [Circuit.eval]
 
 /-- Take the and of many circuits.-/
 def Circuit.bigAnd {α : Type _}
@@ -917,7 +988,7 @@ def mkEvalWithNCircuitAuxList {arity : Type _}
 def mkEvalWithNCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  Circuit.bigOr (mkEvalWithNCircuitAuxList p n)
+  Circuit.bigOr' (mkEvalWithNCircuitAuxList p n)
 
 
 def mkEvalWithNCircuitSucc {arity : Type _}
@@ -946,7 +1017,7 @@ theorem eval_mkEvalWithNCircuit_eq_false_iff
     (hEnvBitstream : EnvOutRelated envBool envBitstream) :
     ((mkEvalWithNCircuit p n).eval envBool = false) ↔
     (∀ i < n + 1, p.evalWith (fun s => envBool (.state s)) envBitstream i = false) := by
-  simp [mkEvalWithNCircuit, Circuit.eval_bigOr_eq_false_iff, mkEvalWithNCircuitAuxList]
+  simp [mkEvalWithNCircuit, Circuit.eval_bigOr'eq_false_iff, mkEvalWithNCircuitAuxList]
   constructor
   · intros hc
     intros i hi
