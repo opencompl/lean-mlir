@@ -21,7 +21,7 @@ def parse_args():
     nproc = os.cpu_count()
     parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
     parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
-    parser.add_argument('-j', type=int, default=nproc, help='number of parallel jobs.')
+    parser.add_argument('-j', type=int, default=((nproc + 2) // 3), help='number of parallel jobs.')
     parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
     return parser.parse_args()
 
