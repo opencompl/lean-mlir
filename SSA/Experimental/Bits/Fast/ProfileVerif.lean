@@ -12,83 +12,11 @@ $ lake build bv-circuit-profile; samply record .lake/build/bin/bv-circuit-profil
 Authors: Siddharth Bhat
 -/
 import SSA.Experimental.Bits.Fast.ReflectVerif
+import SSA.Experimental.Bits.TestPredicates
 import Lean
 open Lean Elab Meta
 
 -- #exit
-
-def preds : Array Predicate := #[
-  -- Predicate.eq
-  --   (Term.add
-  --     (Term.sub (Term.neg (Term.not (Term.xor (Term.var 0) (Term.var 1)))) (Term.shiftL (Term.var 1) 1))
-  --     (Term.not (Term.var 0)))
-  --   (Term.sub
-  --     (Term.neg (Term.not (Term.or (Term.var 0) (Term.not (Term.var 1)))))
-  --     (Term.add (Term.and (Term.var 0) (Term.var 1)) (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1))),
-  -- 1 *  ~~~x - 2 * (x ^^^ y) + 1 *  ~~~(x &&& y) = 2 *  ~~~(x ||| y) - 1 * (x &&&  ~~~y) := by
-  -- Predicate.eq
-  --   (Term.add
-  --     (Term.sub
-  --       (Term.not (Term.var 0))
-  --       (Term.add (Term.xor (Term.var 0) (Term.var 1)) (Term.xor (Term.var 0) (Term.var 1))))
-  --     (Term.not (Term.and (Term.var 0) (Term.var 1))))
-  --   (Term.sub
-  --     (Term.add (Term.not (Term.or (Term.var 0) (Term.var 1))) (Term.not (Term.or (Term.var 0) (Term.var 1))))
-  --     (Term.and (Term.var 0) (Term.not (Term.var 1)))),
-
-  -- 11 *  ~~~(x &&&  ~~~y) - 9 *  ~~~(x ||| y) + 2 * (x &&&  ~~~y) = 2 *  ~~~y + 11 * y := by
-  -- Predicate.eq
-  --   (Term.add
-  --     (Term.sub
-  --       (Term.add
-  --         (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
-  --         (Term.add
-  --           (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
-  --           (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1) 1)))
-  --       (Term.add
-  --         (Term.not (Term.or (Term.var 0) (Term.var 1)))
-  --         (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
-  --     (Term.add (Term.and (Term.var 0) (Term.not (Term.var 1))) (Term.and (Term.var 0) (Term.not (Term.var 1)))))
-  --   (Term.add
-  --     (Term.add (Term.not (Term.var 1)) (Term.not (Term.var 1)))
-  --     (Term.add
-  --       (Term.var 1)
-  --       (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
-    -- 11 *  ~~~(x &&&  ~~~y) - 11 * x + 11 * (x &&&  ~~~y) + 11 * (x &&& y) = 11 *  ~~~(x ||| y) + 11 * y
-    Predicate.eq
-    (Term.add
-      (Term.add
-        (Term.sub
-          (Term.add
-            (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1))))
-            (Term.add
-              (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1)
-              (Term.shiftL
-                (Term.shiftL (Term.shiftL (Term.not (Term.and (Term.var 0) (Term.not (Term.var 1)))) 1) 1)
-                1)))
-          (Term.add
-            (Term.var 0)
-            (Term.add (Term.shiftL (Term.var 0) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 0) 1) 1) 1))))
-        (Term.add
-          (Term.and (Term.var 0) (Term.not (Term.var 1)))
-          (Term.add
-            (Term.shiftL (Term.and (Term.var 0) (Term.not (Term.var 1))) 1)
-            (Term.shiftL (Term.shiftL (Term.shiftL (Term.and (Term.var 0) (Term.not (Term.var 1))) 1) 1) 1))))
-      (Term.add
-        (Term.and (Term.var 0) (Term.var 1))
-        (Term.add
-          (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1)
-          (Term.shiftL (Term.shiftL (Term.shiftL (Term.and (Term.var 0) (Term.var 1)) 1) 1) 1))))
-    (Term.add
-      (Term.add
-        (Term.not (Term.or (Term.var 0) (Term.var 1)))
-        (Term.add
-          (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1)
-          (Term.shiftL (Term.shiftL (Term.shiftL (Term.not (Term.or (Term.var 0) (Term.var 1))) 1) 1) 1)))
-      (Term.add
-        (Term.var 1)
-        (Term.add (Term.shiftL (Term.var 1) 1) (Term.shiftL (Term.shiftL (Term.shiftL (Term.var 1) 1) 1) 1))))
-  ]
 
 def timeElapsedMs (x : IO α) : IO (α × Int) := do
     let tStart ← IO.monoMsNow
@@ -111,7 +39,7 @@ unsafe def main : IO Unit := do
     let sMeta : Meta.State := {}
     let ctxTerm : Term.Context :=  { declName? := .some (Name.mkSimple s!"problem")}
     let sTerm : Term.State := {}
-    for p in preds do
+    for p in Bits.testPredicates do
       IO.println (repr p)
       for i in [0:1] do
         IO.println s!"Iteration #{i + 1} of Running Algorithm"

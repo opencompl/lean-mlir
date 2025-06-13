@@ -41,6 +41,10 @@ name = "bv-circuit-profile"
 root = "SSA.Experimental.Bits.Fast.Profile"
 
 [[lean_exe]]
+name = "bv-circuit-profile-verif"
+root = "SSA.Experimental.Bits.Fast.ProfileVerif"
+
+[[lean_exe]]
 name = "bv-automata-profile"
 root = "SSA.Experimental.Bits.AutoStructs.Profile"
 
