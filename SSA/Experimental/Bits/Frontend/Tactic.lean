@@ -481,22 +481,38 @@ def Expr.mkToFSM (self : Expr) : MetaM Expr :=
   mkAppM ``FSMPredicateSolution.toFSM #[self]
 
 
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkN {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (fsm : FSM arity) (n : ℕ) : ReflectVerif.BvDecide.KInductionCircuits fsm n
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkN
+def Expr.mkMkN (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkN #[fsm, n]
 
 /--
-info: ReflectVerif.BvDecide.mkSafetyCircuit' {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : ℕ) : Circuit (ReflectVerif.BvDecide.Vars Empty arity (n + 1))
+info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {n : ℕ} {arity : Type} [DecidableEq arity] [Fintype arity]
+  [Hashable arity] {fsm : FSM arity} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
+  { c // c.Equiv (ReflectVerif.BvDecide.mkSafetyCircuit' fsm n) }
 -/
-#guard_msgs in #check ReflectVerif.BvDecide.mkSafetyCircuit'
-def Expr.mkMkSafetyCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.mkSafetyCircuit' #[fsm, n]
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
+def Expr.mkMkSafetyCircuit (circs : Expr)  : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit #[circs]
+
+
+/-- info: Subtype.val.{u} {α : Sort u} {p : α → Prop} (self : Subtype p) : α -/
+#guard_msgs in #check Subtype.val
+def Expr.mkSubtypeVal (e : Expr) : MetaM Expr :=
+  mkAppM ``Subtype.val #[e]
+
 
 /--
-info: ReflectVerif.BvDecide.mkIndHypCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : ℕ) : Circuit (ReflectVerif.BvDecide.Vars p.α arity (n + 2))
+info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCircuit {n : ℕ} {arity : Type} [DecidableEq arity] [Fintype arity]
+  [Hashable arity] {fsm : FSM arity} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
+  { c // c.Equiv (ReflectVerif.BvDecide.mkIndHypCircuit fsm n) }
 -/
-#guard_msgs in #check ReflectVerif.BvDecide.mkIndHypCircuit
-def Expr.mkMkIndHypCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.mkIndHypCircuit #[fsm, n]
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCircuit
+def Expr.mkMkIndHypCircuit (circs : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCircuit #[circs]
 
 /--
 info: ReflectVerif.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
@@ -606,29 +622,30 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         let safetyCertExpr := Lean.mkStrLit safetyCert
         let indCertExpr := Lean.mkStrLit indCert
         let prf ← g.withContext do
-          -- (hs : verifyCircuit (mkSafetyCircuit (predicateEvalEqFSM p).toFSM n) sCert = true)
+          -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkSafetyCircuit.val sCert = true
           let safetyCertTy ←
             Expr.mkVerifyCircuit
-              (← Expr.mkMkSafetyCircuit
-                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
-                (toExpr niter)) safetyCertExpr
+              (← Expr.mkSubtypeVal
+                (← Expr.mkMkSafetyCircuit
+                  (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
+              safetyCertExpr
           debugCheck checkTypes? safetyCertTy
           -- logInfo m!"safety cert type: {indentD safetyCertTy}"
           let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
-          -- (hind : verifyCircuit (mkIndHypCircuit (predicateEvalEqFSM p).toFSM n) indCert = true) :
+          -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkIndHypCircuit.val indCert = true
           debugCheck checkTypes? safetyCertProof
-          -- logInfo m!"safety cert proof: {indentD safetyCertProof}"
           let indCertTy ←
             Expr.mkVerifyCircuit
-              (← Expr.mkMkIndHypCircuit
-                (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e)))
-                (toExpr niter)) indCertExpr
+              (← Expr.mkSubtypeVal
+                (← Expr.mkMkIndHypCircuit
+                  (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
+              indCertExpr
           debugCheck checkTypes? indCertTy
           -- logInfo m!"inductive cert type: {indentD indCertTy}"
           let indCertProof ← mkEqRflNativeDecideProof indCertTy true
           debugCheck checkTypes? indCertProof
           -- logInfo m!"inductive cert proof: {indentD indCertProof}"
-          let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG [])
+          let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG' [])
             #[w,
               bvToIxMapVal,
               predicate.e.quote,

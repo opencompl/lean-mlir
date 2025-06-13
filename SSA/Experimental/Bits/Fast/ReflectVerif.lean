@@ -1730,6 +1730,16 @@ def mkSucc {arity : Type _}
     hEvalWithN
   }
 
+
+/- Make the n'th k-induction circuit family. -/
+def mkN {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) (n : Nat) :
+    KInductionCircuits fsm n :=
+    match n with
+    | 0 => mkZero fsm
+    | n + 1 => (mkN fsm n).mkSucc
+
 /-- Make the safety circuit, incrementally. -/
 def mkSafetyCircuit {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1762,8 +1772,51 @@ def mkIndHypCircuit {arity : Type _}
     rw [circs.hEvalWithN]
     rw [circs.mkSuccEvalWithN.prop]
   ⟩
-end KInductionCircuits
 
+  theorem eval_eq_false_of_mkN_mkIndHypCircuit_false_of_mkN_mkSafetyCircuit_false {n : Nat}
+    {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity)
+    (hs : (KInductionCircuits.mkN p n).mkSafetyCircuit.val.always_false)
+    (hind : (KInductionCircuits.mkN p n).mkIndHypCircuit.val.always_false) :
+    ∀ (envBitstream : arity → BitStream) (i : Nat), p.eval envBitstream i = false := by
+  apply BvDecide.eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false (n := n)
+  · rw [Circuit.always_false_iff] at hs hind ⊢
+    intros env
+    rw [← (mkN p n).mkSafetyCircuit.prop]
+    simp [hs env]
+  · rw [Circuit.always_false_iff] at hs hind ⊢
+    intros env
+    rw [← (mkN p n).mkIndHypCircuit.prop]
+    simp [hind env]
+
+/-- Prove that predicate is true iff the cerritificates check out. -/
+theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG'
+    {w : Nat}
+    {vars : List (BitVec w)}
+    (p : Predicate)
+    (n : Nat)
+    (sCert : BVDecide.Frontend.LratCert)
+    (hs : verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkSafetyCircuit.val sCert = true)
+    (indCert : BVDecide.Frontend.LratCert)
+    (hind : verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkIndHypCircuit.val indCert = true) :
+    p.denote w vars := by
+  apply Predicate.denote_of_eval
+  rw [← Predicate.evalFin_eq_eval p
+    (varsList := (List.map BitStream.ofBitVec vars))
+    (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
+  · rw [(predicateEvalEqFSM p).good]
+    apply eval_eq_false_of_mkN_mkIndHypCircuit_false_of_mkN_mkSafetyCircuit_false (n := n)
+    · rw [always_false_of_verifyCircuit]
+      rw [hs]
+    · rw [always_false_of_verifyCircuit]
+      rw [hind]
+  · intros i
+    simp
+
+end KInductionCircuits
 
 @[nospecialize]
 partial def decideIfZerosAuxVerified' {arity : Type _}
@@ -1821,7 +1874,7 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
 
 
 @[nospecialize]
-def _root_.FSM.decideIfZerosVerified  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
+def _root_.FSM.decideIfZerosVerified {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
    (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
