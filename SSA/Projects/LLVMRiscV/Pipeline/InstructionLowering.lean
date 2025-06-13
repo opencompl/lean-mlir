@@ -120,7 +120,7 @@ def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRisc
  -- out2
   remove_dead_Cast2
 
-unsafe def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
+def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
   let loweredConst := multiRewritePeephole 100
@@ -134,12 +134,10 @@ unsafe def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LL
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
   let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val; -- Rerun it to ensure that all dead code is removed.
   let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
-  --We do not use it atm since we get an error when
-  -- trying to call an unsafe function with the opt tool
   let out := (DCE.dce' optimize_eq_cast).val;
   let out2 := (DCE.dce' out).val;
   out2
-  --remove_dead_Cast2
+
 
 
 /- Below are two example programs to test our instruction selector.-/

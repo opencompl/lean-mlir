@@ -33,7 +33,7 @@ def parseComFromFile_LLVMRiscV(fileName : String) :
 /-- This function parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
 Next, it calls the instruction lowering function `selectionPipeFuelSafe` on the parsed `Com` and
 prints it to standart output. If any of the steps fail ,we print an error message and return exit code 1  -/
-unsafe def passriscv64 (fileName : String) : IO UInt32 := do
+def passriscv64 (fileName : String) : IO UInt32 := do
     let icom? ← parseComFromFile_LLVMRiscV fileName
     match icom? with
     | none => return 1
