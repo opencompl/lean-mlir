@@ -983,6 +983,7 @@ theorem Equiv_symm : ∀ {c₁ c₂ : Circuit α}, Circuit.Equiv c₁ c₂ → C
   ext env
   rw [h]
 
+@[trans]
 theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
     Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₃ → Circuit.Equiv c₁ c₃ := by
   intros c₁ c₂ c₃ h₁ h₂

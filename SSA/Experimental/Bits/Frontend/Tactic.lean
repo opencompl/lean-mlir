@@ -483,12 +483,12 @@ def Expr.mkToFSM (self : Expr) : MetaM Expr :=
 
 
 /--
-info: ReflectVerif.BvDecide.mkSafetyCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
+info: ReflectVerif.BvDecide.mkSafetyCircuit' {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : ℕ) : Circuit (ReflectVerif.BvDecide.Vars Empty arity (n + 1))
 -/
-#guard_msgs in #check ReflectVerif.BvDecide.mkSafetyCircuit
+#guard_msgs in #check ReflectVerif.BvDecide.mkSafetyCircuit'
 def Expr.mkMkSafetyCircuit (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.mkSafetyCircuit #[fsm, n]
+  mkAppM ``ReflectVerif.BvDecide.mkSafetyCircuit' #[fsm, n]
 
 /--
 info: ReflectVerif.BvDecide.mkIndHypCircuit {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]

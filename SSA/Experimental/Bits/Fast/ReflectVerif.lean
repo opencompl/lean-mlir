@@ -1596,58 +1596,58 @@ def isSuccess : DecideIfZerosOutput → Bool
 end DecideIfZerosOutput
 
 
-@[nospecialize]
-partial def decideIfZerosAuxVerified {arity : Type _}
-    [DecidableEq arity] [Fintype arity] [Hashable arity]
-    (iter : Nat) (maxIter : Nat)
-    (fsm : FSM arity) :
-    TermElabM (DecideIfZerosOutput) := do
-  trace[Bits.FastVerif] s!"K-induction (iter={iter})"
-  if iter ≥ maxIter && maxIter != 0 then
-    throwError s!"ran out of iterations, quitting"
-    return .exhaustedIterations maxIter
-  let tStart ← IO.monoMsNow
-  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit' fsm iter
-  let tEnd ← IO.monoMsNow
-  let tElapsedSec := (tEnd - tStart) / 1000
-  trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
+-- @[nospecialize]
+-- partial def decideIfZerosAuxVerified {arity : Type _}
+--     [DecidableEq arity] [Fintype arity] [Hashable arity]
+--     (iter : Nat) (maxIter : Nat)
+--     (fsm : FSM arity) :
+--     TermElabM (DecideIfZerosOutput) := do
+--   trace[Bits.FastVerif] s!"K-induction (iter={iter})"
+--   if iter ≥ maxIter && maxIter != 0 then
+--     throwError s!"ran out of iterations, quitting"
+--     return .exhaustedIterations maxIter
+--   let tStart ← IO.monoMsNow
+--   let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit' fsm iter
+--   let tEnd ← IO.monoMsNow
+--   let tElapsedSec := (tEnd - tStart) / 1000
+--   trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
 
-  let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
-  let formatEmpty : Empty → Format := fun e => e.elim
-  let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-  trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
-  let tStart ← IO.monoMsNow
-  let safetyCert? ← checkCircuitUnsatAux cSafety
-  let tEnd ← IO.monoMsNow
-  let tElapsedSec := (tEnd - tStart) / 1000
-  trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
-  match safetyCert? with
-  | .none =>
-    trace[Bits.FastVerif] s!"Safety property failed on initial state."
-    return .safetyFailure iter
-  | .some safetyCert =>
-    trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
+--   let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+--   let formatEmpty : Empty → Format := fun e => e.elim
+--   let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+--   trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+--   let tStart ← IO.monoMsNow
+--   let safetyCert? ← checkCircuitUnsatAux cSafety
+--   let tEnd ← IO.monoMsNow
+--   let tElapsedSec := (tEnd - tStart) / 1000
+--   trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
+--   match safetyCert? with
+--   | .none =>
+--     trace[Bits.FastVerif] s!"Safety property failed on initial state."
+--     return .safetyFailure iter
+--   | .some safetyCert =>
+--     trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
 
-    let tStart ← IO.monoMsNow
-    let cIndHyp := mkIndHypCircuit fsm iter
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+--     let tStart ← IO.monoMsNow
+--     let cIndHyp := mkIndHypCircuit fsm iter
+--     let tEnd ← IO.monoMsNow
+--     let tElapsedSec := (tEnd - tStart) / 1000
+--     trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
 
-    let tStart ← IO.monoMsNow
-    trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
-    -- let le : Bool := sorry
-    let indCert? ← checkCircuitUnsatAux cIndHyp
-    let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
-    match indCert? with
-    | .some indCert =>
-      trace[Bits.FastVerif] s!"Inductive invariant established."
-      return .proven iter safetyCert indCert
-    | .none =>
-      trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
-      decideIfZerosAuxVerified (iter + 1) maxIter fsm
+--     let tStart ← IO.monoMsNow
+--     trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
+--     -- let le : Bool := sorry
+--     let indCert? ← checkCircuitUnsatAux cIndHyp
+--     let tEnd ← IO.monoMsNow
+--     let tElapsedSec := (tEnd - tStart) / 1000
+--     trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
+--     match indCert? with
+--     | .some indCert =>
+--       trace[Bits.FastVerif] s!"Inductive invariant established."
+--       return .proven iter safetyCert indCert
+--     | .none =>
+--       trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
+--       decideIfZerosAuxVerified (iter + 1) maxIter fsm
 
 /-- structure for incrementally building the k-induction circuits. -/
 structure KInductionCircuits {arity : Type _}
@@ -1729,6 +1729,39 @@ def mkSucc {arity : Type _}
     cEvalWithN,
     hEvalWithN
   }
+
+/-- Make the safety circuit, incrementally. -/
+def mkSafetyCircuit {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} (circs : KInductionCircuits fsm n) :
+    { c : Circuit (Vars Empty arity (n + 1)) //
+    Circuit.Equiv c (mkSafetyCircuit' fsm n) } :=
+  let circ := mkCircuitWithInitCarry fsm circs.cEvalWithN
+  ⟨circ, by
+    rw [mkSafetyCircuit']
+    subst circ
+    ext env
+    simp only [mkCircuitWithInitCarry_eval_eq]
+    rw [circs.hEvalWithN]
+  ⟩
+
+/-- Make the induction hypothesis circuit, incrementally. -/
+def mkIndHypCircuit {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} (circs : KInductionCircuits fsm n) :
+    { c : Circuit (Vars fsm.α arity (n + 2)) //
+    Circuit.Equiv c (mkIndHypCircuit fsm n) } :=
+  let circ := mkUnsatImpliesCircuit
+    (circs.cEvalWithN.map (fun vs => vs.castLe (by omega)))
+    circs.mkSuccEvalWithN.val
+  ⟨circ, by
+    rw [BvDecide.mkIndHypCircuit]
+    subst circ
+    ext env
+    simp [mkUnsatImpliesCircuit, Circuit.eval_map]
+    rw [circs.hEvalWithN]
+    rw [circs.mkSuccEvalWithN.prop]
+  ⟩
 end KInductionCircuits
 
 
@@ -1736,54 +1769,55 @@ end KInductionCircuits
 partial def decideIfZerosAuxVerified' {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
-    (fsm : FSM arity) :
+    (fsm : FSM arity)
+    (circs : KInductionCircuits fsm iter) :
     TermElabM (DecideIfZerosOutput) := do
-  trace[Bits.FastVerif] s!"K-induction (iter={iter})"
-  if iter ≥ maxIter && maxIter != 0 then
-    throwError s!"ran out of iterations, quitting"
-    return .exhaustedIterations maxIter
-  let tStart ← IO.monoMsNow
-  let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit' fsm iter
-  let tEnd ← IO.monoMsNow
-  let tElapsedSec := (tEnd - tStart) / 1000
-  trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
-
-  let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
-  let formatEmpty : Empty → Format := fun e => e.elim
-  let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-  trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
-  let tStart ← IO.monoMsNow
-  let safetyCert? ← checkCircuitUnsatAux cSafety
-  let tEnd ← IO.monoMsNow
-  let tElapsedSec := (tEnd - tStart) / 1000
-  trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
-  match safetyCert? with
-  | .none =>
-    trace[Bits.FastVerif] s!"Safety property failed on initial state."
-    return .safetyFailure iter
-  | .some safetyCert =>
-    trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
-
+  withTraceNode `trace.Bits.Fast (fun _ => return s!"K-induction (iter={iter})") do
+    if iter ≥ maxIter && maxIter != 0 then
+      throwError s!"ran out of iterations, quitting"
+      return .exhaustedIterations maxIter
     let tStart ← IO.monoMsNow
-    let cIndHyp := mkIndHypCircuit fsm iter
+    let cSafety : Circuit (Vars Empty arity (iter+1)) := circs.mkSafetyCircuit.val
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+    trace[Bits.FastVerif] m!"Built new safety circuit in '{tElapsedSec}s'"
 
+    let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+    let formatEmpty : Empty → Format := fun e => e.elim
+    let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+    trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
     let tStart ← IO.monoMsNow
-    trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
-    -- let le : Bool := sorry
-    let indCert? ← checkCircuitUnsatAux cIndHyp
+    let safetyCert? ← checkCircuitUnsatAux cSafety
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
-    match indCert? with
-    | .some indCert =>
-      trace[Bits.FastVerif] s!"Inductive invariant established."
-      return .proven iter safetyCert indCert
+    trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
+    match safetyCert? with
     | .none =>
-      trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
-      decideIfZerosAuxVerified (iter + 1) maxIter fsm
+      trace[Bits.FastVerif] s!"Safety property failed on initial state."
+      return .safetyFailure iter
+    | .some safetyCert =>
+      trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
+
+      let tStart ← IO.monoMsNow
+      let cIndHyp := circs.mkIndHypCircuit
+      let tEnd ← IO.monoMsNow
+      let tElapsedSec := (tEnd - tStart) / 1000
+      trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+
+      let tStart ← IO.monoMsNow
+      trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp.val}"
+      -- let le : Bool := sorry
+      let indCert? ← checkCircuitUnsatAux cIndHyp.val
+      let tEnd ← IO.monoMsNow
+      let tElapsedSec := (tEnd - tStart) / 1000
+      trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
+      match indCert? with
+      | .some indCert =>
+        trace[Bits.FastVerif] s!"Inductive invariant established."
+        return .proven iter safetyCert indCert
+      | .none =>
+        trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
+    decideIfZerosAuxVerified' (iter + 1) maxIter fsm  circs.mkSucc
 
 
 @[nospecialize]
@@ -1791,7 +1825,7 @@ def _root_.FSM.decideIfZerosVerified  {arity : Type _} [DecidableEq arity]  [Fin
    (fsm : FSM arity) (maxIter : Nat) : TermElabM DecideIfZerosOutput :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    decideIfZerosAuxVerified 0 maxIter fsm
+    decideIfZerosAuxVerified' 0 maxIter fsm (KInductionCircuits.mkZero fsm)
 
 end BvDecide
 
