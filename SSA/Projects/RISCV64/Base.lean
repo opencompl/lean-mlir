@@ -314,7 +314,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li imm => s! "li { imm }"
+  | .li imm => s! "li \{immediate = { imm.toInt } : i20 }"
   | .mulu => "mulu"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
