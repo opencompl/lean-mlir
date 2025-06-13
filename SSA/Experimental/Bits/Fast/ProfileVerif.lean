@@ -45,12 +45,12 @@ unsafe def main : IO Unit := do
         IO.println s!"Iteration #{i + 1} of Running Algorithm"
         let fsm := predicateEvalEqFSM p
         -- let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
-        let (out, tElapsedCadical) ← timeElapsedMs do
-          let (out, _coreState, _metaState, _termState) ←
+        let ((out, circuitStats), tElapsedCadical) ← timeElapsedMs do
+          let ((out, circuitStats), _coreState, _metaState, _termState) ←
             fsm.toFSM.decideIfZerosVerified 10 |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-          return out
+          return (out, circuitStats)
         let b := out.isSuccess
         -- IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
-        IO.println s!" (cadical)  is all zeroes: '{b}' | time: '{tElapsedCadical}' ms"
+        IO.println s!" (cadical)  is all zeroes: '{b}' | stats: '{repr circuitStats}' | time: '{tElapsedCadical}' ms"
         IO.println "--"
   return ()
