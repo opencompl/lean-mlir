@@ -1397,7 +1397,7 @@ def mkIndHypCircuit {arity : Type _}
   --   1         |  1            | 0
   mkUnsatImpliesCircuit
     ((mkEvalWithNCircuit p n).map (fun vs => vs.castLe (by omega)))
-    (mkEvalWithNCircuit p (n + 1))
+    (mkEvalWithCircuit p (n + 1))
 
 
 /-- induction hyp circuit. -/
@@ -1411,31 +1411,33 @@ theorem eval_mkIndHypCircuit_eq_false_iff_ {arity : Type _}
   (hEnvBitstream : EnvOutRelated envBool envBitstream) :
   (mkIndHypCircuit p n).eval envBool = false ↔
   ((∀ i < n + 1, p.evalWith (fun s => envBool (.state s)) envBitstream i = false) →
-   (∀ i < n + 2, p.evalWith (fun s => envBool (.state s)) envBitstream i = false)) := by
+   (p.evalWith (fun s => envBool (.state s)) envBitstream (n + 1) = false)) := by
   rw [mkIndHypCircuit]
   rw [mkUnsatImpliesCircuit_eq_false_iff]
   rw [Circuit.eval_map]
   constructor
-  · intros h hc j hj
-    rw [eval_mkEvalWithNCircuit_eq_false_iff (hEnvBitstream := hEnvBitstream)] at h
-    rw [eval_mkEvalWithNCircuit_eq_false_iff (envBitstream := envBitstream)] at h
+  · intros h hc
+    simp [eval_mkEvalWithNCircuit_eq_false_iff (hEnvBitstream := hEnvBitstream)] at h
+    rw [eval_mkEvalWithCircuit_eq (envBitstream := envBitstream)] at h
     · apply h
-      intros k hk
-      apply hc
-      omega
-      omega
+      apply eval_mkEvalWithNCircuit_eq_false_iff  .. |>.mpr
+      · apply hc
+      · constructor
+        intros a k hk
+        apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
     · constructor
       intros a k hk
       apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
   · intros h hlhs
-    rw [eval_mkEvalWithNCircuit_eq_false_iff (hEnvBitstream := hEnvBitstream)]
-    rw [eval_mkEvalWithNCircuit_eq_false_iff (envBitstream := envBitstream)] at hlhs
-    · intros i hi
-      apply h
-      intros j hj
-      rw [← hlhs j (by omega)]
-      · congr
-      · omega
+    rw [eval_mkEvalWithCircuit_eq (envBitstream := envBitstream)]
+    · rw [eval_mkEvalWithNCircuit_eq_false_iff (envBitstream := envBitstream)] at hlhs
+      · apply h
+        intros j hj
+        rw [← hlhs j (by omega)]
+        · congr
+      · constructor
+        intros a k hk
+        apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
     · constructor
       intros a k hk
       apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
@@ -1449,10 +1451,10 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
   (∀ envBool, (mkIndHypCircuit p n).eval envBool = false) ↔
   (∀ (state : p.α → Bool) (envBitstream : arity → BitStream),
     ((∀ i ≤ n, p.evalWith state envBitstream i = false) →
-     (∀ i ≤ n + 1, p.evalWith state envBitstream i = false))) := by
+     (p.evalWith state envBitstream (n + 1) = false))) := by
   constructor
   · intros h
-    intros state envBitstream hlhs j hj
+    intros state envBitstream hlhs
     let envBool := envBool_of_envBitstream_of_state envBitstream state (n + 1)
     specialize h envBool
     rw [eval_mkIndHypCircuit_eq_false_iff_] at h
@@ -1460,17 +1462,15 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
       · intros k hk
         apply hlhs
         omega
-      · omega
     · simp [envBool]
   · intros h
     intros envBool
     rw [eval_mkIndHypCircuit_eq_false_iff_]
     let envBitstream := Bitstream_of_envBool envBool
-    · intros hCirc j hj
+    · intros hCirc
       apply h (state := fun s => envBool (.state s)) envBitstream
       intros k hk
       apply hCirc
-      · omega
       · omega
     · simp
 
@@ -1532,7 +1532,6 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
         · apply hjInd
           · omega
           · intros k hk; apply hStrongI; omega
-      · omega
 
 /--
 info: 'ReflectVerif.BvDecide.eval_eq_false_of_mkIndHypCircuit_false_of_mkSafetyCircuit_false' depends on axioms: [propext,
@@ -1770,14 +1769,14 @@ def mkIndHypCircuit {arity : Type _}
     Circuit.Equiv c (mkIndHypCircuit fsm n) } :=
   let circ := mkUnsatImpliesCircuit
     (circs.cEvalWithN.map (fun vs => vs.castLe (by omega)))
-    circs.mkSuccEvalWithN.val
+    circs.mkSuccEvalWith.val
   ⟨circ, by
     rw [BvDecide.mkIndHypCircuit]
     subst circ
     ext env
     simp [mkUnsatImpliesCircuit, Circuit.eval_map]
     rw [circs.hEvalWithN]
-    rw [circs.mkSuccEvalWithN.prop]
+    rw [circs.mkSuccEvalWith.prop]
   ⟩
 
 
@@ -1842,7 +1841,6 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     TermElabM (DecideIfZerosOutput × CircuitStats) := do
   withTraceNode `trace.Bits.Fast (fun _ => return s!"K-induction (iter={iter})") do
     if iter ≥ maxIter && maxIter != 0 then
-      throwError s!"ran out of iterations, quitting"
       return (.exhaustedIterations maxIter, circs.stats)
     let tStart ← IO.monoMsNow
     let cSafety : Circuit (Vars Empty arity (iter+1)) := circs.mkSafetyCircuit.val
