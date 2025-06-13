@@ -25,7 +25,7 @@ def wellformed (fileName : String ) : IO UInt32 := do
       IO.println s!"{Com.toPrint c}"
       return 0
 
-unsafe def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
+def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   let fileName := args.positionalArg! "file" |>.as! String
   if args.hasFlag "verbose" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
     let code ← verbose_flag fileName
@@ -40,7 +40,7 @@ unsafe def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
     let code ← wellformed fileName
     return code
 
-unsafe def mainCmd := `[Cli|
+def mainCmd := `[Cli|
     opt VIA runMainCmd;
     "opt: apply verified rewrites"
     FLAGS:
