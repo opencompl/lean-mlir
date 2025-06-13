@@ -43,11 +43,11 @@ unsafe def main : IO Unit := do
         IO.println s!"Iteration #{i + 1} of Running Algorithm"
         let fsm := predicateEvalEqFSM p
         -- let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
-        let (bCadical, tElapsedCadical) ← timeElapsedMs do
-          let (b, _coreState, _metaState, _termState) ←
+        let ((bCadical, circuitStats), tElapsedCadical) ← timeElapsedMs do
+          let ((b, circuitStats), _coreState, _metaState, _termState) ←
             fsm.toFSM.decideIfZerosMUnverified 10 |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-          return b
+          return (b, circuitStats)
         -- IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
-        IO.println s!" (cadical)  is all zeroes: '{bCadical}' | time: '{tElapsedCadical}' ms"
+        IO.println s!" (cadical) is all zeroes: '{bCadical}' | stats: {repr circuitStats} | time: '{tElapsedCadical}' ms"
         IO.println "--"
   return ()

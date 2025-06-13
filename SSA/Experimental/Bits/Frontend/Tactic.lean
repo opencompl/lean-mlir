@@ -616,7 +616,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     | .circuit_cadical_verified maxIter checkTypes? =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
-      let cert? ← fsm.decideIfZerosVerified maxIter
+      let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
       match cert? with
       | .proven niter safetyCert indCert =>
         let safetyCertExpr := Lean.mkStrLit safetyCert
@@ -671,7 +671,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     | .circuit_cadical_unverified maxIter =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       trace[Bits.Frontend] f!"{fsm.format}'"
-      let isTrueForall ← fsm.decideIfZerosMUnverified maxIter
+      let (isTrueForall, _circuitState) ← fsm.decideIfZerosMUnverified maxIter
       if isTrueForall
       then do
         let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
