@@ -271,10 +271,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     (c0K : Circuit (Vars p.α arity iter))
     -- cK = 0 <-> ∀ p.eval env iter = 0
     (cK : Circuit (Vars p.α arity iter))
-    -- (indCircuit = 1) <->
-    --   (∃ k < K,
-    --      (∀ i < k, p.eval env i = 0) → (∀ j ≤ K, p.eval env j = 0))
-    (indCircuit : Circuit (Vars p.α arity iter)) : TermElabM (Bool × CircuitStats) := do
+    : TermElabM (Bool × CircuitStats) := do
   trace[Bits.Fast] s!"### K-induction (iter {iter}) ###"
   let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
   let formatEmpty : Empty → Format := fun e => e.elim
@@ -283,7 +280,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   trace[Bits.Fast] m!"cK: {formatCircuit (Vars.format formatα formatArity) cK}"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
-    return (false, {indSize := indCircuit.size })
+    return (false, {safetySize := c0K.size })
   let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
     cK.bind fun v =>
       match v with
@@ -324,11 +321,12 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     trace[Bits.Fast] s!"C0KAdapted: {formatCircuit (Vars.format formatα formatArity) c0KAdapted}"
     trace[Bits.Fast] s!"CKSucc: {formatCircuit (Vars.format formatα formatArity) cKSucc}"
     let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ c0KSucc
-    let indCircuit := indCircuit.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
-    let indCircuit := indCircuit ||| impliesCircuit
+    let indCircuit := impliesCircuit
+    -- let indCircuit := indCircuit.map fun v =>
+    --    match v with
+    --    | .state a => .state a
+    --    | .inputs i => .inputs (i.castLe (by omega))
+    -- let indCircuit := indCircuit ||| impliesCircuit
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     let tEnd ← IO.monoMsNow
@@ -345,7 +343,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
       return (true, { indSize := indCircuit.size, safetySize := c0KSuccWithInit.size })
     else
       trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM (iter + 1) maxIter p c0KSucc cKSucc indCircuit
+      decideIfZerosAuxTermElabM (iter + 1) maxIter p c0KSucc cKSucc
 
 
 @[nospecialize]
@@ -354,8 +352,7 @@ def _root_.FSM.decideIfZerosMUnverified  {arity : Type _} [DecidableEq arity]  [
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
-    let safety : Circuit (Vars fsm.α arity 0) := .fals
-    decideIfZerosAuxTermElabM 0 maxIter fsm c c safety
+    decideIfZerosAuxTermElabM 0 maxIter fsm c c
 
 end BvDecide
 
