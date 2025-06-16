@@ -78,8 +78,7 @@ instance : Std.Associative Nat.add where
   assoc := fun a b => by simp only [Nat.add_eq]; omega
 
 /-- The size of the state space of the finite state machine. -/
-def stateSpaceSize : Nat := @Finset.univ (p.α → Bool) inferInstance |>.card
-
+def stateSpaceSize : Nat := Nat.pow 2 (FinEnum.card p.α)
 
 /--
 Return the total size of the FSM as a function of all of its circuits.
@@ -88,10 +87,13 @@ and consequently, is the natural notion of complexity of the FSM.
 -/
 def circuitSize : Nat := Id.run do
   let outCircSize := p.nextBitCirc none |>.size
-  let states := @Finset.univ p.α inferInstance
-  let stateCircSize := Finset.fold Nat.add  0 (fun a => p.nextBitCirc (.some a) |>.size) states
+  let mut stateCircSize := 0
+  for hi : i in List.range (FinEnum.card p.α) do
+    let a := p.nextBitCirc (.some ((FinEnum.equiv (α := p.α)).symm.toFun ⟨i, by simpa using hi⟩))
+    stateCircSize := stateCircSize + a.size
   return outCircSize + stateCircSize
 
+/-
 open Lean in
 def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.run do
   have : DecidableEq fsm.α := fsm.dec_eq
@@ -117,6 +119,7 @@ def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.
     ts := ts ++ Format.align true ++ f!"{fα a}: '{(formatCircuit formatSum (fsm.nextBitCirc (some a)))}'" ++ Format.line
   out := out ++ Format.group (Format.nest 2 ts)
   return out
+-/
 
 
 /-- The state of FSM `p` is given by a function from `p.α` to `Bool`.

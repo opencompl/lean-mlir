@@ -1669,17 +1669,19 @@ def mkAllPairsUniqueStatesCircuit {arity : Type _}
         v.castLe (by have := j; simp at hij; omega))
     (mkStateNeqCircuit p si sj)
 
+/-
+Establishes that all states from [0..n+1] are unique.
+-/
 @[simp]
 theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (i : Nat) :
-  (∀ (envBool : Vars p.α arity (i + 1) → Bool), (mkAllPairsUniqueStatesCircuit p i).eval envBool = false) ↔
+  (p : FSM arity) (n : Nat) :
+  (∀ (envBool : Vars p.α arity (n + 1) → Bool), (mkAllPairsUniqueStatesCircuit p n).eval envBool = false) ↔
   (∀ (envBitstream : arity → BitStream) (state : p.α → Bool)
-      (k l : Nat) (_hkl : k < l) (_hl : l ≤ i),
-    ¬ (p.carryWith state envBitstream (k + 1) = p.carryWith state envBitstream (l + 1))) := by
+      (k l : Nat), k < l → l ≤ n → ¬ (p.carryWith state envBitstream (k + 1) = p.carryWith state envBitstream (l + 1))) := by
   constructor
   · intros h envBitstream state k l hk hl
-    let envBool := envBool_of_envBitstream_of_state envBitstream state i
+    let envBool := envBool_of_envBitstream_of_state envBitstream state n
     specialize h envBool
     simp [mkAllPairsUniqueStatesCircuit] at h
     specialize h _ k l (by omega) rfl
@@ -1722,11 +1724,11 @@ theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
       · simp [envBitstream]
         constructor
         intros x j hj
-        simp [Bitstream_of_envBool, envBitstream, show j < i + 1 by omega]
+        simp [Bitstream_of_envBool, envBitstream, show j < n + 1 by omega]
         rfl
     · constructor
       intros x j hj
-      simp [Bitstream_of_envBool, envBitstream, show j < i + 1 by omega]
+      simp [Bitstream_of_envBool, envBitstream, show j < n + 1 by omega]
       rfl
 
 /-- induction hyp circuit. -/
@@ -1802,6 +1804,18 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
       apply hCirc
       · omega
     · simp
+
+/-- Make the circuit that breaks the cycle in the induction hypothesis. -/
+def mkIndHypCircuitCycleBreaking {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+2)) :=
+  mkUnsatImpliesCircuit
+    -- | if all states [0..n+1] are unique
+    ((mkAllPairsUniqueStatesCircuit p n).map (fun vs => vs.castLe (by omega)))
+    -- | if ind hyp holds for [0..n+1], then it holds for [0..n+2] states.
+    (mkIndHypCircuit p n)
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
@@ -1916,14 +1930,17 @@ inductive DecideIfZerosOutput
 /-- we have proven the safety property for as many steps as the state space size plus one. -/
 | provenByExhaustion (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert)
 /-- we have proven both the safety and inductive invariant property. -/
-| provenByKInd (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+| provenByKIndNoCycleBreaking (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+/-- we have proven both the safety and inductive invariant property. -/
+| provenByKIndCycleBreaking (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCertCycleBreaking : BVDecide.Frontend.LratCert)
 
 namespace DecideIfZerosOutput
 def isSuccess : DecideIfZerosOutput → Bool
   | .safetyFailure _ => false
   | .exhaustedIterations _ => false
   | .provenByExhaustion .. => true
-  | .provenByKInd .. => true
+  | .provenByKIndNoCycleBreaking .. => true
+  | .provenByKIndCycleBreaking .. => true
 end DecideIfZerosOutput
 
 
@@ -2132,6 +2149,25 @@ def mkIndHypCircuit {arity : Type _}
     rw [circs.mkSuccEvalWith.prop]
   ⟩
 
+/-- Make the induction hypothesis circuit with cycle breaking, incrementally. -/
+def mkIndHypCircuitCycleBreaking {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} (circs : KInductionCircuits fsm n) :
+    { c : Circuit (Vars fsm.α arity (n + 2)) //
+    Circuit.Equiv c (mkIndHypCircuitCycleBreaking fsm n) } :=
+  let indHyp  := circs.mkIndHypCircuit
+  let circ : Circuit <| Vars fsm.α arity (n + 2) :=
+    mkUnsatImpliesCircuit
+      ((mkAllPairsUniqueStatesCircuit fsm n).map (fun v => v.castLe (by omega)))
+      indHyp.val
+  ⟨circ, by
+    simp [circ]
+    simp [BvDecide.mkIndHypCircuitCycleBreaking]
+    ext env
+    simp [mkUnsatImpliesCircuit, Circuit.eval_map]
+    rw [indHyp.property]
+  ⟩
+
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -2199,17 +2235,17 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     let tEnd ← IO.monoMsNow
     let tElapsedMs := (tEnd - tStart) 
     trace[Bits.FastVerif] m!"Built new safety circuit in '{tElapsedMs}ms'"
-
-    let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
-    let formatEmpty : Empty → Format := fun e => e.elim
-    let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+    -- | don't use these, they rely on exhaustive enumeration which is crazy slow.
+    -- let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+    -- let formatEmpty : Empty → Format := fun e => e.elim
+    -- let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
     -- wtrace[Bits.FastVerif] m!"safety circuit : {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
     trace[Bits.FastVerif] m!"safety circuit size : {cSafety.size}"
     let tStart ← IO.monoMsNow
     let safetyCert? ← checkCircuitUnsatAux cSafety
     let tEnd ← IO.monoMsNow
     let tElapsedMs := (tEnd - tStart) 
-    trace[Bits.FastVerif] m!"Checked safety property in {tElapsedMs}ms."
+    trace[Bits.FastVerif] m!"Established safety property in {tElapsedMs}ms (iter={iter})."
     match safetyCert? with
     | .none =>
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
@@ -2221,7 +2257,7 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
 
       trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
       let tStart ← IO.monoMsNow
-      let cIndHyp := circs.mkIndHypCircuit
+      let cIndHyp := circs.mkIndHypCircuitCycleBreaking
       let tEnd ← IO.monoMsNow
       let tElapsedMs := (tEnd - tStart) 
       trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedMs}ms'"
@@ -2236,8 +2272,8 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedMs}ms'."
       match indCert? with
       | .some indCert =>
-        trace[Bits.FastVerif] s!"Inductive invariant established."
-        return (.provenByKInd iter safetyCert indCert, circs.stats)
+        trace[Bits.FastVerif] s!"Inductive invariant established (iter={iter})."
+        return (.provenByKIndCycleBreaking iter safetyCert indCert, circs.stats)
       | .none =>
         trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
     decideIfZerosAuxVerified' (iter + 1) maxIter fsm  circs.mkSucc
@@ -2257,7 +2293,12 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
 /--
 An axiom tracking that the safety has been proven by exhaustion of the state space.
 -/
-axiom decideIfZerosByExhaustion {p : Prop}  : p
+axiom decideIfZerosByExhaustionAx {p : Prop}  : p
+
+/--
+An axiom tracking that the safety has been proven by exhaustion of the state space.
+-/
+axiom decideIfZerosByKInductionCycleBreakingAx {p : Prop}  : p
 
 end BvDecide
 
