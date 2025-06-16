@@ -618,7 +618,13 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       trace[Bits.Frontend] f!"{fsm.format}'"
       let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
       match cert? with
-      | .proven niter safetyCert indCert =>
+      | .provenByExhaustion niter safetyCert =>
+        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByExhaustion [])
+        if gs.isEmpty
+          then return gs
+        else
+          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+      | .provenByKInd niter safetyCert indCert =>
         let safetyCertExpr := Lean.mkStrLit safetyCert
         let indCertExpr := Lean.mkStrLit indCert
         let prf ← g.withContext do

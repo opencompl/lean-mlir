@@ -2093,6 +2093,27 @@ def mkSafetyCircuit {arity : Type _}
     rw [circs.hEvalWithN]
   ⟩
 
+/-#
+
+## Cycle Breaking
+
+Considere a state space where 'sgood' is the initial state, with transitions 'sgood->sgood'
+where 's0' is a good state, and unreachable states 'tgood, tbad' with transitions
+'tgood->tgood' and 'tgood->tbad'.
+
+
+Now, the reachable states are only `sgood^n = sgood`, so the automata is safe.
+
+Howver, when we do k-induction, we will explore paths of the form `tgood^n → tbad`,
+which will end in a bad state for *any* n > 0, regardless of how much we increase 'n'.
+
+To rule out such cases, we only prove the IH on paths where all states are unique.
+In the previous example, we will at `k = 2`, we will decide to not explore the path `tgood^2 → tbad`,
+which then establishes the invariant that all reachable states are unique.
+This gets us "unstuck" from cycles of bad states.
+-/
+
+
 /-- Make the induction hypothesis circuit, incrementally. -/
 def mkIndHypCircuit {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -2231,6 +2252,12 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     decideIfZerosAuxVerified' 0 maxIter fsm (KInductionCircuits.mkZero fsm)
+
+
+/--
+An axiom tracking that the safety has been proven by exhaustion of the state space.
+-/
+axiom decideIfZerosByExhaustion {p : Prop}  : p
 
 end BvDecide
 
