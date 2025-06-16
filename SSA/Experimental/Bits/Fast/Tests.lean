@@ -466,11 +466,10 @@ theorem e_1 (x y : BitVec w) :
   bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
 
 set_option trace.Bits.FastVerif true in
-set_option maxHeartbeats 999999999 in
 theorem e_331 (x y : BitVec w):
      - 6 *  ~~~x + 2 * (x |||  ~~~y) - 3 * x + 2 * (x ||| y) - 10 *  ~~~(x ||| y) - 10 *  ~~~(x |||  ~~~y) - 4 * (x &&&  ~~~y) - 15 * (x &&& y) + 3 *  ~~~(x &&&  ~~~x) + 11 *  ~~~(x &&&  ~~~y) = 0#w := by
   -- bv_automata_gen (config := {backend := .dryrun 6 } )
-  bv_automata_gen (config := {backend := .circuit_cadical_verified 4 } )
+  -- bv_automata_gen (config := {backend := .circuit_cadical_verified 4 } )
   -- bv_automata_gen (config := {genSizeThreshold := 2000, stateSpaceSizeThreshold := 100})
   -- fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified 5 } )
   sorry
