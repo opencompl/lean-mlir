@@ -1675,7 +1675,7 @@ theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
   (p : FSM arity) (i : Nat) :
   (∀ (envBool : Vars p.α arity (i + 1) → Bool), (mkAllPairsUniqueStatesCircuit p i).eval envBool = false) ↔
   (∀ (envBitstream : arity → BitStream) (state : p.α → Bool)
-      (k l : Nat) (hkl : k < l) (hl : l ≤ i),
+      (k l : Nat) (_hkl : k < l) (_hl : l ≤ i),
     ¬ (p.carryWith state envBitstream (k + 1) = p.carryWith state envBitstream (l + 1))) := by
   constructor
   · intros h envBitstream state k l hk hl
@@ -1686,23 +1686,48 @@ theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
     simp [Circuit.eval_map] at h
     obtain ⟨a, ha⟩ := h
     intros hContra
+    simp [envBool] at ha
     have := congr_fun hContra a
     rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
     · rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
       · simp at ha
-      · sorry
-    · sorry
-    -- rw [mkAllPairsUniqueStatesCircuit_eq_false_iff_of_EnvOutRelated
-    --   (envBitstream := envBitstream)] at h
-    -- · simp only [Vars.castLe_state, envBool_of_envBitstream_of_state_eq₁, envBool] at h
-    --   apply h k l hk hl
-    -- · constructor
-    --   intros x j hj
-    --   apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
-
-  · sorry
-
-
+        apply ha
+        simp [show (fun s => state s) = state by rfl]
+        apply this
+      · constructor
+        intros x j hj
+        rfl
+    · constructor
+      intros x j hj
+      rfl
+  · intros h
+    intros envBool
+    let envBitstream := Bitstream_of_envBool envBool
+    let state := fun s => envBool (.state s)
+    simp [mkAllPairsUniqueStatesCircuit]
+    intros c k l hkl hc 
+    subst hc
+    simp
+    specialize h envBitstream state k l (by omega) (by omega)
+    obtain ⟨a, ha⟩ := Function.ne_iff.mp h
+    clear h
+    exists a
+    intros hContra
+    simp [Circuit.eval_map] at hContra
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at hContra
+    · rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at hContra
+      · simp at hContra
+        apply ha
+        exact hContra
+      · simp [envBitstream]
+        constructor
+        intros x j hj
+        simp [Bitstream_of_envBool, envBitstream, show j < i + 1 by omega]
+        rfl
+    · constructor
+      intros x j hj
+      simp [Bitstream_of_envBool, envBitstream, show j < i + 1 by omega]
+      rfl
 
 /-- induction hyp circuit. -/
 theorem eval_mkIndHypCircuit_eq_false_iff_ {arity : Type _}
