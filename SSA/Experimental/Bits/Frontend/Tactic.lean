@@ -620,9 +620,9 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       return [g]
     | .circuit_cadical_verified maxIter checkTypes? =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      logInfo m!"built FSM."
-      logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
-      logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
+      -- logInfo m!"built FSM."
+      -- logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+      -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
       let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
       match cert? with
       | .provenByExhaustion niter safetyCert =>

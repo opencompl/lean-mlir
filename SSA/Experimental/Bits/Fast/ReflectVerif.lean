@@ -2286,7 +2286,8 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
     TermElabM (DecideIfZerosOutput × CircuitStats) :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    trace[Bits.FastVerif] s!"FSM state space size: ({fsm.stateSpaceSize})"
+    logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+    logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
     decideIfZerosAuxVerified' 0 maxIter fsm (KInductionCircuits.mkZero fsm)
 
 
