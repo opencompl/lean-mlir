@@ -1608,8 +1608,8 @@ end DecideIfZerosOutput
 --   let tStart ← IO.monoMsNow
 --   let cSafety : Circuit (Vars Empty arity (iter+1)) := mkSafetyCircuit' fsm iter
 --   let tEnd ← IO.monoMsNow
---   let tElapsedSec := (tEnd - tStart) / 1000
---   trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedSec}s'"
+--   let tElapsedMs := (tEnd - tStart) / 1000
+--   trace[Bits.FastVerif] m!"Built safety circuit in '{tElapsedMs}s'"
 
 --   let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
 --   let formatEmpty : Empty → Format := fun e => e.elim
@@ -1618,8 +1618,8 @@ end DecideIfZerosOutput
 --   let tStart ← IO.monoMsNow
 --   let safetyCert? ← checkCircuitUnsatAux cSafety
 --   let tEnd ← IO.monoMsNow
---   let tElapsedSec := (tEnd - tStart) / 1000
---   trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
+--   let tElapsedMs := (tEnd - tStart) / 1000
+--   trace[Bits.FastVerif] m!"Checked safety property in {tElapsedMs} seconds."
 --   match safetyCert? with
 --   | .none =>
 --     trace[Bits.FastVerif] s!"Safety property failed on initial state."
@@ -1630,16 +1630,16 @@ end DecideIfZerosOutput
 --     let tStart ← IO.monoMsNow
 --     let cIndHyp := mkIndHypCircuit fsm iter
 --     let tEnd ← IO.monoMsNow
---     let tElapsedSec := (tEnd - tStart) / 1000
---     trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+--     let tElapsedMs := (tEnd - tStart) / 1000
+--     trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedMs}s'"
 
 --     let tStart ← IO.monoMsNow
 --     trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp}"
 --     -- let le : Bool := sorry
 --     let indCert? ← checkCircuitUnsatAux cIndHyp
 --     let tEnd ← IO.monoMsNow
---     let tElapsedSec := (tEnd - tStart) / 1000
---     trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
+--     let tElapsedMs := (tEnd - tStart) / 1000
+--     trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedMs}s'."
 --     match indCert? with
 --     | .some indCert =>
 --       trace[Bits.FastVerif] s!"Inductive invariant established."
@@ -1845,18 +1845,19 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     let tStart ← IO.monoMsNow
     let cSafety : Circuit (Vars Empty arity (iter+1)) := circs.mkSafetyCircuit.val
     let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.FastVerif] m!"Built new safety circuit in '{tElapsedSec}s'"
+    let tElapsedMs := (tEnd - tStart) 
+    trace[Bits.FastVerif] m!"Built new safety circuit in '{tElapsedMs}ms'"
 
     let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
     let formatEmpty : Empty → Format := fun e => e.elim
     let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
-    trace[Bits.FastVerif] m!"safety circuit: {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+    -- wtrace[Bits.FastVerif] m!"safety circuit : {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
+    trace[Bits.FastVerif] m!"safety circuit size : {cSafety.size}"
     let tStart ← IO.monoMsNow
     let safetyCert? ← checkCircuitUnsatAux cSafety
     let tEnd ← IO.monoMsNow
-    let tElapsedSec := (tEnd - tStart) / 1000
-    trace[Bits.FastVerif] m!"Checked safety property in {tElapsedSec} seconds."
+    let tElapsedMs := (tEnd - tStart) 
+    trace[Bits.FastVerif] m!"Checked safety property in {tElapsedMs}ms."
     match safetyCert? with
     | .none =>
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
@@ -1867,16 +1868,17 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       let tStart ← IO.monoMsNow
       let cIndHyp := circs.mkIndHypCircuit
       let tEnd ← IO.monoMsNow
-      let tElapsedSec := (tEnd - tStart) / 1000
-      trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedSec}s'"
+      let tElapsedMs := (tEnd - tStart) 
+      trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedMs}ms'"
 
       let tStart ← IO.monoMsNow
-      trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp.val}"
+      -- trace[Bits.FastVerif] m!"induction circuit: {formatCircuit (Vars.format formatα formatArity) cIndHyp.val}"
+      trace[Bits.FastVerif] m!"induction circuit size: {cIndHyp.val.size}"
       -- let le : Bool := sorry
       let indCert? ← checkCircuitUnsatAux cIndHyp.val
       let tEnd ← IO.monoMsNow
-      let tElapsedSec := (tEnd - tStart) / 1000
-      trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedSec}s'."
+      let tElapsedMs := (tEnd - tStart)
+      trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedMs}ms'."
       match indCert? with
       | .some indCert =>
         trace[Bits.FastVerif] s!"Inductive invariant established."
