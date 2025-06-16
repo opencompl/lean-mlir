@@ -1838,14 +1838,17 @@ inductive DecideIfZerosOutput
 | safetyFailure (iter : Nat)
 /-- Was unable to establish invariant even at these many iterations. -/
 | exhaustedIterations (numIters : Nat)
+/-- we have proven the safety property for as many steps as the state space size plus one. -/
+| provenByExhaustion (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert)
 /-- we have proven both the safety and inductive invariant property. -/
-| proven (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+| provenByKInd (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
 
 namespace DecideIfZerosOutput
 def isSuccess : DecideIfZerosOutput → Bool
   | .safetyFailure _ => false
   | .exhaustedIterations _ => false
-  | .proven .. => true
+  | .provenByExhaustion .. => true
+  | .provenByKInd .. => true
 end DecideIfZerosOutput
 
 
@@ -2085,7 +2088,6 @@ theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG'
 
 end KInductionCircuits
 
-
 @[nospecialize]
 partial def decideIfZerosAuxVerified' {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -2117,8 +2119,12 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
       return (.safetyFailure iter, circs.stats)
     | .some safetyCert =>
-      trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
+      let stateSpaceSize := Nat.pow 2 (Fintype.card arity)
+      if iter ≥ 1 + stateSpaceSize then
+        trace[Bits.FastVerif] s!"Proved safety for the entire state space (state space size: {stateSpaceSize}). No need to build induction circuit."
+        return (.provenByExhaustion iter safetyCert, circs.stats)
 
+      trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
       let tStart ← IO.monoMsNow
       let cIndHyp := circs.mkIndHypCircuit
       let tEnd ← IO.monoMsNow
@@ -2136,7 +2142,7 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       match indCert? with
       | .some indCert =>
         trace[Bits.FastVerif] s!"Inductive invariant established."
-        return (.proven iter safetyCert indCert, circs.stats)
+        return (.provenByKInd iter safetyCert indCert, circs.stats)
       | .none =>
         trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
     decideIfZerosAuxVerified' (iter + 1) maxIter fsm  circs.mkSucc
