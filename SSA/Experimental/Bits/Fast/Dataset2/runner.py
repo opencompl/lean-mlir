@@ -260,8 +260,8 @@ def load_tests(args) -> List[UnitTest]:
     if not args.prod_run:
         logging.info(f"--prod_run not enabled, pruning files to small batch")
         NTESTS_TO_RETURN = 1
-        return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
-        # return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+        # return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
+        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
     else:
         return out
 
