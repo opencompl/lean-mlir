@@ -1567,13 +1567,13 @@ theorem mkUniqueStatesCircuit_eq_false_iff_of_EnvOutRelated {arity : Type _}
   (envBitstream : arity → BitStream)
   (hEnvBitstream : EnvOutRelated envBool envBitstream) :
   ((mkUniqueStatesCircuit p i).eval envBool = false) ↔
-  (∀(j : Nat), j < i + 1 →
+  (∀(j : Nat), j ≤ i →
     ¬ (p.carryWith (fun s => envBool (.state s)) envBitstream (j + 1) =
         (fun s => envBool (.state s)))) := by
   simp [mkUniqueStatesCircuit, Circuit.eval_bigOr_eq_false_iff]
   constructor
   · intros h j hj
-    specialize h _ j hj rfl
+    specialize h _ j (by omega) rfl
     rw [Circuit.eval_map] at h
     rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
       (envBitstream := envBitstream)] at h
@@ -1589,7 +1589,7 @@ theorem mkUniqueStatesCircuit_eq_false_iff_of_EnvOutRelated {arity : Type _}
     rw [Circuit.eval_map]
     rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
       (envBitstream := envBitstream)]
-    · apply h j hj
+    · apply h j (by omega)
     · constructor
       intros x k hk
       apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
@@ -1601,14 +1601,14 @@ theorem mkUniqueStatesCircuit_eq_false_iff {arity : Type _}
   (p : FSM arity) (i : Nat) :
   (∀ (envBool : Vars p.α arity (i + 1) → Bool), (mkUniqueStatesCircuit p i).eval envBool = false) ↔
   (∀ (envBitstream : arity → BitStream) (state : p.α → Bool) (j : Nat),
-    j < i +1 → ¬ (p.carryWith state envBitstream (j + 1) = state)) := by
+    j ≤ i → ¬ (p.carryWith state envBitstream (j + 1) = state)) := by
   simp [mkUniqueStatesCircuit, Circuit.eval_bigOr_eq_false_iff]
   constructor
   · intros h envBitstream state
     let envBool := envBool_of_envBitstream_of_state envBitstream state i
     specialize h envBool
     intros j hj
-    specialize h _ j hj rfl
+    specialize h _ j (by omega) rfl
     rw [Circuit.eval_map] at h
     rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
       (envBitstream := envBitstream)] at h
@@ -1626,12 +1626,31 @@ theorem mkUniqueStatesCircuit_eq_false_iff {arity : Type _}
     rw [Circuit.eval_map]
     rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
       (envBitstream := envBitstream)]
-    · apply h j hj
+    · apply h j (by omega)
     · constructor
       intros x k hk
       simp only [Bitstream_of_envBool, envBitstream]
       simp only [show k < i + 1 by omega, ↓reduceDIte, envBitstream]
       rfl
+
+
+
+/--
+Make all pairs of indices (i, j) such that 0 ≤ i < j ≤ n
+-/
+def mkLowerTriangularPairs (n : Nat) : List (Nat × Nat) :=
+  let xs := List.range (n + 1) |>.attach
+  xs.flatMap fun i =>
+    let ys := List.range i.val |>.attach
+    ys.map fun j => (j.val, i.val)
+
+
+@[simp]
+theorem mem_mkLowerTriangularPairs {n : Nat} (i j : Nat) :
+  (i, j) ∈ mkLowerTriangularPairs n ↔
+  (i < j ∧ j ≤ n) := by
+  simp [mkLowerTriangularPairs]
+  omega
 
 /--
 make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
@@ -1640,18 +1659,49 @@ This circuit produce false iff there are two states that are equal in [1..i+1] i
 def mkAllPairsUniqueStatesCircuit {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  let xs := List.range (n + 1) |>.attach
+  let xs := mkLowerTriangularPairs n |>.attach
+  Circuit.bigOr <| xs.map fun ⟨(i, j), hij⟩ =>
+    let si : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
+      (mkCarryWithCircuit p (i + 1) s).map (fun v =>
+        v.castLe (by have := i; simp at hij; omega))
+    let sj : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
+      (mkCarryWithCircuit p (j + 1) s).map (fun v =>
+        v.castLe (by have := j; simp at hij; omega))
+    (mkStateNeqCircuit p si sj)
 
-  Circuit.bigOr <| xs.flatMap fun i =>
-    let ys := List.range i.val |>.attach
-    ys.map fun j =>
-     let si : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
-       (mkCarryWithCircuit p (i.val +1) s).map (fun v =>
-         v.castLe (by have := i.property; simp at this; omega))
-     let sj : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
-       (mkCarryWithCircuit p (j.val +1) s).map (fun v =>
-         v.castLe (by have := j.property; simp at this; have := i.property; simp at this; omega))
-     (mkStateNeqCircuit (i := (n+1)) p si sj)
+@[simp]
+theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) :
+  (∀ (envBool : Vars p.α arity (i + 1) → Bool), (mkAllPairsUniqueStatesCircuit p i).eval envBool = false) ↔
+  (∀ (envBitstream : arity → BitStream) (state : p.α → Bool)
+      (k l : Nat) (hkl : k < l) (hl : l ≤ i),
+    ¬ (p.carryWith state envBitstream (k + 1) = p.carryWith state envBitstream (l + 1))) := by
+  constructor
+  · intros h envBitstream state k l hk hl
+    let envBool := envBool_of_envBitstream_of_state envBitstream state i
+    specialize h envBool
+    simp [mkAllPairsUniqueStatesCircuit] at h
+    specialize h _ k l (by omega) rfl
+    simp [Circuit.eval_map] at h
+    obtain ⟨a, ha⟩ := h
+    intros hContra
+    have := congr_fun hContra a
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
+    · rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
+      · simp at ha
+      · sorry
+    · sorry
+    -- rw [mkAllPairsUniqueStatesCircuit_eq_false_iff_of_EnvOutRelated
+    --   (envBitstream := envBitstream)] at h
+    -- · simp only [Vars.castLe_state, envBool_of_envBitstream_of_state_eq₁, envBool] at h
+    --   apply h k l hk hl
+    -- · constructor
+    --   intros x j hj
+    --   apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
+
+  · sorry
+
 
 
 /-- induction hyp circuit. -/
