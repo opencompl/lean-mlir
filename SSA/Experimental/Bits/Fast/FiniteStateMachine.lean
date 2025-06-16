@@ -78,7 +78,7 @@ instance : Std.Associative Nat.add where
   assoc := fun a b => by simp only [Nat.add_eq]; omega
 
 /-- The size of the state space of the finite state machine. -/
-def stateSpaceSize : Nat := @Finset.univ p.α inferInstance |>.card
+def stateSpaceSize : Nat := @Finset.univ (p.α → Bool) inferInstance |>.card
 
 
 /--

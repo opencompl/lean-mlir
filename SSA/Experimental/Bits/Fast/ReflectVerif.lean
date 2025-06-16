@@ -2215,9 +2215,8 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
       return (.safetyFailure iter, circs.stats)
     | .some safetyCert =>
-      let stateSpaceSize := Nat.pow 2 (Fintype.card arity)
-      if iter ≥ 1 + stateSpaceSize then
-        trace[Bits.FastVerif] s!"Proved safety for the entire state space (state space size: {stateSpaceSize}). No need to build induction circuit."
+      if iter ≥ 1 + fsm.stateSpaceSize then
+        trace[Bits.FastVerif] s!"Proved safety for the entire state space (state space size: {fsm.stateSpaceSize}). No need to build induction circuit."
         return (.provenByExhaustion iter safetyCert, circs.stats)
 
       trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
@@ -2251,7 +2250,7 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
     TermElabM (DecideIfZerosOutput × CircuitStats) :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    trace[Bits.FastVerif] s!"FSM state space size: (Nat.pow 2 {Fintype.card arity})"
+    trace[Bits.FastVerif] s!"FSM state space size: ({fsm.stateSpaceSize})"
     decideIfZerosAuxVerified' 0 maxIter fsm (KInductionCircuits.mkZero fsm)
 
 
