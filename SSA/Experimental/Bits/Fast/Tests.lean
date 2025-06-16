@@ -12,7 +12,6 @@ import SSA.Experimental.Bits.Fast.MBA
 import SSA.Projects.InstCombine.TacticAuto
 
 
-set_option trace.Bits.Fast true
 
 open Lean Meta Elab Tactic in
 #eval show TermElabM Unit from do
@@ -69,10 +68,9 @@ info: 'check_axioms' depends on axioms: [propext,
 example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
+set_option trace.Bits.FastVerif true in
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified 20 } )
-  sorry
 
 example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
@@ -222,9 +220,7 @@ When we have this, we then explicitly enumerate the different values that a can 
 Note that this is pretty expensive.
 -/
 example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified} )
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified} )
-  sorry
+  bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
@@ -351,11 +347,10 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
   intros
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
+set_option trace.Bits.FastVerif true in
 example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   intros
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified} )
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified} )
-  sorry
+  bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
   intros
@@ -465,6 +460,8 @@ theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 5 } )
 
+set_option trace.Bits.FastVerif true in
+set_option maxHeartbeats 999999999 in
 theorem e_331 (x y : BitVec w):
      - 6 *  ~~~x + 2 * (x |||  ~~~y) - 3 * x + 2 * (x ||| y) - 10 *  ~~~(x ||| y) - 10 *  ~~~(x |||  ~~~y) - 4 * (x &&&  ~~~y) - 15 * (x &&& y) + 3 *  ~~~(x &&&  ~~~x) + 11 *  ~~~(x &&&  ~~~y) = 0#w := by
   -- bv_automata_gen (config := {genSizeThreshold := 2000, stateSpaceSizeThreshold := 100})
