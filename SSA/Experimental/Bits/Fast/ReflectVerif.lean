@@ -538,6 +538,10 @@ def Vars.castShift {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m
   | .state s => .state s
   | .inputs is => .inputs (is.castShift hnm)
 
+@[simp]
+theorem Vars.castLe_state {n m : Nat} (s : σ) (hnm : n ≤ m) :
+   (Vars.state s : Vars σ ι n).castLe hnm = Vars.state s := by rfl
+
 /-- casting to the same width equals vars-/
 @[simp]
 theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n ≤ n) :
@@ -924,6 +928,17 @@ def mkCarryWith0Circuit {arity : Type _}
     { f : p.α → Circuit (Vars p.α arity 0) //
       ∀ (a : p.α), Circuit.Equiv (f a) (mkCarryWithCircuit p 0 a) } :=
   ⟨mkCarryWithCircuit p 0, by simp⟩
+
+@[simp]
+theorem eval_mkCarryWith0Circuit_eq {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (s : p.α)
+    (envBool : Vars p.α arity 0 → Bool) :
+  ((mkCarryWith0Circuit p).val s).eval envBool = envBool (.state s) := by
+  simp only [mkCarryWith0Circuit, mkCarryWithCircuit, Circuit.eval, Circuit.var, Vars.state]
+  rcases h : envBool (Vars.state s) <;> simp [h]
 
 /--
 make the CarryWith circuit for step (n+1), incrementally,
@@ -1399,6 +1414,322 @@ def mkIndHypCircuit {arity : Type _}
     ((mkEvalWithNCircuit p n).map (fun vs => vs.castLe (by omega)))
     (mkEvalWithCircuit p (n + 1))
 
+/-- Make a circuit that checks if two states are equal. -/
+def mkStateEqCircuit
+  {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) : Circuit (Vars p.α arity i) :=
+  Circuit.bigOr <| FinEnum.toList p.α |>.map fun a => (s a) ^^^ (t a)
+
+
+/-- if the state circuit is false, then the states are equal under all evaluations. -/
+theorem mkStateEqCircuit_eq_zero_iff {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) :
+  (∀ envBool, (mkStateEqCircuit p s t).eval envBool = false) ↔
+  (∀ (a : p.α) (envBool : Vars p.α arity i → Bool), (s a).eval envBool = (t a).eval envBool) := by
+  simp [mkStateEqCircuit, Circuit.eval_bigOr_eq_false_iff]
+  constructor
+  · intros h a envBool
+    apply h
+  · intros h envBool a
+    apply h
+
+
+/-- Make a circuit that checks if two states are disequal. -/
+def mkStateNeqCircuit
+  {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) : Circuit (Vars p.α arity i) :=
+  Circuit.bigAnd <| FinEnum.toList p.α |>.map fun a => ~~~ (s a) ^^^ (t a)
+
+
+/-- if the state circuit is false, then the states are equal under all evaluations. -/
+@[simp]
+theorem mkStateNeqCircuit_eq_false_iff {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) :
+  (∀ envBool, (mkStateNeqCircuit p s t).eval envBool = false) ↔
+  (∀ (envBool : Vars p.α arity i → Bool), ∃ (a : p.α), (s a).eval envBool ≠ (t a).eval envBool) := by
+  simp [mkStateNeqCircuit, Circuit.eval_bigAnd_eq_false_iff]
+
+/-- if the stateNeq circuit is false at a current environment,
+then the states disagree at this environment. -/
+@[simp]
+theorem mkStateNeqCircuit_eq_false_iff₂  {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i))
+  (envBool : Vars p.α arity i → Bool) :
+  ((mkStateNeqCircuit p s t).eval envBool = false) ↔
+  ∃ (a : p.α), (s a).eval envBool ≠ (t a).eval envBool := by
+  simp [mkStateNeqCircuit, Circuit.eval_bigAnd_eq_false_iff]
+
+/--
+make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
+We take 'i+1' so that we take at least one input.
+This circuit produces false iff...
+-/
+def mkUniqueStateCircuitAux {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) : Circuit (Vars p.α arity (i+1)) :=
+   let ins := mkCarryWith0Circuit p |>.val
+   let outs := mkCarryWithCircuit p (i+1)
+   (mkStateNeqCircuit p outs (fun s => (ins s).map  (fun v => v.castLe (by omega))))
+
+
+@[simp]
+theorem mkUniqueStateCircuitAux_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) :
+  (∀ (envBool : Vars p.α arity (i + 1) → Bool), (mkUniqueStateCircuitAux p i).eval envBool = false) ↔
+  (∀ (envBitstream : arity → BitStream) (state : p.α → Bool) , ¬ (p.carryWith state envBitstream (i + 1) = state)) := by
+  simp [mkUniqueStateCircuitAux, mkStateEqCircuit_eq_zero_iff]
+  constructor
+  · intros h envBitstream state
+    let envBool := envBool_of_envBitstream_of_state envBitstream state i
+    specialize h envBool
+    apply Function.ne_iff.mpr
+    obtain ⟨a, ha⟩ := h
+    exists a
+    simp only [mkCarryWith0Circuit] at ha
+    simp only [Circuit.eval_map, Circuit.eval, ↓reduceIte, Vars.castLe_state] at ha
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
+    · apply ha
+    · simp [envBool]
+  · intros h envBool
+    let envBitstream := Bitstream_of_envBool envBool
+    let state := fun s => envBool (.state s)
+    specialize h envBitstream state
+    have := Function.ne_iff.mp h
+    obtain ⟨a, ha⟩ := this
+    exists a
+    rw [Circuit.eval_map, eval_mkCarryWith0Circuit_eq]
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)]
+    · simp only [Vars.castLe_state]
+      apply ha
+    · simp [envBitstream]
+
+
+@[simp]
+theorem mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity) (i : Nat)
+    (envBool : Vars p.α arity (i + 1) → Bool)
+    (envBitstream : arity → BitStream)
+    (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+    (((mkUniqueStateCircuitAux p i).eval envBool = false) ↔
+      ¬ (p.carryWith (fun s => envBool (.state s)) envBitstream (i + 1) = (fun s => envBool (.state s)))) := by
+  constructor
+  · intros h
+    let state := fun s => envBool (.state s)
+    apply Function.ne_iff.mpr
+    simp at h
+    rw [mkUniqueStateCircuitAux] at h
+    simp at h
+    obtain ⟨a, ha⟩ := h
+    exists a
+    rw [eval_mkCarryWithCircuit_eq_carryWith] at ha
+    rw [Circuit.eval_map] at ha
+    rw [eval_mkCarryWith0Circuit_eq] at ha
+    simp only [Circuit.eval_map, Circuit.eval, ↓reduceIte, Vars.castLe_state] at ha
+    · apply ha
+    · apply hEnvBitstream
+  · intros h
+    have := Function.ne_iff.mp h
+    obtain ⟨a, ha⟩ := this
+    rw [mkUniqueStateCircuitAux]
+    simp
+    exists a
+    rw [Circuit.eval_map, eval_mkCarryWith0Circuit_eq]
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)]
+    · simp only [Vars.castLe_state]
+      apply ha
+    · apply hEnvBitstream
+
+/--
+make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
+This circuit produce false iff there are two states that are equal in [1..i+1] inputs
+-/
+def mkUniqueStatesCircuit {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) : Circuit (Vars p.α arity (i+1)) :=
+  let xs := List.range (i + 1) |>.attach
+  Circuit.bigOr <| xs.map fun j =>
+    (mkUniqueStateCircuitAux p j.val).map (fun v =>
+      v.castLe (by have := j.property; simp at this; omega))
+
+
+@[simp]
+theorem mkUniqueStatesCircuit_eq_false_iff_of_EnvOutRelated {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat)
+  (envBool : Vars p.α arity (i + 1) → Bool)
+  (envBitstream : arity → BitStream)
+  (hEnvBitstream : EnvOutRelated envBool envBitstream) :
+  ((mkUniqueStatesCircuit p i).eval envBool = false) ↔
+  (∀(j : Nat), j ≤ i →
+    ¬ (p.carryWith (fun s => envBool (.state s)) envBitstream (j + 1) =
+        (fun s => envBool (.state s)))) := by
+  simp [mkUniqueStatesCircuit, Circuit.eval_bigOr_eq_false_iff]
+  constructor
+  · intros h j hj
+    specialize h _ j (by omega) rfl
+    rw [Circuit.eval_map] at h
+    rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
+      (envBitstream := envBitstream)] at h
+    · simp only [Vars.castLe_state] at h
+      apply h
+    · constructor
+      intros x k hk
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
+  · intros h c
+    intros j hj
+    intros hc
+    subst hc
+    rw [Circuit.eval_map]
+    rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
+      (envBitstream := envBitstream)]
+    · apply h j (by omega)
+    · constructor
+      intros x k hk
+      apply hEnvBitstream.envBool_inputs_mk_eq_envBitStream
+
+/-- mkUniqueStatesCircuit is false iff we don't have a repeatin state. -/
+@[simp]
+theorem mkUniqueStatesCircuit_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (i : Nat) :
+  (∀ (envBool : Vars p.α arity (i + 1) → Bool), (mkUniqueStatesCircuit p i).eval envBool = false) ↔
+  (∀ (envBitstream : arity → BitStream) (state : p.α → Bool) (j : Nat),
+    j ≤ i → ¬ (p.carryWith state envBitstream (j + 1) = state)) := by
+  simp [mkUniqueStatesCircuit, Circuit.eval_bigOr_eq_false_iff]
+  constructor
+  · intros h envBitstream state
+    let envBool := envBool_of_envBitstream_of_state envBitstream state i
+    specialize h envBool
+    intros j hj
+    specialize h _ j (by omega) rfl
+    rw [Circuit.eval_map] at h
+    rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
+      (envBitstream := envBitstream)] at h
+    · simp only [Vars.castLe_state, envBool_of_envBitstream_of_state_eq₁, envBool] at h
+      apply h
+    · constructor
+      intros x k hk
+      rfl -- TODO: don't exploit 'rfl' here.
+  · intros h envBool
+    let envBitstream := Bitstream_of_envBool envBool
+    let state := fun s => envBool (.state s)
+    specialize h envBitstream state
+    intros c j hj hc
+    subst hc
+    rw [Circuit.eval_map]
+    rw [mkUniqueStateCircuitAux_eq_false_iff_of_EnvOutRelated
+      (envBitstream := envBitstream)]
+    · apply h j (by omega)
+    · constructor
+      intros x k hk
+      simp only [Bitstream_of_envBool, envBitstream]
+      simp only [show k < i + 1 by omega, ↓reduceDIte, envBitstream]
+      rfl
+
+
+
+/--
+Make all pairs of indices (i, j) such that 0 ≤ i < j ≤ n
+-/
+def mkLowerTriangularPairs (n : Nat) : List (Nat × Nat) :=
+  let xs := List.range (n + 1) |>.attach
+  xs.flatMap fun i =>
+    let ys := List.range i.val |>.attach
+    ys.map fun j => (j.val, i.val)
+
+
+@[simp]
+theorem mem_mkLowerTriangularPairs {n : Nat} (i j : Nat) :
+  (i, j) ∈ mkLowerTriangularPairs n ↔
+  (i < j ∧ j ≤ n) := by
+  simp [mkLowerTriangularPairs]
+  omega
+
+/--
+make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
+This circuit produce false iff there are two states that are equal in [1..i+1] inputs
+-/
+def mkAllPairsUniqueStatesCircuit {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
+  let xs := mkLowerTriangularPairs n |>.attach
+  Circuit.bigOr <| xs.map fun ⟨(i, j), hij⟩ =>
+    let si : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
+      (mkCarryWithCircuit p (i + 1) s).map (fun v =>
+        v.castLe (by have := i; simp at hij; omega))
+    let sj : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
+      (mkCarryWithCircuit p (j + 1) s).map (fun v =>
+        v.castLe (by have := j; simp at hij; omega))
+    (mkStateNeqCircuit p si sj)
+
+/-
+Establishes that all states from [0..n+1] are unique.
+-/
+@[simp]
+theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) :
+  (∀ (envBool : Vars p.α arity (n + 1) → Bool), (mkAllPairsUniqueStatesCircuit p n).eval envBool = false) ↔
+  (∀ (envBitstream : arity → BitStream) (state : p.α → Bool)
+      (k l : Nat), k < l → l ≤ n → ¬ (p.carryWith state envBitstream (k + 1) = p.carryWith state envBitstream (l + 1))) := by
+  constructor
+  · intros h envBitstream state k l hk hl
+    let envBool := envBool_of_envBitstream_of_state envBitstream state n
+    specialize h envBool
+    simp [mkAllPairsUniqueStatesCircuit] at h
+    specialize h _ k l (by omega) rfl
+    simp [Circuit.eval_map] at h
+    obtain ⟨a, ha⟩ := h
+    intros hContra
+    simp [envBool] at ha
+    have := congr_fun hContra a
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
+    · rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at ha
+      · simp at ha
+        apply ha
+        simp [show (fun s => state s) = state by rfl]
+        apply this
+      · constructor
+        intros x j hj
+        rfl
+    · constructor
+      intros x j hj
+      rfl
+  · intros h
+    intros envBool
+    let envBitstream := Bitstream_of_envBool envBool
+    let state := fun s => envBool (.state s)
+    simp [mkAllPairsUniqueStatesCircuit]
+    intros c k l hkl hc 
+    subst hc
+    simp
+    specialize h envBitstream state k l (by omega) (by omega)
+    obtain ⟨a, ha⟩ := Function.ne_iff.mp h
+    clear h
+    exists a
+    intros hContra
+    simp [Circuit.eval_map] at hContra
+    rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at hContra
+    · rw [eval_mkCarryWithCircuit_eq_carryWith (envBitstream := envBitstream)] at hContra
+      · simp at hContra
+        apply ha
+        exact hContra
+      · simp [envBitstream]
+        constructor
+        intros x j hj
+        simp [Bitstream_of_envBool, envBitstream, show j < n + 1 by omega]
+        rfl
+    · constructor
+      intros x j hj
+      simp [Bitstream_of_envBool, envBitstream, show j < n + 1 by omega]
+      rfl
 
 /-- induction hyp circuit. -/
 theorem eval_mkIndHypCircuit_eq_false_iff_ {arity : Type _}
@@ -1473,6 +1804,18 @@ theorem eval_mkIndHypCircuit_eq_false_iff {arity : Type _}
       apply hCirc
       · omega
     · simp
+
+/-- Make the circuit that breaks the cycle in the induction hypothesis. -/
+def mkIndHypCircuitCycleBreaking {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+2)) :=
+  mkUnsatImpliesCircuit
+    -- | if all states [0..n+1] are unique
+    ((mkAllPairsUniqueStatesCircuit p n).map (fun vs => vs.castLe (by omega)))
+    -- | if ind hyp holds for [0..n+1], then it holds for [0..n+2] states.
+    (mkIndHypCircuit p n)
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
@@ -1584,14 +1927,20 @@ inductive DecideIfZerosOutput
 | safetyFailure (iter : Nat)
 /-- Was unable to establish invariant even at these many iterations. -/
 | exhaustedIterations (numIters : Nat)
+/-- we have proven the safety property for as many steps as the state space size plus one. -/
+| provenByExhaustion (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert)
 /-- we have proven both the safety and inductive invariant property. -/
-| proven (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+| provenByKIndNoCycleBreaking (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
+/-- we have proven both the safety and inductive invariant property. -/
+| provenByKIndCycleBreaking (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCertCycleBreaking : BVDecide.Frontend.LratCert)
 
 namespace DecideIfZerosOutput
 def isSuccess : DecideIfZerosOutput → Bool
   | .safetyFailure _ => false
   | .exhaustedIterations _ => false
-  | .proven .. => true
+  | .provenByExhaustion .. => true
+  | .provenByKIndNoCycleBreaking .. => true
+  | .provenByKIndCycleBreaking .. => true
 end DecideIfZerosOutput
 
 
@@ -1761,6 +2110,27 @@ def mkSafetyCircuit {arity : Type _}
     rw [circs.hEvalWithN]
   ⟩
 
+/-#
+
+## Cycle Breaking
+
+Considere a state space where 'sgood' is the initial state, with transitions 'sgood->sgood'
+where 's0' is a good state, and unreachable states 'tgood, tbad' with transitions
+'tgood->tgood' and 'tgood->tbad'.
+
+
+Now, the reachable states are only `sgood^n = sgood`, so the automata is safe.
+
+Howver, when we do k-induction, we will explore paths of the form `tgood^n → tbad`,
+which will end in a bad state for *any* n > 0, regardless of how much we increase 'n'.
+
+To rule out such cases, we only prove the IH on paths where all states are unique.
+In the previous example, we will at `k = 2`, we will decide to not explore the path `tgood^2 → tbad`,
+which then establishes the invariant that all reachable states are unique.
+This gets us "unstuck" from cycles of bad states.
+-/
+
+
 /-- Make the induction hypothesis circuit, incrementally. -/
 def mkIndHypCircuit {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1777,6 +2147,25 @@ def mkIndHypCircuit {arity : Type _}
     simp [mkUnsatImpliesCircuit, Circuit.eval_map]
     rw [circs.hEvalWithN]
     rw [circs.mkSuccEvalWith.prop]
+  ⟩
+
+/-- Make the induction hypothesis circuit with cycle breaking, incrementally. -/
+def mkIndHypCircuitCycleBreaking {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} (circs : KInductionCircuits fsm n) :
+    { c : Circuit (Vars fsm.α arity (n + 2)) //
+    Circuit.Equiv c (mkIndHypCircuitCycleBreaking fsm n) } :=
+  let indHyp  := circs.mkIndHypCircuit
+  let circ : Circuit <| Vars fsm.α arity (n + 2) :=
+    mkUnsatImpliesCircuit
+      ((mkAllPairsUniqueStatesCircuit fsm n).map (fun v => v.castLe (by omega)))
+      indHyp.val
+  ⟨circ, by
+    simp [circ]
+    simp [BvDecide.mkIndHypCircuitCycleBreaking]
+    ext env
+    simp [mkUnsatImpliesCircuit, Circuit.eval_map]
+    rw [indHyp.property]
   ⟩
 
 
@@ -1831,7 +2220,6 @@ theorem _root_.Predicate.denote_of_verifyAIG_of_verifyAIG'
 
 end KInductionCircuits
 
-
 @[nospecialize]
 partial def decideIfZerosAuxVerified' {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1847,26 +2235,29 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     let tEnd ← IO.monoMsNow
     let tElapsedMs := (tEnd - tStart) 
     trace[Bits.FastVerif] m!"Built new safety circuit in '{tElapsedMs}ms'"
-
-    let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
-    let formatEmpty : Empty → Format := fun e => e.elim
-    let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
+    -- | don't use these, they rely on exhaustive enumeration which is crazy slow.
+    -- let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
+    -- let formatEmpty : Empty → Format := fun e => e.elim
+    -- let formatArity : arity → Format := fun i => "i" ++ formatDecEqFinset i
     -- wtrace[Bits.FastVerif] m!"safety circuit : {formatCircuit (Vars.format formatEmpty formatArity) cSafety}"
     trace[Bits.FastVerif] m!"safety circuit size : {cSafety.size}"
     let tStart ← IO.monoMsNow
     let safetyCert? ← checkCircuitUnsatAux cSafety
     let tEnd ← IO.monoMsNow
     let tElapsedMs := (tEnd - tStart) 
-    trace[Bits.FastVerif] m!"Checked safety property in {tElapsedMs}ms."
+    trace[Bits.FastVerif] m!"Established safety property in {tElapsedMs}ms (iter={iter})."
     match safetyCert? with
     | .none =>
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
       return (.safetyFailure iter, circs.stats)
     | .some safetyCert =>
-      trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
+      if iter ≥ 1 + fsm.stateSpaceSize then
+        trace[Bits.FastVerif] s!"Proved safety for the entire state space (state space size: {fsm.stateSpaceSize}). No need to build induction circuit."
+        return (.provenByExhaustion iter safetyCert, circs.stats)
 
+      trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
       let tStart ← IO.monoMsNow
-      let cIndHyp := circs.mkIndHypCircuit
+      let cIndHyp := circs.mkIndHypCircuitCycleBreaking
       let tEnd ← IO.monoMsNow
       let tElapsedMs := (tEnd - tStart) 
       trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedMs}ms'"
@@ -1881,8 +2272,8 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       trace[Bits.FastVerif] s!"Checked inductive invariant in '{tElapsedMs}ms'."
       match indCert? with
       | .some indCert =>
-        trace[Bits.FastVerif] s!"Inductive invariant established."
-        return (.proven iter safetyCert indCert, circs.stats)
+        trace[Bits.FastVerif] s!"Inductive invariant established (iter={iter})."
+        return (.provenByKIndCycleBreaking iter safetyCert indCert, circs.stats)
       | .none =>
         trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
     decideIfZerosAuxVerified' (iter + 1) maxIter fsm  circs.mkSucc
@@ -1895,7 +2286,20 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
     TermElabM (DecideIfZerosOutput × CircuitStats) :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
+    logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+    logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
     decideIfZerosAuxVerified' 0 maxIter fsm (KInductionCircuits.mkZero fsm)
+
+
+/--
+An axiom tracking that the safety has been proven by exhaustion of the state space.
+-/
+axiom decideIfZerosByExhaustionAx {p : Prop}  : p
+
+/--
+An axiom tracking that the safety has been proven by exhaustion of the state space.
+-/
+axiom decideIfZerosByKInductionCycleBreakingAx {p : Prop}  : p
 
 end BvDecide
 

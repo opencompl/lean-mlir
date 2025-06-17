@@ -585,6 +585,11 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
 
     match cfg.backend with
     | .dryrun =>
+        logInfo m!"Reflected predicate: {repr <| predicate.e}. Converting to FSM..."
+        let fsm := predicateEvalEqFSM predicate.e |>.toFSM
+        logInfo m!"built FSM."
+        logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+        logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
         g.assign (← mkSorry (← g.getType) (synthetic := false))
         trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
@@ -615,10 +620,24 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       return [g]
     | .circuit_cadical_verified maxIter checkTypes? =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      trace[Bits.Frontend] f!"{fsm.format}'"
+      -- logInfo m!"built FSM."
+      -- logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+      -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
       let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
       match cert? with
-      | .proven niter safetyCert indCert =>
+      | .provenByExhaustion niter safetyCert =>
+        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByExhaustionAx [])
+        if gs.isEmpty
+          then return gs
+        else
+          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+      | .provenByKIndCycleBreaking niter safetyCert indCert =>
+        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx [])
+        if gs.isEmpty
+          then return gs
+        else
+          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+      | .provenByKIndNoCycleBreaking niter safetyCert indCert =>
         let safetyCertExpr := Lean.mkStrLit safetyCert
         let indCertExpr := Lean.mkStrLit indCert
         let prf ← g.withContext do
@@ -670,7 +689,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
     | .circuit_cadical_unverified maxIter =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      trace[Bits.Frontend] f!"{fsm.format}'"
+      -- trace[Bits.Frontend] f!"{fsm.format}'"
       let (isTrueForall, _circuitState) ← fsm.decideIfZerosMUnverified maxIter
       if isTrueForall
       then do
@@ -684,7 +703,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         return [g]
     | .circuit_lean =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      trace[Bits.Frontend] f!"{fsm.format}'"
+      -- trace[Bits.Frontend] f!"{fsm.format}'"
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
       if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold && cfg.stateSpaceSizeThreshold != 0 then

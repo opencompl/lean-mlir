@@ -12,7 +12,7 @@ import SSA.Experimental.Bits.Fast.MBA
 import SSA.Projects.InstCombine.TacticAuto
 
 
-set_option trace.Bits.Fast true
+
 
 open Lean Meta Elab Tactic in
 #eval show TermElabM Unit from do
@@ -47,32 +47,28 @@ theorem eq3 (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified } )
 
 /--
-info: 'eq3' depends on axioms: [propext, Circuit.denote_toAIGAux_eq_eval, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'eq3' depends on axioms: [propext, Quot.sound, ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
 -/
 #guard_msgs in #print axioms eq3
 
 example (w : Nat) (a b : BitVec w) : a = a + 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
+set_option trace.Bits.FastVerif true in
 theorem check_axioms (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'check_axioms' depends on axioms: [propext,
- Circuit.denote_toAIGAux_eq_eval,
- Classical.choice,
- Lean.ofReduceBool,
- Quot.sound]
+info: 'check_axioms' depends on axioms: [propext, Quot.sound, ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
 -/
 #guard_msgs in #print axioms check_axioms
 
 example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
+set_option trace.Bits.FastVerif true in
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified 20 } )
-  sorry
+  bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
 
 example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
@@ -222,9 +218,7 @@ When we have this, we then explicitly enumerate the different values that a can 
 Note that this is pretty expensive.
 -/
 example (w : Nat) (a : BitVec w) : (1#w + 1#w = 0#w) → (a = 0#w ∨ a = 1#w) := by
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified} )
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified} )
-  sorry
+  bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 example (w : Nat) (a b : BitVec w) : (a + b = 0#w) → a = - b := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
@@ -330,7 +324,7 @@ def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'test24' depends on axioms: [propext, Circuit.denote_toAIGAux_eq_eval, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'test24' depends on axioms: [propext, Quot.sound, ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
 -/
 #guard_msgs in #print axioms test24
 
@@ -351,11 +345,10 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
   intros
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
+set_option trace.Bits.FastVerif true in
 example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   intros
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified} )
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified} )
-  sorry
+  bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 example : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
   intros
@@ -397,10 +390,17 @@ theorem add_eq_xor_add_mul_and_nt (x y : BitVec w) :
 theorem mul_four (x : BitVec w) : 4 * x = x + x + x + x := by
   bv_automata_gen
 
+theorem add_eq (x : BitVec w) : x = x + 0 := by
+  bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
+
+theorem add_five (x : BitVec w) : (x + x) + (x + x) + x = x + x + x + x + x := by
+  bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
+
 /-- Check that we correctly process an odd numeral multiplication. -/
 theorem mul_five (x : BitVec w) : 5 * x = x + x + x + x + x := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
 
+set_option maxHeartbeats 999999999 in
 /-- Check that we correctly process an odd numeral multiplication. -/
 theorem mul_eleven (x : BitVec w) : 11 * x =
   (x + x + x + x + x +
@@ -408,6 +408,7 @@ theorem mul_eleven (x : BitVec w) : 11 * x =
    x) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
 
+set_option maxHeartbeats 999999999 in
 theorem mul_eleven' (x : BitVec w) : 11 * x =
   (x + x + x + x + x +
    x + x + x + x + x +
@@ -454,21 +455,22 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 
 /--
 info: 'width_1_char_2_add_four' depends on axioms: [propext,
- Circuit.denote_toAIGAux_eq_eval,
  Classical.choice,
- Lean.ofReduceBool,
- Quot.sound]
+ Quot.sound,
+ ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
 -/
 #guard_msgs in #print axioms width_1_char_2_add_four
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  bv_automata_gen (config := {backend := .circuit_cadical_verified 5 } )
+  bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
 
+set_option trace.Bits.FastVerif true in
 theorem e_331 (x y : BitVec w):
      - 6 *  ~~~x + 2 * (x |||  ~~~y) - 3 * x + 2 * (x ||| y) - 10 *  ~~~(x ||| y) - 10 *  ~~~(x |||  ~~~y) - 4 * (x &&&  ~~~y) - 15 * (x &&& y) + 3 *  ~~~(x &&&  ~~~x) + 11 *  ~~~(x &&&  ~~~y) = 0#w := by
+  -- bv_automata_gen (config := {backend := .dryrun 6 } )
+  -- bv_automata_gen (config := {backend := .circuit_cadical_verified 4 } )
   -- bv_automata_gen (config := {genSizeThreshold := 2000, stateSpaceSizeThreshold := 100})
-  fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_verified 5 } )
   -- fail_if_success bv_automata_gen (config := {backend := .circuit_cadical_unverified 5 } )
   sorry
 
@@ -477,6 +479,6 @@ theorem e_331 (x y : BitVec w):
 set_option maxHeartbeats 0 in
 theorem e_2500 (a b c d e f g h i j k l m n o p q r s t u v x y z : BitVec w):
     7 * ( ~~~f ||| (d ^^^ e)) - 6 * ( ~~~(d &&&  ~~~e) &&& (e ^^^ f)) - 11 * ( ~~~(d &&&  ~~~e) &&& (d ^^^ (e ^^^ f))) - 1 * (f ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((e &&&  ~~~f) |||  ~~~(d ||| ( ~~~e &&& f))) - 3 * (f |||  ~~~(d |||  ~~~e)) + 1 *  ~~~(e ^^^ f) + 1 *  ~~~(d &&& (e ||| f)) + 5 * ( ~~~(d |||  ~~~e) ||| (d ^^^ (e ^^^ f))) + 1 * (e ^^^  ~~~(d ||| (e &&& f))) + 1 *  ~~~(d ||| ( ~~~e &&& f)) - 1 * ( ~~~d ||| (e ^^^ f)) + 4 * (e ^^^  ~~~( ~~~d &&& (e ||| f))) + 3 * ((d &&&  ~~~e) |||  ~~~(e ^^^ f)) + 4 * (f ^^^ ( ~~~d ||| ( ~~~e ||| f))) + 4 * ((e &&&  ~~~f) ^^^ (d ||| (e ^^^ f))) + 7 * ((d &&&  ~~~e) ||| (e ^^^ f)) + 2 * ((d ||| e) &&& (e ^^^ f)) + 3 * (e ^^^  ~~~( ~~~d ||| (e ^^^ f))) - 6 * (e ^^^  ~~~(d &&& f)) - 1 * (e ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^ (d &&& (e ||| f))) + 4 * ((d &&& f) ^^^ (e ||| f)) + 1 * (e &&& (d |||  ~~~f)) - 2 *  ~~~(d &&&  ~~~e) + 7 * (f ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 3 * ((d &&& e) |||  ~~~(e ^^^ f)) - 1 *  ~~~( ~~~d &&& ( ~~~e ||| f)) - 5 * (f ^^^ ( ~~~d ||| (e &&& f))) - 1 * (d ||| (e ||| f)) + 5 * (d &&&  ~~~f) + 7 * (f ||| (d &&& e)) - 1 * ( ~~~d &&& (e ||| f)) + 1 * ( ~~~(d ||| e) ||| (d ^^^ (e ^^^ f))) + 7 * (e ^^^  ~~~( ~~~d &&& (e ^^^ f))) + 1 * ((d |||  ~~~e) &&& (d ^^^ (e ^^^ f))) + 11 *  ~~~(d ||| (e ^^^ f)) + 4 * (e ^^^ (d &&& (e ^^^ f))) - 1 * ( ~~~d ||| ( ~~~e ||| f)) + 5 * ((d &&&  ~~~e) |||  ~~~(d ^^^ (e ^^^ f))) - 11 * (e ^^^ ( ~~~d ||| (e ^^^ f))) - 1 * (d &&& (e ||| f)) - 1 * (f ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 * (e ^^^ ( ~~~d &&& (e ||| f))) + 7 * (e ^^^ (d &&&  ~~~f)) + 1 *  ~~~( ~~~d &&& ( ~~~e &&& f)) - 1 * (e ^^^ (d ||| (e &&& f))) + 1 * (e ^^^ (d &&& ( ~~~e ||| f))) - 1 * (f ^^^ ( ~~~d &&& ( ~~~e ||| f))) - 1 * (d ||| ( ~~~e &&& f)) - 6 * (e ^^^  ~~~(d |||  ~~~f)) + 3 *  ~~~(d ||| f) + 4 * (e |||  ~~~(d ^^^ f)) - 2 *  ~~~(d &&& ( ~~~e ||| f)) - 6 * f - 1 * (e |||  ~~~(d |||  ~~~f)) + 5 * ((d ^^^ e) |||  ~~~(d ^^^ f)) - 2 * (f ^^^ ( ~~~d ||| (e ||| f))) + 5 * (f ^^^  ~~~(d |||  ~~~e)) - 11 * (e ||| (d &&&  ~~~f)) + 11 *  ~~~(d &&& (e &&& f)) - 3 * (e ^^^  ~~~( ~~~d &&& ( ~~~e ||| f))) - 5 * ((d &&& e) ||| (e ^^^ f)) + 1 * ((e &&&  ~~~f) ^^^ ( ~~~d ||| (e ^^^ f))) - 3 * (f ^^^  ~~~(d &&& ( ~~~e &&& f))) - 1 *  ~~~(d &&& ( ~~~e &&& f)) + 4 *  ~~~( ~~~d &&& (e &&& f)) - 6 * ((d ||| e) &&&  ~~~(e ^^^ f)) - 11 * ( ~~~e &&& (d ^^^ f)) - 7 * (f &&& (d |||  ~~~e)) + 5 * (d &&& ( ~~~e ||| f)) + 11 *  ~~~(e ||| f) - 7 * (f ^^^  ~~~(d &&& e)) + 1 * ((d ^^^ e) &&& (d ^^^ f)) - 39 *  ~~~(d ||| (e ||| f)) - 29 *  ~~~(d ||| ( ~~~e ||| f)) - 54 *  ~~~( ~~~d ||| (e ||| f)) - 32 *  ~~~( ~~~d ||| ( ~~~e ||| f)) + 19 * ( ~~~d &&& ( ~~~e &&& f)) - 60 * ( ~~~d &&& (e &&& f)) - 31 * (d &&& ( ~~~e &&& f)) + 33 * (d &&& (e &&& f)) =  - 1 * (e ^^^  ~~~( ~~~d ||| ( ~~~e &&& f))) + 3 *  ~~~(d ^^^ f) := by
-  bv_automata_gen (config := {backend := .circuit_cadical_verified 5 } )
+  bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
 
 end BvAutomataTests
