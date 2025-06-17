@@ -219,12 +219,29 @@ def composeBinary : Prop := sorry
 def composeUnary : Prop := sorry
 
 
-def and : FSM Bool :=
-  { α := Empty,
-    initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
-      ((Circuit.var true (inr true)) &&&
-        (Circuit.var true (inr false))) Empty.elim }
+open Std Sat AIG in
+def and : FSM 2 :=
+  let aig : Std.Sat.AIG (Var (σ := 0) (ι := 2)) := Std.Sat.AIG.empty
+  let res := aig.mkAtomCached (Var.input 0)
+  let aig := res.aig
+  let l : aig.Ref := res.ref
+
+  let res := aig.mkAtomCached (Var.input 1)
+  let aig := res.aig
+  let r : aig.Ref := res.ref
+  have := by apply Std.Sat.AIG.LawfulOperator.le_size (f := Std.Sat.AIG.mkAtomCached)
+  let l : aig.Ref := l.cast this
+  let res := aig.mkAndCached ⟨l, r⟩
+  let aig := res.aig
+  let outputCirc : aig.Ref := res.ref
+  let nextBitCirc : aig.RefVec 0 := RefVec.empty
+  {
+    σ := 0,
+    aig := aig,
+    outputCirc := outputCirc,
+    nextStateCirc := nextBitCirc,
+    initCarry := BitVec.zero 0
+  }
 
 @[simp] lemma eval_and (x : Bool → BitStream) : and.eval x = (x true) &&& (x false) := by
   ext n; cases n <;> simp [and, eval, nextBit]
