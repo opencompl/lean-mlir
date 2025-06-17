@@ -220,7 +220,7 @@ def composeUnary : Prop := sorry
 
 
 open Std Sat AIG in
-def and : FSM 2 :=
+def binop (op : {α : Type} → [DecidableEq α] → [Hashable α] → (aig : AIG α) → aig.BinaryInput → Entrypoint α) : FSM 2 :=
   let aig : Std.Sat.AIG (Var (σ := 0) (ι := 2)) := Std.Sat.AIG.empty
   let res := aig.mkAtomCached (Var.input 0)
   let aig := res.aig
@@ -231,7 +231,7 @@ def and : FSM 2 :=
   let r : aig.Ref := res.ref
   have := by apply Std.Sat.AIG.LawfulOperator.le_size (f := Std.Sat.AIG.mkAtomCached)
   let l : aig.Ref := l.cast this
-  let res := aig.mkAndCached ⟨l, r⟩
+  let res := op ⟨l, r⟩
   let aig := res.aig
   let outputCirc : aig.Ref := res.ref
   let nextBitCirc : aig.RefVec 0 := RefVec.empty
@@ -243,43 +243,22 @@ def and : FSM 2 :=
     initCarry := BitVec.zero 0
   }
 
-@[simp] lemma eval_and (x : Bool → BitStream) : and.eval x = (x true) &&& (x false) := by
-  ext n; cases n <;> simp [and, eval, nextBit]
 
-def or : FSM Bool :=
-  { α := Empty,
-    initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
-      ((Circuit.var true (inr true)) |||
-        (Circuit.var true (inr false))) Empty.elim }
 
-@[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = (x true) ||| (x false) := by
-  ext n; cases n <;> simp [or, eval, nextBit]
+open Std Sat AIG in
+def and : FSM 2 := binop (fun aig binInput => aig.mkAndCached binInput)
 
-def xor : FSM Bool :=
-  { α := Empty,
-    initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
-      ( (Circuit.var true (inr true)) ^^^
-        (Circuit.var true (inr false))) Empty.elim }
+open Std Sat AIG in
+def or : FSM 2 := binop (fun aig binInput => aig.mkOrCached binInput)
 
+open Std Sat AIG in
+def xor : FSM 2 := binop (fun aig binInput => aig.mkXorCached binInput)
+
+
+open Std Sat AIG in
 /-- Equality, or alternatively, negation of the xor -/
-def nxor : FSM Bool :=
-  { α := Empty,
-    initCarry := Empty.elim,
-    nextBitCirc := fun a =>
-     match a with
-     | none =>
-      -- x ⊕ y ⊕ T
-      -- 0 ⊕ 0 ⊕ 1 = 1
-      -- 0 ⊕ 1 ⊕ 1 = 0 -- value is 0 iff they differ
-      -- 1 ⊕ 0 ⊕ 1 = 0 -- value is 1 iff they differ.
-      -- 1 ⊕ 1 ⊕ 1 = 1
-      (Circuit.tru ^^^
-        ( (Circuit.var true (inr true)) ^^^
-        (Circuit.var true (inr false))))
-     | some empty => empty.elim
-  }
+def nxor : FSM 2 := binop (fun aig binInput => aig.mkBEqCached binInput)
+
 
 
 /--
