@@ -142,6 +142,6 @@ if __name__ == "__main__":
     #     sys.exit(1)
     
     # For demonstration, assume the file is named 'input.mlir'
-    input_file = "out.mlir" # <<< IMPORTANT: Change this to your actual input file name
-    extract_mlir_functions(input_file, "mlir_output_files", 200)
+    input_file = "out2.mlir" # <<< IMPORTANT: Change this to your actual input file name
+    extract_mlir_functions(input_file, "2mlir_output_files", 1000)
 

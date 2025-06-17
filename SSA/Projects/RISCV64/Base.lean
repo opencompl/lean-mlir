@@ -28,7 +28,7 @@ However, any other attributes (e.g., flags or immediate values) are still encode
 [4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
 inductive Op
-  | li : (val : BitVec 32) → Op
+  | li : (val : BitVec 64) → Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
@@ -477,7 +477,7 @@ functions that define our semantics.
 @[simp, reducible]
 instance : DialectDenote (RV64) where
   denote
-  | .li imm, _ , _ =>  BitVec.signExtend 64 (imm)
+  | .li imm, _ , _ => imm
   | .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .lui imm, regs , _ => UTYPE_pure64_lui imm
   | .auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
