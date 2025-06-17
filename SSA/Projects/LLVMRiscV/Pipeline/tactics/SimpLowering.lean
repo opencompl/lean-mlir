@@ -22,6 +22,21 @@ a rewriter implementor must tag its rewrites as @[simp_denote] such that the fir
 within the `simp_lowering` tactic unfolds the defintions to allow further tactics to be applied.
 
 The purpose of this tactic is to reduce proof size when reasoning about instruction lowerings.
+
+/-
+This file defines the `simp_lowering` tactic, which combines the LLVM tactics with the RISC-V simplification
+tactic and invokes `bv_decide`. The tactic is designed to solve instruction lowering patterns that
+fall within the domain solvable by `bv_decide`. We have enhanced the LLVM tactics to handle PoisonOr
+cases, and the RISC-V tactic simplifies RISC-V definitions so that the remaining goals are suitable
+for `bv_decide`.
+It also defines the `simp_lowering` attribute, which can be used to tag semantic definition
+functions so that they are automatically simplified when `simp_lowering` is invoked.
+To enable this proof automation, rewriter implementors must tag their rewrite rules with
+`@[simp_denote]`. This ensures that the initial invocation of `simp_peephole` within the
+`simp_lowering` tactic unfolds the relevant definitions, allowing subsequent tactics to proceed.
+
+The purpose of this tactic is to maximize proof automation for insstruction lowering rewrite patterns
+-/
 -/
 
 syntax "simp_lowering" : tactic
@@ -34,7 +49,6 @@ macro_rules
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    --Only run `bv_decide` if there are goals left
-    try all_goals bv_decide
+    try all_goals bv_decide --only run `bv_decide` if there are goals left
 
   ))
