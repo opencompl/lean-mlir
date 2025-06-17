@@ -7,7 +7,6 @@ import SSA.Projects.InstCombine.TacticAuto
 open MLIR AST
 
 namespace AliveHandwritten
-
 /-
 Name: SimplifyDivRemOfSelect
 precondition: true
@@ -48,4 +47,9 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_split
   alive_auto
 
-end AliveHandwritten
+def alive_DivRemOfSelect_src2 :=
+  [llvm(64)| {
+  ^bb0(%x : i64, %y : i64):
+    %v2 = llvm.shl %x,  %y : i64
+    llvm.return %v2 : i64
+  }]

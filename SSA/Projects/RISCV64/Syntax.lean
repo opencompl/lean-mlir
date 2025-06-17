@@ -653,3 +653,4 @@ def rem {Γ : Ctxt _} (e₁ e₂: Ctxt.Var Γ .bv) : Expr RV64 Γ .pure .bv  :=
     (regArgs := HVector.nil)
 
 end RISCVExpr
+
