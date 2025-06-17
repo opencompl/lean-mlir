@@ -60,7 +60,7 @@ We provide a `ToString` instance: this is a human-readable name for each type.
 instance {q} : ToString (Ty q) where
   toString := fun
   | .integer => "ℤ"
-  | .modLike => "ℤ/qℤ"
+  | .modLike => "!R"
 
 /--
 We provide a `TyDenote` instance: this is how we translate each
