@@ -49,11 +49,6 @@ def llvm_mul_lower_riscv_noflag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
   lhs := mul_llvm_noflag
   rhs := mul_riscv
 
-
-example (a b : BitVec 128) : a * b = b * a := by bv_decide +acNf
-
--- a b : BitVec 64
--- ⊢ a * b = b * a
 def llvm_mul_lower_riscv_flags : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := mul_llvm_flags
   rhs := mul_riscv

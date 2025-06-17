@@ -88,6 +88,7 @@ private def test_simple2 := [RV64_com| {
   %2 = sub %1, %1 : !i64
        ret %2  : !i64
 }]
+
 /-
 Bellow we implement the case, where an operation has
 one attribute value.
@@ -183,4 +184,3 @@ private def big_test := [RV64_com| {
  %6 = ror %5, %7 : !i64
       ret %6 : !i64
 }]
-

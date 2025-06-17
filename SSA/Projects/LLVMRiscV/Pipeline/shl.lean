@@ -5,7 +5,6 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-open InstCombine
 /-! # SHL (shift left) nsw nuw -/
 
 @[simp_denote]
@@ -14,11 +13,6 @@ def shl_llvm := [LV| {
     %1 = llvm.shl %x, %y : i64
     llvm.return %1 : i64
   }]
-
-#check shl_llvm
-#eval shl_llvm
-#reduce shl_llvm
-#check shl_llvm
 
 @[simp_denote]
 def shl_llvm_nsw := [LV| {
@@ -50,8 +44,6 @@ def shl_riscv := [LV| {
     %3 = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
     llvm.return %3 : i64
   }]
-
-#eval shl_riscv
 
 @[simp_denote]
 def llvm_shl_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
