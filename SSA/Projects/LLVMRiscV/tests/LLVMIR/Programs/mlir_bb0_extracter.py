@@ -94,9 +94,9 @@ def extract_mlir_functions(input_filepath, output_dir="extracted_mlir_functions"
                     "llc",
                     "-march=riscv64", #  targeting RISC-V 64-bit.
                     "-mcpu=generic-rv64", # Example CPU, adjust as needed.
-                    "-mattr=+m,+b"
-                    "-O0"
-                    "-filetype=asm",      # Output assembly file
+                    "-mattr=+m,+b",
+                    "-filetype=asm", 
+                    "-O0",     # Output assembly file
                     llvm_ir_filename,
                     "-o", riscv_assembly_filename
                 ]
@@ -123,5 +123,5 @@ def extract_mlir_functions(input_filepath, output_dir="extracted_mlir_functions"
     print(f"\nFinished extraction and compilation. Total {function_count} functions processed into '{output_dir}/'. 🎉")
 
 if __name__ == "__main__":
-    input_file = "out.mlir" # <<< IMPORTANT: Change this to your actual input file name
-    extract_mlir_functions(input_file, "riscv_output_files", 200)
+    input_file = "out2.mlir" # <<< IMPORTANT: Change this to your actual input file name
+    extract_mlir_functions(input_file, "2riscv_output_files", 1000)

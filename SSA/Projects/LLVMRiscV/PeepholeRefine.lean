@@ -40,6 +40,14 @@ structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : List Ty) where
   correct : ∀ V,
     PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V) := by
       simp_lowering <;> bv_decide
+      PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V) := by
+    simp_peephole
+    simp_alive_undef
+    -- simp_riscv
+    -- simp_alive_ops
+    -- simp_alive_case_bash
+    -- simp_alive_split
+    -- bv_decide
 
 /-!
 ##  Wrapper for the Peephole Rewriter
