@@ -208,7 +208,7 @@ class UnitTest:
     solver_kinduction_verified = "kinduction_verified"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_mba, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
+    solvers = [solver_kinduction_verified] # [solver_mba, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
 
     def __init__(self, ix, test, solver):
         self.ix = ix
