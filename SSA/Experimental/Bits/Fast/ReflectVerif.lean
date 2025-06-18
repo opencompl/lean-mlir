@@ -722,7 +722,7 @@ def mkCarryAssignCircuitNAux {arity : Type _}
   (p : FSM arity) (s : p.α) (n : Nat) : Circuit (Vars p.α arity (n + 1)) :=
     (p.nextBitCirc (some s)).map fun v =>
       match v with
-        | .inl s' => Vars.stateN s' n
+        | .inl t => Vars.stateN t n
         | .inr i => Vars.inputN i n
 
 /--
@@ -768,7 +768,7 @@ def mkInitCarryAssignCircuitAux {arity : Type _}
   Circuit (Vars p.α arity 0) :=
     Circuit.xor
       (Circuit.ofBool (p.initCarry s))
-      (Circuit.var true <| Vars.state0 s)
+      (Circuit.var true <| Vars.stateN s 0)
 
 /--
 Make the circuit that assigns `states[0][:] = initCarry[:]`.
@@ -830,10 +830,11 @@ def mkOutEqZeroCircuitN {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (n : Nat) :
   Circuit (Vars p.α arity (n + 1)) :=
+    -- | f f f
+    -- | t t f
     Circuit.xor
       (Circuit.ofBool false)
       (Circuit.var true <| Vars.outputs ⟨n, by omega⟩)
-
 
 
 /--
@@ -929,7 +930,8 @@ The precondition that assigns all
 -/
 def mkSuccCarryAndOutsAssignPrecond (circs : KInductionCircuits fsm n) :
     Circuit (Vars fsm.α arity (n + 2)) :=
-  circs.cOutAssignCirc ||| circs.cSuccCarryAssignCirc
+  circs.cOutAssignCirc |||
+  circs.cSuccCarryAssignCirc
 
 
 /--
@@ -948,7 +950,7 @@ def mkPostcondSafety (_circs : KInductionCircuits fsm n) :
 The induction hypothesis circuit that checks that if
 the output is zero for all `i ≤ n`, then the output is zero at `i=n+1`.
 -/
-def mkPostcondIndHypNoCycleBreaking {n} (circs : KInductionCircuits fsm n) :
+def mkPostcondIndHypNoCycleBreaking {n} (_circs : KInductionCircuits fsm n) :
     Circuit (Vars fsm.α arity (n + 2)) :=
   mkUnsatImpliesCircuit
     -- | If the output is zero for all `i ≤ n`,
@@ -965,7 +967,7 @@ def mkSafetyCircuit (circs : KInductionCircuits fsm n) :
     Circuit (Vars fsm.α arity (n + 2)) :=
   mkUnsatImpliesCircuit
     (mkSuccCarryAndOutsAssignPrecond circs)
-    (castCircLe <| (mkOutEqZeroCircuitLeN fsm n))
+    (castCircLe <| mkPostcondSafety circs)
 
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
