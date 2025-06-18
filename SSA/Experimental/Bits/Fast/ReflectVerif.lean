@@ -1156,13 +1156,19 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
     logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
-    decideIfZerosAuxVerified' 0 maxIter fsm (KInductionCircuits.mkZero fsm)
+    decideIfZerosAuxVerified' 0 maxIter fsm KInductionCircuits.mkZero
 
 
 /--
 An axiom tracking that the safety has been proven by exhaustion of the state space.
 -/
 axiom decideIfZerosByExhaustionAx {p : Prop}  : p
+
+/--
+An axiom tracking that the safety has been proven by exhaustion of the state space.
+-/
+axiom decideIfZerosByKInductionNoCycleBreakingAx {p : Prop}  : p
+
 
 /--
 An axiom tracking that the safety has been proven by exhaustion of the state space.
