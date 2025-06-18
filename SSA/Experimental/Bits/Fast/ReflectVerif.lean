@@ -870,6 +870,82 @@ theorem mkUnsatImpliesCircuit_eq_false_iff
   rw [mkUnsatImpliesCircuit]
   simp
 
+/-- Make a circuit that checks if two states are disequal. -/
+def mkStateNeqCircuit
+  {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) : Circuit (Vars p.α arity i) :=
+  Circuit.bigAnd <| FinEnum.toList p.α |>.map fun a => ~~~ (s a) ^^^ (t a)
+
+
+/-- if the state circuit is false, then the states are equal under all evaluations. -/
+@[simp]
+theorem mkStateNeqCircuit_eq_false_iff {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) :
+  (∀ envBool, (mkStateNeqCircuit p s t).eval envBool = false) ↔
+  (∀ (envBool : Vars p.α arity i → Bool), ∃ (a : p.α), (s a).eval envBool ≠ (t a).eval envBool) := by
+  simp [mkStateNeqCircuit, Circuit.eval_bigAnd_eq_false_iff]
+
+/-- if the stateNeq circuit is false at a current environment,
+then the states disagree at this environment. -/
+@[simp]
+theorem mkStateNeqCircuit_eq_false_iff₂  {arity : Type _} {i : Nat}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i))
+  (envBool : Vars p.α arity i → Bool) :
+  ((mkStateNeqCircuit p s t).eval envBool = false) ↔
+  ∃ (a : p.α), (s a).eval envBool ≠ (t a).eval envBool := by
+  simp [mkStateNeqCircuit, Circuit.eval_bigAnd_eq_false_iff]
+
+/--
+Make all pairs of indices (i, j) such that 0 ≤ i < j ≤ n
+-/
+def mkLowerTriangularPairs (n : Nat) : List (Nat × Nat) :=
+  let xs := List.range (n + 1) |>.attach
+  xs.flatMap fun i =>
+    let ys := List.range i.val |>.attach
+    ys.map fun j => (j.val, i.val)
+
+
+@[simp]
+theorem mem_mkLowerTriangularPairs {n : Nat} (i j : Nat) :
+  (i, j) ∈ mkLowerTriangularPairs n ↔
+  (i < j ∧ j ≤ n) := by
+  simp [mkLowerTriangularPairs]
+  omega
+
+
+/--
+make the circuit that says that the state at index 'n' is disequal from all states [0..n)
+-/
+def mkStateUniqueCircuitN {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity n) :=
+  let sn : p.α → Circuit (Vars p.α arity n) := fun s =>
+    Circuit.var true (Vars.stateN s n)
+  let circs := (List.range n).attach |>.map fun ⟨i, hi⟩ =>
+    let si : p.α → Circuit (Vars p.α arity n) := fun s =>
+      Circuit.var true (Vars.stateN s i (by simp at hi; omega))
+    (mkStateNeqCircuit p si sn)
+  Circuit.bigOr circs
+
+/--
+make the circuit that witnesses that the states are unique from [0..n]
+-/
+def mkAllPairsUniqueStatesCircuit {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity n) :=
+  let xs := mkLowerTriangularPairs n |>.attach
+  Circuit.bigOr <| xs.map fun ⟨(i, j), hij⟩ =>
+    let si : p.α → Circuit (Vars p.α arity n) := fun s =>
+      Circuit.var true (Vars.stateN s i (by simp at hij; omega))
+    let sj : p.α → Circuit (Vars p.α arity n) := fun s =>
+      Circuit.var true (Vars.stateN s j (by simp at hij; omega))
+    (mkStateNeqCircuit p si sj)
+
+
+
 /-- structure for incrementally building the k-induction circuits. -/
 structure KInductionCircuits {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity] (fsm : FSM arity) (n : Nat) where
@@ -879,8 +955,8 @@ structure KInductionCircuits {arity : Type _}
   cSuccCarryAssignCirc : Circuit (Vars fsm.α arity (n+2))
   -- | Circuit that sets out[i] = out(states[i], inputs[i]) upto 'n'.
   cOutAssignCirc : Circuit (Vars fsm.α arity (n + 2))
-
-
+  -- | Circuit that says that states s0..sn are disequal
+  cStatesUniqueCirc : Circuit (Vars fsm.α arity (n + 1))
 
 namespace KInductionCircuits
 
@@ -896,11 +972,11 @@ def castCircLe {n m : Nat} (c : Circuit (Vars fsm.α arity n)) (hnm : n ≤ m :=
   c.map (fun v => v.castLe hnm)
 
 /-- Make the carry circuit for the k-induction circuits. -/
-def mkZero :
-    KInductionCircuits fsm 0 where
+def mkZero : KInductionCircuits fsm 0 where
   cInitCarryAssignCirc := mkInitCarryAssignCircuit fsm
   cSuccCarryAssignCirc := mkCarryAssignCircuitLeN fsm 1
   cOutAssignCirc := mkOutputAssignCircuitLeN fsm 1
+  cStatesUniqueCirc := mkAllPairsUniqueStatesCircuit fsm 1
 
 
 -- NOTE [Circuit Equivalence As a quotient]:
@@ -923,6 +999,9 @@ def mkSucc
   , cOutAssignCirc :=
       (mkOutputAssignCircuitN fsm (n + 2)) |||
       (castCircLe prev.cOutAssignCirc)
+  , cStatesUniqueCirc :=
+      mkStateUniqueCircuitN fsm (n + 2) |||
+      (castCircLe prev.cStatesUniqueCirc)
   }
 
 /--
@@ -983,68 +1062,6 @@ def mkIndHypCircuitNoCycleBreaking (circs : KInductionCircuits fsm n) :
     -- | Then the output is zero at `i = n+1`
     (mkPostcondIndHypNoCycleBreaking circs)
 
-
-/-- Make a circuit that checks if two states are disequal. -/
-def mkStateNeqCircuit
-  {arity : Type _} {i : Nat}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) : Circuit (Vars p.α arity i) :=
-  Circuit.bigAnd <| FinEnum.toList p.α |>.map fun a => ~~~ (s a) ^^^ (t a)
-
-
-/-- if the state circuit is false, then the states are equal under all evaluations. -/
-@[simp]
-theorem mkStateNeqCircuit_eq_false_iff {arity : Type _} {i : Nat}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i)) :
-  (∀ envBool, (mkStateNeqCircuit p s t).eval envBool = false) ↔
-  (∀ (envBool : Vars p.α arity i → Bool), ∃ (a : p.α), (s a).eval envBool ≠ (t a).eval envBool) := by
-  simp [mkStateNeqCircuit, Circuit.eval_bigAnd_eq_false_iff]
-
-/-- if the stateNeq circuit is false at a current environment,
-then the states disagree at this environment. -/
-@[simp]
-theorem mkStateNeqCircuit_eq_false_iff₂  {arity : Type _} {i : Nat}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (s t : p.α → Circuit (Vars p.α arity i))
-  (envBool : Vars p.α arity i → Bool) :
-  ((mkStateNeqCircuit p s t).eval envBool = false) ↔
-  ∃ (a : p.α), (s a).eval envBool ≠ (t a).eval envBool := by
-  simp [mkStateNeqCircuit, Circuit.eval_bigAnd_eq_false_iff]
-
-/--
-Make all pairs of indices (i, j) such that 0 ≤ i < j ≤ n
--/
-def mkLowerTriangularPairs (n : Nat) : List (Nat × Nat) :=
-  let xs := List.range (n + 1) |>.attach
-  xs.flatMap fun i =>
-    let ys := List.range i.val |>.attach
-    ys.map fun j => (j.val, i.val)
-
-
-@[simp]
-theorem mem_mkLowerTriangularPairs {n : Nat} (i j : Nat) :
-  (i, j) ∈ mkLowerTriangularPairs n ↔
-  (i < j ∧ j ≤ n) := by
-  simp [mkLowerTriangularPairs]
-  omega
-
-/--
-make the circuit that witnesses that the states are unique *after* taking 'i+1' inputs.
-This circuit produce false iff there are two states that are equal in [1..i+1] inputs
--/
-def mkAllPairsUniqueStatesCircuit {arity : Type _}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n+1)) :=
-  let xs := mkLowerTriangularPairs n |>.attach
-  Circuit.bigOr <| xs.map fun ⟨(i, j), hij⟩ =>
-    let si : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
-      Circuit.var true (Vars.stateN s i (by simp at hij; omega))
-    let sj : p.α → Circuit (Vars p.α arity (n+1)) := fun s =>
-      Circuit.var true (Vars.stateN s j (by simp at hij; omega))
-    (mkStateNeqCircuit p si sj)
-
-
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
 out[i] = out(states[i], inputs[i]),
@@ -1056,7 +1073,7 @@ def mkIndHypCycleBreaking (circs : KInductionCircuits fsm n) :
   mkUnsatImpliesCircuit
     (mkSuccCarryAndOutsAssignPrecond circs)
     (mkUnsatImpliesCircuit
-      (castCircLe <| mkAllPairsUniqueStatesCircuit fsm n)
+      (castCircLe <| circs.cStatesUniqueCirc)
       -- | Then the output is zero at `i = n+1`
       (mkPostcondIndHypNoCycleBreaking circs))
 
