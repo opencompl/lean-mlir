@@ -25,6 +25,8 @@ import SSA.Experimental.Bits.Fast.ForLean
 
 import Lean
 
+open Fin.NatCast
+
 initialize Lean.registerTraceClass `Bits.FastVerif
 
 /-
@@ -89,8 +91,8 @@ bitblasting capabilities.
 def _root_.Circuit.toAIGAux [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ExtendingEntrypoint aig :=
   match c with
-  | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
-  | .tru => ⟨aig.mkConstCached true, by apply  LawfulOperator.le_size⟩
+  | .fals => ⟨⟨aig, aig.mkConstCached false⟩, by rfl⟩
+  | .tru => ⟨⟨aig, aig.mkConstCached true⟩, by rfl⟩
   | .var b v =>
     let out := mkAtomCached aig v
     have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v
@@ -149,11 +151,9 @@ theorem _root_.Circuit.toAIGAux_le_size [DecidableEq α] [Fintype α] [Hashable 
   induction c generalizing input
   case tru =>
     simp [Circuit.toAIGAux]
-    have := LawfulOperator.le_size (f := mkConstCached) input true
     omega
   case fals =>
     simp [Circuit.toAIGAux]
-    have := LawfulOperator.le_size (f := mkConstCached) input false
     omega
   case var negated v =>
     simp [Circuit.toAIGAux]
@@ -203,10 +203,8 @@ theorem _root_.Circuit.toAIGAux_decl_eq [DecidableEq α] [Fintype α] [Hashable 
   induction c generalizing input
   case tru =>
     simp [Circuit.toAIGAux]
-    rw [mkConstCached_decl_eq]
   case fals =>
     simp [Circuit.toAIGAux]
-    rw [mkConstCached_decl_eq]
   case var negated v =>
     simp [Circuit.toAIGAux]
     rcases negated with rfl | rfl
@@ -1707,7 +1705,7 @@ theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
     let envBitstream := Bitstream_of_envBool envBool
     let state := fun s => envBool (.state s)
     simp [mkAllPairsUniqueStatesCircuit]
-    intros c k l hkl hc 
+    intros c k l hkl hc
     subst hc
     simp
     specialize h envBitstream state k l (by omega) (by omega)
@@ -2233,7 +2231,7 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     let tStart ← IO.monoMsNow
     let cSafety : Circuit (Vars Empty arity (iter+1)) := circs.mkSafetyCircuit.val
     let tEnd ← IO.monoMsNow
-    let tElapsedMs := (tEnd - tStart) 
+    let tElapsedMs := (tEnd - tStart)
     trace[Bits.FastVerif] m!"Built new safety circuit in '{tElapsedMs}ms'"
     -- | don't use these, they rely on exhaustive enumeration which is crazy slow.
     -- let formatα : fsm.α → Format := fun s => "s" ++ formatDecEqFinset s
@@ -2244,7 +2242,7 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     let tStart ← IO.monoMsNow
     let safetyCert? ← checkCircuitUnsatAux cSafety
     let tEnd ← IO.monoMsNow
-    let tElapsedMs := (tEnd - tStart) 
+    let tElapsedMs := (tEnd - tStart)
     trace[Bits.FastVerif] m!"Established safety property in {tElapsedMs}ms (iter={iter})."
     match safetyCert? with
     | .none =>
@@ -2259,7 +2257,7 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       let tStart ← IO.monoMsNow
       let cIndHyp := circs.mkIndHypCircuitCycleBreaking
       let tEnd ← IO.monoMsNow
-      let tElapsedMs := (tEnd - tStart) 
+      let tElapsedMs := (tEnd - tStart)
       trace[Bits.FastVerif] m!"Built induction circuit in '{tElapsedMs}ms'"
 
       let tStart ← IO.monoMsNow

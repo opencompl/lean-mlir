@@ -13,6 +13,8 @@ import Mathlib.Tactic.FinCases
 
 set_option grind.warning false
 
+open Fin.NatCast
+
 open Mathlib
 
 @[simp] theorem Language.mem_setOf_eq {x : List α} {p : List α → Prop} :
