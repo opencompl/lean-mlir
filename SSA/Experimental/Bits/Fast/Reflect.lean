@@ -87,8 +87,8 @@ bitblasting capabilities.
 def toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ExtendingEntrypoint aig :=
   match c with
-  | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
-  | .tru => ⟨aig.mkConstCached true, by apply  LawfulOperator.le_size⟩
+  | .fals => ⟨⟨aig, aig.mkConstCached false⟩, by rfl⟩
+  | .tru => ⟨⟨aig, aig.mkConstCached true⟩, by rfl⟩
   | .var b v =>
     let out := mkAtomCached aig v
     have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v

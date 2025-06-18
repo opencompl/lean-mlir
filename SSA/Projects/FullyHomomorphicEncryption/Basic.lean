@@ -54,7 +54,7 @@ noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 --   done
 
 def ZMod.toInt (x : ZMod q) : Int := ZMod.cast x
-def ZMod.toFin (x : ZMod q) : Fin q := ZMod.cast x
+def ZMod.toFin (x : ZMod q) : Fin q := (finEquiv q).invFun x
 
 @[simp]
 theorem ZMod.toInt_inj {x y : ZMod q} : x.toInt = y.toInt ↔ x = y := by
