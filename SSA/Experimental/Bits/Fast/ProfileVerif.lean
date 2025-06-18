@@ -13,6 +13,7 @@ Authors: Siddharth Bhat
 -/
 import SSA.Experimental.Bits.Fast.ReflectVerif
 import SSA.Experimental.Bits.TestPredicates
+import SSA.Experimental.Bits.Fast.Aiger
 import Lean
 open Lean Elab Meta
 
@@ -43,17 +44,21 @@ unsafe def main : IO Unit := do
     for p in Bits.testPredicates do
       pix := pix + 1
       IO.println s!"testing predicate '{pix}'"
-      let nIters : Nat := 2
+      let nIters : Nat := 1
       for i in [0:nIters] do
         IO.println s!"Iteration #{i + 1}/{nIters}"
         let fsm := predicateEvalEqFSM p
+        let fn := System.mkFilePath [s!"profile_{pix}.aag"]
+        let handle ← IO.FS.Handle.mk fn IO.FS.Mode.write
+        let stream := IO.FS.Stream.ofHandle handle
+        fsm.toFSM.toAiger.toAagFile stream
         -- let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
-        let ((out, circuitStats), tElapsedCadical) ← timeElapsedMs do
-          let ((out, circuitStats), _coreState, _metaState, _termState) ←
-            fsm.toFSM.decideIfZerosVerified 5 |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-          return (out, circuitStats)
-        let b := out.isSuccess
-        -- IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
-        IO.println s!" (cadical)  is all zeroes: '{b}' | stats: '{repr circuitStats}' | time: '{tElapsedCadical}' ms"
-        IO.println "--"
+        -- let ((out, circuitStats), tElapsedCadical) ← timeElapsedMs do
+        --   let ((out, circuitStats), _coreState, _metaState, _termState) ←
+        --     fsm.toFSM.decideIfZerosVerified 5 |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
+        --   return (out, circuitStats)
+        -- let b := out.isSuccess
+        -- -- IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"
+        -- IO.println s!" (cadical)  is all zeroes: '{b}' | stats: '{repr circuitStats}' | time: '{tElapsedCadical}' ms"
+        -- IO.println "--"
   return ()
