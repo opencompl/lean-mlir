@@ -706,6 +706,7 @@ theorem Circuit.eval_bigAnd_eq_false_iff
 
 
 structure CircuitStats where
+  iter : Nat := 0
   size : Nat := 0
 
 deriving Repr, Inhabited, DecidableEq, Hashable
@@ -1063,6 +1064,7 @@ def mkIndHypCycleBreaking (circs : KInductionCircuits fsm n) :
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     {fsm : FSM arity} (circs : KInductionCircuits fsm n) : CircuitStats where
+  iter := n
   size := circs.cSuccCarryAssignCirc.size +
     circs.cOutAssignCirc.size +
     circs.cInitCarryAssignCirc.size
@@ -1095,11 +1097,12 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     (iter : Nat) (maxIter : Nat)
     (fsm : FSM arity)
-    (circs : KInductionCircuits fsm iter) :
-    TermElabM (DecideIfZerosOutput × CircuitStats) := do
+    (circs : KInductionCircuits fsm iter)
+    (stats : Array CircuitStats) :
+    TermElabM (DecideIfZerosOutput × Array CircuitStats) := do
   withTraceNode `trace.Bits.Fast (fun _ => return s!"K-induction (iter={iter})") do
     if iter ≥ maxIter && maxIter != 0 then
-      return (.exhaustedIterations maxIter, circs.stats)
+      return (.exhaustedIterations maxIter, stats.push circs.stats)
     let tStart ← IO.monoMsNow
     let cSafety : Circuit (Vars fsm.α arity (iter+2)) := circs.mkSafetyCircuit
     let tEnd ← IO.monoMsNow
@@ -1119,11 +1122,11 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
     match safetyCert? with
     | .none =>
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
-      return (.safetyFailure iter, circs.stats)
+      return (.safetyFailure iter, stats.push circs.stats)
     | .some safetyCert =>
       if iter ≥ 1 + fsm.stateSpaceSize then
         trace[Bits.FastVerif] s!"Proved safety for the entire state space (state space size: {fsm.stateSpaceSize}). No need to build induction circuit."
-        return (.provenByExhaustion iter safetyCert, circs.stats)
+        return (.provenByExhaustion iter safetyCert, stats.push circs.stats)
 
       trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
       let tStart ← IO.monoMsNow
@@ -1143,22 +1146,22 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       match indCert? with
       | .some indCert =>
         trace[Bits.FastVerif] s!"Inductive invariant established (iter={iter})."
-        return (.provenByKIndCycleBreaking iter safetyCert indCert, circs.stats)
+        return (.provenByKIndCycleBreaking iter safetyCert indCert, stats.push circs.stats)
       | .none =>
         trace[Bits.FastVerif] s!"Unable to establish inductive invariant. Trying next iteration ({iter+1})..."
-    decideIfZerosAuxVerified' (iter + 1) maxIter fsm  circs.mkSucc
+    decideIfZerosAuxVerified' (iter + 1) maxIter fsm  circs.mkSucc (stats.push circs.stats)
 
 
 @[nospecialize]
 def _root_.FSM.decideIfZerosVerified {arity : Type _}
     [DecidableEq arity]  [Fintype arity] [Hashable arity]
     (fsm : FSM arity) (maxIter : Nat) :
-    TermElabM (DecideIfZerosOutput × CircuitStats) :=
+    TermElabM (DecideIfZerosOutput × Array CircuitStats) :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
-    logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
-    decideIfZerosAuxVerified' 0 maxIter fsm KInductionCircuits.mkZero
+    -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
+    decideIfZerosAuxVerified' 0 maxIter fsm KInductionCircuits.mkZero #[]
 
 
 /--
