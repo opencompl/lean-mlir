@@ -288,7 +288,7 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
     | .some ⟨v, hv⟩ =>
       .some ⟨.ret v, by
         unfold Ctxt.Valuation.eval at hv
-        simp only [EffectKind.toMonad_pure, Com.denote_ret, hv, Id.pure_eq, implies_true]
+        simp only [EffectKind.toMonad_pure, Com.denote_ret, hv, Id.pure_eq', implies_true]
       ⟩
   | .var (α := ω) e body =>
     match Com.deleteVar? (Deleted.snoc DEL) body with
@@ -359,7 +359,7 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
         { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation),
           com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq,
+          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq',
             Ctxt.Valuation.comap_id]
           intros V
           apply hbody

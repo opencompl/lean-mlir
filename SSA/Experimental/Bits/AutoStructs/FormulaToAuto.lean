@@ -1486,7 +1486,7 @@ lemma TermBinop.alt_lang {t₁ t₂ : Term} (op : TermBinop) :
   simp
   constructor
   · rintro heq
-    let bvs' := bvs.bvs.append
+    let bvs' := bvs.bvs ++
                   (t₁.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ t₂.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ List.Vector.nil)
                 |>.transport swapLastTwoBlock
     use ⟨_, bvs'⟩
@@ -1703,7 +1703,7 @@ lemma TermUnop.alt_lang {t : Term} (op : TermUnop) :
   generalize_proofs h₁ h₂ h₃ h₄ h₅
   constructor
   · rintro heq
-    let bvs' := bvs.bvs.append (t.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ List.Vector.nil) |>.transport swapLastTwo
+    let bvs' := bvs.bvs ++ (t.evalFinBV (λ n ↦ bvs.bvs.get n) ::ᵥ List.Vector.nil) |>.transport swapLastTwo
     use ⟨_, bvs'⟩
     split_ands
     · simp [bvs']

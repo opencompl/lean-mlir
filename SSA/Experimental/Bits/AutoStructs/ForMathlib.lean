@@ -11,16 +11,16 @@ open Mathlib
 
 @[simp]
 lemma List.Vector.append_get_lt {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
-    (x.append y).get i = x.get (i.castLT hlt) := by
+    (x ++ y).get i = x.get (i.castLT hlt) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [List.Vector.append, List.Vector.get]
+  dsimp [List.Vector.get]
   apply List.getElem_append_left
 
 @[simp]
 lemma List.Vector.append_get_ge {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: n ≤ i) :
-    (x.append y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
+    (x ++ y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [List.Vector.append, List.Vector.get]
+  dsimp [List.Vector.get]
   rcases hx
   apply List.getElem_append_right hlt
 

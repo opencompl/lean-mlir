@@ -15,6 +15,9 @@ import Mathlib.Data.Finset.Piecewise
 
 set_option deprecated.oldSectionVars true
 
+theorem Id.pure_eq' (a : α) : (pure a : Id α) = a := rfl
+theorem Id.bind_eq' (x : Id α) (f : α → id β) : x >>= f = f x := rfl
+
 open Ctxt (Var VarSet Valuation)
 open TyDenote (toType)
 
@@ -897,8 +900,8 @@ def Com.changeVars : Com d Γ eff ty →
   induction c using Com.recPure
   · simp
   · rename_i a
-    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq,
-      Id.bind_eq, returnVar_var, a, denote]
+    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
+      Id.bind_eq', returnVar_var, a, denote]
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
@@ -1303,7 +1306,7 @@ assignment of that variable in the input valuation -/
   · rw [outContextHom_var]
     rename_i a
     simp only [denoteLets, EffectKind.toMonad_pure, outContext_var,
-    Valuation.cast_rfl, Id.pure_eq, Id.bind_eq, Ctxt.Hom.unSnoc_apply, Valuation.snoc_toSnoc, a]
+    Valuation.cast_rfl, Id.pure_eq', Id.bind_eq', Ctxt.Hom.unSnoc_apply, Valuation.snoc_toSnoc, a]
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
@@ -2210,14 +2213,14 @@ theorem denote_matchVar2_of_subset
 
   induction matchLets generalizing v ma varMap₁ varMap₂ t
   case nil =>
-    simp only [Lets.denote, Id.pure_eq]
+    simp only [Lets.denote, Id.pure_eq']
     rw [mem_lookup_iff.mpr ?_]
     apply h_sub <| mem_lookup_iff.mp <| matchVar_nil h_matchVar
   case var matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
       simp only [Option.mem_def, Ctxt.get?, Var.succ_eq_toSnoc, Lets.denote,
-        EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq, Valuation.snoc_toSnoc] at *
+        EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq', Valuation.snoc_toSnoc] at *
       rw [Var.toSnoc, matchVar_var_succ_eq] at h_matchVar
       apply ih h_sub h_matchVar
 
