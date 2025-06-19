@@ -80,7 +80,9 @@ for file in os.listdir(benchmark_dir):
             while l:
                 if "Bitwuzla " in l: 
                     cegb = False
-                    if "counter" in l : 
+                    if "failed" in l : 
+                        print(l)
+                    elif "counter" in l : 
                         cegb = True
                         tot = float(l.split("after ")[1].split("ms")[0])
                         if r == 0:

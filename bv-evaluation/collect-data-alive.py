@@ -19,6 +19,16 @@ col = [
 "#fb9a99",
 "#e31a1c"]
 
+def clear_folder():
+    for file in os.listdir(RESULTS_DIR):
+        file_path = os.path.join(RESULTS_DIR, file)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 
 def parse_tacbenches(file_name, raw):
