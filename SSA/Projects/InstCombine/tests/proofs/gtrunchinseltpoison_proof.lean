@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gtrunchinseltpoison_proof
 theorem test5_thm (e : IntW 32) : trunc 32 (lshr (zext 128 e) (const? 128 16)) ⊑ lshr e (const? 32 16) := by
@@ -294,15 +295,13 @@ theorem trunc_shl_shl_var_thm (e e_1 : IntW 64) :
 theorem PR44545_thm (e e_1 : IntW 32) :
   add
       (trunc 16
-        (select (icmp IntPredicate.eq e_1 (const? 32 0)) (const? 32 0)
+        (select (icmp IntPred.eq e_1 (const? 32 0)) (const? 32 0)
           (add e (const? 32 1) { «nsw» := true, «nuw» := true })))
       (const? 16 (-1)) { «nsw» := true, «nuw» := false } ⊑
-    select (icmp IntPredicate.eq e_1 (const? 32 0)) (const? 16 (-1)) (trunc 16 e) := by
+    select (icmp IntPred.eq e_1 (const? 32 0)) (const? 16 (-1)) (trunc 16 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

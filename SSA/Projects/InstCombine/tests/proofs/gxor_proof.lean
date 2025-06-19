@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gxor_proof
 theorem test0_thm (e : IntW 1) : LLVM.xor e (const? 1 0) ⊑ e := by
@@ -86,7 +87,7 @@ theorem test7_thm (e e_1 : IntW 32) :
 
 
 theorem test9_thm (e : IntW 8) :
-  icmp IntPredicate.eq (LLVM.xor e (const? 8 123)) (const? 8 34) ⊑ icmp IntPredicate.eq e (const? 8 89) := by
+  icmp IntPred.eq (LLVM.xor e (const? 8 123)) (const? 8 34) ⊑ icmp IntPred.eq e (const? 8 89) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -118,7 +119,7 @@ theorem test11_thm (e : IntW 8) :
 
 
 theorem test12_thm (e : IntW 8) :
-  icmp IntPredicate.ne (LLVM.xor e (const? 8 4)) (const? 8 0) ⊑ icmp IntPredicate.ne e (const? 8 4) := by
+  icmp IntPred.ne (LLVM.xor e (const? 8 4)) (const? 8 0) ⊑ icmp IntPred.ne e (const? 8 4) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -165,7 +166,7 @@ theorem fold_zext_xor_sandwich_thm (e : IntW 1) :
 
 
 theorem test23_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.eq (LLVM.xor e_1 e) e ⊑ icmp IntPredicate.eq e_1 (const? 32 0) := by
+  icmp IntPred.eq (LLVM.xor e_1 e) e ⊑ icmp IntPred.eq e_1 (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -175,7 +176,7 @@ theorem test23_thm (e e_1 : IntW 32) :
 
 
 theorem test24_thm (e e_1 : IntW 32) :
-  icmp IntPredicate.ne (LLVM.xor e_1 e) e ⊑ icmp IntPredicate.ne e_1 (const? 32 0) := by
+  icmp IntPred.ne (LLVM.xor e_1 e) e ⊑ icmp IntPred.ne e_1 (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -195,7 +196,7 @@ theorem test25_thm (e e_1 : IntW 32) :
 
 
 theorem test27_thm (e e_1 e_2 : IntW 32) :
-  zext 32 (icmp IntPredicate.eq (LLVM.xor e_2 e_1) (LLVM.xor e_2 e)) ⊑ zext 32 (icmp IntPredicate.eq e_1 e) := by
+  zext 32 (icmp IntPred.eq (LLVM.xor e_2 e_1) (LLVM.xor e_2 e)) ⊑ zext 32 (icmp IntPred.eq e_1 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -527,5 +528,3 @@ theorem select_or_disjoint_or_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

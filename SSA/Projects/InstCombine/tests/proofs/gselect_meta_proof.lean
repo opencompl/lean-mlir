@@ -8,12 +8,13 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gselect_meta_proof
 theorem foo_thm (e : IntW 32) :
-  select (icmp IntPredicate.sgt e (const? 32 2)) (add e (const? 32 20) { «nsw» := true, «nuw» := false })
+  select (icmp IntPred.sgt e (const? 32 2)) (add e (const? 32 20) { «nsw» := true, «nuw» := false })
       (add e (const? 32 (-20))) ⊑
-    add e (select (icmp IntPredicate.sgt e (const? 32 2)) (const? 32 20) (const? 32 (-20))) := by
+    add e (select (icmp IntPred.sgt e (const? 32 2)) (const? 32 20) (const? 32 (-20))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -33,9 +34,9 @@ theorem shrink_select_thm (e : IntW 32) (e_1 : IntW 1) :
 
 
 theorem foo2_thm (e e_1 : IntW 32) :
-  select (icmp IntPredicate.sgt e_1 (const? 32 2)) (add e_1 e { «nsw» := true, «nuw» := false })
+  select (icmp IntPred.sgt e_1 (const? 32 2)) (add e_1 e { «nsw» := true, «nuw» := false })
       (sub e_1 e { «nsw» := true, «nuw» := false }) ⊑
-    add e_1 (select (icmp IntPredicate.sgt e_1 (const? 32 2)) e (sub (const? 32 0) e)) := by
+    add e_1 (select (icmp IntPred.sgt e_1 (const? 32 2)) e (sub (const? 32 0) e)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -82,5 +83,3 @@ theorem select_ashr_thm (e e_1 : IntW 128) (e_2 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -8,10 +8,11 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gnarrow_proof
 theorem test1_thm (e e_1 : IntW 32) :
-  trunc 1 (LLVM.and (zext 32 (icmp IntPredicate.slt e_1 e)) (zext 32 (icmp IntPredicate.sgt e_1 e))) ⊑
+  trunc 1 (LLVM.and (zext 32 (icmp IntPred.slt e_1 e)) (zext 32 (icmp IntPred.sgt e_1 e))) ⊑
     const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
@@ -47,5 +48,3 @@ theorem shrink_and_thm (e : IntW 64) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -1,17 +1,12 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.Fin.Basic
-import Mathlib.Tactic.LiftLets
-import SSA.Projects.InstCombine.ForLean
-import SSA.Experimental.Bits.FastCopy.Defs
-import SSA.Experimental.Bits.FastCopy.BitStream
+
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
+import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Projects.InstCombine.ForStd
 
-open Copy
-
-namespace AutoStructs
+open Fin.NatCast
 
 -- A bunch of maps from `Fin n` to `Fin m` that we use to
 -- lift and project variables when we interpret formulas
@@ -29,36 +24,23 @@ def liftMax1 (n m : Nat) : Fin n → Fin (max n m) :=
 def liftMax2 (n m : Nat) : Fin m → Fin (max n m) :=
   fun k => k.castLE (by omega)
 
-/-!
-# Term Language
-This file defines the term language the decision procedure operates on,
-and the denotation of these terms into operations on bitstreams -/
+def liftLast3 n : Fin 3 → Fin (n + 3)
+| 0 => n
+| 1 => n + 1
+| 2 => Fin.last (n + 2)
+def liftMaxSuccSucc1 (n m : Nat) : Fin (n + 1) → Fin (max n m + 3) :=
+  fun k => if _ : k = Fin.last n then (max n m).cast else k.castLE (by omega)
+def liftMaxSuccSucc2 (n m : Nat) : Fin (m + 1) → Fin (max n m + 3) :=
+  fun k => if _ : k = Fin.last m then max n m + 1 else k.castLE (by omega)
+def liftExcept3 n : Fin n → Fin (n + 3) :=
+  fun k => Fin.castLE (by omega) k
 
-instance : Inhabited Term where
-  default := .zero
-
--- From the FastCopy module
-open Term
-
-/-- `t.arity` is the max free variable id that occurs in the given term `t`,
-and thus is an upper bound on the number of free variables that occur in `t`.
-
-Note that the upper bound is not perfect:
-a term like `var 10` only has a single free variable, but its arity will be `11` -/
-@[simp] def Term.arity : Term → Nat
-| (var n) => n+1
-| zero => 0
-| one => 0
-| negOne => 0
-| ofNat _ => 0
-| Term.and t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.or t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.not t => arity t
-| add t₁ t₂ => max (arity t₁) (arity t₂)
-| sub t₁ t₂ => max (arity t₁) (arity t₂)
-| neg t => arity t
-| shiftL t _ => arity t
+@[simp] lemma liftMaxSuccSucc1_cast {x : Fin n} : liftMaxSuccSucc1 n m x.castSucc = x.castLE (by omega) := by
+  rcases x
+  simp [liftMaxSuccSucc1, Fin.last]; omega
+@[simp] lemma liftMaxSuccSucc2_cast {x : Fin m} : liftMaxSuccSucc2 n m x.castSucc = x.castLE (by omega) := by
+  rcases x
+  simp [liftMaxSuccSucc2, Fin.last]; omega
 
 /--
 Evaluate a term `t` to the BitVec it represents.
@@ -67,7 +49,7 @@ This differs from `Term.eval` in that `Term.evalFin` uses `Term.arity` to
 determine the number of free variables that occur in the given term,
 and only require that many bitstream values to be given in `vars`.
 -/
-@[simp] def _root_.Copy.Term.evalFinBV (t : Term) (vars : Fin (arity t) → BitVec w) : BitVec w :=
+@[simp] def Term.evalFinBV (t : Term) (vars : Fin (arity t) → BitVec w) : BitVec w :=
   match t with
   | .var n => vars (Fin.last n)
   | .zero    => BitVec.zero w
@@ -107,7 +89,7 @@ lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.a
   simp only
   congr; ext1; simp_all
 
-@[simp] def _root_.Copy.Term.evalNat (t : Term) (vars : Nat → BitVec w) : BitVec w :=
+@[simp] def Term.evalNat (t : Term) (vars : Nat → BitVec w) : BitVec w :=
   match t with
   | .var n => vars n
   | .zero    => BitVec.zero w
@@ -139,12 +121,12 @@ lemma evalFin_eq {t : Term} {vars1 : Fin t.arity → BitVec w1} {vars2 : Fin t.a
   | .neg t       => -(t.evalNat vars)
   | .shiftL a n => (a.evalNat vars) <<< n
 
-def _root_.Copy.Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
+def Term.language (t : Term) : Set (BitVecs (t.arity + 1)) :=
   { bvs : BitVecs (t.arity + 1) | t.evalFinBV (fun n => bvs.bvs.get n) = bvs.bvs.get t.arity }
 
 inductive RelationOrdering
 | lt | le | gt | ge
-deriving Repr
+deriving Repr, Fintype
 
 inductive Relation
 | eq
@@ -236,7 +218,7 @@ def Formula.arity : Formula → Nat
 | binop _ φ1 φ2 => max φ1.arity φ2.arity
 
 @[simp]
-def _root_.Copy.WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
+def WidthPredicate.sat (wp : WidthPredicate) (w n : Nat) : Bool :=
   match wp with
   | .eq => w = n
   | .neq => w ≠ n
@@ -323,23 +305,13 @@ lemma formula_language_case_atom :
       simp [List.Vector.transport, liftMaxSucc1] at h1
       unfold n; simp +zetaDelta; rw [←h1]
       congr; ext1 k
-      split_ifs with h
-      · exfalso
-        have _ : k < t1.arity := by simp
-        have _ : k = t1.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-        omega
-      · congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
+      congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
     have ht2 : bvsb.bvs.get (Fin.last (n+1)) = t2.evalFinBV fun n => bvsb.bvs.get n := by
       unfold Term.language at h2
       simp [List.Vector.transport, liftMaxSucc2] at h2
       unfold n; simp +zetaDelta only [Formula.arity, Fin.natCast_self]; rw [←h2]
       congr; ext1 k
-      split_ifs with h
-      · exfalso
-        have _ : k < t2.arity := by simp
-        have _ : k = t2.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-        omega
-      · congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
+      congr; ext; simp; rw [Nat.mod_eq_of_lt]; omega
     have hw : bvsb.w = bvs.w := by rw [←heqb]; simp
     have heq1 : (t1.evalFinBV fun n => bvsb.bvs.get n) =
         hw ▸ t1.evalFinBV fun n => bvs.bvs.get $ n.castLE (by simp) := by
@@ -362,7 +334,7 @@ lemma formula_language_case_atom :
     simp
     let bv1 := t1.evalFinBV fun k => bvs.bvs.get $ k.castLE (by simp)
     let bv2 := t2.evalFinBV fun k => bvs.bvs.get $ k.castLE (by simp)
-    use ⟨bvs.w, bvs.bvs.append $ bv1 ::ᵥ bv2 ::ᵥ List.Vector.nil⟩
+    use ⟨bvs.w, bvs.bvs ++ bv1 ::ᵥ bv2 ::ᵥ List.Vector.nil⟩
     rcases bvs with ⟨w, bvs⟩
     simp
     constructor
@@ -379,21 +351,11 @@ lemma formula_language_case_atom :
         rw [List.Vector.append_get_ge (by dsimp; rw [Nat.mod_eq_of_lt]; omega)]
         rw [helper1 (by ext; simp; rw [Nat.mod_eq_of_lt] <;> omega)]
         unfold bv1
-        congr; ext1 k; split_ifs
-        · exfalso
-          have _ : k < t1.arity := by simp
-          have _ : k = t1.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-          omega
-        · simp; congr 1
+        congr;
       · unfold l2 Term.language; simp [List.Vector.transport, liftMaxSucc2]
         rw [helper2 (by ext; simp)]
         unfold bv2
-        congr; ext1 k; split_ifs
-        · exfalso
-          have _ : k < t2.arity := by simp
-          have _ : k = t2.arity := by rcases k with ⟨k, hk⟩; simp_all [Fin.last]
-          omega
-        · simp; congr 1
+        congr
     · ext1; simp
       next i =>
         simp [List.Vector.transport, liftExcept2]
@@ -442,7 +404,7 @@ theorem formula_language (φ : Formula) :
       simp at hbvs; simp [←hbvs, List.Vector.transport]; congr
     · intros heq
       use ⟨w,
-        bvs.append ((t.evalFinBV fun k => bvs.get $ k.castLE (by simp)) ::ᵥ List.Vector.nil)⟩
+        bvs ++ ((t.evalFinBV fun k => bvs.get $ k.castLE (by simp)) ::ᵥ List.Vector.nil)⟩
       unfold Term.language
       simp [BitVecs.transport, List.Vector.transport] at heq ⊢
       constructor; assumption

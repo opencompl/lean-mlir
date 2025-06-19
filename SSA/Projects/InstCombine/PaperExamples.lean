@@ -35,7 +35,7 @@ theorem shift_mul:
   · simp
 
 /--
-info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Quot.sound]
+info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms shift_mul
 
@@ -70,6 +70,7 @@ theorem bitvec_AddSub_1309 :
   }] := by
     simp_alive_peephole
     simp_alive_undef
+    simp_alive_ops
     simp_alive_case_bash
     simp
 

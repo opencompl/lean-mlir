@@ -1,8 +1,6 @@
 import SSA.Core.MLIRSyntax.PrettyEDSL
 import SSA.Projects.FullyHomomorphicEncryption.Syntax
 
-import Mathlib.Deprecated.NatLemmas
-
 namespace MLIR.EDSL.Pretty
 open Lean
 

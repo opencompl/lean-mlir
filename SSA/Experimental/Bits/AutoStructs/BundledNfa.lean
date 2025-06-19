@@ -1,10 +1,5 @@
-import Batteries.Data.Fin.Basic
-import Mathlib.Computability.NFA
-import Mathlib.Data.FinEnum
-import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Vector.Defs
-import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
+import SSA.Experimental.Bits.FinEnum
 
 structure NFA' (n : Nat) where
   σ : Type
@@ -81,6 +76,10 @@ def determinize (M : NFA' n) : NFA' n where
 
 lemma neg_eq {M : NFA' n} : M.neg = M.determinize.flipAccept := by rfl
 
+def reverse (M : NFA' n) : NFA' n where
+  σ := _
+  M := M.M.reverse
+
 def lift (f : Fin n → Fin m) (M : NFA' n) : NFA' m where
   σ := _
   M := M.M.lift f
@@ -98,3 +97,7 @@ lemma lift_accepts (M : NFA' n) (f : Fin n → Fin m) :
 lemma proj_accepts (M : NFA' m) (f : Fin n → Fin m) :
     (M.proj f).accepts = BitVecs.transport f '' M.accepts := by
   simp [accepts, accepts', proj]
+
+end NFA'
+
+class DecidableNFA' (M : NFA' α) [Fintype M.σ] [DecidableEq M.σ] [DecidableNFA M.M]

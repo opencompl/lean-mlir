@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gcast_proof
 theorem test2_thm (e : IntW 8) : zext 64 (zext 32 (zext 16 e)) ⊑ zext 64 e := by
@@ -29,7 +30,7 @@ theorem test3_thm (e : IntW 64) : zext 64 (trunc 8 e) ⊑ LLVM.and e (const? 64 
 
 
 theorem test4_thm (e e_1 : IntW 32) :
-  zext 32 (zext 8 (icmp IntPredicate.slt e_1 e)) ⊑ zext 32 (icmp IntPredicate.slt e_1 e) := by
+  zext 32 (zext 8 (icmp IntPred.slt e_1 e)) ⊑ zext 32 (icmp IntPred.slt e_1 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -93,7 +94,7 @@ theorem test18_thm (e : IntW 8) : trunc 16 (sext 32 e) ⊑ sext 16 e := by
 
 
 theorem test19_thm (e : IntW 32) :
-  icmp IntPredicate.slt (sext 64 e) (const? 64 12345) ⊑ icmp IntPredicate.slt e (const? 32 12345) := by
+  icmp IntPred.slt (sext 64 e) (const? 64 12345) ⊑ icmp IntPred.slt e (const? 32 12345) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -102,7 +103,7 @@ theorem test19_thm (e : IntW 32) :
     all_goals sorry
 
 
-theorem test20_thm (e : IntW 1) : icmp IntPredicate.slt (zext 32 e) (const? 32 (-1)) ⊑ const? 1 0 := by
+theorem test20_thm (e : IntW 1) : icmp IntPred.slt (zext 32 e) (const? 32 (-1)) ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -139,7 +140,7 @@ theorem test23_thm (e : IntW 32) : zext 32 (trunc 16 e) ⊑ LLVM.and e (const? 3
 
 
 theorem test24_thm (e : IntW 1) :
-  icmp IntPredicate.ne (select e (const? 32 14) (const? 32 1234)) (const? 32 0) ⊑ const? 1 1 := by
+  icmp IntPred.ne (select e (const? 32 14) (const? 32 1234)) (const? 32 0) ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -159,8 +160,8 @@ theorem test29_thm (e e_1 : IntW 32) :
 
 
 theorem test31_thm (e : IntW 64) :
-  icmp IntPredicate.eq (LLVM.and (trunc 32 e) (const? 32 42)) (const? 32 10) ⊑
-    icmp IntPredicate.eq (LLVM.and e (const? 64 42)) (const? 64 10) := by
+  icmp IntPred.eq (LLVM.and (trunc 32 e) (const? 32 42)) (const? 32 10) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 64 42)) (const? 64 10) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -179,8 +180,8 @@ theorem test34_thm (e : IntW 16) : trunc 16 (lshr (zext 32 e) (const? 32 8)) ⊑
 
 
 theorem test36_thm (e : IntW 32) :
-  icmp IntPredicate.eq (trunc 8 (lshr e (const? 32 31))) (const? 8 0) ⊑
-    icmp IntPredicate.sgt e (const? 32 (-1)) := by
+  icmp IntPred.eq (trunc 8 (lshr e (const? 32 31))) (const? 8 0) ⊑
+    icmp IntPred.sgt e (const? 32 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -190,7 +191,7 @@ theorem test36_thm (e : IntW 32) :
 
 
 theorem test37_thm (e : IntW 32) :
-  icmp IntPredicate.eq (trunc 8 (LLVM.or (lshr e (const? 32 31)) (const? 32 512))) (const? 8 11) ⊑ const? 1 0 := by
+  icmp IntPred.eq (trunc 8 (LLVM.or (lshr e (const? 32 31)) (const? 32 512))) (const? 8 11) ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -200,8 +201,8 @@ theorem test37_thm (e : IntW 32) :
 
 
 theorem test38_thm (e : IntW 32) :
-  zext 64 (LLVM.xor (zext 8 (icmp IntPredicate.eq e (const? 32 (-2)))) (const? 8 1)) ⊑
-    zext 64 (icmp IntPredicate.ne e (const? 32 (-2))) := by
+  zext 64 (LLVM.xor (zext 8 (icmp IntPred.eq e (const? 32 (-2)))) (const? 8 1)) ⊑
+    zext 64 (icmp IntPred.ne e (const? 32 (-2))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -389,7 +390,7 @@ theorem test59_thm (e e_1 : IntW 8) :
 
 
 theorem test67_thm (e : IntW 1) (e_1 : IntW 32) :
-  icmp IntPredicate.eq
+  icmp IntPred.eq
       (trunc 8
         (ashr
           (LLVM.xor
@@ -646,8 +647,8 @@ theorem pr33078_4_thm (e : IntW 3) :
 
 
 theorem test94_thm (e : IntW 32) :
-  sext 64 (LLVM.xor (sext 8 (icmp IntPredicate.eq e (const? 32 (-2)))) (const? 8 (-1))) ⊑
-    sext 64 (icmp IntPredicate.ne e (const? 32 (-2))) := by
+  sext 64 (LLVM.xor (sext 8 (icmp IntPred.eq e (const? 32 (-2)))) (const? 8 (-1))) ⊑
+    sext 64 (icmp IntPred.ne e (const? 32 (-2))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -666,5 +667,3 @@ theorem test95_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

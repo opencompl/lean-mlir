@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gsext_proof
 theorem test4_thm (e : IntW 32) :
@@ -65,7 +66,7 @@ theorem test10_thm (e : IntW 32) :
 
 
 theorem test13_thm (e : IntW 32) :
-  sext 32 (icmp IntPredicate.eq (LLVM.and e (const? 32 8)) (const? 32 0)) ⊑
+  sext 32 (icmp IntPred.eq (LLVM.and e (const? 32 8)) (const? 32 0)) ⊑
     add (LLVM.and (lshr e (const? 32 3)) (const? 32 1)) (const? 32 (-1)) { «nsw» := true, «nuw» := false } := by
     simp_alive_undef
     simp_alive_ops
@@ -76,7 +77,7 @@ theorem test13_thm (e : IntW 32) :
 
 
 theorem test14_thm (e : IntW 16) :
-  sext 32 (icmp IntPredicate.ne (LLVM.and e (const? 16 16)) (const? 16 16)) ⊑
+  sext 32 (icmp IntPred.ne (LLVM.and e (const? 16 16)) (const? 16 16)) ⊑
     sext 32
       (add (LLVM.and (lshr e (const? 16 4)) (const? 16 1)) (const? 16 (-1)) { «nsw» := true, «nuw» := false }) := by
     simp_alive_undef
@@ -88,7 +89,7 @@ theorem test14_thm (e : IntW 16) :
 
 
 theorem test15_thm (e : IntW 32) :
-  sext 32 (icmp IntPredicate.ne (LLVM.and e (const? 32 16)) (const? 32 0)) ⊑
+  sext 32 (icmp IntPred.ne (LLVM.and e (const? 32 16)) (const? 32 0)) ⊑
     ashr (shl e (const? 32 27)) (const? 32 31) := by
     simp_alive_undef
     simp_alive_ops
@@ -99,7 +100,7 @@ theorem test15_thm (e : IntW 32) :
 
 
 theorem test16_thm (e : IntW 16) :
-  sext 32 (icmp IntPredicate.eq (LLVM.and e (const? 16 8)) (const? 16 8)) ⊑
+  sext 32 (icmp IntPred.eq (LLVM.and e (const? 16 8)) (const? 16 8)) ⊑
     sext 32 (ashr (shl e (const? 16 12)) (const? 16 15)) := by
     simp_alive_undef
     simp_alive_ops
@@ -158,5 +159,3 @@ theorem smear_set_bit_different_dest_type_wider_dst_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

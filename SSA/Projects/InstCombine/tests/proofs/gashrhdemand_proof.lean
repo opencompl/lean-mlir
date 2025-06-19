@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gashrhdemand_proof
 theorem srem2_ashr_mask_thm (e : IntW 32) :
@@ -23,7 +24,7 @@ theorem srem2_ashr_mask_thm (e : IntW 32) :
 
 theorem srem8_ashr_mask_thm (e : IntW 32) :
   LLVM.and (ashr (LLVM.srem e (const? 32 8)) (const? 32 31)) (const? 32 2) ⊑
-    select (icmp IntPredicate.ugt (LLVM.and e (const? 32 (-2147483641))) (const? 32 (-2147483648))) (const? 32 2)
+    select (icmp IntPred.ugt (LLVM.and e (const? 32 (-2147483641))) (const? 32 (-2147483648))) (const? 32 2)
       (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
@@ -54,5 +55,3 @@ theorem ashr_can_be_lshr_2_thm (e : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -1,3 +1,6 @@
+*.xz
+*.jpeg
+*.pdf
 *.sqlite3
 .venv/
 *.sqlite3.log

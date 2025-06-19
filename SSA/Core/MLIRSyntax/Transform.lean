@@ -35,9 +35,12 @@ section Monads
   errors.
 -/
 
-abbrev ExceptM  (d : Dialect) := Except (TransformError d.Ty)
+abbrev ExceptM  (_ : Dialect) := Except TransformError
 abbrev BuilderM (d : Dialect) := StateT NameMapping (ExceptM d)
 abbrev ReaderM  (d : Dialect) := ReaderT NameMapping (ExceptM d)
+
+instance : Inhabited (ReaderT NameMapping (ExceptM d) α) where
+  default := throw <| .generic ""
 
 instance {d : Dialect} : MonadLift (ReaderM d) (BuilderM d) where
   monadLift x := do (ReaderT.run x (←get) : ExceptM ..)
@@ -58,6 +61,12 @@ end Monads
   returns with `TransformReturn`.
   - These three automatically give an instance of `TransformDialect`.
 -/
+
+/- TODO: the above mentions a `TransformDialect`, but such a class does not
+          exist. Was it removed for some reason, or did we just not implement it?
+          It would be nice to not have to spell out the three different classes
+          in, e.g., `mkCom` -/
+
 class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
   mkTy   : MLIRType φ → ExceptM d d.Ty
 
@@ -83,6 +92,8 @@ def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
   set nm
   return ⟨DerivedCtxt.ofCtxt Γ |>.snoc ty, Ctxt.Var.last ..⟩
 
+variable [ToString d.Ty]
+
 /--
   Look up a name from the name mapping, and return the corresponding variable in the given context.
 
@@ -99,11 +110,11 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
         namemapping stored in the monad -/
     throw <| .indexOutOfBounds name index n
   else
-    let t := List.get Γ ⟨index, Nat.lt_of_not_le h⟩
+    let t := Γ.toList[index]'(Nat.lt_of_not_le h)
     if h : t = expectedType then
-      return ⟨index, by simp only [get?, ← h]; rw [←List.get?_eq_get]⟩
+      return ⟨index, by simp only [get?, ← h]; rw [←List.getElem?_eq_getElem]⟩
     else
-      throw <| .typeError expectedType t
+      throw <| .typeError (toString expectedType) (toString t)
 
 def BuilderM.isOk {α : Type} (x : BuilderM d α) : Bool :=
   match x.run [] with

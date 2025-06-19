@@ -203,7 +203,7 @@ where
     by_contra h
     apply not_stuck
     funext i
-    induction i using Nat.strongInductionOn
+    induction i using Nat.strongRecOn
     next i ih =>
       simp only [Stream'.get, Stream'.drop, Nat.zero_add, not_exists, not_and, not_forall,
         Classical.not_imp] at h
@@ -367,7 +367,7 @@ theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠
   generalize nonesUntilSome x x_neq_stuck = xn at *
   generalize nonesUntilSome y y_neq_stuck = yn at *
   clear x_neq_stuck y_neq_stuck
-  induction xn using Nat.strongInductionOn generalizing x y yn
+  induction xn using Nat.strongRecOn generalizing x y yn
   next xn x_ih =>
     have : n ≤ xn := by
       by_contra h; simp [hn xn (by omega)] at x_spec₁
@@ -406,6 +406,7 @@ def StreamWithoutNones' (α : Type) : Type :=
   Quot (Bisim : Stream α → Stream α → Prop)
 
 instance StreamSetoid (α : Type) : Setoid (Stream α) where
+  r := Bisim
   iseqv := Equivalence.mk (@Bisim.rfl α) Bisim.symm Bisim.trans
 
 def StreamWithoutNones (α : Type) : Type :=

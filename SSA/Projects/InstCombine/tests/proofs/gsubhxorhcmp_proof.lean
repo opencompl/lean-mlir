@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gsubhxorhcmp_proof
 theorem sext_xor_sub_thm (e : IntW 1) (e_1 : IntW 64) :
@@ -92,8 +93,8 @@ theorem sext_multi_uses_thm (e : IntW 64) (e_1 : IntW 1) (e_2 : IntW 64) :
 
 
 theorem absdiff_thm (e e_1 : IntW 64) :
-  sub (LLVM.xor (sext 64 (icmp IntPredicate.ult e_1 e)) (sub e_1 e)) (sext 64 (icmp IntPredicate.ult e_1 e)) ⊑
-    select (icmp IntPredicate.ult e_1 e) (sub (const? 64 0) (sub e_1 e)) (sub e_1 e) := by
+  sub (LLVM.xor (sext 64 (icmp IntPred.ult e_1 e)) (sub e_1 e)) (sext 64 (icmp IntPred.ult e_1 e)) ⊑
+    select (icmp IntPred.ult e_1 e) (sub (const? 64 0) (sub e_1 e)) (sub e_1 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -103,8 +104,8 @@ theorem absdiff_thm (e e_1 : IntW 64) :
 
 
 theorem absdiff1_thm (e e_1 : IntW 64) :
-  sub (LLVM.xor (sub e_1 e) (sext 64 (icmp IntPredicate.ult e_1 e))) (sext 64 (icmp IntPredicate.ult e_1 e)) ⊑
-    select (icmp IntPredicate.ult e_1 e) (sub (const? 64 0) (sub e_1 e)) (sub e_1 e) := by
+  sub (LLVM.xor (sub e_1 e) (sext 64 (icmp IntPred.ult e_1 e))) (sext 64 (icmp IntPred.ult e_1 e)) ⊑
+    select (icmp IntPred.ult e_1 e) (sub (const? 64 0) (sub e_1 e)) (sub e_1 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -114,13 +115,11 @@ theorem absdiff1_thm (e e_1 : IntW 64) :
 
 
 theorem absdiff2_thm (e e_1 : IntW 64) :
-  sub (LLVM.xor (sub e_1 e) (sext 64 (icmp IntPredicate.ugt e e_1))) (sext 64 (icmp IntPredicate.ugt e e_1)) ⊑
-    select (icmp IntPredicate.ugt e e_1) (sub (const? 64 0) (sub e_1 e)) (sub e_1 e) := by
+  sub (LLVM.xor (sub e_1 e) (sext 64 (icmp IntPred.ugt e e_1))) (sext 64 (icmp IntPred.ugt e e_1)) ⊑
+    select (icmp IntPred.ugt e e_1) (sub (const? 64 0) (sub e_1 e)) (sub e_1 e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

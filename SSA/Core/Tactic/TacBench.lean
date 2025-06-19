@@ -65,10 +65,10 @@ def csvEscapeString (s : String) : String :=
   s
 
 def Result.errorMessage (r : Result) : MessageData :=
-  match r with 
+  match r with
   | .ok .. => ""
   | .err (e := e) .. => e.toMessageData
-  
+
 def Result.isOk (r : Result) : Bool :=
   match r with
   | .ok .. => true
@@ -114,7 +114,7 @@ def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
      return { name := name.getString, tac := tac : Item }
 | _ => throwUnsupportedSyntax
 
-private def toMessageDataToCsvString [ToMessageData α] (a : α) : MetaM String := do 
+private def toMessageDataToCsvString [ToMessageData α] (a : α) : MetaM String := do
   return csvEscapeString <| ← MessageData.toString <| ← addMessageContextFull <| toMessageData a
 
 @[tactic tacBench]
@@ -122,8 +122,8 @@ def evalTacBench : Tactic := fun
 | `(tactic| tac_bench $[$cfg]? [$tacBenchItems:tacBenchItem,*]) => do
     let cfg ← elabTacBenchConfig (mkOptionalNode cfg)
     let thmName : String :=
-      match (← getLCtx).decls.toArray.get? 0 with
-      | .some (.some decl) => decl.userName.toString
+      match (← getLCtx).decls.toArray[0]? with
+      | .some (some decl) => decl.userName.toString
       | _ => "unknown-theorem"
     let g ← getMainGoal
     g.withContext do

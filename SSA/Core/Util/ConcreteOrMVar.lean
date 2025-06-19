@@ -12,12 +12,18 @@ import Mathlib.Data.Vector.Basic
 inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | concrete (a : α)
   | mvar (i : Fin φ)
-  deriving DecidableEq, Repr, Inhabited
+  deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
-instance [ToString α] : ToString (ConcreteOrMVar α n) where
-  toString
-  | .concrete a => s!"concrete({a})"
-  | .mvar i => s!"mvar({i})"
+/-- ToString instance for the type `ConcreteOrMVar`,
+it prints either a concrete known
+value of type `α`, or a `φ` metavariable as a string.
+ -/
+instance : ToString (ConcreteOrMVar Nat φ) where
+  toString x :=
+    match x with
+    | .concrete a => s!"i{a}"
+    | .mvar i => s!"mvar({i})"
+
 /-- A coercion from the concrete type `α` to the `ConcreteOrMVar` -/
 instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 
@@ -43,10 +49,17 @@ def instantiateOne (a : α) : ConcreteOrMVar α (φ+1) → ConcreteOrMVar α φ
       (.concrete a)       -- `i = Fin.last`
       (fun j => .mvar j)  -- `i = Fin.castSucc j`
 
-/-- Instantiate all meta-variables -/
+/-- Instantiate all meta-variables using values -/
 def instantiate (as : List.Vector α φ) : ConcreteOrMVar α φ → α
   | .concrete w => w
   | .mvar i => as.get i
+
+open Lean in
+/-- Instantiate all meta-variables using Lean expressions,
+resulting in a Lean expression of type `α`. -/
+def metaInstantiate [ToExpr α] (as : Vector Lean.Expr φ) : ConcreteOrMVar α φ → Lean.Expr
+  | .concrete w => toExpr w
+  | .mvar i => as[i]
 
 /-- We choose ConcreteOrMVar.concrete to be our simp normal form. -/
 @[simp]

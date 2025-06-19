@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section ghighhbithsignmask_proof
 theorem t0_thm (e : IntW 64) : sub (const? 64 0) (lshr e (const? 64 63)) ⊑ ashr e (const? 64 63) := by
@@ -60,12 +61,10 @@ theorem n9_thm (e : IntW 64) :
 
 
 theorem n10_thm (e : IntW 64) :
-  sub (const? 64 1) (lshr e (const? 64 63)) ⊑ zext 64 (icmp IntPredicate.sgt e (const? 64 (-1))) := by
+  sub (const? 64 1) (lshr e (const? 64 63)) ⊑ zext 64 (icmp IntPred.sgt e (const? 64 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

@@ -28,7 +28,7 @@ theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs :
 
 /- removing at index `n` does not change indices `k < n` -/
 theorem List.get?_eraseIdx_of_lt (hk: k < n) :
-    List.get? (List.eraseIdx xs n) k = List.get? xs k := by
+    (List.eraseIdx xs n)[k]? = xs[k]? := by
   by_cases N_LEN:(xs.length ≤ n)
   case pos => simp [eraseIdx_of_length_le N_LEN]
   case neg =>
@@ -43,7 +43,6 @@ theorem List.get?_eraseIdx_of_lt (hk: k < n) :
       cases k
       case zero => simp
       case succ k' =>
-        simp only [get?]
         apply IHxs
         linarith
         simp only [length_cons, Nat.succ_eq_add_one, add_lt_add_iff_right] at N_LEN
@@ -52,11 +51,11 @@ theorem List.get?_eraseIdx_of_lt (hk: k < n) :
 
 /-- Removing index `n` shifts entires of `k ≥ n` by 1. -/
 theorem List.get?_eraseIdx_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k) :
-  (xs.eraseIdx n).get? k = xs.get? (k + 1) := by
+  (xs.eraseIdx n)[k]? = xs[k + 1]? := by
   induction xs generalizing n k
   case nil => simp [eraseIdx, List.get]
   case cons hd tl IHxs =>
-    simp only [get?_cons_succ];
+    simp only [getElem?_cons_succ];
     cases k
     case zero =>
       simp only [nonpos_iff_eq_zero] at hk
@@ -67,7 +66,7 @@ theorem List.get?_eraseIdx_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k
       case zero =>
         simp [List.eraseIdx, List.eraseIdx_succ]
       case succ n' =>
-        simp only [eraseIdx_cons_succ, get?_cons_succ]
+        simp only [eraseIdx_cons_succ, getElem?_cons_succ]
         apply IHxs
         linarith
 
@@ -79,7 +78,7 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp only [Ctxt.get?, Ctxt.delete] at vproof
-    have H := List.get?_eraseIdx_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := DELV)
+    have H := List.getElem?_eraseIdx_of_lt (l := Γ) (i := delv.val) (j := vix) (h := DELV)
     rw [H] at vproof
     exact vproof
   }⟩
@@ -289,7 +288,7 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
     | .some ⟨v, hv⟩ =>
       .some ⟨.ret v, by
         unfold Ctxt.Valuation.eval at hv
-        simp only [EffectKind.toMonad_pure, Com.denote_ret, hv, Id.pure_eq, implies_true]
+        simp only [EffectKind.toMonad_pure, Com.denote_ret, hv, Id.pure_eq', implies_true]
       ⟩
   | .var (α := ω) e body =>
     match Com.deleteVar? (Deleted.snoc DEL) body with
@@ -360,7 +359,7 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
         { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation),
           com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq,
+          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq',
             Ctxt.Valuation.comap_id]
           intros V
           apply hbody
@@ -465,8 +464,11 @@ def ex1_pre_dce : Com Ex ∅ .pure .nat :=
 def ex1_post_dce : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce).val
 
 def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
-  Com.var (cst 1) <|
+  Com.var (cst 2) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+theorem checkDCEasExpected :
+  ex1_post_dce = ex1_post_dce_expected := by native_decide
 
 end Examples
 end DCE

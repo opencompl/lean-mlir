@@ -1,5 +1,6 @@
 import SSA.Experimental.Bits.AutoStructs.Basic
-import Mathlib.Tactic.LiftLets
+
+set_option grind.warning false
 
 section nfa
 
@@ -158,7 +159,7 @@ theorem processOneElem_grow (st : worklist.St A S) (final : S → Bool) (a : A) 
 
 def worklist.initState (inits : Array S) (hinits : inits.toList.Nodup) (final? : S → Bool) : worklist.St A S :=
   let m := RawCNFA.empty (A := A)
-  let mapm := inits.foldl (init := (Std.HashMap.empty, m)) fun (map, m) sa =>
+  let mapm := inits.foldl (init := (Std.HashMap.emptyWithCapacity, m)) fun (map, m) sa =>
     let (s, m) := m.newState
     let m := m.addInitial s
     let m := if final? sa then m.addFinal s else m
@@ -274,9 +275,10 @@ attribute [simp] StInv.wf StInv.map_states StInv.map_surj
 def worklistRun_init_post (inits : Array S) (final : S → Bool)
     (map : Std.HashMap S State) (m : RawCNFA A) :=
   (forall sa, sa ∈ map ↔ sa ∈ inits) ∧
-  m.trans = ∅ ∧
+  (∀ s a, m.tr s a = ∅) ∧
   ∀ sa s, map[sa]? = some s → (s ∈ m.initials) ∧ (s ∈ m.finals ↔ final sa)
 
+set_option maxHeartbeats 1000000 in
 omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma worklistRun'_init_wf inits hinits final? :
     let st := worklist.initState A S inits hinits final?
@@ -289,9 +291,7 @@ lemma worklistRun'_init_wf inits hinits final? :
   suffices _ : motive (inits.size) mapm by
     simp_all [motive]
   apply Array.foldl_induction
-  · simp [motive, worklistRun_init_post, m0, RawCNFA.states, StInv]; constructor
-    · constructor <;> simp
-    · simp [RawCNFA.empty]
+  · simp [motive, worklistRun_init_post, m0, RawCNFA.states, StInv]; constructor <;> simp
   · rintro i ⟨map, m⟩ ⟨⟨hwf, hst, hsurj, hinj⟩, hmi, htr, hif⟩
     simp -zeta
     lift_lets
@@ -332,8 +332,10 @@ lemma worklistRun'_init_wf inits hinits final? :
       · have hin : s ∈ m.states := by simp_all
         obtain ⟨sa, hsa⟩ := hsurj ⟨_, hin⟩; use sa
         specialize hst sa s hsa
-        rw [Std.HashMap.getElem?_insert]; split
-        · specialize hnew sa (Std.HashMap.mem_of_getElem? hsa); simp_all
+        rw [Std.HashMap.getElem?_insert]; split_ifs with hcond
+        · simp only [beq_iff_eq, motive, m1, m2, m0] at hcond
+          specialize hnew sa (Std.HashMap.mem_of_getElem? hsa) hcond
+          contradiction
         · assumption
     · rintro s sa sa' hsa hsa'
       have hs : s ∈ m.states ∪ {m.stateMax} := by
@@ -358,8 +360,7 @@ lemma worklistRun'_init_wf inits hinits final? :
         · exfalso; apply himp; assumption
     split_ands
     · rintro s; simp [Array.mem_take_get_succ, ←hmi]
-    · simp [m2, m1, RawCNFA.addInitial, RawCNFA.addFinal, RawCNFA.newState]
-      split <;> simp [htr] <;> assumption
+    · rintro s a; aesop
     · rintro sa s hmap
       rw [Std.HashMap.getElem?_insert] at hmap; split at hmap
       next heq =>
@@ -376,6 +377,7 @@ lemma worklistRun'_init_wf inits hinits final? :
         · split <;> simp [RawCNFA.addFinal, RawCNFA.addInitial, RawCNFA.newState, hif]
           rintro rfl; exfalso; apply hst at hmap; simp [RawCNFA.states] at hmap
 
+set_option maxHeartbeats 1000000 in
 lemma worklistRun'_go_wf :
     (st.m.WF ∧ (∀ (sa : S) s, st.map[sa]? = some s → s ∈ st.m.states)) →
     (worklistRun'.go A S final f st).WF := by
@@ -390,11 +392,9 @@ lemma worklistRun'_go_wf :
     have heq := Option.eq_none_iff_forall_not_mem.mpr hmap
     simp_all
     split <;> simp_all +zetaDelta
-  case case4 sa? hnone =>
+  case case4 sa? _ =>
     unfold worklistRun'.go sa? at *
     simp; simp_all
-    rw [hnone]
-    simp_all
   case case2 st hnemp sa? sa heq wl' st1 s hs as st2 _ _ _ _ _ ih => -- inductive case, prove the invariant is maintained
     rcases h with ⟨hwf, hst⟩
     unfold worklistRun'.go
@@ -531,7 +531,7 @@ lemma processOneElem_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa
     split <;> simp_all only []
     split <;> simp_all
   next heq =>
-    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none])
+    dsimp; split <;> (rw [Std.HashMap.getElem?_insert]; split <;> simp_all [-getElem?_eq_none_iff])
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_new_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
@@ -568,39 +568,34 @@ lemma processOneElem_finals (st : worklist.St A S) (final : S → Bool) (a : A) 
     { simp_all [RawCNFA.newState, RawCNFA.addTrans] }
 
 omit [Fintype S] [DecidableEq S] in
-lemma processOneElem_trans (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s' : State) :
+lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s' : State) :
     if a = b ∧ s = s' then
       ∃ ssa, (processOneElem A S final s st (a, sa)).map[sa]? = some ssa ∧
         (processOneElem A S final s st (a, sa)).m.tr s' b =
         (st.m.tr s a |>.insert ssa)
     else
       (processOneElem A S final s st (a, sa)).m.tr s' b = st.m.tr s' b := by
-  simp [processOneElem, worklist.St.addOrCreateState, RawCNFA.tr]
+  simp [processOneElem, worklist.St.addOrCreateState]
   split
   next _ =>
     casesm _ ∧ _; subst_eqs
-    dsimp
     split
     next s'' heq =>
-      use s''; constructor; assumption
-      have _ := Std.HashMap.mem_of_getElem? heq
-      simp [RawCNFA.addTrans]
+      use s''; constructor <;> simp [*]
     next heq =>
       use st.m.stateMax
-      simp
-      split_ifs <;> simp_all [RawCNFA.addFinal, RawCNFA.addTrans, RawCNFA.newState]
+      simp [Std.HashMap.getElem?_insert_self, addTrans_tr_eq, true_and]
+      split_ifs with hcond <;> simp
   next heq =>
-    dsimp
     split
-    { simp_all [RawCNFA.newState, RawCNFA.addTrans, RawCNFA.addFinal, Std.HashMap.getD_insert]; aesop }
-    { simp_all [RawCNFA.newState, RawCNFA.addTrans, RawCNFA.addFinal, Std.HashMap.getD_insert]
-      split; simp_all; split <;> simp }
+    · grind [addTrans_tr]
+    · split_ifs <;> simp [addTrans_tr] <;> grind
 
 omit [Fintype S] [DecidableEq S] in
 lemma processOneElem_trans_preserve (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s1 s2 : State) :
     s2 ∈ st.m.tr s1 b →
     s2 ∈ (processOneElem A S final s st (a, sa)).m.tr s1 b := by
-  have h := processOneElem_trans st final a b sa s s1
+  have h := processOneElem_tr st final a b sa s s1
   split_ifs at h
   · obtain ⟨_, _, h2⟩ := h
     simp_all
@@ -690,7 +685,8 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
       rcases hs' with hold | rfl
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
         rw [Std.HashMap.getElem?_insert]
-        simp_all [-getElem?_eq_none]; rintro rfl; simp_all [-getElem?_eq_none] }
+        simp_all only [ge_iff_le, Prod.mk.eta, beq_iff_eq, ite_eq_right_iff, Option.some.injEq]
+        rintro rfl; simp_all }
       { use sa'; simp_all } } }
   { rintro s' sa1 sa2
     rw [processOneElem_map]
@@ -752,7 +748,7 @@ lemma processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) 
     simp only [processOneElem_initials]
     use s, hs, (by exact processOneElem_rel_preserve final hR) }
   { rintro s₁ s₂ b q₁ hR htr
-    have h := processOneElem_trans st final a b sa' s s₁
+    have h := processOneElem_tr st final a b sa' s s₁
     split_ifs at h with hcond
     on_goal 2 => {
       rw [h] at htr
@@ -780,7 +776,7 @@ lemma processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) 
     · exact hmap' }
   { rintro s₁ b q₁ q₂ hR hs hD hnT
     simp only [ge_iff_le, Prod.mk.eta, Set.mem_setOf_eq, not_and, not_exists] at hnT
-    have h := processOneElem_trans st final a b sa' s s₁
+    have h := processOneElem_tr st final a b sa' s s₁
     split_ifs at h with hcond
     on_goal 2 =>
       have hR' : st.rel s₁ q₁ := by
@@ -858,9 +854,7 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
         suffices hccl : processOneElem_mot inits final f s sa (f sa).size (Array.foldl (processOneElem A S final s) st1 (f sa)) by
           obtain ⟨_, _, inv', hsim'⟩ := hccl
           have hemp : {(sa1, a, sa') | sa1 = sa ∧ ∃ k, (f sa).size ≤ k ∧ (f sa)[k]? = some (a, sa')} = ∅ := by
-            ext sa'; simp_all; rintro rfl k hge hsome
-            suffices hccl : (f sa'.1)[k]? = none by simp_all
-            apply Array.getElem?_size_le; assumption
+            ext sa'; simp_all
           simp_all +zetaDelta only [ge_iff_le, st2]
         apply Array.foldl_induction
         { simp only [st1, wl']
@@ -933,7 +927,7 @@ def worklistRun'_spec :
     constructor
     · exact hif _ _ hR |>.1
     · exact hR
-  · simp [RawCNFA.tr, hts]
+  · simp [hts]
   · simp [worklist.St.D, hvis]
 
 end worklist_correct

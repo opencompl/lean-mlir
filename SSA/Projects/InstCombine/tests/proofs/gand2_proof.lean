@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gand2_proof
 theorem test2_thm (e e_1 : IntW 1) : LLVM.and (LLVM.and e_1 e) e_1 ⊑ LLVM.and e_1 e := by
@@ -39,8 +40,8 @@ theorem test3_thm (e e_1 : IntW 32) : LLVM.and e_1 (LLVM.and e e_1) ⊑ LLVM.and
 
 
 theorem test7_thm (e : IntW 1) (e_1 : IntW 32) :
-  LLVM.and (LLVM.and (icmp IntPredicate.slt e_1 (const? 32 1)) e) (icmp IntPredicate.sgt e_1 (const? 32 (-1))) ⊑
-    LLVM.and (icmp IntPredicate.eq e_1 (const? 32 0)) e := by
+  LLVM.and (LLVM.and (icmp IntPred.slt e_1 (const? 32 1)) e) (icmp IntPred.sgt e_1 (const? 32 (-1))) ⊑
+    LLVM.and (icmp IntPred.eq e_1 (const? 32 0)) e := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -50,9 +51,9 @@ theorem test7_thm (e : IntW 1) (e_1 : IntW 32) :
 
 
 theorem test7_logical_thm (e : IntW 1) (e_1 : IntW 32) :
-  select (select (icmp IntPredicate.slt e_1 (const? 32 1)) e (const? 1 0)) (icmp IntPredicate.sgt e_1 (const? 32 (-1)))
+  select (select (icmp IntPred.slt e_1 (const? 32 1)) e (const? 1 0)) (icmp IntPred.sgt e_1 (const? 32 (-1)))
       (const? 1 0) ⊑
-    select (icmp IntPredicate.eq e_1 (const? 32 0)) e (const? 1 0) := by
+    select (icmp IntPred.eq e_1 (const? 32 0)) e (const? 1 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -62,8 +63,8 @@ theorem test7_logical_thm (e : IntW 1) (e_1 : IntW 32) :
 
 
 theorem test8_thm (e : IntW 32) :
-  LLVM.and (icmp IntPredicate.ne e (const? 32 0)) (icmp IntPredicate.ult e (const? 32 14)) ⊑
-    icmp IntPredicate.ult (add e (const? 32 (-1))) (const? 32 13) := by
+  LLVM.and (icmp IntPred.ne e (const? 32 0)) (icmp IntPred.ult e (const? 32 14)) ⊑
+    icmp IntPred.ult (add e (const? 32 (-1))) (const? 32 13) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -73,8 +74,8 @@ theorem test8_thm (e : IntW 32) :
 
 
 theorem test8_logical_thm (e : IntW 32) :
-  select (icmp IntPredicate.ne e (const? 32 0)) (icmp IntPredicate.ult e (const? 32 14)) (const? 1 0) ⊑
-    icmp IntPredicate.ult (add e (const? 32 (-1))) (const? 32 13) := by
+  select (icmp IntPred.ne e (const? 32 0)) (icmp IntPred.ult e (const? 32 14)) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 32 (-1))) (const? 32 13) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -106,7 +107,7 @@ theorem test10_thm (e : IntW 64) :
 
 
 theorem and1_shl1_is_cmp_eq_0_thm (e : IntW 8) :
-  LLVM.and (shl (const? 8 1) e) (const? 8 1) ⊑ zext 8 (icmp IntPredicate.eq e (const? 8 0)) := by
+  LLVM.and (shl (const? 8 1) e) (const? 8 1) ⊑ zext 8 (icmp IntPred.eq e (const? 8 0)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -190,5 +191,3 @@ theorem test14_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

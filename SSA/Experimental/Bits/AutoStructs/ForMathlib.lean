@@ -1,35 +1,28 @@
-import Batteries.Data.Fin.Basic
 import Mathlib.Computability.NFA
 import Mathlib.Data.FinEnum
 import Mathlib.Data.Rel
 import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Vector.Defs
 import SSA.Experimental.Bits.AutoStructs.ForLean
-import Std.Data.HashSet.Basic
+
+set_option grind.warning false
 
 open Set
 open Mathlib
 
 @[simp]
 lemma List.Vector.append_get_lt {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
-    (x.append y).get i = x.get (i.castLT hlt) := by
+    (x ++ y).get i = x.get (i.castLT hlt) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [List.Vector.append, List.Vector.get]
+  dsimp [List.Vector.get]
   apply List.getElem_append_left
 
 @[simp]
 lemma List.Vector.append_get_ge {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: n ≤ i) :
-    (x.append y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
+    (x ++ y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [List.Vector.append, List.Vector.get]
+  dsimp [List.Vector.get]
   rcases hx
   apply List.getElem_append_right hlt
-
-@[simp]
-def BitVec.getLsbD_cast' (bv : BitVec n) (h : n = m):
-    (h ▸ bv).getLsbD i = bv.getLsbD i := by
-  rcases h; simp
-
 
 -- this is better because card is defeq to n
 @[simps]
@@ -42,6 +35,11 @@ instance (α : Type) : Union (Language α) := ⟨Set.union⟩
 
 def List.Vector.transport (v : Vector α m) (f : Fin n → Fin m) : Vector α n :=
   Vector.ofFn fun i => v.get (f i)
+
+@[simp]
+lemma List.Vector.transport_get {v : Vector α m} { f : Fin n → Fin m} :
+    (v.transport f).get i = v.get (f i) := by
+  simp [transport]
 
 def BitVec.transport (f : Fin n2 → Fin n1) (bv : BitVec n1) : BitVec n2 :=
   BitVec.ofFn fun i => bv.getLsbD (f i)
@@ -58,12 +56,21 @@ lemma BitVec.transport_getLsbD_nat (f : Fin n2 → Fin n1) (bv : BitVec n1) (i :
   nth_rw 1 [heq]
   rw [transport_getLsbD]
 
+@[simp]
+lemma BitVec.transport_getElem (f : Fin n2 → Fin n1) (bv : BitVec n1) (i : Nat) (hlt : i < n2) :
+    (bv.transport f)[i] = bv.getLsbD (f ⟨i, hlt⟩) := by
+  have h := transport_getLsbD_nat f bv i hlt
+  simp_all
+
 /--
 The set of `n`-tuples of bit vectors of an arbitrary width.
 -/
 structure BitVecs (n : Nat) where
   w : Nat
   bvs : List.Vector (BitVec w) n
+
+def BitVecs.cast (bvs : BitVecs n) (h : n = n') : BitVecs n' :=
+  { w := bvs.w, bvs := h ▸ bvs.bvs }
 
 abbrev BitVecs.empty : BitVecs n := ⟨0, List.Vector.replicate n .nil⟩
 abbrev BitVecs.singleton {w : Nat} (bv : BitVec w) : BitVecs 1 := ⟨w, bv ::ᵥ .nil⟩
@@ -75,17 +82,18 @@ def BitVecs0 : Set (BitVecs n) :=
 -- TODO: this ought to be way easier
 @[ext (iff := false)]
 lemma BitVecs.ext (x y : BitVecs n) :
-    ∀ (heq : x.w = y.w),
-      (∀ (i : Fin n), x.bvs.get i = heq ▸ y.bvs.get i) →
+    ∀ (heq : y.w = x.w),
+      (∀ (i : Fin n), x.bvs.get i = (y.bvs.get i).cast heq) →
       x = y := by
   intros heq hbvs
   rcases x with ⟨wx, bvsx⟩
   rcases y with ⟨wy, bvsy⟩
   congr
-  rcases heq
-  apply heq_of_eq
-  ext i j
-  simp_all
+  · exact heq.symm
+  · rcases heq
+    apply heq_of_eq
+    ext i j
+    simp_all
 
 /--
 The set of `n`-tuples of bit vectors of an arbitrary width, encoded as a list of
@@ -98,23 +106,22 @@ def enc (bvs : BitVecs n) : BitVecs' n :=
   (List.finRange bvs.w).map (fun i =>
     BitVec.ofFn (fun (k : Fin n) => (bvs.bvs.get k)[i]))
 
+@[simps]
 def dec (bvs' : BitVecs' n) : BitVecs n where
   w := bvs'.length
   bvs := List.Vector.ofFn fun k => BitVec.ofFn fun i => bvs'[i].getLsbD k
 
 @[simp]
 lemma dec_nil n : dec (n := n) [] = BitVecs.empty := by
-  ext <;> simp [dec]
+  ext _ _ h
+  · simp_all [dec]
+  · simp [dec] at h
 
 -- The two sets are in bijection.
 
 @[simp]
 lemma enc_length (bvs : BitVecs n) : (enc bvs).length = bvs.w := by
   simp [enc]
-
-@[simp]
-lemma dec_w (bvs' : BitVecs' n) : (dec bvs').w = bvs'.length := by
-  simp [dec]
 
 @[simp]
 lemma enc_spec (bvs : BitVecs n) (i : Fin bvs.w) (k : Fin n) :
@@ -139,14 +146,11 @@ lemma helper_dec_enc (bvs : BitVecs n) (h : w' = bvs.w) i (j : Nat) :
 
 @[simp]
 lemma dec_enc : Function.RightInverse (α := BitVecs' n) enc dec := by
-  intros bvs; ext1; exact dec_enc_w bvs
+  intros bvs; ext1; exact dec_enc_w bvs |>.symm
   next i =>
     simp only [enc, Fin.getElem_fin, dec, List.getElem_map, List.getElem_finRange, Fin.cast_mk,
       Fin.is_lt, BitVec.ofFn_getLsbD, Fin.eta, List.Vector.get_ofFn]
-    ext
-    simp_all only [List.length_map, List.length_finRange, BitVec.ofFn_getLsbD,
-      BitVec.getLsbD_cast']
-    rfl
+    ext; simp
 
 @[simp]
 lemma enc_dec : Function.LeftInverse (α := BitVecs' n) enc dec := by
@@ -155,7 +159,7 @@ lemma enc_dec : Function.LeftInverse (α := BitVecs' n) enc dec := by
   by_cases hin : k < (List.length bvs')
   · simp
     rw [List.getElem?_eq_getElem] <;> simp_all only [List.length_finRange, List.getElem_finRange,
-      Fin.cast_mk, Option.map_some', List.getElem?_eq_getElem, Option.some.injEq]
+      Fin.cast_mk, Option.map_some, List.getElem?_eq_getElem, Option.some.injEq]
     ext1; simp_all
   · simp; repeat rw [List.getElem?_eq_none] <;> simp_all
 
@@ -178,14 +182,14 @@ def dec_inj {n : Nat} : Function.Injective (dec (n := n)) := by
 lemma dec_snoc n (bvs' : BitVecs' n) (a : BitVec n) : dec (bvs' ++ [a]) =
   { w := bvs'.length + 1
     bvs := List.Vector.ofFn fun k => BitVec.cons (a.getLsbD k) ((dec bvs').bvs.get k) } := by
-  ext k i <;> simp_all only [dec, Fin.getElem_fin, List.length_append, List.length_singleton,
-    List.Vector.get_ofFn, BitVec.ofFn_getLsbD, BitVec.getLsbD_cast']
-  rw [BitVec.getLsbD_cons]
+  ext k i hi <;> simp_all
+  rw [BitVec.getElem_cons]
   split
   next heq => simp_all
   next h =>
-    have hlt : i < List.length bvs' := by omega
-    rw [List.getElem_append_left hlt, BitVec.ofFn_getLsbD hlt]
+    have hlt : i < List.length bvs' := by simp at hi; omega
+    rw [List.getElem_append_left hlt]
+    simp
 
 @[simp]
 lemma dec_enc_image : dec '' (enc '' S) = S := Function.LeftInverse.image_image dec_enc _
@@ -223,21 +227,26 @@ lemma BitVecs'.transport_getElem' {bvs' : BitVecs' m} (f : Fin n → Fin m) (i :
     (bvs'.transport f)[i]'(by simp_all) = (bvs'[i]'h).transport f := by
   simp [transport]
 
--- TODO: this script generates an ill typed proof :(
-set_option debug.skipKernelTC true in
 @[simp]
 def dec_transport_idx {bvs' : BitVecs' n} (f : Fin m → Fin n) :
     have h : (BitVecs.transport f (dec bvs')).w = (dec (BitVecs'.transport f bvs')).w := by simp
-    (dec (bvs'.transport f)).bvs.get i =  h ▸ (((dec bvs').transport f).bvs.get i) := by
+    (dec (bvs'.transport f)).bvs.get i =  (((dec bvs').transport f).bvs.get i).cast h := by
   intros h
   simp [dec]
-  ext1 i hi
-  simp_all [BitVecs'.tranport_length, BitVec.getLsbD_cast']
+  ext1 j hj
+  simp at h hj ⊢
+  simp_all
+  simp at h ⊢
+  -- TODO: FIXME: why is this necessary to have the rewrite work?
+  generalize_proofs h1 h2 h3 h4
+  rw [BitVec.ofFn_getElem _ h4]
 
 @[simp]
 def dec_transport :
     dec (bvs'.transport f) = (dec bvs').transport f := by
-  ext k j <;> simp
+  ext1
+  · simp
+  · apply dec_transport_idx
 
 @[simp]
 def enc_transport_idx {bvs : BitVecs n} (f : Fin m → Fin n) (i : Fin bvs.w) :
@@ -551,6 +560,9 @@ theorem neg_accepts (M : NFA α σ) :
     M.neg.accepts = M.acceptsᶜ := by
   simp [neg]
 
+@[simp]
+theorem reverse_accepts {M : NFA α σ} : M.reverse.accepts = M.accepts.reverse := by
+  ext; simp
 
 /-
 NOTE: all that follows is defined in terms of bit vectors, even though it should
@@ -665,6 +677,38 @@ theorem Bisimul.symm (hsim : Bisimul R M₁ M₂) : Bisimul R.inv M₂ M₁ := b
   · intros; apply h4 <;> assumption
   · intros; apply h3 <;> assumption
 
+theorem Bisim.symm (hsim : Bisim M₁ M₂) : Bisim M₂ M₁ := by
+  rcases hsim with ⟨_, hsimul⟩
+  exact ⟨_, hsimul.symm⟩
+
+lemma Bisimul.comp {M₁ : NFA A σ1} {M₂ : NFA A σ₂} {M₃ : NFA A σ₃}  :
+    M₁.Bisimul R₁ M₂ → M₂.Bisimul R₂ M₃ →
+    M₁.Bisimul (R₁.comp R₂) M₃ := by
+  rintro h₁ h₂; constructor
+  · rintro s q₁ ⟨q₂, hR₁, hR₂⟩; rw [h₁.accept hR₁, h₂.accept hR₂]
+  · constructor
+    · rintro s hs
+      obtain ⟨q₁, hi₁, hq₁⟩ := h₁.start.1 hs
+      obtain⟨q₂, hi₂, hq₂⟩ := h₂.start.1 hi₁
+      use q₂, hi₂, q₁
+    · rintro q₂ hi₂
+      obtain⟨q₁, hi₁, hq₂⟩ := h₂.start.2 hi₂
+      obtain ⟨s, hsi, hs⟩ := h₁.start.2 hi₁
+      use s, hsi, q₁
+  · rintro s s' a q₂ ⟨q₁, hR₁, hR₂⟩ htr
+    obtain ⟨q₁', hst, hq₁'⟩ := h₁.trans_match₁ hR₁ htr
+    obtain ⟨q₂', hst', hq₂'⟩ := h₂.trans_match₁ hR₂ hst
+    use q₂', hst', q₁', hq₁', hq₂'
+  · rintro s a q₂ q₂' ⟨q₁, hR₁, hR₂⟩ hst
+    obtain ⟨q₁', hst', hR₂'⟩:= h₂.trans_match₂ hR₂ hst
+    obtain ⟨s', htr, hR₁'⟩ := h₁.trans_match₂ hR₁ hst'
+    use s', htr, q₁'
+
+lemma Bisim.comp {M₁ : NFA A σ1} {M₂ : NFA A σ₂} {M₃ : NFA A σ₃}  :
+    M₁.Bisim M₂ → M₂.Bisim M₃ → M₁.Bisim M₃ := by
+  rintro ⟨_, hsim₁⟩ ⟨_, hsim₂⟩
+  exact ⟨_, Bisimul.comp hsim₁ hsim₂⟩
+
 lemma bisimul_eval_one (hsim : Bisimul R M₁ M₂) :
     R.set_eq Q₁ Q₂ → R.set_eq (M₁.stepSet Q₁ a) (M₂.stepSet Q₂ a) := by
   rintro ⟨h1, h2⟩; constructor <;> simp only [stepSet, mem_iUnion, exists_prop,
@@ -697,6 +741,11 @@ theorem bisimul_accepts :
   · apply bisimul_accepts₁ hsim
   · apply bisimul_accepts₁ hsim.symm
 
+theorem bisim_accepts :
+    Bisim M₁ M₂ → M₁.accepts = M₂.accepts := by
+  rintro ⟨R, hsimul⟩
+  exact bisimul_accepts hsimul
+
 end NFA
 
 def Std.HashSet.toSet [BEq α] [Hashable α] (m : HashSet α) : Set α := { x | x ∈ m }
@@ -716,8 +765,9 @@ theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.bac
   exact hnd hdl (List.mem_singleton.mpr rfl)
 
 theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
-    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.size → a[i]? ≠ a[j]? :=
-  List.nodup_iff_getElem?_ne_getElem?
+    a.toList.Nodup ↔ ∀ (i j : Nat), i < j → j < a.toList.length → a[i]? ≠ a[j]? := by
+  simp_rw [←Array.getElem?_toList]
+  exact List.nodup_iff_getElem?_ne_getElem?
 
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
   rcases a with ⟨l⟩
@@ -731,11 +781,87 @@ theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ 
   case append_singleton l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
     List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.some.injEq]; tauto
 
+theorem Std.HashSet.toSet_toList[BEq α] [LawfulBEq α] [Hashable α] (m : HashSet α) : m.toSet = { x | x ∈ m.toList } := by
+  ext x; simp
 
--- TODO: state in in pure Lean using `toList`, and decude this one
 theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
   {f : β → α → β} {m : HashSet α} {motive : β → Set α → Prop} :
     motive b ∅ →
     (∀ b x s, x ∉ s → motive b s → motive (f b x) (s ∪ {x})) →
     motive (m.fold f b) m.toSet := by
-  sorry
+  rintro hemp hind
+  rw [Std.HashSet.fold_eq_foldl_toList, toSet_toList]
+  have := m.distinct_toList
+  revert this
+  induction m.toList using List.reverseRecOn
+  case nil =>
+    simp_all
+  case append_singleton xs x ih =>
+    rintro hd
+    simp_all only [union_singleton, List.foldl_cons, List.mem_cons]
+    simp [List.pairwise_append] at hd
+    rcases hd with ⟨hd, hnew⟩
+    have hnew : x ∉ xs := by aesop
+    specialize ih (by simp [hd])
+    specialize hind _ x { x | x ∈ xs } hnew ih
+    convert hind using 1
+    · exact List.foldl_concat f b x xs
+    · ext; simp; aesop
+
+def Std.HashMap.toPFun [BEq α] [Hashable α] (m : HashMap α β) (x : α) : Option β := m[x]?
+
+theorem Std.HashMap.toPFun_toList[BEq α] [LawfulBEq α] [Hashable α] (m : HashMap α β) :
+    m.toPFun = λ k ↦ m.toList.find? (λ x ↦ x.1 == k) |>.map Prod.snd := by
+  ext x y; simp [toPFun]
+  simp [Std.HashMap.find?_toList_eq_some_iff_getKey?_eq_some_and_getElem?_eq_some]
+  rintro hlk
+  have : m[x]?.isSome := by aesop
+  rw [←Std.HashMap.contains_eq_isSome_getElem?] at this
+  rw [Std.HashMap.contains_eq_isSome_getKey?] at this
+  revert this
+  rcases (m.getKey? x) <;> simp
+
+theorem Std.HashMap.fold_induction [BEq α] [LawfulBEq α] [DecidableEq α] [Hashable α]
+  {f : γ → α → β → γ} {m : HashMap α β} {motive : γ → (α → Option β) → Prop} :
+    motive b (λ _ ↦ none) →
+    (∀ b x y m, m x = none → motive b m → motive (f b x y) (Function.update m x y)) →
+    motive (m.fold f b) m.toPFun := by
+  rintro hemp hind
+  rw [Std.HashMap.fold_eq_foldl_toList, toPFun_toList]
+  have := m.distinct_keys_toList
+  revert this
+  induction m.toList using List.reverseRecOn
+  case nil =>
+    simp_all
+  case append_singleton xs xy ih =>
+    rcases xy with ⟨x, y⟩
+    rintro hd
+    simp_all
+    simp [List.pairwise_append] at hd
+    rcases hd with ⟨hd, hnew⟩
+    let f := fun k => Option.map Prod.snd (List.find? (fun x => x.1 == k) xs)
+    specialize ih (by simp [hd])
+    have hnewf : f x = none := by
+      simp [f]; grind
+    specialize hind _ x y _ hnewf ih
+    convert hind using 1
+    ext a b; simp
+    rw [Function.update_apply]
+    split_ifs with hcond
+    · subst hcond; constructor
+      · rintro ⟨a', hf | hf⟩
+        · obtain h := List.find?_some hf
+          simp at h; subst h
+          grind [List.mem_of_find?_eq_some]
+        · grind
+      · simp only [Option.some.injEq, true_and]
+        rintro rfl
+        aesop
+    · simp [f]; grind
+
+class DecidableNFA [Fintype σ] [Fintype α] [DecidableEq σ] [DecidableEq α] (m : NFA α σ) where
+  decidable_start : Decidable (q ∈ m.start)
+  decidable_accept : Decidable (q ∈ m.accept)
+  decidable_step : Decidable (s' ∈ m.step s a)
+
+attribute [instance]   DecidableNFA.decidable_start DecidableNFA.decidable_accept DecidableNFA.decidable_step

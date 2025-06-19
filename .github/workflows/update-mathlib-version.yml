@@ -1,0 +1,69 @@
+name: Update mathlib version
+on:
+  schedule:
+    - cron: '44 * * * *'
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  mathlibtoday:
+    name: Update Mathlib & Lean
+    strategy:
+      fail-fast: false
+      matrix:
+        daysbefore: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    permissions: write-all
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.PAT}}
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Get Mathlib Date
+        id: mldate
+        run: |
+           echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`"
+           echo "date=`date -d '-${{matrix.daysbefore}} day' +20%y-%m-%d`" >> $GITHUB_OUTPUT
+
+      - name: install zsh
+        run: |
+          sudo apt-get update; sudo apt-get install zsh
+
+      - name: Check if lean toolchain is already newer or equally old
+        shell: zsh {0}
+        run: |
+           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d' | sed -e 's/-//g' ` -ge `echo ${{steps.mldate.outputs.date}} | sed -e 's/-//g'` ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
+
+      - name: Set Mathlib Date
+        run: |
+           sed -e "s/nightly-testing.*\"/nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
+           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
+           echo "## lakefile.toml"
+           cat lakefile.toml
+           echo "## lean-toolchain"
+           cat lean-toolchain
+           lake update mathlib
+
+      - name: Merge pre-existing pull request
+        continue-on-error: true
+        run: |
+           git merge origin/auto-mathlib-update-${{steps.mldate.outputs.date}}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: update to lean nightly ${{steps.mldate.outputs.date}}"
+          branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
+          body: "automatic update of mathlib + lean via GitHub action."
+          token: ${{secrets.PAT}}

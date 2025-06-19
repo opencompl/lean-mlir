@@ -261,7 +261,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
   default_db = f'automata-circuit-{current_time}.sqlite3'
   parser.add_argument('--db', default=default_db, help='path to sqlite3 database')
-  parser.add_argument('-j', '--jobs', type=int, default=nproc // 3)
+  parser.add_argument('-j', '--jobs', type=int, default=5) # ((nproc + 2)// 3))
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
   parser.add_argument('--analyze', action='store_true', help="analyze the data of the db")

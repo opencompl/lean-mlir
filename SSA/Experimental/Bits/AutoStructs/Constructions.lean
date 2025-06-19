@@ -1,15 +1,9 @@
-import Std.Data.HashSet
-import Std.Data.HashMap
-import Mathlib.Data.FinEnum
 import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Tactic.ApplyFun
-import SSA.Experimental.Bits.AutoStructs.Basic
-import SSA.Experimental.Bits.AutoStructs.ForLean
-import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.AutoStructs.FinEnum
-import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.AutoStructs.Worklist
+
+import Mathlib.Tactic.ApplyFun
+
+set_option grind.warning false
 
 section sink
 
@@ -21,7 +15,7 @@ def RawCNFA.addSink (m : RawCNFA A) : RawCNFA A := m.createSink.2
 @[inline]
 def CNFA.addSink (m : CNFA n) : CNFA n := ⟨m.m.addSink, wf_createSink m.wf⟩
 
-lemma addSink_spec (m : CNFA n) (M : NFA' n) :
+lemma CNFA.addSink_spec (m : CNFA n) (M : NFA' n) :
     m.Sim M →
     m.addSink.Sim M.complete := by
   rintro ⟨Ri, hsim⟩
@@ -49,7 +43,7 @@ lemma addSink_spec (m : CNFA n) (M : NFA' n) :
   · simp [CNFA.addSink, RawCNFA.addSink, NFA'.complete, NFA.complete, R]
     rintro s a q q' hs hRi hst
     obtain ⟨s', htr, _⟩ := hsim.trans_match₂ hRi hst (by simp) (by simp)
-    have hs' : s' ∈ m.m.states := m.wf.trans_tgt_lt' _ _ _ htr
+    have hs' : s' ∈ m.m.states := m.wf.trans_tgt_lt htr
     use s'; tauto
 
 def RawCNFA.flipFinals (m : RawCNFA A) : RawCNFA A :=
@@ -61,7 +55,6 @@ def RawCNFA.flipFinals (m : RawCNFA A) : RawCNFA A :=
 lemma RawCNFA.flipFinals_wf {m : RawCNFA A} (hwf : m.WF) : m.flipFinals.WF := by
   simp [flipFinals]
   constructor <;> simp_all
-
   let motive (fs : Std.HashSet State) := ∀ s ∈ fs, s ∈ m.states
   suffices h : motive $ List.foldl
       (fun fins s => if m.finals.contains s = true then fins else fins.insert s)
@@ -117,10 +110,10 @@ lemma CNFA.flipFinals_spec {m : CNFA n} {M : NFA' n} :
     use q, hq, hR, m.flipFinals.wf.initials_lt hq
   · rintro s s' a q ⟨hR, hst⟩ htr
     obtain ⟨q', hst, hR'⟩ := hsim.trans_match₁ hR htr
-    use q', hst, hR', m.flipFinals.wf.trans_tgt_lt' _ _ _ htr
+    use q', hst, hR', m.flipFinals.wf.trans_tgt_lt htr
   · rintro s s' a q ⟨hR, hst⟩ htr - -
     obtain ⟨q', hst, hR'⟩ := hsim.trans_match₂ hR htr (by simp) (by simp)
-    use q', hst, hR', m.flipFinals.wf.trans_tgt_lt' _ _ _ hst
+    use q', hst, hR', m.flipFinals.wf.trans_tgt_lt hst
 
 end sink
 
@@ -143,7 +136,7 @@ def product.prodArray' (a : Array γ) :=
       is.push (f s1 s2)
 
 @[inline]
-def product.prodArray := prodArray' f hm₁ hm₂ (Array.mkEmpty <| m₁.size * m₂.size)
+def product.prodArray := prodArray' f hm₁ hm₂ (Array.emptyWithCapacity <| m₁.size * m₂.size)
 
 include hinj in
 omit [BEq α] [Hashable α] [LawfulBEq α] in
@@ -164,13 +157,13 @@ lemma product.prodArray_spec_helper
     rintro hin rfl; exact hnew _ hin
   rintro a s₂ S hnin ih; split_ands
   · simp; apply List.Nodup.append ih.1 (by simp)
-    simp only [List.disjoint_singleton, Array.mem_toList]
+    simp only [List.disjoint_singleton, Array.mem_toList_iff]
     rintro hin
     rcases ih.2.2 _ _ |>.mp hin with hl | hr
     · simp at hl
     · simp [hnin] at hr
   · obtain ⟨_, ⟨r, hr1, hr2⟩, _⟩ := ih; use r ++ [f s s₂]
-    simp only [Array.push_toList, hr1, List.append_assoc, List.mem_append, List.mem_singleton, true_and]
+    simp only [Array.toList_push, hr1, List.append_assoc, List.mem_append, List.mem_singleton, true_and]
     rintro z (hz | rfl)
     · apply hr2 _ hz
     · tauto
@@ -218,7 +211,11 @@ lemma product.prodArray_spec_full :
     ∀ s₁ s₂, f s₁ s₂ ∈ product.prodArray f hm₁ hm₂ ↔ (s₁.val ∈ m₁ ∧ s₂.val ∈ m₂) := by
   simp only [prodArray]
   obtain ⟨h1, _, h2⟩ := prodArray'_spec_full (aᵢ := #[]) f hinj hm₁ hm₂ (by simp) (by simp)
-  simp [h1, h2]
+  simp only [Array.emptyWithCapacity_eq]
+  simp only [h1]
+  simp only [h2]
+  simp only [implies_true]
+  simp only [and_self]
 
 include hinj in
 @[simp]
@@ -253,7 +250,8 @@ where final (ss : m₁.m.states × m₂.m.states) := final? (ss.1 ∈ m₁.m.fin
       f (ss : m₁.m.states × m₂.m.states) :=
         let (s1, s2) := ss
         (FinEnum.toList (α := BitVec n)).foldl (init := Array.empty) fun as a =>
-          product.prodArray' (λ s₁ s₂ ↦ (a, (s₁, s₂))) (m₁.wf.trans_tgt_lt' s1 a) (m₂.wf.trans_tgt_lt' s2 a) as
+          product.prodArray' (λ s₁ s₂ ↦ (a, (s₁, s₂)))
+            (fun s' => m₁.wf.trans_tgt_lt (s := s1) (a := a)) (fun s' => m₂.wf.trans_tgt_lt (s := s2) (a := a)) as
 
 noncomputable def to_prop (f : Bool → Bool → Bool) (p1 p2 : Prop) : Prop :=
   f (@Decidable.decide p1 (Classical.propDecidable _)) (@Decidable.decide p2 (Classical.propDecidable _))
@@ -266,7 +264,8 @@ lemma product.f_spec {m₁ m₂ : CNFA n} {s₁ : m₁.m.states} {s₂ : m₂.m.
        (hnew : ∀ b s₁ s₂, (b, s₁, s₂) ∈ as → b ∉ (FinEnum.toList (α := BitVec n))) s₁' s₂',
         (a, (s₁', s₂')) ∈
           ((FinEnum.toList (α := BitVec n)).foldl (init := as) fun as a =>
-          product.prodArray' (λ s₁' s₂' ↦ (a, (s₁', s₂'))) (m₁.wf.trans_tgt_lt' s₁ a) (m₂.wf.trans_tgt_lt' s₂ a) as) ↔
+          product.prodArray' (λ s₁' s₂' ↦ (a, (s₁', s₂')))
+            (fun _ => m₁.wf.trans_tgt_lt (s := s₁) (a := a)) (fun _ => m₂.wf.trans_tgt_lt (s := s₂) (a := a)) as) ↔
         (a, (s₁', s₂')) ∈ as ∨ a ∈ (FinEnum.toList (α := BitVec n)) ∧ s₁'.val ∈ m₁.m.tr s₁ a ∧ s₂'.val ∈ m₂.m.tr s₂ a by
     rintro a s₁' s₂'; rw [f, heq]
     · simp; rintro h; apply Array.not_mem_empty at h; trivial
@@ -281,21 +280,23 @@ lemma product.f_spec {m₁ m₂ : CNFA n} {s₁ : m₁.m.states} {s₂ : m₂.m.
     rintro bs b hnd hnd' hnew s₁' s₂'
     obtain ⟨hnd'', ⟨r, hr, hf⟩, hin⟩ := prodArray'_spec_full (fun s₁' s₂' => (a, s₁', s₂'))
       (by rintro _ _ _ _ ⟨rfl, rfl, rfl⟩; tauto)
-      (m₁.wf.trans_tgt_lt' s₁ a) (m₂.wf.trans_tgt_lt' s₂ a)
+      (fun _ => m₁.wf.trans_tgt_lt (s := s₁)) (fun _ => m₂.wf.trans_tgt_lt (s := s₂) (a := a))
       hnd
       (by dsimp; rintro s₁ s₂ hin; apply hnew at hin; simp at hin)
     dsimp
     have hmem : ∀ b s₁' s₂', b ≠ a → (b, s₁', s₂') ∈ prodArray' (fun s₁' s₂' => (a, s₁', s₂'))
-        (m₁.wf.trans_tgt_lt' s₁ a) (m₂.wf.trans_tgt_lt' s₂ a) bs → (b, s₁', s₂') ∈ bs := by
+        (fun _ => m₁.wf.trans_tgt_lt (s := s₁) (a := a))
+        (fun _ => m₂.wf.trans_tgt_lt (s := s₂) (a := a)) bs →
+          (b, s₁', s₂') ∈ bs := by
       rintro b s₁' s₂' hneq hin
-      rw [Array.mem_def] at hin ⊢; simp only [hr, List.mem_append] at hin
+      rw [Array.mem_def] at hin ⊢; rw [hr] at hin; simp only [List.mem_append] at hin
       rcases hin with hin | hin; assumption
       obtain ⟨_, _, ⟨rfl, -, -⟩⟩ := hf _ hin; simp at hneq
     rw [ih] <;> clear ih; rotate_left
     · apply hnd''
     · exact (List.nodup_cons.mp hnd').2
     · rintro b s₁' s₂' hin; by_cases heq : b = a
-      · subst heq; apply List.Nodup.not_mem hnd'
+      · subst heq; apply List.Nodup.notMem hnd'
       · specialize hnew b s₁' s₂' (hmem b s₁' s₂' heq hin); simp at hnew; simp [hnew]
     by_cases heq :  b = a
     · subst heq
@@ -345,8 +346,8 @@ lemma product.sim {m1 m2 : CNFA n}:
     simp [NFA.product] at hst; rcases hst with ⟨hst₁, hst₂⟩
     obtain ⟨s₁', hst₁, hR₁'⟩ := hsim₁.trans_match₂ hR₁ hst₁ (by simp) (by simp)
     obtain ⟨s₂', hst₂, hR₂'⟩ := hsim₂.trans_match₂ hR₂ hst₂ (by simp) (by simp)
-    have hin₁ : s₁' ∈ m1.m.states := by apply m1.wf.trans_tgt_lt' _ _ _ hst₁;
-    have hin₂ : s₂' ∈ m2.m.states := by apply m2.wf.trans_tgt_lt' _ _ _ hst₂
+    have hin₁ : s₁' ∈ m1.m.states := by apply m1.wf.trans_tgt_lt hst₁;
+    have hin₂ : s₂' ∈ m2.m.states := by apply m2.wf.trans_tgt_lt hst₂
     simp only [nfa, Set.mem_setOf_eq, Prod.exists, f_spec, exists_and_left, exists_prop]
     use ⟨s₁', hin₁⟩, ⟨s₂', hin₂⟩
 
@@ -364,7 +365,7 @@ def CNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : CNFA n)
   · apply worklistRun_spec
   apply product.sim <;> assumption
 
-def CNFA.inter_spec (m1 m2 : CNFA n)
+lemma CNFA.inter_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
     m1.Sim M1 →
     m2.Sim M2 →
@@ -376,7 +377,26 @@ def CNFA.inter_spec (m1 m2 : CNFA n)
   simp [heq]
   apply product_spec <;> assumption
 
-def CNFA.union_spec (m1 m2 : CNFA n)
+@[simp]
+def CNFA.inter_language (m₁ m₂ : CNFA n) :
+    m₁.recognizes L₁ →
+    m₂.recognizes L₂ →
+    (m₁.inter m₂).recognizes (L₁ ∩ L₂) := by
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.inter M₂
+  simp_all only [inter_spec, true_and]
+  simp_all [NFA'.inter]
+
+def CNFA.inter_bv_language (m₁ m₂ : CNFA n) :
+    m₁.bv_recognizes L₁ →
+    m₂.bv_recognizes L₂ →
+    (m₁.inter m₂).bv_recognizes (L₁ ∩ L₂) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.inter M₂
+  simp_all [inter_spec]
+
+lemma CNFA.union_spec (m1 m2 : CNFA n)
   {M1 : NFA' n} {M2 : NFA' n} :
     m1.Sim M1 →
     m2.Sim M2 →
@@ -388,10 +408,28 @@ def CNFA.union_spec (m1 m2 : CNFA n)
   simp [heq]
   apply product_spec <;> apply addSink_spec <;> assumption
 
+def CNFA.union_language (m₁ m₂ : CNFA n) :
+    m₁.recognizes L₁ →
+    m₂.recognizes L₂ →
+    (m₁.union m₂).recognizes (L₁ ∪ L₂) := by
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.union M₂
+  simp_all only [union_spec, true_and]
+  simp_all [NFA'.union]
+
+def CNFA.union_bv_language (m₁ m₂ : CNFA n) :
+    m₁.bv_recognizes L₁ →
+    m₂.bv_recognizes L₂ →
+    (m₁.union m₂).bv_recognizes (L₁ ∪ L₂) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M₁, hsim₁, rfl⟩ ⟨M₂, hsim₂, rfl⟩
+  use M₁.union M₂
+  simp_all [union_spec, true_and]
+
 end product
 
 def HashSet.inter [BEq A] [Hashable A] (m1 m2 : Std.HashSet A) : Std.HashSet A :=
-  m1.fold (init := Std.HashSet.empty) fun mi x => if m2.contains x then mi.insert x else mi
+  m1.fold (init := ∅) fun mi x => if m2.contains x then mi.insert x else mi
 
 def Std.HashSet.isDisjoint [BEq A] [Hashable A] (m1 m2 : Std.HashSet A) : Bool :=
   (HashSet.inter m1 m2).isEmpty
@@ -411,7 +449,7 @@ def BitVec.any (b : BitVec w) (f : Fin w → Bool → Bool) :=
 
 theorem BitVec.any_iff_exists {bv : BitVec w} :
     bv.any p ↔ ∃ (i : Fin w), p i (bv.getLsbD i) := by
-  simp [any]; rfl
+  simp [any]
 
 -- could this become a `where` clause in `determinize`?
 def CNFA.determinize.inits (m : CNFA n) : Array (BitVec m.m.stateMax) :=
@@ -448,6 +486,7 @@ lemma bv_to_set_ext : bv_to_set bv₁ = bv_to_set bv₂ ↔ bv₁ = bv₂ := by
   · rintro heq; ext i hi
     rw [Set.ext_iff] at heq
     simp_all [bv_to_set]
+    apply heq
   · tauto
 
 @[simp]
@@ -463,7 +502,7 @@ lemma transBV_spec {m : CNFA n} {res} {s : m.m.states} :
     · constructor
       · simp_all [bv_to_set]
       · rintro (h | h); simp_all [bv_to_set]
-        apply m.wf.trans_tgt_lt' at h; simp_all only [RawCNFA.states, not_lt, Finset.mem_range]
+        apply m.wf.trans_tgt_lt at h; simp_all only [RawCNFA.states, not_lt, Finset.mem_range]
         suffices _ : m.m.stateMax < m.m.stateMax by simp_all
         exact Nat.lt_of_le_of_lt hlt h
   apply Std.HashSet.fold_induction
@@ -542,7 +581,9 @@ lemma CNFA.determinize.f_spec {m : CNFA n} {a : BitVec n} {sa sa' : BitVec m.m.s
     simp [List.foldl_nil, List.not_mem_nil, false_and, iff_false]
   case cons a as ih =>
     rintro acc b sa'
-    simp
+    simp only [List.foldl_cons, List.push_append_toArray, Array.mem_append,
+      Array.mem_toArray, List.mem_cons, Prod.mk.injEq, List.mem_map, existsAndEq,
+      true_and]
     rw [ih]
     simp only [Array.mem_push, Prod.mk.injEq]
     constructor
@@ -622,6 +663,18 @@ def CNFA.determinize_spec (m : CNFA n)
       obtain ⟨s', htr, hRi'⟩ := hsim.trans_match₂ hRi hst (by simp) (by simp)
       use s'; simp_all [transSetBV_spec]; tauto
 
+lemma CNFA.determinize_language {m : CNFA n} :
+    m.recognizes L → m.determinize.recognizes L := by
+  rintro ⟨M, hsim, rfl⟩
+  use M.determinize, m.determinize_spec hsim
+  simp [NFA'.determinize, NFA'.accepts, NFA'.accepts']
+
+lemma CNFA.determinize_bv_language {m : CNFA n} :
+    m.bv_recognizes L → m.determinize.bv_recognizes L := by
+  simp only [bv_recognizes_equiv, forall_exists_index, and_imp]
+  rintro M hsim rfl
+  use M.determinize, m.determinize_spec hsim
+  simp [NFA'.determinize, NFA'.accepts, NFA'.accepts']
 
 def CNFA.neg (m : CNFA n) : CNFA n := m.determinize.flipFinals
 
@@ -630,6 +683,113 @@ def CNFA.neg_spec (m : CNFA n)  {M : NFA' n} (hsim : m.Sim M) :
   rw [NFA'.neg_eq, CNFA.neg]
   apply CNFA.flipFinals_spec
   apply determinize_spec m hsim
+
+lemma CNFA.neg_bv_language {m : CNFA n} :
+    m.bv_recognizes L → (m.neg.bv_recognizes Lᶜ) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use M.neg
+  simp_all [neg_spec]
+
+def RawCNFA.reverse (m : RawCNFA A) : RawCNFA A :=
+  let m' := { stateMax := m.stateMax, trans := Std.HashMap.emptyWithCapacity m.trans.size, initials := m.finals, finals := m.initials}
+  m.trans.fold (init := m') processState
+where
+  processState := fun m' (s, a) ss' =>
+    ss'.fold (init := m') fun m' s' => m'.addTrans a s' s
+
+@[simp]
+lemma RawCNFA.reverse_induction_helper {m : RawCNFA A} :
+    (∃ ss', m.trans.toPFun (s, a) = some ss' ∧ s' ∈ ss') ↔ s' ∈ m.tr s a := by
+  simp [Std.HashMap.toPFun, tr, Std.HashMap.getD_eq_getD_getElem?]
+  rcases m.trans[(s, a)]? <;> simp
+
+lemma RawCNFA.reverse_spec_procesState {m : RawCNFA A} (hwf : m.WF) s₀ a₀ ss' (hs₀ : s₀ ∈ m.states) :
+    let motive m' ss' :=
+      (∀ s ∈ ss', s ∈ m.states) →
+        m'.WF ∧ m'.stateMax = m.stateMax ∧ m'.initials = m.initials ∧ m'.finals = m.finals ∧
+          ∀ s a s', s' ∈ m'.tr s a ↔ (s' ∈ m.tr s a ∨ s' = s₀ ∧ a = a₀ ∧ s ∈ ss')
+    motive (RawCNFA.reverse.processState m (s₀, a₀) ss') ss'.toSet := by
+  rintro motive
+  apply Std.HashSet.fold_induction
+  · simpa [motive]
+  · rintro m' s ss' hnew ih hss'
+    specialize ih (by simp_all)
+    rcases ih with ⟨hwf', hms', his', hfs', htrs'⟩
+    simp_all [motive]
+    constructor
+    · have _ : s₀ ∈ m'.states := by simp_all [states]
+      have _ : s ∈ m'.states := by simp_all [states]
+      simp_all
+    · grind
+
+lemma RawCNFA.reverse_spec {m : RawCNFA A} (hwf : m.WF) :
+    let m' := m.reverse
+    m'.WF ∧ m'.stateMax = m.stateMax ∧ m'.initials = m.finals ∧ m'.finals = m.initials ∧
+      ∀ s a s', s' ∈ m'.tr s a ↔ s ∈ m.tr s' a := by
+  let motive (m' : RawCNFA A) (trs : (State × A) → Option (Std.HashSet State)) :=
+    (∀ s a ss', trs (s, a) = some ss' → s ∈ m.states ∧ ∀ s' ∈ ss', s' ∈ m.states) →
+    m'.WF ∧ m'.stateMax = m.stateMax ∧ m'.initials = m.finals ∧ m'.finals = m.initials ∧
+      ∀ s a s', s' ∈ m'.tr s a ↔ ∃ ss', trs (s', a) = some ss' ∧ s ∈ ss' -- s' -a-> s is a transition
+  suffices h : motive (m.reverse) (m.trans.toPFun) by
+    specialize h (by rintro s a ss' heq; exact ⟨hwf.trans_src_lt _ (Std.HashMap.mem_of_getElem? heq), fun s' hin => hwf.trans_tgt_lt_internal heq hin⟩)
+    simp_all [motive]
+
+  apply Std.HashMap.fold_induction
+  · simp [motive, tr]
+    constructor <;> simp_all [tr]
+  · rintro m' ⟨s, a⟩ ss' trs hnew ih
+    rintro hsts
+    specialize ih (by rintro s₀ a₀ ss₀ heq; apply hsts _ a₀; simp [Function.update_apply]; split <;> simp_all)
+    rcases ih with ⟨hwf', hm', his', hfs', htrs'⟩
+    specialize hsts s a ss' (by simp)
+    have hs : s ∈ m'.states := by simp_all [states]
+    have hss' : ∀ s ∈ ss'.toSet, s ∈ m'.states := by simp_all [states]
+    obtain ⟨hwf'', hm'', his'', hfs'', htrs''⟩ := reverse_spec_procesState hwf' s a ss' hs hss'
+    simp_all only [true_and, motive]
+    rintro s₁ b s₂
+    by_cases hcond : s₂ = s ∧ b = a
+    · rcases hcond with ⟨rfl, rfl, hin⟩
+      simp_all
+    · simp_all
+
+
+def CNFA.reverse (m : CNFA n) : CNFA n :=
+  ⟨m.m.reverse, RawCNFA.reverse_spec m.wf |>.1⟩
+
+lemma CNFA.reverse_spec {m : CNFA n} : m.reverse.Sim m.toNFA'.reverse := by
+  obtain ⟨h₁, h₂, h₃, h₄, h₅⟩ := RawCNFA.reverse_spec m.wf
+  use (λ s s' ↦ s = s'.val)
+  simp_all [NFA'.reverse, NFA.reverse, reverse, toNFA']
+  constructor <;> aesop
+
+lemma CNFA.reverse_language {m : CNFA n} (hl : m.recognizes L) : m.reverse.recognizes L.reverse := by
+  rcases hl with ⟨M, hsim, rfl⟩
+  use m.toNFA'.reverse
+  simp [reverse_spec]
+  simp_all [toNFA', NFA'.reverse]
+  suffices h : m.toNFA.accepts = M.M.accepts by simp_all
+  exact sim_toNFA_eq_accepts hsim
+
+def CNFA.minimize (m : CNFA n) : CNFA n :=
+  let mᵣ := m.reverse.determinize
+  mᵣ.reverse.determinize
+
+lemma CNFA.minimize_language {m : CNFA n} :
+    m.recognizes L → m.minimize.recognizes L := by
+  rintro h
+  rw [←Language.reverse_reverse L]
+  simp only [minimize]
+  apply determinize_language
+  apply reverse_language
+  apply determinize_language
+  apply reverse_language h
+
+lemma CNFA.minimize_bv_language {m : CNFA n} :
+    m.bv_recognizes L → m.minimize.bv_recognizes L := by
+  rintro ⟨L, hrec, rfl⟩
+  apply minimize_language at hrec
+  use L
 
 end determinization
 
@@ -678,7 +838,7 @@ def CNFA.isEmpty (m : CNFA n) : Bool := m.m.finals.isEmpty
 theorem CNFA.isEmpty_spec {m : CNFA n} {M : NFA' n} :
     m.Sim M → m.isEmpty → M.accepts = ∅ := by
   rintro ⟨R, hsim⟩ hemp
-  apply Set.eq_empty_of_forall_not_mem
+  apply Set.eq_empty_of_forall_notMem
   rintro w ⟨w', ⟨q, ha, he⟩, ww⟩
   obtain ⟨s, hR⟩ := hsim.rel_eval he
   obtain hfin := hsim.accept hR |>.mpr ha
@@ -693,6 +853,15 @@ theorem CNFA.isUniversal_spec {m : CNFA n} {M : NFA' n} :
   have hsim' : m.neg.Sim M.neg := neg_spec m hsim
   have _ := isEmpty_spec hsim' huniv
   simp_all
+
+theorem CNFA.isUniversal_bv_language {m : CNFA n} :
+    m.bv_recognizes L → m.isUniversal → L = ⊤ := by
+  rintro hr hu
+  suffices htop : m.bv_recognizes ⊤ by
+    apply bv_recognizes_functional <;> assumption
+  rw [bv_recognizes_equiv] at hr ⊢
+  rcases hr with ⟨M, hsim, rfl⟩
+  use M, hsim, m.isUniversal_spec hsim hu
 
 /-- Recognizes the empty word -/
 def RawCNFA.emptyWord : RawCNFA A :=
@@ -724,7 +893,7 @@ variable {n : Nat}
 
 @[inline]
 def RawCNFA.lift (m₁: RawCNFA (BitVec n1)) (f : Fin n1 → Fin n2) : RawCNFA (BitVec n2) :=
-  let trans := (List.range m₁.stateMax).foldl (init := Std.HashMap.empty) fun m2 s => processState m2 s
+  let trans := (List.range m₁.stateMax).foldl (init := ∅) fun m2 s => processState m2 s
   { m₁ with trans }
 where
   @[inline]
@@ -741,9 +910,9 @@ where
 lemma RawCNFA.lift_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₁ → Fin n₂} (hwf : m.WF) :
     m.lift f |>.WF := by
   have hss : (m.lift f).states = m.states := rfl
-  constructor <;> simp_all [hss, lift]
+  constructor <;> (try rw [WF.trans_tgt_lt_equiv_internal]) <;> simp_all [hss, lift]
   · let motive (X : Std.HashMap (State × BitVec n₂) (Std.HashSet State)) := ∀ s a, (s, a) ∈ X → s ∈ m.states
-    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) Std.HashMap.empty (List.range m.stateMax)) by
+    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) ∅ (List.range m.stateMax)) by
       exact h
     apply List.foldlRecOn
     · simp [motive]
@@ -761,7 +930,7 @@ lemma RawCNFA.lift_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₁ → Fin n₂} (h
   · let motive (X : Std.HashMap (State × BitVec n₂) (Std.HashSet State)) :=
       ∀ (s : State) (a : BitVec n₂) (ss' : Std.HashSet State) s',
         X[(s, a)]? = some ss' → s' ∈ ss' → s' ∈ m.states
-    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) Std.HashMap.empty (List.range m.stateMax)) by
+    suffices h : motive (List.foldl (fun m2 s => lift.processState m f m2 s) ∅ (List.range m.stateMax)) by
       exact h
     apply List.foldlRecOn
     · simp [motive]
@@ -776,7 +945,7 @@ lemma RawCNFA.lift_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₁ → Fin n₂} (h
     · rcases heq? with ⟨rfl, rfl⟩
       simp at heq; subst heq; simp_all
       rcases hin with hin | hin
-      · exact hwf.trans_tgt_lt' _ _ _ hin
+      · exact hwf.trans_tgt_lt hin
       · rcases htr : trans'[(s, a)]? with _ | ss'
         · rw [Std.HashMap.getD_eq_getD_getElem?, htr] at hin; simp at hin
         · rw [Std.HashMap.getD_eq_getD_getElem?, htr] at hin; apply ih' s a ss' _ htr hin
@@ -843,7 +1012,10 @@ def CNFA.lift_tr (m : CNFA n₁) (f : Fin n₁ → Fin n₂) :
   suffices h : motive (List.range m.m.stateMax) by
     simp [motive] at h
     rw [h]
-    simp only [Std.HashMap.getD_empty, Std.HashSet.not_mem_emptyc, false_or, and_iff_right_iff_imp]
+    simp only [Std.HashMap.getD_empty]
+    simp only [Std.HashSet.not_mem_empty]
+    simp only [false_or]
+    simp only [and_iff_right_iff_imp, motive]
     rintro hin
     have h := m.wf.trans_src_lt'' hin
     simp [RawCNFA.states] at h; exact h
@@ -856,7 +1028,7 @@ def CNFA.lift_tr (m : CNFA n₁) (f : Fin n₁ → Fin n₂) :
     rw [ih]; simp only [RawCNFA.lift_processState_spec]
     aesop
 
-def CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
+lemma CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
     m.Sim M → (m.lift f |>.Sim (M.lift f)) := by
   rintro ⟨R, hsim⟩; use R; constructor
   · exact hsim.accept
@@ -871,10 +1043,18 @@ def CNFA.lift_spec (m : CNFA n1) (f : Fin n1 → Fin n2) {M : NFA' n1} :
     obtain ⟨q', hst, hR'⟩ := hsim.trans_match₂ hR htr (by simp) (by simp)
     simp [NFA'.proj]; use q', hst, hR'
 
+@[simp]
+lemma CNFA.lift_bv_language {m : CNFA n1} {f : Fin n1 → Fin n2} :
+    m.bv_recognizes L → (m.lift f |>.bv_recognizes (BitVecs.transport f ⁻¹' L)) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use M.lift f
+  simp_all [lift_spec]
+
 -- Morally, n1 >= n2
 @[inline]
 def RawCNFA.proj (m1: RawCNFA (BitVec n1)) (f : Fin n2 → Fin n1) : RawCNFA (BitVec n2) :=
-  let trans := m1.trans.keysArray.foldl (init := Std.HashMap.empty) process
+  let trans := m1.trans.keysArray.foldl (init := Std.HashMap.emptyWithCapacity) process
   { m1 with trans }
 where
   @[inline]
@@ -887,7 +1067,7 @@ where
 lemma RawCNFA.proj_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₂ → Fin n₁} (hwf : m.WF) :
     m.proj f |>.WF := by
   have hss : (m.proj f).states = m.states := rfl
-  constructor <;> simp_all [hss, proj]
+  constructor <;> (try rw [WF.trans_tgt_lt_equiv_internal]) <;> simp_all [hss, proj]
   · let motive (_ : Nat) (X : Std.HashMap (State × BitVec n₂) (Std.HashSet State)) := ∀ s a, (s, a) ∈ X → s ∈ m.states
     suffices h : motive (m.trans.keysArray.size) (m.proj f).trans by
       exact h
@@ -907,14 +1087,13 @@ lemma RawCNFA.proj_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₂ → Fin n₁} (h
     simp only [proj]; apply Array.foldl_induction
     · simp [motive]
     rintro i trans ih s₀ a₀ ss' s' heq hin
-    simp only [proj.process, Array.get_eq_getElem, Std.HashMap.getElem?_insert, beq_iff_eq,
-      Prod.mk.injEq] at heq
+    simp only [proj.process, Std.HashMap.getElem?_insert, beq_iff_eq, Prod.mk.injEq] at heq
     split_ifs at heq with h
     on_goal 2 => tauto
     · rcases h with ⟨rfl, rfl⟩
       simp at heq; subst heq; simp at hin
       rcases hin with hin | hin
-      · exact WF.trans_tgt_lt' hwf _ _ _ hin
+      · exact hwf.trans_tgt_lt hin
       · rw [Std.HashMap.getD_eq_getD_getElem?] at hin
         rcases htr : trans[(m.trans.keysArray[i.val].1, BitVec.transport f m.trans.keysArray[i.val].2)]? with _ | ss'
         · rw [htr] at hin; simp at hin
@@ -952,15 +1131,13 @@ def CNFA.proj_tr (m : CNFA n₂) (f : Fin n₁ → Fin n₂) :
     constructor
     · rintro (hin | ⟨a', hin, heq, hin'⟩)
       · use t.2
-        sorry
-        -- simp +zetaDelta only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_take, Array.size_take,
-        --   lt_inf_iff, and_self, and_true, hin]
-        -- use i.val, by simp +zetaDelta
-      · sorry
-        -- use a'; simp [heq, hin']
-        -- simp only [Array.mem_iff_getElem, Array.getElem_take, Array.size_take, Fin.is_le',
-        --   inf_of_le_left, lt_inf_iff] at hin ⊢
-        -- rcases hin with ⟨j, hj, heq⟩; use j, by omega
+        simp +zetaDelta only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_extract, zero_add,
+          Array.size_extract, tsub_zero, lt_inf_iff, hin, and_self, and_true]
+        use i.val, by simp +zetaDelta
+      · use a'; simp [heq, hin']
+        simp only [Array.mem_iff_getElem, Array.getElem_extract, zero_add, Array.size_extract,
+          Fin.is_le', inf_of_le_left, tsub_zero, lt_inf_iff] at hin ⊢
+        rcases hin with ⟨j, hj, heq⟩; use j, by omega
     · rintro ⟨a', hin, heq, hin'⟩
       by_cases heq? : a' = t.2
       · subst heq?; tauto
@@ -968,18 +1145,16 @@ def CNFA.proj_tr (m : CNFA n₂) (f : Fin n₁ → Fin n₂) :
       rcases hin with ⟨j, hj, heq⟩
       have hneq : j ≠ i := by
         rintro rfl; apply heq?; apply_fun Prod.snd at heq; exact heq.symm
-      sorry
-      -- right; use a'; simp_all only [←heq, ne_eq, and_self, and_true]
-      -- use j, by omega
-  · sorry
-    -- simp only [ih, Array.mem_iff_getElem, Array.getElem_take, Array.size_take, Fin.is_le',
-    -- inf_of_le_left, lt_inf_iff]
-    -- constructor
-    -- · rintro ⟨a', ⟨j, _, _⟩, htp, hin⟩; use a', ⟨j, by use by omega⟩
-    -- · rintro ⟨a', ⟨j, _, heq⟩, htp, hin⟩
-    --   have _ : j ≠ i := by
-    --     rintro rfl; simp [←htp, heq] at hcond
-    --   use a', ⟨j, by use by omega⟩
+      right; use a'; simp_all only [←heq, ne_eq, and_self, and_true]
+      use j, by omega
+  · simp only [ih, Array.mem_iff_getElem, Array.getElem_extract, zero_add, Array.size_extract,
+    Fin.is_le', inf_of_le_left, tsub_zero, lt_inf_iff, motive]
+    constructor
+    · rintro ⟨a', ⟨j, _, _⟩, htp, hin⟩; use a', ⟨j, by use by omega⟩
+    · rintro ⟨a', ⟨j, _, heq⟩, htp, hin⟩
+      have _ : j ≠ i := by
+        rintro rfl; simp [←htp, heq] at hcond
+      use a', ⟨j, by use by omega⟩
 
 def CNFA.proj_spec (m : CNFA n2) (f : Fin n1 → Fin n2) {M : NFA' n2} :
     m.Sim M → (m.proj f |>.Sim (M.proj f)) := by
@@ -995,5 +1170,12 @@ def CNFA.proj_spec (m : CNFA n2) (f : Fin n1 → Fin n2) {M : NFA' n2} :
     simp at htr; rcases htr with ⟨a', rfl, htr⟩
     obtain ⟨q', hst, hR'⟩ := hsim.trans_match₂ hR htr (by simp) (by simp)
     simp [NFA'.proj]; use q', ⟨a', rfl, hst⟩, hR'
+
+lemma CNFA.proj_bv_language {m : CNFA n2} {f : Fin n1 → Fin n2} :
+    m.bv_recognizes L → (m.proj f |>.bv_recognizes (BitVecs.transport f '' L)) := by
+  repeat rw [bv_recognizes_equiv]
+  rintro ⟨M, hsim, rfl⟩
+  use M.proj f
+  simp_all [proj_spec]
 
 end lift_proj

@@ -1,28 +1,64 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import SSA.Core.Util.Poison
 import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.SimpSet
+
+--TODO: are any of these imports actually needed in this file?
 import Mathlib.Tactic.Cases
 import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
 import Aesop
-import SSA.Projects.InstCombine.LLVM.SimpSet
+
+namespace InstCombine
+
+scoped instance : Refinement (BitVec w) := .ofEq
+@[simp, simp_llvm_split] theorem bv_isRefinedBy_iff (x y : BitVec w) : x ⊑ y ↔ x = y := by rfl
+-- ^^ declare that for pure bitvectors, refinement is just equality
+
+end InstCombine
 
 
 namespace LLVM
+open InstCombine
+open PoisonOr (value poison)
+
+def IntW w := PoisonOr <| BitVec w
+
+namespace IntW
+
+instance : Inhabited (IntW w) := by unfold IntW; infer_instance
+instance : DecidableEq (IntW w) := by unfold IntW; infer_instance
+
+instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
+
+/--
+`isRefinedBy_iff` rewrites refinement of `LLVM.IntW` values into refinement
+of `PoisonOr _` values, effectively unfolding the `LLVM.IntW` definition (and
+the Refinement instance).
+
+By making this a simp-lemma, we ensure all `PoisonOr` simp-lemmas apply without
+having to duplicate that API for `LLVM.IntW`.
+-/
+@[simp, simp_llvm]
+theorem isRefinedBy_iff (x y : LLVM.IntW w) :
+    x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
+  rfl
+
+end IntW
 
 
-abbrev IntW w := Option <| BitVec w
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 @[simp_llvm]
 def and? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x &&& y
+  .value <| x &&& y
 
 @[simp_llvm_option]
-theorem and?_eq : LLVM.and? a b  = some (a &&& b) := rfl
+theorem and?_eq : LLVM.and? a b  = .value (a &&& b) := rfl
 
 @[simp_llvm_option]
 def and {w : Nat} (x y : IntW w) : IntW w := do
@@ -36,21 +72,21 @@ operands.
 -/
 @[simp_llvm]
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x ||| y
+  .value <| x ||| y
 
 @[simp_llvm_option]
-theorem or?_eq : LLVM.or? a b  = some (a ||| b) := rfl
+theorem or?_eq : LLVM.or? a b  = .value (a ||| b) := rfl
 
 structure DisjointFlag where
   disjoint : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
   if flag.disjoint ∧ x' &&& y' != 0 then
-    none
+    .poison
   else
     or? x' y'
 
@@ -61,10 +97,10 @@ is the “~” operator in C.
 -/
 @[simp_llvm]
 def xor? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x ^^^ y
+  .value <| x ^^^ y
 
 @[simp_llvm_option]
-theorem xor?_eq : LLVM.xor? a b  = some (a ^^^ b) := rfl
+theorem xor?_eq : LLVM.xor? a b  = .value (a ^^^ b) := rfl
 
 @[simp_llvm_option]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
@@ -79,24 +115,24 @@ Because LLVM integers use a two’s complement representation, this instruction 
 -/
 @[simp_llvm]
 def add? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x + y
+  .value <| x + y
 
 @[simp_llvm_option]
-theorem add?_eq : LLVM.add? a b  = some (a + b) := rfl
+theorem add?_eq : LLVM.add? a b  = .value (a + b) := rfl
 
 structure NoWrapFlags where
   nsw : Bool := false
   nuw : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
-    none
-  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
-    none
+  if flags.nsw ∧ BitVec.saddOverflow x' y' then
+    .poison
+  else if flags.nuw ∧ BitVec.uaddOverflow x' y' then
+    .poison
   else
     add? x' y'
 
@@ -107,23 +143,19 @@ Because LLVM integers use a two’s complement representation, this instruction 
 -/
 @[simp_llvm]
 def sub? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x - y
+  .value <| x - y
 
 @[simp_llvm_option]
-theorem sub?_eq : LLVM.sub? a b  = some (a - b) := rfl
+theorem sub?_eq : LLVM.sub? a b  = .value (a - b) := rfl
 
 @[simp_llvm_option]
 def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  -- Signed extensions and difference
-  let sx' := BitVec.signExtend (w+1) x'
-  let sy' := BitVec.signExtend (w+1) y'
-  let sdiff := sx' - sy'
-  if flags.nsw ∧ (sdiff.msb ≠ sdiff.getMsbD 1) then
-    none
-  else if flags.nuw ∧ (x' < y') then
-    none
+  if flags.nsw ∧ BitVec.ssubOverflow x' y' then
+    .poison
+  else if flags.nuw ∧ BitVec.usubOverflow x' y' then
+    .poison
   else
     sub? x' y'
 
@@ -140,34 +172,20 @@ sign-extended or zero-extended as appropriate to the width of the full product.
 -/
 @[simp_llvm]
 def mul? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x * y
+  .value <| x * y
 
 @[simp_llvm_option]
-theorem mul?_eq : LLVM.mul? a b  = some (a * b) := rfl
+theorem mul?_eq : LLVM.mul? a b  = .value (a * b) := rfl
 
 @[simp_llvm_option]
 def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let w1 := w-1
-  let w2 := 2*w
-  -- For multiplication, we do the "naive" approach of doubling the size, doing the multiplication, and comparing to the range.
-  -- Signed Wrap
-  let sx' := x'.signExtend w2
-  let sy' := y'.signExtend w2
-  let smul := sx' * sy'
-  let slbound := (BitVec.twoPow w w1).signExtend w2 -- signed lower bound := -2^(w-1)
-  let shbound := BitVec.twoPow w2 w1 -- signed higher bound + 1 := 2^(w-1)
-  -- Unsigned Wrap
-  let ux' := x'.zeroExtend w2
-  let uy' := y'.zeroExtend w2
-  let umul := ux' * uy'
-  let uhbound := shbound <<< 1
 
-  if flags.nsw ∧ ((smul <ₛ slbound) ∨ (smul ≥ₛ shbound)) then
-    none
-  else if flags.nuw ∧ umul ≥ uhbound then
-    none
+  if flags.nsw ∧ BitVec.smulOverflow x' y' then
+    .poison
+  else if flags.nuw ∧ BitVec.umulOverflow x' y' then
+    .poison
   else
     mul? x' y'
 
@@ -179,20 +197,20 @@ Division by zero is undefined behavior.
 @[simp_llvm]
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
   if y = 0 then
-    none
+    .poison
   else
-    some <| x / y
+    .value <| x / y
 
 structure ExactFlag where
   exact : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm_option]
 def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
   if flag.exact ∧ x'.umod y' ≠ 0 then
-    none
+    .poison
   else
     udiv? x' y'
 
@@ -216,16 +234,16 @@ at width 2, -4 / -1 is considered overflow!
 @[simp_llvm]
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
   if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
-    none
+    .poison
   else
-    some (x.sdiv y)
+    .value (x.sdiv y)
 
-theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
-  LLVM.sdiv? x 0 = none := by
+theorem sdiv?_denom_zero_eq_poison {w : Nat} (x : BitVec w) :
+  LLVM.sdiv? x 0 = .poison := by
   simp [LLVM.sdiv?, BitVec.sdiv]
 
-theorem sdiv?_eq_some_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
-    (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = some (BitVec.sdiv x y) := by
+theorem sdiv?_eq_value_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
+    (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = .value (BitVec.sdiv x y) := by
   simp [LLVM.sdiv?]
   tauto
 
@@ -234,7 +252,7 @@ def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
   let x' ← x
   let y' ← y
   if flag.exact ∧ x'.smod y' ≠ 0 then
-    none
+    .poison
   else
     sdiv? x' y'
 
@@ -243,8 +261,8 @@ def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW 
 theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
     sdiv? x y =
     if (y = 0) ∨ ((w ≠ 1) ∧ (x = BitVec.intMin w) ∧ (y = -1))
-      then none
-    else some <| BitVec.sdiv x y
+      then .poison
+    else .value <| BitVec.sdiv x y
     := by
   simp [sdiv?]; split_ifs <;> try tauto
 
@@ -256,9 +274,9 @@ Taking the remainder of a division by zero is undefined behavior.
 @[simp_llvm]
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
   if y = 0 then
-    none
+    .poison
   else
-    some <| x % y
+    .value <| x % y
 
 @[simp_llvm_option]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
@@ -271,7 +289,7 @@ def _root_.Int.rem (x y : Int) : Int :=
   if x ≥ 0 then (x % y) else ((x % y) - y.natAbs)
 
 theorem _root_.Int.rem_sign_dividend :
-  ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by
+  ∀ x y, Int.rem x y < 0 ↔ x < 0 := by
   intro x y
   apply Iff.intro
   <;> simp [Int.rem]; split_ifs <;> by_cases (y = 0) <;> rename_i hx hy
@@ -291,12 +309,12 @@ theorem _root_.Int.rem_sign_dividend :
       by_cases (0 < y)
       case pos hypos =>
         have hyleq : 0 ≤ y := by omega
-        rw [← Int.eq_natAbs_of_zero_le hyleq]; exact Int.emod_lt_of_pos x hypos
+        rw [← Int.eq_natAbs_of_nonneg hyleq]; exact Int.emod_lt_of_pos x hypos
       case neg hynonneg =>
         have hmyneg : 0 < -y := by omega
         have hmynnonpos : 0 ≤ -y := by omega
         rw [← Int.emod_neg, ← Int.natAbs_neg]
-        rw [← Int.eq_natAbs_of_zero_le hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
+        rw [← Int.eq_natAbs_of_nonneg hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
 
 /--
 This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),
@@ -318,9 +336,9 @@ We use this equation to define srem.
 @[simp_llvm]
 def srem? {w : Nat} (x y : BitVec w) : IntW w :=
   if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
-    none
+    .poison
   else
-    BitVec.srem x y
+    .value <| BitVec.srem x y
 
 @[simp_llvm_option]
 def srem {w : Nat} (x y : IntW w) : IntW w := do
@@ -340,8 +358,8 @@ bits in op1, this instruction returns a poison value.
 @[simp_llvm]
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   if op2 >= n
-  then .none
-  else some (op1 <<< op2)
+  then .poison
+  else .value (op1 <<< op2)
 
 
 @[simp_llvm_option]
@@ -350,9 +368,9 @@ def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let y' ← y
     -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
   if flags.nsw ∧ ((x' <<< y').sshiftRight'  y' ≠ x') then
-    none
+    .poison
   else if flags.nuw ∧ ((x' <<< y') >>> y' ≠ x') then
-    none
+    .poison
   else
     shl? x' y'
 
@@ -364,20 +382,20 @@ the shift.
 If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
 this instruction returns a poison value.
 
-Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
+Corresponds to `Std.BitVec.ushiftRight` in the `value` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   if op2 >= n
-  then .none
-  else some (op1 >>> op2)
+  then .poison
+  else .value (op1 >>> op2)
 
 @[simp_llvm_option]
 def lshr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
   if flag.exact ∧(x' >>> y') <<< y' ≠ x' then
-    none
+    .poison
   else
     lshr? x' y'
 
@@ -388,20 +406,20 @@ The most significant bits of the result will be filled with the sign bit of op1.
 If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
 this instruction returns a poison value.
 
-Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
+Corresponds to `Std.BitVec.sshiftRight` in the `value` case.
 -/
 @[simp_llvm]
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   if op2 >= n
-  then .none
-  else some (op1.sshiftRight' op2)
+  then .poison
+  else .value (op1.sshiftRight' op2)
 
 @[simp_llvm_option]
 def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
   if flag.exact ∧ (x' >>> y') <<< y' ≠ x' then
-    none
+    .poison
   else
     ashr? x' y'
 
@@ -413,7 +431,7 @@ def select {w : Nat} (c? : IntW 1) (x? y? : IntW w ) : IntW w := do
   let c ← c?
   if c = 1#1 then x? else y?
 
-inductive IntPredicate where
+inductive IntPred where
   | eq
   | ne
   | ugt
@@ -424,9 +442,9 @@ inductive IntPredicate where
   | sge
   | slt
   | sle
-deriving Inhabited, DecidableEq, Repr
+deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
-instance : ToString IntPredicate where
+instance : ToString IntPred where
   toString
   | .eq => "eq"
   | .ne => "ne"
@@ -459,7 +477,7 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
-def icmp' {w : Nat} (c : IntPredicate) (x y : BitVec w) : Bool :=
+def icmp' {w : Nat} (c : IntPred) (x y : BitVec w) : Bool :=
   match c with
     | .eq => (x == y)
     | .ne => (x != y)
@@ -474,7 +492,7 @@ def icmp' {w : Nat} (c : IntPredicate) (x y : BitVec w) : Bool :=
 
 
 /--
-Wrapper around `icmp` (this cannot become `none` on its own).
+Wrapper around `icmp` (this cannot become `poison` on its own).
 
 The ‘icmp’ instruction takes three operands.
 The first operand is the condition code indicating the kind of comparison to perform. It is not a value, just a keyword.
@@ -494,23 +512,23 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
-def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
-  some ↑(icmp' c x y)
+def icmp? {w : Nat} (c : IntPred) (x y : BitVec w) : IntW 1 :=
+  .value ↑(icmp' c x y)
 
 @[simp]
 theorem icmp?_ult_eq {w : Nat} {a b : BitVec w} :
-  icmp? .ult a b =  some (BitVec.ofBool (a <ᵤ b)) := rfl
+  icmp? .ult a b = .value (BitVec.ofBool (a <ᵤ b)) := rfl
 
 @[simp]
 theorem icmp?_slt_eq {w : Nat} {a b : BitVec w} :
-  icmp? .slt a b =  some (BitVec.ofBool (a <ₛ b)) := rfl
+  icmp? .slt a b = .value (BitVec.ofBool (a <ₛ b)) := rfl
 
 @[simp]
 theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
-  icmp? .sgt a b =  some (BitVec.ofBool (a >ₛ b)) := rfl
+  icmp? .sgt a b = .value (BitVec.ofBool (a >ₛ b)) := rfl
 
 @[simp_llvm_option]
-def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
+def icmp {w : Nat} (c : IntPred) (x y : IntW w) : IntW 1 := do
   let x' ← x
   let y' ← y
   icmp? c x' y'
@@ -534,17 +552,17 @@ TODO: double-check that truncating works the same as MLIR (signedness, overflow,
 -/
 @[simp_llvm]
 def const? (w : Nat) (i : Int): IntW w :=
-  some <| BitVec.ofInt w i
+  .value <| BitVec.ofInt w i
 
 @[simp_llvm_option]
-theorem const?_eq : LLVM.const? w i = some (BitVec.ofInt w i) := rfl
+theorem const?_eq : LLVM.const? w i = .value (BitVec.ofInt w i) := rfl
 
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
-  some (~~~x)
+  .value (~~~x)
 
 @[simp_llvm_option]
-theorem not?_eq : LLVM.not? a = some (~~~ a) := rfl
+theorem not?_eq : LLVM.not? a = .value (~~~ a) := rfl
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -553,10 +571,10 @@ def not {w : Nat} (x : IntW w) : IntW w := do
 
 @[simp_llvm]
 def neg? {w : Nat} (x : BitVec w) : IntW w := do
-  some <| (-.) x
+  .value <| (-.) x
 
 @[simp_llvm_option]
-theorem neg?_eq : LLVM.neg? a = some (-a) := rfl
+theorem neg?_eq : LLVM.neg? a = .value (-a) := rfl
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do
@@ -566,37 +584,37 @@ def neg {w : Nat} (x : IntW w) : IntW w := do
 
 @[simp_llvm]
 def trunc? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
-  some <| (BitVec.truncate w' x)
+  .value <| (BitVec.truncate w' x)
 
 @[simp_llvm_option]
 def trunc {w: Nat} (w': Nat) (x: IntW w) (noWrapFlags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w' := do
   let x' <- x
   if noWrapFlags.nsw ∧ ((x'.truncate w').signExtend w ≠ x') then
-    none
+    .poison
   else if noWrapFlags.nuw ∧ ((x'.truncate w').zeroExtend w ≠ x') then
-    none
+    .poison
   else
     trunc? w' x'
 
 structure NonNegFlag where
   nneg : Bool := false
-  deriving Repr, DecidableEq
+  deriving Repr, DecidableEq, Lean.ToExpr
 
 @[simp_llvm]
 def zext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
-  some <| (BitVec.zeroExtend w' x)
+  .value <| (BitVec.zeroExtend w' x)
 
 @[simp_llvm_option]
 def zext {w: Nat} (w': Nat) (x: IntW w) (flag : NonNegFlag := {nneg := false}) : IntW w' := do
   let x' <- x
   if flag.nneg ∧ x'.msb then
-    none
+    .poison
   else
     zext? w' x'
 
 @[simp_llvm]
 def sext? {w: Nat} (w': Nat) (x: BitVec w) : IntW w' := do
-  some <| (BitVec.signExtend w' x)
+  .value <| (BitVec.signExtend w' x)
 
 @[simp_llvm_option]
 def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do

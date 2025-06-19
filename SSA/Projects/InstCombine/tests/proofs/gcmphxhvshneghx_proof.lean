@@ -8,11 +8,12 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gcmphxhvshneghx_proof
 theorem t0_thm (e : IntW 8) :
-  icmp IntPredicate.sgt (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.slt e (const? 8 0) := by
+  icmp IntPred.sgt (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.slt e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -22,8 +23,8 @@ theorem t0_thm (e : IntW 8) :
 
 
 theorem t1_thm (e : IntW 8) :
-  icmp IntPredicate.sge (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.slt e (const? 8 1) := by
+  icmp IntPred.sge (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.slt e (const? 8 1) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -33,8 +34,8 @@ theorem t1_thm (e : IntW 8) :
 
 
 theorem t2_thm (e : IntW 8) :
-  icmp IntPredicate.slt (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.sgt e (const? 8 0) := by
+  icmp IntPred.slt (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.sgt e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -44,8 +45,8 @@ theorem t2_thm (e : IntW 8) :
 
 
 theorem t3_thm (e : IntW 8) :
-  icmp IntPredicate.sle (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.sgt e (const? 8 (-1)) := by
+  icmp IntPred.sle (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.sgt e (const? 8 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -55,8 +56,8 @@ theorem t3_thm (e : IntW 8) :
 
 
 theorem t4_thm (e : IntW 8) :
-  icmp IntPredicate.ugt (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.sgt e (const? 8 0) := by
+  icmp IntPred.ugt (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.sgt e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -66,8 +67,8 @@ theorem t4_thm (e : IntW 8) :
 
 
 theorem t5_thm (e : IntW 8) :
-  icmp IntPredicate.uge (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.sgt e (const? 8 (-1)) := by
+  icmp IntPred.uge (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.sgt e (const? 8 (-1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -77,8 +78,8 @@ theorem t5_thm (e : IntW 8) :
 
 
 theorem t6_thm (e : IntW 8) :
-  icmp IntPredicate.ult (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.slt e (const? 8 0) := by
+  icmp IntPred.ult (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.slt e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -88,8 +89,8 @@ theorem t6_thm (e : IntW 8) :
 
 
 theorem t7_thm (e : IntW 8) :
-  icmp IntPredicate.ule (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.slt e (const? 8 1) := by
+  icmp IntPred.ule (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.slt e (const? 8 1) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -99,8 +100,8 @@ theorem t7_thm (e : IntW 8) :
 
 
 theorem t8_thm (e : IntW 8) :
-  icmp IntPredicate.eq (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.eq e (const? 8 0) := by
+  icmp IntPred.eq (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.eq e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -110,8 +111,8 @@ theorem t8_thm (e : IntW 8) :
 
 
 theorem t9_thm (e : IntW 8) :
-  icmp IntPredicate.ne (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.ne e (const? 8 0) := by
+  icmp IntPred.ne (sub (const? 8 0) e { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.ne e (const? 8 0) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -121,7 +122,7 @@ theorem t9_thm (e : IntW 8) :
 
 
 theorem n10_thm (e : IntW 8) :
-  icmp IntPredicate.sgt (sub (const? 8 0) e) e ⊑ icmp IntPredicate.slt e (sub (const? 8 0) e) := by
+  icmp IntPred.sgt (sub (const? 8 0) e) e ⊑ icmp IntPred.slt e (sub (const? 8 0) e) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -131,13 +132,11 @@ theorem n10_thm (e : IntW 8) :
 
 
 theorem n12_thm (e e_1 : IntW 8) :
-  icmp IntPredicate.sgt (sub (const? 8 0) e_1 { «nsw» := true, «nuw» := false }) e ⊑
-    icmp IntPredicate.slt e (sub (const? 8 0) e_1 { «nsw» := true, «nuw» := false }) := by
+  icmp IntPred.sgt (sub (const? 8 0) e_1 { «nsw» := true, «nuw» := false }) e ⊑
+    icmp IntPred.slt e (sub (const? 8 0) e_1 { «nsw» := true, «nuw» := false }) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

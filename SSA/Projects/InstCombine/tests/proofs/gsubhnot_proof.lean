@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gsubhnot_proof
 theorem sub_not_thm (e e_1 : IntW 8) :
@@ -45,5 +46,3 @@ theorem sub_dec_thm (e e_1 : IntW 8) : sub (add e_1 (const? 8 (-1))) e ⊑ add e
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

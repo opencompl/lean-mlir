@@ -21,7 +21,7 @@ def parse_args():
     nproc = os.cpu_count()
     parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
     parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
-    parser.add_argument('-j', type=int, default=nproc, help='number of parallel jobs.')
+    parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
     parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
     return parser.parse_args()
 
@@ -31,7 +31,7 @@ STATUS_TIMED_OUT = "timeout"
 
 status_to_emoji = {
     STATUS_FAIL : "❌",
-    STATUS_SUCESS : "🎉",
+    STATUS_SUCCESS : "🎉",
     STATUS_TIMED_OUT : "⌛️"
 }
 
@@ -44,10 +44,43 @@ class Counter:
         self.val += 1
         self.on_increment(self.val)
 
-async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter, test_content, solver):
+class TacbenchRecord:
+    TACBENCH_PREAMBLE = "TACBENCHCSV|"
+    COLS = ["thm", "goal", "tactic", "status", "errmsg", "walltime"]
+    def __init__(self, thm, goal, tactic, status, errmsg, walltime, filename):
+        self.thm = thm
+        self.goal = goal
+        self.tactic = tactic
+        self.status = status
+        self.errmsg = errmsg
+        self.walltime = walltime
+        self.filename = filename
+
+
+    @classmethod
+    def is_tacbench_row(cls, line : str) -> bool:
+        return line.startswith(TacbenchRecord.TACBENCH_PREAMBLE)
+    @classmethod
+    def parse_tacbench_row(cls, filename : str, line : str):
+        assert line.startswith(TacbenchRecord.TACBENCH_PREAMBLE)
+        line = line.removeprefix(TacbenchRecord.TACBENCH_PREAMBLE)
+        row = line.split(", ")
+        assert len(row) == len(TacbenchRecord.COLS)
+        record = dict(zip(TacbenchRecord.COLS, row))
+        record["filename"] = filename
+        return TacbenchRecord(**record)
+
+def parse_tacbench_rows_from_stdout(filename : str, stdout : str) -> List[TacbenchRecord]:
+    rows = []
+    for line in stdout.split("\n"):
+        if TacbenchRecord.is_tacbench_row(line):
+            rows.append(TacbenchRecord.parse_tacbench_row(filename, line))
+    return rows
+
+async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
-        command = f"lake build SSA.Experimental.Bits.Fast.Dataset2.{module_name}"
+        command = f"lake lean {filename} --dir {git_root_dir}"
         logging.info(f"Running {i_test+1}/{n_tests} '{command}'")
 
         logging.info(f"[Looking up cached {filename}]  Opening connection...")
@@ -72,18 +105,27 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         logging.info(f"Running {filename}, no cache found.")
         process = await asyncio.create_subprocess_exec(
             "lake",
-            "build",
-            f"SSA.Experimental.Bits.Fast.Dataset2.{module_name}",
-            cwd=git_root_dir,
-            stdout=asyncio.subprocess.DEVNULL,
+            "lean",
+            filename,
+            "--dir",
+            git_root_dir,
+            # cwd=git_root_dir,
+            stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.DEVNULL,
-            preexec_fn=os.setsid,
+            preexec_fn=os.setsid
         )
 
         status = STATUS_TIMED_OUT
         exit_code = 1
+        walltime = float('inf')
+        stdout = ""
         try:
-            await asyncio.wait_for(process.wait(), timeout=timeout)
+            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
+            stdout = stdout.decode("utf-8")
+            records = parse_tacbench_rows_from_stdout(filename, stdout)
+            assert len(records) == 1
+            record = records[0]
+            walltime = record.walltime
             exit_code = process.returncode
             status = STATUS_SUCCESS if process.returncode == 0 else STATUS_FAIL
         except asyncio.TimeoutError:
@@ -92,7 +134,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             try:
                 os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
             except Exception as e:
-                logging.warning(f"Weird exception {e}")
+                logging.warning(f"Weird exception: {e}")
 
         logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
 
@@ -107,9 +149,10 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
                 solver,
                 timeout,
                 status,
-                exit_code)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (filename, test_content, solver, timeout, status, exit_code))
+                exit_code,
+                walltime)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (filename, test_content, solver, timeout, status, exit_code, walltime))
         logging.info(f"[Writing {filename}]  Commiting...")
         con.commit()
         logging.info(f"[Writing {filename}]  Closing...")
@@ -129,8 +172,9 @@ def get_git_root():
 def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
+import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
-import SSA.Experimental.Bits.Fast.Reflect
+import SSA.Core.Tactic.TacBench
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 9000
@@ -140,7 +184,7 @@ This dataset was derived from
 https://github.com/softsec-unh/MBA-Blast/blob/main/dataset/dataset2_64bit.txt
 -/
 
-variable { a b c d e f g t x y z : BitVec w }
+variable { a b c d e f g t x y z : BitVec 64 }
 """
 
 
@@ -156,18 +200,36 @@ def setup_logging(db_name : str):
 
 
 class UnitTest:
+    ix : int
     test : str
     solver : str
 
     solver_mba = "mba"
-    solver_kinduction = "kinduction"
-    solvers = [solver_mba, solver_kinduction]
-    
-    def __init__(self, test, solver):
+    solver_kinduction_verified = "kinduction_verified"
+    solver_bv_automata_classic = "bv_automata_classic"
+    solver_bv_decide = "bv_decide"
+    solvers = [solver_kinduction_verified] # [solver_mba, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
+
+    def __init__(self, ix, test, solver):
+        self.ix = ix
         self.test = test
         self.solver = solver
         assert self.solver in UnitTest.solvers
-    
+
+    @classmethod
+    def _solver_to_tactic_invocation(cls, solver):
+        interpolant = """by tac_bench (config := {{ outputType := .csv }}) ["{solver}" : {call}]; sorry"""
+        if solver == UnitTest.solver_mba:
+            return interpolant.format(solver=solver, call="bv_mba")
+        elif solver == UnitTest.solver_kinduction_verified:
+            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .circuit_cadical_verified 100 })")
+        elif solver == UnitTest.solver_bv_automata_classic:
+            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .automata })")
+        elif solver == UnitTest.solver_bv_decide:
+            return interpolant.format(solver=solver, call="bv_decide")
+        else:
+            raise RuntimeError(f"expected solver to be one of '{UnitTest.solvers}', found '{solver}'")
+
     def write(self, f):
         f.write(test_file_preamble())
         out = f"private theorem thm :\n    "
@@ -181,28 +243,27 @@ class UnitTest:
         expression = expression.replace("|", " ||| ")
         expression = expression.replace("&", " &&& ")
         expression = expression.replace("~", " ~~~")
-        out = out + expression + " := "
-        if self.solver == UnitTest.solver_mba:
-            out += "by bv_mba"
-        elif self.solver == UnitTest.solver_kinduction:
-            out += "by bv_automata_circuit (config := {backend := .cadical 10})"
-        else:
-            raise RuntimeError(f"expected self.solver to be one of '{UnitTest.solvers}', found '{self.solver}'")
+        out = out + expression + " := " + self._solver_to_tactic_invocation(self.solver)
         f.write(out)
 
 def load_tests(args) -> List[UnitTest]:
     with open('dataset2_64bit.txt', 'r') as f:
+        # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
+
+    out = []
+    ix = 0
+    for (ix, t) in enumerate(tests):
+        for s in UnitTest.solvers:
+            out.append(UnitTest(ix=ix, test=t, solver=s))
 
     if not args.prod_run:
         logging.info(f"--prod_run not enabled, pruning files to small batch")
-        tests = tests[:13]
-
-    out = []
-    for t in tests:
-        for s in UnitTest.solvers:
-            out.append(UnitTest(test=t, solver=s))
-    return out
+        NTESTS_TO_RETURN = 1
+        # return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
+        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+    else:
+        return out
 
 
 async def main(args):
@@ -215,12 +276,13 @@ async def main(args):
     cur = con.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tests (
-            filename text,
-            test_content text,
-            solver text,
+            filename TEXT,
+            test_content TEXT,
+            solver TEXT,
             timeout INTEGER,
             status TEXT,
             exit_code INTEGER,
+            walltime FLOAT,
             PRIMARY KEY (filename, timeout)  -- Composite primary key
             )
     """)
@@ -235,16 +297,17 @@ async def main(args):
     completed_counter = Counter(lambda val: logging.info(f"** COMPLETED {val}/{n_tests} **"))
 
     async with asyncio.TaskGroup() as tg:
-        for (i_test, test) in enumerate(tests):
-            filename = f"Test{test.solver}{i_test+1}.lean".replace("-","").replace("_","")
+        # work through tests in reverse order, hardest to easiest.
+        for test in tests:
+            filename = f"Test{test.solver}{test.ix+1}.lean".replace("-","").replace("_","")
             with open(filename, 'w') as f:
                 test.write(f)
-            logging.debug(f"spawning async task for {i_test+1}:{test.test.strip()}:{filename}")
+            logging.debug(f"spawning async task for {test.ix+1}:{test.test.strip()}:{filename}")
             tg.create_task(run_lake_build(db=args.db,
                            git_root_dir=git_root_dir,
                            semaphore=semaphore,
                            timeout=args.timeout,
-                           i_test=i_test,
+                           i_test=test.ix,
                            n_tests=n_tests,
                            test_content=test.test,
                            solver=test.solver,

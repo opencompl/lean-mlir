@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gnegatedhbitmask_proof
 theorem neg_mask1_lshr_thm (e : IntW 8) :
@@ -90,7 +91,7 @@ theorem neg_signbit_thm (e : IntW 8) :
 
 
 theorem neg_not_signbit1_thm (e : IntW 8) :
-  sub (const? 32 1) (zext 32 (lshr e (const? 8 7))) ⊑ zext 32 (icmp IntPredicate.sgt e (const? 8 (-1))) := by
+  sub (const? 32 1) (zext 32 (lshr e (const? 8 7))) ⊑ zext 32 (icmp IntPred.sgt e (const? 8 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -124,7 +125,7 @@ theorem neg_not_signbit3_thm (e : IntW 8) :
 theorem neg_mask_thm (e : IntW 16) (e_1 : IntW 32) :
   LLVM.and (sub e_1 (sext 32 e) { «nsw» := true, «nuw» := false })
       (sub (const? 32 0) (zext 32 (lshr e (const? 16 15))) { «nsw» := true, «nuw» := false }) ⊑
-    select (icmp IntPredicate.slt e (const? 16 0)) (sub e_1 (sext 32 e) { «nsw» := true, «nuw» := false })
+    select (icmp IntPred.slt e (const? 16 0)) (sub e_1 (sext 32 e) { «nsw» := true, «nuw» := false })
       (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
@@ -137,7 +138,7 @@ theorem neg_mask_thm (e : IntW 16) (e_1 : IntW 32) :
 theorem neg_mask_const_thm (e : IntW 16) :
   LLVM.and (sub (const? 32 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
       (sub (const? 32 0) (zext 32 (lshr e (const? 16 15))) { «nsw» := true, «nuw» := false }) ⊑
-    select (icmp IntPredicate.slt e (const? 16 0)) (sub (const? 32 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
+    select (icmp IntPred.slt e (const? 16 0)) (sub (const? 32 1000) (sext 32 e) { «nsw» := true, «nuw» := false })
       (const? 32 0) := by
     simp_alive_undef
     simp_alive_ops
@@ -145,5 +146,3 @@ theorem neg_mask_const_thm (e : IntW 16) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

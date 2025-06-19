@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gshifthadd_proof
 theorem shl_C1_add_A_C2_i32_thm (e : IntW 16) :
@@ -161,7 +162,7 @@ theorem ashr_2_add_zext_basic_thm (e e_1 : IntW 1) :
 
 theorem lshr_16_add_zext_basic_thm (e e_1 : IntW 16) :
   lshr (add (zext 32 e_1) (zext 32 e)) (const? 32 16) ⊑
-    zext 32 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
+    zext 32 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -208,7 +209,7 @@ theorem lshr_16_add_not_known_16_leading_zeroes_thm (e e_1 : IntW 32) :
 
 theorem lshr_32_add_zext_basic_thm (e e_1 : IntW 32) :
   lshr (add (zext 64 e_1) (zext 64 e)) (const? 64 32) ⊑
-    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 32 (-1)))) := by
+    zext 64 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 32 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -250,7 +251,7 @@ theorem lshr_33_i32_add_zext_basic_thm (e e_1 : IntW 32) : lshr (add (zext 64 e_
 
 theorem lshr_16_to_64_add_zext_basic_thm (e e_1 : IntW 16) :
   lshr (add (zext 64 e_1) (zext 64 e)) (const? 64 16) ⊑
-    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
+    zext 64 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -287,7 +288,7 @@ theorem lshr_32_add_not_known_32_leading_zeroes_thm (e e_1 : IntW 64) :
 
 theorem ashr_16_add_zext_basic_thm (e e_1 : IntW 16) :
   lshr (add (zext 32 e_1) (zext 32 e)) (const? 32 16) ⊑
-    zext 32 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
+    zext 32 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -298,7 +299,7 @@ theorem ashr_16_add_zext_basic_thm (e e_1 : IntW 16) :
 
 theorem ashr_32_add_zext_basic_thm (e e_1 : IntW 32) :
   ashr (add (zext 64 e_1) (zext 64 e)) (const? 64 32) ⊑
-    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 32 (-1)))) := by
+    zext 64 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 32 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -309,7 +310,7 @@ theorem ashr_32_add_zext_basic_thm (e e_1 : IntW 32) :
 
 theorem ashr_16_to_64_add_zext_basic_thm (e e_1 : IntW 16) :
   ashr (add (zext 64 e_1) (zext 64 e)) (const? 64 16) ⊑
-    zext 64 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
+    zext 64 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 16 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -320,7 +321,7 @@ theorem ashr_16_to_64_add_zext_basic_thm (e e_1 : IntW 16) :
 
 theorem lshr_32_add_zext_trunc_thm (e e_1 : IntW 32) :
   add (trunc 32 (add (zext 64 e_1) (zext 64 e))) (trunc 32 (lshr (add (zext 64 e_1) (zext 64 e)) (const? 64 32))) ⊑
-    add (add e_1 e) (zext 32 (icmp IntPredicate.ult (add e_1 e) e_1)) := by
+    add (add e_1 e) (zext 32 (icmp IntPred.ult (add e_1 e) e_1)) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -337,5 +338,3 @@ theorem shl_fold_or_disjoint_cnt_thm (e : IntW 8) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

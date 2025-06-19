@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section gdemorgan_proof
 theorem demorgan_or_apint1_thm (e e_1 : IntW 43) :
@@ -312,9 +313,9 @@ theorem demorgan_and_zext_thm (e e_1 : IntW 1) :
 
 
 theorem PR28476_thm (e e_1 : IntW 32) :
-  LLVM.xor (zext 32 (LLVM.and (icmp IntPredicate.ne e_1 (const? 32 0)) (icmp IntPredicate.ne e (const? 32 0))))
+  LLVM.xor (zext 32 (LLVM.and (icmp IntPred.ne e_1 (const? 32 0)) (icmp IntPred.ne e (const? 32 0))))
       (const? 32 1) ⊑
-    zext 32 (LLVM.or (icmp IntPredicate.eq e_1 (const? 32 0)) (icmp IntPredicate.eq e (const? 32 0))) := by
+    zext 32 (LLVM.or (icmp IntPred.eq e_1 (const? 32 0)) (icmp IntPred.eq e (const? 32 0))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -325,10 +326,10 @@ theorem PR28476_thm (e e_1 : IntW 32) :
 
 theorem PR28476_logical_thm (e e_1 : IntW 32) :
   LLVM.xor
-      (zext 32 (select (icmp IntPredicate.ne e_1 (const? 32 0)) (icmp IntPredicate.ne e (const? 32 0)) (const? 1 0)))
+      (zext 32 (select (icmp IntPred.ne e_1 (const? 32 0)) (icmp IntPred.ne e (const? 32 0)) (const? 1 0)))
       (const? 32 1) ⊑
     zext 32
-      (select (icmp IntPredicate.eq e_1 (const? 32 0)) (const? 1 1) (icmp IntPredicate.eq e (const? 32 0))) := by
+      (select (icmp IntPred.eq e_1 (const? 32 0)) (const? 1 1) (icmp IntPred.eq e (const? 32 0))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -357,5 +358,3 @@ theorem PR45984_thm (e e_1 : IntW 32) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-

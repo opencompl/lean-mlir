@@ -8,6 +8,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
+set_option Elab.async false
 
 section glshr_proof
 theorem lshr_exact_thm (e : IntW 8) :
@@ -363,7 +364,7 @@ theorem lshr_sext_i1_to_i128_thm (e : IntW 1) :
     all_goals sorry
 
 
-theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPredicate.ule (lshr e_1 e) e_1 ⊑ const? 1 1 := by
+theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPred.ule (lshr e_1 e) e_1 ⊑ const? 1 1 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -372,7 +373,7 @@ theorem icmp_ule_thm (e e_1 : IntW 32) : icmp IntPredicate.ule (lshr e_1 e) e_1 
     all_goals sorry
 
 
-theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPredicate.ugt (lshr e_1 e) e_1 ⊑ const? 1 0 := by
+theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPred.ugt (lshr e_1 e) e_1 ⊑ const? 1 0 := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -382,7 +383,7 @@ theorem icmp_ugt_thm (e e_1 : IntW 32) : icmp IntPredicate.ugt (lshr e_1 e) e_1 
 
 
 theorem not_signbit_thm (e : IntW 8) :
-  lshr (LLVM.xor e (const? 8 (-1))) (const? 8 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? 8 (-1))) := by
+  lshr (LLVM.xor e (const? 8 (-1))) (const? 8 7) ⊑ zext 8 (icmp IntPred.sgt e (const? 8 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -392,7 +393,7 @@ theorem not_signbit_thm (e : IntW 8) :
 
 
 theorem not_signbit_alt_xor_thm (e : IntW 8) :
-  lshr (LLVM.xor e (const? 8 (-2))) (const? 8 7) ⊑ zext 8 (icmp IntPredicate.sgt e (const? 8 (-1))) := by
+  lshr (LLVM.xor e (const? 8 (-2))) (const? 8 7) ⊑ zext 8 (icmp IntPred.sgt e (const? 8 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -403,7 +404,7 @@ theorem not_signbit_alt_xor_thm (e : IntW 8) :
 
 theorem not_signbit_zext_thm (e : IntW 16) :
   zext 32 (lshr (LLVM.xor e (const? 16 (-1))) (const? 16 15)) ⊑
-    zext 32 (icmp IntPredicate.sgt e (const? 16 (-1))) := by
+    zext 32 (icmp IntPred.sgt e (const? 16 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -414,7 +415,7 @@ theorem not_signbit_zext_thm (e : IntW 16) :
 
 theorem not_signbit_trunc_thm (e : IntW 16) :
   trunc 8 (lshr (LLVM.xor e (const? 16 (-1))) (const? 16 15)) ⊑
-    zext 8 (icmp IntPredicate.sgt e (const? 16 (-1))) := by
+    zext 8 (icmp IntPred.sgt e (const? 16 (-1))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -435,7 +436,7 @@ theorem bool_add_lshr_thm (e e_1 : IntW 1) :
 
 theorem not_bool_add_lshr_thm (e e_1 : IntW 2) :
   lshr (add (zext 4 e_1) (zext 4 e)) (const? 4 2) ⊑
-    zext 4 (icmp IntPredicate.ugt e (LLVM.xor e_1 (const? 2 (-1)))) := by
+    zext 4 (icmp IntPred.ugt e (LLVM.xor e_1 (const? 2 (-1)))) := by
     simp_alive_undef
     simp_alive_ops
     simp_alive_case_bash
@@ -453,5 +454,3 @@ theorem bool_add_ashr_thm (e e_1 : IntW 1) :
     simp_alive_split
     simp_alive_benchmark
     all_goals sorry
-
-
