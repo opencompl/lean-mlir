@@ -21,7 +21,8 @@ macro "simp_llvm" : tactic => `(tactic|(
 ))
 
 attribute [simp_llvm]
-  PoisonOr.value_bind PoisonOr.value_isRefinedBy_iff PoisonOr.isRefinedBy_poison_iff
+  PoisonOr.value_bind PoisonOr.value_isRefinedBy_value
+  PoisonOr.isRefinedBy_poison_iff
   PoisonOr.value_ne_poison PoisonOr.poison_ne_value
   bind_assoc Bool.false_eq_true false_and reduceIte
   pure_bind
