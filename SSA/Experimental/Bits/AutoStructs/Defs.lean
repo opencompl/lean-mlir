@@ -334,7 +334,7 @@ lemma formula_language_case_atom :
     simp
     let bv1 := t1.evalFinBV fun k => bvs.bvs.get $ k.castLE (by simp)
     let bv2 := t2.evalFinBV fun k => bvs.bvs.get $ k.castLE (by simp)
-    use ⟨bvs.w, bvs.bvs.append $ bv1 ::ᵥ bv2 ::ᵥ List.Vector.nil⟩
+    use ⟨bvs.w, bvs.bvs ++ bv1 ::ᵥ bv2 ::ᵥ List.Vector.nil⟩
     rcases bvs with ⟨w, bvs⟩
     simp
     constructor
@@ -404,7 +404,7 @@ theorem formula_language (φ : Formula) :
       simp at hbvs; simp [←hbvs, List.Vector.transport]; congr
     · intros heq
       use ⟨w,
-        bvs.append ((t.evalFinBV fun k => bvs.get $ k.castLE (by simp)) ::ᵥ List.Vector.nil)⟩
+        bvs ++ ((t.evalFinBV fun k => bvs.get $ k.castLE (by simp)) ::ᵥ List.Vector.nil)⟩
       unfold Term.language
       simp [BitVecs.transport, List.Vector.transport] at heq ⊢
       constructor; assumption
