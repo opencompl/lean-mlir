@@ -56,7 +56,7 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
           .some ⟨v', by {
             intros V
             rw [heneedleΓ]
-            simp only [Lets.denote, EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq,
+            simp only [Lets.denote, EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq',
               Ctxt.Valuation.snoc_toSnoc]
             rw [hv' V]
             congr

@@ -251,7 +251,7 @@ def plot(args):
     solver_latex_names : dict[str, str] = {
         "normCircuitVerified": "NormCircuitVerified",
         "normCircuitUnverified": "NormCircuitUnverified",
-        "normCircuit": "NormCircuit",
+        # "normCircuit": "NormCircuit",
         "normPresburger": "NormPresburger",
         "bv_decide": "BvDecide",
         "bv_normalize": "BvNormalize",

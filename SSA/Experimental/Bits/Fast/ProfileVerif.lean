@@ -39,15 +39,18 @@ unsafe def main : IO Unit := do
     let sMeta : Meta.State := {}
     let ctxTerm : Term.Context :=  { declName? := .some (Name.mkSimple s!"problem")}
     let sTerm : Term.State := {}
+    let mut pix := 0
     for p in Bits.testPredicates do
-      IO.println (repr p)
-      for i in [0:1] do
-        IO.println s!"Iteration #{i + 1} of Running Algorithm"
+      pix := pix + 1
+      IO.println s!"testing predicate '{pix}'"
+      let nIters : Nat := 2
+      for i in [0:nIters] do
+        IO.println s!"Iteration #{i + 1}/{nIters}"
         let fsm := predicateEvalEqFSM p
         -- let (bPure, tElapsedPure) ← timeElapsedMs (IO.lazyPure fun () => decideIfZeros fsm.toFSM)
         let ((out, circuitStats), tElapsedCadical) ← timeElapsedMs do
           let ((out, circuitStats), _coreState, _metaState, _termState) ←
-            fsm.toFSM.decideIfZerosVerified 10 |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
+            fsm.toFSM.decideIfZerosVerified 5 |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
           return (out, circuitStats)
         let b := out.isSuccess
         -- IO.println s!" (pure)     is all zeroes: '{bPure}' | time: '{tElapsedPure}' ms"

@@ -231,17 +231,22 @@ macro "bv_bench_automata": tactic =>
         all_goals (
           tac_bench (config := { outputType := .csv }) [
             "bv_normalize" : (bv_normalize; done),
-            "presburger" : (bv_automata_gen (config := { backend := .presburger }); done),
+            -- "presburger" : (bv_automata_gen (config := { backend := .presburger }); done),
             "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .presburger })); done),
-            "circuitUnverified" : (bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 }); done),
-            "circuitVerified" : (bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 }); done),
-            "normCircuitUnverified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 })); done),
+           --  "circuitUnverified" : (bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 }); done),
+            -- "circuitVerified" : (bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 }); done),
+            -- "normCircuitUnverified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 })); done),
             "normCircuitVerified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 })); done),
-            "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
-            "width_ok" : (bv_automata_fragment_width_legal),
-            "reflect_ok" : (bv_automata_fragment_reflect),
+            -- "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
+            -- "width_ok" : (bv_automata_fragment_width_legal),
+            -- "reflect_ok" : (bv_automata_fragment_reflect),
             "bv_decide" : (bv_decide; done),
           ]
         )
       )
    )
+
+example : ∀ (x : BitVec w), x * 2 = x + x := by
+    intros w
+    bv_bench_automata
+    sorry

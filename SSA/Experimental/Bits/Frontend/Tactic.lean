@@ -481,38 +481,10 @@ def Expr.mkToFSM (self : Expr) : MetaM Expr :=
   mkAppM ``FSMPredicateSolution.toFSM #[self]
 
 
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.mkN {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (fsm : FSM arity) (n : ℕ) : ReflectVerif.BvDecide.KInductionCircuits fsm n
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkN
-def Expr.mkMkN (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkN #[fsm, n]
-
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {n : ℕ} {arity : Type} [DecidableEq arity] [Fintype arity]
-  [Hashable arity] {fsm : FSM arity} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  { c // c.Equiv (ReflectVerif.BvDecide.mkSafetyCircuit' fsm n) }
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
-def Expr.mkMkSafetyCircuit (circs : Expr)  : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit #[circs]
-
-
 /-- info: Subtype.val.{u} {α : Sort u} {p : α → Prop} (self : Subtype p) : α -/
 #guard_msgs in #check Subtype.val
 def Expr.mkSubtypeVal (e : Expr) : MetaM Expr :=
   mkAppM ``Subtype.val #[e]
-
-
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCircuit {n : ℕ} {arity : Type} [DecidableEq arity] [Fintype arity]
-  [Hashable arity] {fsm : FSM arity} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  { c // c.Equiv (ReflectVerif.BvDecide.mkIndHypCircuit fsm n) }
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCircuit
-def Expr.mkMkIndHypCircuit (circs : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCircuit #[circs]
 
 /--
 info: ReflectVerif.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
@@ -585,6 +557,11 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
 
     match cfg.backend with
     | .dryrun =>
+        logInfo m!"Reflected predicate: {repr <| predicate.e}. Converting to FSM..."
+        let fsm := predicateEvalEqFSM predicate.e |>.toFSM
+        logInfo m!"built FSM."
+        logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+        logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
         g.assign (← mkSorry (← g.getType) (synthetic := false))
         trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
@@ -615,62 +592,82 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       return [g]
     | .circuit_cadical_verified maxIter checkTypes? =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      trace[Bits.Frontend] f!"{fsm.format}'"
+      -- logInfo m!"built FSM."
+      -- logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+      -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
       let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
       match cert? with
-      | .proven niter safetyCert indCert =>
+      | .provenByExhaustion niter safetyCert =>
+        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByExhaustionAx [])
+        if gs.isEmpty
+          then return gs
+        else
+          throwError m!"Expected application of axiom to close goal, but failed. {indentD g}"
+      | .provenByKIndCycleBreaking niter safetyCert indCert =>
+        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx [])
+        if gs.isEmpty
+          then return gs
+        else
+          throwError m!"Expected application of axiom to close goal, but failed. {indentD g}"
+      | .provenByKIndNoCycleBreaking niter safetyCert indCert =>
         let safetyCertExpr := Lean.mkStrLit safetyCert
         let indCertExpr := Lean.mkStrLit indCert
-        let prf ← g.withContext do
-          -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkSafetyCircuit.val sCert = true
-          let safetyCertTy ←
-            Expr.mkVerifyCircuit
-              (← Expr.mkSubtypeVal
-                (← Expr.mkMkSafetyCircuit
-                  (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
-              safetyCertExpr
-          debugCheck checkTypes? safetyCertTy
-          -- logInfo m!"safety cert type: {indentD safetyCertTy}"
-          let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
-          -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkIndHypCircuit.val indCert = true
-          debugCheck checkTypes? safetyCertProof
-          let indCertTy ←
-            Expr.mkVerifyCircuit
-              (← Expr.mkSubtypeVal
-                (← Expr.mkMkIndHypCircuit
-                  (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
-              indCertExpr
-          debugCheck checkTypes? indCertTy
-          -- logInfo m!"inductive cert type: {indentD indCertTy}"
-          let indCertProof ← mkEqRflNativeDecideProof indCertTy true
-          debugCheck checkTypes? indCertProof
-          -- logInfo m!"inductive cert proof: {indentD indCertProof}"
-          let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG' [])
-            #[w,
-              bvToIxMapVal,
-              predicate.e.quote,
-              Lean.mkNatLit niter,
-              safetyCertExpr,
-              safetyCertProof,
-              indCertExpr,
-              indCertProof]
-          let prf ← instantiateMVars prf
-          debugCheck checkTypes? prf
-          -- logInfo m!"proof: {indentD prf}"
-          pure prf
-        let gs ← g.apply prf
-        -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
+        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByKInductionNoCycleBreakingAx [])
         if gs.isEmpty
-        then return gs
+          then return gs
         else
-          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+          throwError m!"Expected application of axiom to close goal, but failed. {indentD g}"
+
+        -- let prf ← g.withContext do
+        --   -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkSafetyCircuit.val sCert = true
+        --   let safetyCertTy ←
+        --     Expr.mkVerifyCircuit
+        --       (← Expr.mkSubtypeVal
+        --         (← Expr.mkMkSafetyCircuit
+        --           (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
+        --       safetyCertExpr
+        --   debugCheck checkTypes? safetyCertTy
+        --   -- logInfo m!"safety cert type: {indentD safetyCertTy}"
+        --   let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
+        --   -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkIndHypCircuit.val indCert = true
+        --   debugCheck checkTypes? safetyCertProof
+        --   let indCertTy ←
+        --     Expr.mkVerifyCircuit
+        --       (← Expr.mkSubtypeVal
+        --         (← Expr.mkMkIndHypCircuit
+        --           (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
+        --       indCertExpr
+        --   debugCheck checkTypes? indCertTy
+        --   -- logInfo m!"inductive cert type: {indentD indCertTy}"
+        --   let indCertProof ← mkEqRflNativeDecideProof indCertTy true
+        --   debugCheck checkTypes? indCertProof
+        --   -- logInfo m!"inductive cert proof: {indentD indCertProof}"
+        --   let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG' [])
+        --     #[w,
+        --       bvToIxMapVal,
+        --       predicate.e.quote,
+        --       Lean.mkNatLit niter,
+        --       safetyCertExpr,
+        --       safetyCertProof,
+        --       indCertExpr,
+        --       indCertProof]
+        --   let prf ← instantiateMVars prf
+        --   debugCheck checkTypes? prf
+        --   -- logInfo m!"proof: {indentD prf}"
+        --   pure prf
+        -- let gs ← g.apply prf
+        -- -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
+        -- if gs.isEmpty
+        -- then return gs
+        -- else
+        --   throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
       | .safetyFailure iter =>
         throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
       | .exhaustedIterations niter =>
         throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
     | .circuit_cadical_unverified maxIter =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      trace[Bits.Frontend] f!"{fsm.format}'"
+      -- trace[Bits.Frontend] f!"{fsm.format}'"
       let (isTrueForall, _circuitState) ← fsm.decideIfZerosMUnverified maxIter
       if isTrueForall
       then do
@@ -684,7 +681,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         return [g]
     | .circuit_lean =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      trace[Bits.Frontend] f!"{fsm.format}'"
+      -- trace[Bits.Frontend] f!"{fsm.format}'"
       if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
         throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
       if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold && cfg.stateSpaceSizeThreshold != 0 then
