@@ -6,8 +6,9 @@ import shutil
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 
-RESULTS_DIR = os.path.join(ROOT_DIR, 'bv-evaluation/HackersDelight/results/')
-BENCHMARK_DIR = os.path.join(ROOT_DIR, 'SSA/Projects/InstCombine/HackersDelight/')
+RESULTS_DIR = ROOT_DIR + '/bv-evaluation/HackersDelight/results/'
+
+BENCHMARK_DIR = ROOT_DIR + 'SSA/Projects/InstCombine/HackersDelight/'
 
 REPS = 1
 TIMEOUT = 1800
