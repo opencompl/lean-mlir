@@ -55,6 +55,14 @@ inductive Ty (q : ℕ) where
 deriving DecidableEq, Repr, Inhabited
 
 /--
+We provide a `ToString` instance: this is a human-readable name for each type.
+-/
+instance {q} : ToString (Ty q) where
+  toString := fun
+  | .integer => "ℤ"
+  | .modLike => "!R"
+
+/--
 We provide a `TyDenote` instance: this is how we translate each
 dialect type into an actual Lean type.
 -/
