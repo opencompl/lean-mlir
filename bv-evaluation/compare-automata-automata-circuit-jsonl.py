@@ -2,7 +2,6 @@
 import concurrent.futures
 import subprocess
 import datetime
-import os
 import platform
 import argparse
 import shutil
@@ -112,7 +111,7 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
             future2file[future] = file
 
     total = len(future2file)
-    for future in enumerate(concurrent.futures.as_completed(future2file)):
+    for future in concurrent.futures.as_completed(future2file):
         file = future2file[future]
         try:
             success = future.result()
@@ -142,16 +141,10 @@ if __name__ == "__main__":
   default_db = f'automata-circuit-{current_time}.jsonl'
   parser.add_argument('--db', default=default_db, help='path to jsonl database')
   parser.add_argument('-j', '--jobs', type=int, default=1)
-  parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--dryrun', action='store_true', help="dry run the evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
   args = parser.parse_args()
   setup_logging(args.db)
   logging.info(args)
-  if args.run:
-    process(args.db, args.jobs, prod_run=False, args.dryrun)
-  elif args.prodrun:
-    process(args.db, args.jobs, prod_run=True, args.dryrun)
-  else:
-    logging.error("expected --run or --prodrun.")
+  process(args.db, args.jobs, args.prodrun,  args.dryrun)
 
