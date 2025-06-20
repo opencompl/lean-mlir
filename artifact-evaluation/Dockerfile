@@ -32,28 +32,28 @@ RUN ./configure.py && cd build && ninja install
 # Install Lean-MLIR 
 RUN git clone https://github.com/opencompl/lean-mlir
 WORKDIR /code/lean-mlir
-RUN git checkout bv-evaluation-dockerfile
 
 # Install plotting script dependencies
 
-WORKDIR /code/lean-mlir/bv-evaluation/
-COPY bv-evaluation/requirements.txt ./
-RUN bash -c "\
-	python3 -m venv venv \
-	&& source venv/bin/activate \
-	&& python3 -m pip install -r requirements.txt "
+# WORKDIR /code/lean-mlir/bv-evaluation/
+# RUN bash -c "\
+# 	python3 -m venv venv \
+# 	&& source venv/bin/activate \
+# 	&& python3 -m pip install -r /code/lean-mlir/bv-evaluation/requirements.txt "
 
 # First, get cached dependencies
 WORKDIR /code/lean-mlir
-COPY lean-toolchain lakefile.toml lake-manifest.json ./
-RUN lake exe cache get!
-
-# Then, copy & build lean-mlir
 COPY . .
 
+# COPY lean-toolchain lakefile.toml lake-manifest.json ./
+# RUN lake exe cache get!
+
+# Then, copy & build lean-mlir
+RUN lake exe cache get
 RUN lake build
 
 # Set the evaluation script directory as working dir
-WORKDIR /code/lean-mlir/bv-evaluation
+WORKDIR /code/lean-mlir/bv-evaluation/
+RUN python3 compare-leansat-vs-bitwuzla-hdel.py
 
 USER root
