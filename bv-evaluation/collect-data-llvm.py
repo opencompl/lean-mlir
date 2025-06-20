@@ -4,16 +4,15 @@ import pandas as pd
 import os 
 from enum import Enum
 import subprocess
+
 output = Enum('output', [('counterxample', 1), ('proved', 2), ('failed', 0)])
+
 paper_directory = 'for-paper/'
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/InstCombine/"
 raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
-
 reps = 1
-
-
 
 bitwuzla = []
 leanSAT = []
@@ -207,7 +206,7 @@ for file in os.listdir(benchmark_dir):
                 ls_only_failed += 1
                 thm = thm + 1
             elif output_bw == output.counterxample and output_ls == output.counterxample:
-                # print("bitwuzla and leanSAT provided counterexample for theorem "+str(thm)+ "in file "+file)
+                print("bitwuzla and leanSAT provided counterexample for theorem "+str(thm)+ " in file "+file)
                 counter_bitwuzla.append(np.mean(counter_bitwuzla_times_average[thm]))
                 counter_leanSAT.append(np.mean(counter_leanSAT_tot_times_average[thm]))
                 counter_leanSAT_rw.append(np.mean(counter_leanSAT_rw_times_average[thm]))
@@ -244,7 +243,10 @@ for file in os.listdir(benchmark_dir):
                 print("something is broken: bitwuzla output "+str(output_bw.value)+" leanSAT output "+str(output_ls.value))
                 break
         thmTot += thm
+        # print("file "+file+ " contains "+str(thm)+" goals\n.")
         errTot += errs
+
+print("In total we found "+str(thmTot)+" goals.")
 
 
 print("leanSAT and Bitwuzla solved: "+str(len(leanSAT)))
@@ -263,12 +265,12 @@ def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_va
     failed_str = "FAIL" if failed else "SUCCESS"
     print(f"ran {cmd}, expected {expected_val}, found {val}, {failed_str}")
 
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT failed' | wc -l", both_failed+ls_only_failed)
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_leanSAT))
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla provided a counter' | wc -l", len(counter_bitwuzla))
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT proved' | wc -l", len(leanSAT) + bw_only_failed)
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla proved' | wc -l", len(bitwuzla) + ls_only_failed)
+run_shell_command_and_assert_output_eq_int("results/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/", "rg 'LeanSAT failed' | wc -l", both_failed+ls_only_failed)
+run_shell_command_and_assert_output_eq_int("results/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_leanSAT))
+run_shell_command_and_assert_output_eq_int("results/", "rg 'Bitwuzla provided a counter' | wc -l", len(counter_bitwuzla))
+run_shell_command_and_assert_output_eq_int("results/", "rg 'LeanSAT proved' | wc -l", len(leanSAT) + bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/", "rg 'Bitwuzla proved' | wc -l", len(bitwuzla) + ls_only_failed)
 
 
 # Converting to DataFrame
