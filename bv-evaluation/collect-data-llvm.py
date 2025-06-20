@@ -265,12 +265,12 @@ def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_va
     failed_str = "FAIL" if failed else "SUCCESS"
     print(f"ran {cmd}, expected {expected_val}, found {val}, {failed_str}")
 
-run_shell_command_and_assert_output_eq_int("results/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
-run_shell_command_and_assert_output_eq_int("results/", "rg 'LeanSAT failed' | wc -l", both_failed+ls_only_failed)
-run_shell_command_and_assert_output_eq_int("results/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_leanSAT))
-run_shell_command_and_assert_output_eq_int("results/", "rg 'Bitwuzla provided a counter' | wc -l", len(counter_bitwuzla))
-run_shell_command_and_assert_output_eq_int("results/", "rg 'LeanSAT proved' | wc -l", len(leanSAT) + bw_only_failed)
-run_shell_command_and_assert_output_eq_int("results/", "rg 'Bitwuzla proved' | wc -l", len(bitwuzla) + ls_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT failed' | wc -l", both_failed+ls_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_leanSAT))
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla provided a counter' | wc -l", len(counter_bitwuzla))
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT proved' | wc -l", len(leanSAT) + bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla proved' | wc -l", len(bitwuzla) + ls_only_failed)
 
 
 # Converting to DataFrame
