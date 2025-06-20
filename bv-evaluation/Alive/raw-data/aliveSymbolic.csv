@@ -1,0 +1,222 @@
+,filename,guid,name,status,time_elapsed,error_message
+0,AliveStatements,1,rfl,FAIL,1.859897,"tactic 'rfl' failed, the left-hand side
+      PoisonOr.value (x✝ + x✝)
+    is not definitionally equal to the right-hand side
+      PoisonOr.poison
+    case pos
+    w : ℕ
+    x✝ : BitVec w
+    h✝ : 1#w ≥ ↑w
+    ⊢ PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+1,AliveStatements,1,bv_bitwise,FAIL,0.420863,"applyExtTheorem only applies to equations, not
+      (PoisonOr.value (x✝ + x✝)).IsRefinedBy PoisonOr.poison"
+2,AliveStatements,1,bv_ac,FAIL,20.304128,internal exception #5
+3,AliveStatements,1,bv_distrib,FAIL,73.578546,internal exception #5
+4,AliveStatements,1,bv_ring,FAIL,40.122613,internal exception #5
+5,AliveStatements,1,bv_of_bool,FAIL,21.088917,simp made no progress
+6,AliveStatements,1,bv_omega,FAIL,27.844362,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 0
+      a - c ≤ -1
+    where
+     a := ↑1 % ↑(2 ^ w)
+     b := ↑(↑w).toNat
+     c := ↑2 ^ w"
+7,AliveStatements,1,bv_automata_classic_prop,FAIL,22.340883,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+8,AliveStatements,1,bv_automata_classic,FAIL,16.877529,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+9,AliveStatements,1,bv_normalize_automata_classic,FAIL,30.509747,internal exception #5
+10,AliveStatements,1,simp,FAIL,65.002616,internal exception #5
+11,AliveStatements,1,bv_normalize,FAIL,11.80959,internal exception #5
+12,AliveStatements,1,bv_decide,FAIL,76.157118,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [1#w <ᵤ BitVec.ofNat w w]
+    Consider the following assignment:
+    1#w <ᵤ BitVec.ofNat w w = false"
+13,AliveStatements,1,bv_auto,FAIL,265.899219,internal exception #5
+14,AliveStatements,1,bv_automata_circuit_lean_prop,FAIL,43.956088,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+15,AliveStatements,1,bv_automata_circuit_lean,FAIL,9.580587,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+16,AliveStatements,1,bv_normalize_automata_circuit_lean,FAIL,20.378256,internal exception #5
+17,AliveStatements,1,bv_automata_circuit_cadical_prop,FAIL,31.656859,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+18,AliveStatements,1,bv_automata_circuit_cadical,FAIL,6.953454,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+19,AliveStatements,1,bv_normalize_automata_circuit_cadical,FAIL,30.510317,internal exception #5
+20,AliveStatements,1,bv_mba,FAIL,0.519155,"tactic 'apply' failed, could not unify the conclusion of the term
+      ?x = ?y
+    with the goal
+      PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison
+    
+    Note: The full type of the term is
+      ∀ {w : ℕ} {x y : BitVec w}, x - y = 0#w → x = y
+    case pos
+    w : ℕ
+    x✝ : BitVec w
+    h✝ : 1#w ≥ ↑w
+    ⊢ PoisonOr.value (x✝ + x✝) ⊑ PoisonOr.poison"
+21,AliveStatements,1,bv_normalize_mba,FAIL,18.100282,internal exception #5
+22,AliveStatements,2,rfl,FAIL,9.222281,"tactic 'rfl' failed, the left-hand side
+      x✝ + x✝
+    is not definitionally equal to the right-hand side
+      x✝ <<< 1#w
+    case neg
+    w : ℕ
+    x✝ : BitVec w
+    h✝ : ¬1#w ≥ ↑w
+    ⊢ x✝ + x✝ = x✝ <<< 1#w"
+23,AliveStatements,2,bv_bitwise,FAIL,388.62977,internal exception #5
+24,AliveStatements,2,bv_ac,FAIL,29.304376,internal exception #5
+25,AliveStatements,2,bv_distrib,FAIL,239.183003,internal exception #5
+26,AliveStatements,2,bv_ring,FAIL,37.241408,internal exception #5
+27,AliveStatements,2,bv_of_bool,FAIL,14.113462,simp made no progress
+28,AliveStatements,2,bv_omega,FAIL,6.80562,"omega could not prove the goal:
+    a possible counterexample may satisfy the constraints
+      e ≥ 0
+      d ≥ 0
+      d - e ≥ 1
+      c - d ≥ 1
+      c - e ≥ 1
+      b ≥ 0
+      b - c ≤ -1
+      a ≥ 0
+      a - b ≥ 1
+      a - c ≤ -1
+    where
+     a := ↑(↑w).toNat
+     b := ↑1 % ↑(2 ^ w)
+     c := ↑2 ^ w
+     d := ↑(x✝ <<< 1#w).toNat
+     e := ↑(x✝.toNat + x✝.toNat) % ↑(2 ^ w)"
+29,AliveStatements,2,bv_automata_classic_prop,FAIL,27.680718,"expected shiftLeft by natural number, found symbolic shift amount '1#w' at '
+      x✝ <<< 1#w'"
+30,AliveStatements,2,bv_automata_classic,FAIL,6.147265,"expected shiftLeft by natural number, found symbolic shift amount '1#w' at '
+      x✝ <<< 1#w'"
+31,AliveStatements,2,bv_normalize_automata_classic,FAIL,15.868514,internal exception #5
+32,AliveStatements,2,simp,FAIL,158.435062,internal exception #5
+33,AliveStatements,2,bv_normalize,FAIL,7.656501,internal exception #5
+34,AliveStatements,2,bv_decide,FAIL,68.011819,"The prover found a potentially spurious counterexample:
+    - It abstracted the following unsupported expressions as opaque variables: [x✝ + x✝ == x✝ <<< (1 % 2 ^ w),
+     1#w <ᵤ BitVec.ofNat w w]
+    Consider the following assignment:
+    1#w <ᵤ BitVec.ofNat w w = true
+    x✝ + x✝ == x✝ <<< (1 % 2 ^ w) = false"
+35,AliveStatements,2,bv_auto,FAIL,546.210414,internal exception #5
+36,AliveStatements,2,bv_automata_circuit_lean_prop,FAIL,12.095441,"expected shiftLeft by natural number, found symbolic shift amount '1#w' at '
+      x✝ <<< 1#w'"
+37,AliveStatements,2,bv_automata_circuit_lean,FAIL,4.412071,"expected shiftLeft by natural number, found symbolic shift amount '1#w' at '
+      x✝ <<< 1#w'"
+38,AliveStatements,2,bv_normalize_automata_circuit_lean,FAIL,11.748747,internal exception #5
+39,AliveStatements,2,bv_automata_circuit_cadical_prop,FAIL,10.98672,"expected shiftLeft by natural number, found symbolic shift amount '1#w' at '
+      x✝ <<< 1#w'"
+40,AliveStatements,2,bv_automata_circuit_cadical,FAIL,3.918012,"expected shiftLeft by natural number, found symbolic shift amount '1#w' at '
+      x✝ <<< 1#w'"
+41,AliveStatements,2,bv_normalize_automata_circuit_cadical,FAIL,11.237357,internal exception #5
+42,AliveStatements,2,bv_mba,FAIL,2.407745,"unable to reflect term '
+      x✝'.
+    Expected 'int * variable'."
+43,AliveStatements,2,bv_normalize_mba,FAIL,9.045743,internal exception #5
+44,AliveStatements,3,rfl,FAIL,0.950046,"tactic 'rfl' failed, the left-hand side
+      PoisonOr.value (x✝ ^^^ -1#1)
+    is not definitionally equal to the right-hand side
+      PoisonOr.poison
+    case pos
+    x✝ : BitVec 1
+    h✝ : x✝ = 1#1
+    ⊢ PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+45,AliveStatements,3,bv_bitwise,FAIL,0.264712,"applyExtTheorem only applies to equations, not
+      (PoisonOr.value (x✝ ^^^ -1#1)).IsRefinedBy PoisonOr.poison"
+46,AliveStatements,3,bv_ac,FAIL,11.311023,internal exception #5
+47,AliveStatements,3,bv_distrib,FAIL,134.61517,internal exception #5
+48,AliveStatements,3,bv_ring,FAIL,74.31288,internal exception #5
+49,AliveStatements,3,bv_of_bool,FAIL,17.369794,simp made no progress
+50,AliveStatements,3,bv_omega,FAIL,10.101745,"omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants."
+51,AliveStatements,3,bv_automata_classic_prop,FAIL,13.207839,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+52,AliveStatements,3,bv_automata_classic,FAIL,4.019551,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+53,AliveStatements,3,bv_normalize_automata_classic,FAIL,12.660942,internal exception #5
+54,AliveStatements,3,simp,FAIL,99.496047,internal exception #5
+55,AliveStatements,3,bv_normalize,FAIL,6.914552,internal exception #5
+56,AliveStatements,3,bv_decide,FAIL,66.848747,"The prover found a potentially spurious counterexample:
+    - The following potentially relevant hypotheses could not be used: [a✝]
+    Consider the following assignment:
+    x✝ = 1#1"
+57,AliveStatements,3,bv_auto,FAIL,307.445357,internal exception #5
+58,AliveStatements,3,bv_automata_circuit_lean_prop,FAIL,25.696701,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+59,AliveStatements,3,bv_automata_circuit_lean,FAIL,4.248897,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+60,AliveStatements,3,bv_normalize_automata_circuit_lean,FAIL,9.501369,internal exception #5
+61,AliveStatements,3,bv_automata_circuit_cadical_prop,FAIL,25.32483,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+62,AliveStatements,3,bv_automata_circuit_cadical,FAIL,3.165153,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+63,AliveStatements,3,bv_normalize_automata_circuit_cadical,FAIL,8.718154,internal exception #5
+64,AliveStatements,3,bv_mba,FAIL,0.266265,"tactic 'apply' failed, could not unify the conclusion of the term
+      ?x = ?y
+    with the goal
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison
+    
+    Note: The full type of the term is
+      ∀ {w : ℕ} {x y : BitVec w}, x - y = 0#w → x = y
+    case pos
+    x✝ : BitVec 1
+    h✝ : x✝ = 1#1
+    ⊢ PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+65,AliveStatements,3,bv_normalize_mba,FAIL,5.484915,internal exception #5
+66,AliveStatements,4,rfl,FAIL,2.036305,"tactic 'rfl' failed, the left-hand side
+      PoisonOr.value (x✝ ^^^ -1#1)
+    is not definitionally equal to the right-hand side
+      PoisonOr.poison
+    case neg
+    x✝ : BitVec 1
+    h✝ : ¬x✝ = 1#1
+    ⊢ PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+67,AliveStatements,4,bv_bitwise,FAIL,0.379735,"applyExtTheorem only applies to equations, not
+      (PoisonOr.value (x✝ ^^^ -1#1)).IsRefinedBy PoisonOr.poison"
+68,AliveStatements,4,bv_ac,FAIL,19.700336,internal exception #5
+69,AliveStatements,4,bv_distrib,FAIL,131.541407,internal exception #5
+70,AliveStatements,4,bv_ring,FAIL,64.530849,internal exception #5
+71,AliveStatements,4,bv_of_bool,FAIL,15.883412,simp made no progress
+72,AliveStatements,4,bv_omega,FAIL,8.913167,"omega could not prove the goal:
+    No usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants."
+73,AliveStatements,4,bv_automata_classic_prop,FAIL,15.014136,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+74,AliveStatements,4,bv_automata_classic,FAIL,7.07525,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+75,AliveStatements,4,bv_normalize_automata_classic,FAIL,18.675501,internal exception #5
+76,AliveStatements,4,simp,FAIL,104.753718,internal exception #5
+77,AliveStatements,4,bv_normalize,FAIL,22.928456,internal exception #5
+78,AliveStatements,4,bv_decide,FAIL,68.267024,"The prover found a potentially spurious counterexample:
+    - The following potentially relevant hypotheses could not be used: [a✝]
+    Consider the following assignment:
+    x✝ = 0#1"
+79,AliveStatements,4,bv_auto,FAIL,299.156181,internal exception #5
+80,AliveStatements,4,bv_automata_circuit_lean_prop,FAIL,9.325684,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+81,AliveStatements,4,bv_automata_circuit_lean,FAIL,3.304011,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+82,AliveStatements,4,bv_normalize_automata_circuit_lean,FAIL,9.525805,internal exception #5
+83,AliveStatements,4,bv_automata_circuit_cadical_prop,FAIL,9.856199,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+84,AliveStatements,4,bv_automata_circuit_cadical,FAIL,2.811625,"expected predicate over bitvectors (no quantification), found:  
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+85,AliveStatements,4,bv_normalize_automata_circuit_cadical,FAIL,9.467827,internal exception #5
+86,AliveStatements,4,bv_mba,FAIL,0.248632,"tactic 'apply' failed, could not unify the conclusion of the term
+      ?x = ?y
+    with the goal
+      PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison
+    
+    Note: The full type of the term is
+      ∀ {w : ℕ} {x y : BitVec w}, x - y = 0#w → x = y
+    case neg
+    x✝ : BitVec 1
+    h✝ : ¬x✝ = 1#1
+    ⊢ PoisonOr.value (x✝ ^^^ -1#1) ⊑ PoisonOr.poison"
+87,AliveStatements,4,bv_normalize_mba,FAIL,6.085421,internal exception #5
