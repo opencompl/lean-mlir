@@ -6,13 +6,11 @@ import shutil
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 
-RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/InstCombineSymbolic/'
+RESULTS_DIR = ROOT_DIR + '/bv-evaluation/results/AliveSymbolic/'
 
-BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
+BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/'
 
 REPS = 1
-
-TIMEOUT = 1800
 
 def clear_folder():
     for file in os.listdir(RESULTS_DIR):
@@ -28,21 +26,18 @@ def clear_folder():
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
-    subprocess.Popen('sed -i -E \'s,simp_alive_benchmark,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,try alive_auto,simp_alive_split,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,sorry,bv_bench,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
     for r in range(REPS):
         log_file_path = RESULTS_DIR + file_title + '_' + 'r' + str(r) + '.txt'
         with open(log_file_path, 'w') as log_file:
             cmd = 'lake lean ' + file_path
             print(cmd)
-            try:
-                subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
-            except subprocess.TimeoutExpired:
-                log_file.truncate(0)
-                log_file.write(f"time out of {TIMEOUT} seconds reached\nt")
-                print(f"{file_path} - time out of {TIMEOUT} seconds reached")
+            subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,simp_alive_split,try alive_auto,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen('sed -i -E \'s,bv_bench,sorry,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
-    subprocess.Popen('sed -i -E \'s,bv_bench,simp_alive_benchmark,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
 def process(jobs: int):
     os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -50,11 +45,9 @@ def process(jobs: int):
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
-        for file in os.listdir(BENCHMARK_DIR):
-            if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
-                future = executor.submit(run_file, file)
-                futures[future] = file
-
+        file = 'AliveStatements.lean'
+        future = executor.submit(run_file, file)
+        futures[future] = file
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             file = futures[future]
@@ -62,8 +55,8 @@ def process(jobs: int):
             percentage = ((idx + 1) / total) * 100
             print(f'{file} completed, {percentage}%')
 
-parser = argparse.ArgumentParser(prog='compare-leansat-vs-bitwuzla-llvm')
+clear_folder()
+parser = argparse.ArgumentParser(prog='compare-leansat-vs-bitwuzla-alive')
 parser.add_argument('-j', '--jobs', type=int, default=1)
 args = parser.parse_args()
-clear_folder()
 process(args.jobs)

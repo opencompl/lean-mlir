@@ -4,8 +4,8 @@ import pandas as pd
 import os 
 from enum import Enum
 import subprocess
-output = Enum('output', [('counterxample', 1), ('proved', 2), ('failed', 0)])
-paper_directory = 'for-paper/'
+
+paper_directory = ''
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/InstCombine/"
 raw_data_dir = paper_directory + "raw-data/InstCombine/"

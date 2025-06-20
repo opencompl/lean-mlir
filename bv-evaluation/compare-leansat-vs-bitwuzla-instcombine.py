@@ -59,8 +59,8 @@ def process(jobs: int):
             percentage = ((idx + 1) / total) * 100
             print(f'{file} completed, {percentage}%')
 
+clear_folder()
 parser = argparse.ArgumentParser(prog='compare-leansat-vs-bitwuzla-llvm')
 parser.add_argument('-j', '--jobs', type=int, default=1)
 args = parser.parse_args()
-clear_folder()
 process(args.jobs)
