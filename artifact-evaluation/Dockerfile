@@ -6,15 +6,17 @@ WORKDIR /code
 RUN apt-get update -y \
     && DEBIAN_FRONTEND="noninteractive" apt-get install --yes \
         tzdata \
+	pip \
+	python3-venv \
         build-essential \
         cmake \
         git \
-        ripgrep \
-        vim \
-        neovim \
-        emacs \
         ninja-build \
-        gdb curl wget
+        gdb curl wget \
+        # dependencies for experiment scripts
+        python3-matplotlib python3-pandas python3-num2words \
+        # bitwuzla dependencies
+        meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config
 
 # Install Lean
 RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf > /code/elan.sh \
@@ -22,11 +24,36 @@ RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -
 ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
-# Download & build lean-mlir
-RUN curl -L https://github.com/opencompl/ssa/archive/refs/tags/v0.1.3.tar.gz > /code/ssa.tar.gz # SSA tar file
-RUN tar xf ssa.tar.gz && ls /code/ && mv ssa-0.1.3 ssa # untar
-WORKDIR /code/ssa
-RUN lake -R exe cache get
-RUN lake build SSA mlirnatural
+# Install Bitwuzla
+RUN git clone https://github.com/bitwuzla/bitwuzla
+WORKDIR /code/bitwuzla
+RUN ./configure.py && cd build && ninja install
+
+# Install Lean-MLIR 
+RUN git clone https://github.com/opencompl/lean-mlir
+WORKDIR /code/lean-mlir
+
+# Install plotting script dependencies
+
+# WORKDIR /code/lean-mlir/bv-evaluation/
+# RUN bash -c "\
+# 	python3 -m venv venv \
+# 	&& source venv/bin/activate \
+# 	&& python3 -m pip install -r /code/lean-mlir/bv-evaluation/requirements.txt "
+
+# First, get cached dependencies
+WORKDIR /code/lean-mlir
+COPY . .
+
+# COPY lean-toolchain lakefile.toml lake-manifest.json ./
+# RUN lake exe cache get!
+
+# Then, copy & build lean-mlir
+RUN lake exe cache get
+RUN lake build
+
+# Set the evaluation script directory as working dir
+WORKDIR /code/lean-mlir/bv-evaluation/
+RUN python3 compare-leansat-vs-bitwuzla-hdel.py
 
 USER root
