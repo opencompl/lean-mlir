@@ -187,7 +187,7 @@ for file in os.listdir(benchmark_dir):
                         errs = errs + 1  
                 elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
                     err_loc_tot.append(l.split("error: ")[0].split("/")[-1][0:-1])
-                    err_msg_tot.append((l.split("error: ")[1])[0:-1]+", file: "+file+", goal = "+str(thm))
+                    err_msg_tot.append((l.split("error: ")[1])[0:-1]+")
                     errs = errs + 1
                 l = res_file.readline()
 
