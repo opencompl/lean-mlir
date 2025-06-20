@@ -8,7 +8,7 @@ ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).deco
 
 RESULTS_DIR = ROOT_DIR + "/bv-evaluation/results/HackersDelight/"
 
-BENCHMARK_DIR = ROOT_DIR + "SSA/Projects/InstCombine/HackersDelight/"
+BENCHMARK_DIR = ROOT_DIR + "/SSA/Projects/InstCombine/HackersDelight/"
 
 REPS = 1
 TIMEOUT = 1800
