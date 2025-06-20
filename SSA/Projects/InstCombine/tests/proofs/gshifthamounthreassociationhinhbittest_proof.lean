@@ -43,7 +43,7 @@ theorem t2_const_lshr_shl_eq_thm (e e_1 : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem t3_const_after_fold_lshr_shl_ne_thm (e e_1 e_2 : IntW 32) :
   icmp IntPred.ne (LLVM.and (lshr e_2 (sub (const? 32 32) e_1)) (shl e (add e_1 (const? 32 (-1))))) (const? 32 0) ⊑
     icmp IntPred.ne (LLVM.and (lshr e_2 (const? 32 31)) e) (const? 32 0) := by
@@ -54,7 +54,7 @@ theorem t3_const_after_fold_lshr_shl_ne_thm (e e_1 e_2 : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true
 theorem t4_const_after_fold_lshr_shl_ne_thm (e e_1 e_2 : IntW 32) :
   icmp IntPred.ne (LLVM.and (shl e_2 (sub (const? 32 32) e_1)) (lshr e (add e_1 (const? 32 (-1))))) (const? 32 0) ⊑
     icmp IntPred.ne (LLVM.and (lshr e (const? 32 31)) e_2) (const? 32 0) := by

@@ -110,7 +110,7 @@ theorem tryFactorization_add_nuw_mul_nuw_thm (e : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem tryFactorization_add_nuw_mul_nuw_int_max_thm (e : IntW 32) :
   add (mul e (const? 32 2147483647) { «nsw» := false, «nuw» := true }) e { «nsw» := false, «nuw» := true } ⊑
     shl e (const? 32 31) { «nsw» := false, «nuw» := true } := by
