@@ -246,7 +246,18 @@ macro "bv_bench_automata": tactic =>
       )
    )
 
-example : ∀ (x : BitVec w), x * 2 = x + x := by
-    intros w
-    bv_bench_automata
-    sorry
+/-- Tactic to dry run. -/
+macro "bv_bench_dryrun": tactic =>
+  `(tactic|
+      (
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
+           BitVec.ofNat_eq_ofNat, BitVec.two_mul]
+
+        all_goals (
+          tac_bench (config := { outputType := .csv }) [
+            "done" : (done)
+          ])
+        )
+    )
