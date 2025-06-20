@@ -39,3 +39,4 @@ test-semantics/*.llvm
 lakefile.olean
 .lake/
 bv-evaluation/raw-data/*
+docker-results
