@@ -244,7 +244,6 @@ for file in os.listdir(benchmark_dir):
                 print("something is broken: bitwuzla output "+str(output_bw.value)+" leanSAT output "+str(output_ls.value))
                 break
         thmTot += thm
-        # print("file "+file+ " contains "+str(thm)+" goals\n.")
         errTot += errs
 
 print("In total we found "+str(thmTot)+" goals.")
