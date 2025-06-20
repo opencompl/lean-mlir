@@ -246,7 +246,7 @@ macro "bv_bench_automata": tactic =>
       )
    )
 
-example : ∀ (x : BitVec w), x * 2 = x + x := by
-    intros w
-    bv_bench_automata
-    sorry
+-- example : ∀ (x : BitVec w), x * 2 = x + x := by
+--     intros w
+--     bv_bench_automata
+--     sorry

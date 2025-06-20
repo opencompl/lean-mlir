@@ -8,7 +8,6 @@ import shutil
 import pandas as pd
 import os
 import re
-import sqlite3
 import logging
 import random
 import json
@@ -74,7 +73,7 @@ def run_file(db : str, file: str, file_num : int):
 
 def process(db : str, jobs: int, prod_run : bool):
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
-    os.makedirs(os.path.dirname(db), exist_ok=True)
+    # os.makedirs(os.path.dirname(db), exist_ok=True)
 
     if os.path.exists(db):
         os.remove(db)
@@ -125,8 +124,8 @@ if __name__ == "__main__":
   current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
   nproc = os.cpu_count()
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
-  default_db = f'automata-circuit-{current_time}.sqlite3'
-  parser.add_argument('--db', default=default_db, help='path to sqlite3 database')
+  default_db = f'automata-circuit-{current_time}.jsonl'
+  parser.add_argument('--db', default=default_db, help='path to jsonl database')
   parser.add_argument('-j', '--jobs', type=int, default=1)
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
