@@ -6,7 +6,7 @@ import shutil
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 
-RESULTS_DIR = ROOT_DIR + "bv-evaluation/results/HackersDelight/"
+RESULTS_DIR = ROOT_DIR + "/bv-evaluation/results/HackersDelight/"
 
 BENCHMARK_DIR = ROOT_DIR + "SSA/Projects/InstCombine/HackersDelight/"
 
