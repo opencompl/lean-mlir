@@ -3,7 +3,6 @@ import subprocess
 import datetime
 import os
 import platform
-import concurrent.futures
 import argparse
 import shutil
 import pandas as pd
@@ -12,15 +11,15 @@ import re
 import sqlite3
 import logging
 import random
-from tabulate import tabulate
+import json
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 TIMEOUT = 1800 # timeout
 
-STATUS_FAIL = "❌",
-STATUS_GREEN_CHECK = "✅",
-STATUS_SUCCESS = "🎉",
+STATUS_FAIL = "❌"
+STATUS_GREEN_CHECK = "✅"
+STATUS_SUCCESS = "🎉"
 STATUS_PROCESSING = "⌛️"
 
 def sed():
@@ -75,7 +74,7 @@ def run_file(db : str, file: str, file_num : int):
 
 def process(db : str, jobs: int, prod_run : bool):
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
-    os.mkdir(db, exist_ok=True)
+    os.makedirs(os.path.dirname(db), exist_ok=True)
 
     if os.path.exists(db):
         os.remove(db)
@@ -105,11 +104,10 @@ def process(db : str, jobs: int, prod_run : bool):
 
     total = len(files)
     logging.info(f"total #files to process: {total}")
-    futures = []
-    future_to_file ={}
+    num_completed = 0
     for ix, file in enumerate(files):
         future = run_file(db, file, ix+1)
-        percentage = ((idx + 1) / total) * 100
+        percentage = ((ix + 1) / total) * 100
         logging.info(f'completed {file} ({percentage:.1f}%)')
         num_completed += 1
         logging.info(f"total #files processed: {num_completed}")
