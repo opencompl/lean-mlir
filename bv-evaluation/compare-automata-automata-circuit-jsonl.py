@@ -14,7 +14,7 @@ import json
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
-TIMEOUT = 1800 # timeout
+TIMEOUT = 60 * 60 * 4 # timeout = 4h
 
 STATUS_FAIL = "❌"
 STATUS_GREEN_CHECK = "✅"
