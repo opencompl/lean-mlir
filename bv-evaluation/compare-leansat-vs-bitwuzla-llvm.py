@@ -37,7 +37,7 @@ def process(jobs: int):
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
         for file in os.listdir(BENCHMARK_DIR):
-            if "_proof" in file: # currently discard broken chapter
+            if "_proof" in file:
                 future = executor.submit(run_file, file)
                 futures[future] = file
 
@@ -51,5 +51,4 @@ def process(jobs: int):
 parser = argparse.ArgumentParser(prog='compare-leansat-vs-bitwuzla-llvm')
 parser.add_argument('-j', '--jobs', type=int, default=1)
 args = parser.parse_args()
-clear_folder()
 process(args.jobs)
