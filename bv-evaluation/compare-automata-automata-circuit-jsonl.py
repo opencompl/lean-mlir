@@ -94,7 +94,7 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
 
     files = []
     for ix, file in enumerate(raw_files):
-        if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
+        if "_proof" in file:
             files.append(file)
             N_TEST_RUN_FILES = 5
             if len(files) == N_TEST_RUN_FILES and not prod_run:
