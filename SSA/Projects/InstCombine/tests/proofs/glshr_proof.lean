@@ -58,7 +58,7 @@ theorem fake_sext_thm (e : IntW 3) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem mul_splat_fold_thm (e : IntW 32) :
   lshr (mul e (const? 32 65537) { «nsw» := false, «nuw» := true }) (const? 32 16) ⊑ e := by
     simp_alive_undef

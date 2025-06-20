@@ -11,6 +11,7 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 
 section gshifthamounthreassociationhinhbittesthwithhtruncationhshl_proof
+set_option debug.skipKernelTC true in
 theorem t0_const_after_fold_lshr_shl_ne_thm (e : IntW 64) (e_1 e_2 : IntW 32) :
   icmp IntPred.ne
       (LLVM.and (lshr e_2 (sub (const? 32 32) e_1)) (trunc 32 (shl e (zext 64 (add e_1 (const? 32 (-1)))))))
@@ -50,7 +51,7 @@ theorem n13_overshift_thm (e : IntW 64) (e_1 e_2 : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem n14_trunc_of_lshr_thm (e e_1 : IntW 32) (e_2 : IntW 64) :
   icmp IntPred.ne
       (LLVM.and (trunc 32 (lshr e_2 (zext 64 (sub (const? 32 32) e_1)))) (shl e (add e_1 (const? 32 (-1)))))

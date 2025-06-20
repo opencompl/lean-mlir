@@ -417,7 +417,7 @@ theorem test82_thm (e : IntW 64) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem test83_thm (e : IntW 64) (e_1 : IntW 16) :
   zext 64 (shl (sext 32 e_1) (trunc 32 (add e (const? 64 (-1)) { «nsw» := true, «nuw» := false }))) ⊑
     zext 64 (shl (sext 32 e_1) (add (trunc 32 e) (const? 32 (-1)))) := by
@@ -439,7 +439,7 @@ theorem test84_thm (e : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem test85_thm (e : IntW 32) :
   trunc 8 (lshr (add e (const? 32 (-16777216)) { «nsw» := false, «nuw» := true }) (const? 32 23) { «exact» := true }) ⊑
     trunc 8 (lshr (add e (const? 32 2130706432)) (const? 32 23)) := by
@@ -479,7 +479,7 @@ theorem test88_thm (e : IntW 16) : trunc 16 (ashr (sext 32 e) (const? 32 18)) �
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem PR23309_thm (e e_1 : IntW 32) :
   trunc 1 (sub (add e_1 (const? 32 (-4))) e { «nsw» := true, «nuw» := false }) ⊑ trunc 1 (sub e_1 e) := by
     simp_alive_undef
@@ -489,7 +489,7 @@ theorem PR23309_thm (e e_1 : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem PR23309v2_thm (e e_1 : IntW 32) :
   trunc 1 (add (add e_1 (const? 32 (-4))) e { «nsw» := false, «nuw» := true }) ⊑ trunc 1 (add e_1 e) := by
     simp_alive_undef

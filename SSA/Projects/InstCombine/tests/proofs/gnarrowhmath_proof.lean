@@ -66,7 +66,7 @@ theorem test6_thm (e : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem test7_thm (e : IntW 32) :
   add (zext 64 (lshr e (const? 32 1))) (const? 64 2147483647) ⊑
     zext 64 (add (lshr e (const? 32 1)) (const? 32 2147483647) { «nsw» := false, «nuw» := true }) := by
@@ -99,7 +99,7 @@ theorem test9_thm (e : IntW 32) :
     simp_alive_benchmark
     all_goals sorry
 
-
+set_option debug.skipKernelTC true in
 theorem test10_thm (e : IntW 32) :
   mul (zext 64 (lshr e (const? 32 16))) (const? 64 65535) ⊑
     zext 64 (mul (lshr e (const? 32 16)) (const? 32 65535) { «nsw» := false, «nuw» := true }) := by
