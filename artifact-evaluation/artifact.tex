@@ -116,10 +116,15 @@ The Docker image has all dependencies needed to compile our framework with Lean4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Experiment workflow}
 
-Access the docker image \texttt{opencompl-ssa} from
-\url{https://zenodo.org/records/11519739}.
+Access the docker image \texttt{lean-mlir} from
+\textcolor{red}{Zenodo link}.
 
 \begin{minted}[fontsize=\scriptsize]{text}
+  from folder lean-mlir: 
+- docker build -f artifact-evaluation/Dockerfile -t lean-image .
+- docker create --name temp-container lean-image
+- docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-results
+- docker rm temp-container
 $ docker load -i opencompl-ssa.tar
 $ docker run -it siddudruid/opencompl-ssa
 # | This clears the build cache,
@@ -267,4 +272,3 @@ $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
-
