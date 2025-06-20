@@ -105,12 +105,12 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
     num_completed = 0
     future2file = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
-        files = os.listdir(BENCHMARK_DIR)
         for ix, file in enumerate(files):
             future = executor.submit(run_file, db, file, ix + 1, dryrun)
             future2file[future] = file
 
     total = len(future2file)
+    assert len(future2file) == len(files)
     for future in concurrent.futures.as_completed(future2file):
         file = future2file[future]
         try:
@@ -123,7 +123,7 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
         percentage = ((ix + 1) / total) * 100
         logging.info(f'completed {file} ({percentage:.1f}%)')
         num_completed += 1
-        logging.info(f"total #files processed: {num_completed}")
+        logging.info(f"total #files processed: {num_completed}/{total}")
 
     if num_completed != total:
         logging.error(f"Expected {total} files to be processed, but got {num_completed} completed futures.")
