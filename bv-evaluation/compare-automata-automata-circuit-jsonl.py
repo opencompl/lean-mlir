@@ -50,11 +50,9 @@ def run_file(db : str, file: str, file_num : int):
     logging.info(f"{fileTitle}({file_num}): done.")
     logging.info(out)
     if p.returncode != 0:
-        logging.info(f"ERROR: Expected return code of 0, found {p.returncode}")
-        logging.info(f"{fileTitle}({file_num}) stderr: {err}")
+        logging.error(f"{fileTitle}({file_num}): Expected return code of 0, found {p.returncode}")
         assert p.returncode == 0
 
-    logging.info(f"{fileTitle}({file_num}) output:\n{out}")
     records = []
     for line in out.strip().split("\n"):
         TACBENCH_PREAMBLE = "TACBENCHCSV|"
