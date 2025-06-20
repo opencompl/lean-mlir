@@ -47,10 +47,9 @@ def run_file(db : str, file: str, file_num : int, dryrun : bool):
     except subprocess.TimeoutExpired as e:
         logging.info(f"{file_path} - time out of {TIMEOUT} seconds reached")
         p.kill()
-        return None
+        return False
 
     logging.info(f"{fileTitle}({file_num}): done.")
-    logging.info(out)
     if p.returncode != 0:
         logging.error(f"{fileTitle}({file_num}): Expected return code of 0, found {p.returncode}")
 
@@ -70,6 +69,7 @@ def run_file(db : str, file: str, file_num : int, dryrun : bool):
     with open(f"{db}", "a") as f:
         for record in records:
             f.write(json.dumps(record) + "\n")
+    return True
 
 def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
@@ -116,12 +116,13 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
         try:
             success = future.result()
         except Exception as exc:
-            print('%r generated an exception: %s' % (file, exc))
+            logging.error('%r FAILED with exception: %s' % (file, exc))
         else:
-            print('%r success: %s' % (file, success))
+            if not success:
+                logging.error('%r FAILED run' % (file))
 
         percentage = ((ix + 1) / total) * 100
-        logging.info(f'completed {file} ({percentage:.1f}%)')
+        logging.info(f'{STATUS_GREEN_CHECK} completed {file} ({percentage:.1f}%)')
         num_completed += 1
         logging.info(f"total #files processed: {num_completed}/{total}")
 
