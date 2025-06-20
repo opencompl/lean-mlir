@@ -10,7 +10,7 @@ namespace Ch2Basics
 
 namespace DeMorgansLawsExtended
 
-variable {x y z : BitVec 64}
+variable {x y z : BitVec WIDTH}
 
 theorem not_and_eq_not_or_not :
     ~~~ (x &&& y) = ~~~ x ||| ~~~ y := by
