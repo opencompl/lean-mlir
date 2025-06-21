@@ -17,8 +17,6 @@ tactic and invokes `bv_decide`. The tactic is designed to solve instruction lowe
 fall within the domain solvable by `bv_decide`. We have enhanced the LLVM tactics to handle PoisonOr
 cases, and the RISC-V tactic simplifies RISC-V definitions so that the remaining goals are suitable
 for `bv_decide`.
-It also defines the `simp_lowering` attribute, which can be used to tag semantic definition
-functions so that they are automatically simplified when `simp_lowering` is invoked.
 To enable this proof automation, rewriter implementors must tag their rewrite rules with
 `@[simp_denote]`. This ensures that the initial invocation of `simp_peephole` within the
 `simp_lowering` tactic unfolds the relevant definitions, allowing subsequent tactics to proceed.
