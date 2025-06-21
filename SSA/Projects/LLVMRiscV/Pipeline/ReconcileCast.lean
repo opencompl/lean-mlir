@@ -15,7 +15,7 @@ from one dialect to another dialect to temporary guarantee compatible between ty
 systems. It is stating that an element should be casted to type B from type A.
 -/
 
-
+@[simp_denote]
 def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty.riscv (.bv)) where
   lhs := [LV| {
       ^entry (%arg: !i64):
