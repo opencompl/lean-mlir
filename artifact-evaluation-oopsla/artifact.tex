@@ -121,20 +121,10 @@ Access the docker image \texttt{lean-mlir} from
 
 \begin{minted}[fontsize=\scriptsize]{text}
   from folder lean-mlir: 
-- docker build -f artifact-evaluation/Dockerfile -t lean-image .
-- docker create --name temp-container lean-image
-- docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-results
-- docker rm temp-container
-$ docker load -i opencompl-ssa.tar
-$ docker run -it siddudruid/opencompl-ssa
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
-$ cd /code/ssa && lake clean && lake exe cache get && lake build
-# | This allows to check that the key theorems of our framework are
-# |guarded, and that they do not contain `sorry`s.
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
+$ docker build -f artifact-evaluation/Dockerfile -t lean-image .
+$ docker create --name temp-container lean-image
+$ docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-results
+$ docker rm temp-container
 \end{minted}
 
 % \subsection{Full Workflow Example}
