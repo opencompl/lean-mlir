@@ -1,8 +1,7 @@
-# Main Lean image
 FROM ubuntu:24.04
 WORKDIR /code
 
-# Install dependencies
+# install dependencies
 RUN apt-get update -y \
     && DEBIAN_FRONTEND="noninteractive" apt-get install --yes \
         tzdata \
@@ -18,22 +17,22 @@ RUN apt-get update -y \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config
 
-# Install Lean
+# install Lean
 RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf > /code/elan.sh \
     && sh /code/elan.sh -y # elan
 ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
-# Install Bitwuzla (commit: 22.6.25)
+# install Bitwuzla (commit: 22.6.25)
 RUN git clone https://github.com/bitwuzla/bitwuzla && cd bitwuzla && git checkout 0dca38d0f62fa9002ad6278ca6374838a69ade19
 WORKDIR /code/bitwuzla
 RUN ./configure.py && cd build && ninja install
 
-# Install Lean-MLIR (commit: 22.06.25)
+# install Lean-MLIR (commit: 22.06.25)
 RUN git clone https://github.com/opencompl/lean-mlir && cd lean-mlir && git checkout b0253c5f5dbc6cc507b559d76fd659da38a8e565 
 WORKDIR /code/lean-mlir
 
-# Install plotting script dependencies
+# install plotting script dependencies
 
 # WORKDIR /code/lean-mlir/bv-evaluation/
 # RUN bash -c "\
@@ -41,14 +40,11 @@ WORKDIR /code/lean-mlir
 # 	&& source venv/bin/activate \
 # 	&& python3 -m pip install -r /code/lean-mlir/bv-evaluation/requirements.txt "
 
-# First, get cached dependencies
+# get cached dependencies
 WORKDIR /code/lean-mlir
 COPY . .
 
-# COPY lean-toolchain lakefile.toml lake-manifest.json ./
-# RUN lake exe cache get!
-
-# Then, copy & build lean-mlir
+# build lean-mlir
 RUN lake exe cache get
 RUN lake build
 
