@@ -24,13 +24,17 @@ RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -
 ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
-# Install Bitwuzla
-RUN git clone https://github.com/bitwuzla/bitwuzla
+# Install Bitwuzla (commit: 22.6.25)
+RUN git clone https://github.com/bitwuzla/bitwuzla 
+    && cd bitwuzla 
+    && git checkout 0dca38d0f62fa9002ad6278ca6374838a69ade19
 WORKDIR /code/bitwuzla
 RUN ./configure.py && cd build && ninja install
 
-# Install Lean-MLIR 
+# Install Lean-MLIR (commit: 22.06.25)
 RUN git clone https://github.com/opencompl/lean-mlir
+    && cd lean-mlir 
+    && git checkout b0253c5f5dbc6cc507b559d76fd659da38a8e565 
 WORKDIR /code/lean-mlir
 
 # Install plotting script dependencies
