@@ -119,13 +119,12 @@ The Docker image has all dependencies needed to compile our framework with Lean4
 Access the docker image \texttt{lean-mlir} from
 \textcolor{red}{Zenodo link}.
 
-\begin{minted}[fontsize=\scriptsize]{text}
-  from folder lean-mlir: 
+\begin{verbatim}
 $ docker build -f artifact-evaluation/Dockerfile -t lean-image .
 $ docker create --name temp-container lean-image
 $ docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-results
 $ docker rm temp-container
-\end{minted}
+\end{verbatim}
 
 % \subsection{Full Workflow Example}
 
