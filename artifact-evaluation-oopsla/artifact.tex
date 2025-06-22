@@ -133,112 +133,11 @@ $ docker rm temp-container
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Evaluation and expected results}
 
-On running \texttt{lake build}, the build succeeds with no errors.
-
-Next, run:
-
-\begin{minted}[fontsize=\scriptsize]{text}
-$ rg -g "**/*.lean" "guard_msgs in #print axioms" -C2 | grep "sorry"
-\end{minted}
-
-Grep returns no matches, which checks that all guarded theorems do not use the sorry axiom.
-To manually inspect this, run:
-
-\begin{minted}[fontsize=\scriptsize]{text}
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
-\end{minted}
-
-In the output, observe the following lines, which tells us that, for example, the 
-theorem \texttt{denote\_rewritePeepholeAt} depends only on the axioms 
-\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. That is, this theorem 
-\emph{does not depend} on axioms such as \texttt{sorryAx} that compromise the correctness of Lean's verification.
-
-Now, since the Lean build was successful in the previous step, and since we use standard Lean axioms, 
-we are justified in our claims that we have mechanized the key theorem statements from the paper.
-
-Below, we list the key theorems that we claim to have mechanized, and their 
-guarded verification below. Please inspect the output of 
-\texttt{(\$ rg -g "**/*.lean" "\#guard\_msgs in \#print axioms" -C2 | grep "sorry")}
-and confirm that these guarded statements occur, with the guard containing only the axioms \texttt{propext},
-\texttt{Classical.choice}, and \texttt{Quot.sound}.
 
 \subsubsection{Core Framework Theorems}
 
-The core correctness claim of the peephole rewriter is guarded below:
-
-\begin{minted}[fontsize=\tiny]{text}
-SSA/Core/Framework.lean
-2422-
-2423-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-2424:#guard_msgs in #print axioms denote_rewritePeepholeAt
-2425-
-2426-/- repeatedly apply peephole on program. -/
---
-2458-
-2459-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-2460:#guard_msgs in #print axioms denote_rewritePeephole
-2461-
-2462-end SimpPeepholeApplier
-\end{minted}
-
 \subsubsection{Five Hardest Alive Examples}
-
-The correctness claim of the hardest Alive rewrites that time out on an SMT solver, which we verify 
-for arbitrary bitwidth:
-
-\begin{minted}[fontsize=\tiny]{text}
-SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
-53-/--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-54-axioms: [propext, Classical.choice, Quot.sound] -/
-55:#guard_msgs in #print axioms alive_DivRemOfSelect
-56-
-57-end DivRemOfSelect
---
-215-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
-216-[propext, Classical.choice, Quot.sound] -/
-217:#guard_msgs in #print axioms alive_simplifyMulDivRem805
-218-
-219-open Std (BitVec) in
---
-302-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
-303-[propext, Classical.choice, Quot.sound] -/
-304:#guard_msgs in #print axioms alive_simplifyMulDivRem805'
-305-
-306-/-
---
-357-/-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
-358-axioms: [propext, Classical.choice, Quot.sound]-/
-359:#guard_msgs in #print axioms alive_simplifyMulDivRem290
-360-
-361-end MulDivRem
---
-416-/-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
-417-axioms: [propext, Classical.choice, Quot.sound] -/
-418:#guard_msgs in #print axioms alive_simplifyAndOrXor2515
-419-
-420-/-
---
-532-/-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
-533-[propext, Classical.choice, Quot.sound] -/
-534:#guard_msgs in #print axioms alive_simplifySelect764
-535-
-536-end Select
-\end{minted}
-
 \subsection{Paper Code Examples}
-
-\begin{itemize}
-\item \emph{Figure 1, 2} is at \texttt{SSA/Projects/FullyHomomorphicEncryption/\\PaperExamples.lean}.
-\item \emph{Figure 3, 4} is at \texttt{SSA/Core/Framework.lean}.
-\item The statement and proof of \texttt{denote\_rewritePeephole} can be found at 
-\texttt{SSA/Core/Framework.lean}. 
-\item The definitions and proofs of DCE can be found in \\
-\texttt{SSA/Projects/DCE/DCE.lean}, and of CSE in \\\texttt{SSA/Projects/CSE/CSE.lean}.
-\item The examples for bitvector rewrites in found at \\\texttt{SSA/Projects/InstCombine/PaperExamples.lean}.
-\item The hand-written examples are found at \\\texttt{SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean}.
-\item All FHE examples can be found in \\\texttt{SSA/Projects/FullyHomomorphicEncryption/PaperExamples.lean}.
-\end{itemize}
-
 \subsection{Miscellanous Docker Usage}
 To copy files for inspection from the docker container into the host,
  keep the container running, and in another
