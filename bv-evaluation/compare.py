@@ -128,6 +128,9 @@ def compare(benchmark : str, jobs: int) :
                     future = executor.submit(run_file, "instcombine", file_path, file_title)
                     futures[future] = file
 
+        else : 
+            raise Exception("Unknown benchmark.") 
+
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             file_or_name = futures[future]
