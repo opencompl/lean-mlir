@@ -38,3 +38,4 @@ test-semantics/*.llvm
 *.olean
 lakefile.olean
 .lake/
+bv-evaluation/results
