@@ -74,6 +74,9 @@ def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, speci
                 log_file.truncate(0)
                 log_file.write(f"time out of {TIMEOUT} seconds reached\n")
                 print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
+    
+    else : 
+        raise Exception("Unknown benchmark.") 
 
 def compare(benchmark : str, jobs: int) :
     """Processes benchmarks using a thread pool."""
