@@ -729,7 +729,8 @@ def mkCarryAssignCircuitNAux {arity : Type _}
 The MkcarryAssign circuit is false iff
 p.nextBitCirc evaluates to false on the given environment.
 -/
-theorem mkCarryAssignCircuitNAux_eq_false_iff {arity : Type _}
+@[simp]
+theorem mkCarryAssignCircuitNAux_eval_eq {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -738,10 +739,8 @@ theorem mkCarryAssignCircuitNAux_eq_false_iff {arity : Type _}
     {env' : p.α ⊕ arity → Bool}
     (hEnvState : ∀ (s : p.α), env (Vars.stateN s n) = env' (Sum.inl s))
     (hEnvInput : ∀ (i : arity), env (Vars.inputN i n) = env' (Sum.inr i)) :
-    ((mkCarryAssignCircuitNAux p s n).eval env = false) ↔
-    ((p.nextBitCirc (some s)).eval env' = false) := by
+    ((mkCarryAssignCircuitNAux p s n).eval env) = ((p.nextBitCirc (some s)).eval env') := by
   rw [mkCarryAssignCircuitNAux]
-  simp
   rw [Circuit.eval_map]
   congr
   ext x
@@ -767,17 +766,31 @@ def mkCarryAssignCircuitN {arity : Type _}
       (Circuit.var true <| Vars.stateN s (n + 1))
   Circuit.bigOr carrys
 
-theorem mkCarryAssignCircuitN_eq_false_iff {arity : Type _}
+@[simp]
+theorem mkCarryAssignCircuitN_eval_eq {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
-  (p : FSM arity) (s : p.α) (n : Nat)
+  (p : FSM arity) (n : Nat)
   {env : Vars p.α arity (n + 1) → Bool}
   {env' : p.α ⊕ arity → Bool}
   (hEnvState : ∀ (s : p.α), env (Vars.stateN s n) = env' (Sum.inl s))
   (hEnvInput : ∀ (i : arity), env (Vars.inputN i n) = env' (Sum.inr i)) :
-  ((mkCarryAssignCircuitN p n).eval env = false) ↔
-  (∀ s : p.α, (p.nextBitCirc (some s)).eval env' = false) := by sorry
+  ((mkCarryAssignCircuitN p n).eval env = false) ↔ (∀ (s : p.α), (p.nextBitCirc (some s)).eval env' = env (Vars.stateN s (n + 1))) := by
+  rw [mkCarryAssignCircuitN]
+  simp
+  constructor
+  · intros h s
+    specialize h s
+    rw [mkCarryAssignCircuitNAux_eval_eq] at h
+    · apply h
+    · apply hEnvState
+    · apply hEnvInput
+  · intros h s
+    rw [mkCarryAssignCircuitNAux_eval_eq]
+    · apply h
+    · apply hEnvState
+    · apply hEnvInput
 
 /--
 Make the circuit that assigns `states[i][:] = carry(states[i-1][:], inputs[i-1][:])`
