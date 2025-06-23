@@ -35,48 +35,42 @@ def clear_folder(results_dir):
         except Exception as e:
             print(f'Failed to delete {item_path}. Reason: {e}')
 
-def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, specific_arg_for_log_name: str = None) :
+def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, hackersdelight_width: str = None) :
     """
     Runs a single Lean file and logs its output.
     file_to_run: The full path to the .lean file to execute.
     log_file_base_name: The base name for the log file.
-    specific_arg_for_log_name: An optional argument to append to the log file name, useful for hackersdelight bit-width.
+    hackersdelight_width: An optional argument to append to the log file name, useful for hackersdelight bit-width.
     """
     cmd_prefix = 'lake lean '
     if benchmark == "hackersdelight":
+        log_file_name = f'{log_file_base_name}_{hackersdelight_width}.txt'
+        log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
+    elif benchmark == "instcombine":
+        log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{log_file_base_name}.txt')
+    else : 
+        raise Exception("Unknown benchmark.") 
+
+    # Construct log file name including original file's base name and bit-width
+    with open(log_file_path, 'w') as log_file:
+        cmd = cmd_prefix + file_to_run
+        print(f"Running: {cmd}")
         try:
-            # Construct log file name including original file's base name and bit-width
-            log_file_name = f'{log_file_base_name}_{specific_arg_for_log_name}_r{r}.txt'
-            log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
-            with open(log_file_path, 'w') as log_file:
-                cmd = cmd_prefix + file_to_run
-                print(f"Running: {cmd}")
-                try:
-                    subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
-                except subprocess.TimeoutExpired:
+            subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
+        except subprocess.TimeoutExpired:
                     log_file.truncate(0)
                     log_file.write(f"time out of {TIMEOUT} seconds reached\n")
                     print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
-        finally:
-            # Clean up the temporary file created for this specific bit-width and original file
-            if os.path.exists(file_to_run):
-                os.remove(file_to_run)
-                print(f"Deleted temporary file: {file_to_run}")
 
-    elif benchmark == "instcombine":
-        log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{log_file_base_name}_r{r}.txt')
-        with open(log_file_path, 'w') as log_file:
-            cmd = cmd_prefix + file_to_run
-            print(f"Running: {cmd}")
-            try:
-                subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
-            except subprocess.TimeoutExpired:
-                log_file.truncate(0)
-                log_file.write(f"time out of {TIMEOUT} seconds reached\n")
-                print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
+    if (benchmark == "hackersdelight"):
+            # Clean up the temporary file created for this specific bit-width and original file
+        if os.path.exists(file_to_run):
+            os.remove(file_to_run)
+            print(f"Deleted temporary file: {file_to_run}")
+
+
     
-    else : 
-        raise Exception("Unknown benchmark.") 
+    
 
 def compare(benchmark : str, jobs: int) :
     """Processes benchmarks using a thread pool."""
