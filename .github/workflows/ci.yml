@@ -55,11 +55,12 @@ jobs:
 
       - name: Compile Hacker's Delight Theorems 🧮
         run: |
-          sed -i -E \'s,WIDTH,16,g\ SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan
-          sed -i -E \'s,WIDTH,16,g\ SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps
+          sed -i -E \s,WIDTH,16,g\ SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan
+          sed -i -E \s,WIDTH,16,g\ SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps
           lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan # compile and check the Hacker's Delight theorems chapter 2-1
           lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps # compile and check the Hacker's Delight theorems chapter 2-2
-          sed -i -E \'s,16,WIDTH,g\
+          sed -i -E \s,16,WIDTH,g\ SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan
+          sed -i -E \s,16,WIDTH,g\ SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps
 
       - name: Compile Alive Examples
         run: |
