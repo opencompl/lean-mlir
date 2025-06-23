@@ -19,7 +19,6 @@ RESULTS_DIR_INSTCOMBINE = ROOT_DIR + '/bv-evaluation/results/InstCombine/'
 BENCHMARK_DIR_INSTCOMBINE = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
 
 TIMEOUT = 1800
-REPS = 1
 
 def clear_folder(results_dir):
     """Clears all files and subdirectories within the given directory."""
@@ -46,28 +45,9 @@ def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, speci
     cmd_prefix = 'lake lean '
     if benchmark == "hackersdelight":
         try:
-            for r in range(REPS):
-                # Construct log file name including original file's base name and bit-width
-                log_file_name = f'{log_file_base_name}_{specific_arg_for_log_name}_r{r}.txt'
-                log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
-                with open(log_file_path, 'w') as log_file:
-                    cmd = cmd_prefix + file_to_run
-                    print(f"Running: {cmd}")
-                    try:
-                        subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
-                    except subprocess.TimeoutExpired:
-                        log_file.truncate(0)
-                        log_file.write(f"time out of {TIMEOUT} seconds reached\n")
-                        print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
-        finally:
-            # Clean up the temporary file created for this specific bit-width and original file
-            if os.path.exists(file_to_run):
-                os.remove(file_to_run)
-                print(f"Deleted temporary file: {file_to_run}")
-
-    elif benchmark == "instcombine":
-        for r in range(REPS):
-            log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{log_file_base_name}_r{r}.txt')
+            # Construct log file name including original file's base name and bit-width
+            log_file_name = f'{log_file_base_name}_{specific_arg_for_log_name}_r{r}.txt'
+            log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
             with open(log_file_path, 'w') as log_file:
                 cmd = cmd_prefix + file_to_run
                 print(f"Running: {cmd}")
@@ -77,6 +57,23 @@ def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, speci
                     log_file.truncate(0)
                     log_file.write(f"time out of {TIMEOUT} seconds reached\n")
                     print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
+        finally:
+            # Clean up the temporary file created for this specific bit-width and original file
+            if os.path.exists(file_to_run):
+                os.remove(file_to_run)
+                print(f"Deleted temporary file: {file_to_run}")
+
+    elif benchmark == "instcombine":
+        log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{log_file_base_name}_r{r}.txt')
+        with open(log_file_path, 'w') as log_file:
+            cmd = cmd_prefix + file_to_run
+            print(f"Running: {cmd}")
+            try:
+                subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
+            except subprocess.TimeoutExpired:
+                log_file.truncate(0)
+                log_file.write(f"time out of {TIMEOUT} seconds reached\n")
+                print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
 
 def compare(benchmark : str, jobs: int) :
     """Processes benchmarks using a thread pool."""
