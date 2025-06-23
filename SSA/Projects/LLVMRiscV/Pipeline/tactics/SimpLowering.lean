@@ -17,11 +17,11 @@ tactic and invokes `bv_decide`. The tactic is designed to solve instruction lowe
 fall within the domain solvable by `bv_decide`. We have enhanced the LLVM tactics to handle PoisonOr
 cases, and the RISC-V tactic simplifies RISC-V definitions so that the remaining goals are suitable
 for `bv_decide`.
-To enable this proof automation, rewriter implementors must tag their rewrite rules with
+To enable this proof automation, rewrite implementors must tag their rewrite rules with
 `@[simp_denote]`. This ensures that the initial invocation of `simp_peephole` within the
 `simp_lowering` tactic unfolds the relevant definitions, allowing subsequent tactics to proceed.
 
-The purpose of this tactic is to maximize proof automation for insstruction lowering rewrite patterns
+The purpose of this tactic is to maximize proof automation for instruction lowering rewrite patterns
 -/
 
 syntax "simp_lowering" : tactic
