@@ -14,18 +14,18 @@ theorem bv_AddSub_1043 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
-    | sorry
+    | bv_bench
 
 theorem bv_AddSub_1152 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.add e_1 e ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -36,7 +36,7 @@ theorem bv_AddSub_1156 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -47,7 +47,7 @@ theorem bv_AddSub_1164 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -59,7 +59,7 @@ theorem bv_AddSub_1165 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -70,7 +70,7 @@ theorem bv_AddSub_1176 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -81,7 +81,7 @@ theorem bv_AddSub_1202 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -92,7 +92,7 @@ theorem bv_AddSub_1295 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -103,7 +103,7 @@ theorem bv_AddSub_1309 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -114,7 +114,7 @@ theorem bv_AddSub_1539 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -125,7 +125,7 @@ theorem bv_AddSub_1539_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -136,7 +136,7 @@ theorem bv_AddSub_1556 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -147,7 +147,7 @@ theorem bv_AddSub_1560 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -158,7 +158,7 @@ theorem bv_AddSub_1564 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -169,7 +169,7 @@ theorem bv_AddSub_1574 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -180,7 +180,7 @@ theorem bv_AddSub_1614 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -191,7 +191,7 @@ theorem bv_AddSub_1619 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -202,7 +202,7 @@ theorem bv_AddSub_1624 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -213,7 +213,7 @@ theorem bv_AndOrXor_135 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -224,7 +224,7 @@ theorem bv_AndOrXor_144 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -238,7 +238,7 @@ theorem bv_AndOrXor_698 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -251,7 +251,7 @@ theorem bv_AndOrXor_709 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -264,7 +264,7 @@ theorem bv_AndOrXor_716 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -276,7 +276,7 @@ theorem bv_AndOrXor_794 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -289,7 +289,7 @@ theorem bv_AndOrXor_827 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -300,7 +300,7 @@ theorem bv_AndOrXor_887_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -313,7 +313,7 @@ theorem bv_AndOrXor_1230__A__B___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -324,7 +324,7 @@ theorem bv_AndOrXor_1241_AB__AB__AB :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -335,7 +335,7 @@ theorem bv_AndOrXor_1247_AB__AB__AB :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -346,7 +346,7 @@ theorem bv_AndOrXor_1253_A__AB___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -357,7 +357,7 @@ theorem bv_AndOrXor_1280_ABA___AB :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -370,7 +370,7 @@ theorem bv_AndOrXor_1288_A__B__B__C__A___A__B__C :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -381,7 +381,7 @@ theorem bv_AndOrXor_1294_A__B__A__B___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -393,7 +393,7 @@ theorem bv_AndOrXor_1683_1 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -404,7 +404,7 @@ theorem bv_AndOrXor_1683_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -417,7 +417,7 @@ theorem bv_AndOrXor_1704 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -430,7 +430,7 @@ theorem bv_AndOrXor_1705 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -443,7 +443,7 @@ theorem bv_AndOrXor_1733 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -454,7 +454,7 @@ theorem bv_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -465,7 +465,7 @@ theorem bv_AndOrXor_2113___A__B__A___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -477,7 +477,7 @@ theorem bv_AndOrXor_2118___A__B__A___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -488,7 +488,7 @@ theorem bv_AndOrXor_2123___A__B__A__B___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -501,7 +501,7 @@ theorem bv_AndOrXor_2188 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -512,7 +512,7 @@ theorem bv_AndOrXor_2231__A__B__B__C__A___A__B__C :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -523,7 +523,7 @@ theorem bv_AndOrXor_2243__B__C__A__B___B__A__C :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -536,7 +536,7 @@ theorem bv_AndOrXor_2247__A__B__A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -547,7 +547,7 @@ theorem bv_AndOrXor_2263 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -559,7 +559,7 @@ theorem bv_AndOrXor_2264 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -570,7 +570,7 @@ theorem bv_AndOrXor_2265 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -582,7 +582,7 @@ theorem bv_AndOrXor_2284 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -594,7 +594,7 @@ theorem bv_AndOrXor_2285 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -607,7 +607,7 @@ theorem bv_AndOrXor_2297 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -618,7 +618,7 @@ theorem bv_AndOrXor_2367 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -631,7 +631,7 @@ theorem bv_AndOrXor_2416 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -644,7 +644,7 @@ theorem bv_AndOrXor_2417 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -657,7 +657,7 @@ theorem bv_AndOrXor_2429 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -670,7 +670,7 @@ theorem bv_AndOrXor_2430 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -682,7 +682,7 @@ theorem bv_AndOrXor_2443 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -694,7 +694,7 @@ theorem bv_AndOrXor_2453 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -705,7 +705,7 @@ theorem bv_AndOrXor_2475 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -716,7 +716,7 @@ theorem bv_AndOrXor_2486 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -727,7 +727,7 @@ theorem bv_AndOrXor_2581__BAB___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -738,7 +738,7 @@ theorem bv_AndOrXor_2587__BAA___B__A :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -749,7 +749,7 @@ theorem bv_AndOrXor_2595 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -762,7 +762,7 @@ theorem bv_AndOrXor_2607 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -775,7 +775,7 @@ theorem bv_AndOrXor_2617 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -787,7 +787,7 @@ theorem bv_AndOrXor_2627 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -798,7 +798,7 @@ theorem bv_AndOrXor_2647 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -811,7 +811,7 @@ theorem bv_AndOrXor_2658 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -823,7 +823,7 @@ theorem bv_AndOrXor_2663 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -834,7 +834,7 @@ theorem bv_152 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -845,7 +845,7 @@ theorem bv_229 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -856,7 +856,7 @@ theorem bv_239 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -867,7 +867,7 @@ theorem bv_275 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -878,7 +878,7 @@ theorem bv_275_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -889,7 +889,7 @@ theorem bv_276 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -900,7 +900,7 @@ theorem bv_276_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -911,7 +911,7 @@ theorem bv_283 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -922,7 +922,7 @@ theorem bv_290__292 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -933,7 +933,7 @@ theorem bv_820 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -944,7 +944,7 @@ theorem bv_820' :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -955,7 +955,7 @@ theorem bv_1030 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -967,7 +967,7 @@ theorem bv_Select_858 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -979,7 +979,7 @@ theorem bv_Select_859' :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -990,7 +990,7 @@ theorem bv_select_1100 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1001,7 +1001,7 @@ theorem bv_Select_1105 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1012,7 +1012,7 @@ theorem bv_InstCombineShift__239 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1023,7 +1023,7 @@ theorem bv_InstCombineShift__279 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1036,7 +1036,7 @@ theorem bv_InstCombineShift__440 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1049,7 +1049,7 @@ theorem bv_InstCombineShift__476 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1060,7 +1060,7 @@ theorem bv_InstCombineShift__497 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1071,7 +1071,7 @@ theorem bv_InstCombineShift__497''' :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
@@ -1082,7 +1082,7 @@ theorem bv_InstCombineShift__582 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp_alive_split
+  try alive_auto
   all_goals
     solve
     | bv_auto
