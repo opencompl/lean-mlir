@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os 
 
-paper_directory = 'for-paper/'
+paper_directory = ''
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
 raw_data_dir = paper_directory + 'raw-data/HackersDelight/'
@@ -80,7 +80,9 @@ for file in os.listdir(benchmark_dir):
             while l:
                 if "Bitwuzla " in l: 
                     cegb = False
-                    if "counter" in l : 
+                    if "failed" in l : 
+                        print(l)
+                    elif "counter" in l : 
                         cegb = True
                         tot = float(l.split("after ")[1].split("ms")[0])
                         if r == 0:

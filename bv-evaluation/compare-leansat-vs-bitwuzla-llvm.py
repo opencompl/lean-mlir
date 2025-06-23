@@ -14,17 +14,6 @@ REPS = 1
 
 TIMEOUT = 1800
 
-def clear_folder():
-    for file in os.listdir(RESULTS_DIR):
-        file_path = os.path.join(RESULTS_DIR, file)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
-
 def run_file(file: str):
     file_path = BENCHMARK_DIR + file
     file_title = file.split('.')[0]
@@ -48,7 +37,7 @@ def process(jobs: int):
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
         for file in os.listdir(BENCHMARK_DIR):
-            if "_proof" in file: # currently discard broken chapter
+            if "_proof" in file:
                 future = executor.submit(run_file, file)
                 futures[future] = file
 
@@ -62,5 +51,4 @@ def process(jobs: int):
 parser = argparse.ArgumentParser(prog='compare-leansat-vs-bitwuzla-llvm')
 parser.add_argument('-j', '--jobs', type=int, default=1)
 args = parser.parse_args()
-clear_folder()
 process(args.jobs)
