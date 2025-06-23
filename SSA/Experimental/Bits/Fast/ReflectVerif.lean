@@ -573,24 +573,24 @@ theorem Vars.castLe_castLe_eq_castLe_self {α : Type _} {p q r : Nat}
 
 
 /-- Relate boolean and bitstream environments. -/
-structure EnvOutRelated {arity : Type _} {α : Type _}
+structure EnvSimEnvBitstream {arity : Type _} {α : Type _}
     (envBool : Vars α arity n → Bool)
     (envBitstream : arity → BitStream) where
   envBool_inputs_mk_eq_envBitStream : ∀ (x : arity) (i : Nat) (hi: i < n),
     envBool (Vars.inputs (Inputs.mk ⟨i, by omega⟩ x)) = envBitstream x i
 
 
-theorem EnvOutRelated.envBool_inputs_mk_castShift_eq_envBitStream
+theorem EnvSimEnvBitstream.envBool_inputs_mk_castShift_eq_envBitStream
    (envBool : Vars α arity m → Bool)
    (envBitstream : arity → BitStream)
-   (hEnvBitstream : EnvOutRelated envBool envBitstream)
+   (hEnvBitstream : EnvSimEnvBitstream envBool envBitstream)
    (hnm : n ≤ m) (x : arity) (i : Nat) (hi : i < n) :
    (envBool ((Vars.inputs (Inputs.mk ⟨i, by omega⟩ x : Inputs _ n) :  Vars _ _ n).castShift hnm))=
    envBitstream x (m - 1 - i) := by
   rw [← hEnvBitstream.envBool_inputs_mk_eq_envBitStream]
   rfl
 
-attribute [simp] EnvOutRelated.envBool_inputs_mk_eq_envBitStream
+attribute [simp] EnvSimEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
 /-- Take the 'or' of many circuits.-/
 def Circuit.bigOr {α : Type _}
@@ -712,7 +712,8 @@ deriving Repr, Inhabited, DecidableEq, Hashable
 
 
 /--
-Make the funtion that for a given state 's', computes `carry(states[n][s], inputs[n])`.
+Make the funtion that for a given state 's', computes
+`states[n+1][s] = carry[s](states[n][:], inputs[n])`.
 --/
 def mkCarryAssignCircuitNAux {arity : Type _}
   [DecidableEq arity]
@@ -728,23 +729,30 @@ def mkCarryAssignCircuitNAux {arity : Type _}
 The MkcarryAssign circuit is false iff
 p.nextBitCirc evaluates to false on the given environment.
 -/
-theorem mkCarryAssign_eq_false_iff {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s : p.α) (n : Nat)
-  (env : Vars p.α arity (n + 1) → Bool)
-  {env' : p.α ⊕ arity → Bool}
-  (henv : env' = fun s =>
-    match s with
-    | .inl t => env (Vars.stateN t n)
-    | .inr i => env (Vars.inputN i n)) :
-  ((mkCarryAssignCircuitNAux p s n).eval env = false) ↔
-  ((p.nextBitCirc (some s)).eval env' = false) := by sorry
+theorem mkCarryAssignCircuitNAux_eq_false_iff {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (s : p.α) (n : Nat)
+    {env : Vars p.α arity (n + 1) → Bool}
+    {env' : p.α ⊕ arity → Bool}
+    (hEnvState : ∀ (s : p.α), env (Vars.stateN s n) = env' (Sum.inl s))
+    (hEnvInput : ∀ (i : arity), env (Vars.inputN i n) = env' (Sum.inr i)) :
+    ((mkCarryAssignCircuitNAux p s n).eval env = false) ↔
+    ((p.nextBitCirc (some s)).eval env' = false) := by
+  rw [mkCarryAssignCircuitNAux]
+  simp
+  rw [Circuit.eval_map]
+  congr
+  ext x
+  rcases x with x | x
+  · simp [hEnvState]
+  · simp [hEnvInput]
+
 
 /--
 Make the circuit that assigns the carry state:
-  `states[n+1][:] = carry(states[n][:], inputs[n][:])`.
+  `states[n+1][:] = carry[:](states[n][:], inputs[n][:])`.
 -/
 def mkCarryAssignCircuitN {arity : Type _}
   [DecidableEq arity]
@@ -758,6 +766,18 @@ def mkCarryAssignCircuitN {arity : Type _}
       (mkCarryAssignCircuitNAux p s n)
       (Circuit.var true <| Vars.stateN s (n + 1))
   Circuit.bigOr carrys
+
+theorem mkCarryAssignCircuitN_eq_false_iff {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s : p.α) (n : Nat)
+  {env : Vars p.α arity (n + 1) → Bool}
+  {env' : p.α ⊕ arity → Bool}
+  (hEnvState : ∀ (s : p.α), env (Vars.stateN s n) = env' (Sum.inl s))
+  (hEnvInput : ∀ (i : arity), env (Vars.inputN i n) = env' (Sum.inr i)) :
+  ((mkCarryAssignCircuitN p n).eval env = false) ↔
+  (∀ s : p.α, (p.nextBitCirc (some s)).eval env' = false) := by sorry
 
 /--
 Make the circuit that assigns `states[i][:] = carry(states[i-1][:], inputs[i-1][:])`
@@ -774,6 +794,13 @@ def mkCarryAssignCircuitLeN {arity : Type _}
       mkCarryAssignCircuitN p i |>.map (fun v => v.castLe (by simp at hi; omega))
     Circuit.bigOr circs
 
+theorem mkCarryAssignCircuitLeN_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity) (n : Nat)
+  (env : Vars p.α arity (n + 1) → Bool)
+  (env' : p.α ⊕ arity → Bool)
+  : ((mkCarryAssignCircuitLeN p n).eval env = false) ↔
+  (∀ i : Nat, i ≤ n, (p.evalWith (some i)).eval env' = false) := by sorry
+
 /--
 Make the circuit that assigns `states[0][s] = initCarry[s]`.
 -/
@@ -786,6 +813,17 @@ def mkInitCarryAssignCircuitAux {arity : Type _}
     Circuit.xor
       (Circuit.ofBool (p.initCarry s))
       (Circuit.var true <| Vars.stateN s 0)
+
+theorem mkInitCarryAssignCircuitAux_eq_false_iff {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s : p.α)
+  {env : Vars p.α arity 0 → Bool}
+  {env' : p.α → Bool}
+  (hEnvState : env (Vars.stateN s 0) = env' s) :
+  ((mkInitCarryAssignCircuitAux p s).eval env = false) ↔
+  (p.initCarry s = false) := by sorry
 
 /--
 Make the circuit that assigns `states[0][:] = initCarry[:]`.
