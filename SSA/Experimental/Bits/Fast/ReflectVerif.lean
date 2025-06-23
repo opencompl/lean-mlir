@@ -729,8 +729,7 @@ def mkCarryAssignCircuitNAux {arity : Type _}
 The MkcarryAssign circuit is false iff
 p.nextBitCirc evaluates to false on the given environment.
 -/
-@[simp]
-theorem mkCarryAssignCircuitNAux_eval_eq {arity : Type _}
+theorem mkCarryAssignCircuitNAux_eval_eq_ {arity : Type _}
     [DecidableEq arity]
     [Fintype arity]
     [Hashable arity]
@@ -747,7 +746,24 @@ theorem mkCarryAssignCircuitNAux_eval_eq {arity : Type _}
   rcases x with x | x
   · simp [hEnvState]
   · simp [hEnvInput]
-
+/--
+The MkcarryAssign circuit is false iff
+p.nextBitCirc evaluates to false on the given environment.
+-/
+@[simp]
+theorem mkCarryAssignCircuitNAux_eval_eq {arity : Type _}
+    [DecidableEq arity]
+    [Fintype arity]
+    [Hashable arity]
+    (p : FSM arity) (s : p.α) (n : Nat)
+    {env : Vars p.α arity (n + 1) → Bool} :
+    ((mkCarryAssignCircuitNAux p s n).eval env) = ((p.nextBitCirc (some s)).eval
+      (fun x => match x with | .inl x => env (Vars.stateN x n) | .inr x => env (Vars.inputN x n))) := by
+  rw [mkCarryAssignCircuitNAux]
+  rw [Circuit.eval_map]
+  congr
+  ext x
+  rcases x with x | x <;> simp
 
 /--
 Make the circuit that assigns the carry state:
@@ -767,30 +783,23 @@ def mkCarryAssignCircuitN {arity : Type _}
   Circuit.bigOr carrys
 
 @[simp]
-theorem mkCarryAssignCircuitN_eval_eq {arity : Type _}
+theorem eval_mkCarryAssignCircuitN_eq_false_iff {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat)
-  {env : Vars p.α arity (n + 1) → Bool}
-  {env' : p.α ⊕ arity → Bool}
-  (hEnvState : ∀ (s : p.α), env (Vars.stateN s n) = env' (Sum.inl s))
-  (hEnvInput : ∀ (i : arity), env (Vars.inputN i n) = env' (Sum.inr i)) :
-  ((mkCarryAssignCircuitN p n).eval env = false) ↔ (∀ (s : p.α), (p.nextBitCirc (some s)).eval env' = env (Vars.stateN s (n + 1))) := by
+  {env : Vars p.α arity (n + 1) → Bool} :
+  ((mkCarryAssignCircuitN p n).eval env = false) ↔
+    (∀ (s : p.α), env (Vars.stateN s (n + 1)) = (mkCarryAssignCircuitNAux p s n).eval env) := by
   rw [mkCarryAssignCircuitN]
   simp
   constructor
   · intros h s
     specialize h s
-    rw [mkCarryAssignCircuitNAux_eval_eq] at h
-    · apply h
-    · apply hEnvState
-    · apply hEnvInput
+    rw [← h]
   · intros h s
-    rw [mkCarryAssignCircuitNAux_eval_eq]
-    · apply h
-    · apply hEnvState
-    · apply hEnvInput
+    specialize h s
+    rw [← h]
 
 /--
 Make the circuit that assigns `states[i][:] = carry(states[i-1][:], inputs[i-1][:])`
@@ -807,30 +816,32 @@ def mkCarryAssignCircuitLeN {arity : Type _}
       mkCarryAssignCircuitN p i |>.map (fun v => v.castLe (by simp at hi; omega))
     Circuit.bigOr circs
 
+@[simp]
 theorem mkCarryAssignCircuitLeN_eq_false_iff {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity) (n : Nat)
-  (env : Vars p.α arity (n + 1) → Bool)
-  (carryState : _)
-  (env' : arity → BitStream)
-  : ((mkCarryAssignCircuitLeN p n).eval env = false) ↔
-  (∀ (s : p.α) (i : Nat), (h : i < n) → p.carryWith carryState env' i s = env (Vars.stateN s i)) := by
+  (env : Vars p.α arity (n + 1) → Bool) :
+  ((mkCarryAssignCircuitLeN p n).eval env = false) ↔
+  (∀ (s : p.α) (i : Nat), (hi : i < n + 1) →
+    env (Vars.stateN s (i + 1)) =
+     ((mkCarryAssignCircuitNAux p s i).map (fun v => v.castLe (by omega))).eval env) := by
   rw [mkCarryAssignCircuitLeN]
   simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
     Subtype.exists, List.mem_range, forall_exists_index]
-  constructor <;> sorry
-  -- constructor
-  -- · sorry
-  -- · intros h c i hi hc
-  --   subst hc
-  --   simp [Circuit.eval_map]
-  --   rw [mkCarryAssignCircuitN_eval_eq]
-  --   · intros s
-  --     specialize h s (i) (by omega)
-  --     rw [← h s (i + 1)]
-  --   · sorry
-  --   · sorry
-  --   · sorry
-
+  constructor
+  · intros h s i hi
+    specialize h ?c i (by omega) rfl
+    simp only [Circuit.eval_map, eval_mkCarryAssignCircuitN_eq_false_iff,
+      mkCarryAssignCircuitNAux_eval_eq] at h
+    simp only [Circuit.eval_map, mkCarryAssignCircuitNAux_eval_eq]
+    apply h
+  · intros h c i hi hc
+    subst hc
+    simp only [Circuit.eval_map, eval_mkCarryAssignCircuitN_eq_false_iff,
+      mkCarryAssignCircuitNAux_eval_eq]
+    intros s
+    specialize h s i hi
+    simp only [Circuit.eval_map, mkCarryAssignCircuitNAux_eval_eq] at h
+    apply h
 
 /--
 Make the circuit that assigns `states[0][s] = initCarry[s]`.
