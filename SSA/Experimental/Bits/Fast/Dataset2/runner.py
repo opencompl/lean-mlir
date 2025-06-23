@@ -21,7 +21,7 @@ def parse_args():
     nproc = os.cpu_count()
     parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
     parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
-    parser.add_argument('-j', type=int, default=((nproc + 2) // 3), help='number of parallel jobs.')
+    parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
     parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
     return parser.parse_args()
 
@@ -205,11 +205,10 @@ class UnitTest:
     solver : str
 
     solver_mba = "mba"
-    solver_kinduction_unverified = "kinduction_unverified"
-    solver_kinduction_verified = "kinduction_verifked"
+    solver_kinduction_verified = "kinduction_verified"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_mba, solver_kinduction_unverified, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
+    solvers = [solver_kinduction_verified] # [solver_mba, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
 
     def __init__(self, ix, test, solver):
         self.ix = ix
@@ -222,10 +221,8 @@ class UnitTest:
         interpolant = """by tac_bench (config := {{ outputType := .csv }}) ["{solver}" : {call}]; sorry"""
         if solver == UnitTest.solver_mba:
             return interpolant.format(solver=solver, call="bv_mba")
-        elif solver == UnitTest.solver_kinduction_unverified:
-            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .circuit_cadical_unverified 5 })")
         elif solver == UnitTest.solver_kinduction_verified:
-            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .circuit_cadical_verified 5 })")
+            return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .circuit_cadical_verified 100 })")
         elif solver == UnitTest.solver_bv_automata_classic:
             return interpolant.format(solver=solver, call="bv_automata_gen (config := {backend := .automata })")
         elif solver == UnitTest.solver_bv_decide:
@@ -263,8 +260,8 @@ def load_tests(args) -> List[UnitTest]:
     if not args.prod_run:
         logging.info(f"--prod_run not enabled, pruning files to small batch")
         NTESTS_TO_RETURN = 1
-        return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
-        # return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+        # return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
+        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
     else:
         return out
 

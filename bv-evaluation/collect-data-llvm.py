@@ -207,7 +207,7 @@ for file in os.listdir(benchmark_dir):
                 ls_only_failed += 1
                 thm = thm + 1
             elif output_bw == output.counterxample and output_ls == output.counterxample:
-                # print("bitwuzla and leanSAT provided counterexample for theorem "+str(thm)+ "in file "+file)
+                print("bitwuzla and leanSAT provided counterexample for theorem "+str(thm)+ " in file "+file)
                 counter_bitwuzla.append(np.mean(counter_bitwuzla_times_average[thm]))
                 counter_leanSAT.append(np.mean(counter_leanSAT_tot_times_average[thm]))
                 counter_leanSAT_rw.append(np.mean(counter_leanSAT_rw_times_average[thm]))
@@ -245,6 +245,8 @@ for file in os.listdir(benchmark_dir):
                 break
         thmTot += thm
         errTot += errs
+
+print("In total we found "+str(thmTot)+" goals.")
 
 
 print("leanSAT and Bitwuzla solved: "+str(len(leanSAT)))
