@@ -63,14 +63,10 @@ def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, hacke
                     print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
 
     if (benchmark == "hackersdelight"):
-            # Clean up the temporary file created for this specific bit-width and original file
+        # Clean up the temporary file created for this specific bit-width and original file for hackersdelight
         if os.path.exists(file_to_run):
             os.remove(file_to_run)
             print(f"Deleted temporary file: {file_to_run}")
-
-
-    
-    
 
 def compare(benchmark : str, jobs: int) :
     """Processes benchmarks using a thread pool."""
