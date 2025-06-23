@@ -810,9 +810,27 @@ def mkCarryAssignCircuitLeN {arity : Type _}
 theorem mkCarryAssignCircuitLeN_eq_false_iff {arity : Type _}
   [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity) (n : Nat)
   (env : Vars p.α arity (n + 1) → Bool)
-  (env' : p.α ⊕ arity → Bool)
+  (carryState : _)
+  (env' : arity → BitStream)
   : ((mkCarryAssignCircuitLeN p n).eval env = false) ↔
-  (∀ i : Nat, i ≤ n, (p.evalWith (some i)).eval env' = false) := by sorry
+  (∀ (s : p.α) (i : Nat), (h : i < n) → p.carryWith carryState env' i s = env (Vars.stateN s i)) := by
+  rw [mkCarryAssignCircuitLeN]
+  simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
+    Subtype.exists, List.mem_range, forall_exists_index]
+  constructor <;> sorry
+  -- constructor
+  -- · sorry
+  -- · intros h c i hi hc
+  --   subst hc
+  --   simp [Circuit.eval_map]
+  --   rw [mkCarryAssignCircuitN_eval_eq]
+  --   · intros s
+  --     specialize h s (i) (by omega)
+  --     rw [← h s (i + 1)]
+  --   · sorry
+  --   · sorry
+  --   · sorry
+
 
 /--
 Make the circuit that assigns `states[0][s] = initCarry[s]`.
@@ -832,11 +850,28 @@ theorem mkInitCarryAssignCircuitAux_eq_false_iff {arity : Type _}
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (s : p.α)
-  {env : Vars p.α arity 0 → Bool}
-  {env' : p.α → Bool}
-  (hEnvState : env (Vars.stateN s 0) = env' s) :
+  {env : Vars p.α arity 0 → Bool}:
   ((mkInitCarryAssignCircuitAux p s).eval env = false) ↔
-  (p.initCarry s = false) := by sorry
+  (p.initCarry s = env (Vars.stateN s 0)) := by
+  rw [mkInitCarryAssignCircuitAux]
+  simp
+  rcases hx : p.initCarry s
+  · simp
+  · simp
+
+theorem mkInitCarryAssignCircuitAux_eq_decide {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s : p.α)
+  {env : Vars p.α arity 0 → Bool} :
+  ((mkInitCarryAssignCircuitAux p s).eval env) = ! decide (p.initCarry s = env (Vars.stateN s 0)) := by
+  rw [mkInitCarryAssignCircuitAux]
+  simp
+  rcases hx : p.initCarry s
+  · simp
+  · simp
+
 
 /--
 Make the circuit that assigns `states[0][:] = initCarry[:]`.
@@ -849,6 +884,17 @@ def mkInitCarryAssignCircuit {arity : Type _}
   Circuit (Vars p.α arity 0) :=
     let carrys := FinEnum.toList p.α |>.map (mkInitCarryAssignCircuitAux p)
     Circuit.bigOr carrys
+
+theorem mkInitCarryAssignCircuit_eq_false_iff {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity)
+  {env : Vars p.α arity 0 → Bool} :
+  (mkInitCarryAssignCircuit p).eval env = false ↔
+  (∀ (s : p.α), p.initCarry s = env (Vars.stateN s 0)) := by
+  rw [mkInitCarryAssignCircuit]
+  simp [mkInitCarryAssignCircuitAux_eq_false_iff]
 
 /--
 Make a circuit that computes `out(states[n][:], inputs[n][:])`.
