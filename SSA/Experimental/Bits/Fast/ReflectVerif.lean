@@ -872,7 +872,6 @@ theorem mkInitCarryAssignCircuitAux_eq_decide {arity : Type _}
   · simp
   · simp
 
-
 /--
 Make the circuit that assigns `states[0][:] = initCarry[:]`.
 -/
