@@ -40,7 +40,7 @@ def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, hacke
     Runs a single Lean file and logs its output.
     file_to_run: The full path to the .lean file to execute.
     log_file_base_name: The base name for the log file.
-    hackersdelight_width: An optional argument to append to the log file name, useful for hackersdelight bit-width.
+    hackersdelight_width: Bitvector width for Hackers' delight problems.
     """
     cmd_prefix = 'lake lean '
     if benchmark == "hackersdelight":
