@@ -7,12 +7,14 @@ open LLVMRiscV
 
 /-! # SDIV no exact   -/
 
+@[simp_denote]
 def sdiv_llvm_no_exact := [LV| {
     ^entry (%x: i64, %y: i64):
     %1 = llvm.sdiv %x, %y : i64
     llvm.return %1 : i64
   }]
 
+@[simp_denote]
 def sdiv_riscv := [LV| {
     ^entry (%reg1: i64, %reg2: i64):
     %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)
@@ -25,17 +27,9 @@ def sdiv_riscv := [LV| {
 def llvm_sdiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := sdiv_llvm_no_exact
   rhs := sdiv_riscv
-  correct := by
-    unfold sdiv_llvm_no_exact sdiv_riscv
-    simp_peephole
-    simp_alive_undef
-    simp_riscv
-    simp_alive_ops
-    simp_alive_case_bash
-    intro x x'
-    by_cases onX2 : x' = 0#64 <;> simp [onX2]
 
 /-! # SDIV exact  -/
+@[simp_denote]
 def sdiv_llvm_exact := [LV| {
     ^entry (%x: i64, %y: i64 ):
     %1 = llvm.sdiv exact %x, %y : i64
@@ -45,19 +39,6 @@ def sdiv_llvm_exact := [LV| {
 def llvm_sdiv_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := sdiv_llvm_exact
   rhs := sdiv_riscv
-  correct := by
-    unfold sdiv_llvm_exact sdiv_riscv
-    simp_peephole
-    simp_alive_undef
-    simp_riscv
-    simp_alive_ops
-    simp_alive_case_bash
-    intro x x'
-    by_cases onX2 : x' = 0#64 <;> simp [onX2]
-    by_cases hx : x.smod x' = 0#64
-    simp only [hx, ↓reduceIte, Nat.ofNat_pos, PoisonOr.if_then_poison_isRefinedBy_iff, not_and,
-      PoisonOr.isRefinedBy_self, implies_true] -- to do
-    split <;> simp
 
 def sdiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
