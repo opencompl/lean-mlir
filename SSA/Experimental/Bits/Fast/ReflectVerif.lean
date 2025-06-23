@@ -725,6 +725,24 @@ def mkCarryAssignCircuitNAux {arity : Type _}
         | .inr i => Vars.inputN i n
 
 /--
+The MkcarryAssign circuit is false iff
+p.nextBitCirc evaluates to false on the given environment.
+-/
+theorem mkCarryAssign_eq_false_iff {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (s : p.α) (n : Nat)
+  (env : Vars p.α arity (n + 1) → Bool)
+  {env' : p.α ⊕ arity → Bool}
+  (henv : env' = fun s =>
+    match s with
+    | .inl t => env (Vars.stateN t n)
+    | .inr i => env (Vars.inputN i n)) :
+  ((mkCarryAssignCircuitNAux p s n).eval env = false) ↔
+  ((p.nextBitCirc (some s)).eval env' = false) := by sorry
+
+/--
 Make the circuit that assigns the carry state:
   `states[n+1][:] = carry(states[n][:], inputs[n][:])`.
 -/
