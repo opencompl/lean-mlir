@@ -1,0 +1,270 @@
+% LaTeX template for Artifact Evaluation V20201122
+%
+% Prepared by Grigori Fursin with contributions from Bruce Childers,
+%   Michael Heroux, Michela Taufer and other colleagues.
+%
+% See examples of this Artifact Appendix in
+%  * SC'17 paper: https://dl.acm.org/citation.cfm?id=3126948
+%  * CGO'17 paper: https://www.cl.cam.ac.uk/~sa614/papers/Software-Prefetching-CGO2017.pdf
+%  * ACM ReQuEST-ASPLOS'18 paper: https://dl.acm.org/citation.cfm?doid=3229762.3229763
+%
+% (C)opyright 2014-2022
+%
+% CC BY 4.0 license
+%
+
+\documentclass{sigplanconf}
+
+\usepackage{hyperref}
+\usepackage{minted}
+
+\usepackage[verbose]{newunicodechar}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{▸}{\ensuremath{\blacktriangleright}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{ϵ}{\ensuremath{\epsilon}}
+\newunicodechar{τ}{\ensuremath{\tau}}
+\newunicodechar{ε}{\ensuremath{\epsilon}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+% \newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∧}{\ensuremath{\land}}
+
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+\newunicodechar{ₙ}{\textsubscript{n}}
+\newunicodechar{ₘ}{\textsubscript{m}}
+\newunicodechar{ₕ}{\textsubscript{h}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⟦}{\ensuremath{\llbracket}}
+\newunicodechar{⟧}{\ensuremath{\rrbracket}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+
+% \newunicodechar{⟦}{\ensuremath{\llbracket}}
+% https://tex.stackexchange.com/questions/100966/defining-scalable-white-curly-brackets-and-and
+% TODO FIXME: we gotta fix these parens!
+\newunicodechar{⦃}{\ensuremath{\{\{}}
+\newunicodechar{⦄}{\ensuremath{\}\}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{⊑}{\ensuremath{\sqsubseteq}}
+
+\begin{document}
+
+\special{papersize=8.5in,11in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% When adding this appendix to your paper, 
+% please remove above part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\section{Artifact Appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Abstract}
+
+% {\em Obligatory}
+
+\subsection{Artifact check-list (meta-information)}
+
+% {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
+% and remove the rest. This information is needed to find appropriate reviewers and gradually 
+% unify artifact meta information in Digital Libraries.}
+
+{\small
+\begin{itemize}
+  \item {\bf Program: } The code repository for our framework along with the test suite. Note that this is already setup in the docker image.
+  \item {\bf Compilation: } The Lean4 toolchain, downloaded via \texttt{elan}. Note that this is already setup in the docker image.
+  \item {\bf Run-time environment: } Any operating system that supports Docker.
+  \item {\bf Hardware: } Any x86-64 machine.
+  \item {\bf Output: } Key theorems of the paper will be built and shown to have no unsound axioms.
+  \item {\bf How much disk space required (approximately)?: } 10GB
+  \item {\bf How much time is needed to prepare workflow (approximately)?: } 1hr
+  \item {\bf How much time is needed to complete experiments (approximately)?: } 1hr
+  \item {\bf Publicly available?: } Yes
+  \item {\bf Code licenses (if publicly available)?: } MIT
+  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.11519739
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Description}
+
+\subsubsection{Software dependencies}
+
+Docker is necessary to run our artifact.
+The Docker image has all dependencies needed to compile our framework with Lean4.
+
+
+%COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%COMMENT% \subsection{Installation}
+%COMMENT% 
+%COMMENT% {\em Obligatory}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Experiment workflow}
+
+Access the docker image \texttt{opencompl-ssa} from
+\url{https://zenodo.org/records/11519739}.
+
+\begin{minted}[fontsize=\scriptsize]{text}
+$ docker load -i opencompl-ssa.tar
+$ docker run -it siddudruid/opencompl-ssa
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
+$ cd /code/ssa && lake clean && lake exe cache get && lake build
+# | This allows to check that the key theorems of our framework are
+# |guarded, and that they do not contain `sorry`s.
+$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
+\end{minted}
+
+% \subsection{Full Workflow Example}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Evaluation and expected results}
+
+On running \texttt{lake build}, the build succeeds with no errors.
+
+Next, run:
+
+\begin{minted}[fontsize=\scriptsize]{text}
+$ rg -g "**/*.lean" "guard_msgs in #print axioms" -C2 | grep "sorry"
+\end{minted}
+
+Grep returns no matches, which checks that all guarded theorems do not use the sorry axiom.
+To manually inspect this, run:
+
+\begin{minted}[fontsize=\scriptsize]{text}
+$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
+\end{minted}
+
+In the output, observe the following lines, which tells us that, for example, the 
+theorem \texttt{denote\_rewritePeepholeAt} depends only on the axioms 
+\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. That is, this theorem 
+\emph{does not depend} on axioms such as \texttt{sorryAx} that compromise the correctness of Lean's verification.
+
+Now, since the Lean build was successful in the previous step, and since we use standard Lean axioms, 
+we are justified in our claims that we have mechanized the key theorem statements from the paper.
+
+Below, we list the key theorems that we claim to have mechanized, and their 
+guarded verification below. Please inspect the output of 
+\texttt{(\$ rg -g "**/*.lean" "\#guard\_msgs in \#print axioms" -C2 | grep "sorry")}
+and confirm that these guarded statements occur, with the guard containing only the axioms \texttt{propext},
+\texttt{Classical.choice}, and \texttt{Quot.sound}.
+
+\subsubsection{Core Framework Theorems}
+
+The core correctness claim of the peephole rewriter is guarded below:
+
+\begin{minted}[fontsize=\tiny]{text}
+SSA/Core/Framework.lean
+2422-
+2423-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+2424:#guard_msgs in #print axioms denote_rewritePeepholeAt
+2425-
+2426-/- repeatedly apply peephole on program. -/
+--
+2458-
+2459-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+2460:#guard_msgs in #print axioms denote_rewritePeephole
+2461-
+2462-end SimpPeepholeApplier
+\end{minted}
+
+\subsubsection{Five Hardest Alive Examples}
+
+The correctness claim of the hardest Alive rewrites that time out on an SMT solver, which we verify 
+for arbitrary bitwidth:
+
+\begin{minted}[fontsize=\tiny]{text}
+SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
+53-/--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
+54-axioms: [propext, Classical.choice, Quot.sound] -/
+55:#guard_msgs in #print axioms alive_DivRemOfSelect
+56-
+57-end DivRemOfSelect
+--
+215-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
+216-[propext, Classical.choice, Quot.sound] -/
+217:#guard_msgs in #print axioms alive_simplifyMulDivRem805
+218-
+219-open Std (BitVec) in
+--
+302-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
+303-[propext, Classical.choice, Quot.sound] -/
+304:#guard_msgs in #print axioms alive_simplifyMulDivRem805'
+305-
+306-/-
+--
+357-/-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
+358-axioms: [propext, Classical.choice, Quot.sound]-/
+359:#guard_msgs in #print axioms alive_simplifyMulDivRem290
+360-
+361-end MulDivRem
+--
+416-/-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
+417-axioms: [propext, Classical.choice, Quot.sound] -/
+418:#guard_msgs in #print axioms alive_simplifyAndOrXor2515
+419-
+420-/-
+--
+532-/-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
+533-[propext, Classical.choice, Quot.sound] -/
+534:#guard_msgs in #print axioms alive_simplifySelect764
+535-
+536-end Select
+\end{minted}
+
+\subsection{Paper Code Examples}
+
+\begin{itemize}
+\item \emph{Figure 1, 2} is at \texttt{SSA/Projects/FullyHomomorphicEncryption/\\PaperExamples.lean}.
+\item \emph{Figure 3, 4} is at \texttt{SSA/Core/Framework.lean}.
+\item The statement and proof of \texttt{denote\_rewritePeephole} can be found at 
+\texttt{SSA/Core/Framework.lean}. 
+\item The definitions and proofs of DCE can be found in \\
+\texttt{SSA/Projects/DCE/DCE.lean}, and of CSE in \\\texttt{SSA/Projects/CSE/CSE.lean}.
+\item The examples for bitvector rewrites in found at \\\texttt{SSA/Projects/InstCombine/PaperExamples.lean}.
+\item The hand-written examples are found at \\\texttt{SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean}.
+\item All FHE examples can be found in \\\texttt{SSA/Projects/FullyHomomorphicEncryption/PaperExamples.lean}.
+\end{itemize}
+
+\subsection{Miscellanous Docker Usage}
+To copy files for inspection from the docker container into the host,
+ keep the container running, and in another
+shell instance, use the \texttt{docker cp}
+command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
+
+\begin{minted}[fontsize=\footnotesize]{text}
+$ docker container ls # find   ID
+$ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
+            <PATH/OUTSIDE/CONTAINER>
+\end{minted}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% When adding this appendix to your paper, 
+% please remove below part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+
