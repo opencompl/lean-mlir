@@ -1007,6 +1007,7 @@ theorem mkOutputAssignCircuitLeN_eq_false_iff {arity : Type _}
 /--
 Make a circuit that checks `out[n] = fals`.
 -/
+@[simp]
 def mkOutEqZeroCircuitN {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
@@ -1019,6 +1020,17 @@ def mkOutEqZeroCircuitN {arity : Type _}
       (Circuit.ofBool false)
       (Circuit.var true <| Vars.outputs ⟨n, by omega⟩)
 
+@[simp]
+theorem mkOutEqZeroCircuitN_eval_eq_false_iff {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat)
+  {env : Vars p.α arity (n + 1) → Bool} :
+  ((mkOutEqZeroCircuitN p n).eval env = false) ↔
+    env (Vars.outputs ⟨n, by omega⟩) = false := by
+  rw [mkOutEqZeroCircuitN]
+  simp
 
 /--
 Make a circuit that checks `out[n] = fals` for all `i ≤ n`
@@ -1033,6 +1045,32 @@ def mkOutEqZeroCircuitLeN {arity : Type _}
     let circs := ixs.map fun ⟨i, hi⟩ =>
       mkOutEqZeroCircuitN p i |>.map (fun v => v.castLe (by simp at hi; omega))
     Circuit.bigOr circs
+
+theorem mkOutEqZeroCircuitLeN_eval_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity) (n : Nat)
+  (env : Vars p.α arity (n + 1) → Bool) :
+  ((mkOutEqZeroCircuitLeN p n).eval env = false) ↔
+  (∀ (i : Nat) (hi : i < n + 1),
+    env (Vars.outputs ⟨i, by omega⟩) = false) := by
+  rw [mkOutEqZeroCircuitLeN]
+  simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
+    Subtype.exists, List.mem_range, forall_exists_index]
+  constructor
+  · intros h i hi
+    specialize h ?c i (by omega) rfl
+    simp only [Circuit.eval_map, mkOutEqZeroCircuitN_eval_eq_false_iff] at h
+    apply h
+  · intros h c i hi hc
+    subst hc
+    simp only [Circuit.eval_map, mkOutEqZeroCircuitN_eval_eq_false_iff]
+    apply h i hi
+
+theorem mkOutEqZeroCircuitLeN_eval_eq_false_iff₂ {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity) (n : Nat) :
+  (∀ (env : Vars p.α arity (n + 1) → Bool), (mkOutEqZeroCircuitLeN p n).eval env = false) ↔
+  (∀ (env : Vars p.α arity (n + 1) → Bool) (i : Nat), (hi : i < n + 1) → env (Vars.outputs ⟨i, by omega⟩) = false) := by
+  simp [mkOutEqZeroCircuitLeN_eval_eq_false_iff]
+
 
 def mkUnsatImpliesCircuit (lhs rhs : Circuit α) : Circuit α :=
   -- truth table of this circuit:
@@ -1089,14 +1127,19 @@ def mkLowerTriangularPairs (n : Nat) : List (Nat × Nat) :=
     let ys := List.range i.val |>.attach
     ys.map fun j => (j.val, i.val)
 
-
 @[simp]
-theorem mem_mkLowerTriangularPairs {n : Nat} (i j : Nat) :
-  (i, j) ∈ mkLowerTriangularPairs n ↔
+theorem mem_mkLowerTriangularPairs {n : Nat} {i j : Nat} :
+  ((i, j) ∈ mkLowerTriangularPairs n) ↔
   (i < j ∧ j ≤ n) := by
   simp [mkLowerTriangularPairs]
   omega
 
+@[simp]
+theorem mem_mkLowerTriangularPairs₂  {n : Nat} {ij :  Nat × Nat} :
+  (ij ∈ mkLowerTriangularPairs n) ↔
+  (ij.1 < ij.2 ∧ ij.2 ≤ n) := by
+  obtain ⟨i, j⟩ := ij
+  simp
 
 /--
 make the circuit that says that the state at index 'n' is disequal from all states [0..n)
@@ -1112,6 +1155,23 @@ def mkStateUniqueCircuitN {arity : Type _}
     (mkStateNeqCircuit p si sn)
   Circuit.bigOr circs
 
+theorem mkStateUniqueCircuitN_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat)
+  {env : Vars p.α arity n → Bool} :
+  ((mkStateUniqueCircuitN p n).eval env = false) ↔
+  (∀ (i : Nat) (hi : i < n), ∃ (s : p.α), env (Vars.stateN s i) ≠ env (Vars.stateN s n)) := by
+  rw [mkStateUniqueCircuitN]
+  simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
+    Subtype.exists, List.mem_range, forall_exists_index]
+  constructor
+  · intros h i hi
+    specialize h ?c i hi rfl
+    simpa using h
+  · intros h c i hi hc
+    subst hc
+    specialize h i hi
+    simpa using h
 /--
 make the circuit that witnesses that the states are unique from [0..n]
 -/
@@ -1126,7 +1186,27 @@ def mkAllPairsUniqueStatesCircuit {arity : Type _}
       Circuit.var true (Vars.stateN s j (by simp at hij; omega))
     (mkStateNeqCircuit p si sj)
 
-
+theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (p : FSM arity) (n : Nat)
+  {env : Vars p.α arity n → Bool} :
+  ((mkAllPairsUniqueStatesCircuit p n).eval env = false) ↔
+  (∀ (i j : Nat) (hij : i < j ∧ j ≤ n), ∃ (s : p.α), env (Vars.stateN s i) ≠ env (Vars.stateN s j)) := by
+  rw [mkAllPairsUniqueStatesCircuit]
+  simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
+    Subtype.exists, List.mem_range, forall_exists_index]
+  constructor
+  · intros h i j hij
+    simp only [Prod.forall, mem_mkLowerTriangularPairs] at h
+    specialize h ?c i j hij rfl
+    simpa using h
+  · intros h c ij hij hc
+    subst hc
+    simp only [mkStateNeqCircuit_eq_false_iff₂, Circuit.eval, ↓reduceIte, ne_eq]
+    obtain ⟨i, j⟩ := ij
+    simp only [mem_mkLowerTriangularPairs₂] at hij
+    simp only [ne_eq] at ⊢ h
+    apply h i j hij
 
 /-- structure for incrementally building the k-induction circuits. -/
 structure KInductionCircuits {arity : Type _}
