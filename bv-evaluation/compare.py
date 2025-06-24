@@ -50,9 +50,9 @@ def run_file(benchmark : str, file_to_run : str, log_file_path : str) :
         try:
             subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True).wait(timeout=TIMEOUT)
         except subprocess.TimeoutExpired:
-                    log_file.truncate(0)
-                    log_file.write(f"time out of {TIMEOUT} seconds reached\n")
-                    print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
+                log_file.truncate(0)
+                log_file.write(f"time out of {TIMEOUT} seconds reached\n")
+                print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
 
     if (benchmark == "hackersdelight"):
         # Clean up the temporary file created for this specific bit-width and original file for hackersdelight
