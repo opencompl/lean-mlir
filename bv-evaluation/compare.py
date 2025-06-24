@@ -35,21 +35,13 @@ def clear_folder(results_dir):
         except Exception as e:
             print(f'Failed to delete {item_path}. Reason: {e}')
 
-def run_file(benchmark : str, file_to_run : str, log_file_base_name : str, hackersdelight_width: str = None) :
+def run_file(benchmark : str, file_to_run : str, log_file_path : str) :
     """
     Runs a single Lean file and logs its output.
     file_to_run: The full path to the .lean file to execute.
-    log_file_base_name: The base name for the log file.
-    hackersdelight_width: Bitvector width for Hackers' delight problems.
+    log_file_path: The file to write the logs in.
     """
     cmd_prefix = 'lake lean '
-    if benchmark == "hackersdelight":
-        log_file_name = f'{log_file_base_name}_{hackersdelight_width}.txt'
-        log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
-    elif benchmark == "instcombine":
-        log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{log_file_base_name}.txt')
-    else : 
-        raise Exception("Unknown benchmark.") 
 
     # Construct log file name including original file's base name and bit-width
     with open(log_file_path, 'w') as log_file:
@@ -104,7 +96,9 @@ def compare(benchmark : str, jobs: int) :
                     # Submit the temporary file to be run.
                     # log_file_base_name will be 'original_file_base'
                     # specific_arg_for_log_name will be the 'width'
-                    future = executor.submit(run_file, "hackersdelight", temp_file_path, original_file_base, str(width))
+                    log_file_name = f'{original_file_base}_{str(width)}.txt'
+                    log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
+                    future = executor.submit(run_file, "hackersdelight", temp_file_path, log_file_path)
                     futures[future] = temp_filename # Store the name of the temporary file for progress reporting
 
         elif benchmark == "instcombine":
@@ -115,7 +109,8 @@ def compare(benchmark : str, jobs: int) :
                 if "_proof" in file and file.endswith('.lean'): # Ensure it's a Lean file
                     file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
                     file_title = os.path.splitext(file)[0]
-                    future = executor.submit(run_file, "instcombine", file_path, file_title)
+                    log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{file_title}.txt')
+                    future = executor.submit(run_file, "instcombine", file_path, log_file_path)
                     futures[future] = file
 
         else : 
