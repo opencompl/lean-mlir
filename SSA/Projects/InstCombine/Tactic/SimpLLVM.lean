@@ -1,6 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import SSA.Core.Framework.Trace
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 
@@ -111,7 +112,7 @@ The following section defined two tactics `hide_constants` and `unhide_constants
 
 This serves as a workaround for https://github.com/leanprover/lean4/issues/8898
 -/
-section HideConstants
+namespace HideConstants
 open Meta
 
 /-- Definition of `hide` and `hide_eq` -/
@@ -136,6 +137,7 @@ def simpHide (e : Expr) : Meta.SimpM Meta.Simp.Step := do
   let ctx ← Simp.getContext
   if let some parent := ctx.parent? then
     if parent.isAppOf ``hide then
+      trace[LeanMLIR.Elab] "{Lean.crossEmoji}: parent ({parent}) is an application of `hide`"
       return .continue
 
   let expr ← Meta.mkAppM ``hide #[e]
@@ -145,15 +147,29 @@ def simpHide (e : Expr) : Meta.SimpM Meta.Simp.Step := do
     proof? := some proof
   }
 
+protected partial def isConstant (e : Expr) : Bool :=
+  match_expr e with
+  | Neg.neg _α _self x => HideConstants.isConstant x
+  | OfNat.ofNat _α x _self => HideConstants.isConstant x
+  | _ => e.isRawNatLit
+open HideConstants (isConstant)
+
+
 simproc BitVec.hideOfIntConstants (BitVec.ofInt _ _) := fun e => do
   let_expr BitVec.ofInt _w x := e | return .continue
-  if x.nat?.isNone then return .continue
-  simpHide e
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Hiding: {e}") <| do
+    if !isConstant x then
+      trace[Meta.Tactic.simp] "{Lean.crossEmoji}: {x} is not a constant"
+      return .continue
+    simpHide e
 
 simproc LLVM.hideConst? (LLVM.const? _ _) := fun e => do
   let_expr LLVM.const? _w x := e | return .continue
-  if x.nat?.isNone then return .continue
-  simpHide e
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Hiding: {e}") <| do
+    if !isConstant x then
+      trace[Meta.Tactic.simp] "{Lean.crossEmoji}: {x} is not a constant"
+      return .continue
+    simpHide e
 
 macro "hide_constants" : tactic => `(tactic|
   simp -failIfUnchanged -memoize only [BitVec.hideOfIntConstants, LLVM.hideConst?]
@@ -167,6 +183,7 @@ macro "unhide_constants" : tactic => `(tactic|
 )
 
 end HideConstants
+export HideConstants (BitVec.hideOfIntConstants LLVM.hideConst?)
 
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
