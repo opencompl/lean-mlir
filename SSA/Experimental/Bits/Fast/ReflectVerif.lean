@@ -570,7 +570,7 @@ def Vars.castShift {n m : Nat} (v : Vars σ ι n) (hnm : n ≤ m) : Vars σ ι m
 
 /-- casting to the same width equals vars-/
 @[simp]
-theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n ≤ n) :
+theorem Vars.castLe_eq_self {n : Nat} (v : Vars σ ι n) (h : n ≤ n) :
     v.castLe h = v := by
   rcases v with x | i
   · simp [Vars.castLe]
@@ -578,10 +578,22 @@ theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n �
   · simp [Vars.castLe]
 
 @[simp]
-theorem Vars.castLe_outputs_mk_eq_outputs {α : Type _} {n i m : Nat} (hi : i < n) (hnm : n ≤ m) :
-  ((Vars.outputs ⟨i, hi⟩ : Vars α σ n).castLe (by omega) : Vars α σ m) =
+theorem Vars.castLe_outputs_mk_eq_outputs {n i m : Nat} (hi : i < n) (hnm : n ≤ m) :
+  ((Vars.outputs ⟨i, hi⟩ : Vars σ ι n).castLe (by omega) : Vars σ ι m) =
      Vars.outputs ⟨i, by omega⟩ := by
   simp [Vars.castLe, Vars.outputs]
+
+@[simp]
+theorem Vars.castLe_stateN_eq_stateN  {n i m : Nat} (hi : i ≤ n) (hnm : n ≤ m) :
+  (Vars.stateN s i : Vars σ ι n).castLe hnm =
+  Vars.stateN s i (hin := by omega) := by
+  rfl
+
+@[simp]
+theorem Vars.castLe_inputs_eq_inputs {n i m : Nat} (hi : i < n) (hnm : n ≤ m) :
+  (Vars.inputN inp i hi : Vars σ ι n).castLe hnm =
+  Vars.inputN inp i (by omega) := by
+  rfl
 
 /-- casting to the same width equals vars-/
 @[simp]
@@ -1336,6 +1348,53 @@ def mkSucc
       mkStateUniqueCircuitN fsm (n + 2) |||
       (castCircLe prev.cStatesUniqueCirc)
   }
+
+theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    {fsm : FSM arity} {n : Nat}
+    (prev : KInductionCircuits fsm n)
+    (hPrev : prev.IsLawful) :
+    (mkSucc prev).IsLawful where
+  hCInitCarryAssignCirc := by
+    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    exact hPrev.hCInitCarryAssignCirc
+  hCSuccCarryAssignCirc := by
+    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    simp [Circuit.eval_map]
+    intros env
+    constructor
+    · intros h s i hi
+      obtain ⟨h₁, h₂⟩ := h
+      rw [hPrev.hCSuccCarryAssignCirc] at h₂
+      by_cases hi : i < n + 2
+      · simp only [Vars.castLe_stateN_eq_stateN, Circuit.eval_map,
+        Vars.castLe_castLe_eq_castLe_self, mkCarryAssignCircuitNAux_eval_eq,
+        Vars.castLe_inputs_eq_inputs] at h₂
+        rw [h₂ s i hi]
+      · have hi : i = n + 2 := by omega
+        subst hi
+        apply h₁
+    · intros h
+      constructor
+      · intros s
+        simp only at h ⊢
+        rw [h s _ (by omega)]
+      · rw [hPrev.hCSuccCarryAssignCirc]
+        intros s i hi
+        simp only [Vars.castLe_stateN_eq_stateN, Circuit.eval_map,
+          Vars.castLe_castLe_eq_castLe_self, mkCarryAssignCircuitNAux_eval_eq,
+          Vars.castLe_inputs_eq_inputs] at h
+        simp only [Vars.castLe_stateN_eq_stateN, Circuit.eval_map,
+          Vars.castLe_castLe_eq_castLe_self, mkCarryAssignCircuitNAux_eval_eq,
+          Vars.castLe_inputs_eq_inputs]
+        rw [h s i (by omega)]
+
+  hCOutAssignCirc := by
+    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    sorry
+  hCStatesUniqueCirc := by
+    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    sorry
 
 /--
 The precondition that assigns all
