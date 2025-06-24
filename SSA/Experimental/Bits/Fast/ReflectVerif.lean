@@ -1238,6 +1238,14 @@ structure KInductionCircuits.IsLawful {arity : Type _}
       (circs.cInitCarryAssignCirc.eval env = false)
       ↔ (∀ (s : fsm.α), fsm.initCarry s = env (Vars.state0 s))
 
+  hCSuccCarryAssignCirc :
+    ∀ {env : Vars fsm.α arity (n + 2) → Bool},
+      (circs.cSuccCarryAssignCirc.eval env = false)
+      ↔ (∀ (s : fsm.α) (i : Nat) (hi : i < n + 2),
+        env (Vars.stateN s (i + 1)) =
+          ((mkCarryAssignCircuitNAux fsm s i).map
+            (fun v => v.castLe (by omega))).eval env)
+
 
 namespace KInductionCircuits
 
@@ -1267,6 +1275,10 @@ theorem IsLawful_mkZero {arity : Type _}
     intro s
     simp only [mkZero]
     simp only [mkInitCarryAssignCircuit_eq_false_iff]
+  hCSuccCarryAssignCirc := by
+    intro env
+    simp only [mkZero]
+    simp only [mkCarryAssignCircuitLeN_eq_false_iff]
 
 -- NOTE [Circuit Equivalence As a quotient]:
 -- We ideally should have a notion of `Circuit.equiv`, which says that
