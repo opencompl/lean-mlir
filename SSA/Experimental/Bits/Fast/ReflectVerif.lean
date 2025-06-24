@@ -1452,7 +1452,7 @@ Since the `mkSuccCarryAndOutsAssignPrecond` produces a large
 condition, we keep it as-is, and use it evaluating to false
 as a precondition.
 -/
-theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff
+theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁
   {circs : KInductionCircuits fsm n}
   (hCircs : circs.IsLawful) :
   ∀ (env : Vars fsm.α arity (n + 2) → Bool),
@@ -1563,7 +1563,7 @@ def mkSafetyCircuit (circs : KInductionCircuits fsm n) :
     (mkSuccCarryAndOutsAssignPrecond circs)
     (castCircLe <| mkPostcondSafety circs)
 
-theorem mkSafetyCircuit_eval_eq_false_iff
+theorem mkSafetyCircuit_eval_eq_false_iff₁
     {circs : KInductionCircuits fsm n}
     (hCircs : circs.IsLawful)
     (env : Vars fsm.α arity (n + 2) → Bool) :
@@ -1573,8 +1573,7 @@ theorem mkSafetyCircuit_eval_eq_false_iff
       (∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false)) := by
   rw [mkSafetyCircuit]
   simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
-    hCircs.hCInitCarryAssignCirc, hCircs.hCOutAssignCirc,
-    eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff]
+    hCircs.hCInitCarryAssignCirc, hCircs.hCOutAssignCirc]
   simp
   constructor
   · intros h hinit hsafe i hi
@@ -1592,6 +1591,7 @@ theorem mkSafetyCircuit_eval_eq_false_iff
     apply h
     · apply hPrecond
     · apply hCircs
+
 
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
@@ -1629,8 +1629,7 @@ def mkIndHypCycleBreaking (circs : KInductionCircuits fsm n) :
       -- | Then the output is zero at `i = n+1`
       (mkPostcondIndHypNoCycleBreaking circs))
 
-@[simp]
-theorem mkIndHypCycleBreaking_eval_eq_false_iff
+theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
     {circs : KInductionCircuits fsm n}
     (env : Vars fsm.α arity (n + 2) → Bool) :
     ((mkIndHypCycleBreaking circs).eval env = false) ↔
