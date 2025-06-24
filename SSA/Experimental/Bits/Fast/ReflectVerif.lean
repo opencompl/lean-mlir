@@ -1272,6 +1272,11 @@ structure KInductionCircuits.IsLawful {arity : Type _}
       ↔ (∀ (i j : Nat) (hij : i < j ∧ j ≤ n + 1),
         ∃ (s : fsm.α), env (Vars.stateN s i) ≠ env (Vars.stateN s j))
 
+attribute [simp] KInductionCircuits.IsLawful.hCInitCarryAssignCirc
+attribute [simp] KInductionCircuits.IsLawful.hCSuccCarryAssignCirc
+attribute [simp] KInductionCircuits.IsLawful.hCOutAssignCirc
+attribute [simp] KInductionCircuits.IsLawful.hCStatesUniqueCirc
+
 namespace KInductionCircuits
 
 variable {arity : Type _}
@@ -1432,7 +1437,41 @@ def mkSuccCarryAndOutsAssignPrecond (circs : KInductionCircuits fsm n) :
   circs.cOutAssignCirc |||
   circs.cSuccCarryAssignCirc
 
-
+theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff_
+  (circs : KInductionCircuits fsm n)
+  (hCircs : circs.IsLawful) :
+  ∀ (env : Vars fsm.α arity (n + 2) → Bool),
+  (mkSuccCarryAndOutsAssignPrecond circs).eval env = false ↔
+  (∀ (s : fsm.α) (i : Nat) (hi : i < n + 2),
+    env (Vars.stateN s (i + 1)) =
+      ((mkCarryAssignCircuitNAux fsm s i).map
+        (fun v => v.castLe (by omega))).eval env) ∧
+  (∀ (i : Nat) (hi : i < n + 2),
+    (fsm.nextBitCirc none).eval
+      (fun x => match x with
+        | .inl s => env (Vars.stateN s i)
+        | .inr j => env (Vars.inputN j i)) =
+    env (Vars.outputs ⟨i, by omega⟩)) := by
+  intro env
+  rw [mkSuccCarryAndOutsAssignPrecond]
+  simp only [Circuit.eval_or, Bool.or_eq_false_iff, hCircs, IsLawful.hCOutAssignCirc,
+    IsLawful.hCSuccCarryAssignCirc]
+  simp [Circuit.eval_map]
+  constructor
+  · intros h
+    obtain ⟨h₁, h₂⟩ := h
+    constructor
+    · intros s k hk
+      apply h₂ s k (by omega)
+    · intros k hk
+      apply h₁ k (by omega)
+  · intros h
+    obtain ⟨h₁, h₂⟩ := h
+    constructor
+    · intros k hk
+      apply h₂ k (by omega)
+    · intros s k hk
+      apply h₁ s k (by omega)
 /--
 The safety circuit that checks that if `s[0]` is assigned to init carry,
 then `o[i] = fals` for all `i ≤ n`.
