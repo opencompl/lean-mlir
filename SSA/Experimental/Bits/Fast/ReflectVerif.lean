@@ -421,6 +421,12 @@ def castLe (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
   input := i.input
 
 @[simp]
+theorem castLe_mk_eq_mk {α : Type _} {n m : Nat} (i : Fin n) (h : n ≤ m) (x : α) :
+    (Inputs.mk i x).castLe h = Inputs.mk (i.castLE (by omega)) x := by
+  simp [Inputs.castLe, Inputs.mk]
+  rfl
+
+@[simp]
 theorem castLe_eq_self {α : Type _} {n : Nat} (i : Inputs α n) (h : n ≤ n) :
     i.castLe h = i := by
   simp [Inputs.castLe]
@@ -560,6 +566,12 @@ theorem Vars.castLe_eq_self {α : Type _} {n : Nat} (v : Vars α σ n) (h : n �
   · simp [Vars.castLe]
   · simp [Vars.castLe]
   · simp [Vars.castLe]
+
+@[simp]
+theorem Vars.castLe_outputs_mk_eq_outputs {α : Type _} {n i m : Nat} (hi : i < n) (hnm : n ≤ m) :
+  ((Vars.outputs ⟨i, hi⟩ : Vars α σ n).castLe (by omega) : Vars α σ m) =
+     Vars.outputs ⟨i, by omega⟩ := by
+  simp [Vars.castLe, Vars.outputs]
 
 /-- casting to the same width equals vars-/
 @[simp]
@@ -870,19 +882,6 @@ theorem mkInitCarryAssignCircuitAux_eq_false_iff {arity : Type _}
   · simp
   · simp
 
-theorem mkInitCarryAssignCircuitAux_eq_decide {arity : Type _}
-  [DecidableEq arity]
-  [Fintype arity]
-  [Hashable arity]
-  (p : FSM arity) (s : p.α)
-  {env : Vars p.α arity 0 → Bool} :
-  ((mkInitCarryAssignCircuitAux p s).eval env) = ! decide (p.initCarry s = env (Vars.stateN s 0)) := by
-  rw [mkInitCarryAssignCircuitAux]
-  simp
-  rcases hx : p.initCarry s
-  · simp
-  · simp
-
 /--
 Make the circuit that assigns `states[0][:] = initCarry[:]`.
 -/
@@ -919,6 +918,23 @@ def mkOutputAssignCircuitNAux {arity : Type _}
         | .inl s' => Vars.stateN s' n
         | .inr i => Vars.inputN i n
 
+@[simp]
+theorem eval_mkOutputAssignCircuitNAux_eq {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat) (env : Vars p.α arity (n + 1) → Bool) :
+  (mkOutputAssignCircuitNAux p n).eval env =
+    (p.nextBitCirc none).eval
+      (fun x => match x with
+        | .inl s => env (Vars.stateN s n)
+        | .inr i => env (Vars.inputN i n)) := by
+  rw [mkOutputAssignCircuitNAux]
+  simp [Circuit.eval_map]
+  congr
+  ext x
+  rcases x with x | x <;> simp
+
 /-- Make a circuit that assigns
 `out[n] = out(states[n][:], inputs[n][:])`.
 -/
@@ -931,6 +947,23 @@ def mkOutputAssignCircuitN {arity : Type _}
     Circuit.xor
       (mkOutputAssignCircuitNAux p n)
       (Circuit.var true <| Vars.outputs ⟨n, by omega⟩)
+
+@[simp]
+theorem eval_mkOutputAssignCircuitN_eq_false_iff {arity : Type _}
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+  (p : FSM arity) (n : Nat)
+  {env : Vars p.α arity (n + 1) → Bool}
+  :
+  ((mkOutputAssignCircuitN p n).eval env = false) ↔
+    (p.nextBitCirc none).eval
+      (fun x => match x with
+        | .inl s => env (Vars.stateN s n)
+        | .inr i => env (Vars.inputN i n)) =
+    env (Vars.outputs ⟨n, by omega⟩) := by
+  rw [mkOutputAssignCircuitN]
+  simp [Circuit.eval_map, eval_mkOutputAssignCircuitNAux_eq]
 
 
 def mkOutputAssignCircuitLeN {arity : Type _}
@@ -945,6 +978,32 @@ def mkOutputAssignCircuitLeN {arity : Type _}
     Circuit.bigOr circs
 
 
+theorem mkOutputAssignCircuitLeN_eq_false_iff {arity : Type _}
+  [DecidableEq arity] [Fintype arity] [Hashable arity] (p : FSM arity) (n : Nat)
+  (env : Vars p.α arity (n + 1) → Bool) :
+  ((mkOutputAssignCircuitLeN p n).eval env = false) ↔
+  (∀ (i : Nat) (hi : i < n + 1),
+    (p.nextBitCirc none).eval
+      (fun x => match x with
+        | .inl s => env (Vars.stateN s i)
+        | .inr j => env (Vars.inputN j i)) =
+    env (Vars.outputs ⟨i, by omega⟩)) := by
+  rw [mkOutputAssignCircuitLeN]
+  simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
+    Subtype.exists, List.mem_range, forall_exists_index]
+  constructor
+  · intros h i hi
+    specialize h ?c i (by omega) rfl
+    simp only [Circuit.eval_map, eval_mkOutputAssignCircuitN_eq_false_iff] at h
+    apply h
+  · intros h c i hi hc
+    subst hc
+    simp only [Circuit.eval_map, eval_mkOutputAssignCircuitN_eq_false_iff]
+    simp only [Circuit.eval_map, eval_mkOutputAssignCircuitNAux_eq] at h
+    specialize h i hi
+    simp only [Vars.castLe_outputs_mk_eq_outputs]
+    rw [← h]
+    congr
 /--
 Make a circuit that checks `out[n] = fals`.
 -/
