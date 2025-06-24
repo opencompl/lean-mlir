@@ -27,8 +27,7 @@ ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
 # Download & build lean-mlir
-RUN curl -L https://github.com/opencompl/lean-mlir/archive/refs/heads/main.tar.gz > /code/lean-mlir.tar.gz # SSA tar file
-RUN tar xf lean-mlir.tar.gz && ls /code/ && mv lean-mlir-main lean-mlir # untar
+RUN git clone --depth 1 --branch width-indep-artifact https://github.com/opencompl/lean-mlir.git
 WORKDIR /code/lean-mlir
 RUN lake -R exe cache get
 RUN lake build
@@ -41,7 +40,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN uv pip install -r requirements.txt
 
 WORKDIR /code/lean-mlir/bv-evaluation
-RUN ./compare-automata-automata-circuit-jsonl.py --db compare.jsonl -prodrun  -j5 
+RUN ./compare-automata-automata-circuit-jsonl.py --db compare.jsonl --prodrun  -j5 
 RUN ./plot-automata-automata-circuit-jsonl.py compare.jsonl
 
 WORKDIR /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2
