@@ -118,13 +118,13 @@ def compare(benchmark : str, jobs: int) :
 
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
-            file_or_name = futures[future]
+            file_path = futures[future]
             try:
                 future.result()
             except Exception as exc:
-                print(f'{file_or_name} generated an exception: {exc}')
+                print(f'{file_path} generated an exception: {exc}')
             percentage = ((idx + 1) / total) * 100
-            print(f'{file_or_name} completed, {percentage:.2f}%')
+            print(f'{file_path} completed, {percentage:.2f}%')
 
 
 
