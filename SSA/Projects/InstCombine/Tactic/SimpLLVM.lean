@@ -104,7 +104,7 @@ macro_rules
   )
 
 /-! ### Constant Hiding Workaround
-The following section defined two tactics `hide_constants` and `unhide_constants`.
+The following section defines two tactics, `hide_constants` and `unhide_constants`.
 * `hide_constants` will rewrite occurences of `LLVM.const?` or `BitVec.ofInt`
   into an application of a new `hide` function. This function is an *opaque*
   identity function, and serves to block kernel reduction.
