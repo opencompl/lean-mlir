@@ -507,6 +507,16 @@ def Vars.state0 (s : σ) {n : Nat} : Vars σ ι n :=
 def Vars.stateN (s : σ) (i : Nat) {n : Nat} (hin : i ≤ n := by omega) : Vars σ ι n :=
   .state (Inputs.mk ⟨i, by omega⟩ s)
 
+@[simp]
+theorem state0_eq_stateN_zero {σ : Type} {ι : Type} {n : Nat} (s : σ) :
+    (Vars.state0 s : Vars σ ι n) = Vars.stateN s 0 := by
+  simp [Vars.state0, Vars.stateN]
+
+theorem stateN_zero_eq_state0 {σ : Type} {ι : Type} {n : Nat} (s : σ) :
+    Vars.stateN s 0 = (Vars.state0 s : Vars σ ι n) := by
+  simp [Vars.state0, Vars.stateN]
+
+
 def Vars.inputN (inp : ι) (k : Nat) {n : Nat} (hkn : k < n := by omega) : Vars σ ι n :=
   .inputs (Inputs.mk ⟨k, by omega⟩ inp)
 
@@ -901,7 +911,7 @@ theorem mkInitCarryAssignCircuit_eq_false_iff {arity : Type _}
   (p : FSM arity)
   {env : Vars p.α arity 0 → Bool} :
   (mkInitCarryAssignCircuit p).eval env = false ↔
-  (∀ (s : p.α), p.initCarry s = env (Vars.stateN s 0)) := by
+  (∀ (s : p.α), p.initCarry s = env (Vars.state0 s)) := by
   rw [mkInitCarryAssignCircuit]
   simp [mkInitCarryAssignCircuitAux_eq_false_iff]
 
@@ -1220,6 +1230,15 @@ structure KInductionCircuits {arity : Type _}
   -- | Circuit that says that states s0..sn are disequal
   cStatesUniqueCirc : Circuit (Vars fsm.α arity (n + 1))
 
+structure KInductionCircuits.IsLawful {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity} {n : Nat}
+  (circs : KInductionCircuits fsm n) where
+  hCInitCarryAssignCirc :
+    ∀ {env : Vars fsm.α arity 0 → Bool},
+      (circs.cInitCarryAssignCirc.eval env = false)
+      ↔ (∀ (s : fsm.α), fsm.initCarry s = env (Vars.state0 s))
+
+
 namespace KInductionCircuits
 
 variable {arity : Type _}
@@ -1240,6 +1259,14 @@ def mkZero : KInductionCircuits fsm 0 where
   cOutAssignCirc := mkOutputAssignCircuitLeN fsm 1
   cStatesUniqueCirc := mkAllPairsUniqueStatesCircuit fsm 1
 
+theorem IsLawful_mkZero {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) :
+    (mkZero (fsm := fsm)).IsLawful where
+  hCInitCarryAssignCirc := by
+    intro s
+    simp only [mkZero]
+    simp only [mkInitCarryAssignCircuit_eq_false_iff]
 
 -- NOTE [Circuit Equivalence As a quotient]:
 -- We ideally should have a notion of `Circuit.equiv`, which says that
