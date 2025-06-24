@@ -15,26 +15,15 @@ Elements of type `PoisonOr α` are either `poison`, or values of type `α`.
 `PoisonOr α` is simply a wrapper around `Option α`, but we generally prefer `PoisonOr`
 when specifying poison semantics in dialects, as it's more self-documenting.
 -/
--- structure PoisonOr (α : Type) where
---   ofOption :: toOption : Option α
---   deriving DecidableEq
-def PoisonOr := Option.{0}
-
-/-!
-FIXME: for some reason, having `PoisonOr` be a structure triggers kernel deep
-recursion errors in the bitvector evaluation.
--/
-
-instance [DecidableEq α] : DecidableEq (PoisonOr α) := inferInstanceAs (DecidableEq (Option α))
-
-def PoisonOr.ofOption : Option α → PoisonOr α := id
-def PoisonOr.toOption : PoisonOr α → Option α := id
+structure PoisonOr (α : Type) where
+  ofOption :: toOption : Option α
+  deriving DecidableEq
 
 namespace PoisonOr
 
 /-! ### Constructors-/
-@[match_pattern] def poison : PoisonOr α := ofOption none
-@[match_pattern] def value : α → PoisonOr α := (ofOption <| some ·)
+@[match_pattern] def poison : PoisonOr α := ⟨none⟩
+@[match_pattern] def value : α → PoisonOr α := (⟨some ·⟩)
 
 /--
 `casesOn'` is a custom eliminator. By tagging it with `cases_eliminator`, we can
@@ -148,8 +137,8 @@ variable {a : α}
 @[simp] theorem getValue_value [Inhabited α] : (value a).getValue = a := rfl
 @[simp] theorem getValue_poison [Inhabited α] : (@poison α).getValue = default := rfl
 
-@[simp] theorem mk_some (x : α) : (ofOption <| some x) = PoisonOr.value x := rfl
-@[simp] theorem mk_none : (ofOption <| none (α := α) ) = PoisonOr.poison := rfl
+@[simp] theorem mk_some (x : α) : { toOption := some x } = PoisonOr.value x := rfl
+@[simp] theorem mk_none : { toOption := none (α := α) } = PoisonOr.poison := rfl
 
 @[simp_denote, simp]
 theorem toOption_getSome : (PoisonOr.value x).toOption.getD y = x := by rfl
