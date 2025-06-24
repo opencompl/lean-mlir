@@ -54,11 +54,17 @@ def run_file(benchmark : str, file_to_run : str, log_file_path : str) :
                 log_file.write(f"time out of {TIMEOUT} seconds reached\n")
                 print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
 
-    if (benchmark == "hackersdelight"):
-        # Clean up the temporary file created for this specific bit-width and original file for hackersdelight
-        if os.path.exists(file_to_run):
-            os.remove(file_to_run)
-            print(f"Deleted temporary file: {file_to_run}")
+def run_hdel(temp_file_path : str, log_file_path : str):
+    """
+    A specialized 'run_file' for hacker's delight,
+    that cleans up on the temporary files that are created
+    after execution.
+    """
+    run_file("hackersdelight", temp_file_path, log_file_path)
+    # Clean up the temporary file created for this specific bit-width and original file for hackersdelight
+    os.remove(temp_file_path)
+    print(f"Deleted temporary file: {temp_file_path}")
+
 
 def compare(benchmark : str, jobs: int) :
     """Processes benchmarks using a thread pool."""
@@ -69,7 +75,8 @@ def compare(benchmark : str, jobs: int) :
             # Iterate through all .lean files in the HackersDelight directory
             clear_folder(RESULTS_DIR_HACKERSDELIGHT)
             os.makedirs(RESULTS_DIR_HACKERSDELIGHT, exist_ok=True)
-            for original_file_name in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
+            hackers_delight_files = os.listdir(BENCHMARK_DIR_HACKERSDELIGHT)
+            for original_file_name in hackers_delight_files:
                 if not original_file_name.endswith('.lean'):
                     continue # Skip non-Lean files
 
@@ -98,7 +105,7 @@ def compare(benchmark : str, jobs: int) :
                     # specific_arg_for_log_name will be the 'width'
                     log_file_name = f'{original_file_base}_{str(width)}.txt'
                     log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
-                    future = executor.submit(run_file, "hackersdelight", temp_file_path, log_file_path)
+                    future = executor.submit(run_hdel, temp_file_path, log_file_path)
                     futures[future] = temp_file_path # Store the name of the temporary file for progress reporting
 
         elif benchmark == "instcombine":
