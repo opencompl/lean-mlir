@@ -130,7 +130,7 @@ a def-eq, since we made `hide` opaque. -/
 theorem hide_eq {a : α} : hide a = a := by
   rw [hide, hide_def.2]; rfl
 
-/-- symmetric version of `hide_eq` -/
+/-- Symmetric version of `hide_eq`. -/
 theorem eq_hide {a : α} : a = hide a := by
   symm; exact hide_eq
 
