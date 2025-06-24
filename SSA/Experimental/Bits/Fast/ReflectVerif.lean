@@ -916,7 +916,7 @@ def mkInitCarryAssignCircuit {arity : Type _}
     let carrys := FinEnum.toList p.α |>.map (mkInitCarryAssignCircuitAux p)
     Circuit.bigOr carrys
 
-theorem mkInitCarryAssignCircuit_eq_false_iff {arity : Type _}
+theorem eval_mkInitCarryAssignCircuit_eq_false_iff {arity : Type _}
   [DecidableEq arity]
   [Fintype arity]
   [Hashable arity]
@@ -1280,7 +1280,6 @@ attribute [simp] KInductionCircuits.IsLawful.hCStatesUniqueCirc
 namespace KInductionCircuits
 
 variable {arity : Type _}
-  [DecidableEq arity] [Fintype arity] [Hashable arity]
   {fsm : FSM arity}
 
 /--
@@ -1289,6 +1288,17 @@ Cast a circuit to a larger width, by casting the variables.
 def castCircLe {n m : Nat} (c : Circuit (Vars fsm.α arity n)) (hnm : n ≤ m := by omega) :
     Circuit (Vars fsm.α arity m) :=
   c.map (fun v => v.castLe hnm)
+
+@[simp]
+theorem eval_castCircLe_eq {n m : Nat} (c : Circuit (Vars fsm.α arity n))
+    (hnm : n ≤ m)
+    {env : Vars fsm.α arity m → Bool} :
+    (castCircLe c hnm).eval env = c.eval
+      (fun x => env (x.castLe hnm)) := by
+  simp [castCircLe, Circuit.eval_map]
+
+
+variable [DecidableEq arity] [Fintype arity] [Hashable arity]
 
 /-- Make the carry circuit for the k-induction circuits. -/
 def mkZero : KInductionCircuits fsm 0 where
@@ -1304,7 +1314,7 @@ theorem IsLawful_mkZero {arity : Type _}
   hCInitCarryAssignCirc := by
     intro s
     simp only [mkZero]
-    simp only [mkInitCarryAssignCircuit_eq_false_iff]
+    simp only [eval_mkInitCarryAssignCircuit_eq_false_iff]
   hCSuccCarryAssignCirc := by
     intro env
     simp only [mkZero]
@@ -1483,6 +1493,31 @@ def mkPostcondSafety (_circs : KInductionCircuits fsm n) :
     (castCircLe <| (mkInitCarryAssignCircuit fsm))
     -- | then the output is fals for all i ≤ n.
     (mkOutEqZeroCircuitLeN fsm n)
+
+theorem mkPostcondSafety_eval_eq_false_iff
+    (circs : KInductionCircuits fsm n)
+    (hCircs : circs.IsLawful) :
+    ∀ (env : Vars fsm.α arity (n + 1) → Bool),
+    (mkPostcondSafety circs).eval env = false ↔
+    (∀ (i : Nat) (hi : i < n + 1),
+      env (Vars.outputs ⟨i, by omega⟩) = false) := by
+  intro env
+  rw [mkPostcondSafety]
+  simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
+    hCircs.hCInitCarryAssignCirc, IsLawful.hCOutAssignCirc]
+  simp
+  constructor
+  · intros h i hi
+    simp at h
+    rw [eval_mkInitCarryAssignCircuit_eq_false_iff] at h
+    rw [mkOutEqZeroCircuitLeN_eval_eq_false_iff] at h
+    apply h
+    sorry
+  · intros h
+    rw [mkOutEqZeroCircuitLeN_eval_eq_false_iff]
+    rw [eval_mkInitCarryAssignCircuit_eq_false_iff]
+    intros hpre
+    apply h
 
 /--
 The induction hypothesis circuit that checks that if
