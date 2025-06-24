@@ -2,6 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core.Framework.Trace
+import SSA.Core.Framework.Trace
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 
@@ -105,7 +106,7 @@ macro_rules
 
 /-! ### Constant Hiding Workaround
 The following section defined two tactics `hide_constants` and `unhide_constants`.
-* `hide_constants` will rewrite all occurences of `LLVM.const?` or `BitVec.ofInt`
+* `hide_constants` will rewrite occurences of `LLVM.const?` or `BitVec.ofInt`
   into an application of a new `hide` function. This function is an *opaque*
   identity function, and serves to block kernel reduction.
 * `unhide_constants` does the reverse, and removes all `hide` applications.
