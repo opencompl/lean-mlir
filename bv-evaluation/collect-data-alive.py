@@ -59,7 +59,7 @@ def parse_tacbenches(file_name, raw):
 def run():
     out = None
     file = 'AliveStatements.lean'
-    with open(res_dir+file.split(".")[0]+".txt") as res_file:
+    with open(res_dir+file.split(".")[0]+"_r"+str("0")+".txt") as res_file:
             results = parse_tacbenches(file.split(".")[0], res_file.read())
 
     df = pd.DataFrame(results)
