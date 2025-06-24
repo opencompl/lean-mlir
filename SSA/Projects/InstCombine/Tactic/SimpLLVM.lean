@@ -102,11 +102,78 @@ macro_rules
     )
   )
 
+/-! ### Constant Hiding Workaround
+The following section defined two tactics `hide_constants` and `unhide_constants`.
+* `hide_constants` will rewrite all occurences of `LLVM.const?` or `BitVec.ofInt`
+  into an application of a new `hide` function. This function is an *opaque*
+  identity function, and serves to block kernel reduction.
+* `unhide_constants` does the reverse, and removes all `hide` applications.
+
+This serves as a workaround for https://github.com/leanprover/lean4/issues/8898
+-/
+section HideConstants
+open Meta
+
+/-- Definition of `hide` and `hide_eq` -/
+opaque hide_def : { hide : α → α // hide = id } := ⟨id, rfl⟩
+
+/--
+`hide` is an opaque version of the identity function.
+By making it opaque, we prevent the kernel from trying to reduce the argument.
+-/
+def hide : α → α := hide_def.1
+
+/-- A proof that `hide` is the identity. Note that this is deliberately *not*
+a def-eq, since we made `hide` opaque. -/
+theorem hide_eq {a : α} : hide a = a := by
+  rw [hide, hide_def.2]; rfl
+
+/-- symmetric version of `hide_eq` -/
+theorem eq_hide {a : α} : a = hide a := by
+  symm; exact hide_eq
+
+def simpHide (e : Expr) : Meta.SimpM Meta.Simp.Step := do
+  let ctx ← Simp.getContext
+  if let some parent := ctx.parent? then
+    if parent.isAppOf ``hide then
+      return .continue
+
+  let expr ← Meta.mkAppM ``hide #[e]
+  let proof ← Meta.mkAppOptM ``eq_hide #[none, e]
+  return .done {
+    expr := expr
+    proof? := some proof
+  }
+
+simproc BitVec.hideOfIntConstants (BitVec.ofInt _ _) := fun e => do
+  let_expr BitVec.ofInt _w x := e | return .continue
+  if x.nat?.isNone then return .continue
+  simpHide e
+
+simproc LLVM.hideConst? (LLVM.const? _ _) := fun e => do
+  let_expr LLVM.const? _w x := e | return .continue
+  if x.nat?.isNone then return .continue
+  simpHide e
+
+macro "hide_constants" : tactic => `(tactic|
+  simp -failIfUnchanged -memoize only [BitVec.hideOfIntConstants, LLVM.hideConst?]
+  -- --------------------^^^^^^^
+  -- NOTE: we have to disable the memoize option, since the simprocs
+  -- inspect the parent expressions, which are disregarded by the cache
+)
+
+macro "unhide_constants" : tactic => `(tactic|
+  all_goals simp -failIfUnchanged only [hide_eq]
+)
+
+end HideConstants
+
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
 macro "simp_alive_undef" : tactic =>
   `(tactic|
       (
+        hide_constants
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm_option,
             bind_assoc,
@@ -129,4 +196,5 @@ macro "simp_alive_ops" : tactic =>
           simp_llvm,
           (BitVec.ofInt_ofNat)
         ]
+      unhide_constants
     ))
