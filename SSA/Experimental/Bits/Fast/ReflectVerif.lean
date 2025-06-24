@@ -1447,8 +1447,13 @@ def mkSuccCarryAndOutsAssignPrecond (circs : KInductionCircuits fsm n) :
   circs.cOutAssignCirc |||
   circs.cSuccCarryAssignCirc
 
-theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff_
-  (circs : KInductionCircuits fsm n)
+/--
+Since the `mkSuccCarryAndOutsAssignPrecond` produces a large
+condition, we keep it as-is, and use it evaluating to false
+as a precondition.
+-/
+theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff
+  {circs : KInductionCircuits fsm n}
   (hCircs : circs.IsLawful) :
   ∀ (env : Vars fsm.α arity (n + 2) → Bool),
   (mkSuccCarryAndOutsAssignPrecond circs).eval env = false ↔
@@ -1495,9 +1500,9 @@ def mkPostcondSafety (_circs : KInductionCircuits fsm n) :
     (mkOutEqZeroCircuitLeN fsm n)
 
 set_option linter.unusedVariables false in
-theorem mkPostcondSafety_eval_eq_false_iff
-    (circs : KInductionCircuits fsm n)
-    (hCircs : circs.IsLawful) 
+theorem eval_mkPostcondSafety_eq_false_iff
+    {circs : KInductionCircuits fsm n}
+    (hCircs : circs.IsLawful)
     (env : Vars fsm.α arity (n + 1) → Bool) :
     ((mkPostcondSafety circs).eval env = false) ↔
     ((∀ (s : fsm.α), fsm.initCarry s = env ((Vars.state0 s))) →
@@ -1531,6 +1536,22 @@ def mkPostcondIndHypNoCycleBreaking {n} (_circs : KInductionCircuits fsm n) :
     -- | Then the output is zero at `i = n+1`
     (mkOutEqZeroCircuitN fsm <| n+1)
 
+set_option linter.unusedVariables false in
+theorem mkPostcondIndHypNoCycleBreaking_eq_false_iff
+    {circs : KInductionCircuits fsm n}
+    (hCircs : circs.IsLawful)
+    (env : Vars fsm.α arity (n + 2) → Bool) :
+    ((mkPostcondIndHypNoCycleBreaking circs).eval env = false) ↔
+    ((∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false) →
+    env (Vars.outputs ⟨n + 1, by omega⟩) = false) := by
+  rw [mkPostcondIndHypNoCycleBreaking]
+  simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
+    hCircs.hCOutAssignCirc]
+  simp
+  constructor
+  · simp [mkOutEqZeroCircuitLeN_eval_eq_false_iff]
+  · simp [mkOutEqZeroCircuitLeN_eval_eq_false_iff]
+
 /--
 If the initial state `s[0] = initCarry`,
 and `states[i+1] = carry(states[i], inputs[i])` and `out[i] = out(states[i], inputs[i])`,
@@ -1541,6 +1562,36 @@ def mkSafetyCircuit (circs : KInductionCircuits fsm n) :
   mkUnsatImpliesCircuit
     (mkSuccCarryAndOutsAssignPrecond circs)
     (castCircLe <| mkPostcondSafety circs)
+
+theorem mkSafetyCircuit_eval_eq_false_iff
+    {circs : KInductionCircuits fsm n}
+    (hCircs : circs.IsLawful)
+    (env : Vars fsm.α arity (n + 2) → Bool) :
+    ((mkSafetyCircuit circs).eval env = false) ↔
+    ((mkSuccCarryAndOutsAssignPrecond circs).eval env = false →
+      (∀ (s : fsm.α), fsm.initCarry s = env (Vars.state0 s)) →
+      (∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false)) := by
+  rw [mkSafetyCircuit]
+  simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
+    hCircs.hCInitCarryAssignCirc, hCircs.hCOutAssignCirc,
+    eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff]
+  simp
+  constructor
+  · intros h hinit hsafe i hi
+    rw [eval_mkPostcondSafety_eq_false_iff] at h
+    · simp at h
+      apply h
+      · apply hinit
+      · apply hsafe
+      · omega
+    · apply hCircs
+  · intros h
+    intros hPrecond
+    rw [eval_mkPostcondSafety_eq_false_iff]
+    simp
+    apply h
+    · apply hPrecond
+    · apply hCircs
 
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
@@ -1554,6 +1605,14 @@ def mkIndHypCircuitNoCycleBreaking (circs : KInductionCircuits fsm n) :
     (mkSuccCarryAndOutsAssignPrecond circs)
     -- | Then the output is zero at `i = n+1`
     (mkPostcondIndHypNoCycleBreaking circs)
+
+@[simp]
+theorem mkIndHypCircuitNoCycleBreaking_eval_eq_false_iff
+    {circs : KInductionCircuits fsm n}
+    (env : Vars fsm.α arity (n + 2) → Bool) :
+    ((mkIndHypCircuitNoCycleBreaking circs).eval env = false) ↔
+    ((mkSuccCarryAndOutsAssignPrecond circs).eval env = false → (mkPostcondIndHypNoCycleBreaking circs).eval env = false) := by
+  simp [mkIndHypCircuitNoCycleBreaking]
 
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
@@ -1570,6 +1629,15 @@ def mkIndHypCycleBreaking (circs : KInductionCircuits fsm n) :
       -- | Then the output is zero at `i = n+1`
       (mkPostcondIndHypNoCycleBreaking circs))
 
+@[simp]
+theorem mkIndHypCycleBreaking_eval_eq_false_iff
+    {circs : KInductionCircuits fsm n}
+    (env : Vars fsm.α arity (n + 2) → Bool) :
+    ((mkIndHypCycleBreaking circs).eval env = false) ↔
+    ((mkSuccCarryAndOutsAssignPrecond circs).eval env = false →
+      (circs.cStatesUniqueCirc.eval (fun x => env (x.castLe (by omega))) = false) →
+      (mkPostcondIndHypNoCycleBreaking circs).eval env = false) := by
+  simp [mkIndHypCycleBreaking, mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map]
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
