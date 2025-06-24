@@ -56,7 +56,7 @@ jobs:
       - name: Run LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./compare.py instcombine-j48)
+          (cd bv-evaluation; python3 ./compare.py instcombine -j48)
 
       - name: Collect data LLVM
         continue-on-error: true
