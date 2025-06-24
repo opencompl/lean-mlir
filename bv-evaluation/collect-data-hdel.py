@@ -69,7 +69,7 @@ for file in os.listdir(benchmark_dir):
         for r in range(reps):
             inconsistencies = 0
 
-            res_file = open(res_dir+file.split(".")[0]+"_"+str(bvw)+"_r"+str(r)+".txt")
+            res_file = open(res_dir+file.split(".")[0]+"_"+str(bvw)+".txt")
             # print(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
             ls = 0
             bw = 0
