@@ -1245,7 +1245,20 @@ structure KInductionCircuits.IsLawful {arity : Type _}
         env (Vars.stateN s (i + 1)) =
           ((mkCarryAssignCircuitNAux fsm s i).map
             (fun v => v.castLe (by omega))).eval env)
-
+  hCOutAssignCirc :
+    ∀ {env : Vars fsm.α arity (n + 2) → Bool},
+      (circs.cOutAssignCirc.eval env = false)
+      ↔ (∀ (i : Nat) (hi : i < n + 2),
+        (fsm.nextBitCirc none).eval
+          (fun x => match x with
+            | .inl s => env (Vars.stateN s i)
+            | .inr j => env (Vars.inputN j i)) =
+        env (Vars.outputs ⟨i, by omega⟩))
+  hCStatesUniqueCirc :
+    ∀ {env : Vars fsm.α arity (n + 1) → Bool},
+      (circs.cStatesUniqueCirc.eval env = false)
+      ↔ (∀ (i j : Nat) (hij : i < j ∧ j ≤ n + 1),
+        ∃ (s : fsm.α), env (Vars.stateN s i) ≠ env (Vars.stateN s (n + 1)))
 
 namespace KInductionCircuits
 
@@ -1279,6 +1292,25 @@ theorem IsLawful_mkZero {arity : Type _}
     intro env
     simp only [mkZero]
     simp only [mkCarryAssignCircuitLeN_eq_false_iff]
+  hCOutAssignCirc := by
+    intro env
+    simp only [mkZero]
+    simp only [mkOutputAssignCircuitLeN_eq_false_iff]
+  hCStatesUniqueCirc := by
+    intro env
+    simp only [mkZero]
+    simp only [mkAllPairsUniqueStatesCircuit_eq_false_iff]
+    constructor
+    · intros h i j hij
+      specialize h i j hij
+      have : j = 1 := by omega
+      subst this
+      simp [h]
+    · intros h i j hij
+      specialize h i j hij
+      have : j = 1 := by omega
+      subst this
+      simp [h]
 
 -- NOTE [Circuit Equivalence As a quotient]:
 -- We ideally should have a notion of `Circuit.equiv`, which says that
