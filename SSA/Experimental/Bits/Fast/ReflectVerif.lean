@@ -1494,31 +1494,31 @@ def mkPostcondSafety (_circs : KInductionCircuits fsm n) :
     -- | then the output is fals for all i ≤ n.
     (mkOutEqZeroCircuitLeN fsm n)
 
+set_option linter.unusedVariables false in
 theorem mkPostcondSafety_eval_eq_false_iff
     (circs : KInductionCircuits fsm n)
-    (hCircs : circs.IsLawful) :
-    ∀ (env : Vars fsm.α arity (n + 1) → Bool),
-    (mkPostcondSafety circs).eval env = false ↔
-    (∀ (i : Nat) (hi : i < n + 1),
-      env (Vars.outputs ⟨i, by omega⟩) = false) := by
-  intro env
+    (hCircs : circs.IsLawful) 
+    (env : Vars fsm.α arity (n + 1) → Bool) :
+    ((mkPostcondSafety circs).eval env = false) ↔
+    ((∀ (s : fsm.α), fsm.initCarry s = env ((Vars.state0 s))) →
+    (∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false)) := by
   rw [mkPostcondSafety]
   simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
     hCircs.hCInitCarryAssignCirc, IsLawful.hCOutAssignCirc]
   simp
   constructor
-  · intros h i hi
-    simp at h
+  · intros h hinit i hi
+    simp only at h
     rw [eval_mkInitCarryAssignCircuit_eq_false_iff] at h
     rw [mkOutEqZeroCircuitLeN_eval_eq_false_iff] at h
     apply h
-    sorry
+    apply hinit
   · intros h
     rw [mkOutEqZeroCircuitLeN_eval_eq_false_iff]
     rw [eval_mkInitCarryAssignCircuit_eq_false_iff]
     intros hpre
     apply h
-
+    apply hpre
 /--
 The induction hypothesis circuit that checks that if
 the output is zero for all `i ≤ n`, then the output is zero at `i=n+1`.
