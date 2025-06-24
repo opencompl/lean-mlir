@@ -111,7 +111,7 @@ def compare(benchmark : str, jobs: int) :
                     file_title = os.path.splitext(file)[0]
                     log_file_path = os.path.join(RESULTS_DIR_INSTCOMBINE, f'{file_title}.txt')
                     future = executor.submit(run_file, "instcombine", file_path, log_file_path)
-                    futures[future] = file
+                    futures[future] = file_path
 
         else : 
             raise Exception("Unknown benchmark.") 
