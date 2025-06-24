@@ -99,7 +99,7 @@ def compare(benchmark : str, jobs: int) :
                     log_file_name = f'{original_file_base}_{str(width)}.txt'
                     log_file_path = os.path.join(RESULTS_DIR_HACKERSDELIGHT, log_file_name)
                     future = executor.submit(run_file, "hackersdelight", temp_file_path, log_file_path)
-                    futures[future] = temp_filename # Store the name of the temporary file for progress reporting
+                    futures[future] = temp_file_path # Store the name of the temporary file for progress reporting
 
         elif benchmark == "instcombine":
             clear_folder(RESULTS_DIR_INSTCOMBINE)
