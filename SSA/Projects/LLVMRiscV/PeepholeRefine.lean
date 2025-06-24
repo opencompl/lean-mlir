@@ -1,4 +1,6 @@
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
+import SSA.Projects.RISCV64.Tactic.SimpRiscV
+import SSA.Projects.LLVMRiscV.Pipeline.tactics.SimpLowering
 
 open LLVMRiscV
 /-!
@@ -23,12 +25,19 @@ instance : Refinement (BitVec w) := .ofEq
 /-- `LLVMPeepholeRewriteRefine` defines the `PeepholeRewrite`
 structure for LLVM `Com`s. The refinement is based on the
 dedicated refinement relation for the `PoisonOr` type, where
-a poison value can be refined by any concrete value. -/
+a poison value can be refined by any concrete value.
+The structure contains a default tactic sequences to prove the correctness
+claim. Hence, when the structure is used, the proof for the `correct` is field
+is per default tried to resolved by the tactic sequence provided below. If this fails, Lean will
+throw an corresponding error message to indicate failure. Important for the unfold to succedd and to
+avoid manual unfolding the implementor of the rewrite must tag the lhs and rhs of the
+as simp_denote such that the unfolding is performed by simp_peephole. -/
 structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : Ctxt Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
   correct : ∀ V,
-    PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V)
+    PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V) := by
+      simp_lowering <;> bv_decide
 
 /-!
 ##  Wrapper for the Peephole Rewriter

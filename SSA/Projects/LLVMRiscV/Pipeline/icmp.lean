@@ -7,7 +7,7 @@ open LLVMRiscV
 
 /- ! This file implements the lowering for the llvm compare instructions.
 Currently all flags except for eq ad neq are supported.-/
-
+@[simp_denote]
 def icmp_ugt_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -17,6 +17,7 @@ def icmp_ugt_riscv_i64 := [LV| {
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_ugt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1))  := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -29,16 +30,16 @@ def icmp_ugt_riscv_eq_icmp_ugt_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
    correct := by
     unfold icmp_ugt_llvm_i64 icmp_ugt_riscv_i64
     simp_peephole
-    simp_riscv
     simp_alive_undef
+    simp_riscv
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
     all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq]
     bv_decide
   }
 
+@[simp_denote]
 def icmp_ugt_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -48,6 +49,7 @@ def icmp_ugt_riscv_i32 := [LV| {
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_ugt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1))  := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -56,23 +58,9 @@ def icmp_ugt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
   }]
 
 def icmp_ugt_riscv_eq_icmp_ugt_llvm : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_ugt_llvm_i32, rhs:= icmp_ugt_riscv_i32,
-   correct := by
-    unfold icmp_ugt_llvm_i32 icmp_ugt_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    intro x x'
-    simp only [PoisonOr.toOption_getSome, BitVec.truncate_eq_setWidth, Nat.one_le_ofNat,
-      BitVec.setWidth_setWidth_of_le, BitVec.setWidth_eq, InstCombine.bv_isRefinedBy_iff,
-      BitVec.ofBool_eq_iff_eq]
-    have hx := BitVec.isLt x
-    have hx' := BitVec.isLt x'
-    bv_decide
-  }
+  {lhs:= icmp_ugt_llvm_i32, rhs:= icmp_ugt_riscv_i32}
 
+@[simp_denote]
 def icmp_uge_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -80,6 +68,7 @@ def icmp_uge_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_uge_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -91,21 +80,9 @@ def icmp_uge_riscv_i64 := [LV| {
   }]
 
 def icmp_uge_riscv_eq_icmp_uge_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_uge_llvm_i64, rhs:= icmp_uge_riscv_i64,
-   correct := by
-    unfold icmp_uge_llvm_i64 icmp_uge_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.reduceSignExtend,
-      BitVec.xor_eq, BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_uge_llvm_i64, rhs:= icmp_uge_riscv_i64}
 
+@[simp_denote]
 def icmp_uge_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -113,6 +90,7 @@ def icmp_uge_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_uge_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -124,21 +102,9 @@ def icmp_uge_riscv_i32 := [LV| {
   }]
 
 def icmp_uge_riscv_eq_icmp_uge_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_uge_llvm_i32, rhs:= icmp_uge_riscv_i32,
-   correct := by
-    unfold icmp_uge_llvm_i32 icmp_uge_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.reduceSignExtend, BitVec.xor_eq,
-      BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_uge_llvm_i32, rhs:= icmp_uge_riscv_i32 }
 
+@[simp_denote]
 def icmp_ult_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -146,6 +112,7 @@ def icmp_ult_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_ult_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -156,20 +123,9 @@ def icmp_ult_riscv_i64 := [LV| {
   }]
 
 def icmp_ult_riscv_eq_icmp_ult_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_ult_llvm_i64, rhs:= icmp_ult_riscv_i64,
-   correct := by
-    unfold icmp_ult_llvm_i64 icmp_ult_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq]
-    bv_decide
-  }
+  {lhs:= icmp_ult_llvm_i64, rhs:= icmp_ult_riscv_i64}
 
+@[simp_denote]
 def icmp_ult_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -177,6 +133,7 @@ def icmp_ult_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_ult_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32 ):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -187,20 +144,9 @@ def icmp_ult_riscv_i32 := [LV| {
   }]
 
 def icmp_ult_riscv_eq_icmp_ult_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_ult_llvm_i32, rhs:= icmp_ult_riscv_i32,
-   correct := by
-    unfold icmp_ult_llvm_i32 icmp_ult_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome]
-    bv_decide
-  }
+  {lhs:= icmp_ult_llvm_i32, rhs:= icmp_ult_riscv_i32}
 
+@[simp_denote]
 def icmp_ule_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -208,6 +154,7 @@ def icmp_ule_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_ule_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -219,21 +166,9 @@ def icmp_ule_riscv_i64 := [LV| {
   }]
 
 def icmp_ule_riscv_eq_icmp_ule_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_ule_llvm_i64, rhs:= icmp_ule_riscv_i64,
-   correct := by
-    unfold icmp_ule_llvm_i64 icmp_ule_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.reduceSignExtend,
-      BitVec.xor_eq, BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_ule_llvm_i64, rhs:= icmp_ule_riscv_i64}
 
+@[simp_denote]
 def icmp_ule_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -241,6 +176,7 @@ def icmp_ule_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_ule_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -252,21 +188,9 @@ def icmp_ule_riscv_i32 := [LV| {
   }]
 
 def icmp_ule_riscv_eq_icmp_ule_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_ule_llvm_i32, rhs:= icmp_ule_riscv_i32,
-   correct := by
-    unfold icmp_ule_llvm_i32 icmp_ule_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.reduceSignExtend, BitVec.xor_eq,
-      BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_ule_llvm_i32, rhs:= icmp_ule_riscv_i32}
 
+@[simp_denote]
 def icmp_sgt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -274,6 +198,7 @@ def icmp_sgt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_sgt_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -284,20 +209,9 @@ def icmp_sgt_riscv_i64 := [LV| {
   }]
 
 def icmp_sgt_riscv_eq_icmp_sht_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_sgt_llvm_i64, rhs:= icmp_sgt_riscv_i64,
-   correct := by
-    unfold icmp_sgt_llvm_i64 icmp_sgt_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq]
-    bv_decide
-  }
+  {lhs:= icmp_sgt_llvm_i64, rhs:= icmp_sgt_riscv_i64}
 
+@[simp_denote]
 def icmp_sgt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -305,6 +219,7 @@ def icmp_sgt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_sgt_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -315,20 +230,9 @@ def icmp_sgt_riscv_i32 := [LV| {
   }]
 
 def icmp_sgt_riscv_eq_icmp_sgt_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_sgt_llvm_i32, rhs:= icmp_sgt_riscv_i32,
-   correct := by
-    unfold icmp_sgt_llvm_i32 icmp_sgt_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome]
-    bv_decide
-  }
+  {lhs:= icmp_sgt_llvm_i32, rhs:= icmp_sgt_riscv_i32}
 
+@[simp_denote]
 def icmp_sge_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -336,6 +240,7 @@ def icmp_sge_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_sge_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -347,21 +252,9 @@ def icmp_sge_riscv_i64 := [LV| {
   }]
 
 def icmp_sge_riscv_eq_icmp_sgt_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_sge_llvm_i64, rhs:= icmp_sge_riscv_i64,
-   correct := by
-    unfold icmp_sge_llvm_i64 icmp_sge_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.reduceSignExtend,
-      BitVec.xor_eq, BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_sge_llvm_i64, rhs:= icmp_sge_riscv_i64}
 
+@[simp_denote]
 def icmp_sge_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -369,6 +262,7 @@ def icmp_sge_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_sge_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -380,21 +274,9 @@ def icmp_sge_riscv_i32 := [LV| {
   }]
 
 def icmp_sge_riscv_eq_icmp_sgt_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_sge_llvm_i32, rhs:= icmp_sge_riscv_i32,
-   correct := by
-    unfold icmp_sge_llvm_i32 icmp_sge_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.reduceSignExtend, BitVec.xor_eq,
-      BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_sge_llvm_i32, rhs:= icmp_sge_riscv_i32}
 
+@[simp_denote]
 def icmp_slt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -402,6 +284,7 @@ def icmp_slt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_slt_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -412,20 +295,9 @@ def icmp_slt_riscv_i64 := [LV| {
   }]
 
 def icmp_slt_riscv_eq_icmp_slt_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_slt_llvm_i64, rhs:= icmp_slt_riscv_i64,
-   correct := by
-    unfold icmp_slt_llvm_i64 icmp_slt_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq]
-    bv_decide
-  }
+  {lhs:= icmp_slt_llvm_i64, rhs:= icmp_slt_riscv_i64}
 
+@[simp_denote]
 def icmp_slt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -433,6 +305,7 @@ def icmp_slt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_slt_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -443,20 +316,9 @@ def icmp_slt_riscv_i32 := [LV| {
   }]
 
 def icmp_slt_riscv_eq_icmp_slt_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_slt_llvm_i32, rhs:= icmp_slt_riscv_i32,
-   correct := by
-    unfold icmp_slt_llvm_i32 icmp_slt_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome]
-    bv_decide
-  }
+  {lhs:= icmp_slt_llvm_i32, rhs:= icmp_slt_riscv_i32}
 
+@[simp_denote]
 def icmp_sle_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
@@ -464,6 +326,7 @@ def icmp_sle_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_sle_riscv_i64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
@@ -475,21 +338,9 @@ def icmp_sle_riscv_i64 := [LV| {
   }]
 
 def icmp_sle_riscv_eq_icmp_sle_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs:= icmp_sle_llvm_i64, rhs:= icmp_sle_riscv_i64,
-   correct := by
-    unfold icmp_sle_llvm_i64 icmp_sle_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.reduceSignExtend,
-      BitVec.xor_eq, BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_sle_llvm_i64, rhs:= icmp_sle_riscv_i64}
 
+@[simp_denote]
 def icmp_sle_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
@@ -497,6 +348,7 @@ def icmp_sle_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32
     llvm.return %1 : i1
   }]
 
+@[simp_denote]
 def icmp_sle_riscv_i32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
@@ -508,20 +360,7 @@ def icmp_sle_riscv_i32 := [LV| {
   }]
 
 def icmp_sle_riscv_eq_icmp_sle_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs:= icmp_sle_llvm_i32, rhs:= icmp_sle_riscv_i32,
-   correct := by
-    unfold icmp_sle_llvm_i32 icmp_sle_riscv_i32
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    simp only [PoisonOr.toOption_getSome, BitVec.reduceSignExtend, BitVec.xor_eq,
-      BitVec.signExtend_xor]
-    bv_decide
-  }
+  {lhs:= icmp_sle_llvm_i32, rhs:= icmp_sle_riscv_i32}
 
 def icmp_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
