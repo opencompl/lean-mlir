@@ -1270,7 +1270,7 @@ structure KInductionCircuits.IsLawful {arity : Type _}
     ∀ {env : Vars fsm.α arity (n + 1) → Bool},
       (circs.cStatesUniqueCirc.eval env = false)
       ↔ (∀ (i j : Nat) (hij : i < j ∧ j ≤ n + 1),
-        ∃ (s : fsm.α), env (Vars.stateN s i) ≠ env (Vars.stateN s (n + 1)))
+        ∃ (s : fsm.α), env (Vars.stateN s i) ≠ env (Vars.stateN s j))
 
 namespace KInductionCircuits
 
@@ -1312,17 +1312,6 @@ theorem IsLawful_mkZero {arity : Type _}
     intro env
     simp only [mkZero]
     simp only [mkAllPairsUniqueStatesCircuit_eq_false_iff]
-    constructor
-    · intros h i j hij
-      specialize h i j hij
-      have : j = 1 := by omega
-      subst this
-      simp [h]
-    · intros h i j hij
-      specialize h i j hij
-      have : j = 1 := by omega
-      subst this
-      simp [h]
 
 -- NOTE [Circuit Equivalence As a quotient]:
 -- We ideally should have a notion of `Circuit.equiv`, which says that
@@ -1417,7 +1406,14 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
     intros env
     constructor
     · intros h i j hij
-      sorry
+      simp [mkStateUniqueCircuitN_eq_false_iff] at h
+      simp [hPrev.hCStatesUniqueCirc] at h
+      obtain ⟨h₁, h₂⟩ := h
+      by_cases hj : j ≤ n + 1
+      · apply h₂ i j (by omega)
+      · have : j = n + 2 := by omega
+        subst this
+        apply h₁ i (by omega)
     · intros h
       constructor
       · rw [mkStateUniqueCircuitN_eq_false_iff]
@@ -1426,7 +1422,7 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
       · simp [hPrev.hCStatesUniqueCirc]
         intros i j hij
         simp at h ⊢
-        sorry
+        apply h i j (by omega)
 /--
 The precondition that assigns all
 `s[n+1] = carry(s[n], i[n])` and assigns all `o[n+1] = out(s[n], i[n])`.
