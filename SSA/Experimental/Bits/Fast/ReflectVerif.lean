@@ -1391,11 +1391,42 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
 
   hCOutAssignCirc := by
     simp only [mkSucc, castCircLe, Circuit.eval_map]
-    sorry
+    simp [Circuit.eval_map]
+    intros env
+    constructor
+    · intros h i hi
+      obtain ⟨h₁, h₂⟩ := h
+      rw [hPrev.hCOutAssignCirc] at h₂
+      by_cases hi : i < n + 2
+      · simp at h₁ h₂ ⊢
+        rw [h₂ i hi]
+      · have : i = n + 2 := by omega
+        subst this
+        apply h₁
+    · intros h
+      constructor
+      · simp only at h ⊢
+        rw [h]
+      · rw [hPrev.hCOutAssignCirc]
+        intros i hi
+        simp
+        apply h
   hCStatesUniqueCirc := by
     simp only [mkSucc, castCircLe, Circuit.eval_map]
-    sorry
-
+    simp [Circuit.eval_map]
+    intros env
+    constructor
+    · intros h i j hij
+      sorry
+    · intros h
+      constructor
+      · rw [mkStateUniqueCircuitN_eq_false_iff]
+        intros i hi
+        apply h (j := n + 2) (hij := by omega)
+      · simp [hPrev.hCStatesUniqueCirc]
+        intros i j hij
+        simp at h ⊢
+        sorry
 /--
 The precondition that assigns all
 `s[n+1] = carry(s[n], i[n])` and assigns all `o[n+1] = out(s[n], i[n])`.
