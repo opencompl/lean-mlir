@@ -263,10 +263,14 @@ shell_command_mismatch = False
 # This function sets the global `shell_command_mismatch` to True if the output
 # does not match the expected value.
 def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_val : int) -> int:
+    global shell_command_mismatch
+
     response = subprocess.check_output(cmd, shell=True, cwd=cwd, text=True)
     val = int(response)
     failed =  val != expected_val
     failed_str = "FAIL" if failed else "SUCCESS"
+    if failed:
+        shell_command_mismatch = True
     print(f"ran {cmd}, expected {expected_val}, found {val}, {failed_str}")
 
 run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
