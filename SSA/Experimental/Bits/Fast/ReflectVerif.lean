@@ -1928,26 +1928,59 @@ Find the occurrence of a state 's' in the simple path.
 -/
 noncomputable def SimplePathOfPath.findState?
   (_this : SimplePathOfPath fsm s0 n inputs)
-  (s : fsm.α → Bool) : Option { k : Nat // k ≤ n ∧ fsm.carryWith s0 inputs k = s } :=
+  (s : fsm.α → Bool) :
+    { k? : Option Nat // ∀ (k : Nat), k? = some k ↔ k ≤ n ∧ fsm.carryWith s0 inputs k = s ∧ ∀ l < k, fsm.carryWith s0 inputs l ≠ s } :=
   let states :=
     (List.range (n + 1)).map fun i =>
       fsm.carryWith s0 inputs i
   let out := states.findIdx? (fun t => t = s)
   match hout : out with
   | none =>
-    none
+    ⟨none, by
+      simp only [reduceCtorEq, ne_eq, false_iff, not_and, not_forall, Classical.not_imp,
+        Decidable.not_not]
+      subst out
+      have := List.findIdx?_eq_none_iff |>.mp hout
+      subst states
+      simp only [List.mem_map, List.mem_range, decide_eq_false_iff_not, forall_exists_index,
+        and_imp, forall_apply_eq_imp_iff₂] at this
+      intros k hk
+      intros hcontra
+      specialize this k (by omega)
+      contradiction
+    ⟩
   | some idx =>
-    some ⟨idx, by
+    ⟨some idx, by
       have := List.findIdx?_eq_some_iff_findIdx_eq .. |>.mp hout
       obtain ⟨h₁, h₂⟩ := this
+      intros k
+      simp only [Option.some.injEq, ne_eq]
       constructor
-      · simp [states, out] at *
-        omega
-      · have := List.findIdx_eq h₁ |>.mp h₂
-        simp at this
-        obtain ⟨hidx, hfirst⟩ := this
-        simp [states] at hidx
-        exact hidx
+      · intros hk
+        subst hk
+        constructor
+        · simp only [List.findIdx?_map, List.length_map, List.length_range, out, states] at *
+          omega
+        · have := List.findIdx_eq h₁ |>.mp h₂
+          simp at this
+          obtain ⟨hidx, hfirst⟩ := this
+          simp only [List.getElem_map, List.getElem_range, states] at hidx
+          constructor
+          · simp only [hidx]
+          · intros l hl
+            simp only [List.getElem_map, List.getElem_range, states] at hfirst
+            apply hfirst
+            omega
+      . intros hk
+        obtain ⟨hkLt, hk, hneq⟩ := hk
+        rw [← h₂]
+        have hkLt₂ : k < states.length := by
+          simp only [List.length_map, List.length_range, states]
+          omega
+        apply (List.findIdx_eq hkLt₂ |>.mpr)
+        simp only [List.getElem_map, List.getElem_range, hk, decide_true, decide_eq_false_iff_not,
+          true_and, states]
+        apply hneq
     ⟩
 
 
