@@ -1,0 +1,10 @@
+name: Garbage collect elan toolchains
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Run weekly, at 09:00 on Monday
+
+jobs:
+  elan-gc:
+    runs-on: self-hosted
+    steps:
+      - run: elan toolchain gc --delete
