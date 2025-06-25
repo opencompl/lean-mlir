@@ -3,7 +3,6 @@
 # Check that the dependencies of all bv-evaluation python scripts are installed
 # 
 
-shopt x
 cd $(dirname "$(realpath "$0")")
 
 FILE=$(mktemp)
