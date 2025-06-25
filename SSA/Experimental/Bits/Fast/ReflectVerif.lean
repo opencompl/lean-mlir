@@ -1572,24 +1572,47 @@ theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁
       apply h₁ s k (by omega)
 
 
-/--
-if the 'mkSuccCarryAndOutsAssignPrecond'` evaluates to false,
-then we have assigned all `s[i+1] = carry(s[i], i[i])`
-and all `o[i] = out(s[i], i[i])` for all `i ≤ n + 1`.
-This is the precondition that we use to prove the induction step.
--/
-theorem eval_mkSuccCarryAndOutAssignPrecond_thm
+@[simp]
+theorem mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBoolStart_of_envBitstream
   {circs : KInductionCircuits fsm n}
   (hCircs : circs.IsLawful)
   (env : Vars fsm.α arity (n + 2) → Bool)
-  (envBitstream : _)
-  (hcirc : (mkSuccCarryAndOutsAssignPrecond circs).eval env = false) :
-  (∀ (s : fsm.α) (i : Nat) (hi : i < n + 2),
-    env (Vars.stateN s (i + 1)) = fsm.carryWith (fun s => env (Vars.state0 s)) envBitstream (i + 1) s) ∧
-  (∀ (i : Nat) (hi : i < n + 2),
-    env (Vars.outputs ⟨i, by omega⟩) =
-      fsm.evalWith (fun s => env (Vars.state0 s)) envBitstream (i + 1)) := by
-  sorry
+  (hEnv : env = envBoolStart_of_envBitstream fsm envBitstream (n + 1)) :
+  (mkSuccCarryAndOutsAssignPrecond circs).eval env = false := by
+  rw [eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁ hCircs env]
+  subst hEnv
+  simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state]
+  constructor
+  · intros s i hi
+    simp [Vars.stateN]
+    simp [Circuit.eval_map]
+    simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state,
+      Vars.stateN, Vars.inputN]
+    simp [FSM.carry, FSM.nextBit]
+    congr
+    ext x
+    rcases x with x | x
+    · simp
+    · simp
+  · intros i hi
+    simp [FSM.eval, FSM.nextBit]
+    congr
+    ext x
+    rcases x with x | x
+    · simp [Vars.stateN]
+    · simp [Vars.inputN]
+
+@[simp]
+theorem mkSuccCarryAndOutsAssignPrecond_eval_envBoolStart_of_envBitstream_eq_false
+  {circs : KInductionCircuits fsm n}
+  (hCircs : circs.IsLawful)
+  (envBitstream : _ ) :
+  (mkSuccCarryAndOutsAssignPrecond circs).eval
+    (envBoolStart_of_envBitstream fsm envBitstream (n + 1)) = false := by
+  apply mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBoolStart_of_envBitstream <;>
+    solve
+    | assumption
+    | rfl
 
 /--
 The safety circuit that checks that if `s[0]` is assigned to init carry,
@@ -1697,15 +1720,29 @@ theorem mkSafetyCircuit_eval_eq_false_iff₁
     · apply hCircs
 
 /--
-Safe upto n steps.
+Safe upto n steps, given that `mkSafetyCircuit.eval env = false` for all `env`.
 -/
 theorem mkSafetyCircuit_eval_eq_false_thm
     {circs : KInductionCircuits fsm n}
     (hCircs : circs.IsLawful)
     (h : ∀ (env : _), (mkSafetyCircuit circs).eval env = false) :
-    (∀ (envBitstream : _) (i : Nat), i < n → fsm.eval envBitstream i = false) := by
+    (∀ (envBitstream : _) (i : Nat), i < n + 1 → fsm.eval envBitstream i = false) := by
   intros envBitstream i hi
-  let env := envBoolEmpty_of_envBitstream
+  let env := envBoolStart_of_envBitstream fsm envBitstream (n + 1)
+  specialize h env
+  rw [mkSafetyCircuit_eval_eq_false_iff₁ hCircs env] at h
+  subst env
+  have := mkSuccCarryAndOutsAssignPrecond_eval_envBoolStart_of_envBitstream_eq_false
+    hCircs envBitstream
+  specialize h this
+  clear this
+  simp at h
+  specialize h ?precond
+  · intros s
+    simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state, Vars.stateN]
+  · simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state, Vars.outputs] at h
+    apply h
+    · omega
 
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
@@ -1751,6 +1788,20 @@ theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
       (circs.cStatesUniqueCirc.eval (fun x => env (x.castLe (by omega))) = false) →
       (mkPostcondIndHypNoCycleBreaking circs).eval env = false) := by
   simp [mkIndHypCycleBreaking, mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map]
+
+
+/--
+Show what the cycle breaking induction hypothesis circuit does.
+-/
+theorem  mkIndHypCycleBreaking_eval_eq_false_thm
+  {circs : KInductionCircuits fsm n}
+  (hcircs : circs.IsLawful)
+  (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+  (∀ (envBitstream : _), (∀ (i : Nat) (j : Nat), i < j ∧ j ≤ n + 1 →
+      (fsm.eval envBitstream i) ≠ (fsm.eval envBitstream j)) →
+      (∀ (k : Nat), k < n + 1 → fsm.eval envBitstream k = false) →
+      (fsm.eval envBitstream (n + 1) = false)) := by
+  sorry
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
