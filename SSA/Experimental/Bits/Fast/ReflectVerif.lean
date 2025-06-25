@@ -1792,6 +1792,7 @@ theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
 
 /--
 Show what the cycle breaking induction hypothesis circuit does.
+
 -/
 theorem  mkIndHypCycleBreaking_eval_eq_false_thm
   {circs : KInductionCircuits fsm n}
@@ -1801,7 +1802,24 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
       (fsm.eval envBitstream i) ≠ (fsm.eval envBitstream j)) →
       (∀ (k : Nat), k < n + 1 → fsm.eval envBitstream k = false) →
       (fsm.eval envBitstream (n + 1) = false)) := by
-  sorry
+  simp [mkIndHypCycleBreaking_eval_eq_false_iff₁] at h
+  intros envBitstream huniq hind
+  let env := envBoolStart_of_envBitstream fsm envBitstream (n + 1)
+  specialize h env
+  specialize h ?precond ?huniq
+  · apply mkSuccCarryAndOutsAssignPrecond_eval_envBoolStart_of_envBitstream_eq_false
+      hcircs envBitstream
+  · rw [hcircs.hCStatesUniqueCirc]
+    intros i j hij
+    specialize huniq i j hij
+    -- show that `(Vars.stateN s i)` equals `fsm.eval ...`
+    sorry
+    -- specialize huniq i j hij
+  · rw [mkPostcondIndHypNoCycleBreaking_eq_false_iff] at h
+    simp [env, envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state] at h
+    apply h
+    apply hind
+    exact hcircs
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
