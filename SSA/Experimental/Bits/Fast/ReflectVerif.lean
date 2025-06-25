@@ -6,6 +6,9 @@ into lean bitvectors.
 We use `bv_circuit_nnf` to convert the expression into negation normal form.
 
 Authors: Siddharth Bhat
+
+https://raw.githubusercontent.com/opencompl/lean-mlir/3e0ff379b5e92427747f8dc84c6f77609bda7e67/SSA/Experimental/Bits/Fast/ReflectVerif.lean
+
 -/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
@@ -1836,6 +1839,78 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
     apply h
     apply hind
     exact hcircs
+
+
+/--
+the states in `fsm` starting from state `s0`, with inputs `inputs` is all unique.
+-/
+def StatesUniqueLe (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) : Prop :=
+  ∀ (i j : Nat), i < j ∧ j ≤ n → (fsm.carryWith s0 inputs i) ≠ (fsm.carryWith s0 inputs j)
+
+def SafeOnPathLe (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) : Prop :=
+  ∀ (i : Nat), i ≤ n → fsm.evalWith s0 inputs i = false
+
+
+/--
+Establish safety on all simple paths.
+-/
+theorem SafeOnPathLe_of_StatesUniqueLe_of_Safety_of_HInd
+    (fsm : FSM arity) (n : Nat)
+    (hsafety : ∀ (inputs : _),
+      StatesUniqueLe fsm fsm.initCarry n inputs → SafeOnPathLe fsm fsm.initCarry n inputs)
+    (hind : ∀ (s0 : _) (inputs : _) (n : _),
+       StatesUniqueLe fsm s0 n inputs →
+       SafeOnPathLe fsm s0 n inputs →
+       SafeOnPathLe fsm s0 (n + 1) inputs) :
+  ∀ (inputs : _) (n : Nat),
+    StatesUniqueLe fsm fsm.initCarry n inputs →
+    SafeOnPathLe fsm fsm.initCarry n inputs := by
+  intros inputs n hUnique
+
+
+/-- induction principle with a uniform bound 'bound' in place. -/
+@[elab_as_elim]
+theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
+  (hBase : ∀ i ≤ bound, motive i)
+  (hInd : ∀ (i : Nat),
+    bound < i →
+    ((∀ (k : Nat), k < bound → motive (i - k - 1)) → motive i)) :
+  ∀ k, motive k := by
+  intros k
+  induction k using Nat.strong_induction_on
+  case h k ihk =>
+    by_cases hK : k ≤ bound
+    · apply hBase
+      omega
+    · have : ∃ δ, k = δ + (bound) := by exists (k - (bound)); omega
+      obtain ⟨δ, hδ⟩ := this
+      subst hδ
+      apply hInd
+      omega
+      intros ε  hε
+      apply ihk
+      omega
+
+/--
+Safety on simple paths implies safety on all paths.
+-/
+theorem SafeOnPathLe_of_StatesUniqueLe_of_SafeOnPathLe (fsm : FSM arity)
+    (h : ∀ (inputs : _) (n : Nat),
+      StatesUniqueLe fsm fsm.initCarry n inputs →
+      SafeOnPathLe fsm fsm.initCarry n inputs) :
+  ∀ (inputs : _), SafeOnPathLe fsm fsm.initCarry n inputs := by
+  intros inputs
+  apply h
+  sorry
+
+theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+    {circs : KInductionCircuits fsm n}
+    (hCircs : circs.IsLawful)
+    (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
+    (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+    (∀ (envBitstream : _), fsm.eval envBitstream i = false) := by
+  intros envBitstream
+  sorry
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
