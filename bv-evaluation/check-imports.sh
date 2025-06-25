@@ -3,7 +3,7 @@
 # Check that the dependencies of all bv-evaluation python scripts are installed
 # 
 
-shopt -x
+shopt x
 cd $(dirname "$(realpath "$0")")
 
 FILE=$(mktemp)
@@ -13,4 +13,10 @@ rm "$FILE"          # Unlink tmpfile
 #       the tmpfile gets automatically cleaned up when the script exits
 
 cat *.py | rg '^import' | sed -E 's/\s*(as \w+)?\s*$//' | sort -u | tee /proc/self/fd/3
-python3 /proc/self/fd/3
+
+python3 /proc/self/fd/3 || (
+    echo
+    echo "To fix, please add the missing dependency to shell.nix"
+    echo
+    exit 1
+)
