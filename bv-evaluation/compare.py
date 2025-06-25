@@ -24,7 +24,7 @@ BENCHMARK_DIR_INSTCOMBINE = ROOT_DIR + "/SSA/Projects/InstCombine/tests/proofs/"
 
 TIMEOUT = 1800
 
-REPS = 2
+REPS = 1
 
 def clear_folder(results_dir):
     """Clears all files and subdirectories within the given directory."""

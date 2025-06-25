@@ -11,7 +11,7 @@ res_dir = "results/InstCombine/"
 raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
 
-reps = 2
+reps = 1
 
 
 
