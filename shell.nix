@@ -16,6 +16,7 @@ mkShell {
     pkgs.llvmPackages_19.mlir
     pkgs.llvmPackages_19.bintools-unwrapped
     pkgs.bitwuzla
+    pkgs.ripgrep
   ];
 shellHook = ''
 # lake exe cache get!
