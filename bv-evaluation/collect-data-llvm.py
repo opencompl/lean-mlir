@@ -11,7 +11,7 @@ res_dir = "results/InstCombine/"
 raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
 
-reps = 1
+reps = 2
 
 
 
@@ -75,7 +75,7 @@ for file in os.listdir(benchmark_dir):
         # collect the numbers for all repetitions
 
         for r in range(reps):
-            res_file = open(res_dir+file.split(".")[0]+".txt")
+            res_file = open(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
             l = res_file.readline()
             thm = 0
             while l:

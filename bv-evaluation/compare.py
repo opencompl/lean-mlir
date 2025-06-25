@@ -24,6 +24,7 @@ BENCHMARK_DIR_INSTCOMBINE = ROOT_DIR + "/SSA/Projects/InstCombine/tests/proofs/"
 
 TIMEOUT = 1800
 
+REPS = 2
 
 def clear_folder(results_dir):
     """Clears all files and subdirectories within the given directory."""
@@ -115,17 +116,19 @@ def compare(benchmark: str, jobs: int):
                     with open(temp_file_path, "w", encoding="utf-8") as temp_file:
                         temp_file.write(modified_content)
 
-                    # Submit the temporary file to be run.
-                    # log_file_base_name will be 'original_file_base'
-                    # specific_arg_for_log_name will be the 'width'
-                    log_file_name = f"{original_file_base}_{str(width)}.txt"
-                    log_file_path = os.path.join(
-                        RESULTS_DIR_HACKERSDELIGHT, log_file_name
-                    )
-                    future = executor.submit(run_hdel, temp_file_path, log_file_path)
-                    futures[future] = (
-                        temp_file_path  # Store the name of the temporary file for progress reporting
-                    )
+                    for r in range(REPS): 
+
+                        # Submit the temporary file to be run.
+                        # log_file_base_name will be 'original_file_base'
+                        # specific_arg_for_log_name will be the 'width'
+                        log_file_name = f"{original_file_base}_{str(width)}_r{str(r)}.txt"
+                        log_file_path = os.path.join(
+                            RESULTS_DIR_HACKERSDELIGHT, log_file_name
+                        )
+                        future = executor.submit(run_hdel, temp_file_path, log_file_path)
+                        futures[future] = (
+                            temp_file_path  # Store the name of the temporary file for progress reporting
+                        )
 
         elif benchmark == "instcombine":
             clear_folder(RESULTS_DIR_INSTCOMBINE)
@@ -135,15 +138,16 @@ def compare(benchmark: str, jobs: int):
                 if "_proof" in file and file.endswith(
                     ".lean"
                 ):  # Ensure it's a Lean file
-                    file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
-                    file_title = os.path.splitext(file)[0]
-                    log_file_path = os.path.join(
-                        RESULTS_DIR_INSTCOMBINE, f"{file_title}.txt"
-                    )
-                    future = executor.submit(
-                        run_file, "instcombine", file_path, log_file_path
-                    )
-                    futures[future] = file_path
+                    for r in range(REPS): 
+                        file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
+                        file_title = os.path.splitext(file)[0]
+                        log_file_path = os.path.join(
+                            RESULTS_DIR_INSTCOMBINE, f"{file_title}_r{str(r)}.txt"
+                        )
+                        future = executor.submit(
+                            run_file, "instcombine", file_path, log_file_path
+                        )
+                        futures[future] = file_path
 
         else:
             raise Exception("Unknown benchmark.")
