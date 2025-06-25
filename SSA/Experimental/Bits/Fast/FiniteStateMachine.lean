@@ -408,7 +408,7 @@ theorem eval_eq_outputWith_carryWith (p : FSM arity) :
 while changing the environment 'x'.
 most detailed decomposition of an FSM available.
 -/
-theorem outputWith_carryWith_eq_eval (p : FSM arity)
+theorem outputWith_carryWith_eq_evalWith (p : FSM arity)
   (xs ys : arity → BitStream) (xN : arity → Bool)
   (hysLt : ∀ a i, i < n → ys a i = xs a i)
   (hysN : ∀ a, ys a n = xN a) :
