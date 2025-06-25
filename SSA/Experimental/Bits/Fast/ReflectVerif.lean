@@ -1861,7 +1861,7 @@ theorem SafeOnPathLe_of_StatesUniqueLe_of_Safety_of_HInd
     (hind : ∀ (s0 : _) (inputs : _) (n : _),
        StatesUniqueLe fsm s0 n inputs →
        SafeOnPathLe fsm s0 n inputs →
-       SafeOnPathLe fsm s0 (n + 1) inputs) :
+       fsm.evalWith s0 inputs n = false) :
   ∀ (inputs : _) (n : Nat),
     StatesUniqueLe fsm fsm.initCarry n inputs →
     SafeOnPathLe fsm fsm.initCarry n inputs := by
@@ -1891,6 +1891,27 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
       apply ihk
       omega
 
+
+/--
+Make a simple path corresponding to inputs[:n],
+such that carryWith fsm s0 inputs n = carryWith fsm s0 out.inputs out.k,
+where `k ≤ n`, and moreover, `out.inputs` is a simple path.
+-/
+structure SimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) where
+  simplePath : arity → BitStream
+  k : Nat
+  hk :  fsm.carryWith s0 inputs n = fsm.carryWith s0 simplePath k
+  hStatesUniqueLe : StatesUniqueLe fsm s0 k simplePath
+
+/--
+There always exists a simple path of length `n`.
+-/
+def mkSimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream)
+    (hUnique : StatesUniqueLe fsm s0 n inputs) :
+    SimplePathOfPath fsm s0 n inputs := by
+  sorry
+
+  -- fsm.carryWith fsm.initCarry inputs n =
 /--
 Safety on simple paths implies safety on all paths.
 -/
@@ -1898,9 +1919,9 @@ theorem SafeOnPathLe_of_StatesUniqueLe_of_SafeOnPathLe (fsm : FSM arity)
     (h : ∀ (inputs : _) (n : Nat),
       StatesUniqueLe fsm fsm.initCarry n inputs →
       SafeOnPathLe fsm fsm.initCarry n inputs) :
-  ∀ (inputs : _), SafeOnPathLe fsm fsm.initCarry n inputs := by
+  ∀ (inputs : _), fsm.evalWith fsm.initCarry n inputs = false := by
   intros inputs
-  apply h
+
   sorry
 
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
