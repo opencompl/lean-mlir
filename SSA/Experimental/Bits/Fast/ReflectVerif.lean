@@ -590,6 +590,14 @@ theorem Vars.castLe_stateN_eq_stateN  {n i m : Nat} (hi : i ≤ n) (hnm : n ≤ 
   rfl
 
 @[simp]
+theorem Vars.castLe_state_Inputs_mk_eq_state_castLe_Inputs_mk {n m : Nat}
+    (hnm : n ≤ m) {s : σ} {i : Fin (n + 1)} :
+    (Vars.state (Inputs.mk i s) : Vars σ ι n).castLe hnm =
+    (Vars.state (Inputs.mk (i.castLE (by omega)) s) : Vars σ ι m) := by
+  simp [Vars.castLe, Vars.state]
+
+
+@[simp]
 theorem Vars.castLe_inputs_eq_inputs {n i m : Nat} (hi : i < n) (hnm : n ≤ m) :
   (Vars.inputN inp i hi : Vars σ ι n).castLe hnm =
   Vars.inputN inp i (by omega) := by
@@ -1790,6 +1798,8 @@ theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
   simp [mkIndHypCycleBreaking, mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map]
 
 
+theorem foo (f g : α → β) (h : f ≠ g) : ∃ (a : α ), f a ≠ g a := by
+  apply?
 /--
 Show what the cycle breaking induction hypothesis circuit does.
 
@@ -1799,7 +1809,7 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
   (hcircs : circs.IsLawful)
   (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
   (∀ (envBitstream : _), (∀ (i : Nat) (j : Nat), i < j ∧ j ≤ n + 1 →
-      (fsm.eval envBitstream i) ≠ (fsm.eval envBitstream j)) →
+      (fsm.carry envBitstream i) ≠ (fsm.carry envBitstream j)) →
       (∀ (k : Nat), k < n + 1 → fsm.eval envBitstream k = false) →
       (fsm.eval envBitstream (n + 1) = false)) := by
   simp [mkIndHypCycleBreaking_eval_eq_false_iff₁] at h
@@ -1813,7 +1823,13 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
     intros i j hij
     specialize huniq i j hij
     -- show that `(Vars.stateN s i)` equals `fsm.eval ...`
-    sorry
+    -- | TODO: cleanup this, with
+    -- envBoolStart_of_envBitstream,
+    -- envBool_of_envBitstream_of_state, Vars.stateN
+    -- as a single lemma.
+    simp [env, envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state, Vars.stateN]
+    rw [← Function.ne_iff]
+    exact huniq
     -- specialize huniq i j hij
   · rw [mkPostcondIndHypNoCycleBreaking_eq_false_iff] at h
     simp [env, envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state] at h
