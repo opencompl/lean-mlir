@@ -5,6 +5,7 @@ with pkgs;let
     (xdsl ps)
     matplotlib
     pandas
+    polars
   ];
   my-python = pkgs.python3.withPackages my-python-packages;
 in
