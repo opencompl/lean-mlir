@@ -1850,6 +1850,11 @@ def StatesUniqueLe (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : 
 def SafeOnPathLe (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) : Prop :=
   ∀ (i : Nat), i ≤ n → fsm.evalWith s0 inputs i = false
 
+@[simp] theorem StatesUniqueLe_zero {fsm : FSM arity} {s0 : fsm.α → Bool} {inputs : arity → BitStream} :
+  StatesUniqueLe fsm s0 0 inputs := by
+  intros i j hij
+  simp at hij
+  omega
 
 /--
 Establish safety on all simple paths.
@@ -1903,11 +1908,13 @@ structure SimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (i
   hk :  fsm.carryWith s0 inputs n = fsm.carryWith s0 simplePath k
   hStatesUniqueLe : StatesUniqueLe fsm s0 k simplePath
 
+
 /--
-There always exists a simple path of length `n`.
+There always exists a simple path of a given path,
+which is shorter than the path, and ends at the same state.
 -/
-def mkSimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream)
-    (hUnique : StatesUniqueLe fsm s0 n inputs) :
+def mkSimplePathOfPath (fsm : FSM arity)
+    (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) :
     SimplePathOfPath fsm s0 n inputs := by
   sorry
 
@@ -1919,9 +1926,13 @@ theorem SafeOnPathLe_of_StatesUniqueLe_of_SafeOnPathLe (fsm : FSM arity)
     (h : ∀ (inputs : _) (n : Nat),
       StatesUniqueLe fsm fsm.initCarry n inputs →
       SafeOnPathLe fsm fsm.initCarry n inputs) :
-  ∀ (inputs : _), fsm.evalWith fsm.initCarry n inputs = false := by
-  intros inputs
-
+  ∀ (n : Nat) (inputs : _), fsm.evalWith fsm.initCarry inputs n = false := by
+  intros n inputs
+  simp [FSM.evalWith_eq_outputWith_carryWith]
+  rw [FSM.carry_eq_carryWith_initCarry]
+  have := mkSimplePathOfPath fsm fsm.initCarry n inputs
+  rw [this.hk]
+  rw [← FSM.eval_eq_outputWith_carryWith (p := fsm) ]
   sorry
 
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false

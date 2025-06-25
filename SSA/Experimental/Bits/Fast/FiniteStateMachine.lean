@@ -404,6 +404,35 @@ theorem eval_eq_outputWith_carryWith (p : FSM arity) :
   simp only [carryWith_initCarry_eq_carry]
   apply evalWith_eq_outputWith_carryWith
 
+/-- rewrite an 'eval' in terms of an 'outputWith' + 'carryWith',
+while changing the environment 'x'.
+most detailed decomposition of an FSM available.
+-/
+theorem outputWith_carryWith_eq_eval (p : FSM arity)
+  (xs ys : arity → BitStream) (xN : arity → Bool)
+  (hysLt : ∀ a i, i < n → ys a i = xs a i)
+  (hysN : ∀ a, ys a n = xN a) :
+  p.outputWith (p.carryWith p.initCarry xs n) xN = p.evalWith p.initCarry ys n := by
+  let env := fun a i => if i < n then xs a i else xN a
+  rw [carryWith_congrEnv (y := env)]
+  · have : xN = fun a => env a n := by
+      ext a
+      simp only [env]
+      split_ifs with hi
+      · omega
+      · rfl
+    rw [this]
+    rw [← evalWith_eq_outputWith_carryWith]
+    apply evalWith_congrEnv
+    intros a i hi
+    by_cases hi : i < n
+    · simp [env, hi, hysLt _ _ hi]
+    · simp [env, hi, show i = n by omega, hysN]
+  · intros a i hi;
+    simp only [left_eq_ite_iff, not_lt, env]
+    intros hi'
+    omega
+
 /-- carryWith commutes with delta -/
 theorem carryWith_delta_eq_delta_carryWith
   {carryState : p.α → Bool} {x : arity → BitStream} {n : Nat} :
