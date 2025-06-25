@@ -257,7 +257,11 @@ print("leanSAT succeeded and Bitwuzla failed on "+str(bw_only_failed)+" theorems
 print("There were "+str(inconsistencies)+" inconsistencies")
 print("Errors raised: "+str(errTot))
 
+shell_command_mismatch = False
+
 # Double Checking Against Grep Output
+# This function sets the global `shell_command_mismatch` to True if the output
+# does not match the expected value.
 def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_val : int) -> int:
     response = subprocess.check_output(cmd, shell=True, cwd=cwd, text=True)
     val = int(response)
@@ -305,3 +309,7 @@ df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla, 'leanSAT':counter_leanSAT,
 df.to_csv(raw_data_dir+'llvm-proved-data.csv')
 df_ceg.to_csv(raw_data_dir+'llvm-ceg-data.csv')
 
+# If any of the shell commands were not as expected, set a non-zero exit code
+# to signal this failure (in particular, making CI fail).
+if shell_command_mismatch:
+    exit(1)
