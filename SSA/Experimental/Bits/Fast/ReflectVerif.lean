@@ -626,6 +626,89 @@ theorem EnvSimEnvBitstream.envBool_inputs_mk_castShift_eq_envBitStream
 
 attribute [simp] EnvSimEnvBitstream.envBool_inputs_mk_eq_envBitStream
 
+/-- Environment with chosen state variables of the FSM. -/
+def envBool_of_envBitstream_of_state (p : FSM arity)
+   (envBitstream : arity → BitStream)
+   (s0 : p.α → Bool)
+   (n : Nat) : Vars p.α arity (n + 1) → Bool :=
+  fun x =>
+    match x with
+    | .state ss =>
+      p.carryWith s0 envBitstream ss.ix ss.input
+    | .inputs (.mk a i) => envBitstream i a
+    | .outputs o =>
+      p.evalWith p.initCarry envBitstream o
+
+
+/-- Environment with chosen state variables of the FSM. -/
+def envBoolStart_of_envBitstream (p : FSM arity)
+   (envBitstream : arity → BitStream)
+   (n : Nat) : Vars p.α arity (n + 1) → Bool :=
+  envBool_of_envBitstream_of_state p envBitstream p.initCarry n
+
+/-
+@[simp]
+theorem envBool_of_envBitstream_of_state_eq₁ {arity : Type _} {α : Type _}
+    (envBitstream : arity → BitStream) (s0 : α → Bool) (n : Nat)
+    (s : α) :
+    envBool_of_envBitstream_of_state envBitstream s0 n (.state s) = s0 s := rfl
+
+@[simp]
+theorem envBool_of_envBitstream_of_state_eq₂ {arity : Type _} {α : Type _}
+    (envBitstream : arity → BitStream) (state : α → Bool) (n : Nat)
+    (i : Inputs arity (n + 1)) :
+    envBool_of_envBitstream_of_state envBitstream state n (.inputs i) =
+    envBitstream i.input i.ix := rfl
+
+def Bitstream_of_envBool
+  (envBool : Vars α arity n → Bool) :
+  (arity → BitStream) :=
+  fun a =>
+    fun k =>
+      if hk : k < n
+      then envBool (.inputs (Inputs.mk ⟨k, by omega⟩ a))
+      else false
+
+/-- make the init carry of the FSM from the envBool. -/
+def initCarry_of_envBool {p : FSM α}
+  (envBool : Vars p.α arity n → Bool) :
+  p.α → Bool := fun a => envBool (.state a)
+
+@[simp]
+theorem EnvOutRelated_envBoolEmpty_of_envBitStream_of_self {arity : Type _}
+    (envBitstream : arity → BitStream) :
+    EnvOutRelated (envBoolEmpty_of_envBitstream envBitstream n) envBitstream := by
+  constructor
+  intros x i hi
+  rw [envBoolEmpty_of_envBitstream]
+
+@[simp]
+theorem EnvOutRelated_envBoolStart_of_envBitStream_of_self {arity : Type _} {α : Type _}
+    (p : FSM α) (envBitstream : arity → BitStream) :
+    EnvOutRelated (envBoolStart_of_envBitstream p envBitstream n) envBitstream := by
+  constructor
+  intros x i hi
+  rw [envBoolStart_of_envBitstream]
+
+@[simp]
+theorem EnvOutRelated_envBoolStart_ofenvBitstream_of_state_of_self
+    {arity : Type _} {α : Type _}
+    (envBitstream : arity → BitStream) (state : α → Bool) :
+    EnvOutRelated (envBool_of_envBitstream_of_state envBitstream state n) envBitstream := by
+  constructor
+  intros x i hi
+  rw [envBool_of_envBitstream_of_state]
+
+@[simp]
+theorem EnvOutRelated_self_Bitstream_of_envBool
+    (envBool : Vars α arity n → Bool) :
+    EnvOutRelated envBool (Bitstream_of_envBool envBool) := by
+  constructor
+  intros x i hi
+  simp [Bitstream_of_envBool, hi]
+-/
+
+
 /-- Take the 'or' of many circuits.-/
 def Circuit.bigOr {α : Type _}
     (cs : List (Circuit α)) : Circuit α :=
@@ -1487,6 +1570,27 @@ theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁
       apply h₂ k (by omega)
     · intros s k hk
       apply h₁ s k (by omega)
+
+
+/--
+if the 'mkSuccCarryAndOutsAssignPrecond'` evaluates to false,
+then we have assigned all `s[i+1] = carry(s[i], i[i])`
+and all `o[i] = out(s[i], i[i])` for all `i ≤ n + 1`.
+This is the precondition that we use to prove the induction step.
+-/
+theorem eval_mkSuccCarryAndOutAssignPrecond_thm
+  {circs : KInductionCircuits fsm n}
+  (hCircs : circs.IsLawful)
+  (env : Vars fsm.α arity (n + 2) → Bool)
+  (envBitstream : _)
+  (hcirc : (mkSuccCarryAndOutsAssignPrecond circs).eval env = false) :
+  (∀ (s : fsm.α) (i : Nat) (hi : i < n + 2),
+    env (Vars.stateN s (i + 1)) = fsm.carryWith (fun s => env (Vars.state0 s)) envBitstream (i + 1) s) ∧
+  (∀ (i : Nat) (hi : i < n + 2),
+    env (Vars.outputs ⟨i, by omega⟩) =
+      fsm.evalWith (fun s => env (Vars.state0 s)) envBitstream (i + 1)) := by
+  sorry
+
 /--
 The safety circuit that checks that if `s[0]` is assigned to init carry,
 then `o[i] = fals` for all `i ≤ n`.
@@ -1592,6 +1696,16 @@ theorem mkSafetyCircuit_eval_eq_false_iff₁
     · apply hPrecond
     · apply hCircs
 
+/--
+Safe upto n steps.
+-/
+theorem mkSafetyCircuit_eval_eq_false_thm
+    {circs : KInductionCircuits fsm n}
+    (hCircs : circs.IsLawful)
+    (h : ∀ (env : _), (mkSafetyCircuit circs).eval env = false) :
+    (∀ (envBitstream : _) (i : Nat), i < n → fsm.eval envBitstream i = false) := by
+  intros envBitstream i hi
+  let env := envBoolEmpty_of_envBitstream
 
 /--
 If states[i+1] = carry(states[i], inputs[i]) and
