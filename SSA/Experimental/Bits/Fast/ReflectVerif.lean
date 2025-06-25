@@ -1924,13 +1924,54 @@ def SimplePathOfPath.hCarry (this : SimplePathOfPath fsm s0 n inputs)
 --   rw [← this.hk, ← this.hStatesUniqueLe]
 
 /--
+Find the occurrence of a state 's' in the simple path.
+-/
+noncomputable def SimplePathOfPath.findState?
+  (_this : SimplePathOfPath fsm s0 n inputs)
+  (s : fsm.α → Bool) : Option { k : Nat // k ≤ n ∧ fsm.carryWith s0 inputs k = s } :=
+  let states :=
+    (List.range (n + 1)).map fun i =>
+      fsm.carryWith s0 inputs i
+  let out := states.findIdx? (fun t => t = s)
+  match hout : out with
+  | none =>
+    none
+  | some idx =>
+    some ⟨idx, by
+      have := List.findIdx?_eq_some_iff_findIdx_eq .. |>.mp hout
+      obtain ⟨h₁, h₂⟩ := this
+      constructor
+      · simp [states, out] at *
+        omega
+      · have := List.findIdx_eq h₁ |>.mp h₂
+        simp at this
+        obtain ⟨hidx, hfirst⟩ := this
+        simp [states] at hidx
+        exact hidx
+    ⟩
+
+
+/--
 There always exists a simple path of a given path,
 which is shorter than the path, and ends at the same state.
+Luckily, we don't care about this being executable or fast.
+To ensure that we do not use the performance of this procedure,
+we mark it `noncomputable`.
 -/
-def mkSimplePathOfPath (fsm : FSM arity)
+noncomputable def mkSimplePathOfPath (fsm : FSM arity)
     (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) :
-    SimplePathOfPath fsm s0 n inputs := by
-  sorry
+    SimplePathOfPath fsm s0 n inputs :=
+  match hn : n with
+  | 0 => {
+    simplePath := inputs,
+    k := 0,
+    hkLt := by omega,
+    hCarryWith := rfl,
+    hStatesUniqueLe := StatesUniqueLe_zero
+  }
+  | n' + 1 =>
+    let path' := mkSimplePathOfPath fsm s0 n' inputs
+    sorry
 
 /-- Safety on all simple paths implies safety on all paths. -/
 theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arity)
