@@ -76,7 +76,7 @@ for file in os.listdir(benchmark_dir):
         # collect the numbers for all repetitions
 
         for r in range(reps):
-            res_file = open(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
+            res_file = open(res_dir+file.split(".")[0]+".txt")
             l = res_file.readline()
             thm = 0
             while l:
