@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import os 
-from pathlib import Path
+import os
 from enum import Enum
 import subprocess
 from collections import Counter
 
-output = Enum('output', [('counterexample', 1), ('proved', 2), ('failed', 0)])
-paper_directory = ''
+output = Enum("output", [("counterexample", 1), ("proved", 2), ("failed", 0)])
+paper_directory = ""
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/InstCombine/"
 raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
 
 REPS = 1
+
 
 def compare_solvers_on_file(file_result):
     benchmark_errors = []
@@ -59,7 +58,9 @@ def compare_solvers_on_file(file_result):
         zip(file_result[1]["outputs_bitwuzla"], file_result[1]["outputs_bv_decide"])
     ):
         if output_bitwuzla == output.failed and output_bv_decide == output.failed:
-            failed_bv_decide_and_bitwuzla.append("theorem "+str(theorem_num)+" in "+file_result[0])
+            failed_bv_decide_and_bitwuzla.append(
+                "theorem " + str(theorem_num) + " in " + file_result[0]
+            )
         elif output_bitwuzla == output.failed and output_bv_decide == output.proved:
             print(
                 "bitwuzla failed and bv_decide proved theorem "
@@ -67,7 +68,9 @@ def compare_solvers_on_file(file_result):
                 + " in file "
                 + file_result[0]
             )
-            failed_bitwuzla_only.append("theorem "+str(theorem_num)+" in "+file_result[0])
+            failed_bitwuzla_only.append(
+                "theorem " + str(theorem_num) + " in " + file_result[0]
+            )
         elif output_bitwuzla == output.proved and output_bv_decide == output.failed:
             print(
                 "bitwuzla proved and bv_decide failed theorem "
@@ -75,7 +78,9 @@ def compare_solvers_on_file(file_result):
                 + " in file "
                 + file_result[0]
             )
-            failed_bv_decide_only.append("theorem "+str(theorem_num)+" in "+file_result[0])
+            failed_bv_decide_only.append(
+                "theorem " + str(theorem_num) + " in " + file_result[0]
+            )
         elif (
             output_bitwuzla == output.counterexample
             and output_bv_decide == output.counterexample
@@ -185,12 +190,13 @@ def compare_solvers_on_file(file_result):
         "file_counter_bv_decide_times_average": file_counter_bv_decide_times_average,
         "file_counter_bv_decide_rw_times_average": file_counter_bv_decide_rw_times_average,
         "file_counter_bv_decide_sat_times_average": file_counter_bv_decide_sat_times_average,
-        "failed_bv_decide_and_bitwuzla" : failed_bv_decide_and_bitwuzla,
-        "failed_bitwuzla_only" : failed_bitwuzla_only,
-        "failed_bv_decide_only" : failed_bv_decide_only,
+        "failed_bv_decide_and_bitwuzla": failed_bv_decide_and_bitwuzla,
+        "failed_bitwuzla_only": failed_bitwuzla_only,
+        "failed_bv_decide_only": failed_bv_decide_only,
         "errors": benchmark_errors,
     }
     return data
+
 
 def parse_file(file_name: str, reps: int):
     """Parse an output file and compute the performance number of each solver."""
@@ -209,7 +215,7 @@ def parse_file(file_name: str, reps: int):
     counter_bv_decide_sat_times_average = []
     errors = []
     for r in range(reps):
-        res_file = open(file_name + ".txt")# + "_r" + str(r) + ".txt")
+        res_file = open(file_name + "_r" + str(r) + ".txt")
         file_line = res_file.readline()
         thm = 0
         while file_line:
@@ -307,7 +313,7 @@ def parse_file(file_name: str, reps: int):
                 error_message = (file_line.split("error: ")[1])[0:-1]
                 errors.append([error_location, error_message])
             file_line = res_file.readline()
-            
+
     data = {
         "outputs_bitwuzla": outputs_bitwuzla,
         "solved_bitwuzla_times_average": solved_bitwuzla_times_average,
@@ -327,8 +333,6 @@ def parse_file(file_name: str, reps: int):
     return data
 
 
-
-
 bitwuzla = []
 leanSAT = []
 leanSAT_rw = []
@@ -343,7 +347,7 @@ counter_leanSAT = []
 counter_leanSAT_rw = []
 counter_leanSAT_sat = []
 
-inconsistencies  = 0
+inconsistencies = 0
 
 both_failed = 0
 ls_only_failed = 0
@@ -363,12 +367,12 @@ leanSAT_failed_locations = []
 
 file_data = []
 
-for file in os.listdir("results/InstCombine") :  # os.listdir(benchmark_dir):
-    if "_proof" in file: # currently discard broken chapter
-        file_name = res_dir+file.split(".")[0]
+for file in os.listdir(benchmark_dir):
+    if "_proof" in file:
+        file_name = res_dir + file.split(".")[0]
         parsed_results = parse_file(file_name, REPS)
         file_data.append([file_name, parsed_results])
-        
+
 all_files_solved_bitwuzla_times_average = []
 all_files_counter_bitwuzla_times_average = []
 all_files_solved_bv_decide_times_average = []
@@ -385,7 +389,6 @@ all_files_failed_bv_decide_only = []
 all_files_failed_bitwuzla_only = []
 
 
-
 solved_bitwuzla_tot = 0
 counter_bitwuzla_tot = 0
 error_bitwuzla_tot = 0
@@ -395,7 +398,6 @@ error_bv_decide_tot = 0
 benchmarks_errors = []
 
 for file_result in file_data:
-
     count_bitwuzla = Counter(file_result[1]["outputs_bitwuzla"])
     count_bv_decide = Counter(file_result[1]["outputs_bv_decide"])
 
@@ -408,49 +410,49 @@ for file_result in file_data:
     error_bv_decide_tot += count_bv_decide[output.failed]
 
     file_comparison = compare_solvers_on_file(file_result)
-    for tmp in file_comparison['file_solved_bitwuzla_times_average']: 
+    for tmp in file_comparison["file_solved_bitwuzla_times_average"]:
         all_files_solved_bitwuzla_times_average.append(tmp)
-    
-    for tmp in file_comparison['file_counter_bitwuzla_times_average']:
+
+    for tmp in file_comparison["file_counter_bitwuzla_times_average"]:
         all_files_counter_bitwuzla_times_average.append(tmp)
 
-    for tmp in file_comparison['file_solved_bv_decide_times_average']:
+    for tmp in file_comparison["file_solved_bv_decide_times_average"]:
         all_files_solved_bv_decide_times_average.append(tmp)
-    
-    for tmp in file_comparison['file_solved_bv_decide_rw_times_average']:
+
+    for tmp in file_comparison["file_solved_bv_decide_rw_times_average"]:
         all_files_solved_bv_decide_rw_times_average.append(tmp)
-    
-    for tmp in file_comparison['file_solved_bv_decide_bb_times_average']:
+
+    for tmp in file_comparison["file_solved_bv_decide_bb_times_average"]:
         all_files_solved_bv_decide_bb_times_average.append(tmp)
 
-    for tmp in file_comparison['file_solved_bv_decide_sat_times_average']:
+    for tmp in file_comparison["file_solved_bv_decide_sat_times_average"]:
         all_files_solved_bv_decide_sat_times_average.append(tmp)
 
-    for tmp in file_comparison['file_solved_bv_decide_lratt_times_average']:
+    for tmp in file_comparison["file_solved_bv_decide_lratt_times_average"]:
         all_files_solved_bv_decide_lratt_times_average.append(tmp)
 
-    for tmp in file_comparison['file_solved_bv_decide_lratc_times_average']:
+    for tmp in file_comparison["file_solved_bv_decide_lratc_times_average"]:
         all_files_solved_bv_decide_lratc_times_average.append(tmp)
 
-    for tmp in file_comparison['file_counter_bv_decide_times_average']:
+    for tmp in file_comparison["file_counter_bv_decide_times_average"]:
         all_files_counter_bv_decide_times_average.append(tmp)
 
-    for tmp in file_comparison['file_counter_bv_decide_rw_times_average']:
+    for tmp in file_comparison["file_counter_bv_decide_rw_times_average"]:
         all_files_counter_bv_decide_rw_times_average.append(tmp)
 
-    for tmp in file_comparison['file_counter_bv_decide_sat_times_average']:
+    for tmp in file_comparison["file_counter_bv_decide_sat_times_average"]:
         all_files_counter_bv_decide_sat_times_average.append(tmp)
 
-    for tmp in file_comparison['failed_bv_decide_and_bitwuzla']:
+    for tmp in file_comparison["failed_bv_decide_and_bitwuzla"]:
         all_files_failed_bv_decide_and_bitwuzla.append(tmp)
-    
-    for tmp in file_comparison['failed_bitwuzla_only']:
+
+    for tmp in file_comparison["failed_bitwuzla_only"]:
         all_files_failed_bitwuzla_only.append(tmp)
 
-    for tmp in file_comparison['failed_bv_decide_only']:
+    for tmp in file_comparison["failed_bv_decide_only"]:
         all_files_failed_bv_decide_only.append(tmp)
 
-    for tmp in file_comparison['errors']:
+    for tmp in file_comparison["errors"]:
         benchmarks_errors.append(tmp)
 
 print("bv_decide solved " + str(solved_bv_decide_tot) + " theorems.")
@@ -458,29 +460,92 @@ print("bitwuzla solved " + str(solved_bitwuzla_tot) + " theorems.")
 print("bv_decide found " + str(counter_bv_decide_tot) + " counterexamples.")
 print("bitwuzla found " + str(counter_bitwuzla_tot) + " counterexamples.")
 print("Errors raised: " + str(len(benchmarks_errors)))
-for e in benchmarks_errors: 
-    print("error : "+e[1]+" found at "+e[0])
+for e in benchmarks_errors:
+    print("error : " + e[1] + " found at " + e[0])
 
 # print("bitwuzla solved: "+str(len(all_files_solved_bitwuzla_times_average)))
 # print("bv_decide solved: "+str(len(all_files_solved_bv_decide_times_average)))
 # print("bitwuzla provided "+str(len(all_files_counter_bitwuzla_times_average))+" counterexamples")
 # print("bv_decide provided "+str(len(all_files_counter_bv_decide_times_average))+" counterexamples")
 
+
 # Double Checking Against Grep Output
-def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_val : int) -> int:
+def run_shell_command_and_assert_output_eq_int(
+    cwd: str, cmd: str, expected_val: int
+) -> int:
     response = subprocess.check_output(cmd, shell=True, cwd=cwd, text=True)
     val = int(response)
-    failed =  val != expected_val
+    failed = val != expected_val
     failed_str = "FAIL" if failed else "SUCCESS"
     print(f"ran {cmd}, this file found {expected_val}, rg found {val}, {failed_str}")
 
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT provided a counter' | wc -l", len(all_files_counter_bv_decide_times_average))
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla provided a counter' | wc -l", len(all_files_counter_bitwuzla_times_average))
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT proved' | wc -l", len(all_files_solved_bv_decide_times_average) + len(all_files_failed_bitwuzla_only))
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla proved' | wc -l", len(all_files_solved_bitwuzla_times_average) + len(all_files_failed_bv_decide_only))
+
+run_shell_command_and_assert_output_eq_int(
+    "results/InstCombine/",
+    "rg 'LeanSAT provided a counter' | wc -l",
+    len(all_files_counter_bv_decide_times_average),
+)
+run_shell_command_and_assert_output_eq_int(
+    "results/InstCombine/",
+    "rg 'Bitwuzla provided a counter' | wc -l",
+    len(all_files_counter_bitwuzla_times_average),
+)
+run_shell_command_and_assert_output_eq_int(
+    "results/InstCombine/",
+    "rg 'LeanSAT proved' | wc -l",
+    len(all_files_solved_bv_decide_times_average) + len(all_files_failed_bitwuzla_only),
+)
+run_shell_command_and_assert_output_eq_int(
+    "results/InstCombine/",
+    "rg 'Bitwuzla proved' | wc -l",
+    len(all_files_solved_bitwuzla_times_average) + len(all_files_failed_bv_decide_only),
+)
 
 
 # Converting to DataFrame
+
+
+all_files_solved_bitwuzla_times_average = []
+all_files_solved_bv_decide_times_average = []
+all_files_solved_bv_decide_rw_times_average = []
+all_files_solved_bv_decide_bb_times_average = []
+all_files_solved_bv_decide_sat_times_average = []
+all_files_solved_bv_decide_lratt_times_average = []
+all_files_solved_bv_decide_lratc_times_average = []
+
+all_files_failed_bv_decide_and_bitwuzla = []
+all_files_failed_bv_decide_only = []
+all_files_failed_bitwuzla_only = []
+
+ceg_df = pd.DataFrame(
+    {
+        "counter_bitwuzla_times_average": all_files_counter_bitwuzla_times_average,
+        "counter_bv_decide_times_average": all_files_counter_bv_decide_times_average,
+        "counter_bv_decide_rw_times_average": all_files_counter_bv_decide_rw_times_average,
+        "counter_bv_decide_sat_times_average": all_files_counter_bv_decide_sat_times_average,
+    }
+)
+
+solved_df = pd.DataFrame(
+    {
+        "solved_bitwuzla_times_average": all_files_solved_bitwuzla_times_average,
+        "solved_bv_decide_times_average": all_files_solved_bv_decide_times_average,
+        "solved_bv_decide_rw_times_average": all_files_solved_bv_decide_rw_times_average,
+        "solved_bv_decide_bb_times_average": all_files_solved_bv_decide_bb_times_average,
+        "solved_bv_decide_sat_times_average": all_files_solved_bv_decide_sat_times_average,
+        "solved_bv_decide_lratt_times_average": all_files_solved_bv_decide_lratt_times_average,
+        "solved_bv_decide_lratc_times_average": all_files_solved_bv_decide_lratc_times_average,
+    }
+)
+
+errors_df = pd.DataFrame({"errors_bitwuzla": file_comparison["errors"]})
+
+ceg_df.to_csv(raw_data_dir + file_result[0].split("/")[-1] + "_ceg_data.csv")
+print(raw_data_dir + file_result[0].split("/")[-1] + "_ceg_data.csv")
+solved_df.to_csv(raw_data_dir + file_result[0].split("/")[-1] + "_solved_data.csv")
+print(raw_data_dir + file_result[0].split("/")[-1] + "_solved_data.csv")
+errors_df.to_csv(raw_data_dir + file_result[0].split("/")[-1] + "_err_data.csv")
+print(raw_data_dir + file_result[0].split("/")[-1] + "_err_data.csv")
 
 
 err_a = np.array(err_msg_tot)
@@ -488,27 +553,42 @@ err_a = np.array(err_msg_tot)
 unique_elements, counts = np.unique(err_a, return_counts=True)
 
 for id, el in enumerate(unique_elements):
-    print("error "+el+" was raised "+str(counts[id])+" times")
+    print("error " + el + " was raised " + str(counts[id]) + " times")
 
-df_err = pd.DataFrame({'locations':err_loc_tot, 'err-msg':err_msg_tot})
+df_err = pd.DataFrame({"locations": err_loc_tot, "err-msg": err_msg_tot})
 
-msg_counts = df_err['err-msg'].value_counts()
+msg_counts = df_err["err-msg"].value_counts()
 
-df_err = df_err.assign(msg_count=df_err['err-msg'].map(msg_counts)).sort_values(by=['msg_count', 'err-msg'], ascending=[False, True])
+df_err = df_err.assign(msg_count=df_err["err-msg"].map(msg_counts)).sort_values(
+    by=["msg_count", "err-msg"], ascending=[False, True]
+)
 
-df_err_sorted = df_err.drop(columns='msg_count')
+df_err_sorted = df_err.drop(columns="msg_count")
 
-df_err_sorted.to_csv(raw_data_dir+'err-llvm.csv')
-
-
-df = pd.DataFrame({'bitwuzla':bitwuzla, 'leanSAT':leanSAT,
-                    'leanSAT-rw':leanSAT_rw, 'leanSAT-bb':leanSAT_bb, 'leanSAT-sat':leanSAT_sat, 
-                    'leanSAT-lrat-t':leanSAT_lrat_t, 'leanSAT-lrat-c':leanSAT_lrat_c})
-
-df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla, 'leanSAT':counter_leanSAT,
-                    'leanSAT-rw':counter_leanSAT_rw, 'leanSAT-sat':counter_leanSAT_sat})
+df_err_sorted.to_csv(raw_data_dir + "err-llvm.csv")
 
 
-df.to_csv(raw_data_dir+'llvm-proved-data.csv')
-df_ceg.to_csv(raw_data_dir+'llvm-ceg-data.csv')
+df = pd.DataFrame(
+    {
+        "bitwuzla": bitwuzla,
+        "leanSAT": leanSAT,
+        "leanSAT-rw": leanSAT_rw,
+        "leanSAT-bb": leanSAT_bb,
+        "leanSAT-sat": leanSAT_sat,
+        "leanSAT-lrat-t": leanSAT_lrat_t,
+        "leanSAT-lrat-c": leanSAT_lrat_c,
+    }
+)
 
+df_ceg = pd.DataFrame(
+    {
+        "bitwuzla": counter_bitwuzla,
+        "leanSAT": counter_leanSAT,
+        "leanSAT-rw": counter_leanSAT_rw,
+        "leanSAT-sat": counter_leanSAT_sat,
+    }
+)
+
+
+df.to_csv(raw_data_dir + "llvm-proved-data.csv")
+df_ceg.to_csv(raw_data_dir + "llvm-ceg-data.csv")
