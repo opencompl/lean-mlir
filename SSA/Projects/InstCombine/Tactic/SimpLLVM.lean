@@ -230,6 +230,6 @@ macro "simp_alive_ops" : tactic =>
       -- We need to use `BitVec.ofInt_ofNat` again, as it may have been
       -- previously blocked by a `hide`
       simp -failIfUnchanged only [
-        (BitVec.ofInt_ofNat)
+        (BitVec.ofInt_ofNat), BitVec.ofInt_neg
       ]
     ))
