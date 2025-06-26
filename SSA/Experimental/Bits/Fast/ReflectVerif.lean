@@ -2219,22 +2219,22 @@ we mark it `noncomputable`.
 -/
 noncomputable def mkSimplePathOfPath (fsm : FSM arity)
     (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) :
-    SimplePathOfPath fsm s0 n inputs
-  :=
-  match hn : n with
-  | 0 => {
+    SimplePathOfPath fsm s0 n inputs := by
+  induction n
+  case zero =>
+   exact {
     simplePath := inputs,
     k := 0,
     hkLt := by omega,
     hCarryWith := rfl,
     hStatesUniqueLe := StatesUniqueLe_zero,
   }
-  | n' + 1 =>
-    let path' := mkSimplePathOfPath fsm s0 n' inputs
-    have : n' < n := by omega
+  case succ n' path' =>
+    -- let path' := mkSimplePathOfPath fsm s0 n' inputs
     let sn := fsm.carryWith s0 inputs (n' + 1)
-    match hfind : path'.findStateOnSimplePath? sn with
-    | ⟨none, hnone⟩ => {
+    rcases hfind : (path'.findStateOnSimplePath? sn) with ⟨val, property⟩
+    rcases val with rfl | k
+    · exact {
       simplePath := envBitstream_set path'.simplePath (path'.k) (fun a => inputs a (n')),
       k := path'.k + 1,
       hkLt := by
@@ -2265,7 +2265,6 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
         by_cases hj : j = path'.k + 1
         · subst hj
           clear hj
-          simp at hnone
           have := SimplePathOfPath.findState?_eq_none_iff path' sn |>.mp (by simp [hfind])
           rw [FSM.carryWith_congrEnv_envBitstream_set_of_le]
           · specialize this i (by omega)
@@ -2301,23 +2300,23 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
           apply this
           · omega
           · omega
-    }
-    | ⟨some k, hsome⟩ =>
+      }
+    case some =>
         -- let path' := mkSimplePathOfPath fsm s0 n' inputs
         -- let sn := fsm.carryWith s0 inputs (n' + 1)
-        {
+        exact {
           simplePath := path'.simplePath,
           k := k,
           hkLt := by
             have := path'.hkLt
-            specialize hsome k
-            simp at hsome
+            specialize property k
+            simp at property
             omega,
           hCarryWith := by
             have := path'.hCarryWith
-            specialize hsome k
-            simp at hsome
-            obtain ⟨hk, hcarry, hfirst⟩ := hsome
+            specialize property k
+            simp at property
+            obtain ⟨hk, hcarry, hfirst⟩ := property
             rw [hcarry],
           hStatesUniqueLe := by
             have := path'.hStatesUniqueLe
@@ -2325,10 +2324,14 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
             intros i j hi hj
             apply this
             · omega
-            · specialize hsome k
-              simp at hsome
+            · specialize property k
+              simp at property
               omega
         }
+/--
+info: 'ReflectVerif.BvDecide.KInductionCircuits.mkSimplePathOfPath' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms mkSimplePathOfPath
 
 /-- Safety on all simple paths implies safety on all paths. -/
 theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arity)
@@ -2522,8 +2525,7 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
 info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good_ax,
- ReflectVerif.BvDecide.KInductionCircuits.mkSimplePathOfPath]
+ ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good_ax]
 -/
 #guard_msgs in #print axioms eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
 
