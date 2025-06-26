@@ -199,7 +199,6 @@ def compare_solvers_on_file(file_result):
 
 
 def parse_file(file_name: str, reps: int):
-    print(file)
     """Parse an output file and compute the performance number of each solver."""
     outputs_bitwuzla = []
     solved_bitwuzla_times_average = []
@@ -227,22 +226,31 @@ def parse_file(file_name: str, reps: int):
                     # Append `-1` in the solved and counterexample times
                     if r == 0:
                         outputs_bitwuzla.append(output.failed)
-                    counter_bitwuzla_times_average.append(float(-1))
-                    solved_bitwuzla_times_average.append(float(-1))
+                        counter_bitwuzla_times_average.append(float(-1))
+                        solved_bitwuzla_times_average.append(float(-1))
+                    else: 
+                        counter_bitwuzla_times_average[thm].append(float(-1))
+                        solved_bitwuzla_times_average[thm].append(float(-1))
                 elif "counter" in file_line:
                     # Append `-1` in the solved times only, append solving time in the counterexample times
                     tot = float(file_line.split("after ")[1].split("ms")[0])
                     if r == 0:
                         outputs_bitwuzla.append(output.counterexample)
-                    counter_bitwuzla_times_average.append([tot])
-                    solved_bitwuzla_times_average.append(float(-1))
+                        counter_bitwuzla_times_average.append([tot])
+                        solved_bitwuzla_times_average.append(float(-1))
+                    else : 
+                        counter_bitwuzla_times_average[thm].append([tot])
+                        solved_bitwuzla_times_average[thm].append(float(-1))
                 elif "proved" in file_line:
                     # Append `-1` in the counterexample times only, append solving time in the solved times
                     tot = float(file_line.split("after ")[1].split("ms")[0])
                     if r == 0:
                         outputs_bitwuzla.append(output.proved)
-                    solved_bitwuzla_times_average.append([tot])
-                    counter_bitwuzla_times_average.append(float(-1))
+                        solved_bitwuzla_times_average.append([tot])
+                        counter_bitwuzla_times_average.append(float(-1))
+                    else : 
+                        solved_bitwuzla_times_average[thm].append([tot])
+                        counter_bitwuzla_times_average[thm].append(float(-1))
                 else:
                     raise Exception("Unknown error in " + file.name)
                 # if bitwuzla output was successful, analyze the next output
@@ -251,21 +259,30 @@ def parse_file(file_name: str, reps: int):
                     if "failed" in file_line:
                         if r == 0:
                             outputs_bv_decide.append(output.failed)
-                        counter_bv_decide_times_average.append([float(-1)])
-                        counter_bv_decide_rw_times_average.append([float(-1)])
-                        counter_bv_decide_sat_times_average.append([float(-1)])
-                        solved_bv_decide_times_average.append([float(-1)])
-                        solved_bv_decide_rw_times_average.append([float(-1)])
-                        solved_bv_decide_bb_times_average.append([float(-1)])
-                        solved_bv_decide_sat_times_average.append([float(-1)])
-                        solved_bv_decide_lratt_times_average.append([float(-1)])
-                        solved_bv_decide_lratc_times_average.append([float(-1)])
+                            counter_bv_decide_times_average.append([float(-1)])
+                            counter_bv_decide_rw_times_average.append([float(-1)])
+                            counter_bv_decide_sat_times_average.append([float(-1)])
+                            solved_bv_decide_times_average.append([float(-1)])
+                            solved_bv_decide_rw_times_average.append([float(-1)])
+                            solved_bv_decide_bb_times_average.append([float(-1)])
+                            solved_bv_decide_sat_times_average.append([float(-1)])
+                            solved_bv_decide_lratt_times_average.append([float(-1)])
+                            solved_bv_decide_lratc_times_average.append([float(-1)])
+                        else : 
+                            counter_bv_decide_times_average[thm].append([float(-1)])
+                            counter_bv_decide_rw_times_average[thm].append([float(-1)])
+                            counter_bv_decide_sat_times_average[thm].append([float(-1)])
+                            solved_bv_decide_times_average[thm].append([float(-1)])
+                            solved_bv_decide_rw_times_average[thm].append([float(-1)])
+                            solved_bv_decide_bb_times_average[thm].append([float(-1)])
+                            solved_bv_decide_sat_times_average[thm].append([float(-1)])
+                            solved_bv_decide_lratt_times_average[thm].append([float(-1)])
+                            solved_bv_decide_lratc_times_average[thm].append([float(-1)])
                     elif "counter " in file_line:
-                        print(file_line)
                         if r == 0:
                             outputs_bv_decide.append(output.counterexample)
                             counter_bv_decide_times_average.append(
-                                float(file_line.split("ms:")[0].split("after ")[1])
+                                float(file_line.split("ms")[0].split("after ")[1])
                             )
                             counter_bv_decide_rw_times_average.append(
                                 float(file_line.split(" SAT")[0].split("rewriting ")[1])
@@ -281,7 +298,7 @@ def parse_file(file_name: str, reps: int):
                             solved_bv_decide_lratc_times_average.append(float(-1))
                         else : 
                             counter_bv_decide_times_average[thm].append(
-                                float(file_line.split("ms:")[0].split("after ")[1])
+                                float(file_line.split("ms")[0].split("after ")[1])
                             )
                             counter_bv_decide_rw_times_average[thm].append(
                                 float(file_line.split(" SAT")[0].split("rewriting ")[1])
@@ -298,27 +315,49 @@ def parse_file(file_name: str, reps: int):
                     elif "proved" in file_line:
                         if r == 0:
                             outputs_bv_decide.append(output.proved)
-                        solved_bv_decide_times_average.append(
-                            [float(file_line.split("ms")[0].split("r ")[1])]
-                        )
-                        solved_bv_decide_rw_times_average.append(
-                            [float(file_line.split("ms")[1].split("g ")[1])]
-                        )
-                        solved_bv_decide_bb_times_average.append(
-                            [float(file_line.split("ms")[2].split("g ")[1])]
-                        )
-                        solved_bv_decide_sat_times_average.append(
-                            [float(file_line.split("ms")[3].split("g ")[1])]
-                        )
-                        solved_bv_decide_lratt_times_average.append(
-                            [float(file_line.split("ms")[4].split("g ")[1])]
-                        )
-                        solved_bv_decide_lratc_times_average.append(
-                            [float(file_line.split("ms")[5].split("g ")[1])]
-                        )
-                        counter_bv_decide_times_average.append([float(-1)])
-                        counter_bv_decide_rw_times_average.append([float(-1)])
-                        counter_bv_decide_sat_times_average.append([float(-1)])
+                            solved_bv_decide_times_average.append(
+                                [float(file_line.split("ms")[0].split("r ")[1])]
+                            )
+                            solved_bv_decide_rw_times_average.append(
+                                [float(file_line.split("ms")[1].split("g ")[1])]
+                            )
+                            solved_bv_decide_bb_times_average.append(
+                                [float(file_line.split("ms")[2].split("g ")[1])]
+                            )
+                            solved_bv_decide_sat_times_average.append(
+                                [float(file_line.split("ms")[3].split("g ")[1])]
+                            )
+                            solved_bv_decide_lratt_times_average.append(
+                                [float(file_line.split("ms")[4].split("g ")[1])]
+                            )
+                            solved_bv_decide_lratc_times_average.append(
+                                [float(file_line.split("ms")[5].split("g ")[1])]
+                            )
+                            counter_bv_decide_times_average.append([float(-1)])
+                            counter_bv_decide_rw_times_average.append([float(-1)])
+                            counter_bv_decide_sat_times_average.append([float(-1)])
+                        else : 
+                            solved_bv_decide_times_average[thm].append(
+                                [float(file_line.split("ms")[0].split("r ")[1])]
+                            )
+                            solved_bv_decide_rw_times_average[thm].append(
+                                [float(file_line.split("ms")[1].split("g ")[1])]
+                            )
+                            solved_bv_decide_bb_times_average[thm].append(
+                                [float(file_line.split("ms")[2].split("g ")[1])]
+                            )
+                            solved_bv_decide_sat_times_average[thm].append(
+                                [float(file_line.split("ms")[3].split("g ")[1])]
+                            )
+                            solved_bv_decide_lratt_times_average[thm].append(
+                                [float(file_line.split("ms")[4].split("g ")[1])]
+                            )
+                            solved_bv_decide_lratc_times_average[thm].append(
+                                [float(file_line.split("ms")[5].split("g ")[1])]
+                            )
+                            counter_bv_decide_times_average[thm].append([float(-1)])
+                            counter_bv_decide_rw_times_average[thm].append([float(-1)])
+                            counter_bv_decide_sat_times_average[thm].append([float(-1)])
                         thm = thm + 1
                 else:
                     raise Exception("Unknown error in " + file.name)
@@ -477,8 +516,8 @@ print("bv_decide solved " + str(solved_bv_decide_tot) + " theorems.")
 print("bitwuzla solved " + str(solved_bitwuzla_tot) + " theorems.")
 print("bv_decide found " + str(counter_bv_decide_tot) + " counterexamples.")
 print("bitwuzla found " + str(counter_bitwuzla_tot) + " counterexamples.")
-print("In total, bitwuzla saw " + str(counter_bitwuzla_tot + solved_bitwuzla_tot + error_bitwuzla_tot) + " counterexamples.")
-print("In total, bv_decide saw " + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + " counterexamples.")
+print("In total, bitwuzla saw " + str(counter_bitwuzla_tot + solved_bitwuzla_tot + error_bitwuzla_tot) + " problems.")
+print("In total, bv_decide saw " + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + " problems.")
 
 # print("Errors raised: " + str(len(benchmarks_errors)))
 # for e in benchmarks_errors:
