@@ -1334,7 +1334,7 @@ structure KInductionCircuits {arity : Type _}
   -- | Circuit that sets out[i] = out(states[i], inputs[i]) upto 'n'.
   cOutAssignCirc : Circuit (Vars fsm.α arity (n + 2))
   -- | Circuit that says that states s0..sn are disequal
-  cStatesUniqueCirc : Circuit (Vars fsm.α arity (n + 1))
+  cStatesUniqueCirc : Circuit (Vars fsm.α arity n)
 
 structure KInductionCircuits.IsLawful {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity] {fsm : FSM arity} {n : Nat}
@@ -1361,9 +1361,9 @@ structure KInductionCircuits.IsLawful {arity : Type _}
             | .inr j => env (Vars.inputN j i)) =
         env (Vars.outputs ⟨i, by omega⟩))
   hCStatesUniqueCirc :
-    ∀ {env : Vars fsm.α arity (n + 1) → Bool},
+    ∀ {env : Vars fsm.α arity (n) → Bool},
       (circs.cStatesUniqueCirc.eval env = false)
-      ↔ (∀ (i j : Nat) (hij : i < j ∧ j ≤ n + 1),
+      ↔ (∀ (i j : Nat) (hij : i < j ∧ j ≤ n),
         ∃ (s : fsm.α), env (Vars.stateN s i) ≠ env (Vars.stateN s j))
 
 attribute [simp] KInductionCircuits.IsLawful.hCInitCarryAssignCirc
@@ -1399,7 +1399,7 @@ def mkZero : KInductionCircuits fsm 0 where
   cInitCarryAssignCirc := mkInitCarryAssignCircuit fsm
   cSuccCarryAssignCirc := mkCarryAssignCircuitLeN fsm 1
   cOutAssignCirc := mkOutputAssignCircuitLeN fsm 1
-  cStatesUniqueCirc := mkAllPairsUniqueStatesCircuit fsm 1
+  cStatesUniqueCirc := mkAllPairsUniqueStatesCircuit fsm 0
 
 theorem IsLawful_mkZero {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -1419,8 +1419,7 @@ theorem IsLawful_mkZero {arity : Type _}
     simp only [mkOutputAssignCircuitLeN_eq_false_iff]
   hCStatesUniqueCirc := by
     intro env
-    simp only [mkZero]
-    simp only [mkAllPairsUniqueStatesCircuit_eq_false_iff]
+    simp [mkZero, mkAllPairsUniqueStatesCircuit_eq_false_iff]
 
 -- NOTE [Circuit Equivalence As a quotient]:
 -- We ideally should have a notion of `Circuit.equiv`, which says that
@@ -1443,7 +1442,7 @@ def mkSucc
       (mkOutputAssignCircuitN fsm (n + 2)) |||
       (castCircLe prev.cOutAssignCirc)
   , cStatesUniqueCirc :=
-      mkStateUniqueCircuitN fsm (n + 2) |||
+      mkStateUniqueCircuitN fsm (n + 1) |||
       (castCircLe prev.cStatesUniqueCirc)
   }
 
@@ -1518,16 +1517,16 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
       simp [mkStateUniqueCircuitN_eq_false_iff] at h
       simp [hPrev.hCStatesUniqueCirc] at h
       obtain ⟨h₁, h₂⟩ := h
-      by_cases hj : j ≤ n + 1
+      by_cases hj : j ≤ n
       · apply h₂ i j (by omega)
-      · have : j = n + 2 := by omega
+      · have : j = n + 1 := by omega
         subst this
         apply h₁ i (by omega)
     · intros h
       constructor
       · rw [mkStateUniqueCircuitN_eq_false_iff]
         intros i hi
-        apply h (j := n + 2) (hij := by omega)
+        apply h (j := n + 1) (hij := by omega)
       · simp [hPrev.hCStatesUniqueCirc]
         intros i j hij
         simp at h ⊢
@@ -1868,7 +1867,7 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm_aux
   {circs : KInductionCircuits fsm n}
   (hcircs : circs.IsLawful)
   (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
-  (∀ (envBitstream : _) (s0 : _), (∀ (i : Nat) (j : Nat), i < j ∧ j ≤ n + 1 →
+  (∀ (envBitstream : _) (s0 : _), (∀ (i : Nat) (j : Nat), i < j ∧ j ≤ n →
       (fsm.carryWith s0 envBitstream i) ≠ (fsm.carryWith s0 envBitstream j)) →
       (∀ (k : Nat), k < n + 1 → fsm.evalWith s0 envBitstream k = false) →
       (fsm.evalWith s0 envBitstream (n + 1) = false)) := by
@@ -1905,7 +1904,7 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
   {circs : KInductionCircuits fsm n}
   (hcircs : circs.IsLawful)
   (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
-  (∀ (envBitstream : _) (s0 : _), StatesUniqueLe fsm s0 envBitstream (n + 1) →
+  (∀ (envBitstream : _) (s0 : _), StatesUniqueLe fsm s0 envBitstream n →
       (∀ (k : Nat), k < n + 1 → fsm.evalWith s0 envBitstream k = false) →
       (fsm.evalWith s0 envBitstream (n + 1) = false)) := by
   simp [StatesUniqueLe]
@@ -2310,12 +2309,11 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
     omega
   · intros s0 env hUnique hind
     apply hIndHyp
-    · sorry
-      -- apply hUnique
+    · apply hUnique
     · intros i hi
       apply hind
       omega
-      sorry
+
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     {fsm : FSM arity} (circs : KInductionCircuits fsm n) : CircuitStats where
