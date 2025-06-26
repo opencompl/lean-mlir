@@ -35,6 +35,11 @@ RUN ./configure.py && cd build && ninja install
 # install Lean-MLIR (commit: 22.06.25)
 RUN git clone https://github.com/opencompl/lean-mlir && cd lean-mlir && git checkout b0253c5f5dbc6cc507b559d76fd659da38a8e565 
 WORKDIR /code/lean-mlir
+
+# get cached dependencies
+WORKDIR /code/lean-mlir
+COPY . .
+
 RUN lake exe cache get
 RUN lake build
 
