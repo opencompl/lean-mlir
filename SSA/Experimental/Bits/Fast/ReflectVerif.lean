@@ -2054,9 +2054,9 @@ structure SimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (i
   k : Nat
   hkLt : k ≤ n
   hCarryWith :  fsm.carryWith s0 inputs n = fsm.carryWith s0 simplePath k
-  /-- We pick a subsequence of paths. -/
-  hCarryWith_of_le : ∀ (i : Nat), i ≤ k →
-    ∃ j : Nat, j ≤ n ∧ fsm.carryWith s0 simplePath i = fsm.carryWith s0 inputs j
+  -- /-- We pick a subsequence of paths. -/
+  -- hCarryWith_of_le : ∀ (i : Nat), i ≤ k →
+  --   ∃ j : Nat, j ≤ n ∧ fsm.carryWith s0 simplePath i = fsm.carryWith s0 inputs j
   hStatesUniqueLe : StatesUniqueLe fsm s0 simplePath k
 
 
@@ -2168,6 +2168,19 @@ theorem envBitstream_set_eq_of_eq₂   {x : arity → BitStream}
   (envBitstream_set x n v) a n = v a := by
   simp [envBitstream_set]
 
+/-- if env = env' upto n < k, then we can change
+ `fsm.carryWith s0 env k` into `fsm.carryWith (env_bitstream_set env N val)`.
+-/
+theorem FSM.carryWith_congrEnv_envBitstream_set_of_le (fsm : FSM arity)
+    (s0 : fsm.α → Bool) (env : arity → BitStream) (n : Nat) (v : arity → Bool)
+    (k : Nat) (hk : k ≤ n) :
+  fsm.carryWith s0 (envBitstream_set env n v) k =
+  fsm.carryWith s0 env k := by
+  apply FSM.carryWith_congrEnv
+  intros a l hl
+  simp [envBitstream_set]
+  intros hcontra; omega
+
 
 /--
 There always exists a simple path of a given path,
@@ -2176,10 +2189,9 @@ Luckily, we don't care about this being executable or fast.
 To ensure that we do not use the performance of this procedure,
 we mark it `noncomputable`.
 -/
-axiom mkSimplePathOfPath (fsm : FSM arity)
+noncomputable def mkSimplePathOfPath (fsm : FSM arity)
     (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) :
     SimplePathOfPath fsm s0 n inputs
-/-
   :=
   match hn : n with
   | 0 => {
@@ -2188,29 +2200,40 @@ axiom mkSimplePathOfPath (fsm : FSM arity)
     hkLt := by omega,
     hCarryWith := rfl,
     hStatesUniqueLe := StatesUniqueLe_zero,
-    hCarryWith_of_le := by
-      intros i hi
-      simp [hi]
-      have : i = 0 := by omega
-      subst this
-      simp
+    -- hCarryWith_of_le := by
+    --   intros i hi
+    --   simp [hi]
+    --   have : i = 0 := by omega
+    --   subst this
+    --   simp
   }
   | n' + 1 =>
     let path' := mkSimplePathOfPath fsm s0 n' inputs
     let sn := fsm.carryWith s0 inputs n
     match path'.findState? sn with
     | ⟨none, hnone⟩ => {
-      simplePath := envBitstream_set path'.simplePath n (fun a => inputs a n),
+      simplePath := envBitstream_set path'.simplePath (path'.k) (fun a => inputs a (n')),
       k := path'.k + 1,
       hkLt := by
         have := path'.hkLt
         omega,
       hCarryWith := by
         have := path'.hCarryWith
-        sorry
-
-      hCarryWith_of_le := by
-        sorry
+        conv =>
+          lhs
+          rw [← FSM.carryWith_carryWith_eq_carryWith_add]
+          rw [this]
+        conv =>
+          rhs
+          rw [← FSM.carryWith_carryWith_eq_carryWith_add]
+        rw [FSM.carryWith_congrEnv_envBitstream_set_of_le]
+        · generalize fsm.carryWith s0 path'.simplePath path'.k = s0'
+          -- | TODO: find lemmas.
+          ext a
+          simp [FSM.carryWith, FSM.carry, FSM.nextBit, FSM.nextBitCirc_changeInitCarry_eq,
+            FSM.initCarry_changeInitCarry_eq, add_zero, ne_eq, Nat.left_eq_add, one_ne_zero,
+            not_false_eq_true]
+        · omega
       hStatesUniqueLe := by
         have := path'.hStatesUniqueLe
         simp [StatesUniqueLe] at this ⊢
@@ -2236,7 +2259,6 @@ axiom mkSimplePathOfPath (fsm : FSM arity)
           · omega
     }
     | ⟨some k, hsome⟩ => sorry
--/
 
 /-- Safety on all simple paths implies safety on all paths. -/
 theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arity)
