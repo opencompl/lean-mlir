@@ -513,15 +513,15 @@ def lhs :
     Com ScfArith Γ .impure t :=
   /- v -/
   /- v1 = -/ Com.var (for_ (t := t)
-                        ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
-                        ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
-                        ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
-                        ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
+                        ⟨/- start -/ 0, by rfl⟩
+                        ⟨/- delta -/1, by rfl⟩
+                        ⟨/- steps -/ 2, by simp⟩
+                        ⟨/- v0 -/ 3, by simp⟩  rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs : Com ScfArith [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] .impure t :=
   /- delta * steps + start-/
-  Com.letPure (axpy ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) <|
+  Com.letPure (axpy ⟨1, by simp⟩ ⟨2, by simp⟩ ⟨0, by simp⟩) <|
   /- -delta -/
   Com.letPure (neg ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.var (for_ (t := t)
@@ -542,13 +542,12 @@ theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.V
     {var : Γ.Var ty}
     (hvar : var = ⟨v, hvproof⟩) :
     V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by
-      simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
+      simp at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
   simp [Ctxt.Valuation.snoc, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   unfold lhs rhs
   simp_peephole
-
 
 /-- info:
 'ScfFunctor.ForReversal.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/

@@ -1177,9 +1177,9 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
   have hasPureOp : DialectSignature.effectKind op = EffectKind.pure := by
     simpa [HasPureOp] using Expr.hasPureOp_of_toPure?_isSome (Option.isSome_iff_exists.mpr ⟨_, he⟩)
   rw [Expr.denote_mk_of_pure hasPureOp]
-  have h :
-      cast h (DialectDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs))
-      = denote e' Γv := by
+  simp
+  cases eff
+  · simp
     unfold denote
     split
     simp only [toPure?] at he
@@ -1188,7 +1188,15 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
       obtain ⟨rfl, rfl⟩ := by simpa using h
       simp
     · contradiction
-  cases eff <;> simp [this]
+  · simp
+    unfold denote
+    split
+    simp only [toPure?] at he
+    split at he
+    · obtain ⟨rfl, h⟩ := by simpa using he
+      obtain ⟨rfl, rfl⟩ := by simpa using h
+      simp
+    · contradiction
 
 /-!
 ## Combining `Lets` and `Com`

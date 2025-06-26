@@ -1454,7 +1454,10 @@ def swapLastTwoBlock (x : Fin (n + 3)) : Fin (n + 3) :=
    simp [swapLastTwoBlock]
    split_ifs
    · simp_all [Fin.last]; omega
-   · simp
+   · simp only [Fin.last, Fin.ext_iff, Fin.add_def, Fin.val_natCast, lt_add_iff_pos_right,
+       Nat.ofNat_pos, Nat.mod_eq_of_lt, Fin.coe_ofNat_eq_mod, lt_add_iff_pos_left, add_pos_iff,
+       or_true, add_lt_add_iff_left, Nat.one_lt_ofNat] at *
+     omega
    · simp_all [Fin.last, Fin.ext_iff, Nat.mod_eq_of_lt]; omega
    · simp_all [Fin.last, Fin.ext_iff]; rw [Nat.mod_eq_of_lt (by omega)] at *
 
@@ -1708,12 +1711,12 @@ lemma TermUnop.alt_lang {t : Term} (op : TermUnop) :
         simp [swapLastTwo]
         split_ifs with h₁ h₂
         · exfalso; rw [Fin.ext_iff] at h₁
-          simp [Fin.add_def] at h₁
+          simp at h₁
         · rfl
         · exfalso; apply h₂; ext; simp; exact Eq.symm (Nat.mod_eq_of_lt h₃)
       rw [heq]
       rw [List.Vector.append_get_ge]
-      on_goal 2 => simp [Fin.add_def]
+      on_goal 2 => simp
       simp
       congr
       ext1 x

@@ -90,8 +90,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   simp only [f]
   rw [Polynomial.degree_add_eq_left_of_degree_lt]
   <;> rw [Polynomial.degree_X_pow]
-  simp only [Nat.cast_pow, Nat.cast_ofNat, Polynomial.degree_one,
-    Preorder.toLT, WithBot.preorder, OfNat.ofNat]
+  simp only [Nat.cast_pow, OfNat.ofNat]
   simp only [degree_one, Nat.cast_pow, Nat.cast_ofNat]
   norm_cast
   exact Fin.pos'
@@ -413,7 +412,7 @@ theorem R.repLength_lt_n_plus_1 [Fact (q > 1)]: forall a : R q n, a.repLength < 
     apply f_monic
   simp only [LT.lt] at this
   let ⟨val, VAL, VAL_EQN⟩ := this
-  rcases H : degree (R.representative' q n a %ₘ f q n) <;> simp[this]
+  rcases H : degree (R.representative' q n a %ₘ f q n) <;> simp
   case some val' =>
     specialize (VAL_EQN _ H)
     norm_cast at VAL
@@ -527,8 +526,8 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
     cases xs
     case nil => simp [degree]
     case cons x xs =>
-      simp only [degree, support_ofFinsupp, List.length_cons, Nat.succ_eq_add_one, Nat.cast_add,
-        Nat.cast_one, List.toFinsupp, Finset.range_succ]
+      simp only [degree, support_ofFinsupp, List.length_cons, Nat.cast_add, Nat.cast_one,
+        List.toFinsupp, Finset.range_succ]
       apply Finset.max_le
       intros a ha
       obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
@@ -614,7 +613,7 @@ theorem coeff_modByMonic_degree_lt_f {i : Nat} (p : (ZMod q)[X])
 theorem R.coeff_fromPoly (p : (ZMod q)[X]) :
     R.coeff (R.fromPoly (q := q) (n := n) p) = Polynomial.coeff (p %ₘ (f q n)) := by
   unfold R.coeff
-  simp [R.coeff]
+  simp
   have H := R.representative_fromPoly_toFun (a := p) (n := n)
   norm_cast at H ⊢
 

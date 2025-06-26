@@ -327,14 +327,14 @@ attribute [local simp] Ctxt.snoc
 namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com SimpleReg [int] .pure int :=
-  Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
-      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+  Com.var (iterate (k := 0) (⟨0, by simp⟩) (
+      Com.letPure (add ⟨0, by simp⟩ ⟨0, by simp⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def rhs : Com SimpleReg [int] .pure int :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret ⟨0, by simp⟩
 
 attribute [local simp] Ctxt.snoc
 --
@@ -373,7 +373,7 @@ def lhs : Com SimpleReg [int] .pure int :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def rhs : Com SimpleReg [int] .pure int :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret ⟨0, by simp⟩
 
 def p2 : PeepholeRewrite SimpleReg [int] int:=
   { lhs := lhs, rhs := rhs, correct := by
