@@ -113,17 +113,17 @@ def compare_solvers_on_file (results : dict) :
         benchmark_errors.append(error)
 
     data = {
-        'file_solved_bitwuzla_times_average' = file_solved_bitwuzla_times_average
-        'file_counter_bitwuzla_times_average' = file_counter_bitwuzla_times_average
-        'file_solved_bv_decide_times_average' = file_solved_bv_decide_times_average
-        'file_solved_bv_decide_rw_times_average' = file_solved_bv_decide_rw_times_average
-        'file_solved_bv_decide_bb_times_average' = file_solved_bv_decide_bb_times_average
-        'file_solved_bv_decide_sat_times_average' = file_solved_bv_decide_sat_times_average
-        'file_solved_bv_decide_lratt_times_average' = file_solved_bv_decide_lratt_times_average
-        'file_solved_bv_decide_lratc_times_average' = file_solved_bv_decide_lratc_times_average
-        'file_counter_bv_decide_times_average' = file_counter_bv_decide_times_average
-        'file_counter_bv_decide_rw_times_average' = file_counter_bv_decide_rw_times_average
-        'file_counter_bv_decide_sat_times_average' = file_counter_bv_decide_sat_times_average
+        'file_solved_bitwuzla_times_average' : file_solved_bitwuzla_times_average
+        'file_counter_bitwuzla_times_average' : file_counter_bitwuzla_times_average
+        'file_solved_bv_decide_times_average' : file_solved_bv_decide_times_average
+        'file_solved_bv_decide_rw_times_average' : file_solved_bv_decide_rw_times_average
+        'file_solved_bv_decide_bb_times_average' : file_solved_bv_decide_bb_times_average
+        'file_solved_bv_decide_sat_times_average' : file_solved_bv_decide_sat_times_average
+        'file_solved_bv_decide_lratt_times_average' : file_solved_bv_decide_lratt_times_average
+        'file_solved_bv_decide_lratc_times_average' : file_solved_bv_decide_lratc_times_average
+        'file_counter_bv_decide_times_average' : file_counter_bv_decide_times_average
+        'file_counter_bv_decide_rw_times_average' : file_counter_bv_decide_rw_times_average
+        'file_counter_bv_decide_sat_times_average' : file_counter_bv_decide_sat_times_average
     }
     return data 
 
