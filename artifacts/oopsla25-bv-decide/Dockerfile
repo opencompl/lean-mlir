@@ -61,10 +61,9 @@ RUN rm -rf .lake/packages/mathlib && lake update && lake build
 RUN python3 -m venv .venv && \
     .venv/bin/pip install -r requirements.txt
 
-# setup python env
+# Setup python env
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-
 
 # Set the evaluation script directory as working dir
 WORKDIR /code/lean-mlir/bv-evaluation/
