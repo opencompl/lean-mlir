@@ -41,7 +41,7 @@ def compare_solvers_on_file (results : dict) :
     failed_bv_decide_and_bitwuzla = 0
     failed_bitwuzla_only = 0
     failed_bv_decide_only = 0
-    errors_and_mismatches = []
+    benchmark_errors = []
 
     print(file_result[0])
 
@@ -123,7 +123,8 @@ def compare_solvers_on_file (results : dict) :
         'file_solved_bv_decide_lratc_times_average' : file_solved_bv_decide_lratc_times_average,
         'file_counter_bv_decide_times_average' : file_counter_bv_decide_times_average,
         'file_counter_bv_decide_rw_times_average' : file_counter_bv_decide_rw_times_average,
-        'file_counter_bv_decide_sat_times_average' : file_counter_bv_decide_sat_times_average
+        'file_counter_bv_decide_sat_times_average' : file_counter_bv_decide_sat_times_average,
+        'errors' : benchmark_errors
     }
     return data 
 
