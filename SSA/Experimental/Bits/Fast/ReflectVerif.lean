@@ -1891,6 +1891,44 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
       apply ihk
       omega
 
+
+/--
+`eval` is false iff we establish the safety and induction hypothesis.
+-/
+theorem eval_eq_false_of_eval_eq_false_le_n_of_eval_eq_false_le_n_of_eval_eq_false_le_n {n : Nat}
+    {arity : Type _} [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (p : FSM arity)
+    (hs : ∀ (envBitstream : arity → BitStream), ∀ i ≤ n, p.eval envBitstream i = false)
+    (hind : ∀ (state : p.α → Bool) (envBitstream : arity → BitStream),
+    (∀ i ≤ n, p.evalWith state envBitstream i = false) →
+      p.evalWith state envBitstream (n + 1) = false)
+    :
+    ∀ (envBitstream : arity → BitStream) (i : Nat), p.eval envBitstream i = false := by
+  intros envBitstream i
+  rw [FSM.eval_eq_evalWith_initCarry]
+  induction i using Nat.strong_induction_on
+  case h i hStrongI =>
+    induction i using ind_principle₂ n
+    case hBase i hi =>
+      apply hs
+      omega
+    case hInd j hjLt hjInd =>
+      rw [show j = (j - (n + 1)) + (n + 1) by omega]
+      rw [FSM.evalWith_add_eq_evalWith_carryWith]
+      apply hind
+      · intros i hi
+        rw [← FSM.evalWith_add_eq_evalWith_carryWith]
+        rw [show j - (n + 1)  + i = j - (n + 1 - i) by omega]
+        rw [show j - (n + 1 - i) = j - ((n - i)) - 1 by omega]
+        by_cases hi : i = 0
+        · subst hi
+          simp
+          apply hStrongI
+          omega
+        · apply hjInd
+          · omega
+          · intros k hk; apply hStrongI; omega
+
 /--
 Establish safety on all simple paths.
 -/
