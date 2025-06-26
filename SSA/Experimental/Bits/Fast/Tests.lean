@@ -317,9 +317,7 @@ def test2_gen (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := 
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
-/--
-info: 'test24' depends on axioms: [propext, Quot.sound, ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
--/
+/-- info: 'test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test24
 
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
