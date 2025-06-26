@@ -2166,7 +2166,7 @@ If we have all unique states upto `K`, then we have unique states upto
 -/
 theorem StatesUniqueLe_of_StatesUniqueLe_congr
   {K k' : Nat}
-  {fsm : FSM arity} {s0 : fsm.α → Bool} {env : arity → BitStream}
+  {fsm : FSM arity} {s0 : fsm.α → Bool}
   {env env' : arity → BitStream}
   {this : StatesUniqueLe fsm s0 env K}
   (hk' : k' ≤ K)
@@ -2203,9 +2203,19 @@ theorem ind_hyp_all_paths_of_ind_hyp_simple_paths
   let hEnv' := mkSimplePathOfPath fsm s0 (K + 1) env
   rw [hEnv'.hEvalWith]
   rw [hind]
-  · sorry
-  · sorry
-  · sorry
+  · apply StatesUniqueLe_of_StatesUniqueLe_congr
+    · apply hEnv'.hStatesUniqueLe
+    · have := hEnv'.hkLt; sorry
+      -- omega
+    · sorry
+  · intros i hi
+    -- TODO: use subsequence condition to show that the 'evalWith' must be false because of 'hsafety'.
+    sorry
+    XXXX
+    · sorry
+    · intros a j hj
+      sorry
+  · have := hEnv'.hkLt; omega
 
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
     {circs : KInductionCircuits fsm n}
