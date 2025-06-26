@@ -6,9 +6,9 @@ import os
 from enum import Enum
 from collections import Counter
 
-output = Enum('output', [('counterxample', 1), ('proved', 2), ('failed', 0)])
+output = Enum('output', [('counterexample', 1), ('proved', 2), ('failed', 0)])
 
-paper_directory = 'for-paper/'
+paper_directory = ''
 benchmark_dir = "../SSA/Projects/InstCombine/HackersDelight/"
 res_dir = "results/HackersDelight/"
 raw_data_dir = paper_directory + 'raw-data/HackersDelight/'
@@ -31,7 +31,6 @@ col = [
 
 def parse_file(file_name : str, reps : int) : 
     """Parse an output file and compute the performance number of each solver."""
-    l = file_name.readline()
     outputs_bitwuzla = []
     solved_bitwuzla_times_average = []
     counter_bitwuzla_times_average = []
@@ -47,7 +46,7 @@ def parse_file(file_name : str, reps : int) :
     counter_bv_decide_sat_times_average = []
     errors = []
     for r in range(reps):
-        res_file = open(res_dir+file.split(".")[0]+"_r"+str(r)+".txt")
+        res_file = open(file_name+"_r"+str(r)+".txt")
         l = res_file.readline()
         thm = 0
         while l:
@@ -68,7 +67,7 @@ def parse_file(file_name : str, reps : int) :
                         in the counterexample times"""
                     tot = float(l.split("after ")[1].split("ms")[0])
                     if r == 0:
-                        outputs_bitwuzla.append(output.counterxample) 
+                        outputs_bitwuzla.append(output.counterexample) 
                         counter_bitwuzla_times_average.append([tot])
                         solved_bitwuzla_times_average.append(float(-1))
                     else: 
@@ -115,7 +114,7 @@ def parse_file(file_name : str, reps : int) :
                     elif "counter " in l:   
                         tot = float(l.split("ms")[0].split("after ")[1])
                         if r == 0:
-                            outputs_bv_decide.append(output.counterxample)
+                            outputs_bv_decide.append(output.counterexample)
                             counter_bv_decide_times_average.append([tot])
                             counter_bv_decide_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
                             counter_bv_decide_sat_times_average.append([float(l.split("ms")[1].split("solving ")[1])])
@@ -210,23 +209,27 @@ solved_bv_decide_tot = 0
 counter_bv_decide_tot = 0
 error_bv_decide_tot = 0
 
-# each entry contains the solving time average among all files 
-file_solved_bitwuzla_times_average = []
-file_counter_bitwuzla_times_average = []
-file_solved_bv_decide_times_average = []
-file_solved_bv_decide_rw_times_average = []
-file_solved_bv_decide_bb_times_average = []
-file_solved_bv_decide_sat_times_average = []
-file_solved_bv_decide_lratt_times_average = []
-file_solved_bv_decide_lratc_times_average = []
-file_counter_bv_decide_times_average = []
-file_counter_bv_decide_rw_times_average = []
-file_counter_bv_decide_sat_times_average = []
+
 
 for file_result in file_data: 
 
-    count_bitwuzla = Counter(file_data[1].output_bitwuzla)
-    count_bv_decide = Counter(file_data[1].output_bv_decide)
+    # each entry contains the solving time average among all files 
+    file_solved_bitwuzla_times_average = []
+    file_counter_bitwuzla_times_average = []
+    file_solved_bv_decide_times_average = []
+    file_solved_bv_decide_rw_times_average = []
+    file_solved_bv_decide_bb_times_average = []
+    file_solved_bv_decide_sat_times_average = []
+    file_solved_bv_decide_lratt_times_average = []
+    file_solved_bv_decide_lratc_times_average = []
+    file_counter_bv_decide_times_average = []
+    file_counter_bv_decide_rw_times_average = []
+    file_counter_bv_decide_sat_times_average = []
+
+    print(file_result[0])
+
+    count_bitwuzla = Counter(file_result[1]['outputs_bitwuzla'])
+    count_bv_decide = Counter(file_result[1]['outputs_bv_decide'])
 
     solved_bitwuzla_tot += count_bitwuzla[output.proved]
     counter_bitwuzla_tot += count_bitwuzla[output.counterexample]
@@ -238,48 +241,70 @@ for file_result in file_data:
 
     # average all the results among all repetitions 
         
-    for error in file_data[1].errors : 
+    for error in file_result[1]['errors'] : 
         benchmark_errors.append(error)
 
-    for theorem in file_data[1].solved_bitwuzla_times_average : 
+    for theorem in file_result[1]['solved_bitwuzla_times_average'] : 
         file_solved_bitwuzla_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].counter_bitwuzla_times_average : 
+    for theorem in file_result[1]['counter_bitwuzla_times_average'] : 
         file_counter_bitwuzla_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].solved_bv_decide_times_average : 
+    for theorem in file_result[1]['solved_bv_decide_times_average'] : 
         file_solved_bv_decide_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].solved_bv_decide_rw_times_average : 
+    for theorem in file_result[1]['solved_bv_decide_rw_times_average'] : 
         file_solved_bv_decide_rw_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].solved_bv_decide_bb_times_average : 
+    for theorem in file_result[1]['solved_bv_decide_bb_times_average'] : 
         file_solved_bv_decide_bb_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].solved_bv_decide_sat_times_average : 
+    for theorem in file_result[1]['solved_bv_decide_sat_times_average'] : 
         file_solved_bv_decide_sat_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].solved_bv_decide_lratt_times_average : 
+    for theorem in file_result[1]['solved_bv_decide_lratt_times_average'] : 
         file_solved_bv_decide_lratt_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].solved_bv_decide_lratc_times_average : 
+    for theorem in file_result[1]['solved_bv_decide_lratc_times_average'] : 
         file_solved_bv_decide_lratc_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].counter_bv_decide_times_average : 
+    for theorem in file_result[1]['counter_bv_decide_times_average'] : 
         file_counter_bv_decide_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].counter_bv_decide_rw_times_average : 
+    for theorem in file_result[1]['counter_bv_decide_rw_times_average'] : 
         file_counter_bv_decide_rw_times_average.append(np.mean(theorem))
 
-    for theorem in file_data[1].counter_bv_decide_sat_times_average : 
+    for theorem in file_result[1]['counter_bv_decide_sat_times_average'] : 
         file_counter_bv_decide_sat_times_average.append(np.mean(theorem))
 
 
-print("bv_decide solved "+str(solved_bv_decide_tot)+" theorems.")
-print("bitwuzla solved "+str(solved_bitwuzla_tot)+" theorems.")
-print("bv_decide found "+str(counter_bv_decide_tot)+" counterexamples.")
-print("bitwuzla found "+str(counter_bitwuzla_tot)+" counterexamples.")
-print("Errors raised: "+str(error_bitwuzla_tot + error_bv_decide_tot))
+    # for hackers'delight we want to produce a single .csv dataframe per file per bitwidth 
+
+    ceg_df = pd.DataFrame({'counter_bitwuzla_times_average': file_counter_bitwuzla_times_average, 
+                            'counter_bv_decide_times_average': file_counter_bv_decide_times_average, 
+                            'counter_bv_decide_rw_times_average': file_counter_bv_decide_rw_times_average, 
+                            'counter_bv_decide_sat_times_average': file_counter_bv_decide_sat_times_average})
+
+    solved_df = pd.DataFrame({'solved_bitwuzla_times_average': file_solved_bitwuzla_times_average, 
+                            'solved_bv_decide_times_average': file_solved_bv_decide_times_average, 
+                            'solved_bv_decide_rw_times_average': file_solved_bv_decide_rw_times_average, 
+                            'solved_bv_decide_bb_times_average': file_solved_bv_decide_bb_times_average, 
+                            'solved_bv_decide_sat_times_average': file_solved_bv_decide_sat_times_average, 
+                            'solved_bv_decide_lratt_times_average': file_solved_bv_decide_sat_times_average, 
+                            'solved_bv_decide_lratc_times_average': file_solved_bv_decide_sat_times_average})
+
+    errors_df = pd.DataFrame({'errors_bitwuzla':benchmark_errors})
+
+    ceg_df.to_csv(raw_data_dir+file_result[0].split("/")[-1]+'_ceg_data.csv')
+    print(raw_data_dir+file_result[0].split("/")[-1]+'_ceg_data.csv')
+    solved_df.to_csv(raw_data_dir+file_result[0].split("/")[-1]+'_solved_data.csv')
+    errors_df.to_csv(raw_data_dir+file_result[0].split("/")[-1]+'_err_data.csv')
+
+    print("bv_decide solved "+str(solved_bv_decide_tot)+" theorems.")
+    print("bitwuzla solved "+str(solved_bitwuzla_tot)+" theorems.")
+    print("bv_decide found "+str(counter_bv_decide_tot)+" counterexamples.")
+    print("bitwuzla found "+str(counter_bitwuzla_tot)+" counterexamples.")
+    print("Errors raised: "+str(error_bitwuzla_tot + error_bv_decide_tot))
 
 # err_a = np.array(err_msg)
 
