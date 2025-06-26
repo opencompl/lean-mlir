@@ -2449,7 +2449,13 @@ theorem all_simple_paths_good
       intros hUnique
       apply hind
       · intros k l hkl
-        exact all_simple_paths_good_ax
+        simp [show j - (K + 1) + (K + 1) = j by omega] at hUnique
+        rw [FSM.carryWith_carryWith_eq_carryWith_add]
+        rw [FSM.carryWith_carryWith_eq_carryWith_add]
+        simp [StatesUniqueLe] at hUnique
+        apply hUnique
+        · omega
+        · omega
       · -- rw [← FSM.evalWith_add_eq_evalWith_carryWith]
         intros i hi
         -- rw [show j - (K + 1) + i = j - (K + 1 - i) by omega]
