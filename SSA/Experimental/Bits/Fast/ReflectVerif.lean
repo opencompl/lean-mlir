@@ -2215,7 +2215,7 @@ theorem all_simple_paths_good
     (hind : ∀ (s0 : _) (env : _),
        StatesUniqueLe fsm s0 env K →
        (∀ (i : Nat), i ≤ K  → fsm.evalWith s0 env i = false) →
-       (∀ (j : Nat), j ≤ K + 1 → fsm.evalWith s0 env j = false)) :
+        fsm.evalWith s0 env (K + 1) = false) :
   ∀ (env : _) (n : Nat),
     StatesUniqueLe fsm fsm.initCarry env n →
     fsm.evalWith fsm.initCarry env n = false := by
@@ -2223,6 +2223,7 @@ theorem all_simple_paths_good
   -- apply evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe
   sorry
 
+#print all_simple_paths_good
 /--
 Safety for all paths, given that kinduction base case holds,
 and that we can apply k-induction to simple paths.
@@ -2234,25 +2235,37 @@ theorem all_paths_good_of_kbase_of_simple_path_kind
     (hind : ∀ (s0 : _) (env : _),
       StatesUniqueLe fsm s0 env K →
       (∀ (i : Nat), i ≤ K → fsm.evalWith s0 env i = false) →
-      (∀ (j : Nat), j ≤ K + 1 →
-        fsm.evalWith s0 env j = false)) :
+      fsm.evalWith s0 env (K + 1) = false) :
   ∀ (env : _) (n : Nat),
     fsm.evalWith fsm.initCarry env n = false := by
   intros env n
   apply evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe
   apply all_simple_paths_good (K := K)
   · apply hsafety
-  · apply hind
+  · intros s0 env hUnique hindPrecond
+    apply hind
+    · apply hUnique
+    · apply hindPrecond
 
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
-    {circs : KInductionCircuits fsm n}
+    {circs : KInductionCircuits fsm K}
     (hCircs : circs.IsLawful)
     (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
     (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
     (∀ (envBitstream : _), fsm.eval envBitstream i = false) := by
   intros envBitstream
-  sorry
-
+  obtain hSafety := mkSafetyCircuit_eval_eq_false_thm hCircs hSafety
+  obtain hIndHyp := mkIndHypCycleBreaking_eval_eq_false_thm hCircs hIndHyp
+  apply all_paths_good_of_kbase_of_simple_path_kind (K :=  K)
+  · intros k env hk
+    apply hSafety
+    omega
+  · intros s0 env hUnique hind
+    apply hIndHyp
+    apply hUnique
+    intros i hi
+    apply hind
+    omega
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     {fsm : FSM arity} (circs : KInductionCircuits fsm n) : CircuitStats where
