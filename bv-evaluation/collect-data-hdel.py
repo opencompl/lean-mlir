@@ -22,6 +22,8 @@ data = {}
 
 col = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c"]
 
+threshold = 1.1
+
 
 def compare_solvers_on_file(results: dict):
     benchmark_errors = []
@@ -213,9 +215,9 @@ def compare_solvers_on_file(results: dict):
     data = {
         "file_solved_bitwuzla_times_average": file_solved_bitwuzla_times_average,
         "file_counter_bitwuzla_times_average": file_counter_bitwuzla_times_average,
-        "file_solved_bv_decide_times_average": file_solved_bv_decide_times_average,
+        "": file_solved_bv_decide_times_average,
         "file_solved_bv_decide_rw_times_average": file_solved_bv_decide_rw_times_average,
-        "file_solved_bv_decide_bb_times_average": file_solved_bv_decide_bb_times_average,
+        "file_solved_bv_decide_rw_times_average": file_solved_bv_decide_bb_times_average,
         "file_solved_bv_decide_sat_times_average": file_solved_bv_decide_sat_times_average,
         "file_solved_bv_decide_lratt_times_average": file_solved_bv_decide_lratt_times_average,
         "file_solved_bv_decide_lratc_times_average": file_solved_bv_decide_lratc_times_average,
@@ -371,9 +373,13 @@ for file in os.listdir(benchmark_dir):
         file_data.append([file_name, parse_file(file_name, REPS)])
 
 for file_result in file_data:
+    print(file_result[0])
+
     file_comparison = compare_solvers_on_file(file_result)
 
     # for hackers'delight we want to produce a single .csv dataframe per file per bitwidth
+
+    # sanity_check_times(file_comparison)
 
     ceg_df = pd.DataFrame(
         {
