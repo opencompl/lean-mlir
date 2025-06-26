@@ -432,4 +432,3 @@ for file_result in file_data:
     print(raw_data_dir + file_result[0].split("/")[-1] + "_solved_data.csv")
     errors_df.to_csv(raw_data_dir + file_result[0].split("/")[-1] + "_err_data.csv")
     print(raw_data_dir + file_result[0].split("/")[-1] + "_err_data.csv")
-    
