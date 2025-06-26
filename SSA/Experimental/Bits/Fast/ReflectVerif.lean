@@ -1801,13 +1801,22 @@ theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
   simp [mkIndHypCycleBreaking, mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map]
 
 
-theorem foo (f g : α → β) (h : f ≠ g) : ∃ (a : α ), f a ≠ g a := by
-  apply?
+/--
+the states in `fsm` starting from state `s0`, with inputs `inputs` is all unique.
+-/
+def StatesUniqueLe (fsm : FSM arity) (s0 : fsm.α → Bool) (inputs : arity → BitStream) (n : Nat) : Prop :=
+  ∀ (i j : Nat), i < j ∧ j ≤ n → (fsm.carryWith s0 inputs i) ≠ (fsm.carryWith s0 inputs j)
+
+@[simp] theorem StatesUniqueLe_zero {fsm : FSM arity} {s0 : fsm.α → Bool} {inputs : arity → BitStream} :
+  StatesUniqueLe fsm s0 inputs 0 := by
+  intros i j hij
+  simp at hij
+  omega
+
 /--
 Show what the cycle breaking induction hypothesis circuit does.
-
 -/
-theorem  mkIndHypCycleBreaking_eval_eq_false_thm
+theorem  mkIndHypCycleBreaking_eval_eq_false_thm_aux
   {circs : KInductionCircuits fsm n}
   (hcircs : circs.IsLawful)
   (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
@@ -1841,33 +1850,22 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
     exact hcircs
 
 
-/--
-the states in `fsm` starting from state `s0`, with inputs `inputs` is all unique.
--/
-def StatesUniqueLe (fsm : FSM arity) (s0 : fsm.α → Bool) (inputs : arity → BitStream) (n : Nat) : Prop :=
-  ∀ (i j : Nat), i < j ∧ j ≤ n → (fsm.carryWith s0 inputs i) ≠ (fsm.carryWith s0 inputs j)
-
-@[simp] theorem StatesUniqueLe_zero {fsm : FSM arity} {s0 : fsm.α → Bool} {inputs : arity → BitStream} :
-  StatesUniqueLe fsm s0 inputs 0 := by
-  intros i j hij
-  simp at hij
-  omega
-
-/--
-Establish safety on all simple paths.
--/
-theorem SafeOnPathLe_of_StatesUniqueLe_of_Safety_of_HInd
-    (fsm : FSM arity) (n : Nat)
-    (hsafety : ∀ (i : Nat) (env : _) , i < n → fsm.evalWith fsm.initCarry env i = false)
-    (hind : ∀ (s0 : _) (env : _) (n : _),
-       StatesUniqueLe fsm s0 env n →
-       (∀ (i : Nat), i < n → fsm.evalWith s0 env i = false) →
-       fsm.evalWith s0 env n = false) :
-  ∀ (env : _) (n : Nat),
-    StatesUniqueLe fsm fsm.initCarry env n →
-    fsm.evalWith fsm.initCarry env n = false := by
-  intros inputs n hUnique
-  sorry
+/-- Show that the 'mkIndHypCycleBreaking' theorem establishes safety for all unique paths. -/
+theorem  mkIndHypCycleBreaking_eval_eq_false_thm
+  {circs : KInductionCircuits fsm n}
+  (hcircs : circs.IsLawful)
+  (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+  (∀ (envBitstream : _), StatesUniqueLe fsm fsm.initCarry envBitstream (n + 1) →
+      (∀ (k : Nat), k < n + 1 → fsm.eval envBitstream k = false) →
+      (fsm.eval envBitstream (n + 1) = false)) := by
+  simp [StatesUniqueLe]
+  intros envBitstream hind
+  apply mkIndHypCycleBreaking_eval_eq_false_thm_aux (circs := circs) (hcircs := hcircs)
+  · apply h
+  · intros i j hij
+    apply hind
+    · omega
+    · omega
 
 
 /-- induction principle with a uniform bound 'bound' in place. -/
@@ -1892,6 +1890,31 @@ theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
       intros ε  hε
       apply ihk
       omega
+
+/--
+Establish safety on all simple paths.
+-/
+theorem SafeOnPathLe_of_StatesUniqueLe_of_Safety_of_HInd
+    (fsm : FSM arity) (K : Nat)
+    (hsafety : ∀ (i : Nat) (env : _) , i < K + 1 → fsm.evalWith fsm.initCarry env i = false)
+    (hind : ∀ (s0 : _) (env : _),
+       StatesUniqueLe fsm s0 env K →
+       (∀ (i : Nat), i < K + 1 → fsm.evalWith s0 env i = false) →
+       fsm.evalWith s0 env (K + 1) = false) :
+  ∀ (env : _) (n : Nat),
+    StatesUniqueLe fsm fsm.initCarry env n →
+    fsm.evalWith fsm.initCarry env n = false := by
+  intros inputs n hUnique
+  revert hUnique
+  induction n using ind_principle₂ (bound := K)
+  case hBase i hi =>
+    intros hUnique
+    apply hsafety
+    omega
+  case hInd i hi hind =>
+    intros hUnique
+    -- gotta shift the environment.
+    sorry
 
 
 /--
