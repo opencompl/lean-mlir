@@ -305,3 +305,4 @@ df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla, 'leanSAT':counter_leanSAT,
 
 df.to_csv(raw_data_dir+'llvm-proved-data.csv')
 df_ceg.to_csv(raw_data_dir+'llvm-ceg-data.csv')
+
