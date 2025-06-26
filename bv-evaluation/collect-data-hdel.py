@@ -112,6 +112,12 @@ def compare_solvers_on_file (results : dict) :
     for error in file_result[1]['errors'] : 
         benchmark_errors.append(error)
 
+    print("bv_decide solved "+str(solved_bv_decide_tot)+" theorems.")
+    print("bitwuzla solved "+str(solved_bitwuzla_tot)+" theorems.")
+    print("bv_decide found "+str(counter_bv_decide_tot)+" counterexamples.")
+    print("bitwuzla found "+str(counter_bitwuzla_tot)+" counterexamples.")
+    print("Errors raised: "+str(error_bitwuzla_tot + error_bv_decide_tot))
+
     data = {
         'file_solved_bitwuzla_times_average' : file_solved_bitwuzla_times_average,
         'file_counter_bitwuzla_times_average' : file_counter_bitwuzla_times_average,
@@ -319,8 +325,4 @@ for file_result in file_data:
     errors_df.to_csv(raw_data_dir+file_result[0].split("/")[-1]+'_err_data.csv')
     print(raw_data_dir+file_result[0].split("/")[-1]+'_err_data.csv')
 
-    print("bv_decide solved "+str(solved_bv_decide_tot)+" theorems.")
-    print("bitwuzla solved "+str(solved_bitwuzla_tot)+" theorems.")
-    print("bv_decide found "+str(counter_bv_decide_tot)+" counterexamples.")
-    print("bitwuzla found "+str(counter_bitwuzla_tot)+" counterexamples.")
-    print("Errors raised: "+str(error_bitwuzla_tot + error_bv_decide_tot))
+
