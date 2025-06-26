@@ -289,10 +289,11 @@ def parse_file(file_name: str, reps: int):
                         solved_bv_decide_lratt_times_average.append([float(-1)])
                         solved_bv_decide_lratc_times_average.append([float(-1)])
                     elif "counter " in file_line:
-                        tot = float(file_line.split("ms")[0].split("after ")[1])
                         if r == 0:
                             outputs_bv_decide.append(output.counterexample)
-                        counter_bv_decide_times_average[thm].append(tot)
+                        counter_bv_decide_times_average[thm].append(
+                            float(file_line.split("ms")[0].split("after ")[1])
+                        )
                         counter_bv_decide_rw_times_average[thm].append(
                             float(file_line.split(" SAT")[0].split("rewriting ")[1])
                         )
@@ -306,10 +307,11 @@ def parse_file(file_name: str, reps: int):
                         solved_bv_decide_lratt_times_average[thm].append(float(-1))
                         solved_bv_decide_lratc_times_average[thm].append(float(-1))
                     elif "proved" in file_line:
-                        tot = float(file_line.split("ms")[0].split("r ")[1])
                         if r == 0:
                             outputs_bv_decide.append(output.proved)
-                        solved_bv_decide_times_average.append([tot])
+                        solved_bv_decide_times_average.append(
+                            [float(file_line.split("ms")[0].split("r ")[1])]
+                        )
                         solved_bv_decide_rw_times_average.append(
                             [float(file_line.split("ms")[1].split("g ")[1])]
                         )
