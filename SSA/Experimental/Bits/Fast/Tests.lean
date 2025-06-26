@@ -11,9 +11,6 @@ import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Projects.InstCombine.TacticAuto
 
-
-
-
 open Lean Meta Elab Tactic in
 #eval show TermElabM Unit from do
   let fsm : FSM (Fin 1) := FSM.mk (α := Unit)

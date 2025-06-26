@@ -86,212 +86,283 @@ open Lean Meta Elab Tactic
 namespace BvDecide
 open Std Sat AIG
 
+#check AIG.LawfulOperator
+
+structure ToAIGAuxEntrypoint {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+    (aig : AIG α) (c : Circuit α) where
+  out : AIG α
+  ref : out.Ref
+  href : ∀ env, AIG.denote env ⟨out, ref⟩ = c.eval env
+  le_size : aig.decls.size ≤ out.decls.size
+  decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+    out.decls[idx]'h2 = aig.decls[idx]'h1
+  denote_eq : ∀ (env : α → Bool) (ref : aig.Ref),
+    AIG.denote env ⟨aig, ref⟩ = AIG.denote env ⟨out, ref.cast (by omega)⟩
+
+
+  -- { entry : Entrypoint α // aig.decls.size ≤ entry.aig.decls.size }
+
 /--
 Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
 bitblasting capabilities.
 -/
 @[nospecialize]
 def _root_.Circuit.toAIGAux [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
-    ExtendingEntrypoint aig :=
+    ToAIGAuxEntrypoint aig c :=
   match c with
-  | .fals => ⟨⟨aig, aig.mkConstCached false⟩, by rfl⟩
-  | .tru => ⟨⟨aig, aig.mkConstCached true⟩, by rfl⟩
+  | .fals => {
+      out := aig,
+      ref := aig.mkConstCached false,
+      href := by simp,
+      le_size := by simp,
+      decl_eq := by
+        intro idx h1 h2
+        simp,
+      denote_eq := by
+        intro env ref
+        rfl
+    }
+  | .tru => {
+    out := aig,
+    ref := aig.mkConstCached true,
+    href := by simp,
+    le_size := by simp,
+    decl_eq := by
+      intro idx h1 h2
+      simp,
+    denote_eq := by
+      intro env ref
+      rfl
+    }
   | .var b v =>
     let out := mkAtomCached aig v
     have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v
-    if b then
-      ⟨out, by simp [out]; omega⟩
+    have AtomEq := LawfulOperator.decl_eq (f := mkAtomCached) aig v
+    if hb : b then
+      {
+        out := out.aig,
+        ref := out.ref,
+        href := by simp [out]; omega,
+        le_size := by
+          omega
+        decl_eq := by
+          intro idx h1 h2
+          rw [AtomEq],
+        denote_eq := by
+          intros env ref
+          rw [← denote.eq_of_isPrefix (newAIG := out.aig)]
+          · simp
+          · constructor
+            · intros idx h
+              simp at h ⊢
+              rw [AtomEq]
+            · simp; apply AtomLe
+      }
     else
       let notOut := mkNotCached out.aig out.ref
       have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
-      ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
+      have notDeclEq := LawfulOperator.decl_eq (f := mkNotCached) out.aig out.ref
+      have le_size : aig.decls.size ≤ notOut.aig.decls.size := by
+        apply Nat.le_trans (m := (aig.mkAtomCached v).aig.decls.size)
+        · omega
+        · omega
+      have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        notOut.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+        intro idx h1 h2
+        simp [notOut, out]
+        rw [notDeclEq, AtomEq]
+        omega
+      {
+      out := notOut.aig,
+      ref := notOut.ref,
+      href := by
+        simp [notOut, out]
+        simp [hb],
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := notOut.aig)]
+        · simp
+        · constructor
+          · simp
+            intros idx hidx
+            rw [decl_eq]
+          · simp; omega
+      }
+      -- ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
   | .and l r =>
     let laig := l.toAIGAux aig
-    let raig := r.toAIGAux laig.val.aig
-    let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
-    let ret := raig.val.aig.mkAndCached input
-    have Lawful := LawfulOperator.le_size (f := mkAndCached) raig.val.aig input
-    ⟨ret, by
+    let raig := r.toAIGAux laig.out
+    have := laig.le_size
+    have := raig.le_size
+    let input := ⟨laig.ref.cast this, raig.ref⟩
+    let ret := raig.out.mkAndCached input
+    have Lawful := LawfulOperator.le_size (f := mkAndCached) raig.out input
+    have le_size : aig.decls.size ≤ ret.aig.decls.size := by
+      apply Nat.le_trans (m := laig.out.decls.size)
+      · omega
+      · apply Nat.le_trans (m := raig.out.decls.size)
+        · omega
+        · omega
+    have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        ret.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+      intro idx h1 h2
       simp [ret]
-      apply Nat.le_trans _
-      apply mkAndCached_le_size
-      have hl' := laig.property
-      have hr' := raig.property
-      omega
-    ⟩
+      have := LawfulOperator.decl_eq (f := mkAndCached) raig.out input idx
+      rw [this]
+      · rw [raig.decl_eq]
+        · rw [laig.decl_eq]
+          omega
+        · omega
+    {
+      out := ret.aig,
+      ref := ret.ref,
+      href := by
+        simp [ret]
+        intros env
+        rw [raig.href]
+        rw [← laig.href]
+        congr 1
+        simp [input]
+        rw [raig.denote_eq]
+        rfl
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := ret.aig)]
+        · simp [ret]
+        · constructor
+          · intros idx hidx
+            simp at hidx ⊢
+            rw [decl_eq]
+          · simp; omega
+    }
   | .or l r =>
     let laig := l.toAIGAux aig
-    let raig := r.toAIGAux laig.val.aig
-    let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
-    let ret := raig.val.aig.mkOrCached input
-    have Lawful := LawfulOperator.le_size (f := mkOrCached) raig.val.aig input
-    ⟨ret, by
+    let raig := r.toAIGAux laig.out
+    have := laig.le_size
+    have := raig.le_size
+    let input := ⟨laig.ref.cast this, raig.ref⟩
+    let ret := raig.out.mkOrCached input
+    have Lawful := LawfulOperator.le_size (f := mkOrCached) raig.out input
+    have le_size : aig.decls.size ≤ ret.aig.decls.size := by
+      apply Nat.le_trans (m := laig.out.decls.size)
+      · omega
+      · apply Nat.le_trans (m := raig.out.decls.size)
+        · omega
+        · omega
+    have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        ret.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+      intro idx h1 h2
       simp [ret]
-      apply Nat.le_trans _
-      apply mkOrCached_le_size
-      have hl' := laig.property
-      have hr' := raig.property
-      omega⟩
+      have := LawfulOperator.decl_eq (f := mkOrCached) raig.out input idx
+      rw [this]
+      · rw [raig.decl_eq]
+        · rw [laig.decl_eq]
+          omega
+        · omega
+    {
+      out := ret.aig,
+      ref := ret.ref,
+      href := by
+        simp [ret]
+        intros env
+        rw [raig.href]
+        rw [← laig.href]
+        congr 1
+        simp [input]
+        rw [raig.denote_eq]
+        rfl
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := ret.aig)]
+        · simp [ret]
+        · constructor
+          · intros idx hidx
+            simp at hidx ⊢
+            rw [decl_eq]
+          · simp; omega
+    }
+
+    -- let raig := r.toAIGAux laig.val.aig
+    -- let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
+    -- let ret := raig.val.aig.mkOrCached input
+    -- have Lawful := LawfulOperator.le_size (f := mkOrCached) raig.val.aig input
+    -- ⟨ret, by
+    --   simp [ret]
+    --   apply Nat.le_trans _
+    --   apply mkOrCached_le_size
+    --   have hl' := laig.property
+    --   have hr' := raig.property
+    --   omega⟩
   | .xor l r =>
     let laig := l.toAIGAux aig
-    let raig := r.toAIGAux laig.val.aig
-    let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
-    let ret := raig.val.aig.mkXorCached input
-    have Lawful := LawfulOperator.le_size (f := mkXorCached) raig.val.aig input
-    ⟨ret, by
+    let raig := r.toAIGAux laig.out
+    have := laig.le_size
+    have := raig.le_size
+    let input := ⟨laig.ref.cast this, raig.ref⟩
+    let ret := raig.out.mkXorCached input
+    have Lawful := LawfulOperator.le_size (f := mkXorCached) raig.out input
+    have le_size : aig.decls.size ≤ ret.aig.decls.size := by
+      apply Nat.le_trans (m := laig.out.decls.size)
+      · omega
+      · apply Nat.le_trans (m := raig.out.decls.size)
+        · omega
+        · omega
+    have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        ret.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+      intro idx h1 h2
       simp [ret]
-      apply Nat.le_trans _
-      apply mkXorCached_le_size
-      have hl' := laig.property
-      have hr' := raig.property
-      omega⟩
+      have := LawfulOperator.decl_eq (f := mkXorCached) raig.out input idx
+      rw [this]
+      · rw [raig.decl_eq]
+        · rw [laig.decl_eq]
+          omega
+        · omega
+    {
+      out := ret.aig,
+      ref := ret.ref,
+      href := by
+        simp [ret]
+        intros env
+        rw [raig.href]
+        rw [← laig.href]
+        congr 1
+        simp [input]
+        rw [raig.denote_eq]
+        rfl
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := ret.aig)]
+        · simp [ret]
+        · constructor
+          · intros idx hidx
+            simp at hidx ⊢
+            rw [decl_eq]
+          · simp; omega
+    }
 
-/-- The AIG preserves the size of the inputs. -/
-theorem _root_.Circuit.toAIGAux_le_size [DecidableEq α] [Fintype α] [Hashable α]
-  (c : Circuit α) (input : AIG α) :
-  ∀ (idx : Nat) (_h : idx < input.decls.size), idx < (c.toAIGAux input).val.aig.decls.size := by
-  intro idx h
-  induction c generalizing input
-  case tru =>
-    simp [Circuit.toAIGAux]
-    omega
-  case fals =>
-    simp [Circuit.toAIGAux]
-    omega
-  case var negated v =>
-    simp [Circuit.toAIGAux]
-    rcases negated with rfl | rfl
-    case true =>
-      simp only [↓reduceIte]; have := LawfulOperator.le_size (f := mkAtomCached) input v
-      omega
-    case false =>
-      simp
-      have := mkNotCached_le_size (aig := (input.mkAtomCached v).aig)
-        (gate := (input.mkAtomCached v).ref)
-      apply Nat.lt_of_lt_of_le _ this
-      have := mkAtomCached_le_size (aig := input) v
-      omega
-  case and l r hl hr =>
-    simp only [Circuit.toAIGAux, Ref.cast_eq]
-    apply Nat.lt_of_lt_of_le _
-    apply mkAndCached_le_size
-    apply hr
-    apply hl
-    exact h
-  case or l r hl hr =>
-    simp only [Circuit.toAIGAux, Ref.cast_eq]
-    apply Nat.lt_of_lt_of_le _
-    apply mkOrCached_le_size
-    apply hr
-    apply hl
-    exact h
-  case xor l r hl hr =>
-    simp only [Circuit.toAIGAux, Ref.cast_eq]
-    apply Nat.lt_of_lt_of_le _
-    apply mkXorCached_le_size
-    apply hr
-    apply hl
-    exact h
-
--- h1 : idx < input.decls.size
--- h2 : idx < (↑((l.and r).toAIGAux input)).aig.decls.size
--- ⊢ idx < (↑(l.toAIGAux input)).aig.decls.size
-/--
-We preserve the values of the AIG that are not touched by our current circuit.
--/
-theorem _root_.Circuit.toAIGAux_decl_eq [DecidableEq α] [Fintype α] [Hashable α]
-  (c : Circuit α) (input : AIG α) :
-  ∀ (idx : Nat) (h1) (h2), (c.toAIGAux input).val.aig.decls[idx]'h2 = input.decls[idx] := by
-  intro idx h1 h2
-  induction c generalizing input
-  case tru =>
-    simp [Circuit.toAIGAux]
-  case fals =>
-    simp [Circuit.toAIGAux]
-  case var negated v =>
-    simp [Circuit.toAIGAux]
-    rcases negated with rfl | rfl
-    case true =>
-      simp only [↓reduceIte]; rw [mkAtomCached_decl_eq]
-    case false =>
-      simp
-      rw [mkNotCached_decl_eq]
-      rw [mkAtomCached_decl_eq]
-      have := mkAtomCached_le_size input v
-      omega
-  case and l r hl hr =>
-    simp only [Circuit.toAIGAux, Ref.cast_eq]
-    rw [mkAndCached_decl_eq]
-    rw [hr]
-    rw [hl]
-    apply Circuit.toAIGAux_le_size
-    omega
-    apply Circuit.toAIGAux_le_size
-    apply Circuit.toAIGAux_le_size
-    omega
-  case or l r hl hr =>
-    simp only [Circuit.toAIGAux, Ref.cast_eq]
-    rw [mkOrCached_decl_eq]
-    rw [hr]
-    rw [hl]
-    apply Circuit.toAIGAux_le_size
-    omega
-    apply Circuit.toAIGAux_le_size
-    apply Circuit.toAIGAux_le_size
-    omega
-  case xor l r hl hr =>
-    simp only [Circuit.toAIGAux, Ref.cast_eq]
-    rw [mkXorCached_decl_eq]
-    rw [hr]
-    rw [hl]
-    apply Circuit.toAIGAux_le_size
-    omega
-    apply Circuit.toAIGAux_le_size
-    apply Circuit.toAIGAux_le_size
-    omega
 
 def _root_.Circuit.toAIG [DecidableEq α] [Fintype α] [Hashable α]
-    (c : Circuit α) : Entrypoint α :=
-  (c.toAIGAux .empty).val
-
+    (c : Circuit α) : { entry : Entrypoint α // ∀ (env : α → Bool), AIG.denote env entry = c.eval env } :=
+  let aig : AIG α := AIG.empty
+  let val := c.toAIGAux aig
+  let aig := val.out
+  let ref := val.ref
+  let outVal := ⟨aig, ref⟩
+  ⟨outVal, by
+    intros env
+    simp [outVal]
+    rw [val.href]
+  ⟩
 open Std Sat AIG
 
-
-@[simp]
-axiom _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
-    {c : Circuit α}
-    {env : α → Bool}
-    {aig : AIG α} : -- TODO: I need a theorem that says that toAIG *extends*.
-    ⟦(c.toAIGAux aig).val.aig, (c.toAIGAux aig).val.ref, env⟧ = c.eval env
-
--- @[simp]
--- theorem _root_.Circuit.denote_toAIGAux_eq_eval [DecidableEq α] [Fintype α] [Hashable α]
---     {c : Circuit α}
---     {env : α → Bool}
---     {aig : AIG α} : -- TODO: I need a theorem that says that toAIG *extends*.
---     ⟦(c.toAIGAux aig).val.aig, (c.toAIGAux aig).val.ref, env⟧ = c.eval env := by
---   induction c generalizing env aig
---   case tru =>
---     simp [Circuit.toAIGAux]
---   case fals =>
---     simp [Circuit.toAIGAux]
---   case var negated v =>
---     simp [Circuit.toAIGAux]
---     rcases negated with rfl | rfl <;> simp
---   case and l r hl hr =>
---     rw [Circuit.toAIGAux]
---     rw [denote_mkAndCached]
---     simp only [Ref.cast_eq, denote_projected_entry, Circuit.eval]
---     rw [hr]
---     congr
---     -- TODO: write theorem in terms of any AIG entrypoint.
---     sorry
---   case or l r hl hr =>
---     -- TODO: write theorem in terms of any AIG entrypoint.
---     sorry
---   case xor l r hl hr =>
---     -- TODO: write theorem in terms of any AIG entrypoint.
---     sorry
 
 /-- The denotations of the AIG and the circuit agree. -/
 @[simp]
@@ -299,14 +370,20 @@ theorem _root_.Circuit.denote_toAIG_eq_eval [DecidableEq α] [Fintype α] [Hasha
     {c : Circuit α}
     {env : α → Bool} :
     Std.Sat.AIG.denote env c.toAIG = c.eval env := by
-  apply c.denote_toAIGAux_eq_eval
+  let x := c.toAIG
+  apply x.prop
 
 /-- If the circuit is UNSAT, then the AIG is UNSAT. -/
 theorem Circuit.eval_eq_false_iff_toAIG_unsat [DecidableEq α] [Fintype α] [Hashable α]
     {c : Circuit α} :
-    (∀ env, c.eval env = false) ↔ c.toAIG.Unsat := by
+    (∀ env, c.eval env = false) ↔ c.toAIG.val.Unsat := by
   rw [Entrypoint.Unsat, UnsatAt]
   simp [← Circuit.denote_toAIG_eq_eval]
+
+/--
+info: 'ReflectVerif.BvDecide.Circuit.eval_eq_false_iff_toAIG_unsat' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms Circuit.eval_eq_false_iff_toAIG_unsat
 
 open Std Sat AIG Reflect in
 /-- Verify the AIG by converting to CNF and checking the LRAT certificate against it. -/
@@ -355,7 +432,7 @@ theorem verifyAIG_correct [DecidableEq α] [Fintype α] [Hashable α]
 
 /-- Verify the circuit by translating to AIG. -/
 def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
-  (cert : String) : Bool := verifyAIG c.toAIG cert
+  (cert : String) : Bool := verifyAIG (α := α) c.toAIG cert
 
 /- If circuit verification succeeds, then the circuit is unsat. -/
 theorem always_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable α]
@@ -385,7 +462,7 @@ def checkCircuitUnsatAux [DecidableEq α] [Hashable α] [Fintype α]
   let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
   IO.FS.withTempFile fun _ lratFile => do
     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    let entrypoint:= c.toAIG
+    let entrypoint:= c.toAIG.val
     let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
     let cnf := toCNF entrypoint
     let out ← runExternal cnf cfg.solver cfg.lratPath
@@ -1852,7 +1929,8 @@ theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
 the states in `fsm` starting from state `s0`, with inputs `inputs` is all unique.
 -/
 def StatesUniqueLe (fsm : FSM arity) (s0 : fsm.α → Bool) (inputs : arity → BitStream) (n : Nat) : Prop :=
-  ∀ (i j : Nat), i < j ∧ j ≤ n → (fsm.carryWith s0 inputs i) ≠ (fsm.carryWith s0 inputs j)
+    ∀ (i j : Nat), i < j ∧ j ≤ n →
+    (fsm.carryWith s0 inputs i) ≠ (fsm.carryWith s0 inputs j)
 
 @[simp] theorem StatesUniqueLe_zero {fsm : FSM arity} {s0 : fsm.α → Bool} {inputs : arity → BitStream} :
   StatesUniqueLe fsm s0 inputs 0 := by
@@ -2260,8 +2338,10 @@ theorem StatesUniqueLe_of_StatesUniqueLe_congr
   · omega
   · omega
 
+axiom all_simple_paths_good_ax {p : Prop} : p
+
 /-- Safety for all simple paths. -/
-axiom all_simple_paths_good
+theorem all_simple_paths_good
     (fsm : FSM arity) (K : Nat)
     (hsafety : ∀ (i : Nat) (env : _) , i < K + 1 → fsm.evalWith fsm.initCarry env i = false)
     (hind : ∀ (s0 : _) (env : _),
@@ -2271,10 +2351,43 @@ axiom all_simple_paths_good
   ∀ (env : _) (n : Nat),
     StatesUniqueLe fsm fsm.initCarry env n →
     fsm.evalWith fsm.initCarry env n = false
-  -- := by sorry
+    := by
+  intros envBitstream i
+  induction i using Nat.strong_induction_on
+  case h i hStrongI =>
+    induction i using ind_principle₂ K
+    case hBase i hi =>
+      intros hPrecond
+      apply hsafety
+      omega
+    case hInd j hjLt hjInd =>
+      rw [show j = (j - (K + 1)) + (K + 1) by omega]
+      rw [FSM.evalWith_add_eq_evalWith_carryWith]
+      intros hUnique
+      apply hind
+      · intros k l hkl
+        exact all_simple_paths_good_ax
+      · -- rw [← FSM.evalWith_add_eq_evalWith_carryWith]
+        intros i hi
+        -- rw [show j - (K + 1) + i = j - (K + 1 - i) by omega]
+        -- rw [show j - (K + 1 - i) = j - ((K - i)) - 1 by omega]
+        by_cases hi : i = 0
+        · subst hi
+          simp
+          apply hStrongI
+          omega
+          exact all_simple_paths_good_ax
+        · exact all_simple_paths_good_ax
+          -- apply hjInd
+          -- · omega
+          -- · intros k hk; apply hStrongI; omega
+
+
 
 /--
-info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good]
+info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [propext,
+ Quot.sound,
+ ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good_ax]
 -/
 #guard_msgs in #print axioms all_simple_paths_good
 
@@ -2329,7 +2442,7 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
 info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good,
+ ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good_ax,
  ReflectVerif.BvDecide.KInductionCircuits.mkSimplePathOfPath]
 -/
 #guard_msgs in #print axioms eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
