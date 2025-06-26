@@ -310,7 +310,7 @@ for file_result in file_data:
                             'solved_bv_decide_lratt_times_average': file_comparison['file_solved_bv_decide_lratt_times_average'], 
                             'solved_bv_decide_lratc_times_average': file_comparison['file_solved_bv_decide_lratc_times_average']})
 
-    errors_df = pd.DataFrame({'errors_bitwuzla':file_comparison['benchmark_errors']})
+    errors_df = pd.DataFrame({'errors_bitwuzla':file_comparison['errors']})
 
     ceg_df.to_csv(raw_data_dir+file_result[0].split("/")[-1]+'_ceg_data.csv')
     print(raw_data_dir+file_result[0].split("/")[-1]+'_ceg_data.csv')
