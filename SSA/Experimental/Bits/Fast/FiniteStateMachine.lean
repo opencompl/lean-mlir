@@ -427,7 +427,7 @@ theorem outputWith_carryWith_eq_evalWith (p : FSM arity)
     intros a i hi
     by_cases hi : i < n
     · simp [env, hi, hysLt _ _ hi]
-    · simp [env, hi, show i = n by omega, hysN]
+    · simp [env, show i = n by omega, hysN]
   · intros a i hi;
     simp only [left_eq_ite_iff, not_lt, env]
     intros hi'
