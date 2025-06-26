@@ -89,7 +89,7 @@ where
       modify fun s => s.insert fvarId
     | _ => return ()
 
-elab "revert_intw" : tactic => do
+elab "revert_intw" : tactic => withMainContext do
   let g ← getMainGoal
   let (_, g') ← revertIntW g
   replaceMainGoal [g']
@@ -129,61 +129,74 @@ a def-eq, since we made `hide` opaque. -/
 theorem hide_eq {a : α} : hide a = a := by
   rw [hide, hide_def.2]; rfl
 
-/-- Symmetric version of `hide_eq`. -/
-theorem eq_hide {a : α} : a = hide a := by
-  symm; exact hide_eq
+/-- Auxiliary lemmas used in `simpHideFunArgs`. -/
+private theorem congr_hide_eq (β : Nat → Type) (w : Nat) : β (hide w) = β w := by
+  rw[hide_eq]
 
-def simpHide (e : Expr) : Meta.SimpM Meta.Simp.Step := do
-  let ctx ← Simp.getContext
-  if let some parent := ctx.parent? then
-    if parent.isAppOf ``hide then
-      trace[LeanMLIR.Elab] "{Lean.crossEmoji}: parent ({parent}) is an application of `hide`"
-      return .continue
+/-- Auxiliary lemmas used in `simpHideFunArgs`. -/
+private theorem eq_cast_self_hide_hide {α : Type} {β : Nat → Type}
+    (f : (w : Nat) → α → β w) (w : Nat) (x : α) :
+    f w x = cast (congr_hide_eq β w) (f (hide w) (hide x)) := by
+  rw [eq_cast_iff_heq, hide_eq, hide_eq]
 
-  let expr ← Meta.mkAppM ``hide #[e]
-  let proof ← Meta.mkAppOptM ``eq_hide #[none, e]
+/--
+Given a function expression `f : (w : Nat) → α → β w` together with argument
+expressions `w : Nat` and `x : α` (for arbitrary `α`), ensure the arguments
+`w` and `x` are guarded by `hide` to block kernel reduction.
+-/
+def simpHideFunArgs (f w x β : Expr) : Meta.SimpM Meta.Simp.Step := do
+  if w.isAppOf ``hide && x.isAppOf ``hide then
+    trace[LeanMLIR.Elab] "{Lean.crossEmoji}: both arguments in {mkApp2 f w x} \
+      are already applications of `hide`"
+    return .continue
+
+  let expr ← do
+    let castProof := mkApp2 (.const ``congr_hide_eq []) β w
+    let w' ← mkAppM ``hide #[w]
+    let x' ← mkAppM ``hide #[x]
+    let fwx' := mkApp2 f w' x'
+    mkAppM ``cast #[castProof, fwx']
+  let proof ← mkAppM ``eq_cast_self_hide_hide #[f, w, x]
   return .done {
     expr := expr
     proof? := some proof
   }
 
-protected partial def isConstant (e : Expr) : Bool :=
-  match_expr e with
-  | Neg.neg _α _self x => HideConstants.isConstant x
-  | OfNat.ofNat _α x _self => HideConstants.isConstant x
-  | _ => e.isRawNatLit
-open HideConstants (isConstant)
-
-
-simproc BitVec.hideOfIntConstants (BitVec.ofInt _ _) := fun e => do
-  let_expr BitVec.ofInt _w x := e | return .continue
-  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Hiding: {e}") <| do
-    if !isConstant x then
-      trace[Meta.Tactic.simp] "{Lean.crossEmoji}: {x} is not a constant"
-      return .continue
-    simpHide e
+simproc BitVec.hideOfInt (BitVec.ofInt _ _) := fun e => do
+  let_expr BitVec.ofInt w x := e | return .continue
+  simpHideFunArgs (mkConst ``BitVec.ofInt) w x (mkConst ``BitVec)
 
 simproc LLVM.hideConst? (LLVM.const? _ _) := fun e => do
-  let_expr LLVM.const? _w x := e | return .continue
-  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Hiding: {e}") <| do
-    if !isConstant x then
-      trace[Meta.Tactic.simp] "{Lean.crossEmoji}: {x} is not a constant"
-      return .continue
-    simpHide e
+  let_expr LLVM.const? w x := e | return .continue
+  simpHideFunArgs (mkConst ``LLVM.const?) w x (mkConst ``LLVM.IntW)
 
 macro "hide_constants" : tactic => `(tactic|
-  simp -failIfUnchanged -memoize only [BitVec.hideOfIntConstants, LLVM.hideConst?]
+  simp -failIfUnchanged -memoize only [BitVec.hideOfInt, LLVM.hideConst?]
   -- --------------------^^^^^^^
   -- NOTE: we have to disable the memoize option, since the simprocs
   -- inspect the parent expressions, which are disregarded by the cache
+  -- TODO: we might not need this anymore with the new hiding strategy, since
+  --   we no longer inspect the parent context
 )
 
+/-- Inverse of `eq_cast_self_hide_hide`, used in `unhide_constants` tactic. -/
+protected theorem cast_self_hide_eq {α : Type} {β : Nat → Type}
+    (f : (w : Nat) → α → β w) (w : Nat) (x : α) (h : β (hide w) = β w) :
+    cast h (f (hide w) x) = f w x := by
+  rw [cast_eq_iff_heq, hide_eq]
+open HideConstants (cast_self_hide_eq)
+
 macro "unhide_constants" : tactic => `(tactic|
-  all_goals simp -failIfUnchanged only [hide_eq]
+  all_goals simp -failIfUnchanged only [hide_eq, cast_self_hide_eq,
+    cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofInt w x))]
+  -- ----------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  -- This is the unfolded definition of `LLVM.const?`
+  -- We specify it here manually as inference usually won't manage to
+  -- instantiate `cast_self_hide_eq` like this without assistance.
 )
 
 end HideConstants
-export HideConstants (BitVec.hideOfIntConstants LLVM.hideConst?)
+export HideConstants (BitVec.hideOfInt LLVM.hideConst?)
 
 
 /-- Unfold into the `undef' statements and eliminates as much as possible. -/
