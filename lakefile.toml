@@ -1,6 +1,7 @@
 name = "SSA"
 # precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
 defaultTargets = ["SSA"]
+moreLeanArgs = ["--tstack=400000"]
 
 [[require]]
 name = "mathlib"
