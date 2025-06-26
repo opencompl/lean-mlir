@@ -339,7 +339,7 @@ theorem evalWith_succ_eq_evalWith_delta' (p : FSM arity) (carryState : p.α → 
   p.evalWith carryState x (n + 1) =
   p.evalWith (p.delta' carryState (fun s => x s 0)) (fun s i => x s (i + 1)) n := by
   -- Proof goes here
-  simp [evalWith, delta', carryWith]
+  simp [evalWith]
   rw [eval_changeInitCarry_succ]
   congr
 
@@ -350,7 +350,7 @@ theorem evalWith_succ_eq (p : FSM arity) (carryState : p.α → Bool)
   p.evalWith carryState x (n + 1) =
   p.evalWith (p.delta' carryState (fun s => x s 0)) (fun s i => x s (i + 1)) n := by
   -- Proof goes here
-  simp [evalWith, delta', carryWith]
+  simp [evalWith]
   rw [eval_changeInitCarry_succ]
   congr
 
@@ -517,7 +517,7 @@ lemma carry_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
         ext z
         cases z
         · simp
-        · simp [Circuit.eval_map, carry]
+        · simp [Circuit.eval_map]
           congr
           ext s
           cases s
@@ -635,17 +635,17 @@ def scanAnd  : FSM Unit :=
 
 @[simp]
 lemma eval_scanAnd_zero (x : Unit → BitStream) : scanAnd.eval x 0 = (x () 0) := by
-  simp[eval, nextBit, scanAnd, and, carry]
+  simp [eval, nextBit, scanAnd, carry]
 
 @[simp]
 lemma eval_scanAnd_succ (x : Unit → BitStream) (n : Nat) :
     (scanAnd.eval x (n+1)) = ((scanAnd.eval x n) && (x () (n+1)))  := by
-  simp [eval, nextBit, scanAnd, and, carry]
+  simp [eval, nextBit, scanAnd, carry]
 
 /-- The result of `scanAnd` is true at `n` iff the bitvector has been true upto (and including) `n`. -/
 @[simp] lemma eval_scanAnd_true_iff (x : Unit → BitStream) (n : Nat) : scanAnd.eval x n = true ↔ (∀ (i : Nat), (hi : i ≤ n) → x () i = true) := by
   induction n
-  case zero => simp [eval, nextBit, scanAnd, and, carry]
+  case zero => simp [eval, nextBit, scanAnd, carry]
   case succ n ih =>
     rw [eval_scanAnd_succ]
     constructor
@@ -683,17 +683,17 @@ def scanOr  : FSM Unit :=
 
 @[simp]
 lemma eval_scanOr_zero (x : Unit → BitStream) : scanOr.eval x 0 = (x () 0) := by
-  simp[eval, nextBit, scanOr, and, carry]
+  simp [eval, nextBit, scanOr, carry]
 
 @[simp]
 lemma eval_scanOr_succ (x : Unit → BitStream) (n : Nat) :
     (scanOr.eval x (n+1)) = ((scanOr.eval x n) || (x () (n+1)))  := by
-  simp [eval, nextBit, scanOr, and, carry]
+  simp [eval, nextBit, scanOr, carry]
 
 /-- The result of `scanOr` is false at `n` iff the bitvector has been false upto (and including) time `n`. -/
 @[simp] lemma eval_scanor_false_iff (x : Unit → BitStream) (n : Nat) : scanOr.eval x n = false ↔ (∀ (i : Nat), (hi : i ≤ n) → x () i = false) := by
   induction n
-  case zero => simp [eval, nextBit, scanOr, and, carry]
+  case zero => simp [eval, nextBit, scanOr, carry]
   case succ n ih =>
     rw [eval_scanOr_succ]
     constructor
@@ -745,7 +745,7 @@ theorem add_nextBitCirc_some_eval :
       fun x => x (inr true) && x (inr false) || x (inr true)
         && x (inl ()) || x (inr false) && x (inl ()) := by
   ext x
-  simp +ground [eval, add, Circuit.simplifyAnd, Circuit.simplifyOr]
+  simp +ground [add, Circuit.simplifyAnd, Circuit.simplifyOr]
 
 /-- The internal carry state of the `add` FSM agrees with
 the carry bit of addition as implemented on bitstreams -/
@@ -758,7 +758,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [add_nextBitCirc_some_eval, nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
+    simp [add_nextBitCirc_some_eval, nextBit, ih, BitStream.addAux, BitVec.adcb]
 
 @[simp] theorem carry_zero (x : arity → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
@@ -770,7 +770,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
   · show Bool.xor _ _ = Bool.xor _ _; simp
   · rw [carry_add_succ]
     conv => {rhs; simp only [(· + ·), BitStream.add, Add.add, BitStream.addAux, BitVec.adcb]}
-    simp [nextBit, eval, add]
+    simp [nextBit, add]
 /-!
 We don't really need subtraction or negation FSMs,
 given that we can reduce both those operations to just addition and bitwise complement -/
@@ -791,10 +791,10 @@ def sub : FSM Bool :=
 theorem carry_sub (x : Bool → BitStream) : ∀ (n : ℕ), sub.carry x (n+1) =
     fun _ => (BitStream.subAux (x true) (x false) n).2
   | 0 => by
-    simp [carry, nextBit, funext_iff, BitStream.subAux, sub]
+    simp [carry, nextBit, BitStream.subAux, sub]
   | n+1 => by
     rw [carry, carry_sub _ n]
-    simp [nextBit, eval, sub, BitStream.sub, BitStream.subAux, Bool.xor_not_left']
+    simp [nextBit, sub, BitStream.subAux]
 
 @[simp]
 theorem eval_sub (x : Bool → BitStream) : sub.eval x = (x true) - (x false) := by
@@ -803,7 +803,7 @@ theorem eval_sub (x : Bool → BitStream) : sub.eval x = (x true) - (x false) :=
   cases n
   · simp [eval, sub, nextBit, BitStream.sub, BitStream.subAux, carry]
   · rw [eval, carry_sub]
-    simp [nextBit, eval, sub, BitStream.sub, BitStream.subAux]
+    simp [nextBit, sub, BitStream.sub, BitStream.subAux]
 
 /-!
 We define a borrow automata, whose output stream is the internal state of the subtraction automata,
@@ -853,7 +853,7 @@ TODO: rewrite with 'induction' to be a clean proof script.
     simp [carry, nextBit, borrow]
   case succ n ih =>
     rw [carry, ih]
-    simp [nextBit, eval, borrow]
+    simp [nextBit, borrow]
 
 
 @[simp] lemma eval_borrow (x : Bool → BitStream) : borrow.eval x = (x true).borrow (x false) := by
@@ -879,10 +879,10 @@ def neg : FSM Unit :=
 theorem carry_neg (x : Unit → BitStream) : ∀ (n : ℕ), neg.carry x (n+1) =
     fun _ => (BitStream.negAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, funext_iff, BitStream.negAux, neg]
+    simp [carry, nextBit, BitStream.negAux, neg]
   | n+1 => by
     rw [carry, carry_neg _ n]
-    simp [nextBit, eval, neg, BitStream.neg, BitStream.negAux, Bool.xor_not_left']
+    simp [nextBit, neg, BitStream.negAux]
 
 @[simp] lemma eval_neg (x : Unit → BitStream) : neg.eval x = -(x ()) := by
   show _ = BitStream.neg _
@@ -890,7 +890,7 @@ theorem carry_neg (x : Unit → BitStream) : ∀ (n : ℕ), neg.carry x (n+1) =
   cases n
   · simp [eval, neg, nextBit, BitStream.neg, BitStream.negAux, carry]
   · rw [eval, carry_neg]
-    simp [nextBit, eval, neg, BitStream.neg, BitStream.negAux]
+    simp [nextBit, neg, BitStream.neg, BitStream.negAux]
 
 def not : FSM Unit :=
   { α := Empty,
@@ -950,17 +950,17 @@ def ls (b : Bool) : FSM Unit :=
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
   | 0 => by
-    simp [carry, nextBit, funext_iff, ls]
+    simp [carry, nextBit, ls]
   | n+1 => by
     rw [carry, carry_ls _ _ n]
-    simp [nextBit, eval, ls]
+    simp [nextBit, ls]
 
 @[simp] lemma eval_ls (b : Bool) (x : Unit → BitStream) :
     (ls b).eval x = (x ()).concat b := by
   ext n
   cases n
   · rfl
-  · simp [ls, carry_ls, eval, nextBit, BitStream.concat, carry]
+  · simp [ls, eval, nextBit, BitStream.concat, carry]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
@@ -982,10 +982,10 @@ def incr : FSM Unit :=
 theorem carry_incr (x : Unit → BitStream) : ∀ (n : ℕ),
     incr.carry x (n+1) = fun _ => (BitStream.incrAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, funext_iff, BitStream.incrAux, incr]
+    simp [carry, nextBit, BitStream.incrAux, incr]
   | n+1 => by
     rw [carry, carry_incr _ n]
-    simp [nextBit, eval, incr, incr, BitStream.incrAux]
+    simp [nextBit, incr, incr, BitStream.incrAux]
 
 @[simp] lemma eval_incr (x : Unit → BitStream) : incr.eval x = (x ()).incr := by
   ext n
@@ -1005,10 +1005,10 @@ def decr : FSM Unit :=
 theorem carry_decr (x : Unit → BitStream) : ∀ (n : ℕ), decr.carry x (n+1) =
     fun _ => (BitStream.decrAux (x ()) n).2
   | 0 => by
-    simp [carry, nextBit, funext_iff, BitStream.decrAux, decr]
+    simp [carry, nextBit, BitStream.decrAux, decr]
   | n+1 => by
     rw [carry, carry_decr _ n]
-    simp [nextBit, eval, decr, BitStream.decrAux]
+    simp [nextBit, decr, BitStream.decrAux]
 
 @[simp] lemma eval_decr (x : Unit → BitStream) : decr.eval x = BitStream.decr (x ()) := by
   ext n
@@ -1114,7 +1114,7 @@ def composeBinary
     (q : FSMTermSolution t)
     (x : Fin t.arity → BitStream) :
     (composeUnary p q).eval x = p.eval (λ _ => t.evalFin x) := by
-  simp [composeUnary, FSM.eval_compose, q.good]
+  simp [composeUnary, q.good]
 
 @[simp] lemma composeBinaryAux_eval
     (p : FSM Bool)
@@ -1618,8 +1618,7 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
       toFSM := FSM.trueOnlyAt n
       good := by
         ext i x
-        simp only [Predicate.evalFin, Bool.decide_eq_true, Predicate.arity.eq_2,
-          FSM.eval_trueOnlyAt]
+        simp only [Predicate.evalFin, Bool.decide_eq_true]
         by_cases h : x = n <;> simp [h]
      }
   | .width .ge n =>
@@ -1686,8 +1685,8 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
      { toFSM := fsmSlt a.toFSM b.toFSM
        good := by
         ext;
-        simp [Predicate.evalSlt, fsmSlt,
-          Predicate.evalUlt, fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq, a.good, b.good]
+        simp [Predicate.evalSlt, fsmSlt, Predicate.evalUlt, fsmUlt, Predicate.evalMsbEq, fsmMsbEq,
+          a.good, b.good]
      }
    | .binary .sle t₁ t₂ =>
       let a := termEvalEqFSM t₁
@@ -1696,11 +1695,8 @@ def predicateEvalEqFSM : ∀ (p : Predicate), FSMPredicateSolution p
         toFSM := fsmSle a.toFSM b.toFSM
         good := by
           ext x i
-          simp [fsmSle,
-            Predicate.evalLor, fsmLor,
-            Predicate.evalSlt, fsmSlt, Predicate.evalUlt,
-            fsmUlt, a.good, b.good, Predicate.evalMsbEq, fsmMsbEq,
-            Predicate.evalEq, fsmEq, a.good, b.good]
+          simp [fsmSle, Predicate.evalLor, fsmLor, Predicate.evalSlt, fsmSlt, Predicate.evalUlt,
+            fsmUlt, Predicate.evalMsbEq, fsmMsbEq, Predicate.evalEq, fsmEq, a.good, b.good]
       }
    | .binary .ult t₁ t₂ =>
       let a := termEvalEqFSM t₁
@@ -1843,7 +1839,7 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
       rw [p.eval_eq_zero_of_set {x | c.eval x = true}]
       · intro y s
         simp [Circuit.le_def, Circuit.eval_fst, Circuit.eval_bind] at h'
-        simp [Circuit.eval_fst, FSM.nextBit]
+        simp [FSM.nextBit]
         apply h'
       · assumption
       · exact hc₂
@@ -1859,12 +1855,11 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
         use fun a i => Nat.casesOn i x (fun i a => y a i) a
         rw [FSM.eval_changeInitCarry_succ]
         rw [← hmy]
-        simp only [FSM.nextBit, Nat.rec_zero, Nat.rec_add_one]
+        simp only [FSM.nextBit, Nat.rec_zero]
       · exact hc _ h
       · intro x s h
         have := hc₂ _ _ h
-        simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
-          Circuit.eval_or, this, or_true]
+        simp only [Bool.or_eq_true, Circuit.eval_or, this, or_true]
 termination_by card_compl c
 
 

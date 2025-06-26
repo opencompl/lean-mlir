@@ -612,7 +612,7 @@ theorem Circuit.bigOr_cons_eq {α : Type _}
   induction cs
   case nil => simp [bigOr]
   case cons a as ih =>
-    simp [bigOr, ih]
+    simp [bigOr]
 
 
 /-- append to the bigOr list is equivalent to a circuit
@@ -624,7 +624,7 @@ theorem Circuit.bigOr_append_equiv_or_bigOr {α : Type _}
   induction cs
   case nil => simp [bigOr]
   case cons a as ih =>
-    simp [bigOr, ih]
+    simp [bigOr]
     ext env
     have := Circuit.eval_eq_of_Equiv ih
     simp
@@ -697,8 +697,7 @@ theorem Circuit.eval_bigAnd_eq_false_iff
   induction cs
   case nil => simp [bigAnd]
   case cons a as ih =>
-    simp only [bigAnd, Circuit.eval.eq_4, Bool.and_eq_false_imp, ih, List.mem_cons,
-      exists_eq_or_imp]
+    simp only [bigAnd, List.mem_cons, exists_eq_or_imp]
     by_cases h : a.eval env <;> simp [h, ih]
 
 

@@ -696,7 +696,7 @@ theorem Com.denote_unfold (op : d.Op) (ty_eq : ty = DialectSignature.outTy op)
     = ty_eq ▸ (liftEffect eff_le <|
         DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
       subst ty_eq
-      simp [denote, Expr.denote]
+      simp [Expr.denote]
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -794,7 +794,7 @@ section Lemmas
         return Vbody
       ) := by
   induction com
-  case ret => simp [Lets.denote_var, Com.denoteLets]
+  case ret => simp [Com.denoteLets]
   case var ih => simp [addComToEnd, ih, denote_var]
 
 @[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
@@ -1116,7 +1116,7 @@ theorem Expr.denote_mk_of_pure {op : d.Op} (eff_eq : DialectSignature.effectKind
       | .impure => return d
     ) := by
   funext Γv
-  simp only [denote_unfold, cast_cast, EffectKind.return_impure_toMonad_eq]
+  simp only [denote_unfold, EffectKind.return_impure_toMonad_eq]
   cases eff₂
   · simp only [EffectKind.liftEffect_pure]
     apply eq_of_heq
@@ -1157,7 +1157,7 @@ theorem Expr.hasPureOp_of_toPure?_isSome {e : Expr d Γ eff ty} (h : e.toPure?.i
     e.HasPureOp := by
   rcases e with ⟨op, _, _, _, _⟩
   simp only [Option.isSome, toPure?] at h
-  simp only [HasPureOp, op_mk, le_refl, EffectKind.pure_le]
+  simp only [HasPureOp, op_mk]
   cases hop : DialectSignature.effectKind op
   · rfl
   · split at h
@@ -1177,7 +1177,7 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
   have hasPureOp : DialectSignature.effectKind op = EffectKind.pure := by
     simpa [HasPureOp] using Expr.hasPureOp_of_toPure?_isSome (Option.isSome_iff_exists.mpr ⟨_, he⟩)
   rw [Expr.denote_mk_of_pure hasPureOp]
-  have (h) :
+  have h :
       cast h (DialectDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs))
       = denote e' Γv := by
     unfold denote
@@ -1395,23 +1395,20 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
   case nil => simp [getPureExprAux] at he
   case var Γ_out ty body e ih =>
     -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
-    simp only [Expr.denote_changeVars, EffectKind.return_impure_toMonad_eq]
+    simp only [Expr.denote_changeVars]
     -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
     cases v using Var.casesOn with
     | toSnoc v =>
-      simp only [getPureExprAux, eq_rec_constant, Var.casesOn_toSnoc, Option.mem_def,
-        Option.map_eq_some_iff, Option.bind, Bind.bind] at he
+      simp only [getPureExprAux, Var.casesOn_toSnoc] at he
       let f' : Valuation Γ_out → ⟦t⟧ → eff.toMonad d.m α := fun Γv val => do
         let Ve ← e.denote Γv
         let Γv':= (Γv.snoc Ve)
         f Γv' val
       specialize ih he f'
-      simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
-        EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
+      simp only [Expr.denote_changeVars] at ih
       simp +zetaDelta [denote, ← ih]
     | last =>
-      simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
-        Option.mem_def, Option.some.injEq] at he
+      simp only [getPureExprAux, Var.casesOn_last] at he
       simp only [denote, Expr.denote_toPure? he, EffectKind.toMonad_impure,
         EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
         bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
@@ -1468,12 +1465,11 @@ variable {d d' : Dialect} [DialectSignature d] [DialectSignature d'] (f : Dialec
 
 def DialectMorphism.preserves_sig (op : d.Op) :
     DialectSignature.sig (f.mapOp op) = (DialectSignature.sig op).map f.mapTy := by
-  simp only [DialectSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
+  simp only [DialectSignature.sig, Function.comp_apply, f.preserves_signature]; rfl
 
 def DialectMorphism.preserves_regSig (op : d.Op) :
     DialectSignature.regSig (f.mapOp op) = (DialectSignature.regSig op).map f.mapTy := by
-  simp only [DialectSignature.regSig, Function.comp_apply, f.preserves_signature,
-    List.map_eq_map]; rfl
+  simp only [DialectSignature.regSig, Function.comp_apply, f.preserves_signature]; rfl
 
 def DialectMorphism.preserves_outTy (op : d.Op) :
     DialectSignature.outTy (f.mapOp op) = f.mapTy (DialectSignature.outTy op) := by
@@ -1985,7 +1981,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
       · rwa [AList.lookup_insert_ne hx]
   · intro w ma v₂
     intro b? c? varMap hvarMap
-    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    simp only [Option.mem_def] at *
     unfold matchVar at hvarMap
     split at hvarMap
     split_ifs at hvarMap
@@ -1997,7 +1993,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
       contradiction
   · intro ma w
     intro b? varMap hvarMap
-    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    simp only [Option.mem_def] at *
     unfold matchVar at hvarMap
     split at hvarMap
     case h_1 _p q r _s =>
@@ -2354,9 +2350,9 @@ theorem mem_matchVar
     rw [← Option.dite_none_right_eq_some] at he₂
     split_ifs at he₂ with h
     · dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
-      simp only [Expr.op_mk, Expr.args_mk, Option.some.injEq] at he₂
+      simp only [Expr.op_mk, Expr.args_mk] at he₂
       apply @mem_matchVar_matchArg (matchLets := matchLets) (hvarMap := he₂)
-      simp only [Expr.op_mk, Finset.mem_biUnion, Sigma.exists]
+      simp only [Finset.mem_biUnion, Sigma.exists]
       refine ⟨_, _, ?_, h_v'⟩
       rcases matchE  with ⟨_, _, _⟩
       dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
@@ -2443,7 +2439,7 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
   | 0, lets, .var e body, res, hres, s => by
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
     subst hres
-    simp only [Lets.denote, eq_rec_constant, Com.denote]
+    simp only [Lets.denote]
     simp only [EffectKind.return_impure_toMonad_eq, bind_assoc, pure_bind, Com.denote_var]
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
@@ -2453,11 +2449,11 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
     case pure =>
       rw [denote_splitProgramAtAux hres s]
       apply Id.ext
-      simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      simp [Lets.denote]
       congr
     case impure =>
       rw [denote_splitProgramAtAux hres s]
-      simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      simp [Lets.denote]
 
 -- TODO: have `splitProgramAt` return a `Zipper`
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
@@ -2558,7 +2554,7 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
-      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [List.getElem?_eq_getElem, Ctxt.ofList]⟩
+      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [Ctxt.ofList]⟩
       ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
   · intro h t v
@@ -2620,7 +2616,7 @@ theorem denote_rewritePeephole_go (pr : PeepholeRewrite d Γ t)
     (rewritePeephole_go fuel pr pos target).denote = target.denote := by
   induction fuel generalizing pr pos target
   case zero =>
-    simp[rewritePeephole_go, denote_rewritePeepholeAt]
+    simp [rewritePeephole_go]
   case succ fuel' hfuel =>
     simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
 
@@ -2681,8 +2677,7 @@ theorem denote_multiRewritePeepholeAt (fuel : ℕ)
   case zero =>
     simp [multiRewritePeepholeAt]
   case succ hp =>
-    simp[multiRewritePeepholeAt, denote_rewritePeepholeAt,hp ,
-      denote_foldl_rewritePeepholeAt]
+    simp [multiRewritePeepholeAt, hp, denote_foldl_rewritePeepholeAt]
 
 /- The proof that `rewritePeephole_multi` is semantics preserving  -/
 theorem denote_multiRewritePeephole (fuel : ℕ)
@@ -2703,7 +2698,7 @@ theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
   case pure =>
     subst ty_eq
     have heff' : DialectSignature.effectKind op = EffectKind.pure := by simp [eff']
-    simp [heff', Expr.denote, hregArgs']
+    simp [Expr.denote, hregArgs']
   case impure =>
     subst ty_eq
     simp [Expr.denote, hregArgs']

@@ -194,7 +194,7 @@ theorem Factor.denoteFin_eq_denote {f : Factor} {xs : List (BitVec w)} {xsFin : 
 
 theorem Factor.reflect_eq_ofInt_denote {w : Nat} (xs : Env w) (f : Factor) :
     f.reflect xs = (BitVec.ofInt w <| f.denote xs) := by
-  simp [reflect, denote]
+  simp [denote]
 
 @[simp]
 theorem Factor.reflect_zero_of_denote_zero {w : Nat} {f : Factor} {xs : Env w} (h : f.denote xs = 0) :
@@ -234,11 +234,11 @@ theorem Factor.getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs
       simp [hx, hy]
       rfl
     case xor x y hx hy =>
-      simp only [reflectFin, BitVec.getLsbD_xor]
+      simp only [reflectFin]
       simp [hx, hy]
       rfl
     case not x hx  =>
-      simp only [reflectFin, BitVec.getLsbD_not]
+      simp only [reflectFin]
       simp [hx]
       rfl
   · simp
@@ -516,7 +516,7 @@ theorem Eqn.reflect_width_zero  (es : Eqn) (env : Env 0) :
   induction es
   case nil => simp [Eqn.reflect]
   case cons e es ih =>
-    simp [ih, Eqn.reflect]
+    simp [ih]
 
 
 @[simp]
@@ -650,7 +650,7 @@ def EnvFin.getAll1 (n : Nat) : { envs : List (EnvFin 1 n) // ∀ (envFin : EnvFi
        let envFinSmaller := envFin.comap Fin.succ
        specialize henvs envFinSmaller
        exists envFinSmaller
-       simp only [henvs, true_and, out]
+       simp only [henvs, true_and]
        have hv : (envFin 0) = 0#1 ∨ (envFin 0) = 1#1 := by
          generalize envFin 0 = a
          revert a

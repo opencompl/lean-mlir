@@ -181,7 +181,7 @@ lemma bitVecToFinFun_rinv (c : carry → Bool) [FinEnum carry]:
 @[simp]
 lemma bitVecToFinFun_linv [FinEnum ar] (bv : BitVec $ FinEnum.card ar) :
     finFunToBitVec (bitVecToFinFun bv) = bv := by
-  ext i hi; simp [bitVecToFinFun, finFunToBitVec, hi]
+  ext i hi; simp [bitVecToFinFun, finFunToBitVec]
 
 @[simp]
 lemma bitVecToFinFun_inj [FinEnum ar] : Function.Injective (bitVecToFinFun (ar := ar)) := by
@@ -217,7 +217,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
       · apply Subsingleton.allEq
       · simp [FSM.carryBV]
     · rintro ⟨-, rfl⟩; simp [FSM.carryBV]
-  · simp [inFSMRel, ofFSM']; intros q a w bvn
+  · simp [ofFSM']; intros q a w bvn
     have heq : a[FinEnum.card arity] = a.msb := by
       simp [BitVec.msb_eq_getLsbD_last]
     constructor
@@ -363,7 +363,7 @@ lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :
   ((FSM.ofTerm t).evalBV fun ar => bvn.get ar.castSucc) =
     (t.evalFinBV fun ar => bvn.get ar.castSucc) := by
   simp only [FSM.evalBV]; ext k hk
-  simp only [FSM.ofTerm, hk, BitVec.ofFn_getElem]
+  simp only [FSM.ofTerm, BitVec.ofFn_getElem]
   rw [←(termEvalEqFSM t).good, evalFinStream_evalFin hk _ _ hk]
   simp_all
 
@@ -406,7 +406,7 @@ lemma CNFA.ofFSM.f_spec {p : FSM arity} {s s' : BitVec (FinEnum.card p.α)} :
           bitVecToFinFun s' ∈ (NFA.ofFSM p).step (bitVecToFinFun s) a
   suffices h : motive (FinEnum.toList (BitVec (FinEnum.card arity))) by
     specialize h #[]
-    simp [motive] at h
+    simp at h
     rw [←h]
     rfl
   generalize FinEnum.toList (BitVec (FinEnum.card arity)) = qs
@@ -609,7 +609,7 @@ lemma BitVec.cons_ugt_iff {w} {bv1 bv2 : BitVec w} :
 
 @[simp]
 lemma ucmp_tricho : (bv1 >ᵤ bv2) = false → (bv2 >ᵤ bv1) = false → bv1 = bv2 := by
-  simp [BitVec.ule, BitVec.ult, BitVec.toNat_eq]
+  simp [BitVec.ult, BitVec.toNat_eq]
   apply Nat.le_antisymm
 
 set_option maxHeartbeats 1000000 in
@@ -621,16 +621,16 @@ lemma NFA'.autUnsignedCmp_correct cmp : autUnsignedCmp cmp |>.correct2 autUnsign
   · rintro (_ | _ | _) <;> simp
   · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
     · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
+      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [instFinEnumBitVec_sSA]
       · rintro ⟨_, _⟩; use .eq; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA] at * <;> tauto
     · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
+      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [instFinEnumBitVec_sSA]
       · rintro _; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
         · use .gt; simp_all
         · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
         · use .gt; simp_all
     · constructor
-      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.unsignedCmpStep, instFinEnumBitVec_sSA]
+      · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [instFinEnumBitVec_sSA]
       · rintro _; fin_cases a <;> simp [instFinEnumBitVec_sSA] at *
         · use .lt; simp_all
         · use (getState bv1 bv2); simp [getState]; split_ifs <;> simp_all; apply ucmp_tricho <;> assumption
@@ -762,7 +762,7 @@ lemma BitVec.cons_sgt_iff {w} {bv1 bv2 : BitVec w} :
   have := h₃ w
   have := h₃ (w + 1)
   cases b1 <;> cases b2 <;> simp [BitVec.ult, Nat.shiftLeft_eq] <;>
-    repeat rw [←Nat.add_lt_is_or (by assumption)] <;> simp [Nat.two_pow_succ]
+    repeat rw [←Nat.add_lt_is_or (by assumption)] <;> simp
   · omega
   · omega
   · rw [←Nat.add_lt_is_or hbv1, ←Nat.add_lt_is_or hbv2]
@@ -775,7 +775,7 @@ lemma NFA'.autSignedCmp_correct cmp : autSignedCmp cmp |>.correct2 autSignedCmpS
   constructor <;> simp [NFA.autSignedCmp, autSignedCmp, autSignedCmpSA, RelationOrdering.srel]
   · cases cmp <;> simp [BitVec.sle_iff_slt_or_eq]; tauto
   · rintro (_ | _ | _) <;> simp
-  · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet, NFA.unsignedCmpStep]
+  · rintro (_ | _ | _) a w bv1 bv2 <;> simp [NFA.stepSet]
     · constructor
       · rintro ⟨i, hi⟩; cases i <;> fin_cases a <;> simp_all [NFA.signedCmpStep, instFinEnumBitVec_sSA]
       · rintro ⟨_, _⟩; use .eq; simp; fin_cases a <;> simp [instFinEnumBitVec_sSA] at * <;> tauto
@@ -958,7 +958,7 @@ lemma autMsbSet_accepts : NFA'.autMsbSet.accepts = langMsb := by
     rw [List.getLast?_eq_getElem?] at hl
     rw [List.getElem?_eq_getElem (by omega)] at hl
     injection hl
-    simp_all only [BitVec.getElem_one, zero_lt_one, decide_true, Bool.and_self]
+    simp_all only [BitVec.getElem_one, decide_true]
   · intros h; use enc bvs
     simp only [dec_enc', and_true]
     simp [enc]
@@ -1021,19 +1021,19 @@ lemma RawCNFA.autWidth_spec {wp : WidthPredicate} :
         · split <;> simp_all <;> unfold State at * <;> omega
         · split <;> simp_all
       · rintro s
-        simp only [newState_eq, gt_iff_lt, BitVec.zero_eq, motive]
+        simp only [newState_eq, gt_iff_lt, BitVec.zero_eq]
         split <;> split <;> simp <;> grind
       · rintro s s'
         unfold State at *
         split <;> split <;> simp_all [State] <;> omega
 
     suffices h: motive m (k + 2) by
-      simp only [motive]
+      simp only
       rcases h with ⟨hwf, hsts, hin, htrs⟩
       split_ands
       · simp_all
-      · simp only [BitVec.zero_eq, addTrans_stateMax, addInitial_stateMax, motive]
-        simp only [states, Finset.mem_range, motive] at hsts
+      · simp only [BitVec.zero_eq, addTrans_stateMax, addInitial_stateMax]
+        simp only [states, Finset.mem_range] at hsts
         apply eq_of_forall_lt_iff (hsts ·)
       · rintro s hs; simp_all; grind
       · rintro s s' hs hs'; simp_all
@@ -1076,7 +1076,7 @@ lemma Fin.clamp_eq_bound : Fin.clamp m n = Fin.last n ↔ n ≤ m := by
 
 @[simp]
 lemma Fin.clamp_neq_bound : Fin.clamp m n ≠ Fin.last n ↔ m < n := by
-  simp [not_iff_not]
+  simp
 
 -- TODO: refactor, remove non-terminal simps
 def NFA.autWidth_correct : (autWidth wp n).correct (autWidthSA n) (autWidthLang wp n) := by
@@ -1098,15 +1098,14 @@ def NFA.autWidth_correct : (autWidth wp n).correct (autWidthSA n) (autWidthLang 
 
   · intros w; induction w using List.reverseRecOn
     case nil =>
-      simp only [autWidth, Set.setOf_eq_eq_singleton, eval_nil, Set.mem_singleton_iff, autWidthSA,
-      gt_iff_lt]
+      simp only [autWidth, eval_nil, Set.mem_singleton_iff, autWidthSA, gt_iff_lt]
       rintro q; constructor
       · rintro rfl; split <;> simp_all; exact rfl
-      · split <;> simp_all [Fin.eq_of_val_eq]
+      · split <;> simp_all
         rintro h; exact (Fin.eq_of_val_eq h).symm
     case append_singleton w a ih =>
       rintro q; simp only [eval_append_singleton, stepSet, ih, Set.mem_iUnion, exists_prop]
-      simp only [autWidthSA, gt_iff_lt, autWidth, Set.setOf_eq_eq_singleton, Set.mem_singleton_iff]
+      simp only [autWidthSA, gt_iff_lt, autWidth]
       constructor
       · rintro ⟨q', hq, heq⟩
         simp only [Set.mem_setOf_eq] at heq
@@ -1323,7 +1322,7 @@ lemma binopNfa_bv_language (op : Binop) {m₁ m₂ : CNFA n}  :
       · apply CNFA.union_spec
         · apply CNFA.neg_spec _ hsim₂
         · assumption
-  · rcases op <;> simp_all [binopNfa, binopAbsNfa, langBinop]
+  · rcases op <;> simp_all [binopAbsNfa, langBinop]
 
 def liftOp n : Fin (n + 1) → Fin (n + 3) :=
   fun k =>
@@ -1331,8 +1330,7 @@ def liftOp n : Fin (n + 1) → Fin (n + 3) :=
 
 @[simp]
 def liftOp_unchanged (k : Fin n) : liftOp n k.castSucc = k.castLE (by simp) := by
-  simp only [liftOp, Fin.coe_eq_castSucc, Fin.natCast_eq_last, Fin.castLE_castSucc,
-    ite_eq_right_iff]
+  simp only [liftOp, Fin.natCast_eq_last, Fin.castLE_castSucc, ite_eq_right_iff]
   rcases k with ⟨k, hk⟩
   simp only [Fin.castSucc_mk, Fin.last, Fin.mk.injEq, Fin.castLE_mk]; omega
 
@@ -1349,8 +1347,7 @@ def liftUnop_unchanged (k : Fin n) : liftUnop n k = k.castLE (by simp) := by
 
 @[simp]
 def liftUnop_unchanged' (k : Fin n) : liftUnop n k.castSucc = k.castLE (by simp) := by
-  simp only [liftUnop, Fin.coe_eq_castSucc, Fin.natCast_eq_last, Fin.castLE_castSucc,
-    ite_eq_right_iff]
+  simp only [liftUnop, Fin.natCast_eq_last, Fin.castLE_castSucc, ite_eq_right_iff]
   rcases k with ⟨k, hk⟩
   simp only [Fin.castSucc_mk, Fin.last, Fin.mk.injEq, Fin.castLE_mk]; omega
 
@@ -1456,8 +1453,8 @@ def swapLastTwoBlock (x : Fin (n + 3)) : Fin (n + 3) :=
    rcases x with ⟨x, hx⟩
    simp [swapLastTwoBlock]
    split_ifs
-   · simp_all [Fin.last, Fin.castLE]; omega
-   · simp_all [Fin.last, Fin.castLE, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt]; omega
+   · simp_all [Fin.last]; omega
+   · simp
    · simp_all [Fin.last, Fin.ext_iff, Nat.mod_eq_of_lt]; omega
    · simp_all [Fin.last, Fin.ext_iff]; rw [Nat.mod_eq_of_lt (by omega)] at *
 
@@ -1466,8 +1463,8 @@ def swapLastTwoBlock (x : Fin (n + 3)) : Fin (n + 3) :=
   rcases x with ⟨x, hx⟩
   simp [swapLastTwoBlock]
   split_ifs
-  · simp_all [Fin.last, Fin.castLE]; omega
-  · simp_all [Fin.last, Fin.castLE, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt]; omega
+  · simp_all [Fin.last]; omega
+  · simp_all [Fin.last, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt]; omega
   · simp_all [Fin.last, Fin.ext_iff, Nat.mod_eq_of_lt]; omega
   · simp_all [Fin.last, Fin.ext_iff]; rw [Nat.mod_eq_of_lt (by omega)] at *
 
@@ -1514,7 +1511,7 @@ lemma TermBinop.alt_lang {t₁ t₂ : Term} (op : TermBinop) :
         rfl
       generalize_proofs h₁ h₂ h₃ h₄
       have heq h : Fin.subNat (t₁.arity ⊔ t₂.arity + 1) (Fin.last (2 + t₁.arity ⊔ t₂.arity)) h = 1 := by
-         ext; simp [Fin.add_def]; omega
+         ext; simp; omega
       simp [heq]
       congr; ext1 i; congr 1
       rcases i with ⟨i, hi⟩; simp [Fin.castLT]; ext; simp; repeat rw [Nat.mod_eq_of_lt (by omega)]
@@ -1538,7 +1535,7 @@ lemma TermBinop.alt_lang {t₁ t₂ : Term} (op : TermBinop) :
     · ext1
       · simp
       next i =>
-        simp [bvs', List.Vector.append_get_ge, liftOp]
+        simp [liftOp]
         split_ifs with h
         · subst h
           simp
@@ -1656,10 +1653,10 @@ lemma swapLastTwo_same (x : Fin n) : swapLastTwo (n := n) (x.castLE (by omega)) 
   simp [swapLastTwo]
   split_ifs with h h' <;> simp_all +arith
   · rcases x with ⟨x, hx⟩
-    simp_all [Fin.ext_iff, Fin.add_def]
+    simp_all [Fin.ext_iff]
     omega
   · rcases x with ⟨x, hx⟩
-    simp_all [Fin.ext_iff, Fin.add_def]
+    simp_all [Fin.ext_iff]
     rw [h'] at hx
     rw [Nat.mod_eq_of_lt (by omega)] at hx
     simp at hx
@@ -1669,10 +1666,10 @@ lemma swapLastTwo_same' (x : Fin (n + 1)) (h : x ≠ Fin.last n) : swapLastTwo (
   simp [swapLastTwo]
   split_ifs with h h' <;> simp_all +arith
   · rcases x with ⟨x, hx⟩
-    simp_all [Fin.ext_iff, Fin.add_def]
+    simp_all [Fin.ext_iff]
     omega
   · rcases x with ⟨x, hx⟩
-    simp_all [Fin.ext_iff, Fin.add_def]
+    simp_all [Fin.ext_iff]
     omega
 
 @[simp]
@@ -1737,14 +1734,14 @@ lemma TermUnop.alt_lang {t : Term} (op : TermUnop) :
       rw [hget]
       convert heq using 1
       · have hbvs' : bvs'.get t.arity = t.evalFinBV fun n => bvs.bvs.get n := by
-          simp [bvs', Fin.add]
+          simp [bvs']
         simp [openTerm]
         rcases op <;> simp [hbvs', Fin.natAdd_zero'] <;> rfl
       · congr!;  ext; simp
     · ext1
       · simp
       next i =>
-        simp [bvs', List.Vector.append_get_ge, liftUnop]
+        simp [bvs', liftUnop]
         split_ifs with h
         · subst h
           simp
@@ -1882,7 +1879,7 @@ theorem nfaOfFormula_bv_language φ :
     simp only [nfaOfFormula, Formula.language]
     exact unopNfa_bv_language op ih
   case binop op φ₁ φ2 ih₁ ih₂ =>
-    simp only [nfaOfFormula, Formula.language, ih₁, ih₂]
+    simp only [nfaOfFormula, Formula.language]
     apply binopNfa_bv_language op
     · apply CNFA.lift_bv_language; assumption
     · apply CNFA.lift_bv_language; assumption
@@ -1921,7 +1918,7 @@ theorem decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w
   extract_lets bvs at hx
   have hin : bvs ∈ (⊤ : Set _) := by simp
   rw [←this] at hin
-  simp +zetaDelta [Set.instMembership, Set.Mem] at hin
+  simp +zetaDelta [Set.instMembership] at hin
   assumption
 
 @[simp]
@@ -1936,11 +1933,11 @@ lemma formula_predicate_match {p : Predicate} :
     cases pred <;> simp only [Predicate.denote, formula_predicate_term_match,
       List.getElem!_eq_getElem?_getD, formula_of_predicate, Formula.sat', evalRelation]
   case width rel w' =>
-     cases rel <;> simp [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
+     cases rel <;> simp [Predicate.denote, Formula.sat', formula_of_predicate]
   case land p₁ p₂ ih₁ ih₂ =>
-    simp_all [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
+    simp_all [Predicate.denote, Formula.sat', formula_of_predicate]
   case lor p₁ p₂ ih₁ ih₂ =>
-    simp_all [Predicate.denote, Formula.sat', formula_of_predicate, evalRelation]
+    simp_all [Predicate.denote, Formula.sat', formula_of_predicate]
 
 theorem Formula.denote_of_isUniversal {p : Predicate}
     (heval : formulaIsUniversal (formula_of_predicate p)) :
