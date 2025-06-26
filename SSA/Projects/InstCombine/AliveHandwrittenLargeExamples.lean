@@ -504,7 +504,9 @@ def alive_simplifySelect764 (w : Nat) :
   simp_alive_ops
   simp_alive_case_bash
   intro A
-  simp only [BitVec.slt, ofBool_eq_one, toInt_zero, decide_eq_true_eq, BitVec.zero_sub]
+  simp only [BitVec.slt, ofInt_ofNat, toInt_zero, ofBool_eq_one, decide_eq_true_eq, BitVec.zero_sub,
+    PoisonOr.ite_value_value, PoisonOr.value_bind, PoisonOr.value_isRefinedBy_value,
+    InstCombine.bv_isRefinedBy_iff]
   split
   next => simp
   next A_ge_zero =>
