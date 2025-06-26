@@ -17,6 +17,10 @@ RUN apt-get update -y \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config
 
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+ENV PATH="/root/.local/bin/:$PATH"
+
 # install Lean
 RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf > /code/elan.sh \
     && sh /code/elan.sh -y # elan
@@ -31,25 +35,23 @@ RUN ./configure.py && cd build && ninja install
 # install Lean-MLIR (commit: 22.06.25)
 RUN git clone https://github.com/opencompl/lean-mlir && cd lean-mlir && git checkout b0253c5f5dbc6cc507b559d76fd659da38a8e565 
 WORKDIR /code/lean-mlir
-
-# install plotting script dependencies
-
-# WORKDIR /code/lean-mlir/bv-evaluation/
-# RUN bash -c "\
-# 	python3 -m venv venv \
-# 	&& source venv/bin/activate \
-# 	&& python3 -m pip install -r /code/lean-mlir/bv-evaluation/requirements.txt "
-
-# get cached dependencies
-WORKDIR /code/lean-mlir
-COPY . .
-
-# build lean-mlir
 RUN lake exe cache get
 RUN lake build
 
+# setup python env
+RUN uv venv /opt/venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN uv pip install -r requirements.txt
+
+
 # Set the evaluation script directory as working dir
 WORKDIR /code/lean-mlir/bv-evaluation/
-RUN python3 compare-leansat-vs-bitwuzla-hdel.py
+RUN ./compare hackersdelight -j4 -r5
+RUN ./compare instcombine -j4 -r5
+
+RUN ./collect-data-hdel.py 
+RUN ./collect-data-llvm.py
 
 USER root
