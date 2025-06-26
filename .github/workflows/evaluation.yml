@@ -121,4 +121,4 @@ jobs:
       - name: Collect Stats
         continue-on-error: true
         run: |
-          (cd bv-evaluation/for-paper/tools; python3 ./collect-stats.py)
+          (cd bv-evaluation/tools; python3 ./collect-stats-bv-decide.py)
