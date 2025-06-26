@@ -11,9 +11,6 @@ import SSA.Experimental.Bits.Frontend.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Projects.InstCombine.TacticAuto
 
-
-
-
 open Lean Meta Elab Tactic in
 #eval show TermElabM Unit from do
   let fsm : FSM (Fin 1) := FSM.mk (α := Unit)
@@ -46,9 +43,7 @@ open NNF in
 theorem eq3 (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified } )
 
-/--
-info: 'eq3' depends on axioms: [propext, Quot.sound, ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
--/
+/-- info: 'eq3' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms eq3
 
 example (w : Nat) (a b : BitVec w) : a = a + 0 := by
@@ -59,7 +54,7 @@ theorem check_axioms (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'check_axioms' depends on axioms: [propext, Quot.sound, ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
+info: 'check_axioms' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms check_axioms
 
@@ -453,10 +448,7 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'width_1_char_2_add_four' depends on axioms: [propext,
- Classical.choice,
- Quot.sound,
- ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx]
+info: 'width_1_char_2_add_four' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
 #guard_msgs in #print axioms width_1_char_2_add_four
 

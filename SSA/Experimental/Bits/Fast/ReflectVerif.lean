@@ -7,7 +7,8 @@ We use `bv_circuit_nnf` to convert the expression into negation normal form.
 
 Authors: Siddharth Bhat
 
-https://raw.githubusercontent.com/opencompl/lean-mlir/3e0ff379b5e92427747f8dc84c6f77609bda7e67/SSA/Experimental/Bits/Fast/ReflectVerif.lean
+ReflectVerif: https://raw.githubusercontent.com/opencompl/lean-mlir/3e0ff379b5e92427747f8dc84c6f77609bda7e67/SSA/Experimental/Bits/Fast/ReflectVerif.lean
+Tactic: https://raw.githubusercontent.com/opencompl/lean-mlir/3e0ff379b5e92427747f8dc84c6f77609bda7e67/SSA/Experimental/Bits/Frontend/Tactic.lean
 
 -/
 import Mathlib.Data.Bool.Basic
@@ -423,16 +424,19 @@ def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : C
   (cert : String) : Bool := verifyAIG (α := α) c.toAIG cert
 
 /- If circuit verification succeeds, then the circuit is unsat. -/
-theorem always_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable α]
+theorem eval_eq_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable α]
     {c : Circuit α} {cert : String}
     (h : verifyCircuit c cert) :
-    c.always_false := by
-  simp
+    ∀ (env : _), c.eval env = false := by
   intros env
   simp [verifyCircuit] at h
   apply Circuit.eval_eq_false_iff_toAIG_unsat .. |>.mpr
   apply verifyAIG_correct h
 
+/--
+info: 'ReflectVerif.BvDecide.eval_eq_false_of_verifyCircuit' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_eq_false_of_verifyCircuit
 
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
@@ -1596,6 +1600,28 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
         intros i j hij
         simp at h ⊢
         apply h i j (by omega)
+
+
+/--
+Construct the induction circuits for a given FSM and depth.
+-/
+def mkN (fsm : FSM arity) (n : Nat) : KInductionCircuits fsm n :=
+  match hn : n with
+  | 0 => mkZero
+  | n + 1 => mkSucc (mkN fsm n)
+
+
+/-- The circuits constructed by `mkN` are lawful. -/
+def IsLawful_mkN {arity : Type _}
+    [DecidableEq arity] [Fintype arity] [Hashable arity]
+    (fsm : FSM arity) (n : Nat) :
+    (mkN fsm n).IsLawful := by
+  induction n with
+  | zero => exact IsLawful_mkZero fsm
+  | succ n ih =>
+    apply IsLawful_mkSucc_of_IsLawful
+    exact ih
+
 /--
 The precondition that assigns all
 `s[n+1] = carry(s[n], i[n])` and assigns all `o[n+1] = out(s[n], i[n])`.
@@ -1813,6 +1839,7 @@ def mkSafetyCircuit (circs : KInductionCircuits fsm n) :
     (mkSuccCarryAndOutsAssignPrecond circs)
     (castCircLe <| mkPostcondSafety circs)
 
+
 theorem mkSafetyCircuit_eval_eq_false_iff₁
     {circs : KInductionCircuits fsm n}
     (hCircs : circs.IsLawful)
@@ -1841,6 +1868,7 @@ theorem mkSafetyCircuit_eval_eq_false_iff₁
     apply h
     · apply hPrecond
     · apply hCircs
+
 
 /--
 Safe upto n steps, given that `mkSafetyCircuit.eval env = false` for all `env`.
@@ -2520,7 +2548,7 @@ Safety on all paths, given that our evaluation of
 This is the theorem that is hooked to the external world.
 -/
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
-    {circs : KInductionCircuits fsm K}
+    (circs : KInductionCircuits fsm K)
     (hCircs : circs.IsLawful)
     (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
     (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
@@ -2538,6 +2566,37 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
     · intros i hi
       apply hind
       omega
+
+/--
+The predicate `p` holds for all variables `vars`
+if we can verify the safety circuit and the inductive hypothesis cycle breaking circuit.
+-/
+theorem Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking
+    (n : Nat)
+    (p : Predicate)
+    (w : Nat)
+    (circs : KInductionCircuits (predicateEvalEqFSM p).toFSM n)
+    (hCircs : circs.IsLawful)
+    (vars : List (BitVec w))
+    (sCert : BVDecide.Frontend.LratCert)
+    (hs : verifyCircuit (mkSafetyCircuit circs) sCert = true)
+    (indCert : BVDecide.Frontend.LratCert)
+    (hind : verifyCircuit (mkIndHypCycleBreaking circs) indCert = true) :
+    p.denote w vars := by
+  apply Predicate.denote_of_eval
+  rw [← Predicate.evalFin_eq_eval p
+    (varsList := (List.map BitStream.ofBitVec vars))
+    (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
+  · rw [(predicateEvalEqFSM p).good]
+    apply eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+      (circs := circs) (hCircs := hCircs)
+    · apply eval_eq_false_of_verifyCircuit
+      exact hs
+    · apply eval_eq_false_of_verifyCircuit
+      exact hind
+  · intros i
+    simp
+
 /--
 info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false' depends on axioms: [propext,
  Classical.choice,
@@ -2560,10 +2619,6 @@ inductive DecideIfZerosOutput
 | safetyFailure (iter : Nat)
 /-- Was unable to establish invariant even at these many iterations. -/
 | exhaustedIterations (numIters : Nat)
-/-- we have proven the safety property for as many steps as the state space size plus one. -/
-| provenByExhaustion (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert)
-/-- we have proven both the safety and inductive invariant property. -/
-| provenByKIndNoCycleBreaking (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCert : BVDecide.Frontend.LratCert)
 /-- we have proven both the safety and inductive invariant property. -/
 | provenByKIndCycleBreaking (numIters : Nat) (safetyCert : BVDecide.Frontend.LratCert) (indCertCycleBreaking : BVDecide.Frontend.LratCert)
 
@@ -2571,8 +2626,6 @@ namespace DecideIfZerosOutput
 def isSuccess : DecideIfZerosOutput → Bool
   | .safetyFailure _ => false
   | .exhaustedIterations _ => false
-  | .provenByExhaustion .. => true
-  | .provenByKIndNoCycleBreaking .. => true
   | .provenByKIndCycleBreaking .. => true
 end DecideIfZerosOutput
 
@@ -2608,10 +2661,6 @@ partial def decideIfZerosAuxVerified' {arity : Type _}
       trace[Bits.FastVerif] s!"Safety property failed on initial state."
       return (.safetyFailure iter, stats.push circs.stats)
     | .some safetyCert =>
-      if iter ≥ 1 + fsm.stateSpaceSize then
-        trace[Bits.FastVerif] s!"Proved safety for the entire state space (state space size: {fsm.stateSpaceSize}). No need to build induction circuit."
-        return (.provenByExhaustion iter safetyCert, stats.push circs.stats)
-
       trace[Bits.FastVerif] s!"Safety property succeeded on initial state. Building induction circuit..."
       let tStart ← IO.monoMsNow
       let cIndHyp := circs.mkIndHypCycleBreaking
