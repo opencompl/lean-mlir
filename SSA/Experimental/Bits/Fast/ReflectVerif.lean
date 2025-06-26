@@ -648,7 +648,7 @@ def envBool_of_envBitstream_of_state (p : FSM arity)
       p.carryWith s0 envBitstream ss.ix ss.input
     | .inputs (.mk a i) => envBitstream i a
     | .outputs o =>
-      p.evalWith p.initCarry envBitstream o
+      p.evalWith s0 envBitstream o
 
 
 /-- Environment with chosen state variables of the FSM. -/
@@ -1584,6 +1584,41 @@ theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁
 
 
 @[simp]
+theorem mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBool_of_envBitstream_of_state
+  {circs : KInductionCircuits fsm n}
+  (hCircs : circs.IsLawful)
+  (env : Vars fsm.α arity (n + 2) → Bool)
+  (s0 : fsm.α → Bool)
+  (hEnv : env = envBool_of_envBitstream_of_state fsm envBitstream s0 (n + 1)) :
+  (mkSuccCarryAndOutsAssignPrecond circs).eval env = false := by
+  rw [eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁ hCircs env]
+  subst hEnv
+  simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state]
+  constructor
+  · intros s i hi
+    simp [Vars.stateN]
+    simp [Circuit.eval_map]
+    simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state,
+      Vars.stateN, Vars.inputN]
+    rw [FSM.carryWith, FSM.carry, FSM.nextBit]
+    simp
+    congr
+    ext x
+    rcases x with x | x
+    · rfl
+    · simp [Vars.inputN]
+  · intros i hi
+    congr
+    ext x
+    rcases x with x | x
+    · simp [Vars.stateN]
+      rfl
+    · simp [Vars.inputN]
+
+-- | TODO: remove duplication, reuse
+-- `mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBool_of_envBitstream_of_state`
+-- to work.
+@[simp]
 theorem mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBoolStart_of_envBitstream
   {circs : KInductionCircuits fsm n}
   (hCircs : circs.IsLawful)
@@ -1624,6 +1659,19 @@ theorem mkSuccCarryAndOutsAssignPrecond_eval_envBoolStart_of_envBitstream_eq_fal
     solve
     | assumption
     | rfl
+
+@[simp]
+theorem mkSuccCarryAndOutsAssignPrecond_eval_envBool_of_envBitstream_of_state_eq_false
+  {circs : KInductionCircuits fsm n}
+  (hCircs : circs.IsLawful)
+  (envBitstream : _ ) :
+  (mkSuccCarryAndOutsAssignPrecond circs).eval
+    (envBool_of_envBitstream_of_state fsm envBitstream s0 (n + 1)) = false := by
+  apply mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBool_of_envBitstream_of_state <;>
+    solve
+    | assumption
+    | rfl
+
 
 /--
 The safety circuit that checks that if `s[0]` is assigned to init carry,
@@ -1814,23 +1862,25 @@ def StatesUniqueLe (fsm : FSM arity) (s0 : fsm.α → Bool) (inputs : arity → 
   omega
 
 /--
-Show what the cycle breaking induction hypothesis circuit does.
+Show what the induction hypothesis with cycle breaking circuit implies.
 -/
 theorem  mkIndHypCycleBreaking_eval_eq_false_thm_aux
   {circs : KInductionCircuits fsm n}
   (hcircs : circs.IsLawful)
   (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
-  (∀ (envBitstream : _), (∀ (i : Nat) (j : Nat), i < j ∧ j ≤ n + 1 →
-      (fsm.carry envBitstream i) ≠ (fsm.carry envBitstream j)) →
-      (∀ (k : Nat), k < n + 1 → fsm.eval envBitstream k = false) →
-      (fsm.eval envBitstream (n + 1) = false)) := by
+  (∀ (envBitstream : _) (s0 : _), (∀ (i : Nat) (j : Nat), i < j ∧ j ≤ n + 1 →
+      (fsm.carryWith s0 envBitstream i) ≠ (fsm.carryWith s0 envBitstream j)) →
+      (∀ (k : Nat), k < n + 1 → fsm.evalWith s0 envBitstream k = false) →
+      (fsm.evalWith s0 envBitstream (n + 1) = false)) := by
   simp [mkIndHypCycleBreaking_eval_eq_false_iff₁] at h
-  intros envBitstream huniq hind
-  let env := envBoolStart_of_envBitstream fsm envBitstream (n + 1)
+  intros envBitstream s0 huniq hind
+  let env := envBool_of_envBitstream_of_state fsm envBitstream s0 (n + 1)
   specialize h env
   specialize h ?precond ?huniq
-  · apply mkSuccCarryAndOutsAssignPrecond_eval_envBoolStart_of_envBitstream_eq_false
-      hcircs envBitstream
+  · apply mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBool_of_envBitstream_of_state
+      (envBitstream := envBitstream) (s0 := s0)
+    · exact hcircs
+    · simp [env]
   · rw [hcircs.hCStatesUniqueCirc]
     intros i j hij
     specialize huniq i j hij
@@ -1855,18 +1905,17 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
   {circs : KInductionCircuits fsm n}
   (hcircs : circs.IsLawful)
   (h : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
-  (∀ (envBitstream : _), StatesUniqueLe fsm fsm.initCarry envBitstream (n + 1) →
-      (∀ (k : Nat), k < n + 1 → fsm.eval envBitstream k = false) →
-      (fsm.eval envBitstream (n + 1) = false)) := by
+  (∀ (envBitstream : _) (s0 : _), StatesUniqueLe fsm s0 envBitstream (n + 1) →
+      (∀ (k : Nat), k < n + 1 → fsm.evalWith s0 envBitstream k = false) →
+      (fsm.evalWith s0 envBitstream (n + 1) = false)) := by
   simp [StatesUniqueLe]
-  intros envBitstream hind
+  intros envBitstream s0 hind
   apply mkIndHypCycleBreaking_eval_eq_false_thm_aux (circs := circs) (hcircs := hcircs)
   · apply h
   · intros i j hij
     apply hind
     · omega
     · omega
-
 
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
@@ -2219,8 +2268,6 @@ theorem all_simple_paths_good
   ∀ (env : _) (n : Nat),
     StatesUniqueLe fsm fsm.initCarry env n →
     fsm.evalWith fsm.initCarry env n = false := by
-  -- intros env n hind'
-  -- apply evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe
   sorry
 
 #print all_simple_paths_good
