@@ -75,7 +75,7 @@ def run_hdel(temp_file_path: str, log_file_path: str):
     print(f"Deleted temporary file: {temp_file_path}")
 
 
-def compare(benchmark: str, jobs: int):
+def compare(benchmark: str, jobs: int, reps: int):
     """Processes benchmarks using a thread pool."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
@@ -115,17 +115,19 @@ def compare(benchmark: str, jobs: int):
                     with open(temp_file_path, "w", encoding="utf-8") as temp_file:
                         temp_file.write(modified_content)
 
-                    # Submit the temporary file to be run.
-                    # log_file_base_name will be 'original_file_base'
-                    # specific_arg_for_log_name will be the 'width'
-                    log_file_name = f"{original_file_base}_{str(width)}.txt"
-                    log_file_path = os.path.join(
-                        RESULTS_DIR_HACKERSDELIGHT, log_file_name
-                    )
-                    future = executor.submit(run_hdel, temp_file_path, log_file_path)
-                    futures[future] = (
-                        temp_file_path  # Store the name of the temporary file for progress reporting
-                    )
+                    for r in range(reps): 
+
+                        # Submit the temporary file to be run.
+                        # log_file_base_name will be 'original_file_base'
+                        # specific_arg_for_log_name will be the 'width'
+                        log_file_name = f"{original_file_base}_{str(width)}_r{str(r)}.txt"
+                        log_file_path = os.path.join(
+                            RESULTS_DIR_HACKERSDELIGHT, log_file_name
+                        )
+                        future = executor.submit(run_hdel, temp_file_path, log_file_path)
+                        futures[future] = (
+                            temp_file_path  # Store the name of the temporary file for progress reporting
+                        )
 
         elif benchmark == "instcombine":
             clear_folder(RESULTS_DIR_INSTCOMBINE)
@@ -135,15 +137,16 @@ def compare(benchmark: str, jobs: int):
                 if "_proof" in file and file.endswith(
                     ".lean"
                 ):  # Ensure it's a Lean file
-                    file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
-                    file_title = os.path.splitext(file)[0]
-                    log_file_path = os.path.join(
-                        RESULTS_DIR_INSTCOMBINE, f"{file_title}.txt"
-                    )
-                    future = executor.submit(
-                        run_file, "instcombine", file_path, log_file_path
-                    )
-                    futures[future] = file_path
+                    for r in range(reps): 
+                        file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
+                        file_title = os.path.splitext(file)[0]
+                        log_file_path = os.path.join(
+                            RESULTS_DIR_INSTCOMBINE, f"{file_title}_r{str(r)}.txt"
+                        )
+                        future = executor.submit(
+                            run_file, "instcombine", file_path, log_file_path
+                        )
+                        futures[future] = file_path
 
         else:
             raise Exception("Unknown benchmark.")
@@ -171,6 +174,7 @@ def main():
         choices=["all", "hackersdelight", "instcombine", "smtlib", "alive"],
     )
     parser.add_argument("-j", "--jobs", type=int, default=1)
+    parser.add_argument("-r", "--repetitions", type=int, default=1)
 
     args = parser.parse_args()
     benchmarks_to_run = (
@@ -180,7 +184,7 @@ def main():
     )
 
     for b in benchmarks_to_run:
-        compare(b, args.jobs)
+        compare(b, args.jobs, args.repetitions)
 
 
 if __name__ == "__main__":

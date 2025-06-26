@@ -495,6 +495,40 @@ def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
   mkAppM ``ReflectVerif.BvDecide.verifyCircuit #[c, cert]
 
 
+
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkN {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (fsm : FSM arity) (n : ℕ) : ReflectVerif.BvDecide.KInductionCircuits fsm n
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkN
+def Expr.KInductionCircuits.mkN (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkN #[fsm, n]
+
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN {arity : Type} [DecidableEq arity] [Fintype arity]
+  [Hashable arity] (fsm : FSM arity) (n : ℕ) : (ReflectVerif.BvDecide.KInductionCircuits.mkN fsm n).IsLawful
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN
+def Expr.KInductionCircuits.mkIsLawful_mkN (fsm : Expr) (n : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN #[fsm, n]
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {arity : Type} {fsm : FSM arity} [DecidableEq arity]
+  [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
+  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
+def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit #[circs]
+
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking {arity : Type} {fsm : FSM arity} [DecidableEq arity]
+  [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
+  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking
+def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : MetaM Expr :=
+  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking #[circs]
+
 /-- Check the type of e if check? is true. -/
 def debugCheck (check? : Bool) (e : Expr)  : MetaM Unit :=
     if check?
@@ -597,70 +631,56 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
       -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
       let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
       match cert? with
-      | .provenByExhaustion niter safetyCert =>
-        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByExhaustionAx [])
-        if gs.isEmpty
-          then return gs
-        else
-          throwError m!"Expected application of axiom to close goal, but failed. {indentD g}"
       | .provenByKIndCycleBreaking niter safetyCert indCert =>
-        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByKInductionCycleBreakingAx [])
-        if gs.isEmpty
-          then return gs
-        else
-          throwError m!"Expected application of axiom to close goal, but failed. {indentD g}"
-      | .provenByKIndNoCycleBreaking niter safetyCert indCert =>
-        let safetyCertExpr := Lean.mkStrLit safetyCert
-        let indCertExpr := Lean.mkStrLit indCert
-        let gs ← g.apply (mkConst ``ReflectVerif.BvDecide.decideIfZerosByKInductionNoCycleBreakingAx [])
-        if gs.isEmpty
-          then return gs
-        else
-          throwError m!"Expected application of axiom to close goal, but failed. {indentD g}"
+        let prf ← g.withContext do
+        /-
+        theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+          (circs : KInductionCircuits fsm K)
+          (hCircs : circs.IsLawful)
+          (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
+          (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+          (∀ (envBitstream : _), fsm.eval envBitstream i = false) := by
+        -/
+          let fsmExpr ← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))
+          let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niter)
+          let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niter)
+          -- | verifyCircuit (mkSafetyCircuit circs)
+          let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
+            (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
+            (toExpr safetyCert)
+          debugCheck checkTypes? verifyCircuitMkSafetyCircuitExpr
+          let safetyCertProof ← mkEqRflNativeDecideProof verifyCircuitMkSafetyCircuitExpr true
+          -- verifyCircuit ... = true
+          debugCheck checkTypes? safetyCertProof
 
-        -- let prf ← g.withContext do
-        --   -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkSafetyCircuit.val sCert = true
-        --   let safetyCertTy ←
-        --     Expr.mkVerifyCircuit
-        --       (← Expr.mkSubtypeVal
-        --         (← Expr.mkMkSafetyCircuit
-        --           (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
-        --       safetyCertExpr
-        --   debugCheck checkTypes? safetyCertTy
-        --   -- logInfo m!"safety cert type: {indentD safetyCertTy}"
-        --   let safetyCertProof ← mkEqRflNativeDecideProof safetyCertTy true
-        --   -- verifyCircuit (mkN (predicateEvalEqFSM p).toFSM n).mkIndHypCircuit.val indCert = true
-        --   debugCheck checkTypes? safetyCertProof
-        --   let indCertTy ←
-        --     Expr.mkVerifyCircuit
-        --       (← Expr.mkSubtypeVal
-        --         (← Expr.mkMkIndHypCircuit
-        --           (← Expr.mkMkN (← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))) (toExpr niter))))
-        --       indCertExpr
-        --   debugCheck checkTypes? indCertTy
-        --   -- logInfo m!"inductive cert type: {indentD indCertTy}"
-        --   let indCertProof ← mkEqRflNativeDecideProof indCertTy true
-        --   debugCheck checkTypes? indCertProof
-        --   -- logInfo m!"inductive cert proof: {indentD indCertProof}"
-        --   let prf := mkAppN (mkConst ``Predicate.denote_of_verifyAIG_of_verifyAIG' [])
-        --     #[w,
-        --       bvToIxMapVal,
-        --       predicate.e.quote,
-        --       Lean.mkNatLit niter,
-        --       safetyCertExpr,
-        --       safetyCertProof,
-        --       indCertExpr,
-        --       indCertProof]
-        --   let prf ← instantiateMVars prf
-        --   debugCheck checkTypes? prf
-        --   -- logInfo m!"proof: {indentD prf}"
-        --   pure prf
-        -- let gs ← g.apply prf
-        -- -- let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
-        -- if gs.isEmpty
-        -- then return gs
-        -- else
-        --   throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
+          let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
+              (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
+              (toExpr indCert)
+          debugCheck checkTypes? verifyCircuitMkIndHypCircuitExpr
+
+          let indCertProof ← mkEqRflNativeDecideProof verifyCircuitMkIndHypCircuitExpr true
+          debugCheck checkTypes? indCertProof
+
+          let prf := mkAppN (mkConst ``ReflectVerif.BvDecide.KInductionCircuits.Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking [])
+            #[
+              Lean.mkNatLit niter,
+              predicate.e.quote,
+              w,
+              circsExpr,
+              circsLawfulExpr,
+              bvToIxMapVal,
+              (toExpr safetyCert),
+              safetyCertProof,
+              (toExpr indCert),
+              indCertProof]
+          let prf ← instantiateMVars prf
+          debugCheck checkTypes? prf
+          pure prf
+        let gs ← g.apply prf
+        if gs.isEmpty
+        then return gs
+        else
+          throwError m!"Expected proof cerificate to close goal, but failed. Leftover goals: {indentD g}"
       | .safetyFailure iter =>
         throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
       | .exhaustedIterations niter =>

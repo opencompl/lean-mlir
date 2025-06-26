@@ -123,7 +123,9 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
             stdout = stdout.decode("utf-8")
             records = parse_tacbench_rows_from_stdout(filename, stdout)
-            assert len(records) == 1
+            if len(records) != 1:
+                logging.error("[{status_to_emoji[STATUS_FAIL]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
+                return
             record = records[0]
             walltime = record.walltime
             exit_code = process.returncode
