@@ -29,8 +29,6 @@ col = [
 "#fb9a99",
 "#e31a1c"]
 
-def store_dataframes (results : dict) :
-
 def compare_solvers_on_file (results : dict) : 
     benchmark_errors = []
     solved_bitwuzla_tot = 0
