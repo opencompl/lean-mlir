@@ -2110,9 +2110,11 @@ Luckily, we don't care about this being executable or fast.
 To ensure that we do not use the performance of this procedure,
 we mark it `noncomputable`.
 -/
-noncomputable def mkSimplePathOfPath (fsm : FSM arity)
+axiom mkSimplePathOfPath (fsm : FSM arity)
     (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) :
-    SimplePathOfPath fsm s0 n inputs :=
+    SimplePathOfPath fsm s0 n inputs
+/-
+  :=
   match hn : n with
   | 0 => {
     simplePath := inputs,
@@ -2168,7 +2170,7 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
           · omega
     }
     | ⟨some k, hsome⟩ => sorry
-
+-/
 
 /-- Safety on all simple paths implies safety on all paths. -/
 theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arity)
@@ -2210,6 +2212,7 @@ theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arit
     simp [env']
     intros hk'
     omega
+
 
 /--
 Evaluating at the created simple path equals evaluating at the original path.
@@ -2258,7 +2261,7 @@ theorem StatesUniqueLe_of_StatesUniqueLe_congr
   · omega
 
 /-- Safety for all simple paths. -/
-theorem all_simple_paths_good
+axiom all_simple_paths_good
     (fsm : FSM arity) (K : Nat)
     (hsafety : ∀ (i : Nat) (env : _) , i < K + 1 → fsm.evalWith fsm.initCarry env i = false)
     (hind : ∀ (s0 : _) (env : _),
@@ -2267,10 +2270,14 @@ theorem all_simple_paths_good
         fsm.evalWith s0 env (K + 1) = false) :
   ∀ (env : _) (n : Nat),
     StatesUniqueLe fsm fsm.initCarry env n →
-    fsm.evalWith fsm.initCarry env n = false := by
-  sorry
+    fsm.evalWith fsm.initCarry env n = false
+  -- := by sorry
 
-#print all_simple_paths_good
+/--
+info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good]
+-/
+#guard_msgs in #print axioms all_simple_paths_good
+
 /--
 Safety for all paths, given that kinduction base case holds,
 and that we can apply k-induction to simple paths.
@@ -2294,6 +2301,11 @@ theorem all_paths_good_of_kbase_of_simple_path_kind
     · apply hUnique
     · apply hindPrecond
 
+/--
+Safety on all paths, given that our evaluation of
+`mkSafetyCircuit` is false, and `mkIndHypCycleBreaking` is false.
+This is the theorem that is hooked to the external world.
+-/
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
     {circs : KInductionCircuits fsm K}
     (hCircs : circs.IsLawful)
@@ -2313,6 +2325,14 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
     · intros i hi
       apply hind
       omega
+/--
+info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good,
+ ReflectVerif.BvDecide.KInductionCircuits.mkSimplePathOfPath]
+-/
+#guard_msgs in #print axioms eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
