@@ -2447,9 +2447,9 @@ theorem all_simple_paths_good
       rw [show j = (j - (K + 1)) + (K + 1) by omega]
       rw [FSM.evalWith_add_eq_evalWith_carryWith]
       intros hUnique
+      simp [show j - (K + 1) + (K + 1) = j by omega] at hUnique
       apply hind
       · intros k l hkl
-        simp [show j - (K + 1) + (K + 1) = j by omega] at hUnique
         rw [FSM.carryWith_carryWith_eq_carryWith_add]
         rw [FSM.carryWith_carryWith_eq_carryWith_add]
         simp [StatesUniqueLe] at hUnique
@@ -2465,18 +2465,29 @@ theorem all_simple_paths_good
           simp
           apply hStrongI
           omega
-          exact all_simple_paths_good_ax
-        · exact all_simple_paths_good_ax
-          -- apply hjInd
-          -- · omega
-          -- · intros k hk; apply hStrongI; omega
-
-
+          simp [StatesUniqueLe] at hUnique ⊢
+          intros k l hk hl
+          apply hUnique
+          · omega
+          · omega
+        · rw [FSM.evalWith_eq_outputWith_carryWith]
+          rw [FSM.carryWith_carryWith_eq_carryWith_add]
+          rw [FSM.carryWith_congrEnv (y := envBitstream)]
+          · rw [show j - (K + 1) + i = j - (K + 1 - i) by omega]
+            rw [show j - (K + 1 - i) = j - ((K - i)) - 1 by omega]
+            apply hjInd
+            . omega
+            . intros k hk; apply hStrongI; omega
+            · simp [StatesUniqueLe] at hUnique ⊢
+              intros k l hk hl
+              apply hUnique
+              · omega
+              · omega
+          · intros a k hk
+            simp [envBitstream_set_eq_self_of_ne (by omega)]
 
 /--
-info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [propext,
- Quot.sound,
- ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good_ax]
+info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms all_simple_paths_good
 
@@ -2530,8 +2541,7 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
 /--
 info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false' depends on axioms: [propext,
  Classical.choice,
- Quot.sound,
- ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good_ax]
+ Quot.sound]
 -/
 #guard_msgs in #print axioms eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
 
