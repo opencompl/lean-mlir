@@ -6,7 +6,8 @@ artifact.pdf: artifact.tex sigplanconf.cls
 docker-build-and-push:
 	docker build -t  artifact-evaluation/Dockerfile -t lean-image .
 	docker create --name temp-container lean-image
-	docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-results
+	docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-raw-results
+	# docker cp temp-container:/code/lean-mlir/bv-evaluation/plots ./dockerplots
 	docker rm temp-container
 
 clean:
