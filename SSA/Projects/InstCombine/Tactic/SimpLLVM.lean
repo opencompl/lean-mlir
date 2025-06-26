@@ -134,29 +134,33 @@ private theorem congr_hide_eq (β : Nat → Type) (w : Nat) : β (hide w) = β w
   rw[hide_eq]
 
 /-- Auxiliary lemmas used in `simpHideFunArgs`. -/
-private theorem eq_cast_self_hide_hide {α : Type} {β : Nat → Type}
+private theorem eq_hide_cast_self_hide {α : Type} {β : Nat → Type}
     (f : (w : Nat) → α → β w) (w : Nat) (x : α) :
-    f w x = cast (congr_hide_eq β w) (f (hide w) (hide x)) := by
-  rw [eq_cast_iff_heq, hide_eq, hide_eq]
+    f w x = hide (cast (congr_hide_eq β w) (f (hide w) x)) := by
+  rw [hide_eq, eq_cast_iff_heq, hide_eq]
 
 /--
 Given a function expression `f : (w : Nat) → α → β w` together with argument
-expressions `w : Nat` and `x : α` (for arbitrary `α`), ensure the arguments
-`w` and `x` are guarded by `hide` to block kernel reduction.
+expressions `w : Nat` and `x : α` (for arbitrary `α`), ensure the expression
+is appropriately guarded by `hide` to block kernel reduction.
 -/
 def simpHideFunArgs (f w x β : Expr) : Meta.SimpM Meta.Simp.Step := do
-  if w.isAppOf ``hide && x.isAppOf ``hide then
-    trace[LeanMLIR.Elab] "{Lean.crossEmoji}: both arguments in {mkApp2 f w x} \
-      are already applications of `hide`"
+  if w.isAppOf ``hide then
+    trace[LeanMLIR.Elab] "{Lean.crossEmoji}: argument {w} is already an application of `hide`"
     return .continue
+  let ctx ← Simp.getContext
+  if let some parent := ctx.parent? then
+    if parent.isAppOf ``hide then
+      trace[LeanMLIR.Elab] "{Lean.crossEmoji}: parent ({parent}) is already an application of `hide`"
+      return .continue
 
   let expr ← do
     let castProof := mkApp2 (.const ``congr_hide_eq []) β w
     let w' ← mkAppM ``hide #[w]
-    let x' ← mkAppM ``hide #[x]
-    let fwx' := mkApp2 f w' x'
-    mkAppM ``cast #[castProof, fwx']
-  let proof ← mkAppM ``eq_cast_self_hide_hide #[f, w, x]
+    let fwx' := mkApp2 f w' x
+    let cast ← mkAppM ``cast #[castProof, fwx']
+    mkAppM ``hide #[cast]
+  let proof ← mkAppM ``eq_hide_cast_self_hide #[f, w, x]
   return .done {
     expr := expr
     proof? := some proof
@@ -188,10 +192,10 @@ open HideConstants (cast_self_hide_eq)
 
 macro "unhide_constants" : tactic => `(tactic|
   all_goals simp -failIfUnchanged only [hide_eq, cast_self_hide_eq,
-    cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofInt w x))]
+    cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofInt w x)),
+    cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofNat w x))]
   -- ----------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  -- This is the unfolded definition of `LLVM.const?`
-  -- We specify it here manually as inference usually won't manage to
+  -- We specify these anually as inference usually won't manage to
   -- instantiate `cast_self_hide_eq` like this without assistance.
 )
 
@@ -229,7 +233,7 @@ macro "simp_alive_ops" : tactic =>
       unhide_constants
       -- We need to use `BitVec.ofInt_ofNat` again, as it may have been
       -- previously blocked by a `hide`
-      simp -failIfUnchanged only [
-        (BitVec.ofInt_ofNat), BitVec.ofInt_neg
-      ]
+      -- simp -failIfUnchanged only [
+      --   (BitVec.ofInt_ofNat), BitVec.ofInt_neg
+      -- ]
     ))
