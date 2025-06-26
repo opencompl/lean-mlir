@@ -459,6 +459,9 @@ print("bv_decide solved " + str(solved_bv_decide_tot) + " theorems.")
 print("bitwuzla solved " + str(solved_bitwuzla_tot) + " theorems.")
 print("bv_decide found " + str(counter_bv_decide_tot) + " counterexamples.")
 print("bitwuzla found " + str(counter_bitwuzla_tot) + " counterexamples.")
+print("In total, bitwuzla saw " + str(counter_bitwuzla_tot + solved_bitwuzla_tot + error_bitwuzla_tot) + " counterexamples.")
+print("In total, bv_decide saw " + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + " counterexamples.")
+
 print("Errors raised: " + str(len(benchmarks_errors)))
 for e in benchmarks_errors:
     print("error : " + e[1] + " found at " + e[0])
