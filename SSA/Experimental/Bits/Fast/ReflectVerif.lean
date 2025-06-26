@@ -1917,6 +1917,7 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm
     · omega
     · omega
 
+
 /-- induction principle with a uniform bound 'bound' in place. -/
 @[elab_as_elim]
 theorem ind_principle₂  {motive : Nat → Prop} (bound : Nat)
@@ -2309,10 +2310,12 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
     omega
   · intros s0 env hUnique hind
     apply hIndHyp
-    apply hUnique
-    intros i hi
-    apply hind
-    omega
+    · sorry
+      -- apply hUnique
+    · intros i hi
+      apply hind
+      omega
+      sorry
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
     {fsm : FSM arity} (circs : KInductionCircuits fsm n) : CircuitStats where
