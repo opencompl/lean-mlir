@@ -2231,6 +2231,7 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
   }
   | n' + 1 =>
     let path' := mkSimplePathOfPath fsm s0 n' inputs
+    have : n' < n := by omega
     let sn := fsm.carryWith s0 inputs (n' + 1)
     match hfind : path'.findStateOnSimplePath? sn with
     | ⟨none, hnone⟩ => {
@@ -2301,7 +2302,33 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
           · omega
           · omega
     }
-    | ⟨some k, hsome⟩ => sorry
+    | ⟨some k, hsome⟩ =>
+        -- let path' := mkSimplePathOfPath fsm s0 n' inputs
+        -- let sn := fsm.carryWith s0 inputs (n' + 1)
+        {
+          simplePath := path'.simplePath,
+          k := k,
+          hkLt := by
+            have := path'.hkLt
+            specialize hsome k
+            simp at hsome
+            omega,
+          hCarryWith := by
+            have := path'.hCarryWith
+            specialize hsome k
+            simp at hsome
+            obtain ⟨hk, hcarry, hfirst⟩ := hsome
+            rw [hcarry],
+          hStatesUniqueLe := by
+            have := path'.hStatesUniqueLe
+            simp [StatesUniqueLe] at this ⊢
+            intros i j hi hj
+            apply this
+            · omega
+            · specialize hsome k
+              simp at hsome
+              omega
+        }
 
 /-- Safety on all simple paths implies safety on all paths. -/
 theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arity)
