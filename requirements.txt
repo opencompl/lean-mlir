@@ -17,3 +17,4 @@ tabulate==0.9.0
 tzdata==2025.1
 visidata==3.1.1
 zipp==3.21.0
+num2words==0.5.14
