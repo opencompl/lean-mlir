@@ -287,18 +287,6 @@ def _root_.Circuit.toAIGAux [DecidableEq α] [Fintype α] [Hashable α] (c : Cir
             rw [decl_eq]
           · simp; omega
     }
-
-    -- let raig := r.toAIGAux laig.val.aig
-    -- let input := ⟨laig.val.ref.cast (by omega), raig.val.ref⟩
-    -- let ret := raig.val.aig.mkOrCached input
-    -- have Lawful := LawfulOperator.le_size (f := mkOrCached) raig.val.aig input
-    -- ⟨ret, by
-    --   simp [ret]
-    --   apply Nat.le_trans _
-    --   apply mkOrCached_le_size
-    --   have hl' := laig.property
-    --   have hr' := raig.property
-    --   omega⟩
   | .xor l r =>
     let laig := l.toAIGAux aig
     let raig := r.toAIGAux laig.out
