@@ -1930,32 +1930,6 @@ theorem eval_eq_false_of_eval_eq_false_le_n_of_eval_eq_false_le_n_of_eval_eq_fal
           · intros k hk; apply hStrongI; omega
 
 /--
-Establish safety on all simple paths.
--/
-theorem SafeOnPathLe_of_StatesUniqueLe_of_Safety_of_HInd
-    (fsm : FSM arity) (K : Nat)
-    (hsafety : ∀ (i : Nat) (env : _) , i < K + 1 → fsm.evalWith fsm.initCarry env i = false)
-    (hind : ∀ (s0 : _) (env : _),
-       StatesUniqueLe fsm s0 env K →
-       (∀ (i : Nat), i < K + 1 → fsm.evalWith s0 env i = false) →
-       fsm.evalWith s0 env (K + 1) = false) :
-  ∀ (env : _) (n : Nat),
-    StatesUniqueLe fsm fsm.initCarry env n →
-    fsm.evalWith fsm.initCarry env n = false := by
-  intros inputs n hUnique
-  revert hUnique
-  induction n using ind_principle₂ (bound := K)
-  case hBase i hi =>
-    intros hUnique
-    apply hsafety
-    omega
-  case hInd i hi hind =>
-    intros hUnique
-    -- gotta shift the environment.
-    sorry
-
-
-/--
 Make a simple path corresponding to inputs[:n],
 such that carryWith fsm s0 inputs n = carryWith fsm s0 out.inputs out.k,
 where `k ≤ n`, and moreover, `out.inputs` is a simple path.
@@ -1965,7 +1939,11 @@ structure SimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (i
   k : Nat
   hkLt : k ≤ n
   hCarryWith :  fsm.carryWith s0 inputs n = fsm.carryWith s0 simplePath k
+  /-- We pick a subsequence of paths. -/
+  hCarryWith_of_le : ∀ (i : Nat), i ≤ k →
+    ∃ j : Nat, j ≤ n ∧ fsm.carryWith s0 simplePath i = fsm.carryWith s0 inputs j
   hStatesUniqueLe : StatesUniqueLe fsm s0 simplePath k
+
 
 def SimplePathOfPath.hCarry (this : SimplePathOfPath fsm s0 n inputs)
   (hs0 : s0 = fsm.initCarry := by rfl) :
@@ -2057,7 +2035,13 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
     k := 0,
     hkLt := by omega,
     hCarryWith := rfl,
-    hStatesUniqueLe := StatesUniqueLe_zero
+    hStatesUniqueLe := StatesUniqueLe_zero,
+    hCarryWith_of_le := by
+      intros i hi
+      simp [hi]
+      have : i = 0 := by omega
+      subst this
+      simp
   }
   | n' + 1 =>
     let path' := mkSimplePathOfPath fsm s0 n' inputs
@@ -2104,6 +2088,124 @@ theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arit
     intros hk'
     omega
 
+/--
+set values for index `i` in the environment `x`,
+where `v` is the value to set.
+-/
+def envBitstream_set (x : arity → BitStream) (n : Nat) (v : arity → Bool) :
+    arity → BitStream :=
+  fun a j => if j = n then v a else x a j
+
+@[simp]
+def envBitstream_set_self_eq_self (x : arity → BitStream) (n : Nat) (v : arity → Bool) :
+    (envBitstream_set x n (fun a => x a n)) = x := by
+  ext a i
+  simp [envBitstream_set]
+  intros hi
+  subst hi
+  rfl
+
+@[simp]
+theorem envBitstream_set_eq_self_of_ne {x : arity → BitStream}
+    {n k : Nat} {v : arity → Bool} {a : arity} (hneq : k ≠ n) :
+  (envBitstream_set x n v) a k = x a k := by
+  simp [envBitstream_set, hneq]
+
+@[simp]
+theorem envBitstream_set_eq_of_eq {x : arity → BitStream} {n k : Nat} {v : arity → Bool}
+    {a : arity} (hneq : k = n) :
+    (envBitstream_set x n v) a k = v a := by
+  simp [envBitstream_set, hneq]
+
+@[simp]
+theorem envBitstream_set_eq_of_eq₂   {x : arity → BitStream}
+    {n : Nat} {v : arity → Bool} {a : arity} :
+  (envBitstream_set x n v) a n = v a := by
+  simp [envBitstream_set]
+
+
+
+-- s0 : fsm.α → Bool
+-- n : ℕ
+-- hind' : ∀ i ≤ K, fsm.evalWith s0 env i = false
+-- hEnvSimplePath : SimplePathOfPath fsm s0 K env := mkSimplePathOfPath fsm s0 K env
+-- thmEnv : arity → BitStream := envBitstream_set hEnvSimplePath.simplePath K fun a => env a (K + 1)
+-- ⊢ fsm.evalWith s0 thmEnv (K + 1) = false
+
+
+-- structure SimplePathOfPath (fsm : FSM arity) (s0 : fsm.α → Bool) (n : Nat) (inputs : arity → BitStream) where
+--   simplePath : arity → BitStream
+--   k : Nat
+--   hkLt : k ≤ n
+--   hCarryWith :  fsm.carryWith s0 inputs n = fsm.carryWith s0 simplePath k
+--   hStatesUniqueLe : StatesUniqueLe fsm s0 simplePath k
+
+-- def SimplePathOfPath.hCarry (this : SimplePathOfPath fsm s0 n inputs)
+-- ⊢ fsm.evalWith s0 env (K + 1) = false
+
+def SimplePathOfPath.hEvalWith (this : SimplePathOfPath fsm s0 (K + 1) env) :
+    fsm.evalWith s0 env (K + 1) =
+    fsm.evalWith s0
+      (envBitstream_set this.simplePath (this.k) (fun a => env a (K + 1))) this.k := by
+  rw [FSM.evalWith_eq_outputWith_carryWith]
+  rw [FSM.evalWith_eq_outputWith_carryWith]
+  rw [this.hCarryWith]
+  rw [FSM.carryWith_congrEnv (y := envBitstream_set this.simplePath (this.k) (fun a => env a (K + 1)))]
+  · congr
+    ext i
+    simp
+  · intros a i hi
+    rw [envBitstream_set_eq_self_of_ne (by omega)]
+
+-- hEnv' : SimplePathOfPath fsm s0 (K + 1) env := ⋯
+-- ⊢ StatesUniqueLe fsm s0 (envBitstream_set hEnv'.simplePath hEnv'.k fun a => env a (K + 1)) K
+
+/--
+If we have all unique states upto `K`, then we have unique states upto
+`k' \leq K` on an `env'`, as long as `env` and `env'` match upto the required length.
+-/
+theorem StatesUniqueLe_of_StatesUniqueLe_congr
+  {K k' : Nat}
+  {fsm : FSM arity} {s0 : fsm.α → Bool} {env : arity → BitStream}
+  {env env' : arity → BitStream}
+  {this : StatesUniqueLe fsm s0 env K}
+  (hk' : k' ≤ K)
+  (henv' : ∀ (a : arity) (i : Nat), i ≤ k' → env' a i = env a i) :
+  StatesUniqueLe fsm s0 env' k' := by
+  simp [StatesUniqueLe] at ⊢ this
+  intros i j hii hj
+  have hEnvI : fsm.carryWith s0 env' i = fsm.carryWith s0 env i := by
+    apply FSM.carryWith_congrEnv
+    intros a l hl
+    apply henv'
+    omega
+  have hEnvJ : fsm.carryWith s0 env' j = fsm.carryWith s0 env j := by
+    apply FSM.carryWith_congrEnv
+    intros a l hl
+    apply henv'
+    omega
+  rw [hEnvI, hEnvJ]
+  apply this
+  · omega
+  · omega
+
+theorem ind_hyp_all_paths_of_ind_hyp_simple_paths
+    (fsm : FSM arity) (K : Nat)
+    (hsafety : ∀ (i : Nat) (env : _) , i < K + 1 → fsm.evalWith fsm.initCarry env i = false)
+    (hind : ∀ (s0 : _) (env : _),
+       StatesUniqueLe fsm s0 env K →
+       (∀ (i : Nat), i ≤ K  → fsm.evalWith s0 env i = false) →
+       (∀ (j : Nat), j ≤ K + 1 → fsm.evalWith s0 env j = false)) :
+  ∀ (env : _) (s0 : _) (n : Nat),
+    (∀ (i : Nat), i ≤ K  → fsm.evalWith s0 env i = false) →
+       fsm.evalWith s0 env (K + 1) = false := by
+  intros env s0 n hind'
+  let hEnv' := mkSimplePathOfPath fsm s0 (K + 1) env
+  rw [hEnv'.hEvalWith]
+  rw [hind]
+  · sorry
+  · sorry
+  · sorry
 
 theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
     {circs : KInductionCircuits fsm n}
