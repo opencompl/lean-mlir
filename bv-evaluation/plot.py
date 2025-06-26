@@ -6,9 +6,6 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import math
-
-from typing import Callable
 
 instCombineDataDir = "../raw-data/InstCombine/"
 hackersDelightDataDir = "../raw-data/HackersDelight/"
