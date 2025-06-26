@@ -193,7 +193,8 @@ open HideConstants (cast_self_hide_eq)
 macro "unhide_constants" : tactic => `(tactic|
   all_goals simp -failIfUnchanged only [hide_eq, cast_self_hide_eq,
     cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofInt w x)),
-    cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofNat w x))]
+    cast_self_hide_eq (fun w x => PoisonOr.value (BitVec.ofNat w x)),
+    cast_self_hide_eq (fun w x => PoisonOr.value (-BitVec.ofNat w x))]
   -- ----------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   -- We specify these anually as inference usually won't manage to
   -- instantiate `cast_self_hide_eq` like this without assistance.
