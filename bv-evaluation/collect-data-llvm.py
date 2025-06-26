@@ -10,25 +10,22 @@ paper_directory = 'for-paper/'
 benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 res_dir = "results/InstCombine/"
 raw_data_dir = paper_directory + "raw-data/InstCombine/"
-
-
 reps = 1
 
 
-
 bitwuzla = []
-leanSAT = []
-leanSAT_rw = []
-leanSAT_bb = []
-leanSAT_sat = []
-leanSAT_lrat_c = []
-leanSAT_lrat_t = []
+bv_decide = []
+bv_decide_rw = []
+bv_decide_bb = []
+bv_decide_sat = []
+bv_decide_lrat_c = []
+bv_decide_lrat_t = []
 
 counter_locations = []
 counter_bitwuzla = []
-counter_leanSAT = []
-counter_leanSAT_rw = []
-counter_leanSAT_sat = []
+counter_bv_decide = []
+counter_bv_decide_rw = []
+counter_bv_decide_sat = []
 
 inconsistencies  = 0
 
@@ -46,33 +43,33 @@ ls_counter = 0
 err_loc_tot = []
 err_msg_tot = []
 bitwuzla_failed_locations = []
-leanSAT_failed_locations = []
+bv_decide_failed_locations = []
 
 for file in os.listdir(benchmark_dir):
 
     if "_proof" in file: # currently discard broken chapter
         errs = 0
         bitwuzla_times_average = []
-        leanSAT_tot_times_average = []
-        leanSAT_rw_times_average = []
-        leanSAT_bb_times_average = []
-        leanSAT_sat_times_average = []
-        leanSAT_lrat_t_times_average = []
-        leanSAT_lrat_c_times_average = []
+        bv_decide_tot_times_average = []
+        bv_decide_rw_times_average = []
+        bv_decide_bb_times_average = []
+        bv_decide_sat_times_average = []
+        bv_decide_lrat_t_times_average = []
+        bv_decide_lrat_c_times_average = []
 
         counter_bitwuzla_times_average = []
-        counter_leanSAT_tot_times_average = []
-        counter_leanSAT_rw_times_average = []
-        counter_leanSAT_bb_times_average = []
-        counter_leanSAT_sat_times_average = []
-        counter_leanSAT_lrat_t_times_average = []
-        counter_leanSAT_lrat_c_times_average = []
+        counter_bv_decide_tot_times_average = []
+        counter_bv_decide_rw_times_average = []
+        counter_bv_decide_bb_times_average = []
+        counter_bv_decide_sat_times_average = []
+        counter_bv_decide_lrat_t_times_average = []
+        counter_bv_decide_lrat_c_times_average = []
 
         lineNumbers = []
         counter_lineNumbers = []
 
         outputs_bitwuzla = []
-        outputs_leanSAT = []
+        outputs_bv_decide = []
         # collect the numbers for all repetitions
 
         for r in range(reps):
@@ -115,72 +112,72 @@ for file in os.listdir(benchmark_dir):
                     if "LeanSAT " in l:
                         if "failed" in l :         
                             if r == 0:
-                                outputs_leanSAT.append(output.failed)
-                                counter_leanSAT_tot_times_average.append([float(-1)])
-                                counter_leanSAT_rw_times_average.append([float(-1)])
-                                counter_leanSAT_sat_times_average.append([float(-1)])
-                                leanSAT_tot_times_average.append([float(-1)])
-                                leanSAT_rw_times_average.append([float(-1)])
-                                leanSAT_bb_times_average.append([float(-1)])
-                                leanSAT_sat_times_average.append([float(-1)])
-                                leanSAT_lrat_t_times_average.append([float(-1)])
-                                leanSAT_lrat_c_times_average.append([float(-1)])
+                                outputs_bv_decide.append(output.failed)
+                                counter_bv_decide_tot_times_average.append([float(-1)])
+                                counter_bv_decide_rw_times_average.append([float(-1)])
+                                counter_bv_decide_sat_times_average.append([float(-1)])
+                                bv_decide_tot_times_average.append([float(-1)])
+                                bv_decide_rw_times_average.append([float(-1)])
+                                bv_decide_bb_times_average.append([float(-1)])
+                                bv_decide_sat_times_average.append([float(-1)])
+                                bv_decide_lrat_t_times_average.append([float(-1)])
+                                bv_decide_lrat_c_times_average.append([float(-1)])
                             else: 
-                                counter_leanSAT_tot_times_average[thm].append(float(-1))
-                                counter_leanSAT_rw_times_average[thm].append(float(-1))
-                                counter_leanSAT_sat_times_average[thm].append(float(-1))
-                                leanSAT_tot_times_average[thm].append(float(-1))
-                                leanSAT_rw_times_average[thm].append(float(-1))
-                                leanSAT_bb_times_average[thm].append(float(-1))
-                                leanSAT_sat_times_average[thm].append(float(-1))
-                                leanSAT_lrat_t_times_average[thm].append(float(-1))
-                                leanSAT_lrat_c_times_average[thm].append(float(-1))
+                                counter_bv_decide_tot_times_average[thm].append(float(-1))
+                                counter_bv_decide_rw_times_average[thm].append(float(-1))
+                                counter_bv_decide_sat_times_average[thm].append(float(-1))
+                                bv_decide_tot_times_average[thm].append(float(-1))
+                                bv_decide_rw_times_average[thm].append(float(-1))
+                                bv_decide_bb_times_average[thm].append(float(-1))
+                                bv_decide_sat_times_average[thm].append(float(-1))
+                                bv_decide_lrat_t_times_average[thm].append(float(-1))
+                                bv_decide_lrat_c_times_average[thm].append(float(-1))
                         elif "counter " in l:   
                             tot = float(l.split("ms")[0].split("after ")[1])
                             if r == 0:
-                                outputs_leanSAT.append(output.counterxample)
-                                counter_leanSAT_tot_times_average.append([tot])
-                                counter_leanSAT_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
-                                counter_leanSAT_sat_times_average.append([float(l.split("ms")[1].split("solving ")[1])])
-                                leanSAT_tot_times_average.append([float(-1)])
-                                leanSAT_rw_times_average.append([float(-1)])
-                                leanSAT_bb_times_average.append([float(-1)])
-                                leanSAT_sat_times_average.append([float(-1)])
-                                leanSAT_lrat_t_times_average.append([float(-1)])
-                                leanSAT_lrat_c_times_average.append([float(-1)])
+                                outputs_bv_decide.append(output.counterxample)
+                                counter_bv_decide_tot_times_average.append([tot])
+                                counter_bv_decide_rw_times_average.append([float(l.split(" SAT")[0].split("rewriting ")[1])])
+                                counter_bv_decide_sat_times_average.append([float(l.split("ms")[1].split("solving ")[1])])
+                                bv_decide_tot_times_average.append([float(-1)])
+                                bv_decide_rw_times_average.append([float(-1)])
+                                bv_decide_bb_times_average.append([float(-1)])
+                                bv_decide_sat_times_average.append([float(-1)])
+                                bv_decide_lrat_t_times_average.append([float(-1)])
+                                bv_decide_lrat_c_times_average.append([float(-1)])
                             else: 
-                                counter_leanSAT_tot_times_average[thm].append(tot)
-                                counter_leanSAT_rw_times_average[thm].append(float(l.split(" SAT")[0].split("rewriting ")[1]))
-                                counter_leanSAT_sat_times_average[thm].append(float(l.split("ms")[1].split("solving ")[1]))
-                                leanSAT_tot_times_average[thm].append(float(-1))
-                                leanSAT_rw_times_average[thm].append(float(-1))
-                                leanSAT_bb_times_average[thm].append(float(-1))
-                                leanSAT_sat_times_average[thm].append(float(-1))
-                                leanSAT_lrat_t_times_average[thm].append(float(-1))
-                                leanSAT_lrat_c_times_average[thm].append(float(-1))
+                                counter_bv_decide_tot_times_average[thm].append(tot)
+                                counter_bv_decide_rw_times_average[thm].append(float(l.split(" SAT")[0].split("rewriting ")[1]))
+                                counter_bv_decide_sat_times_average[thm].append(float(l.split("ms")[1].split("solving ")[1]))
+                                bv_decide_tot_times_average[thm].append(float(-1))
+                                bv_decide_rw_times_average[thm].append(float(-1))
+                                bv_decide_bb_times_average[thm].append(float(-1))
+                                bv_decide_sat_times_average[thm].append(float(-1))
+                                bv_decide_lrat_t_times_average[thm].append(float(-1))
+                                bv_decide_lrat_c_times_average[thm].append(float(-1))
                         elif "proved" in l:  
                             tot = float(l.split("ms")[0].split("r ")[1])
                             if r == 0:
-                                outputs_leanSAT.append(output.proved)
-                                leanSAT_tot_times_average.append([tot])
-                                leanSAT_rw_times_average.append([float(l.split("ms")[1].split("g ")[1])])
-                                leanSAT_bb_times_average.append([float(l.split("ms")[2].split("g ")[1])])
-                                leanSAT_sat_times_average.append([float(l.split("ms")[3].split("g ")[1])])
-                                leanSAT_lrat_t_times_average.append([float(l.split("ms")[4].split("g ")[1])])
-                                leanSAT_lrat_c_times_average.append([float(l.split("ms")[5].split("g ")[1])])
-                                counter_leanSAT_tot_times_average.append([float(-1)])
-                                counter_leanSAT_rw_times_average.append([float(-1)])
-                                counter_leanSAT_sat_times_average.append([float(-1)])
+                                outputs_bv_decide.append(output.proved)
+                                bv_decide_tot_times_average.append([tot])
+                                bv_decide_rw_times_average.append([float(l.split("ms")[1].split("g ")[1])])
+                                bv_decide_bb_times_average.append([float(l.split("ms")[2].split("g ")[1])])
+                                bv_decide_sat_times_average.append([float(l.split("ms")[3].split("g ")[1])])
+                                bv_decide_lrat_t_times_average.append([float(l.split("ms")[4].split("g ")[1])])
+                                bv_decide_lrat_c_times_average.append([float(l.split("ms")[5].split("g ")[1])])
+                                counter_bv_decide_tot_times_average.append([float(-1)])
+                                counter_bv_decide_rw_times_average.append([float(-1)])
+                                counter_bv_decide_sat_times_average.append([float(-1)])
                             else: 
-                                leanSAT_tot_times_average[thm].append(tot)
-                                leanSAT_rw_times_average[thm].append(float(l.split("ms")[1].split("g ")[1]))
-                                leanSAT_bb_times_average[thm].append(float(l.split("ms")[2].split("g ")[1]))
-                                leanSAT_sat_times_average[thm].append(float(l.split("ms")[3].split("g ")[1]))
-                                leanSAT_lrat_t_times_average[thm].append(float(l.split("ms")[4].split("g ")[1]))
-                                leanSAT_lrat_c_times_average[thm].append(float(l.split("ms")[5].split("g ")[1]))
-                                counter_leanSAT_tot_times_average[thm].append(float(-1))
-                                counter_leanSAT_rw_times_average[thm].append(float(-1))
-                                counter_leanSAT_sat_times_average[thm].append(float(-1))
+                                bv_decide_tot_times_average[thm].append(tot)
+                                bv_decide_rw_times_average[thm].append(float(l.split("ms")[1].split("g ")[1]))
+                                bv_decide_bb_times_average[thm].append(float(l.split("ms")[2].split("g ")[1]))
+                                bv_decide_sat_times_average[thm].append(float(l.split("ms")[3].split("g ")[1]))
+                                bv_decide_lrat_t_times_average[thm].append(float(l.split("ms")[4].split("g ")[1]))
+                                bv_decide_lrat_c_times_average[thm].append(float(l.split("ms")[5].split("g ")[1]))
+                                counter_bv_decide_tot_times_average[thm].append(float(-1))
+                                counter_bv_decide_rw_times_average[thm].append(float(-1))
+                                counter_bv_decide_sat_times_average[thm].append(float(-1))
                             thm = thm + 1                        
                     elif (("error:" in l or "PANIC" in l) and "Lean" not in l and r == 0):
                         err_loc_tot.append(l.split("error: ")[0].split("/")[-1][0:-1])
@@ -194,55 +191,55 @@ for file in os.listdir(benchmark_dir):
 
         # for every solved theorem in the file add an entry to the dataframe
         thm = 0 
-        for output_bw, output_ls in zip(outputs_bitwuzla, outputs_leanSAT): 
+        for output_bw, output_ls in zip(outputs_bitwuzla, outputs_bv_decide): 
             if output_bw == output.failed and output_ls == output.failed: 
-                # print("bitwuzla failed and leanSAT failed on theorem "+str(thm)+ "in file "+file)
+                # print("bitwuzla failed and bv_decide failed on theorem "+str(thm)+ "in file "+file)
                 both_failed += 1
                 thm = thm + 1
             elif output_bw == output.failed and output_ls == output.proved:
-                print("bitwuzla failed and leanSAT proved theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla failed and bv_decide proved theorem "+str(thm)+ " in file "+file)
                 bw_only_failed += 1
                 thm = thm + 1
             elif output_bw == output.proved and output_ls == output.failed:
-                print("bitwuzla proved and leanSAT failed theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla proved and bv_decide failed theorem "+str(thm)+ " in file "+file)
                 ls_only_failed += 1
                 thm = thm + 1
             elif output_bw == output.counterxample and output_ls == output.counterxample:
-                print("bitwuzla and leanSAT provided counterexample for theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla and bv_decide provided counterexample for theorem "+str(thm)+ " in file "+file)
                 counter_bitwuzla.append(np.mean(counter_bitwuzla_times_average[thm]))
-                counter_leanSAT.append(np.mean(counter_leanSAT_tot_times_average[thm]))
-                counter_leanSAT_rw.append(np.mean(counter_leanSAT_rw_times_average[thm]))
-                counter_leanSAT_sat.append (np.mean(counter_leanSAT_sat_times_average[thm]))
+                counter_bv_decide.append(np.mean(counter_bv_decide_tot_times_average[thm]))
+                counter_bv_decide_rw.append(np.mean(counter_bv_decide_rw_times_average[thm]))
+                counter_bv_decide_sat.append (np.mean(counter_bv_decide_sat_times_average[thm]))
                 thm = thm + 1
             elif output_bw == output.counterxample and output_ls == output.proved:
-                print("bitwuzla provided counterexample and leanSAT proved theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla provided counterexample and bv_decide proved theorem "+str(thm)+ " in file "+file)
                 thm = thm + 1
             elif output_bw == output.proved and output_ls == output.counterxample:
-                print("bitwuzla proved and leanSAT provided counterexample for theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla proved and bv_decide provided counterexample for theorem "+str(thm)+ " in file "+file)
                 thm = thm + 1
             elif output_bw == output.proved and output_ls == output.proved:
-                # print("bitwuzla and leanSAT proved theorem "+str(thm)+ "in file "+file)
+                # print("bitwuzla and bv_decide proved theorem "+str(thm)+ "in file "+file)
                 bitwuzla.append(np.mean(bitwuzla_times_average[thm]))
-                leanSAT.append(np.mean(leanSAT_tot_times_average[thm]))
-                leanSAT_rw.append(np.mean(leanSAT_rw_times_average[thm]))
-                leanSAT_bb.append(np.mean(leanSAT_bb_times_average[thm]))
-                leanSAT_sat.append (np.mean(leanSAT_sat_times_average[thm]))
-                leanSAT_lrat_t.append(np.mean(leanSAT_lrat_t_times_average[thm]))
-                leanSAT_lrat_c.append(np.mean(leanSAT_lrat_c_times_average[thm]))
+                bv_decide.append(np.mean(bv_decide_tot_times_average[thm]))
+                bv_decide_rw.append(np.mean(bv_decide_rw_times_average[thm]))
+                bv_decide_bb.append(np.mean(bv_decide_bb_times_average[thm]))
+                bv_decide_sat.append (np.mean(bv_decide_sat_times_average[thm]))
+                bv_decide_lrat_t.append(np.mean(bv_decide_lrat_t_times_average[thm]))
+                bv_decide_lrat_c.append(np.mean(bv_decide_lrat_c_times_average[thm]))
                 thm = thm + 1
             elif output_bw == output.failed and output_ls == output.counterxample:
-                print("bitwuzla failed and leanSAT provided counterexample for theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla failed and bv_decide provided counterexample for theorem "+str(thm)+ " in file "+file)
                 thm = thm + 1
             elif output_bw == output.failed and output_ls == output.proved:
-                print("bitwuzla failed and leanSAT proved theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla failed and bv_decide proved theorem "+str(thm)+ " in file "+file)
                 thm = thm + 1
             elif output_bw == output.proved and output_ls == output.failed:
-                print("bitwuzla proved and leanSAT failed theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla proved and bv_decide failed theorem "+str(thm)+ " in file "+file)
                 thm = thm + 1
             elif output_bw == output.counterxample and output_ls == output.failed:
-                print("bitwuzla provided counterexample and leanSAT failed theorem "+str(thm)+ " in file "+file)
+                print("bitwuzla provided counterexample and bv_decide failed theorem "+str(thm)+ " in file "+file)
             else:   
-                print("something is broken: bitwuzla output "+str(output_bw.value)+" leanSAT output "+str(output_ls.value))
+                print("something is broken: bitwuzla output "+str(output_bw.value)+" bv_decide output "+str(output_ls.value))
                 break
         thmTot += thm
         errTot += errs
@@ -250,11 +247,11 @@ for file in os.listdir(benchmark_dir):
 print("In total we found "+str(thmTot)+" goals.")
 
 
-print("leanSAT and Bitwuzla solved: "+str(len(leanSAT)))
-print("leanSAT and Bitwuzla provided "+str(len(counter_leanSAT))+" counterexamples")
-print("leanSAT and Bitwuzla both failed on "+str(both_failed)+" theorems")
-print("leanSAT failed and Bitwuzla succeeded on "+str(ls_only_failed)+" theorems")
-print("leanSAT succeeded and Bitwuzla failed on "+str(bw_only_failed)+" theorems")
+print("bv_decide and Bitwuzla solved: "+str(len(bv_decide)))
+print("bv_decide and Bitwuzla provided "+str(len(counter_bv_decide))+" counterexamples")
+print("bv_decide and Bitwuzla both failed on "+str(both_failed)+" theorems")
+print("bv_decide failed and Bitwuzla succeeded on "+str(ls_only_failed)+" theorems")
+print("bv_decide succeeded and Bitwuzla failed on "+str(bw_only_failed)+" theorems")
 print("There were "+str(inconsistencies)+" inconsistencies")
 print("Errors raised: "+str(errTot))
 
@@ -268,9 +265,9 @@ def run_shell_command_and_assert_output_eq_int(cwd : str, cmd : str, expected_va
 
 run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla failed' | wc -l", both_failed+bw_only_failed)
 run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT failed' | wc -l", both_failed+ls_only_failed)
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_leanSAT))
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT provided a counter' | wc -l", len(counter_bv_decide))
 run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla provided a counter' | wc -l", len(counter_bitwuzla))
-run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT proved' | wc -l", len(leanSAT) + bw_only_failed)
+run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'LeanSAT proved' | wc -l", len(bv_decide) + bw_only_failed)
 run_shell_command_and_assert_output_eq_int("results/InstCombine/", "rg 'Bitwuzla proved' | wc -l", len(bitwuzla) + ls_only_failed)
 
 
@@ -295,12 +292,12 @@ df_err_sorted = df_err.drop(columns='msg_count')
 df_err_sorted.to_csv(raw_data_dir+'err-llvm.csv')
 
 
-df = pd.DataFrame({'bitwuzla':bitwuzla, 'leanSAT':leanSAT,
-                    'leanSAT-rw':leanSAT_rw, 'leanSAT-bb':leanSAT_bb, 'leanSAT-sat':leanSAT_sat, 
-                    'leanSAT-lrat-t':leanSAT_lrat_t, 'leanSAT-lrat-c':leanSAT_lrat_c})
+df = pd.DataFrame({'bitwuzla':bitwuzla, 'bv_decide':bv_decide,
+                    'bv_decide-rw':bv_decide_rw, 'bv_decide-bb':bv_decide_bb, 'bv_decide-sat':bv_decide_sat, 
+                    'bv_decide-lrat-t':bv_decide_lrat_t, 'bv_decide-lrat-c':bv_decide_lrat_c})
 
-df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla, 'leanSAT':counter_leanSAT,
-                    'leanSAT-rw':counter_leanSAT_rw, 'leanSAT-sat':counter_leanSAT_sat})
+df_ceg = pd.DataFrame({'bitwuzla':counter_bitwuzla, 'bv_decide':counter_bv_decide,
+                    'bv_decide-rw':counter_bv_decide_rw, 'bv_decide-sat':counter_bv_decide_sat})
 
 
 df.to_csv(raw_data_dir+'llvm-proved-data.csv')
