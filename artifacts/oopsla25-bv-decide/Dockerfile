@@ -59,4 +59,7 @@ RUN ./compare instcombine -j4 -r5
 RUN ./collect-data-hdel.py 
 RUN ./collect-data-llvm.py
 
+WORKDIR /code/lean-mlir/bv-evaluation/for-paper/tools/
+RUN for-paper/tools; python3 ./collect-stats.py
+
 USER root
