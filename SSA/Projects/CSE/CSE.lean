@@ -72,8 +72,7 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   subst hβ
                   subst exprEq
                   simp only [Lets.denote_var_last_pure]
-                  simp only [Lets.denote_var,
-                    EffectKind.toMonad_pure, Id.run_pure, Id.run_bind, heneedleΓ]
+                  simp only [heneedleΓ]
                   congr
                 }⟩
             | .isFalse _neq => .none
@@ -89,7 +88,7 @@ theorem Lets.denote_var
   (V : Ctxt.Valuation Γstart) :
   Lets.denote (Lets.var lets e) V =
     (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
-  simp [Lets.denote, eq_rec_constant]
+  simp [Lets.denote]
   rfl
 
 /-- Remap the last variable in a context, to get a new context without the last variable -/
@@ -291,7 +290,7 @@ def State.cseRegionArgList
   let _ := HVector.map (fun _Γα com => Com.denote com) rs
   match ts, rs with
   | _, .nil => ⟨.nil, by
-      simp [HVector.map]
+      simp
     ⟩
   | ⟨Γ, t⟩::ts, .cons region rs =>
     -- 2023: Need to create a fresh state to CSE the region.
@@ -397,7 +396,7 @@ def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
     ⟨com', by {
       intros V
       specialize (hcom' V)
-      simp only [EffectKind.toMonad_pure, Lets.denote, Id.run_pure] at hcom'
+      simp only [EffectKind.toMonad_pure, Lets.denote] at hcom'
       assumption
     }⟩
 

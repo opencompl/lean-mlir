@@ -458,9 +458,8 @@ theorem MUL_pure64_fff_eq_MUL_pure64_fff_bv (rs2_val : BitVec 64) (rs1_val : Bit
     MUL_pure64_fff  rs2_val rs1_val = MUL_pure64_fff_bv rs2_val rs1_val := by
   simp only  [MUL_pure64_fff,  MUL_pure64_fff_bv]
   apply BitVec.eq_of_toNat_eq
-  simp [Nat.sub_zero, Nat.reduceAdd, Int.mul_def, BitVec.extractLsb_toNat,
-    BitVec.extractLsb'_toNat, BitVec.toNat_ofInt, Nat.reducePow, Nat.cast_ofNat,
-    Nat.shiftRight_zero, Nat.reduceDvd, Nat.mod_mod_of_dvd, BitVec.mul_eq, BitVec.toNat_mul]
+  simp [Nat.sub_zero, Nat.reduceAdd, BitVec.extractLsb_toNat, BitVec.toNat_ofInt, Nat.reducePow,
+    Nat.cast_ofNat, Nat.shiftRight_zero, Nat.reduceDvd, Nat.mod_mod_of_dvd, BitVec.toNat_mul]
   congr
   norm_cast
   rw [Int.toNat_natCast, Nat.mod_eq_of_lt]
@@ -499,8 +498,8 @@ theorem MUL_pure64_tff_eq_MUL_pure64_tff_bv (rs2_val : BitVec 64) (rs1_val : Bit
   apply BitVec.eq_of_toNat_eq
   simp only [HMul.hMul, Mul.mul]
   simp only [Int.mul_def, extractLsb'_eq_setWidth, BitVec.toNat_setWidth, BitVec.toNat_ofInt,
-      Nat.reducePow, Nat.cast_ofNat, BitVec.truncate_eq_setWidth, BitVec.mul_eq,
-      BitVec.extractLsb'_eq_self, BitVec.toNat_mul, Nat.mul_mod_mod, Nat.mod_mul_mod]
+    Nat.reducePow, Nat.cast_ofNat, BitVec.truncate_eq_setWidth, BitVec.mul_eq, BitVec.toNat_mul,
+    Nat.mul_mod_mod, Nat.mod_mul_mod]
   congr
   norm_cast
   rw [Int.toNat_natCast]
@@ -632,7 +631,7 @@ theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val
           obtain ⟨rfl, rfl⟩ := h
           simp only [BitVec.toInt_intMin, Nat.add_one_sub_one, Nat.reducePow, Nat.reduceMod,
             Nat.cast_ofNat, Int.reduceNeg, BitVec.reduceNeg, BitVec.reduceToInt, Int.tdiv_neg,
-            Int.tdiv_one, neg_neg, Int.reduceLT, ↓reduceIte, Int.reduceBmod]
+            Int.tdiv_one, Int.reduceLT, ↓reduceIte, Int.reduceBmod]
       case neg =>
           have := BitVec.toInt_sdiv_of_ne_or_ne rs1_val rs2_val <| by
               rw [← Decidable.not_and_iff_not_or_not]
@@ -644,7 +643,7 @@ theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val
             have h3 : (rs1_val.sdiv rs2_val).toInt ≤2 ^ 63  - 1 := by
                 apply  BitVec.toInt_le
             simp only [Int.reducePow, Int.reduceSub] at h3
-            exact (not_le_of_lt iT h3).elim
+            exact (not_le_of_gt iT h3).elim
           case isFalse iF =>
           rfl
 

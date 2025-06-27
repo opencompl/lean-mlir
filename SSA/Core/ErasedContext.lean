@@ -87,7 +87,7 @@ instance : Functor Ctxt where
 instance : LawfulFunctor Ctxt where
   comp_map  := by simp only [List.map_eq_map, List.map_map, forall_const, implies_true]
   id_map    := by simp only [List.map_eq_map, List.map_id, forall_const]
-  map_const := by simp only [Functor.mapConst, Functor.map, Function.const, forall_const]
+  map_const := by simp only [Functor.mapConst, Functor.map, forall_const]
 
 /-- Recursion principle for contexts in terms of `Ctxt.nil` and `Ctxt.snoc` -/
 @[elab_as_elim, induction_eliminator]
@@ -504,7 +504,7 @@ def toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
   ⟨d.val + 1, by
     intro i _ h_get_snoc
     rcases d with ⟨d, h_get_d⟩
-    simp only [get?, Nat.add_eq, ← h_get_d h_get_snoc]
+    simp only [get?, ← h_get_d h_get_snoc]
     rfl
   ⟩
 
