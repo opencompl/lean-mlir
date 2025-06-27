@@ -896,99 +896,97 @@ def process_and_save_single_hackersdelight_benchmark(
     print(f"Saved errors dataframe at: {errors_csv_path}")
 
 
-# --- End of New Helper Functions ---
+def collect (benchmark : str) : 
 
+    if benchmark == "instcombine" : 
 
-def collect_data_instcombine():
-    file_data = []
+        file_data = []
 
-    for file in os.listdir(BENCHMARK_DIR_INSTCOMBINE):
-        if "_proof" in file:
-            file_name = RESULTS_DIR_INSTCOMBINE + file.split(".")[0]
-            parsed_results = parse_file(file_name, REPS)
-            file_data.append([file_name, parsed_results])
+        for file in os.listdir(BENCHMARK_DIR_INSTCOMBINE):
+            if "_proof" in file:
+                file_name = RESULTS_DIR_INSTCOMBINE + file.split(".")[0]
+                parsed_results = parse_file(file_name, REPS)
+                file_data.append([file_name, parsed_results])
 
-    # Initialize a dictionary to hold all aggregated data lists
-    all_files_aggregated_data = {
-        "solved_bitwuzla_times_average": [],
-        "counter_bitwuzla_times_average": [],
-        "solved_bv_decide_times_average": [],
-        "solved_bv_decide_rw_times_average": [],
-        "solved_bv_decide_bb_times_average": [],
-        "solved_bv_decide_sat_times_average": [],
-        "solved_bv_decide_lratt_times_average": [],
-        "solved_bv_decide_lratc_times_average": [],
-        "counter_bv_decide_times_average": [],
-        "counter_bv_decide_rw_times_average": [],
-        "counter_bv_decide_sat_times_average": [],
-        "failed_bv_decide_and_bitwuzla": [],
-        "failed_bv_decide_only": [],
-        "failed_bitwuzla_only": [],
-        "errors": [],
-    }
-
-    # Initialize total counts using Counter for convenience
-    total_counts = Counter(
-        {
-            "solved_bitwuzla": 0,
-            "counter_bitwuzla": 0,
-            "error_bitwuzla": 0,
-            "solved_bv_decide": 0,
-            "counter_bv_decide": 0,
-            "error_bv_decide": 0,
+        # Initialize a dictionary to hold all aggregated data lists
+        all_files_aggregated_data = {
+            "solved_bitwuzla_times_average": [],
+            "counter_bitwuzla_times_average": [],
+            "solved_bv_decide_times_average": [],
+            "solved_bv_decide_rw_times_average": [],
+            "solved_bv_decide_bb_times_average": [],
+            "solved_bv_decide_sat_times_average": [],
+            "solved_bv_decide_lratt_times_average": [],
+            "solved_bv_decide_lratc_times_average": [],
+            "counter_bv_decide_times_average": [],
+            "counter_bv_decide_rw_times_average": [],
+            "counter_bv_decide_sat_times_average": [],
+            "failed_bv_decide_and_bitwuzla": [],
+            "failed_bv_decide_only": [],
+            "failed_bitwuzla_only": [],
+            "errors": [],
         }
-    )
 
-    for file_name, parsed_results in file_data:
-        # Update total statistics
-        update_overall_statistics(total_counts, parsed_results)
+        # Initialize total counts using Counter for convenience
+        total_counts = Counter(
+            {
+                "solved_bitwuzla": 0,
+                "counter_bitwuzla": 0,
+                "error_bitwuzla": 0,
+                "solved_bv_decide": 0,
+                "counter_bv_decide": 0,
+                "error_bv_decide": 0,
+            }
+        )
 
-        # Compare solvers on this file's results
-        file_comparison = compare_solvers_on_file([file_name, parsed_results])
+        for file_name, parsed_results in file_data:
+            # Update total statistics
+            update_overall_statistics(total_counts, parsed_results)
 
-        # Append individual file comparison results to master lists
-        append_comparison_results(all_files_aggregated_data, file_comparison)
+            # Compare solvers on this file's results
+            file_comparison = compare_solvers_on_file([file_name, parsed_results])
 
-    # Print summary statistics
-    print_instcombine_summary(total_counts, all_files_aggregated_data)
+            # Append individual file comparison results to master lists
+            append_comparison_results(all_files_aggregated_data, file_comparison)
 
-    # Run shell command assertions
-    run_instcombine_assertions(RESULTS_DIR_INSTCOMBINE, all_files_aggregated_data)
+        # Print summary statistics
+        print_instcombine_summary(total_counts, all_files_aggregated_data)
 
-    # Save dataframes
-    save_counterexample_df(
-        all_files_aggregated_data["counter_bitwuzla_times_average"],
-        all_files_aggregated_data["counter_bv_decide_times_average"],
-        all_files_aggregated_data["counter_bv_decide_rw_times_average"],
-        all_files_aggregated_data["counter_bv_decide_sat_times_average"],
-        RAW_DATA_DIR_INSTCOMBINE + "instcombine_ceg_data.csv",
-    )
+        # Run shell command assertions
+        run_instcombine_assertions(RESULTS_DIR_INSTCOMBINE, all_files_aggregated_data)
 
-    save_solved_df(
-        all_files_aggregated_data["solved_bitwuzla_times_average"],
-        all_files_aggregated_data["solved_bv_decide_times_average"],
-        all_files_aggregated_data["solved_bv_decide_rw_times_average"],
-        all_files_aggregated_data["solved_bv_decide_bb_times_average"],
-        all_files_aggregated_data["solved_bv_decide_sat_times_average"],
-        all_files_aggregated_data["solved_bv_decide_lratt_times_average"],
-        all_files_aggregated_data["solved_bv_decide_lratc_times_average"],
-        RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
-    )
+        # Save dataframes
+        save_counterexample_df(
+            all_files_aggregated_data["counter_bitwuzla_times_average"],
+            all_files_aggregated_data["counter_bv_decide_times_average"],
+            all_files_aggregated_data["counter_bv_decide_rw_times_average"],
+            all_files_aggregated_data["counter_bv_decide_sat_times_average"],
+            RAW_DATA_DIR_INSTCOMBINE + "instcombine_ceg_data.csv",
+        )
 
+        save_solved_df(
+            all_files_aggregated_data["solved_bitwuzla_times_average"],
+            all_files_aggregated_data["solved_bv_decide_times_average"],
+            all_files_aggregated_data["solved_bv_decide_rw_times_average"],
+            all_files_aggregated_data["solved_bv_decide_bb_times_average"],
+            all_files_aggregated_data["solved_bv_decide_sat_times_average"],
+            all_files_aggregated_data["solved_bv_decide_lratt_times_average"],
+            all_files_aggregated_data["solved_bv_decide_lratc_times_average"],
+            RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
+        )
+    elif benchmark == "hackersdelight":
+        for file in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
+            # Assuming .split(".") is safe and there's always at least one dot
+            base_file_name_without_ext = file.split(".")[0]
+            for bvw in bv_width:
+                file_base_path = os.path.join(
+                    RESULTS_DIR_HACKERSDELIGHT, f"{base_file_name_without_ext}_{bvw}"
+                )
+                print(file_base_path)  # Original print statement
 
-def collect_data_hackersdelight():
-    for file in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
-        # Assuming .split(".") is safe and there's always at least one dot
-        base_file_name_without_ext = file.split(".")[0]
-        for bvw in bv_width:
-            file_base_path = os.path.join(
-                RESULTS_DIR_HACKERSDELIGHT, f"{base_file_name_without_ext}_{bvw}"
-            )
-            print(file_base_path)  # Original print statement
-
-            process_and_save_single_hackersdelight_benchmark(
-                file_base_path, REPS, RAW_DATA_DIR_HACKERSDELIGHT
-            )
+                process_and_save_single_hackersdelight_benchmark(
+                    file_base_path, REPS, RAW_DATA_DIR_HACKERSDELIGHT
+                )
 
 
 def main():
@@ -1012,16 +1010,8 @@ def main():
     global REPS
     REPS = args.repetitions
 
-    if "all" in benchmarks_to_run:
-        collect_data_instcombine()
-        collect_data_hackersdelight()
-    else:
-        if "instcombine" in benchmarks_to_run:
-            collect_data_instcombine()
-        if "hackersdelight" in benchmarks_to_run:
-            collect_data_hackersdelight()
-        # Add logic for "alive" if needed
-
+    for b in benchmarks_to_run: 
+        collect(b)
 
 if __name__ == "__main__":
     main()
