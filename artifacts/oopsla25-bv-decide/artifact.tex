@@ -12,14 +12,14 @@
 % CC BY 4.0 license
 %
 
-\documentclass[onecolumn, sigconf]{acmart}
+\documentclass[acmlarge, nonacm]{acmart}
 
 % \documentclass[onecolumn]{sigplanconf}
 
 \usepackage{hyperref}
 \usepackage{minted}
 
-\newminted[script]{bash}{style=bw, bgcolor=blue!5!white}
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white, breaklines, fontsize=\footnotesize}
 
 \usepackage[verbose]{newunicodechar}
 \newunicodechar{Γ}{\ensuremath{\Gamma}}
@@ -55,7 +55,6 @@
 \newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
 \newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
 
-% \newunicodechar{⟦}{\ensuremath{\llbracket}}
 % https://tex.stackexchange.com/questions/100966/defining-scalable-white-curly-brackets-and-and
 % TODO FIXME: we gotta fix these parens!
 \newunicodechar{⦃}{\ensuremath{\{\{}}
@@ -65,7 +64,9 @@
 
 \begin{document}
 
+
 \special{papersize=8.5in,11in}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % When adding this appendix to your paper, 
@@ -73,7 +74,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\section{Artifact Appendix}
+\title[Artifact]{Artifact for Interactive Bit Vector Reasoning using Verified Bitblasting}
+
+\maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Abstract}
@@ -85,6 +88,11 @@
 % {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
 % and remove the rest. This information is needed to find appropriate reviewers and gradually 
 % unify artifact meta information in Digital Libraries.}
+
+\section{Introduction}
+
+This artifact contains the infrastructure and tooling necessary to display the performance of the 
+verified bitblaster introduced by the paper for all the benchmarks presented.
 
 {\small
 \begin{itemize}
@@ -102,63 +110,229 @@
 \end{itemize}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Description}
 
-\subsubsection{Software dependencies}
+\subsection{Performance}
 
-Docker is necessary to run our artifact.
-The Docker image has all dependencies needed to compile our framework with Lean4.
+We test the performance of the verified bitblaster \texttt{bv\_decide} against three benchmarks: 
+\begin{itemize}
+\item \texttt{InstCombine} benchmark, extracted from LLVM's peephole verifier
+\item \texttt{HackersDelight} benchmark, containing bit-vector theorems extracted from the first two chapters of Hackers' Delight
+\item \texttt{SMT-LIB} benchmark, containing the problems from SMT-LIB's 2024 Competition
+\end{itemize}
+The artifact contains the benchmarks, the scripts to evaulate \texttt{bv\_decide}'s performance, and the scripts to reproduce the plots in the paper.
 
+\section{Hardware Dependencies}
 
-%COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%COMMENT% \subsection{Installation}
-%COMMENT%
-%COMMENT% {\em Obligatory}
+Podman or Docker are necessary to run our artifact (we tested it with the former).
+The container image has all dependencies needed to compile our framework with Lean4.
+\textcolor{red}{TODO: add info}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Experiment workflow}
+\section{Getting Started}
 
-Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo.15755236}
-
+Access the docker image from \url{10.5281/zenodo.15755236}: 
 \begin{script}
 $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
-# | This allows to check that the key theorems of our framework are
-# |guarded, and that they do not contain `sorry`s.
-# Run experiments, and check that the output is as expected.
+# Run experiments InstCombine and HackersDelight
+# Collect the output and write the plots
 $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 \end{script}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Evaluation and expected results}
-
-\subsection{Miscellanous Docker Usage}
-To copy files for inspection from the docker container into the host,
- keep the container running, and in another
-shell instance, use the \texttt{docker cp}
-command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
-
-\begin{script}
-$ docker container ls # find   ID
-$ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
-            <PATH/OUTSIDE/CONTAINER>
-\end{script}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% When adding this appendix to your paper, 
-% please remove below part
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section{Full Scale Run Of Our Experiments}
+
+% Run the two large experiments and reproduce the data and graphs from the paper:
+
+% \begin{script}
+% # Run experiments, and check that the output is as expected.
+% # (Parallelism can be tweaked by changing the -j options by editing the script.)
+% $ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
+% $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+% $ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+% # (Optional) View the cactus plots from within the container.
+% $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+% $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+% \end{script}
+
+% The tex files contain data correponding to Figure 7 of the paper, and the two
+% graphs correspond to figures (a) and (b) page 18 of the paper as follows.
+
+% \subsubsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
+% Please run:
+% \begin{script}
+% $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+% \end{script}
+
+% {\sloppypar
+% This should produce the following output, where the timings might change
+% depending on the machine that is run on. The absolute number of problems solved
+% should be equal, while the total time and geomean time are machine-dependent.
+% }
+
+% TODO: we should explain the mapping between the names of the macros and the
+% paper names.
+
+% \begin{script}
+% # $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+% \newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
+% \newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
+% \newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+% \newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
+% \newcommand{\InstCombineNormPresburgerTotalTime}{...}
+% \newcommand{\InstCombineBvDecideTotalTime}{...}
+% \newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
+% \newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
+% \newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
+% \newcommand{\InstCombineTotalProblems}{7855} # exact match
+% \end{script}
+
+% To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+% or use the installed \texttt{timg} tool to view the plot data within the container.
+% Use the \texttt{timg -p} option to choose the protocol to view images.
+% This will work on terminal emulators that support the sixel protocol.
+% \begin{script}
+% $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+% \end{script}
+
+% \subsubsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+
+% Please run:
+% \begin{script}
+% $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+% \end{script}
+
+% {\sloppypar
+% This should produce the following output, where the timings might change
+% depending on the machine that is run on. The absolute number of problems solved
+% should be equal, while the total time and geomean time are machine-dependent.
+% }
+
+% \begin{script}
+% # $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+% \newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
+% \newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
+% \newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+% \newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
+% \newcommand{\InstCombineNormPresburgerTotalTime}{...}
+% \newcommand{\InstCombineBvDecideTotalTime}{...}
+% \newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
+% \newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
+% \newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
+% \newcommand{\InstCombineTotalProblems}{7855} # exact match
+% \end{script}
+
+% The plots are located at:
+% \begin{script}
+% $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+% \end{script}
+
+
+% \end{document}
+
+% \subsection{Artifact check-list (meta-information)}
+
+% % {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
+% % and remove the rest. This information is needed to find appropriate reviewers and gradually 
+% % unify artifact meta information in Digital Libraries.}
+
+% {\small
+% \begin{itemize}
+%   \item {\bf Program: } The code repository for our framework along with the test suite. Note that this is already setup in the docker image.
+%   \item {\bf Compilation: } The Lean4 toolchain, downloaded via \texttt{elan}. Note that this is already setup in the docker image.
+%   \item {\bf Run-time environment: } Any operating system that supports Docker.
+%   \item {\bf Hardware: } Any x86-64 machine.
+%   \item {\bf Output: } Key theorems of the paper will be built and shown to have no unsound axioms.
+%   \item {\bf How much disk space required (approximately)?: } 30GB
+%   \item {\bf How much time is needed to prepare workflow (approximately)?: } 1hr
+%   \item {\bf How much time is needed to complete experiments (approximately)?: } 5hr
+%   \item {\bf Publicly available?: } Yes
+%   \item {\bf Code licenses (if publicly available)?: } MIT
+%   \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.15754222
+% \end{itemize}
+% }
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Description}
+
+
+% %COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %COMMENT% \subsection{Installation}
+% %COMMENT% 
+% %COMMENT% {\em Obligatory}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Experiment workflow}
+
+% Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo.15754222}.
+
+% \begin{script}
+% $ docker load -i oopsla25-width-indep.tar
+% $ docker run -it oopsla25-width-indep
+% # | This clears the build cache,
+% # | fetches the maths library from the build cache,
+% # | and builds our framework.
+% $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+% # | This allows to check that the key theorems of our framework are
+% # |guarded, and that they do not contain `sorry`s.
+% $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+% $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
+% # Run experiments, and check that the output is as expected.
+% $ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
+% $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+% $ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+% # (Optional) View the cactus plots from within the container.
+% $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+% $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+% \end{script}
+
+
+% {\sloppypar
+% This should produce the following output, where the timings might change
+% depending on the machine that is run on. The absolute number of problems solved
+% should be equal, while the total time and geomean time are machine-dependent.
+% }
+
+% \begin{script}
+% # $ cat /code/lean-mlir/bv-evaluation/dataset2-cactus-plot-data.tex
+% \newcommand{\MBAKInductionVerifiedNumSolved}{1500}
+% \newcommand{\MBAKInductionVerifiedTotalTime}{1h27m} # machine dependent
+% \newcommand{\MBAKInductionVerifiedGeoMean}{14.7s} # machine dependent
+% \end{script}
+
+% To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+% or use the installed \texttt{timg} tool to view the plot data within the container.
+% Use the \texttt{timg -p} option to choose the protocol to view images.
+% This will work on terminal emulators that support the sixel protocol.
+% \begin{script}
+% $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+% \end{script}
+
+% \subsection{Miscellanous Docker Usage}
+% To copy files for inspection from the docker container into the host,
+%  keep the container running, and in another
+% shell instance, use the \texttt{docker cp}
+% command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
+
+% \begin{script}
+% $ docker container ls # find   ID
+% $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
+%             <PATH/OUTSIDE/CONTAINER>
+% \end{script}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % When adding this appendix to your paper, 
+% % please remove below part
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
 
