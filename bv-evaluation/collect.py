@@ -2,8 +2,6 @@
 import argparse
 import os
 import subprocess
-import concurrent.futures
-import shutil
 from enum import Enum
 from collections import Counter
 import numpy as np
@@ -272,7 +270,7 @@ def parse_file(file_name: str, reps: int):
                         solved_bitwuzla_times_average[thm].append([tot])
                         counter_bitwuzla_times_average[thm].append(float(-1))
                 else:
-                    raise Exception("Unknown error in " + file.name)
+                    raise Exception("Unknown error in " + file_name)
                 # if bitwuzla output was successful, analyze the next output
                 file_line = res_file.readline()
                 if "LeanSAT " in file_line:
@@ -384,7 +382,7 @@ def parse_file(file_name: str, reps: int):
                             counter_bv_decide_sat_times_average[thm].append([float(-1)])
                         thm = thm + 1
                 else:
-                    raise Exception("Unknown error in " + file.name)
+                    raise Exception("Unknown error in " + file_name)
             elif (
                 ("error:" in file_line or "PANIC" in file_line)
                 and "Lean" not in file_line
@@ -470,38 +468,6 @@ def save_solved_df(
 
 
 def collect_data_instcombine():
-    bitwuzla = []
-    leanSAT = []
-    leanSAT_rw = []
-    leanSAT_bb = []
-    leanSAT_sat = []
-    leanSAT_lrat_c = []
-    leanSAT_lrat_t = []
-
-    counter_locations = []
-    counter_bitwuzla = []
-    counter_leanSAT = []
-    counter_leanSAT_rw = []
-    counter_leanSAT_sat = []
-
-    inconsistencies = 0
-
-    both_failed = 0
-    ls_only_failed = 0
-    bw_only_failed = 0
-
-    thmTot = 0
-
-    errTot = 0
-
-    bw_counter = 0
-    ls_counter = 0
-
-    err_loc_tot = []
-    err_msg_tot = []
-    bitwuzla_failed_locations = []
-    leanSAT_failed_locations = []
-
     file_data = []
 
     for file in os.listdir(BENCHMARK_DIR_INSTCOMBINE):
@@ -663,6 +629,7 @@ def collect_data_instcombine():
         RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
     )
 
+
 def collect_data_hackersdelight():
     file_data = []
 
@@ -681,39 +648,41 @@ def collect_data_hackersdelight():
 
         # sanity_check_times(file_comparison)
 
-        save_counterexample_df(file_comparison[
-                    "file_counter_bitwuzla_times_average"
-                ], file_comparison[
-                    "file_counter_bv_decide_times_average"
-                ],  file_comparison[
-                    "file_counter_bv_decide_rw_times_average"
-                ], file_comparison[
-                    "file_counter_bv_decide_sat_times_average"
-                ],
-                RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_ceg_data.csv"
+        save_counterexample_df(
+            file_comparison["file_counter_bitwuzla_times_average"],
+            file_comparison["file_counter_bv_decide_times_average"],
+            file_comparison["file_counter_bv_decide_rw_times_average"],
+            file_comparison["file_counter_bv_decide_sat_times_average"],
+            RAW_DATA_DIR_HACKERSDELIGHT
+            + file_result[0].split("/")[-1]
+            + "_ceg_data.csv",
         )
 
-        save_solved_df(file_comparison[
-                    "file_solved_bitwuzla_times_average"
-                ], file_comparison[
-                    "file_solved_bv_decide_times_average"
-                ], file_comparison[
-                    "file_solved_bv_decide_rw_times_average"
-                ], file_comparison[
-                    "file_solved_bv_decide_bb_times_average"
-                ], file_comparison[
-                    "file_solved_bv_decide_sat_times_average"
-                ], file_comparison[
-                    "file_solved_bv_decide_lratt_times_average"
-                ], file_comparison[
-                    "file_solved_bv_decide_lratc_times_average"
-                ], RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_solved_data.csv"
+        save_solved_df(
+            file_comparison["file_solved_bitwuzla_times_average"],
+            file_comparison["file_solved_bv_decide_times_average"],
+            file_comparison["file_solved_bv_decide_rw_times_average"],
+            file_comparison["file_solved_bv_decide_bb_times_average"],
+            file_comparison["file_solved_bv_decide_sat_times_average"],
+            file_comparison["file_solved_bv_decide_lratt_times_average"],
+            file_comparison["file_solved_bv_decide_lratc_times_average"],
+            RAW_DATA_DIR_HACKERSDELIGHT
+            + file_result[0].split("/")[-1]
+            + "_solved_data.csv",
         )
 
         errors_df = pd.DataFrame({"errors_bitwuzla": file_comparison["errors"]})
 
-        errors_df.to_csv(RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_err_data.csv")
-        print(RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_err_data.csv")
+        errors_df.to_csv(
+            RAW_DATA_DIR_HACKERSDELIGHT
+            + file_result[0].split("/")[-1]
+            + "_err_data.csv"
+        )
+        print(
+            RAW_DATA_DIR_HACKERSDELIGHT
+            + file_result[0].split("/")[-1]
+            + "_err_data.csv"
+        )
 
 
 def main():
@@ -734,12 +703,11 @@ def main():
     benchmarks_to_run = (
         ["hackersdelight", "instcombine"] if "all" in args.benchmark else args.benchmark
     )
-    
 
     for b in benchmarks_to_run:
-        if b == "instcombine": 
+        if b == "instcombine":
             collect_data_instcombine()
-        elif b == "hackersdelight": 
+        elif b == "hackersdelight":
             collect_data_hackersdelight()
     #     compare(b, args.jobs, args.repetitions)
 
