@@ -49,11 +49,6 @@ RUN cd /code && git clone https://github.com/opencompl/lean-mlir && cd lean-mlir
 #&& git checkout 7bd8c716a4a0bd5608279f0b73bd6c87f78c9f1c
 WORKDIR /code/lean-mlir
 
-# Install and set the default Lean toolchain for elan
-# Get the toolchain from .lean-toolchain file (example: 'leanprover/lean4:nightly-2025-06-20')
-RUN /home/user/.elan/bin/elan toolchain install nightly && \
-    /home/user/.elan/bin/elan default nightly
-
 # Ensure the .lake/packages directory is clean before running lake update
 RUN rm -rf .lake/packages/mathlib && lake update && lake build
 
