@@ -577,6 +577,10 @@ def collect(benchmark: str):
             for tmp in file_comparison["errors"]:
                 benchmarks_errors.append(tmp)
 
+        df_errors = pd.DataFrame({'errors':benchmarks_errors})
+
+        df_errors.to_csv(RAW_DATA_DIR_INSTCOMBINE + "instcombine_err_data.csv")
+
         print("bv_decide solved " + str(solved_bv_decide_tot) + " theorems.")
         print("bitwuzla solved " + str(solved_bitwuzla_tot) + " theorems.")
         print("bv_decide found " + str(counter_bv_decide_tot) + " counterexamples.")
@@ -679,6 +683,11 @@ def collect(benchmark: str):
             # for hackers'delight we want to produce a single .csv dataframe per file per bitwidth
 
             # sanity_check_times(file_comparison)
+            print(file_comparison['errors'])
+
+            df_errors = pd.DataFrame({'errors':file_comparison['errors']})
+
+            df_errors.to_csv(raw_data_output_dir + csv_base_name +'_err_data.csv')
 
             save_counterexample_df(
                 file_comparison["file_counter_bitwuzla_times_average"],
