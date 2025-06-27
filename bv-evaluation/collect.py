@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import argparse
 import os
 import subprocess
@@ -6,6 +5,7 @@ from enum import Enum
 from collections import Counter
 import numpy as np
 import pandas as pd
+import shutil
 
 bv_width = [4, 8, 16, 32, 64]
 
@@ -29,6 +29,7 @@ TIMEOUT = 1800
 
 REPS = 1
 
+
 def clear_folder(results_dir):
     """Clears all files and subdirectories within the given directory."""
     if not os.path.exists(results_dir):
@@ -44,6 +45,7 @@ def clear_folder(results_dir):
         except Exception as e:
             print(f"Failed to delete {item_path}. Reason: {e}")
 
+
 def sanity_check_bv_decide_times(df: pd.DataFrame, df_name: str):
     """
     Checks that for every entry, bv_decide_times_average is within +/- 20%
@@ -51,7 +53,7 @@ def sanity_check_bv_decide_times(df: pd.DataFrame, df_name: str):
     Ignores entries where bv_decide_times_average is -1 (failed/timeout).
     """
     print(f"\n--- Validating bv_decide times for {df_name} ---")
-    
+
     # Define the columns that sum up to bv_decide_times_average
     component_cols = [
         "solved_bv_decide_rw_times_average",
@@ -60,11 +62,11 @@ def sanity_check_bv_decide_times(df: pd.DataFrame, df_name: str):
         "solved_bv_decide_lratt_times_average",
         "solved_bv_decide_lratc_times_average",
     ]
-    
+
     # Filter out rows where solved_bv_decide_times_average is -1 (indicating failure/timeout)
     # Also, ensure all component columns are present and their values are not -1
     valid_rows = df[(df["solved_bv_decide_times_average"] != -1)].copy()
-    
+
     # Check if all component columns exist in the DataFrame
     missing_cols = [col for col in component_cols if col not in valid_rows.columns]
     if missing_cols:
@@ -83,18 +85,21 @@ def sanity_check_bv_decide_times(df: pd.DataFrame, df_name: str):
     valid_rows["component_sum"] = valid_rows[component_cols].sum(axis=1)
 
     # Define the tolerance
-    tolerance = 0.30 # 20%
+    tolerance = 0.30  # 20%
 
     # Calculate the lower and upper bounds for validation
-    valid_rows["lower_bound"] = valid_rows["solved_bv_decide_times_average"] * (1 - tolerance)
-    valid_rows["upper_bound"] = valid_rows["solved_bv_decide_times_average"] * (1 + tolerance)
+    valid_rows["lower_bound"] = valid_rows["solved_bv_decide_times_average"] * (
+        1 - tolerance
+    )
+    valid_rows["upper_bound"] = valid_rows["solved_bv_decide_times_average"] * (
+        1 + tolerance
+    )
 
     # Check if solved_bv_decide_times_average is within the allowed range
     # Add a small epsilon for floating point comparison to prevent minor inaccuracies from failing
     valid_rows["is_valid"] = (
-        (valid_rows["component_sum"] >= np.floor(valid_rows["lower_bound"]))
-        & (valid_rows["component_sum"] <= np.ceil(valid_rows["upper_bound"]))
-    )
+        valid_rows["component_sum"] >= np.floor(valid_rows["lower_bound"])
+    ) & (valid_rows["component_sum"] <= np.ceil(valid_rows["upper_bound"]))
 
     # Report discrepancies
     discrepancies = valid_rows[~valid_rows["is_valid"]]
@@ -108,11 +113,16 @@ def sanity_check_bv_decide_times(df: pd.DataFrame, df_name: str):
                 f"Component sum: {row['component_sum']:.2f}, "
                 f"Expected range: [{row['lower_bound']:.2f}, {row['upper_bound']:.2f}]"
             )
-        print(f"Total discrepancies: {len(discrepancies)} out of {len(valid_rows)} valid entries.")
+        print(
+            f"Total discrepancies: {len(discrepancies)} out of {len(valid_rows)} valid entries."
+        )
     else:
-        print(f"All bv_decide times in {df_name} are consistent with their components within +/- {tolerance*100}% tolerance.")
+        print(
+            f"All bv_decide times in {df_name} are consistent with their components within +/- {tolerance * 100}% tolerance."
+        )
+
+
 def compare_solvers_on_file(file_result):
-    benchmark_errors = []
     solved_bitwuzla_tot = 0
     counter_bitwuzla_tot = 0
     error_bitwuzla_tot = 0
@@ -759,7 +769,6 @@ def save_solved_df(
     print("Saved dataframe at: " + csv_name)
 
 
-
 def update_overall_statistics(total_counts: dict, parsed_results: dict):
     """
     Updates the aggregate counts for proved, counterexample, and failed theorems
@@ -896,9 +905,9 @@ def process_and_save_single_hackersdelight_benchmark(
     print(f"Saved errors dataframe at: {errors_csv_path}")
 
 
-def collect (benchmark : str) : 
-
-    if benchmark == "instcombine" : 
+def collect(benchmark: str):
+    if benchmark == "instcombine":
+        clear_folder(RAW_DATA_DIR_INSTCOMBINE)
 
         file_data = []
 
@@ -975,6 +984,8 @@ def collect (benchmark : str) :
             RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
         )
     elif benchmark == "hackersdelight":
+        clear_folder(RAW_DATA_DIR_HACKERSDELIGHT)
+
         for file in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
             # Assuming .split(".") is safe and there's always at least one dot
             base_file_name_without_ext = file.split(".")[0]
@@ -1010,8 +1021,9 @@ def main():
     global REPS
     REPS = args.repetitions
 
-    for b in benchmarks_to_run: 
+    for b in benchmarks_to_run:
         collect(b)
+
 
 if __name__ == "__main__":
     main()
