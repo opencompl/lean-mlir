@@ -1,6 +1,8 @@
 import argparse
 import os
+import csv
 import subprocess
+from pathlib import Path
 from enum import Enum
 from collections import Counter
 import numpy as np
@@ -20,6 +22,136 @@ output = Enum("output", [("counterexample", 1), ("proved", 2), ("failed", 0)])
 # benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 # res_dir = "results/InstCombine/"
 # raw_data_dir = paper_directory + "raw-data/InstCombine/"
+
+RAW_DATA_DIR_SMTLIB = ROOT_DIR + "/bv-evaluation/raw-data/SMT-LIB"
+RESULTS_DIR_SMTLIB = ROOT_DIR + "/bv-evaluation/results/SMT-LIB"
+SOLVERS_SMTLIB = ["bitwuzla", "bv_decide", "bv_decide-nokernel", "coqQFBV"]
+FIELDNAMES_SMTLIB = {
+    "bitwuzla": ["benchmark", "result", "total"],
+    "bv_decide": [
+        "benchmark",
+        "result",
+        "leanSAT-ld",
+        "leanSAT-ps",
+        "leanSAT-rr",
+        "leanSAT-ac",
+        "leanSAT-af",
+        "leanSAT-ecs",
+        "leanSAT-bb",
+        "leanSAT-sat",
+        "leanSAT-lrat",
+        "leanSAT-kc",
+        "total",
+    ],
+    "bv_decide-nokernel": [
+        "benchmark",
+        "result",
+        "leanSAT-ld",
+        "leanSAT-ps",
+        "leanSAT-rr",
+        "leanSAT-ac",
+        "leanSAT-af",
+        "leanSAT-ecs",
+        "leanSAT-bb",
+        "leanSAT-sat",
+        "leanSAT-lrat",
+        "leanSAT-kc",
+        "total",
+    ],
+    "coqQFBV": ["benchmark", "result", "total"],
+}
+
+
+def parse_log_file(filepath):
+    data = {
+        "benchmark": filepath,
+        "result": "unknown",
+        "leanSAT-ld": 0,
+        "leanSAT-ps": 0,
+        "leanSAT-rr": 0,
+        "leanSAT-ac": 0,
+        "leanSAT-af": 0,
+        "leanSAT-ecs": 0,
+        "leanSAT-bb": 0,
+        "leanSAT-sat": 0,
+        "leanSAT-lrat": 0,
+        "leanSAT-kc": 0,
+        "total": 0,
+    }
+
+    with open(filepath, "r") as file:
+        for line in file:
+            if "load:" in line:
+                data["leanSAT-ld"] += int(line.split("load:")[1].strip())
+            elif "parse:" in line:
+                data["leanSAT-ps"] += int(line.split("parse:")[1].strip())
+            elif "rewriteRules:" in line:
+                data["leanSAT-rr"] += int(line.split("rewriteRules:")[1].strip())
+            elif "bv_ac_nf:" in line:
+                data["leanSAT-ac"] += int(line.split("bv_ac_nf:")[1].strip())
+            elif "andFlattening:" in line:
+                data["leanSAT-af"] += int(line.split("andFlattening:")[1].strip())
+            elif "embeddedConstraintSubsitution:" in line:
+                data["leanSAT-ecs"] += int(
+                    line.split("embeddedConstraintSubsitution:")[1].strip()
+                )
+            elif "bitblast:" in line:
+                data["leanSAT-bb"] += int(line.split("bitblast:")[1].strip())
+            elif "sat:" in line:
+                data["leanSAT-sat"] += int(line.split("sat:")[1].strip())
+            elif "lrat:" in line:
+                data["leanSAT-lrat"] += int(line.split("lrat:")[1].strip())
+            elif "kernel:" in line:
+                data["leanSAT-kc"] += int(line.split("kernel:")[1].strip())
+            elif "total:" in line:
+                data["total"] += int(line.split("total:")[1].strip())
+            elif "unsat\n" in line:
+                data["result"] = "unsat"
+            elif "sat\n" in line:
+                data["result"] = "sat"
+            elif "unknown\n" in line:
+                data["result"] = "unknown"
+
+    return data
+
+
+def find_log_files(solver, directory):
+    log_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(f"{solver}.stdout"):
+                log_files.append(os.path.join(root, file))
+    return log_files
+
+
+def write_to_csv(solver, log_files, output_csv):
+    with open(output_csv, "w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=FIELDNAMES_SMTLIB[solver])
+        writer.writeheader()
+
+        for filepath in log_files:
+            data = parse_log_file(filepath)
+            filtered_data = {k: data[k] for k in FIELDNAMES_SMTLIB[solver] if k in data}
+            writer.writerow(filtered_data)
+
+
+def collect_solver_data(solver, directory):
+    log_files = find_log_files(solver, directory)
+    if not log_files:
+        print(f"No log files found for solver {solver} in {directory}")
+        return
+    Path(RAW_DATA_DIR_SMTLIB).mkdir(parents=True, exist_ok=True)
+    output_csv = f"{RAW_DATA_DIR_SMTLIB}/{solver}_data.csv"
+    write_to_csv(solver, log_files, output_csv)
+    print(f"Data for solver {solver} has been written to {output_csv}")
+
+
+def collect_smtlib_data(solver, directory):
+    if solver == "all":
+        for s in SOLVERS_SMTLIB:
+            collect_solver_data(s, directory)
+    else:
+        collect_solver_data(solver, directory)
 
 
 def clear_folder(results_dir):
@@ -725,6 +857,10 @@ def collect(benchmark: str):
                 + "_err_data.csv"
             )
 
+    elif benchmark == "smtlib":
+        clear_folder(RAW_DATA_DIR_SMTLIB)
+        collect_smtlib_data("all", RESULTS_DIR_SMTLIB)
+
     else:
         raise Exception("Unknown benchmark " + benchmark)
 
@@ -738,7 +874,7 @@ def main():
     parser.add_argument(
         "benchmark",
         nargs="+",
-        choices=["all", "hackersdelight", "instcombine", "alive"],
+        choices=["all", "hackersdelight", "instcombine", "alive", "smtlib"],
     )
     parser.add_argument("-j", "--jobs", type=int, default=1)
     parser.add_argument("-r", "--repetitions", type=int, default=1)
@@ -754,4 +890,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

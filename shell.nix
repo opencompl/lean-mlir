@@ -7,6 +7,7 @@ with pkgs;let
     pandas
     polars
     num2words
+    psutil
   ];
   my-python = pkgs.python3.withPackages my-python-packages;
 in

@@ -4,25 +4,173 @@ import os
 import subprocess
 import concurrent.futures
 import shutil
+import multiprocessing
+import psutil
+import time
+import threading
+from functools import partial
+from pathlib import Path
+import sys
 
+# Common Bit-vector widths for certain benchmarks
 bv_widths = [4, 8, 16, 32, 64]
 
+# Root of the git repository
 ROOT_DIR = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
     .decode("utf-8")
     .strip()
 )
 
-RESULTS_DIR_ALIVE = ROOT_DIR + "/bv-evaluation/results/Alive/"
-BENCHMARK_DIR_ALIVE = ROOT_DIR + "/SSA/Projects/InstCombine/"
+# Directories for benchmarks
+RESULTS_DIR_ALIVE = f"{ROOT_DIR}/bv-evaluation/results/Alive/"
+BENCHMARK_DIR_ALIVE = f"{ROOT_DIR}/SSA/Projects/InstCombine/"
 
-RESULTS_DIR_HACKERSDELIGHT = ROOT_DIR + "/bv-evaluation/results/HackersDelight/"
-BENCHMARK_DIR_HACKERSDELIGHT = ROOT_DIR + "/SSA/Projects/InstCombine/HackersDelight/"
+RESULTS_DIR_HACKERSDELIGHT = f"{ROOT_DIR}/bv-evaluation/results/HackersDelight/"
+BENCHMARK_DIR_HACKERSDELIGHT = f"{ROOT_DIR}/SSA/Projects/InstCombine/HackersDelight/"
 
-RESULTS_DIR_INSTCOMBINE = ROOT_DIR + "/bv-evaluation/results/InstCombine/"
-BENCHMARK_DIR_INSTCOMBINE = ROOT_DIR + "/SSA/Projects/InstCombine/tests/proofs/"
+RESULTS_DIR_INSTCOMBINE = f"{ROOT_DIR}/bv-evaluation/results/InstCombine/"
+BENCHMARK_DIR_INSTCOMBINE = f"{ROOT_DIR}/SSA/Projects/InstCombine/tests/proofs/"
 
-TIMEOUT = 1800
+RESULTS_DIR_SMTLIB = f"{ROOT_DIR}/bv-evaluation/results/SMT-LIB/"
+BENCHMARK_DIR_SMTLIB = f"{ROOT_DIR}/bv-evaluation/SMT-LIB/"
+SOLVER_COMMANDS = {
+    "bitwuzla": lambda path: [f"{ROOT_DIR}/bv-evaluation/solvers/bitwuzla.sh", path],
+    "bv_decide": lambda path: [f"{ROOT_DIR}/bv-evaluation/solvers/bv_decide.sh", path],
+    "bv_decide-nokernel": lambda path: [
+        f"{ROOT_DIR}/bv-evaluation/solvers/bv_decide-nokernel.sh",
+        path,
+    ],
+    "coqQFBV": lambda path: [f"{ROOT_DIR}/bv-evaluation/solvers/coqQFBV.sh", path],
+}
+
+TIMEOUT = 1800  # seconds
+
+
+def kill_process_tree(pid):
+    try:
+        parent = psutil.Process(pid)
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
+    except psutil.NoSuchProcess:
+        pass
+
+
+def monitor_memory(pid, memout_mb, flag):
+    try:
+        proc = psutil.Process(pid)
+        while not flag["done"]:
+            mem = proc.memory_info().rss
+            for child in proc.children(recursive=True):
+                try:
+                    mem += child.memory_info().rss
+                except psutil.NoSuchProcess:
+                    continue
+            if mem > memout_mb * 1024 * 1024:
+                flag["memout"] = True
+                kill_process_tree(pid)
+                return
+            time.sleep(5)
+    except psutil.NoSuchProcess:
+        pass
+
+
+def run_with_limits(cmd, timeout, memout_mb):
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            preexec_fn=os.setsid,
+        )
+        flag = {"done": False, "memout": False}
+        monitor_thread = threading.Thread(
+            target=monitor_memory, args=(proc.pid, memout_mb, flag)
+        )
+        monitor_thread.start()
+
+        try:
+            stdout, stderr = proc.communicate(timeout=timeout)
+            flag["done"] = True
+            monitor_thread.join()
+            if flag["memout"]:
+                return "MEMOUT", stdout, stderr
+            return proc.returncode, stdout, stderr
+        except subprocess.TimeoutExpired:
+            flag["done"] = True
+            kill_process_tree(proc.pid)
+            stdout, stderr = proc.communicate()
+            monitor_thread.join()
+            return "TIMEOUT", stdout, stderr
+    except Exception as e:
+        return "ERROR", "", str(e)
+
+
+def save_output(solver, benchmark_path, stdout, stderr, out_dir):
+    try:
+        out_path = Path(out_dir) / benchmark_path
+        out_path.mkdir(parents=True, exist_ok=True)
+        with open(out_path / (solver + ".stdout"), "w") as f_out:
+            f_out.write(stdout)
+        with open(out_path / (solver + ".stderr"), "w") as f_err:
+            f_err.write(stderr)
+    except Exception as e:
+        print(f"Failed to save output for {benchmark_path}: {e}", file=sys.stderr)
+
+
+def run_single_benchmark(solver_name, timeout, memout_mb, out_dir, benchmark_path):
+    if solver_name not in SOLVER_COMMANDS:
+        return (benchmark_path, "INVALID_SOLVER")
+    cmd = SOLVER_COMMANDS[solver_name](benchmark_path)
+    code, out, err = run_with_limits(cmd, timeout, memout_mb)
+    save_output(solver_name, benchmark_path, out, err, out_dir)
+    return (benchmark_path, code)
+
+
+def read_benchmarks_set(file_path):
+    try:
+        with open(file_path, "r") as f:
+            return [line.strip() for line in f if line.strip()]
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        sys.exit(1)
+
+
+def find_smtlib_benchmarks(directory):
+    paths = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".smt2"):
+                paths.append(os.path.join(root, file))
+    return paths
+
+
+def run_smtlib_benchmarks(benchmark_paths, solver, jobs, timeout, memout, output_dir):
+    if solver == "all":
+        all_results = {}
+        for solver in SOLVER_COMMANDS.keys():
+            print(f"\nRunning solver: {solver}")
+            with multiprocessing.Pool(jobs) as pool:
+                run_func = partial(
+                    run_single_benchmark, solver, timeout, memout, output_dir
+                )
+                results = pool.map(run_func, benchmark_paths)
+            all_results[solver] = results
+            print(f"\nSummary for solver: {solver}")
+            for path, code in results:
+                print(f"{path} -> {code}")
+    else:
+        with multiprocessing.Pool(jobs) as pool:
+            run_func = partial(
+                run_single_benchmark, solver, timeout, memout, output_dir
+            )
+            results = pool.map(run_func, benchmark_paths)
+
+        print(f"\nSummary for solver: {solver}")
+        for path, code in results:
+            print(f"{path} -> {code}")
 
 
 def clear_folder(results_dir):
@@ -41,7 +189,7 @@ def clear_folder(results_dir):
             print(f"Failed to delete {item_path}. Reason: {e}")
 
 
-def run_file(benchmark: str, file_to_run: str, log_file_path: str):
+def run_file(file_to_run: str, log_file_path: str, timeout: int):
     """
     Runs a single Lean file and logs its output.
     file_to_run: The full path to the .lean file to execute.
@@ -56,26 +204,34 @@ def run_file(benchmark: str, file_to_run: str, log_file_path: str):
         try:
             subprocess.Popen(
                 cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True
-            ).wait(timeout=TIMEOUT)
+            ).wait(timeout=timeout)
         except subprocess.TimeoutExpired:
             log_file.truncate(0)
-            log_file.write(f"time out of {TIMEOUT} seconds reached\n")
-            print(f"{file_to_run} - time out of {TIMEOUT} seconds reached")
+            log_file.write(f"timeout of {timeout} seconds reached\n")
+            print(f"{file_to_run} - timeout of {timeout} seconds reached")
 
 
-def run_hdel(temp_file_path: str, log_file_path: str):
+def run_hdel(temp_file_path, log_file_path, timeout):
     """
     A specialized 'run_file' for hacker's delight,
     that cleans up on the temporary files that are created
     after execution.
     """
-    run_file("hackersdelight", temp_file_path, log_file_path)
+    run_file(temp_file_path, log_file_path, timeout)
     # Clean up the temporary file created for this specific bit-width and original file for hackersdelight
     os.remove(temp_file_path)
     print(f"Deleted temporary file: {temp_file_path}")
 
 
-def compare(benchmark: str, jobs: int, reps: int):
+def compare(
+    benchmark: str,
+    set: str,
+    solver: str,
+    jobs: int,
+    reps: int,
+    timeout: int,
+    memout: int,
+):
     """Processes benchmarks using a thread pool."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
@@ -115,16 +271,19 @@ def compare(benchmark: str, jobs: int, reps: int):
                     with open(temp_file_path, "w", encoding="utf-8") as temp_file:
                         temp_file.write(modified_content)
 
-                    for r in range(reps): 
-
+                    for r in range(reps):
                         # Submit the temporary file to be run.
                         # log_file_base_name will be 'original_file_base'
                         # specific_arg_for_log_name will be the 'width'
-                        log_file_name = f"{original_file_base}_{str(width)}_r{str(r)}.txt"
+                        log_file_name = (
+                            f"{original_file_base}_{str(width)}_r{str(r)}.txt"
+                        )
                         log_file_path = os.path.join(
                             RESULTS_DIR_HACKERSDELIGHT, log_file_name
                         )
-                        future = executor.submit(run_hdel, temp_file_path, log_file_path)
+                        future = executor.submit(
+                            run_hdel, temp_file_path, log_file_path
+                        )
                         futures[future] = (
                             temp_file_path  # Store the name of the temporary file for progress reporting
                         )
@@ -137,7 +296,7 @@ def compare(benchmark: str, jobs: int, reps: int):
                 if "_proof" in file and file.endswith(
                     ".lean"
                 ):  # Ensure it's a Lean file
-                    for r in range(reps): 
+                    for r in range(reps):
                         file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
                         file_title = os.path.splitext(file)[0]
                         log_file_path = os.path.join(
@@ -147,6 +306,17 @@ def compare(benchmark: str, jobs: int, reps: int):
                             run_file, "instcombine", file_path, log_file_path
                         )
                         futures[future] = file_path
+
+        elif benchmark == "smtlib":
+            clear_folder(RESULTS_DIR_SMTLIB)
+            os.makedirs(RESULTS_DIR_SMTLIB, exist_ok=True)
+            if set:
+                benchmark_paths = read_benchmarks_set(set)
+            else:
+                benchmark_paths = find_smtlib_benchmarks(BENCHMARK_DIR_SMTLIB)
+            run_smtlib_benchmarks(
+                benchmark_paths, solver, jobs, timeout, memout, RESULTS_DIR_SMTLIB
+            )
 
         else:
             raise Exception("Unknown benchmark.")
@@ -165,16 +335,48 @@ def compare(benchmark: str, jobs: int, reps: int):
 def main():
     parser = argparse.ArgumentParser(
         prog="compare",
-        description="Compare the performance of bv_decide vs. bitwuzla",
+        description="Compare performance across benchmarks and solvers",
     )
 
     parser.add_argument(
         "benchmark",
         nargs="+",
         choices=["all", "hackersdelight", "instcombine", "smtlib", "alive"],
+        help="Which benchmarks to run",
     )
-    parser.add_argument("-j", "--jobs", type=int, default=1)
-    parser.add_argument("-r", "--repetitions", type=int, default=1)
+    parser.add_argument(
+        "-s",
+        "--set",
+        type=str,
+        default=None,
+        help="Path to file containing full SMT-LIB benchmark paths",
+    )
+    parser.add_argument(
+        "-j", "--jobs", type=int, default=1, help="Parallel jobs for all benchmarks"
+    )
+    parser.add_argument(
+        "-r", "--repetitions", type=int, default=1, help="Repetitions for benchmarks"
+    )
+    parser.add_argument(
+        "-t",
+        "--timeout",
+        type=int,
+        default=TIMEOUT,
+        help="Timeout (in seconds) per benchmark",
+    )
+    parser.add_argument(
+        "-m",
+        "--memout",
+        type=int,
+        default=1024,
+        help="Memory limit (in MB) per SMT-LIB benchmark",
+    )
+    parser.add_argument(
+        "--solver",
+        choices=list(SOLVER_COMMANDS.keys()) + ["all"],
+        default="all",
+        help="Solver for SMT-LIB benchmarks",
+    )
 
     args = parser.parse_args()
     benchmarks_to_run = (
@@ -184,7 +386,15 @@ def main():
     )
 
     for b in benchmarks_to_run:
-        compare(b, args.jobs, args.repetitions)
+        compare(
+            b,
+            args.set,
+            args.solver,
+            args.jobs,
+            args.repetitions,
+            args.timeout,
+            args.memout,
+        )
 
 
 if __name__ == "__main__":
