@@ -869,3 +869,17 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
 end Tactic
 
 macro "bv_automata_classic" : tactic => `(tactic| (bv_automata_gen (config := {backend := .automata})))
+
+private lemma simple_test (x y : BitVec w) : x + y = y + x ∨ x = 0 := by
+  bv_automata_classic
+
+/--
+info: '_private.SSA.Experimental.Bits.Frontend.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
+ propext,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms simple_test
