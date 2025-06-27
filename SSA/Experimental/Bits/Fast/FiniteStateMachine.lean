@@ -78,8 +78,7 @@ instance : Std.Associative Nat.add where
   assoc := fun a b => by simp only [Nat.add_eq]; omega
 
 /-- The size of the state space of the finite state machine. -/
-def stateSpaceSize : Nat := @Finset.univ p.α inferInstance |>.card
-
+def stateSpaceSize : Nat := Nat.pow 2 (FinEnum.card p.α)
 
 /--
 Return the total size of the FSM as a function of all of its circuits.
@@ -88,10 +87,13 @@ and consequently, is the natural notion of complexity of the FSM.
 -/
 def circuitSize : Nat := Id.run do
   let outCircSize := p.nextBitCirc none |>.size
-  let states := @Finset.univ p.α inferInstance
-  let stateCircSize := Finset.fold Nat.add  0 (fun a => p.nextBitCirc (.some a) |>.size) states
+  let mut stateCircSize := 0
+  for hi : i in List.range (FinEnum.card p.α) do
+    let a := p.nextBitCirc (.some ((FinEnum.equiv (α := p.α)).symm.toFun ⟨i, by simpa using hi⟩))
+    stateCircSize := stateCircSize + a.size
   return outCircSize + stateCircSize
 
+/-
 open Lean in
 def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.run do
   have : DecidableEq fsm.α := fsm.dec_eq
@@ -117,6 +119,7 @@ def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.
     ts := ts ++ Format.align true ++ f!"{fα a}: '{(formatCircuit formatSum (fsm.nextBitCirc (some a)))}'" ++ Format.line
   out := out ++ Format.group (Format.nest 2 ts)
   return out
+-/
 
 
 /-- The state of FSM `p` is given by a function from `p.α` to `Bool`.
@@ -400,6 +403,35 @@ theorem eval_eq_outputWith_carryWith (p : FSM arity) :
   p.outputWith (p.carryWith p.initCarry x n) (fun a => x a n) := by
   simp only [carryWith_initCarry_eq_carry]
   apply evalWith_eq_outputWith_carryWith
+
+/-- rewrite an 'eval' in terms of an 'outputWith' + 'carryWith',
+while changing the environment 'x'.
+most detailed decomposition of an FSM available.
+-/
+theorem outputWith_carryWith_eq_evalWith (p : FSM arity)
+  (xs ys : arity → BitStream) (xN : arity → Bool)
+  (hysLt : ∀ a i, i < n → ys a i = xs a i)
+  (hysN : ∀ a, ys a n = xN a) :
+  p.outputWith (p.carryWith p.initCarry xs n) xN = p.evalWith p.initCarry ys n := by
+  let env := fun a i => if i < n then xs a i else xN a
+  rw [carryWith_congrEnv (y := env)]
+  · have : xN = fun a => env a n := by
+      ext a
+      simp only [env]
+      split_ifs with hi
+      · omega
+      · rfl
+    rw [this]
+    rw [← evalWith_eq_outputWith_carryWith]
+    apply evalWith_congrEnv
+    intros a i hi
+    by_cases hi : i < n
+    · simp [env, hi, hysLt _ _ hi]
+    · simp [env, hi, show i = n by omega, hysN]
+  · intros a i hi;
+    simp only [left_eq_ite_iff, not_lt, env]
+    intros hi'
+    omega
 
 /-- carryWith commutes with delta -/
 theorem carryWith_delta_eq_delta_carryWith

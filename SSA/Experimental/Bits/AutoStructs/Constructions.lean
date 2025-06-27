@@ -157,13 +157,13 @@ lemma product.prodArray_spec_helper
     rintro hin rfl; exact hnew _ hin
   rintro a s₂ S hnin ih; split_ands
   · simp; apply List.Nodup.append ih.1 (by simp)
-    simp only [List.disjoint_singleton, Array.mem_toList]
+    simp only [List.disjoint_singleton, Array.mem_toList_iff]
     rintro hin
     rcases ih.2.2 _ _ |>.mp hin with hl | hr
     · simp at hl
     · simp [hnin] at hr
   · obtain ⟨_, ⟨r, hr1, hr2⟩, _⟩ := ih; use r ++ [f s s₂]
-    simp only [Array.push_toList, hr1, List.append_assoc, List.mem_append, List.mem_singleton, true_and]
+    simp only [Array.toList_push, hr1, List.append_assoc, List.mem_append, List.mem_singleton, true_and]
     rintro z (hz | rfl)
     · apply hr2 _ hz
     · tauto
@@ -296,7 +296,7 @@ lemma product.f_spec {m₁ m₂ : CNFA n} {s₁ : m₁.m.states} {s₂ : m₂.m.
     · apply hnd''
     · exact (List.nodup_cons.mp hnd').2
     · rintro b s₁' s₂' hin; by_cases heq : b = a
-      · subst heq; apply List.Nodup.not_mem hnd'
+      · subst heq; apply List.Nodup.notMem hnd'
       · specialize hnew b s₁' s₂' (hmem b s₁' s₂' heq hin); simp at hnew; simp [hnew]
     by_cases heq :  b = a
     · subst heq
@@ -838,7 +838,7 @@ def CNFA.isEmpty (m : CNFA n) : Bool := m.m.finals.isEmpty
 theorem CNFA.isEmpty_spec {m : CNFA n} {M : NFA' n} :
     m.Sim M → m.isEmpty → M.accepts = ∅ := by
   rintro ⟨R, hsim⟩ hemp
-  apply Set.eq_empty_of_forall_not_mem
+  apply Set.eq_empty_of_forall_notMem
   rintro w ⟨w', ⟨q, ha, he⟩, ww⟩
   obtain ⟨s, hR⟩ := hsim.rel_eval he
   obtain hfin := hsim.accept hR |>.mpr ha

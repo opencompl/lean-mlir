@@ -7,6 +7,7 @@ open LLVMRiscV
 
 
 /-! # UREM  -/
+@[simp_denote]
 def llvm_urem: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64 ):
@@ -14,6 +15,7 @@ def llvm_urem: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       llvm.return %1 : i64
   }]
 
+@[simp_denote]
 def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%reg1: i64, %reg2: i64):
@@ -25,23 +27,7 @@ def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   }]
 
   def llvm_urem_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs := llvm_urem, rhs := urem_riscv, correct := by
-    unfold llvm_urem urem_riscv
-    simp_peephole
-    simp_alive_undef
-    simp_riscv
-    simp_alive_ops
-    simp_alive_case_bash
-    intro x x'
-    split
-    case value.value.isTrue ht =>
-      simp
-    case value.value.isFalse hf =>
-      simp only [PoisonOr.toOption_getSome, BitVec.signExtend_eq, BitVec.ofNat_eq_ofNat,
-        BitVec.umod_eq, PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff,
-        right_eq_ite_iff]
-      bv_omega
-  }
+  {lhs := llvm_urem, rhs := urem_riscv}
 
 def urem_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))

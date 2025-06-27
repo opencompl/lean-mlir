@@ -87,8 +87,8 @@ bitblasting capabilities.
 def toAIG [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ExtendingEntrypoint aig :=
   match c with
-  | .fals => ⟨aig.mkConstCached false, by apply  LawfulOperator.le_size⟩
-  | .tru => ⟨aig.mkConstCached true, by apply  LawfulOperator.le_size⟩
+  | .fals => ⟨⟨aig, aig.mkConstCached false⟩, by rfl⟩
+  | .tru => ⟨⟨aig, aig.mkConstCached true⟩, by rfl⟩
   | .var b v =>
     let out := mkAtomCached aig v
     have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v
@@ -257,6 +257,11 @@ def Vars.format (fσ : σ → Format) (fι : ι → Format) {n : Nat} (v : Vars 
   | .state s => fσ s
   | .inputs is => is.format fι
 
+structure CircuitStats where
+  safetySize : Nat := 0
+  indSize : Nat := 0
+deriving Repr, Inhabited, DecidableEq, Hashable
+
 @[nospecialize]
 partial def decideIfZerosAuxTermElabM {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -266,10 +271,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     (c0K : Circuit (Vars p.α arity iter))
     -- cK = 0 <-> ∀ p.eval env iter = 0
     (cK : Circuit (Vars p.α arity iter))
-    -- (safetyProperty = 1) <->
-    --   (∃ k < K,
-    --      (∀ i < k, p.eval env i = 0) → (∀ j ≤ K, p.eval env j = 0))
-    (safetyProperty : Circuit (Vars p.α arity iter)) : TermElabM Bool := do
+    : TermElabM (Bool × CircuitStats) := do
   trace[Bits.Fast] s!"### K-induction (iter {iter}) ###"
   let formatα : p.α → Format := fun s => "s" ++ formatDecEqFinset s
   let formatEmpty : Empty → Format := fun e => e.elim
@@ -278,7 +280,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   trace[Bits.Fast] m!"cK: {formatCircuit (Vars.format formatα formatArity) cK}"
   if iter ≥ maxIter && maxIter != 0 then
     throwError s!"ran out of iterations, quitting"
-    return false
+    return (false, {safetySize := c0K.size })
   let cKSucc : Circuit (Vars p.α arity (iter + 1)) :=
     cK.bind fun v =>
       match v with
@@ -309,7 +311,7 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
   if ← checkCircuitSatAux c0KSuccWithInit
   then
     trace[Bits.Fast] s!"Safety property failed on initial state."
-    return false
+    return (false, { safetySize := c0KSuccWithInit.size })
   else
     trace[Bits.Fast] s!"Safety property succeeded on initial state. Building next state circuit..."
     let tStart ← IO.monoMsNow
@@ -319,11 +321,12 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     trace[Bits.Fast] s!"C0KAdapted: {formatCircuit (Vars.format formatα formatArity) c0KAdapted}"
     trace[Bits.Fast] s!"CKSucc: {formatCircuit (Vars.format formatα formatArity) cKSucc}"
     let impliesCircuit : Circuit (Vars p.α arity (iter + 1)) := c0KAdapted ||| ~~~ c0KSucc
-    let safetyProperty := safetyProperty.map fun v =>
-       match v with
-       | .state a => .state a
-       | .inputs i => .inputs (i.castLe (by omega))
-    let safetyProperty := safetyProperty ||| impliesCircuit
+    let indCircuit := impliesCircuit
+    -- let indCircuit := indCircuit.map fun v =>
+    --    match v with
+    --    | .state a => .state a
+    --    | .inputs i => .inputs (i.castLe (by omega))
+    -- let indCircuit := indCircuit ||| impliesCircuit
     -- let formatαβarity : p.α ⊕ (β ⊕ arity) → Format := sorry
     trace[Bits.Fast] m!"induction hyp circuit: {formatCircuit (Vars.format formatα formatArity) impliesCircuit}"
     let tEnd ← IO.monoMsNow
@@ -332,25 +335,24 @@ partial def decideIfZerosAuxTermElabM {arity : Type _}
     trace[Bits.Fast] s!"Establishing inductive invariant with cadical..."
     let tStart ← IO.monoMsNow
     -- let le : Bool := sorry
-    let le ← checkCircuitTautoAux safetyProperty
+    let le ← checkCircuitTautoAux indCircuit
     let tEnd ← IO.monoMsNow
     let tElapsedSec := (tEnd - tStart) / 1000
     if le then
       trace[Bits.Fast] s!"Inductive invariant established! (time={tElapsedSec}s)"
-      return true
+      return (true, { indSize := indCircuit.size, safetySize := c0KSuccWithInit.size })
     else
       trace[Bits.Fast] s!"Unable to establish inductive invariant (time={tElapsedSec}s). Recursing..."
-      decideIfZerosAuxTermElabM (iter + 1) maxIter p c0KSucc cKSucc safetyProperty
+      decideIfZerosAuxTermElabM (iter + 1) maxIter p c0KSucc cKSucc
 
 
 @[nospecialize]
 def _root_.FSM.decideIfZerosMUnverified  {arity : Type _} [DecidableEq arity]  [Fintype arity] [Hashable arity]
-   (fsm : FSM arity) (maxIter : Nat) : TermElabM Bool :=
+   (fsm : FSM arity) (maxIter : Nat) : TermElabM (Bool × CircuitStats) :=
   -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     let c : Circuit (Vars fsm.α arity 0) := (fsm.nextBitCirc none).fst.map Vars.state
-    let safety : Circuit (Vars fsm.α arity 0) := .fals
-    decideIfZerosAuxTermElabM 0 maxIter fsm c c safety
+    decideIfZerosAuxTermElabM 0 maxIter fsm c c
 
 end BvDecide
 

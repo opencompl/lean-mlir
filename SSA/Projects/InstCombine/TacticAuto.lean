@@ -176,48 +176,6 @@ macro "simp_alive_benchmark": tactic =>
       )
    )
 
-macro "bv_bench": tactic =>
-  `(tactic|
-      (
-        simp (config := { failIfUnchanged := false }) only
-          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
-           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
-           BitVec.ofNat_eq_ofNat, BitVec.two_mul]
-        all_goals (
-          tac_bench [
-            "rfl" : (rfl; done),
-            "bv_bitwise" : (bv_bitwise; done),
-            "bv_ac" : (bv_ac; done),
-            "bv_distrib" : (bv_distrib; done),
-            "bv_ring" : (bv_ring; done),
-            "bv_of_bool" : (bv_of_bool; done),
-            "bv_omega" : (bv_omega; done),
-            -- Automata Classic
-            "bv_automata_classic_prop" : (bool_to_prop; bv_automata_classic; done),
-            "bv_automata_classic" : (bv_automata_classic; done),
-            "bv_normalize_automata_classic" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
-            "simp" : (simp; done),
-            "bv_normalize" : (bv_normalize; done),
-            "bv_decide" : (bv_decide; done),
-            "bv_auto" : (bv_auto; done),
-            -- Verified, Lean-based.
-            "bv_automata_circuit_lean_prop" : (bool_to_prop; bv_automata_gen; done),
-            "bv_automata_circuit_lean" : (bv_automata_gen (config := {backend := .circuit_lean}); done),
-            "bv_normalize_automata_circuit_lean" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := {backend := .circuit_lean}); done); done),
-            -- Cadical based, currently unverified.
-            "bv_automata_circuit_cadical_prop" : (bool_to_prop; bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4 }); done),
-            "bv_automata_circuit_cadical" : (bv_automata_gen (config := { backend := .circuit_cadical /- maxIter-/ 4 }); done),
-            "bv_normalize_automata_circuit_cadical" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4})); done),
-            -- MBA algorithm.
-            "bv_mba" : (bv_mba; done),
-            "bv_normalize_mba" : ((try (solve | bv_normalize)); (try bv_mba); done),
-          ]
-          try bv_auto
-          try sorry
-        )
-      )
-   )
-
 /--
 Benchmark the automata algorithms to understand their pros and cons. Produce output as CSV.
 -/
@@ -230,22 +188,34 @@ macro "bv_bench_automata": tactic =>
            BitVec.ofNat_eq_ofNat, BitVec.two_mul]
         all_goals (
           tac_bench (config := { outputType := .csv }) [
-            "bv_normalize" : (bv_normalize; done),
-            "presburger" : (bv_automata_classic; done),
-            "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_classic); done),
-            "circuitLean" : (bv_automata_gen (config := { backend := .cicuit_lean /- maxIter -/ 4 }); done),
-            "circuitUnverified" : (bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 }); done),
-            "circuitVerified" : (bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 }); done),
-            "normCircuitUnverified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 })); done),
+            -- "bv_normalize" : (bv_normalize; done),
+            -- "presburger" : (bv_automata_gen (config := { backend := .presburger }); done),
+            "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .presburger })); done),
+           --  "circuitUnverified" : (bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 }); done),
+            -- "circuitVerified" : (bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 }); done),
+            -- "normCircuitUnverified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 })); done),
             "normCircuitVerified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 })); done),
-            "normCircuit" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical /- maxIter -/ 4 })); done),
-            "normCircuitVerified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 })); done),
-            "normCircuitUnverified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 })); done),
-            "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
-            "width_ok" : (bv_automata_fragment_width_legal),
-            "reflect_ok" : (bv_automata_fragment_reflect),
+            -- "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
+            -- "width_ok" : (bv_automata_fragment_width_legal),
+            -- "reflect_ok" : (bv_automata_fragment_reflect),
             "bv_decide" : (bv_decide; done),
           ]
         )
       )
    )
+
+/-- Tactic to dry run. -/
+macro "bv_bench_dryrun": tactic =>
+  `(tactic|
+      (
+        simp (config := { failIfUnchanged := false }) only
+          [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
+           BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
+           BitVec.ofNat_eq_ofNat, BitVec.two_mul]
+
+        all_goals (
+          tac_bench (config := { outputType := .csv }) [
+            "done" : (done)
+          ])
+        )
+    )
