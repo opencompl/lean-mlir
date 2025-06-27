@@ -12,7 +12,7 @@
 % CC BY 4.0 license
 %
 
-\documentclass[onecolumn, sigconf, nonacm]{acmart}
+\documentclass[acmlarge, nonacm]{acmart}
 
 % \documentclass[onecolumn]{sigplanconf}
 
@@ -73,12 +73,154 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\section{Artifact Appendix}
+\title[Artifact]{Artifact for Certified Decision Procedures for Width-Independent
+Bitvector Predicates in Interactive Theorem Provers}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Abstract}
+\maketitle
 
-% {\em Obligatory}
+\section{Introduction}
+
+This artifact contains the decision procedures introduced by the coresponding
+paper, it aims to demonstrate that they are correct and proved correct using the
+Lean proof assistant, and to demonstrate they performance.
+
+\subsection{Correctness}
+
+To demonstrate the correctness, we use the decision procedures to prove lemmas
+and check that Lean accepts the proof, and that they do not rely on unexpected
+axioms such as \texttt{sorryAx}.
+
+\subsection{Performance}
+
+To demonstrate their performance, we test the decision procedures on a set of
+tests, one coming from LLVM and one coming from the obfuscation litterature. The
+artifact contains the inputs of these benchmarks as well as scripts to run then
+and generate the plots in the paper.
+
+\section{Hardware Dependencies}
+
+Podman or Docker are necessary to run our artifact (we tested it with the former).
+%
+The container image has all dependencies needed to compile our framework with Lean4.
+
+The artifact requires a somewhat beefy machine to run: the largest evaluation
+contains 10000 problems, and 2500 of the problems exercise our k-induction
+solver which uses a SAT solver, which can require a large amount of RAM.
+
+We ran our evaluation on a machine with 32 cores and 125 GB of RAM, though 32 GB
+should suffice.
+
+\section{Getting Started}
+
+Access the docker image from \url{10.5281/zenodo.11519739}.
+
+\begin{script}
+$ docker load -i oopsla25-width-indep.tar
+$ docker run -it oopsla25-width-indep
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+# Run a smaller version of the experiments, and check that the output is as expected.
+$ /code/lean-mlir/artifacts/oopsla25-width-indep/test_experiments.sh
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+# (Optional) View the cactus plots from within the container.
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+
+\section{Step by Step Instructions}
+
+As for the previous section, load the image and build the project.
+
+\begin{script}
+$ docker load -i oopsla25-width-indep.tar
+$ docker run -it oopsla25-width-indep
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+\end{script}
+
+Check that the theorems that are automatically proved by our decision
+procedures do not rely on incomplete proofs, which is materialized as the
+sorryAx axiom in Lean.
+
+This relies on the \texttt{check\_msg} command of Lean, which enforces that the
+comment contains exactly the output of a Lean command, which is used here with
+the \texttt{print axioms} command which lists all the axioms used (transitively)
+by a theorem.
+
+\begin{script}
+# | This allows to check that the key theorems of our framework are
+# |guarded, and that they do not contain `sorry`s.
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
+\end{script}
+
+Run the two large experiments and reproduce the data and graphs from the paper:
+
+\begin{script}
+# Run experiments, and check that the output is as expected.
+# (Parallelism can be tweaked by changing the -j options by editing the script.)
+$ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+# (Optional) View the cactus plots from within the container.
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+The tex files contain data correponding to Figure 7 of the paper, and the two
+graphs correspond to figures (a) and (b) page 18 of the paper as follows.
+
+\subsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
+Please run:
+\begin{script}
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+\end{script}
+
+{\sloppypar
+This should produce the following output, where the timings might change
+depending on the machine that is run on. The absolute number of problems solved
+should be equal, while the total time and geomean time are machine-dependent.
+}
+
+TODO: we should explain the mapping between the names of the macros and the
+paper names.
+
+\begin{script}
+# $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
+\newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
+\newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+\newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
+\newcommand{\InstCombineNormPresburgerTotalTime}{...}
+\newcommand{\InstCombineBvDecideTotalTime}{...}
+\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
+\newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
+\newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
+\newcommand{\InstCombineTotalProblems}{7855} # exact match
+\end{script}
+
+To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+or use the installed \texttt{timg} tool to view the plot data within the container.
+Use the \texttt{timg -p} option to choose the protocol to view images.
+This will work on terminal emulators that support the sixel protocol.
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+\subsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+
+Please run:
+\begin{script}
+$ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\end{script}
+
+\end{document}
 
 \subsection{Artifact check-list (meta-information)}
 
@@ -104,11 +246,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Description}
-
-\subsubsection{Software dependencies}
-
-Docker is necessary to run our artifact.
-The Docker image has all dependencies needed to compile our framework with Lean4.
 
 
 %COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,103 +276,6 @@ $ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-da
 # (Optional) View the cactus plots from within the container.
 $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
 $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
-\end{script}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Evaluation and expected results}
-
-On running \texttt{lake build}, the build succeeds with no errors.
-Next, run:
-
-\begin{script}
-$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
-\end{script}
-
-Grep returns no matches, which checks that all guarded theorems do not use the sorry axiom.
-To manually inspect this, run:
-
-\begin{script}
-$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
-\end{script}
-
-In the output, observe the following lines, which tells us that, for example, the 
-theorem \texttt{denote\_rewritePeepholeAt} depends only on the axioms 
-\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. That is, this theorem 
-\emph{does not depend} on axioms such as \texttt{sorryAx} that compromise the correctness of Lean's verification.
-Now, since the Lean build was successful in the previous step, and since we use standard Lean axioms, 
-we are justified in our claims that we have mechanized the key theorem statements from the paper.
-
-Below, we list the key theorems that we claim to have mechanized, and their 
-guarded verification below. Please inspect the output of 
-\texttt{(\$ rg -g "**/*.lean" "\#guard\_msgs in \#print axioms" -C2 | grep "sorry")}
-and confirm that these guarded statements occur, with the guard containing only the axioms \texttt{propext},
-\texttt{Classical.choice}, and \texttt{Quot.sound}.
-
-\subsubsection{Core Decision Procedure Theorems are Verified}
-The core correctness claim of the peephole rewriter is guarded below:
-
-\begin{script}
-SSA/Core/Framework.lean
-2422-
-2423-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-2424:#guard_msgs in #print axioms denote_rewritePeepholeAt
-2425-
-2426-/- repeatedly apply peephole on program. -/
---
-2458-
-2459-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-2460:#guard_msgs in #print axioms denote_rewritePeephole
-2461-
-2462-end SimpPeepholeApplier
-\end{script}
-
-\subsubsection{Running The Solvers}
-
-Please run the folowing commands to run the solvers:
-\begin{script}
-$ /code/lean-mlir/run-experiments.sh
-\end{script}
-
-\subsubsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
-Please run:
-\begin{script}
-$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
-\end{script}
-
-{\sloppypar
-This should produce the following output, where the timings might change
-depending on the machine that is run on. The absolute number of problems solved
-should be equal, while the total time and geomean time are machine-dependent.
-}
-
-\begin{script}
-# $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
-\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
-\newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
-\newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
-\newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
-\newcommand{\InstCombineNormPresburgerTotalTime}{...}
-\newcommand{\InstCombineBvDecideTotalTime}{...}
-\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
-\newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
-\newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
-\newcommand{\InstCombineTotalProblems}{7855} # exact match
-\end{script}
-
-To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
-or use the installed \texttt{timg} tool to view the plot data within the container.
-Use the \texttt{timg -p} option to choose the protocol to view images.
-This will work on terminal emulators that support the sixel protocol.
-\begin{script}
-$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
-\end{script}
-
-\subsubsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
-
-Please run:
-\begin{script}
-$ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
 \end{script}
 
 
