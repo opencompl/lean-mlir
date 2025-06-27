@@ -287,9 +287,18 @@ should be equal, while the total time and geomean time are machine-dependent.
 
 \begin{script}
 # $ cat /code/lean-mlir/bv-evaluation/dataset2-cactus-plot-data.tex
-\newcommand{\MBAKInductionVerifiedNumSolved}{1500}
-\newcommand{\MBAKInductionVerifiedTotalTime}{1h27m} # machine dependent
-\newcommand{\MBAKInductionVerifiedGeoMean}{14.7s} # machine dependent
+\newcommand{\MBAKInductionVerifiedNumSolved}{1537} # should be > 1500
+\newcommand{\MBAMBANumSolved}{2500} # can solve all 2500
+\newcommand{\MBAPresburgerNumSolved}{2500} # can solve all 2500
+\newcommand{\MBABvDecideNumSolved}{2500} # can solve all 2500
+\newcommand{\MBAKInductionVerifiedTotalTime}{...}
+\newcommand{\MBAMBATotalTime}{...}
+\newcommand{\MBAPresburgerTotalTime}{...}
+\newcommand{\MBABvDecideTotalTime}{..}
+\newcommand{\MBAKInductionVerifiedGeoMean}{3.68s} # should be similar order of magnitude.
+\newcommand{\MBAMBAGeoMean}{57.8ms} # should be similar order of magnitude.
+\newcommand{\MBAPresburgerGeoMean}{3.74s} # should be similar order of magnitude.
+\newcommand{\MBABvDecideGeoMean}{11s} # should be similar order of magnitude.
 \end{script}
 
 To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
