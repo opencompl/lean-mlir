@@ -553,12 +553,12 @@ def bv_decide_tot_stacked_area(df, bm):
         df_sorted["solved_bv_decide_sat_times_average"],
         df_sorted["solved_bv_decide_lratt_times_average"],
         df_sorted["solved_bv_decide_lratc_times_average"],
-        labels=["rw", "bb", "sat", "lrat-t", "lrats"],
+        labels=["rw", "bb", "sat", "lrat-t", "lrat-c"],
         colors=colors_in_order,
     )
 
     ax.set_yscale("log")
-    ax.set_xticks(np.arange(0, 51, 50))
+    # ax.set_xticks(np.arange(0, 51, 50))
     ax.set_xlabel("Theorems")
     ax.set_ylabel("Time [ms]", rotation="horizontal", horizontalalignment="left", y=1)
     ax.legend(loc="center right", ncols=1, frameon=False, bbox_to_anchor=(1.2, 0.5))
