@@ -1,4 +1,3 @@
-% LaTeX template for Artifact Evaluation V20201122
 %
 % Prepared by Grigori Fursin with contributions from Bruce Childers,
 %   Michael Heroux, Michela Taufer and other colleagues.
@@ -13,10 +12,14 @@
 % CC BY 4.0 license
 %
 
-\documentclass{sigplanconf}
+\documentclass[onecolumn, sigconf]{acmart}
+
+% \documentclass[onecolumn]{sigplanconf}
 
 \usepackage{hyperref}
 \usepackage{minted}
+
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white}
 
 \usepackage[verbose]{newunicodechar}
 \newunicodechar{Γ}{\ensuremath{\Gamma}}
@@ -90,12 +93,12 @@
   \item {\bf Run-time environment: } Any operating system that supports Docker.
   \item {\bf Hardware: } Any x86-64 machine.
   \item {\bf Output: } Key theorems of the paper will be built and shown to have no unsound axioms.
-  \item {\bf How much disk space required (approximately)?: } 10GB
+  \item {\bf How much disk space required (approximately)?: } 30GB
   \item {\bf How much time is needed to prepare workflow (approximately)?: } 1hr
-  \item {\bf How much time is needed to complete experiments (approximately)?: } 1hr
+  \item {\bf How much time is needed to complete experiments (approximately)?: } 5hr
   \item {\bf Publicly available?: } Yes
   \item {\bf Code licenses (if publicly available)?: } MIT
-  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.11519739
+  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.15754223
 \end{itemize}
 }
 
@@ -116,48 +119,47 @@ The Docker image has all dependencies needed to compile our framework with Lean4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Experiment workflow}
 
-Access the docker image \texttt{opencompl-ssa} from
-\url{https://zenodo.org/records/11519739}.
+Access the docker image from \url{10.5281/zenodo.11519739}.
 
-\begin{minted}[fontsize=\scriptsize]{text}
-$ docker load -i opencompl-ssa.tar
-$ docker run -it siddudruid/opencompl-ssa
+\begin{script}
+$ docker load -i oopsla25-width-indep.tar
+$ docker run -it siddudruid/oopsla25-width-indep
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
 # | and builds our framework.
-$ cd /code/ssa && lake clean && lake exe cache get && lake build
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # | This allows to check that the key theorems of our framework are
 # |guarded, and that they do not contain `sorry`s.
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
-\end{minted}
-
-% \subsection{Full Workflow Example}
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
+# Run experiments, and check that the output is as expected.
+$ /code/lean-mlir/run-experiments.sh
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\end{script}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Evaluation and expected results}
 
 On running \texttt{lake build}, the build succeeds with no errors.
-
 Next, run:
 
-\begin{minted}[fontsize=\scriptsize]{text}
-$ rg -g "**/*.lean" "guard_msgs in #print axioms" -C2 | grep "sorry"
-\end{minted}
+\begin{script}
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+\end{script}
 
 Grep returns no matches, which checks that all guarded theorems do not use the sorry axiom.
 To manually inspect this, run:
 
-\begin{minted}[fontsize=\scriptsize]{text}
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
-\end{minted}
+\begin{script}
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
+\end{script}
 
 In the output, observe the following lines, which tells us that, for example, the 
 theorem \texttt{denote\_rewritePeepholeAt} depends only on the axioms 
 \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. That is, this theorem 
 \emph{does not depend} on axioms such as \texttt{sorryAx} that compromise the correctness of Lean's verification.
-
 Now, since the Lean build was successful in the previous step, and since we use standard Lean axioms, 
 we are justified in our claims that we have mechanized the key theorem statements from the paper.
 
@@ -167,11 +169,10 @@ guarded verification below. Please inspect the output of
 and confirm that these guarded statements occur, with the guard containing only the axioms \texttt{propext},
 \texttt{Classical.choice}, and \texttt{Quot.sound}.
 
-\subsubsection{Core Framework Theorems}
-
+\subsubsection{Core Decision Procedure Theorems are Verified}
 The core correctness claim of the peephole rewriter is guarded below:
 
-\begin{minted}[fontsize=\tiny]{text}
+\begin{script}
 SSA/Core/Framework.lean
 2422-
 2423-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -184,65 +185,39 @@ SSA/Core/Framework.lean
 2460:#guard_msgs in #print axioms denote_rewritePeephole
 2461-
 2462-end SimpPeepholeApplier
-\end{minted}
+\end{script}
 
-\subsubsection{Five Hardest Alive Examples}
+\subsubsection{Running The Solvers}
 
-The correctness claim of the hardest Alive rewrites that time out on an SMT solver, which we verify 
-for arbitrary bitwidth:
+Please run the folowing commands to run the solvers:
+\begin{script}
+$ /code/lean-mlir/run-experiments.sh
+\end{script}
 
-\begin{minted}[fontsize=\tiny]{text}
-SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
-53-/--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-54-axioms: [propext, Classical.choice, Quot.sound] -/
-55:#guard_msgs in #print axioms alive_DivRemOfSelect
-56-
-57-end DivRemOfSelect
---
-215-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
-216-[propext, Classical.choice, Quot.sound] -/
-217:#guard_msgs in #print axioms alive_simplifyMulDivRem805
-218-
-219-open Std (BitVec) in
---
-302-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
-303-[propext, Classical.choice, Quot.sound] -/
-304:#guard_msgs in #print axioms alive_simplifyMulDivRem805'
-305-
-306-/-
---
-357-/-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
-358-axioms: [propext, Classical.choice, Quot.sound]-/
-359:#guard_msgs in #print axioms alive_simplifyMulDivRem290
-360-
-361-end MulDivRem
---
-416-/-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
-417-axioms: [propext, Classical.choice, Quot.sound] -/
-418:#guard_msgs in #print axioms alive_simplifyAndOrXor2515
-419-
-420-/-
---
-532-/-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
-533-[propext, Classical.choice, Quot.sound] -/
-534:#guard_msgs in #print axioms alive_simplifySelect764
-535-
-536-end Select
-\end{minted}
+\subsubsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
+Please run:
+\begin{script}
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+\end{script}
 
-\subsection{Paper Code Examples}
+{\sloppypar
+This should produce the following output, where the timings might change
+depending on the machine that is run on. The absolute number of problems solved
+should be equal.
+}
 
-\begin{itemize}
-\item \emph{Figure 1, 2} is at \texttt{SSA/Projects/FullyHomomorphicEncryption/\\PaperExamples.lean}.
-\item \emph{Figure 3, 4} is at \texttt{SSA/Core/Framework.lean}.
-\item The statement and proof of \texttt{denote\_rewritePeephole} can be found at 
-\texttt{SSA/Core/Framework.lean}. 
-\item The definitions and proofs of DCE can be found in \\
-\texttt{SSA/Projects/DCE/DCE.lean}, and of CSE in \\\texttt{SSA/Projects/CSE/CSE.lean}.
-\item The examples for bitvector rewrites in found at \\\texttt{SSA/Projects/InstCombine/PaperExamples.lean}.
-\item The hand-written examples are found at \\\texttt{SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean}.
-\item All FHE examples can be found in \\\texttt{SSA/Projects/FullyHomomorphicEncryption/PaperExamples.lean}.
-\end{itemize}
+\subsubsection{Verifying the Results for the MBA dataset (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+Please run:
+\begin{script}
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\end{script}
+This should produce the following output, where the timings might change
+depending on the machine that is run on.
+We expect the number of problems solved to be \emph{at least} 1500 for KInduction,
+and all of \texttt{2500} for the other two solvers.
+The absolute number of problems solved can vary by 5-10 problems for KInduction,
+as the K-induction solver uses \texttt{cadical}, a SAT solver,
+which can have different timings and problems solved depending on the machine available.
 
 \subsection{Miscellanous Docker Usage}
 To copy files for inspection from the docker container into the host,
@@ -250,11 +225,11 @@ To copy files for inspection from the docker container into the host,
 shell instance, use the \texttt{docker cp}
 command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
 
-\begin{minted}[fontsize=\footnotesize]{text}
+\begin{script}
 $ docker container ls # find   ID
 $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
             <PATH/OUTSIDE/CONTAINER>
-\end{minted}
+\end{script}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

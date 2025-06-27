@@ -3,9 +3,9 @@ artifact.pdf: artifact.tex sigplanconf.cls
 	latexmk -pdf -shell-escape artifact.tex
 
 docker-build-and-push:
-	docker build -t opencompl-ssa --progress plain .
-	docker save -o ./opencompl-ssa.tar opencompl-ssa
-	docker push siddudruid/opencompl-ssa
+	docker build -t oopsla25-width-indep --progress plain .
+	docker save -o ./oopsla25-width-indep.tar oopsla25-width-indep
+	docker push siddudruid/oopsla25-width-indep
 
 clean:
 	latexmk -C
