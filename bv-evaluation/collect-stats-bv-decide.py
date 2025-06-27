@@ -15,61 +15,34 @@ def geomean(xs):
         # raise RuntimeError("Trying to compute the geomean of an empty list. ")
 
 
-def get_avg_bb_sat(df_tot, benchmark, phase, statsfile):
+def get_avg_bb_sat(df_tot, benchmark, phase, statsfile): 
+    df_tot_ordered = df_tot.sort_values(by='solved_bv_decide_times_average')
+    df_tot_ordered.to_csv('sorted_'+benchmark+'.csv')
     df = df_tot[df_tot["solved_bv_decide_sat_times_average"] > 0]
-    if len(df["solved_bv_decide_times_average"]) > 0:
-        if phase == "sat":
-            sat_bb = np.sum(np.array(df["solved_bv_decide_bb_times_average"]) + np.array(df["solved_bv_decide_sat_times_average"]))
-            perc_sat_bb = (sat_bb / np.sum(df["solved_bv_decide_times_average"])) * 100
-            geomean_sat_bb = (
-                geomean((df["solved_bv_decide_bb_times_average"] + df["solved_bv_decide_sat_times_average"]) / df["solved_bv_decide_times_average"]) * 100
-            )
+    if(len(df["solved_bv_decide_times_average"])>0):
+        if phase == 'sat': 
+            sat_bb =  np.sum(np.array(df['solved_bv_decide_bb_times_average'])+np.array(df['solved_bv_decide_sat_times_average']))
+            perc_sat_bb = (sat_bb/np.sum(df['solved_bv_decide_times_average']))*100
+            geomean_sat_bb = geomean((df['solved_bv_decide_bb_times_average']+df['solved_bv_decide_sat_times_average'])/df['solved_bv_decide_times_average'])*100
             f = open(statsfile, "a+")
-            f.write(
-                "\\newcommand{\\"
-                + benchmark.replace("_", "")
-                + r"SatBitBlastingPerc}{"
-                + ("%.1f" % perc_sat_bb)
-                + "\\%}\n"
-            )
-            f.write(
-                "\\newcommand{\\"
-                + benchmark.replace("_", "")
-                + r"SatBitBlastingGeoMean}{"
-                + ("%.1f" % geomean_sat_bb)
-                + "\\%}\n"
-            )
-            f.close
-        elif phase == "lrat":
-            lrat_tot = np.sum(
-                np.array(df["solved_bv_decide_lratt_times_average"]) + np.array(df["solved_bv_decide_lratc_times_average"])
-            )
-            perc_sat_bb = (lrat_tot / np.sum(df["solved_bv_decide_times_average"])) * 100
+            f.write("\\newcommand{\\"+benchmark.replace('_', '')+r"SatBitBlastingPerc}{"+("%.1f" % perc_sat_bb)+"\\%}\n")
+            f.write("\\newcommand{\\"+benchmark.replace('_', '')+r"SatBitBlastingGeoMean}{"+("%.1f" % geomean_sat_bb)+"\\%}\n")
+            if benchmark == 'InstCombine':
+                filtered_df = df_tot[(df_tot['solved_bv_decide_bb_times_average'] == 0) & (df_tot['solved_bv_decide_sat_times_average'] == 0) & (df_tot['solved_bv_decide_lratt_times_average'] == 0) & (df_tot['solved_bv_decide_lratc_times_average'] == 0)]
+                rewriteOnlyMean = geomean(filtered_df['solved_bv_decide_times_average'])
+                f.write("\\newcommand{\\"+benchmark.replace('_', '')+r"RewriteOnlyGeoMean}{"+("%.1f" % rewriteOnlyMean)+"}\n")
+            f.close()
+        elif phase == 'lrat':
+            lrat_tot = np.sum(np.array(df['solved_bv_decide_lratt_times_average'])+np.array(df['solved_bv_decide_lratc_times_average']))
+            perc_sat_bb = (lrat_tot/np.sum(df['solved_bv_decide_times_average']))*100
             # geomean (r1 / r2) = geomean(r1) / geomean(r2)
-            geomean_lrat = (
-                geomean((df["solved_bv_decide_lratt_times_average"] + df["solved_bv_decide_lratc_times_average"]) / df["solved_bv_decide_times_average"])
-                * 100
-            )
+            geomean_lrat = geomean((df['solved_bv_decide_lratt_times_average']+df['solved_bv_decide_lratc_times_average'])/df['solved_bv_decide_times_average'])*100
             f = open(statsfile, "a+")
-            f.write(
-                "\\newcommand{\\"
-                + benchmark.replace("_", "")
-                + r"LRATPerc}{"
-                + ("%.1f" % perc_sat_bb)
-                + "\\%}\n"
-            )
-            f.write(
-                "\\newcommand{\\"
-                + benchmark.replace("_", "")
-                + r"LRATGeoMean}{"
-                + ("%.1f" % geomean_lrat)
-                + "\\%}\n"
-            )
+            f.write("\\newcommand{\\"+benchmark.replace('_', '')+r"LRATPerc}{"+("%.1f" % perc_sat_bb)+"\\%}\n")
+            f.write("\\newcommand{\\"+benchmark.replace('_', '')+r"LRATGeoMean}{"+("%.1f" % geomean_lrat)+"\\%}\n")
             f.close()
         else:
             raise RuntimeError("Unexpected phase selected. ")
-
-
 # def smtlib_slowdown_by_fam(df, type):
 #     print(df)
 #     fig, ax = plt.subplots(figsize=(14, 5))
