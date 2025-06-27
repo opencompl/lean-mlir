@@ -140,11 +140,16 @@ $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 \end{script}
 
 
+\section{Experiments Reproduction}
 
+Three main scripts are involved in the reproduction of our results and plots: 
+\begin{itemize}
+  \item \texttt{compare.py benchmark} runs our bitblaster as well as the solver we compare against for \texttt{benchmark}. The results obtained from this run are saved in \texttt{bv-evaluation/results}. 
+  \item \texttt{collect.py benchmark} collects and analyzes the results obtain for \texttt{benchmark} and stores everything in \texttt{bv-evaluation/raw-data}. 
+  \item \texttt{plot.py benchmark} plots the results obtained from \texttt{benchmark}'s run, including the plots presented in the paper. 
+\end{itemize}
 
-
-
-% \section{Full Scale Run Of Our Experiments}
+\subsection{\texttt{InstCombine} - Reproduce Fig. 9}
 
 % Run the two large experiments and reproduce the data and graphs from the paper:
 
