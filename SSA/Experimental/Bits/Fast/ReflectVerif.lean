@@ -87,8 +87,6 @@ open Lean Meta Elab Tactic
 namespace BvDecide
 open Std Sat AIG
 
-#check AIG.LawfulOperator
-
 structure ToAIGAuxEntrypoint {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
     (aig : AIG α) (c : Circuit α) where
   out : AIG α
@@ -495,7 +493,7 @@ def castLe (i : Inputs ι n) (hn : n ≤ m) : Inputs ι m where
 @[simp]
 theorem castLe_mk_eq_mk {α : Type _} {n m : Nat} (i : Fin n) (h : n ≤ m) (x : α) :
     (Inputs.mk i x).castLe h = Inputs.mk (i.castLE (by omega)) x := by
-  simp [Inputs.castLe, Inputs.mk]
+  simp [Inputs.castLe]
   rfl
 
 @[simp]
@@ -653,7 +651,7 @@ theorem Vars.castLe_eq_self {n : Nat} (v : Vars σ ι n) (h : n ≤ n) :
 theorem Vars.castLe_outputs_mk_eq_outputs {n i m : Nat} (hi : i < n) (hnm : n ≤ m) :
   ((Vars.outputs ⟨i, hi⟩ : Vars σ ι n).castLe (by omega) : Vars σ ι m) =
      Vars.outputs ⟨i, by omega⟩ := by
-  simp [Vars.castLe, Vars.outputs]
+  simp [Vars.castLe]
 
 @[simp]
 theorem Vars.castLe_stateN_eq_stateN  {n i m : Nat} (hi : i ≤ n) (hnm : n ≤ m) :
@@ -666,7 +664,7 @@ theorem Vars.castLe_state_Inputs_mk_eq_state_castLe_Inputs_mk {n m : Nat}
     (hnm : n ≤ m) {s : σ} {i : Fin (n + 1)} :
     (Vars.state (Inputs.mk i s) : Vars σ ι n).castLe hnm =
     (Vars.state (Inputs.mk (i.castLE (by omega)) s) : Vars σ ι m) := by
-  simp [Vars.castLe, Vars.state]
+  simp [Vars.castLe]
 
 
 @[simp]
@@ -809,7 +807,7 @@ theorem Circuit.bigOr_cons_eq {α : Type _}
   induction cs
   case nil => simp [bigOr]
   case cons a as ih =>
-    simp [bigOr, ih]
+    simp [bigOr]
 
 
 /-- append to the bigOr list is equivalent to a circuit
@@ -821,7 +819,7 @@ theorem Circuit.bigOr_append_equiv_or_bigOr {α : Type _}
   induction cs
   case nil => simp [bigOr]
   case cons a as ih =>
-    simp [bigOr, ih]
+    simp [bigOr]
     ext env
     have := Circuit.eval_eq_of_Equiv ih
     simp
@@ -894,8 +892,7 @@ theorem Circuit.eval_bigAnd_eq_false_iff
   induction cs
   case nil => simp [bigAnd]
   case cons a as ih =>
-    simp only [bigAnd, Circuit.eval.eq_4, Bool.and_eq_false_imp, ih, List.mem_cons,
-      exists_eq_or_imp]
+    simp only [bigAnd, List.mem_cons, exists_eq_or_imp]
     by_cases h : a.eval env <;> simp [h, ih]
 
 
@@ -1148,7 +1145,7 @@ theorem eval_mkOutputAssignCircuitN_eq_false_iff {arity : Type _}
         | .inr i => env (Vars.inputN i n)) =
     env (Vars.outputs ⟨n, by omega⟩) := by
   rw [mkOutputAssignCircuitN]
-  simp [Circuit.eval_map, eval_mkOutputAssignCircuitNAux_eq]
+  simp [eval_mkOutputAssignCircuitNAux_eq]
 
 
 def mkOutputAssignCircuitLeN {arity : Type _}
@@ -1184,7 +1181,7 @@ theorem mkOutputAssignCircuitLeN_eq_false_iff {arity : Type _}
   · intros h c i hi hc
     subst hc
     simp only [Circuit.eval_map, eval_mkOutputAssignCircuitN_eq_false_iff]
-    simp only [Circuit.eval_map, eval_mkOutputAssignCircuitNAux_eq] at h
+    simp only at h
     specialize h i hi
     simp only [Vars.castLe_outputs_mk_eq_outputs]
     rw [← h]
@@ -1379,7 +1376,7 @@ theorem mkAllPairsUniqueStatesCircuit_eq_false_iff {arity : Type _}
   (∀ (i j : Nat) (hij : i < j ∧ j ≤ n), ∃ (s : p.α), env (Vars.stateN s i) ≠ env (Vars.stateN s j)) := by
   rw [mkAllPairsUniqueStatesCircuit]
   simp only [Circuit.eval_bigOr_eq_false_iff, List.mem_map, List.mem_attach, true_and,
-    Subtype.exists, List.mem_range, forall_exists_index]
+    Subtype.exists, forall_exists_index]
   constructor
   · intros h i j hij
     simp only [Prod.forall, mem_mkLowerTriangularPairs] at h
@@ -1522,7 +1519,7 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
     (hPrev : prev.IsLawful) :
     (mkSucc prev).IsLawful where
   hCInitCarryAssignCirc := by
-    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    simp only [mkSucc, castCircLe]
     exact hPrev.hCInitCarryAssignCirc
   hCSuccCarryAssignCirc := by
     simp only [mkSucc, castCircLe, Circuit.eval_map]
@@ -1547,16 +1544,14 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
         rw [h s _ (by omega)]
       · rw [hPrev.hCSuccCarryAssignCirc]
         intros s i hi
-        simp only [Vars.castLe_stateN_eq_stateN, Circuit.eval_map,
-          Vars.castLe_castLe_eq_castLe_self, mkCarryAssignCircuitNAux_eval_eq,
-          Vars.castLe_inputs_eq_inputs] at h
+        simp only at h
         simp only [Vars.castLe_stateN_eq_stateN, Circuit.eval_map,
           Vars.castLe_castLe_eq_castLe_self, mkCarryAssignCircuitNAux_eval_eq,
           Vars.castLe_inputs_eq_inputs]
         rw [h s i (by omega)]
 
   hCOutAssignCirc := by
-    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    simp only [mkSucc, castCircLe]
     simp [Circuit.eval_map]
     intros env
     constructor
@@ -1578,7 +1573,7 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
         simp
         apply h
   hCStatesUniqueCirc := by
-    simp only [mkSucc, castCircLe, Circuit.eval_map]
+    simp only [mkSucc, castCircLe]
     simp [Circuit.eval_map]
     intros env
     constructor
@@ -1606,7 +1601,7 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
 Construct the induction circuits for a given FSM and depth.
 -/
 def mkN (fsm : FSM arity) (n : Nat) : KInductionCircuits fsm n :=
-  match hn : n with
+  match n with
   | 0 => mkZero
   | n + 1 => mkSucc (mkN fsm n)
 
@@ -1683,20 +1678,19 @@ theorem mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBool_of_envBitstr
   (mkSuccCarryAndOutsAssignPrecond circs).eval env = false := by
   rw [eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁ hCircs env]
   subst hEnv
-  simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state]
+  simp [envBool_of_envBitstream_of_state]
   constructor
   · intros s i hi
     simp [Vars.stateN]
     simp [Circuit.eval_map]
-    simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state,
-      Vars.stateN, Vars.inputN]
+    simp [envBool_of_envBitstream_of_state, Vars.stateN, Vars.inputN]
     rw [FSM.carryWith, FSM.carry, FSM.nextBit]
     simp
     congr
     ext x
     rcases x with x | x
     · rfl
-    · simp [Vars.inputN]
+    · simp
   · intros i hi
     congr
     ext x
@@ -1722,8 +1716,7 @@ theorem mkSuccCarryAndOutsAssignPrecond_eval_eq_false_of_eq_envBoolStart_of_envB
   · intros s i hi
     simp [Vars.stateN]
     simp [Circuit.eval_map]
-    simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state,
-      Vars.stateN, Vars.inputN]
+    simp [envBool_of_envBitstream_of_state, Vars.stateN, Vars.inputN]
     simp [FSM.carry, FSM.nextBit]
     congr
     ext x
@@ -1784,8 +1777,7 @@ theorem eval_mkPostcondSafety_eq_false_iff
     ((∀ (s : fsm.α), fsm.initCarry s = env ((Vars.state0 s))) →
     (∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false)) := by
   rw [mkPostcondSafety]
-  simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
-    hCircs.hCInitCarryAssignCirc, IsLawful.hCOutAssignCirc]
+  simp only [mkUnsatImpliesCircuit_eq_false_iff]
   simp
   constructor
   · intros h hinit i hi
@@ -1821,8 +1813,7 @@ theorem mkPostcondIndHypNoCycleBreaking_eq_false_iff
     ((∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false) →
     env (Vars.outputs ⟨n + 1, by omega⟩) = false) := by
   rw [mkPostcondIndHypNoCycleBreaking]
-  simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
-    hCircs.hCOutAssignCirc]
+  simp only [mkUnsatImpliesCircuit_eq_false_iff]
   simp
   constructor
   · simp [mkOutEqZeroCircuitLeN_eval_eq_false_iff]
@@ -1849,8 +1840,7 @@ theorem mkSafetyCircuit_eval_eq_false_iff₁
       (∀ (s : fsm.α), fsm.initCarry s = env (Vars.state0 s)) →
       (∀ (i : Nat) (hi : i < n + 1), env (Vars.outputs ⟨i, by omega⟩) = false)) := by
   rw [mkSafetyCircuit]
-  simp only [mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map,
-    hCircs.hCInitCarryAssignCirc, hCircs.hCOutAssignCirc]
+  simp only [mkUnsatImpliesCircuit_eq_false_iff]
   simp
   constructor
   · intros h hinit hsafe i hi
@@ -1891,7 +1881,7 @@ theorem mkSafetyCircuit_eval_eq_false_thm
   specialize h ?precond
   · intros s
     simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state, Vars.stateN]
-  · simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state, Vars.outputs] at h
+  · simp [envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state] at h
     apply h
     · omega
 
@@ -1938,7 +1928,7 @@ theorem mkIndHypCycleBreaking_eval_eq_false_iff₁
     ((mkSuccCarryAndOutsAssignPrecond circs).eval env = false →
       (circs.cStatesUniqueCirc.eval (fun x => env (x.castLe (by omega))) = false) →
       (mkPostcondIndHypNoCycleBreaking circs).eval env = false) := by
-  simp [mkIndHypCycleBreaking, mkUnsatImpliesCircuit_eq_false_iff, Circuit.eval_map]
+  simp [mkIndHypCycleBreaking, mkUnsatImpliesCircuit_eq_false_iff]
 
 
 /--
@@ -1982,12 +1972,12 @@ theorem  mkIndHypCycleBreaking_eval_eq_false_thm_aux
     -- envBoolStart_of_envBitstream,
     -- envBool_of_envBitstream_of_state, Vars.stateN
     -- as a single lemma.
-    simp [env, envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state, Vars.stateN]
+    simp [env, envBool_of_envBitstream_of_state, Vars.stateN]
     rw [← Function.ne_iff]
     exact huniq
     -- specialize huniq i j hij
   · rw [mkPostcondIndHypNoCycleBreaking_eq_false_iff] at h
-    simp [env, envBoolStart_of_envBitstream, envBool_of_envBitstream_of_state] at h
+    simp [env, envBool_of_envBitstream_of_state] at h
     apply h
     apply hind
     exact hcircs
@@ -2114,8 +2104,7 @@ noncomputable def SimplePathOfPath.findStateOnSimplePath?
   match hout : out with
   | none =>
     ⟨none, by
-      simp only [reduceCtorEq, ne_eq, false_iff, not_and, not_forall, Classical.not_imp,
-        Decidable.not_not]
+      simp only [reduceCtorEq, ne_eq, false_iff, not_and, not_forall, Decidable.not_not]
       subst out
       have := List.findIdx?_eq_none_iff |>.mp hout
       subst states
@@ -2174,7 +2163,7 @@ theorem SimplePathOfPath.findState?_eq_none_iff (this : SimplePathOfPath fsm s0 
     apply hfind
     omega
   case h_2 hfind idx hidx =>
-    simp only [reduceCtorEq, false_iff, not_forall, Classical.not_imp, Decidable.not_not]
+    simp only [reduceCtorEq, false_iff, not_forall, Decidable.not_not]
     simp only [List.findIdx?_map] at hidx
     obtain ⟨hidxLt, hidxVal⟩ := List.findIdx?_eq_some_iff_findIdx_eq .. |>.mp hidx
     simp only [List.length_range] at hidxLt
@@ -2198,7 +2187,7 @@ def envBitstream_set (x : arity → BitStream) (n : Nat) (v : arity → Bool) :
   fun a j => if j = n then v a else x a j
 
 @[simp]
-def envBitstream_set_self_eq_self (x : arity → BitStream) (n : Nat) (v : arity → Bool) :
+def envBitstream_set_self_eq_self (x : arity → BitStream) (n : Nat) :
     (envBitstream_set x n (fun a => x a n)) = x := by
   ext a i
   simp [envBitstream_set]
@@ -2282,8 +2271,7 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
           -- | TODO: find lemmas.
           ext a
           simp [FSM.carryWith, FSM.carry, FSM.nextBit, FSM.nextBitCirc_changeInitCarry_eq,
-            FSM.initCarry_changeInitCarry_eq, add_zero, ne_eq, Nat.left_eq_add, one_ne_zero,
-            not_false_eq_true]
+            FSM.initCarry_changeInitCarry_eq, add_zero]
         · omega
       hStatesUniqueLe := by
         have := path'.hStatesUniqueLe
@@ -2306,8 +2294,7 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
                 generalize fsm.carryWith s0 path'.simplePath path'.k = s0'
                 ext a
                 simp [FSM.carryWith, FSM.carry, FSM.nextBit, FSM.nextBitCirc_changeInitCarry_eq,
-                  FSM.initCarry_changeInitCarry_eq, add_zero, ne_eq, Nat.left_eq_add,
-                  one_ne_zero, not_false_eq_true]
+                  FSM.initCarry_changeInitCarry_eq, add_zero]
               · omega
             rw [← hsn]
             apply this
@@ -2390,11 +2377,11 @@ theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arit
     have hEnvI : fsm.carry env' i = fsm.carry this.simplePath i := by
       apply FSM.carry_congrEnv
       intros a l hl
-      simp [env', hl, show l ≠ this.k by omega]
+      simp [env', show l ≠ this.k by omega]
     have hEnvJ : fsm.carry env' j = fsm.carry this.simplePath j := by
       apply FSM.carry_congrEnv
       intros a l hl
-      simp [env', hl, show l ≠ this.k by omega]
+      simp [env', show l ≠ this.k by omega]
     rw [hEnvI, hEnvJ]
     apply hUnique
   · intros a k hk
@@ -2512,7 +2499,7 @@ theorem all_simple_paths_good
               · omega
               · omega
           · intros a k hk
-            simp [envBitstream_set_eq_self_of_ne (by omega)]
+            simp
 
 /--
 info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [propext, Quot.sound]

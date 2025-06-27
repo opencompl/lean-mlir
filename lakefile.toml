@@ -1,11 +1,12 @@
 name = "SSA"
 # precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
 defaultTargets = ["SSA"]
+moreLeanArgs = ["--tstack=400000"]
 
 [[require]]
 name = "mathlib"
-git = "https://github.com/leanprover-community/mathlib4"
-rev = "nightly-testing-2025-06-20"
+git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
+rev = "nightly-testing-2025-06-26"
 
 [[require]]
 name = "Cli"

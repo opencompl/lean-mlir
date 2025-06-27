@@ -240,7 +240,7 @@ def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
 
 theorem sdiv?_denom_zero_eq_poison {w : Nat} (x : BitVec w) :
   LLVM.sdiv? x 0 = .poison := by
-  simp [LLVM.sdiv?, BitVec.sdiv]
+  simp [LLVM.sdiv?]
 
 theorem sdiv?_eq_value_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
     (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = .value (BitVec.sdiv x y) := by

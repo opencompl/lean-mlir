@@ -39,7 +39,7 @@ def tail : Stream α → Stream α := Stream'.tail
 
 /-- Expand a finite list of values into a stream, by appending an infinte amount of `none`s -/
 def ofList (vals : List α) : Stream α :=
-  fun i => (vals.get? i).join
+  fun i => (vals[i]?).join
 
 /-- `toList n x` returns the first `n` messages (including `none`s) as a list -/
 def toList (n : Nat) (x : Stream α) : List (Option α) :=

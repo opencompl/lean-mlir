@@ -137,4 +137,4 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
 
 lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by
-  simp [funext_iff]
+  simp

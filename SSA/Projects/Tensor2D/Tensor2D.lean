@@ -78,9 +78,7 @@ theorem Tensor2d'.map_extract (δ₀ δ₁ sz₀ sz₁ : ℕ) (t : Tensor2d' α)
     simp only [MAP_dim₁]
     by_cases H₀ : δ₀ + sz₀ ≤ t.dim₀ <;> simp[H₀, Tensor2d'.map_error];
     by_cases H₁ : δ₁ + sz₁ ≤ t.dim₁ <;> simp[H₁, Tensor2d'.map_error];
-    simp only [map, Matrix.map, Matrix.of_apply, Int.ofNat_add_ofNat, Eq.ndrec,
-      Int.rawCast, Int.cast_id, Nat.rawCast, Nat.cast_id, Int.ofNat_eq_coe,
-      eq_mp_eq_cast, id_eq]
+    simp only [map, Matrix.map, Matrix.of_apply]
 }
 
 theorem Tensor2d'.fill_extract (δ₀ δ₁ sz₀ sz₁ : ℕ) (t : Tensor2d' α) (v : β) :

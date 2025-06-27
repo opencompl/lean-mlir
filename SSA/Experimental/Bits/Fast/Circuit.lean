@@ -136,21 +136,21 @@ theorem and_def {α : Type _} (c d : Circuit α) :
 
 @[simp] lemma tru_and (c : Circuit α) :
   Circuit.tru &&& c = c := by
-  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.tru]
+  simp [Circuit.and_def, Circuit.simplifyAnd]
 
 @[simp] lemma fals_and (c : Circuit α) :
   Circuit.fals &&& c = Circuit.fals := by
-  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.fals]
+  simp [Circuit.and_def, Circuit.simplifyAnd]
   rcases c <;> simp
 
 @[simp] lemma and_fals (c : Circuit α) :
   c &&& Circuit.fals = Circuit.fals := by
-  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.fals]
+  simp [Circuit.and_def, Circuit.simplifyAnd]
   rcases c <;> simp
 
 @[simp] lemma and_tru (c : Circuit α) :
   c &&& Circuit.tru = c := by
-  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.tru]
+  simp [Circuit.and_def, Circuit.simplifyAnd]
   rcases c <;> simp
 
 @[simp] lemma eval_and : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
@@ -178,24 +178,24 @@ theorem or_def {α : Type _} (c d : Circuit α) :
 @[simp]
 lemma fals_or (c : Circuit α) :
   Circuit.fals ||| c = c := by
-  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.fals]
+  simp [Circuit.or_def, Circuit.simplifyOr]
   rcases c <;> simp
 
 @[simp]
 lemma tru_or (c : Circuit α) :
   Circuit.tru ||| c = Circuit.tru := by
-  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.tru]
+  simp [Circuit.or_def, Circuit.simplifyOr]
 
 @[simp]
 lemma or_fals (c : Circuit α) :
   c ||| Circuit.fals = c := by
-  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.fals]
+  simp [Circuit.or_def, Circuit.simplifyOr]
   rcases c <;> simp
 
 @[simp]
 lemma or_tru (c : Circuit α) :
   c ||| Circuit.tru = Circuit.tru := by
-  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.tru]
+  simp [Circuit.or_def, Circuit.simplifyOr]
   rcases c <;> simp
 
 @[simp] lemma eval_or : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
@@ -265,13 +265,13 @@ instance : Xor (Circuit α) := ⟨Circuit.simplifyXor⟩
 @[simp] lemma eval_xor : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     eval (c₁ ^^^ c₂) f = Bool.xor (eval c₁ f) (eval c₂ f) := by
   intros c₁ c₂ f
-  cases c₁ <;> cases c₂ <;> simp [simplifyXor, Bool.xor_not_left', HXor.hXor, Xor.xor]
+  cases c₁ <;> cases c₂ <;> simp [simplifyXor, HXor.hXor, Xor.xor]
 
 set_option maxHeartbeats 1000000
 theorem vars_simplifyXor [DecidableEq α] (c₁ c₂ : Circuit α) :
     (vars (simplifyXor c₁ c₂)) ⊆ (vars c₁ ++ vars c₂).dedup := by
   intro x
-  simp only [List.mem_dedup, List.mem_append, ←simplifyNot_eq_complement]
+  simp only [List.mem_dedup, List.mem_append]
   induction c₁ <;> induction c₂ <;> simp only [simplifyXor, vars,
     ← simplifyNot_eq_complement, simplifyNot] at * <;> aesop
 
@@ -374,7 +374,7 @@ lemma eval_eq_of_eq_on_vars [DecidableEq α] : ∀ {c : Circuit α} {f g : α �
   | tru, _, _, _ => rfl
   | fals, _, _, _ => rfl
   | var true x, _f, _g, h => h x (by simp [vars])
-  | var false x, f, g, h => by simp [eval, h x (by simp [vars, eval])]
+  | var false x, f, g, h => by simp [eval, h x (by simp [vars])]
   | and c₁ c₂, f, g, h => by
     simp only [vars, List.mem_append, List.mem_dedup] at h
     rw [eval, eval,
@@ -471,7 +471,7 @@ def bOr : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   ∀ (s : List α) (f : α → Circuit β) (c : Circuit β) (g : β → Bool),
     (eval (s.foldl (λ c x => c ||| (f x)) c) g : Prop) ↔
       eval c g ∨ (∃ a ∈ s, eval (f a) g)
-| [], f, c, g => by simp [eval]
+| [], f, c, g => by simp
 | a::l, f, c, g => by
   rw [List.foldl_cons, eval_foldl_or l]
   simp only [eval_or, Bool.or_eq_true, List.mem_cons]
@@ -491,7 +491,7 @@ def bOr : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   ∀ {s : List α} {f : α → Circuit β} {g : β → Bool},
     eval (bOr s f) g = ∃ a ∈ s, eval (f a) g
 | [], _, _ => by simp [bOr, eval]
-| [a], f, g => by simp [bOr, eval]
+| [a], f, g => by simp [bOr]
 | a::l, f, g => by
   rw [bOr, eval_foldl_or, List.exists_mem_cons_iff]
 
@@ -503,7 +503,7 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
     ∀ (s : List α) (f : α → Circuit β) (c : Circuit β) (g : β → Bool),
       (eval (s.foldl (λ c x => c &&& (f x)) c) g : Prop) ↔
         eval c g ∧ (∀ a ∈ s, eval (f a) g)
-  | [], f, c, g => by simp [eval]
+  | [], f, c, g => by simp
   | a::l, f, c, g => by
     rw [List.foldl_cons, eval_foldl_and l]
     simp only [eval_and, Bool.and_eq_true, List.mem_cons]
@@ -520,7 +520,7 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
     ∀ {s : List α} {f : α → Circuit β} {g : β → Bool},
       eval (bAnd s f) g ↔ ∀ a ∈ s, eval (f a) g
   | [], _, _ => by simp [bAnd, eval]
-  | [a], f, g => by simp [bAnd, eval]
+  | [a], f, g => by simp [bAnd]
   | a::l, f, g => by
     rw [bAnd, eval_foldl_and]; simp
 
@@ -596,7 +596,7 @@ lemma varsFinset_assignVars [DecidableEq α] [DecidableEq β] :
     intro x
     simp [assignVars, varsFinset, vars]
     split <;>
-    simp [*, vars, Xor']
+    simp [*, vars]
     split_ifs <;> simp [vars]
   | and c₁ c₂, f => by
     intro x
@@ -675,7 +675,7 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
         simp only [Finset.ssubset_iff, Finset.mem_map, Finset.mem_biUnion,
           Function.Embedding.coeFn_mk, not_exists, not_and, forall_exists_index, and_imp,
           Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, Sum.forall,
-          Sum.inl.injEq, IsEmpty.forall_iff, implies_true, and_true]
+          Sum.inl.injEq]
         use (f a ha)
         simp only [hfa, reduceCtorEq, not_false_eq_true, implies_true, false_implies, and_true,
           true_and]
@@ -698,20 +698,20 @@ lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
   | tru, _, _ => rfl
   | fals, _, _ => rfl
   | var b x, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     cases f x (by simp [vars]) with
     | inl val => cases b <;> simp [eval]
     | inr val =>
-      simp [eval]
+      simp
       cases val <;> cases b <;> simp [eval]
   | and c₁ c₂, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     rw [eval_assignVars, eval_assignVars]
   | or c₁ c₂, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     rw [eval_assignVars, eval_assignVars]
   | xor c₁ c₂, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     rw [eval_assignVars, eval_assignVars]
 
 def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
@@ -723,8 +723,7 @@ def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
 theorem eval_fst {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : α → Bool) :
     c.fst.eval g ↔ ∃ g' : β → Bool, c.eval (Sum.elim g g') := by
-  simp only [fst, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
-    List.mem_singleton, eval_assignVars]
+  simp only [fst, eval_bOr, List.mem_pi, List.mem_cons, eval_assignVars]
   constructor
   · rintro ⟨a, ha⟩
     use (fun i => if hi : i ∈ c.sumVarsRight then a i hi else true)
@@ -751,8 +750,7 @@ def snd {α β : Type _} [DecidableEq α] [DecidableEq β]
 theorem eval_sn.d {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : β → Bool) :
     c.snd.eval g ↔ ∃ g' : α → Bool, c.eval (Sum.elim g' g) := by
-  simp only [snd, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
-    List.mem_singleton, eval_assignVars]
+  simp only [snd, eval_bOr, List.mem_pi, List.mem_cons, eval_assignVars]
   constructor
   · rintro ⟨a, ha⟩
     use (fun i => if hi : i ∈ c.sumVarsLeft then a i hi else true)
@@ -905,7 +903,7 @@ def always_true [DecidableEq α] (c : Circuit α) : Bool :=
 @[simp]
 lemma always_true_iff [DecidableEq α] (c : Circuit α) :
     always_true c ↔ ∀ x, eval c x := by
-  simp [always_true, nonempty_eq_false_iff, not_not]
+  simp [always_true, nonempty_eq_false_iff]
 
 instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit α → Prop) :=
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
@@ -975,7 +973,7 @@ def Equiv (c₁ c₂ : Circuit α) : Prop :=
 theorem Equiv_refl : ∀ (c : Circuit α), Circuit.Equiv c c := by
   intro c
   ext v
-  simp [eval]
+  simp
 
 @[symm]
 theorem Equiv_symm : ∀ {c₁ c₂ : Circuit α}, Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₁ := by

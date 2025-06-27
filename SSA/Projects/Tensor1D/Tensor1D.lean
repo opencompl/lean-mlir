@@ -30,7 +30,7 @@ def Tensor1d.empty [Inhabited α] : Tensor1d α where
   val := fun _ => default
   spec := by {
     intros _ix _IX
-    simp[val];
+    simp;
   }
 
 
@@ -157,7 +157,7 @@ theorem extractslice_insertslice [Inhabited α]
       have B : t.size >= sliceix := not_lt_is_geq A
 
       by_cases C:(sliceix < t.size) <;> simp[C]
-      case neg => simp[Tensor1d.insertslice, Tensor1d.extract, A, B, C] at CORRECT
+      case neg => simp [Tensor1d.insertslice, Tensor1d.extract, A, C] at CORRECT
       case pos =>
           funext ix
           by_cases D: (ix < slicesize) <;> simp[D]

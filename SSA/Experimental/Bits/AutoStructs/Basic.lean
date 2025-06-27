@@ -275,7 +275,7 @@ lemma addTrans_finals (m : RawCNFA A) (a : A) (s1 s2 : State) :
 @[grind =, simp]
 lemma addTrans_tr_eq (m : RawCNFA A) [LawfulBEq A] (a : A) (s₁ s₂ : State) :
     (m.addTrans a s₁ s₂).tr s₁ a = (m.tr s₁ a).insert s₂ := by
-  simp [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  simp [RawCNFA.addTrans, RawCNFA.tr]
 
 @[grind =, simp]
 lemma addTrans_tr_neq (m : RawCNFA A) [LawfulBEq A] {a : A} {s₁ s₁' s₂ : State} (hneq : s₁ ≠ s₁') :
@@ -328,7 +328,7 @@ lemma newState_finals (m : RawCNFA A) :
 @[grind =, simp, aesop 50% unsafe]
 lemma newState_eq (m : RawCNFA A) :
     m.newState.1 = m.stateMax := by
-  simp_all [RawCNFA.newState, RawCNFA.states, Finset.range_add]
+  simp_all [RawCNFA.newState]
 
 @[grind, simp, aesop 50% unsafe]
 lemma mem_states_newState_self (m : RawCNFA A) :
@@ -415,7 +415,7 @@ lemma wf_empty :
 lemma wf_newState (m : RawCNFA A) (hwf : m.WF) :
     m.newState.2.WF := by
   constructor <;> intros <;> simp [RawCNFA.states] <;>
-    apply Nat.lt_add_one_of_lt <;> simp_all [RawCNFA.newState, RawCNFA.WF]
+    apply Nat.lt_add_one_of_lt <;> simp_all [RawCNFA.newState]
   have h := @hwf.trans_tgt_lt
   simp [RawCNFA.states] at h
   apply h <;> assumption
@@ -431,14 +431,14 @@ lemma RawCNFA.empty_stateMax : empty (A := A).stateMax = 0 := rfl
 @[grind, simp, aesop 50% unsafe]
 lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
-  constructor <;> intros <;> simp_all [RawCNFA.addInitial, RawCNFA.WF]
+  constructor <;> intros <;> simp_all [RawCNFA.addInitial]
   { casesm* _ ∨ _ <;> subst_eqs <;> simp_all }
   { apply hwf.trans_tgt_lt <;> assumption }
 
 @[grind, simp, aesop 50% unsafe]
 lemma wf_addFinal (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addFinal s).WF := by
-  constructor <;> intros <;> simp_all [RawCNFA.addFinal, RawCNFA.WF] <;> aesop
+  constructor <;> intros <;> simp_all [RawCNFA.addFinal] <;> aesop
 
 @[grind, simp, aesop 50% unsafe]
 lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
@@ -511,9 +511,9 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
   generalize (m.newState.2.addInitial m.stateMax) = mi
   induction FinEnum.toList A generalizing mi
   case nil =>
-    rintro hwf'; simp [motive, RawCNFA.createSink, hwf]
+    rintro hwf'; simp [motive]
   case cons a as ih =>
-    simp [motive, RawCNFA.createSink, hwf]
+    simp [motive]
     rintro hwf' hstates b
     simp [motive] at ih
     rw [ih]
@@ -587,17 +587,16 @@ lemma simul_equiv {m : CNFA n} {M : NFA' n} :
   use (λ s q ↦ R s.val q)
   simp [CNFA.toNFA', CNFA.toNFA]
   constructor
-  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
-  · simp [CNFA.toNFA', CNFA.toNFA]
+  · simp only [Set.mem_setOf_eq, Subtype.forall]; grind
+  · simp
     constructor
     · simp_all
     · simp_all
       rintro q hst
       obtain ⟨s, hi, hR⟩ := h₄ hst
       aesop
-  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
-  · simp only [Set.mem_setOf_eq, Subtype.exists, CNFA.wf, exists_and_left, exists_prop,
-    Subtype.forall]
+  · simp only [Set.mem_setOf_eq, Subtype.forall]; grind
+  · simp only [Set.mem_setOf_eq, Subtype.exists, exists_and_left, exists_prop, Subtype.forall]
     rintro s₁ hs₁ q₁ a q₂ hR₁ hst
     obtain ⟨s₂, htr, hR₂⟩:= h₆ hR₁ hst (by simp) (by simp)
     use s₂, htr, RawCNFA.WF.trans_tgt_lt m.wf htr, hR₂

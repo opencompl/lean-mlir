@@ -126,7 +126,7 @@ lemma enc_length (bvs : BitVecs n) : (enc bvs).length = bvs.w := by
 @[simp]
 lemma enc_spec (bvs : BitVecs n) (i : Fin bvs.w) (k : Fin n) :
     (enc bvs)[i][k] = (bvs.bvs.get k)[i] := by
-  simp [enc, dec]
+  simp [enc]
 
 @[simp]
 lemma dec_spec (bvs' : BitVecs' n) (k : Fin n) (i : Fin bvs'.length) :
@@ -271,7 +271,7 @@ def dec_transport_preim :
   · rintro ⟨bvs', hS, hdec⟩
     use enc bvs
     rw [←enc_transport]
-    constructor <;> simp_all [←hdec, enc_dec]
+    constructor <;> simp_all [← hdec]
 
 @[simp]
 def dec_transport_image (f : Fin m → Fin n) :
@@ -489,7 +489,7 @@ lemma product_eval {M : NFA α σ} {N : NFA α ς} {w} :
   (M.product accept? N).eval w = M.eval w ×ˢ N.eval w := by
   unfold eval; induction w using List.reverseRecOn
   case nil => ext; simp [product]
-  case append_singleton w a ih => simp only [eval, evalFrom_append_singleton, product_stepSet, ih]
+  case append_singleton w a ih => simp only [evalFrom_append_singleton, product_stepSet, ih]
 
 @[simp]
 theorem inter_accepts (M : NFA α σ) (N : NFA α ς) :
@@ -552,7 +552,7 @@ lemma determinize_complete (M : NFA α σ) :
 @[simp]
 lemma determinize_deternistic (M : NFA α σ) :
     M.toDFA.toNFA.Deterministic := by
-  simp [Deterministic, DFA.toNFA, toDFA]
+  simp [DFA.toNFA, toDFA]
   constructor <;> simp
 
 @[simp]
@@ -798,7 +798,7 @@ theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
     simp_all
   case append_singleton xs x ih =>
     rintro hd
-    simp_all only [union_singleton, List.foldl_cons, List.mem_cons]
+    simp_all only [union_singleton]
     simp [List.pairwise_append] at hd
     rcases hd with ⟨hd, hnew⟩
     have hnew : x ∉ xs := by aesop
