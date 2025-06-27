@@ -118,10 +118,10 @@ def compare_tools_same_bw(df, bm, tool1, tool2):
     fig, ax = plt.subplots()
     df_sorted = df.sort_values(by="solved_bv_decide_times_average")
     ax.plot(
-        np.arange(len(df_sorted[tool1])), df_sorted[tool1], color=col[0], label=tool1
+        np.arange(len(df_sorted[tool1])), df_sorted[tool1], color=col[0], label="bv_decide"
     )
     ax.plot(
-        np.arange(len(df_sorted[tool2])), df_sorted[tool2], color=col[3], label=tool2
+        np.arange(len(df_sorted[tool2])), df_sorted[tool2], color=col[3], label="bitwuzla"
     )
     if np.max(df_sorted[tool2]) > max:
         max = np.max(df_sorted[tool2])
@@ -593,7 +593,7 @@ def cumul_solving_time_hackers_delight(df, tool1, tool2, bm, bv_width):
             np.arange(0, len(df_sorted[tool2]) + 1),
             marker="x",
             color=col[3],
-            label=tool2,
+            label="bitwuzla",
         )
         ax[i].set_xlabel("bitwidth: " + str(bvw))
         ax[i].set_xscale("log")
@@ -627,7 +627,7 @@ def cumul_solving_time(df, tool1, tool2, bm):
         np.arange(0, len(df[tool2]) + 1),
         marker="x",
         color=col[3],
-        label=tool2,
+        label="bitwuzla",
     )
     ax.set_xlabel("Time [ms]")
     ax.set_xscale("log")
@@ -660,7 +660,7 @@ def cumul_solving_time_smtlib(df, name):
         np.arange(0, len(df["time_cpu_bw"]) + 1),
         marker="o",
         color=dark_green,
-        label="solved_bitwuzla_times_average",
+        label="bitwuzla",
     )
     ax.plot(
         cumtime2,
