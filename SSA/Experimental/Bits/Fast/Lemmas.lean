@@ -86,9 +86,6 @@ lemma Term.evalFin_eq_eval (t : Term)
       rw [this]
       rfl
 
-/-- info: 'Term.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
-#guard_msgs in #print axioms Term.evalFin_eq_eval
-
 lemma Predicate.evalFin_eq_eval (p : Predicate)
    (varsList : List BitStream) (varsFin : Fin p.arity → BitStream)
    (hvars : ∀ (i : Fin p.arity), varsList.getD i default = (varsFin i)) :
@@ -130,10 +127,6 @@ lemma Predicate.evalFin_eq_eval (p : Predicate)
     · intros i
       rw [hvars ⟨i, by omega⟩]
       rfl
-
-/-- info: 'Predicate.evalFin_eq_eval' depends on axioms: [propext, Quot.sound] -/
-#guard_msgs in #print axioms Predicate.evalFin_eq_eval
-
 
 lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by

@@ -632,6 +632,11 @@ theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (w : Na
   simp
   apply h
 
+/--
+info: 'MBA.Eqn.forall_width_reflect_zero_of_width_one_denote_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms Eqn.forall_width_reflect_zero_of_width_one_denote_zero
+
 @[simp]
 theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by
   simp [EnvFin] at *
@@ -972,12 +977,14 @@ example (x y : BitVec w) :
     [Term.mk 1 (.var 0), Term.mk 2 (.var 1), Term.mk (-1) (.var 0)] [x, y] =
     (BitVec.ofInt w 1 * x + (BitVec.ofInt w 2 * y + BitVec.ofInt w (-1) * x) = BitVec.ofInt w 0) := rfl
 
-theorem eg3 (x y : BitVec w) :
+theorem check_axioms_mba (x y : BitVec w) :
      - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
   bv_mba
 
-/-- info: 'MBA.Examples.eg3' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms eg3
+/--
+info: 'MBA.Examples.check_axioms_mba' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms check_axioms_mba
 
 end Examples
 end MBA

@@ -43,20 +43,30 @@ open NNF in
 theorem eq3 (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified } )
 
-/-- info: 'eq3' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
-#guard_msgs in #print axioms eq3
-
 example (w : Nat) (a b : BitVec w) : a = a + 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 set_option trace.Bits.FastVerif true in
-theorem check_axioms (w : Nat) (a b : BitVec w) : a + b = b + a := by
+theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'check_axioms' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
-#guard_msgs in #print axioms check_axioms
+#guard_msgs in #print axioms check_axioms_cadical
+
+theorem check_axioms_presburger (w : Nat) (a b : BitVec w) : a + b = b + a := by
+  bv_automata_gen (config := {backend := .automata} )
+
+/--
+info: 'check_axioms_presburger' depends on axioms: [hashMap_missing,
+ propext,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms check_axioms_presburger
 
 example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
@@ -317,9 +327,6 @@ def test2_gen (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := 
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
-/-- info: 'test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
-#guard_msgs in #print axioms test24
-
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
@@ -444,11 +451,6 @@ def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
 def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
-
-/--
-info: 'width_1_char_2_add_four' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
--/
-#guard_msgs in #print axioms width_1_char_2_add_four
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by

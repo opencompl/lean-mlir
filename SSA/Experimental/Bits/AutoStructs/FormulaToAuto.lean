@@ -1891,14 +1891,6 @@ theorem nfaOfFormula_bv_language φ :
 The theorem stating that the automaton generated from the formula φ recognizes
 exactly the solution of φ.
 -/
--- theorem absNfaToFomrmula_spec' (φ : Formula) :
---     (absNfaOfFormula φ).accepts = { (bvs : BitVecs φ.arity) | φ.sat (fun k => bvs.bvs.get k) = true } := by
---   simp [absNfaToFomrmula_spec, formula_language]
-
--- /--
--- info: 'absNfaToFomrmula_spec'' depends on axioms: [propext, Classical.choice, Quot.sound]
--- -/
--- #guard_msgs in #print axioms absNfaToFomrmula_spec'
 
 /-
 Note: it is important to define this function and not inline it, otherwise
@@ -1948,6 +1940,15 @@ theorem Formula.denote_of_isUniversal {p : Predicate}
   rintro w vars
   apply decision_procedure_is_correct _ (λ n ↦ vars[n]!) at heval
   simp_all [formula_predicate_match]
+
+/--
+info: 'Formula.denote_of_isUniversal' depends on axioms: [hashMap_missing,
+ propext,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms Formula.denote_of_isUniversal
 
 -- -- For testing the comparison operators.
 -- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : RawCNFA (BitVec 0) :=
