@@ -708,7 +708,7 @@ def scatter_solving_time_instcombine(df):
 def plot_hackersdelight():
     dfs = []
     for file in os.listdir(hackersDelightDataDir):
-        if "err" not in file and "ceg" not in file and "sym" not in file:
+        if "err" not in file and "ceg" not in file and "sym" and ".placeholder" not in file:
             print(file)
             bvw = file.split("_")[2]
             df_bw = pd.read_csv(hackersDelightDataDir + file)
@@ -757,7 +757,6 @@ def plot_hackersdelight():
         "solved_bitwuzla_times_average",
         bv_width,
     )
-
 
 def plot_instcombine():
     for file in os.listdir(instCombineDataDir):
