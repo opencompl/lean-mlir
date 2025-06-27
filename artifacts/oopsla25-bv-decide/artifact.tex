@@ -135,7 +135,7 @@ $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # Run experiments InstCombine and HackersDelight
-# Collect the output and write the plots
+# Collect the output and write all the plots
 $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 \end{script}
 
@@ -150,6 +150,20 @@ Three main scripts are involved in the reproduction of our results and plots:
 \end{itemize}
 
 \subsection{\texttt{InstCombine} - Reproduce Fig. 9}
+
+As an example, to reproduce Fig. 9 using 8 threads for the experimental run and 5 repetitions for stability, the sequence of commands to run are: 
+\begin{script}
+$ docker load -i oopsla25-bv-decide.tar
+$ docker run -it oopsla25-bv-decide
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+# Run experiments for InstCombine
+$ /code/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r5
+# Collect InstCombine data
+$ /code/lean-mlir/bv-evaluation/collect.py instcombine
+# Plot InstCombine data 
+$ /code/lean-mlir/bv-evaluation/plot.py instcombine
+\end{script}
+The expected plot is in \texttt{plots/bv\_decide\_stacked\_perc\_instCombine.pdf}
 
 % Run the two large experiments and reproduce the data and graphs from the paper:
 
