@@ -61,7 +61,7 @@ jobs:
       - name: Collect data LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
+          (cd bv-evaluation; python3 ./collect.py instcombine | tee llvm-stats)
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -106,7 +106,7 @@ jobs:
       - name: Collect data HDEl
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+          (cd bv-evaluation; python3 ./collect.py hackersdelight > /dev/null)
 
 #    - name: Run LLVM Symbolic
 #        continue-on-error: true
