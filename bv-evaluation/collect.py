@@ -6,6 +6,7 @@ from enum import Enum
 from collections import Counter
 import numpy as np
 import pandas as pd
+import shutil
 
 bv_width = [4, 8, 16, 32, 64]
 
@@ -21,6 +22,7 @@ output = Enum("output", [("counterexample", 1), ("proved", 2), ("failed", 0)])
 # res_dir = "results/InstCombine/"
 # raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
+
 def clear_folder(results_dir):
     """Clears all files and subdirectories within the given directory."""
     if not os.path.exists(results_dir):
@@ -35,6 +37,7 @@ def clear_folder(results_dir):
                 shutil.rmtree(item_path)
         except Exception as e:
             print(f"Failed to delete {item_path}. Reason: {e}")
+
 
 RAW_DATA_DIR_HACKERSDELIGHT = ROOT_DIR + "/bv-evaluation/raw-data/HackersDelight/"
 RESULTS_DIR_HACKERSDELIGHT = ROOT_DIR + "/bv-evaluation/results/HackersDelight/"
@@ -482,9 +485,8 @@ def save_solved_df(
     print("Saved dataframe at: " + csv_name)
 
 
-
-def collect (benchmark : str): 
-    if benchmark == "instcombine": 
+def collect(benchmark: str):
+    if benchmark == "instcombine":
         file_data = []
 
         for file in os.listdir(BENCHMARK_DIR_INSTCOMBINE):
@@ -492,6 +494,8 @@ def collect (benchmark : str):
                 file_name = RESULTS_DIR_INSTCOMBINE + file.split(".")[0]
                 parsed_results = parse_file(file_name, REPS)
                 file_data.append([file_name, parsed_results])
+
+        clear_folder(RAW_DATA_DIR_INSTCOMBINE)
 
         all_files_solved_bitwuzla_times_average = []
         all_files_counter_bitwuzla_times_average = []
@@ -626,9 +630,15 @@ def collect (benchmark : str):
             len(all_files_solved_bitwuzla_times_average)
             + len(all_files_failed_bv_decide_only),
         )
-        response = subprocess.check_output("cat "+ROOT_DIR+"/SSA/Projects/InstCombine/tests/proofs/*_proof.lean  | grep theorem | wc -l", shell=True, text=True)
+        response = subprocess.check_output(
+            "cat "
+            + ROOT_DIR
+            + "/SSA/Projects/InstCombine/tests/proofs/*_proof.lean  | grep theorem | wc -l",
+            shell=True,
+            text=True,
+        )
         val = int(response)
-        print("The InstCombine benchmark contains "+str(val)+" theorems in total.")
+        print("The InstCombine benchmark contains " + str(val) + " theorems in total.")
 
         save_counterexample_df(
             all_files_counter_bitwuzla_times_average,
@@ -648,13 +658,17 @@ def collect (benchmark : str):
             all_files_solved_bv_decide_lratc_times_average,
             RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
         )
-        
-    elif benchmark == "hackersdelight": 
+
+    elif benchmark == "hackersdelight":
+        clear_folder(RAW_DATA_DIR_HACKERSDELIGHT)
+
         file_data = []
 
         for file in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
             for bvw in bv_width:
-                file_name = RESULTS_DIR_HACKERSDELIGHT + file.split(".")[0] + "_" + str(bvw)
+                file_name = (
+                    RESULTS_DIR_HACKERSDELIGHT + file.split(".")[0] + "_" + str(bvw)
+                )
 
                 file_data.append([file_name, parse_file(file_name, REPS)])
 
@@ -703,8 +717,9 @@ def collect (benchmark : str):
                 + "_err_data.csv"
             )
 
-    else : 
-        raise Exception ("Unknown benchmark "+b)
+    else:
+        raise Exception("Unknown benchmark " + benchmark)
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -727,6 +742,7 @@ def main():
 
     for b in benchmarks_to_run:
         collect(b)
+
 
 if __name__ == "__main__":
     main()
