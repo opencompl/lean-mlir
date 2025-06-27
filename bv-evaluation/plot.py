@@ -386,11 +386,11 @@ def bv_decide_smtlib_sat_stacked_perc(df: pd.DataFrame, bm, type):
         lambda x: x / 10**6
         if x.name
         in [
-            "bv_decide-ld",
-            "bv_decide-rr",
-            "bv_decide-ac",
-            "bv_decide-af",
-            "bv_decide-ecs",
+            "leanSAT-ld",
+            "leanSAT-rr",
+            "leanSAT-ac",
+            "leanSAT-af",
+            "leanSAT-ecs",
             "solved_bv_decide_bb_times_average",
             "solved_bv_decide_sat_times_average",
             "bv_decide-lrat",
