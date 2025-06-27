@@ -9,7 +9,7 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
-bv_widths = [4, 8, 16, 32, 64]
+bv_width = [4, 8, 16, 32, 64]
 
 ROOT_DIR = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
@@ -649,7 +649,7 @@ def collect_data_instcombine():
         all_files_counter_bv_decide_times_average,
         all_files_counter_bv_decide_rw_times_average,
         all_files_counter_bv_decide_sat_times_average,
-        RAW_DATA_DIR_INSTCOMBINE + file_result[0].split("/")[-1] + "_ceg_data.csv",
+        RAW_DATA_DIR_INSTCOMBINE + "instcombine_ceg_data.csv",
     )
 
     save_solved_df(
@@ -660,15 +660,15 @@ def collect_data_instcombine():
         all_files_solved_bv_decide_sat_times_average,
         all_files_solved_bv_decide_lratt_times_average,
         all_files_solved_bv_decide_lratc_times_average,
-        RAW_DATA_DIR_INSTCOMBINE + file_result[0].split("/")[-1] + "_solved_data.csv",
+        RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
     )
 
 def collect_data_hackersdelight():
     file_data = []
 
-    for file in os.listdir(benchmark_dir):
+    for file in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
         for bvw in bv_width:
-            file_name = res_dir + file.split(".")[0] + "_" + str(bvw)
+            file_name = RESULTS_DIR_HACKERSDELIGHT + file.split(".")[0] + "_" + str(bvw)
 
             file_data.append([file_name, parse_file(file_name, REPS)])
 
@@ -681,59 +681,39 @@ def collect_data_hackersdelight():
 
         # sanity_check_times(file_comparison)
 
-        ceg_df = pd.DataFrame(
-            {
-                "counter_bitwuzla_times_average": file_comparison[
+        save_counterexample_df(file_comparison[
                     "file_counter_bitwuzla_times_average"
-                ],
-                "counter_bv_decide_times_average": file_comparison[
+                ], file_comparison[
                     "file_counter_bv_decide_times_average"
-                ],
-                "counter_bv_decide_rw_times_average": file_comparison[
+                ],  file_comparison[
                     "file_counter_bv_decide_rw_times_average"
-                ],
-                "counter_bv_decide_sat_times_average": file_comparison[
+                ], file_comparison[
                     "file_counter_bv_decide_sat_times_average"
                 ],
-            }
+                RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_ceg_data.csv"
         )
 
-        solved_df = pd.DataFrame(
-            {
-                "solved_bitwuzla_times_average": file_comparison[
+        save_solved_df(file_comparison[
                     "file_solved_bitwuzla_times_average"
-                ],
-                "solved_bv_decide_times_average": file_comparison[
+                ], file_comparison[
                     "file_solved_bv_decide_times_average"
-                ],
-                "solved_bv_decide_rw_times_average": file_comparison[
+                ], file_comparison[
                     "file_solved_bv_decide_rw_times_average"
-                ],
-                "solved_bv_decide_bb_times_average": file_comparison[
+                ], file_comparison[
                     "file_solved_bv_decide_bb_times_average"
-                ],
-                "solved_bv_decide_sat_times_average": file_comparison[
+                ], file_comparison[
                     "file_solved_bv_decide_sat_times_average"
-                ],
-                "solved_bv_decide_lratt_times_average": file_comparison[
+                ], file_comparison[
                     "file_solved_bv_decide_lratt_times_average"
-                ],
-                "solved_bv_decide_lratc_times_average": file_comparison[
+                ], file_comparison[
                     "file_solved_bv_decide_lratc_times_average"
-                ],
-            }
+                ], RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_solved_data.csv"
         )
 
         errors_df = pd.DataFrame({"errors_bitwuzla": file_comparison["errors"]})
 
-        ceg_df.to_csv(raw_data_dir + file_result[0].split("/")[-1] + "_ceg_data.csv")
-        print(raw_data_dir + file_result[0].split("/")[-1] + "_ceg_data.csv")
-        solved_df.to_csv(
-            raw_data_dir + file_result[0].split("/")[-1] + "_solved_data.csv"
-        )
-        print(raw_data_dir + file_result[0].split("/")[-1] + "_solved_data.csv")
-        errors_df.to_csv(raw_data_dir + file_result[0].split("/")[-1] + "_err_data.csv")
-        print(raw_data_dir + file_result[0].split("/")[-1] + "_err_data.csv")
+        errors_df.to_csv(RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_err_data.csv")
+        print(RAW_DATA_DIR_HACKERSDELIGHT + file_result[0].split("/")[-1] + "_err_data.csv")
 
 
 def main():
