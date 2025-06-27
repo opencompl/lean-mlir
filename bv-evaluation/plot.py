@@ -7,9 +7,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-instCombineDataDir = "../raw-data/InstCombine/"
-hackersDelightDataDir = "../raw-data/HackersDelight/"
-SMTLIBDataDir = "../raw-data/SMTLIB/"
+instCombineDataDir = "raw-data/InstCombine/"
+hackersDelightDataDir = "raw-data/HackersDelight/"
+SMTLIBDataDir = "raw-data/SMT-LIB/"
 
 
 def setGlobalDefaults():
@@ -624,10 +624,10 @@ def cumul_solving_time_smtlib(df, name):
     fig, ax = plt.subplots(figsize=(14, 3))
     plt.rcParams["path.simplify_threshold"] = 1
     # only consider rows where the problem was actually sat/unsat
-    sorted1 = np.sort(df["time_cpu_bw"])
-    sorted2 = np.sort(df["time_cpu_lwt"])
-    sorted3 = np.sort(df["time_cpu_lw"])
-    sorted4 = np.sort(df["time_cpu_coq"])
+    sorted1 = np.sort(df["total_bw"])
+    sorted2 = np.sort(df["total_lwt"])
+    sorted3 = np.sort(df["total_lw"])
+    sorted4 = np.sort(df["total_coq"])
     cumtime1 = [0]
     cumtime1.extend(np.cumsum(sorted1))
     cumtime2 = [0]
@@ -638,28 +638,28 @@ def cumul_solving_time_smtlib(df, name):
     cumtime4.extend(np.cumsum(sorted4))
     ax.plot(
         cumtime1,
-        np.arange(0, len(df["time_cpu_bw"]) + 1),
+        np.arange(0, len(df["total_bw"]) + 1),
         marker="o",
         color=dark_green,
         label="bitwuzla",
     )
     ax.plot(
         cumtime2,
-        np.arange(0, len(df["time_cpu_lwt"]) + 1),
+        np.arange(0, len(df["total_lwt"]) + 1),
         marker="x",
         color=light_blue,
         label="bv_decide (no kernel)",
     )
     ax.plot(
         cumtime3,
-        np.arange(0, len(df["time_cpu_lw"]) + 1),
+        np.arange(0, len(df["total_lw"]) + 1),
         marker="x",
         color=dark_blue,
         label="bv_decide (+ kernel)",
     )
     ax.plot(
         cumtime4,
-        np.arange(0, len(df["time_cpu_coq"]) + 1),
+        np.arange(0, len(df["total_coq"]) + 1),
         marker="*",
         color=dark_red,
         label="CoqQFBV",
@@ -668,49 +668,49 @@ def cumul_solving_time_smtlib(df, name):
     ax.set_xlabel("Time [s] - " + name.upper() + " results")
     ax.set_ylabel("Problems solved", rotation="horizontal", ha="left", y=1)
     # add a line to highlight the difference in #solved problems between the tools
-    # x_start = cumtime1[len([x for x in np.array(df['time_cpu_lw']) if x > 0])-10]
-    # x_end = np.sum(df['time_cpu_lw'])
-    # y_value = len([x for x in np.array(df['time_cpu_lw']) if x > 0])
-    # ax.plot([x_start, x_end], [len([x for x in np.array(df['time_cpu_lw']) if x > 0]), len([x for x in np.array(df['time_cpu_lw']) if x > 0])], color='black', linestyle='--', linewidth=1)
+    # x_start = cumtime1[len([x for x in np.array(df['total_lw']) if x > 0])-10]
+    # x_end = np.sum(df['total_lw'])
+    # y_value = len([x for x in np.array(df['total_lw']) if x > 0])
+    # ax.plot([x_start, x_end], [len([x for x in np.array(df['total_lw']) if x > 0]), len([x for x in np.array(df['total_lw']) if x > 0])], color='black', linestyle='--', linewidth=1)
     # ax.annotate(f"10^{int(np.round(np.log10(x_end - x_start)))} s",
     #         xy=(x_start+(x_end-x_start)/2, y_value),
     #         xytext=((x_end-x_start)/2, y_value * 1.01),
     #         fontsize=12, color='black')
 
-    # x_start_c = cumtime1[len([x for x in np.array(df['time_cpu_coq']) if x > 0])-10]
-    # x_end_c = np.sum(df['time_cpu_coq'])
-    # y_value_c = len([x for x in np.array(df['time_cpu_coq']) if x > 0])
-    # ax.plot([x_start_c, x_end_c], [len([x for x in np.array(df['time_cpu_coq']) if x > 0]), len([x for x in np.array(df['time_cpu_coq']) if x > 0])], color='black', linestyle='--', linewidth=1)
+    # x_start_c = cumtime1[len([x for x in np.array(df['total_coq']) if x > 0])-10]
+    # x_end_c = np.sum(df['total_coq'])
+    # y_value_c = len([x for x in np.array(df['total_coq']) if x > 0])
+    # ax.plot([x_start_c, x_end_c], [len([x for x in np.array(df['total_coq']) if x > 0]), len([x for x in np.array(df['total_coq']) if x > 0])], color='black', linestyle='--', linewidth=1)
     # ax.annotate(f"10^{int(np.round(np.log10(x_end_c - x_start_c)))} s",
     #         xy=(x_start_c, y_value_c),
     #         xytext=((x_end_c-x_start_c)/2, y_value_c * 1.01),
     #         fontsize=12, color='black')
 
-    # y_start = next((i for i, x in enumerate(cumtime2) if x > np.sum(df['time_cpu_bw'])), -1)
-    # y_end = len(df['time_cpu_bw'])
+    # y_start = next((i for i, x in enumerate(cumtime2) if x > np.sum(df['total_bw'])), -1)
+    # y_end = len(df['total_bw'])
     # print(cumtime1[-1])
-    # x_value = np.sum(df['time_cpu_bw'])
+    # x_value = np.sum(df['total_bw'])
     # ax.plot([x_value, x_value], [y_start, y_end], color='black', linestyle='dashed', linewidth=1)
-    # y_end = next((i for i, x in enumerate(cumtime2) if x > np.sum(df['time_cpu_bw'])), -1)
+    # y_end = next((i for i, x in enumerate(cumtime2) if x > np.sum(df['total_bw'])), -1)
     # y_start = 0
     # print(cumtime1[-1])
-    # x_value = np.sum(df['time_cpu_bw'])
+    # x_value = np.sum(df['total_bw'])
     # ax.plot([x_value, x_value], [y_start, y_end], color='black', linestyle='solid', linewidth=2)
     # ax.annotate(f"{int(y_end)} problems",
     #         xy=(x_start, y_value),
     #         xytext=(x_value*1.1, y_end * 0.95),
     #         fontsize=12, color='black')
 
-    # x_start_c = cumtime1[len([x for x in np.array(df['time_cpu_coq']) if x > 0])-10]
-    # x_end_c = np.sum(df['time_cpu_coq'])
-    # y_value_c = len([x for x in np.array(df['time_cpu_coq']) if x > 0])
-    # ax.plot([x_start_c, x_end_c], [len([x for x in np.array(df['time_cpu_coq']) if x > 0]), len([x for x in np.array(df['time_cpu_coq']) if x > 0])], color='black', linestyle='--', linewidth=1)
+    # x_start_c = cumtime1[len([x for x in np.array(df['total_coq']) if x > 0])-10]
+    # x_end_c = np.sum(df['total_coq'])
+    # y_value_c = len([x for x in np.array(df['total_coq']) if x > 0])
+    # ax.plot([x_start_c, x_end_c], [len([x for x in np.array(df['total_coq']) if x > 0]), len([x for x in np.array(df['total_coq']) if x > 0])], color='black', linestyle='--', linewidth=1)
     # ax.annotate(f"10^{int(np.round(np.log10(x_end_c - x_start_c)))} s",
     #         xy=(x_start_c, y_value_c),
     #         xytext=((x_end_c-x_start_c)/2, y_value_c * 1.01),
     #         fontsize=12, color='black')
 
-    # ax.axvline(np.sum(df['time_cpu_bw']), color = black, linestyle = '--')
+    # ax.axvline(np.sum(df['total_bw']), color = black, linestyle = '--')
     # ax.set_xscale("log")
     # ax.set_yscale("log")
     # ax.legend(loc="center right", ncols=1, frameon=False, bbox_to_anchor=(1.2, 0.5))
@@ -720,17 +720,16 @@ def cumul_solving_time_smtlib(df, name):
 
 def scatter_solving_time_smtlib(df_sat, df_unsat):
     fig, ax = plt.subplots(1, 2, figsize=(14, 4), sharey=True)
-
     ax[0].scatter(
-        df_sat["time_cpu_bw"],
-        df_sat["time_cpu_lw"],
+        df_sat["total_bw"],
+        df_sat["total_lw"],
         c="#beaed4",
         label="SAT results",
         marker=".",
     )
     ax[1].scatter(
-        df_unsat["time_cpu_bw"],
-        df_unsat["time_cpu_lw"],
+        df_unsat["total_bw"],
+        df_unsat["total_lw"],
         c="#fdc086",
         label="UNSAT results",
         marker=".",
@@ -739,11 +738,11 @@ def scatter_solving_time_smtlib(df_sat, df_unsat):
     ax[0].set_xlabel("SAT")
     ax[1].set_xlabel("UNSAT")
 
-    time_sat_min = min(df_sat["time_cpu_bw"].min(), df_sat["time_cpu_lw"].min())
-    time_sat_max = max(df_sat["time_cpu_bw"].max(), df_sat["time_cpu_lw"].max())
+    time_sat_min = min(df_sat["total_bw"].min(), df_sat["total_lw"].min())
+    time_sat_max = max(df_sat["total_bw"].max(), df_sat["total_lw"].max())
 
-    time_unsat_min = min(df_unsat["time_cpu_bw"].min(), df_unsat["time_cpu_lw"].min())
-    time_unsat_max = max(df_unsat["time_cpu_bw"].max(), df_unsat["time_cpu_lw"].max())
+    time_unsat_min = min(df_unsat["total_bw"].min(), df_unsat["total_lw"].min())
+    time_unsat_max = max(df_unsat["total_bw"].max(), df_unsat["total_lw"].max())
 
     time_min = min(time_sat_min, time_unsat_min)
     time_max = max(time_sat_max, time_unsat_max)
@@ -755,13 +754,13 @@ def scatter_solving_time_smtlib(df_sat, df_unsat):
         10 ** (np.floor(np.log10(time_min))), 10 ** (np.ceil(np.log10(time_max)))
     )
     ax[0].plot(
-        [df_sat["time_cpu_bw"].min(), df_sat["time_cpu_bw"].max()],
-        [df_sat["time_cpu_bw"].min(), df_sat["time_cpu_bw"].max()],
+        [time_sat_min, time_sat_max],
+        [time_sat_min, time_sat_max],
         c=black,
     )
     ax[1].plot(
-        [df_unsat["time_cpu_bw"].min(), df_unsat["time_cpu_lw"].max()],
-        [df_unsat["time_cpu_bw"].min(), df_unsat["time_cpu_lw"].max()],
+        [time_unsat_min, time_unsat_max],
+        [time_unsat_min, time_unsat_max],
         c=black,
     )
     ax[0].set_xscale("log")
@@ -858,47 +857,47 @@ def plot_instcombine():
 
 def plot_smtlib():
     # filter out results that are unknown for both solvers
-    df_bitwuzla_46k = pd.read_csv(SMTLIBDataDir + "bitwuzla_46k.csv")
-    df_leanwuzla_46k = pd.read_csv(SMTLIBDataDir + "leanwuzla_46k.csv")
-    df_leanwuzla_trusted_46k = pd.read_csv(SMTLIBDataDir + "leanwuzla_trusted_46k.csv")
-    df_coq_46k = pd.read_csv(SMTLIBDataDir + "coq_46k.csv")
-    df_bitwuzla_46k_no_unknowns = df_bitwuzla_46k[
-        df_bitwuzla_46k["result"] != "unknown"
-    ]
-    df_leanwuzla_46k_no_unknowns = df_leanwuzla_46k[
-        df_leanwuzla_46k["result"] != "unknown"
-    ]
-    df_leanwuzla_trusted_46k_no_unknowns = df_leanwuzla_trusted_46k[
-        df_leanwuzla_trusted_46k["result"] != "unknown"
-    ]
-    df_leanwuzla_trusted_46k_no_unknowns = df_leanwuzla_trusted_46k_no_unknowns.rename(
+    df_bitwuzla = pd.read_csv(SMTLIBDataDir + "bitwuzla_data.csv")
+    df_bv_decide = pd.read_csv(SMTLIBDataDir + "bv_decide_data.csv")
+    df_bv_decide_nokernel = pd.read_csv(SMTLIBDataDir + "bv_decide-nokernel_data.csv")
+    df_coq_qfbv = pd.read_csv(SMTLIBDataDir + "coqQFBV_data.csv")
+    df_bitwuzla["benchmark"] = df_bitwuzla["benchmark"].apply(os.path.dirname)
+    df_bv_decide["benchmark"] = df_bv_decide["benchmark"].apply(os.path.dirname)
+    df_bv_decide_nokernel["benchmark"] = df_bv_decide_nokernel["benchmark"].apply(os.path.dirname)
+    df_coq_qfbv["benchmark"] = df_coq_qfbv["benchmark"].apply(os.path.dirname)
+    df_bitwuzla_no_unknowns = df_bitwuzla[df_bitwuzla["result"] != "unknown"]
+    df_bv_decide_no_unknowns = df_bv_decide[df_bv_decide["result"] != "unknown"]
+    df_bv_decide_nokernel_no_unknowns = df_bv_decide_nokernel[df_bv_decide_nokernel["result"] != "unknown"]
+    df_bv_decide_nokernel_no_unknowns = df_bv_decide_nokernel_no_unknowns.rename(
         columns=lambda x: x + "_lwt" if x != "benchmark" else x
     )
-    df_coq_46k_no_unknowns = df_coq_46k[df_coq_46k["result"] != "unknown"]
-    df_coq_46k_no_unknowns = df_coq_46k_no_unknowns.rename(
+    df_coq_qfbv_no_unknowns = df_coq_qfbv[df_coq_qfbv["result"] != "unknown"]
+    df_coq_qfbv_no_unknowns = df_coq_qfbv_no_unknowns.rename(
         columns=lambda x: x + "_coq" if x != "benchmark" else x
     )
     merged_df = pd.merge(
-        df_bitwuzla_46k_no_unknowns,
-        df_leanwuzla_46k_no_unknowns,
+        df_bitwuzla_no_unknowns,
+        df_bv_decide_no_unknowns,
         how="outer",
         on="benchmark",
         suffixes=("_bw", "_lw"),
     )
     merged_df = pd.merge(
-        merged_df, df_leanwuzla_trusted_46k_no_unknowns, how="outer", on="benchmark"
+        merged_df, df_bv_decide_nokernel_no_unknowns, how="outer", on="benchmark"
     )
     merged_df_tot = pd.merge(
-        merged_df, df_coq_46k_no_unknowns, how="outer", on="benchmark"
+        merged_df, df_coq_qfbv_no_unknowns, how="outer", on="benchmark"
     )
     df_sat = merged_df_tot.loc[
         lambda x: (x["result_bw"] == "sat")
         | (x["result_lw"] == "sat")
+        | (x["result_lwt"] == "sat")
         | (x["result_coq"] == "sat")
     ]
     df_unsat = merged_df_tot.loc[
         lambda x: (x["result_bw"] == "unsat")
         | (x["result_lw"] == "unsat")
+        | (x["result_lwt"] == "unsat")
         | (x["result_coq"] == "unsat")
     ]
     # separate sat from unsat
@@ -906,26 +905,14 @@ def plot_smtlib():
     cumul_solving_time_smtlib(df_unsat, "unsat")
     scatter_solving_time_smtlib(df_sat, df_unsat)
     # plot stacked area plot
-    df_leanwuzla_46k_stats = pd.read_csv(SMTLIBDataDir + "leanwuzla_46k_stats.csv")
-    df_sat_stats = df_leanwuzla_46k_stats[
-        df_leanwuzla_46k_stats["leanSAT-res"] == "sat"
-    ]
-    df_unsat_stats = df_leanwuzla_46k_stats[
-        df_leanwuzla_46k_stats["leanSAT-res"] == "unsat"
-    ]
+    df_sat_stats = df_bv_decide[df_bv_decide["result"] == "sat"]
+    df_unsat_stats = df_bv_decide[df_bv_decide["result"] == "unsat"]
     leanSAT_smtlib_sat_stacked_perc(df_sat_stats, "sat", "i")
     leanSAT_smtlib_unsat_stacked_perc(df_unsat_stats, "unsat", "i")
-    df_leanwuzla_trusted_46k_stats = pd.read_csv(
-        SMTLIBDataDir + "leanwuzla_trusted_46k_stats.csv"
-    )
-    df_sat_stats = df_leanwuzla_trusted_46k_stats[
-        df_leanwuzla_trusted_46k_stats["leanSAT-res"] == "sat"
-    ]
-    df_unsat_stats = df_leanwuzla_trusted_46k_stats[
-        df_leanwuzla_trusted_46k_stats["leanSAT-res"] == "unsat"
-    ]
-    leanSAT_smtlib_sat_stacked_perc(df_sat_stats, "trusted_sat", "i")
-    leanSAT_smtlib_unsat_stacked_perc(df_unsat_stats, "trusted_unsat", "i")
+    df_sat_stats = df_bv_decide_nokernel[df_bv_decide_nokernel["result"] == "sat"]
+    df_unsat_stats = df_bv_decide_nokernel[df_bv_decide_nokernel["result"] == "unsat"]
+    leanSAT_smtlib_sat_stacked_perc(df_sat_stats, "nokernel_sat", "i")
+    leanSAT_smtlib_unsat_stacked_perc(df_unsat_stats, "nokernel_unsat", "i")
 
 
 def main():
