@@ -36,6 +36,7 @@ USER user
 RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
 ENV PATH=/home/user/.elan/bin:$PATH
 
+
 # Install Bitwuzla (commit: 22.6.25)
 RUN cd /home/user && git clone https://github.com/bitwuzla/bitwuzla
 # && git checkout 0dca38d0f62fa9002ad6278ca6374838a69ade19
