@@ -729,8 +729,7 @@ attribute [bv_mba_preprocess] BitVec.sub_toAdd
 theorem BitVec.ofNat_eq_ofInt (n w : Nat) :
     BitVec.ofNat w n = BitVec.ofInt w n := by
   apply BitVec.eq_of_toInt_eq
-  simp[BitVec.toInt_ofNat]
-
+  simp
 
 attribute [bv_mba_preprocess] BitVec.ofNat_eq_ofNat
 
