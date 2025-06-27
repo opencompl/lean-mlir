@@ -123,7 +123,7 @@ Access the docker image from \url{10.5281/zenodo.11519739}.
 
 \begin{script}
 $ docker load -i oopsla25-width-indep.tar
-$ docker run -it siddudruid/oopsla25-width-indep
+$ docker run -it oopsla25-width-indep
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
 # | and builds our framework.
@@ -133,7 +133,7 @@ $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
 $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
 # Run experiments, and check that the output is as expected.
-$ /code/lean-mlir/run-experiments.sh
+$ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
 $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
 $ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
 \end{script}

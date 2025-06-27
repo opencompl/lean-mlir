@@ -3,8 +3,8 @@ artifact.pdf: artifact.tex sigplanconf.cls
 	latexmk -pdf -shell-escape artifact.tex
 
 docker-build-and-push:
-	docker build -t oopsla25-width-indep --progress plain .
-	docker save -o ./oopsla25-width-indep.tar oopsla25-width-indep
+	podman build -t oopsla25-width-indep --progress plain .
+	podman save -o ./oopsla25-width-indep.tar oopsla25-width-indep
 	docker push siddudruid/oopsla25-width-indep
 
 clean:
