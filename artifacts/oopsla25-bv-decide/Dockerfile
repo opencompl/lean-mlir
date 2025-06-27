@@ -46,7 +46,7 @@ RUN ./configure.py && cd build && ninja && sudo ninja install
 
 # Install Lean-MLIR (commit: 26.06.25)
 RUN cd /code && git clone https://github.com/opencompl/lean-mlir && cd lean-mlir
-# && git checkout 7bd8c716a4a0bd5608279f0b73bd6c87f78c9f1c
+#&& git checkout 7bd8c716a4a0bd5608279f0b73bd6c87f78c9f1c
 WORKDIR /code/lean-mlir
 
 # Ensure the .lake/packages directory is clean before running lake update
