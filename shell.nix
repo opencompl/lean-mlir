@@ -6,6 +6,7 @@ with pkgs;let
     matplotlib
     pandas
     polars
+    num2words
   ];
   my-python = pkgs.python3.withPackages my-python-packages;
 in
