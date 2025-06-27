@@ -1,4 +1,3 @@
-% LaTeX template for Artifact Evaluation V20201122
 %
 % Prepared by Grigori Fursin with contributions from Bruce Childers,
 %   Michael Heroux, Michela Taufer and other colleagues.
@@ -13,10 +12,14 @@
 % CC BY 4.0 license
 %
 
-\documentclass{sigplanconf}
+\documentclass[onecolumn, sigconf]{acmart}
+
+% \documentclass[onecolumn]{sigplanconf}
 
 \usepackage{hyperref}
 \usepackage{minted}
+
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white}
 
 \usepackage[verbose]{newunicodechar}
 \newunicodechar{Γ}{\ensuremath{\Gamma}}
@@ -90,9 +93,9 @@
   \item {\bf Run-time environment: } Any operating system that supports Docker.
   \item {\bf Hardware: } Any x86-64 machine.
   \item {\bf Output: } Key theorems of the paper will be built and shown to have no unsound axioms.
-  \item {\bf How much disk space required (approximately)?: } 10GB
+  \item {\bf How much disk space required (approximately)?: } 30GB
   \item {\bf How much time is needed to prepare workflow (approximately)?: } 1hr
-  \item {\bf How much time is needed to complete experiments (approximately)?: } 1hr
+  \item {\bf How much time is needed to complete experiments (approximately)?: } 5hr
   \item {\bf Publicly available?: } Yes
   \item {\bf Code licenses (if publicly available)?: } MIT
   \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.15755237
@@ -116,38 +119,36 @@ The Docker image has all dependencies needed to compile our framework with Lean4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Experiment workflow}
 
-Access the docker image \texttt{lean-mlir} from
-\textcolor{red}{Zenodo link}.
+Access the docker image from \url{10.5281/zenodo.11519739}.
 
-\begin{verbatim}
-$ docker build -f artifact-evaluation/Dockerfile -t lean-image .
-$ docker create --name temp-container lean-image
-$ docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-results
-$ docker rm temp-container
-\end{verbatim}
-
-% \subsection{Full Workflow Example}
+\begin{script}
+$ docker load -i oopsla25-bv-decide.tar
+$ docker run -it oopsla25-bv-decide
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+# | This allows to check that the key theorems of our framework are
+# |guarded, and that they do not contain `sorry`s.
+# Run experiments, and check that the output is as expected.
+$ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
+\end{script}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Evaluation and expected results}
 
-
-\subsubsection{Core Framework Theorems}
-
-\subsubsection{Five Hardest Alive Examples}
-\subsection{Paper Code Examples}
 \subsection{Miscellanous Docker Usage}
 To copy files for inspection from the docker container into the host,
  keep the container running, and in another
 shell instance, use the \texttt{docker cp}
 command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
 
-\begin{minted}[fontsize=\footnotesize]{text}
+\begin{script}
 $ docker container ls # find   ID
 $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
             <PATH/OUTSIDE/CONTAINER>
-\end{minted}
+\end{script}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -160,3 +161,4 @@ $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
+
