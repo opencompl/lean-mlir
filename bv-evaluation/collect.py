@@ -865,6 +865,9 @@ def run_instcombine_assertions(results_dir: str, aggregated_data: dict):
         len(aggregated_data["solved_bitwuzla_times_average"])
         + len(aggregated_data["failed_bv_decide_only"]),
     )
+    response = subprocess.check_output("cat ../SSA/Projects/InstCombine/tests/proofs/*_proof.lean  | grep theorem | wc -l", shell=True, text=True)
+    val = int(response)
+    print("The InstCombine benchmark contains "+str(val)+" theorems in total.")
 
 
 def process_and_save_single_hackersdelight_benchmark(
@@ -1009,7 +1012,7 @@ def main():
     parser.add_argument(
         "benchmark",
         nargs="+",
-        choices=["all", "hackersdelight", "instcombine", "alive"],
+        choices=["all", "hackersdelight", "instcombine"],
     )
     parser.add_argument("-j", "--jobs", type=int, default=1)
     parser.add_argument("-r", "--repetitions", type=int, default=1)
