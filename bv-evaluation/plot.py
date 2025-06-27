@@ -760,7 +760,7 @@ def plot_hackersdelight():
 
 def plot_instcombine():
     for file in os.listdir(instCombineDataDir):
-        if "err" not in file and "ceg" not in file:
+        if "err" not in file and "ceg" not in file and ".placeholder" not in file:
             df = pd.read_csv(instCombineDataDir + file)
             cumul_solving_time(
                 df,
