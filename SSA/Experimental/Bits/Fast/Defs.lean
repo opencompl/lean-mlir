@@ -119,11 +119,6 @@ private theorem not_not_xor_not (a b : Bool) : ! ((!a).xor (!b)) = (a == b) := b
   decide
 
 /--
-info: BitVec.slt_eq_not_carry {w : ℕ} {x y : BitVec w} : (x <ₛ y) = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
--/
-#guard_msgs in #check BitVec.slt_eq_not_carry
-
-/--
 Evaluate whether `t₁ <ₛ t₂`.
 This is defined by computing the most significant bit of `t₁ - t₂`.
 IF the `msb is 1`, then `t₁ - t₂ <s 0`, and thus `t₁ <s t₂`.
@@ -600,9 +595,6 @@ theorem Predicate.eval_eq_denote (w : Nat) (p : Predicate) (vars : List (BitVec 
 theorem Predicate.denote_of_eval {w : Nat} {p : Predicate} {vars : List (BitVec w)}
     (heval : (p.eval (vars.map BitStream.ofBitVec) w = false)) : p.denote w vars := by
   apply Predicate.eval_eq_denote w p vars |>.mp heval
-
--- /-- info: 'Predicate.eval_eq_denote' depends on axioms: [propext, Classical.choice, Quot.sound] -/
--- #guard_msgs in #print axioms Predicate.eval_eq_denote
 
 
 /--

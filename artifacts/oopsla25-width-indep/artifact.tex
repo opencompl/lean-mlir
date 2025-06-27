@@ -19,7 +19,7 @@
 \usepackage{hyperref}
 \usepackage{minted}
 
-\newminted[script]{bash}{style=bw, bgcolor=blue!5!white}
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white, breaklines, fontsize=\footnotesize}
 
 \usepackage[verbose]{newunicodechar}
 \newunicodechar{Γ}{\ensuremath{\Gamma}}
@@ -144,21 +144,118 @@ $ docker run -it oopsla25-width-indep
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 \end{script}
 
+\subsection{Checking That Our Decision Procedures Are Verified}
+
 Check that the theorems that are automatically proved by our decision
 procedures do not rely on incomplete proofs, which is materialized as the
 sorryAx axiom in Lean.
 
-This relies on the \texttt{check\_msg} command of Lean, which enforces that the
+This relies on the \texttt{guard\_msgs} command of Lean, which enforces that the
 comment contains exactly the output of a Lean command, which is used here with
 the \texttt{print axioms} command which lists all the axioms used (transitively)
 by a theorem.
 
 \begin{script}
-# | This allows to check that the key theorems of our framework are
-# |guarded, and that they do not contain `sorry`s.
-$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
-$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
+# | This allows to check that the key theorems of our decision procedures are
+# | guarded, and that they do not contain `sorry`s.
+$ rg -g "SSA/Experimental/Bits/**/*.lean" "#guard_msgs in #print axioms" -C7 | grep "sorry"
+# | This allows to manually inspect that the key theorems of our paper are sorry-free.
+$ rg -g "SSA/Experimental/Bits/**/*.lean" "#guard_msgs in #print axioms" -C7
 \end{script}
+
+
+\subsubsection{Automata Decision Procedure}
+
+The next shows that the key lemma of the automata based decision procedure relies on no axioms
+except for missing hashMap lemmas in Lean:
+
+\begin{script}
+AutoStructs/FormulaToAuto.lean
+1944-/--
+1945-info: 'Formula.denote_of_isUniversal' depends on axioms: [hashMap_missing,
+1946- propext,
+1947- Classical.choice,
+1948- Lean.ofReduceBool,
+1949- Quot.sound]
+1950--/
+1951:#guard_msgs in #print axioms Formula.denote_of_isUniversal
+\end{script}
+
+Furthermore, the tactic, when used against an example, also produces no extra axioms
+beyond the standard lean axioms, plus \texttt{hashMap\_missing}:
+
+\begin{script}
+Fast/Tests.lean
+58-theorem check_axioms_presburger (w : Nat) (a b : BitVec w) : a + b = b + a := by
+59-  bv_automata_gen (config := {backend := .automata} )
+60-
+61-/--
+62-info: 'check_axioms_presburger' depends on axioms: [hashMap_missing,
+63- propext,
+64- Classical.choice,
+65- Lean.ofReduceBool,
+66- Lean.trustCompiler,
+67- Quot.sound]
+68--/
+69:#guard_msgs in #print axioms check_axioms_presburger
+\end{script}
+
+\subsubsection{K-induction decision procedure}
+
+The example below show that the key lemma,
+as well as the use of the tactic on a an example theorem
+do not use any axioms beyond the standard Lean inbuilt
+axioms of propositional extensionality, classical choice principles, and soundness of quotient types:
+
+\begin{script}
+Fast/ReflectVerif.lean
+2561-    simp
+2562-
+2563-/--
+2564-info: 'ReflectVerif.BvDecide.KInductionCircuits.Predicate. denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking' depends on axioms: [propext,
+2565- Classical.choice,
+2566- Quot.sound]
+2567--/
+2568:#guard_msgs in #print axioms Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking
+...
+Fast/Tests.lean
+49-set_option trace.Bits.FastVerif true in
+50-theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
+51-  bv_automata_gen (config := {backend := .circuit_cadical_verified} )
+52-
+53-/--
+54-info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+55--/
+56:#guard_msgs in #print axioms check_axioms_cadical
+\end{script}
+
+
+\subsubsection{MBA Decision Procedure}
+
+The example below show that the key lemma,
+as well as the use of the tactic on a an example theorem
+do not use any axioms beyond the standard Lean inbuilt
+axioms of propositional extensionality, classical choice principles, and soundness of quotient types:
+
+
+\begin{script}
+Fast/MBA.lean
+636-info: 'MBA.Eqn.forall_width_reflect_zero_of_width_one_denote_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+637--/
+638:#guard_msgs in #print axioms Eqn.forall_width_reflect_zero_of_width_one_denote_zero
+639-
+640-@[simp]
+--
+985-info: 'MBA.Examples.check_axioms_mba' depends on axioms: [propext, Classical.choice, Quot.sound]
+986--/
+987:#guard_msgs in #print axioms check_axioms_mba
+988-
+989-end Examples
+\end{script}
+
+
+
+\section{Full Scale Run Of Our Experiments}
 
 Run the two large experiments and reproduce the data and graphs from the paper:
 
@@ -176,7 +273,7 @@ $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-au
 The tex files contain data correponding to Figure 7 of the paper, and the two
 graphs correspond to figures (a) and (b) page 18 of the paper as follows.
 
-\subsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
+\subsubsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
 Please run:
 \begin{script}
 $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
@@ -213,12 +310,38 @@ This will work on terminal emulators that support the sixel protocol.
 $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
 \end{script}
 
-\subsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+\subsubsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
 
 Please run:
 \begin{script}
 $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
 \end{script}
+
+{\sloppypar
+This should produce the following output, where the timings might change
+depending on the machine that is run on. The absolute number of problems solved
+should be equal, while the total time and geomean time are machine-dependent.
+}
+
+\begin{script}
+# $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
+\newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
+\newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+\newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
+\newcommand{\InstCombineNormPresburgerTotalTime}{...}
+\newcommand{\InstCombineBvDecideTotalTime}{...}
+\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
+\newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
+\newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
+\newcommand{\InstCombineTotalProblems}{7855} # exact match
+\end{script}
+
+The plots are located at:
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
 
 \end{document}
 

@@ -367,11 +367,6 @@ theorem Circuit.eval_eq_false_iff_toAIG_unsat [DecidableEq α] [Fintype α] [Has
   rw [Entrypoint.Unsat, UnsatAt]
   simp [← Circuit.denote_toAIG_eq_eval]
 
-/--
-info: 'ReflectVerif.BvDecide.Circuit.eval_eq_false_iff_toAIG_unsat' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms Circuit.eval_eq_false_iff_toAIG_unsat
-
 open Std Sat AIG Reflect in
 /-- Verify the AIG by converting to CNF and checking the LRAT certificate against it. -/
 def verifyAIG [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
@@ -400,12 +395,6 @@ theorem relabelNat_unsat_iff₂  [DecidableEq α] [Hashable α]
   simp only [Entrypoint.Unsat, Entrypoint.relabelNat]
   rw [relabelNat_unsat_iff']
 
-/--
-info: Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff {α : Type} [DecidableEq α] [Hashable α] {entry : Entrypoint α} :
-  entry.relabelNat.Unsat ↔ entry.Unsat
--/
-#guard_msgs in #check Entrypoint.relabelNat_unsat_iff
-
 open Std Tactic Sat AIG Reflect BitVec in
 /-- Verifying the AIG implies that the AIG is unsat at the entrypoint. -/
 theorem verifyAIG_correct [DecidableEq α] [Fintype α] [Hashable α]
@@ -431,10 +420,6 @@ theorem eval_eq_false_of_verifyCircuit [DecidableEq α] [Fintype α] [Hashable �
   apply Circuit.eval_eq_false_iff_toAIG_unsat .. |>.mpr
   apply verifyAIG_correct h
 
-/--
-info: 'ReflectVerif.BvDecide.eval_eq_false_of_verifyCircuit' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms eval_eq_false_of_verifyCircuit
 
 /-!
 Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
@@ -2343,10 +2328,6 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
               simp at property
               omega
         }
-/--
-info: 'ReflectVerif.BvDecide.KInductionCircuits.mkSimplePathOfPath' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms mkSimplePathOfPath
 
 /-- Safety on all simple paths implies safety on all paths. -/
 theorem evalWith_eq_false_of_evalWith_eq_false_of_StatesUniqueLe (fsm : FSM arity)
@@ -2502,11 +2483,6 @@ theorem all_simple_paths_good
             simp
 
 /--
-info: 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good' depends on axioms: [propext, Quot.sound]
--/
-#guard_msgs in #print axioms all_simple_paths_good
-
-/--
 Safety for all paths, given that kinduction base case holds,
 and that we can apply k-induction to simple paths.
 -/
@@ -2585,11 +2561,11 @@ theorem Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkInd
     simp
 
 /--
-info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false' depends on axioms: [propext,
+info: 'ReflectVerif.BvDecide.KInductionCircuits.Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
 -/
-#guard_msgs in #print axioms eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+#guard_msgs in #print axioms Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking
 
 def stats {arity : Type _}
     [DecidableEq arity] [Fintype arity] [Hashable arity]
@@ -2677,28 +2653,9 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
     [DecidableEq arity]  [Fintype arity] [Hashable arity]
     (fsm : FSM arity) (maxIter : Nat) :
     TermElabM (DecideIfZerosOutput × Array CircuitStats) :=
-  -- decideIfZerosM Circuit.impliesCadical fsm
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
     logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
-    -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
     decideIfZerosAuxVerified' 0 maxIter fsm KInductionCircuits.mkZero #[]
-
-
-/--
-An axiom tracking that the safety has been proven by exhaustion of the state space.
--/
-axiom decideIfZerosByExhaustionAx {p : Prop}  : p
-
-/--
-An axiom tracking that the safety has been proven by exhaustion of the state space.
--/
-axiom decideIfZerosByKInductionNoCycleBreakingAx {p : Prop}  : p
-
-
-/--
-An axiom tracking that the safety has been proven by exhaustion of the state space.
--/
-axiom decideIfZerosByKInductionCycleBreakingAx {p : Prop}  : p
 
 end BvDecide
 
