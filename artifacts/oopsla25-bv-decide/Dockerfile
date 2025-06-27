@@ -60,15 +60,4 @@ RUN python3 -m venv .venv && \
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Set the evaluation script directory as working dir
-WORKDIR /code/lean-mlir/bv-evaluation/
-RUN python3 compare.py hackersdelight -j4 -r5
-RUN python3 compare.py instcombine -j4 -r5
-
-RUN ./collect-data-hdel.py
-RUN ./collect-data-llvm.py
-
-WORKDIR /code/lean-mlir/bv-evaluation/for-paper/tools/
-RUN for-paper/tools; python3 ./collect-stats.py
-
 USER root
