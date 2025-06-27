@@ -482,6 +482,7 @@ def save_solved_df(
     print("Saved dataframe at: " + csv_name)
 
 
+
 def collect (benchmark : str): 
     if benchmark == "instcombine": 
         file_data = []
@@ -625,6 +626,9 @@ def collect (benchmark : str):
             len(all_files_solved_bitwuzla_times_average)
             + len(all_files_failed_bv_decide_only),
         )
+        response = subprocess.check_output("cat "+ROOT_DIR+"/SSA/Projects/InstCombine/tests/proofs/*_proof.lean  | grep theorem | wc -l", shell=True, text=True)
+        val = int(response)
+        print("The InstCombine benchmark contains "+str(val)+" theorems in total.")
 
         save_counterexample_df(
             all_files_counter_bitwuzla_times_average,
@@ -699,6 +703,9 @@ def collect (benchmark : str):
                 + "_err_data.csv"
             )
 
+    else : 
+        raise Exception ("Unknown benchmark "+b)
+
 def main():
     parser = argparse.ArgumentParser(
         prog="compare",
@@ -719,12 +726,7 @@ def main():
     )
 
     for b in benchmarks_to_run:
-        if b == "instcombine":
-            collect_data_instcombine()
-        elif b == "hackersdelight":
-            collect_data_hackersdelight()
-    #     compare(b, args.jobs, args.repetitions)
-
+        collect(b)
 
 if __name__ == "__main__":
     main()
