@@ -4,10 +4,8 @@ artifact.pdf: artifact.tex sigplanconf.cls
 	latexmk -pdf -shell-escape artifact.tex
 
 docker:
-	docker build -t lean-image
-	docker create --name temp-container lean-image
-	docker cp temp-container:/code/lean-mlir/bv-evaluation/raw-data ./docker-raw-results
-	docker rm temp-container
+	podman build -t oopsla25-bv-decide --progress plain .
+	podman save -o ./oopsla25-bv-decide.tar oopsla25-bv-decide
 
 clean:
 	latexmk -C
