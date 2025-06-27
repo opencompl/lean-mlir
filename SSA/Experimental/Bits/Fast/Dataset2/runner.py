@@ -21,6 +21,7 @@ def parse_args():
     nproc = os.cpu_count()
     parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
     parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
+    parser.add_argument('--num-tests', type=int, default=100, help='number of tests to run')
     parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
     parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
     return parser.parse_args()
@@ -210,7 +211,7 @@ class UnitTest:
     solver_kinduction_verified = "kinduction_verified"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_kinduction_verified] # [solver_mba, solver_kinduction_verified, solver_bv_automata_classic, solver_bv_decide]
+    solvers = [solver_mba, solver_bv_automata_classic, solver_bv_decide, solver_kinduction_verified]
 
     def __init__(self, ix, test, solver):
         self.ix = ix
@@ -252,21 +253,22 @@ def load_tests(args) -> List[UnitTest]:
     with open('dataset2_64bit.txt', 'r') as f:
         # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
+    
+    NTESTS_TO_RETURN = len(tests)
 
     out = []
-    ix = 0
     for (ix, t) in enumerate(tests):
         for s in UnitTest.solvers:
             out.append(UnitTest(ix=ix, test=t, solver=s))
 
-    if not args.prod_run:
-        logging.info(f"--prod_run not enabled, pruning files to small batch")
-        NTESTS_TO_RETURN = 1
-        # return out[-NTESTS_TO_RETURN*len(UnitTest.solvers):]
-        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
-    else:
+    if args.prod_run:
+        logging.info(f"--prod_run enabled, running all the files")
         return out
-
+    else:
+        if not args.num_tests:
+            args.num_tests = 10
+        NTESTS_TO_RETURN = min(args.num_tests, NTESTS_TO_RETURN)
+        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
 
 async def main(args):
     logging.info(f"parsed config args: {args}")

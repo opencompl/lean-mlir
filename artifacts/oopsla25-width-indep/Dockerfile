@@ -14,7 +14,8 @@ RUN apt-get update -y \
         neovim \
         emacs \
         ninja-build \
-        gdb curl wget
+        gdb curl wget \
+        timg
 
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
