@@ -16,13 +16,13 @@ def geomean(xs):
 
 
 def get_avg_bb_sat(df_tot, benchmark, phase, statsfile):
-    df = df_tot[df_tot["leanSAT-sat"] > 0]
-    if len(df["leanSAT"]) > 0:
+    df = df_tot[df_tot["solved_bv_decide_sat_times_average"] > 0]
+    if len(df["solved_bv_decide_times_average"]) > 0:
         if phase == "sat":
-            sat_bb = np.sum(np.array(df["leanSAT-bb"]) + np.array(df["leanSAT-sat"]))
-            perc_sat_bb = (sat_bb / np.sum(df["leanSAT"])) * 100
+            sat_bb = np.sum(np.array(df["solved_bv_decide_bb_times_average"]) + np.array(df["solved_bv_decide_sat_times_average"]))
+            perc_sat_bb = (sat_bb / np.sum(df["solved_bv_decide_times_average"])) * 100
             geomean_sat_bb = (
-                geomean((df["leanSAT-bb"] + df["leanSAT-sat"]) / df["leanSAT"]) * 100
+                geomean((df["solved_bv_decide_bb_times_average"] + df["solved_bv_decide_sat_times_average"]) / df["solved_bv_decide_times_average"]) * 100
             )
             f = open(statsfile, "a+")
             f.write(
@@ -42,12 +42,12 @@ def get_avg_bb_sat(df_tot, benchmark, phase, statsfile):
             f.close
         elif phase == "lrat":
             lrat_tot = np.sum(
-                np.array(df["leanSAT-lrat-t"]) + np.array(df["leanSAT-lrat-c"])
+                np.array(df["solved_bv_decide_lratt_times_average"]) + np.array(df["solved_bv_decide_lratc_times_average"])
             )
-            perc_sat_bb = (lrat_tot / np.sum(df["leanSAT"])) * 100
+            perc_sat_bb = (lrat_tot / np.sum(df["solved_bv_decide_times_average"])) * 100
             # geomean (r1 / r2) = geomean(r1) / geomean(r2)
             geomean_lrat = (
-                geomean((df["leanSAT-lrat-t"] + df["leanSAT-lrat-c"]) / df["leanSAT"])
+                geomean((df["solved_bv_decide_lratt_times_average"] + df["solved_bv_decide_lratc_times_average"]) / df["solved_bv_decide_times_average"])
                 * 100
             )
             f = open(statsfile, "a+")
@@ -514,9 +514,9 @@ def smtlib_stats(performance_smtlib_dir):
 
 
 def instcombine_stats(performance_instcombine_dir):
-    df_ceg = pd.read_csv("../raw-data/InstCombine/err-llvm.csv")
-    df = pd.read_csv("../raw-data/InstCombine/llvm-proved-data.csv")
-    df_err = pd.read_csv("../raw-data/InstCombine/llvm-ceg-data.csv")
+    df_ceg = pd.read_csv("raw-data/InstCombine/instcombine_ceg_data.csv")
+    df = pd.read_csv("raw-data/InstCombine/instcombine_solved_data.csv")
+    df_err = pd.read_csv("raw-data/InstCombine/instcombine_err_data.csv")
     get_avg_bb_sat(df, "InstCombine", "sat", performance_instcombine_dir)
     get_avg_bb_sat(df, "InstCombine", "lrat", performance_instcombine_dir)
     tot_problems = len(df) + len(df_ceg) + len(df_err)
@@ -531,10 +531,10 @@ def instcombine_stats(performance_instcombine_dir):
     # slowdown
     slowdown_df = df.copy()
 
-    slowdown_df["slowdown"] = df["leanSAT"] / df["bitwuzla"]
+    slowdown_df["slowdown"] = df["solved_bv_decide_times_average"] / df["solved_bitwuzla_times_average"]
     # geomean slowdown where both leanwuzla and bitwuzla terminate
-    geomean_time_instcombine_bvdecide = geomean(df["leanSAT"])
-    geomean_time_instcombine_bitwuzla = geomean(df["bitwuzla"])
+    geomean_time_instcombine_bvdecide = geomean(df["solved_bv_decide_times_average"])
+    geomean_time_instcombine_bitwuzla = geomean(df["solved_bitwuzla_times_average"])
     geomean_slowdown_instcombine = geomean(slowdown_df["slowdown"])
     mean_slowdown_instcombine = np.mean(slowdown_df["slowdown"])
     f.write(
@@ -567,11 +567,11 @@ def hackersdelight_stats(performance_hackersdelight_dir):
         for file in files:
             # df_ceg=pd.read_csv('../raw-data/HackersDelight/bvw'+str(bvw)+'_'+file+'_ceg_data.csv')
             df = pd.read_csv(
-                "../raw-data/HackersDelight/bvw"
-                + str(bvw)
+                "raw-data/HackersDelight/"
+                + file 
                 + "_"
-                + file
-                + "_proved_data.csv"
+                + str(bvw)
+                + "_solved_data.csv"
             )
             if len(df) > 0:
                 dfs.append(df)
@@ -589,104 +589,6 @@ def hackersdelight_stats(performance_hackersdelight_dir):
             "lrat",
             performance_hackersdelight_dir,
         )
-
-
-def instcombine_symbolic_stats(outpath: str):
-    with open(outpath, "w") as f:
-        df = pd.read_csv("../raw-data/InstCombineSymbolic/instcombineSymbolic.csv")
-        # get the number of problems we can solve with bv_auto,
-        # get the total number of problems
-        # get the number of problems we can solve with ring
-        # name: the block of tacbench / the tactic that they came from
-        n_total = len(set(list(df["filename"] + "_guid_" + df["guid"].astype(str))))
-        print(f"total # of theorems: {n_total}")
-
-        names = df["name"].unique().tolist()
-        f.write("\\newcommand{\InstCombineSymbolicTotalTheorems}{%s}\n" % n_total)
-        for name in names:
-            df_name = df[df["name"] == name]
-            # print(df_name)
-            df_solved = df_name[df_name["status"] == "PASS"]
-            # print(df_solved)
-            time_elapsed = df_solved["time_elapsed"]
-            # print(time_elapsed)
-            geomean_time = geomean(time_elapsed)
-            print(f"geomean time for '{name}' is '{geomean_time}'")
-            print(f"#solved by '{name}' is '{len(df_solved)}'")
-            f.write(
-                "\\newcommand{\InstCombineSymbolicNumSolvedBy%s}{%s}\n"
-                % (name.replace("_", ""), len(df_solved))
-            )
-            f.write(
-                "\\newcommand{\InstCombineSymbolicGeomeanTimeSolvedBy%s}{%4.2f}\n"
-                % (name.replace("_", ""), geomean_time)
-            )
-
-
-def alive_symbolic_stats(outpath: str):
-    with open(outpath, "w") as f:
-        df = pd.read_csv("../raw-data/AliveSymbolic/aliveSymbolic.csv")
-        # get the number of problems we can solve with bv_auto,
-        # get the total number of problems
-        # get the number of problems we can solve with ring
-        # name: the block of tacbench / the tactic that they came from
-        n_total = len(set(list(df["filename"] + "_guid_" + df["guid"].astype(str))))
-        print(f"total # of theorems: {n_total}")
-
-        names = df["name"].unique().tolist()
-        f.write("\\newcommand{\AliveSymbolicTotalTheorems}{%s}\n" % n_total)
-        for name in names:
-            df_name = df[df["name"] == name]
-            # print(df_name)
-            df_solved = df_name[df_name["status"] == "PASS"]
-            # print(df_solved)
-            time_elapsed = df_solved["time_elapsed"]
-            # print(time_elapsed)
-            geomean_time = geomean(time_elapsed)
-            print(f"geomean time for '{name}' is '{geomean_time}'")
-            print(f"#solved by '{name}' is '{len(df_solved)}'")
-            f.write(
-                "\\newcommand{\AliveSymbolicNumSolvedBy%s}{%s}\n"
-                % (name.replace("_", ""), len(df_solved))
-            )
-            f.write(
-                "\\newcommand{\AliveSymbolicGeomeanTimeSolvedBy%s}{%4.2f}\n"
-                % (name.replace("_", ""), geomean_time)
-            )
-
-
-def hackersdelight_symbolic_stats(outpath: str):
-    with open(outpath, "w") as f:
-        df = pd.read_csv(
-            "../raw-data/HackersDelightSymbolic/hackersDelightSymbolic.csv"
-        )
-        # get the number of problems we can solve with bv_auto,
-        # get the total number of problems
-        # get the number of problems we can solve with ring
-        # name: the block of tacbench / the tactic that they came from
-        n_total = len(set(list(df["filename"] + "_guid_" + df["guid"].astype(str))))
-        print(f"total # of theorems: {n_total}")
-
-        names = df["name"].unique().tolist()
-        f.write("\\newcommand{\HackersDelightSymbolicTotalTheorems}{%s}\n" % n_total)
-        for name in names:
-            df_name = df[df["name"] == name]
-            # print(df_name)
-            df_solved = df_name[df_name["status"] == "PASS"]
-            # print(df_solved)
-            time_elapsed = df_solved["time_elapsed"]
-            # print(time_elapsed)
-            geomean_time = geomean(time_elapsed)
-            print(f"geomean time for '{name}' is '{geomean_time}'")
-            print(f"#solved by '{name}' is '{len(df_solved)}'")
-            f.write(
-                "\\newcommand{\HackersDelightSymbolicNumSolvedBy%s}{%s}\n"
-                % (name.replace("_", ""), len(df_solved))
-            )
-            f.write(
-                "\\newcommand{\HackersDelightSymbolicGeomeanTimeSolvedBy%s}{%4.2f}\n"
-                % (name.replace("_", ""), geomean_time)
-            )
 
 
 def generate_latex_table_smtlib_problems_solved():
@@ -775,12 +677,12 @@ def generate_latex_table_smtlib_problems_solved():
 # f.write(generate_latex_table_smtlib_problems_solved())
 # f.close()
 
-performance_smtlib_dir = "../performance-smtlib.tex"
-performance_instcombine_dir = "../performance-instcombine.tex"
-performance_hackerdelight_dir = "../performance-hackersdelight.tex"
-performance_hackersdelight_symbolic_file = "../performance-hackersdelight-symbolic.tex"
-performance_instcombine_symbolic_file = "../performance-instcombine-symbolic.tex"
-performance_alive_symbolic_file = "../performance-alive-symbolic.tex"
+performance_smtlib_dir = "tables/performance-smtlib.tex"
+performance_instcombine_dir = "tables/performance-instcombine.tex"
+performance_hackerdelight_dir = "tables/performance-hackersdelight.tex"
+performance_hackersdelight_symbolic_file = "tables/performance-hackersdelight-symbolic.tex"
+performance_instcombine_symbolic_file = "tables/performance-instcombine-symbolic.tex"
+performance_alive_symbolic_file = "tables/performance-alive-symbolic.tex"
 
 # slowdown_smtlib_stats()
 
@@ -798,6 +700,3 @@ with open(performance_hackerdelight_dir, "w"):
 # smtlib_stats(performance_smtlib_dir)
 instcombine_stats(performance_instcombine_dir)
 hackersdelight_stats(performance_hackerdelight_dir)
-hackersdelight_symbolic_stats(performance_hackersdelight_symbolic_file)
-instcombine_symbolic_stats(performance_instcombine_symbolic_file)
-alive_symbolic_stats(performance_alive_symbolic_file)
