@@ -136,6 +136,9 @@ $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C
 $ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
 $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
 $ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+# (Optional) View the cactus plots from within the container.
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
 \end{script}
 
 
@@ -203,21 +206,59 @@ $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.t
 {\sloppypar
 This should produce the following output, where the timings might change
 depending on the machine that is run on. The absolute number of problems solved
-should be equal.
+should be equal, while the total time and geomean time are machine-dependent.
 }
 
-\subsubsection{Verifying the Results for the MBA dataset (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+\begin{script}
+# $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
+\newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
+\newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+\newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
+\newcommand{\InstCombineNormPresburgerTotalTime}{...}
+\newcommand{\InstCombineBvDecideTotalTime}{...}
+\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
+\newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
+\newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
+\newcommand{\InstCombineTotalProblems}{7855} # exact match
+\end{script}
+
+To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+or use the installed \texttt{timg} tool to view the plot data within the container.
+Use the \texttt{timg -p} option to choose the protocol to view images.
+This will work on terminal emulators that support the sixel protocol.
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+\subsubsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+
 Please run:
 \begin{script}
-$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+$ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
 \end{script}
+
+
+{\sloppypar
 This should produce the following output, where the timings might change
-depending on the machine that is run on.
-We expect the number of problems solved to be \emph{at least} 1500 for KInduction,
-and all of \texttt{2500} for the other two solvers.
-The absolute number of problems solved can vary by 5-10 problems for KInduction,
-as the K-induction solver uses \texttt{cadical}, a SAT solver,
-which can have different timings and problems solved depending on the machine available.
+depending on the machine that is run on. The absolute number of problems solved
+should be equal, while the total time and geomean time are machine-dependent.
+}
+
+\begin{script}
+# $ cat /code/lean-mlir/bv-evaluation/dataset2-cactus-plot-data.tex
+\newcommand{\MBAKInductionVerifiedNumSolved}{1500}
+\newcommand{\MBAKInductionVerifiedTotalTime}{1h27m} # machine dependent
+\newcommand{\MBAKInductionVerifiedGeoMean}{14.7s} # machine dependent
+\end{script}
+
+To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+or use the installed \texttt{timg} tool to view the plot data within the container.
+Use the \texttt{timg -p} option to choose the protocol to view images.
+This will work on terminal emulators that support the sixel protocol.
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
 
 \subsection{Miscellanous Docker Usage}
 To copy files for inspection from the docker container into the host,
