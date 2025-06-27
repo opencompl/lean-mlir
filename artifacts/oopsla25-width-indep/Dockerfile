@@ -39,12 +39,4 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN uv pip install -r requirements.txt
 
-WORKDIR /code/lean-mlir/bv-evaluation
-RUN ./compare-automata-automata-circuit-jsonl.py --db compare.jsonl --prodrun  -j5 
-RUN ./plot-automata-automata-circuit-jsonl.py compare.jsonl
-
-WORKDIR /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2
-RUN ./runner.py --db mba.sqlite3 -j10 --prod-run --timeout 8000
-RUN ./plotter.py mba.sqlite3
-
 USER root

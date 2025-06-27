@@ -124,7 +124,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             stdout = stdout.decode("utf-8")
             records = parse_tacbench_rows_from_stdout(filename, stdout)
             if len(records) != 1:
-                logging.error("[{status_to_emoji[STATUS_FAIL]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
+                logging.error(f"[{status_to_emoji[STATUS_FAIL]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
                 return
             record = records[0]
             walltime = record.walltime
