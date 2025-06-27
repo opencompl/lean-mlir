@@ -5,6 +5,7 @@ We avoid the issue by increasing the heartbeats. Since this applies to most indu
 Additionally, this file contains definitions that match on these large inductive types. These also causes Lean to require
 more heartbeats.  -/
 set_option maxHeartbeats 1000000000000000000
+set_option maxRecDepth 10000000000000
 
 open RV64Semantics
 
