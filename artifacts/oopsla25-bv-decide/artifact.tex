@@ -12,14 +12,14 @@
 % CC BY 4.0 license
 %
 
-\documentclass[onecolumn, sigconf]{acmart}
+\documentclass[acmlarge, nonacm]{acmart}
 
 % \documentclass[onecolumn]{sigplanconf}
 
 \usepackage{hyperref}
 \usepackage{minted}
 
-\newminted[script]{bash}{style=bw, bgcolor=blue!5!white}
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white, breaklines, fontsize=\footnotesize}
 
 \usepackage[verbose]{newunicodechar}
 \newunicodechar{Γ}{\ensuremath{\Gamma}}
@@ -55,7 +55,6 @@
 \newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
 \newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
 
-% \newunicodechar{⟦}{\ensuremath{\llbracket}}
 % https://tex.stackexchange.com/questions/100966/defining-scalable-white-curly-brackets-and-and
 % TODO FIXME: we gotta fix these parens!
 \newunicodechar{⦃}{\ensuremath{\{\{}}
@@ -65,7 +64,9 @@
 
 \begin{document}
 
+
 \special{papersize=8.5in,11in}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % When adding this appendix to your paper, 
@@ -73,7 +74,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\section{Artifact Appendix}
+\title[Artifact]{Artifact for Interactive Bit Vector Reasoning using Verified Bitblasting}
+
+\maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Abstract}
@@ -85,6 +88,11 @@
 % {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
 % and remove the rest. This information is needed to find appropriate reviewers and gradually 
 % unify artifact meta information in Digital Libraries.}
+
+\section{Introduction}
+
+This artifact contains the infrastructure and tooling necessary to display the performance of the 
+verified bitblaster introduced by the paper for all the benchmarks presented.
 
 {\small
 \begin{itemize}
@@ -102,25 +110,26 @@
 \end{itemize}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Description}
 
-\subsubsection{Software dependencies}
+\subsection{Performance}
 
-Docker is necessary to run our artifact.
-The Docker image has all dependencies needed to compile our framework with Lean4.
+We test the performance of the verified bitblaster \texttt{bv\_decide} against three benchmarks: 
+\begin{itemize}
+\item \texttt{InstCombine} benchmark, extracted from LLVM's peephole verifier
+\item \texttt{HackersDelight} benchmark, containing bit-vector theorems extracted from the first two chapters of Hackers' Delight
+\item \texttt{SMT-LIB} benchmark, containing the problems from SMT-LIB's 2024 Competition
+\end{itemize}
+The artifact contains the benchmarks, the scripts to evaulate \texttt{bv\_decide}'s performance, and the scripts to reproduce the plots in the paper.
 
+\section{Hardware Dependencies}
 
-%COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%COMMENT% \subsection{Installation}
-%COMMENT%
-%COMMENT% {\em Obligatory}
+Podman or Docker are necessary to run our artifact (we tested it with the former).
+The container image has all dependencies needed to compile our framework with Lean4.
+\textcolor{red}{TODO: add info}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Experiment workflow}
+\section{Getting Started}
 
-Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo.15755236}
-
+Access the docker image from \url{10.5281/zenodo.15755236}: 
 \begin{script}
 $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
@@ -128,37 +137,44 @@ $ docker run -it oopsla25-bv-decide
 # | fetches the maths library from the build cache,
 # | and builds our framework.
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
-# | This allows to check that the key theorems of our framework are
-# |guarded, and that they do not contain `sorry`s.
-# Run experiments, and check that the output is as expected.
+# | Run experiments with all the benchmarks
+# | Collect the output and write all the plots and numbers
 $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 \end{script}
 
+Alternatively, one can access the image from DockerHub (https://hub.docker.com/r/abdoo8080/oopsla25-bv-decide-base/) with the command \texttt{docker pull abdoo8080/oopsla25-bv-decide-base:v1}. A long-term archive of the Dockher hub image will be uploaded to Zenodo, but we support dockerhub as the primary form of access"
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Evaluation and expected results}
+\section{Experiments Reproduction}
 
-\subsection{Miscellanous Docker Usage}
-To copy files for inspection from the docker container into the host,
- keep the container running, and in another
-shell instance, use the \texttt{docker cp}
-command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
+Three main scripts are involved in the reproduction of our results and plots: 
+\begin{itemize}
+  \item \texttt{compare.py benchmark} runs our bitblaster as well as the solver we compare against for \texttt{benchmark}. The results obtained from this run are saved in \texttt{bv-evaluation/results}. Note that the number of problems solved by \texttt{bv\_decide} might slightly change depending on the performance of the machine in relation to the timeout set for the SAT/SMT solvers.
+  \item \texttt{collect.py benchmark} collects and analyzes the results obtain for \texttt{benchmark} and stores everything in \texttt{bv-evaluation/raw-data}. 
+  \item \texttt{plot.py benchmark} plots the results obtained from \texttt{benchmark}'s run, including the plots presented in the paper. 
+  \item \texttt{collect-stats-bv-decide.py} collects all the statistics regarding our evaluation, and in particular the numbers we describe in the paper.
+\end{itemize}
 
+\subsection{Verifying the results of \texttt{InstCombine}}
+
+As an example, to reproduce the results of \texttt{InstCombine} using 8 threads for the experimental run and 1 repetition, the sequence of commands to run are: 
 \begin{script}
-$ docker container ls # find   ID
-$ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
-            <PATH/OUTSIDE/CONTAINER>
+$ docker load -i oopsla25-bv-decide.tar
+$ docker run -it oopsla25-bv-decide
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+# Run experiments for InstCombine
+$ /code/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r1
+# Collect InstCombine data
+$ /code/lean-mlir/bv-evaluation/collect.py instcombine
+# Plot InstCombine data 
+$ /code/lean-mlir/bv-evaluation/plot.py instcombine
+# Extract performance numbers 
+$ python3 collect-stats-bv-decide.py 
 \end{script}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% When adding this appendix to your paper, 
-% please remove below part
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{itemize}
+  \item[Figure 9] is in \texttt{plots/bv\_decide\_stacked\_perc\_instCombine.pdf} and
+  \item[Figure 7] is in \texttt{plots/cumul\_problems\_llvm\_instcombine\_solved\_data.pdf}.
+\end{itemize}
 
 \end{document}
 
