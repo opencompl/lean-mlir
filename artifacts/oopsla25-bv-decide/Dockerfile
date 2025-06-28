@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:25.04
+FROM --platform=linux/amd64
 
 # Set up non-interactive mode for apt-get
 ENV DEBIAN_FRONTEND=noninteractive
