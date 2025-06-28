@@ -144,7 +144,7 @@ $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 
 Three main scripts are involved in the reproduction of our results and plots: 
 \begin{itemize}
-  \item \texttt{compare.py benchmark} runs our bitblaster as well as the solver we compare against for \texttt{benchmark}. The results obtained from this run are saved in \texttt{bv-evaluation/results}. 
+  \item \texttt{compare.py benchmark} runs our bitblaster as well as the solver we compare against for \texttt{benchmark}. The results obtained from this run are saved in \texttt{bv-evaluation/results}. Note that the number of problems solved by \textttt{bv\_decide} might slightly change depending on the performance of the machine in relation to the timeout set for the SAT/SMT solvers.
   \item \texttt{collect.py benchmark} collects and analyzes the results obtain for \texttt{benchmark} and stores everything in \texttt{bv-evaluation/raw-data}. 
   \item \texttt{plot.py benchmark} plots the results obtained from \texttt{benchmark}'s run, including the plots presented in the paper. 
   \item \texttt{collect-stats-bv-decide.py} collects all the statistics regarding our evaluation, and in particular the numbers we describe in the paper.
@@ -152,13 +152,13 @@ Three main scripts are involved in the reproduction of our results and plots:
 
 \subsection{\texttt{InstCombine} - Reproduce Fig. 9}
 
-As an example, to reproduce Fig. 9 using 8 threads for the experimental run and 5 repetitions for stability, the sequence of commands to run are: 
+As an example, to reproduce Fig. 9 using 8 threads for the experimental run and 1 repetition, the sequence of commands to run are: 
 \begin{script}
 $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # Run experiments for InstCombine
-$ /code/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r5
+$ /code/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r1
 # Collect InstCombine data
 $ /code/lean-mlir/bv-evaluation/collect.py instcombine
 # Plot InstCombine data 
