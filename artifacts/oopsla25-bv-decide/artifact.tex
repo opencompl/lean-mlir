@@ -133,12 +133,16 @@ Access the docker image from \url{10.5281/zenodo.15755236}:
 \begin{script}
 $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
-# Run experiments with all the benchmarks
-# Collect the output and write all the plots and numbers
+# | Run experiments with all the benchmarks
+# | Collect the output and write all the plots and numbers
 $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 \end{script}
 
+Alternatively, one can access the image from DockerHub (https://hub.docker.com/r/abdoo8080/oopsla25-bv-decide-base/) with the command \texttt{docker pull abdoo8080/oopsla25-bv-decide-base:v1}. A long-term archive of the Dockher hub image will be uploaded to Zenodo, but we support dockerhub as the primary form of access"
 
 \section{Experiments Reproduction}
 
