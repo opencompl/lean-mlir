@@ -134,8 +134,8 @@ Access the docker image from \url{10.5281/zenodo.15755236}:
 $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
 $ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
-# Run experiments InstCombine and HackersDelight
-# Collect the output and write all the plots
+# Run experiments with all the benchmarks
+# Collect the output and write all the plots and numbers
 $ /code/lean-mlir/artifacts/oopsla25-bv-decide/run.sh
 \end{script}
 
@@ -147,6 +147,7 @@ Three main scripts are involved in the reproduction of our results and plots:
   \item \texttt{compare.py benchmark} runs our bitblaster as well as the solver we compare against for \texttt{benchmark}. The results obtained from this run are saved in \texttt{bv-evaluation/results}. 
   \item \texttt{collect.py benchmark} collects and analyzes the results obtain for \texttt{benchmark} and stores everything in \texttt{bv-evaluation/raw-data}. 
   \item \texttt{plot.py benchmark} plots the results obtained from \texttt{benchmark}'s run, including the plots presented in the paper. 
+  \item \texttt{collect-stats-bv-decide.py} collects all the statistics regarding our evaluation, and in particular the numbers we describe in the paper.
 \end{itemize}
 
 \subsection{\texttt{InstCombine} - Reproduce Fig. 9}
