@@ -373,7 +373,7 @@ def bv_decide_smtlib_unsat_stacked_perc(df: pd.DataFrame, bm, type):
     )
     ax.legend(ncols=4, frameon=False, bbox_to_anchor=[0.5, 1], loc="lower center")
     plt.gca().spines["right"].set_visible(True)
-    save(fig, plotsdir + "leanSAT_stacked_smtlib_" + bm.split(".")[0] + ".pdf")
+    save(fig, plotsdir + "bv_decide_stacked_smtlib_" + bm.split(".")[0] + ".pdf")
 
 
 def bv_decide_smtlib_sat_stacked_perc(df: pd.DataFrame, bm, type):
@@ -475,7 +475,7 @@ def bv_decide_smtlib_sat_stacked_perc(df: pd.DataFrame, bm, type):
     )
     ax.legend(ncols=4, frameon=False, bbox_to_anchor=[0.5, 1], loc="lower center")
     plt.gca().spines["right"].set_visible(True)
-    save(fig, plotsdir + "leanSAT_stacked_smtlib_" + bm.split(".")[0] + ".pdf")
+    save(fig, plotsdir + "bv_decide_stacked_smtlib_" + bm.split(".")[0] + ".pdf")
 
 
 def bv_decide_tot_stacked(df, bm):
@@ -734,7 +734,7 @@ def cumul_solving_time_smtlib(df, name):
     # ax.set_yscale("log")
     # ax.legend(loc="center right", ncols=1, frameon=False, bbox_to_anchor=(1.2, 0.5))
     ax.legend(loc="upper left", ncols=1, frameon=False)
-    save(fig, "cumul_problems_smtlib_" + name + ".pdf")
+    save(fig, plotsdir + "cumul_problems_smtlib_" + name + ".pdf")
 
 
 def scatter_solving_time_smtlib(df_sat, df_unsat):
