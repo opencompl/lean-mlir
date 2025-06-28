@@ -128,18 +128,16 @@ The container image has all dependencies needed to compile our framework with Le
 
 \section{Getting Started}
 
-Acesss the image from \texttt{DockerHub} via the url \url{https://hub.docker.com/r/abdoo8080/oopsla25-bv-decide-base/}.
-Please use the following steps to load the docker image:
-
+Access the \texttt{DockerHub} via the url \url{https://hub.docker.com/r/abdoo8080/oopsla25-bv-decide}. Please use the following steps to load the docker image and get started:
 \begin{script}
 # Pull the docker image
-$ docker pull abdoo8080/oopsla25-bv-decide-base:v1
+$ docker pull abdoo8080/oopsla25-bv-decide:v1
 # Run the docker image
-$ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide-base:v1
+$ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide:v1
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
 # | and builds our framework.
-$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
+$ lake update && lake build
 # Run experiments InstCombine, HackersDelight, and SMT-LIB
 # Collect the output and generate the plots and statistics
 $ artifacts/oopsla25-bv-decide/run.sh
@@ -178,8 +176,7 @@ Three main scripts are involved in the reproduction of our results and plots:
 
 As an example, to reproduce the results of \texttt{InstCombine} using 8 threads for the experimental run and 1 repetition, the sequence of commands to run are: 
 \begin{script}
-$ docker load -i oopsla25-bv-decide.tar
-$ docker run --name oopsla25-bv-decide -it oopsla25-bv-decide
+$ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide:v1
 $ cd /home/user/lean-mlir && lake clean && lake exe cache get && lake build
 # Run experiments for InstCombine
 $ /home/user/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r5
@@ -199,8 +196,7 @@ $ /home/user/lean-mlir/bv-evaluation/plot.py instcombine
 The \texttt{SMT-LIB} benchmark set contains 46191 benchmarks. Running the full experiment to reproduce the results in the paper will take a long time, even in a cluster. Instead, we recommend running the experiments on a subset of the benchmarks. The following command will run the experiments on 500 random benchmarks from the \texttt{SMT-LIB} benchmark set, using 16 threads with 20 minutes timeout and 8GB of memory per job (should take \textasciitilde 8 hours):
 
 \begin{script}
-$ docker load -i oopsla25-bv-decide.tar
-$ docker run --name oopsla25-bv-decide -it oopsla25-bv-decide
+$ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide:v1
 $ cd bv-evaluation
 # Run experiments for SMT-LIB
 python3 compare.py smtlib -n500 -j16 -t1200 -m8192
@@ -213,5 +209,11 @@ python3 collect-stats-bv-decide.py
 \end{script}
 
 Note that the above commands will run the experiments on a subset of the benchmarks, and will not exactly reproduce the results in the paper. However, the results should resemble the ones in the paper and would eventually converge to the same results if run on the full set of benchmarks. For reviewers with lower hardware resources, we recommend running the experiments on a smaller subset of the benchmarks, e.g., 200 benchmarks.
+
+\begin{itemize}
+  \item[Figure 11.a] is in \texttt{plots/cumul\_problems\_smtlib\_unsat.pdf}, and
+  \item[Figure 11.b] is in \texttt{plots/cumul\_problems\_smtlib\_sat.pdf}, and
+  \item[Figure 11.c and 11.d] is in \texttt{plots/scatter\_smtlib.pdf}.
+\end{itemize}
 
 \end{document}

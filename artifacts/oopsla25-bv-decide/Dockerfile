@@ -119,15 +119,13 @@ RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla
     cd Leanwuzla && git checkout 3ec8c974eed8f4d142a5d3422feb8220d0661089 && \
     lake build
 
-# Install Lean-MLIR (commit: 26.06.25)
+# Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN echo "v2"
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
+    cd lean-mlir-temp && git checkout oopsla25-bv-decide && \
     cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
-
-# Ensure the .lake/packages directory is clean before running lake update
-RUN rm -rf .lake/packages/mathlib && lake update && lake build
 
 # Install Python dependencies
 RUN python3 -m venv .venv && \
