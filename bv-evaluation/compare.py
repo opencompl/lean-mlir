@@ -193,7 +193,7 @@ def clear_folder(results_dir):
             print(f"Failed to delete {item_path}. Reason: {e}")
 
 
-def run_file(file_to_run: str, log_file_path: str, timeout: int):
+def run_file(file_to_run: str, log_file_path: str, timeout = TIMEOUT):
     """
     Runs a single Lean file and logs its output.
     file_to_run: The full path to the .lean file to execute.
@@ -215,7 +215,7 @@ def run_file(file_to_run: str, log_file_path: str, timeout: int):
             print(f"{file_to_run} - timeout of {timeout} seconds reached")
 
 
-def run_hdel(temp_file_path, log_file_path, timeout):
+def run_hdel(temp_file_path, log_file_path, timeout=TIMEOUT):
     """
     A specialized 'run_file' for hacker's delight,
     that cleans up on the temporary files that are created
@@ -330,10 +330,11 @@ def compare(
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             file_path = futures[future]
             try:
-                future.result()
+              future.result()
             except Exception as exc:
                 print(f"{file_path} generated an exception: {exc}")
-            percentage = ((idx + 1) / total) * 100
+                raise exc
+            percentage = ((float(idx) + float(1)) / float(total)) * 100
             print(f"{file_path} completed, {percentage:.2f}%")
 
 
