@@ -63,10 +63,9 @@ noncomputable def TV_add_fold : PeepholeRewrite (ModArith q) [] .modLike :=
   lhs := test_add_fold_LHS,
   rhs := test_add_fold_RHS,
   correct := by
-    funext valuation
     -- Expand the definitions:
     unfold test_add_fold_LHS test_add_fold_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     norm_cast
 }
 
@@ -106,9 +105,8 @@ noncomputable def TV_sub_fold : PeepholeRewrite (ModArith q) [] .modLike :=
   lhs := test_sub_fold_LHS,
   rhs := test_sub_fold_RHS,
   correct := by
-    funext valuation
     unfold test_sub_fold_LHS test_sub_fold_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     norm_cast
 }
 
@@ -145,9 +143,8 @@ noncomputable def TV_mul_fold : PeepholeRewrite (ModArith q) [] .modLike :=
   lhs := test_mul_fold_LHS,
   rhs := test_mul_fold_RHS,
   correct := by
-    funext valuation
     unfold test_mul_fold_LHS test_mul_fold_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     norm_cast
 }
 
@@ -177,9 +174,8 @@ noncomputable def TV_add_zero_rhs : PeepholeRewrite (ModArith q) [.modLike] .mod
   lhs := test_add_zero_rhs_LHS,
   rhs := test_add_zero_rhs_RHS,
   correct := by
-    funext valuation
     unfold test_add_zero_rhs_LHS test_add_zero_rhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -209,9 +205,8 @@ noncomputable def TV_add_zero_lhs : PeepholeRewrite (ModArith q) [.modLike] .mod
   lhs := test_add_zero_lhs_LHS,
   rhs := test_add_zero_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_add_zero_lhs_LHS test_add_zero_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -242,9 +237,8 @@ noncomputable def TV_sub_zero : PeepholeRewrite (ModArith q) [.modLike] .modLike
   lhs := test_sub_zero_LHS,
   rhs := test_sub_zero_RHS,
   correct := by
-    funext valuation
     unfold test_sub_zero_LHS test_sub_zero_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -277,9 +271,8 @@ noncomputable def TV_mul_zero_rhs : PeepholeRewrite (ModArith q) [.modLike] .mod
   lhs := test_mul_zero_rhs_LHS,
   rhs := test_mul_zero_rhs_RHS,
   correct := by
-    funext valuation
     unfold test_mul_zero_rhs_LHS test_mul_zero_rhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -312,9 +305,8 @@ noncomputable def TV_mul_zero_lhs : PeepholeRewrite (ModArith q) [.modLike] .mod
   lhs := test_mul_zero_lhs_LHS,
   rhs := test_mul_zero_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_mul_zero_lhs_LHS test_mul_zero_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -345,9 +337,8 @@ noncomputable def TV_mul_one_rhs : PeepholeRewrite (ModArith q) [.modLike] .modL
   lhs := test_mul_one_rhs_LHS,
   rhs := test_mul_one_rhs_RHS,
   correct := by
-    funext valuation
     unfold test_mul_one_rhs_LHS test_mul_one_rhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -378,9 +369,8 @@ noncomputable def TV_mul_one_lhs : PeepholeRewrite (ModArith q) [.modLike] .modL
   lhs := test_mul_one_lhs_LHS,
   rhs := test_mul_one_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_mul_one_lhs_LHS test_mul_one_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -419,9 +409,8 @@ noncomputable def TV_add_add_const : PeepholeRewrite (ModArith q) [.modLike] .mo
   lhs := test_add_add_const_LHS,
   rhs := test_add_add_const_RHS,
   correct := by
-    funext valuation
     unfold test_add_add_const_LHS test_add_add_const_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
     rfl
@@ -461,9 +450,8 @@ noncomputable def TV_add_sub_const_rhs : PeepholeRewrite (ModArith q) [.modLike]
   lhs := test_add_sub_const_rhs_LHS,
   rhs := test_add_sub_const_rhs_RHS,
   correct := by
-    funext valuation
     unfold test_add_sub_const_rhs_LHS test_add_sub_const_rhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -502,9 +490,8 @@ noncomputable def TV_add_sub_const_lhs : PeepholeRewrite (ModArith q) [.modLike]
   lhs := test_add_sub_const_lhs_LHS,
   rhs := test_add_sub_const_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_add_sub_const_lhs_LHS test_add_sub_const_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     norm_cast
     ring_nf
@@ -541,9 +528,8 @@ noncomputable def TV_add_mul_neg_one_rhs : PeepholeRewrite (ModArith q) [.modLik
   lhs := test_add_mul_neg_one_rhs_LHS,
   rhs := test_add_mul_neg_one_rhs_RHS,
   correct := by
-    funext valuation
     unfold test_add_mul_neg_one_rhs_LHS test_add_mul_neg_one_rhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x y
     simp [h41]
     ring_nf
@@ -579,9 +565,8 @@ noncomputable def TV_add_mul_neg_one_lhs : PeepholeRewrite (ModArith q) [.modLik
   lhs := test_add_mul_neg_one_lhs_LHS,
   rhs := test_add_mul_neg_one_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_add_mul_neg_one_lhs_LHS test_add_mul_neg_one_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x y
     simp [h41]
     ring_nf
@@ -620,9 +605,8 @@ noncomputable def TV_sub_mul_neg_one_rhs : PeepholeRewrite (ModArith q) [.modLik
   lhs := test_sub_mul_neg_one_rhs_LHS,
   rhs := test_sub_mul_neg_one_rhs_RHS,
   correct := by
-    funext valuation
     unfold test_sub_mul_neg_one_rhs_LHS test_sub_mul_neg_one_rhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x y
     simp [h41]
     ring_nf
@@ -660,9 +644,8 @@ noncomputable def TV_sub_mul_neg_one_lhs : PeepholeRewrite (ModArith q) [.modLik
   lhs := test_sub_mul_neg_one_lhs_LHS,
   rhs := test_sub_mul_neg_one_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_sub_mul_neg_one_lhs_LHS test_sub_mul_neg_one_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x y
     simp [h41]
     ring_nf
@@ -701,9 +684,8 @@ noncomputable def TV_mul_mul_const : PeepholeRewrite (ModArith q) [.modLike] .mo
   lhs := test_mul_mul_const_LHS,
   rhs := test_mul_mul_const_RHS,
   correct := by
-    funext valuation
     unfold test_mul_mul_const_LHS test_mul_mul_const_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
     rfl
@@ -743,9 +725,8 @@ noncomputable def TV_sub_rhs_add_const : PeepholeRewrite (ModArith q) [.modLike]
   lhs := test_sub_rhs_add_const_LHS,
   rhs := test_sub_rhs_add_const_RHS,
   correct := by
-    funext valuation
     unfold test_sub_rhs_add_const_LHS test_sub_rhs_add_const_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
     rfl
@@ -785,9 +766,8 @@ noncomputable def TV_sub_lhs_add_const : PeepholeRewrite (ModArith q) [.modLike]
   lhs := test_sub_lhs_add_const_LHS,
   rhs := test_sub_lhs_add_const_RHS,
   correct := by
-    funext valuation
     unfold test_sub_lhs_add_const_LHS test_sub_lhs_add_const_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro x
     ring_nf
 }
@@ -822,9 +802,8 @@ noncomputable def TV_sub_sub_lhs_rhs_lhs : PeepholeRewrite (ModArith q) [.modLik
   lhs := test_sub_sub_lhs_rhs_lhs_LHS,
   rhs := test_sub_sub_lhs_rhs_lhs_RHS,
   correct := by
-    funext valuation
     unfold test_sub_sub_lhs_rhs_lhs_LHS test_sub_sub_lhs_rhs_lhs_RHS
-    simp_peephole [] at valuation
+    simp_peephole
     intro a b
     ring_nf
 }
