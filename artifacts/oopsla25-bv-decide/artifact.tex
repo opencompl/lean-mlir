@@ -150,9 +150,9 @@ Three main scripts are involved in the reproduction of our results and plots:
   \item \texttt{collect-stats-bv-decide.py} collects all the statistics regarding our evaluation, and in particular the numbers we describe in the paper.
 \end{itemize}
 
-\subsection{\texttt{InstCombine} - Reproduce Fig. 9}
+\subsection{Verifying the results of \texttt{InstCombine}}
 
-As an example, to reproduce Fig. 9 using 8 threads for the experimental run and 1 repetition, the sequence of commands to run are: 
+As an example, to reproduce the results of \texttt{InstCombine} using 8 threads for the experimental run and 1 repetition, the sequence of commands to run are: 
 \begin{script}
 $ docker load -i oopsla25-bv-decide.tar
 $ docker run -it oopsla25-bv-decide
@@ -163,24 +163,12 @@ $ /code/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r1
 $ /code/lean-mlir/bv-evaluation/collect.py instcombine
 # Plot InstCombine data 
 $ /code/lean-mlir/bv-evaluation/plot.py instcombine
+# Extract performance numbers 
+$ python3 collect-stats-bv-decide.py 
 \end{script}
-The expected plot is in \texttt{plots/bv\_decide\_stacked\_perc\_instCombine.pdf}
+Figure 9 is in \texttt{plots/bv\_decide\_stacked\_perc\_instCombine.pdf} and 
+Figure 7 is in \texttt{plots/cumul\_problems\_llvm\_instcombine\_solved\_data.pdf}.
 
-% Run the two large experiments and reproduce the data and graphs from the paper:
-
-% \begin{script}
-% # Run experiments, and check that the output is as expected.
-% # (Parallelism can be tweaked by changing the -j options by editing the script.)
-% $ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
-% $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
-% $ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
-% # (Optional) View the cactus plots from within the container.
-% $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
-% $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
-% \end{script}
-
-% The tex files contain data correponding to Figure 7 of the paper, and the two
-% graphs correspond to figures (a) and (b) page 18 of the paper as follows.
 
 % \subsubsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
 % Please run:
