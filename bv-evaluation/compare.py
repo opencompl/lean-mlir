@@ -308,7 +308,7 @@ def compare(
                             RESULTS_DIR_INSTCOMBINE, f"{file_title}_r{str(r)}.txt"
                         )
                         future = executor.submit(
-                            run_file, "instcombine", file_path, log_file_path
+                            run_file, file_path, log_file_path
                         )
                         futures[future] = file_path
 
@@ -329,11 +329,11 @@ def compare(
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             file_path = futures[future]
-            try:
-              future.result()
-            except Exception as exc:
-                print(f"{file_path} generated an exception: {exc}")
-                raise exc
+            # try:
+            future.result()
+            # except Exception as exc:
+            #     print(f"{file_path} generated an exception: {exc}")
+            #     raise exc
             percentage = ((float(idx) + float(1)) / float(total)) * 100
             print(f"{file_path} completed, {percentage:.2f}%")
 
