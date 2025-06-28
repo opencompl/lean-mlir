@@ -178,12 +178,13 @@ As an example, to reproduce the results of \texttt{InstCombine} using 8 threads 
 \begin{script}
 $ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide:v1
 $ cd /home/user/lean-mlir && lake clean && lake exe cache get && lake build
+$ cd /home/user/lean-mlir/bv-evaluation
 # Run experiments for InstCombine
-$ /home/user/lean-mlir/bv-evaluation/compare.py instcombine -j8 -r5
+$ python3 compare.py instcombine -j8 -r5
 # Collect InstCombine data
-$ /home/user/lean-mlir/bv-evaluation/collect.py instcombine
+$ python3 collect.py instcombine
 # Plot InstCombine data 
-$ /home/user/lean-mlir/bv-evaluation/plot.py instcombine
+$ python3 plot.py instcombine
 \end{script}
 
 \begin{itemize}

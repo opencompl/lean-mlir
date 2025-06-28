@@ -819,7 +819,7 @@ def collect(benchmark: str):
 
             df_errors = pd.DataFrame({'errors':file_comparison['errors']})
 
-            df_errors.to_csv(raw_data_output_dir + csv_base_name +'_err_data.csv')
+            df_errors.to_csv(RAW_DATA_DIR_HACKERSDELIGHT + "hackersdelight_err_data.csv")
 
             save_counterexample_df(
                 file_comparison["file_counter_bitwuzla_times_average"],

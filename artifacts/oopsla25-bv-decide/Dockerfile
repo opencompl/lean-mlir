@@ -121,7 +121,6 @@ RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla
 
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
-RUN echo "v3"
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
     cd lean-mlir-temp && git checkout oopsla25-bv-decide && \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
