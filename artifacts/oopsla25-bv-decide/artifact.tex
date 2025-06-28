@@ -153,15 +153,16 @@ $ docker cp oopsla25-bv-decide:/home/user/lean-mlir/bv-evaluation/plots ./plots
 
 \subsection{Long-Term Archive}
 
+A long-term archive of the dockerfile will be available at \url{https://doi.org/10.5281/zenodo.15755236},
+which can be used to build the docker image that is uploaded to docker hub.
 
-A long-term archive of the docker image will be available at \url{https://doi.org/10.5281/zenodo.15755236}.
-Use the following steps to load from the long term archive, if the docker-hub link no longer works:
-\begin{script}
-# Alternative: Load from long-term zenodo archive. First download the tarball, and then load
-# into docker.
-$ docker load -i oopsla25-bv-decide.tar
-$ docker run --name oopsla25-bv-decide -it oopsla25-bv-decide
-\end{script}
+% Use the following steps to load from the long term archive, if the docker-hub link no longer works:
+% \begin{script}
+% # Alternative: Load from long-term zenodo archive. First download the tarball, and then load
+% # into docker.
+% $ docker load -i oopsla25-bv-decide.tar
+% $ docker run --name oopsla25-bv-decide -it oopsla25-bv-decide
+% \end{script}
 
 \section{Experiments Reproduction}
 
