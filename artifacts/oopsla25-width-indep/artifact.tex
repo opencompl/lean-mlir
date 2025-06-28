@@ -1,4 +1,4 @@
-%
+  %
 % Prepared by Grigori Fursin with contributions from Bruce Childers,
 %   Michael Heroux, Michela Taufer and other colleagues.
 %
@@ -68,7 +68,7 @@
 \special{papersize=8.5in,11in}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% When adding this appendix to your paper, 
+% When adding this appendix to your paper,
 % please remove above part
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -348,7 +348,7 @@ $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-au
 \subsection{Artifact check-list (meta-information)}
 
 % {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
-% and remove the rest. This information is needed to find appropriate reviewers and gradually 
+% and remove the rest. This information is needed to find appropriate reviewers and gradually
 % unify artifact meta information in Digital Libraries.}
 
 {\small
@@ -373,7 +373,7 @@ $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-au
 
 %COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %COMMENT% \subsection{Installation}
-%COMMENT% 
+%COMMENT%
 %COMMENT% {\em Obligatory}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -405,14 +405,25 @@ $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-au
 {\sloppypar
 This should produce the following output, where the timings might change
 depending on the machine that is run on. The absolute number of problems solved
-should be equal, while the total time and geomean time are machine-dependent.
+should be 2500 on the fast solver (MBA), and should be appreciably
+large on the other solvers. The geomean time are machine-dependent,
+and should match upto order of magnitude comparisons.
 }
 
 \begin{script}
 # $ cat /code/lean-mlir/bv-evaluation/dataset2-cactus-plot-data.tex
-\newcommand{\MBAKInductionVerifiedNumSolved}{1500}
-\newcommand{\MBAKInductionVerifiedTotalTime}{1h27m} # machine dependent
-\newcommand{\MBAKInductionVerifiedGeoMean}{14.7s} # machine dependent
+\newcommand{\MBAPresburgerNumSolved}{2353} # > 2300
+\newcommand{\MBABvDecideNumSolved}{2500} # > 2300
+\newcommand{\MBAKInductionVerifiedNumSolved}{1537} # > 1500
+\newcommand{\MBAMBANumSolved}{2500} # exact match
+\newcommand{\MBAPresburgerTotalTime}{..} # machine dependent
+\newcommand{\MBABvDecideTotalTime}{..} # machine dependent
+\newcommand{\MBAKInductionVerifiedTotalTime}{..} # machine dependent
+\newcommand{\MBAMBATotalTime}{..} # machine dependent
+\newcommand{\MBAPresburgerGeoMean}{4.6s} # machine dependent
+\newcommand{\MBABvDecideGeoMean}{10.9s} # machine dependent
+\newcommand{\MBAKInductionVerifiedGeoMean}{3.68s} # machine dependent
+\newcommand{\MBAMBAGeoMean}{78.9ms} # machine dependent
 \end{script}
 
 To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
@@ -441,7 +452,7 @@ $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% When adding this appendix to your paper, 
+% When adding this appendix to your paper,
 % please remove below part
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
