@@ -20,7 +20,7 @@ RUN apt-get update && \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
         # CoqQFBV dependencies
-        libboost-timer-dev mlton && \
+        libboost-timer-dev && \
     apt-get clean
 
 # Create a new user named 'user' with no password and switch to it
@@ -89,12 +89,27 @@ RUN cd lib && \
     cmake -DCMAKE_BUILD_TYPE=Release .. && \
     make && \
     cp gratgen ../../../bin
+# Install MLton (version: 30.12.24)
+RUN cd lib && ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        curl -L -o mlton.tgz https://github.com/MLton/mlton/releases/download/on-20241230-release/mlton-20241230-1.amd64-linux.ubuntu-24.04_static.tgz ; \
+        tar -xzf mlton.tgz ; \
+        mv mlton-20241230-1.amd64-linux.ubuntu-24.04_static mlton ; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        curl -L -o mlton.tgz https://github.com/MLton/mlton/releases/download/on-20241230-release/mlton-20241230-1.arm64-linux.ubuntu-24.04-arm_static.tgz ; \
+        tar -xzf mlton.tgz ; \
+        mv mlton-20241230-1.arm64-linux.ubuntu-24.04-arm_static mlton ; \
+    else \
+        echo "Unsupported architecture: $ARCH" && exit 1 ; \
+    fi && \
+    rm mlton.tgz
 # Install GRATchk (version: 1.3.2)
 RUN cd lib && \
     curl -L -o gratchk-sml.tgz https://www21.in.tum.de/~lammich/grat/archive/v1.3.2/gratchk-sml.tgz && \
     tar -xzf gratchk-sml.tgz && \
     rm gratchk-sml.tgz && \
-    cd gratchk-sml && make && \
+    cd gratchk-sml && \
+    PATH=/home/user/lean-mlir/bv-evaluation/solvers/coq-qfbv/lib/mlton/bin:$PATH make && \
     cp gratchk ../../bin
 WORKDIR /home/user/lean-mlir
 
@@ -119,7 +134,7 @@ RUN python3 -m venv .venv && \
     .venv/bin/pip install -r requirements.txt
 
 # Setup Python env
-ENV VIRTUAL_ENV=/opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+ENV VIRTUAL_ENV=/home/user/lean-mlir/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 USER user

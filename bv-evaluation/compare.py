@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+import random
 import subprocess
 import concurrent.futures
 import shutil
@@ -110,7 +111,8 @@ def run_with_limits(cmd, timeout, memout_mb):
 
 def save_output(solver, benchmark_path, stdout, stderr, out_dir):
     try:
-        out_path = Path(out_dir) / benchmark_path
+        relative = os.path.relpath(benchmark_path, BENCHMARK_DIR_SMTLIB)
+        out_path = Path(os.path.join(out_dir, relative))
         out_path.mkdir(parents=True, exist_ok=True)
         with open(out_path / (solver + ".stdout"), "w") as f_out:
             f_out.write(stdout)
@@ -129,22 +131,24 @@ def run_single_benchmark(solver_name, timeout, memout_mb, out_dir, benchmark_pat
     return (benchmark_path, code)
 
 
-def read_benchmarks_set(file_path):
-    try:
-        with open(file_path, "r") as f:
-            return [line.strip() for line in f if line.strip()]
-    except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
-        sys.exit(1)
-
-
 def find_smtlib_benchmarks(directory):
     paths = []
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(".smt2"):
                 paths.append(os.path.join(root, file))
-    return paths
+    return sorted(paths)
+
+
+def select_smtlib_samples(benchmark_paths, seed, num_samples):
+    """
+    Randomly selects a subset of SMT-LIB benchmarks based on the provided seed.
+    """
+    random.seed(seed)
+    selected_benchmarks = random.sample(
+        benchmark_paths, min(num_samples, len(benchmark_paths))
+    )
+    return selected_benchmarks
 
 
 def run_smtlib_benchmarks(benchmark_paths, solver, jobs, timeout, memout, output_dir):
@@ -225,12 +229,13 @@ def run_hdel(temp_file_path, log_file_path, timeout):
 
 def compare(
     benchmark: str,
-    set: str,
     solver: str,
     jobs: int,
     reps: int,
     timeout: int,
     memout: int,
+    num_samples,
+    seed,
 ):
     """Processes benchmarks using a thread pool."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
@@ -310,10 +315,10 @@ def compare(
         elif benchmark == "smtlib":
             clear_folder(RESULTS_DIR_SMTLIB)
             os.makedirs(RESULTS_DIR_SMTLIB, exist_ok=True)
-            if set:
-                benchmark_paths = read_benchmarks_set(set)
-            else:
-                benchmark_paths = find_smtlib_benchmarks(BENCHMARK_DIR_SMTLIB)
+            benchmark_paths = find_smtlib_benchmarks(BENCHMARK_DIR_SMTLIB)
+            benchmark_paths = select_smtlib_samples(
+                benchmark_paths, seed, num_samples
+            )
             run_smtlib_benchmarks(
                 benchmark_paths, solver, jobs, timeout, memout, RESULTS_DIR_SMTLIB
             )
@@ -346,10 +351,17 @@ def main():
     )
     parser.add_argument(
         "-s",
-        "--set",
-        type=str,
-        default=None,
-        help="Path to file containing full SMT-LIB benchmark paths",
+        "--seed",
+        type=int,
+        default=42,
+        help="Seed for random selection of SMT-LIB benchmarks",
+    )
+    parser.add_argument(
+        "-n",
+        "--num_samples",
+        type=int,
+        default=10,
+        help="Number of SMT-LIB benchmarks to randomly select",
     )
     parser.add_argument(
         "-j", "--jobs", type=int, default=1, help="Parallel jobs for all benchmarks"
@@ -388,12 +400,13 @@ def main():
     for b in benchmarks_to_run:
         compare(
             b,
-            args.set,
             args.solver,
             args.jobs,
             args.repetitions,
             args.timeout,
             args.memout,
+            args.num_samples,
+            args.seed,
         )
 
 
