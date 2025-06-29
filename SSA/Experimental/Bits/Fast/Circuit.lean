@@ -846,8 +846,8 @@ def nonemptyAux [DecidableEq α] :
         card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) true (by simp)
       have wf₂ : cc₂'.varsFinset.card < c.varsFinset.card :=
         card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) false (by simp)
-      let b₁ := nonemptyAux c₁ c₁.vars rfl
-      let b₂ := nonemptyAux c₂ c₂.vars rfl
+      have b₁ := nonemptyAux c₁ c₁.vars rfl
+      have b₂ := nonemptyAux c₂ c₂.vars rfl
       ⟨b₁ || b₂, by
         simp only [eval_eq_evalv, Bool.or_eq_true, eq_iff_iff]
         rw [← b₁.prop, ← b₂.prop]

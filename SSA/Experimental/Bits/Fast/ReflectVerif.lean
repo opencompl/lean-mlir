@@ -101,6 +101,7 @@ structure ToAIGAuxEntrypoint {α : Type} [DecidableEq α] [Fintype α] [Hashable
 
   -- { entry : Entrypoint α // aig.decls.size ≤ entry.aig.decls.size }
 
+set_option maxHeartbeats 2000000 in
 /--
 Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
 bitblasting capabilities.
