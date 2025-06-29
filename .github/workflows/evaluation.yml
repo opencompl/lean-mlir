@@ -40,8 +40,8 @@ jobs:
 
       - name: Install Python Modules
         run: |
-          sudo apt update
-          sudo apt install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
+          sudo apt-get update
+          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
 
       - name: Get Cache
         continue-on-error: true
