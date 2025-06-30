@@ -894,249 +894,249 @@ instance : ToString PreconditionSynthesisCacheValue where
   toString val :=
     s! "⟨positiveExampleValues := {val.positiveExampleValues}, negativeExampleValues := {val.negativeExampleValues}⟩"
 
-def generatePreconditions (originalBVLogicalExpr : ParsedBVLogicalExpr) (reducedWidthBVLogicalExpr: BVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
-              (numConjunctions: Nat) : TermElabM (Option BVLogicalExpr) := do
+structure GeneralizerState where
+  startTime: Nat
+  timeout : Nat
+  processingWidth : Nat
+  targetWidth : Nat
+  parsedBVLogicalExpr : ParsedBVLogicalExpr
+  needsPreconditionsExprs : List BVLogicalExpr
+  visitedSubstitutions : Std.HashSet BVLogicalExpr
+  bottomUpEnumerationCache : Std.HashMap (BVExpr processingWidth) BVExpr.PackedBitVec
+
+abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
+
+def zero (w: Nat) := BVExpr.const (BitVec.ofNat w 0)
+def one (w: Nat) := BVExpr.const (BitVec.ofNat w 1)
+def minusOne (w: Nat) := BVExpr.const (BitVec.ofInt w (-1))
+
+def eqToZero (expr: BVExpr w) : BVLogicalExpr :=
+  BoolExpr.literal (BVPred.bin expr BVBinPred.eq (zero w))
+
+def positive (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+  let shiftDistance : BVExpr w := BVExpr.bin (BVExpr.var widthId) BVBinOp.add (negate (one w))
+  let mask := BVExpr.shiftLeft (one w) shiftDistance
+  let maskAndExpr := BVExpr.bin expr BVBinOp.and mask  -- It's positive if (expr && (1 << width -1) == 0)
+
+  eqToZero maskAndExpr
+
+def strictlyGTZero  (expr: BVExpr w) (widthId : Nat)  : BVLogicalExpr :=
+  BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (positive expr widthId)
+
+def gteZero (expr: BVExpr w) (widthId : Nat)  : BVLogicalExpr :=
+  positive expr widthId
+
+def negative (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+  BoolExpr.not (positive expr widthId)
+
+def strictlyLTZero (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+  negative expr widthId
+
+def lteZero (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+  BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)
+
+def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (widthIdAndVal: Nat × Nat)
+              (numConjunctions: Nat) : GeneralizerStateM (Option BVLogicalExpr) := do
 
     let widthId := widthIdAndVal.fst
     let bitwidth := widthIdAndVal.snd
 
     logInfo m! "Using width: {bitwidth}"
 
-    let constants := widthId :: positiveExamples[0]!.keys
+    let widthSubstitutionValue := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat bitwidth bitwidth))])
+    let bvLogicalExprWithWidthVal := substitute bvLogicalExpr widthSubstitutionValue
 
-    let maxConstantId := constants.max?
-    match maxConstantId with
+    let validateCandidates (preconditionCandidatesSet visited: Std.HashSet BVLogicalExpr) : TermElabM (List BVLogicalExpr) := withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
+      let mut res : List BVLogicalExpr := []
+
+      let mut candidates := preconditionCandidatesSet
+      if numConjunctions >= 1 then
+        let combinations := generateCombinations numConjunctions candidates.toList
+        candidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
+
+      let widthConstraint : BVLogicalExpr := BoolExpr.literal (BVPred.bin (BVExpr.var widthId) BVBinPred.eq (BVExpr.const (BitVec.ofNat bitwidth bitwidth)))
+
+      logInfo m! "Originally processing {candidates.size} candidates"
+      let mut numInvocations := 0
+      candidates := candidates.filter (λ cand => !visited.contains cand)
+      while !candidates.isEmpty do
+        let expressionsConstraints : BVLogicalExpr := addConstraints (BoolExpr.const False) candidates.toList Gate.or
+        let expr := BoolExpr.gate Gate.and (addConstraints expressionsConstraints [widthConstraint]) (BoolExpr.not bvLogicalExprWithWidthVal)
+
+        let mut newCandidates : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
+        numInvocations := numInvocations + 1
+        match (← solve expr) with
+        | none => break
+        | some assignment =>
+            newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
+              let mut res : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
+              for candidate in candidates do
+                let widthSubstitutedCandidate := substitute candidate widthSubstitutionValue
+                if !(evalBVLogicalExpr assignment bitwidth widthSubstitutedCandidate) then
+                  res := res.insert candidate
+              pure res
+
+        candidates := newCandidates
+
+      logInfo m! "Invoked the solver {numInvocations} times for {preconditionCandidatesSet.size} potential candidates."
+      res := candidates.toList
+      pure res
+
+
+    let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
+      let mut preconditionCandidates : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
+      for const in positiveExamples[0]!.keys do
+        let bvExprVar := BVExpr.var const
+        -- Check for power of 2: const & (const - 1) == 0
+        let powerOf2Expr :=  BVExpr.bin bvExprVar BVBinOp.and (BVExpr.bin bvExprVar BVBinOp.add (minusOne bitwidth))
+        let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos bitwidth powerOf2Expr)
+
+        if powerOfTwoResults.any (λ val => val == 0) then
+          let powerOf2 := BoolExpr.literal (BVPred.bin powerOf2Expr BVBinPred.eq (zero bitwidth))
+          preconditionCandidates := preconditionCandidates.insert powerOf2
+
+      let groupExamplesBySymVar (examples : List (Std.HashMap Nat BVExpr.PackedBitVec)) : Std.HashMap (BVExpr bitwidth) (List BVExpr.PackedBitVec) := Id.run do
+        let mut res : Std.HashMap (BVExpr bitwidth) (List BVExpr.PackedBitVec) := Std.HashMap.emptyWithCapacity
+        for ex in examples do
+          for (const, val) in ex.toArray do
+            let constVar : BVExpr bitwidth := BVExpr.var const
+            let existingList := res.getD constVar []
+            res := res.insert constVar (val::existingList)
+        res
+
+      let mut positiveExamplesByKey := groupExamplesBySymVar positiveExamples
+      let mut negativeExamplesByKey := groupExamplesBySymVar negativeExamples
+
+      let mut allInputs : Std.HashMap (BVExpr bitwidth)  PreconditionSynthesisCacheValue := Std.HashMap.emptyWithCapacity
+      for key in positiveExamplesByKey.keys do
+        allInputs := allInputs.insert key {positiveExampleValues := positiveExamplesByKey[key]!, negativeExampleValues := negativeExamplesByKey[key]!}
+
+      let specialConstants : Std.HashMap (BVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
+          ((one bitwidth), {bv := BitVec.ofNat bitwidth 1}),
+          ((minusOne bitwidth), {bv := BitVec.ofInt bitwidth (-1)}),
+          (BVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
+
+      for (sc, val) in specialConstants.toArray do
+        allInputs := allInputs.insert sc {positiveExampleValues := List.replicate positiveExamples.length val, negativeExampleValues := List.replicate negativeExamples.length val}
+
+      let mut previousLevelCache : Std.HashMap (BVExpr bitwidth)  PreconditionSynthesisCacheValue := allInputs
+
+      let numVariables := positiveExamplesByKey.size + 1 -- Add 1 for the width ID
+      let ops : List (BVExpr bitwidth -> BVExpr bitwidth -> BVExpr bitwidth):= [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
+
+      let mut currentLevel := 0
+      let mut validCandidates : List BVLogicalExpr := []
+      let mut visited : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
+
+      while currentLevel < numVariables do
+          logInfo m! "Precondition Synthesis: Processing level {currentLevel}"
+
+          let origCandidatesSize := preconditionCandidates.size
+          for (bvExpr, intermediateRes) in previousLevelCache.toArray do
+            let evaluatedNegativeExs := intermediateRes.negativeExampleValues.map (λ ex => ex.bv.toInt)
+            let evaluatedPositiveExs := intermediateRes.positiveExampleValues.map (λ ex => ex.bv.toInt)
+
+            if (evaluatedPositiveExs.all ( λ val => val == 0)) && evaluatedNegativeExs.all (λ val => val != 0) then
+              preconditionCandidates := preconditionCandidates.insert (eqToZero bvExpr)
+              continue
+
+            if (evaluatedPositiveExs.any ( λ val => val < 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val > 0) then
+              let mut cand := lteZero bvExpr widthId
+              if (evaluatedPositiveExs.all ( λ val => val < 0)) then
+                cand := strictlyLTZero bvExpr widthId
+
+              preconditionCandidates := preconditionCandidates.insert cand
+
+            if (evaluatedPositiveExs.any ( λ val => val > 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val < 0) then
+              let mut cand := gteZero bvExpr widthId
+              if (evaluatedPositiveExs.all ( λ val => val > 0)) then
+                  cand := strictlyGTZero bvExpr widthId
+
+              preconditionCandidates := preconditionCandidates.insert cand
+
+          -- Check if we have a valid candidate at the start
+          if preconditionCandidates.size > origCandidatesSize then
+            validCandidates ← validateCandidates preconditionCandidates visited
+            match validCandidates with
+            | [] => visited := preconditionCandidates
+            | _ => return validCandidates
+
+
+          let mut currentCache := Std.HashMap.emptyWithCapacity
+          let mut observationalEquivFilter : Std.HashSet String := Std.HashSet.emptyWithCapacity
+
+          for (bvExpr, intermediateRes) in previousLevelCache.toArray do
+            let intermediateNegValues := intermediateRes.negativeExampleValues
+            let intermediatePosValues := intermediateRes.positiveExampleValues
+
+            for op in ops do
+              for (var, cacheValue) in allInputs.toArray do
+                if specialConstants.contains bvExpr && specialConstants.contains var then
+                  continue
+
+                let processCombos (combos :  List (BVExpr.PackedBitVec × BVExpr.PackedBitVec)) (examples: List (HashMap Nat BVExpr.PackedBitVec) ) : TermElabM (List (BitVec bitwidth)) := do
+                      let mut res : List (BitVec bitwidth) := []
+                      let mut index := 0
+                      for (lhs, rhs) in combos do
+                        let h : lhs.w = bitwidth := sorry
+                        let h' : rhs.w = bitwidth := sorry
+                        if h : lhs.w = bitwidth ∧ rhs.w = bitwidth then
+                          res := (evalBVExpr examples[index]! bitwidth (op  (BVExpr.const (h.left ▸ lhs.bv)) (BVExpr.const (h.right ▸ rhs.bv)))) :: res
+                          index := index + 1
+                        else
+                          throwError m! "Invalid width for lhs:{lhs} and rhs:{rhs}"
+                      pure res
+
+                let negCombos := List.zip intermediateNegValues cacheValue.negativeExampleValues --- Zip each negative example computation with the corresponding constant value for the negative example
+                let evaluatedNegativeExs ← processCombos negCombos negativeExamples
+
+                let posCombos := List.zip intermediatePosValues cacheValue.positiveExampleValues
+                let evaluatedPositiveExs  ← processCombos posCombos positiveExamples
+
+                let filterCheckStr := toString (evaluatedNegativeExs ++ evaluatedPositiveExs)
+                if observationalEquivFilter.contains filterCheckStr then
+                  continue
+
+                let newExpr := op bvExpr var
+                currentCache := currentCache.insert newExpr {negativeExampleValues := evaluatedNegativeExs.map (λ ex => {bv := ex, w := bitwidth}), positiveExampleValues := evaluatedPositiveExs.map (λ ex => {bv := ex, w := bitwidth}) : PreconditionSynthesisCacheValue}
+                observationalEquivFilter := observationalEquivFilter.insert filterCheckStr
+
+          previousLevelCache := currentCache
+          currentLevel := currentLevel + 1
+      pure validCandidates
+
+    if validCandidates.isEmpty then
+      return none
+
+    if validCandidates.length == 1 then
+      return validCandidates[0]?
+
+    -- Prune expressions
+    let prunedResults ← withTraceNode `Generalize (fun _ => return "Pruned equivalent valid precondition candidates") do
+      let mut pruned: List BVLogicalExpr:= []
+      for cand in validCandidates do
+        if pruned.isEmpty then
+          pruned := cand :: pruned
+          continue
+
+        let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f cand))
+        let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+
+        if let some _ ← solve subsumeCheckExpr then
+          pruned := cand :: pruned
+
+      pure pruned
+    logInfo m! "Pruned {validCandidates.length - prunedResults.length} equivalent expressions"
+
+    let combinedPred := some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
+    match combinedPred with
+    | some pred =>
+        let widthSubstitutedPred := substitute pred widthSubstitutionValue
+        if let some assignment ← solve (BoolExpr.gate Gate.and widthSubstitutedPred (BoolExpr.not bvLogicalExprWithWidthVal)) then
+            throwError m! "Precondition logic has failed; found an assignment for {pred}: {assignment}"
     | none => return none
-    | some max =>
-          let symbolicVarIds : List Nat := (List.range constants.length).map (fun c => max + c + 1)
-          let symbolicVars : List (BVExpr bitwidth) := symbolicVarIds.map (fun c => BVExpr.var c)
 
-          logInfo m! "Symbolic vars: {symbolicVars}"
-
-          let zero := BVExpr.const (BitVec.ofNat bitwidth 0)
-          let one := BVExpr.const (BitVec.ofNat bitwidth 1)
-          let minusOne := BVExpr.const (BitVec.ofInt bitwidth (-1))
-
-          let eqToZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.literal (BVPred.bin expr BVBinPred.eq zero)
-
-          let positive (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            let shiftDistance : BVExpr bitwidth := BVExpr.bin (BVExpr.var widthId) BVBinOp.add (negate one)
-            let mask := BVExpr.shiftLeft one shiftDistance
-            let maskAndExpr : BVExpr bitwidth := BVExpr.bin expr BVBinOp.and mask  -- It's positive if (expr && (1 << width -1) == 0)
-
-            eqToZero maskAndExpr
-
-          let strictlyGTZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (positive expr)
-
-          let gteZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-             positive expr
-
-          let negative (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.not (positive expr)
-
-          let strictlyLTZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            negative expr
-
-          let lteZero (expr: BVExpr bitwidth) : BVLogicalExpr :=
-            BoolExpr.gate Gate.or (eqToZero expr) (negative expr)
-
-          let reducedWidthSubstitutionVal := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat bitwidth bitwidth))])
-          let reducedWidthSubstitutedBVLogicalExpr := substitute reducedWidthBVLogicalExpr  reducedWidthSubstitutionVal
-
-          logInfo m! "reducedWidthSubstitutedBVLogicalExpr : {reducedWidthSubstitutedBVLogicalExpr}"
-          let validateCandidates (preconditionCandidatesSet visited: Std.HashSet BVLogicalExpr) : TermElabM (List BVLogicalExpr) := withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
-            let mut res : List BVLogicalExpr := []
-
-            let mut candidates := preconditionCandidatesSet
-            if numConjunctions >= 1 then
-              let combinations := generateCombinations numConjunctions candidates.toList
-              candidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
-
-            let widthConstraint : BVLogicalExpr := BoolExpr.literal (BVPred.bin (BVExpr.var widthId) BVBinPred.eq (BVExpr.const (BitVec.ofNat bitwidth bitwidth)))
-
-            logInfo m! "Originally processing {candidates.size} candidates"
-            let mut numInvocations := 0
-            candidates := candidates.filter (λ cand => !visited.contains cand)
-            while !candidates.isEmpty do
-              let expressionsConstraints : BVLogicalExpr := addConstraints (BoolExpr.const False) candidates.toList Gate.or
-              let expr := BoolExpr.gate Gate.and (addConstraints expressionsConstraints [widthConstraint]) (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)
-
-              let mut newCandidates : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
-              numInvocations := numInvocations + 1
-              match (← solve expr) with
-              | none => break
-              | some assignment =>
-                  newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
-                    let mut res : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
-                    for candidate in candidates do
-                      let widthSubstitutedCandidate := substitute candidate reducedWidthSubstitutionVal
-                      if !(evalBVLogicalExpr assignment bitwidth widthSubstitutedCandidate) then
-                        res := res.insert candidate
-                    pure res
-
-              candidates := newCandidates
-
-            logInfo m! "Invoked the solver {numInvocations} times for {preconditionCandidatesSet.size} potential candidates."
-            res := candidates.toList
-            pure res
-
-
-          let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
-            let mut preconditionCandidates : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
-            for const in positiveExamples[0]!.keys do
-              let bvExprVar := BVExpr.var const
-             -- Check for power of 2: const & (const - 1) == 0
-              let powerOf2Expr :=  BVExpr.bin bvExprVar BVBinOp.and (BVExpr.bin bvExprVar BVBinOp.add minusOne)
-              let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos bitwidth powerOf2Expr)
-
-              if powerOfTwoResults.any (λ val => val == 0) then
-                let powerOf2 := BoolExpr.literal (BVPred.bin powerOf2Expr BVBinPred.eq zero)
-                preconditionCandidates := preconditionCandidates.insert powerOf2
-
-            let groupExamplesByKey (examples : List (Std.HashMap Nat BVExpr.PackedBitVec)) : Std.HashMap (BVExpr bitwidth) (List BVExpr.PackedBitVec) := Id.run do
-              let mut res : Std.HashMap (BVExpr bitwidth) (List BVExpr.PackedBitVec) := Std.HashMap.emptyWithCapacity
-              for ex in examples do
-                for (const, val) in ex.toArray do
-                  let constVar : BVExpr bitwidth := BVExpr.var const
-                  let existingList := res.getD constVar []
-                  res := res.insert constVar (val::existingList)
-              res
-
-            let mut positiveExamplesByKey := groupExamplesByKey positiveExamples
-            let mut negativeExamplesByKey := groupExamplesByKey negativeExamples
-
-            let mut allInputs : Std.HashMap (BVExpr bitwidth)  PreconditionSynthesisCacheValue := Std.HashMap.emptyWithCapacity
-            for key in positiveExamplesByKey.keys do
-              allInputs := allInputs.insert key {positiveExampleValues := positiveExamplesByKey[key]!, negativeExampleValues := negativeExamplesByKey[key]!}
-
-            let specialConstants : Std.HashMap (BVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
-                (one, {bv := BitVec.ofNat bitwidth 1}),
-                (minusOne, {bv := BitVec.ofInt bitwidth (-1)}),
-                (BVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
-
-            for (sc, val) in specialConstants.toArray do
-              allInputs := allInputs.insert sc {positiveExampleValues := List.replicate positiveExamples.length val, negativeExampleValues := List.replicate negativeExamples.length val}
-
-            let mut previousLevelCache : Std.HashMap (BVExpr bitwidth)  PreconditionSynthesisCacheValue := allInputs
-
-            let numVariables := positiveExamplesByKey.size + 1 -- Add 1 for the width ID
-            let ops : List (BVExpr bitwidth -> BVExpr bitwidth -> BVExpr bitwidth):= [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
-
-            let mut currentLevel := 0
-            let mut validCandidates : List BVLogicalExpr := []
-            let mut visited : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
-
-            while currentLevel < numVariables do
-                logInfo m! "Precondition Synthesis: Processing level {currentLevel}"
-
-                let origCandidatesSize := preconditionCandidates.size
-                for (bvExpr, intermediateRes) in previousLevelCache.toArray do
-                  let evaluatedNegativeExs := intermediateRes.negativeExampleValues.map (λ ex => ex.bv.toInt)
-                  let evaluatedPositiveExs := intermediateRes.positiveExampleValues.map (λ ex => ex.bv.toInt)
-
-                  if (evaluatedPositiveExs.all ( λ val => val == 0)) && evaluatedNegativeExs.all (λ val => val != 0) then
-                    preconditionCandidates := preconditionCandidates.insert (eqToZero bvExpr)
-                    continue
-
-                  if (evaluatedPositiveExs.any ( λ val => val < 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val > 0) then
-                    let mut cand := lteZero bvExpr
-                    if (evaluatedPositiveExs.all ( λ val => val < 0)) then
-                      cand := strictlyLTZero bvExpr
-
-                    preconditionCandidates := preconditionCandidates.insert cand
-
-                  if (evaluatedPositiveExs.any ( λ val => val > 0 || val == 0)) && evaluatedNegativeExs.all (λ val => val < 0) then
-                    let mut cand := gteZero bvExpr
-                    if (evaluatedPositiveExs.all ( λ val => val > 0)) then
-                        cand := strictlyGTZero bvExpr
-
-                    preconditionCandidates := preconditionCandidates.insert cand
-
-                -- Check if we have a valid candidate at the start
-                if preconditionCandidates.size > origCandidatesSize then
-                  validCandidates ← validateCandidates preconditionCandidates visited
-                  match validCandidates with
-                  | [] => visited := preconditionCandidates
-                  | _ => return validCandidates
-
-
-                let mut currentCache := Std.HashMap.emptyWithCapacity
-                let mut observationalEquivFilter : Std.HashSet String := Std.HashSet.emptyWithCapacity
-
-                for (bvExpr, intermediateRes) in previousLevelCache.toArray do
-                  let intermediateNegValues := intermediateRes.negativeExampleValues
-                  let intermediatePosValues := intermediateRes.positiveExampleValues
-
-                  for op in ops do
-                    for (var, cacheValue) in allInputs.toArray do
-                      if specialConstants.contains bvExpr && specialConstants.contains var then
-                        continue
-
-                      let processCombos (combos :  List (BVExpr.PackedBitVec × BVExpr.PackedBitVec)) (examples: List (HashMap Nat BVExpr.PackedBitVec) ) : TermElabM (List (BitVec bitwidth)) := do
-                            let mut res : List (BitVec bitwidth) := []
-                            let mut index := 0
-                            for (lhs, rhs) in combos do
-                              let h : lhs.w = bitwidth := sorry
-                              let h' : rhs.w = bitwidth := sorry
-                              if h : lhs.w = bitwidth ∧ rhs.w = bitwidth then
-                                res := (evalBVExpr examples[index]! bitwidth (op  (BVExpr.const (h.left ▸ lhs.bv)) (BVExpr.const (h.right ▸ rhs.bv)))) :: res
-                                index := index + 1
-                              else
-                                throwError m! "Invalid width for lhs:{lhs} and rhs:{rhs}"
-                            pure res
-
-                      let negCombos := List.zip intermediateNegValues cacheValue.negativeExampleValues --- Zip each negative example computation with the corresponding constant value for the negative example
-                      let evaluatedNegativeExs ← processCombos negCombos negativeExamples
-
-                      let posCombos := List.zip intermediatePosValues cacheValue.positiveExampleValues
-                      let evaluatedPositiveExs  ← processCombos posCombos positiveExamples
-
-                      let filterCheckStr := toString (evaluatedNegativeExs ++ evaluatedPositiveExs)
-                      if observationalEquivFilter.contains filterCheckStr then
-                        continue
-
-                      let newExpr := op bvExpr var
-                      currentCache := currentCache.insert newExpr {negativeExampleValues := evaluatedNegativeExs.map (λ ex => {bv := ex, w := bitwidth}), positiveExampleValues := evaluatedPositiveExs.map (λ ex => {bv := ex, w := bitwidth}) : PreconditionSynthesisCacheValue}
-                      observationalEquivFilter := observationalEquivFilter.insert filterCheckStr
-
-                previousLevelCache := currentCache
-                currentLevel := currentLevel + 1
-            pure validCandidates
-
-          if validCandidates.isEmpty then
-            return none
-
-          if validCandidates.length == 1 then
-            return validCandidates[0]?
-
-          -- Prune expressions
-          let prunedResults ← withTraceNode `Generalize (fun _ => return "Pruned equivalent valid precondition candidates") do
-            let mut pruned: List BVLogicalExpr:= []
-            for cand in validCandidates do
-              if pruned.isEmpty then
-                pruned := cand :: pruned
-                continue
-
-              let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f cand))
-              let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
-
-              if let some _ ← solve subsumeCheckExpr then
-                pruned := cand :: pruned
-
-            pure pruned
-          logInfo m! "Pruned {validCandidates.length - prunedResults.length} equivalent expressions"
-
-          let combinedPred := some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
-          match combinedPred with
-          | some pred =>
-              let widthSubstitutedPred := substitute pred reducedWidthSubstitutionVal
-              if let some assignment ← solve (BoolExpr.gate Gate.and widthSubstitutedPred (BoolExpr.not reducedWidthSubstitutedBVLogicalExpr)) then
-                  throwError m! "Precondition logic has failed; found an assignment for {pred}: {assignment}"
-          | none => return none
-
-          return combinedPred
+    return combinedPred
 
 
 def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (BVExpr w)) := Id.run do
@@ -1184,19 +1184,8 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (L
 
           pure tempResults
 
-structure GeneralizerState where
-  startTime: Nat
-  timeout : Nat
-  processingWidth : Nat
-  targetWidth : Nat
-  parsedBVLogicalExpr : ParsedBVLogicalExpr
-  needsPreconditionsExprs : List BVLogicalExpr
-  visitedSubstitutions : Std.HashSet BVLogicalExpr
-  bottomUpEnumerationCache : Std.HashMap (BVExpr processingWidth) BVExpr.PackedBitVec
 
-abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
-
-def checkForNoPreconditionRequired (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
+def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
     logInfo m! "Expression synthesis results : {exprSynthesisResults}"
     let combinations := productsList exprSynthesisResults.values
@@ -1277,7 +1266,7 @@ def bottomUpEnumerateFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExpr.Packe
     pure res
 
 
-def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)): GeneralizerStateM (Option BVLogicalExpr) :=  do
+def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)): GeneralizerStateM (Option BVLogicalExpr) :=  do
     let state ← get
     let parsedBVLogicalExpr := state.parsedBVLogicalExpr
     let processingWidth := state.processingWidth
@@ -1302,7 +1291,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
 
         if exprSynthesisResults.size == rhsAssignments.size then
           exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
-          match (← checkForNoPreconditionRequired exprSynthesisResults) with
+          match (← getCombinationWithNoPreconditions exprSynthesisResults) with
           | some expr => return (some expr)
           | none => logInfo m! "Could not find a generalized form from just deductive search"
 
@@ -1314,7 +1303,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
 
         if !lhsSketchResults.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
           exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
-          let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
+          let preconditionCheckResults ← getCombinationWithNoPreconditions exprSynthesisResults
           match preconditionCheckResults with
           | some expr => return (some expr)
           | none => logInfo m! "Could not find a generalized form from a sketch of the LHS"
@@ -1347,7 +1336,7 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
 
           if !bottomUpRes.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
             exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
-            let preconditionCheckResults ← checkForNoPreconditionRequired exprSynthesisResults
+            let preconditionCheckResults ← getCombinationWithNoPreconditions exprSynthesisResults
             match preconditionCheckResults with
             | some expr => return some expr
             | none => logInfo m! "Could not find a generalized form from processing level {currentLevel}"
@@ -1356,7 +1345,8 @@ def synthesizeAndCheckNoPreconditionNeeded (constantAssignments : List (Std.Hash
 
     return none
 
-def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat) : GeneralizerStateM (Option ( BVLogicalExpr × BVLogicalExpr)) := do
+def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat)
+                                                : GeneralizerStateM (Option ( BVLogicalExpr × BVLogicalExpr)) := do
   let state ← get
   let parsedBVLogicalExpr := state.parsedBVLogicalExpr
 
@@ -1370,7 +1360,7 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
         logInfo m! "Negative examples for {expr} : {negativeExamples}"
 
         let precondition ← withTraceNode `Generalize (fun _ => return m! "Attempted to generate weak precondition for {expr}") do
-                      generatePreconditions parsedBVLogicalExpr expr positiveExamples negativeExamples (widthId, state.processingWidth) numConjunctions
+                      generatePreconditions expr positiveExamples negativeExamples (widthId, state.processingWidth) numConjunctions
 
         match precondition with
         | none => logInfo m! "Could not generate precondition for expr: {expr} with negative examples: {negativeExamples}"
@@ -1387,7 +1377,7 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
 
 def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option String) := do
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
-        synthesizeAndCheckNoPreconditionNeeded constantAssignments
+        synthesizeWithNoPrecondition constantAssignments
     let maxConjunctions : ℕ := 1
 
     match exprWithNoPrecondition with
