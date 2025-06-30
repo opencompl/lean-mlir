@@ -865,26 +865,41 @@ def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) 
                    let res ← helper (addConstraints expr newConstraints) n
                    return [constVals] ++ res
 
-def pruneEquivalentExprs (expressions: List (BVExpr w)) : TermElabM (List (BVExpr w)) := do
-      let res ← withTraceNode `Generalize (fun _ => return "Pruned equivalent expressions") do
-        let mut filtered : List (BVExpr w) := []
+def pruneEquivalentBVExprs (expressions: List (BVExpr w)) : TermElabM (List (BVExpr w)) := do
+  withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
+    let mut pruned : List (BVExpr w) := []
 
-        for expr in expressions do
-          if filtered.isEmpty then
-            filtered := expr :: filtered
-            continue
+    for expr in expressions do
+      if pruned.isEmpty then
+        pruned := expr :: pruned
+        continue
 
-          let newConstraints := filtered.map (fun f =>  BoolExpr.not (BoolExpr.literal (BVPred.bin f BVBinPred.eq expr)))
-          let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (BVPred.bin f BVBinPred.eq expr)))
+      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-          if let some _ ← solve subsumeCheckExpr then
-            filtered := expr :: filtered
+      if let some _ ← solve subsumeCheckExpr then
+        pruned := expr :: pruned
 
-        logInfo m! "Removed {expressions.length - filtered.length} expressions after pruning"
+    logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning"
 
-        return filtered
+    pure pruned
 
-      pure res
+def pruneEquivalentBVLogicalExprs(expressions : List BVLogicalExpr): TermElabM (List BVLogicalExpr) := do
+  withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
+    let mut pruned: List BVLogicalExpr:= []
+    for expr in expressions do
+      if pruned.isEmpty then
+        pruned := expr :: pruned
+        continue
+
+      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
+      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+
+      if let some _ ← solve subsumeCheckExpr then
+        pruned := expr :: pruned
+
+    logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning"
+    pure pruned
 
 structure PreconditionSynthesisCacheValue where
   positiveExampleValues : List BVExpr.PackedBitVec
@@ -985,16 +1000,12 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
     let widthId := state.widthId
     let bitwidth := state.processingWidth
 
-    logInfo m! "Using width: {bitwidth}"
-
-    let widthSubstitutionValue := bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, BVExpr.const (BitVec.ofNat bitwidth bitwidth))])
-    let bvLogicalExprWithWidthVal := substitute bvLogicalExpr widthSubstitutionValue
-
     let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
       let mut preconditionCandidates : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
+
+      -- Check for power of 2: const & (const - 1) == 0
       for const in positiveExamples[0]!.keys do
         let bvExprVar := BVExpr.var const
-        -- Check for power of 2: const & (const - 1) == 0
         let powerOf2Expr :=  BVExpr.bin bvExprVar BVBinOp.and (BVExpr.bin bvExprVar BVBinOp.add (minusOne bitwidth))
         let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos bitwidth powerOf2Expr)
 
@@ -1002,6 +1013,7 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
           let powerOf2 := BoolExpr.literal (BVPred.bin powerOf2Expr BVBinPred.eq (zero bitwidth))
           preconditionCandidates := preconditionCandidates.insert powerOf2
 
+      --  Build the initial cache state
       let groupExamplesBySymVar (examples : List (Std.HashMap Nat BVExpr.PackedBitVec)) : Std.HashMap (BVExpr bitwidth) (List BVExpr.PackedBitVec) := Id.run do
         let mut res : Std.HashMap (BVExpr bitwidth) (List BVExpr.PackedBitVec) := Std.HashMap.emptyWithCapacity
         for ex in examples do
@@ -1119,32 +1131,10 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
       return validCandidates[0]?
 
     -- Prune expressions
-    let prunedResults ← withTraceNode `Generalize (fun _ => return "Pruned equivalent valid precondition candidates") do
-      let mut pruned: List BVLogicalExpr:= []
-      for cand in validCandidates do
-        if pruned.isEmpty then
-          pruned := cand :: pruned
-          continue
-
-        let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f cand))
-        let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
-
-        if let some _ ← solve subsumeCheckExpr then
-          pruned := cand :: pruned
-
-      pure pruned
-    logInfo m! "Pruned {validCandidates.length - prunedResults.length} equivalent expressions"
-
-    let combinedPred := some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
-    match combinedPred with
-    | some pred =>
-        let widthSubstitutedPred := substitute pred widthSubstitutionValue
-        if let some assignment ← solve (BoolExpr.gate Gate.and widthSubstitutedPred (BoolExpr.not bvLogicalExprWithWidthVal)) then
-            throwError m! "Precondition logic has failed; found an assignment for {pred}: {assignment}"
-    | none => return none
-
-    return combinedPred
-
+    let prunedResults ← pruneEquivalentBVLogicalExprs validCandidates
+    match prunedResults with
+    | [] => return none
+    | _ =>  return some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
 
 def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (BVExpr w)) := Id.run do
   let zero := BVExpr.const (BitVec.ofNat w 0)
@@ -1186,7 +1176,7 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (L
           let mut tempResults : Std.HashMap Nat (List (BVExpr w)) := Std.HashMap.emptyWithCapacity
 
           for (var, expressions) in exprSynthesisResults.toList do
-              let mut prunedExprs ← pruneEquivalentExprs expressions
+              let mut prunedExprs ← pruneEquivalentBVExprs expressions
               tempResults := tempResults.insert var prunedExprs.reverse
 
           pure tempResults
