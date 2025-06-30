@@ -41,9 +41,7 @@ ENV PATH=/home/user/.elan/bin:$PATH
 
 # Install bv-theorem-table-maker
 
-RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d && make 
-# Print the table in the terminal
-RUN python3 mk-latex-table.py
+RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d 
 
 # Download and unzip SMT-LIB QF_BV benchmarks
 RUN mkdir -p bv-evaluation/SMT-LIB
