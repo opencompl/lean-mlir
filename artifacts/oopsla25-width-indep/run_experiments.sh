@@ -10,7 +10,7 @@ pushd bv-evaluation
 popd
 
 pushd SSA/Experimental/Bits/Fast/Dataset2
-./runner.py --db mba.sqlite3 -j10 --prod-run --timeout 120
+./runner.py --db mba.sqlite3 -j10 --prod-run --timeout 540
 ./plotter.py mba.sqlite3
 
 popd
