@@ -291,7 +291,7 @@ async def main(args):
 
     async with asyncio.TaskGroup() as tg:
         # work through tests in reverse order, hardest to easiest.
-        for test in tests:
+        for (i_test, test) in enumerate(tests):
             filename = f"Test{test.solver}{test.ix+1}.lean".replace("-","").replace("_","")
             with open(filename, 'w') as f:
                 test.write(f)
@@ -300,7 +300,7 @@ async def main(args):
                            git_root_dir=git_root_dir,
                            semaphore=semaphore,
                            timeout=args.timeout,
-                           i_test=test.ix,
+                           i_test=i_test,
                            n_tests=n_tests,
                            test_content=test.test,
                            solver=test.solver,
