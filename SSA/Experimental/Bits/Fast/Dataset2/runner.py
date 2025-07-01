@@ -333,7 +333,6 @@ def load_tests(args) -> List[UnitTest]:
         for (ix, t) in enumerate(tests):
             if ix < int(getattr(args, s)): # UnitTest.solver_num_problems[s]:
                 out.append(UnitTest(ix=ix, test=t, solver=s))
-    out = out[::-1]
     return out
 
 async def main(args):
