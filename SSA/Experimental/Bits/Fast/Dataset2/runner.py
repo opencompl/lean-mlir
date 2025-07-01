@@ -328,10 +328,7 @@ class UnitTest:
 
 def load_tests(args) -> List[UnitTest]:
     with open('dataset2_64bit.txt', 'r') as f:
-        # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
-
-    tests = tests[::-1]
 
     out = []
     for s in UnitTest.solvers:
