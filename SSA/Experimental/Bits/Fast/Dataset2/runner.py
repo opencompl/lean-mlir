@@ -122,16 +122,15 @@ class RunWithLimitsResult:
         self.stderr = stderr
         assert self.status in RunWithLimitsResult.statuses
 
-def run_with_limits(cmd : list[str], timeout_sec : int, memout_mb : int) -> RunWithLimitsResult:
+async def run_with_limits(cmd : list[str], timeout_sec : int, memout_mb : int) -> RunWithLimitsResult:
     """
     Run process 'cmd' with limits of 'timout' in seconds and 'memout' in megabyte.
     """
     try:
-        proc = subprocess.Popen(
-            cmd,
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True,
             preexec_fn=os.setsid,
         )
         flag = {"done": False, "memout": False}
@@ -141,16 +140,20 @@ def run_with_limits(cmd : list[str], timeout_sec : int, memout_mb : int) -> RunW
         monitor_thread.start()
 
         try:
-            stdout, stderr = proc.communicate(timeout=timeout_sec)
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout_sec)
+            stdout = stdout.decode("utf-8")
+            stderr = stderr.decode("utf-8")
             flag["done"] = True
             monitor_thread.join()
             if flag["memout"]:
                 return RunWithLimitsResult(status=STATUS_MEMORY_OUT, returncode=None, stdout=stdout, stderr=stderr)
             return RunWithLimitsResult(status=STATUS_SUCCESS, returncode=proc.returncode, stdout=stdout, stderr=stderr)
-        except subprocess.TimeoutExpired:
+        except asyncio.TimeoutError:
             flag["done"] = True
             kill_process_tree(proc.pid)
-            stdout, stderr = proc.communicate()
+            # stdout, stderr = proc.communicate()
+            stdout = ""
+            stderr = ""
             monitor_thread.join()
             return RunWithLimitsResult(status=STATUS_TIMED_OUT, returncode=None, stdout=stdout, stderr=stderr)
     except Exception as e:
@@ -184,7 +187,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test
             return
 
         logging.info(f"Running {filename}, no cache found.")
-        result = run_with_limits(command, timeout_sec=timeout, memout_mb=memout_mb)
+        result = await run_with_limits(command, timeout_sec=timeout, memout_mb=memout_mb)
         exit_code = result.returncode
         walltime = float('inf')
         stdout = result.stdout
@@ -220,14 +223,15 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test
         logging.info(f"[Writing {filename}]  DONE")
         completed_counter.increment()
 
-    command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+1", "-delete"]
-    logging.info(f"{i_test+1}/{n_tests} Clearing /tmp/ folder with command '{" ".join(command)}'")
-    result = subprocess.run(command, capture_output=True, text=True)
-    # v This is OK. There will be files in '/tmp/ that are written by 'root',
-    # but we don't care about clearing them, even if 'find' complains about
-    # trying to open them.
-    # if result.returncode != 0:
-    #     logging.warning(f"{i_test+1}/{n_tests} failed to clear /tmp/: '{result.stderr}'")
+        command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+1", "-delete"]
+        logging.info(f"{i_test+1}/{n_tests} Clearing /tmp/ folder with command '{" ".join(command)}'")
+        result = await asyncio.create_subprocess_exec(*command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        await result.wait()
+        # v This is OK. There will be files in '/tmp/ that are written by 'root',
+        # but we don't care about clearing them, even if 'find' complains about
+        # trying to open them.
+        # if result.returncode != 0:
+        #     logging.warning(f"{i_test+1}/{n_tests} failed to clear /tmp/: '{result.stderr}'")
 
 def get_git_root():
     result = subprocess.run(
