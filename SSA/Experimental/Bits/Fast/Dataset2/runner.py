@@ -194,14 +194,16 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test
         stdout = result.stdout
         status = result.status
         records = parse_tacbench_rows_from_stdout(filename, stdout)
-        print(status)
+
+        logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
         if len(records) != 1:
+            if status == STATUS_SUCCESS:
+                # set status to failure in case we thought we have succeeded.
+                status = STATUS_FAIL
             logging.error(f"[{status} {status_to_emoji[status]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
         else:
             record = records[0]
             walltime = record.walltime
-
-        logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
         logging.info(f"[Writing {filename}]  Opening connection...")
         con = sqlite3.connect(args.db)
         logging.info(f"[Writing {filename}]  Executing INSERT...")
