@@ -16,7 +16,7 @@ RUN apt-get update && \
         ninja-build \
         gdb curl wget zstd unzip sudo \
         # dependencies for experiment scripts
-        python3-matplotlib python3-pandas python3-num2words \
+        python3-matplotlib python3-pandas python3-num2words python3-tabulate \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
         # CoqQFBV dependencies
@@ -38,6 +38,10 @@ WORKDIR /home/user/lean-mlir
 # Install elan and update environment
 RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
 ENV PATH=/home/user/.elan/bin:$PATH
+
+# Install bv-theorem-table-maker
+
+RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d 
 
 # Download and unzip SMT-LIB QF_BV benchmarks
 RUN mkdir -p bv-evaluation/SMT-LIB
