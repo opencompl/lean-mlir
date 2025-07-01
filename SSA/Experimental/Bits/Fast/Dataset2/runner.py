@@ -412,7 +412,7 @@ def parse_args():
         parser.add_argument("--" + solver, type=int, default=UnitTest.solver_num_problems[solver], help=f'run {solver} with these many problems, default {UnitTest.solver_num_problems[solver]}')
     parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
     parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
-    parser.add_argument('--memout-mb', type=int, default=512, help='maximum memory usage per problem (in MB)')
+    parser.add_argument('--memout-mb', type=int, default=8000, help='maximum memory usage per problem (in MB)')
     return parser.parse_args()
 
 if __name__ == "__main__":
