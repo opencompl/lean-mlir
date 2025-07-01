@@ -5,7 +5,7 @@ cd bv-evaluation/
 
 python3 compare.py hackersdelight -j16 -r1
 python3 compare.py instcombine -j16 -r1
-python3 compare.py smtlib -j8 -t60 -m300
+python3 compare.py smtlib -j16 -t60 -m10
 
 python3 collect.py hackersdelight
 python3 collect.py instcombine
