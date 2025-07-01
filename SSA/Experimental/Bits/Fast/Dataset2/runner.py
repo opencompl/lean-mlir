@@ -255,7 +255,7 @@ def load_tests(args) -> List[UnitTest]:
     out = []
     for s in UnitTest.solvers:
         for (ix, t) in enumerate(tests):
-            if ix <= int(getattr(args, s)): # UnitTest.solver_num_problems[s]:
+            if ix < int(getattr(args, s)): # UnitTest.solver_num_problems[s]:
                 out.append(UnitTest(ix=ix, test=t, solver=s))
     return out
 
