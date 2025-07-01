@@ -93,13 +93,13 @@ def monitor_memory(pid, memout_mb, flag):
     try:
         proc = psutil.Process(pid)
         while not flag["done"]:
-            mem = proc.memory_info().rss
+            mem_bytes = proc.memory_info().rss
             for child in proc.children(recursive=True):
                 try:
-                    mem += child.memory_info().rss
+                    mem_bytes += child.memory_info().rss
                 except psutil.NoSuchProcess:
                     continue
-            if mem > memout_mb * 1024 * 1024:
+            if mem_bytes > memout_mb * 1024 * 1024:
                 flag["memout"] = True
                 kill_process_tree(pid)
                 return
