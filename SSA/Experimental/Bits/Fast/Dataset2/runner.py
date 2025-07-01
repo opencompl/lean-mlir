@@ -224,7 +224,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test
         logging.info(f"[Writing {filename}]  DONE")
         completed_counter.increment()
 
-        command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+1", "-delete"]
+        command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+20", "-delete"]
         logging.info(f"{i_test+1}/{n_tests} Clearing /tmp/ folder with command '{" ".join(command)}'")
         result = await asyncio.create_subprocess_exec(*command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         await result.wait()
@@ -282,7 +282,7 @@ class UnitTest:
     solver_kinduction_verified = "kinduction_verified"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_mba, solver_bv_decide, solver_bv_automata_classic, solver_kinduction_verified]
+    solvers = [solver_kinduction_verified, solver_bv_automata_classic,  solver_mba, solver_bv_decide]
     solver_num_problems = {
       solver_mba: 2500,
       solver_bv_automata_classic: 2500,
