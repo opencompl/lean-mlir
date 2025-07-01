@@ -15,16 +15,6 @@ import pathlib
 import datetime
 import logging
 
-def parse_args():
-    current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    parser = argparse.ArgumentParser(prog='runner')
-    nproc = os.cpu_count()
-    parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
-    parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
-    parser.add_argument('--num-tests', type=int, default=100, help='number of tests to run')
-    parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
-    parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
-    return parser.parse_args()
 
 STATUS_FAIL = "fail"
 STATUS_SUCCESS = "success"
@@ -265,17 +255,9 @@ def load_tests(args) -> List[UnitTest]:
     out = []
     for s in UnitTest.solvers:
         for (ix, t) in enumerate(tests):
-            if ix <= UnitTest.solver_num_problems[s]:
+            if ix <= int(getattr(args, s)): # UnitTest.solver_num_problems[s]:
                 out.append(UnitTest(ix=ix, test=t, solver=s))
-
-    if args.prod_run:
-        logging.info(f"--prod_run enabled, running all the files")
-        return out
-    else:
-        if not args.num_tests:
-            args.num_tests = 10
-        NTESTS_TO_RETURN = min(args.num_tests, NTESTS_TO_RETURN)
-        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+    return out
 
 async def main(args):
     logging.info(f"parsed config args: {args}")
@@ -349,6 +331,19 @@ def print_summary_from_db(db):
         logging.info("All tests passed!")
     logging.info("Done with summary.")
     con.close()
+
+def parse_args():
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    parser = argparse.ArgumentParser(prog='runner')
+    nproc = os.cpu_count()
+    parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
+    # parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
+    # parser.add_argument('--num-tests', type=int, default=100, help='number of tests to run')
+    for solver in UnitTest.solvers:
+        parser.add_argument("--" + solver, type=int, default=UnitTest.solver_num_problems[solver], help=f'run {solver} with these many problems, default {UnitTest.solver_num_problems[solver]}')
+    parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
+    parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
+    return parser.parse_args()
 
 if __name__ == "__main__":
     args = parse_args()
