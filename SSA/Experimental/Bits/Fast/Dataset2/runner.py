@@ -103,7 +103,8 @@ def monitor_memory(pid, memout_mb, flag):
                 flag["memout"] = True
                 kill_process_tree(pid)
                 return
-            time.sleep(1)
+            MONITOR_POLL_TIME_SEC = 5
+            time.sleep(MONITOR_POLL_TIME_SEC)
     except psutil.NoSuchProcess:
         pass
 
