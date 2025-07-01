@@ -4,8 +4,11 @@
 # 20.833333333333332 / $NPROC
 # maxHeartbeats
 # timeout.
-from typing import List, Dict
+from typing import List, Dict, Optional
 import os
+import threading
+import psutil
+import time
 import argparse
 import glob
 import sqlite3
@@ -19,11 +22,13 @@ import logging
 STATUS_FAIL = "fail"
 STATUS_SUCCESS = "success"
 STATUS_TIMED_OUT = "timeout"
+STATUS_MEMORY_OUT = "memoryout"
 
 status_to_emoji = {
     STATUS_FAIL : "❌",
     STATUS_SUCCESS : "🎉",
-    STATUS_TIMED_OUT : "⌛️"
+    STATUS_TIMED_OUT : "⌛️",
+    STATUS_MEMORY_OUT : "💥"
 }
 
 class Counter:
@@ -68,11 +73,96 @@ def parse_tacbench_rows_from_stdout(filename : str, stdout : str) -> List[Tacben
             rows.append(TacbenchRecord.parse_tacbench_row(filename, line))
     return rows
 
-async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
+def kill_process_tree(pid : int):
+    """Kill process tree of PID"""
+    try:
+        parent = psutil.Process(pid)
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
+    except psutil.NoSuchProcess:
+        pass
+
+
+def monitor_memory(pid, memout_mb, flag):
+    """
+    monitor the memory of process 'pid', and update the 'flag'
+    dictionary with 'memout=true' if we run out of memory
+    """
+
+    try:
+        proc = psutil.Process(pid)
+        while not flag["done"]:
+            mem = proc.memory_info().rss
+            for child in proc.children(recursive=True):
+                try:
+                    mem += child.memory_info().rss
+                except psutil.NoSuchProcess:
+                    continue
+            if mem > memout_mb * 1024 * 1024:
+                flag["memout"] = True
+                kill_process_tree(pid)
+                return
+            time.sleep(1)
+    except psutil.NoSuchProcess:
+        pass
+
+
+class RunWithLimitsResult:
+    statuses = [STATUS_SUCCESS, STATUS_TIMED_OUT, STATUS_MEMORY_OUT, STATUS_FAIL]
+    status : str
+    returncode : Optional[int]
+    stdout : str
+    stderr : str
+
+    def __init__(self, status : str, returncode : int, stdout : str, stderr : str):
+        self.status = status
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+        assert self.status in RunWithLimitsResult.statuses
+
+def run_with_limits(cmd : list[str], timeout_sec : int, memout_mb : int) -> RunWithLimitsResult:
+    """
+    Run process 'cmd' with limits of 'timout' in seconds and 'memout' in megabyte.
+    """
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            preexec_fn=os.setsid,
+        )
+        flag = {"done": False, "memout": False}
+        monitor_thread = threading.Thread(
+            target=monitor_memory, args=(proc.pid, memout_mb, flag)
+        )
+        monitor_thread.start()
+
+        try:
+            stdout, stderr = proc.communicate(timeout=timeout_sec)
+            flag["done"] = True
+            monitor_thread.join()
+            if flag["memout"]:
+                return RunWithLimitsResult(status=STATUS_MEMORY_OUT, returncode=None, stdout=stdout, stderr=stderr)
+            return RunWithLimitsResult(status=STATUS_SUCCESS, returncode=proc.returncode, stdout=stdout, stderr=stderr)
+        except subprocess.TimeoutExpired:
+            flag["done"] = True
+            kill_process_tree(proc.pid)
+            stdout, stderr = proc.communicate()
+            monitor_thread.join()
+            return RunWithLimitsResult(status=STATUS_TIMED_OUT, returncode=None, stdout=stdout, stderr=stderr)
+    except Exception as e:
+        raise e
+        return RunWithLimitsResult(status=STATUS_FAIL, returncode=None, stdout="", stderr="")
+
+
+async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
-        command = f"lake lean {filename} --dir {git_root_dir}"
-        logging.info(f"Running {i_test+1}/{n_tests} '{command}'")
+        command = ["lake", "lean", filename, "--dir", git_root_dir]
+        logging.info(f"Running {i_test+1}/{n_tests} '{" ".join(command)}'")
 
         logging.info(f"[Looking up cached {filename}]  Opening connection...")
         con = sqlite3.connect(db)
@@ -94,43 +184,20 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             return
 
         logging.info(f"Running {filename}, no cache found.")
-        process = await asyncio.create_subprocess_exec(
-            "lake",
-            "lean",
-            filename,
-            "--dir",
-            git_root_dir,
-            # cwd=git_root_dir,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.DEVNULL,
-            preexec_fn=os.setsid
-        )
-
-        status = STATUS_TIMED_OUT
-        exit_code = 1
+        result = run_with_limits(command, timeout_sec=timeout, memout_mb=memout_mb)
+        exit_code = result.returncode
         walltime = float('inf')
-        stdout = ""
-        try:
-            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
-            stdout = stdout.decode("utf-8")
-            records = parse_tacbench_rows_from_stdout(filename, stdout)
-            if len(records) != 1:
-                logging.error(f"[{status_to_emoji[STATUS_FAIL]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
-                return
+        stdout = result.stdout
+        status = result.status
+        records = parse_tacbench_rows_from_stdout(filename, stdout)
+        print(status)
+        if len(records) != 1:
+            logging.error(f"[{status} {status_to_emoji[status]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
+        else:
             record = records[0]
             walltime = record.walltime
-            exit_code = process.returncode
-            status = STATUS_SUCCESS if process.returncode == 0 else STATUS_FAIL
-        except asyncio.TimeoutError:
-            logging.warning(f"[Timeout for {filename}] Process exceeded {timeout} seconds")
-            os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
-            try:
-                os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
-            except Exception as e:
-                logging.warning(f"Weird exception: {e}")
 
         logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
-
         logging.info(f"[Writing {filename}]  Opening connection...")
         con = sqlite3.connect(args.db)
         logging.info(f"[Writing {filename}]  Executing INSERT...")
@@ -250,13 +317,14 @@ def load_tests(args) -> List[UnitTest]:
         # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
 
-    NTESTS_TO_RETURN = len(tests)
+    tests = tests[::-1]
 
     out = []
     for s in UnitTest.solvers:
         for (ix, t) in enumerate(tests):
             if ix < int(getattr(args, s)): # UnitTest.solver_num_problems[s]:
                 out.append(UnitTest(ix=ix, test=t, solver=s))
+    out = out[::-1]
     return out
 
 async def main(args):
@@ -300,6 +368,7 @@ async def main(args):
                            git_root_dir=git_root_dir,
                            semaphore=semaphore,
                            timeout=args.timeout,
+                           memout_mb=args.memout_mb,
                            i_test=i_test,
                            n_tests=n_tests,
                            test_content=test.test,
@@ -343,6 +412,7 @@ def parse_args():
         parser.add_argument("--" + solver, type=int, default=UnitTest.solver_num_problems[solver], help=f'run {solver} with these many problems, default {UnitTest.solver_num_problems[solver]}')
     parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
     parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
+    parser.add_argument('--memout-mb', type=int, default=512, help='maximum memory usage per problem (in MB)')
     return parser.parse_args()
 
 if __name__ == "__main__":
