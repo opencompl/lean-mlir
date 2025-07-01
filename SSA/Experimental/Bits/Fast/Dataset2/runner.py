@@ -211,7 +211,13 @@ class UnitTest:
     solver_kinduction_verified = "kinduction_verified"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_mba, solver_bv_automata_classic, solver_bv_decide, solver_kinduction_verified]
+    solvers = [solver_mba, solver_bv_decide, solver_bv_automata_classic, solver_kinduction_verified]
+    solver_num_problems = {
+      solver_mba: 2500,
+      solver_bv_automata_classic: 2500,
+      solver_bv_decide: 2500,
+      solver_kinduction_verified: 1500
+    }
 
     def __init__(self, ix, test, solver):
         self.ix = ix
@@ -253,13 +259,14 @@ def load_tests(args) -> List[UnitTest]:
     with open('dataset2_64bit.txt', 'r') as f:
         # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
-    
+
     NTESTS_TO_RETURN = len(tests)
 
     out = []
-    for (ix, t) in enumerate(tests):
-        for s in UnitTest.solvers:
-            out.append(UnitTest(ix=ix, test=t, solver=s))
+    for s in UnitTest.solvers:
+        for (ix, t) in enumerate(tests):
+            if ix <= UnitTest.solver_num_problems[s]:
+                out.append(UnitTest(ix=ix, test=t, solver=s))
 
     if args.prod_run:
         logging.info(f"--prod_run enabled, running all the files")
