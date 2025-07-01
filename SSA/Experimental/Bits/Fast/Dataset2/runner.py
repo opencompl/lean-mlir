@@ -220,6 +220,15 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test
         logging.info(f"[Writing {filename}]  DONE")
         completed_counter.increment()
 
+    command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+1", "-delete"]
+    logging.info(f"{i_test+1}/{n_tests} Clearing /tmp/ folder with command '{" ".join(command)}'")
+    result = subprocess.run(command, capture_output=True, text=True)
+    # v This is OK. There will be files in '/tmp/ that are written by 'root',
+    # but we don't care about clearing them, even if 'find' complains about
+    # trying to open them.
+    # if result.returncode != 0:
+    #     logging.warning(f"{i_test+1}/{n_tests} failed to clear /tmp/: '{result.stderr}'")
+
 def get_git_root():
     result = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"],
