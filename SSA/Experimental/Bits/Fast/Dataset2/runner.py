@@ -226,7 +226,7 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test
         logging.info(f"[Writing {filename}]  DONE")
         completed_counter.increment()
 
-        command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+20", "-delete"]
+        command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+11", "-delete"]
         logging.info(f"{i_test+1}/{n_tests} Clearing /tmp/ folder with command '{" ".join(command)}'")
         result = await asyncio.create_subprocess_exec(*command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         await result.wait()
