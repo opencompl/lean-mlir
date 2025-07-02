@@ -42,7 +42,7 @@ structure ParsedBVExprState where
   BVExprIdToFreeVar : Std.HashMap Nat Name
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
-  symVarToDisplayName : Std.HashMap Nat Name
+  symVarToDisplayName : Std.HashMap Nat String
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 
@@ -415,14 +415,16 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
     let existingVal :=  currState.valToSymVar[pbv]?
     match existingVal with
     | none =>
-      let newId := 1001 + currState.numSymVars
+      let numSymVars := currState.numSymVars
+      let newId := 1001 + numSymVars
       let newExpr : BVExpr targetWidth := BVExpr.var newId
 
       let updatedState : ParsedBVExprState := { currState with
-                                              numSymVars := currState.numSymVars + 1
+                                              numSymVars := numSymVars + 1
                                               , originalWidth := pbv.w
                                               , symVarToVal := currState.symVarToVal.insert newId pbv
-                                              , valToSymVar := currState.valToSymVar.insert pbv newId}
+                                              , valToSymVar := currState.valToSymVar.insert pbv newId
+                                              , symVarToDisplayName := currState.symVarToDisplayName.insert newId s!"C{numSymVars + 1}"}
       set updatedState
       return some {bvExpr := newExpr, width := targetWidth}
     | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
