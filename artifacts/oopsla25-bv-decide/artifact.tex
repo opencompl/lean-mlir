@@ -143,10 +143,8 @@ Access the \texttt{DockerHub} via the url \url{https://hub.docker.com/r/abdoo808
 $ docker pull abdoo8080/oopsla25-bv-decide:v1
 # Run the docker image
 $ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide:v1
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
-$ lake update && lake build
+# Build the framework.
+$ lake build
 # Run experiments InstCombine, HackersDelight, and SMT-LIB
 # Collect the output and generate the plots and statistics
 $ artifacts/oopsla25-bv-decide/run.sh
