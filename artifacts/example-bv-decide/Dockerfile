@@ -19,10 +19,9 @@ USER user
 # Download and unzip SMT-LIB QF_BV benchmarks
 # WARNING: This is a large file, so downloading may take a while,
 #          which is why we put it so high in the Dockerfile (to maximize caching)
-RUN mkdir -p bv-evaluation/SMT-LIB
-RUN curl -L -o QF_BV.tar.zst https://zenodo.org/records/15493090/files/QF_BV.tar.zst?download=1 && \
-    tar -xf QF_BV.tar.zst -C bv-evaluation/SMT-LIB && \
-    rm QF_BV.tar.zst
+RUN mkdir -p bv-evaluation/SMT-LIB && \
+    curl -L  https://zenodo.org/records/15493090/files/QF_BV.tar.zst?download=1 | \
+    tar --extract --zstd --file - -C bv-evaluation/SMT-LIB 
 
 # install dependencies
 RUN apt-get update && \
