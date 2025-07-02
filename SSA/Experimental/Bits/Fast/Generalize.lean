@@ -1367,36 +1367,34 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
             throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
   return none
 
-def prettifyBVExpr (bvExpr : BVExpr w) (state: ParsedBVExprState) : String :=
+def prettifyBVExpr (bvExpr : BVExpr w) (variableDisplayNames: Std.HashMap Nat String) : String :=
     match bvExpr with
-    | .var idx =>
-      let allVars := Std.HashMap.union state.BVExprIdToFreeVar state.symVarToDisplayName
-      allVars[idx]!
+    | .var idx => variableDisplayNames[idx]!
     | .bin lhs op rhs =>
-       s! "({prettifyBVExpr lhs state} {op.toString} {prettifyBVExpr rhs state})"
+       s! "({prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames})"
     | .un op operand =>
-       s! "({op.toString} {prettifyBVExpr operand state})"
+       s! "({op.toString} {prettifyBVExpr operand variableDisplayNames})"
     | .shiftLeft lhs rhs =>
-        s! "({prettifyBVExpr lhs state} << {prettifyBVExpr rhs state})"
+        s! "({prettifyBVExpr lhs variableDisplayNames} << {prettifyBVExpr rhs variableDisplayNames})"
     | .shiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs state} >> {prettifyBVExpr rhs state})"
+        s! "({prettifyBVExpr lhs variableDisplayNames} >> {prettifyBVExpr rhs variableDisplayNames})"
     | .arithShiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs state} >>a {prettifyBVExpr rhs state})"
+        s! "({prettifyBVExpr lhs variableDisplayNames} >>a {prettifyBVExpr rhs variableDisplayNames})"
     -- | .extract start len expr =>
     --     BVExpr.extract start len (substituteBVExpr expr assignment)
     -- -- | .append lhs rhs =>
     --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
     | _ => bvExpr.toString --TODO: Handle other constructors
 
-def prettify (generalization: BVLogicalExpr) (state: ParsedBVExprState) : String :=
+def prettify (generalization: BVLogicalExpr) (variableDisplayNames: Std.HashMap Nat String) : String :=
   match generalization with
-  | .literal (BVPred.bin lhs op rhs) => s! "{prettifyBVExpr lhs state} {op.toString} {prettifyBVExpr rhs state}"
+  | .literal (BVPred.bin lhs op rhs) => s! "{prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames}"
   | .not boolExpr =>
-      s! "!{prettify boolExpr state}"
+      s! "!{prettify boolExpr variableDisplayNames}"
   | .gate op lhs rhs =>
-      s! "{prettify lhs state} {op.toString} {prettify rhs state}"
+      s! "{prettify lhs variableDisplayNames} {op.toString} {prettify rhs variableDisplayNames}"
   | .ite cond positive _ =>
-      s! "if {prettify cond state} then {prettify positive state} "
+      s! "if {prettify cond variableDisplayNames} then {prettify positive variableDisplayNames} "
   | _ => generalization.toString
 
 def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option BVLogicalExpr) := do
@@ -1474,8 +1472,11 @@ elab "#generalize" expr:term: command =>
               }
 
             let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
-              match generalizeRes with
-              | some res => let pretty := prettify res parsedBVState
+            let mut variableDisplayNames := Std.HashMap.union parsedBVState.BVExprIdToFreeVar parsedBVState.symVarToDisplayName
+            variableDisplayNames := variableDisplayNames.insert initialGeneralizerState.widthId "W"
+
+            match generalizeRes with
+              | some res => let pretty := prettify res variableDisplayNames
                             logInfo m! "Input expression: {hExpr} has generalization: {pretty}"
               | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
