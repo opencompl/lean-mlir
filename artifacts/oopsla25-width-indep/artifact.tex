@@ -120,7 +120,6 @@ $ docker run -it oopsla25-width-indep
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
 # | and builds our framework.
-$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # Run a smaller version of the experiments, and check that the output is as expected.
 $ /code/lean-mlir/artifacts/oopsla25-width-indep/test_experiments.sh
 $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
@@ -133,15 +132,11 @@ $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-au
 
 \section{Step by Step Instructions}
 
-As for the previous section, load the image and build the project.
+As for the previous section, load the image.
 
 \begin{script}
 $ docker load -i oopsla25-width-indep.tar
 $ docker run -it oopsla25-width-indep
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
-$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 \end{script}
 
 \subsection{Checking That Our Decision Procedures Are Verified}
@@ -411,9 +406,9 @@ and should match upto order of magnitude comparisons.
 }
 
 \begin{script}
-# $ cat /code/lean-mlir/bv-evaluation/dataset2-cactus-plot-data.tex
-\newcommand{\MBAPresburgerNumSolved}{2353} # > 2300
-\newcommand{\MBABvDecideNumSolved}{2500} # > 2300
+# $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\newcommand{\MBAPresburgerNumSolved}{2500} # exact match
+\newcommand{\MBABvDecideNumSolved}{2500} # exact match
 \newcommand{\MBAKInductionVerifiedNumSolved}{1537} # > 1500
 \newcommand{\MBAMBANumSolved}{2500} # exact match
 \newcommand{\MBAPresburgerTotalTime}{..} # machine dependent
