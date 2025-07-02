@@ -328,19 +328,8 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
                             return some {bvExpr := newExpr, width := targetWidth}
 
         | (none, some bvProd) =>
-              let currState: ParsedBVExprState ← get
               let pbv : BVExpr.PackedBitVec := {bv := bvProd.snd: BVExpr.PackedBitVec}
-              let existingVal :=  currState.valToSymVar[pbv]?
-
-              match existingVal with
-              | none => let newId := 1001 + currState.numSymVars
-                        let newExpr : BVExpr targetWidth := BVExpr.var newId
-
-                        let updatedState : ParsedBVExprState := { currState with numSymVars := currState.numSymVars + 1, originalWidth := bvProd.fst, symVarToVal := currState.symVarToVal.insert newId pbv, valToSymVar := currState.valToSymVar.insert pbv newId}
-                        set updatedState
-                        return some {bvExpr := newExpr, width := targetWidth}
-              | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
-                            return some {bvExpr := newExpr, width := targetWidth}
+              return (← processBitVec pbv)
         | _ =>
             let currState: ParsedBVExprState ← get
             let .fvar name := x | throwError m! "Unknown expression: {x}"
@@ -432,7 +421,8 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
       let updatedState : ParsedBVExprState := { currState with
                                               numSymVars := currState.numSymVars + 1
                                               , originalWidth := pbv.w
-                                              , symVarToVal := currState.symVarToVal.insert newId pbv}
+                                              , symVarToVal := currState.symVarToVal.insert newId pbv
+                                              , valToSymVar := currState.valToSymVar.insert pbv newId}
       set updatedState
       return some {bvExpr := newExpr, width := targetWidth}
     | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
