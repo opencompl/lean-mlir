@@ -128,7 +128,7 @@ RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN echo "v7"
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && gie checkout 28b780232c1e7c47c0360cff34e7ef50955ded21 && git checkout oopsla25-bv-decide && \
+    cd lean-mlir-temp && git checkout 28b780232c1e7c47c0360cff34e7ef50955ded21 && git checkout oopsla25-bv-decide && \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
 
