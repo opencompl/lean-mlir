@@ -800,5 +800,5 @@ with open(performance_hackerdelight_dir, "w"):
 
 instcombine_stats(performance_instcombine_dir)
 hackersdelight_stats(performance_hackerdelight_dir)
-# smtlib_stats(performance_smtlib_dir)
-# smtlib_nokernel_stats(performance_smtlib_nokernel_dir)
+smtlib_stats(performance_smtlib_dir)
+smtlib_nokernel_stats(performance_smtlib_nokernel_dir)
