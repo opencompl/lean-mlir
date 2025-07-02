@@ -115,9 +115,7 @@ should suffice.
 Access the docker image from \url{10.5281/zenodo.11519739}.
 
 \begin{script}
-# decompress the container image
-$ zstd -d oopsla25-width-indep.tar.zst
-$ docker load -i oopsla25-width-indep.tar
+$ docker load -i oopsla25-width-indep.tar.zst
 $ docker run -it oopsla25-width-indep
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
