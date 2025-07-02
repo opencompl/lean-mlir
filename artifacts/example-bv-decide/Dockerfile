@@ -9,6 +9,21 @@ ARG LEAN_MLIR_COMMIT=28b780232c1e7c47c0360cff34e7ef50955ded21
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
+# Create a new user named 'user' with no password and switch to it
+# Needed to install opam packages while avoiding sandboxing issues
+RUN useradd -m -s /bin/bash user && \
+    adduser user sudo && \
+    echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER user
+
+# Download and unzip SMT-LIB QF_BV benchmarks
+# WARNING: This is a large file, so downloading may take a while,
+#          which is why we put it so high in the Dockerfile (to maximize caching)
+RUN mkdir -p bv-evaluation/SMT-LIB
+RUN curl -L -o QF_BV.tar.zst https://zenodo.org/records/15493090/files/QF_BV.tar.zst?download=1 && \
+    tar -xf QF_BV.tar.zst -C bv-evaluation/SMT-LIB && \
+    rm QF_BV.tar.zst
+
 # install dependencies
 RUN apt-get update && \
     apt-get install --yes \
@@ -29,13 +44,6 @@ RUN apt-get update && \
         libboost-timer-dev && \
     apt-get clean
 
-# Create a new user named 'user' with no password and switch to it
-# Needed to install opam packages while avoiding sandboxing issues
-RUN useradd -m -s /bin/bash user && \
-    adduser user sudo && \
-    echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-USER user
-
 # HACK around Lean-MLIR self-reference incompatibility with docker cache:
 # Do all the work in the home directory for now and move it to the lean-mlir directory later
 RUN mkdir -p /home/user/lean-mlir
@@ -48,12 +56,6 @@ ENV PATH=/home/user/.elan/bin:$PATH
 # Install bv-theorem-table-maker
 
 RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d 
-
-# Download and unzip SMT-LIB QF_BV benchmarks
-RUN mkdir -p bv-evaluation/SMT-LIB
-RUN curl -L -o QF_BV.tar.zst https://zenodo.org/records/15493090/files/QF_BV.tar.zst?download=1 && \
-    tar -xf QF_BV.tar.zst -C bv-evaluation/SMT-LIB && \
-    rm QF_BV.tar.zst
 
 # Create Solvers directory
 RUN mkdir -p bv-evaluation/solvers
