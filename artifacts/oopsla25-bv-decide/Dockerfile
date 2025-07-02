@@ -131,7 +131,7 @@ RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && 
     cd lean-mlir-temp && git checkout 28b780232c1e7c47c0360cff34e7ef50955ded21 \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
-RUN lake update --no-cache
+RUN MATHLIB_NO_CACHE_ON_UPDATE=1 LAKE_NO_CACHE=1 lake update --no-cache
 
 # Install Python dependencies
 RUN python3 -m venv .venv && \
