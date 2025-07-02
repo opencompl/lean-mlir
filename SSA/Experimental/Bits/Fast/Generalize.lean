@@ -1370,6 +1370,10 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
 def prettifyBVExpr (bvExpr : BVExpr w) (variableDisplayNames: Std.HashMap Nat String) : String :=
     match bvExpr with
     | .var idx => variableDisplayNames[idx]!
+    | .bin _ BVBinOp.add (BVExpr.un BVUnOp.not operand)  =>
+       s! "(-{prettifyBVExpr operand variableDisplayNames})"
+    | .bin lhs BVBinOp.add (.bin _ BVBinOp.add (BVExpr.un BVUnOp.not rhs)) => -- A subtraction
+       s! "({prettifyBVExpr lhs variableDisplayNames} - {prettifyBVExpr rhs variableDisplayNames})"
     | .bin lhs op rhs =>
        s! "({prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames})"
     | .un op operand =>
