@@ -118,7 +118,7 @@ RUN cd lib && \
     cp gratchk ../../bin
 WORKDIR /home/user/lean-mlir
 
-# Install Leanwuzla (commit: 25.06.25)
+# Install Leanwuzla (commit: 30.06.25)
 # This is a fork of Leanwuzla with modifications to support the evaluation
 RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla && \
     cd Leanwuzla && git checkout 1c8543dfcb325dd113527ddd55ab9c1190c5a111 && \
