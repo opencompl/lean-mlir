@@ -602,10 +602,33 @@ def instcombine_stats(performance_instcombine_dir):
     df_ceg = pd.read_csv("raw-data/InstCombine/instcombine_ceg_data.csv")
     df = pd.read_csv("raw-data/InstCombine/instcombine_solved_data.csv")
     df_err = pd.read_csv("raw-data/InstCombine/instcombine_err_data.csv")
+    df_err_bv_decide = []
+    print(df_err)
+    for idx1, row1 in df_err.iterrows() : 
+        loc1 = row1[1].split(",")[0]
+        msg1 = row1[1].split(",")[1]
+        found = False
+        for idx2, row2 in df_err.iterrows() : 
+            loc2 = row2[1].split(",")[0]
+            msg2 = row2[1].split(",")[1]
+            if loc1 == loc2 and msg1 != msg2: 
+                df_err_bv_decide.append(row2)
+                found = True 
+        if not found: 
+            df_err_bv_decide.append(row1)
+
+
+
     get_avg_bb_sat(df, "InstCombine", "sat", performance_instcombine_dir)
     get_avg_bb_sat(df, "InstCombine", "lrat", performance_instcombine_dir)
-    tot_problems = len(df) + len(df_ceg) + len(df_err)
+    tot_problems = len(df) + len(df_ceg) + len(df_err_bv_decide)
     tot_problems_solved = len(df)
+
+
+    print("tot_solved:"+str(len(df)))
+    print("tot_ceg: "+str(len(df_ceg)))
+    print("tot_err: "+str(len(df_err_bv_decide)))
+    print(tot_problems)
     f = open(performance_instcombine_dir, "a+")
     f.write(r"\newcommand{\InstCombineNProblemsTot}{" + str(tot_problems) + "}\n")
     f.write(
@@ -785,5 +808,5 @@ with open(performance_hackerdelight_dir, "w"):
 
 instcombine_stats(performance_instcombine_dir)
 hackersdelight_stats(performance_hackerdelight_dir)
-smtlib_stats(performance_smtlib_dir)
-smtlib_nokernel_stats(performance_smtlib_nokernel_dir)
+# smtlib_stats(performance_smtlib_dir)
+# smtlib_nokernel_stats(performance_smtlib_nokernel_dir)
