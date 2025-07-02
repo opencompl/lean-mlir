@@ -9,12 +9,27 @@ ARG LEAN_MLIR_COMMIT=28b780232c1e7c47c0360cff34e7ef50955ded21
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
+# Install minimal utilities needed to download SMT-LIB
+# Use cache mounts to cache `apt-get update`:
+#   https://docs.docker.com/build/cache/optimize/#use-cache-mounts
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install --yes \
+        curl zstd sudo
+# NOTE: the cache-mount means the relevant folders are *not*
+# part of the image, so there is no need for `apt-get clean`
+
 # Create a new user named 'user' with no password and switch to it
 # Needed to install opam packages while avoiding sandboxing issues
-RUN useradd -m -s /bin/bash user && \
-    adduser user sudo && \
+RUN useradd -m -s /bin/bash user -G sudo && \
     echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER user
+
+# HACK around Lean-MLIR self-reference incompatibility with docker cache:
+# Do all the work in the home directory for now and move it to the lean-mlir directory later
+RUN mkdir -p /home/user/lean-mlir
+WORKDIR /home/user/lean-mlir
 
 # Download and unzip SMT-LIB QF_BV benchmarks
 # WARNING: This is a large file, so downloading may take a while,
@@ -24,8 +39,10 @@ RUN mkdir -p bv-evaluation/SMT-LIB && \
     tar --extract --zstd --file - -C bv-evaluation/SMT-LIB 
 
 # install dependencies
-RUN apt-get update && \
-    apt-get install --yes \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update && \
+    sudo apt-get install --yes \
         tzdata \
         pip \
         python3-venv \
@@ -34,26 +51,19 @@ RUN apt-get update && \
         git \
         ninja-build \
         ripgrep \ 
-        gdb curl wget zstd unzip sudo \
+        gdb wget unzip \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
         # CoqQFBV dependencies
-        libboost-timer-dev && \
-    apt-get clean
-
-# HACK around Lean-MLIR self-reference incompatibility with docker cache:
-# Do all the work in the home directory for now and move it to the lean-mlir directory later
-RUN mkdir -p /home/user/lean-mlir
-WORKDIR /home/user/lean-mlir
+        libboost-timer-dev
 
 # Install elan and update environment
 RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
 ENV PATH=/home/user/.elan/bin:$PATH
 
 # Install bv-theorem-table-maker
-
-RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git --depth=1 \
-        --revision=4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d
+RUN git clone --depth=1 --revision=4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d \
+        https://github.com/opencompl/bv-theorem-table-maker.git 
 
 # Create Solvers directory
 RUN mkdir -p bv-evaluation/solvers
