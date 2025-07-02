@@ -607,16 +607,8 @@ def instcombine_stats(performance_instcombine_dir):
     for idx1, row1 in df_err.iterrows() : 
         loc1 = row1[1].split(",")[0]
         msg1 = row1[1].split(",")[1]
-        found = False
-        for idx2, row2 in df_err.iterrows() : 
-            loc2 = row2[1].split(",")[0]
-            msg2 = row2[1].split(",")[1]
-            if loc1 == loc2 and msg1 != msg2: 
-                df_err_bv_decide.append(row2)
-                found = True 
-        if not found: 
+        if "SMT" not in msg1 : 
             df_err_bv_decide.append(row1)
-
 
 
     get_avg_bb_sat(df, "InstCombine", "sat", performance_instcombine_dir)

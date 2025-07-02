@@ -2,6 +2,7 @@
 *.jpeg
 *.pdf
 *.csv
+*.txt
 *.sqlite3
 .venv/
 *.sqlite3.log
