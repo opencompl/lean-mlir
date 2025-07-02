@@ -555,8 +555,9 @@ def addConstraints (expr: BVLogicalExpr) (constraints: List BVLogicalExpr) (op: 
       match constraints with
       | [] => expr
       | x::xs =>
-          addConstraints (BoolExpr.gate op expr x) xs op
-
+          match expr with
+          | BoolExpr.const _ => addConstraints x xs op
+          | _ => addConstraints (BoolExpr.gate op expr x) xs op
 
 def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars : Std.HashSet Nat) : List BVLogicalExpr :=
       match bvLogicalExpr with
@@ -1336,7 +1337,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
     return none
 
 def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat)
-                                                : GeneralizerStateM (Option ( BVLogicalExpr × BVLogicalExpr)) := do
+                                                : GeneralizerStateM (Option BVLogicalExpr) := do
   let state ← get
   let parsedBVLogicalExpr := state.parsedBVLogicalExpr
 
@@ -1354,7 +1355,7 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
         match precondition with
         | none => logInfo m! "Could not generate precondition for expr: {expr} with negative examples: {negativeExamples}"
         | some weakPC =>
-                return some (weakPC, expr)
+                return BoolExpr.ite weakPC expr (BoolExpr.const False)
 
         let currentTime ← Core.liftIOCore IO.monoMsNow
         let elapsedTime := currentTime - state.startTime
@@ -1364,13 +1365,13 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
             throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
   return none
 
-def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option String) := do
+def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option BVLogicalExpr) := do
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
         synthesizeWithNoPrecondition constantAssignments
     let maxConjunctions : ℕ := 1
 
     match exprWithNoPrecondition with
-    | some generalized => return some (s! "General form {generalized} has no precondition")
+    | some generalized => return some generalized
     | none =>
               let state ← get
               if state.needsPreconditionsExprs.isEmpty then
@@ -1380,7 +1381,7 @@ def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec
                 checkForPreconditions constantAssignments maxConjunctions
 
               match preconditionRes with
-              | some (pc, expr) => return some s! "Expr {expr} has weak precondition: {pc}"
+              | some expr => return some expr
               | none => return none
     -- TODO:  verify width independence
 
@@ -1440,7 +1441,7 @@ elab "#generalize" expr:term: command =>
 
             let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
               match generalizeRes with
-              | some res => logInfo m! "{res}"
+              | some res => logInfo m! "Input expression: {hExpr} has generalization: {res}"
               | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
