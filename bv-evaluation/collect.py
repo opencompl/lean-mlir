@@ -711,8 +711,6 @@ def collect(benchmark: str):
 
         df_errors = pd.DataFrame({'errors':benchmarks_errors})
 
-        print("len(df_errors)="+str(len(df_errors)))
-
         df_errors.to_csv(RAW_DATA_DIR_INSTCOMBINE + "instcombine_err_data.csv")
 
         print("bv_decide solved " + str(solved_bv_decide_tot) + " theorems.")
