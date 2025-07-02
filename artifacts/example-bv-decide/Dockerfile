@@ -1,5 +1,10 @@
 FROM ubuntu:24.04
 
+# Arguments
+# Note: These can be overriden by invoking docker like so:
+# > docker build --build-arg LEAN_MLIR_COMMIT=abcdef .
+ARG LEAN_MLIR_COMMIT=28b780232c1e7c47c0360cff34e7ef50955ded21
+
 # Set up non-interactive mode for apt-get
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
@@ -128,7 +133,7 @@ RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN echo "v7"
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && git checkout 28b780232c1e7c47c0360cff34e7ef50955ded21 \
+    cd lean-mlir-temp && git checkout $LEAN_MLIR_COMMIT  \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
 
