@@ -17,7 +17,7 @@ RUN apt-get update && \
         ripgrep \ 
         gdb curl wget zstd unzip sudo \
         # dependencies for experiment scripts
-        python3-matplotlib python3-pandas python3-num2words python3-tabulate \
+        python3-matplotlib python3-pandas python3-num2words python3-tabulate ripgrep \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
         # CoqQFBV dependencies
