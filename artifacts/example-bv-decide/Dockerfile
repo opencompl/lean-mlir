@@ -52,18 +52,22 @@ ENV PATH=/home/user/.elan/bin:$PATH
 
 # Install bv-theorem-table-maker
 
-RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d 
+RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git --depth=1 \
+        --revision=4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d
 
 # Create Solvers directory
 RUN mkdir -p bv-evaluation/solvers
+WORKDIR bv-evaluation/solvers
 
 # Install Bitwuzla (commit: 22.6.25)
-RUN cd bv-evaluation/solvers && git clone https://github.com/bitwuzla/bitwuzla && cd bitwuzla && git checkout 0dca38d0f62fa9002ad6278ca6374838a69ade19
-RUN cd bv-evaluation/solvers/bitwuzla && ./configure.py && cd build && ninja && sudo ninja install
+RUN git clone https://github.com/bitwuzla/bitwuzla --depth=1 \
+        --revision=0dca38d0f62fa9002ad6278ca6374838a69ade19 && \
+    cd bitwuzla && ./configure.py && cd build && ninja && sudo ninja install
 
 # Install CoqQFBV (commit: 09.04.23)
-RUN cd bv-evaluation/solvers && git clone https://github.com/fmlab-iis/coq-qfbv && cd coq-qfbv && git checkout bb055f7b05dd81a5ddf89c734bde140a9feecf70
-WORKDIR bv-evaluation/solvers/coq-qfbv
+RUN git clone https://github.com/fmlab-iis/coq-qfbv --depth=1 \
+        --revision=bb055f7b05dd81a5ddf89c734bde140a9feecf70
+WORKDIR coq-qfbv
 RUN yes "/usr/local/bin" | bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)" && \
     opam init --disable-sandboxing --bare
 RUN opam switch create ocaml-base-compiler.4.14.0
@@ -120,20 +124,22 @@ RUN cd lib && \
     cd gratchk-sml && \
     PATH=/home/user/lean-mlir/bv-evaluation/solvers/coq-qfbv/lib/mlton/bin:$PATH make && \
     cp gratchk ../../bin
-WORKDIR /home/user/lean-mlir
+WORKDIR /home/user/lean-mlir/bv-evaluation/solvers
 
 # Install Leanwuzla (commit: 30.06.25)
 # This is a fork of Leanwuzla with modifications to support the evaluation
-RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla && \
-    cd Leanwuzla && git checkout 1c8543dfcb325dd113527ddd55ab9c1190c5a111 && \
+RUN git clone https://github.com/abdoo8080/Leanwuzla --depth=1 \
+        --revision=1c8543dfcb325dd113527ddd55ab9c1190c5a111 && \
+    cd Leanwuzla && \
     lake build
 
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
+WORKDIR /home/user/
 RUN echo "v7"
-RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && git checkout $LEAN_MLIR_COMMIT  \
-    cd .. && cp -r lean-mlir-temp/. lean-mlir && \
+RUN git clone https://github.com/opencompl/lean-mlir lean-mlir-temp --depth=1 \
+        --revision=$LEAN_MLIR_COMMIT && \
+    cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
 
 # Install Python dependencies
