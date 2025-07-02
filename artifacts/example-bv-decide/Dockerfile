@@ -35,8 +35,6 @@ RUN apt-get update && \
         ninja-build \
         ripgrep \ 
         gdb curl wget zstd unzip sudo \
-        # dependencies for experiment scripts
-        python3-matplotlib python3-pandas python3-num2words python3-tabulate \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
         # CoqQFBV dependencies
