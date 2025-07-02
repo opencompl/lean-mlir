@@ -130,9 +130,9 @@ The container image has all dependencies needed to compile our framework with Le
 
 All of our infrastructure is based on Lean version \texttt{nightly-2025-06-27}, commit \texttt{0aca10b228974232cd2d77cd4575a8594458c6e4}. 
 \begin{itemize}
-\item the commit hash for the infrastructure allowing \texttt{bv\_decide} to digest SMT-LIB is \texttt{1c8543dfcb325dd113527ddd55ab9c1190c5a111}
-\item we use lean-MLIR at commit \texttt{548a868571e1aa1f50ede3e6814db6a87db4df91}
-\item we evaluate the coverge of our BitVec API at commit \texttt{4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d}
+\item We use Leanwuzla (https://github.com/hargoniX/Leanwuzla), the infrastructure allowing bv decide to digest SMT-LIB, at commit 1c8543dfcb325dd113527ddd55ab9c1
+\item We use lean-MLIR (https://github.com/opencompl/lean-mlir) at commit 28b780232c1e7c47c0360cff34e7ef50955ded21
+\item We use our own theorem table maker (https://github.com/opencompl/bv-theorem-table-maker) for computing the coverge of our BitVec API at commit 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d
 \end{itemize}
 
 \section{Getting Started}
