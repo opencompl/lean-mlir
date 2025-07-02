@@ -38,8 +38,8 @@ structure BVExprWrapper where
 structure ParsedBVExprState where
   maxFreeVarId : Nat
   numSymVars :  Nat
-  freeVarToBVExpr : Std.HashMap Name BVExprWrapper
-  BVExprIdToFreeVar : Std.HashMap Nat Name
+  freeVarToBVExpr : Std.HashMap String BVExprWrapper
+  BVExprIdToFreeVar : Std.HashMap Nat String
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
   symVarToDisplayName : Std.HashMap Nat String
@@ -93,7 +93,7 @@ structure ParsedBVExpr where
   width : Nat
   bvExpr: BVExpr width
   symVars: Std.HashMap Nat BVExpr.PackedBitVec
-  inputVars : Std.HashMap Nat Name
+  inputVars : Std.HashMap Nat String
 
 structure ParsedBVLogicalExpr where
   lhs: ParsedBVExpr
@@ -315,13 +315,15 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
               let existingVal :=  currState.valToSymVar[pbv]?
 
               match existingVal with
-              | none => let newId := 1001 + currState.numSymVars
+              | none => let numSymVars := currState.numSymVars
+                        let newId := 1001 + numSymVars
                         let newExpr : BVExpr targetWidth := BVExpr.var newId
 
                         let updatedState : ParsedBVExprState := { currState with
-                                                                numSymVars := currState.numSymVars + 1
+                                                                numSymVars := numSymVars + 1
                                                                 , symVarToVal := currState.symVarToVal.insert newId pbv
-                                                                , valToSymVar := currState.valToSymVar.insert pbv newId}
+                                                                , valToSymVar := currState.valToSymVar.insert pbv newId
+                                                                , symVarToDisplayName := currState.symVarToDisplayName.insert newId s!"C{numSymVars + 1}"}
                         set updatedState
                         return some {bvExpr := newExpr, width := targetWidth}
               | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
@@ -333,7 +335,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         | _ =>
             let currState: ParsedBVExprState ← get
             let .fvar name := x | throwError m! "Unknown expression: {x}"
-            let userFacingName := ((← getLCtx).get! name).userName
+            let userFacingName := ((← getLCtx).get! name).userName.toString
 
             let existingVar? := currState.freeVarToBVExpr[userFacingName]?
             match existingVar? with
@@ -1365,6 +1367,38 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
             throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
   return none
 
+def prettifyBVExpr (bvExpr : BVExpr w) (state: ParsedBVExprState) : String :=
+    match bvExpr with
+    | .var idx =>
+      let allVars := Std.HashMap.union state.BVExprIdToFreeVar state.symVarToDisplayName
+      allVars[idx]!
+    | .bin lhs op rhs =>
+       s! "({prettifyBVExpr lhs state} {op.toString} {prettifyBVExpr rhs state})"
+    | .un op operand =>
+       s! "({op.toString} {prettifyBVExpr operand state})"
+    | .shiftLeft lhs rhs =>
+        s! "({prettifyBVExpr lhs state} << {prettifyBVExpr rhs state})"
+    | .shiftRight lhs rhs =>
+        s! "({prettifyBVExpr lhs state} >> {prettifyBVExpr rhs state})"
+    | .arithShiftRight lhs rhs =>
+        s! "({prettifyBVExpr lhs state} >>a {prettifyBVExpr rhs state})"
+    -- | .extract start len expr =>
+    --     BVExpr.extract start len (substituteBVExpr expr assignment)
+    -- -- | .append lhs rhs =>
+    --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
+    | _ => bvExpr.toString --TODO: Handle other constructors
+
+def prettify (generalization: BVLogicalExpr) (state: ParsedBVExprState) : String :=
+  match generalization with
+  | .literal (BVPred.bin lhs op rhs) => s! "{prettifyBVExpr lhs state} {op.toString} {prettifyBVExpr rhs state}"
+  | .not boolExpr =>
+      s! "!{prettify boolExpr state}"
+  | .gate op lhs rhs =>
+      s! "{prettify lhs state} {op.toString} {prettify rhs state}"
+  | .ite cond positive _ =>
+      s! "if {prettify cond state} then {prettify positive state} "
+  | _ => generalization.toString
+
 def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option BVLogicalExpr) := do
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
         synthesizeWithNoPrecondition constantAssignments
@@ -1441,7 +1475,8 @@ elab "#generalize" expr:term: command =>
 
             let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
               match generalizeRes with
-              | some res => logInfo m! "Input expression: {hExpr} has generalization: {res}"
+              | some res => let pretty := prettify res parsedBVState
+                            logInfo m! "Input expression: {hExpr} has generalization: {pretty}"
               | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
       | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
