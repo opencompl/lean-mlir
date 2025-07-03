@@ -1515,6 +1515,4 @@ elab "#generalize" expr:term: command =>
 variable {x y : BitVec 8}
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
-#eval BitVec.ult (BitVec.ofInt 4 (0)) (BitVec.ofInt 4 9)
-
 end Generalize
