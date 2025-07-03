@@ -2,7 +2,7 @@
   description = "A Nix-based development environment for the lean-mlir project.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     lean.url = "github:lenianiva/lean4-nix";
   };
