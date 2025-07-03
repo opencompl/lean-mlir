@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          push: false # Temporarily disabled, as I can't figure out the permissions needed
           tags: ghcr.io/opencompl/lean-mlir:latest #,opencompl/lean-mlir:$GITHUB_SHA
           outputs: type=docker,dest=${{ runner.temp }}/lean-mlir.tar
 
