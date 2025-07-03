@@ -17,7 +17,7 @@ COPY flake.nix flake.lock ./
 RUN nix profile install ".#"
 
 # Install Lean & checkout dependencies
-COPY lean-toolchain lakefile.* ./
+COPY lean-toolchain lakefile.* lake-manifest.json ./
 RUN lean-mlir-init-env
 
 COPY . ./
