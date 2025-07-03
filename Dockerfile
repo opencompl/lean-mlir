@@ -22,5 +22,6 @@ RUN lean-mlir-init-env
 
 # Build the framework
 COPY . ./
-RUN --mount=type=cache,target=/root/.cache/mathlib \
-  lake exe cache get && lake build
+# Temporarily disabled while testing ghcr, to speed up build
+#RUN --mount=type=cache,target=/root/.cache/mathlib \
+#  lake exe cache get && lake build
