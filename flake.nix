@@ -42,38 +42,15 @@
 
       in
       {
-        devShells.default = pkgs.mkShell {
-          buildInputs = [
-            pythonEnv
-            pkgs.unzip
-            pkgs.black
-            pkgs.llvmPackages_19.mlir
-            pkgs.llvmPackages_19.bintools-unwrapped
-            pkgs.bitwuzla
-            pkgs.ripgrep
-            pkgs.git
-          ];
+        # nix run .#test-experiments
+        apps.test-experiments = {
+          type = "app";
+          program = "${pkgs.writeShellScriptBin "run-experiments-script" ''
+            set -euo pipefail
+            export PATH=${pkgs.lib.makeBinPath [ pythonEnv pkgs.coreutils ]}:$PATH
+            ./artifacts/oopsla25-width-indep/test_experiments.sh
+          ''}/bin/run-experiments-script";
         };
-
-      apps.test-experiments = {
-        type = "app";
-        program = "${pkgs.writeShellScriptBin "run-experiments-script" ''
-          set -euo pipefail
-          export PATH=${pkgs.lib.makeBinPath [ pythonEnv pkgs.coreutils ]}:$PATH
-          chmod +x artifacts/oopsla25-width-indep/test_experiments.sh
-          ./artifacts/oopsla25-width-indep/test_experiments.sh
-        ''}/bin/run-experiments-script";
-      };
-
-      apps.run-experiments = {
-        type = "app";
-        program = "${pkgs.writeShellScriptBin "run-experiments-script" ''
-          set -euo pipefail
-          export PATH=${pkgs.lib.makeBinPath [ pythonEnv pkgs.coreutils ]}:$PATH
-          chmod +x artifacts/oopsla25-width-indep/run_experiments.sh
-          ./artifacts/oopsla25-width-indep/run_experiments.sh
-        ''}/bin/run-experiments-script";
-      };
 
       });
 }
