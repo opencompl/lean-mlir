@@ -10,6 +10,14 @@ permissions:
   contents: write
 
 jobs:
+  docker:
+    name: Build and push
+    uses: docker/build-push-action@v6
+      with:
+        platforms: linux/amd64
+        push: true
+        tags: opencompl/lean-mlir:latest,opencompl/lean-mlir:${GITHUB_SHA}
+
   build:
     name: core library
     permissions:
