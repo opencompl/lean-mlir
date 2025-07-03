@@ -18,7 +18,7 @@ jobs:
       with:
         platforms: linux/amd64
         push: true
-        tags: opencompl/lean-mlir:latest,opencompl/lean-mlir:${GITHUB_SHA}
+        tags: opencompl/lean-mlir:latest #,opencompl/lean-mlir:$GITHUB_SHA
 
   build:
     name: core library
