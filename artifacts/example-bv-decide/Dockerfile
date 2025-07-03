@@ -3,6 +3,8 @@ FROM ubuntu:24.04
 # Arguments
 # Note: These can be overriden by invoking docker like so:
 # > docker build --build-arg LEAN_MLIR_COMMIT=abcdef .
+# Keep in mind, when referring to a commit, the argument value
+# *must* be the full hash. Truncated hashes do not work.
 ARG LEAN_MLIR_COMMIT=28b780232c1e7c47c0360cff34e7ef50955ded21
 
 # Set up non-interactive mode for apt-get
@@ -62,21 +64,20 @@ RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-to
 ENV PATH=/home/user/.elan/bin:$PATH
 
 # Install bv-theorem-table-maker
-RUN git clone --depth=1 --revision=4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d \
-        https://github.com/opencompl/bv-theorem-table-maker.git 
-
+ADD --chown=user \
+    https://github.com/opencompl/bv-theorem-table-maker.git#4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d \
+    bv-theorem-table-maker/
+        
 # Create Solvers directory
 RUN mkdir -p bv-evaluation/solvers
 WORKDIR bv-evaluation/solvers
 
 # Install Bitwuzla (commit: 22.6.25)
-RUN git clone https://github.com/bitwuzla/bitwuzla --depth=1 \
-        --revision=0dca38d0f62fa9002ad6278ca6374838a69ade19 && \
-    cd bitwuzla && ./configure.py && cd build && ninja && sudo ninja install
+ADD --chown=user https://github.com/bitwuzla/bitwuzla.git#0dca38d0f62fa9002ad6278ca6374838a69ade19 bitwuzla/
+RUN cd bitwuzla && ./configure.py && cd build && ninja && sudo ninja install
 
 # Install CoqQFBV (commit: 09.04.23)
-RUN git clone https://github.com/fmlab-iis/coq-qfbv --depth=1 \
-        --revision=bb055f7b05dd81a5ddf89c734bde140a9feecf70
+ADD --chown=user https://github.com/fmlab-iis/coq-qfbv.git#bb055f7b05dd81a5ddf89c734bde140a9feecf70 coq-qfbv/
 WORKDIR coq-qfbv
 RUN yes "/usr/local/bin" | bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)" && \
     opam init --disable-sandboxing --bare
@@ -138,19 +139,14 @@ WORKDIR /home/user/lean-mlir/bv-evaluation/solvers
 
 # Install Leanwuzla (commit: 30.06.25)
 # This is a fork of Leanwuzla with modifications to support the evaluation
-RUN git clone https://github.com/abdoo8080/Leanwuzla --depth=1 \
-        --revision=1c8543dfcb325dd113527ddd55ab9c1190c5a111 && \
-    cd Leanwuzla && \
-    lake build
+ADD --chown=user https://github.com/abdoo8080/Leanwuzla.git#1c8543dfcb325dd113527ddd55ab9c1190c5a111 Leanwuzla
+RUN cd Leanwuzla && lake build
 
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
-WORKDIR /home/user/
+WORKDIR /home/user/lean-mlir
 RUN echo "v7"
-RUN git clone https://github.com/opencompl/lean-mlir lean-mlir-temp --depth=1 \
-        --revision=$LEAN_MLIR_COMMIT && \
-    cp -r lean-mlir-temp/. lean-mlir && \
-    rm -rf lean-mlir-temp
+ADD --chown=user https://github.com/opencompl/lean-mlir.git#$LEAN_MLIR_COMMIT ./
 
 # Install Python dependencies
 RUN python3 -m venv .venv && \
