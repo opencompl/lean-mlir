@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   docker:
@@ -31,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: false # Temporarily disabled, as I can't figure out the permissions needed
+          push: true
           tags: ghcr.io/opencompl/lean-mlir:latest #,opencompl/lean-mlir:$GITHUB_SHA
           outputs: type=docker,dest=${{ runner.temp }}/lean-mlir.tar
           cache-from: type=gha
