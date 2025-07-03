@@ -43,7 +43,13 @@
           # Ensure the right Lean toolchain gets installed
           # And that dependencies are checked out to the right versions,
           # although we do not check any cached build outputs
-          MATHLIB_NO_CACHE_ON_UPDATE=1 lake update --no-cache
+          #
+          # NOTE: we prefer `build --no-build` over `update` as the former
+          # uses the pinned versions from the manifest, whereas the latter will
+          # update the manifest to the latest versions.
+          # To wit, the following *does not* trigger a build of Lean-MLIR.
+
+          MATHLIB_NO_CACHE_ON_UPDATE=1 lake build --no-build --no-cache
         '';
 
         shellPkgs = with pkgs; [
