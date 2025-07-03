@@ -1392,20 +1392,21 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
         s! "({prettifyBVExpr lhs displayNames} >>a {prettifyBVExpr rhs displayNames})"
     | _ => bvExpr.toString
 
-def isPositiveCheckMask (mask : BVExpr w) : Bool :=
+def isPositiveCheckMask (mask : BVLogicalExpr) : Bool :=
   match mask with
-  | BVExpr.shiftLeft (BVExpr.const bv) (BVExpr.bin (BVExpr.var _) BVBinOp.add (BVExpr.bin (BVExpr.const bv') BVBinOp.add (BVExpr.un BVUnOp.not (BVExpr.const bv'')))) => bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
+  | BoolExpr.literal (BVPred.bin _ BVBinPred.ult (BVExpr.shiftLeft (BVExpr.const bv) (BVExpr.bin (BVExpr.var _) BVBinOp.add (BVExpr.bin (BVExpr.const bv') BVBinOp.add (BVExpr.un BVUnOp.not (BVExpr.const bv'')))))) =>
+          bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
   | _ => false
 
 def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String :=
   match generalization with
-  | .literal (BVPred.bin expr BVBinPred.ult rhs) =>
-    if isPositiveCheckMask rhs then
-      s! "{prettifyBVExpr expr displayNames} >= 0"
-    else s! "{prettifyBVExpr expr displayNames} <u {prettifyBVExpr rhs displayNames} "
-  | .literal (BVPred.bin lhs op rhs) => s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
+  | .literal (BVPred.bin lhs op rhs) =>
+     if isPositiveCheckMask generalization then
+        s! "{prettifyBVExpr lhs displayNames} >= 0"
+     else s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
   | .not boolExpr =>
       s! "!({prettify boolExpr displayNames})"
+ --| .gate Gate.and lhs
   | .gate op lhs rhs =>
       s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
   | .ite cond positive _ =>
