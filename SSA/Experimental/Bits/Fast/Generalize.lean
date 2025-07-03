@@ -1394,11 +1394,11 @@ def prettifyBVExpr (bvExpr : BVExpr w) (variableDisplayNames: Std.HashMap Nat St
 
 def prettify (generalization: BVLogicalExpr) (variableDisplayNames: Std.HashMap Nat String) : String :=
   match generalization with
-  | .literal (BVPred.bin lhs op rhs) => s! "{prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames}"
+  | .literal (BVPred.bin lhs op rhs) => s! "({prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames})"
   | .not boolExpr =>
-      s! "!{prettify boolExpr variableDisplayNames}"
+      s! "!({prettify boolExpr variableDisplayNames})"
   | .gate op lhs rhs =>
-      s! "{prettify lhs variableDisplayNames} {op.toString} {prettify rhs variableDisplayNames}"
+      s! "({prettify lhs variableDisplayNames}) {op.toString} ({prettify rhs variableDisplayNames})"
   | .ite cond positive _ =>
       s! "if {prettify cond variableDisplayNames} then {prettify positive variableDisplayNames} "
   | _ => generalization.toString
@@ -1446,8 +1446,6 @@ elab "#generalize" expr:term: command =>
             let mut bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
             let parsedBVState := parsedBVLogicalExpr.state
             let originalWidth := parsedBVState.originalWidth
-
-           -- TODO: Verify correctness in the original width
 
             let mut constantAssignments := []
             --- Synthesize constants in a lower width if needed
