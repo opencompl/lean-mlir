@@ -1,6 +1,6 @@
 ARG NIXOS_VERSION="25.05"
 ARG SYSTEM="x86_64-linux"
-FROM nixpkgs/nix:nixos-$NIXOS_VERSION-$SYSTEM AS opencompl/lean-mlir
+FROM nixpkgs/nix:nixos-$NIXOS_VERSION-$SYSTEM 
 
 # Enable flakes and set up nix configuration
 RUN mkdir -p /etc/nix && \
