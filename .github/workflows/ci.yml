@@ -32,6 +32,13 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/opencompl/lean-mlir:latest #,opencompl/lean-mlir:$GITHUB_SHA
+          outputs: type=docker,dest=${{ runner.temp }}/lean-mlir.tar
+
+      - name: Upload Docker image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-mlir-docker
+          path: ${{ runner.temp }}/lean-mlir.tar
 
   build:
     name: core library
