@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   docker:
+    name: Build Docker image for core library
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -33,6 +34,8 @@ jobs:
           push: false # Temporarily disabled, as I can't figure out the permissions needed
           tags: ghcr.io/opencompl/lean-mlir:latest #,opencompl/lean-mlir:$GITHUB_SHA
           outputs: type=docker,dest=${{ runner.temp }}/lean-mlir.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Upload Docker image as artifact
         uses: actions/upload-artifact@v4
@@ -47,6 +50,7 @@ jobs:
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
     runs-on: ubuntu-latest
+    container: 
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
