@@ -920,13 +920,11 @@ def eqToZero (expr: BVExpr w) : BVLogicalExpr :=
 
 def positive (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
   let shiftDistance : BVExpr w := BVExpr.bin (BVExpr.var widthId) BVBinOp.add (negate (one w))
-  let mask := BVExpr.shiftLeft (one w) shiftDistance
-  let maskAndExpr := BVExpr.bin expr BVBinOp.and mask  -- It's positive if (expr && (1 << width -1) == 0)
-
-  eqToZero maskAndExpr
+  let signVal := BVExpr.shiftLeft (one w) shiftDistance
+  BoolExpr.literal (BVPred.bin expr BVBinPred.ult signVal) --- It's positive if `expr <u 2 ^ (w - 1)`
 
 def strictlyGTZero  (expr: BVExpr w) (widthId : Nat)  : BVLogicalExpr :=
-  BoolExpr.gate  Gate.and (BoolExpr.not (eqToZero expr)) (positive expr widthId)
+  BoolExpr.gate  Gate.and (BoolExpr.literal (BVPred.bin (zero w) BVBinPred.ult expr)) (positive expr widthId)
 
 def gteZero (expr: BVExpr w) (widthId : Nat)  : BVLogicalExpr :=
   positive expr widthId
@@ -1493,5 +1491,7 @@ elab "#generalize" expr:term: command =>
 
 variable {x y : BitVec 8}
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+
+#eval BitVec.ult (BitVec.ofInt 4 (0)) (BitVec.ofInt 4 9)
 
 end Generalize
