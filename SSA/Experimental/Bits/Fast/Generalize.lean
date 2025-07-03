@@ -1373,12 +1373,12 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
     | .const bv =>
        toString bv.toInt
     | .bin (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)  =>
-       if bv == (BitVec.ofInt w (-1)) then
+       if bv.toInt == 1 then
         s! "(-{prettifyBVExpr rhs displayNames})"
       else
         s! "({prettifyBVExpr (BVExpr.const bv) displayNames} + {prettifyBVExpr (BVExpr.un BVUnOp.not rhs) displayNames})"
     | .bin lhs BVBinOp.add (.bin  (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)) =>
-      if bv == (BitVec.ofInt w (-1)) then -- A subtraction
+      if bv.toInt == 1 then -- A subtraction
         s! "({prettifyBVExpr lhs displayNames} - {prettifyBVExpr rhs displayNames})"
       else
         s! "({prettifyBVExpr lhs displayNames} + ({prettifyBVExpr (BVExpr.const bv) displayNames} + {prettifyBVExpr (BVExpr.un BVUnOp.not rhs) displayNames}))"
@@ -1394,7 +1394,7 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
         s! "({prettifyBVExpr lhs displayNames} >>a {prettifyBVExpr rhs displayNames})"
     | _ => bvExpr.toString
 
-   
+
 def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String :=
   match generalization with
   | .literal (BVPred.bin lhs op rhs) => s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
