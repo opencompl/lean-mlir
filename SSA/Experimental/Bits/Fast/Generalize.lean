@@ -1365,16 +1365,12 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
             throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
   return none
 
+
 def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : String :=
     match bvExpr with
     | .var idx => displayNames[idx]!
     | .const bv =>
        toString bv.toInt
-    | .bin (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)  =>
-       if bv.toInt == 1 then
-        s! "(-{prettifyBVExpr rhs displayNames})"
-      else
-        s! "({prettifyBVExpr (BVExpr.const bv) displayNames} + {prettifyBVExpr (BVExpr.un BVUnOp.not rhs) displayNames})"
     | .bin lhs BVBinOp.add (.bin  (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)) =>
       if bv.toInt == 1 then -- A subtraction
         s! "({prettifyBVExpr lhs displayNames} - {prettifyBVExpr rhs displayNames})"
