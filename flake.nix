@@ -44,12 +44,13 @@
           # And that dependencies are checked out to the right versions,
           # although we do not check any cached build outputs
           #
-          # NOTE: we prefer `build --no-build` over `update` as the former
-          # uses the pinned versions from the manifest, whereas the latter will
-          # update the manifest to the latest versions.
-          # To wit, the following *does not* trigger a build of Lean-MLIR.
+          # NOTE: surprisingly, there seems to be no dedicated command which just
+          # fetches the depencies, without updating the manifest to newer version
+          # as `lake update` does, or fetching build outputs from cache. Thus, 
+          # we use `lake env ...` which as a side-effect does ensure all dependency 
+          # sources are available.
 
-          MATHLIB_NO_CACHE_ON_UPDATE=1 lake build --no-build --no-cache
+          lake env echo
         '';
 
         shellPkgs = with pkgs; [
