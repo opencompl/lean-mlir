@@ -56,6 +56,7 @@
         shellPkgs = with pkgs; [
           pythonEnv
           elan
+          curl # Needed for `lake exe cache ...`
           customShellHook
         ];
 
