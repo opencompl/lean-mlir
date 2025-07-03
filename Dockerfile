@@ -22,4 +22,5 @@ RUN lean-mlir-init-env
 
 # Build the framework
 COPY . ./
-RUN lake exe cache get && lake build
+RUN --mount=type=cache,target=/root/.cache/mathlib \
+  lake exe cache get && lake build
