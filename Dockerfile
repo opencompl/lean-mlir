@@ -20,4 +20,6 @@ RUN nix profile install ".#"
 COPY lean-toolchain lakefile.* lake-manifest.json ./
 RUN lean-mlir-init-env
 
+# Build the framework
 COPY . ./
+RUN lake exe cache get && lake build
