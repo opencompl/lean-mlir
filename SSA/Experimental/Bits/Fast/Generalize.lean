@@ -1392,26 +1392,47 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
         s! "({prettifyBVExpr lhs displayNames} >>a {prettifyBVExpr rhs displayNames})"
     | _ => bvExpr.toString
 
-def isPositiveCheckMask (mask : BVLogicalExpr) : Bool :=
-  match mask with
+def isGteZeroCheck (expr : BVLogicalExpr) : Bool :=
+  match expr with
   | BoolExpr.literal (BVPred.bin _ BVBinPred.ult (BVExpr.shiftLeft (BVExpr.const bv) (BVExpr.bin (BVExpr.var _) BVBinOp.add (BVExpr.bin (BVExpr.const bv') BVBinOp.add (BVExpr.un BVUnOp.not (BVExpr.const bv'')))))) =>
           bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
   | _ => false
 
+def isStrictlyGTZeroCheck(expr : BVLogicalExpr) : Bool := Id.run do
+  let mut hello : Option String := none
+  match expr with
+  | .gate Gate.and (BoolExpr.literal (BVPred.bin (BVExpr.const bv) BVBinPred.ult _)) rhs =>
+    --bv.toInt == 0 && isGteZeroCheck rhs
+    bv.toInt == 0 && isGteZeroCheck rhs
+  | _ => false
+
+def prettifyComparison (bvLogicalExpr : BVLogicalExpr) (displayNames: Std.HashMap Nat String)  : Option String := Id.run do
+  let mut res : Option String := none
+  match bvLogicalExpr with
+  | BoolExpr.literal (BVPred.bin lhs BVBinPred.ult _) =>
+    if isGteZeroCheck bvLogicalExpr then
+      res := some s! "{prettifyBVExpr lhs displayNames} >= 0"
+  | .gate Gate.and (BoolExpr.literal (BVPred.bin (BVExpr.const bv) BVBinPred.ult expr)) rhs =>
+    if bv.toInt == 0 && isGteZeroCheck rhs then
+      res := some s! "{prettifyBVExpr expr displayNames} > 0"
+  | _ => return none
+
+  res
+
 def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String :=
-  match generalization with
-  | .literal (BVPred.bin lhs op rhs) =>
-     if isPositiveCheckMask generalization then
-        s! "{prettifyBVExpr lhs displayNames} >= 0"
-     else s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
-  | .not boolExpr =>
-      s! "!({prettify boolExpr displayNames})"
- --| .gate Gate.and lhs
-  | .gate op lhs rhs =>
-      s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
-  | .ite cond positive _ =>
-      s! "if {prettify cond displayNames} then {prettify positive displayNames} "
-  | _ => generalization.toString
+  match (prettifyComparison generalization displayNames) with
+  | some s => s
+  | none =>
+      match generalization with
+      | .literal (BVPred.bin lhs op rhs) =>
+          s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
+      | .not boolExpr =>
+          s! "!({prettify boolExpr displayNames})"
+      | .gate op lhs rhs =>
+          s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
+      | .ite cond positive _ =>
+          s! "if {prettify cond displayNames} then {prettify positive displayNames} "
+      | _ => generalization.toString
 
 def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option BVLogicalExpr) := do
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
