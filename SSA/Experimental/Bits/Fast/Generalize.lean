@@ -1394,27 +1394,24 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
 
 def isGteZeroCheck (expr : BVLogicalExpr) : Bool :=
   match expr with
-  | BoolExpr.literal (BVPred.bin _ BVBinPred.ult (BVExpr.shiftLeft (BVExpr.const bv) (BVExpr.bin (BVExpr.var _) BVBinOp.add (BVExpr.bin (BVExpr.const bv') BVBinOp.add (BVExpr.un BVUnOp.not (BVExpr.const bv'')))))) =>
+  | .literal (BVPred.bin _ BVBinPred.ult (BVExpr.shiftLeft (BVExpr.const bv) (BVExpr.bin (BVExpr.var _) BVBinOp.add (BVExpr.bin (BVExpr.const bv') BVBinOp.add (BVExpr.un BVUnOp.not (BVExpr.const bv'')))))) =>
           bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
-  | _ => false
-
-def isStrictlyGTZeroCheck(expr : BVLogicalExpr) : Bool := Id.run do
-  let mut hello : Option String := none
-  match expr with
-  | .gate Gate.and (BoolExpr.literal (BVPred.bin (BVExpr.const bv) BVBinPred.ult _)) rhs =>
-    --bv.toInt == 0 && isGteZeroCheck rhs
-    bv.toInt == 0 && isGteZeroCheck rhs
   | _ => false
 
 def prettifyComparison (bvLogicalExpr : BVLogicalExpr) (displayNames: Std.HashMap Nat String)  : Option String := Id.run do
   let mut res : Option String := none
   match bvLogicalExpr with
-  | BoolExpr.literal (BVPred.bin lhs BVBinPred.ult _) =>
+  | .literal (BVPred.bin lhs BVBinPred.ult _) =>
     if isGteZeroCheck bvLogicalExpr then
       res := some s! "{prettifyBVExpr lhs displayNames} >= 0"
   | .gate Gate.and (BoolExpr.literal (BVPred.bin (BVExpr.const bv) BVBinPred.ult expr)) rhs =>
     if bv.toInt == 0 && isGteZeroCheck rhs then
       res := some s! "{prettifyBVExpr expr displayNames} > 0"
+  | .not expr  =>
+     if isGteZeroCheck expr then
+      match expr with
+      |  .literal (BVPred.bin lhs _ _) => res := some s! "{prettifyBVExpr lhs displayNames} < 0"
+      | _ => return none
   | _ => return none
 
   res
@@ -1425,7 +1422,7 @@ def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat Stri
   | none =>
       match generalization with
       | .literal (BVPred.bin lhs op rhs) =>
-          s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
+          s! "{prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames}"
       | .not boolExpr =>
           s! "!({prettify boolExpr displayNames})"
       | .gate op lhs rhs =>
