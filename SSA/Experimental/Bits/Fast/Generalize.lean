@@ -919,7 +919,7 @@ def eqToZero (expr: BVExpr w) : BVLogicalExpr :=
   BoolExpr.literal (BVPred.bin expr BVBinPred.eq (zero w))
 
 def positive (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
-  let shiftDistance : BVExpr w := BVExpr.bin (BVExpr.var widthId) BVBinOp.add (negate (one w))
+  let shiftDistance : BVExpr w :=  subtract (BVExpr.var widthId) (one w)
   let signVal := BVExpr.shiftLeft (one w) shiftDistance
   BoolExpr.literal (BVPred.bin expr BVBinPred.ult signVal) --- It's positive if `expr <u 2 ^ (w - 1)`
 
@@ -1392,9 +1392,17 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
         s! "({prettifyBVExpr lhs displayNames} >>a {prettifyBVExpr rhs displayNames})"
     | _ => bvExpr.toString
 
+def isPositiveCheckMask (mask : BVExpr w) : Bool :=
+  match mask with
+  | BVExpr.shiftLeft (BVExpr.const bv) (BVExpr.bin (BVExpr.var _) BVBinOp.add (BVExpr.bin (BVExpr.const bv') BVBinOp.add (BVExpr.un BVUnOp.not (BVExpr.const bv'')))) => bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
+  | _ => false
 
 def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String :=
   match generalization with
+  | .literal (BVPred.bin expr BVBinPred.ult rhs) =>
+    if isPositiveCheckMask rhs then
+      s! "{prettifyBVExpr expr displayNames} >= 0"
+    else s! "{prettifyBVExpr expr displayNames} <u {prettifyBVExpr rhs displayNames} "
   | .literal (BVPred.bin lhs op rhs) => s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
   | .not boolExpr =>
       s! "!({prettify boolExpr displayNames})"
