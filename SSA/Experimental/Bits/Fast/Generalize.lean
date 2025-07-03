@@ -1367,40 +1367,43 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
             throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
   return none
 
-def prettifyBVExpr (bvExpr : BVExpr w) (variableDisplayNames: Std.HashMap Nat String) : String :=
+def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : String :=
     match bvExpr with
-    | .var idx => variableDisplayNames[idx]!
+    | .var idx => displayNames[idx]!
     | .const bv =>
        toString bv.toInt
-    | .bin _ BVBinOp.add (BVExpr.un BVUnOp.not operand)  =>
-       s! "(-{prettifyBVExpr operand variableDisplayNames})"
-    | .bin lhs BVBinOp.add (.bin _ BVBinOp.add (BVExpr.un BVUnOp.not rhs)) => -- A subtraction
-       s! "({prettifyBVExpr lhs variableDisplayNames} - {prettifyBVExpr rhs variableDisplayNames})"
+    | .bin (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)  =>
+       if bv == (BitVec.ofInt w (-1)) then
+        s! "(-{prettifyBVExpr rhs displayNames})"
+      else
+        s! "({prettifyBVExpr (BVExpr.const bv) displayNames} + {prettifyBVExpr (BVExpr.un BVUnOp.not rhs) displayNames})"
+    | .bin lhs BVBinOp.add (.bin  (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)) =>
+      if bv == (BitVec.ofInt w (-1)) then -- A subtraction
+        s! "({prettifyBVExpr lhs displayNames} - {prettifyBVExpr rhs displayNames})"
+      else
+        s! "({prettifyBVExpr lhs displayNames} + ({prettifyBVExpr (BVExpr.const bv) displayNames} + {prettifyBVExpr (BVExpr.un BVUnOp.not rhs) displayNames}))"
     | .bin lhs op rhs =>
-       s! "({prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames})"
+       s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
     | .un op operand =>
-       s! "({op.toString} {prettifyBVExpr operand variableDisplayNames})"
+       s! "({op.toString} {prettifyBVExpr operand displayNames})"
     | .shiftLeft lhs rhs =>
-        s! "({prettifyBVExpr lhs variableDisplayNames} << {prettifyBVExpr rhs variableDisplayNames})"
+        s! "({prettifyBVExpr lhs displayNames} << {prettifyBVExpr rhs displayNames})"
     | .shiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs variableDisplayNames} >> {prettifyBVExpr rhs variableDisplayNames})"
+        s! "({prettifyBVExpr lhs displayNames} >> {prettifyBVExpr rhs displayNames})"
     | .arithShiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs variableDisplayNames} >>a {prettifyBVExpr rhs variableDisplayNames})"
-    -- | .extract start len expr =>
-    --     BVExpr.extract start len (substituteBVExpr expr assignment)
-    -- -- | .append lhs rhs =>
-    --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
-    | _ => bvExpr.toString --TODO: Handle other constructors
+        s! "({prettifyBVExpr lhs displayNames} >>a {prettifyBVExpr rhs displayNames})"
+    | _ => bvExpr.toString
 
-def prettify (generalization: BVLogicalExpr) (variableDisplayNames: Std.HashMap Nat String) : String :=
+   
+def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String :=
   match generalization with
-  | .literal (BVPred.bin lhs op rhs) => s! "({prettifyBVExpr lhs variableDisplayNames} {op.toString} {prettifyBVExpr rhs variableDisplayNames})"
+  | .literal (BVPred.bin lhs op rhs) => s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
   | .not boolExpr =>
-      s! "!({prettify boolExpr variableDisplayNames})"
+      s! "!({prettify boolExpr displayNames})"
   | .gate op lhs rhs =>
-      s! "({prettify lhs variableDisplayNames}) {op.toString} ({prettify rhs variableDisplayNames})"
+      s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
   | .ite cond positive _ =>
-      s! "if {prettify cond variableDisplayNames} then {prettify positive variableDisplayNames} "
+      s! "if {prettify cond displayNames} then {prettify positive displayNames} "
   | _ => generalization.toString
 
 def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) : GeneralizerStateM (Option BVLogicalExpr) := do
@@ -1481,6 +1484,7 @@ elab "#generalize" expr:term: command =>
 
             match generalizeRes with
               | some res => let pretty := prettify res variableDisplayNames
+                            logInfo m! "Raw generalization result: {res}"
                             logInfo m! "Input expression: {hExpr} has generalization: {pretty}"
               | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
