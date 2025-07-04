@@ -5,7 +5,6 @@ lean_packages/
 *~
 \#*
 .#*
-*.lock
 build
 GPATH
 GRTAGS
