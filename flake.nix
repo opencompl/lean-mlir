@@ -14,6 +14,10 @@
         };
 
         pythonPackages = ps: with ps; [
+          # (ps.callPackage ./xdsl.nix {})
+          # ^^ FIXME: this is temporarily disabled, as the version of 
+          #    typing-extensions packaged by nixpkgs did not fit in the constraints
+          #    set by xdsl, breaking the entire devshell. We do need xDSL, though!
           matplotlib
           pandas
           polars
@@ -33,7 +37,6 @@
           six
           tabulate
           tzdata
-          # visidata
           zipp
         ];
 
@@ -57,6 +60,12 @@
           pythonEnv
           elan
           curl # Needed for `lake exe cache ...`
+          unzip
+          black
+          llvmPackages_19.mlir
+          llvmPackages_19.bintools-unwrapped
+          bitwuzla
+          ripgrep
           customShellHook
         ];
 
@@ -72,12 +81,8 @@
         packages.default = pkgs.buildEnv {
           name = "LeanMLIR build environment";
           paths = shellPkgs;
-          pathsToLink = [
-            "/bin"
-            "/share"
-          ];
         };
-
+        
         # nix run .#test-experiments
         apps.test-experiments = {
           type = "app";
