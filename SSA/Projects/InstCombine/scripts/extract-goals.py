@@ -31,9 +31,7 @@ STATUS_PROCESSING = "🕒"
 SCRIPT_PATH = os.path.relpath(os.path.abspath(__file__), ROOT_DIR)
 
 
-PREAMBLE = f"""
--- auto-generated from {SCRIPT_PATH}
-
+PREAMBLE = f""" -- auto-generated from '{SCRIPT_PATH}'
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
@@ -81,7 +79,7 @@ def extract_theorems(raw : str) -> List[Theorem]:
 def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
     file_path = BENCHMARK_DIR + file
     fileTitle = file.split('.')[0]
-    EXTRACT_GOALS = "set_option pp.explicit true in extract_goals"
+    EXTRACT_GOALS = "extract_goals"
     logging.info(f"{fileTitle}: writing '{EXTRACT_GOALS}' tactic into file #{file_num}.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,{EXTRACT_GOALS},g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
@@ -94,7 +92,7 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
     try:
         out, err = p.communicate(timeout=timeout)
     except subprocess.TimeoutExpired as e:
-        logging.info(f"{file_path} - time out of {TIMEOUT} seconds reached")
+        logging.error(f"{file_path} - time out of {TIMEOUT} seconds reached")
         p.kill()
         return False
 
@@ -113,10 +111,11 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
 
     for t in theorems:
         path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
+        logging.info(f"{fileTitle}({file_num}/{nfiles}): Writing to '{path}'...")
         with open(path, 'w') as f:
             f.write(PREAMBLE)
             f.write(t.text)
-            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Extracted {path}")
+            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
     return True
 
 def process(db : str, jobs: int, nfiles: int, timeout : int):
@@ -153,14 +152,15 @@ def process(db : str, jobs: int, nfiles: int, timeout : int):
     assert len(future2file) == len(files)
     for future in concurrent.futures.as_completed(future2file):
         file = future2file[future]
+
+        success = False
         try:
             success = future.result()
         except Exception as exc:
             success = False
             logging.error('%r FAILED with exception: %s' % (file, exc))
-        else:
-            if not success:
-                logging.error('%r FAILED run' % (file))
+        if not success:
+            logging.error('%r FAILED run' % (file))
 
         percentage = ((ix + 1) / total) * 100
         status_symbol = STATUS_SUCCESS if success else STATUS_FAIL
