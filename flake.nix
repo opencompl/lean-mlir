@@ -13,11 +13,45 @@
           inherit system;
         };
 
+        installPackages = with pkgs; [
+          ##########################################################
+          ##
+          ## Installed packages
+          ##
+          ##########################################################
+          #
+          # To add a new package to be installed in both the Dockerfile
+          # and local development environments, search for the name of the 
+          # relevant nix package on https://search.nixos.org/packages, 
+          # and add it at the end of the list below.
+          #
+          elan
+          curl # Needed for `lake exe cache ...`
+          unzip
+          black
+          llvmPackages_19.mlir
+          llvmPackages_19.bintools-unwrapped
+          bitwuzla
+          ripgrep
+        ];
+
+
         pythonPackages = ps: with ps; [
-          # (ps.callPackage ./xdsl.nix {})
-          # ^^ FIXME: this is temporarily disabled, as the version of 
-          #    typing-extensions packaged by nixpkgs did not fit in the constraints
-          #    set by xdsl, breaking the entire devshell. We do need xDSL, though!
+          ##########################################################
+          ##
+          ## Python dependencies
+          ##
+          ##########################################################
+          #
+          # To add a new python package to be installed in both the Dockerfile
+          # and local development environments, search for the name of the 
+          # relevant nix package on https://search.nixos.org/packages, 
+          # and add it at the end of the list below. 
+          # For example, for matplotlib, the search will return 
+          # `python313Packages.matplotlib` as the relevant nix package.
+          # To install this, omit the python313Packages prefix from the 
+          # package name, and list only the bit after the dot below.
+          # 
           matplotlib
           pandas
           polars
@@ -38,7 +72,11 @@
           tabulate
           tzdata
           zipp
-        ];
+          # (ps.callPackage ./xdsl.nix {})
+          # ^^ FIXME: this is temporarily disabled, as the version of 
+          #    typing-extensions packaged by nixpkgs did not fit in the constraints
+          #    set by xdsl, breaking the entire devshell. We do need xDSL, though!
+       ];
 
         pythonEnv = pkgs.python3.withPackages pythonPackages;
 
@@ -56,19 +94,10 @@
           lake env echo
         '';
 
-        shellPkgs = with pkgs; [
+        shellPkgs = installPackages + [
           pythonEnv
-          elan
-          curl # Needed for `lake exe cache ...`
-          unzip
-          black
-          llvmPackages_19.mlir
-          llvmPackages_19.bintools-unwrapped
-          bitwuzla
-          ripgrep
           customShellHook
         ];
-
       in
       {
         devShell = pkgs.mkShell {
