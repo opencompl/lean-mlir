@@ -21,6 +21,8 @@ inductive CircuitBackend
 | circuit_cadical_unverified (maxIter : Nat := 4)
 /-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
 | circuit_cadical_verified (maxIter : Nat := 4) (checkTypes? : Bool := false)
+/-- Extract the circuit and print to stdout. -/
+| extract
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
 deriving Repr, DecidableEq
@@ -599,6 +601,11 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         g.assign (← mkSorry (← g.getType) (synthetic := false))
         trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
+    | .extract => do
+      let str := toString predicate.e
+      IO.println str
+      trace[Bits.Frontend] "Closing goal with 'sorry' for extract-run"
+      return []
     | .automata =>
       let (mapFv, g) ← generalizeMap g bvToIxMapVal;
       let (_, g) ← g.revert #[mapFv]
