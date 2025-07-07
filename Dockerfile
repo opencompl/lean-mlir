@@ -9,6 +9,9 @@ RUN mkdir -p /etc/nix && \
 # Add the nix profile to path
 ENV PATH="${PATH}:/root/.nix-profile/bin"
 
+# Install busybox, for `adduser`
+RUN nix profile install "nixpkgs#busybox"
+
 # Install the development environment package
 RUN mkdir -p /code/lean-mlir
 WORKDIR /code/lean-mlir
