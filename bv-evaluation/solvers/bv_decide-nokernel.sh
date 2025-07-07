@@ -3,8 +3,8 @@ set -e
 
 input_file="$1"
 
-export PATH="$HOME/.elan/toolchains/leanprover--lean4-nightly---nightly-2025-06-20/bin:$PATH"
-export LEAN_PATH="$PWD/solvers/Leanwuzla/.lake/build/lib/lean:$HOME/.elan/toolchains/leanprover--lean4-nightly---nightly-2025-06-20/lib/lean"
+export PATH="$HOME/.elan/toolchains/leanprover--lean4-nightly---nightly-2025-06-27/bin:$PATH"
+export LEAN_PATH="$PWD/solvers/Leanwuzla/.lake/build/lib/lean:$HOME/.elan/toolchains/leanprover--lean4-nightly---nightly-2025-06-27/lib/lean"
 
 ulimit -s unlimited
 

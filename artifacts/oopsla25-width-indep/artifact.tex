@@ -112,14 +112,11 @@ should suffice.
 
 \section{Getting Started}
 
-Access the docker image from \url{10.5281/zenodo.11519739}.
+Access the docker image from \url{https://doi.org/10.5281/zenodo.15754222}.
 
 \begin{script}
-$ docker load -i oopsla25-width-indep.tar
+$ docker load -i oopsla25-width-indep.tar.zst
 $ docker run -it oopsla25-width-indep
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
 # Run a smaller version of the experiments, and check that the output is as expected.
 $ /code/lean-mlir/artifacts/oopsla25-width-indep/test_experiments.sh
 $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
@@ -320,16 +317,18 @@ should be equal, while the total time and geomean time are machine-dependent.
 
 \begin{script}
 # $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
-\newcommand{\InstCombineNormPresburgerNumSolved}{2136} # exact match
-\newcommand{\InstCombineBvDecideNumSolved}{7892} # exact match
-\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2496} # exact match
-\newcommand{\InstCombineNormPresburgerTotalTime}{..} # machine dependent
-\newcommand{\InstCombineBvDecideTotalTime}{..} # machine dependent
-\newcommand{\InstCombineNormCircuitVerifiedTotalTime}{..} # machine dependent
-\newcommand{\InstCombineNormPresburgerGeoMean}{14ms} # machine dependent
-\newcommand{\InstCombineBvDecideGeoMean}{55ms} # machine dependent
-\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{30ms} # machine dependent
-\newcommand{\InstCombineTotalProblems}{7964} # exact match
+\newcommand{\MBAKInductionVerifiedNumSolved}{1546} # > 1500
+\newcommand{\MBAMBANumSolved}{2500} # exact match
+\newcommand{\MBABvDecideNumSolved}{2500} # exact match
+\newcommand{\MBAPresburgerNumSolved}{2500} #exact match
+\newcommand{\MBAKInductionVerifiedTotalTime}{2h2m}
+\newcommand{\MBAMBATotalTime}{6m17s}
+\newcommand{\MBABvDecideTotalTime}{6h59m}
+\newcommand{\MBAPresburgerTotalTime}{15h13m}
+\newcommand{\MBAKInductionVerifiedGeoMean}{2.7s}
+\newcommand{\MBAMBAGeoMean}{54.2ms}
+\newcommand{\MBABvDecideGeoMean}{9.89s}
+\newcommand{\MBAPresburgerGeoMean}{4.26s}
 \end{script}
 
 The plots are located at:
@@ -379,10 +378,6 @@ Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo
 \begin{script}
 $ docker load -i oopsla25-width-indep.tar
 $ docker run -it oopsla25-width-indep
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
-$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # | This allows to check that the key theorems of our framework are
 # |guarded, and that they do not contain `sorry`s.
 $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
