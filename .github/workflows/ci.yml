@@ -51,7 +51,10 @@ jobs:
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
     runs-on: ubuntu-latest
-    container: 
+    inputs:
+      ALIVE_EXPECT_ALL: 93
+      ALIVE_EXPECT_SUCCES: 90
+      ALIVE_EXPECT_FAIL: 3
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
