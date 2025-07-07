@@ -5,7 +5,7 @@ pushd $(git rev-parse --show-toplevel)
 echo $PWD
 
 pushd bv-evaluation
-./compare-automata-automata-circuit-jsonl.py --db compare.jsonl --prodrun  -j5
+./compare-automata-automata-circuit-jsonl.py --db compare.jsonl --nfiles 3  -j5
 ./plot-automata-automata-circuit-jsonl.py compare.jsonl
 popd
 

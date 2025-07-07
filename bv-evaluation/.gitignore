@@ -1,6 +1,10 @@
 *.xz
 *.jpeg
 *.pdf
+*.jsonl
+*.db
+*.sqlite
+*.log
 *.csv
 *.sqlite3
 .venv/

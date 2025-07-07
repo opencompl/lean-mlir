@@ -26,14 +26,11 @@ def sed():
         return "gsed"
     return "sed"
 
-def run_file(db : str, file: str, file_num : int, dryrun : bool):
+def run_file(db : str, file: str, file_num : int, timeout : int):
     file_path = BENCHMARK_DIR + file
     fileTitle = file.split('.')[0]
     logging.info(f"{fileTitle}: writing 'bv_bench_automata' tactic into file #{file_num}.")
-    if dryrun:
-        subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_dryrun,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
-    else:
-        subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+    subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
     logging.info(f"{fileTitle}: {STATUS_PROCESSING}")
 
     cmd = 'lake lean ' + file_path
@@ -43,7 +40,7 @@ def run_file(db : str, file: str, file_num : int, dryrun : bool):
     p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
     logging.info(f"{fileTitle}({file_num}): running...")
     try:
-        out, err = p.communicate(timeout=TIMEOUT)
+        out, err = p.communicate(timeout=timeout)
     except subprocess.TimeoutExpired as e:
         logging.info(f"{file_path} - time out of {TIMEOUT} seconds reached")
         p.kill()
@@ -71,7 +68,7 @@ def run_file(db : str, file: str, file_num : int, dryrun : bool):
             f.write(json.dumps(record) + "\n")
     return True
 
-def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
+def process(db : str, jobs: int, nfiles : int, timeout : int):
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
     # os.makedirs(os.path.dirname(db), exist_ok=True)
 
@@ -96,9 +93,8 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
     for ix, file in enumerate(raw_files):
         if "_proof" in file:
             files.append(file)
-            N_TEST_RUN_FILES = 5
-            if len(files) == N_TEST_RUN_FILES and not prod_run:
-                break # quit if we are not doing a production run after 5 files.
+            if len(files) > nfiles:
+                break
 
     total = len(files)
     logging.info(f"total #files to process: {total}")
@@ -106,7 +102,7 @@ def process(db : str, jobs: int, prod_run : bool, dryrun : bool):
     future2file = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         for ix, file in enumerate(files):
-            future = executor.submit(run_file, db, file, ix + 1, dryrun)
+            future = executor.submit(run_file, db, file, ix + 1, timeout)
             future2file[future] = file
 
     total = len(future2file)
@@ -142,10 +138,10 @@ if __name__ == "__main__":
   default_db = f'automata-circuit-{current_time}.jsonl'
   parser.add_argument('--db', default=default_db, help='path to jsonl database')
   parser.add_argument('-j', '--jobs', type=int, default=1)
-  parser.add_argument('--dryrun', action='store_true', help="dry run the evaluation")
-  parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
+  parser.add_argument('--timeout', type=int, default=TIMEOUT, help="timeout in seconds for each file run (default: 4h)")
+  parser.add_argument('--nfiles', type=int, default=5, help="number of files to run (default: 5)")
   args = parser.parse_args()
   setup_logging(args.db)
   logging.info(args)
-  process(args.db, args.jobs, args.prodrun,  args.dryrun)
+  process(args.db, jobs=args.jobs, nfiles=args.nfiles, timeout=args.timeout)
 
