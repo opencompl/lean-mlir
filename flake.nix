@@ -31,8 +31,30 @@
           black
           llvmPackages_19.mlir
           llvmPackages_19.bintools-unwrapped
-          bitwuzla
           ripgrep
+
+          #
+          # Packages with specific version overrides
+          #
+          # To update, replace `version` with the new commit hash or tag
+          # you wish to update to, replace hash with an empty string (`""`),
+          # and run `nix develop` (or attempt to build the Docker image).
+          # This will fail, with a hash mismatch error, for example;
+          # ```
+          # error: hash mismatch in fixed-output derivation '/nix/store/ni1ps8il94y5lbvzlxwvaqsxwrwqkxqd-source.drv':
+          #   specified: sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+          #      got:    sha256-cEzN/nktAe5wbNDCn6P9orNuZS6KbnjuRpG4XgnzevA=
+          # ```
+          # Then, replace the now-empty hash with the hash you see in the `got` 
+          # of the error you just got.
+          (bitwuzla.overrideAttrs (final: prev: rec {
+            version = "0dca38d0f62fa9002ad6278ca6374838a69ade19";
+            src = fetchFromGitHub {
+              inherit (prev.src) owner repo;
+              rev = version;
+              hash = "sha256-cEzN/nktAe5wbNDCn6P9orNuZS6KbnjuRpG4XgnzevA=";
+            };
+          }))
         ];
 
 
