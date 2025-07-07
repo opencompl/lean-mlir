@@ -94,7 +94,7 @@
           lake env echo
         '';
 
-        shellPkgs = installPackages + [
+        shellPkgs = installPackages ++ [
           pythonEnv
           customShellHook
         ];
