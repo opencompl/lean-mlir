@@ -602,8 +602,8 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
         return []
     | .extract => do
-      let str := toString predicate.e
-      IO.println str
+      let fmt : Format := format <| predicate.e.toSexp
+      IO.println fmt
       trace[Bits.Frontend] "Closing goal with 'sorry' for extract-run"
       return []
     | .automata =>

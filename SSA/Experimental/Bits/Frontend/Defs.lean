@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Notation.Defs
 import Mathlib.Order.Notation
+import SSA.Experimental.Bits.Sexp.Basic
 
 /-!
 # Term Language
@@ -44,6 +45,25 @@ inductive Term : Type
 --   hence, I don't anticipate us implementing it.
 deriving Repr, Inhabited, Lean.ToExpr
 
+def Term.toSexp (t : Term) : Sexp :=
+    match t with
+    | var n => .atom ("var " ++ toString n)
+    | zero => .expr [.atom "zero"]
+    | negOne => .expr [.atom "negOne"]
+    | one => .expr [.atom "one"]
+    | ofNat n => .expr [.atom "ofNat ", .atom <| toString n]
+    | Term.and t₁ t₂ => Sexp.expr [Sexp.atom "and", toSexp t₁, toSexp t₂]
+    | Term.or t₁ t₂ => Sexp.expr [Sexp.atom "or", toSexp t₁, toSexp t₂]
+    | Term.xor t₁ t₂ => Sexp.expr [Sexp.atom "xor", toSexp t₁, toSexp t₂]
+    | Term.not t => Sexp.expr [Sexp.atom "not", toSexp t]
+    | add t₁ t₂ => Sexp.expr [Sexp.atom "add", toSexp t₁, toSexp t₂]
+    | sub t₁ t₂ => Sexp.expr [Sexp.atom "sub", toSexp t₁, toSexp t₂]
+    | neg t => Sexp.expr [Sexp.atom "neg", toSexp t]
+    | shiftL t k => Sexp.expr [Sexp.atom "shiftL", toSexp t, .atom (toString k)]
+
+instance : ToSexp Term where
+  toSexp := Term.toSexp
+
 open Term
 
 instance : Add Term := ⟨add⟩
@@ -84,6 +104,19 @@ inductive BinaryPredicate
 | sle
 deriving Repr, Lean.ToExpr
 
+instance : ToString BinaryPredicate where
+  toString := fun bp =>
+    match bp with
+    | .eq => "eq"
+    | .neq => "neq"
+    | .ult => "ult"
+    | .ule => "ule"
+    | .slt => "slt"
+    | .sle => "sle"
+
+instance : ToSexp BinaryPredicate where
+  toSexp p := .atom (toString p)
+
 inductive WidthPredicate
 | eq
 | neq
@@ -92,6 +125,19 @@ inductive WidthPredicate
 | gt
 | ge
 deriving Repr, Inhabited, Lean.ToExpr
+
+instance : ToString WidthPredicate where
+  toString := fun wp =>
+    match wp with
+    | .eq => "eq"
+    | .neq => "neq"
+    | .lt => "lt"
+    | .le => "le"
+    | .gt => "gt"
+    | .ge => "ge"
+
+instance : ToSexp WidthPredicate where
+  toSexp wp := .atom (toString wp)
 
 /--
 The fragment of predicate logic that we support in `bv_automata`.
@@ -112,6 +158,18 @@ inductive Predicate : Type where
 | land  (p q : Predicate) : Predicate
 | lor (p q : Predicate) : Predicate
 deriving Repr, Inhabited, Lean.ToExpr
+
+def Predicate.toSexp (p : Predicate) : Sexp :=
+  match p with
+  | .width wp n =>
+    Sexp.expr [Sexp.atom "wp", ToSexp.toSexp wp, Sexp.atom (toString n)]
+  | .binary bp t₁ t₂ =>
+    Sexp.expr [Sexp.atom "bp", ToSexp.toSexp bp, Term.toSexp t₁, Term.toSexp t₂]
+  | .land p q => Sexp.expr [Sexp.atom "land", toSexp p, toSexp q]
+  | .lor p q => Sexp.expr [Sexp.atom "lor", toSexp p, toSexp q]
+
+instance : ToSexp Predicate where
+  toSexp := Predicate.toSexp
 
 -- TODO: This ugly definition is here to make the `predicateEvalEqFSM` function compile wihtout change.
 @[simp] def Predicate.arity : Predicate → Nat
