@@ -84,14 +84,22 @@
         };
         
         # nix run .#test-experiments
-        apps.test-experiments = {
+        apps.test-experiments = 
+        let
+          programDir = pkgs.writeShellApplication {
+            name = "run-experiments-script";
+            runtimeInputs = shellPkgs;
+            text = ''
+              set -euo pipefail
+              export PATH=${pkgs.lib.makeBinPath [ pythonEnv pkgs.coreutils ]}:$PATH
+              ./artifacts/oopsla25-width-indep/test_experiments.sh
+            '';
+          };
+          program = "${programDir}/bin/run-experiments-script";
+        in
+        {
+          inherit program;
           type = "app";
-          program = "${pkgs.writeShellScriptBin "run-experiments-script" ''
-            set -euo pipefail
-            export PATH=${pkgs.lib.makeBinPath [ pythonEnv pkgs.coreutils ]}:$PATH
-            ./artifacts/oopsla25-width-indep/test_experiments.sh
-          ''}/bin/run-experiments-script";
         };
-
       });
 }
