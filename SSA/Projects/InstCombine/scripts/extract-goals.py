@@ -64,7 +64,7 @@ class Theorem:
 def extract_theorems(raw : str) -> List[Theorem]:
     out = []
     raw = raw.strip()
-    ss = re.findall(r'(theorem.*?:= sorry)', raw, re.DOTALL)
+    ss = re.findall(r'(theorem.*?sorry)', raw, re.DOTALL)
     for s in ss:
         # grab the theorem name.
         thm_name = re.search(r'\btheorem\s+([\w._]+)', s).group(1)
@@ -102,16 +102,22 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
 
     # split 'out' into parts that are delimited by 'theorem ... := sorry'.
     theorems = extract_theorems(out)
+    logging.info(f"{fileTitle}({file_num}/{nfiles}) Extracted {len(theorems)} theorems.")
+    if not theorems:
+        logging.error(f"{fileTitle}({file_num}/{nfiles}) {STATUS_FAIL}: No theorems extracted from file {file_path}.")
+        return False
+
     with open(db, "a") as f:
-        f.write(json.dumps({
-            "fileTitle": fileTitle,
-            "contents": out,
-            "theorems": [asdict(t) for t in theorems]
-            }) + "\n")
+        for t in theorems:
+            f.write(json.dumps({
+                "fileTitle": fileTitle,
+                "theorem_name": t.name,
+                "theorem_text": t.text,
+                }) + "\n")
 
     for t in theorems:
         path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
-        logging.info(f"{fileTitle}({file_num}/{nfiles}): Writing to '{path}'...")
+        logging.info(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
         with open(path, 'w') as f:
             f.write(PREAMBLE)
             f.write(t.text)
