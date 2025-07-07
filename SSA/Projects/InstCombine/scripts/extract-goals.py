@@ -189,7 +189,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(prog='extract-goals')
   default_db = f'extract-goals-{current_time}.jsonl'
   parser.add_argument('--db', default=default_db, help='path to jsonl database')
-  parser.add_argument('-j', '--jobs', type=int, default=1)
+  parser.add_argument('-j', '--jobs', type=int, default=4)
   parser.add_argument('--nfiles', type=int, default=4, help="number of files to extract")
   parser.add_argument('--timeout', type=int, default=600, help="timeout in seconds for each file processing")
   args = parser.parse_args()
