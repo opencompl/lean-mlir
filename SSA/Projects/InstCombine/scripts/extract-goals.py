@@ -28,6 +28,25 @@ STATUS_GREEN_CHECK = "✅"
 STATUS_SUCCESS = "🎉"
 STATUS_PROCESSING = "🕒"
 
+SCRIPT_PATH = os.path.relpath(os.path.abspath(__file__), ROOT_DIR)
+
+
+PREAMBLE = f"""
+-- auto-generated from {SCRIPT_PATH}
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
+open LLVM
+
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
+set_option Elab.async false
+
+"""
+
 def sed():
     if platform.system() == "Darwin":
         return "gsed"
@@ -39,6 +58,10 @@ class Theorem:
     name : str
     # the text of the theorem, including 'theorem <name> <args> := by sorry
     text : str
+
+    def get_file_name(self, file_title: str) -> str:
+        suffix = self.name.replace('.', '_').replace(' ', '_')
+        return f"{file_title}_{suffix}.lean"
 
 def extract_theorems(raw : str) -> List[Theorem]:
     out = []
@@ -58,7 +81,7 @@ def extract_theorems(raw : str) -> List[Theorem]:
 def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
     file_path = BENCHMARK_DIR + file
     fileTitle = file.split('.')[0]
-    EXTRACT_GOALS = "extract_goals"
+    EXTRACT_GOALS = "set_option pp.explicit true in extract_goals"
     logging.info(f"{fileTitle}: writing '{EXTRACT_GOALS}' tactic into file #{file_num}.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,{EXTRACT_GOALS},g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
@@ -89,8 +112,9 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
             }) + "\n")
 
     for t in theorems:
-        path = Path(GOALS_DIR) / f"{fileTitle}_{t.name}.lean"
+        path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
         with open(path, 'w') as f:
+            f.write(PREAMBLE)
             f.write(t.text)
             logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Extracted {path}")
     return True
