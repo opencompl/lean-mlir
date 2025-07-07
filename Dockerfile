@@ -13,6 +13,8 @@ ENV PATH="${PATH}:/root/.nix-profile/bin"
 RUN nix profile install "nixpkgs#busybox"
 
 # Install the development environment package
+# To add another package to be installed in the Dockerfile,
+# please modify the `flake.nix` file.
 RUN mkdir -p /code/lean-mlir
 WORKDIR /code/lean-mlir
 
