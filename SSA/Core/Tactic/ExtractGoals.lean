@@ -101,7 +101,7 @@ end PrintPrivate
 
 -/
 
-syntax (name := extractGoal) "extract_goals" : tactic
+syntax (name := extractGoals) "extract_goals" : tactic
 
 open Lean Meta Elab Tactic
 
