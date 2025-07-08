@@ -3,8 +3,7 @@ import SSA.Experimental.Bits.SingleWidth.Defs
 import SSA.Experimental.Bits.SingleWidth.Preprocessing
 import SSA.Experimental.Bits.SingleWidth.Syntax
 
-import SSA.Experimental.Bits.Fast.Reflect
-import SSA.Experimental.Bits.Fast.ReflectVerif
+import SSA.Experimental.Bits.Fast.KInduction
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
 initialize Lean.registerTraceClass `Bits.SingleWidth
@@ -17,9 +16,7 @@ inductive CircuitBackend
 | automata
 /-- Pure lean implementation, verified. -/
 | circuit_lean
-/-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
-| circuit_cadical_unverified (maxIter : Nat := 4)
-/-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
+/-- bv_decide based backend for k-induction. -/
 | circuit_cadical_verified (maxIter : Nat := 4) (checkTypes? : Bool := false)
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
@@ -683,20 +680,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
       | .exhaustedIterations niter =>
         throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
-    | .circuit_cadical_unverified maxIter =>
-      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      -- trace[Bits.Frontend] f!"{fsm.format}'"
-      let (isTrueForall, _circuitState) ← fsm.decideIfZerosMUnverified maxIter
-      if isTrueForall
-      then do
-        let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
-        if gs.isEmpty
-        then return gs
-        else
-          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
-      else
-        throwError m!"failed to prove goal, since decideIfZerosM established that theorem is not true."
-        return [g]
     | .circuit_lean =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       -- trace[Bits.Frontend] f!"{fsm.format}'"
