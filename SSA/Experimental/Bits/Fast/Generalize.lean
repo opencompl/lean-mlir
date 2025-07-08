@@ -501,8 +501,7 @@ def reconstructAssignment' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
 def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    let cadicalTimeoutSec : Nat := 500
-    let cfg: BVDecideConfig := {timeout := 500}
+    let cfg: BVDecideConfig := {timeout := 60}
 
     IO.FS.withTempFile fun _ lratFile => do
       let ctx ← BVDecide.Frontend.TacticContext.new lratFile cfg
@@ -514,9 +513,9 @@ def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.Pa
             (cnf, map))
 
       let res ← runExternal cnf ctx.solver ctx.lratPath
-          (trimProofs := true)
-          (timeout := cadicalTimeoutSec)
-          (binaryProofs := true)
+          (trimProofs := ctx.config.trimProofs)
+          (timeout := ctx.config.timeout)
+          (binaryProofs := ctx.config.binaryProofs)
 
       match res with
       | .ok proof =>
@@ -1365,6 +1364,17 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
             throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
   return none
 
+def prettifyBVBinOp (op: BVBinOp) : String :=
+  match op with
+  | .and => "&&&"
+  | .or => "|||"
+  | .xor => "^^^"
+  | _ => op.toString
+
+def prettifyBVBinPred (op : BVBinPred) : String :=
+  match op with
+  | .eq => "="
+  | _ => op.toString
 
 def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : String :=
     match bvExpr with
@@ -1377,15 +1387,15 @@ def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : 
       else
         s! "({prettifyBVExpr lhs displayNames} + ({prettifyBVExpr (BVExpr.const bv) displayNames} + {prettifyBVExpr (BVExpr.un BVUnOp.not rhs) displayNames}))"
     | .bin lhs op rhs =>
-       s! "({prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames})"
+       s! "({prettifyBVExpr lhs displayNames} {prettifyBVBinOp op} {prettifyBVExpr rhs displayNames})"
     | .un op operand =>
        s! "({op.toString} {prettifyBVExpr operand displayNames})"
     | .shiftLeft lhs rhs =>
-        s! "({prettifyBVExpr lhs displayNames} << {prettifyBVExpr rhs displayNames})"
+        s! "({prettifyBVExpr lhs displayNames} <<< {prettifyBVExpr rhs displayNames})"
     | .shiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs displayNames} >> {prettifyBVExpr rhs displayNames})"
+        s! "({prettifyBVExpr lhs displayNames} >>> {prettifyBVExpr rhs displayNames})"
     | .arithShiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs displayNames} >>a {prettifyBVExpr rhs displayNames})"
+        s! "({prettifyBVExpr lhs displayNames} >>>a {prettifyBVExpr rhs displayNames})"
     | _ => bvExpr.toString
 
 def isGteZeroCheck (expr : BVLogicalExpr) : Bool :=
@@ -1418,7 +1428,7 @@ def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat Stri
   | none =>
       match generalization with
       | .literal (BVPred.bin lhs op rhs) =>
-          s! "{prettifyBVExpr lhs displayNames} {op.toString} {prettifyBVExpr rhs displayNames}"
+          s! "{prettifyBVExpr lhs displayNames} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames}"
       | .not boolExpr =>
           s! "!({prettify boolExpr displayNames})"
       | .gate op lhs rhs =>
@@ -1447,72 +1457,142 @@ def generalize  (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec
               | none => return none
     -- TODO:  verify width independence
 
+inductive GeneralizeContext where
+  | Command : GeneralizeContext
+  | Tactic (name : Name) : GeneralizeContext
+
+
+def printAsTheorem (name: Name) (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String := Id.run do
+  let params := displayNames.values.filter (λ n => n != "w")
+  let mut res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " params} : BitVec w)"
+
+  match generalization with
+  | .ite cond positive _ => res := res ++ s! " (h: {prettify cond displayNames}) : {prettify positive displayNames}"
+  | _ => res := res ++ s! " : {prettify generalization displayNames}"
+
+  res := res ++ s! " := by sorry"
+  pure res
+
+def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
+    let targetWidth := 8
+    let timeoutMs := 600000
+
+    match_expr hExpr with
+    | Eq _ lhsExpr rhsExpr =>
+          let startTime ← Core.liftIOCore IO.monoMsNow
+
+          -- Parse the input expression
+          let initialState : ParsedBVExprState := default
+          let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
+            | throwError "Unsupported expression provided"
+
+          trace[Generalize] m! "Parsed BVLogicalExpr state: {parsedBVLogicalExpr.state}"
+
+          let mut bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
+          let parsedBVState := parsedBVLogicalExpr.state
+          let originalWidth := parsedBVState.originalWidth
+
+          let mut constantAssignments := []
+          --- Synthesize constants in a lower width if needed
+          if originalWidth > targetWidth then
+            constantAssignments ← existsForAll bvLogicalExpr parsedBVState.symVarToVal.keys parsedBVState.BVExprIdToFreeVar.keys 1
+
+          let mut processingWidth := targetWidth
+          if constantAssignments.isEmpty then
+            logInfo m! "Did not synthesize new constant values in width {targetWidth}"
+            constantAssignments := parsedBVState.symVarToVal :: constantAssignments
+            processingWidth := originalWidth
+
+          if processingWidth != targetWidth then
+              -- Revert to the original width if necessary
+            bvLogicalExpr := changeBVLogicalExprWidth bvLogicalExpr processingWidth
+            trace[Generalize] m! "Using values for {bvLogicalExpr} in width {processingWidth}: {constantAssignments}"
+
+          let initialGeneralizerState : GeneralizerState :=
+            { startTime := startTime
+            , widthId := 9481
+            , timeout := timeoutMs
+            , processingWidth           := processingWidth
+            , targetWidth               := targetWidth
+            , parsedBVLogicalExpr       := { parsedBVLogicalExpr with bvLogicalExpr := bvLogicalExpr }
+            , needsPreconditionsExprs   := []
+            , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
+            , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
+            }
+
+          let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
+          let mut variableDisplayNames := Std.HashMap.union parsedBVState.BVExprIdToFreeVar parsedBVState.symVarToDisplayName
+          variableDisplayNames := variableDisplayNames.insert initialGeneralizerState.widthId "w"
+
+          trace[Generalize] m! "All vars: {variableDisplayNames}"
+          match generalizeRes with
+            | some res => match context with
+                          | GeneralizeContext.Command => let pretty := prettify res variableDisplayNames
+                                                         pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
+                          | GeneralizeContext.Tactic name => pure m! "{printAsTheorem name res variableDisplayNames}"
+            | none => throwError m! "Could not generalize {bvLogicalExpr}"
+
+    | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
+
+
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let targetWidth := 8
-
       let hExpr ← Term.elabTerm expr none
-      logInfo m! "hexpr: {hExpr}"
-      let timeoutMs := 600000
+      trace[Generalize] m! "hexpr: {hExpr}"
+      let res ← parseAndGeneralize hExpr GeneralizeContext.Command
 
-      match_expr hExpr with
-      | Eq _ lhsExpr rhsExpr =>
-            let startTime ← Core.liftIOCore IO.monoMsNow
-
-            -- Parse the input expression
-            let initialState : ParsedBVExprState := default
-            let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
-              | throwError "Unsupported expression provided"
-
-            logInfo m! "Parsed BVLogicalExpr state: {parsedBVLogicalExpr.state}"
-
-            let mut bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
-            let parsedBVState := parsedBVLogicalExpr.state
-            let originalWidth := parsedBVState.originalWidth
-
-            let mut constantAssignments := []
-            --- Synthesize constants in a lower width if needed
-            if originalWidth > targetWidth then
-              constantAssignments ← existsForAll bvLogicalExpr parsedBVState.symVarToVal.keys parsedBVState.BVExprIdToFreeVar.keys 1
-
-            let mut processingWidth := targetWidth
-            if constantAssignments.isEmpty then
-              logInfo m! "Did not synthesize new constant values in width {targetWidth}"
-              constantAssignments := parsedBVState.symVarToVal :: constantAssignments
-              processingWidth := originalWidth
-
-            if processingWidth != targetWidth then
-                -- Revert to the original width if necessary
-              bvLogicalExpr := changeBVLogicalExprWidth bvLogicalExpr processingWidth
-              logInfo m! "Using values for {bvLogicalExpr} in width {processingWidth}: {constantAssignments}"
-
-            let initialGeneralizerState : GeneralizerState :=
-              { startTime := startTime
-              , widthId := 9481
-              , timeout := timeoutMs
-              , processingWidth           := processingWidth
-              , targetWidth               := targetWidth
-              , parsedBVLogicalExpr       := { parsedBVLogicalExpr with bvLogicalExpr := bvLogicalExpr }
-              , needsPreconditionsExprs   := []
-              , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
-              , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
-              }
-
-            let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
-            let mut variableDisplayNames := Std.HashMap.union parsedBVState.BVExprIdToFreeVar parsedBVState.symVarToDisplayName
-            variableDisplayNames := variableDisplayNames.insert initialGeneralizerState.widthId "W"
-
-            match generalizeRes with
-              | some res => let pretty := prettify res variableDisplayNames
-                            logInfo m! "Raw generalization result: {res}"
-                            logInfo m! "Input expression: {hExpr} has generalization: {pretty}"
-              | none => throwError m! "Could not generalize {bvLogicalExpr}"
-
-      | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
-      pure ()
+      logInfo m! "{res}"
 
 variable {x y : BitVec 8}
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+
+
+syntax (name := bvGeneralize) "bv_generalize" : tactic
+@[tactic bvGeneralize]
+def evalBvGeneralize : Tactic := fun
+| `(tactic| bv_generalize) => do
+    let name ← mkAuxDeclName `generalized
+    let msg ← withoutModifyingEnv <| withoutModifyingState do
+      withMainContext do
+        let expr ← Lean.Elab.Tactic.getMainTarget
+        let res ← parseAndGeneralize expr (GeneralizeContext.Tactic name)
+        pure m! "{res}"
+    logInfo m! "{msg}"
+| _ => throwUnsupportedSyntax
+
+
+set_option linter.unusedTactic false
+
+/--
+info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+---
+warning: declaration uses 'sorry'
+-/
+#guard_msgs in
+theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
+  bv_generalize
+  sorry
+
+
+/--
+info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
+---
+warning: declaration uses 'sorry'
+-/
+#guard_msgs in
+theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
+  bv_generalize
+  sorry
+
+/--
+info: theorem Generalize.demo3.generalized_1_1 {w} (x C1 C2 C3 : BitVec w) (h: (C1 &&& C2) = 0) : ((x &&& C1) &&& C2) = 0 := by sorry
+---
+warning: declaration uses 'sorry'
+-/
+#guard_msgs in
+theorem demo3 (x y : BitVec 8) : x &&& 3#8 &&& 4#8 = 0#8 := by
+  bv_generalize
+  sorry
 
 end Generalize
