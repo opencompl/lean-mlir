@@ -11,7 +11,7 @@ $ lake build bv-circuit-profile; samply record .lake/build/bin/bv-circuit-profil
 
 Authors: Siddharth Bhat
 -/
-import SSA.Experimental.Bits.Fast.ReflectVerif
+import SSA.Experimental.Bits.Fast.KInduction
 import SSA.Experimental.Bits.TestPredicates
 import Lean
 open Lean Elab Meta
