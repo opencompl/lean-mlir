@@ -487,12 +487,11 @@ def Expr.mkSubtypeVal (e : Expr) : MetaM Expr :=
   mkAppM ``Subtype.val #[e]
 
 /--
-info: ReflectVerif.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
-  (cert : String) : Bool
+info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
 -/
-#guard_msgs in #check ReflectVerif.BvDecide.verifyCircuit
+#guard_msgs in #check Circuit.verifyCircuit
 def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.verifyCircuit #[c, cert]
+  mkAppM ``Circuit.verifyCircuit #[c, cert]
 
 
 
@@ -514,7 +513,7 @@ def Expr.KInductionCircuits.mkIsLawful_mkN (fsm : Expr) (n : Expr) : MetaM Expr 
 /--
 info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {arity : Type} {fsm : FSM arity} [DecidableEq arity]
   [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+  Circuit (Vars fsm.α arity (n + 2))
 -/
 #guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
 def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
@@ -523,7 +522,7 @@ def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
 /--
 info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking {arity : Type} {fsm : FSM arity} [DecidableEq arity]
   [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+  Circuit (Vars fsm.α arity (n + 2))
 -/
 #guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking
 def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : MetaM Expr :=
@@ -587,7 +586,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
-
 
     match cfg.backend with
     | .dryrun =>
