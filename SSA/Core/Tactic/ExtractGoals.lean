@@ -22,7 +22,7 @@ import Lean.Elab.Command
 /-!
 We reuse implementations from Lean.Elab.Print
 to correctly print theorem statements.
-The key issue is that `#print` correcly obeys
+The key issue is that `#print` correctly obeys
 `pp.analyze` and `pp.analyze.checkInstances`, while `#check` does not.
 Thus, we reuse the `printDefLike` and `printAxiomLike`
 functions from `Lean.Elab.Print` to print theorems.
