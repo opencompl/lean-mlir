@@ -487,12 +487,11 @@ def Expr.mkSubtypeVal (e : Expr) : MetaM Expr :=
   mkAppM ``Subtype.val #[e]
 
 /--
-info: ReflectVerif.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
-  (cert : String) : Bool
+info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
 -/
-#guard_msgs in #check ReflectVerif.BvDecide.verifyCircuit
+#guard_msgs in #check Circuit.verifyCircuit
 def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.verifyCircuit #[c, cert]
+  mkAppM ``Circuit.verifyCircuit #[c, cert]
 
 
 
@@ -587,7 +586,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
-
 
     match cfg.backend with
     | .dryrun =>
