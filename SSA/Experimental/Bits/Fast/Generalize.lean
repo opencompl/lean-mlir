@@ -2,7 +2,7 @@
 import Std.Sat.AIG.CNF
 import Std.Sat.AIG.RelabelNat
 import Std.Tactic.BVDecide.Bitblast.BVExpr
-import Lean.Elab.Tactic.BVDecide.Frontend.BVDecide.Reify
+import Lean.Elab.Tactic.BVDecide.SingleWidth.BVDecide.Reify
 
 import Lean.Elab.Term
 import Lean.Meta.ForEachExpr

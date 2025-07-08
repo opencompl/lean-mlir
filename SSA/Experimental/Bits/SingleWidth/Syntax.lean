@@ -1,5 +1,5 @@
 import Lean.Meta.ForEachExpr
-import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Experimental.Bits.SingleWidth.Defs
 
 open Lean in
 def mkBoolLit (b : Bool) : Expr :=
