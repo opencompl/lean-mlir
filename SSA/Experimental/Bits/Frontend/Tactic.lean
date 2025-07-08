@@ -514,7 +514,7 @@ def Expr.KInductionCircuits.mkIsLawful_mkN (fsm : Expr) (n : Expr) : MetaM Expr 
 /--
 info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {arity : Type} {fsm : FSM arity} [DecidableEq arity]
   [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+  Circuit (Vars fsm.α arity (n + 2))
 -/
 #guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
 def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
@@ -523,7 +523,7 @@ def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
 /--
 info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking {arity : Type} {fsm : FSM arity} [DecidableEq arity]
   [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+  Circuit (Vars fsm.α arity (n + 2))
 -/
 #guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking
 def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : MetaM Expr :=
