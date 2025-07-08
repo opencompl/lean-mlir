@@ -19,7 +19,7 @@ import Lean.Util.CollectAxioms
 import Lean.Elab.Command
 
 
-/-#
+/-!
 We reuse implementations from Lean.Elab.Print
 to correctly print theorem statements.
 The key issue is that `#print` correcly obeys
