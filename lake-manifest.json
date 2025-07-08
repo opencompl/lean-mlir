@@ -98,7 +98,7 @@
    "rev": "414cf639742674ba0adeab75425ba818c153dd01",
    "name": "batteries",
    "manifestFile": "lake-manifest.json",
-   "inputRev": "nightly-testing",
+   "inputRev": "main",
    "inherited": true,
    "configFile": "lakefile.toml"}],
  "name": "SSA",
