@@ -1,13 +1,13 @@
 import Mathlib.Data.Fintype.Defs
-import SSA.Experimental.Bits.Frontend.Defs
-import SSA.Experimental.Bits.Frontend.Preprocessing
-import SSA.Experimental.Bits.Frontend.Syntax
+import SSA.Experimental.Bits.SingleWidth.Defs
+import SSA.Experimental.Bits.SingleWidth.Preprocessing
+import SSA.Experimental.Bits.SingleWidth.Syntax
 
 import SSA.Experimental.Bits.Fast.Reflect
 import SSA.Experimental.Bits.Fast.ReflectVerif
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
-initialize Lean.registerTraceClass `Bits.Frontend
+initialize Lean.registerTraceClass `Bits.SingleWidth
 
 namespace Tactic
 open Lean Meta Elab Tactic
@@ -872,7 +872,7 @@ private lemma simple_test (x y : BitVec w) : x + y = y + x ∨ x = 0 := by
   bv_automata_classic
 
 /--
-info: '_private.SSA.Experimental.Bits.Frontend.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
+info: '_private.SSA.Experimental.Bits.SingleWidth.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
  Lean.ofReduceBool,

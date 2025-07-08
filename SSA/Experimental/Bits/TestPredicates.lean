@@ -1,5 +1,4 @@
-
-import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Experimental.Bits.SingleWidth.Defs
 
 def Bits.testPredicates : Array Predicate := #[
 Predicate.binary

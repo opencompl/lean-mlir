@@ -1137,7 +1137,7 @@ Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
 bitblasting capabilities.
 -/
 @[nospecialize]
-def toAIGAux {α : Type} 
+def toAIGAux {α : Type}
     [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
     ToAIGAuxEntrypoint aig c :=
   match c with
@@ -1444,7 +1444,7 @@ theorem verifyAIG_correct {α : Type} [DecidableEq α] [Fintype α] [Hashable α
 
 /-- Verify the circuit by translating to AIG. -/
 def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
-    (c : Circuit α) (cert : String) : Bool := 
+    (c : Circuit α) (cert : String) : Bool :=
   verifyAIG (α := α) c.toAIG cert
 
 /- If circuit verification succeeds, then the circuit is unsat. -/

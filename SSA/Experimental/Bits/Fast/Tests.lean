@@ -7,7 +7,7 @@ We use `grind_norm` to convert the expression into negation normal form.
 
 Authors: Siddharth Bhat
 -/
-import SSA.Experimental.Bits.Frontend.Tactic
+import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Projects.InstCombine.TacticAuto
 

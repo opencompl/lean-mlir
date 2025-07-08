@@ -15,13 +15,13 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Defs
 import Mathlib.Data.Multiset.FinsetOps
-import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Experimental.Bits.SingleWidth.Defs
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.Decide
-import SSA.Experimental.Bits.Frontend.Syntax
-import SSA.Experimental.Bits.Frontend.Preprocessing
+import SSA.Experimental.Bits.SingleWidth.Syntax
+import SSA.Experimental.Bits.SingleWidth.Preprocessing
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import SSA.Experimental.Bits.Fast.ForLean
