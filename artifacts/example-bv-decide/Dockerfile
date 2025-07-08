@@ -1,5 +1,3 @@
-FROM ubuntu:24.04
-
 # Arguments
 # Note: These can be overriden by invoking docker like so:
 # > docker build --build-arg LEAN_MLIR_COMMIT=abcdef .
@@ -7,20 +5,18 @@ FROM ubuntu:24.04
 # *must* be the full hash. Truncated hashes do not work.
 ARG LEAN_MLIR_COMMIT=28b780232c1e7c47c0360cff34e7ef50955ded21
 
-# Set up non-interactive mode for apt-get
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Etc/UTC
 
-# Install minimal utilities needed to download SMT-LIB
-# Use cache mounts to cache `apt-get update`:
-#   https://docs.docker.com/build/cache/optimize/#use-cache-mounts
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install --yes \
-        curl zstd sudo
-# NOTE: the cache-mount means the relevant folders are *not*
-# part of the image, so there is no need for `apt-get clean`
+FROM lean-mlir:latest 
+# ^^ TODO the tag should be given by LEAN_MLIR_COMMIT
+
+# TODO: this docker file could be based on the nix-based image
+# However, we probably don't want to base it on the lean-mlir image as it stands
+# today, given that one will change whenever LeanMLIR has an update (i.e., very frequently)
+# which will rerun *all* commands in this file.
+# This is an argument for having a separate "base" image, which just has the relatively
+# stable dependencies, and base this Dockerfile on that instead.
+
+ENV TZ=Etc/UTC
 
 # Create a new user named 'user' with no password and switch to it
 # Needed to install opam packages while avoiding sandboxing issues
@@ -40,28 +36,28 @@ RUN mkdir -p bv-evaluation/SMT-LIB && \
     curl -L  https://zenodo.org/records/15493090/files/QF_BV.tar.zst?download=1 | \
     tar --extract --zstd --file - -C bv-evaluation/SMT-LIB 
 
-# install dependencies
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    sudo apt-get update && \
-    sudo apt-get install --yes \
-        tzdata \
-        pip \
-        python3-venv \
-        build-essential \
-        cmake \
-        git \
-        ninja-build \
-        ripgrep \ 
-        gdb wget unzip \
-        # bitwuzla dependencies
-        meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
-        # CoqQFBV dependencies
-        libboost-timer-dev
+# # install dependencies
+# RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+#     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+#     sudo apt-get update && \
+#     sudo apt-get install --yes \
+#         tzdata \
+#         pip \
+#         python3-venv \
+#         build-essential \
+#         cmake \
+#         git \
+#         ninja-build \
+#         ripgrep \ 
+#         gdb wget unzip \
+#         # bitwuzla dependencies
+#         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
+#         # CoqQFBV dependencies
+#         libboost-timer-dev
 
-# Install elan and update environment
-RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
-ENV PATH=/home/user/.elan/bin:$PATH
+# # Install elan and update environment
+# RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+# ENV PATH=/home/user/.elan/bin:$PATH
 
 # Install bv-theorem-table-maker
 ADD --chown=user \
