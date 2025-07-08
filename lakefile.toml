@@ -39,7 +39,7 @@ root = "SSA.MLIRNatural"
 
 [[lean_exe]]
 name = "bv-circuit-profile-kinduction"
-root = "SSA.Experimental.Bits.Fast.ProfileKInduction"
+root = "SSA.Experimental.Bits.KInduction.ProfileKInduction"
 
 [[lean_exe]]
 name = "bv-automata-profile"

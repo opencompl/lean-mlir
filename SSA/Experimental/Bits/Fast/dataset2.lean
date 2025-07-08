@@ -1,5 +1,5 @@
 import Std.Tactic.BVDecide
-import SSA.Experimental.Bits.Fast.KInduction
+import SSA.Experimental.Bits.KInduction
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.AutoStructs.Tactic
 import SSA.Core.Tactic.TacBench

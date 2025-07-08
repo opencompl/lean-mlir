@@ -3,7 +3,7 @@ import SSA.Experimental.Bits.SingleWidth.Defs
 import SSA.Experimental.Bits.SingleWidth.Preprocessing
 import SSA.Experimental.Bits.SingleWidth.Syntax
 
-import SSA.Experimental.Bits.Fast.KInduction
+import SSA.Experimental.Bits.KInduction.KInduction
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
 initialize Lean.registerTraceClass `Bits.SingleWidth
