@@ -1,5 +1,5 @@
 import SSA.Experimental.Bits.ForLean
-import SSA.Experimental.Bits.Frontend.Attr
+import SSA.Experimental.Bits.SingleWidth.Attr
 import Mathlib.Data.Nat.Bits
 import Mathlib.Algebra.Group.Nat.Defs
 

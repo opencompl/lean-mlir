@@ -1,13 +1,12 @@
 import Mathlib.Data.Fintype.Defs
-import SSA.Experimental.Bits.Frontend.Defs
-import SSA.Experimental.Bits.Frontend.Preprocessing
-import SSA.Experimental.Bits.Frontend.Syntax
+import SSA.Experimental.Bits.SingleWidth.Defs
+import SSA.Experimental.Bits.SingleWidth.Preprocessing
+import SSA.Experimental.Bits.SingleWidth.Syntax
 
-import SSA.Experimental.Bits.Fast.Reflect
-import SSA.Experimental.Bits.Fast.ReflectVerif
+import SSA.Experimental.Bits.Fast.KInduction
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 
-initialize Lean.registerTraceClass `Bits.Frontend
+initialize Lean.registerTraceClass `Bits.SingleWidth
 
 namespace Tactic
 open Lean Meta Elab Tactic
@@ -17,9 +16,7 @@ inductive CircuitBackend
 | automata
 /-- Pure lean implementation, verified. -/
 | circuit_lean
-/-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
-| circuit_cadical_unverified (maxIter : Nat := 4)
-/-- bv_decide based backend. Two versions, an unverified one and a verified one.. -/
+/-- bv_decide based backend for k-induction. -/
 | circuit_cadical_verified (maxIter : Nat := 4) (checkTypes? : Bool := false)
 /-- Dry run, do not execute and close proof with `sorry` -/
 | dryrun
@@ -487,12 +484,11 @@ def Expr.mkSubtypeVal (e : Expr) : MetaM Expr :=
   mkAppM ``Subtype.val #[e]
 
 /--
-info: ReflectVerif.BvDecide.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α)
-  (cert : String) : Bool
+info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
 -/
-#guard_msgs in #check ReflectVerif.BvDecide.verifyCircuit
+#guard_msgs in #check Circuit.verifyCircuit
 def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.verifyCircuit #[c, cert]
+  mkAppM ``Circuit.verifyCircuit #[c, cert]
 
 
 
@@ -514,7 +510,7 @@ def Expr.KInductionCircuits.mkIsLawful_mkN (fsm : Expr) (n : Expr) : MetaM Expr 
 /--
 info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {arity : Type} {fsm : FSM arity} [DecidableEq arity]
   [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+  Circuit (Vars fsm.α arity (n + 2))
 -/
 #guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
 def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
@@ -523,7 +519,7 @@ def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
 /--
 info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking {arity : Type} {fsm : FSM arity} [DecidableEq arity]
   [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (ReflectVerif.BvDecide.Vars fsm.α arity (n + 2))
+  Circuit (Vars fsm.α arity (n + 2))
 -/
 #guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking
 def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : MetaM Expr :=
@@ -587,7 +583,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
     let g ← g.replaceTargetDefEq target
     trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
-
 
     match cfg.backend with
     | .dryrun =>
@@ -685,20 +680,6 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
         throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
       | .exhaustedIterations niter =>
         throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
-    | .circuit_cadical_unverified maxIter =>
-      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      -- trace[Bits.Frontend] f!"{fsm.format}'"
-      let (isTrueForall, _circuitState) ← fsm.decideIfZerosMUnverified maxIter
-      if isTrueForall
-      then do
-        let gs ← g.apply (mkConst ``Reflect.BvDecide.decideIfZerosMAx [])
-        if gs.isEmpty
-        then return gs
-        else
-          throwError m!"Expected application of 'decideIfZerosMAx' to close goal, but failed. {indentD g}"
-      else
-        throwError m!"failed to prove goal, since decideIfZerosM established that theorem is not true."
-        return [g]
     | .circuit_lean =>
       let fsm := predicateEvalEqFSM predicate.e |>.toFSM
       -- trace[Bits.Frontend] f!"{fsm.format}'"
@@ -874,7 +855,7 @@ private lemma simple_test (x y : BitVec w) : x + y = y + x ∨ x = 0 := by
   bv_automata_classic
 
 /--
-info: '_private.SSA.Experimental.Bits.Frontend.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
+info: '_private.SSA.Experimental.Bits.SingleWidth.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
  Lean.ofReduceBool,
