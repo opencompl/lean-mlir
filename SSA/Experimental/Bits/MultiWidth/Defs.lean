@@ -21,7 +21,7 @@ inductive NatPredicate (n : Nat) : Type
 | eq : WidthExpr n → WidthExpr n → NatPredicate n
 
 def NatPredicate.toProp (env : Fin n → Nat) : NatPredicate n → Prop
-  | .eq e1 e2 => WidthExpr.toNat e1 env = WidthExpr.toNat e2 env
+| .eq e1 e2 => WidthExpr.toNat e1 env = WidthExpr.toNat e2 env
 
 
 abbrev Term.Ctx (wcard : Nat) (tcard : Nat) : Type :=
@@ -41,15 +41,16 @@ inductive Term {wcard tcard : Nat}
 /--
 Environments are for evaluation.
 -/
-abbrev Term.Env
-  (tCtx : Term.Ctx wcard tcard)
+abbrev Term.Ctx.Env
+  (tctx : Term.Ctx wcard tcard)
   (wenv : Fin wcard → Nat) :=
-  (v : Fin tcard) → BitVec ((tCtx v).toNat wenv)
+  (v : Fin tcard) → BitVec ((tctx v).toNat wenv)
 
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
-    (tenv : Term.Env tcard wenv) :
-  Term tcard w → BitVec (w.toNat wenv)
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) :
+  Term tctx w → BitVec (w.toNat wenv)
 | .var v => tenv v
 | .add a b => a.toBV tenv + b.toBV tenv
 | .zext a v => (a.toBV tenv).zeroExtend (v.toNat wenv)
@@ -67,9 +68,9 @@ inductive Predicate
 | not (p : Predicate ctx) : Predicate ctx
 
 def Predicate.toProp
-    {tCtx : Term.Ctx wcard tcard}
-    (tenv : Term.Env tCtx wenv)
-    (p : Predicate tCtx) : Prop :=
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv)
+    (p : Predicate tctx) : Prop :=
   match p with
   | .binRel k a b =>
     match k with
@@ -96,14 +97,14 @@ def Term.toBitstream {wcard tcard : Nat}
     {w : WidthExpr wcard}
     (t : Term tctx w)
     {wenv : WidthExpr.Env wcard}
-    (tenv : Term.Env tctx wenv) :
+    (tenv : tctx.Env wenv) :
     BitStream :=
   BitStream.ofBitVec (t.toBV tenv)
 
-def Predicate.toBitstream {tCtx : Term.Ctx wcard tcard}
-    (p : Predicate tCtx)
+def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
+    (p : Predicate tctx)
     {wenv : WidthExpr.Env wcard}
-    (tenv : Term.Env tCtx wenv) :
+    (tenv : tctx.Env wenv) :
     BitStream :=
   match p with
   | .binRel k a b =>
@@ -128,14 +129,36 @@ structure NatFSM (wcard : Nat) (v : WidthExpr wcard) where
 
 structure TermFSM {w : WidthExpr wcard}
   (ctx : Term.Ctx wcard tcard)
-  (t : Term tCtx w) where
+  (t : Term tctx w) where
   fsm : FSM (StateSpace wcard tcard)
 
 structure PredicateFSM
-  {tCtx : Term.Ctx wcard tcard}
-  (p : Predicate tCtx) where
+  {tctx : Term.Ctx wcard tcard}
+  (p : Predicate tctx) where
   fsm : FSM (StateSpace wcard tcard)
 
+structure GoodNatFSM (wcard : Nat) (v : WidthExpr wcard)
+  extends NatFSM wcard v where
+  heval_eq :
+    ∀ (env : Fin wcard → Nat)
+    (fsmEnv : StateSpace wcard 0 → BitStream),
+      fsm.eval fsmEnv = v.toBitstream env
+
+structure GoodTermFSM {w : WidthExpr wcard}
+  (ctx : Term.Ctx wcard tcard)
+  (t : Term tctx w) extends TermFSM ctx t where
+  heval_eq :
+    ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
+      (fsmEnv : StateSpace wcard tcard → BitStream),
+      fsm.eval fsmEnv = t.toBitstream tenv
+
+structure GoodPredicateFSM
+  {tctx : Term.Ctx wcard tcard}
+  (p : Predicate tctx) extends PredicateFSM p where
+  heval_eq :
+    ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
+      (fsmEnv : StateSpace wcard tcard → BitStream),
+      fsm.eval fsmEnv = p.toBitstream tenv
 
 end ToFSM
 
