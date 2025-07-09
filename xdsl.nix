@@ -11,17 +11,21 @@
   fetchFromGitHub,
   immutabledict,
   typing-extensions,
-  ordered-set
+  ordered-set,
+  setuptools,
+  versioneer
 }:
 
 buildPythonPackage rec {
   pname = "xdsl";
   version = "0.22.0";
 
+  pyproject = true;
+  build-system = [ setuptools ];
+
   src = fetchPypi {
     inherit version;
     pname = "xdsl";
-    # hash = "sha256-oh618MGF7YmQ0Y8tl7IKSu7c1n0DnW+oRbx5eeDV18w=";
     hash = "sha256-+t8Lic/fm7u7PNEQs9DtSwoVnDjBjdy43f62qtkzPMs=";
   };
 
@@ -29,6 +33,8 @@ buildPythonPackage rec {
     immutabledict
     typing-extensions
     ordered-set
+    setuptools
+    versioneer
   ];
 
 
