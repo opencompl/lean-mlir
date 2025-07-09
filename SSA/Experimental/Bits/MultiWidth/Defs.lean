@@ -63,6 +63,11 @@ inductive Predicate
 | or (p1 p2 : Predicate ctx) : Predicate ctx
 | not (p : Predicate ctx) : Predicate ctx
 
+section toBV
+end toBV
+
+section toBitstream
+end toBitstream
+
+
 end MultiWidth
-
-
