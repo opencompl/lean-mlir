@@ -50,6 +50,11 @@ def compare : FrameIx → FrameIx → Ordering
 | .infinity, _ => .gt -- infinity is greater than everything.
 | .ofNat f, .ofNat g => Ord.compare f g
 
+instance : Ord FrameIx where
+  compare := FrameIx.compare
+
+instance : LT FrameIx := ltOfOrd 
+
 end FrameIx
 
 structure TCube extends Cube fsm where
@@ -99,16 +104,30 @@ def depth (frames : Frames fsm) : Nat :=
 
 end Frames
 
-abbrev SolverM (fsm : FSM arity) := StateT (PDRState fsm) Id
+abbrev SolverM (fsm : FSM arity) := StateT (PDRState fsm) MetaM
 
 def SAT.getBadCube : SolverM fsm (Option (Cube fsm)) :=
   sorry
+
 def SAT.isBlocked (c : TCube fsm) : SolverM fsm Bool :=
   sorry
+
 def SAT.isInitial (c : Cube fsm) : SolverM fsm Bool :=
   sorry
-def SAT.solveRelative (c : TCube fsm) (params : Nat) : SolverM fsm (TCube fsm) :=
-    sorry
+
+
+inductive ModelExtractKind
+| extractModel
+| noExtractModel
+
+inductive QueryKind
+| indQuery
+| noIndQuery
+
+def SAT.solveRelative (c : TCube fsm)
+    (mk : ModelExtractKind)
+    (qk : QueryKind) : SolverM fsm (TCube fsm) :=
+  sorry
 
 
 def depth : SolverM fsm Nat := do
@@ -118,12 +137,26 @@ def depth : SolverM fsm Nat := do
 def newFrame : SolverM fsm Unit := do
   modify fun s => { s with F := s.F.newFrame }
 
+def assert (b : Bool) (msg : MessageData) : SolverM fsm Unit := do
+  if !b then
+    throwError "Assertion failed: {msg}"
+
 def addBlockedCube (c : TCube fsm) : SolverM fsm Unit := sorry
+
+
+def generalize (s0 : TCube fsm) : SolverM fsm (TCube fsm) := sorry
 
 inductive RecBlockedCubeResult
 | blocked
 | failedToBlock
 deriving DecidableEq, Hashable
+
+
+def condAssign (dest : TCube fsm) (src : TCube fsm) : SolverM fsm (TCube fsm) := 
+    if src.frame ≠ .null then
+      return src
+    else
+      return dest
 
 -- Figure 6
 def recBlockedCube (s0 : TCube fsm) : SolverM fsm RecBlockedCubeResult := do
@@ -137,15 +170,32 @@ def recBlockedCube (s0 : TCube fsm) : SolverM fsm RecBlockedCubeResult := do
       -- failed to block the cube, it is an initial cube.
       return .failedToBlock
     else
-      if hblocked : ! (← SAT.isBlocked s) then
-        sorry
+      let isBlocked ← SAT.isBlocked s
+      if hblocked : !isBlocked then do
+        assert (! (← SAT.isInitial s.toCube)) m!"cube was unable to be blocked, and cube turned out to be initial."
+        let z ← SAT.solveRelative s .extractModel .indQuery
+        if z.frame ≠ FrameIx.null then
+          -- cube 's' was blocked by image of predecessor.
+          let mut z ← generalize z
+          -- | TODO: this condition is slightly different from the paper, so be careful.
+          while z.frame < FrameIx.ofNat ((← depth) - 1) do
+              let z' ← SAT.solveRelative z.next .extractModel .indQuery
+              if z'.frame = FrameIx.null then -- condAssign.
+                break
+              else
+                z := z'
+          addBlockedCube z
+          -- TODO: think
+          if s.frame < FrameIx.ofNat (← depth) && z.frame ≠ .infinity then
+            Q := Q.insert s.next
+        else
+          sorry
       else
        sorry
 
   return .blocked
 
 def isBlocked (s : TCube fsm) : SolverM fsm Bool := sorry
-def generalize (s0 : TCube fsm) : SolverM fsm (TCube fsm) := sorry
 
 inductive PropagationResult
 | propagatedAll
