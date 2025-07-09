@@ -24,7 +24,7 @@ where we unroll for 'n' steps.
 structure Inputs (ι : Type) (n : Nat) : Type  where
   ix : Fin n
   input : ι
-deriving DecidableEq, Hashable
+deriving DecidableEq, Hashable, BEq
 
 
 namespace Inputs
@@ -120,7 +120,7 @@ inductive Vars (σ : Type) (ι : Type) (n : Nat)
 | state (s : Inputs σ (n + 1))
 | inputs (is : Inputs ι n)
 | outputs (os : Fin n) -- there is one output bit for each step.
-deriving DecidableEq, Hashable
+deriving DecidableEq, Hashable, BEq
 
 /--
 A state variable for the initial state.
@@ -237,5 +237,3 @@ theorem Vars.castLe_castLe_eq_castLe_self {α : Type _} {p q r : Nat}
   · simp [Vars.castLe]
   · simp [Vars.castLe]
   · simp [Vars.castLe]
-
-
