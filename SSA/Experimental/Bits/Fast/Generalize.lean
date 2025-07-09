@@ -937,6 +937,15 @@ def strictlyLTZero (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
 def lteZero (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
   BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)
 
+def checkTimeout : GeneralizerStateM Unit := do
+  let state ← get
+  let currentTime ← Core.liftIOCore IO.monoMsNow
+  let elapsedTime := currentTime - state.startTime
+
+  trace[Generalize] m! "Elapsed time: {elapsedTime/1000}s"
+  if elapsedTime >= state.timeout then
+      throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
+
 def filterCandidatePredicates  (bvLogicalExpr: BVLogicalExpr) (preconditionCandidates visited: Std.HashSet BVLogicalExpr) : GeneralizerStateM (List BVLogicalExpr) :=
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
     let state ← get
@@ -1116,8 +1125,11 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
             | [] => visited := preconditionCandidates
             | _ => return validCandidates
 
+          checkTimeout
+
           previousLevelCache ← precondSynthesisUpdateCache previousLevelCache synthesisComponents positiveExamples negativeExamples specialConstants ops
           currentLevel := currentLevel + 1
+
       pure validCandidates
 
     if validCandidates.isEmpty then
@@ -1208,7 +1220,8 @@ def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (L
 
     return none
 
-def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) (ops: List (BVExpr w → BVExpr w → BVExpr w)) : GeneralizerStateM (Std.HashMap Nat (List (BVExpr w))) := do
+def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
+                                          (ops: List (BVExpr w → BVExpr w → BVExpr w)) : GeneralizerStateM (Std.HashMap Nat (List (BVExpr w))) := do
     let zero := BitVec.ofNat w 0
     let one := BitVec.ofNat w 1
     let minusOne := BitVec.ofInt w (-1)
@@ -1331,6 +1344,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
             | some expr => return some expr
             | none => logInfo m! "Could not find a generalized form from processing level {currentLevel}"
 
+          checkTimeout
           currentLevel :=  currentLevel + 1
 
     return none
@@ -1356,12 +1370,7 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
         | some weakPC =>
                 return BoolExpr.ite weakPC expr (BoolExpr.const False)
 
-        let currentTime ← Core.liftIOCore IO.monoMsNow
-        let elapsedTime := currentTime - state.startTime
-
-        trace[Generalize] m! "Elapsed time: {elapsedTime/1000}s"
-        if elapsedTime >= state.timeout then
-            throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
+        checkTimeout
   return none
 
 def prettifyBVBinOp (op: BVBinOp) : String :=
