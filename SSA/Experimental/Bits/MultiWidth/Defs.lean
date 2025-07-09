@@ -2,6 +2,7 @@ import Mathlib.Algebra.Notation.Defs
 import Mathlib.Order.Notation
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Vars
+import Lean
 
 import Std.Tactic.BVDecide
 
