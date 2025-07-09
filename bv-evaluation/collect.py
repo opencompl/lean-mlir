@@ -272,10 +272,10 @@ def compare_solvers_on_file(file_result):
                 np.mean(file_result[1]["counter_bv_decide_times_average"][theorem_num])
             )
             file_counter_bv_decide_rw_times_average.append(
-                np.mean(file_result[1]["counter_bv_decide_times_average"][theorem_num])
+                np.mean(file_result[1]["counter_bv_decide_rw_times_average"][theorem_num])
             )
             file_counter_bv_decide_sat_times_average.append(
-                np.mean(file_result[1]["counter_bv_decide_times_average"][theorem_num])
+                np.mean(file_result[1]["counter_bv_decide_sat_times_average"][theorem_num])
             )
         elif (
             output_bitwuzla == output.counterexample
