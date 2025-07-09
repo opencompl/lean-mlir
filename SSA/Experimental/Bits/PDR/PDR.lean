@@ -69,7 +69,7 @@ structure TCube extends Cube fsm where
 deriving Inhabited, BEq
 
 structure Frames where
-  F : Array (Array (TCube fsm)) -- cubes for each frame.
+  F : Array (Array (Cube fsm)) -- cubes for each frame.
   hf : 1 < F.size  -- at least one frame exists. The last frame is the f∞ frame.
 
 structure PDRState where
@@ -129,7 +129,7 @@ def depth (frames : Frames fsm) : Nat :=
 
 def size (frames : Frames fsm) : Nat := frames.F.size
 
-instance : ForM m (Frames fsm) (Array (TCube fsm)) where
+instance : ForM m (Frames fsm) (Array (Cube fsm)) where
   forM frame f := frame.F.forM f
 
 -- instance : GetElem (Array α) Nat α fun xs i => i < xs.size where
@@ -251,14 +251,14 @@ def addBlockedCube (s : TCube fsm) : SolverM fsm Unit := do
     let mut Fd := F[d]!
     let mut i := 0
     while hi : i < Fd.size do
-      if s.subsumes Fd[i].toCube then
+      if s.subsumes Fd[i] then
         Fd := ArraySetEraseAt Fd i
       else
         i := i + 1
     F := F.set! d Fd
 
   -- | TODO: F stores cubes, not timed cubes.
-  F := F.set! k (F[k]!.push s)
+  F := F.set! k (F[k]!.push s.toCube)
   SAT.blockCubeInSolver s
 
 
