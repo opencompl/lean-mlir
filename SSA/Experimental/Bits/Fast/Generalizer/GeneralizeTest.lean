@@ -1,10 +1,22 @@
-import SSA.Experimental.Bits.Fast.Generalize
+import SSA.Experimental.Bits.Fast.Generalizer.Generalize
 
 set_option trace.profiler true
 set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
+set_option maxHeartbeats 1000000000000
+set_option maxRecDepth 1000000
+
+
+variable {x y z: BitVec 32}
+#generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- PASSED gxor2_proof/test5_thm; #18
+
+variable {x y z: BitVec 64}
+#generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46
+
 variable {x y : BitVec 8}
+#eval (1#8 ^^^ 1) ||| 0
+#eval (1#8 ^^^ 1) ||| 0x3e#8
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y --- PASSED add_or_sub_comb_i8_negative_y_sub_thm; #1
 #generalize (0#8 - x ||| y) + x = (y ||| 0#8 - x) + x -- PASSED add_or_sub_comb_i8_negative_y_or_thm; #7
 #generalize (0#8 - x ^^^ x) + x = (x ^^^ 0#8 - x) + x -- PASSED add_or_sub_comb_i8_negative_xor_instead_or_thm; #20
@@ -56,12 +68,8 @@ variable {x y z: BitVec 32}
 #generalize (x &&& 31#32 ^^^ 31#32) + 42#32 = 73#32 - (x &&& 31#32) -- gsubhxor_proof#xor_add_thm; #44
 #generalize x <<< 3#32 &&& 15#32 ||| x <<< 5#32 &&& 60#32 = x <<< 3#32 &&& 8#32 ||| x <<< 5#32 &&& 32#32 -- gorhshiftedhmasks_proof#or_and_shifts1_thm; #50
 
-variable {x y z: BitVec 64}
-#generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46
-
 variable {x y : BitVec 67}
 #generalize (x ||| y >>> 66#67) &&& 2#67 = x &&& 2#67 -- gapinthandhorhand_proof#test4_thm #22
-
 
 variable {x y z: BitVec 232}
 #generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - gshifthshift_proof#lshr_lshr_thm; #17
