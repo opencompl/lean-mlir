@@ -564,6 +564,31 @@ def bv_decide_tot_stacked_area(df, bm):
     ax.legend(loc="center right", ncols=1, frameon=False, bbox_to_anchor=(1.2, 0.5))
     save(fig, plotsdir + "bv_decide_stacked_area_" + bm.split(".")[0] + ".pdf")
 
+def histogram_stddev(df, bm):
+    column_to_name = {
+      "solved_bitwuzla_times_stddev" : "stddev of bitwuzla runtimes",
+      "solved_bv_decide_times_stddev": "stddev of bv_decide runtimes",
+      "solved_bv_decide_rw_times_stddev": "stddev of bv_decide rewriting time",
+      "solved_bv_decide_bb_times_stddev": "stddev of bv_decide bitblasting time",
+      "solved_bv_decide_sat_times_stddev": "stddev of bv_decide SAT solving time",
+      "solved_bv_decide_lratt_times_stddev": "stddev of bv_decide LRAT trimming time",
+      "solved_bv_decide_lratc_times_stddev": "stddev of bv_decide LRAT checking time",
+    }
+
+
+    df_sorted = df.sort_values(by="solved_bv_decide_times_average")
+
+    num_cols = len(column_to_name)
+    fig, axes = plt.subplots(num_cols, 1, figsize=(15, num_cols * 5))
+    # fig.suptitle("Distribution and Bar Plots of Standard Deviations", fontsize=16)
+
+    for i, col_name in enumerate(column_to_name):
+        axes[i].hist(df_sorted[col_name], bins=8000)
+        axes[i].set_title(f"Distribution of {column_to_name[col_name]}")
+        axes[i].set_xlabel("Standard Deviation Value")
+        axes[i].set_ylabel("Frequency")
+    save(fig, plotsdir + "barplot_stddev_" + bm.split(".")[0] + ".pdf")
+
 
 # for hackers delight we want to consider bitwidth in the plotting
 def cumul_solving_time_hackers_delight(df, tool1, tool2, bm, bv_width):
@@ -809,9 +834,9 @@ def scatter_solving_time_instcombine(df):
     time_min = min(df["solved_bitwuzla_times_average"].min(), tot_sum.min())
     time_max = max(df["solved_bitwuzla_times_average"].max(), tot_sum.max())
 
-    ax.set_ylim(
-        10 ** (np.floor(np.log10(time_min))), 10 ** (np.ceil(np.log10(time_max)))
-    )
+    # ax.set_ylim(
+    #     10 ** (np.floor(np.log10(time_min))), 10 ** (np.ceil(np.log10(time_max)))
+    # )
     ax.plot(
         [df["solved_bitwuzla_times_average"].min(), tot_sum.max()],
         [df["solved_bitwuzla_times_average"].min(), tot_sum.max()],
@@ -824,6 +849,7 @@ def scatter_solving_time_instcombine(df):
     ax.set_ylabel("Time [ms] - bv_decide", rotation="horizontal", ha="left", y=1.05)
     # ax.legend(loc="lower center", ncols=2, frameon=False)
     save(fig, plotsdir + "scatter_instcombine.pdf")
+
 
 
 def plot_hackersdelight():
@@ -899,6 +925,7 @@ def plot_instcombine():
             bv_decide_tot_stacked_perc(df, "instCombine", "i")
             bv_decide_tot_stacked_area(df, "instCombine")
             scatter_solving_time_instcombine(df)
+            histogram_stddev(df, "instCombine")
 
 
 def plot_smtlib():
