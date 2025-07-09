@@ -123,6 +123,20 @@ inductive StateSpace (wcard tcard : Nat)
 | termVar (v : Fin tcard)
 deriving DecidableEq, Repr
 
+
+/--
+A bitstream environment.
+-/
+structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
+  (bs : StateSpace wcard tcard → BitStream)
+  {wenv : WidthExpr.Env wcard}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) where
+  hw : ∀ (v : Fin wcard),
+    BitStream.ofNat (wenv v)  = bs (StateSpace.widthVar v)
+  ht : ∀ (v : Fin tcard),
+    BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
+
 /-- the FSM that corresponds to a given nat-predicate. -/
 structure NatFSM (wcard : Nat) (v : WidthExpr wcard) where
   fsm : FSM (StateSpace wcard 0)
