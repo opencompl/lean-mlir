@@ -1,0 +1,118 @@
+⚠ [1005/1053] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:47:4: declaration uses 'sorry'
+⚠ [1010/1053] Replayed SSA.Experimental.Bits.Fast.ReflectVerif
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:1927:8: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.StatesUniqueLe_zero':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2138:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.SimplePathOfPath.findState?_eq_none_iff':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2185:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.envBitstream_set_eq_self_of_ne':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2191:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.envBitstream_set_eq_of_eq':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2197:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.envBitstream_set_eq_of_eq₂':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2205:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.FSM.carryWith_congrEnv_envBitstream_set_of_le':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2396:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.StatesUniqueLe_of_StatesUniqueLe_congr':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: SSA/Experimental/Bits/Fast/ReflectVerif.lean:2424:0: automatically included section variable(s) unused in theorem 'ReflectVerif.BvDecide.KInductionCircuits.all_simple_paths_good':
+  [DecidableEq arity]
+  [Fintype arity]
+  [Hashable arity]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq arity] [Fintype arity] [Hashable arity] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+✖ [1053/1053] Building SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
+trace: .> LEAN_PATH=/Users/user/Projects/lean-mlir/.lake/packages/batteries/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/Qq/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/aesop/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/importGraph/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/plausible/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/mathlib/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/Cli/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/packages/leanwuzla/.lake/build/lib/lean:/Users/user/Projects/lean-mlir/.lake/build/lib/lean /Users/user/.elan/toolchains/leanprover--lean4-nightly---nightly-2025-07-03/bin/lean --tstack=400000 /Users/user/Projects/lean-mlir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean -o /Users/user/Projects/lean-mlir/.lake/build/lib/lean/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.olean -i /Users/user/Projects/lean-mlir/.lake/build/lib/lean/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.ilean -c /Users/user/Projects/lean-mlir/.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.c --setup /Users/user/Projects/lean-mlir/.lake/build/ir/SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.setup.json --json
+info: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:40:17: theorem andcond_proof.extracted_1_1 (e e_1 : IntW 1) (e_2 e_3 e_4 : IntW 8) :
+  select (select e e_1 (const? 1 0)) e_4 (select e e_2 e_3) ⊑ select e (select e_1 e_4 e_2) e_3 := sorry
+warning: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:35:8: declaration uses 'sorry'
+info: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:69:17: theorem orcond_proof.extracted_1_1 (e e_1 : IntW 1) (e_2 e_3 e_4 : IntW 8) :
+  select (select e (const? 1 1) e_1) (select e e_2 e_3) e_4 ⊑ select e e_2 (select e_1 e_3 e_4) := sorry
+warning: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:64:8: declaration uses 'sorry'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:74:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:86:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:98:15: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:108:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:119:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:130:14: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:140:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:152:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:162:15: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:172:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:183:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:193:14: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:203:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:215:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:224:15: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:234:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:245:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:254:14: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:264:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:277:11: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:289:15: unexpected token '.'; expected ':'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:299:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:311:10: unexpected token '.'; expected ':=', 'where' or '|'
+error: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:322:14: unexpected token '.'; expected ':'
+info: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:362:17: theorem test_implied_true_proof.extracted_1_1 (e : IntW 8) :
+  select (icmp IntPred.slt e (const? 8 0)) (select (icmp IntPred.slt e (const? 8 10)) (const? 8 0) (const? 8 5))
+      (const? 8 20) ⊑
+    select (icmp IntPred.slt e (const? 8 0)) (const? 8 0) (const? 8 20) := sorry
+warning: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:357:8: declaration uses 'sorry'
+info: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:397:17: theorem test_implied_true_falseval_proof.extracted_1_1 (e : IntW 8) :
+  select (icmp IntPred.sgt e (const? 8 0)) (const? 8 20)
+      (select (icmp IntPred.slt e (const? 8 10)) (const? 8 0) (const? 8 5)) ⊑
+    select (icmp IntPred.sgt e (const? 8 0)) (const? 8 20) (const? 8 0) := sorry
+warning: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:392:8: declaration uses 'sorry'
+info: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:433:17: theorem test_implied_false_proof.extracted_1_1 (e : IntW 8) :
+  select (icmp IntPred.slt e (const? 8 0)) (select (icmp IntPred.sgt e (const? 8 10)) (const? 8 0) (const? 8 5))
+      (const? 8 20) ⊑
+    select (icmp IntPred.slt e (const? 8 0)) (const? 8 5) (const? 8 20) := sorry
+warning: SSA/Projects/InstCombine/tests/LLVM/gnestedhselect.lean:428:8: declaration uses 'sorry'
+error: Lean exited with code 1
+Some required builds logged failures:
+- SSA.Projects.InstCombine.tests.LLVM.gnestedhselect
+error: build failed

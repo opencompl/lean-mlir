@@ -1,0 +1,57 @@
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Experimental.Bits.Fast.Generalize
+open BitVec
+open LLVM
+
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
+
+section gsignhbithtesthviahrighthshiftinghallhotherhbits_proof
+theorem unsigned_sign_bit_extract_proof.unsigned_sign_bit_extract_thm_1 (e : IntW 32) :
+  icmp IntPred.ne (lshr e (const? 32 31)) (const? 32 0) ⊑ icmp IntPred.slt e (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem signed_sign_bit_extract_proof.signed_sign_bit_extract_thm_1 (e : IntW 32) :
+  icmp IntPred.ne (ashr e (const? 32 31)) (const? 32 0) ⊑ icmp IntPred.slt e (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem unsigned_sign_bit_extract_with_trunc_proof.unsigned_sign_bit_extract_with_trunc_thm_1 (e : IntW 64) :
+  icmp IntPred.ne (trunc 32 (lshr e (const? 64 63))) (const? 32 0) ⊑ icmp IntPred.slt e (const? 64 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem signed_sign_bit_extract_trunc_proof.signed_sign_bit_extract_trunc_thm_1 (e : IntW 64) :
+  icmp IntPred.ne (trunc 32 (ashr e (const? 64 63))) (const? 32 0) ⊑ icmp IntPred.slt e (const? 64 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    

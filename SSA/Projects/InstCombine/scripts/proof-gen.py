@@ -8,7 +8,7 @@ from cfg import *
 
 def get_lines(msg):
     # Define the regex pattern to match error messages with line numbers
-    pattern = re.compile(r"info: .+?:(\d+):\d+: (theorem extracted.+?)(?=warning)", flags=re.DOTALL)
+    pattern = re.compile(r"info: .+?:(\d+):\d+: (theorem \S+\.extracted_\S+ .+?)(?=\nwarning:)", flags=re.DOTALL)
     # Find all matches in the log
     matches = pattern.findall(msg)
     lines_thm = [(int(l), m) for (l, m) in matches if "no goals to be solved" not in m]
