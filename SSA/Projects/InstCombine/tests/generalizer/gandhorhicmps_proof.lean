@@ -1,0 +1,1940 @@
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Experimental.Bits.Fast.Generalize
+open BitVec
+open LLVM
+
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
+
+section gandhorhicmps_proof
+theorem PR1817_1_proof.PR1817_1_thm_1 (e : IntW 32) :
+  LLVM.and (icmp IntPred.slt e (const? 32 10)) (icmp IntPred.ult e (const? 32 10)) ⊑
+    icmp IntPred.ult e (const? 32 10) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR1817_1_logical_proof.PR1817_1_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.slt e (const? 32 10)) (icmp IntPred.ult e (const? 32 10)) (const? 1 0) ⊑
+    icmp IntPred.ult e (const? 32 10) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR1817_2_proof.PR1817_2_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.slt e (const? 32 10)) (icmp IntPred.ult e (const? 32 10)) ⊑
+    icmp IntPred.slt e (const? 32 10) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR1817_2_logical_proof.PR1817_2_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.slt e (const? 32 10)) (const? 1 1) (icmp IntPred.ult e (const? 32 10)) ⊑
+    icmp IntPred.slt e (const? 32 10) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR2330_proof.PR2330_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.ult e_1 (const? 32 8)) (icmp IntPred.ult e (const? 32 8)) ⊑
+    icmp IntPred.ult (LLVM.or e_1 e) (const? 32 8) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_one_bit_diff_constants1_proof.or_eq_with_one_bit_diff_constants1_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.eq e (const? 32 50)) (icmp IntPred.eq e (const? 32 51)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 32 (-2))) (const? 32 50) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_one_bit_diff_constants1_logical_proof.or_eq_with_one_bit_diff_constants1_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.eq e (const? 32 50)) (const? 1 1) (icmp IntPred.eq e (const? 32 51)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 32 (-2))) (const? 32 50) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_one_bit_diff_constants1_proof.and_ne_with_one_bit_diff_constants1_thm_1 (e : IntW 32) :
+  LLVM.and (icmp IntPred.ne e (const? 32 51)) (icmp IntPred.ne e (const? 32 50)) ⊑
+    icmp IntPred.ult (add e (const? 32 (-52))) (const? 32 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_one_bit_diff_constants1_logical_proof.and_ne_with_one_bit_diff_constants1_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ne e (const? 32 51)) (icmp IntPred.ne e (const? 32 50)) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 32 (-52))) (const? 32 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_one_bit_diff_constants2_proof.or_eq_with_one_bit_diff_constants2_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.eq e (const? 32 97)) (icmp IntPred.eq e (const? 32 65)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 32 (-33))) (const? 32 65) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_one_bit_diff_constants2_logical_proof.or_eq_with_one_bit_diff_constants2_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.eq e (const? 32 97)) (const? 1 1) (icmp IntPred.eq e (const? 32 65)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 32 (-33))) (const? 32 65) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_one_bit_diff_constants2_proof.and_ne_with_one_bit_diff_constants2_thm_1 (e : IntW 19) :
+  LLVM.and (icmp IntPred.ne e (const? 19 65)) (icmp IntPred.ne e (const? 19 193)) ⊑
+    icmp IntPred.ne (LLVM.and e (const? 19 (-129))) (const? 19 65) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_one_bit_diff_constants2_logical_proof.and_ne_with_one_bit_diff_constants2_logical_thm_1 (e : IntW 19) :
+  select (icmp IntPred.ne e (const? 19 65)) (icmp IntPred.ne e (const? 19 193)) (const? 1 0) ⊑
+    icmp IntPred.ne (LLVM.and e (const? 19 (-129))) (const? 19 65) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_one_bit_diff_constants3_proof.or_eq_with_one_bit_diff_constants3_thm_1 (e : IntW 8) :
+  LLVM.or (icmp IntPred.eq e (const? 8 (-2))) (icmp IntPred.eq e (const? 8 126)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 8 127)) (const? 8 126) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_one_bit_diff_constants3_logical_proof.or_eq_with_one_bit_diff_constants3_logical_thm_1 (e : IntW 8) :
+  select (icmp IntPred.eq e (const? 8 (-2))) (const? 1 1) (icmp IntPred.eq e (const? 8 126)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 8 127)) (const? 8 126) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_one_bit_diff_constants3_proof.and_ne_with_one_bit_diff_constants3_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.ne e (const? 8 65)) (icmp IntPred.ne e (const? 8 (-63))) ⊑
+    icmp IntPred.ne (LLVM.and e (const? 8 127)) (const? 8 65) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_one_bit_diff_constants3_logical_proof.and_ne_with_one_bit_diff_constants3_logical_thm_1 (e : IntW 8) :
+  select (icmp IntPred.ne e (const? 8 65)) (icmp IntPred.ne e (const? 8 (-63))) (const? 1 0) ⊑
+    icmp IntPred.ne (LLVM.and e (const? 8 127)) (const? 8 65) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_diff_one_proof.or_eq_with_diff_one_thm_1 (e : IntW 8) :
+  LLVM.or (icmp IntPred.eq e (const? 8 13)) (icmp IntPred.eq e (const? 8 14)) ⊑
+    icmp IntPred.ult (add e (const? 8 (-13))) (const? 8 2) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_diff_one_logical_proof.or_eq_with_diff_one_logical_thm_1 (e : IntW 8) :
+  select (icmp IntPred.eq e (const? 8 13)) (const? 1 1) (icmp IntPred.eq e (const? 8 14)) ⊑
+    icmp IntPred.ult (add e (const? 8 (-13))) (const? 8 2) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_diff_one_proof.and_ne_with_diff_one_thm_1 (e : IntW 32) :
+  LLVM.and (icmp IntPred.ne e (const? 32 40)) (icmp IntPred.ne e (const? 32 39)) ⊑
+    icmp IntPred.ult (add e (const? 32 (-41))) (const? 32 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_diff_one_logical_proof.and_ne_with_diff_one_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ne e (const? 32 40)) (icmp IntPred.ne e (const? 32 39)) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 32 (-41))) (const? 32 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_diff_one_signed_proof.or_eq_with_diff_one_signed_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.eq e (const? 32 0)) (icmp IntPred.eq e (const? 32 (-1))) ⊑
+    icmp IntPred.ult (add e (const? 32 1)) (const? 32 2) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_eq_with_diff_one_signed_logical_proof.or_eq_with_diff_one_signed_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.eq e (const? 32 0)) (const? 1 1) (icmp IntPred.eq e (const? 32 (-1))) ⊑
+    icmp IntPred.ult (add e (const? 32 1)) (const? 32 2) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_diff_one_signed_proof.and_ne_with_diff_one_signed_thm_1 (e : IntW 64) :
+  LLVM.and (icmp IntPred.ne e (const? 64 (-1))) (icmp IntPred.ne e (const? 64 0)) ⊑
+    icmp IntPred.ult (add e (const? 64 (-1))) (const? 64 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ne_with_diff_one_signed_logical_proof.and_ne_with_diff_one_signed_logical_thm_1 (e : IntW 64) :
+  select (icmp IntPred.ne e (const? 64 (-1))) (icmp IntPred.ne e (const? 64 0)) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 64 (-1))) (const? 64 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_1_proof.PR42691_1_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.slt e (const? 32 0)) (icmp IntPred.eq e (const? 32 2147483647)) ⊑
+    icmp IntPred.ugt e (const? 32 2147483646) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_1_logical_proof.PR42691_1_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.slt e (const? 32 0)) (const? 1 1) (icmp IntPred.eq e (const? 32 2147483647)) ⊑
+    icmp IntPred.ugt e (const? 32 2147483646) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_2_proof.PR42691_2_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.ult e (const? 32 (-2147483648))) (icmp IntPred.eq e (const? 32 (-1))) ⊑
+    icmp IntPred.sgt e (const? 32 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_2_logical_proof.PR42691_2_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ult e (const? 32 (-2147483648))) (const? 1 1) (icmp IntPred.eq e (const? 32 (-1))) ⊑
+    icmp IntPred.sgt e (const? 32 (-2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_3_proof.PR42691_3_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.sge e (const? 32 0)) (icmp IntPred.eq e (const? 32 (-2147483648))) ⊑
+    icmp IntPred.ult e (const? 32 (-2147483647)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_3_logical_proof.PR42691_3_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.sge e (const? 32 0)) (const? 1 1) (icmp IntPred.eq e (const? 32 (-2147483648))) ⊑
+    icmp IntPred.ult e (const? 32 (-2147483647)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_4_proof.PR42691_4_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.uge e (const? 32 (-2147483648))) (icmp IntPred.eq e (const? 32 0)) ⊑
+    icmp IntPred.slt e (const? 32 1) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_4_logical_proof.PR42691_4_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.uge e (const? 32 (-2147483648))) (const? 1 1) (icmp IntPred.eq e (const? 32 0)) ⊑
+    icmp IntPred.slt e (const? 32 1) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_5_proof.PR42691_5_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.slt e (const? 32 1)) (icmp IntPred.eq e (const? 32 2147483647)) ⊑
+    icmp IntPred.ult (add e (const? 32 (-2147483647))) (const? 32 (-2147483646)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_5_logical_proof.PR42691_5_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.slt e (const? 32 1)) (const? 1 1) (icmp IntPred.eq e (const? 32 2147483647)) ⊑
+    icmp IntPred.ult (add e (const? 32 (-2147483647))) (const? 32 (-2147483646)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_6_proof.PR42691_6_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.ult e (const? 32 (-2147483647))) (icmp IntPred.eq e (const? 32 (-1))) ⊑
+    icmp IntPred.ult (add e (const? 32 1)) (const? 32 (-2147483646)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_6_logical_proof.PR42691_6_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ult e (const? 32 (-2147483647))) (const? 1 1) (icmp IntPred.eq e (const? 32 (-1))) ⊑
+    icmp IntPred.ult (add e (const? 32 1)) (const? 32 (-2147483646)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_7_proof.PR42691_7_thm_1 (e : IntW 32) :
+  LLVM.or (icmp IntPred.uge e (const? 32 (-2147483647))) (icmp IntPred.eq e (const? 32 0)) ⊑
+    icmp IntPred.slt (add e (const? 32 (-1))) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_7_logical_proof.PR42691_7_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.uge e (const? 32 (-2147483647))) (const? 1 1) (icmp IntPred.eq e (const? 32 0)) ⊑
+    icmp IntPred.slt (add e (const? 32 (-1))) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_8_proof.PR42691_8_thm_1 (e : IntW 32) :
+  LLVM.and (icmp IntPred.slt e (const? 32 14)) (icmp IntPred.ne e (const? 32 (-2147483648))) ⊑
+    icmp IntPred.ult (add e (const? 32 2147483647)) (const? 32 (-2147483635)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_8_logical_proof.PR42691_8_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.slt e (const? 32 14)) (icmp IntPred.ne e (const? 32 (-2147483648))) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 32 2147483647)) (const? 32 (-2147483635)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_9_proof.PR42691_9_thm_1 (e : IntW 32) :
+  LLVM.and (icmp IntPred.sgt e (const? 32 13)) (icmp IntPred.ne e (const? 32 2147483647)) ⊑
+    icmp IntPred.ult (add e (const? 32 (-14))) (const? 32 2147483633) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_9_logical_proof.PR42691_9_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.sgt e (const? 32 13)) (icmp IntPred.ne e (const? 32 2147483647)) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 32 (-14))) (const? 32 2147483633) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_10_proof.PR42691_10_thm_1 (e : IntW 32) :
+  LLVM.and (icmp IntPred.ugt e (const? 32 13)) (icmp IntPred.ne e (const? 32 (-1))) ⊑
+    icmp IntPred.ult (add e (const? 32 (-14))) (const? 32 (-15)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem PR42691_10_logical_proof.PR42691_10_logical_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ugt e (const? 32 13)) (icmp IntPred.ne e (const? 32 (-1))) (const? 1 0) ⊑
+    icmp IntPred.ult (add e (const? 32 (-14))) (const? 32 (-15)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_eq_eq_proof.substitute_constant_and_eq_eq_thm_1 (e e_1 : IntW 8) :
+  LLVM.and (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.eq e e_1) ⊑
+    LLVM.and (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_eq_eq_logical_proof.substitute_constant_and_eq_eq_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.eq e e_1) (const? 1 0) ⊑
+    select (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_eq_eq_commute_proof.substitute_constant_and_eq_eq_commute_thm_1 (e e_1 : IntW 8) :
+  LLVM.and (icmp IntPred.eq e e_1) (icmp IntPred.eq e (const? 8 42)) ⊑
+    LLVM.and (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_eq_eq_commute_logical_proof.substitute_constant_and_eq_eq_commute_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.eq e e_1) (icmp IntPred.eq e (const? 8 42)) (const? 1 0) ⊑
+    LLVM.and (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_eq_ugt_swap_proof.substitute_constant_and_eq_ugt_swap_thm_1 (e e_1 : IntW 8) :
+  LLVM.and (icmp IntPred.ugt e_1 e) (icmp IntPred.eq e (const? 8 42)) ⊑
+    LLVM.and (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.ugt e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_eq_ugt_swap_logical_proof.substitute_constant_and_eq_ugt_swap_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.ugt e_1 e) (icmp IntPred.eq e (const? 8 42)) (const? 1 0) ⊑
+    LLVM.and (icmp IntPred.eq e (const? 8 42)) (icmp IntPred.ugt e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_and_ne_ugt_swap_logical_proof.substitute_constant_and_ne_ugt_swap_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.ugt e_1 e) (icmp IntPred.ne e (const? 8 42)) (const? 1 0) ⊑
+    LLVM.and (icmp IntPred.ugt e_1 e) (icmp IntPred.ne e (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_or_ne_swap_sle_proof.substitute_constant_or_ne_swap_sle_thm_1 (e e_1 : IntW 8) :
+  LLVM.or (icmp IntPred.ne e (const? 8 42)) (icmp IntPred.sle e_1 e) ⊑
+    LLVM.or (icmp IntPred.ne e (const? 8 42)) (icmp IntPred.slt e_1 (const? 8 43)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_or_ne_swap_sle_logical_proof.substitute_constant_or_ne_swap_sle_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.ne e (const? 8 42)) (const? 1 1) (icmp IntPred.sle e_1 e) ⊑
+    select (icmp IntPred.ne e (const? 8 42)) (const? 1 1) (icmp IntPred.slt e_1 (const? 8 43)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_or_ne_uge_commute_proof.substitute_constant_or_ne_uge_commute_thm_1 (e e_1 : IntW 8) :
+  LLVM.or (icmp IntPred.uge e e_1) (icmp IntPred.ne e (const? 8 42)) ⊑
+    LLVM.or (icmp IntPred.ne e (const? 8 42)) (icmp IntPred.ult e_1 (const? 8 43)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem substitute_constant_or_ne_uge_commute_logical_proof.substitute_constant_or_ne_uge_commute_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.uge e e_1) (const? 1 1) (icmp IntPred.ne e (const? 8 42)) ⊑
+    LLVM.or (icmp IntPred.ne e (const? 8 42)) (icmp IntPred.ult e_1 (const? 8 43)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_ranges_overlap_proof.or_ranges_overlap_thm_1 (e : IntW 8) :
+  LLVM.or (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (LLVM.and (icmp IntPred.uge e (const? 8 10)) (icmp IntPred.ule e (const? 8 20))) ⊑
+    icmp IntPred.ult (add e (const? 8 (-5))) (const? 8 16) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_ranges_adjacent_proof.or_ranges_adjacent_thm_1 (e : IntW 8) :
+  LLVM.or (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (LLVM.and (icmp IntPred.uge e (const? 8 11)) (icmp IntPred.ule e (const? 8 20))) ⊑
+    icmp IntPred.ult (add e (const? 8 (-5))) (const? 8 16) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_ranges_separated_proof.or_ranges_separated_thm_1 (e : IntW 8) :
+  LLVM.or (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (LLVM.and (icmp IntPred.uge e (const? 8 12)) (icmp IntPred.ule e (const? 8 20))) ⊑
+    LLVM.or (icmp IntPred.ult (add e (const? 8 (-5))) (const? 8 6))
+      (icmp IntPred.ult (add e (const? 8 (-12))) (const? 8 9)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_ranges_single_elem_right_proof.or_ranges_single_elem_right_thm_1 (e : IntW 8) :
+  LLVM.or (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (icmp IntPred.eq e (const? 8 11)) ⊑
+    icmp IntPred.ult (add e (const? 8 (-5))) (const? 8 7) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem or_ranges_single_elem_left_proof.or_ranges_single_elem_left_thm_1 (e : IntW 8) :
+  LLVM.or (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (icmp IntPred.eq e (const? 8 4)) ⊑
+    icmp IntPred.ult (add e (const? 8 (-4))) (const? 8 7) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ranges_overlap_proof.and_ranges_overlap_thm_1 (e : IntW 8) :
+  LLVM.and (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (LLVM.and (icmp IntPred.uge e (const? 8 7)) (icmp IntPred.ule e (const? 8 20))) ⊑
+    icmp IntPred.ult (add e (const? 8 (-7))) (const? 8 4) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ranges_overlap_single_proof.and_ranges_overlap_single_thm_1 (e : IntW 8) :
+  LLVM.and (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (LLVM.and (icmp IntPred.uge e (const? 8 10)) (icmp IntPred.ule e (const? 8 20))) ⊑
+    icmp IntPred.eq e (const? 8 10) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ranges_no_overlap_proof.and_ranges_no_overlap_thm_1 (e : IntW 8) :
+  LLVM.and (LLVM.and (icmp IntPred.uge e (const? 8 5)) (icmp IntPred.ule e (const? 8 10)))
+      (LLVM.and (icmp IntPred.uge e (const? 8 11)) (icmp IntPred.ule e (const? 8 20))) ⊑
+    const? 1 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ranges_signed_pred_proof.and_ranges_signed_pred_thm_1 (e : IntW 64) :
+  LLVM.and (icmp IntPred.slt (add e (const? 64 127)) (const? 64 1024))
+      (icmp IntPred.slt (add e (const? 64 128)) (const? 64 256)) ⊑
+    icmp IntPred.ult (add e (const? 64 (-9223372036854775681))) (const? 64 (-9223372036854775553)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_two_ranges_to_mask_and_range_proof.and_two_ranges_to_mask_and_range_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.ugt (add e (const? 8 (-97))) (const? 8 25))
+      (icmp IntPred.ugt (add e (const? 8 (-65))) (const? 8 25)) ⊑
+    icmp IntPred.ult (add (LLVM.and e (const? 8 (-33))) (const? 8 (-91))) (const? 8 (-26)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_two_ranges_to_mask_and_range_not_pow2_diff_proof.and_two_ranges_to_mask_and_range_not_pow2_diff_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.ugt (add e (const? 8 (-97))) (const? 8 25))
+      (icmp IntPred.ugt (add e (const? 8 (-64))) (const? 8 25)) ⊑
+    LLVM.and (icmp IntPred.ult (add e (const? 8 (-123))) (const? 8 (-26)))
+      (icmp IntPred.ult (add e (const? 8 (-90))) (const? 8 (-26))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_two_ranges_to_mask_and_range_different_sizes_proof.and_two_ranges_to_mask_and_range_different_sizes_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.ugt (add e (const? 8 (-97))) (const? 8 25))
+      (icmp IntPred.ugt (add e (const? 8 (-65))) (const? 8 24)) ⊑
+    LLVM.and (icmp IntPred.ult (add e (const? 8 (-123))) (const? 8 (-26)))
+      (icmp IntPred.ult (add e (const? 8 (-90))) (const? 8 (-25))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_two_ranges_to_mask_and_range_no_add_on_one_range_proof.and_two_ranges_to_mask_and_range_no_add_on_one_range_thm_1 (e : IntW 16) :
+  LLVM.and (icmp IntPred.uge e (const? 16 12))
+      (LLVM.or (icmp IntPred.ult e (const? 16 16)) (icmp IntPred.uge e (const? 16 28))) ⊑
+    icmp IntPred.ugt (LLVM.and e (const? 16 (-20))) (const? 16 11) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem is_ascii_alphabetic_proof.is_ascii_alphabetic_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ult (add e (const? 32 (-65)) { «nsw» := true }) (const? 32 26)) (const? 1 1)
+      (icmp IntPred.ult (add e (const? 32 (-97)) { «nsw» := true }) (const? 32 26)) ⊑
+    icmp IntPred.ult (add (LLVM.and e (const? 32 (-33))) (const? 32 (-65))) (const? 32 26) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem is_ascii_alphabetic_inverted_proof.is_ascii_alphabetic_inverted_thm_1 (e : IntW 32) :
+  select (icmp IntPred.ult (add e (const? 32 (-91)) { «nsw» := true }) (const? 32 (-26)))
+      (icmp IntPred.ult (add e (const? 32 (-123)) { «nsw» := true }) (const? 32 (-26))) (const? 1 0) ⊑
+    icmp IntPred.ult (add (LLVM.and e (const? 32 (-33))) (const? 32 (-91))) (const? 32 (-26)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_bitwise_and_icmps_proof.bitwise_and_bitwise_and_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and (LLVM.and (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    LLVM.and (icmp IntPred.eq e_1 (const? 8 42))
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_bitwise_and_icmps_comm1_proof.bitwise_and_bitwise_and_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (LLVM.and (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0))) ⊑
+    LLVM.and (icmp IntPred.eq e_1 (const? 8 42))
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_bitwise_and_icmps_comm2_proof.bitwise_and_bitwise_and_icmps_comm2_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and (LLVM.and (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    LLVM.and
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_bitwise_and_icmps_comm3_proof.bitwise_and_bitwise_and_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (LLVM.and (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42))) ⊑
+    LLVM.and
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_icmps_proof.bitwise_and_logical_and_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 0))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    select (icmp IntPred.eq e_1 (const? 8 42))
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_icmps_comm1_proof.bitwise_and_logical_and_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0))
+        (const? 1 0)) ⊑
+    select (icmp IntPred.eq e_1 (const? 8 42))
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_icmps_comm3_proof.bitwise_and_logical_and_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.and (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (select (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42))
+        (const? 1 0)) ⊑
+    select
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_bitwise_and_icmps_proof.logical_and_bitwise_and_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  select (LLVM.and (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 0) ⊑
+    select (LLVM.and (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_bitwise_and_icmps_comm1_proof.logical_and_bitwise_and_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (LLVM.and (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (const? 1 0) ⊑
+    select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0))
+      (LLVM.and (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_bitwise_and_icmps_comm2_proof.logical_and_bitwise_and_icmps_comm2_thm_1 (e e_1 e_2 : IntW 8) :
+  select (LLVM.and (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 0) ⊑
+    select (LLVM.and (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_bitwise_and_icmps_comm3_proof.logical_and_bitwise_and_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (LLVM.and (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 0) ⊑
+    select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0))
+      (LLVM.and (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_logical_and_icmps_proof.logical_and_logical_and_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  select
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 0))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 0) ⊑
+    select
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 0))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_logical_and_icmps_comm1_proof.logical_and_logical_and_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 0))
+      (const? 1 0) ⊑
+    select
+      (select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0))
+        (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0))
+      (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_logical_and_icmps_comm2_proof.logical_and_logical_and_icmps_comm2_thm_1 (e e_1 e_2 : IntW 8) :
+  select
+      (select (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 0) ⊑
+    select
+      (select (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0))
+      (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_logical_and_icmps_comm3_proof.logical_and_logical_and_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.ne (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (select (icmp IntPred.ne (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0))
+      (const? 1 0) ⊑
+    select
+      (icmp IntPred.eq (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_bitwise_or_icmps_proof.bitwise_or_bitwise_or_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or (LLVM.or (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    LLVM.or (icmp IntPred.eq e_1 (const? 8 42))
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_bitwise_or_icmps_comm1_proof.bitwise_or_bitwise_or_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (LLVM.or (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0))) ⊑
+    LLVM.or (icmp IntPred.eq e_1 (const? 8 42))
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_bitwise_or_icmps_comm2_proof.bitwise_or_bitwise_or_icmps_comm2_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or (LLVM.or (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    LLVM.or
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_bitwise_or_icmps_comm3_proof.bitwise_or_bitwise_or_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (LLVM.or (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42))) ⊑
+    LLVM.or
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_logical_or_icmps_proof.bitwise_or_logical_or_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1)
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_logical_or_icmps_comm1_proof.bitwise_or_logical_or_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1)
+        (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0))) ⊑
+    select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1)
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_or_logical_or_icmps_comm3_proof.bitwise_or_logical_or_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  LLVM.or (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0))
+      (select (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 1)
+        (icmp IntPred.eq e_1 (const? 8 42))) ⊑
+    select
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (const? 1 1) (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_bitwise_or_icmps_proof.logical_or_bitwise_or_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  select (LLVM.or (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    select (LLVM.or (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_bitwise_or_icmps_comm1_proof.logical_or_bitwise_or_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 1)
+      (LLVM.or (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0))) ⊑
+    select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 1)
+      (LLVM.or (icmp IntPred.eq e_1 (const? 8 42)) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_bitwise_or_icmps_comm2_proof.logical_or_bitwise_or_icmps_comm2_thm_1 (e e_1 e_2 : IntW 8) :
+  select (LLVM.or (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    select (LLVM.or (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_bitwise_or_icmps_comm3_proof.logical_or_bitwise_or_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 1)
+      (LLVM.or (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42))) ⊑
+    select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 1)
+      (LLVM.or (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (icmp IntPred.eq e_1 (const? 8 42))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_logical_or_icmps_proof.logical_or_logical_or_icmps_thm_1 (e e_1 e_2 : IntW 8) :
+  select
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    select
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_logical_or_icmps_comm1_proof.logical_or_logical_or_icmps_comm1_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 1)
+      (select (icmp IntPred.eq e_1 (const? 8 42)) (const? 1 1)
+        (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0))) ⊑
+    select
+      (select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) (const? 1 1)
+        (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_logical_or_icmps_comm2_proof.logical_or_logical_or_icmps_comm2_thm_1 (e e_1 e_2 : IntW 8) :
+  select
+      (select (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 1) (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) ⊑
+    select
+      (select (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 1) (icmp IntPred.eq e_1 (const? 8 42)))
+      (const? 1 1) (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2 { «nuw» := true })) (const? 8 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_or_logical_or_icmps_comm3_proof.logical_or_logical_or_icmps_comm3_thm_1 (e e_1 e_2 : IntW 8) :
+  select (icmp IntPred.eq (LLVM.and e (shl (const? 8 1) e_2)) (const? 8 0)) (const? 1 1)
+      (select (icmp IntPred.eq (LLVM.and e (const? 8 1)) (const? 8 0)) (const? 1 1)
+        (icmp IntPred.eq e_1 (const? 8 42))) ⊑
+    select
+      (icmp IntPred.ne (LLVM.and e (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+        (LLVM.or (shl (const? 8 1) e_2 { «nuw» := true }) (const? 8 1)))
+      (const? 1 1) (icmp IntPred.eq e_1 (const? 8 42)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_masked_icmp_asymmetric_proof.bitwise_and_logical_and_masked_icmp_asymmetric_thm_1 (e : IntW 1) (e_1 : IntW 32) :
+  LLVM.and (select (icmp IntPred.ne (LLVM.and e_1 (const? 32 255)) (const? 32 0)) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 (const? 32 11)) (const? 32 11)) ⊑
+    select (icmp IntPred.eq (LLVM.and e_1 (const? 32 11)) (const? 32 11)) e (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_masked_icmp_allzeros_proof.bitwise_and_logical_and_masked_icmp_allzeros_thm_1 (e : IntW 1) (e_1 : IntW 32) :
+  LLVM.and (select (icmp IntPred.eq (LLVM.and e_1 (const? 32 8)) (const? 32 0)) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 (const? 32 7)) (const? 32 0)) ⊑
+    select (icmp IntPred.eq (LLVM.and e_1 (const? 32 15)) (const? 32 0)) e (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_masked_icmp_allzeros_poison1_proof.bitwise_and_logical_and_masked_icmp_allzeros_poison1_thm_1 (e : IntW 1) (e_1 e_2 : IntW 32) :
+  LLVM.and (select (icmp IntPred.eq (LLVM.and e_1 e_2) (const? 32 0)) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 (const? 32 7)) (const? 32 0)) ⊑
+    select (icmp IntPred.eq (LLVM.and e_1 (LLVM.or e_2 (const? 32 7))) (const? 32 0)) e (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_masked_icmp_allones_proof.bitwise_and_logical_and_masked_icmp_allones_thm_1 (e : IntW 1) (e_1 : IntW 32) :
+  LLVM.and (select (icmp IntPred.eq (LLVM.and e_1 (const? 32 8)) (const? 32 8)) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 (const? 32 7)) (const? 32 7)) ⊑
+    select (icmp IntPred.eq (LLVM.and e_1 (const? 32 15)) (const? 32 15)) e (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_masked_icmp_allones_poison1_proof.bitwise_and_logical_and_masked_icmp_allones_poison1_thm_1 (e : IntW 1) (e_1 e_2 : IntW 32) :
+  LLVM.and (select (icmp IntPred.eq (LLVM.and e_1 e_2) e_2) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 (const? 32 7)) (const? 32 7)) ⊑
+    select (icmp IntPred.eq (LLVM.and e_1 (LLVM.or e_2 (const? 32 7))) (LLVM.or e_2 (const? 32 7))) e
+      (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem bitwise_and_logical_and_masked_icmp_allones_poison2_proof.bitwise_and_logical_and_masked_icmp_allones_poison2_thm_1 (e : IntW 1) (e_1 e_2 : IntW 32) :
+  LLVM.and (select (icmp IntPred.eq (LLVM.and e_1 (const? 32 8)) (const? 32 8)) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 e_2) e_2) ⊑
+    LLVM.and (select (icmp IntPred.ne (LLVM.and e_1 (const? 32 8)) (const? 32 0)) e (const? 1 0))
+      (icmp IntPred.eq (LLVM.and e_1 e_2) e_2) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_proof.samesign_thm_1 (e e_1 : IntW 32) :
+  LLVM.or (icmp IntPred.slt (LLVM.and e e_1) (const? 32 0)) (icmp IntPred.sgt (LLVM.or e e_1) (const? 32 (-1))) ⊑
+    icmp IntPred.sgt (LLVM.xor e e_1) (const? 32 (-1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_different_sign_bittest2_proof.samesign_different_sign_bittest2_thm_1 (e e_1 : IntW 32) :
+  LLVM.or (icmp IntPred.slt (LLVM.and e e_1) (const? 32 0)) (icmp IntPred.sge (LLVM.or e e_1) (const? 32 0)) ⊑
+    icmp IntPred.sgt (LLVM.xor e e_1) (const? 32 (-1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_commute1_proof.samesign_commute1_thm_1 (e e_1 : IntW 32) :
+  LLVM.or (icmp IntPred.sgt (LLVM.or e e_1) (const? 32 (-1))) (icmp IntPred.slt (LLVM.and e e_1) (const? 32 0)) ⊑
+    icmp IntPred.sgt (LLVM.xor e e_1) (const? 32 (-1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_commute2_proof.samesign_commute2_thm_1 (e e_1 : IntW 32) :
+  LLVM.or (icmp IntPred.slt (LLVM.and e e_1) (const? 32 0)) (icmp IntPred.sgt (LLVM.or e_1 e) (const? 32 (-1))) ⊑
+    icmp IntPred.sgt (LLVM.xor e e_1) (const? 32 (-1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_commute3_proof.samesign_commute3_thm_1 (e e_1 : IntW 32) :
+  LLVM.or (icmp IntPred.sgt (LLVM.or e_1 e) (const? 32 (-1))) (icmp IntPred.slt (LLVM.and e e_1) (const? 32 0)) ⊑
+    icmp IntPred.sgt (LLVM.xor e_1 e) (const? 32 (-1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_inverted_proof.samesign_inverted_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.sgt (LLVM.and e e_1) (const? 32 (-1))) (icmp IntPred.slt (LLVM.or e e_1) (const? 32 0)) ⊑
+    icmp IntPred.slt (LLVM.xor e e_1) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_inverted_different_sign_bittest1_proof.samesign_inverted_different_sign_bittest1_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.sge (LLVM.and e e_1) (const? 32 0)) (icmp IntPred.slt (LLVM.or e e_1) (const? 32 0)) ⊑
+    icmp IntPred.slt (LLVM.xor e e_1) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_inverted_different_sign_bittest2_proof.samesign_inverted_different_sign_bittest2_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.sgt (LLVM.and e e_1) (const? 32 (-1))) (icmp IntPred.sle (LLVM.or e e_1) (const? 32 (-1))) ⊑
+    icmp IntPred.slt (LLVM.xor e e_1) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_inverted_commute1_proof.samesign_inverted_commute1_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.slt (LLVM.or e e_1) (const? 32 0)) (icmp IntPred.sgt (LLVM.and e e_1) (const? 32 (-1))) ⊑
+    icmp IntPred.slt (LLVM.xor e e_1) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_inverted_commute2_proof.samesign_inverted_commute2_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.sgt (LLVM.and e e_1) (const? 32 (-1))) (icmp IntPred.slt (LLVM.or e_1 e) (const? 32 0)) ⊑
+    icmp IntPred.slt (LLVM.xor e e_1) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem samesign_inverted_commute3_proof.samesign_inverted_commute3_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (icmp IntPred.slt (LLVM.or e_1 e) (const? 32 0)) (icmp IntPred.sgt (LLVM.and e e_1) (const? 32 (-1))) ⊑
+    icmp IntPred.slt (LLVM.xor e_1 e) (const? 32 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_sgt_0_i32_proof.icmp_slt_0_or_icmp_sgt_0_i32_thm_1 (e : IntW 32) :
+  LLVM.or (zext 32 (icmp IntPred.slt e (const? 32 0))) (zext 32 (icmp IntPred.sgt e (const? 32 0))) ⊑
+    zext 32 (icmp IntPred.ne e (const? 32 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_sgt_0_i64_proof.icmp_slt_0_or_icmp_sgt_0_i64_thm_1 (e : IntW 64) :
+  LLVM.or (zext 64 (icmp IntPred.slt e (const? 64 0))) (zext 64 (icmp IntPred.sgt e (const? 64 0))) ⊑
+    zext 64 (icmp IntPred.ne e (const? 64 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_sgt_0_i64_fail0_proof.icmp_slt_0_or_icmp_sgt_0_i64_fail0_thm_1 (e : IntW 64) :
+  LLVM.or (lshr e (const? 64 63)) (zext 64 (icmp IntPred.slt e (const? 64 0))) ⊑ lshr e (const? 64 63) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_sgt_0_i64_fail3_proof.icmp_slt_0_or_icmp_sgt_0_i64_fail3_thm_1 (e : IntW 64) :
+  LLVM.or (ashr e (const? 64 62)) (zext 64 (icmp IntPred.slt e (const? 64 0))) ⊑
+    LLVM.or (ashr e (const? 64 62)) (lshr e (const? 64 63)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_and_icmp_sge_neg1_i32_proof.icmp_slt_0_and_icmp_sge_neg1_i32_thm_1 (e : IntW 32) :
+  LLVM.and (lshr e (const? 32 31)) (zext 32 (icmp IntPred.sgt e (const? 32 (-1)))) ⊑ const? 32 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_sge_neg1_i32_proof.icmp_slt_0_or_icmp_sge_neg1_i32_thm_1 (e : IntW 32) :
+  LLVM.or (lshr e (const? 32 31)) (zext 32 (icmp IntPred.sge e (const? 32 (-1)))) ⊑ const? 32 1 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_sge_100_i32_proof.icmp_slt_0_or_icmp_sge_100_i32_thm_1 (e : IntW 32) :
+  LLVM.or (lshr e (const? 32 31)) (zext 32 (icmp IntPred.sge e (const? 32 100))) ⊑
+    zext 32 (icmp IntPred.ugt e (const? 32 99)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_and_icmp_sge_neg1_i64_proof.icmp_slt_0_and_icmp_sge_neg1_i64_thm_1 (e : IntW 64) :
+  LLVM.and (lshr e (const? 64 63)) (zext 64 (icmp IntPred.sge e (const? 64 (-1)))) ⊑
+    zext 64 (icmp IntPred.eq e (const? 64 (-1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_and_icmp_sge_neg2_i64_proof.icmp_slt_0_and_icmp_sge_neg2_i64_thm_1 (e : IntW 64) :
+  LLVM.and (lshr e (const? 64 63)) (zext 64 (icmp IntPred.sge e (const? 64 (-2)))) ⊑
+    zext 64 (icmp IntPred.ugt e (const? 64 (-3))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem ashr_and_icmp_sge_neg1_i64_proof.ashr_and_icmp_sge_neg1_i64_thm_1 (e : IntW 64) :
+  LLVM.and (ashr e (const? 64 63)) (zext 64 (icmp IntPred.sge e (const? 64 (-1)))) ⊑
+    zext 64 (icmp IntPred.eq e (const? 64 (-1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_and_icmp_sgt_neg1_i64_proof.icmp_slt_0_and_icmp_sgt_neg1_i64_thm_1 (e : IntW 64) :
+  LLVM.and (lshr e (const? 64 63)) (zext 64 (icmp IntPred.sgt e (const? 64 (-1)))) ⊑ const? 64 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_and_icmp_sge_neg1_i64_fail_proof.icmp_slt_0_and_icmp_sge_neg1_i64_fail_thm_1 (e : IntW 64) :
+  LLVM.and (lshr e (const? 64 62)) (zext 64 (icmp IntPred.sge e (const? 64 (-1)))) ⊑
+    select (icmp IntPred.sgt e (const? 64 (-2))) (LLVM.and (lshr e (const? 64 62)) (const? 64 1)) (const? 64 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32_proof.icmp_x_slt_0_xor_icmp_y_sgt_neg1_i32_thm_1 (e e_1 : IntW 32) :
+  LLVM.xor (lshr e_1 (const? 32 31)) (zext 32 (icmp IntPred.sgt e (const? 32 (-1)))) ⊑
+    zext 32 (icmp IntPred.sgt (LLVM.xor e_1 e) (const? 32 (-1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_xor_icmp_sgt_neg2_i32_proof.icmp_slt_0_xor_icmp_sgt_neg2_i32_thm_1 (e : IntW 32) :
+  LLVM.xor (lshr e (const? 32 31)) (zext 32 (icmp IntPred.sgt e (const? 32 (-2)))) ⊑
+    zext 32 (icmp IntPred.ne e (const? 32 (-1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_eq_100_i32_fail_proof.icmp_slt_0_or_icmp_eq_100_i32_fail_thm_1 (e : IntW 32) :
+  LLVM.or (lshr e (const? 32 31)) (zext 32 (icmp IntPred.eq e (const? 32 100))) ⊑
+    zext 32 (LLVM.or (icmp IntPred.slt e (const? 32 0)) (icmp IntPred.eq e (const? 32 100))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_and_icmp_ne_neg2_i32_fail_proof.icmp_slt_0_and_icmp_ne_neg2_i32_fail_thm_1 (e : IntW 32) :
+  LLVM.and (lshr e (const? 32 31)) (zext 32 (icmp IntPred.ne e (const? 32 (-2)))) ⊑
+    zext 32 (LLVM.and (icmp IntPred.slt e (const? 32 0)) (icmp IntPred.ne e (const? 32 (-2)))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail_proof.icmp_x_slt_0_and_icmp_y_ne_neg2_i32_fail_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (lshr e_1 (const? 32 31)) (zext 32 (icmp IntPred.ne e (const? 32 (-2)))) ⊑
+    zext 32 (LLVM.and (icmp IntPred.slt e_1 (const? 32 0)) (icmp IntPred.ne e (const? 32 (-2)))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail_proof.icmp_x_slt_0_and_icmp_y_sgt_neg1_i32_fail_thm_1 (e e_1 : IntW 32) :
+  LLVM.and (lshr e_1 (const? 32 31)) (zext 32 (icmp IntPred.sgt e (const? 32 (-1)))) ⊑
+    zext 32 (LLVM.and (icmp IntPred.slt e_1 (const? 32 0)) (icmp IntPred.sgt e (const? 32 (-1)))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_xor_icmp_sge_neg2_i32_fail_proof.icmp_slt_0_xor_icmp_sge_neg2_i32_fail_thm_1 (e : IntW 32) :
+  LLVM.xor (lshr e (const? 32 31)) (zext 32 (icmp IntPred.sge e (const? 32 (-2)))) ⊑
+    zext 32 (icmp IntPred.ult e (const? 32 (-2))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_slt_0_or_icmp_add_1_sge_100_i32_fail_proof.icmp_slt_0_or_icmp_add_1_sge_100_i32_fail_thm_1 (e : IntW 32) :
+  LLVM.or (lshr e (const? 32 31)) (zext 32 (icmp IntPred.sge (add e (const? 32 1)) (const? 32 100))) ⊑
+    zext 32
+      (LLVM.or (icmp IntPred.slt e (const? 32 0)) (icmp IntPred.sgt (add e (const? 32 1)) (const? 32 99))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_icmps1_proof.logical_and_icmps1_thm_1 (e : IntW 32) (e_1 : IntW 1) :
+  select (select e_1 (icmp IntPred.sgt e (const? 32 (-1))) (const? 1 0)) (icmp IntPred.slt e (const? 32 10086))
+      (const? 1 0) ⊑
+    select e_1 (icmp IntPred.ult e (const? 32 10086)) (const? 1 0) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem logical_and_icmps2_proof.logical_and_icmps2_thm_1 (e : IntW 32) (e_1 : IntW 1) :
+  select (select e_1 (icmp IntPred.slt e (const? 32 (-1))) (const? 1 0)) (icmp IntPred.eq e (const? 32 10086))
+      (const? 1 0) ⊑
+    const? 1 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_eq_or_z_or_pow2orz_proof.icmp_eq_or_z_or_pow2orz_thm_1 (e e_1 : IntW 8) :
+  LLVM.or (icmp IntPred.eq e (LLVM.and (sub (const? 8 0) e_1) e_1)) (icmp IntPred.eq e (const? 8 0)) ⊑
+    icmp IntPred.eq (LLVM.and e (LLVM.and e_1 (sub (const? 8 0) e_1))) e := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_eq_or_z_or_pow2orz_logical_proof.icmp_eq_or_z_or_pow2orz_logical_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.eq e (LLVM.and (sub (const? 8 0) e_1) e_1)) (const? 1 1) (icmp IntPred.eq e (const? 8 0)) ⊑
+    icmp IntPred.eq (LLVM.and e (LLVM.and e_1 (sub (const? 8 0) e_1))) e := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_eq_or_z_or_pow2orz_fail_logic_or_proof.icmp_eq_or_z_or_pow2orz_fail_logic_or_thm_1 (e e_1 : IntW 8) :
+  select (icmp IntPred.eq e (const? 8 0)) (const? 1 1) (icmp IntPred.eq e (LLVM.and (sub (const? 8 0) e_1) e_1)) ⊑
+    select (icmp IntPred.eq e (const? 8 0)) (const? 1 1)
+      (icmp IntPred.eq e (LLVM.and e_1 (sub (const? 8 0) e_1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_ne_and_z_and_onefail_proof.icmp_ne_and_z_and_onefail_thm_1 (e : IntW 8) :
+  LLVM.and (LLVM.and (icmp IntPred.ne e (const? 8 0)) (icmp IntPred.ne e (const? 8 1)))
+      (icmp IntPred.ne e (const? 8 2)) ⊑
+    icmp IntPred.ugt e (const? 8 2) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_eq_or_z_or_pow2orz_fail_nonzero_const_proof.icmp_eq_or_z_or_pow2orz_fail_nonzero_const_thm_1 (e e_1 : IntW 8) :
+  LLVM.or (icmp IntPred.eq e (const? 8 1)) (icmp IntPred.eq e (LLVM.and (sub (const? 8 0) e_1) e_1)) ⊑
+    LLVM.or (icmp IntPred.eq e (const? 8 1)) (icmp IntPred.eq e (LLVM.and e_1 (sub (const? 8 0) e_1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem icmp_eq_or_z_or_pow2orz_fail_bad_pred2_proof.icmp_eq_or_z_or_pow2orz_fail_bad_pred2_thm_1 (e e_1 : IntW 8) :
+  LLVM.or (icmp IntPred.sle e (const? 8 0)) (icmp IntPred.sle e (LLVM.and (sub (const? 8 0) e_1) e_1)) ⊑
+    LLVM.or (icmp IntPred.slt e (const? 8 1)) (icmp IntPred.sle e (LLVM.and e_1 (sub (const? 8 0) e_1))) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_slt_to_mask_proof.and_slt_to_mask_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.slt e (const? 8 (-124))) (icmp IntPred.eq (LLVM.and e (const? 8 2)) (const? 8 0)) ⊑
+    icmp IntPred.slt e (const? 8 (-126)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_sgt_to_mask_proof.and_sgt_to_mask_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.sgt e (const? 8 123)) (icmp IntPred.eq (LLVM.and e (const? 8 2)) (const? 8 0)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 8 (-2))) (const? 8 124) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem and_ugt_to_mask_proof.and_ugt_to_mask_thm_1 (e : IntW 8) :
+  LLVM.and (icmp IntPred.ugt e (const? 8 (-5))) (icmp IntPred.eq (LLVM.and e (const? 8 2)) (const? 8 0)) ⊑
+    icmp IntPred.eq (LLVM.and e (const? 8 (-2))) (const? 8 (-4)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    

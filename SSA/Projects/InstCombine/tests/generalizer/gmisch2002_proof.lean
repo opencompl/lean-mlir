@@ -1,0 +1,35 @@
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Experimental.Bits.Fast.Generalize
+open BitVec
+open LLVM
+
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
+
+section gmisch2002_proof
+theorem cast_test_2002h08h02_proof.cast_test_2002h08h02_thm_1 (e : IntW 64) :
+  zext 64 (trunc 8 e) ⊑ LLVM.and e (const? 64 255) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem missed_const_prop_2002h12h05_proof.missed_const_prop_2002h12h05_thm_1 (e : IntW 32) :
+  add (sub (const? 32 0) e) (add e (add (sub (const? 32 0) (const? 32 1)) (const? 32 1))) ⊑ const? 32 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
