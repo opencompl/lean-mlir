@@ -7,6 +7,9 @@ structure ReflectMap where
   /-- Map expressions to their index in the eventual `Reflect.Map`. -/
   exprs : Std.HashMap Expr Nat
 
+/-- The size of the reflect map map. -/
+def ReflectMap.size (m : ReflectMap) : Nat :=
+    m.exprs.size
 
 instance : EmptyCollection ReflectMap where
   emptyCollection := { exprs := ∅ }
@@ -60,3 +63,5 @@ structure ReflectResult (α : Type) where
   exprToIx : ReflectMap
   e : α
 
+instance [ToMessageData α] : ToMessageData (ReflectResult α) where
+  toMessageData result := m!"{result.e} {result.exprToIx}"
