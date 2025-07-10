@@ -15,8 +15,10 @@ if len(llvm_path) == 0:
 
 test_path = "SSA/Projects/InstCombine/tests/LLVM"
 proof_path = "SSA/Projects/InstCombine/tests/proofs"
+generalizer_proof_path = "SSA/Projects/InstCombine/tests/generalizer"
 llvm_log_path = "SSA/Projects/InstCombine/tests/logs/LLVM"
 proof_log_path = "SSA/Projects/InstCombine/tests/logs/proofs"
+generalizer_log_path = "SSA/Projects/InstCombine/tests/logs/generalizer"
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
 
 skipped_funcs = {
