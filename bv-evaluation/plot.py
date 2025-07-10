@@ -594,7 +594,7 @@ def histogram_stddev(df, bm):
     for i, col_name in enumerate(column_to_name):
         axes[i].hist(df_sorted[col_name]/df_sorted[column_to_average[col_name]], bins=8000)
         axes[i].set_title(f"Distribution of {column_to_name[col_name]}")
-        axes[i].set_xlabel("Standard Deviation Value")
+        axes[i].set_xlabel("Coefficient of Variation")
         axes[i].set_ylabel("Frequency")
     save(fig, plotsdir + "barplot_stddev_" + bm.split(".")[0] + ".pdf")
 
