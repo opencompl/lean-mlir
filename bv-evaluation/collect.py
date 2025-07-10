@@ -874,6 +874,15 @@ def collect(benchmark: str, reps : int):
         print("all_files_solved_bv_decide_lratt_times_stddev" + " avg: " + str(np.median(all_files_solved_bv_decide_lratt_times_average)) + " | stddev:  "+str(np.median(all_files_solved_bv_decide_lratt_times_stddev)))
         print("all_files_solved_bv_decide_lratc_times_stddev" + " avg: " + str(np.median(all_files_solved_bv_decide_lratc_times_average)) + " | stddev:  "+str(np.median(all_files_solved_bv_decide_lratc_times_stddev)))
 
+        ratios = []
+        for avg, stddev in zip(all_files_solved_bv_decide_times_average, all_files_solved_bv_decide_times_stddev):
+            ratio = (stddev/avg) * 100 
+            ratios.append(ratio)
+
+        print("mean of percentage stddev/av: "+str(np.mean(ratios)) + "%")
+        print("max of percentage stddev/av: "+str(np.max(ratios))+ "%")
+
+
         save_solved_df(
             all_files_solved_bitwuzla_times_average,
             all_files_solved_bv_decide_times_average,
