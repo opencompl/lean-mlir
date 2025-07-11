@@ -13,8 +13,35 @@ open MLIR AST in
 
 unseal String.splitOnAux in
 def ex1 := [DCxComb_com| {
-  ^entry(%0 : !TokenStream):
+  ^entry(%0: !TokenStream):
     "return" (%0) : (!TokenStream) -> ()
   }]
 
 #check ex1
+
+unseal String.splitOnAux in
+def exampleSource := [DCxComb_com| {
+  ^entry():
+    %src = "DCxComb.source" () : () -> (!TokenStream)
+    "return" (%src) : (!TokenStream) -> ()
+  }]
+
+#check exampleSource
+
+unseal String.splitOnAux in
+def exampleSink := [DCxComb_com| {
+  ^entry(%0: !TokenStream):
+    %src = "DCxComb.sink" (%0) : (!TokenStream) -> (!TokenStream)
+    "return" (%src) : (!TokenStream) -> ()
+  }]
+
+def ofList (vals : List (Option α)) : Stream α :=
+  fun i => vals[i]?.join
+
+#check exampleSource
+def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
+
+def testExampleSource : DCOp.TokenStream :=
+  exampleSource.denote (Ctxt.Valuation.ofHVector (.cons u <| .nil))
+
+#eval testExampleSource
