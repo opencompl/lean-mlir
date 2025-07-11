@@ -34,8 +34,10 @@ variable {Ty : Type}
   assuming an instance of `Foo` exists for `List` -/
 local macro "inherit_instance" cls:term : command =>
   `(instance {Ty : Type} [$cls Ty] : $cls (Ctxt Ty) := inferInstanceAs <| $cls (List Ty))
+
 inherit_instance Repr
 inherit_instance Lean.ToMessageData
+inherit_instance DecidableEq
 
 -- def empty : Ctxt := Erased.mk []
 def empty : Ctxt Ty := []
@@ -56,6 +58,8 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ
 
+instance : HAppend (Ctxt Ty) (List Ty) (Ctxt Ty) where
+  hAppend Γ tys := tys.reverse ++ (@id (List _ ) Γ)
 
 instance : GetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
   inferInstanceAs (GetElem (List _) ..)
