@@ -19,84 +19,92 @@ notation "⟦" x "⟧" => TyDenote.toType x
 
 instance : TyDenote Unit where toType := fun _ => Unit
 
-def Ctxt (Ty : Type) : Type :=
+structure Ctxt (Ty : Type) : Type where
+  ofList :: toList : List Ty
   -- Erased <| List Ty
-  List Ty
+  deriving Repr, Lean.ToExpr
 
-abbrev Ctxt.toList (Γ : Ctxt Ty) : List Ty := Γ
+attribute [coe] Ctxt.ofList
 
 namespace Ctxt
 
 variable {Ty : Type}
 
-/-! ### Inherited Instances-/
-/-- `inherit_instance Foo` wil define an instance of `[Foo Ty] → Foo (Ctxt Ty)`,
-  assuming an instance of `Foo` exists for `List` -/
-local macro "inherit_instance" cls:term : command =>
-  `(instance {Ty : Type} [$cls Ty] : $cls (Ctxt Ty) := inferInstanceAs <| $cls (List Ty))
-inherit_instance Repr
-inherit_instance Lean.ToMessageData
+/-! ### Typeclass Instances-/
+section Instances
 
--- def empty : Ctxt := Erased.mk []
-def empty : Ctxt Ty := []
+open Lean in
+instance [ToMessageData Ty] : ToMessageData (Ctxt Ty) where
+  toMessageData (Γ) := m!"{Γ.toList}"
+
+instance : Coe (List Ty) (Ctxt Ty) where
+  coe := ofList
+
+end Instances
+
+def empty : Ctxt Ty := .ofList []
 
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
-lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
+lemma empty_eq : (∅ : Ctxt Ty) = .empty := rfl
 
 @[match_pattern]
-def snoc : Ctxt Ty → Ty → Ctxt Ty :=
-  -- fun tl hd => do return hd :: (← tl)
-  fun tl hd => hd :: tl
+def snoc : Ctxt Ty → Ty → Ctxt Ty
+  | ⟨tl⟩, hd => ⟨hd :: tl⟩
 
-/-- Turn a list of types into a context -/
-@[coe, simp]
-def ofList : List Ty → Ctxt Ty :=
-  -- Erased.mk
-  fun Γ => Γ
+instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
+  getElem xs i h := xs.toList[i]
+  getElem? xs i  := xs.toList[i]?
 
-
-instance : GetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
-  inferInstanceAs (GetElem (List _) ..)
-instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
-  inferInstanceAs (GetElem? (List _) ..)
-
--- Why was this noncomutable? (removed it to make transformation computable)
-@[simp]
-def get? : Ctxt Ty → Nat → Option Ty :=
-  GetElem?.getElem? (coll := List _)
+@[simp
+-- , deprecated "Use `getElem?`" (since := "")
+]
+def get? : Ctxt Ty → Nat → Option Ty := (·[·]?)
 
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
-  List.map f
+  ofList ∘ (List.map f) ∘ toList
 
-@[simp]
-lemma map_nil (f : Ty → Ty') :
-  map f ∅ = ∅ := rfl
+def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
 
-@[simp]
-lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
-  map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
+section Lemmas
 
-theorem map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
+lemma getElem?_eq_toList_getElem? {Γ : Ctxt Ty} {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
+@[simp] lemma getElem?_ofList (Γ : List Ty) (i : Nat) : (ofList Γ)[i]? = Γ[i]? := rfl
+
+@[simp] lemma getElem?_snoc_zero (Γ : Ctxt Ty) (t : Ty)           : (Γ.snoc t)[0]? = some t := rfl
+@[simp] lemma getElem?_snoc_succ (Γ : Ctxt Ty) (t : Ty) (i : Nat) : (Γ.snoc t)[i+1]? = Γ[i]? := rfl
+
+@[simp] lemma map_nil (f : Ty → Ty') : map f ∅ = ∅ := rfl
+@[simp] lemma map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
+
+@[simp] lemma getElem?_map (Γ : Ctxt Ty) (f : Ty → Ty') (i : Nat) :
+    (Γ.map f)[i]? = Γ[i]?.map f := by
+  simp [map]; rfl
+
+@[simp] lemma length_ofList : (ofList Γ).length = Γ.length := rfl
 
 instance : Functor Ctxt where
   map := map
 
+@[simp] lemma map_eq_map : f <$> Γ = map f Γ := rfl
+
 instance : LawfulFunctor Ctxt where
-  comp_map  := by simp only [List.map_eq_map, List.map_map, forall_const, implies_true]
-  id_map    := by simp only [List.map_eq_map, List.map_id, forall_const]
+  comp_map  := by simp [(· <$> ·), map]
+  id_map    := by simp [(· <$> ·), map]
   map_const := by simp only [Functor.mapConst, Functor.map, forall_const]
+
+end Lemmas
 
 /-- Recursion principle for contexts in terms of `Ctxt.nil` and `Ctxt.snoc` -/
 @[elab_as_elim, induction_eliminator]
-def recOn {motive : Ctxt Ty → Sort*}
+def recOn' {motive : Ctxt Ty → Sort*}
     (nil  : motive empty)
     (snoc : (Γ : Ctxt Ty) → (t : Ty) → motive Γ → motive (Γ.snoc t)) :
     ∀ Γ, motive Γ
-  | []        => nil
-  | ty :: tys  => snoc tys ty (recOn nil snoc tys)
+  | ⟨[]⟩        => nil
+  | ⟨ty :: tys⟩ => snoc ⟨tys⟩ ty (recOn' nil snoc ⟨tys⟩)
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
@@ -115,10 +123,9 @@ instance : DecidableEq (Var Γ t) := by
 def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
   ⟨0, by rfl⟩
 
-def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var [] t → α :=
+def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
   fun ⟨_, h⟩ => by
-    simp only [get?, List.getElem?_nil, reduceCtorEq] at h
-
+    simp [getElem?_eq_toList_getElem?, EmptyCollection.emptyCollection, empty] at h
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
 in context `Γ.snoc t`. This is marked as a coercion. -/
@@ -138,11 +145,7 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
-  | ⟨i, h⟩ => ⟨i, by
-      simp only [get?, map, List.getElem?_map, Option.map_eq_some_iff]
-      simp only [get?] at h
-      simp [h]
-    ⟩
+  | ⟨i, h⟩ => ⟨i, by simp_all⟩
 
 def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
   | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
@@ -177,9 +180,7 @@ def casesOn
   match v with
     | ⟨0, h⟩ =>
         _root_.cast (by
-          simp only [get?, snoc, List.length_cons, Nat.zero_lt_succ, List.getElem?_eq_getElem,
-            List.getElem_cons_zero, Option.some.injEq] at h
-          subst h
+          obtain rfl : t' = t := by simpa [snoc] using h
           simp_all only [get?, zero_eq_last]
           ) <| @last Γ t
     | ⟨i+1, h⟩ =>
@@ -278,9 +279,9 @@ def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var 
     VAL v
 
 /-- Make a valuation for the empty context. -/
-def Valuation.nil : Ctxt.Valuation ([] : Ctxt Ty) := fun _ v => v.emptyElim
+def Valuation.nil : Ctxt.Valuation (∅ : Ctxt Ty) := fun _ v => v.emptyElim
 
-instance : Inhabited (Ctxt.Valuation ([] : Ctxt Ty)) := ⟨Valuation.nil⟩
+instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨Valuation.nil⟩
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
 def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -297,8 +298,8 @@ infixl:50 "::ᵥ" => Valuation.snoc
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) = fun t var => match var with
       | ⟨0, hvar⟩ => by
-          simp only [get?, Ctxt.snoc, List.getElem?_cons_zero, Option.some.injEq] at hvar
-          exact (hvar ▸ x)
+          obtain rfl : _ = t := by simpa using hvar
+          exact x
       | ⟨.succ i, hvar⟩ => s ⟨i, hvar⟩ := by
   funext t' v
   rcases v with ⟨⟨⟩|i, hi⟩
@@ -330,8 +331,7 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 @[simp]
 theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
     (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
-    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by
-      simp only [get?, Ctxt.snoc, List.getElem?_cons_succ] at hvar; exact hvar⟩ :=
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simpa using hvar⟩ :=
   rfl
 
 /-- There is only one distinct valuation for the empty context -/
@@ -345,13 +345,13 @@ theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.sn
   cases v using Var.casesOn <;> rfl
 
 /-- Make a a valuation for a singleton value -/
-def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation [t] :=
+def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation ⟨[t]⟩ :=
   Ctxt.Valuation.nil.snoc v
 
 /-- Build valuation from a vector of values of types `types`. -/
 def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
-  | .nil => (default : Ctxt.Valuation ([] : Ctxt Ty))
-  | .cons x xs => (Valuation.ofHVector xs).snoc x
+  | .nil        => (default : Ctxt.Valuation ∅)
+  | .cons x xs  => (Valuation.ofHVector xs).snoc x
 
 /-- Build valuation from a vector of values of types `types`. -/
 def Valuation.ofPair  {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
@@ -424,7 +424,7 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   rfl
 
 /-- Show that a valuation is equivalent to a `HVector` -/
-def Valuation.equivHVector {Γ : Ctxt Ty} : Valuation Γ ≃ HVector toType Γ where
+def Valuation.equivHVector {Γ : List Ty} : Valuation ⟨Γ⟩ ≃ HVector toType Γ where
   toFun V   := HVector.ofFn _ _ <| fun i => V ⟨i, by simp⟩
   invFun    := Valuation.ofHVector
   left_inv V := by
@@ -434,7 +434,7 @@ def Valuation.equivHVector {Γ : Ctxt Ty} : Valuation Γ ≃ HVector toType Γ w
     case nil =>
       rcases v with ⟨_, _⟩
       contradiction
-    case snoc Γ u ih =>
+    case cons Γ u ih =>
       cases v
       case last   => rfl
       case toSnoc => apply ih (fun t v => V v.toSnoc)
@@ -473,7 +473,7 @@ theorem val_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ _ t'
   rfl
 
 instance : Repr (Var Γ t) where
-  reprPrec v _ := f!"%{Γ.length - v.val - 1}"
+  reprPrec v _ := f!"%{Γ.toList.length - v.val - 1}"
 
 end Var
 
@@ -526,8 +526,8 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some_iff,
-      forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] at h_get_d ⊢
+    simp only [Valid, get?, getElem?_map, Option.map_eq_some_iff, forall_exists_index, and_imp,
+      forall_apply_eq_imp_iff₂] at h_get_d ⊢
     intros a b c
     simp [h_get_d c]
   ⟩
@@ -559,6 +559,7 @@ theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (
     Valid Γ₁ Γ₂ d := by
   intro i t h_get
   simp [←h_valid h_get, snoc, List.getElem?_cons]
+  rfl
 
 lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
@@ -611,12 +612,12 @@ abbrev ofCtxt (Γ : Ctxt Ty) : DerivedCtxt Γ := ⟨Γ, .zero _⟩
 /-- value of a dervied context from an empty context,
      is the empty context with a zero diff. -/
 @[simp]
-theorem ofCtxt_empty : DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := rfl
+theorem ofCtxt_empty : DerivedCtxt.ofCtxt (∅ : Ctxt Ty) = ⟨∅, .zero _⟩ := rfl
 
 /-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
 @[simp]
 def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
-  | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
+  | ⟨⟨Δ⟩, diff⟩, ty => ⟨ty::Δ, diff.toSnoc⟩
 
 theorem snoc_ctxt_eq_ctxt_snoc:
     (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
@@ -642,7 +643,7 @@ end DerivedCtxt
 
 /-- `Γ.dropUntil v` is the largest prefix of context `Γ` that no longer contains variable `v` -/
 def dropUntil (Γ : Ctxt Ty) (v : Var Γ ty) : Ctxt Ty :=
-  List.drop (v.val + 1) Γ
+  ⟨List.drop (v.val + 1) Γ.toList⟩
 
 @[simp] lemma dropUntil_last   : dropUntil (snoc Γ ty) (Var.last Γ ty) = Γ := rfl
 @[simp] lemma dropUntil_toSnoc : dropUntil (snoc Γ ty) (Var.toSnoc v) = dropUntil Γ v := rfl
@@ -677,9 +678,6 @@ instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
 section ToExpr
 open Lean Qq
 variable [ToExpr Ty] {Γ : Ctxt Ty} {ty : Ty}
-
-instance : ToExpr (Ctxt Ty) :=
-  inferInstanceAs <| ToExpr (List Ty)
 
 /-- Construct an expression of type `Var Γ ty`.
 

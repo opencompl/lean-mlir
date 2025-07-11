@@ -212,10 +212,10 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
 
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
-private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
+private def formatArgTuple [Repr Ty] {Γ : List Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
-  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
     | .cons .. =>
@@ -251,7 +251,7 @@ mutual
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
     f!"\{" ++ Format.nest 2
     (Format.line ++
-    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ) ++ f!":" ++ Format.line ++
+    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ.toList) ++ f!":" ++ Format.line ++
     (comReprAux prec com))) ++ Format.line ++
     f!"}"
 
@@ -310,7 +310,7 @@ partial def Com.ToStringBody : Com d Γ eff t → String
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
 partial def Com.toString (com : Com d Γ eff t) : String :=
    "{ \n"
-  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
+  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.ToStringBody com) ++
    "\n }"
 
@@ -1526,7 +1526,7 @@ section Lemmas
 @[simp] lemma Com.changeDialect_var (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
     (Com.var e body).changeDialect f = Com.var (e.changeDialect f) (body.changeDialect f) := by
-  simp only [List.map_eq_map, changeDialect]
+  simp only [changeDialect]
 
 @[simp] lemma HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
     HVector.changeDialect (eff := eff) f nil = nil := by simp [HVector.changeDialect]
@@ -1766,7 +1766,7 @@ def Ctxt.Substitution (Γ Δ : Ctxt d.Ty) : Type :=
 @[coe] def Ctxt.Substitution.ofValuation
     (V : Valuation (Ty:=(TermModel d Δ).Ty) (TermModelTy.mk <$> Γ)) :
     Γ.Substitution d Δ := fun ⟨v, h⟩ =>
-  V ⟨v, by simp only [get?] at h; simp [h]⟩
+  V ⟨v, by simp_all⟩
 
 /-- A context homomorphism trivially induces a substitution  -/
 @[coe] def Ctxt.Substitution.ofHom {Γ Δ : Ctxt d.Ty} (f : Γ.Hom Δ) : Γ.Substitution d Δ :=
@@ -1785,9 +1785,7 @@ def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution
   Ctxt.Substitution.ofValuation <|
     (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
       ExprTree.fvar ⟨v, by
-        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map,
-          List.getElem?_map, Option.map_eq_some_iff] at h
-        simp only [Ctxt.get?]
+        simp_all only [Ctxt.get?, Ctxt.map_eq_map, Ctxt.getElem?_map, Option.map_eq_some_iff]
         rcases h with ⟨ty', h_get, h_map⟩
         injection h_map with ty_eq_ty'
         subst ty_eq_ty'
@@ -1876,7 +1874,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
     * If `matchLets = .var matchLets' e`, and `w` is `w' + 1`, then we recurse and try to
       `matchVar lets v matchLets' w' map` -/
   | .var matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
-      let w := ⟨w, by simp_all[Ctxt.snoc]⟩
+      let w := ⟨w, by simp_all⟩
       matchVar lets v matchLets w ma
   | @Lets.var _ _ _ _ Δ_out _ matchLets matchExpr , ⟨0, _⟩, ma => do -- w† = Var.last
       let ie ← lets.getPureExpr v
@@ -1903,8 +1901,7 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
     (hw : Ctxt.get? Δ_out w = .some t)
     (ma : Mapping Δ_in Γ_out) :
   matchVar lets v (matchLets := .var matchLets matchE)
-    ⟨w + 1, by simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_succ];
-               simp only [Ctxt.get?] at hw; apply hw⟩ ma =
+    ⟨w + 1, by simpa using hw⟩ ma =
   matchVar lets v matchLets ⟨w, hw⟩ ma := by
     conv =>
       lhs
