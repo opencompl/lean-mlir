@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import Batteries.Data.Fin.Basic
 import Batteries.Data.Fin.Lemmas
-import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Experimental.Bits.SingleWidth.Defs
 import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine

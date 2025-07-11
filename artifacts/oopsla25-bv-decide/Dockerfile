@@ -14,6 +14,7 @@ RUN apt-get update && \
         cmake \
         git \
         ninja-build \
+        ripgrep \ 
         gdb curl wget zstd unzip sudo \
         # dependencies for experiment scripts
         python3-matplotlib python3-pandas python3-num2words python3-tabulate \
@@ -117,18 +118,19 @@ RUN cd lib && \
     cp gratchk ../../bin
 WORKDIR /home/user/lean-mlir
 
-# Install Leanwuzla (commit: 25.06.25)
+# Install Leanwuzla (commit: 30.06.25)
 # This is a fork of Leanwuzla with modifications to support the evaluation
 RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla && \
-    cd Leanwuzla && git checkout 3ec8c974eed8f4d142a5d3422feb8220d0661089 && \
+    cd Leanwuzla && git checkout 1c8543dfcb325dd113527ddd55ab9c1190c5a111 && \
     lake build
 
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && git checkout oopsla25-bv-decide && \
+    cd lean-mlir-temp && git checkout 548a868571e1aa1f50ede3e6814db6a87db4df91 && \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
+RUN MATHLIB_NO_CACHE_ON_UPDATE=1 LAKE_NO_CACHE=1 lake update --no-cache
 
 # Install Python dependencies
 RUN python3 -m venv .venv && \

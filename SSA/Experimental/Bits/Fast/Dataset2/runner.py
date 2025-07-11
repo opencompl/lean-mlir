@@ -4,8 +4,11 @@
 # 20.833333333333332 / $NPROC
 # maxHeartbeats
 # timeout.
-from typing import List, Dict
+from typing import List, Dict, Optional
 import os
+import threading
+import psutil
+import time
 import argparse
 import glob
 import sqlite3
@@ -15,25 +18,17 @@ import pathlib
 import datetime
 import logging
 
-def parse_args():
-    current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    parser = argparse.ArgumentParser(prog='runner')
-    nproc = os.cpu_count()
-    parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
-    parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
-    parser.add_argument('--num-tests', type=int, default=100, help='number of tests to run')
-    parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
-    parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
-    return parser.parse_args()
 
 STATUS_FAIL = "fail"
 STATUS_SUCCESS = "success"
 STATUS_TIMED_OUT = "timeout"
+STATUS_MEMORY_OUT = "memoryout"
 
 status_to_emoji = {
     STATUS_FAIL : "❌",
     STATUS_SUCCESS : "🎉",
-    STATUS_TIMED_OUT : "⌛️"
+    STATUS_TIMED_OUT : "⌛️",
+    STATUS_MEMORY_OUT : "💥"
 }
 
 class Counter:
@@ -78,11 +73,100 @@ def parse_tacbench_rows_from_stdout(filename : str, stdout : str) -> List[Tacben
             rows.append(TacbenchRecord.parse_tacbench_row(filename, line))
     return rows
 
-async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
+def kill_process_tree(pid : int):
+    """Kill process tree of PID"""
+    try:
+        parent = psutil.Process(pid)
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
+    except psutil.NoSuchProcess:
+        pass
+
+
+def monitor_memory(pid, memout_mb, flag):
+    """
+    monitor the memory of process 'pid', and update the 'flag'
+    dictionary with 'memout=true' if we run out of memory
+    """
+
+    try:
+        proc = psutil.Process(pid)
+        while not flag["done"]:
+            mem_bytes = proc.memory_info().rss
+            for child in proc.children(recursive=True):
+                try:
+                    mem_bytes += child.memory_info().rss
+                except psutil.NoSuchProcess:
+                    continue
+            if mem_bytes > memout_mb * 1024 * 1024:
+                flag["memout"] = True
+                kill_process_tree(pid)
+                return
+            MONITOR_POLL_TIME_SEC = 5
+            time.sleep(MONITOR_POLL_TIME_SEC)
+    except psutil.NoSuchProcess:
+        pass
+
+
+class RunWithLimitsResult:
+    statuses = [STATUS_SUCCESS, STATUS_TIMED_OUT, STATUS_MEMORY_OUT, STATUS_FAIL]
+    status : str
+    returncode : Optional[int]
+    stdout : str
+    stderr : str
+
+    def __init__(self, status : str, returncode : int, stdout : str, stderr : str):
+        self.status = status
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+        assert self.status in RunWithLimitsResult.statuses
+
+async def run_with_limits(cmd : list[str], timeout_sec : int, memout_mb : int) -> RunWithLimitsResult:
+    """
+    Run process 'cmd' with limits of 'timout' in seconds and 'memout' in megabyte.
+    """
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            preexec_fn=os.setsid,
+        )
+        flag = {"done": False, "memout": False}
+        monitor_thread = threading.Thread(
+            target=monitor_memory, args=(proc.pid, memout_mb, flag)
+        )
+        monitor_thread.start()
+
+        try:
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout_sec)
+            stdout = stdout.decode("utf-8")
+            stderr = stderr.decode("utf-8")
+            flag["done"] = True
+            monitor_thread.join()
+            if flag["memout"]:
+                return RunWithLimitsResult(status=STATUS_MEMORY_OUT, returncode=None, stdout=stdout, stderr=stderr)
+            return RunWithLimitsResult(status=STATUS_SUCCESS, returncode=proc.returncode, stdout=stdout, stderr=stderr)
+        except asyncio.TimeoutError:
+            flag["done"] = True
+            kill_process_tree(proc.pid)
+            # stdout, stderr = proc.communicate()
+            stdout = ""
+            stderr = ""
+            monitor_thread.join()
+            return RunWithLimitsResult(status=STATUS_TIMED_OUT, returncode=None, stdout=stdout, stderr=stderr)
+    except Exception as e:
+        raise e
+        return RunWithLimitsResult(status=STATUS_FAIL, returncode=None, stdout="", stderr="")
+
+
+async def run_lake_build(db, git_root_dir, semaphore, timeout, memout_mb, i_test, n_tests, filename, completed_counter : Counter, test_content, solver):
     async with semaphore:
         module_name = pathlib.Path(filename).stem
-        command = f"lake lean {filename} --dir {git_root_dir}"
-        logging.info(f"Running {i_test+1}/{n_tests} '{command}'")
+        command = ["lake", "lean", filename, "--dir", git_root_dir]
+        logging.info(f"Running {i_test+1}/{n_tests} '{" ".join(command)}'")
 
         logging.info(f"[Looking up cached {filename}]  Opening connection...")
         con = sqlite3.connect(db)
@@ -104,43 +188,22 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
             return
 
         logging.info(f"Running {filename}, no cache found.")
-        process = await asyncio.create_subprocess_exec(
-            "lake",
-            "lean",
-            filename,
-            "--dir",
-            git_root_dir,
-            # cwd=git_root_dir,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.DEVNULL,
-            preexec_fn=os.setsid
-        )
-
-        status = STATUS_TIMED_OUT
-        exit_code = 1
+        result = await run_with_limits(command, timeout_sec=timeout, memout_mb=memout_mb)
+        exit_code = result.returncode
         walltime = float('inf')
-        stdout = ""
-        try:
-            stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
-            stdout = stdout.decode("utf-8")
-            records = parse_tacbench_rows_from_stdout(filename, stdout)
-            if len(records) != 1:
-                logging.error(f"[{status_to_emoji[STATUS_FAIL]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
-                return
-            record = records[0]
-            walltime = record.walltime
-            exit_code = process.returncode
-            status = STATUS_SUCCESS if process.returncode == 0 else STATUS_FAIL
-        except asyncio.TimeoutError:
-            logging.warning(f"[Timeout for {filename}] Process exceeded {timeout} seconds")
-            os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
-            try:
-                os.killpg(os.getpgid(process.pid), 9) # kill the process and all its children
-            except Exception as e:
-                logging.warning(f"Weird exception: {e}")
+        stdout = result.stdout
+        status = result.status
+        records = parse_tacbench_rows_from_stdout(filename, stdout)
 
         logging.info(f"[Finished {filename}]  Status: {status} {status_to_emoji[status]}")
-
+        if len(records) != 1:
+            if status == STATUS_SUCCESS:
+                # set status to failure in case we thought we have succeeded.
+                status = STATUS_FAIL
+            logging.error(f"[{status} {status_to_emoji[status]} Error in {filename}]: found {len(records)} records, expected exactly one record.")
+        else:
+            record = records[0]
+            walltime = record.walltime
         logging.info(f"[Writing {filename}]  Opening connection...")
         con = sqlite3.connect(args.db)
         logging.info(f"[Writing {filename}]  Executing INSERT...")
@@ -163,6 +226,16 @@ async def run_lake_build(db, git_root_dir, semaphore, timeout, i_test, n_tests, 
         logging.info(f"[Writing {filename}]  DONE")
         completed_counter.increment()
 
+        command = ["find", "/tmp/", "-type", "f", "-readable", "-name", "tmp.XX*", "-mmin", "+11", "-delete"]
+        logging.info(f"{i_test+1}/{n_tests} Clearing /tmp/ folder with command '{" ".join(command)}'")
+        result = await asyncio.create_subprocess_exec(*command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        await result.wait()
+        # v This is OK. There will be files in '/tmp/ that are written by 'root',
+        # but we don't care about clearing them, even if 'find' complains about
+        # trying to open them.
+        # if result.returncode != 0:
+        #     logging.warning(f"{i_test+1}/{n_tests} failed to clear /tmp/: '{result.stderr}'")
+
 def get_git_root():
     result = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"],
@@ -175,7 +248,7 @@ def get_git_root():
 def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
-import SSA.Experimental.Bits.Frontend.Tactic
+import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Core.Tactic.TacBench
 
@@ -211,7 +284,13 @@ class UnitTest:
     solver_kinduction_verified = "kinduction_verified"
     solver_bv_automata_classic = "bv_automata_classic"
     solver_bv_decide = "bv_decide"
-    solvers = [solver_mba, solver_bv_automata_classic, solver_bv_decide, solver_kinduction_verified]
+    solvers = [solver_kinduction_verified, solver_bv_automata_classic,  solver_mba, solver_bv_decide]
+    solver_num_problems = {
+      solver_mba: 2500,
+      solver_bv_automata_classic: 2500,
+      solver_bv_decide: 2500,
+      solver_kinduction_verified: 1500
+    }
 
     def __init__(self, ix, test, solver):
         self.ix = ix
@@ -251,24 +330,14 @@ class UnitTest:
 
 def load_tests(args) -> List[UnitTest]:
     with open('dataset2_64bit.txt', 'r') as f:
-        # sort tests backwards, from hardest to easiest!
         tests = list(f)[1:]
-    
-    NTESTS_TO_RETURN = len(tests)
 
     out = []
-    for (ix, t) in enumerate(tests):
-        for s in UnitTest.solvers:
-            out.append(UnitTest(ix=ix, test=t, solver=s))
-
-    if args.prod_run:
-        logging.info(f"--prod_run enabled, running all the files")
-        return out
-    else:
-        if not args.num_tests:
-            args.num_tests = 10
-        NTESTS_TO_RETURN = min(args.num_tests, NTESTS_TO_RETURN)
-        return out[:NTESTS_TO_RETURN*len(UnitTest.solvers)]
+    for s in UnitTest.solvers:
+        for (ix, t) in enumerate(tests):
+            if ix < int(getattr(args, s)): # UnitTest.solver_num_problems[s]:
+                out.append(UnitTest(ix=ix, test=t, solver=s))
+    return out
 
 async def main(args):
     logging.info(f"parsed config args: {args}")
@@ -302,7 +371,7 @@ async def main(args):
 
     async with asyncio.TaskGroup() as tg:
         # work through tests in reverse order, hardest to easiest.
-        for test in tests:
+        for (i_test, test) in enumerate(tests):
             filename = f"Test{test.solver}{test.ix+1}.lean".replace("-","").replace("_","")
             with open(filename, 'w') as f:
                 test.write(f)
@@ -311,7 +380,8 @@ async def main(args):
                            git_root_dir=git_root_dir,
                            semaphore=semaphore,
                            timeout=args.timeout,
-                           i_test=test.ix,
+                           memout_mb=args.memout_mb,
+                           i_test=i_test,
                            n_tests=n_tests,
                            test_content=test.test,
                            solver=test.solver,
@@ -342,6 +412,20 @@ def print_summary_from_db(db):
         logging.info("All tests passed!")
     logging.info("Done with summary.")
     con.close()
+
+def parse_args():
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    parser = argparse.ArgumentParser(prog='runner')
+    nproc = os.cpu_count()
+    parser.add_argument('--db', default=f'run-{current_time}.sqlite3', help='path to sqlite3 database')
+    # parser.add_argument('--prod-run', default=False, action='store_true', help='run a production run of the whole thing.')
+    # parser.add_argument('--num-tests', type=int, default=100, help='number of tests to run')
+    for solver in UnitTest.solvers:
+        parser.add_argument("--" + solver, type=int, default=UnitTest.solver_num_problems[solver], help=f'run {solver} with these many problems, default {UnitTest.solver_num_problems[solver]}')
+    parser.add_argument('-j', type=int, default=5, help='number of parallel jobs.')
+    parser.add_argument('--timeout', type=int, default=60, help='number of seconds for timeout of test.')
+    parser.add_argument('--memout-mb', type=int, default=8000, help='maximum memory usage per problem (in MB)')
+    return parser.parse_args()
 
 if __name__ == "__main__":
     args = parse_args()

@@ -126,6 +126,15 @@ The artifact contains the benchmarks, the scripts to evaulate \texttt{bv\_decide
 Podman or Docker are necessary to run our artifact.
 The container image has all dependencies needed to compile our framework with Lean4.
 
+\section{Versioning}
+
+All of our infrastructure is based on Lean version \texttt{nightly-2025-06-27}, commit \texttt{0aca10b228974232cd2d77cd4575a8594458c6e4}. 
+\begin{itemize}
+\item We use Leanwuzla (https://github.com/hargoniX/Leanwuzla), the infrastructure allowing bv decide to digest SMT-LIB, at commit 1c8543dfcb325dd113527ddd55ab9c1
+\item We use lean-MLIR (https://github.com/opencompl/lean-mlir) at commit 28b780232c1e7c47c0360cff34e7ef50955ded21
+\item We use our own theorem table maker (https://github.com/opencompl/bv-theorem-table-maker) for computing the coverge of our BitVec API at commit 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d
+\end{itemize}
+
 \section{Getting Started}
 
 Access the \texttt{DockerHub} via the url \url{https://hub.docker.com/r/abdoo8080/oopsla25-bv-decide}. Please use the following steps to load the docker image and get started:
@@ -134,10 +143,8 @@ Access the \texttt{DockerHub} via the url \url{https://hub.docker.com/r/abdoo808
 $ docker pull abdoo8080/oopsla25-bv-decide:v1
 # Run the docker image
 $ docker run --name oopsla25-bv-decide -it abdoo8080/oopsla25-bv-decide:v1
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
-$ lake update && lake build
+# Build the framework.
+$ lake build
 # Run experiments InstCombine, HackersDelight, and SMT-LIB
 # Collect the output and generate the plots and statistics
 $ artifacts/oopsla25-bv-decide/run.sh
@@ -224,7 +231,7 @@ Note that the above commands will run the experiments on a subset of the benchma
 \begin{itemize}
   \item[Figure 11.a] is in \texttt{plots/cumul\_problems\_smtlib\_unsat.pdf}, and
   \item[Figure 11.b] is in \texttt{plots/cumul\_problems\_smtlib\_sat.pdf}, and
-  \item[Figure 11.c and 11.d] is in \texttt{plots/scatter\_smtlib.pdf}.
+  \item[Figure 11.c] is in \texttt{plots/scatter\_smtlib.pdf}.
 \end{itemize}
 
 \end{document}
