@@ -11,6 +11,14 @@ structure ReflectMap where
 def ReflectMap.size (m : ReflectMap) : Nat :=
     m.exprs.size
 
+
+/-- Convert the 'ReflectMap' into an array of expressions, sorted by their index. -/
+def ReflectMap.toArray (m : ReflectMap) : Array Expr := Id.run do
+  let vals := m.exprs.toArray
+  let vals := vals.qsort (fun a b => a.2 < b.2)
+  return vals.map Prod.fst
+
+
 instance : EmptyCollection ReflectMap where
   emptyCollection := { exprs := ∅ }
 /--

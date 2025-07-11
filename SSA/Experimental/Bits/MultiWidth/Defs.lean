@@ -92,7 +92,6 @@ def WidthExpr.toBitstream
   match e with
   | .var v => fun i => decide (env v ≤ i)
 
-
 def Term.toBitstream {wcard tcard : Nat}
     {tctx :Term.Ctx wcard tcard}
     {w : WidthExpr wcard}
@@ -177,4 +176,13 @@ structure GoodPredicateFSM
 
 end ToFSM
 
+namespace Nondep
+
+inductive WidthExpr
+| var (v : Nat) : WidthExpr
+
+inductive Term : Type
+| var (v : Nat) : Term
+
+end Nondep
 end MultiWidth

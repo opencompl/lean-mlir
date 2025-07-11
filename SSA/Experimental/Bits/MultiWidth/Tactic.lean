@@ -17,11 +17,6 @@ structure Config where
 /-- Default user configuration -/
 def Config.default : Config := {}
 
-/--
-Convert the meta-level `ReflectMap` into an object level `Reflect.Map` by
-repeatedly calling `Reflect.Map.empty` and `Reflect.Map.set`.
--/
-def ReflectMap.toExpr (xs : ReflectMap) : MetaM ReflectedExpr := sorry
 
 /--
 info: ∀ {w : Nat} (a b : BitVec w),
@@ -83,18 +78,83 @@ In the next phase, we will use this `ReflectMap` of widths to reflect terms and 
 
 end MkReflectMapWidth
 
-structure ReflectedWidth (nw : Nat) where
-  wMap : ReflectMap
-  w : MultiWidth.WidthExpr nw
 
-structure ReflectedTerm extends ReflectionCtx where
-  ctx : MultiWidth.Term.Ctx wcard tcard
-  w : MultiWidth.WidthExpr wcard
-  term : MultiWidth.Term ctx w
+structure TotalOrder (α : Type) [Hashable α] [BEq α] where 
+  vals : Std.HashMap α Nat 
 
-def reflectBVAtom (wMap : ReflectMap) (bvMap : ReflectMap) (e : Expr) : MetaM (ReflectedTerm) := do
-  if let some (v, _bvTy) ← getOfNatValue? e ``BitVec then
-    return { exprToIx := map, e := Term.ofNat v }
+instance [Hashable α] [BEq α] : EmptyCollection (TotalOrder α) where
+  emptyCollection := { vals := ∅ }
+
+def TotalOrder.findOrInsert {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α := 
+  let (ix, vals) := match toOrder.vals.get? e with
+    | some ix => (ix, toOrder.vals)
+    | none =>
+      let ix := toOrder.vals.size
+      (ix, toOrder.vals.insert e ix)
+  (ix, { toOrder with vals := vals })
+
+def TotalOrder.toArray {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array (α × Nat) := 
+  toOrder.vals.toArray.qsort (fun a b => a.2 < b.2)
+
+def TotalOrder.toArray_ {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array α := 
+  toOrder.toArray.map Prod.fst
+
+
+/-- Get the value of an array at a given index `i`,
+where the index `i` is a `Fin n` -/
+private def arrayGetFin (a : Array α) (n : Nat) (hn : n = a.size) (i : Fin n) : α :=
+  a[i] 
+
+def arrayExprToExpr (a : Array Expr) (ty : Expr) : MetaM Expr := do
+    let mut out := mkAppN (mkConst ``Array.empty []) #[ty]
+    for e in a do
+      out ← mkAppM ``Array.push #[out, e]
+    return out
+
+/-- build an expr for 'xs' as `fun (x : Fin n) => arrayGetFin xs n (by rfl) x`  -/
+def exprArrayToFinEnv (xs : Array Expr) (n : Expr) : MetaM Expr := sorry
+
+structure CollectState where
+    wToIx : TotalOrder Expr
+    bvToIx : TotalOrder Expr
+    bvToWidth : Std.HashMap Expr Expr -- map from BitVec to width
+
+
+/- TODO: type a 'ReflectMap' with some kind of ``Name to make it clear what's happening. -/ 
+structure ReflectedWidth  where
+  wToIx : ReflectMap
+  w : MultiWidth.Nondep.WidthExpr
+
+def collectWidthAtom (wToIx : TotalOrder Expr) (e : Expr) (check? : Bool := false) : 
+    MetaM (TotalOrder Expr) := do
+    if check? then
+      if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
+        throwError m!"expected width to be a Nat, found: {indentD e}"
+    let (_, wToIx) := wToIx.findOrInsert e
+    return wToIx
+
+def reflectBVAtom (reader : CollectState) (wMapExpr : Expr) (bvMapExpr : Expr) 
+  (e : Expr) : MetaM Expr := do sorry
+
+structure ReflectedTerm where
+  wToIx : ReflectMap
+  bvToIx : ReflectMap
+  w : MultiWidth.Nondep.WidthExpr
+  term : MultiWidth.Nondep.Term
+
+
+def collectBVAtom (state : CollectState) 
+  (e : Expr) : MetaM (CollectState) := do
+  let t ← inferType e
+  let_expr BitVec w := t
+    | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
+  let wToIx ← collectWidthAtom state.wToIx w
+  let (_, bvToIx) := state.bvToIx.findOrInsert e
+  let bvToWidth := state.bvtoWidth.insert e w
+  return { wToIx := wToIx, bvToIx := bvToIx, bvToWidth := bvToWidth }
+
+def reflectBVAtom (reader : CollectState) (e : Expr) : MetaM Expr := do sorry
+
 
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
@@ -103,75 +163,13 @@ and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
 -/
-partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : MetaM (ReflectResult MultiWidth.Term) := do
-  if let some (v, _bvTy) ← getOfNatValue? e ``BitVec then
-    return { exprToIx := map, e := Term.ofNat v }
-  -- TODO: bitvector contants.
+partial def reflectTermUnchecked (state : CollectState) (e : Expr) : 
+     MetaM (CollectState) := do
   match_expr e with
-  | BitVec.ofInt _wExpr iExpr =>
-    let i ← getIntValue? iExpr
-    match i with
-    | _ =>
-      let (e, map) := map.findOrInsertExpr e
-      return { exprToIx := map, e := Term.var e }
-  | BitVec.ofNat _wExpr nExpr =>
-    let n ← getNatValue? nExpr
-    match n with
-    | .some 0 =>
-      return {exprToIx := map, e := Term.zero }
-    | .some 1 =>
-      let _ := (mkConst ``Term.one)
-      return {exprToIx := map, e := Term.one }
-    | .some n =>
-      return { exprToIx := map, e := Term.ofNat n }
-    | none =>
-      logWarning "expected concrete BitVec.ofNat, found symbol '{n}', creating free variable"
-      reflectAtomUnchecked map w e
-
-  | HAnd.hAnd _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.exprToIx w b
-      let out := Term.and a.e b.e
-      return { b with e := out }
-  | HOr.hOr _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.exprToIx w b
-      let out := Term.or a.e b.e
-      return { b with e := out }
-  | HXor.hXor _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.exprToIx w b
-      let out := Term.xor a.e b.e
-      return { b with e := out }
-  | Complement.complement _bv _inst a =>
-      let a ← reflectTermUnchecked map w a
-      let out := Term.not a.e
-      return { a with e := out }
-  | HAdd.hAdd _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.exprToIx w b
-      let out := Term.add a.e b.e
-      return { b with e := out }
-  | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
-      let a ← reflectTermUnchecked map w a
-      let some n ← getNatValue? n
-        | throwError m!"expected shiftLeft by natural number, found symbolic shift amount '{n}' at '{indentD e}'"
-      return { a with e := Term.shiftL a.e n }
-
-  | HSub.hSub _bv _bv _bv _inst a b =>
-      let a ← reflectTermUnchecked map w a
-      let b ← reflectTermUnchecked a.exprToIx w b
-      let out := Term.sub a.e b.e
-      return { b with e := out }
-  | Neg.neg _bv _inst a =>
-      let a ← reflectTermUnchecked map w a
-      let out := Term.neg a.e
-      return { a with e := out }
-  -- incr
-  -- decr
   | _ =>
-    let (e, map) := map.findOrInsertExpr e
-    return { exprToIx := map, e := Term.var e }
+    let state ← collectBVAtom state e
+    return state
+
 
 set_option pp.explicit true in
 /--
@@ -181,27 +179,28 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-partial def reflectPredicateAux (exprToIx : ReflectMap) (e : Expr)  : MetaM (ReflectResult Predicate) := do
+partial def collectPredicateAux (state : CollectState) (e : Expr) : 
+    MetaM (CollectState) := do
   match_expr e with
   | Eq α a b =>
     match_expr α with
-    | BitVec w =>
-      let a ←  reflectTermUnchecked exprToIx w a
-      let b ← reflectTermUnchecked a.exprToIx w b
-      return { exprToIx := b.exprToIx, e := Predicate.binary .eq a.e b.e }
+    | BitVec _ =>
+      let state ← reflectTermUnchecked state a
+      let state ← reflectTermUnchecked state b
+      return state
     | _ => throwError m!"expected bitvector equality, found: {indentD e}"
   | Or p q =>
-    let p ← reflectPredicateAux exprToIx p
-    let q ← reflectPredicateAux p.exprToIx q
-    let out := Predicate.lor p.e q.e
-    return { q with e := out }
-  | And p q =>
-    let p ← reflectPredicateAux exprToIx p
-    let q ← reflectPredicateAux p.exprToIx q
-    let out := Predicate.land p.e q.e
-    return { q with e := out }
+    let state ← collectPredicateAux state p
+    let state ← collectPredicateAux state q
+    return state
+  -- | And p q =>
+  --   let p ← collectPredicateAux exprToIx p
+  --   let q ← collectPredicateAux p.exprToIx q
+  --   let out := Predicate.land p.e q.e
+  --   return { q with e := out }
   | _ =>
      throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
+
 
 /-- Name of the tactic -/
 def tacName : String := "bv_automata_gen"
@@ -422,7 +421,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
 
     -- finally, we perform reflection.
-    let predicate ← reflectPredicateAux ∅ (← g.getType) w
+    let predicate ← collectPredicateAux ∅ (← g.getType) w
     predicate.exprToIx.throwWarningIfUninterpretedExprs
 
     trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
@@ -637,7 +636,7 @@ def evalBvAutomataFragmentNoUninterpreted : Tactic := fun
           return ()
       trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
       -- finally, we perform reflection.
-      let result ← reflectPredicateAux ∅ (← g.getType) w
+      let result ← collectPredicateAux ∅ (← g.getType) w
       -- Order the expressions so we get stable error messages.
       let exprs := result.exprToIx.exprs.toArray.qsort (fun ei ej => ei.1.lt ej.1)
       let mut out? : Option MessageData := .none
@@ -687,7 +686,7 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
           return ()
       trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
       -- finally, we perform reflection.
-      let result ← reflectPredicateAux ∅ (← g.getType) w
+      let result ← collectPredicateAux ∅ (← g.getType) w
       let bvToIxMapVal ← result.exprToIx.toExpr w
 
       let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
