@@ -596,6 +596,8 @@ def histogram_stddev(df, bm):
         axes[i].set_title(f"Distribution of {column_to_name[col_name]}")
         axes[i].set_xlabel("Coefficient of Variation")
         axes[i].set_ylabel("Frequency")
+        axes[i].set_xlim(0,1.5)
+        axes[i].set_ylim(0,50)
     save(fig, plotsdir + "barplot_stddev_" + bm.split(".")[0] + ".pdf")
 
 
@@ -843,9 +845,9 @@ def scatter_solving_time_instcombine(df):
     time_min = min(df["solved_bitwuzla_times_average"].min(), tot_sum.min())
     time_max = max(df["solved_bitwuzla_times_average"].max(), tot_sum.max())
 
-    # ax.set_ylim(
-    #     10 ** (np.floor(np.log10(time_min))), 10 ** (np.ceil(np.log10(time_max)))
-    # )
+    ax.set_ylim(
+        10 ** (np.floor(np.log10(time_min))), 10 ** (np.ceil(np.log10(time_max)))
+    )
     ax.plot(
         [df["solved_bitwuzla_times_average"].min(), tot_sum.max()],
         [df["solved_bitwuzla_times_average"].min(), tot_sum.max()],
