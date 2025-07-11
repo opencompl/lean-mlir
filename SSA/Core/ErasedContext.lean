@@ -58,7 +58,7 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ
 
-instance : HAppend (Ctxt Ty) (List Ty) (Ctxt Ty) where
+instance instAppend : HAppend (Ctxt Ty) (List Ty) (Ctxt Ty) where
   hAppend Γ tys := tys.reverse ++ (@id (List _ ) Γ)
 
 instance : GetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) :=
