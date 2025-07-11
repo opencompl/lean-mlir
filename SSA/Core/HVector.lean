@@ -159,6 +159,26 @@ theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec :
    (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := by
   rfl
 
+@[simp]
+theorem get_cons_succ {A : α → Type} {as : List α} {a : α} (x : A a) (xs : HVector A as) (i : Fin (as.length)) :
+    (cons x xs).get i.succ = xs.get i := by
+  rfl
+
+@[simp]
+theorem map_cons {A B : α → Type} {as : List α} {a : α} (f : ∀ a, A a → B a) (x : A a) (xs : HVector A as) :
+    (cons x xs).map f = cons (f a x) (xs.map f) := by
+  rfl
+
+theorem get_map (A B : α → Type) (xs : HVector A as) (f : ∀ (a : α), A a → B a) (i) :
+    (xs.map f).get i = f (as.get i) (xs.get i) := by
+  simp only [List.get_eq_getElem]
+  induction xs
+  case nil => exact Fin.elim0 i
+  case cons as a x xs ih =>
+    cases i using Fin.cases
+    · rfl
+    · simp [ih]
+
 -- Copied from core for List
 macro_rules
   | `([ $elems,* ]ₕ) => do

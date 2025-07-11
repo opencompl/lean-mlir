@@ -39,6 +39,15 @@ theorem pure_eq (x : α) (s) : (pure x : EffectM _) s = .value (x, s) := rfl
 theorem bind_eq (x : EffectM α) (f : α → EffectM β) (s) :
     (x >>= f) s = x s >>= (fun (x, s) => f x s) := rfl
 
+@[simp] theorem map_ub (f : α → β) : f <$> ub = ub := rfl
+@[simp] theorem ub_bind (f : α → EffectM β) : ub >>= f = ub := rfl
+
+@[simp] theorem bind_ub (x : EffectM α) : x >>= (fun _ => @ub β) = ub := by
+  funext; simp
+
+@[simp] theorem seq_ub (x : EffectM (α → β)) : x <*> ub = ub := by
+  rw [seq_eq_bind]; simp
+
 /-! ## Refinement -/
 
 instance [HRefinement α α] : Refinement (EffectM α) where
