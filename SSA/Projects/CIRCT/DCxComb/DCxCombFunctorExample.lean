@@ -40,6 +40,7 @@ def ofList (vals : List (Option α)) : Stream α :=
 
 #check exampleSource
 def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
+set_option diagnostics true
 
 def testExampleSource : DCOp.TokenStream :=
   exampleSource.denote (Ctxt.Valuation.ofHVector (.cons u <| .nil))
