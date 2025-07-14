@@ -226,7 +226,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, opStx.name with
       | .tokenstream, "DCxComb.sink" =>  mkExprOf <| Op.dc (MLIR2DC.Op.sink)
-      | .valuestream r, "DCxComb.unpack"  => throw <| .generic s!"ERROR: Unimplemented"
+      | .valuestream r, "DCxComb.unpack"  => mkExprOf <| Op.dc (MLIR2DC.Op.unpack r)
       | .tokenstream, "DCxComb.fork"  =>  mkExprOf <| Op.dc (MLIR2DC.Op.fork)
       | .valuestream 1, "DCxComb.branch"  =>  mkExprOf <| Op.dc (MLIR2DC.Op.branch)
       | .tokenstream2, "DCxComb.fst" => mkExprOf <| Op.dc (MLIR2DC.Op.fst)
@@ -248,7 +248,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       match ty₁, ty₂, opStx.name with
       | .tokenstream, .tokenstream, "DCxComb.merge" => mkExprOf <| Op.dc (MLIR2DC.Op.merge)
       | .tokenstream, .tokenstream, "DCxComb.join"  => mkExprOf <| Op.dc (MLIR2DC.Op.join)
-      | .valuestream r, .tokenstream, "DCxComb.pack"  => throw <| .generic s!"ERROR: Unimplemented"
+      | .valuestream r, .tokenstream, "DCxComb.pack"  => mkExprOf <| Op.dc (MLIR2DC.Op.pack r)
       | .valuestream r₁, .valuestream r₂, "DCxComb.unpack2"  =>
           if h : r₁ = r₂ then mkExprOf <| Op.dc (MLIR2DC.Op.unpack2 r₁)
           else throw <| .generic s!"typew mismatch in {repr opStx.args}"

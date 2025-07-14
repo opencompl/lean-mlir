@@ -132,6 +132,7 @@ instance : ToString Ty where
 inductive Op
 | fst
 | snd
+| pair (w : Nat)
 | fstVal (w : Nat)
 | sndVal (w : Nat)
 | fstVal' (w : Nat)
@@ -159,6 +160,7 @@ def_signature for DC where
   | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
   | .fstVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
   | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
+  | .pair w => (Ty.valuestream w, Ty.valuestream w) → Ty.valuestream2 w
   | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
   | .sndVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
   | .tokVal' t => (Ty.variadicvaluetokenstream t) → Ty.tokenstream
@@ -189,6 +191,7 @@ def_denote for DC where
   | .fstVal _ => fun s => s.fst
   | .fstVal' _ => fun s => s.fst.mapOpt (·[0]?)
   | .snd => fun s => s.snd
+  | .pair _ => fun s₁ s₂ => (s₁, s₂)
   | .sndVal _ => fun s => s.snd
   | .sndVal' _ => fun s => s.fst.mapOpt (·[0]?)
   | .tokVal' _ => fun s => s.snd
@@ -347,7 +350,13 @@ def sndVal {r} {Γ : Ctxt _} (a : Γ.Var (.valuetokenstream r))  : Expr (DC) Γ 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-
+def pair {r} {Γ : Ctxt _} (a b: Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.valuestream2 r)  :=
+  Expr.mk
+    (op := .pair r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
 
 def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokenstream)  :=
   Expr.mk
@@ -380,7 +389,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream 1, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DC.merge" | op@"DC.join" | op@"DC.pack"  =>
+  | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.pair" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -389,6 +398,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream 1, merge v₁ v₂⟩
       | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
+      | .valuestream r₁, .valuestream r₂, "DC.pair"  =>
+        if h : r₁ = r₂ then
+          let v₂' : Γ.Var (Ty.valuestream r₁) := Eq.mp (by rw [h]) v₂
+          return ⟨_, .valuestream2 r₁, pair v₁ v₂'⟩
+        else throw <| .generic s!"type mismatch, expected same width for pair, got {r₁} and {r₂}"
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"DC.select" =>
