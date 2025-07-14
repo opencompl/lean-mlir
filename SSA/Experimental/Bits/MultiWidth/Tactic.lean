@@ -79,13 +79,13 @@ In the next phase, we will use this `ReflectMap` of widths to reflect terms and 
 end MkReflectMapWidth
 
 
-structure TotalOrder (α : Type) [Hashable α] [BEq α] where 
-  vals : Std.HashMap α Nat 
+structure TotalOrder (α : Type) [Hashable α] [BEq α] where
+  vals : Std.HashMap α Nat
 
 instance [Hashable α] [BEq α] : EmptyCollection (TotalOrder α) where
   emptyCollection := { vals := ∅ }
 
-def TotalOrder.findOrInsert {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α := 
+def TotalOrder.findOrInsert {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α :=
   let (ix, vals) := match toOrder.vals.get? e with
     | some ix => (ix, toOrder.vals)
     | none =>
@@ -93,26 +93,21 @@ def TotalOrder.findOrInsert {α : Type} [Hashable α] [BEq α] (toOrder : TotalO
       (ix, toOrder.vals.insert e ix)
   (ix, { toOrder with vals := vals })
 
-def TotalOrder.toArray {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array (α × Nat) := 
+def TotalOrder.toArray {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array (α × Nat) :=
   toOrder.vals.toArray.qsort (fun a b => a.2 < b.2)
 
-def TotalOrder.toArray_ {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array α := 
+def TotalOrder.toArray_ {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array α :=
   toOrder.toArray.map Prod.fst
 
 
-/-- Get the value of an array at a given index `i`,
-where the index `i` is a `Fin n` -/
-private def arrayGetFin (a : Array α) (n : Nat) (hn : n = a.size) (i : Fin n) : α :=
-  a[i] 
-
-def arrayExprToExpr (a : Array Expr) (ty : Expr) : MetaM Expr := do
-    let mut out := mkAppN (mkConst ``Array.empty []) #[ty]
-    for e in a do
-      out ← mkAppM ``Array.push #[out, e]
-    return out
-
-/-- build an expr for 'xs' as `fun (x : Fin n) => arrayGetFin xs n (by rfl) x`  -/
-def exprArrayToFinEnv (xs : Array Expr) (n : Expr) : MetaM Expr := sorry
+/-- build an expr for 'xs' as `fun (i : Fin xs.size) => arrayGetFin xs x`  -/
+def exprArrayToFinEnv (xs : Array Expr) (xty : Expr) : MetaM Expr := do
+  let len := xs.size
+  let ity := mkApp (.const ``Fin []) (toExpr len)
+  withLocalDeclD `i ity fun i =>
+    let body := mkAppN (mkConst ``arrayGetFin []) #[arrayExprToExpr xs, i]
+    mkLambdaFVars #[i] <|
+      sorry
 
 structure CollectState where
     wToIx : TotalOrder Expr
@@ -120,12 +115,12 @@ structure CollectState where
     bvToWidth : Std.HashMap Expr Expr -- map from BitVec to width
 
 
-/- TODO: type a 'ReflectMap' with some kind of ``Name to make it clear what's happening. -/ 
+/- TODO: type a 'ReflectMap' with some kind of ``Name to make it clear what's happening. -/
 structure ReflectedWidth  where
   wToIx : ReflectMap
   w : MultiWidth.Nondep.WidthExpr
 
-def collectWidthAtom (wToIx : TotalOrder Expr) (e : Expr) (check? : Bool := false) : 
+def collectWidthAtom (wToIx : TotalOrder Expr) (e : Expr) (check? : Bool := false) :
     MetaM (TotalOrder Expr) := do
     if check? then
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
@@ -133,7 +128,7 @@ def collectWidthAtom (wToIx : TotalOrder Expr) (e : Expr) (check? : Bool := fals
     let (_, wToIx) := wToIx.findOrInsert e
     return wToIx
 
-def reflectBVAtom (reader : CollectState) (wMapExpr : Expr) (bvMapExpr : Expr) 
+def reflectBVAtom (reader : CollectState) (wMapExpr : Expr) (bvMapExpr : Expr)
   (e : Expr) : MetaM Expr := do sorry
 
 structure ReflectedTerm where
@@ -143,7 +138,7 @@ structure ReflectedTerm where
   term : MultiWidth.Nondep.Term
 
 
-def collectBVAtom (state : CollectState) 
+def collectBVAtom (state : CollectState)
   (e : Expr) : MetaM (CollectState) := do
   let t ← inferType e
   let_expr BitVec w := t
@@ -163,7 +158,7 @@ and furthermore, it will reflect all terms as variables.
 
 Precondition: we assume that this is called on bitvectors.
 -/
-partial def reflectTermUnchecked (state : CollectState) (e : Expr) : 
+partial def reflectTermUnchecked (state : CollectState) (e : Expr) :
      MetaM (CollectState) := do
   match_expr e with
   | _ =>
@@ -179,7 +174,7 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-partial def collectPredicateAux (state : CollectState) (e : Expr) : 
+partial def collectPredicateAux (state : CollectState) (e : Expr) :
     MetaM (CollectState) := do
   match_expr e with
   | Eq α a b =>

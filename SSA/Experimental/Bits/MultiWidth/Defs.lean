@@ -28,6 +28,14 @@ def NatPredicate.toProp (env : Fin n → Nat) : NatPredicate n → Prop
 abbrev Term.Ctx (wcard : Nat) (tcard : Nat) : Type :=
   Fin tcard → WidthExpr wcard
 
+def Term.Ctx.empty (wcard : Nat) : Term.Ctx wcard 0 :=
+  fun x => x.elim0
+
+def Term.Ctx.cons (ctx : Term.Ctx wcard tcard)
+  (w : WidthExpr wcard) : Term.Ctx wcard (tcard + 1) :=
+  fun v =>
+    v.cases w (fun v' => ctx v')
+
 inductive Term {wcard tcard : Nat}
   (ctx : Term.Ctx wcard tcard) : (WidthExpr wcard) → Type
 /-- a variable of a given width -/
@@ -46,6 +54,23 @@ abbrev Term.Ctx.Env
   (tctx : Term.Ctx wcard tcard)
   (wenv : Fin wcard → Nat) :=
   (v : Fin tcard) → BitVec ((tctx v).toNat wenv)
+
+def Term.Ctx.Env.empty
+  {wcard : Nat} (wenv : Fin wcard → Nat) (ctx : Term.Ctx wcard 0) :
+  Term.Ctx.Env ctx wenv :=
+  fun v => v.elim0
+
+def Term.Ctx.Env.cons
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {ctx : Term.Ctx wcard tcard}
+  (tenv : Term.Ctx.Env ctx wenv)
+  (w : WidthExpr wcard)
+  (bv : BitVec (w.toNat wenv)) :
+  Term.Ctx.Env (ctx.cons w) wenv :=
+  fun v =>
+    v.cases
+      bv
+      (fun w => tenv w)
 
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
