@@ -154,13 +154,12 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let args ← args.assumeArity 3
     return getVarWidth args[0]
   -- n-ary ops
-  let args' ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ) -- will need to find a better way to do this
-  if h : args'.length = 0 then
+  if h : args.toList.length = 0 then
     throw <| .generic s!" empty list of argument provided for the variadic op {repr opStx.args}"
   else
     -- exclude empty list of args
     let nnW : AST.ReaderM (Comb) (Nat) := do
-      let args ← args.assumeArity args'.length
+      let args ← args.assumeArity args.toList.length
       return getVarWidth args[0]
     let mkExprOf := opStx.mkExprOf (args? := args) Γ
     match (opStx.name).splitOn "_" with
