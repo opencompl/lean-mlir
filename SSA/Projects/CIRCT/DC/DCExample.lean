@@ -9,6 +9,9 @@ import SSA.Core.Util
 
 namespace CIRCTStream
 
+instance : ToString DCOp.TokenStream where
+  toString s := toString (Stream.toList 100 s)
+
 open MLIR AST in
 
 unseal String.splitOnAux in
