@@ -38,7 +38,7 @@ abbrev Term.Ctx (wcard : Nat) (tcard : Nat) : Type :=
 def Term.Ctx.empty (wcard : Nat) : Term.Ctx wcard 0 :=
   fun x => x.elim0
 
-def Term.Ctx.cons (ctx : Term.Ctx wcard tcard)
+def Term.Ctx.cons (wcard : Nat) {tcard : Nat} (ctx : Term.Ctx wcard tcard)
   (w : WidthExpr wcard) : Term.Ctx wcard (tcard + 1) :=
   fun v =>
     v.cases w (fun v' => ctx v')

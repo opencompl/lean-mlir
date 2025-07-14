@@ -85,6 +85,12 @@ structure TotalOrder (α : Type) [Hashable α] [BEq α] where
 instance [Hashable α] [BEq α] : EmptyCollection (TotalOrder α) where
   emptyCollection := { vals := ∅ }
 
+def TotalOrder.get? {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Option Nat :=
+  toOrder.vals.get? e
+
+def TotalOrder.size {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Nat :=
+  toOrder.vals.size
+
 def TotalOrder.findOrInsert {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α :=
   let (ix, vals) := match toOrder.vals.get? e with
     | some ix => (ix, toOrder.vals)
@@ -100,56 +106,102 @@ def TotalOrder.toArray_ {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder
   toOrder.toArray.map Prod.fst
 
 
-/-- build an expr for 'xs' as `fun (i : Fin xs.size) => arrayGetFin xs x`  -/
-def exprArrayToFinEnv (xs : Array Expr) (xty : Expr) : MetaM Expr := do
-  let len := xs.size
-  let ity := mkApp (.const ``Fin []) (toExpr len)
-  withLocalDeclD `i ity fun i =>
-    let body := mkAppN (mkConst ``arrayGetFin []) #[arrayExprToExpr xs, i]
-    mkLambdaFVars #[i] <|
-      sorry
+/-- build an expr for 'xs' as `empty |>.cons x1 |>.cons x₂ ... |>.cons xₙ`  -/
+private def elimExprArray (xs : Array Expr) (empty : Expr) (cons : Expr) :
+  MetaM Expr := do
+  let mut out := empty
+  for x in xs do
+    out ← mkAppM' cons #[out, x]
+  return out
 
 structure CollectState where
     wToIx : TotalOrder Expr
     bvToIx : TotalOrder Expr
     bvToWidth : Std.HashMap Expr Expr -- map from BitVec to width
 
+def CollectState.widthArray (state : CollectState) : Array Expr :=
+  state.wToIx.toArray_
+
+def CollectState.bvArray (state : CollectState) : Array Expr :=
+  state.bvToIx.toArray_
+
+def CollectState.wcard (state : CollectState) : Nat :=
+  state.wToIx.size
+
+def CollectState.tcard (state : CollectState) : Nat :=
+  state.bvToIx.size
 
 /- TODO: type a 'ReflectMap' with some kind of ``Name to make it clear what's happening. -/
 structure ReflectedWidth  where
   wToIx : ReflectMap
   w : MultiWidth.Nondep.WidthExpr
 
-def collectWidthAtom (wToIx : TotalOrder Expr) (e : Expr) (check? : Bool := false) :
-    MetaM (TotalOrder Expr) := do
+def collectWidthAtom (state : CollectState) (e : Expr) (check? : Bool := false) :
+    MetaM (CollectState) := do
     if check? then
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
-    let (_, wToIx) := wToIx.findOrInsert e
-    return wToIx
+    let (_, wToIx) := state.wToIx.findOrInsert e
+    return { state with wToIx := wToIx }
 
-def reflectBVAtom (reader : CollectState) (wMapExpr : Expr) (bvMapExpr : Expr)
-  (e : Expr) : MetaM Expr := do sorry
+private def mkFinLit (n : Nat) (i : Nat) : Expr :=
+  mkAppN (.const ``Fin.mk []) #[mkNatLit n, mkNatLit i]
 
-structure ReflectedTerm where
-  wToIx : ReflectMap
-  bvToIx : ReflectMap
-  w : MultiWidth.Nondep.WidthExpr
-  term : MultiWidth.Nondep.Term
+def reflectWidthAtom (reader : CollectState) (e : Expr) : MetaM Expr := do
+  let .some ix := reader.wToIx.get? e
+    | throwError m!"found unexpected width {indentD e}. Expected width to be one among {indentD <| toMessageData reader.wToIx.vals.toList}"
+  return mkAppN (mkConst ``MultiWidth.WidthExpr.var [])
+    #[mkNatLit reader.wcard, mkFinLit reader.wcard ix]
 
+def collectWidthPredicateAux (state : CollectState)
+  (e : Expr) : MetaM (CollectState) := do
+  match_expr e with
+  | Eq α a b =>
+    match_expr α with
+    | Nat _ =>
+      let state ← collectWidthAtom state a
+      let state ← collectWidthAtom state b
+      return state
+    | _ => throwError m!"expected Nat equality, found: {indentD e}"
+  | _ =>
+    throwError m!"expected predicate over widths (no quantification), found: {indentD e}"
 
+/-- Reflect the environment of widths. -/
+def reflectWidthEnv (reader : CollectState) : MetaM Expr := do
+  let ws := reader.wToIx.toArray_
+  elimExprArray ws.reverse
+    (mkConst ``MultiWidth.WidthExpr.Env.empty)
+    (mkConst ``MultiWidth.WidthExpr.Env.cons)
+
+/-# Reflection for BV environments, terms, and predicates. -/
+
+/-- Build an expression for the `Term.Env`. -/
+def reflectBVEnv (reader : CollectState) : MetaM Expr := do
+  let mkEmptyCtx := mkAppN (mkConst ``MultiWidth.Term.Ctx.empty) #[mkNatLit reader.wcard]
+  let mkConsCtx := mkAppN (mkConst ``MultiWidth.Term.Ctx.cons) #[mkNatLit reader.wcard]
+
+  elimExprArray reader.bvArray.reverse
+    mkEmptyCtx
+    mkConsCtx
+
+/-- Convert a raw expression into a `Term`. -/
+def reflectBVAtom (reader : CollectState)
+    (e : Expr) : MetaM Expr := do
+  let .some ix := reader.bvToIx.get? e
+    | throwError m!"found unexpected bitvector {indentD e}. Expected bitvector to be one among {indentD <| toMessageData reader.bvToIx.vals.toList}"
+  let tcard := reader.bvToWidth.size
+  return mkAppN (mkConst ``MultiWidth.Term.var []) #[mkNatLit tcard, mkFinLit tcard ix]
+
+/-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
   (e : Expr) : MetaM (CollectState) := do
   let t ← inferType e
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
-  let wToIx ← collectWidthAtom state.wToIx w
+  let state ← collectWidthAtom state w
   let (_, bvToIx) := state.bvToIx.findOrInsert e
-  let bvToWidth := state.bvtoWidth.insert e w
-  return { wToIx := wToIx, bvToIx := bvToIx, bvToWidth := bvToWidth }
-
-def reflectBVAtom (reader : CollectState) (e : Expr) : MetaM Expr := do sorry
-
+  let bvToWidth := state.bvToWidth.insert e w
+  return { state with bvToIx := bvToIx, bvToWidth := bvToWidth }
 
 /--
 Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
@@ -174,7 +226,7 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
-partial def collectPredicateAux (state : CollectState) (e : Expr) :
+partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     MetaM (CollectState) := do
   match_expr e with
   | Eq α a b =>
@@ -185,12 +237,12 @@ partial def collectPredicateAux (state : CollectState) (e : Expr) :
       return state
     | _ => throwError m!"expected bitvector equality, found: {indentD e}"
   | Or p q =>
-    let state ← collectPredicateAux state p
-    let state ← collectPredicateAux state q
+    let state ← collectBVPredicateAux state p
+    let state ← collectBVPredicateAux state q
     return state
   -- | And p q =>
-  --   let p ← collectPredicateAux exprToIx p
-  --   let q ← collectPredicateAux p.exprToIx q
+  --   let p ← collectBVPredicateAux exprToIx p
+  --   let q ← collectBVPredicateAux p.exprToIx q
   --   let out := Predicate.land p.e q.e
   --   return { q with e := out }
   | _ =>
@@ -416,7 +468,7 @@ def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarI
     trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
 
     -- finally, we perform reflection.
-    let predicate ← collectPredicateAux ∅ (← g.getType) w
+    let predicate ← collectBVPredicateAux ∅ (← g.getType) w
     predicate.exprToIx.throwWarningIfUninterpretedExprs
 
     trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
@@ -631,7 +683,7 @@ def evalBvAutomataFragmentNoUninterpreted : Tactic := fun
           return ()
       trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
       -- finally, we perform reflection.
-      let result ← collectPredicateAux ∅ (← g.getType) w
+      let result ← collectBVPredicateAux ∅ (← g.getType) w
       -- Order the expressions so we get stable error messages.
       let exprs := result.exprToIx.exprs.toArray.qsort (fun ei ej => ei.1.lt ej.1)
       let mut out? : Option MessageData := .none
@@ -681,7 +733,7 @@ def evalBvAutomataFragmentCheckReflected : Tactic := fun
           return ()
       trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
       -- finally, we perform reflection.
-      let result ← collectPredicateAux ∅ (← g.getType) w
+      let result ← collectBVPredicateAux ∅ (← g.getType) w
       let bvToIxMapVal ← result.exprToIx.toExpr w
 
       let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
