@@ -206,24 +206,24 @@ info: MultiWidth.Term.Ctx.Env.cons {tcard wcard : ℕ} {wenv : Fin wcard → ℕ
 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.Env.cons
 
-def mkTermEnvCons (reader : CollectState) (tenv : Expr) (w : MultiWidth.Nondep.WidthExpr) (bv : Expr) : MetaM Expr := do
+def mkTermEnvCons (reader : CollectState) (wenv : Expr) (tenv : Expr) (w : MultiWidth.Nondep.WidthExpr) (bv : Expr) : MetaM Expr := do
   let wexpr ← mkWidthExpr reader.wcard w
   mkAppM (``MultiWidth.Term.Ctx.Env.cons)
     #[ tenv,
       wexpr,
       bv,
-      ← mkSorry ((← mkFreshExprMVar .none)) (synthetic := true)
+      ← mkEqRefl (← mkAppM ``MultiWidth.WidthExpr.toNat #[wexpr, wenv])
       ]
 
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
-def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) : MetaM Expr := do
+def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (tctx : Expr) : MetaM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
   for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx do
     let some wexpr := reader.bvIxToWidthExpr.get? ix
       | throwError "unable to find width for '{bv}' at index {ix}"
     check out
     logInfo m!"before out: {out}"
-    out ← mkTermEnvCons (reader := reader) (tenv := out) (w := wexpr) (bv := bv)
+    out ← mkTermEnvCons (reader := reader) (wenv := wenv) (tenv := out) (w := wexpr) (bv := bv)
     logInfo m!"after out: {out}"
     check out
   return out
@@ -401,7 +401,7 @@ def solve (g : MVarId) (_cfg : Config) : TermElabM (List MVarId) := do
   let (p, collect) ← collectBVPredicateAux collect (← g.getType)
   let tctx ← collect.mkTctxExpr
   let wenv ← collect.mkWenvExpr
-  let tenv ← collect.mkTenvExpr (wenv := wenv) 
+  let tenv ← collect.mkTenvExpr (wenv := wenv) (tctx := tctx)
   let out ← withLocalDeclD `wenv wenv fun wenv => do
     withLocalDeclD `tenv tenv fun tenv => do
       let out ← mkPredicateToPropExpr (p := p)
