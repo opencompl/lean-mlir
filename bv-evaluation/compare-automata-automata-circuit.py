@@ -28,44 +28,45 @@ def sed():
         return "gsed"
     return "sed"
 
-def run_file(db : str, file: str):
+def run_file(db : str, file: str, file_num : int):
+    assert 0 < file_num, "file_num must be greater than 0"
     file_path = BENCHMARK_DIR + file
     fileTitle = file.split('.')[0]
 
-    logging.info(f"{fileTitle}: Cache lookup, Opening connection...")
-    con = sqlite3.connect(db)
-    cur = con.cursor()
-    # Check if there is a row with the given fileTitle and timeout
-    logging.info(f"{fileTitle}: Cache lookup, SELECTING for existing data...")
-    cur.execute("""
-        SELECT 1 FROM completedFiles WHERE fileTitle = ? LIMIT 1
-    """, (fileTitle, ))
-    # Fetch the result, if no rows exist, the result will be an empty list
-    result = cur.fetchone()
-    con.close()
-    if result is not None:
-        logging.info(f"{fileTitle}: cache hit, skipping ⏭️")
-        return
-    else:
-        logging.info(f"{fileTitle}: cache miss, processing ▶️")
+    # logging.info(f"{fileTitle}: Cache lookup, Opening connection...")
+    # con = sqlite3.connect(db)
+    # cur = con.cursor()
+    # # Check if there is a row with the given fileTitle and timeout
+    # logging.info(f"{fileTitle}: Cache lookup, SELECTING for existing data...")
+    # cur.execute("""
+    #     SELECT 1 FROM completedFiles WHERE fileTitle = ? LIMIT 1
+    # """, (fileTitle, ))
+    # # Fetch the result, if no rows exist, the result will be an empty list
+    # result = cur.fetchone()
+    # con.close()
+    # if result is not None:
+    #     logging.info(f"{fileTitle}: cache hit, skipping ⏭️")
+    #     return
+    # else:
+    #     logging.info(f"{fileTitle}: cache miss, processing ▶️")
 
-    logging.info(f"{fileTitle}: writing 'bv_bench_automata' tactic into file.")
+    logging.info(f"{fileTitle}: writing 'bv_bench_automata' tactic into file #{file_num}.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,bv_bench_automata,g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
     logging.info(f"{fileTitle}: {STATUS_PROCESSING}")
 
     cmd = 'lake lean ' + file_path
-    logging.info(f"{fileTitle}: running '{cmd}'")
+    logging.info(f"{fileTitle}({file_num}): running '{cmd}'")
     try:
         p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
-        logging.info(f"{fileTitle}: running...")
+        logging.info(f"{fileTitle}({file_num}): running...")
         out, err = p.communicate(timeout=TIMEOUT)
-        logging.info(f"{fileTitle}: done.")
+        logging.info(f"{fileTitle}({file_num}): done.")
         logging.info(out)
         if p.returncode != 0:
             logging.info(f"ERROR: Expected return code of 0, found {p.returncode}")
-            logging.info(f"{fileTitle} stderr: {err}")
+            logging.info(f"{fileTitle}({file_num}) stderr: {err}")
             assert p.returncode == 0
-        logging.info(f"{fileTitle} output:\n{out}")
+        logging.info(f"{fileTitle}({file_num}) output:\n{out}")
         for line in out.strip().split("\n"):
             TACBENCH_PREAMBLE = "TACBENCHCSV|"
             COLS = ["thmName", "goalStr", "tactic", "status", "errmsg", "timeElapsed"]
@@ -76,9 +77,9 @@ def run_file(db : str, file: str):
                 record = dict(zip(COLS, row))
                 record["fileTitle"] = fileTitle
                 # TODO: invoke sqlite here to store
-                logging.info(f"{fileTitle}: Opening connection to write test record.")
+                logging.info(f"{fileTitle}({file_num}): Opening connection to write test record.")
                 con = sqlite3.connect(args.db)
-                logging.info(f"{fileTitle}: Executing INSERT of record...")
+                logging.info(f"{fileTitle}({file_num}): Executing INSERT of record...")
                 cur = con.cursor()
                 cur.execute("""
                     INSERT INTO tests (
@@ -92,20 +93,20 @@ def run_file(db : str, file: str):
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """, (record["fileTitle"], record["thmName"], record["goalStr"], record["tactic"], record["status"], record["errmsg"], record["timeElapsed"]))
                 con.commit()
-                logging.info(f"{fileTitle}: Done executing INSERT of record...")
+                logging.info(f"{fileTitle}({file_num}): Done executing INSERT of record...")
                 con.close()
 
         # write that we are done with the file
-        logging.info(f"{fileTitle}: Opening connection to write successful completion.")
-        con = sqlite3.connect(args.db)
-        logging.info(f"{fileTitle}: Executing INSERT of successful completion...")
-        cur = con.cursor()
-        cur.execute("""
-            INSERT INTO completedFiles (fileTitle) VALUES (?)
-        """, (record["fileTitle"], ))
-        con.commit()
-        logging.info(f"{fileTitle}: Done executing INSERT of successful completion...")
-        con.close()
+        # logging.info(f"{fileTitle}: Opening connection to write successful completion.")
+        # con = sqlite3.connect(args.db)
+        # logging.info(f"{fileTitle}: Executing INSERT of successful completion...")
+        # cur = con.cursor()
+        # cur.execute("""
+        #     INSERT INTO completedFiles (fileTitle) VALUES (?)
+        # """, (record["fileTitle"], ))
+        # con.commit()
+        # logging.info(f"{fileTitle}: Done executing INSERT of successful completion...")
+        # con.close()
 
     except subprocess.TimeoutExpired as e:
         logging.info(f"{file_path} - time out of {TIMEOUT} seconds reached")
@@ -130,11 +131,11 @@ def process(db : str, jobs: int, prod_run : bool):
             PRIMARY KEY (fileTitle, thmName, goalStr, tactic)
             )
     """)
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS completedFiles (
-            fileTitle text
-            )
-    """)
+    # cur.execute("""
+    #     CREATE TABLE IF NOT EXISTS completedFiles (
+    #         fileTitle text
+    #         )
+    # """)
 
     con.commit()
     con.close()
@@ -150,26 +151,42 @@ def process(db : str, jobs: int, prod_run : bool):
     lake.wait()
     assert lake.returncode == 0, f"lake build should succeed before running evaluation."
 
+    raw_files = list(os.listdir(BENCHMARK_DIR))
+
+    files = []
+    for ix, file in enumerate(raw_files):
+        if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
+            files.append(file)
+            N_TEST_RUN_FILES = 5
+            if len(files) == N_TEST_RUN_FILES and not prod_run:
+                break # quit if we are not doing a production run after 5 files.
+
+
+    total = len(files)
+    logging.info(f"total #files to process: {total}")
+    futures = []
+    future_to_file ={}
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
-        futures = {}
-        files = os.listdir(BENCHMARK_DIR)
+        for ix, file in enumerate(files):
+            future = executor.submit(run_file, db, file, ix+1)
+            futures.append(future)
+            future_to_file[future] = file
 
-        for file in files:
-            if "_proof" in file and "gandhorhicmps_proof" not in file: # currently discard broken chapter
-                future = executor.submit(run_file, db, file)
-                futures[future] = file
-                N_TEST_RUN_FILES = 5
-                if len(futures) == N_TEST_RUN_FILES and not prod_run:
-                    break # quit if we are not doing a production run after 5 files.
+        if len(futures) != len(files):
+            logging.error(f"Expected {len(files)} files to be processed, but got {total} futures.")
 
-        total = len(futures)
+        num_completed = 0
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             if future.exception() is not None:
                 raise future.exception()
-            file = futures[future]
             future.result()
+            file = future_to_file[future]
             percentage = ((idx + 1) / total) * 100
-            logging.info(f'{file} completed, {percentage}%')
+            logging.info(f'completed {file} ({percentage:.1f}%)')
+            num_completed += 1
+    logging.info(f"total #files processed: {num_completed}")
+    if num_completed != total:
+        logging.error(f"Expected {total} files to be processed, but got {num_completed} completed futures.")
 
 def setup_logging(db_name : str):
     # Set up the logging configuration
@@ -226,13 +243,13 @@ def analyze_errors(cur : sqlite3.Cursor):
                 break
         if not matched:
             str2matches[KEY_UNKNOWN].append((errMsg, goalStr, thmName, fileTitle))
-            print(errMsg)
+            logging.info(errMsg)
 
     for s in str2matches:
         NEXAMPLES = 5
-        print(f"{str2explanation[s]} (#{len(str2matches[s])}):")
+        logging.info(f"{str2explanation[s]} (#{len(str2matches[s])}):")
         if not str2matches[s]: continue
-        print(tabulate(str2matches[s][:NEXAMPLES], headers=HEADERS, tablefmt="grid", maxcolwidths=HEADER_COL_WIDTHS))
+        logging.info(tabulate(str2matches[s][:NEXAMPLES], headers=HEADERS, tablefmt="grid", maxcolwidths=HEADER_COL_WIDTHS))
 
 
 def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
@@ -244,8 +261,8 @@ def analyze_uninterpreted_functions(cur : sqlite3.Cursor):
     rows = list(rows)
     for row in rows:
         (fileTitle, thmName, goalStr, errMsg) = row
-        print(errMsg)
-    print(f"#problems with uninterpreted functions: {len(rows)}")
+        logging.info(errMsg)
+    logging.info(f"#problems with uninterpreted functions: {len(rows)}")
 
 # analyze the sqlite db.
 def analyze(db : str):
@@ -261,7 +278,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(prog='compare-automata-automata-circuit')
   default_db = f'automata-circuit-{current_time}.sqlite3'
   parser.add_argument('--db', default=default_db, help='path to sqlite3 database')
-  parser.add_argument('-j', '--jobs', type=int, default=nproc // 3)
+  parser.add_argument('-j', '--jobs', type=int, default=1)
   parser.add_argument('--run', action='store_true', help="run evaluation")
   parser.add_argument('--prodrun', action='store_true', help="run production run of evaluation")
   parser.add_argument('--analyze', action='store_true', help="analyze the data of the db")

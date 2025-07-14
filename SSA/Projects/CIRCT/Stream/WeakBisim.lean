@@ -114,7 +114,7 @@ theorem tail_bisim_of_bisim_of_head_eq {a b : Stream α} (h_sim : a ~ b) (head_e
         have b_head_eq_none : b.head = none       := h_m 0 (by omega)
         have a_head_eq_none : a.head = none       := by simp_all
         have b_get_eq_none  : b.get (m+1) = none  := by simpa [← a_head_eq_none] using h_eq.symm
-        simp [show m' + 1 + (m + 2) = m' + m + 3 by omega] at h_sim_drop'
+        simp at h_sim_drop'
         sorry
         -- refine ⟨n', m'+m+1, h_sim_drop', h_eq', h_n', ?_⟩
         -- intro j j_lt
@@ -131,7 +131,7 @@ theorem tail_bisim_of_bisim_of_head_eq {a b : Stream α} (h_sim : a ~ b) (head_e
         have a_head_eq_none : a.head = none       := h_n 0 (by omega)
         have b_head_eq_none : b.head = none       := by simp_all
         have a_get_eq_none  : a.get (n+1) = none  := by simpa [← b_head_eq_none] using h_eq
-        simp [show n' + 1 + (n + 2) = n' + n + 3 by omega] at h_sim_drop'
+        simp at h_sim_drop'
         sorry
         -- refine ⟨n'+n+1, m', h_sim_drop', h_eq', ?_, h_m'⟩
         -- intro j j_lt
@@ -205,8 +205,7 @@ where
     funext i
     induction i using Nat.strongRecOn
     next i ih =>
-      simp only [Stream'.get, Stream'.drop, Nat.zero_add, not_exists, not_and, not_forall,
-        Classical.not_imp] at h
+      simp only [Stream'.get, Stream'.drop, Nat.zero_add, not_exists, not_and, not_forall] at h
       specialize h i
       cases hx : x i
       case none   => rfl
@@ -297,7 +296,7 @@ theorem removeNone_equiv (x : Stream α) :
       have ⟨_, h2⟩ := nonesUntilSome_spec x x_eq_stuck
       refine ⟨nonesUntilSome x x_eq_stuck, ?_, ?_, h2⟩
       · show x.removeNone.tail = removeNone (Stream'.drop _ x)
-        have (w) : x.drop (w + 1) = tail (x.drop w) := by simp [tail]
+        have (w : Nat) : x.drop (w + 1) = tail (x.drop w) := by simp [tail]
         rw [this]
         simp [x_eq_stuck]
         rfl
@@ -363,7 +362,7 @@ theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠
   have ⟨x_spec₁, x_spec₂⟩ := nonesUntilSome_spec x x_neq_stuck
   have ⟨y_spec₁, y_spec₂⟩ := nonesUntilSome_spec y y_neq_stuck
   have ⟨n, m, h_drop, h_eq, hn, hm⟩ := h.unfold
-  simp only [head, dropLeadingNones, Stream'.get_drop, Nat.zero_add] at *
+  simp only [head, dropLeadingNones, Stream'.get_drop] at *
   generalize nonesUntilSome x x_neq_stuck = xn at *
   generalize nonesUntilSome y y_neq_stuck = yn at *
   clear x_neq_stuck y_neq_stuck

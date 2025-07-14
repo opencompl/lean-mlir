@@ -1,6 +1,12 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Pi
 import Mathlib.Data.Finset.Union
+import Mathlib.Data.Fin.Basic
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Defs
+import Mathlib.Data.Fintype.Basic
+
+open Std Sat AIG
 
 
 universe u v
@@ -20,11 +26,11 @@ inductive Circuit (α : Type u) : Type u
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
   | xor : Circuit α → Circuit α → Circuit α
-deriving Repr, DecidableEq 
+deriving Repr, DecidableEq
 
 open Lean in
 def formatCircuit {α : Type u} (formatVar : α → Format)  (c : Circuit α) : Lean.Format :=
-  match c with 
+  match c with
   | .tru => "T"
   | .fals => "F"
   | .var b v =>
@@ -131,6 +137,28 @@ def simplifyAnd : Circuit α → Circuit α → Circuit α
 
 instance : AndOp (Circuit α) := ⟨Circuit.simplifyAnd⟩
 
+theorem and_def {α : Type _} (c d : Circuit α) :
+  (c &&& d) = Circuit.simplifyAnd c d := rfl
+
+@[simp] lemma tru_and (c : Circuit α) :
+  Circuit.tru &&& c = c := by
+  simp [Circuit.and_def, Circuit.simplifyAnd]
+
+@[simp] lemma fals_and (c : Circuit α) :
+  Circuit.fals &&& c = Circuit.fals := by
+  simp [Circuit.and_def, Circuit.simplifyAnd]
+  rcases c <;> simp
+
+@[simp] lemma and_fals (c : Circuit α) :
+  c &&& Circuit.fals = Circuit.fals := by
+  simp [Circuit.and_def, Circuit.simplifyAnd]
+  rcases c <;> simp
+
+@[simp] lemma and_tru (c : Circuit α) :
+  c &&& Circuit.tru = c := by
+  simp [Circuit.and_def, Circuit.simplifyAnd]
+  rcases c <;> simp
+
 @[simp] lemma eval_and : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     (eval (c₁ &&& c₂) f) = ((eval c₁ f) && (eval c₂ f)) := by
   intros c₁ c₂ f
@@ -149,6 +177,32 @@ def simplifyOr : Circuit α → Circuit α → Circuit α
   | c₁, c₂ => or c₁ c₂
 
 instance : OrOp (Circuit α) := ⟨Circuit.simplifyOr⟩
+
+theorem or_def {α : Type _} (c d : Circuit α) :
+  (c ||| d) = Circuit.simplifyOr c d := rfl
+
+@[simp]
+lemma fals_or (c : Circuit α) :
+  Circuit.fals ||| c = c := by
+  simp [Circuit.or_def, Circuit.simplifyOr]
+  rcases c <;> simp
+
+@[simp]
+lemma tru_or (c : Circuit α) :
+  Circuit.tru ||| c = Circuit.tru := by
+  simp [Circuit.or_def, Circuit.simplifyOr]
+
+@[simp]
+lemma or_fals (c : Circuit α) :
+  c ||| Circuit.fals = c := by
+  simp [Circuit.or_def, Circuit.simplifyOr]
+  rcases c <;> simp
+
+@[simp]
+lemma or_tru (c : Circuit α) :
+  c ||| Circuit.tru = Circuit.tru := by
+  simp [Circuit.or_def, Circuit.simplifyOr]
+  rcases c <;> simp
 
 @[simp] lemma eval_or : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     (eval (c₁ ||| c₂) f) = ((eval c₁ f) || (eval c₂ f)) := by
@@ -217,13 +271,13 @@ instance : Xor (Circuit α) := ⟨Circuit.simplifyXor⟩
 @[simp] lemma eval_xor : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     eval (c₁ ^^^ c₂) f = Bool.xor (eval c₁ f) (eval c₂ f) := by
   intros c₁ c₂ f
-  cases c₁ <;> cases c₂ <;> simp [simplifyXor, Bool.xor_not_left', HXor.hXor, Xor.xor]
+  cases c₁ <;> cases c₂ <;> simp [simplifyXor, HXor.hXor, Xor.xor]
 
 set_option maxHeartbeats 1000000
 theorem vars_simplifyXor [DecidableEq α] (c₁ c₂ : Circuit α) :
     (vars (simplifyXor c₁ c₂)) ⊆ (vars c₁ ++ vars c₂).dedup := by
   intro x
-  simp only [List.mem_dedup, List.mem_append, ←simplifyNot_eq_complement]
+  simp only [List.mem_dedup, List.mem_append]
   induction c₁ <;> induction c₂ <;> simp only [simplifyXor, vars,
     ← simplifyNot_eq_complement, simplifyNot] at * <;> aesop
 
@@ -247,9 +301,44 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | or c₁ c₂, f => (map c₁ f) ||| (map c₂ f)
   | xor c₁ c₂, f => (map c₁ f) ^^^ (map c₂ f)
 
+/--
+Map of 'identity' does not change the evaluation of the circuit.
+Funnily, it *can* structually change the circuit,
+since it rebuilds the circuit, while simplifying it during rebuilding.
+-/
+@[simp]
+theorem eval_map_id_eq (c : Circuit α) (env : α → Bool) :
+    (Circuit.map c (id : α → α)).eval env = c.eval env := by
+  induction c <;> simp [Circuit.map, *] at *
+
+@[simp]
+theorem eval_map_id_eq' {c : Circuit α} {f : α → Bool} :
+    eval (map c fun v => v) f = eval c f := by
+  induction c <;> simp [Circuit.map, *] at *
+
+@[simp]
+theorem map_tru (f : α → β) :
+    Circuit.tru.map f = Circuit.tru := rfl
+
+@[simp]
+theorem map_fals (f : α → β) :
+    Circuit.fals.map f = Circuit.fals := rfl
+
 lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
     eval (map c f) g = eval c (λ x => g (f x)) := by
   induction c <;> simp [*, Circuit.map, eval] at *
+
+@[simp]
+lemma fals_map (f : α → β) :
+  fals.map f = Circuit.fals := rfl
+
+@[simp]
+lemma var_map (f : α → β) (b : Bool) (x : α) :
+  (Circuit.var b x).map f = Circuit.var b (f x) := rfl
+
+@[simp]
+lemma tru_map (f : α → β) :
+  Circuit.tru.map f = Circuit.tru := rfl
 
 def simplify : ∀ (_c : Circuit α), Circuit α
   | tru => tru
@@ -291,7 +380,7 @@ lemma eval_eq_of_eq_on_vars [DecidableEq α] : ∀ {c : Circuit α} {f g : α �
   | tru, _, _, _ => rfl
   | fals, _, _, _ => rfl
   | var true x, _f, _g, h => h x (by simp [vars])
-  | var false x, f, g, h => by simp [eval, h x (by simp [vars, eval])]
+  | var false x, f, g, h => by simp [eval, h x (by simp [vars])]
   | and c₁ c₂, f, g, h => by
     simp only [vars, List.mem_append, List.mem_dedup] at h
     rw [eval, eval,
@@ -388,7 +477,7 @@ def bOr : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   ∀ (s : List α) (f : α → Circuit β) (c : Circuit β) (g : β → Bool),
     (eval (s.foldl (λ c x => c ||| (f x)) c) g : Prop) ↔
       eval c g ∨ (∃ a ∈ s, eval (f a) g)
-| [], f, c, g => by simp [eval]
+| [], f, c, g => by simp
 | a::l, f, c, g => by
   rw [List.foldl_cons, eval_foldl_or l]
   simp only [eval_or, Bool.or_eq_true, List.mem_cons]
@@ -408,7 +497,7 @@ def bOr : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   ∀ {s : List α} {f : α → Circuit β} {g : β → Bool},
     eval (bOr s f) g = ∃ a ∈ s, eval (f a) g
 | [], _, _ => by simp [bOr, eval]
-| [a], f, g => by simp [bOr, eval]
+| [a], f, g => by simp [bOr]
 | a::l, f, g => by
   rw [bOr, eval_foldl_or, List.exists_mem_cons_iff]
 
@@ -420,7 +509,7 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
     ∀ (s : List α) (f : α → Circuit β) (c : Circuit β) (g : β → Bool),
       (eval (s.foldl (λ c x => c &&& (f x)) c) g : Prop) ↔
         eval c g ∧ (∀ a ∈ s, eval (f a) g)
-  | [], f, c, g => by simp [eval]
+  | [], f, c, g => by simp
   | a::l, f, c, g => by
     rw [List.foldl_cons, eval_foldl_and l]
     simp only [eval_and, Bool.and_eq_true, List.mem_cons]
@@ -437,9 +526,40 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
     ∀ {s : List α} {f : α → Circuit β} {g : β → Bool},
       eval (bAnd s f) g ↔ ∀ a ∈ s, eval (f a) g
   | [], _, _ => by simp [bAnd, eval]
-  | [a], f, g => by simp [bAnd, eval]
+  | [a], f, g => by simp [bAnd]
   | a::l, f, g => by
     rw [bAnd, eval_foldl_and]; simp
+
+/-- perform the same task as assignVars, but don't change the signature of the circuit. -/
+def assignAllVars [DecidableEq α] (c : Circuit α)
+  (f : α → Bool) : Circuit Empty
+  := match c with
+  | tru => tru
+  | fals => fals
+  | var b x =>
+    let v := f x
+    Circuit.ofBool (b = v)
+  | and p q => assignAllVars p f &&& assignAllVars q f
+  | or p q => assignAllVars p f ||| assignAllVars q f
+  | xor p q => assignAllVars p f ^^^ assignAllVars q f
+
+/-- Says how to evaluate asssignVars' in terms of an updated environment. -/
+@[simp]
+lemma eval_assignAllVars [DecidableEq α] {c : Circuit α} {f : α → Bool} :
+    eval (assignAllVars c f) env = c.eval f := by
+  induction c
+  case tru => simp [eval, assignAllVars]
+  case fals => simp [eval, assignAllVars]
+  case var b x =>
+    simp [assignAllVars]
+    rcases fx : f x <;> rcases b <;> simp
+  case and p q hp hq =>
+    simp [eval, hp, hq, assignAllVars]
+  case or p q hp hq =>
+    simp [eval, hp, hq, assignAllVars]
+  case xor p q hp hq =>
+    simp [eval, hp, hq, assignAllVars]
+
 
 def assignVars [DecidableEq α] :
     ∀ (c : Circuit α) (_f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool), Circuit β
@@ -482,7 +602,7 @@ lemma varsFinset_assignVars [DecidableEq α] [DecidableEq β] :
     intro x
     simp [assignVars, varsFinset, vars]
     split <;>
-    simp [*, vars, Xor']
+    simp [*, vars]
     split_ifs <;> simp [vars]
   | and c₁ c₂, f => by
     intro x
@@ -561,7 +681,7 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
         simp only [Finset.ssubset_iff, Finset.mem_map, Finset.mem_biUnion,
           Function.Embedding.coeFn_mk, not_exists, not_and, forall_exists_index, and_imp,
           Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, Sum.forall,
-          Sum.inl.injEq, IsEmpty.forall_iff, implies_true, and_true]
+          Sum.inl.injEq]
         use (f a ha)
         simp only [hfa, reduceCtorEq, not_false_eq_true, implies_true, false_implies, and_true,
           true_and]
@@ -584,20 +704,20 @@ lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
   | tru, _, _ => rfl
   | fals, _, _ => rfl
   | var b x, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     cases f x (by simp [vars]) with
     | inl val => cases b <;> simp [eval]
     | inr val =>
-      simp [eval]
+      simp
       cases val <;> cases b <;> simp [eval]
   | and c₁ c₂, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     rw [eval_assignVars, eval_assignVars]
   | or c₁ c₂, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     rw [eval_assignVars, eval_assignVars]
   | xor c₁ c₂, f, g => by
-    simp [assignVars, eval, vars]
+    simp [assignVars]
     rw [eval_assignVars, eval_assignVars]
 
 def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
@@ -609,8 +729,7 @@ def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
 theorem eval_fst {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : α → Bool) :
     c.fst.eval g ↔ ∃ g' : β → Bool, c.eval (Sum.elim g g') := by
-  simp only [fst, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
-    List.mem_singleton, eval_assignVars]
+  simp only [fst, eval_bOr, List.mem_pi, List.mem_cons, eval_assignVars]
   constructor
   · rintro ⟨a, ha⟩
     use (fun i => if hi : i ∈ c.sumVarsRight then a i hi else true)
@@ -637,8 +756,7 @@ def snd {α β : Type _} [DecidableEq α] [DecidableEq β]
 theorem eval_sn.d {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : β → Bool) :
     c.snd.eval g ↔ ∃ g' : α → Bool, c.eval (Sum.elim g' g) := by
-  simp only [snd, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
-    List.mem_singleton, eval_assignVars]
+  simp only [snd, eval_bOr, List.mem_pi, List.mem_cons, eval_assignVars]
   constructor
   · rintro ⟨a, ha⟩
     use (fun i => if hi : i ∈ c.sumVarsLeft then a i hi else true)
@@ -734,8 +852,8 @@ def nonemptyAux [DecidableEq α] :
         card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) true (by simp)
       have wf₂ : cc₂'.varsFinset.card < c.varsFinset.card :=
         card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) false (by simp)
-      let b₁ := nonemptyAux c₁ c₁.vars rfl
-      let b₂ := nonemptyAux c₂ c₂.vars rfl
+      have b₁ := nonemptyAux c₁ c₁.vars rfl
+      have b₂ := nonemptyAux c₂ c₂.vars rfl
       ⟨b₁ || b₂, by
         simp only [eval_eq_evalv, Bool.or_eq_true, eq_iff_iff]
         rw [← b₁.prop, ← b₂.prop]
@@ -770,17 +888,28 @@ lemma nonempty_iff [DecidableEq α] (c : Circuit α) :
     nonempty c ↔ ∃ x, eval c x :=
   by rw [nonempty, ← (nonemptyAux c c.vars rfl).2]
 
+
 lemma nonempty_eq_false_iff [DecidableEq α] (c : Circuit α) :
     nonempty c = false ↔ ∀ x, ¬ eval c x := by
   apply not_iff_not.1
   simpa using nonempty_iff c
 
+def always_false [DecidableEq α] (c : Circuit α) : Bool :=
+   nonempty c = false
+
+@[simp]
+lemma always_false_iff [DecidableEq α] (c : Circuit α) :
+    always_false c ↔ ∀ x, ¬ eval c x := by
+rw [always_false]
+simp [nonempty_eq_false_iff]
+
 def always_true [DecidableEq α] (c : Circuit α) : Bool :=
   !(nonempty (~~~ c))
 
+@[simp]
 lemma always_true_iff [DecidableEq α] (c : Circuit α) :
     always_true c ↔ ∀ x, eval c x := by
-  simp [always_true, nonempty_eq_false_iff, not_not]
+  simp [always_true, nonempty_eq_false_iff]
 
 instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit α → Prop) :=
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
@@ -809,33 +938,550 @@ lemma le_iff_implies : ∀ (c₁ c₂ : Circuit α), c₁ ≤ c₂ ↔ (∀ f, e
 section Optimizer
 variable {α : Type u} [DecidableEq α]
 
-def optimize : Circuit α → Circuit α 
+def optimize : Circuit α → Circuit α
 | .tru => .tru
-| .fals => .fals 
+| .fals => .fals
 | .var b v => .var b v
-| .or l r => 
+| .or l r =>
    let l := optimize l
-   let r := optimize r 
+   let r := optimize r
    if l == r
    then l
    else l ||| r
-| .and l r => 
+| .and l r =>
    let l := optimize l
-   let r := optimize r 
-   if l == r then l 
+   let r := optimize r
+   if l == r then l
    else l &&& r
-| .xor l r => 
+| .xor l r =>
   let l := optimize l
-  let r := optimize r 
+  let r := optimize r
   if l == r
   then .fals
-  else 
-    match l, r with 
-    | .var b v, .var b' v' => 
-       if v == v' 
-       then .ofBool <| b.xor b' 
-       else l ^^^ r 
+  else
+    match l, r with
+    | .var b v, .var b' v' =>
+       if v == v'
+       then .ofBool <| b.xor b'
+       else l ^^^ r
     | _, _ => l ^^^ r
 end Optimizer
+
+
+
+section Equiv
+
+/--
+Two circuits are equivalent if they evaluate to the same result for all possible inputs.
+-/
+def Equiv (c₁ c₂ : Circuit α) : Prop :=
+    eval c₁ = eval c₂
+
+@[simp]
+theorem Equiv_refl : ∀ (c : Circuit α), Circuit.Equiv c c := by
+  intro c
+  ext v
+  simp
+
+@[symm]
+theorem Equiv_symm : ∀ {c₁ c₂ : Circuit α}, Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₁ := by
+  intros c₁ c₂ h
+  ext env
+  rw [h]
+
+@[trans]
+theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
+    Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₃ → Circuit.Equiv c₁ c₃ := by
+  intros c₁ c₂ c₃ h₁ h₂
+  ext env
+  rw [h₁, h₂]
+
+theorem eval_eq_of_Equiv {c₁ c₂ : Circuit α} (h : Circuit.Equiv c₁ c₂) (f : α → Bool) :
+    eval c₁ f = eval c₂ f := by rw [h]
+
+theorem Equiv_of_eval_eq {c₁ c₂ : Circuit α} (h : ∀ f, eval c₁ f = eval c₂ f) :
+    Circuit.Equiv c₁ c₂ := by
+    ext v
+    apply h
+
+end Equiv
+
+/-- Take the 'or' of many circuits.-/
+def bigOr {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  match cs with
+  | [] => Circuit.fals
+  | c :: cs =>
+    c ||| (Circuit.bigOr cs)
+
+@[simp]
+theorem bigOr_nil_eq {α : Type _} :
+    Circuit.bigOr (α := α) [] = Circuit.fals := by
+  simp [bigOr]
+
+@[simp]
+theorem bigOr_cons_eq {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) :
+    Circuit.bigOr (c :: cs) = c ||| Circuit.bigOr cs := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr]
+
+
+/-- append to the bigOr list is equivalent to a circuit
+that is the bigOr of the circuit and the |||
+-/
+theorem bigOr_append_equiv_or_bigOr {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) :
+    Equiv (Circuit.bigOr (cs ++ [c])) (c ||| Circuit.bigOr cs) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr]
+    ext env
+    have := Circuit.eval_eq_of_Equiv ih
+    simp
+    rw [this]
+    simp [Circuit.eval_or]
+    rcases (a.eval env) <;> simp
+-- bigOr [a, b]
+-- = a ||| (bigOr [b])
+-- = a ||| (b ||| fals)
+
+theorem bigOr_append_equiv_bigOr_cons {α : Type _}
+    (c : Circuit α) (cs : List (Circuit α)) :
+    Equiv (bigOr (cs ++ [c])) (Circuit.bigOr (c :: cs)) := by
+  rw [bigOr_cons_eq]
+  apply Circuit.Equiv_trans
+  · apply Circuit.bigOr_append_equiv_or_bigOr
+  · apply Circuit.Equiv_refl
+
+theorem eval_bigOr_eq_decide
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = decide (∃ c ∈ cs, c.eval env = true) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+@[simp]
+theorem eval_bigOr_eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = false ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = false) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+@[simp]
+theorem eval_bigOr_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigOr cs).eval env = true ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = true) := by
+  induction cs
+  case nil => simp [bigOr]
+  case cons a as ih =>
+    simp [bigOr, ih]
+
+/-- Take the and of many circuits.-/
+def bigAnd {α : Type _}
+    (cs : List (Circuit α)) : Circuit α :=
+  match cs with
+  | [] => Circuit.tru
+  | c :: cs =>
+    c &&& (Circuit.bigAnd cs)
+
+@[simp]
+theorem eval_bigAnd_eq_true_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigAnd cs).eval env = true ↔
+    (∀ (c : Circuit α), c ∈ cs → c.eval env = true) := by
+  induction cs
+  case nil => simp [bigAnd]
+  case cons a as ih =>
+    simp [bigAnd, ih]
+
+@[simp]
+theorem eval_bigAnd_eq_false_iff
+    (cs : List (Circuit α)) (env : α → Bool):
+    (Circuit.bigAnd cs).eval env = false ↔
+    (∃ (c : Circuit α), c ∈ cs ∧ c.eval env = false) := by
+  induction cs
+  case nil => simp [bigAnd]
+  case cons a as ih =>
+    simp only [bigAnd, List.mem_cons, exists_eq_or_imp]
+    by_cases h : a.eval env <;> simp [h, ih]
+
+
+
+/--
+The 'Entrypoint' for the 'toAIGAux' function, which maintains invariants
+about AIGs.
+-/
+structure ToAIGAuxEntrypoint {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+    (aig : AIG α) (c : Circuit α) where
+  out : AIG α
+  ref : out.Ref
+  href : ∀ env, AIG.denote env ⟨out, ref⟩ = c.eval env
+  le_size : aig.decls.size ≤ out.decls.size
+  decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+    out.decls[idx]'h2 = aig.decls[idx]'h1
+  denote_eq : ∀ (env : α → Bool) (ref : aig.Ref),
+    AIG.denote env ⟨aig, ref⟩ = AIG.denote env ⟨out, ref.cast (by omega)⟩
+
+set_option maxHeartbeats 2000000 in
+/--
+Convert a 'Circuit α' into an 'AIG α' in order to reuse bv_decide's
+bitblasting capabilities.
+-/
+@[nospecialize]
+def toAIGAux {α : Type}
+    [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (aig : AIG α) :
+    ToAIGAuxEntrypoint aig c :=
+  match c with
+  | .fals => {
+      out := aig,
+      ref := aig.mkConstCached false,
+      href := by simp,
+      le_size := by simp,
+      decl_eq := by
+        intro idx h1 h2
+        simp,
+      denote_eq := by
+        intro env ref
+        rfl
+    }
+  | .tru => {
+    out := aig,
+    ref := aig.mkConstCached true,
+    href := by simp,
+    le_size := by simp,
+    decl_eq := by
+      intro idx h1 h2
+      simp,
+    denote_eq := by
+      intro env ref
+      rfl
+    }
+  | .var b v =>
+    let out := mkAtomCached aig v
+    have AtomLe := LawfulOperator.le_size (f := mkAtomCached) aig v
+    have AtomEq := LawfulOperator.decl_eq (f := mkAtomCached) aig v
+    if hb : b then
+      {
+        out := out.aig,
+        ref := out.ref,
+        href := by simp [out]; omega,
+        le_size := by
+          omega
+        decl_eq := by
+          intro idx h1 h2
+          rw [AtomEq],
+        denote_eq := by
+          intros env ref
+          rw [← denote.eq_of_isPrefix (newAIG := out.aig)]
+          · simp
+          · constructor
+            · intros idx h
+              simp at h ⊢
+              rw [AtomEq]
+            · simp; apply AtomLe
+      }
+    else
+      let notOut := mkNotCached out.aig out.ref
+      have NotLe := LawfulOperator.le_size (f := mkNotCached) out.aig out.ref
+      have notDeclEq := LawfulOperator.decl_eq (f := mkNotCached) out.aig out.ref
+      have le_size : aig.decls.size ≤ notOut.aig.decls.size := by
+        apply Nat.le_trans (m := (aig.mkAtomCached v).aig.decls.size)
+        · omega
+        · omega
+      have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        notOut.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+        intro idx h1 h2
+        simp [notOut, out]
+        rw [notDeclEq, AtomEq]
+        omega
+      {
+      out := notOut.aig,
+      ref := notOut.ref,
+      href := by
+        simp [notOut, out]
+        simp [hb],
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := notOut.aig)]
+        · simp
+        · constructor
+          · simp
+            intros idx hidx
+            rw [decl_eq]
+          · simp; omega
+      }
+      -- ⟨notOut, by simp only [notOut, out] at NotLe AtomLe ⊢; omega⟩
+  | .and l r =>
+    let laig := l.toAIGAux aig
+    let raig := r.toAIGAux laig.out
+    have := laig.le_size
+    have := raig.le_size
+    let input := ⟨laig.ref.cast this, raig.ref⟩
+    let ret := raig.out.mkAndCached input
+    have Lawful := LawfulOperator.le_size (f := mkAndCached) raig.out input
+    have le_size : aig.decls.size ≤ ret.aig.decls.size := by
+      apply Nat.le_trans (m := laig.out.decls.size)
+      · omega
+      · apply Nat.le_trans (m := raig.out.decls.size)
+        · omega
+        · omega
+    have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        ret.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+      intro idx h1 h2
+      simp [ret]
+      have := LawfulOperator.decl_eq (f := mkAndCached) raig.out input idx
+      rw [this]
+      · rw [raig.decl_eq]
+        · rw [laig.decl_eq]
+          omega
+        · omega
+    {
+      out := ret.aig,
+      ref := ret.ref,
+      href := by
+        simp [ret]
+        intros env
+        rw [raig.href]
+        rw [← laig.href]
+        congr 1
+        simp [input]
+        rw [raig.denote_eq]
+        rfl
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := ret.aig)]
+        · simp [ret]
+        · constructor
+          · intros idx hidx
+            simp at hidx ⊢
+            rw [decl_eq]
+          · simp; omega
+    }
+  | .or l r =>
+    let laig := l.toAIGAux aig
+    let raig := r.toAIGAux laig.out
+    have := laig.le_size
+    have := raig.le_size
+    let input := ⟨laig.ref.cast this, raig.ref⟩
+    let ret := raig.out.mkOrCached input
+    have Lawful := LawfulOperator.le_size (f := mkOrCached) raig.out input
+    have le_size : aig.decls.size ≤ ret.aig.decls.size := by
+      apply Nat.le_trans (m := laig.out.decls.size)
+      · omega
+      · apply Nat.le_trans (m := raig.out.decls.size)
+        · omega
+        · omega
+    have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        ret.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+      intro idx h1 h2
+      simp [ret]
+      have := LawfulOperator.decl_eq (f := mkOrCached) raig.out input idx
+      rw [this]
+      · rw [raig.decl_eq]
+        · rw [laig.decl_eq]
+          omega
+        · omega
+    {
+      out := ret.aig,
+      ref := ret.ref,
+      href := by
+        simp [ret]
+        intros env
+        rw [raig.href]
+        rw [← laig.href]
+        congr 1
+        simp [input]
+        rw [raig.denote_eq]
+        rfl
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := ret.aig)]
+        · simp [ret]
+        · constructor
+          · intros idx hidx
+            simp at hidx ⊢
+            rw [decl_eq]
+          · simp; omega
+    }
+  | .xor l r =>
+    let laig := l.toAIGAux aig
+    let raig := r.toAIGAux laig.out
+    have := laig.le_size
+    have := raig.le_size
+    let input := ⟨laig.ref.cast this, raig.ref⟩
+    let ret := raig.out.mkXorCached input
+    have Lawful := LawfulOperator.le_size (f := mkXorCached) raig.out input
+    have le_size : aig.decls.size ≤ ret.aig.decls.size := by
+      apply Nat.le_trans (m := laig.out.decls.size)
+      · omega
+      · apply Nat.le_trans (m := raig.out.decls.size)
+        · omega
+        · omega
+    have decl_eq : ∀ (idx : Nat) (h1 : idx < aig.decls.size) (h2),
+        ret.aig.decls[idx]'h2 = aig.decls[idx]'h1 := by
+      intro idx h1 h2
+      simp [ret]
+      have := LawfulOperator.decl_eq (f := mkXorCached) raig.out input idx
+      rw [this]
+      · rw [raig.decl_eq]
+        · rw [laig.decl_eq]
+          omega
+        · omega
+    {
+      out := ret.aig,
+      ref := ret.ref,
+      href := by
+        simp [ret]
+        intros env
+        rw [raig.href]
+        rw [← laig.href]
+        congr 1
+        simp [input]
+        rw [raig.denote_eq]
+        rfl
+      le_size,
+      decl_eq,
+      denote_eq := by
+        intros env ref
+        rw [← denote.eq_of_isPrefix (newAIG := ret.aig)]
+        · simp [ret]
+        · constructor
+          · intros idx hidx
+            simp at hidx ⊢
+            rw [decl_eq]
+          · simp; omega
+    }
+
+
+def toAIG {α : Type}
+    [DecidableEq α] [Fintype α] [Hashable α]
+    (c : Circuit α) : { entry : Entrypoint α // ∀ (env : α → Bool), AIG.denote env entry = c.eval env } :=
+  let aig : AIG α := AIG.empty
+  let val := c.toAIGAux aig
+  let aig := val.out
+  let ref := val.ref
+  let outVal := ⟨aig, ref⟩
+  ⟨outVal, by
+    intros env
+    simp [outVal]
+    rw [val.href]
+  ⟩
+open Std Sat AIG
+
+
+/-- The denotations of the AIG and the circuit agree. -/
+@[simp]
+theorem denote_toAIG_eq_eval
+    {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α}
+    {env : α → Bool} :
+    Std.Sat.AIG.denote env c.toAIG = c.eval env := by
+  let x := c.toAIG
+  apply x.prop
+
+/-- If the circuit is UNSAT, then the AIG is UNSAT. -/
+theorem eval_eq_false_iff_toAIG_unsat {α : Type}
+    [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α} :
+    (∀ env, c.eval env = false) ↔ c.toAIG.val.Unsat := by
+  rw [Entrypoint.Unsat, UnsatAt]
+  simp [← Circuit.denote_toAIG_eq_eval]
+
+open Std Sat AIG in
+/-- Verify the AIG by converting to CNF
+and checking the LRAT certificate against it. -/
+def verifyAIG {α : Type} [DecidableEq α] [Hashable α] (x : Entrypoint α) (cert : String) : Bool :=
+  let y := (Entrypoint.relabelNat x)
+  let z := AIG.toCNF y
+  Std.Tactic.BVDecide.Reflect.verifyCert z cert
+
+
+
+open Std Tactic BVDecide Reflect AIG in
+/--
+This theorem tracks that Std.Sat.AIG.Entrypoint.relabelNat_unsat_iff does not need a [Nonempty α]
+to preserve unsatisfiability.
+@hargoniX uses [Nonempty α] to convert a partial inverse to the relabelling.
+However, this is un-necessary: One can case split on `Nonempty α`, and:
+- When it is nonempty, we can apply the relabelling directly to show unsatisfiability.
+- When it is empty, we show that the relabelling preserves unsatisfiability
+  by showing that the relabelling is a no-op.
+- Alternative proof strategy: Implement a 'RelabelNat' that case splits on
+  'NonEmpty α', and when it is empty, returns the original AIG.
+-/
+
+theorem relabelNat_unsat_iff₂ {α : Type} [DecidableEq α] [Hashable α]
+{entry : Entrypoint α} :
+    (entry.relabelNat).Unsat ↔ entry.Unsat:= by
+  simp only [Entrypoint.Unsat, Entrypoint.relabelNat]
+  rw [relabelNat_unsat_iff]
+
+open Std Tactic Sat AIG BitVec in
+/-- Verifying the AIG implies that the AIG is unsat at the entrypoint. -/
+theorem verifyAIG_correct {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+    {entry : Entrypoint α} {cert : String}
+    (h : verifyAIG entry cert) :
+    entry.Unsat := by
+  rw [verifyAIG] at h
+  rw [← relabelNat_unsat_iff₂]
+  rw [← AIG.toCNF_equisat entry.relabelNat]
+  apply Std.Tactic.BVDecide.Reflect.verifyCert_correct (cert := cert) _ h
+
+/-- Verify the circuit by translating to AIG. -/
+def verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α]
+    (c : Circuit α) (cert : String) : Bool :=
+  verifyAIG (α := α) c.toAIG cert
+
+/- If circuit verification succeeds, then the circuit is unsat. -/
+theorem eval_eq_false_of_verifyCircuit {α : Type}
+    [DecidableEq α] [Fintype α] [Hashable α]
+    {c : Circuit α} {cert : String}
+    (h : verifyCircuit c cert) :
+    ∀ (env : _), c.eval env = false := by
+  intros env
+  simp [verifyCircuit] at h
+  apply Circuit.eval_eq_false_iff_toAIG_unsat .. |>.mpr
+  apply verifyAIG_correct h
+
+/-!
+Helpers to use `bv_decide` as a solver-in-the-loop for the reflection proof.
+-/
+
+def cadicalTimeoutSec : Nat := 1000
+
+attribute [nospecialize] Circuit.toAIG
+
+-- TODO: rename to checkUnsatAux
+open Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
+def checkCircuitUnsatAux {α : Type} [DecidableEq α] [Hashable α] [Fintype α]
+    (c : Circuit α) : TermElabM (Option LratCert) := do
+  let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
+  IO.FS.withTempFile fun _ lratFile => do
+    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+    let entrypoint:= c.toAIG.val
+    let ⟨entrypoint, _labelling⟩ := entrypoint.relabelNat'
+    let cnf := toCNF entrypoint
+    let out ← runExternal cnf cfg.solver cfg.lratPath
+      (trimProofs := true)
+      (timeout := cadicalTimeoutSec)
+      (binaryProofs := true)
+    match out with
+    | .error _model => return .none
+    | .ok cert => return .some cert
 
 end Circuit

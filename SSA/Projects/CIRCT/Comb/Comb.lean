@@ -120,7 +120,7 @@ def mkTy : MLIR.AST.MLIRType 0 → MLIR.AST.ExceptM Comb (Comb.Ty)
   | MLIR.AST.MLIRType.int _ w =>
     match w with
     | .concrete w' => return .bitvec w'
-    | .mvar _ => throw <| .generic s!" bitVec size can't be an mvar!"
+    | .mvar _ => throw <| .generic s!" BitVec size can't be an mvar!"
   | _ => throw .unsupportedType
 
 -- borrowed from the LLVM/EDSL infra
@@ -154,13 +154,12 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let args ← args.assumeArity 3
     return getVarWidth args[0]
   -- n-ary ops
-  let args' ← opStx.args.mapM (MLIR.AST.TypedSSAVal.mkVal Γ) -- will need to find a better way to do this
-  if h : args'.length = 0 then
+  if h : args.toList.length = 0 then
     throw <| .generic s!" empty list of argument provided for the variadic op {repr opStx.args}"
   else
     -- exclude empty list of args
     let nnW : AST.ReaderM (Comb) (Nat) := do
-      let args ← args.assumeArity args'.length
+      let args ← args.assumeArity args.toList.length
       return getVarWidth args[0]
     let mkExprOf := opStx.mkExprOf (args? := args) Γ
     match (opStx.name).splitOn "_" with
@@ -191,11 +190,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     -- 3-ary
     | ["Comb.mux"] => mkExprOf <| .mux (← terW)
     -- n-ary (variadic)
-    | ["Comb.add"] => mkExprOf <| .add (← nnW) args'.length
-    | ["Comb.and"] => mkExprOf <| .and (← nnW) args'.length
-    | ["Comb.mul"] => mkExprOf <| .mul (← nnW) args'.length
-    | ["Comb.or"] => mkExprOf <| .or (← nnW) args'.length
-    | ["Comb.xor"] => mkExprOf <| .xor (← nnW) args'.length
+    | ["Comb.add"] => mkExprOf <| .add (← nnW) args.toList.length
+    | ["Comb.and"] => mkExprOf <| .and (← nnW) args.toList.length
+    | ["Comb.mul"] => mkExprOf <| .mul (← nnW) args.toList.length
+    | ["Comb.or"] => mkExprOf <| .or (← nnW) args.toList.length
+    | ["Comb.xor"] => mkExprOf <| .xor (← nnW) args.toList.length
     | _ => throw <| .unsupportedOp s!"{repr opStx}"
 
 def mkReturn (Γ : Ctxt Comb.Ty) (opStx : MLIR.AST.Op 0) :

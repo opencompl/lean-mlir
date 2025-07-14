@@ -40,8 +40,8 @@ jobs:
 
       - name: Install Python Modules
         run: |
-          sudo apt update
-          sudo apt install -y python3-matplotlib python3-pandas python3-num2words ripgrep
+          sudo apt-get update
+          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
 
       - name: Get Cache
         continue-on-error: true
@@ -56,12 +56,12 @@ jobs:
       - name: Run LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm.py -j48)
+          (cd bv-evaluation; python3 ./compare.py instcombine -j48)
 
-      - name: Compare LLVM
+      - name: Collect data LLVM
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-llvm.py | tee llvm-stats)
+          (cd bv-evaluation; python3 ./collect.py instcombine | tee llvm-stats)
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -101,12 +101,12 @@ jobs:
 
       - name: Run HDel
         run: |
-          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-hdel.py -j48)
+          (cd bv-evaluation; python3 ./compare.py hackersdelight -j48)
 
-      - name: Compare HDEl
+      - name: Collect data HDEl
         continue-on-error: true
         run: |
-          (cd bv-evaluation; python3 ./collect-data-hdel.py > /dev/null)
+          (cd bv-evaluation; python3 ./collect.py hackersdelight > /dev/null)
 
 #    - name: Run LLVM Symbolic
 #        continue-on-error: true
@@ -121,4 +121,4 @@ jobs:
       - name: Collect Stats
         continue-on-error: true
         run: |
-          (cd bv-evaluation/for-paper/tools; python3 ./collect-stats.py)
+          (cd bv-evaluation/tools; python3 ./collect-stats-bv-decide.py)

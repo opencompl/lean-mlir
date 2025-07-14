@@ -100,4 +100,8 @@ theorem Int.natCast_pred_of_pos (x : Nat) (h : 0 < x) :
       (-·), Int.neg, Int.negOfNat, Int.subNatNat]
     simp
 
+theorem ofBool_eq_one_iff (b : Bool) :
+    ofBool b = 1#1 ↔ b = true := by
+  cases b <;> simp
+
 end BitVec

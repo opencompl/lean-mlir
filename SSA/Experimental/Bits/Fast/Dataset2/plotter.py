@@ -215,14 +215,16 @@ def plot(args):
 
     solver_colors = {
         "mba": material_red,
-        "kinduction": material_blue,
+        "kinduction_verified": material_yellow,
+        "kinduction_unverified": material_blue,
         "bv_automata_classic": material_green,
         "bv_decide": material_purple
     }
 
     solver_latex_names = {
         "mba": "MBA",
-        "kinduction": "KInduction",
+        "kinduction_verified": "KInductionVerified",
+        "kinduction_unverified": "KInductionUnverified",
         "bv_automata_classic": "Presburger",
         "bv_decide": "BvDecide"
     }

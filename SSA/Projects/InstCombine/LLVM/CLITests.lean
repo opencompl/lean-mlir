@@ -52,36 +52,8 @@ theorem natParamsTup : ∀ n : Nat, n > 0 → natParams (n + 1) = (Nat × natPar
   intro n
   induction n <;> simp [natParams]
 
-def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
-  name := s!"{n} nat(s)."
-  parse? str :=
-  match n with
-    | 0 =>
-      let inst : Cli.ParseableType Unit := inferInstance
-      inst.parse? str
-    | 1 =>
-      let inst : Cli.ParseableType Nat := inferInstance
-      inst.parse? str
-    -- this feels unnecessarily complicated
-    | (n + 1) + 1 =>
-      let inst1 : Cli.ParseableType Nat := inferInstance
-      let instn : Cli.ParseableType (natParams (n + 1)) := @instParseableNatParams (n + 1)
-      let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) :=
-        @instParseableTuple Nat (natParams (n + 1)) inst1 instn
-      let hn1gt0 : (n + 1) > 0 := by
-        rename_i n_1 -- aesop?
-        simp_all only [gt_iff_lt, or_true]
-        omega
-      let hn1eq := natParamsTup (n + 1) hn1gt0
-      hn1eq ▸ instTup.parse? str
-
-instance {n : Nat} : Cli.ParseableType (natParams n) := instParseableNatParams
-
 def CliTest.params : CliTest → Type
 | test => natParams test.mvars
-
-def CliTest.paramsParseable (test : CliTest) : Cli.ParseableType (test.params) :=
-  instParseableNatParams
 
 instance {n : Nat} : Cli.ParseableType (BitVec n) where
   name := s!"BitVec {n}"

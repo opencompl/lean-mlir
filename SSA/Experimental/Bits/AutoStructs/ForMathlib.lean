@@ -11,16 +11,16 @@ open Mathlib
 
 @[simp]
 lemma List.Vector.append_get_lt {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
-    (x.append y).get i = x.get (i.castLT hlt) := by
+    (x ++ y).get i = x.get (i.castLT hlt) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [List.Vector.append, List.Vector.get]
+  dsimp [List.Vector.get]
   apply List.getElem_append_left
 
 @[simp]
 lemma List.Vector.append_get_ge {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: n ≤ i) :
-    (x.append y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
+    (x ++ y).get i = y.get ((i.cast (Nat.add_comm n m) |>.subNat n hlt)) := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  dsimp [List.Vector.append, List.Vector.get]
+  dsimp [List.Vector.get]
   rcases hx
   apply List.getElem_append_right hlt
 
@@ -126,7 +126,7 @@ lemma enc_length (bvs : BitVecs n) : (enc bvs).length = bvs.w := by
 @[simp]
 lemma enc_spec (bvs : BitVecs n) (i : Fin bvs.w) (k : Fin n) :
     (enc bvs)[i][k] = (bvs.bvs.get k)[i] := by
-  simp [enc, dec]
+  simp [enc]
 
 @[simp]
 lemma dec_spec (bvs' : BitVecs' n) (k : Fin n) (i : Fin bvs'.length) :
@@ -271,7 +271,7 @@ def dec_transport_preim :
   · rintro ⟨bvs', hS, hdec⟩
     use enc bvs
     rw [←enc_transport]
-    constructor <;> simp_all [←hdec, enc_dec]
+    constructor <;> simp_all [← hdec]
 
 @[simp]
 def dec_transport_image (f : Fin m → Fin n) :
@@ -489,7 +489,7 @@ lemma product_eval {M : NFA α σ} {N : NFA α ς} {w} :
   (M.product accept? N).eval w = M.eval w ×ˢ N.eval w := by
   unfold eval; induction w using List.reverseRecOn
   case nil => ext; simp [product]
-  case append_singleton w a ih => simp only [eval, evalFrom_append_singleton, product_stepSet, ih]
+  case append_singleton w a ih => simp only [evalFrom_append_singleton, product_stepSet, ih]
 
 @[simp]
 theorem inter_accepts (M : NFA α σ) (N : NFA α ς) :
@@ -552,7 +552,7 @@ lemma determinize_complete (M : NFA α σ) :
 @[simp]
 lemma determinize_deternistic (M : NFA α σ) :
     M.toDFA.toNFA.Deterministic := by
-  simp [Deterministic, DFA.toNFA, toDFA]
+  simp [DFA.toNFA, toDFA]
   constructor <;> simp
 
 @[simp]
@@ -560,63 +560,9 @@ theorem neg_accepts (M : NFA α σ) :
     M.neg.accepts = M.acceptsᶜ := by
   simp [neg]
 
-def reverse (M : NFA α σ) : NFA α σ where
-  start := M.accept
-  accept := M.start
-  step q a := { q' | M.step q' a q }
-
-theorem evalFrom_cons {M : NFA α σ} (S : Set σ) (x : List α) (a : α) :
-    M.evalFrom S (a :: x) = M.evalFrom (M.stepSet S a) x := by
-  simp [evalFrom]
-
-@[simp]
-theorem reverse_stepSet {M : NFA α σ} {S : Set σ} : M.reverse.stepSet S a = { q | ∃ q' ∈ S, q' ∈ M.step q a } := by
-  simp [reverse, stepSet]; ext q; simp; rfl
-
-theorem evalFrom_union {M : NFA α σ} {S : Set σ} : M.evalFrom S w = ⋃ s ∈ S, M.evalFrom {s} w := by
-  induction w using List.reverseRecOn generalizing S
-  case nil => simp
-  case append_singleton w a ih =>
-    simp only [evalFrom_append_singleton]
-    rw [ih]
-    simp [stepSet]
-
-@[simp]
-theorem reverse_evalFrom {M : NFA α σ} {S : Set σ} : M.reverse.evalFrom S w = { q | ∃ q' ∈ S, q' ∈ M.evalFrom {q} w.reverse } := by
-  induction w using List.reverseRecOn generalizing S
-  case nil => simp
-  case append_singleton w a ih =>
-    simp
-    ext q
-    simp [ih, mem_stepSet]
-    constructor
-    · rintro ⟨q', ⟨q'', hS, hst''⟩, hst'⟩
-      simp [evalFrom_cons]
-      use q'', hS
-      rw [evalFrom_union]; simp_all
-      use q', by (simpa [stepSet]), hst''
-    · simp only [forall_exists_index, and_imp]
-      rintro q' hS hef
-      simp [evalFrom_cons] at hef
-      rw [evalFrom_union] at hef
-      simp only [mem_iUnion, exists_prop] at hef
-      rcases hef with ⟨q'', hst, hef⟩
-      simp [stepSet] at hst
-      use q'', ⟨q', hS, hef⟩
-
 @[simp]
 theorem reverse_accepts {M : NFA α σ} : M.reverse.accepts = M.accepts.reverse := by
-  simp [accepts, eval]; ext w; simp only [Language.mem_reverse]; constructor
-  · simp only [Language.eq_def, mem_setOf_eq, forall_exists_index, and_imp]
-    rintro qf ha qi hi hef
-    use qi, hi
-    rw [evalFrom_union]; simp only [mem_iUnion, exists_prop]
-    use qf, ha
-  · simp only [Language.eq_def, mem_setOf_eq, forall_exists_index, and_imp]
-    rintro qa ha hef
-    rw [evalFrom_union] at hef; simp only [mem_iUnion, exists_prop] at hef
-    rcases hef with ⟨qi, hi, hef⟩
-    use qi, hi, qa, ha
+  ext; simp
 
 /-
 NOTE: all that follows is defined in terms of bit vectors, even though it should
@@ -852,7 +798,7 @@ theorem Std.HashSet.fold_induction [BEq α] [LawfulBEq α] [Hashable α]
     simp_all
   case append_singleton xs x ih =>
     rintro hd
-    simp_all only [union_singleton, List.foldl_cons, List.mem_cons]
+    simp_all only [union_singleton]
     simp [List.pairwise_append] at hd
     rcases hd with ⟨hd, hnew⟩
     have hnew : x ∉ xs := by aesop

@@ -103,7 +103,7 @@ lemma addOrCreateState_preserves_mem (st : worklist.St A S) (final? : Bool) (sa 
   simp_all [worklist.St.addOrCreateState]; intros hmap
   split; simp_all
   dsimp only
-  simp_all [Std.HashMap.getElem?_insert]
+  simp_all
 
 omit [Fintype S] [DecidableEq S] [LawfulBEq A] in
 theorem addOrCreateState_grow (st : worklist.St A S) (b : Bool) (sa : S) :
@@ -172,13 +172,13 @@ def worklist.initState (inits : Array S) (hinits : inits.toList.Nodup) (final? :
     suffices hccl : mot inits.size mapm by
       simp_all [mot]; intros sa hin
       apply Array.getElem_of_mem at hin; rcases hin with ⟨k, hk, heq⟩
-      apply hccl _ _ hk (by simp_all [Array.getElem?_eq_getElem])
+      apply hccl _ _ hk (by simp_all)
     apply Array.foldl_induction; simp [mot]
     intros i map ih; simp [mot] at ih ⊢
     intros sa k hk hsome
     apply Nat.lt_add_one_iff_lt_or_eq.mp at hk; rcases hk with hk | rfl
     { right; apply ih _ _ hk hsome }
-    { left; simp_all [Array.getElem?_eq_getElem]  }
+    { left; simp_all  }
   { m, map, worklist := inits, worklist_nodup := hinits, worklist_incl }
 
 def worklistRun' (final : S → Bool) (inits : Array S) (hinits : inits.toList.Nodup) (f : S → Array (A × S)) : RawCNFA A :=
@@ -219,13 +219,13 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         rcases heq' : sa? with ⟨⟩ | ⟨sa⟩
         { simp_all }
         apply Finset.card_lt_card
-        simp [worklist.St.meas, Finset.ssubset_iff, Finset.subset_iff]
+        simp [Finset.ssubset_iff, Finset.subset_iff]
         use sa
         simp [sa?] at heq'
         constructor
         { constructor
           { apply Array.mem_of_back? at heq'; apply st0.worklist_incl; assumption }
-          { apply Array.not_elem_back_pop at heq' <;> simp_all +zetaDelta [Array.pop, wl] } }
+          { apply Array.not_elem_back_pop at heq' <;> simp_all +zetaDelta [Array.pop] } }
         constructor
         { right; apply Array.mem_of_back? at heq'; assumption }
         rintro sa hh; rcases hh with hnin | hin
@@ -234,7 +234,7 @@ where go (st0 : worklist.St A S) : RawCNFA A :=
         exact Array.mem_of_mem_pop st0.worklist sa hin
       have : st2.meas ≤ st1.meas := by
         apply Finset.card_le_card
-        simp +zetaDelta [worklist.St.meas, Finset.subset_iff]
+        simp +zetaDelta [Finset.subset_iff]
         intros sa' h
         rcases h with hnin | hin
         { left; simp [st1] at hincl; intros hc; apply hnin; apply hincl; assumption }
@@ -291,7 +291,7 @@ lemma worklistRun'_init_wf inits hinits final? :
   suffices _ : motive (inits.size) mapm by
     simp_all [motive]
   apply Array.foldl_induction
-  · simp [motive, worklistRun_init_post, m0, RawCNFA.states, StInv]; constructor <;> simp
+  · simp [motive, worklistRun_init_post, m0]; constructor <;> simp
   · rintro i ⟨map, m⟩ ⟨⟨hwf, hst, hsurj, hinj⟩, hmi, htr, hif⟩
     simp -zeta
     lift_lets
@@ -333,7 +333,7 @@ lemma worklistRun'_init_wf inits hinits final? :
         obtain ⟨sa, hsa⟩ := hsurj ⟨_, hin⟩; use sa
         specialize hst sa s hsa
         rw [Std.HashMap.getElem?_insert]; split_ifs with hcond
-        · simp only [beq_iff_eq, motive, m1, m2, m0] at hcond
+        · simp only [beq_iff_eq] at hcond
           specialize hnew sa (Std.HashMap.mem_of_getElem? hsa) hcond
           contradiction
         · assumption
@@ -343,12 +343,12 @@ lemma worklistRun'_init_wf inits hinits final? :
         split_ifs at hsa
         · simp at hsa; simp [hsa]
         · apply hst at hsa; simp [hsa]
-      simp [hsts] at hs; rcases hs with hs | rfl
+      simp at hs; rcases hs with hs | rfl
       · have _ : m.stateMax ≠ s := by
           rintro rfl; simp [RawCNFA.states] at hs
         rw [Std.HashMap.getElem?_insert] at hsa hsa'
         split at hsa <;> split at hsa' <;> try simp at hsa hsa' <;> try contradiction
-        simp only [Subtype.forall] at hinj
+        simp only at hinj
         apply hinj hsa hsa'
       · rw [Std.HashMap.getElem?_insert] at hsa hsa'
         have himp : ∀ (sa : S), map[sa]? ≠ some m.stateMax := by
@@ -388,7 +388,7 @@ lemma worklistRun'_go_wf :
   case case3 st hemp sa? sa hsa wl st' hmap =>
     unfold worklistRun'.go sa? at *
     split; simp_all
-    simp [hsa]
+    simp
     have heq := Option.eq_none_iff_forall_not_mem.mpr hmap
     simp_all
     split <;> simp_all +zetaDelta
@@ -410,7 +410,7 @@ lemma worklistRun'_go_wf :
     suffices hccl : motive as.size (Array.foldl (processOneElem A S final s) st1 as) by
       rcases hccl with ⟨hwf, hst', _⟩; constructor <;> assumption
     apply Array.foldl_induction motive
-    · simp_all +zetaDelta [motive]; constructor
+    · simp_all +zetaDelta; constructor
       · apply hst _ _ hs
       · apply hst
     . simp [motive]; intros i st hwf hsin hst
@@ -564,8 +564,8 @@ lemma processOneElem_finals (st : worklist.St A S) (final : S → Bool) (a : A) 
     dsimp
     have _ := Std.HashMap.get?_none_not_mem heq
     split
-    { simp_all [RawCNFA.newState, RawCNFA.addTrans, RawCNFA.addFinal] }
-    { simp_all [RawCNFA.newState, RawCNFA.addTrans] }
+    { simp_all [RawCNFA.newState, RawCNFA.addFinal] }
+    { simp_all [RawCNFA.newState] }
 
 omit [Fintype S] [DecidableEq S] in
 lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s' : State) :
@@ -584,7 +584,7 @@ lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (s
       use s''; constructor <;> simp [*]
     next heq =>
       use st.m.stateMax
-      simp [Std.HashMap.getElem?_insert_self, addTrans_tr_eq, true_and]
+      simp [addTrans_tr_eq, true_and]
       split_ifs with hcond <;> simp
   next heq =>
     split
@@ -680,7 +680,7 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
   { simp only [processOneElem, worklist.St.addOrCreateState]; split
     { simp; intros s hs; apply inv.map_surj ⟨s, hs⟩ }
     { simp; intros s' hs'
-      have hs' : s' ∈ st.m.newState.2.states := by split at hs' <;> simp_all [hs']
+      have hs' : s' ∈ st.m.newState.2.states := by split at hs' <;> simp_all
       simp at hs'
       rcases hs' with hold | rfl
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
@@ -854,10 +854,8 @@ def worklistGo_spec {st : worklist.St A S} (inv : StInv A S st.m st.map) :
         suffices hccl : processOneElem_mot inits final f s sa (f sa).size (Array.foldl (processOneElem A S final s) st1 (f sa)) by
           obtain ⟨_, _, inv', hsim'⟩ := hccl
           have hemp : {(sa1, a, sa') | sa1 = sa ∧ ∃ k, (f sa).size ≤ k ∧ (f sa)[k]? = some (a, sa')} = ∅ := by
-            ext sa'; simp_all; rintro rfl k hge hsome
-            suffices hccl : (f sa'.1)[k]? = none by simp_all
-            apply Array.getElem?_size_le; assumption
-          simp_all +zetaDelta only [ge_iff_le, st2]
+            ext sa'; simp_all
+          simp_all +zetaDelta only [ge_iff_le]
         apply Array.foldl_induction
         { simp only [st1, wl']
           unfold processOneElem_mot

@@ -1,0 +1,15 @@
+ -- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
+open LLVM
+
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
+set_option Elab.async false
+
+theorem zext_sext_add_icmp_i128_thm.extracted_1._1 : ∀ (x x_1 : BitVec 1),
+  ofBool (9223372036854775808#128 <ₛ zeroExtend 128 x_1 + signExtend 128 x) = 0#1 :=
+sorry

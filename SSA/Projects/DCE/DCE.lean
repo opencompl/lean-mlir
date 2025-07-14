@@ -22,9 +22,9 @@ theorem List.eraseIdx_succ :
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
 theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs := by
   induction xs
-  case nil => simp [List.eraseIdx]
+  case nil => simp
   case cons x xs' IH =>
-    simp [eraseIdx_succ, IH]
+    simp [IH]
 
 /- removing at index `n` does not change indices `k < n` -/
 theorem List.get?_eraseIdx_of_lt (hk: k < n) :
@@ -45,7 +45,7 @@ theorem List.get?_eraseIdx_of_lt (hk: k < n) :
       case succ k' =>
         apply IHxs
         linarith
-        simp only [length_cons, Nat.succ_eq_add_one, add_lt_add_iff_right] at N_LEN
+        simp only [length_cons, add_lt_add_iff_right] at N_LEN
         linarith
 
 
@@ -53,7 +53,7 @@ theorem List.get?_eraseIdx_of_lt (hk: k < n) :
 theorem List.get?_eraseIdx_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k) :
   (xs.eraseIdx n)[k]? = xs[k + 1]? := by
   induction xs generalizing n k
-  case nil => simp [eraseIdx, List.get]
+  case nil => simp [eraseIdx]
   case cons hd tl IHxs =>
     simp only [getElem?_cons_succ];
     cases k
@@ -64,7 +64,7 @@ theorem List.get?_eraseIdx_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k
     case succ k' =>
       cases n
       case zero =>
-        simp [List.eraseIdx, List.eraseIdx_succ]
+        simp [List.eraseIdx]
       case succ n' =>
         simp only [eraseIdx_cons_succ, getElem?_cons_succ]
         apply IHxs
@@ -203,8 +203,8 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {del
   (V : Γ.Valuation) {newv : TyDenote.toType ω} :
   DELω.pushforward_Valuation (V.snoc newv) =
   (DEL.pushforward_Valuation V).snoc newv := by
-    simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?, Ctxt.Var.val_toSnoc,
-      Ctxt.Var.succ_eq_toSnoc, Ctxt.Valuation.snoc_eq]
+    simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?,
+      Ctxt.Valuation.snoc_eq]
     unfold Deleted.pushforward_Valuation Deleted.pullback_var
     simp only [Ctxt.get?, Ctxt.Var.val_toSnoc, Ctxt.Var.succ_eq_toSnoc, Nat.succ_eq_add_one]
     funext t var
@@ -288,7 +288,7 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
     | .some ⟨v, hv⟩ =>
       .some ⟨.ret v, by
         unfold Ctxt.Valuation.eval at hv
-        simp only [EffectKind.toMonad_pure, Com.denote_ret, hv, Id.pure_eq, implies_true]
+        simp only [EffectKind.toMonad_pure, Com.denote_ret, hv, Id.pure_eq', implies_true]
       ⟩
   | .var (α := ω) e body =>
     match Com.deleteVar? (Deleted.snoc DEL) body with
@@ -335,7 +335,7 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
     ⟨Γ, Ctxt.Hom.id, ⟨.ret v, by
       intros V
       unfold Ctxt.Valuation.comap
-      simp [Ctxt.Valuation.comap]
+      simp
       ⟩⟩
   | .var (α := α) e body =>
     let DEL := Deleted.deleteSnoc Γ α
@@ -359,7 +359,7 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
         { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation),
           com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq,
+          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq',
             Ctxt.Valuation.comap_id]
           intros V
           apply hbody

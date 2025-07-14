@@ -149,6 +149,7 @@ def autolabel(ax, rects, label_from_height: Callable[[float], str] =str_from_flo
 
 # utility to print times as 1h4m, 1d15h, 143.2ms, 10.3s etc.
 def str_from_ms(ms):
+  ms = int(ms)
   def maybe_val_with_unit(val, unit):
     return f'{val}{unit}' if val != 0 else ''
 
@@ -220,7 +221,7 @@ def plot(args):
 
 
     # print available solver
-    print(df["tactic"].unique())
+    print(list(df["tactic"].unique().head(100)))
     # Series: 'tactic' [str]
     # [
     #     "width_ok"
@@ -232,21 +233,25 @@ def plot(args):
     # ]
 
     solver_colors : dict[str, str] = {
-        "normCircuit": material_blue,
+        "normCircuitVerified": material_yellow,
+        "normCircuitUnverified": material_blue,
         "normPresburger": material_green,
         "bv_decide": material_purple,
         "bv_normalize": material_red,
         #"reflect_ok": material_yellow,
     }
     solver_names : dict[str, str] = {
-        "normCircuit": "k-induction",
+        "normCircuitVerified": "k-induction (verified)",
+        "normCircuitUnverified": "k-induction (unverified)",
         "normPresburger": "bv_automata_classic",
         "bv_decide": "bv_decide",
         "bv_normalize": "bv_normalize",
         # "reflect_ok": "Reflect",
     }
     solver_latex_names : dict[str, str] = {
-        "normCircuit": "NormCircuit",
+        "normCircuitVerified": "NormCircuitVerified",
+        "normCircuitUnverified": "NormCircuitUnverified",
+        # "normCircuit": "NormCircuit",
         "normPresburger": "NormPresburger",
         "bv_decide": "BvDecide",
         "bv_normalize": "BvNormalize",
@@ -300,12 +305,16 @@ def plot(args):
     # write data to latex file
     with open("automata-automata-circuit-cactus-plot-data.tex", "w") as f:
         for solver, num_solved in solver_num_solved.items():
+            if num_solved is None: num_solved = 0
             solver = solver_latex_names[solver]
             f.write(f"\\newcommand{{\\InstCombine{solver}NumSolved}}{{{num_solved}}}\n")
         for solver, total_time in solver_total_time.items():
+            if total_time is None: total_time = 0
+            print(f"solver: {solver} | total_time: {total_time}")
             solver = solver_latex_names[solver]
             f.write(f"\\newcommand{{\\InstCombine{solver}TotalTime}}{{{str_from_ms(total_time)}}}\n")
         for solver, geo_mean in solver_geo_mean.items():
+            if geo_mean is None: geo_mean = 0
             solver = solver_latex_names[solver]
             f.write(f"\\newcommand{{\\InstCombine{solver}GeoMean}}{{{str_from_ms(geo_mean)}}}\n")
         f.write(f"\\newcommand{{\\InstCombineTotalProblems}}{{{total_problems}}}\n")

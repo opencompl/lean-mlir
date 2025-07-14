@@ -56,7 +56,7 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
           .some ⟨v', by {
             intros V
             rw [heneedleΓ]
-            simp only [Lets.denote, EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq,
+            simp only [Lets.denote, EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq',
               Ctxt.Valuation.snoc_toSnoc]
             rw [hv' V]
             congr
@@ -72,8 +72,7 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   subst hβ
                   subst exprEq
                   simp only [Lets.denote_var_last_pure]
-                  simp only [Lets.denote_var,
-                    EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq, heneedleΓ]
+                  simp only [heneedleΓ]
                   congr
                 }⟩
             | .isFalse _neq => .none
@@ -89,7 +88,8 @@ theorem Lets.denote_var
   (V : Ctxt.Valuation Γstart) :
   Lets.denote (Lets.var lets e) V =
     (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
-  simp [Lets.denote, eq_rec_constant]
+  simp [Lets.denote]
+  rfl
 
 /-- Remap the last variable in a context, to get a new context without the last variable -/
 def _root_.Ctxt.Hom.remapLast [TyDenote d.Ty]  {α : d.Ty} (Γ : Ctxt d.Ty) (var : Γ.Var α) :
@@ -279,7 +279,7 @@ mutual
 variable [DecidableEq d.Ty] [DecidableEq d.Op]
 
 /-- Replace the regions in `rs` with new regions that have the same valuation -/
-unsafe def State.cseRegionArgList
+def State.cseRegionArgList
   {Γstart Γ : Ctxt d.Ty}
   {lets : Lets d Γstart .pure Γ}
   (_ : State d lets)
@@ -290,7 +290,7 @@ unsafe def State.cseRegionArgList
   let _ := HVector.map (fun _Γα com => Com.denote com) rs
   match ts, rs with
   | _, .nil => ⟨.nil, by
-      simp [HVector.map]
+      simp
     ⟩
   | ⟨Γ, t⟩::ts, .cons region rs =>
     -- 2023: Need to create a fresh state to CSE the region.
@@ -312,7 +312,7 @@ unsafe def State.cseRegionArgList
     -/
 /-- lookup an expression in the state and return a corresponding CSE'd variable for it,
   along with the CSE'd expression that was looked up in the map for the variable.  -/
-unsafe def State.cseExpr
+def State.cseExpr
  {Γstart Γ : Ctxt d.Ty}
  {lets : Lets d Γstart .pure Γ}
  (s : State d lets)
@@ -345,7 +345,7 @@ unsafe def State.cseExpr
         | .none => .none
       ⟩
 
-unsafe def State.cseCom {α : d.Ty}
+def State.cseCom {α : d.Ty}
   {lets : Lets d Γstart .pure Γ}
   (s : State d lets)
   (com: Com d Γ .pure α) :
@@ -389,14 +389,14 @@ unsafe def State.cseCom {α : d.Ty}
 end -- mutual.
 
 /-- common subexpression elimination entry point. -/
-unsafe def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
+def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
   {α : d.Ty} {Γ : Ctxt d.Ty} (com: Com d Γ .pure α) :
   { com' : Com d Γ .pure α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=
     let ⟨com', hcom'⟩ := State.cseCom (State.empty Lets.nil) com
     ⟨com', by {
       intros V
       specialize (hcom' V)
-      simp only [EffectKind.toMonad_pure, Lets.denote, Id.pure_eq] at hcom'
+      simp only [EffectKind.toMonad_pure, Lets.denote] at hcom'
       assumption
     }⟩
 
@@ -465,13 +465,13 @@ info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
     %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add (%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add(%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %2 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
 #guard_msgs in #eval ex1_pre_cse
 
-unsafe def ex1_post_cse :
+def ex1_post_cse :
  { com' : Com Ex ∅ .pure .nat // ∀ V, ex1_pre_cse.denote V = com'.denote V } :=
    cse' ex1_pre_cse
 /--
@@ -479,20 +479,20 @@ info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
     %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %2 : (CSE.Examples.ExTy.nat) → ()
 }
 -/
 #guard_msgs in #eval ex1_post_cse
 
-unsafe def ex1_post_cse_post_dce :
+def ex1_post_cse_post_dce :
   { com : Com Ex ∅ .pure  .nat // ∀ V, ex1_post_cse.val.denote V = com.denote V } :=
     (DCE.dce' ex1_post_cse.val)
 /--
 info: {
   ^entry():
     %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %1 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    %1 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
     return %1 : (CSE.Examples.ExTy.nat) → ()
 }
 -/

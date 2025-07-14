@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        daysbefore: [0, 1, 2]
+        daysbefore: [0, 1, 2, 3, 4, 5, 6, 7, 8]
     permissions: write-all
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
@@ -43,7 +43,7 @@ jobs:
       - name: Check if lean toolchain is already newer or equally old
         shell: zsh {0}
         run: |
-           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d'` -le ${{steps.mldate.outputs.date}} ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
+           if [[ `cat lean-toolchain | sed -e 's/leanprover\/lean4:nightly-//' | sed -e '/$^/d' | sed -e 's/-//g' ` -ge `echo ${{steps.mldate.outputs.date}} | sed -e 's/-//g'` ]]; then echo "abort: lean-toolchain is newer than proposed date"; false ; fi
 
       - name: Set Mathlib Date
         run: |
@@ -55,10 +55,15 @@ jobs:
            cat lean-toolchain
            lake update mathlib
 
+      - name: Merge pre-existing pull request
+        continue-on-error: true
+        run: |
+           git merge origin/auto-mathlib-update-${{steps.mldate.outputs.date}}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "chore: update to lean nightly ${{steps.mldate.outputs.date}}"
+          title: "${{steps.mldate.outputs.date}} lean nightly update"
           branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
           body: "automatic update of mathlib + lean via GitHub action."
           token: ${{secrets.PAT}}

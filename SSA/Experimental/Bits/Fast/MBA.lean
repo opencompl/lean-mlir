@@ -1,4 +1,4 @@
-import SSA.Experimental.Bits.Frontend.Attr
+import SSA.Experimental.Bits.SingleWidth.Attr
 import Lean
 import Lean.ToExpr
 
@@ -194,7 +194,7 @@ theorem Factor.denoteFin_eq_denote {f : Factor} {xs : List (BitVec w)} {xsFin : 
 
 theorem Factor.reflect_eq_ofInt_denote {w : Nat} (xs : Env w) (f : Factor) :
     f.reflect xs = (BitVec.ofInt w <| f.denote xs) := by
-  simp [reflect, denote]
+  simp [denote]
 
 @[simp]
 theorem Factor.reflect_zero_of_denote_zero {w : Nat} {f : Factor} {xs : Env w} (h : f.denote xs = 0) :
@@ -234,11 +234,11 @@ theorem Factor.getLsb_reflectFin_eq_or_reflectFin_getLsb_reflectFin_getNonLsbs
       simp [hx, hy]
       rfl
     case xor x y hx hy =>
-      simp only [reflectFin, BitVec.getLsbD_xor]
+      simp only [reflectFin]
       simp [hx, hy]
       rfl
     case not x hx  =>
-      simp only [reflectFin, BitVec.getLsbD_not]
+      simp only [reflectFin]
       simp [hx]
       rfl
   · simp
@@ -516,7 +516,7 @@ theorem Eqn.reflect_width_zero  (es : Eqn) (env : Env 0) :
   induction es
   case nil => simp [Eqn.reflect]
   case cons e es ih =>
-    simp [ih, Eqn.reflect]
+    simp [ih]
 
 
 @[simp]
@@ -632,6 +632,11 @@ theorem Eqn.forall_width_reflect_zero_of_width_one_denote_zero (e : Eqn) (w : Na
   simp
   apply h
 
+/--
+info: 'MBA.Eqn.forall_width_reflect_zero_of_width_one_denote_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms Eqn.forall_width_reflect_zero_of_width_one_denote_zero
+
 @[simp]
 theorem EnvFin.eq_elim0 (envFin : EnvFin w 0) : envFin = fun i => i.elim0 := by
   simp [EnvFin] at *
@@ -650,7 +655,7 @@ def EnvFin.getAll1 (n : Nat) : { envs : List (EnvFin 1 n) // ∀ (envFin : EnvFi
        let envFinSmaller := envFin.comap Fin.succ
        specialize henvs envFinSmaller
        exists envFinSmaller
-       simp only [henvs, true_and, out]
+       simp only [henvs, true_and]
        have hv : (envFin 0) = 0#1 ∨ (envFin 0) = 1#1 := by
          generalize envFin 0 = a
          revert a
@@ -729,8 +734,7 @@ attribute [bv_mba_preprocess] BitVec.sub_toAdd
 theorem BitVec.ofNat_eq_ofInt (n w : Nat) :
     BitVec.ofNat w n = BitVec.ofInt w n := by
   apply BitVec.eq_of_toInt_eq
-  simp[BitVec.toInt_ofNat]
-
+  simp
 
 attribute [bv_mba_preprocess] BitVec.ofNat_eq_ofNat
 
@@ -973,12 +977,14 @@ example (x y : BitVec w) :
     [Term.mk 1 (.var 0), Term.mk 2 (.var 1), Term.mk (-1) (.var 0)] [x, y] =
     (BitVec.ofInt w 1 * x + (BitVec.ofInt w 2 * y + BitVec.ofInt w (-1) * x) = BitVec.ofInt w 0) := rfl
 
-theorem eg3 (x y : BitVec w) :
+theorem check_axioms_mba (x y : BitVec w) :
      - 2 *  ~~~(x &&&  ~~~y) + 2 *  ~~~x - 5 *  ~~~(x |||  ~~~y) = 3 * (x &&& y) - 5 * y := by
   bv_mba
 
-/-- info: 'MBA.Examples.eg3' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms eg3
+/--
+info: 'MBA.Examples.check_axioms_mba' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms check_axioms_mba
 
 end Examples
 end MBA

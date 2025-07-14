@@ -151,7 +151,7 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
 info: {
   ^entry(%0 : ToyNoRegion.Ty.int):
     %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
-    %2 = ToyNoRegion.Op.add (%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
+    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
     return %2 : (ToyNoRegion.Ty.int) → ()
 }
 -/
@@ -248,6 +248,12 @@ inductive Op :  Type
   | iterate (k : ℕ) : Op
   deriving DecidableEq, Repr
 
+instance : Repr Op where
+  reprPrec
+    | .add, _ => "ToyRegion.Op.add"
+    | .const n , _ => f!"ToyRegion.Op.const {n}"
+    | .iterate n , _ => f!"ToyRegion.Op.iterate {n} "
+
 /-- A simple example dialect with regions -/
 abbrev SimpleReg : Dialect where
   Op := Op
@@ -321,14 +327,14 @@ attribute [local simp] Ctxt.snoc
 namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com SimpleReg [int] .pure int :=
-  Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
-      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+  Com.var (iterate (k := 0) (⟨0, by simp⟩) (
+      Com.letPure (add ⟨0, by simp⟩ ⟨0, by simp⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def rhs : Com SimpleReg [int] .pure int :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret ⟨0, by simp⟩
 
 attribute [local simp] Ctxt.snoc
 --
@@ -367,7 +373,7 @@ def lhs : Com SimpleReg [int] .pure int :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def rhs : Com SimpleReg [int] .pure int :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret ⟨0, by simp⟩
 
 def p2 : PeepholeRewrite SimpleReg [int] int:=
   { lhs := lhs, rhs := rhs, correct := by
@@ -394,11 +400,11 @@ def egLhs : Com SimpleReg [int] .pure int :=
 info: {
   ^entry(%0 : ToyRegion.Ty.int):
     %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-    %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
     %3 = ToyRegion.Op.iterate 0 (%2) ({
       ^entry(%0 : ToyRegion.Ty.int):
         %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-        %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+        %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
         return %2 : (ToyRegion.Ty.int) → ()
     }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
     return %3 : (ToyRegion.Ty.int) → ()
@@ -413,11 +419,11 @@ def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
 info: {
   ^entry(%0 : ToyRegion.Ty.int):
     %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-    %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
     %3 = ToyRegion.Op.iterate 0 (%0) ({
       ^entry(%0 : ToyRegion.Ty.int):
         %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-        %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+        %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
         return %0 : (ToyRegion.Ty.int) → ()
     }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
     return %3 : (ToyRegion.Ty.int) → ()

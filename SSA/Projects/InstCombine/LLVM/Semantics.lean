@@ -11,8 +11,17 @@ import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
 import Aesop
 
+namespace InstCombine
+
+scoped instance : Refinement (BitVec w) := .ofEq
+@[simp, simp_llvm_split] theorem bv_isRefinedBy_iff (x y : BitVec w) : x ⊑ y ↔ x = y := by rfl
+-- ^^ declare that for pure bitvectors, refinement is just equality
+
+end InstCombine
+
 
 namespace LLVM
+open InstCombine
 open PoisonOr (value poison)
 
 def IntW w := PoisonOr <| BitVec w
@@ -20,6 +29,7 @@ def IntW w := PoisonOr <| BitVec w
 namespace IntW
 
 instance : Inhabited (IntW w) := by unfold IntW; infer_instance
+instance : DecidableEq (IntW w) := by unfold IntW; infer_instance
 
 instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
 
@@ -230,7 +240,7 @@ def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
 
 theorem sdiv?_denom_zero_eq_poison {w : Nat} (x : BitVec w) :
   LLVM.sdiv? x 0 = .poison := by
-  simp [LLVM.sdiv?, BitVec.sdiv]
+  simp [LLVM.sdiv?]
 
 theorem sdiv?_eq_value_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
     (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = .value (BitVec.sdiv x y) := by

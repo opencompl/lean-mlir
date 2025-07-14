@@ -1,0 +1,450 @@
+  %
+% Prepared by Grigori Fursin with contributions from Bruce Childers,
+%   Michael Heroux, Michela Taufer and other colleagues.
+%
+% See examples of this Artifact Appendix in
+%  * SC'17 paper: https://dl.acm.org/citation.cfm?id=3126948
+%  * CGO'17 paper: https://www.cl.cam.ac.uk/~sa614/papers/Software-Prefetching-CGO2017.pdf
+%  * ACM ReQuEST-ASPLOS'18 paper: https://dl.acm.org/citation.cfm?doid=3229762.3229763
+%
+% (C)opyright 2014-2022
+%
+% CC BY 4.0 license
+%
+
+\documentclass[acmlarge, nonacm]{acmart}
+
+% \documentclass[onecolumn]{sigplanconf}
+
+\usepackage{hyperref}
+\usepackage{minted}
+
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white, breaklines, fontsize=\footnotesize}
+
+\usepackage[verbose]{newunicodechar}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{▸}{\ensuremath{\blacktriangleright}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{ϵ}{\ensuremath{\epsilon}}
+\newunicodechar{τ}{\ensuremath{\tau}}
+\newunicodechar{ε}{\ensuremath{\epsilon}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+% \newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∧}{\ensuremath{\land}}
+
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+\newunicodechar{ₙ}{\textsubscript{n}}
+\newunicodechar{ₘ}{\textsubscript{m}}
+\newunicodechar{ₕ}{\textsubscript{h}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⟦}{\ensuremath{\llbracket}}
+\newunicodechar{⟧}{\ensuremath{\rrbracket}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+
+% \newunicodechar{⟦}{\ensuremath{\llbracket}}
+% https://tex.stackexchange.com/questions/100966/defining-scalable-white-curly-brackets-and-and
+% TODO FIXME: we gotta fix these parens!
+\newunicodechar{⦃}{\ensuremath{\{\{}}
+\newunicodechar{⦄}{\ensuremath{\}\}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{⊑}{\ensuremath{\sqsubseteq}}
+
+\begin{document}
+
+\special{papersize=8.5in,11in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% When adding this appendix to your paper,
+% please remove above part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\title[Artifact]{Artifact for Certified Decision Procedures for Width-Independent
+Bitvector Predicates in Interactive Theorem Provers}
+
+\maketitle
+
+\section{Introduction}
+
+This artifact contains the decision procedures introduced by the coresponding
+paper, it aims to demonstrate that they are correct and proved correct using the
+Lean proof assistant, and to demonstrate they performance.
+
+\subsection{Correctness}
+
+To demonstrate the correctness, we use the decision procedures to prove lemmas
+and check that Lean accepts the proof, and that they do not rely on unexpected
+axioms such as \texttt{sorryAx}.
+
+\subsection{Performance}
+
+To demonstrate their performance, we test the decision procedures on a set of
+tests, one coming from LLVM and one coming from the obfuscation litterature. The
+artifact contains the inputs of these benchmarks as well as scripts to run then
+and generate the plots in the paper.
+
+\section{Hardware Dependencies}
+
+Podman or Docker are necessary to run our artifact (we tested it with the former).
+%
+The container image has all dependencies needed to compile our framework with Lean4.
+
+The artifact requires a somewhat beefy machine to run: the largest evaluation
+contains 10000 problems, and 2500 of the problems exercise our k-induction
+solver which uses a SAT solver, which can require a large amount of RAM.
+
+We ran our evaluation on a machine with 32 cores and 125 GB of RAM, though 32 GB
+should suffice.
+
+\section{Getting Started}
+
+Access the docker image from \url{https://doi.org/10.5281/zenodo.15754222}.
+
+\begin{script}
+$ docker load -i oopsla25-width-indep.tar.zst
+$ docker run -it oopsla25-width-indep
+# Run a smaller version of the experiments, and check that the output is as expected.
+$ /code/lean-mlir/artifacts/oopsla25-width-indep/test_experiments.sh
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+# (Optional) View the cactus plots from within the container.
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+
+\section{Step by Step Instructions}
+
+As for the previous section, load the image.
+
+\begin{script}
+$ docker load -i oopsla25-width-indep.tar
+$ docker run -it oopsla25-width-indep
+\end{script}
+
+\subsection{Checking That Our Decision Procedures Are Verified}
+
+Check that the theorems that are automatically proved by our decision
+procedures do not rely on incomplete proofs, which is materialized as the
+sorryAx axiom in Lean.
+
+This relies on the \texttt{guard\_msgs} command of Lean, which enforces that the
+comment contains exactly the output of a Lean command, which is used here with
+the \texttt{print axioms} command which lists all the axioms used (transitively)
+by a theorem.
+
+\begin{script}
+# | This allows to check that the key theorems of our decision procedures are
+# | guarded, and that they do not contain `sorry`s.
+$ rg -g "SSA/Experimental/Bits/**/*.lean" "#guard_msgs in #print axioms" -C7 | grep "sorry"
+# | This allows to manually inspect that the key theorems of our paper are sorry-free.
+$ rg -g "SSA/Experimental/Bits/**/*.lean" "#guard_msgs in #print axioms" -C7
+\end{script}
+
+
+\subsubsection{Automata Decision Procedure}
+
+The next shows that the key lemma of the automata based decision procedure relies on no axioms
+except for missing hashMap lemmas in Lean:
+
+\begin{script}
+AutoStructs/FormulaToAuto.lean
+1944-/--
+1945-info: 'Formula.denote_of_isUniversal' depends on axioms: [hashMap_missing,
+1946- propext,
+1947- Classical.choice,
+1948- Lean.ofReduceBool,
+1949- Quot.sound]
+1950--/
+1951:#guard_msgs in #print axioms Formula.denote_of_isUniversal
+\end{script}
+
+Furthermore, the tactic, when used against an example, also produces no extra axioms
+beyond the standard lean axioms, plus \texttt{hashMap\_missing}:
+
+\begin{script}
+Fast/Tests.lean
+58-theorem check_axioms_presburger (w : Nat) (a b : BitVec w) : a + b = b + a := by
+59-  bv_automata_gen (config := {backend := .automata} )
+60-
+61-/--
+62-info: 'check_axioms_presburger' depends on axioms: [hashMap_missing,
+63- propext,
+64- Classical.choice,
+65- Lean.ofReduceBool,
+66- Lean.trustCompiler,
+67- Quot.sound]
+68--/
+69:#guard_msgs in #print axioms check_axioms_presburger
+\end{script}
+
+\subsubsection{K-induction decision procedure}
+
+The example below show that the key lemma,
+as well as the use of the tactic on a an example theorem
+do not use any axioms beyond the standard Lean inbuilt
+axioms of propositional extensionality, classical choice principles, and soundness of quotient types:
+
+\begin{script}
+Fast/ReflectVerif.lean
+2561-    simp
+2562-
+2563-/--
+2564-info: 'ReflectVerif.BvDecide.KInductionCircuits.Predicate. denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking' depends on axioms: [propext,
+2565- Classical.choice,
+2566- Quot.sound]
+2567--/
+2568:#guard_msgs in #print axioms Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking
+...
+Fast/Tests.lean
+49-set_option trace.Bits.FastVerif true in
+50-theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
+51-  bv_automata_gen (config := {backend := .circuit_cadical_verified} )
+52-
+53-/--
+54-info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+55--/
+56:#guard_msgs in #print axioms check_axioms_cadical
+\end{script}
+
+
+\subsubsection{MBA Decision Procedure}
+
+The example below show that the key lemma,
+as well as the use of the tactic on a an example theorem
+do not use any axioms beyond the standard Lean inbuilt
+axioms of propositional extensionality, classical choice principles, and soundness of quotient types:
+
+
+\begin{script}
+Fast/MBA.lean
+636-info: 'MBA.Eqn.forall_width_reflect_zero_of_width_one_denote_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+637--/
+638:#guard_msgs in #print axioms Eqn.forall_width_reflect_zero_of_width_one_denote_zero
+639-
+640-@[simp]
+--
+985-info: 'MBA.Examples.check_axioms_mba' depends on axioms: [propext, Classical.choice, Quot.sound]
+986--/
+987:#guard_msgs in #print axioms check_axioms_mba
+988-
+989-end Examples
+\end{script}
+
+
+
+\section{Full Scale Run Of Our Experiments}
+
+Run the two large experiments and reproduce the data and graphs from the paper:
+
+\begin{script}
+# Run experiments, and check that the output is as expected.
+# (Parallelism can be tweaked by changing the -j options by editing the script.)
+$ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+# (Optional) View the cactus plots from within the container.
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+The tex files contain data correponding to Figure 7 of the paper, and the two
+graphs correspond to figures (a) and (b) page 18 of the paper as follows.
+
+\subsubsection{Verifying the Results for LLVM rewrites (\texttt{bv-evaluation}).}
+Please run:
+\begin{script}
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+\end{script}
+
+{\sloppypar
+This should produce the following output, where the timings might change
+depending on the machine that is run on. The absolute number of problems solved
+should be equal, while the total time and geomean time are machine-dependent.
+}
+
+TODO: we should explain the mapping between the names of the macros and the
+paper names.
+
+\begin{script}
+# $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
+\newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
+\newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+\newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
+\newcommand{\InstCombineNormPresburgerTotalTime}{...}
+\newcommand{\InstCombineBvDecideTotalTime}{...}
+\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
+\newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
+\newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
+\newcommand{\InstCombineTotalProblems}{7855} # exact match
+\end{script}
+
+To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+or use the installed \texttt{timg} tool to view the plot data within the container.
+Use the \texttt{timg -p} option to choose the protocol to view images.
+This will work on terminal emulators that support the sixel protocol.
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+\subsubsection{Verifying the Results for MBA (\texttt{SSA/Experimental/Bits/Fast/Dataset2}).}
+
+Please run:
+\begin{script}
+$ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\end{script}
+
+{\sloppypar
+This should produce the following output, where the timings might change
+depending on the machine that is run on. The absolute number of problems solved
+should be equal, while the total time and geomean time are machine-dependent.
+}
+
+\begin{script}
+# $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\newcommand{\MBAKInductionVerifiedNumSolved}{1546} # > 1500
+\newcommand{\MBAMBANumSolved}{2500} # exact match
+\newcommand{\MBABvDecideNumSolved}{2500} # exact match
+\newcommand{\MBAPresburgerNumSolved}{2500} #exact match
+\newcommand{\MBAKInductionVerifiedTotalTime}{2h2m}
+\newcommand{\MBAMBATotalTime}{6m17s}
+\newcommand{\MBABvDecideTotalTime}{6h59m}
+\newcommand{\MBAPresburgerTotalTime}{15h13m}
+\newcommand{\MBAKInductionVerifiedGeoMean}{2.7s}
+\newcommand{\MBAMBAGeoMean}{54.2ms}
+\newcommand{\MBABvDecideGeoMean}{9.89s}
+\newcommand{\MBAPresburgerGeoMean}{4.26s}
+\end{script}
+
+The plots are located at:
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+
+\end{document}
+
+\subsection{Artifact check-list (meta-information)}
+
+% {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
+% and remove the rest. This information is needed to find appropriate reviewers and gradually
+% unify artifact meta information in Digital Libraries.}
+
+{\small
+\begin{itemize}
+  \item {\bf Program: } The code repository for our framework along with the test suite. Note that this is already setup in the docker image.
+  \item {\bf Compilation: } The Lean4 toolchain, downloaded via \texttt{elan}. Note that this is already setup in the docker image.
+  \item {\bf Run-time environment: } Any operating system that supports Docker.
+  \item {\bf Hardware: } Any x86-64 machine.
+  \item {\bf Output: } Key theorems of the paper will be built and shown to have no unsound axioms.
+  \item {\bf How much disk space required (approximately)?: } 30GB
+  \item {\bf How much time is needed to prepare workflow (approximately)?: } 1hr
+  \item {\bf How much time is needed to complete experiments (approximately)?: } 5hr
+  \item {\bf Publicly available?: } Yes
+  \item {\bf Code licenses (if publicly available)?: } MIT
+  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.15754222
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Description}
+
+
+%COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%COMMENT% \subsection{Installation}
+%COMMENT%
+%COMMENT% {\em Obligatory}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Experiment workflow}
+
+Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo.15754222}.
+
+\begin{script}
+$ docker load -i oopsla25-width-indep.tar
+$ docker run -it oopsla25-width-indep
+# | This allows to check that the key theorems of our framework are
+# |guarded, and that they do not contain `sorry`s.
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+$ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2
+# Run experiments, and check that the output is as expected.
+$ /code/lean-mlir/artifacts/oopsla25-width-indep/run_experiments.sh
+$ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
+$ cat /code/lean-mlirSSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+# (Optional) View the cactus plots from within the container.
+$ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot.jpeg
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+
+{\sloppypar
+This should produce the following output, where the timings might change
+depending on the machine that is run on. The absolute number of problems solved
+should be 2500 on the fast solver (MBA), and should be appreciably
+large on the other solvers. The geomean time are machine-dependent,
+and should match upto order of magnitude comparisons.
+}
+
+\begin{script}
+# $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\newcommand{\MBAPresburgerNumSolved}{2500} # exact match
+\newcommand{\MBABvDecideNumSolved}{2500} # exact match
+\newcommand{\MBAKInductionVerifiedNumSolved}{1537} # > 1500
+\newcommand{\MBAMBANumSolved}{2500} # exact match
+\newcommand{\MBAPresburgerTotalTime}{..} # machine dependent
+\newcommand{\MBABvDecideTotalTime}{..} # machine dependent
+\newcommand{\MBAKInductionVerifiedTotalTime}{..} # machine dependent
+\newcommand{\MBAMBATotalTime}{..} # machine dependent
+\newcommand{\MBAPresburgerGeoMean}{4.6s} # machine dependent
+\newcommand{\MBABvDecideGeoMean}{10.9s} # machine dependent
+\newcommand{\MBAKInductionVerifiedGeoMean}{3.68s} # machine dependent
+\newcommand{\MBAMBAGeoMean}{78.9ms} # machine dependent
+\end{script}
+
+To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
+or use the installed \texttt{timg} tool to view the plot data within the container.
+Use the \texttt{timg -p} option to choose the protocol to view images.
+This will work on terminal emulators that support the sixel protocol.
+\begin{script}
+$ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
+\end{script}
+
+\subsection{Miscellanous Docker Usage}
+To copy files for inspection from the docker container into the host,
+ keep the container running, and in another
+shell instance, use the \texttt{docker cp}
+command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
+
+\begin{script}
+$ docker container ls # find   ID
+$ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
+            <PATH/OUTSIDE/CONTAINER>
+\end{script}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% When adding this appendix to your paper,
+% please remove below part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+

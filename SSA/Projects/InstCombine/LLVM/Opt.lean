@@ -1,5 +1,7 @@
 import SSA.Projects.InstCombine.LLVM.Parser
 import Cli
+import SSA.Projects.LLVMRiscV.ParseAndTransform
+import SSA.Projects.RISCV64.ParseAndTransform
 
 /-- `verbose_flag` takes in a filename and assuming the file is wellformed,
  prints verbose output to the command line. Additionally it prints
@@ -28,6 +30,12 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   if args.hasFlag "verbose" then -- in this case we just mirror the llvm program again and checked that it is wellformed.
     let code ← verbose_flag fileName
     return code
+  if args.hasFlag "riscv" then -- parsing as riscv
+    let code ←  parseAsRiscv fileName
+    return code
+  if args.hasFlag "passriscv64" then -- lowering pass to a RISC-V 64 SSA-assembly IR
+    let code ← passriscv64 fileName
+    return code
   else
     let code ← wellformed fileName
     return code
@@ -37,6 +45,8 @@ def mainCmd := `[Cli|
     "opt: apply verified rewrites"
     FLAGS:
       verbose; "Prints verbose output for debugging using the Repr typeclass to print."
+      passriscv64; "Lowering pass to a RISC-V 64 SSA-assembly IR"
+      riscv; "Allows to parse a file as a RISC-V 64 SSA-assembly IR"
     ARGS:
       file: String; "Input filename"
     ]

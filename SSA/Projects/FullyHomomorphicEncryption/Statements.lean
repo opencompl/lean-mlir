@@ -253,7 +253,7 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
     simp only [gt_iff_lt, not_lt_zero'] at hqgt1
     exact (Fact.elim hqgt1)
   case succ q' =>
-    simp only [ZMod.cast]
+    simp only
     norm_cast
     simp only [IntCast.intCast, Nat.succ_eq_add_one, ZMod.natCast_val, Nat.cast_add, Nat.cast_one]
     norm_cast

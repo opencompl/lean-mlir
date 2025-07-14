@@ -15,6 +15,9 @@ import Mathlib.Data.Finset.Piecewise
 
 set_option deprecated.oldSectionVars true
 
+theorem Id.pure_eq' (a : α) : (pure a : Id α) = a := rfl
+theorem Id.bind_eq' (x : Id α) (f : α → id β) : x >>= f = f x := rfl
+
 open Ctxt (Var VarSet Valuation)
 open TyDenote (toType)
 
@@ -211,7 +214,7 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
 private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args) where
+  Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
   formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
@@ -279,6 +282,11 @@ partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
   let args := (List.range ts.length).zip ts |>.map
     (fun (i, t) => s!"%{i} : {toString t}")
   "(" ++ String.intercalate ", " args ++ ")"
+
+-- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
+private def formatTypeTupleToString [ToString Ty] (xs : List Ty) : String :=
+  "(" ++ String.intercalate ", " (xs.map toString) ++ ")"
+
 /--
 Converts an expression to its string representation.
 Assumes that `toString` instances exist for both the dialect's operations (`d.Op`)
@@ -289,14 +297,14 @@ partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
     let outTy : d.Ty := DialectSignature.outTy op
     let argTys := DialectSignature.sig op
-    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTuple argTys} → ({ToString.toString outTy})"
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({ToString.toString outTy})"
 
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
 partial def Com.ToStringBody : Com d Γ eff t → String
-  | .ret v => s!".return {_root_.repr v } : ({toString t}) → ()"
+  | .ret v => s!"  \"return\"({_root_.repr v }) : ({toString t}) -> ()"
   | .var e body =>
-    s!" %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+    s!"  %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
     Com.ToStringBody body
 
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
@@ -688,7 +696,7 @@ theorem Com.denote_unfold (op : d.Op) (ty_eq : ty = DialectSignature.outTy op)
     = ty_eq ▸ (liftEffect eff_le <|
         DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
       subst ty_eq
-      simp [denote, Expr.denote]
+      simp [Expr.denote]
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -740,13 +748,22 @@ section Lemmas
     (Com.var e body).denote =
     fun Γv => (e.denote Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
   funext Γv
-  cases eff <;> simp [denote]
+  cases eff
+  · apply Id.ext
+    simp only [EffectKind.toMonad_pure, Id.run_bind, denote]
+    congr
+  · simp [denote]
 
 @[simp] lemma Com.denoteLets_var (e : Expr d Γ eff t) (body : Com d _ eff u) [LawfulMonad d.m] :
     (Com.var e body).denoteLets =
         (fun V => e.denote V >>= fun Ve => body.denoteLets (V.snoc Ve)) := by
   funext V
-  cases eff <;> simp [denoteLets, bind_pure]
+  cases eff
+  · apply Id.ext
+    simp only [outContext_var, denoteLets, EffectKind.toMonad_pure, Valuation.cast_rfl,
+      EffectKind.return_pure_toMonad_eq, Id.run_bind]
+    congr
+  · simp [denoteLets, bind_pure]
 
 @[simp] lemma Com.denoteImpure_ret [Monad d.m] [DialectDenote d] {Γ : Ctxt d.Ty} (x : Γ.Var t) :
   (Com.ret (d:=d) (eff := eff) x).denoteImpure = fun Γv => return (Γv x) := rfl
@@ -777,7 +794,7 @@ section Lemmas
         return Vbody
       ) := by
   induction com
-  case ret => simp [Lets.denote_var, Com.denoteLets]
+  case ret => simp [Com.denoteLets]
   case var ih => simp [addComToEnd, ih, denote_var]
 
 @[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
@@ -798,7 +815,7 @@ variable [DialectHRefinement d d]
 An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: Refinement (Expr d Γ eff t) where
+instance: HRefinement (Expr d Γ eff₁ t) (Expr d Γ eff₂ t) where
   IsRefinedBy e₁ e₂ :=
     ∀ V, e₁.denote V ⊑ e₂.denote V
 
@@ -806,7 +823,7 @@ instance: Refinement (Expr d Γ eff t) where
 A program `c₁` is refined by a program `c₂` (of the same dialect) if their
 respective denotations under every valuation are in the refinement relation.
 -/
-instance: Refinement (Com d Γ eff t) where
+instance : HRefinement (Com d Γ eff₁ t) (Com d Γ eff₂ t) where
   IsRefinedBy c₁ c₂ :=
     ∀ V, c₁.denote V ⊑ c₂.denote V
 
@@ -880,7 +897,11 @@ def Com.changeVars : Com d Γ eff ty →
 
 @[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure ty) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = c.denote Γv := by
-  induction c using Com.recPure <;> simp_all [denoteLets, denote]
+  induction c using Com.recPure
+  · simp
+  · rename_i a
+    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
+      Id.bind_eq', returnVar_var, a, denote]
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
@@ -1039,12 +1060,20 @@ section Lemmas
 @[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
   funext V; simp only [EffectKind.return_impure_toMonad_eq]
-  induction com using Com.recPure <;> simp_all
+  induction com using Com.recPure
+  · simp
+  · apply Id.ext
+    simp_all
+    rfl
 
 @[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
     denoteLets (com.castPureToEff eff)
     = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
-  funext V; induction com using Com.recPure <;> simp_all
+  funext V; induction com using Com.recPure
+  · simp
+  · apply Id.ext
+    simp_all
+    rfl
 
 end Lemmas
 
@@ -1087,7 +1116,7 @@ theorem Expr.denote_mk_of_pure {op : d.Op} (eff_eq : DialectSignature.effectKind
       | .impure => return d
     ) := by
   funext Γv
-  simp only [denote_unfold, cast_cast, EffectKind.return_impure_toMonad_eq]
+  simp only [denote_unfold, EffectKind.return_impure_toMonad_eq]
   cases eff₂
   · simp only [EffectKind.liftEffect_pure]
     apply eq_of_heq
@@ -1128,7 +1157,7 @@ theorem Expr.hasPureOp_of_toPure?_isSome {e : Expr d Γ eff ty} (h : e.toPure?.i
     e.HasPureOp := by
   rcases e with ⟨op, _, _, _, _⟩
   simp only [Option.isSome, toPure?] at h
-  simp only [HasPureOp, op_mk, le_refl, EffectKind.pure_le]
+  simp only [HasPureOp, op_mk]
   cases hop : DialectSignature.effectKind op
   · rfl
   · split at h
@@ -1148,9 +1177,9 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
   have hasPureOp : DialectSignature.effectKind op = EffectKind.pure := by
     simpa [HasPureOp] using Expr.hasPureOp_of_toPure?_isSome (Option.isSome_iff_exists.mpr ⟨_, he⟩)
   rw [Expr.denote_mk_of_pure hasPureOp]
-  have (h) :
-      cast h (DialectDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs))
-      = denote e' Γv := by
+  simp
+  cases eff
+  · simp
     unfold denote
     split
     simp only [toPure?] at he
@@ -1159,7 +1188,15 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
       obtain ⟨rfl, rfl⟩ := by simpa using h
       simp
     · contradiction
-  cases eff <;> simp [this]
+  · simp
+    unfold denote
+    split
+    simp only [toPure?] at he
+    split at he
+    · obtain ⟨rfl, h⟩ := by simpa using he
+      obtain ⟨rfl, rfl⟩ := by simpa using h
+      simp
+    · contradiction
 
 /-!
 ## Combining `Lets` and `Com`
@@ -1274,7 +1311,10 @@ assignment of that variable in the input valuation -/
     com.denoteLets V (com.outContextHom v) = V v := by
   induction com using Com.recPure
   · simp
-  · rw [outContextHom_var]; simp [denoteLets, *]
+  · rw [outContextHom_var]
+    rename_i a
+    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var,
+    Valuation.cast_rfl, Id.pure_eq', Id.bind_eq', Ctxt.Hom.unSnoc_apply, Valuation.snoc_toSnoc, a]
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
@@ -1363,28 +1403,29 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
   case nil => simp [getPureExprAux] at he
   case var Γ_out ty body e ih =>
     -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
-    simp only [Expr.denote_changeVars, EffectKind.return_impure_toMonad_eq]
+    simp only [Expr.denote_changeVars]
     -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
     cases v using Var.casesOn with
     | toSnoc v =>
-      simp only [getPureExprAux, eq_rec_constant, Var.casesOn_toSnoc, Option.mem_def,
-        Option.map_eq_some_iff, Option.bind, Bind.bind] at he
+      simp only [getPureExprAux, Var.casesOn_toSnoc] at he
       let f' : Valuation Γ_out → ⟦t⟧ → eff.toMonad d.m α := fun Γv val => do
         let Ve ← e.denote Γv
         let Γv':= (Γv.snoc Ve)
         f Γv' val
       specialize ih he f'
-      simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
-        EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
+      simp only [Expr.denote_changeVars] at ih
       simp +zetaDelta [denote, ← ih]
     | last =>
-      simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
-        Option.mem_def, Option.some.injEq] at he
+      simp only [getPureExprAux, Var.casesOn_last] at he
       simp only [denote, Expr.denote_toPure? he, EffectKind.toMonad_impure,
         EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
         bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
         Valuation.snoc_last]
-      cases eff <;> simp
+      cases eff
+      · apply Id.ext
+        simp
+        rfl
+      · simp
 
 theorem Lets.denote_getExpr [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty}
     {lets : Lets d Γ₁ eff Γ₂} {t : d.Ty}
@@ -1432,12 +1473,11 @@ variable {d d' : Dialect} [DialectSignature d] [DialectSignature d'] (f : Dialec
 
 def DialectMorphism.preserves_sig (op : d.Op) :
     DialectSignature.sig (f.mapOp op) = (DialectSignature.sig op).map f.mapTy := by
-  simp only [DialectSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
+  simp only [DialectSignature.sig, Function.comp_apply, f.preserves_signature]; rfl
 
 def DialectMorphism.preserves_regSig (op : d.Op) :
     DialectSignature.regSig (f.mapOp op) = (DialectSignature.regSig op).map f.mapTy := by
-  simp only [DialectSignature.regSig, Function.comp_apply, f.preserves_signature,
-    List.map_eq_map]; rfl
+  simp only [DialectSignature.regSig, Function.comp_apply, f.preserves_signature]; rfl
 
 def DialectMorphism.preserves_outTy (op : d.Op) :
     DialectSignature.outTy (f.mapOp op) = f.mapTy (DialectSignature.outTy op) := by
@@ -1949,7 +1989,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
       · rwa [AList.lookup_insert_ne hx]
   · intro w ma v₂
     intro b? c? varMap hvarMap
-    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    simp only [Option.mem_def] at *
     unfold matchVar at hvarMap
     split at hvarMap
     split_ifs at hvarMap
@@ -1961,7 +2001,7 @@ theorem subset_entries (lets : Lets d Γ_in eff Γ_out) [DecidableEq d.Op] :
       contradiction
   · intro ma w
     intro b? varMap hvarMap
-    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    simp only [Option.mem_def] at *
     unfold matchVar at hvarMap
     split at hvarMap
     case h_1 _p q r _s =>
@@ -2138,7 +2178,9 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
 @[simp] lemma Lets.denote_var_last_pure (lets : Lets d Γ_in .pure Γ_out)
     (e : Expr d Γ_out .pure ty) (V_in : Valuation Γ_in) :
     Lets.denote (var lets e) V_in (Var.last ..) = e.denote (lets.denote V_in) := by
+  apply Id.ext
   simp [Lets.denote]
+  congr
 
 @[simp] lemma Expr.denote_eq_denote_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
     {Γv : Valuation Γ} {Δv : Valuation Δ}
@@ -2175,14 +2217,14 @@ theorem denote_matchVar2_of_subset
 
   induction matchLets generalizing v ma varMap₁ varMap₂ t
   case nil =>
-    simp only [Lets.denote, Id.pure_eq]
+    simp only [Lets.denote, Id.pure_eq']
     rw [mem_lookup_iff.mpr ?_]
     apply h_sub <| mem_lookup_iff.mp <| matchVar_nil h_matchVar
   case var matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
       simp only [Option.mem_def, Ctxt.get?, Var.succ_eq_toSnoc, Lets.denote,
-        EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq, Valuation.snoc_toSnoc] at *
+        EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq', Valuation.snoc_toSnoc] at *
       rw [Var.toSnoc, matchVar_var_succ_eq] at h_matchVar
       apply ih h_sub h_matchVar
 
@@ -2316,9 +2358,9 @@ theorem mem_matchVar
     rw [← Option.dite_none_right_eq_some] at he₂
     split_ifs at he₂ with h
     · dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
-      simp only [Expr.op_mk, Expr.args_mk, Option.some.injEq] at he₂
+      simp only [Expr.op_mk, Expr.args_mk] at he₂
       apply @mem_matchVar_matchArg (matchLets := matchLets) (hvarMap := he₂)
-      simp only [Expr.op_mk, Finset.mem_biUnion, Sigma.exists]
+      simp only [Finset.mem_biUnion, Sigma.exists]
       refine ⟨_, _, ?_, h_v'⟩
       rcases matchE  with ⟨_, _, _⟩
       dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
@@ -2405,7 +2447,7 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
   | 0, lets, .var e body, res, hres, s => by
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
     subst hres
-    simp only [Lets.denote, eq_rec_constant, Com.denote]
+    simp only [Lets.denote]
     simp only [EffectKind.return_impure_toMonad_eq, bind_assoc, pure_bind, Com.denote_var]
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
@@ -2414,10 +2456,12 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
     cases eff
     case pure =>
       rw [denote_splitProgramAtAux hres s]
-      simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      apply Id.ext
+      simp [Lets.denote]
+      congr
     case impure =>
       rw [denote_splitProgramAtAux hres s]
-      simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      simp [Lets.denote]
 
 -- TODO: have `splitProgramAt` return a `Zipper`
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
@@ -2433,7 +2477,11 @@ theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ₁ 
     (hres : res ∈ splitProgramAt pos prog) (s : Valuation Γ₁) :
      (res.2.1.denote s) >>= res.2.2.1.denote = prog.denote s := by
   rw [denote_splitProgramAtAux hres s]
-  cases eff <;> simp
+  cases eff
+  · apply Id.ext
+    simp
+    congr
+  · simp
 
 /-
   ## Rewriting
@@ -2514,7 +2562,7 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
-      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [List.getElem?_eq_getElem, Ctxt.ofList]⟩
+      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [Ctxt.ofList]⟩
       ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
   · intro h t v
@@ -2576,7 +2624,7 @@ theorem denote_rewritePeephole_go (pr : PeepholeRewrite d Γ t)
     (rewritePeephole_go fuel pr pos target).denote = target.denote := by
   induction fuel generalizing pr pos target
   case zero =>
-    simp[rewritePeephole_go, denote_rewritePeepholeAt]
+    simp [rewritePeephole_go]
   case succ fuel' hfuel =>
     simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
 
@@ -2588,6 +2636,62 @@ theorem denote_rewritePeephole (fuel : ℕ)
 
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
+
+variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+/--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
+and later, running at most `fuel` steps. -/
+def multiRewritePeepholeAt (fuel : ℕ) (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty))
+    (ix : ℕ) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
+  match fuel with
+  | 0 => target
+  | fuel' + 1 =>
+    let target' := prs.foldl (fun acc ⟨_Γ, _ty, pr⟩ => rewritePeepholeAt pr ix acc) target
+    multiRewritePeepholeAt fuel' prs (ix + 1) target'
+
+variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
+[TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
+/-- rewrite with the list of peephole optimizations `prs` at the `target` program, running at most
+`fuel` steps starting at location 0. -/
+def multiRewritePeephole (fuel : ℕ)
+    (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
+  multiRewritePeepholeAt fuel prs 0 target
+
+/-- helper lemma for the proof of `denote_rewritePeephole_go_multi`. It proofs that folding
+a list of semantics preserving peephole rewrites over the target program does preserve the semantics
+of the target program. -/
+lemma denote_foldl_rewritePeepholeAt
+  (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
+    (prs.foldl (fun acc ⟨_Γ, _ty, pr⟩=> rewritePeepholeAt pr ix acc) target).denote = target.denote := by
+  induction prs generalizing target
+  case nil =>
+    simp
+  case cons prog rest ih =>
+    let ⟨Γ, ty, pr⟩ := prog
+    simp only [List.foldl]
+    have h : (rewritePeepholeAt pr ix target).denote = target.denote :=
+      denote_rewritePeepholeAt pr ix target
+    let mid := rewritePeepholeAt pr ix target
+    have h' := ih mid
+    rw [←h'] at h
+    exact h
+
+/- The proof that applying `rewritePeephole_go_multi` preserves the semantics of the target program
+to which the peephole rewrites get applied. -/
+theorem denote_multiRewritePeepholeAt (fuel : ℕ)
+  (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
+    (multiRewritePeepholeAt fuel prs ix target).denote = target.denote := by
+  induction fuel generalizing prs ix target
+  case zero =>
+    simp [multiRewritePeepholeAt]
+  case succ hp =>
+    simp [multiRewritePeepholeAt, hp, denote_foldl_rewritePeepholeAt]
+
+/- The proof that `rewritePeephole_multi` is semantics preserving  -/
+theorem denote_multiRewritePeephole (fuel : ℕ)
+  (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) :
+    (multiRewritePeephole fuel prs target).denote = target.denote := by
+  simp [multiRewritePeephole, denote_multiRewritePeepholeAt]
 
 theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
@@ -2602,7 +2706,7 @@ theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
   case pure =>
     subst ty_eq
     have heff' : DialectSignature.effectKind op = EffectKind.pure := by simp [eff']
-    simp [heff', Expr.denote, hregArgs']
+    simp [Expr.denote, hregArgs']
   case impure =>
     subst ty_eq
     simp [Expr.denote, hregArgs']
