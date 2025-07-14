@@ -190,11 +190,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     -- 3-ary
     | ["Comb.mux"] => mkExprOf <| .mux (← terW)
     -- n-ary (variadic)
-    | ["Comb.add"] => mkExprOf <| .add (← nnW) args'.length
-    | ["Comb.and"] => mkExprOf <| .and (← nnW) args'.length
-    | ["Comb.mul"] => mkExprOf <| .mul (← nnW) args'.length
-    | ["Comb.or"] => mkExprOf <| .or (← nnW) args'.length
-    | ["Comb.xor"] => mkExprOf <| .xor (← nnW) args'.length
+    | ["Comb.add"] => mkExprOf <| .add (← nnW) args.toList.length
+    | ["Comb.and"] => mkExprOf <| .and (← nnW) args.toList.length
+    | ["Comb.mul"] => mkExprOf <| .mul (← nnW) args.toList.length
+    | ["Comb.or"] => mkExprOf <| .or (← nnW) args.toList.length
+    | ["Comb.xor"] => mkExprOf <| .xor (← nnW) args.toList.length
     | _ => throw <| .unsupportedOp s!"{repr opStx}"
 
 def mkReturn (Γ : Ctxt Comb.Ty) (opStx : MLIR.AST.Op 0) :
