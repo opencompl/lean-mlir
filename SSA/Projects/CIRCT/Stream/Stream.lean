@@ -98,20 +98,3 @@ def transpose {A} {as : List α} (xs : HVector A as)
     (h : ∀ (i : Fin as.length), A as[i] = Stream (B as[i])) :
     Stream (HVector B as) :=
   transpose' <| xs.castFun h
-
-
-  -- corec xs fun xs =>
-  --   -- map the vector of streams (input) to streams where the first none have been removed
-  --   -- e.g. f ~ popFirstNone
-  --   -- then, we foldl over this new vector of streams (monadic map???? the side effect is returning a `none`)
-  --   let xs' := xs.map fun a x =>
-  --     let x : Stream (B a) := cast h x
-  --     x.dropFirstNone
-
-  --   let out := xs'.mapM' fun a x => x.head
-  --   (cast (by congr; sorry) out,
-  --    xs'.map fun a x => h ▸ x)
-  --   -- use the state of the corec to remember what elements we know/have already and what not
-  --   -- match as, xs with
-  --   -- | [], _ => corec () fun _ => (none, ())
-  --   -- | _::_, x ::ₕ xs => _
