@@ -80,142 +80,190 @@ end MkReflectMapWidth
 
 
 structure TotalOrder (α : Type) [Hashable α] [BEq α] where
-  vals : Std.HashMap α Nat
+  val2ix : Std.HashMap α Nat := ∅
+  ix2val : Array α := #[]
 
 instance [Hashable α] [BEq α] : EmptyCollection (TotalOrder α) where
-  emptyCollection := { vals := ∅ }
+  emptyCollection := {}
 
 def TotalOrder.get? {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Option Nat :=
-  toOrder.vals.get? e
+  toOrder.val2ix.get? e
+
+def TotalOrder.getD {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) (d : Nat) : Nat :=
+  toOrder.val2ix.getD e d
 
 def TotalOrder.size {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Nat :=
-  toOrder.vals.size
+  toOrder.val2ix.size
 
-def TotalOrder.findOrInsert {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α :=
-  let (ix, vals) := match toOrder.vals.get? e with
-    | some ix => (ix, toOrder.vals)
+def TotalOrder.findOrInsertVal {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α :=
+  let (ix, val2ix) := match toOrder.val2ix.get? e with
+    | some ix => (ix, toOrder.val2ix)
     | none =>
-      let ix := toOrder.vals.size
-      (ix, toOrder.vals.insert e ix)
-  (ix, { toOrder with vals := vals })
+      let ix := toOrder.val2ix.size
+      (ix, toOrder.val2ix.insert e ix)
+  (ix, { toOrder with val2ix := val2ix, ix2val := toOrder.ix2val.push e })
 
-def TotalOrder.toArray {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array (α × Nat) :=
-  toOrder.vals.toArray.qsort (fun a b => a.2 < b.2)
+def TotalOrder.getIx? (ix : Nat) {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Option α :=
+    toOrder.ix2val[ix]?
 
-def TotalOrder.toArray_ {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array α :=
-  toOrder.toArray.map Prod.fst
+def TotalOrder.getIxD {α : Type} [Hashable α] [BEq α]  (ix : Nat) (d : α) (toOrder : TotalOrder α) : α :=
+  toOrder.ix2val.getD ix d
 
+def TotalOrder.toArrayAsc {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Array α :=
+  toOrder.ix2val
 
-/-- build an expr for 'xs' as `empty |>.cons x1 |>.cons x₂ ... |>.cons xₙ`  -/
-private def elimExprArray (xs : Array Expr) (empty : Expr) (cons : Expr) :
-  MetaM Expr := do
-  let mut out := empty
-  for x in xs do
-    out ← mkAppM' cons #[out, x]
-  return out
 
 structure CollectState where
-    wToIx : TotalOrder Expr
-    bvToIx : TotalOrder Expr
-    bvToWidth : Std.HashMap Expr Expr -- map from BitVec to width
+    wToIx : TotalOrder Expr := ∅
+    bvToIx : TotalOrder Expr := ∅
+    bvIxToWidthExpr : Std.HashMap Nat MultiWidth.Nondep.WidthExpr := ∅ -- map from BitVec to width
 
-def CollectState.widthArray (state : CollectState) : Array Expr :=
-  state.wToIx.toArray_
-
-def CollectState.bvArray (state : CollectState) : Array Expr :=
-  state.bvToIx.toArray_
-
+@[simp]
 def CollectState.wcard (state : CollectState) : Nat :=
   state.wToIx.size
 
 def CollectState.tcard (state : CollectState) : Nat :=
   state.bvToIx.size
 
-/- TODO: type a 'ReflectMap' with some kind of ``Name to make it clear what's happening. -/
-structure ReflectedWidth  where
-  wToIx : ReflectMap
-  w : MultiWidth.Nondep.WidthExpr
-
 def collectWidthAtom (state : CollectState) (e : Expr) (check? : Bool := false) :
-    MetaM (CollectState) := do
+    MetaM (MultiWidth.Nondep.WidthExpr × CollectState) := do
     if check? then
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
-    let (_, wToIx) := state.wToIx.findOrInsert e
-    return { state with wToIx := wToIx }
+    let (wix, wToIx) := state.wToIx.findOrInsertVal e
+    return (.ofNat wix, { state with wToIx := wToIx })
 
 private def mkFinLit (n : Nat) (i : Nat) : Expr :=
   mkAppN (.const ``Fin.mk []) #[mkNatLit n, mkNatLit i]
 
-def reflectWidthAtom (reader : CollectState) (e : Expr) : MetaM Expr := do
-  let .some ix := reader.wToIx.get? e
-    | throwError m!"found unexpected width {indentD e}. Expected width to be one among {indentD <| toMessageData reader.wToIx.vals.toList}"
-  return mkAppN (mkConst ``MultiWidth.WidthExpr.var [])
-    #[mkNatLit reader.wcard, mkFinLit reader.wcard ix]
 
-def collectWidthPredicateAux (state : CollectState)
-  (e : Expr) : MetaM (CollectState) := do
-  match_expr e with
-  | Eq α a b =>
-    match_expr α with
-    | Nat _ =>
-      let state ← collectWidthAtom state a
-      let state ← collectWidthAtom state b
-      return state
-    | _ => throwError m!"expected Nat equality, found: {indentD e}"
-  | _ =>
-    throwError m!"expected predicate over widths (no quantification), found: {indentD e}"
+/-- info: MultiWidth.WidthExpr.var {wcard : ℕ} (v : Fin wcard) : MultiWidth.WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.var
 
-/-- Reflect the environment of widths. -/
-def reflectWidthEnv (reader : CollectState) : MetaM Expr := do
-  let ws := reader.wToIx.toArray_
-  elimExprArray ws.reverse
-    (mkConst ``MultiWidth.WidthExpr.Env.empty)
-    (mkConst ``MultiWidth.WidthExpr.Env.cons)
+def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := do
+  return mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, mkFinLit wcard w.toNat]
+
+/-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : MultiWidth.Term.Ctx wcard 0 -/
+#guard_msgs in #check MultiWidth.Term.Ctx.empty
+
+/--
+info: MultiWidth.Term.Ctx.cons {wcard tcard : ℕ} (ctx : MultiWidth.Term.Ctx wcard tcard) (w : MultiWidth.WidthExpr wcard) :
+  MultiWidth.Term.Ctx wcard (tcard + 1)
+-/
+#guard_msgs in #check MultiWidth.Term.Ctx.cons
 
 /-# Reflection for BV environments, terms, and predicates. -/
 
-/-- Build an expression for the `Term.Env`. -/
-def reflectBVEnv (reader : CollectState) : MetaM Expr := do
+/-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : MultiWidth.Term.Ctx wcard 0 -/
+#guard_msgs in #check MultiWidth.Term.Ctx.empty
+
+/-- Build `Term.Ctx.empty`. -/
+def mkTermCtxEmptyExpr (reader : CollectState) : MetaM Expr := do
   let mkEmptyCtx := mkAppN (mkConst ``MultiWidth.Term.Ctx.empty) #[mkNatLit reader.wcard]
-  let mkConsCtx := mkAppN (mkConst ``MultiWidth.Term.Ctx.cons) #[mkNatLit reader.wcard]
+  return mkEmptyCtx
 
-  elimExprArray reader.bvArray.reverse
-    mkEmptyCtx
-    mkConsCtx
+/--
+info: MultiWidth.Term.Ctx.cons {wcard tcard : ℕ} (ctx : MultiWidth.Term.Ctx wcard tcard) (w : MultiWidth.WidthExpr wcard) :
+  MultiWidth.Term.Ctx wcard (tcard + 1)
+-/
+#guard_msgs in #check MultiWidth.Term.Ctx.cons
 
-/-- Convert a raw expression into a `Term`. -/
-def reflectBVAtom (reader : CollectState)
-    (e : Expr) : MetaM Expr := do
-  let .some ix := reader.bvToIx.get? e
-    | throwError m!"found unexpected bitvector {indentD e}. Expected bitvector to be one among {indentD <| toMessageData reader.bvToIx.vals.toList}"
-  let tcard := reader.bvToWidth.size
-  return mkAppN (mkConst ``MultiWidth.Term.var []) #[mkNatLit tcard, mkFinLit tcard ix]
+def mkTermCtxConsExpr (reader : CollectState) (tctx : Expr) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := do
+  return mkAppN (mkConst ``MultiWidth.Term.Ctx.cons)
+    #[mkNatLit reader.wcard, mkNatLit reader.tcard,
+      tctx,
+      ← mkWidthExpr reader.wcard w
+    ]
+
+/-- Make the expression for the 'tctx' from the 'CollectState'. -/
+def CollectState.mkTctxExpr (reader : CollectState) : MetaM Expr := do
+  let mut ctx ← mkTermCtxEmptyExpr reader
+  for i in [0:reader.tcard] do
+    let some wexpr := reader.bvIxToWidthExpr.get? i
+      | throwError "unable to find width for BitVec at index {i}"
+    ctx ← mkTermCtxConsExpr reader ctx wexpr
+  return ctx
+
+/--
+info: MultiWidth.Term.Ctx.Env.empty {wcard : ℕ} (wenv : Fin wcard → ℕ) (ctx : MultiWidth.Term.Ctx wcard 0) : ctx.Env wenv
+-/
+#guard_msgs in #check MultiWidth.Term.Ctx.Env.empty
+
+def mkTermEnvEmpty (reader : CollectState) : MetaM Expr := do
+  let emptyCtx ← mkTermCtxEmptyExpr reader
+  return mkAppN (mkConst ``MultiWidth.Term.Ctx.Env.empty) #[mkNatLit reader.wcard, emptyCtx]
+
+/--
+info: MultiWidth.Term.Ctx.Env.cons {tcard wcard : ℕ} {wenv : Fin wcard → ℕ} {tctx : MultiWidth.Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (w : MultiWidth.WidthExpr wcard) (bv : BitVec (w.toNat wenv)) : (tctx.cons w).Env wenv
+-/
+#guard_msgs in #check MultiWidth.Term.Ctx.Env.cons
+
+def mkTermEnvCons (reader : CollectState) (tenv : Expr) (w : MultiWidth.Nondep.WidthExpr) (bv : Expr) : MetaM Expr := do
+  return mkAppN (mkConst ``MultiWidth.Term.Ctx.Env.cons)
+    #[mkNatLit reader.wcard, tenv, ← mkWidthExpr reader.wcard w, bv]
+
+/-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
+def CollectState.mkTenvExpr (reader : CollectState) : MetaM Expr := do
+  let mut out ← mkTermEnvEmpty reader
+  for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx do
+    let some wexpr := reader.bvIxToWidthExpr.get? ix
+      | throwError "unable to find width for BitVec {bv} at index {ix}"
+    out ← mkTermEnvCons reader out wexpr bv
+  return out
+
+/-- info: MultiWidth.WidthExpr.Env.empty : MultiWidth.WidthExpr.Env 0 -/
+#guard_msgs in #check MultiWidth.WidthExpr.Env.empty
+
+def mkWidthEnvEmpty : Expr :=
+  (mkConst ``MultiWidth.WidthExpr.Env.empty)
+
+/--
+info: MultiWidth.WidthExpr.Env.cons {wcard : ℕ} (env : MultiWidth.WidthExpr.Env wcard) (w : ℕ) :
+  MultiWidth.WidthExpr.Env (wcard + 1)
+-/
+#guard_msgs in #check MultiWidth.WidthExpr.Env.cons
+
+def mkWidthEnvCons (wenv : Expr) (w : Expr) : MetaM Expr := do
+  mkAppM ``MultiWidth.WidthExpr.Env.cons #[wenv, w]
+
+def CollectState.mkWenvExpr (reader : CollectState) : MetaM Expr := do
+  let mut out := mkWidthEnvEmpty
+  for w in reader.wToIx.toArrayAsc do
+    out ← mkWidthEnvCons out w
+  return out
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
-  (e : Expr) : MetaM (CollectState) := do
+  (e : Expr) : MetaM (MultiWidth.Nondep.Term × CollectState) := do
   let t ← inferType e
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
-  let state ← collectWidthAtom state w
-  let (_, bvToIx) := state.bvToIx.findOrInsert e
-  let bvToWidth := state.bvToWidth.insert e w
-  return { state with bvToIx := bvToIx, bvToWidth := bvToWidth }
+  let (wexpr, state) ← collectWidthAtom state w
+  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
+  let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
+  return (.var bvix, { state with bvToIx, bvIxToWidthExpr })
 
-/--
-Return a new expression that this is **defeq** to, along with the expression of the environment that this needs.
-Crucially, when this succeeds, this will be in terms of `term`.
-and furthermore, it will reflect all terms as variables.
-
-Precondition: we assume that this is called on bitvectors.
--/
-partial def reflectTermUnchecked (state : CollectState) (e : Expr) :
-     MetaM (CollectState) := do
+partial def collectTerm (state : CollectState) (e : Expr) :
+     MetaM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
   | _ =>
-    let state ← collectBVAtom state e
-    return state
+    let (t, state) ← collectBVAtom state e -- TODO: use this?
+    return (t, state)
+
+/--
+info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : MultiWidth.Term.Ctx wcard tcard} (v : Fin tcard) :
+  MultiWidth.Term tctx (tctx v)
+-/
+#guard_msgs in #check MultiWidth.Term.var
+
+/-- Convert a raw expression into a `Term`. -/
+def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
+    (t : MultiWidth.Nondep.Term) : MetaM Expr := do
+  match t with
+  | .var v =>
+    return mkAppN (mkConst ``MultiWidth.Term.var [])
+      #[mkNatLit wcard, mkNatLit tcard, tctx, mkFinLit tcard v]
 
 
 set_option pp.explicit true in
@@ -227,112 +275,77 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
-    MetaM (CollectState) := do
+    MetaM (MultiWidth.Nondep.Predicate × CollectState) := do
   match_expr e with
   | Eq α a b =>
     match_expr α with
-    | BitVec _ =>
-      let state ← reflectTermUnchecked state a
-      let state ← reflectTermUnchecked state b
-      return state
+    | BitVec w =>
+      let (w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.eq w ta tb, state)
     | _ => throwError m!"expected bitvector equality, found: {indentD e}"
   | Or p q =>
-    let state ← collectBVPredicateAux state p
-    let state ← collectBVPredicateAux state q
-    return state
-  -- | And p q =>
-  --   let p ← collectBVPredicateAux exprToIx p
-  --   let q ← collectBVPredicateAux p.exprToIx q
-  --   let out := Predicate.land p.e q.e
-  --   return { q with e := out }
+    let (ta, state) ← collectBVPredicateAux state p
+    let (tb, state) ← collectBVPredicateAux state q
+    return (.or ta tb, state)
   | _ =>
      throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
+/--
+info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : MultiWidth.Term.Ctx wcard tcard} {w : MultiWidth.WidthExpr wcard}
+  (k : MultiWidth.BinaryRelationKind) (a b : MultiWidth.Term ctx w) : MultiWidth.Predicate ctx
+-/
+#guard_msgs in #check MultiWidth.Predicate.binRel
+
+/--
+info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : MultiWidth.Term.Ctx wcard tcard} (p1 p2 : MultiWidth.Predicate ctx) :
+  MultiWidth.Predicate ctx
+-/
+#guard_msgs in #check MultiWidth.Predicate.or
+
+def mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
+    (p : MultiWidth.Nondep.Predicate) : MetaM Expr := do
+  match p with
+  | .eq w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let bExpr ← mkTermExpr wcard tcard tctx b
+    return mkAppN (mkConst ``MultiWidth.Predicate.binRel)
+      #[mkNatLit wcard, mkNatLit tcard, tctx,
+        wExpr,
+        mkConst ``MultiWidth.BinaryRelationKind.eq,
+        aExpr, bExpr]
+  | .or p q =>
+    let pExpr ← mkPredicateExpr wcard tcard tctx p
+    let qExpr ← mkPredicateExpr wcard tcard tctx q
+    return mkAppN (mkConst ``MultiWidth.Predicate.or)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
+
+
+/--
+info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : Fin wcard → ℕ} {tctx : MultiWidth.Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (p : MultiWidth.Predicate tctx) : Prop
+-/
+#guard_msgs in #check MultiWidth.Predicate.toProp
+
+def mkPredicateToPropExpr (p : MultiWidth.Nondep.Predicate)
+  (wcard tcard : Nat) (wenv : Expr) (tctx : Expr) (tenv : Expr) : MetaM Expr := do
+  let pExpr ← mkPredicateExpr wcard tcard tctx p
+  mkAppOptM (``MultiWidth.Predicate.toProp)
+    #[(mkNatLit wcard),
+      (mkNatLit tcard),
+      wenv, -- wenv,
+      tctx,
+      tenv,
+      pExpr]
 
 /-- Name of the tactic -/
-def tacName : String := "bv_automata_gen"
+def tacName : String := "bv_multi_width"
 
-abbrev WidthToExprMap := Std.HashMap Expr Expr
-
-/--
-Find all bitwidths implicated in the given expression.
-Maps each length (the key) to an expression of that length.
-
-Find all bitwidths implicated in the given expression,
-by visiting subexpressions with visitExpr:
-    O(size of expr × inferType)
--/
-def findExprBitwidths (target : Expr) : MetaM WidthToExprMap := do
-  let (_, out) ← StateT.run (go target) ∅
-  return out
-  where
-    go (target : Expr) : StateT WidthToExprMap MetaM Unit := do
-      -- Creates fvars when going inside binders.
-      forEachExpr target fun e => do
-        match_expr ← inferType e with
-        | BitVec n =>
-          -- TODO(@bollu): do we decide to normalize `n`? upto what?
-          modify (fun arr => arr.insert n.cleanupAnnotations e)
-        | _ => return ()
-
-/-- Return if expression 'e' is a bitvector of bitwidth 'w' -/
-private def Expr.isBitVecOfWidth (e : Expr) (w : Expr) : MetaM Bool := do
-  match_expr ← inferType e with
-  | BitVec w' => return w == w'
-  | _ => return false
-
-
-/-- Revert all bitwidths of a given bitwidth and then run the continuation 'k'.
-This allows
--/
-def revertBVsOfWidth (g : MVarId) (w : Expr) : MetaM MVarId := g.withContext do
-  let mut reverts : Array FVarId := #[]
-  for d in ← getLCtx do
-    if ← Expr.isBitVecOfWidth d.type w then
-      reverts := reverts.push d.fvarId
-  /- revert all the bitvectors of the given width in one fell swoop. -/
-  let (_fvars, g) ← g.revert reverts
-  return g
-
-/-- generalize our mapping to get a single fvar -/
-def generalizeMap (g : MVarId) (e : Expr) : MetaM (FVarId × MVarId) :=  do
-  let (fvars, g) ← g.generalize #[{ expr := e : GeneralizeArg}]
-  --eNow target no longer depends on the particular bitvectors
-  if h : fvars.size = 1 then
-    return (fvars[0], g)
-  throwError"expected a single free variable from generalizing map {e}, found multiple..."
-
-/--
-Revert all hypotheses that have to do with bitvectors, so that we can use them.
-
-For now, we choose to revert all propositional hypotheses.
-The issue is as follows: Since our reflection fragment only deals with
-goals in negation normal form, the naive algorithm would run an NNF pass
-and then try to reflect the hyp before reverting it. This is expensive and annoying to implement.
-
-Ideally, we would have a pass that quickly walks an expression to cheaply
-ee if it's in the BV fragment, and revert it if it is.
-For now, we use a sound overapproximation and revert everything.
--/
-def revertBvHyps (g : MVarId) : MetaM MVarId := do
-  let (_, g) ← g.revert (← g.getNondepPropHyps)
-  return g
-
-namespace BvDecide
 open Std Sat AIG in
 
-def cadicalTimeoutSec : Nat := 1000
-
-
-/--
-An axiom that tracks that a theorem is true because of our currently unverified
-'decideIfZerosM' decision procedure.
--/
-axiom decideIfZerosMAx {p : Prop} : p
-
-end BvDecide
-
-def getBoolLit? : Expr → Option Bool
+private def getBoolLit? : Expr → Option Bool
   | Expr.const ``Bool.true _  => some true
   | Expr.const ``Bool.false _ => some false
   | _                         => none
@@ -360,402 +373,67 @@ def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : TermElabM Expr := d
   mkAppM ``Lean.ofReduceBool #[lhsDef, toExpr rhs, rflProof]
 
 
-/-- info: predicateEvalEqFSM (p : Predicate) : FSMPredicateSolution p -/
-#guard_msgs in #check predicateEvalEqFSM
-def Expr.mkPredicateEvalEqFSM (p : Expr) : Expr :=
-    mkApp (.const ``predicateEvalEqFSM []) p
-
-/--
-info: FSMPredicateSolution.toFSM {p : Predicate} (self : FSMPredicateSolution p) : FSM (Fin p.arity)
--/
-#guard_msgs in #check FSMPredicateSolution.toFSM
-def Expr.mkToFSM (self : Expr) : MetaM Expr :=
-  mkAppM ``FSMPredicateSolution.toFSM #[self]
-
-
-/-- info: Subtype.val.{u} {α : Sort u} {p : α → Prop} (self : Subtype p) : α -/
-#guard_msgs in #check Subtype.val
-def Expr.mkSubtypeVal (e : Expr) : MetaM Expr :=
-  mkAppM ``Subtype.val #[e]
-
-/--
-info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
--/
-#guard_msgs in #check Circuit.verifyCircuit
-def Expr.mkVerifyCircuit (c cert : Expr) : MetaM Expr :=
-  mkAppM ``Circuit.verifyCircuit #[c, cert]
-
-
-
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.mkN {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
-  (fsm : FSM arity) (n : ℕ) : ReflectVerif.BvDecide.KInductionCircuits fsm n
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkN
-def Expr.KInductionCircuits.mkN (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkN #[fsm, n]
-
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN {arity : Type} [DecidableEq arity] [Fintype arity]
-  [Hashable arity] (fsm : FSM arity) (n : ℕ) : (ReflectVerif.BvDecide.KInductionCircuits.mkN fsm n).IsLawful
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN
-def Expr.KInductionCircuits.mkIsLawful_mkN (fsm : Expr) (n : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN #[fsm, n]
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {arity : Type} {fsm : FSM arity} [DecidableEq arity]
-  [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (Vars fsm.α arity (n + 2))
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
-def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit #[circs]
-
-/--
-info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking {arity : Type} {fsm : FSM arity} [DecidableEq arity]
-  [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
-  Circuit (Vars fsm.α arity (n + 2))
--/
-#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking
-def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : MetaM Expr :=
-  mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking #[circs]
-
 /-- Check the type of e if check? is true. -/
 def debugCheck (check? : Bool) (e : Expr)  : MetaM Unit :=
     if check?
     then check e
     else return ()
 
-/--
-Reflect an expression of the form:
-  ∀ ⟦(w : Nat)⟧ (← focus)
-  ∀ (b₁ b₂ ... bₙ : BitVec w),
-  <proposition about bitvectors>.
-
-Reflection code adapted from `elabNaticeDecideCoreUnsafe`,
-which explains how to create the correct auxiliary definition of the form
-`decideProprerty = true`, such that our goal state after using `ofReduceBool` becomes
-⊢ ofReduceBool decideProperty = true
-
-which is then indeed `rfl` equal to `true`.
--/
-def reflectUniversalWidthBVs (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
-  let ws ← findExprBitwidths (← g.getType)
-  let ws := ws.toArray
-  if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-  else if hgt: ws.size > 1 then
-    let (w1, wExample1) := ws[0]
-    let (w2, wExample2) := ws[1]
-    let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
-    throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
-  else
-    -- we have exactly one width
-    let (w, wExample) := ws[0]
-
-    -- We can now revert hypotheses that are of this bitwidth.
-    let g ← revertBvHyps g
-
-    -- Next, after reverting, we have a goal which we want to reflect.
-    -- we convert this goal to NNF
-    let .some g ← NNF.runNNFSimpSet g
-      | trace[Bits.Frontend] m!"Converting to negation normal form automatically closed goal."
-        return[]
-    trace[Bits.Frontend] m!"goal after NNF: {indentD g}"
-
-    let .some g ← Simplifications.runPreprocessing g
-      | trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
-        return[]
-    trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
-
-    -- finally, we perform reflection.
-    let predicate ← collectBVPredicateAux ∅ (← g.getType) w
-    predicate.exprToIx.throwWarningIfUninterpretedExprs
-
-    trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
-
-    let bvToIxMapVal ← predicate.exprToIx.toExpr w
-
-    let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
-    let g ← g.replaceTargetDefEq target
-    trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
-
-    match cfg.backend with
-    | .dryrun =>
-        logInfo m!"Reflected predicate: {repr <| predicate.e}. Converting to FSM..."
-        let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-        logInfo m!"built FSM."
-        logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
-        logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
-        g.assign (← mkSorry (← g.getType) (synthetic := false))
-        trace[Bits.Frontend] "Closing goal with 'sorry' for dry-run"
-        return []
-    | .automata =>
-      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
-      let (_, g) ← g.revert #[mapFv]
-      -- Apply Predicate.denote_of_eval_eq.
-      let wVal? ← Meta.getNatValue? w
-      let g ←
-        -- TODO FIXME
-        if false then
-          pure g
-        else
-          -- Generic width problem.
-          if !w.isFVar then
-            let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
-            let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
-            let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
-            logWarning  msg
-
-          let [g] ← g.apply <| (mkConst ``Formula.denote_of_isUniversal)
-            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-          pure g
-      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
+open Lean Meta Elab Tactic in
+def solve (g : MVarId) (_cfg : Config) : TermElabM (List MVarId) := do
+  let collect : CollectState := {}
+  let (p, collect) ← collectBVPredicateAux collect (← g.getType)
+  let tctx ← collect.mkTctxExpr
+  let wenv ← collect.mkWenvExpr
+  let tenv ← collect.mkTenvExpr
+  let gs ← withLocalDeclD `wenv wenv <| fun wenv => do
+    withLocalDeclD `tenv tenv <| fun tenv => do
+      let out ← mkPredicateToPropExpr (p := p)
+        (wcard := collect.wcard)
+        (tcard := collect.tcard)
+        (tctx := tctx)
+        (wenv := wenv)
+        (tenv := tenv)
+      trace[Bits.Frontend] m!"goal before reflection: {indentD g}"
+      let g ← g.replaceTargetDefEq out
       return [g]
-    | .circuit_cadical_verified maxIter checkTypes? =>
-      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      -- logInfo m!"built FSM."
-      -- logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
-      -- logInfo m!"FSM transition circuit size: {fsm.circuitSize}"
-      let (cert?, _circuitStats) ← fsm.decideIfZerosVerified maxIter
-      match cert? with
-      | .provenByKIndCycleBreaking niter safetyCert indCert =>
-        let prf ← g.withContext do
-        /-
-        theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
-          (circs : KInductionCircuits fsm K)
-          (hCircs : circs.IsLawful)
-          (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
-          (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
-          (∀ (envBitstream : _), fsm.eval envBitstream i = false) := by
-        -/
-          let fsmExpr ← Expr.mkToFSM (Expr.mkPredicateEvalEqFSM (toExpr predicate.e))
-          let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niter)
-          let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niter)
-          -- | verifyCircuit (mkSafetyCircuit circs)
-          let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
-            (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
-            (toExpr safetyCert)
-          debugCheck checkTypes? verifyCircuitMkSafetyCircuitExpr
-          let safetyCertProof ← mkEqRflNativeDecideProof verifyCircuitMkSafetyCircuitExpr true
-          -- verifyCircuit ... = true
-          debugCheck checkTypes? safetyCertProof
+  return gs
 
-          let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
-              (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
-              (toExpr indCert)
-          debugCheck checkTypes? verifyCircuitMkIndHypCircuitExpr
 
-          let indCertProof ← mkEqRflNativeDecideProof verifyCircuitMkIndHypCircuitExpr true
-          debugCheck checkTypes? indCertProof
+  -- -- finally, we perform reflection.
+  -- -- let predicate ← collectBVPredicateAux ∅ (← g.getType) w
+  -- -- predicate.exprToIx.throwWarningIfUninterpretedExprs
+  -- -- trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
+  -- -- let bvToIxMapVal ← predicate.exprToIx.toExpr w
+  -- -- let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
+  -- -- let g ← g.replaceTargetDefEq target
+  -- trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
+  -- let prf ← mkSorry (Expr.mvar g) (synthetic := false)
+  -- if ! (← isDefEq (Expr.mvar g) prf) then
+  --   throwError m!"expected goal to be defeq to the proof, but it is not: {indentD g} != {indentD prf}"
+  --   return []
+  -- else
+  --   return []
 
-          let prf := mkAppN (mkConst ``ReflectVerif.BvDecide.KInductionCircuits.Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking [])
-            #[
-              Lean.mkNatLit niter,
-              predicate.e.quote,
-              w,
-              circsExpr,
-              circsLawfulExpr,
-              bvToIxMapVal,
-              (toExpr safetyCert),
-              safetyCertProof,
-              (toExpr indCert),
-              indCertProof]
-          let prf ← instantiateMVars prf
-          debugCheck checkTypes? prf
-          pure prf
-        let gs ← g.apply prf
-        if gs.isEmpty
-        then return gs
-        else
-          throwError m!"Expected proof cerificate to close goal, but failed. Leftover goals: {indentD g}"
-      | .safetyFailure iter =>
-        throwError  m!"Goal is false: found safety counter-example at iteration '{iter}'"
-      | .exhaustedIterations niter =>
-        throwError m!"Failed to prove goal in '{niter}' iterations: Try increasing number of iterations."
-    | .circuit_lean =>
-      let fsm := predicateEvalEqFSM predicate.e |>.toFSM
-      -- trace[Bits.Frontend] f!"{fsm.format}'"
-      if fsm.circuitSize > cfg.circuitSizeThreshold && cfg.circuitSizeThreshold != 0 then
-        throwError m!"Not running on goal: since circuit size ('{fsm.circuitSize}') is larger than threshold ('circuitSizeThreshold:{cfg.circuitSizeThreshold}')"
-      if fsm.stateSpaceSize > cfg.stateSpaceSizeThreshold && cfg.stateSpaceSizeThreshold != 0 then
-        throwError m!"Not running on goal: since state space size size ('{fsm.stateSpaceSize}') is larger than threshold ('stateSpaceSizeThreshold:{cfg.stateSpaceSizeThreshold}')"
+declare_config_elab elabBvMultiWidthConfig Config
 
-      let (mapFv, g) ← generalizeMap g bvToIxMapVal;
-      let (_, g) ← g.revert #[mapFv]
-      -- Apply Predicate.denote_of_eval_eq.
-      let wVal? ← Meta.getNatValue? w
-      let g ←
-        -- Fixed width problem
-        if h : wVal?.isSome ∧ cfg.fastFixedWidth then
-          trace[Bits.Frontend] m!"using special fixed-width procedure for fixed bitwidth '{w}'."
-          let wVal := wVal?.get h.left
-          let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq_fixedWidth)
-            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq_fixedWidth` on goal '{indentD g}'"
-          pure g
-        else
-          -- Generic width problem.
-          -- If the generic width problem has as 'complex' width, then warn the user that they're
-          -- trying to solve a fragment that's better expressed differently.
-          if !w.isFVar then
-            let msg := m!"Width '{w}' is not a free variable (i.e. width is not universally quantified)."
-            let msg := msg ++ Format.line ++ m!"The tactic will perform width-generic reasoning."
-            let msg := msg ++ Format.line ++ m!"To perform width-specific reasoning, rewrite goal with a width constraint, e.g. ∀ (w : Nat) (hw : w = {w}), ..."
-            logWarning  msg
-
-          let [g] ← g.apply <| (mkConst ``Predicate.denote_of_eval_eq)
-            | throwError m!"Failed to apply `Predicate.denote_of_eval_eq` on goal '{indentD g}'"
-          pure g
-      let [g] ← g.apply <| (mkConst ``of_decide_eq_true)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      let [g] ← g.apply <| (mkConst ``Lean.ofReduceBool)
-        | throwError m!"Failed to apply `of_decide_eq_true on goal '{indentD g}'"
-      return [g]
-
-/-- Allow elaboration of `bv_automata_gen's config` arguments to tactics. -/
-declare_config_elab elabBvAutomataCircuitConfig Config
-
-syntax (name := bvAutomataGen) "bv_automata_gen" (Lean.Parser.Tactic.config)? : tactic
-@[tactic bvAutomataGen]
+syntax (name := bvMultiWidth) "bv_multi_width" (Lean.Parser.Tactic.config)? : tactic
+@[tactic bvMultiWidth]
 def evalBvAutomataCircuit : Tactic := fun
-| `(tactic| bv_automata_gen $[$cfg]?) => do
-  let cfg ← elabBvAutomataCircuitConfig (mkOptionalNode cfg)
+| `(tactic| bv_multi_width $[$cfg]?) => do
+  let cfg ← elabBvMultiWidthConfig (mkOptionalNode cfg)
   let g ← getMainGoal
   g.withContext do
-    let gs ← reflectUniversalWidthBVs g cfg
+    let gs ← solve g cfg
     replaceMainGoal gs
-    match gs  with
+    match gs with
     | [] => return ()
     | [g] => do
-      trace[Bits.Frontend] m!"goal being decided via boolean reflection: {indentD g}"
-      evalDecideCore `bv_automata_circuit (cfg := { native := true : Parser.Tactic.DecideConfig })
+      -- trace[Bits.Frontend] m!"goal being decided via boolean reflection: {indentD g}"
+      -- evalDecideCore `bv_multi_width (cfg := { native := true : Parser.Tactic.DecideConfig })
+      return
     | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
-/-- A tactic that succeeds if we have multiple widths. -/
-syntax (name := bvAutomataFragmentWidthLegal) "bv_automata_fragment_width_legal" : tactic
-@[tactic bvAutomataFragmentWidthLegal]
-def evalBvAutomataFragmentIllegalWidth : Tactic := fun
-| `(tactic| bv_automata_fragment_width_legal) => do
-  let g ← getMainGoal
-  g.withContext do
-    let ws ← findExprBitwidths (← g.getType)
-    let ws := ws.toArray
-    if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-    else if hgt: ws.size > 1 then
-      let (w1, wExample1) := ws[0]
-      let (w2, wExample2) := ws[1]
-      let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
-      throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
-    else
-      return ()
-| _ => throwUnsupportedSyntax
-
-/-- A tactic that succeeds if we have no uninterpreted function symbols. -/
-syntax (name := bvAutomataFragmentNoUninterpreted) "bv_automata_fragment_no_uninterpreted" : tactic
-@[tactic bvAutomataFragmentNoUninterpreted]
-def evalBvAutomataFragmentNoUninterpreted : Tactic := fun
-| `(tactic| bv_automata_fragment_no_uninterpreted) => do
-  let g ← getMainGoal
-  g.withContext do
-    let ws ← findExprBitwidths (← g.getType)
-    let ws := ws.toArray
-    if h0: ws.size = 0 then
-      throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-    else if hgt: ws.size > 1 then
-      let (w1, wExample1) := ws[0]
-      let (w2, wExample2) := ws[1]
-      let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
-      throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
-    else
-      let (w, wExample) := ws[0]
-      let g ← revertBvHyps g
-      -- Next, after reverting, we have a goal which we want to reflect.
-      -- we convert this goal to NNF
-      let .some g ← NNF.runNNFSimpSet g
-        | trace[Bits.Frontend] m!"Converting to negation normal form automatically closed goal."
-          return ()
-      trace[Bits.Frontend] m!"goal after NNF: {indentD g}"
-      let .some g ← Simplifications.runPreprocessing g
-        | trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
-          return ()
-      trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
-      -- finally, we perform reflection.
-      let result ← collectBVPredicateAux ∅ (← g.getType) w
-      -- Order the expressions so we get stable error messages.
-      let exprs := result.exprToIx.exprs.toArray.qsort (fun ei ej => ei.1.lt ej.1)
-      let mut out? : Option MessageData := .none
-      let header := m!"Tactic has not understood the following expressions, and will treat them as symbolic:"
-      for (e, _) in exprs do
-        if e.isFVar then continue
-        let eshow := indentD m!"- '{e}'"
-        out? := match out? with
-          | .none => header ++ Format.line ++ eshow
-          | .some out => .some (out ++ eshow)
-      match out? with
-      | .none => pure ()
-      | .some out => throwError out
-| _  => throwUnsupportedSyntax
-
-/-- A tactic that succeeds if we have successfully reflected the goal state. -/
-syntax (name := bvAutomataFragmentCheckReflected) "bv_automata_fragment_reflect" : tactic
-@[tactic bvAutomataFragmentCheckReflected]
-def evalBvAutomataFragmentCheckReflected : Tactic := fun
-| `(tactic| bv_automata_fragment_reflect) => do
-  let g ← getMainGoal
-  g.withContext do
-    let ws ← findExprBitwidths (← g.getType)
-    let ws := ws.toArray
-    if h0: ws.size = 0 then throwError m!"found no bitvector in the target: {indentD (← g.getType)}"
-    else if hgt: ws.size > 1 then
-      let (w1, wExample1) := ws[0]
-      let (w2, wExample2) := ws[1]
-      let mExample := m!"{w1} → {wExample1}; {w2} → {wExample2}"
-      throwError m!"found multiple bitvector widths in the target: {indentD mExample}"
-    else
-      -- we have exactly one width
-      let (w, wExample) := ws[0]
-
-      -- We can now revert hypotheses that are of this bitwidth.
-      let g ← revertBvHyps g
-
-      -- Next, after reverting, we have a goal which we want to reflect.
-      -- we convert this goal to NNF
-      let .some g ← NNF.runNNFSimpSet g
-        | trace[Bits.Frontend] m!"Converting to negation normal form automatically closed goal."
-          return ()
-      trace[Bits.Frontend] m!"goal after NNF: {indentD g}"
-
-      let .some g ← Simplifications.runPreprocessing g
-        | trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
-          return ()
-      trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
-      -- finally, we perform reflection.
-      let result ← collectBVPredicateAux ∅ (← g.getType) w
-      let bvToIxMapVal ← result.exprToIx.toExpr w
-
-      let target := (mkAppN (mkConst ``Predicate.denote) #[result.e.quote, w, bvToIxMapVal])
-      let g ← g.replaceTargetDefEq target
-      trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
-      return ()
-| _  => throwUnsupportedSyntax
 
 end Tactic
-
-macro "bv_automata_classic" : tactic => `(tactic| (bv_automata_gen (config := {backend := .automata})))
-
-private lemma simple_test (x y : BitVec w) : x + y = y + x ∨ x = 0 := by
-  bv_automata_classic
-
-/--
-info: '_private.SSA.Experimental.Bits.SingleWidth.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
- propext,
- Classical.choice,
- Lean.ofReduceBool,
- Lean.trustCompiler,
- Quot.sound]
--/
-#guard_msgs in
-#print axioms simple_test

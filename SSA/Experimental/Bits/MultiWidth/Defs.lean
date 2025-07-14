@@ -8,27 +8,27 @@ import Std.Tactic.BVDecide
 
 namespace MultiWidth
 
-inductive WidthExpr (n : Nat) : Type
-| var : (v : Fin n) → WidthExpr n
+inductive WidthExpr (wcard : Nat) : Type
+| var : (v : Fin wcard) → WidthExpr wcard
 
-def WidthExpr.Env (n : Nat) : Type :=
-  Fin n → Nat
+def WidthExpr.Env (wcard : Nat) : Type :=
+  Fin wcard → Nat
 
 def WidthExpr.Env.empty : WidthExpr.Env 0 :=
   fun v => v.elim0
 
-def WidthExpr.Env.cons (env : WidthExpr.Env n) (w : Nat) :
-  WidthExpr.Env (n + 1) :=
+def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
+  WidthExpr.Env (wcard + 1) :=
   fun v => v.cases w env
 
 def WidthExpr.toNat (e : WidthExpr n) (env : Fin n → Nat) : Nat :=
   match e with
   | .var v => env v
 
-inductive NatPredicate (n : Nat) : Type
-| eq : WidthExpr n → WidthExpr n → NatPredicate n
+inductive NatPredicate (wcard : Nat) : Type
+| eq : WidthExpr wcard → WidthExpr wcard → NatPredicate wcard
 
-def NatPredicate.toProp (env : Fin n → Nat) : NatPredicate n → Prop
+def NatPredicate.toProp (env : Fin wcard → Nat) : NatPredicate wcard → Prop
 | .eq e1 e2 => WidthExpr.toNat e1 env = WidthExpr.toNat e2 env
 
 
@@ -38,21 +38,21 @@ abbrev Term.Ctx (wcard : Nat) (tcard : Nat) : Type :=
 def Term.Ctx.empty (wcard : Nat) : Term.Ctx wcard 0 :=
   fun x => x.elim0
 
-def Term.Ctx.cons (wcard : Nat) {tcard : Nat} (ctx : Term.Ctx wcard tcard)
+def Term.Ctx.cons {wcard : Nat} {tcard : Nat} (ctx : Term.Ctx wcard tcard)
   (w : WidthExpr wcard) : Term.Ctx wcard (tcard + 1) :=
   fun v =>
     v.cases w (fun v' => ctx v')
 
 inductive Term {wcard tcard : Nat}
-  (ctx : Term.Ctx wcard tcard) : (WidthExpr wcard) → Type
+  (tctx : Term.Ctx wcard tcard) : (WidthExpr wcard) → Type
 /-- a variable of a given width -/
-| var (v : Fin tcard) : Term ctx (ctx v)
+| var (v : Fin tcard) : Term tctx (tctx v)
 /-- addition of two terms of the same width -/
-| add (a : Term ctx w) (b : Term ctx w) : Term ctx w
+| add (a : Term tctx w) (b : Term tctx w) : Term tctx w
 /-- zero extend a term to a given width -/
-| zext (a : Term ctx w) (v : WidthExpr wcard) : Term ctx v
+| zext (a : Term tctx w) (v : WidthExpr wcard) : Term tctx v
 /-- sign extend a term to a given width -/
-| sext (a : Term ctx w) (v : WidthExpr wcard) : Term ctx v
+| sext (a : Term tctx w) (v : WidthExpr wcard) : Term tctx v
 
 /--
 Environments are for evaluation.
@@ -207,11 +207,16 @@ end ToFSM
 
 namespace Nondep
 
-inductive WidthExpr
-| var (v : Nat) : WidthExpr
+structure WidthExpr where ofNat ::
+  toNat : Nat
+deriving Inhabited, Repr, Hashable, DecidableEq
 
-inductive Term : Type
+inductive Term
 | var (v : Nat) : Term
+
+inductive Predicate
+| eq (w : WidthExpr) (a b : Term) : Predicate
+| or (p1 p2 : Predicate) : Predicate
 
 end Nondep
 end MultiWidth
