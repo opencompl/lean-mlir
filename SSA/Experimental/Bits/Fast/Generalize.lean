@@ -21,6 +21,136 @@ open Std.Sat
 open Std.Tactic.BVDecide
 
 
+/--
+Custom BVExpr for generalization incoroporating all supported expressions involving `BitVec` and operations on them.
+-/
+inductive GenBVExpr : Nat → Type where
+  /--
+  A `BitVec` variable, referred to through an index.
+  -/
+  | var (idx : Nat) : GenBVExpr w
+  /--
+  A constant `BitVec` value.
+  -/
+  | const (val : BitVec w) : GenBVExpr w
+  /--
+  Extract a slice from a `BitVec`.
+  -/
+  | extract (start len : Nat) (expr : GenBVExpr w) : GenBVExpr len
+  /--
+  A binary operation on two `BVExpr`.
+  -/
+  | bin (lhs : GenBVExpr w) (op : BVBinOp) (rhs : GenBVExpr w) : GenBVExpr w
+  /--
+  A unary operation on two `BVExpr`.
+  -/
+  | un (op : BVUnOp) (operand : GenBVExpr w) : GenBVExpr w
+  /--
+  Concatenate two bitvectors.
+  -/
+  | append (lhs : GenBVExpr l) (rhs : GenBVExpr r) (h : w = l + r) : GenBVExpr w
+  /--
+  Concatenate a bitvector with itself `n` times.
+  -/
+  | replicate (n : Nat) (expr : GenBVExpr w) (h : w' = w * n) : GenBVExpr w'
+  /--
+  shift left by another BitVec expression. For constant shifts there exists a `BVUnop`.
+  -/
+  | shiftLeft (lhs : GenBVExpr m) (rhs : GenBVExpr n) : GenBVExpr m
+  /--
+  shift right by another BitVec expression. For constant shifts there exists a `BVUnop`.
+  -/
+  | shiftRight (lhs : GenBVExpr m) (rhs : GenBVExpr n) : GenBVExpr m
+  /--
+  shift right arithmetically by another BitVec expression. For constant shifts there exists a `BVUnop`.
+  -/
+  | arithShiftRight (lhs : GenBVExpr m) (rhs : GenBVExpr n) : GenBVExpr m
+  | zeroExtend (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
+  | truncate (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
+
+namespace GenBVExpr
+
+def toString : GenBVExpr w → String
+  | .var idx => s!"var{idx}"
+  | .const val => ToString.toString val
+  | .extract start len expr => s!"{expr.toString}[{start}, {len}]"
+  | .bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
+  | .un op operand => s!"({op.toString} {toString operand})"
+  | .append lhs rhs _ => s!"({toString lhs} ++ {toString rhs})"
+  | .replicate n expr _ => s!"(replicate {n} {toString expr})"
+  | .shiftLeft lhs rhs => s!"({lhs.toString} << {rhs.toString})"
+  | .shiftRight lhs rhs => s!"({lhs.toString} >> {rhs.toString})"
+  | .arithShiftRight lhs rhs => s!"({lhs.toString} >>a {rhs.toString})"
+  | .zeroExtend v expr => s!"(zeroExtend {v} {toString expr}})"
+  | .truncate v expr => s!"(truncate {v} {toString expr}})"
+
+instance : ToString (GenBVExpr w) := ⟨toString⟩
+
+/--
+The semantics for `BVExpr`.
+-/
+def eval (assign : BVExpr.Assignment) : GenBVExpr w → BitVec w
+  | .var idx =>
+    let packedBv := assign.get idx
+    /-
+    This formulation improves performance, as in a well formed expression the condition always holds
+    so there is no need for the more involved `BitVec.truncate` logic.
+    -/
+    if h : packedBv.w = w then
+      h ▸ packedBv.bv
+    else
+      packedBv.bv.truncate w
+  | .const val => val
+  | .extract start len expr => BitVec.extractLsb' start len (eval assign expr)
+  | .bin lhs op rhs => op.eval (eval assign lhs) (eval assign rhs)
+  | .un op operand => op.eval (eval assign operand)
+  | .append lhs rhs h => h ▸ ((eval assign lhs) ++ (eval assign rhs))
+  | .replicate n expr h => h ▸ (BitVec.replicate n (eval assign expr))
+  | .shiftLeft lhs rhs => (eval assign lhs) <<< (eval assign rhs)
+  | .shiftRight lhs rhs => (eval assign lhs) >>> (eval assign rhs)
+  | .arithShiftRight lhs rhs => BitVec.sshiftRight' (eval assign lhs) (eval assign rhs)
+  | .zeroExtend n expr => BitVec.zeroExtend n (eval assign expr)
+  | .truncate n expr => BitVec.truncate n (eval assign expr)
+end GenBVExpr
+
+inductive GenBVPred where
+  /--
+  A binary predicate on `GenBVExpr`.
+  -/
+  | bin (lhs : GenBVExpr w) (op : BVBinPred) (rhs : GenBVExpr w)
+  /--
+  Getting a constant LSB from a `BitVec`.
+  -/
+  | getLsbD (expr : GenBVExpr w) (idx : Nat)
+
+namespace GenBVPred
+
+def toString : GenBVPred → String
+  | bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
+  | getLsbD expr idx => s!"{expr.toString}[{idx}]"
+
+instance : ToString GenBVPred := ⟨toString⟩
+
+/--
+The semantics for `BVPred`.
+-/
+def eval (assign : BVExpr.Assignment) : GenBVPred → Bool
+  | bin lhs op rhs => op.eval (lhs.eval assign) (rhs.eval assign)
+  | getLsbD expr idx => (expr.eval assign).getLsbD idx
+
+end GenBVPred
+
+abbrev GenBVLogicalExpr := BoolExpr GenBVPred
+
+namespace GenBVLogicalExpr
+/--
+The semantics of boolean problems involving BitVec predicates as atoms.
+-/
+def eval (assign : BVExpr.Assignment) (expr : GenBVLogicalExpr) : Bool :=
+  BoolExpr.eval (·.eval assign) expr
+
+end GenBVLogicalExpr
+
 instance : BEq BVExpr.PackedBitVec where
   beq a b := if h : a.w = b.w then
                 let b' := h ▸ b.bv
@@ -33,7 +163,7 @@ instance : Hashable BVExpr.PackedBitVec where
 
 structure BVExprWrapper where
   width : Nat
-  bvExpr: BVExpr width
+  bvExpr: GenBVExpr width
 
 structure ParsedBVExprState where
   maxFreeVarId : Nat
@@ -64,7 +194,7 @@ instance : ToString FVarId where
   toString f := s! "{f.name}"
 
 instance : Inhabited BVExprWrapper where
-  default := {bvExpr := BVExpr.const (BitVec.ofNat 0 0), width := 0}
+  default := {bvExpr := GenBVExpr.const (BitVec.ofNat 0 0), width := 0}
 
 instance : Inhabited ParsedBVExprState where
   default := { maxFreeVarId := 0
@@ -91,37 +221,37 @@ instance : ToString ParsedBVExprState where
 
 structure ParsedBVExpr where
   width : Nat
-  bvExpr: BVExpr width
+  bvExpr: GenBVExpr width
   symVars: Std.HashMap Nat BVExpr.PackedBitVec
   inputVars : Std.HashMap Nat String
 
 structure ParsedBVLogicalExpr where
   lhs: ParsedBVExpr
   rhs: ParsedBVExpr
-  bvLogicalExpr: BVLogicalExpr
+  bvLogicalExpr: GenBVLogicalExpr
   state: ParsedBVExprState
 
 
 abbrev ParseBVExprM := StateRefT ParsedBVExprState MetaM
 
-def changeBVExprWidth (bvExpr: BVExpr w) (target: Nat) : BVExpr target := Id.run do
+def changeBVExprWidth (bvExpr: GenBVExpr w) (target: Nat) : GenBVExpr target := Id.run do
   if h : w = target then
     return (h ▸ bvExpr)
 
   match bvExpr with
-  | .var idx => (BVExpr.var idx : BVExpr target)
-  | .const val => BVExpr.const (val.signExtend target)
-  | .extract start len expr => BVExpr.extract start target (changeBVExprWidth expr (start + target))
-  | .bin lhs op rhs => BVExpr.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target)
-  | .un op operand => BVExpr.un op (changeBVExprWidth operand target)
-  | .shiftLeft lhs rhs =>  BVExpr.shiftLeft (changeBVExprWidth lhs target)  (changeBVExprWidth rhs target)
-  | .shiftRight lhs rhs =>  BVExpr.shiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
-  | .arithShiftRight lhs rhs => BVExpr.arithShiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
-  | _ => BVExpr.const (BitVec.zero target) -- TODO: How to handle 'append' and 'replicate'?
+  | .var idx => (GenBVExpr.var idx : GenBVExpr target)
+  | .const val => GenBVExpr.const (val.signExtend target)
+  | .extract start len expr => GenBVExpr.extract start target (changeBVExprWidth expr (start + target))
+  | .bin lhs op rhs => GenBVExpr.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target)
+  | .un op operand => GenBVExpr.un op (changeBVExprWidth operand target)
+  | .shiftLeft lhs rhs =>  GenBVExpr.shiftLeft (changeBVExprWidth lhs target)  (changeBVExprWidth rhs target)
+  | .shiftRight lhs rhs =>  GenBVExpr.shiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
+  | .arithShiftRight lhs rhs => GenBVExpr.arithShiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
+  | _ => GenBVExpr.const (BitVec.zero target) -- TODO: How to handle zeroextend, trunc, ?
 
-def changeBVLogicalExprWidth (bvLogicalExpr: BVLogicalExpr) (target: Nat): BVLogicalExpr :=
+def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): GenBVLogicalExpr :=
   match bvLogicalExpr with
-  | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target))
+  | .literal (GenBVPred.bin lhs op rhs) => BoolExpr.literal (GenBVPred.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target))
   | .not boolExpr =>
       BoolExpr.not (changeBVLogicalExprWidth boolExpr target)
   | .gate op lhs rhs =>
@@ -134,50 +264,50 @@ instance : Inhabited BVExpr.PackedBitVec where
   default := { bv := BitVec.ofNat 0 0 }
 
 inductive SubstitutionValue where
-    | bvExpr {w} (bvExpr : BVExpr w) : SubstitutionValue
+    | bvExpr {w} (bvExpr : GenBVExpr w) : SubstitutionValue
     | packedBV  (bv: BVExpr.PackedBitVec) : SubstitutionValue
 
 instance : Inhabited SubstitutionValue where
   default := SubstitutionValue.packedBV default
 
-def bvExprToSubstitutionValue (map: Std.HashMap Nat (BVExpr w)) : Std.HashMap Nat SubstitutionValue :=
+def bvExprToSubstitutionValue (map: Std.HashMap Nat (GenBVExpr w)) : Std.HashMap Nat SubstitutionValue :=
       Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.bvExpr item.snd)) map.toList)
 
 def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat SubstitutionValue :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
-def substituteBVExpr (bvExpr: BVExpr w) (assignment: Std.HashMap Nat SubstitutionValue) : BVExpr w :=
+def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat SubstitutionValue) : GenBVExpr w :=
     match bvExpr with
     | .var idx =>
-      if assignment.contains idx then
-          let value := assignment[idx]!
-          match value with
-          | .bvExpr (w := wbv) bv =>
-            if h : w = wbv
-            then h ▸ bv
-            else BVExpr.extract 0 w bv
-          | .packedBV packedBitVec =>  BVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
-      else bvExpr
+        let value := assignment[idx]!
+        match value with
+        | .bvExpr (w := wbv) bv =>
+          if h : w = wbv
+          then h ▸ bv
+          else GenBVExpr.extract 0 w bv
+        | .packedBV packedBitVec =>  GenBVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
     | .bin lhs op rhs =>
-        BVExpr.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment)
+        GenBVExpr.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment)
     | .un op operand =>
-        BVExpr.un op (substituteBVExpr operand assignment)
+        GenBVExpr.un op (substituteBVExpr operand assignment)
     | .shiftLeft lhs rhs =>
-        BVExpr.shiftLeft (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
+        GenBVExpr.shiftLeft (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
     | .shiftRight lhs rhs =>
-        BVExpr.shiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
+        GenBVExpr.shiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
     | .arithShiftRight lhs rhs =>
-        BVExpr.arithShiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
-    -- | .extract start len expr =>
-    --     BVExpr.extract start len (substituteBVExpr expr assignment)
-    -- -- | .append lhs rhs =>
-    --     BVExpr.append (substituteBVExpr lhs) (substituteBVExpr rhs)
-    | _ => bvExpr --TODO: Handle other constructors
+        GenBVExpr.arithShiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
+    | .zeroExtend w expr =>
+        GenBVExpr.zeroExtend w (substituteBVExpr expr assignment)
+    | .truncate w expr =>
+        GenBVExpr.truncate w (substituteBVExpr expr assignment)
+    | .extract start len expr =>
+        GenBVExpr.extract start len (substituteBVExpr expr assignment)
+    | e => e
 
-def substitute  (bvLogicalExpr: BVLogicalExpr) (assignment: Std.HashMap Nat SubstitutionValue) :
-          BVLogicalExpr :=
+def substitute  (bvLogicalExpr: GenBVLogicalExpr) (assignment: Std.HashMap Nat SubstitutionValue) :
+          GenBVLogicalExpr :=
   match bvLogicalExpr with
-  | .literal (BVPred.bin lhs op rhs) => BoolExpr.literal (BVPred.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment))
+  | .literal (GenBVPred.bin lhs op rhs) => BoolExpr.literal (GenBVPred.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment))
   | .not boolExpr =>
       BoolExpr.not (substitute boolExpr assignment)
   | .gate op lhs rhs =>
@@ -195,60 +325,60 @@ def sameBothSides (bvLogicalExpr : BVLogicalExpr) : Bool :=
 /-
 This function expects that targetWidth >= w
 -/
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: BVExpr w) : BitVec targetWidth :=
+def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVExpr w) : BitVec targetWidth :=
   let newWidthExpr := changeBVExprWidth expr targetWidth
   let substitutedBvExpr := substituteBVExpr newWidthExpr (packedBitVecToSubstitutionValue assignments)
 
   let h : 0 < assignments.valuesArray.size := sorry
   let rArrayAssignments : BVExpr.Assignment  := RArray.ofArray assignments.valuesArray h
-  BVExpr.eval rArrayAssignments substitutedBvExpr
+  GenBVExpr.eval rArrayAssignments substitutedBvExpr
 
 
-def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: BVLogicalExpr) : Bool :=
+def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVLogicalExpr) : Bool :=
   let newWidthExpr := changeBVLogicalExprWidth expr targetWidth
   let substitutedBvExpr := substitute newWidthExpr (packedBitVecToSubstitutionValue assignments)
 
   let h : 0 < assignments.valuesArray.size := sorry
   let rArrayAssignments : BVExpr.Assignment  := RArray.ofArray assignments.valuesArray h
-  BVLogicalExpr.eval rArrayAssignments substitutedBvExpr
+  GenBVLogicalExpr.eval rArrayAssignments substitutedBvExpr
 
 
-def add (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.add op2
+def add (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.add op2
 
-def negate (bvExpr: BVExpr w) : BVExpr w :=
+def negate (bvExpr: GenBVExpr w) : GenBVExpr w :=
   -- Two's complement value = 1 + Not(Var)
-  BVExpr.bin (BVExpr.const (BitVec.ofNat w 1)) BVBinOp.add (BVExpr.un BVUnOp.not bvExpr)
+  GenBVExpr.bin (GenBVExpr.const (BitVec.ofNat w 1)) BVBinOp.add (GenBVExpr.un BVUnOp.not bvExpr)
 
-def subtract (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
+def subtract (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
   add op1 (negate op2)
 
-def multiply (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.mul op2
+def multiply (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.mul op2
 
-def udiv (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.udiv op2
+def udiv (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.udiv op2
 
-def umod  (op1 : BVExpr w) (op2 : BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.umod op2
+def umod  (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.umod op2
 
-def and (op1 : BVExpr w) (op2: BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.and op2
+def and (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.and op2
 
-def or (op1 : BVExpr w) (op2: BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.or op2
+def or (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.or op2
 
-def xor (op1 : BVExpr w) (op2: BVExpr w) : BVExpr w :=
-  BVExpr.bin op1 BVBinOp.xor op2
+def xor (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.bin op1 BVBinOp.xor op2
 
-def shiftLeft (op1 : BVExpr w) (op2: BVExpr w) : BVExpr w :=
-  BVExpr.shiftLeft op1 op2
+def shiftLeft (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.shiftLeft op1 op2
 
-def shiftRight (op1 : BVExpr w) (op2: BVExpr w) : BVExpr w :=
-  BVExpr.shiftRight op1 op2
+def shiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.shiftRight op1 op2
 
-def arithShiftRight (op1 : BVExpr w) (op2: BVExpr w) : BVExpr w :=
-  BVExpr.arithShiftRight op1 op2
+def arithShiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
+  GenBVExpr.arithShiftRight op1 op2
 
 partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BVExprWrapper)) := do
   go expr
@@ -280,19 +410,19 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         binaryReflection lhsExpr rhsExpr BVBinOp.umod
     | Complement.complement _ _ innerExpr =>
         let some inner ← go innerExpr | return none
-        return some {bvExpr := BVExpr.un BVUnOp.not inner.bvExpr, width := inner.width}
+        return some {bvExpr := GenBVExpr.un BVUnOp.not inner.bvExpr, width := inner.width}
     | HShiftLeft.hShiftLeft _ _ _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr BVExpr.shiftLeft
+        shiftReflection innerExpr distanceExpr GenBVExpr.shiftLeft
     | HShiftRight.hShiftRight _ _ _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr BVExpr.shiftRight
+        shiftReflection innerExpr distanceExpr GenBVExpr.shiftRight
     | BitVec.sshiftRight _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr BVExpr.arithShiftRight
+        shiftReflection innerExpr distanceExpr GenBVExpr.arithShiftRight
     | BitVec.sshiftRight' _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr BVExpr.arithShiftRight
+        shiftReflection innerExpr distanceExpr GenBVExpr.arithShiftRight
     | HAppend.hAppend _ _ _ _ lhsExpr rhsExpr =>
         let some lhs ← go lhsExpr | return none
         let some rhs ← go rhsExpr | return none
-        return some {bvExpr := BVExpr.append lhs.bvExpr rhs.bvExpr rfl, width := _}
+        return some {bvExpr := GenBVExpr.append lhs.bvExpr rhs.bvExpr rfl, width := _}
     | BitVec.extractLsb' _ _ _ _ =>
         throwError m! "Does not support BitVec.extractLsb' operations"
     | BitVec.rotateLeft _ innerExpr distanceExpr =>
@@ -306,9 +436,9 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
           return (← processBitVec pbv)
     | _ =>
         let natVal ← getNatValue? x
-        let bitVal ← getBitVecValue? x
+        let bitVecVal ← getBitVecValue? x
 
-        match (natVal, bitVal) with
+        match (natVal, bitVecVal) with
         | (some v, none) =>
               let currState: ParsedBVExprState ← get
               let pbv : BVExpr.PackedBitVec := {bv := BitVec.ofNat currState.originalWidth v}
@@ -317,7 +447,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
               match existingVal with
               | none => let numSymVars := currState.numSymVars
                         let newId := 1001 + numSymVars
-                        let newExpr : BVExpr targetWidth := BVExpr.var newId
+                        let newExpr : GenBVExpr targetWidth := GenBVExpr.var newId
 
                         let updatedState : ParsedBVExprState := { currState with
                                                                 numSymVars := numSymVars + 1
@@ -326,7 +456,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
                                                                 , symVarToDisplayName := currState.symVarToDisplayName.insert newId s!"C{numSymVars + 1}"}
                         set updatedState
                         return some {bvExpr := newExpr, width := targetWidth}
-              | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
+              | some var => let newExpr : GenBVExpr targetWidth := GenBVExpr.var var
                             return some {bvExpr := newExpr, width := targetWidth}
 
         | (none, some bvProd) =>
@@ -342,7 +472,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
             | some val => return val
             | none =>
                 let newId := currState.maxFreeVarId + 1
-                let newExpr : BVExpr targetWidth :=  BVExpr.var newId
+                let newExpr : GenBVExpr targetWidth :=  GenBVExpr.var newId
                 let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := targetWidth}
 
                 let updatedState : ParsedBVExprState :=  { currState with
@@ -357,7 +487,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
           : ParseBVExprM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← getNatValue? distanceExpr | return none
-      return some {bvExpr := BVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
+      return some {bvExpr := GenBVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
 
   binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : ParseBVExprM (Option (BVExprWrapper)) := do
     let some lhs ← go lhsExpr | return none
@@ -365,11 +495,11 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
 
     if h : lhs.width = rhs.width then
       let rhs' := h ▸ rhs.bvExpr  -- cast rhs to BVExpr lhs.width
-      return some {bvExpr := BVExpr.bin lhs.bvExpr op rhs', width := lhs.width}
+      return some {bvExpr := GenBVExpr.bin lhs.bvExpr op rhs', width := lhs.width}
     else
       return none
 
-  shiftReflection (innerExpr : Expr) (distanceExpr : Expr) (shiftOp : {m n : Nat} → BVExpr m → BVExpr n → BVExpr m)
+  shiftReflection (innerExpr : Expr) (distanceExpr : Expr) (shiftOp : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m)
         : ParseBVExprM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← go distanceExpr | return none
@@ -380,7 +510,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         let some n  ← getNatValue? nExpr | return none
         let some v ← getNatValue? vExpr | return none
 
-        return some {bvExpr := BVExpr.const (BitVec.ofNat n v), width := n}
+        return some {bvExpr := GenBVExpr.const (BitVec.ofNat n v), width := n}
 
   getBitVecValue? (e : Expr) : MetaM (Option ((n : Nat) × BitVec n)) := OptionT.run do
     match_expr e with
@@ -396,14 +526,18 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
       let n ← getNatValue? nExpr
       let v ← getIntValue? vExpr
       return ⟨n, BitVec.ofInt n v⟩
+    -- | BitVec.ofBool b =>
+    --    return ⟨1, e⟩
     | BitVec.allOnes nExpr =>
       let n ← getNatValue? nExpr
       return ⟨n, BitVec.allOnes n⟩
     | BitVec.zeroExtend _ nExpr vExpr =>
+      logInfo m! "matched zero extend: {e}"
       let n ← getNatValue? nExpr
       let v ← getBitVecValue? vExpr
       return ⟨n, BitVec.zeroExtend n v.snd⟩
     | BitVec.truncate _ nExpr vExpr =>
+      logInfo m! "matched truncate: {e}"
       let n ← getNatValue? nExpr
       let v ← getBitVecValue? vExpr
       return ⟨n, BitVec.truncate n v.snd⟩
@@ -419,7 +553,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
     | none =>
       let numSymVars := currState.numSymVars
       let newId := 1001 + numSymVars
-      let newExpr : BVExpr targetWidth := BVExpr.var newId
+      let newExpr : GenBVExpr targetWidth := GenBVExpr.var newId
 
       let updatedState : ParsedBVExprState := { currState with
                                               numSymVars := numSymVars + 1
@@ -429,7 +563,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
                                               , symVarToDisplayName := currState.symVarToDisplayName.insert newId s!"C{numSymVars + 1}"}
       set updatedState
       return some {bvExpr := newExpr, width := targetWidth}
-    | some var => let newExpr : BVExpr targetWidth := BVExpr.var var
+    | some var => let newExpr : GenBVExpr targetWidth := GenBVExpr.var var
                   return some {bvExpr := newExpr, width := targetWidth}
 
 
@@ -450,7 +584,7 @@ def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ParseBVExprM (Optio
 
   if h : lhsRes.width = rhsRes.width then
     let rhsExpr := h ▸ rhsRes.bvExpr
-    let bvLogicalExpr := BoolExpr.literal (BVPred.bin lhsRes.bvExpr BVBinPred.eq rhsExpr)
+    let bvLogicalExpr := BoolExpr.literal (GenBVPred.bin lhsRes.bvExpr BVBinPred.eq rhsExpr)
     logInfo m! "BVLogicalExpr: {bvLogicalExpr}"
 
     return some {lhs := lhs, rhs := rhs, state := state, bvLogicalExpr := bvLogicalExpr}
@@ -531,12 +665,12 @@ def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.Pa
 
 
 ---- Test Solver function ----
-def simpleArith : BVLogicalExpr :=
-  let x := BVExpr.const (BitVec.ofNat 5 2)
-  let y := BVExpr.const (BitVec.ofNat 5 4)
-  let z : BVExpr 5 := BVExpr.var 0
-  let sum : BVExpr 5 := BVExpr.bin x BVBinOp.add z
-  BoolExpr.literal (BVPred.bin sum BVBinPred.eq y)
+def simpleArith : GenBVLogicalExpr :=
+  let x := GenBVExpr.const (BitVec.ofNat 5 2)
+  let y := GenBVExpr.const (BitVec.ofNat 5 4)
+  let z : GenBVExpr 5 := GenBVExpr.var 0
+  let sum : GenBVExpr 5 := GenBVExpr.bin x BVBinOp.add z
+  BoolExpr.literal (GenBVPred.bin sum BVBinPred.eq y)
 
 syntax (name := testExSolver) "test_solver" : tactic
 @[tactic testExSolver]
@@ -552,7 +686,7 @@ def testSolverImpl : Tactic := fun _ => do
 -- theorem test_solver : False := by
 --   test_solver
 
-def addConstraints (expr: BVLogicalExpr) (constraints: List BVLogicalExpr) (op: Gate := Gate.and) : BVLogicalExpr :=
+def addConstraints (expr: GenBVLogicalExpr) (constraints: List GenBVLogicalExpr) (op: Gate := Gate.and) : GenBVLogicalExpr :=
       match constraints with
       | [] => expr
       | x::xs =>
@@ -560,9 +694,9 @@ def addConstraints (expr: BVLogicalExpr) (constraints: List BVLogicalExpr) (op: 
           | BoolExpr.const _ => addConstraints x xs op
           | _ => addConstraints (BoolExpr.gate op expr x) xs op
 
-def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars : Std.HashSet Nat) : List BVLogicalExpr :=
+def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenBVLogicalExpr) (symVars : Std.HashSet Nat) : List GenBVLogicalExpr :=
       match bvLogicalExpr with
-      | .literal (BVPred.bin lhs _ rhs) => (getBVExprConstraints lhs) ++ (getBVExprConstraints rhs)
+      | .literal (GenBVPred.bin lhs _ rhs) => (getBVExprConstraints lhs) ++ (getBVExprConstraints rhs)
       | .not boolExpr => getIdentityAndAbsorptionConstraints boolExpr symVars
       | .gate _ lhs rhs => (getIdentityAndAbsorptionConstraints lhs symVars) ++ (getIdentityAndAbsorptionConstraints rhs symVars)
       | .ite constVar auxVar op3 =>
@@ -570,11 +704,11 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
       | _ => []
 
       where
-        getBVExprConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr := Id.run do
+        getBVExprConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr := Id.run do
                 match bvExpr with
                 | .shiftRight lhs rhs | .shiftLeft lhs rhs | .arithShiftRight lhs rhs =>
                       match (lhs, rhs) with
-                      | (BVExpr.var lhsId, BVExpr.var rhsId) =>
+                      | (GenBVExpr.var lhsId, GenBVExpr.var rhsId) =>
                           let mut constraints := []
 
                           if symVars.contains lhsId then
@@ -583,12 +717,12 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
                           if symVars.contains rhsId then
                             constraints := getRhsShiftConstraints rhs ++ constraints
                           pure constraints
-                      | (BVExpr.var lhsId, _) =>
+                      | (GenBVExpr.var lhsId, _) =>
                           if !symVars.contains lhsId then
                             getBVExprConstraints rhs
                           else
                             (getLhsShiftConstraints lhs) ++ (getBVExprConstraints rhs)
-                      | (_, BVExpr.var rhsId) =>
+                      | (_, GenBVExpr.var rhsId) =>
                           if !symVars.contains rhsId then
                             getBVExprConstraints lhs
                           else
@@ -596,7 +730,7 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
                       | _ => ((getBVExprConstraints lhs) ++ (getBVExprConstraints rhs))
                 | .bin lhs op rhs  =>
                       match (lhs, rhs) with
-                      | (BVExpr.var lhsId, BVExpr.var rhsId) =>
+                      | (GenBVExpr.var lhsId, GenBVExpr.var rhsId) =>
                           let mut constraints := []
 
                           if symVars.contains lhsId then
@@ -605,12 +739,12 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
                           if symVars.contains rhsId then
                             constraints := getBitwiseConstraints rhs op ++ constraints
                           pure constraints
-                      | (BVExpr.var lhsId, _) =>
+                      | (GenBVExpr.var lhsId, _) =>
                           if !symVars.contains lhsId then
                             getBVExprConstraints rhs
                           else
                             (getBitwiseConstraints lhs op) ++ (getBVExprConstraints rhs)
-                      | (_, BVExpr.var rhsId) =>
+                      | (_, GenBVExpr.var rhsId) =>
                           if !symVars.contains rhsId then
                             getBVExprConstraints lhs
                           else
@@ -620,19 +754,19 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
                       getBVExprConstraints operand
                 | _ =>  []
 
-        getLhsShiftConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr :=
-          let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin bvExpr BVBinPred.eq (BVExpr.const ((BitVec.ofNat w 0)))))
+        getLhsShiftConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr :=
+          let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const ((BitVec.ofNat w 0)))))
           [neqZero]
 
-        getRhsShiftConstraints {w} (bvExpr : BVExpr w) : List BVLogicalExpr :=
-          let ltWidth := BoolExpr.literal (BVPred.bin bvExpr BVBinPred.ult (BVExpr.const (BitVec.ofNat w w)))
-          let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin bvExpr BVBinPred.eq (BVExpr.const ((BitVec.ofNat w 0)))))
+        getRhsShiftConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr :=
+          let ltWidth := BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.ult (GenBVExpr.const (BitVec.ofNat w w)))
+          let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const ((BitVec.ofNat w 0)))))
 
           [ltWidth, neqZero]
 
-        getBitwiseConstraints {w} (bvExpr: BVExpr w) (op : BVBinOp): List BVLogicalExpr :=
-            let neqZero := BoolExpr.not (BoolExpr.literal (BVPred.bin bvExpr BVBinPred.eq (BVExpr.const (BitVec.ofNat w 0))))
-            let neqAllOnes := BoolExpr.not (BoolExpr.literal (BVPred.bin bvExpr BVBinPred.eq (BVExpr.const (BitVec.allOnes w))))
+        getBitwiseConstraints {w} (bvExpr: GenBVExpr w) (op : BVBinOp): List GenBVLogicalExpr :=
+            let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const (BitVec.ofNat w 0))))
+            let neqAllOnes := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const (BitVec.allOnes w))))
 
             match op with
             | BVBinOp.xor => [neqZero]
@@ -640,9 +774,9 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: BVLogicalExpr) (symVars 
             | _ => []
 
 
-partial def existsForAll (origExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1):
+partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1):
                   TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    let rec constantsSynthesis (bvExpr: BVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
+    let rec constantsSynthesis (bvExpr: GenBVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
             : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
       let existsRes ← solve bvExpr
 
@@ -728,8 +862,8 @@ variable {x y z : BitVec 32}
 #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 
-partial def deductiveSearch (expr: BVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
-                      TermElabM ( List (BVExpr w)) := do
+partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
+                      TermElabM ( List (GenBVExpr w)) := do
 
     let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
         if orig.w < newWidth then
@@ -744,7 +878,7 @@ partial def deductiveSearch (expr: BVExpr w) (constants: Std.HashMap Nat BVExpr.
     match depth with
       | 0 => return []
       | _ =>
-            let mut res : List (BVExpr w) := []
+            let mut res : List (GenBVExpr w) := []
 
             for (constId, constVal) in constants.toArray do
               let newVar := BVExpr.var constId
@@ -853,9 +987,9 @@ def getNegativeExamples (bvExpr: BVLogicalExpr) (consts: List Nat) (numEx: Nat) 
                    let res ← helper (addConstraints expr newConstraints) n
                    return [constVals] ++ res
 
-def pruneEquivalentBVExprs (expressions: List (BVExpr w)) : TermElabM (List (BVExpr w)) := do
+def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : TermElabM (List (GenBVExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
-    let mut pruned : List (BVExpr w) := []
+    let mut pruned : List (GenBVExpr w) := []
 
     for expr in expressions do
       if pruned.isEmpty then
@@ -906,7 +1040,7 @@ structure GeneralizerState where
   parsedBVLogicalExpr : ParsedBVLogicalExpr
   needsPreconditionsExprs : List BVLogicalExpr
   visitedSubstitutions : Std.HashSet BVLogicalExpr
-  constantExprsEnumerationCache : Std.HashMap (BVExpr processingWidth) BVExpr.PackedBitVec
+  constantExprsEnumerationCache : Std.HashMap (GenBVExpr processingWidth) BVExpr.PackedBitVec
 
 abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
@@ -914,27 +1048,27 @@ def zero (w: Nat) := BVExpr.const (BitVec.ofNat w 0)
 def one (w: Nat) := BVExpr.const (BitVec.ofNat w 1)
 def minusOne (w: Nat) := BVExpr.const (BitVec.ofInt w (-1))
 
-def eqToZero (expr: BVExpr w) : BVLogicalExpr :=
+def eqToZero (expr: GenBVExpr w) : BVLogicalExpr :=
   BoolExpr.literal (BVPred.bin expr BVBinPred.eq (zero w))
 
-def positive (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
-  let shiftDistance : BVExpr w :=  subtract (BVExpr.var widthId) (one w)
+def positive (expr: GenBVExpr w) (widthId : Nat) : BVLogicalExpr :=
+  let shiftDistance : GenBVExpr w :=  subtract (BVExpr.var widthId) (one w)
   let signVal := BVExpr.shiftLeft (one w) shiftDistance
   BoolExpr.literal (BVPred.bin expr BVBinPred.ult signVal) --- It's positive if `expr <u 2 ^ (w - 1)`
 
-def strictlyGTZero  (expr: BVExpr w) (widthId : Nat)  : BVLogicalExpr :=
+def strictlyGTZero  (expr: GenBVExpr w) (widthId : Nat)  : BVLogicalExpr :=
   BoolExpr.gate  Gate.and (BoolExpr.literal (BVPred.bin (zero w) BVBinPred.ult expr)) (positive expr widthId)
 
-def gteZero (expr: BVExpr w) (widthId : Nat)  : BVLogicalExpr :=
+def gteZero (expr: GenBVExpr w) (widthId : Nat)  : BVLogicalExpr :=
   positive expr widthId
 
-def negative (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+def negative (expr: GenBVExpr w) (widthId : Nat) : BVLogicalExpr :=
   BoolExpr.not (positive expr widthId)
 
-def strictlyLTZero (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+def strictlyLTZero (expr: GenBVExpr w) (widthId : Nat) : BVLogicalExpr :=
   negative expr widthId
 
-def lteZero (expr: BVExpr w) (widthId : Nat) : BVLogicalExpr :=
+def lteZero (expr: GenBVExpr w) (widthId : Nat) : BVLogicalExpr :=
   BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)
 
 def checkTimeout : GeneralizerStateM Unit := do
@@ -987,13 +1121,13 @@ def filterCandidatePredicates  (bvLogicalExpr: BVLogicalExpr) (preconditionCandi
     res := currentCandidates.toList
     pure res
 
-def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (specialConstants : Std.HashMap (BVExpr w) BVExpr.PackedBitVec) :
-                  Std.HashMap (BVExpr w)  PreconditionSynthesisCacheValue := Id.run do
-    let groupExamplesBySymVar (examples : List (Std.HashMap Nat BVExpr.PackedBitVec)) : Std.HashMap (BVExpr w) (List BVExpr.PackedBitVec) := Id.run do
-      let mut res : Std.HashMap (BVExpr w) (List BVExpr.PackedBitVec) := Std.HashMap.emptyWithCapacity
+def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (specialConstants : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec) :
+                  Std.HashMap (GenBVExpr w)  PreconditionSynthesisCacheValue := Id.run do
+    let groupExamplesBySymVar (examples : List (Std.HashMap Nat BVExpr.PackedBitVec)) : Std.HashMap (GenBVExpr w) (List BVExpr.PackedBitVec) := Id.run do
+      let mut res : Std.HashMap (GenBVExpr w) (List BVExpr.PackedBitVec) := Std.HashMap.emptyWithCapacity
       for ex in examples do
         for (const, val) in ex.toArray do
-          let constVar : BVExpr w := BVExpr.var const
+          let constVar : GenBVExpr w := BVExpr.var const
           let existingList := res.getD constVar []
           res := res.insert constVar (val::existingList)
       res
@@ -1001,7 +1135,7 @@ def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List 
     let positiveExamplesByKey := groupExamplesBySymVar positiveExamples
     let negativeExamplesByKey := groupExamplesBySymVar negativeExamples
 
-    let mut allInputs : Std.HashMap (BVExpr w)  PreconditionSynthesisCacheValue := Std.HashMap.emptyWithCapacity
+    let mut allInputs : Std.HashMap (GenBVExpr w)  PreconditionSynthesisCacheValue := Std.HashMap.emptyWithCapacity
     for key in positiveExamplesByKey.keys do
       allInputs := allInputs.insert key {positiveExampleValues := positiveExamplesByKey[key]!, negativeExampleValues := negativeExamplesByKey[key]!}
 
@@ -1010,14 +1144,14 @@ def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List 
 
     return allInputs
 
-def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.HashMap (BVExpr w)  PreconditionSynthesisCacheValue)
-    (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (specialConstants : Std.HashMap (BVExpr w) BVExpr.PackedBitVec)
-    (ops : List (BVExpr w → BVExpr w → BVExpr w)) : GeneralizerStateM (Std.HashMap (BVExpr w)  PreconditionSynthesisCacheValue) := do
+def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.HashMap (GenBVExpr w)  PreconditionSynthesisCacheValue)
+    (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (specialConstants : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec)
+    (ops : List (GenBVExpr w → GenBVExpr w → GenBVExpr w)) : GeneralizerStateM (Std.HashMap (GenBVExpr w)  PreconditionSynthesisCacheValue) := do
     let mut currentCache := Std.HashMap.emptyWithCapacity
     let mut observationalEquivFilter : Std.HashSet String := Std.HashSet.emptyWithCapacity
 
     let evaluateCombinations (combos :  List (BVExpr.PackedBitVec × BVExpr.PackedBitVec)) (examples: List (HashMap Nat BVExpr.PackedBitVec))
-            (op : BVExpr w → BVExpr w → BVExpr w) : GeneralizerStateM (List (BitVec w)) := do
+            (op : GenBVExpr w → GenBVExpr w → GenBVExpr w) : GeneralizerStateM (List (BitVec w)) := do
           let mut res : List (BitVec w) := []
           let mut index := 0
           for (lhs, rhs) in combos do
@@ -1064,14 +1198,14 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
     let widthId := state.widthId
     let bitwidth := state.processingWidth
 
-    let specialConstants : Std.HashMap (BVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
+    let specialConstants : Std.HashMap (GenBVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
         ((one bitwidth), {bv := BitVec.ofNat bitwidth 1}),
         ((minusOne bitwidth), {bv := BitVec.ofInt bitwidth (-1)}),
         (BVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
 
     let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
       let mut preconditionCandidates : Std.HashSet BVLogicalExpr := Std.HashSet.emptyWithCapacity
-      let synthesisComponents : Std.HashMap (BVExpr bitwidth)  PreconditionSynthesisCacheValue := getPreconditionSynthesisComponents positiveExamples negativeExamples specialConstants
+      let synthesisComponents : Std.HashMap (GenBVExpr bitwidth)  PreconditionSynthesisCacheValue := getPreconditionSynthesisComponents positiveExamples negativeExamples specialConstants
 
       -- Check for power of 2: const & (const - 1) == 0
       for const in positiveExamples[0]!.keys do
@@ -1083,10 +1217,10 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
           let powerOf2 := BoolExpr.literal (BVPred.bin powerOf2Expr BVBinPred.eq (zero bitwidth))
           preconditionCandidates := preconditionCandidates.insert powerOf2
 
-      let mut previousLevelCache : Std.HashMap (BVExpr bitwidth) PreconditionSynthesisCacheValue := synthesisComponents
+      let mut previousLevelCache : Std.HashMap (GenBVExpr bitwidth) PreconditionSynthesisCacheValue := synthesisComponents
 
       let numVariables := positiveExamples[0]!.keys.length + 1 -- Add 1 for the width ID
-      let ops : List (BVExpr bitwidth -> BVExpr bitwidth -> BVExpr bitwidth):= [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
+      let ops : List (GenBVExpr bitwidth -> GenBVExpr bitwidth -> GenBVExpr bitwidth):= [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
 
       let mut currentLevel := 0
       let mut validCandidates : List BVLogicalExpr := []
@@ -1144,7 +1278,7 @@ def generatePreconditions (bvLogicalExpr: BVLogicalExpr) (positiveExamples negat
     | [] => return none
     | _ =>  return some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
 
-def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (BVExpr w)) := Id.run do
+def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (GenBVExpr w)) := Id.run do
   let zero := BVExpr.const (BitVec.ofNat w 0)
   let one := BVExpr.const (BitVec.ofNat w 1 )
   let minusOne := BVExpr.const (BitVec.ofInt w (-1))
@@ -1152,7 +1286,7 @@ def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVar
   let specialConstants := [zero, one, minusOne]
   let inputCombinations := productsList (List.replicate inputVars.length specialConstants)
 
-  let lhsSymVarsAsBVExprs : List (BVExpr w):= lhsSymVars.keys.map (λ k => BVExpr.var k)
+  let lhsSymVarsAsBVExprs : List (GenBVExpr w):= lhsSymVars.keys.map (λ k => BVExpr.var k)
   let lhsSymVarsPermutation := productsList (List.replicate lhsSymVarsAsBVExprs.length lhsSymVarsAsBVExprs)
 
   let inputsAndSymVars := List.product inputCombinations lhsSymVarsPermutation
@@ -1162,7 +1296,7 @@ def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVar
     let h : value.w = w := sorry
     rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
 
-  let mut res : Std.HashMap Nat (List (BVExpr w)):= Std.HashMap.emptyWithCapacity
+  let mut res : Std.HashMap Nat (List (GenBVExpr w)):= Std.HashMap.emptyWithCapacity
   for combo in inputsAndSymVars do
     let inputsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip inputVars combo.fst))
     let symVarsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip lhsSymVars.keys combo.snd))
@@ -1178,10 +1312,10 @@ def lhsSketchEnumeration  (lhsSketch: BVExpr w) (inputVars: List Nat) (lhsSymVar
 
   pure res
 
-def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (BVExpr w)))
-                            : TermElabM (Std.HashMap Nat (List (BVExpr w))) := do
+def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (GenBVExpr w)))
+                            : TermElabM (Std.HashMap Nat (List (GenBVExpr w))) := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
-          let mut tempResults : Std.HashMap Nat (List (BVExpr w)) := Std.HashMap.emptyWithCapacity
+          let mut tempResults : Std.HashMap Nat (List (GenBVExpr w)) := Std.HashMap.emptyWithCapacity
 
           for (var, expressions) in exprSynthesisResults.toList do
               let mut prunedExprs ← pruneEquivalentBVExprs expressions
@@ -1190,7 +1324,7 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (L
           pure tempResults
 
 
-def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
+def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (GenBVExpr processingWidth))) : GeneralizerStateM (Option BVLogicalExpr) := do
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
     -- logInfo m! "Expression synthesis results : {exprSynthesisResults}"
     let combinations := productsList exprSynthesisResults.values
@@ -1220,13 +1354,13 @@ def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (L
 
     return none
 
-def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
-                                          (ops: List (BVExpr w → BVExpr w → BVExpr w)) : GeneralizerStateM (Std.HashMap Nat (List (BVExpr w))) := do
+def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
+                                          (ops: List (GenBVExpr w → GenBVExpr w → GenBVExpr w)) : GeneralizerStateM (Std.HashMap Nat (List (GenBVExpr w))) := do
     let zero := BitVec.ofNat w 0
     let one := BitVec.ofNat w 1
     let minusOne := BitVec.ofInt w (-1)
 
-    let specialConstants : Std.HashMap (BVExpr w) BVExpr.PackedBitVec := Std.HashMap.ofList [
+    let specialConstants : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec := Std.HashMap.ofList [
       (BVExpr.const one, {bv := one}),
       (BVExpr.const minusOne, {bv := minusOne})
     ]
@@ -1246,7 +1380,7 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (BVExpr w) BVExp
 
     let mut currentCache := Std.HashMap.emptyWithCapacity
 
-    let mut res : Std.HashMap Nat (List (BVExpr w)):= Std.HashMap.emptyWithCapacity
+    let mut res : Std.HashMap Nat (List (GenBVExpr w)):= Std.HashMap.emptyWithCapacity
     for (bvExpr, packedBV) in previousLevelCache.toArray do
       let h' : packedBV.w = w := sorry
 
@@ -1277,7 +1411,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
     let parsedBVLogicalExpr := state.parsedBVLogicalExpr
     let processingWidth := state.processingWidth
 
-    let mut exprSynthesisResults : Std.HashMap Nat (List (BVExpr processingWidth)) := Std.HashMap.emptyWithCapacity
+    let mut exprSynthesisResults : Std.HashMap Nat (List (GenBVExpr processingWidth)) := Std.HashMap.emptyWithCapacity
 
     for constantAssignment in constantAssignments do
         logInfo m! "Processing constants assignment: {constantAssignment}"
@@ -1316,7 +1450,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
 
         logInfo m! "Performing bottom-up enumerative search one level at a time"
 
-        let specialConstants : Std.HashMap (BVExpr state.processingWidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
+        let specialConstants : Std.HashMap (GenBVExpr state.processingWidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
           ((one processingWidth), {bv := BitVec.ofNat processingWidth 1}),
           ((minusOne processingWidth), {bv :=  BitVec.ofInt processingWidth (-1)})
         ]
@@ -1385,7 +1519,7 @@ def prettifyBVBinPred (op : BVBinPred) : String :=
   | .eq => "="
   | _ => op.toString
 
-def prettifyBVExpr (bvExpr : BVExpr w) (displayNames: Std.HashMap Nat String) : String :=
+def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat String) : String :=
     match bvExpr with
     | .var idx => displayNames[idx]!
     | .const bv =>
@@ -1556,6 +1690,11 @@ elab "#generalize" expr:term: command =>
 variable {x y : BitVec 8}
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
+variable {x y : BitVec 32}
+--#generalize 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32))
+#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+-- zext( (trunc(𝑎 : i32) ≪ 8) ) ⇒(𝑎 ≪ 8) & 0xFF00
+
 
 syntax (name := bvGeneralize) "bv_generalize" : tactic
 @[tactic bvGeneralize]
@@ -1564,14 +1703,32 @@ def evalBvGeneralize : Tactic := fun
     let name ← mkAuxDeclName `generalized
     let msg ← withoutModifyingEnv <| withoutModifyingState do
       withMainContext do
+        -- let g ← getMainGoal
+        -- let normalized? ← Normalize.bvNormalize g {}
+        -- let some normalized := normalized? | throwError "Error!"
+        -- let reflected ← (reflectBV g).run
         let expr ← Lean.Elab.Tactic.getMainTarget
         let res ← parseAndGeneralize expr (GeneralizeContext.Tactic name)
-        pure m! "{res}"
+        pure m! "Generalized theorem: {res}"
+       --  pure m! "{reflected.bvExpr}"
     logInfo m! "{msg}"
 | _ => throwUnsupportedSyntax
 
 
 set_option linter.unusedTactic false
+
+
+
+theorem zextdemo (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
+  bv_normalize
+  bv_generalize
+  sorry
+
+
+theorem zextdemo2 (x : BitVec 32) : BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32 := by
+  bv_normalize
+  bv_generalize
+  sorry
 
 /--
 info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
