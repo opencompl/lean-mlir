@@ -14,6 +14,13 @@ inductive WidthExpr (n : Nat) : Type
 def WidthExpr.Env (n : Nat) : Type :=
   Fin n → Nat
 
+def WidthExpr.Env.empty : WidthExpr.Env 0 :=
+  fun v => v.elim0
+
+def WidthExpr.Env.cons (env : WidthExpr.Env n) (w : Nat) :
+  WidthExpr.Env (n + 1) :=
+  fun v => v.cases w env
+
 def WidthExpr.toNat (e : WidthExpr n) (env : Fin n → Nat) : Nat :=
   match e with
   | .var v => env v
@@ -62,15 +69,12 @@ def Term.Ctx.Env.empty
 
 def Term.Ctx.Env.cons
   {wcard : Nat} {wenv : Fin wcard → Nat}
-  {ctx : Term.Ctx wcard tcard}
-  (tenv : Term.Ctx.Env ctx wenv)
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv)
   (w : WidthExpr wcard)
   (bv : BitVec (w.toNat wenv)) :
-  Term.Ctx.Env (ctx.cons w) wenv :=
-  fun v =>
-    v.cases
-      bv
-      (fun w => tenv w)
+  Term.Ctx.Env (tctx.cons w) wenv :=
+  fun v => v.cases bv (fun w => tenv w)
 
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
