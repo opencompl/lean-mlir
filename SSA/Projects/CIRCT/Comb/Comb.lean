@@ -120,7 +120,7 @@ def mkTy : MLIR.AST.MLIRType 0 → MLIR.AST.ExceptM Comb (Comb.Ty)
   | MLIR.AST.MLIRType.int _ w =>
     match w with
     | .concrete w' => return .bitvec w'
-    | .mvar _ => throw <| .generic s!" bitVec size can't be an mvar!"
+    | .mvar _ => throw <| .generic s!" BitVec size can't be an mvar!"
   | _ => throw .unsupportedType
 
 -- borrowed from the LLVM/EDSL infra
