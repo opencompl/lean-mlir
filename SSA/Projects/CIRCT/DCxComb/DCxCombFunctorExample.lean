@@ -38,11 +38,10 @@ def exampleSink := [DCxComb_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => vals[i]?.join
 
-#check exampleSource
+#check exampleSink
 def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
-set_option diagnostics true
 
 def testExampleSource : DCOp.TokenStream :=
-  exampleSource.denote (Ctxt.Valuation.ofHVector (.cons u <| .nil))
+  exampleSink.denote (Ctxt.Valuation.ofHVector (.cons u <| .nil))
 
 #eval testExampleSource
