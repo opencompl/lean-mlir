@@ -14,27 +14,7 @@ namespace HVector
 
 variable {α : Type u} {A B : α → Type*} {as : List α}
 
-/-!
-  # Notation
--/
-
--- Copied from core for List
-syntax "[" withoutPosition(term,*) "]ₕ"  : term
-macro_rules
-  | `([ $elems,* ]ₕ) => do
-    let rec expandListLit (i : Nat) (skip : Bool) (result : Lean.TSyntax `term) : Lean.MacroM Lean.Syntax := do
-      match i, skip with
-      | 0,   _     => pure result
-      | i+1, true  => expandListLit i false result
-      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps[i]!⟩) $result))
-    if elems.elemsAndSeps.size < 64 then
-      expandListLit elems.elemsAndSeps.size false (← ``(HVector.nil))
-    else
-      `(%[ $elems,* | List.nil ])
-
-infixl:50 "::ₕ" => HVector.cons
-
-/-!
+/-
   # Definitions
 -/
 
@@ -62,6 +42,12 @@ def map' {A : α → Type*} {B : β → Type*} (f' : α → β) (f : ∀ (a : α
     ∀ {l : List α}, HVector A l → HVector B (l.map f')
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map' f' f as)
+
+def mapM [Monad m] {α : Type 0} {A : α → Type} {B : α → Type}
+    (f : ∀ (a : α), A a → m (B a)) :
+    ∀ {l : List α}, HVector A l → m (HVector B l)
+  | [], .nil => return .nil
+  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM f as)
 
 /-- Folds a function over an hvector from the left, where the accumulator has a fixed type. -/
 def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
@@ -97,8 +83,7 @@ def foldlM {B : Type*} [Monad m] (f : ∀ (a : α), B → A a → m B) :
 
 /--
 Simultaneous map on the type and value level of an HVector while
-performing monadic effects for value translation.
--/
+performing monadic effects for value translation.-/
 def mapM' [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
     {l : List α}
     {F : α → β}
@@ -107,12 +92,6 @@ def mapM' [Monad m] {α : Type 0} {A : α → Type} {B : β → Type}
   match l, as with
   | [], .nil => return .nil
   | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM' f as)
-
-def mapM [Monad m] {α : Type 0} {A : α → Type} {B : α → Type}
-    (f : ∀ (a : α), A a → m (B a)) :
-    ∀ {l : List α}, HVector A l → m (HVector B l)
-  | [], .nil => return .nil
-  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM f as)
 
 def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .nil, i => i.elim0
@@ -167,30 +146,6 @@ instance [∀ a, Repr (f a)] : Repr (HVector f as) where
 
 end Repr
 
-/-! ## Casts -/
-
-/-- Cast the type function of an HVector. -/
-def castFun {A B : α → Type u} {as}
-    (h : ∀ (i : Fin as.length), A as[i] = B as[i]) :
-    HVector A as → HVector B as
-  | .nil => .nil
-  | x ::ₕ xs =>
-    let x := h (0 : Fin (_ + 1)) ▸ x
-    let xs := xs.castFun (fun i => h i.succ)
-    x ::ₕ xs
-
-def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
-    (h_len : as.length = bs.length)
-    (h_elem : ∀ i (_ : i < as.length), A as[i] = B bs[i])
-    (xs : HVector A as) : HVector B bs :=
-  match bs, xs with
-  | [], .nil        => .nil
-  | _::_, x ::ₕ xs  =>
-      have h₀ := h_elem 0 (by simp)
-      let xs := xs.cast (by simpa using h_len)
-                        (fun i => by simpa using h_elem i.succ)
-      (h₀ ▸ x) ::ₕ xs
-
 /-
   # Theorems
 -/
@@ -203,11 +158,28 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
 theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
     {t₁ t₂ : HVector A l} (h : l = []) : t₁ = t₂ := by
   cases h; cases t₁; cases t₂; rfl
+syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
 @[simp]
 theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :
    (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := by
   rfl
+
+-- Copied from core for List
+macro_rules
+  | `([ $elems,* ]ₕ) => do
+    let rec expandListLit (i : Nat) (skip : Bool) (result : Lean.TSyntax `term) : Lean.MacroM Lean.Syntax := do
+      match i, skip with
+      | 0,   _     => pure result
+      | i+1, true  => expandListLit i false result
+      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps[i]!⟩) $result))
+    if elems.elemsAndSeps.size < 64 then
+      expandListLit elems.elemsAndSeps.size false (← ``(HVector.nil))
+    else
+      `(%[ $elems,* | List.nil ])
+
+infixl:50 "::ₕ" => HVector.cons
+
 
 /-!
   ## OfFn
@@ -272,5 +244,16 @@ instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     toExpr }
 
 end ToExprPi
+
+/- ### cast -/
+
+def castFun {A B : α → Type u} {as}
+    (h : ∀ (i : Fin as.length), A as[i] = B as[i]) :
+    HVector A as → HVector B as
+  | .nil => .nil
+  | x ::ₕ xs =>
+    let x := h (0 : Fin (_ + 1)) ▸ x
+    let xs := xs.castFun (fun i => h i.succ)
+    x ::ₕ xs
 
 end HVector
