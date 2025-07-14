@@ -1705,15 +1705,18 @@ def Lets.exprTreeAt : (lets : Lets d Γ_in .pure Γ_out) → (v : Var Γ_out ty)
   | .nil, v                       => .fvar v
   | .var body e, ⟨0, Eq.refl _⟩  => e.toExprTree body
   | .var body _, ⟨v+1, h⟩        => body.exprTreeAt ⟨v, h⟩
+termination_by (Γ_out.length, 1)
 
 /-- `e.toExprTree lets` converts a single expression `e` into an expression tree by looking up the
 arguments to `e` in `lets` -/
-def Expr.toExprTree (lets : Lets d Γ_in .pure Γ_out) (e : Expr d Γ_out .pure ty) :
-    ExprTree d Γ_in ty :=
+def Expr.toExprTree (lets : Lets d Γ_in .pure Γ_out) (e : Expr d Γ_out .pure Δ) :
+    ExprTree d Γ_in Δ :=
   .mk e.op e.ty_eq (EffectKind.eq_of_le_pure e.eff_le) (argsToBranches e.args)
+termination_by (Γ_out.length + 1, 0)
   where argsToBranches {ts} : HVector (Var Γ_out) ts → ExprTreeBranches d Γ_in ts
     | .nil => .nil
     | .cons v vs => .cons (lets.exprTreeAt v) (argsToBranches vs)
+  termination_by (Γ_out.length, ts.length + 2)
 
 end
 
