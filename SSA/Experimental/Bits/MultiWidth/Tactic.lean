@@ -419,7 +419,7 @@ declare_config_elab elabBvMultiWidthConfig Config
 
 syntax (name := bvMultiWidth) "bv_multi_width" (Lean.Parser.Tactic.config)? : tactic
 @[tactic bvMultiWidth]
-def evalBvAutomataCircuit : Tactic := fun
+def evalBvMultiWidth : Tactic := fun
 | `(tactic| bv_multi_width $[$cfg]?) => do
   let cfg ← elabBvMultiWidthConfig (mkOptionalNode cfg)
   let g ← getMainGoal
