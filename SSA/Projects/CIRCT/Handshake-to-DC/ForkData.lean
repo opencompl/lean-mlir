@@ -76,7 +76,7 @@ def DCxCombFork := [DCxComb_com| {
     %pack1 = "DCxComb.pack" (%unpack1, %fork1) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
     %pack2 = "DCxComb.pack" (%unpack1, %fork2) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
     %pack12 = "DCxComb.pair" (%pack1, %pack2) : (!ValueStream_8, !ValueStream_8) -> (!ValueStream2_8)
-    "return" (%pack1, %pack2) : (!ValueStream_8, !ValueStream_8) -> ()
+    "return" (%pack12) : (!ValueStream2_8) -> ()
   }]
 /- step 2: denote dc circuit -/
 

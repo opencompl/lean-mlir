@@ -240,7 +240,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | _, _ => throw <| .generic s!"type mismatch at {repr opStx.args}"
     | _ => throw <| .generic s!"expected one operand, found #'{opStx.args.length}' in '{repr opStx.args}'"
   -- 2-ary ops
-  | ["DCxComb.merge"] | ["DCxComb.join"] | ["DCxComb.pack"] | ["DCxComb.unpack2"] =>
+  | ["DCxComb.merge"] | ["DCxComb.join"] | ["DCxComb.pack"] | ["DCxComb.unpack2"] | ["DCxComb.pair"] =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -252,6 +252,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream r₁, .valuestream r₂, "DCxComb.unpack2"  =>
           if h : r₁ = r₂ then mkExprOf <| Op.dc (MLIR2DC.Op.unpack2 r₁)
           else throw <| .generic s!"typew mismatch in {repr opStx.args}"
+      | .valuestream r₁, .valuestream r₂, "DCxComb.pair"  =>
+          if h : r₁ = r₂ then mkExprOf <| Op.dc (MLIR2DC.Op.pair r₁)
+          else throw <| .generic s!"type mismatch in {repr opStx.args}"
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   -- special cases
