@@ -266,7 +266,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | .variadicvaluetokenstream r₁, "DCxComb.pack2"  =>
             return ⟨_, .valuestream2 r₁, Expr.mk (op := Op.dc (MLIR2DC.Op.pack2 r₁)) (eff := .impure)
             (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .nil) (regArgs := .nil)⟩
-        | _, _ => throw <| .generic s!"type mismatch"
+        | _, _ => throw <| .generic s!"type mismatch at {repr opStx.args}"
       | _ => throw <| .generic s!"type mismatch"
     -- 2-ary ops
     | ["DCxComb.merge"] | ["DCxComb.join"] | ["DCxComb.pack"] | ["DCxComb.unpack2"] | ["DCxComb.pack2"] =>
@@ -281,10 +281,10 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             (ty_eq := rfl) (eff_le := by constructor) (args := .cons v₁ <| .cons v₂ <| .nil) (regArgs := .nil)⟩
           | .valuestream r, .tokenstream, "DCxComb.pack"  => throw <| .generic s!"ERROR: Unimplemented"
           | .valuestream r, .valuestream r', "DCxComb.add" =>
-              if h : r = r' then
-                return ⟨_, .valuestream r, (Expr.mk (op := Op.comb (MLIR2Comb.Op.add r 2)) (eff := .pure)
-                    (ty_eq := rfl)  (eff_le := by sorry) (args := .cons v₁ <| .cons (h▸ v₂)<| .nil) (regArgs := .nil))⟩
-              else sorry
+              -- if h : r = r' then
+              --   return ⟨_, .valuestream r, (Expr.mk (op := Op.comb (MLIR2Comb.Op.add r 2)) (eff := .pure)
+              --       (ty_eq := rfl)  (eff_le := by sorry) (args := .cons v₁ <| .cons (h▸ v₂)<| .nil) (regArgs := .nil))⟩
+              -- else sorry
               throw <| .generic s!"ERROR: Unimplemented"
           | .valuestream r₁, .valuestream r₂, "DCxComb.unpack2"  =>
               if h : r₁ = r₂ then
@@ -326,11 +326,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
               simp [Nat.gt_of_not_le (n := args.length) (m := 0) hl]
             match args[0], opStx.name with
             | ⟨.valuestream w, _⟩, "DCxComb.add" =>
-                if hall : args.all (·.1 = .valuestream w) then
-                  let argsv := ofList (.valuestream w) _ hall
-                  have heq : args.length - 1 + 1 = args.length := by omega
-                  sorry
-                else
+                -- if hall : args.all (·.1 = .valuestream w) then
+                --   let argsv := ofList (.valuestream w) _ hall
+                --   have heq : args.length - 1 + 1 = args.length := by omega
+                --   sorry
+                -- else
                   throw <| .generic s!"ERROR: not all args are .valuestream w"
               -- if hall : args.all (·.1 = .valuestream w) then
               --   (Expr.mk (op := Op.comb (MLIR2Comb.Op.parity w)) (eff := .pure)

@@ -28,7 +28,7 @@ def exampleSource := [DCxComb_com| {
 
 #check exampleSource
 
-unseal String.splitOnAux in
+-- unseal String.splitOnAux in
 def exampleSink := [DCxComb_com| {
   ^entry(%0: !TokenStream):
     %src = "DCxComb.sink" (%0) : (!TokenStream) -> (!TokenStream)
@@ -38,10 +38,24 @@ def exampleSink := [DCxComb_com| {
 def ofList (vals : List (Option α)) : Stream α :=
   fun i => vals[i]?.join
 
-#check exampleSink
-def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
+def inputSource : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
 
 def testExampleSource : DCOp.TokenStream :=
-  exampleSink.denote (Ctxt.Valuation.ofHVector (.cons u <| .nil))
+  exampleSink.denote (Ctxt.Valuation.ofHVector (.cons inputSource <| .nil))
 
 #eval testExampleSource
+
+def exampleFst := [DCxComb_com| {
+  ^entry(%0: !TokenStream2):
+    %src = "DCxComb.fst" (%0) : (!TokenStream2) -> (!TokenStream)
+    "return" (%src) : (!TokenStream) -> ()
+  }]
+
+def tok1 : CIRCTStream.DCOp.TokenStream := ofList [some (), none, some (), some (), none]
+def tok2 : CIRCTStream.DCOp.TokenStream := ofList [some (), some (), some (), some (), none]
+def inputFst : (CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream) := (tok1, tok2)
+
+def testExampleFst : DCOp.TokenStream :=
+  exampleFst.denote (Ctxt.Valuation.ofHVector (.cons inputFst <| .nil))
+
+#eval testExampleFst
