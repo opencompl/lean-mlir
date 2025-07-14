@@ -96,12 +96,12 @@ def TotalOrder.size {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α)
   toOrder.val2ix.size
 
 def TotalOrder.findOrInsertVal {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) (e : α) : Nat × TotalOrder α :=
-  let (ix, val2ix) := match toOrder.val2ix.get? e with
-    | some ix => (ix, toOrder.val2ix)
+  match toOrder.val2ix.get? e with
+    | some ix =>
+      (ix, toOrder)
     | none =>
       let ix := toOrder.val2ix.size
-      (ix, toOrder.val2ix.insert e ix)
-  (ix, { toOrder with val2ix := val2ix, ix2val := toOrder.ix2val.push e })
+      (ix, { toOrder with val2ix := toOrder.val2ix.insert e ix, ix2val := toOrder.ix2val.push e })
 
 def TotalOrder.getIx? (ix : Nat) {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrder α) : Option α :=
     toOrder.ix2val[ix]?
@@ -185,31 +185,47 @@ def CollectState.mkTctxExpr (reader : CollectState) : MetaM Expr := do
   return ctx
 
 /--
-info: MultiWidth.Term.Ctx.Env.empty {wcard : ℕ} (wenv : Fin wcard → ℕ) (ctx : MultiWidth.Term.Ctx wcard 0) : ctx.Env wenv
+info: MultiWidth.Term.Ctx.Env.empty {wcard : ℕ} (wenv : MultiWidth.WidthExpr.Env wcard) (ctx : MultiWidth.Term.Ctx wcard 0) :
+  ctx.Env wenv
 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.Env.empty
 
-def mkTermEnvEmpty (reader : CollectState) : MetaM Expr := do
+def mkTermEnvEmpty (reader : CollectState) (wenv : Expr) : MetaM Expr := do
   let emptyCtx ← mkTermCtxEmptyExpr reader
-  return mkAppN (mkConst ``MultiWidth.Term.Ctx.Env.empty) #[mkNatLit reader.wcard, emptyCtx]
+  return mkAppN (mkConst ``MultiWidth.Term.Ctx.Env.empty) #[mkNatLit reader.wcard, wenv, emptyCtx]
+
+/--
+info: MultiWidth.WidthExpr.toNat {wcard : ℕ} (e : MultiWidth.WidthExpr wcard) (env : MultiWidth.WidthExpr.Env wcard) : ℕ
+-/
+#guard_msgs in #check MultiWidth.WidthExpr.toNat
 
 /--
 info: MultiWidth.Term.Ctx.Env.cons {tcard wcard : ℕ} {wenv : Fin wcard → ℕ} {tctx : MultiWidth.Term.Ctx wcard tcard}
-  (tenv : tctx.Env wenv) (w : MultiWidth.WidthExpr wcard) (bv : BitVec (w.toNat wenv)) : (tctx.cons w).Env wenv
+  (tenv : tctx.Env wenv) (wexpr : MultiWidth.WidthExpr wcard) {w : ℕ} (bv : BitVec w) (hw : w = wexpr.toNat wenv) :
+  (tctx.cons wexpr).Env wenv
 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.Env.cons
 
 def mkTermEnvCons (reader : CollectState) (tenv : Expr) (w : MultiWidth.Nondep.WidthExpr) (bv : Expr) : MetaM Expr := do
-  return mkAppN (mkConst ``MultiWidth.Term.Ctx.Env.cons)
-    #[mkNatLit reader.wcard, tenv, ← mkWidthExpr reader.wcard w, bv]
+  let wexpr ← mkWidthExpr reader.wcard w
+  mkAppM (``MultiWidth.Term.Ctx.Env.cons)
+    #[ tenv,
+      wexpr,
+      bv,
+      ← mkSorry ((← mkFreshExprMVar .none)) (synthetic := true)
+      ]
 
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
-def CollectState.mkTenvExpr (reader : CollectState) : MetaM Expr := do
-  let mut out ← mkTermEnvEmpty reader
+def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) : MetaM Expr := do
+  let mut out ← mkTermEnvEmpty reader (wenv := wenv)
   for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx do
     let some wexpr := reader.bvIxToWidthExpr.get? ix
-      | throwError "unable to find width for BitVec {bv} at index {ix}"
-    out ← mkTermEnvCons reader out wexpr bv
+      | throwError "unable to find width for '{bv}' at index {ix}"
+    check out
+    logInfo m!"before out: {out}"
+    out ← mkTermEnvCons (reader := reader) (tenv := out) (w := wexpr) (bv := bv)
+    logInfo m!"after out: {out}"
+    check out
   return out
 
 /-- info: MultiWidth.WidthExpr.Env.empty : MultiWidth.WidthExpr.Env 0 -/
@@ -324,15 +340,15 @@ def mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
 
 
 /--
-info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : Fin wcard → ℕ} {tctx : MultiWidth.Term.Ctx wcard tcard}
-  (tenv : tctx.Env wenv) (p : MultiWidth.Predicate tctx) : Prop
+info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : MultiWidth.WidthExpr.Env wcard}
+  {tctx : MultiWidth.Term.Ctx wcard tcard} (tenv : tctx.Env wenv) (p : MultiWidth.Predicate tctx) : Prop
 -/
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
 def mkPredicateToPropExpr (p : MultiWidth.Nondep.Predicate)
   (wcard tcard : Nat) (wenv : Expr) (tctx : Expr) (tenv : Expr) : MetaM Expr := do
   let pExpr ← mkPredicateExpr wcard tcard tctx p
-  mkAppOptM (``MultiWidth.Predicate.toProp)
+  return mkAppN (mkConst ``MultiWidth.Predicate.toProp [])
     #[(mkNatLit wcard),
       (mkNatLit tcard),
       wenv, -- wenv,
@@ -385,9 +401,9 @@ def solve (g : MVarId) (_cfg : Config) : TermElabM (List MVarId) := do
   let (p, collect) ← collectBVPredicateAux collect (← g.getType)
   let tctx ← collect.mkTctxExpr
   let wenv ← collect.mkWenvExpr
-  let tenv ← collect.mkTenvExpr
-  let gs ← withLocalDeclD `wenv wenv <| fun wenv => do
-    withLocalDeclD `tenv tenv <| fun tenv => do
+  let tenv ← collect.mkTenvExpr (wenv := wenv) 
+  let out ← withLocalDeclD `wenv wenv fun wenv => do
+    withLocalDeclD `tenv tenv fun tenv => do
       let out ← mkPredicateToPropExpr (p := p)
         (wcard := collect.wcard)
         (tcard := collect.tcard)
@@ -395,9 +411,11 @@ def solve (g : MVarId) (_cfg : Config) : TermElabM (List MVarId) := do
         (wenv := wenv)
         (tenv := tenv)
       trace[Bits.Frontend] m!"goal before reflection: {indentD g}"
-      let g ← g.replaceTargetDefEq out
-      return [g]
-  return gs
+      mkLambdaFVars #[wenv, tenv] out
+  logInfo m!"produced out: {out}"
+  check out
+  let g ← g.replaceTargetDefEq out
+  return [g]
 
 
   -- -- finally, we perform reflection.
