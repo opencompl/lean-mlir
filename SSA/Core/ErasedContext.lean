@@ -84,6 +84,7 @@ lemma getElem?_eq_toList_getElem? {Γ : Ctxt Ty} {i : Nat} : Γ[i]? = Γ.toList[
   simp [map]; rfl
 
 @[simp] lemma length_ofList : (ofList Γ).length = Γ.length := rfl
+@[simp] lemma length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
 
 instance : Functor Ctxt where
   map := map
@@ -97,6 +98,8 @@ instance : LawfulFunctor Ctxt where
 
 end Lemmas
 
+section Rec
+
 /-- Recursion principle for contexts in terms of `Ctxt.nil` and `Ctxt.snoc` -/
 @[elab_as_elim, induction_eliminator]
 def recOn' {motive : Ctxt Ty → Sort*}
@@ -105,6 +108,10 @@ def recOn' {motive : Ctxt Ty → Sort*}
     ∀ Γ, motive Γ
   | ⟨[]⟩        => nil
   | ⟨ty :: tys⟩ => snoc ⟨tys⟩ ty (recOn' nil snoc ⟨tys⟩)
+
+end Rec
+
+/-! ## Variables -/
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
