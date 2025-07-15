@@ -213,12 +213,14 @@ info: MultiWidth.Term.Ctx.Env.cons {tcard wcard : ℕ} {wenv : Fin wcard → ℕ
 
 def mkTermEnvCons (reader : CollectState) (wenv : Expr) (tenv : Expr) (w : MultiWidth.Nondep.WidthExpr) (bv : Expr) : MetaM Expr := do
   let wexpr ← mkWidthExpr reader.wcard w
-  mkAppM (``MultiWidth.Term.Ctx.Env.cons)
+  let out ← mkAppM (``MultiWidth.Term.Ctx.Env.cons)
     #[ tenv,
       wexpr,
       bv,
       ← mkEqRefl (← mkAppM ``MultiWidth.WidthExpr.toNat #[wexpr, wenv])
       ]
+  check out
+  return out
 
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
 def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (tctx : Expr) : MetaM Expr := do
@@ -231,6 +233,7 @@ def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (tctx : Expr) 
     out ← mkTermEnvCons (reader := reader) (wenv := wenv) (tenv := out) (w := wexpr) (bv := bv)
     logInfo m!"after out: {out}"
     check out
+    logInfo m!"checked out!"
   return out
 
 /-- info: MultiWidth.WidthExpr.Env.empty : MultiWidth.WidthExpr.Env 0 -/
