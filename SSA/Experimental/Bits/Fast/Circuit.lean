@@ -131,6 +131,28 @@ def simplifyAnd : Circuit α → Circuit α → Circuit α
 
 instance : AndOp (Circuit α) := ⟨Circuit.simplifyAnd⟩
 
+theorem and_def {α : Type _} (c d : Circuit α) :
+  (c &&& d) = Circuit.simplifyAnd c d := rfl
+
+@[simp] lemma tru_and (c : Circuit α) :
+  Circuit.tru &&& c = c := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.tru]
+
+@[simp] lemma fals_and (c : Circuit α) :
+  Circuit.fals &&& c = Circuit.fals := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.fals]
+  rcases c <;> simp
+
+@[simp] lemma and_fals (c : Circuit α) :
+  c &&& Circuit.fals = Circuit.fals := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.fals]
+  rcases c <;> simp
+
+@[simp] lemma and_tru (c : Circuit α) :
+  c &&& Circuit.tru = c := by
+  simp [Circuit.and_def, Circuit.simplifyAnd, Circuit.tru]
+  rcases c <;> simp
+
 @[simp] lemma eval_and : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     (eval (c₁ &&& c₂) f) = ((eval c₁ f) && (eval c₂ f)) := by
   intros c₁ c₂ f
@@ -149,6 +171,32 @@ def simplifyOr : Circuit α → Circuit α → Circuit α
   | c₁, c₂ => or c₁ c₂
 
 instance : OrOp (Circuit α) := ⟨Circuit.simplifyOr⟩
+
+theorem or_def {α : Type _} (c d : Circuit α) :
+  (c ||| d) = Circuit.simplifyOr c d := rfl
+
+@[simp]
+lemma fals_or (c : Circuit α) :
+  Circuit.fals ||| c = c := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.fals]
+  rcases c <;> simp
+
+@[simp]
+lemma tru_or (c : Circuit α) :
+  Circuit.tru ||| c = Circuit.tru := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.tru]
+
+@[simp]
+lemma or_fals (c : Circuit α) :
+  c ||| Circuit.fals = c := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.fals]
+  rcases c <;> simp
+
+@[simp]
+lemma or_tru (c : Circuit α) :
+  c ||| Circuit.tru = Circuit.tru := by
+  simp [Circuit.or_def, Circuit.simplifyOr, Circuit.tru]
+  rcases c <;> simp
 
 @[simp] lemma eval_or : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     (eval (c₁ ||| c₂) f) = ((eval c₁ f) || (eval c₂ f)) := by
@@ -247,9 +295,44 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | or c₁ c₂, f => (map c₁ f) ||| (map c₂ f)
   | xor c₁ c₂, f => (map c₁ f) ^^^ (map c₂ f)
 
+/--
+Map of 'identity' does not change the evaluation of the circuit.
+Funnily, it *can* structually change the circuit,
+since it rebuilds the circuit, while simplifying it during rebuilding.
+-/
+@[simp]
+theorem eval_map_id_eq (c : Circuit α) (env : α → Bool) :
+    (Circuit.map c (id : α → α)).eval env = c.eval env := by
+  induction c <;> simp [Circuit.map, *] at *
+
+@[simp]
+theorem eval_map_id_eq' {c : Circuit α} {f : α → Bool} :
+    eval (map c fun v => v) f = eval c f := by
+  induction c <;> simp [Circuit.map, *] at *
+
+@[simp]
+theorem map_tru (f : α → β) :
+    Circuit.tru.map f = Circuit.tru := rfl
+
+@[simp]
+theorem map_fals (f : α → β) :
+    Circuit.fals.map f = Circuit.fals := rfl
+
 lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
     eval (map c f) g = eval c (λ x => g (f x)) := by
   induction c <;> simp [*, Circuit.map, eval] at *
+
+@[simp]
+lemma fals_map (f : α → β) :
+  fals.map f = Circuit.fals := rfl
+
+@[simp]
+lemma var_map (f : α → β) (b : Bool) (x : α) :
+  (Circuit.var b x).map f = Circuit.var b (f x) := rfl
+
+@[simp]
+lemma tru_map (f : α → β) :
+  Circuit.tru.map f = Circuit.tru := rfl
 
 def simplify : ∀ (_c : Circuit α), Circuit α
   | tru => tru
@@ -879,5 +962,42 @@ def optimize : Circuit α → Circuit α
        else l ^^^ r
     | _, _ => l ^^^ r
 end Optimizer
+
+section Equiv
+
+/--
+Two circuits are equivalent if they evaluate to the same result for all possible inputs.
+-/
+def Equiv (c₁ c₂ : Circuit α) : Prop :=
+    eval c₁ = eval c₂
+
+@[simp]
+theorem Equiv_refl : ∀ (c : Circuit α), Circuit.Equiv c c := by
+  intro c
+  ext v
+  simp [eval]
+
+@[symm]
+theorem Equiv_symm : ∀ {c₁ c₂ : Circuit α}, Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₁ := by
+  intros c₁ c₂ h
+  ext env
+  rw [h]
+
+@[trans]
+theorem Equiv_trans : ∀ {c₁ c₂ c₃ : Circuit α},
+    Circuit.Equiv c₁ c₂ → Circuit.Equiv c₂ c₃ → Circuit.Equiv c₁ c₃ := by
+  intros c₁ c₂ c₃ h₁ h₂
+  ext env
+  rw [h₁, h₂]
+
+theorem eval_eq_of_Equiv {c₁ c₂ : Circuit α} (h : Circuit.Equiv c₁ c₂) (f : α → Bool) :
+    eval c₁ f = eval c₂ f := by rw [h]
+
+theorem Equiv_of_eval_eq {c₁ c₂ : Circuit α} (h : ∀ f, eval c₁ f = eval c₂ f) :
+    Circuit.Equiv c₁ c₂ := by
+    ext v
+    apply h
+
+end Equiv
 
 end Circuit

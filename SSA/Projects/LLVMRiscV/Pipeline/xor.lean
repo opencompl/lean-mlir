@@ -6,6 +6,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 open LLVMRiscV
 
 /-! # XOR   -/
+@[simp_denote]
 def llvm_xor: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64):
@@ -13,6 +14,7 @@ def llvm_xor: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
       llvm.return %0 : i64
   }]
 
+@[simp_denote]
 def xor_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64):
@@ -24,17 +26,7 @@ def xor_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   }]
 
   def llvm_xor_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
-  {lhs := llvm_xor, rhs := xor_riscv, correct := by
-    unfold llvm_xor xor_riscv
-    simp_peephole
-    simp_alive_undef
-    simp_riscv
-    simp only [BitVec.setWidth_eq, BitVec.xor_eq, BitVec.signExtend_eq]
-    simp_alive_case_bash
-    intro x x'
-    simp only [PoisonOr.toOption_getSome, InstCombine.bv_isRefinedBy_iff]
-    bv_decide
-  }
+  {lhs := llvm_xor, rhs := xor_riscv}
 
 def xor_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))

@@ -180,26 +180,8 @@ def autolabel_ms(ax, rects, **kwargs):
 
 
 def plot(args):
-    con = sqlite3.connect(args.db)
-    # cur.execute("""
-    #     CREATE TABLE IF NOT EXISTS tests (
-    #         filename TEXT,
-    #         test_content TEXT,
-    #         solver TEXT,
-    #         timeout INTEGER,
-    #         status TEXT,
-    #         exit_code INTEGER,
-    #         walltime FLOAT,
-    #         PRIMARY KEY (filename, timeout)  -- Composite primary key
-    #         )
-    # """)
-    # con.commit()
-    # con.close()
-    # load the database with polars
-    df = pl.read_database(query="SELECT * from tests",
-        connection=con)
-    con.close()
-
+    df = df = pl.read_ndjson(args.db)
+    df = df.with_columns(pl.col("timeElapsed").cast(pl.Float64))
     print(df)
     # fileTitle   ┆ thmName ┆ goalStr ┆ tactic ┆ status ┆ errmsg ┆ timeElapsed
     # │ gapinthcasthcasthtohand_proof ┆  test1_thm    ┆ case some x✝ : BitVec 61 ⊢ Bit… ┆ reflect_ok       ┆ err    ┆ found multiple bitvector width… ┆ 0.17294     │

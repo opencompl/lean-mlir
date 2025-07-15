@@ -5,7 +5,7 @@ defaultTargets = ["SSA"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
-rev = "nightly-testing-2025-06-05"
+rev = "nightly-testing-2025-06-20"
 
 [[require]]
 name = "Cli"
@@ -39,6 +39,10 @@ root = "SSA.MLIRNatural"
 [[lean_exe]]
 name = "bv-circuit-profile"
 root = "SSA.Experimental.Bits.Fast.Profile"
+
+[[lean_exe]]
+name = "bv-circuit-profile-verif"
+root = "SSA.Experimental.Bits.Fast.ProfileVerif"
 
 [[lean_exe]]
 name = "bv-automata-profile"
