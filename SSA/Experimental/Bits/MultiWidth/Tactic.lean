@@ -133,15 +133,20 @@ def collectWidthAtom (state : CollectState) (e : Expr) (check? : Bool := false) 
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
     return (.ofNat wix, { state with wToIx := wToIx })
 
-private def mkFinLit (n : Nat) (i : Nat) : Expr :=
-  mkAppN (.const ``Fin.mk []) #[mkNatLit n, mkNatLit i]
+/-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
+#guard_msgs in #check Fin.mk
+
+private def mkFinLit (n : Nat) (i : Nat) : MetaM Expr := do
+  let en := mkNatLit n
+  let ei := mkNatLit i
+  return mkAppN (.const ``Fin.mk []) #[en, ei, ← mkDecideProof (← mkLt ei en)]
 
 
 /-- info: MultiWidth.WidthExpr.var {wcard : ℕ} (v : Fin wcard) : MultiWidth.WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.var
 
 def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := do
-  return mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, mkFinLit wcard w.toNat]
+  return mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : MultiWidth.Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
@@ -279,7 +284,7 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
   match t with
   | .var v =>
     return mkAppN (mkConst ``MultiWidth.Term.var [])
-      #[mkNatLit wcard, mkNatLit tcard, tctx, mkFinLit tcard v]
+      #[mkNatLit wcard, mkNatLit tcard, tctx, <- mkFinLit tcard v]
 
 
 set_option pp.explicit true in
