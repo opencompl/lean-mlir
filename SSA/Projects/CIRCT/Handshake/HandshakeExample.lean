@@ -14,12 +14,12 @@ open MLIR AST in
 
 unseal String.splitOnAux in
 def BranchEg1 := [handshake_com| {
-  ^entry(%0: !Stream_Bool, %1: !Stream_Bool):
-    %out = "handshake.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
-    %outf = "handshake.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-    %outs = "handshake.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-    %out2 = "handshake.merge" (%outs, %outf) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
-    "return" (%out2) : (!Stream_Bool) -> ()
+  ^entry(%0: !Stream_BitVec_1, %1: !Stream_BitVec_1):
+    %out = "handshake.branch" (%0, %1) : (!Stream_BitVec_1, !Stream_BitVec_1) -> (!Stream2_BitVec_1)
+    %outf = "handshake.fst" (%out) : (!Stream2_BitVec_1) -> (!Stream_BitVec_1)
+    %outs = "handshake.snd" (%out) : (!Stream2_BitVec_1) -> (!Stream_BitVec_1)
+    %out2 = "handshake.merge" (%outs, %outf) : (!Stream_BitVec_1, !Stream_BitVec_1) -> (!Stream_BitVec_1)
+    "return" (%out2) : (!Stream_BitVec_1) -> ()
   }]
 
 #check BranchEg1
@@ -29,25 +29,23 @@ def BranchEg1 := [handshake_com| {
 #print axioms BranchEg1
 
 def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+  fun i => vals[i]?.join
 
-def c : Stream Bool := ofList [some true, none, some false, some true, some false]
-def x : Stream Bool := ofList [some true, none, some true, some false, none]
+def c : Stream (BitVec 1) := ofList [some 1, none, some 0, some 1, some 0]
+def x : Stream (BitVec 1) := ofList [some 1, none, some 1, some 0, none]
 
 -- is this in the opposite order or am I misunderstanding? if yes: why?
-def test : Stream Bool :=
+def test : Stream (BitVec 1) :=
   BranchEg1.denote (Ctxt.Valuation.ofPair c x)
 
 namespace Stream
 
 
 open Ctxt in
-theorem equiv_arg1 (x1Stream x2Stream : Stream Bool) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
+theorem equiv_arg1 (x1Stream x2Stream : Stream (BitVec 1)) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
-  let v := (@Valuation.ofPair MLIR2Handshake.Ty _ (MLIR2Handshake.Ty.stream MLIR2Handshake.Ty2.bool) (MLIR2Handshake.Ty.stream MLIR2Handshake.Ty2.bool) x1Stream x2Stream)
+  let v := (@Valuation.ofPair MLIR2Handshake.Ty _ (MLIR2Handshake.Ty.stream (MLIR2Handshake.Ty2.bitvec 1)) (MLIR2Handshake.Ty.stream (MLIR2Handshake.Ty2.bitvec 1)) x1Stream x2Stream)
   simp_peephole at v
-  unfold Handshake.branch
-  unfold Handshake.merge
   sorry
 
 theorem determinate :

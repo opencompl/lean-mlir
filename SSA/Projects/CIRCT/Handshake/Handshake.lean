@@ -266,9 +266,6 @@ be recognized by the LeanMLIR generic syntax parser, and
 defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
 
-
-
-
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
