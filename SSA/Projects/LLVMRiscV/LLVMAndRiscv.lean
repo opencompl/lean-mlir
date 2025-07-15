@@ -55,7 +55,8 @@ def castLLVMToriscv (toCast : PoisonOr (BitVec w)) : BitVec 64 :=
 abbrev LLVMPlusRiscV : Dialect where
   Op := Op
   Ty := Ty
-
+  
+@[simp]
 instance : TyDenote LLVMPlusRiscV.Ty where
   toType := fun
     | .llvm llvmTy => TyDenote.toType llvmTy

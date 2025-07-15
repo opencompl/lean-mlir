@@ -1,7 +1,6 @@
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.RISCV64.Tactic.SimpRiscVAttr
-set_option maxHeartbeats 1000000000000000000
 
 open BitVec
 /-!
@@ -950,7 +949,7 @@ def ZBB_pure64_RISCV_RORIW (shamt : (BitVec 5)) (rs1_val : BitVec 64) : BitVec 6
 
 def ZBB_pure64_RISCV_RORI (shamt : (BitVec 5)) (rs1_val : BitVec 64) : BitVec 64 :=
     rs1_val >>> shamt.toNat ||| rs1_val <<< ((64 - shamt.toNat) % 64)
-   
+
 def ZBB_RTYPE_pure_RISCV_XNOR (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
     ~~~(rs1_val ^^^ rs2_val)
 
