@@ -11,7 +11,7 @@ open InstCombine(LLVM)
 /-
 This file contains simplification procedures to simplify proof goals within the
 LLVMAndRiscV dialect.
-These simpprocs are needed because the usually simplifier fails to remove the framework overhead
+These simpprocs are needed because the usual simplifier fails to remove the framework overhead
 given the new additional mappings used for the hybrid dialect.
 
 llvmArgsFromHybrid _ = .bitvec 64, similar

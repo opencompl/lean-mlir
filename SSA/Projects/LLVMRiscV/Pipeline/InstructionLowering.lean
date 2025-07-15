@@ -20,6 +20,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.xor
 import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
 import SSA.Projects.LLVMRiscV.Pipeline.select
+import SSA.Projects.LLVMRiscV.Pipeline.pseudo
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
@@ -49,8 +50,31 @@ def rewritingPatterns0 :
     icmp_match,
     mul_match,
     or_match,
-    rem_match,
-    sdiv_match]
+    -- rem_match_8,
+    -- rem_match_16,
+    -- rem_,match_32,
+    sdiv_match, -- to do fix the casts
+    add_match_1,
+    add_match_8,
+    add_match_16,
+    add_match_32,
+    and_match_1,
+    and_match_8,
+    and_match_16,
+    and_match_32,
+    ashr_match_8,
+    ashr_match_16,
+    ashr_match_32,
+    mul_match_8,
+    mul_match_16,
+    mul_match_32,
+    or_match_8,
+    or_match_16,
+    or_match_32,
+    sub_match,
+    sub_match_16,
+    sub_match_32,
+    ]
 
 /- Array containing the second batch of rewrites. We split it up in tw oarrays to avoid a stackoverflow, when
 invoking the rewriter with large size arrays.-/
@@ -59,8 +83,10 @@ def rewritingPatterns1 :
   List.flatten [
     sext_match,
     shl_match,
+    shl_match_8,
+    shl_match_16,
+    shl_match_32,
     srl_match,
-    sub_match,
     trunc_match,
     udiv_match,
     urem_match,
@@ -68,7 +94,7 @@ def rewritingPatterns1 :
     zext_match,
     select_match
   ]
-
+def enable_pseudo_instr_pass := pseudo_match
 /-- Defines an array containing only the rewrite pattern which eliminates cast.-/
 def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
   := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩ <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
@@ -121,8 +147,13 @@ def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRisc
   remove_dead_Cast2
 
 def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
-    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
+  let rmInitialDeadCode :=
+    if pseudo then
+      multiRewritePeephole 100 pseudo_match rmInitialDeadCode
+    else
+      rmInitialDeadCode -- no change if not pseudo
   let loweredConst := multiRewritePeephole 100
     const_match rmInitialDeadCode; -- Lower the instructions in the first array.
   let lowerPart1 := multiRewritePeephole 100
@@ -154,7 +185,7 @@ def llvm00:=
 def llvm01:=
   [LV|{
     ^bb0(%X : i64, %Y : i64 ):
-    %1 = llvm.icmp.ugt %X, %Y : i64
+    %1 = llvm.icmp.eq %X, %Y : i64
     %2 = llvm.sub %X, %X : i64
     llvm.return %1 : i1
   }]
@@ -166,4 +197,4 @@ def llvm02:=
     %2 = llvm.sub %X, %X : i64
     llvm.return %1 : i64
   }]
-#eval! (selectionPipeFuelSafe llvm02)
+#eval! (selectionPipeFuelWithCSE llvm01 false)

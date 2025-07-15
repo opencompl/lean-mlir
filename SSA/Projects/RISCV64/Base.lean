@@ -1,4 +1,5 @@
 import SSA.Projects.RISCV64.Semantics
+import SSA.Projects.RISCV64.PseudoOpSemantics
 import SSA.Core.Framework
 /- This file has a number of very large inductive types, which seem to cause Lean to run out of heartbeats.
 We avoid the issue by increasing the heartbeats. Since this applies to most inductives in this file, we do so globally.
@@ -8,6 +9,7 @@ set_option maxHeartbeats 1000000000000000000
 set_option maxRecDepth 10000000000000
 
 open RV64Semantics
+open RV64PseudoOpSemantics
 
 namespace RISCV64
 /-! ## The `RISCV64` dialect -/
@@ -121,6 +123,18 @@ inductive Op
   /- RISC-V `Zicond` conditional operations extension  -/
   | czero.eqz
   | czero.nez
+    -- adding RISC-V standart pseudo-instructions according to : https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
+  | mv
+  | not
+  | neg
+  | negw
+  | sext.w
+  | zext.b
+  | seqz
+  | snez
+  | sltz
+  | sgtz
+
   deriving DecidableEq, Repr, Lean.ToExpr
 
 /--
@@ -242,6 +256,17 @@ def Op.sig : Op → List Ty
   | maxu => [Ty.bv, Ty.bv]
   | min  => [Ty.bv, Ty.bv]
   | minu  => [Ty.bv, Ty.bv]
+  -- pseudo-instructions
+  | mv => [Ty.bv]
+  | not => [Ty.bv]
+  | neg => [Ty.bv]
+  | negw => [Ty.bv]
+  | sext.w => [Ty.bv]
+  | zext.b => [Ty.bv]
+  | seqz => [Ty.bv]
+  | snez => [Ty.bv]
+  | sltz => [Ty.bv]
+  | sgtz => [Ty.bv]
 
 /--
 Specifing the `outTy` of each `RISCV64` operation.
@@ -328,6 +353,17 @@ def Op.outTy : Op  → Ty
   | .maxu =>  Ty.bv
   | .min  =>  Ty.bv
   | .minu  =>  Ty.bv
+  --pseudo-instructions
+  | mv => Ty.bv
+  | not => Ty.bv
+  | neg => Ty.bv
+  | negw => Ty.bv
+  | sext.w => Ty.bv
+  | zext.b => Ty.bv
+  | seqz => Ty.bv
+  | snez => Ty.bv
+  | sltz => Ty.bv
+  | sgtz => Ty.bv
 
 /-- Combine `outTy` and `sig` together into a `Signature`. -/
 @[simp, reducible]
@@ -426,6 +462,17 @@ def opToString (op : RISCV64.Op) : String :=
   | .maxu => "maxu"
   | .min  => "min"
   | .minu  => "minu"
+    --pseudo-instructions
+  | .mv => "mv"
+  | .not => "not"
+  | .neg => "neg"
+  | .negw => "negw"
+  | .sext.w => "sext.w"
+  | .zext.b => "zext.b"
+  | .seqz => "seqz"
+  | .snez => "snez"
+  | .sltz => "sltz"
+  | .sgtz => "sgtz"
   op
 
 def attributesToPrint: RISCV64.Op → String
@@ -557,4 +604,15 @@ instance : DialectDenote (RV64) where
   | .maxu, regs, _ => ZBB_RTYPE_pure_RISCV_MAXU (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .min, regs, _ => ZBB_RTYPE_pure_RISCV_MIN (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .minu, regs, _ => ZBB_RTYPE_pure_RISCV_MINU (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  --pseudo-instructions
+  | .mv, regs, _  => MV_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .not, regs, _ => NOT_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .neg, regs, _ => NEG_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .negw, regs, _ => NEGW_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .sext.w, regs, _ => SEXTW_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .zext.b, regs, _ => ZEXTB_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .seqz, regs, _ => SEQZ_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .snez, regs, _ => SNEZ_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .sltz, regs, _ => SLTZ_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .sgtz, regs, _ => SGZT_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
 end RISCV64
