@@ -67,7 +67,31 @@ inductive GenBVExpr : Nat → Type where
   | arithShiftRight (lhs : GenBVExpr m) (rhs : GenBVExpr n) : GenBVExpr m
   | zeroExtend (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
   | truncate (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
-
+with
+  @[computed_field]
+  hashCode : (w : Nat) → GenBVExpr w → UInt64
+    | w, .var idx => mixHash 5 <| mixHash (hash w) (hash idx)
+    | w, .const val => mixHash 7 <| mixHash (hash w) (hash val)
+    | w, .extract start _ expr =>
+      mixHash 11 <| mixHash (hash start) <| mixHash (hash w) (hashCode _ expr)
+    | w, .bin lhs op rhs =>
+      mixHash 13 <| mixHash (hash w) <| mixHash (hashCode _ lhs) <| mixHash (hash op) (hashCode _ rhs)
+    | w, .un op operand =>
+      mixHash 17 <| mixHash (hash w) <| mixHash (hash op) (hashCode _ operand)
+    | w, .append lhs rhs _ =>
+      mixHash 19 <| mixHash (hash w) <| mixHash (hashCode _ lhs) (hashCode _ rhs)
+    | w, .replicate n expr _ =>
+      mixHash 23 <| mixHash (hash w) <| mixHash (hash n) (hashCode _ expr)
+    | w, .shiftLeft lhs rhs =>
+      mixHash 29 <| mixHash (hash w) <| mixHash (hashCode _ lhs) (hashCode _ rhs)
+    | w, .shiftRight lhs rhs =>
+      mixHash 31 <| mixHash (hash w) <| mixHash (hashCode _ lhs) (hashCode _ rhs)
+    | w, .arithShiftRight lhs rhs =>
+      mixHash 37 <| mixHash (hash w) <| mixHash (hashCode _ lhs) (hashCode _ rhs)
+    | w, .zeroExtend _ expr =>
+      mixHash 41 <| mixHash (hash w) (hashCode _ expr)
+    | w, .truncate _ expr =>
+      mixHash 43 <| mixHash (hash w) (hashCode _ expr)
 namespace GenBVExpr
 
 def toString : GenBVExpr w → String
@@ -86,8 +110,15 @@ def toString : GenBVExpr w → String
 
 instance : ToString (GenBVExpr w) := ⟨toString⟩
 
+instance : Hashable (GenBVExpr w) where
+  hash expr := expr.hashCode _
+
+instance : BEq (GenBVExpr w) where
+  beq := fun a b => toString a == toString b
+
+
 /--
-The semantics for `BVExpr`.
+The semantics for `GenBVExpr`.
 -/
 def eval (assign : BVExpr.Assignment) : GenBVExpr w → BitVec w
   | .var idx =>
@@ -143,11 +174,18 @@ end GenBVPred
 abbrev GenBVLogicalExpr := BoolExpr GenBVPred
 
 namespace GenBVLogicalExpr
+
 /--
 The semantics of boolean problems involving BitVec predicates as atoms.
 -/
 def eval (assign : BVExpr.Assignment) (expr : GenBVLogicalExpr) : Bool :=
   BoolExpr.eval (·.eval assign) expr
+
+instance : BEq GenBVLogicalExpr where
+  beq := fun a b => toString a == toString b
+
+instance : Hashable GenBVLogicalExpr where
+  hash a := hash (toString a)
 
 end GenBVLogicalExpr
 
@@ -168,11 +206,11 @@ structure BVExprWrapper where
 structure ParsedBVExprState where
   maxFreeVarId : Nat
   numSymVars :  Nat
-  freeVarToBVExpr : Std.HashMap String BVExprWrapper
-  BVExprIdToFreeVar : Std.HashMap Nat String
+  inputVarToBVExpr : Std.HashMap Name BVExprWrapper
+  inputVarIdToDisplayName : Std.HashMap Nat Name
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
-  symVarToDisplayName : Std.HashMap Nat String
+  symVarToDisplayName : Std.HashMap Nat Name
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 
@@ -199,15 +237,15 @@ instance : Inhabited BVExprWrapper where
 instance : Inhabited ParsedBVExprState where
   default := { maxFreeVarId := 0
              , numSymVars := 0, originalWidth := 32
-             , BVExprIdToFreeVar := {}, symVarToVal := {}
-             , symVarToDisplayName := {}, freeVarToBVExpr := {}, valToSymVar:= {}}
+             , inputVarIdToDisplayName := {}, symVarToVal := {}
+             , symVarToDisplayName := {}, inputVarToBVExpr := {}, valToSymVar:= {}}
 
 def printParsedBVExprState (s: ParsedBVExprState) :=
     s!"ParsedBVExprState:\n" ++
     s!"  maxFreeVarId: {s.maxFreeVarId}\n" ++
     s!"  numSymVars: {s.numSymVars}\n" ++
-    s!"  freeVarToBVExpr: {s.freeVarToBVExpr}\n" ++
-    s!"  BVExprIdToFreeVar: {s.BVExprIdToFreeVar}\n" ++
+    s!"  freeVarToBVExpr: {s.inputVarToBVExpr}\n" ++
+    s!"  BVExprIdToFreeVar: {s.inputVarIdToDisplayName}\n" ++
     s!"  symVarToVal: {s.symVarToVal}" ++
     s!"  symVarToDisplayName: {s.symVarToDisplayName}"
 
@@ -223,7 +261,7 @@ structure ParsedBVExpr where
   width : Nat
   bvExpr: GenBVExpr width
   symVars: Std.HashMap Nat BVExpr.PackedBitVec
-  inputVars : Std.HashMap Nat String
+  inputVars : Std.HashMap Nat Name
 
 structure ParsedBVLogicalExpr where
   lhs: ParsedBVExpr
@@ -453,7 +491,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
                                                                 numSymVars := numSymVars + 1
                                                                 , symVarToVal := currState.symVarToVal.insert newId pbv
                                                                 , valToSymVar := currState.valToSymVar.insert pbv newId
-                                                                , symVarToDisplayName := currState.symVarToDisplayName.insert newId s!"C{numSymVars + 1}"}
+                                                                , symVarToDisplayName := currState.symVarToDisplayName.insert newId (Lean.Name.mkSimple s!"C{numSymVars + 1}")}
                         set updatedState
                         return some {bvExpr := newExpr, width := targetWidth}
               | some var => let newExpr : GenBVExpr targetWidth := GenBVExpr.var var
@@ -465,9 +503,9 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         | _ =>
             let currState: ParsedBVExprState ← get
             let .fvar name := x | throwError m! "Unknown expression: {x}"
-            let userFacingName := ((← getLCtx).get! name).userName.getRoot.toString
+            let userFacingName := ((← getLCtx).get! name).userName
 
-            let existingVar? := currState.freeVarToBVExpr[userFacingName]?
+            let existingVar? := currState.inputVarToBVExpr[userFacingName]?
             match existingVar? with
             | some val => return val
             | none =>
@@ -477,8 +515,8 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
 
                 let updatedState : ParsedBVExprState :=  { currState with
                                                          maxFreeVarId := newId
-                                                         , freeVarToBVExpr := currState.freeVarToBVExpr.insert userFacingName newWrappedExpr
-                                                         , BVExprIdToFreeVar := currState.BVExprIdToFreeVar.insert newId userFacingName
+                                                         , inputVarToBVExpr := currState.inputVarToBVExpr.insert userFacingName newWrappedExpr
+                                                         , inputVarIdToDisplayName := currState.inputVarIdToDisplayName.insert newId userFacingName
                                                          }
                 set updatedState
                 return some newWrappedExpr
@@ -560,7 +598,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
                                               , originalWidth := pbv.w
                                               , symVarToVal := currState.symVarToVal.insert newId pbv
                                               , valToSymVar := currState.valToSymVar.insert pbv newId
-                                              , symVarToDisplayName := currState.symVarToDisplayName.insert newId s!"C{numSymVars + 1}"}
+                                              , symVarToDisplayName := currState.symVarToDisplayName.insert newId (Lean.Name.mkSimple s!"C{numSymVars + 1}")}
       set updatedState
       return some {bvExpr := newExpr, width := targetWidth}
     | some var => let newExpr : GenBVExpr targetWidth := GenBVExpr.var var
@@ -572,12 +610,12 @@ def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ParseBVExprM (Optio
   let some lhsRes ← toBVExpr lhsExpr targetWidth | throwError "Could not extract lhs: {lhsExpr}"
 
   let state ← get
-  let lhs: ParsedBVExpr := {bvExpr := lhsRes.bvExpr, width := lhsRes.width, symVars := state.symVarToVal, inputVars := state.BVExprIdToFreeVar}
+  let lhs: ParsedBVExpr := {bvExpr := lhsRes.bvExpr, width := lhsRes.width, symVars := state.symVarToVal, inputVars := state.inputVarIdToDisplayName}
 
   let some rhsRes ← toBVExpr rhsExpr targetWidth | throwError "Could not extract rhs: {rhsExpr}"
   let state ← get
 
-  let rhsInputVars := state.BVExprIdToFreeVar.filter fun k _ => !lhs.inputVars.contains k
+  let rhsInputVars := state.inputVarIdToDisplayName.filter fun k _ => !lhs.inputVars.contains k
   let rhsSymVars := state.symVarToVal.filter fun k _ => !lhs.symVars.contains k
 
   let rhs: ParsedBVExpr := {bvExpr := rhsRes.bvExpr, width := rhsRes.width, symVars := rhsSymVars, inputVars := rhsInputVars}
@@ -591,6 +629,20 @@ def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ParseBVExprM (Optio
 
   return none
 
+open Lean Elab Std Sat AIG Tactic BVDecide Frontend
+
+structure GeneralizerState where
+  startTime: Nat
+  timeout : Nat
+  processingWidth : Nat
+  targetWidth : Nat
+  widthId: Nat
+  parsedBVLogicalExpr : ParsedBVLogicalExpr
+  needsPreconditionsExprs : List GenBVLogicalExpr
+  visitedSubstitutions : Std.HashSet GenBVLogicalExpr
+  constantExprsEnumerationCache : Std.HashMap (GenBVExpr processingWidth) BVExpr.PackedBitVec
+
+abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
 def reconstructAssignment' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array (Bool × Nat))
     (aigSize : Nat)  :
@@ -632,37 +684,82 @@ def reconstructAssignment' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array
     finalMap := finalMap.insert bitVecVar ⟨BitVec.ofNat currentBit value⟩
   return finalMap
 
-open Lean Elab Std Sat AIG Tactic BVDecide Frontend
+def solve (bvExpr: GenBVLogicalExpr) : ParseBVExprM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    let parsedBVExprState ← get
+    let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
 
-def solve (bvExpr: BVLogicalExpr) : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    let cfg: BVDecideConfig := {timeout := 60}
+    let bitVecWidth := (mkNatLit 4)
+    let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
 
-    IO.FS.withTempFile fun _ lratFile => do
-      let ctx ← BVDecide.Frontend.TacticContext.new lratFile cfg
-      let entry ← IO.lazyPure (fun _ => bvExpr.bitblast)
 
-      let (cnf, map) ← IO.lazyPure (fun _ =>
-            let (entry, map) := entry.relabelNat'
-            let cnf := AIG.toCNF entry
-            (cnf, map))
+    let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType))
 
-      let res ← runExternal cnf ctx.solver ctx.lratPath
-          (trimProofs := ctx.config.trimProofs)
-          (timeout := ctx.config.timeout)
-          (binaryProofs := ctx.config.binaryProofs)
+  -- withLocalDeclsDND takes (Name × Expr), not BinderInfo
+    let bitVecExpr ←
+      withLocalDeclsDND nameTypeCombo.toArray fun fvars => do
+        let x0 := fvars[0]!
+        let x1 := fvars[1]!
+        let addFn := mkConst ``BitVec.add
+        let expr := mkApp3 addFn bitVecWidth x0 x1
+        let expr1 := mkApp3 addFn bitVecWidth x1 x1
+        let eqn ← mkEq expr expr1
 
-      match res with
-      | .ok proof =>
-        withTraceNode `Generalize (fun _ => return "Verified proof") do
-            let valid := BVDecide.Reflect.verifyBVExpr bvExpr proof
-            if !valid then
-                throwError m! "Received invalid proof from SAT"
-            pure ()
-        return none
-      | .error assignment =>
-        let equations := reconstructAssignment' map assignment entry.aig.decls.size
-        return .some equations
+        Lean.Meta.check eqn
 
+        let mVar ← mkFreshExprMVar eqn
+        let cfg: BVDecideConfig := {timeout := 60}
+
+        IO.FS.withTempFile fun _ lratFile => do
+          let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run'
+          let res ← BVDecide.Frontend.bvDecide' mVar.mvarId! ctx
+
+          match res with
+          | .ok result => pure s! "Res: {result.lratCert}"
+          | .error counterExample =>
+             let diagnosis ← DiagnosisM.run DiagnosisM.diagnose counterExample
+             let mut err := m!"The prover found a counterexample, consider the following assignment:\n"
+             let folder := fun error (var, value) => error ++ m!"{var} = {value}\n"
+             err := diagnosis.derivedEquations.foldl (init := err) folder
+             for (var, val) in diagnosis.derivedEquations do
+              logInfo m! "var: {var}; val: {val}"
+             logInfo m! "Error: {err}"
+             pure s! "CounterEx: {counterExample.equations}"
+--         mkForallFVars fvars eqn
+
+    -- let str ← ppExpr bitVecExpr
+    logInfo m!"{bitVecExpr}"
+
+    return none
+
+    -- let cfg: BVDecideConfig := {timeout := 60}
+
+    -- IO.FS.withTempFile fun _ lratFile => do
+    --   let ctx ← BVDecide.Frontend.TacticContext.new lratFile cfg
+    --   let entry ← IO.lazyPure (fun _ => bvExpr.bitblast)
+
+    --   let (cnf, map) ← IO.lazyPure (fun _ =>
+    --         let (entry, map) := entry.relabelNat'
+    --         let cnf := AIG.toCNF entry
+    --         (cnf, map))
+
+    --   let res ← runExternal cnf ctx.solver ctx.lratPath
+    --       (trimProofs := ctx.config.trimProofs)
+    --       (timeout := ctx.config.timeout)
+    --       (binaryProofs := ctx.config.binaryProofs)
+
+    --   match res with
+    --   | .ok proof =>
+    --     withTraceNode `Generalize (fun _ => return "Verified proof") do
+    --         let valid := BVDecide.Reflect.verifyBVExpr bvExpr proof
+    --         if !valid then
+    --             throwError m! "Received invalid proof from SAT"
+    --         pure ()
+    --     return none
+    --   | .error assignment =>
+    --     let equations := reconstructAssignment' map assignment entry.aig.decls.size
+    --     return .some equations
+
+lemma toto (x y : BitVec 4) : BitVec.add x x = BitVec.add x y := by bv_decide
 
 ---- Test Solver function ----
 def simpleArith : GenBVLogicalExpr :=
@@ -675,7 +772,12 @@ def simpleArith : GenBVLogicalExpr :=
 syntax (name := testExSolver) "test_solver" : tactic
 @[tactic testExSolver]
 def testSolverImpl : Tactic := fun _ => do
-  let res ← solve simpleArith
+  let mut initialState : ParsedBVExprState := default
+
+  initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insertMany [(0, (Name.mkSimple "w")), (1, (Name.mkSimple "x"))]}
+
+  let res ← (solve simpleArith).run' initialState
+--  let res ← solve simpleArith
   match res with
     | none => pure ()
     | some counterex =>
@@ -683,8 +785,8 @@ def testSolverImpl : Tactic := fun _ => do
           logInfo m! "Results: {id}={var.bv}"
   pure ()
 
--- theorem test_solver : False := by
---   test_solver
+theorem test_solver : False := by
+  test_solver
 
 def addConstraints (expr: GenBVLogicalExpr) (constraints: List GenBVLogicalExpr) (op: Gate := Gate.and) : GenBVLogicalExpr :=
       match constraints with
@@ -811,8 +913,6 @@ partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (fo
                       let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
                       return res ++ (← existsForAll (BoolExpr.gate Gate.and origExpr constrainedBVExpr) existsVars forAllVars n)
 
-
-
 elab "#reducewidth" expr:term " : " target:term : command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
@@ -831,7 +931,7 @@ elab "#reducewidth" expr:term " : " target:term : command =>
            let state := parsedBvExpr.state
            logInfo m! "bvExpr: {bvExpr}, state: {state}"
 
-           let results ← existsForAll bvExpr state.symVarToVal.keys state.BVExprIdToFreeVar.keys 3
+           let results ← existsForAll bvExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys 3
 
            logInfo m! "Results: {results}"
       | _ =>
@@ -933,14 +1033,6 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
 
-
-instance : BEq BVLogicalExpr where
-  beq := fun a b => toString a == toString b
-
-instance : Hashable BVLogicalExpr where
-  hash a := hash (toString a)
-
-
 partial def countModel (expr : BVLogicalExpr) (constants: Std.HashSet Nat): TermElabM Nat := do
     go 0 expr
     where
@@ -1031,18 +1123,6 @@ instance : ToString PreconditionSynthesisCacheValue where
   toString val :=
     s! "⟨positiveExampleValues := {val.positiveExampleValues}, negativeExampleValues := {val.negativeExampleValues}⟩"
 
-structure GeneralizerState where
-  startTime: Nat
-  timeout : Nat
-  processingWidth : Nat
-  targetWidth : Nat
-  widthId: Nat
-  parsedBVLogicalExpr : ParsedBVLogicalExpr
-  needsPreconditionsExprs : List BVLogicalExpr
-  visitedSubstitutions : Std.HashSet BVLogicalExpr
-  constantExprsEnumerationCache : Std.HashMap (GenBVExpr processingWidth) BVExpr.PackedBitVec
-
-abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
 def zero (w: Nat) := BVExpr.const (BitVec.ofNat w 0)
 def one (w: Nat) := BVExpr.const (BitVec.ofNat w 1)
@@ -1519,9 +1599,9 @@ def prettifyBVBinPred (op : BVBinPred) : String :=
   | .eq => "="
   | _ => op.toString
 
-def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat String) : String :=
+def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) : String :=
     match bvExpr with
-    | .var idx => displayNames[idx]!
+    | .var idx => displayNames[idx]!.toString
     | .const bv =>
        toString bv.toInt
     | .bin lhs BVBinOp.add (.bin  (BVExpr.const bv) BVBinOp.add (BVExpr.un BVUnOp.not rhs)) =>
@@ -1547,7 +1627,7 @@ def isGteZeroCheck (expr : BVLogicalExpr) : Bool :=
           bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
   | _ => false
 
-def prettifyComparison (bvLogicalExpr : BVLogicalExpr) (displayNames: Std.HashMap Nat String)  : Option String := Id.run do
+def prettifyComparison (bvLogicalExpr : BVLogicalExpr) (displayNames: Std.HashMap Nat Name)  : Option String := Id.run do
   let mut res : Option String := none
   match bvLogicalExpr with
   | .literal (BVPred.bin lhs BVBinPred.ult _) =>
@@ -1565,7 +1645,7 @@ def prettifyComparison (bvLogicalExpr : BVLogicalExpr) (displayNames: Std.HashMa
 
   res
 
-def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String :=
+def prettify (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat Name) : String :=
   match (prettifyComparison generalization displayNames) with
   | some s => s
   | none =>
@@ -1605,9 +1685,10 @@ inductive GeneralizeContext where
   | Tactic (name : Name) : GeneralizeContext
 
 
-def printAsTheorem (name: Name) (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat String) : String := Id.run do
-  let params := displayNames.values.filter (λ n => n != "w")
-  let mut res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " params} : BitVec w)"
+def printAsTheorem (name: Name) (generalization: BVLogicalExpr) (displayNames: Std.HashMap Nat Name) : String := Id.run do
+  let params := displayNames.values.filter (λ n => n.toString != "w")
+
+  let mut res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
 
   match generalization with
   | .ite cond positive _ => res := res ++ s! " (h: {prettify cond displayNames}) : {prettify positive displayNames}"
@@ -1625,7 +1706,10 @@ def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM Me
           let startTime ← Core.liftIOCore IO.monoMsNow
 
           -- Parse the input expression
-          let initialState : ParsedBVExprState := default
+          let widthId : Nat := 9481
+          let mut initialState : ParsedBVExprState := default
+          initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId (Name.mkSimple "w")}
+
           let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
             | throwError "Unsupported expression provided"
 
@@ -1638,7 +1722,7 @@ def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM Me
           let mut constantAssignments := []
           --- Synthesize constants in a lower width if needed
           if originalWidth > targetWidth then
-            constantAssignments ← existsForAll bvLogicalExpr parsedBVState.symVarToVal.keys parsedBVState.BVExprIdToFreeVar.keys 1
+            constantAssignments ← existsForAll bvLogicalExpr parsedBVState.symVarToVal.keys parsedBVState.inputVarIdToDisplayName.keys 1
 
           let mut processingWidth := targetWidth
           if constantAssignments.isEmpty then
@@ -1653,7 +1737,7 @@ def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM Me
 
           let initialGeneralizerState : GeneralizerState :=
             { startTime := startTime
-            , widthId := 9481
+            , widthId := widthId
             , timeout := timeoutMs
             , processingWidth           := processingWidth
             , targetWidth               := targetWidth
@@ -1664,8 +1748,7 @@ def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM Me
             }
 
           let generalizeRes ← (generalize constantAssignments).run' initialGeneralizerState
-          let mut variableDisplayNames := Std.HashMap.union parsedBVState.BVExprIdToFreeVar parsedBVState.symVarToDisplayName
-          variableDisplayNames := variableDisplayNames.insert initialGeneralizerState.widthId "w"
+          let variableDisplayNames := Std.HashMap.union parsedBVState.inputVarIdToDisplayName parsedBVState.symVarToDisplayName
 
           trace[Generalize] m! "All vars: {variableDisplayNames}"
           match generalizeRes with
@@ -1703,14 +1786,14 @@ def evalBvGeneralize : Tactic := fun
     let name ← mkAuxDeclName `generalized
     let msg ← withoutModifyingEnv <| withoutModifyingState do
       withMainContext do
-        -- let g ← getMainGoal
-        -- let normalized? ← Normalize.bvNormalize g {}
-        -- let some normalized := normalized? | throwError "Error!"
-        -- let reflected ← (reflectBV g).run
-        let expr ← Lean.Elab.Tactic.getMainTarget
-        let res ← parseAndGeneralize expr (GeneralizeContext.Tactic name)
-        pure m! "Generalized theorem: {res}"
-       --  pure m! "{reflected.bvExpr}"
+        let g ← getMainGoal
+        let normalized? ← Normalize.bvNormalize g {}
+        let some normalized := normalized? | throwError "Error!"
+        let reflected ← (reflectBV g).run
+        -- let expr ← Lean.Elab.Tactic.getMainTarget
+        -- let res ← parseAndGeneralize expr (GeneralizeContext.Tactic name)
+        -- pure m! "Generalized theorem: {res}"
+        pure m! "{reflected.bvExpr}"
     logInfo m! "{msg}"
 | _ => throwUnsupportedSyntax
 
@@ -1720,6 +1803,7 @@ set_option linter.unusedTactic false
 
 
 theorem zextdemo (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
+  intros _
   bv_normalize
   bv_generalize
   sorry
