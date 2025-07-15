@@ -5,6 +5,7 @@ import SSA.Core.Framework.Macro
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Core.Tactic.SimpSet
+import Init.Data.String.Basic
 
 open MLIR AST Ctxt
 
@@ -266,19 +267,21 @@ defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
 
 
+
+
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
-    | ["Stream", w] =>
+    | ["Stream", "BitVec", w] =>
       match w.toNat? with
       | some w' => return .stream (.bitvec w')
       | _ => throw .unsupportedType
-    | ["Stream2", w] =>
+    | ["Stream2", "BitVec", w] =>
       match w.toNat? with
       | some w' => return .stream2 (.bitvec w')
       | _ => throw .unsupportedType
-    | ["Stream2Token", w] =>
-    match w.toNat? with
+    | ["Stream2Token", "BitVec", w] =>
+      match w.toNat? with
       | some w' => return .stream2token (.bitvec w')
       | _ => throw .unsupportedType
     | _ => throw .unsupportedType
