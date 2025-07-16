@@ -147,7 +147,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         | _ =>
             let currState: ParsedBVExprState ← get
             let .fvar name := x | throwError m! "Unknown expression: {x}"
-            let userFacingName := ((← getLCtx).get! name).userName
+            let userFacingName := Name.mkSimple (((← getLCtx).get! name).userName.toString ++ "_191")
 
             let existingVar? := currState.inputVarToBVExpr[userFacingName]?
             match existingVar? with

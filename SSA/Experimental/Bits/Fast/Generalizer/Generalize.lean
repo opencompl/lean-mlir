@@ -31,14 +31,17 @@ structure GeneralizerState where
 
 abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
-def bvExprToExpr (bvExpr : GenBVExpr w) : ParseBVExprM Expr := do
-  let parsedBVExprState ← get
+def GeneralizerStateM.liftTermElabM (m : TermElabM α) : GeneralizerStateM α := do
+  let v ← m
+  return v
+
+def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
+  let parsedBVExprState := (← get).parsedBVLogicalExpr.state
   let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
 
   let bitVecWidth := (mkNatLit w)
   match bvExpr with
-  | .var idx => logInfo m! "idx: {idx}; getting: {allNames[idx]!}"
-                let localDecl ← getLocalDeclFromUserName allNames[idx]!
+  | .var idx => let localDecl ← getLocalDeclFromUserName allNames[idx]!
                 pure (mkFVar localDecl.fvarId)
   | .const val => mkAppM ``BitVec.ofInt #[bitVecWidth,  (mkIntLit val.toInt)]
   | .bin lhs op rhs  => match op with
@@ -65,30 +68,33 @@ def bvExprToExpr (bvExpr : GenBVExpr w) : ParseBVExprM Expr := do
   | .truncate v expr => mkAppM ``BitVec.truncate #[bitVecWidth, ← bvExprToExpr expr]
   | .extract _ _ _ => throwError m! "Extract operation is not supported."
 
-def toExpr (bvLogicalExpr: GenBVLogicalExpr) : ParseBVExprM Expr := do
+def toExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM Expr := do
   match bvLogicalExpr with
   | .literal (GenBVPred.bin lhs op rhs) =>
       match op with
-      | .eq => mkEq (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+      -- | .eq => mkEq (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+      | .eq => mkAppM ``BEq.beq #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
       | .ult => mkAppM ``BitVec.ult #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
   | .const b =>
       match b with
       | true => pure (mkConst ``Bool.true)
       | _ => pure (mkConst ``Bool.false)
-  | .not boolExpr => mkAppM ``BitVec.not #[← toExpr boolExpr]
+  | .not boolExpr => mkAppM ``Bool.not #[← toExpr boolExpr]
   | .gate gate lhs rhs =>
         match gate with
         | .or => mkAppM ``HOr.hOr #[← toExpr lhs, ← toExpr rhs]
         | .xor => mkAppM ``HXor.hXor #[← toExpr lhs, ← toExpr rhs]
-        | .and => mkAppM ``HAnd.hAnd #[← toExpr lhs, ← toExpr rhs]
+        | .and => mkAppM ``Bool.and #[← toExpr lhs, ← toExpr rhs]
         | .beq => mkAppM ``BEq.beq #[← toExpr lhs, ← toExpr rhs]
   | _ => throwError m! "Unsupported operation"
 
-def solve (bvExpr: GenBVLogicalExpr) : ParseBVExprM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    let parsedBVExprState ← get
+def solve (bvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    let state ← get
+    let parsedBVExprState := state.parsedBVLogicalExpr.state
+
     let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
 
-    let bitVecWidth := (mkNatLit 5)
+    let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
 
     let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType))
@@ -103,35 +109,39 @@ def solve (bvExpr: GenBVLogicalExpr) : ParseBVExprM (Option (Std.HashMap Nat BVE
         -- let expr1 := mkApp3 addFn bitVecWidth x1 x1
         -- let eqn ← mkEq expr expr1
 
-        let expr ← toExpr bvExpr
-        -- if !(← Lean.Meta.isTypeCorrect expr) then
-        --   throwError m! "Expression: {expr} has incorrect type."
-        logInfo m! "Checking: {expr}"
+        let mut expr ← toExpr bvExpr
         Lean.Meta.check expr
-        logInfo m! "Passed check: {expr}"
+        -- logInfo m! "Created Expr: {expr}; fVars: {fvars}"
+
+        expr ← mkEq expr (mkConst ``Bool.true)
+        Lean.Meta.check expr
 
         let mVar ← mkFreshExprMVar expr
-        let cfg: BVDecideConfig := {timeout := 60}
+        mVar.mvarId!.withContext do
+          -- logInfo m! "{← getLocalHyps}"
+          -- logInfo m! "{mVar}; {mVar.mvarId!}"
+          let cfg: BVDecideConfig := {timeout := 60}
 
-        IO.FS.withTempFile fun _ lratFile => do
-          let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run'
-          let res ← BVDecide.Frontend.bvDecide' mVar.mvarId! ctx
+          IO.FS.withTempFile fun _ lratFile => do
+            let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg)
+            logWarning m!"@@@SOLVE@@@ {mVar.mvarId!}"
+            let res ← BVDecide.Frontend.bvDecide' mVar.mvarId! ctx
+            logWarning "^^^^^^^^"
 
-          match res with
-          | .ok _ => pure none
-          | .error counterExample =>
-             let nameToId : Std.HashMap Name Nat := Std.HashMap.ofList (allNames.toList.map (λ (id, name) => (name, id)))
-             let mut assignment : Std.HashMap Nat BVExpr.PackedBitVec := Std.HashMap.emptyWithCapacity
-             for (var, val) in counterExample.equations do
+            match res with
+            | .ok _ => pure none
+            | .error counterExample =>
+              let nameToId : Std.HashMap Name Nat := Std.HashMap.ofList (allNames.toList.map (λ (id, name) => (name, id)))
+              let mut assignment : Std.HashMap Nat BVExpr.PackedBitVec := Std.HashMap.emptyWithCapacity
+              for (var, val) in counterExample.equations do
                 let name := ((← getLCtx).get! var.fvarId!).userName
                 assignment := assignment.insert nameToId[name]! val
-             pure (some assignment)
+              pure (some assignment)
 
-    logInfo m!"{res}"
 
     return res
 
-lemma toto (x y : BitVec 4) : BitVec.add x x = BitVec.add x y := by bv_decide
+lemma toto (x y : BitVec 4) : BitVec.add x x == BitVec.add x x := by bv_decide
 
 ---- Test Solver function ----
 def simpleArith : GenBVLogicalExpr :=
@@ -141,14 +151,20 @@ def simpleArith : GenBVLogicalExpr :=
   let sum : GenBVExpr 5 := GenBVExpr.bin x BVBinOp.add z
   BoolExpr.literal (GenBVPred.bin sum BVBinPred.eq y)
 
+
+
+/-
 syntax (name := testExSolver) "test_solver" : tactic
 @[tactic testExSolver]
 def testSolverImpl : Tactic := fun _ => do
-  let mut initialState : ParsedBVExprState := default
+  let mut parsedBVExprState : ParsedBVExprState := default
+  parsedBVExprState := { parsedBVExprState with
+                              symVarToDisplayName := parsedBVExprState.symVarToDisplayName.insertMany
+                                                [(0, (Name.mkSimple "w"))
+                                                ,(1, (Name.mkSimple "x"))]}
 
-  initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insertMany [(0, (Name.mkSimple "w")), (1, (Name.mkSimple "x"))]}
-
-  let res ← (solve simpleArith).run' initialState
+ -- let initialGeneralizerState : GeneralizerState := {}
+  let res ← (solve simpleArith).run' {}
 --  let res ← solve simpleArith
   match res with
     | none => pure ()
@@ -157,8 +173,9 @@ def testSolverImpl : Tactic := fun _ => do
           logInfo m! "Results: {id}={var.bv}"
   pure ()
 
-theorem test_solver : False := by
-  test_solver
+-/
+-- theorem test_solver : False := by
+--   test_solver
 
 def addConstraints (expr: GenBVLogicalExpr) (constraints: List GenBVLogicalExpr) (op: Gate := Gate.and) : GenBVLogicalExpr :=
       match constraints with
@@ -249,9 +266,9 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenBVLogicalExpr) (symVa
 
 
 partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1):
-                  TermElabM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+                  GeneralizerStateM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let rec constantsSynthesis (bvExpr: GenBVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
-            : TermElabM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+            : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
       let existsRes ← solve bvExpr
 
       match existsRes with
@@ -281,7 +298,7 @@ partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (fo
                 | none => return res
                 | some assignment =>
                       res := assignment :: res
-                      let newConstraints := assignment.toList.map (fun c => BoolExpr.literal (BVPred.bin (BVExpr.var c.fst) BVBinPred.eq (BVExpr.const c.snd.bv)))
+                      let newConstraints := assignment.toList.map (fun c => BoolExpr.literal (GenBVPred.bin (GenBVExpr.var c.fst) BVBinPred.eq (GenBVExpr.const c.snd.bv)))
                       let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
                       return res ++ (← existsForAll (BoolExpr.gate Gate.and origExpr constrainedBVExpr) existsVars forAllVars n)
 
@@ -303,15 +320,44 @@ elab "#reducewidth" expr:term " : " target:term : command =>
            let state := parsedBvExpr.state
            logInfo m! "bvExpr: {bvExpr}, state: {state}"
 
-           let results ← existsForAll bvExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys 3
+           let initialGeneralizerState : GeneralizerState :=
+                { startTime                := 0
+                , widthId                  := 0
+                , timeout                  := 0
+                , processingWidth          := targetWidth
+                , targetWidth              := targetWidth
+                , parsedBVLogicalExpr       := parsedBvExpr
+                , needsPreconditionsExprs   := []
+                , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
+                , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
+                }
+
+
+           let results ← (existsForAll bvExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys 3).run' initialGeneralizerState
 
            logInfo m! "Results: {results}"
       | _ =>
             logInfo m! "Could not match"
       pure ()
 
+set_option pp.coercions true in
+lemma toto2 : true == true := by sorry
+
+-- theorem test (x y z : BitVec 64) (x_191 C1 : BitVec 4) : (x_191.add C1 == x_191 && true) = true := by
+--   bv_normalize
+--   bv_decide
+
+set_option trace.Meta.Tactic.bv true
+set_option diagnostics true
 variable {x y z : BitVec 64}
 #reducewidth (x + 0 = x) : 4
+
+-- theorem test (x y z : BitVec 64) (x_191 C1 : BitVec 4) :
+--  (!((BitVec.ofInt 4 0).add (BitVec.ofInt 4 0) == BitVec.ofInt 4 0 && true)) = true := by
+--  bv_decide
+
+
+#exit
 
 #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
 
@@ -405,10 +451,10 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
 
-partial def countModel (expr : BVLogicalExpr) (constants: Std.HashSet Nat): TermElabM Nat := do
+partial def countModel (expr : GenBVLogicalExpr) (constants: Std.HashSet Nat): TermElabM Nat := do
     go 0 expr
     where
-        go (count: Nat) (expr : BVLogicalExpr) : TermElabM Nat := do
+        go (count: Nat) (expr : GenBVLogicalExpr) : TermElabM Nat := do
           let res ← solve expr
           match res with
           | none => return count
