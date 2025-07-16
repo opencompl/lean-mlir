@@ -7,7 +7,7 @@ import Mathlib.Tactic.Linarith
 
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
-  Γ.eraseIdx v.val
+  ⟨Γ.toList.eraseIdx v.val⟩
 
 /-- Witness that Γ' is Γ without v -/
 def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
@@ -77,8 +77,8 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     simp only [Deleted] at DEL
     subst DEL
     have ⟨vix, vproof⟩ := v
-    simp only [Ctxt.get?, Ctxt.delete] at vproof
-    have H := List.getElem?_eraseIdx_of_lt (l := Γ) (i := delv.val) (j := vix) (h := DELV)
+    simp only [Ctxt.get?, Ctxt.delete, Ctxt.getElem?_ofList] at vproof ⊢
+    have H := List.getElem?_eraseIdx_of_lt (l := Γ.toList) (i := delv.val) (j := vix) (h := DELV)
     rw [H] at vproof
     exact vproof
   }⟩
@@ -86,9 +86,9 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     simp only [Deleted] at DEL
     subst DEL
     have ⟨vix, vproof⟩ := v
-    simp only [Ctxt.get?, Ctxt.delete] at vproof
-    have H := List.get?_eraseIdx_of_le (xs := Γ) (n := delv.val) (k := vix) (hk := by linarith)
-    rw[H] at vproof
+    simp only [Ctxt.get?, Ctxt.delete, Ctxt.getElem?_ofList] at vproof
+    have H := List.get?_eraseIdx_of_le (xs := Γ.toList) (n := delv.val) (k := vix) (hk := by linarith)
+    rw [H] at vproof
     exact vproof
   }⟩
 
@@ -121,8 +121,8 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     simp only [Deleted] at DEL
     subst DEL
     have ⟨vix, vproof⟩ := v
-    simp only [Ctxt.get?, Ctxt.delete] at *
-    have H := List.get?_eraseIdx_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
+    simp only [Ctxt.get?, Ctxt.delete, Ctxt.getElem?_ofList] at *
+    have H := List.get?_eraseIdx_of_lt (xs := Γ.toList) (n := delv.val) (k := vix) (hk := VLT)
     rw [H]
     exact vproof
   }⟩, by
@@ -130,7 +130,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     subst DEL
     intros V
     have ⟨vix, vproof⟩ := v
-    simp only [Ctxt.get?, Ctxt.delete] at *
+    simp only [Ctxt.get?, Ctxt.delete, Ctxt.getElem?_ofList] at *
     simp only [Ctxt.Valuation.eval, Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?]
     split_ifs;
     case pos _ => rfl
@@ -157,9 +157,8 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     cases VIX:vix
     case zero => subst VIX; contradiction
     case succ vix' =>
-      have H := List.get?_eraseIdx_of_le (xs := Γ) (n := delv.val) (k := vix') (hk := by linarith)
-      simp only [add_tsub_cancel_right]
-      rw [H]
+      have H := List.get?_eraseIdx_of_le (xs := Γ.toList) (n := delv.val) (k := vix') (hk := by linarith)
+      simp only [add_tsub_cancel_right, Ctxt.getElem?_ofList, H]
       subst VIX
       assumption
   }⟩, by
@@ -203,10 +202,10 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {del
   (V : Γ.Valuation) {newv : TyDenote.toType ω} :
   DELω.pushforward_Valuation (V.snoc newv) =
   (DEL.pushforward_Valuation V).snoc newv := by
-    simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?,
-      Ctxt.Valuation.snoc_eq]
+    simp only [Ctxt.Valuation.snoc_eq, Ctxt.get?, Ctxt.getElem?_snoc_zero, Nat.succ_eq_add_one,
+      Ctxt.getElem?_snoc_succ, Deleted.pushforward_Valuation, Deleted.pullback_var]
     unfold Deleted.pushforward_Valuation Deleted.pullback_var
-    simp only [Ctxt.get?, Ctxt.Var.val_toSnoc, Ctxt.Var.succ_eq_toSnoc, Nat.succ_eq_add_one]
+    simp only [Ctxt.get?, Ctxt.Var.val_toSnoc, Ctxt.Var.succ_eq_toSnoc]
     funext t var
     rcases var with ⟨i, hvar⟩
     split_ifs with EQN <;> (
@@ -217,10 +216,9 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {del
       exfalso
       linarith
     all_goals
-      split_ifs <;>
-        solve
-        | rfl
-        | exfalso; linarith
+      solve
+      | rfl
+      | exfalso; linarith
 
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
