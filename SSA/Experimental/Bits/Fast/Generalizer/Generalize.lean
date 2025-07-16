@@ -31,27 +31,86 @@ structure GeneralizerState where
 
 abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
+def bvExprToExpr (bvExpr : GenBVExpr w) : ParseBVExprM Expr := do
+  let parsedBVExprState ← get
+  let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
+
+  let bitVecWidth := (mkNatLit w)
+  match bvExpr with
+  | .var idx => logInfo m! "idx: {idx}; getting: {allNames[idx]!}"
+                let localDecl ← getLocalDeclFromUserName allNames[idx]!
+                pure (mkFVar localDecl.fvarId)
+  | .const val => mkAppM ``BitVec.ofInt #[bitVecWidth,  (mkIntLit val.toInt)]
+  | .bin lhs op rhs  => match op with
+                        | .and => mkAppM ``BitVec.and #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .or => mkAppM ``BitVec.or #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .xor => mkAppM ``BitVec.xor #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .add => mkAppM ``BitVec.add #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .mul => mkAppM ``BitVec.mul #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .udiv => mkAppM ``BitVec.udiv #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .umod => mkAppM ``BitVec.umod #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .un op expr => match op with
+                   | .not => mkAppM ``BitVec.not #[← bvExprToExpr expr]
+                   | .rotateLeft n => mkAppM ``BitVec.rotateLeft #[← bvExprToExpr expr, mkNatLit n]
+                   | .rotateRight n => mkAppM ``BitVec.rotateRight #[← bvExprToExpr expr, mkNatLit n]
+                   | .arithShiftRightConst n => mkAppM ``BitVec.sshiftRight #[← bvExprToExpr expr, mkNatLit n]
+                   | .reverse => mkAppM ``BitVec.reverse #[← bvExprToExpr expr]
+                   | .clz => mkAppM ``BitVec.clz #[← bvExprToExpr expr]
+  | .append lhs rhs _ => mkAppM ``BitVec.append #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .replicate n expr _ => mkAppM ``BitVec.replicate #[mkNatLit n, ← bvExprToExpr expr]
+  | .shiftLeft lhs rhs => mkAppM ``HShiftLeft.hShiftLeft #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .shiftRight lhs rhs => mkAppM ``HShiftRight.hShiftRight #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .arithShiftRight lhs rhs => mkAppM ``BitVec.sshiftRight' #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .zeroExtend v expr => mkAppM ``BitVec.zeroExtend #[bitVecWidth, ← bvExprToExpr expr]
+  | .truncate v expr => mkAppM ``BitVec.truncate #[bitVecWidth, ← bvExprToExpr expr]
+  | .extract _ _ _ => throwError m! "Extract operation is not supported."
+
+def toExpr (bvLogicalExpr: GenBVLogicalExpr) : ParseBVExprM Expr := do
+  match bvLogicalExpr with
+  | .literal (GenBVPred.bin lhs op rhs) =>
+      match op with
+      | .eq => mkEq (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+      | .ult => mkAppM ``BitVec.ult #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .const b =>
+      match b with
+      | true => pure (mkConst ``Bool.true)
+      | _ => pure (mkConst ``Bool.false)
+  | .not boolExpr => mkAppM ``BitVec.not #[← toExpr boolExpr]
+  | .gate gate lhs rhs =>
+        match gate with
+        | .or => mkAppM ``HOr.hOr #[← toExpr lhs, ← toExpr rhs]
+        | .xor => mkAppM ``HXor.hXor #[← toExpr lhs, ← toExpr rhs]
+        | .and => mkAppM ``HAnd.hAnd #[← toExpr lhs, ← toExpr rhs]
+        | .beq => mkAppM ``BEq.beq #[← toExpr lhs, ← toExpr rhs]
+  | _ => throwError m! "Unsupported operation"
+
 def solve (bvExpr: GenBVLogicalExpr) : ParseBVExprM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let parsedBVExprState ← get
     let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
 
-    let bitVecWidth := (mkNatLit 4)
+    let bitVecWidth := (mkNatLit 5)
     let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
 
     let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType))
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun fvars => do
-        let x0 := fvars[0]!
-        let x1 := fvars[1]!
-        let addFn := mkConst ``BitVec.add
-        let expr := mkApp3 addFn bitVecWidth x0 x1
-        let expr1 := mkApp3 addFn bitVecWidth x1 x1
-        let eqn ← mkEq expr expr1
+        -- let x0 := fvars[0]!
+        -- logInfo m! "{x0}; allfvars: {fvars}"
+        -- let x1 := fvars[1]!
+        -- let addFn := mkConst ``BitVec.add
+        -- let expr := mkApp3 addFn bitVecWidth x0 x0
+        -- let expr1 := mkApp3 addFn bitVecWidth x1 x1
+        -- let eqn ← mkEq expr expr1
 
-        Lean.Meta.check eqn
+        let expr ← toExpr bvExpr
+        -- if !(← Lean.Meta.isTypeCorrect expr) then
+        --   throwError m! "Expression: {expr} has incorrect type."
+        logInfo m! "Checking: {expr}"
+        Lean.Meta.check expr
+        logInfo m! "Passed check: {expr}"
 
-        let mVar ← mkFreshExprMVar eqn
+        let mVar ← mkFreshExprMVar expr
         let cfg: BVDecideConfig := {timeout := 60}
 
         IO.FS.withTempFile fun _ lratFile => do
@@ -294,7 +353,7 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
             let mut res : List (GenBVExpr w) := []
 
             for (constId, constVal) in constants.toArray do
-              let newVar := BVExpr.var constId
+              let newVar := GenBVExpr.var constId
 
               if constVal == target then
                 res := newVar :: res
@@ -304,7 +363,7 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
                 continue
 
               if target.bv == 0 then
-                res := BVExpr.const 0 :: res
+                res := GenBVExpr.const 0 :: res
 
               let newTarget := (updatePackedBVWidth target constVal.w)
               if h : constVal.w = newTarget.w then
@@ -312,29 +371,29 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
 
                 -- ~C = T
                 if BitVec.not constVal.bv == targetBv then
-                  res := BVExpr.un BVUnOp.not newVar :: res
+                  res := GenBVExpr.un BVUnOp.not newVar :: res
 
                 -- C + X = Target; New target = Target - X.
                 let addRes ← deductiveSearch expr constants {bv := targetBv - constVal.bv} (depth-1) constId
-                res := res ++ addRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add resExpr)
+                res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
 
                 -- C - X = Target
                 let subRes ← deductiveSearch expr constants {bv := constVal.bv - targetBv} (depth-1) constId
-                res := res ++ subRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.add (negate resExpr))
+                res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
 
                 -- X - C = Target
                 let subRes' ← deductiveSearch expr constants {bv := targetBv + constVal.bv}  (depth-1) constId
-                res := res ++ subRes'.map (λ resExpr => BVExpr.bin (resExpr) BVBinOp.add (negate newVar))
+                res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
 
                 -- X * C = Target
                 if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
                   let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
-                  res := res ++ mulRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.mul resExpr)
+                  res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
 
                 -- C / X = Target
                 if targetBv != 0 && (BitVec.umod constVal.bv targetBv) == 0 then
                   let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constVal.bv targetBv} (depth - 1) constId
-                  res := res ++ divRes.map (λ resExpr => BVExpr.bin newVar BVBinOp.udiv resExpr)
+                  res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
 
               else
                     throwError m! "Width mismatch for expr : {expr} and target: {target}"

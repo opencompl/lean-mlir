@@ -288,8 +288,8 @@ def substitute  (bvLogicalExpr: GenBVLogicalExpr) (assignment: Std.HashMap Nat S
       BoolExpr.not (substitute boolExpr assignment)
   | .gate op lhs rhs =>
       BoolExpr.gate op (substitute lhs assignment) (substitute rhs assignment)
-  | .ite constVar auxVar op3 =>
-      BoolExpr.ite (substitute constVar assignment) (substitute auxVar assignment) (substitute op3 assignment)
+  | .ite conditional pos neg =>
+      BoolExpr.ite (substitute conditional assignment) (substitute pos assignment) (substitute neg assignment)
   | _ => bvLogicalExpr
 
 
