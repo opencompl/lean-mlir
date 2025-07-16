@@ -261,22 +261,23 @@ def compare(
                 original_file_base = os.path.splitext(original_file_name)[0]
 
                 for width in bv_widths:
-                    # Apply both replacements: 'sorry' to 'bv_compare'' and 'WIDTH' to actual width
-                    modified_content = original_content.replace(
-                        "sorry", "bv_compare'"
-                    ).replace("WIDTH", str(width))
-
-                    # Create a new temporary filename that includes original file's base name and width
-                    temp_filename = f"{original_file_base}_{width}.lean"
-                    temp_file_path = os.path.join(
-                        BENCHMARK_DIR_HACKERSDELIGHT, temp_filename
-                    )
-
-                    # Write the modified content to the temporary file
-                    with open(temp_file_path, "w", encoding="utf-8") as temp_file:
-                        temp_file.write(modified_content)
+                    
 
                     for r in range(reps):
+                        # Apply both replacements: 'sorry' to 'bv_compare'' and 'WIDTH' to actual width
+                        modified_content = original_content.replace(
+                            "sorry", "bv_compare'"
+                        ).replace("WIDTH", str(width))
+
+                        # Create a new temporary filename that includes original file's base name and width
+                        temp_filename = f"{original_file_base}_{width}_{r}.lean"
+                        temp_file_path = os.path.join(
+                            BENCHMARK_DIR_HACKERSDELIGHT, temp_filename
+                        )
+
+                        # Write the modified content to the temporary file
+                        with open(temp_file_path, "w", encoding="utf-8") as temp_file:
+                            temp_file.write(modified_content)
                         # Submit the temporary file to be run.
                         # log_file_base_name will be 'original_file_base'
                         # specific_arg_for_log_name will be the 'width'

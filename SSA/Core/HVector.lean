@@ -43,6 +43,12 @@ def map' {A : α → Type*} {B : β → Type*} (f' : α → β) (f : ∀ (a : α
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map' f' f as)
 
+def mapM [Monad m] {α : Type 0} {A : α → Type} {B : α → Type}
+    (f : ∀ (a : α), A a → m (B a)) :
+    ∀ {l : List α}, HVector A l → m (HVector B l)
+  | [], .nil => return .nil
+  | t :: _ts, .cons a as => do return HVector.cons (← f t a) (← HVector.mapM f as)
+
 /-- Folds a function over an hvector from the left, where the accumulator has a fixed type. -/
 def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
     ∀ {l : List α}, B → HVector A l → B
@@ -238,5 +244,28 @@ instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
     toExpr }
 
 end ToExprPi
+
+/- ### cast -/
+
+def castFun {A B : α → Type u} {as}
+    (h : ∀ (i : Fin as.length), A as[i] = B as[i]) :
+    HVector A as → HVector B as
+  | .nil => .nil
+  | x ::ₕ xs =>
+    let x := h (0 : Fin (_ + 1)) ▸ x
+    let xs := xs.castFun (fun i => h i.succ)
+    x ::ₕ xs
+
+def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
+    (h_len : as.length = bs.length)
+    (h_elem : ∀ i (_ : i < as.length), A as[i] = B bs[i])
+    (xs : HVector A as) : HVector B bs :=
+  match bs, xs with
+  | [], .nil        => .nil
+  | _::_, x ::ₕ xs  =>
+      have h₀ := h_elem 0 (by simp)
+      let xs := xs.cast (by simpa using h_len)
+                        (fun i => by simpa using h_elem i.succ)
+      (h₀ ▸ x) ::ₕ xs
 
 end HVector

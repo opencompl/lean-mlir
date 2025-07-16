@@ -248,7 +248,7 @@ def get_git_root():
 def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
-import SSA.Experimental.Bits.Frontend.Tactic
+import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Core.Tactic.TacBench
 
