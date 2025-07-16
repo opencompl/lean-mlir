@@ -39,11 +39,11 @@ variable {x y z: BitVec 32}
 #generalize (42#32 - x) <<< 3#32 = 336#32 - x <<< 3#32 -- PASSED gshlhsub_proof/shl_const_op1_sub_const_op0_thm; #11
 #generalize ((x >>> 4#32 &&& 8#32) + y) <<< 4#32 = (x &&& 128#32) + y <<< 4#32 --#PASSED gshlhbo_proof/shl_add_and_lshr_thm; #12
 #generalize (x + (y >>> 5#32 &&& 127#32)) <<< 5#32 = (y &&& 4064#32) + x <<< 5#32 --- PASSED gshlhbo_proof/lshr_add_and_shl_thm; #14
+#generalize x + (x ||| (0 - x )) = x &&& (x + BitVec.ofInt 32 (-1)) -- #19
 #generalize x <<< 6#32 <<< 28#32 = 0#32   -- PASSED ; shl_shl_thm #10
 #generalize 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 -- PASSED g2008h07h08hSubAnd_proof#a_thm #16
 #generalize x &&& 1#32 ||| 1#32 = 1#32 -- PASSED gandhorand_proof/or_test1_thm
 #generalize (x ||| y <<< 1#32) &&& 1#32 = x &&& 1#32 --- PASSED gandhorand_proof/test3_thm; #30
-#generalize x + (x ||| (0 - x )) = x &&& (x + BitVec.ofInt 32 (-1)) -- #19
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 #generalize (x + 5) + (y + 1)  =  x + y + 6
 #generalize (x <<< 10) <<< 14 = x <<< 24 --- #42

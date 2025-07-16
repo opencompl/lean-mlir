@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
 import SSA.Experimental.Bits.Fast.BitStream
-import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Experimental.Bits.SingleWidth.Defs
 
 open Term
 
