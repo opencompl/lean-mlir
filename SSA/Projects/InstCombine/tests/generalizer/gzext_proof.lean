@@ -1,0 +1,257 @@
+
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Experimental.Bits.Fast.Generalize
+open BitVec
+open LLVM
+
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
+set_option maxHeartbeats 5000000
+set_option maxRecDepth 1000000
+
+section gzext_proof
+theorem test_sext_zext_proof.test_sext_zext_thm_1 (e : IntW 16) : sext 64 (zext 32 e) ⊑ zext 64 e := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem fold_xor_zext_sandwich_proof.fold_xor_zext_sandwich_thm_1 (e : IntW 1) :
+  zext 64 (LLVM.xor (zext 32 e) (const? 32 1)) ⊑ zext 64 (LLVM.xor e (const? 1 1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem fold_and_zext_icmp_proof.fold_and_zext_icmp_thm_1 (e e_1 e_2 : IntW 64) :
+  LLVM.and (zext 8 (icmp IntPred.sgt e e_1)) (zext 8 (icmp IntPred.slt e e_2)) ⊑
+    zext 8 (LLVM.and (icmp IntPred.sgt e e_1) (icmp IntPred.slt e e_2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem fold_or_zext_icmp_proof.fold_or_zext_icmp_thm_1 (e e_1 e_2 : IntW 64) :
+  LLVM.or (zext 8 (icmp IntPred.sgt e e_1)) (zext 8 (icmp IntPred.slt e e_2)) ⊑
+    zext 8 (LLVM.or (icmp IntPred.sgt e e_1) (icmp IntPred.slt e e_2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem fold_xor_zext_icmp_proof.fold_xor_zext_icmp_thm_1 (e e_1 e_2 : IntW 64) :
+  LLVM.xor (zext 8 (icmp IntPred.sgt e e_1)) (zext 8 (icmp IntPred.slt e e_2)) ⊑
+    zext 8 (LLVM.xor (icmp IntPred.sgt e e_1) (icmp IntPred.slt e e_2)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem fold_nested_logic_zext_icmp_proof.fold_nested_logic_zext_icmp_thm_1 (e e_1 e_2 e_3 : IntW 64) :
+  LLVM.or (LLVM.and (zext 8 (icmp IntPred.sgt e e_1)) (zext 8 (icmp IntPred.slt e e_2)))
+      (zext 8 (icmp IntPred.eq e e_3)) ⊑
+    zext 8 (LLVM.or (LLVM.and (icmp IntPred.sgt e e_1) (icmp IntPred.slt e e_2)) (icmp IntPred.eq e e_3)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem sext_zext_apint1_proof.sext_zext_apint1_thm_1 (e : IntW 77) : sext 1024 (zext 533 e) ⊑ zext 1024 e := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem sext_zext_apint2_proof.sext_zext_apint2_thm_1 (e : IntW 11) : sext 47 (zext 39 e) ⊑ zext 47 e := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem masked_bit_set_proof.masked_bit_set_thm_1 (e e_1 : IntW 32) :
+  zext 32 (icmp IntPred.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    LLVM.and (lshr e e_1) (const? 32 1) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem masked_bit_clear_commute_proof.masked_bit_clear_commute_thm_1 (e e_1 : IntW 32) :
+  zext 32 (icmp IntPred.eq (LLVM.and (LLVM.srem (const? 32 42) e) (shl (const? 32 1) e_1)) (const? 32 0)) ⊑
+    LLVM.and (lshr (LLVM.xor (LLVM.srem (const? 32 42) e) (const? 32 (-1))) e_1) (const? 32 1) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem div_bit_set_proof.div_bit_set_thm_1 (e e_1 : IntW 32) :
+  zext 32 (icmp IntPred.ne (LLVM.sdiv (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    zext 32 (icmp IntPred.ne (LLVM.sdiv (shl (const? 32 1) e_1 { «nuw» := true }) e) (const? 32 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem masked_bit_set_nonzero_cmp_proof.masked_bit_set_nonzero_cmp_thm_1 (e e_1 : IntW 32) :
+  zext 32 (icmp IntPred.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 1)) ⊑
+    zext 32 (icmp IntPred.ne (LLVM.and (shl (const? 32 1) e_1 { «nuw» := true }) e) (const? 32 1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem masked_bit_wrong_pred_proof.masked_bit_wrong_pred_thm_1 (e e_1 : IntW 32) :
+  zext 32 (icmp IntPred.sgt (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    zext 32 (icmp IntPred.sgt (LLVM.and (shl (const? 32 1) e_1 { «nuw» := true }) e) (const? 32 0)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_or_masked_bit_test_proof.zext_or_masked_bit_test_thm_1 (e e_1 e_2 : IntW 32) :
+  zext 32 (LLVM.or (icmp IntPred.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) (icmp IntPred.eq e_2 e_1)) ⊑
+    zext 32
+      (LLVM.or (icmp IntPred.ne (LLVM.and (shl (const? 32 1) e_1 { «nuw» := true }) e) (const? 32 0))
+        (icmp IntPred.eq e_2 e_1)) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_masked_bit_zero_to_smaller_bitwidth_proof.zext_masked_bit_zero_to_smaller_bitwidth_thm_1 (e e_1 : IntW 32) :
+  zext 16 (icmp IntPred.eq (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    LLVM.and (trunc 16 (lshr (LLVM.xor e (const? 32 (-1))) e_1)) (const? 16 1) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_masked_bit_nonzero_to_smaller_bitwidth_proof.zext_masked_bit_nonzero_to_smaller_bitwidth_thm_1 (e e_1 : IntW 32) :
+  zext 16 (icmp IntPred.ne (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    LLVM.and (trunc 16 (lshr e e_1)) (const? 16 1) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_masked_bit_zero_to_larger_bitwidth_proof.zext_masked_bit_zero_to_larger_bitwidth_thm_1 (e e_1 : IntW 32) :
+  zext 64 (icmp IntPred.eq (LLVM.and (shl (const? 32 1) e_1) e) (const? 32 0)) ⊑
+    zext 64 (LLVM.and (lshr (LLVM.xor e (const? 32 (-1))) e_1) (const? 32 1)) { «nneg» := true } := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_nneg_flag_drop_proof.zext_nneg_flag_drop_thm_1 (e : IntW 8) (e_1 : IntW 16) :
+  LLVM.or (LLVM.or (zext 16 (LLVM.and e (const? 8 127)) { «nneg» := true }) e_1) (const? 16 128) ⊑
+    LLVM.or (LLVM.or e_1 (zext 16 e)) (const? 16 128) := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_nneg_redundant_and_proof.zext_nneg_redundant_and_thm_1 (e : IntW 8) :
+  LLVM.and (zext 32 e { «nneg» := true }) (const? 32 127) ⊑ zext 32 e { «nneg» := true } := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_nneg_signbit_extract_proof.zext_nneg_signbit_extract_thm_1 (e : IntW 32) :
+  lshr (zext 64 e { «nneg» := true }) (const? 64 31) ⊑ const? 64 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
+theorem zext_nneg_i1_proof.zext_nneg_i1_thm_1 (e : IntW 1) : zext 32 e { «nneg» := true } ⊑ const? 32 0 := by
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_split
+        bv_generalize
+        simp_alive_benchmark
+        all_goals sorry
+
+    
