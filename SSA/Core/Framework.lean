@@ -1682,6 +1682,7 @@ def matchArg [DecidableEq d.Op]
   | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
       let ma ← matchVar (t := t) lets vₗ matchLets vᵣ ma
       matchArg lets matchLets vsₗ vsᵣ ma
+  termination_by l => (Δ_out.length, l.length + 1)
 
 
 
@@ -1746,6 +1747,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
             then some ma
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
+  termination_by (Δ_out.length, 0)
 end
 
 /-- how matchVar behaves on `var` at a successor variable -/
