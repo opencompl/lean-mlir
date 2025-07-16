@@ -51,7 +51,7 @@ theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
 -/
 #guard_msgs in #print axioms check_axioms_cadical
 

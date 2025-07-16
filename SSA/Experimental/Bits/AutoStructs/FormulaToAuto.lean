@@ -260,7 +260,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           omega
       · rw [hq]
         rcases hsa with ⟨-, rfl⟩
-        simp [FSM.carryBV, FSM.carry]; congr
+        simp [FSM.carryBV, FSM.carry]; congr 2
         · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
@@ -292,7 +292,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         simp at hk ⊢; omega
       · rw [hcar]; simp [NFA.ofFSM]
         constructor
-        · simp [FSM.carryBV, FSM.carry]; congr
+        · simp [FSM.carryBV, FSM.carry]; congr 2
           · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
             rw [ite_cond_eq_true]
             on_goal 2 => simp; omega
@@ -305,7 +305,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           rw [BitVec.eq_of_getLsbD_eq_iff] at hrel
           specialize hrel (Fin.last w)
           simp [BitVec.getElem_cons, heq] at hrel
-          rw [hrel]; simp [FSM.evalBV, FSM.eval, FSM.carryBV]; congr
+          rw [hrel]; simp [FSM.evalBV, FSM.eval, FSM.carryBV]; congr 2
           · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
             rw [ite_cond_eq_true]
             on_goal 2 => simp; omega
@@ -1946,6 +1946,7 @@ info: 'Formula.denote_of_isUniversal' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
  Lean.ofReduceBool,
+ Lean.trustCompiler,
  Quot.sound]
 -/
 #guard_msgs in #print axioms Formula.denote_of_isUniversal

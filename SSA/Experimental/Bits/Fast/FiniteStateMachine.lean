@@ -308,7 +308,7 @@ theorem eval_congrEnv {p : FSM arity}
     {x y : arity → BitStream} {n : Nat} (h : ∀ a i, i ≤ n → x a i = y a i) :
     p.eval x n = p.eval y n := by
   simp [eval]
-  congr
+  congr 2
   · ext i
     rw [carry_congrEnv]
     intros a i hi
@@ -446,7 +446,8 @@ theorem carryWith_delta_eq_delta_carryWith
     rw [← carryWith_delta_eq_succ_carryWith]
     rw [ih]
     simp
-    congr
+    congr! 4
+    omega
 
 /-- carryWith's compose, and so can be added. -/
 theorem carryWith_carryWith_eq_carryWith_add (carryState : p.α → Bool) (x : arity → BitStream) :
@@ -462,7 +463,9 @@ theorem carryWith_carryWith_eq_carryWith_add (carryState : p.α → Bool) (x : a
     repeat rw [← carryWith_delta_eq_succ_carryWith]
     repeat rw [carryWith_delta_eq_delta_carryWith]
     rw [ih]
-    congr
+    congr! 4
+    omega
+
 
 theorem evalWith_add_eq_evalWith_carryWith
   (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream) (n : Nat) :
