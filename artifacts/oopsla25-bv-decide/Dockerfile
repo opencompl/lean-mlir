@@ -14,9 +14,10 @@ RUN apt-get update && \
         cmake \
         git \
         ninja-build \
+        ripgrep \ 
         gdb curl wget zstd unzip sudo \
         # dependencies for experiment scripts
-        python3-matplotlib python3-pandas python3-num2words \
+        python3-matplotlib python3-pandas python3-num2words python3-tabulate \
         # bitwuzla dependencies
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config \
         # CoqQFBV dependencies
@@ -38,6 +39,10 @@ WORKDIR /home/user/lean-mlir
 # Install elan and update environment
 RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
 ENV PATH=/home/user/.elan/bin:$PATH
+
+# Install bv-theorem-table-maker
+
+RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d 
 
 # Download and unzip SMT-LIB QF_BV benchmarks
 RUN mkdir -p bv-evaluation/SMT-LIB
@@ -113,18 +118,19 @@ RUN cd lib && \
     cp gratchk ../../bin
 WORKDIR /home/user/lean-mlir
 
-# Install Leanwuzla (commit: 25.06.25)
+# Install Leanwuzla (commit: 30.06.25)
 # This is a fork of Leanwuzla with modifications to support the evaluation
 RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla && \
-    cd Leanwuzla && git checkout 3ec8c974eed8f4d142a5d3422feb8220d0661089 && \
+    cd Leanwuzla && git checkout 1c8543dfcb325dd113527ddd55ab9c1190c5a111 && \
     lake build
 
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && git checkout oopsla25-bv-decide && \
+    cd lean-mlir-temp && git checkout f9af9d62a0dc0b07690e1ac69052336a8e2752af && \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
+RUN MATHLIB_NO_CACHE_ON_UPDATE=1 LAKE_NO_CACHE=1 lake update --no-cache
 
 # Install Python dependencies
 RUN python3 -m venv .venv && \

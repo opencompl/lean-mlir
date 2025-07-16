@@ -6,10 +6,11 @@ import Std.Tactic.BVDecide
 import Leanwuzla
 
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
-import SSA.Experimental.Bits.Frontend.Tactic
+import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Core.Tactic.TacBench
+import SSA.Core.Tactic.ExtractGoals
 
 open Lean
 open Lean.Elab.Tactic
