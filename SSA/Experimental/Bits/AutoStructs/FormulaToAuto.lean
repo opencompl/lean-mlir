@@ -392,7 +392,11 @@ def CNFA.ofFSM (p : FSM arity) : CNFA (FinEnum.card arity + 1) :=
         process carry ts a
     @[inline]
     process carry ts a :=
-        let eval x := (p.nextBitCirc x).eval (Sum.elim (bitVecToFinFun carry) (bitVecToFinFun a))
+        let eval x :=
+          let env := (Sum.elim (bitVecToFinFun carry) (bitVecToFinFun a))
+          match x with
+          | none => p.outputCirc.eval env
+          | some x => (p.nextStateCirc x).eval env
         let res : Bool := eval none
         let carry' : BitVec (FinEnum.card p.α) := finFunToBitVec (fun c => eval (some c))
         ts.push (a.cons res, carry')
