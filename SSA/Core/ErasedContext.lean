@@ -250,6 +250,11 @@ def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
   | toSnoc v => exact Ctxt.Var.toSnoc (f v)
   | last => exact Ctxt.Var.last _ _
 
+@[simp] lemma Hom.snocMap_last {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
+    (f.snocMap (Ctxt.Var.last Γ t)) = Ctxt.Var.last Γ' t := rfl
+@[simp] lemma Hom.snocMap_toSnoc {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t t' : Ty} (v : Γ.Var t') :
+    (f.snocMap v.toSnoc (t := t)) = (f v).toSnoc := rfl
+
 @[simp]
 abbrev Hom.snocRight {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.snoc t) :=
   fun _ v => (f v).toSnoc
@@ -368,6 +373,10 @@ theorem Valuation.ofPair_snd {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂
 /-- transport/pullback a valuation along a context homomorphism. -/
 def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
   fun _to vo => Γiv (hom vo)
+
+@[simp] theorem Valuation.comap_apply {Γi Γo : Ctxt Ty}
+    (V : Γi.Valuation) (f : Ctxt.Hom Γo Γi) (v : Γo.Var t) :
+    V.comap f v = V (f v) := rfl
 
 @[simp] theorem Valuation.comap_snoc_snocMap {Γ Γ_out : Ctxt Ty}
     (V : Γ_out.Valuation) {t} (x : ⟦t⟧) (map : Γ.Hom Γ_out) :
