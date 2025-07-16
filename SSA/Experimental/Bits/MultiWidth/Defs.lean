@@ -98,7 +98,7 @@ inductive Predicate
 | or (p1 p2 : Predicate ctx) : Predicate ctx
 | not (p : Predicate ctx) : Predicate ctx
 
-def Predicate.toProp
+def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv)
     (p : Predicate tctx) : Prop :=
@@ -205,6 +205,13 @@ structure GoodPredicateFSM
       fsm.eval fsmEnv = p.toBitstream tenv
 
 end ToFSM
+
+namespace Decide
+theorem Predicate.toProp_of_decide
+    {wcard tcard : Nat}
+    {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) (hdecide : decide (1 = 1) = true) :
+    (∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv) := by sorry
+end Decide
 
 namespace Nondep
 
