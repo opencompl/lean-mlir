@@ -429,7 +429,18 @@ info: MultiWidth.Decide.Predicate.toProp_of_decide {wcard tcard : ℕ} {tctx : T
 -/
 #guard_msgs in #check MultiWidth.Decide.Predicate.toProp_of_decide
 
-open Lean Meta Elab Tactic in
+def XXX : True := by simp
+
+
+open private withAppBuilderTrace from Lean.Meta.AppBuilder
+open private mkFun from Lean.Meta.AppBuilder
+open private mkAppMArgs from Lean.Meta.AppBuilder
+def mkAppMUnif (constName : Name) (xs : Array Expr) : MetaM Expr := do
+  withAppBuilderTrace constName xs do -- withNewMCtxDepth (allowLevelAssignments := true) do
+    let (f, fType) ← mkFun constName
+    mkAppMArgs f fType xs
+
+open Lean Meta Elab Term Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
   g.withContext do
     let collect : CollectState := {}
@@ -443,19 +454,46 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       (tctx := tctx)
       (wenv := wenv)
       (tenv := tenv)
-    let g ← g.replaceTargetDefEq pToProp
-    let exactPrf ← g.withContext <|
-      mkAppM (``MultiWidth.Decide.Predicate.toProp_of_decide)
+    let gDecideTy ← mkFreshExprMVar (mkSort 0) .natural `MultiWidth.Predicate.decideTy
+    let gDecideExpr ← mkFreshExprMVar gDecideTy .natural `MultiWidth.Predicate.decideExpr
+    -- let eq? ← isDefEq gDecideExpr (mkConst ``MultiWidth.Tactic.XXX)
+    -- let gDecideTy ← instantiateMVars gDecideTy
+    -- let gDecideExpr ← instantiateMVars gDecideExpr
+    -- throwError m!"ty : {indentD gDecideTy} \nexpr : {indentD gDecideExpr} \neq? : {eq?}"
+
+
+    -- let exactPrf ← mkAppMUnif (``MultiWidth.Decide.Predicate.toProp_of_decide)
+    --   #[← mkPredicateExpr collect.wcard collect.tcard tctx p, gDecideExpr, tenv]
+    let exactPrf ← mkAppM (``MultiWidth.Decide.Predicate.toProp_of_decide)
       #[← mkPredicateExpr collect.wcard collect.tcard tctx p]
-    let some (gDecideTy, _) := Expr.arrow? (← inferType exactPrf)
-      | throwError "unable to find 'decidable' type in the type {← inferType exactPrf}"
-    -- gDecideTy will be of the form `decide ... = true`. We want the '...' part.
-    let some (_, gDecideTyLhs, _) := Expr.eq? gDecideTy
-      | throwError "expected goal type to be of the form 'decide <...> = true', found: {indentD gDecideTy}"
-    let gDecidePrf ← g.withContext <| mkEqRflNativeDecideProof (lhsExpr := gDecideTyLhs) (rhs := true)
-    let exactPrf ← g.withContext <| mkAppM' exactPrf #[gDecidePrf, tenv]
-    g.assign exactPrf
-    return []
+    let exactPrf := mkApp exactPrf gDecideExpr
+    let exactPrf ← mkAppM' exactPrf #[tenv]
+    if ← g.isAssigned then throwError m!"expected goal to be unassigned, but it is already assigned: {indentD g}"
+
+    if ! (← isDefEq (Expr.mvar g) exactPrf) then
+      throwError m!"expected goal to be defeq to the proof, but it is not: {indentD g} != {indentD exactPrf}"
+    synthesizeSyntheticMVarsNoPostponing
+
+    if ! (← gDecideTy.mvarId!.isAssigned) then
+      throwError m!"expected goal type to be assigned, but it is not: {indentD gDecideTy}"
+    let exactPrf ← instantiateMVars exactPrf
+    throwError "exactPrf: {indentD exactPrf}"
+    return [gDecideExpr.mvarId!]
+
+    -- let gDecideTy ← instantiateMVars gDecideTy
+    -- let gDecideExpr ← instantiateMVars gDecideExpr
+    -- throwError m!"ty : {indentD gDecideTy} \nexpr : {indentD gDecideExpr} \n"
+    -- let g ← g.replaceTargetDefEq pToProp
+    -- g.assign exactPrf
+    -- let some (gDecideTy, _) := Expr.arrow? (← inferType exactPrf)
+    --   | throwError "unable to find 'decidable' type in the type {← inferType exactPrf}"
+    -- -- gDecideTy will be of the form `decide ... = true`. We want the '...' part.
+    -- let some (_, gDecideTyLhs, _) := Expr.eq? gDecideTy
+    --   | throwError "expected goal type to be of the form 'decide <...> = true', found: {indentD gDecideTy}"
+    -- let gDecidePrf ← g.withContext <| mkEqRflNativeDecideProof (lhsExpr := gDecideTyLhs) (rhs := true)
+    -- let exactPrf ← g.withContext <| mkAppM' exactPrf #[gDecidePrf, tenv]
+    -- g.assign exactPrf
+    -- return [gDecideExpr.mvarId!]
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   (solve g).run { toConfig := cfg }
