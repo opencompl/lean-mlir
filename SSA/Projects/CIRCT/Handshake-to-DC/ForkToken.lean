@@ -42,4 +42,4 @@ def test : DCOp.TokenStream × DCOp.TokenStream :=
 
 open Ctxt in
 theorem equiv_forkToken (streamT : DCOp.TokenStream) :
-  (Handshake.fork streamT).fst ~ (forkToken.denote (Valuation.ofHVector (.cons streamT <| .nil))).fst := by sorry
+  (HandshakeOp.fork streamT).fst ~ (forkToken.denote (Valuation.ofHVector (.cons streamT <| .nil))).fst := by sorry
