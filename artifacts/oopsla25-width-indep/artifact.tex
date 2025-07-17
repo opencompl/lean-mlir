@@ -378,10 +378,6 @@ Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo
 \begin{script}
 $ docker load -i oopsla25-width-indep.tar
 $ docker run -it oopsla25-width-indep
-# | This clears the build cache,
-# | fetches the maths library from the build cache,
-# | and builds our framework.
-$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # | This allows to check that the key theorems of our framework are
 # |guarded, and that they do not contain `sorry`s.
 $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
