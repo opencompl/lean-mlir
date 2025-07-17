@@ -738,7 +738,8 @@ def Valuation.mkOfElems (Ty instTyDenote : Expr) (Γ : Array Expr) (xs : Array E
     let mut V_acc := mkApp2 (mkConst ``Ctxt.Valuation.nil) Ty instTyDenote
     let mut Γ_acc := mkApp (.const ``List.nil [0]) Ty
     for (ty, x) in Γ.zip xs do
-      V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ_acc ty V_acc x
+      let Γ := mkApp2 (mkConst ``Ctxt.ofList) Ty Γ_acc
+      V_acc := mkApp6 (mkConst ``Ctxt.Valuation.snoc) Ty instTyDenote Γ ty V_acc x
       Γ_acc := mkApp3 (.const ``List.cons [0]) Ty ty Γ_acc
     V_acc
 
