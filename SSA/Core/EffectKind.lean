@@ -232,12 +232,20 @@ theorem liftEffect_eq_id (hle : eff ≤ eff) [Pure m] :
   cases eff <;> rfl
 
 /-- toMonad is functorial: it preserves composition. -/
-def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
+theorem liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h12 : e1 ≤ e2)
     (h23 : e2 ≤ e3)
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
+
+variable [Monad m] [LawfulMonad m] in
+@[simp] theorem liftEffect_map {e1 e2 : EffectKind}
+    (h : e1 ≤ e2)
+    (f : α → β) (x : e1.toMonad m α) :
+    liftEffect h (f <$> x) = f <$> (liftEffect h x) := by
+  cases e1 <;> cases e2
+  <;> (solve | rfl | simp; rfl | contradiction)
 
 /-!
 ## `toMonad` coercion
