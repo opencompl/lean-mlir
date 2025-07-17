@@ -85,7 +85,7 @@ def SHIFTIOP_pure64_RISCV_SLLI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec
   BitVec.shiftLeft rs1_val shamt.toNat
 
 @[simp_riscv]
-def  SHIFTIOP_pure64_RISCV_SLLI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
+def SHIFTIOP_pure64_RISCV_SLLI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
   rs1_val <<< shamt
 
 theorem SHIFTIOP_pure64_RISCV_SLLI_eq_SHIFTIOP_pure64_RISCV_SLLI_bv :
@@ -924,7 +924,7 @@ def ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (rs2_val : BitVec 64) (rs1_val : BitVec 64
   BitVec.add (BitVec.zeroExtend 64 (BitVec.extractLsb 31 0 rs1_val) <<< 2#2) rs2_val
 
 @[simp_riscv]
-def  ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+def ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.add (BitVec.zeroExtend 64 (BitVec.extractLsb 31 0 rs1_val) <<< 3#2)  rs2_val
 
 @[simp_riscv]
