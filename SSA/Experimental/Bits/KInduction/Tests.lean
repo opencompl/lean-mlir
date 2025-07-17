@@ -17,11 +17,8 @@ open Lean Meta Elab Tactic in
     (initCarry :=
       fun
       | _ => false)
-    (nextBitCirc :=
-      fun
-      | .some () => .var true (.inr 0) -- stores input in state variables.
-      | .none => .var true (.inl ()) -- spits out the output.
-    )
+    (outputCirc := .var true (.inl ()))
+    (nextStateCirc := fun () => .var true (.inr 0))
   let _ ← fsm.decideIfZerosVerified 0
   logInfo "done test."
   return ()
