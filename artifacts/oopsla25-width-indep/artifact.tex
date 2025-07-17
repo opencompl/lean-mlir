@@ -112,11 +112,14 @@ should suffice.
 
 \section{Getting Started}
 
-Access the docker image from \url{https://doi.org/10.5281/zenodo.15754222}.
+Access the docker image from \url{10.5281/zenodo.11519739}.
 
 \begin{script}
-$ docker load -i oopsla25-width-indep.tar.zst
+$ docker load -i oopsla25-width-indep.tar
 $ docker run -it oopsla25-width-indep
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
 # Run a smaller version of the experiments, and check that the output is as expected.
 $ /code/lean-mlir/artifacts/oopsla25-width-indep/test_experiments.sh
 $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
@@ -277,21 +280,18 @@ depending on the machine that is run on. The absolute number of problems solved
 should be equal, while the total time and geomean time are machine-dependent.
 }
 
-TODO: we should explain the mapping between the names of the macros and the
-paper names.
-
 \begin{script}
 # $ cat /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-plot-data.tex
-\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2486} # exact match
-\newcommand{\InstCombineNormPresburgerNumSolved}{2126} # exact match
-\newcommand{\InstCombineBvDecideNumSolved}{7781} # exact match
+\newcommand{\InstCombineBvDecideNumSolved}{7906} # exact match
+\newcommand{\InstCombineNormCircuitVerifiedNumSolved}{2498} # exact match
+\newcommand{\InstCombineNormPresburgerNumSolved}{2138} # exact match
+\newcommand{\InstCombineBvDecideTotalTime}{...}
 \newcommand{\InstCombineNormCircuitVerifiedTotalTime}{...}
 \newcommand{\InstCombineNormPresburgerTotalTime}{...}
-\newcommand{\InstCombineBvDecideTotalTime}{...}
-\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{42ms} # machine-dependent
-\newcommand{\InstCombineNormPresburgerGeoMean}{25ms} # machine-dependent
-\newcommand{\InstCombineBvDecideGeoMean}{66ms} # machine-dependent
-\newcommand{\InstCombineTotalProblems}{7855} # exact match
+\newcommand{\InstCombineBvDecideGeoMean}{43ms} # machine dependent
+\newcommand{\InstCombineNormCircuitVerifiedGeoMean}{22ms} # machine dependent
+\newcommand{\InstCombineNormPresburgerGeoMean}{10ms} # machine dependent
+\newcommand{\InstCombineTotalProblems}{7978} # exact match
 \end{script}
 
 To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
@@ -317,18 +317,18 @@ should be equal, while the total time and geomean time are machine-dependent.
 
 \begin{script}
 # $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
+\newcommand{\MBAPresburgerNumSolved}{2500} # exact match
 \newcommand{\MBAKInductionVerifiedNumSolved}{1546} # > 1500
 \newcommand{\MBAMBANumSolved}{2500} # exact match
 \newcommand{\MBABvDecideNumSolved}{2500} # exact match
-\newcommand{\MBAPresburgerNumSolved}{2500} #exact match
-\newcommand{\MBAKInductionVerifiedTotalTime}{2h2m}
-\newcommand{\MBAMBATotalTime}{6m17s}
-\newcommand{\MBABvDecideTotalTime}{6h59m}
-\newcommand{\MBAPresburgerTotalTime}{15h13m}
-\newcommand{\MBAKInductionVerifiedGeoMean}{2.7s}
-\newcommand{\MBAMBAGeoMean}{54.2ms}
-\newcommand{\MBABvDecideGeoMean}{9.89s}
-\newcommand{\MBAPresburgerGeoMean}{4.26s}
+\newcommand{\MBAPresburgerTotalTime}{...}
+\newcommand{\MBAKInductionVerifiedTotalTime}{...}
+\newcommand{\MBAMBATotalTime}{...}
+\newcommand{\MBABvDecideTotalTime}{...}
+\newcommand{\MBAPresburgerGeoMean}{4.29s} # machine dependent
+\newcommand{\MBAKInductionVerifiedGeoMean}{2.69s} # machine dependent
+\newcommand{\MBAMBAGeoMean}{54.4ms} # machine dependent
+\newcommand{\MBABvDecideGeoMean}{9.89s} # machine dependent
 \end{script}
 
 The plots are located at:
@@ -378,6 +378,10 @@ Access the tar file of the docker image from \url{https://doi.org/10.5281/zenodo
 \begin{script}
 $ docker load -i oopsla25-width-indep.tar
 $ docker run -it oopsla25-width-indep
+# | This clears the build cache,
+# | fetches the maths library from the build cache,
+# | and builds our framework.
+$ cd /code/lean-mlir && lake clean && lake exe cache get && lake build
 # | This allows to check that the key theorems of our framework are
 # |guarded, and that they do not contain `sorry`s.
 $ rg -g "SSA/Experimental/Bits/Fast/**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
@@ -391,30 +395,6 @@ $ timg -p iterm2 /code/lean-mlir/bv-evaluation/automata-automata-circuit-cactus-
 $ timg -p iterm2 /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/automata-automata-circuit-cactus-plot.jpeg
 \end{script}
 
-
-{\sloppypar
-This should produce the following output, where the timings might change
-depending on the machine that is run on. The absolute number of problems solved
-should be 2500 on the fast solver (MBA), and should be appreciably
-large on the other solvers. The geomean time are machine-dependent,
-and should match upto order of magnitude comparisons.
-}
-
-\begin{script}
-# $ cat /code/lean-mlir/SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex
-\newcommand{\MBAPresburgerNumSolved}{2500} # exact match
-\newcommand{\MBABvDecideNumSolved}{2500} # exact match
-\newcommand{\MBAKInductionVerifiedNumSolved}{1537} # > 1500
-\newcommand{\MBAMBANumSolved}{2500} # exact match
-\newcommand{\MBAPresburgerTotalTime}{..} # machine dependent
-\newcommand{\MBABvDecideTotalTime}{..} # machine dependent
-\newcommand{\MBAKInductionVerifiedTotalTime}{..} # machine dependent
-\newcommand{\MBAMBATotalTime}{..} # machine dependent
-\newcommand{\MBAPresburgerGeoMean}{4.6s} # machine dependent
-\newcommand{\MBABvDecideGeoMean}{10.9s} # machine dependent
-\newcommand{\MBAKInductionVerifiedGeoMean}{3.68s} # machine dependent
-\newcommand{\MBAMBAGeoMean}{78.9ms} # machine dependent
-\end{script}
 
 To view the plot data, either use \texttt{docker cp} to copy the file out of the container,
 or use the installed \texttt{timg} tool to view the plot data within the container.
