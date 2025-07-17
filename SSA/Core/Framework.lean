@@ -612,20 +612,6 @@ def Com.denoteLets : (com : Com d Γ eff ty) → (Γv : Valuation Γ) →
       body.denoteLets (V.snoc Ve) >>= fun V =>
       return V.cast (by simp [Com.outContext])
 
---TODO: this should be an abbrev: the `liftM` is inserted automatically when writing `e.denote`
---      inside of `do`-notation, and we shouldn't have two ways to write the same thing
-/-- Denote an `Expr` in an unconditionally impure fashion -/
-def Expr.denoteImpure (e : Expr d Γ eff ty) (Γv : Valuation Γ) :
-    EffectKind.impure.toMonad d.m (toType ty) :=
-  liftM <| e.denote Γv
-
---TODO: figure out if we can write this in terms of `liftM`, too
-/-- Denote a `Com` in an unconditionally impure fashion -/
-def Com.denoteImpure :
-    Com d Γ eff ty → (Γv : Valuation Γ) → EffectKind.impure.toMonad d.m (toType ty)
-  | .ret e, Γv => pure (Γv e)
-  | .var e body, Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x)
-
 def Lets.denote [DialectSignature d] [DialectDenote d] {Γ₂}
     (lets : Lets d Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (eff.toMonad d.m <| Valuation Γ₂) :=
   match lets with
@@ -645,18 +631,6 @@ the congruence, you can do: `rw [← Lets.denotePure]; congr`
 -/
 @[simp] abbrev Lets.denotePure [DialectSignature d] [DialectDenote d] :
     Lets d Γ₁ .pure Γ₂ → Valuation Γ₁ → Valuation Γ₂ := Lets.denote
-
---TODO: figure out if we can write this in terms of `liftM`, too
-/-- Denote a `Lets` in an unconditionally impure fashion -/
-def Lets.denoteImpure [DialectSignature d] [DialectDenote d] {Γ₂}
-    (lets : Lets d Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) :
-    (EffectKind.impure.toMonad d.m <| Valuation Γ₂) :=
-  match lets with
-  | .nil => EffectKind.impure.return Γ₁'v
-  | .var lets' e =>
-      lets'.denote Γ₁'v  >>= fun Γ₂'v =>
-      e.denote Γ₂'v >>= fun v =>
-      return (Γ₂'v.snoc v)
 
 /-- The denotation of a zipper is a composition of the denotations of the constituent
 `Lets` and `Com` -/
@@ -764,14 +738,6 @@ section Lemmas
       EffectKind.return_pure_toMonad_eq, Id.run_bind]
     congr
   · simp [denoteLets, bind_pure]
-
-@[simp] lemma Com.denoteImpure_ret [Monad d.m] [DialectDenote d] {Γ : Ctxt d.Ty} (x : Γ.Var t) :
-  (Com.ret (d:=d) (eff := eff) x).denoteImpure = fun Γv => return (Γv x) := rfl
-
-@[simp] lemma Com.denoteImpure_body [Monad d.m] [DialectDenote d] {Γ : Ctxt d.Ty}
-    (e : Expr d Γ eff te) (body : Com d (Γ.snoc te) eff tbody) :
-  (Com.var e body).denoteImpure =
-  fun Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x) := rfl
 
 @[simp] lemma Lets.denote_nil {Γ : Ctxt d.Ty} :
     (Lets.nil : Lets d Γ eff Γ).denote = (return ·) := by
