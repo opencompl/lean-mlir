@@ -271,7 +271,7 @@ def appendCases
         omega
       eq ▸ left v'
 
-/-! ### Fin Helper -/
+/-! ### Fin Helpers -/
 
 def toFin : Γ.Var t → Fin Γ.length
   | ⟨idx, h⟩ => ⟨idx, by
@@ -280,6 +280,9 @@ def toFin : Γ.Var t → Fin Γ.length
       simp only [length_ofList, ← List.getElem?_eq_none_iff]
       simp_all
     ⟩
+
+def ofFin : (i : Fin Γ.length) → Γ.Var (Γ[i])
+  | ⟨idx, h⟩ => ⟨idx, by simpa using List.getElem?_eq_getElem _⟩
 
 end Var
 end Ctxt
