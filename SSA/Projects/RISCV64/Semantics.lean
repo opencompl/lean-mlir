@@ -23,7 +23,7 @@ open BitVec
 namespace RV64Semantics
 
 @[simp_riscv]
-def UTYPE_pure64_RISCV_ADDIW (imm : BitVec 12) (rs1_val : BitVec 64) : BitVec 64 :=
+def pure64_RISCV_ADDIW (imm : BitVec 12) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.signExtend 64 (BitVec.setWidth 32 (BitVec.add (BitVec.signExtend 64 imm) rs1_val))
 
 -- loads immediate into upper 20 bits and then fills the rest up with 0 and returns it as the result

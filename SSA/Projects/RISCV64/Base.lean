@@ -403,7 +403,7 @@ functions that define our semantics.
 instance : DialectDenote (RV64) where
   denote
   | .li imm, _ , _ =>  BitVec.signExtend 64 (imm)
-  | .addiw imm, regs, _ => UTYPE_pure64_RISCV_ADDIW imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .addiw imm, regs, _ => pure64_RISCV_ADDIW imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .lui imm, regs , _ => UTYPE_pure64_RISCV_LUI imm
   | .auipc imm, regs, _ => UTYPE_pure64_RISCV_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .slliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SLLIW_bv shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
