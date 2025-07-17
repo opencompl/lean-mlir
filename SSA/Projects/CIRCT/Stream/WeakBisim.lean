@@ -352,10 +352,6 @@ theorem corec₂_eq_corec₂_of
 
 -- unfold quot stuff to reduce to bisim stuff
 
-
-
-
-
 theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck α)
     (y_neq_stuck : y ≠ stuck α := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
     head (x.dropLeadingNones x_neq_stuck) = head (y.dropLeadingNones y_neq_stuck) := by

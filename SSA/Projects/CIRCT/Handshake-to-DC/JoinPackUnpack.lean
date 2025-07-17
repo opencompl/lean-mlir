@@ -1,4 +1,4 @@
-import SSA.Projects.CIRCT.DC.DC
+import SSA.Projects.CIRCT.DCxComb.DCxCombFunctor
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
@@ -22,39 +22,40 @@ namespace Stream.Bisim
 -- // CHECK:           %[[VAL_18:.*]] = dc.pack %[[VAL_16]], %[[VAL_17]] : i64
 -- // CHECK:           hw.output %[[VAL_18]], %[[VAL_2]] : !dc.value<i64>, !dc.token
 -- // CHECK:         }
+
 -- handshake.func @top(%arg0: i64, %arg1: i64, %arg8: none, ...) -> (i64, none) {
 --     %0 = arith.cmpi slt, %arg0, %arg1 : i64
 --     %1 = arith.select %0, %arg1, %arg0 : i64
 --     return %1, %arg8 : i64, none
 -- }
 
-
 -- also changed to return a single value, the third arg is not used anyways
 unseal String.splitOnAux in
-def joinPackUnpack := [DC_com| {
-  ^entry(%0: !ValueStream_Int, %1: !ValueStream_Int):
-    %unpack0 = "DC.unpack" (%0) : (!ValueStream_Int) -> (!ValueTokenStream_Int)
-    %unpack1 = "DC.unpack" (%1) : (!ValueStream_Int) -> (!ValueTokenStream_Int)
-    %unpack01 = "DC.fstVal" (%unpack0) : (!ValueTokenStream_Int) -> (!ValueStream_Int)
-    %unpack02 = "DC.sndVal" (%unpack0) : (!ValueTokenStream_Int) -> (!TokenStream)
-    %unpack11 = "DC.fstVal" (%unpack1) : (!ValueTokenStream_Int) -> (!ValueStream_Int)
-    %unpack12 = "DC.sndVal" (%unpack1) : (!ValueTokenStream_Int) -> (!TokenStream)
-    %join01 = "DC.join" (%unpack02, %unpack12) : (!TokenStream, !TokenStream) -> (!TokenStream)
+def joinPackUnpack := [DCxComb_com| {
+  ^entry(%0: !ValueStream_8, %1: !ValueStream_8):
+    %unpack0 = "DCxComb.unpack" (%0) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    %unpack1 = "DCxComb.unpack" (%1) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    %unpack01 = "DCxComb.fstVal" (%unpack0) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %unpack02 = "DCxComb.sndVal" (%unpack0) : (!ValueTokenStream_8) -> (!TokenStream)
+    %unpack11 = "DCxComb.fstVal" (%unpack1) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %unpack12 = "DCxComb.sndVal" (%unpack1) : (!ValueTokenStream_8) -> (!TokenStream)
+    %join01 = "DCxComb.join" (%unpack02, %unpack12) : (!TokenStream, !TokenStream) -> (!TokenStream)
+    %slt = "DCxComb.icmp_slt" (%unpack01, %unpack11) : (!ValueStream_8, !ValueStream_8) -> (!ValueStream_8)
     -- here we have an `arith` operation whose result we should pack :
     -- // CHECK:           %[[VAL_8:.*]] = arith.cmpi slt, %[[VAL_4]], %[[VAL_6]] : i64
     -- instead, I am packing `%unpack01`, for the time being
-    %pack = "DC.pack" (%unpack01, %join01) : (!ValueStream_Int, !TokenStream) -> (!ValueStream_Int)
-    %unpackPack = "DC.unpack" (%pack) : (!ValueStream_Int) -> (!ValueTokenStream_Int)
-    %unpack0Pack1 = "DC.fstVal" (%unpackPack) : (!ValueTokenStream_Int) -> (!ValueStream_Int)
-    %unpack0Pack2 = "DC.sndVal" (%unpackPack) : (!ValueTokenStream_Int) -> (!TokenStream)
-    %unpack0Bis = "DC.unpack" (%0) : (!ValueStream_Int) -> (!ValueTokenStream_Int)
-    %unpack0Bis1 = "DC.fstVal" (%unpack0Bis) : (!ValueTokenStream_Int) -> (!ValueStream_Int)
-    %unpack0Bis2 = "DC.sndVal" (%unpack0Bis) : (!ValueTokenStream_Int) -> (!TokenStream)
+    %pack = "DCxComb.pack" (%unpack01, %join01) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    %unpackPack = "DCxComb.unpack" (%pack) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    %unpack0Pack1 = "DCxComb.fstVal" (%unpackPack) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %unpack0Pack2 = "DCxComb.sndVal" (%unpackPack) : (!ValueTokenStream_8) -> (!TokenStream)
+    %unpack0Bis = "DCxComb.unpack" (%0) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    %unpack0Bis1 = "DCxComb.fstVal" (%unpack0Bis) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %unpack0Bis2 = "DCxComb.sndVal" (%unpack0Bis) : (!ValueTokenStream_8) -> (!TokenStream)
     -- we currently don't support n-ary joins so will keep it binary for now
-    %joinPackBis = "DC.join" (%unpack0Bis2, %unpack0Pack2) : (!TokenStream, !TokenStream) -> (!TokenStream)
+    %joinPackBis = "DCxComb.join" (%unpack0Bis2, %unpack0Pack2) : (!TokenStream, !TokenStream) -> (!TokenStream)
     -- again avoiding `arith` operation
-    %packBis = "DC.pack" (%unpack0Bis1, %joinPackBis) : (!ValueStream_Int, !TokenStream) -> (!ValueStream_Int)
-    "return" (%packBis) : (!ValueStream_Int) -> ()
+    %packBis = "DCxComb.pack" (%unpack0Bis1, %joinPackBis) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    "return" (%packBis) : (!ValueStream_8) -> ()
   }]
 
 #check joinPackUnpack
@@ -64,10 +65,10 @@ def joinPackUnpack := [DC_com| {
 #print axioms joinPackUnpack
 
 def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+  fun i => vals[i]?.join
 
-def x : DCOp.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
-def y : DCOp.ValueStream Int := ofList [some 1, some 2, none, none, some 3]
+def x : DCOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 5, none]
+def y : DCOp.ValueStream (BitVec 8) := ofList [some 1, some 2, none, none, some 3]
 
-def test : DCOp.ValueStream Int :=
+def test : DCOp.ValueStream (BitVec 8) :=
   joinPackUnpack.denote (Ctxt.Valuation.ofHVector (.cons x <| .cons y <| .nil))

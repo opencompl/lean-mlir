@@ -111,6 +111,14 @@ theorem tail_iterate'' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail 
 theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n 0 = s n :=
   tail_iterate''
 
+
+def decideEquivHandshakeDC
+  (h : Com MLIR2Handshake.Handshake hintys EffectKind.pure houtty)
+  (dc : Com MLIR2DC.DC  dcintys  EffectKind.pure dcoutty)
+  (hinty : True)
+  (houtty : True) :
+  Decidable (∀ (hin : _) (dcin : _) (hin: _ ), h.denote hin ~ dc.denote dcin) := sorry
+
 open Ctxt in
 theorem equiv_fork_fst (streamInt : DCOp.ValueStream (BitVec 8)) :
   (HandshakeOp.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by

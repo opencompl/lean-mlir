@@ -122,3 +122,22 @@ def testExampleAdd : DCOp.ValueStream (BitVec 8) :=
   exampleAdd.denote (Ctxt.Valuation.ofHVector (.cons val1 <| .cons val2 <| .nil))
 
 #eval testExampleAdd
+
+unseal String.splitOnAux in
+def exampleUnpack := [DCxComb_com| {
+  ^entry(%0: !ValueStream_8):
+    %src = "DCxComb.unpack" (%0) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    "return" (%src) : (!ValueTokenStream_8) -> ()
+  }]
+
+def testExampleUnpack :=
+  exampleUnpack.denote (Ctxt.Valuation.ofHVector (.cons val1 <| .nil))
+
+#print exampleUnpack
+
+
+def exampleSlt := [DCxComb_com| {
+  ^entry(%0: !ValueStream_8, %1 : !ValueStream_8):
+    %2 = "DCxComb.icmp_slt" (%0, %1) : (!ValueStream_8, !ValueStream_8) -> !ValueStream_1
+    "return" (%2) : (!ValueStream_1) -> ()
+  }]

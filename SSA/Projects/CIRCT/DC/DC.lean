@@ -81,6 +81,14 @@ def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
     | none, some _ => (some 0, (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
+-- def merge' (x y : automaton) : automaton := → tokenstream quot nones
+--   Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
+--     match x 0, y 0 with
+--     | some _, some _ => (some 1, (x.tail, y))
+--     | some _, none => (some 1, (x.tail, y.tail))
+--     | none, some _ => (some 0, (x.tail, y.tail))
+--     | none, none => (none, (x.tail, y.tail))
+
 def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
   Stream.corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c) fun ⟨x, y, c⟩ =>
     match x 0, y 0, c 0 with
@@ -175,6 +183,16 @@ def_signature for DC where
   | .pack2 t => (Ty.variadicvaluetokenstream t) → Ty.valuestream2 t
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
   | .unpack2 t => (Ty.valuestream t, Ty.valuestream t) → Ty.variadicvaluetokenstream t
+
+/--
+s1 : [2, 4, none, 6]
+s2 : [3, none, 5, 7]
+
+s1.unpack = [2, 4, none, 6], [some, some, none, some]
+s2.unpack = [3, none, 5, 7], [some, none, some, some]
+
+merge s1 s2 = [some, some, some, none, some, none, some, some]
+-/
 
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
