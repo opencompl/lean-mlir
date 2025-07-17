@@ -109,7 +109,7 @@ instance : DialectDenote (LLVMPlusRiscV) where
   | .castLLVM _,
     (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec _)]), _ =>
     let toCast : PoisonOr (BitVec _) :=
-      elemToCast.getN 0 (by simp [DialectSignature.sig, signature])
+      elemToCast.getN 0 (by simp)
     castLLVMToriscv toCast
 
 @[simp_denote]
@@ -189,13 +189,13 @@ def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) 
     | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
         let args' : HVector (Ctxt.Var Γ) (.riscv <$> DialectSignature.sig op1) ←
           args1.mapM' fun t v => do
-            match h : Γ.get ⟨v.val, by
+            match h : Γ.toList.get ⟨v.val, by
               have hv := v.prop
-              have hcontra: List.length Γ ≤ v.val → Γ.get? v.val  = none := by simp [List.get?]
+              have hcontra: List.length Γ.toList ≤ v.val → Γ.get? v.val  = none := by
+                rcases Γ; simp
               have ll: (ctxtTransformToRiscV Γ).length = Γ.length := by
-                  unfold ctxtTransformToRiscV Ctxt.map
-                  conv =>
-                  rw [List.length_map]
+                  unfold ctxtTransformToRiscV
+                  simp
               rw [← ll]
               by_contra x
               simp only [RISCV64.RV64, Ctxt.get?.eq_1, gt_iff_lt, not_lt] at x
