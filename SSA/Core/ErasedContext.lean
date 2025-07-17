@@ -58,7 +58,7 @@ instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
   getElem? xs i  := xs.toList[i]?
 
 instance instAppend : HAppend (Ctxt Ty) (List Ty) (Ctxt Ty) where
-  hAppend Γ tys := ⟨tys.reverse ++ Γ.toList⟩
+  hAppend Γ tys := ⟨tys ++ Γ.toList⟩
 
 @[simp
 -- , deprecated "Use `getElem?`" (since := "")
@@ -72,6 +72,9 @@ def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
 def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
 
 section Lemmas
+
+@[simp] lemma ofList_append (xs ys : List α) :
+    (xs : Ctxt α) ++ ys = ys ++ xs := rfl
 
 lemma getElem?_eq_toList_getElem? {Γ : Ctxt Ty} {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
 @[simp] lemma getElem?_ofList (Γ : List Ty) (i : Nat) : (ofList Γ)[i]? = Γ[i]? := rfl
@@ -220,8 +223,6 @@ def casesOn_toSnoc
       Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v :=
   rfl
 
-end Var
-
 theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
     Function.Injective (@Ctxt.Var.toSnoc Ty Γ t t') := by
   let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
@@ -229,6 +230,77 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   intro x y h
   simpa (config := { zetaDelta := true }) only [Var.casesOn_toSnoc, Option.some.injEq] using
     congr_arg ofSnoc h
+
+/-! ### Var Append -/
+variable {Γ : Ctxt Ty} {xs : List Ty}
+
+@[coe] def appendInl : Γ.Var t → (Γ ++ xs).Var t
+  | ⟨v, h⟩ => ⟨v + xs.length, by
+      rcases Γ; simp_all [List.getElem?_append_right]
+    ⟩
+
+def appendInr : Var ⟨xs⟩ t → (Γ ++ xs).Var t
+  | ⟨v, h⟩ => ⟨v, by
+      rcases Γ
+      have : v < xs.length := by
+        suffices ¬(xs.length ≤ v) by omega
+        rw [← List.getElem?_eq_none_iff]
+        simp_all
+      simp_all [List.getElem?_append_left]
+    ⟩
+
+@[elab_as_elim]
+def appendCases
+    {motive : (Γ ++ xs).Var t → Sort u}
+    (left : (v : Var Γ t) → motive (appendInl v))
+    (right : (v : Var ⟨xs⟩ t) → motive (appendInr v)) :
+    (v : (Γ ++ xs).Var t) → motive v
+  | ⟨idx, h⟩ =>
+    if hv : idx < xs.length then
+      let v' : Var _ _ := ⟨idx, by
+        rcases Γ; simp_all [List.getElem?_append_left]
+      ⟩
+      right v'
+    else
+      let v' : Var _ _ := ⟨idx - xs.length, by
+        rcases Γ; simp_all [List.getElem?_append_right]
+      ⟩
+      have eq : v'.appendInl = ⟨idx, h⟩ := by
+        show Subtype.mk _ _ = _
+        congr 1
+        omega
+      eq ▸ left v'
+
+/-! ### Fin Helper -/
+
+def toFin : Γ.Var t → Fin Γ.length
+  | ⟨idx, h⟩ => ⟨idx, by
+      suffices ¬(Γ.length ≤ idx) by omega
+      rcases Γ
+      simp only [length_ofList, ← List.getElem?_eq_none_iff]
+      simp_all
+    ⟩
+
+end Var
+end Ctxt
+
+/-!
+## Indexing an HVector by `Var`
+Note that a `Var` is quite similar to a `Fin`, plus a static proof of the item
+at the particular index. This extra knowledge is useful when indexing into an
+HVector as well.
+-/
+instance : GetElem (HVector A as) (Ctxt.Var ⟨as⟩ a) (A a) (fun _ _ => True) where
+  getElem xs i _ := (cast · <| xs.get i.toFin) <| by
+    congr 1
+    rcases i with ⟨i, h⟩
+    simpa [Ctxt.Var.toFin, List.getElem_eq_iff] using h
+
+namespace Ctxt
+variable {Ty : Type}
+/-!
+## Context Homomorphisms
+-/
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
@@ -358,6 +430,14 @@ theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.sn
     snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) = V := by
   funext _ v
   cases v using Var.casesOn <;> rfl
+
+/-! ## Valuation Append -/
+
+instance (Γ : Ctxt Ty) (xs : List Ty) : HAppend (Valuation Γ) (HVector toType xs) (Valuation <| Γ ++ xs) where
+  hAppend V vals := fun t v =>
+    v.appendCases (@V t) (vals[·])
+
+/-! ## Valuation Construction Helpers -/
 
 /-- Make a a valuation for a singleton value -/
 def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation ⟨[t]⟩ :=
