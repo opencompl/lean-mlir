@@ -132,7 +132,7 @@ def Op.sig : Op → List Ty
 
 @[reducible, simp]
 def Op.regSig : Op → RegionSignature Ty
-  | .map2d => [([.int], .int)]
+  | .map2d => [([Ty.int], .int)]
   | _ => []
 
 set_option linter.dupNamespace false in

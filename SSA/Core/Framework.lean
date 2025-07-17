@@ -216,10 +216,10 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
 
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
-private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
+private def formatArgTuple [Repr Ty] {Γ : List Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
-  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
     | .cons .. =>
@@ -255,7 +255,7 @@ mutual
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
     f!"\{" ++ Format.nest 2
     (Format.line ++
-    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ) ++ f!":" ++ Format.line ++
+    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ.toList) ++ f!":" ++ Format.line ++
     (comReprAux prec com))) ++ Format.line ++
     f!"}"
 
@@ -314,7 +314,7 @@ partial def Com.ToStringBody : Com d Γ eff t → String
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
 partial def Com.toString (com : Com d Γ eff t) : String :=
    "{ \n"
-  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
+  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.ToStringBody com) ++
    "\n }"
 
@@ -1579,7 +1579,7 @@ section Lemmas
 @[simp] lemma Com.changeDialect_var (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
     (Com.var e body).changeDialect f = Com.var (e.changeDialect f) (body.changeDialect f) := by
-  simp only [List.map_eq_map, changeDialect]
+  simp only [changeDialect]
 
 @[simp] lemma HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
     HVector.changeDialect (eff := eff) f nil = nil := by simp [HVector.changeDialect]
@@ -1715,153 +1715,7 @@ theorem HVector.map_eq_of_eq_on_vars {A : d.Ty → Type*}
       apply h
       simp_all
 
-/-!
-## Expression Trees
-Morally, a pure `Com` can be represented as just a tree of expressions.
-We use this intuition to explain what `matchVar` does, but first we give a semi-formal definition
-of `ExprTree` and its operations.
--/
 
-
-mutual
-variable (d)
-
-/-- A tree of pure expressions -/
-inductive ExprTree (Γ : Ctxt d.Ty) : (ty : d.Ty) → Type
-  | mk (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
-    (eff_eq : DialectSignature.effectKind op = .pure)
-    (args : ExprTreeBranches Γ <| DialectSignature.sig op)
-    --TODO: we should tree-ify the regions as well to make the term model work
-    -- /- We don't consider regions to be part of the expression tree, so we keep them as `Com` -/
-    -- (regArgs : HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2)
-    --   (DialectSignature.regSig op))
-    : ExprTree Γ ty
-  | fvar : Var Γ ty → ExprTree Γ ty
-
-inductive ExprTreeBranches (Γ : Ctxt d.Ty) : List d.Ty → Type
-  | nil : ExprTreeBranches Γ []
-  | cons : ExprTree Γ t → ExprTreeBranches Γ ts → ExprTreeBranches Γ (t::ts)
-
-end
-
-@[coe]
-def ExprTreeBranches.ofHVector : HVector (ExprTree d Γ) ts → ExprTreeBranches d Γ ts
-  | .nil        => .nil
-  | .cons v vs  => .cons v (ofHVector vs)
-
-mutual
-
-/-- `lets.exprTreeAt v` follows the def-use chain of `v` in `lets` to produce an `ExprTree` whose
-free variables are only the free variables of `lets` as a whole -/
-def Lets.exprTreeAt : (lets : Lets d Γ_in .pure Γ_out) → (v : Var Γ_out ty) → ExprTree d Γ_in ty
-  | .nil, v                       => .fvar v
-  | .var body e, ⟨0, Eq.refl _⟩  => e.toExprTree body
-  | .var body _, ⟨v+1, h⟩        => body.exprTreeAt ⟨v, h⟩
-
-/-- `e.toExprTree lets` converts a single expression `e` into an expression tree by looking up the
-arguments to `e` in `lets` -/
-def Expr.toExprTree (lets : Lets d Γ_in .pure Γ_out) (e : Expr d Γ_out .pure ty) :
-    ExprTree d Γ_in ty :=
-  .mk e.op e.ty_eq (EffectKind.eq_of_le_pure e.eff_le) (argsToBranches e.args)
-  where argsToBranches {ts} : HVector (Var Γ_out) ts → ExprTreeBranches d Γ_in ts
-    | .nil => .nil
-    | .cons v vs => .cons (lets.exprTreeAt v) (argsToBranches vs)
-
-end
-
-/-!
-## TermModel
-We can syntactically give semantics to any dialect by denoting it with `ExprTrees`
--/
-
-section TermModel
-
-/-- A wrapper around the `Ty` universe of a term model, to prevent the instance of `TyDenote`
-leaking to the original type. -/
-structure TermModelTy (Ty : Type) where
-  ty : Ty
-
-/-- The Term Model of a dialect `d` is a dialect with the exact same operations, types, and
-signature as the original dialect `d`, but whose denotation exists of expression trees. -/
-def TermModel (d : Dialect) (_Γ : Ctxt d.Ty) : Dialect where
-  Op := d.Op
-  Ty := TermModelTy d.Ty
-  m  := d.m
-
-class PureDialect (d : Dialect) [DialectSignature d] where
-  allPure : ∀ (op : d.Op), DialectSignature.effectKind op = .pure
-
--- trivial instances
-instance [Monad d.m] : Monad (TermModel d Γ).m := inferInstanceAs (Monad d.m)
-
-instance : DialectSignature (TermModel d Γ) where
-  signature := fun op => TermModelTy.mk <$> signature (d:=d) op
-
-instance : TyDenote (TermModel d Γ).Ty where
-  toType := fun ty => ExprTree d Γ ty.1
-
-instance [p : PureDialect d] : DialectDenote (TermModel d Γ) where
-  denote := fun op args _regArgs =>
-    return .mk op rfl (p.allPure _) (argsToBranches args)
-  where
-    argsToBranches : {ts : List d.Ty} → HVector _ (TermModelTy.mk <$> ts) → ExprTreeBranches d Γ ts
-      | [], .nil          => .nil
-      | _::_, .cons a as  => .cons a (argsToBranches as)
-
-variable (d) in
-/-- A substitution in context `Γ` maps variables of `Γ` to expression trees in `Δ`,
-in a type-preserving manner -/
-def Ctxt.Substitution (Γ Δ : Ctxt d.Ty) : Type :=
-  {ty : d.Ty} → Γ.Var ty → (ExprTree d Δ ty)
-
-/-- A valuation of the term model w.r.t context `Δ` is exactly a substitution -/
-@[coe] def Ctxt.Substitution.ofValuation
-    (V : Valuation (Ty:=(TermModel d Δ).Ty) (TermModelTy.mk <$> Γ)) :
-    Γ.Substitution d Δ := fun ⟨v, h⟩ =>
-  V ⟨v, by simp only [get?] at h; simp [h]⟩
-
-/-- A context homomorphism trivially induces a substitution  -/
-@[coe] def Ctxt.Substitution.ofHom {Γ Δ : Ctxt d.Ty} (f : Γ.Hom Δ) : Γ.Substitution d Δ :=
-  fun v => .fvar <| f v
-
-def TermModel.morphism : DialectMorphism d (TermModel d Γ) where
-  mapOp := id
-  mapTy := TermModelTy.mk
-  preserves_signature := by intros; rfl
-
-variable [PureDialect d]
-
-/-- `lets.toSubstitution` gives a substitution from each variable in the output context to an
-expression tree with variables in the input context by following the def-use chain -/
-def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution d Γ_in :=
-  Ctxt.Substitution.ofValuation <|
-    (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
-      ExprTree.fvar ⟨v, by
-        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map,
-          List.getElem?_map, Option.map_eq_some_iff] at h
-        simp only [Ctxt.get?]
-        rcases h with ⟨ty', h_get, h_map⟩
-        injection h_map with ty_eq_ty'
-        subst ty_eq_ty'
-        exact h_get⟩
-
-mutual
-
-/-- `e.applySubstitution σ` replaces occurences of `v` in `e` with `σ v` -/
-def ExprTree.applySubstitution (σ : Γ.Substitution d Δ) : ExprTree d Γ ty → ExprTree d Δ ty
-  | .fvar v => σ v
-  | .mk op (Eq.refl _) eff_eq args => .mk op rfl eff_eq (args.applySubstitution σ)
-
-/-- `es.applySubstitution σ` maps `ExprTree.applySubstution` over `es` -/
-def ExprTreeBranches.applySubstitution (σ : Γ.Substitution d Δ) :
-    ExprTreeBranches d Γ ty → ExprTreeBranches d Δ ty
-  | .nil => .nil
-  | .cons a as => .cons (a.applySubstitution σ) (as.applySubstitution σ)
-
-end
-
-end TermModel
 
 /-!
 ## Matching
@@ -1881,6 +1735,7 @@ def matchArg [DecidableEq d.Op]
   | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
       let ma ← matchVar (t := t) lets vₗ matchLets vᵣ ma
       matchArg lets matchLets vsₗ vsᵣ ma
+  termination_by l => (Δ_out.length, l.length + 1)
 
 
 
@@ -1928,15 +1783,17 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
 
     * If `matchLets = .var matchLets' e`, and `w` is `w' + 1`, then we recurse and try to
       `matchVar lets v matchLets' w' map` -/
-  | .var matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
-      let w := ⟨w, by simp_all[Ctxt.snoc]⟩
-      matchVar lets v matchLets w ma
-  | @Lets.var _ _ _ _ Δ_out _ matchLets matchExpr , ⟨0, _⟩, ma => do -- w† = Var.last
-      let ie ← lets.getPureExpr v
-      if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
-      then
-        matchArg lets matchLets ie.args (hs.1 ▸ matchExpr.args) ma
-      else none
+  | @Lets.var _ _ _ _ Δ_out _ matchLets matchExpr, w, ma => do
+      match w with
+      | ⟨w+1, h⟩ =>
+        let w := ⟨w, by simp_all⟩
+        matchVar lets v matchLets w ma
+      | ⟨0, _⟩ => do
+        let ie ← lets.getPureExpr v
+        if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
+        then
+          matchArg lets matchLets ie.args (hs.1 ▸ matchExpr.args) ma
+        else none
   | .nil, w, ma => -- The match expression is just a free (meta) variable
       match ma.lookup ⟨_, w⟩ with
       | some v₂ =>
@@ -1945,6 +1802,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
             then some ma
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
+  termination_by (Δ_out.length, 0)
 end
 
 /-- how matchVar behaves on `var` at a successor variable -/
@@ -1956,8 +1814,7 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
     (hw : Ctxt.get? Δ_out w = .some t)
     (ma : Mapping Δ_in Γ_out) :
   matchVar lets v (matchLets := .var matchLets matchE)
-    ⟨w + 1, by simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_succ];
-               simp only [Ctxt.get?] at hw; apply hw⟩ ma =
+    ⟨w + 1, by simpa using hw⟩ ma =
   matchVar lets v matchLets ⟨w, hw⟩ ma := by
     conv =>
       lhs
@@ -2273,7 +2130,7 @@ theorem denote_matchVar2_of_subset
     simp only [Lets.denote, Id.pure_eq']
     rw [mem_lookup_iff.mpr ?_]
     apply h_sub <| mem_lookup_iff.mp <| matchVar_nil h_matchVar
-  case var matchLets matchExpr ih =>
+  case var t' matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
       simp only [Option.mem_def, Ctxt.get?, Var.succ_eq_toSnoc, Lets.denote,
@@ -2282,8 +2139,8 @@ theorem denote_matchVar2_of_subset
       apply ih h_sub h_matchVar
 
     | ⟨0, h_w⟩ =>
-      obtain rfl : t = _ := by simp only [Ctxt.get?, Ctxt.snoc, List.length_cons, Nat.zero_lt_succ,
-        List.getElem?_eq_getElem, List.getElem_cons_zero, Option.some.injEq] at h_w; apply h_w.symm
+      obtain rfl : t = t' := by
+        symm; simpa using h_w
       have ⟨args, h_pure, h_matchArgs⟩ := matchVar_var_last h_matchVar
       rw [← Vout.property v _ h_pure]
       simp only [Ctxt.get?, Var.zero_eq_last, Lets.denote_var_last_pure]
@@ -2396,10 +2253,10 @@ theorem mem_matchVar
       )
     have hvarMap' := hvar' ▸ hvarMap
     apply hvarMap'
-  | .var matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
+  | .var (t := t') matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
     revert hMatchLets
-    simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_zero, Option.some.injEq] at hw
-    subst hw
+    obtain rfl : t = t' := by
+      symm; simpa using hw
     simp only [Lets.vars, Ctxt.get?, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
       Sigma.exists, forall_exists_index, and_imp]
     intro _ _ hl h_v'
@@ -2615,7 +2472,7 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
-      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [Ctxt.ofList]⟩
+      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp⟩
       ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
   · intro h t v
@@ -2776,10 +2633,11 @@ def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
     | .nil => ⟨HVector.nil, rfl⟩
   | .cons .. =>
     match args with
-    | .cons com coms =>
-      let ⟨com', hcom'⟩ := (rewritePeepholeRecursively fuel pr com)
+    | .cons (a := a) (as := as) com coms =>
+      let ⟨com', hcom'⟩ := rewritePeepholeRecursively fuel pr com
       let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyRegArgs fuel pr coms)
       ⟨.cons com' coms', by simp [hcom', hcoms']⟩
+termination_by (fuel, ts.length + 2)
 
 def rewritePeepholeRecursivelyExpr (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
@@ -2789,6 +2647,7 @@ def rewritePeepholeRecursivelyExpr (fuel : ℕ)
     let ⟨regArgs', hregArgs'⟩ := rewritePeepholeRecursivelyRegArgs fuel pr regArgs
     ⟨Expr.mk op ty eff' args regArgs', by
       apply Expr.denote_eq_of_region_denote_eq op ty eff' args regArgs regArgs' hregArgs'⟩
+termination_by (fuel + 1, 0)
 
 /-- A peephole rewriter that recurses into regions, allowing
 peephole rewriting into nested code. -/
@@ -2812,6 +2671,8 @@ def rewritePeepholeRecursively (fuel : ℕ)
       ⟨.var e' body', by
         rw [← htarget'_denote_eq_htarget]
         simp [he', hbody']⟩
+termination_by (fuel, 1)
+
 end
 
 /--

@@ -5,6 +5,7 @@ import SSA.Core.Framework.Macro
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Core.Tactic.SimpSet
+import Init.Data.String.Basic
 
 open MLIR AST Ctxt
 
@@ -32,8 +33,8 @@ not consuming any tokens, until a message becomes available on the other stream 
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
 -/
 
-def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
-  Stream.corec₂ (β := Stream α × Stream Bool) (x, c)
+def branch (x : Stream α) (c : Stream (BitVec 1)) : Stream α × Stream α :=
+  Stream.corec₂ (β := Stream α × Stream (BitVec 1)) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
       let c₀ := c 0
       let c' := c.tail
@@ -43,7 +44,7 @@ def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
         | none, _ => (none, none, (x, c'))
         | _, none => (none, none, (x', c))
         | some c₀, some x₀ =>
-          if c₀ then
+          if c₀ = 1 then
             (some x₀, none, (x', c'))
           else
             (none, some x₀, (x', c'))
@@ -125,35 +126,35 @@ def fork (x : Stream α) : Stream α × Stream α :=
       (x0, x0, x')
 
 -- not entirely nondeterministic (still picks left first)
-def controlMerge (x y : Stream α) : Stream α × Stream Bool :=
+def controlMerge (x y : Stream α) : Stream α × Stream (BitVec 1) :=
   Stream.corec₂ (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
-    | some x', some _ => (some x', some true, (x.tail, y))
-    | some x', none => (some x', some true, (x.tail, y.tail))
-    | none, some y' => (some y', some false, (x.tail, y.tail))
+    | some x', some _ => (some x', some 1, (x.tail, y))
+    | some x', none => (some x', some 1, (x.tail, y.tail))
+    | none, some y' => (some y', some 0, (x.tail, y.tail))
     | none, none => (none, none, (x.tail, y.tail))
 
 
-def join (x y : Stream α) : Stream Unit :=
+def join (x y : Stream α) : Stream (BitVec 1) :=
   Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
-    | some _, some _ => (some (), (x.tail, y.tail))
+    | some _, some _ => (some 1, (x.tail, y.tail))
     | some _, none   => (none, (x, y.tail))
     | none, some _   => (none, (x.tail, y))
     | none, none     => (none, (x.tail, y.tail))
 
 -- select stream and two inputs (deterministic mergs)
-def mux (x y : Stream α) (c : Stream Bool) : Stream α :=
-  Stream.corec (β := Stream α × Stream α × Stream Bool) (x, y, c) fun ⟨x, y, c⟩ => Id.run <| do
+def mux (x y : Stream α) (c : Stream (BitVec 1)) : Stream α :=
+  Stream.corec (β := Stream α × Stream α × Stream (BitVec 1)) (x, y, c) fun ⟨x, y, c⟩ => Id.run <| do
     match x 0, y 0, c 0 with
-      | none, _, some true => (none, (x.tail, y, c)) -- could not pop anything
-      | some _, _, some true => (x 0, (x.tail, y, c.tail)) -- pop from x
-      | _, none, some false => (none, (x, y.tail, c)) -- could not pop anything
-      | _, some _, some false => (y 0, (x, y.tail, c.tail)) -- pop from y
+      | none, _, some 1 => (none, (x.tail, y, c)) -- could not pop anything
+      | some _, _, some 1 => (x 0, (x.tail, y, c.tail)) -- pop from x
+      | _, none, some 0 => (none, (x, y.tail, c)) -- could not pop anything
+      | _, some _, some 0 => (y 0, (x, y.tail, c.tail)) -- pop from y
       | _, _, none => (none, (x, y, c.tail)) -- no pop
 
 -- discards any data: actually this should not return anything
-def sink (x : Stream α) : Stream Unit :=
+def sink (x : Stream α) : Stream (BitVec 1) :=
   Stream.corec (β := Stream α) (x) fun (x) => (none, x.tail)
 
 -- The source operation represents continuous token source.
@@ -187,24 +188,19 @@ namespace MLIR2Handshake
 section Dialect
 
 inductive Ty2
-  | int : Ty2
-  | bool : Ty2
-  | token : Ty2
+  | bitvec (w : Nat) : Ty2
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 
 inductive Ty
 | stream (ty2 : Ty2) : Ty -- A stream of values of type `ty2`.
 | stream2 (ty2 : Ty2) : Ty -- A product of streams of values of type `ty2`.
-| stream2token (ty2 : Ty2) : Ty -- A product of a stream of values of type `ty2` and a stream of values of type `token`
-| stream2bool (ty2 : Ty2) : Ty -- A product of a stream of values of type `ty2` and a stream of values of type `bool`
+| stream2token (ty2 : Ty2) : Ty -- A product of a stream of values of type `ty2` and a stream of `BitVec 1` representing `token`
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : TyDenote Ty2 where
 toType := fun
-|  Ty2.int => Int
-|  Ty2.bool => Bool
-|  Ty2.token => Unit
+|  Ty2.bitvec w => BitVec w
 
 instance : ToString Ty where
   toString t := repr t |>.pretty
@@ -230,22 +226,21 @@ abbrev Handshake : Dialect where
 def_signature for Handshake where
 | .fst t => (Ty.stream2 t) → Ty.stream t
 | .snd t => (Ty.stream2 t) → Ty.stream t
-| .branch t => (Ty.stream t, Ty.stream Ty2.bool) → Ty.stream2 t
+| .branch t => (Ty.stream t, Ty.stream (Ty2.bitvec 1)) → Ty.stream2 t
 | .merge t => (Ty.stream t, Ty.stream t) → Ty.stream t
 | .altMerge t => (Ty.stream t, Ty.stream t) → Ty.stream t
 | .fork t => (Ty.stream t) → Ty.stream2 t -- returns the product
-| .controlMerge t => (Ty.stream t, Ty.stream t) → (Ty.stream2bool t)
-| .join t => (Ty.stream t, Ty.stream t) → (Ty.stream Ty2.token)
-| .mux t => (Ty.stream t, Ty.stream t, Ty.stream Ty2.bool) → Ty.stream t
-| .sink t => (Ty.stream t) → (Ty.stream Ty2.token)
+| .controlMerge t => (Ty.stream t, Ty.stream t) → (Ty.stream2token t)
+| .join t => (Ty.stream t, Ty.stream t) → (Ty.stream (Ty2.bitvec 1))
+| .mux t => (Ty.stream t, Ty.stream t, Ty.stream (Ty2.bitvec 1)) → Ty.stream t
+| .sink t => (Ty.stream t) → (Ty.stream (Ty2.bitvec 1))
 | .sync t => (Ty.stream t, Ty.stream t) → Ty.stream2 t
 
 instance instHandshakeTyDenote : TyDenote Ty where
 toType := fun
 | Ty.stream ty2 => CIRCTStream.Stream (TyDenote.toType ty2)
 | Ty.stream2 ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType ty2)
-| Ty.stream2token ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType Ty2.token)
-| Ty.stream2bool ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType Ty2.bool)
+| Ty.stream2token ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType (Ty2.bitvec 1))
 
 def_denote for Handshake where
 | .fst _ => fun s => s.fst
@@ -271,26 +266,28 @@ be recognized by the LeanMLIR generic syntax parser, and
 defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
 
-
-def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
-  | "Int" => return (.int)
-  | "Bool" => return (.bool)
-  | _ => throw .unsupportedType
-
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
-    | ["Stream", r] =>
-      return .stream (← mkTy2 r)
-    | ["Stream2", r] =>
-      return .stream2 (← mkTy2 r)
+    | ["Stream", "BitVec", w] =>
+      match w.toNat? with
+      | some w' => return .stream (.bitvec w')
+      | _ => throw .unsupportedType
+    | ["Stream2", "BitVec", w] =>
+      match w.toNat? with
+      | some w' => return .stream2 (.bitvec w')
+      | _ => throw .unsupportedType
+    | ["Stream2Token", "BitVec", w] =>
+      match w.toNat? with
+      | some w' => return .stream2token (.bitvec w')
+      | _ => throw .unsupportedType
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy Handshake 0 where
   mkTy := mkTy
 
-def branch {r} {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (Handshake) Γ .pure (.stream2 r) :=
+def branch {r} {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream (.bitvec 1))) : Expr (Handshake) Γ .pure (.stream2 r) :=
   Expr.mk
     (op := .branch r)
     (ty_eq := rfl)
@@ -331,7 +328,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .stream r₁, .stream .bool, "handshake.branch" => return ⟨_, .stream2 r₁, @branch r₁ _ v₁ v₂⟩
+      | .stream r₁, .stream (.bitvec 1), "handshake.branch" => return ⟨_, .stream2 r₁, @branch r₁ _ v₁ v₂⟩
       -- unsure this is correct
       | .stream r₁, _, "handshake.merge" => return ⟨_, .stream r₁, merge v₁ v₁⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
