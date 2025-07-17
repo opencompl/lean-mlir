@@ -150,7 +150,7 @@ end Repr
   # Theorems
 -/
 
-theorem map_cons {A B : α → Type u} {as : List α} {f : (a : α) → A a → B a}
+theorem map_cons {A B : α → Type*} {as : List α} {f : (a : α) → A a → B a}
     {x : A a} {xs : HVector A as} :
     map f (cons x xs) = cons (f _ x) (map f xs) := by
   induction xs <;> simp_all [map]
@@ -167,8 +167,22 @@ syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
 @[simp]
 theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :
-   (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := by
-  rfl
+   (cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := rfl
+
+@[simp]
+theorem cons_get_succ {A : α → Type*} {a: α} {as : List α}
+    {x : A a} {xs : HVector A as} {i : Fin as.length} :
+    (cons x xs).get (i.succ) = xs.get i := rfl
+
+@[simp]
+theorem get_map {A B : α → Type*} {l : List α} (f : ∀ a, A a → B a)
+    (xs : HVector A l) (i : Fin l.length) :
+    (xs.map f).get i = f _ (xs.get i) := by
+  induction xs
+  case nil => exact i.elim0
+  case cons x xs ih =>
+    cases i using Fin.succRec
+    <;> simp_all [map_cons]
 
 -- Copied from core for List
 macro_rules
