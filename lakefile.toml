@@ -6,7 +6,7 @@ moreLeanArgs = ["--tstack=400000"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-rev = "nightly-testing-2025-07-10"
+rev = "nightly-testing-2025-07-17"
 
 [[require]]
 name = "Cli"
