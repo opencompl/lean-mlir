@@ -774,6 +774,15 @@ def add : FSM Bool :=
                   Circuit.var true (inl ()),
   }
 
+def map (fsm : FSM arity) (f : arity → arity') : FSM arity' where
+  α := fsm.α
+  initCarry := fsm.initCarry
+  outputCirc := fsm.outputCirc.map (Sum.map id f)
+  nextStateCirc := fun s =>
+    fsm.nextStateCirc s |>.map (Sum.map id f)
+
+instance : Functor FSM where
+  map f fsm :=  fsm.map f
 
 theorem add_nextStateCirc_eval :
     (add.nextStateCirc ()).eval =
@@ -1016,6 +1025,17 @@ def var (n : ℕ) : FSM (Fin (n+1)) :=
 @[simp] lemma eval_var (n : ℕ) (x : Fin (n+1) → BitStream) : (var n).eval x = x (Fin.last n) := by
   ext m; cases m <;> simp [var, eval, carry, nextBit]
 
+def var' (i : arity) : FSM arity :=
+  { α := Empty,
+    i := by infer_instance,
+    initCarry := Empty.elim,
+    nextStateCirc := Empty.elim
+    outputCirc := Circuit.var true (inr i)
+  }
+
+@[simp] lemma eval_var' (i : arity) (x : arity → BitStream) : (var' i).eval x = x i := by
+  ext; simp [var', eval, nextBit]
+
 def incr : FSM Unit :=
   { α := Unit,
     initCarry := fun _ => true,
@@ -1136,6 +1156,49 @@ def composeBinaryAux
     (λ b => match b with
       | true => q₁
       | false => q₂)
+
+def composeBinaryAux'
+    (p : FSM Bool)
+    (q₁ : FSM α)
+    (q₂ : FSM α) :
+    FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ b => match b with
+      | true => q₁
+      | false => q₂)
+
+def composeTernaryAux' (p : FSM (Fin 3)) (q₀ q₁ q₂ : FSM α) : FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ v =>
+      v.cases q₀ fun v =>
+        v.cases q₁ fun v =>
+          v.cases q₂ fun v => v.elim0)
+
+def composeQuaternaryAux' (p : FSM (Fin 4)) (q₀ q₁ q₂ q₃ : FSM α) : FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ v =>
+      v.cases q₀ fun v =>
+        v.cases q₁ fun v =>
+          v.cases q₂ fun v =>
+            v.cases q₃ fun v => v.elim0)
+
+def composeQuinaryAux' (p : FSM (Fin 5)) (q₀ q₁ q₂ q₃ q₄: FSM α) : FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ v =>
+      v.cases q₀ fun v =>
+        v.cases q₁ fun v =>
+          v.cases q₂ fun v =>
+            v.cases q₃ fun v =>
+              v.cases q₄ fun v => v.elim0)
+
 
 /-- Compose two binary opeators -/
 def composeBinary
