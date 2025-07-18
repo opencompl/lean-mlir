@@ -1590,11 +1590,6 @@ end AListTheorems
 ## Free Variables
 -/
 
-/-- Convert a heterogenous vector of variables into a homogeneous `VarSet` -/
-def HVector.toVarSet : {l : List d.Ty} → (T : HVector (Var Γ) l) → VarSet Γ
-  | [], .nil => ∅
-  | _::_, .cons v vs => insert ⟨_, v⟩ vs.toVarSet
-
 -- TODO: `HVector.toVarSet` and `HVector.vars` do the same thing, deduplicate
 def HVector.vars {l : List d.Ty} (T : HVector (Var Γ) l) : VarSet Γ :=
   T.foldl (fun _ s a => insert ⟨_, a⟩ s) ∅
