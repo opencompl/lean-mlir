@@ -3,7 +3,7 @@ set -o xtrace
 set -e # fail on errors.
 
 cd "$(git rev-parse --show-toplevel)"
-python3 SSA/Projects/InstCombine/scripts/extract-goals.py -n 500000 -j20
+python3 SSA/Projects/InstCombine/scripts/extract-goals.py --nfiles 500000 -j20
 CHANGED=$(git diff SSA/Projects/InstCombine/scripts)
 
 echo "$CHANGED"
