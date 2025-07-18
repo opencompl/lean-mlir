@@ -10,5 +10,4 @@ set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
 set_option Elab.async false
 
-theorem test_thm.extracted_1._1 : ∀ (x : BitVec 1), ofBool (x <ᵤ 0#1) = 0#1 :=
-sorry
+theorem test_thm.extracted_1._1 : ∀ (x : BitVec 2), ofBool (x <ᵤ 0#2) = 0#2 := sorry
