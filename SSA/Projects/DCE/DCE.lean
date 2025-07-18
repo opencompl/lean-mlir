@@ -9,7 +9,7 @@ open Ctxt (Var Valuation Hom)
 
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
-  Γ.eraseIdx v.val
+  ⟨Γ.toList.eraseIdx v.val⟩
 
 @[simp] theorem Ctxt.delete_snoc_toSnoc {Γ : Ctxt Ty} {v : Γ.Var t} :
     (Γ.snoc u).delete (v.toSnoc) = (Γ.delete v).snoc u := rfl
@@ -56,12 +56,16 @@ def Deleted.toHom (h : Deleted Γ v Γ') : Γ'.Hom Γ :=
     (DEL : Deleted (Γ.snoc u) v.toSnoc (Γ'.snoc u)) :
     DEL.toHom =
       have DEL' : Deleted Γ v Γ' := by
-        simp [Deleted] at DEL
+        rcases Γ'
+        simp only [Deleted, Ctxt.delete_snoc_toSnoc] at DEL ⊢
         injection DEL
+        simp_all [Ctxt.delete]
       DEL'.toHom.snocMap := by
   have DEL' : Deleted Γ v Γ' := by
-    simp [Deleted] at DEL
+    rcases Γ'
+    simp only [Deleted, Ctxt.delete_snoc_toSnoc] at DEL ⊢
     injection DEL
+    simp_all [Ctxt.delete]
   subst DEL'
   funext t v;
   simp only [Deleted.toHom]
@@ -79,7 +83,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     let idx := if v.val < delv.val then v.val else v.val - 1
     let v' := ⟨idx, by
       subst DEL
-      simp only [Ctxt.get?, Ctxt.delete, Ctxt.get?.eq_1, List.getElem?_eraseIdx, idx]
+      simp only [Ctxt.get?, Ctxt.delete, Ctxt.getElem?_ofList, List.getElem?_eraseIdx, idx]
       split_ifs with h_val_lt h_val_sub_lt
       · exact v.prop
       · omega

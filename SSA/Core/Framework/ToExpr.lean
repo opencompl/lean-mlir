@@ -65,12 +65,16 @@ protected def List.foldToExpr {α : Q(Type)} : List Q($α) → Q(List $α) :=
 protected def Prod.foldToExpr {α β : Q(Type)} : Q($α) × Q($β) → Q($α × $β) :=
   Function.uncurry <| mkApp4 (.const ``Prod [1,1]) α β
 
+protected def Ctxt.mkOfListExpr {α : Q(Type)} : Q(List $α) → Q(Ctxt $α) :=
+  mkApp2 (mkConst ``Ctxt.ofList) α
+
 namespace DialectMetaMorphism
 
 variable {d'} (f : DialectMetaMorphism d d')
 
 def mapList (Γ : List d.Ty) : Q(List $(d').Ty) := (f.mapTy <$> Γ).foldToExpr
-def mapCtxt : (Γ : Ctxt d.Ty) → Q(Ctxt $(d').Ty) := f.mapList
+def mapCtxt : (Γ : Ctxt d.Ty) → Q(Ctxt $(d').Ty) :=
+  Ctxt.mkOfListExpr ∘ f.mapList ∘ Ctxt.toList
 
 def mapVar {Γ : Ctxt d.Ty} (v : Γ.Var ty) : Q(Ctxt.Var $(f.mapCtxt Γ) $(f.mapTy ty)) :=
   let Ty := q(($d').Ty)
