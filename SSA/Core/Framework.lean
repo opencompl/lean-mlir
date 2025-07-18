@@ -2223,21 +2223,11 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty}
     (matchLets : Lets d Δ_in .pure Δ_out) (w : Var Δ_out t)
     (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w) :
     Option (Δ_in.Hom Γ_out) := do
-  match hm : matchVar lets v matchLets w with
-  | none => none
-  | some m =>
-    return fun t v' =>
-    match h : m.lookup ⟨t, v'⟩ with
-    | some v' => by exact v'
-    | none => by
-      have := AList.lookup_isSome.2
-        (mem_matchVar
-            (lets := lets)
-            (v := v)
-            (w := w)
-            (matchLets := matchLets)
-            (hvarMap := by simp; apply hm) (hvars t v'))
-      simp_all
+  (matchVar lets v matchLets w).attach.map fun ⟨m, hm⟩ =>
+    fun t v' =>
+      (m.lookup ⟨t, v'⟩).get <| by
+        apply AList.lookup_isSome.2
+        apply mem_matchVar (by simpa) (hvars _ _)
 
 /-- if matchVarMap lets v matchLets w hvars = .some map,
 then ⟦lets; matchLets⟧ = ⟦lets⟧(v)
@@ -2254,23 +2244,20 @@ theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt 
     (lets.denote s₁ >>= (fun Γ_out_v => f Γ_out_v <|
       matchLets.denote (Valuation.comap Γ_out_v map) w))
     = (lets.denote s₁ >>= (fun Γ_out_v => f Γ_out_v <| Γ_out_v v)) := by
-  rw [matchVarMap] at hmap
-  split at hmap
-  next => simp_all
-  next hm =>
-    rw [← denote_matchVar2 hm]
-    simp only [Option.mem_def, Option.some.injEq, pure] at hmap
-    subst hmap
-    congr
-    funext Γ_out_v
-    rw [← Lets.denotePure]
-    congr
-    funext t v
-    simp only [Valuation.comap]
-    split
-    · split <;> simp_all
-    · have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
-      simp_all
+  obtain ⟨ma',
+      (hm : matchVar lets v matchLets w = some ma'),
+      (rfl : (fun t_1 v' => (lookup ⟨t_1, v'⟩ ma').get _) = map)⟩ := by
+    simpa [matchVarMap] using hmap
+  rw [← denote_matchVar2 hm, ← Lets.denotePure]
+  congr
+  funext Γ_out_v
+  congr
+  funext t v
+  simp only [Valuation.comap]
+  split
+  · simp_all
+  · have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
+    simp_all
 
 
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending
