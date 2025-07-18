@@ -2184,11 +2184,9 @@ theorem mem_matchVar
       (w := ⟨w, by simpa[Ctxt.snoc] using hw'⟩)
       (ma := ma)
       (v := v)
-      (hMatchLets := by
-        have hmatchLets' :=
-          Lets.vars_var_eq (lets := matchLets)
-            (e := matchE) (w := w) (wh := hw') ▸ hMatchLets
-        apply hmatchLets'
+      (hMatchLets :=
+        have := Lets.vars_var_eq (lets := matchLets) (e := matchE) (w := w) (wh := hw')
+        this ▸ hMatchLets
       )
     have hvarMap' := hvar' ▸ hvarMap
     apply hvarMap'
