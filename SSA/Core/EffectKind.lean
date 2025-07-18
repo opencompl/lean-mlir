@@ -219,12 +219,6 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
     liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
   cases hle; rfl
 
-@[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
-    liftEffect hle (α := α) (m := m) = match e with
-      | .pure => fun v => Pure.pure v
-      | .impure => id := by
-  cases e <;> rfl
-
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
 theorem liftEffect_eq_id (hle : eff ≤ eff) [Pure m] :
@@ -257,6 +251,15 @@ either `pure` or the identity, depending on the effect `eff`.
 
 NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
 -/
-@[simp, simp_denote]
+@[simp_denote]
 def coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
   liftEffect (le_impure eff)
+
+@[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
+    liftEffect hle (α := α) (m := m) = coe_toMonad := by
+  cases e <;> rfl
+
+theorem coe_toMonad_eq_of_pure [Pure m] {eff} (h : eff = pure) :
+    coe_toMonad (α := α) (m := m) (eff := eff)
+    = fun x => Pure.pure (cast (by subst h; rfl) x) := by
+  subst h; rfl

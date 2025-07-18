@@ -150,6 +150,9 @@ end Repr
   # Theorems
 -/
 
+@[simp] theorem map_id : map (fun _ x => x) xs = xs := by
+  induction xs <;> simp_all [map]
+
 theorem map_cons {A B : α → Type*} {as : List α} {f : (a : α) → A a → B a}
     {x : A a} {xs : HVector A as} :
     map f (cons x xs) = cons (f _ x) (map f xs) := by
