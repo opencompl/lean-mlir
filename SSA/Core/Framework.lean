@@ -1465,82 +1465,93 @@ def Lets.getPureExprAux {Γ₁ Γ₂ : Ctxt d.Ty} {t : d.Ty} : Lets d Γ₁ eff 
         simp
         sorry⟩
 
+@[simp] def Expr.changeVars' (varsMap : Γ.Hom Γ')
+    (e : Expr d Γ eff Δ) : (Δ' : Ctxt d.Ty) × Expr d Γ' eff Δ' :=
+  ⟨_, (e.changeVars varsMap).2.2⟩
+
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
 not the local context where the variable appears. -/
 def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {t : d.Ty} (v : Var Γ₂ t) :
-    Option (Expr d Γ₂ .pure t) :=
-  Expr.changeVars Ctxt.dropUntilHom <$> getPureExprAux lets v
+    Option (Σ Δ, Expr d Γ₂ .pure Δ) :=
+  (getPureExprAux lets v).map fun ⟨_, e⟩ =>
+    e.changeVars' Ctxt.dropUntilHom
 
 @[simp] lemma Lets.getPureExpr_nil : getPureExpr (.nil : Lets d Γ eff Γ) v = none := rfl
 
-@[simp] lemma Lets.getPureExpr_var_returnVars (lets : Lets d Γ_in eff Γ_out)
-    (e : Expr d Γ_out eff Δ) :
-    getPureExpr (lets.var e) e.returnVars
-    = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> e.toPure? := by
-  rfl
-@[simp] lemma Lets.getPureExprAux_var_toSnoc (lets : Lets d Γ_in eff Γ_out)
-    (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
-    getPureExprAux (lets.var e) (v.toSnoc) = getPureExprAux lets v :=
-  rfl
+@[simp] lemma Lets.getPureExpr_returnVar (lets : Lets d Γ_in eff Γ_out)
+    (e : Expr d Γ_out eff Δ) {v : Δ.Var t} (h : e.returnVars.contains v = true) :
+    getPureExpr (lets.var e) v
+    = (Expr.changeVars' <| e.contextHom) <$> e.toPure? := by
+  sorry
 
-@[simp] lemma Lets.getPureExpr_var_toSnoc (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
-    (v : Var Γ_out ty₂):
-    getPureExpr (lets.var e) (v.toSnoc)
-    = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
-  simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
-    getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp_def,
-    Expr.changeVars_changeVars];
-  rfl
+-- TODO: to make the following lemma work, I need some way to transport `v` into
+--       context `Γ_out`
+-- @[simp] lemma Lets.getPureExprAux_not_returnVar (lets : Lets d Γ_in eff Γ_out)
+--     (e : Expr d Γ_out eff Δ) (v : Δ.Var t) (h : e.returnVars.contains v = false) :
+--     getPureExprAux (lets.var e) v = getPureExprAux lets v :=
+--   sorry
 
-theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {t : d.Ty}
-    {lets : Lets d Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr d _ .pure t}
-    (he : lets.getPureExprAux v = some ePure)
-    (s : Valuation Γ₁)
-    (f : Valuation Γ₂ → ⟦t⟧ → eff.toMonad d.m α) :
-    (lets.denote s) >>= (fun Γv => f Γv ((ePure.changeVars Ctxt.dropUntilHom).denote Γv))
-    = lets.denote s >>= (fun Γv => f Γv (Γv v)) := by
-  induction lets
-  case nil => simp [getPureExprAux] at he
-  case var Γ_out ty body e ih =>
-    -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
-    simp only [Expr.denote_changeVars]
-    -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
-    cases v using Var.casesOn with
-    | toSnoc v =>
-      simp only [getPureExprAux, Var.casesOn_toSnoc] at he
-      let f' : Valuation Γ_out → ⟦t⟧ → eff.toMonad d.m α := fun Γv val => do
-        let Ve ← e.denote Γv
-        let Γv':= (Γv.snoc Ve)
-        f Γv' val
-      specialize ih he f'
-      simp only [Expr.denote_changeVars] at ih
-      simp +zetaDelta [denote, ← ih]
-    | last =>
-      simp only [getPureExprAux, Var.casesOn_last] at he
-      simp only [denote, Expr.denote_toPure? he, EffectKind.toMonad_impure,
-        EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
-        bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
-        Valuation.snoc_last]
-      cases eff
-      · apply Id.ext
-        simp
-        rfl
-      · simp
+-- @[simp] lemma Lets.getPureExpr_var_toSnoc (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
+--     (v : Var Γ_out ty₂):
+--     getPureExpr (lets.var e) (v.toSnoc)
+--     = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
+--   simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
+--     getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp_def,
+--     Expr.changeVars_changeVars];
+--   rfl
 
-theorem Lets.denote_getExpr [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty}
-    {lets : Lets d Γ₁ eff Γ₂} {t : d.Ty}
-    {v : Var Γ₂ t}
-    {e : Expr d Γ₂ .pure Δ}
-    (he : lets.getPureExpr v = some e)
-    (V : Valuation Γ₁) :
-    (f : Valuation Γ₂ → ⟦t⟧ → eff.toMonad d.m α) →
-    (lets.denote V) >>= (fun Γv => f Γv (e.denote Γv))
-    = (lets.denote V) >>= (fun Γv => f Γv (Γv v)) := by
-  simp only [getPureExpr, Option.map_eq_map, Option.map_eq_some_iff] at he
-  rcases he with ⟨e', he, rfl⟩
-  apply denote_getPureExprAux
-  assumption
+-- theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {t : d.Ty}
+--     {lets : Lets d Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr d _ .pure t}
+--     (he : lets.getPureExprAux v = some ePure)
+--     (s : Valuation Γ₁)
+--     (f : Valuation Γ₂ → ⟦t⟧ → eff.toMonad d.m α) :
+--     (lets.denote s) >>= (fun Γv => f Γv ((ePure.changeVars Ctxt.dropUntilHom).denote Γv))
+--     = lets.denote s >>= (fun Γv => f Γv (Γv v)) := by
+--   stop
+--   induction lets
+--   case nil => simp [getPureExprAux] at he
+--   case var Γ_out ty body e ih =>
+--     -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
+--     simp only [Expr.denote_changeVars]
+--     -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
+--     cases v using Var.casesOn with
+--     | toSnoc v =>
+--       simp only [getPureExprAux, Var.casesOn_toSnoc] at he
+--       let f' : Valuation Γ_out → ⟦t⟧ → eff.toMonad d.m α := fun Γv val => do
+--         let Ve ← e.denote Γv
+--         let Γv':= (Γv.snoc Ve)
+--         f Γv' val
+--       specialize ih he f'
+--       simp only [Expr.denote_changeVars] at ih
+--       simp +zetaDelta [denote, ← ih]
+--     | last =>
+--       simp only [getPureExprAux, Var.casesOn_last] at he
+--       simp only [denote, Expr.denote_toPure? he, EffectKind.toMonad_impure,
+--         EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
+--         bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
+--         Valuation.snoc_last]
+--       cases eff
+--       · apply Id.ext
+--         simp
+--         rfl
+--       · simp
+
+-- TODO: this is not a `simp` theorem, and is not explicitly referred to, do we actually need it?
+-- theorem Lets.denote_getExpr [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty}
+--     {lets : Lets d Γ₁ eff Γ₂} {t : d.Ty}
+--     {v : Var Γ₂ t}
+--     {e : Expr d Γ₂ .pure Δ}
+--     (he : lets.getPureExpr v = some ⟨_, e⟩)
+--     (V : Valuation Γ₁) :
+--     (f : Valuation Γ₂ → ⟦t⟧ → eff.toMonad d.m α) →
+--     (lets.denote V) >>= e.denote
+--     = (lets.denote V) >>= (fun V => f V (V v)) := by
+--   stop
+--   simp only [getPureExpr, Option.map_eq_map, Option.map_eq_some_iff] at he
+--   rcases he with ⟨e', he, rfl⟩
+--   apply denote_getPureExprAux
+--   assumption
 
 /-!
 ## Mapping
@@ -1725,13 +1736,14 @@ def Com.vars : Com d Γ .pure t → VarSet Γ :=
     |>.map (fun _ => com.toFlatCom.lets.vars)
     |>.foldl (fun _ => (· ∪ ·)) ∅
 
-theorem Lets.vars_var_eq {lets : Lets d Γ_in eff Γ_out}
-    {e : Expr d Γ_out eff ts}
-    {w : ℕ} {tw : d.Ty}
-    {wh : Ctxt.get? Γ_out w = some tw} :
-    Lets.vars (Lets.var lets e) _
-    = Lets.vars lets ⟨w, wh⟩ := by
-  simp [Lets.vars]
+-- TODO: not sure what this statement ought to be
+-- theorem Lets.vars_var_eq {lets : Lets d Γ_in eff Γ_out}
+--     {e : Expr d Γ_out eff ts}
+--     {w : ℕ} {tw : d.Ty}
+--     {wh : Ctxt.get? Γ_out w = some tw} :
+--     Lets.vars (Lets.var lets e) _
+--     = Lets.vars lets ⟨w, wh⟩ := by
+--   simp [Lets.vars]
 
 
 @[simp] lemma HVector.vars_nil :
