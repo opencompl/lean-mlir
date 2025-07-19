@@ -69,22 +69,24 @@ def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
 def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
 
 section Lemmas
+variable (Γ : Ctxt Ty) (ts : List Ty)
 
-lemma getElem?_eq_toList_getElem? {Γ : Ctxt Ty} {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
-@[simp] lemma getElem?_ofList (Γ : List Ty) (i : Nat) : (ofList Γ)[i]? = Γ[i]? := rfl
+lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
+@[simp] lemma getElem?_ofList (i : Nat) : (ofList ts)[i]? = ts[i]? := rfl
 
-@[simp] lemma getElem?_snoc_zero (Γ : Ctxt Ty) (t : Ty)           : (Γ.snoc t)[0]? = some t := rfl
-@[simp] lemma getElem?_snoc_succ (Γ : Ctxt Ty) (t : Ty) (i : Nat) : (Γ.snoc t)[i+1]? = Γ[i]? := rfl
+@[simp] lemma getElem?_snoc_zero (t : Ty)           : (Γ.snoc t)[0]? = some t := rfl
+@[simp] lemma getElem?_snoc_succ (t : Ty) (i : Nat) : (Γ.snoc t)[i+1]? = Γ[i]? := rfl
 
 @[simp] lemma map_nil (f : Ty → Ty') : map f ∅ = ∅ := rfl
-@[simp] lemma map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
+@[simp] lemma map_snoc : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
 
 @[simp] lemma getElem?_map (Γ : Ctxt Ty) (f : Ty → Ty') (i : Nat) :
     (Γ.map f)[i]? = Γ[i]?.map f := by
   simp [map]; rfl
 
-@[simp] lemma length_ofList : (ofList Γ).length = Γ.length := rfl
+@[simp] lemma length_ofList : (ofList ts).length = ts.length := rfl
 @[simp] lemma length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
+@[simp] lemma length_map : (Γ.map f).length = Γ.length := by simp [map, length]
 
 instance : Functor Ctxt where
   map := map
@@ -217,8 +219,6 @@ def casesOn_toSnoc
       Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v :=
   rfl
 
-end Var
-
 theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
     Function.Injective (@Ctxt.Var.toSnoc Ty Γ t t') := by
   let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
@@ -226,6 +226,27 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   intro x y h
   simpa (config := { zetaDelta := true }) only [Var.casesOn_toSnoc, Option.some.injEq] using
     congr_arg ofSnoc h
+
+
+/-! ### Var Fin Helpers -/
+variable {Γ : Ctxt Ty}
+
+def toFin : Γ.Var t → Fin Γ.length
+  | ⟨idx, h⟩ => ⟨idx, by
+      suffices ¬(Γ.length ≤ idx) by omega
+      rcases Γ
+      simp only [length_ofList, ← List.getElem?_eq_none_iff]
+      simp_all
+    ⟩
+
+def ofFin : (i : Fin Γ.length) → Γ.Var (Γ[i])
+  | ⟨idx, h⟩ => ⟨idx, by simpa using List.getElem?_eq_getElem _⟩
+
+end Var
+
+/-!
+## Context Homomorphisms
+-/
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
