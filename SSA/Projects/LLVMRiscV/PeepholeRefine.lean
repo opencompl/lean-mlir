@@ -1,3 +1,5 @@
+import SSA.Core
+
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.tactics.SimpLowering
