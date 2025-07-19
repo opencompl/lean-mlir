@@ -290,4 +290,12 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
                         (fun i => by simpa using h_elem i.succ)
       (h₀ ▸ x) ::ₕ xs
 
+/- ### Contains -/
+
+/-- `xs.contains y` returns true if `y` is an element of `xs`. -/
+def contains [DecidableEq α] [DecidableEq (A a)] {as} : HVector A as → A a → Bool
+  | .nil, _ => false
+  | .cons (a := a') x xs, y =>
+      decide (∃ (h : a = a'), h ▸ x = y) || xs.contains y
+
 end HVector
