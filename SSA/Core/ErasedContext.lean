@@ -13,7 +13,7 @@ import SSA.Core.HVector
 -/
 class TyDenote (β : Type) : Type 1 where
   toType : β → Type
-open TyDenote (toType) /- make toType publically visible in module. -/
+export TyDenote (toType)
 
 notation "⟦" x "⟧" => TyDenote.toType x
 
