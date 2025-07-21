@@ -37,3 +37,4 @@ test-semantics/*.llvm
 *.olean
 lakefile.olean
 .lake/
+SSA/Projects/InstCombine/tests/generalizer
