@@ -266,7 +266,19 @@ section ToFSM
 inductive StateSpace (wcard tcard : Nat)
 | widthVar (v : Fin wcard)
 | termVar (v : Fin tcard)
-deriving DecidableEq, Repr
+deriving DecidableEq, Repr, Hashable
+
+instance : Fintype (StateSpace wcard tcard) where
+  elems :=
+    let ws : Finset (Fin wcard) := Finset.univ
+    let vs : Finset (Fin tcard) := Finset.univ
+    let ws := ws.image StateSpace.widthVar
+    let vs := vs.image StateSpace.termVar
+    ws ∪ vs
+  complete := by
+    simp only [Finset.mem_union, Finset.mem_image, Finset.mem_univ, true_and]
+    intros x 
+    rcases x with x | x  <;> simp
 
 
 /--

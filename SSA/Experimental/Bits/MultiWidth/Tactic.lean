@@ -1,5 +1,7 @@
 import Mathlib.Data.Fintype.Defs
 import SSA.Experimental.Bits.MultiWidth.Defs
+import SSA.Experimental.Bits.MultiWidth.GoodFSM
+import SSA.Experimental.Bits.KInduction.KInduction
 
 import SSA.Experimental.Bits.KInduction.KInduction
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
@@ -447,6 +449,15 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       (_wenv := wenv)
       (tenv := tenv)
     let g ← g.replaceTargetDefEq pToProp
+    let some fsm := MultiWidth.mkPredicateFSM collect.wcard collect.tcard p
+      | throwError m!"unable to build FSM for predicate {repr p} with wcard={collect.wcard} and tcard={collect.tcard}"
+    logInfo m!"fsm circuit size: {fsm.fsm.circuitSize}"
+    let (stats, _log) ← FSM.decideIfZerosVerified fsm.fsm  (maxIter := 10)
+    match stats with 
+    | .safetyFailure i => throwError m!"safety failure at iteration {i} for predicate {repr p}"
+    | .exhaustedIterations _ => throwError m!"exhausted iterations for predicate {repr p}"
+    | .provenByKIndCycleBreaking niters _safetyCert _cycleBreakingCert =>
+      logInfo m!"proven by KInduction with {niters} iterations"
     let exactPrf ← g.withContext <|
       mkAppM (``MultiWidth.Decide.Predicate.toProp_of_decide)
       #[← mkPredicateExpr collect.wcard collect.tcard tctx p]
@@ -491,7 +502,7 @@ def evalBvMultiWidth : Tactic := fun
     replaceMainGoal gs
     match gs with
     | [] => return ()
-    | [g] => do
+    | [_g] => do
       -- trace[Bits.Frontend] m!"goal being decided via boolean reflection: {indentD g}"
       -- evalDecideCore `bv_multi_width (cfg := { native := true : Parser.Tactic.DecideConfig })
       return
