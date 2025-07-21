@@ -52,7 +52,7 @@ def fsmUltUnary (a : FSM α) (b : FSM α) : FSM α :=
 
 -- returns 1 if a is equal to b.
 def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
-  composeUnaryAux FSM.scanAnd <|  composeBinaryAux' FSM.nxor a  b
+  composeUnaryAux FSM.scanAnd <| composeBinaryAux' FSM.nxor a  b
 
 -- returns 1 if a is less than or equal to b.
 def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
@@ -140,7 +140,7 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : Option (TermFSM wcard tcar
     let vFsm ← mkWidthFSM wcard tcard v
     return { fsm := fsmSext afsm.fsm woldFsm.fsm vFsm.fsm }
 
-def mkPredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) :
+def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   Option (PredicateFSM wcard tcard p) := do
   match p with
   | .binRel .eq a b =>
@@ -148,15 +148,21 @@ def mkPredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmB ← mkTermFSM wcard tcard b
     return { fsm := fsmEqBitwise fsmA.fsm fsmB.fsm }
   | .or p q  =>
-    let fsmP ←  mkPredicateFSM wcard tcard p
-    let fsmQ ←  mkPredicateFSM wcard tcard q
+    let fsmP ←  mkPredicateFSMAux wcard tcard p
+    let fsmQ ←  mkPredicateFSMAux wcard tcard q
     return { fsm := composeUnaryAux FSM.scanAnd (fsmP.fsm ||| fsmQ.fsm) }
   | .and p q =>
-    let fsmP ← mkPredicateFSM wcard tcard p
-    let fsmQ ← mkPredicateFSM wcard tcard q
+    let fsmP ← mkPredicateFSMAux wcard tcard p
+    let fsmQ ← mkPredicateFSMAux wcard tcard q
     return { fsm := composeUnaryAux FSM.scanAnd (fsmP.fsm &&& fsmQ.fsm) }
   | .not p =>
-    let fsmP ← mkPredicateFSM wcard tcard p
+    let fsmP ← mkPredicateFSMAux wcard tcard p
     return { fsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.fsm) }
+
+/-- Negate the FSM so we can decide if zeroes. -/
+def mkPredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) :
+  Option (PredicateFSM wcard tcard p) := do
+    let fsm ← mkPredicateFSMAux wcard tcard p
+    return { fsm := ~~~ fsm.fsm }
 
 end MultiWidth
