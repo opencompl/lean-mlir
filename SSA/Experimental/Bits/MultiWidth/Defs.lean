@@ -219,12 +219,50 @@ structure WidthExpr where ofNat ::
   toNat : Nat
 deriving Inhabited, Repr, Hashable, DecidableEq
 
+def WidthExpr.wcard (w : WidthExpr) : Nat :=
+  match w with
+  | .ofNat n => n + 1
+
+/-- convert the 'WidthExpr' to a dependently typed width expression. -/
+def WidthExpr.toDep (w : WidthExpr) : MultiWidth.WidthExpr w.wcard :=
+  match w with
+  | .ofNat n => .var ⟨n, by simp [WidthExpr.wcard]⟩
+
 inductive Term
-| var (v : Nat) : Term
+| var (v : Nat) (w : WidthExpr) : Term
+
+def Term.tcard (t : Term) : Nat :=
+  match t with
+  | .var v _w => v
+
+def Term.wcard (t : Term) : Nat :=
+  match t with
+  | .var _v w => w.wcard
+
+def Term.width (t : Term) : WidthExpr :=
+  match t with
+  | .var _v w => w
+
+def Term.toDep {wcard tcard : Nat} (t : Term) (ctx : Term.Ctx wcard tcard) (hw : t.wcard ≤ wcard) (ht : t.tcard ≤ tcard) :
+  MultiWidth.Term ctx (t.width.toDep) :=
+  match t with
+  | .var v w => .var (Fin.mk v (by sorry))
+      
 
 inductive Predicate
 | eq (w : WidthExpr) (a b : Term) : Predicate
 | or (p1 p2 : Predicate) : Predicate
+
+def Predicate.tcard (p : Predicate) : Nat :=
+  match p with
+  | .eq _w a b => max a.tcard b.tcard
+  | .or p1 p2 => max p1.tcard p2.tcard
+
+def Predicate.wcard (p : Predicate) : Nat :=
+  match p with
+  | .eq w _a _b => w.wcard
+  | .or p1 p2 => max p1.wcard p2.wcard
+
 
 end Nondep
 end MultiWidth
