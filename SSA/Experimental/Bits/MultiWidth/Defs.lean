@@ -11,7 +11,7 @@ namespace MultiWidth
 inductive WidthExpr (wcard : Nat) : Type
 | var : (v : Fin wcard) → WidthExpr wcard
 
-structure PackedWidthExpr where 
+structure PackedWidthExpr where
   wcard : Nat
   e : WidthExpr wcard
 
@@ -105,6 +105,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
 
 inductive BinaryRelationKind
 | eq
+deriving DecidableEq, Repr, Inhabited
 
 inductive Predicate
   (ctx : Term.Ctx wcard tcard) : Type
@@ -185,30 +186,78 @@ deriving Inhabited, Repr, Hashable, DecidableEq
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
   w.toNat + 1
 
+def WidthExpr.toPacked (w : WidthExpr) : PackedWidthExpr where
+  wcard := w.toNat + 1
+  e := .var ⟨w.toNat, by simp⟩
+
+def WidthExpr.ofDep {wcard : Nat} (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
+    match w with
+    | .var v => { toNat := v }
+
 inductive Term
 | var (v : Nat) (w : WidthExpr) : Term
+| add (a b : Term) : Term
+| zext (a : Term) (wnew : WidthExpr) : Term
+| sext (a : Term) (wnew : WidthExpr) : Term
+deriving DecidableEq, Inhabited, Repr
 
-def Term.wcard (t : Term) : Nat :=
+def Term.ofDep {wcard tcard : Nat}
+    {tctx :Term.Ctx wcard tcard}
+    {w : MultiWidth.WidthExpr wcard}
+    (t : MultiWidth.Term tctx w) : Term :=
+  match t with 
+  | .var v => .var v (.ofDep w)
+  | .add a b => .add (.ofDep a) (.ofDep b)
+  | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
+  | .sext a wnew => .sext (.ofDep a) (.ofDep wnew)
+
+def Term.width (t : Term) : WidthExpr :=
   match t with
-  | .var _v w => w.wcard
+  | .var _v w => w
+  | .add a _b => a.width
+  | .zext _a wnew => wnew
+  | .sext _a wnew => wnew
+
+def Term.wcard (t : Term) : Nat := t.width.wcard
 
 def Term.tcard (t : Term) : Nat :=
   match t with
   | .var v _w => v + 1
+  | .add a b => max (Term.tcard a) (Term.tcard b)
+  | .zext a _wnew => (Term.tcard a) 
+  | .sext a _wnew => (Term.tcard a)
 
 inductive Predicate
-| eq (w : WidthExpr) (a b : Term) : Predicate
+| binRel (k : BinaryRelationKind)
+    (a : Term) (b : Term) : Predicate
 | or (p1 p2 : Predicate) : Predicate
+| and (p1 p2 : Predicate) : Predicate
+| not (p : Predicate) : Predicate
+deriving DecidableEq, Inhabited, Repr
 
 def Predicate.wcard (p : Predicate) : Nat :=
   match p with
-  | .eq w _a _b => w.wcard
+  | .binRel .eq a _b => a.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
+  | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
+  | .not p => Predicate.wcard p
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
-  | .eq _w a b => max a.tcard b.tcard
+  | .binRel .eq a b => max a.tcard b.tcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
+  | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
+  | .not p => Predicate.tcard p
+
+def Predicate.ofDep {wcard tcard : Nat}
+    {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
+  match p with 
+  | .binRel k a b =>
+    match k with
+    | .eq  => .binRel .eq (.ofDep a) (.ofDep b)
+  | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
+  | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
+  | .not p => .not (.ofDep p)
 
 end Nondep
 
@@ -234,21 +283,17 @@ structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
     BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
 
 /-- the FSM that corresponds to a given nat-predicate. -/
-structure NatFSM (v : WidthExpr wcard) (tcard : Nat) where
+structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
   fsm : FSM (StateSpace wcard tcard)
 
-structure TermFSM {w : WidthExpr wcard}
-  {tctx : Term.Ctx wcard tcard}
-  (t : Term tctx w) where
+structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
   fsm : FSM (StateSpace wcard tcard)
 
-structure PredicateFSM
-  {tctx : Term.Ctx wcard tcard}
-  (p : Predicate tctx) where
+structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
   fsm : FSM (StateSpace wcard tcard)
 
 structure GoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
-  extends NatFSM v tcard where
+  extends NatFSM wcard tcard (.ofDep v) where
   heval_eq :
     ∀ (env : Fin wcard → Nat)
     (fsmEnv : StateSpace wcard tcard → BitStream),
@@ -256,7 +301,7 @@ structure GoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
 
 structure GoodTermFSM {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
-  (t : Term tctx w) extends TermFSM t where
+  (t : Term tctx w) extends TermFSM wcard tcard (.ofDep t) where
   heval_eq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
@@ -264,7 +309,7 @@ structure GoodTermFSM {w : WidthExpr wcard}
 
 structure GoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}
-  (p : Predicate tctx) extends PredicateFSM p where
+  (p : Predicate tctx) extends PredicateFSM wcard tcard (.ofDep p) where
   heval_eq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),

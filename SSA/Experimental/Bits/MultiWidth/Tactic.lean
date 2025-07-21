@@ -303,6 +303,7 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, <- mkFinLit tcard v]
     debugCheck out
     return out
+  | _ => throwError m!"unhandled mkTermExpr {repr t}"
 
 
 set_option pp.explicit true in
@@ -322,7 +323,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
-      return (.eq w ta tb, state)
+      return (.binRel .eq ta tb, state)
     | _ => throwError m!"expected bitvector equality, found: {indentD e}"
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
@@ -345,7 +346,8 @@ info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (
 def mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
-  | .eq w a b =>
+  | .binRel .eq a b =>
+    let w := a.width
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard tctx a
     let bExpr ← mkTermExpr wcard tcard tctx b
@@ -363,6 +365,7 @@ def mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
     debugCheck out
     return out
+  | _ => throwError m!"unhandled mkPredicateExpr {repr p}"
 
 
 /--
