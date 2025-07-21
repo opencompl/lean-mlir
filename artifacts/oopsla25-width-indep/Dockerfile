@@ -28,10 +28,9 @@ ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
 # Download & build lean-mlir
-RUN echo "v5"
 RUN git clone  https://github.com/opencompl/lean-mlir.git 
 WORKDIR /code/lean-mlir
-RUN git checkout bf3ecb44670f69fe255e06761e9374f22039b086
+RUN git checkout 7ac5ae6d07332cfa10ba9c8b973de2db63d4f761
 RUN lake -R exe cache get
 RUN lake build
 

@@ -156,7 +156,8 @@ sorry
 warning: declaration uses 'sorry'
 ---
 warning: 'extract_goals' tactic does nothing
-note: this linter can be disabled with `set_option linter.unusedTactic false`
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
 -/
 #guard_msgs in example (P Q R : Prop) : P ∧ Q ∧ R := by
     constructor <;> try constructor
@@ -171,7 +172,8 @@ sorry
 warning: declaration uses 'sorry'
 ---
 warning: 'extract_goals' tactic does nothing
-note: this linter can be disabled with `set_option linter.unusedTactic false`
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
 -/
 #guard_msgs in example (P Q : Nat) : P + Q = Q + P := by
     extract_goals

@@ -42,7 +42,7 @@ lemma eval_eq_up_to :
     p.eval x n = p.eval y n := by
   rintro h
   simp [eval]
-  congr
+  congr 2
   apply carry_eq_up_to p (by rintro ar k hlt; apply h; omega)
   ext; apply h; rfl
 
