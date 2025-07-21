@@ -280,7 +280,7 @@ def collectBVAtom (state : CollectState)
   let (wexpr, state) ← collectWidthAtom state w
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
   let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
-  return (.var bvix, { state with bvToIx, bvIxToWidthExpr })
+  return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -298,7 +298,7 @@ info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v :
 def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
-  | .var v =>
+  | .var v _wexpr =>
     let out := mkAppN (mkConst ``MultiWidth.Term.var [])
       #[mkNatLit wcard, mkNatLit tcard, tctx, <- mkFinLit tcard v]
     debugCheck out
@@ -372,7 +372,7 @@ info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : WidthExpr.Env wcar
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
 def mkPredicateToPropExpr (p : MultiWidth.Nondep.Predicate)
-  (wcard tcard : Nat) (wenv : Expr) (tctx : Expr) (tenv : Expr) : SolverM Expr := do
+  (wcard tcard : Nat) (_wenv : Expr) (tctx : Expr) (tenv : Expr) : SolverM Expr := do
   let pExpr ← mkPredicateExpr wcard tcard tctx p
   let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, pExpr]
     -- #[(mkNatLit wcard),
@@ -441,7 +441,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       (wcard := collect.wcard)
       (tcard := collect.tcard)
       (tctx := tctx)
-      (wenv := wenv)
+      (_wenv := wenv)
       (tenv := tenv)
     let g ← g.replaceTargetDefEq pToProp
     let exactPrf ← g.withContext <|
@@ -459,7 +459,6 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   (solve g).run { toConfig := cfg }
-
 
   -- -- finally, we perform reflection.
   -- -- let predicate ← collectBVPredicateAux ∅ (← g.getType) w

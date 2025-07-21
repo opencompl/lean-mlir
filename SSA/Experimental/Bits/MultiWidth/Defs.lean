@@ -11,6 +11,15 @@ namespace MultiWidth
 inductive WidthExpr (wcard : Nat) : Type
 | var : (v : Fin wcard) → WidthExpr wcard
 
+structure PackedWidthExpr where 
+  wcard : Nat
+  e : WidthExpr wcard
+
+
+def WidthExpr.castLe {wcard : Nat} (e : WidthExpr wcard) (hw : wcard ≤ wcard') : WidthExpr wcard' :=
+  match e with
+  | .var v => .var ⟨v, by omega⟩
+
 abbrev WidthExpr.Env (wcard : Nat) : Type :=
   Fin wcard → Nat
 
@@ -53,6 +62,13 @@ inductive Term {wcard tcard : Nat}
 | zext (a : Term tctx w) (v : WidthExpr wcard) : Term tctx v
 /-- sign extend a term to a given width -/
 | sext (a : Term tctx w) (v : WidthExpr wcard) : Term tctx v
+
+structure PackedTerm where
+  wcard : Nat
+  tcard : Nat
+  tctx : Term.Ctx wcard tcard
+  w : WidthExpr wcard
+  t : Term tctx w
 
 /--
 Environments are for evaluation.
@@ -97,6 +113,12 @@ inductive Predicate
 | and (p1 p2 : Predicate ctx) : Predicate ctx
 | or (p1 p2 : Predicate ctx) : Predicate ctx
 | not (p : Predicate ctx) : Predicate ctx
+
+structure PackedPredicate where
+  wcard : Nat
+  tcard : Nat
+  tctx : Term.Ctx wcard tcard
+  p : Predicate tctx
 
 def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
@@ -146,6 +168,50 @@ def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
 
 end ToBitstream
 
+
+namespace Decide
+theorem Predicate.toProp_of_decide
+    {wcard tcard : Nat}
+    {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) (hdecide : decide (1 = 1) = true) :
+    (∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv) := by sorry
+end Decide
+
+namespace Nondep
+
+structure WidthExpr where ofNat ::
+  toNat : Nat
+deriving Inhabited, Repr, Hashable, DecidableEq
+
+def WidthExpr.wcard (w : WidthExpr) : Nat :=
+  w.toNat + 1
+
+inductive Term
+| var (v : Nat) (w : WidthExpr) : Term
+
+def Term.wcard (t : Term) : Nat :=
+  match t with
+  | .var _v w => w.wcard
+
+def Term.tcard (t : Term) : Nat :=
+  match t with
+  | .var v _w => v + 1
+
+inductive Predicate
+| eq (w : WidthExpr) (a b : Term) : Predicate
+| or (p1 p2 : Predicate) : Predicate
+
+def Predicate.wcard (p : Predicate) : Nat :=
+  match p with
+  | .eq w _a _b => w.wcard
+  | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
+
+def Predicate.tcard (p : Predicate) : Nat :=
+  match p with
+  | .eq _w a b => max a.tcard b.tcard
+  | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
+
+end Nondep
+
 section ToFSM
 
 inductive StateSpace (wcard tcard : Nat)
@@ -168,7 +234,7 @@ structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
     BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
 
 /-- the FSM that corresponds to a given nat-predicate. -/
-structure NatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat) where
+structure NatFSM (v : WidthExpr wcard) (tcard : Nat) where
   fsm : FSM (StateSpace wcard tcard)
 
 structure TermFSM {w : WidthExpr wcard}
@@ -205,64 +271,4 @@ structure GoodPredicateFSM
       fsm.eval fsmEnv = p.toBitstream tenv
 
 end ToFSM
-
-namespace Decide
-theorem Predicate.toProp_of_decide
-    {wcard tcard : Nat}
-    {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) (hdecide : decide (1 = 1) = true) :
-    (∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv) := by sorry
-end Decide
-
-namespace Nondep
-
-structure WidthExpr where ofNat ::
-  toNat : Nat
-deriving Inhabited, Repr, Hashable, DecidableEq
-
-def WidthExpr.wcard (w : WidthExpr) : Nat :=
-  match w with
-  | .ofNat n => n + 1
-
-/-- convert the 'WidthExpr' to a dependently typed width expression. -/
-def WidthExpr.toDep (w : WidthExpr) : MultiWidth.WidthExpr w.wcard :=
-  match w with
-  | .ofNat n => .var ⟨n, by simp [WidthExpr.wcard]⟩
-
-inductive Term
-| var (v : Nat) (w : WidthExpr) : Term
-
-def Term.tcard (t : Term) : Nat :=
-  match t with
-  | .var v _w => v
-
-def Term.wcard (t : Term) : Nat :=
-  match t with
-  | .var _v w => w.wcard
-
-def Term.width (t : Term) : WidthExpr :=
-  match t with
-  | .var _v w => w
-
-def Term.toDep {wcard tcard : Nat} (t : Term) (ctx : Term.Ctx wcard tcard) (hw : t.wcard ≤ wcard) (ht : t.tcard ≤ tcard) :
-  MultiWidth.Term ctx (t.width.toDep) :=
-  match t with
-  | .var v w => .var (Fin.mk v (by sorry))
-      
-
-inductive Predicate
-| eq (w : WidthExpr) (a b : Term) : Predicate
-| or (p1 p2 : Predicate) : Predicate
-
-def Predicate.tcard (p : Predicate) : Nat :=
-  match p with
-  | .eq _w a b => max a.tcard b.tcard
-  | .or p1 p2 => max p1.tcard p2.tcard
-
-def Predicate.wcard (p : Predicate) : Nat :=
-  match p with
-  | .eq w _a _b => w.wcard
-  | .or p1 p2 => max p1.wcard p2.wcard
-
-
-end Nondep
 end MultiWidth
