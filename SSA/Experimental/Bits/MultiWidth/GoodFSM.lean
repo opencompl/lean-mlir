@@ -26,7 +26,7 @@ instance : Complement (FSM α) where
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
-def mkWidthFSM (w : WidthExpr wcard) : NatFSM w :=
+def mkWidthFSM (w : WidthExpr wcard) (tcard : Nat) : NatFSM w tcard :=
    match w with
    | .var v => { fsm :=
       composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar v))
@@ -118,9 +118,9 @@ def mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w : WidthExpr w
     let fsmB := mkTermFSM b
     { fsm := (composeBinaryAux' FSM.add fsmA.fsm fsmB.fsm) }
   | .zext (w := wold) a wnew =>
-    { fsm := fsmZext (mkTermFSM a).fsm (mkWidthFSM wold).fsm (mkWidthFSM wnew).fsm }
+    { fsm := fsmZext (mkTermFSM a).fsm (mkWidthFSM wold tcard).fsm (mkWidthFSM wnew tcard).fsm }
   | .sext (w := wa) a v =>
-    { fsm := fsmSext (mkTermFSM a).fsm (mkWidthFSM wa).fsm (mkWidthFSM v).fsm }
+    { fsm := fsmSext (mkTermFSM a).fsm (mkWidthFSM wa tcard).fsm (mkWidthFSM v tcard).fsm }
 
 def mkPredicateFSM {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) :
   PredicateFSM p :=
