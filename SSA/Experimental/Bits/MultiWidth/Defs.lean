@@ -168,11 +168,11 @@ structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
     BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
 
 /-- the FSM that corresponds to a given nat-predicate. -/
-structure NatFSM (wcard : Nat) (v : WidthExpr wcard) where
-  fsm : FSM (StateSpace wcard 0)
+structure NatFSM {wcard : Nat} (v : WidthExpr wcard) where
+  fsm : FSM (StateSpace wcard tcard)
 
-structure TermFSM {w : WidthExpr wcard}
-  (ctx : Term.Ctx wcard tcard)
+structure TermFSM {wcard tcard : Nat} {w : WidthExpr wcard}
+  {tctx : Term.Ctx wcard tcard}
   (t : Term tctx w) where
   fsm : FSM (StateSpace wcard tcard)
 
@@ -181,20 +181,22 @@ structure PredicateFSM
   (p : Predicate tctx) where
   fsm : FSM (StateSpace wcard tcard)
 
-structure GoodNatFSM (wcard : Nat) (v : WidthExpr wcard)
-  extends NatFSM wcard v where
+structure GoodNatFSM {wcard : Nat} (v : WidthExpr wcard)
+  extends NatFSM v where
   heval_eq :
     ∀ (env : Fin wcard → Nat)
     (fsmEnv : StateSpace wcard 0 → BitStream),
       fsm.eval fsmEnv = v.toBitstream env
 
+/-
 structure GoodTermFSM {w : WidthExpr wcard}
-  (ctx : Term.Ctx wcard tcard)
-  (t : Term tctx w) extends TermFSM ctx t where
+  (tctx : Term.Ctx wcard tcard)
+  (t : Term tctx w) extends TermFSM t where
   heval_eq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
       fsm.eval fsmEnv = t.toBitstream tenv
+-/
 
 structure GoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}

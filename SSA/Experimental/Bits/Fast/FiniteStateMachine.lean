@@ -9,6 +9,7 @@ import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.FinEnum
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.Circuit
+import SSA.Experimental.Bits.Vars
 
 open Sum
 
@@ -39,7 +40,8 @@ structure FSM (arity : Type) : Type 1 where
 
   `nextBitCirc none` computes the current output bit as a function of the state and inputs.
   `nextBitCirc (some a)`, computes the *one* bit of the new state that corresponds to `a : α`. -/
-  ( nextBitCirc : Option α → Circuit (α ⊕ arity) )
+  outputCirc : Circuit (α ⊕ arity)
+  nextStateCirc : α → Circuit (α ⊕ arity)
 
 attribute [instance] FSM.i FSM.dec_eq FSM.h
 
@@ -86,10 +88,10 @@ Note that this implicitly counts the size of the state space of the FSM,
 and consequently, is the natural notion of complexity of the FSM.
 -/
 def circuitSize : Nat := Id.run do
-  let outCircSize := p.nextBitCirc none |>.size
+  let outCircSize := p.outputCirc |>.size
   let mut stateCircSize := 0
   for hi : i in List.range (FinEnum.card p.α) do
-    let a := p.nextBitCirc (.some ((FinEnum.equiv (α := p.α)).symm.toFun ⟨i, by simpa using hi⟩))
+    let a := p.nextStateCirc (((FinEnum.equiv (α := p.α)).symm.toFun ⟨i, by simpa using hi⟩))
     stateCircSize := stateCircSize + a.size
   return outCircSize + stateCircSize
 
@@ -133,8 +135,8 @@ where `state` are the *current* state bits, and `in` are the current input bits.
 def nextBit : p.State → (arity → Bool) → p.State × Bool :=
   fun carry inputBits =>
     let input := Sum.elim carry inputBits
-    let newState : p.State  := fun (a : p.α) => (p.nextBitCirc (some a)).eval input
-    let outBit : Bool       := (p.nextBitCirc none).eval input
+    let newState : p.State  := fun (a : p.α) => (p.nextStateCirc a).eval input
+    let outBit : Bool       := (p.outputCirc).eval input
     (newState, outBit)
 
 /-- `p.carry in i` computes the internal carry state at step `i`, given input *streams* `in` -/
@@ -164,8 +166,12 @@ theorem initCarry_changeInitCarry_eq (p : FSM arity) (c : p.α → Bool) :
     (p.changeInitCarry c).initCarry = c := rfl
 
 @[simp]
-theorem nextBitCirc_changeInitCarry_eq (p : FSM arity) (c : p.α → Bool) :
-    (p.changeInitCarry c).nextBitCirc = p.nextBitCirc := rfl
+theorem outputCirc_changeInitCarry_eq (p : FSM arity) (c : p.α → Bool) :
+    (p.changeInitCarry c).outputCirc = p.outputCirc := rfl
+
+@[simp]
+theorem nextStateCirc_changeInitCarry_eq (p : FSM arity) (c : p.α → Bool) :
+    (p.changeInitCarry c).nextStateCirc = p.nextStateCirc := rfl
 
 theorem carry_changeInitCarry_succ
     (p : FSM arity) (c : p.α → Bool) (x : arity → BitStream) : ∀ n,
@@ -329,7 +335,7 @@ theorem evalWith_congrEnv {p : FSM arity}
 
 /-- One step transition of the FSM.-/
 def delta' (p : FSM arity) (carryState : p.α → Bool) (x : arity → Bool) : p.α → Bool :=
-  fun s => (p.nextBitCirc (some s)).eval fun v =>
+  fun s => (p.nextStateCirc s).eval fun v =>
     Sum.elim carryState (fun a => x a) v
 
 
@@ -357,7 +363,7 @@ theorem evalWith_succ_eq (p : FSM arity) (carryState : p.α → Bool)
 
 /-- compute the output of the FSM, given the carry state and the environment of the immediate next bits. -/
 def outputWith (p : FSM arity) (carryState : p.α → Bool) (env : arity → Bool) : Bool :=
-  (p.nextBitCirc none).eval (Sum.elim carryState env)
+  (p.outputCirc).eval (Sum.elim carryState env)
 
 /-- evalWith agrees with eval when we set the carry to the init carry. -/
 theorem evalWith_eq_eval_of_eq_init (p : FSM arity) (carryState : p.α → Bool) (x : arity → BitStream)
@@ -480,7 +486,10 @@ theorem evalWith_add_eq_evalWith_carryWith
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
 def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
-  { p with nextBitCirc := fun a => (p.nextBitCirc a).map (Sum.map id changeVars) }
+  { p with
+     outputCirc := p.outputCirc.map (Sum.map id changeVars),
+     nextStateCirc := fun a => (p.nextStateCirc a).map (Sum.map id changeVars)
+  }
 
 instance {α : Type _} [Hashable α] {f : α → Type _} [∀ (a : α), Hashable (f a)] : Hashable (Sigma f) where
   hash v := hash (v.fst, v.snd)
@@ -511,21 +520,22 @@ def compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
       letI := fun a => (q a).dec_eq
       infer_instance,
     initCarry := Sum.elim p.initCarry (λ x => (q x.1).initCarry x.2),
-    nextBitCirc := λ a =>
-      match a with
-      | none => (p.nextBitCirc none).bind
+    outputCirc :=
+      (p.outputCirc).bind
         (Sum.elim
           (fun a => Circuit.var true (inl (inl a)))
-          (fun a => ((q a).nextBitCirc none).map
+          (fun a => ((q a).outputCirc).map
             (Sum.elim (fun d => (inl (inr ⟨a, d⟩))) (fun q => inr (vars a q)))))
-      | some (inl a) =>
-        (p.nextBitCirc (some a)).bind
+    nextStateCirc := fun x =>
+      match x with
+      | (inl a) =>
+        (p.nextStateCirc (a)).bind
           (Sum.elim
             (fun a => Circuit.var true (inl (inl a)))
-            (fun a => ((q a).nextBitCirc none).map
+            (fun a => ((q a).outputCirc).map
             (Sum.elim (fun d => (inl (inr ⟨a, d⟩))) (fun q => inr (vars a q)))))
-      | some (inr ⟨x, y⟩) =>
-          ((q x).nextBitCirc (some y)).map
+      | inr ⟨x, y⟩ =>
+          ((q x).nextStateCirc (y)).map
             (Sum.elim
               (fun a => inl (inr ⟨_, a⟩))
               (fun a => inr (vars x a))) }
@@ -591,9 +601,9 @@ instance : Hashable Empty where
 def and : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
-      ((Circuit.var true (inr true)) &&&
-        (Circuit.var true (inr false))) Empty.elim }
+    nextStateCirc := fun a => a.elim,
+    outputCirc := Circuit.var true (inr true) &&& Circuit.var true (inr false),
+  }
 
 @[simp] lemma eval_and (x : Bool → BitStream) : and.eval x = (x true) &&& (x false) := by
   ext n; cases n <;> simp [and, eval, nextBit]
@@ -601,9 +611,9 @@ def and : FSM Bool :=
 def or : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
-      ((Circuit.var true (inr true)) |||
-        (Circuit.var true (inr false))) Empty.elim }
+    outputCirc := Circuit.var true (inr true) ||| Circuit.var true (inr false),
+    nextStateCirc := fun a => a.elim
+  }
 
 @[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = (x true) ||| (x false) := by
   ext n; cases n <;> simp [or, eval, nextBit]
@@ -611,17 +621,17 @@ def or : FSM Bool :=
 def xor : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun a => a.elim
-      ( (Circuit.var true (inr true)) ^^^
-        (Circuit.var true (inr false))) Empty.elim }
+    outputCirc := Circuit.var true (inr true) ^^^ Circuit.var true (inr false),
+    nextStateCirc := Empty.elim
+  }
+
 
 /-- Equality, or alternatively, negation of the xor -/
 def nxor : FSM Bool :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun a =>
-     match a with
-     | none =>
+    nextStateCirc := Empty.elim,
+    outputCirc :=
       -- x ⊕ y ⊕ T
       -- 0 ⊕ 0 ⊕ 1 = 1
       -- 0 ⊕ 1 ⊕ 1 = 0 -- value is 0 iff they differ
@@ -630,15 +640,9 @@ def nxor : FSM Bool :=
       (Circuit.tru ^^^
         ( (Circuit.var true (inr true)) ^^^
         (Circuit.var true (inr false))))
-     | some empty => empty.elim
   }
 
-def simplify (p : FSM arity) : FSM arity := {
-  α := p.α
-  initCarry := p.initCarry
-  -- nextBitCirc := Circuit.simplify ∘ p.nextBitCirc
-  nextBitCirc := p.nextBitCirc
-}
+def simplify (p : FSM arity) : FSM arity := p
 
 /-- Evaluating the value after `simplify` is the same as the original value. -/
 @[simp] lemma eval_simplify :
@@ -662,7 +666,8 @@ def scanAnd  : FSM Unit :=
   {
    α := Unit,
    initCarry := fun () => true,
-   nextBitCirc := fun _a => (Circuit.var true (inl ())) &&& (Circuit.var true (inr ()))
+   outputCirc := Circuit.var true (inl ()) &&& Circuit.var true (inr ()),
+   nextStateCirc := fun () => (Circuit.var true (inl ())) &&& (Circuit.var true (inr ()))
   }
 
 @[simp]
@@ -710,7 +715,8 @@ def scanOr  : FSM Unit :=
   {
    α := Unit,
    initCarry := fun () => false,
-   nextBitCirc := fun _α => (Circuit.var true (inl ())) ||| (Circuit.var true (inr ()))
+   outputCirc := Circuit.var true (inl ()) ||| Circuit.var true (inr ()),
+   nextStateCirc := fun () => Circuit.var true (inl ()) ||| Circuit.var true (inr ())
   }
 
 @[simp]
@@ -762,18 +768,27 @@ lemma eval_scanOr_succ (x : Unit → BitStream) (n : Nat) :
 def add : FSM Bool :=
   { α := Unit,
     initCarry := λ _ => false,
-    nextBitCirc := fun a =>
-      match a with
-      | some () =>
-             (Circuit.var true (inr true)  &&& Circuit.var true (inr false))
-             ||| (Circuit.var true (inr true)  &&& Circuit.var true (inl ()))
-             ||| (Circuit.var true (inr false) &&& Circuit.var true (inl ()))
-      | none => Circuit.var true (inr true) ^^^
-                Circuit.var true (inr false) ^^^
-                Circuit.var true (inl ()) }
+    nextStateCirc := fun () =>
+      Circuit.var true (inr true) &&& Circuit.var true (inr false) |||
+      Circuit.var true (inr true) &&& Circuit.var true (inl ()) |||
+      Circuit.var true (inr false) &&& Circuit.var true (inl ()),
+    outputCirc := Circuit.var true (inr true) ^^^
+                  Circuit.var true (inr false) ^^^
+                  Circuit.var true (inl ()),
+  }
 
-theorem add_nextBitCirc_some_eval :
-    (add.nextBitCirc (some ())).eval =
+def map (fsm : FSM arity) (f : arity → arity') : FSM arity' where
+  α := fsm.α
+  initCarry := fsm.initCarry
+  outputCirc := fsm.outputCirc.map (Sum.map id f)
+  nextStateCirc := fun s =>
+    fsm.nextStateCirc s |>.map (Sum.map id f)
+
+instance : Functor FSM where
+  map f fsm :=  fsm.map f
+
+theorem add_nextStateCirc_eval :
+    (add.nextStateCirc ()).eval =
       fun x => x (inr true) && x (inr false) || x (inr true)
         && x (inl ()) || x (inr false) && x (inl ()) := by
   ext x
@@ -790,7 +805,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [add_nextBitCirc_some_eval, nextBit, ih, BitStream.addAux, BitVec.adcb]
+    simp [add_nextStateCirc_eval, nextBit, ih, BitStream.addAux, BitVec.adcb]
 
 @[simp] theorem carry_zero (x : arity → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
@@ -810,15 +825,14 @@ given that we can reduce both those operations to just addition and bitwise comp
 def sub : FSM Bool :=
   { α := Unit,
     initCarry := fun _ => false,
-    nextBitCirc := fun a =>
-      match a with
-      | some () =>
-             (Circuit.var false (inr true) &&& Circuit.var true (inr false)) |||
-             ((Circuit.var false (inr true) ^^^ Circuit.var true (inr false)) &&&
-              (Circuit.var true (inl ())))
-      | none => Circuit.var true (inr true) ^^^
-                Circuit.var true (inr false) ^^^
-                Circuit.var true (inl ()) }
+    outputCirc := Circuit.var true (inr true) ^^^
+                  Circuit.var true (inr false) ^^^
+                  Circuit.var true (inl ()),
+    nextStateCirc := fun _ =>
+      (Circuit.var false (inr true) &&& Circuit.var true (inr false)) |||
+      (Circuit.var false (inr true) ^^^ Circuit.var true (inr false)) &&&
+      (Circuit.var true (inl ()))
+  }
 
 theorem carry_sub (x : Bool → BitStream) : ∀ (n : ℕ), sub.carry x (n+1) =
     fun _ => (BitStream.subAux (x true) (x false) n).2
@@ -848,9 +862,14 @@ def borrow : FSM Bool :=
   { α := Unit,
     -- Internal state is the current borrow.
     initCarry := fun _ => false,
-    -- | TODO: check that this is in fact the borrow bit of the subtraction automata.
-    -- Check that we do correctly compute the borrow bit here.
-    nextBitCirc := fun _i =>
+    outputCirc :=
+      let borrow := Circuit.var true (inl ())
+      let a := Circuit.var true (inr true)
+      let nota := Circuit.var false (inr true)
+      let b := Circuit.var true (inr false)
+      (nota &&& b/- !a && b-/) |||
+      ((~~~ (a ^^^ b) /- !(xor a b) -/) &&& borrow)
+    nextStateCirc := fun () =>
       let borrow := Circuit.var true (inl ())
       let a := Circuit.var true (inr true)
       let nota := Circuit.var false (inr true)
@@ -869,7 +888,6 @@ def borrow : FSM Bool :=
       -- (!a && b || ((!(xor a b)) && borrow))
       (nota &&& b/- !a && b-/) |||
       ((~~~ (a ^^^ b) /- !(xor a b) -/) &&& borrow)
-
   }
 
 /--
@@ -903,10 +921,11 @@ def neg : FSM Unit :=
   { α := Unit,
     i := by infer_instance,
     initCarry := λ _ => true,
-    nextBitCirc := fun a =>
-      match a with
-      | some () => Circuit.var false (inr ()) &&& Circuit.var true (inl ())
-      | none => Circuit.var false (inr ()) ^^^ Circuit.var true (inl ())  }
+    outputCirc :=
+      Circuit.var false (inr ()) ^^^ Circuit.var true (inl ())
+    nextStateCirc := fun () =>
+      Circuit.var false (inr ()) &&& Circuit.var true (inl ())
+  }
 
 theorem carry_neg (x : Unit → BitStream) : ∀ (n : ℕ), neg.carry x (n+1) =
     fun _ => (BitStream.negAux (x ()) n).2
@@ -927,7 +946,9 @@ theorem carry_neg (x : Unit → BitStream) : ∀ (n : ℕ), neg.carry x (n+1) =
 def not : FSM Unit :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun _ => Circuit.var false (inr ()) }
+    nextStateCirc := Empty.elim,
+    outputCirc := Circuit.var false (inr ())
+  }
 
 @[simp] lemma eval_not (x : Unit → BitStream) : not.eval x = ~~~(x ()) := by
   ext; simp [eval, not, nextBit]
@@ -935,7 +956,9 @@ def not : FSM Unit :=
 def zero : FSM (Fin 0) :=
   { α := Empty,
     initCarry := Empty.elim,
-    nextBitCirc := fun _ => Circuit.fals }
+    nextStateCirc := Empty.elim,
+    outputCirc := Circuit.fals
+  }
 
 @[simp] lemma eval_zero (x : Fin 0 → BitStream) : zero.eval x = BitStream.zero := by
   ext; simp [zero, eval, nextBit]
@@ -944,10 +967,9 @@ def one : FSM (Fin 0) :=
   { α := Unit,
     i := by infer_instance,
     initCarry := λ _ => true,
-    nextBitCirc := fun a =>
-      match a with
-      | some () => Circuit.fals
-      | none => Circuit.var true (inl ()) }
+    outputCirc := Circuit.var true (inl ()),
+    nextStateCirc := fun () => Circuit.fals
+  }
 
 @[simp] theorem carry_one (x : Fin 0 → BitStream) (n : ℕ) :
     one.carry x (n+1) = fun _ => false := by
@@ -963,7 +985,9 @@ def negOne : FSM (Fin 0) :=
   { α := Empty,
     i := by infer_instance,
     initCarry := Empty.elim,
-    nextBitCirc := fun _ => Circuit.tru }
+    nextStateCirc := Empty.elim,
+    outputCirc := Circuit.tru
+  }
 
 @[simp] lemma eval_negOne (x : Fin 0 → BitStream) : negOne.eval x = BitStream.negOne := by
   ext; simp [negOne, eval, nextBit]
@@ -974,10 +998,9 @@ An FSM whose first output is `b`, and later outputs are whatever the input is.
 def ls (b : Bool) : FSM Unit :=
   { α := Unit,
     initCarry := fun _ => b,
-    nextBitCirc := fun x =>
-      match x with
-      | none => Circuit.var true (inl ()) -- next state bit = state bit
-      | some () => Circuit.var true (inr ()) } --
+    nextStateCirc := fun () => Circuit.var true (inr ()),
+    outputCirc := Circuit.var true (inl ())
+  }
 
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
@@ -998,18 +1021,32 @@ def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
     i := by infer_instance,
     initCarry := Empty.elim,
-    nextBitCirc := λ _ => Circuit.var true (inr (Fin.last _)) }
+    nextStateCirc := Empty.elim
+    outputCirc := Circuit.var true (inr (Fin.last _))
+  }
 
 @[simp] lemma eval_var (n : ℕ) (x : Fin (n+1) → BitStream) : (var n).eval x = x (Fin.last n) := by
   ext m; cases m <;> simp [var, eval, carry, nextBit]
 
+def var' (i : arity) : FSM arity :=
+  { α := Empty,
+    i := by infer_instance,
+    initCarry := Empty.elim,
+    nextStateCirc := Empty.elim
+    outputCirc := Circuit.var true (inr i)
+  }
+
+@[simp] lemma eval_var' (i : arity) (x : arity → BitStream) : (var' i).eval x = x i := by
+  ext; simp [var', eval, nextBit]
+
 def incr : FSM Unit :=
   { α := Unit,
     initCarry := fun _ => true,
-    nextBitCirc := fun x =>
-      match x with
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
-      | some _ => (Circuit.var true (inr ())) &&& (Circuit.var true (inl ())) }
+    outputCirc :=
+      (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
+    nextStateCirc := fun () =>
+      (Circuit.var true (inr ())) &&& (Circuit.var true (inl ()))
+  }
 
 theorem carry_incr (x : Unit → BitStream) : ∀ (n : ℕ),
     incr.carry x (n+1) = fun _ => (BitStream.incrAux (x ()) n).2
@@ -1029,10 +1066,10 @@ def decr : FSM Unit :=
   { α := Unit,
     i := by infer_instance,
     initCarry := λ _ => true,
-    nextBitCirc := fun x =>
-      match x with
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
-      | some _ => (Circuit.var false (inr ())) &&& (Circuit.var true (inl ())) }
+    outputCirc :=
+      (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
+    nextStateCirc := fun () => (Circuit.var false (inr ())) &&& (Circuit.var true (inl ()))
+  }
 
 theorem carry_decr (x : Unit → BitStream) : ∀ (n : ℕ), decr.carry x (n+1) =
     fun _ => (BitStream.decrAux (x ()) n).2
@@ -1073,9 +1110,8 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
 def repeatBit : FSM Unit where
   α := Unit
   initCarry := fun () => false
-  nextBitCirc := fun _ =>
-    .or (.var true <| .inl ()) (.var true <| .inr ())
-
+  outputCirc :=  (.var true <| .inl ()) ||| (.var true <| .inr ())
+  nextStateCirc := fun () => (.var true <| .inl ()) ||| (.var true <| .inr ())
 -- @[simp] theorem eval_repeatBit :
 --     repeatBit.eval x = BitStream.repeatBit (x ()) := by
 --   unfold BitStream.repeatBit
@@ -1123,6 +1159,49 @@ def composeBinaryAux
     (λ b => match b with
       | true => q₁
       | false => q₂)
+
+def composeBinaryAux'
+    (p : FSM Bool)
+    (q₁ : FSM α)
+    (q₂ : FSM α) :
+    FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ b => match b with
+      | true => q₁
+      | false => q₂)
+
+def composeTernaryAux' (p : FSM (Fin 3)) (q₀ q₁ q₂ : FSM α) : FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ v =>
+      v.cases q₀ fun v =>
+        v.cases q₁ fun v =>
+          v.cases q₂ fun v => v.elim0)
+
+def composeQuaternaryAux' (p : FSM (Fin 4)) (q₀ q₁ q₂ q₃ : FSM α) : FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ v =>
+      v.cases q₀ fun v =>
+        v.cases q₁ fun v =>
+          v.cases q₂ fun v =>
+            v.cases q₃ fun v => v.elim0)
+
+def composeQuinaryAux' (p : FSM (Fin 5)) (q₀ q₁ q₂ q₃ q₄: FSM α) : FSM α :=
+  p.compose (α)
+    (λ _ => α)
+    (λ _ i => i)
+    (λ v =>
+      v.cases q₀ fun v =>
+        v.cases q₁ fun v =>
+          v.cases q₂ fun v =>
+            v.cases q₃ fun v =>
+              v.cases q₄ fun v => v.elim0)
+
 
 /-- Compose two binary opeators -/
 def composeBinary
@@ -1303,10 +1382,8 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
 def id : FSM Unit := {
  α := Empty,
  initCarry := Empty.elim,
- nextBitCirc := fun a =>
-   match a with
-   | none => (Circuit.var true (inr ()))
-   | some f => f.elim
+ outputCirc := Circuit.var true (inr ()),
+ nextStateCirc := Empty.elim
 }
 
 @[simp]
@@ -1521,19 +1598,17 @@ If not, we produce an infinite sequence of `1`.
 -/
 def and : FSM Bool :=
   { α := Unit,
-    initCarry := fun _ => false,
-    nextBitCirc := fun a =>
-      match a with
-      | some () =>
-             -- Only if both are `0` we produce a `0`.
-             (Circuit.var true (inr false)  |||
-             ((Circuit.var false (inr true) |||
-              -- But if we have failed and have value `1`, then we produce a `1` from our state.
-              (Circuit.var true (inl ())))))
-      | none => -- must succeed in both arguments, so we are `0` if both are `0`.
-                Circuit.var true (inr true) |||
-                Circuit.var true (inr false)
-                }
+    initCarry := fun () => false,
+    nextStateCirc := fun () =>
+      -- Only if both are `0` we produce a `0`.
+      (Circuit.var true (inr false)  |||
+      ((Circuit.var false (inr true) |||
+      -- But if we have failed and have value `1`, then we produce a `1` from our state.
+      (Circuit.var true (inl ())))))
+    outputCirc := -- must succeed in both arguments, so we are `0` if both are `0`.
+      Circuit.var true (inr true) |||
+      Circuit.var true (inr false)
+  }
 
 /-!
 FSM that implement bitwise-or. Since we use `0` as the good state,
@@ -1543,18 +1618,16 @@ If not, we produce a `1`.
 def or : FSM Bool :=
   { α := Unit,
     initCarry := fun _ => false,
-    nextBitCirc := fun a =>
-      match a with
-      | some () =>
-             -- If either succeeds, then the full thing succeeds
-             ((Circuit.var true (inr false)  &&&
-             ((Circuit.var false (inr true)) |||
-             -- On the other hand, if we have failed, then propagate failure.
-              (Circuit.var true (inl ())))))
-      | none => -- can succeed in either argument, so we are `0` if either is `0`.
-                Circuit.var true (inr true) &&&
-                Circuit.var true (inr false)
-                }
+    nextStateCirc := fun () =>
+      -- If either succeeds, then the full thing succeeds
+      ((Circuit.var true (inr false)  &&&
+      ((Circuit.var false (inr true)) |||
+      -- On the other hand, if we have failed, then propagate failure.
+      (Circuit.var true (inl ())))))
+    outputCirc :=-- can succeed in either argument, so we are `0` if either is `0`.
+      Circuit.var true (inr true) &&&
+      Circuit.var true (inr false)
+  }
 
 /-- An `FSMPredicateSolution `t` is an FSM with a witness that the FSM evaluates to the same value as `t` does -/
 structure FSMPredicateSolution (p : Predicate) extends FSM (Fin p.arity) where
@@ -1773,7 +1846,7 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
   else
     -- compute circuit that produces output at the (k+1)th state.
     -- [c' = false] ↔ ∀ i < (n + 1), ∀ env, p.eval env i = 0
-    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    have c' := (c.bind (p.nextStateCirc)).fst
     if h : c' ≤ c then true
     else
       have _wf : card_compl (c' ||| c) < card_compl c :=
@@ -1804,7 +1877,7 @@ def decideIfZerosAuxM {arity : Type _} [DecidableEq arity] [Monad m]
   if c.eval p.initCarry
   then return false
   else
-    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    have c' := (c.bind (p.nextStateCirc)).fst
     let le ← decLe c' c
     if h : le then return true
     else
@@ -1839,7 +1912,7 @@ theorem decideIfZerosAuxM_Id_eq_decideIfZerosAux {arity : Type _}
   case neg =>
     simp [h]
     clear h
-    by_cases h : (c.bind (p.nextBitCirc ∘ some)).fst ≤ c
+    by_cases h : (c.bind (p.nextStateCirc)).fst ≤ c
     case pos =>
       simp [h]
       rfl
@@ -1872,7 +1945,7 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
         apply h'
       · assumption
       · exact hc₂
-    · let c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    · let c' := (c.bind (p.nextStateCirc)).fst
       have _wf : card_compl (c' ||| c) < card_compl c :=
         decideIfZeroAux_wf h'
       apply decideIfZerosAux_correct p (c' ||| c)
@@ -1907,22 +1980,18 @@ def decideIfZerosAuxUnverified {σ ι : Type _}
   termination_by card_compl π
 
 
-def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity where
-  α := p.α
-  initCarry := p.initCarry
-  nextBitCirc := fun v => (p.nextBitCirc v).optimize
-
+def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity :=
+  p
 
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
-  -- let p := FSM.optimize p
-  decideIfZerosAux p (p.nextBitCirc none).fst
+  decideIfZerosAux p (p.outputCirc).fst
 
 def decideIfZerosM {arity : Type _} [DecidableEq arity] [Monad m]
     (decLe : {α : Type} → [DecidableEq α] → [Fintype α] → [Hashable α] →
         (c : Circuit α) → (c' : Circuit α) → m { b : Bool // b ↔ c ≤ c' })
     (p : FSM arity) : m Bool :=
-  decideIfZerosAuxM decLe p (p.nextBitCirc none).fst
+  decideIfZerosAuxM decLe p (p.outputCirc).fst
 
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
@@ -1947,11 +2016,11 @@ def FSM.nextBitCircIterate {arity : Type _ } [DecidableEq arity]
   match n with
   | 0 =>
      -- | the .fst performs quantifier elimination, by running over all possible values of inputs.
-    fsm.nextBitCirc none |>.fst
+    fsm.outputCirc |>.fst
   | n' + 1 =>
      let c := fsm.nextBitCircIterate n'
      -- | for each input, compute the next bit circuit, quantifier eliminate it for all inputs, and then compose.
-     let c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
+     let c' := (c.bind (fsm.nextStateCirc)).fst
      c'
 
 /-- Decide if the FSM produces zeroes for all inputs at a given index of the bitstream -/
@@ -1971,14 +2040,14 @@ def decideIfZerosAtIxAux {arity : Type _} [DecidableEq arity]
       | 0 => true -- c has accumulated the effects so far.
       | nItersLeft' + 1 =>
         -- accumulate one iteration
-        have c' := (c.bind (fsm.nextBitCirc ∘ some)).fst
+        have c' := (c.bind (fsm.nextStateCirc)).fst
         if _ : c' ≤ c
         then true
         else decideIfZerosAtIxAux fsm (c' ||| c) nItersLeft'
 
 def decideIfZerosAtIx {arity : Type _} [DecidableEq arity]
       (fsm : FSM arity) (w : Nat) : Bool :=
-    decideIfZerosAtIxAux fsm (fsm.nextBitCirc none).fst w
+    decideIfZerosAtIxAux fsm (fsm.outputCirc).fst w
 /--
 The correctness statement of decideIfZeroesAtIx.
 This tells us that decideIfZeroesAtIx is correct iff the FSM 'p' when evaluated returns false
