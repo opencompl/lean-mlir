@@ -1,7 +1,7 @@
 import SSA.Experimental.Bits.Fast.Generalizer.Generalize
 
 set_option trace.profiler true
-set_option trace.profiler.threshold 1
+--set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
 set_option maxHeartbeats 1000000000000
@@ -10,6 +10,7 @@ set_option maxRecDepth 1000000
 
 variable {x y z: BitVec 32}
 #generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- PASSED gxor2_proof/test5_thm; #18
+#exit
 
 variable {x y z: BitVec 64}
 #generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46

@@ -48,7 +48,7 @@ def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
                         | .and => mkAppM ``BitVec.and #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
                         | .or => mkAppM ``BitVec.or #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
                         | .xor => mkAppM ``BitVec.xor #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .add => mkAppM ``BitVec.add #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .add => mkAppM ``HAdd.hAdd #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
                         | .mul => mkAppM ``BitVec.mul #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
                         | .udiv => mkAppM ``BitVec.udiv #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
                         | .umod => mkAppM ``BitVec.umod #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
@@ -91,6 +91,12 @@ def toExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM Expr := do
 
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
+
+def bvDecide' (g : MVarId) (ctx : TacticContext) : MetaM (Except CounterExample Result) := do
+  match ← bvUnsat g ctx with
+  | .ok lratCert => return .ok ⟨some lratCert⟩
+  | .error counterExample => return .error counterExample
+
 def solve (bvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
     let parsedBVExprState := state.parsedBVLogicalExpr.state
@@ -296,6 +302,7 @@ elab "#reducewidth" expr:term " : " target:term : command =>
 
 
 variable {x y z : BitVec 64}
+--set_option trace.Meta.Tactic.bv true
 #reducewidth (x + 0 = x) : 4
 #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
 #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
@@ -1152,27 +1159,19 @@ def evalBvGeneralize : Tactic := fun
 
 set_option linter.unusedTactic false
 
-theorem test (x : BitVec 64) : 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) := by
-  bv_decide
+variable {x y z: BitVec 32}
+-- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
+-- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
 
-def c1 : BitVec 8 := 0x3e#8
-theorem test2 (x : BitVec 8) : 0x3e#8 - x + (0x3e#8 - x &&& 1#8) = 0x3e#8 - (x &&& 0xfe#8) := by
-  bv_decide
-
-
-
--- variable {x y z: BitVec 64}
--- #generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2))
-
-
--- theorem zextdemo (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
---   bv_generalize
+-- theorem zextdemo (x : BitVec 32) : BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32 := by
+--   bv_decide
 --   sorry
 
 
--- theorem zextdemo2 (x : BitVec 32) : BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32 := by
+-- theorem zextdemo2 (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
 --   bv_generalize
 --   sorry
+
 
 /--
 info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
