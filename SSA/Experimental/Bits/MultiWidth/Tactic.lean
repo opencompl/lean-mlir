@@ -287,9 +287,19 @@ def collectBVAtom (state : CollectState)
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
-  | _ =>
-    let (t, state) ← collectBVAtom state e -- TODO: use this?
-    return (t, state)
+  | HAdd.hAdd _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (_w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.add ta tb, state)
+    | _ => mkAtom
+  | _ => mkAtom
+  where
+    mkAtom := do
+      let (t, state) ← collectBVAtom state e
+      return (t, state)
 
 /--
 info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) : Term tctx (tctx v)
@@ -305,6 +315,12 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, <- mkFinLit tcard v]
     debugCheck out
     return out
+  | .add a b =>
+     let out ← mkAppM ``MultiWidth.Term.add 
+        #[← mkTermExpr wcard tcard tctx a,
+        ← mkTermExpr wcard tcard tctx b]
+     debugCheck out
+     return out
   | _ => throwError m!"unhandled mkTermExpr {repr t}"
 
 
@@ -427,6 +443,13 @@ def mkDecideTy : SolverM Expr := do
   debugCheck ty
   return ty
 
+def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
+  for e in state.bvToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+  for e in state.wToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted non-variable width: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
 
 /--
 info: MultiWidth.Decide.Predicate.toProp_of_decide {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (p : Predicate tctx)
@@ -454,8 +477,12 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     logInfo m!"fsm circuit size: {fsm.fsm.circuitSize}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.fsm  (maxIter := 10)
     match stats with 
-    | .safetyFailure i => throwError m!"safety failure at iteration {i} for predicate {repr p}"
-    | .exhaustedIterations _ => throwError m!"exhausted iterations for predicate {repr p}"
+    | .safetyFailure i =>
+      collect.logSuspiciousFvars
+      throwError m!"safety failure at iteration {i} for predicate {repr p}"
+    | .exhaustedIterations _ =>
+      collect.logSuspiciousFvars
+      throwError m!"exhausted iterations for predicate {repr p}"
     | .provenByKIndCycleBreaking niters _safetyCert _cycleBreakingCert =>
       logInfo m!"proven by KInduction with {niters} iterations"
     let exactPrf ← g.withContext <|
