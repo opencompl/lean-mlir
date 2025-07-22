@@ -9,6 +9,11 @@ theorem hty : ty = BitVec 10 := by
   unfold ty
   rfl
 
+example (w : Nat) :
+      w = (WidthExpr.var (wcard := 2) ⟨0, by simp⟩).toNat
+      ((WidthExpr.Env.empty.cons u).cons w) := rfl
+
+
 /-
 set_option pp.analyze true
 set_option pp.analyze.explicitHoles true
@@ -49,4 +54,8 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 
 theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
+  bv_multi_width
+
+theorem eg4 (u v w : Nat) (x : BitVec w) :
+    (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
   bv_multi_width

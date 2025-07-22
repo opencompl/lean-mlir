@@ -34,7 +34,8 @@ def check?  : SolverM Bool := do
 /-- Check the type of e if check? is true. -/
 def debugCheck (e : Expr) : SolverM Unit := do
     if ← check?
-    then check e
+    then
+      check e
     else return ()
 
 
@@ -156,17 +157,21 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
 
-private def mkFinLit (n : Nat) (i : Nat) : MetaM Expr := do
+private def mkFinLit (n : Nat) (i : Nat) : SolverM Expr := do
   let en := mkNatLit n
   let ei := mkNatLit i
-  return mkAppN (.const ``Fin.mk []) #[en, ei, ← mkDecideProof (← mkLt ei en)]
+  let out := mkAppN (.const ``Fin.mk []) #[en, ei, ← mkDecideProof (← mkLt ei en)]
+  debugCheck out
+  return out
 
 
 /-- info: MultiWidth.WidthExpr.var {wcard : ℕ} (v : Fin wcard) : WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.var
 
-def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := do
-  return mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
+def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
+  debugCheck out
+  return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
@@ -177,8 +182,9 @@ def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := 
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
 
 /-- Build `Term.Ctx.empty`. -/
-def mkTermCtxEmptyExpr (reader : CollectState) : MetaM Expr := do
+def mkTermCtxEmptyExpr (reader : CollectState) : SolverM Expr := do
   let mkEmptyCtx := mkAppN (mkConst ``MultiWidth.Term.Ctx.empty) #[mkNatLit reader.wcard]
+  debugCheck mkEmptyCtx
   return mkEmptyCtx
 
 /--
@@ -189,7 +195,7 @@ info: MultiWidth.Term.Ctx.cons {wcard tcard : ℕ} (ctx : Term.Ctx wcard tcard) 
 
 def mkTermCtxConsExpr (reader : CollectState) (tctx : Expr) (w : MultiWidth.Nondep.WidthExpr) : SolverM Expr := do
   let out ← mkAppM (``MultiWidth.Term.Ctx.cons) #[ tctx, ← mkWidthExpr reader.wcard w ]
-  check out
+  debugCheck out
   return out
 
 /-- Make the expression for the 'tctx' from the 'CollectState'. -/
@@ -268,7 +274,8 @@ def mkWidthEnvCons (wenv : Expr) (w : Expr) : SolverM Expr := do
 
 def CollectState.mkWenvExpr (reader : CollectState) : SolverM Expr := do
   let mut out ← mkWidthEnvEmpty
-  for w in reader.wToIx.toArrayAsc do
+  -- | needs to be reversed, because variable '0' is at the end of the array.
+  for w in reader.wToIx.toArrayAsc.reverse do
     out ← mkWidthEnvCons out w
   debugCheck out
   return out
@@ -283,8 +290,6 @@ def collectBVAtom (state : CollectState)
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
   let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
   return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
-
-#check BitVec.zeroExtend
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -493,7 +498,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       (tenv := tenv)
     let g ← g.replaceTargetDefEq pToProp
     let some fsm := MultiWidth.mkPredicateFSM collect.wcard collect.tcard p
-      | throwError m!"unable to build FSM for predicate {repr p} with wcard={collect.wcard} and tcard={collect.tcard}"
+      | throwError m!"unable to build FSM for predicate '{indentD <| repr p}'.\nwcard: {indentD <| repr collect.wcard}.\ntcard: {indentD <| repr collect.tcard}"
     logInfo m!"fsm circuit size: {fsm.fsm.circuitSize}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.fsm  (maxIter := 10)
     match stats with 

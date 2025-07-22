@@ -23,13 +23,6 @@ instance : Complement (FSM α) where
   complement := composeUnaryAux FSM.not
 
 
-def Fin.ofNatUnafe (n : Nat) (i : Nat) : Option (Fin n) :=
-    if hi : i < n then
-      some ⟨i, hi⟩
-    else
-      none
-
-
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
@@ -37,6 +30,7 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat)  (w : Nondep.WidthExpr) : Option (Nat
   if h : w.toNat < wcard then
     some { fsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
   else 
+    -- some { fsm := FSM.zero.map Fin.elim0 }
     none
 
 
@@ -116,13 +110,18 @@ def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     }
 
 
-def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : Option (TermFSM wcard tcard t) :=
+def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : 
+    Option (TermFSM wcard tcard t) :=
   match t with
-  | .var w v => 
-    if h : v.toNat < tcard then
-      some { fsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v.toNat, h⟩)) }
+  | .var v _w =>
+    if h : v < tcard then
+      some { 
+      fsm := composeUnaryAux
+        FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      }
     else
       none
+      -- some { fsm := FSM.zero.map Fin.elim0 }
   | .add a b => do
     let fsmA ← mkTermFSM wcard tcard a
     let fsmB ← mkTermFSM wcard tcard b
