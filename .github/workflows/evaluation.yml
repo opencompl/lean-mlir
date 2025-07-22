@@ -55,14 +55,7 @@ jobs:
 
       - name: Ensure InstCombine goals are up-to-date
         run: |
-          python3 SSA/Projects/InstCombine/scripts/extract-goals.py --nfiles 9000 -j7
-          OUT=$(git diff SSA/Projects/InstCombine/tests/goals/)
-          echo $OUT
-          if [[ -n "$OUT" ]]; then
-            echo "Goals have changed. Please commit the changes. ❌"
-            exit 1
-          fi
-          echo "Goals are up-to-date ✅"
+          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
 
       - name: Run LLVM
         continue-on-error: true
