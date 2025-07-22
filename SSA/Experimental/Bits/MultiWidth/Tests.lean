@@ -46,3 +46,7 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 -/
 #guard_msgs in theorem eg2 (w : Nat) (x : BitVec w) : x = x + 1 := by
   bv_multi_width
+
+theorem eg3 (u w : Nat) (x : BitVec w) :
+    (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
+  bv_multi_width
