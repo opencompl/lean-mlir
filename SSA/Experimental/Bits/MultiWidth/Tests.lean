@@ -56,6 +56,18 @@ theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
   bv_multi_width
 
-theorem eg4 (u v w : Nat) (x : BitVec w) :
+/--
+info: fsm circuit size: 258
+---
+info: FSM state space size: 8589934592
+---
+error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
+  (MultiWidth.BinaryRelationKind.eq)
+  (MultiWidth.Nondep.Term.zext
+    (MultiWidth.Nondep.Term.zext (MultiWidth.Nondep.Term.var 0 { toNat := 2 }) { toNat := 1 })
+    { toNat := 0 })
+  (MultiWidth.Nondep.Term.zext (MultiWidth.Nondep.Term.var 0 { toNat := 2 }) { toNat := 0 })
+-/
+#guard_msgs in theorem eg4 (u v w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
   bv_multi_width

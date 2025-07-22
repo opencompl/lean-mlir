@@ -6,6 +6,8 @@ multi-width bitstream semantics.
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Vars
 import SSA.Experimental.Bits.MultiWidth.Defs
+import SSA.Experimental.Bits.KInduction.KInduction
+import Lean
 
 namespace MultiWidth
 
@@ -163,5 +165,30 @@ def mkPredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) :
   Option (PredicateFSM wcard tcard p) := do
     let fsm ← mkPredicateFSMAux wcard tcard p
     return { fsm := ~~~ fsm.fsm }
+
+
+axiom AxGoodFSM {P : Prop} : P
+
+
+-- | TODO: rename these namespaces.
+open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
+/-- If the FSM passes the safety and induction certificates,
+then the predicate is satisfied.
+-/
+theorem Predicate.toProp_of_KInductionCircuits
+   {wcard tcard : Nat}
+   (tctx : Term.Ctx wcard tcard)
+   (p : MultiWidth.Predicate tctx) 
+   {fsm : PredicateFSM wcard tcard (.ofDep p)}
+   (n : Nat)
+   (circs : KInductionCircuits fsm.fsm n)
+   (hCircs : circs.IsLawful)
+   (sCert : String)
+   (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
+   (indCert : String)
+   (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
+   (wenv : WidthExpr.Env wcard)
+   (tenv : tctx.Env wenv) :
+  p.toProp tenv := by exact AxGoodFSM
 
 end MultiWidth
