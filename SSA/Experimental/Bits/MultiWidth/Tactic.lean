@@ -284,6 +284,8 @@ def collectBVAtom (state : CollectState)
   let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
   return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
 
+#check BitVec.zeroExtend
+
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
@@ -295,6 +297,14 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (tb, state) ← collectTerm state b
       return (.add ta tb, state)
     | _ => mkAtom
+  | BitVec.zeroExtend _w v x =>
+      let (v, state) ← collectWidthAtom state v
+      let (x, state) ← collectTerm state x
+      return (.zext x v, state)
+  | BitVec.signExtend _w v x =>
+      let (v, state) ← collectWidthAtom state v
+      let (x, state) ← collectTerm state x
+      return (.sext x v, state)
   | _ => mkAtom
   where
     mkAtom := do
@@ -321,8 +331,18 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
         ← mkTermExpr wcard tcard tctx b]
      debugCheck out
      return out
-  | _ => throwError m!"unhandled mkTermExpr {repr t}"
-
+  | .zext a v =>
+    let vExpr ← mkWidthExpr wcard v
+    let out ← mkAppM ``MultiWidth.Term.zext
+      #[← mkTermExpr wcard tcard tctx a, vExpr]
+    debugCheck out
+    return out
+  | .sext a v =>
+    let vExpr ← mkWidthExpr wcard v
+    let out ← mkAppM ``MultiWidth.Term.sext
+      #[← mkTermExpr wcard tcard tctx a, vExpr]
+    debugCheck out
+    return out
 
 set_option pp.explicit true in
 /--
