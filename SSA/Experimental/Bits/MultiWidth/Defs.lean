@@ -169,14 +169,6 @@ def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
 
 end ToBitstream
 
-
-namespace Decide
-theorem Predicate.toProp_of_decide
-    {wcard tcard : Nat}
-    {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) (hdecide : decide (1 = 1) = true) :
-    (∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv) := by sorry
-end Decide
-
 namespace Nondep
 
 structure WidthExpr where ofNat ::
@@ -190,9 +182,9 @@ def WidthExpr.toPacked (w : WidthExpr) : PackedWidthExpr where
   wcard := w.toNat + 1
   e := .var ⟨w.toNat, by simp⟩
 
-def WidthExpr.ofDep {wcard : Nat} (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
-    match w with
-    | .var v => { toNat := v }
+def WidthExpr.ofDep {wcard : Nat}
+    (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
+  match w with | .var v => { toNat := v }
 
 inductive Term
 | var (v : Nat) (w : WidthExpr) : Term
@@ -296,20 +288,20 @@ structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
 
 /-- the FSM that corresponds to a given nat-predicate. -/
 structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
-  fsm : FSM (StateSpace wcard tcard)
+  toFsm : FSM (StateSpace wcard tcard)
 
 structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
-  fsm : FSM (StateSpace wcard tcard)
+  toFsm : FSM (StateSpace wcard tcard)
 
 structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
-  fsm : FSM (StateSpace wcard tcard)
+  toFsm : FSM (StateSpace wcard tcard)
 
 structure GoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
   extends NatFSM wcard tcard (.ofDep v) where
   heval_eq :
     ∀ (env : Fin wcard → Nat)
     (fsmEnv : StateSpace wcard tcard → BitStream),
-      fsm.eval fsmEnv = v.toBitstream env
+      toFsm.eval fsmEnv = v.toBitstream env
 
 structure GoodTermFSM {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
@@ -317,7 +309,7 @@ structure GoodTermFSM {w : WidthExpr wcard}
   heval_eq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      fsm.eval fsmEnv = t.toBitstream tenv
+      toFsm.eval fsmEnv = t.toBitstream tenv
 
 structure GoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}
@@ -325,7 +317,7 @@ structure GoodPredicateFSM
   heval_eq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      fsm.eval fsmEnv = p.toBitstream tenv
+      toFsm.eval fsmEnv = p.toBitstream tenv
 
 end ToFSM
 end MultiWidth

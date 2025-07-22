@@ -28,12 +28,11 @@ instance : Complement (FSM α) where
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
-def mkWidthFSM (wcard : Nat) (tcard : Nat)  (w : Nondep.WidthExpr) : Option (NatFSM wcard tcard w) :=
+def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) : (NatFSM wcard tcard w) :=
   if h : w.toNat < wcard then
-    some { fsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
+    { toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
   else 
-    -- some { fsm := FSM.zero.map Fin.elim0 }
-    none
+    { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
 
 -- when we compute 'a - b', if the borrow bit is zero,
@@ -113,59 +112,60 @@ def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
 
 
 def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : 
-    Option (TermFSM wcard tcard t) :=
+    (TermFSM wcard tcard t) :=
   match t with
   | .var v _w =>
     if h : v < tcard then
-      some { 
-      fsm := composeUnaryAux
-        FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      {
+      toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
       }
     else
-      none
-      -- some { fsm := FSM.zero.map Fin.elim0 }
-  | .add a b => do
-    let fsmA ← mkTermFSM wcard tcard a
-    let fsmB ← mkTermFSM wcard tcard b
-    return { fsm := (composeBinaryAux' FSM.add fsmA.fsm fsmB.fsm) }
-  | .zext a wnew => do
+      { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be ued.
+  | .add a b =>
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    { toFsm := (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm) }
+  | .zext a wnew =>
       let wold := a.width
-      let afsm ← mkTermFSM wcard tcard a
-      let woldFsm ← mkWidthFSM wcard tcard wold
-      let wnewFsm ← mkWidthFSM wcard tcard wnew
-      return { fsm := fsmZext afsm.fsm woldFsm.fsm wnewFsm.fsm }
-  | .sext a v => do
+      let afsm := mkTermFSM wcard tcard a
+      let woldFsm := mkWidthFSM wcard tcard wold
+      let wnewFsm := mkWidthFSM wcard tcard wnew
+      { toFsm := fsmZext afsm.toFsm woldFsm.toFsm wnewFsm.toFsm }
+  | .sext a v =>
     let wold := a.width
-    let afsm ← mkTermFSM wcard tcard a
-    let woldFsm ← mkWidthFSM wcard tcard wold
-    let vFsm ← mkWidthFSM wcard tcard v
-    return { fsm := fsmSext afsm.fsm woldFsm.fsm vFsm.fsm }
+    let afsm := mkTermFSM wcard tcard a
+    let woldFsm := mkWidthFSM wcard tcard wold
+    let vFsm := mkWidthFSM wcard tcard v
+    { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
-  Option (PredicateFSM wcard tcard p) := do
+  (PredicateFSM wcard tcard p) :=
   match p with
   | .binRel .eq a b =>
-    let fsmA ← mkTermFSM wcard tcard a
-    let fsmB ← mkTermFSM wcard tcard b
-    return { fsm := fsmEqBitwise fsmA.fsm fsmB.fsm }
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    { toFsm := fsmEqBitwise fsmA.toFsm fsmB.toFsm }
   | .or p q  =>
-    let fsmP ←  mkPredicateFSMAux wcard tcard p
-    let fsmQ ←  mkPredicateFSMAux wcard tcard q
-    return { fsm := composeUnaryAux FSM.scanAnd (fsmP.fsm ||| fsmQ.fsm) }
+    let fsmP :=  mkPredicateFSMAux wcard tcard p
+    let fsmQ :=  mkPredicateFSMAux wcard tcard q
+    { toFsm := composeUnaryAux FSM.scanAnd (fsmP.toFsm ||| fsmQ.toFsm) }
   | .and p q =>
-    let fsmP ← mkPredicateFSMAux wcard tcard p
-    let fsmQ ← mkPredicateFSMAux wcard tcard q
-    return { fsm := composeUnaryAux FSM.scanAnd (fsmP.fsm &&& fsmQ.fsm) }
+    let fsmP := mkPredicateFSMAux wcard tcard p
+    let fsmQ := mkPredicateFSMAux wcard tcard q
+    { toFsm := composeUnaryAux FSM.scanAnd (fsmP.toFsm &&& fsmQ.toFsm) }
   | .not p =>
-    let fsmP ← mkPredicateFSMAux wcard tcard p
-    return { fsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.fsm) }
+    let fsmP := mkPredicateFSMAux wcard tcard p
+    { toFsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.toFsm) }
 
 /-- Negate the FSM so we can decide if zeroes. -/
-def mkPredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) :
-  Option (PredicateFSM wcard tcard p) := do
-    let fsm ← mkPredicateFSMAux wcard tcard p
-    return { fsm := ~~~ fsm.fsm }
+def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :
+  (PredicateFSM wcard tcard p) :=
+    let fsm := mkPredicateFSMAux wcard tcard p
+    { toFsm := ~~~ fsm.toFsm }
 
+def mkPredicateFSMDep {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard}
+    (p : MultiWidth.Predicate tctx) : PredicateFSM wcard tcard (.ofDep p) :=
+  mkPredicateFSMNondep wcard tcard (.ofDep p)
 
 axiom AxGoodFSM {P : Prop} : P
 
@@ -179,9 +179,9 @@ theorem Predicate.toProp_of_KInductionCircuits
    {wcard tcard : Nat}
    (tctx : Term.Ctx wcard tcard)
    (p : MultiWidth.Predicate tctx) 
-   {fsm : PredicateFSM wcard tcard (.ofDep p)}
+   (fsm : PredicateFSM wcard tcard (.ofDep p))
    (n : Nat)
-   (circs : KInductionCircuits fsm.fsm n)
+   (circs : KInductionCircuits fsm.toFsm n)
    (hCircs : circs.IsLawful)
    (sCert : String)
    (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
