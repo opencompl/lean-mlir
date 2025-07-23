@@ -1,7 +1,5 @@
 import Lean
 
-
-
 open Lean
 open Lean.Meta
 open Std.Sat
@@ -306,7 +304,7 @@ This function expects that targetWidth >= w
 def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVExpr w) : BitVec targetWidth :=
   let newWidthExpr := changeBVExprWidth expr targetWidth
   let substitutedBvExpr := substituteBVExpr newWidthExpr (packedBitVecToSubstitutionValue assignments)
-  
+
   GenBVExpr.eval assignments substitutedBvExpr
 
 

@@ -4,8 +4,8 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Lean
 
 import SSA.Core.Util
-import SSA.Experimental.Bits.Fast.Generalizer.Basic
-import SSA.Experimental.Bits.Fast.Generalizer.Reflect
+import SSA.Experimental.Bits.Generalizer.Basic
+import SSA.Experimental.Bits.Generalizer.Reflect
 
 initialize Lean.registerTraceClass `Generalize
 namespace Generalize
