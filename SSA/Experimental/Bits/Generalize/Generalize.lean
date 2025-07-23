@@ -7,6 +7,8 @@ import SSA.Core.Util
 import SSA.Experimental.Bits.Generalize.Basic
 import SSA.Experimental.Bits.Generalize.Reflect
 
+initialize Lean.registerTraceClass `Generalize
+
 open Lean
 open Lean.Meta
 open Std.Sat
@@ -267,7 +269,7 @@ elab "#reducewidth" expr:term " : " target:term : command =>
       let some targetWidth ← getNatValue? targetExpr | throwError "Invalid width provided"
 
       let hExpr ← Term.elabTerm expr none
-      trace[Generalize] m! "hexpr: {hExpr}"
+      logInfo m! "hexpr: {hExpr}"
 
       match_expr hExpr with
       | Eq _ lhsExpr rhsExpr =>
@@ -276,7 +278,7 @@ elab "#reducewidth" expr:term " : " target:term : command =>
 
            let bvExpr := parsedBvExpr.bvLogicalExpr
            let state := parsedBvExpr.state
-           trace[Generalize] m! "bvExpr: {bvExpr}, state: {state}"
+           logInfo m! "bvExpr: {bvExpr}, state: {state}"
 
            let initialGeneralizerState : GeneralizerState :=
                 { startTime                := 0
@@ -450,7 +452,7 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
 
-    trace[Generalize] m! "Removed {expressions.length - pruned.length} expressions after pruning {expressions.length} expressions"
+    logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning {expressions.length} expressions"
 
     pure pruned
 
@@ -904,7 +906,6 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
         while currentLevel < lhs.symVars.size do
           logInfo m! "Expression Synthesis Processing level {currentLevel}"
 
-          --
           let bottomUpRes ← constantExprsEnumerationFromCache allLHSVars lhsAssignments rhsAssignments ops
           for (var, exprs) in bottomUpRes.toArray do
             let existingExprs := exprSynthesisResults.getD var []

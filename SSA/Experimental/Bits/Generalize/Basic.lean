@@ -5,7 +5,6 @@ open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
 
-initialize Lean.registerTraceClass `Generalize
 
 namespace Generalize
 /--
