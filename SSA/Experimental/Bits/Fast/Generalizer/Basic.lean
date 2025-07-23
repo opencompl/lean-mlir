@@ -103,13 +103,15 @@ instance : Hashable (GenBVExpr w) where
 instance : BEq (GenBVExpr w) where
   beq := fun a b => toString a == toString b
 
+instance : Inhabited BVExpr.PackedBitVec where
+  default := { bv := BitVec.ofNat 0 0 }
 
 /--
 The semantics for `GenBVExpr`.
 -/
-def eval (assign : BVExpr.Assignment) : GenBVExpr w → BitVec w
+def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : GenBVExpr w → BitVec w
   | .var idx =>
-    let packedBv := assign.get idx
+    let packedBv := assign[idx]!
     /-
     This formulation improves performance, as in a well formed expression the condition always holds
     so there is no need for the more involved `BitVec.truncate` logic.
@@ -152,7 +154,7 @@ instance : ToString GenBVPred := ⟨toString⟩
 /--
 The semantics for `BVPred`.
 -/
-def eval (assign : BVExpr.Assignment) : GenBVPred → Bool
+def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : GenBVPred → Bool
   | bin lhs op rhs => op.eval (lhs.eval assign) (rhs.eval assign)
   | getLsbD expr idx => (expr.eval assign).getLsbD idx
 
@@ -165,7 +167,7 @@ namespace GenBVLogicalExpr
 /--
 The semantics of boolean problems involving BitVec predicates as atoms.
 -/
-def eval (assign : BVExpr.Assignment) (expr : GenBVLogicalExpr) : Bool :=
+def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) (expr : GenBVLogicalExpr) : Bool :=
   BoolExpr.eval (·.eval assign) expr
 
 instance : BEq GenBVLogicalExpr where
@@ -236,9 +238,6 @@ def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): Ge
       BoolExpr.ite (changeBVLogicalExprWidth constVar target) (changeBVLogicalExprWidth auxVar target) (changeBVLogicalExprWidth op3 target)
   | _ => bvLogicalExpr
 
-instance : Inhabited BVExpr.PackedBitVec where
-  default := { bv := BitVec.ofNat 0 0 }
-
 inductive SubstitutionValue where
     | bvExpr {w} (bvExpr : GenBVExpr w) : SubstitutionValue
     | packedBV  (bv: BVExpr.PackedBitVec) : SubstitutionValue
@@ -307,19 +306,15 @@ This function expects that targetWidth >= w
 def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVExpr w) : BitVec targetWidth :=
   let newWidthExpr := changeBVExprWidth expr targetWidth
   let substitutedBvExpr := substituteBVExpr newWidthExpr (packedBitVecToSubstitutionValue assignments)
-
-  let h : 0 < assignments.valuesArray.size := sorry
-  let rArrayAssignments : BVExpr.Assignment  := RArray.ofArray assignments.valuesArray h
-  GenBVExpr.eval rArrayAssignments substitutedBvExpr
+  
+  GenBVExpr.eval assignments substitutedBvExpr
 
 
 def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVLogicalExpr) : Bool :=
   let newWidthExpr := changeBVLogicalExprWidth expr targetWidth
   let substitutedBvExpr := substitute newWidthExpr (packedBitVecToSubstitutionValue assignments)
 
-  let h : 0 < assignments.valuesArray.size := sorry
-  let rArrayAssignments : BVExpr.Assignment  := RArray.ofArray assignments.valuesArray h
-  GenBVLogicalExpr.eval rArrayAssignments substitutedBvExpr
+  GenBVLogicalExpr.eval assignments substitutedBvExpr
 
 def add (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
   GenBVExpr.bin op1 BVBinOp.add op2

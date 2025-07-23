@@ -1,7 +1,6 @@
 import SSA.Experimental.Bits.Fast.Generalizer.Generalize
 
 set_option trace.profiler true
---set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
 set_option maxHeartbeats 1000000000000

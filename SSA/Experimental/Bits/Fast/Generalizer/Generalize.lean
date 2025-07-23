@@ -452,7 +452,7 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
 
-    logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning"
+    logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning {expressions.length} expressions"
 
     pure pruned
 

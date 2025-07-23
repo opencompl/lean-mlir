@@ -12,7 +12,6 @@ open Std.Sat
 open Std.Tactic.BVDecide
 
 
-
 structure ParsedBVExprState where
   maxFreeVarId : Nat
   numSymVars :  Nat
