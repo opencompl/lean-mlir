@@ -5,12 +5,10 @@ import SSA.Experimental.Bits.Generalize.Basic
 
 namespace Generalize
 
-
 open Lean
 open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
-
 
 structure ParsedBVExprState where
   maxFreeVarId : Nat
@@ -110,13 +108,10 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
     | BitVec.rotateRight _ innerExpr distanceExpr =>
         rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
     | BitVec.zeroExtend _ nExpr vExpr =>
-        logInfo m! "matched zero extend: {vExpr}"
         let some n ← getNatValue? nExpr | return none
-        logInfo m! "vExpr: {vExpr}"
         let some v ← go vExpr | return none
         return some {bvExpr := GenBVExpr.zeroExtend n v.bvExpr, width := _}
     | BitVec.truncate _ nExpr vExpr =>
-      logInfo m! "matched truncate: {vExpr}"
       let some n ← getNatValue? nExpr | return none
       let some v ← go vExpr | return none
       return some {bvExpr := GenBVExpr.truncate n v.bvExpr, width := _}
@@ -205,7 +200,6 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BV
         return some {bvExpr := GenBVExpr.const (BitVec.ofNat n v), width := n}
 
   getBitVecValue? (e : Expr) : MetaM (Option ((n : Nat) × BitVec n)) := OptionT.run do
-    logInfo m! "parsing: {e}"
     match_expr e with
     | BitVec.ofNat nExpr vExpr =>
       let n ← getNatValue? nExpr
@@ -264,11 +258,11 @@ def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ParseBVExprM (Optio
 
   let rhs: ParsedBVExpr := {bvExpr := rhsRes.bvExpr, width := rhsRes.width, symVars := rhsSymVars, inputVars := rhsInputVars}
 
-  logInfo m! "lhs width: {lhsRes.width}; rhs width: {rhsRes.width}"
+  trace[Generalize] m! "lhs width: {lhsRes.width}; rhs width: {rhsRes.width}"
   if h : lhsRes.width = rhsRes.width then
     let rhsExpr := h ▸ rhsRes.bvExpr
     let bvLogicalExpr := BoolExpr.literal (GenBVPred.bin lhsRes.bvExpr BVBinPred.eq rhsExpr)
-    logInfo m! "BVLogicalExpr: {bvLogicalExpr}"
+    trace[Generalize] m! "BVLogicalExpr: {bvLogicalExpr}"
 
     return some {lhs := lhs, rhs := rhs, state := state, bvLogicalExpr := bvLogicalExpr}
 
