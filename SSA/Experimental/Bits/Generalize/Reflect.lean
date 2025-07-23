@@ -1,7 +1,7 @@
 import Lean
 
 import SSA.Core.Util
-import SSA.Experimental.Bits.Generalizer.Basic
+import SSA.Experimental.Bits.Generalize.Basic
 
 namespace Generalize
 

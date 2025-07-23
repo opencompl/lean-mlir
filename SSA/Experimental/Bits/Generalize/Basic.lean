@@ -6,6 +6,7 @@ open Std.Sat
 open Std.Tactic.BVDecide
 
 
+namespace Generalize
 /--
 Custom BVExpr for generalization incoroporating all supported expressions involving `BitVec` and operations on them.
 -/

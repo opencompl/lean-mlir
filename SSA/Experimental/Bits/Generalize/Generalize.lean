@@ -4,12 +4,10 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Lean
 
 import SSA.Core.Util
-import SSA.Experimental.Bits.Generalizer.Basic
-import SSA.Experimental.Bits.Generalizer.Reflect
+import SSA.Experimental.Bits.Generalize.Basic
+import SSA.Experimental.Bits.Generalize.Reflect
 
 initialize Lean.registerTraceClass `Generalize
-namespace Generalize
-
 
 open Lean
 open Lean.Meta
@@ -17,6 +15,8 @@ open Std.Sat
 open Std.Tactic.BVDecide
 
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
+
+namespace Generalize
 
 structure GeneralizerState where
   startTime: Nat
@@ -1193,5 +1193,3 @@ warning: declaration uses 'sorry'
 theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
   bv_generalize
   sorry
-
-end Generalize
