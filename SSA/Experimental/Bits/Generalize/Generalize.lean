@@ -40,9 +40,6 @@ def mkHShift (name : Name) (w n : Nat) (synthName : Name) (lhs rhs : Expr) : Exp
 
   mkApp6 (.const name [levelZero, levelZero, levelZero]) bitVecW bitVecN bitVecW synthInstance lhs rhs
 
-#synth HShiftLeft (BitVec 2) (BitVec 3) (BitVec 2)
-#synth BEq (BitVec 3)
-
 def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
   let parsedBVExprState := (← get).parsedBVLogicalExpr.state
   let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
