@@ -566,11 +566,11 @@ end ForReversal
 namespace ForFusion
 
 
-variable (rgn : Com ScfArith [.int, t] .impure t)
+variable (rgn : Com ScfArith ⟨[.int, t]⟩ .impure t)
 variable (niters1 niters2 : ℕ)
 variable (start1 : ℤ)
 
-def lhs : Com ScfArith [/- v0 -/ t] .impure t :=
+def lhs : Com ScfArith ⟨[/- v0 -/ t]⟩ .impure t :=
   /- niters1 = -/ Com.letPure (cst_nat niters1) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
@@ -582,7 +582,7 @@ def lhs : Com ScfArith [/- v0 -/ t] .impure t :=
   Com.var (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-def rhs : Com ScfArith [/- v0 -/ t] .impure t :=
+def rhs : Com ScfArith ⟨[/- v0 -/ t]⟩ .impure t :=
   /- niters1 + niters2 = -/ Com.letPure (cst_nat <| niters1 + niters2) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
