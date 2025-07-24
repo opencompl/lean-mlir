@@ -36,11 +36,12 @@ def GeneralizerStateM.liftTermElabM (m : TermElabM α) : GeneralizerStateM α :=
 def mkHShift (name : Name) (w n : Nat) (synthName : Name) (lhs rhs : Expr) : Expr :=
   let bitVecW := mkApp (mkConst ``BitVec) (mkNatLit w)
   let bitVecN := mkApp (mkConst ``BitVec) (mkNatLit n)
-  let synthInstance := (mkApp4 (.const synthName []) (mkNatLit n) bitVecW bitVecN bitVecW)
+  let synthInstance := (mkApp2 (.const synthName []) (mkNatLit w) (mkNatLit n)) -- bitVecW bitVecN bitVecW)
 
   mkApp6 (.const name [levelZero, levelZero, levelZero]) bitVecW bitVecN bitVecW synthInstance lhs rhs
 
 #synth HShiftLeft (BitVec 2) (BitVec 3) (BitVec 2)
+#synth BEq (BitVec 3)
 
 def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
   let parsedBVExprState := (← get).parsedBVLogicalExpr.state
@@ -69,7 +70,7 @@ def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
   | .append lhs rhs _ => return mkApp3 (.const ``BitVec.append []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .replicate n expr _ => return mkApp3 (.const ``BitVec.replicate []) bitVecWidth (mkNatLit n) (← bvExprToExpr expr)
   | .shiftLeft (n := n) lhs rhs => return mkHShift ``HShiftLeft.hShiftLeft w n ``BitVec.instHShiftLeft (← bvExprToExpr lhs) (← bvExprToExpr rhs)
-  | .shiftRight lhs rhs => mkAppM ``HShiftRight.hShiftRight #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+  | .shiftRight (n := n) lhs rhs => return mkHShift ``HShiftRight.hShiftRight w n ``BitVec.instHShiftRight (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .arithShiftRight lhs rhs => return mkApp4 (.const ``BitVec.sshiftRight' []) bitVecWidth bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .zeroExtend v expr => return mkApp3  (.const ``BitVec.zeroExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr expr)
   | .truncate v expr => return mkApp3  (.const ``BitVec.truncate []) bitVecWidth (mkNatLit v) (← bvExprToExpr expr)
