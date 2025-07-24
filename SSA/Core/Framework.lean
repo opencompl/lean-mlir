@@ -150,16 +150,16 @@ variable (d : Dialect) [DialectSignature d]
 
 mutual
 /-- An intrinsically typed expression whose effect is *at most* EffectKind -/
-inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (ty : d.Ty) → Type where
-  | mk {Γ} {ty} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (Δ : Ctxt d.Ty) → Type where
+  | mk {Γ Δ} (op : d.Op)
+    (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
     (eff_le : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) <| DialectSignature.sig op)
     /- For now, assume that regions are impure.
        We keep it this way to minimize the total amount of disruption in our definitions.
        We shall change this once the rest of the file goes through. -/
     (regArgs : HVector (fun t : Ctxt d.Ty × d.Ty => Com t.1 .impure t.2)
-      (DialectSignature.regSig op)) : Expr Γ eff ty
+      (DialectSignature.regSig op)) : Expr Γ eff Δ
 
 
 /-- A very simple intrinsically typed program: a sequence of let bindings.
@@ -169,7 +169,7 @@ the body are impure!
 -/
 inductive Com : Ctxt d.Ty → EffectKind → d.Ty → Type where
   | ret {eff : EffectKind} (v : Var Γ t) : Com Γ eff t
-  | var (e : Expr Γ eff α) (body : Com (Γ.snoc α) eff β) : Com Γ eff β
+  | var (e : Expr Γ eff Δ) (body : Com Δ eff β) : Com Γ eff β
 end
 
 /-- `Lets d Γ_in Γ_out` is a sequence of lets which are well-formed under
@@ -177,7 +177,7 @@ context `Γ_out` and result in context `Γ_in`. -/
 inductive Lets (Γ_in : Ctxt d.Ty) (eff : EffectKind) :
     (Γ_out : Ctxt d.Ty) → Type where
   | nil : Lets Γ_in eff Γ_in
-  | var (body : Lets Γ_in eff Γ_out) (e : Expr d Γ_out eff t) : Lets Γ_in eff (Γ_out.snoc t)
+  | var (body : Lets Γ_in eff Γ_mid) (e : Expr d Γ_mid eff Γ_out) : Lets Γ_in eff Γ_out
 
 /-- `Zipper d Γ_in eff Γ_mid ty` represents a particular position in a program, by storing the
 `Lets` that come before this position separately from the `Com` that represents the rest.
@@ -334,7 +334,7 @@ protected instance HVector.decidableEqReg [DecidableEq d.Op] [DecidableEq d.Ty] 
     decidable_of_iff (x₁ = x₂ ∧ v₁ = v₂) (by simp)
 
 protected instance Expr.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty] :
-    {Γ : Ctxt d.Ty} → {ty : d.Ty} → DecidableEq (Expr d Γ eff ty)
+    {Γ : Ctxt d.Ty} → {Δ : Ctxt d.Ty} → DecidableEq (Expr d Γ eff Δ)
   | _, _, .mk op₁ rfl eff_le₁ arg₁ regArgs₁, .mk op₂ eq eff_le₂ arg₂ regArgs₂ =>
     if ho : op₁ = op₂
     then by
@@ -347,13 +347,13 @@ protected instance Expr.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty] :
 protected instance Com.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty]
     {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty} : DecidableEq (Com d Γ eff ty)
   | .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
-  | .var (α := α₁) e₁ body₁, .var (α := α₂) e₂ body₂ =>
-    if hα : α₁ = α₂
-    then by
-      subst hα
+  | .var (Δ := Δ₁) e₁ body₁, .var (Δ := Δ₂) e₂ body₂ =>
+    if h_eq : Δ₁ = Δ₂ then
+      let e₂ := h_eq ▸ e₂
+      let body₂ := h_eq ▸ body₂
       letI := Expr.decidableEq e₁ e₂
       letI := Com.decidableEq body₁ body₂
-      exact decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by simp)
+      decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by subst h_eq; simp +zetaDelta)
     else isFalse (by simp_all)
   | .ret _, .var _ _ => isFalse (fun h => Com.noConfusion h)
   | .var _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
@@ -369,10 +369,10 @@ end DataStructures
 variable {d : Dialect} [DialectSignature d]
 
 @[elab_as_elim]
-def Com.recAux' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
+def Com.recAux' {motive : ∀ {Γ eff Δ}, Com d Γ eff Δ → Sort u}
     (ret : ∀ {Γ t} {eff : EffectKind}, (v : Var Γ t) → motive (eff := eff) (Com.ret v))
-    (var : ∀ {Γ} {t u : d.Ty} {eff},
-      (e : Expr d Γ eff t) → (body : Com d (Ctxt.snoc Γ t) eff u) →
+    (var : ∀ {Γ Δ} {t : d.Ty} {eff},
+      (e : Expr d Γ eff Δ) → (body : Com d Δ eff t) →
         motive body → motive (Com.var e body)) :
     ∀ {Γ eff t}, (com : Com d Γ eff t) → motive com
   | _, _, _, Com.ret v => ret v
@@ -383,8 +383,8 @@ def Com.recAux' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
 --      See `Com.recAux'_eq` for a theorem that states these definitions are equal
 def Com.rec' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
     (ret : ∀ {Γ t} {eff : EffectKind}, (v : Var Γ t) → motive (eff := eff) (Com.ret v))
-    (var : ∀ {Γ} {t u : d.Ty} {eff},
-      (e : Expr d Γ eff t) → (body : Com d (Ctxt.snoc Γ t) eff u) →
+    (var : ∀ {Γ Δ} {t : d.Ty} {eff},
+      (e : Expr d Γ eff Δ) → (body : Com d Δ eff t) →
         motive body → motive (Com.var e body)) :
     ∀ {Γ eff t}, (com : Com d Γ eff t) → motive com :=
   /- HACK: the obvious definition of `rec'` using the match compiler does not have the
@@ -418,8 +418,8 @@ theorem Com.recAux'_eq {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u} :
 @[elab_as_elim]
 def Com.recPure {motive : ∀ {Γ t}, Com d Γ .pure t → Sort u}
     (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
-    (var : ∀ {Γ} {t u : d.Ty},
-      (e : Expr d Γ .pure t) → (body : Com d (Ctxt.snoc Γ t) .pure u) →
+    (var : ∀ {Γ Δ} {t : d.Ty},
+      (e : Expr d Γ .pure Δ) → (body : Com d Δ .pure t) →
         motive body → motive (Com.var e body))
     {Γ t} (com : Com d Γ .pure t) : motive com :=
   let motive {_Γ eff _t} (com) := match eff with
@@ -428,53 +428,53 @@ def Com.recPure {motive : ∀ {Γ t}, Com d Γ .pure t → Sort u}
   let ret {Γ eff t} (v : Var Γ t) : @motive Γ eff t (Com.ret v) := match eff with
     | .pure => ret v
     | .impure => ⟨⟩
-  let var {Γ t u} {eff} (e : Expr d Γ eff t) (body : Com d (Γ.snoc t) eff u) :
+  let var {Γ Δ u} {eff} (e : Expr d Γ eff Δ) (body : Com d Δ eff u) :
       motive body → motive (body.var e) :=
     fun r => match eff with
       | .pure => var _ _ r
       | .impure => ⟨⟩
   com.rec' (motive := @motive) ret var
 
-def Expr.op {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty} (e : Expr d Γ eff ty) : d.Op :=
+def Expr.op {Γ Δ : Ctxt d.Ty} {eff : EffectKind} (e : Expr d Γ eff Δ) : d.Op :=
   Expr.casesOn e (fun op _ _ _ _ => op)
 
-theorem Expr.eff_le {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
+theorem Expr.eff_le {Γ Δ : Ctxt d.Ty} (e : Expr d Γ eff Δ) :
   DialectSignature.effectKind e.op ≤ eff :=
   Expr.casesOn e (fun _ _ eff_le _ _ => eff_le)
 
-theorem Expr.ty_eq {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
-    ty = DialectSignature.outTy e.op :=
-  Expr.casesOn e (fun _ ty_eq _ _ _ => ty_eq)
+theorem Expr.Δ_eq {Γ Δ : Ctxt d.Ty} (e : Expr d Γ eff Δ) :
+    Δ = Γ.snoc (DialectSignature.outTy e.op) :=
+  Expr.casesOn e (fun _ Δ_eq _ _ _ => Δ_eq)
 
-def Expr.args {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
+def Expr.args {Γ Δ : Ctxt d.Ty} (e : Expr d Γ eff Δ) :
     HVector (Var Γ) (DialectSignature.sig e.op) :=
   Expr.casesOn e (fun _ _ _ args _ => args)
 
-def Expr.regArgs {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
+def Expr.regArgs {Γ Δ : Ctxt d.Ty} (e : Expr d Γ eff Δ) :
     HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2) (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
 /-! Projection equations for `Expr` -/
 @[simp]
-theorem Expr.op_mk {Γ : Ctxt d.Ty} {ty : d.Ty} {eff : EffectKind} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+theorem Expr.op_mk {Γ Δ : Ctxt d.Ty} {eff : EffectKind} (op : d.Op)
+    (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
     (eff_le : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (DialectSignature.sig op)) (regArgs):
-    (Expr.mk op ty_eq eff_le args regArgs).op = op := rfl
+    (Expr.mk op Δ_eq eff_le args regArgs).op = op := rfl
 
 @[simp]
-theorem Expr.args_mk {Γ : Ctxt d.Ty} {ty : d.Ty} {eff : EffectKind} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+theorem Expr.args_mk {Γ : Ctxt d.Ty} {eff : EffectKind} (op : d.Op)
+    (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
     (eff_le : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (DialectSignature.sig op)) (regArgs) :
-    (Expr.mk op ty_eq eff_le args regArgs).args = args := rfl
+    (Expr.mk op Δ_eq eff_le args regArgs).args = args := rfl
 
 @[simp]
-theorem Expr.regArgs_mk {Γ : Ctxt d.Ty} {ty : d.Ty} {eff : EffectKind} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+theorem Expr.regArgs_mk {Γ : Ctxt d.Ty} {eff : EffectKind} (op : d.Op)
+    (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
     (eff_le : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (DialectSignature.sig op)) (regArgs) :
-    (Expr.mk op ty_eq eff_le args regArgs).regArgs = regArgs := rfl
+    (Expr.mk op Δ_eq eff_le args regArgs).regArgs = regArgs := rfl
 
 /-!
 ### `size`
@@ -514,6 +514,7 @@ def Com.outContextDiff (com : Com d Γ eff t) : Γ.Diff com.outContext :=
     case ret => exact h
     case var ih =>
       rw [rec'_var, size_var, ← Nat.add_assoc, Nat.add_comm _ 1, ← Nat.add_assoc, ih]
+      stop
       simpa [Ctxt.snoc, Nat.add_comm 1 _] using h⟩
 
 /-- `com.outContextHom` is the canonical homorphism from free variables of `com` to those same
@@ -528,8 +529,9 @@ def Com.returnVar : (com : Com d Γ eff t) → Var com.outContext t
 
 section Lemmas
 
-@[simp] lemma Com.outContext_ret (v : Var Γ t) : (ret v : Com d Γ eff t).outContext = Γ := rfl
-@[simp] lemma Com.outContext_var {eff} (e : Expr d Γ eff t) (body : Com d (Γ.snoc t) eff u) :
+@[simp] lemma Com.outContext_ret (v : Var Γ t) :
+    (ret v : Com d Γ eff t).outContext = Γ := rfl
+@[simp] lemma Com.outContext_var {eff} (e : Expr d Γ eff Δ) (body : Com d Δ eff u) :
     (Com.var e body).outContext = body.outContext := rfl
 
 @[simp] lemma Com.outContextHom_ret (v : Var Γ t) :
@@ -587,19 +589,24 @@ def HVector.denote :
   | _, .nil => HVector.nil
   | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
 
-def Expr.denote {ty : d.Ty} (e : Expr d Γ eff ty) (Γv : Valuation Γ) :
-    eff.toMonad d.m (toType ty) :=
-  match e with
-  | ⟨op, Eq.refl _, heff, args, regArgs⟩ =>
-    EffectKind.liftEffect heff <| DialectDenote.denote op
-      (args.map (fun _ v => Γv v)) regArgs.denote
+def Expr.denoteOp (e : Expr d Γ eff Δ) (V : Γ.Valuation) :
+    eff.toMonad d.m ⟦DialectSignature.outTy e.op⟧ :=
+  let args := e.args.map V
+  let regs := e.regArgs.denote
+  EffectKind.liftEffect e.eff_le <|
+    DialectDenote.denote e.op args regs
+
+def Expr.denote (e : Expr d Γ eff Δ) (V : Γ.Valuation) :
+    eff.toMonad d.m Δ.Valuation := do
+  let x ← e.denoteOp V
+  return e.Δ_eq ▸ V.snoc x
 
 def Com.denote : Com d Γ eff ty → (Γv : Valuation Γ) → eff.toMonad d.m (toType ty)
   | .ret e, Γv => pure (Γv e)
-  | .var e body, Γv =>
+  | .var e body, V =>
      match eff with
-     | .pure => body.denote (Γv.snoc (e.denote Γv))
-     | .impure => e.denote Γv >>= fun x => body.denote (Γv.snoc x)
+     | .pure => body.denote (e.denote V)
+     | .impure => e.denote V >>= body.denote
 end
 
 /-- Denote just the let bindings of `com`, transforming a valuation for `Γ` into a valuation for
@@ -608,18 +615,14 @@ def Com.denoteLets : (com : Com d Γ eff ty) → (Γv : Valuation Γ) →
     eff.toMonad d.m (com.outContext.Valuation)
   | .ret _, V => pure V
   | .var e body, V =>
-      e.denote V >>= fun Ve =>
-      body.denoteLets (V.snoc Ve) >>= fun V =>
-      return V.cast (by simp [Com.outContext])
+      e.denote V >>= body.denoteLets >>= fun V =>
+        return V.cast (by simp [Com.outContext])
 
 def Lets.denote [DialectSignature d] [DialectDenote d] {Γ₂}
-    (lets : Lets d Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (eff.toMonad d.m <| Valuation Γ₂) :=
+    (lets : Lets d Γ₁ eff Γ₂) (V : Valuation Γ₁) : (eff.toMonad d.m <| Valuation Γ₂) :=
   match lets with
-  | .nil => return Γ₁'v
-  | .var lets' e =>
-      lets'.denote Γ₁'v >>= fun Γ₂'v =>
-      e.denote Γ₂'v >>= fun v =>
-      return (Γ₂'v.snoc v)
+  | .nil          => return V
+  | .var lets' e  => lets'.denote V >>= e.denote
 
 /-- `denotePure` is a specialization of `denote` for pure `Lets`.
 Theorems and definitions should always be phrased in terms of the latter.
@@ -643,34 +646,35 @@ section Unfoldings
 open EffectKind (liftEffect)
 
 /- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
-  of the coercion `ty_eq` and the mutual definition. -/
+  of the coercion `Δ_eq` and the mutual definition. -/
 theorem Expr.denote_unfold
     (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+    (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
     (eff_le : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) <| DialectSignature.sig op)
     (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2)
       (DialectSignature.regSig op))
     (Γv : Γ.Valuation) :
-    Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv
-    = ty_eq ▸ (EffectKind.liftEffect eff_le <|
+    Expr.denote (Expr.mk op Δ_eq eff_le args regArgs) Γv
+    = Δ_eq ▸ (EffectKind.liftEffect eff_le <|
         DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
-      subst ty_eq
+      subst Δ_eq
       simp [denote]
 
-/-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
-  of the coercion `ty_eq` and the mutual definition. -/
-theorem Com.denote_unfold (op : d.Op) (ty_eq : ty = DialectSignature.outTy op)
-    (eff_le : DialectSignature.effectKind op ≤ eff)
-    (args : HVector (Var Γ) <| DialectSignature.sig op)
-    (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2)
-      (DialectSignature.regSig op))
-    (Γv : Γ.Valuation) :
-    Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv
-    = ty_eq ▸ (liftEffect eff_le <|
-        DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
-      subst ty_eq
-      simp [Expr.denote]
+-- TODO: this claims to unfold Com, but the statement is just Expr!
+-- /-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
+--   of the coercion `Δ_eq` and the mutual definition. -/
+-- theorem Com.denote_unfold (op : d.Op) (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
+--     (eff_le : DialectSignature.effectKind op ≤ eff)
+--     (args : HVector (Var Γ) <| DialectSignature.sig op)
+--     (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2)
+--       (DialectSignature.regSig op))
+--     (Γv : Γ.Valuation) :
+--     Expr.denote (Expr.mk op Δ_eq eff_le args regArgs) Γv
+--     = Δ_eq ▸ (liftEffect eff_le <|
+--         DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
+--       subst Δ_eq
+--       simp [Expr.denote]
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -705,38 +709,27 @@ section Lemmas
 @[simp] lemma HVector.denote_nil
     (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2) []) :
     HVector.denote T = HVector.nil := by
-  cases T; simp [HVector.denote]
+  cases T; rfl
 
 @[simp] lemma HVector.denote_cons
     (t : Ctxt d.Ty × d.Ty) (ts : List (Ctxt d.Ty × d.Ty))
     (a : Com d t.1 .impure t.2) (as : HVector (fun t => Com d t.1 .impure t.2) ts) :
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
-  simp [HVector.denote]
+  rfl
 
 @[simp] lemma Com.denote_ret {eff : EffectKind} (Γ : Ctxt d.Ty) (x : Γ.Var t) :
     (Com.ret x : Com d Γ eff t).denote = fun Γv => return (Γv x) := by
-  funext Γv
-  simp [denote]
+  rfl
 
 @[simp] lemma Com.denote_var [LawfulMonad d.m] {e : Expr d Γ eff α} :
-    (Com.var e body).denote =
-    fun Γv => (e.denote Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
-  funext Γv
-  cases eff
-  · apply Id.ext
-    simp only [EffectKind.toMonad_pure, Id.run_bind, denote]
-    congr
-  · simp [denote]
+    (Com.var e body).denote = fun Γv => (e.denote Γv) >>= body.denote := by
+  cases eff <;> rfl
 
 @[simp] lemma Com.denoteLets_var (e : Expr d Γ eff t) (body : Com d _ eff u) [LawfulMonad d.m] :
     (Com.var e body).denoteLets =
-        (fun V => e.denote V >>= fun Ve => body.denoteLets (V.snoc Ve)) := by
-  funext V
+        fun V => e.denote V >>= body.denoteLets := by
   cases eff
-  · apply Id.ext
-    simp only [outContext_var, denoteLets, EffectKind.toMonad_pure, Valuation.cast_rfl,
-      EffectKind.return_pure_toMonad_eq, Id.run_bind]
-    congr
+  · rfl
   · simp [denoteLets, bind_pure]
 
 @[simp] lemma Lets.denote_nil {Γ : Ctxt d.Ty} :
@@ -744,11 +737,8 @@ section Lemmas
   funext; simp [denote]
 
 @[simp] lemma Lets.denote_var {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff t} :
-    (lets.var e).denote = fun V_in => (do
-      let V_out ← lets.denote V_in
-      let x ← e.denote V_out
-      return V_out.snoc x) := by
-  funext V; simp [denote]
+    (lets.var e).denote = fun V_in => lets.denote V_in >>= e.denote :=
+  rfl
 
 
 
@@ -777,13 +767,18 @@ end Lemmas
 section Refinement
 variable [DialectHRefinement d d]
 
-/--
-An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
-respective denotations under every valuation are in the refinement relation.
+/-
+TODO: do we need refinement of expressions? If we do, we need to start by
+defining refinement of Valuations, which will require some more reworking.
 -/
-instance: HRefinement (Expr d Γ eff₁ t) (Expr d Γ eff₂ t) where
-  IsRefinedBy e₁ e₂ :=
-    ∀ V, e₁.denote V ⊑ e₂.denote V
+
+-- /--
+-- An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
+-- respective denotations under every valuation are in the refinement relation.
+-- -/
+-- instance: HRefinement (Expr d Γ eff₁ t) (Expr d Γ eff₂ t) where
+--   IsRefinedBy e₁ e₂ :=
+--     ∀ V, e₁.denote V ⊑ e₂.denote V
 
 /--
 A program `c₁` is refined by a program `c₂` (of the same dialect) if their
@@ -801,10 +796,20 @@ Map a context homomorphism over a `Expr`/`Com`.
 That is, substitute variables.
 -/
 
+def Expr.changeVarsAux (varsMap : Γ.Hom Γ') :
+    (e : Expr d Γ eff Δ) → Σ Δ', Δ.Hom Δ' × Expr d Γ' eff Δ'
+  | ⟨op, Δ_eq, eff_leq, args, regArgs⟩ =>
+      ⟨ _,
+        Δ_eq ▸ varsMap.snocMap,
+        ⟨op, rfl, eff_leq, args.map varsMap, regArgs⟩
+      ⟩
+
 def Expr.changeVars (varsMap : Γ.Hom Γ') :
-    {ty : d.Ty} → (e : Expr d Γ eff ty) → Expr d Γ' eff ty
-  | _, ⟨op, sig_eq, eff_leq, args, regArgs⟩ =>
-     ⟨op, sig_eq, eff_leq, args.map varsMap, regArgs⟩
+    (e : Expr d Γ eff Δ) → Σ Δ', Expr d Γ' eff Δ'
+  | ⟨op, Δ_eq, eff_leq, args, regArgs⟩ =>
+      have Δ_eq := by
+        subst Δ_eq
+      ⟨op, Δ_eq, eff_leq, args.map varsMap, regArgs⟩
 
 def Com.changeVars : Com d Γ eff ty →
     (varsMap : Γ.Hom Γ') →
@@ -871,7 +876,7 @@ def Com.changeVars : Com d Γ eff ty →
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
-  rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
+  rcases e with ⟨op, Δ_eq, eff_le, args, regArgs⟩
   simp only [changeVars, HVector.map_map, mk.injEq, heq_eq_eq, and_true, true_and]
   rfl
 
@@ -920,10 +925,10 @@ Generally used to change a pure expression into an impure one, but it is useful 
 phrased more generically -/
 def Expr.changeEffect {eff₁ eff₂ : EffectKind} (h : eff₁ ≤ eff₂) :
     Expr d Γ eff₁ t → Expr d Γ eff₂ t
-  | Expr.mk op ty_eq eff_le args regArgs =>
+  | Expr.mk op Δ_eq eff_le args regArgs =>
     have heff : DialectSignature.effectKind op ≤ eff₂ := by
       apply EffectKind.le_trans eff_le h
-    Expr.mk op ty_eq heff args regArgs
+    Expr.mk op Δ_eq heff args regArgs
 
 /-- Change the effect of a program into another effect that is "higher" in the hierarchy.
 Generally used to change a pure program into an impure one, but it is useful to have this
@@ -1058,9 +1063,9 @@ instance (e : Expr d Γ eff t) : Decidable (e.HasPureOp) := inferInstanceAs (Dec
 If the expression's operation is impure, return `none` -/
 def Expr.toPure? (e : Expr d Γ eff ty) : Option (Expr d Γ .pure ty) :=
   match e with
-  | Expr.mk op ty_eq _ args regArgs =>
+  | Expr.mk op Δ_eq _ args regArgs =>
      match h : DialectSignature.effectKind op with
-     | .pure => .some <| Expr.mk op ty_eq (by simp [h]) args regArgs
+     | .pure => .some <| Expr.mk op Δ_eq (by simp [h]) args regArgs
      | .impure => .none
 
 /-- The operation of a pure expression is necessarily pure -/
@@ -1069,13 +1074,14 @@ theorem Expr.HasPureOp_of_pure : (e : Expr d Γ .pure t) → e.HasPureOp
 
 /-- Rewrite theorem for an expression with a pure operation (which might be evaluated impurely) -/
 theorem Expr.denote_mk_of_pure {op : d.Op} (eff_eq : DialectSignature.effectKind op = .pure)
-    (ty_eq : ty = _) (eff_le : DialectSignature.effectKind op ≤ eff₂)
+    (Δ_eq : Δ = Γ.snoc (DialectSignature.outTy op))
+    (eff_le : DialectSignature.effectKind op ≤ eff₂)
     (args : HVector (Var Γ) (DialectSignature.sig op))
     (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 EffectKind.impure t.2)
       (DialectSignature.regSig op)) :
-    Expr.denote (mk op ty_eq eff_le args regArgs) = (fun (Γv : Valuation Γ) =>
+    Expr.denote (mk op Δ_eq eff_le args regArgs) = (fun (Γv : Valuation Γ) =>
       let d : EffectKind.toMonad .pure d.m ⟦ty⟧ :=
-        cast (by rw [eff_eq, ty_eq]) <|
+        cast (by rw [eff_eq, Δ_eq]) <|
           DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
       match eff₂ with
       | .pure => d
@@ -1100,13 +1106,13 @@ theorem Expr.denote_mk_of_pure {op : d.Op} (eff_eq : DialectSignature.effectKind
 theorem Expr.denote_of_pure {e : Expr d Γ eff ty} (eff_eq : e.HasPureOp) :
     e.denote = (fun (Γv : Valuation Γ) =>
       let d : EffectKind.toMonad .pure d.m ⟦ty⟧ :=
-        cast (by rw [eff_eq, ← e.ty_eq]) <|
+        cast (by rw [eff_eq, ← e.Δ_eq]) <|
           DialectDenote.denote e.op (e.args.map (fun _ v => Γv v)) e.regArgs.denote
       match eff with
       | .pure => d
       | .impure => return d
     ) := by
-  rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
+  rcases e with ⟨op, Δ_eq, eff_le, args, regArgs⟩
   simp only [op_mk, EffectKind.toMonad_pure, args_mk, regArgs_mk, EffectKind.toMonad_impure]
   rw [Expr.denote_mk_of_pure (by simpa using eff_eq)]
   cases eff <;> rfl
@@ -1116,7 +1122,7 @@ and returning the value -/
 @[simp]
 theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad d.m] (e : Expr d Γ .pure t) :
     (e.castPureToEff .impure).denote = fun Γv => return (e.denote Γv) := by
-  rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
+  rcases e with ⟨op, Δ_eq, eff_le, args, regArgs⟩
   simp only [castPureToEff, changeEffect, denote_mk_of_pure (EffectKind.eq_of_le_pure eff_le)]
 
 theorem Expr.hasPureOp_of_toPure?_isSome {e : Expr d Γ eff ty} (h : e.toPure?.isSome) :
@@ -1139,7 +1145,7 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
     | .pure => e'.denote
     | .impure => pure ∘ e'.denote := by
   funext Γv
-  rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
+  rcases e with ⟨op, Δ_eq, eff_le, args, regArgs⟩
   have hasPureOp : DialectSignature.effectKind op = EffectKind.pure := by
     simpa [HasPureOp] using Expr.hasPureOp_of_toPure?_isSome (Option.isSome_iff_exists.mpr ⟨_, he⟩)
   rw [Expr.denote_mk_of_pure hasPureOp]
