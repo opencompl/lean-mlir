@@ -96,7 +96,7 @@ def toExpr (bvLogicalExpr: GenBVLogicalExpr) (width: Expr) : GeneralizerStateM E
         | .or => return mkApp2 (.const ``Bool.or []) (← go lhs) (← go rhs)
         | .xor => return mkApp2 (.const ``Bool.xor []) (← go lhs) (← go rhs)
         | .and => return mkApp2 (.const ``Bool.and []) (← go lhs) (← go rhs)
-        | .beq => return mkApp2 (.const ``BEq.beq []) (← go lhs) (← go rhs)
+        | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) width) (beqInstExpr width) (← go lhs) (← go rhs)
   | _ => throwError m! "Unsupported operation"
 
 def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
@@ -217,12 +217,10 @@ def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap N
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
         let mVar ← withTraceNode `Generalize (fun _ => return "Converted bvExpr to expr") do
           let mut expr ← toExpr bvExpr bitVecWidth
-          logInfo m! "Generated Lean Expr: {← ppExpr expr} from {bvExpr}"
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here
           Lean.Meta.check expr
-        -- logInfo m! "Generated Lean Expr: {← ppExpr expr} from {bvExpr}"
 
           mkFreshExprMVar expr
 
@@ -1013,7 +1011,6 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
         while currentLevel < lhs.symVars.size do
           logInfo m! "Expression Synthesis Processing level {currentLevel}"
 
-          --
           let bottomUpRes ← constantExprsEnumerationFromCache allLHSVars lhsAssignments rhsAssignments ops
           for (var, exprs) in bottomUpRes.toArray do
             let existingExprs := exprSynthesisResults.getD var []
