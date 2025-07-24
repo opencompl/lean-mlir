@@ -33,6 +33,15 @@ def GeneralizerStateM.liftTermElabM (m : TermElabM α) : GeneralizerStateM α :=
   let v ← m
   return v
 
+def mkHShift (name : Name) (w n : Nat) (synthName : Name) (lhs rhs : Expr) : Expr :=
+  let bitVecW := mkApp (mkConst ``BitVec) (mkNatLit w)
+  let bitVecN := mkApp (mkConst ``BitVec) (mkNatLit n)
+  let synthInstance := (mkApp4 (.const synthName []) (mkNatLit n) bitVecW bitVecN bitVecW)
+
+  mkApp6 (.const name [levelZero, levelZero, levelZero]) bitVecW bitVecN bitVecW synthInstance lhs rhs
+
+#synth HShiftLeft (BitVec 2) (BitVec 3) (BitVec 2)
+
 def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
   let parsedBVExprState := (← get).parsedBVLogicalExpr.state
   let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
@@ -43,47 +52,53 @@ def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
                 pure (mkFVar localDecl.fvarId)
   | .const val => mkAppM ``BitVec.ofInt #[bitVecWidth,  (mkIntLit val.toInt)]
   | .bin lhs op rhs  => match op with
-                        | .and => mkAppM ``BitVec.and #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .or => mkAppM ``BitVec.or #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .xor => mkAppM ``BitVec.xor #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .add => mkAppM ``HAdd.hAdd #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .mul => mkAppM ``BitVec.mul #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .udiv => mkAppM ``BitVec.udiv #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-                        | .umod => mkAppM ``BitVec.umod #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                        | .and => return mkApp3 (.const ``BitVec.and []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+                        | .or =>  return mkApp3 (.const ``BitVec.or [])  bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+                        | .xor => return mkApp3 (.const ``BitVec.xor []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+                        | .add => return mkApp3 (.const ``BitVec.add []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+                        | .mul => return mkApp3 (.const ``BitVec.mul []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+                        | .udiv => return mkApp3 (.const ``BitVec.udiv []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+                        | .umod => return mkApp3 (.const ``BitVec.umod []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .un op expr => match op with
-                   | .not => mkAppM ``BitVec.not #[← bvExprToExpr expr]
-                   | .rotateLeft n => mkAppM ``BitVec.rotateLeft #[← bvExprToExpr expr, mkNatLit n]
-                   | .rotateRight n => mkAppM ``BitVec.rotateRight #[← bvExprToExpr expr, mkNatLit n]
-                   | .arithShiftRightConst n => mkAppM ``BitVec.sshiftRight #[← bvExprToExpr expr, mkNatLit n]
-                   | .reverse => mkAppM ``BitVec.reverse #[← bvExprToExpr expr]
-                   | .clz => mkAppM ``BitVec.clz #[← bvExprToExpr expr]
-  | .append lhs rhs _ => mkAppM ``BitVec.append #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-  | .replicate n expr _ => mkAppM ``BitVec.replicate #[mkNatLit n, ← bvExprToExpr expr]
-  | .shiftLeft lhs rhs => mkAppM ``HShiftLeft.hShiftLeft #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+                   | .not => return mkApp2 (.const ``BitVec.not []) bitVecWidth (← bvExprToExpr expr)
+                   | .rotateLeft n => return mkApp3 (.const ``BitVec.rotateLeft []) bitVecWidth (← bvExprToExpr expr) (mkNatLit n)
+                   | .rotateRight n => return mkApp3 (.const ``BitVec.rotateRight []) bitVecWidth (← bvExprToExpr expr) (mkNatLit n)
+                   | .arithShiftRightConst n => return mkApp4 (.const ``BitVec.sshiftRight' []) bitVecWidth bitVecWidth (← bvExprToExpr expr) (mkNatLit n)
+                   | .reverse => return mkApp2 (.const ``BitVec.reverse []) bitVecWidth (← bvExprToExpr expr)
+                   | .clz => return mkApp2 (.const ``BitVec.clz []) bitVecWidth (← bvExprToExpr expr)
+  | .append lhs rhs _ => return mkApp3 (.const ``BitVec.append []) bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+  | .replicate n expr _ => return mkApp3 (.const ``BitVec.replicate []) bitVecWidth (mkNatLit n) (← bvExprToExpr expr)
+  | .shiftLeft (n := n) lhs rhs => return mkHShift ``HShiftLeft.hShiftLeft w n ``BitVec.instHShiftLeft (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .shiftRight lhs rhs => mkAppM ``HShiftRight.hShiftRight #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-  | .arithShiftRight lhs rhs => mkAppM ``BitVec.sshiftRight' #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-  | .zeroExtend v expr => mkAppM ``BitVec.zeroExtend #[bitVecWidth, ← bvExprToExpr expr]
-  | .truncate v expr => mkAppM ``BitVec.truncate #[bitVecWidth, ← bvExprToExpr expr]
+  | .arithShiftRight lhs rhs => return mkApp4 (.const ``BitVec.sshiftRight' []) bitVecWidth bitVecWidth (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+  | .zeroExtend v expr => return mkApp3  (.const ``BitVec.zeroExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr expr)
+  | .truncate v expr => return mkApp3  (.const ``BitVec.truncate []) bitVecWidth (mkNatLit v) (← bvExprToExpr expr)
   | .extract _ _ _ => throwError m! "Extract operation is not supported."
 
-def toExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM Expr := do
-  match bvLogicalExpr with
+
+def beqInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
+
+def toExpr (bvLogicalExpr: GenBVLogicalExpr) (width: Expr) : GeneralizerStateM Expr := do
+  go bvLogicalExpr
+  where
+  go (input : GenBVLogicalExpr) :=
+  match input with
   | .literal (GenBVPred.bin lhs op rhs) =>
       match op with
-      -- | .eq => mkEq (← bvExprToExpr lhs) (← bvExprToExpr rhs)
-      | .eq => mkAppM ``BEq.beq #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
-      | .ult => mkAppM ``BitVec.ult #[← bvExprToExpr lhs, ← bvExprToExpr rhs]
+      -- | .eq => mkEq (← bvExprToExpr lhs) (← bvExprToExpr rhs) (mkApp (mkConst ``BitVec) width)
+      | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) width) (beqInstExpr width) (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+      | .ult => return mkApp3 (.const ``BitVec.ult []) width (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .const b =>
       match b with
-      | true => pure (mkConst ``Bool.true)
-      | _ => pure (mkConst ``Bool.false)
-  | .not boolExpr => mkAppM ``Bool.not #[← toExpr boolExpr]
+      | true => return (mkConst ``Bool.true)
+      | _ => return (mkConst ``Bool.false)
+  | .not boolExpr => return mkApp (.const ``Bool.not []) (← go boolExpr)
   | .gate gate lhs rhs =>
         match gate with
-        | .or => mkAppM ``Bool.or #[← toExpr lhs, ← toExpr rhs]
-        | .xor => mkAppM ``Bool.xor #[← toExpr lhs, ← toExpr rhs]
-        | .and => mkAppM ``Bool.and #[← toExpr lhs, ← toExpr rhs]
-        | .beq => mkAppM ``BEq.beq #[← toExpr lhs, ← toExpr rhs]
+        | .or => return mkApp2 (.const ``Bool.or []) (← go lhs) (← go rhs)
+        | .xor => return mkApp2 (.const ``Bool.xor []) (← go lhs) (← go rhs)
+        | .and => return mkApp2 (.const ``Bool.and []) (← go lhs) (← go rhs)
+        | .beq => return mkApp2 (.const ``BEq.beq []) (← go lhs) (← go rhs)
   | _ => throwError m! "Unsupported operation"
 
 def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
@@ -159,7 +174,6 @@ def reconstructAssignment' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array
 def solve' (genBvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let bvExpr ← withTraceNode `Generalize (fun _ => return "Converted GenBVLogicalExpr to BVLogicalExpr") do
                     toBVLogicalExpr genBvExpr
-                    
     let cadicalTimeoutSec : Nat := 500
     let cfg: BVDecideConfig := {timeout := 500}
 
@@ -204,7 +218,8 @@ def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap N
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
         let mVar ← withTraceNode `Generalize (fun _ => return "Converted bvExpr to expr") do
-          let mut expr ← toExpr bvExpr
+          let mut expr ← toExpr bvExpr bitVecWidth
+          logInfo m! "Generated Lean Expr: {← ppExpr expr} from {bvExpr}"
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here
@@ -212,6 +227,7 @@ def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap N
         -- logInfo m! "Generated Lean Expr: {← ppExpr expr} from {bvExpr}"
 
           mkFreshExprMVar expr
+
         let cfg: BVDecideConfig := {timeout := 60, embeddedConstraintSubst := false}
 
         IO.FS.withTempFile fun _ lratFile => do
@@ -323,7 +339,7 @@ partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (fo
                   GeneralizerStateM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let rec constantsSynthesis (bvExpr: GenBVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
             : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-      let existsRes ← solve' bvExpr
+      let existsRes ← solve bvExpr
 
       match existsRes with
         | none => trace[Generalize] m! "Could not satisfy exists formula for {bvExpr}"
@@ -331,7 +347,7 @@ partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (fo
         | some assignment =>
           let existsVals := assignment.filter fun c _ => existsVars.contains c
           let substExpr := substitute bvExpr (packedBitVecToSubstitutionValue existsVals)
-          let forAllRes ← solve' (BoolExpr.not substExpr)
+          let forAllRes ← solve (BoolExpr.not substExpr)
 
           match forAllRes with
             | none =>
@@ -488,7 +504,7 @@ partial def countModel (expr : GenBVLogicalExpr) (constants: Std.HashSet Nat): G
     go 0 expr
     where
         go (count: Nat) (expr : GenBVLogicalExpr) : GeneralizerStateM Nat := do
-          let res ← solve' expr
+          let res ← solve expr
           match res with
           | none => return count
           | some assignment =>
@@ -519,7 +535,7 @@ def getNegativeExamples (bvExpr: GenBVLogicalExpr) (consts: List Nat) (numEx: Na
         match depth with
           | 0 => return []
           | n + 1 =>
-              let solution ← solve' expr
+              let solution ← solve expr
 
               match solution with
               | none => return []
@@ -542,7 +558,7 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
       let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (GenBVPred.bin f BVBinPred.eq expr)))
       let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-      if let some _ ← solve' subsumeCheckExpr then
+      if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
 
     trace[Generalize] m! "Removed {expressions.length - pruned.length} expressions after pruning {expressions.length} expressions"
@@ -560,7 +576,7 @@ def pruneEquivalentBVLogicalExprs(expressions : List GenBVLogicalExpr): Generali
       let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
       let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-      if let some _ ← solve' subsumeCheckExpr then
+      if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
 
     logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning"
@@ -636,7 +652,7 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCa
 
       let mut newCandidates : Std.HashSet GenBVLogicalExpr := Std.HashSet.emptyWithCapacity
       numInvocations := numInvocations + 1
-      match (← solve' expr) with
+      match (← solve expr) with
       | none => break
       | some assignment =>
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
@@ -934,9 +950,6 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BV
             if evaluatedRes == h' ▸ packedBV.bv then
               newExpr := h ▸ bvExpr
             currentCache := currentCache.insert newExpr {bv := evaluatedRes : BVExpr.PackedBitVec}
-
-    let uniqueExprs := Std.HashSet.ofList (← pruneEquivalentBVExprs currentCache.keys)
-    let nextCache := currentCache.filter (λ k v => uniqueExprs.contains k )
 
     set {state with constantExprsEnumerationCache := h ▸ currentCache}
     pure res
