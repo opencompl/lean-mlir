@@ -41,7 +41,7 @@ Note that the `EffectKind` is uniform: if a `Com` is `pure`, then the expression
 and its body are pure, and if a `Com` is `impure`, then both the expression and
 the body are impure!
 -/
-inductive Block : (ℓ : Type) → (Γ : Ctxt d.Ty) →  (L : ℓ → d.Ty) (t : d.Ty) → Type where
+inductive Block : (ℓ : Type) → (Γ : Ctxt d.Ty) → (L : ℓ → d.Ty) (t : d.Ty) → Type where
   | term : Terminator  →  Block Γ t
   | var (e : Inst Γ α) (body : Block (Γ.snoc α) β) : Block Γ β
 end
