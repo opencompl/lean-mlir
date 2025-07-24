@@ -5,45 +5,70 @@ open Ctxt (Var Valuation)
 /- # Datastructures -/
 section DataStructures
 
-variable (d : Dialect) [DialectSignature d]
+inductive Op
+  | const (x : Nat)
+  | add
+  | ite
+  deriving DecidableEq
 
-inductive Terminator (ℓ : Type) (Γ : Ctxt d.Ty) (L : ℓ → d.Ty) : (t : d.Ty) → Type
-  | ret (v : Γ.Var t) : Terminator ℓ Γ L t
-  | goto (l : ℓ) : Terminator ℓ Γ L (L l)
+inductive Ty
+  | nat
+  deriving DecidableEq
+
+def Op.outTy : Op → Ty
+  | _ => .nat
+
+def Op.sig : Op → List Ty
+  | .const _ => []
+  | .add => [.nat, .nat]
+  | .ite => [.nat]
+
+def Op.regSig : Op → RegionSignature Ty
+  | .const _ | .add => []
+  | .ite => [
+      ⟨ ∅, .nat ⟩,
+      ⟨ ∅, .nat ⟩
+    ]
+
+
+instance : TyDenote Ty where
+  toType
+  | .nat => Nat
+
+
+inductive Terminator (ℓ : Type) (L : ℓ → Ty) (Γ : Ctxt Ty) : (t : Ty) → Type
+  | ret (v : Γ.Var t) : Terminator ℓ L Γ t
+  | goto (l : ℓ) : Terminator ℓ L Γ (L l)
 
 mutual
 
-inductive Region : (Γ : Ctxt d.Ty) → (ty : d.Ty) → Type
+/-- An intrinsically typed instruction whose effect is *at most* EffectKind -/
+inductive Inst : (Γ : Ctxt Ty) → (ty : Ty) → Type where
+  | mk {Γ} {ty} (op : Op)
+    (ty_eq : ty = op.outTy)
+    (args : HVector (Var Γ) <| op.sig)
+    (regArgs : Regions <| op.regSig) : Inst Γ ty
+
+inductive Region : (Γ : Ctxt Ty) → (ty : Ty) → Type
   | mk
       (ℓ : Set String)
       (entry : ℓ)
-      (L : ℓ → d.Ty)
-      (blocks : (l : ℓ) → Block Γ (L l))
+      (L : ℓ → Ty)
+      (blocks : (l : ℓ) → Block ℓ L Γ (L l))
       : Region Γ (L entry)
 
-inductive Regions : (ρ : RegionSignature d.Ty) → Type
+inductive Regions : (ρ : RegionSignature Ty) → Type
   | mk : HVector (fun r => Region r.1 r.2) ρ → Regions ρ
-
-/-- An intrinsically typed instruction whose effect is *at most* EffectKind -/
-inductive Inst : (Γ : Ctxt d.Ty) → (ty : d.Ty) → Type where
-  | mk {Γ} {ty} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
-    (eff_le : DialectSignature.effectKind op = .pure)
-    (args : HVector (Var Γ) <| DialectSignature.sig op)
-    /- For now, assume that regions are impure.
-       We keep it this way to minimize the total amount of disruption in our definitions.
-       We shall change this once the rest of the file goes through. -/
-    (regArgs : Regions <| DialectSignature.regSig op) : Inst Γ ty
-
 
 /-- A very simple intrinsically typed program: a sequence of let bindings.
 Note that the `EffectKind` is uniform: if a `Com` is `pure`, then the expression
 and its body are pure, and if a `Com` is `impure`, then both the expression and
 the body are impure!
 -/
-inductive Block : (ℓ : Type) → (Γ : Ctxt d.Ty) → (L : ℓ → d.Ty) (t : d.Ty) → Type where
-  | term : Terminator  →  Block Γ t
-  | var (e : Inst Γ α) (body : Block (Γ.snoc α) β) : Block Γ β
+inductive Block : (ℓ : Set String) → (L : ℓ → Ty) → (Γ : Ctxt Ty) → (t : Ty) → Type where
+  | term {ℓ : Set String} {L : ℓ → Ty} : Terminator ℓ L Γ t → Block ℓ L Γ t
+  | var (e : Inst Γ α) (body : Block ℓ L (Γ.snoc α) β) : Block ℓ L Γ β
+
 end
 
 
@@ -53,27 +78,40 @@ end
 
 -/
 
-variable [TyDenote d.Ty] [DialectDenote d] [DecidableEq d.Ty] [Monad d.m] [LawfulMonad d.m]
 
 mutual
 
-def HVector.denote :
-    {l : List (Ctxt d.Ty × d.Ty)} → (T : HVector (fun t => Com d t.1 .impure t.2) l) →
-    HVector (fun t => t.1.Valuation → EffectKind.impure.toMonad d.m (toType t.2)) l
-  | _, .nil => HVector.nil
-  | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
+def Inst.denote (i : Inst Γ ty) (V : Γ.Valuation) : Option (Γ.snoc ty).Valuation :=
+  match i with
+  | ⟨op, ty_eq, args, regArgs⟩ => do
+    -- let val : ⟦ty⟧ ← match op, args, regArgs with
+    --   | .const x, _, _ => some x
+    --   | .add, v ::ₕ (w ::ₕ _), _ =>
+    --       let x : Nat := V v
+    --       let y : Nat := V w
+    --       some <| x + y
+    --   | .ite, v ::ₕ _, ⟨th ::ₕ els ::ₕ _⟩ =>
+    --       some 0
+    -- return V.snoc val
+    none
+  -- partial_fixpoint
 
-def Expr.denote {ty : d.Ty} (e : Expr d Γ eff ty) (Γv : Valuation Γ) :
-    eff.toMonad d.m (toType ty) :=
-  match e with
-  | ⟨op, Eq.refl _, heff, args, regArgs⟩ =>
-    EffectKind.liftEffect heff <| DialectDenote.denote op
-      (args.map (fun _ v => Γv v)) regArgs.denote
+def Block.denote (V : Γ.Valuation) : Block ℓ L Γ t → Option (⟦t⟧ ⊕ { l : ℓ // L l = t } )
+  | .term (.ret v)  => return .inl (V v)
+  | .term (.goto l) => return .inr ⟨l, rfl⟩
+  | .var i body => i.denote V >>= body.denote
+  partial_fixpoint
 
-def Com.denote : Com d Γ eff ty → (Γv : Valuation Γ) → eff.toMonad d.m (toType ty)
-  | .ret e, Γv => pure (Γv e)
-  | .var e body, Γv =>
-     match eff with
-     | .pure => body.denote (Γv.snoc (e.denote Γv))
-     | .impure => e.denote Γv >>= fun x => body.denote (Γv.snoc x)
+def Region.denote (V : Γ.Valuation) : Region Γ t → Option ⟦t⟧
+  | .mk ℓ entry L blocks => denoteBlock ℓ entry L blocks
+  where denoteBlock (ℓ : Set String) (l : ℓ) (L : ℓ → Ty)
+      (blocks : (l : ℓ) → Block ℓ L Γ (L l)) : Option ⟦L l⟧ := do
+    match (← (blocks l).denote V) with
+    | .inl val      => return val
+    | .inr ⟨l', h⟩  => (h ▸ ·) <$> denoteBlock ℓ l' L blocks
+    partial_fixpoint
+
+-- def Regions.denote  : Regions ρ → (HVector (fun r => r.1.Valuation → Option ⟦r.2⟧) ρ)
+--   | .mk regions => regions.map (fun _ r V => r.denote V)
+
 end
