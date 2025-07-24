@@ -66,7 +66,6 @@ def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
   | .truncate v expr => mkAppM ``BitVec.truncate #[bitVecWidth, ← bvExprToExpr expr]
   | .extract _ _ _ => throwError m! "Extract operation is not supported."
 
-
 def toExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM Expr := do
   match bvLogicalExpr with
   | .literal (GenBVPred.bin lhs op rhs) =>
@@ -87,6 +86,28 @@ def toExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM Expr := do
         | .beq => mkAppM ``BEq.beq #[← toExpr lhs, ← toExpr rhs]
   | _ => throwError m! "Unsupported operation"
 
+def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
+  match bvExpr with
+  | .var idx => return BVExpr.var idx
+  | .const val => return BVExpr.const val
+  | .bin lhs op rhs  => return BVExpr.bin (← toBVExpr' lhs) op (← toBVExpr' rhs)
+  | .un op expr =>  return BVExpr.un op (← toBVExpr' expr)
+  | .append lhs rhs h => return BVExpr.append (← toBVExpr' lhs) (← toBVExpr' rhs) h
+  | .replicate n expr h => return BVExpr.replicate n (← toBVExpr' expr) h
+  | .shiftLeft lhs rhs =>  return BVExpr.shiftLeft (← toBVExpr' lhs) (← toBVExpr' rhs)
+  | .shiftRight lhs rhs => return BVExpr.shiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
+  | .arithShiftRight lhs rhs =>return BVExpr.arithShiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
+  | _ => throwError m! "Unsupported operation provided: {bvExpr}"
+
+
+def toBVLogicalExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM BVLogicalExpr := do
+  match bvLogicalExpr with
+  | .literal (GenBVPred.bin lhs op rhs) => return BoolExpr.literal (BVPred.bin (← toBVExpr' lhs) op (← toBVExpr' rhs))
+  | .const b => return BoolExpr.const b
+  | .not boolExpr => return BoolExpr.not (← toBVLogicalExpr boolExpr)
+  | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
+  | _ => throwError m! "Unsupported operation"
+
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
 
@@ -95,7 +116,81 @@ def bvDecide' (g : MVarId) (ctx : TacticContext) : MetaM (Except CounterExample 
   | .ok lratCert => return .ok ⟨some lratCert⟩
   | .error counterExample => return .error counterExample
 
-def solve (bvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+def reconstructAssignment' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array (Bool × Nat))
+    (aigSize : Nat)  :
+    Std.HashMap Nat BVExpr.PackedBitVec := Id.run do
+  let mut sparseMap : Std.HashMap Nat (RBMap Nat Bool Ord.compare) := {}
+
+  for (bitVar, cnfVar) in var2Cnf.toArray do
+    /-
+    The setup of the variables in CNF is as follows:
+    1. One auxiliary variable for each node in the AIG
+    2. The actual BitVec bitwise variables
+    Hence we access the assignment array offset by the AIG size to obtain the value for a BitVec bit.
+    We assume that a variable can be found at its index as CaDiCal prints them in order.
+
+    Note that cadical will report an assignment for all literals up to the maximum literal from the
+    CNF. So even if variable or AIG bits below the maximum literal did not occur in the CNF they
+    will still occur in the assignment that cadical reports.
+
+    There is one crucial thing to consider in addition: If the highest literal that ended up in the
+    CNF does not represent the highest variable bit not all variable bits show up in the assignment.
+    For this situation we do the same as cadical for literals that did not show up in the CNF:
+    set them to true.
+    -/
+    let idx := cnfVar + aigSize
+    let varSet := if h : idx < assignment.size then assignment[idx].fst else true
+    let mut bitMap := sparseMap.getD bitVar.var {}
+    bitMap := bitMap.insert bitVar.idx varSet
+    sparseMap := sparseMap.insert bitVar.var bitMap
+
+  let mut finalMap := Std.HashMap.emptyWithCapacity
+  for (bitVecVar, bitMap) in sparseMap.toArray do
+    let mut value : Nat := 0
+    let mut currentBit := 0
+    for (bitIdx, bitValue) in bitMap.toList do
+      assert! bitIdx == currentBit
+      if bitValue then
+        value := value ||| (1 <<< currentBit)
+      currentBit := currentBit + 1
+    finalMap := finalMap.insert bitVecVar ⟨BitVec.ofNat currentBit value⟩
+  return finalMap
+
+def solve' (genBvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    let bvExpr ← withTraceNode `Generalize (fun _ => return "Converted GenBVLogicalExpr to BVLogicalExpr") do
+                    toBVLogicalExpr genBvExpr
+                    
+    let cadicalTimeoutSec : Nat := 500
+    let cfg: BVDecideConfig := {timeout := 500}
+
+    IO.FS.withTempFile fun _ lratFile => do
+      let ctx ← BVDecide.Frontend.TacticContext.new lratFile cfg
+      let entry ← IO.lazyPure (fun _ => bvExpr.bitblast)
+
+      let (cnf, map) ← IO.lazyPure (fun _ =>
+            let (entry, map) := entry.relabelNat'
+            let cnf := AIG.toCNF entry
+            (cnf, map))
+
+      let res ← runExternal cnf ctx.solver ctx.lratPath
+          (trimProofs := true)
+          (timeout := cadicalTimeoutSec)
+          (binaryProofs := true)
+
+      match res with
+      | .ok proof =>
+        withTraceNode `Generalize (fun _ => return "Verified proof") do
+            let valid := BVDecide.Reflect.verifyBVExpr bvExpr proof
+            if !valid then
+                throwError m! "Received invalid proof from SAT"
+            pure ()
+        return none
+      | .error assignment =>
+        let equations := reconstructAssignment' map assignment entry.aig.decls.size
+        return .some equations
+
+
+def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
     let parsedBVExprState := state.parsedBVLogicalExpr.state
 
@@ -117,7 +212,7 @@ def solve (bvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Na
         -- logInfo m! "Generated Lean Expr: {← ppExpr expr} from {bvExpr}"
 
           mkFreshExprMVar expr
-        let cfg: BVDecideConfig := {timeout := 60}
+        let cfg: BVDecideConfig := {timeout := 60, embeddedConstraintSubst := false}
 
         IO.FS.withTempFile fun _ lratFile => do
           let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg)
@@ -228,7 +323,7 @@ partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (fo
                   GeneralizerStateM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let rec constantsSynthesis (bvExpr: GenBVLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
             : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-      let existsRes ← solve bvExpr
+      let existsRes ← solve' bvExpr
 
       match existsRes with
         | none => trace[Generalize] m! "Could not satisfy exists formula for {bvExpr}"
@@ -236,7 +331,7 @@ partial def existsForAll (origExpr: GenBVLogicalExpr) (existsVars: List Nat) (fo
         | some assignment =>
           let existsVals := assignment.filter fun c _ => existsVars.contains c
           let substExpr := substitute bvExpr (packedBitVecToSubstitutionValue existsVals)
-          let forAllRes ← solve (BoolExpr.not substExpr)
+          let forAllRes ← solve' (BoolExpr.not substExpr)
 
           match forAllRes with
             | none =>
@@ -393,7 +488,7 @@ partial def countModel (expr : GenBVLogicalExpr) (constants: Std.HashSet Nat): G
     go 0 expr
     where
         go (count: Nat) (expr : GenBVLogicalExpr) : GeneralizerStateM Nat := do
-          let res ← solve expr
+          let res ← solve' expr
           match res with
           | none => return count
           | some assignment =>
@@ -424,7 +519,7 @@ def getNegativeExamples (bvExpr: GenBVLogicalExpr) (consts: List Nat) (numEx: Na
         match depth with
           | 0 => return []
           | n + 1 =>
-              let solution ← solve expr
+              let solution ← solve' expr
 
               match solution with
               | none => return []
@@ -447,7 +542,7 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
       let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (GenBVPred.bin f BVBinPred.eq expr)))
       let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-      if let some _ ← solve subsumeCheckExpr then
+      if let some _ ← solve' subsumeCheckExpr then
         pruned := expr :: pruned
 
     trace[Generalize] m! "Removed {expressions.length - pruned.length} expressions after pruning {expressions.length} expressions"
@@ -465,7 +560,7 @@ def pruneEquivalentBVLogicalExprs(expressions : List GenBVLogicalExpr): Generali
       let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
       let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
 
-      if let some _ ← solve subsumeCheckExpr then
+      if let some _ ← solve' subsumeCheckExpr then
         pruned := expr :: pruned
 
     logInfo m! "Removed {expressions.length - pruned.length} expressions after pruning"
@@ -541,7 +636,7 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCa
 
       let mut newCandidates : Std.HashSet GenBVLogicalExpr := Std.HashSet.emptyWithCapacity
       numInvocations := numInvocations + 1
-      match (← solve expr) with
+      match (← solve' expr) with
       | none => break
       | some assignment =>
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
@@ -839,6 +934,9 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BV
             if evaluatedRes == h' ▸ packedBV.bv then
               newExpr := h ▸ bvExpr
             currentCache := currentCache.insert newExpr {bv := evaluatedRes : BVExpr.PackedBitVec}
+
+    let uniqueExprs := Std.HashSet.ofList (← pruneEquivalentBVExprs currentCache.keys)
+    let nextCache := currentCache.filter (λ k v => uniqueExprs.contains k )
 
     set {state with constantExprsEnumerationCache := h ▸ currentCache}
     pure res
