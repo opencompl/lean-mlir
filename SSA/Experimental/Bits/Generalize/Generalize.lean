@@ -170,7 +170,7 @@ def reconstructAssignment' (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array
   return finalMap
 
 def solve' (genBvExpr: GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-    let bvExpr ← withTraceNode `Generalize (fun _ => return "Converted GenBVLogicalExpr to BVLogicalExpr") do
+    let bvExpr ← withTraceNode `Generalize (fun _ => return "Converted GenBVLogicalExpr to BVLogicalExpr (size : {genBvExpr.size})") do
                     toBVLogicalExpr genBvExpr
     let cadicalTimeoutSec : Nat := 500
     let cfg: BVDecideConfig := {timeout := 500}
@@ -215,7 +215,7 @@ def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap N
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
-        let mVar ← withTraceNode `Generalize (fun _ => return "Converted bvExpr to expr") do
+        let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {bvExpr.size})") do
           let mut expr ← toExpr bvExpr bitVecWidth
           Lean.Meta.check expr
 
@@ -239,8 +239,6 @@ def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap N
               let name := ((← getLCtx).get! var.fvarId!).userName
               assignment := assignment.insert nameToId[name]! val
             pure (some assignment)
-
-
     return res
 
 def addConstraints (expr: GenBVLogicalExpr) (constraints: List GenBVLogicalExpr) (op: Gate := Gate.and) : GenBVLogicalExpr :=
