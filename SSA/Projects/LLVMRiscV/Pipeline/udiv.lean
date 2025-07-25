@@ -7,7 +7,7 @@ open LLVMRiscV
 
 /-! # UDIV no exact  -/
 @[simp_denote]
-def udiv_llvm_no_exact : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def udiv_llvm_no_exact : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64 ):
       %1 = llvm.udiv  %x, %y : i64
@@ -15,7 +15,7 @@ def udiv_llvm_no_exact : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 
   }]
 
 @[simp_denote]
-def udiv_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def udiv_riscv: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%reg1: i64, %reg2: i64):
       %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)
@@ -30,7 +30,7 @@ def llvm_udiv_lower_riscv_no_flag: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
 
 /-! # UDIV exact   -/
 @[simp_denote]
-def udiv_llvm_exact : Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def udiv_llvm_exact : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.udiv exact %x, %y : i64
