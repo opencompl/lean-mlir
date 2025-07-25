@@ -4,13 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Qq
 import Lean
 import Mathlib.Logic.Function.Iterate
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.Tactic
-import SSA.Core.Util
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
 import Mathlib.Tactic.Ring
+
+import SSA.Core
 
 open BitVec
 open Ctxt(Var)
@@ -313,7 +309,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure int :=
     (regArgs := .nil)
 
 @[simp_denote]
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [int] .impure int) :
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg ⟨[int]⟩ .impure int) :
     Expr SimpleReg Γ .pure int :=
   Expr.mk
     (op := Op.iterate k)
@@ -326,14 +322,14 @@ attribute [local simp] Ctxt.snoc
 
 namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
-def lhs : Com SimpleReg [int] .pure int :=
+def lhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   Com.var (iterate (k := 0) (⟨0, by simp⟩) (
       Com.letPure (add ⟨0, by simp⟩ ⟨0, by simp⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def rhs : Com SimpleReg [int] .pure int :=
+def rhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   Com.ret ⟨0, by simp⟩
 
 attribute [local simp] Ctxt.snoc
@@ -367,12 +363,12 @@ end P1
 namespace P2
 
 /-- running `f(x) = x + 0` 0 times is the identity. -/
-def lhs : Com SimpleReg [int] .pure int :=
+def lhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   Com.var (cst 0) <| -- %c0
   Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def rhs : Com SimpleReg [int] .pure int :=
+def rhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   Com.ret ⟨0, by simp⟩
 
 def p2 : PeepholeRewrite SimpleReg [int] int:=
@@ -386,7 +382,7 @@ def p2 : PeepholeRewrite SimpleReg [int] int:=
 /--
 example program that has the pattern 'x + 0' both at the top level,
 and inside a region in an iterate. -/
-def egLhs : Com SimpleReg [int] .pure int :=
+def egLhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   Com.var (cst 0) <|
   Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
   Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
@@ -412,7 +408,7 @@ info: {
 -/
 #guard_msgs in #eval egLhs
 
-def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
+def runRewriteOnLhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   (rewritePeepholeRecursively (fuel := 100) p2 egLhs).val
 
 /--
@@ -431,7 +427,7 @@ info: {
 -/
 #guard_msgs in #eval runRewriteOnLhs
 
-def expectedRhs : Com SimpleReg [int] .pure int :=
+def expectedRhs : Com SimpleReg ⟨[int]⟩ .pure int :=
   Com.var (cst 0) <|
   Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
   -- | Note that the argument to 'iterate' is rewritten.

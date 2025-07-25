@@ -1,3 +1,5 @@
+import SSA.Core
+
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.tactics.SimpLowering
@@ -32,7 +34,7 @@ is per default tried to resolved by the tactic sequence provided below. If this 
 throw an corresponding error message to indicate failure. Important for the unfold to succedd and to
 avoid manual unfolding the implementor of the rewrite must tag the lhs and rhs of the
 as simp_denote such that the unfolding is performed by simp_peephole. -/
-structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : Ctxt Ty) where
+structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : List Ty) where
   lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
   correct : ∀ V,
