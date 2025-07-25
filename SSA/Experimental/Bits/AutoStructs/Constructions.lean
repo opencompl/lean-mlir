@@ -3,7 +3,7 @@ import SSA.Experimental.Bits.AutoStructs.Worklist
 
 import Mathlib.Tactic.ApplyFun
 
-set_option grind.warning false
+open Rel
 
 section sink
 
@@ -19,9 +19,9 @@ lemma CNFA.addSink_spec (m : CNFA n) (M : NFA' n) :
     m.Sim M →
     m.addSink.Sim M.complete := by
   rintro ⟨Ri, hsim⟩
-  let R (s : State) (q : M.complete.σ) :=
+  let R := {(s, q) : State × M.complete.σ |
     s = m.m.stateMax ∧ q = .inr () ∨
-      ∃ qᵢ, s ∈ m.m.states ∧ q = .inl qᵢ ∧ Ri s qᵢ
+      ∃ qᵢ, s ∈ m.m.states ∧ q = .inl qᵢ ∧ s ~[Ri] qᵢ }
   use R; constructor
   · simp [CNFA.addSink, RawCNFA.addSink, NFA'.complete, NFA.complete, R]
     rintro s; constructor
@@ -100,7 +100,7 @@ lemma CNFA.flipFinals_finals {m : CNFA n} {s} :
 
 lemma CNFA.flipFinals_spec {m : CNFA n} {M : NFA' n} :
     m.Sim M → m.flipFinals.Sim M.flipAccept := by
-  rintro ⟨R, hsim⟩; use (λ s q => R s q ∧ s ∈ m.m.states); constructor
+  rintro ⟨R, hsim⟩; use {(s, q) | s ~[R] q ∧ s ∈ m.m.states}; constructor
   · rintro s q ⟨hR, hs⟩
     simp only [flipFinals_finals, hsim.accept hR, true_and, NFA'.flipAccept, NFA.flipAccept, hs]
     rfl
@@ -318,7 +318,7 @@ lemma product.sim {m1 m2 : CNFA n}:
     (nfa (product.inits m1 m2) (final final? m1 m2) (f m1 m2)).Bisim (M1.M.product (to_prop final?) M2.M) := by
   rintro ⟨R₁, hsim₁⟩ ⟨R₂, hsim₂⟩
   let R : Rel (m1.m.states × m2.m.states) (M1.σ × M2.σ) :=
-    λ (s₁, s₂) (q₁, q₂) ↦ R₁ s₁ q₁ ∧ R₂ s₂ q₂
+    {((s₁, s₂), (q₁, q₂)) | s₁.val ~[R₁] q₁ ∧ s₂.val ~[R₂] q₂ }
   use R; constructor
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ ⟨hR₁, hR₂⟩
     simp [nfa, to_prop, final]
@@ -336,12 +336,14 @@ lemma product.sim {m1 m2 : CNFA n}:
       have hin₁ : s₁ ∈ m1.m.states := by apply m1.wf.initials_lt hi₁
       have hin₂ : s₂ ∈ m2.m.states := by apply m2.wf.initials_lt hi₂
       use ⟨s₁, hin₁⟩, ⟨s₂, hin₂⟩
+      simp_all [R]
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ a ⟨s₁', s₂'⟩ ⟨hR₁, hR₂⟩ hst
     simp [nfa, f_spec] at hst; rcases hst with ⟨hst₁, hst₂⟩
     obtain ⟨q₁', hst₁, hR₁'⟩ := hsim₁.trans_match₁ hR₁ hst₁
     obtain ⟨q₂', hst₂, hR₂'⟩ := hsim₂.trans_match₁ hR₂ hst₂
     simp [NFA.product]
     use q₁', q₂'
+    simp_all [R]
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ a ⟨q₁', q₂'⟩ ⟨hR₁, hR₂⟩ hst
     simp [NFA.product] at hst; rcases hst with ⟨hst₁, hst₂⟩
     obtain ⟨s₁', hst₁, hR₁'⟩ := hsim₁.trans_match₂ hR₁ hst₁ (by simp) (by simp)
@@ -350,6 +352,7 @@ lemma product.sim {m1 m2 : CNFA n}:
     have hin₂ : s₂' ∈ m2.m.states := by apply m2.wf.trans_tgt_lt hst₂
     simp only [nfa, Set.mem_setOf_eq, Prod.exists, f_spec]
     use ⟨s₁', hin₁⟩, ⟨s₂', hin₂⟩
+    simp_all [R]
 
 def CNFA.inter (m1 m2 : CNFA n) : CNFA n := product (fun b1 b2 => b1 && b2) m1 m2
 def CNFA.union (m1 m2 : CNFA n) : CNFA n :=
@@ -604,7 +607,7 @@ def CNFA.determinize_spec (m : CNFA n)
   apply bisim_comp
   · apply worklistRun_spec
   let R : Rel (BitVec m.m.stateMax) (Set M.σ) :=
-    λ ss qs ↦ Ri.set_eq (bv_to_set ss) qs
+    {(ss, qs) | Ri.set_eq (bv_to_set ss) qs }
   use R; constructor
   · simp [nfa', nfa, NFA'.determinize, NFA.toDFA, BitVec.any_iff_exists]
     rintro q₁ q₂ hR; constructor
@@ -616,7 +619,7 @@ def CNFA.determinize_spec (m : CNFA n)
       have hlt : i < m.m.stateMax :=
         BitVec.lt_of_getLsbD hlsb
       use ⟨i, hlt⟩, hlsb, hsim.accept hRi |>.mpr ha
-  · have heq : R (BitVec.ofFn fun n_1 => decide (↑n_1 ∈ m.m.initials)) M.M.start := by
+  · have heq : (BitVec.ofFn fun n_1 => decide (↑n_1 ∈ m.m.initials)) ~[R] M.M.start := by
       constructor
       · rintro s hi
         obtain ⟨hlt, hinit⟩ := BitVec.ofFn_getLsbD_true.mp hi
@@ -757,7 +760,7 @@ def CNFA.reverse (m : CNFA n) : CNFA n :=
 
 lemma CNFA.reverse_spec {m : CNFA n} : m.reverse.Sim m.toNFA'.reverse := by
   obtain ⟨h₁, h₂, h₃, h₄, h₅⟩ := RawCNFA.reverse_spec m.wf
-  use (λ s s' ↦ s = s'.val)
+  use {(s, s') | s = s'.val}
   simp_all [NFA'.reverse, NFA.reverse, reverse, toNFA']
   constructor <;> aesop
 
