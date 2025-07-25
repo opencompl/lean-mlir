@@ -46,17 +46,24 @@ mutual
 free variables are only the free variables of `lets` as a whole -/
 def Lets.exprTreeAt : (lets : Lets d Γ_in .pure Γ_out) → (v : Var Γ_out ty) → ExprTree d Γ_in ty
   | .nil, v                       => .fvar v
-  | .var body e, ⟨0, Eq.refl _⟩  => e.toExprTree body
-  | .var body _, ⟨v+1, h⟩        => body.exprTreeAt ⟨v, h⟩
+  | .var (t := ty') body e, v  =>
+      match v with
+      | ⟨0, h⟩ =>
+          have h : ty' = ty := by simpa using h
+          Expr.toExprTree body (h ▸ e)
+      | ⟨v+1, h⟩ => body.exprTreeAt ⟨v, h⟩
+termination_by (Γ_out.length, 1)
 
 /-- `e.toExprTree lets` converts a single expression `e` into an expression tree by looking up the
 arguments to `e` in `lets` -/
 def Expr.toExprTree (lets : Lets d Γ_in .pure Γ_out) (e : Expr d Γ_out .pure ty) :
     ExprTree d Γ_in ty :=
   .mk e.op e.ty_eq (EffectKind.eq_of_le_pure e.eff_le) (argsToBranches e.args)
+termination_by (Γ_out.length + 1, 0)
   where argsToBranches {ts} : HVector (Var Γ_out) ts → ExprTreeBranches d Γ_in ts
     | .nil => .nil
     | .cons v vs => .cons (lets.exprTreeAt v) (argsToBranches vs)
+  termination_by (Γ_out.length, ts.length + 2)
 
 end
 
@@ -128,10 +135,9 @@ def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution
   Ctxt.Substitution.ofValuation <|
     (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
       ExprTree.fvar ⟨v, by
-        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map,
-          List.getElem?_map, Option.map_eq_some_iff] at h
-        simp only [Ctxt.get?]
-        rcases h with ⟨ty', h_get, h_map⟩
+        obtain ⟨ty', h_get, h_map⟩ :
+            ∃ a, Γ_in[v]? = some a ∧ TermModel.morphism.mapTy a = { ty := ty } := by
+          simpa using h
         injection h_map with ty_eq_ty'
         subst ty_eq_ty'
         exact h_get⟩

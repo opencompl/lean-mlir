@@ -14,7 +14,7 @@ def liRiscvN50 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN50 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN50 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-50) : i64
       llvm.return %1 : i64
@@ -37,7 +37,7 @@ def liRiscvN49 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN49 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN49 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-49) : i64
       llvm.return %1 : i64
@@ -60,7 +60,7 @@ def liRiscvN48 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN48 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN48 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-48) : i64
       llvm.return %1 : i64
@@ -83,7 +83,7 @@ def liRiscvN47 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN47 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN47 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-47) : i64
       llvm.return %1 : i64
@@ -106,7 +106,7 @@ def liRiscvN46 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN46 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN46 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-46) : i64
       llvm.return %1 : i64
@@ -129,7 +129,7 @@ def liRiscvN45 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN45 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN45 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-45) : i64
       llvm.return %1 : i64
@@ -152,7 +152,7 @@ def liRiscvN44 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN44 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN44 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-44) : i64
       llvm.return %1 : i64
@@ -175,7 +175,7 @@ def liRiscvN43 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN43 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN43 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-43) : i64
       llvm.return %1 : i64
@@ -198,7 +198,7 @@ def liRiscvN42 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN42 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN42 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-42) : i64
       llvm.return %1 : i64
@@ -221,7 +221,7 @@ def liRiscvN41 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN41 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN41 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-41) : i64
       llvm.return %1 : i64
@@ -244,7 +244,7 @@ def liRiscvN40 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN40 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN40 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-40) : i64
       llvm.return %1 : i64
@@ -267,7 +267,7 @@ def liRiscvN39 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN39 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN39 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-39) : i64
       llvm.return %1 : i64
@@ -290,7 +290,7 @@ def liRiscvN38 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN38 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN38 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-38) : i64
       llvm.return %1 : i64
@@ -313,7 +313,7 @@ def liRiscvN37 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN37 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN37 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-37) : i64
       llvm.return %1 : i64
@@ -336,7 +336,7 @@ def liRiscvN36 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN36 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN36 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-36) : i64
       llvm.return %1 : i64
@@ -359,7 +359,7 @@ def liRiscvN35 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN35 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN35 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-35) : i64
       llvm.return %1 : i64
@@ -382,7 +382,7 @@ def liRiscvN34 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN34 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN34 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-34) : i64
       llvm.return %1 : i64
@@ -405,7 +405,7 @@ def liRiscvN33 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN33 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN33 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-33) : i64
       llvm.return %1 : i64
@@ -428,7 +428,7 @@ def liRiscvN32 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN32 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN32 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-32) : i64
       llvm.return %1 : i64
@@ -451,7 +451,7 @@ def liRiscvN31 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN31 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN31 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-31) : i64
       llvm.return %1 : i64
@@ -474,7 +474,7 @@ def liRiscvN30 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN30 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN30 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-30) : i64
       llvm.return %1 : i64
@@ -497,7 +497,7 @@ def liRiscvN29 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN29 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN29 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-29) : i64
       llvm.return %1 : i64
@@ -520,7 +520,7 @@ def liRiscvN28 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN28 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN28 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-28) : i64
       llvm.return %1 : i64
@@ -543,7 +543,7 @@ def liRiscvN27 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN27 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN27 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-27) : i64
       llvm.return %1 : i64
@@ -566,7 +566,7 @@ def liRiscvN26 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN26 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN26 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-26) : i64
       llvm.return %1 : i64
@@ -589,7 +589,7 @@ def liRiscvN25 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN25 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN25 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-25) : i64
       llvm.return %1 : i64
@@ -612,7 +612,7 @@ def liRiscvN24 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN24 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN24 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-24) : i64
       llvm.return %1 : i64
@@ -635,7 +635,7 @@ def liRiscvN23 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN23 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN23 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-23) : i64
       llvm.return %1 : i64
@@ -658,7 +658,7 @@ def liRiscvN22 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN22 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN22 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-22) : i64
       llvm.return %1 : i64
@@ -681,7 +681,7 @@ def liRiscvN21 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN21 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN21 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-21) : i64
       llvm.return %1 : i64
@@ -704,7 +704,7 @@ def liRiscvN20 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN20 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN20 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-20) : i64
       llvm.return %1 : i64
@@ -727,7 +727,7 @@ def liRiscvN19 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN19 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN19 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-19) : i64
       llvm.return %1 : i64
@@ -750,7 +750,7 @@ def liRiscvN18 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN18 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN18 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-18) : i64
       llvm.return %1 : i64
@@ -773,7 +773,7 @@ def liRiscvN17 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN17 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN17 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-17) : i64
       llvm.return %1 : i64
@@ -796,7 +796,7 @@ def liRiscvN16 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN16 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN16 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-16) : i64
       llvm.return %1 : i64
@@ -819,7 +819,7 @@ def liRiscvN15 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN15 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN15 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-15) : i64
       llvm.return %1 : i64
@@ -842,7 +842,7 @@ def liRiscvN14 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN14 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN14 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-14) : i64
       llvm.return %1 : i64
@@ -865,7 +865,7 @@ def liRiscvN13 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN13 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN13 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-13) : i64
       llvm.return %1 : i64
@@ -888,7 +888,7 @@ def liRiscvN12 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN12 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN12 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-12) : i64
       llvm.return %1 : i64
@@ -911,7 +911,7 @@ def liRiscvN11 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN11 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN11 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-11) : i64
       llvm.return %1 : i64
@@ -934,7 +934,7 @@ def liRiscvN10 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN10 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN10 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-10) : i64
       llvm.return %1 : i64
@@ -957,7 +957,7 @@ def liRiscvN9 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN9 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN9 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-9) : i64
       llvm.return %1 : i64
@@ -980,7 +980,7 @@ def liRiscvN8 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN8 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN8 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-8) : i64
       llvm.return %1 : i64
@@ -1003,7 +1003,7 @@ def liRiscvN7 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN7 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN7 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-7) : i64
       llvm.return %1 : i64
@@ -1026,7 +1026,7 @@ def liRiscvN6 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN6 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN6 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-6) : i64
       llvm.return %1 : i64
@@ -1049,7 +1049,7 @@ def liRiscvN5 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN5 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN5 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-5) : i64
       llvm.return %1 : i64
@@ -1072,7 +1072,7 @@ def liRiscvN4 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN4 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN4 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-4) : i64
       llvm.return %1 : i64
@@ -1095,7 +1095,7 @@ def liRiscvN3 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN3 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN3 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-3) : i64
       llvm.return %1 : i64
@@ -1118,7 +1118,7 @@ def liRiscvN2 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN2 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN2 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-2) : i64
       llvm.return %1 : i64
@@ -1141,7 +1141,7 @@ def liRiscvN1 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvmN1 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvmN1 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (-1) : i64
       llvm.return %1 : i64
@@ -1164,7 +1164,7 @@ def liRiscv0 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm0 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm0 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (0) : i64
       llvm.return %1 : i64
@@ -1187,7 +1187,7 @@ def liRiscv1 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm1 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm1 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (1) : i64
       llvm.return %1 : i64
@@ -1210,7 +1210,7 @@ def liRiscv2 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm2 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm2 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (2) : i64
       llvm.return %1 : i64
@@ -1233,7 +1233,7 @@ def liRiscv3 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm3 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm3 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (3) : i64
       llvm.return %1 : i64
@@ -1256,7 +1256,7 @@ def liRiscv4 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm4 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm4 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (4) : i64
       llvm.return %1 : i64
@@ -1279,7 +1279,7 @@ def liRiscv5 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm5 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm5 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (5) : i64
       llvm.return %1 : i64
@@ -1302,7 +1302,7 @@ def liRiscv6 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm6 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm6 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (6) : i64
       llvm.return %1 : i64
@@ -1325,7 +1325,7 @@ def liRiscv7 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm7 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm7 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (7) : i64
       llvm.return %1 : i64
@@ -1348,7 +1348,7 @@ def liRiscv8 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm8 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm8 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (8) : i64
       llvm.return %1 : i64
@@ -1371,7 +1371,7 @@ def liRiscv9 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm9 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm9 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (9) : i64
       llvm.return %1 : i64
@@ -1394,7 +1394,7 @@ def liRiscv10 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm10 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm10 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (10) : i64
       llvm.return %1 : i64
@@ -1417,7 +1417,7 @@ def liRiscv11 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm11 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm11 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (11) : i64
       llvm.return %1 : i64
@@ -1440,7 +1440,7 @@ def liRiscv12 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm12 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm12 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (12) : i64
       llvm.return %1 : i64
@@ -1463,7 +1463,7 @@ def liRiscv13 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm13 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm13 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (13) : i64
       llvm.return %1 : i64
@@ -1486,7 +1486,7 @@ def liRiscv14 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm14 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm14 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (14) : i64
       llvm.return %1 : i64
@@ -1509,7 +1509,7 @@ def liRiscv15 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm15 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm15 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (15) : i64
       llvm.return %1 : i64
@@ -1532,7 +1532,7 @@ def liRiscv16 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm16 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm16 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (16) : i64
       llvm.return %1 : i64
@@ -1555,7 +1555,7 @@ def liRiscv17 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm17 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm17 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (17) : i64
       llvm.return %1 : i64
@@ -1578,7 +1578,7 @@ def liRiscv18 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm18 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm18 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (18) : i64
       llvm.return %1 : i64
@@ -1601,7 +1601,7 @@ def liRiscv19 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm19 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm19 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (19) : i64
       llvm.return %1 : i64
@@ -1624,7 +1624,7 @@ def liRiscv20 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm20 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm20 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (20) : i64
       llvm.return %1 : i64
@@ -1647,7 +1647,7 @@ def liRiscv21 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm21 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm21 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (21) : i64
       llvm.return %1 : i64
@@ -1670,7 +1670,7 @@ def liRiscv22 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm22 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm22 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (22) : i64
       llvm.return %1 : i64
@@ -1693,7 +1693,7 @@ def liRiscv23 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm23 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm23 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (23) : i64
       llvm.return %1 : i64
@@ -1716,7 +1716,7 @@ def liRiscv24 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm24 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm24 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (24) : i64
       llvm.return %1 : i64
@@ -1739,7 +1739,7 @@ def liRiscv25 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm25 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm25 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (25) : i64
       llvm.return %1 : i64
@@ -1762,7 +1762,7 @@ def liRiscv26 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm26 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm26 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (26) : i64
       llvm.return %1 : i64
@@ -1785,7 +1785,7 @@ def liRiscv27 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm27 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm27 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (27) : i64
       llvm.return %1 : i64
@@ -1808,7 +1808,7 @@ def liRiscv28 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm28 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm28 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (28) : i64
       llvm.return %1 : i64
@@ -1831,7 +1831,7 @@ def liRiscv29 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm29 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm29 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (29) : i64
       llvm.return %1 : i64
@@ -1854,7 +1854,7 @@ def liRiscv30 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm30 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm30 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (30) : i64
       llvm.return %1 : i64
@@ -1877,7 +1877,7 @@ def liRiscv31 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm31 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm31 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (31) : i64
       llvm.return %1 : i64
@@ -1900,7 +1900,7 @@ def liRiscv32 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm32 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm32 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (32) : i64
       llvm.return %1 : i64
@@ -1923,7 +1923,7 @@ def liRiscv33 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm33 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm33 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (33) : i64
       llvm.return %1 : i64
@@ -1946,7 +1946,7 @@ def liRiscv34 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm34 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm34 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (34) : i64
       llvm.return %1 : i64
@@ -1969,7 +1969,7 @@ def liRiscv35 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm35 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm35 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (35) : i64
       llvm.return %1 : i64
@@ -1992,7 +1992,7 @@ def liRiscv36 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm36 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm36 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (36) : i64
       llvm.return %1 : i64
@@ -2015,7 +2015,7 @@ def liRiscv37 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm37 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm37 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (37) : i64
       llvm.return %1 : i64
@@ -2038,7 +2038,7 @@ def liRiscv38 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm38 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm38 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (38) : i64
       llvm.return %1 : i64
@@ -2061,7 +2061,7 @@ def liRiscv39 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm39 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm39 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (39) : i64
       llvm.return %1 : i64
@@ -2084,7 +2084,7 @@ def liRiscv40 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm40 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm40 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (40) : i64
       llvm.return %1 : i64
@@ -2107,7 +2107,7 @@ def liRiscv41 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm41 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm41 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (41) : i64
       llvm.return %1 : i64
@@ -2130,7 +2130,7 @@ def liRiscv42 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm42 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm42 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (42) : i64
       llvm.return %1 : i64
@@ -2153,7 +2153,7 @@ def liRiscv43 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm43 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm43 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (43) : i64
       llvm.return %1 : i64
@@ -2176,7 +2176,7 @@ def liRiscv44 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm44 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm44 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (44) : i64
       llvm.return %1 : i64
@@ -2199,7 +2199,7 @@ def liRiscv45 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm45 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm45 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (45) : i64
       llvm.return %1 : i64
@@ -2222,7 +2222,7 @@ def liRiscv46 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm46 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm46 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (46) : i64
       llvm.return %1 : i64
@@ -2245,7 +2245,7 @@ def liRiscv47 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm47 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm47 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (47) : i64
       llvm.return %1 : i64
@@ -2268,7 +2268,7 @@ def liRiscv48 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm48 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm48 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (48) : i64
       llvm.return %1 : i64
@@ -2291,7 +2291,7 @@ def liRiscv49 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm49 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm49 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (49) : i64
       llvm.return %1 : i64
@@ -2314,7 +2314,7 @@ def liRiscv50 := [LV| {
       llvm.return %1 : i64
   }]
 
-def constLlvm50 : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {
+def constLlvm50 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry ():
       %1 = llvm.mlir.constant (50) : i64
       llvm.return %1 : i64

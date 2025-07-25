@@ -109,6 +109,17 @@ where go (es : Array Expr) (e : Expr) : (OptionT MetaM _) := do
   | List.nil _  => return es
   | _           => OptionT.fail
 
+/--
+Given `e` a Lean expression of type `List α`, return an array of
+expressions `es : Array Expr` where `es[i]` is the `i`th element of `e`.
+
+Returns `none` if `e` does not reduce to a `Ctxt.ofList` applied to a sequence
+of `List` constructors. -/
+def ctxtExprToArray (e : Expr) : MetaM (Option <| Array Expr) := do
+  let_expr Ctxt.ofList _ Γ := ← whnf e
+    | return none
+  listExprToArray Γ
+
 /-!
 ## `def_signature` Elaboration
 -/
@@ -163,12 +174,16 @@ def parseSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : m Term :=
       let regions ← regions.getElems.mapM fun fn => withRef fn do
         let `(plainFunction| $args → $outTy) := fn
           | throwUnexpectedSyntax fn
-        let args ← parseArgumentList args
+        let args ← parseRegionArgumentList args
         `(⟨$args, $outTy⟩)
       parseFunction regions fn
   | `(signature| $fn:function) => parseFunction #[] fn
   | ref => throwUnexpectedSyntax ref
   where
+    parseRegionArgumentList : TSyntax ``argumentList → m Term
+      | `(argumentList| ${$args})  => pure args
+      | `(argumentList| ($args,*)) => `(⟨[$args,*]⟩)
+      | ref => throwUnexpectedSyntax ref
     parseArgumentList : TSyntax ``argumentList → m Term
       | `(argumentList| ${$args})  => pure args
       | `(argumentList| ($args,*)) => `([$args,*])
@@ -327,7 +342,7 @@ partial def CurriedArgs.ofTypeExpr (argTy : Expr) (argName : Option Name := none
           return .vector name α f as args
       | none => return .other name argTy
   | Ctxt.Valuation Ty inst Γ =>
-      match ← listExprToArray Γ with
+      match ← ctxtExprToArray Γ with
       | some Γ =>
           let toType := mkApp2 (.const ``TyDenote.toType []) Ty inst
           let args ← Γ.mapM (CurriedArrow.ofExpr <| .app toType ·)
