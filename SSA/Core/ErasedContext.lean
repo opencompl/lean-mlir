@@ -485,19 +485,19 @@ theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType
   · rfl
 
 @[simp]
-theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (s.snoc x) (Ctxt.Var.last _ _) = x := by
+theorem Valuation.snoc_last {t : Ty} (s : Γ.Valuation) (x : toType t) :
+    (s.snoc x) (Ctxt.Var.last _ _) = x :=
   rfl
 
 @[simp]
-theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
+theorem Valuation.snoc_zero {ty : Ty} (s : Γ.Valuation) (x : toType ty)
     (h : (Ctxt.snoc Γ ty)[0]? = some ty) :
-    (s.snoc x) ⟨0, h⟩ = x := by
+    (s.snoc x) ⟨0, h⟩ = x :=
   rfl
 
-@[simp]
-theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
-    (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
+@[simp] lemma Valuation.snoc_toSnoc {t t' : Ty} (s : Γ.Valuation)
+    (x : toType t) (v : Γ.Var t') :
+    (s.snoc x) v.toSnoc = s v :=
   rfl
 
 /-!
@@ -627,6 +627,9 @@ def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuatio
   fun _ v => V <| v.castCtxt h.symm
 
 @[simp] lemma Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
+
+@[simp] lemma Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
+    V.cast h v = V (v.castCtxt h.symm) := rfl
 
 /-- reassigning a variable to the same value that has been looked up is identity. -/
 theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]

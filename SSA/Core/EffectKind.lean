@@ -1,4 +1,6 @@
 import SSA.Core.Tactic.SimpSet
+import SSA.Core.Util.QPF
+
 import Lean
 import Mathlib.Order.Lattice
 
@@ -60,7 +62,29 @@ instance [Monad m] : Monad (e.toMonad m) := by
 instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
   unfold toMonad; cases e <;> infer_instance
 
+/-!
+Finally, show that `eff.toMonad m` is a (uniform) QPF, assuming that `m` is.
+-/
+instance [QPF m] : QPF (e.toMonad m) := by
+  unfold toMonad; cases e <;> infer_instance
+
+instance [QPF m] [UniformQPF m] : UniformQPF (e.toMonad m) := by
+  unfold toMonad; cases e <;> infer_instance
+
 end Instances
+
+section Lemmas
+variable [Monad m]
+
+@[simp] lemma pure_pure (eff : EffectKind) (x : α) :
+    (Pure.pure (Pure.pure x : pure.toMonad m (no_index α)) : eff.toMonad m α) = Pure.pure x :=
+  rfl
+
+theorem pure_map (f : α → β) (x : pure.toMonad m α) (eff : EffectKind) :
+    (Pure.pure (f <$> x : pure.toMonad m _) : eff.toMonad m _) = f <$> (Pure.pure x) := by
+  sorry
+
+end Lemmas
 
 /-!
 ## `PartialOrder`
@@ -211,15 +235,26 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
-@[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
-    liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
-  cases hle; rfl
+/-
+TODO:  `liftEffect_pure` and `liftEffect_impure` might be bad simplemmas.
+The former in particular as it abuses the `Id x = x` def-eq that upstream is
+moving away from.
+-/
+
+-- @[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
+--     liftEffect hle (α := α) (m := m)
+--     = fun x => Pure.pure (cast (by simp [eq_of_le_pure hle, Id]) x) := by
+--   cases hle; rfl
 
 @[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
     liftEffect hle (α := α) (m := m) = match e with
       | .pure => fun v => Pure.pure v
       | .impure => id := by
   cases e <;> rfl
+
+theorem liftEffect_eq_pure_cast_of [Pure m] {e₁ e₂} (heq : e₁ = .pure) (hle : e₁ ≤ e₂) :
+    liftEffect hle (α := α) (m := m) = fun x => Pure.pure (cast (by subst heq; rfl) x) := by
+  subst heq; cases e₂ <;> rfl
 
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
@@ -234,6 +269,13 @@ def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
+
+@[simp]
+theorem pure_liftEffect {eff₁ eff₂ : EffectKind}
+    (hle : eff₁ ≤ .pure) [Monad m] (x : eff₁.toMonad m α) :
+    (Pure.pure (liftEffect hle x) : eff₂.toMonad m α)
+    = liftEffect (by cases hle; constructor) x := by
+  sorry
 
 /-!
 ## `toMonad` coercion
