@@ -81,37 +81,52 @@ end
 
 mutual
 
+
 def Inst.denote (i : Inst Γ ty) (V : Γ.Valuation) : Option (Γ.snoc ty).Valuation :=
   match i with
-  | ⟨op, ty_eq, args, regArgs⟩ => do
-    -- let val : ⟦ty⟧ ← match op, args, regArgs with
-    --   | .const x, _, _ => some x
-    --   | .add, v ::ₕ (w ::ₕ _), _ =>
-    --       let x : Nat := V v
-    --       let y : Nat := V w
-    --       some <| x + y
-    --   | .ite, v ::ₕ _, ⟨th ::ₕ els ::ₕ _⟩ =>
-    --       some 0
-    -- return V.snoc val
-    none
-  -- partial_fixpoint
+  | ⟨op, _ty_eq, args, regArgs⟩ => do
+    let val : Option ⟦ty⟧ := match op, args, regArgs with
+      | .const x, _, _ => some x
+      | .add, v ::ₕ (w ::ₕ _), _ =>
+          let x : Nat := V v
+          let y : Nat := V w
+          some <| x + y
+      | .ite, v ::ₕ _, ⟨th ::ₕ els ::ₕ _⟩ =>
+          let c : Nat := V v
+          -- if c = 0 then
+          th.denote .nil
+          -- else
+          --   els.denote .nil
+          -- c
+    (V.snoc ·) <$> val
+  partial_fixpoint
 
 def Block.denote (V : Γ.Valuation) : Block ℓ L Γ t → Option (⟦t⟧ ⊕ { l : ℓ // L l = t } )
-  | .term (.ret v)  => return .inl (V v)
-  | .term (.goto l) => return .inr ⟨l, rfl⟩
-  | .var i body => i.denote V >>= body.denote
+  | .term t => match t with
+    | .ret v => return .inl (V v)
+    | .goto l => return .inr ⟨l, rfl⟩
+  | .var i body => do
+      let V ← i.denote V
+      body.denote V
   partial_fixpoint
 
 def Region.denote (V : Γ.Valuation) : Region Γ t → Option ⟦t⟧
-  | .mk ℓ entry L blocks => denoteBlock ℓ entry L blocks
-  where denoteBlock (ℓ : Set String) (l : ℓ) (L : ℓ → Ty)
-      (blocks : (l : ℓ) → Block ℓ L Γ (L l)) : Option ⟦L l⟧ := do
-    match (← (blocks l).denote V) with
-    | .inl val      => return val
-    | .inr ⟨l', h⟩  => (h ▸ ·) <$> denoteBlock ℓ l' L blocks
-    partial_fixpoint
+  | .mk ℓ entry L blocks =>
+    Region.denoteBlock V ℓ entry L blocks
+  partial_fixpoint
 
--- def Regions.denote  : Regions ρ → (HVector (fun r => r.1.Valuation → Option ⟦r.2⟧) ρ)
---   | .mk regions => regions.map (fun _ r V => r.denote V)
+def Region.denoteBlock (V : Γ.Valuation) (ℓ : Set String) (l : ℓ) (L : ℓ → Ty)
+      (blocks : (l : ℓ) → Block ℓ L Γ (L l)) : Option ⟦L l⟧ := do
+  match (← (blocks l).denote V) with
+  | .inl val      => return val
+  | .inr l'  =>
+    let ⟨l', h⟩ := l'
+    (h ▸ ·) <$> Region.denoteBlock V ℓ l' L blocks
+  partial_fixpoint
+
+def Regions.denote  : Regions ρ → (HVector (fun r => r.1.Valuation → Option ⟦r.2⟧) ρ)
+  | .mk regions =>
+      sorry
+      -- regions.map (fun _ r V => r.denote V)
 
 end
