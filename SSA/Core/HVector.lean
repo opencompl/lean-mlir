@@ -183,7 +183,7 @@ macro_rules
     else
       `(%[ $elems,* | List.nil ])
 
-infixl:50 "::ₕ" => HVector.cons
+infixr:50 "::ₕ" => HVector.cons
 
 
 /-!
