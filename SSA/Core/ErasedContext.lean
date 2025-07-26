@@ -621,6 +621,9 @@ def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuatio
 
 @[simp] lemma Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
 
+@[simp] lemma Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
+    V.cast h v = V (v.castCtxt h.symm) := rfl
+
 /-- reassigning a variable to the same value that has been looked up is identity. -/
 theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
     {Γ : Ctxt Ty} {V : Γ.Valuation} {var : Var Γ t} :

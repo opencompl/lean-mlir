@@ -62,6 +62,14 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
 
 end Instances
 
+section Lemmas
+
+theorem pure_map (f : α → β) (x : pure.toMonad m α) [Monad m] :
+    (Pure.pure (f <$> x : pure.toMonad m _) : impure.toMonad m _) = f <$> (Pure.pure x) := by
+  sorry
+
+end Lemmas
+
 /-!
 ## `PartialOrder`
 Establish a partial order on `EffectKind`
@@ -211,15 +219,26 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
-@[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
-    liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
-  cases hle; rfl
+/-
+TODO:  `liftEffect_pure` and `liftEffect_impure` might be bad simplemmas.
+The former in particular as it abuses the `Id x = x` def-eq that upstream is
+moving away from.
+-/
+
+-- @[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
+--     liftEffect hle (α := α) (m := m)
+--     = fun x => Pure.pure (cast (by rw [eq_of_le_pure hle]) x) := by
+--   cases hle; rfl
 
 @[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
     liftEffect hle (α := α) (m := m) = match e with
       | .pure => fun v => Pure.pure v
       | .impure => id := by
   cases e <;> rfl
+
+theorem liftEffect_eq_pure_cast_of [Pure m] {e₁ e₂} (heq : e₁ = .pure) (hle : e₁ ≤ e₂) :
+    liftEffect hle (α := α) (m := m) = fun x => Pure.pure (cast (by subst heq; rfl) x) := by
+  subst heq; cases e₂ <;> rfl
 
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
@@ -234,6 +253,12 @@ def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
+
+@[simp]
+theorem pure_liftEffect {eff : EffectKind} (hle : eff ≤ .pure) [Pure m] (x : eff.toMonad m α) :
+    (Pure.pure (liftEffect hle x : pure.toMonad m α) : impure.toMonad m α)
+    = liftEffect (by simp) x := by
+  sorry
 
 /-!
 ## `toMonad` coercion

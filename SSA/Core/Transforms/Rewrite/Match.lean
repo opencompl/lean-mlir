@@ -331,14 +331,17 @@ implies `lets.getPureExpr v = some e → e.denote V = V v` -/
 /-- `e.IsDenotationForPureE Γv x` holds if `x` is the pure value obtained from `e` under valuation
 `Γv`, assuming that `e` has a pure operation.
 If `e` has an impure operation, the property holds vacuously. -/
-abbrev Expr.IsDenotationForPureE (e : Expr d Γ eff ty) (Γv : Valuation Γ) (x : ⟦ty⟧) : Prop :=
-  ∀ (ePure : Expr d Γ .pure ty), e.toPure? = some ePure → ePure.denote Γv = x
+abbrev Expr.IsDenotationForPureE (e : Expr d Γ eff ty) (V_in : Valuation Γ) (V_out : e.outContext.Valuation) : Prop :=
+  ∀ (ePure : Expr d Γ .pure ty), e.toPure? = some ePure → ePure.denote V_in = V_out
 
-def Expr.denoteIntoSubtype (e : Expr d Γ_in eff ty) (Γv : Valuation Γ_in) :
-    eff.toMonad d.m {x : ⟦ty⟧ // e.IsDenotationForPureE Γv x} :=
+def Expr.denoteIntoSubtype (e : Expr d Γ_in eff ty) (V_in : Valuation Γ_in) :
+    eff.toMonad d.m {V_out // e.IsDenotationForPureE V_in V_out} :=
   match h_pure : e.toPure? with
-    | some ePure => pure ⟨ePure.denote Γv, by simp [IsDenotationForPureE, h_pure]⟩
-    | none => (Subtype.mk · (by simp [IsDenotationForPureE, h_pure])) <$> (e.denote Γv)
+    | some ePure =>
+        have h_legal := by
+          simp [IsDenotationForPureE, h_pure]
+        pure ⟨ePure.denote V_in, h_legal⟩
+    | none => (Subtype.mk · (by simp [IsDenotationForPureE, h_pure])) <$> (e.denote V_in)
 
 /-- An alternative version of `Lets.denote`, whose returned type carries a proof that the valuation
 agrees with the denotation of every pure expression in `lets`.
@@ -347,16 +350,19 @@ Strongly prefer using `Lets.denote` in definitions, but you can use `denoteIntoS
 The subtype allows us to carry the property with us when doing congruence proofs inside a bind. -/
 def Lets.denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv : Valuation Γ_in) :
     eff.toMonad d.m {
-      V : Valuation Γ_out // ∀ {t} (v : Var _ t) e, lets.getPureExpr v = some e → e.denote V = V v
+      V : Valuation Γ_out // ∀ {t} (v : Var _ t) e, lets.getPureExpr v = some e →
+        e.denote V (Var.last _ _) = V v
     } :=
   match lets with
     | .nil => return ⟨Γv, by simp⟩
     | @Lets.var _ _ _ _ Γ_out eTy body e => do
         let ⟨Vout, h⟩ ← body.denoteIntoSubtype Γv
         let v ← e.denoteIntoSubtype Vout
-        return ⟨Vout.snoc v.val, by
+        return ⟨v.val, by
           intro t' v'; cases v' using Var.casesOn
-          · simpa using h _
+          · simp
+            rw [Expr.denote_changeVars]
+            simpa using h _
           · simpa using v.prop
           ⟩
 
@@ -425,12 +431,12 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
   · contradiction
 
 
-@[simp] lemma Lets.denote_var_last_pure (lets : Lets d Γ_in .pure Γ_out)
-    (e : Expr d Γ_out .pure ty) (V_in : Valuation Γ_in) :
-    Lets.denote (var lets e) V_in (Var.last ..) = e.denote (lets.denote V_in) := by
-  apply Id.ext
-  simp [Lets.denote]
-  congr
+-- @[simp] lemma Lets.denote_var_last_pure (lets : Lets d Γ_in .pure Γ_out)
+--     (e : Expr d Γ_out .pure ty) (V_in : Valuation Γ_in) :
+--     Lets.denote (var lets e) V_in (Var.last ..) = e.denote (lets.denote V_in) := by
+--   apply Id.ext
+--   simp [Lets.denote]
+--   congr
 
 @[simp] lemma Expr.denote_eq_denote_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
     {Γv : Valuation Γ} {Δv : Valuation Δ}
