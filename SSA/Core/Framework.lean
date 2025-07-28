@@ -912,7 +912,9 @@ def Com.changeVars : Com d Γ eff tys →
       >>= (f <| Valuation.comap · (Expr.changeVars varsMap e).2.1)
     = e.denote (V.comap varsMap) >>= f := by
   rcases e with ⟨op, rfl, _⟩
-  simp [changeVars, denote, HVector.map_map]; rfl
+  simp only [changeVars, denote, HVector.map_map, Valuation.cast_rfl,
+    EffectKind.return_impure_toMonad_eq, bind_pure_comp, EffectKind.liftEffect_map, bind_map_left,
+    Valuation.comap_append_append]; rfl
 
 @[simp] lemma Expr.denote_changeVars_pure {Γ Γ' : Ctxt d.Ty}
     (varsMap : Γ.Hom Γ')
