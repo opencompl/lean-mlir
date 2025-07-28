@@ -22,7 +22,7 @@ attribute [simp_denote]
   Var.zero_eq_last Var.succ_eq_toSnoc
   Ctxt.empty Ctxt.empty_eq Ctxt.snoc Ctxt.Valuation.nil
   Ctxt.Valuation.snoc_last Ctxt.map
-  Ctxt.Valuation.snoc_eval Ctxt.ofList Ctxt.Valuation.snoc_toSnoc
+  Ctxt.Valuation.snoc_eval Ctxt.Valuation.snoc_toSnoc
   HVector.map HVector.getN HVector.get HVector.toSingle HVector.toPair HVector.toTuple
   DialectDenote.denote Expr.op_mk Expr.args_mk
   DialectMorphism.mapOp DialectMorphism.mapTy List.map Ctxt.snoc List.map
@@ -88,8 +88,12 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
   let .forallE _name VTy@(mkApp3 (.const ``Ctxt.Valuation _) Ty instTyDenote Γ) body _info := e
     | return .continue
 
-  let some (_, Γelems) := Γ.listLit?
+  let Γlist ← mkFreshExprMVar none
+  unless ← isDefEq Γ (mkApp2 (mkConst ``Ctxt.ofList) Ty Γlist) do
+    return .continue
+  let some (_, Γelems) := (← instantiateMVars Γlist).listLit?
     | return .continue
+
   let Γelems := Γelems.toArray.reverse
   let xsTypes := Γelems.map (mkApp3 (mkConst ``TyDenote.toType) Ty instTyDenote)
   let declInfo := xsTypes.mapIdx fun i ty =>

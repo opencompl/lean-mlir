@@ -212,10 +212,10 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
 
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
-private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty}
+private def formatArgTuple [Repr Ty] {Γ : List Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
-  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
     | .cons .. =>
@@ -251,7 +251,7 @@ mutual
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
     f!"\{" ++ Format.nest 2
     (Format.line ++
-    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ) ++ f!":" ++ Format.line ++
+    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ.toList) ++ f!":" ++ Format.line ++
     (comReprAux prec com))) ++ Format.line ++
     f!"}"
 
@@ -310,7 +310,7 @@ partial def Com.ToStringBody : Com d Γ eff t → String
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
 partial def Com.toString (com : Com d Γ eff t) : String :=
    "{ \n"
-  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ)) ++ ":" ++ "\n"
+  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.ToStringBody com) ++
    "\n }"
 
@@ -1492,7 +1492,7 @@ section Lemmas
 @[simp] lemma Com.changeDialect_var (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
     (Com.var e body).changeDialect f = Com.var (e.changeDialect f) (body.changeDialect f) := by
-  simp only [List.map_eq_map, changeDialect]
+  simp only [changeDialect]
 
 @[simp] lemma HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
     HVector.changeDialect (eff := eff) f nil = nil := by simp [HVector.changeDialect]
@@ -1648,6 +1648,7 @@ def matchArg [DecidableEq d.Op]
   | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
       let ma ← matchVar (t := t) lets vₗ matchLets vᵣ ma
       matchArg lets matchLets vsₗ vsᵣ ma
+  termination_by l => (Δ_out.length, l.length + 1)
 
 
 
@@ -1695,15 +1696,17 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
 
     * If `matchLets = .var matchLets' e`, and `w` is `w' + 1`, then we recurse and try to
       `matchVar lets v matchLets' w' map` -/
-  | .var matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
-      let w := ⟨w, by simp_all[Ctxt.snoc]⟩
-      matchVar lets v matchLets w ma
-  | @Lets.var _ _ _ _ Δ_out _ matchLets matchExpr , ⟨0, _⟩, ma => do -- w† = Var.last
-      let ie ← lets.getPureExpr v
-      if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
-      then
-        matchArg lets matchLets ie.args (hs.1 ▸ matchExpr.args) ma
-      else none
+  | @Lets.var _ _ _ _ Δ_out _ matchLets matchExpr, w, ma => do
+      match w with
+      | ⟨w+1, h⟩ =>
+        let w := ⟨w, by simp_all⟩
+        matchVar lets v matchLets w ma
+      | ⟨0, _⟩ => do
+        let ie ← lets.getPureExpr v
+        if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
+        then
+          matchArg lets matchLets ie.args (hs.1 ▸ matchExpr.args) ma
+        else none
   | .nil, w, ma => -- The match expression is just a free (meta) variable
       match ma.lookup ⟨_, w⟩ with
       | some v₂ =>
@@ -1712,6 +1715,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
             then some ma
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
+  termination_by (Δ_out.length, 0)
 end
 
 /-- how matchVar behaves on `var` at a successor variable -/
@@ -1723,8 +1727,7 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
     (hw : Ctxt.get? Δ_out w = .some t)
     (ma : Mapping Δ_in Γ_out) :
   matchVar lets v (matchLets := .var matchLets matchE)
-    ⟨w + 1, by simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_succ];
-               simp only [Ctxt.get?] at hw; apply hw⟩ ma =
+    ⟨w + 1, by simpa using hw⟩ ma =
   matchVar lets v matchLets ⟨w, hw⟩ ma := by
     conv =>
       lhs
@@ -2040,7 +2043,7 @@ theorem denote_matchVar2_of_subset
     simp only [Lets.denote, Id.pure_eq']
     rw [mem_lookup_iff.mpr ?_]
     apply h_sub <| mem_lookup_iff.mp <| matchVar_nil h_matchVar
-  case var matchLets matchExpr ih =>
+  case var t' matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
       simp only [Option.mem_def, Ctxt.get?, Var.succ_eq_toSnoc, Lets.denote,
@@ -2049,8 +2052,8 @@ theorem denote_matchVar2_of_subset
       apply ih h_sub h_matchVar
 
     | ⟨0, h_w⟩ =>
-      obtain rfl : t = _ := by simp only [Ctxt.get?, Ctxt.snoc, List.length_cons, Nat.zero_lt_succ,
-        List.getElem?_eq_getElem, List.getElem_cons_zero, Option.some.injEq] at h_w; apply h_w.symm
+      obtain rfl : t = t' := by
+        symm; simpa using h_w
       have ⟨args, h_pure, h_matchArgs⟩ := matchVar_var_last h_matchVar
       rw [← Vout.property v _ h_pure]
       simp only [Ctxt.get?, Var.zero_eq_last, Lets.denote_var_last_pure]
@@ -2163,10 +2166,10 @@ theorem mem_matchVar
       )
     have hvarMap' := hvar' ▸ hvarMap
     apply hvarMap'
-  | .var matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
+  | .var (t := t') matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
     revert hMatchLets
-    simp only [Ctxt.get?, Ctxt.snoc, List.getElem?_cons_zero, Option.some.injEq] at hw
-    subst hw
+    obtain rfl : t = t' := by
+      symm; simpa using hw
     simp only [Lets.vars, Ctxt.get?, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
       Sigma.exists, forall_exists_index, and_imp]
     intro _ _ hl h_v'
@@ -2382,7 +2385,7 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
-      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [Ctxt.ofList]⟩
+      let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp⟩
       ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
   · intro h t v
@@ -2543,10 +2546,11 @@ def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
     | .nil => ⟨HVector.nil, rfl⟩
   | .cons .. =>
     match args with
-    | .cons com coms =>
-      let ⟨com', hcom'⟩ := (rewritePeepholeRecursively fuel pr com)
+    | .cons (a := a) (as := as) com coms =>
+      let ⟨com', hcom'⟩ := rewritePeepholeRecursively fuel pr com
       let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyRegArgs fuel pr coms)
       ⟨.cons com' coms', by simp [hcom', hcoms']⟩
+termination_by (fuel, ts.length + 2)
 
 def rewritePeepholeRecursivelyExpr (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
@@ -2556,6 +2560,7 @@ def rewritePeepholeRecursivelyExpr (fuel : ℕ)
     let ⟨regArgs', hregArgs'⟩ := rewritePeepholeRecursivelyRegArgs fuel pr regArgs
     ⟨Expr.mk op ty eff' args regArgs', by
       apply Expr.denote_eq_of_region_denote_eq op ty eff' args regArgs regArgs' hregArgs'⟩
+termination_by (fuel + 1, 0)
 
 /-- A peephole rewriter that recurses into regions, allowing
 peephole rewriting into nested code. -/
@@ -2579,6 +2584,8 @@ def rewritePeepholeRecursively (fuel : ℕ)
       ⟨.var e' body', by
         rw [← htarget'_denote_eq_htarget]
         simp [he', hbody']⟩
+termination_by (fuel, 1)
+
 end
 
 /--

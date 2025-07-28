@@ -7,7 +7,7 @@ open LLVMRiscV
 
 /-! # XOR   -/
 @[simp_denote]
-def llvm_xor: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def llvm_xor: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.xor  %x, %y : i64
@@ -15,7 +15,7 @@ def llvm_xor: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   }]
 
 @[simp_denote]
-def xor_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def xor_riscv: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64):
       %x1 = "builtin.unrealized_conversion_cast"(%x) : (i64) -> (!i64)
