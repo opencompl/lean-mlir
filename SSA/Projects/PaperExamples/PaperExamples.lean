@@ -4,13 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Qq
 import Lean
 import Mathlib.Logic.Function.Iterate
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.Tactic
-import SSA.Core.Util
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
 import Mathlib.Tactic.Ring
+
+import SSA.Core
 
 open BitVec
 open Ctxt(Var)
