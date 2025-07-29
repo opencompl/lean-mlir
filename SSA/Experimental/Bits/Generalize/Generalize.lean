@@ -74,17 +74,18 @@ def bvExprToExpr (bvExpr : GenBVExpr w) : GeneralizerStateM Expr := do
   | .extract _ _ _ => throwError m! "Extract operation is not supported."
 
 
-def beqInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
+def beqBitVecInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
+def beqBoolInstExpr : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkConst ``Bool) (mkConst ``instDecidableEqBool)
+
 
 def toExpr (bvLogicalExpr: GenBVLogicalExpr) (width: Expr) : GeneralizerStateM Expr := do
   go bvLogicalExpr
   where
-  go (input : GenBVLogicalExpr) :=
+  go (input : GenBVLogicalExpr) := do
   match input with
   | .literal (GenBVPred.bin lhs op rhs) =>
       match op with
-      -- | .eq => mkEq (← bvExprToExpr lhs) (← bvExprToExpr rhs) (mkApp (mkConst ``BitVec) width)
-      | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) width) (beqInstExpr width) (← bvExprToExpr lhs) (← bvExprToExpr rhs)
+      | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) width) (beqBitVecInstExpr width) (← bvExprToExpr lhs) (← bvExprToExpr rhs)
       | .ult => return mkApp3 (.const ``BitVec.ult []) width (← bvExprToExpr lhs) (← bvExprToExpr rhs)
   | .const b =>
       match b with
@@ -96,7 +97,7 @@ def toExpr (bvLogicalExpr: GenBVLogicalExpr) (width: Expr) : GeneralizerStateM E
         | .or => return mkApp2 (.const ``Bool.or []) (← go lhs) (← go rhs)
         | .xor => return mkApp2 (.const ``Bool.xor []) (← go lhs) (← go rhs)
         | .and => return mkApp2 (.const ``Bool.and []) (← go lhs) (← go rhs)
-        | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) width) (beqInstExpr width) (← go lhs) (← go rhs)
+        | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkConst ``Bool) (beqBoolInstExpr) (← go lhs) (← go rhs)--mkAppM ``BEq.beq #[← go lhs, ← go rhs]
   | _ => throwError m! "Unsupported operation"
 
 def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
