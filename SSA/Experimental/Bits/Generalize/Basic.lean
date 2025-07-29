@@ -95,6 +95,20 @@ def toString : GenBVExpr w → String
   | .zeroExtend v expr => s!"(zeroExtend {v} {toString expr}})"
   | .truncate v expr => s!"(truncate {v} {toString expr}})"
 
+def size : GenBVExpr w → Nat
+  | .var idx => 1
+  | .const val => 1
+  | .extract _ len expr => 1 + expr.size
+  | .bin lhs _ rhs => 1 + lhs.size + rhs.size
+  | .un _ operand => 1 + operand.size
+  | .append lhs rhs _ => 1 + lhs.size + rhs.size
+  | .replicate _ expr _ => 1 + expr.size
+  | .shiftLeft lhs rhs => 1 + lhs.size + rhs.size
+  | .shiftRight lhs rhs => 1 + lhs.size + rhs.size
+  | .arithShiftRight lhs rhs => 1 + lhs.size + rhs.size
+  | .zeroExtend v expr => 1 + expr.size
+  | .truncate v expr => 1 + expr.size
+
 instance : ToString (GenBVExpr w) := ⟨toString⟩
 
 instance : Hashable (GenBVExpr w) where
@@ -145,6 +159,10 @@ inductive GenBVPred where
 
 namespace GenBVPred
 
+def size : GenBVPred → Nat
+| .bin lhs _ rhs => 1 + lhs.size + rhs.size
+| .getLsbD e _ => 1 + e.size
+
 def toString : GenBVPred → String
   | bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
   | getLsbD expr idx => s!"{expr.toString}[{idx}]"
@@ -162,7 +180,22 @@ end GenBVPred
 
 abbrev GenBVLogicalExpr := BoolExpr GenBVPred
 
+
+def _root_.Std.Tactic.BVDecide.BoolExpr.size : GenBVLogicalExpr → Nat 
+| .literal x => x.size
+| .const _ => 1
+| .not e => 1 + e.size
+| .gate _ e₁ e₂ => 1 + e₁.size + e₂.size 
+| .ite e₁ e₂ e₃ => 1 + e₁.size + e₂.size + e₃.size
+
 namespace GenBVLogicalExpr
+
+/- inductive BoolExpr (α : Type) -/
+/-   | literal : α → BoolExpr α -/
+/-   | const : Bool → BoolExpr α -/
+/-   | not : BoolExpr α → BoolExpr α -/
+/-   | gate : Gate → BoolExpr α → BoolExpr α → BoolExpr α -/
+/-   | ite : BoolExpr α → BoolExpr α → BoolExpr α → BoolExpr α -/
 
 /--
 The semantics of boolean problems involving BitVec predicates as atoms.

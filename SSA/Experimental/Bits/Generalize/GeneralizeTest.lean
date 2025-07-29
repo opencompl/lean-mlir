@@ -6,13 +6,6 @@ set_option trace.Generalize true
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
 
-
-variable {x y z: BitVec 32}
-#generalize ((x ^^^ 1234#32) >>> 8#32 ^^^ 1#32) + (x ^^^ 1234#32) = (x >>> 8#32 ^^^ 5#32) + (x ^^^ 1234#32) -- PASSED gxor2_proof/test5_thm; #18
-
-variable {x y z: BitVec 64}
-#generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46
-
 variable {x y : BitVec 8}
 #eval (1#8 ^^^ 1) ||| 0
 #eval (1#8 ^^^ 1) ||| 0x3e#8
@@ -58,7 +51,6 @@ variable {x y z: BitVec 32}
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 #generalize (x + 5) + (y + 1)  =  x + y + 6
 #generalize (x <<< 10) <<< 14 = x <<< 24 --- #42
-
 #generalize (x &&& 7#32 ||| y &&& 8#32) &&& 7#32 = x &&& 7#32 ---  gandhorand_proof/test1_thm; #39
 #generalize (x ||| y >>> 31#32) &&& 2#32 = x &&& 2#32 ---  gandhorand_proof/test4_thm; #40
 #generalize (x &&& 12#32 ^^^ 15#32) &&& 1#32 = 1#32 -- gand_proof/test10_thm; #41
@@ -66,6 +58,10 @@ variable {x y z: BitVec 32}
 #generalize 63#32 - (x &&& 31#32) = x &&& 31#32 ^^^ 63#32 -- gsubhxor_proof#low_mask_nsw_nuw_thm; #43
 #generalize (x &&& 31#32 ^^^ 31#32) + 42#32 = 73#32 - (x &&& 31#32) -- gsubhxor_proof#xor_add_thm; #44
 #generalize x <<< 3#32 &&& 15#32 ||| x <<< 5#32 &&& 60#32 = x <<< 3#32 &&& 8#32 ||| x <<< 5#32 &&& 32#32 -- gorhshiftedhmasks_proof#or_and_shifts1_thm; #50
+
+variable {x y z: BitVec 64}
+#generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46
+
 
 variable {x y : BitVec 67}
 #generalize (x ||| y >>> 66#67) &&& 2#67 = x &&& 2#67 -- gapinthandhorhand_proof#test4_thm #22
