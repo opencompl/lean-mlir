@@ -26,9 +26,8 @@ structure Ctxt (Ty : Type) : Type where
 
 attribute [coe] Ctxt.ofList
 
+variable {Ty : Type} {Γ : Ctxt Ty} {ts : List Ty}
 namespace Ctxt
-
-variable {Ty : Type}
 
 /-! ### Typeclass Instances-/
 section Instances
@@ -57,9 +56,7 @@ instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
   getElem xs i h := xs.toList[i]
   getElem? xs i  := xs.toList[i]?
 
-@[simp
--- , deprecated "Use `getElem?`" (since := "")
-]
+@[simp, deprecated "Use `getElem?`" (since := "")]
 def get? : Ctxt Ty → Nat → Option Ty := (·[·]?)
 
 /-- Map a function from one type universe to another over a context -/
@@ -152,21 +149,11 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
+/-! ### toMap-/
+
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by simp_all⟩
-
-def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
-  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
-
-def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
-  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
-
-@[simp] lemma cast_rfl (v : Var Γ t) (h : t = t) : v.cast h = v := rfl
-
-@[simp] lemma castCtxt_rfl (v : Var Γ t) (h : Γ = Γ) : v.castCtxt h = v := rfl
-@[simp] lemma castCtxt_castCtxt (v : Var Γ t) (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
-    (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
 
 @[simp]
 theorem toMap_last {Γ : Ctxt Ty} {t : Ty} :
@@ -175,6 +162,8 @@ theorem toMap_last {Γ : Ctxt Ty} {t : Ty} :
 @[simp]
 theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty} {var : Ctxt.Var Γ t'} {f : Ty → Ty₂} :
     var.toSnoc.toMap (Γ := Γ.snoc t) (f := f) = var.toMap.toSnoc := rfl
+
+/-! ### Cases -/
 
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
@@ -227,9 +216,32 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   simpa (config := { zetaDelta := true }) only [Var.casesOn_toSnoc, Option.some.injEq] using
     congr_arg ofSnoc h
 
+/-! ### Var cast -/
+
+def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
+  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
+
+def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
+  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
+
+section Lemmas
+variable {t} (v : Var Γ t)
+
+@[simp] lemma cast_rfl (h : t = t) : v.cast h = v := rfl
+
+@[simp] lemma castCtxt_rfl (h : Γ = Γ) : v.castCtxt h = v := rfl
+@[simp] lemma castCtxt_castCtxt (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
+    (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
+
+@[simp] lemma cast_mk : cast h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
+@[simp] lemma castCtxt_mk : castCtxt h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
+
+@[simp] lemma val_cast : (cast h v).val = v.val := rfl
+@[simp] lemma val_castCtxt : (castCtxt h v).val = v.val := rfl
+
+end Lemmas
 
 /-! ### Var Fin Helpers -/
-variable {Γ : Ctxt Ty}
 
 def toFin : Γ.Var t → Fin Γ.length
   | ⟨idx, h⟩ => ⟨idx, by
@@ -255,8 +267,8 @@ abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
 /-- `f.comp g := g(f(x))` -/
-def Hom.comp {Γ Γ' Γ'' : Ctxt Ty} (self : Hom Γ Γ') (rangeMap : Hom Γ' Γ'') : Hom Γ Γ'' :=
-  fun _t v => rangeMap (self v)
+def Hom.comp {Γ Δ Ξ : Ctxt Ty} (f : Hom Γ Δ) (g : Hom Δ Ξ) : Hom Γ Ξ :=
+  fun _t v => g (f v)
 
 /--
   `map.with v₁ v₂` adjusts a single variable of a Context map, so that in the resulting map
@@ -270,7 +282,6 @@ def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {t :
       v₂.cast h.fst
     else
       f w
-
 
 def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
     (Γ.snoc t).Hom (Γ'.snoc t) := by
@@ -295,13 +306,14 @@ def Hom.unSnoc (f : Hom (Γ.snoc t) Δ) : Hom Γ Δ :=
 @[simp] lemma Hom.unSnoc_apply {Γ : Ctxt Ty} (f : Hom (Γ.snoc t) Δ) (v : Var Γ u) :
     f.unSnoc v = f v.toSnoc := rfl
 
+instance : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
-instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
-
+/-!
+## Context Valuations
+-/
 section Valuation
-
--- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 variable [TyDenote Ty]
+-- ^^ for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Valuation (Γ : Ctxt Ty) : Type :=
@@ -377,6 +389,8 @@ theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.sn
   funext _ v
   cases v using Var.casesOn <;> rfl
 
+/-! ## Valuation Construction Helpers -/
+
 /-- Make a a valuation for a singleton value -/
 def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation ⟨[t]⟩ :=
   Ctxt.Valuation.nil.snoc v
@@ -398,6 +412,8 @@ theorem Valuation.ofPair_fst {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂
 theorem Valuation.ofPair_snd {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by rfl⟩ = v₂ := rfl
 
+/-! ### Valuation Pullback (comap) -/
+
 /-- transport/pullback a valuation along a context homomorphism. -/
 def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
   fun _to vo => Γiv (hom vo)
@@ -405,6 +421,9 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
 @[simp] theorem Valuation.comap_apply {Γi Γo : Ctxt Ty}
     (V : Γi.Valuation) (f : Ctxt.Hom Γo Γi) (v : Γo.Var t) :
     V.comap f v = V (f v) := rfl
+
+@[simp] theorem Valuation.comap_comap {Γ Δ Ξ : Ctxt Ty} (V : Γ.Valuation) (f : Δ.Hom Γ) (g : Ξ.Hom Δ) :
+    (V.comap f).comap g = V.comap (fun _t v => f (g v)) := rfl
 
 @[simp] theorem Valuation.comap_snoc_snocMap {Γ Γ_out : Ctxt Ty}
     (V : Γ_out.Valuation) {t} (x : ⟦t⟧) (map : Γ.Hom Γ_out) :
@@ -584,6 +603,21 @@ theorem append_valid {Γ₁ Γ₂ Γ₃  : Ctxt Ty} {d₁ d₂ : Nat} :
 def append (d₁ : Diff Γ₁ Γ₂) (d₂ : Diff Γ₂ Γ₃) : Diff Γ₁ Γ₃ :=
   {val := d₁.val + d₂.val,  property := append_valid d₁.property d₂.property}
 
+
+/-!
+### add
+-/
+
+def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
+  | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by
+      rw [←Nat.add_assoc]
+      apply h₂ <| h₁ h
+    ⟩
+
+instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
+
+@[simp, grind] lemma val_add (f : Γ.Diff Δ) (g : Δ.Diff Ξ) : (f + g).val = f.val + g.val := rfl
+
 /-!
 ### `toHom`
 -/
@@ -591,6 +625,11 @@ def append (d₁ : Diff Γ₁ Γ₂) (d₂ : Diff Γ₂ Γ₃) : Diff Γ₁ Γ�
 /-- Adding the difference of two contexts to variable indices is a context mapping -/
 def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩
+
+section Lemmas
+
+@[simp, grind] lemma val_toHom_apply (d : Diff Γ Δ) (v : Γ.Var t) :
+    (d.toHom v).val = v.val + d.val := rfl
 
 theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     Valid Γ₁ Γ₂ d := by
@@ -614,17 +653,15 @@ lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc 
   congr 1
   rw [Nat.add_assoc, Nat.add_comm 1]
 
-/-!
-### add
--/
+@[simp] lemma toHom_comp_toHom (f : Γ.Diff Δ) (g : Δ.Diff Ξ) :
+    f.toHom.comp g.toHom = (f + g).toHom := by
+  funext t v
+  apply Subtype.eq
+  simp
+  simp only [Hom.comp, toHom, get?, Valid]
+  grind
 
-def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
-  | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by
-      rw [←Nat.add_assoc]
-      apply h₂ <| h₁ h
-    ⟩
-
-instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
+end Lemmas
 
 def cast (h₁ : Γ = Γ') (h₂ : Δ = Δ') : Diff Γ Δ → Diff Γ' Δ'
   | ⟨n, h⟩ => ⟨n, by subst h₁ h₂; exact h⟩
@@ -656,7 +693,7 @@ theorem ofCtxt_empty : DerivedCtxt.ofCtxt (∅ : Ctxt Ty) = ⟨∅, .zero _⟩ :
 def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
   | ⟨⟨Δ⟩, diff⟩, ty => ⟨ty::Δ, diff.toSnoc⟩
 
-theorem snoc_ctxt_eq_ctxt_snoc:
+theorem snoc_ctxt_eq_ctxt_snoc {Γ : DerivedCtxt Δ}:
     (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
   rfl
 
