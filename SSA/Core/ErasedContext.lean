@@ -22,7 +22,7 @@ instance : TyDenote Unit where toType := fun _ => Unit
 structure Ctxt (Ty : Type) : Type where
   ofList :: toList : List Ty
   -- Erased <| List Ty
-  deriving Repr, Lean.ToExpr
+  deriving Repr, Lean.ToExpr, DecidableEq
 
 attribute [coe] Ctxt.ofList
 
