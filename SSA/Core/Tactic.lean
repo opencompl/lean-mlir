@@ -17,7 +17,7 @@ open Ctxt (Var Valuation DerivedCtxt)
 open Lean Elab Tactic Meta
 
 attribute [simp_denote]
-  Int.ofNat_eq_coe Nat.cast_zero DerivedCtxt.snoc DerivedCtxt.ofCtxt
+  Int.ofNat_eq_coe DerivedCtxt.snoc DerivedCtxt.ofCtxt
   DerivedCtxt.ofCtxt_empty Valuation.snoc_last
   Var.zero_eq_last Var.succ_eq_toSnoc
   Ctxt.empty Ctxt.empty_eq Ctxt.snoc Ctxt.Valuation.nil
