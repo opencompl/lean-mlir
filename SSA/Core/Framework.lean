@@ -862,7 +862,7 @@ def Com.changeVars : Com d Γ eff ty →
 @[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure ty) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = c.denote Γv := by
   induction c using Com.recPure
-  · simp
+  · simp; rfl
   · rename_i a
     simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
       Id.bind_eq', returnVar_var, a, denote]
@@ -1017,27 +1017,24 @@ section Lemmas
   case pure => rfl
   case impure =>
     funext V
-    simp only [castPureToEff, changeEffect, denote, EffectKind.return_impure_toMonad_eq,
+    simp only [castPureToEff, changeEffect, denote,
       EffectKind.liftEffect_pure,
       EffectKind.liftEffect_eq_pure_cast (EffectKind.eq_of_le_pure eff_le)]
 
 @[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
-  funext V; simp only [EffectKind.return_impure_toMonad_eq]
+  funext V
   induction com using Com.recPure
-  · simp
-  · apply Id.ext
-    simp_all
-    rfl
+  · rfl
+  · simp [*]; rfl
 
 @[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
     denoteLets (com.castPureToEff eff)
     = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
-  funext V; induction com using Com.recPure
-  · simp
-  · apply Id.ext
-    simp_all
-    rfl
+  funext V
+  induction com using Com.recPure
+  · simp; rfl
+  · simp [*]; rfl
 
 end Lemmas
 
@@ -1080,7 +1077,7 @@ theorem Expr.denote_mk_of_pure {op : d.Op} (eff_eq : DialectSignature.effectKind
       | .impure => return d
     ) := by
   funext Γv
-  simp only [denote_unfold, EffectKind.return_impure_toMonad_eq]
+  simp only [denote_unfold]
   cases eff₂
   · simp only [EffectKind.liftEffect_pure]
     apply eq_of_heq
@@ -1088,12 +1085,7 @@ theorem Expr.denote_mk_of_pure {op : d.Op} (eff_eq : DialectSignature.effectKind
     · simp
     · symm; simp
   · rw [EffectKind.liftEffect_eq_pure_cast eff_eq]
-    simp only [EffectKind.return_impure_toMonad_eq, Pure.pure_cast]
-    apply eq_of_heq
-    trans (pure (DialectDenote.denote op (HVector.map (fun x v => Γv v) args)
-      (HVector.denote regArgs)) : d.m _)
-    · simp
-    · symm; simp
+    simp [Pure.pure_cast, eqRec_eq_cast]
 
 theorem Expr.denote_of_pure {e : Expr d Γ eff ty} (eff_eq : e.HasPureOp) :
     e.denote = (fun (Γv : Valuation Γ) =>
@@ -1274,7 +1266,7 @@ assignment of that variable in the input valuation -/
     {vTy} (v : Var Γ vTy) :
     com.denoteLets V (com.outContextHom v) = V v := by
   induction com using Com.recPure
-  · simp
+  · simp; rfl
   · rw [outContextHom_var]
     rename_i a
     simp only [denoteLets, EffectKind.toMonad_pure, outContext_var,
@@ -1382,7 +1374,7 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
     | last =>
       simp only [getPureExprAux, Var.casesOn_last] at he
       simp only [denote, Expr.denote_toPure? he, EffectKind.toMonad_impure,
-        EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
+        Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
         bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
         Valuation.snoc_last]
       cases eff

@@ -15,13 +15,6 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
   | pure => Id
   | impure => m
 
-section Lemmas
-
-@[simp, simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
-@[simp, simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
-
-end Lemmas
-
 section Instances
 variable {e : EffectKind} {m : Type → Type}
 
@@ -40,9 +33,17 @@ lower priority to the `pure.toMonad m` instances, too.
 [1]: reported at https://github.com/leanprover/lean4/issues/7984#issuecomment-2847319540
 -/
 
+/-!
+Firstly, we show that `pure.toMonad m` is a (lawful) monad, irrespective of
+whether `m` is.
+-/
 instance (priority := low) : Monad (pure.toMonad m) := by unfold toMonad; infer_instance
 instance (priority := low) : LawfulMonad (pure.toMonad m) := by unfold toMonad; infer_instance
 
+/-!
+Then, we show that `eff.toMonad m` is a (lawful) monad, for arbitrary effect `eff`,
+assuming that `m` is a (lawful) monad.
+-/
 instance (priority := low) [Pure m] : Pure (e.toMonad m) := by
   unfold toMonad; cases e <;> infer_instance
 
@@ -53,6 +54,14 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
   unfold toMonad; cases e <;> infer_instance
 
 end Instances
+
+section Lemmas
+variable {e : EffectKind} {m : Type → Type}
+
+@[simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
+@[simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
+
+end Lemmas
 
 /-!
 ## `PartialOrder`
