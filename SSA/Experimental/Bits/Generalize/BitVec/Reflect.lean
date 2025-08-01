@@ -102,10 +102,14 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
         rotateReflection innerExpr distanceExpr BVUnOp.rotateLeft
     | BitVec.rotateRight _ innerExpr distanceExpr =>
         rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
+    | BitVec.signExtend _ nExpr vExpr =>
+        let some n ← getNatValue? nExpr | return none
+        let some v ← go vExpr | return none
+        return some {bvExpr := GenBVExpr.signExtend targetWidth v.bvExpr, width := _}
     | BitVec.zeroExtend _ nExpr vExpr =>
         let some n ← getNatValue? nExpr | return none
         let some v ← go vExpr | return none
-        return some {bvExpr := GenBVExpr.zeroExtend n v.bvExpr, width := _}
+        return some {bvExpr := GenBVExpr.zeroExtend targetWidth v.bvExpr, width := _}
     | BitVec.truncate _ nExpr vExpr =>
       let some n ← getNatValue? nExpr | return none
       let some v ← go vExpr | return none
