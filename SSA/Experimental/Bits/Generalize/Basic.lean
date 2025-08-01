@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2024 Lean FRO, LLC. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Henrik Böving, Timi Adeniran, Léo Stefanesco
+-/
 import Lean
 
 open Lean
@@ -181,11 +186,11 @@ end GenBVPred
 abbrev GenBVLogicalExpr := BoolExpr GenBVPred
 
 
-def _root_.Std.Tactic.BVDecide.BoolExpr.size : GenBVLogicalExpr → Nat 
+def _root_.Std.Tactic.BVDecide.BoolExpr.size : GenBVLogicalExpr → Nat
 | .literal x => x.size
 | .const _ => 1
 | .not e => 1 + e.size
-| .gate _ e₁ e₂ => 1 + e₁.size + e₂.size 
+| .gate _ e₁ e₂ => 1 + e₁.size + e₂.size
 | .ite e₁ e₂ e₃ => 1 + e₁.size + e₂.size + e₃.size
 
 namespace GenBVLogicalExpr
