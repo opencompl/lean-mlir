@@ -123,10 +123,10 @@ end Rec
 /-! ## Variables -/
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
-  { i : Nat // Γ.get? i = some t }
+  { i : Nat // Γ[i]? = some t }
 
 /-- constructor for Var. -/
-def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
+def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ[i]? = some t) : Γ.Var t :=
   ⟨i, hi⟩
 
 namespace Var
@@ -155,7 +155,7 @@ theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
   rfl
 
 @[simp]
-theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
+theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t)[w+1]? = some t') :
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
@@ -189,7 +189,7 @@ def casesOn
     | ⟨0, h⟩ =>
         _root_.cast (by
           obtain rfl : t' = t := by simpa [snoc] using h
-          simp_all only [get?, zero_eq_last]
+          simp_all only [zero_eq_last]
           ) <| @last Γ t
     | ⟨i+1, h⟩ =>
         toSnoc ⟨i, by simpa [snoc] using h⟩
@@ -491,7 +491,7 @@ theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toTy
 
 @[simp]
 theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
-    (h : get? (Ctxt.snoc Γ ty) 0 = some ty) :
+    (h : (Ctxt.snoc Γ ty)[0]? = some ty) :
     (s.snoc x) ⟨0, h⟩ = x := by
   rfl
 
@@ -506,7 +506,7 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 /--  (ctx.snoc v₁) ⟨n+1, _⟩ = ctx ⟨n, _⟩ -/
 @[simp]
 theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
+    (hvar : (Ctxt.snoc Γ ty)[n+1]? = some var_val) :
     (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simpa using hvar⟩ :=
   rfl
 
@@ -638,7 +638,7 @@ def Valuation.equivHVector {Γ : List Ty} : Valuation ⟨Γ⟩ ≃ HVector toTyp
   invFun    := Valuation.ofHVector
   left_inv V := by
     funext t v
-    simp only [Fin.getElem_fin, get?]
+    simp only [Fin.getElem_fin]
     induction Γ
     case nil =>
       rcases v with ⟨_, _⟩
@@ -648,7 +648,7 @@ def Valuation.equivHVector {Γ : List Ty} : Valuation ⟨Γ⟩ ≃ HVector toTyp
       case last   => rfl
       case toSnoc => apply ih (fun t v => V v.toSnoc)
   right_inv vs := by
-    simp only [Fin.getElem_fin, get?]
+    simp only [Fin.getElem_fin]
     induction vs
     case nil => rfl
     case cons Γ t v vs ih => simp [HVector.ofFn, ofHVector, ih]
@@ -693,7 +693,7 @@ end Var
 
 @[simp]
 abbrev Diff.Valid (Γ₁ Γ₂ : Ctxt Ty) (d : Nat) : Prop :=
-  ∀ {i t}, Γ₁.get? i = some t → Γ₂.get? (i+d) = some t
+  ∀ {i t}, Γ₁[i]? = some t → Γ₂[i+d]? = some t
 
 /--
   If `Γ₁` is a prefix of `Γ₂`,
@@ -713,7 +713,7 @@ def toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
   ⟨d.val + 1, by
     intro i _ h_get_snoc
     rcases d with ⟨d, h_get_d⟩
-    simp only [get?, ← h_get_d h_get_snoc]
+    simp only [← h_get_d h_get_snoc]
     rfl
   ⟩
 
@@ -723,7 +723,7 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     intro i t h_get
     rcases d with ⟨d, h_get_d⟩
     specialize @h_get_d (i+1) t
-    rw [←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
+    rw [←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1]
   ⟩
 
 /-!
@@ -735,7 +735,7 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, getElem?_map, Option.map_eq_some_iff, forall_exists_index, and_imp,
+    simp only [Valid, getElem?_map, Option.map_eq_some_iff, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂] at h_get_d ⊢
     intros a b c
     simp [h_get_d c]
@@ -801,7 +801,7 @@ lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc 
 @[simp] lemma toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   unfold unSnoc Var.toSnoc toHom
-  simp only [get?, Valid]
+  simp only [Valid]
   funext x v
   congr 1
   rw [Nat.add_assoc, Nat.add_comm 1]
@@ -811,7 +811,7 @@ lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc 
   funext t v
   apply Subtype.eq
   simp
-  simp only [Hom.comp, toHom, get?, Valid]
+  simp only [Hom.comp, toHom, Valid]
   grind
 
 end Lemmas
@@ -893,7 +893,7 @@ def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
     case nil => exact v.emptyElim
     case snoc Γ _ ih =>
       cases v using Var.casesOn
-      · simp only [get?, dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
+      · simp only [dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
         apply ih h
       · simpa! using h
   ⟩
@@ -918,18 +918,19 @@ variable [ToExpr Ty] {Γ : Ctxt Ty} {ty : Ty}
 
 /-- Construct an expression of type `Var Γ ty`.
 
-If no proof `hi : Γ.get? i = some ty` is provided,
+If no proof `hi : Γ[i]? = some ty` is provided,
 it's assumed to be true by rfl. -/
 def mkVar (Ty : Q(Type)) (Γ : Q(Ctxt $Ty)) (ty : Q($Ty)) (i : Q(Nat))
-    (hi? : Option Q(($Γ).get? $i = some $ty) := none) :
+    (hi? : Option Q(($Γ)[$i]? = some $ty) := none) :
     Q(($Γ).Var $ty) :=
   let optTy := mkApp (.const ``Option [0]) Ty
   let someTy := mkApp2 (.const ``Option.some [0]) Ty ty
   let P :=
-    let getE := mkApp3 (mkConst ``Ctxt.get?) Ty Γ (.bvar 0)
+    let i : Q(Nat) := Expr.bvar 0
+    let getE := q($Γ[$i]?)
     let eq := mkApp3 (.const ``Eq [1]) optTy getE someTy
     Expr.lam `i (mkConst ``Nat) eq .default
-  let hi := hi?.getD <| /- : Γ.get? i = some ty := rfl -/
+  let hi := hi?.getD <| /- : Γ[i]? = some ty := rfl -/
     mkApp2 (.const ``rfl [1]) optTy someTy
   mkApp4 (.const ``Subtype.mk [1]) (mkConst ``Nat) P i hi
 

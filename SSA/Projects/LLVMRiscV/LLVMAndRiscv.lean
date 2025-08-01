@@ -153,7 +153,7 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
     | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
         let args' : HVector (Ctxt.Var Γ) (.llvm <$> DialectSignature.sig op1) ←
           args1.mapM' fun t v => do
-            match h : Γ.get? v.val with
+            match h : Γ[v.val]? with
             | some ty' => do
               match hty : ty' with
               | .riscv _ => /- This is impossible, because mixing LLVM and RiscV variables would've already
@@ -256,7 +256,7 @@ instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
 @[simp_denote]
 def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) :
      MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty)) :=
-  if h : Γ.get? v.1 = some (LLVMRiscV.Ty.llvm ty) then
+  if h : Γ[v.1]? = some (LLVMRiscV.Ty.llvm ty) then
    return ⟨_ , h⟩
   else
     throw <| .generic s!"TransformVarLLVM FAILED: Tried to convert a variable of wrong type."
@@ -264,7 +264,7 @@ def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) :
 @[simp_denote]
 def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty) :
     MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty)) :=
-  if h : Γ.get? v.1 = some (LLVMRiscV.Ty.riscv ty) then
+  if h : Γ[v.1]? = some (LLVMRiscV.Ty.riscv ty) then
    return ⟨_ , h⟩
   else
      throw <| .generic s!"TransformVarRISCV FAILED: Tried to convert a variable of wrong type."
