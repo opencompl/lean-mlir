@@ -734,9 +734,7 @@ section Lemmas
   funext V
   cases eff
   · apply Id.ext
-    simp only [outContext_var, denoteLets, EffectKind.toMonad_pure, Valuation.cast_rfl,
-      EffectKind.return_pure_toMonad_eq, Id.run_bind]
-    congr
+    simp; rfl
   · simp [denoteLets, bind_pure]
 
 @[simp] lemma Lets.denote_nil {Γ : Ctxt d.Ty} :

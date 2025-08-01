@@ -54,12 +54,6 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
 
 end Instances
 
-@[simp]
-def return_pure_toMonad_eq (a : α) : (return a : pure.toMonad m α) = a := rfl
-
-@[simp]
-def return_impure_toMonad_eq [Monad m] (a : α) : (return a : impure.toMonad m α) = (return a : m α) := rfl
-
 /-!
 ## `PartialOrder`
 Establish a partial order on `EffectKind`
