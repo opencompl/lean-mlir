@@ -538,11 +538,10 @@ def rhs : Com ScfArith ⟨[/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /
 theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.Valuation Γ)
     {snocval : ⟦snocty⟧}
     {v: ℕ}
-    {hvproof : Ctxt.get? Γ v = some ty}
+    {hvproof : Γ[v]? = some ty}
     {var : Γ.Var ty}
     (hvar : var = ⟨v, hvproof⟩) :
-    V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by
-      simp at hvproof; simp [hvproof]⟩ := by
+    V var = (V ::ᵥ snocval) ⟨v+1, by simp [hvproof]⟩ := by
   simp [Ctxt.Valuation.snoc, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by

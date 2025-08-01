@@ -1583,7 +1583,7 @@ def Com.vars : Com d Γ .pure t → VarSet Γ :=
 
 theorem Lets.vars_var_eq {lets : Lets d Γ_in eff Γ_out}
   {t: d.Ty} {e : Expr d Γ_out eff t}
-  {w : ℕ} {tw : d.Ty} {wh : Ctxt.get? Γ_out w = some tw} :
+  {w : ℕ} {tw : d.Ty} {wh : Γ_out[w]? = some tw} :
   Lets.vars (Lets.var lets e) ⟨w + 1, by simpa [Ctxt.snoc] using wh⟩ =
   Lets.vars lets ⟨w, wh⟩ := by simp [Lets.vars]
 

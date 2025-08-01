@@ -126,7 +126,7 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
     (matchLets : Lets d Δ_in .pure Δ_out)
     (matchE : Expr d Δ_out .pure te)
     (w : ℕ)
-    (hw : Ctxt.get? Δ_out w = .some t)
+    (hw : Δ_out[w]? = .some t)
     (ma : Mapping Δ_in Γ_out) :
   matchVar lets v (matchLets := .var matchLets matchE)
     ⟨w + 1, by simpa using hw⟩ ma =
@@ -245,7 +245,7 @@ theorem isMonotone_matchVarArg_aux (lets : Lets d Γ_in eff Γ_out) :
 
   · intro Δ_out t_1 matchLets
     intro matchExpr property? ih_matchArg
-    simp only [Ctxt.get?, matchVar, isMonotone_bind_liftM, Option.mem_def]
+    simp only [matchVar, isMonotone_bind_liftM, Option.mem_def]
     intro e he
     split
     next h =>
@@ -473,7 +473,7 @@ theorem denote_matchVar2_of_subset
   case var t' matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
-      simp only [Option.mem_def, Ctxt.get?, Var.succ_eq_toSnoc, Lets.denote,
+      simp only [Option.mem_def, Var.succ_eq_toSnoc, Lets.denote,
         EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq', Valuation.snoc_toSnoc] at *
       rw [Var.toSnoc, matchVar_var_succ_eq] at h_matchVar
       apply ih h_sub h_matchVar
@@ -483,7 +483,7 @@ theorem denote_matchVar2_of_subset
         symm; simpa using h_w
       have ⟨args, h_pure, h_matchArgs⟩ := matchVar_var_last h_matchVar
       rw [← Vout.property v _ h_pure]
-      simp only [Ctxt.get?, Var.zero_eq_last, Lets.denote_var_last_pure]
+      simp only [Var.zero_eq_last, Lets.denote_var_last_pure]
       apply Expr.denote_eq_denote_of <;> (try rfl)
       simp only [Expr.op_mk, Expr.args_mk]
 
@@ -595,7 +595,7 @@ theorem mem_matchVar
     revert hMatchLets
     obtain rfl : t = t' := by
       symm; simpa using hw
-    simp only [Lets.vars, Ctxt.get?, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
+    simp only [Lets.vars, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
       Sigma.exists, forall_exists_index, and_imp]
     intro _ _ hl h_v'
     obtain ⟨

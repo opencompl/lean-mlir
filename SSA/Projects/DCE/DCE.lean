@@ -45,7 +45,7 @@ def Deleted.deleteSnoc (Γ : Ctxt Ty) (α : Ty) : Deleted (Γ.snoc α) (Ctxt.Var
 def Deleted.snoc {α : Ty} {Γ : Ctxt Ty} {v : Γ.Var α}
     (DEL : Deleted Γ v Γ') (ω : Ty) :
     Deleted (Γ.snoc ω) v.toSnoc (Γ'.snoc ω) := by
-  simp only [Deleted, Ctxt.delete, Ctxt.get?, Ctxt.Var.val_toSnoc] at DEL ⊢
+  simp only [Deleted, Ctxt.delete, Ctxt.Var.val_toSnoc] at DEL ⊢
   subst DEL
   rfl
 
@@ -83,7 +83,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     let idx := if v.val < delv.val then v.val else v.val - 1
     let v' := ⟨idx, by
       subst DEL
-      simp only [Ctxt.get?, Ctxt.delete, Ctxt.getElem?_ofList, List.getElem?_eraseIdx, idx]
+      simp only [Ctxt.delete, Ctxt.getElem?_ofList, List.getElem?_eraseIdx, idx]
       split_ifs with h_val_lt h_val_sub_lt
       · exact v.prop
       · omega
