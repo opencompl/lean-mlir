@@ -266,12 +266,12 @@ theorem _root_.Bool.xor_not_left' (a b : Bool) :
     Bool.xor (!a) b = !Bool.xor a b := by
   cases a <;> cases b <;> rfl
 
-instance : Xor (Circuit α) := ⟨Circuit.simplifyXor⟩
+instance : XorOp (Circuit α) := ⟨Circuit.simplifyXor⟩
 
 @[simp] lemma eval_xor : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
     eval (c₁ ^^^ c₂) f = Bool.xor (eval c₁ f) (eval c₂ f) := by
   intros c₁ c₂ f
-  cases c₁ <;> cases c₂ <;> simp [simplifyXor, HXor.hXor, Xor.xor]
+  cases c₁ <;> cases c₂ <;> simp [simplifyXor, HXor.hXor, XorOp.xor]
 
 set_option maxHeartbeats 1000000
 theorem vars_simplifyXor [DecidableEq α] (c₁ c₂ : Circuit α) :
@@ -363,11 +363,11 @@ lemma ite_def (cond t f : Circuit α) :
 
 theorem ite_eq_of_eq_true {cond t f : Circuit α} (h : cond.eval g = true) :
     (ite cond t f).eval g = t.eval g := by
-  simp [ite_def, eval_ite, h]
+  simp [ite_def, h]
 
 theorem ite_eq_of_eq_false {cond t f : Circuit α} (h : cond.eval g = false) :
     (ite cond t f).eval g = f.eval g := by
-  simp [ite_def, eval_ite, h]
+  simp [ite_def, h]
 
 @[simp] lemma eval_simplify : ∀ (c : Circuit α) (f : α → Bool),
     eval (simplify c) f = eval c f
