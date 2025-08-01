@@ -15,6 +15,14 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
   | pure => Id
   | impure => m
 
+section Lemmas
+
+@[simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
+@[simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
+
+end Lemmas
+
+
 section Instances
 variable {e : EffectKind} {m : Type → Type}
 
@@ -54,14 +62,6 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
   unfold toMonad; cases e <;> infer_instance
 
 end Instances
-
-section Lemmas
-variable {e : EffectKind} {m : Type → Type}
-
-@[simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
-@[simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
-
-end Lemmas
 
 /-!
 ## `PartialOrder`
