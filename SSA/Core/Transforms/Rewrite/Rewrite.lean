@@ -39,23 +39,14 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
     (s : Valuation Γ₁) →
     (res.2.1.denote s) >>= res.2.2.1.denote  = (lets.denote s) >>= prog.denote
   | 0, lets, .var e body, res, hres, s => by
-    simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
-    subst hres
-    simp only [Lets.denote]
-    simp only [EffectKind.return_impure_toMonad_eq, bind_assoc, pure_bind, Com.denote_var]
+    obtain rfl := by
+      simpa only [splitProgramAtAux, Option.mem_def, Option.some.injEq] using hres
+    simp only [Lets.denote, bind_assoc, pure_bind, Com.denote_var]
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
-    cases eff
-    case pure =>
-      rw [denote_splitProgramAtAux hres s]
-      apply Id.ext
-      simp [Lets.denote]
-      congr
-    case impure =>
-      rw [denote_splitProgramAtAux hres s]
-      simp [Lets.denote]
+    simp [denote_splitProgramAtAux hres s]
 
 -- TODO: have `splitProgramAt` return a `Zipper`
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
@@ -70,12 +61,7 @@ theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ₁ 
     {res : Σ (Γ₂ : Ctxt d.Ty), Lets d Γ₁ eff Γ₂ × Com d Γ₂ eff t × (t' : d.Ty) × Var Γ₂ t'}
     (hres : res ∈ splitProgramAt pos prog) (s : Valuation Γ₁) :
      (res.2.1.denote s) >>= res.2.2.1.denote = prog.denote s := by
-  rw [denote_splitProgramAtAux hres s]
-  cases eff
-  · apply Id.ext
-    simp
-    congr
-  · simp
+  simp [denote_splitProgramAtAux hres s]
 
 /-
   ## Rewriting
