@@ -54,12 +54,6 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
 
 end Instances
 
---TODO: rename `return` to `pure`
-def «return» [Monad m] (e : EffectKind) (a : α) : e.toMonad m α := return a
-
-@[simp] -- return is normal form.
-def return_eq [Monad m] (e : EffectKind) (a : α) : e.return a = (return a : e.toMonad m α) := by rfl
-
 @[simp]
 def return_pure_toMonad_eq (a : α) : (return a : pure.toMonad m α) = a := rfl
 
