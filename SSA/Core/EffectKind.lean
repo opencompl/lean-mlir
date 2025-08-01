@@ -22,7 +22,6 @@ section Lemmas
 
 end Lemmas
 
-
 section Instances
 variable {e : EffectKind} {m : Type → Type}
 
