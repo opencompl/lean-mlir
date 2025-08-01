@@ -227,7 +227,7 @@ moving away from.
 
 -- @[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
 --     liftEffect hle (α := α) (m := m)
---     = fun x => Pure.pure (cast (by rw [eq_of_le_pure hle]) x) := by
+--     = fun x => Pure.pure (cast (by simp [eq_of_le_pure hle, Id]) x) := by
 --   cases hle; rfl
 
 @[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
@@ -255,9 +255,10 @@ def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
 
 @[simp]
-theorem pure_liftEffect {eff : EffectKind} (hle : eff ≤ .pure) [Pure m] (x : eff.toMonad m α) :
-    (Pure.pure (liftEffect hle x : pure.toMonad m α) : impure.toMonad m α)
-    = liftEffect (by simp) x := by
+theorem pure_liftEffect {eff₁ eff₂ : EffectKind}
+    (hle : eff₁ ≤ .pure) [Pure m] (x : eff₁.toMonad m α) :
+    (Pure.pure (liftEffect hle x) : eff₂.toMonad m α)
+    = liftEffect (by cases hle; constructor) x := by
   sorry
 
 /-!

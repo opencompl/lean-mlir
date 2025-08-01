@@ -649,8 +649,13 @@ section Unfoldings
 
 open EffectKind (liftEffect)
 
+/-- Returns only the result of the current expression. -/
+def Expr.denoteOp (e : Expr d Γ eff ty) (V : Γ.Valuation) : eff.toMonad d.m ⟦ty⟧ :=
+  EffectKind.liftEffect e.eff_le <| cast (by rw [← e.ty_eq]) <|
+    DialectDenote.denote e.op (e.args.map V) e.regArgs.denote
+
 /--
-Unfold `Expr.denote` in terms of the field projections.
+Unfold `Expr.denote` in terms of the field projections and `Expr.denoteOp`.
 
 NOTE: this allows the unfolding of `Expr.denote` applied to arbitrary expressions,
 whereas the built-in unfold lemma only applies when the argument is an application of
@@ -660,28 +665,9 @@ Unfortunately, if we define `Expr.denote` in terms of the projections directly,
 the termination checker fails to prove termination. Hence, this workaround.
 -/
 theorem Expr.denote_unfold (e : Expr d Γ eff ty) :
-    e.denote = fun V => do
-      let argsDenote := e.args.map V
-      let val ← EffectKind.liftEffect e.eff_le <| DialectDenote.denote e.op argsDenote e.regArgs.denote
-      return (V.snoc val).cast (by rw [← e.ty_eq]) := by
-  rcases e; rfl
-
-
--- /- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
---   of the coercion `ty_eq` and the mutual definition. -/
--- theorem Expr.denote_unfold
---     (op : d.Op)
---     (ty_eq : ty = DialectSignature.outTy op)
---     (eff_le : DialectSignature.effectKind op ≤ eff)
---     (args : HVector (Var Γ) <| DialectSignature.sig op)
---     (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2)
---       (DialectSignature.regSig op))
---     (Γv : Γ.Valuation) :
---     Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv
---     = ty_eq ▸ (EffectKind.liftEffect eff_le <|
---         DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
---       subst ty_eq
---       simp [denote]
+    e.denote = fun V => V.snoc <$> (e.denoteOp V) := by
+  rcases e with ⟨op, rfl, _⟩
+  simp [denote, denoteOp]
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -816,8 +802,6 @@ def Com.changeVars : Com d Γ eff ty →
       (body.changeVars (fun _ v => varsMap.snocMap v))
 
 /-! simp-lemmas about `changeVars`-/
-
-#check Valuation.comap ?V (?f : Ctxt.Hom ?Γ ?Δ)
 
 /-
 The expected type of the rhs is:
@@ -1084,8 +1068,8 @@ section Lemmas
   case pure => rfl
   case impure =>
     funext V
-    simp only [castPureToEff, changeEffect, denote_unfold, op_mk, args_mk, regArgs_mk,
-      Valuation.cast_rfl, bind_pure_comp, EffectKind.pure_map, EffectKind.pure_liftEffect]
+    simp only [castPureToEff, changeEffect, denote_unfold, denoteOp, op_mk, args_mk, regArgs_mk,
+      EffectKind.pure_map, EffectKind.pure_liftEffect]
 
 @[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
@@ -1143,45 +1127,29 @@ end toPureLemmas
 
 theorem Expr.denote_pure {e : Expr d Γ .pure ty} :
     e.denote = fun (V : Valuation Γ) =>
-      have eff_eq := EffectKind.eq_of_le_pure e.eff_le
-      let val : ⟦_⟧ := eff_eq ▸ DialectDenote.denote e.op (e.args.map V) e.regArgs.denote
-      return (V.snoc val).cast (by rw [← e.ty_eq]) := by
+      return (V.snoc <| e.denoteOp V) := by
   funext V t v
-  simp only [denote_unfold, EffectKind.toMonad_pure, EffectKind.liftEffect_pure,
-    EffectKind.return_pure_toMonad_eq]
-  show (V ::ᵥ (cast _ _)) _ = _
-  congr
-  apply cast_eq_iff_heq.mpr
+  simp [denote_unfold]; rfl
+
+@[simp]
+theorem Expr.pure_denoteOp_toPure (e : Expr d Γ eff ty) (h : e.HasPureOp) :
+    pure ((e.toPure h).denoteOp V) = (e.denoteOp V) := by
+  simp [denoteOp]
+  generalize (cast _ (DialectDenote.denote e.op (HVector.map V e.args) e.regArgs.denote)) = x
+  rw [EffectKind.pure_liftEffect (x := x)]
+  simp [EffectKind.toMonad_pure, Id]
+  simp only [op_toPure, args_toPure, regArgs_toPure]
   simp
+  rw [← denoteOp]
+  simp only [EffectKind.toMonad_pure, denoteOp, op_toPure, args_toPure, regArgs_toPure,
+    EffectKind.liftEffect_pure, EffectKind.return_pure_toMonad_eq,
+    EffectKind.return_impure_toMonad_eq]
+  rw [← denoteOp, ← denoteOp]
 
--- theorem Expr.denote_of_pure {e : Expr d Γ eff ty} (eff_eq : e.HasPureOp) :
---     e.denote = (fun (V : Valuation Γ) =>
---       let val : ⟦_⟧ := eff_eq ▸ DialectDenote.denote e.op (e.args.map V) e.regArgs.denote
---       return (V.snoc val).cast (by rw [← e.ty_eq])
---     ) := by
---   stop
---   rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
---   change DialectSignature.effectKind op = .pure at eff_eq
---   funext V
---   simp only [denote, EffectKind.return_impure_toMonad_eq, bind_pure_comp, op_mk, args_mk,
---     regArgs_mk]
---   generalize DialectDenote.denote op (HVector.map V args) regArgs.denote = x
---   -- simp
---   simp [Valuation.cast]
-
--- /-- casting an expr to an impure expr and running it equals running it purely
--- and returning the value -/
--- @[simp]
--- theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad d.m] (e : Expr d Γ .pure t) :
---     (e.castPureToEff .impure).denote = fun Γv => return (e.denote Γv) := by
---   have := denote_of_pure (e:=e) (EffectKind.eq_of_le_pure e.eff_le)
---   rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
---   have e_is_pure := EffectKind.eq_of_le_pure eff_le
---   funext V
---   simp only [castPureToEff, changeEffect, denote_pure]
---   unfold Expr.denote
---   rw [EffectKind.liftEffect_eq_pure_cast_of e_is_pure, eqRec_eq_cast]
---   simp
+  simp only [EffectKind.toMonad_pure, toPure, EffectKind.return_impure_toMonad_eq]
+  cases eff
+  · simp
+  · simp
 
 /-- The denotation of toPure? -/
 theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
@@ -1190,14 +1158,10 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
   obtain ⟨h_pure, rfl⟩ : ∃ (h : e.HasPureOp), e.toPure h = e' := by
     simpa [toPure?] using he
   clear he
-  rcases e with ⟨op, _⟩
-  simp only [denote_unfold, op_mk, args_mk, regArgs_mk, EffectKind.return_impure_toMonad_eq,
-    bind_pure_comp, EffectKind.toMonad_pure, op_toPure, args_toPure, regArgs_toPure,
-    EffectKind.liftEffect_pure, EffectKind.return_pure_toMonad_eq]
-  rw [EffectKind.liftEffect_eq_pure_cast_of h_pure]
-  cases eff
-  · rfl
-  · simp; rfl
+
+  rw [denote_pure, denote_unfold, ← map_pure, ← map_pure,
+    Expr.pure_denoteOp_toPure]
+  simp
 
 /-!
 ## Combining `Lets` and `Com`
@@ -1303,13 +1267,14 @@ section DenoteInsert
 @[simp] lemma Expr.denote_snoc (e : Expr d Γ .pure t) (V : Γ.Valuation) (v : Γ.Var u) :
     e.denote V v.toSnoc = V v := by
   rw [Expr.denote_unfold]
+  simp
+
+  stop
   simp only
   simp only [EffectKind.toMonad_pure]
-
   simp only [EffectKind.toMonad_pure, EffectKind.liftEffect_pure, EffectKind.return_pure_toMonad_eq]
 
   simp [Expr.denote_unfold]
-  stop
 
 /-- Denoting any of the free variables of a program through `Com.denoteLets` just returns the
 assignment of that variable in the input valuation -/
