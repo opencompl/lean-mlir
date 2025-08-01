@@ -71,7 +71,7 @@ def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
 section Lemmas
 variable (Γ : Ctxt Ty) (ts us : List Ty)
 
-@[simp] lemma ofList_append : (ts : Ctxt α) ++ us = us ++ ts := rfl
+@[simp] lemma ofList_append : (⟨ts⟩ : Ctxt _) ++ us = us ++ ts := rfl
 @[simp] lemma toList_append : (Γ ++ ts).toList = ts ++ Γ.toList := rfl
 
 lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
