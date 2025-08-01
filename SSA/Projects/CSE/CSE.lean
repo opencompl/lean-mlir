@@ -71,9 +71,8 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   intros V
                   subst hβ
                   subst exprEq
-                  simp only [Lets.denote_var_last_pure]
                   simp only [heneedleΓ]
-                  congr
+                  rfl
                 }⟩
             | .isFalse _neq => .none
             -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
@@ -200,9 +199,10 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
       case last => -- new variable, return the CSE'd variable.
         apply (Subtype.mk vold.toSnoc)
         intros V
-        simp only [Lets.denote_var_last_pure, Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
+        simp only [Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
         rw [← hv]
         rw [henew]
+        rfl
     expr2cache := fun β eneedle =>
       let homRemap := Ctxt.Hom.remapLast Γ vold
       let lastVar := (Ctxt.Var.last Γ α)
