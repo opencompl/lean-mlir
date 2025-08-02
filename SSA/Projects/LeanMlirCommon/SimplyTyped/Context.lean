@@ -49,7 +49,3 @@ theorem ExtEq.symm {Γ Δ : Context Ty} : Γ.ExtEq Δ → Δ.ExtEq Γ := by
   unfold ExtEq
   intro h v
   rw [h v]
-
-theorem hasType_of_extEq {Γ Δ : Context Ty} (h_eq : Γ.ExtEq Δ) (h : Δ.hasType v t) :
-    Γ.hasType v t := by
-  sorry
