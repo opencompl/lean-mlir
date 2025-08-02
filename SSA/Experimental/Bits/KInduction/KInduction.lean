@@ -33,6 +33,8 @@ import Lean
 
 open Fin.NatCast
 
+set_option linter.unusedSectionVars false
+
 initialize Lean.registerTraceClass `Bits.FastVerif
 
 /-
