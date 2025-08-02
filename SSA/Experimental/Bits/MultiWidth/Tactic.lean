@@ -236,7 +236,7 @@ def mkTermEnvCons (reader : CollectState)
   return out
 
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
-def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (tctx : Expr) : SolverM Expr := do
+def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr) : SolverM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
   for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx do
     let some wexpr := reader.bvIxToWidthExpr.get? ix
@@ -372,7 +372,7 @@ info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : WidthExpr.Env wcar
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
 def mkPredicateToPropExpr (p : MultiWidth.Nondep.Predicate)
-  (wcard tcard : Nat) (wenv : Expr) (tctx : Expr) (tenv : Expr) : SolverM Expr := do
+  (wcard tcard : Nat) (_wenv : Expr) (tctx : Expr) (tenv : Expr) : SolverM Expr := do
   let pExpr ← mkPredicateExpr wcard tcard tctx p
   let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, pExpr]
     -- #[(mkNatLit wcard),
@@ -436,12 +436,12 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     let (p, collect) ← collectBVPredicateAux collect (← g.getType)
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
-    let tenv ← collect.mkTenvExpr (wenv := wenv) (tctx := tctx)
+    let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
     let pToProp ← mkPredicateToPropExpr (p := p)
       (wcard := collect.wcard)
       (tcard := collect.tcard)
       (tctx := tctx)
-      (wenv := wenv)
+      (_wenv := wenv)
       (tenv := tenv)
     let g ← g.replaceTargetDefEq pToProp
     let exactPrf ← g.withContext <|
@@ -489,7 +489,7 @@ def evalBvMultiWidth : Tactic := fun
     replaceMainGoal gs
     match gs with
     | [] => return ()
-    | [g] => do
+    | [_g] => do
       -- trace[Bits.Frontend] m!"goal being decided via boolean reflection: {indentD g}"
       -- evalDecideCore `bv_multi_width (cfg := { native := true : Parser.Tactic.DecideConfig })
       return
