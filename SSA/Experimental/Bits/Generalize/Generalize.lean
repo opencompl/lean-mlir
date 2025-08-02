@@ -657,7 +657,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
     return currentCache
 
 def generatePreconditions (bvLogicalExpr: GenBVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec))
-              (numConjunctions: Nat) : GeneralizerStateM (Option GenBVLogicalExpr) := do
+              (_numConjunctions: Nat) : GeneralizerStateM (Option GenBVLogicalExpr) := do
 
     let state ← get
     let widthId := state.widthId
