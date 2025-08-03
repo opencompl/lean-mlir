@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import SSA.Core.Transforms.Rewrite.Mapping
 
 /-!
 # Matching
