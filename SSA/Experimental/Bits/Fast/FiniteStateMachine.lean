@@ -46,6 +46,7 @@ structure FSM (arity : Type) : Type 1 where
 attribute [instance] FSM.i FSM.dec_eq FSM.h
 
 
+set_option warn.sorry false in
 def Finset.toListUnsafe (as : Finset α) : List α :=
   let multiset := as.val
   Quotient.lift id sorry multiset
