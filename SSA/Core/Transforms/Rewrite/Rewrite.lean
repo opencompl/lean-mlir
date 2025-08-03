@@ -94,39 +94,32 @@ def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
     com.toFlatCom.ret = com.returnVar := by
   simp [toFlatCom]
 
-theorem denote_rewriteAt [LawfulMonad d.m] (lhs rhs : Com d Γ₁ .pure t₁)
-    (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
-    (pos : ℕ) (target : Com d Γ₂ eff t₂)
+theorem denote_rewriteAt [LawfulMonad d.m]
+    {lhs rhs : Com d Γ₁ .pure t₁}
     (hl : lhs.denote = rhs.denote)
-    (rew : Com d Γ₂ eff t₂)
+    {hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars}
+    {pos : ℕ} {target : Com d Γ₂ eff t₂}
+    {rew : Com d Γ₂ eff t₂}
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
-  funext Γ₂v
-  rw [rewriteAt] at hrew
-  simp only [bind, pure, Option.bind] at hrew
-  split at hrew
-  next => simp at hrew
-  next a b c hs =>
-    simp only [Option.mem_def] at hrew
-    split_ifs at hrew
-    subst t₁
-    split at hrew
-    · simp at hrew
-    · simp only [Option.some.injEq] at hrew
-      subst hrew
-      rename_i _ _ h
-      simp only [Zipper.denote_toCom, Zipper.denote_insertPureCom, ← hl,
-        ← denote_splitProgramAt hs Γ₂v, Valuation.comap_with,
-        Valuation.comap_outContextHom_denoteLets, Com.denoteLets_returnVar_pure,
-        Com.denote_changeVars, Function.comp_apply]
-      have this1 := denote_matchVarMap2 (hmap := h) (s₁ := Γ₂v)
-        (f := fun Vtop x =>
-            Com.denote c.2.2.1 (Valuation.reassignVar Vtop c.2.2.2.snd x)) -- x : ⟦t'⟧
-      simp only [Com.toFlatCom_ret, Var.cast_rfl, Com.denote_toFlatCom_lets,
-        Com.denoteLets_returnVar_pure] at this1
-      rw [this1]
-      congr; funext Γ_out_v; congr
-      apply Valuation.reassignVar_eq_of_lookup
+  funext V
+  simp only [rewriteAt, Com.toFlatCom_ret, Option.pure_def, Option.bind_eq_bind, Option.mem_def,
+    Option.bind_eq_some_iff, Option.dite_none_right_eq_some, Option.some.injEq, Sigma.exists,
+    Prod.exists] at hrew
+  rcases hrew with ⟨Γ', lets', com', t', v', h_split, rfl, varMap', hmap, rfl⟩
+  simp only [Var.cast_rfl] at *
+  suffices
+    (do
+      let V_mid ← lets'.denote V
+      com'.denote
+      <| V_mid.reassignVar v'
+        <| lhs.toFlatCom.lets.denote (V_mid.comap varMap') lhs.returnVar
+    ) = lets'.denote V >>= com'.denote
+  by
+    simpa [Zipper.denote_insertPureCom, hl, denote_splitProgramAt h_split]
+
+  simp only [lets'.denote_eq_denoteIntoSubtype, bind_map_left]
+  simp [denote_matchLets_of_matchVarMap hmap]
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--
@@ -169,13 +162,10 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
     (rewritePeepholeAt pr pos target).denote = target.denote := by
     simp only [rewritePeepholeAt]
     split_ifs
-    case pos h =>
-      generalize hrew : rewriteAt pr.lhs pr.rhs h pos target = rew
-      cases rew with
-        | some res =>
-          apply denote_rewriteAt pr.lhs pr.rhs h pos target pr.correct _ hrew
-        | none => simp
-    case neg h => simp
+    · split
+      · apply denote_rewriteAt pr.correct; assumption
+      · rfl
+    · rfl
 
 /-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeepholeAt

@@ -58,4 +58,21 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
     next h =>
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
+
 end AListTheorems
+
+namespace Mapping
+
+variable {Γ Δ : Ctxt Ty} [DecidableEq Ty]
+
+/-- Whether the mapping has an entry for every variable in the domain. -/
+def IsTotal (m : Mapping Γ Δ) : Prop :=
+  ∀ {t} v, ⟨t, v⟩ ∈ m
+
+/--
+Convert a known-total mapping into a context morphism.
+-/
+def toHom (m : Mapping Γ Δ) (h : m.IsTotal) : Γ.Hom Δ :=
+  fun t v =>
+    m.lookup ⟨t, v⟩ |>.get <| by
+      simpa [AList.lookup_isSome] using h _
