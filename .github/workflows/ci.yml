@@ -77,7 +77,7 @@ jobs:
 
       - name: Compile Library 🧐
         run: |
-          lake -R build SSA --wfail
+          lake -R build SSA --iofail
 
       - name: Test Library
         run: |

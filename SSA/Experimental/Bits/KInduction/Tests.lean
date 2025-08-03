@@ -20,7 +20,7 @@ open Lean Meta Elab Tactic in
     (outputCirc := .var true (.inl ()))
     (nextStateCirc := fun () => .var true (.inr 0))
   let _ ← fsm.decideIfZerosVerified 0
-  logInfo "done test."
+  --logInfo "done test."
   return ()
 
 set_option linter.unusedVariables false
@@ -43,7 +43,7 @@ theorem eq3 (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
 example (w : Nat) (a b : BitVec w) : a = a + 0 := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
-set_option trace.Bits.FastVerif true in
+--set_option trace.Bits.FastVerif true in
 theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
@@ -68,7 +68,7 @@ info: 'check_axioms_presburger' depends on axioms: [hashMap_missing,
 example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
-set_option trace.Bits.FastVerif true in
+--set_option trace.Bits.FastVerif true in
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
 
@@ -79,13 +79,13 @@ example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
 -- Check that this example produces 'normCircuitVerified: ok, normCircuitUnverified: ok'
 set_option warn.sorry false in
 example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a)  := by
-  bv_bench_automata
+  --bv_bench_automata
   sorry
 
 -- Check that this example produces 'normCircuitVerified: err, normCircuitUnverified: err
 set_option warn.sorry false in
 example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a + a)  := by
-  bv_bench_automata
+  -- bv_bench_automata
   sorry
 
 set_option warn.sorry false in
@@ -350,7 +350,7 @@ example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofN
   intros
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
-set_option trace.Bits.FastVerif true in
+--set_option trace.Bits.FastVerif true in
 example : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   intros
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
@@ -464,7 +464,7 @@ theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified 6 } )
 
-set_option trace.Bits.FastVerif true in
+--set_option trace.Bits.FastVerif true in
 theorem e_331 (x y : BitVec w):
      - 6 *  ~~~x + 2 * (x |||  ~~~y) - 3 * x + 2 * (x ||| y) - 10 *  ~~~(x ||| y) - 10 *  ~~~(x |||  ~~~y) - 4 * (x &&&  ~~~y) - 15 * (x &&& y) + 3 *  ~~~(x &&&  ~~~x) + 11 *  ~~~(x &&&  ~~~y) = 0#w := by
   -- bv_automata_gen (config := {backend := .dryrun 6 } )

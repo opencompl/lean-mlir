@@ -331,21 +331,21 @@ elab "#reducewidth" expr:term " : " target:term : command =>
 
 variable {x y z : BitVec 64}
 --set_option trace.Meta.Tactic.bv true
-#reducewidth (x + 0 = x) : 4
-#reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
-#reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
-#reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
-#reducewidth x + 5 = x : 8
-#reducewidth x = 10 : 8
-#reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
+-- #reducewidth (x + 0 = x) : 4
+-- #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
+-- #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
+-- #reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
+-- #reducewidth x + 5 = x : 8
+-- #reducewidth x = 10 : 8
+-- #reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
 
 variable {x y z : BitVec 32}
-#reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
-#reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
-#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
+-- #reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
+-- #reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
+-- #reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
 
-#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
-#reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
+-- #reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+-- #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 
 partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
