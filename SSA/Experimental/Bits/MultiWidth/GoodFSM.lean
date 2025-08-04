@@ -6,9 +6,10 @@ multi-width bitstream semantics.
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Vars
 import SSA.Experimental.Bits.MultiWidth.Defs
+import SSA.Experimental.Bits.KInduction.KInduction
+import Lean
 
 namespace MultiWidth
-
 
 instance : HAnd (FSM α) (FSM α) (FSM α) where
   hAnd := composeBinaryAux' FSM.and
@@ -26,11 +27,11 @@ instance : Complement (FSM α) where
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
-def mkWidthFSM (w : WidthExpr wcard) : NatFSM w :=
-   match w with
-   | .var v => { fsm :=
-      composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar v))
-    }
+def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) : (NatFSM wcard tcard w) :=
+  if h : w.toNat < wcard then
+    { toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
+  else 
+    { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
 
 -- when we compute 'a - b', if the borrow bit is zero,
@@ -45,7 +46,7 @@ def fsmUltUnary (a : FSM α) (b : FSM α) : FSM α :=
 
 -- returns 1 if a is equal to b.
 def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
-  composeUnaryAux FSM.scanAnd <|  composeBinaryAux' FSM.nxor a  b
+  composeUnaryAux FSM.scanAnd <| composeBinaryAux' FSM.nxor a  b
 
 -- returns 1 if a is less than or equal to b.
 def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
@@ -109,36 +110,88 @@ def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     }
 
 
-def mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w : WidthExpr wcard}
-  (t : Term tctx w) : TermFSM t :=
+def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : 
+    (TermFSM wcard tcard t) :=
   match t with
-  | .var v => { fsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar v)) }
+  | .var v _w =>
+    if h : v < tcard then
+      {
+      toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      }
+    else
+      { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be ued.
   | .add a b =>
-    let fsmA := mkTermFSM a
-    let fsmB := mkTermFSM b
-    { fsm := (composeBinaryAux' FSM.add fsmA.fsm fsmB.fsm) }
-  | .zext (w := wold) a wnew =>
-    { fsm := fsmZext (mkTermFSM a).fsm (mkWidthFSM wold).fsm (mkWidthFSM wnew).fsm }
-  | .sext (w := wa) a v =>
-    { fsm := fsmSext (mkTermFSM a).fsm (mkWidthFSM wa).fsm (mkWidthFSM v).fsm }
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    { toFsm := (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm) }
+  | .zext a wnew =>
+      let wold := a.width
+      let afsm := mkTermFSM wcard tcard a
+      let woldFsm := mkWidthFSM wcard tcard wold
+      let wnewFsm := mkWidthFSM wcard tcard wnew
+      { toFsm := fsmZext afsm.toFsm woldFsm.toFsm wnewFsm.toFsm }
+  | .sext a v =>
+    let wold := a.width
+    let afsm := mkTermFSM wcard tcard a
+    let woldFsm := mkWidthFSM wcard tcard wold
+    let vFsm := mkWidthFSM wcard tcard v
+    { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
-def mkPredicateFSM {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) :
-  PredicateFSM p :=
+/-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
+def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
+  (PredicateFSM wcard tcard p) :=
   match p with
   | .binRel .eq a b =>
-    let fsmA := mkTermFSM a
-    let fsmB := mkTermFSM b
-    { fsm := fsmEqBitwise fsmA.fsm fsmB.fsm }
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    { toFsm := fsmEqBitwise fsmA.toFsm fsmB.toFsm }
   | .or p q  =>
-    let fsmP := mkPredicateFSM p
-    let fsmQ := mkPredicateFSM q
-    { fsm := composeUnaryAux FSM.scanAnd (fsmP.fsm ||| fsmQ.fsm) }
+    let fsmP :=  mkPredicateFSMAux wcard tcard p
+    let fsmQ :=  mkPredicateFSMAux wcard tcard q
+    { toFsm := composeUnaryAux FSM.scanAnd (fsmP.toFsm ||| fsmQ.toFsm) }
   | .and p q =>
-    let fsmP := mkPredicateFSM p
-    let fsmQ := mkPredicateFSM q
-    { fsm := composeUnaryAux FSM.scanAnd (fsmP.fsm &&& fsmQ.fsm) }
+    let fsmP := mkPredicateFSMAux wcard tcard p
+    let fsmQ := mkPredicateFSMAux wcard tcard q
+    { toFsm := composeUnaryAux FSM.scanAnd (fsmP.toFsm &&& fsmQ.toFsm) }
   | .not p =>
-    let fsmP := mkPredicateFSM p
-    { fsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.fsm) }
+    let fsmP := mkPredicateFSMAux wcard tcard p
+    { toFsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.toFsm) }
+
+/-- Negate the FSM so we can decide if zeroes. -/
+def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :
+  (PredicateFSM wcard tcard p) :=
+    let fsm := mkPredicateFSMAux wcard tcard p
+    { toFsm := ~~~ fsm.toFsm }
+
+def mkPredicateFSMDep {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard}
+    (p : MultiWidth.Predicate tctx) : PredicateFSM wcard tcard (.ofDep p) :=
+  mkPredicateFSMNondep wcard tcard (.ofDep p)
+
+axiom AxGoodFSM {P : Prop} : P
+
+
+-- | TODO: rename these namespaces.
+open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
+/-- If the FSM passes the safety and induction certificates,
+then the predicate is satisfied.
+-/
+theorem Predicate.toProp_of_KInductionCircuits
+   {wcard tcard : Nat}
+   (tctx : Term.Ctx wcard tcard)
+   (p : MultiWidth.Predicate tctx)
+   (pNondep : Nondep.Predicate)
+   (_hpNondep : pNondep = (.ofDep p))
+   (fsm : PredicateFSM wcard tcard pNondep)
+   (_hfsm : fsm = mkPredicateFSMNondep wcard tcard pNondep)
+   (n : Nat)
+   (circs : KInductionCircuits fsm.toFsm n)
+   (_hCircs : circs.IsLawful)
+   (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+   (_hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
+   (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+   (_hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
+   (wenv : WidthExpr.Env wcard)
+   (tenv : tctx.Env wenv) :
+  p.toProp tenv := by exact AxGoodFSM
 
 end MultiWidth

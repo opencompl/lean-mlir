@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Defs
 import SSA.Experimental.Bits.MultiWidth.Defs
-
+import SSA.Experimental.Bits.MultiWidth.GoodFSM
 import SSA.Experimental.Bits.KInduction.KInduction
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 import SSA.Experimental.Bits.ReflectMap
@@ -15,6 +15,9 @@ open Lean Meta Elab Tactic
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
   check? : Bool := true
+  -- number of k-induction iterations.
+  niter : Nat := 10
+  verbose?: Bool := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -29,10 +32,18 @@ def SolverM.run (m : SolverM α) (ctx : Context) : TermElabM α :=
 def check?  : SolverM Bool := do
   return (← read).check?
 
+/-- Log a new information message using the given message data. The position is provided by `getRef`. -/
+def debugLog (msgData : MessageData) : SolverM Unit := do
+  if (← read).verbose? then
+    log msgData MessageSeverity.information
+  else
+    return ()
+
 /-- Check the type of e if check? is true. -/
 def debugCheck (e : Expr) : SolverM Unit := do
     if ← check?
-    then check e
+    then
+      check e
     else return ()
 
 
@@ -154,17 +165,21 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
 
-private def mkFinLit (n : Nat) (i : Nat) : MetaM Expr := do
+private def mkFinLit (n : Nat) (i : Nat) : SolverM Expr := do
   let en := mkNatLit n
   let ei := mkNatLit i
-  return mkAppN (.const ``Fin.mk []) #[en, ei, ← mkDecideProof (← mkLt ei en)]
+  let out := mkAppN (.const ``Fin.mk []) #[en, ei, ← mkDecideProof (← mkLt ei en)]
+  debugCheck out
+  return out
 
 
 /-- info: MultiWidth.WidthExpr.var {wcard : ℕ} (v : Fin wcard) : WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.var
 
-def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := do
-  return mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
+def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
+  debugCheck out
+  return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
@@ -175,8 +190,9 @@ def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : MetaM Expr := 
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
 
 /-- Build `Term.Ctx.empty`. -/
-def mkTermCtxEmptyExpr (reader : CollectState) : MetaM Expr := do
+def mkTermCtxEmptyExpr (reader : CollectState) : SolverM Expr := do
   let mkEmptyCtx := mkAppN (mkConst ``MultiWidth.Term.Ctx.empty) #[mkNatLit reader.wcard]
+  debugCheck mkEmptyCtx
   return mkEmptyCtx
 
 /--
@@ -187,7 +203,7 @@ info: MultiWidth.Term.Ctx.cons {wcard tcard : ℕ} (ctx : Term.Ctx wcard tcard) 
 
 def mkTermCtxConsExpr (reader : CollectState) (tctx : Expr) (w : MultiWidth.Nondep.WidthExpr) : SolverM Expr := do
   let out ← mkAppM (``MultiWidth.Term.Ctx.cons) #[ tctx, ← mkWidthExpr reader.wcard w ]
-  check out
+  debugCheck out
   return out
 
 /-- Make the expression for the 'tctx' from the 'CollectState'. -/
@@ -266,7 +282,8 @@ def mkWidthEnvCons (wenv : Expr) (w : Expr) : SolverM Expr := do
 
 def CollectState.mkWenvExpr (reader : CollectState) : SolverM Expr := do
   let mut out ← mkWidthEnvEmpty
-  for w in reader.wToIx.toArrayAsc do
+  -- | needs to be reversed, because variable '0' is at the end of the array.
+  for w in reader.wToIx.toArrayAsc.reverse do
     out ← mkWidthEnvCons out w
   debugCheck out
   return out
@@ -280,14 +297,32 @@ def collectBVAtom (state : CollectState)
   let (wexpr, state) ← collectWidthAtom state w
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
   let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
-  return (.var bvix, { state with bvToIx, bvIxToWidthExpr })
+  return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
-  | _ =>
-    let (t, state) ← collectBVAtom state e -- TODO: use this?
-    return (t, state)
+  | HAdd.hAdd _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (_w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.add ta tb, state)
+    | _ => mkAtom
+  | BitVec.zeroExtend _w v x =>
+      let (v, state) ← collectWidthAtom state v
+      let (x, state) ← collectTerm state x
+      return (.zext x v, state)
+  | BitVec.signExtend _w v x =>
+      let (v, state) ← collectWidthAtom state v
+      let (x, state) ← collectTerm state x
+      return (.sext x v, state)
+  | _ => mkAtom
+  where
+    mkAtom := do
+      let (t, state) ← collectBVAtom state e
+      return (t, state)
 
 /--
 info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) : Term tctx (tctx v)
@@ -298,12 +333,29 @@ info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v :
 def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
-  | .var v =>
+  | .var v _wexpr =>
     let out := mkAppN (mkConst ``MultiWidth.Term.var [])
-      #[mkNatLit wcard, mkNatLit tcard, tctx, <- mkFinLit tcard v]
+      #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]
     debugCheck out
     return out
-
+  | .add a b =>
+     let out ← mkAppM ``MultiWidth.Term.add
+        #[← mkTermExpr wcard tcard tctx a,
+        ← mkTermExpr wcard tcard tctx b]
+     debugCheck out
+     return out
+  | .zext a v =>
+    let vExpr ← mkWidthExpr wcard v
+    let out ← mkAppM ``MultiWidth.Term.zext
+      #[← mkTermExpr wcard tcard tctx a, vExpr]
+    debugCheck out
+    return out
+  | .sext a v =>
+    let vExpr ← mkWidthExpr wcard v
+    let out ← mkAppM ``MultiWidth.Term.sext
+      #[← mkTermExpr wcard tcard tctx a, vExpr]
+    debugCheck out
+    return out
 
 set_option pp.explicit true in
 /--
@@ -319,10 +371,10 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
   | Eq α a b =>
     match_expr α with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (_w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
-      return (.eq w ta tb, state)
+      return (.binRel .eq ta tb, state)
     | _ => throwError m!"expected bitvector equality, found: {indentD e}"
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
@@ -342,10 +394,11 @@ info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (
 -/
 #guard_msgs in #check MultiWidth.Predicate.or
 
-def mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
+def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
-  | .eq w a b =>
+  | .binRel .eq a b =>
+    let w := a.width
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard tctx a
     let bExpr ← mkTermExpr wcard tcard tctx b
@@ -363,6 +416,7 @@ def mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
     debugCheck out
     return out
+  | _ => throwError m!"unhandled mkPredicateExpr {repr p}"
 
 
 /--
@@ -371,9 +425,8 @@ info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : WidthExpr.Env wcar
 -/
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
-def mkPredicateToPropExpr (p : MultiWidth.Nondep.Predicate)
-  (wcard tcard : Nat) (_wenv : Expr) (tctx : Expr) (tenv : Expr) : SolverM Expr := do
-  let pExpr ← mkPredicateExpr wcard tcard tctx p
+def Expr.mkPredicateToPropExpr (pExpr : Expr)
+  (_wcard _tcard : Nat) (_wenv : Expr) (_tctx : Expr) (tenv : Expr) : SolverM Expr := do
   let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, pExpr]
     -- #[(mkNatLit wcard),
     --   (mkNatLit tcard),
@@ -400,9 +453,10 @@ Assumes that the mvar has type 'a = <true>' or 'a = <false>',
 and closes this goal with 'native_decide' of a 'rfl' proof.
 Assigns to the MVarId a proof.
 -/
-def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : TermElabM Expr := do
+def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
-  let auxDeclName ← Term.mkAuxName `_mkEqRflNativeDecideProof
+  let name := name ++ `lhs
+  let auxDeclName ← Term.mkAuxName name
   let decl := Declaration.defnDecl {
     name := auxDeclName
     levelParams := []
@@ -412,69 +466,179 @@ def mkEqRflNativeDecideProof (lhsExpr : Expr) (rhs : Bool) : TermElabM Expr := d
     safety := .safe
   }
   addAndCompile decl
+  debugLog m!"declared {lhsExpr} as {auxDeclName}"
   let lhsDef : Expr := mkConst auxDeclName
   let rflProof ← mkEqRefl (toExpr rhs)
-  mkAppM ``Lean.ofReduceBool #[lhsDef, toExpr rhs, rflProof]
-
+  -- let rflProof := mkApp2 (mkConst ``Eq.refl [Level.ofNat 1]) (mkConst ``Bool []) (toExpr rhs)
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsExpr (toExpr rhs)
+  let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
+  let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
+  return if debugSorry? then sorryProof else proof
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
   debugCheck ty
   return ty
 
+def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
+  for e in state.bvToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+  for e in state.wToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted non-variable width: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
 
 /--
-info: MultiWidth.Decide.Predicate.toProp_of_decide {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (p : Predicate tctx)
-  (hdecide : decide (1 = 1) = true) {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv) : Predicate.toProp tenv p
+info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
 -/
-#guard_msgs in #check MultiWidth.Decide.Predicate.toProp_of_decide
+#guard_msgs in #check Circuit.verifyCircuit
+def Expr.mkVerifyCircuit (c cert : Expr) : SolverM Expr := do
+  let out ← mkAppM ``Circuit.verifyCircuit #[c, cert]
+  debugCheck out
+  return out
+
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkN {arity : Type} [DecidableEq arity] [Fintype arity] [Hashable arity]
+  (fsm : FSM arity) (n : ℕ) : ReflectVerif.BvDecide.KInductionCircuits fsm n
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkN
+def Expr.KInductionCircuits.mkN (fsm : Expr) (n : Expr) : SolverM Expr := do
+  let out ← mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkN #[fsm, n]
+  debugCheck out
+  return out
+
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN {arity : Type} [DecidableEq arity] [Fintype arity]
+  [Hashable arity] (fsm : FSM arity) (n : ℕ) : (ReflectVerif.BvDecide.KInductionCircuits.mkN fsm n).IsLawful
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN
+def Expr.KInductionCircuits.mkIsLawful_mkN (fsm : Expr) (n : Expr) : SolverM Expr := do
+  let out ← mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN #[fsm, n]
+  debugCheck out
+  return out
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit {arity : Type} {fsm : FSM arity} [DecidableEq arity]
+  [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
+  Circuit (Vars fsm.α arity (n + 2))
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit
+def Expr.KInductionCircuits.mkMkSafetyCircuit (circs : Expr) : SolverM Expr := do
+  let out ← mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkSafetyCircuit #[circs]
+  debugCheck out
+  return out
+
+/--
+info: ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking {arity : Type} {fsm : FSM arity} [DecidableEq arity]
+  [Fintype arity] [Hashable arity] {n : ℕ} (circs : ReflectVerif.BvDecide.KInductionCircuits fsm n) :
+  Circuit (Vars fsm.α arity (n + 2))
+-/
+#guard_msgs in #check ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking
+def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : SolverM Expr := do
+  let out ← mkAppM ``ReflectVerif.BvDecide.KInductionCircuits.mkIndHypCycleBreaking #[circs]
+  debugCheck out
+  return out
+
+/--
+info: MultiWidth.mkPredicateFSMDep {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) :
+  PredicateFSM wcard tcard (Nondep.Predicate.ofDep p)
+-/
+#guard_msgs in #check MultiWidth.mkPredicateFSMDep
+def Expr.mkPredicateFSMDep (_wcard _tcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.mkPredicateFSMDep) #[p]
+  debugCheck out
+  return out
+
+/--
+info: MultiWidth.mkPredicateFSMNondep (wcard tcard : ℕ) (p : Nondep.Predicate) : PredicateFSM wcard tcard p
+-/
+#guard_msgs in #check MultiWidth.mkPredicateFSMNondep
+def Expr.mkPredicateFSMNondep (wcard tcard : Nat) (pNondep : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, pNondep]
+  debugCheck out
+  return out
+
+def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.PredicateFSM.toFsm) #[p]
+  debugCheck out
+  return out
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
   g.withContext do
     let collect : CollectState := {}
     let (p, collect) ← collectBVPredicateAux collect (← g.getType)
+    debugLog m!"collected predicate: {repr p}"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
-    let pToProp ← mkPredicateToPropExpr (p := p)
-      (wcard := collect.wcard)
-      (tcard := collect.tcard)
-      (tctx := tctx)
+    let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard tctx p
+    let pNondepExpr := Lean.ToExpr.toExpr p
+    let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
+      (_wcard := collect.wcard)
+      (_tcard := collect.tcard)
+      (_tctx := tctx)
       (_wenv := wenv)
       (tenv := tenv)
     let g ← g.replaceTargetDefEq pToProp
-    let exactPrf ← g.withContext <|
-      mkAppM (``MultiWidth.Decide.Predicate.toProp_of_decide)
-      #[← mkPredicateExpr collect.wcard collect.tcard tctx p]
-    let some (gDecideTy, _) := Expr.arrow? (← inferType exactPrf)
-      | throwError "unable to find 'decidable' type in the type {← inferType exactPrf}"
-    -- gDecideTy will be of the form `decide ... = true`. We want the '...' part.
-    let some (_, gDecideTyLhs, _) := Expr.eq? gDecideTy
-      | throwError "expected goal type to be of the form 'decide <...> = true', found: {indentD gDecideTy}"
-    let gDecidePrf ← g.withContext <| mkEqRflNativeDecideProof (lhsExpr := gDecideTyLhs) (rhs := true)
-    let exactPrf ← g.withContext <| mkAppM' exactPrf #[gDecidePrf, tenv]
-    g.assign exactPrf
-    return []
+    let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard p
+    debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
+    debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
+    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
+    match stats with
+    | .safetyFailure i =>
+      collect.logSuspiciousFvars
+      throwError m!"safety failure at iteration {i} for predicate {repr p}"
+    | .exhaustedIterations _ =>
+      collect.logSuspiciousFvars
+      throwError m!"exhausted iterations for predicate {repr p}"
+    | .provenByKIndCycleBreaking niters safetyCert indCert =>
+      debugLog m!"proven by KInduction with {niters} iterations"
+      let prf ← g.withContext <| do
+        -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
+        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard pNondepExpr
+        -- let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
+        let fsmExpr ← Expr.mkPredicateFSMtoFSM predNondepFsmExpr
+        let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
+        let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
+        debugLog "making safety certs..."
+        -- | verifyCircuit (mkSafetyCircuit circs)
+        let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
+          (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
+          (toExpr safetyCert)
+        debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
+        debugLog "making safety cert = true proof..."
+        let safetyCertProof ← mkEqRflNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
+        debugLog m!"made safety cert proof: {safetyCertProof}"
+        let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
+            (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
+            (toExpr indCert)
+        debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
+        let indCertProof ← mkEqRflNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
+        debugLog m!"made induction cert = true proof..."
+        let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
+          #[tctx,
+            pExpr,
+            pNondepExpr,
+            ← mkEqRefl pNondepExpr,
+            predNondepFsmExpr,
+            ← mkEqRefl predNondepFsmExpr,
+            -- fsmExpr,
+            toExpr niters,
+            circsExpr,
+            circsLawfulExpr,
+            toExpr safetyCert,
+            safetyCertProof,
+            toExpr indCert,
+            indCertProof,
+            wenv,
+            tenv]
+        let prf ← instantiateMVars prf
+        pure prf
+      g.assign prf
+      return []
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
   (solve g).run { toConfig := cfg }
-
-
-  -- -- finally, we perform reflection.
-  -- -- let predicate ← collectBVPredicateAux ∅ (← g.getType) w
-  -- -- predicate.exprToIx.throwWarningIfUninterpretedExprs
-  -- -- trace[Bits.Frontend] m!"predicate (repr): {indentD (repr predicate.e)}"
-  -- -- let bvToIxMapVal ← predicate.exprToIx.toExpr w
-  -- -- let target := (mkAppN (mkConst ``Predicate.denote) #[predicate.e.quote, w, bvToIxMapVal])
-  -- -- let g ← g.replaceTargetDefEq target
-  -- trace[Bits.Frontend] m!"goal after reflection: {indentD g}"
-  -- let prf ← mkSorry (Expr.mvar g) (synthetic := false)
-  -- if ! (← isDefEq (Expr.mvar g) prf) then
-  --   throwError m!"expected goal to be defeq to the proof, but it is not: {indentD g} != {indentD prf}"
-  --   return []
-  -- else
-  --   return []
 
 declare_config_elab elabBvMultiWidthConfig Config
 
@@ -489,10 +653,6 @@ def evalBvMultiWidth : Tactic := fun
     replaceMainGoal gs
     match gs with
     | [] => return ()
-    | [_g] => do
-      -- trace[Bits.Frontend] m!"goal being decided via boolean reflection: {indentD g}"
-      -- evalDecideCore `bv_multi_width (cfg := { native := true : Parser.Tactic.DecideConfig })
-      return
     | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
 | _ => throwUnsupportedSyntax
 
