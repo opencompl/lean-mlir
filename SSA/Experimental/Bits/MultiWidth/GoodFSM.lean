@@ -137,6 +137,7 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
+/-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
@@ -178,6 +179,8 @@ theorem Predicate.toProp_of_KInductionCircuits
    {wcard tcard : Nat}
    (tctx : Term.Ctx wcard tcard)
    (p : MultiWidth.Predicate tctx)
+   -- (pNondep : Nondep.Predicate)
+   -- (hpNondep : pNondep = (.ofDep p))
    (fsm : PredicateFSM wcard tcard (.ofDep p))
    (n : Nat)
    (circs : KInductionCircuits fsm.toFsm n)

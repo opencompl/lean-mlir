@@ -460,12 +460,13 @@ def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) : Solve
   addAndCompile decl
   logInfo m!"declared {lhsExpr} as {auxDeclName}"
   let lhsDef : Expr := mkConst auxDeclName
-  let _rflProof ← mkEqRefl (toExpr rhs)
-  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsExpr (toExpr rhs)
-  debugCheck rflTy
-  let rflProof ← mkSorry (type := rflTy) (synthetic := true)
-  debugCheck rflProof
-  let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef  (toExpr rhs) rflProof
+  let rflProof ← mkEqRefl (toExpr rhs)
+  -- let rflProof := mkApp2 (mkConst ``Eq.refl [Level.ofNat 1]) (mkConst ``Bool []) (toExpr rhs)
+  -- let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsExpr (toExpr rhs)
+  -- debugCheck rflTy
+  -- let rflProof ← mkSorry (type := rflTy) (synthetic := true)
+  -- debugCheck rflProof
+  let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
   -- debugCheck proof -- do not check the proof, since this will literally try to eval an 'ofReduceBool' (the large proof by reflection).
   return proof
 
@@ -594,9 +595,9 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
             (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
             (toExpr indCert)
-        logInfo "made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
+        logInfo m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
         let indCertProof ← mkEqRflNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
-        logInfo "made induction cert = true proof..."
+        logInfo m!"made induction cert = true proof..."
         let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
           #[tctx,
             pExpr,
@@ -612,7 +613,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             wenv,
             tenv]
         -- debugCheck prf
-        logInfo "made final appM: {indentD <| prf}"
+        logInfo m!"made final appM: {indentD <| prf}"
         let prf ← instantiateMVars prf
         pure prf
       g.assign prf
