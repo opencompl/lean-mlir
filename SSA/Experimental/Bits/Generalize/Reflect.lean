@@ -55,7 +55,6 @@ structure ParsedBVLogicalExpr where
   bvLogicalExpr: GenBVLogicalExpr
   state: ParsedBVExprState
 
-
 abbrev ParseBVExprM := StateRefT ParsedBVExprState MetaM
 
 partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseBVExprM (Option (BVExprWrapper)) := do
