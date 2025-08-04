@@ -120,15 +120,12 @@ jobs:
           lake -R build SSA.Projects.CIRCT.DC.DC # compile and check CIRCT's DC Dialect
           lake -R build SSA.Projects.CIRCT.DC.DCExample # compile and check CIRCT's DC Dialect
 
-
-
-      - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `Alive Statistics: ${{env.ALIVE_SUCCESS}} / ${{env.ALIVE_ALL}} (${{env.ALIVE_FAILED}} failed)`
-            })
+      - if: github.event_name == 'pull_request'
+        run: |
+          echo "Alive Statistics: ${{env.ALIVE_SUCCESS}} / ${{env.ALIVE_ALL}} (${{env.ALIVE_FAILED}} failed)"
+          if  [ "${{env.ALIVE_SUCCESS}}" -ne "90" ] ||
+              [ "${{env.ALIVE_ALL}}" -ne "93" ] ||
+              [ "${{env.ALIVE_FAILED}}" -ne "3" ]; then
+            echo "ERROR: Alive statistics do not match the expected values!"
+            exit 1
+          fi
