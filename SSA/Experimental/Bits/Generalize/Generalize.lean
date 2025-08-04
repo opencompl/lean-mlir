@@ -26,6 +26,9 @@ class Hydrable (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat
   beqGenExpr : ∀ (n : Nat), BEq (genExpr n) := by infer_instance
   genExprToExpr {n : Nat} : parsedLogicalExpr → genExpr n → MetaM Expr
   genLogicalExprToExpr : parsedLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
+  getAllNamesFromParsedLogicalExpr : parsedLogicalExpr → HashMap Nat Name
+  getLogicalExprSize : genLogicalExpr → Nat
+
 
 attribute [instance] Hydrable.beqLogical
 attribute [instance] Hydrable.hashableLogical
@@ -104,6 +107,9 @@ def toExpr (parsedBVExpr : ParsedBVLogicalExpr) (bvLogicalExpr: GenBVLogicalExpr
 instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   genExprToExpr := bvExprToExpr
   genLogicalExprToExpr := toExpr
+  getAllNamesFromParsedLogicalExpr p :=
+    Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
+  getLogicalExprSize e := e.size
 
 /- ===================== Generalizer ==========-/
 /-
@@ -135,7 +141,7 @@ def GeneralizerStateM.liftTermElabM
   let v ← m
   return v
 
-def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
+/- def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
   match bvExpr with
   | .var idx => return BVExpr.var idx
   | .const val => return BVExpr.const val
@@ -156,16 +162,16 @@ def toBVLogicalExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM BVLogi
   | .not boolExpr => return BoolExpr.not (← toBVLogicalExpr boolExpr)
   | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
   | _ => throwError m! "Unsupported operation"
-
+ -/
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
 
-def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+def solve [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr]
+  (bvExpr : genLogicalExpr) : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
-    let parsedBVExprState := state.parsedBVLogicalExpr.state
-
-    let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
-
+    -- let parsedBVExprState := state.parsedBVLogicalExpr.state
+    -- let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
+    let allNames := H.getAllNamesFromParsedLogicalExpr state.parsedBVLogicalExpr
     let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
 
@@ -173,8 +179,8 @@ def solve (bvExpr : GenBVLogicalExpr) : GeneralizerStateM (Option (Std.HashMap N
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
-        let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {bvExpr.size})") do
-          let mut expr ← toExpr bvExpr bitVecWidth
+        let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {H.getLogicalExprSize bvExpr})") do
+          let mut expr ← H.genLogicalExprToExpr state.parsedBVLogicalExpr bvExpr bitVecWidth
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here
