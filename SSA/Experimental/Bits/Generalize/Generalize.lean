@@ -260,17 +260,17 @@ def getNegativeExamples {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable
                    let res ← helper (H.addConstraints expr newConstraints Gate.and) n
                    return [constVals] ++ res
 
-def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : MetaM (List (GenBVExpr w)) := do
+def pruneEquivalentGenExprs {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (expressions: List (genExpr w)) : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List (genExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
-    let mut pruned : List (GenBVExpr w) := []
+    let mut pruned : List (genExpr w) := []
 
     for expr in expressions do
       if pruned.isEmpty then
         pruned := expr :: pruned
         continue
 
-      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (GenBVPred.bin f BVBinPred.eq expr)))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+      let newConstraints := pruned.map (fun f =>  H.not (H.eq f expr))
+      let subsumeCheckExpr :=  H.addConstraints H.True newConstraints Gate.and
 
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
@@ -279,16 +279,17 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : MetaM (List (GenB
 
     pure pruned
 
-def pruneEquivalentBVLogicalExprs(expressions : List GenBVLogicalExpr): GeneralizerStateM (List GenBVLogicalExpr) := do
+def pruneEquivalentBVLogicalExprs {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (expressions : List genLogicalExpr): GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List genLogicalExpr) := do
+
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
-    let mut pruned: List GenBVLogicalExpr:= []
+    let mut pruned: List genLogicalExpr:= []
     for expr in expressions do
       if pruned.isEmpty then
         pruned := expr :: pruned
         continue
 
-      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints
+      let newConstraints := pruned.map (fun f => H.not (H.beq f expr))
+      let subsumeCheckExpr :=  H.addConstraints H.True newConstraints Gate.and
 
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
@@ -332,7 +333,7 @@ def strictlyLTZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
 def lteZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
   BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)
 
-def checkTimeout : GeneralizerStateM Unit := do
+def checkTimeout {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr Unit := do
   let state ← get
   let currentTime ← Core.liftIOCore IO.monoMsNow
   let elapsedTime := currentTime - state.startTime
@@ -341,19 +342,19 @@ def checkTimeout : GeneralizerStateM Unit := do
   if elapsedTime >= state.timeout then
       throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
 
-def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCandidates visited: Std.HashSet GenBVLogicalExpr)
-                                                    : GeneralizerStateM (List GenBVLogicalExpr) :=
+def filterCandidatePredicates {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (bvLogicalExpr: genLogicalExpr) (preconditionCandidates visited: Std.HashSet genLogicalExpr) : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List genLogicalExpr) :=
+
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
     let state ← get
     let widthId := state.widthId
     let bitwidth := state.processingWidth
 
-    let mut res : List GenBVLogicalExpr := []
+    let mut res : List genLogicalExpr := []
     -- let mut currentCandidates := preconditionCandidates
     -- if numConjunctions >= 1 then
     --   let combinations := generateCombinations numConjunctions currentCandidates.toList
     --   currentCandidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
-    let widthConstraint : GenBVLogicalExpr := BoolExpr.literal (GenBVPred.bin (GenBVExpr.var widthId) BVBinPred.eq (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))
+    let widthConstraint : genLogicalExpr := H.eq (H.genExprVar widthId) (H.genExprConst (BitVec.ofNat bitwidth bitwidth))
 
     let mut numInvocations := 0
     let mut currentCandidates := preconditionCandidates.filter (λ cand => !visited.contains cand)
@@ -361,19 +362,19 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCa
 
     -- Progressive filtering implementation
     while !currentCandidates.isEmpty do
-      let expressionsConstraints : GenBVLogicalExpr := addConstraints (BoolExpr.const False) currentCandidates.toList Gate.or
-      let expr := BoolExpr.gate Gate.and (addConstraints expressionsConstraints [widthConstraint]) (BoolExpr.not bvLogicalExpr)
+      let expressionsConstraints : genLogicalExpr := H.addConstraints (H.False) currentCandidates.toList Gate.or
+      let expr := H.and (H.addConstraints expressionsConstraints [widthConstraint] Gate.and) (H.not bvLogicalExpr)
 
-      let mut newCandidates : Std.HashSet GenBVLogicalExpr := Std.HashSet.emptyWithCapacity
+      let mut newCandidates : Std.HashSet genLogicalExpr := Std.HashSet.emptyWithCapacity
       numInvocations := numInvocations + 1
       match (← solve expr) with
       | none => break
       | some assignment =>
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
-            let mut res : Std.HashSet GenBVLogicalExpr := Std.HashSet.emptyWithCapacity
+            let mut res : Std.HashSet genLogicalExpr := Std.HashSet.emptyWithCapacity
             for candidate in currentCandidates do
-              let widthSubstitutedCandidate := substitute candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, GenBVExpr.const (BitVec.ofNat bitwidth bitwidth))]))
-              if !(evalBVLogicalExpr assignment bitwidth widthSubstitutedCandidate) then
+              let widthSubstitutedCandidate := H.substitute candidate (H.genExprToSubstitutionValue (Std.HashMap.ofList [(widthId, H.genExprConst (BitVec.ofNat bitwidth bitwidth))]))
+              if !(H.evalGenLogicalExpr assignment bitwidth widthSubstitutedCandidate) then
                 res := res.insert candidate
             pure res
 

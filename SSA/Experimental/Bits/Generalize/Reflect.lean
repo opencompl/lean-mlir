@@ -345,6 +345,7 @@ instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   getLogicalExprSize e := e.size
   substitute := substitute
   packedBitVecToSubstitutionValue := packedBitVecToSubstitutionValue
+  genExprToSubstitutionValue := bvExprToSubstitutionValue
   getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
   addConstraints := addConstraints
   deductiveSearch := deductiveSearch
@@ -355,3 +356,6 @@ instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   genExprVar id := GenBVExpr.var id
   genExprConst bv := GenBVExpr.const bv
   eq e1 e2 := BoolExpr.literal (GenBVPred.bin e1 BVBinPred.eq e2)
+  beq e1 e2 := BoolExpr.gate Gate.beq e1 e2
+  evalGenExpr := evalBVExpr
+  evalGenLogicalExpr := evalBVLogicalExpr

@@ -37,19 +37,20 @@ class Hydrable (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat
   getLogicalExprSize : genLogicalExpr → Nat
   substitute : genLogicalExpr → (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) → genLogicalExpr
   packedBitVecToSubstitutionValue : (Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (SubstitutionValue genExpr)
+  genExprToSubstitutionValue : (Std.HashMap Nat (genExpr n)) → Std.HashMap Nat (SubstitutionValue genExpr)
   getIdentityAndAbsorptionConstraints : genLogicalExpr →  Std.HashSet Nat → List genLogicalExpr
   addConstraints : genLogicalExpr → List genLogicalExpr → Gate → genLogicalExpr
-  -- pruneEquivalentGenExprs : List (genExpr n) → MetaM (List (genExpr n))
-  -- pruneEquivalentGenLogicalExprs : List (genLogicalExpr) → MetaM (List genLogicalExpr)
   not : genLogicalExpr → genLogicalExpr
   and : genLogicalExpr → genLogicalExpr → genLogicalExpr
   eq : genExpr n → genExpr n → genLogicalExpr
+  beq : genLogicalExpr → genLogicalExpr → genLogicalExpr
   True : genLogicalExpr
   False : genLogicalExpr
   genExprVar : Nat → genExpr n
   genExprConst : BitVec n → genExpr n
   deductiveSearch : genExpr n → Std.HashMap Nat BVExpr.PackedBitVec → BVExpr.PackedBitVec → Nat → Nat → TermElabM (List (genExpr n))
-
+  evalGenLogicalExpr : (Std.HashMap Nat BVExpr.PackedBitVec) →  Nat →  genLogicalExpr → Bool
+  evalGenExpr : (Std.HashMap Nat BVExpr.PackedBitVec) → (n: Nat) →  genExpr w → BitVec n
 
 attribute [instance] Hydrable.beqLogical
 attribute [instance] Hydrable.messageDataLogical
