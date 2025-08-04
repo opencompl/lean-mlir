@@ -197,7 +197,7 @@ def Term.ofDep {wcard tcard : Nat}
     {tctx :Term.Ctx wcard tcard}
     {w : MultiWidth.WidthExpr wcard}
     (t : MultiWidth.Term tctx w) : Term :=
-  match t with 
+  match t with
   | .var v => .var v (.ofDep w)
   | .add a b => .add (.ofDep a) (.ofDep b)
   | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
@@ -216,7 +216,7 @@ def Term.tcard (t : Term) : Nat :=
   match t with
   | .var v _w => v + 1
   | .add a b => max (Term.tcard a) (Term.tcard b)
-  | .zext a _wnew => (Term.tcard a) 
+  | .zext a _wnew => (Term.tcard a)
   | .sext a _wnew => (Term.tcard a)
 
 inductive Predicate
@@ -243,7 +243,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
 
 def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
-  match p with 
+  match p with
   | .binRel k a b =>
     match k with
     | .eq  => .binRel .eq (.ofDep a) (.ofDep b)
@@ -269,7 +269,7 @@ instance : Fintype (StateSpace wcard tcard) where
     ws ∪ vs
   complete := by
     simp only [Finset.mem_union, Finset.mem_image, Finset.mem_univ, true_and]
-    intros x 
+    intros x
     rcases x with x | x  <;> simp
 
 

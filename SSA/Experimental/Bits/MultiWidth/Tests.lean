@@ -46,8 +46,6 @@ info: fsm from MultiWidth.mkPredicateFSMNondep 1 2 MultiWidth.Nondep.Predicate.b
 ---
 info: fsm circuit size: 58
 ---
-info: FSM state space size: 32
----
 warning: abstracted non-variable bitvector: ⏎
   → '1'
 ---
@@ -82,8 +80,6 @@ info: fsm from MultiWidth.mkPredicateFSMNondep 3 1 MultiWidth.Nondep.Predicate.b
   (MultiWidth.Nondep.Term.zext (MultiWidth.Nondep.Term.var 0 { toNat := 2 }) { toNat := 0 }).
 ---
 info: fsm circuit size: 258
----
-info: FSM state space size: 8589934592
 ---
 error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
   (MultiWidth.BinaryRelationKind.eq)

@@ -53,6 +53,10 @@ jobs:
         run: |
           lake -R build
 
+      - name: Ensure InstCombine goals are up-to-date
+        run: |
+          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
+
       - name: Run LLVM
         continue-on-error: true
         run: |

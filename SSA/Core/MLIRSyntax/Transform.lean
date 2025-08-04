@@ -71,10 +71,10 @@ class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
   mkTy   : MLIRType φ → ExceptM d d.Ty
 
 class TransformExpr (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ]  where
-  mkExpr   : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Expr d Γ eff ty)
+  mkExpr   : (Γ : Ctxt d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Expr d Γ eff ty)
 
 class TransformReturn (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ] where
-  mkReturn : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Com d Γ eff ty)
+  mkReturn : (Γ : Ctxt d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Com d Γ eff ty)
 
 /- instance of the transform dialect, plus data needed about `Op` and `Ty`. -/
 variable {d φ} [DialectSignature d] [DecidableEq d.Ty] [DecidableEq d.Op]
@@ -112,7 +112,9 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
   else
     let t := Γ.toList[index]'(Nat.lt_of_not_le h)
     if h : t = expectedType then
-      return ⟨index, by simp only [get?, ← h]; rw [←List.getElem?_eq_getElem]⟩
+      return ⟨index, by
+        simp [← h, t, Ctxt.getElem?_eq_toList_getElem?]
+      ⟩
     else
       throw <| .typeError (toString expectedType) (toString t)
 
@@ -184,7 +186,7 @@ private def mkComHelper
     else
       let _ ← addValToMapping Γ (var.res[0]'(by simp_all only [bne_iff_ne, ne_eq,
         Decidable.not_not, Nat.lt_succ_self]) |>.fst |> SSAValToString) ty₁
-      let ⟨eff₂, ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
+      let ⟨eff₂, ty₂, body⟩ ← mkComHelper (Γ.snoc ty₁) rest
       return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 

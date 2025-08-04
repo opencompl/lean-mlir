@@ -244,7 +244,7 @@ def mkTermEnvCons (reader : CollectState)
   return out
 
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
-def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (tctx : Expr) : SolverM Expr := do
+def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr) : SolverM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
   for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx do
     let some wexpr := reader.bvIxToWidthExpr.get? ix
@@ -331,7 +331,7 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
     debugCheck out
     return out
   | .add a b =>
-     let out ← mkAppM ``MultiWidth.Term.add 
+     let out ← mkAppM ``MultiWidth.Term.add
         #[← mkTermExpr wcard tcard tctx a,
         ← mkTermExpr wcard tcard tctx b]
      debugCheck out
@@ -562,7 +562,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     logInfo m!"collected predicate: {repr p}"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
-    let tenv ← collect.mkTenvExpr (wenv := wenv) (tctx := tctx)
+    let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
     let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
@@ -576,7 +576,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     logInfo m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     logInfo m!"fsm circuit size: {fsm.toFsm.circuitSize}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
-    match stats with 
+    match stats with
     | .safetyFailure i =>
       collect.logSuspiciousFvars
       throwError m!"safety failure at iteration {i} for predicate {repr p}"

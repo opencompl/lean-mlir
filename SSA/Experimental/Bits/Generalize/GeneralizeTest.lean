@@ -1,10 +1,14 @@
-import SSA.Experimental.Bits.Fast.Generalize
+import SSA.Experimental.Bits.Generalize.Generalize
 
 set_option trace.profiler true
-set_option trace.profiler.threshold 1
 set_option trace.Generalize true
 
+set_option maxHeartbeats 1000000000000
+set_option maxRecDepth 1000000
+
 variable {x y : BitVec 8}
+#eval (1#8 ^^^ 1) ||| 0
+#eval (1#8 ^^^ 1) ||| 0x3e#8
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y --- PASSED add_or_sub_comb_i8_negative_y_sub_thm; #1
 #generalize (0#8 - x ||| y) + x = (y ||| 0#8 - x) + x -- PASSED add_or_sub_comb_i8_negative_y_or_thm; #7
 #generalize (0#8 - x ^^^ x) + x = (x ^^^ 0#8 - x) + x -- PASSED add_or_sub_comb_i8_negative_xor_instead_or_thm; #20
@@ -47,7 +51,6 @@ variable {x y z: BitVec 32}
 #generalize (x + 5) - (y + 1)  =  x - y + 4
 #generalize (x + 5) + (y + 1)  =  x + y + 6
 #generalize (x <<< 10) <<< 14 = x <<< 24 --- #42
-
 #generalize (x &&& 7#32 ||| y &&& 8#32) &&& 7#32 = x &&& 7#32 ---  gandhorand_proof/test1_thm; #39
 #generalize (x ||| y >>> 31#32) &&& 2#32 = x &&& 2#32 ---  gandhorand_proof/test4_thm; #40
 #generalize (x &&& 12#32 ^^^ 15#32) &&& 1#32 = 1#32 -- gand_proof/test10_thm; #41
@@ -59,9 +62,9 @@ variable {x y z: BitVec 32}
 variable {x y z: BitVec 64}
 #generalize 0#64 - x + (0#64 - x &&& 1#64) = 0#64 - (x &&& BitVec.ofInt 64 (-2)) --- gand2_proof#test10_thm #46
 
+
 variable {x y : BitVec 67}
 #generalize (x ||| y >>> 66#67) &&& 2#67 = x &&& 2#67 -- gapinthandhorhand_proof#test4_thm #22
-
 
 variable {x y z: BitVec 232}
 #generalize x >>> 231#232 >>> 1#232 = 0#232 -- PASSED - gshifthshift_proof#lshr_lshr_thm; #17

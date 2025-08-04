@@ -440,13 +440,14 @@ lemma CNFA.ofFSM_spec (p : FSM arity) :
     (CNFA.ofFSM p).Sim (NFA'.ofFSM p) := by
   apply bisim_comp
   · apply worklistRun_spec
-  use (λ s q ↦ q = bitVecToFinFun s)
+  use {(s, q) | q = bitVecToFinFun s}
   simp [nfa', nfa, NFA'.ofFSM, NFA'.ofFSM', NFA.ofFSM]
   constructor
   · simp
   · constructor <;> simp
   · aesop
-  · rintro q₁ q₂ a q₂' rfl hst
+  · rintro q₁ q₂ a q₂' h hst
+    simp only [Set.mem_setOf_eq] at h; subst h
     use (finFunToBitVec q₂')
     simpa [hst]
 
