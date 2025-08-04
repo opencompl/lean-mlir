@@ -11,7 +11,6 @@ import Lean
 
 namespace MultiWidth
 
-
 instance : HAnd (FSM α) (FSM α) (FSM α) where
   hAnd := composeBinaryAux' FSM.and
 

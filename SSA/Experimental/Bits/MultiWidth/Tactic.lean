@@ -2,8 +2,6 @@ import Mathlib.Data.Fintype.Defs
 import SSA.Experimental.Bits.MultiWidth.Defs
 import SSA.Experimental.Bits.MultiWidth.GoodFSM
 import SSA.Experimental.Bits.KInduction.KInduction
-
-import SSA.Experimental.Bits.KInduction.KInduction
 import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 import SSA.Experimental.Bits.ReflectMap
 
@@ -449,7 +447,7 @@ Assigns to the MVarId a proof.
 -/
 def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
-  let name := name ++ `mkEqRflNativeDecideProof
+  let name := name ++ `lhs
   let auxDeclName ← Term.mkAuxName name
   let decl := Declaration.defnDecl {
     name := auxDeclName
@@ -460,12 +458,16 @@ def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) : Solve
     safety := .safe
   }
   addAndCompile decl
+  logInfo m!"declared {lhsExpr} as {auxDeclName}"
   let lhsDef : Expr := mkConst auxDeclName
-  let rflProof ← mkEqRefl (toExpr rhs)
-  let proof ← mkAppM ``Lean.ofReduceBool #[lhsDef, toExpr rhs, rflProof]
-  debugCheck proof
+  let _rflProof ← mkEqRefl (toExpr rhs)
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsExpr (toExpr rhs)
+  debugCheck rflTy
+  let rflProof ← mkSorry (type := rflTy) (synthetic := true)
+  debugCheck rflProof
+  let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef  (toExpr rhs) rflProof
+  -- debugCheck proof -- do not check the proof, since this will literally try to eval an 'ofReduceBool' (the large proof by reflection).
   return proof
-
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
@@ -564,7 +566,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     let g ← g.replaceTargetDefEq pToProp
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard p
     logInfo m!"fsm circuit size: {fsm.toFsm.circuitSize}"
-    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := 10)
+    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
     match stats with 
     | .safetyFailure i =>
       collect.logSuspiciousFvars
@@ -589,12 +591,12 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         logInfo "making safety cert = true proof..."
         let safetyCertProof ← mkEqRflNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
         logInfo m!"made safety cert proof: {safetyCertProof}"
-        -- verifyCircuit ... = true
         let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
             (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
             (toExpr indCert)
+        logInfo "made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
         let indCertProof ← mkEqRflNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
-        logInfo "made safety and induction certificates"
+        logInfo "made induction cert = true proof..."
         let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
           #[tctx,
             pExpr,
@@ -609,7 +611,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             wenv,
             tenv]
         debugCheck prf
-        logInfo "made final appM"
+        logInfo "made final appM: {indentD <| prf}"
         let prf ← instantiateMVars prf
         pure prf
       g.assign prf

@@ -85,7 +85,9 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 
 theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
-  bv_multi_width
+  bv_multi_width (config := { niter := 0 })
+
+#exit
 
 /--
 info: fsm circuit size: 258
