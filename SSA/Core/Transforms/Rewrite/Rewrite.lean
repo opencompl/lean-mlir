@@ -94,6 +94,13 @@ def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
     com.toFlatCom.ret = com.returnVar := by
   simp [toFlatCom]
 
+variable [QPF G] [Monad G] in
+@[simp] lemma EffectKind.qpf_map_eq (eff : EffectKind) :
+    @Functor.map (eff.toMonad G) EffectKind.instQPFToMonad.toFunctor
+    = @Functor.map (eff.toMonad G) EffectKind.instMonadToMonad.toFunctor := by
+  sorry
+
+variable [QPF d.m] [UniformQPF d.m] in
 theorem denote_rewriteAt [LawfulMonad d.m]
     {lhs rhs : Com d Γ₁ .pure t₁}
     (hl : lhs.denote = rhs.denote)
@@ -118,7 +125,9 @@ theorem denote_rewriteAt [LawfulMonad d.m]
   by
     simpa [Zipper.denote_insertPureCom, hl, denote_splitProgramAt h_split]
 
-  simp only [lets'.denote_eq_denoteIntoSubtype, bind_map_left]
+  simp only [lets'.denote_eq_denoteIntoSubtype]
+  repeat rw [EffectKind.qpf_map_eq]
+  simp only [bind_map_left]
   simp [denote_matchLets_of_matchVarMap hmap]
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
@@ -156,7 +165,7 @@ def rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
         | none => target
       else target
 
-variable [LawfulMonad d.m]
+variable [LawfulMonad d.m] [QPF d.m] [UniformQPF d.m]
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂  eff t₂) :
     (rewritePeepholeAt pr pos target).denote = target.denote := by
@@ -196,13 +205,13 @@ theorem denote_rewritePeephole_go (pr : PeepholeRewrite d Γ t)
   case zero =>
     simp [rewritePeephole_go]
   case succ fuel' hfuel =>
-    simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
+    simpa [rewritePeephole_go, hfuel] using denote_rewritePeepholeAt ..
 
 /-- `rewritePeephole` preserves semantics. -/
 theorem denote_rewritePeephole (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
     (rewritePeephole fuel pr target).denote = target.denote := by
-  simp[rewritePeephole, denote_rewritePeephole_go]
+  exact denote_rewritePeephole_go ..
 
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
@@ -255,13 +264,13 @@ theorem denote_multiRewritePeepholeAt (fuel : ℕ)
   case zero =>
     simp [multiRewritePeepholeAt]
   case succ hp =>
-    simp [multiRewritePeepholeAt, hp, denote_foldl_rewritePeepholeAt]
+    simpa [multiRewritePeepholeAt, hp] using denote_foldl_rewritePeepholeAt ..
 
 /- The proof that `rewritePeephole_multi` is semantics preserving  -/
 theorem denote_multiRewritePeephole (fuel : ℕ)
   (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) :
     (multiRewritePeephole fuel prs target).denote = target.denote := by
-  simp [multiRewritePeephole, denote_multiRewritePeepholeAt]
+  exact denote_multiRewritePeepholeAt ..
 
 theorem Expr.denote_eq_of_region_denote_eq {ty} (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)

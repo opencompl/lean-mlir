@@ -367,19 +367,30 @@ noncomputable def Lets.validDenote (lets : Lets d Γ_in eff Γ_out) (V : Γ_in.V
     eff.toMonad d.m (lets.ValidDenotation V) :=
   QPF.attachSupp (lets.denote V)
 
+/-! ### Lets.ValidDenotation.varCases -/
+
+def Lets.ValidDenotation.varCases {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff ty}
+    (V : (lets.var e).ValidDenotation V_in) :
+    Σ (V : lets.ValidDenotation V_in), e.ValidDenotation V.val :=
+  let Vmid := V.val.comap (Ctxt.Hom.id.snocRight)
+  let Vout := V.val
+
+  ⟨ ⟨Vmid, by
+      have := V.prop
+      simp +zetaDelta
+      sorry
+    ⟩,
+    ⟨Vout, sorry⟩ ⟩
+
+
+
 /--
 The pullback of a valuation resulting from `Expr.denote` (of a pure expression)
 via `scocRight` is just the original valuation passed to `Expr.denote`.
 -/
-@[simp] lemma Valuation.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
+-- @[simp]
+lemma Valuation.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
     Valuation.comap (e.denote V) (.snocRight f) = V.comap f := by
-  sorry
-
--- TODO: move to Utils/QPF file
-variable {G} [QPF G] [UniformQPF G]
-@[simp] lemma QPF.val_attachSupp (x : G α) :
-    Subtype.val <$> (QPF.attachSupp x) = x := by
-  simp [QPF.attachSupp]
   sorry
 
 theorem Expr.denote_eq_denoteIntoSubtype (e : Expr d Γ eff ty) (V : Valuation Γ) :
@@ -438,12 +449,13 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
   · contradiction
 
 
--- @[simp] lemma Lets.denote_var_last_pure (lets : Lets d Γ_in .pure Γ_out)
---     (e : Expr d Γ_out .pure ty) (V_in : Valuation Γ_in) :
---     Lets.denote (var lets e) V_in (Var.last ..) = e.denote (lets.denote V_in) := by
---   apply Id.ext
---   simp [Lets.denote]
---   congr
+@[simp] lemma Lets.denote_var_last_pure (lets : Lets d Γ_in .pure Γ_out)
+    (e : Expr d Γ_out .pure ty) (V_in : Valuation Γ_in) :
+    Lets.denote (var lets e) V_in (Var.last ..) = e.denoteOp (lets.denote V_in) := by
+  show e.denote (lets.denote _) _ = _
+  simp only [Expr.denote_unfold]
+  show (lets.denote V_in |>.snoc _) _ = _
+  simp
 
 @[simp] lemma Expr.denoteOp_eq_denoteOp_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
     {Γv : Valuation Γ} {Δv : Valuation Δ}
@@ -463,6 +475,25 @@ variable {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out}
 
+theorem Lets.ValidDenotation.denote_eq_of_getPureExpr
+    (V : lets.ValidDenotation V_in) {v : Γ_out.Var t} :
+    lets.getPureExpr v = some e → e.denoteOp V.val = V.val v := by
+  simp only [getPureExpr, Option.map_eq_map, Option.map_eq_some_iff, forall_exists_index, and_imp]
+  rintro e h rfl
+  simp only [Expr.denoteOp_changeVars]
+
+  induction lets
+  case nil => simp [getPureExprAux] at h
+  case var ih =>
+    cases v
+    case last =>
+      simp [getPureExprAux, Expr.toPure?] at h
+      rcases h with ⟨_, rfl⟩
+      simp [ValidDenotation] at V
+      sorry
+    case toSnoc v =>
+      sorry
+
 /--
 if matchVar lets v matchLets w ma = .some varMap,
 then informally:
@@ -473,7 +504,7 @@ then informally:
 theorem denote_matchVar
     {v w : Var _ t}
     (h_matchVar : ((), varMap₁) ∈ matchVar lets v matchLets w ma)
-    (V : lets.ValidDenotation) :
+    (V : lets.ValidDenotation V_in) :
     (matchLets.denote (fun t' v' =>
         match varMap₁.lookup ⟨t', v'⟩ with
         | .some mappedVar => by exact (V.val mappedVar)
@@ -497,16 +528,19 @@ theorem denote_matchVar
   case var t' matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
+      stop
       simp only [Option.mem_def, Var.succ_eq_toSnoc, Lets.denote,
         EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq', Valuation.snoc_toSnoc] at *
       rw [Var.toSnoc, matchVar_var_succ_eq] at h_matchVar
-      apply ih h_matchVar h_sub
+      stop
+      apply ih
+      -- apply ih h_matchVar h_sub
 
     | ⟨0, h_w⟩ =>
       obtain rfl : t = t' := by
         symm; simpa using h_w
       have ⟨args, h_pure, h_matchArgs⟩ := matchVar_var_last h_matchVar
-      rw [← V.property v _ h_pure]
+      rw [← V.denote_eq_of_getPureExpr h_pure]
       simp only [Var.zero_eq_last, Lets.denote_var_last_pure]
       apply Expr.denoteOp_eq_denoteOp_of <;> (try rfl)
       simp only [Expr.op_mk, Expr.args_mk]
@@ -647,7 +681,7 @@ theorem denote_matchLets_of_matchVarMap
     {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
     (hmap : map ∈ matchVarMap lets v matchLets w hvars)
-    (V : lets.ValidDenotation) :
+    (V : lets.ValidDenotation V_in) :
     matchLets.denote (V.val.comap map) w = V.val v := by
   rw [matchVarMap] at hmap
   split at hmap

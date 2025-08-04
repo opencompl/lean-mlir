@@ -14,6 +14,8 @@ class UniformQPF (F : Type u → Type u) [QPF F] where
 
 variable [QPF G] [UniformQPF G]
 
+/-! ## Functor Support -/
+
 noncomputable def attachSupp (x : G α) : G { y // y ∈ Functor.supp x } :=
   have hx : Liftp (· ∈ supp x) x := by
     rw [← QPF.abs_repr x, QPF.liftp_iff]
@@ -21,6 +23,25 @@ noncomputable def attachSupp (x : G α) : G { y // y ∈ Functor.supp x } :=
     use a, f
     simp [QPF.supp_eq_of_isUniform UniformQPF.isUniform]
   hx.choose
+
+@[simp] lemma val_attachSupp (x : G α) :
+    Subtype.val <$> (QPF.attachSupp x) = x := by
+  have := Exists.choose_spec <| attachSupp._proof_1 x
+  simpa [QPF.attachSupp]
+
+variable [Monad G] in
+lemma mem_supp_bind (x : G α) (f : α → G β) :
+    ∀ b ∈ supp (x >>= f), ∃ a ∈ supp x, b ∈ supp (f a) := by
+  simp only [supp, Set.mem_setOf_eq]
+  rw [← abs_repr x]
+  intro b h
+  stop
+
+  simp only [mem_supp, Set.image_univ, Set.mem_range, Set.mem_setOf_eq]
+  constructor
+  · intro h
+    sorry
+  · sorry
 
 end QPF
 export QPF (UniformQPF)
@@ -45,7 +66,7 @@ instance : UniformQPF Id where
 
 
 
-
+/-! ## Random Functor Junk -/
 -- TODO: upstream to Mathlib
 namespace Functor
 variable {F} [Functor F] [LawfulFunctor F] {x : F α}
