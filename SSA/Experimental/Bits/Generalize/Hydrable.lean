@@ -17,6 +17,13 @@ open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
 namespace Generalize
 
+inductive SubstitutionValue (genExpr : Nat → Type) where
+| bvExpr {w} (bvExpr : genExpr w)
+| packedBV  (bv: BVExpr.PackedBitVec)
+
+instance : Inhabited (SubstitutionValue genExpr) where
+  default := .packedBV (BVExpr.PackedBitVec.mk (w := 0) 0#0)
+
 -- class Monad n
 class Hydrable (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
   beqLogical : BEq genLogicalExpr := by infer_instance
@@ -28,6 +35,19 @@ class Hydrable (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat
   genLogicalExprToExpr : parsedLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
   getAllNamesFromParsedLogicalExpr : parsedLogicalExpr → HashMap Nat Name
   getLogicalExprSize : genLogicalExpr → Nat
+  substitute : genLogicalExpr → (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) → genLogicalExpr
+  packedBitVecToSubstitutionValue : (Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (SubstitutionValue genExpr)
+  getIdentityAndAbsorptionConstraints : genLogicalExpr →  Std.HashSet Nat → List genLogicalExpr
+  addConstraints : genLogicalExpr → List genLogicalExpr → Gate → genLogicalExpr
+  -- pruneEquivalentGenExprs : List (genExpr n) → MetaM (List (genExpr n))
+  -- pruneEquivalentGenLogicalExprs : List (genLogicalExpr) → MetaM (List genLogicalExpr)
+  not : genLogicalExpr → genLogicalExpr
+  and : genLogicalExpr → genLogicalExpr → genLogicalExpr
+  eq : genExpr n → genExpr n → genLogicalExpr
+  True : genLogicalExpr
+  False : genLogicalExpr
+  genExprVar : Nat → genExpr n
+  genExprConst : BitVec n → genExpr n
 
 
 attribute [instance] Hydrable.beqLogical

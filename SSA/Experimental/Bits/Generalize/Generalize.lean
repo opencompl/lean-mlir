@@ -113,97 +113,10 @@ def solve [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr]
             pure (some assignment)
     return res
 
-def addConstraints (expr: GenBVLogicalExpr) (constraints: List GenBVLogicalExpr) (op: Gate := Gate.and) : GenBVLogicalExpr :=
-      match constraints with
-      | [] => expr
-      | x::xs =>
-          match expr with
-          | BoolExpr.const _ => addConstraints x xs op
-          | _ => addConstraints (BoolExpr.gate op expr x) xs op
-
-def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenBVLogicalExpr) (symVars : Std.HashSet Nat) : List GenBVLogicalExpr :=
-      match bvLogicalExpr with
-      | .literal (GenBVPred.bin lhs _ rhs) => (getBVExprConstraints lhs) ++ (getBVExprConstraints rhs)
-      | .not boolExpr => getIdentityAndAbsorptionConstraints boolExpr symVars
-      | .gate _ lhs rhs => (getIdentityAndAbsorptionConstraints lhs symVars) ++ (getIdentityAndAbsorptionConstraints rhs symVars)
-      | .ite constVar auxVar op3 =>
-          (getIdentityAndAbsorptionConstraints constVar symVars) ++ (getIdentityAndAbsorptionConstraints auxVar symVars) ++ (getIdentityAndAbsorptionConstraints op3 symVars)
-      | _ => []
-
-      where
-        getBVExprConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr := Id.run do
-                match bvExpr with
-                | .shiftRight lhs rhs | .shiftLeft lhs rhs | .arithShiftRight lhs rhs =>
-                      match (lhs, rhs) with
-                      | (GenBVExpr.var lhsId, GenBVExpr.var rhsId) =>
-                          let mut constraints := []
-
-                          if symVars.contains lhsId then
-                            constraints := getLhsShiftConstraints lhs ++ constraints
-
-                          if symVars.contains rhsId then
-                            constraints := getRhsShiftConstraints rhs ++ constraints
-                          pure constraints
-                      | (GenBVExpr.var lhsId, _) =>
-                          if !symVars.contains lhsId then
-                            getBVExprConstraints rhs
-                          else
-                            (getLhsShiftConstraints lhs) ++ (getBVExprConstraints rhs)
-                      | (_, GenBVExpr.var rhsId) =>
-                          if !symVars.contains rhsId then
-                            getBVExprConstraints lhs
-                          else
-                          (getBVExprConstraints lhs)  ++ (getRhsShiftConstraints rhs)
-                      | _ => ((getBVExprConstraints lhs) ++ (getBVExprConstraints rhs))
-                | .bin lhs op rhs  =>
-                      match (lhs, rhs) with
-                      | (GenBVExpr.var lhsId, GenBVExpr.var rhsId) =>
-                          let mut constraints := []
-
-                          if symVars.contains lhsId then
-                            constraints := getBitwiseConstraints lhs op ++ constraints
-
-                          if symVars.contains rhsId then
-                            constraints := getBitwiseConstraints rhs op ++ constraints
-                          pure constraints
-                      | (GenBVExpr.var lhsId, _) =>
-                          if !symVars.contains lhsId then
-                            getBVExprConstraints rhs
-                          else
-                            (getBitwiseConstraints lhs op) ++ (getBVExprConstraints rhs)
-                      | (_, GenBVExpr.var rhsId) =>
-                          if !symVars.contains rhsId then
-                            getBVExprConstraints lhs
-                          else
-                         (getBVExprConstraints lhs)  ++ (getBitwiseConstraints rhs op)
-                      | _ => ((getBVExprConstraints lhs) ++ (getBVExprConstraints rhs))
-                | .un _ operand =>
-                      getBVExprConstraints operand
-                | _ =>  []
-
-        getLhsShiftConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr :=
-          let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const ((BitVec.ofNat w 0)))))
-          [neqZero]
-
-        getRhsShiftConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr :=
-          let ltWidth := BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.ult (GenBVExpr.const (BitVec.ofNat w w)))
-          let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const ((BitVec.ofNat w 0)))))
-
-          [ltWidth, neqZero]
-
-        getBitwiseConstraints {w} (bvExpr: GenBVExpr w) (op : BVBinOp): List GenBVLogicalExpr :=
-            let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const (BitVec.ofNat w 0))))
-            let neqAllOnes := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const (BitVec.allOnes w))))
-
-            match op with
-            | BVBinOp.xor => [neqZero]
-            | BVBinOp.or | BVBinOp.and => [neqZero, neqAllOnes]
-            | _ => []
-
-
 partial def existsForAll {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr]
     (origExpr: genLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1) :
     GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+
     let rec constantsSynthesis (bvExpr: genLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
             : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
       let existsRes ← solve bvExpr
@@ -213,19 +126,19 @@ partial def existsForAll {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrabl
                   return none
         | some assignment =>
           let existsVals := assignment.filter fun c _ => existsVars.contains c
-          let substExpr := substitute bvExpr (packedBitVecToSubstitutionValue existsVals)
-          let forAllRes ← solve (BoolExpr.not substExpr)
+          let substExpr := H.substitute bvExpr (H.packedBitVecToSubstitutionValue existsVals)
+          let forAllRes ← solve (H.not substExpr)
 
           match forAllRes with
             | none =>
               return some existsVals
             | some counterEx =>
-                let newExpr := substitute bvExpr (packedBitVecToSubstitutionValue counterEx)
-                constantsSynthesis (BoolExpr.gate Gate.and bvExpr newExpr) existsVars forAllVars
+                let newExpr := H.substitute bvExpr (H.packedBitVecToSubstitutionValue counterEx)
+                constantsSynthesis (H.and bvExpr newExpr) existsVars forAllVars
 
     let mut res : List (Std.HashMap Nat BVExpr.PackedBitVec) := []
-    let identityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints origExpr (Std.HashSet.ofList existsVars)
-    let targetExpr := (BoolExpr.gate Gate.and origExpr (addConstraints (BoolExpr.const True) (identityAndAbsorptionConstraints)))
+    let identityAndAbsorptionConstraints := H.getIdentityAndAbsorptionConstraints origExpr (Std.HashSet.ofList existsVars)
+    let targetExpr := (H.and origExpr (H.addConstraints H.True (identityAndAbsorptionConstraints) Gate.and))
 
     match numExamples with
     | 0 => return res
@@ -234,9 +147,9 @@ partial def existsForAll {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrabl
                 | none => return res
                 | some assignment =>
                       res := assignment :: res
-                      let newConstraints := assignment.toList.map (fun c => BoolExpr.literal (GenBVPred.bin (GenBVExpr.var c.fst) BVBinPred.eq (GenBVExpr.const c.snd.bv)))
-                      let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
-                      return res ++ (← existsForAll (BoolExpr.gate Gate.and origExpr constrainedBVExpr) existsVars forAllVars n)
+                      let newConstraints := assignment.toList.map (fun c => H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv))
+                      let constrainedBVExpr := H.not (H.addConstraints H.True newConstraints Gate.and)
+                      return res ++ (← existsForAll (H.and origExpr constrainedBVExpr) existsVars forAllVars n)
 
 elab "#reducewidth" expr:term " : " target:term : command =>
   open Lean Lean.Elab Command Term in
@@ -367,17 +280,18 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
 
-partial def countModel (expr : GenBVLogicalExpr) (constants: Std.HashSet Nat): GeneralizerStateM Nat := do
+partial def countModel {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (expr : genLogicalExpr) (constants: Std.HashSet Nat):
+            GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr Nat := do
     go 0 expr
     where
-        go (count: Nat) (expr : GenBVLogicalExpr) : GeneralizerStateM Nat := do
+        go (count: Nat) (expr : genLogicalExpr) : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr Nat := do
           let res ← solve expr
           match res with
           | none => return count
           | some assignment =>
                 let filteredAssignments := assignment.filter (λ c _ => constants.contains c)
                 let newConstraints := filteredAssignments.toList.map (fun c => BoolExpr.literal (GenBVPred.bin (GenBVExpr.var c.fst) BVBinPred.eq (GenBVExpr.const c.snd.bv)))
-                let constrainedBVExpr := BoolExpr.not (addConstraints (BoolExpr.const True) newConstraints)
+                let constrainedBVExpr := BoolExpr.not (H.addConstraints (BoolExpr.const True) newConstraints)
 
                 if count + 1 > 1000 then
                   return count
@@ -392,13 +306,13 @@ def generateCombinations (num: Nat) (values: List α) : List (List α) :=
             let combosWithX := (generateCombinations n xs).map (λ combo => x :: combo)
             combosWithoutX ++ combosWithX
 
-def getNegativeExamples (bvExpr: GenBVLogicalExpr) (consts: List Nat) (numEx: Nat) :
-              GeneralizerStateM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+def getNegativeExamples {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (bvExpr: genLogicalExpr) (consts: List Nat) (numEx: Nat) :
+              GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
   let targetExpr := (BoolExpr.not bvExpr)
   return (← helper targetExpr numEx)
   where
-        helper (expr: GenBVLogicalExpr) (depth : Nat)
-          : GeneralizerStateM (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+        helper (expr: genLogicalExpr) (depth : Nat)
+          : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
         match depth with
           | 0 => return []
           | n + 1 =>
@@ -413,7 +327,7 @@ def getNegativeExamples (bvExpr: GenBVLogicalExpr) (consts: List Nat) (numEx: Na
                    let res ← helper (addConstraints expr newConstraints) n
                    return [constVals] ++ res
 
-def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM (List (GenBVExpr w)) := do
+def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : MetaM (List (GenBVExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
     let mut pruned : List (GenBVExpr w) := []
 
@@ -1033,7 +947,7 @@ def generalize  : GeneralizerStateM (Option GenBVLogicalExpr) := do
     match exprWithNoPrecondition with
     | some generalized => return some generalized
     | none =>
-              let state ← get
+              let stat e ← get
               if state.needsPreconditionsExprs.isEmpty then
                 throwError m! "Could not synthesise constant expressions for {state.parsedBVLogicalExpr.bvLogicalExpr}"
 

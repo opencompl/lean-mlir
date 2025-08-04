@@ -343,3 +343,14 @@ instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   getAllNamesFromParsedLogicalExpr p :=
     Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
   getLogicalExprSize e := e.size
+  substitute := substitute
+  packedBitVecToSubstitutionValue := packedBitVecToSubstitutionValue
+  getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
+  addConstraints := addConstraints
+  not e := BoolExpr.not e
+  and e1 e2 := BoolExpr.gate Gate.and e1 e2
+  True := BoolExpr.const True
+  False := BoolExpr.const False
+  genExprVar id := GenBVExpr.var id
+  genExprConst bv := GenBVExpr.const bv
+  eq e1 e2 := BoolExpr.literal (GenBVPred.bin e1 BVBinPred.eq e2)
