@@ -73,12 +73,18 @@ def join (x y : TokenStream) : TokenStream  :=
     | none, some _ => (none, (x.tail, y))
     | none, none => (none, (x.tail, y.tail))
 
+/--
+Select one of the incoming tokens and emits an output stating which token was selected.
+If multiple tokens are ready to transact at the same time,
+the tokens are selected with priority, from first to last (i.e. left to right in the IR).
+This property ensures deterministic behavior.
+-/
 def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
   Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some _, some _ => (some 1, (x.tail, y))
-    | some _, none => (some 1, (x.tail, y.tail))
-    | none, some _ => (some 0, (x.tail, y.tail))
+    | some _, none => (some 1, (x.tail, y))
+    | none, some _ => (some 0, (x, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
 def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
