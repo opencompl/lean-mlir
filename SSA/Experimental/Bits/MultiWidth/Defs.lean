@@ -105,7 +105,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
 
 inductive BinaryRelationKind
 | eq
-deriving DecidableEq, Repr, Inhabited
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive Predicate
   (ctx : Term.Ctx wcard tcard) : Type
@@ -173,7 +173,7 @@ namespace Nondep
 
 structure WidthExpr where ofNat ::
   toNat : Nat
-deriving Inhabited, Repr, Hashable, DecidableEq
+deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
   w.toNat + 1
@@ -191,7 +191,7 @@ inductive Term
 | add (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
 | sext (a : Term) (wnew : WidthExpr) : Term
-deriving DecidableEq, Inhabited, Repr
+deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.ofDep {wcard tcard : Nat}
     {tctx :Term.Ctx wcard tcard}
@@ -225,7 +225,7 @@ inductive Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
 | not (p : Predicate) : Predicate
-deriving DecidableEq, Inhabited, Repr
+deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
   match p with

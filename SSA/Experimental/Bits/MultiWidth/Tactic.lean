@@ -445,7 +445,7 @@ Assumes that the mvar has type 'a = <true>' or 'a = <false>',
 and closes this goal with 'native_decide' of a 'rfl' proof.
 Assigns to the MVarId a proof.
 -/
-def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) : SolverM Expr := do
+def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let name := name ++ `lhs
   let auxDeclName ← Term.mkAuxName name
@@ -462,13 +462,10 @@ def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) : Solve
   let lhsDef : Expr := mkConst auxDeclName
   let rflProof ← mkEqRefl (toExpr rhs)
   -- let rflProof := mkApp2 (mkConst ``Eq.refl [Level.ofNat 1]) (mkConst ``Bool []) (toExpr rhs)
-  -- let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsExpr (toExpr rhs)
-  -- debugCheck rflTy
-  -- let rflProof ← mkSorry (type := rflTy) (synthetic := true)
-  -- debugCheck rflProof
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsExpr (toExpr rhs)
+  let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
   let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
-  -- debugCheck proof -- do not check the proof, since this will literally try to eval an 'ofReduceBool' (the large proof by reflection).
-  return proof
+  return if debugSorry? then sorryProof else proof
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
@@ -543,6 +540,15 @@ def Expr.mkPredicateFSMDep (wcard tcard : Nat) (tctx : Expr) (p : Expr) : Solver
   debugCheck out
   return out
 
+/--
+info: MultiWidth.mkPredicateFSMNondep (wcard tcard : ℕ) (p : Nondep.Predicate) : PredicateFSM wcard tcard p
+-/
+#guard_msgs in #check MultiWidth.mkPredicateFSMNondep
+def Expr.mkPredicateFSMNondep (wcard tcard : Nat) (pNondep : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, pNondep]
+  debugCheck out
+  return out
+
 def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
   let out ← mkAppM (``MultiWidth.PredicateFSM.toFsm) #[p]
   debugCheck out
@@ -558,6 +564,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (tctx := tctx)
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard tctx p
+    let pNondepExpr := Lean.ToExpr.toExpr p
     let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
       (wcard := collect.wcard)
       (tcard := collect.tcard)
@@ -566,6 +573,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       (tenv := tenv)
     let g ← g.replaceTargetDefEq pToProp
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard p
+    logInfo m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     logInfo m!"fsm circuit size: {fsm.toFsm.circuitSize}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
     match stats with 
@@ -578,11 +586,13 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       logInfo m!"proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
-        let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
-        let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
-        let niter := (← read) |>.niter
-        let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niter)
-        let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niter)
+        -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
+        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard pNondepExpr
+        -- let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
+        let fsmExpr ← Expr.mkPredicateFSMtoFSM predNondepFsmExpr
+        let maxIters := (← read) |>.niter
+        let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
+        let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
         logInfo "making safety certs..."
         -- | verifyCircuit (mkSafetyCircuit circs)
         let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
@@ -601,9 +611,12 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
           #[tctx,
             pExpr,
-            predFsmExpr,
+            pNondepExpr,
+            ← mkEqRefl pNondepExpr,
+            predNondepFsmExpr,
+            ← mkEqRefl predNondepFsmExpr,
             -- fsmExpr,
-            toExpr niter,
+            toExpr niters,
             circsExpr,
             circsLawfulExpr,
             toExpr safetyCert,
