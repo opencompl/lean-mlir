@@ -209,79 +209,11 @@ variable {x y z : BitVec 32}
 #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 
-partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
-                      TermElabM ( List (GenBVExpr w)) := do
-
-    let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
-        if orig.w < newWidth then
-            if orig.bv < 0 then
-             {bv := orig.bv.signExtend newWidth, w := newWidth}
-            else {bv := orig.bv.zeroExtend newWidth, w := newWidth}
-        else if orig.w > newWidth then
-            {bv := orig.bv.truncate newWidth, w := newWidth}
-        else
-            orig
-
-    match depth with
-      | 0 => return []
-      | _ =>
-            let mut res : List (GenBVExpr w) := []
-
-            for (constId, constVal) in constants.toArray do
-              let newVar := GenBVExpr.var constId
-
-              if constVal == target then
-                res := newVar :: res
-                continue
-
-              if constId == parent then -- Avoid runaway expressions
-                continue
-
-              if target.bv == 0 then
-                res := GenBVExpr.const 0 :: res
-
-              let newTarget := (updatePackedBVWidth target constVal.w)
-              if h : constVal.w = newTarget.w then
-                let targetBv := h ▸ newTarget.bv
-
-                -- ~C = T
-                if BitVec.not constVal.bv == targetBv then
-                  res := GenBVExpr.un BVUnOp.not newVar :: res
-
-                -- C + X = Target; New target = Target - X.
-                let addRes ← deductiveSearch expr constants {bv := targetBv - constVal.bv} (depth-1) constId
-                res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
-
-                -- C - X = Target
-                let subRes ← deductiveSearch expr constants {bv := constVal.bv - targetBv} (depth-1) constId
-                res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
-
-                -- X - C = Target
-                let subRes' ← deductiveSearch expr constants {bv := targetBv + constVal.bv}  (depth-1) constId
-                res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
-
-                -- X * C = Target
-                if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
-                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
-                  res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
-
-                -- C / X = Target
-                if targetBv != 0 && (BitVec.umod constVal.bv targetBv) == 0 then
-                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constVal.bv targetBv} (depth - 1) constId
-                  res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
-
-              else
-                    throwError m! "Width mismatch for expr : {expr} and target: {target}"
-            return res
-
-
-
 def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BVExpr.PackedBitVec)
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
 
-partial def countModel {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (expr : genLogicalExpr) (constants: Std.HashSet Nat):
-            GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr Nat := do
+partial def countModel {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (expr : genLogicalExpr) (constants: Std.HashSet Nat): GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr Nat := do
     go 0 expr
     where
         go (count: Nat) (expr : genLogicalExpr) : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr Nat := do
@@ -290,12 +222,13 @@ partial def countModel {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable 
           | none => return count
           | some assignment =>
                 let filteredAssignments := assignment.filter (λ c _ => constants.contains c)
-                let newConstraints := filteredAssignments.toList.map (fun c => BoolExpr.literal (GenBVPred.bin (GenBVExpr.var c.fst) BVBinPred.eq (GenBVExpr.const c.snd.bv)))
-                let constrainedBVExpr := BoolExpr.not (H.addConstraints (BoolExpr.const True) newConstraints)
+                let newConstraints := filteredAssignments.toList.map (fun c => H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv))
+
+                let constrainedBVExpr := H.not (H.addConstraints (H.True) newConstraints Gate.and)
 
                 if count + 1 > 1000 then
                   return count
-                pure (← go (count + 1) (BoolExpr.gate Gate.and expr constrainedBVExpr))
+                pure (← go (count + 1) (H.and expr constrainedBVExpr))
 
 def generateCombinations (num: Nat) (values: List α) : List (List α) :=
     match num, values with
@@ -308,7 +241,7 @@ def generateCombinations (num: Nat) (values: List α) : List (List α) :=
 
 def getNegativeExamples {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (bvExpr: genLogicalExpr) (consts: List Nat) (numEx: Nat) :
               GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-  let targetExpr := (BoolExpr.not bvExpr)
+  let targetExpr := H.not bvExpr
   return (← helper targetExpr numEx)
   where
         helper (expr: genLogicalExpr) (depth : Nat)
@@ -322,9 +255,9 @@ def getNegativeExamples {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable
               | none => return []
               | some assignment =>
                    let constVals := assignment.filter fun c _ => consts.contains c
-                   let newConstraints := constVals.toList.map (fun c => BoolExpr.not (BoolExpr.literal (GenBVPred.bin (GenBVExpr.var c.fst) BVBinPred.eq (GenBVExpr.const c.snd.bv))))
+                   let newConstraints := constVals.toList.map (fun c => H.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
 
-                   let res ← helper (addConstraints expr newConstraints) n
+                   let res ← helper (H.addConstraints expr newConstraints Gate.and) n
                    return [constVals] ++ res
 
 def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : MetaM (List (GenBVExpr w)) := do
@@ -736,7 +669,7 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BV
     pure res
 
 
-def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)): GeneralizerStateM (Option GenBVLogicalExpr) :=  do
+def synthesizeWithNoPrecondition {parsedLogicalExpr genLogicalExpr genExpr} [H : Hydrable parsedLogicalExpr genLogicalExpr genExpr] (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)): GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (Option GenBVLogicalExpr) :=  do
     let state ← get
     let parsedBVLogicalExpr := state.parsedBVLogicalExpr
     let processingWidth := state.processingWidth
@@ -754,7 +687,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
 
         logInfo m! "Performing deductive search"
         for (targetId, targetVal) in rhsAssignments do
-          let deductiveSearchRes ← deductiveSearch lhs.bvExpr lhsAssignments targetVal 3 1234
+          let deductiveSearchRes ← H.deductiveSearch lhs.bvExpr lhsAssignments targetVal 3 1234
           match deductiveSearchRes with
           | [] => break
           | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (h ▸ deductiveSearchRes)

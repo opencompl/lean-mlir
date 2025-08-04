@@ -347,6 +347,7 @@ instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   packedBitVecToSubstitutionValue := packedBitVecToSubstitutionValue
   getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
   addConstraints := addConstraints
+  deductiveSearch := deductiveSearch
   not e := BoolExpr.not e
   and e1 e2 := BoolExpr.gate Gate.and e1 e2
   True := BoolExpr.const True

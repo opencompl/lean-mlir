@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henrik Böving, Timi Adeniran, Léo Stefanesco
 -/
 import Lean
+import Lean.Elab.Term
 import SSA.Experimental.Bits.Generalize.Hydrable
 
 open Lean
+open Elab
 open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
@@ -428,7 +430,6 @@ def sameBothSides (bvLogicalExpr : GenBVLogicalExpr) : Bool :=
   | .literal (GenBVPred.bin lhs _ rhs) => lhs == rhs
   | _ => false
 
-
 /-
 This function expects that targetWidth >= w
 -/
@@ -481,3 +482,69 @@ def shiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
 
 def arithShiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
   GenBVExpr.arithShiftRight op1 op2
+
+
+partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec)
+      (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr w)) := do
+
+    let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
+        if orig.w < newWidth then
+            if orig.bv < 0 then
+             {bv := orig.bv.signExtend newWidth, w := newWidth}
+            else {bv := orig.bv.zeroExtend newWidth, w := newWidth}
+        else if orig.w > newWidth then
+            {bv := orig.bv.truncate newWidth, w := newWidth}
+        else
+            orig
+
+    match depth with
+      | 0 => return []
+      | _ =>
+            let mut res : List (GenBVExpr w) := []
+
+            for (constId, constVal) in constants.toArray do
+              let newVar := GenBVExpr.var constId
+
+              if constVal == target then
+                res := newVar :: res
+                continue
+
+              if constId == parent then -- Avoid runaway expressions
+                continue
+
+              if target.bv == 0 then
+                res := GenBVExpr.const 0 :: res
+
+              let newTarget := (updatePackedBVWidth target constVal.w)
+              if h : constVal.w = newTarget.w then
+                let targetBv := h ▸ newTarget.bv
+
+                -- ~C = T
+                if BitVec.not constVal.bv == targetBv then
+                  res := GenBVExpr.un BVUnOp.not newVar :: res
+
+                -- C + X = Target; New target = Target - X.
+                let addRes ← deductiveSearch expr constants {bv := targetBv - constVal.bv} (depth-1) constId
+                res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
+
+                -- C - X = Target
+                let subRes ← deductiveSearch expr constants {bv := constVal.bv - targetBv} (depth-1) constId
+                res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
+
+                -- X - C = Target
+                let subRes' ← deductiveSearch expr constants {bv := targetBv + constVal.bv}  (depth-1) constId
+                res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
+
+                -- X * C = Target
+                if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
+                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
+                  res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
+
+                -- C / X = Target
+                if targetBv != 0 && (BitVec.umod constVal.bv targetBv) == 0 then
+                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constVal.bv targetBv} (depth - 1) constId
+                  res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
+
+              else
+                    throwError m! "Width mismatch for expr : {expr} and target: {target}"
+            return res

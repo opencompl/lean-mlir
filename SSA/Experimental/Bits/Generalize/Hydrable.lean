@@ -48,6 +48,7 @@ class Hydrable (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat
   False : genLogicalExpr
   genExprVar : Nat → genExpr n
   genExprConst : BitVec n → genExpr n
+  deductiveSearch : genExpr n → Std.HashMap Nat BVExpr.PackedBitVec → BVExpr.PackedBitVec → Nat → Nat → TermElabM (List (genExpr n))
 
 
 attribute [instance] Hydrable.beqLogical
