@@ -600,7 +600,8 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
           #[tctx,
             pExpr,
-            fsmExpr,
+            predFsmExpr,
+            -- fsmExpr,
             toExpr niter,
             circsExpr,
             circsLawfulExpr,
@@ -610,7 +611,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             indCertProof,
             wenv,
             tenv]
-        debugCheck prf
+        -- debugCheck prf
         logInfo "made final appM: {indentD <| prf}"
         let prf ← instantiateMVars prf
         pure prf

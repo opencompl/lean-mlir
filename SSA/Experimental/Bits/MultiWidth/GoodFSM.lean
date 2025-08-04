@@ -177,7 +177,7 @@ then the predicate is satisfied.
 theorem Predicate.toProp_of_KInductionCircuits
    {wcard tcard : Nat}
    (tctx : Term.Ctx wcard tcard)
-   (p : MultiWidth.Predicate tctx) 
+   (p : MultiWidth.Predicate tctx)
    (fsm : PredicateFSM wcard tcard (.ofDep p))
    (n : Nat)
    (circs : KInductionCircuits fsm.toFsm n)
