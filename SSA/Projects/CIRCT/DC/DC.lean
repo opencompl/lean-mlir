@@ -81,26 +81,30 @@ def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
     | none, some _ => (some 0, (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
+/--
+An input token is selected based on the value of the incoming select signal, and propagated to the single output. Only the condition value, the selected input, and the output will be transacted.
+
+
+Informally, the semantics are as follows:
+- If there is no condition, then wait for a condition.
+- If there is a condition, then try to produce output from the selected channel, leaving the other channel untouched.
+- If the selected channel has a value, return it.
+- If not, pull more from the selected channel, leaving the condition and the unselected channel unchanged.
+
+-/
 def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
-  Stream.corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c) fun ⟨x, y, c⟩ =>
-    match x 0, y 0, c 0 with
-    | some _, some _, some c₀ =>
-      if c₀.msb then -- it's just one bit
-        (some (), (x.tail, y, c.tail))
-      else
-        (some (), (x.tail, y.tail, c.tail))
-    | some _, none, some c₀ =>
-      if c₀.msb then
-        (some (), (x.tail, y.tail, c.tail))
-      else
-        (none, (x, y.tail, c))
-    | none, some _, some c₀ =>
-      if c₀.msb then
-        (none, (x.tail, y, c))
-      else
-        (some (), (x.tail, y.tail, c))
-    | _, _, none => (none, (x, y, c.tail))
-    | none, none, some _ => (none, (x.tail, y.tail, c))
+  Stream.corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c)
+  fun ⟨x, y, c⟩ =>
+    match (c 0) with
+    | none => (none, x, y, c.tail) -- wait on 'c'.
+    | some 1#1 =>
+      match (x 0) with
+      | none => (none, x.tail, y, c) -- have 'c', wait on 'x'.
+      | some _ => (some (), x.tail, y, c.tail) -- consume 'c' and 'x'.
+    | some 0#1 =>
+      match (y 0) with
+      | none => (none, x, y.tail, c) -- hace 'c', wait on 'y'.
+      | some _ => (some (), x, y.tail, c.tail) -- consume 'c' and 'y'.
 
 def sink (x : TokenStream) : TokenStream :=
   Stream.corec (β := TokenStream) x fun x => (none, x.tail)
