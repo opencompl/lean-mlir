@@ -94,13 +94,6 @@ def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
     com.toFlatCom.ret = com.returnVar := by
   simp [toFlatCom]
 
-variable [QPF G] [Monad G] in
-@[simp] lemma EffectKind.qpf_map_eq (eff : EffectKind) :
-    @Functor.map (eff.toMonad G) EffectKind.instQPFToMonad.toFunctor
-    = @Functor.map (eff.toMonad G) EffectKind.instMonadToMonad.toFunctor := by
-  sorry
-
-variable [QPF d.m] [UniformQPF d.m] in
 theorem denote_rewriteAt [LawfulMonad d.m]
     {lhs rhs : Com d Γ₁ .pure t₁}
     (hl : lhs.denote = rhs.denote)
@@ -125,9 +118,7 @@ theorem denote_rewriteAt [LawfulMonad d.m]
   by
     simpa [Zipper.denote_insertPureCom, hl, denote_splitProgramAt h_split]
 
-  simp only [lets'.denote_eq_denoteIntoSubtype]
-  repeat rw [EffectKind.qpf_map_eq]
-  simp only [bind_map_left]
+  simp only [lets'.denote_eq_denoteIntoSubtype, bind_map_left]
   simp [denote_matchLets_of_matchVarMap hmap]
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in

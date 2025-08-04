@@ -269,7 +269,7 @@ section BitwiseOps
 instance : Complement BitStream := ⟨map Bool.not⟩
 instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
-instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
+instance :   XorOp BitStream := ⟨map₂ Bool.xor⟩
 
 /-- Shift left by `k` bits, giving a new bitstream whose first `k` bits are zero. -/
 def shiftLeft (x : BitStream) (k : Nat) : BitStream :=

@@ -12,7 +12,7 @@ theorem hty : ty = BitVec 10 := by
 set_option pp.analyze true
 set_option pp.analyze.explicitHoles true
 set_option pp.analyze.checkInstances true
-set_option trace.Meta.check true
+--set_option trace.Meta.check true
 
 theorem foo (w : Nat) :
   w = WidthExpr.toNat (WidthExpr.var (Fin.mk 0 (by simp))) (WidthExpr.Env.empty.cons w) := rfl

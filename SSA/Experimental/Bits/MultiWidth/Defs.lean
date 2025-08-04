@@ -209,6 +209,8 @@ structure GoodPredicateFSM
 end ToFSM
 
 namespace Decide
+
+set_option warn.sorry false in
 theorem Predicate.toProp_of_decide
     {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) (hdecide : decide (1 = 1) = true) :

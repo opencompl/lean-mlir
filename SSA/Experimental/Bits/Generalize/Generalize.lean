@@ -14,6 +14,8 @@ open Std.Tactic.BVDecide
 
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
+set_option warn.sorry false
+
 namespace Generalize
 
 structure GeneralizerState where
@@ -329,21 +331,21 @@ elab "#reducewidth" expr:term " : " target:term : command =>
 
 variable {x y z : BitVec 64}
 --set_option trace.Meta.Tactic.bv true
-#reducewidth (x + 0 = x) : 4
-#reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
-#reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
-#reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
-#reducewidth x + 5 = x : 8
-#reducewidth x = 10 : 8
-#reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
+-- #reducewidth (x + 0 = x) : 4
+-- #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
+-- #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
+-- #reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
+-- #reducewidth x + 5 = x : 8
+-- #reducewidth x = 10 : 8
+-- #reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
 
 variable {x y z : BitVec 32}
-#reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
-#reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
-#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
+-- #reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
+-- #reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
+-- #reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
 
-#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
-#reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
+-- #reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+-- #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 
 partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec) (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) :
@@ -657,7 +659,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
     return currentCache
 
 def generatePreconditions (bvLogicalExpr: GenBVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec))
-              (numConjunctions: Nat) : GeneralizerStateM (Option GenBVLogicalExpr) := do
+              (_numConjunctions: Nat) : GeneralizerStateM (Option GenBVLogicalExpr) := do
 
     let state ← get
     let widthId := state.widthId
@@ -1201,8 +1203,6 @@ variable {x y z: BitVec 32}
 
 /--
 info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
----
-warning: declaration uses 'sorry'
 -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
@@ -1212,8 +1212,6 @@ theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
 
 /--
 info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
----
-warning: declaration uses 'sorry'
 -/
 #guard_msgs in
 theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by

@@ -303,7 +303,7 @@ variable {t : Ty} {v : Γ.Var t}
   rcases v with ⟨idx, h⟩
   have : ¬ idx + ts.length < ts.length := by omega
   apply eq_of_heq
-  simp only [get?, appendInl, appendCases, this, ↓reduceDIte, eqRec_heq_iff_heq]
+  simp only [appendInl, appendCases, this, ↓reduceDIte, eqRec_heq_iff_heq]
   congr
   omega
 
@@ -311,7 +311,7 @@ variable {t : Ty} {v : Γ.Var t}
   rcases v with ⟨idx, h⟩
   simp only [Ctxt.length]
   suffices ¬ Γ.toList.length ≤ idx by omega
-  simp only [get?, getElem?_eq_toList_getElem?] at h
+  simp only [getElem?_eq_toList_getElem?] at h
   simp [← List.getElem?_eq_none_iff, h]
 
 @[simp] theorem appendCases_appendInr (v : Γ.Var t) :

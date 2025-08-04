@@ -33,6 +33,8 @@ import Lean
 
 open Fin.NatCast
 
+set_option linter.unusedSectionVars false
+
 initialize Lean.registerTraceClass `Bits.FastVerif
 
 /-
@@ -1863,7 +1865,7 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
     (fsm : FSM arity) (maxIter : Nat) :
     TermElabM (DecideIfZerosOutput × Array CircuitStats) :=
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+    -- logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
     decideIfZerosAuxVerified' 0 maxIter fsm KInductionCircuits.mkZero #[]
 
 end BvDecide
