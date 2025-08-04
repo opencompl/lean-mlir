@@ -18,16 +18,24 @@ set_option warn.sorry false
 
 namespace Generalize
 
-structure GeneralizerState where
+/-
+ParsedBVLogicalExpr
+GenBVLogicalExpr
+GenBVExpr processingWidth
+-/
+structure GeneralizerState (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
+  [BEq parsedLogicalExpr] [Hashable parsedLogicalExpr]
+  [∀ (n : Nat), Hashable (genExpr n)] [∀ (n : Nat), BEq (genExpr n)]
+  where
   startTime: Nat
   timeout : Nat
   processingWidth : Nat
   targetWidth : Nat
   widthId: Nat
-  parsedBVLogicalExpr : ParsedBVLogicalExpr
-  needsPreconditionsExprs : List GenBVLogicalExpr
-  visitedSubstitutions : Std.HashSet GenBVLogicalExpr
-  constantExprsEnumerationCache : Std.HashMap (GenBVExpr processingWidth) BVExpr.PackedBitVec
+  parsedBVLogicalExpr : parsedLogicalExpr
+  needsPreconditionsExprs : List parsedLogicalExpr
+  visitedSubstitutions : Std.HashSet parsedLogicalExpr
+  constantExprsEnumerationCache : Std.HashMap (genExpr processingWidth) BVExpr.PackedBitVec
 
 abbrev GeneralizerStateM := StateRefT GeneralizerState TermElabM
 
