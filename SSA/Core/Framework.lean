@@ -1005,16 +1005,6 @@ section Lemmas
 
 /-! denotations of `castPureToEff` -/
 
--- @[simp] lemma Expr.denote_changeEffect {e : Expr d Γ eff t}
---     (eff_le' : eff ≤ eff'):
---     denote (e.changeEffect eff_le') = (EffectKind.liftEffect eff_le' <| e.denote ·) := by
---   rcases e with ⟨op, _, eff_le, _, _⟩
---   funext V
---   -- simp [denote]
---   cases eff_le'
---   · simp
---   · rfl
-
 @[simp] lemma Expr.denote_castPureToEff {e : Expr d Γ .pure t} :
     denote (e.castPureToEff eff) = fun V => pure (e.denote V) := by
   rcases e with ⟨op, rfl, eff_le, _, _⟩
@@ -1345,7 +1335,6 @@ theorem DialectMorphism.preserves_effectKind (op : d.Op) :
 
 mutual
 
--- TODO: `map` is ambiguous, rename it to `changeDialect` (to mirror `changeVars`)
 def Com.changeDialect : Com d Γ eff ty → Com d' (f.mapTy <$> Γ) eff (f.mapTy ty)
   | .ret v          => .ret v.toMap
   | .var body rest => .var body.changeDialect rest.changeDialect
