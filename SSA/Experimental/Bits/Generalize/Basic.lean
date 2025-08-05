@@ -548,3 +548,41 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
               else
                     throwError m! "Width mismatch for expr : {expr} and target: {target}"
             return res
+
+structure PreconditionSynthesisCacheValue where
+  positiveExampleValues : List BVExpr.PackedBitVec
+  negativeExampleValues : List BVExpr.PackedBitVec
+
+instance : ToString PreconditionSynthesisCacheValue where
+  toString val :=
+    s! "⟨positiveExampleValues := {val.positiveExampleValues}, negativeExampleValues := {val.negativeExampleValues}⟩"
+
+
+def zero (w: Nat) := GenBVExpr.const (BitVec.ofNat w 0)
+def one (w: Nat) := GenBVExpr.const (BitVec.ofNat w 1)
+def minusOne (w: Nat) := GenBVExpr.const (BitVec.ofInt w (-1))
+
+def eqToZero (expr: GenBVExpr w) : GenBVLogicalExpr :=
+  BoolExpr.literal (GenBVPred.bin expr BVBinPred.eq (zero w))
+
+def positive (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  let shiftDistance : GenBVExpr w :=  subtract (GenBVExpr.var widthId) (one w)
+  let signVal := GenBVExpr.shiftLeft (one w) shiftDistance
+  BoolExpr.literal (GenBVPred.bin expr BVBinPred.ult signVal) --- It's positive if `expr <u 2 ^ (w - 1)`
+
+def strictlyGTZero  (expr: GenBVExpr w) (widthId : Nat)  : GenBVLogicalExpr :=
+  BoolExpr.gate  Gate.and (BoolExpr.literal (GenBVPred.bin (zero w) BVBinPred.ult expr)) (positive expr widthId)
+
+def gteZero (expr: GenBVExpr w) (widthId : Nat)  : GenBVLogicalExpr :=
+  positive expr widthId
+
+def negative (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  BoolExpr.not (positive expr widthId)
+
+def strictlyLTZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  negative expr widthId
+
+def lteZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)
+
+

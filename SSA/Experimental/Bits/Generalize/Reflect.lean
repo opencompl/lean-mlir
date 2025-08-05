@@ -3,6 +3,7 @@ import Lean
 import SSA.Core.Util
 import SSA.Experimental.Bits.Generalize.Basic
 import SSA.Experimental.Bits.Generalize.Hydrable
+import SSA.Experimental.Bits.Generalize.Generalize
 
 namespace Generalize
 
@@ -337,6 +338,29 @@ def toExpr (parsedBVExpr : ParsedBVLogicalExpr) (bvLogicalExpr: GenBVLogicalExpr
         | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkConst ``Bool) (beqBoolInstExpr) (← go lhs) (← go rhs)--mkAppM ``BEq.beq #[← go lhs, ← go rhs]
   | _ => throwError m! "Unsupported operation"
 
+instance : HydrableInstances  ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+
+instance : HydrableGetAllNamesFromParsedLogicalExpr ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  getAllNamesFromParsedLogicalExpr p :=
+    Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
+
+instance : HydrableGetLogicalExprSize  ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  getLogicalExprSize e := e.size
+
+instance : HydrableGenLogicalExprToExpr ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  genLogicalExprToExpr := toExpr
+
+instance : HydrableSolve ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+
+instance :  HydrableGeneratePreconditions ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+ generatePreconditions := fun a b c d => do
+  let v ← solve a
+  sorry
+
+
+
+set_option trace.Meta.synthInstance true in
+/-
 instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   genExprToExpr := bvExprToExpr
   genLogicalExprToExpr := toExpr
@@ -359,3 +383,112 @@ instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   beq e1 e2 := BoolExpr.gate Gate.beq e1 e2
   evalGenExpr := evalBVExpr
   evalGenLogicalExpr := evalBVLogicalExpr
+-/
+
+instance : HydrableSubstitute ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  substitute := substitute
+
+instance : HydrablePackedBitvecToSubstitutionValue ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  packedBitVecToSubstitutionValue := packedBitVecToSubstitutionValue
+
+instance : HydrableBooleanAlgebra ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  not e := BoolExpr.not e
+  and e1 e2 := BoolExpr.gate Gate.and e1 e2
+  True := BoolExpr.const True
+  False := BoolExpr.const False
+  eq e1 e2 := BoolExpr.literal (GenBVPred.bin e1 BVBinPred.eq e2)
+  beq e1 e2 := BoolExpr.gate Gate.beq e1 e2
+
+instance : HydrableGetIdentityAndAbsorptionConstraints ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
+
+instance : HydrableAddConstraints ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  addConstraints := addConstraints
+
+instance : HydrableGenExpr ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+  genExprVar id := GenBVExpr.var id
+  genExprConst bv := GenBVExpr.const bv
+
+instance : HydrableExistsForall ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
+
+
+elab "#reducewidth" expr:term " : " target:term : command =>
+  open Lean Lean.Elab Command Term in
+  withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
+      let targetExpr ← Term.elabTerm target (some (mkConst ``Nat))
+      let some targetWidth ← getNatValue? targetExpr | throwError "Invalid width provided"
+
+      let hExpr ← Term.elabTerm expr none
+      trace[Generalize] m! "hexpr: {hExpr}"
+
+      match_expr hExpr with
+      | Eq _ lhsExpr rhsExpr =>
+           let initialState : ParsedBVExprState := default
+           let some (parsedBvExpr) ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState | throwError "Unsupported expression provided"
+
+           let bvExpr := parsedBvExpr.bvLogicalExpr
+           let state := parsedBvExpr.state
+           trace[Generalize] m! "bvExpr: {bvExpr}, state: {state}"
+
+           let initialGeneralizerState : GeneralizerState ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr :=
+                { startTime                := 0
+                , widthId                  := 0
+                , timeout                  := 0
+                , processingWidth          := targetWidth
+                , targetWidth              := targetWidth
+                , parsedBVLogicalExpr       := parsedBvExpr
+                , needsPreconditionsExprs   := []
+                , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
+                , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
+                }
+
+
+           let results ← (existsForAll bvExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys 3).run' initialGeneralizerState
+
+           logInfo m! "Results: {results}"
+      | _ =>
+            logInfo m! "Could not match"
+      pure ()
+
+
+variable {x y z : BitVec 64}
+--set_option trace.Meta.Tactic.bv true
+#reducewidth (x + 0 = x) : 4
+#reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
+#reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
+#reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
+#reducewidth x + 5 = x : 8
+#reducewidth x = 10 : 8
+#reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
+
+variable {x y z : BitVec 32}
+#reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
+#reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
+#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
+
+#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+#reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
+
+
+
+def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr (List (GenBVExpr w)) := do
+  withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
+    let mut pruned : List (GenBVExpr w) := []
+
+    for expr in expressions do
+      if pruned.isEmpty then
+        pruned := expr :: pruned
+        continue
+
+      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (GenBVPred.bin f BVBinPred.eq expr)))
+      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints Gate.and
+
+      if let some _ ← solve subsumeCheckExpr then
+        pruned := expr :: pruned
+
+    trace[Generalize] m! "Removed {expressions.length - pruned.length} expressions after pruning {expressions.length} expressions"
+
+    pure pruned
+
+def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BVExpr.PackedBitVec)
+             : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
