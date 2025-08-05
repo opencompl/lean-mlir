@@ -1257,6 +1257,18 @@ instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
     Fintype (cond b α β) := by
   cases b <;> simp <;> infer_instance
 
+@[simp] lemma composeBinaryAux'_eval
+    (p : FSM Bool)
+    (q₁ : FSM s)
+    (q₂ : FSM s)
+    (x : s → BitStream) :
+    (composeBinaryAux' p q₁ q₂).eval x = p.eval
+      (λ b => cond b (q₁.eval (fun i => x i))
+                  (q₂.eval (fun i => x i))) := by
+  rw [composeBinaryAux', FSM.eval_compose]
+  ext b
+  cases b <;> dsimp <;> congr <;> funext b <;> cases b <;> simp
+
 
 namespace FSM
 

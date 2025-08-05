@@ -27,12 +27,27 @@ instance : Complement (FSM α) where
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
-def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) : (NatFSM wcard tcard w) :=
+def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
+    (NatFSM wcard tcard w) :=
   if h : w.toNat < wcard then
-    { toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
+    { toFsm :=
+      -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
+      (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
+    }
   else
     { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
+
+def mkGoodWidthFsm {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} : (GoodNatFSM w tcard) :=
+   GoodNatFSM.mk (mkWidthFSM wcard tcard (.ofDep w)) (by
+    intros wenv fsmEnv henv
+    induction w
+    case var v =>
+      simp [mkWidthFSM]
+      have ⟨henv⟩ := henv
+      rw [henv]
+      simp [WidthExpr.toBitstream]
+   )
 
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
@@ -76,16 +91,16 @@ def fsmSext.inputs.toFin : fsmSext.inputs → Fin 4
 
 def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
-    ite (fsmUleUnary wnew wold)
-      /- wnew ≤ wold, so it's the same as zext. -/
-      (fsmZext a wold wnew)
-      /- wnew > wold. -/
-    (composeQuaternaryAux'
-      (composer.map fsmSext.inputs.toFin)
-      a
-      (composeUnaryAux (FSM.ls false) a)
-      wold
-      wnew)
+  ite (fsmUleUnary wnew wold)
+    /- wnew ≤ wold, so it's the same as zext. -/
+    (fsmZext a wold wnew)
+    /- wnew > wold. -/
+  (composeQuaternaryAux'
+    (composer.map fsmSext.inputs.toFin)
+    a
+    (composeUnaryAux (FSM.ls false) a)
+    wold
+    wnew)
   where
     -- precondition: wnew > wold.
     composer : FSM fsmSext.inputs := {
@@ -141,12 +156,21 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
 def mkGoodTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthExpr wcard} (t : Term tctx w)  :
     (GoodTermFSM t) :=
   GoodTermFSM.mk (mkTermFSM wcard tcard (.ofDep t)) (by
-    intros wenv tenv fsmEnv
+    intros wenv tenv fsmEnv htenv
     induction t generalizing wenv tenv fsmEnv
     case var v =>
-      simp
-    case add w a b => sorry
-    case zext w' a b => sorry
+      obtain htenv_term := htenv.heq_term
+      obtain htenv_width := htenv.heq_width
+      simp only [Nondep.Term.ofDep_var, mkTermFSM, Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var',
+        htenv_term, Term.toBitstream, Term.toBV_var]
+    case add v p q hp hq =>
+      simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
+      simp [Term.toBV]
+      sorry
+    case zext w' a b c  =>
+      simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
+      simp [fsmZext]
+      sorry
     case sext w' a b => sorry
   )
 
