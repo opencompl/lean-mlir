@@ -39,6 +39,18 @@ theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
   bv_multi_width (config := { niter := 0 })
 
+theorem eg4 (u w : Nat) (x : BitVec w) :
+    (x.signExtend u).signExtend u = x.signExtend u := by
+  bv_multi_width (config := { niter := 0 })
+
+theorem eg5 (u w : Nat) (x : BitVec w) :
+    (x.signExtend u).zeroExtend u = x.signExtend u := by
+  bv_multi_width (config := { niter := 0 })
+
+theorem eg6 (u w : Nat) (x : BitVec w) :
+    (x.zeroExtend u).signExtend u = x.zeroExtend u := by
+  bv_multi_width (config := { niter := 0 })
+
 /--
 error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
   (MultiWidth.BinaryRelationKind.eq)
@@ -47,6 +59,6 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
     { toNat := 0 })
   (MultiWidth.Nondep.Term.zext (MultiWidth.Nondep.Term.var 0 { toNat := 2 }) { toNat := 0 })
 -/
-#guard_msgs in theorem eg4 (u v w : Nat) (x : BitVec w) :
+#guard_msgs in theorem eg100 (u v w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
   bv_multi_width (config := { niter := 0})
