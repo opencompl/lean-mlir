@@ -225,6 +225,10 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
+@[deprecated "liftEffect_eq_pure_cast_of" (since := "")]
+theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
+    liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
+  cases hle; rfl
 
 @[simp] theorem liftEffect_impure [Pure m] {e} (hle : e ≤ impure) :
     liftEffect hle (α := α) (m := m) = match e with
