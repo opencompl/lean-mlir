@@ -383,8 +383,8 @@ variable {d : Dialect} [DialectSignature d]
 
 section Rec
 variable {eff t} {motive : ∀ {Γ}, Com d Γ eff t → Sort u}
-          (ret : ∀ {Γ} , (v : Var Γ t) → motive (Com.ret v))
-          (var : ∀ {Γ} {u : d.Ty},
+          (ret : ∀ {Γ : Ctxt _} , (v : HVector Γ.Var t) → motive (Com.ret v))
+          (var : ∀ {Γ} {u},
             (e : Expr d Γ eff u) → (body : Com d e.outContext eff t) →
               motive body → motive (Com.var e body))
 
@@ -423,9 +423,9 @@ def Com.rec' {Γ} (com : Com d Γ eff t) : motive com :=
     rfl
     rfl
 
-variable {ret} {var}
+variable {ret} {var} {Γ : Ctxt _}
 
-@[simp] lemma Com.rec'_ret (v : Var Γ t) :
+@[simp] lemma Com.rec'_ret (v : HVector Γ.Var t) :
     (Com.ret (d:=d) (eff := eff) v).rec' (motive:=motive) ret var = ret v :=
   rfl
 
@@ -449,9 +449,9 @@ NOTE: this can now be achieved through `Com.rec'` direclty;
 -- TODO: eventually remove this
 @[elab_as_elim, deprecated Com.rec' (since := "")]
 def Com.recPure {t} {motive : ∀ {Γ t}, Com d Γ .pure t → Sort u}
-    (ret : ∀ {Γ}, (v : Var Γ t) → motive (Com.ret v))
-    (var : ∀ {Γ} {u : d.Ty},
-      (e : Expr d Γ .pure u) → (body : Com d (Γ.snoc u) .pure t) →
+    (ret : ∀ {Γ : Ctxt _}, (v : HVector Γ.Var t) → motive (Com.ret v))
+    (var : ∀ {Γ} {u},
+      (e : Expr d Γ .pure u) → (body : Com d e.outContext .pure t) →
         motive body → motive (Com.var e body))
     {Γ} (com : Com d Γ .pure t) : motive com :=
   com.rec' (motive := motive) ret var
@@ -563,7 +563,7 @@ def Com.outContextDiff (com : Com d Γ eff ts) : Γ.Diff com.outContext :=
     unfold outContext
     induction com generalizing i
     case ret => exact h
-    case var Γ Δ _ _ e _ ih =>
+    case var e _ ih =>
       simp only [rec'_var, bvars_var]
       rw [← Nat.add_assoc]
       apply ih
@@ -1078,7 +1078,7 @@ section Lemmas
   rw [show (Lets.nil : Lets d Γ eff Γ) = (Lets.nil.castPureToEff eff) from rfl,
     Lets.addComToEnd_castPureToEff]
 
-@[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure [ty]} :
     (com.castPureToEff eff).returnVar = com.returnVar.castCtxt (by simp) := by
   induction com using Com.rec' <;> simp_all
 
