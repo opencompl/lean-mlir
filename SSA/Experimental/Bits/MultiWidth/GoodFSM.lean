@@ -30,7 +30,7 @@ instance : Complement (FSM α) where
 def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) : (NatFSM wcard tcard w) :=
   if h : w.toNat < wcard then
     { toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
-  else 
+  else
     { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
 
@@ -110,13 +110,14 @@ def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     }
 
 
-def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : 
+def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
   match t with
   | .var v _w =>
     if h : v < tcard then
       {
-      toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      -- toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      toFsm := (FSM.var' (StateSpace.termVar ⟨v, h⟩))
       }
     else
       { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be ued.
@@ -136,6 +137,18 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let woldFsm := mkWidthFSM wcard tcard wold
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
+
+def mkGoodTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthExpr wcard} (t : Term tctx w)  :
+    (GoodTermFSM t) :=
+  GoodTermFSM.mk (mkTermFSM wcard tcard (.ofDep t)) (by
+    intros wenv tenv fsmEnv
+    induction t generalizing wenv tenv fsmEnv
+    case var v =>
+      simp
+    case add w a b => sorry
+    case zext w' a b => sorry
+    case sext w' a b => sorry
+  )
 
 /-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
