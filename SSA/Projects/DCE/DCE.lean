@@ -159,8 +159,6 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
       simp [Com.denote, Expr.denote_unfold, ←he', hbody']
     ⟩
 
--- theorem
-
 /-- Declare the type of DCE up-front, so we can declare an `Inhabited` instance.
 This is necessary so that we can mark the DCE implementation as a `partial def`
 and ensure that Lean does not freak out on us, since it's indeed unclear to Lean
