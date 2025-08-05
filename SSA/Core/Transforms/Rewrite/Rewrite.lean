@@ -41,7 +41,7 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
   | 0, lets, .var e body, res, hres, s => by
     obtain rfl := by
       simpa only [splitProgramAtAux, Option.mem_def, Option.some.injEq] using hres
-    simp only [Lets.denote, bind_assoc, pure_bind, Com.denote_var]
+    simp only [Lets.denote, bind_assoc, Com.denote_var]
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
@@ -196,13 +196,13 @@ theorem denote_rewritePeephole_go (pr : PeepholeRewrite d Γ t)
   case zero =>
     simp [rewritePeephole_go]
   case succ fuel' hfuel =>
-    simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
+    simpa [rewritePeephole_go, hfuel] using denote_rewritePeepholeAt ..
 
 /-- `rewritePeephole` preserves semantics. -/
 theorem denote_rewritePeephole (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
     (rewritePeephole fuel pr target).denote = target.denote := by
-  simp[rewritePeephole, denote_rewritePeephole_go]
+  exact denote_rewritePeephole_go ..
 
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
@@ -255,13 +255,13 @@ theorem denote_multiRewritePeepholeAt (fuel : ℕ)
   case zero =>
     simp [multiRewritePeepholeAt]
   case succ hp =>
-    simp [multiRewritePeepholeAt, hp, denote_foldl_rewritePeepholeAt]
+    simpa [multiRewritePeepholeAt, hp] using denote_foldl_rewritePeepholeAt ..
 
 /- The proof that `rewritePeephole_multi` is semantics preserving  -/
 theorem denote_multiRewritePeephole (fuel : ℕ)
   (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) :
     (multiRewritePeephole fuel prs target).denote = target.denote := by
-  simp [multiRewritePeephole, denote_multiRewritePeepholeAt]
+  exact denote_multiRewritePeepholeAt ..
 
 theorem Expr.denote_eq_of_region_denote_eq {ty} (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
