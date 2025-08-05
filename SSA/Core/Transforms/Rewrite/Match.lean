@@ -380,10 +380,6 @@ theorem Lets.denote_eq_denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv :
     simp [ValidDenotation, denote, denoteIntoSubtype, ih,
       Expr.denote_unfold, Expr.denoteOp_eq_denoteOpIntoSubtype]
 
-#print axioms Expr.pure_denoteOp_toPure
-#print axioms Expr.denoteOp_eq_denoteOpIntoSubtype
-#print axioms Lets.denote_eq_denoteIntoSubtype
-
 end DenoteIntoSubtype
 
 theorem matchVar_nil {lets : Lets d Γ_in eff Γ_out} :
@@ -439,20 +435,6 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
   simp only [Expr.denote_unfold]
   show (lets.denote V_in |>.snoc _) _ = _
   simp
-
-@[simp] lemma Expr.denoteOp_eq_denoteOp_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
-    {Γv : Valuation Γ} {Δv : Valuation Δ}
-    (op_eq : e₁.op = e₂.op)
-    (h_regArgs : HEq e₁.regArgs e₂.regArgs)
-    (h_args : HVector.map Γv (op_eq ▸ e₁.args)
-              = HVector.map Δv e₂.args) :
-    e₁.denoteOp Γv = e₂.denoteOp Δv := by
-  rcases e₁ with ⟨op₁, rfl, _, args₁, regArgs₁⟩
-  rcases e₂ with ⟨op₂, _, _, args₂, _⟩
-  obtain rfl : op₁ = op₂ := op_eq
-  simp_all only [op_mk, regArgs_mk, heq_eq_eq, args_mk]
-  subst h_regArgs
-  simp [denoteOp, h_args]
 
 variable {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}

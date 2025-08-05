@@ -71,6 +71,13 @@ def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
 section Lemmas
 variable (Γ : Ctxt Ty) (ts us : List Ty)
 
+@[simp] lemma snoc_inj : Γ.snoc t = Γ.snoc u ↔ t = u := by
+  constructor <;> (rintro ⟨⟩; rfl)
+
+variable {m} [Monad m] [LawfulMonad m] (t u : m _) in
+@[simp] lemma snoc_map_inj : Γ.snoc <$> t = Γ.snoc <$> u ↔ t = u :=
+  (map_inj_right (snoc_inj _).mp)
+
 @[simp] lemma ofList_append : (⟨ts⟩ : Ctxt _) ++ us = us ++ ts := rfl
 @[simp] lemma toList_append : (Γ ++ ts).toList = ts ++ Γ.toList := rfl
 
@@ -499,6 +506,18 @@ theorem Valuation.snoc_zero {ty : Ty} (s : Γ.Valuation) (x : toType ty)
     (x : toType t) (v : Γ.Var t') :
     (s.snoc x) v.toSnoc = s v :=
   rfl
+
+@[simp] lemma Valuation.snoc_inj {t : Ty} {x y : ⟦t⟧} :
+    (V ::ᵥ x) = (V ::ᵥ y) ↔ x = y where
+  mpr := by rintro rfl; rfl
+  mp := by
+    intro h
+    rw [← snoc_last V x, ← snoc_last V y, h]
+
+variable {m} [Monad m] [LawfulMonad m] in
+@[simp] lemma Valuation.snoc_map_inj {V : Γ.Valuation} {x y : m ⟦t⟧} :
+    (V.snoc <$> x) = (V.snoc <$> y) ↔ x = y :=
+  map_inj_right <| Valuation.snoc_inj.mp
 
 /-!
 # Helper to simplify context manipulation with toSnoc and variable access.

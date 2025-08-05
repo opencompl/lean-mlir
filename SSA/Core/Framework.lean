@@ -670,6 +670,18 @@ theorem Expr.denote_unfold (e : Expr d Γ eff ty) :
   rcases e with ⟨op, rfl, _⟩
   simp [denote, denoteOp]
 
+@[simp] lemma Expr.denoteOp_eq_denoteOp_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
+    {Γv : Valuation Γ} {Δv : Valuation Δ}
+    (op_eq : e₁.op = e₂.op)
+    (h_args : HVector.map Γv (op_eq ▸ e₁.args)
+              = HVector.map Δv e₂.args)
+    (h_regArgs : HEq e₁.regArgs.denote e₂.regArgs.denote) :
+    e₁.denoteOp Γv = e₂.denoteOp Δv := by
+  rcases e₁ with ⟨op₁, rfl, _, args₁, regArgs₁⟩
+  rcases e₂ with ⟨op₂, _, _, args₂, _⟩
+  obtain rfl : op₁ = op₂ := op_eq
+  simp_all [op_mk, regArgs_mk, heq_eq_eq, args_mk, denoteOp]
+
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
 Recall that `simp` lazily generates equation lemmas.
