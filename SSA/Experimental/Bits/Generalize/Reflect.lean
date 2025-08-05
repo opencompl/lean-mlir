@@ -744,4 +744,4 @@ def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSym
   pure res
 
 instance :  HydrableLHSSketchEnumeration ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
- generatePreconditions := generatePreconditions
+  lhsSketchEnumeration := lhsSketchEnumeration
