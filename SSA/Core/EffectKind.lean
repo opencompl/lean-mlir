@@ -80,9 +80,10 @@ variable [Monad m]
     (Pure.pure (Pure.pure x : pure.toMonad m (no_index α)) : eff.toMonad m α) = Pure.pure x :=
   rfl
 
+variable [LawfulMonad m] in
 theorem pure_map (f : α → β) (x : pure.toMonad m α) (eff : EffectKind) :
     (Pure.pure (f <$> x : pure.toMonad m _) : eff.toMonad m _) = f <$> (Pure.pure x) := by
-  sorry
+  simp; rfl
 
 end Lemmas
 
@@ -275,7 +276,8 @@ theorem pure_liftEffect {eff₁ eff₂ : EffectKind}
     (hle : eff₁ ≤ .pure) [Monad m] (x : eff₁.toMonad m α) :
     (Pure.pure (liftEffect hle x) : eff₂.toMonad m α)
     = liftEffect (by cases hle; constructor) x := by
-  sorry
+  obtain rfl : eff₁ = .pure := eq_of_le_pure hle
+  cases eff₂ <;> rfl
 
 /-!
 ## `toMonad` coercion
