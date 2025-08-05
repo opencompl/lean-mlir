@@ -62,6 +62,20 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by
 
 end Instances
 
+section Lemmas
+variable [Monad m]
+
+@[simp] lemma pure_pure (eff : EffectKind) (x : α) :
+    (Pure.pure (Pure.pure x : pure.toMonad m (no_index α)) : eff.toMonad m α) = Pure.pure x :=
+  rfl
+
+variable [LawfulMonad m] in
+theorem pure_map (f : α → β) (x : pure.toMonad m α) (eff : EffectKind) :
+    (Pure.pure (f <$> x : pure.toMonad m _) : eff.toMonad m _) = f <$> (Pure.pure x) := by
+  simp; rfl
+
+end Lemmas
+
 /-!
 ## `PartialOrder`
 Establish a partial order on `EffectKind`
@@ -211,7 +225,8 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
-@[simp] theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
+@[deprecated "liftEffect_eq_pure_cast_of" (since := "")]
+theorem liftEffect_pure [Pure m] {e} (hle : e ≤ pure) :
     liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
   cases hle; rfl
 
@@ -220,6 +235,10 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Pure m]
       | .pure => fun v => Pure.pure v
       | .impure => id := by
   cases e <;> rfl
+
+theorem liftEffect_eq_pure_cast_of [Pure m] {e₁ e₂} (heq : e₁ = .pure) (hle : e₁ ≤ e₂) :
+    liftEffect hle (α := α) (m := m) = fun x => Pure.pure (cast (by subst heq; rfl) x) := by
+  subst heq; cases e₂ <;> rfl
 
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
@@ -234,6 +253,14 @@ def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Pure m]
     (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
+
+@[simp]
+theorem pure_liftEffect {eff₁ eff₂ : EffectKind}
+    (hle : eff₁ ≤ .pure) [Monad m] (x : eff₁.toMonad m α) :
+    (Pure.pure (liftEffect hle x) : eff₂.toMonad m α)
+    = liftEffect (by cases hle; constructor) x := by
+  obtain rfl : eff₁ = .pure := eq_of_le_pure hle
+  cases eff₂ <;> rfl
 
 /-!
 ## `toMonad` coercion

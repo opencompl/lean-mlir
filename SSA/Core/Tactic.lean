@@ -10,6 +10,13 @@ import Qq
 import Lean.Meta.KAbstract
 import Lean.Elab.Tactic.ElabTerm
 
+variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m] in
+@[simp_denote] lemma Expr.denote_unfold' {ty} (e : Expr d Γ eff ty) :
+    e.denote V = do
+      let x ← e.denoteOp V
+      return V ::ᵥ x := by
+  rw [Expr.denote_unfold, ← map_eq_pure_bind]
+
 namespace SSA
 
 open Ctxt (Var Valuation DerivedCtxt)
@@ -31,12 +38,17 @@ attribute [simp_denote]
   bind_assoc pairBind
   /- `castPureToEff` -/
   Com.letPure Expr.denote_castPureToEff
+  Expr.denote_castPureToEff
   /- Unfold denotation -/
-  Com.denote_var Com.denote_ret Expr.denote_unfold HVector.denote
+  Com.denote_var Com.denote_ret Expr.denoteOp HVector.denote
+  Expr.op_mk Expr.args_mk Expr.regArgs_mk
+  Expr.op_castPureToEff Expr.args_castPureToEff
   /- Effect massaging -/
   EffectKind.toMonad_pure EffectKind.toMonad_impure
   EffectKind.liftEffect_rfl
   Id.pure_eq Id.bind_eq id_eq
+  pure_bind
+  cast_eq
 
 /-!
 NOTE (Here Be Dragons 🐉):
@@ -138,7 +150,11 @@ macro "simp_peephole" loc:(location)? : tactic =>
       | skip
 
       -- Then, we simplify with the `simp_denote` simpset
-      simp (config := {failIfUnchanged := false}) only [simp_denote] $[$loc]?
+      simp (config := {failIfUnchanged := false}) only
+        [Expr.denote_castPureToEff, simp_denote] $[$loc]?
+      -- ^^^^^^^^^^^^^^^^^^^^^^^^^
+      -- `denote_castPureToEff` is already part of the simp_denote simpset
+      -- Still, omitting it here somehow causes motive-related errors.
   ))
 
 /-

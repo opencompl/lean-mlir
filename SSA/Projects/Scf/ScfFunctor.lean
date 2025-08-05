@@ -433,7 +433,7 @@ theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond
   just fetching the loop variable. -/
 theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int)
     (niters : Var Γ .nat) (v : Var Γ t) :
-    Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
+    Expr.denoteOp (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
   simp_peephole
   simp [Scf.LoopBody.counterDecorator.constant_iterate]
 

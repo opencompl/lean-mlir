@@ -73,6 +73,11 @@ def Deleted.toHom (h : Deleted Γ v Γ') : Γ'.Hom Γ :=
   · simp
   · simp [Hom.delete]
 
+@[simp] lemma Deleted.toHom_last (DEL : Deleted (Γ.snoc u) (Var.last _ _) Γ) :
+    DEL.toHom = Hom.id.snocRight := rfl
+
+/-! ## tryDelete? -/
+
 /-- Given  `Γ' := Γ/delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
 def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ') (v : Γ.Var β) :
@@ -121,50 +126,38 @@ def arglistDeleteVar? {Γ: Ctxt d.Ty} {delv : Γ.Var α} {Γ' : Ctxt d.Ty} {ts :
       | .none => .none
       | .some ⟨as', has'⟩ => .some ⟨.cons a' as', by simp [HVector.map_cons, *]⟩
 
-variable [DialectSignature d] [DialectDenote d] [Monad d.m]
+variable [DialectSignature d] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
 
 /- Try to delete a variable from an Expr -/
 def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr d Γ .pure t) :
   Option { e' : Expr d Γ' .pure t // ∀ (V : Γ.Valuation),
-    e.denote V = e'.denote (V.comap DEL.toHom) } :=
+    e.denoteOp V = e'.denoteOp (V.comap DEL.toHom) } :=
   match e with
-  | .mk op ty_eq eff_le args regArgs =>
-    match arglistDeleteVar? DEL args with
-    | .none => .none
-    | .some args' =>
-      .some ⟨.mk op ty_eq eff_le args' regArgs, by
-        obtain ⟨ args', rfl ⟩ := args'
-        intros V
-        simp only [EffectKind.toMonad_pure, Expr.denote_unfold, EffectKind.liftEffect_pure,
-          Valuation.comap_apply, eq_rec_inj, cast_inj]
-        congr 1
-        simp [HVector.map_map]
-      ⟩
+  | .mk op ty_eq eff_le args regArgs => do
+    let args' ← arglistDeleteVar? DEL args
+    some ⟨.mk op ty_eq eff_le args' regArgs, by
+      obtain ⟨ args', rfl ⟩ := args'
+      intros V
+      simp [Expr.denoteOp, HVector.map_map]
+      rfl
+    ⟩
 
 /-- Delete a variable from an Com. -/
 def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
   Option { com' : Com d Γ' .pure t // ∀ (V : Γ.Valuation),
     com.denote V = com'.denote (V.comap DEL.toHom) } :=
   match com with
-  | .ret v =>
-    match Var.tryDelete? DEL v with
-    | .none => .none
-    | .some ⟨v, hv⟩ =>
-      .some ⟨.ret v, by simp [hv]⟩
-  | .var (α := ω) e body =>
-    match Com.deleteVar? (DEL.snoc _) body with
-    | .none => .none
-    | .some ⟨body', hbody'⟩ =>
-      match Expr.deleteVar? DEL e with
-        | .none => .none
-        | .some ⟨e', he'⟩ =>
-          .some ⟨.var e' body', by
-            intros V
-            simp only [EffectKind.toMonad_pure, Com.denote]
-            rw [←he', hbody']
-            congr
-            simp
-            ⟩
+  | .ret v => do
+    let ⟨v, hv⟩ ← Var.tryDelete? DEL v
+    return ⟨.ret v, by simp [hv]⟩
+  | .var (α := ω) e body => do
+    let ⟨body', hbody'⟩ ← Com.deleteVar? (DEL.snoc _) body
+    let ⟨e', he'⟩ ← Expr.deleteVar? DEL e
+    .some ⟨.var e' body', by
+      intros V
+      apply Id.ext
+      simp [Com.denote, Expr.denote_unfold, ←he', hbody']
+    ⟩
 
 /-- Declare the type of DCE up-front, so we can declare an `Inhabited` instance.
 This is necessary so that we can mark the DCE implementation as a `partial def`
@@ -210,8 +203,8 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
       let com' := Com.var (α := α) e (body'.changeVars hom')
       ⟨Γ, Hom.id, com', by
         intros V
-        simp (config := {zetaDelta := true}) [Com.denote]
-        rw [hbody']
+        apply Id.ext
+        simp (config := {zetaDelta := true}) [Com.denote, hbody']
       ⟩
     | .some ⟨body', hbody⟩ =>
       let ⟨Γ', hom', ⟨com', hcom'⟩⟩
@@ -219,10 +212,9 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
         { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation),
           com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-          simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq',
-            Ctxt.Valuation.comap_id]
           intros V
-          apply hbody
+          simp [EffectKind.toMonad_pure, HCOM, Com.denote_var,
+            Ctxt.Valuation.comap_id, hbody, Id.bind_eq']
         ⟩⟩
       let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
         :   Σ (Γ'' : Ctxt d.Ty) (hom : Hom Γ'' Γ'),
@@ -237,12 +229,6 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
         rw [hcom']
         rw [hcom'']
         rfl⟩
-/-
-decreasing_by {
-  simp[invImage, InvImage, WellFoundedRelation.rel, Nat.lt_wfRel]
-  sorry -- Lean bug: *no goals to be solved*?!
-}
--/
 
 /-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where
 we play the `DCEType` trick to convince Lean that the output type is in fact
