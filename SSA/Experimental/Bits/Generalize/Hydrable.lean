@@ -110,7 +110,9 @@ class HydrableGeneratePreconditions (parsedLogicalExpr : Type) (genLogicalExpr :
     (_numConjunctions: Nat) →
     GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr (Option genLogicalExpr)
 
--- class Monad n4
+class HydrableLHSSketchEnumeration (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  lhsSketchEnumeration : (lhsSketch: genExpr n) → (inputVars: List Nat) → (lhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) → (rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (List (genExpr n))
+
 class Hydrable (parsedLogicalExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableInstances parsedLogicalExpr genLogicalExpr genExpr,
   HydrableGenExprToExpr parsedLogicalExpr genLogicalExpr genExpr
