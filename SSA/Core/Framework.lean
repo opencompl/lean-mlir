@@ -17,7 +17,7 @@ set_option deprecated.oldSectionVars true
 theorem Id.pure_eq' (a : α) : (pure a : Id α) = a := rfl
 theorem Id.bind_eq' (x : Id α) (f : α → id β) : x >>= f = f x := rfl
 
-open Ctxt (Var VarSet Valuation)
+open Ctxt (Var VarSet Valuation Hom)
 open TyDenote (toType)
 
 /-!
@@ -648,11 +648,13 @@ section Unfoldings
 
 open EffectKind (liftEffect)
 
+omit [LawfulMonad d.m] in
 /-- Returns only the result of the current expression. -/
 def Expr.denoteOp (e : Expr d Γ eff ty) (V : Γ.Valuation) : eff.toMonad d.m ⟦ty⟧ :=
   EffectKind.liftEffect e.eff_le <| cast (by rw [← e.ty_eq]) <|
     DialectDenote.denote e.op (e.args.map V) e.regArgs.denote
 
+omit [LawfulMonad d.m] in
 /--
 Unfold `Expr.denote` in terms of the field projections and `Expr.denoteOp`.
 
@@ -697,6 +699,10 @@ end Unfoldings
 
 /-! simp-lemmas about `denote` functions -/
 section Lemmas
+
+@[simp] lemma Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
+    (Valuation.comap (e.denote V) Hom.id.snocRight) = V := by
+  funext t v; simp [Expr.denote_unfold]; rfl
 
 @[simp] lemma HVector.denote_nil
     (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2) []) :
