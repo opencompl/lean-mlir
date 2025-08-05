@@ -331,7 +331,7 @@ structure HTermEnv {wcard tcard : Nat}
     heq_term : ∀ (v : Fin tcard),
       fsmEnv (StateSpace.termVar v) = BitStream.ofBitVec (tenv v)
 
-structure IsGoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
+structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
   heq :
     ∀ (wenv : Fin wcard → Nat) (fsmEnv : StateSpace wcard tcard → BitStream),

@@ -14,14 +14,42 @@ namespace MultiWidth
 instance : HAnd (FSM α) (FSM α) (FSM α) where
   hAnd := composeBinaryAux' FSM.and
 
+theorem FSM.and_eq (a b : FSM α) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
+
+@[simp]
+theorem FSM.eval_and (a b : FSM α) : (a &&& b).eval env = a.eval env &&& b.eval env := by
+  rw [FSM.and_eq]
+  simp
+
 instance : HOr (FSM α) (FSM α) (FSM α) where
   hOr := composeBinaryAux' FSM.or
+
+theorem FSM.or_eq (a b : FSM α) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
+
+@[simp]
+theorem FSM.eval_or (a b : FSM α) : (a ||| b).eval env = a.eval env ||| b.eval env := by
+  rw [FSM.or_eq]
+  simp
 
 instance : HXor (FSM α) (FSM α) (FSM α) where
   hXor := composeBinaryAux' FSM.xor
 
+theorem FSM.xor_eq (a b : FSM α) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
+
+@[simp]
+theorem FSM.eval_xor (a b : FSM α) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
+  rw [FSM.xor_eq]
+  simp
+
 instance : Complement (FSM α) where
   complement := composeUnaryAux FSM.not
+
+theorem FSM.not_eq (a : FSM α) : (~~~ a) = composeUnaryAux FSM.not a := rfl
+
+@[simp]
+theorem FSM.eval_not (a : FSM α) : (~~~ a).eval env = ~~~ (a.eval env) := by
+  rw [FSM.not_eq]
+  simp
 
 
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
@@ -39,7 +67,7 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
 
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
-    IsGoodNatFSM w tcard (mkWidthFSM wcard tcard (.ofDep w)) where
+    IsGoodNatFSM (mkWidthFSM wcard tcard (.ofDep w)) where
   heq := by
     intros wenv fsmEnv henv
     induction w
@@ -58,6 +86,13 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
 -- a: 1 <= b: 1 = 1
 def fsmUltUnary (a : FSM α) (b : FSM α) : FSM α :=
   a ||| ~~~ b
+
+theorem eval_fsmUltUnary_eq_true_iff (a : NatFSM wcard tcard (.ofDep v)) (b : NatFSM wcard tcard (.ofDep w))
+   (env : StateSpace wcard tcard → BitStream)
+   (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+   ((fsmUltUnary a.toFsm b.toFsm).eval env) i = sorry := sorry -- (v.toNat env) < (w.toNat env) := by sorry
+
+
 
 -- returns 1 if a is equal to b.
 def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
@@ -170,6 +205,7 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w
     case zext w' a b c  =>
       simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
       simp [fsmZext]
+      simp [fsmUleUnary, fsmUltUnary, ite]
       sorry
     case sext w' a b => sorry
 
