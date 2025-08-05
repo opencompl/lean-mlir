@@ -331,19 +331,19 @@ structure HTermEnv {wcard tcard : Nat}
     heq_term : ∀ (v : Fin tcard),
       fsmEnv (StateSpace.termVar v) = BitStream.ofBitVec (tenv v)
 
-structure GoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
-  extends NatFSM wcard tcard (.ofDep v) where
+structure IsGoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
+   (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
   heq :
     ∀ (wenv : Fin wcard → Nat) (fsmEnv : StateSpace wcard tcard → BitStream),
-    (henv : HWidthEnv fsmEnv wenv) → toFsm.eval fsmEnv = v.toBitstream wenv
+    (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv = v.toBitstream wenv
 
-structure GoodTermFSM {w : WidthExpr wcard}
+structure IsGoodTermFSM {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
-  (t : Term tctx w) extends TermFSM wcard tcard (.ofDep t) where
+  {t : Term tctx w} (fsm : TermFSM wcard tcard (.ofDep t)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      (henv : HTermEnv fsmEnv tenv) → toFsm.eval fsmEnv = t.toBitstream tenv
+      (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv = t.toBitstream tenv
 
 structure GoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}

@@ -38,8 +38,9 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
     { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
 
-def mkGoodWidthFsm {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} : (GoodNatFSM w tcard) :=
-   GoodNatFSM.mk (mkWidthFSM wcard tcard (.ofDep w)) (by
+def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
+    IsGoodNatFSM w tcard (mkWidthFSM wcard tcard (.ofDep w)) where
+  heq := by
     intros wenv fsmEnv henv
     induction w
     case var v =>
@@ -47,7 +48,6 @@ def mkGoodWidthFsm {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} : (GoodNatF
       have ⟨henv⟩ := henv
       rw [henv]
       simp [WidthExpr.toBitstream]
-   )
 
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
@@ -153,9 +153,9 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
-def mkGoodTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthExpr wcard} (t : Term tctx w)  :
-    (GoodTermFSM t) :=
-  GoodTermFSM.mk (mkTermFSM wcard tcard (.ofDep t)) (by
+def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthExpr wcard} (t : Term tctx w)  :
+    (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) where
+  heq := by
     intros wenv tenv fsmEnv htenv
     induction t generalizing wenv tenv fsmEnv
     case var v =>
@@ -172,7 +172,6 @@ def mkGoodTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthEx
       simp [fsmZext]
       sorry
     case sext w' a b => sorry
-  )
 
 /-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
