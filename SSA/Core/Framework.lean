@@ -970,6 +970,12 @@ def Com.letSup (e : Expr d Γ eff₁ t) (body : Com d (Γ.snoc t) eff₂ u) :
 
 section Lemmas
 
+@[simp] lemma Expr.op_castPureToEff (e : Expr d Γ .pure t) : (e.castPureToEff eff).op = e.op := by
+  cases e; cases eff <;> rfl
+@[simp] lemma Expr.args_castPureToEff (e : Expr d Γ .pure t) :
+    (e.castPureToEff eff).args = cast (by simp) e.args := by
+  cases e; cases eff <;> rfl
+
 @[simp] lemma Com.castPureToEff_ret : (ret v : Com d Γ .pure ty).castPureToEff eff = ret v := rfl
 @[simp] lemma Com.castPureToEff_var {com : Com d _ .pure ty} {e : Expr d Γ _ eTy} :
     (var e com).castPureToEff eff = var (e.castPureToEff eff) (com.castPureToEff eff) := rfl
