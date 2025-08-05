@@ -47,6 +47,7 @@ attribute [simp_denote]
   EffectKind.toMonad_pure EffectKind.toMonad_impure
   EffectKind.liftEffect_rfl
   Id.pure_eq Id.bind_eq id_eq
+  pure_bind
   cast_eq
 
 /-!
