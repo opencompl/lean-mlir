@@ -643,7 +643,7 @@ theorem DIV_pure64_signed_eq_DIV_pure64_signed_bv (rs2_val : BitVec 64) (rs1_val
             have h3 : (rs1_val.sdiv rs2_val).toInt ≤2 ^ 63  - 1 := by
                 apply  BitVec.toInt_le
             simp only [Int.reducePow, Int.reduceSub] at h3
-            exact (not_le_of_lt iT h3).elim
+            exact (not_le_of_gt iT h3).elim
           case isFalse iF =>
           rfl
 
