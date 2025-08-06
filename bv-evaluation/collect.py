@@ -944,7 +944,7 @@ def collect(benchmark: str, reps : int):
 
         all_files_solved_bv_decide_lratt_plus_lratc_times_average = all_files_solved_bv_decide_lratt_times_average + all_files_solved_bv_decide_lratc_times_average
         lrat_tot = np.sum(all_files_solved_bv_decide_lratt_plus_lratc_times_average)
-        perc_lrat = (lrat_tot / np.sum(np.array(all_files_solve_bv_decide_times_average)))*100
+        perc_lrat = (lrat_tot / np.sum(np.array(all_files_solved_bv_decide_times_average)))*100
         geomean_lrat = geomean(all_files_solved_bv_decide_lratt_plus_lratc_times_average / all_files_solved_bv_decide_times_average) * 100
 
         with open("performance-instcombine.tex", "w") as f:
