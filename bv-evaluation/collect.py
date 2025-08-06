@@ -33,6 +33,8 @@ output = Enum("output", [("counterexample", 1), ("proved", 2), ("failed", 0)])
 # res_dir = "results/InstCombine/"
 # raw_data_dir = paper_directory + "raw-data/InstCombine/"
 
+REPO_GIT_HASH = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+
 RAW_DATA_DIR_SMTLIB = ROOT_DIR + "/bv-evaluation/raw-data/SMT-LIB"
 RESULTS_DIR_SMTLIB = ROOT_DIR + "/bv-evaluation/results/SMT-LIB"
 SOLVERS_SMTLIB = ["bitwuzla", "bv_decide", "bv_decide-nokernel", "coqQFBV"]
@@ -918,6 +920,7 @@ def collect(benchmark: str, reps : int):
         mean_slowdown_instcombine = np.mean(all_files_slowdown)
 
         with open("performance-instcombine.tex", "w") as f:
+            f.write(r"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}")
             f.write(r"\newcommand{\InstCombineNProblemsTot}{" + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + "}\n")
             f.write(r"\newcommand{\InstCombineNumProblemsSolved}{" + str(solved_bv_decide_tot) + "}\n")
             f.write(r"\newcommand{\InstCombineGeomeanBvDecide}{" + str("%.2f" % geomean_time_instcombine_bvdecide) + "}\n")
