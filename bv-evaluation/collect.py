@@ -920,7 +920,7 @@ def collect(benchmark: str, reps : int):
         mean_slowdown_instcombine = np.mean(all_files_slowdown)
 
         with open("performance-instcombine.tex", "w") as f:
-            f.write(r"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}")
+            f.write(f"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}\n")
             f.write(r"\newcommand{\InstCombineNProblemsTot}{" + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + "}\n")
             f.write(r"\newcommand{\InstCombineNumProblemsSolved}{" + str(solved_bv_decide_tot) + "}\n")
             f.write(r"\newcommand{\InstCombineGeomeanBvDecide}{" + str("%.2f" % geomean_time_instcombine_bvdecide) + "}\n")
