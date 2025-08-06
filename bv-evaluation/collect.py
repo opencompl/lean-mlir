@@ -8,6 +8,7 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 import shutil
+import num2words
 
 
 def avg_bb_sat_to_latex_str(solver_name : str,
@@ -46,11 +47,11 @@ def avg_bb_sat_to_latex_str(solver_name : str,
     geomean_lrat = geomean(all_files_solved_bv_decide_lratt_plus_lratc_times_average / all_files_solved_bv_decide_times_average) * 100
 
     out = ""
-    out += f"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}\n")
-    out += r"\newcommand{\\" + solver_name + r"SatBitBlastingPerc}{" + ("%1.f" % perc_sat_bb) + "\\%}\n")
-    out += r"\newcommand{\\" + solver_name + r"SatBitBlastingGeoMean}{" + ("%1.f" % geomean_sat_bb) + "\\%}\n")
-    out += r"\newcommand{\\" + solver_name + r"}{" + ("%1.f" % perc_lrat) + "\\%}\n")
-    out += r"\newcommand{\\" + solver_name + r"}{" + ("%1.f" % geomean_lrat) + "\\%}\n")
+    out += f"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}\n"
+    out += "\\newcommand{\\" + solver_name + r"SatBitBlastingPerc}{" + ("%1.f" % perc_sat_bb) + "\\%}\n"
+    out += "\\newcommand{\\" + solver_name + r"SatBitBlastingGeoMean}{" + ("%1.f" % geomean_sat_bb) + "\\%}\n"
+    out += "\\newcommand{\\" + solver_name + r"LRATPerc}{" + ("%1.f" % perc_lrat) + "\\%}\n"
+    out += "\\newcommand{\\" + solver_name + r"LRATGeoMean}{" + ("%1.f" % geomean_lrat) + "\\%}\n"
     return out
 
 
@@ -1086,22 +1087,22 @@ def collect(benchmark: str, reps : int):
                     file_name = (
                         RESULTS_DIR_HACKERSDELIGHT + file.split(".")[0] + "_" + str(bvw)
                     )
-                file_result = parse_file(file_name, reps)
-                file_comparison = compare_solvers_on_file(file_result)
-                all_files_solved_bv_decide_times_average = file_comparison["file_solved_bv_decide_times_average"]
-                all_files_solved_bitwuzla_times_average = file_comparison["file_solved_bitwuzla_times_average"]
-                all_files_solved_bv_decide_rw_times_average = file_comparison["file_solved_bv_decide_rw_times_average"]
-                all_files_solved_bv_decide_sat_times_average = file_comparison["file_solved_bv_decide_sat_times_average"]
-                all_files_solved_bv_decide_bb_times_average = file_comparison["file_solved_bv_decide_bb_times_average"]
-                all_files_solved_bv_decide_lratc_times_average = file_comparison["file_solved_bv_decide_lratc_times_average"]
-                all_files_solved_bv_decide_lratt_times_average = file_comparison["file_solved_bv_decide_lratt_times_average"]
-                f.write(avg_bb_sat_to_latex_str(solver_name="HackersDelight" + num2words.num2words(bvw).replace('-', ''), \
-                    all_files_solved_bv_decide_times_average=all_files_solved_bv_decide_times_average, \
-                    all_files_solved_bitwuzla_times_average=all_files_solved_bitwuzla_times_average, \
-                    all_files_solved_bv_decide_bb_times_average=all_files_solved_bv_decide_bb_times_average, \
-                    all_files_solved_bv_decide_sat_times_average=all_files_solved_bv_decide_sat_times_average, \
-                    all_files_solved_bv_decide_lratt_times_average=all_files_solved_bv_decide_lratt_times_average, \
-                    all_files_solved_bv_decide_lratc_times_average=all_files_solved_bv_decide_lratc_times_average)
+                    file_parse_result = parse_file(file_name, reps)
+                    file_comparison = compare_solvers_on_file((file_name, file_parse_result))
+                    all_files_solved_bv_decide_times_average = file_comparison["file_solved_bv_decide_times_average"]
+                    all_files_solved_bitwuzla_times_average = file_comparison["file_solved_bitwuzla_times_average"]
+                    all_files_solved_bv_decide_rw_times_average = file_comparison["file_solved_bv_decide_rw_times_average"]
+                    all_files_solved_bv_decide_sat_times_average = file_comparison["file_solved_bv_decide_sat_times_average"]
+                    all_files_solved_bv_decide_bb_times_average = file_comparison["file_solved_bv_decide_bb_times_average"]
+                    all_files_solved_bv_decide_lratc_times_average = file_comparison["file_solved_bv_decide_lratc_times_average"]
+                    all_files_solved_bv_decide_lratt_times_average = file_comparison["file_solved_bv_decide_lratt_times_average"]
+                    f.write(avg_bb_sat_to_latex_str(solver_name="HackersDelight" + num2words.num2words(bvw).replace('-', ''), \
+                        all_files_solved_bv_decide_times_average=all_files_solved_bv_decide_times_average, \
+                        all_files_solved_bitwuzla_times_average=all_files_solved_bitwuzla_times_average, \
+                        all_files_solved_bv_decide_bb_times_average=all_files_solved_bv_decide_bb_times_average, \
+                        all_files_solved_bv_decide_sat_times_average=all_files_solved_bv_decide_sat_times_average, \
+                        all_files_solved_bv_decide_lratt_times_average=all_files_solved_bv_decide_lratt_times_average, \
+                        all_files_solved_bv_decide_lratc_times_average=all_files_solved_bv_decide_lratc_times_average))
 
     elif benchmark == "smtlib":
         clear_folder(RAW_DATA_DIR_SMTLIB)
