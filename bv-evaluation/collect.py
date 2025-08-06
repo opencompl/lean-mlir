@@ -314,7 +314,7 @@ def compare_solvers_on_file(file_result):
             )
             file_solved_bitwuzla_times_stddev.append(np.std(file_result[1]["solved_bitwuzla_times_average"][theorem_num]))
 
-            
+
 
             file_solved_bv_decide_times_average.append(
                 np.mean(file_result[1]["solved_bv_decide_times_average"][theorem_num])
@@ -465,7 +465,7 @@ def parse_file(file_name: str, reps: int):
                 file_line = res_file.readline()
                 if "LeanSAT " in file_line:
                     if "failed" in file_line:
-                        if "gdivhshift_proof" in file_name and thm == 46: 
+                        if "gdivhshift_proof" in file_name and thm == 46:
                             print(file_line)
                         if r == 0:
                             outputs_bv_decide.append(output.failed)
@@ -483,7 +483,7 @@ def parse_file(file_name: str, reps: int):
                             counter_bv_decide_rw_times_average[thm].append(float(-1))
                             counter_bv_decide_sat_times_average[thm].append(float(-1))
                             solved_bv_decide_times_average[thm].append(float(-1))
-                            solved_bv_decide_rw_times_average[thm].append(float(-1))             
+                            solved_bv_decide_rw_times_average[thm].append(float(-1))
                             solved_bv_decide_bb_times_average[thm].append(float(-1))
                             solved_bv_decide_sat_times_average[thm].append(float(-1))
                             solved_bv_decide_lratt_times_average[thm].append(
@@ -649,7 +649,7 @@ def save_solved_df(
     all_files_solved_bv_decide_sat_times_stddev: list,
     all_files_solved_bv_decide_lratt_times_stddev: list,
     all_files_solved_bv_decide_lratc_times_stddev: list,
-    
+
     csv_name: str,
 ):
     solved_df = pd.DataFrame(
@@ -779,10 +779,10 @@ def collect(benchmark: str, reps : int):
 
             for tmp in file_comparison["file_solved_bv_decide_rw_times_stddev"]:
                 all_files_solved_bv_decide_rw_times_stddev.append(tmp)
-            
+
             for tmp in file_comparison["file_solved_bv_decide_bb_times_stddev"]:
                 all_files_solved_bv_decide_bb_times_stddev.append(tmp)
-            
+
             for tmp in file_comparison["file_solved_bv_decide_sat_times_stddev"]:
                 all_files_solved_bv_decide_sat_times_stddev.append(tmp)
 
@@ -886,7 +886,7 @@ def collect(benchmark: str, reps : int):
 
         ratios = []
         for avg, stddev in zip(all_files_solved_bv_decide_times_average, all_files_solved_bv_decide_times_stddev):
-            ratio = (stddev/avg) * 100 
+            ratio = (stddev/avg) * 100
             ratios.append(ratio)
 
         print("mean of percentage stddev/av: "+str(np.mean(ratios)) + "%")
@@ -924,6 +924,9 @@ def collect(benchmark: str, reps : int):
             f.write(r"\newcommand{\InstCombineGeomeanBitwuzla}{" + str("%.2f" %geomean_time_instcombine_bitwuzla) + "}\n")
             f.write(r"\newcommand{\InstCombineGeomeanSlowdown}{" + str("%.2f" % geomean_slowdown_instcombine) + "}\n")
             f.write(r"\newcommand{\InstCombineMeanSlowdown}{" + str("%.2f" % mean_slowdown_instcombine) + "}\n")
+            f.write(r"\newcommand{\InstCombineBothFailed}{" + str(len(all_files_failed_bv_decide_and_bitwuzla)) + "}\n")
+            f.write(r"\newcommand{\InstCombineOnlyBvDecideFailed}{" + str(len(all_files_failed_bv_decide_only)) + "}\n")
+            f.write(r"\newcommand{\InstCombineOnlyBitwuzlaFailed}{" + str(len(all_files_failed_bitwuzla_only)) + "}\n")
 
 
     elif benchmark == "hackersdelight":
