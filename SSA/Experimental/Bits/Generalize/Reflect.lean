@@ -50,7 +50,7 @@ structure ParsedBVExpr where
   symVars: Std.HashMap Nat BVExpr.PackedBitVec
   inputVars : Std.HashMap Nat Name
 
-abbrev ParsedBVLogicalExpr := ParsedLogicalExpr GenBVLogicalExpr BVExprWrapper ParsedBVExpr
+abbrev ParsedBVLogicalExpr := ParsedLogicalExpr BVExprWrapper ParsedBVExpr GenBVLogicalExpr
 
 partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
   go expr
@@ -404,8 +404,8 @@ instance : HydrableGenExpr GenBVLogicalExpr GenBVExpr where
 
 instance : HydrableExistsForall  BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 
-instance : HydrableGetParserState BVExprWrapper where
-  defaultParserState := defaultParsedExprState
+instance : HydrableInitialParserState BVExprWrapper where
+  initialParserState := defaultParsedExprState
 
 elab "#reducewidth" expr:term " : " target:term : command =>
   open Lean Lean.Elab Command Term in

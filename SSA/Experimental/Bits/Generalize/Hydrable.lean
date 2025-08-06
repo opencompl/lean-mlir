@@ -61,7 +61,7 @@ instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
 instance : ToString FVarId where
   toString f := s! "{f.name}"
 
-  
+
 structure ParsedInputState (parsedExprWrapper : Type) where
   maxFreeVarId : Nat
   numSymVars :  Nat
@@ -72,11 +72,11 @@ structure ParsedInputState (parsedExprWrapper : Type) where
   symVarToDisplayName : Std.HashMap Nat Name
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
-class HydrableGetParserState  (parsedExprWrapper: Type)
+class HydrableInitialParserState  (parsedExprWrapper: Type)
 where
-  defaultParserState : ParsedInputState parsedExprWrapper
+  initialParserState : ParsedInputState parsedExprWrapper
 
-structure ParsedLogicalExpr (genLogicalExpr : Type) (parsedExprWrapper : Type) (parsedExpr : Type)
+structure ParsedLogicalExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type)
 where
   logicalExpr : genLogicalExpr
   state : ParsedInputState parsedExprWrapper
@@ -86,16 +86,16 @@ where
 abbrev ParseExprM (parsedExprWrapper : Type) := StateRefT (ParsedInputState parsedExprWrapper) MetaM
 
 class HydrableParseExprs (genLogicalExpr : Type) (parsedExprWrapper : Type) (parsedExpr : Type)  where
-  parseExprs : (lhsExpr rhsExpr : Expr) → (targetWidth : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr))
+  parseExprs : (lhsExpr rhsExpr : Expr) → (targetWidth : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr ))
 
 class HydrableGenExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  genExprToExpr {n : Nat} : ParsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr → genExpr n → MetaM Expr
+  genExprToExpr {n : Nat} : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → genExpr n → MetaM Expr
 
 class HydrableGenLogicalExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  genLogicalExprToExpr : ParsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
+  genLogicalExprToExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
 
 class HydrableGetAllNamesFromParsedLogicalExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getAllNamesFromParsedLogicalExpr : ParsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr → HashMap Nat Name
+  getAllNamesFromParsedLogicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → HashMap Nat Name
 
 class HydrableGetLogicalExprSize (genLogicalExpr : Type) where
   getLogicalExprSize : genLogicalExpr → Nat
@@ -116,7 +116,7 @@ structure GeneralizerState
   processingWidth : Nat
   targetWidth : Nat
   widthId: Nat
-  parsedLogicalExpr : ParsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr
+  parsedLogicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr
   needsPreconditionsExprs : List genLogicalExpr
   visitedSubstitutions : Std.HashSet genLogicalExpr
   constantExprsEnumerationCache : Std.HashMap (genExpr processingWidth) BVExpr.PackedBitVec
@@ -131,6 +131,11 @@ def GeneralizerStateM.liftTermElabM
   (m : TermElabM α) : GeneralizerStateM  parsedExprWrapper parsedExpr genLogicalExpr genExpr α := do
   let v ← m
   return v
+
+class HydrableInitialGeneralizerState  (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
+extends HydrableInstances genLogicalExpr genExpr
+where
+  initialGeneralizerState : GeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr
 
 class HydrableBooleanAlgebra (genLogicalExpr : Type) (genExpr : Nat → Type) where
   not : genLogicalExpr → genLogicalExpr

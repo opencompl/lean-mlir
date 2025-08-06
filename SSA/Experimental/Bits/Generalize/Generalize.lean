@@ -230,6 +230,7 @@ class HydrableGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogic
   HydrableExistsForall parsedExprWrapper parsedExpr  genLogicalExpr genExpr,
   HydrableParseExprs genLogicalExpr parsedExprWrapper parsedExpr,
   HydrableChangeLogicalExprWidth genLogicalExpr,
+  HydrableInitialParserState parsedExprWrapper,
   HydrableSynthesizeWithNoPrecondition parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrableCheckForPreconditions parsedExprWrapper parsedExpr genLogicalExpr genExpr
   where
@@ -288,8 +289,8 @@ inductive GeneralizeContext where
   | Command : GeneralizeContext
   | Tactic (name : Name) : GeneralizeContext
 
-
-def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
+/-
+def parseAndGeneralize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr] (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
     let targetWidth := 8
     let timeoutMs := 300000
 
@@ -299,16 +300,14 @@ def parseAndGeneralize (hExpr : Expr) (context: GeneralizeContext): TermElabM Me
 
           -- Parse the input expression
           let widthId : Nat := 9481
-          let mut initialState : ParsedBVExprState := default
+          let mut initialState := H.initialParserState
           initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId (Name.mkSimple "w")}
 
-          let some parsedBVLogicalExpr ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState
+          let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr targetWidth).run' initialState
             | throwError "Unsupported expression provided"
 
-          trace[Generalize] m! "Parsed GenBVLogicalExpr state: {parsedBVLogicalExpr.state}"
-
-          let bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
-          let parsedBVState := parsedBVLogicalExpr.state
+          let bvLogicalExpr := parsedLogicalExpr.logicalExpr
+          let parsedBVState := parsedLogicalExpr.state
 
           let mut initialGeneralizerState : GeneralizerState :=
             { startTime := startTime
