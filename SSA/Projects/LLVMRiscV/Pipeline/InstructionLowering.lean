@@ -197,4 +197,3 @@ def llvm02:=
     %2 = llvm.sub %X, %X : i64
     llvm.return %1 : i64
   }]
-#eval! (selectionPipeFuelWithCSE llvm01 false)
