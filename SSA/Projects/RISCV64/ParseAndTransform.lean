@@ -37,9 +37,9 @@ def parseAsRiscv (fileName : String ) : IO UInt32 := do
     | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
       IO.println s!"{Com.toPrint c}"
       return 0
+
 private def test_simple := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
   %1 = add %e1, %e2 : !i64
        ret %1 : !i64
 }]
-#eval! test_simple
