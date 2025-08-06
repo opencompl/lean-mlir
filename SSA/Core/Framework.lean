@@ -380,72 +380,75 @@ abbrev Expr.outContext (_ : Expr d Γ eff t) : Ctxt d.Ty :=
 ### Com recursors
 -/
 
+section Rec
+variable {eff t} {motive : ∀ {Γ}, Com d Γ eff t → Sort u}
+          (ret : ∀ {Γ} , (v : Var Γ t) → motive (Com.ret v))
+          (var : ∀ {Γ} {u : d.Ty},
+            (e : Expr d Γ eff u) → (body : Com d e.outContext eff t) →
+              motive body → motive (Com.var e body))
+
 @[elab_as_elim]
-def Com.recAux' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
-    (ret : ∀ {Γ t} {eff : EffectKind}, (v : Var Γ t) → motive (eff := eff) (Com.ret v))
-    (var : ∀ {Γ} {t u : d.Ty} {eff},
-      (e : Expr d Γ eff t) → (body : Com d (Γ.snoc t) eff u) →
-        motive body → motive (Com.var e body)) :
-    ∀ {Γ eff t}, (com : Com d Γ eff t) → motive com
-  | _, _, _, Com.ret v => ret v
-  | _, _, _, Com.var e body => var e body (Com.recAux' ret var body)
+def Com.recAux' {Γ} : (com : Com d Γ eff t) → motive com
+  | Com.ret v => ret v
+  | Com.var e body => var e body (Com.recAux' body)
 
 @[implemented_by Com.recAux', elab_as_elim, induction_eliminator]
 -- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
 --      See `Com.recAux'_eq` for a theorem that states these definitions are equal
-def Com.rec' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
-    (ret : ∀ {Γ t} {eff : EffectKind}, (v : Var Γ t) → motive (eff := eff) (Com.ret v))
-    (var : ∀ {Γ} {t u : d.Ty} {eff},
-      (e : Expr d Γ eff t) → (body : Com d (Γ.snoc t) eff u) →
-        motive body → motive (Com.var e body)) :
-    ∀ {Γ eff t}, (com : Com d Γ eff t) → motive com :=
+def Com.rec' {Γ} (com : Com d Γ eff t) : motive com :=
   /- HACK: the obvious definition of `rec'` using the match compiler does not have the
      def-eqs we expect. Thus, we directly use the recursion principle. -/
-  Com.rec (motive_1 := fun _ _ _ _ => PUnit) (motive_2 := fun _ _ _ c => motive c)
-    (motive_3 := fun _ _ => PUnit) (fun _ _ _ _ _ _ => ⟨⟩) -- `Expr.mk` case
-    (ret) -- `Com.ret` case
-    (fun e body _ r => var e body r) -- `Com.var` case
-    ⟨⟩ (fun _ _ _ _ => ⟨⟩)
+  Com.rec
+    (motive_1 := fun _ _ _ _ => PUnit)
+    (motive_2 := fun _ eff' t' c =>
+      (h₁ : eff = eff') → (h₂ : t = t') → motive (h₁ ▸ h₂ ▸ c))
+    (motive_3 := fun _ _ => PUnit)
+    (fun _ _ _ _ _ _ => ⟨⟩) -- `Expr.mk` case
+    (fun v h₁ h₂ => -- `Com.ret` case
+      cast (by subst h₁ h₂; rfl) <| ret (h₂ ▸ v))
+    (fun e' body' _ r' h₁ h₂ => -- `Com.var` case
+      let e := h₁ ▸ e'
+      let body : Com _ _ eff t := cast (by simp_all) body'
+      let r : motive body := cast (by subst h₁ h₂; rfl) (r' h₁ h₂)
+      cast (by subst h₁ h₂; rfl) <| var e body r)
+    ⟨⟩
+    (fun _ _ _ _ => ⟨⟩)
+    com
+    rfl
+    rfl
 
-@[simp] lemma Com.rec'_ret (v : Var Γ t) {motive eff} {ret var} :
+variable {ret} {var}
+
+@[simp] lemma Com.rec'_ret (v : Var Γ t) :
     (Com.ret (d:=d) (eff := eff) v).rec' (motive:=motive) ret var = ret v :=
   rfl
 
-@[simp] lemma Com.rec'_var (e : Expr d Γ eff t) (body : Com d _ _ u)
-    {motive} {ret var} :
+@[simp] lemma Com.rec'_var (e : Expr d Γ eff u) (body : Com d _ _ t) :
     (Com.var e body).rec' (motive:=motive) ret var
-    = var e body (body.rec' ret var) :=
+    = var e body (body.rec' (motive:=motive) ret var) :=
   rfl
 
-theorem Com.recAux'_eq {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u} :
+omit ret var in
+theorem Com.recAux'_eq :
     Com.recAux' (motive:=motive) = Com.rec' (motive:=motive) := by
-  funext ret var Γ eff t com
-  induction com
-  next => simp[recAux']
-  next ih => simp [recAux', ih]
+  funext ret var Γ com
+  induction com <;> simp [recAux', *]
 
-/-- Alternative recursion principle for known-pure `Com`s -/
--- TODO: we should be able to make `Com.rec'` work even for known-pure `Com`s by fiddling with
---       the type of `motive`
-@[elab_as_elim]
-def Com.recPure {motive : ∀ {Γ t}, Com d Γ .pure t → Sort u}
-    (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
-    (var : ∀ {Γ} {t u : d.Ty},
-      (e : Expr d Γ .pure t) → (body : Com d (Γ.snoc t) .pure u) →
+end Rec
+
+/-- Alternative recursion principle for known-pure `Com`s.
+
+NOTE: this can now be achieved through `Com.rec'` direclty;
+`recPure` is deprecated and will be removed soon. -/
+-- TODO: eventually remove this
+@[elab_as_elim, deprecated Com.rec' (since := "")]
+def Com.recPure {t} {motive : ∀ {Γ t}, Com d Γ .pure t → Sort u}
+    (ret : ∀ {Γ}, (v : Var Γ t) → motive (Com.ret v))
+    (var : ∀ {Γ} {u : d.Ty},
+      (e : Expr d Γ .pure u) → (body : Com d (Γ.snoc u) .pure t) →
         motive body → motive (Com.var e body))
-    {Γ t} (com : Com d Γ .pure t) : motive com :=
-  let motive {_Γ eff _t} (com) := match eff with
-    | EffectKind.pure => motive com
-    | EffectKind.impure => PUnit
-  let ret {Γ eff t} (v : Var Γ t) : @motive Γ eff t (Com.ret v) := match eff with
-    | .pure => ret v
-    | .impure => ⟨⟩
-  let var {Γ t u} {eff} (e : Expr d Γ eff t) (body : Com d (Γ.snoc t) eff u) :
-      motive body → motive (body.var e) :=
-    fun r => match eff with
-      | .pure => var _ _ r
-      | .impure => ⟨⟩
-  com.rec' (motive := @motive) ret var
+    {Γ} (com : Com d Γ .pure t) : motive com :=
+  com.rec' (motive := motive) ret var
 
 def Expr.op {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty} (e : Expr d Γ eff ty) : d.Op :=
   Expr.casesOn e (fun op _ _ _ _ => op)
@@ -513,7 +516,7 @@ end Lemmas
 of the program. That is, it is the context under which the return value is typed -/
 def Com.outContext {Γ} : Com d Γ eff t → Ctxt d.Ty :=
   Com.rec' (motive := fun _ => Ctxt d.Ty)
-    (@fun Γ _ _ _ => Γ) -- `Com.ret` case
+    (@fun Γ _ => Γ) -- `Com.ret` case
     (fun _ _ r => r) -- `Com.var` case
 
 /-- The difference between the context `Γ` under which `com` is typed, and the output context of
@@ -876,7 +879,7 @@ end Lemmas
 
 @[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure ty) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = c.denote Γv := by
-  induction c using Com.recPure
+  induction c using Com.rec'
   · simp; rfl
   · rename_i a
     simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
@@ -941,7 +944,7 @@ Generally used to change a pure program into an impure one, but it is useful to 
 phrased more generically -/
 def Com.changeEffect {eff₁ eff₂ : EffectKind} (h : eff₁ ≤ eff₂) :
     Com d Γ eff₁ t → Com d Γ eff₂ t := fun com =>
-  Com.rec' (motive := @fun Γ eff t _ => eff ≤ eff₂ → Com d Γ eff₂ t)
+  Com.rec' (motive := @fun Γ _ => eff₁ ≤ eff₂ → Com d Γ eff₂ t)
     /- ret v -/       (fun v _h               => ret v)
     /- var e body -/ (fun e _body castBody h => var (e.changeEffect h) (castBody h))
     com h
@@ -1000,18 +1003,18 @@ section Lemmas
 
 @[simp] lemma Com.outContext_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).outContext = com.outContext := by
-  induction com using Com.recPure <;> simp [*]
+  induction com using Com.rec' <;> simp [*]
 
 /-- `castPureToEff` does not change the size of a `Com` -/
 @[simp] lemma Com.size_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).size = com.size := by
-  induction com using Com.recPure <;> simp [*]
+  induction com using Com.rec' <;> simp [*]
 
 @[simp] lemma Lets.addComToEnd_castPureToEff {lets : Lets d Γ_in .pure Γ_out}
     {com : Com d Γ_out .pure ty} :
     (lets.castPureToEff eff).addComToEnd (com.castPureToEff eff)
     = cast (by simp) ((lets.addComToEnd com).castPureToEff eff) := by
-  induction com using Com.recPure
+  induction com using Com.rec'
   case ret => simp
   case var ih =>
     simp only [Com.castPureToEff_var, Com.outContext_var, addComToEnd_var,
@@ -1025,7 +1028,7 @@ section Lemmas
 
 @[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).returnVar = com.returnVar.castCtxt (by simp) := by
-  induction com using Com.recPure <;> simp_all
+  induction com using Com.rec' <;> simp_all
 
 /-! denotations of `castPureToEff` -/
 
@@ -1042,7 +1045,7 @@ section Lemmas
 @[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
   funext V
-  induction com using Com.recPure
+  induction com using Com.rec'
   · rfl
   · simp [*]; rfl
 
@@ -1050,7 +1053,7 @@ section Lemmas
     denoteLets (com.castPureToEff eff)
     = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
   funext V
-  induction com using Com.recPure
+  induction com using Com.rec'
   · simp
   · simp [*]; rfl
 
@@ -1223,7 +1226,7 @@ assignment of that variable in the input valuation -/
 @[simp] lemma Com.denoteLets_outContextHom (com : Com d Γ .pure ty) (V : Valuation Γ)
     {vTy} (v : Var Γ vTy) :
     com.denoteLets V (com.outContextHom v) = V v := by
-  induction com using Com.recPure
+  induction com using Com.rec'
   · simp; rfl
   case var e body ih =>
     rw [outContextHom_var]
