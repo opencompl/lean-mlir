@@ -111,22 +111,22 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
   let some (_, xsRealTys) := Expr.listLit? (← reduce as)
     | return .continue
   let xsRealTys ←  xsRealTys.mapM extractRiscvTy
-  logInfo m!"found (llvmArgsFromHybrid (HVector.cons ({x} : {xRealTy}) ({xs} : {xsRealTys})"
+  -- logInfo m!"found (llvmArgsFromHybrid (HVector.cons ({x} : {xRealTy}) ({xs} : {xsRealTys})"
   let llvmTypeType := mkApp (mkConst ``Dialect.Ty []) (mkConst ``RISCV64.RV64 [])
   let xsRealTys ←  Lean.Meta.mkListLit llvmTypeType xsRealTys
-  logInfo m!"calling {``riscvArgsFromHybrid_cons_eq.lemma} with {xRealTy}, {xsRealTys}, {x}, {xs}"
-  logInfo m!"XXXX"
+  -- logInfo m!"calling {``riscvArgsFromHybrid_cons_eq.lemma} with {xRealTy}, {xsRealTys}, {x}, {xs}"
+  -- logInfo m!"XXXX"
   let proof := mkAppN (mkConst ``riscvArgsFromHybrid_cons_eq.lemma []) #[xRealTy, xsRealTys, x, xs]
-  logInfo m!"YYYY"
-  logInfo m!"built proof {proof}"
+  -- logInfo m!"YYYY"
+  -- logInfo m!"built proof {proof}"
   let proof ← reduce proof
-  logInfo m!"reduced proof to {proof}"
+  -- logInfo m!"reduced proof to {proof}"
   let eq ← reduce (← inferType proof)
-  logInfo m!"reduced type of proof (i.e. the equality) to {eq}"
+  -- logInfo m!"reduced type of proof (i.e. the equality) to {eq}"
   let .some (_ty, _lhs, rhs) := eq.eq?
     | throwError "unable to reduce application of riscvArgsFromHybrid_cons_eq.lemma to an
       equality, only reduced to '{eq}'."
-  logInfo m!"final right-hand-side of equality is: {rhs}"
+  -- logInfo m!"final right-hand-side of equality is: {rhs}"
   return .visit {
     expr := rhs,
     proof? := .some proof
