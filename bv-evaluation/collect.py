@@ -1081,28 +1081,37 @@ def collect(benchmark: str, reps : int):
                 + "_err_data.csv"
             )
 
+        # build the merged data we want for the paper.
+        chapter_names = ['ch2_1DeMorgan', 'ch2_2AdditionAndLogicalOps']
+        all_files_solved_bv_decide_times_average = []
+        all_files_solved_bitwuzla_times_average = []
+        all_files_solved_bv_decide_rw_times_average = []
+        all_files_solved_bv_decide_sat_times_average = []
+        all_files_solved_bv_decide_bb_times_average = []
+        all_files_solved_bv_decide_lratc_times_average = []
+        all_files_solved_bv_decide_lratt_times_average = []
         with open("performance-hackersdelight.tex", "w") as f:
-            for file in os.listdir(BENCHMARK_DIR_HACKERSDELIGHT):
-                for bvw in bv_width:
+            for bvw in bv_width:
+                for chapter_name in chapter_names:
                     file_name = (
-                        RESULTS_DIR_HACKERSDELIGHT + file.split(".")[0] + "_" + str(bvw)
+                        RESULTS_DIR_HACKERSDELIGHT + chapter_name + "_" + str(bvw)
                     )
                     file_parse_result = parse_file(file_name, reps)
                     file_comparison = compare_solvers_on_file((file_name, file_parse_result))
-                    all_files_solved_bv_decide_times_average = file_comparison["file_solved_bv_decide_times_average"]
-                    all_files_solved_bitwuzla_times_average = file_comparison["file_solved_bitwuzla_times_average"]
-                    all_files_solved_bv_decide_rw_times_average = file_comparison["file_solved_bv_decide_rw_times_average"]
-                    all_files_solved_bv_decide_sat_times_average = file_comparison["file_solved_bv_decide_sat_times_average"]
-                    all_files_solved_bv_decide_bb_times_average = file_comparison["file_solved_bv_decide_bb_times_average"]
-                    all_files_solved_bv_decide_lratc_times_average = file_comparison["file_solved_bv_decide_lratc_times_average"]
-                    all_files_solved_bv_decide_lratt_times_average = file_comparison["file_solved_bv_decide_lratt_times_average"]
-                    f.write(avg_bb_sat_to_latex_str(solver_name="HackersDelight" + num2words.num2words(bvw).replace('-', ''), \
-                        all_files_solved_bv_decide_times_average=all_files_solved_bv_decide_times_average, \
-                        all_files_solved_bitwuzla_times_average=all_files_solved_bitwuzla_times_average, \
-                        all_files_solved_bv_decide_bb_times_average=all_files_solved_bv_decide_bb_times_average, \
-                        all_files_solved_bv_decide_sat_times_average=all_files_solved_bv_decide_sat_times_average, \
-                        all_files_solved_bv_decide_lratt_times_average=all_files_solved_bv_decide_lratt_times_average, \
-                        all_files_solved_bv_decide_lratc_times_average=all_files_solved_bv_decide_lratc_times_average))
+                    all_files_solved_bv_decide_times_average.extend(file_comparison["file_solved_bv_decide_times_average"])
+                    all_files_solved_bitwuzla_times_average.extend(file_comparison["file_solved_bitwuzla_times_average"])
+                    all_files_solved_bv_decide_rw_times_average.extend(file_comparison["file_solved_bv_decide_rw_times_average"])
+                    all_files_solved_bv_decide_sat_times_average.extend(file_comparison["file_solved_bv_decide_sat_times_average"])
+                    all_files_solved_bv_decide_bb_times_average.extend(file_comparison["file_solved_bv_decide_bb_times_average"])
+                    all_files_solved_bv_decide_lratc_times_average.extend(file_comparison["file_solved_bv_decide_lratc_times_average"])
+                    all_files_solved_bv_decide_lratt_times_average.extend(file_comparison["file_solved_bv_decide_lratt_times_average"])
+                f.write(avg_bb_sat_to_latex_str(solver_name="HackersDelight" + num2words.num2words(bvw).replace('-', ''), \
+                    all_files_solved_bv_decide_times_average=all_files_solved_bv_decide_times_average, \
+                    all_files_solved_bitwuzla_times_average=all_files_solved_bitwuzla_times_average, \
+                    all_files_solved_bv_decide_bb_times_average=all_files_solved_bv_decide_bb_times_average, \
+                    all_files_solved_bv_decide_sat_times_average=all_files_solved_bv_decide_sat_times_average, \
+                    all_files_solved_bv_decide_lratt_times_average=all_files_solved_bv_decide_lratt_times_average, \
+                    all_files_solved_bv_decide_lratc_times_average=all_files_solved_bv_decide_lratc_times_average))
 
     elif benchmark == "smtlib":
         clear_folder(RAW_DATA_DIR_SMTLIB)
