@@ -4,8 +4,6 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Lean
 
 import SSA.Core.Util
--- import SSA.Experimental.Bits.Generalize.Basic
--- import SSA.Experimental.Bits.Generalize.Reflect
 import SSA.Experimental.Bits.Generalize.Hydrable
 
 open Lean
@@ -14,8 +12,6 @@ open Std.Sat
 open Std.Tactic.BVDecide
 
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
-
-set_option warn.sorry false
 
 namespace Generalize
 
@@ -228,7 +224,6 @@ def checkTimeout {parsedExprWrapper parsedExpr genLogicalExpr genExpr} [H : Hydr
 
 class HydrableGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableExistsForall parsedExprWrapper parsedExpr  genLogicalExpr genExpr,
-  HydrableParseExprs genLogicalExpr parsedExprWrapper parsedExpr,
   HydrableChangeLogicalExprWidth genLogicalExpr,
   HydrableInitialParserState parsedExprWrapper,
   HydrableSynthesizeWithNoPrecondition parsedExprWrapper parsedExpr genLogicalExpr genExpr,
@@ -289,8 +284,16 @@ inductive GeneralizeContext where
   | Command : GeneralizeContext
   | Tactic (name : Name) : GeneralizeContext
 
-/-
-def parseAndGeneralize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr] (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
+
+class HydrableParseAndGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
+  HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrableParseExprs parsedExprWrapper parsedExpr genLogicalExpr,
+  HydrableInitialGeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrablePrettify genLogicalExpr,
+  HydrablePrettifyAsTheorem genLogicalExpr
+  where
+
+def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr] (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
     let targetWidth := 8
     let timeoutMs := 300000
 
@@ -309,17 +312,7 @@ def parseAndGeneralize [H : HydrableGeneralize parsedExprWrapper parsedExpr genL
           let bvLogicalExpr := parsedLogicalExpr.logicalExpr
           let parsedBVState := parsedLogicalExpr.state
 
-          let mut initialGeneralizerState : GeneralizerState :=
-            { startTime := startTime
-            , widthId := widthId
-            , timeout := timeoutMs
-            , processingWidth           := targetWidth
-            , targetWidth               := targetWidth
-            , parsedBVLogicalExpr       := parsedBVLogicalExpr
-            , needsPreconditionsExprs   := []
-            , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
-            , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
-            }
+          let mut initialGeneralizerState := H.initialGeneralizerState startTime timeoutMs widthId targetWidth parsedLogicalExpr
 
           let generalizeRes ← generalize.run' initialGeneralizerState
           let variableDisplayNames := Std.HashMap.union parsedBVState.inputVarIdToDisplayName parsedBVState.symVarToDisplayName
@@ -327,68 +320,9 @@ def parseAndGeneralize [H : HydrableGeneralize parsedExprWrapper parsedExpr genL
           trace[Generalize] m! "All vars: {variableDisplayNames}"
           match generalizeRes with
             | some res => match context with
-                          | GeneralizeContext.Command => let pretty := prettify res variableDisplayNames
+                          | GeneralizeContext.Command => let pretty := H.prettify res variableDisplayNames
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
-                          | GeneralizeContext.Tactic name => pure m! "{printAsTheorem name res variableDisplayNames}"
+                          | GeneralizeContext.Tactic name => pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
-
-
-elab "#generalize" expr:term: command =>
-  open Lean Lean.Elab Command Term in
-  withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-      let hExpr ← Term.elabTerm expr none
-      trace[Generalize] m! "hexpr: {hExpr}"
-      let res ← parseAndGeneralize hExpr GeneralizeContext.Command
-
-      logInfo m! "{res}"
-
-
-syntax (name := bvGeneralize) "bv_generalize" : tactic
-@[tactic bvGeneralize]
-def evalBvGeneralize : Tactic := fun
-| `(tactic| bv_generalize) => do
-    let name ← mkAuxDeclName `generalized
-    let msg ← withoutModifyingEnv <| withoutModifyingState do
-      withMainContext do
-        let expr ← Lean.Elab.Tactic.getMainTarget
-        let res ← parseAndGeneralize expr (GeneralizeContext.Tactic name)
-        pure m! "{res}"
-    logInfo m! "{msg}"
-| _ => throwUnsupportedSyntax
-
-
-set_option linter.unusedTactic false
-
-variable {x y z: BitVec 32}
--- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
--- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
-
--- theorem zextdemo (x : BitVec 32) : BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32 := by
---   bv_decide
---   sorry
-
-
--- theorem zextdemo2 (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
---   bv_generalize
---   sorry
-
-
-/--
-info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
--/
-#guard_msgs in
-theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
-  bv_generalize
-  sorry
-
-
-/--
-info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
--/
-#guard_msgs in
-theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
-  bv_generalize
-  sorry
--/

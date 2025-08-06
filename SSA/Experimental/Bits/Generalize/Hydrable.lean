@@ -85,7 +85,7 @@ where
 
 abbrev ParseExprM (parsedExprWrapper : Type) := StateRefT (ParsedInputState parsedExprWrapper) MetaM
 
-class HydrableParseExprs (genLogicalExpr : Type) (parsedExprWrapper : Type) (parsedExpr : Type)  where
+class HydrableParseExprs (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) where
   parseExprs : (lhsExpr rhsExpr : Expr) → (targetWidth : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr ))
 
 class HydrableGenExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
@@ -132,10 +132,11 @@ def GeneralizerStateM.liftTermElabM
   let v ← m
   return v
 
-class HydrableInitialGeneralizerState  (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
+class HydrableInitialGeneralizerState  (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
 extends HydrableInstances genLogicalExpr genExpr
 where
-  initialGeneralizerState : GeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr
+  initialGeneralizerState : (startTime timeout widthId targetWidth: Nat) → (parsedLogicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr)
+                          → GeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr
 
 class HydrableBooleanAlgebra (genLogicalExpr : Type) (genExpr : Nat → Type) where
   not : genLogicalExpr → genLogicalExpr

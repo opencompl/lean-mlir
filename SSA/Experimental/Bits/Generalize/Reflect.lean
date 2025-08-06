@@ -1,3 +1,4 @@
+import Lean.Elab.Term
 import Lean
 
 import SSA.Core.Util
@@ -11,6 +12,7 @@ open Lean
 open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
+open Tactic
 
 structure ParsedBVExprState where
   maxFreeVarId : Nat
@@ -351,8 +353,9 @@ instance : HydrableChangeExprWidth GenBVExpr where
 instance : HydrableChangeLogicalExprWidth GenBVLogicalExpr where
   changeLogicalExprWidth := changeBVLogicalExprWidth
 
-instance : HydrableParseExprs GenBVLogicalExpr BVExprWrapper ParsedBVExpr where
+instance : HydrableParseExprs BVExprWrapper ParsedBVExpr GenBVLogicalExpr where
   parseExprs := parseExprs
+
 /-
 instance : Hydrable ParsedBVLogicalExpr GenBVLogicalExpr GenBVExpr where
   genExprToExpr := bvExprToExpr
@@ -1043,3 +1046,84 @@ def prettifyAsTheorem (name: Name) (generalization: GenBVLogicalExpr) (displayNa
 
 instance : HydrablePrettifyAsTheorem GenBVLogicalExpr where
   prettifyAsTheorem := prettifyAsTheorem
+
+abbrev BVGeneralizerState := GeneralizerState BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr
+def initialGeneralizerState (startTime timeout widthId targetWidth: Nat) (parsedLogicalExpr : ParsedBVLogicalExpr)
+            : BVGeneralizerState := { startTime := startTime
+                                    , widthId := widthId
+                                    , timeout := timeout
+                                    , processingWidth           := targetWidth
+                                    , targetWidth               := targetWidth
+                                    , parsedLogicalExpr       := parsedLogicalExpr
+                                    , needsPreconditionsExprs   := []
+                                    , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
+                                    , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
+                                    }
+
+instance : HydrableInitialGeneralizerState BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+  initialGeneralizerState := initialGeneralizerState
+
+instance : HydrableGeneralize BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+
+elab "#generalize" expr:term: command =>
+  open Lean Lean.Elab Command Term in
+  withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
+      let hExpr ← Term.elabTerm expr none
+      trace[Generalize] m! "hexpr: {hExpr}"
+      let res ← parseAndGeneralize (H := bvHydrableParseAndGeneralize)
+        hExpr GeneralizeContext.Command
+
+      logInfo m! "{res}"
+
+syntax (name := bvGeneralize) "bv_generalize" : tactic
+
+open Lean Meta Elab Tactic in
+@[tactic bvGeneralize]
+def evalBvGeneralize : Tactic
+  | `(tactic| bv_generalize) => do
+      let name ← mkAuxDeclName `generalized
+      let msg ← withoutModifyingEnv <| withoutModifyingState do
+        Lean.Elab.Tactic.withMainContext do
+          let expr ← Lean.Elab.Tactic.getMainTarget
+          let res ← parseAndGeneralize (H := bvHydrableParseAndGeneralize)
+            expr (GeneralizeContext.Tactic name)
+          pure m! "{res}"
+      logInfo m! "{msg}"
+  | _ => Lean.Elab.throwUnsupportedSyntax
+
+
+set_option linter.unusedTactic false
+set_option warn.sorry false
+
+
+variable {x y z: BitVec 32}
+-- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
+-- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+
+-- theorem zextdemo (x : BitVec 32) : BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32 := by
+--   bv_decide
+--   sorry
+
+
+-- theorem zextdemo2 (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
+--   bv_generalize
+--   sorry
+
+
+/--
+info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+-/
+#guard_msgs in
+theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
+  bv_generalize
+  sorry
+
+
+/--
+info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
+-/
+#guard_msgs in
+theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
+  bv_generalize
+  sorry

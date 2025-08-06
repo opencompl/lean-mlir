@@ -1,4 +1,4 @@
-import SSA.Experimental.Bits.Generalize.Generalize
+import SSA.Experimental.Bits.Generalize.Reflect
 
 set_option trace.profiler true
 set_option trace.Generalize true
