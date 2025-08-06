@@ -83,6 +83,20 @@ class DialectHRefinement (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote 
   IsRefinedBy {t : d.Ty} {u : d'.Ty} : d.m ⟦t⟧ → d'.m ⟦u⟧ → Prop
 open DialectHRefinement
 
+/-
+TODO: we should decouple the refinement of monads `d.m` / `d'.m` from the
+refinement of values `⟦t⟧` and `⟦u⟧`. I.e., the definition of DialectHRefinement
+ought to be along the lines of:
+```lean
+  MIsRefinedBy {α β} [HRefinement α β] : d.m α → d'.m β → Prop
+  IsRefinedBy {t : d.Ty} {u : d'.Ty} : ⟦t⟧ → ⟦u⟧ → Prop
+```
+
+It might also not be a bad idea to actually just have `DialectHRefinement`
+`extend` the appropriate HRefinement instances (although I'm not sure that's
+actually possible given the quantifications).
+-/
+
 namespace DialectHRefinement
 variable {d d' : Dialect} [TyDenote d.Ty] [TyDenote d'.Ty] [DialectHRefinement d d']
 variable {t : d.Ty} {u : d'.Ty}
@@ -290,6 +304,17 @@ We provide some generic refinement instances
 -/
 section Instances
 
+/-! ### HVector -/
+namespace HVector
+
+instance {as : List α} [∀ i : Fin as.length, HRefinement (A as[i]) (B as[i])] :
+    HRefinement (HVector A as) (HVector B as) where
+  IsRefinedBy x y :=
+    ∀ i, x.get i ⊑ y.get i
+
+end HVector
+
+/-! ### Prod -/
 namespace Prod
 
 instance [HRefinement α γ] [HRefinement β δ] : HRefinement (α × β) (γ × δ) where
@@ -302,6 +327,7 @@ theorem isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
   rfl
 end Prod
 
+/-! ### StateT -/
 namespace StateT
 variable {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
 
