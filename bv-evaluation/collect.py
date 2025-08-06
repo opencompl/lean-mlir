@@ -913,14 +913,50 @@ def collect(benchmark: str, reps : int):
             RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
         )
 
+        all_files_solved_bv_decide_times_average = np.array(all_files_solved_bv_decide_times_average)
+        all_files_solved_bitwuzla_times_average = np.array(all_files_solved_bitwuzla_times_average)
+        all_files_solved_bv_decide_bb_times_average = np.array(all_files_solved_bv_decide_bb_times_average)
+        all_files_solved_bv_decide_sat_times_average = np.array(all_files_solved_bv_decide_sat_times_average)
+        all_files_solved_bv_decide_lratt_times_average = np.array(all_files_solved_bv_decide_lratt_times_average)
+        all_files_solved_bv_decide_lratc_times_average = np.array(all_files_solved_bv_decide_lratc_times_average)
+
         geomean_time_instcombine_bvdecide = geomean(all_files_solved_bv_decide_times_average)
         geomean_time_instcombine_bitwuzla = geomean(all_files_solved_bitwuzla_times_average)
-        all_files_slowdown = np.array(all_files_solved_bv_decide_times_average) /np.array(all_files_solved_bitwuzla_times_average)
+        all_files_slowdown = all_files_solved_bv_decide_times_average / all_files_solved_bitwuzla_times_average
         geomean_slowdown_instcombine = geomean(all_files_slowdown)
         mean_slowdown_instcombine = np.mean(all_files_slowdown)
 
+        all_files_solved_bv_decide_sat_plus_bb_average = all_files_solved_bv_decide_bb_times_average + all_files_solved_bv_decide_sat_times_average
+        sat_bb =  np.sum(all_files_solved_bv_decide_sat_plus_bb_average)
+        perc_sat_bb = (sat_bb/np.sum(all_files_solved_bv_decide_times_average))*100
+        geomean_sat_bb = geomean(all_files_solved_bv_decide_sat_plus_bb_average/ all_files_solved_bv_decide_times_average)*100
+
+
+        # geomean time of those problems that are solved purely by rewriting
+        filtered_rewrite_times = []
+        for i in range(len(all_files_solved_bv_decide_times_average)):
+            if all_files_solved_bv_decide_sat_times_average[i] == 0 and \
+               all_files_solved_bv_decide_bb_times_average[i] == 0 and \
+               all_files_solved_bv_decide_lratc_times_average[i] == 0 and \
+               all_files_solved_bv_decide_lratt_times_average[i] == 0:
+                   filtered_rewrite_times.append(all_files_solved_bv_decide_times_average[i])
+        rewrite_only_mean = geomean(filtered_rewrite_times)
+
+        all_files_solved_bv_decide_lratt_plus_lratc_times_average = all_files_solved_bv_decide_lratt_times_average + all_files_solved_bv_decide_lratc_times_average
+        lrat_tot = np.sum(all_files_solved_bv_decide_lratt_plus_lratc_times_average)
+        perc_lrat = (lrat_tot / np.sum(np.array(all_files_solve_bv_decide_times_average)))*100
+        geomean_lrat = geomean(all_files_solved_bv_decide_lratt_plus_lratc_times_average / all_files_solved_bv_decide_times_average) * 100
+
         with open("performance-instcombine.tex", "w") as f:
             f.write(f"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}\n")
+            f.write(r"\newcommand{\InstCombineSatBitBlastingPerc}{" + ("%1.f" % perc_sat_bb) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineSatBitBlastingGeoMean}{" + ("%1.f" % geomean_sat_bb) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineRewriteOnlyGeoMean}{" + ("%1.f" % rewrite_only_mean) + "}\n")
+            # NOTE: what is called 'perc_lrat' used to be called 'perc_sat_bb'
+            # in paper-lean-bitvectors/tools/collect-stats.py @ 6cf08fa (due to a typo).
+            # We change the name to 'perc_lrat' for consistency.
+            f.write(r"\newcommand{\InstCombineLRATPerc}{" + ("%1.f" % perc_lrat) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineLRATGeoMean}{" + ("%1.f" % geomean_lrat) + "\\%}\n")
             f.write(r"\newcommand{\InstCombineNProblemsTot}{" + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + "}\n")
             f.write(r"\newcommand{\InstCombineNumProblemsSolved}{" + str(solved_bv_decide_tot) + "}\n")
             f.write(r"\newcommand{\InstCombineGeomeanBvDecide}{" + str("%.2f" % geomean_time_instcombine_bvdecide) + "}\n")
@@ -930,7 +966,6 @@ def collect(benchmark: str, reps : int):
             f.write(r"\newcommand{\InstCombineBothFailed}{" + str(len(all_files_failed_bv_decide_and_bitwuzla)) + "}\n")
             f.write(r"\newcommand{\InstCombineOnlyBvDecideFailed}{" + str(len(all_files_failed_bv_decide_only)) + "}\n")
             f.write(r"\newcommand{\InstCombineOnlyBitwuzlaFailed}{" + str(len(all_files_failed_bitwuzla_only)) + "}\n")
-
 
     elif benchmark == "hackersdelight":
         clear_folder(RAW_DATA_DIR_HACKERSDELIGHT)
