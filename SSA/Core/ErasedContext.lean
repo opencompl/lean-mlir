@@ -260,9 +260,11 @@ end Lemmas
 
 /-! ### Var Append -/
 
-def appendInl : Γ.Var t → (Γ ++ ts).Var t
-  | ⟨v, h⟩ => ⟨v + ts.length, by
-      rcases Γ; simp_all [List.getElem?_append_right]
+def appendInl (v : Γ.Var t) : (Γ ++ ts).Var t :=
+  ⟨v.1 + ts.length, by
+      have := v.prop
+      rcases Γ
+      simp_all [List.getElem?_append_right]
     ⟩
 instance : Coe (Γ.Var t) ((Γ ++ ts).Var t) where coe := appendInl
 
@@ -294,8 +296,7 @@ def appendCases
       ⟩
       have eq : v'.appendInl = ⟨idx, h⟩ := by
         show Subtype.mk _ _ = _
-        congr 1
-        omega
+        simp [v']; omega
       eq ▸ left v'
 
 section Lemmas
@@ -415,7 +416,7 @@ instance : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
 /--
 Lift a context morphism `f` from context `Γ` to context `Δ` into a morphism
-where an arbitrary list of types is append to both the domain and codomain.
+where a list of types `ts` is appended to *both* the domain and codomain.
 That is, on any variables in the original domain `Γ`, `f.append` acts like `f`,
 but on any *new* variables, in the appended list of types `ts`, `f.append`
 maps to the corresponding new variable in the codomain (`Δ ++ ts`).
@@ -424,6 +425,13 @@ def Hom.append {ts : List Ty} (f : Γ.Hom Δ) : Hom (Γ ++ ts) (Δ ++ ts) :=
   fun _ => Var.appendCases
     (fun v => (f v).appendInl)
     (fun v => v.appendInr)
+
+/--
+Lift a context morphism `f` from context `Γ` to context `Δ` into a morphism
+where a list of types is appended to just to codomain `Δ`.
+-/
+def Hom.appendCodomain {ts : List Ty} (f : Γ.Hom Δ) : Hom Γ (Δ ++ ts) :=
+  fun _ v => (f v).appendInl
 
 section Lemmas
 
@@ -434,6 +442,13 @@ section Lemmas
 @[simp] theorem Hom.append_appendInr (f : Γ.Hom Δ) (v : Var ⟨ts⟩ t) :
     (f.append (ts := ts)) v.appendInr = v.appendInr := by
   simp [append]
+
+@[simp] theorem Hom.appendCodomain_apply (f : Γ.Hom Δ) (v : Γ.Var t) :
+    (f.appendCodomain (ts := ts)) v = (f v).appendInl :=
+  rfl
+
+@[simp] lemma Hom.id_append : (Hom.id (Γ:=Γ)).append (ts := ts) = .id := by
+  funext t v; cases v using Var.appendCases <;> simp [id, append]
 
 end Lemmas
 
@@ -913,6 +928,17 @@ def dropUntil (Γ : Ctxt Ty) (v : Var Γ ty) : Ctxt Ty :=
   simp only [dropUntil, Var.val_appendInl]
   rw [Nat.add_right_comm, Nat.add_comm]
   simp
+
+@[simp] lemma dropUntil_appendInr {v : (⟨ts⟩ : Ctxt _).Var t} :
+    (Γ ++ ts).dropUntil v.appendInr = Γ ++ (ts.drop <| v.1 + 1) := by
+  rcases Γ
+  simp only [dropUntil, ofList_append, getElem?_ofList, Var.val_appendInr, ofList.injEq]
+  induction ts
+  · rcases v with ⟨idx, h⟩
+    simp at h
+  · stop
+    simp_all
+
 
 /-- The difference between `Γ.dropUntil v` and `Γ` is exactly `v.val + 1` -/
 def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
