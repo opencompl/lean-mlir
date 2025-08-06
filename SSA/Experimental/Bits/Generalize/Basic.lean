@@ -223,22 +223,9 @@ structure BVExprWrapper where
   width : Nat
   bvExpr: GenBVExpr width
 
-instance : ToString BVExpr.PackedBitVec where
-  toString bitvec := toString bitvec.bv
-
-instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.HashMap α β) where
-  toString map :=
-    "{" ++ String.intercalate ", " (map.toList.map (λ (k, v) => toString k ++ " → " ++ toString v)) ++ "}"
-
-instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
-  toString set := toString set.toList
-
 instance : ToString BVExprWrapper where
   toString w :=
       s!" BVExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr}}"
-
-instance : ToString FVarId where
-  toString f := s! "{f.name}"
 
 instance : Inhabited BVExprWrapper where
   default := {bvExpr := GenBVExpr.const (BitVec.ofNat 0 0), width := 0}

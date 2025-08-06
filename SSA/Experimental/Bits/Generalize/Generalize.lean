@@ -191,7 +191,7 @@ class HydrableGetNegativeExamples (parsedExprWrapper : Type) (parsedExpr : Type)
   HydrableGenExpr genLogicalExpr genExpr,
   HydrableAddConstraints genLogicalExpr genExpr
 
-def getNegativeExamples [H : HydrableGetNegativeExamples parsedExprWrapper parsedExpr  genLogicalExpr genExpr] (bvExpr: genLogicalExpr) (consts: List Nat) (numEx: Nat) :
+def getNegativeExamples [H : HydrableGetNegativeExamples parsedExprWrapper parsedExpr genLogicalExpr genExpr] (bvExpr: genLogicalExpr) (consts: List Nat) (numEx: Nat) :
               GeneralizerStateM parsedExprWrapper parsedExpr  genLogicalExpr genExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
   let targetExpr := H.not bvExpr
   return (← helper targetExpr numEx)
@@ -226,17 +226,20 @@ def checkTimeout {parsedExprWrapper parsedExpr genLogicalExpr genExpr} [H : Hydr
       throwError m! "Synthesis Timeout Failure: Exceeded timeout of {state.timeout/1000}s"
 
 
-class HydrableGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (parsedExprWrapper: Type) (parsedExpr : Type) (genExpr : Nat → Type) extends
+class HydrableGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableExistsForall parsedExprWrapper parsedExpr  genLogicalExpr genExpr,
-  HydrableParseExprs genLogicalExpr parsedExprWrapper parsedExpr
+  HydrableParseExprs genLogicalExpr parsedExprWrapper parsedExpr,
+  HydrableChangeLogicalExprWidth genLogicalExpr,
+  HydrableSynthesizeWithNoPrecondition parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrableCheckForPreconditions parsedExprWrapper parsedExpr genLogicalExpr genExpr
   where
 
-/-
-def generalize  {parsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr genExpr } [H : HydrableGeneralize parsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr genExpr] : GeneralizerStateM parsedLogicalExpr genLogicalExpr genExpr  (Option GenBVLogicalExpr) := do
+
+def generalize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr] : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr  (Option genLogicalExpr) := do
     let state ← get
-    let parsedBVLogicalExpr := state.parsedLogicalExpr
-    let mut bvLogicalExpr := parsedBVLogicalExpr.bvLogicalExpr
-    let parsedBVState := parsedBVLogicalExpr.state
+    let parsedLogicalExpr := state.parsedLogicalExpr
+    let mut logicalExpr := parsedLogicalExpr.logicalExpr
+    let parsedBVState := parsedLogicalExpr.state
 
     let originalWidth := parsedBVState.originalWidth
     let targetWidth := state.targetWidth
@@ -244,7 +247,7 @@ def generalize  {parsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr g
     let mut constantAssignments := []
     --- Synthesize constants in a lower width if needed
     if originalWidth > targetWidth then
-      constantAssignments ← existsForAll bvLogicalExpr parsedBVState.symVarToVal.keys parsedBVState.inputVarIdToDisplayName.keys 1
+      constantAssignments ← existsForAll logicalExpr parsedBVState.symVarToVal.keys parsedBVState.inputVarIdToDisplayName.keys 1
 
     let mut processingWidth := targetWidth
     if constantAssignments.isEmpty then
@@ -254,16 +257,16 @@ def generalize  {parsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr g
 
     if processingWidth != targetWidth then
         -- Revert to the original width if necessary
-      bvLogicalExpr := changeBVLogicalExprWidth bvLogicalExpr processingWidth
-      trace[Generalize] m! "Using values for {bvLogicalExpr} in width {processingWidth}: {constantAssignments}"
+      logicalExpr := H.changeLogicalExprWidth logicalExpr processingWidth
+      trace[Generalize] m! "Using values for {logicalExpr} in width {processingWidth}: {constantAssignments}"
 
     set {state with
                 processingWidth := processingWidth,
                 constantExprsEnumerationCache := {},
-                parsedBVLogicalExpr := { parsedBVLogicalExpr with bvLogicalExpr := bvLogicalExpr }}
+                parsedLogicalExpr := { parsedLogicalExpr with logicalExpr := logicalExpr }}
 
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
-        synthesizeWithNoPrecondition constantAssignments
+        H.synthesizeWithNoPrecondition constantAssignments
     let maxConjunctions : ℕ := 1
 
     match exprWithNoPrecondition with
@@ -271,10 +274,10 @@ def generalize  {parsedLogicalExpr genLogicalExpr parsedExprWrapper parsedExpr g
     | none =>
               let state ← get
               if state.needsPreconditionsExprs.isEmpty then
-                throwError m! "Could not synthesise constant expressions for {state.parsedBVLogicalExpr.bvLogicalExpr}"
+                throwError m! "Could not synthesise constant expressions for {state.parsedLogicalExpr.logicalExpr}"
 
               let preconditionRes ← withTraceNode `Generalize (fun _ => return "Attempted to generate weak precondition for all expression combos") do
-                checkForPreconditions constantAssignments maxConjunctions
+                H.checkForPreconditions constantAssignments maxConjunctions
 
               match preconditionRes with
               | some expr => return some expr

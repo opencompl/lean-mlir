@@ -48,7 +48,20 @@ instance : BEq BVExpr.PackedBitVec where
 instance : Hashable BVExpr.PackedBitVec where
   hash pbv := hash pbv.bv
 
+instance : ToString BVExpr.PackedBitVec where
+  toString bitvec := toString bitvec.bv
 
+instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.HashMap α β) where
+  toString map :=
+    "{" ++ String.intercalate ", " (map.toList.map (λ (k, v) => toString k ++ " → " ++ toString v)) ++ "}"
+
+instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
+  toString set := toString set.toList
+
+instance : ToString FVarId where
+  toString f := s! "{f.name}"
+
+  
 structure ParsedInputState (parsedExprWrapper : Type) where
   maxFreeVarId : Nat
   numSymVars :  Nat
