@@ -392,8 +392,10 @@ def slowdown_smtlib_stats():
 def smtlib_stats(performance_smtlib_dir):
     df_bitwuzla = pd.read_csv("raw-data/SMT-LIB/bitwuzla_data.csv")
     df_bv_decide = pd.read_csv("raw-data/SMT-LIB/bv_decide_data.csv")
+    df_coqqfbv_46k = pd.read_csv("raw-data/SMTLIB/coqQFBV_data.csv")
     df_bitwuzla["benchmark"] = df_bitwuzla["benchmark"].apply(os.path.dirname)
     df_bv_decide["benchmark"] = df_bv_decide["benchmark"].apply(os.path.dirname)
+    df_coqqfbv_46k["benchmark"] = df_coqqfbv_46k["benchmark"].apply(os.path.dirname)
     assert len(df_bitwuzla) == len(df_bv_decide)
     merged_df = pd.merge(
         df_bitwuzla, df_bv_decide, on="benchmark", how="inner", suffixes=("_bw", "_lw")
@@ -411,6 +413,7 @@ def smtlib_stats(performance_smtlib_dir):
     geomean_slowdown_smtlib_unsat = geomean(slowdown_df_unsat["slowdown"])
     # geomean slowdown, leanwuzla vs. bitwuzla, UNSAT+SAT problems (removing all unknowns)
     geomean_slowdown_smtlib_tot = geomean(slowdown_df["slowdown"])
+    tot_num_problems = len(df_bitwuzla)
     # num. of problems where neither leanwuzla nor bitwuzla terminate
     merged_df_both_unknown = merged_df[
         (merged_df["result_bw"] == "unknown") & (merged_df["result_lw"] == "unknown")
@@ -431,16 +434,22 @@ def smtlib_stats(performance_smtlib_dir):
     perc_leanwuzla_unsat = tot_leanwuzla_unsat / tot_bitwuzla_unsat * 100
     # plot_smtlib_slowdown_families_raw(merged_df)
     # perc. of SAT + UNSAT solved by leanwuzla
-    tot_bitwuzla = tot_bitwuzla_sat + tot_bitwuzla_unsat
-    tot_leanwuzla = tot_leanwuzla_sat + tot_leanwuzla_unsat
-    perc_leanwuzla_tot = tot_leanwuzla / tot_bitwuzla * 100
+    tot_bitwuzla = len(merged_df[merged_df['result_bw'] != 'unknown'])
+    tot_leanwuzla = len(merged_df[merged_df['result_lw'] != 'unknown'])
+    tot_coqqfbv = len(df_coqqfbv_46k[df_coqqfbv_46k['result'] != 'unknown'])
+    perc_leanwuzla_tot = tot_leanwuzla/tot_num_problems*100
+    perc_coqqfbv_tot = tot_coqqfbv/tot_num_problems*100
 
     f = open(performance_smtlib_dir, "a+")
+    f.write(r"\newcommand{\SMTLIBProblemsTot}{" +
+            str(tot_num_problems) + "}\n")
     f.write(r"\newcommand{\SMTLIBBitwuzlaSolvedSat}{" + str(tot_bitwuzla_sat) + "}\n")
     f.write(
         r"\newcommand{\SMTLIBBitwuzlaSolvedUnsat}{" + str(tot_bitwuzla_unsat) + "}\n"
     )
     f.write(r"\newcommand{\SMTLIBBitwuzlaSolved}{" + str(tot_bitwuzla) + "}\n")
+    f.write(r"\newcommand{\SMTLIBBitwuzlaUnknown}{" +
+            str(tot_num_problems - tot_bitwuzla) + "}\n")
     f.write(r"\newcommand{\SMTLIBLeanwuzlaSolvedSat}{" + str(tot_leanwuzla_sat) + "}\n")
     f.write(
         r"\newcommand{\SMTLIBLeanwuzlaSolvedUnsat}{" + str(tot_leanwuzla_unsat) + "}\n"
@@ -482,6 +491,9 @@ def smtlib_stats(performance_smtlib_dir):
         + ("%.1f" % perc_leanwuzla_tot)
         + "}\n"
     )
+    f.write(r"\newcommand{\SMTLIBCoqSolved}{"+str(tot_coqqfbv)+"}\n")
+    f.write(r"\newcommand{\SMTLIBCoqPercSolved}{" +
+            ("%.1f" % perc_coqqfbv_tot)+"}\n")
     f.close()
 
 
@@ -533,12 +545,10 @@ def smtlib_nokernel_stats(performance_smtlib_nokernel_dir):
     perc_leanwuzla_unsat = tot_leanwuzla_unsat / tot_bitwuzla_unsat * 100
     # plot_smtlib_slowdown_families_raw(merged_df)
     # perc. of SAT + UNSAT solved by leanwuzla
-    tot_bitwuzla = tot_bitwuzla_sat + tot_bitwuzla_unsat
-    tot_leanwuzla = tot_leanwuzla_sat + tot_leanwuzla_unsat
-    perc_leanwuzla_tot = tot_leanwuzla / tot_bitwuzla * 100
+    tot_leanwuzla = len(merged_df[merged_df['result_lw'] != 'unknown'])
+    perc_leanwuzla_tot = tot_leanwuzla/tot_num_problems*100
 
     f = open(performance_smtlib_nokernel_dir, "a+")
-    f.write(r"\newcommand{\SMTLIBProblemsTot}{" + str(tot_num_problems) + "}\n")
     f.write(
         r"\newcommand{\SMTLIBLeanwuzlaNoKernelSolvedSat}{"
         + str(tot_leanwuzla_sat)
