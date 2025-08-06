@@ -544,7 +544,7 @@ def Com.returnVar : (com : Com d Γ eff t) → Var com.outContext t
 section Lemmas
 
 @[simp] lemma Com.outContext_ret (v : Var Γ t) : (ret v : Com d Γ eff t).outContext = Γ := rfl
-@[simp] lemma Com.outContext_var {eff} (e : Expr d Γ eff t) (body : Com d (Γ.snoc t) eff u) :
+@[simp] lemma Com.outContext_var {eff} (e : Expr d Γ eff t) (body : Com d (e.outContext) eff u) :
     (Com.var e body).outContext = body.outContext := rfl
 
 @[simp] lemma Com.outContextHom_ret (v : Var Γ t) :
@@ -974,12 +974,12 @@ but for some reason doing so causes `Lets.castPureToEff_var` to no longer be def
 
 /-- A wrapper around `Com.var` that allows for a pure expression to be added to an otherwise
 impure program, using `Expr.castPureToEff` -/
-def Com.letPure (e : Expr d Γ .pure t) (body : Com d (Γ.snoc t) eff u) : Com d Γ eff u :=
+def Com.letPure (e : Expr d Γ .pure t) (body : Com d (e.outContext) eff u) : Com d Γ eff u :=
   body.var (e.castPureToEff eff)
 
 /-- `letSup e body` allows us to combine an expression and body with different effects,
 by returning a `Com` whose effect is their join/supremum -/
-def Com.letSup (e : Expr d Γ eff₁ t) (body : Com d (Γ.snoc t) eff₂ u) :
+def Com.letSup (e : Expr d Γ eff₁ t) (body : Com d (e.outContext) eff₂ u) :
     Com d Γ (eff₁ ⊔ eff₂) u :=
   Com.var (e.changeEffect <| by simp) (body.changeEffect <| by simp)
 
