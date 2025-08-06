@@ -9,6 +9,16 @@ import numpy as np
 import pandas as pd
 import shutil
 
+def geomean(xs):
+    xs = [x for x in xs if x > 0]
+    if xs:
+        # (x1 x2 ... xn)^1/n
+        # = e^([log x1 + log x2 + ... + log xn] / n)
+        # = e^(mean(log(xs)))
+        return np.exp(np.mean(np.log(np.array(xs))))
+    else:
+        return 0
+
 bv_width = [4, 8, 16, 32, 64]
 
 ROOT_DIR = (
@@ -900,6 +910,21 @@ def collect(benchmark: str, reps : int):
             all_files_solved_bv_decide_lratc_times_stddev,
             RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
         )
+
+        geomean_time_instcombine_bvdecide = geomean(all_files_solved_bv_decide_times_average)
+        geomean_time_instcombine_bitwuzla = geomean(all_files_solved_bitwuzla_times_average)
+        all_files_slowdown = np.array(all_files_solved_bv_decide_times_average) /np.array(all_files_solved_bitwuzla_times_average)
+        geomean_slowdown_instcombine = geomean(all_files_slowdown)
+        mean_slowdown_instcombine = np.mean(all_files_slowdown)
+
+        with open("performance-instcombine.tex", "w") as f:
+            f.write(r"\newcommand{\InstCombineNProblemsTot}{" + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + "}\n")
+            f.write(r"\newcommand{\InstCombineNumProblemsSolved}{" + str(solved_bv_decide_tot) + "}\n")
+            f.write(r"\newcommand{\InstCombineGeomeanBvDecide}{" + str("%.2f" % geomean_time_instcombine_bvdecide) + "}\n")
+            f.write(r"\newcommand{\InstCombineGeomeanBitwuzla}{" + str("%.2f" %geomean_time_instcombine_bitwuzla) + "}\n")
+            f.write(r"\newcommand{\InstCombineGeomeanSlowdown}{" + str("%.2f" % geomean_slowdown_instcombine) + "}\n")
+            f.write(r"\newcommand{\InstCombineMeanSlowdown}{" + str("%.2f" % mean_slowdown_instcombine) + "}\n")
+
 
     elif benchmark == "hackersdelight":
         clear_folder(RAW_DATA_DIR_HACKERSDELIGHT)
