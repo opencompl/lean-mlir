@@ -15,39 +15,6 @@ open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
 namespace Generalize
 
-/- ===================== Generalizer ==========-/
-/-
-ParsedBVLogicalExpr
-GenBVLogicalExpr
-GenBVExpr processingWidth
--/
-
-
-/- def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
-  match bvExpr with
-  | .var idx => return BVExpr.var idx
-  | .const val => return BVExpr.const val
-  | .bin lhs op rhs  => return BVExpr.bin (← toBVExpr' lhs) op (← toBVExpr' rhs)
-  | .un op expr =>  return BVExpr.un op (← toBVExpr' expr)
-  | .append lhs rhs h => return BVExpr.append (← toBVExpr' lhs) (← toBVExpr' rhs) h
-  | .replicate n expr h => return BVExpr.replicate n (← toBVExpr' expr) h
-  | .shiftLeft lhs rhs =>  return BVExpr.shiftLeft (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .shiftRight lhs rhs => return BVExpr.shiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .arithShiftRight lhs rhs =>return BVExpr.arithShiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | _ => throwError m! "Unsupported operation provided: {bvExpr}"
-
-
-def toBVLogicalExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM BVLogicalExpr := do
-  match bvLogicalExpr with
-  | .literal (GenBVPred.bin lhs op rhs) => return BoolExpr.literal (BVPred.bin (← toBVExpr' lhs) op (← toBVExpr' rhs))
-  | .const b => return BoolExpr.const b
-  | .not boolExpr => return BoolExpr.not (← toBVLogicalExpr boolExpr)
-  | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
-  | _ => throwError m! "Unsupported operation"
- -/
-set_option maxHeartbeats 1000000000000
-set_option maxRecDepth 1000000
-
 class HydrableSolve (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableInstances genLogicalExpr genExpr,
   HydrableGetAllNamesFromParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr genExpr,
