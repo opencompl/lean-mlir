@@ -219,16 +219,6 @@ instance : Hashable GenBVLogicalExpr where
 
 end GenBVLogicalExpr
 
-instance : BEq BVExpr.PackedBitVec where
-  beq a b := if h : a.w = b.w then
-                let b' := h ▸ b.bv
-                a.bv == b'
-              else
-                false
-
-instance : Hashable BVExpr.PackedBitVec where
-  hash pbv := hash pbv.bv
-
 structure BVExprWrapper where
   width : Nat
   bvExpr: GenBVExpr width
@@ -584,5 +574,3 @@ def strictlyLTZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
 
 def lteZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
   BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)
-
-
