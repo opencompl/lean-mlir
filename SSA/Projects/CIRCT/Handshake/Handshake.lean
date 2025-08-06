@@ -217,6 +217,7 @@ inductive Op
 | mux (t : Ty2)
 | sink (t : Ty2)
 | sync (t : Ty2)
+| source (t : Ty2)
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 abbrev Handshake : Dialect where
@@ -235,12 +236,15 @@ def_signature for Handshake where
 | .mux t => (Ty.stream t, Ty.stream t, Ty.stream (Ty2.bitvec 1)) → Ty.stream t
 | .sink t => (Ty.stream t) → (Ty.stream (Ty2.bitvec 1))
 | .sync t => (Ty.stream t, Ty.stream t) → Ty.stream2 t
+| .source t => (Ty2.bitvec _) → Ty.stream t
 
 instance instHandshakeTyDenote : TyDenote Ty where
 toType := fun
 | Ty.stream ty2 => CIRCTStream.Stream (TyDenote.toType ty2)
 | Ty.stream2 ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType ty2)
 | Ty.stream2token ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType (Ty2.bitvec 1))
+
+#check HandshakeOp.source
 
 def_denote for Handshake where
 | .fst _ => fun s => s.fst
@@ -254,9 +258,7 @@ def_denote for Handshake where
 | .mux _ => fun s₁ s₂ c => HandshakeOp.mux s₁ s₂ c
 | .sink _ => fun s => HandshakeOp.sink s
 | .sync _ => fun s₁ s₂ => HandshakeOp.sync s₁ s₂
-
-
-
+| .source t => fun s => HandshakeOp.source t s
 end Dialect
 
 /-!
