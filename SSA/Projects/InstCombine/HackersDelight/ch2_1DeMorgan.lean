@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.TacticAuto
 /- 2-1 De Morgan’s Laws Extended -/
 
 set_option Elab.async false
+set_option warn.sorry false
 
 namespace HackersDelight
 

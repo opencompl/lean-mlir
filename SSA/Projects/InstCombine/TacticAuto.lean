@@ -6,10 +6,11 @@ import Std.Tactic.BVDecide
 import Leanwuzla
 
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
-import SSA.Experimental.Bits.Frontend.Tactic
+import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Core.Tactic.TacBench
+import SSA.Core.Tactic.ExtractGoals
 
 open Lean
 open Lean.Elab.Tactic
@@ -182,7 +183,7 @@ Benchmark the automata algorithms to understand their pros and cons. Produce out
 macro "bv_bench_automata": tactic =>
   `(tactic|
       (
-        simp (config := { failIfUnchanged := false }) only
+        try simp (config := { failIfUnchanged := false }) only
           [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
            BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
            BitVec.ofNat_eq_ofNat, BitVec.two_mul]

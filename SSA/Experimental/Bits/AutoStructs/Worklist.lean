@@ -2,6 +2,8 @@ import SSA.Experimental.Bits.AutoStructs.Basic
 
 set_option grind.warning false
 
+open Rel
+
 section nfa
 
 variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
@@ -492,8 +494,7 @@ lemma processOneElem_visited (st : worklist.St A S) :
   rw [←addOrCreateElem_visited (final sa') st sa']
   simp [st', processOneElem, worklist.St.visited]
 
-def worklist.St.rel (st : worklist.St A S) : Rel State S := λ s sa ↦
-  st.map[sa]? = some s
+def worklist.St.rel (st : worklist.St A S) : Rel State S := {(s, sa) | st.map[sa]? = some s }
 
 def worklist.St.D (st : worklist.St A S) : Set S := st.visited
 
@@ -603,34 +604,27 @@ lemma processOneElem_trans_preserve (st : worklist.St A S) (final : S → Bool) 
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel {s₁ s₂ : State} :
-    (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' ↔
-      (st.rel s₂ sa' ∨ (s₂ = st.m.stateMax ∧ sa' = sa ∧ st.map[sa']? = none)) := by
-  simp only [worklist.St.rel]
-  rw [processOneElem_map]
-  constructor
-  · split
-    next s heq => simp only [Option.some.injEq]; rintro ⟨rfl, _⟩; tauto
-    next hnone =>
-      simp only [Option.ite_none_right_eq_some, Option.some.injEq, and_imp]
-      rintro rfl _; right; tauto
-  · rintro (heq | ⟨rfl, rfl, heq⟩) <;> simp [*]
+    s₂ ~[(processOneElem A S final s₁ st (a, sa)).rel] sa' ↔
+      (s₂ ~[st.rel] sa' ∨ (s₂ = st.m.stateMax ∧ sa' = sa ∧ st.map[sa']? = none)) := by
+  simp only [worklist.St.rel, Set.mem_setOf_eq, getElem?_eq_none_iff]
+  grind [processOneElem_map]
 
 omit [LawfulBEq A] [Fintype S] [LawfulBEq S] [DecidableEq S] in
 lemma rel_in_states {st : worklist.St A S} (hinv : StInv A S st.m st.map) :
-    st.rel s sa → s ∈ st.m.states := by
+    s ~[st.rel] sa → s ∈ st.m.states := by
   rintro h1
   apply hinv.map_states <;> assumption
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel_preserve :
-    st.rel s₂ sa' →
-    (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' := by
+    s₂ ~[st.rel] sa' →
+    s₂ ~[(processOneElem A S final s₁ st (a, sa)).rel] sa' := by
   rw [processOneElem_rel]; tauto
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_rel_preserve_olds :
-    (processOneElem A S final s₁ st (a, sa)).rel s₂ sa' →
-    s₂ ∈ st.m.states → st.rel s₂ sa' := by
+    s₂ ~[(processOneElem A S final s₁ st (a, sa)).rel] sa' →
+    s₂ ∈ st.m.states → s₂ ~[st.rel] sa' := by
   rw [processOneElem_rel]
   rintro (h | ⟨rfl, rfl, heq⟩) hs; exact h
   simp at hs
@@ -779,7 +773,7 @@ lemma processOneElem_spec {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) 
     have h := processOneElem_tr st final a b sa' s s₁
     split_ifs at h with hcond
     on_goal 2 =>
-      have hR' : st.rel s₁ q₁ := by
+      have hR' : s₁ ~[st.rel] q₁ := by
         rw [processOneElem_rel] at hR; rcases hR with hR' | ⟨_, _, hnone⟩; exact hR'
         unfold worklist.St.D at hD; rw [processOneElem_visited] at hD
         rcases hD with ⟨hnin, -⟩

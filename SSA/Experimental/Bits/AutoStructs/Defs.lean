@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
 import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.Frontend.Defs
+import SSA.Experimental.Bits.SingleWidth.Defs
 import SSA.Projects.InstCombine.ForStd
 
 open Fin.NatCast

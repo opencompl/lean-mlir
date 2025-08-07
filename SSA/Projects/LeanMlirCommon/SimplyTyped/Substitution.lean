@@ -15,6 +15,7 @@ def Substitution (Γ Δ : Context Ty) : Type :=
 
 variable {Op Ty} [OpSignature Op Ty]
 
+set_option warn.sorry false in
 mutual
 
 variable {Γ Δ} {σ : Substitution Γ Δ}

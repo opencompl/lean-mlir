@@ -5,7 +5,6 @@ lean_packages/
 *~
 \#*
 .#*
-*.lock
 build
 GPATH
 GRTAGS
@@ -38,3 +37,4 @@ test-semantics/*.llvm
 *.olean
 lakefile.olean
 .lake/
+SSA/Projects/InstCombine/tests/logs/generalizer

@@ -6,7 +6,7 @@ moreLeanArgs = ["--tstack=400000"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-rev = "nightly-testing-2025-06-27"
+rev = "nightly-testing-2025-08-06"
 
 [[require]]
 name = "Cli"
@@ -38,12 +38,8 @@ name = "mlirnatural"
 root = "SSA.MLIRNatural"
 
 [[lean_exe]]
-name = "bv-circuit-profile"
-root = "SSA.Experimental.Bits.Fast.Profile"
-
-[[lean_exe]]
-name = "bv-circuit-profile-verif"
-root = "SSA.Experimental.Bits.Fast.ProfileVerif"
+name = "bv-circuit-profile-kinduction"
+root = "SSA.Experimental.Bits.KInduction.ProfileKInduction"
 
 [[lean_exe]]
 name = "bv-automata-profile"

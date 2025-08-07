@@ -38,10 +38,15 @@ private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt
 open Lean Meta Elab in
 simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.snoc _ _) (Ctxt.Var.last _ _)) := fun e => do
   let (_f, xs) := e.getAppFnArgs
-  let ty := xs[0]!
+  let Ty := xs[0]!
+  let instTyDenote := xs[1]!
+  let Γ := xs[2]!
+  let t := xs[3]!
   let s := xs[4]!
   let x := xs[xs.size - 1 - 2]!
-  let proof ← mkAppOptM ``valuation_var_last_eq.lemma #[.some ty, .none, .none, .none, .some s, .some x]
+  let proof := mkAppN (mkConst ``valuation_var_last_eq.lemma) #[
+      Ty, instTyDenote, Γ, t, s, x
+    ]
   return .visit {
     expr := x,
     proof? := proof

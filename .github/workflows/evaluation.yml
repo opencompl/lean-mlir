@@ -52,13 +52,18 @@ jobs:
         continue-on-error: true
         run: |
           lake -R build
+          
+      - name: Ensure InstCombine goals are up-to-date
+        run: |
+          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
 
-      - name : Run Width Independent
+      - name : Run Width Independent Test
         continue-on-error: true
         run: |
           (cd artifacts/oopsla25-width-indep/; ./test_experiments.sh)
 
       - uses: actions/github-script@v6
+        continue-on-error: true
         if: github.event_name == 'pull_request'
         with:
           script: |
