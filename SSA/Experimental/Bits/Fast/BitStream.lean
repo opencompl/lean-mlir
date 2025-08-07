@@ -189,6 +189,10 @@ abbrev ofBitVec {w} (x : BitVec w) : BitStream :=
 abbrev ofNatUnary (n : Nat) : BitStream :=
   fun i => decide (i ≤ n)
 
+@[simp]
+theorem eval_ofNatUnary (n : Nat) (i : Nat) :
+    ofNatUnary n i = decide (i ≤ n) := rfl
+
 /-- `x.toBitVec w` returns the first `w` bits of bitstream `x` -/
 def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
   match w with

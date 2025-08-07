@@ -75,32 +75,61 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
       simp [mkWidthFSM]
       have ⟨henv⟩ := henv
       rw [henv]
-      simp [WidthExpr.toBitstream]
 
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
 -- if the borrow bit is one, then we know that 'a' is less than 'b'.
--- a: 0 <= b: 0 = 1
--- a: 0 <= b: 1 = 1
--- a: 1 <= b: 0 = 0
--- a: 1 <= b: 1 = 1
-def fsmUltUnary (a : FSM α) (b : FSM α) : FSM α :=
-  a ||| ~~~ b
+-- a ≤ b ↔ b[i] = 0 → a[i] = 0
+-- if b = 1, we are done.
+-- Otherwise, if b=0,then a=0
 
-theorem eval_fsmUltUnary_eq_true_iff (a : NatFSM wcard tcard (.ofDep v)) (b : NatFSM wcard tcard (.ofDep w))
-   (env : StateSpace wcard tcard → BitStream)
-   (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
-   ((fsmUltUnary a.toFsm b.toFsm).eval env) i = sorry := sorry -- (v.toNat env) < (w.toNat env) := by sorry
+-- alternatively, a[i] = 1 → b[i] = 1.
+-- if a is high, then b must be high for it to be ≤.
+def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
+  (b ||| ~~~ a)
 
+theorem eval_fsmUltUnary_eq_true_iff
+    (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (henv : HWidthEnv fsmEnv wenv)
+    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    ((fsmUleUnary a.toFsm b.toFsm).eval fsmEnv) i =
+    decide (max i (v.toNat wenv) ≤ max i (w.toNat wenv)) := by
+  simp [fsmUleUnary]
+  rw [ha.heq (henv := henv)]
+  rw [hb.heq (henv := henv)]
+  induction w generalizing v
+  case var w =>
+    induction v
+    case var v =>
+      simp
+      by_cases hiv : i ≤ wenv v
+      case pos =>
+        simp [hiv]
+        by_cases hiw : i ≤ wenv w
+        case pos =>
+          simp [hiw]
+        case neg =>
+          simp [hiw]
+          omega
+      case neg =>
+        simp [hiv]
+        by_cases hiw : i ≤ wenv w
+        case pos =>
+          omega
+        case neg =>
+          omega
 
 
 -- returns 1 if a is equal to b.
 def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
   composeUnaryAux FSM.scanAnd <| composeBinaryAux' FSM.nxor a  b
 
--- returns 1 if a is less than or equal to b.
-def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
-  (fsmUltUnary a b) &&& (fsmEqBitwise a b)
+-- -- returns 1 if a is less than or equal to b.
+-- def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
+--   (fsmUltUnary a b) &&& (fsmEqBitwise a b)
 
 -- | if 'cond' is true, then return 't', otherwise return 'e'.
 def ite (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=

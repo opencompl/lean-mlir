@@ -34,6 +34,10 @@ def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .var v => env v
 
+@[simp]
+def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.var v) env = env v := rfl
+
 inductive NatPredicate (wcard : Nat) : Type
 | eq : WidthExpr wcard → WidthExpr wcard → NatPredicate wcard
 
@@ -141,15 +145,6 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
 
 section ToBitstream
 
-/--
-A width expression denotes a bitstream, whose
-value is true if for all indeces larger than 'env v'.
--/
-def WidthExpr.toBitstream
-  (e : WidthExpr n)
-  (env : WidthExpr.Env n) : BitStream :=
-  match e with
-  | .var v => BitStream.ofNatUnary (env v)
 
 def Term.toBitstream {wcard tcard : Nat}
     {tctx :Term.Ctx wcard tcard}
@@ -335,7 +330,8 @@ structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
   heq :
     ∀ (wenv : Fin wcard → Nat) (fsmEnv : StateSpace wcard tcard → BitStream),
-    (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv = v.toBitstream wenv
+    (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv =
+      BitStream.ofNatUnary (v.toNat wenv)
 
 structure IsGoodTermFSM {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
