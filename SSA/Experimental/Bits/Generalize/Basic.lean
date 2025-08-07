@@ -5,15 +5,13 @@ Authors: Henrik Böving, Timi Adeniran, Léo Stefanesco
 -/
 import Lean
 import Lean.Elab.Term
-import SSA.Experimental.Bits.Generalize.Hydrable
+import SSA.Experimental.Bits.Generalize.Generalize
 
 open Lean
 open Elab
 open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
-
-initialize Lean.registerTraceClass `Generalize
 
 namespace Generalize
 /--
