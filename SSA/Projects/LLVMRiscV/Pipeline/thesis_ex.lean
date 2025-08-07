@@ -174,9 +174,9 @@ def corrected_ISEL_pattern : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64),
           · exact .inr <| hf₂ h
           · exact .inl h
       simp only [PoisonOr.value_isRefinedBy_value, InstCombine.bv_isRefinedBy_iff]
-      bv_decide
+      --bv_decide
       sorry
-      simp [hf₁, hf₂]
+      --simp [hf₁, hf₂]
     case value.value.isTrue ht =>
       simp only [PoisonOr.isRefinedBy_self]
 
@@ -238,14 +238,14 @@ def llvm_sub_lower_riscv_no_flag_self: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.b
 
 
 @[simp_denote]
-def llvm_urem: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def llvm_urem: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64 ):
       %1 = llvm.urem  %x, %y : i64
       llvm.return %1 : i64
   }]
 @[simp_denote]
-def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def urem_riscv: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%reg1: i64, %reg2: i64):
       %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)
