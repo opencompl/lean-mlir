@@ -19,8 +19,8 @@ set_option maxRecDepth 1000000
 
 instance : HydrableInstances GenBVLogicalExpr GenBVExpr where
 
-instance : HydrableGetAllNamesFromParsedLogicalExpr BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
-  getAllNamesFromParsedLogicalExpr p :=
+instance : HydrableGetDisplayNames BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+  getDisplayNames p :=
     Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
 
 instance : HydrableGetLogicalExprSize GenBVLogicalExpr where

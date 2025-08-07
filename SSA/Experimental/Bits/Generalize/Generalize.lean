@@ -16,16 +16,13 @@ open Std.Tactic.BVDecide
 
 open Lean Elab Std Sat AIG Tactic BVDecide Frontend
 
+/-!
+This file contains the interface for implementing generalization on a new IR type.
+-/
+
 namespace Generalize
 
 initialize Lean.registerTraceClass `Generalize
-
-inductive SubstitutionValue (genExpr : Nat → Type) where
-| genExpr {w} (genExpr : genExpr w)
-| packedBV  (bv: BVExpr.PackedBitVec)
-
-instance : Inhabited (SubstitutionValue genExpr) where
-  default := .packedBV (BVExpr.PackedBitVec.mk (w := 0) 0#0)
 
 instance : BEq BVExpr.PackedBitVec where
   beq a b := if h : a.w = b.w then
@@ -50,6 +47,25 @@ instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
 instance : ToString FVarId where
   toString f := s! "{f.name}"
 
+/--
+A value that can be substituted into a `BitVec` formula.
+-/
+inductive SubstitutionValue (genExpr : Nat → Type) where
+| genExpr {w} (genExpr : genExpr w)
+| packedBV  (bv: BVExpr.PackedBitVec)
+
+instance : Inhabited (SubstitutionValue genExpr) where
+  default := .packedBV (BVExpr.PackedBitVec.mk (w := 0) 0#0)
+
+/--
+Convert a (VariableId -→ PackedBitVec) map to a (VariableId → SubstitutionValue) one
+-/
+class HydrablePackedBitvecToSubstitutionValue (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  packedBitVecToSubstitutionValue : (Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (SubstitutionValue genExpr)
+
+/--
+`Hashable`, `BEq`, and `ToMessageData` instances for generalization types.
+-/
 class HydrableInstances (genLogicalExpr : Type) (genExpr : Nat → Type) where
   beqLogical : BEq genLogicalExpr := by infer_instance
   messageDataLogical : ToMessageData genLogicalExpr := by infer_instance
@@ -62,6 +78,7 @@ attribute [instance] HydrableInstances.messageDataLogical
 attribute [instance] HydrableInstances.hashableLogical
 attribute [instance] HydrableInstances.hashableGenExpr
 attribute [instance] HydrableInstances.beqGenExpr
+
 
 structure ParsedInputState (parsedExprWrapper : Type) where
   maxFreeVarId : Nat
@@ -77,6 +94,9 @@ class HydrableInitialParserState  (parsedExprWrapper: Type)
 where
   initialParserState : ParsedInputState parsedExprWrapper
 
+/--
+Structure for maintaining the state of a parsed input `Expr`.
+-/
 structure ParsedLogicalExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type)
 where
   logicalExpr : genLogicalExpr
@@ -86,26 +106,35 @@ where
 
 abbrev ParseExprM (parsedExprWrapper : Type) := StateRefT (ParsedInputState parsedExprWrapper) MetaM
 
+/--
+Parse the LHS and RHS of an input `Expr`, returning a `ParsedLogicalExpr` in the given target width.
+-/
 class HydrableParseExprs (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) where
   parseExprs : (lhsExpr rhsExpr : Expr) → (targetWidth : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr ))
 
-class HydrableGenExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  genExprToExpr {n : Nat} : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → genExpr n → MetaM Expr
-
+/--
+Convert a `genLogicalExpr` to a Lean Expr. We invoke `BVDecide` on the Lean Expr in the `solve` function.
+-/
 class HydrableGenLogicalExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
   genLogicalExprToExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
 
-class HydrableGetAllNamesFromParsedLogicalExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getAllNamesFromParsedLogicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → HashMap Nat Name
+/--
+Retrieve a mapping from variable IDs to their display name for a `ParsedLogicalExpr`.
+-/
+class HydrableGetDisplayNames (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  getDisplayNames : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → HashMap Nat Name
 
+/--
+Get the number of nodes of a `genLogicalexpr` for debugging.
+-/
 class HydrableGetLogicalExprSize (genLogicalExpr : Type) where
   getLogicalExprSize : genLogicalExpr → Nat
 
+/--
+Replace the variables in a BitVec formula with `SubstitutionValue` objects.
+-/
 class HydrableSubstitute (genLogicalExpr : Type) (genExpr : Nat → Type) where
   substitute : genLogicalExpr → (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) → genLogicalExpr
-
-class HydrablePackedBitvecToSubstitutionValue (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  packedBitVecToSubstitutionValue : (Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (SubstitutionValue genExpr)
 
 structure GeneralizerState
   (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
@@ -183,7 +212,7 @@ class HydrablePrettifyAsTheorem (genLogicalExpr : Type) where
 
 class HydrableSolve (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableInstances genLogicalExpr genExpr,
-  HydrableGetAllNamesFromParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrableGetDisplayNames parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrableGetLogicalExprSize genLogicalExpr,
   HydrableGenLogicalExprToExpr parsedExprWrapper parsedExpr genLogicalExpr genExpr where
 
@@ -191,7 +220,7 @@ def solve
 [H : HydrableSolve parsedExprWrapper parsedExpr genLogicalExpr genExpr]
   (bvExpr : genLogicalExpr) : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
-    let allNames := H.getAllNamesFromParsedLogicalExpr state.parsedLogicalExpr
+    let allNames := H.getDisplayNames state.parsedLogicalExpr
     let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
 
