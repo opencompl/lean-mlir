@@ -14,7 +14,7 @@ RUN apt-get update && \
         cmake \
         git \
         ninja-build \
-        ripgrep \ 
+        ripgrep \
         gdb curl wget zstd unzip sudo \
         # dependencies for experiment scripts
         python3-matplotlib python3-pandas python3-num2words python3-tabulate \
@@ -42,7 +42,7 @@ ENV PATH=/home/user/.elan/bin:$PATH
 
 # Install bv-theorem-table-maker
 
-RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d 
+RUN git clone https://github.com/opencompl/bv-theorem-table-maker.git && cd bv-theorem-table-maker && git checkout 4a3b029fbcea100f54d79261ed6ed1e6e8b8bc2d
 
 # Download and unzip SMT-LIB QF_BV benchmarks
 RUN mkdir -p bv-evaluation/SMT-LIB
@@ -127,7 +127,7 @@ RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && git checkout 548a868571e1aa1f50ede3e6814db6a87db4df91 && \
+    cd lean-mlir-temp && git checkout 9ed595567e409513d6063e54f88223ac0c80d8d9 && \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
 RUN MATHLIB_NO_CACHE_ON_UPDATE=1 LAKE_NO_CACHE=1 lake update --no-cache
