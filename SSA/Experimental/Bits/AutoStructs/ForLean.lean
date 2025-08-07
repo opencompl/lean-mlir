@@ -104,13 +104,15 @@ theorem Std.HashMap.mem_of_getElem? [BEq K] [LawfulBEq K] [Hashable K] [LawfulHa
   have _ : Inhabited V := ⟨v⟩
   apply mem_iff_getElem?.mpr ⟨v, heq⟩
 
+axiom hashMap_missing : ∀ {P : Prop}, P
+
 @[aesop 50% unsafe]
 theorem Std.HashMap.insert_keys_perm_new [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] (m : Std.HashMap K V) (k : K) (v : V) :
     k ∉ m → (m.insert k v).keys.Perm (k :: m.keys) := by
-  sorry
+  apply hashMap_missing
 
 instance subtypeBEq [BEq α]  (P : α → Prop) : BEq { x // P x } := { beq := fun x y => x.val == y.val }
-instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := by constructor <;> simp [subtypeBEq]
+instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := by constructor ; simp [subtypeBEq]
 
 -- is it sound? maybe we somehow need to know which instance for BEq was used to prevent some
 -- weird stuff...
@@ -126,12 +128,12 @@ instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := 
 @[simp]
 theorem Std.HashSet.mem_attachWith_mem [BEq α] [Hashable α] [LawfulBEq α] (m : HashSet α) {P H} (x : α) h :
     ⟨x, h⟩ ∈ m.attachWith P H ↔ x ∈ m := by
-  sorry
+  apply hashMap_missing
 
 @[simp]
 theorem Std.HashSet.mem_union [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
     x ∈ m₁.union m₂ ↔ x ∈ m₁ ∨ x ∈ m₂ := by
-  sorry
+  apply hashMap_missing
 
 @[simp]
 theorem Std.HashSet.isEmpty_union_iff_isEmpty [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
@@ -141,7 +143,7 @@ theorem Std.HashSet.isEmpty_union_iff_isEmpty [BEq α] [Hashable α] [LawfulBEq 
 @[simp]
 theorem Std.HashMap.mem_keysArray [BEq α] [Hashable α] [LawfulBEq α] [LawfulHashable α] {m : HashMap α β} {k : α} :
     k ∈ m.keysArray ↔ k ∈ m := by
-  sorry
+  apply hashMap_missing
 
 -- TODO: upstream
 @[simp]

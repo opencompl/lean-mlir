@@ -28,7 +28,8 @@ abbrev Context := Ctxt LLVM.Ty
 abbrev MCom φ := Com (MetaLLVM φ)
 abbrev MExpr φ := Expr (MetaLLVM φ)
 
-instance : ToString Context := inferInstanceAs (ToString (List <| MTy 0))
+instance : ToString Context where
+  toString Γ := toString Γ.toList
 
 structure CliTest where
   name : Name
@@ -39,7 +40,7 @@ structure CliTest where
   code : MCom mvars context eff ty
 
 def CliTest.signature (test : CliTest) :
-  List (InstCombine.MTy test.mvars) × (InstCombine.MTy test.mvars) :=
+  Ctxt (InstCombine.MTy test.mvars) × (InstCombine.MTy test.mvars) :=
   (test.context, test.ty)
 
 -- We add a special case for 1 because Nat × Unit ≠ Nat
@@ -52,36 +53,8 @@ theorem natParamsTup : ∀ n : Nat, n > 0 → natParams (n + 1) = (Nat × natPar
   intro n
   induction n <;> simp [natParams]
 
-def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
-  name := s!"{n} nat(s)."
-  parse? str :=
-  match n with
-    | 0 =>
-      let inst : Cli.ParseableType Unit := inferInstance
-      inst.parse? str
-    | 1 =>
-      let inst : Cli.ParseableType Nat := inferInstance
-      inst.parse? str
-    -- this feels unnecessarily complicated
-    | (n + 1) + 1 =>
-      let inst1 : Cli.ParseableType Nat := inferInstance
-      let instn : Cli.ParseableType (natParams (n + 1)) := @instParseableNatParams (n + 1)
-      let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) :=
-        @instParseableTuple Nat (natParams (n + 1)) inst1 instn
-      let hn1gt0 : (n + 1) > 0 := by
-        rename_i n_1 -- aesop?
-        simp_all only [gt_iff_lt, or_true]
-        omega
-      let hn1eq := natParamsTup (n + 1) hn1gt0
-      hn1eq ▸ instTup.parse? str
-
-instance {n : Nat} : Cli.ParseableType (natParams n) := instParseableNatParams
-
 def CliTest.params : CliTest → Type
 | test => natParams test.mvars
-
-def CliTest.paramsParseable (test : CliTest) : Cli.ParseableType (test.params) :=
-  instParseableNatParams
 
 instance {n : Nat} : Cli.ParseableType (BitVec n) where
   name := s!"BitVec {n}"
@@ -204,8 +177,8 @@ open LLVM.Ty in
 def InstCombine.mkValuation (ctxt : Context)
   (values : List.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
-  | [], ⟨[],_⟩ => Ctxt.Valuation.nil
-  | ty::tys, ⟨val::vals,hlen⟩ =>
+  | ⟨[]⟩, ⟨[],_⟩ => Ctxt.Valuation.nil
+  | ⟨ty::tys⟩, ⟨val::vals,hlen⟩ =>
     let valsVec : List.Vector (Option Int) tys.length := ⟨vals,by aesop⟩
     let valuation' := mkValuation tys valsVec
     match ty with
@@ -235,10 +208,11 @@ def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) :
   := inferInstance
 
 def CocreteCliTest.signature (test : ConcreteCliTest) :
-  List (InstCombine.MTy 0) × (InstCombine.MTy 0) := (test.context.reverse, test.ty)
+    Ctxt (InstCombine.MTy 0) × (InstCombine.MTy 0) :=
+  (⟨test.context.toList.reverse⟩, test.ty)
 
 def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
-  s!"{test.context.reverse} → {test.ty}"
+  s!"{test.context.toList.reverse} → {test.ty}"
 
 open LLVM.Ty in
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where

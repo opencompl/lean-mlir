@@ -56,7 +56,7 @@ theorem mod_eq_if {a b : Nat} : a % b = if 0 ≤ a ∧ a < b then a else (if b �
     have : a / b = 0 := Nat.div_eq_of_lt h
     simp only [this, Nat.mul_zero, Nat.sub_zero]
   · simp [h]
-    simp only [show b ≤ a by omega, true_and]
+    simp only [show b ≤ a by omega]
     by_cases h₂ : a < 2 * b
     · simp [h₂]
       have : a / b = 1 := by
@@ -111,7 +111,7 @@ lemma toNat_shiftLeft' (A B : BitVec w) :
     BitVec.toNat (A <<< B) = (BitVec.toNat A) * 2 ^ BitVec.toNat B % 2 ^w := by
   simp only [HShiftLeft.hShiftLeft]
   simp only [shiftLeft_eq, toNat_shiftLeft]
-  simp only [toNat_shiftLeft, Nat.shiftLeft_eq_mul_pow]
+  simp only [Nat.shiftLeft_eq_mul_pow]
 
 lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
     (1 <<< B * A) = (A <<< B) := by
@@ -142,7 +142,7 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : x.udiv 1#w = x := by
 
 
 theorem udiv_eq_zero_iff {x y : BitVec w} (hy : 0#w < y) : udiv x y = 0#w ↔ x < y := by
-  simp_all [bv_toNat, Nat.div_eq_zero_iff, hy]
+  simp_all [bv_toNat]
   constructor
   · rw [BitVec.lt_def, BitVec.udiv_def]
     intros h
@@ -219,8 +219,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         not_true_eq_false] at ha0)
       case inr h => subst h; contradiction
     case succ w' =>
-      simp only [BitVec.sdiv, lt_add_iff_pos_left, add_pos_iff, zero_lt_one,
-        or_true, msb_one, neg_eq]
+      simp only [BitVec.sdiv, msb_one, neg_eq]
       by_cases h : a.msb <;> simp [h]
       · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1
@@ -319,7 +318,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
     omega
   simp only [ne_eq]
   have h : 0 < w := by omega
-  simp only [Nat.zero_mod, h, Nat.two_pow_pred_mod_two_pow, ne_eq]
+  simp only [ne_eq]
   have two_pow_pos := Nat.two_pow_pos (w-1)
   simp only [intMin, toNat_eq, toNat_ofNat, Nat.zero_mod, toNat_twoPow, ne_eq]
   let w' := w - 1
@@ -354,7 +353,7 @@ theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
   by_cases h : w = 0
   · subst h
     simp [of_length_zero]
-  · simp only [not_gt_eq_le, sge_eq_sle]
+  · simp only [not_gt_eq_le]
     rw [sge_of_sgt]
     apply intMin_lt_zero
     omega
@@ -425,7 +424,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
     x.signExtend (i+1) = cons (if i < w then x.getLsbD i else x.msb) (x.signExtend i) := by
   ext j
-  simp only [← BitVec.getLsbD_eq_getElem, getLsbD_signExtend, Fin.is_lt, decide_true, Bool.true_and, getLsbD_cons]
+  simp only [← BitVec.getLsbD_eq_getElem, getLsbD_signExtend, getLsbD_cons]
   split <;> split <;> simp_all <;> omega
 
 @[simp]
@@ -444,7 +443,7 @@ theorem allOnes_sshiftRight {w n : Nat} :
   ext i
   by_cases h : 0 < w
   · simp [← BitVec.getLsbD_eq_getElem, BitVec.msb_allOnes h, getLsbD_sshiftRight, ←decide_not]; omega
-  · simp [getLsbD_sshiftRight]; omega
+  · simp; omega
 
 attribute [simp] shiftLeft_ushiftRight
 

@@ -18,7 +18,7 @@ def icmp_ugt_riscv_i64 := [LV| {
   }]
 
 @[simp_denote]
-def icmp_ugt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_ugt_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1))  := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.ugt %lhs, %rhs  : i64
@@ -50,7 +50,7 @@ def icmp_ugt_riscv_i32 := [LV| {
   }]
 
 @[simp_denote]
-def icmp_ugt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_ugt_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1))  := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.ugt %lhs, %rhs  : i32
@@ -61,7 +61,7 @@ def icmp_ugt_riscv_eq_icmp_ugt_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_ugt_llvm_i32, rhs:= icmp_ugt_riscv_i32}
 
 @[simp_denote]
-def icmp_uge_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_uge_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.uge %lhs, %rhs : i64
@@ -83,7 +83,7 @@ def icmp_uge_riscv_eq_icmp_uge_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_uge_llvm_i64, rhs:= icmp_uge_riscv_i64}
 
 @[simp_denote]
-def icmp_uge_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_uge_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.uge %lhs, %rhs  : i32
@@ -105,7 +105,7 @@ def icmp_uge_riscv_eq_icmp_uge_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_uge_llvm_i32, rhs:= icmp_uge_riscv_i32 }
 
 @[simp_denote]
-def icmp_ult_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_ult_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.ult %lhs, %rhs  : i64
@@ -126,7 +126,7 @@ def icmp_ult_riscv_eq_icmp_ult_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_ult_llvm_i64, rhs:= icmp_ult_riscv_i64}
 
 @[simp_denote]
-def icmp_ult_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_ult_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.ult %lhs, %rhs : i32
@@ -147,7 +147,7 @@ def icmp_ult_riscv_eq_icmp_ult_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_ult_llvm_i32, rhs:= icmp_ult_riscv_i32}
 
 @[simp_denote]
-def icmp_ule_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_ule_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.ule %lhs, %rhs  : i64
@@ -169,7 +169,7 @@ def icmp_ule_riscv_eq_icmp_ule_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_ule_llvm_i64, rhs:= icmp_ule_riscv_i64}
 
 @[simp_denote]
-def icmp_ule_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_ule_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.ule %lhs, %rhs : i32
@@ -191,7 +191,7 @@ def icmp_ule_riscv_eq_icmp_ule_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_ule_llvm_i32, rhs:= icmp_ule_riscv_i32}
 
 @[simp_denote]
-def icmp_sgt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_sgt_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.sgt %lhs, %rhs  : i64
@@ -212,7 +212,7 @@ def icmp_sgt_riscv_eq_icmp_slt_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_sgt_llvm_i64, rhs:= icmp_sgt_riscv_i64}
 
 @[simp_denote]
-def icmp_sgt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_sgt_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.sgt %lhs, %rhs : i32
@@ -233,7 +233,7 @@ def icmp_sgt_riscv_eq_icmp_slt_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_sgt_llvm_i32, rhs:= icmp_sgt_riscv_i32}
 
 @[simp_denote]
-def icmp_sge_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_sge_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.sge %lhs, %rhs  : i64
@@ -255,7 +255,7 @@ def icmp_sge_riscv_eq_icmp_sge_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_sge_llvm_i64, rhs:= icmp_sge_riscv_i64}
 
 @[simp_denote]
-def icmp_sge_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_sge_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.sge %lhs, %rhs : i32
@@ -277,7 +277,7 @@ def icmp_sge_riscv_eq_icmp_sge_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_sge_llvm_i32, rhs:= icmp_sge_riscv_i32}
 
 @[simp_denote]
-def icmp_slt_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_slt_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.slt %lhs, %rhs  : i64
@@ -298,7 +298,7 @@ def icmp_slt_riscv_eq_icmp_slt_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_slt_llvm_i64, rhs:= icmp_slt_riscv_i64}
 
 @[simp_denote]
-def icmp_slt_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_slt_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.slt %lhs, %rhs : i32
@@ -319,7 +319,7 @@ def icmp_slt_riscv_eq_icmp_slt_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_slt_llvm_i32, rhs:= icmp_slt_riscv_i32}
 
 @[simp_denote]
-def icmp_sle_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_sle_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.sle %lhs, %rhs  : i64
@@ -341,7 +341,7 @@ def icmp_sle_riscv_eq_icmp_sle_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_sle_llvm_i64, rhs:= icmp_sle_riscv_i64}
 
 @[simp_denote]
-def icmp_sle_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_sle_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.sle %lhs, %rhs : i32

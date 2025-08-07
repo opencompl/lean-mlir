@@ -6,6 +6,7 @@ We avoid the issue by increasing the heartbeats. Since this applies to most indu
 Additionally, this file contains definitions that match on these large inductive types. These also causes Lean to require
 more heartbeats.  -/
 set_option maxHeartbeats 1000000000000000000
+set_option maxRecDepth 10000000000000
 
 open RV64Semantics
 open RV64PseudoOpSemantics
@@ -222,11 +223,11 @@ def Op.sig : Op → List Ty
   | .andi (_imm : BitVec 12) => [Ty.bv]
   | .ori (_imm : BitVec 12) => [Ty.bv]
   | .xori (_imm : BitVec 12) => [Ty.bv]
-  | .czero.eqz =>  [Ty.bv, Ty.bv]
-  | .czero.nez =>  [Ty.bv, Ty.bv]
-  | .sext.b => [Ty.bv]
-  | .sext.h => [Ty.bv]
-  | .zext.h => [Ty.bv]
+  | RISCV64.Op.czero.eqz =>  [Ty.bv, Ty.bv]
+  | RISCV64.Op.czero.nez =>  [Ty.bv, Ty.bv]
+  | RISCV64.Op.sext.b => [Ty.bv]
+  | RISCV64.Op.sext.h => [Ty.bv]
+  | RISCV64.Op.zext.h => [Ty.bv]
   | .bclr => [Ty.bv, Ty.bv]
   | .bext => [Ty.bv, Ty.bv]
   | .binv => [Ty.bv, Ty.bv]
@@ -237,10 +238,10 @@ def Op.sig : Op → List Ty
   | .bseti (_shamt : BitVec 6) => [Ty.bv]
   | .rolw => [Ty.bv, Ty.bv]
   | .rorw => [Ty.bv, Ty.bv]
-  | .add.uw => [Ty.bv, Ty.bv]
-  | .sh1add.uw => [Ty.bv, Ty.bv]
-  | .sh2add.uw => [Ty.bv, Ty.bv]
-  | .sh3add.uw => [Ty.bv, Ty.bv]
+  | RISCV64.Op.add.uw => [Ty.bv, Ty.bv]
+  | RISCV64.Op.sh1add.uw => [Ty.bv, Ty.bv]
+  | RISCV64.Op.sh2add.uw => [Ty.bv, Ty.bv]
+  | RISCV64.Op.sh3add.uw => [Ty.bv, Ty.bv]
   | .sh1add => [Ty.bv, Ty.bv]
   | .sh2add => [Ty.bv, Ty.bv]
   | .sh3add => [Ty.bv, Ty.bv]
@@ -320,11 +321,11 @@ def Op.outTy : Op  → Ty
   | .andi (_imm : BitVec 12) => Ty.bv
   | .ori (_imm : BitVec 12) => Ty.bv
   | .xori (_imm : BitVec 12) => Ty.bv
-  | .czero.eqz => Ty.bv
-  | .czero.nez => Ty.bv
-  | .sext.b => Ty.bv
-  | .sext.h => Ty.bv
-  | .zext.h => Ty.bv
+  | RISCV64.Op.czero.eqz => Ty.bv
+  | RISCV64.Op.czero.nez => Ty.bv
+  | RISCV64.Op.sext.b => Ty.bv
+  | RISCV64.Op.sext.h => Ty.bv
+  | RISCV64.Op.zext.h => Ty.bv
   | .bclr => Ty.bv
   | .bext => Ty.bv
   | .binv => Ty.bv
@@ -335,10 +336,10 @@ def Op.outTy : Op  → Ty
   | .bseti (_shamt : BitVec 6) => Ty.bv
   | .rolw => Ty.bv
   | .rorw => Ty.bv
-  | .add.uw => Ty.bv
-  | .sh1add.uw => Ty.bv
-  | .sh2add.uw => Ty.bv
-  | .sh3add.uw => Ty.bv
+  | RISCV64.Op.add.uw => Ty.bv
+  | RISCV64.Op.sh1add.uw => Ty.bv
+  | RISCV64.Op.sh2add.uw => Ty.bv
+  | RISCV64.Op.sh3add.uw => Ty.bv
   | .sh1add => Ty.bv
   | .sh2add => Ty.bv
   | .sh3add => Ty.bv
@@ -444,10 +445,10 @@ def opToString (op : RISCV64.Op) : String :=
   | .bseti (_shamt : BitVec 6) => "bseti"
   | .rolw => "rolw"
   | .rorw => "rorw"
-  | .add.uw => "add.uw"
-  | .sh1add.uw => "sh1add.uw"
-  | .sh2add.uw => "sh2add.uw"
-  | .sh3add.uw => "sh3add.uw"
+  | RISCV64.Op.add.uw => "add.uw"
+  | RISCV64.Op.sh1add.uw => "sh1add.uw"
+  | RISCV64.Op.sh2add.uw => "sh2add.uw"
+  | RISCV64.Op.sh3add.uw => "sh3add.uw"
   | .sh1add => "sh1add"
   | .sh2add => "sh2add"
   | .sh3add => "sh3add"
@@ -553,7 +554,7 @@ instance : DialectDenote (RV64) where
   | .remuw, regs, _ => REMW_pure64_unsigned_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .rem, regs, _ => REM_pure64_signed_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .remu, regs, _ => REM_pure64_unsigned_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  --| .mulu, regs, _ => MUL_pure64_fff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .mulu, regs, _ => MUL_pure64_fff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mulhu,regs, _ => MUL_pure64_tff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mul ,regs, _ => MUL_pure64_ftt (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mulhsu ,regs, _ => MUL_pure64_ttf_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -586,10 +587,10 @@ instance : DialectDenote (RV64) where
   | .rorw, regs, _ => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .rol, regs, _ => ZBB_RTYPE_pure64_RISCV_ROL_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .ror, regs, _ => ZBB_RTYPE_pure64_RISCV_ROR_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .sh1add.uw , regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .sh2add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .sh3add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.sh1add.uw , regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.sh2add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.sh3add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh1add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH1ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh2add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH2ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh3add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH3ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))

@@ -6,7 +6,7 @@ import Mathlib.Algebra.Group.Nat.Range
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.FinEnum
 
-set_option grind.warning false
+open Rel
 
 abbrev State := Nat
 
@@ -47,11 +47,11 @@ between concrete and abstract states which satisfies some properties, as defined
 in Kozen 1997.
 -/
 structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : Rel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
-  accept {s q} : R s q → (s ∈ m.finals ↔ q ∈ M.accept)
-  initial₁ {s} : s ∈ m.initials → ∃ q ∈ M.start, R s q
-  initial₂ {q} : q ∈ M.start → ∃ s ∈ m.initials, R s q
-  trans_match₁ {s s' a q} : R s q → s' ∈ m.tr s a → ∃ q', q' ∈ M.step q a ∧ R s' q'
-  trans_match₂ {s a q q'} : R s q → q' ∈ M.step q a → q ∈ D → (q, a, q') ∉ T → ∃ s', s' ∈ m.tr s a ∧ R s' q'
+  accept {s q} : s ~[R] q → (s ∈ m.finals ↔ q ∈ M.accept)
+  initial₁ {s} : s ∈ m.initials → ∃ q ∈ M.start, s ~[R] q
+  initial₂ {q} : q ∈ M.start → ∃ s ∈ m.initials, s ~[R] q
+  trans_match₁ {s s' a q} : s ~[R] q → s' ∈ m.tr s a → ∃ q', q' ∈ M.step q a ∧ s' ~[R] q'
+  trans_match₂ {s a q q'} : s ~[R] q → q' ∈ M.step q a → q ∈ D → (q, a, q') ∉ T → ∃ s', s' ∈ m.tr s a ∧ s' ~[R] q'
 
 @[simp]
 lemma RawCNFA.Simul.initial {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
@@ -90,7 +90,7 @@ lemma RawCNFA.Simul.eval_set_eq {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M 
   hsim.rel_preserved_word (hsim.initial)
 
 lemma RawCNFA.Simul.rel_eval {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
-    q ∈ M.eval w → ∃ s, R s q := by
+    q ∈ M.eval w → ∃ s, s ~[R] q := by
   rintro h
   obtain ⟨S, heq⟩ := hsim.eval_set_eq
   obtain ⟨s, hs, hR⟩ := heq.2 h
@@ -104,7 +104,7 @@ def RawCNFA.Sim (m : RawCNFA A) (A : NFA A S) := ∃ R, RawCNFA.Simul m A R ⊤ 
 lemma sim_full_cod (m : RawCNFA A) (M : NFA A Q) (D : Set Q) (T : Set (Q × A × Q)) R :
     T = ∅ →
     m.Simul M R D T →
-    R.codom = D →
+    R.cod = D →
     m.Sim M := by
   rintro rfl ⟨_, _, _, _, h⟩ hcod; use R
   constructor <;> try assumption
@@ -275,7 +275,7 @@ lemma addTrans_finals (m : RawCNFA A) (a : A) (s1 s2 : State) :
 @[grind =, simp]
 lemma addTrans_tr_eq (m : RawCNFA A) [LawfulBEq A] (a : A) (s₁ s₂ : State) :
     (m.addTrans a s₁ s₂).tr s₁ a = (m.tr s₁ a).insert s₂ := by
-  simp [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  simp [RawCNFA.addTrans, RawCNFA.tr]
 
 @[grind =, simp]
 lemma addTrans_tr_neq (m : RawCNFA A) [LawfulBEq A] {a : A} {s₁ s₁' s₂ : State} (hneq : s₁ ≠ s₁') :
@@ -328,7 +328,7 @@ lemma newState_finals (m : RawCNFA A) :
 @[grind =, simp, aesop 50% unsafe]
 lemma newState_eq (m : RawCNFA A) :
     m.newState.1 = m.stateMax := by
-  simp_all [RawCNFA.newState, RawCNFA.states, Finset.range_add]
+  simp_all [RawCNFA.newState]
 
 @[grind, simp, aesop 50% unsafe]
 lemma mem_states_newState_self (m : RawCNFA A) :
@@ -415,7 +415,7 @@ lemma wf_empty :
 lemma wf_newState (m : RawCNFA A) (hwf : m.WF) :
     m.newState.2.WF := by
   constructor <;> intros <;> simp [RawCNFA.states] <;>
-    apply Nat.lt_add_one_of_lt <;> simp_all [RawCNFA.newState, RawCNFA.WF]
+    apply Nat.lt_add_one_of_lt <;> simp_all [RawCNFA.newState]
   have h := @hwf.trans_tgt_lt
   simp [RawCNFA.states] at h
   apply h <;> assumption
@@ -431,14 +431,14 @@ lemma RawCNFA.empty_stateMax : empty (A := A).stateMax = 0 := rfl
 @[grind, simp, aesop 50% unsafe]
 lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
-  constructor <;> intros <;> simp_all [RawCNFA.addInitial, RawCNFA.WF]
+  constructor <;> intros <;> simp_all [RawCNFA.addInitial]
   { casesm* _ ∨ _ <;> subst_eqs <;> simp_all }
   { apply hwf.trans_tgt_lt <;> assumption }
 
 @[grind, simp, aesop 50% unsafe]
 lemma wf_addFinal (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addFinal s).WF := by
-  constructor <;> intros <;> simp_all [RawCNFA.addFinal, RawCNFA.WF] <;> aesop
+  constructor <;> intros <;> simp_all [RawCNFA.addFinal] <;> aesop
 
 @[grind, simp, aesop 50% unsafe]
 lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
@@ -511,9 +511,9 @@ lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
   generalize (m.newState.2.addInitial m.stateMax) = mi
   induction FinEnum.toList A generalizing mi
   case nil =>
-    rintro hwf'; simp [motive, RawCNFA.createSink, hwf]
+    rintro hwf'; simp [motive]
   case cons a as ih =>
-    simp [motive, RawCNFA.createSink, hwf]
+    simp [motive]
     rintro hwf' hstates b
     simp [motive] at ih
     rw [ih]
@@ -536,10 +536,10 @@ structure RawCNFA.SimulFun (m : RawCNFA A) (M : NFA A Q) (f : m.states ≃ Q)  w
 
 lemma simulFun_sim_raw [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) f :
     m.SimulFun M f → m.Sim M := by
-  rintro hsim; use (λ s q ↦ (f.invFun q).val = s); constructor
+  rintro hsim; use {(s, q) | (f.invFun q).val = s}; constructor
   · rintro s q rfl; exact hsim.accept
   · rintro s hin; use f ⟨s, hwf.initials_lt hin⟩
-    simp only [Equiv.invFun_as_coe, Equiv.symm_apply_apply, and_true]
+    simp only [Equiv.invFun_as_coe, Set.mem_setOf_eq, Equiv.symm_apply_apply, and_true]
     obtain heq : s = (f.invFun (f ⟨s, hwf.initials_lt hin⟩)) := by simp
     rw [heq, ←hsim.initial] at hin; assumption
   · rintro q hin; rw [hsim.initial] at hin; simp_all
@@ -564,7 +564,7 @@ def CNFA.toNFA (m : CNFA n) : NFA (BitVec n) m.m.states where
 
 def CNFA.toNFA' (m : CNFA n) : NFA' n := ⟨_, m.toNFA⟩
 
-lemma CNFA.canonicalSimul (m : CNFA n) : m.m.Simul m.toNFA (λ s s' ↦ s = s'.val) ⊤ ∅ := by
+lemma CNFA.canonicalSimul (m : CNFA n) : m.m.Simul m.toNFA {(s, s') | s = s'.val} ⊤ ∅ := by
   simp [toNFA]
   have hwf := m.wf
   constructor <;> aesop
@@ -584,20 +584,19 @@ def CNFA.bv_recognizes (m : CNFA n) (L : Set (BitVecs n)) :=
 lemma simul_equiv {m : CNFA n} {M : NFA' n} :
     m.Sim M → m.toNFA'.M.Bisim M.M := by
   rintro ⟨R, h₂, h₃, h₄, h₅, h₆⟩
-  use (λ s q ↦ R s.val q)
+  use {(s, q) | s.val ~[R] q}
   simp [CNFA.toNFA', CNFA.toNFA]
   constructor
-  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
-  · simp [CNFA.toNFA', CNFA.toNFA]
+  · simp only [Set.mem_setOf_eq, Subtype.forall]; grind
+  · simp
     constructor
     · simp_all
     · simp_all
       rintro q hst
       obtain ⟨s, hi, hR⟩ := h₄ hst
       aesop
-  · simp only [Set.mem_setOf_eq, Subtype.forall, CNFA.wf]; grind
-  · simp only [Set.mem_setOf_eq, Subtype.exists, CNFA.wf, exists_and_left, exists_prop,
-    Subtype.forall]
+  · simp only [Set.mem_setOf_eq, Subtype.forall]; grind
+  · simp only [Set.mem_setOf_eq, Subtype.exists, exists_and_left, exists_prop, Subtype.forall]
     rintro s₁ hs₁ q₁ a q₂ hR₁ hst
     obtain ⟨s₂, htr, hR₂⟩:= h₆ hR₁ hst (by simp) (by simp)
     use s₂, htr, RawCNFA.WF.trans_tgt_lt m.wf htr, hR₂
