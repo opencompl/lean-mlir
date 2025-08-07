@@ -1,0 +1,6 @@
+module {
+  func.func @main(%arg0: i1) -> i64 attributes {seed = 82 : index} {
+    %0 = llvm.sext %arg0 : i1 to i64
+    return %0 : i64
+  }
+}

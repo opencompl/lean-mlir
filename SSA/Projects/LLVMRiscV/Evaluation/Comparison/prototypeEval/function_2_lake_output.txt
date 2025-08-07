@@ -1,0 +1,42 @@
+⚠ [607/1103] Replayed SSA.Core.Framework
+warning: SSA/Core/Framework.lean:966:88: `Id.pure_eq` has been deprecated: use `Id.run_pure` instead
+warning: SSA/Core/Framework.lean:967:6: `Id.bind_eq` has been deprecated: use `Id.run_bind` instead
+warning: SSA/Core/Framework.lean:1372:24: `Id.pure_eq` has been deprecated: use `Id.run_pure` instead
+warning: SSA/Core/Framework.lean:1372:36: `Id.bind_eq` has been deprecated: use `Id.run_bind` instead
+warning: SSA/Core/Framework.lean:2279:28: `Id.pure_eq` has been deprecated: use `Id.run_pure` instead
+warning: SSA/Core/Framework.lean:2286:33: `Id.pure_eq` has been deprecated: use `Id.run_pure` instead
+warning: SSA/Core/Framework.lean:2286:45: `Id.bind_eq` has been deprecated: use `Id.run_bind` instead
+⚠ [1001/1103] Replayed SSA.Experimental.Bits.Fast.FiniteStateMachine
+warning: SSA/Experimental/Bits/Fast/FiniteStateMachine.lean:47:4: declaration uses 'sorry'
+⚠ [1037/1103] Replayed SSA.Experimental.Bits.AutoStructs.ForLean
+warning: SSA/Experimental/Bits/AutoStructs/ForLean.lean:108:8: declaration uses 'sorry'
+warning: SSA/Experimental/Bits/AutoStructs/ForLean.lean:127:8: declaration uses 'sorry'
+warning: SSA/Experimental/Bits/AutoStructs/ForLean.lean:132:8: declaration uses 'sorry'
+warning: SSA/Experimental/Bits/AutoStructs/ForLean.lean:142:8: declaration uses 'sorry'
+⚠ [1042/1103] Replayed SSA.Experimental.Bits.AutoStructs.Constructions
+warning: SSA/Experimental/Bits/AutoStructs/Constructions.lean:160:40: `Array.mem_toList` has been deprecated: use `Array.mem_toList_iff` instead
+warning: SSA/Experimental/Bits/AutoStructs/Constructions.lean:166:15: `Array.push_toList` has been deprecated: use `Array.toList_push` instead
+warning: SSA/Experimental/Bits/AutoStructs/Constructions.lean:299:25: `List.Nodup.not_mem` has been deprecated: use `List.Nodup.notMem` instead
+warning: SSA/Experimental/Bits/AutoStructs/Constructions.lean:841:8: `Set.eq_empty_of_forall_not_mem` has been deprecated: use `Set.eq_empty_of_forall_notMem` instead
+⚠ [1055/1103] Replayed SSA.Projects.LLVMRiscV.LLVMAndRiscv
+warning: SSA/Projects/LLVMRiscV/LLVMAndRiscv.lean:214:85: `List.get?` has been deprecated: Use `a[i]?` instead.
+warning: SSA/Projects/LLVMRiscV/LLVMAndRiscv.lean:250:24: `List.get?_eq_getElem?` has been deprecated: Use `a[i]?` instead.
+warning: SSA/Projects/LLVMRiscV/LLVMAndRiscv.lean:251:39: `List.get?_eq_some_iff` has been deprecated: Use `a[i]?` instead.
+⚠ [1056/1103] Replayed SSA.Projects.LLVMRiscV.PeepholeRefine
+warning: SSA/Projects/LLVMRiscV/PeepholeRefine.lean:53:4: declaration uses 'sorry'
+⚠ [1096/1103] Replayed SSA.Projects.DCE.DCE
+warning: SSA/Projects/DCE/DCE.lean:291:64: `Id.pure_eq` has been deprecated: use `Id.run_pure` instead
+warning: SSA/Projects/DCE/DCE.lean:362:68: `Id.bind_eq` has been deprecated: use `Id.run_bind` instead
+⚠ [1097/1103] Replayed SSA.Projects.CSE.CSE
+warning: SSA/Projects/CSE/CSE.lean:59:61: `Id.pure_eq` has been deprecated: use `Id.run_pure` instead
+warning: SSA/Projects/CSE/CSE.lean:59:73: `Id.bind_eq` has been deprecated: use `Id.run_bind` instead
+builtin.module { 
+^bb0(%0 : i64, %1 : i64):
+  %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %4 = "riscv.mul"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %5 = "riscv.rem"(%4, %2) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.rem"(%4, %5) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i64)
+  "llvm.return"(%7) : (i64) -> ()
+ }
