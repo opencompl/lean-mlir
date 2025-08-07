@@ -235,10 +235,10 @@ private def formatArgTuple [Repr Ty] {Γ : List Ty}
       | .cons a as => (repr a) :: (formatArgTupleAux as)
 
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
-private def formatArgTupleForPrint [Repr Ty] {Γ : Ctxt Ty}
+private def formatArgTupleForPrint [Repr Ty] {Γ : List Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args) where
-  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
     | .cons .. =>
@@ -379,7 +379,7 @@ partial def Com.ToPrintBody : Com d Γ eff t → String
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
 partial def Com.toPrint (com : Com d Γ eff t) : String :=
    "builtin.module { \n"
-  ++ DialectPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ)) ++ ":" ++ "\n"
+  ++ DialectPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.ToPrintBody com) ++
    "\n }"
 

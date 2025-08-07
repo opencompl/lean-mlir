@@ -526,9 +526,9 @@ functions that define our semantics.
 instance : DialectDenote (RV64) where
   denote
   | .li imm, _ , _ => imm
-  | .addiw imm, regs, _ => ADDIW_pure64 imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .lui imm, regs , _ => UTYPE_pure64_lui imm
-  | .auipc imm, regs, _ => UTYPE_pure64_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .addiw imm, regs, _ => pure64_RISCV_ADDIW imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .lui imm, regs , _ => UTYPE_pure64_RISCV_LUI imm
+  | .auipc imm, regs, _ => UTYPE_pure64_RISCV_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .slliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SLLIW_bv shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .srliw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SRLIW_bv shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sraiw shamt, regs, _ => SHIFTIWOP_pure64_RISCV_SRAIW_bv shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -550,11 +550,11 @@ instance : DialectDenote (RV64) where
   | .srl, regs, _ => RTYPE_pure64_RISCV_SRL_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sub, regs, _ => RTYPE_pure64_RISCV_SUB (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sra, regs, _ => RTYPE_pure64_RISCV_SRA_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .remw, regs, _ => REMW_pure64_signed_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .remw, regs, _ => SIGNED_pure64_REMW_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .remuw, regs, _ => REMW_pure64_unsigned_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .rem, regs, _ => REM_pure64_signed_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .remu, regs, _ => REM_pure64_unsigned_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .mulu, regs, _ => MUL_pure64_fff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .rem, regs, _ => SIGNED_pure64_REM_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .remu, regs, _ => UNSIGNED_pure64_REM_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  --| .mulu, regs, _ => MUL_pure64_fff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mulhu,regs, _ => MUL_pure64_tff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mul ,regs, _ => MUL_pure64_ftt (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mulhsu ,regs, _ => MUL_pure64_ttf_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -587,10 +587,10 @@ instance : DialectDenote (RV64) where
   | .rorw, regs, _ => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .rol, regs, _ => ZBB_RTYPE_pure64_RISCV_ROL_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .ror, regs, _ => ZBB_RTYPE_pure64_RISCV_ROR_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.sh1add.uw , regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.sh2add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.sh3add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .sh1add.uw , regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .sh2add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .sh3add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh1add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH1ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh2add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH2ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh3add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH3ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
