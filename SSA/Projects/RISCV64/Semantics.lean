@@ -351,7 +351,7 @@ def SIGNED_pure64_REMW_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 6
     BitVec.signExtend 64
     ((BitVec.extractLsb 31 0 rs1_val).srem (BitVec.extractLsb 31 0 rs2_val))
 
-theorem SIGNED_pure64_REMWd_eq_SIGNED_pure64_REMW (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+theorem SIGNED_pure64_REMW_eq_SIGNED_pure64_REMW (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
     SIGNED_pure64_REMW rs2_val rs1_val = SIGNED_pure64_REMW_bv rs2_val rs1_val := by
   unfold SIGNED_pure64_REMW SIGNED_pure64_REMW_bv
   rw [extractLsb'_ofInt_eq_ofInt (h:= by simp)]
