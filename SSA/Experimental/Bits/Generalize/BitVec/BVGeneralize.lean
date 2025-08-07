@@ -2,10 +2,9 @@ import Lean.Elab.Term
 import Lean
 
 import SSA.Core.Util
-import SSA.Experimental.Bits.Generalize.Basic
-import SSA.Experimental.Bits.Generalize.Reflect
-import SSA.Experimental.Bits.Generalize.Hydrable
 import SSA.Experimental.Bits.Generalize.Generalize
+import SSA.Experimental.Bits.Generalize.BitVec.Basic
+import SSA.Experimental.Bits.Generalize.BitVec.Reflect
 
 namespace Generalize
 

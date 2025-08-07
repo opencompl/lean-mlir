@@ -4,7 +4,6 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Lean
 
 import SSA.Core.Util
-import SSA.Experimental.Bits.Generalize.Hydrable
 
 open Lean
 open Lean.Meta

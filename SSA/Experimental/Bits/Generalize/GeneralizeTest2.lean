@@ -1,6 +1,6 @@
 
 ---- Failing Tests
-import SSA.Experimental.Bits.Fast.Generalize
+import SSA.Experimental.Bits.Generalize.BitVec.BVGeneralize
 
 set_option trace.profiler true
 set_option trace.profiler.threshold 1
