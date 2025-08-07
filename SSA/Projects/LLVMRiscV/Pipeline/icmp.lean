@@ -368,7 +368,7 @@ is imlemented below. The pseudo instruction version is implemented in the file P
 -/
 
 @[simp_denote]
-def icmp_eq_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_eq_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.eq %lhs, %rhs : i32
@@ -390,7 +390,7 @@ def icmp_eq_riscv_eq_icmp_eq_llvm_i32 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.b
   {lhs:= icmp_eq_llvm_i32, rhs:= icmp_eq_riscv_i32}
 
 @[simp_denote]
-def icmp_eq_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_eq_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.eq %lhs, %rhs : i64
@@ -412,7 +412,7 @@ def icmp_eq_riscv_eq_icmp_eq_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.b
   {lhs:= icmp_eq_llvm_i64, rhs:= icmp_eq_riscv_i64}
 
 @[simp_denote]
-def icmp_neq_llvm_i64 : Com LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def icmp_neq_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.ne %lhs, %rhs : i64
@@ -435,7 +435,7 @@ def icmp_neq_riscv_eq_icmp_neq_llvm_i64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   {lhs:= icmp_neq_llvm_i64, rhs:= icmp_neq_riscv_i64}
 
 @[simp_denote]
-def icmp_neq_llvm_i32 : Com LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def icmp_neq_llvm_i32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
   .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.ne %lhs, %rhs : i32

@@ -46,7 +46,7 @@ def udiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
 
 /-! # UDIV i32 no exact  -/
 @[simp_denote]
-def udiv_llvm_no_exact_32 : Com  LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def udiv_llvm_no_exact_32 : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
     .pure (.llvm (.bitvec 32)) := [LV| {
     ^entry (%x: i32, %y: i32 ):
       %1 = llvm.udiv  %x, %y : i32
@@ -54,7 +54,7 @@ def udiv_llvm_no_exact_32 : Com  LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitv
   }]
 
 @[simp_denote]
-def udiv_riscv_32: Com  LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def udiv_riscv_32: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
     .pure (.llvm (.bitvec 32)) := [LV| {
     ^entry (%reg1: i32, %reg2: i32):
       %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i32) -> (!i64)
@@ -75,7 +75,7 @@ def llvm_udiv_lower_riscv_no_flag_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
 
 /-! # UDIV exact   -/
 @[simp_denote]
-def udiv_llvm_exact_32 : Com  LLVMPlusRiscV [.llvm (.bitvec 32), .llvm (.bitvec 32)]
+def udiv_llvm_exact_32 : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
     .pure (.llvm (.bitvec 32)) := [LV| {
     ^entry (%x: i32, %y: i32):
       %0 = llvm.udiv exact %x, %y : i32

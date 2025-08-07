@@ -43,7 +43,7 @@ def NEGW_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
 
 @[simp_riscv]
 def SEXTW_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.ADDIW_pure64 0 (rs1_val)
+  RV64Semantics.pure64_RISCV_ADDIW 0 (rs1_val)
 
 @[simp_riscv]
 def ZEXTB_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=

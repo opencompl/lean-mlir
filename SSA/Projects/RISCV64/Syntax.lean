@@ -78,7 +78,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 ⟩⟩
       | .bv, "sext.w" => do
         return ⟨.pure, .bv, ⟨
-                  .sext.w,
+                  RISCV64.Op.sext.w,
                   by
                   simp [DialectSignature.outTy, signature],
                   by constructor,
@@ -87,7 +87,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 ⟩⟩
       | .bv, "zext.b" => do
         return ⟨.pure, .bv, ⟨
-                  .zext.b,
+                  RISCV64.Op.zext.b,
                   by
                   simp [DialectSignature.outTy, signature],
                   by constructor,
@@ -465,7 +465,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, opTy, ⟨
-              .slli.uw (BitVec.ofInt 6 val),
+              RISCV64.Op.slli.uw (BitVec.ofInt 6 val),
               by
               simp[DialectSignature.outTy, signature],
               by constructor,
