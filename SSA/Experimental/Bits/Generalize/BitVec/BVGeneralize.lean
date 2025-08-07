@@ -1,20 +1,19 @@
-import Lean.Elab.Term
 import Lean
+import Lean.Elab.Term
 
 import SSA.Core.Util
-import SSA.Experimental.Bits.Generalize.Basic
-import SSA.Experimental.Bits.Generalize.Reflect
-import SSA.Experimental.Bits.Generalize.Hydrable
 import SSA.Experimental.Bits.Generalize.Generalize
-
-namespace Generalize
+import SSA.Experimental.Bits.Generalize.BitVec.Basic
+import SSA.Experimental.Bits.Generalize.BitVec.Reflect
 
 open Lean
+open Elab
 open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
 open Tactic
 
+namespace Generalize
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
 
@@ -209,6 +208,13 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCa
     res := currentCandidates.toList
     pure res
 
+structure PreconditionSynthesisCacheValue where
+  positiveExampleValues : List BVExpr.PackedBitVec
+  negativeExampleValues : List BVExpr.PackedBitVec
+
+instance : ToString PreconditionSynthesisCacheValue where
+  toString val :=
+    s! "⟨positiveExampleValues := {val.positiveExampleValues}, negativeExampleValues := {val.negativeExampleValues}⟩"
 
 def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (specialConstants : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec) :
                   Std.HashMap (GenBVExpr w)  PreconditionSynthesisCacheValue := Id.run do
@@ -368,10 +374,6 @@ def generatePreconditions (bvLogicalExpr: GenBVLogicalExpr) (positiveExamples ne
     | [] => return none
     | _ =>  return some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
 
-
-instance :  HydrableGeneratePreconditions BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
- generatePreconditions := generatePreconditions
-
 set_option warn.sorry false in
 def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (GenBVExpr w)) := Id.run do
   let zero := GenBVExpr.const (BitVec.ofNat w 0)
@@ -503,6 +505,71 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BV
 
     set {state with constantExprsEnumerationCache := h ▸ currentCache}
     pure res
+
+partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec)
+      (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr w)) := do
+
+    let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
+        if orig.w < newWidth then
+            if orig.bv < 0 then
+             {bv := orig.bv.signExtend newWidth, w := newWidth}
+            else {bv := orig.bv.zeroExtend newWidth, w := newWidth}
+        else if orig.w > newWidth then
+            {bv := orig.bv.truncate newWidth, w := newWidth}
+        else
+            orig
+
+    match depth with
+      | 0 => return []
+      | _ =>
+            let mut res : List (GenBVExpr w) := []
+
+            for (constId, constVal) in constants.toArray do
+              let newVar := GenBVExpr.var constId
+
+              if constVal == target then
+                res := newVar :: res
+                continue
+
+              if constId == parent then -- Avoid runaway expressions
+                continue
+
+              if target.bv == 0 then
+                res := GenBVExpr.const 0 :: res
+
+              let newTarget := (updatePackedBVWidth target constVal.w)
+              if h : constVal.w = newTarget.w then
+                let targetBv := h ▸ newTarget.bv
+
+                -- ~C = T
+                if BitVec.not constVal.bv == targetBv then
+                  res := GenBVExpr.un BVUnOp.not newVar :: res
+
+                -- C + X = Target; New target = Target - X.
+                let addRes ← deductiveSearch expr constants {bv := targetBv - constVal.bv} (depth-1) constId
+                res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
+
+                -- C - X = Target
+                let subRes ← deductiveSearch expr constants {bv := constVal.bv - targetBv} (depth-1) constId
+                res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
+
+                -- X - C = Target
+                let subRes' ← deductiveSearch expr constants {bv := targetBv + constVal.bv}  (depth-1) constId
+                res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
+
+                -- X * C = Target
+                if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
+                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
+                  res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
+
+                -- C / X = Target
+                if targetBv != 0 && (BitVec.umod constVal.bv targetBv) == 0 then
+                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constVal.bv targetBv} (depth - 1) constId
+                  res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
+
+              else
+                    throwError m! "Width mismatch for expr : {expr} and target: {target}"
+            return res
 
 set_option warn.sorry false in
 def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec))
