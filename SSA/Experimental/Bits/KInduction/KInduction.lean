@@ -33,6 +33,8 @@ import Lean
 
 open Fin.NatCast
 
+set_option linter.unusedSectionVars false
+
 initialize Lean.registerTraceClass `Bits.FastVerif
 
 /-
@@ -108,7 +110,7 @@ def mkCarryAssignCircuitNAux {arity : Type _}
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (s : p.α) (n : Nat) : Circuit (Vars p.α arity (n + 1)) :=
-    (p.nextBitCirc (some s)).map fun v =>
+    (p.nextStateCirc s).map fun v =>
       match v with
         | .inl t => Vars.stateN t n
         | .inr i => Vars.inputN i n
@@ -126,7 +128,7 @@ theorem mkCarryAssignCircuitNAux_eval_eq_ {arity : Type _}
     {env' : p.α ⊕ arity → Bool}
     (hEnvState : ∀ (s : p.α), env (Vars.stateN s n) = env' (Sum.inl s))
     (hEnvInput : ∀ (i : arity), env (Vars.inputN i n) = env' (Sum.inr i)) :
-    ((mkCarryAssignCircuitNAux p s n).eval env) = ((p.nextBitCirc (some s)).eval env') := by
+    ((mkCarryAssignCircuitNAux p s n).eval env) = ((p.nextStateCirc s).eval env') := by
   rw [mkCarryAssignCircuitNAux]
   rw [Circuit.eval_map]
   congr
@@ -145,7 +147,7 @@ theorem mkCarryAssignCircuitNAux_eval_eq {arity : Type _}
     [Hashable arity]
     (p : FSM arity) (s : p.α) (n : Nat)
     {env : Vars p.α arity (n + 1) → Bool} :
-    ((mkCarryAssignCircuitNAux p s n).eval env) = ((p.nextBitCirc (some s)).eval
+    ((mkCarryAssignCircuitNAux p s n).eval env) = ((p.nextStateCirc s).eval
       (fun x => match x with | .inl x => env (Vars.stateN x n) | .inr x => env (Vars.inputN x n))) := by
   rw [mkCarryAssignCircuitNAux]
   rw [Circuit.eval_map]
@@ -289,7 +291,7 @@ def mkOutputAssignCircuitNAux {arity : Type _}
   [Fintype arity]
   [Hashable arity]
   (p : FSM arity) (n : Nat) : Circuit (Vars p.α arity (n + 1)) :=
-    (p.nextBitCirc none).map fun v =>
+    (p.outputCirc).map fun v =>
       match v with
         | .inl s' => Vars.stateN s' n
         | .inr i => Vars.inputN i n
@@ -301,7 +303,7 @@ theorem eval_mkOutputAssignCircuitNAux_eq {arity : Type _}
   [Hashable arity]
   (p : FSM arity) (n : Nat) (env : Vars p.α arity (n + 1) → Bool) :
   (mkOutputAssignCircuitNAux p n).eval env =
-    (p.nextBitCirc none).eval
+    (p.outputCirc).eval
       (fun x => match x with
         | .inl s => env (Vars.stateN s n)
         | .inr i => env (Vars.inputN i n)) := by
@@ -333,7 +335,7 @@ theorem eval_mkOutputAssignCircuitN_eq_false_iff {arity : Type _}
   {env : Vars p.α arity (n + 1) → Bool}
   :
   ((mkOutputAssignCircuitN p n).eval env = false) ↔
-    (p.nextBitCirc none).eval
+    (p.outputCirc).eval
       (fun x => match x with
         | .inl s => env (Vars.stateN s n)
         | .inr i => env (Vars.inputN i n)) =
@@ -359,7 +361,7 @@ theorem mkOutputAssignCircuitLeN_eq_false_iff {arity : Type _}
   (env : Vars p.α arity (n + 1) → Bool) :
   ((mkOutputAssignCircuitLeN p n).eval env = false) ↔
   (∀ (i : Nat) (hi : i < n + 1),
-    (p.nextBitCirc none).eval
+    (p.outputCirc).eval
       (fun x => match x with
         | .inl s => env (Vars.stateN s i)
         | .inr j => env (Vars.inputN j i)) =
@@ -615,7 +617,7 @@ structure KInductionCircuits.IsLawful {arity : Type _}
     ∀ {env : Vars fsm.α arity (n + 2) → Bool},
       (circs.cOutAssignCirc.eval env = false)
       ↔ (∀ (i : Nat) (hi : i < n + 2),
-        (fsm.nextBitCirc none).eval
+        (fsm.outputCirc).eval
           (fun x => match x with
             | .inl s => env (Vars.stateN s i)
             | .inr j => env (Vars.inputN j i)) =
@@ -835,7 +837,7 @@ theorem eval_mkSuccCarryAndOutAssignPrecond_eq_false_iff₁
       ((mkCarryAssignCircuitNAux fsm s i).map
         (fun v => v.castLe (by omega))).eval env) ∧
   (∀ (i : Nat) (hi : i < n + 2),
-    (fsm.nextBitCirc none).eval
+    (fsm.outputCirc).eval
       (fun x => match x with
         | .inl s => env (Vars.stateN s i)
         | .inr j => env (Vars.inputN j i)) =
@@ -1464,7 +1466,7 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
         · generalize fsm.carryWith s0 path'.simplePath path'.k = s0'
           -- | TODO: find lemmas.
           ext a
-          simp [FSM.carryWith, FSM.carry, FSM.nextBit, FSM.nextBitCirc_changeInitCarry_eq,
+          simp [FSM.carryWith, FSM.carry, FSM.nextBit,
             FSM.initCarry_changeInitCarry_eq, add_zero]
         · omega
       hStatesUniqueLe := by
@@ -1487,7 +1489,7 @@ noncomputable def mkSimplePathOfPath (fsm : FSM arity)
               · rw [path'.hCarryWith]
                 generalize fsm.carryWith s0 path'.simplePath path'.k = s0'
                 ext a
-                simp [FSM.carryWith, FSM.carry, FSM.nextBit, FSM.nextBitCirc_changeInitCarry_eq,
+                simp [FSM.carryWith, FSM.carry, FSM.nextBit,
                   FSM.initCarry_changeInitCarry_eq, add_zero]
               · omega
             rw [← hsn]
@@ -1863,7 +1865,7 @@ def _root_.FSM.decideIfZerosVerified {arity : Type _}
     (fsm : FSM arity) (maxIter : Nat) :
     TermElabM (DecideIfZerosOutput × Array CircuitStats) :=
   withTraceNode `trace.Bits.Fast (fun _ => return "k-induction") (collapsed := false) do
-    logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
+    -- logInfo m!"FSM state space size: {fsm.stateSpaceSize}"
     decideIfZerosAuxVerified' 0 maxIter fsm KInductionCircuits.mkZero #[]
 
 end BvDecide

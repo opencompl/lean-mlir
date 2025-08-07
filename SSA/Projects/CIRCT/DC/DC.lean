@@ -13,12 +13,25 @@ def ValueStream := Stream
 
 def TokenStream := Stream Unit
 
-def unpack (x : ValueStream α) : ValueStream α × TokenStream :=
-  Stream.corec₂ (β := Stream α) (x)
+def VariadicValueStream (w : Nat) := CIRCTStream.Stream (List (BitVec w))
+
+def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream :=
+  Stream.corec₂ (β := Stream (BitVec w)) (x)
     fun x => Id.run <| do
       match x 0 with
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
+
+-- ifeally we spit out a tuple of bitvec, but it's less usable
+-- the output of this is synced
+def unpack2 (x : ValueStream (BitVec w)) (y : ValueStream (BitVec w)) : VariadicValueStream w × TokenStream :=
+  Stream.corec₂ (β := CIRCTStream.Stream (BitVec w) × CIRCTStream.Stream (BitVec w)) (x, y)
+    fun (x, y) => Id.run <| do
+      match x 0, y 0 with
+      | some x', some y' => return (some [x', y'], some .unit, (x.tail, y.tail))
+      | some _, none => return (none, none, (x, y.tail))
+      | none, some _ => return (none, none, (x.tail, y)) -- the mid return is the one that returns some if we have a sync
+      | none, none => return (none, none, (x.tail, y.tail))
 
 def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
   Stream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
@@ -28,13 +41,21 @@ def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
     | none, some _ => (none, (x.tail, y)) -- wait to sync with the value stream
     | none, none => (none, (x.tail, y.tail))
 
-def branch (x : ValueStream Bool): TokenStream × TokenStream  :=
-  Stream.corec₂ (β := ValueStream Bool) x fun x =>
+def pack2 (x : VariadicValueStream α × TokenStream) : (ValueStream (BitVec α)) × (ValueStream (BitVec α))  :=
+  Stream.corec₂ (β := VariadicValueStream α × TokenStream) (x) fun ⟨x, y⟩ =>
+    match x 0, y 0 with
+    | some x', some _ => (x'[0]?, x'[1]?, (x.tail, y.tail))
+    | some _, none => (none, none, (x, y.tail))
+    | none, some _ => (none, none, (x.tail, y)) -- wait to sync with the value stream
+    | none, none => (none, none, (x.tail, y.tail)) -- wait to sync with the value stream
+
+def branch (x : ValueStream (BitVec 1)): TokenStream × TokenStream  :=
+  Stream.corec₂ (β := ValueStream (BitVec 1)) x fun x =>
     Id.run <| do
       match x 0 with
         | none => (none, none, (x.tail))
         | some x₀ =>
-          if x₀ then
+          if x₀.msb then
             (some (), none, (x.tail))
           else
             (none, some (), (x.tail))
@@ -52,34 +73,38 @@ def join (x y : TokenStream) : TokenStream  :=
     | none, some _ => (none, (x.tail, y))
     | none, none => (none, (x.tail, y.tail))
 
-def merge (x y : TokenStream) : ValueStream Bool :=
+def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
   Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
-    | some _, some _ => (some true, (x.tail, y))
-    | some _, none => (some true, (x.tail, y.tail))
-    | none, some _ => (some false, (x.tail, y.tail))
+    | some _, some _ => (some 1, (x.tail, y))
+    | some _, none => (some 1, (x.tail, y.tail))
+    | none, some _ => (some 0, (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
-def select (x y : TokenStream) (c : ValueStream Bool): TokenStream :=
-  Stream.corec (β := TokenStream × TokenStream × Stream Bool) (x, y, c) fun ⟨x, y, c⟩ =>
-    match x 0, y 0, c 0 with
-    | some _, some _, some c₀ =>
-      if c₀ then
-        (some (), (x.tail, y, c.tail))
-      else
-        (some (), (x.tail, y.tail, c.tail))
-    | some _, none, some c₀ =>
-      if c₀ then
-        (some (), (x.tail, y.tail, c.tail))
-      else
-        (none, (x, y.tail, c))
-    | none, some _, some c₀ =>
-      if c₀ then
-        (none, (x.tail, y, c))
-      else
-        (some (), (x.tail, y.tail, c))
-    | _, _, none => (none, (x, y, c.tail))
-    | none, none, some _ => (none, (x.tail, y.tail, c))
+/--
+An input token is selected based on the value of the incoming select signal, and propagated to the single output. Only the condition value, the selected input, and the output will be transacted.
+
+
+Informally, the semantics are as follows:
+- If there is no condition, then wait for a condition.
+- If there is a condition, then try to produce output from the selected channel, leaving the other channel untouched.
+- If the selected channel has a value, return it.
+- If not, pull more from the selected channel, leaving the condition and the unselected channel unchanged.
+
+-/
+def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
+  Stream.corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c)
+  fun ⟨x, y, c⟩ =>
+    match (c 0) with
+    | none => (none, x, y, c.tail) -- wait on 'c'.
+    | some 1#1 =>
+      match (x 0) with
+      | none => (none, x.tail, y, c) -- have 'c', wait on 'x'.
+      | some _ => (some (), x.tail, y, c.tail) -- consume 'c' and 'x'.
+    | some 0#1 =>
+      match (y 0) with
+      | none => (none, x, y.tail, c) -- hace 'c', wait on 'y'.
+      | some _ => (some (), x, y.tail, c.tail) -- consume 'c' and 'y'.
 
 def sink (x : TokenStream) : TokenStream :=
   Stream.corec (β := TokenStream) x fun x => (none, x.tail)
@@ -89,31 +114,34 @@ def source : TokenStream :=
 
 end DCOp
 
+end CIRCTStream
+
 namespace MLIR2DC
 
 section Dialect
 
-inductive Ty2
-  | int : Ty2
-  | bool : Ty2
-deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 inductive Ty
 | tokenstream : Ty
 | tokenstream2 : Ty
-| valuestream (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
-| valuestream2 (Ty2 : Ty2) : Ty -- A stream of values of type `Ty2`.
-| valuetokenstream (Ty2 : Ty2) : Ty -- A product of streams of values of type `Ty2`.
+| valuestream (w : Nat) : Ty -- A stream of BitVec w
+| valuestream2 (w : Nat) : Ty -- A stream of BitVec w
+| valuetokenstream (w : Nat) : Ty -- A product of streams of BitVec wvariadicvaluevokenvstream
+| variadicvaluetokenstream (w : Nat) : Ty -- variadicvaluevokenvstream
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 instance : ToString Ty where
   toString t := repr t |>.pretty
-  
+
 inductive Op
 | fst
 | snd
-| fstVal (t : Ty2)
-| sndVal (t : Ty2)
+| pair (w : Nat)
+| fstVal (w : Nat)
+| sndVal (w : Nat)
+| fstVal' (w : Nat)
+| sndVal' (w : Nat)
+| tokVal' (w : Nat)
 | merge
 | branch
 | fork
@@ -121,8 +149,10 @@ inductive Op
 | select
 | sink
 | source
-| pack (t : Ty2)
-| unpack (t : Ty2)
+| pack (w : Nat)
+| pack2 (w : Nat)
+| unpack (w : Nat)
+| unpack2 (w : Nat)
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 abbrev DC : Dialect where
@@ -132,53 +162,56 @@ abbrev DC : Dialect where
 def_signature for DC where
   | .fst => (Ty.tokenstream2) → (Ty.tokenstream)
   | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
+  | .fstVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
   | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
+  | .pair w => (Ty.valuestream w, Ty.valuestream w) → Ty.valuestream2 w
   | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
-  | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream Ty2.bool
-  | .branch => (Ty.valuestream Ty2.bool) → Ty.tokenstream2
+  | .sndVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
+  | .tokVal' t => (Ty.variadicvaluetokenstream t) → Ty.tokenstream
+  | .merge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuestream 1
+  | .branch => (Ty.valuestream 1) → Ty.tokenstream2
   | .fork => (Ty.tokenstream) → Ty.tokenstream2
   | .join => (Ty.tokenstream, Ty.tokenstream) → Ty.tokenstream
-  | .select => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream Ty2.bool) → Ty.tokenstream
+  | .select => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream 1) → Ty.tokenstream
   | .sink => (Ty.tokenstream) → Ty.tokenstream
   | .source => () → Ty.tokenstream
   | .pack t => (Ty.valuestream t, Ty.tokenstream) → Ty.valuestream t
+  | .pack2 t => (Ty.variadicvaluetokenstream t) → Ty.valuestream2 t
   | .unpack t => (Ty.valuestream t) → Ty.valuetokenstream t
-
-instance : TyDenote Ty2 where
-toType := fun
-| Ty2.int => Int
-| Ty2.bool => Bool
+  | .unpack2 t => (Ty.valuestream t, Ty.valuestream t) → Ty.variadicvaluetokenstream t
 
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
 | Ty.tokenstream => CIRCTStream.DCOp.TokenStream
 | Ty.tokenstream2 => CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream
-| Ty.valuestream Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2)
-| Ty.valuestream2 Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2) × CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2)
-| Ty.valuetokenstream Ty2 => CIRCTStream.DCOp.ValueStream (TyDenote.toType Ty2) × CIRCTStream.DCOp.TokenStream
+| Ty.valuestream w => CIRCTStream.DCOp.ValueStream (BitVec w)
+| Ty.valuestream2 w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.ValueStream (BitVec w)
+| Ty.valuetokenstream w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.TokenStream
+| Ty.variadicvaluetokenstream w => CIRCTStream.DCOp.VariadicValueStream w × CIRCTStream.DCOp.TokenStream
 
 
 def_denote for DC where
   | .fst => fun s => s.fst
   | .fstVal _ => fun s => s.fst
+  | .fstVal' _ => fun s => s.fst.mapOpt (·[0]?)
   | .snd => fun s => s.snd
+  | .pair _ => fun s₁ s₂ => (s₁, s₂)
   | .sndVal _ => fun s => s.snd
-  | .merge => fun s₁ s₂ => DCOp.merge s₁ s₂
-  | .branch => fun s => DCOp.branch s
-  | .fork => fun s => DCOp.fork s
-  | .join => fun s₁ s₂ => DCOp.join s₁ s₂
-  | .select => fun s₁ s₂ c => DCOp.select s₁ s₂ c
-  | .sink => fun s => DCOp.sink s
-  | .source => fun s => DCOp.source s
-  | .pack _ => fun s₁ s₂ => DCOp.pack s₁ s₂
-  | .unpack _ => fun s => DCOp.unpack s
+  | .sndVal' _ => fun s => s.fst.mapOpt (·[0]?)
+  | .tokVal' _ => fun s => s.snd
+  | .merge => fun s₁ s₂ => CIRCTStream.DCOp.merge s₁ s₂
+  | .branch => fun s => CIRCTStream.DCOp.branch s
+  | .fork => fun s => CIRCTStream.DCOp.fork s
+  | .join => fun s₁ s₂ => CIRCTStream.DCOp.join s₁ s₂
+  | .select => fun s₁ s₂ c => CIRCTStream.DCOp.select s₁ s₂ c
+  | .sink => fun s => CIRCTStream.DCOp.sink s
+  | .source => fun s => CIRCTStream.DCOp.source s
+  | .pack _ => fun s₁ s₂ => CIRCTStream.DCOp.pack s₁ s₂
+  | .pack2 _ => fun s₁ => CIRCTStream.DCOp.pack2 s₁
+  | .unpack _ => fun s => CIRCTStream.DCOp.unpack s
+  | .unpack2 _ => fun s => CIRCTStream.DCOp.unpack2 s
 
 end Dialect
-
-def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
-  | "Int" => return (.int)
-  | "Bool" => return (.bool)
-  | _ => throw .unsupportedType
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
   | MLIR.AST.MLIRType.undefined s => do
@@ -187,12 +220,22 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
       return .tokenstream
     | ["TokenStream2"] =>
       return .tokenstream2
-    | ["ValueStream", r] =>
-      return .valuestream (← mkTy2 r)
-    | ["ValueStream2", r] =>
-      return .valuestream2 (← mkTy2 r)
-    | ["ValueTokenStream", r] =>
-      return .valuetokenstream (← mkTy2 r)
+    | ["ValueStream", w] =>
+      match w.toNat? with
+      | some w' => return .valuestream w'
+      | _ => throw .unsupportedType
+    | ["ValueStream2", w] =>
+      match w.toNat? with
+      | some w' => return .valuestream2 w'
+      | _ => throw .unsupportedType
+    | ["ValueTokenStream", w] =>
+    match w.toNat? with
+      | some w' => return .valuetokenstream w'
+      | _ => throw .unsupportedType
+    | ["VariadicValueTokenStream", w] =>
+    match w.toNat? with
+      | some w' => return .variadicvaluetokenstream w'
+      | _ => throw .unsupportedType
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
@@ -223,6 +266,14 @@ def unpack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) : Expr (DC) Γ .pure 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+def unpack2 {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.variadicvaluetokenstream r) :=
+  Expr.mk
+    (op := .unpack2 r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
 def pack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream r) :=
   Expr.mk
     (op := .pack r)
@@ -231,7 +282,15 @@ def pack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.tokenstre
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def branch {Γ : Ctxt _} (a : Γ.Var (.valuestream .bool)) : Expr (DC) Γ .pure (.tokenstream2) :=
+def pack2 {r} {Γ : Ctxt _} (a : Γ.Var (.variadicvaluetokenstream r)) : Expr (DC) Γ .pure (.valuestream2 r) :=
+  Expr.mk
+    (op := .pack2 r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a  <| .nil)
+    (regArgs := .nil)
+
+def branch {Γ : Ctxt _} (a : Γ.Var (.valuestream 1)) : Expr (DC) Γ .pure (.tokenstream2) :=
   Expr.mk
     (op := .branch)
     (ty_eq := rfl)
@@ -255,7 +314,7 @@ def join {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.toke
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream .bool) :=
+def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream 1) :=
   Expr.mk
     (op := .merge)
     (ty_eq := rfl)
@@ -263,7 +322,7 @@ def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.val
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def select {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) (c : Γ.Var (.valuestream .bool)) : Expr (DC) Γ .pure (.tokenstream) :=
+def select {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) (c : Γ.Var (.valuestream 1)) : Expr (DC) Γ .pure (.tokenstream) :=
   Expr.mk
     (op := .select)
     (ty_eq := rfl)
@@ -295,6 +354,14 @@ def sndVal {r} {Γ : Ctxt _} (a : Γ.Var (.valuetokenstream r))  : Expr (DC) Γ 
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+def pair {r} {Γ : Ctxt _} (a b: Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.valuestream2 r)  :=
+  Expr.mk
+    (op := .pair r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
 def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokenstream)  :=
   Expr.mk
     (op := .snd)
@@ -319,22 +386,27 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .tokenstream2, "DC.fst" => return ⟨_, .tokenstream, fst v₁⟩
       | .tokenstream2, "DC.snd"  => return ⟨_, .tokenstream, snd v₁⟩
       | .valuetokenstream r, "DC.fstVal" => return ⟨_, .valuestream r, fstVal v₁⟩
-      | .valuetokenstream r, "DC.sndVal"  => return ⟨_, .tokenstream, sndVal v₁⟩
+      | .valuetokenstream _, "DC.sndVal"  => return ⟨_, .tokenstream, sndVal v₁⟩
       | .tokenstream, "DC.sink" => return ⟨_, .tokenstream, sink v₁⟩
       | .valuestream r, "DC.unpack"  => return ⟨_, .valuetokenstream r, unpack v₁⟩
       | .tokenstream, "DC.fork"  => return ⟨_, .tokenstream2, fork v₁⟩
-      | .valuestream .bool, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
+      | .valuestream 1, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DC.merge" | op@"DC.join" | op@"DC.pack"  =>
+  | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.pair" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream .bool, merge v₁ v₂⟩
+      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream 1, merge v₁ v₂⟩
       | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
       | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
+      | .valuestream r₁, .valuestream r₂, "DC.pair"  =>
+        if h : r₁ = r₂ then
+          let v₂' : Γ.Var (Ty.valuestream r₁) := Eq.mp (by rw [h]) v₂
+          return ⟨_, .valuestream2 r₁, pair v₁ v₂'⟩
+        else throw <| .generic s!"type mismatch, expected same width for pair, got {r₁} and {r₂}"
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"DC.select" =>
@@ -344,7 +416,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .tokenstream, .tokenstream, .valuestream .bool, "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
+      | .tokenstream, .tokenstream, .valuestream 1, "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
       | _, _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"

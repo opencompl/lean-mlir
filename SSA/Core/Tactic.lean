@@ -10,6 +10,13 @@ import Qq
 import Lean.Meta.KAbstract
 import Lean.Elab.Tactic.ElabTerm
 
+variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m] in
+@[simp_denote] lemma Expr.denote_unfold' {ty} (e : Expr d Γ eff ty) :
+    e.denote V = do
+      let x ← e.denoteOp V
+      return V ::ᵥ x := by
+  rw [Expr.denote_unfold, ← map_eq_pure_bind]
+
 namespace SSA
 
 open Ctxt (Var Valuation DerivedCtxt)
@@ -17,12 +24,12 @@ open Ctxt (Var Valuation DerivedCtxt)
 open Lean Elab Tactic Meta
 
 attribute [simp_denote]
-  Int.ofNat_eq_coe Nat.cast_zero DerivedCtxt.snoc DerivedCtxt.ofCtxt
+  Int.ofNat_eq_coe DerivedCtxt.snoc DerivedCtxt.ofCtxt
   DerivedCtxt.ofCtxt_empty Valuation.snoc_last
   Var.zero_eq_last Var.succ_eq_toSnoc
   Ctxt.empty Ctxt.empty_eq Ctxt.snoc Ctxt.Valuation.nil
   Ctxt.Valuation.snoc_last Ctxt.map
-  Ctxt.Valuation.snoc_eval Ctxt.ofList Ctxt.Valuation.snoc_toSnoc
+  Ctxt.Valuation.snoc_eval Ctxt.Valuation.snoc_toSnoc
   HVector.map HVector.getN HVector.get HVector.toSingle HVector.toPair HVector.toTuple
   DialectDenote.denote Expr.op_mk Expr.args_mk
   DialectMorphism.mapOp DialectMorphism.mapTy List.map Ctxt.snoc List.map
@@ -31,12 +38,17 @@ attribute [simp_denote]
   bind_assoc pairBind
   /- `castPureToEff` -/
   Com.letPure Expr.denote_castPureToEff
+  Expr.denote_castPureToEff
   /- Unfold denotation -/
-  Com.denote_var Com.denote_ret Expr.denote_unfold HVector.denote
+  Com.denote_var Com.denote_ret Expr.denoteOp HVector.denote
+  Expr.op_mk Expr.args_mk Expr.regArgs_mk
+  Expr.op_castPureToEff Expr.args_castPureToEff
   /- Effect massaging -/
   EffectKind.toMonad_pure EffectKind.toMonad_impure
   EffectKind.liftEffect_rfl
   Id.pure_eq Id.bind_eq id_eq
+  pure_bind
+  cast_eq
 
 /-!
 NOTE (Here Be Dragons 🐉):
@@ -88,8 +100,12 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
   let .forallE _name VTy@(mkApp3 (.const ``Ctxt.Valuation _) Ty instTyDenote Γ) body _info := e
     | return .continue
 
-  let some (_, Γelems) := Γ.listLit?
+  let Γlist ← mkFreshExprMVar none
+  unless ← isDefEq Γ (mkApp2 (mkConst ``Ctxt.ofList) Ty Γlist) do
+    return .continue
+  let some (_, Γelems) := (← instantiateMVars Γlist).listLit?
     | return .continue
+
   let Γelems := Γelems.toArray.reverse
   let xsTypes := Γelems.map (mkApp3 (mkConst ``TyDenote.toType) Ty instTyDenote)
   let declInfo := xsTypes.mapIdx fun i ty =>
@@ -134,7 +150,11 @@ macro "simp_peephole" loc:(location)? : tactic =>
       | skip
 
       -- Then, we simplify with the `simp_denote` simpset
-      simp (config := {failIfUnchanged := false}) only [simp_denote] $[$loc]?
+      simp (config := {failIfUnchanged := false}) only
+        [Expr.denote_castPureToEff, simp_denote] $[$loc]?
+      -- ^^^^^^^^^^^^^^^^^^^^^^^^^
+      -- `denote_castPureToEff` is already part of the simp_denote simpset
+      -- Still, omitting it here somehow causes motive-related errors.
   ))
 
 /-

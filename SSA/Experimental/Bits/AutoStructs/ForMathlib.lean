@@ -8,6 +8,7 @@ set_option grind.warning false
 
 open Set
 open Mathlib
+open Rel
 
 @[simp]
 lemma List.Vector.append_get_lt {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
@@ -656,22 +657,22 @@ lemma proj_accepts (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
 /- Simulations -/
 
 structure _root_.Rel.set_eq (R : Rel α β) (A : Set α) (B : Set β) where
-  fwd : a ∈ A → ∃ b ∈ B, R a b
-  bwd : b ∈ B → ∃ a ∈ A, R a b
+  fwd : a ∈ A → ∃ b ∈ B, a ~[R] b
+  bwd : b ∈ B → ∃ a ∈ A, a ~[R] b
 
 theorem _root_.Rel.set_eq_symm {R : Rel α β} (h : R.set_eq A B) : R.inv.set_eq B A := by
-  rcases h with ⟨h1, h2⟩; constructor <;> simp_all [Rel.inv, flip]
+  rcases h with ⟨h1, h2⟩; constructor <;> simp_all [Rel.inv]
 
 structure Bisimul (R : Rel σ ς) (M₁ : NFA α σ) (M₂ : NFA α ς) where
-  accept : R q₁ q₂ → (q₁ ∈ M₁.accept ↔ q₂ ∈ M₂.accept)
+  accept : q₁ ~[R] q₂ → (q₁ ∈ M₁.accept ↔ q₂ ∈ M₂.accept)
   start : R.set_eq M₁.start M₂.start
-  trans_match₁ : R q₁ q₂ → q₁' ∈ M₁.step q₁ a → ∃ q₂', q₂' ∈ M₂.step q₂ a ∧ R q₁' q₂'
-  trans_match₂ : R q₁ q₂ → q₂' ∈ M₂.step q₂ a → ∃ q₁', q₁' ∈ M₁.step q₁ a ∧ R q₁' q₂'
+  trans_match₁ : q₁ ~[R] q₂ → q₁' ∈ M₁.step q₁ a → ∃ q₂', q₂' ∈ M₂.step q₂ a ∧ q₁' ~[R] q₂'
+  trans_match₂ : q₁ ~[R] q₂ → q₂' ∈ M₂.step q₂ a → ∃ q₁', q₁' ∈ M₁.step q₁ a ∧ q₁' ~[R] q₂'
 
 def Bisim (M₁ : NFA α σ) (M₂ : NFA α ς) := ∃ R, M₁.Bisimul R M₂
 
 theorem Bisimul.symm (hsim : Bisimul R M₁ M₂) : Bisimul R.inv M₂ M₁ := by
-  rcases hsim with ⟨h1, h2, h3, h4⟩; constructor <;> simp_all [Rel.inv, flip]
+  rcases hsim with ⟨h1, h2, h3, h4⟩; constructor <;> simp_all [Rel.inv]
   · intros; symm; apply h1; assumption
   · apply R.set_eq_symm; assumption
   · intros; apply h4 <;> assumption

@@ -126,7 +126,7 @@ simproc↓ [bv_automata_preprocess] shiftLeft_break_down ((BitVec.ofNat _ _) * (
     else
       mkConst ``BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one
     let eqProof := mkAppN thmName
-      #[_w, x, mkNatLit <| Nat.div2 kVal, mkNatLit kVal,  (← mkEqRefl k)]
+      #[_w, x, mkNatLit <| kVal/2, mkNatLit kVal,  (← mkEqRefl k)]
     return .visit { proof? := eqProof, expr := ← getEqRhs eqProof }
   | _ => return .continue
 

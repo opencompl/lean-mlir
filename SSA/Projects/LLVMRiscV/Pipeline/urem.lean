@@ -8,7 +8,7 @@ open LLVMRiscV
 
 /-! # UREM  -/
 @[simp_denote]
-def llvm_urem: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def llvm_urem: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%x: i64, %y: i64 ):
       %1 = llvm.urem  %x, %y : i64
@@ -16,7 +16,7 @@ def llvm_urem: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
   }]
 
 @[simp_denote]
-def urem_riscv: Com  LLVMPlusRiscV [.llvm (.bitvec 64), .llvm (.bitvec 64)]
+def urem_riscv: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
     .pure (.llvm (.bitvec 64)) := [LV| {
     ^entry (%reg1: i64, %reg2: i64):
       %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)

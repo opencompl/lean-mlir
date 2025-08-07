@@ -4,8 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 /-
 This file implements common subexpression elimination for our SSA based IR.
 -/
-import SSA.Core.Framework
+import SSA.Core
 import SSA.Projects.DCE.DCE
+
+/-! ## Prelims  -/
+
+namespace Ctxt
+variable {Ty} [TyDenote Ty]
+
+/-- Remap the last variable in a context, to get a new context without the last variable -/
+def Hom.remapLast {α : Ty} (Γ : Ctxt Ty) (var : Γ.Var α) :
+  Ctxt.Hom (Γ.snoc α) Γ := fun ty' var' => by
+    cases var' using Ctxt.Var.casesOn
+    case toSnoc var' => exact var'
+    case last => exact var
+
+@[simp] lemma Valuation.comap_remapList {Γ : Ctxt Ty} (V : Valuation Γ) (v : Γ.Var t) :
+    V.comap (.remapLast _ v) = V.snoc (V v) := by
+  funext t v; cases v <;> simp [Hom.remapLast]
+
+end Ctxt
 
 /- Decidable Equality for Coms. -/
 section DecEqCom
@@ -16,6 +34,20 @@ variable [DialectSignature d]
 def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) := inferInstance
 
 
+/-- denoting a `var` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
+@[simp]
+theorem Lets.denote_var_pure [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
+  {Γstart Γ : Ctxt d.Ty}
+  {lets : Lets d Γstart .pure Γ}
+  (e : Expr d Γ .pure α)
+  (V : Ctxt.Valuation Γstart) :
+  Lets.denote (Lets.var lets e) V =
+    (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denoteOp e (Lets.denote lets V))) := by
+  simp [Expr.denote_unfold]; rfl
+
+/-! # CSE  -/
+
+variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 namespace CSE
 
 /-- State stored by CSE pass. -/
@@ -28,75 +60,41 @@ structure State (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenot
   /-- map an Expr to its canonical variable -/
   expr2cache : (α : d.Ty) → (e : Expr d Γ .pure α) →
     Option ({ v : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v =
-    e.denote (lets.denote V) })
-
-variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
+    e.denoteOp (lets.denote V) })
 
 /-- The empty CSEing state. -/
 def State.empty (lets : Lets d Γstart .pure Γ) : State d lets where
   var2var := fun v => ⟨v, by intros V; rfl⟩
   expr2cache := fun α e => .none
 
+variable [LawfulMonad d.m]
+
 def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
- {Γ : Ctxt d.Ty} {α : d.Ty}
- {lets : Lets d Γstart .pure Γ}
- (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.var lets e) :=
- {
-  var2var := fun v => by
+    {Γ : Ctxt d.Ty} {α : d.Ty}
+    {lets : Lets d Γstart .pure Γ}
+    (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.var lets e) where
+  var2var v := by
     apply Subtype.mk
     intros V
     rfl
-  expr2cache := fun β eneedle =>
-    let eneedleΓ? := DCE.Expr.deleteVar? (DEL := Deleted.deleteSnoc Γ α) (eneedle)
-    match eneedleΓ? with
-    | .none => .none -- this expression actually uses β in some nontrivial way, we're fucked,
-    | .some ⟨eneedleΓ, heneedleΓ⟩ =>
-        match s.expr2cache _ eneedleΓ with /- find in cache -/
-        | .some ⟨v', hv'⟩ =>
-          .some ⟨v', by {
-            intros V
-            rw [heneedleΓ]
-            simp only [Lets.denote, EffectKind.toMonad_pure, Id.pure_eq', Id.bind_eq',
-              Ctxt.Valuation.snoc_toSnoc]
-            rw [hv' V]
-            congr
-          }⟩
-        | .none => /- not in cache, check if new expr. -/
-          match decEq α β with
-          | .isFalse _neq => .none
-          | .isTrue hβ =>
-            match (inferInstance : Decidable ((hβ ▸ eneedleΓ) = e)) with
-            | .isTrue exprEq => /- same expression, return the variable. -/
-                .some ⟨hβ ▸ Ctxt.Var.last Γ α, by {
-                  intros V
-                  subst hβ
-                  subst exprEq
-                  simp only [Lets.denote_var_last_pure]
-                  simp only [heneedleΓ]
-                  congr
-                }⟩
-            | .isFalse _neq => .none
-            -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
- }
-
-/-- denoting a `var` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
-@[simp]
-theorem Lets.denote_var
-  {Γstart Γ : Ctxt d.Ty}
-  {lets : Lets d Γstart .pure Γ}
-  (e : Expr d Γ .pure α)
-  (V : Ctxt.Valuation Γstart) :
-  Lets.denote (Lets.var lets e) V =
-    (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
-  simp [Lets.denote]
-  rfl
-
-/-- Remap the last variable in a context, to get a new context without the last variable -/
-def _root_.Ctxt.Hom.remapLast [TyDenote d.Ty]  {α : d.Ty} (Γ : Ctxt d.Ty) (var : Γ.Var α) :
-  Ctxt.Hom (Γ.snoc α) Γ := fun ty' var' => by
-    cases var' using Ctxt.Var.casesOn
-    case toSnoc var' => exact var'
-    case last => exact var
+  expr2cache β eneedle := do
+    let ⟨eneedleΓ, heneedleΓ⟩ ← DCE.Expr.deleteVar? (DEL := Deleted.deleteSnoc Γ α) (eneedle)
+    -- If `eneedleΓ` is none, this expression actually uses β in some nontrivial way,
+    -- and there's nothing we can really do
+    match s.expr2cache _ eneedleΓ with /- find in cache -/
+    | .some ⟨v', hv'⟩ => .some ⟨v', by
+        simp [heneedleΓ, hv']
+      ⟩
+    | .none => /- not in cache, check if new expr. -/
+      if hβ : α = β then
+        if exprEq : (hβ ▸ eneedleΓ) = e then
+          some ⟨hβ ▸ Ctxt.Var.last Γ α, by
+            subst hβ; simp [heneedleΓ, exprEq]
+          ⟩
+        else
+          none
+      else
+        none
 
 section RemapVar
 def VarRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
@@ -156,15 +154,15 @@ def ExprRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
     ((lets.denote Vstart).comap hom) vnew)
   (e' : Expr d Γ' .pure β) :
   { e : Expr d Γ .pure β  // ∀ (Vstart : Ctxt.Valuation Γstart),
-    e.denote (lets.denote Vstart) = e'.denote ((lets.denote Vstart).comap hom) } :=
+    e.denoteOp (lets.denote Vstart) = e'.denoteOp ((lets.denote Vstart).comap hom) } :=
     match e' with
     | ⟨op, ty_eq, eff_le, args, regArgs⟩ =>
       let ⟨args', hargs'⟩ := arglistRemapVar lets hom vold vnew VNEW args
       ⟨.mk op ty_eq eff_le args' regArgs, by
         intros Vstart
         subst ty_eq
-        simp only [EffectKind.toMonad_pure, Expr.denote, EffectKind.liftEffect_pure, cast_inj]
-        rw [hargs']
+        simp [Expr.denoteOp, hargs']
+        rfl
       ⟩
     -- TODO: extend to Com.
 end RemapVar
@@ -185,7 +183,7 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
  {lets : Lets d Γstart .pure Γ}
  (s : State d lets) (enew : Expr d Γ .pure α) (eold : Expr d Γ .pure α) (henew :
     ∀ (V : Γstart.Valuation), enew.denote (lets.denote V) = eold.denote (lets.denote V))
-  (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) =
+  (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denoteOp (lets.denote V) =
     lets.denote V vold) :
   State d (Lets.var lets enew) := {
     var2var := fun v => by
@@ -194,15 +192,12 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
         let ⟨v', hv'⟩ := s.var2var v
         apply (Subtype.mk v'.toSnoc)
         intros V
-        simp only [Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
+        simp only [Lets.denote_var_pure, Ctxt.Valuation.snoc_toSnoc]
         rw [hv']
 
       case last => -- new variable, return the CSE'd variable.
-        apply (Subtype.mk vold.toSnoc)
-        intros V
-        simp only [Lets.denote_var_last_pure, Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
-        rw [← hv]
-        rw [henew]
+        apply Subtype.mk vold.toSnoc
+        simp_all [Expr.denote_unfold]
     expr2cache := fun β eneedle =>
       let homRemap := Ctxt.Hom.remapLast Γ vold
       let lastVar := (Ctxt.Var.last Γ α)
@@ -213,23 +208,9 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
       })  eneedle
       match s.expr2cache β eneedle' with
       | .none => .none
-      | .some ⟨e', he'⟩ =>
-        .some ⟨e', by {
-          intros V
-          simp only [Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
-          rw [he']
-          rw [heneedle']
-          congr
-          funext ty var
-          cases var using Ctxt.Var.casesOn
-          case e_Γv.h.h.toSnoc v =>
-            simp (config := {zetaDelta := true}) [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
-          case e_Γv.h.h.last =>
-            simp (config := { zetaDelta := true }) only [Ctxt.Valuation.comap, Ctxt.Hom.remapLast,
-              Ctxt.Var.casesOn_last, Ctxt.Valuation.snoc_last]
-            rw [henew]
-            rw [hv]
-        }⟩
+      | .some ⟨e', he'⟩ => .some ⟨e', by
+          simp_all [Expr.denote_unfold, homRemap]
+        ⟩
 }
 
 /-- Replace the variables in `as` with new variables that have the same valuation -/
@@ -320,7 +301,7 @@ def State.cseExpr
  {e' : Expr d Γ .pure α //
   ∀ (V : Γstart.Valuation), e'.denote (lets.denote V) =
     e.denote (lets.denote V) } × Option ({ v' : Γ.Var α // ∀ (V : Γstart.Valuation),
-      (lets.denote V) v' = e.denote (lets.denote V) }) :=
+      (lets.denote V) v' = e.denoteOp (lets.denote V) }) :=
   match E : e with
   | .mk op ty_eq eff_le args regArgs =>
       let ⟨args', hargs'⟩ := s.cseArgList args
@@ -329,12 +310,11 @@ def State.cseExpr
       let e' : Expr d Γ .pure α  := .mk op ty_eq eff_le args' regArgs'
       ⟨⟨e', by {
         intros V
-        simp (config := { zetaDelta := true }) only [EffectKind.toMonad_pure, Expr.denote_unfold,
-          EffectKind.liftEffect_pure, eq_rec_inj, cast_inj]
-        congr 1
-        · unfold Ctxt.Valuation.eval at hargs'
-          rw [hargs']
-        · rw [hregArgs']
+        simp +zetaDelta only [Expr.denote_unfold, Ctxt.Valuation.snoc_map_inj]
+        apply Expr.denoteOp_eq_denoteOp_of
+        · simpa [Ctxt.Valuation.eval] using (hargs' _).symm
+        · simpa using hregArgs'.symm
+        · rfl
       }⟩,
         match s.expr2cache _ e with
         | .some ⟨v', hv'⟩ =>
@@ -366,7 +346,7 @@ def State.cseCom {α : d.Ty}
         ⟨.var e' body',  by
             intros VΓ
             simp only [EffectKind.toMonad_pure, Com.denote]
-            simp only [EffectKind.toMonad_pure, Lets.denote_var] at hbody' ⊢
+            simp only [EffectKind.toMonad_pure, Lets.denote_var, Id.bind_eq'] at hbody' ⊢
             rw [← hbody']
             rw [he']⟩
       | .some ⟨v', hv'⟩ =>
@@ -379,7 +359,7 @@ def State.cseCom {α : d.Ty}
         , by
             intros V
             simp only [EffectKind.toMonad_pure, Com.denote]
-            simp only [EffectKind.toMonad_pure, Lets.denote_var] at hbody' ⊢
+            simp only [EffectKind.toMonad_pure, Lets.denote_var, Id.bind_eq'] at hbody' ⊢
             specialize (hbody' V)
             specialize (he' V)
             rw [he'] at hbody'
