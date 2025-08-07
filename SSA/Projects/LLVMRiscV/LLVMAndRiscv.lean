@@ -109,7 +109,7 @@ instance : DialectDenote (LLVMPlusRiscV) where
   | .castLLVM _,
     (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec _)]), _ =>
     let toCast : PoisonOr (BitVec _) :=
-      elemToCast.getN 0 (by simp [DialectSignature.sig, signature])
+      elemToCast.getN 0 (by simp)
     castLLVMToriscv toCast
 
 @[simp_denote]
@@ -153,7 +153,7 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
     | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
         let args' : HVector (Ctxt.Var Γ) (.llvm <$> DialectSignature.sig op1) ←
           args1.mapM' fun t v => do
-            match h : Γ.get? v.val with
+            match h : Γ[v.val]? with
             | some ty' => do
               match hty : ty' with
               | .riscv _ => /- This is impossible, because mixing LLVM and RiscV variables would've already
@@ -189,53 +189,17 @@ def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) 
     | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
         let args' : HVector (Ctxt.Var Γ) (.riscv <$> DialectSignature.sig op1) ←
           args1.mapM' fun t v => do
-            match h : Γ.get ⟨v.val, by
-              have hv := v.prop
-              have hcontra: List.length Γ ≤ v.val → Γ.get? v.val  = none := by simp [List.get?]
-              have ll: (ctxtTransformToRiscV Γ).length = Γ.length := by
-                  unfold ctxtTransformToRiscV Ctxt.map
-                  conv =>
-                  rw [List.length_map]
-              rw [← ll]
-              by_contra x
-              simp only [RISCV64.RV64, Ctxt.get?.eq_1, gt_iff_lt, not_lt] at x
-              rw [← ll] at hcontra
-              apply hcontra at x
-              have hh : Γ.get? v.val = none → (ctxtTransformToRiscV Γ).get? v.val = none := by
-                simp only [LLVMPlusRiscV, Ctxt.get?, RISCV64.RV64, Ctxt.get?.eq_1,
-                  getElem?_eq_none_iff, not_lt]
-                intros x
-                rw [ll]
-                exact x
-              apply hh at x
-              rw [x] at hv
-              contradiction
-            ⟩ with
+            let i := v.toFin.cast <| by
+              simp [ctxtTransformToRiscV]; rfl
+
+            match h : Γ.toList.get i with
             | .llvm _ => /- This is impossible, because mixing LLVM and RiscV variables would've already been
                           caught by RISC-V parserbeen caught by the RISC-V parser before invoking this function. -/
                 throw <| .generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to LLVM variable.
-                Should have benn caught by the RISC-V parser."
+                Should have been caught by the RISC-V parser."
             | .riscv originalRISCVTy =>
                 if hty' : originalRISCVTy = t then
-                  return ⟨v.val, by
-                  rw [← hty']
-                  simp only [LLVMPlusRiscV, Ctxt.get?,
-                    RISCV64.RV64, List.getElem?_eq_some_iff]
-                  simp only [LLVMPlusRiscV, RISCV64.RV64,
-                     Ctxt.get?, List.get_eq_getElem] at h
-                  rw [← Option.some.injEq] at h
-                  simp only [Option.some.injEq] at h
-                  have h1 := v.2
-                  simp only [RISCV64.RV64, Ctxt.get?] at h1
-                  rw [← List.get?_eq_getElem? ] at h1
-                  have ⟨bound, val⟩ := List.get?_eq_some_iff.mp h1
-                  have ll: (ctxtTransformToRiscV Γ).length = Γ.length := by
-                    unfold ctxtTransformToRiscV Ctxt.map
-                    conv =>
-                      rw [List.length_map]
-                  rw [ll] at bound
-                  use bound
-                  ⟩
+                  return ⟨i, by rcases Γ; simp_all⟩
                 else
                   throw <|.generic s!"INTERNAL ERROR: This case is impossible, RISCV expression is pointing to an incorrect bitwidth LLVM argument."
         return Expr.mk
@@ -292,7 +256,7 @@ instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
 @[simp_denote]
 def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) :
      MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.llvm ty)) :=
-  if h : Γ.get? v.1 = some (LLVMRiscV.Ty.llvm ty) then
+  if h : Γ[v.1]? = some (LLVMRiscV.Ty.llvm ty) then
    return ⟨_ , h⟩
   else
     throw <| .generic s!"TransformVarLLVM FAILED: Tried to convert a variable of wrong type."
@@ -300,7 +264,7 @@ def transformVarLLVM (v : Ctxt.Var (ctxtTransformToLLVM Γ) ty) :
 @[simp_denote]
 def transformVarRISCV (v : Ctxt.Var (ctxtTransformToRiscV Γ) ty) :
     MLIR.AST.ReaderM LLVMPlusRiscV (Ctxt.Var Γ (LLVMRiscV.Ty.riscv ty)) :=
-  if h : Γ.get? v.1 = some (LLVMRiscV.Ty.riscv ty) then
+  if h : Γ[v.1]? = some (LLVMRiscV.Ty.riscv ty) then
    return ⟨_ , h⟩
   else
      throw <| .generic s!"TransformVarRISCV FAILED: Tried to convert a variable of wrong type."

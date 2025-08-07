@@ -3060,6 +3060,9 @@ def alive_275_tgt  :=
   %v3 = llvm.sub %X, %v1 : i5
   llvm.return %v3 : i5
 }]
+
+-- attribute [simp_denote] bind_pure bind_pure_comp map_pure pure_bind
+
 theorem alive_275   : alive_275_src ⊑ alive_275_tgt := by
   unfold alive_275_src alive_275_tgt
   simp_peephole

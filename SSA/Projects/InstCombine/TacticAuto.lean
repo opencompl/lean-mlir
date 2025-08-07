@@ -183,7 +183,7 @@ Benchmark the automata algorithms to understand their pros and cons. Produce out
 macro "bv_bench_automata": tactic =>
   `(tactic|
       (
-        simp (config := { failIfUnchanged := false }) only
+        try simp (config := { failIfUnchanged := false }) only
           [BitVec.ofBool_or_ofBool, BitVec.ofBool_and_ofBool,
            BitVec.ofBool_xor_ofBool, BitVec.ofBool_eq_iff_eq,
            BitVec.ofNat_eq_ofNat, BitVec.two_mul]

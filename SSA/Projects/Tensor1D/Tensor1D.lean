@@ -38,6 +38,8 @@ def Tensor1d.empty [Inhabited α] : Tensor1d α where
 -- [0..[left..left+len)..size)
 -- if the (left + len) is larger than size, then we don't have a valid extract,
 -- so we return a size zero tensor.
+
+set_option warn.sorry false in
 def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
   (left: Index) (len: Index) : Tensor1d α :=
   let right := if (left + len) < t.size then left + len else 0
@@ -345,7 +347,7 @@ def Op.sig : Op → List Ty
 
 @[reducible, simp]
 def Op.regSig : Op → RegionSignature Ty
-  | .map1d => [([.int], .int)]
+  | .map1d => [([Ty.int], .int)]
   | _ => []
 
 set_option linter.dupNamespace false in

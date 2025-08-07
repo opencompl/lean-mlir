@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 
+set_option warn.sorry false
 set_option linter.style.nameCheck false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false

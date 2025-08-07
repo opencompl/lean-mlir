@@ -65,6 +65,7 @@ def extract_theorems(raw : str) -> List[Theorem]:
     out = []
     raw = raw.strip()
     ss = re.findall(r'(theorem.*?sorry)', raw, re.DOTALL)
+    # TODO: add goal index? but that's also there in the theorem name.
     for s in ss:
         # grab the theorem name.
         thm_name = re.search(r'\btheorem\s+([\w._]+)', s).group(1)

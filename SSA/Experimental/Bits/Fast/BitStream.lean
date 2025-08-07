@@ -269,7 +269,7 @@ section BitwiseOps
 instance : Complement BitStream := ⟨map Bool.not⟩
 instance : AndOp BitStream := ⟨map₂ Bool.and⟩
 instance :  OrOp BitStream := ⟨map₂ Bool.or⟩
-instance :   Xor BitStream := ⟨map₂ Bool.xor⟩
+instance :   XorOp BitStream := ⟨map₂ Bool.xor⟩
 
 /-- Shift left by `k` bits, giving a new bitstream whose first `k` bits are zero. -/
 def shiftLeft (x : BitStream) (k : Nat) : BitStream :=
@@ -1107,3 +1107,17 @@ theorem toBitVec_concat(a : BitStream) :
       | 0 => 0#0
       | w + 1 => (a.toBitVec w).concat b  := by
   rcases w with rfl | w <;> simp
+
+section InverseLimit
+
+def Bitstream.ofBitvecSequence (bs : (w : ℕ) → BitVec w) : BitStream :=
+    fun i => (bs (i + 1)).getLsbD i
+
+/--
+A bitvec sequence 'bs' is good, if it produces a sequence of bitvectors b₁, b₂, ..,
+where the truncations agree with each other.
+-/
+def Bitstream.goodBitvecSequence (bs : (w : ℕ) → BitVec w) : Prop :=
+  ∀ wsmall wlarge, wsmall ≤ wlarge →
+    (bs wlarge).setWidth wsmall = bs wsmall
+end InverseLimit

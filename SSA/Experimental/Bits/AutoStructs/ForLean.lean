@@ -112,7 +112,7 @@ theorem Std.HashMap.insert_keys_perm_new [BEq K] [LawfulBEq K] [Hashable K] [Law
   apply hashMap_missing
 
 instance subtypeBEq [BEq α]  (P : α → Prop) : BEq { x // P x } := { beq := fun x y => x.val == y.val }
-instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := by constructor <;> simp [subtypeBEq]
+instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := by constructor ; simp [subtypeBEq]
 
 -- is it sound? maybe we somehow need to know which instance for BEq was used to prevent some
 -- weird stuff...
