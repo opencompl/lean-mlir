@@ -52,10 +52,35 @@ jobs:
         continue-on-error: true
         run: |
           lake -R build
-
+          
       - name: Ensure InstCombine goals are up-to-date
         run: |
           bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
+
+      - name : Run Width Independent Test
+        continue-on-error: true
+        run: |
+          (cd artifacts/oopsla25-width-indep/; ./test_experiments.sh)
+
+      - uses: actions/github-script@v6
+        continue-on-error: true
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs')
+            let out = ""
+            out += '### InstCombine Test Run Results\n\n'
+            const body = fs.readFileSync('bv-evaluation/automata-automata-circuit-cactus-plot-data.tex', 'utf8')
+            out += '```latex\n' + body + '\n```'
+            out += '### MBA Test Run Results\n\n'
+            const body = fs.readFileSync('SSA/Experimental/Bits/Fast/Dataset2/dataset2-cactus-plot-data.tex', 'utf8')
+            out += '```latex\n' + body + '\n```'
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: out
+            })
 
       - name: Run LLVM
         continue-on-error: true
