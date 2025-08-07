@@ -15,6 +15,7 @@ import Mathlib.Data.Finset.Piecewise
 set_option deprecated.oldSectionVars true
 
 theorem Id.pure_eq' (a : α) : (pure a : Id α) = a := rfl
+theorem Id.map_eq' (x : Id α) (f : α → β) : f <$> x = f x := rfl
 theorem Id.bind_eq' (x : Id α) (f : α → id β) : x >>= f = f x := rfl
 
 open Ctxt (Var VarSet Valuation Hom)
