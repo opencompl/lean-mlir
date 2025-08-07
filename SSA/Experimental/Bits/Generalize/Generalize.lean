@@ -1,3 +1,7 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Timi Adeniran, Siddharth Bhat
+-/
 import Lean.Elab.Term
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
@@ -17,25 +21,11 @@ namespace Generalize
 initialize Lean.registerTraceClass `Generalize
 
 inductive SubstitutionValue (genExpr : Nat → Type) where
-| bvExpr {w} (bvExpr : genExpr w)
+| genExpr {w} (genExpr : genExpr w)
 | packedBV  (bv: BVExpr.PackedBitVec)
 
 instance : Inhabited (SubstitutionValue genExpr) where
   default := .packedBV (BVExpr.PackedBitVec.mk (w := 0) 0#0)
-
-
-class HydrableInstances (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  beqLogical : BEq genLogicalExpr := by infer_instance
-  messageDataLogical : ToMessageData genLogicalExpr := by infer_instance
-  hashableLogical : Hashable genLogicalExpr := by infer_instance
-  hashableGenExpr : ∀ (n : Nat), Hashable (genExpr n) := by infer_instance
-  beqGenExpr : ∀ (n : Nat), BEq (genExpr n) := by infer_instance
-
-attribute [instance] HydrableInstances.beqLogical
-attribute [instance] HydrableInstances.messageDataLogical
-attribute [instance] HydrableInstances.hashableLogical
-attribute [instance] HydrableInstances.hashableGenExpr
-attribute [instance] HydrableInstances.beqGenExpr
 
 instance : BEq BVExpr.PackedBitVec where
   beq a b := if h : a.w = b.w then
@@ -60,6 +50,18 @@ instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
 instance : ToString FVarId where
   toString f := s! "{f.name}"
 
+class HydrableInstances (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  beqLogical : BEq genLogicalExpr := by infer_instance
+  messageDataLogical : ToMessageData genLogicalExpr := by infer_instance
+  hashableLogical : Hashable genLogicalExpr := by infer_instance
+  hashableGenExpr : ∀ (n : Nat), Hashable (genExpr n) := by infer_instance
+  beqGenExpr : ∀ (n : Nat), BEq (genExpr n) := by infer_instance
+
+attribute [instance] HydrableInstances.beqLogical
+attribute [instance] HydrableInstances.messageDataLogical
+attribute [instance] HydrableInstances.hashableLogical
+attribute [instance] HydrableInstances.hashableGenExpr
+attribute [instance] HydrableInstances.beqGenExpr
 
 structure ParsedInputState (parsedExprWrapper : Type) where
   maxFreeVarId : Nat
@@ -105,7 +107,6 @@ class HydrableSubstitute (genLogicalExpr : Type) (genExpr : Nat → Type) where
 class HydrablePackedBitvecToSubstitutionValue (genLogicalExpr : Type) (genExpr : Nat → Type) where
   packedBitVecToSubstitutionValue : (Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (SubstitutionValue genExpr)
 
-
 structure GeneralizerState
   (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
   [HydrableInstances genLogicalExpr genExpr]
@@ -146,24 +147,14 @@ class HydrableBooleanAlgebra (genLogicalExpr : Type) (genExpr : Nat → Type) wh
   False : genLogicalExpr
 
 class HydrableAddConstraints (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  addConstraints : genLogicalExpr → List genLogicalExpr → Gate → genLogicalExpr
+  addConstraints : (expr: genLogicalExpr) → (constraints: List genLogicalExpr) → (gate: Gate) → genLogicalExpr
 
 class HydrableGetIdentityAndAbsorptionConstraints (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getIdentityAndAbsorptionConstraints : genLogicalExpr →  Std.HashSet Nat → List genLogicalExpr
+  getIdentityAndAbsorptionConstraints : (expr: genLogicalExpr) →  (symVars: Std.HashSet Nat) → List genLogicalExpr
 
 class HydrableGenExpr (genLogicalExpr : Type) (genExpr : Nat → Type) where
   genExprVar : Nat → genExpr n
   genExprConst : BitVec n → genExpr n
-
-
-class HydrableGeneratePreconditions (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
-    HydrableInstances genLogicalExpr genExpr
-    where
- generatePreconditions :
-    (bvLogicalExpr: genLogicalExpr) →
-    (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) →
-    (_numConjunctions: Nat) →
-    GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr (Option genLogicalExpr)
 
 class HydrableChangeExprWidth (genExpr : Nat → Type)
     where
@@ -196,13 +187,10 @@ class HydrableSolve (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalEx
   HydrableGetLogicalExprSize genLogicalExpr,
   HydrableGenLogicalExprToExpr parsedExprWrapper parsedExpr genLogicalExpr genExpr where
 
-
 def solve
 [H : HydrableSolve parsedExprWrapper parsedExpr genLogicalExpr genExpr]
   (bvExpr : genLogicalExpr) : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
-    -- let parsedBVExprState := state.parsedBVLogicalExpr.state
-    -- let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
     let allNames := H.getAllNamesFromParsedLogicalExpr state.parsedLogicalExpr
     let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
@@ -371,7 +359,6 @@ class HydrableGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogic
   HydrableSynthesizeWithNoPrecondition parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrableCheckForPreconditions parsedExprWrapper parsedExpr genLogicalExpr genExpr
   where
-
 
 def generalize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr] : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr  (Option genLogicalExpr) := do
     let state ← get

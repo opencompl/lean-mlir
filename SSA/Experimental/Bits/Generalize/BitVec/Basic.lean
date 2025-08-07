@@ -254,16 +254,9 @@ def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): Ge
       BoolExpr.ite (changeBVLogicalExprWidth constVar target) (changeBVLogicalExprWidth auxVar target) (changeBVLogicalExprWidth op3 target)
   | _ => bvLogicalExpr
 
--- inductive SubstitutionValue where
---     | bvExpr {w} (bvExpr : GenBVExpr w) : SubstitutionValue
---     | packedBV  (bv: BVExpr.PackedBitVec) : SubstitutionValue
-
--- instance : Inhabited SubstitutionValue where
-  -- default := SubstitutionValue.packedBV default
-
 def bvExprToSubstitutionValue (map: Std.HashMap Nat (GenBVExpr w)) : Std.HashMap Nat
   (SubstitutionValue GenBVExpr) :=
-      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.bvExpr item.snd)) map.toList)
+      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd)) map.toList)
 
 def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
@@ -274,7 +267,7 @@ def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (Substit
       if assignment.contains idx then
           let value := assignment[idx]!
           match value with
-          | .bvExpr (w := wbv) bv =>
+          | .genExpr (w := wbv) bv =>
             if h : w = wbv
             then h ▸ bv
             else GenBVExpr.extract 0 w bv
@@ -298,7 +291,6 @@ def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (Substit
         GenBVExpr.extract start len (substituteBVExpr expr assignment)
     | e => e
 
--- (bvLogicalExpr: logicalExpr) (assignment: Std.HashMap Nat SubstitutionValue) : logicalExpr
 
 def substitute  (bvLogicalExpr: GenBVLogicalExpr) (assignment: Std.HashMap Nat (SubstitutionValue GenBVExpr)) :
           GenBVLogicalExpr :=
@@ -457,81 +449,6 @@ def shiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
 
 def arithShiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
   GenBVExpr.arithShiftRight op1 op2
-
-
-partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec)
-      (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr w)) := do
-
-    let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
-        if orig.w < newWidth then
-            if orig.bv < 0 then
-             {bv := orig.bv.signExtend newWidth, w := newWidth}
-            else {bv := orig.bv.zeroExtend newWidth, w := newWidth}
-        else if orig.w > newWidth then
-            {bv := orig.bv.truncate newWidth, w := newWidth}
-        else
-            orig
-
-    match depth with
-      | 0 => return []
-      | _ =>
-            let mut res : List (GenBVExpr w) := []
-
-            for (constId, constVal) in constants.toArray do
-              let newVar := GenBVExpr.var constId
-
-              if constVal == target then
-                res := newVar :: res
-                continue
-
-              if constId == parent then -- Avoid runaway expressions
-                continue
-
-              if target.bv == 0 then
-                res := GenBVExpr.const 0 :: res
-
-              let newTarget := (updatePackedBVWidth target constVal.w)
-              if h : constVal.w = newTarget.w then
-                let targetBv := h ▸ newTarget.bv
-
-                -- ~C = T
-                if BitVec.not constVal.bv == targetBv then
-                  res := GenBVExpr.un BVUnOp.not newVar :: res
-
-                -- C + X = Target; New target = Target - X.
-                let addRes ← deductiveSearch expr constants {bv := targetBv - constVal.bv} (depth-1) constId
-                res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
-
-                -- C - X = Target
-                let subRes ← deductiveSearch expr constants {bv := constVal.bv - targetBv} (depth-1) constId
-                res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
-
-                -- X - C = Target
-                let subRes' ← deductiveSearch expr constants {bv := targetBv + constVal.bv}  (depth-1) constId
-                res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
-
-                -- X * C = Target
-                if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
-                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
-                  res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
-
-                -- C / X = Target
-                if targetBv != 0 && (BitVec.umod constVal.bv targetBv) == 0 then
-                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constVal.bv targetBv} (depth - 1) constId
-                  res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
-
-              else
-                    throwError m! "Width mismatch for expr : {expr} and target: {target}"
-            return res
-
-structure PreconditionSynthesisCacheValue where
-  positiveExampleValues : List BVExpr.PackedBitVec
-  negativeExampleValues : List BVExpr.PackedBitVec
-
-instance : ToString PreconditionSynthesisCacheValue where
-  toString val :=
-    s! "⟨positiveExampleValues := {val.positiveExampleValues}, negativeExampleValues := {val.negativeExampleValues}⟩"
-
 
 def zero (w: Nat) := GenBVExpr.const (BitVec.ofNat w 0)
 def one (w: Nat) := GenBVExpr.const (BitVec.ofNat w 1)
