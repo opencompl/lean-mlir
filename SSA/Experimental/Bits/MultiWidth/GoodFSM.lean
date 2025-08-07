@@ -14,43 +14,122 @@ namespace MultiWidth
 instance : HAnd (FSM α) (FSM α) (FSM α) where
   hAnd := composeBinaryAux' FSM.and
 
+theorem FSM.and_eq (a b : FSM α) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
+
+@[simp]
+theorem FSM.eval_and (a b : FSM α) : (a &&& b).eval env = a.eval env &&& b.eval env := by
+  rw [FSM.and_eq]
+  simp
+
 instance : HOr (FSM α) (FSM α) (FSM α) where
   hOr := composeBinaryAux' FSM.or
+
+theorem FSM.or_eq (a b : FSM α) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
+
+@[simp]
+theorem FSM.eval_or (a b : FSM α) : (a ||| b).eval env = a.eval env ||| b.eval env := by
+  rw [FSM.or_eq]
+  simp
 
 instance : HXor (FSM α) (FSM α) (FSM α) where
   hXor := composeBinaryAux' FSM.xor
 
+theorem FSM.xor_eq (a b : FSM α) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
+
+@[simp]
+theorem FSM.eval_xor (a b : FSM α) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
+  rw [FSM.xor_eq]
+  simp
+
 instance : Complement (FSM α) where
   complement := composeUnaryAux FSM.not
+
+theorem FSM.not_eq (a : FSM α) : (~~~ a) = composeUnaryAux FSM.not a := rfl
+
+@[simp]
+theorem FSM.eval_not (a : FSM α) : (~~~ a).eval env = ~~~ (a.eval env) := by
+  rw [FSM.not_eq]
+  simp
 
 
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
-def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) : (NatFSM wcard tcard w) :=
+def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
+    (NatFSM wcard tcard w) :=
   if h : w.toNat < wcard then
-    { toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩)) }
-  else 
+    { toFsm :=
+      -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
+      (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
+    }
+  else
     { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
+
+def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
+    IsGoodNatFSM (mkWidthFSM wcard tcard (.ofDep w)) where
+  heq := by
+    intros wenv fsmEnv henv
+    induction w
+    case var v =>
+      simp [mkWidthFSM]
+      have ⟨henv⟩ := henv
+      rw [henv]
 
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
 -- if the borrow bit is one, then we know that 'a' is less than 'b'.
--- a: 0 <= b: 0 = 1
--- a: 0 <= b: 1 = 1
--- a: 1 <= b: 0 = 0
--- a: 1 <= b: 1 = 1
-def fsmUltUnary (a : FSM α) (b : FSM α) : FSM α :=
-  a ||| ~~~ b
+-- a ≤ b ↔ b[i] = 0 → a[i] = 0
+-- if b = 1, we are done.
+-- Otherwise, if b=0,then a=0
+
+-- alternatively, a[i] = 1 → b[i] = 1.
+-- if a is high, then b must be high for it to be ≤.
+def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
+  (b ||| ~~~ a)
+
+theorem eval_fsmUltUnary_eq_true_iff
+    (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (henv : HWidthEnv fsmEnv wenv)
+    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    ((fsmUleUnary a.toFsm b.toFsm).eval fsmEnv) i =
+    decide (max i (v.toNat wenv) ≤ max i (w.toNat wenv)) := by
+  simp [fsmUleUnary]
+  rw [ha.heq (henv := henv)]
+  rw [hb.heq (henv := henv)]
+  induction w generalizing v
+  case var w =>
+    induction v
+    case var v =>
+      simp
+      by_cases hiv : i ≤ wenv v
+      case pos =>
+        simp [hiv]
+        by_cases hiw : i ≤ wenv w
+        case pos =>
+          simp [hiw]
+        case neg =>
+          simp [hiw]
+          omega
+      case neg =>
+        simp [hiv]
+        by_cases hiw : i ≤ wenv w
+        case pos =>
+          omega
+        case neg =>
+          omega
+
 
 -- returns 1 if a is equal to b.
 def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
   composeUnaryAux FSM.scanAnd <| composeBinaryAux' FSM.nxor a  b
 
--- returns 1 if a is less than or equal to b.
-def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
-  (fsmUltUnary a b) &&& (fsmEqBitwise a b)
+-- -- returns 1 if a is less than or equal to b.
+-- def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
+--   (fsmUltUnary a b) &&& (fsmEqBitwise a b)
 
 -- | if 'cond' is true, then return 't', otherwise return 'e'.
 def ite (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
@@ -76,16 +155,16 @@ def fsmSext.inputs.toFin : fsmSext.inputs → Fin 4
 
 def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
-    ite (fsmUleUnary wnew wold)
-      /- wnew ≤ wold, so it's the same as zext. -/
-      (fsmZext a wold wnew)
-      /- wnew > wold. -/
-    (composeQuaternaryAux'
-      (composer.map fsmSext.inputs.toFin)
-      a
-      (composeUnaryAux (FSM.ls false) a)
-      wold
-      wnew)
+  ite (fsmUleUnary wnew wold)
+    /- wnew ≤ wold, so it's the same as zext. -/
+    (fsmZext a wold wnew)
+    /- wnew > wold. -/
+  (composeQuaternaryAux'
+    (composer.map fsmSext.inputs.toFin)
+    a
+    (composeUnaryAux (FSM.ls false) a)
+    wold
+    wnew)
   where
     -- precondition: wnew > wold.
     composer : FSM fsmSext.inputs := {
@@ -110,13 +189,14 @@ def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     }
 
 
-def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) : 
+def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
   match t with
   | .var v _w =>
     if h : v < tcard then
       {
-      toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      -- toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      toFsm := (FSM.var' (StateSpace.termVar ⟨v, h⟩))
       }
     else
       { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be ued.
@@ -136,6 +216,27 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let woldFsm := mkWidthFSM wcard tcard wold
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
+
+def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthExpr wcard} (t : Term tctx w)  :
+    (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) where
+  heq := by
+    intros wenv tenv fsmEnv htenv
+    induction t generalizing wenv tenv fsmEnv
+    case var v =>
+      obtain htenv_term := htenv.heq_term
+      obtain htenv_width := htenv.heq_width
+      simp only [Nondep.Term.ofDep_var, mkTermFSM, Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var',
+        htenv_term, Term.toBitstream, Term.toBV_var]
+    case add v p q hp hq =>
+      simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
+      simp [Term.toBV]
+      sorry
+    case zext w' a b c  =>
+      simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
+      simp [fsmZext]
+      simp [fsmUleUnary, fsmUltUnary, ite]
+      sorry
+    case sext w' a b => sorry
 
 /-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :

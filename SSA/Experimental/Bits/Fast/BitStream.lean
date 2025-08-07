@@ -185,6 +185,14 @@ section ToBitVec
 abbrev ofBitVec {w} (x : BitVec w) : BitStream :=
   fun i => if i < w then x.getLsbD i else x.msb
 
+/-- Make a bitstream of a unary natural number. -/
+abbrev ofNatUnary (n : Nat) : BitStream :=
+  fun i => decide (i ≤ n)
+
+@[simp]
+theorem eval_ofNatUnary (n : Nat) (i : Nat) :
+    ofNatUnary n i = decide (i ≤ n) := rfl
+
 /-- `x.toBitVec w` returns the first `w` bits of bitstream `x` -/
 def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
   match w with
