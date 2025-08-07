@@ -86,9 +86,10 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
 -- alternatively, a[i] = 1 → b[i] = 1.
 -- if a is high, then b must be high for it to be ≤.
 def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
-  (b ||| ~~~ a)
+ composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
 
-theorem eval_fsmUltUnary_eq_true_iff
+@[simp]
+theorem eval_fsmUltUnary_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
@@ -96,7 +97,7 @@ theorem eval_fsmUltUnary_eq_true_iff
     (henv : HWidthEnv fsmEnv wenv)
     (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
     ((fsmUleUnary a.toFsm b.toFsm).eval fsmEnv) i =
-    decide (max i (v.toNat wenv) ≤ max i (w.toNat wenv)) := by
+    decide (min i (v.toNat wenv) ≤ min i (w.toNat wenv)) := by
   simp [fsmUleUnary]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
@@ -104,24 +105,45 @@ theorem eval_fsmUltUnary_eq_true_iff
   case var w =>
     induction v
     case var v =>
-      simp
+      simp [BitStream.scanAnd_eq_decide]
       by_cases hiv : i ≤ wenv v
       case pos =>
-        simp [hiv]
         by_cases hiw : i ≤ wenv w
         case pos =>
           simp [hiw]
+          intros j
+          omega
         case neg =>
           simp [hiw]
-          omega
+          by_cases hvw : wenv v ≤ wenv w
+          case pos =>
+            simp [hvw]
+            intros j
+            omega
+          case neg =>
+            simp [hvw]
+            exists i
+            omega
       case neg =>
-        simp [hiv]
         by_cases hiw : i ≤ wenv w
         case pos =>
+          simp [hiw]
           omega
         case neg =>
-          omega
+          simp [hiw]
+          by_cases hvw : wenv v ≤ wenv w
+          case pos =>
+            simp [hvw]
+            omega
+          case neg =>
+            simp [hvw]
+            exists (wenv v)
+            omega
 
+/--
+info: 'MultiWidth.eval_fsmUltUnary_eq_decide' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_fsmUltUnary_eq_decide
 
 -- returns 1 if a is equal to b.
 def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
@@ -234,7 +256,7 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w
     case zext w' a b c  =>
       simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
       simp [fsmZext]
-      simp [fsmUleUnary, fsmUltUnary, ite]
+      simp [ite]
       sorry
     case sext w' a b => sorry
 

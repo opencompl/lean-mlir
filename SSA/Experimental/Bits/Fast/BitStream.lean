@@ -452,6 +452,7 @@ theorem scanAnd_true_iff (s : BitStream) (n : Nat) :
         exact h _ (by omega)
       · apply h _ (by omega)
 
+
 /-- The result of `scanAnd` is true at index `i` if the bitstream has been true upto (and including) time `n`. -/
 theorem scanAnd_false_iff (s : BitStream) (n : Nat)
     : s.scanAnd n = false ↔ ∃ (i : Nat), (i ≤ n) ∧ s i = false := by
@@ -464,6 +465,12 @@ theorem scanAnd_false_iff (s : BitStream) (n : Nat)
     contrapose h
     simp_all
     apply (scanAnd_true_iff _ _).mp (by assumption)
+
+theorem scanAnd_eq_decide (s : BitStream) (n : Nat) :
+    s.scanAnd n = decide (∀ (i : Nat), i ≤ n → s i = true) := by
+  have := scanAnd_true_iff s n
+  by_cases hs : s.scanAnd n <;> simp [hs] at ⊢ this <;> apply this
+
 
 end Scan
 

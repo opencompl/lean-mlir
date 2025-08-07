@@ -704,6 +704,17 @@ lemma eval_scanAnd_succ (x : Unit → BitStream) (n : Nat) :
       intros j hj
       exact h j (by omega)
 
+/-- The result of `scanAnd` is true at `n` iff the bitvector has been true upto (and including) `n`. -/
+lemma eval_scanAnd_eq_decide (x : Unit → BitStream) (n : Nat) : scanAnd.eval x n =
+  decide (∀ (i : Nat), (hi : i ≤ n) → x () i = true) := by
+  have := eval_scanAnd_true_iff x n
+  by_cases hscan : scanAnd.eval x n
+  · simp only [hscan, true_iff, true_eq_decide_iff] at this ⊢;
+    apply this
+  · simp only [hscan, Bool.false_eq_true, false_iff, not_forall,
+    Bool.not_eq_true, false_eq_decide_iff] at this ⊢
+    apply this
+
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
   ext n; cases n <;> simp [xor, eval, nextBit]
 
