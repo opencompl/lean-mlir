@@ -31,9 +31,6 @@ instance : HydrableGenLogicalExprToExpr  BVExprWrapper ParsedBVExpr GenBVLogical
 
 instance : HydrableSolve  BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 
-instance : HydrableChangeExprWidth GenBVExpr where
-  changeExprWidth := changeBVExprWidth
-
 instance : HydrableChangeLogicalExprWidth GenBVLogicalExpr where
   changeLogicalExprWidth := changeBVLogicalExprWidth
 
@@ -60,7 +57,7 @@ instance : HydrableGetIdentityAndAbsorptionConstraints GenBVLogicalExpr GenBVExp
 instance : HydrableAddConstraints GenBVLogicalExpr GenBVExpr where
   addConstraints := addConstraints
 
-instance : HydrableGenExpr GenBVLogicalExpr GenBVExpr where
+instance : HydrableGenExpr GenBVExpr where
   genExprVar id := GenBVExpr.var id
   genExprConst bv := GenBVExpr.const bv
 
