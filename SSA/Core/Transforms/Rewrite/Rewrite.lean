@@ -25,9 +25,14 @@ with the `pos`th variable in `prog`, and an `Com` starting with the next variabl
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
-    (prog : Com d Γ₂ eff t) →
-    Option (Σ (Γ₃ : Ctxt d.Ty), Lets d Γ₁ eff Γ₃ × Com d Γ₃ eff t × (t' : d.Ty) × Var Γ₃ t')
-  | 0, lets, .var e body => some ⟨_, .var lets e, body, _, Var.last _ _⟩
+    (prog : Com d Γ₂ eff [t]) →
+    Option (Σ (Γ₃ : Ctxt d.Ty), Lets d Γ₁ eff Γ₃ × Com d Γ₃ eff [t] × (t' : d.Ty) × Var Γ₃ t')
+  | 0, lets, .var e body =>
+      /-
+        TODO: this definition is fundamentally broken, as it conflates variables with let-bindings.
+        What should it do when the expression in question has 0 return values?
+      -/
+      some ⟨_, .var lets e, body, _, (Var.last [] t).appendInr⟩
   | _, _, .ret _ => none
   | n+1, lets, .var e body =>
     splitProgramAtAux n (lets.var e) body

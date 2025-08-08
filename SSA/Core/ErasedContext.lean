@@ -94,9 +94,9 @@ lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
     (Γ.map f)[i]? = Γ[i]?.map f := by
   simp [map]; rfl
 
-@[simp] lemma length_ofList : (ofList ts).length = ts.length := rfl
-@[simp] lemma length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
-@[simp] lemma length_map : (Γ.map f).length = Γ.length := by simp [map, length]
+@[simp, grind=] lemma length_ofList : (ofList ts).length = ts.length := rfl
+@[simp, grind=] lemma length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
+@[simp, grind=] lemma length_map : (Γ.map f).length = Γ.length := by simp [map, length]
 
 instance : Functor Ctxt where
   map := map
@@ -132,11 +132,11 @@ end Rec
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ[i]? = some t }
 
-/-- constructor for Var. -/
-def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ[i]? = some t) : Γ.Var t :=
-  ⟨i, hi⟩
-
 namespace Var
+
+/-- constructor for Var. -/
+def mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ[i]? = some t) : Γ.Var t :=
+  ⟨i, hi⟩
 
 instance : DecidableEq (Var Γ t) := by
   delta Var
@@ -156,15 +156,21 @@ in context `Γ.snoc t`. This is marked as a coercion. -/
 def toSnoc {Γ : Ctxt Ty} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
   ⟨var.1+1, var.2⟩
 
-@[simp]
-theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
-    ⟨0, h⟩ = last Γ t :=
-  rfl
+section Lemmas
+variable {Γ : Ctxt Ty} {t : Ty}
 
-@[simp]
-theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t)[w+1]? = some t') :
-    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
-  rfl
+lemma val_lt (v : Γ.Var t) : v.val < Γ.length := by
+  rcases v with ⟨idx, h⟩
+  suffices ¬(Γ.length ≤ idx) by grind
+  rcases Γ
+  simp only [length_ofList, ← List.getElem?_eq_none_iff]
+  simp_all
+
+@[simp] lemma zero_eq_last (h) : ⟨0, h⟩ = last Γ t := rfl
+@[simp] lemma succ_eq_toSnoc {w} (h : (Γ.snoc t)[w+1]? = some t') :
+    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ := rfl
+
+end Lemmas
 
 /-! ### toMap-/
 
@@ -260,9 +266,11 @@ end Lemmas
 
 /-! ### Var Append -/
 
-def appendInl : Γ.Var t → (Γ ++ ts).Var t
-  | ⟨v, h⟩ => ⟨v + ts.length, by
-      rcases Γ; simp_all [List.getElem?_append_right]
+def appendInl (v : Γ.Var t) : (Γ ++ ts).Var t :=
+  ⟨v.1 + ts.length, by
+      have := v.prop
+      rcases Γ
+      simp_all [List.getElem?_append_right]
     ⟩
 instance : Coe (Γ.Var t) ((Γ ++ ts).Var t) where coe := appendInl
 
@@ -294,8 +302,7 @@ def appendCases
       ⟩
       have eq : v'.appendInl = ⟨idx, h⟩ := by
         show Subtype.mk _ _ = _
-        congr 1
-        omega
+        simp [v']; omega
       eq ▸ left v'
 
 section Lemmas
@@ -331,13 +338,8 @@ end Lemmas
 
 /-! ### Var Fin Helpers -/
 
-def toFin : Γ.Var t → Fin Γ.length
-  | ⟨idx, h⟩ => ⟨idx, by
-      suffices ¬(Γ.length ≤ idx) by omega
-      rcases Γ
-      simp only [length_ofList, ← List.getElem?_eq_none_iff]
-      simp_all
-    ⟩
+def toFin (v : Γ.Var t) : Fin Γ.length :=
+  ⟨v.val, v.val_lt⟩
 
 def ofFin : (i : Fin Γ.length) → Γ.Var (Γ[i])
   | ⟨idx, h⟩ => ⟨idx, by simpa using List.getElem?_eq_getElem _⟩
@@ -369,9 +371,17 @@ abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
+/-! ### Morphism Composition -/
+section Comp
+variable {Γ Δ Ξ : Ctxt Ty} (f : Hom Γ Δ) (g : Hom Δ Ξ)
+
 /-- `f.comp g := g(f(x))` -/
-def Hom.comp {Γ Δ Ξ : Ctxt Ty} (f : Hom Γ Δ) (g : Hom Δ Ξ) : Hom Γ Ξ :=
+def Hom.comp : Hom Γ Ξ :=
   fun _t v => g (f v)
+
+@[simp, grind=] lemma Hom.comp_apply : f.comp g v = g (f v) := rfl
+
+end Comp
 
 /--
   `map.with v₁ v₂` adjusts a single variable of a Context map, so that in the resulting map
@@ -415,7 +425,7 @@ instance : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
 /--
 Lift a context morphism `f` from context `Γ` to context `Δ` into a morphism
-where an arbitrary list of types is append to both the domain and codomain.
+where a list of types `ts` is appended to *both* the domain and codomain.
 That is, on any variables in the original domain `Γ`, `f.append` acts like `f`,
 but on any *new* variables, in the appended list of types `ts`, `f.append`
 maps to the corresponding new variable in the codomain (`Δ ++ ts`).
@@ -424,6 +434,13 @@ def Hom.append {ts : List Ty} (f : Γ.Hom Δ) : Hom (Γ ++ ts) (Δ ++ ts) :=
   fun _ => Var.appendCases
     (fun v => (f v).appendInl)
     (fun v => v.appendInr)
+
+/--
+Lift a context morphism `f` from context `Γ` to context `Δ` into a morphism
+where a list of types is appended to just to codomain `Δ`.
+-/
+def Hom.appendCodomain {ts : List Ty} (f : Γ.Hom Δ) : Hom Γ (Δ ++ ts) :=
+  fun _ v => (f v).appendInl
 
 section Lemmas
 
@@ -434,6 +451,13 @@ section Lemmas
 @[simp] theorem Hom.append_appendInr (f : Γ.Hom Δ) (v : Var ⟨ts⟩ t) :
     (f.append (ts := ts)) v.appendInr = v.appendInr := by
   simp [append]
+
+@[simp] theorem Hom.appendCodomain_apply (f : Γ.Hom Δ) (v : Γ.Var t) :
+    (f.appendCodomain (ts := ts)) v = (f v).appendInl :=
+  rfl
+
+@[simp] lemma Hom.id_append : (Hom.id (Γ:=Γ)).append (ts := ts) = .id := by
+  funext t v; cases v using Var.appendCases <;> simp [id, append]
 
 end Lemmas
 
@@ -617,9 +641,20 @@ def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
     then h.fst ▸ val
     else V vneedle
 
+@[simp] lemma Valuation.reassignVar_apply_same [DecidableEq Ty] (V : Γ.Valuation) :
+    V.reassignVar v x v = x := by
+  simp [reassignVar]
+
+@[simp] lemma Valuation.reassignVar_apply_of_neq [DecidableEq Ty] (V : Γ.Valuation)
+    (h : v ≠ w) :
+    V.reassignVar v x w = V w := by
+  simp only [reassignVar, exists_const, dite_eq_ite, ite_eq_right_iff]
+  rintro rfl
+  contradiction
+
 @[simp] lemma Valuation.reassignVar_eq [DecidableEq Ty] (V : Γ.Valuation) :
     V.reassignVar v (V v) = V := by
-  funext t v
+  funext t w
   simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
   rintro rfl rfl
   rfl
@@ -839,8 +874,6 @@ lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc 
     f.toHom.comp g.toHom = (f + g).toHom := by
   funext t v
   apply Subtype.eq
-  simp
-  simp only [Hom.comp, toHom, Valid]
   grind
 
 end Lemmas
@@ -896,39 +929,63 @@ instance {Γ' : DerivedCtxt Γ} : Coe (Ctxt.Var Γ t) (Ctxt.Var (Γ' : Ctxt Ty) 
 end DerivedCtxt
 
 /-! ## `dropUntil` -/
+section DropUntil
+variable (Γ : Ctxt Ty) {ty} (v : Var Γ ty)
 
-/-- `Γ.dropUntil v` is the largest prefix of context `Γ` that no longer contains variable `v` -/
-def dropUntil (Γ : Ctxt Ty) (v : Var Γ ty) : Ctxt Ty :=
+/-- `Γ.dropUntil v` is the largest prefix of context `Γ` that no longer contains variable `v`. -/
+def dropUntil : Ctxt Ty :=
   ⟨List.drop (v.val + 1) Γ.toList⟩
+
+variable {Γ} {v}
 
 @[simp] lemma dropUntil_last   : dropUntil (snoc Γ ty) (Var.last Γ ty) = Γ := rfl
 @[simp] lemma dropUntil_toSnoc : dropUntil (snoc Γ ty) (Var.toSnoc v) = dropUntil Γ v := rfl
 
-@[simp] lemma dropUntil_castCtxt {v : Γ'.Var t} {h : Γ' = Γ} :
-    Γ.dropUntil (v.castCtxt h) = Γ'.dropUntil v := by
+@[simp] lemma dropUntil_castCtxt {h : Γ = Γ'} :
+    Γ'.dropUntil (v.castCtxt h) = Γ.dropUntil v := by
   subst h; rfl
 
-@[simp] lemma dropUntil_appendInl {v : Γ.Var t} :
+@[simp] lemma dropUntil_appendInl :
     (Γ ++ ts).dropUntil v.appendInl = Γ.dropUntil v := by
   simp only [dropUntil, Var.val_appendInl]
   rw [Nat.add_right_comm, Nat.add_comm]
   simp
 
+@[simp] lemma dropUntil_appendInr {v : Var ⟨ts⟩ t} :
+    (Γ ++ ts).dropUntil v.appendInr = Γ ++ (ts.drop <| v.1 + 1) := by
+  rcases Γ
+  -- TODO: upstream the following as a `List` lemma
+  suffices ∀ {xs} (i : Nat) (hi : i ≤ xs.length) (ys : List Ty),
+    List.drop i (xs ++ ys) = List.drop i xs ++ ys
+  by
+    have hi : v.val + 1 ≤ ts.length := by
+      simpa using v.val_lt
+    simpa [dropUntil] using this _ hi _
+  intro xs i hi ys
+  induction xs generalizing i
+  case nil => cases i <;> simp_all
+  case cons ih =>
+    rcases i with _|i
+    · rfl
+    · simp [ih i (by simp_all)]
+
 /-- The difference between `Γ.dropUntil v` and `Γ` is exactly `v.val + 1` -/
-def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
+def dropUntilDiff : Diff (Γ.dropUntil v) Γ :=
   ⟨v.val+1, by
     intro i _ h
     induction Γ
     case nil => exact v.emptyElim
     case snoc Γ _ ih =>
       cases v using Var.casesOn
-      · simp only [dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
+      · simp only [Var.val_toSnoc] at h ⊢
         apply ih h
       · simpa! using h
   ⟩
 
 /-- Context homomorphism from `(Γ.dropUntil v)` to `Γ`, see also `dropUntilDiff` -/
 abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
+
+@[simp, grind=] lemma val_dropUntilDiff : (@dropUntilDiff _ Γ _ v).val = v.val+1 := rfl
 
 @[simp] lemma dropUntilHom_last : dropUntilHom (v := Var.last Γ ty) = Hom.id.snocRight := rfl
 @[simp] lemma dropUntilHom_toSnoc {v : Var Γ t} :
@@ -937,6 +994,7 @@ abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
 instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
   coe v := dropUntilDiff.toHom v
 
+end DropUntil
 
 /-!
 # ToExpr
