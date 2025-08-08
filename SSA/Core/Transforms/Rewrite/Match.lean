@@ -692,16 +692,10 @@ theorem denote_matchVar_old
     {v w : Var _ t}
     {varMap₁ : MatchVarResult lets v matchLets w ma}
     (V : lets.ValidDenotation) :
-    (matchLets.denote (fun t' v' =>
-        match varMap₁.val.lookup ⟨t', v'⟩ with
-        | .some mappedVar => by exact (V.val mappedVar)
-        | .none => default) w)
+    (matchLets.denote (varMap₁.mapValuation V.val) w)
     = V.val v := by
-  suffices ∀ {varMap₂ : Mapping _ _}, varMap₁.val.entries ⊆ varMap₂.entries →
-    (matchLets.denote (fun t' v' =>
-        match varMap₂.lookup ⟨t', v'⟩ with
-        | .some mappedVar => by exact (V.val mappedVar)
-        | .none => default) w)
+  suffices ∀ {varMap₂ : Mapping _ _}, varMap₁.entries ⊆ varMap₂.entries →
+    (matchLets.denote (varMap₂.mapValuation V.val) w)
     = V.val v
   by
     apply this (List.Subset.refl _)
@@ -710,9 +704,8 @@ theorem denote_matchVar_old
   induction matchLets generalizing v ma varMap₂ t
   case nil =>
     simp only [Lets.denote, Id.pure_eq']
-    rw [AList.mem_lookup_iff.mpr ?_]
-    apply h_sub
-    simp
+    rw [Mapping.mapValuation, AList.mem_lookup_iff.mpr ?_]
+    apply h_sub <| AList.mem_lookup_iff.mp <| matchVar_nil h_matchVar
   case var t' matchLets matchExpr ih =>
     cases w using Var.appendCases with
     | left w =>
@@ -883,15 +876,8 @@ theorem denote_matchLets_of_matchVarMap
   split at hmap
   next => contradiction
   next m hm =>
-    obtain rfl : m.toHom _ = map := by
+    obtain rfl : m.toHom ?isTotal = map := by
       simpa using hmap
-
-    rw [← denote_matchVar hm]
-    apply congrFun; apply congrFun; apply congrArg
-
-    funext t' v'
-    have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v'))
-    split <;> simp_all [Mapping.toHom]
-
+    rw [m.toHom_eq_mapValuation ?isTotal, denote_matchVar hm]
 
 end DenoteLemmas

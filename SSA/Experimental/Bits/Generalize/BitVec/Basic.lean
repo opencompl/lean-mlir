@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henrik Böving, Timi Adeniran, Léo Stefanesco
 -/
 import Lean
+import Lean.Elab.Term
+import SSA.Experimental.Bits.Generalize.Generalize
 
 open Lean
+open Elab
 open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
-
-initialize Lean.registerTraceClass `Generalize
 
 namespace Generalize
 /--
@@ -216,36 +217,13 @@ instance : Hashable GenBVLogicalExpr where
 
 end GenBVLogicalExpr
 
-instance : BEq BVExpr.PackedBitVec where
-  beq a b := if h : a.w = b.w then
-                let b' := h ▸ b.bv
-                a.bv == b'
-              else
-                false
-
-instance : Hashable BVExpr.PackedBitVec where
-  hash pbv := hash pbv.bv
-
 structure BVExprWrapper where
   width : Nat
   bvExpr: GenBVExpr width
 
-instance : ToString BVExpr.PackedBitVec where
-  toString bitvec := toString bitvec.bv
-
-instance [ToString α] [ToString β] [Hashable α] [BEq α] : ToString (Std.HashMap α β) where
-  toString map :=
-    "{" ++ String.intercalate ", " (map.toList.map (λ (k, v) => toString k ++ " → " ++ toString v)) ++ "}"
-
-instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
-  toString set := toString set.toList
-
 instance : ToString BVExprWrapper where
   toString w :=
       s!" BVExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr}}"
-
-instance : ToString FVarId where
-  toString f := s! "{f.name}"
 
 instance : Inhabited BVExprWrapper where
   default := {bvExpr := GenBVExpr.const (BitVec.ofNat 0 0), width := 0}
@@ -276,26 +254,20 @@ def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): Ge
       BoolExpr.ite (changeBVLogicalExprWidth constVar target) (changeBVLogicalExprWidth auxVar target) (changeBVLogicalExprWidth op3 target)
   | _ => bvLogicalExpr
 
-inductive SubstitutionValue where
-    | bvExpr {w} (bvExpr : GenBVExpr w) : SubstitutionValue
-    | packedBV  (bv: BVExpr.PackedBitVec) : SubstitutionValue
+def bvExprToSubstitutionValue (map: Std.HashMap Nat (GenBVExpr w)) : Std.HashMap Nat
+  (SubstitutionValue GenBVExpr) :=
+      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd)) map.toList)
 
-instance : Inhabited SubstitutionValue where
-  default := SubstitutionValue.packedBV default
-
-def bvExprToSubstitutionValue (map: Std.HashMap Nat (GenBVExpr w)) : Std.HashMap Nat SubstitutionValue :=
-      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.bvExpr item.snd)) map.toList)
-
-def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat SubstitutionValue :=
+def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
-def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat SubstitutionValue) : GenBVExpr w :=
+def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (SubstitutionValue GenBVExpr)) : GenBVExpr w :=
     match bvExpr with
     | .var idx =>
       if assignment.contains idx then
           let value := assignment[idx]!
           match value with
-          | .bvExpr (w := wbv) bv =>
+          | .genExpr (w := wbv) bv =>
             if h : w = wbv
             then h ▸ bv
             else GenBVExpr.extract 0 w bv
@@ -319,7 +291,8 @@ def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat Substitu
         GenBVExpr.extract start len (substituteBVExpr expr assignment)
     | e => e
 
-def substitute  (bvLogicalExpr: GenBVLogicalExpr) (assignment: Std.HashMap Nat SubstitutionValue) :
+
+def substitute  (bvLogicalExpr: GenBVLogicalExpr) (assignment: Std.HashMap Nat (SubstitutionValue GenBVExpr)) :
           GenBVLogicalExpr :=
   match bvLogicalExpr with
   | .literal (GenBVPred.bin lhs op rhs) => BoolExpr.literal (GenBVPred.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment))
@@ -331,12 +304,98 @@ def substitute  (bvLogicalExpr: GenBVLogicalExpr) (assignment: Std.HashMap Nat S
       BoolExpr.ite (substitute conditional assignment) (substitute pos assignment) (substitute neg assignment)
   | _ => bvLogicalExpr
 
+def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenBVLogicalExpr) (symVars : Std.HashSet Nat) : List GenBVLogicalExpr :=
+      match bvLogicalExpr with
+      | .literal (GenBVPred.bin lhs _ rhs) => (getBVExprConstraints lhs) ++ (getBVExprConstraints rhs)
+      | .not boolExpr => getIdentityAndAbsorptionConstraints boolExpr symVars
+      | .gate _ lhs rhs => (getIdentityAndAbsorptionConstraints lhs symVars) ++ (getIdentityAndAbsorptionConstraints rhs symVars)
+      | .ite constVar auxVar op3 =>
+          (getIdentityAndAbsorptionConstraints constVar symVars) ++ (getIdentityAndAbsorptionConstraints auxVar symVars) ++ (getIdentityAndAbsorptionConstraints op3 symVars)
+      | _ => []
+
+      where
+        getBVExprConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr := Id.run do
+                match bvExpr with
+                | .shiftRight lhs rhs | .shiftLeft lhs rhs | .arithShiftRight lhs rhs =>
+                      match (lhs, rhs) with
+                      | (GenBVExpr.var lhsId, GenBVExpr.var rhsId) =>
+                          let mut constraints := []
+
+                          if symVars.contains lhsId then
+                            constraints := getLhsShiftConstraints lhs ++ constraints
+
+                          if symVars.contains rhsId then
+                            constraints := getRhsShiftConstraints rhs ++ constraints
+                          pure constraints
+                      | (GenBVExpr.var lhsId, _) =>
+                          if !symVars.contains lhsId then
+                            getBVExprConstraints rhs
+                          else
+                            (getLhsShiftConstraints lhs) ++ (getBVExprConstraints rhs)
+                      | (_, GenBVExpr.var rhsId) =>
+                          if !symVars.contains rhsId then
+                            getBVExprConstraints lhs
+                          else
+                          (getBVExprConstraints lhs)  ++ (getRhsShiftConstraints rhs)
+                      | _ => ((getBVExprConstraints lhs) ++ (getBVExprConstraints rhs))
+                | .bin lhs op rhs  =>
+                      match (lhs, rhs) with
+                      | (GenBVExpr.var lhsId, GenBVExpr.var rhsId) =>
+                          let mut constraints := []
+
+                          if symVars.contains lhsId then
+                            constraints := getBitwiseConstraints lhs op ++ constraints
+
+                          if symVars.contains rhsId then
+                            constraints := getBitwiseConstraints rhs op ++ constraints
+                          pure constraints
+                      | (GenBVExpr.var lhsId, _) =>
+                          if !symVars.contains lhsId then
+                            getBVExprConstraints rhs
+                          else
+                            (getBitwiseConstraints lhs op) ++ (getBVExprConstraints rhs)
+                      | (_, GenBVExpr.var rhsId) =>
+                          if !symVars.contains rhsId then
+                            getBVExprConstraints lhs
+                          else
+                         (getBVExprConstraints lhs)  ++ (getBitwiseConstraints rhs op)
+                      | _ => ((getBVExprConstraints lhs) ++ (getBVExprConstraints rhs))
+                | .un _ operand =>
+                      getBVExprConstraints operand
+                | _ =>  []
+
+        getLhsShiftConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr :=
+          let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const ((BitVec.ofNat w 0)))))
+          [neqZero]
+
+        getRhsShiftConstraints {w} (bvExpr : GenBVExpr w) : List GenBVLogicalExpr :=
+          let ltWidth := BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.ult (GenBVExpr.const (BitVec.ofNat w w)))
+          let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const ((BitVec.ofNat w 0)))))
+
+          [ltWidth, neqZero]
+
+        getBitwiseConstraints {w} (bvExpr: GenBVExpr w) (op : BVBinOp): List GenBVLogicalExpr :=
+            let neqZero := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const (BitVec.ofNat w 0))))
+            let neqAllOnes := BoolExpr.not (BoolExpr.literal (GenBVPred.bin bvExpr BVBinPred.eq (GenBVExpr.const (BitVec.allOnes w))))
+
+            match op with
+            | BVBinOp.xor => [neqZero]
+            | BVBinOp.or | BVBinOp.and => [neqZero, neqAllOnes]
+            | _ => []
+
+def addConstraints (expr: GenBVLogicalExpr) (constraints: List GenBVLogicalExpr) (op: Gate) : GenBVLogicalExpr :=
+      match constraints with
+      | [] => expr
+      | x::xs =>
+          match expr with
+          | BoolExpr.const _ => addConstraints x xs op
+          | _ => addConstraints (BoolExpr.gate op expr x) xs op
+
 
 def sameBothSides (bvLogicalExpr : GenBVLogicalExpr) : Bool :=
     match bvLogicalExpr with
   | .literal (GenBVPred.bin lhs _ rhs) => lhs == rhs
   | _ => false
-
 
 /-
 This function expects that targetWidth >= w
@@ -390,3 +449,30 @@ def shiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
 
 def arithShiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
   GenBVExpr.arithShiftRight op1 op2
+
+def zero (w: Nat) := GenBVExpr.const (BitVec.ofNat w 0)
+def one (w: Nat) := GenBVExpr.const (BitVec.ofNat w 1)
+def minusOne (w: Nat) := GenBVExpr.const (BitVec.ofInt w (-1))
+
+def eqToZero (expr: GenBVExpr w) : GenBVLogicalExpr :=
+  BoolExpr.literal (GenBVPred.bin expr BVBinPred.eq (zero w))
+
+def positive (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  let shiftDistance : GenBVExpr w :=  subtract (GenBVExpr.var widthId) (one w)
+  let signVal := GenBVExpr.shiftLeft (one w) shiftDistance
+  BoolExpr.literal (GenBVPred.bin expr BVBinPred.ult signVal) --- It's positive if `expr <u 2 ^ (w - 1)`
+
+def strictlyGTZero  (expr: GenBVExpr w) (widthId : Nat)  : GenBVLogicalExpr :=
+  BoolExpr.gate  Gate.and (BoolExpr.literal (GenBVPred.bin (zero w) BVBinPred.ult expr)) (positive expr widthId)
+
+def gteZero (expr: GenBVExpr w) (widthId : Nat)  : GenBVLogicalExpr :=
+  positive expr widthId
+
+def negative (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  BoolExpr.not (positive expr widthId)
+
+def strictlyLTZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  negative expr widthId
+
+def lteZero (expr: GenBVExpr w) (widthId : Nat) : GenBVLogicalExpr :=
+  BoolExpr.gate Gate.or (eqToZero expr) (negative expr widthId)

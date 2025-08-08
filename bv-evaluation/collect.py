@@ -8,6 +8,62 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 import shutil
+import num2words
+
+
+def avg_bb_sat_to_latex_str(solver_name : str,
+    all_files_solved_bv_decide_times_average,
+    all_files_solved_bitwuzla_times_average,
+    all_files_solved_bv_decide_bb_times_average,
+    all_files_solved_bv_decide_sat_times_average,
+    all_files_solved_bv_decide_lratt_times_average,
+    all_files_solved_bv_decide_lratc_times_average):
+    """
+    Produce a string of latex that describes the time and perf breakdown
+    of these into
+    """
+    all_files_solved_bv_decide_times_average = np.array(all_files_solved_bv_decide_times_average)
+    all_files_solved_bitwuzla_times_average = np.array(all_files_solved_bitwuzla_times_average)
+    all_files_solved_bv_decide_bb_times_average = np.array(all_files_solved_bv_decide_bb_times_average)
+    all_files_solved_bv_decide_sat_times_average = np.array(all_files_solved_bv_decide_sat_times_average)
+    all_files_solved_bv_decide_lratt_times_average = np.array(all_files_solved_bv_decide_lratt_times_average)
+    all_files_solved_bv_decide_lratc_times_average = np.array(all_files_solved_bv_decide_lratc_times_average)
+
+    geomean_time_instcombine_bvdecide = geomean(all_files_solved_bv_decide_times_average)
+    geomean_time_instcombine_bitwuzla = geomean(all_files_solved_bitwuzla_times_average)
+    all_files_slowdown = all_files_solved_bv_decide_times_average / all_files_solved_bitwuzla_times_average
+    geomean_slowdown_instcombine = geomean(all_files_slowdown)
+    mean_slowdown_instcombine = np.mean(all_files_slowdown)
+
+    all_files_solved_bv_decide_sat_plus_bb_average = all_files_solved_bv_decide_bb_times_average + all_files_solved_bv_decide_sat_times_average
+    sat_bb =  np.sum(all_files_solved_bv_decide_sat_plus_bb_average)
+    perc_sat_bb = (sat_bb/np.sum(all_files_solved_bv_decide_times_average))*100
+    geomean_sat_bb = geomean(all_files_solved_bv_decide_sat_plus_bb_average/ all_files_solved_bv_decide_times_average)*100
+
+
+    all_files_solved_bv_decide_lratt_plus_lratc_times_average = all_files_solved_bv_decide_lratt_times_average + all_files_solved_bv_decide_lratc_times_average
+    lrat_tot = np.sum(all_files_solved_bv_decide_lratt_plus_lratc_times_average)
+    perc_lrat = (lrat_tot / np.sum(np.array(all_files_solved_bv_decide_times_average)))*100
+    geomean_lrat = geomean(all_files_solved_bv_decide_lratt_plus_lratc_times_average / all_files_solved_bv_decide_times_average) * 100
+
+    out = ""
+    out += f"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}\n"
+    out += "\\newcommand{\\" + solver_name + r"SatBitBlastingPerc}{" + ("%1.f" % perc_sat_bb) + "\\%}\n"
+    out += "\\newcommand{\\" + solver_name + r"SatBitBlastingGeoMean}{" + ("%1.f" % geomean_sat_bb) + "\\%}\n"
+    out += "\\newcommand{\\" + solver_name + r"LRATPerc}{" + ("%1.f" % perc_lrat) + "\\%}\n"
+    out += "\\newcommand{\\" + solver_name + r"LRATGeoMean}{" + ("%1.f" % geomean_lrat) + "\\%}\n"
+    return out
+
+
+def geomean(xs):
+    xs = [x for x in xs if x > 0]
+    if xs:
+        # (x1 x2 ... xn)^1/n
+        # = e^([log x1 + log x2 + ... + log xn] / n)
+        # = e^(mean(log(xs)))
+        return np.exp(np.mean(np.log(np.array(xs))))
+    else:
+        return 0
 
 bv_width = [4, 8, 16, 32, 64]
 
@@ -22,6 +78,8 @@ output = Enum("output", [("counterexample", 1), ("proved", 2), ("failed", 0)])
 # benchmark_dir = "../SSA/Projects/InstCombine/tests/proofs/"
 # res_dir = "results/InstCombine/"
 # raw_data_dir = paper_directory + "raw-data/InstCombine/"
+
+REPO_GIT_HASH = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
 
 RAW_DATA_DIR_SMTLIB = ROOT_DIR + "/bv-evaluation/raw-data/SMT-LIB"
 RESULTS_DIR_SMTLIB = ROOT_DIR + "/bv-evaluation/results/SMT-LIB"
@@ -304,7 +362,7 @@ def compare_solvers_on_file(file_result):
             )
             file_solved_bitwuzla_times_stddev.append(np.std(file_result[1]["solved_bitwuzla_times_average"][theorem_num]))
 
-            
+
 
             file_solved_bv_decide_times_average.append(
                 np.mean(file_result[1]["solved_bv_decide_times_average"][theorem_num])
@@ -455,7 +513,7 @@ def parse_file(file_name: str, reps: int):
                 file_line = res_file.readline()
                 if "LeanSAT " in file_line:
                     if "failed" in file_line:
-                        if "gdivhshift_proof" in file_name and thm == 46: 
+                        if "gdivhshift_proof" in file_name and thm == 46:
                             print(file_line)
                         if r == 0:
                             outputs_bv_decide.append(output.failed)
@@ -473,7 +531,7 @@ def parse_file(file_name: str, reps: int):
                             counter_bv_decide_rw_times_average[thm].append(float(-1))
                             counter_bv_decide_sat_times_average[thm].append(float(-1))
                             solved_bv_decide_times_average[thm].append(float(-1))
-                            solved_bv_decide_rw_times_average[thm].append(float(-1))             
+                            solved_bv_decide_rw_times_average[thm].append(float(-1))
                             solved_bv_decide_bb_times_average[thm].append(float(-1))
                             solved_bv_decide_sat_times_average[thm].append(float(-1))
                             solved_bv_decide_lratt_times_average[thm].append(
@@ -639,7 +697,7 @@ def save_solved_df(
     all_files_solved_bv_decide_sat_times_stddev: list,
     all_files_solved_bv_decide_lratt_times_stddev: list,
     all_files_solved_bv_decide_lratc_times_stddev: list,
-    
+
     csv_name: str,
 ):
     solved_df = pd.DataFrame(
@@ -769,10 +827,10 @@ def collect(benchmark: str, reps : int):
 
             for tmp in file_comparison["file_solved_bv_decide_rw_times_stddev"]:
                 all_files_solved_bv_decide_rw_times_stddev.append(tmp)
-            
+
             for tmp in file_comparison["file_solved_bv_decide_bb_times_stddev"]:
                 all_files_solved_bv_decide_bb_times_stddev.append(tmp)
-            
+
             for tmp in file_comparison["file_solved_bv_decide_sat_times_stddev"]:
                 all_files_solved_bv_decide_sat_times_stddev.append(tmp)
 
@@ -876,7 +934,7 @@ def collect(benchmark: str, reps : int):
 
         ratios = []
         for avg, stddev in zip(all_files_solved_bv_decide_times_average, all_files_solved_bv_decide_times_stddev):
-            ratio = (stddev/avg) * 100 
+            ratio = (stddev/avg) * 100
             ratios.append(ratio)
 
         print("mean of percentage stddev/av: "+str(np.mean(ratios)) + "%")
@@ -901,6 +959,60 @@ def collect(benchmark: str, reps : int):
             RAW_DATA_DIR_INSTCOMBINE + "instcombine_solved_data.csv",
         )
 
+        all_files_solved_bv_decide_times_average = np.array(all_files_solved_bv_decide_times_average)
+        all_files_solved_bitwuzla_times_average = np.array(all_files_solved_bitwuzla_times_average)
+        all_files_solved_bv_decide_bb_times_average = np.array(all_files_solved_bv_decide_bb_times_average)
+        all_files_solved_bv_decide_sat_times_average = np.array(all_files_solved_bv_decide_sat_times_average)
+        all_files_solved_bv_decide_lratt_times_average = np.array(all_files_solved_bv_decide_lratt_times_average)
+        all_files_solved_bv_decide_lratc_times_average = np.array(all_files_solved_bv_decide_lratc_times_average)
+
+        geomean_time_instcombine_bvdecide = geomean(all_files_solved_bv_decide_times_average)
+        geomean_time_instcombine_bitwuzla = geomean(all_files_solved_bitwuzla_times_average)
+        all_files_slowdown = all_files_solved_bv_decide_times_average / all_files_solved_bitwuzla_times_average
+        geomean_slowdown_instcombine = geomean(all_files_slowdown)
+        mean_slowdown_instcombine = np.mean(all_files_slowdown)
+
+        all_files_solved_bv_decide_sat_plus_bb_average = all_files_solved_bv_decide_bb_times_average + all_files_solved_bv_decide_sat_times_average
+        sat_bb =  np.sum(all_files_solved_bv_decide_sat_plus_bb_average)
+        perc_sat_bb = (sat_bb/np.sum(all_files_solved_bv_decide_times_average))*100
+        geomean_sat_bb = geomean(all_files_solved_bv_decide_sat_plus_bb_average/ all_files_solved_bv_decide_times_average)*100
+
+
+        # geomean time of those problems that are solved purely by rewriting
+        filtered_rewrite_times = []
+        for i in range(len(all_files_solved_bv_decide_times_average)):
+            if all_files_solved_bv_decide_sat_times_average[i] == 0 and \
+               all_files_solved_bv_decide_bb_times_average[i] == 0 and \
+               all_files_solved_bv_decide_lratc_times_average[i] == 0 and \
+               all_files_solved_bv_decide_lratt_times_average[i] == 0:
+                   filtered_rewrite_times.append(all_files_solved_bv_decide_times_average[i])
+        rewrite_only_mean = geomean(filtered_rewrite_times)
+
+        all_files_solved_bv_decide_lratt_plus_lratc_times_average = all_files_solved_bv_decide_lratt_times_average + all_files_solved_bv_decide_lratc_times_average
+        lrat_tot = np.sum(all_files_solved_bv_decide_lratt_plus_lratc_times_average)
+        perc_lrat = (lrat_tot / np.sum(np.array(all_files_solved_bv_decide_times_average)))*100
+        geomean_lrat = geomean(all_files_solved_bv_decide_lratt_plus_lratc_times_average / all_files_solved_bv_decide_times_average) * 100
+
+        with open("performance-instcombine.tex", "w") as f:
+            f.write(f"% git hash of lean-mlir that produced this file: {REPO_GIT_HASH}\n")
+            f.write(r"\newcommand{\InstCombineSatBitBlastingPerc}{" + ("%1.f" % perc_sat_bb) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineSatBitBlastingGeoMean}{" + ("%1.f" % geomean_sat_bb) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineRewriteOnlyGeoMean}{" + ("%1.f" % rewrite_only_mean) + "}\n")
+            # NOTE: what is called 'perc_lrat' used to be called 'perc_sat_bb'
+            # in paper-lean-bitvectors/tools/collect-stats.py @ 6cf08fa (due to a typo).
+            # We change the name to 'perc_lrat' for consistency.
+            f.write(r"\newcommand{\InstCombineLRATPerc}{" + ("%1.f" % perc_lrat) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineLRATGeoMean}{" + ("%1.f" % geomean_lrat) + "\\%}\n")
+            f.write(r"\newcommand{\InstCombineNProblemsTot}{" + str(counter_bv_decide_tot + solved_bv_decide_tot + error_bv_decide_tot) + "}\n")
+            f.write(r"\newcommand{\InstCombineNumProblemsSolved}{" + str(solved_bv_decide_tot) + "}\n")
+            f.write(r"\newcommand{\InstCombineGeomeanBvDecide}{" + str("%.2f" % geomean_time_instcombine_bvdecide) + "}\n")
+            f.write(r"\newcommand{\InstCombineGeomeanBitwuzla}{" + str("%.2f" %geomean_time_instcombine_bitwuzla) + "}\n")
+            f.write(r"\newcommand{\InstCombineGeomeanSlowdown}{" + str("%.2f" % geomean_slowdown_instcombine) + "}\n")
+            f.write(r"\newcommand{\InstCombineMeanSlowdown}{" + str("%.2f" % mean_slowdown_instcombine) + "}\n")
+            f.write(r"\newcommand{\InstCombineBothFailed}{" + str(len(all_files_failed_bv_decide_and_bitwuzla)) + "}\n")
+            f.write(r"\newcommand{\InstCombineOnlyBvDecideFailed}{" + str(len(all_files_failed_bv_decide_only)) + "}\n")
+            f.write(r"\newcommand{\InstCombineOnlyBitwuzlaFailed}{" + str(len(all_files_failed_bitwuzla_only)) + "}\n")
+
     elif benchmark == "hackersdelight":
         clear_folder(RAW_DATA_DIR_HACKERSDELIGHT)
 
@@ -911,7 +1023,6 @@ def collect(benchmark: str, reps : int):
                 file_name = (
                     RESULTS_DIR_HACKERSDELIGHT + file.split(".")[0] + "_" + str(bvw)
                 )
-
                 file_data.append([file_name, parse_file(file_name, reps)])
 
         for file_result in file_data:
@@ -937,7 +1048,6 @@ def collect(benchmark: str, reps : int):
                 + file_result[0].split("/")[-1]
                 + "_ceg_data.csv"
             )
-
             save_solved_df(
                 file_comparison["file_solved_bitwuzla_times_average"],
                 file_comparison["file_solved_bv_decide_times_average"],
@@ -970,6 +1080,38 @@ def collect(benchmark: str, reps : int):
                 + file_result[0].split("/")[-1]
                 + "_err_data.csv"
             )
+
+        # build the merged data we want for the paper.
+        chapter_names = ['ch2_1DeMorgan', 'ch2_2AdditionAndLogicalOps']
+        all_files_solved_bv_decide_times_average = []
+        all_files_solved_bitwuzla_times_average = []
+        all_files_solved_bv_decide_rw_times_average = []
+        all_files_solved_bv_decide_sat_times_average = []
+        all_files_solved_bv_decide_bb_times_average = []
+        all_files_solved_bv_decide_lratc_times_average = []
+        all_files_solved_bv_decide_lratt_times_average = []
+        with open("performance-hackersdelight.tex", "w") as f:
+            for bvw in bv_width:
+                for chapter_name in chapter_names:
+                    file_name = (
+                        RESULTS_DIR_HACKERSDELIGHT + chapter_name + "_" + str(bvw)
+                    )
+                    file_parse_result = parse_file(file_name, reps)
+                    file_comparison = compare_solvers_on_file((file_name, file_parse_result))
+                    all_files_solved_bv_decide_times_average.extend(file_comparison["file_solved_bv_decide_times_average"])
+                    all_files_solved_bitwuzla_times_average.extend(file_comparison["file_solved_bitwuzla_times_average"])
+                    all_files_solved_bv_decide_rw_times_average.extend(file_comparison["file_solved_bv_decide_rw_times_average"])
+                    all_files_solved_bv_decide_sat_times_average.extend(file_comparison["file_solved_bv_decide_sat_times_average"])
+                    all_files_solved_bv_decide_bb_times_average.extend(file_comparison["file_solved_bv_decide_bb_times_average"])
+                    all_files_solved_bv_decide_lratc_times_average.extend(file_comparison["file_solved_bv_decide_lratc_times_average"])
+                    all_files_solved_bv_decide_lratt_times_average.extend(file_comparison["file_solved_bv_decide_lratt_times_average"])
+                f.write(avg_bb_sat_to_latex_str(solver_name="HackersDelight" + num2words.num2words(bvw).replace('-', ''), \
+                    all_files_solved_bv_decide_times_average=all_files_solved_bv_decide_times_average, \
+                    all_files_solved_bitwuzla_times_average=all_files_solved_bitwuzla_times_average, \
+                    all_files_solved_bv_decide_bb_times_average=all_files_solved_bv_decide_bb_times_average, \
+                    all_files_solved_bv_decide_sat_times_average=all_files_solved_bv_decide_sat_times_average, \
+                    all_files_solved_bv_decide_lratt_times_average=all_files_solved_bv_decide_lratt_times_average, \
+                    all_files_solved_bv_decide_lratc_times_average=all_files_solved_bv_decide_lratc_times_average))
 
     elif benchmark == "smtlib":
         clear_folder(RAW_DATA_DIR_SMTLIB)

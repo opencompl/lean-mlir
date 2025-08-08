@@ -88,3 +88,29 @@ def toHom (m : Mapping Γ Δ) (h : m.IsTotal) : Γ.Hom Δ :=
   fun t v =>
     m.lookup ⟨t, v⟩ |>.get <| by
       simpa [AList.lookup_isSome] using h _
+
+section MapValuation
+variable [TyDenote Ty] [∀ t' : Ty, Inhabited ⟦t'⟧]
+
+/--
+Map a valuation of context `Δ` along a partial map `m : Mapping Γ Δ` into
+a valuation of context `Γ`. This returns the default value of `⟦t'⟧` for
+any variable `Γ.Var t'` which is not mapped in `m`.
+-/
+def mapValuation (m : Mapping Γ Δ) (V : Δ.Valuation) : Γ.Valuation :=
+  fun t' v' =>
+    match m.lookup ⟨t', v'⟩ with
+    | some mappedVar => V mappedVar
+    | none => default
+
+section Lemmas
+variable {m : Mapping Γ Δ} {V : Δ.Valuation}
+
+lemma toHom_eq_mapValuation (h : m.IsTotal) :
+    V.comap (m.toHom h) = m.mapValuation V := by
+  funext t v
+  obtain ⟨_, h_lookup⟩ := Option.isSome_iff_exists.mp <| AList.lookup_isSome.2 (h v)
+  simp [mapValuation, toHom, h_lookup]
+
+end Lemmas
+end MapValuation
