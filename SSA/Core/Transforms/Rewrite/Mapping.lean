@@ -65,6 +65,18 @@ namespace Mapping
 
 variable {Γ Δ : Ctxt Ty} [DecidableEq Ty]
 
+variable [TyDenote Ty] [∀ t' : Ty, Inhabited ⟦t'⟧] in
+/--
+Map a valuation of context `Δ` along a partial map `m : Mapping Γ Δ` into
+a valuation of context `Γ`. This returns the default value of `⟦t'⟧` for
+any variable `Γ.Var t'` which is not mapped in `m`.
+-/
+def mapValuation (m : Mapping Γ Δ) (V : Δ.Valuation) : Γ.Valuation :=
+  fun t' v' =>
+    match m.lookup ⟨t', v'⟩ with
+    | some mappedVar => V mappedVar
+    | none => default
+
 /-- Whether the mapping has an entry for every variable in the domain. -/
 def IsTotal (m : Mapping Γ Δ) : Prop :=
   ∀ {t} v, ⟨t, v⟩ ∈ m
