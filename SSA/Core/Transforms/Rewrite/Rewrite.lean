@@ -20,6 +20,12 @@ variable [∀ (t : d.Ty), Inhabited (toType t)]
 /-!
 ## Program Splitting
 -/
+section SplitProgram
+
+variable (d Γ eff t) in
+structure SplitProgramResult extends Zipper d Γ eff t where
+  {midType : d.Ty}
+  midRet : toZipper.Γ_mid.Var midType
 
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
@@ -27,42 +33,47 @@ It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
     (prog : Com d Γ₂ eff t) →
-    Option (Σ (Γ₃ : Ctxt d.Ty), Lets d Γ₁ eff Γ₃ × Com d Γ₃ eff t × (t' : d.Ty) × Var Γ₃ t')
-  | 0, lets, .var e body => some ⟨_, .var lets e, body, _, Var.last _ _⟩
+    Option (SplitProgramResult d Γ₁ eff t)
+  | 0, lets, .var e body => some {
+      top := lets.var e
+      bot := body
+      midRet := Var.last _ _
+    }
   | _, _, .ret _ => none
   | n+1, lets, .var e body =>
     splitProgramAtAux n (lets.var e) body
 
-theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Lets d Γ₁ eff Γ₂} →
+theorem denote_splitProgramAtAux [LawfulMonad d.m] :
+    {pos : ℕ} → {lets : Lets d Γ₁ eff Γ₂} →
     {prog : Com d Γ₂ eff t} →
-    {res : Σ (Γ₃ : Ctxt d.Ty), Lets d Γ₁ eff Γ₃ × Com d Γ₃ eff t × (t' : d.Ty) × Var Γ₃ t'} →
-    (hres : res ∈ splitProgramAtAux pos lets prog) →
-    (s : Valuation Γ₁) →
-    (res.2.1.denote s) >>= res.2.2.1.denote  = (lets.denote s) >>= prog.denote
-  | 0, lets, .var e body, res, hres, s => by
+    {res : _} → (hres : res ∈ splitProgramAtAux pos lets prog) →
+    (V : Valuation Γ₁) →
+    res.denote V = (lets.denote V) >>= prog.denote
+  | 0, lets, .var e body, res, hres, V => by
     obtain rfl := by
       simpa only [splitProgramAtAux, Option.mem_def, Option.some.injEq] using hres
-    simp only [Lets.denote, bind_assoc, Com.denote_var]
+    simp
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
     simp [denote_splitProgramAtAux hres s]
 
--- TODO: have `splitProgramAt` return a `Zipper`
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
-def splitProgramAt (pos : ℕ) (prog : Com d Γ₁ eff t) :
-    Option (Σ (Γ₂ : Ctxt d.Ty), Lets d Γ₁ eff Γ₂ × Com d Γ₂ eff t × (t' : d.Ty) × Var Γ₂ t') :=
+def splitProgramAt (pos : ℕ) (prog : Com d Γ eff t) :
+    Option (SplitProgramResult d Γ eff t) :=
   splitProgramAtAux pos .nil prog
 
-theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ₁ eff t}
-    {res : Σ (Γ₂ : Ctxt d.Ty), Lets d Γ₁ eff Γ₂ × Com d Γ₂ eff t × (t' : d.Ty) × Var Γ₂ t'}
-    (hres : res ∈ splitProgramAt pos prog) (s : Valuation Γ₁) :
-     (res.2.1.denote s) >>= res.2.2.1.denote = prog.denote s := by
-  simp [denote_splitProgramAtAux hres s]
+@[simp]
+theorem denote_splitProgramAt [LawfulMonad d.m] {pos : ℕ} {prog : Com d Γ eff t}
+    {res : _} (hres : res ∈ splitProgramAt pos prog) :
+    res.denote = prog.denote := by
+  funext; simp [denote_splitProgramAtAux hres]
+
+end SplitProgram
 
 /-
   ## Rewriting
@@ -76,14 +87,15 @@ def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
     Option (Com d Γ₂ eff t₂) := do
-  let ⟨Γ₃, targetLets, target', t', vm⟩ ← splitProgramAt pos target
-  if h : t₁ = t'
+  let splitRes ← splitProgramAt pos target
+  if h : t₁ = splitRes.midType
   then
+    let targetLets := splitRes.top
+    let vm := splitRes.midRet
     let flatLhs := lhs.toFlatCom
     let m ← matchVarMap targetLets vm flatLhs.lets (flatLhs.ret.cast h)
       (by subst h; exact hlhs)
-    let zip : Zipper .. := ⟨targetLets, target'⟩;
-    let zip := zip.insertPureCom vm (h ▸ rhs.changeVars m)
+    let zip := splitRes.insertPureCom vm (h ▸ rhs.changeVars m)
     return zip.toCom
   else none
 
@@ -105,22 +117,12 @@ theorem denote_rewriteAt [LawfulMonad d.m]
     rew.denote = target.denote := by
   funext V
   simp only [rewriteAt, Com.toFlatCom_ret, Option.pure_def, Option.bind_eq_bind, Option.mem_def,
-    Option.bind_eq_some_iff, Option.dite_none_right_eq_some, Option.some.injEq, Sigma.exists,
-    Prod.exists] at hrew
-  rcases hrew with ⟨Γ', lets', com', t', v', h_split, rfl, varMap', hmap, rfl⟩
-  simp only [Var.cast_rfl] at *
-  suffices
-    (do
-      let V_mid ← lets'.denote V
-      com'.denote
-      <| V_mid.reassignVar v'
-        <| lhs.toFlatCom.lets.denote (V_mid.comap varMap') lhs.returnVar
-    ) = lets'.denote V >>= com'.denote
-  by
-    simpa [Zipper.denote_insertPureCom, hl, denote_splitProgramAt h_split]
-
-  simp only [lets'.denote_eq_denoteIntoSubtype, bind_map_left]
-  simp [denote_matchLets_of_matchVarMap hmap]
+    Option.bind_eq_some_iff, Option.dite_none_right_eq_some, Option.some.injEq] at hrew
+  rcases hrew with ⟨res, h_split, rfl, varMap', hmap, rfl⟩
+  rw [Zipper.denote_toCom, ← denote_splitProgramAt h_split]
+  apply Zipper.denote_insertPureCom_eq_of
+  intro V
+  simp [← hl, ← denote_matchLets_of_matchVarMap hmap]
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--

@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import SSA.Core.Transforms.Rewrite.Match
 
 open Ctxt (Valuation Var Hom)
 
@@ -129,6 +130,21 @@ theorem denote_insertPureCom {zip : Zipper d Γ_in eff t₁} [LawfulMonad d.m]
     simp only [Com.outContextHom, Com.outContextDiff, Com.size_castPureToEff]
     rfl
   funext V; simp [insertPureCom, denote_insertCom, Valuation.comap, this]
+
+theorem denote_insertPureCom_eq_of [LawfulMonad d.m]
+    {zip : Zipper d Γ_in eff ty₁} {v}
+    {newCom : Com d zip.Γ_mid _ newTy} {V_in : Valuation Γ_in}
+    (h : ∀ V : zip.top.ValidDenotation, newCom.denote V.val = V.val v) :
+    (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
+  simp only [denote_insertPureCom, Valuation.comap_with,
+  Valuation.comap_outContextHom_denoteLets, Com.denoteLets_returnVar_pure]
+  unfold Valuation.reassignVar Zipper.denote
+  simp only [Lets.denote_eq_denoteIntoSubtype, bind_map_left]
+  congr; funext V_mid; congr
+  funext t' v'
+  simp only [dite_eq_right_iff, forall_exists_index]
+  rintro rfl rfl
+  simpa using h _
 
 end Lemmas
 end InsertCom
