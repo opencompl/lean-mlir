@@ -1,10 +1,12 @@
 import SSA.Core.Framework
 
-open Ctxt (Valuation Var)
+open Ctxt (Valuation Var Hom)
 
 /-!
 # Zipper
 -/
+
+/-! ## Zipper Definition -/
 
 variable (d : Dialect) [DialectSignature d]
 
@@ -23,7 +25,7 @@ structure Zipper (Γ_in : Ctxt d.Ty) (eff : EffectKind) (ty : d.Ty) where
   /-- The program at the bottom of the zipper -/
   bot : Com d Γ_mid eff ty
 
-
+/-! ## Zipper API -/
 namespace Zipper
 variable {d}
 
@@ -80,12 +82,12 @@ variable [DecidableEq d.Ty]
 occurence of a given free variable (`v`) of `zip.com` to the output of the new `Com`  -/
 def insertCom (zip : Zipper d Γ_in eff ty) (v : Var zip.Γ_mid newTy)
     (newCom : Com d zip.Γ_mid eff newTy) : Zipper d Γ_in eff ty :=
-  let newTop := zip.top.addComToEnd newCom
-  --  ^^^^^^ The combination of the previous `top` with the `newCom` inserted
-  let newBot := zip.bot.changeVars <| newCom.outContextHom.with v newCom.returnVar
-  --  ^^^^^^ Adjust variables in `bot` to the intermediate context of the new zipper --- which is
+  let top := zip.top.addComToEnd newCom
+  --  ^^^ The combination of the previous `top` with the `newCom` inserted
+  let bot := zip.bot.changeVars <| newCom.outContextHom.with v newCom.returnVar
+  --  ^^^ Adjust variables in `bot` to the intermediate context of the new zipper --- which is
   --         `newCom.outContext` --- while also reassigning `v`
-  ⟨newTop, newBot⟩
+  { top, bot }
 
 /-- Add a pure `Com` directly before the current position of a possibly impure
 zipper, while r eassigning every occurence of a given free variable (`v`) of
