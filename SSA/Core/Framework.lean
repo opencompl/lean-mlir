@@ -436,20 +436,6 @@ theorem Com.recAux'_eq :
 
 end Rec
 
-/-- Alternative recursion principle for known-pure `Com`s.
-
-NOTE: this can now be achieved through `Com.rec'` direclty;
-`recPure` is deprecated and will be removed soon. -/
--- TODO: eventually remove this
-@[elab_as_elim, deprecated Com.rec' (since := "")]
-def Com.recPure {t} {motive : ∀ {Γ t}, Com d Γ .pure t → Sort u}
-    (ret : ∀ {Γ}, (v : Var Γ t) → motive (Com.ret v))
-    (var : ∀ {Γ} {u : d.Ty},
-      (e : Expr d Γ .pure u) → (body : Com d (Γ.snoc u) .pure t) →
-        motive body → motive (Com.var e body))
-    {Γ} (com : Com d Γ .pure t) : motive com :=
-  com.rec' (motive := motive) ret var
-
 def Expr.op {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty} (e : Expr d Γ eff ty) : d.Op :=
   Expr.casesOn e (fun op _ _ _ _ => op)
 
