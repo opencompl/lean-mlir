@@ -451,7 +451,6 @@ def generalize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalEx
       constantAssignments := parsedBVState.symVarToVal :: constantAssignments
       processingWidth := originalWidth
 
-    let mut updatedParsedBVLogicalExpr := parsedBVLogicalExpr
     if processingWidth != targetWidth then
         -- Revert to the original width if necessary
       logicalExpr := H.changeLogicalExprWidth logicalExpr processingWidth

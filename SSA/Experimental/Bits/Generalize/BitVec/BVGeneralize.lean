@@ -710,6 +710,9 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) :
         s! "({prettifyBVExpr lhs displayNames} >>> {prettifyBVExpr rhs displayNames})"
     | .arithShiftRight lhs rhs =>
         s! "({prettifyBVExpr lhs displayNames} >>>a {prettifyBVExpr rhs displayNames})"
+    | .signExtend v expr => s! "BitVec.signExtend {v} {prettifyBVExpr expr displayNames}"
+    | .zeroExtend v expr => s! "BitVec.zeroExtend {v} {prettifyBVExpr expr displayNames}"
+    | .truncate v expr =>   s! "BitVec.truncate {v} {prettifyBVExpr expr displayNames}"
     | _ => bvExpr.toString
 
 def isGteZeroCheck (expr : GenBVLogicalExpr) : Bool :=
@@ -818,18 +821,26 @@ def evalBvGeneralize : Tactic
 
 
 set_option linter.unusedTactic false
+variable {x y z : BitVec 11}
+#generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
+
+variable {x y z : BitVec 16}
+#generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
+
 variable {x y z: BitVec 32}
--- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
--- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+#generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
 
--- theorem zextdemo (x : BitVec 32) : BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32 := by
---   bv_decide
---   sorry
+variable {x y z : BitVec 1}
+#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1)
 
 
--- theorem zextdemo2 (x : BitVec 32) : 1#32 <<< x &&& 1#32 = BitVec.zeroExtend 32 (BitVec.ofBool (x == 0#32)) := by
---   bv_generalize
---   sorry
+theorem zext (x : BitVec 8) :  ¬ (BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x) := by
+ -- intros h
+  bv_normalize
+  bv_decide
+  sorry
+
 
 section Examples
 set_option warn.sorry false

@@ -308,6 +308,7 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
   | .arithShiftRight lhs rhs => return mkApp4 (.const ``BitVec.sshiftRight' []) bitVecWidth bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .zeroExtend v expr => return mkApp3  (.const ``BitVec.zeroExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
   | .truncate v expr => return mkApp3  (.const ``BitVec.truncate []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
+  | .signExtend v expr => return mkApp3 (.const ``BitVec.signExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
   | .extract _ _ _ => throwError m! "Extract operation is not supported."
 
 
