@@ -954,13 +954,20 @@ variable {Γ} {v}
 @[simp] lemma dropUntil_appendInr {v : Var ⟨ts⟩ t} :
     (Γ ++ ts).dropUntil v.appendInr = Γ ++ (ts.drop <| v.1 + 1) := by
   rcases Γ
-  simp only [dropUntil, ofList_append, getElem?_ofList, Var.val_appendInr, ofList.injEq]
-  induction ts
-  · rcases v with ⟨idx, h⟩
-    simp at h
-  · stop
-    simp_all
-
+  -- TODO: upstream the following as a `List` lemma
+  suffices ∀ {xs} (i : Nat) (hi : i ≤ xs.length) (ys : List Ty),
+    List.drop i (xs ++ ys) = List.drop i xs ++ ys
+  by
+    have hi : v.val + 1 ≤ ts.length := by
+      simpa using v.val_lt
+    simpa [dropUntil] using this _ hi _
+  intro xs i hi ys
+  induction xs generalizing i
+  case nil => cases i <;> simp_all
+  case cons ih =>
+    rcases i with _|i
+    · rfl
+    · simp [ih i (by simp_all)]
 
 /-- The difference between `Γ.dropUntil v` and `Γ` is exactly `v.val + 1` -/
 def dropUntilDiff : Diff (Γ.dropUntil v) Γ :=
@@ -970,7 +977,7 @@ def dropUntilDiff : Diff (Γ.dropUntil v) Γ :=
     case nil => exact v.emptyElim
     case snoc Γ _ ih =>
       cases v using Var.casesOn
-      · simp only [dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
+      · simp only [Var.val_toSnoc] at h ⊢
         apply ih h
       · simpa! using h
   ⟩
