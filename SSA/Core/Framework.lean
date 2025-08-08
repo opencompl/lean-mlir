@@ -190,21 +190,6 @@ inductive Lets (Γ_in : Ctxt d.Ty) (eff : EffectKind) :
   | nil : Lets Γ_in eff Γ_in
   | var (body : Lets Γ_in eff Γ_out) (e : Expr d Γ_out eff t) : Lets Γ_in eff e.outContext
 
-/-- `Zipper d Γ_in eff Γ_mid ty` represents a particular position in a program, by storing the
-`Lets` that come before this position separately from the `Com` that represents the rest.
-Thus, `Γ_in` is the context of the program as a whole, while `Γ_mid` is the context at the
-current position.
-
-While technically the position is in between two let-bindings, by convention we say that the first
-binding of `top : Lets ..` is the current binding of a particular zipper. -/
-structure Zipper (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_mid : Ctxt d.Ty) (tys : List d.Ty) where
-  /-- The let-bindings at the top of the zipper -/
-  top : Lets d Γ_in eff Γ_mid
-  /-- The program at the bottom of the zipper -/
-  bot : Com d Γ_mid eff tys
-
-
-
 /-! ### Repr instance -/
 section Repr
 open Std (Format)
@@ -462,6 +447,10 @@ def Expr.regArgs {Γ ts} (e : Expr d Γ eff ts) :
     Regions d (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
+/-- `e.returnVar` is the variable in `e.outContext` which is bound by `e`. -/
+def Expr.returnVar (e : Expr d Γ eff ty) : e.outContext.Var ty :=
+  Var.last _ _
+
 /-! Projection equations for `Expr` -/
 @[simp]
 theorem Expr.op_mk {Γ : Ctxt d.Ty} {ty} {eff : EffectKind} (op : d.Op)
@@ -571,6 +560,9 @@ def Com.returnVar (com : Com d Γ eff [t]) : Var com.outContext t :=
 @[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
   @fun _ => Var.appendInl
 
+@[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
+  @fun _ => Var.toSnoc
+
 section Lemmas
 
 @[simp] lemma Com.outContext_ret (vs : HVector Γ.Var t) : (ret vs : Com d Γ eff t).outContext = Γ := rfl
@@ -596,31 +588,6 @@ section Lemmas
     returnVar (ret v : Com d Γ eff [t]) = v.get (0 : Fin 1) := rfl
 @[simp] lemma Com.returnVar_var :
     returnVar (var (d:=d) (eff:=eff) e body) = body.returnVar := rfl
-
-end Lemmas
-
-/-!
-### `Lets.addComToEnd` and `Com.toLets`
--/
-
-/-- Add a `Com` to the end of a sequence of lets -/
-def Lets.addComToEnd {Γ_out} {eff} (lets : Lets d Γ_in eff Γ_out) :
-      (com : Com d Γ_out eff ty) → Lets d Γ_in eff com.outContext
-  | Com.ret _       => lets
-  | Com.var e body => addComToEnd (Lets.var lets e) body
-
-/-- The let-bindings of a program -/
-def Com.toLets (com : Com d Γ eff t) : Lets d Γ eff com.outContext :=
-  Lets.nil.addComToEnd com
-
-section Lemmas
-
-@[simp] lemma Lets.addComToEnd_ret {lets : Lets d Γ_in eff Γ_out} :
-    addComToEnd lets (.ret v : Com d Γ_out eff t) = lets             := by simp [addComToEnd]
-@[simp] lemma Lets.addComToEnd_var {lets : Lets d Γ_in eff Γ_out} {com : Com d _ eff t} :
-    addComToEnd lets (Com.var e com) = addComToEnd (lets.var e) com := by simp [addComToEnd]
-
-@[simp] lemma Com.toLets_ret : toLets (ret v : Com d Γ eff t) = .nil := by simp [toLets]
 
 end Lemmas
 
@@ -677,12 +644,6 @@ the congruence, you can do: `rw [← Lets.denotePure]; congr`
 -/
 @[simp] abbrev Lets.denotePure [DialectSignature d] [DialectDenote d] :
     Lets d Γ₁ .pure Γ₂ → Valuation Γ₁ → Valuation Γ₂ := Lets.denote
-
-/-- The denotation of a zipper is a composition of the denotations of the constituent
-`Lets` and `Com` -/
-def Zipper.denote (zip : Zipper d Γ_in eff Γ_out tys) (V_in : Valuation Γ_in) :
-    eff.toMonad d.m (HVector toType tys) :=
-  (zip.top.denote V_in) >>= zip.bot.denote
 
 section Unfoldings
 
@@ -796,25 +757,6 @@ section Lemmas
 @[simp] lemma Lets.denote_var {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff t} :
     (lets.var e).denote = fun V_in => lets.denote V_in >>= e.denote :=
   rfl
-
-
-
-@[simp] lemma Lets.denote_addComToEnd
-    {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff t} :
-    Lets.denote (lets.addComToEnd com) = fun V => (do
-        let Vlets ← lets.denote V
-        let Vbody ← com.denoteLets Vlets
-        return Vbody
-      ) := by
-  induction com
-  case ret => simp [Com.denoteLets]
-  case var ih => simp [addComToEnd, ih, denote_var]
-
-@[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
-  funext V; simp [denoteLets]
-
-theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
-  simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_var]
 
 end Lemmas
 
@@ -1078,32 +1020,6 @@ section Lemmas
     (com.castPureToEff eff).size = com.size := by
   induction com using Com.rec' <;> simp [*]
 
-/-- `castPureToEff` does not change the number of bound variables.  -/
-@[simp] lemma Expr.bvars_castPureToEff {e : Expr d Γ .pure ty} :
-    (e.castPureToEff eff).bvars = e.bvars := by
-  rcases e; simp [Expr.castPureToEff, changeEffect, Expr.bvars]
-
-/-- `castPureToEff` does not change the number of bound variables in a `Com` -/
-@[simp] lemma Com.bvars_castPureToEff {com : Com d Γ .pure ty} :
-    (com.castPureToEff eff).bvars = com.bvars := by
-  induction com using Com.rec' <;> simp [*]
-
-@[simp] lemma Lets.addComToEnd_castPureToEff {lets : Lets d Γ_in .pure Γ_out}
-    {com : Com d Γ_out .pure ty} :
-    (lets.castPureToEff eff).addComToEnd (com.castPureToEff eff)
-    = cast (by simp) ((lets.addComToEnd com).castPureToEff eff) := by
-  induction com using Com.rec'
-  case ret => simp
-  case var ih =>
-    simp only [Com.castPureToEff_var, Com.outContext_var, addComToEnd_var,
-      ← Lets.castPureToEff_var, ih]
-
-@[simp] lemma Com.toLets_castPureToEff {com : Com d Γ .pure ty} :
-    (com.castPureToEff eff).toLets = cast (by simp) (com.toLets.castPureToEff eff) := by
-  unfold toLets
-  rw [show (Lets.nil : Lets d Γ eff Γ) = (Lets.nil.castPureToEff eff) from rfl,
-    Lets.addComToEnd_castPureToEff]
-
 @[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure [ty]} :
     (com.castPureToEff eff).returnVar = com.returnVar.castCtxt (by simp) := by
   induction com using Com.rec' <;> simp_all
@@ -1125,14 +1041,6 @@ section Lemmas
   funext V
   induction com using Com.rec'
   · rfl
-  · simp [*]; rfl
-
-@[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
-    denoteLets (com.castPureToEff eff)
-    = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
-  funext V
-  induction com using Com.rec'
-  · simp
   · simp [*]; rfl
 
 end Lemmas
@@ -1192,98 +1100,6 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
   obtain ⟨h_pure, rfl⟩ : ∃ (h : e.HasPureOp), e.toPure h = e' := by
     simpa [toPure?] using he
   rw [denote_pure, EffectKind.pure_pure, ← map_pure, Expr.pure_denoteOp_toPure, denote_unfold]
-
-/-!
-## Combining `Lets` and `Com`
-
-Various machinery to combine `Lets` and `Com`s in various ways.
-
--/
-
--- TODO: this doesn't morally fit here, but we can't yoink it up, figure out what to do
-/-- Convert a `Com` into a `FlatCom` -/
-def Com.toFlatCom {t : d.Ty} (com : Com d Γ .pure [t]) : FlatCom d Γ .pure com.outContext t :=
-  ⟨com.toLets, com.returnVar⟩
-
-/-- Recombine a zipper into a single program by adding the `lets` to the beginning of the `com` -/
-def Zipper.toCom (zip : Zipper d Γ_in eff Γ_mid ty) : Com d Γ_in eff ty :=
-  go zip.top zip.bot
-  where
-    go : {Γ_mid : _} → Lets d Γ_in eff Γ_mid → Com d Γ_mid eff ty → Com d Γ_in eff ty
-      | _, .nil, com          => com
-      | _, .var body e, com  => go body (.var e com)
-
-/-- Add a `Com` directly before the current position of a zipper, while reassigning every
-occurence of a given free variable (`v`) of `zip.com` to the output of the new `Com`  -/
-def Zipper.insertCom (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid newTy)
-    (newCom : Com d Γ_mid eff [newTy]) : Zipper d Γ_in eff newCom.outContext ty :=
-  let newTop := zip.top.addComToEnd newCom
-  --  ^^^^^^ The combination of the previous `top` with the `newCom` inserted
-  let newBot := zip.bot.changeVars <| newCom.outContextHom.with v newCom.returnVar
-  --  ^^^^^^ Adjust variables in `bot` to the intermediate context of the new zipper --- which is
-  --         `newCom.outContext` --- while also reassigning `v`
-  ⟨newTop, newBot⟩
-
-/-- Add a pure `Com` directly before the current position of a possibly impure
-zipper, while r eassigning every occurence of a given free variable (`v`) of
-`zip.com` to the output of the new `Com`
-
-This is a wrapper around `insertCom` (which expects `newCom` to have the same effect as `zip`)
-and `castPureToEff` -/
-def Zipper.insertPureCom (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid newTy)
-    (newCom : Com d Γ_mid .pure [newTy]) : Zipper d Γ_in eff newCom.outContext ty :=
-  (by simp : (newCom.castPureToEff eff).outContext = newCom.outContext)
-    ▸ zip.insertCom v (newCom.castPureToEff eff)
-
-/-! simp-lemmas -/
-section Lemmas
-
-@[simp] lemma Zipper.toCom_nil {com : Com d Γ eff ty} : Zipper.toCom ⟨.nil, com⟩ = com := rfl
-@[simp] lemma Zipper.toCom_var {lets : Lets d Γ_in eff Γ_mid} :
-    Zipper.toCom ⟨Lets.var lets e, com⟩ = Zipper.toCom ⟨lets, Com.var e com⟩ := rfl
-
-@[simp] theorem Zipper.denote_toCom [LawfulMonad d.m] (zip : Zipper d Γ_in eff Γ_mid ty) :
-    zip.toCom.denote = zip.denote := by
-  rcases zip with ⟨lets, com⟩
-  funext Γv; induction lets <;> simp [Lets.denote, Zipper.denote, *]
-
-@[simp] lemma Zipper.denote_mk {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff ty} :
-    denote ⟨lets, com⟩ = fun V => (lets.denote V) >>= com.denote := rfl
-
-theorem Zipper.denote_insertCom {zip : Zipper d Γ_in eff Γ_mid ty₁}
-    {newCom : Com d _ eff [newTy]} [LawfulMonad d.m] :
-    (zip.insertCom v newCom).denote = (fun (V_in : Valuation Γ_in) => do
-      let V_mid ← zip.top.denote V_in
-      let V_newMid ← newCom.denoteLets V_mid
-      zip.bot.denote
-        (V_newMid.comap <| newCom.outContextHom.with v newCom.returnVar)
-      ) := by
-  funext V
-  simp [insertCom, Com.denoteLets_eq]
-
-/-- Casting the intermediate context is not relevant for the denotation -/
-@[simp] lemma Zipper.denoteLets_eqRec_Γ_mid {zip : Zipper d Γ_in eff Γ_mid ty}
-    (h : Γ_mid = Γ_mid') :
-    denote (h ▸ zip) = zip.denote := by
-  subst h; rfl
-
-theorem Zipper.denote_insertPureCom {zip : Zipper d Γ_in eff Γ_mid ty₁}
-    {newCom : Com d _ .pure [newTy]} [LawfulMonad d.m] :
-    (zip.insertPureCom v newCom).denote = (fun (V_in : Valuation Γ_in) => do
-      let V_mid ← zip.top.denote V_in
-      zip.bot.denote
-        ((Com.denoteLets newCom V_mid).comap <| newCom.outContextHom.with v newCom.returnVar)
-      ) := by
-  have (V_mid) (h : Com.outContext (Com.castPureToEff eff newCom) = Com.outContext newCom) :
-      ((Com.denoteLets newCom V_mid).comap fun x v => v.castCtxt h).comap
-        (newCom.castPureToEff eff).outContextHom
-      = (Com.denoteLets newCom V_mid).comap newCom.outContextHom := by
-    funext t' ⟨v', hv'⟩
-    simp [Com.outContextHom, Com.outContextDiff]
-    rfl
-  funext V; simp [insertPureCom, denote_insertCom, Valuation.comap, this]
-
-end Lemmas
 
 /-!
 ### Semantic preservation of `Zipper.insertPureCom`
@@ -1553,6 +1369,82 @@ section Lemmas
 end Lemmas
 
 end Map
+
+/-!
+## `Lets.addComToEnd`, `Com.toLets` and `Com.toFlatCom`
+-/
+
+/-- Add a `Com` to the end of a sequence of lets -/
+def Lets.addComToEnd {Γ_out} {eff} (lets : Lets d Γ_in eff Γ_out) :
+      (com : Com d Γ_out eff ty) → Lets d Γ_in eff com.outContext
+  | Com.ret _       => lets
+  | Com.var e body => addComToEnd (Lets.var lets e) body
+
+/-- The let-bindings of a program -/
+def Com.toLets (com : Com d Γ eff t) : Lets d Γ eff com.outContext :=
+  Lets.nil.addComToEnd com
+
+/-- Convert a `Com` into a `FlatCom` -/
+def Com.toFlatCom {t : d.Ty} (com : Com d Γ .pure t) : FlatCom d Γ .pure com.outContext t :=
+  ⟨com.toLets, com.returnVar⟩
+
+section Lemmas
+
+/-! #### Basic Lemmas -/
+
+@[simp] lemma Lets.addComToEnd_ret {lets : Lets d Γ_in eff Γ_out} :
+    addComToEnd lets (.ret v : Com d Γ_out eff t) = lets             := by simp [addComToEnd]
+@[simp] lemma Lets.addComToEnd_var {lets : Lets d Γ_in eff Γ_out} {com : Com d _ eff t} :
+    addComToEnd lets (Com.var e com) = addComToEnd (lets.var e) com := by simp [addComToEnd]
+
+@[simp] lemma Com.toLets_ret : toLets (ret v : Com d Γ eff t) = .nil := by simp [toLets]
+
+/-! ### castPureToEff -/
+
+@[simp] lemma Lets.addComToEnd_castPureToEff {lets : Lets d Γ_in .pure Γ_out}
+    {com : Com d Γ_out .pure ty} :
+    (lets.castPureToEff eff).addComToEnd (com.castPureToEff eff)
+    = cast (by simp) ((lets.addComToEnd com).castPureToEff eff) := by
+  induction com using Com.rec'
+  case ret => simp
+  case var ih =>
+    simp only [Com.castPureToEff_var, Com.outContext_var, addComToEnd_var,
+      ← Lets.castPureToEff_var, ih]
+
+@[simp] lemma Com.toLets_castPureToEff {com : Com d Γ .pure ty} :
+    (com.castPureToEff eff).toLets = cast (by simp) (com.toLets.castPureToEff eff) := by
+  unfold toLets
+  rw [show (Lets.nil : Lets d Γ eff Γ) = (Lets.nil.castPureToEff eff) from rfl,
+    Lets.addComToEnd_castPureToEff]
+
+/-! ### Denotation Lemmas-/
+
+@[simp] lemma Lets.denote_addComToEnd
+    {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff t} :
+    Lets.denote (lets.addComToEnd com) = fun V => (do
+        let Vlets ← lets.denote V
+        let Vbody ← com.denoteLets Vlets
+        return Vbody
+      ) := by
+  induction com
+  case ret => simp [Com.denoteLets]
+  case var ih => simp [addComToEnd, ih, denote_var]
+
+@[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
+  funext V; simp [denoteLets]
+
+theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
+  simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_var]
+
+@[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
+    denoteLets (com.castPureToEff eff)
+    = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
+  funext V
+  induction com using Com.rec'
+  · simp
+  · simp [*]; rfl
+
+end Lemmas
 
 /-!
 ## Free Variables
