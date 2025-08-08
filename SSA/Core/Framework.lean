@@ -440,6 +440,10 @@ def Expr.regArgs {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
     HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2) (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
+/-- `e.returnVar` is the variable in `e.outContext` which is bound by `e`. -/
+def Expr.returnVar (e : Expr d Γ eff ty) : e.outContext.Var ty :=
+  Var.last _ _
+
 /-! Projection equations for `Expr` -/
 @[simp]
 theorem Expr.op_mk {Γ : Ctxt d.Ty} {ty : d.Ty} {eff : EffectKind} (op : d.Op)
@@ -511,6 +515,9 @@ def Com.outContextHom (com : Com d Γ eff t) : Γ.Hom com.outContext :=
 def Com.returnVar : (com : Com d Γ eff t) → Var com.outContext t
   | .ret v => v
   | .var _ body => body.returnVar
+
+@[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
+  @fun _ => Var.toSnoc
 
 section Lemmas
 
