@@ -509,7 +509,7 @@ def Com.size : Com d Γ eff t → Nat :=
     /- ret _ -/       (fun _ => 0)
     /- var _ body -/ (fun _ _body bodySize => bodySize + 1)
 
-@[grind] def Expr.bvars (e : Expr d Γ eff Δ) : Nat :=
+@[simp, grind=] def Expr.bvars (e : Expr d Γ eff Δ) : Nat :=
   (DialectSignature.returnTypes e.op).length
 
 /-- The number of variables bound in a `Com`. This is related to the `size`, but
@@ -533,15 +533,13 @@ namespace Com
 
 end Com
 
-/-- Note: the context being accessed (`Γ_out`) is the return context of `e`! -/
 @[simp] lemma Ctxt.get_add_bvars (e : Expr d Γ eff ts) (i : Nat) :
     e.outContext[i + e.bvars]? = Γ[i]? := by
-  stop
   rcases e with ⟨op, rfl, _, _⟩
-  rcases Γ_in
-  simp only [get?, instAppend, ofList_append, Expr.bvars, Expr.op_mk, getElem?_ofList]
+  rcases Γ
+  simp only [ofList_append, Expr.bvars, Expr.op_mk, getElem?_ofList]
   rw [List.getElem?_append_right (by simp)]
-  simp
+  grind
 
 end Lemmas
 
@@ -711,6 +709,11 @@ def Expr.denoteOp (e : Expr d Γ eff ty) (V : Γ.Valuation) :
   EffectKind.liftEffect e.eff_le <| cast (by rw [← e.ty_eq]) <|
     DialectDenote.denote e.op (e.args.map V) e.regArgs.denote
 
+/-- Alias of `denoteOp` for pure expressions. -/
+@[simp] abbrev Expr.pdenoteOp :
+    Expr d Γ .pure ty → Γ.Valuation → (HVector toType ty) :=
+  Expr.denoteOp
+
 omit [LawfulMonad d.m] in
 /--
 Unfold `Expr.denote` in terms of the field projections and `Expr.denoteOp`.
@@ -771,8 +774,7 @@ section Lemmas
 
 @[simp] lemma Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
     (Valuation.comap (e.denote V) e.contextHom) = V := by
-  stop
-  funext t v; simp [Expr.denote_unfold]; rfl
+  funext t v; simp [Expr.denote_unfold, Id.map_eq']
 
 @[simp] lemma HVector.denote_nil
     (T : HVector (fun (t : Ctxt d.Ty × List d.Ty) => Com d t.1 .impure t.2) []) :
@@ -959,7 +961,7 @@ lemma Expr.changeVars_castCodomain (e : Expr d Γ eff t)
 
 @[simp] lemma HVector.changeVars_id {Γ : Ctxt d.Ty} (vs : HVector Γ.Var ts) :
     vs.map Hom.id = vs := by
-  sorry
+  induction vs <;> simp [map, *]
 
 @[simp] lemma Expr.changeVars_id (e : Expr d Γ eff t) :
     e.changeVars .id = e := by
@@ -1308,8 +1310,7 @@ section DenoteInsert
 
 @[simp] lemma Expr.denote_appendInl (e : Expr d Γ .pure t) (V : Γ.Valuation) (v : Γ.Var u) :
     e.denote V v.appendInl = V v := by
-  simp only [denote_unfold]
-  sorry
+  simp [denote_unfold, Id.map_eq']
 
 /-- Denoting any of the free variables of a program through `Com.denoteLets` just returns the
 assignment of that variable in the input valuation -/
@@ -1319,12 +1320,8 @@ assignment of that variable in the input valuation -/
   induction com using Com.rec'
   · simp; rfl
   case var e body ih =>
-    stop
     rw [outContextHom_var]
-    simp only [Ctxt.Hom.unSnoc_apply, denoteLets_var, EffectKind.toMonad_pure]
-    show body.denoteLets (e.denote V) _ = _
-    simp [ih]
-
+    simp [Id.bind_eq', Hom.comp, ih]
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
@@ -1367,7 +1364,7 @@ without adjusting variables, assuming that this expression has a pure operation.
 If the expression has an impure operation, or there is no binding corresponding to `v`
 (i.e., `v` comes from `Γ_in`), return `none` -/
 def Lets.getPureExprAux {Γ₁ Γ₂ : Ctxt d.Ty} {t} : Lets d Γ₁ eff Γ₂ → (v : Var Γ₂ t) →
-    Option (Σ ts, Expr d (Γ₂.dropUntil v) .pure ts)
+    Option (Σ ts, (Var ⟨ts⟩ t) × Expr d (Γ₂.dropUntil v) .pure ts)
   | .nil, _ => none
   | .var (Γ_out := Γ_out) (t := t) lets e, v => by
     cases v using Var.appendCases with
@@ -1377,52 +1374,55 @@ def Lets.getPureExprAux {Γ₁ Γ₂ : Ctxt d.Ty} {t} : Lets d Γ₁ eff Γ₂ �
     | right v =>
         have h : Γ_out ++ (t.drop <| v.1 + 1) = e.outContext.dropUntil v.appendInr := by simp
         let f := Hom.castCodomain h <| .appendCodomain .id
-        exact e.toPure?.map (fun e => ⟨_, e.changeVars f⟩)
+        exact e.toPure?.map (fun e => ⟨_, v, e.changeVars f⟩)
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
 not the local context where the variable appears. -/
 def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {t : d.Ty} (v : Var Γ₂ t) :
-    Option (Σ ts, Expr d Γ₂ .pure ts) :=
-  (getPureExprAux lets v).map fun ⟨_, e⟩ =>
-    ⟨_, e.changeVars Ctxt.dropUntilHom⟩
+    Option (Σ ts, (Var ⟨ts⟩ t) × Expr d Γ₂ .pure ts) :=
+  (getPureExprAux lets v).map fun ⟨_, v, e⟩ =>
+    ⟨_, v, e.changeVars Ctxt.dropUntilHom⟩
 
 @[simp] lemma Lets.getPureExpr_nil : getPureExpr (.nil : Lets d Γ eff Γ) v = none := rfl
 
 @[simp] lemma Lets.getPureExpr_var_appendInr (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty) (v : Var ⟨ty⟩ u) :
     getPureExpr (lets.var e) v.appendInr
-    = e.toPure?.map (fun e => ⟨_, e.changeVars <| e.contextHom⟩) := by
+    = e.toPure?.map (fun e => ⟨_, v, e.changeVars <| e.contextHom⟩) := by
   simp only [getPureExpr, getPureExprAux, Ctxt.getElem?_ofList, Var.appendCases_appendInr,
     Option.map_map]
-  congr
+  congr 1
   funext e
-  stop
-  simp [Hom.comp]
-  rfl
+  simp only [Expr.changeVars_changeVars, Function.comp]
+  congr 3
+  funext _ v'
+  apply Subtype.eq
+  have := v.val_lt
+  simp; grind
 
 -- TODO: not sure if we actually need this, if not drop it
 @[simp] lemma Lets.getPureExpr_var_last (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff [ty]) :
     getPureExpr (lets.var e) (Var.last _ _)
-    = e.toPure?.map (fun e => ⟨_, e.changeVars <| e.contextHom⟩) := by
+    = e.toPure?.map (fun e => ⟨_, Var.last _ _, e.changeVars <| e.contextHom⟩) := by
   show getPureExpr _ (Var.last ⟨[]⟩ ty).appendInr = _
   exact getPureExpr_var_appendInr ..
 
 @[simp] lemma Lets.getPureExprAux_var_appendInl (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
     getPureExprAux (lets.var e) v.appendInl
-    = (getPureExprAux lets v).map fun ⟨_, e⟩ =>
-        ⟨_, e.changeVars <| Hom.id.castCodomain (by simp)⟩ := by
+    = (getPureExprAux lets v).map fun ⟨_, w, e⟩ =>
+        ⟨_, w, e.changeVars <| Hom.id.castCodomain (by simp)⟩ := by
   simp [getPureExprAux]
   match lets.getPureExprAux v with
   | none =>
     simp only [Option.map_none, cast_eq_iff_heq]
     congr
     simp
-  | some ⟨_, e⟩ =>
+  | some ⟨_, _, e⟩ =>
     simp only [Option.map_some, cast_eq_iff_heq]
-    congr <;> simp [Expr.changeVars_castCodomain]
+    congr 3 <;> simp [Expr.changeVars_castCodomain]
 
 -- @[simp] lemma Lets.getPureExprAux_var_toSnoc (lets : Lets d Γ_in eff Γ_out)
 --     (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
@@ -1432,12 +1432,12 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
 @[simp] lemma Lets.getPureExpr_var_appendInl (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
     (v : Var Γ_out ty₂):
     getPureExpr (lets.var e) (v.appendInl)
-    = (fun ⟨_, e'⟩ => ⟨_,  e'.changeVars <| e.contextHom⟩) <$> (getPureExpr lets v) := by
+    = (fun ⟨_, w, e'⟩ => ⟨_, w,  e'.changeVars <| e.contextHom⟩) <$> (getPureExpr lets v) := by
   simp only [getPureExpr, getPureExprAux_var_appendInl, Option.map_eq_map, Option.map_map]
   congr 1
   funext ⟨_, e⟩
   simp only [Function.comp_apply, Expr.changeVars_changeVars, Sigma.mk.injEq, heq_eq_eq, true_and]
-  congr 1
+  congr 2
   funext t v
   apply Subtype.eq
   simp [Hom.castCodomain, Hom.comp, Ctxt.dropUntilHom, Ctxt.dropUntilDiff, Ctxt.Diff.toHom, Var.appendInl]
