@@ -146,12 +146,9 @@ info: 'MultiWidth.eval_fsmUltUnary_eq_decide' depends on axioms: [propext, Class
 #guard_msgs in #print axioms eval_fsmUltUnary_eq_decide
 
 -- returns 1 if a is equal to b.
-def fsmEqBitwise (a : FSM α) (b : FSM α) : FSM α :=
+def fsmEqUpto (a : FSM α) (b : FSM α) : FSM α :=
   composeUnaryAux FSM.scanAnd <| composeBinaryAux' FSM.nxor a  b
 
--- -- returns 1 if a is less than or equal to b.
--- def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
---   (fsmUltUnary a b) &&& (fsmEqBitwise a b)
 
 -- | if 'cond' is true, then return 't', otherwise return 'e'.
 def ite (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
@@ -267,7 +264,7 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   | .binRel .eq a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
-    { toFsm := fsmEqBitwise fsmA.toFsm fsmB.toFsm }
+    { toFsm := fsmEqUpto fsmA.toFsm fsmB.toFsm }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
