@@ -31,7 +31,7 @@ open TyDenote
 -- HSxComb contains operations of two types: comb and dc
 inductive Op : Type _
   | comb (o : MLIR2Comb.Comb.Op)
-  | dc (o : MLIR2Handshake.Handshake.Op)
+  | hs (o : MLIR2Handshake.Handshake.Op)
   deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 -- inductive Ty : Type _ -- do the same as Op
@@ -66,7 +66,7 @@ instance : DialectSignature HSxComb where
     | .comb o => liftSig (signature o) -- does not assume that regsig is empty
     -- TODO(yann): Need to specify the signature instance directly because it is otherwise trying to get the instance of
     -- HSxComb.
-    | .dc o => MLIR2Handshake.instDialectSignatureHandshake.signature o
+    | .hs o => MLIR2Handshake.instDialectSignatureHandshake.signature o
 
 -- this function does not actually sync, it "only" lifts the HVector of Streams we
 -- have e.g. in a variadic input into a single stream, where each element of the stream is an HVector
@@ -162,7 +162,7 @@ def_denote for HSxComb where
       let opDenote : HVector _ _ → ⟦_⟧ :=
         EffectKind.coe_toMonad ∘ opDenote
       liftComb opDenote
-  | .dc op => MLIR2Handshake.instDialectDenoteHandshake.denote op
+  | .hs op => MLIR2Handshake.instDialectDenoteHandshake.denote op
 
 -- we want to have a latency-sensitive semantics for pack and unpack to eat/produce sync tokens
 -- only need to sync with multiple inputs to the comb region (ideally variadic)
@@ -208,10 +208,10 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, opStx.name with
-      | .stream t, "HSxComb.fst" =>  mkExprOf <| Op.dc (MLIR2Handshake.Op.fst t)
-      | .stream t, "HSxComb.snd" =>  mkExprOf <| Op.dc (MLIR2Handshake.Op.snd t)
-      | .stream t, "HSxComb.fork" =>  mkExprOf <| Op.dc (MLIR2Handshake.Op.fork t)
-      | .stream t, "HSxComb.sink" =>  mkExprOf <| Op.dc (MLIR2Handshake.Op.sink t)
+      | .stream t, "HSxComb.fst" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.fst t)
+      | .stream t, "HSxComb.snd" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.snd t)
+      | .stream t, "HSxComb.fork" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.fork t)
+      | .stream t, "HSxComb.sink" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.sink t)
       | _, _ => throw <| .generic s!"type mismatch at {repr opStx.args}"
     | _ => throw <| .generic s!"expected one operand, found #'{opStx.args.length}' in '{repr opStx.args}'"
   -- 2-ary ops
@@ -222,21 +222,21 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, opStx.name with
       | .stream t₁, .stream t₂, "HSxComb.merge" =>
-        if t₁ = t₂ then mkExprOf <| Op.dc (MLIR2Handshake.Op.merge t₁)
+        if t₁ = t₂ then mkExprOf <| Op.hs (MLIR2Handshake.Op.merge t₁)
         else throw <| .generic s!"type mismatch in {repr opStx.args}"
       | .stream t₁, .stream t₂, "HSxComb.altMerge" =>
-        if t₁ = t₂ then mkExprOf <| Op.dc (MLIR2Handshake.Op.altMerge t₁)
+        if t₁ = t₂ then mkExprOf <| Op.hs (MLIR2Handshake.Op.altMerge t₁)
         else throw <| .generic s!"type mismatch in {repr opStx.args}"
       | .stream t₁, .stream t₂, "HSxComb.controlMerge" =>
-        if t₁ = t₂ then mkExprOf <| Op.dc (MLIR2Handshake.Op.controlMerge t₁)
+        if t₁ = t₂ then mkExprOf <| Op.hs (MLIR2Handshake.Op.controlMerge t₁)
         else throw <| .generic s!"type mismatch in {repr opStx.args}"
       | .stream t₁, .stream t₂, "HSxComb.join" =>
-        if t₁ = t₂ then mkExprOf <| Op.dc (MLIR2Handshake.Op.join t₁)
+        if t₁ = t₂ then mkExprOf <| Op.hs (MLIR2Handshake.Op.join t₁)
         else throw <| .generic s!"type mismatch in {repr opStx.args}"
       | .stream t₁, .stream t₂, "HSxComb.sync" =>
-        if t₁ = t₂ then mkExprOf <| Op.dc (MLIR2Handshake.Op.sync t₁)
+        if t₁ = t₂ then mkExprOf <| Op.hs (MLIR2Handshake.Op.sync t₁)
         else throw <| .generic s!"type mismatch in {repr opStx.args}"
-      | .stream t₁, .stream (.bitvec 1), "HSxComb.branch" => mkExprOf <| Op.dc (MLIR2Handshake.Op.branch t₁)
+      | .stream t₁, .stream (.bitvec 1), "HSxComb.branch" => mkExprOf <| Op.hs (MLIR2Handshake.Op.branch t₁)
       | _, _, _ => throw <| .generic s!"type mismatch in {repr opStx.args}"
     | _ => throw <| .generic s!"expected two operands, found #'{opStx.args.length}' in '{repr opStx.args}'"
   -- special cases
@@ -248,7 +248,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
         match ty₁, ty₂, ty₃, opStx.name with
         | .stream t₁, .stream t₂, .stream (.bitvec 1), "HSxComb.mux" =>
-          if t₁ = t₂ then  mkExprOf <| Op.dc (MLIR2Handshake.Op.mux t₁)
+          if t₁ = t₂ then  mkExprOf <| Op.hs (MLIR2Handshake.Op.mux t₁)
           else throw <| .generic s!"type mismatch in {repr opStx.args}"
         | _, _, _, _=> throw <| .generic s!"type mismatch in the args of '{repr opStx.args}'"
       | _ => throw <| .generic s!"expected three operands, found #'{opStx.args.length}' in '{repr opStx.args}'"

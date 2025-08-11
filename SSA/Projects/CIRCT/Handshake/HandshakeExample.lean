@@ -12,6 +12,11 @@ namespace CIRCTStream
 
 open MLIR AST in
 
+instance : ToString (Stream (BitVec w)) where
+  toString s :=
+    let l := Stream.toList 100 s
+    toString l
+
 unseal String.splitOnAux in
 def BranchEg1 := [handshake_com| {
   ^entry(%0: !Stream_BitVec_1, %1: !Stream_BitVec_1):
@@ -37,6 +42,30 @@ def x : Stream (BitVec 1) := ofList [some 1, none, some 1, some 0, none]
 -- is this in the opposite order or am I misunderstanding? if yes: why?
 def test : Stream (BitVec 1) :=
   BranchEg1.denote (Ctxt.Valuation.ofPair c x)
+
+
+unseal String.splitOnAux in
+def SyncEg1 := [handshake_com| {
+  ^entry(%0: !Stream_BitVec_8, %1: !Stream_BitVec_8):
+    %out = "handshake.sync" (%0, %1) : (!Stream_BitVec_8, !Stream_BitVec_8) -> (!Stream2_BitVec_8)
+    %outf = "handshake.fst" (%out) : (!Stream2_BitVec_8) -> (!Stream_BitVec_8)
+    "return" (%outf) : (!Stream_BitVec_8) -> ()
+  }]
+
+#check SyncEg1
+#eval SyncEg1
+#reduce SyncEg1
+#check SyncEg1.denote
+#print axioms SyncEg1
+
+
+def i : Stream (BitVec 8) := ofList [1#8, none, 1#8, 4#8, 0#8]
+def j : Stream (BitVec 8) := ofList [none, 3#8, none]
+
+def testSync : Stream (BitVec 8) :=
+  SyncEg1.denote (Ctxt.Valuation.ofPair j i)
+
+#eval testSync
 
 namespace Stream
 
