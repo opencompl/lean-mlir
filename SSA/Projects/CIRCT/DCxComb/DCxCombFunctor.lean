@@ -19,7 +19,7 @@ open CIRCTStream
 open TyDenote
 
 
-/-- Describes that the dialect Op' has a type whose denotation is 'DenotedTy -/
+/-- Describes that the dialect Op' has ax type whose denotation is 'DenotedTy -/
 -- class HasTy (d : Dialect) (DenotedTy : Type) [TyDenote d.Ty] [DialectSignature d] where
 --     ty : d.Ty
 --     denote_eq : toType ty = DenotedTy := by rfl
