@@ -38,7 +38,7 @@ variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 
 /-- The denotation of a zipper is a composition of the denotations of the constituent
 `Lets` and `Com` -/
-def denote (zip : Zipper d Γ_in eff Γ_out tys) (V_in : Valuation Γ_in) :
+def denote (zip : Zipper d Γ_in eff tys) (V_in : Valuation Γ_in) :
     eff.toMonad d.m (HVector toType tys) :=
   (zip.top.denote V_in) >>= zip.bot.denote
 
@@ -81,11 +81,12 @@ variable [DecidableEq d.Ty]
 
 /-- Add a `Com` directly before the current position of a zipper, while reassigning every
 occurence of a given free variable (`v`) of `zip.com` to the output of the new `Com`  -/
-def insertCom (zip : Zipper d Γ_in eff ty) (v : Var zip.Γ_mid newTy)
-    (newCom : Com d zip.Γ_mid eff newTy) : Zipper d Γ_in eff ty :=
+def insertCom (zip : Zipper d Γ_in eff ty)
+    (vs : HVector zip.Γ_mid.Var newTy) (newCom : Com d zip.Γ_mid eff newTy) :
+    Zipper d Γ_in eff ty :=
   let top := zip.top.addComToEnd newCom
   --  ^^^ The combination of the previous `top` with the `newCom` inserted
-  let bot := zip.bot.changeVars <| newCom.outContextHom.with v newCom.returnVar
+  let bot := zip.bot.changeVars <| newCom.outContextHom.with vs newCom.returnVars
   --  ^^^ Adjust variables in `bot` to the intermediate context of the new zipper --- which is
   --         `newCom.outContext` --- while also reassigning `v`
   { top, bot }
@@ -96,55 +97,54 @@ zipper, while r eassigning every occurence of a given free variable (`v`) of
 
 This is a wrapper around `insertCom` (which expects `newCom` to have the same effect as `zip`)
 and `castPureToEff` -/
-def insertPureCom (zip : Zipper d Γ_in eff ty) (v : Var zip.Γ_mid newTy)
+def insertPureCom (zip : Zipper d Γ_in eff ty)
+    (vs : HVector zip.Γ_mid.Var newTy)
     (newCom : Com d zip.Γ_mid .pure newTy) : Zipper d Γ_in eff ty :=
-  zip.insertCom v (newCom.castPureToEff eff)
+  zip.insertCom vs (newCom.castPureToEff eff)
 
 /-! simp-lemmas -/
 section Lemmas
 variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 
 theorem denote_insertCom {zip : Zipper d Γ_in eff t₁} [LawfulMonad d.m]
-    {newCom : Com d zip.Γ_mid eff newTy} {v : Var zip.Γ_mid _} :
-    (zip.insertCom v newCom).denote = (fun (V_in : Valuation Γ_in) => do
+    {newCom : Com d zip.Γ_mid eff newTys} {vs : HVector zip.Γ_mid.Var newTys} :
+    (zip.insertCom vs newCom).denote = (fun (V_in : Valuation Γ_in) => do
       let V_mid ← zip.top.denote V_in
       let V_newMid ← newCom.denoteLets V_mid
       zip.bot.denote
-        (V_newMid.comap <| newCom.outContextHom.with v newCom.returnVar)
+        (V_newMid.comap <| newCom.outContextHom.with vs newCom.returnVars)
       ) := by
   funext V
   simp [insertCom, Com.denoteLets_eq]
 
 theorem denote_insertPureCom {zip : Zipper d Γ_in eff t₁} [LawfulMonad d.m]
-    {newCom : Com d zip.Γ_mid .pure newTy} {v : Var zip.Γ_mid _} :
-    (zip.insertPureCom v newCom).denote = (fun (V_in : Valuation Γ_in) => do
+    {newCom : Com d zip.Γ_mid .pure newTys} {vs : HVector zip.Γ_mid.Var newTys} :
+    (zip.insertPureCom vs newCom).denote = (fun (V_in : Valuation Γ_in) => do
       let V_mid ← zip.top.denote V_in
       zip.bot.denote
-        ((Com.denoteLets newCom V_mid).comap <| newCom.outContextHom.with v newCom.returnVar)
+        ((Com.denoteLets newCom V_mid).comap <| newCom.outContextHom.with vs newCom.returnVars)
       ) := by
   have (V_mid) (h : Com.outContext (Com.castPureToEff eff newCom) = Com.outContext newCom) :
       ((Com.denoteLets newCom V_mid).comap fun x v => v.castCtxt h).comap
         (newCom.castPureToEff eff).outContextHom
       = (Com.denoteLets newCom V_mid).comap newCom.outContextHom := by
     funext t' ⟨v', hv'⟩
-    simp only [Com.outContextHom, Com.outContextDiff, Com.size_castPureToEff]
+    simp only [Com.outContextHom, Com.outContextDiff, Com.bvars_castPureToEff]
     rfl
-  funext V; simp [insertPureCom, denote_insertCom, Valuation.comap, this]
+  funext V;
+  simp [insertPureCom, denote_insertCom, this]
+  sorry
 
 theorem denote_insertPureCom_eq_of [LawfulMonad d.m]
-    {zip : Zipper d Γ_in eff ty₁} {v}
-    {newCom : Com d zip.Γ_mid _ newTy} {V_in : Valuation Γ_in}
-    (h : ∀ V : zip.top.ValidDenotation, newCom.denote V.val = V.val v) :
-    (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
+    {zip : Zipper d Γ_in eff tys} {vs}
+    {newCom : Com d zip.Γ_mid .pure newTys} {V_in : Valuation Γ_in}
+    (h : ∀ V : zip.top.ValidDenotation,
+        newCom.denote V.val = vs.map V.val) :
+    (zip.insertPureCom vs newCom).denote V_in = zip.denote V_in := by
   simp only [denote_insertPureCom, Valuation.comap_with,
-  Valuation.comap_outContextHom_denoteLets, Com.denoteLets_returnVar_pure]
-  unfold Valuation.reassignVar Zipper.denote
-  simp only [Lets.denote_eq_denoteIntoSubtype, bind_map_left]
-  congr; funext V_mid; congr
-  funext t' v'
-  simp only [dite_eq_right_iff, forall_exists_index]
-  rintro rfl rfl
-  simpa using h _
+  Valuation.comap_outContextHom_denoteLets, Com.denoteLets_returnVars]
+  unfold Zipper.denote
+  simp [Lets.denote_eq_denoteIntoSubtype, h]
 
 end Lemmas
 end InsertCom

@@ -757,27 +757,28 @@ local macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp +arith)
 
 mutual
 
-theorem mem_matchVar_matchArg {Δ_out}
+theorem mem_matchArg {Δ_out}
     {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out}
     {l : List d.Ty} {argsₗ : HVector (Var Γ_out) l}
     {argsᵣ : HVector (Var Δ_out) l} {ma : Mapping Δ_in Γ_out}
     {varMap : Mapping Δ_in Γ_out}
     (hvarMap : ((), varMap) ∈ matchArg lets matchLets argsₗ argsᵣ ma)
-    {t' v'} : ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) → ⟨t', v'⟩ ∈ varMap :=
+    {t' v'} : ⟨t', v'⟩ ∈ matchLets.varsOfVec argsᵣ → ⟨t', v'⟩ ∈ varMap :=
   match l, argsₗ, argsᵣ/- , ma, varMap, hvarMap -/ with
-  | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp
+  | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp [Lets.varsOfVec]
   | .cons t ts, .cons vₗ argsₗ, .cons vᵣ args /-, ma, varMap, h -/ => by
     simp only [matchArg, bind, Option.mem_def, StateT.bind, Option.bind_eq_some_iff] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
-      Finset.mem_biUnion, Sigma.exists]
+      Finset.mem_biUnion, Sigma.exists, Lets.varsOfVec]
     rintro (h | ⟨a, b, hab⟩)
     · exact AList.keys_subset_keys_of_entries_subset_entries
         (isMonotone_matchArg _ _ h₂)
         (mem_matchVar (matchLets := matchLets) h₁ h)
-    · exact mem_matchVar_matchArg (l := ts) h₂
-        (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)
+    · apply mem_matchArg h₂
+      unfold Lets.varsOfVec
+      apply Finset.mem_biUnion.mpr ⟨_, hab.1, hab.2⟩
 
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar {Δ_out}
@@ -850,11 +851,12 @@ end
 map as a `MatchVarResult`, and drops the accumulator map input (instead setting
 it to the default empty map).
 -/
-def matchVarRes (lets : Lets d Γ_in eff Γ_out) (v : Var Γ_out t)
-    (matchLets : Lets d Δ_in .pure Δ_out) (w : Var Δ_out t) :
-    Option (MatchVarResult lets v matchLets w ∅) := do
-  (matchVar lets v matchLets w ∅).attach.map fun ⟨⟨_, _⟩, h⟩ => .mk h
-
+def matchArgRes (lets : Lets d Γ_in eff Γ_out)
+    (matchLets : Lets d Δ_in .pure Δ_out)
+    (vs : HVector Γ_out.Var ts)
+    (ws : HVector Δ_out.Var ts) :
+    Option (MatchArgResult lets matchLets vs ws ∅) := do
+  (matchArg lets matchLets vs ws ∅).attach.map fun ⟨⟨_, _⟩, h⟩ => .mk h
 
 /--
 If a `matchLets` contains all variables in context `Δ_in`, the corresponding
@@ -876,6 +878,26 @@ def MatchVarResult.toHom
     Δ_in.Hom Γ_out :=
   map.val.toHom <| map.isTotal_of hvars
 
+/--
+If a `matchLets` contains all variables in context `Δ_in`, the corresponding
+`matchVar` result mapping is in fact a total context morphism.
+-/
+def MatchArgResult.isTotal_of
+    (map : MatchArgResult lets matchLets vs ws mapIn)
+    (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.varsOfVec ws) :
+    map.val.IsTotal := by
+  intro t v
+  have ⟨map', h_entries, h_match⟩ := map.prop
+  apply AList.keys_subset_keys_of_entries_subset_entries h_entries
+  apply mem_matchArg h_match (hvars _ v)
+
+/-- Wrapper around `Mapping.toHom` and `MatchArgResult.isTotal_of`. -/
+def MatchArgResult.toHom
+    (map : MatchArgResult lets matchLets vs ws mapIn)
+    (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.varsOfVec ws) :
+    Δ_in.Hom Γ_out :=
+  map.val.toHom <| map.isTotal_of hvars
+
 variable
   {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
   {lets : Lets d Γ_in eff Γ_out}
@@ -884,12 +906,13 @@ variable
   {matchLets : Lets d Δ_in .pure Δ_out}
   {w : Var Δ_out matchTy}
 in
-theorem denote_matchLets_of_matchVarMap
-    (map : MatchVarResult lets v matchLets w mapIn)
-    (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w)
+theorem denote_matchLets_of
+    (map : MatchArgResult lets matchLets vs ws mapIn)
+    (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.varsOfVec ws)
     (V : lets.ValidDenotation) :
-    matchLets.denote (V.val.comap <| map.toHom h) w = V.val v := by
-  unfold MatchVarResult.toHom
+    ws.map (matchLets.denote (V.val.comap <| map.toHom h)) = vs.map V.val := by
+  unfold MatchArgResult.toHom
+  stop
   rw [Mapping.toHom_eq_mapValuation (map.isTotal_of hvars), denote_matchVar map]
 
 

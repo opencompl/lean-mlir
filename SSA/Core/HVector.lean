@@ -160,6 +160,15 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
     (t.map f).map g = t.map (fun a v => g a (f a v)) := by
   induction t <;> simp_all [map]
 
+@[simp] theorem get_map (xs : HVector A as) (f : (a : α) → A a → B a) :
+    (xs.map f).get i = f _ (xs.get i) := by
+  induction xs
+  · exact i.elim0
+  · cases i using Fin.succRecOn
+    · rfl
+    · simp_all [map_cons]
+      sorry
+
 theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
     {t₁ t₂ : HVector A l} (h : l = []) : t₁ = t₂ := by
   cases h; cases t₁; cases t₂; rfl
@@ -272,5 +281,20 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
       let xs := xs.cast (by simpa using h_len)
                         (fun i => by simpa using h_elem i.succ)
       (h₀ ▸ x) ::ₕ xs
+
+/-!
+## Find
+-/
+
+variable [DecidableEq α] [∀ a, DecidableEq (A a)]
+def idxOf? (x : A a) {as} :
+    HVector A as → Option { i : Fin <| as.length // as.get i = a }
+  | .nil => none
+  | .cons (a:=b) y ys =>
+      if h : ∃ h : a = b, x = h ▸ y then
+        some ⟨(0 : Fin <| _ + 1), h.1 ▸ rfl⟩
+      else
+        (ys.idxOf? x).map fun ⟨i, h⟩ =>
+          ⟨i.succ, by simpa⟩
 
 end HVector

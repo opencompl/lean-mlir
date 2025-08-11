@@ -24,8 +24,8 @@ section SplitProgram
 
 variable (d Γ eff t) in
 structure SplitProgramResult extends Zipper d Γ eff t where
-  {midType : d.Ty}
-  midRet : toZipper.Γ_mid.Var midType
+  {midTypes : List d.Ty}
+  midRet : HVector toZipper.Γ_mid.Var midTypes
 
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
@@ -37,7 +37,7 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
   | 0, lets, .var e body => some {
       top := lets.var e
       bot := body
-      midRet := Var.last _ _
+      midRet := e.args.map (fun _ v => v.appendInl)
     }
   | _, _, .ret _ => none
   | n+1, lets, .var e body =>
@@ -83,19 +83,18 @@ end SplitProgram
 `target`. If it can match the variables, it inserts `rhs` into the program
 with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
-def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
+def rewriteAt
+    (lhs rhs : Com d Γ₁ .pure ts₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
     Option (Com d Γ₂ eff t₂) := do
   let splitRes ← splitProgramAt pos target
-  if h : t₁ = splitRes.midType
-  then
-    let targetLets := splitRes.top
-    let vm := splitRes.midRet
-    let flatLhs := lhs.toFlatCom
-    let m ← matchVarMap targetLets vm flatLhs.lets (flatLhs.ret.cast h)
-      (by subst h; exact hlhs)
-    let zip := splitRes.insertPureCom vm (h ▸ rhs.changeVars m)
+  if h : ts₁ = splitRes.midTypes then
+    let m ← matchArgRes splitRes.top lhs.toLets splitRes.midRet (h ▸ lhs.returnVars)
+    let m := m.toHom <| by
+      sorry
+    let rhs := rhs.changeVars m
+    let zip := splitRes.insertPureCom splitRes.midRet (cast (by simp[← h]) rhs)
     return zip.toCom
   else none
 
@@ -104,8 +103,15 @@ def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
   funext Γv; simp [toFlatCom, Com.denoteLets_eq]
 
 @[simp] lemma Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
-    com.toFlatCom.ret = com.returnVar := by
+    com.toFlatCom.ret = com.returnVars := by
   simp [toFlatCom]
+
+-- -- TODO: move to somewhere more sensible
+-- lemma Com.denoteLets_comap (lets : Lets d Γ_in .pure Γ_out) (vars : HVector Γ_out.Var ts)
+--     (V : Valuation Δ) (f : Γ_in.Hom Δ) :
+--     vars.map (lets.denote <| V.comap f)
+--     = _ := by
+--   sorry
 
 theorem denote_rewriteAt [LawfulMonad d.m]
     {lhs rhs : Com d Γ₁ .pure t₁}
@@ -116,25 +122,29 @@ theorem denote_rewriteAt [LawfulMonad d.m]
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
   funext V
-  simp only [rewriteAt, Com.toFlatCom_ret, Option.pure_def, Option.bind_eq_bind, Option.mem_def,
+  simp only [rewriteAt, Option.pure_def, Option.bind_eq_bind, Option.mem_def,
     Option.bind_eq_some_iff, Option.dite_none_right_eq_some, Option.some.injEq] at hrew
-  rcases hrew with ⟨res, h_split, rfl, varMap', hmap, rfl⟩
-  rw [Zipper.denote_toCom, ← denote_splitProgramAt h_split]
+  rcases hrew with ⟨res, h_split, rfl, varMap', -, rfl⟩
+  dsimp only at varMap'
+  simp only [cast_eq, Zipper.denote_toCom, ← denote_splitProgramAt h_split]
   apply Zipper.denote_insertPureCom_eq_of
   intro V
-  simp [← hl, ← denote_matchLets_of_matchVarMap hmap]
+  simp only [Expr.pdenoteOp, Com.denote_changeVars, ← hl]
+  rw [← Com.denoteLets_returnVars, Com.denoteLets_eq]
+  apply denote_matchLets_of varMap' hlhs
+
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable
 -/
-structure PeepholeRewrite (Γ : List d.Ty) (t : d.Ty) where
-  lhs : Com d (.ofList Γ) .pure t
-  rhs : Com d (.ofList Γ) .pure t
+structure PeepholeRewrite (Γ : List d.Ty) (ts : List d.Ty) where
+  lhs : Com d (.ofList Γ) .pure ts
+  rhs : Com d (.ofList Γ) .pure ts
   correct : lhs.denote = rhs.denote
 
-instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
+instance {Γ : List d.Ty} {t'} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
@@ -152,12 +162,13 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
 
 def rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
-    (Com d Γ₂ eff t₂) := if hlhs : ∀ t (v : Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
-      match rewriteAt pr.lhs pr.rhs hlhs pos target
-      with
-        | some res => res
-        | none => target
-      else target
+    (Com d Γ₂ eff t₂) :=
+  if hlhs : ∀ t (v : Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
+    match rewriteAt pr.lhs pr.rhs hlhs pos target
+    with
+      | some res => res
+      | none => target
+  else target
 
 variable [LawfulMonad d.m]
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
@@ -170,8 +181,8 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
       · rfl
     · rfl
 
-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms denote_rewritePeepholeAt
+-- /-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+-- #guard_msgs in #print axioms denote_rewritePeepholeAt
 
 /- repeatedly apply peephole on program. -/
 section SimpPeepholeApplier
@@ -207,8 +218,8 @@ theorem denote_rewritePeephole (fuel : ℕ)
     (rewritePeephole fuel pr target).denote = target.denote := by
   exact denote_rewritePeephole_go ..
 
-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in #print axioms denote_rewritePeephole
+-- /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+-- #guard_msgs in #print axioms denote_rewritePeephole
 
 variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
 [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
@@ -267,7 +278,7 @@ theorem denote_multiRewritePeephole (fuel : ℕ)
   exact denote_multiRewritePeepholeAt ..
 
 theorem Expr.denote_eq_of_region_denote_eq {ty} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+    (ty_eq : ty = DialectSignature.returnTypes op)
     (eff' : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (DialectSignature.sig op))
     (regArgs regArgs' : HVector (fun t => Com d t.1 EffectKind.impure t.2)
@@ -287,7 +298,7 @@ theorem Expr.denote_eq_of_region_denote_eq {ty} (op : d.Op)
 mutual
 
 def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
-    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
+    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × List d.Ty)}
     (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
     : { out : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts // out.denote = args.denote} :=
   match ts with
@@ -303,7 +314,7 @@ def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
 termination_by (fuel, ts.length + 2)
 
 def rewritePeepholeRecursivelyExpr (fuel : ℕ)
-    (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
+    (pr : PeepholeRewrite d Γ t) {ty}
     (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
   match e with
   | Expr.mk op ty eff' args regArgs =>
@@ -326,7 +337,7 @@ def rewritePeepholeRecursively (fuel : ℕ)
     match htarget : target' with
     | .ret v => ⟨target', by
       simp [htarget, htarget'_denote_eq_htarget]⟩
-    | .var (α := α) e body =>
+    | .var e body =>
       let ⟨e', he'⟩ := rewritePeepholeRecursivelyExpr fuel pr e
       let ⟨body', hbody'⟩ :=
         -- decreases because 'body' is smaller.
@@ -338,9 +349,9 @@ termination_by (fuel, 1)
 
 end
 
-/--
-info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms rewritePeepholeRecursively
+-- /--
+-- info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
+-- -/
+-- #guard_msgs in #print axioms rewritePeepholeRecursively
 
 end SimpPeepholeApplier

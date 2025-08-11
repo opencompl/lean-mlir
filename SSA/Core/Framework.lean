@@ -448,7 +448,7 @@ def Expr.regArgs {Γ ts} (e : Expr d Γ eff ts) :
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
 /-- `e.returnVar` is the variable in `e.outContext` which is bound by `e`. -/
-def Expr.returnVar (e : Expr d Γ eff ty) : e.outContext.Var ty :=
+def Expr.returnVar (e : Expr d Γ eff [ty]) : e.outContext.Var ty :=
   Var.last _ _
 
 /-! Projection equations for `Expr` -/
@@ -491,7 +491,7 @@ def Com.size : Com d Γ eff t → Nat :=
 will differ in the presence of let-bindings with multiple return variables.
 
 NOTE: this ignores any regions. -/
-private def Com.bvars : Com d Γ eff t → Nat :=
+def Com.bvars : Com d Γ eff t → Nat :=
   Com.rec'
     /- ret _ -/      (fun _ => 0)
     /- var e body -/ (fun e _body bodySize => e.bvars + bodySize)
@@ -559,9 +559,6 @@ def Com.returnVar (com : Com d Γ eff [t]) : Var com.outContext t :=
 
 @[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
   @fun _ => Var.appendInl
-
-@[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
-  @fun _ => Var.toSnoc
 
 section Lemmas
 
@@ -634,17 +631,6 @@ def Lets.denote [DialectSignature d] [DialectDenote d] {Γ₂}
   | .nil          => return V
   | .var lets' e  => lets'.denote V >>= e.denote
 
-/-- `denotePure` is a specialization of `denote` for pure `Lets`.
-Theorems and definitions should always be phrased in terms of the latter.
-
-However, `denotePure` behaves slighly better when it comes to congruences, since `congr` does not
-realize that `pure.toMonad d.m (Valuation _)` is just `Valuation _`, and thus a function.
-Therefore, if a goalstate is `⊢ lets.denote ... = lets.denote ...`, and `lets` is pure, then to use
-the congruence, you can do: `rw [← Lets.denotePure]; congr`
--/
-@[simp] abbrev Lets.denotePure [DialectSignature d] [DialectDenote d] :
-    Lets d Γ₁ .pure Γ₂ → Valuation Γ₁ → Valuation Γ₂ := Lets.denote
-
 section Unfoldings
 
 open EffectKind (liftEffect)
@@ -655,11 +641,6 @@ def Expr.denoteOp (e : Expr d Γ eff ty) (V : Γ.Valuation) :
     eff.toMonad d.m (HVector toType ty) :=
   EffectKind.liftEffect e.eff_le <| cast (by rw [← e.ty_eq]) <|
     DialectDenote.denote e.op (e.args.map V) e.regArgs.denote
-
-/-- Alias of `denoteOp` for pure expressions. -/
-@[simp] abbrev Expr.pdenoteOp :
-    Expr d Γ .pure ty → Γ.Valuation → (HVector toType ty) :=
-  Expr.denoteOp
 
 omit [LawfulMonad d.m] in
 /--
@@ -716,7 +697,30 @@ info: some #[`Com.denote.eq_1, `Com.denote.eq_2]
 
 end Unfoldings
 
-/-! simp-lemmas about `denote` functions -/
+/-! ### Pure Denote -/
+
+/-- `denotePure` is a specialization of `denote` for pure `Lets`.
+Theorems and definitions should always be phrased in terms of the latter.
+
+However, `denotePure` behaves slighly better when it comes to congruences, since `congr` does not
+realize that `pure.toMonad d.m (Valuation _)` is just `Valuation _`, and thus a function.
+Therefore, if a goalstate is `⊢ lets.denote ... = lets.denote ...`, and `lets` is pure, then to use
+the congruence, you can do: `rw [← Lets.denotePure]; congr`
+-/
+@[simp] abbrev Lets.denotePure [DialectSignature d] [DialectDenote d] :
+    Lets d Γ₁ .pure Γ₂ → Valuation Γ₁ → Valuation Γ₂ := Lets.denote
+
+/-- Alias of `denoteOp` for pure expressions. -/
+@[simp] abbrev Expr.pdenoteOp :
+    Expr d Γ .pure ty → Γ.Valuation → (HVector toType ty) :=
+  Expr.denoteOp
+
+/-- Alias of `denoteOp` for pure expressions. -/
+@[simp] abbrev Com.pdenote :
+    Com d Γ .pure ty → Γ.Valuation → (HVector toType ty) :=
+  Com.denote
+
+/-! ### simp-lemmas about `denote` functions -/
 section Lemmas
 
 @[simp] lemma Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
@@ -865,7 +869,8 @@ end Lemmas
   | .var _ body  => cast (by simp) <|
       Com.outContext_changeVars_hom (map := map.append) map_inv.append (c := body)
 
-@[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure [ty]) (Γv : Valuation Γ) :
+@[simp, deprecated]  -- TODO: remove
+lemma Com.denoteLets_returnVar (c : Com d Γ .pure [ty]) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = (c.denote Γv).get (0 : Fin 1) := by
   induction c using Com.rec'
   case ret v =>
@@ -875,6 +880,12 @@ end Lemmas
   case var ih =>
     simp [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
       Id.bind_eq', returnVar_var, ih, denote]
+
+@[simp] lemma Com.denoteLets_returnVars (c : Com d Γ .pure tys) (V : Valuation Γ) :
+    c.returnVars.map (c.denoteLets V) = c.denote V := by
+  induction c using Com.rec'
+  case ret v  => rfl
+  case var ih => simp [denoteLets, Id.pure_eq', Id.bind_eq', ih, denote]
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
@@ -907,9 +918,9 @@ An alternative representation of a program as a `Lets` with a return `Var`
 /-- `FlatCom Γ eff Δ ty` represents a program as a sequence `Lets Γ eff Δ` and a `Var Δ ty`.
 This is isomorphic to `Com Γ eff ty`, where `Δ` is `com.outContext` -/
 structure FlatCom (d : Dialect) [DialectSignature d]  (Γ_in : Ctxt d.Ty) (eff : EffectKind)
-    (Γ_out : Ctxt d.Ty) (ty : d.Ty) where
+    (Γ_out : Ctxt d.Ty) (ts : List d.Ty) where
   lets : Lets d Γ_in eff Γ_out
-  ret : Var Γ_out ty
+  ret : HVector Γ_out.Var ts
 
 --TODO: should this be a `@[simp] abbrev`, or just nuked altogether?
 /-- Denote the Lets of the FlatICom -/
@@ -918,19 +929,20 @@ def FlatCom.denoteLets (flatCom : FlatCom d Γ eff Γ_out t) (Γv : Γ.Valuation
   flatCom.lets.denote Γv
 
 /-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
-@[simp] abbrev FlatCom.denote [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t)
-    (Γv : Γ.Valuation) : eff.toMonad d.m (toType t) :=
-  flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret)
+@[simp] abbrev FlatCom.denote [DialectDenote d]
+    (flatCom : FlatCom d Γ eff Γ_out ts)
+    (V : Γ.Valuation) : eff.toMonad d.m (HVector toType ts) :=
+  flatCom.lets.denote V >>= (return flatCom.ret.map ·)
 
 theorem FlatCom.denoteLets_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :
     flatCom.denoteLets = fun Γv => flatCom.lets.denote Γv := by
   funext Γv
   simp [denoteLets]
 
-theorem FlatCom.denote_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :
-    flatCom.denote = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret) := by
-  funext Γv
-  simp [denote]
+-- theorem FlatCom.denote_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out ts) :
+--     flatCom.denote = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret) := by
+--   funext Γv
+--   simp [denote]
 
 /-!
 ## casting of expressions and purity
@@ -1018,6 +1030,11 @@ section Lemmas
 /-- `castPureToEff` does not change the size of a `Com` -/
 @[simp] lemma Com.size_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).size = com.size := by
+  induction com using Com.rec' <;> simp [*]
+
+/-- `castPureToEff` does not change the number of bvars of a `Com` -/
+@[simp] lemma Com.bvars_castPureToEff {com : Com d Γ .pure ty} :
+    (com.castPureToEff eff).bvars = com.bvars := by
   induction com using Com.rec' <;> simp [*]
 
 @[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure [ty]} :
@@ -1385,8 +1402,8 @@ def Com.toLets (com : Com d Γ eff t) : Lets d Γ eff com.outContext :=
   Lets.nil.addComToEnd com
 
 /-- Convert a `Com` into a `FlatCom` -/
-def Com.toFlatCom {t : d.Ty} (com : Com d Γ .pure t) : FlatCom d Γ .pure com.outContext t :=
-  ⟨com.toLets, com.returnVar⟩
+def Com.toFlatCom {ts} (com : Com d Γ .pure ts) : FlatCom d Γ .pure com.outContext ts :=
+  ⟨com.toLets, com.returnVars⟩
 
 section Lemmas
 
@@ -1459,6 +1476,8 @@ def HVector.toVarSet : {l : List d.Ty} → (T : HVector (Var Γ) l) → VarSet �
 def HVector.vars {l : List d.Ty} (T : HVector (Var Γ) l) : VarSet Γ :=
   T.foldl (fun _ s a => insert ⟨_, a⟩ s) ∅
 
+mutual
+
 --TODO: find a name that better encapsulates that it's the *transitive* closure
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v`.
 Also known as the uses of var. -/
@@ -1467,12 +1486,23 @@ def Lets.vars : Lets d Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
   | .var lets e, v => by
       cases v using Var.appendCases with
       | left v => exact lets.vars v
-      | right _ => exact (e.args.vars).biUnion (fun v => lets.vars v.2)
+      | right _ => exact lets.varsOfVec e.args
+
+def Lets.varsOfVec (lets : Lets d Γ_in eff Γ_out) (vs : HVector Γ_out.Var ts) :
+    VarSet Γ_in :=
+  (vs.vars).biUnion (fun v => lets.vars v.2)
+
+end
 
 /-- `com.vars` is the set of free variables from `Γ` that are (transitively) used by the return
 variable of `com` -/
-def Com.vars : Com d Γ .pure [t] → VarSet Γ :=
-  fun com => com.toFlatCom.lets.vars com.toFlatCom.ret
+def Com.vars (com : Com d Γ eff ts) : VarSet Γ :=
+  com.toLets.varsOfVec com.returnVars
+
+section Lemmas
+
+@[simp] lemma Com.vars_toLets (com : Com d Γ eff t) :
+    com.toLets.varsOfVec com.returnVars = com.vars := rfl
 
 @[simp] lemma Lets.vars_var {lets : Lets d Γ_in eff Γ_out}
     {t} {e : Expr d Γ_out eff t} {w : Γ_out.Var u} :
@@ -1520,8 +1550,11 @@ theorem HVector.map_eq_of_eq_on_vars {A : d.Ty → Type*}
       apply h
       simp_all
 
+end Lemmas
 
-
+/-!
+## Misc
+-/
 section TypeProjections
 variable {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
 
