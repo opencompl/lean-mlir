@@ -1548,6 +1548,15 @@ if and only if 'falseUptoExcluding' evaluates to 'false
 private theorem falseUptoIncluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
     ((falseUptoIncluding n).eval env i = false) ↔ i ≤ n := by simp
 
+
+/-- Produce the FSM after consuming the input stream for one clock cycle 'arity2b'. -/
+def nextFSM (fsm : FSM arity) (arity2b : arity → Bool) : FSM arity where
+  α := fsm.α
+  initCarry := fun abit =>
+    (fsm.nextStateCirc abit).eval (Sum.elim fsm.initCarry arity2b)
+  nextStateCirc := fsm.nextStateCirc
+  outputCirc := fsm.outputCirc
+
 end FSM
 
 open Term

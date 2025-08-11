@@ -145,7 +145,9 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
 
 section ToBitstream
 
-
+/-- Our bitstreams start with '0',
+since we want the denotation of the bitstream at 'i' to be equal to
+'Term.zeroExtend i.msb'. -/
 def Term.toBitstream {wcard tcard : Nat}
     {tctx :Term.Ctx wcard tcard}
     {w : WidthExpr wcard}
@@ -153,7 +155,7 @@ def Term.toBitstream {wcard tcard : Nat}
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) :
     BitStream :=
-  BitStream.ofBitVec (t.toBV tenv)
+  BitStream.ofBitVec (t.toBV tenv) |>.concat false
 
 def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
     (p : Predicate tctx)
@@ -345,7 +347,8 @@ structure IsGoodTermFSM {w : WidthExpr wcard}
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv = (t.toBitstream tenv).concat false
+      (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv =
+        (t.toBitstream tenv)
 
 structure GoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}

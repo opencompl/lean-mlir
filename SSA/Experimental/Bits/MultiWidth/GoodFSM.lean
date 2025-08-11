@@ -76,6 +76,26 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
       have ⟨henv⟩ := henv
       rw [henv]
 
+#check BitStream
+
+def fsmUnaryMin (a b : FSM α) : FSM α :=
+  composeBinaryAux' FSM.and a b
+
+theorem eval_fsmUnaryMin_eq_decide
+  (a : NatFSM wcard tcard (.ofDep v))
+  (b : NatFSM wcard tcard (.ofDep w))
+  {wenv : WidthExpr.Env wcard}
+  {fsmEnv : StateSpace wcard tcard → BitStream}
+  (henv : HWidthEnv fsmEnv wenv)
+  (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+  ((fsmUnaryMin a.toFsm b.toFsm).eval fsmEnv) i =
+    (i ≤ (min (v.toNat wenv) (w.toNat wenv))) := by
+  simp only [fsmUnaryMin, composeBinaryAux'_eval, _root_.FSM.eval_and, cond_true, cond_false,
+    BitStream.and_eq, Bool.and_eq_true, le_inf_iff, eq_iff_iff]
+  rw [ha.heq (henv := henv)]
+  rw [hb.heq (henv := henv)]
+  simp
+
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
 -- if the borrow bit is one, then we know that 'a' is less than 'b'.
@@ -85,19 +105,19 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
 
 -- alternatively, a[i] = 1 → b[i] = 1.
 -- if a is high, then b must be high for it to be ≤.
-def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
+def fsmUnaryUle (a : FSM α) (b : FSM α) : FSM α :=
  composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
 
-theorem eval_fsmUleUnary_eq_decide
+theorem eval_fsmUnaryUle_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
-    ((fsmUleUnary a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUnaryUle a.toFsm b.toFsm).eval fsmEnv) i =
     decide (min i (v.toNat wenv) ≤ min i (w.toNat wenv)) := by
-  simp [fsmUleUnary]
+  simp [fsmUnaryUle]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
   induction w generalizing v
@@ -140,25 +160,25 @@ theorem eval_fsmUleUnary_eq_decide
             omega
 
 @[simp]
-theorem eval_fsmUleUnary_eq_lt_or_decide
+theorem eval_fsmUnaryUle_eq_lt_or_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
-    ((fsmUleUnary a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUnaryUle a.toFsm b.toFsm).eval fsmEnv) i =
     decide (i ≤ min (v.toNat wenv) (w.toNat wenv) ∨ (v.toNat wenv) ≤ (w.toNat wenv)) := by
-  rw [eval_fsmUleUnary_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
+  rw [eval_fsmUnaryUle_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
   simp
   by_cases hiv : i ≤ v.toNat wenv
   · simp [hiv]
   · simp [hiv]
     omega
 /--
-info: 'MultiWidth.eval_fsmUleUnary_eq_decide' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.eval_fsmUnaryUle_eq_decide' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in #print axioms eval_fsmUleUnary_eq_decide
+#guard_msgs in #print axioms eval_fsmUnaryUle_eq_decide
 
 -- returns 1 if a is equal to b.
 def fsmEqUnaryUpto (a : FSM α) (b : FSM α) : FSM α :=
@@ -230,7 +250,7 @@ private theorem decide_or_decide_eq_decide {P Q : Prop}
   simp
 
 /-- returns 1 if a is not equal to b. -/
-def fsmNeqUnaryUpto (a b : FSM α) : FSM α :=
+def fsmUnaryNeqUpto (a b : FSM α) : FSM α :=
   composeUnaryAux FSM.scanOr (a ^^^ b)
 
 theorem neq_of_min_neq_min {i v w : Nat} (hivw : ¬ min i v = min i w ) :
@@ -246,16 +266,16 @@ theorem neq_of_min_neq_min {i v w : Nat} (hivw : ¬ min i v = min i w ) :
       omega
 
 @[simp]
-theorem eval_fsmNeqUnaryUpto_eq_decide
+theorem eval_fsmUnaryNeqUpto_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
-    ((fsmNeqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUnaryNeqUpto a.toFsm b.toFsm).eval fsmEnv) i =
     (decide (min i (v.toNat wenv) ≠ min i (w.toNat wenv))) := by
-  simp [fsmNeqUnaryUpto]
+  simp [fsmUnaryNeqUpto]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
   induction w generalizing v
@@ -296,7 +316,7 @@ theorem eval_fsmNeqUnaryUpto_eq_decide
               exists (wenv v)
               omega
 
-def fsmIncrK
+def fsmUnaryIncrK
     (k : Nat)
     (a : NatFSM wcard tcard (.ofDep v))
     {wenv : WidthExpr.Env wcard}
@@ -305,23 +325,23 @@ def fsmIncrK
     (ha : IsGoodNatFSM a) : FSM  (StateSpace wcard tcard) :=
   match k with
   | 0 => a.toFsm
-  | k + 1 => composeUnaryAux (FSM.ls true) (fsmIncrK k a henv ha)
+  | k + 1 => composeUnaryAux (FSM.ls true) (fsmUnaryIncrK k a henv ha)
 
-theorem eval_fsmIncrK_eq_decide
+theorem eval_fsmUnaryIncrK_eq_decide
     (k : Nat)
     (a : NatFSM wcard tcard (.ofDep v))
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : IsGoodNatFSM a) :
-    ((fsmIncrK k a henv ha).eval fsmEnv) i =
+    ((fsmUnaryIncrK k a henv ha).eval fsmEnv) i =
     decide (i ≤ v.toNat wenv + k) := by
   induction k generalizing i
   case zero =>
-    simp [fsmIncrK]
+    simp [fsmUnaryIncrK]
     rw [ha.heq (henv := henv)]
   case succ k ih =>
-    simp [fsmIncrK]
+    simp [fsmUnaryIncrK]
     simp [BitStream.concat]
     rcases i with rfl | i
     · simp only [BitStream.concat_zero, zero_le, decide_true]
@@ -344,7 +364,7 @@ theorem eval_ite_eq_decide
   by_cases hcond : cond.eval env i <;> simp [hcond]
 
 def fsmUltUnary (a b : FSM α) : FSM α :=
-  composeBinaryAux' FSM.and (fsmUleUnary a b) (fsmNeqUnaryUpto a b)
+  composeBinaryAux' FSM.and (fsmUnaryUle a b) (fsmUnaryNeqUpto a b)
 
 theorem eval_fsmUltUnary_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
@@ -356,8 +376,8 @@ theorem eval_fsmUltUnary_eq_decide
     ((fsmUltUnary a.toFsm b.toFsm).eval fsmEnv) i =
    (decide (min i (v.toNat wenv) < min i (w.toNat wenv))) := by
   simp [fsmUltUnary]
-  rw [eval_fsmUleUnary_eq_lt_or_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
-  rw [eval_fsmNeqUnaryUpto_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
+  rw [eval_fsmUnaryUle_eq_lt_or_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
+  rw [eval_fsmUnaryNeqUpto_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
   simp
   generalize v.toNat wenv = v'
   generalize w.toNat wenv = w'
@@ -387,9 +407,29 @@ theorem fsmIndexUle_eval_eq
   rw [fsmUnaryIndexUle]
   rw [ha.heq (henv := henv)]
 
-def fsmZext (a _wold wnew : FSM (StateSpace wcard tcard))
+def fsmZext (nFsm wnewfsm : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
-  a &&& (wnew)
+  nFsm &&& (wnewfsm)
+
+/-- the fsmZext builds the correct zero-extended FSM. -/
+theorem fsmZext_eval_eq
+    (wnewFsm : NatFSM wcard tcard (.ofDep wnew))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (hwnew : IsGoodNatFSM wnewFsm)
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : Term.Ctx.Env tctx wenv)
+    (t : Term tctx w)
+    (tFsm : TermFSM wcard tcard (.ofDep t))
+    (ht : IsGoodTermFSM tFsm)
+    (htenv : HTermEnv fsmEnv tenv) :
+    (fsmZext tFsm.toFsm wnewFsm.toFsm).eval fsmEnv i =
+      ((t.toBitstream tenv).zeroExtend (wnew.toNat wenv)) i := by
+  rw [fsmZext]
+  simp
+  rw [ht.heq (henv := htenv)]
+  rw [hwnew.heq (henv := htenv.toHWidthEnv)]
+
 
 
 /-- The inputs given to the sext fsm. -/
@@ -408,7 +448,7 @@ def fsmSext.inputs.toFin : fsmSext.inputs → Fin 4
 
 def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
-  ite (fsmUleUnary wnew wold)
+  ite (fsmUnaryUle wnew wold)
     /- wnew ≤ wold, so it's the same as zext. -/
     (fsmZext a wold wnew)
     /- wnew > wold. -/
@@ -487,7 +527,6 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w
     case zext w' a b c  =>
       simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
       simp [fsmZext]
-      simp [ite]
       sorry
     case sext w' a b => sorry
 

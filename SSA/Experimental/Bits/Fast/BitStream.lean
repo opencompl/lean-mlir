@@ -227,6 +227,14 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
     (x.toBitVec w)[i] = ((decide (i < w)) && x i) := by
   simp [← BitVec.getLsbD_eq_getElem]
 
+
+def zeroExtend (b : BitStream) (n : Nat) : BitStream := fun i =>
+  (b i) && decide (i ≤ n)
+
+@[simp]
+theorem zeroExtend_eval_eq (b : BitStream) (n : Nat) (i : Nat) :
+  b.zeroExtend n i = ((b i) && decide (i ≤ n)) := rfl
+
 /-- `EqualUpTo w x y` holds iff `x` and `y` are equal in the first `w` bits -/
 def EqualUpTo (w : Nat) (x y : BitStream) : Prop :=
   ∀ i < w, x i = y i
