@@ -179,6 +179,15 @@ theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec :
    (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := by
   rfl
 
+@[ext] theorem ext {xs ys : HVector A as}
+    (h : ∀ i, xs.get i = ys.get i) : xs = ys := by
+  induction xs <;> cases ys
+  case nil => rfl
+  case cons ih _ _ =>
+    specialize ih (fun i => by simpa using h i.succ)
+    specialize h (0 : Fin <| _ + 1)
+    simp_all
+
 -- Copied from core for List
 macro_rules
   | `([ $elems,* ]ₕ) => do
@@ -198,6 +207,7 @@ infixr:50 "::ₕ" => HVector.cons
 /-!
   ## OfFn
 -/
+section OfFn
 
 def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]) :
     HVector A as :=
@@ -205,8 +215,15 @@ def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]
   | _ :: as => f (0 : Fin (_ + 1)) ::ₕ ofFn A as (fun i => f i.succ)
   | [] => .nil
 
-@[simp] theorem ofFn_nil : ofFn A [] f = .nil := by rfl
+@[simp] theorem ofFn_nil : ofFn A [] f = .nil := rfl
 
+@[simp] theorem get_ofFn : (ofFn A as f).get i = f i := by
+  induction as
+  case nil => exact i.elim0
+  case cons ih =>
+    sorry
+
+end OfFn
 /-
   # ToExpr and other Meta helpers
 -/

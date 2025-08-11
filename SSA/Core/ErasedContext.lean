@@ -3,6 +3,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Union
+import Mathlib.Tactic.DepRewrite
+
 import SSA.Core.HVector
 
 /--
@@ -341,12 +343,29 @@ end Lemmas
 def toFin (v : Γ.Var t) : Fin Γ.length :=
   ⟨v.val, v.val_lt⟩
 
-def ofFin : (i : Fin Γ.length) → Γ.Var (Γ[i])
-  | ⟨idx, h⟩ => ⟨idx, by simpa using List.getElem?_eq_getElem _⟩
+def ofFin (i : Fin Γ.length) : Γ.Var (Γ[i]) :=
+  ⟨i.val, by simpa using List.getElem?_eq_getElem _⟩
+
+def ofFinCases
+    {motive : ∀ {t}, Γ.Var t → Sort u}
+    (ofFin : (i : Fin Γ.length) → motive (ofFin i))
+    (v : Γ.Var t) :
+    motive v := by
+  let i := ofFin v.toFin
+  rcases v with ⟨v, hv⟩
+  refine _root_.cast ?h i
+  simp [Var.toFin, Var.ofFin]
+  stop
+  congr
+  · rcases Γ
+    simp_all
+
+
 
 end Var
 
 end Ctxt
+open Ctxt
 
 /-!
 ### Indexing an HVector by `Var`
@@ -359,6 +378,15 @@ instance : GetElem (HVector A as) (Ctxt.Var ⟨as⟩ a) (A a) (fun _ _ => True) 
     congr 1
     rcases i with ⟨i, h⟩
     simpa [Ctxt.Var.toFin, List.getElem_eq_iff] using h
+
+@[simp] lemma HVector.getElem_eq_get (xs : HVector A as) (i : Fin as.length) :
+    xs[Ctxt.Var.ofFin i] = xs.get i := rfl
+@[simp] lemma HVector.getElem_map (xs : HVector A as) (v : Var ⟨as⟩ a) :
+    (xs.map f)[v] = f _ xs[v] := by
+  cases v using Var.ofFinCases
+  rw [HVector.getElem_eq_get, HVector.getElem_eq_get]
+  simp only [length_ofList, get_map, List.get_eq_getElem]
+  rfl
 
 namespace Ctxt
 /-!
@@ -579,6 +607,18 @@ variable {V : Γ.Valuation} {xs : HVector toType ts}
     (V ++ xs) v.appendInr = xs[v] := by
   simp [(· ++ ·)]
 
+@[simp] lemma Valuation.append_inj {V : Γ.Valuation}
+    {ts : List Ty} {xs ys : HVector toType ts} :
+    (V ++ xs) = (V ++ ys) ↔ xs = ys where
+  mpr := by rintro rfl; rfl
+  mp := by
+    intro h
+    replace h {t} (v : Var _ t) : (V ++ xs) v.appendInr = (V ++ ys) v.appendInr := by
+      rw [h]
+    simp only [append_appendInr] at h
+    ext i
+    exact h (Var.ofFin i)
+
 /-! ## Valuation Construction Helpers -/
 
 /-- Make a a valuation for a singleton value -/
@@ -632,6 +672,13 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
     (f : Δ.Hom Γ) :
     (V ++ xs).comap (f.append) = (V.comap f) ++ xs := by
   funext t v; cases v using Var.appendCases <;> simp
+
+@[simp] lemma Valuation.comap_appendCodomain {Γ Δ : Ctxt Ty} {ts : List Ty}
+    (V : Γ.Valuation) (xs : HVector toType ts) (f : Δ.Hom Γ) :
+    (V ++ xs).comap f.appendCodomain = V.comap f := by
+  funext t v; simp
+
+/-! ### Reassign Variables-/
 
 /-- Reassign the variable var to value val in context ctxt -/
 def Valuation.reassignVars [DecidableEq Ty] {ts : List Ty} {Γ : Ctxt Ty}

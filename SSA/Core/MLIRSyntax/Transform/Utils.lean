@@ -147,7 +147,7 @@ def mkExprOf (Γ : Ctxt d.Ty) (parsedOp : d.Op)
   let signature := DialectSignature.signature parsedOp
   let argsVec := args.toHVector
   let eff := signature.effectKind
-  let returnTy := signature.outTy
+  let returnTy := signature.returnTypes
 
   -- TODO: parse regions
   if h_noRegions : ¬signature.regSig.isEmpty then

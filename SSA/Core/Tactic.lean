@@ -14,7 +14,7 @@ variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [Law
 @[simp_denote] lemma Expr.denote_unfold' {ty} (e : Expr d Γ eff ty) :
     e.denote V = do
       let x ← e.denoteOp V
-      return V ::ᵥ x := by
+      return V ++ x := by
   rw [Expr.denote_unfold, ← map_eq_pure_bind]
 
 namespace SSA
@@ -79,12 +79,12 @@ variable {d : Dialect} {instSig : DialectSignature d}
   {instMonad : Monad d.m}
 
 @[simp_denote] lemma HVector.denote_nil'
-    (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 .impure t.2) []) :
+    (T : HVector (fun (t : Ctxt d.Ty × List d.Ty) => Com d t.1 .impure t.2) []) :
     HVector.denote T = HVector.nil := by
   cases T; simp [HVector.denote]
 
 @[simp_denote] lemma HVector.denote_cons'
-    (t : Ctxt d.Ty × d.Ty) (ts : List (Ctxt d.Ty × d.Ty))
+    (t : Ctxt d.Ty × List d.Ty) (ts : List (Ctxt d.Ty × List d.Ty))
     (a : Com d t.1 .impure t.2) (as : HVector (fun t => Com d t.1 .impure t.2) ts) :
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
   simp [HVector.denote]

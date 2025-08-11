@@ -557,8 +557,8 @@ def Com.returnVars : (com : Com d Γ eff ts) → HVector (Var com.outContext) ts
 def Com.returnVar (com : Com d Γ eff [t]) : Var com.outContext t :=
   com.returnVars.get (0 : Fin 1)
 
-@[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
-  @fun _ => Var.appendInl
+abbrev Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
+  Hom.id.appendCodomain
 
 section Lemmas
 

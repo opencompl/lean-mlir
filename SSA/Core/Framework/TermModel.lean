@@ -17,9 +17,9 @@ mutual
 variable (d)
 
 /-- A tree of pure expressions -/
-inductive ExprTree (Γ : Ctxt d.Ty) : (ty : d.Ty) → Type
+inductive ExprTree (Γ : Ctxt d.Ty) : (ty : List d.Ty) → Type
   | mk (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+    (ty_eq : ty = DialectSignature.returnTypes op)
     (eff_eq : DialectSignature.effectKind op = .pure)
     (args : ExprTreeBranches Γ <| DialectSignature.sig op)
     --TODO: we should tree-ify the regions as well to make the term model work
@@ -27,13 +27,20 @@ inductive ExprTree (Γ : Ctxt d.Ty) : (ty : d.Ty) → Type
     -- (regArgs : HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2)
     --   (DialectSignature.regSig op))
     : ExprTree Γ ty
-  | fvar : Var Γ ty → ExprTree Γ ty
+  | fvar : HVector Γ.Var ty → ExprTree Γ ty
 
 inductive ExprTreeBranches (Γ : Ctxt d.Ty) : List d.Ty → Type
   | nil : ExprTreeBranches Γ []
-  | cons : ExprTree Γ t → ExprTreeBranches Γ ts → ExprTreeBranches Γ (t::ts)
+  | cons :
+      ExprTree Γ t → ExprTreeBranches Γ ts → (i : Fin t.length)
+      → ExprTreeBranches Γ ( t.get i ::ts)
 
 end
+
+/-
+TODO: the term model stuff breaks quite thoroughly with multiple returns.
+Since we don't actually use the term model, it's unclear how to fix it.
+-/
 
 @[coe]
 def ExprTreeBranches.ofHVector : HVector (ExprTree d Γ) ts → ExprTreeBranches d Γ ts
