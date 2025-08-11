@@ -826,6 +826,9 @@ def evalBvGeneralize : Tactic
 set_option linter.unusedTactic false
 
 
+variable {x y z : BitVec 1}
+#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
+
 variable {x y z : BitVec 8}
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
@@ -838,9 +841,6 @@ variable {x y z : BitVec 16}
 variable {x y z: BitVec 32}
 #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
 #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
-
-variable {x y z : BitVec 1}
-#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1)
 
 
 theorem zext (x : BitVec 8) :  ¬ (BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x) := by

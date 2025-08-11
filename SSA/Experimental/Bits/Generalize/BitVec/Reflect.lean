@@ -53,67 +53,68 @@ structure ParsedBVExpr where
 
 abbrev ParsedBVLogicalExpr := ParsedLogicalExpr BVExprWrapper ParsedBVExpr GenBVLogicalExpr
 
-partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
   go expr
   where
 
   go (x : Expr) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
     match_expr x with
-    | HAnd.hAnd _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.and
-    | HXor.hXor _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.xor
-    | HAdd.hAdd _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.add
-    | HOr.hOr _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.or
-    | HSub.hSub _ _ _ _ lhsExpr rhsExpr =>
+    | HAnd.hAnd _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.and
+    | HXor.hXor _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.xor
+    | HAdd.hAdd _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.add
+    | HOr.hOr _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.or
+    | HSub.hSub _ _ resType _ lhsExpr rhsExpr =>
         let some lhs ← go lhsExpr | return none
         let some rhs ← go rhsExpr | return none
-        if h : lhs.width = rhs.width then
-          let rhs' := h ▸ rhs.bvExpr
+        let some w ← getWidth? resType | return none
+        if h : lhs.width = w ∧ rhs.width = lhs.width then
+          let rhs' := h.right ▸ rhs.bvExpr
           return some {bvExpr := subtract lhs.bvExpr rhs', width := lhs.width}
         else
           return none
-    | HMul.hMul _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.mul
-    | HDiv.hDiv _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.udiv
-    | HMod.hMod _ _ _ _ lhsExpr rhsExpr =>
-        binaryReflection lhsExpr rhsExpr BVBinOp.umod
-    | Complement.complement _ _ innerExpr =>
+    | HMul.hMul _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.mul
+    | HDiv.hDiv _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.udiv
+    | HMod.hMod _ _ resType _ lhsExpr rhsExpr =>
+        binaryReflection lhsExpr rhsExpr resType BVBinOp.umod
+    | Complement.complement _ _ innerExpr => --TODO:
         let some inner ← go innerExpr | return none
         return some {bvExpr := GenBVExpr.un BVUnOp.not inner.bvExpr, width := inner.width}
-    | HShiftLeft.hShiftLeft _ _ _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr GenBVExpr.shiftLeft
-    | HShiftRight.hShiftRight _ _ _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr GenBVExpr.shiftRight
-    | BitVec.sshiftRight _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr GenBVExpr.arithShiftRight
-    | BitVec.sshiftRight' _ _ innerExpr distanceExpr =>
-        shiftReflection innerExpr distanceExpr GenBVExpr.arithShiftRight
+    | HShiftLeft.hShiftLeft _ _ resType _ innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr resType GenBVExpr.shiftLeft
+    | HShiftRight.hShiftRight _ _ resType _ innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr resType GenBVExpr.shiftRight
+    | BitVec.sshiftRight a resType innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr resType GenBVExpr.arithShiftRight
+    | BitVec.sshiftRight' _ resType innerExpr distanceExpr =>
+        shiftReflection innerExpr distanceExpr resType GenBVExpr.arithShiftRight
     | HAppend.hAppend _ _ _ _ lhsExpr rhsExpr =>
         let some lhs ← go lhsExpr | return none
         let some rhs ← go rhsExpr | return none
         return some {bvExpr := GenBVExpr.append lhs.bvExpr rhs.bvExpr rfl, width := _}
     | BitVec.extractLsb' _ _ _ _ =>
         throwError m! "Does not support BitVec.extractLsb' operations"
-    | BitVec.rotateLeft _ innerExpr distanceExpr =>
-        rotateReflection innerExpr distanceExpr BVUnOp.rotateLeft
-    | BitVec.rotateRight _ innerExpr distanceExpr =>
-        rotateReflection innerExpr distanceExpr BVUnOp.rotateRight
-    | BitVec.signExtend _ nExpr vExpr =>
-        let some n ← getNatValue? nExpr | return none
-        let some v ← go vExpr | return none
-        return some {bvExpr := GenBVExpr.signExtend targetWidth v.bvExpr, width := _}
-    | BitVec.zeroExtend _ nExpr vExpr =>
-        let some n ← getNatValue? nExpr | return none
-        let some v ← go vExpr | return none
-        return some {bvExpr := GenBVExpr.zeroExtend targetWidth v.bvExpr, width := _}
-    | BitVec.truncate _ nExpr vExpr =>
-      let some n ← getNatValue? nExpr | return none
-      let some v ← go vExpr | return none
-      return some {bvExpr := GenBVExpr.truncate n v.bvExpr, width := _}
+    | BitVec.rotateLeft resType innerExpr distanceExpr =>
+        rotateReflection innerExpr distanceExpr resType BVUnOp.rotateLeft
+    | BitVec.rotateRight resType innerExpr distanceExpr =>
+        rotateReflection innerExpr distanceExpr resType BVUnOp.rotateRight
+    | BitVec.signExtend _ vExpr xExpr =>
+        let some v ← getNatValue? vExpr | return none
+        let some x ← go xExpr | return none
+        return some {bvExpr := GenBVExpr.zeroExtend v x.bvExpr, width := v}
+    | BitVec.zeroExtend _ vExpr xExpr =>
+        let some v ← getNatValue? vExpr | return none
+        let some x ← go xExpr | return none
+        return some {bvExpr := GenBVExpr.zeroExtend v x.bvExpr, width := v}
+    | BitVec.truncate _ vExpr xExpr =>
+      let some v ← getNatValue? vExpr | return none
+      let some x ← go xExpr | return none
+      return some {bvExpr := GenBVExpr.truncate v x.bvExpr, width := _}
     | Neg.neg _ _ a =>
           let some (bvProd) ← getBitVecValue? a| return none
           let pbv := {bv := -bvProd.snd: BVExpr.PackedBitVec}
@@ -133,7 +134,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
               match existingVal with
               | none => let numSymVars := currState.numSymVars
                         let newId := 1001 + numSymVars
-                        let newExpr : GenBVExpr targetWidth := GenBVExpr.var newId
+                        let newExpr : GenBVExpr width := GenBVExpr.var newId
 
                         let updatedState : ParsedInputState BVExprWrapper := { currState with
                                                                 numSymVars := numSymVars + 1
@@ -141,25 +142,26 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
                                                                 , valToSymVar := currState.valToSymVar.insert pbv newId
                                                                 , symVarToDisplayName := currState.symVarToDisplayName.insert newId (Lean.Name.mkSimple s!"C{numSymVars + 1}")}
                         set updatedState
-                        return some {bvExpr := newExpr, width := targetWidth}
-              | some var => let newExpr : GenBVExpr targetWidth := GenBVExpr.var var
-                            return some {bvExpr := newExpr, width := targetWidth}
+                        return some {bvExpr := newExpr, width := width}
+              | some var => let newExpr : GenBVExpr width := GenBVExpr.var var
+                            return some {bvExpr := newExpr, width := width}
 
         | (none, some bvProd) =>
               let pbv : BVExpr.PackedBitVec := {bv := bvProd.snd: BVExpr.PackedBitVec}
               return (← processBitVec pbv)
         | _ =>
             let currState: ParsedInputState BVExprWrapper ← get
-            let .fvar name := x | throwError m! "Unknown expression: {x}"
-            let userFacingName := ((← getLCtx).get! name).userName
+            let localDecl ← getFVarLocalDecl x
+            let userFacingName := localDecl.userName
+            let some w ← getWidth? localDecl.type | return none
 
             let existingVar? := currState.inputVarToExprWrapper[userFacingName]?
             match existingVar? with
             | some val => return val
             | none =>
                 let newId := currState.maxFreeVarId + 1
-                let newExpr : GenBVExpr targetWidth :=  GenBVExpr.var newId
-                let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := targetWidth}
+                let newExpr : GenBVExpr w :=  GenBVExpr.var newId
+                let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := w}
 
                 let updatedState : ParsedInputState BVExprWrapper :=  { currState with
                                                          maxFreeVarId := newId
@@ -169,27 +171,36 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
                 set updatedState
                 return some newWrappedExpr
 
-  rotateReflection (innerExpr: Expr) (distanceExpr : Expr) (rotateOp: Nat → BVUnOp)
+  rotateReflection (innerExpr distanceExpr resType: Expr) (rotateOp: Nat → BVUnOp)
           : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← getNatValue? distanceExpr | return none
-      return some {bvExpr := GenBVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
+      let some w ← getWidth? resType | return none
 
-  binaryReflection (lhsExpr rhsExpr : Expr) (op : BVBinOp) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+      if w == inner.width then
+        return some {bvExpr := GenBVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
+      else return none
+
+  binaryReflection (lhsExpr rhsExpr resType : Expr) (op : BVBinOp) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
     let some lhs ← go lhsExpr | return none
     let some rhs ← go rhsExpr | return none
+    let some w ← getWidth? resType | return none
 
-    if h : lhs.width = rhs.width then
-      let rhs' := h ▸ rhs.bvExpr  -- cast rhs to BVExpr lhs.width
+    if h : w = lhs.width ∧ lhs.width = rhs.width then
+      let rhs' := h.right ▸ rhs.bvExpr
       return some {bvExpr := GenBVExpr.bin lhs.bvExpr op rhs', width := lhs.width}
     else
       return none
 
-  shiftReflection (innerExpr : Expr) (distanceExpr : Expr) (shiftOp : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m)
+  shiftReflection (innerExpr distanceExpr resType: Expr) (shiftOp : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m)
         : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← go distanceExpr | return none
-      return some {bvExpr :=  shiftOp inner.bvExpr distance.bvExpr, width := inner.width}
+      let some w ← getWidth? resType | return none
+
+      if w == inner.width then
+        return some {bvExpr :=  shiftOp inner.bvExpr distance.bvExpr, width := inner.width}
+      else return none
 
 
   getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
@@ -222,6 +233,11 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
       let n ← getNatValue? (← whnfD type.appArg!)
       return ⟨n, BitVec.ofNat n v⟩
 
+  getWidth? (type : Expr) : MetaM (Option Nat) := do
+    match_expr type with
+    | BitVec n => getNatValue? n
+    | _ => pure none
+
   processBitVec (pbv : BVExpr.PackedBitVec) : ParseExprM BVExprWrapper (Option BVExprWrapper) := do
     let currState: ParsedInputState BVExprWrapper  ← get
     let existingVal :=  currState.valToSymVar[pbv]?
@@ -229,7 +245,7 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
     | none =>
       let numSymVars := currState.numSymVars
       let newId := 1001 + numSymVars
-      let newExpr : GenBVExpr targetWidth := GenBVExpr.var newId
+      let newExpr : GenBVExpr pbv.w := GenBVExpr.var newId
 
       let updatedState : ParsedInputState BVExprWrapper := { currState with
                                               numSymVars := numSymVars + 1
@@ -238,18 +254,18 @@ partial def toBVExpr (expr : Expr) (targetWidth: Nat) : ParseExprM BVExprWrapper
                                               , valToSymVar := currState.valToSymVar.insert pbv newId
                                               , symVarToDisplayName := currState.symVarToDisplayName.insert newId (Lean.Name.mkSimple s!"C{numSymVars + 1}")}
       set updatedState
-      return some {bvExpr := newExpr, width := targetWidth}
-    | some var => let newExpr : GenBVExpr targetWidth := GenBVExpr.var var
-                  return some {bvExpr := newExpr, width := targetWidth}
+      return some {bvExpr := newExpr, width := pbv.w}
+    | some var => let newExpr : GenBVExpr width := GenBVExpr.var var
+                  return some {bvExpr := newExpr, width := width}
 
 
-def parseExprs (lhsExpr rhsExpr : Expr) (targetWidth : Nat): ParseExprM BVExprWrapper (Option ParsedBVLogicalExpr)  := do
-  let some lhsRes ← toBVExpr lhsExpr targetWidth | throwError "Could not extract lhs: {lhsExpr}"
+def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM BVExprWrapper (Option ParsedBVLogicalExpr)  := do
+  let some lhsRes ← toBVExpr lhsExpr width | throwError "Could not extract lhs: {lhsExpr}"
 
   let state ← get
   let lhs: ParsedBVExpr := {bvExpr := lhsRes.bvExpr, width := lhsRes.width, symVars := state.symVarToVal, inputVars := state.inputVarIdToDisplayName}
 
-  let some rhsRes ← toBVExpr rhsExpr targetWidth | throwError "Could not extract rhs: {rhsExpr}"
+  let some rhsRes ← toBVExpr rhsExpr width | throwError "Could not extract rhs: {rhsExpr}"
   let state ← get
 
   let rhsInputVars := state.inputVarIdToDisplayName.filter fun k _ => !lhs.inputVars.contains k

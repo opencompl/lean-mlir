@@ -21,7 +21,7 @@ This file contains the interface for implementing generalization on a new IR typ
 The type classes and structures operate on objects of the following types:
 - `genExpr w` : This type defines the supported operations on an IR of a given width `w`. An example is the GenBVExpr type.
 - `genLogicalExpr` : This defines operations involving predicates on `genExpr` objects. See `GenBVLogicalExpr`.
-- `parsedExprWrapper` : This wraps a `genExpr` object into a structure, enabling easy access to its width during parsing. See `BVExprWrapper`. TODO: We should be able to get rid of this type.
+- `parsedExprWrapper` : This wraps a `genExpr` object into a structure, enabling us to return a `genExpr` of unknown width. See `BVExprWrapper`.
 - `parsedExpr` : This contains the state of a `genExpr`, including its symbolic and input variables.
 -/
 
@@ -495,7 +495,7 @@ Convert a generalization to a theorem, with variable IDs replaced with proper di
 -/
 class HydrablePrettifyAsTheorem (genLogicalExpr : Type) where
   prettifyAsTheorem : (name : Name) → (generalization : genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
-  
+
 class HydrableGetInputWidth where
   getWidth : Expr → MetaM (Option Nat)
 
@@ -524,7 +524,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedE
           -- Parse the input expression
           let widthId : Nat := 9481
           let mut initialState := H.initialParserState
-          initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId (Name.mkSimple "w")}
+          initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId (Name.mkSimple "w"), originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
             | throwError "Unsupported expression provided"
