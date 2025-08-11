@@ -1759,8 +1759,8 @@ theorem Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkInd
     p.denote w vars := by
   apply Predicate.denote_of_eval
   rw [← Predicate.evalFin_eq_eval p
-    (varsList := (List.map BitStream.ofBitVec vars))
-    (varsFin := fun i => (List.map BitStream.ofBitVec vars).getD i default)]
+    (varsList := (List.map .ofBitVecSext vars))
+    (varsFin := fun i => (List.map .ofBitVecSext vars).getD i default)]
   · rw [(predicateEvalEqFSM p).good]
     apply eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
       (circs := circs) (hCircs := hCircs)

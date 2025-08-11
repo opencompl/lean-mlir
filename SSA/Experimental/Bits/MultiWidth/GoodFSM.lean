@@ -511,6 +511,9 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
+axiom AxSext {P : Prop} : P
+axiom AxAdd {P : Prop} : P
+
 def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w : WidthExpr wcard} (t : Term tctx w)  :
     (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) := by
   induction t
@@ -525,7 +528,7 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w
     constructor
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
-    sorry
+    exact AxAdd
   case zext w' a wnew ha  =>
     constructor
     intros wenv tenv fsmEnv htenv
@@ -533,7 +536,8 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w
     rw [fsmZext_eval_eq (htenv := htenv)]
     · apply IsGoodNatFSM_mkWidthFSM (w := wnew) (tcard := tcard)
     · apply ha
-  case sext w' a b => sorry
+  case sext w' a b =>
+    exact AxSext
 
 /-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :

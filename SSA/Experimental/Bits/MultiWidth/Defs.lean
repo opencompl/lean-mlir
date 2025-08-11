@@ -171,12 +171,13 @@ theorem Term.toBitstream_zext {wcard tcard : Nat}
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) (t : Term tctx w) (wnew : WidthExpr wcard) :
   (Term.toBitstream (.zext t wnew) tenv) = BitStream.zeroExtend (Term.toBitstream t tenv) (wnew.toNat wenv) := by
-  simp [Term.toBitstream, BitStream.zeroExtend]
+  simp only [toBitstream]
   ext i
   simp
-  simp [BitStream.ofBitVecZextMsb]
-  simp [BitVec.msb_eq_getLsbD_last]
-  simp [Term.toBV]
+  simp only [BitStream.ofBitVecZextMsb, BitVec.truncate_eq_setWidth]
+  simp only [BitVec.msb_eq_getLsbD_last, BitVec.getLsbD_setWidth, tsub_lt_self_iff, zero_lt_one,
+    and_true]
+  simp only [toBV, BitVec.truncate_eq_setWidth, BitVec.getLsbD_setWidth]
   generalize (toBV tenv t) = tbv
   generalize (wnew.toNat wenv) = wnat
   by_cases hi0 : 0 < i
