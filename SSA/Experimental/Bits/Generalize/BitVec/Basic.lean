@@ -410,17 +410,13 @@ def sameBothSides (bvLogicalExpr : GenBVLogicalExpr) : Bool :=
 /-
 This function expects that targetWidth >= w
 -/
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVExpr w) : BitVec targetWidth :=
-  let newWidthExpr := changeBVExprWidth expr targetWidth
-  let substitutedBvExpr := substituteBVExpr newWidthExpr (packedBitVecToSubstitutionValue assignments)
-
+def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenBVExpr w) : BitVec w :=
+  let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
   GenBVExpr.eval assignments substitutedBvExpr
 
 
-def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVLogicalExpr) : Bool :=
-  let newWidthExpr := changeBVLogicalExprWidth expr targetWidth
-  let substitutedBvExpr := substitute newWidthExpr (packedBitVecToSubstitutionValue assignments)
-
+def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenBVLogicalExpr) : Bool :=
+  let substitutedBvExpr := substitute expr (packedBitVecToSubstitutionValue assignments)
   GenBVLogicalExpr.eval assignments substitutedBvExpr
 
 def add (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=

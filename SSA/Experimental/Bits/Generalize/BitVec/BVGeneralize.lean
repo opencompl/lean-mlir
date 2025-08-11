@@ -195,7 +195,7 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCa
             let mut res : Std.HashSet GenBVLogicalExpr := Std.HashSet.emptyWithCapacity
             for candidate in currentCandidates do
               let widthSubstitutedCandidate := substitute candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, GenBVExpr.const (BitVec.ofNat bitwidth bitwidth))]))
-              if !(evalBVLogicalExpr assignment bitwidth widthSubstitutedCandidate) then
+              if !(evalBVLogicalExpr assignment widthSubstitutedCandidate) then
                 res := res.insert candidate
             pure res
 
@@ -251,7 +251,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
             let h : lhs.w = w := sorry
             let h' : rhs.w = w := sorry
             if h : lhs.w = w ∧ rhs.w = w then
-              res := (evalBVExpr examples[index]! w (op  (GenBVExpr.const (h.left ▸ lhs.bv)) (GenBVExpr.const (h.right ▸ rhs.bv)))) :: res
+              res := (evalBVExpr examples[index]! (op  (GenBVExpr.const (h.left ▸ lhs.bv)) (GenBVExpr.const (h.right ▸ rhs.bv)))) :: res
               index := index + 1
             else
               throwError m! "Invalid width for lhs:{lhs} and rhs:{rhs}"
@@ -304,7 +304,7 @@ def generatePreconditions (bvLogicalExpr: GenBVLogicalExpr) (positiveExamples ne
       for const in positiveExamples[0]!.keys do
         let bvExprVar := GenBVExpr.var const
         let powerOf2Expr :=  GenBVExpr.bin bvExprVar BVBinOp.and (GenBVExpr.bin bvExprVar BVBinOp.add (minusOne bitwidth))
-        let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos bitwidth powerOf2Expr)
+        let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos powerOf2Expr)
 
         if powerOfTwoResults.any (λ val => val == 0) then
           let powerOf2 := BoolExpr.literal (GenBVPred.bin powerOf2Expr BVBinPred.eq (zero bitwidth))
@@ -396,7 +396,7 @@ def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSym
     let symVarsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip lhsSymVars.keys combo.snd))
 
     let substitutedExpr := substituteBVExpr lhsSketch (Std.HashMap.union inputsSubstitutions symVarsSubstitutions)
-    let evalRes : BitVec w := evalBVExpr lhsSymVars w substitutedExpr
+    let evalRes : BitVec w := evalBVExpr lhsSymVars substitutedExpr
 
     if rhsVarByValue.contains evalRes then
       let existingVar := rhsVarByValue[evalRes]!
@@ -486,7 +486,7 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BV
 
       for (lhsVar, lhsVal) in allLhsVars.toArray do
         for op in ops do
-          let evaluatedRes := evalBVExpr lhsSymVars w (op packedBVExpr lhsVar)
+          let evaluatedRes := evalBVExpr lhsSymVars (op packedBVExpr lhsVar)
 
           let mut newExpr : GenBVExpr w := op (h ▸ bvExpr) lhsVar
           let rhsVarForValue := rhsVarByValue[evaluatedRes]?
