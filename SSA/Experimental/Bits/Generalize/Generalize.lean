@@ -169,10 +169,10 @@ def GeneralizerStateM.liftTermElabM
 /--
 Initialize a `GeneralizerState` object with a `parsedLogicalExpr` and the timeout and width configurations
 -/
-class HydrableInitialGeneralizerState  (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
+class HydrableInitializeGeneralizerState  (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type)
 extends HydrableInstances genLogicalExpr genExpr
 where
-  initialGeneralizerState : (startTime timeout widthId targetWidth: Nat) → (parsedLogicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr)
+  initializeGeneralizerState : (startTime timeout widthId targetWidth: Nat) → (parsedLogicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr)
                           → GeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr
 
 /--
@@ -417,6 +417,26 @@ class HydrableChangeLogicalExprWidth (genLogicalExpr : Type)
     where
   changeLogicalExprWidth : (expr : genLogicalExpr) → (target : Nat) → genLogicalExpr
 
+
+class HydrableReduceWidth (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
+  HydrableExistsForall parsedExprWrapper parsedExpr  genLogicalExpr genExpr
+  where
+  shrink : (expr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr) → (target: Nat) → MetaM (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr)
+
+abbrev ReducedWidthRes (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) := (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr) × List (Std.HashMap Nat BVExpr.PackedBitVec)
+
+def reduceWidth [H : HydrableReduceWidth parsedExprWrapper parsedExpr genLogicalExpr genExpr]
+    (logicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr) (target numResults: Nat): GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr (ReducedWidthRes parsedExprWrapper parsedExpr genLogicalExpr) := do
+  let shrank ← H.shrink logicalExpr target
+  logInfo m! "Shrank {logicalExpr.logicalExpr} to {shrank.logicalExpr}"
+
+  let state := shrank.state
+  let constantAssignments ← existsForAll shrank.logicalExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys numResults
+
+  return (shrank, constantAssignments)
+
+
+
 /--
 Main generalization workflow. It works as follows at a high level:
 - Invokes the `existsForAll` function to synthesize new constants in a lower bitwidth.
@@ -428,38 +448,37 @@ class HydrableGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogic
   HydrableChangeLogicalExprWidth genLogicalExpr,
   HydrableInitialParserState parsedExprWrapper,
   HydrableSynthesizeWithNoPrecondition parsedExprWrapper parsedExpr genLogicalExpr genExpr,
-  HydrableCheckForPreconditions parsedExprWrapper parsedExpr genLogicalExpr genExpr
+  HydrableCheckForPreconditions parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrableReduceWidth parsedExprWrapper parsedExpr genLogicalExpr genExpr
   where
 
-def generalize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr] : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr  (Option genLogicalExpr) := do
+def generalize [H : HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr]
+                  : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr  (Option genLogicalExpr) := do
     let state ← get
-    let parsedLogicalExpr := state.parsedLogicalExpr
-    let mut logicalExpr := parsedLogicalExpr.logicalExpr
-    let parsedBVState := parsedLogicalExpr.state
+    let mut parsedLogicalExpr := state.parsedLogicalExpr
+    let parsedLogicalExprState := parsedLogicalExpr.state
 
-    let originalWidth := parsedBVState.originalWidth
+    let originalWidth := parsedLogicalExprState.originalWidth
     let targetWidth := state.targetWidth
 
-    let mut constantAssignments := []
-    --- Synthesize constants in a lower width if needed
+    let mut constantAssignments := [parsedLogicalExprState.symVarToVal]
+    let mut processingWidth := originalWidth
+
+    logInfo m! "OriginalWidth: {originalWidth}, targetWidth: {targetWidth}"
     if originalWidth > targetWidth then
-      constantAssignments ← existsForAll logicalExpr parsedBVState.symVarToVal.keys parsedBVState.inputVarIdToDisplayName.keys 1
+      let shrinkedResults ← reduceWidth parsedLogicalExpr targetWidth 3
+      let shrinkedLogicalExpr := shrinkedResults.fst
+      let newAssignments := shrinkedResults.snd
 
-    let mut processingWidth := targetWidth
-    if constantAssignments.isEmpty then
-      logInfo m! "Did not synthesize new constant values in width {targetWidth}"
-      constantAssignments := parsedBVState.symVarToVal :: constantAssignments
-      processingWidth := originalWidth
-
-    if processingWidth != targetWidth then
-        -- Revert to the original width if necessary
-      logicalExpr := H.changeLogicalExprWidth logicalExpr processingWidth
-      trace[Generalize] m! "Using values for {logicalExpr} in width {processingWidth}: {constantAssignments}"
+      if !newAssignments.isEmpty then
+        parsedLogicalExpr := shrinkedLogicalExpr
+        constantAssignments := newAssignments
+        processingWidth := targetWidth
 
     set {state with
                 processingWidth := processingWidth,
                 constantExprsEnumerationCache := {},
-                parsedLogicalExpr := { parsedLogicalExpr with logicalExpr := logicalExpr }}
+                parsedLogicalExpr := parsedLogicalExpr}
 
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
         H.synthesizeWithNoPrecondition constantAssignments
@@ -502,7 +521,7 @@ class HydrableGetInputWidth where
 class HydrableParseAndGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrableParseExprs parsedExprWrapper parsedExpr genLogicalExpr,
-  HydrableInitialGeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrableInitializeGeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrablePrettify genLogicalExpr,
   HydrablePrettifyAsTheorem genLogicalExpr,
   HydrableGetInputWidth
@@ -521,6 +540,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedE
           let some width ← H.getWidth w  | throwError m! "Could not determine the rewrite width from {w}"
           let startTime ← Core.liftIOCore IO.monoMsNow
 
+          logInfo m! "Expression width: {width}"
           -- Parse the input expression
           let widthId : Nat := 9481
           let mut initialState := H.initialParserState
@@ -532,7 +552,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedE
           let bvLogicalExpr := parsedLogicalExpr.logicalExpr
           let parsedBVState := parsedLogicalExpr.state
 
-          let mut initialGeneralizerState := H.initialGeneralizerState startTime timeoutMs widthId targetWidth parsedLogicalExpr
+          let mut initialGeneralizerState := H.initializeGeneralizerState startTime timeoutMs widthId targetWidth parsedLogicalExpr
 
           let generalizeRes ← generalize.run' initialGeneralizerState
           let variableDisplayNames := Std.HashMap.union parsedBVState.inputVarIdToDisplayName parsedBVState.symVarToDisplayName

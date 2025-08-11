@@ -89,7 +89,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
         shiftReflection innerExpr distanceExpr resType GenBVExpr.shiftLeft
     | HShiftRight.hShiftRight _ _ resType _ innerExpr distanceExpr =>
         shiftReflection innerExpr distanceExpr resType GenBVExpr.shiftRight
-    | BitVec.sshiftRight a resType innerExpr distanceExpr =>
+    | BitVec.sshiftRight _ resType innerExpr distanceExpr =>
         shiftReflection innerExpr distanceExpr resType GenBVExpr.arithShiftRight
     | BitVec.sshiftRight' _ resType innerExpr distanceExpr =>
         shiftReflection innerExpr distanceExpr resType GenBVExpr.arithShiftRight
@@ -106,7 +106,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
     | BitVec.signExtend _ vExpr xExpr =>
         let some v ← getNatValue? vExpr | return none
         let some x ← go xExpr | return none
-        return some {bvExpr := GenBVExpr.zeroExtend v x.bvExpr, width := v}
+        return some {bvExpr := GenBVExpr.signExtend v x.bvExpr, width := v}
     | BitVec.zeroExtend _ vExpr xExpr =>
         let some v ← getNatValue? vExpr | return none
         let some x ← go xExpr | return none
@@ -249,7 +249,6 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
 
       let updatedState : ParsedInputState BVExprWrapper := { currState with
                                               numSymVars := numSymVars + 1
-                                              , originalWidth := pbv.w
                                               , symVarToVal := currState.symVarToVal.insert newId pbv
                                               , valToSymVar := currState.valToSymVar.insert pbv newId
                                               , symVarToDisplayName := currState.symVarToDisplayName.insert newId (Lean.Name.mkSimple s!"C{numSymVars + 1}")}
@@ -283,7 +282,6 @@ def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM BVExprWrapper 
 
   return none
 
-
 def mkHShift (name : Name) (w n : Nat) (synthName : Name) (lhs rhs : Expr) : Expr :=
   let bitVecW := mkApp (mkConst ``BitVec) (mkNatLit w)
   let bitVecN := mkApp (mkConst ``BitVec) (mkNatLit n)
@@ -301,7 +299,7 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
   match bvExpr with
   | .var idx => let localDecl ← getLocalDeclFromUserName allNames[idx]!
                 pure (mkFVar localDecl.fvarId)
-  | .const val => mkAppM ``BitVec.ofInt #[bitVecWidth,  (mkIntLit val.toInt)]
+  | .const (w := w) val => mkAppM ``BitVec.ofInt #[(mkNatLit w),  (mkIntLit val.toInt)]
   | .bin lhs op rhs  => match op with
                         | .and => return mkApp3 (.const ``BitVec.and []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
                         | .or =>  return mkApp3 (.const ``BitVec.or [])  bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
@@ -321,7 +319,7 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
   | .replicate n expr _ => return mkApp3 (.const ``BitVec.replicate []) bitVecWidth (mkNatLit n) (← bvExprToExpr parsedBVExpr expr)
   | .shiftLeft (n := n) lhs rhs => return mkHShift ``HShiftLeft.hShiftLeft w n ``BitVec.instHShiftLeft (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .shiftRight (n := n) lhs rhs => return mkHShift ``HShiftRight.hShiftRight w n ``BitVec.instHShiftRight (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-  | .arithShiftRight lhs rhs => return mkApp4 (.const ``BitVec.sshiftRight' []) bitVecWidth bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+  | .arithShiftRight (m := m) (n := n) lhs rhs => return mkApp4 (.const ``BitVec.sshiftRight' []) (mkNatLit m) (mkNatLit n) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .zeroExtend v expr => return mkApp3  (.const ``BitVec.zeroExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
   | .truncate v expr => return mkApp3  (.const ``BitVec.truncate []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
   | .signExtend v expr => return mkApp3 (.const ``BitVec.signExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)

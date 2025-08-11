@@ -71,6 +71,51 @@ instance : HydrableInitialParserState BVExprWrapper where
 
 instance :  HydrableCheckTimeout BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 
+def shrinkParsedBVExpr (expr : ParsedBVExpr) (targetWidth : Nat) : MetaM ParsedBVExpr := do
+  let bvExpr ← shrinkBVExpr expr.bvExpr targetWidth
+  return {expr with bvExpr := bvExpr, width := targetWidth}
+
+  where
+    shrinkBVExpr {w} (bvExpr : GenBVExpr w) (result: Nat) : MetaM (GenBVExpr result) := do
+      match bvExpr with
+      | .var idx => return GenBVExpr.var idx
+      | .const val => return GenBVExpr.const (val.setWidth result)
+      | .bin lhs op rhs => return GenBVExpr.bin (← shrinkBVExpr lhs result) op (← shrinkBVExpr rhs result)
+      | .un op operand => return GenBVExpr.un op (← shrinkBVExpr operand result)
+      | .shiftLeft (n := n) lhs rhs => return GenBVExpr.shiftLeft (← shrinkBVExpr lhs result) (← shrinkBVExpr rhs (reduce n))
+      | .shiftRight (n := n) lhs rhs => return GenBVExpr.shiftRight (← shrinkBVExpr lhs result) (← shrinkBVExpr rhs (reduce n))
+      | .arithShiftRight (n := n) lhs rhs => return GenBVExpr.arithShiftRight (← shrinkBVExpr lhs result) (← shrinkBVExpr rhs (reduce n))
+      | .signExtend (w := w) _ expr => return GenBVExpr.signExtend result (← shrinkBVExpr expr (reduce w))
+      | .zeroExtend (w := w) _ expr => return GenBVExpr.zeroExtend result (← shrinkBVExpr expr (reduce w))
+      | .truncate (w := w) _ expr => return GenBVExpr.truncate result (← shrinkBVExpr expr (reduce w))
+      | _ => throwError m! "Unsupported input type: {bvExpr}"
+
+    reduce (instWidth : Nat) : Nat :=
+      (instWidth  * targetWidth) / expr.width
+
+def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBVLogicalExpr := do
+  let lhs ← shrinkParsedBVExpr origExpr.lhs targetWidth
+  let rhs ← shrinkParsedBVExpr origExpr.rhs targetWidth
+
+  if h :  targetWidth = lhs.width ∧ lhs.width = rhs.width then
+    let rhsExpr := h.right ▸ rhs.bvExpr
+
+    let mut shrinkedInputVarToExprWrapper : Std.HashMap Name BVExprWrapper := Std.HashMap.emptyWithCapacity
+    for (id, name) in origExpr.state.inputVarIdToDisplayName.toList do
+      let origWrapper := origExpr.state.inputVarToExprWrapper[name]!
+      let resultWidth := (origWrapper.width / origExpr.lhs.width) * targetWidth
+      shrinkedInputVarToExprWrapper := shrinkedInputVarToExprWrapper.insert name {width := resultWidth, bvExpr := GenBVExpr.var id}
+
+    let bvLogicalExpr := BoolExpr.literal (GenBVPred.bin lhs.bvExpr BVBinPred.eq rhsExpr)
+
+    let shrinkedState := {origExpr.state with inputVarToExprWrapper := shrinkedInputVarToExprWrapper}
+    return {origExpr with lhs := lhs, rhs := rhs, logicalExpr := bvLogicalExpr, state := shrinkedState}
+
+  throwError m! "Expected lhsWidth:{lhs.width} and rhsWidth:{rhs.width} to equal targetWidth:{targetWidth}"
+
+instance : HydrableReduceWidth BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+  shrink := shrink
+
 elab "#reducewidth" expr:term " : " target:term : command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
@@ -81,9 +126,10 @@ elab "#reducewidth" expr:term " : " target:term : command =>
       trace[Generalize] m! "hexpr: {hExpr}"
 
       match_expr hExpr with
-      | Eq _ lhsExpr rhsExpr =>
-           let initialState  := defaultParsedExprState
-           let some (parsedBvExpr) ← (parseExprs lhsExpr rhsExpr targetWidth).run' initialState | throwError "Unsupported expression provided"
+      | Eq w lhsExpr rhsExpr =>
+           let some width ← getWidth w  | throwError m! "Could not determine the rewrite width from {w}"
+           let initialState  := { defaultParsedExprState with originalWidth := width}
+           let some (parsedBvExpr) ← (parseExprs lhsExpr rhsExpr width).run' initialState | throwError "Unsupported expression provided"
 
            let bvExpr := parsedBvExpr.logicalExpr
            let state := parsedBvExpr.state
@@ -101,31 +147,30 @@ elab "#reducewidth" expr:term " : " target:term : command =>
                 , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
                 }
 
-           let results ← (existsForAll bvExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys 3).run' initialGeneralizerState
+           let results ← (reduceWidth parsedBvExpr targetWidth 3).run' initialGeneralizerState
 
-           logInfo m! "Results: {results}"
+           logInfo m! "Results: {results.snd}"
       | _ =>
             logInfo m! "Could not match"
       pure ()
 
 
 variable {x y z : BitVec 64}
---set_option trace.Meta.Tactic.bv true
--- #reducewidth (x + 0 = x) : 4
--- #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
--- #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
--- #reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
--- #reducewidth x + 5 = x : 8
--- #reducewidth x = 10 : 8
--- #reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
+#reducewidth (x + 0 = x) : 4
+#reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
+#reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
+#reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
+#reducewidth x + 5 = x : 8
+#reducewidth x = 10 : 8
+#reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
 
--- variable {x y z : BitVec 32}
--- #reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
--- #reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
--- #reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
+variable {x y z : BitVec 32}
+#reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
+#reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
+#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
 
--- #reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
--- #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
+#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+#reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM  BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr (List (GenBVExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
@@ -790,8 +835,8 @@ def initialGeneralizerState (startTime timeout widthId targetWidth: Nat) (parsed
                                     , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
                                     }
 
-instance : HydrableInitialGeneralizerState BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
-  initialGeneralizerState := initialGeneralizerState
+instance : HydrableInitializeGeneralizerState BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+  initializeGeneralizerState := initialGeneralizerState
 
 instance : HydrableGeneralize BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
