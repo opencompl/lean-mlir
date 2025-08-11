@@ -147,7 +147,12 @@ section ToBitstream
 
 /-- Our bitstreams start with '0',
 since we want the denotation of the bitstream at 'i' to be equal to
-'Term.zeroExtend i.msb'. -/
+'Term.zeroExtend i.msb'.
+
+NOTE: we should never reveal 'ofBitVecZextMsb', which is an implementation
+detail. Instead, our 'simp' lemmas should simplify the compound versions
+into the simpler versions.
+-/
 def Term.toBitstream {wcard tcard : Nat}
     {tctx :Term.Ctx wcard tcard}
     {w : WidthExpr wcard}
@@ -155,7 +160,36 @@ def Term.toBitstream {wcard tcard : Nat}
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) :
     BitStream :=
-  BitStream.ofBitVec (t.toBV tenv) |>.concat false
+  BitStream.ofBitVecZextMsb (t.toBV tenv)
+
+-- We write all other 'toBitstream' than 'var' in terms of more primitive 'toBitstream'.
+
+@[simp]
+theorem Term.toBitstream_zext {wcard tcard : Nat}
+    {tctx : Term.Ctx wcard tcard}
+    {w : WidthExpr wcard}
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv) (t : Term tctx w) (wnew : WidthExpr wcard) :
+  (Term.toBitstream (.zext t wnew) tenv) = BitStream.zeroExtend (Term.toBitstream t tenv) (wnew.toNat wenv) := by
+  simp [Term.toBitstream, BitStream.zeroExtend]
+  ext i
+  simp
+  simp [BitStream.ofBitVecZextMsb]
+  simp [BitVec.msb_eq_getLsbD_last]
+  simp [Term.toBV]
+  generalize (toBV tenv t) = tbv
+  generalize (wnew.toNat wenv) = wnat
+  by_cases hi0 : 0 < i
+  · simp [hi0]
+    by_cases hiw : i ≤ wnat
+    · simp [hiw]
+      intros h
+      have := BitVec.lt_of_getLsbD h
+      omega
+    · simp [hiw]
+      intros h
+      omega
+  · simp [hi0]
 
 def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
     (p : Predicate tctx)
@@ -286,18 +320,18 @@ instance : Fintype (StateSpace wcard tcard) where
     rcases x with x | x  <;> simp
 
 
-/--
-A bitstream environment.
--/
-structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
-  (bs : StateSpace wcard tcard → BitStream)
-  {wenv : WidthExpr.Env wcard}
-  {tctx : Term.Ctx wcard tcard}
-  (tenv : tctx.Env wenv) where
-  hw : ∀ (v : Fin wcard),
-    BitStream.ofNat (wenv v)  = bs (StateSpace.widthVar v)
-  ht : ∀ (v : Fin tcard),
-    BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
+-- /--
+-- A bitstream environment.
+-- -/
+-- structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
+--   (bs : StateSpace wcard tcard → BitStream)
+--   {wenv : WidthExpr.Env wcard}
+--   {tctx : Term.Ctx wcard tcard}
+--   (tenv : tctx.Env wenv) where
+--   hw : ∀ (v : Fin wcard),
+--     BitStream.ofNat (wenv v)  = bs (StateSpace.widthVar v)
+--   ht : ∀ (v : Fin tcard),
+--     BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
 
 /-- the FSM that corresponds to a given nat-predicate. -/
 structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
@@ -326,7 +360,7 @@ structure HTermEnv {wcard tcard : Nat}
   (fsmEnv : StateSpace wcard tcard → BitStream) (tenv : tctx.Env wenv) : Prop
   extends HWidthEnv fsmEnv wenv where
     heq_term : ∀ (v : Fin tcard),
-      fsmEnv (StateSpace.termVar v) = BitStream.ofBitVec (tenv v)
+      fsmEnv (StateSpace.termVar v) = (Term.var v).toBitstream tenv
 
 structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where

@@ -185,6 +185,9 @@ section ToBitVec
 abbrev ofBitVec {w} (x : BitVec w) : BitStream :=
   fun i => if i < w then x.getLsbD i else x.msb
 
+def ofBitVecZextMsb {w} (x : BitVec w) : BitStream :=
+  fun i => (x.zeroExtend i).msb
+
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
   fun i => decide (i ≤ n)

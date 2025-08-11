@@ -411,6 +411,7 @@ def fsmZext (nFsm wnewfsm : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
   nFsm &&& (wnewfsm)
 
+
 /-- the fsmZext builds the correct zero-extended FSM. -/
 theorem fsmZext_eval_eq
     (wnewFsm : NatFSM wcard tcard (.ofDep wnew))
@@ -423,13 +424,13 @@ theorem fsmZext_eval_eq
     (tFsm : TermFSM wcard tcard (.ofDep t))
     (ht : IsGoodTermFSM tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
-    (fsmZext tFsm.toFsm wnewFsm.toFsm).eval fsmEnv i =
-      ((t.toBitstream tenv).zeroExtend (wnew.toNat wenv)) i := by
+    (fsmZext tFsm.toFsm wnewFsm.toFsm).eval fsmEnv = fun i =>
+      (BitStream.zeroExtend (t.toBitstream tenv) (wnew.toNat wenv)) i := by
+  ext i
   rw [fsmZext]
   simp
   rw [ht.heq (henv := htenv)]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
-
 
 
 /-- The inputs given to the sext fsm. -/
@@ -450,7 +451,7 @@ def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
   ite (fsmUnaryUle wnew wold)
     /- wnew ≤ wold, so it's the same as zext. -/
-    (fsmZext a wold wnew)
+    (fsmZext a wnew)
     /- wnew > wold. -/
   (composeQuaternaryAux'
     (composer.map fsmSext.inputs.toFin)
@@ -498,11 +499,11 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm) }
   | .zext a wnew =>
-      let wold := a.width
+      -- let wold := a.width
       let afsm := mkTermFSM wcard tcard a
-      let woldFsm := mkWidthFSM wcard tcard wold
+      -- let woldFsm := mkWidthFSM wcard tcard wold
       let wnewFsm := mkWidthFSM wcard tcard wnew
-      { toFsm := fsmZext afsm.toFsm woldFsm.toFsm wnewFsm.toFsm }
+      { toFsm := fsmZext afsm.toFsm wnewFsm.toFsm }
   | .sext a v =>
     let wold := a.width
     let afsm := mkTermFSM wcard tcard a
@@ -510,25 +511,29 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
-def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} (tctx : Term.Ctx wcard tcard) {w : WidthExpr wcard} (t : Term tctx w)  :
-    (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) where
-  heq := by
+def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w : WidthExpr wcard} (t : Term tctx w)  :
+    (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) := by
+  induction t
+  case var v =>
+    constructor
     intros wenv tenv fsmEnv htenv
-    induction t generalizing wenv tenv fsmEnv
-    case var v =>
-      obtain htenv_term := htenv.heq_term
-      obtain htenv_width := htenv.heq_width
-      simp only [Nondep.Term.ofDep_var, mkTermFSM, Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var',
-        htenv_term, Term.toBitstream, Term.toBV_var]
-    case add v p q hp hq =>
-      simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
-      simp [Term.toBV]
-      sorry
-    case zext w' a b c  =>
-      simp [Term.toBitstream, Nondep.Term.ofDep, mkTermFSM]
-      simp [fsmZext]
-      sorry
-    case sext w' a b => sorry
+    obtain htenv_term := htenv.heq_term
+    obtain htenv_width := htenv.heq_width
+    simp only [Nondep.Term.ofDep_var, mkTermFSM,
+      Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var', htenv_term]
+  case add v p q hp hq =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    sorry
+  case zext w' a wnew ha  =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    rw [fsmZext_eval_eq (htenv := htenv)]
+    · apply IsGoodNatFSM_mkWidthFSM (w := wnew) (tcard := tcard)
+    · apply ha
+  case sext w' a b => sorry
 
 /-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
