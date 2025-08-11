@@ -235,9 +235,8 @@ theorem neq_of_min_neq_min {i v w : Nat} (hivw : ¬ min i v = min i w ) :
     · simp at hiw; simp [hiw] at hivw
       omega
 
-
 @[simp]
-theorem eval_fsmNeqUpto_eq_decide
+theorem eval_fsmNeqUnaryUpto_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
@@ -287,7 +286,6 @@ theorem eval_fsmNeqUpto_eq_decide
               exists (wenv v)
               omega
 
-
 -- | if 'cond' is true, then return 't', otherwise return 'e'.
 def ite (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
   (cond &&& t) ||| (~~~ cond &&& e)
@@ -300,6 +298,9 @@ theorem eval_ite_eq_decide
     if (cond.eval env i) then t.eval env i else e.eval env i := by
   simp [ite]
   by_cases hcond : cond.eval env i <;> simp [hcond]
+
+def fsmUltUnary (a b : FSM α) : FSM α :=
+  composeBinaryAux' FSM.and (fsmUleUnary a b) (fsmNeqUnaryUpto a b)
 
 private theorem BitVec.getLsbD_zeroExtend_eq_getLsbD (x : BitVec wold) (wnew : Nat) :
     (x.zeroExtend wnew).getLsbD i = if (i < wnew) then x.getLsbD i else false := by

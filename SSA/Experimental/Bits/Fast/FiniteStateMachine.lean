@@ -1172,6 +1172,7 @@ def composeBinaryAux
       | true => q₁
       | false => q₂)
 
+-- TODO: replace 'composeBinaryAux' with 'composeBinaryAux'.
 def composeBinaryAux'
     (p : FSM Bool)
     (q₁ : FSM α)
