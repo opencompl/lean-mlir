@@ -88,7 +88,7 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
 def fsmUleUnary (a : FSM α) (b : FSM α) : FSM α :=
  composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
 
-theorem eval_fsmUltUnary_eq_decide
+theorem eval_fsmUleUnary_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
@@ -140,7 +140,7 @@ theorem eval_fsmUltUnary_eq_decide
             omega
 
 @[simp]
-theorem eval_fsmUltUnary_eq_lt_or_decide
+theorem eval_fsmUleUnary_eq_lt_or_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
     {wenv : WidthExpr.Env wcard}
@@ -149,21 +149,20 @@ theorem eval_fsmUltUnary_eq_lt_or_decide
     (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
     ((fsmUleUnary a.toFsm b.toFsm).eval fsmEnv) i =
     decide (i ≤ min (v.toNat wenv) (w.toNat wenv) ∨ (v.toNat wenv) ≤ (w.toNat wenv)) := by
-  rw [eval_fsmUltUnary_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
+  rw [eval_fsmUleUnary_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
   simp
   by_cases hiv : i ≤ v.toNat wenv
   · simp [hiv]
   · simp [hiv]
     omega
 /--
-info: 'MultiWidth.eval_fsmUltUnary_eq_decide' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.eval_fsmUleUnary_eq_decide' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in #print axioms eval_fsmUltUnary_eq_decide
+#guard_msgs in #print axioms eval_fsmUleUnary_eq_decide
 
 -- returns 1 if a is equal to b.
 def fsmEqUnaryUpto (a : FSM α) (b : FSM α) : FSM α :=
   composeUnaryAux FSM.scanAnd (composeBinaryAux' FSM.nxor a b)
-
 
 @[simp]
 private theorem min_eq_of_not_le {a b : Nat} (hab : ¬ a ≤ b) : min a b = b := by
@@ -210,6 +209,83 @@ theorem eval_FsmEqUpto_eq_decide
           apply hi .. |>.mp <;> omega
       · intros hivw j hj
         omega
+
+private theorem decide_eq_eq_decide_iff_decide {P Q : Prop}
+  [Decidable P] [Decidable Q] :
+  (decide P = decide Q) = decide (P ↔ Q) := by
+  simp
+
+private theorem not_decide_eq_decide_lnot {P : Prop}
+  [Decidable P] :
+    (!(decide P)) = (decide (¬ P)) := by simp
+
+/-- returns 1 if a is not equal to b. -/
+def fsmNeqUnaryUpto (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanOr (a ^^^ b)
+
+theorem neq_of_min_neq_min {i v w : Nat} (hivw : ¬ min i v = min i w ) :
+  (v ≠ w) := by
+  by_cases hiv : i < v
+  · simp [hiv] at hivw ⊢
+    omega
+  · simp at hiv; simp [hiv] at hivw
+    by_cases hiw : i < w
+    · simp [hiw] at hivw
+      omega
+    · simp at hiw; simp [hiw] at hivw
+      omega
+
+
+@[simp]
+theorem eval_fsmNeqUpto_eq_decide
+    (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (henv : HWidthEnv fsmEnv wenv)
+    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    ((fsmNeqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) i =
+    (decide (min i (v.toNat wenv) ≠ min i (w.toNat wenv))) := by
+  simp [fsmNeqUnaryUpto]
+  rw [ha.heq (henv := henv)]
+  rw [hb.heq (henv := henv)]
+  induction w generalizing v
+  case var w =>
+    induction v
+    case var v =>
+      simp [BitStream.scanOr_eq_decide]
+      rw [not_decide_eq_decide_lnot]
+      rw [decide_eq_eq_decide_iff_decide]
+      rw [decide_eq_true_iff]
+      constructor
+      · intros hi
+        obtain ⟨j, hj₁, hj₂⟩ := hi
+        by_cases hiv : wenv v < i
+        · simp only [not_le, hiv, min_eq_of_not_le]
+          omega
+        · simp only [not_lt] at hiv
+          simp only [hiv, inf_of_le_left, left_eq_inf, not_le]
+          omega
+      · intros hivw
+        simp only [not_iff, not_le]
+        by_cases hiv : i < (wenv v)
+        · simp only [not_le, hiv, min_eq_of_not_le', left_eq_inf] at hivw ⊢
+          exists i
+          omega
+        · simp only [not_lt] at hiv; simp [hiv] at hivw
+          by_cases hiw : i < (wenv w)
+          · simp only [not_le, hiw, min_eq_of_not_le'] at hivw
+            have hiv' : (wenv v) ≤ i := by omega
+            exists i
+            omega
+          · simp only [not_lt] at hiw; simp [hiw] at hivw
+            by_cases hvw : wenv v < wenv w
+            · exists (wenv w)
+              simp only [le_refl, iff_true]
+              omega
+            · simp only [not_lt] at hvw
+              exists (wenv v)
+              omega
 
 
 -- | if 'cond' is true, then return 't', otherwise return 'e'.

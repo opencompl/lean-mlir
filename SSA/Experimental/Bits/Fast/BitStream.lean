@@ -410,6 +410,12 @@ theorem scanOr_true_iff (s : BitStream) (n : Nat)
     simp_all
     apply (scanOr_false_iff _ _).mp (by assumption)
 
+theorem scanOr_eq_decide (s : BitStream) (n : Nat) :
+    s.scanOr n = decide (∃ (i : Nat), i ≤ n ∧ s i = true) := by
+  have := scanOr_true_iff s n
+  by_cases hs : s.scanOr n <;> simp [hs] at ⊢ this <;> apply this
+
+
 /--
 (scan s)[0] = s[0]
 (scan s)[i+1] = (scan s)[i] && s[i+1]
