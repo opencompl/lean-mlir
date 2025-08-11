@@ -19,8 +19,8 @@ set_option maxRecDepth 1000000
 
 instance : HydrableInstances GenBVLogicalExpr GenBVExpr where
 
-instance : HydrableGetAllNamesFromParsedLogicalExpr BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
-  getAllNamesFromParsedLogicalExpr p :=
+instance : HydrableGetDisplayNames BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+  getDisplayNames p :=
     Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
 
 instance : HydrableGetLogicalExprSize GenBVLogicalExpr where
@@ -30,9 +30,6 @@ instance : HydrableGenLogicalExprToExpr  BVExprWrapper ParsedBVExpr GenBVLogical
   genLogicalExprToExpr := toExpr
 
 instance : HydrableSolve  BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
-
-instance : HydrableChangeExprWidth GenBVExpr where
-  changeExprWidth := changeBVExprWidth
 
 instance : HydrableChangeLogicalExprWidth GenBVLogicalExpr where
   changeLogicalExprWidth := changeBVLogicalExprWidth
@@ -60,7 +57,7 @@ instance : HydrableGetIdentityAndAbsorptionConstraints GenBVLogicalExpr GenBVExp
 instance : HydrableAddConstraints GenBVLogicalExpr GenBVExpr where
   addConstraints := addConstraints
 
-instance : HydrableGenExpr GenBVLogicalExpr GenBVExpr where
+instance : HydrableGenExpr GenBVExpr where
   genExprVar id := GenBVExpr.var id
   genExprConst bv := GenBVExpr.const bv
 
