@@ -1037,6 +1037,7 @@ def var (n : ℕ) : FSM (Fin (n+1)) :=
     outputCirc := Circuit.var true (inr (Fin.last _))
   }
 
+
 @[simp] lemma eval_var (n : ℕ) (x : Fin (n+1) → BitStream) : (var n).eval x = x (Fin.last n) := by
   ext m; cases m <;> simp [var, eval, carry, nextBit]
 
