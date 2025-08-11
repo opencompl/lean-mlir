@@ -173,7 +173,7 @@ private theorem min_eq_of_not_le {a b : Nat} (hab : ¬ a ≤ b) : min a b = b :=
 private theorem min_eq_of_not_le' {a b : Nat} (hab : ¬ a ≤ b) : min b a = b := by
   omega
 
-
+@[simp]
 theorem eval_FsmEqUpto_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
     (b : NatFSM wcard tcard (.ofDep w))
@@ -216,9 +216,23 @@ theorem eval_FsmEqUpto_eq_decide
 def ite (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
   (cond &&& t) ||| (~~~ cond &&& e)
 
+@[simp]
+theorem eval_ite_eq_decide
+    (cond t e : FSM α)
+    (env : α → BitStream) :
+    (ite cond t e).eval env i =
+    if (cond.eval env i) then t.eval env i else e.eval env i := by
+  simp [ite]
+  by_cases hcond : cond.eval env i <;> simp [hcond]
+
+private theorem BitVec.getLsbD_zeroExtend_eq_getLsbD (x : BitVec wold) (wnew : Nat) :
+    (x.zeroExtend wnew).getLsbD i = if (i < wnew) then x.getLsbD i else false := by
+    simp
+
 def fsmZext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
   ite (fsmUleUnary wold wnew) a (FSM.zero.map Fin.elim0)
+
 
 /-- The inputs given to the sext fsm. -/
 inductive fsmSext.inputs
