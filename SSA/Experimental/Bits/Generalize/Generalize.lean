@@ -115,7 +115,7 @@ abbrev ParseExprM (parsedExprWrapper : Type) := StateRefT (ParsedInputState pars
 Parse the LHS and RHS of an input `Expr`, returning a `ParsedLogicalExpr` in the given target width.
 -/
 class HydrableParseExprs (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) where
-  parseExprs : (lhsExpr rhsExpr : Expr) → (targetWidth : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr ))
+  parseExprs : (lhsExpr rhsExpr : Expr) → (width : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr ))
 
 /--
 Convert a `genLogicalExpr` to a Lean Expr. We invoke `BVDecide` on the Lean Expr in the `solve` function.
@@ -495,13 +495,17 @@ Convert a generalization to a theorem, with variable IDs replaced with proper di
 -/
 class HydrablePrettifyAsTheorem (genLogicalExpr : Type) where
   prettifyAsTheorem : (name : Name) → (generalization : genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+  
+class HydrableGetInputWidth where
+  getWidth : Expr → MetaM (Option Nat)
 
 class HydrableParseAndGeneralize (parsedExprWrapper: Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableGeneralize parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrableParseExprs parsedExprWrapper parsedExpr genLogicalExpr,
   HydrableInitialGeneralizerState parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrablePrettify genLogicalExpr,
-  HydrablePrettifyAsTheorem genLogicalExpr
+  HydrablePrettifyAsTheorem genLogicalExpr,
+  HydrableGetInputWidth
   where
 
 /--
@@ -512,7 +516,9 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedE
     let timeoutMs := 300000
 
     match_expr hExpr with
-    | Eq _ lhsExpr rhsExpr =>
+    | Eq w lhsExpr rhsExpr =>
+
+          let some width ← H.getWidth w  | throwError m! "Could not determine the rewrite width from {w}"
           let startTime ← Core.liftIOCore IO.monoMsNow
 
           -- Parse the input expression
@@ -520,7 +526,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedE
           let mut initialState := H.initialParserState
           initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId (Name.mkSimple "w")}
 
-          let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr targetWidth).run' initialState
+          let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
             | throwError "Unsupported expression provided"
 
           let bvLogicalExpr := parsedLogicalExpr.logicalExpr

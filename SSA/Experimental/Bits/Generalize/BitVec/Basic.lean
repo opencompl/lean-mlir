@@ -234,6 +234,12 @@ instance : ToString BVExprWrapper where
 instance : Inhabited BVExprWrapper where
   default := {bvExpr := GenBVExpr.const (BitVec.ofNat 0 0), width := 0}
 
+
+def getWidth (expr : Expr) : MetaM (Option Nat) := do
+  match_expr expr with
+  | BitVec n => getNatValue? n
+  | _ => pure none
+
 def changeBVExprWidth (bvExpr: GenBVExpr w) (target: Nat) : GenBVExpr target := Id.run do
   if h : w = target then
     return (h ▸ bvExpr)

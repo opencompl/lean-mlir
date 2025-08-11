@@ -19,6 +19,9 @@ set_option maxRecDepth 1000000
 
 instance : HydrableInstances GenBVLogicalExpr GenBVExpr where
 
+instance : HydrableGetInputWidth where
+  getWidth := getWidth
+
 instance : HydrableGetDisplayNames BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
   getDisplayNames p :=
     Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
@@ -821,6 +824,11 @@ def evalBvGeneralize : Tactic
 
 
 set_option linter.unusedTactic false
+
+
+variable {x y z : BitVec 8}
+#generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+
 variable {x y z : BitVec 11}
 #generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
 
