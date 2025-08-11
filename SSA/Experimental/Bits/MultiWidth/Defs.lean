@@ -333,13 +333,19 @@ structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
     (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv =
       BitStream.ofNatUnary (v.toNat wenv)
 
+/--
+Our term FSMs start unconditionally with a '0',
+and then proceed to produce outputs.
+This ensures that the width-0 value is assumed to be '0',
+followed by the output at a width 'i'.
+-/
 structure IsGoodTermFSM {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
   {t : Term tctx w} (fsm : TermFSM wcard tcard (.ofDep t)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv = t.toBitstream tenv
+      (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv = (t.toBitstream tenv).concat false
 
 structure GoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}
