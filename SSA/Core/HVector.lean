@@ -117,6 +117,8 @@ abbrev getN (x : HVector A as) (i : Nat) (hi : i < as.length := by hvector_get_e
     A (as.get ⟨i, hi⟩) :=
   x.get ⟨i, hi⟩
 
+/-! ## ToTuple -/
+
 def ToTupleType (A : α → Type*) : List α → Type _
   | [] => PUnit
   | [a] => A a
@@ -150,7 +152,9 @@ end Repr
   # Theorems
 -/
 
-theorem map_cons {A B : α → Type u} {as : List α} {f : (a : α) → A a → B a}
+/-! ## map -/
+
+@[simp] theorem map_cons {A B : α → Type u} {as : List α} {f : (a : α) → A a → B a}
     {x : A a} {xs : HVector A as} :
     map f (cons x xs) = cons (f _ x) (map f xs) := by
   induction xs <;> simp_all [map]
@@ -168,6 +172,21 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
     · rfl
     · simp_all [map_cons]
       sorry
+
+/-! ## fold -/
+
+@[simp] theorem foldl_cons :
+    foldl f b (cons x xs) = foldl f (f _ x b) xs := by
+  sorry
+
+@[simp] theorem foldl_map :
+    foldl f b (map g xs) = foldl (fun a x b => f a (g x) b) b xs := by
+  induction xs
+  · rfl
+  · simp
+    sorry
+
+/-! ## misc -/
 
 theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
     {t₁ t₂ : HVector A l} (h : l = []) : t₁ = t₂ := by

@@ -99,6 +99,8 @@ lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
 @[simp, grind=] lemma length_ofList : (ofList ts).length = ts.length := rfl
 @[simp, grind=] lemma length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
 @[simp, grind=] lemma length_map : (Γ.map f).length = Γ.length := by simp [map, length]
+@[simp, grind=] lemma length_append : (Γ ++ ts).length = Γ.length + ts.length := by
+  simp [length, Nat.add_comm]
 
 instance : Functor Ctxt where
   map := map

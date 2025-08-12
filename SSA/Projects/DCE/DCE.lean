@@ -3,70 +3,164 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.DepRewrite
 
 open Ctxt (Var Valuation Hom)
 
+/-! ## DeleteRange -/
 
-/-- Delete a variable from a list. -/
-def Ctxt.delete (Γ : Ctxt Ty) (vs : HVector Γ.Var α) : Ctxt Ty :=
-  ⟨vs.foldl (fun _ Γ v => Γ.eraseIdx v.val) Γ.toList⟩
+/-- A `DeleteRange Γ` indicates a consecutive range of variables in `Γ` to
+be deleted. -/
+structure DCE.DeleteRange (Γ : Ctxt Ty) where
+  /-- The first variable to delete. -/
+  start : Fin (Γ.length + 1)
+  /-- The number of variables to delete -/
+  num : Fin (Γ.length + 1 - start.val)
+open DCE (DeleteRange)
 
--- @[simp] theorem Ctxt.delete_snoc_toSnoc {Γ : Ctxt Ty} {v : Γ.Var t} :
---     (Γ.snoc u).delete (v.toSnoc) = (Γ.delete v).snoc u := rfl
+/-- `DeleteRange.full Γ` is the range of all variables in `Γ`. -/
+def DCE.DeleteRange.full (Γ : Ctxt Ty) : DeleteRange Γ where
+  start := ⟨0, by omega⟩
+  num := ⟨Γ.length, by simp⟩
+
+def DCE.DeleteRange.appendInl {Γ : Ctxt Ty} {ts : List Ty}
+    (r : DeleteRange Γ) : DeleteRange (Γ ++ ts) where
+  start := ⟨r.start + ts.length, by grind⟩
+  num := ⟨r.num, by grind⟩
+
+def DCE.DeleteRange.appendInr {Γ : Ctxt Ty} {ts : List Ty}
+    (r : DeleteRange ⟨ts⟩) : DeleteRange (Γ ++ ts) where
+  start := ⟨r.start, by grind⟩
+  num := ⟨r.num, by grind⟩
+
+/-! ## Ctxt.delete -/
+
+/-- Delete a vector of variables from a ctxt. -/
+def Ctxt.delete (Γ : Ctxt Ty) (vs : DeleteRange Γ) : Ctxt Ty :=
+  ⟨Γ.toList.zipIdx
+    |>.filter (fun ⟨_, i⟩ => ¬(vs.start ≤ i ∧ i < vs.start + vs.num))
+    |>.map Prod.fst
+  ⟩
 
 @[simp] theorem Ctxt.delete_append_appendInl {Γ : Ctxt Ty} {us : List Ty}
-    {vs : HVector Γ.Var ts} :
-    (Γ ++ us).delete (vs.map (fun _ v => v.appendInl)) = (Γ.delete vs) ++ us := by
+    {r : DeleteRange Γ} :
+    (Γ ++ us).delete r.appendInl = (Γ.delete r) ++ us := by
+  simp [delete]
+  ext i t
+  simp
   sorry
 
-def Hom.delete {Γ : Ctxt Ty} (delv : HVector Γ.Var ts) : Hom (Γ.delete delv) Γ :=
-  sorry
-  -- fun t' v =>
-  --   let idx :=
-  --     if v.val < delv.val then
-  --       v.val
-  --     else
-  --       v.val + 1
-  --   ⟨idx, by
-  --     unfold idx
-  --     split_ifs with h_val
-  --     <;> simpa [Ctxt.delete, List.getElem?_eraseIdx, h_val] using v.prop
-  --   ⟩
+section Lemmas
+variable {Γ : Ctxt Ty}
 
--- @[simp] lemma Hom.delete_toSnoc_toSnoc {Γ : Ctxt Ty}
---     {delv : HVector Γ.Var ts} {v : (Γ.delete delv).Var t'} :
---     Hom.delete (delv.toSnoc : (Γ.snoc u).Var t) v.toSnoc = (Hom.delete delv v).toSnoc := by
---   simp only [delete, Var.val_toSnoc, add_lt_add_iff_right]
---   split <;> rfl
+@[simp] lemma Ctxt.delete_empty :
+    (empty : Ctxt Ty).delete vs = empty := by
+  sorry
+
+-- @[simp] lemma Ctxt.getElem_deleteOne_of_lt {i v : Nat} (h : i < v) :
+--     (Γ.deleteOne v)[i]? = Γ[i]? := by
+--   sorry
+
+-- @[simp] lemma Ctxt.getElem_deleteOne_of_ge {i v : Nat} (h : v ≤ i) :
+--     (Γ.deleteOne v)[i]? = Γ[i + 1]? := by
+--   sorry
+
+theorem Ctxt.getElem_delete_of_lt {i : Nat} (vs : DeleteRange Γ) (h : i < vs.start) :
+    Γ[i]? = (Γ.delete vs)[i]? := by
+  rcases Γ
+  simp only [getElem?_ofList, delete, length_ofList, not_and, not_lt, decide_implies, dite_eq_ite,
+    Bool.if_true_right, List.getElem?_map]
+  induction vs.num.val generalizing i
+  case zero =>
+    have : (Prod.fst ∘ fun a => (a, i)) = @id Ty :=
+      rfl
+    simp [this]
+  case succ ih =>
+    cases i
+    case zero =>
+      stop
+      simp []
+    case succ i =>
+      sorry
+    -- rw [Nat.fold_succ, getElem_deleteOne_of_lt (by omega)]
+    -- exact ih
+
+theorem Ctxt.getElem_delete_of_ge {i : Nat} (vs : DeleteRange Γ) (h : vs.start ≤ i) :
+    Γ[i + vs.num]? = (Γ.delete vs)[i]? := by
+  stop
+  rcases Γ
+  simp only [getElem?_ofList, delete]
+  induction vs.num
+  case zero => rfl
+  case succ ih =>
+    rw [Nat.fold_succ, getElem_deleteOne_of_lt (by omega)]
+    exact ih
+
+/-
+TODO: I am not at all certain that the index maths here is correct, but I am
+cautiously optimistic that the general setup of these lemmas works
+-/
+
+theorem Ctxt.getElem_delete (i : Nat) (vs : DeleteRange Γ) :
+    (Γ.delete vs)[i]? = Γ[if i < vs.start then i else i - vs.num]? := by
+  split_ifs with h
+  · rw [Ctxt.getElem_delete_of_lt _ h]
+  · obtain ⟨_, rfl⟩ := Nat.exists_eq_add_of_le (by omega : vs.start ≤ i)
+    stop
+    rw [Ctxt.getElem_delete_of_ge]
+
+end Lemmas
+
+def Hom.delete {Γ : Ctxt Ty} (delv : DeleteRange Γ) : Hom (Γ.delete delv) Γ :=
+  fun t' v =>
+    let idx :=
+      if v.val < delv.start then
+        v.val
+      else
+        v.val + delv.num
+    ⟨idx, by
+      subst idx
+      rcases v with ⟨v, hv⟩
+      simp only [← hv]; clear hv
+      split_ifs with h_val
+      · rw [Ctxt.getElem_delete_of_lt _ h_val]
+      · rw [Ctxt.getElem_delete_of_ge _ (by omega)]
+    ⟩
 
 /-- Witness that Γ' is Γ without v -/
-def Deleted {α : List Ty} (Γ: Ctxt Ty) (vs : HVector Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
+def Deleted (Γ: Ctxt Ty) (vs : DeleteRange Γ) (Γ' : Ctxt Ty) : Prop :=
   Γ' = Γ.delete vs
-
-def Var.varsOfType {Γ : Ctxt Ty} (ts : List Ty) : HVector (Var <| Γ ++ ts) ts :=
-  (HVector.ofFn (Var ⟨ts⟩) _ Var.ofFin)
-    |>.map (fun _ v => v.appendInr)
 
 /-- build a `Deleted` for a `(Γ ++ αs) → Γ`-/
 def Deleted.deleteAppend (Γ : Ctxt Ty) (αs : List Ty) :
-    Deleted (Γ ++ αs) (Var.varsOfType αs) Γ :=
-  sorry -- rfl
+    Deleted (Γ ++ αs) (DeleteRange.full ⟨αs⟩).appendInr Γ := by
+  stop
+  simp [Deleted, Var.varsOfType, Ctxt.delete]
+  induction αs
+  · rfl
+  case cons ih =>
+    simp [HVector.ofFn, HVector.map_cons]
+    rw [ih]
+    -- congr 1
+    -- rfl
+
+  -- sorry -- rfl
 
 
 /-- append an `ωs` to both the input and output contexts of `Deleted Γ v Γ'` -/
-def Deleted.append {αs} {Γ : Ctxt Ty} {vs : HVector Γ.Var αs}
-    (DEL : Deleted Γ vs Γ') (ω : List Ty) :
-    Deleted (Γ ++ ωs) (vs.map fun _ v => v.appendInl) (Γ' ++ ωs) := by
+def Deleted.append {Γ : Ctxt Ty} {vs : DeleteRange Γ}
+    (DEL : Deleted Γ vs Γ') (ωs : List Ty) :
+    Deleted (Γ ++ ωs) vs.appendInl (Γ' ++ ωs) := by
   stop
   simp only [Deleted, Ctxt.delete, Ctxt.Var.val_toSnoc] at DEL ⊢
   subst DEL
   rfl
 
-def Deleted.toHom (h : Deleted Γ v Γ') : Γ'.Hom Γ :=
-  sorry -- h ▸ Hom.delete _
+def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
+  fun _ v => Hom.delete r (v.castCtxt h)
 
-@[simp] lemma Deleted.toHom_append {Γ Γ' : Ctxt Ty} {vs : HVector Γ.Var ts}
-    (DEL : Deleted (Γ ++ us) (vs.map fun _ v => v.appendInl) (Γ' ++ us)) :
+@[simp] lemma Deleted.toHom_append {Γ Γ' : Ctxt Ty} {vs : DeleteRange Γ}
+    (DEL : Deleted (Γ ++ us) vs.appendInl (Γ' ++ us)) :
     DEL.toHom
     = have DEL' : Deleted Γ vs Γ' := by
         rcases Γ'
@@ -81,32 +175,39 @@ def Deleted.toHom (h : Deleted Γ v Γ') : Γ'.Hom Γ :=
     simp_all [Ctxt.delete]
   subst DEL'
   funext t v;
-  stop
   simp only [Deleted.toHom]
-  cases v
-  · simp
-  · simp [Hom.delete]
+  cases v using Var.appendCases
+  · stop simp
+  · stop simp [Hom.delete]
 
-@[simp] lemma Deleted.toHom_last (DEL : Deleted (Γ ++ us) (Var.varsOfType us) Γ) :
+@[simp] lemma Deleted.toHom_last
+    (DEL : Deleted (Γ ++ us) (DeleteRange.full ⟨us⟩).appendInr Γ) :
     DEL.toHom = Hom.id.appendCodomain := by
-  sorry
+  simp [Deleted] at DEL
+  funext t v
+  apply Subtype.eq
+  simp [toHom, Hom.delete, DeleteRange.full, DeleteRange.appendInr]
 
 /-! ## tryDelete? -/
 
 /-- Given  `Γ' := Γ/delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
-def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : HVector Γ.Var α}
-  (DEL : Deleted Γ delv Γ') (vs : HVector Γ.Var β) :
-    Option { v' : HVector Γ'.Var β // vs = v'.map DEL.toHom } :=
-  by
-  stop
-  exact
-  if h_val_eq : v.val = delv.val then
+def Var.tryDeleteOne? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : DeleteRange Γ}
+  (DEL : Deleted Γ delv Γ') (v : Γ.Var β) :
+    Option { v' : Γ'.Var β // v = DEL.toHom v' } :=
+  if h_val_eq : delv.start ≤ v.val ∧ v.val < delv.start.val + delv.num.val then
     none -- if it's the deleted variable, then return nothing.
   else
-    let idx := if v.val < delv.val then v.val else v.val - 1
+    let idx := if v.val < delv.start then v.val else v.val - delv.num
     let v' := ⟨idx, by
-      subst DEL
-      simp only [Ctxt.delete, Ctxt.getElem?_ofList, List.getElem?_eraseIdx, idx]
+      subst DEL idx
+      simp at h_val_eq
+      rw [Ctxt.getElem_delete]
+      stop
+      by_cases v.val < delv.start
+      · simp [*]
+      · simp [*]
+
+      simp
       split_ifs with h_val_lt h_val_sub_lt
       · exact v.prop
       · omega
@@ -114,6 +215,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : HVector Γ.Var α}
         exact v.prop
     ⟩
     some ⟨v', by
+      stop
       subst DEL
       simp +zetaDelta only [Deleted.toHom, Hom.delete]
       split_ifs
@@ -122,28 +224,21 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : HVector Γ.Var α}
       · rcases v; congr; rw [Nat.sub_add_cancel (by omega)]
     ⟩
 
+/-- Given  `Γ' := Γ/delv`, transport a vector of variables from `Γ` to `Γ',
+assuming that none of those variables were deleted. -/
+def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : DeleteRange Γ}
+  (DEL : Deleted Γ delv Γ') (vs : HVector Γ.Var β) :
+    Option { v' : HVector Γ'.Var β // vs = v'.map DEL.toHom } := do
+  match vs with
+  | .nil => some ⟨.nil, rfl⟩
+  | v ::ₕ vs => do
+      let ⟨v, hv⟩ ← tryDeleteOne? DEL v
+      let ⟨vs, hvs⟩ ← tryDelete? DEL vs
+      return ⟨v ::ₕ vs, by simp_all⟩
+
 namespace DCE
 
 variable {d : Dialect} [TyDenote d.Ty]
-
--- /-- Try to delete the variable from the argument list.
---   Succeeds if variable does not occur in the argument list.
---   Fails otherwise. -/
--- def arglistDeleteVar? {Γ: Ctxt d.Ty} {delv : HVector Γ.Var us} {Γ' : Ctxt d.Ty} {ts : List d.Ty}
---     (DEL : Deleted Γ delv Γ')
---     (as : HVector Γ.Var ts) :
---     Option { as' : HVector (Ctxt.Var Γ') <| ts // as = as'.map DEL.toHom } :=
---   Var.tryDelete? DEL as
-
-  -- match as with
-  -- | .nil => .some ⟨.nil, by rfl⟩
-  -- | .cons a as =>
-  --   match Var.tryDelete? DEL a with
-  --   | .none => .none
-  --   | .some ⟨a', ha'⟩ =>
-  --     match arglistDeleteVar? DEL as with
-  --     | .none => .none
-  --     | .some ⟨as', has'⟩ => .some ⟨.cons a' as', by simp [HVector.map_cons, *]⟩
 
 variable [DialectSignature d] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
 
