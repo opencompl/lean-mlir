@@ -237,7 +237,6 @@ def solve
     let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType (w : Nat) :=  mkApp (mkConst ``BitVec) (mkNatLit w)
 
-    logInfo m! "SymVarToVal: {state.parsedLogicalExpr.state.symVarToVal} for {bvExpr}"
     logInfo m! "AllWidths: {allWidths}; allNames: {allNames}"
     let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType allWidths[n]! ))
 
@@ -554,13 +553,15 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
           let some width ← H.getWidth w  | throwError m! "Could not determine the rewrite width from {w}"
           let startTime ← Core.liftIOCore IO.monoMsNow
 
-          logInfo m! "Expression width: {width}"
           -- Parse the input expression
           let widthId : Nat := 9481
           let widthName := (Name.mkSimple "w")
 
           let mut initialState := H.initialParserState
-          initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId widthName, originalWidth := width}
+          initialState := { initialState with
+                          symVarToDisplayName := initialState.symVarToDisplayName.insert widthId widthName
+                          , displayNameToVariable := initialState.displayNameToVariable.insert widthName {id := widthId, name := widthName, width := width}
+                          , originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
             | throwError "Unsupported expression provided"
