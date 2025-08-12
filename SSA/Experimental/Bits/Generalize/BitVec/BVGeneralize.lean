@@ -26,6 +26,15 @@ instance : HydrableGetDisplayNames BVExprWrapper ParsedBVExpr GenBVLogicalExpr G
   getDisplayNames p :=
     Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
 
+instance : HydrableGetVariableWidths BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+  getVariableWidths p := Id.run do
+    let mut res := Std.HashMap.emptyWithCapacity
+
+    for (id, wrapper) in p.state.varToExprWrapper do
+      res := res.insert id wrapper.width
+
+    return res
+
 instance : HydrableGetLogicalExprSize GenBVLogicalExpr where
   getLogicalExprSize e := e.size
 
@@ -101,15 +110,21 @@ def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBV
   if h :  targetWidth = lhs.width ∧ lhs.width = rhs.width then
     let rhsExpr := h.right ▸ rhs.bvExpr
 
-    let mut shrinkedInputVarToExprWrapper : Std.HashMap Name BVExprWrapper := Std.HashMap.emptyWithCapacity
-    for (id, name) in origExpr.state.inputVarIdToDisplayName.toList do
-      let origWrapper := origExpr.state.inputVarToExprWrapper[name]!
-      let resultWidth := (origWrapper.width / origExpr.lhs.width) * targetWidth
-      shrinkedInputVarToExprWrapper := shrinkedInputVarToExprWrapper.insert name {width := resultWidth, bvExpr := GenBVExpr.var id}
+    let mut shrinkedVarToExprWrapper : Std.HashMap Name BVExprWrapper := Std.HashMap.emptyWithCapacity
+    let allVarsToDisplayName := Std.HashMap.union origExpr.state.inputVarIdToDisplayName origExpr.state.symVarToDisplayName
+
+    for (id, name) in allVarsToDisplayName.toList do
+      let origWrapper := origExpr.state.varToExprWrapper[name]!
+      let mut resultWidth := 1
+
+      if origWrapper.width != 1 then
+        resultWidth := (origWrapper.width  * targetWidth) / origExpr.lhs.width
+
+      shrinkedVarToExprWrapper := shrinkedVarToExprWrapper.insert name {width := resultWidth, bvExpr := GenBVExpr.var id}
 
     let bvLogicalExpr := BoolExpr.literal (GenBVPred.bin lhs.bvExpr BVBinPred.eq rhsExpr)
 
-    let shrinkedState := {origExpr.state with inputVarToExprWrapper := shrinkedInputVarToExprWrapper}
+    let shrinkedState := {origExpr.state with varToExprWrapper := shrinkedVarToExprWrapper}
     return {origExpr with lhs := lhs, rhs := rhs, logicalExpr := bvLogicalExpr, state := shrinkedState}
 
   throwError m! "Expected lhsWidth:{lhs.width} and rhsWidth:{rhs.width} to equal targetWidth:{targetWidth}"
@@ -168,9 +183,9 @@ variable {x y z : BitVec 64}
 variable {x y z : BitVec 32}
 #reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
 #reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
-#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 4
+#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 8
 
-#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+--#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
 #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM  BVExprWrapper ParsedBVExpr GenBVLogicalExpr GenBVExpr (List (GenBVExpr w)) := do

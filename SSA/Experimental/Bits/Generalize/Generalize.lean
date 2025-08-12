@@ -88,7 +88,7 @@ attribute [instance] HydrableInstances.beqGenExpr
 structure ParsedInputState (parsedExprWrapper : Type) where
   maxFreeVarId : Nat
   numSymVars :  Nat
-  inputVarToExprWrapper : Std.HashMap Name parsedExprWrapper
+  varToExprWrapper : Std.HashMap Name parsedExprWrapper
   inputVarIdToDisplayName : Std.HashMap Nat Name
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
@@ -116,24 +116,6 @@ Parse the LHS and RHS of an input `Expr`, returning a `ParsedLogicalExpr` in the
 -/
 class HydrableParseExprs (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) where
   parseExprs : (lhsExpr rhsExpr : Expr) → (width : Nat) → ParseExprM parsedExprWrapper (Option (ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr ))
-
-/--
-Convert a `genLogicalExpr` to a Lean Expr. We invoke `BVDecide` on the Lean Expr in the `solve` function.
--/
-class HydrableGenLogicalExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  genLogicalExprToExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
-
-/--
-Retrieve a mapping from variable IDs to their display name for a `ParsedLogicalExpr`.
--/
-class HydrableGetDisplayNames (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getDisplayNames : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → HashMap Nat Name
-
-/--
-Get the number of nodes of a `genLogicalexpr` for debugging.
--/
-class HydrableGetLogicalExprSize (genLogicalExpr : Type) where
-  getLogicalExprSize : genLogicalExpr → Nat
 
 /--
 Replace the variables in a BitVec formula with `SubstitutionValue` objects.
@@ -208,6 +190,27 @@ class HydrableGenExpr (genExpr : Nat → Type) where
   genExprVar : Nat → genExpr n
   genExprConst : BitVec n → genExpr n
 
+/--
+Convert a `genLogicalExpr` to a Lean Expr. We invoke `BVDecide` on the Lean Expr in the `solve` function.
+-/
+class HydrableGenLogicalExprToExpr (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  genLogicalExprToExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
+
+/--
+Retrieve a mapping from variable IDs to their display name for a `ParsedLogicalExpr`.
+-/
+class HydrableGetDisplayNames (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  getDisplayNames : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → HashMap Nat Name
+
+/--
+Get the number of nodes of a `genLogicalexpr` for debugging.
+-/
+class HydrableGetLogicalExprSize (genLogicalExpr : Type) where
+  getLogicalExprSize : genLogicalExpr → Nat
+
+class HydrableGetVariableWidths (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
+  getVariableWidths : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr → HashMap Name Nat
+
 
 /--
 Invoke BVDecide for a given `genLogicalExpr` representing a BitVec formula.
@@ -215,6 +218,7 @@ Invoke BVDecide for a given `genLogicalExpr` representing a BitVec formula.
 class HydrableSolve (parsedExprWrapper : Type) (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableInstances genLogicalExpr genExpr,
   HydrableGetDisplayNames parsedExprWrapper parsedExpr genLogicalExpr genExpr,
+  HydrableGetVariableWidths parsedExprWrapper parsedExpr genLogicalExpr genExpr,
   HydrableGetLogicalExprSize genLogicalExpr,
   HydrableGenLogicalExprToExpr parsedExprWrapper parsedExpr genLogicalExpr genExpr where
 
@@ -223,15 +227,20 @@ def solve
   (bvExpr : genLogicalExpr) : GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
     let allNames := H.getDisplayNames state.parsedLogicalExpr
-    let bitVecWidth := (mkNatLit state.processingWidth)
-    let bitVecType :=  mkApp (mkConst ``BitVec) bitVecWidth
+    let allWidths := H.getVariableWidths state.parsedLogicalExpr
 
-    let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType))
+    let bitVecWidth := (mkNatLit state.processingWidth)
+    let bitVecType (w : Nat) :=  mkApp (mkConst ``BitVec) (mkNatLit w)
+
+    logInfo m! "SymVarToVal: {state.parsedLogicalExpr.state.symVarToVal} for {bvExpr}"
+    logInfo m! "AllWidths: {allWidths}; allNames: {allNames}"
+    let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType allWidths[n]! ))
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
         let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {H.getLogicalExprSize bvExpr})") do
           let mut expr ← H.genLogicalExprToExpr state.parsedLogicalExpr bvExpr bitVecWidth
+          logInfo m! "expr to check: {expr}"
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here
@@ -427,13 +436,13 @@ abbrev ReducedWidthRes (parsedExprWrapper: Type) (parsedExpr : Type) (genLogical
 
 def reduceWidth [H : HydrableReduceWidth parsedExprWrapper parsedExpr genLogicalExpr genExpr]
     (logicalExpr : ParsedLogicalExpr parsedExprWrapper parsedExpr genLogicalExpr) (target numResults: Nat): GeneralizerStateM parsedExprWrapper parsedExpr genLogicalExpr genExpr (ReducedWidthRes parsedExprWrapper parsedExpr genLogicalExpr) := do
-  let shrank ← H.shrink logicalExpr target
-  logInfo m! "Shrank {logicalExpr.logicalExpr} to {shrank.logicalExpr}"
+  let shrunk ← H.shrink logicalExpr target
+  logInfo m! "Shrank {logicalExpr.logicalExpr} to {shrunk.logicalExpr}"
 
-  let state := shrank.state
-  let constantAssignments ← existsForAll shrank.logicalExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys numResults
+  let state := shrunk.state
+  let constantAssignments ← existsForAll shrunk.logicalExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys numResults
 
-  return (shrank, constantAssignments)
+  return (shrunk, constantAssignments)
 
 
 
@@ -543,8 +552,10 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExprWrapper parsedE
           logInfo m! "Expression width: {width}"
           -- Parse the input expression
           let widthId : Nat := 9481
+          let widthName := (Name.mkSimple "w")
+
           let mut initialState := H.initialParserState
-          initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId (Name.mkSimple "w"), originalWidth := width}
+          initialState := { initialState with symVarToDisplayName := initialState.symVarToDisplayName.insert widthId widthName, originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
             | throwError "Unsupported expression provided"
