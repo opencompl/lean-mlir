@@ -155,9 +155,8 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrap
             | none =>
                 let newId := currState.maxFreeVarId + 1
                 let newExpr : GenBVExpr w :=  GenBVExpr.var newId
-                let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := w}
 
-                let var : HydraVariable := {name := userFacingName, id := newId, width := width}
+                let var : HydraVariable := {name := userFacingName, id := newId, width := w}
 
                 let updatedState : ParsedInputState :=  { currState with
                                                          maxFreeVarId := newId
@@ -165,7 +164,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrap
                                                          , inputVarIdToDisplayName := currState.inputVarIdToDisplayName.insert newId userFacingName
                                                          }
                 set updatedState
-                return some newWrappedExpr
+                return some {bvExpr := newExpr, width := w}
 
   rotateReflection (innerExpr distanceExpr resType: Expr) (rotateOp: Nat → BVUnOp)
           : ParseExprM (Option (BVExprWrapper)) := do
