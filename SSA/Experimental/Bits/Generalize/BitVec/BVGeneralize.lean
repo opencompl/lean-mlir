@@ -91,7 +91,8 @@ def shrinkParsedBVExpr (expr : ParsedBVExpr) (targetWidth : Nat) : MetaM ParsedB
       | _ => throwError m! "Unsupported input type: {bvExpr}"
 
     reduce (instWidth : Nat) : Nat :=
-      (instWidth  * targetWidth) / expr.width
+      if instWidth == 1 then instWidth
+      else (instWidth  * targetWidth) / expr.width
 
 def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBVLogicalExpr := do
   let lhs ← shrinkParsedBVExpr origExpr.lhs targetWidth
