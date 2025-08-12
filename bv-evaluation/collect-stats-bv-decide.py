@@ -392,7 +392,7 @@ def slowdown_smtlib_stats():
 def smtlib_stats(performance_smtlib_dir):
     df_bitwuzla = pd.read_csv("raw-data/SMT-LIB/bitwuzla_data.csv")
     df_bv_decide = pd.read_csv("raw-data/SMT-LIB/bv_decide_data.csv")
-    df_coqqfbv_46k = pd.read_csv("raw-data/SMTLIB/coqQFBV_data.csv")
+    df_coqqfbv_46k = pd.read_csv("raw-data/SMT-LIB/coqQFBV_data.csv")
     df_bitwuzla["benchmark"] = df_bitwuzla["benchmark"].apply(os.path.dirname)
     df_bv_decide["benchmark"] = df_bv_decide["benchmark"].apply(os.path.dirname)
     df_coqqfbv_46k["benchmark"] = df_coqqfbv_46k["benchmark"].apply(os.path.dirname)
