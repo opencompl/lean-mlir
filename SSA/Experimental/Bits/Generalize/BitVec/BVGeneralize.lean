@@ -161,9 +161,9 @@ elab "#reducewidth" expr:term " : " target:term : command =>
                 , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
                 }
 
-           let results ← (reduceWidth parsedBvExpr targetWidth 3).run' initialGeneralizerState
+           let results ← (reduceWidth width targetWidth 3).run' initialGeneralizerState
 
-           logInfo m! "Results: {results.snd}"
+           logInfo m! "Results: {results}"
       | _ =>
             logInfo m! "Could not match"
       pure ()

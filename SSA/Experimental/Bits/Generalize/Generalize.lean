@@ -439,14 +439,27 @@ class HydrableReduceWidth (parsedExpr : Type) (genLogicalExpr : Type) (genExpr :
 abbrev ReducedWidthRes (parsedExpr : Type) (genLogicalExpr : Type) := (ParsedLogicalExpr parsedExpr genLogicalExpr) × List (Std.HashMap Nat BVExpr.PackedBitVec)
 
 def reduceWidth [H : HydrableReduceWidth parsedExpr genLogicalExpr genExpr]
-    (logicalExpr : ParsedLogicalExpr parsedExpr genLogicalExpr) (target numResults: Nat): GeneralizerStateM parsedExpr genLogicalExpr genExpr (ReducedWidthRes parsedExpr genLogicalExpr) := do
-  let shrunk ← H.shrink logicalExpr target
+    (origWidth targetWidth numResults: Nat): GeneralizerStateM parsedExpr genLogicalExpr genExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+  let state ← get
+  let logicalExpr := state.parsedLogicalExpr
+
+  let shrunk ← H.shrink logicalExpr targetWidth
   logInfo m! "Shrank {logicalExpr.logicalExpr} to {shrunk.logicalExpr}"
+  set {state with
+                processingWidth := targetWidth,
+                constantExprsEnumerationCache := {},
+                parsedLogicalExpr := shrunk}
 
-  let state := shrunk.state
-  let constantAssignments ← existsForAll shrunk.logicalExpr state.symVarToVal.keys state.inputVarIdToDisplayName.keys numResults
+  let shrunkState := shrunk.state
+  let constantAssignments ← existsForAll shrunk.logicalExpr shrunkState.symVarToVal.keys shrunkState.inputVarIdToDisplayName.keys numResults
 
-  return (shrunk, constantAssignments)
+  if constantAssignments.isEmpty then
+    set {state with
+              processingWidth := origWidth,
+              constantExprsEnumerationCache := {},
+              parsedLogicalExpr := logicalExpr}
+
+  return constantAssignments
 
 
 
@@ -475,23 +488,13 @@ def generalize [H : HydrableGeneralize parsedExpr genLogicalExpr genExpr]
     let targetWidth := state.targetWidth
 
     let mut constantAssignments := [parsedLogicalExprState.symVarToVal]
-    let mut processingWidth := originalWidth
 
     logInfo m! "OriginalWidth: {originalWidth}, targetWidth: {targetWidth}"
     if originalWidth > targetWidth then
-      let shrinkedResults ← reduceWidth parsedLogicalExpr targetWidth 3
-      let shrinkedLogicalExpr := shrinkedResults.fst
-      let newAssignments := shrinkedResults.snd
+      let newAssignments ← reduceWidth originalWidth targetWidth 1
 
       if !newAssignments.isEmpty then
-        parsedLogicalExpr := shrinkedLogicalExpr
         constantAssignments := newAssignments
-        processingWidth := targetWidth
-
-    set {state with
-                processingWidth := processingWidth,
-                constantExprsEnumerationCache := {},
-                parsedLogicalExpr := parsedLogicalExpr}
 
     let exprWithNoPrecondition  ← withTraceNode `Generalize (fun _ => return "Performed expression synthesis") do
         H.synthesizeWithNoPrecondition constantAssignments
