@@ -13,26 +13,26 @@ open Std.Sat
 open Std.Tactic.BVDecide
 open Tactic
 
-def defaultParsedExprState : ParsedInputState BVExprWrapper := { maxFreeVarId := 0
+def defaultParsedExprState : ParsedInputState := { maxFreeVarId := 0
                                                                  , numSymVars := 0, originalWidth := 32
                                                                 , inputVarIdToDisplayName := {}, symVarToVal := {}
-                                                                , symVarToDisplayName := {}, varToExprWrapper := {}, valToSymVar:= {}}
+                                                                , symVarToDisplayName := {}, displayNameToVariable := {}, valToSymVar:= {}}
 
-def printParsedBVExprState (s: ParsedInputState BVExprWrapper) :=
+def printParsedBVExprState (s: ParsedInputState) :=
     s!"ParsedBVExprState:\n" ++
     s!"  maxFreeVarId: {s.maxFreeVarId}\n" ++
     s!"  numSymVars: {s.numSymVars}\n" ++
-    s!"  freeVarToBVExpr: {s.varToExprWrapper}\n" ++
+    s!"  displayNameToVariable: {s.displayNameToVariable}\n" ++
     s!"  BVExprIdToFreeVar: {s.inputVarIdToDisplayName}\n" ++
     s!"  symVarToVal: {s.symVarToVal}" ++
     s!"  symVarToDisplayName: {s.symVarToDisplayName}"
 
 
-instance : ToMessageData (ParsedInputState BVExprWrapper) where
+instance : ToMessageData (ParsedInputState) where
   toMessageData s := printParsedBVExprState s
 
 
-instance : ToString (ParsedInputState BVExprWrapper) where
+instance : ToString (ParsedInputState) where
   toString s := printParsedBVExprState s
 
 
@@ -42,13 +42,13 @@ structure ParsedBVExpr where
   symVars: Std.HashMap Nat BVExpr.PackedBitVec
   inputVars : Std.HashMap Nat Name
 
-abbrev ParsedBVLogicalExpr := ParsedLogicalExpr BVExprWrapper ParsedBVExpr GenBVLogicalExpr
+abbrev ParsedBVLogicalExpr := ParsedLogicalExpr ParsedBVExpr GenBVLogicalExpr
 
-partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrapper)) := do
   go expr
   where
 
-  go (x : Expr) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+  go (x : Expr) : ParseExprM (Option (BVExprWrapper)) := do
     match_expr x with
     | HAnd.hAnd _ _ resType _ lhsExpr rhsExpr =>
         binaryReflection lhsExpr rhsExpr resType BVBinOp.and
@@ -118,7 +118,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
 
         match (natVal, bitVecVal) with
         | (some v, none) =>
-              let currState: ParsedInputState BVExprWrapper ← get
+              let currState: ParsedInputState  ← get
               let pbv : BVExpr.PackedBitVec := {bv := BitVec.ofNat currState.originalWidth v}
               let existingVal :=  currState.valToSymVar[pbv]?
 
@@ -127,13 +127,13 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
                         let newId := 1001 + numSymVars
                         let newExpr : GenBVExpr width := GenBVExpr.var newId
                         let userFacingName := Lean.Name.mkSimple s!"C{numSymVars + 1}"
-                        let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := width}
+                        let var : HydraVariable := {name := userFacingName, id := newId, width := width}
 
-                        let updatedState : ParsedInputState BVExprWrapper := { currState with
+                        let updatedState : ParsedInputState  := { currState with
                                                                 numSymVars := numSymVars + 1
                                                                 , symVarToVal := currState.symVarToVal.insert newId pbv
                                                                 , valToSymVar := currState.valToSymVar.insert pbv newId
-                                                                , varToExprWrapper := currState.varToExprWrapper.insert userFacingName newWrappedExpr
+                                                                , displayNameToVariable := currState.displayNameToVariable.insert userFacingName var
                                                                 , symVarToDisplayName := currState.symVarToDisplayName.insert newId userFacingName}
                         set updatedState
                         return some {bvExpr := newExpr, width := width}
@@ -144,29 +144,31 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
               let pbv : BVExpr.PackedBitVec := {bv := bvProd.snd: BVExpr.PackedBitVec}
               return (← processBitVec pbv)
         | _ =>
-            let currState: ParsedInputState BVExprWrapper ← get
+            let currState: ParsedInputState ← get
             let localDecl ← getFVarLocalDecl x
             let userFacingName := localDecl.userName
             let some w ← getWidth? localDecl.type | return none
 
-            let existingVar? := currState.varToExprWrapper[userFacingName]?
+            let existingVar? := currState.displayNameToVariable[userFacingName]?
             match existingVar? with
-            | some val => return val
+            | some val => return some {bvExpr := GenBVExpr.var val.id, width := val.width}
             | none =>
                 let newId := currState.maxFreeVarId + 1
                 let newExpr : GenBVExpr w :=  GenBVExpr.var newId
                 let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := w}
 
-                let updatedState : ParsedInputState BVExprWrapper :=  { currState with
+                let var : HydraVariable := {name := userFacingName, id := newId, width := width}
+
+                let updatedState : ParsedInputState :=  { currState with
                                                          maxFreeVarId := newId
-                                                         , varToExprWrapper := currState.varToExprWrapper.insert userFacingName newWrappedExpr
+                                                         , displayNameToVariable := currState.displayNameToVariable.insert userFacingName var
                                                          , inputVarIdToDisplayName := currState.inputVarIdToDisplayName.insert newId userFacingName
                                                          }
                 set updatedState
                 return some newWrappedExpr
 
   rotateReflection (innerExpr distanceExpr resType: Expr) (rotateOp: Nat → BVUnOp)
-          : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+          : ParseExprM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← getNatValue? distanceExpr | return none
       let some w ← getWidth? resType | return none
@@ -175,7 +177,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
         return some {bvExpr := GenBVExpr.un (rotateOp distance) inner.bvExpr, width := inner.width}
       else return none
 
-  binaryReflection (lhsExpr rhsExpr resType : Expr) (op : BVBinOp) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+  binaryReflection (lhsExpr rhsExpr resType : Expr) (op : BVBinOp) : ParseExprM (Option (BVExprWrapper)) := do
     let some lhs ← go lhsExpr | return none
     let some rhs ← go rhsExpr | return none
     let some w ← getWidth? resType | return none
@@ -187,7 +189,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
       return none
 
   shiftReflection (innerExpr distanceExpr resType: Expr) (shiftOp : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m)
-        : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+        : ParseExprM (Option (BVExprWrapper)) := do
       let some inner ← go innerExpr | return none
       let some distance ← go distanceExpr | return none
       let some w ← getWidth? resType | return none
@@ -197,7 +199,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
       else return none
 
 
-  getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : ParseExprM BVExprWrapper (Option (BVExprWrapper)) := do
+  getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : ParseExprM (Option (BVExprWrapper)) := do
         let some n  ← getNatValue? nExpr | return none
         let some v ← getNatValue? vExpr | return none
 
@@ -232,8 +234,8 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
     | BitVec n => getNatValue? n
     | _ => pure none
 
-  processBitVec (pbv : BVExpr.PackedBitVec) : ParseExprM BVExprWrapper (Option BVExprWrapper) := do
-    let currState: ParsedInputState BVExprWrapper  ← get
+  processBitVec (pbv : BVExpr.PackedBitVec) : ParseExprM (Option BVExprWrapper) := do
+    let currState: ParsedInputState ← get
     let existingVal :=  currState.valToSymVar[pbv]?
     match existingVal with
     | none =>
@@ -242,21 +244,21 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM BVExprWrapper (Opti
       let newExpr : GenBVExpr pbv.w := GenBVExpr.var newId
 
       let userFacingName := Lean.Name.mkSimple s!"C{numSymVars + 1}"
-      let newWrappedExpr : BVExprWrapper := {bvExpr := newExpr, width := pbv.w}
+      let var : HydraVariable := {name := userFacingName, id := newId, width := pbv.w}
 
-      let updatedState : ParsedInputState BVExprWrapper := { currState with
+      let updatedState : ParsedInputState := { currState with
                                               numSymVars := numSymVars + 1
                                               , symVarToVal := currState.symVarToVal.insert newId pbv
                                               , valToSymVar := currState.valToSymVar.insert pbv newId
-                                              , varToExprWrapper := currState.varToExprWrapper.insert userFacingName newWrappedExpr
+                                              , displayNameToVariable := currState.displayNameToVariable.insert userFacingName var
                                               , symVarToDisplayName := currState.symVarToDisplayName.insert newId userFacingName}
       set updatedState
       return some {bvExpr := newExpr, width := pbv.w}
-    | some var => let newExpr : GenBVExpr width := GenBVExpr.var var
-                  return some {bvExpr := newExpr, width := width}
+    | some var => let newExpr : GenBVExpr pbv.w := GenBVExpr.var var
+                  return some {bvExpr := newExpr, width := pbv.w}
 
 
-def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM BVExprWrapper (Option ParsedBVLogicalExpr)  := do
+def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM (Option ParsedBVLogicalExpr)  := do
   let some lhsRes ← toBVExpr lhsExpr width | throwError "Could not extract lhs: {lhsExpr}"
 
   let state ← get
