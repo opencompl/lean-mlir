@@ -119,7 +119,6 @@ elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom' reg (Simple)
 
 end MLIR2Simple
 
-set_option trace.LeanMLIR.Elab true in
 open MLIR AST MLIR2Simple in
 def eg₀ : Com Simple (Ctxt.ofList []) .pure [.int] :=
   [simple_com| {
