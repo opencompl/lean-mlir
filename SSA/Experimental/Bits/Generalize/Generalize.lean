@@ -444,13 +444,16 @@ def reduceWidth [H : HydrableReduceWidth parsedExpr genLogicalExpr genExpr]
   let logicalExpr := state.parsedLogicalExpr
 
   let shrunk ← H.shrink logicalExpr targetWidth
-  logInfo m! "Shrank {logicalExpr.logicalExpr} to {shrunk.logicalExpr}"
+  trace[Generalize] m! "Shrank {logicalExpr.logicalExpr} to {shrunk.logicalExpr}"
   set {state with
                 processingWidth := targetWidth,
                 constantExprsEnumerationCache := {},
                 parsedLogicalExpr := shrunk}
 
   let shrunkState := shrunk.state
+  if state.parsedLogicalExpr.state.symVarToVal.isEmpty then
+    return []
+
   let constantAssignments ← existsForAll shrunk.logicalExpr shrunkState.symVarToVal.keys shrunkState.inputVarIdToDisplayName.keys numResults
 
   if constantAssignments.isEmpty then
