@@ -293,34 +293,33 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
   let parsedBVExprState := parsedBVExpr.state
   let allNames := Std.HashMap.union parsedBVExprState.inputVarIdToDisplayName parsedBVExprState.symVarToDisplayName
 
-  let bitVecWidth := (mkNatLit w)
   match bvExpr with
   | .var idx => let localDecl ← getLocalDeclFromUserName allNames[idx]!
                 pure (mkFVar localDecl.fvarId)
   | .const (w := w) val => mkAppM ``BitVec.ofInt #[(mkNatLit w),  (mkIntLit val.toInt)]
-  | .bin lhs op rhs  => match op with
-                        | .and => return mkApp3 (.const ``BitVec.and []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .or =>  return mkApp3 (.const ``BitVec.or [])  bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .xor => return mkApp3 (.const ``BitVec.xor []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .add => return mkApp3 (.const ``BitVec.add []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .mul => return mkApp3 (.const ``BitVec.mul []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .udiv => return mkApp3 (.const ``BitVec.udiv []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .umod => return mkApp3 (.const ``BitVec.umod []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-  | .un op expr => match op with
-                   | .not => return mkApp2 (.const ``BitVec.not []) bitVecWidth (← bvExprToExpr parsedBVExpr expr)
-                   | .rotateLeft n => return mkApp3 (.const ``BitVec.rotateLeft []) bitVecWidth (← bvExprToExpr parsedBVExpr expr) (mkNatLit n)
-                   | .rotateRight n => return mkApp3 (.const ``BitVec.rotateRight []) bitVecWidth (← bvExprToExpr parsedBVExpr expr) (mkNatLit n)
-                   | .arithShiftRightConst n => return mkApp4 (.const ``BitVec.sshiftRight' []) bitVecWidth bitVecWidth (← bvExprToExpr parsedBVExpr expr) (mkNatLit n)
-                   | .reverse => return mkApp2 (.const ``BitVec.reverse []) bitVecWidth (← bvExprToExpr parsedBVExpr expr)
-                   | .clz => return mkApp2 (.const ``BitVec.clz []) bitVecWidth (← bvExprToExpr parsedBVExpr expr)
-  | .append lhs rhs _ => return mkApp3 (.const ``BitVec.append []) bitVecWidth (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-  | .replicate n expr _ => return mkApp3 (.const ``BitVec.replicate []) bitVecWidth (mkNatLit n) (← bvExprToExpr parsedBVExpr expr)
+  | .bin (w := w) lhs op rhs  => match op with
+                        | .and => return mkApp3 (.const ``BitVec.and []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .or =>  return mkApp3 (.const ``BitVec.or [])  (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .xor => return mkApp3 (.const ``BitVec.xor []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .add => return mkApp3 (.const ``BitVec.add []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .mul => return mkApp3 (.const ``BitVec.mul []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .udiv => return mkApp3 (.const ``BitVec.udiv []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .umod => return mkApp3 (.const ``BitVec.umod []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+  | .un (w := w) op expr => match op with
+                   | .not => return mkApp2 (.const ``BitVec.not []) (mkNatLit w) (← bvExprToExpr parsedBVExpr expr)
+                   | .rotateLeft n => return mkApp3 (.const ``BitVec.rotateLeft []) (mkNatLit w) (← bvExprToExpr parsedBVExpr expr) (mkNatLit n)
+                   | .rotateRight n => return mkApp3 (.const ``BitVec.rotateRight []) (mkNatLit w) (← bvExprToExpr parsedBVExpr expr) (mkNatLit n)
+                   | .arithShiftRightConst n => return mkApp4 (.const ``BitVec.sshiftRight' []) (mkNatLit w) (mkNatLit w) (← bvExprToExpr parsedBVExpr expr) (mkNatLit n)
+                   | .reverse => return mkApp2 (.const ``BitVec.reverse []) (mkNatLit w) (← bvExprToExpr parsedBVExpr expr)
+                   | .clz => return mkApp2 (.const ``BitVec.clz []) (mkNatLit w) (← bvExprToExpr parsedBVExpr expr)
+  | .append (w := w) lhs rhs _ => return mkApp3 (.const ``BitVec.append []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+  | .replicate n expr _ => return mkApp3 (.const ``BitVec.replicate []) (mkNatLit w) (mkNatLit n) (← bvExprToExpr parsedBVExpr expr)
   | .shiftLeft (n := n) lhs rhs => return mkHShift ``HShiftLeft.hShiftLeft w n ``BitVec.instHShiftLeft (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .shiftRight (n := n) lhs rhs => return mkHShift ``HShiftRight.hShiftRight w n ``BitVec.instHShiftRight (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .arithShiftRight (m := m) (n := n) lhs rhs => return mkApp4 (.const ``BitVec.sshiftRight' []) (mkNatLit m) (mkNatLit n) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-  | .zeroExtend v expr => return mkApp3  (.const ``BitVec.zeroExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
-  | .truncate v expr => return mkApp3  (.const ``BitVec.truncate []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
-  | .signExtend v expr => return mkApp3 (.const ``BitVec.signExtend []) bitVecWidth (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
+  | .zeroExtend (w := w) v expr => return mkApp3  (.const ``BitVec.zeroExtend []) (mkNatLit w) (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
+  | .truncate (w := w) v expr => return mkApp3  (.const ``BitVec.truncate []) (mkNatLit w) (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
+  | .signExtend (w := w) v expr => return mkApp3 (.const ``BitVec.signExtend []) (mkNatLit w) (mkNatLit v) (← bvExprToExpr parsedBVExpr expr)
   | .extract _ _ _ => throwError m! "Extract operation is not supported."
 
 
@@ -332,10 +331,10 @@ def toExpr (parsedBVExpr : ParsedBVLogicalExpr) (bvLogicalExpr: GenBVLogicalExpr
   where
   go (input : GenBVLogicalExpr) := do
   match input with
-  | .literal (GenBVPred.bin lhs op rhs) =>
+  | .literal (GenBVPred.bin (w := w) lhs op rhs) =>
       match op with
-      | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) width) (beqBitVecInstExpr width) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-      | .ult => return mkApp3 (.const ``BitVec.ult []) width (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+      | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+      | .ult => return mkApp3 (.const ``BitVec.ult []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .const b =>
       match b with
       | true => return (mkConst ``Bool.true)
