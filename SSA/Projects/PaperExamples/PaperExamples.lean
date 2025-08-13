@@ -130,7 +130,7 @@ def eg₀ : Com Simple (Ctxt.ofList []) .pure [.int] :=
   }]
 
 def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
-/-- info: 8#32 -/
+/-- info: [[0x00000008#32]] -/
 #guard_msgs in #eval eg₀val
 
 open MLIR AST MLIR2Simple in
@@ -146,9 +146,9 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
 /--
 info: {
   ^entry(%0 : ToyNoRegion.Ty.int):
-    %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
-    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
-    return %2 : (ToyNoRegion.Ty.int) → ()
+    %1 = ToyNoRegion.Op.const 0 : () → ([ToyNoRegion.Ty.int])
+    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → ([ToyNoRegion.Ty.int])
+    return [[%2]] : ([ToyNoRegion.Ty.int]) → ()
 }
 -/
 #guard_msgs in #eval lhs
@@ -165,7 +165,7 @@ def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
 /--
 info: {
   ^entry(%0 : ToyNoRegion.Ty.int):
-    return %0 : (ToyNoRegion.Ty.int) → ()
+    return [[%0]] : ([ToyNoRegion.Ty.int]) → ()
 }
 -/
 #guard_msgs in #eval rhs
@@ -397,15 +397,15 @@ def egLhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
 /--
 info: {
   ^entry(%0 : ToyRegion.Ty.int):
-    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-    %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %1 = ToyRegion.Op.const 0 : () → ([ToyRegion.Ty.int])
+    %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → ([ToyRegion.Ty.int])
     %3 = ToyRegion.Op.iterate 0 (%2) ({
       ^entry(%0 : ToyRegion.Ty.int):
-        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-        %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-        return %2 : (ToyRegion.Ty.int) → ()
-    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-    return %3 : (ToyRegion.Ty.int) → ()
+        %1 = ToyRegion.Op.const 0 : () → ([ToyRegion.Ty.int])
+        %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → ([ToyRegion.Ty.int])
+        return [[%2]] : ([ToyRegion.Ty.int]) → ()
+    }) : (ToyRegion.Ty.int) → ([ToyRegion.Ty.int])
+    return [[%3]] : ([ToyRegion.Ty.int]) → ()
 }
 -/
 #guard_msgs in #eval egLhs
