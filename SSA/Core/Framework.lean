@@ -168,7 +168,7 @@ and its body are pure, and if a `Com` is `impure`, then both the expression and
 the body are impure!
 -/
 inductive Com : Ctxt d.Ty → EffectKind → List d.Ty → Type where
-  | ret {eff : EffectKind} (vs : HVector Γ.Var tys) : Com Γ eff tys
+  | ret {Γ} {tys} {eff : EffectKind} (vs : HVector Γ.Var tys) : Com Γ eff tys
   | var (e : Expr Γ eff ty) (body : Com (Γ ++ ty) eff β) : Com Γ eff β
 end
 

@@ -65,16 +65,14 @@ protected def List.foldToExpr {α : Q(Type)} : List Q($α) → Q(List $α) :=
 protected def Prod.foldToExpr {α β : Q(Type)} : Q($α) × Q($β) → Q($α × $β) :=
   Function.uncurry <| mkApp4 (.const ``Prod [1,1]) α β
 
-protected def Ctxt.mkOfListExpr {α : Q(Type)} : Q(List $α) → Q(Ctxt $α) :=
-  mkApp2 (mkConst ``Ctxt.ofList) α
-
 namespace DialectMetaMorphism
 
 variable {d'} (f : DialectMetaMorphism d d')
 
 def mapList (Γ : List d.Ty) : Q(List $(d').Ty) := (f.mapTy <$> Γ).foldToExpr
-def mapCtxt : (Γ : Ctxt d.Ty) → Q(Ctxt $(d').Ty) :=
-  Ctxt.mkOfListExpr ∘ f.mapList ∘ Ctxt.toList
+def mapCtxt (Γ : Ctxt d.Ty) : Q(Ctxt $(d').Ty) :=
+  let Γ := f.mapList Γ.toList
+  q(Ctxt.ofList $Γ)
 
 def mapVar {Γ : Ctxt d.Ty} (v : Γ.Var ty) : Q(Ctxt.Var $(f.mapCtxt Γ) $(f.mapTy ty)) :=
   let Ty := q(($d').Ty)
@@ -84,7 +82,7 @@ def mapVar {Γ : Ctxt d.Ty} (v : Γ.Var ty) : Q(Ctxt.Var $(f.mapCtxt Γ) $(f.map
   Ctxt.mkVar Ty Γ ty i none
 
 def mapVarVec {Γ : Ctxt d.Ty} {argSig} (args : HVector (Γ.Var) argSig) :
-    Lean.Expr :=
+    Q(HVector (Ctxt.Var $(f.mapCtxt Γ)) $(f.mapList argSig)) :=
   let Ty : Q(Type) := q(($d').Ty)
   let Γ := f.mapCtxt Γ
   let A : Q($Ty → Type) := q(($Γ).Var)
@@ -119,13 +117,13 @@ partial def Com.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty}
 partial def Expr.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty} :
     Expr d Γ eff ty → Lean.Expr :=
   let ΓE : Q(Ctxt ($dE).Ty) := f.mapCtxt Γ
-  let tyE : Q(($dE).Ty) := f.mapList ty
+  let tyE : Q(List ($dE).Ty) := f.mapList ty
   let effE : Q(EffectKind) := Lean.toExpr eff
   fun
   | ⟨op, _ty_eq, eff_le, args, regArgs⟩ =>
-    let Ty := mkApp (mkConst ``Dialect.Ty) dE
+    let Ty : Q(Type) := mkApp (mkConst ``Dialect.Ty) dE
     let op := f.mapOp op
-    let ty_eq : Lean.Expr := mkApp2 (.const ``rfl [1]) Ty tyE
+    let ty_eq : Lean.Expr := mkApp2 (.const ``rfl [1]) q(List $Ty) tyE
     let eff_le := f.mapEffLe eff_le
 
     let args := f.mapVarVec args
@@ -138,7 +136,7 @@ partial def Expr.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty} :
 partial def Regions.toExprAux {regSig : RegionSignature d.Ty}
     (regs : HVector (fun (t : _ × _) => Com d t.1 EffectKind.impure t.2) regSig) :
     Lean.Expr :=
-  let α := q(Ctxt ($dE).Ty × ($dE).Ty)
+  let α := q(Ctxt ($dE).Ty × List ($dE).Ty)
   let A :=
     q(fun (t : Ctxt ($dE).Ty × List ($dE).Ty) => Com $dE t.1 EffectKind.impure t.2)
   match regSig, regs with
