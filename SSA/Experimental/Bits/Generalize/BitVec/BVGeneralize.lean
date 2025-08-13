@@ -168,6 +168,8 @@ elab "#reducewidth" expr:term " : " target:term : command =>
             logInfo m! "Could not match"
       pure ()
 
+variable {x y z : BitVec 1}
+#reducewidth BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) : 8
 
 variable {x y z : BitVec 64}
 #reducewidth (x + 0 = x) : 4
@@ -183,7 +185,7 @@ variable {x y z : BitVec 32}
 #reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
 #reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 8
 
---#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
 #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (List (GenBVExpr w)) := do
@@ -886,9 +888,15 @@ set_option linter.unusedTactic false
 
 
 variable {x y z : BitVec 1}
+variable {C1 : BitVec 4}
+variable {C2 : BitVec 1}
+#check BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1)
+#check BitVec.zeroExtend 8 ((BitVec.zeroExtend 4 x).xor C1) = BitVec.zeroExtend 8 (x.xor C2)
+
 #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
 
 variable {x y z : BitVec 8}
+#generalize x + 0 = 0
 #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
 variable {x y z : BitVec 11}
@@ -902,9 +910,15 @@ variable {x y z: BitVec 32}
 #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
 
 
-theorem zext (x : BitVec 8) :  ¬ (BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x) := by
- -- intros h
-  bv_normalize
+theorem zext' (x : BitVec 1) (C1 : BitVec 4) (C2: BitVec 1) : BitVec.zeroExtend 8 ((BitVec.zeroExtend 4 x).xor C1) = BitVec.zeroExtend 8 (x.xor C2) := by
+  bv_decide
+  sorry
+
+theorem zext (x : BitVec 1) : BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) := by
+  bv_decide
+  sorry
+
+theorem zext2 (x : BitVec 8) :  (BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x) := by
   bv_decide
   sorry
 
