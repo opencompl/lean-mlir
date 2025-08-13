@@ -49,10 +49,10 @@ def_signature for Simple
   | .const _  => () → .int
 
 def_denote for Simple
-  | .const n => BitVec.ofInt 32 n
-  | .add     => fun a b => a + b
+  | .const n => BitVec.ofInt 32 n ::ₕ .nil
+  | .add     => fun a b => a + b ::ₕ .nil
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .pure .int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .pure [.int]  :=
   Expr.mk
     (op := .const n)
     (eff_le := by constructor)
@@ -60,7 +60,7 @@ def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .pure .int  :=
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .pure .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .pure [.int] :=
   Expr.mk
     (op := .add)
     (eff_le := by constructor)
@@ -85,14 +85,14 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   match opStx.name with
   | "const" =>
     match opStx.attrs.find_int "value" with
-    | .some (v, _ty) => return ⟨.pure, .int, cst v⟩
+    | .some (v, _ty) => return ⟨.pure, [.int], cst v⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "add" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨.int, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨.int, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-      return ⟨.pure, .int, add v₁ v₂⟩
+      return ⟨.pure, [.int], add v₁ v₂⟩
     | _ => throw <| .generic (
         s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'")
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
@@ -106,7 +106,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret (v ::ₕ .nil)⟩
   | _ => throw <| .generic (
       s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})")
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
@@ -120,7 +120,7 @@ elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom' reg (Simple)
 end MLIR2Simple
 
 open MLIR AST MLIR2Simple in
-def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
+def eg₀ : Com Simple (Ctxt.ofList []) .pure [.int] :=
   [simple_com| {
     %c2 = "const"() {value = 2} : () -> i32
     %c4 = "const"() {value = 4} : () -> i32
@@ -135,7 +135,7 @@ def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
 
 open MLIR AST MLIR2Simple in
 /-- x + 0 -/
-def lhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
+def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
   [simple_com| {
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
@@ -155,7 +155,7 @@ info: {
 
 open MLIR AST MLIR2Simple in
 /-- x -/
-def rhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
+def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
   [simple_com| {
     ^bb0(%x : i32):
       "return" (%x) : (i32) -> (i32)
@@ -171,7 +171,7 @@ info: {
 #guard_msgs in #eval rhs
 
 open MLIR AST MLIR2Simple in
-def p1 : PeepholeRewrite Simple [.int] .int :=
+def p1 : PeepholeRewrite Simple [.int] [.int] :=
   { lhs := lhs, rhs := rhs, correct :=
     by
       rw [lhs, rhs]
@@ -190,7 +190,7 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
     }
 
 def ex1_rewritePeepholeAt :
-    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
+    Com Simple  (Ctxt.ofList [.int]) .pure [.int] := rewritePeepholeAt p1 1 lhs
 
 theorem hex1_rewritePeephole :
   ex1_rewritePeepholeAt
@@ -198,14 +198,14 @@ theorem hex1_rewritePeephole :
     -- %c0 = 0
     Com.var (cst 0) <|
     -- %out_dead = %x + %c0
-    Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+    Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
     -- ret %c0
-    Com.ret ⟨2, by simp [Ctxt.snoc]⟩) := by
+    Com.ret [⟨2, rfl⟩]ₕ) := by
   native_decide
 
 
 def ex1_rewritePeephole :
-    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
+    Com Simple  (Ctxt.ofList [.int]) .pure [.int] := rewritePeephole (fuel := 100) p1 lhs
 
 set_option maxRecDepth 2000 in
 theorem Hex1_rewritePeephole :
@@ -214,9 +214,9 @@ theorem Hex1_rewritePeephole :
       -- %c0 = 0
       Com.var (cst 0) <|
       -- %out_dead = %x + %c0
-      Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+      Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
       -- ret %c0
-      Com.ret ⟨2, by simp [Ctxt.snoc]⟩) := by
+      Com.ret [⟨2, rfl⟩]ₕ) := by
   native_decide
 
 
@@ -261,12 +261,14 @@ open SimpleReg (int)
 def_signature for SimpleReg
   | .const _    => () → .int
   | .add        => (.int, .int) → .int
-  | .iterate _  => { (.int) → .int } → (.int) -[.pure]-> .int
+  | .iterate _  => { (.int) → [.int] } → (.int) -[.pure]-> .int
 
 def_denote for SimpleReg
-  | .const n    => BitVec.ofInt 32 n
-  | .add        => fun a b => a + b
-  | .iterate k  => fun x f => f^[k] x
+  | .const n    => [BitVec.ofInt 32 n]ₕ
+  | .add        => fun a b => [a + b]ₕ
+  | .iterate k  => fun x f =>
+      let f := fun y => (f y).getN 0
+      [f^[k] x]ₕ
 
 /-
 TODO: the current `denote` function puts the regular arguments *before* the regions,
@@ -282,16 +284,16 @@ TODO: the current `denote` function puts the regular arguments *before* the regi
 @[reducible]
 instance : DialectDenote SimpleReg where
   denote
-    | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b
-    | .iterate k, [(x : BitVec 32)]ₕ, [(f : _ → BitVec 32)]ₕ =>
-      let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
-      k.iterate f' x
-      -- let f_k := Nat.iterate f' k
-      -- f_k x
+    | .const n, _, _ => BitVec.ofInt 32 n ::ₕ .nil
+    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b ::ₕ .nil
+    | .iterate k, [(x : BitVec 32)]ₕ, [(f : _ → _)]ₕ =>
+      let f := fun y => (f y).getN 0
+      let f' (v :  BitVec 32) : BitVec 32 := f (Ctxt.Valuation.nil.snoc v)
+      let y := k.iterate f' x
+      [y]ₕ
 
 @[simp_denote]
-def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure [int] :=
   Expr.mk
     (op := .const n)
     (eff_le := by constructor)
@@ -300,7 +302,7 @@ def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure int  :=
     (regArgs := .nil)
 
 @[simp_denote]
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure [int] :=
   Expr.mk
     (op := .add)
     (eff_le := by constructor)
@@ -309,8 +311,8 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure int :=
     (regArgs := .nil)
 
 @[simp_denote]
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg ⟨[int]⟩ .impure int) :
-    Expr SimpleReg Γ .pure int :=
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg ⟨[int]⟩ .impure [int]) :
+    Expr SimpleReg Γ .pure [int] :=
   Expr.mk
     (op := Op.iterate k)
     (eff_le := by constructor)
@@ -322,22 +324,22 @@ attribute [local simp] Ctxt.snoc
 
 namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
-def lhs : Com SimpleReg ⟨[int]⟩ .pure int :=
+def lhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (iterate (k := 0) (⟨0, by simp⟩) (
       Com.letPure (add ⟨0, by simp⟩ ⟨0, by simp⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+      <| Com.ret [⟨0, rfl⟩]ₕ
   )) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret [⟨0, by rfl⟩]ₕ
 
-def rhs : Com SimpleReg ⟨[int]⟩ .pure int :=
-  Com.ret ⟨0, by simp⟩
+def rhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
+  Com.ret [⟨0, by rfl⟩]ₕ
 
 attribute [local simp] Ctxt.snoc
 --
 -- set_option trace.Meta.Tactic.simp true in
 open Ctxt (Var Valuation DerivedCtxt) in
 
-def p1 : PeepholeRewrite SimpleReg [int] int:=
+def p1 : PeepholeRewrite SimpleReg [int] [int] :=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
       simp_peephole
@@ -352,9 +354,9 @@ theorem EX1' : ex1' = (
   -- %c0 = 0
   Com.var (cst 0) <|
   -- %out_dead = %x + %c0
-  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+  Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
   -- ret %c0
-  Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
+  Com.ret [⟨2, rfl⟩]ₕ)
   := by rfl
 -/
 
@@ -363,15 +365,15 @@ end P1
 namespace P2
 
 /-- running `f(x) = x + 0` 0 times is the identity. -/
-def lhs : Com SimpleReg ⟨[int]⟩ .pure int :=
+def lhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (cst 0) <| -- %c0
-  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.var (add ⟨0, rfl⟩ ⟨1, rfl⟩) <| -- %out = %x + %c0
+  Com.ret [⟨0, rfl⟩]ₕ
 
-def rhs : Com SimpleReg ⟨[int]⟩ .pure int :=
-  Com.ret ⟨0, by simp⟩
+def rhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
+  Com.ret [⟨0, rfl⟩]ₕ
 
-def p2 : PeepholeRewrite SimpleReg [int] int:=
+def p2 : PeepholeRewrite SimpleReg [int] [int] :=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
       simp_peephole
@@ -382,15 +384,15 @@ def p2 : PeepholeRewrite SimpleReg [int] int:=
 /--
 example program that has the pattern 'x + 0' both at the top level,
 and inside a region in an iterate. -/
-def egLhs : Com SimpleReg ⟨[int]⟩ .pure int :=
+def egLhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (cst 0) <|
-  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
-  Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
+  Com.var (add ⟨0, rfl⟩ ⟨1, rfl⟩) <| -- %out = %x + %c0
+  Com.var (iterate (k := 0) (⟨0, rfl⟩) (
       Com.letPure (cst 0) <|
-      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+      Com.letPure (add ⟨0, rfl⟩ ⟨1, rfl⟩) -- fun x => (x + x)
+      <| Com.ret [⟨0, rfl⟩]ₕ
   )) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret [⟨0, rfl⟩]ₕ
 
 /--
 info: {
@@ -427,19 +429,19 @@ info: {
 -/
 #guard_msgs in #eval runRewriteOnLhs
 
-def expectedRhs : Com SimpleReg ⟨[int]⟩ .pure int :=
+def expectedRhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (cst 0) <|
-  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  Com.var (add ⟨0, rfl⟩ ⟨1, rfl⟩) <| -- %out = %x + %c0
   -- | Note that the argument to 'iterate' is rewritten.
   -- This is a rewrite that fires at the top level.
-  Com.var (iterate (k := 0) (⟨2, by simp[Ctxt.snoc]⟩) (
+  Com.var (iterate (k := 0) (⟨2, rfl⟩) (
       Com.letPure (cst 0) <|
-      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩)
+      Com.letPure (add ⟨0, rfl⟩ ⟨1, rfl⟩)
       -- | See that the rewrite has fired in the nested region for 'iterate',
       -- and we directly return the block argument.
-      <| Com.ret ⟨2, by simp[Ctxt.snoc]⟩
+      <| Com.ret [⟨2, rfl⟩]ₕ
   )) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret [⟨0, rfl⟩]ₕ
 
 theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
   native_decide
