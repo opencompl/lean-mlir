@@ -228,10 +228,10 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrap
       let n ← getNatValue? (← whnfD type.appArg!)
       return ⟨n, BitVec.ofNat n v⟩
 
-  getWidth? (type : Expr) : MetaM (Option Nat) := do
-    match_expr type with
+  getWidth? (typeExpr : Expr) : MetaM (Option Nat) := do
+    match_expr typeExpr with
     | BitVec n => getNatValue? n
-    | _ => pure none
+    | _ => getNatValue? typeExpr
 
   processBitVec (pbv : BVExpr.PackedBitVec) : ParseExprM (Option BVExprWrapper) := do
     let currState: ParsedInputState ← get
