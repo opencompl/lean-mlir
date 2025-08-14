@@ -39,6 +39,11 @@ def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .var v => env v
 
+
+def WidthExpr.toBitStream (e : WidthExpr wcard) (wenv : WidthExpr.Env wcard) : BitStream :=
+  match e with
+  | .var v => BitStream.ofNatUnary (wenv v)
+
 @[simp]
 def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :
     WidthExpr.toNat (.var v) env = env v := rfl
@@ -330,25 +335,23 @@ structure HTermEnv {wcard tcard : Nat}
 def HTermEnv.mkFsmEnvOfTenv {wcard tcard : Nat}
     {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) :
-    StateSpace wcard tcard → BitStream := sorry
-
-/-- make a 'HTermEnv' of 'ofTenv'. -/
-def HTermEnv.mkTenvOfFsmEnv {wcard tcard : Nat}
-    (wenv : Fin wcard → Nat) (tctx : Term.Ctx wcard tcard)
-    (fsmEnv : StateSpace wcard tcard → BitStream) :
-    tctx.Env wenv := sorry
+    StateSpace wcard tcard → BitStream := fun
+    | .widthVar v =>
+        BitStream.ofNatUnary (wenv v)
+    | .termVar v =>
+      BitStream.ofBitVecSext (tenv v)
 
 @[simp]
 theorem HTermEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
     {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) :
-    HTermEnv (mkFsmEnvOfTenv tenv) tenv := sorry
-
-@[simp]
-theorem HTermEnv.of_mkTenvOfFsmEnv {wcard tcard : Nat}
-    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
-    (fsmEnv : StateSpace wcard tcard → BitStream) :
-    HTermEnv fsmEnv (mkTenvOfFsmEnv wenv tctx fsmEnv) := sorry
+    HTermEnv (mkFsmEnvOfTenv tenv) tenv := by
+  constructor
+  · constructor
+    · intros v
+      simp [mkFsmEnvOfTenv]
+  · intros v
+    simp [mkFsmEnvOfTenv]
 
 structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
