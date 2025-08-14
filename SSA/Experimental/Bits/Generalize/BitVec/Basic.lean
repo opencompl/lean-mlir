@@ -227,6 +227,14 @@ structure BVExprWrapper where
   width : Nat
   bvExpr: GenBVExpr width
 
+instance : BEq BVExprWrapper where
+  beq := fun a b => if h : a.width = b.width then
+                      a.bvExpr == h ▸ b.bvExpr
+                    else false
+
+instance : Hashable BVExprWrapper where
+  hash a := hash a.bvExpr
+
 instance : ToString BVExprWrapper where
   toString w :=
       s!" BVExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr}}"
@@ -269,9 +277,8 @@ def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): Ge
       BoolExpr.ite (changeBVLogicalExprWidth constVar target) (changeBVLogicalExprWidth auxVar target) (changeBVLogicalExprWidth op3 target)
   | _ => bvLogicalExpr
 
-def bvExprToSubstitutionValue (map: Std.HashMap Nat (GenBVExpr w)) : Std.HashMap Nat
-  (SubstitutionValue GenBVExpr) :=
-      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd)) map.toList)
+def bvExprToSubstitutionValue (map: Std.HashMap Nat BVExprWrapper) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
+      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd.bvExpr)) map.toList)
 
 def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
@@ -458,7 +465,7 @@ def shiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
 def arithShiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
   GenBVExpr.arithShiftRight op1 op2
 
-def zero (w: Nat) := GenBVExpr.const (BitVec.ofNat w 0)
+def zero (w: Nat)  := GenBVExpr.const (BitVec.ofNat w 0)
 def one (w: Nat) := GenBVExpr.const (BitVec.ofNat w 1)
 def minusOne (w: Nat) := GenBVExpr.const (BitVec.ofInt w (-1))
 

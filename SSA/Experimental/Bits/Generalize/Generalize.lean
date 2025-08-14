@@ -83,10 +83,16 @@ attribute [instance] HydrableInstances.hashableLogical
 attribute [instance] HydrableInstances.hashableGenExpr
 attribute [instance] HydrableInstances.beqGenExpr
 
+/--
+The state of an input or symbolic variable
+-/
 structure HydraVariable where
   id : Nat
   name : Name
   width : Nat
+
+instance : Inhabited HydraVariable where
+  default := {id := 0, width := 0, name := default}
 
 instance : ToString HydraVariable where
   toString s := s! "Variable[id: {s.id}, name : {s.name}, width : {s.width}]"
@@ -224,14 +230,12 @@ def solve
     let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType (w : Nat) :=  mkApp (mkConst ``BitVec) (mkNatLit w)
 
-    logInfo m! "AllVars: {allVars}"
     let nameTypeCombo : List (Name × Expr) := allVars.values.map (λ n => (n.name, bitVecType n.width))
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
         let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {H.getLogicalExprSize bvExpr})") do
           let mut expr ← H.genLogicalExprToExpr state.parsedLogicalExpr bvExpr bitVecWidth
-          logInfo m! "expr to check: {expr}"
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here

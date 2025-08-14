@@ -22,19 +22,6 @@ instance : HydrableInstances GenBVLogicalExpr GenBVExpr where
 instance : HydrableGetInputWidth where
   getWidth := getWidth
 
-instance : HydrableGetDisplayNames ParsedBVExpr GenBVLogicalExpr GenBVExpr where
-  getDisplayNames p :=
-    Std.HashMap.union p.state.inputVarIdToDisplayName p.state.symVarToDisplayName
-
-instance : HydrableGetVariableWidths ParsedBVExpr GenBVLogicalExpr GenBVExpr where
-  getVariableWidths p := Id.run do
-    let mut res := Std.HashMap.emptyWithCapacity
-
-    for (name, var) in p.state.displayNameToVariable do
-      res := res.insert name var.width
-
-    return res
-
 instance : HydrableGetLogicalExprSize GenBVLogicalExpr where
   getLogicalExprSize e := e.size
 
@@ -111,6 +98,8 @@ def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBV
     let rhsExpr := h.right ▸ rhs.bvExpr
 
     let mut displayNameToShrinkedVar : Std.HashMap Name HydraVariable := Std.HashMap.emptyWithCapacity
+    let mut inputVarIdToShrinkedVar : Std.HashMap Nat HydraVariable := Std.HashMap.emptyWithCapacity
+    let mut symVarIdToShrinkedVar : Std.HashMap Nat HydraVariable := Std.HashMap.emptyWithCapacity
 
     for (name, var) in origExpr.state.displayNameToVariable do
       let mut resultWidth := 1
@@ -118,11 +107,18 @@ def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBV
       if var.width != 1 then
         resultWidth := (var.width * targetWidth) / origExpr.lhs.width
 
-      displayNameToShrinkedVar := displayNameToShrinkedVar.insert name {name := name, width := resultWidth, id := var.id}
+      let var := {name := name, width := resultWidth, id := var.id}
+      displayNameToShrinkedVar := displayNameToShrinkedVar.insert name var
+
+      if origExpr.state.inputVarIdToVariable.contains var.id then
+        inputVarIdToShrinkedVar := inputVarIdToShrinkedVar.insert var.id var
+
+      if origExpr.state.symVarIdToVariable.contains var.id then
+        symVarIdToShrinkedVar := symVarIdToShrinkedVar.insert var.id var
 
     let bvLogicalExpr := BoolExpr.literal (GenBVPred.bin lhs.bvExpr BVBinPred.eq rhsExpr)
 
-    let shrinkedState := {origExpr.state with displayNameToVariable := displayNameToShrinkedVar}
+    let shrinkedState := {origExpr.state with displayNameToVariable := displayNameToShrinkedVar, symVarIdToVariable := symVarIdToShrinkedVar, inputVarIdToVariable := inputVarIdToShrinkedVar}
     return {origExpr with lhs := lhs, rhs := rhs, logicalExpr := bvLogicalExpr, state := shrinkedState}
 
   throwError m! "Expected lhsWidth:{lhs.width} and rhsWidth:{rhs.width} to equal targetWidth:{targetWidth}"
@@ -227,6 +223,8 @@ def pruneEquivalentBVLogicalExprs(expressions : List GenBVLogicalExpr): Generali
 def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BVExpr.PackedBitVec)
              : ParsedBVExpr := {bvExpr with symVars := assignments.filter (λ id _ => bvExpr.symVars.contains id)}
 
+def wrap (bvExpr : GenBVExpr w) : BVExprWrapper := { bvExpr := bvExpr, width := w}
+
 def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCandidates visited: Std.HashSet GenBVLogicalExpr)
                                                     : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (List GenBVLogicalExpr) :=
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
@@ -258,7 +256,7 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCa
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
             let mut res : Std.HashSet GenBVLogicalExpr := Std.HashSet.emptyWithCapacity
             for candidate in currentCandidates do
-              let widthSubstitutedCandidate := substitute candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, GenBVExpr.const (BitVec.ofNat bitwidth bitwidth))]))
+              let widthSubstitutedCandidate := substitute candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, wrap (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))]))
               if !(evalBVLogicalExpr assignment widthSubstitutedCandidate) then
                 res := res.insert candidate
             pure res
@@ -435,16 +433,18 @@ def generatePreconditions (bvLogicalExpr: GenBVLogicalExpr) (positiveExamples ne
     | [] => return none
     | _ =>  return some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
 
+abbrev ExpressionSynthesisResult := Std.HashMap Nat (List BVExprWrapper)
 set_option warn.sorry false in
-def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (List (GenBVExpr w)) := Id.run do
-  let zero := GenBVExpr.const (BitVec.ofNat w 0)
-  let one := GenBVExpr.const (BitVec.ofNat w 1 )
-  let minusOne := GenBVExpr.const (BitVec.ofInt w (-1))
+def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec) : ExpressionSynthesisResult := Id.run do
+  let zero := wrap (GenBVExpr.const (BitVec.ofNat w 0))
+  let one := wrap (GenBVExpr.const (BitVec.ofNat w 1 ))
+  let minusOne := wrap (GenBVExpr.const (BitVec.ofInt w (-1)))
 
+  -- Special constants representing each input variable
   let specialConstants := [zero, one, minusOne]
   let inputCombinations := productsList (List.replicate inputVars.length specialConstants)
 
-  let lhsSymVarsAsBVExprs : List (GenBVExpr w):= lhsSymVars.keys.map (λ k => GenBVExpr.var k)
+  let lhsSymVarsAsBVExprs : List (BVExprWrapper):= lhsSymVars.toList.map (λ (id, pbv) => {bvExpr := GenBVExpr.var id, width := pbv.w})
   let lhsSymVarsPermutation := productsList (List.replicate lhsSymVarsAsBVExprs.length lhsSymVarsAsBVExprs)
 
   let inputsAndSymVars := List.product inputCombinations lhsSymVarsPermutation
@@ -454,7 +454,7 @@ def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSym
     let h : value.w = w := sorry
     rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
 
-  let mut res : Std.HashMap Nat (List (GenBVExpr w)):= Std.HashMap.emptyWithCapacity
+  let mut res : ExpressionSynthesisResult := Std.HashMap.emptyWithCapacity
   for combo in inputsAndSymVars do
     let inputsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip inputVars combo.fst))
     let symVarsSubstitutions := bvExprToSubstitutionValue (Std.HashMap.ofList (List.zip lhsSymVars.keys combo.snd))
@@ -466,24 +466,33 @@ def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSym
       let existingVar := rhsVarByValue[evalRes]!
       let existingVarRes := res.getD existingVar []
 
-      res := res.insert existingVar (substitutedExpr::existingVarRes)
+      res := res.insert existingVar (wrap substitutedExpr :: existingVarRes)
 
   pure res
 
-def pruneConstantExprsSynthesisResults(exprSynthesisResults : Std.HashMap Nat (List (GenBVExpr w)))
-                            : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Std.HashMap Nat (List (GenBVExpr w))) := do
+set_option warn.sorry false in
+def pruneConstantExprsSynthesisResults(exprSynthesisResults : ExpressionSynthesisResult)
+                            : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr ExpressionSynthesisResult := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
-          let mut tempResults : Std.HashMap Nat (List (GenBVExpr w)) := Std.HashMap.emptyWithCapacity
+          let state ← get
+          let mut tempResults : Std.HashMap Nat (List (BVExprWrapper)) := Std.HashMap.emptyWithCapacity
 
           for (var, expressions) in exprSynthesisResults.toList do
-              let mut prunedExprs ← pruneEquivalentBVExprs expressions
-              tempResults := tempResults.insert var prunedExprs.reverse
+              let width := state.parsedLogicalExpr.state.symVarIdToVariable[var]!.width
+              let mut bvExprs : List (GenBVExpr width) := []
+
+              for expr in expressions do
+                let h : width = expr.width := sorry
+                bvExprs := h ▸ expr.bvExpr :: bvExprs
+
+              let mut prunedExprs ← pruneEquivalentBVExprs bvExprs.reverse -- lets us process in roughly increasing order
+              tempResults := tempResults.insert var (prunedExprs.map (λ expr => wrap expr))
 
           pure tempResults
 
 instance :  HydrableGetNegativeExamples ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 
-def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (GenBVExpr processingWidth)))
+def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (BVExprWrapper)))
                                             : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Option GenBVLogicalExpr) := do
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
     -- logInfo m! "Expression synthesis results : {exprSynthesisResults}"
@@ -515,9 +524,10 @@ def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (L
     return none
 
 set_option warn.sorry false in
-def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec ) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
+abbrev EnumerativeSearchCache :=  Std.HashMap BVExprWrapper BVExpr.PackedBitVec
+def constantExprsEnumerationFromCache (previousLevelCache allLhsVars : EnumerativeSearchCache) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
                                           (ops: List (GenBVExpr w → GenBVExpr w → GenBVExpr w))
-                                          : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Std.HashMap Nat (List (GenBVExpr w))) := do
+                                          : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (ExpressionSynthesisResult × EnumerativeSearchCache) := do
     let zero := BitVec.ofNat w 0
     let one := BitVec.ofNat w 1
     let minusOne := BitVec.ofInt w (-1)
@@ -534,59 +544,46 @@ def constantExprsEnumerationFromCache (allLhsVars : Std.HashMap (GenBVExpr w) BV
 
 
     let state ← get
-    let h : state.processingWidth = w := sorry
-    let mut previousLevelCache := state.constantExprsEnumerationCache
-
-    if previousLevelCache.isEmpty then
-      previousLevelCache := h ▸ allLhsVars
+   -- let h : state.processingWidth = w := sorry
 
     let mut currentCache := Std.HashMap.emptyWithCapacity
 
-    let mut res : Std.HashMap Nat (List (GenBVExpr w)):= Std.HashMap.emptyWithCapacity
-    for (bvExpr, packedBV) in previousLevelCache.toArray do
-      let h' : packedBV.w = w := sorry
-
-      let packedBVExpr : GenBVExpr w := GenBVExpr.const (h' ▸ packedBV.bv)
+    let mut res : Std.HashMap Nat (List BVExprWrapper) := Std.HashMap.emptyWithCapacity
+    for (wrappedBvExpr, packedBV) in previousLevelCache.toArray do
+      let packedBVExpr : GenBVExpr packedBV.w := GenBVExpr.const packedBV.bv
 
       for (lhsVar, lhsVal) in allLhsVars.toArray do
         for op in ops do
-          let evaluatedRes := evalBVExpr lhsSymVars (op packedBVExpr lhsVar)
+          if packedBV.w == lhsVar.width then
+            let h : packedBV.w = w ∧ lhsVar.width = w := sorry
 
-          let mut newExpr : GenBVExpr w := op (h ▸ bvExpr) lhsVar
-          let rhsVarForValue := rhsVarByValue[evaluatedRes]?
+            let evaluatedRes := evalBVExpr lhsSymVars (op (h.left ▸ packedBVExpr) (h.right ▸ lhsVar.bvExpr))
 
-          match rhsVarForValue with
-          | some rhsVar =>
-              let existingCandidates := res.getD rhsVar []
-              res := res.insert rhsVar (newExpr::existingCandidates)
-          | none =>
-            if evaluatedRes == h' ▸ packedBV.bv then
-              newExpr := h ▸ bvExpr
-            currentCache := currentCache.insert newExpr {bv := evaluatedRes : BVExpr.PackedBitVec}
+            let h' : w = wrappedBvExpr.width := sorry
+            let mut newExpr := wrap (op (h' ▸ wrappedBvExpr.bvExpr) (h.right ▸ lhsVar.bvExpr))
+            let rhsVarForValue := rhsVarByValue[evaluatedRes]?
 
-    set {state with constantExprsEnumerationCache := h ▸ currentCache}
-    pure res
+            match rhsVarForValue with
+            | some rhsVar =>
+                let existingCandidates := res.getD rhsVar []
+                res := res.insert rhsVar (newExpr::existingCandidates)
+            | none =>
+              if evaluatedRes == h.left ▸ packedBV.bv then
+                newExpr := wrappedBvExpr
+              currentCache := currentCache.insert newExpr {bv := evaluatedRes : BVExpr.PackedBitVec}
+
+    pure (res, currentCache)
 
 partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec)
-      (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr w)) := do
-
-    let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
-        if orig.w < newWidth then
-            if orig.bv < 0 then
-             {bv := orig.bv.signExtend newWidth, w := newWidth}
-            else {bv := orig.bv.zeroExtend newWidth, w := newWidth}
-        else if orig.w > newWidth then
-            {bv := orig.bv.truncate newWidth, w := newWidth}
-        else
-            orig
+      (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr target.w)) := do
 
     match depth with
       | 0 => return []
       | _ =>
-            let mut res : List (GenBVExpr w) := []
+            let mut res : List (GenBVExpr target.w) := []
 
             for (constId, constVal) in constants.toArray do
-              let newVar := GenBVExpr.var constId
+              let newVar : GenBVExpr target.w := GenBVExpr.var constId
 
               if constVal == target then
                 res := newVar :: res
@@ -598,38 +595,37 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
               if target.bv == 0 then
                 res := GenBVExpr.const 0 :: res
 
-              let newTarget := (updatePackedBVWidth target constVal.w)
-              if h : constVal.w = newTarget.w then
-                let targetBv := h ▸ newTarget.bv
+              if h : target.w = constVal.w then
+                let constBv := h ▸ constVal.bv
 
                 -- ~C = T
-                if BitVec.not constVal.bv == targetBv then
+                if BitVec.not constBv == target.bv then
                   res := GenBVExpr.un BVUnOp.not newVar :: res
 
                 -- C + X = Target; New target = Target - X.
-                let addRes ← deductiveSearch expr constants {bv := targetBv - constVal.bv} (depth-1) constId
+                let addRes ← deductiveSearch expr constants {bv := target.bv - constBv} (depth-1) constId
                 res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
 
                 -- C - X = Target
-                let subRes ← deductiveSearch expr constants {bv := constVal.bv - targetBv} (depth-1) constId
+                let subRes ← deductiveSearch expr constants {bv := constBv - target.bv} (depth-1) constId
                 res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
 
                 -- X - C = Target
-                let subRes' ← deductiveSearch expr constants {bv := targetBv + constVal.bv}  (depth-1) constId
+                let subRes' ← deductiveSearch expr constants {bv := target.bv + constBv}  (depth-1) constId
                 res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
 
                 -- X * C = Target
-                if (BitVec.srem targetBv constVal.bv) == 0 && (BitVec.sdiv targetBv constVal.bv != 0) then
-                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv targetBv constVal.bv} (depth - 1) constId
+                if (BitVec.srem target.bv constBv) == 0 && (BitVec.sdiv target.bv constBv != 0) then
+                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv target.bv constBv} (depth - 1) constId
                   res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
 
                 -- C / X = Target
-                if targetBv != 0 && (BitVec.umod constVal.bv targetBv) == 0 then
-                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constVal.bv targetBv} (depth - 1) constId
+                if target.bv != 0 && (BitVec.umod constBv target.bv) == 0 then
+                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constBv target.bv} (depth - 1) constId
                   res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
 
               else
-                    throwError m! "Width mismatch for expr : {expr} and target: {target}"
+                    logInfo m! "Width mismatch for expr : {expr} and target: {target}"
             return res
 
 set_option warn.sorry false in
@@ -639,7 +635,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
     let parsedBVLogicalExpr := state.parsedLogicalExpr
     let processingWidth := state.processingWidth
 
-    let mut exprSynthesisResults : Std.HashMap Nat (List (GenBVExpr processingWidth)) := Std.HashMap.emptyWithCapacity
+    let mut exprSynthesisResults : Std.HashMap Nat (List (BVExprWrapper)) := Std.HashMap.emptyWithCapacity
 
     for constantAssignment in constantAssignments do
         logInfo m! "Processing constants assignment: {constantAssignment}"
@@ -655,7 +651,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
           let deductiveSearchRes ← deductiveSearch lhs.bvExpr lhsAssignments targetVal 3 1234
           match deductiveSearchRes with
           | [] => break
-          | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (h ▸ deductiveSearchRes)
+          | x::xs => exprSynthesisResults := exprSynthesisResults.insert targetId (deductiveSearchRes.map (λ res => wrap res))
 
         if exprSynthesisResults.size == rhsAssignments.size then
           exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
@@ -667,7 +663,7 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
         let lhsSketchResults := lhsSketchEnumeration lhs.bvExpr lhs.inputVars.keys lhsAssignments rhsAssignments
         for (var, exprs) in lhsSketchResults.toArray do
           let existingExprs := exprSynthesisResults.getD var []
-          exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ (h ▸ exprs))
+          exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ exprs)
 
         if !lhsSketchResults.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
           exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
@@ -678,28 +674,31 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
 
         logInfo m! "Performing bottom-up enumerative search one level at a time"
 
-        let specialConstants : Std.HashMap (GenBVExpr state.processingWidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
-          ((one processingWidth), {bv := BitVec.ofNat processingWidth 1}),
-          ((minusOne processingWidth), {bv :=  BitVec.ofInt processingWidth (-1)})
+        let specialConstants : Std.HashMap BVExprWrapper BVExpr.PackedBitVec := Std.HashMap.ofList [
+          ((wrap (one processingWidth)), {bv := BitVec.ofNat processingWidth 1}),
+          ((wrap (minusOne processingWidth)), {bv :=  BitVec.ofInt processingWidth (-1)})
         ]
 
         let mut allLHSVars := specialConstants
         for (var, value) in lhsAssignments.toArray do
-          allLHSVars := allLHSVars.insert (GenBVExpr.var var) value
-          allLHSVars := allLHSVars.insert (GenBVExpr.un BVUnOp.not ((GenBVExpr.var var))) {bv := BitVec.not (value.bv)}
+          allLHSVars := allLHSVars.insert (wrap (GenBVExpr.var (w := processingWidth) var)) value
+          allLHSVars := allLHSVars.insert (wrap (GenBVExpr.un (w := processingWidth) BVUnOp.not ((GenBVExpr.var var)))) {bv := BitVec.not (value.bv)}
 
-        let ops := [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
+        let ops : List (GenBVExpr processingWidth → (GenBVExpr processingWidth) → (GenBVExpr processingWidth)) := [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
 
         let mut currentLevel := 1
+        let mut cache := allLHSVars
+
         while currentLevel < lhs.symVars.size do
           logInfo m! "Expression Synthesis Processing level {currentLevel}"
 
-          let bottomUpRes ← constantExprsEnumerationFromCache allLHSVars lhsAssignments rhsAssignments ops
-          for (var, exprs) in bottomUpRes.toArray do
+          let bottomUpRes ← constantExprsEnumerationFromCache cache allLHSVars lhsAssignments rhsAssignments ops
+          cache := bottomUpRes.snd
+          for (var, exprs) in bottomUpRes.fst do
             let existingExprs := exprSynthesisResults.getD var []
             exprSynthesisResults := exprSynthesisResults.insert var (existingExprs ++ exprs)
 
-          if !bottomUpRes.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
+          if !bottomUpRes.fst.isEmpty && exprSynthesisResults.size == rhsAssignments.size then
             exprSynthesisResults ← pruneConstantExprsSynthesisResults exprSynthesisResults
             let preconditionCheckResults ← getCombinationWithNoPreconditions exprSynthesisResults
             match preconditionCheckResults with
@@ -887,40 +886,39 @@ def evalBvGeneralize : Tactic
 set_option linter.unusedTactic false
 
 
-variable {x y z : BitVec 1}
-variable {C1 : BitVec 4}
-variable {C2 : BitVec 1}
-#check BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1)
-#check BitVec.zeroExtend 8 ((BitVec.zeroExtend 4 x).xor C1) = BitVec.zeroExtend 8 (x.xor C2)
+-- variable {x y z : BitVec 1}
+-- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
 
-#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
+-- variable {x y z : BitVec 8}
+-- #generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.
+-- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
-variable {x y z : BitVec 8}
-#generalize x + 0 = 0
-#generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+-- variable {x y z : BitVec 11}
+-- #generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
 
-variable {x y z : BitVec 11}
-#generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
+-- variable {x y z : BitVec 16}
+-- #generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
 
-variable {x y z : BitVec 16}
-#generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
-
-variable {x y z: BitVec 32}
-#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
-#generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
+-- variable {x y z: BitVec 32}
+-- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+-- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
 
 
-theorem zext' (x : BitVec 1) (C1 : BitVec 4) (C2: BitVec 1) : BitVec.zeroExtend 8 ((BitVec.zeroExtend 4 x).xor C1) = BitVec.zeroExtend 8 (x.xor C2) := by
-  bv_decide
-  sorry
+-- theorem addZero (x C1: BitVec 8) : x + C1 = C1 := by
+--   bv_normalize
+--   bv_decide
 
-theorem zext (x : BitVec 1) : BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) := by
-  bv_decide
-  sorry
+-- theorem zext' (x : BitVec 1) (C1 : BitVec 4) (C2: BitVec 1) : BitVec.zeroExtend 8 ((BitVec.zeroExtend 4 x).xor C1) = BitVec.zeroExtend 8 (x.xor C2) := by
+--   bv_decide
+--   sorry
 
-theorem zext2 (x : BitVec 8) :  (BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x) := by
-  bv_decide
-  sorry
+-- theorem zext (x : BitVec 1) : BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) := by
+--   bv_decide
+--   sorry
+
+-- theorem zext2 (x : BitVec 8) :  (BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x) := by
+--   bv_decide
+--   sorry
 
 
 section Examples
