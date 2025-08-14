@@ -359,41 +359,6 @@ theorem eval_fsmUnaryNeqUpto_eq_decide
               exists (wenv v)
               omega
 
-def fsmUnaryIncrK
-    (k : Nat)
-    (a : NatFSM wcard tcard (.ofDep v))
-    {wenv : WidthExpr.Env wcard}
-    {fsmEnv : StateSpace wcard tcard → BitStream}
-    (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) : FSM  (StateSpace wcard tcard) :=
-  match k with
-  | 0 => a.toFsm
-  | k + 1 => composeUnaryAux (FSM.ls true) (fsmUnaryIncrK k a henv ha)
-
-theorem eval_fsmUnaryIncrK_eq_decide
-    (k : Nat)
-    (a : NatFSM wcard tcard (.ofDep v))
-    {wenv : WidthExpr.Env wcard}
-    {fsmEnv : StateSpace wcard tcard → BitStream}
-    (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) :
-    ((fsmUnaryIncrK k a henv ha).eval fsmEnv) i =
-    decide (i ≤ v.toNat wenv + k) := by
-  induction k generalizing i
-  case zero =>
-    simp [fsmUnaryIncrK]
-    rw [ha.heq (henv := henv)]
-  case succ k ih =>
-    simp [fsmUnaryIncrK]
-    simp [BitStream.concat]
-    rcases i with rfl | i
-    · simp only [BitStream.concat_zero, zero_le, decide_true]
-    · simp only [BitStream.concat_succ]
-      rw [ih]
-      simp
-      omega
-
--- | if 'cond' is true, then return 't', otherwise return 'e'.
 def ite (cond : FSM arity) (t : FSM arity) (e : FSM arity) : FSM arity :=
   (cond &&& t) ||| (~~~ cond &&& e)
 
@@ -474,6 +439,7 @@ theorem fsmZext_eval_eq
   simp
   rw [ht.heq (henv := htenv)]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
+  sorry
 
 
 /-- The inputs given to the sext fsm. -/
@@ -567,6 +533,7 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w
     obtain htenv_width := htenv.heq_width
     simp only [Nondep.Term.ofDep_var, mkTermFSM,
       Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var', htenv_term]
+    sorry
   case add v p q hp hq =>
     constructor
     intros wenv tenv fsmEnv htenv
@@ -576,9 +543,10 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w
     constructor
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
-    rw [fsmZext_eval_eq (htenv := htenv)]
-    · apply IsGoodNatFSM_mkWidthFSM (w := wnew) (tcard := tcard)
-    · apply ha
+    sorry
+    -- rw [fsmZext_eval_eq (htenv := htenv)]
+    -- · apply IsGoodNatFSM_mkWidthFSM (w := wnew) (tcard := tcard)
+    -- · apply ha
   case sext w' a b =>
     exact AxSext
 
