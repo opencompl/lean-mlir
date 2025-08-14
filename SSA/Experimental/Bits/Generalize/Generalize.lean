@@ -95,10 +95,10 @@ structure ParsedInputState where
   maxFreeVarId : Nat
   numSymVars :  Nat
   displayNameToVariable : Std.HashMap Name HydraVariable
-  inputVarIdToDisplayName : Std.HashMap Nat Name
+  inputVarIdToVariable : Std.HashMap Nat HydraVariable
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
-  symVarToDisplayName : Std.HashMap Nat Name
+  symVarIdToVariable : Std.HashMap Nat HydraVariable
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 class HydrableInitialParserState
@@ -202,28 +202,16 @@ class HydrableGenLogicalExprToExpr (parsedExpr : Type) (genLogicalExpr : Type) (
   genLogicalExprToExpr : ParsedLogicalExpr parsedExpr genLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
 
 /--
-Retrieve a mapping from variable IDs to their display name for a `ParsedLogicalExpr`.
--/
-class HydrableGetDisplayNames (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getDisplayNames : ParsedLogicalExpr parsedExpr genLogicalExpr → HashMap Nat Name
-
-/--
 Get the number of nodes of a `genLogicalexpr` for debugging.
 -/
 class HydrableGetLogicalExprSize (genLogicalExpr : Type) where
   getLogicalExprSize : genLogicalExpr → Nat
-
-class HydrableGetVariableWidths (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getVariableWidths : ParsedLogicalExpr parsedExpr genLogicalExpr → HashMap Name Nat
-
 
 /--
 Invoke BVDecide for a given `genLogicalExpr` representing a BitVec formula.
 -/
 class HydrableSolve (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends
   HydrableInstances genLogicalExpr genExpr,
-  HydrableGetDisplayNames parsedExpr genLogicalExpr genExpr,
-  HydrableGetVariableWidths parsedExpr genLogicalExpr genExpr,
   HydrableGetLogicalExprSize genLogicalExpr,
   HydrableGenLogicalExprToExpr parsedExpr genLogicalExpr genExpr where
 
@@ -231,14 +219,13 @@ def solve
 [H : HydrableSolve parsedExpr genLogicalExpr genExpr]
   (bvExpr : genLogicalExpr) : GeneralizerStateM parsedExpr genLogicalExpr genExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
-    let allNames := H.getDisplayNames state.parsedLogicalExpr
-    let allWidths := H.getVariableWidths state.parsedLogicalExpr
+    let allVars := Std.HashMap.union state.parsedLogicalExpr.state.inputVarIdToVariable state.parsedLogicalExpr.state.symVarIdToVariable
 
     let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType (w : Nat) :=  mkApp (mkConst ``BitVec) (mkNatLit w)
 
-    logInfo m! "AllWidths: {allWidths}; allNames: {allNames}"
-    let nameTypeCombo : List (Name × Expr) := allNames.values.map (λ n => (n, bitVecType allWidths[n]! ))
+    logInfo m! "AllVars: {allVars}"
+    let nameTypeCombo : List (Name × Expr) := allVars.values.map (λ n => (n.name, bitVecType n.width))
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
@@ -261,7 +248,7 @@ def solve
           match res with
           | .ok _ => pure none
           | .error counterExample =>
-            let nameToId : Std.HashMap Name Nat := Std.HashMap.ofList (allNames.toList.map (λ (id, name) => (name, id)))
+            let nameToId : Std.HashMap Name Nat := Std.HashMap.ofList (allVars.toList.map (λ (id, var) => (var.name, id)))
             let mut assignment : Std.HashMap Nat BVExpr.PackedBitVec := Std.HashMap.emptyWithCapacity
             for (var, val) in counterExample.equations do
               let name := ((← getLCtx).get! var.fvarId!).userName
@@ -385,9 +372,11 @@ def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genLogicalEx
               match solution with
               | none => return []
               | some assignment =>
+                   logInfo m! "Found assignment: { assignment}"
                    let constVals := assignment.filter fun c _ => consts.contains c
-                   let newConstraints := constVals.toList.map (fun c => H.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
+                   if constVals.isEmpty then return [{}]
 
+                   let newConstraints := constVals.toList.map (fun c => H.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
                    let res ← helper (H.addConstraints expr newConstraints Gate.and) n
                    return [constVals] ++ res
 
@@ -454,7 +443,7 @@ def reduceWidth [H : HydrableReduceWidth parsedExpr genLogicalExpr genExpr]
   if state.parsedLogicalExpr.state.symVarToVal.isEmpty then
     return []
 
-  let constantAssignments ← existsForAll shrunk.logicalExpr shrunkState.symVarToVal.keys shrunkState.inputVarIdToDisplayName.keys numResults
+  let constantAssignments ← existsForAll shrunk.logicalExpr shrunkState.symVarToVal.keys shrunkState.inputVarIdToVariable.keys numResults
 
   if constantAssignments.isEmpty then
     set {state with
@@ -562,11 +551,12 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
           -- Parse the input expression
           let widthId : Nat := 9481
           let widthName := (Name.mkSimple "w")
+          let widthVariable : HydraVariable := {id := widthId, name := widthName, width := width}
 
           let mut initialState := H.initialParserState
           initialState := { initialState with
-                          symVarToDisplayName := initialState.symVarToDisplayName.insert widthId widthName
-                          , displayNameToVariable := initialState.displayNameToVariable.insert widthName {id := widthId, name := widthName, width := width}
+                          symVarIdToVariable := initialState.symVarIdToVariable.insert widthId widthVariable
+                          , displayNameToVariable := initialState.displayNameToVariable.insert widthName widthVariable
                           , originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
@@ -578,7 +568,11 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
           let mut initialGeneralizerState := H.initializeGeneralizerState startTime timeoutMs widthId targetWidth parsedLogicalExpr
 
           let generalizeRes ← generalize.run' initialGeneralizerState
-          let variableDisplayNames := Std.HashMap.union parsedBVState.inputVarIdToDisplayName parsedBVState.symVarToDisplayName
+          let allVariables := Std.HashMap.union parsedBVState.inputVarIdToVariable parsedBVState.symVarIdToVariable
+
+          let mut variableDisplayNames : Std.HashMap Nat Name := Std.HashMap.emptyWithCapacity
+          for (id, var) in allVariables.toList do
+            variableDisplayNames := variableDisplayNames.insert id var.name
 
           trace[Generalize] m! "All vars: {variableDisplayNames}"
           match generalizeRes with
