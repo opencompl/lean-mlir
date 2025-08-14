@@ -118,6 +118,15 @@ theorem Term.toBV_var {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) :
   Term.toBV tenv (.var v) = tenv v := rfl
 
+def Term.toBitstream {wcard tcard : Nat}
+    {tctx :Term.Ctx wcard tcard}
+    {w : WidthExpr wcard}
+    (t : Term tctx w)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv) :
+    BitStream :=
+  BitStream.ofBitvecSextMsb (t.toBV tenv)
+
 inductive BinaryRelationKind
 | eq
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
@@ -147,6 +156,19 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
   | .not p => ¬ p.toProp tenv
+
+def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
+    (p : Predicate tctx)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv) :
+    BitStream :=
+  match p with
+  | .binRel k a b =>
+    match k with
+    | .eq => fun i => a.toBitstream tenv i = b.toBitstream tenv i
+  | .and p1 p2 => (p1.toBitstream tenv) &&& (p2.toBitstream tenv)
+  | .or p1 p2 => (p1.toBitstream tenv) ||| (p2.toBitstream tenv)
+  | .not p => ~~~ (p.toBitstream tenv)
 
 namespace Nondep
 
@@ -304,6 +326,30 @@ structure HTermEnv {wcard tcard : Nat}
     heq_term : ∀ (v : Fin tcard),
       fsmEnv (StateSpace.termVar v) = BitStream.ofBitVecSext (tenv v)
 
+/-- make a 'HTermEnv' of 'ofTenv'. -/
+def HTermEnv.mkFsmEnvOfTenv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) :
+    StateSpace wcard tcard → BitStream := sorry
+
+/-- make a 'HTermEnv' of 'ofTenv'. -/
+def HTermEnv.mkTenvOfFsmEnv {wcard tcard : Nat}
+    (wenv : Fin wcard → Nat) (tctx : Term.Ctx wcard tcard)
+    (fsmEnv : StateSpace wcard tcard → BitStream) :
+    tctx.Env wenv := sorry
+
+@[simp]
+theorem HTermEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) :
+    HTermEnv (mkFsmEnvOfTenv tenv) tenv := sorry
+
+@[simp]
+theorem HTermEnv.of_mkTenvOfFsmEnv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+    (fsmEnv : StateSpace wcard tcard → BitStream) :
+    HTermEnv fsmEnv (mkTenvOfFsmEnv wenv tctx fsmEnv) := sorry
+
 structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
   heq :
@@ -332,7 +378,7 @@ structure IsGoodPredicateFSM
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      fsm.toFsm.eval fsmEnv = p.toProp
+      (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv = p.toBitstream tenv
 
 end ToFSM
 end MultiWidth

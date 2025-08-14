@@ -1742,6 +1742,64 @@ theorem eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_
       omega
 
 /--
+Safety on all paths, given that our evaluation of
+`mkSafetyCircuit` is false, and `mkIndHypCycleBreaking` is false.
+This is the theorem that is hooked to the external world.
+-/
+theorem eval_eq_zero_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+    (circs : KInductionCircuits fsm K)
+    (hCircs : circs.IsLawful)
+    (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
+    (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+    (∀ (envBitstream : _), fsm.eval envBitstream = BitStream.zero) := by
+  intros envBitstream
+  ext i
+  apply eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+    (hSafety := hSafety)
+    (hIndHyp := hIndHyp)
+    (hCircs := hCircs)
+
+/--
+If the FSM produces zeros, then the negation of the FSM always produces 1s.
+-/
+theorem eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+    (circs : KInductionCircuits fsm K)
+    (hCircs : circs.IsLawful)
+    (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
+    (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+    (∀ (envBitstream : _), (~~~ fsm).eval envBitstream = BitStream.negOne) := by
+  intros envBitstream
+  ext i
+  simp
+  apply eval_eq_false_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+    (hSafety := hSafety)
+    (hIndHyp := hIndHyp)
+    (hCircs := hCircs)
+
+/--
+It suffices to show that the negation of the fsm produces all zeroes,
+to show that the FSM always produces a '1'.
+-/
+theorem eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
+    (circs : KInductionCircuits (~~~ fsm) K)
+    (hCircs : circs.IsLawful)
+    (hSafety : ∀ (env : _), (mkSafetyCircuit circs).eval env = false)
+    (hIndHyp : ∀ (env : _), (mkIndHypCycleBreaking circs).eval env = false) :
+    (∀ (envBitstream : _), (fsm).eval envBitstream = BitStream.negOne) := by
+  intros envBitstream
+  ext i
+  simp
+  have := eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false
+    (hSafety := hSafety)
+    (hIndHyp := hIndHyp)
+    (hCircs := hCircs)
+  specialize this envBitstream
+  simp at this
+  have : (~~~ ~~~ (fsm.eval envBitstream)) i = BitStream.negOne i := by
+    rw [this]
+  simpa using this
+
+/--
 The predicate `p` holds for all variables `vars`
 if we can verify the safety circuit and the inductive hypothesis cycle breaking circuit.
 -/

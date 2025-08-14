@@ -11,46 +11,6 @@ import Lean
 
 namespace MultiWidth
 
-instance : HAnd (FSM arity) (FSM arity) (FSM arity) where
-  hAnd := composeBinaryAux' FSM.and
-
-theorem FSM.and_eq (a b : FSM arity) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
-
-@[simp]
-theorem FSM.eval_and (a b : FSM arity) : (a &&& b).eval env = a.eval env &&& b.eval env := by
-  rw [FSM.and_eq]
-  simp
-
-instance : HOr (FSM arity) (FSM arity) (FSM arity) where
-  hOr := composeBinaryAux' FSM.or
-
-theorem FSM.or_eq (a b : FSM arity) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
-
-@[simp]
-theorem FSM.eval_or (a b : FSM arity) : (a ||| b).eval env = a.eval env ||| b.eval env := by
-  rw [FSM.or_eq]
-  simp
-
-instance : HXor (FSM arity) (FSM arity) (FSM arity) where
-  hXor := composeBinaryAux' FSM.xor
-
-theorem FSM.xor_eq (a b : FSM arity) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
-
-@[simp]
-theorem FSM.eval_xor (a b : FSM arity) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
-  rw [FSM.xor_eq]
-  simp
-
-instance : Complement (FSM arity) where
-  complement := composeUnaryAux FSM.not
-
-theorem FSM.not_eq (a : FSM arity) : (~~~ a) = composeUnaryAux FSM.not a := rfl
-
-@[simp]
-theorem FSM.eval_not (a : FSM arity) : (~~~ a).eval env = ~~~ (a.eval env) := by
-  rw [FSM.not_eq]
-  simp
-
 
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
@@ -678,6 +638,23 @@ def mkPredicateFSMDep {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard}
 
 axiom AxGoodFSM {P : Prop} : P
 
+section BitStream2BV
+
+variable
+  {tctx : Term.Ctx wcard tcard}
+    (p : Predicate tctx)
+
+/-- If the denotation as a bitstream is always zero,
+then so is the denotation as a proposition. -/
+theorem Predicate.toProp_of_toBitStream_eq_negOne
+  (hBistream : ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv),
+        (p.toBitstream tenv = BitStream.negOne)) :
+    ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv := by
+  exact AxGoodFSM
+
+end BitStream2BV
+
+
 
 -- | TODO: rename these namespaces.
 open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
@@ -685,22 +662,35 @@ open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
 then the predicate is satisfied.
 -/
 theorem Predicate.toProp_of_KInductionCircuits
-   {wcard tcard : Nat}
-   (tctx : Term.Ctx wcard tcard)
-   (p : MultiWidth.Predicate tctx)
-   (pNondep : Nondep.Predicate)
-   (_hpNondep : pNondep = (.ofDep p))
-   (fsm : PredicateFSM wcard tcard pNondep)
-   (_hfsm : fsm = mkPredicateFSMNondep wcard tcard pNondep)
-   (n : Nat)
-   (circs : KInductionCircuits fsm.toFsm n)
-   (_hCircs : circs.IsLawful)
-   (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
-   (_hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
-   (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
-   (_hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
-   (wenv : WidthExpr.Env wcard)
-   (tenv : tctx.Env wenv) :
-  p.toProp tenv := by exact AxGoodFSM
+    {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    (p : MultiWidth.Predicate tctx)
+    (pNondep : Nondep.Predicate)
+    (_hpNondep : pNondep = (.ofDep p))
+    (fsm : PredicateFSM wcard tcard pNondep)
+    (_hfsm : fsm = mkPredicateFSMNondep wcard tcard pNondep)
+    (n : Nat)
+    (circs : KInductionCircuits fsm.toFsm n)
+    (hCircs : circs.IsLawful)
+    (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+    (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
+    (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+    (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
+    (wenv : WidthExpr.Env wcard)
+    (tenv : tctx.Env wenv) :
+    p.toProp tenv := by
+  apply Predicate.toProp_of_toBitStream_eq_negOne
+  intros wenv tenv
+  have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
+  rw [← hGoodPredicateFSM.heq (tenv := tenv)
+    (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv)]
+  · subst _hpNondep _hfsm
+    simp [mkPredicateFSMNondep] at circs
+    apply ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
+      (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv))
+      (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
+      (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)
+  · simp
+
 
 end MultiWidth

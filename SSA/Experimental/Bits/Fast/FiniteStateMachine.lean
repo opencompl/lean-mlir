@@ -2018,6 +2018,8 @@ def decideIfZerosAuxUnverified {σ ι : Type _}
 def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity :=
   p
 
+
+
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
   decideIfZerosAux p (p.outputCirc).fst
@@ -2094,3 +2096,43 @@ axiom decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false
 
 end FSM
+
+instance : HAnd (FSM arity) (FSM arity) (FSM arity) where
+  hAnd := composeBinaryAux' FSM.and
+
+theorem FSM.and_eq (a b : FSM arity) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
+
+@[simp]
+theorem FSM.eval_and' (a b : FSM arity) : (a &&& b).eval env = a.eval env &&& b.eval env := by
+  rw [FSM.and_eq]
+  simp
+
+instance : HOr (FSM arity) (FSM arity) (FSM arity) where
+  hOr := composeBinaryAux' FSM.or
+
+theorem FSM.or_eq (a b : FSM arity) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
+
+@[simp]
+theorem FSM.eval_or' (a b : FSM arity) : (a ||| b).eval env = a.eval env ||| b.eval env := by
+  rw [FSM.or_eq]
+  simp
+
+instance : HXor (FSM arity) (FSM arity) (FSM arity) where
+  hXor := composeBinaryAux' FSM.xor
+
+theorem FSM.xor_eq (a b : FSM arity) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
+
+@[simp]
+theorem FSM.eval_xor' (a b : FSM arity) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
+  rw [FSM.xor_eq]
+  simp
+
+instance : Complement (FSM arity) where
+  complement := composeUnaryAux FSM.not
+
+theorem FSM.not_eq (a : FSM arity) : (~~~ a) = composeUnaryAux FSM.not a := rfl
+
+@[simp]
+theorem FSM.eval_not' (a : FSM arity) : (~~~ a).eval env = ~~~ (a.eval env) := by
+  rw [FSM.not_eq]
+  simp
