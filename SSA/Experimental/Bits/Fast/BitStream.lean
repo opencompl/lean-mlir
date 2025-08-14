@@ -189,15 +189,29 @@ abbrev ofBitVecSext {w} (x : BitVec w) : BitStream :=
 abbrev ofBitVecZext {w} (x : BitVec w) : BitStream :=
   fun i => x.getLsbD i
 
-/-- Zero extend a finite bitvector 'x' to the infinite stream of 'x.msb' -/
-def ofBitvecSextMsb {w} (x : BitVec w) : BitStream :=
+/-- Sign extend a finite bitvector 'x' to the infinite stream of 'x.msb' -/
+def ofBitVecSextMsb {w} (x : BitVec w) : BitStream :=
   fun i => (x.signExtend i).msb
 
+/-- Zero extend a finite bitvector 'x' to the infinite stream of 'x.msb' -/
+def ofBitVecZextMsb {w} (x : BitVec w) : BitStream :=
+  fun i => (x.zeroExtend i).msb
+
 @[simp]
-theorem ofBitvecSextMsb_eq_concat_ofBitVec (x : BitVec w) :
-    ofBitvecSextMsb x = (ofBitVecSext x).concat false := by
+theorem ofBitVecZextMsb_eq_concat_ofBitVecZext (x : BitVec w) :
+    ofBitVecZextMsb x = (ofBitVecZext x).concat false := by
   ext i
-  simp [ofBitvecSextMsb, BitVec.msb_eq_getLsbD_last]
+  simp [ofBitVecZextMsb, BitVec.msb_eq_getLsbD_last]
+  rcases i with rfl | i
+  · simp
+  · simp only [add_tsub_cancel_right, concat_succ, ofBitVecZext]
+    by_cases hi : i < w <;> simp [hi]
+
+@[simp]
+theorem ofBitVecSextMsb_eq_concat_ofBitVec (x : BitVec w) :
+    ofBitVecSextMsb x = (ofBitVecSext x).concat false := by
+  ext i
+  simp [ofBitVecSextMsb, BitVec.msb_eq_getLsbD_last]
   rcases i with rfl | i
   · simp
   · simp only [add_tsub_cancel_right, lt_add_iff_pos_right, zero_lt_one, BitVec.getLsbD_eq_getElem,

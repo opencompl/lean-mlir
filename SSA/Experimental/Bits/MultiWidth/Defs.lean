@@ -125,7 +125,7 @@ def Term.toBitstream {wcard tcard : Nat}
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) :
     BitStream :=
-  BitStream.ofBitvecSextMsb (t.toBV tenv)
+  BitStream.ofBitVecZextMsb (t.toBV tenv)
 
 inductive BinaryRelationKind
 | eq
