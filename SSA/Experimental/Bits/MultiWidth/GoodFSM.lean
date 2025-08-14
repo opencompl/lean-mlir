@@ -273,6 +273,19 @@ theorem eval_FsmEqUpto_eq_decide
       · intros hivw j hj
         omega
 
+@[simp]
+theorem eval_FsmEqUpto_eq_decide'
+    (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (henv : HWidthEnv fsmEnv wenv)
+    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    ((fsmEqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) = fun i =>
+    decide (min i (v.toNat wenv) = min i (w.toNat wenv)) := by
+  ext i
+  rw [eval_FsmEqUpto_eq_decide (henv := henv) (ha := ha) (hb := hb)]
+
 private theorem decide_eq_eq_decide_iff_decide {P Q : Prop}
   [Decidable P] [Decidable Q] :
   (decide P = decide Q) = decide (P ↔ Q) := by
@@ -523,7 +536,7 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
 axiom AxSext {P : Prop} : P
 axiom AxAdd {P : Prop} : P
 
-def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w : WidthExpr wcard} (t : Term tctx w)  :
+def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard} {w : WidthExpr wcard} (t : Term tctx w)  :
     (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) := by
   induction t
   case var v =>
@@ -550,48 +563,77 @@ def IsGoodTermFSM_mkTermFSM {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} {w
   case sext w' a b =>
     exact AxSext
 
-/-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
+
+
+def fsmTermEq {wcard tcard : Nat}
+  {a b : Nondep.Term}
+  (afsm : TermFSM wcard tcard a)
+  (bfsm : TermFSM wcard tcard b)
+  -- (ha : IsGoodTermFSM afsm)
+  -- (hb : IsGoodTermFSM bfsm)
+  : FSM (StateSpace wcard tcard) :=
+    composeUnaryAux FSM.scanAnd
+    (composeBinaryAux' FSM.nxor afsm.toFsm  bfsm.toFsm)
+
+
+-- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
   | .binRel .eq a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
-    { toFsm := fsmEqUnaryUpto fsmA.toFsm fsmB.toFsm }
+    { toFsm := fsmTermEq fsmA fsmB }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
-    { toFsm := composeUnaryAux FSM.scanAnd (fsmP.toFsm ||| fsmQ.toFsm) }
+    { toFsm := (fsmP.toFsm ||| fsmQ.toFsm) }
   | .and p q =>
     let fsmP := mkPredicateFSMAux wcard tcard p
     let fsmQ := mkPredicateFSMAux wcard tcard q
-    { toFsm := composeUnaryAux FSM.scanAnd (fsmP.toFsm &&& fsmQ.toFsm) }
+    { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
   | .not p =>
     let fsmP := mkPredicateFSMAux wcard tcard p
-    { toFsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.toFsm) }
+    { toFsm := (~~~ fsmP.toFsm) }
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx) :
-    IsGoodPredicateFSM p (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
+    IsGoodPredicateFSM (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
-  case binRel eq a b =>
+  case binRel rel a b =>
+    rcases rel
+    case eq =>
     constructor
+    intros wenv tenv fsmEnv henv
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    sorry
+    -- fsmTermEqProof starts here.
+    simp [fsmTermEq]
+    have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
+    have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+    rw [ha.heq (henv := henv)]
+    rw [hb.heq (henv := henv)]
+    simp [Predicate.toBitstream]
   case or p q hp hq =>
     constructor
-    intros wenv tenv fsmEnv
+    intros wenv tenv fsmEnv henv
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    sorry
+    rw [hp.heq (henv := henv)]
+    rw [hq.heq (henv := henv)]
+    simp [Predicate.toBitstream]
   case and p q hp hq =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    sorry
+    intros wenv tenv fsmEnv htenv
+    rw [hp.heq (henv := htenv)]
+    rw [hq.heq (henv := htenv)]
+    simp [Predicate.toBitstream]
   case not p hp =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    sorry
+    intros wenv tenv fsmEnv htenv
+    rw [hp.heq (henv := htenv)]
+    simp [Predicate.toBitstream]
 
 
 /-- Negate the FSM so we can decide if zeroes. -/

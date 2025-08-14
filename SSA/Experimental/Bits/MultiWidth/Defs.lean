@@ -162,6 +162,8 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
   | .not p => ¬ p.toProp tenv
 
+-- TODO: is this even needed?
+-- Can't I directly show that the FSM corresponds to the BV?
 def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
     (p : Predicate tctx)
     {wenv : WidthExpr.Env wcard}
@@ -170,7 +172,10 @@ def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
   match p with
   | .binRel k a b =>
     match k with
-    | .eq => fun i => a.toBitstream tenv i = b.toBitstream tenv i
+    | .eq =>
+      let aStream := a.toBitstream tenv
+      let bStream := b.toBitstream tenv
+      (aStream.nxor bStream).scanAnd
   | .and p1 p2 => (p1.toBitstream tenv) &&& (p2.toBitstream tenv)
   | .or p1 p2 => (p1.toBitstream tenv) ||| (p2.toBitstream tenv)
   | .not p => ~~~ (p.toBitstream tenv)
@@ -373,11 +378,11 @@ structure IsGoodTermFSM {w : WidthExpr wcard}
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
       (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv =
-        BitStream.ofBitVecSext (t.toBV tenv)
+        t.toBitstream tenv
 
 structure IsGoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}
-  (p : Predicate tctx) (fsm : PredicateFSM wcard tcard (.ofDep p)) : Prop where
+  {p : Predicate tctx} (fsm : PredicateFSM wcard tcard (.ofDep p)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
