@@ -303,8 +303,7 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
                         | .or =>  return mkApp3 (.const ``BitVec.or [])  (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
                         | .xor => return mkApp3 (.const ``BitVec.xor []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
                         | .add => return mkApp3 (.const ``BitVec.add []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-                        | .mul => logInfo m! "mul; w := {w}, lhs := {lhs}, rhs := {rhs}"
-                                  return mkApp3 (.const ``BitVec.mul []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
+                        | .mul => return mkApp3 (.const ``BitVec.mul []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
                         | .udiv => return mkApp3 (.const ``BitVec.udiv []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
                         | .umod => return mkApp3 (.const ``BitVec.umod []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
   | .un (w := w) op expr => match op with
