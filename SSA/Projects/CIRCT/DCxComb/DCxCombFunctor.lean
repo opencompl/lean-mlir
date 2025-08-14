@@ -184,15 +184,15 @@ def mkTy : MLIR.AST.MLIRType 0 → MLIR.AST.ExceptM DCxComb DCxComb.Ty
       | some w' => return .valuestream2 w'
       | _ => throw <| .generic s!"type mismatch 2"
     | ["ValueTokenStream", w] =>
-    match w.toNat? with
+      match w.toNat? with
       | some w' => return .valuetokenstream w'
       | _ => throw .unsupportedType
     | ["VariadicValueTokenStream", w] =>
-    match w.toNat? with
+      match w.toNat? with
       | some w' => return .variadicvaluetokenstream w'
-      | _ => throw <| .generic s!"type mismatch 3"
-    | _ => throw <| .generic s!"type mismatch 4"
-  | _ => throw <| .generic s!"type mismatch 5"
+      | _ => throw <| .generic s!"type mismatch {s}"
+    | _ => throw <| .generic s!"type mismatch {s}"
+  | _ => throw <| .generic s!"type mismatch"
 
 instance instTransformTy : MLIR.AST.TransformTy DCxComb 0 where
   mkTy := mkTy
