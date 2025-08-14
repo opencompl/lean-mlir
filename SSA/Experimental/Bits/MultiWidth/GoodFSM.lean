@@ -11,43 +11,43 @@ import Lean
 
 namespace MultiWidth
 
-instance : HAnd (FSM α) (FSM α) (FSM α) where
+instance : HAnd (FSM arity) (FSM arity) (FSM arity) where
   hAnd := composeBinaryAux' FSM.and
 
-theorem FSM.and_eq (a b : FSM α) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
+theorem FSM.and_eq (a b : FSM arity) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
 
 @[simp]
-theorem FSM.eval_and (a b : FSM α) : (a &&& b).eval env = a.eval env &&& b.eval env := by
+theorem FSM.eval_and (a b : FSM arity) : (a &&& b).eval env = a.eval env &&& b.eval env := by
   rw [FSM.and_eq]
   simp
 
-instance : HOr (FSM α) (FSM α) (FSM α) where
+instance : HOr (FSM arity) (FSM arity) (FSM arity) where
   hOr := composeBinaryAux' FSM.or
 
-theorem FSM.or_eq (a b : FSM α) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
+theorem FSM.or_eq (a b : FSM arity) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
 
 @[simp]
-theorem FSM.eval_or (a b : FSM α) : (a ||| b).eval env = a.eval env ||| b.eval env := by
+theorem FSM.eval_or (a b : FSM arity) : (a ||| b).eval env = a.eval env ||| b.eval env := by
   rw [FSM.or_eq]
   simp
 
-instance : HXor (FSM α) (FSM α) (FSM α) where
+instance : HXor (FSM arity) (FSM arity) (FSM arity) where
   hXor := composeBinaryAux' FSM.xor
 
-theorem FSM.xor_eq (a b : FSM α) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
+theorem FSM.xor_eq (a b : FSM arity) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
 
 @[simp]
-theorem FSM.eval_xor (a b : FSM α) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
+theorem FSM.eval_xor (a b : FSM arity) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
   rw [FSM.xor_eq]
   simp
 
-instance : Complement (FSM α) where
+instance : Complement (FSM arity) where
   complement := composeUnaryAux FSM.not
 
-theorem FSM.not_eq (a : FSM α) : (~~~ a) = composeUnaryAux FSM.not a := rfl
+theorem FSM.not_eq (a : FSM arity) : (~~~ a) = composeUnaryAux FSM.not a := rfl
 
 @[simp]
-theorem FSM.eval_not (a : FSM α) : (~~~ a).eval env = ~~~ (a.eval env) := by
+theorem FSM.eval_not (a : FSM arity) : (~~~ a).eval env = ~~~ (a.eval env) := by
   rw [FSM.not_eq]
   simp
 
@@ -76,11 +76,67 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
       have ⟨henv⟩ := henv
       rw [henv]
 
-#check BitStream
+/--
+An FSM that computes the MSB at the current index.
+If the index is smaller than the width, then the MSB is 'false'.
+At and after the current width, the MSB is whatever the MSB is supposed to be.
+-- Takes an input the bitvector, and the width.
+-/
+def fsmMsbAux: FSM Bool where
+  α := Unit
+  initCarry := fun () => false
+  outputCirc := Circuit.var (positive := true) (.inl ())
+  nextStateCirc := fun () =>
+    let s : Circuit (Unit ⊕ Bool) := Circuit.var (positive := true) (.inl ())
+    let x : Circuit (Unit ⊕ Bool)  := Circuit.var (positive := true) (.inr false)
+    let w : Circuit (Unit ⊕ Bool)  := Circuit.var (positive := true) (.inr true)
+    -- as long as the width is not exceeded, store into the width.
+    Circuit.ite w -- if w
+      x -- then x
+      s  -- else s
 
-def fsmUnaryMin (a b : FSM α) : FSM α :=
+/-- the MSB finite state machine as a composition of the MSB machine. -/
+def fsmMsb (x w : FSM α) : FSM α :=
+  composeBinaryAux' fsmMsbAux x w
+
+theorem eval_fsmMsb_eq_decide
+  {wenv : WidthExpr.Env wcard}
+  {fsmEnv : StateSpace wcard tcard → BitStream}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : Term.Ctx.Env tctx wenv)
+  (x : Term tctx w)
+  (w : WidthExpr wcard)
+  (xfsm : TermFSM wcard tcard (.ofDep x))
+  (hxfsm : IsGoodTermFSM xfsm)
+  (wfsm : NatFSM wcard tcard (.ofDep w)) :
+  (fsmMsb xfsm.toFsm wfsm.toFsm).eval env i =
+  ((x.toBV tenv).signExtend (w.toNat wenv)).getLsbD i
+   := sorry
+
+
+def fsmUnaryMax (a b : FSM arity) : FSM arity :=
+  composeBinaryAux' FSM.or a b
+
+@[simp]
+theorem eval_fsmUnaryMax_eq_decide
+  (a : NatFSM wcard tcard (.ofDep v))
+  (b : NatFSM wcard tcard (.ofDep w))
+  {wenv : WidthExpr.Env wcard}
+  {fsmEnv : StateSpace wcard tcard → BitStream}
+  (henv : HWidthEnv fsmEnv wenv)
+  (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+  ((fsmUnaryMax a.toFsm b.toFsm).eval fsmEnv) i =
+    (i ≤ (max (v.toNat wenv) (w.toNat wenv))) := by
+  simp only [fsmUnaryMax, composeBinaryAux'_eval, eq_iff_iff]
+  rw [ha.heq (henv := henv)]
+  rw [hb.heq (henv := henv)]
+  simp
+
+def fsmUnaryMin (a b : FSM arity) : FSM arity :=
   composeBinaryAux' FSM.and a b
 
+/-- compute the 'min' of two FSMs. -/
+@[simp]
 theorem eval_fsmUnaryMin_eq_decide
   (a : NatFSM wcard tcard (.ofDep v))
   (b : NatFSM wcard tcard (.ofDep w))
@@ -96,6 +152,33 @@ theorem eval_fsmUnaryMin_eq_decide
   rw [hb.heq (henv := henv)]
   simp
 
+/-- increment a unary number by a known constant 'k'. -/
+def fsmUnaryIncrK (k : Nat) (fsm : FSM α) : FSM α :=
+  match k with
+  | 0 => fsm
+  | k + 1 => composeUnaryAux (FSM.ls true) (fsmUnaryIncrK k fsm)
+
+theorem eval_fsmUnaryIncrK_eq_decide
+  (a : NatFSM wcard tcard (.ofDep v))
+  {wenv : WidthExpr.Env wcard}
+  {fsmEnv : StateSpace wcard tcard → BitStream}
+  (henv : HWidthEnv fsmEnv wenv)
+  (ha : IsGoodNatFSM a) :
+  ((fsmUnaryIncrK k a.toFsm).eval fsmEnv) = fun i =>
+  decide (i ≤ (v.toNat wenv) + k) := by
+  induction k
+  case zero =>
+    simp [fsmUnaryIncrK]
+    rw [ha.heq (henv := henv)]
+  case succ k ih =>
+    simp [fsmUnaryIncrK]
+    rw [ih]
+    ext i
+    rcases i with rfl | i
+    · simp only [BitStream.concat_zero, zero_le, decide_true]
+    · simp only [BitStream.concat_succ, decide_eq_decide]
+      omega
+
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
 -- if the borrow bit is one, then we know that 'a' is less than 'b'.
@@ -105,7 +188,7 @@ theorem eval_fsmUnaryMin_eq_decide
 
 -- alternatively, a[i] = 1 → b[i] = 1.
 -- if a is high, then b must be high for it to be ≤.
-def fsmUnaryUle (a : FSM α) (b : FSM α) : FSM α :=
+def fsmUnaryUle (a : FSM arity) (b : FSM arity) : FSM arity :=
  composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
 
 theorem eval_fsmUnaryUle_eq_decide
@@ -181,7 +264,7 @@ info: 'MultiWidth.eval_fsmUnaryUle_eq_decide' depends on axioms: [propext, Class
 #guard_msgs in #print axioms eval_fsmUnaryUle_eq_decide
 
 -- returns 1 if a is equal to b.
-def fsmEqUnaryUpto (a : FSM α) (b : FSM α) : FSM α :=
+def fsmEqUnaryUpto (a : FSM arity) (b : FSM arity) : FSM arity :=
   composeUnaryAux FSM.scanAnd (composeBinaryAux' FSM.nxor a b)
 
 @[simp]
@@ -250,7 +333,7 @@ private theorem decide_or_decide_eq_decide {P Q : Prop}
   simp
 
 /-- returns 1 if a is not equal to b. -/
-def fsmUnaryNeqUpto (a b : FSM α) : FSM α :=
+def fsmUnaryNeqUpto (a b : FSM arity) : FSM arity :=
   composeUnaryAux FSM.scanOr (a ^^^ b)
 
 theorem neq_of_min_neq_min {i v w : Nat} (hivw : ¬ min i v = min i w ) :
@@ -351,19 +434,19 @@ theorem eval_fsmUnaryIncrK_eq_decide
       omega
 
 -- | if 'cond' is true, then return 't', otherwise return 'e'.
-def ite (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
+def ite (cond : FSM arity) (t : FSM arity) (e : FSM arity) : FSM arity :=
   (cond &&& t) ||| (~~~ cond &&& e)
 
 @[simp]
 theorem eval_ite_eq_decide
-    (cond t e : FSM α)
-    (env : α → BitStream) :
+    (cond t e : FSM arity)
+    (env : arity → BitStream) :
     (ite cond t e).eval env i =
     if (cond.eval env i) then t.eval env i else e.eval env i := by
   simp [ite]
   by_cases hcond : cond.eval env i <;> simp [hcond]
 
-def fsmUltUnary (a b : FSM α) : FSM α :=
+def fsmUltUnary (a b : FSM arity) : FSM arity :=
   composeBinaryAux' FSM.and (fsmUnaryUle a b) (fsmUnaryNeqUpto a b)
 
 theorem eval_fsmUltUnary_eq_decide
@@ -558,6 +641,30 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   | .not p =>
     let fsmP := mkPredicateFSMAux wcard tcard p
     { toFsm := composeUnaryAux FSM.scanAnd (~~~ fsmP.toFsm) }
+
+def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
+    {tctx : Term.Ctx wcard tcard}
+    (p : MultiWidth.Predicate tctx) :
+    IsGoodPredicateFSM p (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
+  induction p
+  case binRel eq a b =>
+    constructor
+    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    sorry
+  case or p q hp hq =>
+    constructor
+    intros wenv tenv fsmEnv
+    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    sorry
+  case and p q hp hq =>
+    constructor
+    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    sorry
+  case not p hp =>
+    constructor
+    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    sorry
+
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :

@@ -185,19 +185,24 @@ section ToBitVec
 abbrev ofBitVecSext {w} (x : BitVec w) : BitStream :=
   fun i => if i < w then x.getLsbD i else x.msb
 
-/-- Sign-extend a finite bitvector `x` to the infinite stream `(x.msb)^ω ⋅ x`  -/
+/-- Sign-extend a finite bitvector `x` to the infinite stream `0^ω ⋅ x`  -/
 abbrev ofBitVecZext {w} (x : BitVec w) : BitStream :=
   fun i => x.getLsbD i
 
-def ofBitVecZextMsb {w} (x : BitVec w) : BitStream :=
-  fun i => (x.zeroExtend i).msb
+/-- Zero extend a finite bitvector 'x' to the infinite stream of 'x.msb' -/
+def ofBitvecSextMsb {w} (x : BitVec w) : BitStream :=
+  fun i => (x.signExtend i).msb
 
-theorem ofBitVecZextMsb_eq_concat_ofBitVec (x : BitVec w) :
-    ofBitVecZextMsb x = (ofBitVecZext x).concat false := by
+@[simp]
+theorem ofBitvecSextMsb_eq_concat_ofBitVec (x : BitVec w) :
+    ofBitvecSextMsb x = (ofBitVecSext x).concat false := by
   ext i
-  simp [ofBitVecZextMsb, BitVec.msb_eq_getLsbD_last]
-  rcases i with rfl | i <;> simp
-
+  simp [ofBitvecSextMsb, BitVec.msb_eq_getLsbD_last]
+  rcases i with rfl | i
+  · simp
+  · simp only [add_tsub_cancel_right, lt_add_iff_pos_right, zero_lt_one, BitVec.getLsbD_eq_getElem,
+    BitVec.getElem_signExtend, concat_succ, ofBitVecSext]
+    by_cases hi : i < w <;> simp [hi]
 
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
@@ -837,11 +842,10 @@ theorem ofBitVec_sub : ofBitVecSext (x - y) ≈ʷ (ofBitVecSext x) - (ofBitVecSe
   _ ≈ʷ ofBitVecSext x + -(ofBitVecSext y) := add_congr equal_up_to_refl ofBitVec_neg
   _ ≈ʷ ofBitVecSext x - ofBitVecSext y := by rw [sub_eq_add_neg]
 
-theorem ofBitVecZextMsb_add_eq {w} (x y : BitVec w)  :
-   BitStream.ofBitVecZextMsb (x + y) = BitStream.ofBitVecZextMsb x + BitStream.ofBitVecZextMsb y := by
-  ext i
-  simp [ofBitVecZextMsb]
-  sorry
+theorem ofBitVec_sub' {w : Nat} {i : Nat} {hi : i < w} (x y : BitVec w) :
+    ofBitVecSext (x - y) i = ((ofBitVecSext x) - (ofBitVecSext y)) i := by
+  apply ofBitVec_sub
+  simp [hi]
 
 theorem incr_add : a + (@ofBitVecSext w 1) ≈ʷ a.incr := by
   have incr_add_aux {i : Nat} (le : i < w) : a.addAux (@ofBitVecSext w 1) i = a.incrAux i := by

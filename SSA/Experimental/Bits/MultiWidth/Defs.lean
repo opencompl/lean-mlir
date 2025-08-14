@@ -7,6 +7,11 @@ import Lean
 import Std.Tactic.BVDecide
 
 namespace MultiWidth
+/-
+op
+op.toBV : Nat → BV
+op.toBitStream : BitStream
+-/
 
 inductive WidthExpr (wcard : Nat) : Type
 | var : (v : Fin wcard) → WidthExpr wcard
@@ -142,70 +147,6 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
   | .not p => ¬ p.toProp tenv
-
-section ToBitstream
-
-/-- Our bitstreams start with '0',
-since we want the denotation of the bitstream at 'i' to be equal to
-'Term.zeroExtend i.msb'.
-
-NOTE: we should never reveal 'ofBitVecZextMsb', which is an implementation
-detail. Instead, our 'simp' lemmas should simplify the compound versions
-into the simpler versions.
--/
-def Term.toBitstream {wcard tcard : Nat}
-    {tctx :Term.Ctx wcard tcard}
-    {w : WidthExpr wcard}
-    (t : Term tctx w)
-    {wenv : WidthExpr.Env wcard}
-    (tenv : tctx.Env wenv) :
-    BitStream :=
-  BitStream.ofBitVecZextMsb (t.toBV tenv)
-
--- We write all other 'toBitstream' than 'var' in terms of more primitive 'toBitstream'.
-
-@[simp]
-theorem Term.toBitstream_zext {wcard tcard : Nat}
-    {tctx : Term.Ctx wcard tcard}
-    {w : WidthExpr wcard}
-    {wenv : WidthExpr.Env wcard}
-    (tenv : tctx.Env wenv) (t : Term tctx w) (wnew : WidthExpr wcard) :
-  (Term.toBitstream (.zext t wnew) tenv) = BitStream.zeroExtend (Term.toBitstream t tenv) (wnew.toNat wenv) := by
-  simp only [toBitstream]
-  ext i
-  simp
-  simp only [BitStream.ofBitVecZextMsb, BitVec.truncate_eq_setWidth]
-  simp only [BitVec.msb_eq_getLsbD_last, BitVec.getLsbD_setWidth, tsub_lt_self_iff, zero_lt_one,
-    and_true]
-  simp only [toBV, BitVec.truncate_eq_setWidth, BitVec.getLsbD_setWidth]
-  generalize (toBV tenv t) = tbv
-  generalize (wnew.toNat wenv) = wnat
-  by_cases hi0 : 0 < i
-  · simp [hi0]
-    by_cases hiw : i ≤ wnat
-    · simp [hiw]
-      intros h
-      have := BitVec.lt_of_getLsbD h
-      omega
-    · simp [hiw]
-      intros h
-      omega
-  · simp [hi0]
-
-def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
-    (p : Predicate tctx)
-    {wenv : WidthExpr.Env wcard}
-    (tenv : tctx.Env wenv) :
-    BitStream :=
-  match p with
-  | .binRel k a b =>
-    match k with
-    | .eq => fun i => a.toBitstream tenv i = b.toBitstream tenv i
-  | .and p1 p2 => (p1.toBitstream tenv) &&& (p2.toBitstream tenv)
-  | .or p1 p2 => (p1.toBitstream tenv) ||| (p2.toBitstream tenv)
-  | .not p => ~~~ (p.toBitstream tenv)
-
-end ToBitstream
 
 namespace Nondep
 
@@ -361,7 +302,7 @@ structure HTermEnv {wcard tcard : Nat}
   (fsmEnv : StateSpace wcard tcard → BitStream) (tenv : tctx.Env wenv) : Prop
   extends HWidthEnv fsmEnv wenv where
     heq_term : ∀ (v : Fin tcard),
-      fsmEnv (StateSpace.termVar v) = (Term.var v).toBitstream tenv
+      fsmEnv (StateSpace.termVar v) = BitStream.ofBitVecSext (tenv v)
 
 structure IsGoodNatFSM {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
@@ -383,15 +324,15 @@ structure IsGoodTermFSM {w : WidthExpr wcard}
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
       (henv : HTermEnv fsmEnv tenv) → fsm.toFsm.eval fsmEnv =
-        (t.toBitstream tenv)
+        BitStream.ofBitVecSext (t.toBV tenv)
 
-structure GoodPredicateFSM
+structure IsGoodPredicateFSM
   {tctx : Term.Ctx wcard tcard}
-  (p : Predicate tctx) extends PredicateFSM wcard tcard (.ofDep p) where
+  (p : Predicate tctx) (fsm : PredicateFSM wcard tcard (.ofDep p)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      toFsm.eval fsmEnv = p.toBitstream tenv
+      fsm.toFsm.eval fsmEnv = p.toProp
 
 end ToFSM
 end MultiWidth
