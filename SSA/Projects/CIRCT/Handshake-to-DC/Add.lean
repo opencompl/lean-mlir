@@ -17,6 +17,9 @@ open MLIR AST in
 instance : ToString DCOp.TokenStream where
   toString s := toString (Stream.toList 10 s)
 
+instance : ToString (CIRCTStream.Stream (BitVec w))where
+  toString s := toString (Stream.toList 10 s)
+
 instance [ToString w] : ToString (Option w) where
   toString
     | some x => s!"(some {toString x})"
@@ -24,6 +27,10 @@ instance [ToString w] : ToString (Option w) where
 
 instance [ToString w] : ToString (DCOp.ValueStream w) where
   toString s := toString (Stream.toList 10 s)
+
+def ofList (vals : List (Option α)) : Stream α :=
+  fun i => (vals[i]?).join
+
 
 /--
 Initial handshake program:
@@ -42,6 +49,20 @@ def handshakeAdd := [HSxComb_com| {
     %add2 = "HSxComb.add" (%syncAdd1, %a) : (!Stream_BitVec_32, !Stream_BitVec_32) -> (!Stream_BitVec_32)
     "return" (%add2) : (!Stream_BitVec_32) -> ()
   }]
+
+#check handshakeAdd
+#eval handshakeAdd
+#reduce handshakeAdd
+#check handshakeAdd.denote
+#print axioms handshakeAdd
+
+def a : Stream (BitVec 32) := ofList [1#32, none, 2#32, 5#32, none]
+def b : Stream (BitVec 32) := ofList [none, 1#32, none, 2#32, 5#32]
+
+def testHandshake : Stream (BitVec 32) :=
+  handshakeAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
+
+#eval testHandshake
 
 
 /--
@@ -99,3 +120,17 @@ def dcAdd := [DCxComb_com| {
     %8 = "DCxComb.pack" (%7, %6) : (!ValueStream_32, !TokenStream) -> (!ValueStream_32)
     "return" (%8) : (!ValueStream_32) -> ()
   }]
+
+#check dcAdd
+#eval dcAdd
+#reduce dcAdd
+#check dcAdd.denote
+#print axioms dcAdd
+
+def aVal : DCOp.ValueStream (BitVec 32) := ofList [some 1#32, none, some 2#32, some 5#32, none]
+def bVal : DCOp.ValueStream (BitVec 32) := ofList [none, some 1#32, none, some 2#32, some 5#32]
+
+def testDC : DCOp.ValueStream (BitVec 32)  :=
+  dcAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
+
+#eval testHandshake
