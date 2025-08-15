@@ -36,20 +36,21 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       have ⟨henv⟩ := henv
       rw [henv]
 
+
 /--
 An FSM that computes the MSB at the current index.
 If the index is smaller than the width, then the MSB is 'false'.
 At and after the current width, the MSB is whatever the MSB is supposed to be.
 -- Takes an input the bitvector, and the width.
 -/
-def fsmMsbAux: FSM Bool where
+def fsmMsbAux: FSM (Bool) where
   α := Unit
   initCarry := fun () => false
   outputCirc := Circuit.var (positive := true) (.inl ())
   nextStateCirc := fun () =>
-    let s : Circuit (Unit ⊕ Bool) := Circuit.var (positive := true) (.inl ())
-    let x : Circuit (Unit ⊕ Bool)  := Circuit.var (positive := true) (.inr false)
-    let w : Circuit (Unit ⊕ Bool)  := Circuit.var (positive := true) (.inr true)
+    let s : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inl ())
+    let x : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr false)
+    let w : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr true)
     -- as long as the width is not exceeded, store into the width.
     Circuit.ite w -- if w
       x -- then x
@@ -372,17 +373,6 @@ theorem eval_fsmUnaryNeqUpto_eq_decide
               exists (wenv v)
               omega
 
-def ite (cond : FSM arity) (t : FSM arity) (e : FSM arity) : FSM arity :=
-  (cond &&& t) ||| (~~~ cond &&& e)
-
-@[simp]
-theorem eval_ite_eq_decide
-    (cond t e : FSM arity)
-    (env : arity → BitStream) :
-    (ite cond t e).eval env i =
-    if (cond.eval env i) then t.eval env i else e.eval env i := by
-  simp [ite]
-  by_cases hcond : cond.eval env i <;> simp [hcond]
 
 def fsmUltUnary (a b : FSM arity) : FSM arity :=
   composeBinaryAux' FSM.and (fsmUnaryUle a b) (fsmUnaryNeqUpto a b)
@@ -467,52 +457,28 @@ theorem fsmZext_eval_eq
 /-- The inputs given to the sext fsm. -/
 inductive fsmSext.inputs
 | a
-| a0
 | wold
 | wnew
 
-def fsmSext.inputs.toFin : fsmSext.inputs → Fin 4
+def fsmSext.inputs.toFin : fsmSext.inputs → Fin 3
 | .a => 0
-| .a0 => 1
-| .wold => 2
-| .wnew => 3
+| .wold => 1
+| .wnew => 2
 
 
 def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
-  ite (fsmUnaryUle wnew wold)
-    /- wnew ≤ wold, so it's the same as zext. -/
-    (fsmZext a wnew)
-    /- wnew > wold. -/
-  (composeQuaternaryAux'
-    (composer.map fsmSext.inputs.toFin)
-    a
-    (composeUnaryAux (FSM.ls false) a)
-    wold
-    wnew)
-  where
-    -- precondition: wnew > wold.
-    composer : FSM fsmSext.inputs := {
-      α := Unit,
-      initCarry := fun () => false,
-      outputCirc :=
-        .ite (.var true (.inr fsmSext.inputs.wold)) -- i ≤ wold < wnew
-          (.var true (.inr fsmSext.inputs.a)) -- return the bit of a.
-          -- else: wold < i ≤ wnew
-          (.ite (.var true (.inr fsmSext.inputs.wnew))
-            (.var true (.inl ())) -- return our state bit.
-            -- else: wnew < i.
-            .fals
-          )
-      nextStateCirc :=
-        /- while we are i ≤ wold, store the bit from a. -/
-        /- otherwise, save the old bit. -/
-        fun () =>
-          .ite (.var true (.inr fsmSext.inputs.wold))
-            (.var true (.inr fsmSext.inputs.a)) -- i ≤ wold
-            (.var true (.inl ())) -- i > wold
-    }
-
+  let fmsb := composeBinaryAux' fsmMsbAux a wnew
+  /-
+  If still in the old bitwidth, then return 'a',
+  -/
+  FSM.ite wnew
+    -- i ≤ wnew
+    (FSM.ite wold
+      a -- i ≤ wold, so produce 'a'.
+      fmsb) -- we are in the part that is outside wold, so spit the 'msb'.
+    -- i > wnew
+    (FSM.zero.map Fin.elim0)
 
 def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
@@ -562,6 +528,12 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     constructor
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
+    ext i
+    rw [hp.heq (henv := htenv)]
+    rw [hq.heq (henv := htenv)]
+    simp only [BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
+    rw [← BitStream.add_eq]
+    rw [BitStream.add]
     exact AxAdd
   case zext w' a wnew ha  =>
     constructor

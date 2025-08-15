@@ -1626,6 +1626,7 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
          · simp [hi]; omega
      }
 
+
 /-!
 FSM that implement bitwise-and. Since we use `0` as the good state,
 we keep the invariant that if both inputs are good and our state is `0`, then we produce a `0`.
@@ -2136,3 +2137,15 @@ theorem FSM.not_eq (a : FSM arity) : (~~~ a) = composeUnaryAux FSM.not a := rfl
 theorem FSM.eval_not' (a : FSM arity) : (~~~ a).eval env = ~~~ (a.eval env) := by
   rw [FSM.not_eq]
   simp
+
+def FSM.ite {α : Type _} (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
+  (cond &&& t) ||| (~~~ cond &&& e)
+
+@[simp]
+theorem FSM.eval_ite_eq_decide {α : Type}
+    (cond t e : FSM α)
+    (env : α → BitStream) (i : Nat) :
+    (FSM.ite cond t e).eval env i =
+    if (cond.eval env i) then t.eval env i else e.eval env i := by
+  simp [FSM.ite]
+  by_cases hcond : cond.eval env i <;> simp [hcond]
