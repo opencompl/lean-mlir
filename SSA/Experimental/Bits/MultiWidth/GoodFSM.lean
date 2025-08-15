@@ -26,8 +26,8 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
     { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
 
 
-def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) {w : WidthExpr wcard} :
-    IsGoodNatFSM (mkWidthFSM wcard tcard (.ofDep w)) where
+def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
+    HNatFSMToBitstream (mkWidthFSM wcard tcard (.ofDep w)) where
   heq := by
     intros wenv fsmEnv henv
     induction w
@@ -67,7 +67,7 @@ theorem eval_fsmMsb_eq_decide
   (x : Term tctx w)
   (w : WidthExpr wcard)
   (xfsm : TermFSM wcard tcard (.ofDep x))
-  (hxfsm : IsGoodTermFSM xfsm)
+  (hxfsm : HTermFSMToBitStream xfsm)
   (wfsm : NatFSM wcard tcard (.ofDep w)) :
   (fsmMsb xfsm.toFsm wfsm.toFsm).eval env i =
   ((x.toBV tenv).signExtend (w.toNat wenv)).getLsbD i
@@ -84,7 +84,7 @@ theorem eval_fsmUnaryMax_eq_decide
   {wenv : WidthExpr.Env wcard}
   {fsmEnv : StateSpace wcard tcard → BitStream}
   (henv : HWidthEnv fsmEnv wenv)
-  (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+  (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
   ((fsmUnaryMax a.toFsm b.toFsm).eval fsmEnv) i =
     (i ≤ (max (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMax, composeBinaryAux'_eval, eq_iff_iff]
@@ -103,7 +103,7 @@ theorem eval_fsmUnaryMin_eq_decide
   {wenv : WidthExpr.Env wcard}
   {fsmEnv : StateSpace wcard tcard → BitStream}
   (henv : HWidthEnv fsmEnv wenv)
-  (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+  (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
   ((fsmUnaryMin a.toFsm b.toFsm).eval fsmEnv) i =
     (i ≤ (min (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMin, composeBinaryAux'_eval, _root_.FSM.eval_and, cond_true, cond_false,
@@ -123,7 +123,7 @@ theorem eval_fsmUnaryIncrK_eq_decide
   {wenv : WidthExpr.Env wcard}
   {fsmEnv : StateSpace wcard tcard → BitStream}
   (henv : HWidthEnv fsmEnv wenv)
-  (ha : IsGoodNatFSM a) :
+  (ha : HNatFSMToBitstream a) :
   ((fsmUnaryIncrK k a.toFsm).eval fsmEnv) = fun i =>
   decide (i ≤ (v.toNat wenv) + k) := by
   induction k
@@ -157,7 +157,7 @@ theorem eval_fsmUnaryUle_eq_decide
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
     ((fsmUnaryUle a.toFsm b.toFsm).eval fsmEnv) i =
     decide (min i (v.toNat wenv) ≤ min i (w.toNat wenv)) := by
   simp [fsmUnaryUle]
@@ -209,7 +209,7 @@ theorem eval_fsmUnaryUle_eq_lt_or_decide
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
     ((fsmUnaryUle a.toFsm b.toFsm).eval fsmEnv) i =
     decide (i ≤ min (v.toNat wenv) (w.toNat wenv) ∨ (v.toNat wenv) ≤ (w.toNat wenv)) := by
   rw [eval_fsmUnaryUle_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
@@ -242,7 +242,7 @@ theorem eval_FsmEqUpto_eq_decide
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
     ((fsmEqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) i =
     decide (min i (v.toNat wenv) = min i (w.toNat wenv)) := by
   simp [fsmEqUnaryUpto]
@@ -280,7 +280,7 @@ theorem eval_FsmEqUpto_eq_decide'
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
     ((fsmEqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) = fun i =>
     decide (min i (v.toNat wenv) = min i (w.toNat wenv)) := by
   ext i
@@ -328,7 +328,7 @@ theorem eval_fsmUnaryNeqUpto_eq_decide
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
     ((fsmUnaryNeqUpto a.toFsm b.toFsm).eval fsmEnv) i =
     (decide (min i (v.toNat wenv) ≠ min i (w.toNat wenv))) := by
   simp [fsmUnaryNeqUpto]
@@ -393,7 +393,7 @@ theorem eval_fsmUltUnary_eq_decide
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) (hb : IsGoodNatFSM b) :
+    (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
     ((fsmUltUnary a.toFsm b.toFsm).eval fsmEnv) i =
    (decide (min i (v.toNat wenv) < min i (w.toNat wenv))) := by
   simp [fsmUltUnary]
@@ -422,7 +422,7 @@ theorem fsmIndexUle_eval_eq
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
-    (ha : IsGoodNatFSM a) :
+    (ha : HNatFSMToBitstream a) :
     (fsmUnaryIndexUle a).eval fsmEnv i =
     decide (i ≤ v.toNat wenv) := by
   rw [fsmUnaryIndexUle]
@@ -438,22 +438,23 @@ theorem fsmZext_eval_eq
     (wnewFsm : NatFSM wcard tcard (.ofDep wnew))
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
-    (hwnew : IsGoodNatFSM wnewFsm)
+    (hwnew : HNatFSMToBitstream wnewFsm)
     {tctx : Term.Ctx wcard tcard}
     (tenv : Term.Ctx.Env tctx wenv)
     (t : Term tctx w)
     (tFsm : TermFSM wcard tcard (.ofDep t))
-    (ht : IsGoodTermFSM tFsm)
+    (ht : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
     (fsmZext tFsm.toFsm wnewFsm.toFsm).eval fsmEnv = fun i =>
-      (BitStream.zeroExtend (t.toBitstream tenv) (wnew.toNat wenv)) i := by
+      ((BitStream.ofBitVecZextMsb ((Term.zext t wnew).toBV tenv))) i := by
   ext i
   rw [fsmZext]
-  simp
+  simp only [FSM.eval_and', BitStream.and_eq, BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext,
+    BitStream.zeroExtend_eval_eq]
   rw [ht.heq (henv := htenv)]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
+  simp
   sorry
-
 
 /-- The inputs given to the sext fsm. -/
 inductive fsmSext.inputs
@@ -536,8 +537,10 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
 axiom AxSext {P : Prop} : P
 axiom AxAdd {P : Prop} : P
 
-def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard} {w : WidthExpr wcard} (t : Term tctx w)  :
-    (IsGoodTermFSM (mkTermFSM wcard tcard (.ofDep t))) := by
+def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
+    {w : WidthExpr wcard}
+      (t : Term tctx w)  :
+    (HTermFSMToBitStream (mkTermFSM wcard tcard (.ofDep t))) := by
   induction t
   case var v =>
     constructor
@@ -545,8 +548,8 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard} {w
     obtain htenv_term := htenv.heq_term
     obtain htenv_width := htenv.heq_width
     simp only [Nondep.Term.ofDep_var, mkTermFSM,
-      Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var', htenv_term]
-    sorry
+      Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var', htenv_term,
+      BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext, Term.toBV_var]
   case add v p q hp hq =>
     constructor
     intros wenv tenv fsmEnv htenv
@@ -556,10 +559,9 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard} {w
     constructor
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
-    sorry
-    -- rw [fsmZext_eval_eq (htenv := htenv)]
-    -- · apply IsGoodNatFSM_mkWidthFSM (w := wnew) (tcard := tcard)
-    -- · apply ha
+    let hwnew := IsGoodNatFSM_mkWidthFSM tcard wnew
+    rw [fsmZext_eval_eq (htenv := htenv) (wnew := wnew) (ht := ha) (hwnew := hwnew)]
+    simp
   case sext w' a b =>
     exact AxSext
 
@@ -599,42 +601,47 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx) :
-    IsGoodPredicateFSM (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
+    HPredFSMToBitStream (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
   case binRel rel a b =>
     rcases rel
     case eq =>
-    constructor
-    intros wenv tenv fsmEnv henv
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    -- fsmTermEqProof starts here.
-    simp [fsmTermEq]
-    have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
-    have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
-    rw [ha.heq (henv := henv)]
-    rw [hb.heq (henv := henv)]
-    simp [Predicate.toBitstream]
+      constructor
+      intros wenv tenv fsmEnv henv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      -- fsmTermEqProof starts here.
+      simp [fsmTermEq]
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      rw [ha.heq (henv := henv)]
+      rw [hb.heq (henv := henv)]
+      simp [Predicate.toProp]
+      constructor
+      · sorry
+      · sorry
   case or p q hp hq =>
     constructor
     intros wenv tenv fsmEnv henv
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    simp [Predicate.toProp]
     rw [hp.heq (henv := henv)]
     rw [hq.heq (henv := henv)]
-    simp [Predicate.toBitstream]
+    sorry
   case and p q hp hq =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     intros wenv tenv fsmEnv htenv
+    simp [Predicate.toProp]
     rw [hp.heq (henv := htenv)]
     rw [hq.heq (henv := htenv)]
-    simp [Predicate.toBitstream]
+    sorry
   case not p hp =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     intros wenv tenv fsmEnv htenv
+    simp [Predicate.toProp]
     rw [hp.heq (henv := htenv)]
-    simp [Predicate.toBitstream]
-
+    sorry
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :
@@ -660,7 +667,15 @@ theorem Predicate.toProp_of_toBitStream_eq_negOne
   (hBistream : ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv),
         (p.toBitstream tenv = BitStream.negOne)) :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv := by
-  exact AxGoodFSM
+  induction p
+  case and p q hp hq => sorry
+  case or p q hp hq => sorry
+  case binRel rel a b => sorry
+  case not q hq =>
+    intros wenv tenv
+    simp [toProp]
+    simp [Predicate.toBitstream] at hBistream
+    sorry
 
 end BitStream2BV
 
