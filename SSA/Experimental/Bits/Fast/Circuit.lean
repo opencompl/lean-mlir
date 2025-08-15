@@ -22,7 +22,7 @@ inductive Circuit (α : Type u) : Type u
   | tru : Circuit α
   | fals : Circuit α
   /-- `var b x` represents literal `x` if `b = true` or the negated literat `¬x` if `b = false` -/
-  | var : Bool → α → Circuit α
+  | var : (positive: Bool) → α → Circuit α
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
   | xor : Circuit α → Circuit α → Circuit α

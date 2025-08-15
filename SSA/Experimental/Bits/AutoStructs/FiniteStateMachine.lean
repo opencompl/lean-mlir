@@ -13,10 +13,10 @@ attribute [instance] FSM.i FSM.dec_eq
 variable {ar : Type} (p : FSM ar)
 
 def carryBV (x : ar → BitVec w) : p.State :=
-  p.carry (fun ar => BitStream.ofBitVec (x ar)) w
+  p.carry (fun ar => .ofBitVecSext (x ar)) w
 
 def evalBV {w} (x : ar → BitVec w) : BitVec w :=
-  BitVec.ofFn fun k => p.eval (fun ar => BitStream.ofBitVec (x ar)) k
+  BitVec.ofFn fun k => p.eval (fun ar => .ofBitVecSext (x ar)) k
 
 instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
     Fintype (cond b α β) := by
