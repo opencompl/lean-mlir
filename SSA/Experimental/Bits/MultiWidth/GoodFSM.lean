@@ -641,7 +641,17 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     intros wenv tenv fsmEnv htenv
     simp [Predicate.toProp]
     rw [hp.heq (henv := htenv)]
-    sorry
+    constructor
+    · intros h
+      -- obtain hx := congrFun h 1
+      sorry
+    · intros h
+      intros h'
+      have h0 := congrFun h 0
+      have h'0 := congrFun h' 0
+      simp at h0
+      simp at h'0
+      simp [h0] at h'0
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :
