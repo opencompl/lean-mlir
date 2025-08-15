@@ -880,22 +880,22 @@ def evalBvGeneralize : Tactic
 set_option linter.unusedTactic false
 
 
--- variable {x y z : BitVec 1}
--- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
+variable {x y z : BitVec 1}
+#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
 
--- variable {x y z : BitVec 8}
--- #generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.
--- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+variable {x y z : BitVec 8}
+#generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.
+#generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
--- variable {x y z : BitVec 11}
--- #generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
+variable {x y z : BitVec 11 }
+#generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
 
--- variable {x y z : BitVec 16}
--- #generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
+variable {x y z : BitVec 16}
+#generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
 
--- variable {x y z: BitVec 32}
--- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
--- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
+variable {x y z: BitVec 32}
+#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+#generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
 
 
 -- theorem addZero (x C1: BitVec 8) : x + C1 = C1 := by

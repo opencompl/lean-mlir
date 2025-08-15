@@ -471,7 +471,6 @@ def generalize [H : HydrableGeneralize parsedExpr genLogicalExpr genExpr]
 
     let mut constantAssignments := [parsedLogicalExprState.symVarToVal]
 
-    logInfo m! "OriginalWidth: {originalWidth}, targetWidth: {targetWidth}"
     if originalWidth > targetWidth then
       let newAssignments ← reduceWidth originalWidth targetWidth 1
 
