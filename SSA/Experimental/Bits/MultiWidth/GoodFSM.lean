@@ -671,22 +671,6 @@ variable
   {tctx : Term.Ctx wcard tcard}
     (p : Predicate tctx)
 
-/-- If the denotation as a bitstream is always zero,
-then so is the denotation as a proposition. -/
-theorem Predicate.toProp_of_toBitStream_eq_negOne
-  (hBistream : ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv),
-        (p.toBitstream tenv = BitStream.negOne)) :
-    ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv := by
-  induction p
-  case and p q hp hq => sorry
-  case or p q hp hq => sorry
-  case binRel rel a b => sorry
-  case not q hq =>
-    intros wenv tenv
-    simp [toProp]
-    simp [Predicate.toBitstream] at hBistream
-    sorry
-
 end BitStream2BV
 
 
@@ -714,10 +698,8 @@ theorem Predicate.toProp_of_KInductionCircuits
     (wenv : WidthExpr.Env wcard)
     (tenv : tctx.Env wenv) :
     p.toProp tenv := by
-  apply Predicate.toProp_of_toBitStream_eq_negOne
-  intros wenv tenv
   have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
-  rw [← hGoodPredicateFSM.heq (tenv := tenv)
+  rw [hGoodPredicateFSM.heq (tenv := tenv)
     (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv)]
   · subst _hpNondep _hfsm
     simp [mkPredicateFSMNondep] at circs
@@ -726,6 +708,5 @@ theorem Predicate.toProp_of_KInductionCircuits
       (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
       (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)
   · simp
-
 
 end MultiWidth
