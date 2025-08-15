@@ -589,11 +589,16 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
-    { toFsm := (fsmP.toFsm ||| fsmQ.toFsm) }
+    let fsmP := composeUnaryAux FSM.scanAnd fsmP.toFsm
+    let fsmQ := composeUnaryAux FSM.scanAnd fsmQ.toFsm
+    { toFsm := (fsmP ||| fsmQ) }
   | .and p q =>
     let fsmP := mkPredicateFSMAux wcard tcard p
     let fsmQ := mkPredicateFSMAux wcard tcard q
     { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
+
+theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
+  exact Function.ne_iff.mp h
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -626,8 +631,44 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     rw [hq.heq (henv := henv)]
     constructor
     · intros h
-      sorry
-    · sorry
+      ext i
+      simp only [BitStream.or_eq, BitStream.negOne_eq, Bool.or_eq_true]
+      rcases h with h | h
+      · left
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+        intros j hj
+        have := congrFun h j
+        simp at this
+        simp [this]
+      · right
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+        intros j hj
+        have := congrFun h j
+        simp at this
+        simp [this]
+    · intros h
+      by_contra h'
+      simp at h'
+      obtain ⟨h1, h2⟩ := h'
+      have h1 := Function.ne_iff.mp h1
+      have h2 := Function.ne_iff.mp h2
+      obtain ⟨i1, h1⟩ := h1
+      simp at h1
+      obtain ⟨i2, h2⟩ := h2
+      simp at h2
+      have := congrFun h (max i1 i2)
+      simp at this
+      rcases this with this | this
+      · rw [BitStream.scanAnd_eq_decide] at this
+        simp at this
+        specialize this i1 (by omega)
+        simp [this] at h1
+      · rw [BitStream.scanAnd_eq_decide] at this
+        simp at this
+        specialize this i2 (by omega)
+        simp [this] at h2
   case and p q hp hq =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]

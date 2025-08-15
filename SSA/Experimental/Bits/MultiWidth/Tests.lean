@@ -37,7 +37,7 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 
 theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
-  bv_multi_width (config := { niter := 0 })
+  bv_multi_width (config := { niter := 2 })
 
 /--
 error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
@@ -49,4 +49,4 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 -/
 #guard_msgs in theorem eg4 (u v w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
-  bv_multi_width (config := { niter := 0})
+  bv_multi_width (config := { niter := 2 })
