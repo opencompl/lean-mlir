@@ -17,7 +17,7 @@ namespace Generalize
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
 
-instance : HydrableInstances GenBVLogicalExpr GenBVExpr where
+instance : HydrableInstances GenBVLogicalExpr where
 
 instance : HydrableGetInputWidth where
   getWidth := getWidth
@@ -65,7 +65,7 @@ instance : HydrableExistsForall ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 instance : HydrableInitialParserState where
   initialParserState := defaultParsedExprState
 
-instance :  HydrableCheckTimeout ParsedBVExpr GenBVLogicalExpr GenBVExpr where
+instance :  HydrableCheckTimeout GenBVLogicalExpr where
 
 def shrinkParsedBVExpr (expr : ParsedBVExpr) (targetWidth : Nat) : MetaM ParsedBVExpr := do
   let bvExpr ← shrinkBVExpr expr.bvExpr targetWidth
@@ -145,7 +145,7 @@ elab "#reducewidth" expr:term " : " target:term : command =>
            let state := parsedBvExpr.state
            trace[Generalize] m! "bvExpr: {bvExpr}, state: {state}"
 
-           let initialGeneralizerState : GeneralizerState ParsedBVExpr GenBVLogicalExpr GenBVExpr :=
+           let initialGeneralizerState : GeneralizerState ParsedBVExpr GenBVLogicalExpr :=
                 { startTime                := 0
                 , widthId                  := 0
                 , timeout                  := 0
@@ -154,7 +154,6 @@ elab "#reducewidth" expr:term " : " target:term : command =>
                 , parsedLogicalExpr       := parsedBvExpr
                 , needsPreconditionsExprs   := []
                 , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
-                , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
                 }
 
            let results ← (reduceWidth width targetWidth 3).run' initialGeneralizerState
@@ -184,7 +183,7 @@ variable {x y z : BitVec 32}
 #reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
 #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
-def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (List (GenBVExpr w)) := do
+def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr  (List (GenBVExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
     let mut pruned : List (GenBVExpr w) := []
 
@@ -203,7 +202,7 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
 
     pure pruned
 
-def pruneEquivalentBVLogicalExprs(expressions : List GenBVLogicalExpr): GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (List GenBVLogicalExpr) := do
+def pruneEquivalentBVLogicalExprs(expressions : List GenBVLogicalExpr): GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (List GenBVLogicalExpr) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
     let mut pruned: List GenBVLogicalExpr:= []
     for expr in expressions do
@@ -226,7 +225,7 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 def wrap (bvExpr : GenBVExpr w) : BVExprWrapper := { bvExpr := bvExpr, width := w}
 
 def filterCandidatePredicates  (bvLogicalExpr: GenBVLogicalExpr) (preconditionCandidates visited: Std.HashSet GenBVLogicalExpr)
-                                                    : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (List GenBVLogicalExpr) :=
+                                                    : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (List GenBVLogicalExpr) :=
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
     let state ← get
     let widthId := state.widthId
@@ -301,12 +300,12 @@ def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List 
 set_option warn.sorry false in
 def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.HashMap (GenBVExpr w)  PreconditionSynthesisCacheValue)
     (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec)) (specialConstants : Std.HashMap (GenBVExpr w) BVExpr.PackedBitVec)
-    (ops : List (GenBVExpr w → GenBVExpr w → GenBVExpr w)) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Std.HashMap (GenBVExpr w) PreconditionSynthesisCacheValue) := do
+    (ops : List (GenBVExpr w → GenBVExpr w → GenBVExpr w)) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (Std.HashMap (GenBVExpr w) PreconditionSynthesisCacheValue) := do
     let mut currentCache := Std.HashMap.emptyWithCapacity
     let mut observationalEquivFilter : Std.HashSet String := Std.HashSet.emptyWithCapacity
 
     let evaluateCombinations (combos :  List (BVExpr.PackedBitVec × BVExpr.PackedBitVec)) (examples: List (Std.HashMap Nat BVExpr.PackedBitVec))
-            (op : GenBVExpr w → GenBVExpr w → GenBVExpr w) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (List (BitVec w)) := do
+            (op : GenBVExpr w → GenBVExpr w → GenBVExpr w) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr  (List (BitVec w)) := do
           let mut res : List (BitVec w) := []
           let mut index := 0
           for (lhs, rhs) in combos do
@@ -347,7 +346,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
     return currentCache
 
 def generatePreconditions (bvLogicalExpr: GenBVLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec))
-              (_numConjunctions: Nat) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Option GenBVLogicalExpr) := do
+              (_numConjunctions: Nat) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (Option GenBVLogicalExpr) := do
 
     let state ← get
     let widthId := state.widthId
@@ -472,7 +471,7 @@ def lhsSketchEnumeration  (lhsSketch: GenBVExpr w) (inputVars: List Nat) (lhsSym
 
 set_option warn.sorry false in
 def pruneConstantExprsSynthesisResults(exprSynthesisResults : ExpressionSynthesisResult)
-                            : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr ExpressionSynthesisResult := do
+                            : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr ExpressionSynthesisResult := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
           let state ← get
           let mut tempResults : Std.HashMap Nat (List (BVExprWrapper)) := Std.HashMap.emptyWithCapacity
@@ -493,7 +492,7 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : ExpressionSynthesi
 instance :  HydrableGetNegativeExamples ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 
 def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (BVExprWrapper)))
-                                            : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Option GenBVLogicalExpr) := do
+                                            : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (Option GenBVLogicalExpr) := do
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
     -- logInfo m! "Expression synthesis results : {exprSynthesisResults}"
     let combinations := productsList exprSynthesisResults.values
@@ -527,7 +526,7 @@ set_option warn.sorry false in
 abbrev EnumerativeSearchCache :=  Std.HashMap BVExprWrapper BVExpr.PackedBitVec
 def constantExprsEnumerationFromCache (previousLevelCache allLhsVars : EnumerativeSearchCache) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
                                           (ops: List (GenBVExpr w → GenBVExpr w → GenBVExpr w))
-                                          : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (ExpressionSynthesisResult × EnumerativeSearchCache) := do
+                                          : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (ExpressionSynthesisResult × EnumerativeSearchCache) := do
     let zero := BitVec.ofNat w 0
     let one := BitVec.ofNat w 1
     let minusOne := BitVec.ofInt w (-1)
@@ -630,7 +629,7 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
 
 set_option warn.sorry false in
 def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec))
-              : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Option GenBVLogicalExpr) :=  do
+              : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (Option GenBVLogicalExpr) :=  do
     let state ← get
     let parsedBVLogicalExpr := state.parsedLogicalExpr
     let processingWidth := state.processingWidth
@@ -714,7 +713,7 @@ instance :  HydrableSynthesizeWithNoPrecondition ParsedBVExpr GenBVLogicalExpr G
  synthesizeWithNoPrecondition := synthesizeWithNoPrecondition
 
 def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat)
-                                                : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr GenBVExpr (Option GenBVLogicalExpr) := do
+                                                : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (Option GenBVLogicalExpr) := do
   let state ← get
   let parsedBVLogicalExpr := state.parsedLogicalExpr
 
@@ -837,7 +836,7 @@ def prettifyAsTheorem (name: Name) (generalization: GenBVLogicalExpr) (displayNa
 instance : HydrablePrettifyAsTheorem GenBVLogicalExpr where
   prettifyAsTheorem := prettifyAsTheorem
 
-abbrev BVGeneralizerState := GeneralizerState ParsedBVExpr GenBVLogicalExpr GenBVExpr
+abbrev BVGeneralizerState := GeneralizerState ParsedBVExpr GenBVLogicalExpr
 def initialGeneralizerState (startTime timeout widthId targetWidth: Nat) (parsedLogicalExpr : ParsedBVLogicalExpr)
             : BVGeneralizerState := { startTime := startTime
                                     , widthId := widthId
@@ -847,7 +846,6 @@ def initialGeneralizerState (startTime timeout widthId targetWidth: Nat) (parsed
                                     , parsedLogicalExpr       := parsedLogicalExpr
                                     , needsPreconditionsExprs   := []
                                     , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
-                                    , constantExprsEnumerationCache  := Std.HashMap.emptyWithCapacity
                                     }
 
 instance : HydrableInitializeGeneralizerState ParsedBVExpr GenBVLogicalExpr GenBVExpr where
@@ -921,23 +919,23 @@ set_option linter.unusedTactic false
 --   sorry
 
 
-section Examples
-set_option warn.sorry false
-/--
-info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
--/
-#guard_msgs in
-theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
-  bv_generalize
-  sorry
+-- section Examples
+-- set_option warn.sorry false
+-- /--
+-- info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+-- -/
+-- #guard_msgs in
+-- theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
+--   bv_generalize
+--   sorry
 
 
-/--
-info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
--/
-#guard_msgs in
-theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
-  bv_generalize
-  sorry
+-- /--
+-- info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
+-- -/
+-- #guard_msgs in
+-- theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
+--   bv_generalize
+--   sorry
 
-end Examples
+-- end Examples
