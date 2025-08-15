@@ -594,9 +594,6 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmP := mkPredicateFSMAux wcard tcard p
     let fsmQ := mkPredicateFSMAux wcard tcard q
     { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
-  | .not p =>
-    let fsmP := mkPredicateFSMAux wcard tcard p
-    { toFsm := (~~~ fsmP.toFsm) }
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -617,7 +614,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       rw [hb.heq (henv := henv)]
       simp [Predicate.toProp]
       constructor
-      · sorry
+      · intros h
+        sorry
       · sorry
   case or p q hp hq =>
     constructor
@@ -626,7 +624,10 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     simp [Predicate.toProp]
     rw [hp.heq (henv := henv)]
     rw [hq.heq (henv := henv)]
-    sorry
+    constructor
+    · intros h
+      sorry
+    · sorry
   case and p q hp hq =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
@@ -634,24 +635,21 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     simp [Predicate.toProp]
     rw [hp.heq (henv := htenv)]
     rw [hq.heq (henv := htenv)]
-    sorry
-  case not p hp =>
-    constructor
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    intros wenv tenv fsmEnv htenv
-    simp [Predicate.toProp]
-    rw [hp.heq (henv := htenv)]
     constructor
     · intros h
-      -- obtain hx := congrFun h 1
-      sorry
+      obtain ⟨hpfsm, hqfsm⟩ := h
+      simp [hpfsm, hqfsm]
+      ext i; simp
     · intros h
-      intros h'
-      have h0 := congrFun h 0
-      have h'0 := congrFun h' 0
-      simp at h0
-      simp at h'0
-      simp [h0] at h'0
+      constructor
+      · ext i
+        have := congrFun h i
+        simp at this
+        simp [this]
+      · ext i
+        have := congrFun h i
+        simp at this
+        simp [this]
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :
