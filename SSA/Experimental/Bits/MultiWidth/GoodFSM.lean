@@ -454,7 +454,15 @@ theorem fsmZext_eval_eq
   rw [ht.heq (henv := htenv)]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
   simp
-  sorry
+  rcases i with rfl | i
+  · simp
+  · simp
+    by_cases hi : i < wnew.toNat wenv
+    · simp [hi]
+      intros hval
+      omega
+    · simp [hi]
+      omega
 
 /-- The inputs given to the sext fsm. -/
 inductive fsmSext.inputs
@@ -760,7 +768,6 @@ theorem Predicate.toProp_of_KInductionCircuits
 
 /--
 info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
- sorryAx,
  Classical.choice,
  MultiWidth.AxAdd,
  MultiWidth.AxSext,
