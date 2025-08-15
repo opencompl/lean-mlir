@@ -163,25 +163,25 @@ elab "#reducewidth" expr:term " : " target:term : command =>
             logInfo m! "Could not match"
       pure ()
 
-variable {x y z : BitVec 1}
-#reducewidth BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) : 8
+-- variable {x y z : BitVec 1}
+-- #reducewidth BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) : 8
 
-variable {x y z : BitVec 64}
-#reducewidth (x + 0 = x) : 4
-#reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
-#reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
-#reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
-#reducewidth x + 5 = x : 8
-#reducewidth x = 10 : 8
-#reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
+-- variable {x y z : BitVec 64}
+-- #reducewidth (x + 0 = x) : 4
+-- #reducewidth ((x <<< 8) >>> 16) <<< 8 = x &&& 0x00ffff00#64 : 4
+-- #reducewidth (x <<< 3  = y + (BitVec.ofNat 64 3)) : 4
+-- #reducewidth (x <<< 3) <<< 4 = x <<< 7 : 4
+-- #reducewidth x + 5 = x : 8
+-- #reducewidth x = 10 : 8
+-- #reducewidth (x + (-21)) >>> 1 = x >>> 1 : 4
 
-variable {x y z : BitVec 32}
-#reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
-#reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
-#reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 8
+-- variable {x y z : BitVec 32}
+-- #reducewidth (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32  : 8
+-- #reducewidth 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x : 8
+-- #reducewidth 8#32 - x &&& 7#32 = 0#32 - x &&& 7#32 : 8
 
-#reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
-#reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
+-- #reducewidth BitVec.sshiftRight' (x &&& ((BitVec.ofInt 32 (-1)) <<< (32 - y))) (BitVec.ofInt 32 32 - y) = BitVec.sshiftRight' x (BitVec.ofInt 32 32 - y) : 8
+-- #reducewidth x <<< 6#32 <<< 28#32 = 0#32 : 4
 
 def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr  (List (GenBVExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
@@ -522,8 +522,8 @@ def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (L
 
     return none
 
-set_option warn.sorry false in
 abbrev EnumerativeSearchCache :=  Std.HashMap BVExprWrapper BVExpr.PackedBitVec
+set_option warn.sorry false in
 def constantExprsEnumerationFromCache (previousLevelCache allLhsVars : EnumerativeSearchCache) (lhsSymVars rhsSymVars : Std.HashMap Nat BVExpr.PackedBitVec)
                                           (ops: List (GenBVExpr w → GenBVExpr w → GenBVExpr w))
                                           : GeneralizerStateM ParsedBVExpr GenBVLogicalExpr (ExpressionSynthesisResult × EnumerativeSearchCache) := do
@@ -540,10 +540,6 @@ def constantExprsEnumerationFromCache (previousLevelCache allLhsVars : Enumerati
     for (var, value) in rhsSymVars.toArray do
       let h : value.w = w := sorry
       rhsVarByValue := rhsVarByValue.insert (h ▸ value.bv) var
-
-
-    let state ← get
-   -- let h : state.processingWidth = w := sorry
 
     let mut currentCache := Std.HashMap.emptyWithCapacity
 
@@ -919,23 +915,23 @@ set_option linter.unusedTactic false
 --   sorry
 
 
--- section Examples
--- set_option warn.sorry false
--- /--
--- info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
--- -/
--- #guard_msgs in
--- theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
---   bv_generalize
---   sorry
+section Examples
+set_option warn.sorry false
+/--
+info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+-/
+#guard_msgs in
+theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
+  bv_generalize
+  sorry
 
 
--- /--
--- info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
--- -/
--- #guard_msgs in
--- theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
---   bv_generalize
---   sorry
+/--
+info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
+-/
+#guard_msgs in
+theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
+  bv_generalize
+  sorry
 
--- end Examples
+end Examples
