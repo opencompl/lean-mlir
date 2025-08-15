@@ -572,6 +572,16 @@ def constantExprsEnumerationFromCache (previousLevelCache allLhsVars : Enumerati
 partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec)
       (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr target.w)) := do
 
+    let updatePackedBVWidth (orig : BVExpr.PackedBitVec) (newWidth: Nat) : BVExpr.PackedBitVec :=
+        if orig.w < newWidth then
+            if orig.bv < 0 then
+             {bv := orig.bv.signExtend newWidth, w := newWidth}
+            else {bv := orig.bv.zeroExtend newWidth, w := newWidth}
+        else if orig.w > newWidth then
+            {bv := orig.bv.truncate newWidth, w := newWidth}
+        else
+            orig
+
     match depth with
       | 0 => return []
       | _ =>
@@ -590,37 +600,36 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
               if target.bv == 0 then
                 res := GenBVExpr.const 0 :: res
 
-              if h : target.w = constVal.w then
-                let constBv := h ▸ constVal.bv
+              let newConstVal := (updatePackedBVWidth constVal target.w)
+              let h : newConstVal.w = target.w := sorry
 
-                -- ~C = T
-                if BitVec.not constBv == target.bv then
-                  res := GenBVExpr.un BVUnOp.not newVar :: res
+              let constBv := h ▸ newConstVal.bv
+              -- ~C = T
+              if BitVec.not constBv == target.bv then
+                res := GenBVExpr.un BVUnOp.not newVar :: res
 
-                -- C + X = Target; New target = Target - X.
-                let addRes ← deductiveSearch expr constants {bv := target.bv - constBv} (depth-1) constId
-                res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
+              -- C + X = Target; New target = Target - X.
+              let addRes ← deductiveSearch expr constants {bv := target.bv - constBv} (depth-1) constId
+              res := res ++ addRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add resExpr)
 
-                -- C - X = Target
-                let subRes ← deductiveSearch expr constants {bv := constBv - target.bv} (depth-1) constId
-                res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
+              -- C - X = Target
+              let subRes ← deductiveSearch expr constants {bv := constBv - target.bv} (depth-1) constId
+              res := res ++ subRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.add (negate resExpr))
 
-                -- X - C = Target
-                let subRes' ← deductiveSearch expr constants {bv := target.bv + constBv}  (depth-1) constId
-                res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
+              -- X - C = Target
+              let subRes' ← deductiveSearch expr constants {bv := target.bv + constBv}  (depth-1) constId
+              res := res ++ subRes'.map (λ resExpr => GenBVExpr.bin (resExpr) BVBinOp.add (negate newVar))
 
-                -- X * C = Target
-                if (BitVec.srem target.bv constBv) == 0 && (BitVec.sdiv target.bv constBv != 0) then
-                  let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv target.bv constBv} (depth - 1) constId
-                  res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
+              -- X * C = Target
+              if (BitVec.srem target.bv constBv) == 0 && (BitVec.sdiv target.bv constBv != 0) then
+                let mulRes ← deductiveSearch expr constants {bv := BitVec.sdiv target.bv constBv} (depth - 1) constId
+                res := res ++ mulRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.mul resExpr)
 
-                -- C / X = Target
-                if target.bv != 0 && (BitVec.umod constBv target.bv) == 0 then
-                  let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constBv target.bv} (depth - 1) constId
-                  res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
+              -- C / X = Target
+              if target.bv != 0 && (BitVec.umod constBv target.bv) == 0 then
+                let divRes ← deductiveSearch expr constants {bv := BitVec.udiv constBv target.bv} (depth - 1) constId
+                res := res ++ divRes.map (λ resExpr => GenBVExpr.bin newVar BVBinOp.udiv resExpr)
 
-              else
-                    logInfo m! "Width mismatch for expr : {expr} and target: {target}"
             return res
 
 set_option warn.sorry false in
@@ -880,22 +889,22 @@ def evalBvGeneralize : Tactic
 set_option linter.unusedTactic false
 
 
-variable {x y z : BitVec 1}
-#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
+--variable {x y z : BitVec 1}
+-- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm
 
-variable {x y z : BitVec 8}
-#generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.
-#generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
+-- variable {x y z : BitVec 8}
+-- #generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.
+-- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
-variable {x y z : BitVec 11 }
-#generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
+--variable {x y z : BitVec 11 }
+-- #generalize BitVec.signExtend 47 (BitVec.zeroExtend 39 x) = BitVec.zeroExtend 47 x --gzext_proof#sext_zext_apint2_thm
 
-variable {x y z : BitVec 16}
-#generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
+-- variable {x y z : BitVec 16}
+-- #generalize BitVec.signExtend 64 (BitVec.zeroExtend 32 x) = BitVec.zeroExtend 64 x
 
-variable {x y z: BitVec 32}
-#generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
-#generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
+-- variable {x y z: BitVec 32}
+-- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
+-- #generalize BitVec.zeroExtend 32 (BitVec.zeroExtend 8 x) = BitVec.zeroExtend 32 x
 
 
 -- theorem addZero (x C1: BitVec 8) : x + C1 = C1 := by
