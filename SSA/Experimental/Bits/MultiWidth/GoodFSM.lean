@@ -605,7 +605,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     (p : MultiWidth.Predicate tctx) :
     HPredFSMToBitStream (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
-  case binRel rel a b =>
+  case binRel w rel a b =>
     rcases rel
     case eq =>
       constructor
@@ -620,8 +620,18 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       simp [Predicate.toProp]
       constructor
       · intros h
-        sorry
-      · sorry
+        simp at h
+        ext N
+        simp
+        rw [h]
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+      · intros h
+        apply BitVec.eq_of_getLsbD_eq
+        intros i hi
+        have := congrFun h (i + 1)
+        simp at this
+        simp [this]
   case or p q hp hq =>
     constructor
     intros wenv tenv fsmEnv henv
@@ -747,5 +757,15 @@ theorem Predicate.toProp_of_KInductionCircuits
       (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
       (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)
   · simp
+
+/--
+info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ MultiWidth.AxAdd,
+ MultiWidth.AxSext,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
 
 end MultiWidth

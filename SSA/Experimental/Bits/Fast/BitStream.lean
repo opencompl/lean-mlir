@@ -251,6 +251,24 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
         omega
 
 
+@[simp]
+theorem ofBitVecZext_inj (x y : BitVec w) :
+  (ofBitVecZext x = ofBitVecZext y) ↔ (x = y) := by
+  constructor
+  · intro h
+    apply BitVec.eq_of_getLsbD_eq
+    intros i hi
+    have := congrFun h i
+    simp [this]
+  · intros h
+    subst h
+    rfl
+
+@[simp]
+theorem ofBitVecZext_eq_getLsbD (x : BitVec w) :
+  ofBitVecZext x i = x.getLsbD i := rfl
+
+
 @[simp] theorem getElem_toBitVec (w : Nat) (x : BitStream) (i : Nat) (hi : i < w) :
     (x.toBitVec w)[i] = ((decide (i < w)) && x i) := by
   rw [← BitVec.getLsbD_eq_getElem]
