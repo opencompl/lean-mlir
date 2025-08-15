@@ -569,6 +569,7 @@ def constantExprsEnumerationFromCache (previousLevelCache allLhsVars : Enumerati
 
     pure (res, currentCache)
 
+set_option warn.sorry false in
 partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVExpr.PackedBitVec)
       (target: BVExpr.PackedBitVec) (depth: Nat) (parent: Nat) : TermElabM (List (GenBVExpr target.w)) := do
 
