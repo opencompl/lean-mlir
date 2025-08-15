@@ -199,7 +199,7 @@ class HydrableGenExpr (genExpr : Nat → Type) where
 Convert a `genLogicalExpr` to a Lean Expr. We invoke `BVDecide` on the Lean Expr in the `solve` function.
 -/
 class HydrableGenLogicalExprToExpr (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  genLogicalExprToExpr : ParsedLogicalExpr parsedExpr genLogicalExpr → genLogicalExpr → (widthExpr : Expr) → MetaM Expr
+  genLogicalExprToExpr : ParsedLogicalExpr parsedExpr genLogicalExpr → genLogicalExpr  → MetaM Expr
 
 /--
 Get the number of nodes of a `genLogicalexpr` for debugging.
@@ -221,7 +221,6 @@ def solve
     let state ← get
     let allVars := Std.HashMap.union state.parsedLogicalExpr.state.inputVarIdToVariable state.parsedLogicalExpr.state.symVarIdToVariable
 
-    let bitVecWidth := (mkNatLit state.processingWidth)
     let bitVecType (w : Nat) :=  mkApp (mkConst ``BitVec) (mkNatLit w)
 
     let nameTypeCombo : List (Name × Expr) := allVars.values.map (λ n => (n.name, bitVecType n.width))
@@ -229,7 +228,7 @@ def solve
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
         let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {H.getLogicalExprSize bvExpr})") do
-          let mut expr ← H.genLogicalExprToExpr state.parsedLogicalExpr bvExpr bitVecWidth
+          let mut expr ← H.genLogicalExprToExpr state.parsedLogicalExpr bvExpr
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here

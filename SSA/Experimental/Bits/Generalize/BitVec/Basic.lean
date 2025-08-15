@@ -283,6 +283,7 @@ def bvExprToSubstitutionValue (map: Std.HashMap Nat BVExprWrapper) : Std.HashMap
 def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
+set_option warn.sorry false in
 def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (SubstitutionValue GenBVExpr)) : GenBVExpr w :=
     match bvExpr with
     | .var idx =>
