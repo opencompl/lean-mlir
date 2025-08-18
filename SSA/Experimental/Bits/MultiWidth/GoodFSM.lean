@@ -88,6 +88,22 @@ theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
       simp [show min i (wold - 1) = wold - 1 by omega]
   · simp [hnew]
 
+-- | Found a cuter expression for 'getLsbD_signExtend'.
+theorem getLsbD_signExtend_eq' {wold : Nat} (x : BitVec wold) {wnew : Nat} :
+  (x.signExtend wnew).getLsbD i =
+    (x.getLsbD (min i (wold - 1)) && decide (i < wnew))
+      := by
+  simp [BitVec.getLsbD_signExtend]
+  rw [BitVec.msb_eq_getLsbD_last]
+  by_cases hnew : i < wnew
+  · simp [hnew]
+    by_cases hi : i < wold
+    · simp [hi]
+      simp [show min i (wold - 1) = i by omega]
+    · simp [hi]
+      simp [show min i (wold - 1) = wold - 1 by omega]
+  · simp [hnew]
+
 theorem eval_fsmMsb_eq_decide
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
