@@ -253,6 +253,23 @@ def Term.width (t : Term) : WidthExpr :=
   | .zext _a wnew => wnew
   | .sext _a wnew => wnew
 
+/-- The width of the non-dependently typed 't' equals the width 'w',
+converting into the non-dependent version. -/
+@[simp]
+theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat}
+    {w : MultiWidth.WidthExpr wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (t : MultiWidth.Term tctx w)
+    : (Term.ofDep t).width = (.ofDep w) := by
+  induction t
+  case var v => simp [Term.width]
+  case add v a b ha hb =>
+    simp [Term.ofDep, Term.width, ha]
+  case zext a wnew =>
+    simp [Term.ofDep, Term.width]
+  case sext a wnew =>
+    simp [Term.ofDep, Term.width]
+
 def Term.wcard (t : Term) : Nat := t.width.wcard
 
 def Term.tcard (t : Term) : Nat :=

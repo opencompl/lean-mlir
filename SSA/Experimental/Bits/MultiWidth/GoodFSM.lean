@@ -152,37 +152,6 @@ theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
 def fsmSext (x wold wnew : FSM α) : FSM α :=
   (fsmMsb x wold) &&& wnew
 
-theorem eval_fsmSext_eq {wenv : WidthExpr.Env wcard}
-    {fsmEnv : StateSpace wcard tcard → BitStream}
-    {tctx : Term.Ctx wcard tcard}
-    (tenv : Term.Ctx.Env tctx wenv)
-    (wold wnew : WidthExpr wcard)
-    (x : Term tctx wold)
-    (xfsm : TermFSM wcard tcard (.ofDep x))
-    (hxfsm : HTermFSMToBitStream xfsm)
-    (woldfsm : NatFSM wcard tcard (.ofDep wold))
-    (wnewfsm : NatFSM wcard tcard (.ofDep wnew))
-    (hwoldfsm : HNatFSMToBitstream woldfsm)
-    (hwnewfsm : HNatFSMToBitstream wnewfsm)
-    (htenv : HTermEnv fsmEnv tenv) :
-    (fsmSext xfsm.toFsm woldfsm.toFsm wnewfsm.toFsm).eval fsmEnv =
-      BitStream.ofBitVecZextMsb ((x.sext wnew).toBV tenv) := by
-  simp [fsmSext]
-  rw [eval_fsmMsb_eq (xfsm := xfsm) (wfsm := woldfsm) (htenv := htenv)]
-  ext i
-  rcases i with rfl | i
-  · simp
-  · simp
-    rw [getLsbD_signExtend_eq]
-    by_cases hiold : i + 1 ≤ wold.toNat wenv
-    · simp [hiold]
-      sorry
-    · simp at hiold
-      simp [show min (i + 1) (wold.toNat wenv) = wold.toNat wenv by omega]
-      simp [show min (i) (wold.toNat wenv - 1) = wold.toNat wenv - 1 by omega]
-      sorry
-
-
 def fsmUnaryMax (a b : FSM arity) : FSM arity :=
   composeBinaryAux' FSM.or a b
 
@@ -659,7 +628,6 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
 
-axiom AxSext {P : Prop} : P
 axiom AxAdd {P : Prop} : P
 
 def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
@@ -696,12 +664,15 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
   case sext wold a wnew ha =>
     constructor
     intros wenv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
     let hwold := IsGoodNatFSM_mkWidthFSM tcard wold
     let hwnew := IsGoodNatFSM_mkWidthFSM tcard wnew
-    sorry
-
-
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    -- | TODO: why does this not unify?
+    rw [MultiWidth.Nondep.Term.width_ofDep_eq_ofDep]
+    rw [fsmSext_eval_eq (htenv := htenv) (tenv := tenv)
+      (wold := wold) (wnew := wnew) (t := a) (htfsm := ha)
+      (hwnew := hwnew) (hwold := hwold)]
+    simp
 
 def fsmTermEq {wcard tcard : Nat}
   {a b : Nondep.Term}
@@ -898,7 +869,6 @@ theorem Predicate.toProp_of_KInductionCircuits
 info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
  Classical.choice,
  MultiWidth.AxAdd,
- MultiWidth.AxSext,
  Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
