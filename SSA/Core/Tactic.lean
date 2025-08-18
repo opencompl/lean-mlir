@@ -6,7 +6,9 @@ import SSA.Core.Util
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Core.Tactic.TacBench
 import SSA.Core.Tactic.SimpSet
+
 import Qq
+import Mathlib.Tactic.FinCases
 import Lean.Meta.KAbstract
 import Lean.Elab.Tactic.ElabTerm
 
@@ -19,7 +21,7 @@ variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [Law
 
 namespace SSA
 
-open Ctxt (Var Valuation DerivedCtxt)
+open Ctxt (Var Valuation DerivedCtxt Hom)
 
 open Lean Elab Tactic Meta
 
@@ -49,6 +51,11 @@ attribute [simp_denote]
   Id.pure_eq Id.bind_eq id_eq
   pure_bind
   cast_eq
+  -- Valuation append & accesses
+  Valuation.append_nil Valuation.append_cons
+  Valuation.snoc_last Valuation.snoc_toSnoc
+  /- Misc-/
+  and_true true_and implies_true
 
 /-!
 NOTE (Here Be Dragons 🐉):
