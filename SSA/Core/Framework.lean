@@ -1569,3 +1569,28 @@ def Expr.ty : Expr d Γ eff [t] → d.Ty := fun _ => t
 def Expr.ctxt : Expr d Γ eff [t] → Ctxt d.Ty := fun _ => Γ
 
 end TypeProjections
+
+/-!
+## Compatibility Namespaces
+-/
+section Compat
+
+/-!
+`open LeanMLIR.SingleReturnCompat` will bring an alias for `Com` & `Expr` into
+scope which has only a single return type.
+-/
+namespace LeanMLIR.SingleReturnCompat
+variable (d) [DialectSignature d]
+
+nonrec def Com  : Ctxt d.Ty → EffectKind → d.Ty → Type := (Com d · · [·])
+nonrec def Expr : Ctxt d.Ty → EffectKind → d.Ty → Type := (Expr d · · [·])
+
+variable {d} {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
+
+nonrec def Com.ret : Γ.Var t → Com d Γ eff t := (Com.ret <| · ::ₕ .nil)
+nonrec def Com.var : Expr d Γ eff t → Com d (Γ.snoc t) eff β → Com d Γ eff β :=
+  (Com.var · ·)
+
+end LeanMLIR.SingleReturnCompat
+
+end Compat
