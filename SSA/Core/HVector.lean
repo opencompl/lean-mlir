@@ -195,7 +195,12 @@ syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
 @[simp]
 theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :
-   (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e := by
+   (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e :=
+  rfl
+
+@[simp]
+theorem cons_get_succ {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} {i : Fin as.length} :
+   (HVector.cons e vec).get (i.succ) = vec.get i :=
   rfl
 
 @[ext] theorem ext {xs ys : HVector A as}
@@ -240,9 +245,33 @@ def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]
   induction as
   case nil => exact i.elim0
   case cons ih =>
-    sorry
+    cases i using Fin.succRec
+    · rfl
+    · simp [ofFn, ih]
 
 end OfFn
+
+/-!
+## Append
+-/
+section Append
+
+def append {as bs} : HVector A as → HVector A bs → HVector A (as ++ bs)
+  | .nil, ys => ys
+  | x ::ₕ xs, ys => x ::ₕ (append xs ys)
+
+instance : HAppend (HVector A as) (HVector A bs) (HVector A (as ++ bs)) where
+  hAppend := append
+
+variable {bs} {xs : HVector A as} {ys : HVector A bs}
+
+@[simp] theorem append_eq : append xs ys = xs ++ ys := rfl
+
+@[simp] theorem nil_append : nil (f:=A) ++ ys = ys := rfl
+@[simp] theorem cons_append : (x ::ₕ xs) ++ ys = (x ::ₕ (xs ++ ys)) := rfl
+
+end Append
+
 /-
   # ToExpr and other Meta helpers
 -/
