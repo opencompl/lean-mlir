@@ -908,7 +908,9 @@ lemma Expr.changeVars_castCodomain (e : Expr d Γ eff t)
 
 @[simp] lemma Com.changeVars_id (c : Com d Γ eff t) :
     c.changeVars .id = c := by
-  induction c <;> simp [changeVars, *]
+  induction c
+  · simp
+  · simpa
 
 /-!
 ## FlatCom
