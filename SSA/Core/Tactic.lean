@@ -140,6 +140,60 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
       proof? := some proof
     }
 
+section SimpValuationApply
+
+private partial def valuationElements (e : Expr) (elems : Array Expr := #[]) : Option (Array Expr) :=
+  match_expr e with
+  | Valuation.snoc _Ty _instTyDenote _Γ _t V x => valuationElements V (elems.push x)
+  | Valuation.nil _Ty _instTyDenote => some elems
+  | _ => none
+
+private partial def varToIndex (e : Expr) : Option Nat :=
+  match_expr e with
+  | Var.mk _Ty _Γ _t i _hi      => Expr.numeral? i
+  | Subtype.mk _α _p i _hi      => Expr.numeral? i
+  | Var.last _Ty _Γ _t          => some 0
+  | Var.toSnoc _Ty _Γ _t _t' v  => (· + 1) <$> varToIndex v
+  | _                           => none
+
+/--
+`simpValuationApply` rewrites applications of *fully-concrete* valuations to
+*fully-concrete* variables.
+-/
+dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
+  let mkApp2 V _t v := e
+    | return .continue
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying: {e}") <| do
+    let some Velems := valuationElements V
+      | trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expected a fully concrete valuation, but found: {V}"
+        return .continue
+    let some i := varToIndex v
+      | trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expected a fully concrete variable, but found: {v}"
+        return .continue
+
+    if let some x := Velems[i]? then
+      return .visit x
+    else
+      trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expression seems to be mallformed, as the variable:\
+        \n\t{v}\n\
+        reduced to index {i}, but this is out of range for the elements:\n\t{Velems}\n\
+        derived from the valuation:\n\t{V}"
+      Meta.check e
+      return .continue
+
+end SimpValuationApply
+
+
+/-!
+WORKAROUND: Simplifying the semantics can yields equalities of the form:
+  `@Eq (Id <| HVector _ _) (x ::ₕ xs) (y ::ₕ ys)`
+The `Id _` in the type of the equality somehow blocks the injectivity lemma
+for `HVector.cons` from applying, so we first have to clean up the equality.
+-/
+@[simp_denote] lemma eq_id_iff (x y : α) : @Eq (Id α) x y ↔ x = y := by rfl
+attribute [simp_denote] HVector.cons.injEq
+
+
 open Lean.Parser.Tactic (location)
 /--
 `simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
