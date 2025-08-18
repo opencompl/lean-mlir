@@ -207,7 +207,6 @@ def ofBitVecSextMsb {w} (x : BitVec w) : BitStream :=
 def ofBitVecZextMsb {w} (x : BitVec w) : BitStream :=
   fun i => (x.zeroExtend i).msb
 
-
 @[simp]
 theorem ofBitVecZextMsb_eq_concat_ofBitVecZext (x : BitVec w) :
     ofBitVecZextMsb x = (ofBitVecZext x).concat false := by
@@ -232,6 +231,22 @@ theorem ofBitVecSextMsb_eq_concat_ofBitVec (x : BitVec w) :
 @[simp]
 theorem ofBitVecZext_eq_getLsbD (x : BitVec w) (i : Nat) :
   ofBitVecZext x i = x.getLsbD i := rfl
+
+/-- rewrite 'ofBitVecZextMsb' in terms of 'ofBitVecSext'. -/
+theorem ofBitVecZextMsb_eq_ofBitVecZext_mul_two_zeroExtend (x : BitVec w)
+    (i : Nat) (hi : i ≤ w) :
+    (BitStream.ofBitVecZextMsb x i) =
+    ((BitStream.ofBitVecSext ((x.zeroExtend (w + 1)) <<< 1)) i) := by
+  simp [ofBitVecSext]
+  rcases i with rfl | i
+  · simp
+  · simp [show i < w + 1 by omega]
+    rw [BitVec.getMsbD_eq_getLsbD]
+    simp [show 1 + w - (w + 1) = 0 by omega]
+    by_cases hi : i < w
+    · simp [hi]
+    · simp [hi]
+      omega
 
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
