@@ -545,7 +545,7 @@ section FindIndex
 
 /-- Starting from index 'ix', walking backward, find the largest index
 where the bitstream has value 'v'. -/
-def findLargestIxOf (x : BitStream) (ix : Nat) (value : Bool): Option Nat :=
+def findLargestIxOf (x : BitStream) (ix : Nat) (value : Bool) : Option Nat :=
   if x ix = value then some ix
   else
     match ix with
@@ -553,115 +553,89 @@ def findLargestIxOf (x : BitStream) (ix : Nat) (value : Bool): Option Nat :=
     | ix' + 1 => findLargestIxOf x ix' value
 
 /--
-if `findLargestIxOf` returns a `some ix`,
-then `x ix = value`.
+Characgterize the results of 'findLargestIxOf'.
 -/
-theorem findLargestIxOf.eq_of_eq_some (x : BitStream) (n ix : Nat) (value : Bool) :
-    findLargestIxOf x n value = some ix →
-    x ix = value := by
-  induction n generalizing ix
+theorem findLargestIxOf.eq_iff (x : BitStream) (n : Nat) (value : Bool) :
+    (findLargestIxOf x n value = some ix ↔
+    (ix ≤ n ∧ x ix = value ∧
+      -- it's the larget 'ix < j ≤ n' with value 'value'.
+      (∀ (j : Nat), ix < j → j ≤ n → x j ≠ value))) ∧
+    (findLargestIxOf x n value = none ↔
+      ∀ (j : Nat), j ≤ n → x j ≠ value) := by
+  induction n
   case zero =>
     simp [findLargestIxOf]
-    intros hx hi
-    subst hi
-    simp [hx]
-  case succ j hind =>
-    simp [findLargestIxOf]
-    intros hj
-    by_cases hx : x (j + 1) = value
-    · simp [hx] at hj ⊢
-      subst hj
+    constructor
+    · intros h
+      obtain ⟨hx, hix⟩ := h
+      subst hix
       simp [hx]
-    · simp [hx] at hj
-      apply hind
-      exact hj
-
-/--
-if `findLargestIxOf` returns a `some ix`,
-then `x ix = value`.
--/
-theorem findLargestIxOf.neq_value_of_eq_some (x : BitStream) (n ix : Nat) (value : Bool) :
-    findLargestIxOf x n value = some ix →
-    ∀ j, ix < j → j ≤ n → x j ≠ value := by
-  induction n
-  case zero =>
-    simp [findLargestIxOf]
-    intros hx0 hix ix' hix'Lt hix'Eq
-    subst hix
-    omega
-  case succ n hn =>
-    simp [findLargestIxOf]
-    intros h
-    intros j hjLt hjLe
-    split at h
-    case isTrue hsplit =>
-      simp at h
+      intros ixl hIxlLt hIxlEq
+      subst hIxlEq
       omega
-    case isFalse hsplit =>
-      by_cases hjn : j = n + 1
-      · simp [hjn]
-        exact hsplit
-      · apply hn
-        · exact h
-        · omega
-        · omega
-/--
-if `findLargestIxOf` returns a `none`,
-then `x ix ≠ value` for all `ix ≤ n`.
--/
-theorem findLargestIxOf.eq_of_eq_none (x : BitStream) (n : Nat) (value : Bool) :
-  findLargestIxOf x n value = none →
-  ∀ (j : Nat), j ≤ n → x j ≠ value := by
-  intros hnone
-  induction n
-  case zero =>
-    simp [findLargestIxOf] at hnone
-    intros j hj
-    have : j = 0 := by omega
-    subst this
-    simp [hnone]
-  case succ n hind =>
-    intros k hk
-    simp [findLargestIxOf] at hnone
-    split at hnone
-    case isTrue hcontra =>
-      simp at hnone
-    case isFalse hrec =>
-      simp [hnone] at hind
-      by_cases hk : k = n + 1
-      · simp [hk, hrec]
-      · apply hind
-        omega
-
-theorem findLargestIxOf.eq_some_of
-    (ix : ℕ)
-    (x : BitStream)
-    (n : ℕ)
-    (value : Bool)
-    (hEqValue : x ix = value)
-    (hNeqValue: ∀ (ix' : ℕ), ix < ix' → ix' ≤ n → x ix' ≠ value) :
-    x.findLargestIxOf n value = some ix := by
-  induction n generalizing ix
-  case zero =>
+    · intros h
+      obtain ⟨hixEq, hXIxEq, hixLt⟩ := h
+      subst hixEq
+      simp [hXIxEq]
+  case succ n ihn =>
+    obtain ⟨ihnSome, ihnNone⟩ := ihn
     simp [findLargestIxOf]
-    sorry
-  case succ n' hn =>
-    sorry
-
-theorem findLargestIxOf.eq_some_iff (x : BitStream) (n : Nat) (value : Bool) :
-    findLargestIxOf x n value = some ix ↔
-    (x ix = value ∧ (∀ (ix' : Nat), ix < ix' → ix' ≤ n → x ix' ≠ value)) := by
-  constructor
-  · intros heq
-    simp [findLargestIxOf.eq_of_eq_some _ _ _ _ heq]
-    intros j hjLt hjLe
-    apply findLargestIxOf.neq_value_of_eq_some x n ix value heq <;> omega
-  · intros heq
-    obtain ⟨h1, h2⟩ := heq
-    apply findLargestIxOf.eq_some_of
-    · apply h1
-    · apply h2
-
+    by_cases hxEq : x (n + 1) = value
+    · simp [hxEq]
+      constructor
+      · constructor
+        · intros hIxEq
+          subst hIxEq
+          simp [hxEq]
+          intros ixl hixl1 hixl2
+          omega
+        · intros hIx
+          have ⟨hIx1, hIx2, hIx3⟩ := hIx
+          by_cases hIx : ix = n + 1
+          · subst hIx
+            omega
+          · specialize hIx3 (n + 1) (by omega) (by omega)
+            simp [hxEq] at hIx3
+      · exists n + 1
+    · simp [hxEq]
+      constructor
+      · constructor
+        · intros hSome
+          obtain ⟨hSome1, hSome2, hSome3⟩ := ihnSome.mp hSome
+          simp [show ix ≤ n + 1 by omega, hSome2]
+          intros k hkLt hkLe
+          by_cases hk : k = n + 1
+          · subst hk
+            omega
+          · apply hSome3
+            · omega
+            · omega
+        · intros hSome
+          have ⟨hSome1, hSome2, hSome3⟩ := hSome
+          have hIxNe : ix ≠ n + 1 := by
+            intros hIxEq
+            subst hIxEq
+            simp [hSome2] at hxEq
+          apply ihnSome.mpr
+          simp [show ix ≤ n by omega, hSome2]
+          intros k hkLt hkLe
+          apply hSome3
+          · omega
+          · omega
+      · constructor
+        · intros hNone
+          have := ihnNone.mp hNone
+          intros k hk
+          by_cases hkEq : k = n + 1
+          · subst hkEq
+            simp [hxEq]
+          · apply this
+            omega
+        · intros hNone
+          apply ihnNone.mpr
+          intros h Hj
+          apply hNone
+          omega
 
 /-! # Addition, Subtraction, Negation -/
 section Arith
