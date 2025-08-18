@@ -21,6 +21,7 @@ variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [Law
 
 namespace SSA
 
+open LeanMLIR
 open Ctxt (Var Valuation DerivedCtxt Hom)
 
 open Lean Elab Tactic Meta
@@ -183,8 +184,9 @@ dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
 
 end SimpValuationApply
 
-
 /-!
+### HVector.cons injectivity
+
 WORKAROUND: Simplifying the semantics can yields equalities of the form:
   `@Eq (Id <| HVector _ _) (x ::ₕ xs) (y ::ₕ ys)`
 The `Id _` in the type of the equality somehow blocks the injectivity lemma
@@ -193,6 +195,15 @@ for `HVector.cons` from applying, so we first have to clean up the equality.
 @[simp_denote] lemma eq_id_iff (x y : α) : @Eq (Id α) x y ↔ x = y := by rfl
 attribute [simp_denote] HVector.cons.injEq
 
+/-! ### Compatibility Wrappers -/
+attribute [simp_denote]
+  SingleReturnCompat.Com SingleReturnCompat.Expr
+  SingleReturnCompat.Com.ret SingleReturnCompat.Com.var
+
+
+/-!
+## Simp_peephole
+-/
 
 open Lean.Parser.Tactic (location)
 /--
