@@ -593,7 +593,7 @@ theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType
 
 @[simp]
 theorem Valuation.snoc_last {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (s.snoc x) (Ctxt.Var.last _ _) = x :=
+    (s.snoc x : no_index _) (Ctxt.Var.last _ _) = x :=
   rfl
 
 @[simp]
