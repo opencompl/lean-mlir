@@ -1139,8 +1139,7 @@ def repeatBit : FSM Unit where
   nextStateCirc := fun () => (.var true <| .inl ()) ||| (.var true <| .inr ())
 
 /--
-(xval, control)
-produce the latch value immediately when 'control = true'.
+(xval:false, control:true) produce the latch value immediately when 'control = true'.
 -/
 def latchImmediate (initVal : Bool) : FSM Bool where
   α := Unit
@@ -1241,15 +1240,15 @@ def composeBinaryAux
 -- TODO: replace 'composeBinaryAux' with 'composeBinaryAux'.
 def composeBinaryAux'
     (p : FSM Bool)
-    (q₁ : FSM α)
-    (q₂ : FSM α) :
+    (qtrue : FSM α)
+    (qfalse : FSM α) :
     FSM α :=
   p.compose (α)
     (λ _ => α)
     (λ _ i => i)
     (λ b => match b with
-      | true => q₁
-      | false => q₂)
+      | true => qtrue
+      | false => qfalse)
 
 def composeTernaryAux' (p : FSM (Fin 3)) (q₀ q₁ q₂ : FSM α) : FSM α :=
   p.compose (α)

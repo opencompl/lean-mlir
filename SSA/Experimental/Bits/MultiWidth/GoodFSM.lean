@@ -68,7 +68,7 @@ the MSB finite state machine
 returns the 'msb' upto the current width.
 -/
 def fsmMsb (x w : FSM α) : FSM α :=
-  composeBinaryAux' (FSM.latchImmediate false) x w
+  composeBinaryAux' (FSM.latchImmediate false) (qfalse := x) (qtrue := w)
 
 theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
@@ -80,12 +80,9 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
     (hxfsm : HTermFSMToBitStream xfsm)
     (wfsm : NatFSM wcard tcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
-    (htenv : HTermEnv fsmEnv tenv)
-
-    :
-    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv =
-      (BitStream.concat false
-        (fun i => ((x.toBV tenv).getLsbD (min i (w.toNat wenv))))) := by
+    (htenv : HTermEnv fsmEnv tenv) :
+    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv = (fun i =>
+      BitStream.ofBitVecZextMsb (x.toBV tenv) (min i (w.toNat wenv))) := by
   simp [fsmMsb]
   have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
   have tfsmEval := hxfsm.heq (henv := htenv)
@@ -93,54 +90,46 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
   rcases i with rfl | i
   · simp
     intros hxFsmEq
-    simp [tfsmEval] at hxFsmEq
+    simp [tfsmEval]
   · simp
     rw [tfsmEval, wfsmEval]
     simp
     induction i
     case zero =>
       simp
-      have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
-      have tfsmEval := hxfsm.heq (henv := htenv)
-      intros hXEq
-      apply Nat.le_iff_lt_add_one .. |>.mpr
-      simp only [lt_add_iff_pos_left]
-      apply BitVec.lt_of_getLsbD hXEq
+      by_cases hw : 1 ≤ w.toNat wenv
+      · simp [hw]
+      · simp at hw
+        simp [hw]
     case succ i hi =>
       simp
       by_cases hxiSucc : (Term.toBV tenv x).getLsbD (i + 1) = true
       · simp [hxiSucc]
-        by_cases hiwLe : i + 2 ≤ w.toNat wenv
+        by_cases hiwLe : i + 1 + 1  ≤ w.toNat wenv
         · simp [hiwLe]
-          simp [show min (i + 1) (w.toNat wenv) = i + 1 by omega]
-          exact hxiSucc
+          simp [hxiSucc]
         · simp [hiwLe]
+          simp at hiwLe
+          have hiwLt := BitVec.lt_of_getLsbD hxiSucc
+          omega
+      · simp at hxiSucc
+        simp [hxiSucc]
+        rw [hi]
+        clear hi
+        generalize hbv : (Term.toBV tenv x) = bv
+        rw [hbv] at hxiSucc
+        by_cases hiSucc : i + 1 ≤ w.toNat wenv
+        · simp [hiSucc]
+          by_cases hiSuccSucc : i + 1 + 1 ≤ w.toNat wenv
+          · simp [hiSuccSucc]
+            rw [hxiSucc]
+          · simp at hiSuccSucc
+            have hwEq : w.toNat wenv = i + 1 := by omega
+            simp [hwEq]
+        · simp at hiSucc
+          simp [show ¬ i + 1 + 1 ≤ w.toNat wenv by omega]
           simp [show min (i + 1) (w.toNat wenv) = w.toNat wenv by omega]
-      · simp [hxiSucc]
-        by_cases hxi : (Term.toBV tenv x).getLsbD i = true
-        · simp [hxi]
-          simp [hxi] at hi
-          by_cases hiwLe : i + 1 ≤ w.toNat wenv
-          · simp [hiwLe]
-            simp [hiwLe] at hi
-            simp [show min i (w.toNat wenv) = i by omega] at hi
-            sorry
-          · simp [hiwLe]
-            sorry
-        · simp [hxi]
-          simp [hxi] at hi
-          rw [hi]
-          by_cases hiwLeSucc : i + 1 ≤ w.toNat wenv
-          · simp [hiwLeSucc]
-            by_cases hiwLe : i ≤ w.toNat wenv
-            · simp [hiwLe]
-              simp at hxi hxiSucc
-              simp [hxi, hxiSucc]
-            · simp [show min i (w.toNat wenv) = w.toNat wenv by omega]
-              apply BitVec.getLsbD_of_ge
-              omega
-          · simp [show min (i + 1) (w.toNat wenv) = w.toNat wenv by omega]
-            simp [show min (i) (w.toNat wenv) = w.toNat wenv by omega]
+          simp [show min (i + 1 + 1) (w.toNat wenv) = w.toNat wenv by omega]
 
 
 -- | Found a cuter expression for 'getLsbD_signExtend'.
