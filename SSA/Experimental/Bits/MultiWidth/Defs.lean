@@ -6,7 +6,32 @@ import Lean
 
 import Std.Tactic.BVDecide
 
+
 namespace MultiWidth
+
+inductive StateSpace (wcard tcard : Nat)
+| widthVar (v : Fin wcard)
+| termVar (v : Fin tcard)
+deriving DecidableEq, Repr, Hashable
+
+instance : Fintype (StateSpace wcard tcard) where
+  elems :=
+    let ws : Finset (Fin wcard) := Finset.univ
+    let vs : Finset (Fin tcard) := Finset.univ
+    let ws := ws.image StateSpace.widthVar
+    let vs := vs.image StateSpace.termVar
+    ws ∪ vs
+  complete := by
+    simp only [Finset.mem_union, Finset.mem_image, Finset.mem_univ, true_and]
+    intros x
+    rcases x with x | x  <;> simp
+
+
+/-
+op
+op.toBV : Nat → BV
+op.toBitStream : BitStream
+-/
 
 inductive WidthExpr (wcard : Nat) : Type
 | var : (v : Fin wcard) → WidthExpr wcard
@@ -33,6 +58,16 @@ def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
 def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .var v => env v
+
+
+def WidthExpr.toBitStream (e : WidthExpr wcard)
+  (bsEnv : StateSpace wcard tcard → BitStream) : BitStream :=
+  match e with
+  | .var v => bsEnv (StateSpace.widthVar v)
+
+@[simp]
+def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.var v) env = env v := rfl
 
 inductive NatPredicate (wcard : Nat) : Type
 | eq : WidthExpr wcard → WidthExpr wcard → NatPredicate wcard
@@ -103,6 +138,25 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
 | .zext a v => (a.toBV tenv).zeroExtend (v.toNat wenv)
 | .sext a v => (a.toBV tenv).signExtend (v.toNat wenv)
 
+@[simp]
+theorem Term.toBV_var {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) :
+  Term.toBV tenv (.var v) = tenv v := rfl
+
+@[simp]
+theorem Term.toBV_zext {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) (a : Term tctx w) (v : WidthExpr wcard) :
+  Term.toBV tenv (.zext a v) = (a.toBV tenv).zeroExtend (v.toNat wenv) := rfl
+
+@[simp]
+theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) (a : Term tctx w) (v : WidthExpr wcard) :
+  Term.toBV tenv (.sext a v) =
+    (a.toBV tenv).signExtend (v.toNat wenv) := rfl
+
 inductive BinaryRelationKind
 | eq
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
@@ -113,7 +167,6 @@ inductive Predicate
     (a : Term ctx w) (b : Term ctx w) : Predicate ctx
 | and (p1 p2 : Predicate ctx) : Predicate ctx
 | or (p1 p2 : Predicate ctx) : Predicate ctx
-| not (p : Predicate ctx) : Predicate ctx
 
 structure PackedPredicate where
   wcard : Nat
@@ -131,43 +184,23 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     | .eq => a.toBV tenv = b.toBV tenv
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
-  | .not p => ¬ p.toProp tenv
 
-section ToBitstream
-
-/--
-A width expression denotes a bitstream, whose
-value is true if for all indeces larger than 'env v'.
--/
-def WidthExpr.toBitstream
-  (e : WidthExpr n)
-  (env : WidthExpr.Env n) : BitStream :=
-  match e with
-  | .var v => fun i => decide (env v ≤ i)
-
-def Term.toBitstream {wcard tcard : Nat}
-    {tctx :Term.Ctx wcard tcard}
-    {w : WidthExpr wcard}
-    (t : Term tctx w)
-    {wenv : WidthExpr.Env wcard}
-    (tenv : tctx.Env wenv) :
-    BitStream :=
-  BitStream.ofBitVec (t.toBV tenv)
-
-def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
-    (p : Predicate tctx)
-    {wenv : WidthExpr.Env wcard}
-    (tenv : tctx.Env wenv) :
-    BitStream :=
-  match p with
-  | .binRel k a b =>
-    match k with
-    | .eq => fun i => a.toBitstream tenv i = b.toBitstream tenv i
-  | .and p1 p2 => (p1.toBitstream tenv) &&& (p2.toBitstream tenv)
-  | .or p1 p2 => (p1.toBitstream tenv) ||| (p2.toBitstream tenv)
-  | .not p => ~~~ (p.toBitstream tenv)
-
-end ToBitstream
+-- TODO: is this even needed?
+-- Can't I directly show that the FSM corresponds to the BV?
+-- def Predicate.toBitstream {tctx : Term.Ctx wcard tcard}
+--     (p : Predicate tctx)
+--     (bsEnv : StateSpace wcard tcard → BitStream) :
+--     BitStream :=
+--   match p with
+--   | .binRel k a b =>
+--     match k with
+--     | .eq =>
+--       let aStream := a.toBitstream bsEnv
+--       let bStream := b.toBitstream bsEnv
+--       (aStream.nxor bStream).scanAnd
+--   | .and p1 p2 => (p1.toBitstream bsEnv) &&& (p2.toBitstream bsEnv)
+--   | .or p1 p2 => (p1.toBitstream bsEnv) ||| (p2.toBitstream bsEnv)
+--   | .not p => ~~~ (p.toBitstream bsEnv)
 
 namespace Nondep
 
@@ -186,6 +219,10 @@ def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
   match w with | .var v => { toNat := v }
 
+@[simp]
+def WidthExpr.ofDep_var {wcard : Nat} {v : Fin wcard} :
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.var v)) = { toNat := v } := rfl
+
 inductive Term
 | var (v : Nat) (w : WidthExpr) : Term
 | add (a b : Term) : Term
@@ -203,12 +240,35 @@ def Term.ofDep {wcard tcard : Nat}
   | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
   | .sext a wnew => .sext (.ofDep a) (.ofDep wnew)
 
+
+@[simp]
+def Term.ofDep_var {wcard tcard : Nat}
+    {v : Fin tcard} {tctx : Term.Ctx wcard tcard} :
+    Term.ofDep (wcard := wcard) (tcard := tcard) (tctx := tctx) (w := tctx v) (MultiWidth.Term.var v) = Term.var v (.ofDep (tctx v)) := rfl
+
 def Term.width (t : Term) : WidthExpr :=
   match t with
   | .var _v w => w
   | .add a _b => a.width
   | .zext _a wnew => wnew
   | .sext _a wnew => wnew
+
+/-- The width of the non-dependently typed 't' equals the width 'w',
+converting into the non-dependent version. -/
+@[simp]
+theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat}
+    {w : MultiWidth.WidthExpr wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (t : MultiWidth.Term tctx w)
+    : (Term.ofDep t).width = (.ofDep w) := by
+  induction t
+  case var v => simp [Term.width]
+  case add v a b ha hb =>
+    simp [Term.ofDep, Term.width, ha]
+  case zext a wnew =>
+    simp [Term.ofDep, Term.width]
+  case sext a wnew =>
+    simp [Term.ofDep, Term.width]
 
 def Term.wcard (t : Term) : Nat := t.width.wcard
 
@@ -224,7 +284,6 @@ inductive Predicate
     (a : Term) (b : Term) : Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
-| not (p : Predicate) : Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
@@ -232,14 +291,12 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .eq a _b => a.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
-  | .not p => Predicate.wcard p
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
   | .binRel .eq a b => max a.tcard b.tcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
-  | .not p => Predicate.tcard p
 
 def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
@@ -249,42 +306,11 @@ def Predicate.ofDep {wcard tcard : Nat}
     | .eq  => .binRel .eq (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
-  | .not p => .not (.ofDep p)
 
 end Nondep
 
 section ToFSM
 
-inductive StateSpace (wcard tcard : Nat)
-| widthVar (v : Fin wcard)
-| termVar (v : Fin tcard)
-deriving DecidableEq, Repr, Hashable
-
-instance : Fintype (StateSpace wcard tcard) where
-  elems :=
-    let ws : Finset (Fin wcard) := Finset.univ
-    let vs : Finset (Fin tcard) := Finset.univ
-    let ws := ws.image StateSpace.widthVar
-    let vs := vs.image StateSpace.termVar
-    ws ∪ vs
-  complete := by
-    simp only [Finset.mem_union, Finset.mem_image, Finset.mem_univ, true_and]
-    intros x
-    rcases x with x | x  <;> simp
-
-
-/--
-A bitstream environment.
--/
-structure Term.Ctx.GoodBitstreamEnv {wcard tcard : Nat}
-  (bs : StateSpace wcard tcard → BitStream)
-  {wenv : WidthExpr.Env wcard}
-  {tctx : Term.Ctx wcard tcard}
-  (tenv : tctx.Env wenv) where
-  hw : ∀ (v : Fin wcard),
-    BitStream.ofNat (wenv v)  = bs (StateSpace.widthVar v)
-  ht : ∀ (v : Fin tcard),
-    BitStream.ofBitVec (tenv v) = bs (StateSpace.termVar v)
 
 /-- the FSM that corresponds to a given nat-predicate. -/
 structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
@@ -296,28 +322,78 @@ structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
 structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
   toFsm : FSM (StateSpace wcard tcard)
 
-structure GoodNatFSM {wcard : Nat} (v : WidthExpr wcard) (tcard : Nat)
-  extends NatFSM wcard tcard (.ofDep v) where
-  heval_eq :
-    ∀ (env : Fin wcard → Nat)
-    (fsmEnv : StateSpace wcard tcard → BitStream),
-      toFsm.eval fsmEnv = v.toBitstream env
+/--
+Preconditions on the environments: 1. The widths are encoded in unary.
+-/
+structure HWidthEnv {wcard tcard : Nat}
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (wenv : Fin wcard → Nat) : Prop where
+    heq_width : ∀ (v : Fin wcard),
+      fsmEnv (StateSpace.widthVar v) = BitStream.ofNatUnary (wenv v)
 
-structure GoodTermFSM {w : WidthExpr wcard}
+/--
+Preconditions on the environments: 2. The terms are encoded in binary bitstreams.
+-/
+structure HTermEnv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+  (fsmEnv : StateSpace wcard tcard → BitStream) (tenv : tctx.Env wenv) : Prop
+  extends HWidthEnv fsmEnv wenv where
+    heq_term : ∀ (v : Fin tcard),
+      fsmEnv (StateSpace.termVar v) = BitStream.ofBitVecZextMsb (tenv v)
+
+/-- make a 'HTermEnv' of 'ofTenv'. -/
+def HTermEnv.mkFsmEnvOfTenv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) :
+    StateSpace wcard tcard → BitStream := fun
+    | .widthVar v =>
+        BitStream.ofNatUnary (wenv v)
+    | .termVar v =>
+      BitStream.ofBitVecZextMsb (tenv v)
+
+@[simp]
+theorem HTermEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) :
+    HTermEnv (mkFsmEnvOfTenv tenv) tenv := by
+  constructor
+  · constructor
+    · intros v
+      simp [mkFsmEnvOfTenv]
+  · intros v
+    simp [mkFsmEnvOfTenv]
+
+structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
+   (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
+  heq :
+    ∀ (wenv : Fin wcard → Nat) (fsmEnv : StateSpace wcard tcard → BitStream),
+    (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv =
+      BitStream.ofNatUnary (v.toNat wenv)
+
+/--
+Our term FSMs start unconditionally with a '0',
+and then proceed to produce outputs.
+This ensures that the width-0 value is assumed to be '0',
+followed by the output at a width 'i'.
+-/
+structure HTermFSMToBitStream {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
-  (t : Term tctx w) extends TermFSM wcard tcard (.ofDep t) where
-  heval_eq :
+  {t : Term tctx w} (fsm : TermFSM wcard tcard (.ofDep t)) : Prop where
+  heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      toFsm.eval fsmEnv = t.toBitstream tenv
+      (henv : HTermEnv fsmEnv tenv) →
+        fsm.toFsm.eval fsmEnv =
+        BitStream.ofBitVecZextMsb (t.toBV tenv)
 
-structure GoodPredicateFSM
+structure HPredFSMToBitStream
   {tctx : Term.Ctx wcard tcard}
-  (p : Predicate tctx) extends PredicateFSM wcard tcard (.ofDep p) where
-  heval_eq :
+  {p : Predicate tctx} (fsm : PredicateFSM wcard tcard (.ofDep p)) : Prop where
+  heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
-      toFsm.eval fsmEnv = p.toBitstream tenv
+      (henv : HTermEnv fsmEnv tenv) →
+        p.toProp tenv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
 
 end ToFSM
 end MultiWidth
