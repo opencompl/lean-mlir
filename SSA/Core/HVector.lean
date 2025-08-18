@@ -5,6 +5,8 @@ import Batteries.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 import Qq
 
+import SSA.Core.Util.Snoc
+
 /-- An heterogeneous vector -/
 inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
   | nil : HVector f []
@@ -183,8 +185,8 @@ macro_rules
     else
       `(%[ $elems,* | List.nil ])
 
-infixr:50 "::ₕ" => HVector.cons
-
+instance : HCons (HVector A as) A (HVector A <| · :: as) where
+  hCons := HVector.cons
 
 /-!
   ## OfFn
@@ -193,7 +195,7 @@ infixr:50 "::ₕ" => HVector.cons
 def ofFn (A : α → Type _) (as : List α) (f : (i : Fin as.length) → A as[i]) :
     HVector A as :=
   match as with
-  | _ :: as => f (0 : Fin (_ + 1)) ::ₕ ofFn A as (fun i => f i.succ)
+  | _ :: as => (f (0 : Fin (_ + 1))) :> (ofFn A as (fun i => f i.succ))
   | [] => .nil
 
 @[simp] theorem ofFn_nil : ofFn A [] f = .nil := by rfl
@@ -251,15 +253,16 @@ instance [Lean.ToExpr α] [∀ a, Lean.ToExpr (A a)] [HVector.ToExprPi A]
 end ToExprPi
 
 /- ### cast -/
+local infixr:52 (priority:=high) " :> " => HVector.cons
 
 def castFun {A B : α → Type u} {as}
     (h : ∀ (i : Fin as.length), A as[i] = B as[i]) :
     HVector A as → HVector B as
   | .nil => .nil
-  | x ::ₕ xs =>
+  | x :> xs =>
     let x := h (0 : Fin (_ + 1)) ▸ x
     let xs := xs.castFun (fun i => h i.succ)
-    x ::ₕ xs
+    x :> xs
 
 def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
     (h_len : as.length = bs.length)
@@ -267,10 +270,10 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
     (xs : HVector A as) : HVector B bs :=
   match bs, xs with
   | [], .nil        => .nil
-  | _::_, x ::ₕ xs  =>
+  | _::_, x :> xs  =>
       have h₀ := h_elem 0 (by simp)
       let xs := xs.cast (by simpa using h_len)
                         (fun i => by simpa using h_elem i.succ)
-      (h₀ ▸ x) ::ₕ xs
+      (h₀ ▸ x) :> xs
 
 end HVector

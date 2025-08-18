@@ -3,7 +3,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Union
+
 import SSA.Core.HVector
+import SSA.Core.Util.Snoc
 
 /--
   Typeclass for a `baseType` which is a Gödel code of Lean types.
