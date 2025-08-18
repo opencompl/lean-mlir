@@ -70,12 +70,12 @@ theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
     -- if the new width is smaller than the old width,
     -- then it is the same as zero extension.
     if wnew ≤ wold
-    then x.getLsbD i && decide (i < wnew)
+    then x.getLsbD (min i (wold - 1)) && decide (i < wnew)
     else
       -- if the new width is larger than the old width,
       -- then we return the value of sign extension,
       -- which is the value at index 'wold - 1'.
-      x.getLsbD (min i (wold - 1)) && (i < wnew)
+      x.getLsbD (min i (wold - 1)) && decide (i < wnew)
       := by
   simp [BitVec.getLsbD_signExtend]
   rw [BitVec.msb_eq_getLsbD_last]
@@ -83,12 +83,9 @@ theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
   · simp [hnew]
     by_cases hi : i < wold
     · simp [hi]
-      intros hwold
       simp [show min i (wold - 1) = i by omega]
     · simp [hi]
-      simp [show ¬ wnew ≤ wold by omega]
-      apply congrArg
-      omega
+      simp [show min i (wold - 1) = wold - 1 by omega]
   · simp [hnew]
 
 theorem eval_fsmMsb_eq_decide
