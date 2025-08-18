@@ -37,6 +37,11 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       rw [henv]
 
 
+/--
+Build an FSM taking inputs 'x' and 'w'.
+When 'w' is '1', produce 'false'.
+Otherwise, return if we have found a '1' so far.
+-/
 def fsmMsbAux : FSM Bool where
   -- when w = 1, store into 'x'.
   α := Unit
@@ -49,8 +54,8 @@ def fsmMsbAux : FSM Bool where
     s -- else return 's'.
   nextStateCirc := fun () =>
     let s : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inl ())
-    let x : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr false)
-    let w : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr true)
+    let x : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inr false)
+    let w : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inr true)
     -- as long as the width is not exceeded, store into the width.
     Circuit.ite w -- if w
       x -- then x
@@ -59,6 +64,32 @@ def fsmMsbAux : FSM Bool where
 /-- the MSB finite state machine as a composition of the MSB machine. -/
 def fsmMsb (x w : FSM α) : FSM α :=
   composeBinaryAux' fsmMsbAux x w
+
+theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
+  (x.signExtend wnew).getLsbD i =
+    -- if the new width is smaller than the old width,
+    -- then it is the same as zero extension.
+    if wnew ≤ wold
+    then x.getLsbD i && decide (i < wnew)
+    else
+      -- if the new width is larger than the old width,
+      -- then we return the value of sign extension,
+      -- which is the value at index 'wold - 1'.
+      x.getLsbD (min i (wold - 1)) && (i < wnew)
+      := by
+  simp [BitVec.getLsbD_signExtend]
+  rw [BitVec.msb_eq_getLsbD_last]
+  by_cases hnew : i < wnew
+  · simp [hnew]
+    by_cases hi : i < wold
+    · simp [hi]
+      intros hwold
+      simp [show min i (wold - 1) = i by omega]
+    · simp [hi]
+      simp [show ¬ wnew ≤ wold by omega]
+      apply congrArg
+      omega
+  · simp [hnew]
 
 theorem eval_fsmMsb_eq_decide
     {wenv : WidthExpr.Env wcard}

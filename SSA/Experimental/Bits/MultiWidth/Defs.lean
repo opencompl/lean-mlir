@@ -154,20 +154,8 @@ theorem Term.toBV_zext {wenv : WidthExpr.Env wcard}
 theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) (a : Term tctx w) (v : WidthExpr wcard) :
-  Term.toBV tenv (.sext a v) = (a.toBV tenv).signExtend (v.toNat wenv) := rfl
-
--- def Term.toBitstream {wcard tcard : Nat}
---     {tctx :Term.Ctx wcard tcard}
---     {w : WidthExpr wcard}
---     (t : Term tctx w)
---     (bsEnv : StateSpace wcard tcard → BitStream) :
---     BitStream := match t with
---   | .var v => bsEnv (StateSpace.termVar v)
---   | .add a b => a.toBitstream bsEnv + b.toBitstream bsEnv
---   | .zext a v => (a.toBitstream bsEnv) &&& (v.toBitStream bsEnv)
---   | .sext a v =>
---     -- TODO: need to implement this.
---     (a.toBitstream bsEnv) &&& (v.toBitStream bsEnv)
+  Term.toBV tenv (.sext a v) =
+    (a.toBV tenv).signExtend (v.toNat wenv) := rfl
 
 inductive BinaryRelationKind
 | eq
