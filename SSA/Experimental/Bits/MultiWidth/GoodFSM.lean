@@ -516,8 +516,7 @@ theorem fsmZext_eval_eq
       ((BitStream.ofBitVecZextMsb ((Term.zext t wnew).toBV tenv))) i := by
   ext i
   rw [fsmZext]
-  simp only [FSM.eval_and', BitStream.and_eq, BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext,
-    BitStream.zeroExtend_eval_eq]
+  simp only [FSM.eval_and', BitStream.and_eq, BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
   rw [ht.heq (henv := htenv)]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
   simp
@@ -550,9 +549,7 @@ theorem fsmSext_eval_eq
   ext i
   rw [fsmSext]
   simp only [FSM.eval_and', BitStream.and_eq,
-    BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext,
-    BitStream.zeroExtend_eval_eq,
-    FSM.eval_ite_eq_decide, composeBinaryAux'_eval]
+    BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
   rw [eval_fsmMsb_eq
         (xfsm := tFsm) (wfsm := woldFsm) (htenv := htenv)
@@ -594,8 +591,7 @@ theorem fsmSext_eval_eq
       · simp
       · simp
         rw [BitVec.getLsbD_signExtend]
-        simp [hwold, hwnew]
-        omega
+        simp; omega
 
 /-- info: 'MultiWidth.fsmSext_eval_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms fsmSext_eval_eq
