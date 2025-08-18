@@ -1171,8 +1171,9 @@ theorem eval_latchImmediate_succ_eq (initVal : Bool) (i : Nat)
   simp [latchImmediate, eval, nextBit, carry]
 
 /--
-(xval, control)
-produce the latch value immediately when 'control = true'.
+(false | true)
+(xval  |  control)
+produce the latch value from the previous iteration when 'control = true'.
 -/
 def latchDelayed (initVal : Bool) : FSM Bool where
   α := Unit

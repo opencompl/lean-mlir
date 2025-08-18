@@ -39,7 +39,8 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
 
 /--
 Build an FSM taking inputs 'x' and 'w'.
-When 'w' is '1', produce 'false'.
+Produce the bit 'x[i]' as long as 'w = 1'.
+Once 'w = 0', produce the last value 'x[`last index where w = 1`]
 Otherwise, return if we have found a '1' so far.
 -/
 def fsmMsbAux : FSM Bool where
@@ -48,9 +49,10 @@ def fsmMsbAux : FSM Bool where
   initCarry := fun () => false
   outputCirc :=
     let s : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inl ())
+    let x : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inr false)
     let w : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr true)
     Circuit.ite w -- if still inside width
-    .fals -- then return false.
+    x -- then update state bit to be 'x'.
     s -- else return 's'.
   nextStateCirc := fun () =>
     let s : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inl ())
@@ -61,35 +63,43 @@ def fsmMsbAux : FSM Bool where
       x -- then x
       s  -- else s
 
-/-- the MSB finite state machine as a composition of the MSB machine. -/
+/--
+the MSB finite state machine
+returns the 'msb' upto the current width.
+-/
 def fsmMsb (x w : FSM α) : FSM α :=
-  composeBinaryAux' fsmMsbAux x w
+  composeBinaryAux' (FSM.latchImmediate false) x w
 
-theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
-  (x.signExtend wnew).getLsbD i =
-    -- if the new width is smaller than the old width,
-    -- then it is the same as zero extension.
-    if wnew ≤ wold
-    then x.getLsbD (min i (wold - 1)) && decide (i < wnew)
-    else
-      -- if the new width is larger than the old width,
-      -- then we return the value of sign extension,
-      -- which is the value at index 'wold - 1'.
-      x.getLsbD (min i (wold - 1)) && decide (i < wnew)
-      := by
-  simp [BitVec.getLsbD_signExtend]
-  rw [BitVec.msb_eq_getLsbD_last]
-  by_cases hnew : i < wnew
-  · simp [hnew]
-    by_cases hi : i < wold
-    · simp [hi]
-      simp [show min i (wold - 1) = i by omega]
-    · simp [hi]
-      simp [show min i (wold - 1) = wold - 1 by omega]
-  · simp [hnew]
+theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : Term.Ctx.Env tctx wenv)
+    (w : WidthExpr wcard)
+    (x : Term tctx w)
+    (xfsm : TermFSM wcard tcard (.ofDep x))
+    (hxfsm : HTermFSMToBitStream xfsm)
+    (wfsm : NatFSM wcard tcard (.ofDep w))
+    (hwfsm : HNatFSMToBitstream wfsm)
+    (htenv : HTermEnv fsmEnv tenv)
+
+    :
+    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv i =
+      ((x.toBV tenv).getLsbD (min i (w.toNat wenv))) := by
+  simp [fsmMsb]
+  induction i
+  case zero =>
+    simp
+    have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
+    have tfsmEval := hxfsm.heq (henv := htenv)
+    rw [tfsmEval, wfsmEval]
+    simp
+    sorry
+  case succ i hi =>
+    simp
+
 
 -- | Found a cuter expression for 'getLsbD_signExtend'.
-theorem getLsbD_signExtend_eq' {wold : Nat} (x : BitVec wold) {wnew : Nat} :
+theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
   (x.signExtend wnew).getLsbD i =
     (x.getLsbD (min i (wold - 1)) && decide (i < wnew))
       := by
