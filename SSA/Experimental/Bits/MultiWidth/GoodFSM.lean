@@ -83,19 +83,64 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
     (htenv : HTermEnv fsmEnv tenv)
 
     :
-    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv i =
-      ((x.toBV tenv).getLsbD (min i (w.toNat wenv))) := by
+    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv =
+      (BitStream.concat false
+        (fun i => ((x.toBV tenv).getLsbD (min i (w.toNat wenv))))) := by
   simp [fsmMsb]
-  induction i
-  case zero =>
-    simp
-    have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
-    have tfsmEval := hxfsm.heq (henv := htenv)
+  have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
+  have tfsmEval := hxfsm.heq (henv := htenv)
+  ext i
+  rcases i with rfl | i
+  · simp
+    intros hxFsmEq
+    simp [tfsmEval] at hxFsmEq
+  · simp
     rw [tfsmEval, wfsmEval]
     simp
-    sorry
-  case succ i hi =>
-    simp
+    induction i
+    case zero =>
+      simp
+      have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
+      have tfsmEval := hxfsm.heq (henv := htenv)
+      intros hXEq
+      apply Nat.le_iff_lt_add_one .. |>.mpr
+      simp only [lt_add_iff_pos_left]
+      apply BitVec.lt_of_getLsbD hXEq
+    case succ i hi =>
+      simp
+      by_cases hxiSucc : (Term.toBV tenv x).getLsbD (i + 1) = true
+      · simp [hxiSucc]
+        by_cases hiwLe : i + 2 ≤ w.toNat wenv
+        · simp [hiwLe]
+          simp [show min (i + 1) (w.toNat wenv) = i + 1 by omega]
+          exact hxiSucc
+        · simp [hiwLe]
+          simp [show min (i + 1) (w.toNat wenv) = w.toNat wenv by omega]
+      · simp [hxiSucc]
+        by_cases hxi : (Term.toBV tenv x).getLsbD i = true
+        · simp [hxi]
+          simp [hxi] at hi
+          by_cases hiwLe : i + 1 ≤ w.toNat wenv
+          · simp [hiwLe]
+            simp [hiwLe] at hi
+            simp [show min i (w.toNat wenv) = i by omega] at hi
+            sorry
+          · simp [hiwLe]
+            sorry
+        · simp [hxi]
+          simp [hxi] at hi
+          rw [hi]
+          by_cases hiwLeSucc : i + 1 ≤ w.toNat wenv
+          · simp [hiwLeSucc]
+            by_cases hiwLe : i ≤ w.toNat wenv
+            · simp [hiwLe]
+              simp at hxi hxiSucc
+              simp [hxi, hxiSucc]
+            · simp [show min i (w.toNat wenv) = w.toNat wenv by omega]
+              apply BitVec.getLsbD_of_ge
+              omega
+          · simp [show min (i + 1) (w.toNat wenv) = w.toNat wenv by omega]
+            simp [show min (i) (w.toNat wenv) = w.toNat wenv by omega]
 
 
 -- | Found a cuter expression for 'getLsbD_signExtend'.
