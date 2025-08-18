@@ -3,7 +3,7 @@ import SSA.Experimental.Bits.AutoStructs.Worklist
 
 import Mathlib.Tactic.ApplyFun
 
-open Rel
+open SetRel
 
 section sink
 
@@ -317,7 +317,7 @@ lemma product.sim {m1 m2 : CNFA n}:
     m1.Sim M1 → m2.Sim M2 →
     (nfa (product.inits m1 m2) (final final? m1 m2) (f m1 m2)).Bisim (M1.M.product (to_prop final?) M2.M) := by
   rintro ⟨R₁, hsim₁⟩ ⟨R₂, hsim₂⟩
-  let R : Rel (m1.m.states × m2.m.states) (M1.σ × M2.σ) :=
+  let R : SetRel (m1.m.states × m2.m.states) (M1.σ × M2.σ) :=
     {((s₁, s₂), (q₁, q₂)) | s₁.val ~[R₁] q₁ ∧ s₂.val ~[R₂] q₂ }
   use R; constructor
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ ⟨hR₁, hR₂⟩
@@ -606,7 +606,7 @@ def CNFA.determinize_spec (m : CNFA n)
   rcases hsim with ⟨Ri, hsim⟩
   apply bisim_comp
   · apply worklistRun_spec
-  let R : Rel (BitVec m.m.stateMax) (Set M.σ) :=
+  let R : SetRel (BitVec m.m.stateMax) (Set M.σ) :=
     {(ss, qs) | Ri.set_eq (bv_to_set ss) qs }
   use R; constructor
   · simp [nfa', nfa, NFA'.determinize, NFA.toDFA, BitVec.any_iff_exists]

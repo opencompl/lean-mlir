@@ -2,7 +2,7 @@ import SSA.Experimental.Bits.AutoStructs.Basic
 
 set_option grind.warning false
 
-open Rel
+open SetRel
 
 section nfa
 
@@ -485,7 +485,7 @@ lemma processOneElem_visited (st : worklist.St A S) :
   rw [←addOrCreateElem_visited (final sa') st sa']
   simp [st', processOneElem, worklist.St.visited]
 
-def worklist.St.rel (st : worklist.St A S) : Rel State S := {(s, sa) | st.map[sa]? = some s }
+def worklist.St.rel (st : worklist.St A S) : SetRel State S := {(s, sa) | st.map[sa]? = some s }
 
 def worklist.St.D (st : worklist.St A S) : Set S := st.visited
 
@@ -578,10 +578,7 @@ lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (s
       use st.m.stateMax
       simp [addTrans_tr_eq, true_and]
       split_ifs with hcond <;> simp
-  next heq =>
-    split
-    · grind [addTrans_tr]
-    · split_ifs <;> simp [addTrans_tr] <;> grind
+  next heq => grind
 
 omit [Fintype S] [DecidableEq S] in
 lemma processOneElem_trans_preserve (st : worklist.St A S) (final : S → Bool) (a b : A) (sa : S) (s s1 s2 : State) :
