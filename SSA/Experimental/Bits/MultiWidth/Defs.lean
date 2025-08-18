@@ -150,6 +150,12 @@ theorem Term.toBV_zext {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) (a : Term tctx w) (v : WidthExpr wcard) :
   Term.toBV tenv (.zext a v) = (a.toBV tenv).zeroExtend (v.toNat wenv) := rfl
 
+@[simp]
+theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) (a : Term tctx w) (v : WidthExpr wcard) :
+  Term.toBV tenv (.sext a v) = (a.toBV tenv).signExtend (v.toNat wenv) := rfl
+
 -- def Term.toBitstream {wcard tcard : Nat}
 --     {tctx :Term.Ctx wcard tcard}
 --     {w : WidthExpr wcard}

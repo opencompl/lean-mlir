@@ -23,7 +23,7 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
       (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
     }
   else
-    { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be used.
+    { toFsm := FSM.zero' } -- default, should not be used.
 
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
@@ -37,16 +37,16 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       rw [henv]
 
 
-/--
-An FSM that computes the MSB at the current index.
-If the index is smaller than the width, then the MSB is 'false'.
-At and after the current width, the MSB is whatever the MSB is supposed to be.
--- Takes an input the bitvector, and the width.
--/
-def fsmMsbAux: FSM (Bool) where
+def fsmMsbAux : FSM Bool where
+  -- when w = 1, store into 'x'.
   α := Unit
   initCarry := fun () => false
-  outputCirc := Circuit.var (positive := true) (.inl ())
+  outputCirc :=
+    let s : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inl ())
+    let w : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr true)
+    Circuit.ite w -- if still inside width
+    .fals -- then return false.
+    s -- else return 's'.
   nextStateCirc := fun () =>
     let s : Circuit (Unit ⊕ (Bool)) := Circuit.var (positive := true) (.inl ())
     let x : Circuit (Unit ⊕ (Bool))  := Circuit.var (positive := true) (.inr false)
@@ -61,18 +61,19 @@ def fsmMsb (x w : FSM α) : FSM α :=
   composeBinaryAux' fsmMsbAux x w
 
 theorem eval_fsmMsb_eq_decide
-  {wenv : WidthExpr.Env wcard}
-  {fsmEnv : StateSpace wcard tcard → BitStream}
-  {tctx : Term.Ctx wcard tcard}
-  (tenv : Term.Ctx.Env tctx wenv)
-  (x : Term tctx w)
-  (w : WidthExpr wcard)
-  (xfsm : TermFSM wcard tcard (.ofDep x))
-  (hxfsm : HTermFSMToBitStream xfsm)
-  (wfsm : NatFSM wcard tcard (.ofDep w)) :
-  (fsmMsb xfsm.toFsm wfsm.toFsm).eval env i =
-  ((x.toBV tenv).signExtend (w.toNat wenv)).getLsbD i
-   := sorry
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : Term.Ctx.Env tctx wenv)
+    (x : Term tctx w)
+    (w : WidthExpr wcard)
+    (xfsm : TermFSM wcard tcard (.ofDep x))
+    (hxfsm : HTermFSMToBitStream xfsm)
+    (wfsm : NatFSM wcard tcard (.ofDep w)) :
+    (fsmMsb xfsm.toFsm wfsm.toFsm).eval env i =
+    ((x.toBV tenv).signExtend (w.toNat wenv)).getLsbD i
+    := by
+  sorry
 
 
 def fsmUnaryMax (a b : FSM arity) : FSM arity :=
@@ -469,16 +470,72 @@ def fsmSext.inputs.toFin : fsmSext.inputs → Fin 3
 def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
   let fmsb := composeBinaryAux' fsmMsbAux a wnew
-  /-
-  If still in the old bitwidth, then return 'a',
-  -/
+  /- If still in the old bitwidth, then return 'a',-/
   FSM.ite wnew
     -- i ≤ wnew
     (FSM.ite wold
       a -- i ≤ wold, so produce 'a'.
       fmsb) -- we are in the part that is outside wold, so spit the 'msb'.
-    -- i > wnew
-    (FSM.zero.map Fin.elim0)
+    -- i > wnew, so we are just producing zeroes.
+    FSM.zero'
+
+/-- the fsmZext builds the correct zero-extended FSM. -/
+theorem fsmSext_eval_eq
+    (woldFsm : NatFSM wcard tcard (.ofDep wold))
+    (wnewFsm : NatFSM wcard tcard (.ofDep wnew))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (hwnew : HNatFSMToBitstream wnewFsm)
+    (hwold : HNatFSMToBitstream woldFsm)
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : Term.Ctx.Env tctx wenv)
+    (t : Term tctx wold)
+    (tFsm : TermFSM wcard tcard (.ofDep t))
+    (ht : HTermFSMToBitStream tFsm)
+    (htenv : HTermEnv fsmEnv tenv) :
+    (fsmSext tFsm.toFsm woldFsm.toFsm  wnewFsm.toFsm).eval fsmEnv = fun i =>
+      ((BitStream.ofBitVecZextMsb ((Term.sext t wnew).toBV tenv))) i := by
+  ext i
+  rw [fsmSext]
+  simp only [FSM.eval_and', BitStream.and_eq,
+    BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext,
+    BitStream.zeroExtend_eval_eq,
+    FSM.eval_ite_eq_decide, composeBinaryAux'_eval]
+  rw [hwnew.heq (henv := htenv.toHWidthEnv)]
+  rw [hwold.heq (henv := htenv.toHWidthEnv)]
+  rw [ht.heq (henv := htenv)]
+  simp
+  by_cases hwold : i ≤ wold.toNat wenv
+  · simp [hwold]
+    by_cases hwnew : i ≤ wnew.toNat wenv
+    · simp [hwnew]
+      rcases i with rfl | i
+      · simp
+      · simp [BitVec.getLsbD_signExtend]
+        simp [show i < wnew.toNat wenv by omega]
+        omega
+    · simp [hwnew]
+      rcases i with rfl | i
+      · simp
+      · simp [BitVec.getLsbD_signExtend]
+        omega
+  · simp [hwold]
+    by_cases hwnew : i ≤ wnew.toNat wenv
+    · simp [hwnew]
+      -- TODO: needs fsmMsbAux.
+      rcases i with rfl | i
+      · simp
+        sorry
+      · simp;
+        sorry
+    · simp [hwnew]
+      rcases i with rfl | w
+      · simp
+      · simp
+        rw [BitVec.getLsbD_signExtend]
+        simp [hwold, hwnew]
+        omega
+
 
 def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
@@ -512,8 +569,8 @@ axiom AxSext {P : Prop} : P
 axiom AxAdd {P : Prop} : P
 
 def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
-    {w : WidthExpr wcard}
-      (t : Term tctx w)  :
+    {wold : WidthExpr wcard}
+    (t : Term tctx wold) :
     (HTermFSMToBitStream (mkTermFSM wcard tcard (.ofDep t))) := by
   induction t
   case var v =>
@@ -542,8 +599,13 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     let hwnew := IsGoodNatFSM_mkWidthFSM tcard wnew
     rw [fsmZext_eval_eq (htenv := htenv) (wnew := wnew) (ht := ha) (hwnew := hwnew)]
     simp
-  case sext w' a b =>
-    exact AxSext
+  case sext wold a wnew ha =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    let hwold := IsGoodNatFSM_mkWidthFSM tcard wold
+    let hwnew := IsGoodNatFSM_mkWidthFSM tcard wnew
+    sorry
 
 
 

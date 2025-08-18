@@ -972,8 +972,20 @@ def zero : FSM (Fin 0) :=
     outputCirc := Circuit.fals
   }
 
+
 @[simp] lemma eval_zero (x : Fin 0 → BitStream) : zero.eval x = BitStream.zero := by
   ext; simp [zero, eval, nextBit]
+
+def zero' {α : Type} : FSM α :=
+  { α := Empty,
+    initCarry := Empty.elim,
+    nextStateCirc := Empty.elim,
+    outputCirc := Circuit.fals
+  }
+
+@[simp] lemma eval_zero' {α : Type}
+    (x : α → BitStream) : zero'.eval x = BitStream.zero := by
+  ext; simp [zero', eval, nextBit]
 
 def one : FSM (Fin 0) :=
   { α := Unit,
@@ -1125,16 +1137,68 @@ def repeatBit : FSM Unit where
   initCarry := fun () => false
   outputCirc :=  (.var true <| .inl ()) ||| (.var true <| .inr ())
   nextStateCirc := fun () => (.var true <| .inl ()) ||| (.var true <| .inr ())
--- @[simp] theorem eval_repeatBit :
---     repeatBit.eval x = BitStream.repeatBit (x ()) := by
---   unfold BitStream.repeatBit
---   rw [eval_eq_eval', eval']
---   apply BitStream.corec_eq_corec
---     (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
---   · simp [repeatBit]
---   · intro ⟨y, a⟩ ⟨b, x⟩ h
---     simp at h
---     simp [h, nextBit, BitStream.head]
+
+/--
+(xval, control)
+produce the latch value immediately when 'control = true'.
+-/
+def latchImmediate (initVal : Bool) : FSM Bool where
+  α := Unit
+  initCarry := fun _ => initVal
+  outputCirc :=
+    let xval := Circuit.var true (inr false)
+    let control := Circuit.var true (inr true)
+    let state := Circuit.var true (inl ())
+    Circuit.ite control xval state
+  nextStateCirc := fun () =>
+    let xval := Circuit.var true (inr false)
+    let control := Circuit.var true (inr true)
+    let state := Circuit.var true (inl ())
+    Circuit.ite control xval state
+
+@[simp]
+theorem eval_latchImmediate_zero_eq (initVal : Bool)
+    (x : Bool → BitStream) :
+    (latchImmediate initVal).eval x 0 = if (x true 0) then (x false 0) else initVal := by
+  simp [latchImmediate, eval, nextBit]
+
+@[simp]
+theorem eval_latchImmediate_succ_eq (initVal : Bool) (i : Nat)
+    (x : Bool → BitStream) :
+    (latchImmediate initVal).eval x (i + 1) =
+      if (x true (i + 1)) then (x false (i + 1)) else
+        (latchImmediate initVal).eval x i := by
+  simp [latchImmediate, eval, nextBit, carry]
+
+/--
+(xval, control)
+produce the latch value immediately when 'control = true'.
+-/
+def latchDelayed (initVal : Bool) : FSM Bool where
+  α := Unit
+  initCarry := fun _ => initVal
+  outputCirc :=
+    let state := Circuit.var true (inl ())
+    state
+  nextStateCirc := fun () =>
+    let xval := Circuit.var true (inr false)
+    let control := Circuit.var true (inr true)
+    let state := Circuit.var true (inl ())
+    Circuit.ite control xval state
+
+@[simp]
+theorem eval_latchDelayed_zero_eq (initVal : Bool)
+    (x : Bool → BitStream) :
+    (latchDelayed initVal).eval x 0 = initVal := by
+  simp [latchDelayed, eval, nextBit]
+
+@[simp]
+theorem eval_latchDelayed_succ_eq (initVal : Bool) (i : Nat)
+    (x : Bool → BitStream) :
+    (latchDelayed initVal).eval x (i + 1) =
+      if (x true i) then x false i else
+        (latchDelayed initVal).eval x i := by
+  simp [latchDelayed, eval, nextBit, carry]
 
 end FSM
 
