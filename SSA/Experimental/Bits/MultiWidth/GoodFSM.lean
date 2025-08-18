@@ -70,6 +70,7 @@ returns the 'msb' upto the current width.
 def fsmMsb (x w : FSM α) : FSM α :=
   composeBinaryAux' (FSM.latchImmediate false) (qfalse := x) (qtrue := w)
 
+@[simp]
 theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     {tctx : Term.Ctx wcard tcard}
@@ -148,19 +149,24 @@ theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
       simp [show min i (wold - 1) = wold - 1 by omega]
   · simp [hnew]
 
-theorem eval_fsmMsb_eq_decide
-    {wenv : WidthExpr.Env wcard}
+def fsmSext (x wold wnew w : FSM α) : FSM α :=
+  (fsmMsb x wold) &&& wnew
+
+theorem eval_fsmSext_eq {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard → BitStream}
     {tctx : Term.Ctx wcard tcard}
     (tenv : Term.Ctx.Env tctx wenv)
-    (x : Term tctx w)
-    (w : WidthExpr wcard)
+    (wold wnew : WidthExpr wcard)
+    (x : Term tctx wold)
     (xfsm : TermFSM wcard tcard (.ofDep x))
     (hxfsm : HTermFSMToBitStream xfsm)
-    (wfsm : NatFSM wcard tcard (.ofDep w)) :
-    (fsmMsb xfsm.toFsm wfsm.toFsm).eval env i =
-    ((x.toBV tenv).signExtend (w.toNat wenv)).getLsbD i
-    := by
+    (woldfsm wnewfsm : NatFSM wcard tcard (.ofDep w))
+    (hwoldfsm : HNatFSMToBitstream woldfsm)
+    (hwnewfsm : HNatFSMToBitstream wnewfsm)
+    (htenv : HTermEnv fsmEnv tenv) :
+    (fsmMsb xfsm.toFsm woldfsm.toFsm).eval fsmEnv =
+      BitStream.ofBitVecZextMsb ((x.sext wnew).toBV tenv) := by
+  simp
   sorry
 
 
