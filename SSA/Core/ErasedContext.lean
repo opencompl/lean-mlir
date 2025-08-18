@@ -3,6 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Union
+import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.DepRewrite
 
 import SSA.Core.HVector
@@ -271,21 +272,22 @@ end Lemmas
 /-! ### Var Append -/
 
 def appendInl (v : Γ.Var t) : (Γ ++ ts).Var t :=
-  ⟨v.1 + ts.length, by
+  ⟨v.val + ts.length, by
       have := v.prop
       rcases Γ
       simp_all [List.getElem?_append_right]
     ⟩
 instance : Coe (Γ.Var t) ((Γ ++ ts).Var t) where coe := appendInl
 
-def appendInr : Var ⟨ts⟩ t → (Γ ++ ts).Var t
-  | ⟨v, h⟩ => ⟨v, by
+def appendInr (v : Var ⟨ts⟩ t) : (Γ ++ ts).Var t :=
+  ⟨v.val, by
       rcases Γ
+      rcases v with ⟨v, h⟩
       have : v < ts.length := by
         suffices ¬(ts.length ≤ v) by omega
         rw [← List.getElem?_eq_none_iff]
         simp_all
-      simp_all [List.getElem?_append_left]
+      simpa [List.getElem?_append_left this] using h
     ⟩
 
 @[elab_as_elim]
@@ -315,6 +317,10 @@ variable {t : Ty} {v : Γ.Var t}
 @[simp] lemma val_appendInl {v : Γ.Var t} : (v.appendInl (ts := ts)).val = v.val + ts.length := rfl
 @[simp] lemma val_appendInr {v : Var ts t}  : (v.appendInr (Γ := Γ)).val = v.val := rfl
 
+lemma toSnoc_appendInr {v : Var ⟨ts⟩ t} :
+    v.toSnoc (t':=t').appendInr (Γ := Γ) = v.appendInr.toSnoc :=
+  rfl
+
 @[simp] theorem appendCases_appendInl (v : Γ.Var t) :
     appendCases (motive := motive) left right v.appendInl = (left v) := by
   rename_i ts
@@ -340,6 +346,27 @@ variable {t : Ty} {v : Γ.Var t}
 
 end Lemmas
 
+/-! ### Fintype instance -/
+
+instance [DecidableEq Ty] {Γ : Ctxt Ty} {t : Ty} : Fintype (Γ.Var t) where
+  elems := {
+      val := .ofList <|
+                List.range Γ.length
+                |>.filterMap fun i =>
+                    if h : Γ[i]? = some t then
+                      some ⟨i, h⟩
+                    else
+                      none
+      nodup := by
+        apply List.Nodup.filterMap ?_ List.nodup_range
+        simp only [Option.mem_def, Option.dite_none_right_eq_some, Option.some.injEq,
+          forall_exists_index, forall_apply_eq_imp_iff]
+        intro i j hi hj h_eq
+        cases h_eq
+        rfl
+    }
+  complete v := by simpa using ⟨v.val, v.val_lt, v.prop, rfl⟩
+
 /-! ### Var Fin Helpers -/
 
 def toFin (v : Γ.Var t) : Fin Γ.length :=
@@ -347,6 +374,8 @@ def toFin (v : Γ.Var t) : Fin Γ.length :=
 
 def ofFin (i : Fin Γ.length) : Γ.Var (Γ[i]) :=
   ⟨i.val, by simpa using List.getElem?_eq_getElem _⟩
+
+section Lemmas
 
 def ofFinCases
     {motive : ∀ {t}, Γ.Var t → Sort u}
@@ -362,10 +391,10 @@ def ofFinCases
   · rcases Γ
     simp_all
 
+@[simp] lemma toFin_toSnoc (v : Γ.Var t) : (v.toSnoc (t':=t')).toFin = v.toFin.succ := rfl
 
-
+end Lemmas
 end Var
-
 end Ctxt
 open Ctxt
 
@@ -375,21 +404,32 @@ Note that a `Var` is quite similar to a `Fin`, plus a static proof of the item
 at the particular index. This extra knowledge is useful when indexing into an
 HVector as well.
 -/
-instance : GetElem (HVector A as) (Ctxt.Var ⟨as⟩ a) (A a) (fun _ _ => True) where
-  getElem xs i _ := (cast · <| xs.get i.toFin) <| by
+instance {Γ} : GetElem (HVector A as) (Var Γ a) (A a) (fun _ _ => as = Γ.toList) where
+  getElem xs i h := (cast · <| xs.get <| i.toFin.cast <| by rw [h]; rfl) <| by
+    subst h
     congr 1
     rcases i with ⟨i, h⟩
     simpa [Ctxt.Var.toFin, List.getElem_eq_iff] using h
 
-@[simp] lemma HVector.getElem_eq_get (xs : HVector A as) (i : Fin as.length) :
+namespace HVector
+variable {A : α → _} {as : List α} (xs : HVector A as) {Γ : Ctxt α}
+
+@[simp] lemma getElem_ofFin_eq_get (i : Fin as.length) :
     xs[Ctxt.Var.ofFin i] = xs.get i := rfl
-@[simp] lemma HVector.getElem_map (xs : HVector A as) (v : Var ⟨as⟩ a) :
+@[simp] lemma getElem_map (xs : HVector A as) (v : Var ⟨as⟩ a) :
     (xs.map f)[v] = f _ xs[v] := by
   cases v using Var.ofFinCases
-  rw [HVector.getElem_eq_get, HVector.getElem_eq_get]
+  rw [getElem_ofFin_eq_get, getElem_ofFin_eq_get]
   simp only [length_ofList, get_map, List.get_eq_getElem]
   rfl
 
+@[simp] lemma cons_getElem_toSnoc (x : A a) (v : Var Γ u)
+    (h : as = Γ.toList := by rfl) (h' : a :: as = (Γ.snoc a).toList := by rfl) :
+    (HVector.cons x xs)[v.toSnoc (t' := a)]'h' = xs[v]'h := by
+  simp only [GetElem.getElem]
+  simp
+
+end HVector
 namespace Ctxt
 /-!
 ## Context Homomorphisms
@@ -397,8 +437,7 @@ namespace Ctxt
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
-@[simp]
-abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
+@[simp] abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
 /-! ### Morphism Composition -/
@@ -499,6 +538,13 @@ def Hom.castCodomain (h : Δ = Δ') (f : Γ.Hom Δ) : Γ.Hom Δ' :=
 
 @[simp] lemma Hom.castDomain_apply {h : Δ = Δ'} {f : Γ.Hom Δ} {v : Γ.Var t} :
     f.castCodomain h v = (f v).castCtxt h := rfl
+
+@[simp] lemma Hom.castDomain_castCodomain {h₁ : Δ₁ = Δ₂} {h₂ : Δ₂ = Δ₃}
+    {f : Γ.Hom Δ₁} :
+    (f.castCodomain h₁).castCodomain h₂ = f.castCodomain (h₁ ▸ h₂) := rfl
+
+@[simp] lemma Hom.castDomain_rfl {h : Δ = Δ} {f : Γ.Hom Δ} :
+    (f.castCodomain h) = f := rfl
 
 /-!
 ## Context Valuations
@@ -621,6 +667,26 @@ variable {V : Γ.Valuation} {xs : HVector toType ts}
     ext i
     exact h (Var.ofFin i)
 
+@[simp] lemma Valuation.append_nil {V : Γ.Valuation} :
+    V ++ (HVector.nil (α := Ty) (f := toType)) = V := rfl
+
+@[simp] lemma Valuation.append_cons {t : Ty} {V : Γ.Valuation} {x : ⟦t⟧}  {xs : HVector toType ts} :
+    V ++ (HVector.cons x xs) = (V ++ xs).snoc x := by
+  funext _t v
+  cases v using Var.appendCases with
+  | left v =>
+      simp only [append_appendInl]
+      have : v.appendInl (ts := t :: ts) = (v.appendInl (ts:=ts) |>.toSnoc (t':=t)) := by
+        rfl
+      simp [this]
+  | right v =>
+      simp only [append_appendInr]
+      cases v using Var.casesOn with
+      | toSnoc v =>
+          simp only [Var.toSnoc_appendInr, snoc_toSnoc, append_appendInr]
+          apply HVector.cons_getElem_toSnoc
+      | last => rfl
+
 /-! ## Valuation Construction Helpers -/
 
 /-- Make a a valuation for a singleton value -/
@@ -664,7 +730,8 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
   funext t' v
   cases v using Var.casesOn <;> rfl
 
-@[simp] lemma Valuation.comap_id {Γ : Ctxt Ty} (Γv : Valuation Γ) : comap Γv Hom.id = Γv := rfl
+@[simp] lemma Valuation.comap_id {Γ : Ctxt Ty} (V : Valuation Γ) : comap V Hom.id = V := rfl
+
 @[simp] lemma Valuation.comap_snoc_snocRight {Γ Δ : Ctxt Ty} (Γv : Valuation Γ) (f : Hom Δ Γ) :
     comap (Γv.snoc x) (f.snocRight) = comap Γv f :=
   rfl
