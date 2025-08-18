@@ -81,6 +81,15 @@ theorem concat_zero (b : Bool) (x : BitStream) : concat b x 0 = b := rfl
 @[simp]
 theorem concat_succ (b : Bool) (x : BitStream) : concat b x (n+1) = x n := rfl
 
+@[simp]
+theorem concat_eq_sub_of_lt
+    {b : Bool} {x : BitStream} {i : Nat} (hi : 0 < i) :
+    concat b x i = x (i - 1) := by
+  simp [concat]
+  rcases i with rfl | i
+  · omega
+  · simp
+
 /-- `map f` maps a (unary) function over a bitstreams -/
 abbrev map (f : Bool → Bool) : BitStream → BitStream :=
   fun x i => f (x i)
@@ -198,6 +207,7 @@ def ofBitVecSextMsb {w} (x : BitVec w) : BitStream :=
 def ofBitVecZextMsb {w} (x : BitVec w) : BitStream :=
   fun i => (x.zeroExtend i).msb
 
+
 @[simp]
 theorem ofBitVecZextMsb_eq_concat_ofBitVecZext (x : BitVec w) :
     ofBitVecZextMsb x = (ofBitVecZext x).concat false := by
@@ -218,6 +228,10 @@ theorem ofBitVecSextMsb_eq_concat_ofBitVec (x : BitVec w) :
   · simp only [add_tsub_cancel_right, lt_add_iff_pos_right, zero_lt_one, BitVec.getLsbD_eq_getElem,
     BitVec.getElem_signExtend, concat_succ, ofBitVecSext]
     by_cases hi : i < w <;> simp [hi]
+
+@[simp]
+theorem ofBitVecZext_eq_getLsbD (x : BitVec w) (i : Nat) :
+  ofBitVecZext x i = x.getLsbD i := rfl
 
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
@@ -264,10 +278,6 @@ theorem ofBitVecZext_inj (x y : BitVec w) :
   · intros h
     subst h
     rfl
-
-@[simp]
-theorem ofBitVecZext_eq_getLsbD (x : BitVec w) :
-  ofBitVecZext x i = x.getLsbD i := rfl
 
 
 @[simp] theorem getElem_toBitVec (w : Nat) (x : BitStream) (i : Nat) (hi : i < w) :

@@ -149,7 +149,7 @@ theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
       simp [show min i (wold - 1) = wold - 1 by omega]
   · simp [hnew]
 
-def fsmSext (x wold wnew w : FSM α) : FSM α :=
+def fsmSext (x wold wnew : FSM α) : FSM α :=
   (fsmMsb x wold) &&& wnew
 
 theorem eval_fsmSext_eq {wenv : WidthExpr.Env wcard}
@@ -160,14 +160,27 @@ theorem eval_fsmSext_eq {wenv : WidthExpr.Env wcard}
     (x : Term tctx wold)
     (xfsm : TermFSM wcard tcard (.ofDep x))
     (hxfsm : HTermFSMToBitStream xfsm)
-    (woldfsm wnewfsm : NatFSM wcard tcard (.ofDep w))
+    (woldfsm : NatFSM wcard tcard (.ofDep wold))
+    (wnewfsm : NatFSM wcard tcard (.ofDep wnew))
     (hwoldfsm : HNatFSMToBitstream woldfsm)
     (hwnewfsm : HNatFSMToBitstream wnewfsm)
     (htenv : HTermEnv fsmEnv tenv) :
-    (fsmMsb xfsm.toFsm woldfsm.toFsm).eval fsmEnv =
+    (fsmSext xfsm.toFsm woldfsm.toFsm wnewfsm.toFsm).eval fsmEnv =
       BitStream.ofBitVecZextMsb ((x.sext wnew).toBV tenv) := by
-  simp
-  sorry
+  simp [fsmSext]
+  rw [eval_fsmMsb_eq (xfsm := xfsm) (wfsm := woldfsm) (htenv := htenv)]
+  ext i
+  rcases i with rfl | i
+  · simp
+  · simp
+    rw [getLsbD_signExtend_eq]
+    by_cases hiold : i + 1 ≤ wold.toNat wenv
+    · simp [hiold]
+      sorry
+    · simp at hiold
+      simp [show min (i + 1) (wold.toNat wenv) = wold.toNat wenv by omega]
+      simp [show min (i) (wold.toNat wenv - 1) = wold.toNat wenv - 1 by omega]
+      sorry
 
 
 def fsmUnaryMax (a b : FSM arity) : FSM arity :=
@@ -549,30 +562,6 @@ theorem fsmZext_eval_eq
     · simp [hi]
       omega
 
-/-- The inputs given to the sext fsm. -/
-inductive fsmSext.inputs
-| a
-| wold
-| wnew
-
-def fsmSext.inputs.toFin : fsmSext.inputs → Fin 3
-| .a => 0
-| .wold => 1
-| .wnew => 2
-
-
-def fsmSext (a wold wnew : FSM (StateSpace wcard tcard))
-    : FSM (StateSpace wcard tcard) :=
-  let fmsb := composeBinaryAux' fsmMsbAux a wnew
-  /- If still in the old bitwidth, then return 'a',-/
-  FSM.ite wnew
-    -- i ≤ wnew
-    (FSM.ite wold
-      a -- i ≤ wold, so produce 'a'.
-      fmsb) -- we are in the part that is outside wold, so spit the 'msb'.
-    -- i > wnew, so we are just producing zeroes.
-    FSM.zero'
-
 /-- the fsmZext builds the correct zero-extended FSM. -/
 theorem fsmSext_eval_eq
     (woldFsm : NatFSM wcard tcard (.ofDep wold))
@@ -585,7 +574,7 @@ theorem fsmSext_eval_eq
     (tenv : Term.Ctx.Env tctx wenv)
     (t : Term tctx wold)
     (tFsm : TermFSM wcard tcard (.ofDep t))
-    (ht : HTermFSMToBitStream tFsm)
+    (htfsm : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
     (fsmSext tFsm.toFsm woldFsm.toFsm  wnewFsm.toFsm).eval fsmEnv = fun i =>
       ((BitStream.ofBitVecZextMsb ((Term.sext t wnew).toBV tenv))) i := by
@@ -596,8 +585,9 @@ theorem fsmSext_eval_eq
     BitStream.zeroExtend_eval_eq,
     FSM.eval_ite_eq_decide, composeBinaryAux'_eval]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
-  rw [hwold.heq (henv := htenv.toHWidthEnv)]
-  rw [ht.heq (henv := htenv)]
+  rw [eval_fsmMsb_eq
+        (xfsm := tFsm) (wfsm := woldFsm) (htenv := htenv)
+        (hxfsm := htfsm) (hwfsm := hwold)]
   simp
   by_cases hwold : i ≤ wold.toNat wenv
   · simp [hwold]
@@ -619,9 +609,17 @@ theorem fsmSext_eval_eq
       -- TODO: needs fsmMsbAux.
       rcases i with rfl | i
       · simp
-        sorry
-      · simp;
-        sorry
+        omega
+      · simp
+        simp at hwold
+        rw [getLsbD_signExtend_eq]
+        simp [show min i (wold.toNat wenv - 1) = wold.toNat wenv - 1 by omega]
+        simp [show i < wnew.toNat wenv by omega]
+        have hwold : wold.toNat wenv = 0 ∨ 0 < wold.toNat wenv := by
+          omega
+        rcases hwold with hwold | hwold
+        · simp [hwold]
+        · simp [hwold]
     · simp [hwnew]
       rcases i with rfl | w
       · simp
@@ -630,6 +628,8 @@ theorem fsmSext_eval_eq
         simp [hwold, hwnew]
         omega
 
+/-- info: 'MultiWidth.fsmSext_eval_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms fsmSext_eval_eq
 
 def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
