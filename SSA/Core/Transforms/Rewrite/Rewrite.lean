@@ -39,7 +39,7 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
       bot := body
       midRet := e.args.map (fun _ v => v.appendInl)
     }
-  | _, _, .ret _ => none
+  | _, _, .rets _ => none
   | n+1, lets, .var e body =>
     splitProgramAtAux n (lets.var e) body
 
@@ -53,7 +53,7 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] :
     obtain rfl := by
       simpa only [splitProgramAtAux, Option.mem_def, Option.some.injEq] using hres
     simp
-  | _+1, _, .ret _, res, hres, s => by
+  | _+1, _, .rets _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
@@ -103,7 +103,7 @@ def rewriteAt
   funext Γv; simp [toFlatCom, Com.denoteLets_eq]
 
 @[simp] lemma Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
-    com.toFlatCom.ret = com.returnVars := by
+    com.toFlatCom.rets = com.returnVars := by
   simp [toFlatCom]
 
 -- -- TODO: move to somewhere more sensible
@@ -335,7 +335,7 @@ def rewritePeepholeRecursively (fuel : ℕ)
     have htarget'_denote_eq_htarget : target'.denote = target.denote := by
       apply denote_rewritePeephole
     match htarget : target' with
-    | .ret v => ⟨target', by
+    | .rets v => ⟨target', by
       simp [htarget, htarget'_denote_eq_htarget]⟩
     | .var e body =>
       let ⟨e', he'⟩ := rewritePeepholeRecursivelyExpr fuel pr e
