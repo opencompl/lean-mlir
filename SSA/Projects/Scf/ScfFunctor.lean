@@ -240,7 +240,7 @@ instance [Monad d.m] : DialectDenote (Scf d) where
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
         f (Ctxt.Valuation.nil.snoc v)
     | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))),
-        (.cons (f : _  → _) .nil) =>
+        (.cons (f : _  → _) .nil) => do
         let istart : ℤ := Z.denote_eq ▸ istart
         let istep : ℤ := Z.denote_eq ▸ istep
         let niter : ℕ := N.denote_eq ▸ niter
@@ -251,9 +251,10 @@ instance [Monad d.m] : DialectDenote (Scf d) where
           return xs.get (0 : Fin 1)
         let to_iterate := f'.counterDecorator (α := d.m ⟦ty⟧) (δ := istep)
         let loop_fn := niter.iterate (op := to_iterate)
-        ([·]ₕ) <$> (loop_fn (istart, pure vstart)).2
+        let x ← (loop_fn (istart, pure vstart)).2
+        return [x]ₕ
 
-    | .iterate k, (.cons (x) .nil), (.cons (f : _ → _) .nil) =>
+    | .iterate k, (.cons (x) .nil), (.cons (f : _ → _) .nil) => do
       let x : ℤ := Z.denote_eq ▸ x
       let coe : ℤ = toType Z.ty := Z.denote_eq.symm
       let f' (v : d.m ℤ) : d.m ℤ := do
@@ -261,7 +262,8 @@ instance [Monad d.m] : DialectDenote (Scf d) where
         let xs ← f (Ctxt.Valuation.nil.snoc (cast coe v))
         let x := xs.getN 0
         return coe ▸ x
-      Z.denote_eq ▸ (k.iterate f' (pure x))
+      let y ← (k.iterate f' (pure x))
+      return [cast Z.denote_eq.symm y]ₕ
 end Scf
 
 namespace Arith
@@ -321,8 +323,7 @@ export Arith (Arith)
 /-- Compose Scf on top of Arith -/
 abbrev ScfArith := Scf Arith
 
-section Compat
-open LeanMLIR.SingleReturnCompat
+open LeanMLIR.SingleReturnCompat (Com Expr)
 
 @[simp_denote] def cst (n : ℤ) : Expr ScfArith Γ .pure .int  :=
   Expr.mk
@@ -478,13 +479,13 @@ def lhs (vincrement : ℤ) : Com ScfArith ⟨[/- nsteps -/ .nat, /- vstart -/ .i
                         ⟨/- vstart -/ 3, rfl⟩ (
       Com.letPure (cst vincrement) <|
       Com.letPure (add ⟨0, rfl⟩ ⟨2, rfl⟩) -- fun v => (v + increment)
-      <| SingleReturnCompat.Com.ret ⟨0, rfl⟩)) <|
-  SingleReturnCompat.Com.ret ⟨0, rfl⟩
+      <| Com.ret ⟨0, rfl⟩)) <|
+  Com.ret ⟨0, rfl⟩
 
 def rhs (vincrement : ℤ) : Com ScfArith ⟨[/- nsteps -/ .nat, /- vstart -/ .int]⟩ .pure .int :=
   Com.var (cst vincrement) <|
   Com.var (axpy ⟨0, rfl⟩ ⟨1, rfl⟩ ⟨2, rfl⟩) <|
-  SingleReturnCompat.Com.ret ⟨0, rfl⟩
+  Com.ret ⟨0, rfl⟩
 
 abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧
   ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAdd
@@ -512,8 +513,12 @@ variable {t : Arith.Ty}
 variable (rgn : Com ScfArith ⟨[Arith.Ty.int, t]⟩ .impure t)
 /- region semantics does not depend on trip count. That is, the region is trip count invariant.
   In such cases, a region can be reversed. -/
-variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v => Com.denote rgn <|
-    Ctxt.Valuation.ofPair i v))
+variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v =>
+    Com.denote rgn <|
+      let v : HVector _ _ := v
+      let v := v.getN 0
+      Ctxt.Valuation.ofPair i v)
+  )
 
 def lhs :
     let Γ := ⟨[/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int,

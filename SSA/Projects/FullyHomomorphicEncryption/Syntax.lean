@@ -182,7 +182,7 @@ def mkReturn (Γ : Ctxt (FHE q n).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨.pure, [ty], LeanMLIR.SingleReturnCompat.Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
   | _ => throw <| .generic (s!"Ill-formed return statement (wrong arity, expected 1," ++
     s!" got {opStx.args.length})")
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
