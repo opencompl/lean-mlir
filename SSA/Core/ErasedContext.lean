@@ -161,7 +161,7 @@ def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
   fun ⟨_, h⟩ => by
-    simp [getElem?_eq_toList_getElem?, EmptyCollection.emptyCollection, empty] at h
+    simp [EmptyCollection.emptyCollection, empty] at h
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
 in context `Γ.snoc t`. This is marked as a coercion. -/
