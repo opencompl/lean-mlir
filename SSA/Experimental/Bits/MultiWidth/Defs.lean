@@ -39,10 +39,6 @@ inductive WidthExpr (wcard : Nat) : Type
 | max : (v w : WidthExpr wcard) → WidthExpr wcard
 | addK : (v : WidthExpr wcard) → (k : Nat) → WidthExpr wcard
 
-structure PackedWidthExpr where
-  wcard : Nat
-  e : WidthExpr wcard
-
 
 /-- Cast the width expression along the fact that width is ≤. -/
 def WidthExpr.castLe {wcard : Nat} (e : WidthExpr wcard) (hw : wcard ≤ wcard') : WidthExpr wcard' :=
@@ -216,24 +212,47 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
 
 namespace Nondep
 
-structure WidthExpr where ofNat ::
-  toNat : Nat
+inductive WidthExpr where
+| var : Nat → WidthExpr
+| max : WidthExpr → WidthExpr → WidthExpr
+| min : WidthExpr → WidthExpr → WidthExpr
+| addK : WidthExpr → Nat → WidthExpr
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
-  w.toNat + 1
+  match w with
+  | .var i => i + 1
+  | .max v w => Nat.max (v.wcard) (w.wcard)
+  | .min v w => Nat.min (v.wcard) (w.wcard)
+  | .addK v k => v.wcard + k
 
-def WidthExpr.toPacked (w : WidthExpr) : PackedWidthExpr where
-  wcard := w.toNat + 1
-  e := .var ⟨w.toNat, by simp⟩
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
-  match w with | .var v => { toNat := v }
+  match w with
+  | .var v => .var v
+  | .max a b => .max (.ofDep a) (.ofDep b)
+  | .min a b => .min (.ofDep a) (.ofDep b)
+  | .addK a k => .addK (.ofDep a) k
 
 @[simp]
 def WidthExpr.ofDep_var {wcard : Nat} {v : Fin wcard} :
-    (WidthExpr.ofDep (MultiWidth.WidthExpr.var v)) = { toNat := v } := rfl
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.var v)) = (.var v) := rfl
+
+@[simp]
+def WidthExpr.ofDep_max {wcard : Nat} {v w : MultiWidth.WidthExpr wcard} :
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.max v w)) =
+    (.max (.ofDep v) (.ofDep w)) := rfl
+
+@[simp]
+def WidthExpr.ofDep_min {wcard : Nat} {v w : MultiWidth.WidthExpr wcard} :
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.min v w)) =
+    (.min (.ofDep v) (.ofDep w)) := rfl
+
+@[simp]
+def WidthExpr.ofDep_addK {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat} :
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.addK v k)) =
+    (.addK (.ofDep v) k) := rfl
 
 inductive Term
 | var (v : Nat) (w : WidthExpr) : Term
@@ -251,7 +270,6 @@ def Term.ofDep {wcard tcard : Nat}
   | .add a b => .add (.ofDep a) (.ofDep b)
   | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
   | .sext a wnew => .sext (.ofDep a) (.ofDep wnew)
-
 
 @[simp]
 def Term.ofDep_var {wcard tcard : Nat}
