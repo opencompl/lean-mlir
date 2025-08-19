@@ -194,23 +194,29 @@ theorem matchVar_appendInr {w : Var ⟨te⟩ t} :
 -/
 attribute [refl] List.Subset.refl -- TODO: upstream somewhere
 
-variable (lets v matchLets w ma) in
+variable (lets v matchLets w) (mapIn : Mapping _ _) in
 def MatchVarResult := { mapOut : Mapping _ _ //
-  ∃ map', map'.entries ⊆ mapOut.entries ∧ matchVar lets v matchLets w ma = some ((), map') }
+  ∃ (mapIn' mapOut' : Mapping _ _),
+    mapIn.entries ⊆ mapIn'.entries
+    ∧ mapOut'.entries ⊆ mapOut.entries
+    ∧  matchVar lets v matchLets w mapIn' = some ((), mapOut') }
 
-variable (lets matchLets) {tys} (vs ws : HVector _ tys) (ma) in
+variable (lets matchLets) {tys} (vs ws : HVector _ tys) (mapIn : Mapping _ _) in
 def MatchArgResult := { mapOut : Mapping _ _ //
-  ∃ map', map'.entries ⊆ mapOut.entries ∧ matchArg lets matchLets vs ws ma = some ((), map') }
+  ∃ (mapIn' mapOut' : Mapping _ _),
+    mapIn.entries ⊆ mapIn'.entries
+    ∧ mapOut'.entries ⊆ mapOut.entries
+    ∧ matchArg lets matchLets vs ws mapIn' = some ((), mapOut') }
 
 def MatchVarResult.mk {mapOut : Mapping _ _}
-    (h : matchVar lets v matchLets w ma = some ((), mapOut) := by simp_all) :
-    MatchVarResult lets v matchLets w ma :=
-  ⟨mapOut, mapOut, ⟨by rfl, h⟩⟩
+    (h : matchVar lets v matchLets w mapIn = some ((), mapOut) := by simp_all) :
+    MatchVarResult lets v matchLets w mapIn :=
+  ⟨mapOut, mapIn, mapOut, ⟨by rfl, by rfl, h⟩⟩
 
 def MatchArgResult.mk {mapOut : Mapping _ _}
-    (h : matchArg lets matchLets vs ws ma = some ((), mapOut) := by simp_all) :
-    MatchArgResult lets matchLets vs ws ma :=
-  ⟨mapOut, mapOut, ⟨by rfl, h⟩⟩
+    (h : matchArg lets matchLets vs ws mapIn = some ((), mapOut) := by simp_all) :
+    MatchArgResult lets matchLets vs ws mapIn :=
+  ⟨mapOut, mapIn, mapOut, ⟨by rfl, by rfl, h⟩⟩
 
 /-!
 ### Subtype-based lemmas
@@ -218,22 +224,19 @@ def MatchArgResult.mk {mapOut : Mapping _ _}
 
 @[simp] lemma lookup_matchVar_nil (m : MatchVarResult lets v .nil w ma) :
     m.val.lookup ⟨_, w⟩ = some v := by
-  sorry
-
-@[simp] lemma entries_matchVar_nil (m : MatchVarResult lets v .nil w ma) :
-    m.val.entries = ma.entries.insert ⟨⟨_, w⟩, v⟩ := by
-  rcases m with ⟨m, hm⟩
-  simp only [matchVar_nil_eq, unifyVars] at hm
-  sorry
+  rcases m with ⟨m, -, m', -, h_entries_out, hm'⟩
+  rw [← Option.mem_def, AList.mem_lookup_iff]
+  apply h_entries_out
+  simp [← AList.mem_lookup_iff, matchVar_nil hm']
 
 namespace MatchVarResult
 
 theorem ofSubsetEntries {varMap₁ : MatchVarResult lets v matchLets w ma} {varMap₂ : Mapping _ _}
     (h_sub : varMap₁.val.entries ⊆ varMap₂.entries) :
     ∃ varMap₃ : MatchVarResult lets v matchLets w ma, varMap₂ = varMap₃.val := by
-  rcases varMap₁ with ⟨varMap₁, map', h₁, h₂⟩
-  refine ⟨⟨varMap₂, map', ?_, h₂⟩, rfl⟩
-  trans; exact h₁; exact h_sub
+  rcases varMap₁ with ⟨varMap₁, mapIn', map', h₁, h₂, h₃⟩
+  refine ⟨⟨varMap₂, mapIn', map', h₁, ?_, h₃⟩, rfl⟩
+  trans; exact h₂; exact h_sub
 
 /-! ### nil lemmas -/
 
@@ -285,7 +288,7 @@ theorem getPureExpr_eq_some
         args,
         matchExpr.regArgs
       ⟩⟩ := by
-  rcases mapOut with ⟨mapOut, map', ⟨h_sub, h⟩⟩
+  rcases mapOut with ⟨mapOut, _, map', _, _, h⟩
   obtain ⟨args, w', h₁, h₂⟩ := matchVar_appendInr h
   use args, w', h₁
 
@@ -296,9 +299,9 @@ noncomputable def toArgResult
     let args := mapOut.getPureExpr_eq_some.choose
     MatchArgResult lets matchLets args matchExpr.args mapIn :=
   ⟨mapOut.1, by
-    rcases mapOut with ⟨mapOut, ⟨map', h₁, h₂⟩⟩
-    use map', h₁
-    have ⟨args, w', h'₁, h'₂⟩ := matchVar_appendInr h₂
+    rcases mapOut with ⟨mapOut, mapIn', mapOut', h₁, h₂, h₃⟩
+    use mapIn', mapOut', h₁, h₂
+    have ⟨args, w', h'₁, h'₂⟩ := matchVar_appendInr h₃
     simp [*]
   ⟩
 noncomputable instance :
@@ -318,31 +321,6 @@ noncomputable instance :
 --   rintro ⟨mapOut, h⟩
 
 end MatchVarResult
-
-namespace MatchArgResult
-
-/-! ### cons -/
-variable {u us}
-  {v : Γ_out.Var u} {vs : HVector Γ_out.Var us}
-  {w : Δ_out.Var u} {ws : HVector Δ_out.Var us}
-  {mapIn : Mapping _ _}
-  (mapOut : MatchArgResult lets matchLets (v ::ₕ vs) (w ::ₕ ws) mapIn)
-
-def consLeft : MatchVarResult lets v matchLets w mapIn :=
-  ⟨mapOut.val, by
-    rcases mapOut with ⟨_, ⟨_, _, h⟩⟩
-    simp [matchArg] at h
-    sorry
-  ⟩
-
-def consRight : MatchArgResult lets matchLets vs ws mapIn :=
-  ⟨mapOut.val, by
-    rcases mapOut with ⟨_, ⟨_, _, h⟩⟩
-    simp [matchArg] at h
-    sorry
-  ⟩
-
-end MatchArgResult
 
 end MatchVar
 
@@ -477,6 +455,46 @@ theorem isMonotone_matchVar
   (@isMonotone_matchVarArg_aux _ _ _ _ _ _ _ _ _).2 _ _ _ _ _
 
 end SubsetEntries
+
+/-! ## MatchArgResult -/
+namespace MatchArgResult
+variable [DecidableEq d.Op] {Γ_in Γ_out Δ_in Δ_out te}
+          {lets : Lets d Γ_in eff Γ_out}
+          {matchLets : Lets d Δ_in .pure Δ_out}
+          {matchExpr : Expr d Δ_out .pure te}
+          {u us}
+          {v : Γ_out.Var u} {vs : HVector Γ_out.Var us}
+          {w : Δ_out.Var u} {ws : HVector Δ_out.Var us}
+          {mapIn : Mapping _ _}
+          (mapOut : MatchArgResult lets matchLets (v ::ₕ vs) (w ::ₕ ws) mapIn)
+
+def consLeft : MatchVarResult lets v matchLets w mapIn :=
+  ⟨mapOut.val, by
+    rcases mapOut with ⟨mapOut, ⟨mapIn', mapOut', h_entries_in, h_entries_out, h⟩⟩
+    change StateT.run _ _ = _ at h
+    obtain ⟨⟨⟩, mapOut'', h₁, h₂⟩ := by
+      simpa only [matchArg, StateT.run_bind, Option.bind_eq_bind, Option.bind_eq_some_iff,
+        Prod.exists] using h
+    refine ⟨mapIn', mapOut'', h_entries_in, ?_, h₁⟩
+    trans mapOut'.entries
+    · exact isMonotone_matchArg _ _ h₂
+    · exact h_entries_out
+  ⟩
+
+def consRight : MatchArgResult lets matchLets vs ws mapIn :=
+  ⟨mapOut.val, by
+    rcases mapOut with ⟨mapOut, ⟨mapIn', mapOut', h_entries_in, h_entries_out, h⟩⟩
+    change StateT.run _ _ = _ at h
+    obtain ⟨⟨⟩, mapOut'', h₁, h₂⟩ := by
+      simpa only [matchArg, StateT.run_bind, Option.bind_eq_bind, Option.bind_eq_some_iff,
+        Prod.exists] using h
+    refine ⟨_, _, ?_, h_entries_out, h₂⟩
+    trans mapIn'.entries
+    · exact h_entries_in
+    · exact isMonotone_matchVar _ _ h₁
+  ⟩
+
+end MatchArgResult
 
 /-!
 ## Semantics Preservation
