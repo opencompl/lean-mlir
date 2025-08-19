@@ -442,7 +442,7 @@ def ex1_pre_cse : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 1) <|
   Com.var (cst 1) <|
   Com.var (add ⟨0, rfl⟩ ⟨1, rfl⟩) <|
-  Com.ret (⟨0, rfl⟩ ::ₕ .nil)
+  Com.ret ⟨0, rfl⟩
 /--
 info: {
   ^entry():
