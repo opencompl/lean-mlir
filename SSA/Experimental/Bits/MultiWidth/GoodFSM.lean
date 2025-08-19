@@ -17,14 +17,16 @@ namespace MultiWidth
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
 def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
     (NatFSM wcard tcard w) :=
-  if h : w.toNat < wcard then
-    { toFsm :=
-      -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
-      (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
-    }
-  else
-    { toFsm := FSM.zero' } -- default, should not be used.
-
+  match w with
+  | .var wnat =>
+    if h : wnat < wcard then
+      { toFsm :=
+        -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
+        (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
+      }
+    else
+      { toFsm := FSM.zero' } -- default, should not be used.
+  | _ => { toFsm := FSM.zero' }
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
     HNatFSMToBitstream (mkWidthFSM wcard tcard (.ofDep w)) where
@@ -35,6 +37,9 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       simp [mkWidthFSM]
       have ⟨henv⟩ := henv
       rw [henv]
+    case min v w => sorry
+    case max v w => sorry
+    case addK v k => sorry
 
 
 /--
