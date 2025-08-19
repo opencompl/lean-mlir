@@ -152,6 +152,16 @@ end Repr
   # Theorems
 -/
 
+/-! ## get -/
+
+@[simp] theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :
+   (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e :=
+  rfl
+
+@[simp] theorem cons_get_succ {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} {i : Fin as.length} :
+   (HVector.cons e vec).get (i.succ) = vec.get i :=
+  rfl
+
 /-! ## map -/
 
 @[simp] theorem map_cons {A B : α → Type u} {as : List α} {f : (a : α) → A a → B a}
@@ -166,25 +176,24 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
 
 @[simp] theorem get_map (xs : HVector A as) (f : (a : α) → A a → B a) :
     (xs.map f).get i = f _ (xs.get i) := by
-  induction xs
-  · exact i.elim0
-  · cases i using Fin.succRecOn
+  induction xs with
+  | nil     => exact i.elim0
+  | cons x xs ih =>
+    cases i using Fin.succRecOn
     · rfl
-    · simp_all [map_cons]
-      sorry
+    · simp_all [map]
 
 /-! ## fold -/
 
 @[simp] theorem foldl_cons :
-    foldl f b (cons x xs) = foldl f (f _ x b) xs := by
-  sorry
+    foldl f b (cons x xs) = foldl f (f _ b x) xs :=
+  rfl
 
 @[simp] theorem foldl_map :
-    foldl f b (map g xs) = foldl (fun a x b => f a (g x) b) b xs := by
-  induction xs
-  · rfl
-  · simp
-    sorry
+    foldl f b (map g xs) = foldl (fun a x b => f a x (g _ b)) b xs := by
+  induction xs generalizing f b with
+  | nil => rfl
+  | cons _ _ ih => simp [foldl, map, ih]
 
 /-! ## misc -/
 
@@ -193,15 +202,6 @@ theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
   cases h; cases t₁; cases t₂; rfl
 syntax "[" withoutPosition(term,*) "]ₕ"  : term
 
-@[simp]
-theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :
-   (HVector.cons e vec).get (@OfNat.ofNat (Fin (as.length + 1)) 0 Fin.instOfNat) = e :=
-  rfl
-
-@[simp]
-theorem cons_get_succ {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} {i : Fin as.length} :
-   (HVector.cons e vec).get (i.succ) = vec.get i :=
-  rfl
 
 @[ext] theorem ext {xs ys : HVector A as}
     (h : ∀ i, xs.get i = ys.get i) : xs = ys := by
