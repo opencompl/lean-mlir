@@ -44,7 +44,7 @@ partial def comNf (com : Expr) : MetaM Expr := do
         let e ← whnf e
         let body ← comNf body
         return mkAppN (.const ``Com.var []) #[d, opSig, Γ, eff, α, β, e, body]
-    | Com.ret _d _inst _Γ _eff _t _ => return com
+    | Com.rets _d _inst _Γ _eff _t _ => return com
     | _ => throwError "Expected `Com.var _ _` or `Com.ret _`, found:\n\t{com}"
 
 /--
