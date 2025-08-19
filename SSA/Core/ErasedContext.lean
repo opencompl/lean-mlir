@@ -59,6 +59,17 @@ instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
   getElem xs i h := xs.toList[i]
   getElem? xs i  := xs.toList[i]?
 
+section GetElemLemmas
+
+lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
+@[simp, grind=] lemma getElem?_ofList (i : Nat) : (ofList ts)[i]? = ts[i]? := rfl
+@[simp, grind=] lemma getElem_ofList (i : Nat) (h : _) : (ofList ts)[i]'h = ts[i]'h := rfl
+
+instance : LawfulGetElem (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
+  getElem?_def Γ i _ := by rcases Γ; grind
+
+end GetElemLemmas
+
 instance instAppend : HAppend (Ctxt Ty) (List Ty) (Ctxt Ty) where
   hAppend Γ tys := ⟨tys ++ Γ.toList⟩
 
@@ -83,9 +94,6 @@ variable {m} [Monad m] [LawfulMonad m] (t u : m _) in
 
 @[simp] lemma ofList_append : (⟨ts⟩ : Ctxt _) ++ us = us ++ ts := rfl
 @[simp] lemma toList_append : (Γ ++ ts).toList = ts ++ Γ.toList := rfl
-
-lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
-@[simp] lemma getElem?_ofList (i : Nat) : (ofList ts)[i]? = ts[i]? := rfl
 
 @[simp] lemma getElem?_snoc_zero (t : Ty)           : (Γ.snoc t)[0]? = some t := rfl
 @[simp] lemma getElem?_snoc_succ (t : Ty) (i : Nat) : (Γ.snoc t)[i+1]? = Γ[i]? := rfl
@@ -255,17 +263,17 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
 section Lemmas
 variable {t} (v : Var Γ t)
 
-@[simp] lemma cast_rfl (h : t = t) : v.cast h = v := rfl
+@[simp, grind=] lemma cast_rfl (h : t = t) : v.cast h = v := rfl
 
-@[simp] lemma castCtxt_rfl (h : Γ = Γ) : v.castCtxt h = v := rfl
-@[simp] lemma castCtxt_castCtxt (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
+@[simp, grind=] lemma castCtxt_rfl (h : Γ = Γ) : v.castCtxt h = v := rfl
+@[simp, grind=] lemma castCtxt_castCtxt (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
     (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
 
-@[simp] lemma cast_mk : cast h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
-@[simp] lemma castCtxt_mk : castCtxt h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
+@[simp, grind=] lemma cast_mk : cast h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
+@[simp, grind=] lemma castCtxt_mk : castCtxt h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
 
-@[simp] lemma val_cast : (cast h v).val = v.val := rfl
-@[simp] lemma val_castCtxt : (castCtxt h v).val = v.val := rfl
+@[simp, grind=] lemma val_cast : (cast h v).val = v.val := rfl
+@[simp, grind=] lemma val_castCtxt : (castCtxt h v).val = v.val := rfl
 
 end Lemmas
 
@@ -346,6 +354,27 @@ lemma toSnoc_appendInr {v : Var ⟨ts⟩ t} :
 
 end Lemmas
 
+/-! ### Var equality -/
+
+/--
+Given two variables `v, w` in the same context `Γ`, but with potentially
+different types `t` and `u`, `v.eq w` holds if `v = w` (after
+substituing along a proof that `t = u`).
+-/
+def eq (v : Γ.Var t) (w : Γ.Var u) : Prop :=
+  ∃ (h : t = u), v = h ▸ w
+
+/-- Given variables `v, w : Γ.Var t` with the same type index `t`, `v.eq w`
+coincides exactly with `v = w`. -/
+@[simp] lemma eq_iff {v w : Γ.Var t} : v.eq w ↔ v = w := by
+  simp [Var.eq]
+
+@[inherit_doc eq_iff] lemma eq.to_eq {v w : Γ.Var t} : v.eq w → v = w := eq_iff.mp
+
+/-- From `v.eq w` it follows that the types of `v` and `w` are the same. -/
+lemma eq.ty_eq {v : Γ.Var t} {w : Γ.Var u} (h : v.eq w) : t = u := h.1
+
+
 /-! ### Fintype instance -/
 
 instance [DecidableEq Ty] {Γ : Ctxt Ty} {t : Ty} : Fintype (Γ.Var t) where
@@ -373,23 +402,20 @@ def toFin (v : Γ.Var t) : Fin Γ.length :=
   ⟨v.val, v.val_lt⟩
 
 def ofFin (i : Fin Γ.length) : Γ.Var (Γ[i]) :=
-  ⟨i.val, by simpa using List.getElem?_eq_getElem _⟩
+  ⟨i.val, by simp⟩
 
 section Lemmas
+
+@[simp, grind=] lemma ofFin_toFin (v : Γ.Var t) :
+    ofFin v.toFin = v.cast (by have := v.prop; grind [toFin]) := rfl
 
 def ofFinCases
     {motive : ∀ {t}, Γ.Var t → Sort u}
     (ofFin : (i : Fin Γ.length) → motive (ofFin i))
     (v : Γ.Var t) :
     motive v := by
-  let i := ofFin v.toFin
-  rcases v with ⟨v, hv⟩
-  refine _root_.cast ?h i
-  simp [Var.toFin, Var.ofFin]
-  stop
-  congr
-  · rcases Γ
-    simp_all
+  refine _root_.cast ?h <| ofFin v.toFin
+  grind
 
 @[simp] lemma toFin_toSnoc (v : Γ.Var t) : (v.toSnoc (t':=t')).toFin = v.toFin.succ := rfl
 
@@ -757,24 +783,23 @@ def Valuation.reassignVars [DecidableEq Ty] {ts : List Ty} {Γ : Ctxt Ty}
     | none => V vneedle
     | some ⟨i, h⟩ => h ▸ val.get i
 
--- @[simp] lemma Valuation.reassignVars_apply_same [DecidableEq Ty] (V : Γ.Valuation) :
---     V.reassignVars v x v = x := by
---   simp [reassignVar]
-
--- @[simp] lemma Valuation.reassignVar_apply_of_neq [DecidableEq Ty] (V : Γ.Valuation)
---     (h : v ≠ w) :
---     V.reassignVar v x w = V w := by
---   simp only [reassignVar, exists_const, dite_eq_ite, ite_eq_right_iff]
---   rintro rfl
---   contradiction
-
 @[simp] lemma Valuation.reassignVars_eq [DecidableEq Ty] (V : Γ.Valuation) :
     V.reassignVars vs (vs.map V) = V := by
-  sorry
---   funext t w
---   simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
---   rintro rfl rfl
-  -- rfl
+  funext t w
+  unfold reassignVars
+  induction vs
+  case nil => rfl
+  case cons v vs ih =>
+    by_cases h_eq : w.eq v
+    · have := h_eq.ty_eq
+      subst this
+      have := h_eq.to_eq
+      subst this
+      simp
+    · unfold Var.eq at h_eq
+      simp only [HVector.idxOf?, h_eq, ↓reduceDIte, List.get_eq_getElem, List.length_cons,
+        HVector.map_cons]
+      split at ih <;> simp_all
 
 @[simp] lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
     {V : Valuation Γ} {map : Δ.Hom Γ} {vs : HVector Δ.Var ty} {ws : HVector Γ.Var ty} :

@@ -351,8 +351,7 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
 ## Find
 -/
 
-variable [DecidableEq α] [∀ a, DecidableEq (A a)]
-def idxOf? (x : A a) {as} :
+def idxOf? (x : A a) {as} [DecidableEq α] [∀ a, DecidableEq (A a)] :
     HVector A as → Option { i : Fin <| as.length // as.get i = a }
   | .nil => none
   | .cons (a:=b) y ys =>
@@ -361,5 +360,15 @@ def idxOf? (x : A a) {as} :
       else
         (ys.idxOf? x).map fun ⟨i, h⟩ =>
           ⟨i.succ, by simpa⟩
+
+section Lemmas
+variable [DecidableEq α] [∀ a, DecidableEq (A a)]
+variable (xs : HVector A as) {a : α} (x : A a)
+
+@[simp] theorem idxOf?_cons_same :
+    idxOf? x (x ::ₕ xs) = some ⟨(0 : Fin <| _ + 1), rfl⟩ := by
+  simp [idxOf?]
+
+end Lemmas
 
 end HVector
