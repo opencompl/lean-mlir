@@ -525,7 +525,7 @@ def lhs :
                         ⟨/- delta -/1, by rfl⟩
                         ⟨/- steps -/ 2, by simp⟩
                         ⟨/- v0 -/ 3, by simp⟩  rgn) <|
-  Com.ret [⟨0, rfl⟩]ₕ
+  Com.rets [⟨0, rfl⟩]ₕ
 
 def rhs : Com ScfArith ⟨[/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t]⟩ .impure t :=
   /- delta * steps + start-/
@@ -537,7 +537,7 @@ def rhs : Com ScfArith ⟨[/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /
                         ⟨/- -delta -/ 3, rfl⟩
                         ⟨/- steps -/ 4, rfl⟩
                         ⟨/- v0 -/ 5, rfl⟩  rgn) <|
-  Com.ret [⟨0, rfl⟩]ₕ
+  Com.rets [⟨0, rfl⟩]ₕ
 
 
 /-- rewrite a variable whose index is '> 0' to a new variable which is the

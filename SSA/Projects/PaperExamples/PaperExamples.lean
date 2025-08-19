@@ -106,7 +106,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨.pure, [ty], Com.ret (v ::ₕ .nil)⟩
+    return ⟨.pure, [ty], Com.ret v⟩
   | _ => throw <| .generic (
       s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})")
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
@@ -179,8 +179,8 @@ def p1 : PeepholeRewrite Simple [.int] [.int] :=
       Com.denote
         (Com.var (cst 0)
         (Com.var (add { val := 1, property := _ } { val := 0, property := _ })
-        (Com.ret { val := 0, property := ex1.proof_3 }))) =
-      Com.denote (Com.ret { val := 0, property := _ })
+        (Com.rets { val := 0, property := ex1.proof_3 }))) =
+      Com.denote (Com.rets { val := 0, property := _ })
       -/
       simp_peephole
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
@@ -200,7 +200,7 @@ theorem hex1_rewritePeephole :
     -- %out_dead = %x + %c0
     Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
     -- ret %c0
-    Com.ret [⟨2, rfl⟩]ₕ) := by
+    Com.rets [⟨2, rfl⟩]ₕ) := by
   native_decide
 
 
@@ -216,7 +216,7 @@ theorem Hex1_rewritePeephole :
       -- %out_dead = %x + %c0
       Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
       -- ret %c0
-      Com.ret [⟨2, rfl⟩]ₕ) := by
+      Com.rets [⟨2, rfl⟩]ₕ) := by
   native_decide
 
 
@@ -327,12 +327,12 @@ namespace P1
 def lhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (iterate (k := 0) (⟨0, by simp⟩) (
       Com.letPure (add ⟨0, by simp⟩ ⟨0, by simp⟩) -- fun x => (x + x)
-      <| Com.ret [⟨0, rfl⟩]ₕ
+      <| Com.rets [⟨0, rfl⟩]ₕ
   )) <|
-  Com.ret [⟨0, by rfl⟩]ₕ
+  Com.rets [⟨0, by rfl⟩]ₕ
 
 def rhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
-  Com.ret [⟨0, by rfl⟩]ₕ
+  Com.rets [⟨0, by rfl⟩]ₕ
 
 attribute [local simp] Ctxt.snoc
 --
@@ -356,7 +356,7 @@ theorem EX1' : ex1' = (
   -- %out_dead = %x + %c0
   Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
   -- ret %c0
-  Com.ret [⟨2, rfl⟩]ₕ)
+  Com.rets [⟨2, rfl⟩]ₕ)
   := by rfl
 -/
 
@@ -368,10 +368,10 @@ namespace P2
 def lhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (cst 0) <| -- %c0
   Com.var (add ⟨0, rfl⟩ ⟨1, rfl⟩) <| -- %out = %x + %c0
-  Com.ret [⟨0, rfl⟩]ₕ
+  Com.rets [⟨0, rfl⟩]ₕ
 
 def rhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
-  Com.ret [⟨0, rfl⟩]ₕ
+  Com.rets [⟨0, rfl⟩]ₕ
 
 def p2 : PeepholeRewrite SimpleReg [int] [int] :=
   { lhs := lhs, rhs := rhs, correct := by
@@ -390,9 +390,9 @@ def egLhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.var (iterate (k := 0) (⟨0, rfl⟩) (
       Com.letPure (cst 0) <|
       Com.letPure (add ⟨0, rfl⟩ ⟨1, rfl⟩) -- fun x => (x + x)
-      <| Com.ret [⟨0, rfl⟩]ₕ
+      <| Com.rets [⟨0, rfl⟩]ₕ
   )) <|
-  Com.ret [⟨0, rfl⟩]ₕ
+  Com.rets [⟨0, rfl⟩]ₕ
 
 /--
 info: {
@@ -439,9 +439,9 @@ def expectedRhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
       Com.letPure (add ⟨0, rfl⟩ ⟨1, rfl⟩)
       -- | See that the rewrite has fired in the nested region for 'iterate',
       -- and we directly return the block argument.
-      <| Com.ret [⟨2, rfl⟩]ₕ
+      <| Com.rets [⟨2, rfl⟩]ₕ
   )) <|
-  Com.ret [⟨0, rfl⟩]ₕ
+  Com.rets [⟨0, rfl⟩]ₕ
 
 theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
   native_decide

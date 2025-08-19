@@ -43,7 +43,8 @@ attribute [simp_denote]
   Com.letPure Expr.denote_castPureToEff
   Expr.denote_castPureToEff
   /- Unfold denotation -/
-  Com.denote_var Com.denote_ret Expr.denoteOp HVector.denote
+  Com.ret
+  Com.denote_var Com.denote_rets Expr.denoteOp HVector.denote
   Expr.op_mk Expr.args_mk Expr.regArgs_mk
   Expr.op_castPureToEff Expr.args_castPureToEff
   /- Effect massaging -/
@@ -197,8 +198,7 @@ attribute [simp_denote] HVector.cons.injEq
 
 /-! ### Compatibility Wrappers -/
 attribute [simp_denote]
-  SingleReturnCompat.Com SingleReturnCompat.Expr
-  SingleReturnCompat.Com.ret SingleReturnCompat.Com.var
+  SingleReturnCompat.Com SingleReturnCompat.Expr SingleReturnCompat.Com.var
 
 
 /-!

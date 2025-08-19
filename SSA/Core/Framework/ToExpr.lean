@@ -105,7 +105,7 @@ partial def Com.toExprAux {Γ : Ctxt d.Ty} {eff : EffectKind} {ty}
   let tyE : Q(List ($dE).Ty) := f.mapList ty
   let effE : Q(EffectKind) := Lean.toExpr eff
   match com with
-  | .ret vs =>
+  | .rets vs =>
     let vs := f.mapVarVec vs
     mkAppN (mkConst ``Com.ret) #[dE, sig, ΓE, tyE, effE, vs]
   | .var (ty := eTy) e body =>

@@ -168,7 +168,7 @@ and its body are pure, and if a `Com` is `impure`, then both the expression and
 the body are impure!
 -/
 inductive Com : Ctxt d.Ty → EffectKind → List d.Ty → Type where
-  | ret {Γ} {tys} {eff : EffectKind} (vs : HVector Γ.Var tys) : Com Γ eff tys
+  | rets {Γ} {tys} {eff : EffectKind} (vs : HVector Γ.Var tys) : Com Γ eff tys
   | var (e : Expr Γ eff ty) (body : Com (Γ ++ ty) eff β) : Com Γ eff β
 end
 
@@ -253,7 +253,7 @@ mutual
 
   /-- Format string for sequence of assignments and return in a Com. -/
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
-    | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ()"
+    | .rets v => f!"return {reprPrec v prec} : ({repr t}) → ()"
     | .var e body =>
       f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
       comReprAux prec body
@@ -298,7 +298,7 @@ partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
 partial def Com.ToStringBody : Com d Γ eff t → String
-  | .ret v => s!"  \"return\"({_root_.repr v }) : ({toString t}) -> ()"
+  | .rets v => s!"  \"return\"({_root_.repr v }) : ({toString t}) -> ()"
   | .var e body =>
     s!"  %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
     Com.ToStringBody body
@@ -341,7 +341,7 @@ protected instance Expr.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty] :
 
 protected instance Com.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty]
     {Γ : Ctxt d.Ty} {eff : EffectKind} {tys : List d.Ty} : DecidableEq (Com d Γ eff tys)
-  | .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
+  | .rets v₁, .rets v₂ => decidable_of_iff (v₁ = v₂) (by simp)
   | .var (ty := ty₁) e₁ body₁, .var (ty := ty₂) e₂ body₂ =>
     if hα : ty₁ = ty₂
     then by
@@ -350,8 +350,8 @@ protected instance Com.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty]
       letI := Com.decidableEq body₁ body₂
       exact decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by simp)
     else isFalse (by simp_all)
-  | .ret _, .var _ _ => isFalse (fun h => Com.noConfusion h)
-  | .var _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
+  | .rets _, .var _ _ => isFalse (fun h => Com.noConfusion h)
+  | .var _ _, .rets _ => isFalse (fun h => Com.noConfusion h)
 
 end -- decEq
 
@@ -369,14 +369,14 @@ variable {d : Dialect} [DialectSignature d]
 
 section Rec
 variable {eff t} {motive : ∀ {Γ}, Com d Γ eff t → Sort u}
-          (ret : ∀ {Γ : Ctxt _} , (v : HVector Γ.Var t) → motive (Com.ret v))
+          (rets : ∀ {Γ : Ctxt _} , (v : HVector Γ.Var t) → motive (Com.rets v))
           (var : ∀ {Γ} {u},
             (e : Expr d Γ eff u) → (body : Com d e.outContext eff t) →
               motive body → motive (Com.var e body))
 
 @[elab_as_elim]
 def Com.recAux' {Γ} : (com : Com d Γ eff t) → motive com
-  | Com.ret v => ret v
+  | Com.rets v => rets v
   | Com.var e body => var e body (Com.recAux' body)
 
 /--
@@ -396,8 +396,8 @@ def Com.rec' {Γ} (com : Com d Γ eff t) : motive com :=
       (h₁ : eff = eff') → (h₂ : t = t') → motive (h₁ ▸ h₂ ▸ c))
     (motive_3 := fun _ _ => PUnit)
     (fun _ _ _ _ _ _ => ⟨⟩) -- `Expr.mk` case
-    (fun v h₁ h₂ => -- `Com.ret` case
-      cast (by subst h₁ h₂; rfl) <| ret (h₂ ▸ v))
+    (fun v h₁ h₂ => -- `Com.rets` case
+      cast (by subst h₁ h₂; rfl) <| rets (h₂ ▸ v))
     (fun e' body' _ r' h₁ h₂ => -- `Com.var` case
       let e := h₁ ▸ e'
       let body : Com _ _ eff t := cast (by simp_all) body'
@@ -409,21 +409,21 @@ def Com.rec' {Γ} (com : Com d Γ eff t) : motive com :=
     rfl
     rfl
 
-variable {ret} {var} {Γ : Ctxt _}
+variable {rets} {var} {Γ : Ctxt _}
 
-@[simp] lemma Com.rec'_ret (v : HVector Γ.Var t) :
-    (Com.ret (d:=d) (eff := eff) v).rec' (motive:=motive) ret var = ret v :=
+@[simp] lemma Com.rec'_rets (v : HVector Γ.Var t) :
+    (Com.rets (d:=d) (eff := eff) v).rec' (motive:=motive) rets var = rets v :=
   rfl
 
 @[simp] lemma Com.rec'_var (e : Expr d Γ eff u) (body : Com d _ _ t) :
-    (Com.var e body).rec' (motive:=motive) ret var
-    = var e body (body.rec' (motive:=motive) ret var) :=
+    (Com.var e body).rec' (motive:=motive) rets var
+    = var e body (body.rec' (motive:=motive) rets var) :=
   rfl
 
-omit ret var in
+omit rets var in
 theorem Com.recAux'_eq :
     Com.recAux' (motive:=motive) = Com.rec' (motive:=motive) := by
-  funext ret var Γ com
+  funext rets var Γ com
   induction com <;> simp [recAux', *]
 
 end Rec
@@ -481,7 +481,7 @@ theorem Expr.regArgs_mk {Γ : Ctxt d.Ty} {ty eff op}
 /-- The size of a `Com` is given by the number of let-bindings it contains -/
 def Com.size : Com d Γ eff t → Nat :=
   Com.rec'
-    /- ret _ -/       (fun _ => 0)
+    /- rets _ -/       (fun _ => 0)
     /- var _ body -/ (fun _ _body bodySize => bodySize + 1)
 
 @[simp, grind=] def Expr.bvars (e : Expr d Γ eff Δ) : Nat :=
@@ -493,16 +493,16 @@ will differ in the presence of let-bindings with multiple return variables.
 NOTE: this ignores any regions. -/
 def Com.bvars : Com d Γ eff t → Nat :=
   Com.rec'
-    /- ret _ -/      (fun _ => 0)
+    /- rets _ -/      (fun _ => 0)
     /- var e body -/ (fun e _body bodySize => e.bvars + bodySize)
 
 section Lemmas
 namespace Com
 
-@[simp] lemma size_ret  : (ret v : Com d Γ eff t).size = 0 := rfl
+@[simp] lemma size_rets  : (rets v : Com d Γ eff t).size = 0 := rfl
 @[simp] lemma size_var : (var e body : Com d Γ eff t).size = body.size + 1 := rfl
 
-@[simp] lemma bvars_ret  : (ret v : Com d Γ eff t).bvars = 0 := rfl
+@[simp] lemma bvars_rets  : (rets v : Com d Γ eff t).bvars = 0 := rfl
 @[simp] lemma bvars_var  :
   (var e body : Com d Γ eff t).bvars = e.bvars + body.bvars := rfl
 
@@ -526,7 +526,7 @@ end Lemmas
 of the program. That is, it is the context under which the return value is typed -/
 def Com.outContext {Γ} : Com d Γ eff ts → Ctxt d.Ty :=
   Com.rec' (motive := fun _ => Ctxt d.Ty)
-    (@fun Γ _ => Γ) -- `Com.ret` case
+    (@fun Γ _ => Γ) -- `Com.rets` case
     (fun _ _ r => r) -- `Com.var` case
 
 /-- The difference between the context `Γ` under which `com` is typed, and the output context of
@@ -536,7 +536,7 @@ def Com.outContextDiff (com : Com d Γ eff ts) : Γ.Diff com.outContext :=
     intro i t h;
     unfold outContext
     induction com generalizing i
-    case ret => exact h
+    case rets => exact h
     case var e _ ih =>
       simp only [rec'_var, bvars_var]
       rw [← Nat.add_assoc]
@@ -550,7 +550,7 @@ def Com.outContextHom (com : Com d Γ eff t) : Γ.Hom com.outContext :=
 
 /-- The return variables of a program -/
 def Com.returnVars : (com : Com d Γ eff ts) → HVector (Var com.outContext) ts
-  | .ret vs => vs
+  | .rets vs => vs
   | .var _ body => body.returnVars
 
 /-- The return variable of a program with exactly one return. -/
@@ -562,12 +562,12 @@ abbrev Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
 
 section Lemmas
 
-@[simp] lemma Com.outContext_ret (vs : HVector Γ.Var t) : (ret vs : Com d Γ eff t).outContext = Γ := rfl
+@[simp] lemma Com.outContext_rets (vs : HVector Γ.Var t) : (rets vs : Com d Γ eff t).outContext = Γ := rfl
 @[simp] lemma Com.outContext_var {eff} (e : Expr d Γ eff t) (body : Com d e.outContext eff u) :
     (Com.var e body).outContext = body.outContext := rfl
 
-@[simp] lemma Com.outContextHom_ret (v : HVector Γ.Var t) :
-    (ret v : Com d Γ eff t).outContextHom = Ctxt.Hom.id := rfl
+@[simp] lemma Com.outContextHom_rets (v : HVector Γ.Var t) :
+    (rets v : Com d Γ eff t).outContextHom = Ctxt.Hom.id := rfl
 @[simp] lemma Com.outContextHom_var :
     (var e body : Com d Γ eff t).outContextHom
     = e.contextHom.comp body.outContextHom := by
@@ -577,12 +577,12 @@ section Lemmas
     e.ty_eq]
   omega
 
-@[simp] lemma Com.returnVars_ret : returnVars (ret vs : Com d Γ eff t) = vs := rfl
+@[simp] lemma Com.returnVars_rets : returnVars (rets vs : Com d Γ eff t) = vs := rfl
 @[simp] lemma Com.returnVars_var :
     returnVars (var (d:=d) (eff:=eff) e body) = body.returnVars := rfl
 
-@[simp] lemma Com.returnVar_ret :
-    returnVar (ret v : Com d Γ eff [t]) = v.get (0 : Fin 1) := rfl
+@[simp] lemma Com.returnVar_rets :
+    returnVar (rets v : Com d Γ eff [t]) = v.get (0 : Fin 1) := rfl
 @[simp] lemma Com.returnVar_var :
     returnVar (var (d:=d) (eff:=eff) e body) = body.returnVar := rfl
 
@@ -612,7 +612,7 @@ def Expr.denote {ty} (e : Expr d Γ eff ty) (V : Valuation Γ) :
 
 def Com.denote : Com d Γ eff ty → (Γv : Valuation Γ) →
     eff.toMonad d.m (HVector toType ty)
-  | .ret vs, Γv     => pure (vs.map Γv)
+  | .rets vs, Γv     => pure (vs.map Γv)
   | .var e body, V => e.denote V >>= body.denote
 end
 
@@ -620,7 +620,7 @@ end
 the output context of `com` -/
 def Com.denoteLets : (com : Com d Γ eff ty) → (Γv : Valuation Γ) →
     eff.toMonad d.m (com.outContext.Valuation)
-  | .ret _, V => pure V
+  | .rets _, V => pure V
   | .var e body, V =>
       e.denote V >>= body.denoteLets >>= fun V =>
         return V.cast (by simp [Com.outContext])
@@ -738,8 +738,8 @@ section Lemmas
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) :=
   rfl
 
-@[simp] lemma Com.denote_ret {eff : EffectKind} (Γ : Ctxt d.Ty) (vs : HVector Γ.Var ts) :
-    (Com.ret (eff := eff) vs).denote = fun V => pure (vs.map V) :=
+@[simp] lemma Com.denote_rets {eff : EffectKind} (Γ : Ctxt d.Ty) (vs : HVector Γ.Var ts) :
+    (Com.rets (eff := eff) vs).denote = fun V => pure (vs.map V) :=
   rfl
 
 @[simp] lemma Com.denote_var [LawfulMonad d.m] {e : Expr d Γ eff α} :
@@ -808,7 +808,7 @@ def Expr.changeVars (varsMap : Γ.Hom Γ') {ty} (e : Expr d Γ eff ty) :
 def Com.changeVars : Com d Γ eff ty →
     (varsMap : Γ.Hom Γ') →
     Com d Γ' eff ty
-  |  .ret e => fun varsMap => .ret (e.map varsMap)
+  |  .rets e => fun varsMap => .rets (e.map varsMap)
   |  .var e body => fun varsMap => .var (e.changeVars varsMap)
       (body.changeVars (fun _ v => varsMap.append v))
 
@@ -836,9 +836,9 @@ variable {Γ Γ' : Ctxt d.Ty} {t} (f : Γ.Hom Γ') (e : Expr d Γ eff t) (V : Γ
 
 end Lemmas
 
-@[simp] lemma Com.changeVars_ret :
-    (Com.ret (d:=d) (Γ:=Γ) (eff := eff) vs).changeVars
-    = fun (map : Γ.Hom Δ) => Com.ret (vs.map map) := by
+@[simp] lemma Com.changeVars_rets :
+    (Com.rets (d:=d) (Γ:=Γ) (eff := eff) vs).changeVars
+    = fun (map : Γ.Hom Δ) => Com.rets (vs.map map) := by
   funext map
   simp [changeVars]
 
@@ -848,15 +848,15 @@ end Lemmas
   simp [changeVars]
 
 -- TODO: this is implied by simpler simp-lemmas, do we need it?
-@[simp] lemma Com.outContext_changeVars_ret (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
-  ((Com.ret (d:=d) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
+@[simp] lemma Com.outContext_changeVars_rets (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
+  ((Com.rets (d:=d) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
 
 @[simp] lemma Com.denote_changeVars
     (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
     (c.changeVars varsMap).denote =
     fun V => c.denote (V.comap varsMap) := by
   induction c using Com.rec' generalizing Γ' with
-  | ret x      => simp [HVector.map_map]; rfl
+  | rets x      => simp [HVector.map_map]; rfl
   | var _ _ ih => simp [denote, ih]
 
 @[simp] lemma Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
@@ -865,7 +865,7 @@ end Lemmas
 
 @[simp] def Com.outContext_changeVars_hom {map : Γ.Hom Δ} (map_inv : Δ.Hom Γ) :
     {c : Com d Γ eff ty} → Ctxt.Hom (outContext (changeVars c map)) (outContext c)
-  | .ret _        => cast (by simp) map_inv
+  | .rets _        => cast (by simp) map_inv
   | .var _ body  => cast (by simp) <|
       Com.outContext_changeVars_hom (map := map.append) map_inv.append (c := body)
 
@@ -873,7 +873,7 @@ end Lemmas
 lemma Com.denoteLets_returnVar (c : Com d Γ .pure [ty]) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = (c.denote Γv).get (0 : Fin 1) := by
   induction c using Com.rec'
-  case ret v =>
+  case rets v =>
     rcases v
     simp
     rfl
@@ -884,7 +884,7 @@ lemma Com.denoteLets_returnVar (c : Com d Γ .pure [ty]) (Γv : Valuation Γ) :
 @[simp] lemma Com.denoteLets_returnVars (c : Com d Γ .pure tys) (V : Valuation Γ) :
     c.returnVars.map (c.denoteLets V) = c.denote V := by
   induction c using Com.rec'
-  case ret v  => rfl
+  case rets v  => rfl
   case var ih => simp [denoteLets, Id.pure_eq', Id.bind_eq', ih, denote]
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
@@ -922,7 +922,7 @@ This is isomorphic to `Com Γ eff ty`, where `Δ` is `com.outContext` -/
 structure FlatCom (d : Dialect) [DialectSignature d]  (Γ_in : Ctxt d.Ty) (eff : EffectKind)
     (Γ_out : Ctxt d.Ty) (ts : List d.Ty) where
   lets : Lets d Γ_in eff Γ_out
-  ret : HVector Γ_out.Var ts
+  rets : HVector Γ_out.Var ts
 
 --TODO: should this be a `@[simp] abbrev`, or just nuked altogether?
 /-- Denote the Lets of the FlatICom -/
@@ -930,11 +930,11 @@ def FlatCom.denoteLets (flatCom : FlatCom d Γ eff Γ_out t) (Γv : Γ.Valuation
     eff.toMonad d.m <| Γ_out.Valuation :=
   flatCom.lets.denote Γv
 
-/-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
+/-- Denote the lets and the rets of the FlatCom. This is equal to denoting the Com -/
 @[simp] abbrev FlatCom.denote [DialectDenote d]
     (flatCom : FlatCom d Γ eff Γ_out ts)
     (V : Γ.Valuation) : eff.toMonad d.m (HVector toType ts) :=
-  flatCom.lets.denote V >>= (return flatCom.ret.map ·)
+  flatCom.lets.denote V >>= (return flatCom.rets.map ·)
 
 theorem FlatCom.denoteLets_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :
     flatCom.denoteLets = fun Γv => flatCom.lets.denote Γv := by
@@ -942,7 +942,7 @@ theorem FlatCom.denoteLets_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_o
   simp [denoteLets]
 
 -- theorem FlatCom.denote_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out ts) :
---     flatCom.denote = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret) := by
+--     flatCom.denote = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.rets) := by
 --   funext Γv
 --   simp [denote]
 
@@ -969,7 +969,7 @@ phrased more generically -/
 def Com.changeEffect {eff₁ eff₂ : EffectKind} (h : eff₁ ≤ eff₂) :
     Com d Γ eff₁ t → Com d Γ eff₂ t := fun com =>
   Com.rec' (motive := @fun Γ _ => eff₁ ≤ eff₂ → Com d Γ eff₂ t)
-    /- ret v -/       (fun v _h               => ret v)
+    /- rets v -/       (fun v _h               => rets v)
     /- var e body -/ (fun e _body castBody h => var (e.changeEffect h) (castBody h))
     com h
 
@@ -1015,7 +1015,7 @@ section Lemmas
     (e.castPureToEff eff).args = cast (by simp) e.args := by
   cases e; cases eff <;> rfl
 
-@[simp] lemma Com.castPureToEff_ret : (ret v : Com d Γ .pure ty).castPureToEff eff = ret v := rfl
+@[simp] lemma Com.castPureToEff_rets : (rets v : Com d Γ .pure ty).castPureToEff eff = rets v := rfl
 @[simp] lemma Com.castPureToEff_var {com : Com d _ .pure ty} {e : Expr d Γ _ eTy} :
     (var e com).castPureToEff eff = var (e.castPureToEff eff) (com.castPureToEff eff) := rfl
 
@@ -1330,7 +1330,7 @@ theorem DialectMorphism.preserves_effectKind (op : d.Op) :
 mutual
 
 def Com.changeDialect : Com d Γ eff ty → Com d' (f.mapTy <$> Γ) eff (f.mapTy <$> ty)
-  | .ret vs        => .ret <| vs.map' f.mapTy (fun _ v => v.toMap)
+  | .rets vs        => .rets <| vs.map' f.mapTy (fun _ v => v.toMap)
   | .var body rest =>
       let rest :=
         rest.changeDialect.changeVars <|
@@ -1369,9 +1369,9 @@ def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in)
 
 section Lemmas
 
-@[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (vs) :
-    Com.changeDialect f (Com.ret vs : Com d Γ eff t)
-    = Com.ret (vs.map' f.mapTy (fun _ v => v.toMap)) := by
+@[simp] lemma Com.changeDialect_rets (f : DialectMorphism d d') (vs) :
+    Com.changeDialect f (Com.rets vs : Com d Γ eff t)
+    = Com.rets (vs.map' f.mapTy (fun _ v => v.toMap)) := by
   cases eff <;> simp [changeDialect]
 
 @[simp] lemma Com.changeDialect_var (f : DialectMorphism d d')
@@ -1396,7 +1396,7 @@ end Map
 /-- Add a `Com` to the end of a sequence of lets -/
 def Lets.addComToEnd {Γ_out} {eff} (lets : Lets d Γ_in eff Γ_out) :
       (com : Com d Γ_out eff ty) → Lets d Γ_in eff com.outContext
-  | Com.ret _       => lets
+  | Com.rets _       => lets
   | Com.var e body => addComToEnd (Lets.var lets e) body
 
 /-- The let-bindings of a program -/
@@ -1411,12 +1411,12 @@ section Lemmas
 
 /-! #### Basic Lemmas -/
 
-@[simp] lemma Lets.addComToEnd_ret {lets : Lets d Γ_in eff Γ_out} :
-    addComToEnd lets (.ret v : Com d Γ_out eff t) = lets             := by simp [addComToEnd]
+@[simp] lemma Lets.addComToEnd_rets {lets : Lets d Γ_in eff Γ_out} :
+    addComToEnd lets (.rets v : Com d Γ_out eff t) = lets             := by simp [addComToEnd]
 @[simp] lemma Lets.addComToEnd_var {lets : Lets d Γ_in eff Γ_out} {com : Com d _ eff t} :
     addComToEnd lets (Com.var e com) = addComToEnd (lets.var e) com := by simp [addComToEnd]
 
-@[simp] lemma Com.toLets_ret : toLets (ret v : Com d Γ eff t) = .nil := by simp [toLets]
+@[simp] lemma Com.toLets_rets : toLets (rets v : Com d Γ eff t) = .nil := by simp [toLets]
 
 /-! ### castPureToEff -/
 
@@ -1425,7 +1425,7 @@ section Lemmas
     (lets.castPureToEff eff).addComToEnd (com.castPureToEff eff)
     = cast (by simp) ((lets.addComToEnd com).castPureToEff eff) := by
   induction com using Com.rec'
-  case ret => simp
+  case rets => simp
   case var ih =>
     simp only [Com.castPureToEff_var, Com.outContext_var, addComToEnd_var,
       ← Lets.castPureToEff_var, ih]
@@ -1446,10 +1446,10 @@ section Lemmas
         return Vbody
       ) := by
   induction com
-  case ret => simp [Com.denoteLets]
+  case rets => simp [Com.denoteLets]
   case var ih => simp [addComToEnd, ih, denote_var]
 
-@[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
+@[simp] lemma Com.denoteLets_rets : (.rets v : Com d Γ eff t).denoteLets = fun V => pure V := by
   funext V; simp [denoteLets]
 
 theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
@@ -1575,6 +1575,9 @@ end TypeProjections
 -/
 section Compat
 
+def Com.ret {Γ : Ctxt d.Ty} {ty : d.Ty} {eff : EffectKind} : Γ.Var ty → Com d Γ eff [ty] :=
+  (Com.rets [·]ₕ)
+
 /-!
 `open LeanMLIR.SingleReturnCompat` will bring an alias for `Com` & `Expr` into
 scope which has only a single return type.
@@ -1587,7 +1590,6 @@ nonrec def Expr : Ctxt d.Ty → EffectKind → d.Ty → Type := (Expr d · · [�
 
 variable {d} {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
 
-nonrec def Com.ret : Γ.Var t → Com d Γ eff t := (Com.ret <| · ::ₕ .nil)
 nonrec def Com.var : Expr d Γ eff t → Com d (Γ.snoc t) eff β → Com d Γ eff β :=
   (Com.var · ·)
 
