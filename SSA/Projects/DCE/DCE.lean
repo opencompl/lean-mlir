@@ -262,9 +262,9 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ')
     Option { com' : Com d Γ' .pure ts // ∀ (V : Γ.Valuation),
       com.denote V = com'.denote (V.comap DEL.toHom) } :=
   match com with
-  | .ret vs => do
+  | .rets vs => do
     let ⟨vs, hv⟩ ← Var.tryDelete? DEL vs
-    return ⟨.ret vs, by
+    return ⟨.rets vs, by
       intro V
       simp [hv, HVector.map_map]; rfl
     ⟩
@@ -302,8 +302,8 @@ backward pass.
 partial def dce_ {Γ : Ctxt d.Ty} {t}
     (com : Com d Γ .pure t) : DCEType com :=
   match HCOM: com with
-  | .ret v => -- If we have a `ret`, return it.
-    ⟨Γ, Hom.id, ⟨.ret v, by
+  | .rets v => -- If we have a `ret`, return it.
+    ⟨Γ, Hom.id, ⟨.rets v, by
       intros V
       unfold Ctxt.Valuation.comap
       simp
@@ -422,13 +422,13 @@ attribute [local simp] Ctxt.snoc
 def ex1_pre_dce : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 1) <|
   Com.var (cst 2) <|
-  Com.ret <| (⟨0, rfl⟩) ::ₕ .nil
+  Com.ret ⟨0, rfl⟩
 
 def ex1_post_dce : Com Ex ∅ .pure [.nat] := (dce' ex1_pre_dce).val
 
 def ex1_post_dce_expected : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 2) <|
-  Com.ret <| (⟨0, rfl⟩) ::ₕ .nil
+  Com.ret ⟨0, rfl⟩
 
 -- TODO: uncomment once sorries are fixed
 -- theorem checkDCEasExpected :
