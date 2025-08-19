@@ -592,12 +592,25 @@ def Lets.denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv : Valuation Γ_
     | .nil => return ⟨Γv, by simp⟩
     | @Lets.var _ _ _ _ Γ_out eTy body e => do
         let ⟨Vout, h⟩ ← body.denoteIntoSubtype Γv
-        let v ← e.denoteOpIntoSubtype Vout
-        return ⟨Vout ++ v.val, by
-          intro t' _ v' w
+        let Ve ← e.denoteOpIntoSubtype Vout
+        return ⟨Vout ++ Ve.val, by
+          intro t' _ v' w ePure h_getPureExpr
           induction v' using Var.appendCases
-          · sorry
-          · sorry
+          · obtain ⟨tys', w', ePure', h_ePure', rfl, h_ePure⟩ := by
+              simp only [getPureExpr_var_appendInl, Option.map_eq_map, Option.map_eq_some_iff,
+                Sigma.mk.injEq, Sigma.exists, Prod.exists] at h_getPureExpr
+              exact h_getPureExpr
+            clear h_getPureExpr
+            obtain ⟨(rfl : w' = w), (rfl : ePure'.changeVars e.contextHom = ePure)⟩ := by
+              simpa using h_ePure
+            clear h_ePure
+            simpa using h h_ePure'
+          · simp only [getPureExpr_var_appendInr, Option.map_eq_some_iff,
+            Sigma.mk.injEq] at h_getPureExpr
+            rcases h_getPureExpr with ⟨ePure', h_toPure?, rfl, h_ePure⟩
+            obtain ⟨(rfl : _ = w), (rfl : ePure'.changeVars e.contextHom = ePure)⟩ := by
+              simpa using h_ePure
+            simp [Ve.prop _ h_toPure?]
         ⟩
 
 theorem Expr.denoteOp_eq_denoteOpIntoSubtype (e : Expr d Γ eff tys) (V : Valuation Γ) :
@@ -885,7 +898,7 @@ def MatchVarResult.isTotal_of
     (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w) :
     map.val.IsTotal := by
   intro t v
-  have ⟨map', h_entries, h_matchVar⟩ := map.prop
+  have ⟨_, map', _, h_entries, h_matchVar⟩ := map.prop
   apply AList.keys_subset_keys_of_entries_subset_entries h_entries
   apply mem_matchVar h_matchVar (hvars _ v)
 
@@ -905,7 +918,7 @@ def MatchArgResult.isTotal_of
     (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.varsOfVec ws) :
     map.val.IsTotal := by
   intro t v
-  have ⟨map', h_entries, h_match⟩ := map.prop
+  have ⟨_, map', _, h_entries, h_match⟩ := map.prop
   apply AList.keys_subset_keys_of_entries_subset_entries h_entries
   apply mem_matchArg h_match (hvars _ v)
 
