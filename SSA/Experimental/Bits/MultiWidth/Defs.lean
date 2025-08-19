@@ -35,15 +35,22 @@ op.toBitStream : BitStream
 
 inductive WidthExpr (wcard : Nat) : Type
 | var : (v : Fin wcard) → WidthExpr wcard
+| min : (v w : WidthExpr wcard) → WidthExpr wcard
+| max : (v w : WidthExpr wcard) → WidthExpr wcard
+| addK : (v : WidthExpr wcard) → (k : Nat) → WidthExpr wcard
 
 structure PackedWidthExpr where
   wcard : Nat
   e : WidthExpr wcard
 
 
+/-- Cast the width expression along the fact that width is ≤. -/
 def WidthExpr.castLe {wcard : Nat} (e : WidthExpr wcard) (hw : wcard ≤ wcard') : WidthExpr wcard' :=
   match e with
   | .var v => .var ⟨v, by omega⟩
+  | .min v w => .min (v.castLe hw) (w.castLe hw)
+  | .max v w => .max (v.castLe hw) (w.castLe hw)
+  | .addK v k => .addK (v.castLe hw) k
 
 abbrev WidthExpr.Env (wcard : Nat) : Type :=
   Fin wcard → Nat
@@ -58,12 +65,17 @@ def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
 def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .var v => env v
-
+  | .min v w => Nat.min (v.toNat env) (w.toNat env)
+  | .max v w => Nat.max (v.toNat env) (w.toNat env)
+  | .addK v k => v.toNat env + k
 
 def WidthExpr.toBitStream (e : WidthExpr wcard)
   (bsEnv : StateSpace wcard tcard → BitStream) : BitStream :=
   match e with
   | .var v => bsEnv (StateSpace.widthVar v)
+  | .min v w => BitStream.minUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
+  | .max v w => BitStream.maxUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
+  | .addK v k => BitStream.addKUnary (v.toBitStream bsEnv) k
 
 @[simp]
 def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :

@@ -1339,3 +1339,16 @@ def Bitstream.goodBitvecSequence (bs : (w : ℕ) → BitVec w) : Prop :=
   ∀ wsmall wlarge, wsmall ≤ wlarge →
     (bs wlarge).setWidth wsmall = bs wsmall
 end InverseLimit
+
+
+/-- compute unary 'min'. -/
+def minUnary (x y : BitStream) : BitStream :=
+  x &&& y
+
+/-- compute unary max. -/
+def maxUnary (x y : BitStream) : BitStream :=
+  x ||| y
+
+/-- increment by '+k'. -/
+def addKUnary (x : BitStream) (k : Nat) : BitStream :=
+  fun i => if i < k then true else x (i - k)
