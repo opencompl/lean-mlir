@@ -207,7 +207,6 @@ def ofBitVecSextMsb {w} (x : BitVec w) : BitStream :=
 def ofBitVecZextMsb {w} (x : BitVec w) : BitStream :=
   fun i => (x.zeroExtend i).msb
 
-
 @[simp]
 theorem ofBitVecZextMsb_eq_concat_ofBitVecZext (x : BitVec w) :
     ofBitVecZextMsb x = (ofBitVecZext x).concat false := by
@@ -232,6 +231,22 @@ theorem ofBitVecSextMsb_eq_concat_ofBitVec (x : BitVec w) :
 @[simp]
 theorem ofBitVecZext_eq_getLsbD (x : BitVec w) (i : Nat) :
   ofBitVecZext x i = x.getLsbD i := rfl
+
+/-- rewrite 'ofBitVecZextMsb' in terms of 'ofBitVecSext'. -/
+theorem ofBitVecZextMsb_eq_ofBitVecZext_mul_two_zeroExtend (x : BitVec w)
+    (i : Nat) (hi : i ≤ w) :
+    (BitStream.ofBitVecZextMsb x i) =
+    ((BitStream.ofBitVecSext ((x.zeroExtend (w + 1)) <<< 1)) i) := by
+  simp [ofBitVecSext]
+  rcases i with rfl | i
+  · simp
+  · simp [show i < w + 1 by omega]
+    rw [BitVec.getMsbD_eq_getLsbD]
+    simp [show 1 + w - (w + 1) = 0 by omega]
+    by_cases hi : i < w
+    · simp [hi]
+    · simp [hi]
+      omega
 
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
@@ -265,6 +280,13 @@ def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
         apply BitVec.getLsbD_of_ge
         omega
 
+/-- the value of a bitstream at 'i' can be computed by coercing
+the bitstream to a bitvector, and then computing the value
+at any size 'w > i'. -/
+theorem eq_getLsbD_toBitVec_of_lt (x : BitStream) (i : Nat) (hi : i < w) :
+    x i = (x.toBitVec w).getLsbD i := by
+  rw [getLsbD_toBitVec]
+  simp [hi]
 
 @[simp]
 theorem ofBitVecZext_inj (x y : BitVec w) :
@@ -322,7 +344,7 @@ section Lemmas
   case zero      => simp only [BitVec.eq_nil]
   case succ w ih => rw [toBitVec, ih]; simp [BitVec.signExtend_succ]
 
-theorem toBitVec_eq_of_equalUpTo {w : Nat} {x y : BitStream} (h : x ={≤w} y) :
+theorem toBitVec_eq_of_equal_up_to {w : Nat} {x y : BitStream} (h : x ={≤w} y) :
     x.toBitVec w = y.toBitVec w := by
   simp [EqualUpTo] at h
   induction w
@@ -332,10 +354,29 @@ theorem toBitVec_eq_of_equalUpTo {w : Nat} {x y : BitStream} (h : x ={≤w} y) :
   have b := f (fun y g => h y (by omega))
   rw [a,b]
 
+/--
+we can always rewrite 'EqualUpTo'
+in terms of bitvector equality.
+-/
+theorem toBitVec_eq_toBitVec_iff_EqualUpTo {w : Nat} {x y : BitStream} :
+  (EqualUpTo w x y) ↔ x.toBitVec w = y.toBitVec w := by
+  simp [EqualUpTo]
+  constructor
+  · intros h
+    ext i hi
+    simp [hi]
+    apply h
+    omega
+  · intros h
+    intros i hi
+    have := congrFun (congrArg BitVec.getLsbD h) i
+    simp [hi] at this
+    exact this
+
 theorem eq_of_ofBitVec_eq (x y : BitVec w) :
     ofBitVecSext x ={≤w} ofBitVecSext y → x = y := by
   intro h
-  have := toBitVec_eq_of_equalUpTo h
+  have := toBitVec_eq_of_equal_up_to h
   simp only [toBitVec_ofBitVec, BitVec.signExtend_eq] at this
   simpa
 
@@ -659,7 +700,8 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carryIn)
 
-@[simp] theorem addAux_zero (x y : BitStream) : (x.addAux y 0) = ((x 0) ^^ (y 0), (x 0) && (y 0)) := by
+@[simp] theorem addAux_zero (x y : BitStream) : (x.addAux y 0) =
+  ((x 0) ^^ (y 0), (x 0) && (y 0)) := by
   simp [addAux, addAux,BitVec.adcb]
 
 @[simp] theorem addAux_succ (x y : BitStream) : (x.addAux y (i+1)) =
@@ -872,10 +914,40 @@ theorem ofBitVec_add : ofBitVecSext (x + y) ≈ʷ (ofBitVecSext x) + (ofBitVecSe
   intros n a
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecSext x).addAux (ofBitVecSext y) n := by
     induction' n with n ih
-    · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
+    ·
+      simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
+
+theorem ofBitVecSext_add_eq_ofBitVecSext_add_ofBitVecSext
+    (x y : BitVec w) (i : Nat) (hi : i < w):
+    (ofBitVecSext (x + y)) i =
+    ((ofBitVecSext x) + (ofBitVecSext y)) i := by
+  rw [ofBitVec_add]
+  omega
+
+theorem ofBitVecZext_add_EqualUpTo :
+    ofBitVecZext (x + y) ≈ʷ (ofBitVecZext x) + (ofBitVecZext y) := by
+  intros n a
+  have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecZext x).addAux (ofBitVecZext y) n := by
+    induction' n with n ih
+    · simp only [zero_add, addAux_zero, ofBitVecZext_eq_getLsbD, Prod.mk.injEq]
+      simp [BitVec.getLsbD, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
+        Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
+    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
+  simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
+
+@[simp]
+theorem ofBitVecZext_add_eq (hi : i < w) : ofBitVecZext (x + y) i =
+    ((ofBitVecZext x) + (ofBitVecZext y)) i := by
+  apply ofBitVecZext_add_EqualUpTo
+  omega
+
+/--
+info: 'BitStream.ofBitVecZext_add_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms ofBitVecZext_add_eq
 
 @[refl]
 theorem equal_up_to_refl : a ≈ʷ a := by
@@ -1303,13 +1375,28 @@ theorem toBitVec_concat_succ (a : BitStream) :
   · simp
   · simp; omega
 
-@[simp]
+-- @[simp]
 theorem toBitVec_concat(a : BitStream) :
     (a.concat b).toBitVec w =
       match w with
       | 0 => 0#0
       | w + 1 => (a.toBitVec w).concat b  := by
   rcases w with rfl | w <;> simp
+
+/-- concatenating a bit 'b' and then converting to a bitvector
+is the same as converting to a bitvector and then using 'shiftConcat'
+to add the extra bit. -/
+theorem toBitVec_concat_eq_shiftConcat_toBitVec (a : BitStream) :
+    (a.concat b).toBitVec w =
+    (a.toBitVec w).shiftConcat b := by
+  ext i hi
+  simp [hi]
+  rw [BitVec.getElem_shiftConcat]
+  rcases i with rfl | i
+  · simp
+  · simp
+    omega
+
 
 section InverseLimit
 
@@ -1324,3 +1411,158 @@ def Bitstream.goodBitvecSequence (bs : (w : ℕ) → BitVec w) : Prop :=
   ∀ wsmall wlarge, wsmall ≤ wlarge →
     (bs wlarge).setWidth wsmall = bs wsmall
 end InverseLimit
+
+
+/-- compute unary 'min'. -/
+def minUnary (x y : BitStream) : BitStream :=
+  x &&& y
+
+/-- compute unary max. -/
+def maxUnary (x y : BitStream) : BitStream :=
+  x ||| y
+
+/-- increment by '+k'. -/
+def addKUnary (x : BitStream) (k : Nat) : BitStream :=
+  fun i => if i < k then true else x (i - k)
+
+/-- We have the values equal up to 'w + 1'. -/
+theorem ofBitVecZextMsb_EqualUpTo_ofBitVecSext
+  (x : BitVec w) :
+  EqualUpTo (w + 1)
+    (BitStream.ofBitVecZextMsb x)
+    (BitStream.concat false (BitStream.ofBitVecSext x)) := by
+  simp
+  intros i hi
+  rcases i with rfl | i
+  · simp
+  · simp
+    intros hi
+    omega
+
+/-- We can rewrite 'ofBitVecZext' with 'ofBitVecSext'
+if we are inbounds. -/
+theorem ofBitVecZext_eq_ofBitVecSext_of_lt (x : BitVec w)
+    (h : i < w) :
+    BitStream.ofBitVecZext x i =
+    BitStream.ofBitVecSext x i := by
+  simp
+  intros hi
+  omega
+
+/-- bitstream equals itself upto width w with zext. -/
+theorem self_EqualUpTo_ofBitVecZext_toBitVec (x : BitStream) :
+  EqualUpTo w x (BitStream.ofBitVecZext (x.toBitVec w)) := by
+  intros i hi
+  simp
+  omega
+
+/-- bitstream equals itself upto width w with sext. -/
+theorem self_EqualUpTo_ofBitVecSext_toBitVec (x : BitStream) :
+  EqualUpTo w x (BitStream.ofBitVecSext (x.toBitVec w)) := by
+  intros i hi
+  simp [BitStream.ofBitVecSext, hi]
+
+/-- bitstream equals itself upto width w with sext. -/
+theorem concat_false_self_EqualUpTo_ofBitVec_toBitVec (x : BitStream) :
+  EqualUpTo (w + 1) (BitStream.concat false x)
+    (BitStream.ofBitVecZextMsb (x.toBitVec w)) := by
+  intros i hi
+  rcases i with rfl | i
+  · simp
+  · simp
+    omega
+
+theorem concat_false_self_EqualUpTo_ofBitVec_toBitVec_shiftConcat (x : BitStream) :
+  EqualUpTo (w + 1) (BitStream.concat false x)
+    (BitStream.ofBitVecSext ((x.toBitVec (w + 1)).shiftConcat false)) := by
+  intros i hi
+  rcases i with rfl | i
+  · simp
+  · simp
+    simp [BitStream.ofBitVecSext]
+    by_cases hi : i < w
+    · simp [hi]
+      omega
+    · simp [hi]
+      omega
+
+@[simp]
+theorem concat_false_add_concat_false_zero_eq (x y : BitStream) :
+ ((BitStream.concat false x) + (BitStream.concat false y)) 0 =
+  (BitStream.concat false (x + y)) 0 := by
+  simp [BitStream.add_eq_addAux]
+
+theorem BitVec.shiftConcat_eq_shiftLeft_or (x : BitVec w) (b : Bool) :
+  x.shiftConcat b = (x <<< 1) ||| ((BitVec.ofBool b).zeroExtend w) := by
+  simp
+  rcases w with rfl |  w
+  · ext i hi
+    omega
+  · ext i hi
+    simp
+    rw [BitVec.getElem_shiftConcat]
+    rcases i with rfl | i
+    · simp
+    · simp
+
+theorem BitVec.shiftConcat_false_eq_shiftLeft (x : BitVec w) :
+    x.shiftConcat false = (x <<< 1) := by
+  rw [BitVec.shiftConcat_eq_shiftLeft_or]
+  simp
+
+-- TODO: what's the right direction for this theorem?
+-- @[simp]
+theorem concat_false_add_concat_false_eq_add (x y : BitStream) :
+  ((BitStream.concat false x) + (BitStream.concat false y)) =
+  (BitStream.concat false (x + y)) := by
+  rw [BitStream.eq_iff_EqualUpTo]
+  intros w
+  rw [toBitVec_eq_toBitVec_iff_EqualUpTo]
+  rw [BitStream.toBitVec_add]
+  rw [toBitVec_concat_eq_shiftConcat_toBitVec]
+  rw [toBitVec_concat_eq_shiftConcat_toBitVec]
+  rw [toBitVec_concat_eq_shiftConcat_toBitVec]
+  rw [BitVec.shiftConcat_false_eq_shiftLeft]
+  rw [BitVec.shiftConcat_false_eq_shiftLeft]
+  rw [BitVec.shiftConcat_false_eq_shiftLeft]
+  simp
+
+/--
+Bitstreams are equal.
+-/
+theorem EqualUpTo_ofBitVecZextMsb_add (a b : BitVec w) :
+    EqualUpTo (w + 1)
+    (BitStream.ofBitVecZextMsb a + BitStream.ofBitVecZextMsb b)
+    (BitStream.ofBitVecZextMsb (a + b)) := by
+  intros i hi
+  simp only [ofBitVecZextMsb_eq_concat_ofBitVecZext, concat_false_add_concat_false_eq_add]
+  rcases i with rfl | i
+  · simp
+  · simp
+    rw [← BitStream.ofBitVecZext_add_eq (by omega)]
+
+/--
+info: 'BitStream.EqualUpTo_ofBitVecZextMsb_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms EqualUpTo_ofBitVecZextMsb_add
+
+/--
+See that this cannot be true, and that I should instead
+change the denotation of predicate equality to be 'EqualUptoW' or whatever.
+-/
+theorem EqualUpTo_ofBitVecZext_add (a b : BitVec w) :
+    EqualUpTo w
+    (BitStream.ofBitVecZext a + BitStream.ofBitVecZext b)
+    (BitStream.ofBitVecZext (a + b)) := by
+  intros i hi
+  rw [← BitStream.ofBitVecZext_add_eq]
+  omega
+
+-- @[simp]
+theorem ofBitVecZext_add_eq_ofBitVecZext_add_ofBitVecZext (a b : BitVec w)
+    (hi : i < w) :
+  (BitStream.ofBitVecZext (a + b)) i  =
+  (BitStream.ofBitVecZext a + BitStream.ofBitVecZext b) i
+  := by
+rw [EqualUpTo_ofBitVecZext_add]
+omega
