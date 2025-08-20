@@ -409,8 +409,8 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
      throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
 /--
-info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} {w : WidthExpr wcard}
-  (k : BinaryRelationKind) (a b : Term ctx w) : Predicate ctx
+info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (k : BinaryRelationKind)
+  (w : WidthExpr wcard) (a b : Term ctx w) : Predicate ctx
 -/
 #guard_msgs in #check MultiWidth.Predicate.binRel
 
@@ -429,8 +429,8 @@ def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     let bExpr ← mkTermExpr wcard tcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
       #[mkNatLit wcard, mkNatLit tcard, tctx,
-        wExpr,
         mkConst ``MultiWidth.BinaryRelationKind.eq,
+        wExpr,
         aExpr, bExpr]
     debugCheck out
     return out

@@ -725,7 +725,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     (p : MultiWidth.Predicate tctx) :
     HPredFSMToBitStream (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
-  case binRel w rel a b =>
+  case binRel rel w a b =>
     rcases rel
     case eq =>
       constructor

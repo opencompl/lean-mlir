@@ -191,7 +191,7 @@ deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive Predicate
   (ctx : Term.Ctx wcard tcard) : Type
-| binRel (k : BinaryRelationKind)
+| binRel (k : BinaryRelationKind) (w : WidthExpr wcard)
     (a : Term ctx w) (b : Term ctx w) : Predicate ctx
 | and (p1 p2 : Predicate ctx) : Predicate ctx
 | or (p1 p2 : Predicate ctx) : Predicate ctx
@@ -207,7 +207,7 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv)
     (p : Predicate tctx) : Prop :=
   match p with
-  | .binRel k a b =>
+  | .binRel k _w a b =>
     match k with
     | .eq => a.toBV tenv = b.toBV tenv
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
@@ -351,7 +351,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
 def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
   match p with
-  | .binRel k a b =>
+  | .binRel k _w a b =>
     match k with
     | .eq  => .binRel .eq (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
