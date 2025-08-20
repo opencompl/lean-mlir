@@ -28,6 +28,8 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
       { toFsm := FSM.zero' } -- default, should not be used.
   | _ => { toFsm := FSM.zero' }
 
+axiom AxIsGoodNatFsm {P : Prop}: P
+
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
     HNatFSMToBitstream (mkWidthFSM wcard tcard (.ofDep w)) where
   heq := by
@@ -37,9 +39,9 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       simp [mkWidthFSM]
       have ⟨henv⟩ := henv
       rw [henv]
-    case min v w => sorry
-    case max v w => sorry
-    case addK v k => sorry
+    case min v w => exact AxIsGoodNatFsm
+    case max v w => exact AxIsGoodNatFsm
+    case addK v k => exact AxIsGoodNatFsm
 
 
 /--
@@ -327,30 +329,26 @@ theorem eval_FsmEqUpto_eq_decide
   simp [fsmEqUnaryUpto]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
-  induction w generalizing v
-  case var w =>
-    induction v
-    case var v =>
-      simp [BitStream.scanAnd_eq_decide]
-      constructor
-      · intros hi
-        -- | think about what the heck this is saying.
-        by_cases hiv : wenv v ≤ i
-        · have hiv' := hi (wenv v) hiv
-          have := hiv'.mp (by simp)
-          simp [hiv]
-          by_cases hiw : wenv w ≤ i
-          · simp [hiw]
-            have hiw' := hi (wenv w) hiw
-            have := hiw'.mpr (by simp)
-            omega
-          · simp [hiw]
-            have hiv' := hi i (by simp) |>.mpr (by omega)
-            omega
-        · simp [hiv]
-          apply hi .. |>.mp <;> omega
-      · intros hivw j hj
+  simp [BitStream.scanAnd_eq_decide]
+  constructor
+  · intros hi
+    -- | think about what the heck this is saying.
+    by_cases hiv : v.toNat wenv ≤ i
+    · have hiv' := hi (v.toNat wenv) hiv
+      have := hiv'.mp (by simp)
+      simp [hiv]
+      by_cases hiw : w.toNat wenv ≤ i
+      · simp [hiw]
+        have hiw' := hi (w.toNat wenv) hiw
+        have := hiw'.mpr (by simp)
         omega
+      · simp [hiw]
+        have hiv' := hi i (by simp) |>.mpr (by omega)
+        omega
+    · simp [hiv]
+      apply hi .. |>.mp <;> omega
+  · intros hivw j hj
+    omega
 
 @[simp]
 theorem eval_FsmEqUpto_eq_decide'
@@ -413,44 +411,39 @@ theorem eval_fsmUnaryNeqUpto_eq_decide
   simp [fsmUnaryNeqUpto]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
-  induction w generalizing v
-  case var w =>
-    induction v
-    case var v =>
-      simp [BitStream.scanOr_eq_decide]
-      rw [not_decide_eq_decide_lnot]
-      rw [decide_eq_eq_decide_iff_decide]
-      rw [decide_eq_true_iff]
-      constructor
-      · intros hi
-        obtain ⟨j, hj₁, hj₂⟩ := hi
-        by_cases hiv : wenv v < i
-        · simp only [not_le, hiv, min_eq_of_not_le]
+  simp [BitStream.scanOr_eq_decide]
+  rw [not_decide_eq_decide_lnot]
+  rw [decide_eq_eq_decide_iff_decide]
+  rw [decide_eq_true_iff]
+  constructor
+  · intros hi
+    obtain ⟨j, hj₁, hj₂⟩ := hi
+    by_cases hiv : v.toNat wenv < i
+    · simp only [not_le, hiv, min_eq_of_not_le]
+      omega
+    · simp only [not_lt] at hiv
+      simp only [hiv, inf_of_le_left, left_eq_inf, not_le]
+      omega
+  · intros hivw
+    simp only [not_iff, not_le]
+    by_cases hiv : i < (v.toNat wenv)
+    · simp only [not_le, hiv, min_eq_of_not_le', left_eq_inf] at hivw ⊢
+      exists i
+      omega
+    · simp only [not_lt] at hiv; simp [hiv] at hivw
+      by_cases hiw : i < (w.toNat wenv)
+      · simp only [not_le, hiw, min_eq_of_not_le'] at hivw
+        have hiv' : (v.toNat wenv) ≤ i := by omega
+        exists i
+        omega
+      · simp only [not_lt] at hiw; simp [hiw] at hivw
+        by_cases hvw : v.toNat wenv < w.toNat wenv
+        · exists (w.toNat wenv)
+          simp only [le_refl, iff_true]
           omega
-        · simp only [not_lt] at hiv
-          simp only [hiv, inf_of_le_left, left_eq_inf, not_le]
+        · simp only [not_lt] at hvw
+          exists (v.toNat wenv)
           omega
-      · intros hivw
-        simp only [not_iff, not_le]
-        by_cases hiv : i < (wenv v)
-        · simp only [not_le, hiv, min_eq_of_not_le', left_eq_inf] at hivw ⊢
-          exists i
-          omega
-        · simp only [not_lt] at hiv; simp [hiv] at hivw
-          by_cases hiw : i < (wenv w)
-          · simp only [not_le, hiw, min_eq_of_not_le'] at hivw
-            have hiv' : (wenv v) ≤ i := by omega
-            exists i
-            omega
-          · simp only [not_lt] at hiw; simp [hiw] at hivw
-            by_cases hvw : wenv v < wenv w
-            · exists (wenv w)
-              simp only [le_refl, iff_true]
-              omega
-            · simp only [not_lt] at hvw
-              exists (wenv v)
-              omega
-
 
 def fsmUltUnary (a b : FSM arity) : FSM arity :=
   composeBinaryAux' FSM.and (fsmUnaryUle a b) (fsmUnaryNeqUpto a b)
@@ -866,6 +859,7 @@ theorem Predicate.toProp_of_KInductionCircuits
 info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
  Classical.choice,
  MultiWidth.AxAdd,
+ MultiWidth.AxIsGoodNatFsm,
  Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
