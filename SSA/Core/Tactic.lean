@@ -144,11 +144,12 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
 
 section SimpValuationApply
 
-private partial def valuationElements (e : Expr) (elems : Array Expr := #[]) : Option (Array Expr) :=
+/-- Return all statically known elements at the *end* of the valuation.
+That is, in `V ::ₕ x ::ₕ y` with `V` a free variable, return `#[y, x]`. -/
+private partial def valuationElements (e : Expr) (elems : Array Expr := #[]) : Array Expr :=
   match_expr e with
   | Valuation.snoc _Ty _instTyDenote _Γ _t V x => valuationElements V (elems.push x)
-  | Valuation.nil _Ty _instTyDenote => some elems
-  | _ => none
+  | _ => elems
 
 private partial def varToIndex (e : Expr) : Option Nat :=
   match_expr e with
@@ -165,10 +166,8 @@ private partial def varToIndex (e : Expr) : Option Nat :=
 dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
   let mkApp2 V _t v := e
     | return .continue
-  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying: {e}") <| do
-    let some Velems := valuationElements V
-      | trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expected a fully concrete valuation, but found: {V}"
-        return .continue
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying access of variable: {e}") <| do
+    let Velems := valuationElements V
     let some i := varToIndex v
       | trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expected a fully concrete variable, but found: {v}"
         return .continue
@@ -176,10 +175,9 @@ dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
     if let some x := Velems[i]? then
       return .visit x
     else
-      trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expression seems to be mallformed, as the variable:\
-        \n\t{v}\n\
-        reduced to index {i}, but this is out of range for the elements:\n\t{Velems}\n\
-        derived from the valuation:\n\t{V}"
+      trace[LeanMLIR.Elab] "{Lean.crossEmoji} Variable with index #{i} is out-of-range \
+        for static elements array:\n\t{Velems}\nderived from valuation expression:\
+          \n\t{V}"
       Meta.check e
       return .continue
 
