@@ -646,6 +646,52 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
 
 axiom AxAdd {P : Prop} : P
 
+/-- if we concatenate, then the bitstreams remain equal. -/
+@[simp]
+theorem BitStream.EqualUpTo_of_concat_EqualUpTo_concat
+  (x y : BitStream) (n : Nat) :
+  BitStream.EqualUpTo (n + 1) (.concat b x) (.concat b y) ↔
+  BitStream.EqualUpTo n x y := by
+  simp [BitStream.EqualUpTo]
+  constructor
+  · intros h i hi
+    specialize h (i + 1) (by omega)
+    simp at h
+    exact h
+  · intros h i hi
+    rcases i with rfl | i
+    · simp
+    · simp
+      apply h
+      omega
+
+/-- masking with a unary bitstream produces equal results
+if the bitstreams are equal upto a given width. -/
+theorem BitStream.ofNatUnary_and_eq_ofNatUnary_and_of_EqualUpTo_succ (n : Nat)
+  {x y : BitStream} (hxy : BitStream.EqualUpTo (n + 1) x y) :
+  (BitStream.ofNatUnary n) &&& x =
+  (BitStream.ofNatUnary n) &&& y := by
+  ext i
+  simp
+  specialize hxy i
+  by_cases hi : i ≤ n
+  · simp [hi]
+    apply hxy (by omega)
+  · simp [hi]
+
+/-- Zero extend a finite bitvector 'x' to the infinite stream of 'x.msb' -/
+theorem ofBitVecZextMsb_eq_ofNatUnary_and_ofBitVecZextMsb {w} (x : BitVec w) :
+  (BitStream.ofBitVecZextMsb x) =
+  (BitStream.ofNatUnary w) &&& (BitStream.ofBitVecZextMsb x) := by
+  ext i
+  simp
+  rcases i with rfl | i
+  · simp
+  · simp
+    intros hi
+    have := BitVec.lt_of_getLsbD hi
+    omega
+
 def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     {wold : WidthExpr wcard}
     (t : Term tctx wold) :
@@ -667,7 +713,11 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     rw [hp.heq (henv := htenv)]
     rw [hq.heq (henv := htenv)]
     rw [Term.toBV_add] -- TODO: why does this just not rewrite?
-
+    simp
+    have hwgood := IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) v
+    rw [hwgood.heq (henv := htenv.toHWidthEnv)]
+    ext i
+    rcases i with rfl | i
     -- -- TODO: fill this up
     -- rw [← BitStream.add_eq]
     -- rw [BitStream.add]
@@ -844,8 +894,6 @@ variable
     (p : Predicate tctx)
 
 end BitStream2BV
-
-
 
 -- | TODO: rename these namespaces.
 open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
