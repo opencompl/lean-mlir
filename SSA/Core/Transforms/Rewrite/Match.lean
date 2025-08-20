@@ -666,6 +666,19 @@ theorem denote_matchVar
           simp [← ih mapOut'', mapOut_eq, mapOut']
       · rfl
 
+theorem denote_matchArg
+    {vs ws : HVector (Var _) ts}
+    (mapOut : MatchArgResult lets matchLets vs ws mapIn)
+    (V : lets.ValidDenotation) :
+    HVector.map (matchLets.denote (mapOut.val.mapValuation V.val)) ws = HVector.map (V.val) vs := by
+  apply HVector.map_eq_map_of_matchArg mapOut
+  intro t v₁ v₂ mapOut' mapOut_eq
+  simp [← mapOut_eq, denote_matchVar]
+  -- TODO: there is a little bit of duplication between the last bit of the `denote_matchVar` proof
+  --       and the `denote_matchArg` proof, but resolving it is not worth the hassle of introducing
+  --       a mutual theorem block.
+
+
 /-!
 ## Post-match membership
 
@@ -809,8 +822,8 @@ theorem denote_matchLets_of
     (V : lets.ValidDenotation) :
     ws.map (matchLets.denote (V.val.comap <| map.toHom h)) = vs.map V.val := by
   unfold MatchArgResult.toHom
-  stop
-  rw [Mapping.toHom_eq_mapValuation (map.isTotal_of hvars), denote_matchVar map]
+  rw [Mapping.toHom_eq_mapValuation (map.isTotal_of hvars)]
+  apply denote_matchArg
 
 
 end DenoteLemmas
