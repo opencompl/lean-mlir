@@ -39,9 +39,6 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
         composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard v).toFsm
     }
 
-
-axiom AxIsGoodNatFsm {P : Prop}: P
-
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
     HNatFSMToBitstream (mkWidthFSM wcard tcard (.ofDep w)) where
   heq := by
@@ -883,7 +880,6 @@ theorem Predicate.toProp_of_KInductionCircuits
 info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
  Classical.choice,
  MultiWidth.AxAdd,
- MultiWidth.AxIsGoodNatFsm,
  Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
