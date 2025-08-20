@@ -246,44 +246,40 @@ theorem eval_fsmUnaryUle_eq_decide
   simp [fsmUnaryUle]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
-  induction w generalizing v
-  case var w =>
-    induction v
-    case var v =>
-      simp [BitStream.scanAnd_eq_decide]
-      by_cases hiv : i ≤ wenv v
+  simp [BitStream.scanAnd_eq_decide]
+  by_cases hiv : i ≤ v.toNat wenv
+  case pos =>
+    by_cases hiw : i ≤ w.toNat wenv
+    case pos =>
+      simp [hiw]
+      intros j
+      omega
+    case neg =>
+      simp [hiw]
+      by_cases hvw : v.toNat wenv ≤ w.toNat wenv
       case pos =>
-        by_cases hiw : i ≤ wenv w
-        case pos =>
-          simp [hiw]
-          intros j
-          omega
-        case neg =>
-          simp [hiw]
-          by_cases hvw : wenv v ≤ wenv w
-          case pos =>
-            simp [hvw]
-            intros j
-            omega
-          case neg =>
-            simp [hvw]
-            exists i
-            omega
+        simp [hvw]
+        intros j
+        omega
       case neg =>
-        by_cases hiw : i ≤ wenv w
-        case pos =>
-          simp [hiw]
-          omega
-        case neg =>
-          simp [hiw]
-          by_cases hvw : wenv v ≤ wenv w
-          case pos =>
-            simp [hvw]
-            omega
-          case neg =>
-            simp [hvw]
-            exists (wenv v)
-            omega
+        simp [hvw]
+        exists i
+        omega
+  case neg =>
+    by_cases hiw : i ≤ w.toNat wenv
+    case pos =>
+      simp [hiw]
+      omega
+    case neg =>
+      simp [hiw]
+      by_cases hvw : v.toNat wenv ≤ w.toNat wenv
+      case pos =>
+        simp [hvw]
+        omega
+      case neg =>
+        simp [hvw]
+        exists (v.toNat wenv)
+        omega
 
 @[simp]
 theorem eval_fsmUnaryUle_eq_lt_or_decide
