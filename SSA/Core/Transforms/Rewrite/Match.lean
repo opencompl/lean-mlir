@@ -110,7 +110,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
         if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs) then
           have hts : Ctxt.ofList ts' = ts := by
             rw [ie.ty_eq, matchExpr.ty_eq, hs.1]
-          if w.eq (w'.castCtxt hts) then
+          if w = w'.castCtxt hts then
             matchArg lets matchLets ie.args (hs.1 ▸ matchExpr.args)
           else
             none
@@ -432,7 +432,7 @@ theorem isMonotone_matchVarArg_aux (lets : Lets d Γ_in eff Γ_out) :
   · intro _ _ Δ_out u matchLets matchExpr l h ih
     cases l using Var.appendCases
     · simp [h]
-    · simp only [matchVar, Var.eq_iff, Var.appendCases_appendInr, isMonotone_bind_liftM,
+    · simp only [matchVar, Var.appendCases_appendInr, isMonotone_bind_liftM,
       Option.mem_def]
       intro ⟨_, e⟩ h_getPureExpr
       split_ifs
@@ -714,8 +714,8 @@ theorem mem_matchVar {Δ_out}
     {t': _ } {v' : _}
     (hMatchLets : ⟨t', v'⟩ ∈ matchLets.vars w) :
   ⟨t', v'⟩ ∈ varMap :=
-  match matchLets, w /- , hvarMap, t', v' -/ with
-  | .nil, w /-, h, t', v' -/ => by
+  match matchLets /- , hvarMap, t', v' -/ with
+  | .nil => by
     revert hMatchLets
     simp only [Lets.vars, VarSet.ofVar, Finset.mem_singleton, Sigma.mk.inj_iff, and_imp]
     rintro ⟨⟩ ⟨⟩
@@ -724,51 +724,23 @@ theorem mem_matchVar {Δ_out}
     · simp
     · simp [← AList.lookup_isSome, h_lookup]
 
-  | .var matchLets matchE, ⟨w+1, hw'⟩ /-, h, t', v' -/ => by
-    stop
-    have hvar' := matchVar_var_succ_eq
-      (lets := lets) (v := v) (matchLets := matchLets) (w := w) (hw := hw')
-      (matchE := matchE)
-      (ma := ma)
-    apply mem_matchVar
-      (lets := lets)
-      (matchLets := matchLets)
-      (w := ⟨w, by simpa [Ctxt.snoc] using hw'⟩)
-      (ma := ma)
-      (v := v)
-      (hMatchLets := by
-        have hmatchLets' :=
-          Lets.vars_var_eq (lets := matchLets)
-            (e := matchE) (w := w) (wh := hw') ▸ hMatchLets
-        apply hmatchLets'
-      )
-    have hvarMap' := hvar' ▸ hvarMap
-    apply hvarMap'
-  | .var (t := t') matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
-    revert hMatchLets
-    stop
-    obtain rfl : t = t' := by
-      symm; simpa using hw
-    simp only [Lets.vars, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
-      Sigma.exists, forall_exists_index, and_imp]
-    intro _ _ hl h_v'
-    obtain ⟨
-        (⟨ope, rfl, _eff_le, args, _regArgs⟩ : Expr ..),
-        he₁, he₂ ⟩ := by
-      unfold matchVar at hvarMap
-      simp only [bind, Option.mem_def, Option.bind_eq_some_iff, StateT.bind] at hvarMap
-      have h := by simpa [pure, bind] using hvarMap
-      exact h
-    rcases matchE with ⟨op', _, _, args', regArgs'⟩
-    split at he₂
-    case isFalse => contradiction
-    case isTrue h =>
-      rcases h with ⟨(rfl : ope = op'), (rfl : _regArgs = regArgs')⟩
-      change matchArg lets matchLets args args' ma = some ((), varMap) at he₂
-      apply @mem_matchVar_matchArg (hvarMap := he₂)
-      simp only [Finset.mem_biUnion, Sigma.exists]
-      refine ⟨_, _, ?_, h_v'⟩
-      exact hl
+  | .var matchLets matchE => by
+    simp only [matchVar, Option.mem_def] at hvarMap
+    cases w using Var.appendCases with
+    | left w =>
+        simp only [Var.appendCases_appendInl] at hvarMap
+        apply mem_matchVar hvarMap
+        simpa [Lets.vars] using hMatchLets
+    | right w =>
+        simp only [Var.appendCases_appendInr, MatchVar.liftM_bind_eq_some_iff] at hvarMap
+        rcases hvarMap with ⟨h_isSome, hvarMap⟩
+        split_ifs at hvarMap with h_pure h_var <;> (try contradiction)
+        subst h_var
+        apply mem_matchArg hvarMap
+        rcases matchE with ⟨matchOp, _⟩
+        obtain rfl : matchOp = _ := h_pure.1.symm
+        simpa [Lets.vars] using hMatchLets
+
 end
 
 /--
