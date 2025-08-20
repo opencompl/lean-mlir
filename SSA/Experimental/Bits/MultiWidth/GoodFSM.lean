@@ -623,9 +623,14 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     else
       { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be ued.
   | .add w a b =>
+    let fsmW := mkWidthFSM wcard tcard w
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
-    { toFsm := (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm) }
+    { toFsm :=
+      composeBinaryAux' FSM.and
+        fsmW.toFsm
+        (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm)
+    }
   | .zext a wnew =>
       -- let wold := a.width
       let afsm := mkTermFSM wcard tcard a
