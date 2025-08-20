@@ -136,17 +136,30 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
-section Repr
-open Std (Format format)
 
-private def reprInner [∀ a, Repr (f a)] (prec : Nat) : ∀ {as}, HVector f as → List Format
-  | _, .nil => []
-  | _, .cons x xs => (reprPrec x prec) :: (reprInner prec xs)
+/-!
+## Conversion to a List
+-/
+
+/-- Convert an hvector where every element provably has the same type β into
+a `List` of βs-/
+def toListOf {A : α → _} {as} (β : Type _)
+    (hα : ∀ a ∈ as, A a = β := by intros; rfl) :
+    HVector A as → List β
+  | .nil => []
+  | .cons x xs =>
+    let y := cast (hα _ <| by simp) x
+    let ys := xs.toListOf β (fun a h => hα a <| by simpa using .inr h)
+    y :: ys
+
+/-!
+## Repr
+-/
 
 instance [∀ a, Repr (f a)] : Repr (HVector f as) where
-  reprPrec xs prec := f!"[{(xs.reprInner prec).intersperse f!","}]"
-
-end Repr
+  reprPrec xs prec :=
+    let xs := xs.map (fun _ x => s!"{repr x}") |>.toListOf String |> ", ".intercalate
+    f!"[{xs}]"
 
 /-
   # Theorems
@@ -271,21 +284,6 @@ variable {bs} {xs : HVector A as} {ys : HVector A bs}
 @[simp] theorem cons_append : (x ::ₕ xs) ++ ys = (x ::ₕ (xs ++ ys)) := rfl
 
 end Append
-
-/-!
-## Conversion to a List
--/
-
-/-- Convert an hvector where every element provably has the same type β into
-a `List` of βs-/
-def toListOf {A : α → _} {as} (β : Type _)
-    (hα : ∀ a ∈ as, A a = β := by intros; rfl) :
-    HVector A as → List β
-  | .nil => []
-  | x ::ₕ xs =>
-    let y := cast (hα _ <| by simp) x
-    let ys := xs.toListOf β (fun a h => hα a <| by simpa using .inr h)
-    y :: ys
 
 /-
   # ToExpr and other Meta helpers
