@@ -29,6 +29,7 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
   (MultiWidth.BinaryRelationKind.eq)
   (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
   (MultiWidth.Nondep.Term.add
+    (MultiWidth.Nondep.WidthExpr.var 0)
     (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
     (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0)))
 -/

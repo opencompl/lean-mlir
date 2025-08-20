@@ -276,7 +276,7 @@ def WidthExpr.ofDep_addK {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat
 
 inductive Term
 | var (v : Nat) (w : WidthExpr) : Term
-| add (a b : Term) : Term
+| add (w : WidthExpr) (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
 | sext (a : Term) (wnew : WidthExpr) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
@@ -287,7 +287,7 @@ def Term.ofDep {wcard tcard : Nat}
     (t : MultiWidth.Term tctx w) : Term :=
   match t with
   | .var v => .var v (.ofDep w)
-  | .add a b => .add (.ofDep a) (.ofDep b)
+  | .add (w := w) a b => .add (.ofDep w) (.ofDep a) (.ofDep b)
   | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
   | .sext a wnew => .sext (.ofDep a) (.ofDep wnew)
 
@@ -299,7 +299,7 @@ def Term.ofDep_var {wcard tcard : Nat}
 def Term.width (t : Term) : WidthExpr :=
   match t with
   | .var _v w => w
-  | .add a _b => a.width
+  | .add w _a _b => w
   | .zext _a wnew => wnew
   | .sext _a wnew => wnew
 
@@ -313,8 +313,8 @@ theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat}
     : (Term.ofDep t).width = (.ofDep w) := by
   induction t
   case var v => simp [Term.width]
-  case add v a b ha hb =>
-    simp [Term.ofDep, Term.width, ha]
+  case add w a b ha hb =>
+    simp [Term.ofDep, Term.width]
   case zext a wnew =>
     simp [Term.ofDep, Term.width]
   case sext a wnew =>
@@ -325,7 +325,7 @@ def Term.wcard (t : Term) : Nat := t.width.wcard
 def Term.tcard (t : Term) : Nat :=
   match t with
   | .var v _w => v + 1
-  | .add a b => max (Term.tcard a) (Term.tcard b)
+  | .add w a b => max (Term.tcard a) (Term.tcard b)
   | .zext a _wnew => (Term.tcard a)
   | .sext a _wnew => (Term.tcard a)
 

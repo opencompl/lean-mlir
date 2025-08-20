@@ -622,7 +622,7 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
       }
     else
       { toFsm := FSM.zero.map Fin.elim0 } -- default, should not be ued.
-  | .add a b =>
+  | .add w a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm) }

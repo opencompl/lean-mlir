@@ -330,10 +330,10 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HAdd.hAdd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (_w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
-      return (.add ta tb, state)
+      return (.add w ta tb, state)
     | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
       let (v, state) ← collectWidthAtom state v
@@ -363,7 +363,7 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]
     debugCheck out
     return out
-  | .add a b =>
+  | .add _w a b =>
      let out ← mkAppM ``MultiWidth.Term.add
         #[← mkTermExpr wcard tcard tctx a,
         ← mkTermExpr wcard tcard tctx b]
