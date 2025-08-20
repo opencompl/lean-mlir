@@ -272,6 +272,21 @@ variable {bs} {xs : HVector A as} {ys : HVector A bs}
 
 end Append
 
+/-!
+## Conversion to a List
+-/
+
+/-- Convert an hvector where every element provably has the same type β into
+a `List` of βs-/
+def toListOf {A : α → _} {as} (β : Type _)
+    (hα : ∀ a ∈ as, A a = β := by intros; rfl) :
+    HVector A as → List β
+  | .nil => []
+  | x ::ₕ xs =>
+    let y := cast (hα _ <| by simp) x
+    let ys := xs.toListOf β (fun a h => hα a <| by simpa using .inr h)
+    y :: ys
+
 /-
   # ToExpr and other Meta helpers
 -/

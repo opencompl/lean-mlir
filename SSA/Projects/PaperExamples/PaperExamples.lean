@@ -146,9 +146,9 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
 /--
 info: {
   ^entry(%0 : ToyNoRegion.Ty.int):
-    %1 = ToyNoRegion.Op.const 0 : () → ([ToyNoRegion.Ty.int])
-    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → ([ToyNoRegion.Ty.int])
-    return [[%2]] : ([ToyNoRegion.Ty.int]) → ()
+    %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
+    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
+    return %2 : (ToyNoRegion.Ty.int) → ()
 }
 -/
 #guard_msgs in #eval lhs
@@ -165,7 +165,7 @@ def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
 /--
 info: {
   ^entry(%0 : ToyNoRegion.Ty.int):
-    return [[%0]] : ([ToyNoRegion.Ty.int]) → ()
+    return %0 : (ToyNoRegion.Ty.int) → ()
 }
 -/
 #guard_msgs in #eval rhs

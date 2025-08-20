@@ -223,6 +223,13 @@ private def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
   Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
     (fun it => f!"%{it.fst} : {repr it.snd}")) ", "
 
+private def Expr.formatBoundVariables : Expr d Γ eff ts → String
+  | ⟨op, _, _, _, _⟩ =>
+    (DialectSignature.returnTypes op).length
+    |> List.range
+    |>.map (s!"%{· + Γ.length}")
+    |> ", ".intercalate
+
 mutual
   /-- Convert a HVector of region arguments into a List of format strings. -/
   partial def reprRegArgsAux [Repr d.Ty] {ts : RegionSignature d.Ty}
@@ -241,7 +248,7 @@ mutual
         let returnTypes := DialectSignature.returnTypes op
         let argTys := DialectSignature.sig op
         let regArgs := Format.parenIfNonempty " (" ")" Format.line (reprRegArgsAux regArgs)
-        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → ({repr returnTypes})"
+        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → {formatTypeTuple returnTypes}"
 
   /-- Format string for a Com, with the region parentheses and formal argument list. -/
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
@@ -253,9 +260,13 @@ mutual
 
   /-- Format string for sequence of assignments and return in a Com. -/
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
-    | .rets v => f!"return {reprPrec v prec} : ({repr t}) → ()"
+    | .rets vs =>
+      let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String
+      let vs := ", ".intercalate vs
+      f!"return {vs} : {formatTypeTuple t} → ()"
     | .var e body =>
-      f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
+      let vs := e.formatBoundVariables
+      f!"{vs} = {e.repr prec}" ++ Format.line ++
       comReprAux prec body
 end
 
@@ -292,15 +303,21 @@ their types, and the resulting output type.
 partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
     let returnTypes := DialectSignature.returnTypes op
+    let returnTypes := ", ".intercalate <| returnTypes.map ToString.toString
     let argTys := DialectSignature.sig op
-    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({ToString.toString returnTypes})"
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({returnTypes})"
 
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
-partial def Com.ToStringBody : Com d Γ eff t → String
-  | .rets v => s!"  \"return\"({_root_.repr v }) : ({toString t}) -> ()"
-  | .var e body =>
-    s!"  %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+partial def Com.ToStringBody : Com d Γ eff ts → String
+  | .rets vs =>
+    let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String (by intros; rfl)
+    let vs := ", ".intercalate vs
+    let ts := ", ".intercalate <| ts.map ToString.toString
+    s!"  \"return\"({vs}) : ({ts}) -> ()"
+  | .var e@⟨op, _ , _,_ , _⟩ body =>
+    let vs := e.formatBoundVariables
+    s!"  {vs} = {Expr.toString e}" ++ "\n" ++
     Com.ToStringBody body
 
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
@@ -559,9 +576,6 @@ def Com.returnVar (com : Com d Γ eff [t]) : Var com.outContext t :=
 
 abbrev Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
   Hom.id.appendCodomain
-
-@[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
-  @fun _ => Var.toSnoc
 
 section Lemmas
 
