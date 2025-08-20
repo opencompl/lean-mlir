@@ -194,7 +194,11 @@ The `Id _` in the type of the equality somehow blocks the injectivity lemma
 for `HVector.cons` from applying, so we first have to clean up the equality.
 -/
 @[simp_denote] lemma eq_id_iff (x y : α) : @Eq (Id α) x y ↔ x = y := by rfl
-attribute [simp_denote] HVector.cons.injEq
+
+@[simp_denote] lemma HVector.cons_inj {α : Type u_1} {f : α → Type u_2}
+    {as : List α} {a : α}  (x y : f a) (xs ys : HVector f as) :
+    @Eq (no_index _) (x ::ₕ xs) (y ::ₕ ys) ↔ (x = y ∧ xs = ys) := by
+  rw [HVector.cons.injEq]
 
 /-! ### Compatibility Wrappers -/
 attribute [simp_denote]

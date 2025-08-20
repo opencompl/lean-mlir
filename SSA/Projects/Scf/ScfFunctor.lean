@@ -443,7 +443,6 @@ theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int)
     (niters : Var Γ .nat) (v : Var Γ t) :
     Expr.denoteOp (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = [Γv v]ₕ := by
   simp_peephole
-  stop
   simp [Scf.LoopBody.counterDecorator.constant_iterate]
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
