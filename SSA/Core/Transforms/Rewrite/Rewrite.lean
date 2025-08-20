@@ -217,8 +217,6 @@ theorem denote_rewritePeephole (fuel : ℕ)
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
-#print axioms denote_rewritePeephole
-
 variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
 [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--  rewrite with the list of peephole optimizations `prs` at the `target` program, at location `ix`
