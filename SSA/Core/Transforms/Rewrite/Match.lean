@@ -666,57 +666,6 @@ theorem denote_matchVar
           simp [← ih mapOut'', mapOut_eq, mapOut']
       · rfl
 
--- theorem denote_matchVar_old
---     {v w : Var _ t}
---     {varMap₁ : MatchVarResult lets v matchLets w ma}
---     (V : lets.ValidDenotation) :
---     (matchLets.denote (varMap₁.mapValuation V.val) w)
---     = V.val v := by
---   suffices ∀ {varMap₂ : Mapping _ _}, varMap₁.entries ⊆ varMap₂.entries →
---     (matchLets.denote (varMap₂.mapValuation V.val) w)
---     = V.val v
---   by
---     apply this (List.Subset.refl _)
-
---   intro varMap₂ h_sub
---   induction matchLets generalizing v ma varMap₂ t
---   case nil =>
---     simp only [Lets.denote, Id.pure_eq']
---     rw [Mapping.mapValuation, AList.mem_lookup_iff.mpr ?_]
---     apply h_sub <| AList.mem_lookup_iff.mp <| matchVar_nil h_matchVar
---   case var t' matchLets matchExpr ih =>
---     cases w using Var.appendCases with
---     | left w =>
---       simp only [EffectKind.toMonad_pure, Lets.denote, Id.bind_eq', Expr.denote_appendInl] at *
---       apply ih (varMap₁ := varMap₁.eqvVarLeft)
---       simpa
---     | right w =>
---       obtain ⟨varMap₂, rfl⟩ := varMap₁.ofSubsetEntries h_sub
---       simp
-
-
---       stop
-
---       obtain ⟨⟨_,_⟩, h_pure⟩ := varMap₁.getPureExpr_eq_some
---       have := V.property _ _ h_pure
---       simp
---       -- let varMap' := varMap₁.eqvVar
---       -- obtain rfl : t = t' := by
---       --   symm; simpa using h_w
---       -- simp at h_matchVar
---       -- have ⟨args, h_pure, h_matchArgs⟩ := matchVar_var h_matchVar
-
---       rw [← V.property v _ _]
---       simp only [Var.zero_eq_last, Lets.denote_var_last_pure]
---       apply Expr.denoteOp_eq_denoteOp_of <;> (try rfl)
---       simp only [Expr.op_mk, Expr.args_mk]
-
---       apply denote_matchVar_matchArg (hvarMap := h_matchArgs) h_sub
---       · intro t v₁ v₂ ma ma' hmem h_ma_sub
---         apply ih hmem h_ma_sub
---       · intro _ _ _ _ _ h
---         exact isMonotone_matchVar _ _ h
-
 /-!
 ## Post-match membership
 
