@@ -717,11 +717,17 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     have hwgood := IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) v
     rw [hwgood.heq (henv := htenv.toHWidthEnv)]
     ext i
+    simp
     rcases i with rfl | i
-    -- -- TODO: fill this up
-    -- rw [← BitStream.add_eq]
-    -- rw [BitStream.add]
-    exact AxAdd
+    · simp
+    · simp
+      by_cases hi : i < v.toNat wenv
+      · simp [show i + 1 ≤ v.toNat wenv by omega]
+
+        exact AxAdd
+      · simp [show ¬ i + 1 ≤ v.toNat wenv by omega]
+        apply BitVec.getLsbD_of_ge
+        omega
   case zext w' a wnew ha  =>
     constructor
     intros wenv tenv fsmEnv htenv
