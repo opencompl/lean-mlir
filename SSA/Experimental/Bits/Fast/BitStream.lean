@@ -933,7 +933,7 @@ theorem ofBitVecZext_add_EqualUpTo :
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecZext x).addAux (ofBitVecZext y) n := by
     induction' n with n ih
     · simp only [zero_add, addAux_zero, ofBitVecZext_eq_getLsbD, Prod.mk.injEq]
-      simp [BitVec.getLsbD, a, addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
+      simp [BitVec.getLsbD, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]

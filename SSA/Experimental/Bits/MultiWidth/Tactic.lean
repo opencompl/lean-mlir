@@ -381,6 +381,38 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
       #[← mkTermExpr wcard tcard tctx a, vExpr]
     debugCheck out
     return out
+  | .band w a b =>
+      let wExpr ← mkWidthExpr wcard w
+      let aExpr ← mkTermExpr wcard tcard tctx a
+      let bExpr ← mkTermExpr wcard tcard tctx b
+      let out := mkAppN (mkConst ``MultiWidth.Term.band)
+        #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+      debugCheck out
+      return out
+  | .bor w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let bExpr ← mkTermExpr wcard tcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Term.bor)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .bxor w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let bExpr ← mkTermExpr wcard tcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Term.bxor)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .bnot w a =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let out := mkAppN (mkConst ``MultiWidth.Term.bnot)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr]
+    debugCheck out
+    return out
+
 
 set_option pp.explicit true in
 /--
