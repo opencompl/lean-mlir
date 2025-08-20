@@ -37,7 +37,7 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
   | 0, lets, .var e body => some {
       top := lets.var e
       bot := body
-      midRet := e.args.map (fun _ v => v.appendInl)
+      midRet := e.returnVars
     }
   | _, _, .rets _ => none
   | n+1, lets, .var e body =>

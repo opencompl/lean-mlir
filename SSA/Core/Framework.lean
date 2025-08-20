@@ -464,9 +464,14 @@ def Expr.regArgs {Γ ts} (e : Expr d Γ eff ts) :
     Regions d (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
+-- TODO: I don't think `returnVar` is used, remove it
 /-- `e.returnVar` is the variable in `e.outContext` which is bound by `e`. -/
 def Expr.returnVar (e : Expr d Γ eff [ty]) : e.outContext.Var ty :=
   Var.last _ _
+
+/-- `e.returnVars` is the vector of variables in `e.outContext` which are bound by `e`. -/
+def Expr.returnVars (e : Expr d Γ eff tys) : HVector e.outContext.Var tys :=
+  .ofFn _ _ <| fun i => (Var.ofFin i).appendInr
 
 /-! Projection equations for `Expr` -/
 @[simp]
