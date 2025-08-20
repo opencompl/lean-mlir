@@ -494,6 +494,9 @@ def consRight : MatchArgResult lets matchLets vs ws mapIn :=
     · exact isMonotone_matchVar _ _ h₁
   ⟩
 
+@[simp, grind=] lemma val_consLeft : mapOut.consLeft.val = mapOut.val := rfl
+@[simp, grind=] lemma val_consRight : mapOut.consRight.val = mapOut.val := rfl
+
 end MatchArgResult
 
 /-!
@@ -509,52 +512,21 @@ theorem HVector.map_eq_map_of_matchArg
     {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out}
     {ma : Mapping Δ_in Γ_out}
+    {l : List d.Ty} {args₁ : HVector _ l} {args₂ : HVector _ l}
+    (mapOut : MatchArgResult lets matchLets args₁ args₂ ma)
     (f₁ f₂ : (t : d.Ty) → Var _ t → ⟦t⟧)
-    (hf : ∀ {t v₁ v₂ mapIn},
-      (MatchVarResult lets v₁ matchLets v₂ mapIn)
-      → f₂ t v₂ = f₁ t v₁)
-    {l : List d.Ty} :
-    {args₁ : HVector _ l} → {args₂ : HVector _ l}
-    → (varMap₁ : MatchArgResult lets matchLets args₁ args₂ ma) →
-    HVector.map f₂ args₂ = HVector.map f₁ args₁
-  | .nil, .nil => by simp [HVector.map]
-  | .cons v₁ T₁, .cons v₂ T₂ => by
-    intro mapOut
-    simp [HVector.map]
+    (hf : ∀ {t v₁ v₂},
+      (mapOut' : MatchVarResult lets v₁ matchLets v₂ ma)
+      → mapOut'.val.entries ⊆ mapOut.val.entries
+      → f₂ t v₂ = f₁ t v₁) :
+    HVector.map f₂ args₂ = HVector.map f₁ args₁ := by
+  induction args₁ <;> cases args₂
+  case nil.nil => rfl
+  case cons.cons _ _ ih _ _ =>
+    simp only [map_cons, cons.injEq]
     and_intros
-    · apply hf mapOut.consLeft
-    · apply map_eq_map_of_matchArg _ _ hf mapOut.consRight
-
-theorem denote_matchVar_matchArg
-    {Γ_out Δ_in Δ_out : Ctxt d.Ty} {lets : Lets d Γ_in eff Γ_out}
-    {matchLets : Lets d Δ_in .pure Δ_out} :
-    {l : List d.Ty} →
-    {args₁ : HVector (Var Γ_out) l} →
-    {args₂ : HVector (Var Δ_out) l} →
-    {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} →
-    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    (f₁ : (t : d.Ty) → Var Γ_out t → toType t) →
-    (f₂ : (t : d.Ty) → Var Δ_out t → toType t) →
-    (hf : ∀ t v₁ v₂ (ma : Mapping Δ_in Γ_out) (ma'),
-      (((), ma) ∈ matchVar lets v₁ matchLets v₂ ma') →
-      ma.entries ⊆ varMap₂.entries → f₂ t v₂ = f₁ t v₁) →
-    (hmatchVar : ∀ vMap (t : d.Ty) (vₗ vᵣ) ma,
-      ((), vMap) ∈ matchVar (t := t) lets vₗ matchLets vᵣ ma →
-      ma.entries ⊆ vMap.entries) →
-    (hvarMap : ((), varMap₁) ∈ matchArg lets matchLets args₁ args₂ ma) →
-      HVector.map f₂ args₂ = HVector.map f₁ args₁
-  | _, .nil, .nil, _, _ => by simp [HVector.map]
-  | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
-    intro h_sub f₁ f₂ hf hmatchVar hvarMap
-    simp only [HVector.map, HVector.cons.injEq]
-    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some_iff,
-      StateT.bind] at hvarMap
-    rcases hvarMap with ⟨⟨⟨⟩, ma'⟩, h₁, h₂⟩
-    refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
-    · exact isMonotone_matchArg _ _ h₂
-    apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
-    · exact h_sub
-    · exact hmatchVar
+    · apply hf mapOut.consLeft (by rfl)
+    · apply ih mapOut.consRight hf
 
 variable [Monad d.m] [LawfulMonad d.m] [DialectDenote d]
 
@@ -667,8 +639,8 @@ theorem denote_matchVar
       simpa [Id.bind_eq'] using ih
     | right w =>
       -- specialize ih _
-      rcases h' : mapOut.getPureExpr_eq_some with ⟨_, _, h⟩
       let mapOut' := mapOut.toArgResult
+      rcases Exists.choose_spec mapOut.getPureExpr_eq_some with ⟨_, h⟩
 
       rw [← V.prop h]
       simp
@@ -676,25 +648,25 @@ theorem denote_matchVar
 
       apply Expr.denoteOp_eq_denoteOp_of (by rfl)
       · simp only [Expr.op_mk, Expr.args_mk]
+        rw [HVector.map_eq_map_of_matchArg (f₁ := V.val) (mapOut := mapOut')]
+        · intro t v₁ v₂ mapOut'' h_sub
+          rw [← ih]
+          stop
+          suffices mapOut.val = mapOut'.val by
+            rw [← ih mapOut', this]
 
-        stop
-
-        apply HVector.map_eq_map_of_matchArg (varMap₁ := mapOut')
-        · intro t v₁ v₂ mapIn' mapOut'
-
-          -- let mapOut := mapOut.eqvVar
-          apply ih (mapOut := mapOut')
           sorry
           -- intro t v₁ v₂ ma ma' hmem h_ma_sub
           -- apply ih hmem h_ma_sub
-        · skip
-          stop
-          apply (mapOut.ofSubsetEntries _).choose
+        -- · skip
+        --   stop
+        --   apply (mapOut.ofSubsetEntries _).choose
+
+      · rfl
+      ·
 
 
-      · simp
-
-      stop
+        stop
       obtain ⟨varMap₂, rfl⟩ := mapOut.ofSubsetEntries h_sub
       simp
 
