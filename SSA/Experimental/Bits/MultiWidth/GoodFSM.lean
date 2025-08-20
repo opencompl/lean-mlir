@@ -811,8 +811,6 @@ def mkPredicateFSMDep {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx) : PredicateFSM wcard tcard (.ofDep p) :=
   mkPredicateFSMNondep wcard tcard (.ofDep p)
 
-axiom AxGoodFSM {P : Prop} : P
-
 section BitStream2BV
 
 variable
