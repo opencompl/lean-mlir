@@ -611,6 +611,18 @@ theorem fsmSext_eval_eq
 /-- info: 'MultiWidth.fsmSext_eval_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms fsmSext_eval_eq
 
+/-- Create a finite state machine that masks the zero bit.
+It produces the stream '0111....'.  -/
+def mkMaskZeroFSM {α : Type} : FSM α :=
+  composeUnaryAux (FSM.ls false) (FSM.negOne) |>.map Fin.elim0
+
+@[simp]
+theorem eval_mkMaskZeroFsm_eq_decide (env : α → BitStream):
+  mkMaskZeroFSM.eval env i =
+    decide (0 < i) := by
+  simp [mkMaskZeroFSM]
+  rcases i with rfl | i <;> simp
+
 def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
   match t with
@@ -643,8 +655,28 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let woldFsm := mkWidthFSM wcard tcard wold
     let vFsm := mkWidthFSM wcard tcard v
     { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
-
-axiom AxAdd {P : Prop} : P
+  | .band _w a b =>
+      let aFsm := mkTermFSM wcard tcard a
+      let bFsm := mkTermFSM wcard tcard b
+      { toFsm :=
+            (composeBinaryAux' FSM.and aFsm.toFsm bFsm.toFsm) }
+  | .bor _w a b =>
+    let aFsm := mkTermFSM wcard tcard a
+    let bFsm := mkTermFSM wcard tcard b
+    { toFsm :=
+          (composeBinaryAux' FSM.or aFsm.toFsm bFsm.toFsm) }
+  | .bxor _w a b =>
+    let aFsm := mkTermFSM wcard tcard a
+    let bFsm := mkTermFSM wcard tcard b
+    { toFsm :=
+          (composeBinaryAux' FSM.xor aFsm.toFsm bFsm.toFsm) }
+  | .bnot w a =>
+    let aFsm := mkTermFSM wcard tcard a
+    let wFsm := mkWidthFSM wcard tcard w
+    { toFsm :=
+      composeBinaryAux' FSM.and wFsm.toFsm
+        (composeBinaryAux' FSM.and (mkMaskZeroFSM.map Fin.elim0)
+          (composeUnaryAux FSM.not aFsm.toFsm)) }
 
 /-- if we concatenate, then the bitstreams remain equal. -/
 @[simp]
@@ -723,8 +755,11 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     · simp
       by_cases hi : i < v.toNat wenv
       · simp [show i + 1 ≤ v.toNat wenv by omega]
-
-        exact AxAdd
+        rw [BitStream.concat_false_add_concat_false_eq_add]
+        simp only [BitStream.concat_succ]
+        -- | TODO: find clean lemmas here.
+        rw [BitStream.EqualUpTo_ofBitVecZext_add]
+        omega
       · simp [show ¬ i + 1 ≤ v.toNat wenv by omega]
         apply BitVec.getLsbD_of_ge
         omega
@@ -747,6 +782,50 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
       (wold := wold) (wnew := wnew) (t := a) (htfsm := ha)
       (hwnew := hwnew) (hwold := hwold)]
     simp
+  case band _w a b ha hb =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    rw [ha.heq (henv := htenv)]
+    rw [hb.heq (henv := htenv)]
+    simp [Term.toBV]
+    ext i
+    rcases i with rfl | i <;> simp
+  case bor _w a b ha hb =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    rw [ha.heq (henv := htenv)]
+    rw [hb.heq (henv := htenv)]
+    simp [Term.toBV]
+    ext i
+    rcases i with rfl | i <;> simp
+  case bxor _w a b ha hb =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    rw [ha.heq (henv := htenv)]
+    rw [hb.heq (henv := htenv)]
+    simp [Term.toBV]
+    ext i
+    rcases i with rfl | i <;> simp
+  case bnot w a ha =>
+    let hw := IsGoodNatFSM_mkWidthFSM tcard w
+    constructor
+    intros wenv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    rw [ha.heq (henv := htenv)]
+    rw [hw.heq (henv := htenv.toHWidthEnv)]
+    simp [Term.toBV]
+    ext i
+    rcases i with rfl | i
+    · simp
+    · simp
+      by_cases hi : i < w.toNat wenv
+      · simp [hi]
+        omega
+      · simp [hi]
+        omega
 
 def fsmTermEq {wcard tcard : Nat}
   {a b : Nondep.Term}
@@ -936,10 +1015,7 @@ theorem Predicate.toProp_of_KInductionCircuits
   · simp
 
 /--
-info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
- Classical.choice,
- MultiWidth.AxAdd,
- Quot.sound]
+info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
 

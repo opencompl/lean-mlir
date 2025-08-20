@@ -115,6 +115,14 @@ inductive Term {wcard tcard : Nat}
 | var (v : Fin tcard) : Term tctx (tctx v)
 /-- addition of two terms of the same width -/
 | add (a : Term tctx w) (b : Term tctx w) : Term tctx w
+/-- bitwise or -/
+| bor (a b : Term tctx w) : Term tctx w
+/-- bitwise and -/
+| band (a b : Term tctx w) : Term tctx w
+/-- bitwise xor -/
+| bxor (a b : Term tctx w) : Term tctx w
+/-- bitwise not -/
+| bnot (a : Term tctx w) : Term tctx w
 /-- zero extend a term to a given width -/
 | zext (a : Term tctx w) (v : WidthExpr wcard) : Term tctx v
 /-- sign extend a term to a given width -/
@@ -150,6 +158,7 @@ def Term.Ctx.Env.cons
   Term.Ctx.Env (tctx.cons wexpr) wenv :=
   fun v => v.cases (bv.cast hw) (fun w => tenv w)
 
+
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
@@ -159,6 +168,10 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
 | .add a b => a.toBV tenv + b.toBV tenv
 | .zext a v => (a.toBV tenv).zeroExtend (v.toNat wenv)
 | .sext a v => (a.toBV tenv).signExtend (v.toNat wenv)
+| .bor a b => (a.toBV tenv) ||| (b.toBV tenv)
+| .band a b => (a.toBV tenv) &&& (b.toBV tenv)
+| .bxor a b => (a.toBV tenv) ^^^ (b.toBV tenv)
+| .bnot a => ~~~ (a.toBV tenv)
 
 @[simp]
 theorem Term.toBV_var {wenv : WidthExpr.Env wcard}
@@ -195,6 +208,8 @@ inductive Predicate
     (a : Term ctx w) (b : Term ctx w) : Predicate ctx
 | and (p1 p2 : Predicate ctx) : Predicate ctx
 | or (p1 p2 : Predicate ctx) : Predicate ctx
+-- add predicate NOT, <= for bitvectors, < for bitvectors, <=
+-- for widths, =, not equals for widths.
 
 structure PackedPredicate where
   wcard : Nat
@@ -279,6 +294,10 @@ inductive Term
 | add (w : WidthExpr) (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
 | sext (a : Term) (wnew : WidthExpr) : Term
+| bor (w : WidthExpr) (a b : Term) : Term
+| band (w : WidthExpr) (a b : Term) : Term
+| bxor (w : WidthExpr) (a b : Term) : Term
+| bnot (w : WidthExpr)  (a : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.ofDep {wcard tcard : Nat}
@@ -290,6 +309,10 @@ def Term.ofDep {wcard tcard : Nat}
   | .add (w := w) a b => .add (.ofDep w) (.ofDep a) (.ofDep b)
   | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
   | .sext a wnew => .sext (.ofDep a) (.ofDep wnew)
+  | .bor (w := w) a b => .bor (.ofDep w) (.ofDep a) (.ofDep b)
+  | .band (w := w) a b => .band (.ofDep w) (.ofDep a) (.ofDep b)
+  | .bxor (w := w) a b => .bxor (.ofDep w) (.ofDep a) (.ofDep b)
+  | .bnot (w := w) a => .bnot (.ofDep w) (.ofDep a)
 
 @[simp]
 def Term.ofDep_var {wcard tcard : Nat}
@@ -302,6 +325,10 @@ def Term.width (t : Term) : WidthExpr :=
   | .add w _a _b => w
   | .zext _a wnew => wnew
   | .sext _a wnew => wnew
+  | .bor w _a _b => w
+  | .band w _a _b => w
+  | .bxor w _a _b => w
+  | .bnot w _a => w
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -319,15 +346,27 @@ theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat}
     simp [Term.ofDep, Term.width]
   case sext a wnew =>
     simp [Term.ofDep, Term.width]
+  case bor w a b ha hb =>
+    simp [Term.ofDep, Term.width]
+  case band w a b ha hb =>
+    simp [Term.ofDep, Term.width]
+  case bxor w a b ha hb =>
+    simp [Term.ofDep, Term.width]
+  case bnot w a ha =>
+    simp [Term.ofDep, Term.width]
 
 def Term.wcard (t : Term) : Nat := t.width.wcard
 
 def Term.tcard (t : Term) : Nat :=
   match t with
   | .var v _w => v + 1
-  | .add w a b => max (Term.tcard a) (Term.tcard b)
+  | .add _w a b => max (Term.tcard a) (Term.tcard b)
   | .zext a _wnew => (Term.tcard a)
   | .sext a _wnew => (Term.tcard a)
+  | .bor _w a b => (max (Term.tcard a) (Term.tcard b))
+  | .band _w a b => (max (Term.tcard a) (Term.tcard b))
+  | .bxor _w a b => (max (Term.tcard a) (Term.tcard b))
+  | .bnot _w a => (Term.tcard a)
 
 inductive Predicate
 | binRel (k : BinaryRelationKind)

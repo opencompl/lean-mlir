@@ -484,14 +484,6 @@ theorem evalWith_add_eq_evalWith_carryWith
     rw [← carryWith_carryWith_eq_carryWith_add]
     rw [← evalWith_eq_outputWith_carryWith]
 
-/-- `p.changeVars f` changes the arity of an `FSM`.
-The function `f` determines how the new input bits map to the input expected by `p` -/
-def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
-  { p with
-     outputCirc := p.outputCirc.map (Sum.map id changeVars),
-     nextStateCirc := fun a => (p.nextStateCirc a).map (Sum.map id changeVars)
-  }
-
 instance {α : Type _} [Hashable α] {f : α → Type _} [∀ (a : α), Hashable (f a)] : Hashable (Sigma f) where
   hash v := hash (v.fst, v.snd)
 
@@ -795,6 +787,27 @@ def map (fsm : FSM arity) (f : arity → arity') : FSM arity' where
   outputCirc := fsm.outputCirc.map (Sum.map id f)
   nextStateCirc := fun s =>
     fsm.nextStateCirc s |>.map (Sum.map id f)
+
+@[simp]
+theorem eval_map (fsm : FSM arity) (f : arity → arity')
+    (env' : arity' → BitStream):
+    (fsm.map f).eval env' = fsm.eval (env' ∘ f) := by
+  ext n
+  simp [eval, map, nextBit, Circuit.eval_map]
+  congr 1
+  ext arg
+  rcases arg with arg | arg
+  · induction n generalizing arg
+    case zero => simp [carry]
+    case succ n ih =>
+      simp only [map_inl, id_eq, elim_inl, carry, nextBit, Circuit.eval_map,
+        Function.comp_apply] at *
+      congr 1
+      ext q
+      rcases q with q | q
+      · simp only [map_inl, id_eq, elim_inl, ih]
+      · simp
+  · simp
 
 instance : Functor FSM where
   map f fsm :=  fsm.map f
