@@ -1026,6 +1026,20 @@ def ls (b : Bool) : FSM Unit :=
     outputCirc := Circuit.var true (inl ())
   }
 
+/-- Identity finite state machine -/
+def id : FSM Unit := {
+ α := Empty,
+ initCarry := Empty.elim,
+ outputCirc := Circuit.var true (inr ()),
+ nextStateCirc := Empty.elim
+}
+
+@[simp]
+def eval_id (env: Unit → BitStream) (i : Nat) : id.eval env i = (env ()) i := rfl
+
+@[simp]
+def eval_id' (env: Unit → BitStream) : id.eval env = env () := rfl
+
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
   | 0 => by
@@ -1467,17 +1481,35 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
     ext i
     simp
 
-
-/-- Identity finite state machine -/
-def id : FSM Unit := {
- α := Empty,
- initCarry := Empty.elim,
- outputCirc := Circuit.var true (inr ()),
- nextStateCirc := Empty.elim
-}
+/-- Repeat the boolean bit 'b' 'n' times. -/
+def repeatN (b : Bool) (n : Nat) : FSM Unit :=
+  match n with
+  | 0 => FSM.id
+  | n' + 1 =>
+    composeUnaryAux (FSM.ls b) (repeatN b n')
 
 @[simp]
-def eval_id (env: Unit → BitStream) (i : Nat) : id.eval env i = (env ()) i := rfl
+theorem eval_repeatN_zero (b : Bool) (env : Unit → BitStream) :
+  (repeatN b 0).eval env = (env ()) := by
+  simp [repeatN]
+
+@[simp]
+theorem eval_repeatN_succ (b : Bool) (n : Nat) (env : Unit → BitStream) :
+  (repeatN b (n + 1)).eval env =
+  BitStream.concat b ((repeatN b n).eval env) := by
+  simp [repeatN]
+
+@[simp]
+theorem eval_repeatN (b : Bool) (n : Nat) (env : Unit → BitStream) :
+  (repeatN b n).eval env = fun i =>
+    if i < n then b else (env () (i - n)) := by
+  induction n
+  case zero =>
+    ext i; simp
+  case succ n hn =>
+    ext i
+    simp [hn]
+    rcases i with rfl | i <;> simp
 
 /-- Build logical shift left automata by `n` bits -/
 def shiftLeft (n : Nat) : FSM Unit :=

@@ -65,6 +65,23 @@ def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   | .max v w => Nat.max (v.toNat env) (w.toNat env)
   | .addK v k => v.toNat env + k
 
+@[simp]
+def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.var v) env = env v := rfl
+
+@[simp]
+def WidthExpr.toNat_min (v w : WidthExpr wcard) (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.min v w) env = Nat.min (v.toNat env) (w.toNat env) := rfl
+
+@[simp]
+def WidthExpr.toNat_max (v w : WidthExpr wcard) (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.max v w) env = Nat.max (v.toNat env) (w.toNat env) := rfl
+
+@[simp]
+def WidthExpr.toNat_addK (v : WidthExpr wcard) (k : Nat)
+    (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.addK v k) env = v.toNat env + k := rfl
+
 def WidthExpr.toBitStream (e : WidthExpr wcard)
   (bsEnv : StateSpace wcard tcard → BitStream) : BitStream :=
   match e with
@@ -73,9 +90,6 @@ def WidthExpr.toBitStream (e : WidthExpr wcard)
   | .max v w => BitStream.maxUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
   | .addK v k => BitStream.addKUnary (v.toBitStream bsEnv) k
 
-@[simp]
-def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :
-    WidthExpr.toNat (.var v) env = env v := rfl
 
 inductive NatPredicate (wcard : Nat) : Type
 | eq : WidthExpr wcard → WidthExpr wcard → NatPredicate wcard

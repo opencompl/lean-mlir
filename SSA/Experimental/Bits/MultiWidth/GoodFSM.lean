@@ -26,7 +26,19 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
       }
     else
       { toFsm := FSM.zero' } -- default, should not be used.
-  | _ => { toFsm := FSM.zero' }
+  | .min v w =>
+      { toFsm :=
+        (mkWidthFSM wcard tcard v).toFsm &&& (mkWidthFSM wcard tcard w).toFsm
+      }
+  | .max v w =>
+        { toFsm :=
+        (mkWidthFSM wcard tcard v).toFsm ||| (mkWidthFSM wcard tcard w).toFsm
+      }
+  | .addK v k =>
+    { toFsm :=
+        composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard v).toFsm
+    }
+
 
 axiom AxIsGoodNatFsm {P : Prop}: P
 
@@ -39,10 +51,22 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       simp [mkWidthFSM]
       have ⟨henv⟩ := henv
       rw [henv]
-    case min v w => exact AxIsGoodNatFsm
-    case max v w => exact AxIsGoodNatFsm
-    case addK v k => exact AxIsGoodNatFsm
-
+    case min v w hv hw =>
+      simp [mkWidthFSM]
+      rw [hv, hw]
+      ext i
+      simp
+    case max v w hv hw =>
+      simp [mkWidthFSM]
+      rw [hv, hw]
+      ext i
+      simp
+    case addK v k hv =>
+      simp [mkWidthFSM]
+      rw [hv]
+      ext i
+      simp
+      omega
 
 /--
 Build an FSM taking inputs 'x' and 'w'.
