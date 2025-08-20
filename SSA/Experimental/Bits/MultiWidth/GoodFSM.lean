@@ -662,7 +662,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     rw [hp.heq (henv := htenv)]
     rw [hq.heq (henv := htenv)]
     rw [Term.toBV_add] -- TODO: why does this just not rewrite?
-    simp only [BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
+
     -- -- TODO: fill this up
     -- rw [← BitStream.add_eq]
     -- rw [BitStream.add]

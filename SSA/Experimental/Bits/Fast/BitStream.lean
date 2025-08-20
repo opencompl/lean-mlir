@@ -1352,3 +1352,11 @@ def maxUnary (x y : BitStream) : BitStream :=
 /-- increment by '+k'. -/
 def addKUnary (x : BitStream) (k : Nat) : BitStream :=
   fun i => if i < k then true else x (i - k)
+
+/--
+See that this cannot be true, and that I should instead
+change the denotation of predicate equality to be 'EqualUptoW' or whatever.
+-/
+theorem ofBitVecZextMsb_add (a b : BitVec w) :
+  BitStream.ofBitVecZextMsb a + BitStream.ofBitVecZextMsb b =
+  BitStream.ofBitVecZextMsb (a + b) := sorry
