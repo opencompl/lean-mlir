@@ -189,36 +189,17 @@ def p1 : PeepholeRewrite Simple [.int] [.int] :=
       /- goals accomplished 🎉 -/
     }
 
-def ex1_rewritePeepholeAt :
-    Com Simple  (Ctxt.ofList [.int]) .pure [.int] := rewritePeepholeAt p1 1 lhs
-
-theorem hex1_rewritePeephole :
-  ex1_rewritePeepholeAt
-  = (
-    -- %c0 = 0
-    Com.var (cst 0) <|
-    -- %out_dead = %x + %c0
-    Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
-    -- ret %c0
-    Com.rets [⟨2, rfl⟩]ₕ) := by
+/--
+info: {
+  ^entry(%0 : ToyNoRegion.Ty.int):
+    %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
+    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
+    return %0 : (ToyNoRegion.Ty.int) → ()
+}
+-/
+#guard_msgs (whitespace := lax) in #eval rewritePeepholeAt p1 1 lhs
+example : rewritePeephole (fuel := 100) p1 lhs = rewritePeepholeAt p1 1 lhs := by
   native_decide
-
-
-def ex1_rewritePeephole :
-    Com Simple  (Ctxt.ofList [.int]) .pure [.int] := rewritePeephole (fuel := 100) p1 lhs
-
-set_option maxRecDepth 2000 in
-theorem Hex1_rewritePeephole :
-    ex1_rewritePeephole
-    = (
-      -- %c0 = 0
-      Com.var (cst 0) <|
-      -- %out_dead = %x + %c0
-      Com.var (add ⟨1, rfl⟩ ⟨0, rfl⟩ ) <| -- %out = %x + %c0
-      -- ret %c0
-      Com.rets [⟨2, rfl⟩]ₕ) := by
-  native_decide
-
 
 end ToyNoRegion
 
@@ -429,24 +410,7 @@ info: {
 -/
 #guard_msgs in #eval runRewriteOnLhs
 
-def expectedRhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
-  Com.var (cst 0) <|
-  Com.var (add ⟨0, rfl⟩ ⟨1, rfl⟩) <| -- %out = %x + %c0
-  -- | Note that the argument to 'iterate' is rewritten.
-  -- This is a rewrite that fires at the top level.
-  Com.var (iterate (k := 0) (⟨2, rfl⟩) (
-      Com.letPure (cst 0) <|
-      Com.letPure (add ⟨0, rfl⟩ ⟨1, rfl⟩)
-      -- | See that the rewrite has fired in the nested region for 'iterate',
-      -- and we directly return the block argument.
-      <| Com.rets [⟨2, rfl⟩]ₕ
-  )) <|
-  Com.rets [⟨0, rfl⟩]ₕ
-
 theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
-  native_decide
-
-theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by
   native_decide
 
 end P2

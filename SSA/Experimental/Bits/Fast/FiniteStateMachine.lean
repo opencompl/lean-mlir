@@ -704,6 +704,17 @@ lemma eval_scanAnd_succ (x : Unit → BitStream) (n : Nat) :
       intros j hj
       exact h j (by omega)
 
+/-- The result of `scanAnd` is true at `n` iff the bitvector has been true upto (and including) `n`. -/
+lemma eval_scanAnd_eq_decide (x : Unit → BitStream) (n : Nat) : scanAnd.eval x n =
+  decide (∀ (i : Nat), (hi : i ≤ n) → x () i = true) := by
+  have := eval_scanAnd_true_iff x n
+  by_cases hscan : scanAnd.eval x n
+  · simp only [hscan, true_iff, true_eq_decide_iff] at this ⊢;
+    apply this
+  · simp only [hscan, Bool.false_eq_true, false_iff, not_forall,
+    Bool.not_eq_true, false_eq_decide_iff] at this ⊢
+    apply this
+
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = (x true) ^^^ (x false) := by
   ext n; cases n <;> simp [xor, eval, nextBit]
 
@@ -961,8 +972,20 @@ def zero : FSM (Fin 0) :=
     outputCirc := Circuit.fals
   }
 
+
 @[simp] lemma eval_zero (x : Fin 0 → BitStream) : zero.eval x = BitStream.zero := by
   ext; simp [zero, eval, nextBit]
+
+def zero' {α : Type} : FSM α :=
+  { α := Empty,
+    initCarry := Empty.elim,
+    nextStateCirc := Empty.elim,
+    outputCirc := Circuit.fals
+  }
+
+@[simp] lemma eval_zero' {α : Type}
+    (x : α → BitStream) : zero'.eval x = BitStream.zero := by
+  ext; simp [zero', eval, nextBit]
 
 def one : FSM (Fin 0) :=
   { α := Unit,
@@ -1025,6 +1048,7 @@ def var (n : ℕ) : FSM (Fin (n+1)) :=
     nextStateCirc := Empty.elim
     outputCirc := Circuit.var true (inr (Fin.last _))
   }
+
 
 @[simp] lemma eval_var (n : ℕ) (x : Fin (n+1) → BitStream) : (var n).eval x = x (Fin.last n) := by
   ext m; cases m <;> simp [var, eval, carry, nextBit]
@@ -1113,16 +1137,68 @@ def repeatBit : FSM Unit where
   initCarry := fun () => false
   outputCirc :=  (.var true <| .inl ()) ||| (.var true <| .inr ())
   nextStateCirc := fun () => (.var true <| .inl ()) ||| (.var true <| .inr ())
--- @[simp] theorem eval_repeatBit :
---     repeatBit.eval x = BitStream.repeatBit (x ()) := by
---   unfold BitStream.repeatBit
---   rw [eval_eq_eval', eval']
---   apply BitStream.corec_eq_corec
---     (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
---   · simp [repeatBit]
---   · intro ⟨y, a⟩ ⟨b, x⟩ h
---     simp at h
---     simp [h, nextBit, BitStream.head]
+
+/--
+(xval:false, control:true) produce the latch value immediately when 'control = true'.
+-/
+def latchImmediate (initVal : Bool) : FSM Bool where
+  α := Unit
+  initCarry := fun _ => initVal
+  outputCirc :=
+    let xval := Circuit.var true (inr false)
+    let control := Circuit.var true (inr true)
+    let state := Circuit.var true (inl ())
+    Circuit.ite control xval state
+  nextStateCirc := fun () =>
+    let xval := Circuit.var true (inr false)
+    let control := Circuit.var true (inr true)
+    let state := Circuit.var true (inl ())
+    Circuit.ite control xval state
+
+@[simp]
+theorem eval_latchImmediate_zero_eq (initVal : Bool)
+    (x : Bool → BitStream) :
+    (latchImmediate initVal).eval x 0 = if (x true 0) then (x false 0) else initVal := by
+  simp [latchImmediate, eval, nextBit]
+
+@[simp]
+theorem eval_latchImmediate_succ_eq (initVal : Bool) (i : Nat)
+    (x : Bool → BitStream) :
+    (latchImmediate initVal).eval x (i + 1) =
+      if (x true (i + 1)) then (x false (i + 1)) else
+        (latchImmediate initVal).eval x i := by
+  simp [latchImmediate, eval, nextBit, carry]
+
+/--
+(false | true)
+(xval  |  control)
+produce the latch value from the previous iteration when 'control = true'.
+-/
+def latchDelayed (initVal : Bool) : FSM Bool where
+  α := Unit
+  initCarry := fun _ => initVal
+  outputCirc :=
+    let state := Circuit.var true (inl ())
+    state
+  nextStateCirc := fun () =>
+    let xval := Circuit.var true (inr false)
+    let control := Circuit.var true (inr true)
+    let state := Circuit.var true (inl ())
+    Circuit.ite control xval state
+
+@[simp]
+theorem eval_latchDelayed_zero_eq (initVal : Bool)
+    (x : Bool → BitStream) :
+    (latchDelayed initVal).eval x 0 = initVal := by
+  simp [latchDelayed, eval, nextBit]
+
+@[simp]
+theorem eval_latchDelayed_succ_eq (initVal : Bool) (i : Nat)
+    (x : Bool → BitStream) :
+    (latchDelayed initVal).eval x (i + 1) =
+      if (x true i) then x false i else
+        (latchDelayed initVal).eval x i := by
+  simp [latchDelayed, eval, nextBit, carry]
 
 end FSM
 
@@ -1161,17 +1237,18 @@ def composeBinaryAux
       | true => q₁
       | false => q₂)
 
+-- TODO: replace 'composeBinaryAux' with 'composeBinaryAux'.
 def composeBinaryAux'
     (p : FSM Bool)
-    (q₁ : FSM α)
-    (q₂ : FSM α) :
+    (qtrue : FSM α)
+    (qfalse : FSM α) :
     FSM α :=
   p.compose (α)
     (λ _ => α)
     (λ _ i => i)
     (λ b => match b with
-      | true => q₁
-      | false => q₂)
+      | true => qtrue
+      | false => qfalse)
 
 def composeTernaryAux' (p : FSM (Fin 3)) (q₀ q₁ q₂ : FSM α) : FSM α :=
   p.compose (α)
@@ -1256,6 +1333,18 @@ def composeBinary
 instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
     Fintype (cond b α β) := by
   cases b <;> simp <;> infer_instance
+
+@[simp] lemma composeBinaryAux'_eval
+    (p : FSM Bool)
+    (q₁ : FSM s)
+    (q₂ : FSM s)
+    (x : s → BitStream) :
+    (composeBinaryAux' p q₁ q₂).eval x = p.eval
+      (λ b => cond b (q₁.eval (fun i => x i))
+                  (q₂.eval (fun i => x i))) := by
+  rw [composeBinaryAux', FSM.eval_compose]
+  ext b
+  cases b <;> dsimp <;> congr <;> funext b <;> cases b <;> simp
 
 
 namespace FSM
@@ -1523,6 +1612,15 @@ if and only if 'falseUptoExcluding' evaluates to 'false
 private theorem falseUptoIncluding_eq_false_iff (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
     ((falseUptoIncluding n).eval env i = false) ↔ i ≤ n := by simp
 
+
+/-- Produce the FSM after consuming the input stream for one clock cycle 'arity2b'. -/
+def nextFSM (fsm : FSM arity) (arity2b : arity → Bool) : FSM arity where
+  α := fsm.α
+  initCarry := fun abit =>
+    (fsm.nextStateCirc abit).eval (Sum.elim fsm.initCarry arity2b)
+  nextStateCirc := fsm.nextStateCirc
+  outputCirc := fsm.outputCirc
+
 end FSM
 
 open Term
@@ -1591,6 +1689,7 @@ def termEvalEqFSM : ∀ (t : Term), FSMTermSolution t
          · simp [hi]
          · simp [hi]; omega
      }
+
 
 /-!
 FSM that implement bitwise-and. Since we use `0` as the good state,
@@ -1984,6 +2083,8 @@ def decideIfZerosAuxUnverified {σ ι : Type _}
 def FSM.optimize {arity : Type _} (p : FSM arity) [DecidableEq arity] : FSM arity :=
   p
 
+
+
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
   decideIfZerosAux p (p.outputCirc).fst
@@ -2060,3 +2161,55 @@ axiom decideIfZeroesAtIx_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (w : Nat) : decideIfZerosAtIx p w = true ↔ ∀ (x : arity → BitStream), p.eval x w = false
 
 end FSM
+
+instance : HAnd (FSM arity) (FSM arity) (FSM arity) where
+  hAnd := composeBinaryAux' FSM.and
+
+theorem FSM.and_eq (a b : FSM arity) : (a &&& b) = composeBinaryAux' FSM.and a b := rfl
+
+@[simp]
+theorem FSM.eval_and' (a b : FSM arity) : (a &&& b).eval env = a.eval env &&& b.eval env := by
+  rw [FSM.and_eq]
+  simp
+
+instance : HOr (FSM arity) (FSM arity) (FSM arity) where
+  hOr := composeBinaryAux' FSM.or
+
+theorem FSM.or_eq (a b : FSM arity) : (a ||| b) = composeBinaryAux' FSM.or a b := rfl
+
+@[simp]
+theorem FSM.eval_or' (a b : FSM arity) : (a ||| b).eval env = a.eval env ||| b.eval env := by
+  rw [FSM.or_eq]
+  simp
+
+instance : HXor (FSM arity) (FSM arity) (FSM arity) where
+  hXor := composeBinaryAux' FSM.xor
+
+theorem FSM.xor_eq (a b : FSM arity) : (a ^^^ b) = composeBinaryAux' FSM.xor a b := rfl
+
+@[simp]
+theorem FSM.eval_xor' (a b : FSM arity) : (a ^^^ b).eval env = a.eval env ^^^ b.eval env := by
+  rw [FSM.xor_eq]
+  simp
+
+instance : Complement (FSM arity) where
+  complement := composeUnaryAux FSM.not
+
+theorem FSM.not_eq (a : FSM arity) : (~~~ a) = composeUnaryAux FSM.not a := rfl
+
+@[simp]
+theorem FSM.eval_not' (a : FSM arity) : (~~~ a).eval env = ~~~ (a.eval env) := by
+  rw [FSM.not_eq]
+  simp
+
+def FSM.ite {α : Type _} (cond : FSM α) (t : FSM α) (e : FSM α) : FSM α :=
+  (cond &&& t) ||| (~~~ cond &&& e)
+
+@[simp]
+theorem FSM.eval_ite_eq_decide {α : Type}
+    (cond t e : FSM α)
+    (env : α → BitStream) (i : Nat) :
+    (FSM.ite cond t e).eval env i =
+    if (cond.eval env i) then t.eval env i else e.eval env i := by
+  simp [FSM.ite]
+  by_cases hcond : cond.eval env i <;> simp [hcond]

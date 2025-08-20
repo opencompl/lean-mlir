@@ -40,11 +40,6 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
       midRet := e.args.map (fun _ v => v.appendInl)
     }
   | _, _, .rets _ => none
-  | n+1, lets, .var e body =>
-    splitProgramAtAux n (lets.var e) body
-
-theorem denote_splitProgramAtAux [LawfulMonad d.m] :
-    {pos : ℕ} → {lets : Lets d Γ₁ eff Γ₂} →
     {prog : Com d Γ₂ eff t} →
     {res : _} → (hres : res ∈ splitProgramAtAux pos lets prog) →
     (V : Valuation Γ₁) →

@@ -560,6 +560,9 @@ def Com.returnVar (com : Com d Γ eff [t]) : Var com.outContext t :=
 abbrev Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
   Hom.id.appendCodomain
 
+@[simp] def Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
+  @fun _ => Var.toSnoc
+
 section Lemmas
 
 @[simp] lemma Com.outContext_rets (vs : HVector Γ.Var t) : (rets vs : Com d Γ eff t).outContext = Γ := rfl
