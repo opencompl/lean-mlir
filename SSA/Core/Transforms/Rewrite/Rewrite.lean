@@ -92,7 +92,7 @@ def rewriteAt
   if h : ts₁ = splitRes.midTypes then
     let m ← matchArgRes splitRes.top lhs.toLets splitRes.midRet (h ▸ lhs.returnVars)
     let m := m.toHom <| by
-      sorry
+      subst h; exact hlhs
     let rhs := rhs.changeVars m
     let zip := splitRes.insertPureCom splitRes.midRet (cast (by simp[← h]) rhs)
     return zip.toCom
@@ -105,13 +105,6 @@ def rewriteAt
 @[simp] lemma Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
     com.toFlatCom.rets = com.returnVars := by
   simp [toFlatCom]
-
--- -- TODO: move to somewhere more sensible
--- lemma Com.denoteLets_comap (lets : Lets d Γ_in .pure Γ_out) (vars : HVector Γ_out.Var ts)
---     (V : Valuation Δ) (f : Γ_in.Hom Δ) :
---     vars.map (lets.denote <| V.comap f)
---     = _ := by
---   sorry
 
 theorem denote_rewriteAt [LawfulMonad d.m]
     {lhs rhs : Com d Γ₁ .pure t₁}
@@ -181,8 +174,11 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
       · rfl
     · rfl
 
--- /-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
--- #guard_msgs in #print axioms denote_rewritePeepholeAt
+/-- info: 'denote_rewriteAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_rewriteAt
+
+/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_rewritePeepholeAt
 
 /- repeatedly apply peephole on program. -/
 section SimpPeepholeApplier
@@ -218,8 +214,10 @@ theorem denote_rewritePeephole (fuel : ℕ)
     (rewritePeephole fuel pr target).denote = target.denote := by
   exact denote_rewritePeephole_go ..
 
--- /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
--- #guard_msgs in #print axioms denote_rewritePeephole
+/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_rewritePeephole
+
+#print axioms denote_rewritePeephole
 
 variable {d : Dialect} [DialectSignature d] [DecidableEq (Dialect.Ty d)] [DecidableEq (Dialect.Op d)]
 [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
@@ -349,9 +347,9 @@ termination_by (fuel, 1)
 
 end
 
--- /--
--- info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
--- -/
--- #guard_msgs in #print axioms rewritePeepholeRecursively
+/--
+info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms rewritePeepholeRecursively
 
 end SimpPeepholeApplier

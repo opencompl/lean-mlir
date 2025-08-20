@@ -131,9 +131,11 @@ theorem denote_insertPureCom {zip : Zipper d Γ_in eff t₁} [LawfulMonad d.m]
     funext t' ⟨v', hv'⟩
     simp only [Com.outContextHom, Com.outContextDiff, Com.bvars_castPureToEff]
     rfl
-  funext V;
-  simp [insertPureCom, denote_insertCom, this]
-  sorry
+  funext V
+  simp only [insertPureCom, denote_insertCom, Com.denoteLets_castPureToEff,
+    Com.returnVars_castPureToEff, Valuation.comap_with, HVector.map_map, pure_bind, this,
+    Valuation.comap_outContextHom_denoteLets, Valuation.comap_apply, Var.castCtxt_castCtxt,
+    Var.castCtxt_rfl, Com.denoteLets_returnVars]
 
 theorem denote_insertPureCom_eq_of [LawfulMonad d.m]
     {zip : Zipper d Γ_in eff tys} {vs}

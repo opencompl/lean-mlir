@@ -825,5 +825,7 @@ theorem denote_matchLets_of
   rw [Mapping.toHom_eq_mapValuation (map.isTotal_of hvars)]
   apply denote_matchArg
 
+/-- info: 'denote_matchLets_of' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_matchLets_of
 
 end DenoteLemmas

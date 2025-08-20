@@ -1027,21 +1027,25 @@ section Lemmas
 
 @[simp] lemma Com.outContext_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).outContext = com.outContext := by
-  induction com using Com.rec' <;> simp [*]
+  induction com <;> simp [*]
 
 /-- `castPureToEff` does not change the size of a `Com` -/
 @[simp] lemma Com.size_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).size = com.size := by
-  induction com using Com.rec' <;> simp [*]
+  induction com <;> simp [*]
 
 /-- `castPureToEff` does not change the number of bvars of a `Com` -/
 @[simp] lemma Com.bvars_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).bvars = com.bvars := by
-  induction com using Com.rec' <;> simp [*]
+  induction com <;> simp [*]
+
+@[simp] lemma Com.returnVars_castPureToEff (eff : _) (com : Com d Γ .pure tys) :
+    (com.castPureToEff eff).returnVars = com.returnVars.map (fun _ v => v.castCtxt (by simp)) := by
+  induction com <;> simp_all
 
 @[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure [ty]} :
     (com.castPureToEff eff).returnVar = com.returnVar.castCtxt (by simp) := by
-  induction com using Com.rec' <;> simp_all
+  simp [returnVar]
 
 /-! denotations of `castPureToEff` -/
 
