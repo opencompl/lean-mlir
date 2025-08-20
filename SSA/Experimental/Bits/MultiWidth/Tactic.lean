@@ -160,7 +160,7 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
-    return (.ofNat wix, { state with wToIx := wToIx })
+    return (.var wix, { state with wToIx := wToIx })
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
@@ -176,10 +176,35 @@ private def mkFinLit (n : Nat) (i : Nat) : SolverM Expr := do
 /-- info: MultiWidth.WidthExpr.var {wcard : ℕ} (v : Fin wcard) : WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.var
 
-def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : SolverM Expr := do
-  let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
-  debugCheck out
-  return out
+/-- info: MultiWidth.WidthExpr.min {wcard : ℕ} (v w : WidthExpr wcard) : WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.min
+
+/-- info: MultiWidth.WidthExpr.max {wcard : ℕ} (v w : WidthExpr wcard) : WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.max
+
+/-- info: MultiWidth.WidthExpr.addK {wcard : ℕ} (v : WidthExpr wcard) (k : ℕ) : WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.addK
+
+def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
+    SolverM Expr := do
+  match ve with
+  | .var v =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var)
+      #[mkNatLit wcard, ← mkFinLit wcard v]
+    debugCheck out
+    return out
+  | .min v w =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.min)
+      #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+    return out
+  | .max v w =>
+      let out := mkAppN (mkConst ``MultiWidth.WidthExpr.max)
+        #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+      return out
+  | .addK v k =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.addK)
+      #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty

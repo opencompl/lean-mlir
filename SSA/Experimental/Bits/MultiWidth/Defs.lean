@@ -165,6 +165,12 @@ theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
   Term.toBV tenv (.sext a v) =
     (a.toBV tenv).signExtend (v.toNat wenv) := rfl
 
+@[simp]
+theorem Term.toBV_add {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) (a b : Term tctx w) :
+  Term.toBV tenv (.add a b) = a.toBV tenv + b.toBV tenv := rfl
+
 inductive BinaryRelationKind
 | eq
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr

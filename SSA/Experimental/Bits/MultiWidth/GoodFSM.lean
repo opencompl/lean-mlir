@@ -636,13 +636,15 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
   case add v p q hp hq =>
     constructor
     intros wenv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
-    ext i
+    simp only [Nondep.Term.ofDep, mkTermFSM, composeBinaryAux'_eval, FSM.eval_add, cond_true,
+      cond_false]
     rw [hp.heq (henv := htenv)]
     rw [hq.heq (henv := htenv)]
+    rw [Term.toBV_add] -- TODO: why does this just not rewrite?
     simp only [BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
-    rw [← BitStream.add_eq]
-    rw [BitStream.add]
+    -- -- TODO: fill this up
+    -- rw [← BitStream.add_eq]
+    -- rw [BitStream.add]
     exact AxAdd
   case zext w' a wnew ha  =>
     constructor
