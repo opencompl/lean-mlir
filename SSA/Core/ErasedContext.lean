@@ -364,6 +364,9 @@ substituing along a proof that `t = u`).
 def eq (v : Γ.Var t) (w : Γ.Var u) : Prop :=
   ∃ (h : t = u), v = h ▸ w
 
+instance [DecidableEq Ty] {v : Γ.Var t} {w : Γ.Var u} : Decidable (v.eq w) := by
+  unfold Var.eq; infer_instance
+
 /-- Given variables `v, w : Γ.Var t` with the same type index `t`, `v.eq w`
 coincides exactly with `v = w`. -/
 @[simp] lemma eq_iff {v w : Γ.Var t} : v.eq w ↔ v = w := by
