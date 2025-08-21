@@ -16,5 +16,5 @@ theorem do_not_add_annotation_to_existing_instr_thm (e e_1 : IntW 32) : add (con
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

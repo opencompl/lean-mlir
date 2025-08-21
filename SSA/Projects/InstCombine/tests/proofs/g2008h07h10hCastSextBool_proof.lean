@@ -16,7 +16,7 @@ theorem PR2539_A_thm (e : IntW 1) : icmp IntPred.slt (zext 32 e) (const? 32 1) â
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,5 +25,5 @@ theorem PR2539_B_thm (e : IntW 1) : icmp IntPred.slt e (const? 1 1) âŠ‘ const? 1
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

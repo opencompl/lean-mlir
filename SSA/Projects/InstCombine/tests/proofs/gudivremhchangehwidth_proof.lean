@@ -16,7 +16,7 @@ theorem udiv_i8_thm (e e_1 : IntW 8) : trunc 8 (LLVM.udiv (zext 32 e_1) (zext 32
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem urem_i8_thm (e e_1 : IntW 8) : trunc 8 (urem (zext 32 e_1) (zext 32 e)) 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,7 +34,7 @@ theorem udiv_i32_thm (e e_1 : IntW 8) : LLVM.udiv (zext 32 e_1) (zext 32 e) ⊑ 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -46,7 +46,7 @@ theorem udiv_i32_multiuse_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -55,7 +55,7 @@ theorem udiv_illegal_type_thm (e e_1 : IntW 9) : LLVM.udiv (zext 32 e_1) (zext 3
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -64,7 +64,7 @@ theorem urem_i32_thm (e e_1 : IntW 8) : urem (zext 32 e_1) (zext 32 e) ⊑ zext 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -76,7 +76,7 @@ theorem urem_i32_multiuse_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -85,7 +85,7 @@ theorem urem_illegal_type_thm (e e_1 : IntW 9) : urem (zext 32 e_1) (zext 32 e) 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -95,7 +95,7 @@ theorem udiv_i32_c_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -106,7 +106,7 @@ theorem udiv_i32_c_multiuse_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -116,7 +116,7 @@ theorem udiv_illegal_type_c_thm (e : IntW 9) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -126,7 +126,7 @@ theorem urem_i32_c_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -137,7 +137,7 @@ theorem urem_i32_c_multiuse_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -147,7 +147,7 @@ theorem urem_illegal_type_c_thm (e : IntW 9) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -157,7 +157,7 @@ theorem udiv_c_i32_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -167,5 +167,5 @@ theorem urem_c_i32_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
