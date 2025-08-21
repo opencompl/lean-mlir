@@ -41,5 +41,5 @@ theorem bind_eq (x : EffectM α) (f : α → EffectM β) (s) :
 
 /-! ## Refinement -/
 
-instance [HRefinement α α] : Refinement (EffectM α) where
+instance [HRefinement α β] : HRefinement (EffectM α) (EffectM β) where
   IsRefinedBy (x y : StateT _ PoisonOr _) := x ⊑ y
