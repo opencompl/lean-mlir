@@ -17,7 +17,7 @@ theorem select_of_symmetric_selects_thm (e e_1 : IntW 32) (e_2 e_3 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -27,7 +27,7 @@ theorem select_of_symmetric_selects_negative1_thm (e e_1 : IntW 32) (e_2 e_3 : I
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -37,5 +37,5 @@ theorem select_of_symmetric_selects_commuted_thm (e e_1 : IntW 32) (e_2 e_3 : In
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

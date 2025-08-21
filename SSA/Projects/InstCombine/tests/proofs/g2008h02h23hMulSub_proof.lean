@@ -16,5 +16,5 @@ theorem test_thm (e : IntW 26) : sub (mul e (const? 26 2885)) (mul e (const? 26 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
