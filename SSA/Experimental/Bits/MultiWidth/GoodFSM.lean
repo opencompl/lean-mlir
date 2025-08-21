@@ -842,7 +842,7 @@ def fsmTermEq {wcard tcard : Nat}
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
-  | .binRel .eq a b =>
+  | .tbinRel .eq a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := fsmTermEq fsmA fsmB }
@@ -961,6 +961,28 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
         have := congrFun h i
         simp at this
         simp [this]
+  case not p hp =>
+    constructor
+    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    intros wenv tenv fsmEnv htenv
+    simp [Predicate.toProp]
+    rw [hp.heq (henv := htenv)]
+    constructor
+    · intros h
+      ext i
+      rw [BitStream.scanOr_eq_decide]
+      rw [← ne_eq, Function.ne_iff] at h
+      simp
+      sorry
+    · intros h
+      simp at h ⊢
+      apply Function.ne_iff .. |>.mpr
+      have := fun ix => congrFun h ix
+      simp [BitStream.scanOr_eq_decide] at this
+      specialize this 0
+      obtain ⟨i, hi⟩ := this
+      exists i
+      simp [hi]
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard : Nat) (p : Nondep.Predicate) :

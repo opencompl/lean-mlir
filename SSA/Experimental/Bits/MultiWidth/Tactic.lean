@@ -431,7 +431,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (_w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
-      return (.binRel .eq ta tb, state)
+      return (tbinRel .eq ta tb, state)
     | _ => throwError m!"expected bitvector equality, found: {indentD e}"
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
@@ -444,7 +444,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
 info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (k : BinaryRelationKind)
   (w : WidthExpr wcard) (a b : Term ctx w) : Predicate ctx
 -/
-#guard_msgs in #check MultiWidth.Predicate.binRel
+#guard_msgs in #check tbinRel
 
 /--
 info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (p1 p2 : Predicate ctx) : Predicate ctx
@@ -454,7 +454,7 @@ info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (
 def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
-  | .binRel .eq a b =>
+  | tbinRel .eq a b =>
     let w := a.width
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard tctx a
