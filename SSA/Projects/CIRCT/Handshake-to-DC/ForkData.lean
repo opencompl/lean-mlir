@@ -114,12 +114,23 @@ theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s
 open Ctxt in
 theorem equiv_fork_fst (streamInt : DCOp.ValueStream (BitVec 8)) :
   (HandshakeOp.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
-  unfold HandshakeOp.fork
-  simp only [DCFork, getElem?_ofList, Var.zero_eq_last, Com.denote_var, Com.denote_ret,
-    bind_pure_comp]
+  unfold HandshakeOp.fork DCFork
   simp_peephole
   unfold Bisim; exists Eq
   rw [corec₂_corec1]
+  refine
+    (and_symm_left
+          (fun x =>
+            DCOp.pack (fun x => (DCOp.unpack fun x => streamInt x).1 x)
+              (fun x => (DCOp.fork fun x => (DCOp.unpack fun x => streamInt x).2 x).1 x) x)
+          (corec streamInt fun s' =>
+            match Id.run (s' 0, s' 0, s'.tail) with
+            | (a, fst, b) => (a, b))
+          (IsBisim Eq)).mp
+      ?_
+  unfold DCOp.pack DCOp.unpack DCOp.fork
+  simp_peephole
+
   · sorry
       -- and_intros
       -- all_goals

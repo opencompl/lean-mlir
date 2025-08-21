@@ -237,7 +237,8 @@ def testDCShl2 : DCOp.ValueStream (BitVec 32)  :=
 
 theorem equiv_add_shl (a : DCOp.ValueStream (BitVec 32)) :
     (dcAdd2.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons a <| .nil))) = (dcShl.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons a <| .nil))) := by
-  simp [dcAdd2, dcShl]
+  unfold dcAdd2 dcShl
+  simp_peephole
 
   sorry
 
@@ -246,9 +247,9 @@ theorem equiv_add (a : (BitVec 32)) :
   simp [CombOp.add, CombOp.shlPar]
   bv_decide
 
-theorem equiv_add_dcxcomb (a : DCOp.ValueStream (BitVec 32)) :
-    ((DCxCombFunctor.Op.comb add).denote (Ctxt.Valuation.ofHVector (.cons a <| .cons a <| .nil)))
-    ((DCxCombFunctor.Op.comb shlPar 2).denote (Ctxt.Valuation.ofHVector (.cons a <| .nil))) := by sorry
+-- theorem equiv_add_dcxcomb (a : DCOp.ValueStream (BitVec 32)) :
+--     ((DCxCombFunctor.Op.comb add).denote (Ctxt.Valuation.ofHVector (.cons a <| .cons a <| .nil)))
+--     ((DCxCombFunctor.Op.comb shlPar 2).denote (Ctxt.Valuation.ofHVector (.cons a <| .nil))) := by sorry
 
 -- theorem dc_eq (a b: DCOp.ValueStream (BitVec 32)) :
 --   (dcAdd4.denote (Valuation.ofHVector (.cons a <| .cons b <| .nil))) = DCxComb.shiftLeft a >> 2 := by sorry
