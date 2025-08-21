@@ -25,6 +25,8 @@ deriving Repr, DecidableEq
 
 structure Config where
   outputType : Config.OutputType := .text
+  outputPath : Option System.FilePath := .none
+
 /-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
 declare_config_elab elabTacBenchConfig Config
 
@@ -173,7 +175,10 @@ def evalTacBench : Tactic := fun
             errorMessage := errMsgStr
             timeElapsed := result.timeElapsed
           }
-          logInfo <| record |> toJson |>.compress
+          let outStr := record |> toJson |>.compress
+          logInfo <| outStr
+          if let some path := cfg.outputPath then
+            IO.FS.writeFile path outStr
 
 
 | _ => throwUnsupportedSyntax
