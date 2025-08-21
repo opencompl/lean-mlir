@@ -13,6 +13,20 @@ import Lean
 namespace AlivePaperExamples
 open BitVec
 
+-- set_option trace.LeanMLIR.Elab true
+
+-- set_option pp.instances false
+
+open Lean Meta in
+#eval do
+  let e := Lean.Expr.proj `DialectHRefinement 0 (Lean.Expr.const `InstCombine.instRefinement [])
+  let eApp := mkAppN e #[← mkFreshExprMVar none]
+  trace[LeanMLIR.Elab] m!"{e}"
+  trace[LeanMLIR.Elab] m!"{eApp}"
+
+
+-- set_option pp.explicit true
+
 -- Example proof of shift + mul, this is one of the hardest alive examples.
 -- (alive_simplifyMulDivRem290)
 theorem shift_mul:
