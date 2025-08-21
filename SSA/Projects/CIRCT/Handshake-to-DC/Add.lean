@@ -134,3 +134,108 @@ def testDC : DCOp.ValueStream (BitVec 32)  :=
   dcAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
 
 #eval testHandshake
+
+
+/--
+After canonicalization and materialization
+module {
+  hw.module @add(in %a : !dc.value<i32>, in %b : !dc.value<i32>, in %clk : !seq.clock {dc.clock}, in %rst : i1 {dc.reset}, out out0 : !dc.value<i32>) {
+    %false = hw.constant false
+    %token, %output = dc.unpack %a : !dc.value<i32>
+    %0:3 = dc.fork [3] %token
+    %1 = comb.extract %output from 0 : (i32) -> i31
+    %2 = comb.concat %1, %false : i31, i1
+    %token_0, %output_1 = dc.unpack %b : !dc.value<i32>
+    %3 = dc.join %0#0, %token_0, %0#2, %0#1
+    %4 = comb.add %2, %output : i32
+    %5 = dc.pack %3, %4 : i32
+    hw.output %5 : !dc.value<i32>
+  }
+}
+-/
+def dcAdd' := [DCxComb_com| {
+  ^entry(%a: !ValueStream_32, %b: !ValueStream_32):
+    %unpacka = "DCxComb.unpack" (%a) : (!ValueStream_32) -> (!ValueTokenStream_32)
+    -- opposit args order wrt. circt
+    %output = "DCxComb.fstVal" (%unpacka) : (!ValueTokenStream_32) -> (!ValueStream_32)
+    %token = "DCxComb.sndVal" (%unpacka) : (!ValueTokenStream_32) -> (!TokenStream)
+    -- %fork = "DCxComb.fork" (%token) : (!TokenStream) -> (!TokenStream2) keep this implicit
+    %2 = "DCxComb.add" (%output, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+    %unpackb = "DCxComb.unpack" (%b) : (!ValueStream_32) -> (!ValueTokenStream_32)
+    -- opposit args order wrt. circt
+    %output1 = "DCxComb.fstVal" (%unpackb) : (!ValueTokenStream_32) -> (!ValueStream_32)
+    %token0 = "DCxComb.sndVal" (%unpackb) : (!ValueTokenStream_32) -> (!TokenStream)
+    %3 = "DCxComb.join" (%token, %token0) : (!TokenStream, !TokenStream) -> (!TokenStream)
+    %4 = "DCxComb.add" (%2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+    %5 = "DCxComb.pack" (%4, %3) : (!ValueStream_32, !TokenStream) -> (!ValueStream_32)
+    "return" (%5) : (!ValueStream_32) -> ()
+}]
+#check dcAdd'
+#eval dcAdd'
+#reduce dcAdd'
+#check dcAdd'.denote
+#print axioms dcAdd'
+-- delay-insensitive, hence easier to prove.
+
+def dcAdd4 := [DCxComb_com| {
+  ^entry(%a: !ValueStream_32, %b: !ValueStream_32):
+    %unpacka = "DCxComb.unpack" (%a) : (!ValueStream_32) -> (!ValueTokenStream_32)
+    -- opposit args order wrt. circt
+    %output = "DCxComb.fstVal" (%unpacka) : (!ValueTokenStream_32) -> (!ValueStream_32)
+    %token = "DCxComb.sndVal" (%unpacka) : (!ValueTokenStream_32) -> (!TokenStream)
+    -- %fork = "DCxComb.fork" (%token) : (!TokenStream) -> (!TokenStream2) keep this implicit
+    %2 = "DCxComb.add" (%output, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+    %b2 = "DCxComb.add" (%2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+    -- %c2 = "DCxComb.add" (%b2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+    %unpackb = "DCxComb.unpack" (%b) : (!ValueStream_32) -> (!ValueTokenStream_32)
+    -- opposit args order wrt. circt
+    %output1 = "DCxComb.fstVal" (%unpackb) : (!ValueTokenStream_32) -> (!ValueStream_32)
+    %token0 = "DCxComb.sndVal" (%unpackb) : (!ValueTokenStream_32) -> (!TokenStream)
+    %3 = "DCxComb.join" (%token, %token0) : (!TokenStream, !TokenStream) -> (!TokenStream)
+    %4 = "DCxComb.add" (%b2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+    %5 = "DCxComb.pack" (%4, %3) : (!ValueStream_32, !TokenStream) -> (!ValueStream_32)
+    "return" (%5) : (!ValueStream_32) -> ()
+}]
+#check dcAdd'
+#eval dcAdd'
+#reduce dcAdd'
+#check dcAdd'.denote
+#print axioms dcAdd'
+-- delay-insensitive, hence easier to prove/reason about.
+
+
+
+
+
+
+
+
+
+
+
+-- def dcShl := [DCxComb_com| {
+--   ^entry(%a: !ValueStream_32, %b: !ValueStream_32):
+--     %unpacka = "DCxComb.unpack" (%a) : (!ValueStream_32) -> (!ValueTokenStream_32)
+--     -- opposit args order wrt. circt
+--     %output = "DCxComb.fstVal" (%unpacka) : (!ValueTokenStream_32) -> (!ValueStream_32)
+--     %token = "DCxComb.sndVal" (%unpacka) : (!ValueTokenStream_32) -> (!TokenStream)
+--     -- %fork = "DCxComb.fork" (%token) : (!TokenStream) -> (!TokenStream2) keep this implicit
+--     %2 = "DCxComb.shiftLeft" (%output, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+--     %b2 = "DCxComb.add" (%2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+--     -- %c2 = "DCxComb.add" (%b2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+--     %unpackb = "DCxComb.unpack" (%b) : (!ValueStream_32) -> (!ValueTokenStream_32)
+--     -- opposit args order wrt. circt
+--     %output1 = "DCxComb.fstVal" (%unpackb) : (!ValueTokenStream_32) -> (!ValueStream_32)
+--     %token0 = "DCxComb.sndVal" (%unpackb) : (!ValueTokenStream_32) -> (!TokenStream)
+--     %3 = "DCxComb.join" (%token, %token0) : (!TokenStream, !TokenStream) -> (!TokenStream)
+--     %4 = "DCxComb.add" (%b2, %output) : (!ValueStream_32, !ValueStream_32) -> (!ValueStream_32)
+--     %5 = "DCxComb.pack" (%4, %3) : (!ValueStream_32, !TokenStream) -> (!ValueStream_32)
+--     "return" (%5) : (!ValueStream_32) -> ()
+-- }]
+
+-- theorem dc_eq (a b: DCOp.ValueStream (BitVec 32)) :
+--   (dcAdd4.denote (Valuation.ofHVector (.cons a <| .cons b <| .nil))) = DCxComb.shiftLeft a >> 2 := by sorry
+--   /--
+--     1. rewrite comb add -> comb shl
+--     2. generalized rewrite
+--   -/
