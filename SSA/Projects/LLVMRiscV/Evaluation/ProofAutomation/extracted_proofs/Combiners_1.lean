@@ -1,7 +1,6 @@
   correct := by
     simp_lowering
-    sorry
+    simp
     --bv_decide
-
-    -- us this as an counterexample
+    sorry
 
