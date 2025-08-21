@@ -46,6 +46,10 @@ class Refinement (α : Type) where
 instance instHRefinementOfRefinement [Refinement α] : HRefinement α α where
   IsRefinedBy := Refinement.IsRefinedBy
 
+@[simp_denote]
+def Refinement.ofHRefinement (inst : HRefinement α α) : Refinement α where
+  IsRefinedBy x y := x ⊑ y
+
 /-! #### Trivial Refinement -/
 
 section OfEq

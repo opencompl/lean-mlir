@@ -31,7 +31,8 @@ namespace IntW
 instance : Inhabited (IntW w) := by unfold IntW; infer_instance
 instance : DecidableEq (IntW w) := by unfold IntW; infer_instance
 
-instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
+instance : Refinement (LLVM.IntW w) :=
+  .ofHRefinement (α := PoisonOr _) inferInstance
 
 /--
 `isRefinedBy_iff` rewrites refinement of `LLVM.IntW` values into refinement
