@@ -275,3 +275,19 @@ NOTE: This is simply `liftEffect` with the second effect fixed to be impure.
 @[simp, simp_denote]
 def coe_toMonad [Pure m] {eff : EffectKind} : eff.toMonad m α → m α :=
   liftEffect (le_impure eff)
+
+
+
+/-!
+## Meta Helpers
+-/
+
+/--
+Given a Lean expression that represents a literal of type `EffectKind`, reflect
+it into an object-level value, or return `none` if the given expression is *not*
+just a `pure` or `impure` constructor.
+-/
+def ofLeanLiteral : Lean.Expr → Option EffectKind
+  | .const ``pure _   => some .pure
+  | .const ``impure _ => some .impure
+  | _ => none
