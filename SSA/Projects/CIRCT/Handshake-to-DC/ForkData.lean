@@ -33,8 +33,8 @@ theorem EqIsBisim {α} : @IsBisim α Eq := by
   and_intros; all_goals first | rfl | intros _ h; cases h
 
 theorem fork_hs_dc_equiv_fst (x : DCOp.TokenStream):
-    (DCOp.fork (x)).fst ~ (Handshake.fork (x)).fst := by
-  simp [Bisim, DCOp.fork, Handshake.fork]
+    (DCOp.fork (x)).fst ~ (HandshakeOp.fork (x)).fst := by
+  simp [Bisim, DCOp.fork, HandshakeOp.fork]
   exists Eq
   and_intros
   · rw [corec₂_eq_tok]
@@ -42,8 +42,8 @@ theorem fork_hs_dc_equiv_fst (x : DCOp.TokenStream):
   · apply EqIsBisim
 
 theorem fork_hs_dc_equiv_snd (x : DCOp.TokenStream):
-    (DCOp.fork (x)).snd ~ (Handshake.fork (x)).snd := by
-  simp [Bisim, DCOp.fork, Handshake.fork]
+    (DCOp.fork (x)).snd ~ (HandshakeOp.fork (x)).snd := by
+  simp [Bisim, DCOp.fork, HandshakeOp.fork]
   exists Eq
   and_intros
   · rw [corec₂_eq_tok]
@@ -57,17 +57,17 @@ theorem fork_hs_dc_equiv_snd (x : DCOp.TokenStream):
 
 unseal String.splitOnAux in
 def DCFork := [DC_com| {
-  ^entry(%0 : !ValueStream_Int):
-    %unpack12 = "DC.unpack" (%0) : (!ValueStream_Int) -> (!ValueTokenStream_Int)
-    %unpack1 = "DC.fstVal" (%unpack12) : (!ValueTokenStream_Int) -> (!ValueStream_Int)
-    %unpack2 = "DC.sndVal" (%unpack12) : (!ValueTokenStream_Int) -> (!TokenStream)
+  ^entry(%0 : !ValueStream_8):
+    %unpack12 = "DC.unpack" (%0) : (!ValueStream_8) -> (!ValueTokenStream_8)
+    %unpack1 = "DC.fstVal" (%unpack12) : (!ValueTokenStream_8) -> (!ValueStream_8)
+    %unpack2 = "DC.sndVal" (%unpack12) : (!ValueTokenStream_8) -> (!TokenStream)
     %fork12 = "DC.fork" (%unpack2) : (!TokenStream) -> (!TokenStream2)
     %fork1 = "DC.fst" (%fork12) : (!TokenStream2) -> (!TokenStream)
     %fork2 = "DC.snd" (%fork12) : (!TokenStream2) -> (!TokenStream)
-    %pack1 = "DC.pack" (%unpack1, %fork1) : (!ValueStream_Int, !TokenStream) -> (!ValueStream_Int)
-    %pack2 = "DC.pack" (%unpack1, %fork2) : (!ValueStream_Int, !TokenStream) -> (!ValueStream_Int)
-    %pack12 = "DC.pair" (%pack1, %pack2) : (!ValueStream_Int, !ValueStream_Int) -> (!ValueStream2_Int)
-    "return" (%pack12) : (!ValueStream2_Int) -> ()
+    %pack1 = "DC.pack" (%unpack1, %fork1) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    %pack2 = "DC.pack" (%unpack1, %fork2) : (!ValueStream_8, !TokenStream) -> (!ValueStream_8)
+    %pack12 = "DC.pair" (%pack1, %pack2) : (!ValueStream_8, !ValueStream_8) -> (!ValueStream2_8)
+    "return" (%pack12) : (!ValueStream2_8) -> ()
   }]
 
 /- step 2: denote dc circuit -/
@@ -79,11 +79,11 @@ def DCFork := [DC_com| {
 #print axioms DCFork
 
 def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+  fun i => (vals[i]?).join
 
-def x : DCOp.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
+def x : DCOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 5, none]
 
-def test : DCOp.ValueStream Int × DCOp.ValueStream Int :=
+def test : DCOp.ValueStream (BitVec 8) × DCOp.ValueStream (BitVec 8) :=
   DCFork.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 /- step 3: prove equivalence -/
@@ -96,8 +96,8 @@ theorem corec₂_corec2 (s : Stream γ) (f : Stream γ -> Option α × Option β
 
 -- this function maps a stream α to a stream α × stream unit st stream unit stores
 -- whether the stream has something in there
-def map_to_unit_pair (x : Stream α) (z : Stream α × Stream Unit) : Prop :=
-    x = z.1 ∧ x.map (·.map (λ _ => ())) = z.2
+-- def map_to_unit_pair (x : Stream α) (z : Stream α × Stream Unit) : Prop :=
+--     x = z.1 ∧ x.map (·.map (λ _ => ())) = z.2
 
 theorem tail_iterate'' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n m = s (n + m) := by
   induction n generalizing m; dsimp [Stream'.iterate]; simp
@@ -112,20 +112,15 @@ theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s
   tail_iterate''
 
 open Ctxt in
-theorem equiv_fork_fst (streamInt : DCOp.ValueStream Int) :
-  (Handshake.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
-  simp only [MLIR2DC.instDialectDenoteDC, EffectKind.toMonad_impure, DCFork,
-    EffectKind.pure_sup_pure_eq, DerivedCtxt.ofCtxt, DerivedCtxt.snoc.eq_1, get?.eq_1,
-    Var.zero_eq_last, zero_add, Var.succ_eq_toSnoc, Nat.reduceAdd, Valuation.ofHVector,
-    Ctxt.ofList.eq_1, Com.denote_var, EffectKind.toMonad_pure, Com.denote_ret, Id.pure_eq,
-    Id.bind_eq]
-  unfold Handshake.fork DCOp.pack DCOp.unpack DCOp.fork
+theorem equiv_fork_fst (streamInt : DCOp.ValueStream (BitVec 8)) :
+  (HandshakeOp.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
+  unfold HandshakeOp.fork
+  simp only [DCFork, getElem?_ofList, Var.zero_eq_last, Com.denote_var, Com.denote_ret,
+    bind_pure_comp]
   simp_peephole
   unfold Bisim; exists Eq
   rw [corec₂_corec1]
-  and_intros
   · sorry
-    -- · intros a b hm
       -- and_intros
       -- all_goals
       --   unfold CIRCTStream.Stream.tail

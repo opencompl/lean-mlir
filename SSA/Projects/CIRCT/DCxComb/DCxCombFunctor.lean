@@ -298,7 +298,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             else throw <| .generic s!"Wrong argument types for '{repr opStx.args}'"
         | _ => throw <| .generic s!"Wrong argument types for '{repr opStx.args}'"
   -- comb binary ops
-  | ["Comb.divs"] | ["Comb.divu"] | ["Comb.mods"] | ["Comb.modu"] | ["Comb.replicate"] | ["Comb.shl"] | ["Comb.shrs"] | ["Comb.shru"] | ["Comb.sub"] =>
+  | ["DCxComb.divs"] | ["DCxComb.divu"] | ["DCxComb.mods"] | ["DCxComb.modu"] | ["DCxComb.replicate"] | ["DCxComb.shl"] | ["DCxComb.shrs"] | ["DCxComb.shru"] | ["DCxComb.sub"] =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -308,20 +308,20 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream r₁, .valuestream r₂ =>
         if r₁ = r₂ then
           match opStx.name with
-          | "Comb.divs" => mkExprOf <| Op.comb (MLIR2Comb.Op.divs r₁)
-          | "Comb.divu" => mkExprOf <| Op.comb (MLIR2Comb.Op.divu r₁)
-          | "Comb.mods" => mkExprOf <| Op.comb (MLIR2Comb.Op.mods r₁)
-          | "Comb.modu" => mkExprOf <| Op.comb (MLIR2Comb.Op.modu r₁)
-          | "Comb.shl" => mkExprOf <| Op.comb (MLIR2Comb.Op.shl r₁)
-          | "Comb.shrs" => mkExprOf <| Op.comb (MLIR2Comb.Op.shrs r₁)
-          | "Comb.shru" => mkExprOf <| Op.comb (MLIR2Comb.Op.shru r₁)
-          | "Comb.sub" => mkExprOf <| Op.comb (MLIR2Comb.Op.sub r₁)
+          | "DCxComb.divs" => mkExprOf <| Op.comb (MLIR2Comb.Op.divs r₁)
+          | "DCxComb.divu" => mkExprOf <| Op.comb (MLIR2Comb.Op.divu r₁)
+          | "DCxComb.mods" => mkExprOf <| Op.comb (MLIR2Comb.Op.mods r₁)
+          | "DCxComb.modu" => mkExprOf <| Op.comb (MLIR2Comb.Op.modu r₁)
+          | "DCxComb.shl" => mkExprOf <| Op.comb (MLIR2Comb.Op.shl r₁)
+          | "DCxComb.shrs" => mkExprOf <| Op.comb (MLIR2Comb.Op.shrs r₁)
+          | "DCxComb.shru" => mkExprOf <| Op.comb (MLIR2Comb.Op.shru r₁)
+          | "DCxComb.sub" => mkExprOf <| Op.comb (MLIR2Comb.Op.sub r₁)
           | _ => throw <| .generic s!"unknown comb operation '{repr opStx.args}'"
         else
           throw <| .generic s!"type mismatch in '{repr opStx.args}'"
       | _, _ => throw <| .generic s!"Wrong argument types for '{repr opStx.args}'"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | ["Comb.icmp", icmpPred] =>
+  | ["DCxComb.icmp", icmpPred] =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -330,13 +330,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .valuestream r₁, .valuestream r₂ =>
         if r₁ = r₂ then
           match opStx.name with
-          | "Comb.icmp" => mkExprOf <| Op.comb (MLIR2Comb.Op.icmp icmpPred r₁)
+          | "DCxComb.icmp" => mkExprOf <| Op.comb (MLIR2Comb.Op.icmp icmpPred r₁)
           | _ => throw <| .generic s!"unknown comb operation '{repr opStx.args}'"
         else
           throw <| .generic s!"type mismatch in '{repr opStx.args}'"
       | _, _ => throw <| .generic s!"Wrong argument types for '{repr opStx.args}'"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | ["Comb.mux"] =>
+  | ["DCxComb.mux"] =>
       match opStx.args with
       | v₁Stx::v₂Stx::v₃Stx::[] =>
         let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -348,6 +348,17 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           else  throw <| .generic s!"unknown comb operation '{repr opStx.args}'"
         | _, _, _ => throw <| .generic s!"type mismatch"
       | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | ["DCxComb.shlPar", n] =>
+    match opStx.args with
+    | v₁Stx::[] =>
+        let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+        match ty₁ with
+        | .valuestream r₁=>
+          match n.toNat? with
+          | some n' => mkExprOf <| Op.comb (MLIR2Comb.Op.shlPar r₁ n')
+          | _ => throw <| .generic s!"expect Nat parameter in {repr opStx}"
+        | _  => throw <| .generic s!"type mismatch"
+    | _  => throw <| .generic s!"type mismatch"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 
