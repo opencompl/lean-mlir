@@ -1,0 +1,15 @@
+name = "BvDecideParametric"
+version = "0.1.0"
+defaultTargets = ["bvdecideparametric"]
+
+[[lean_lib]]
+name = "BvDecideParametric"
+
+[[lean_exe]]
+name = "bvdecideparametric"
+root = "Main"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
+rev = "nightly-testing-2025-08-11"

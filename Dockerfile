@@ -1,6 +1,6 @@
 ARG NIXOS_VERSION="25.05"
 ARG SYSTEM="x86_64-linux"
-FROM nixpkgs/nix:nixos-$NIXOS_VERSION-$SYSTEM 
+FROM nixpkgs/nix:nixos-$NIXOS_VERSION-$SYSTEM
 
 # Enable flakes and set up nix configuration
 RUN mkdir -p /etc/nix && \
@@ -21,8 +21,12 @@ WORKDIR /code/lean-mlir
 COPY flake.nix flake.lock ./
 RUN nix profile install ".#"
 
-# Install Lean & checkout dependencies
-COPY lean-toolchain lakefile.* lake-manifest.json ./
+# Install Lean & checkout dependencies.
+# I agree this looks funky.
+# The idea is that we setup just enough of the lakefile and lake-manifest
+# such that we can run a `lake env echo`.
+# This then lets us copy the framework *after* a build.
+COPY lean-toolchain lakefile.* lake-manifest.json BvDecideParametric/lean-toolchain BvDecideParametric/lakefile.* BvDecideParametric/lake-manifest.json ./
 RUN lean-mlir-init-env
 
 # Build the framework

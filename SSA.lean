@@ -30,10 +30,10 @@ import SSA.Projects.SLLVM.SLLVM
 -- ============
 
 -- Bit-fiddling decision procedure
-import SSA.Experimental.Bits.Fast
+-- import SSA.Experimental.Bits.Fast
 import SSA.Experimental.Bits.Generalize
-import SSA.Experimental.Bits.SingleWidth.Tactic
-import SSA.Experimental.Bits.KInduction.KInduction
-import SSA.Experimental.Bits.KInduction.Tests
-import SSA.Experimental.Bits.MultiWidth.Tests
-import SSA.Experimental.Bits.MultiWidth.GoodFSM
+-- import SSA.Experimental.Bits.SingleWidth.Tactic
+-- import SSA.Experimental.Bits.KInduction.KInduction
+-- import SSA.Experimental.Bits.KInduction.Tests
+-- import SSA.Experimental.Bits.MultiWidth.Tests
+-- import SSA.Experimental.Bits.MultiWidth.GoodFSM
