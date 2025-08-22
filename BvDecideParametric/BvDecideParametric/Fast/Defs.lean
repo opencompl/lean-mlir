@@ -7,6 +7,7 @@ import BvDecideParametric.Fast.BitStream
 import BvDecideParametric.SingleWidth.Defs
 
 open Term
+open BvDecideParametric
 
 open BitStream in
 /--

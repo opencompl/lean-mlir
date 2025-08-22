@@ -4,7 +4,7 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
-import SSA.Experimental.Bits.ForLean
+import BvDecideParametric.ForLean
 
 open BitVec
 open MLIR AST

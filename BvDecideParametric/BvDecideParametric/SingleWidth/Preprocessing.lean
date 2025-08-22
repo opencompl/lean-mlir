@@ -5,7 +5,9 @@ import Mathlib.Algebra.Group.Nat.Defs
 
 set_option grind.warning false
 
+open BvDecideParametric
 namespace Simplifications
+
 
 /-!
 Canonicalize `OfNat.ofNat`, `BitVec.ofNat` and `Nat` multiplication to become

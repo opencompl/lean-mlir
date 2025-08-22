@@ -12,6 +12,7 @@ import BvDecideParametric.Fast.Circuit
 import BvDecideParametric.Vars
 
 open Sum
+open BvDecideParametric
 
 section FSM
 variable {α β α' β' : Type} {γ : β → Type}

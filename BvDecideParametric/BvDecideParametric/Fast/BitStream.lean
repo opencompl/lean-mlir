@@ -3,7 +3,10 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Logic.Function.Iterate
 import BvDecideParametric.ForLean
 -- TODO: upstream the following section
+open BvDecideParametric
+
 section UpStream
+
 
 namespace Int
 
