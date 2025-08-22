@@ -202,11 +202,9 @@ where
   simpEffToMonad instArgs := do
     let #[eff₁, eff₂, m, n, α, β, instRef, instPureM, instPureN] := instArgs
       | throwUnexpectedArgs
-    let mα := mkApp m α
-    let nβ := mkApp n β
     let lhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) m α instPureM eff₁ lhs
     let rhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) n β instPureN eff₂ rhs
-    isRefinedByAppN #[mα, nβ, instRef, lhs', rhs']
+    isRefinedByAppN #[m.app α, n.app β, instRef, lhs', rhs']
   /--
   Simplifier for `Id.instRefinement`
   -/
