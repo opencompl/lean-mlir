@@ -337,7 +337,8 @@ private def Format.parenIfNonemptyForPrint (l : String) (r : String) (separator 
 /-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
 private def formatArgTupleForPrint [Repr Ty] {Γ : List Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args) where
+  Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args)
+where
   formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
