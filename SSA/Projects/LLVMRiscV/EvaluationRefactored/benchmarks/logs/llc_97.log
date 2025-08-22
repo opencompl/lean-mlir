@@ -1,1 +1,0 @@
-/home/lc985/llvm-project/build/bin/llc: error: /home/lc985/llvm-project/build/bin/llc: /home/lc985/lean-mlir/SSA/Projects/LLVMRiscV/EvaluationRefactored/benchmarks/LLVMIR/function_97.mlir: error: Could not open input file: No such file or directory

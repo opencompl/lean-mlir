@@ -7,6 +7,16 @@ import subprocess
 import re
 import argparse
 import concurrent.futures
+from xdsl.rewriter import Rewriter
+from xdsl.xdsl_opt_main import xDSLOptMain
+from xdsl.rewriter import InsertPoint
+from xdsl.ir import Block
+from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
+from xdsl.dialects import llvm
+from xdsl.dialects.riscv import IntRegisterType
+from xdsl.dialects import riscv_func
+from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
+
 
 ROOT_DIR = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
@@ -148,7 +158,7 @@ def LLC_compile_riscv(idx):
     print(f"Compiling '{input_file}' to RISC-V assembly using llc.")
     cmd_base = (
         LLVM_BUILD_DIR
-        + "llc -march=riscv64 -mcpu=generic-rv64 -mattr=+m,+b -filetype=asm -O0 "
+        + "llc -march=riscv64 -mcpu=generic-rv64 -mattr=+m,+b -filetype=asm "
     )
     cmd = cmd_base + input_file + " -o " + output_file
     run_command(cmd, log_file)
@@ -252,6 +262,61 @@ def clear_empty_logs():
                     print("Failed to delete {filename}")
 
 
+
+# class MyOptMain(xDSLOptMain):
+                
+#     def process_module(self, module: ModuleOp):
+#         reg_type = IntRegisterType(NoneAttr(), StringAttr(""))
+#         module_args = module.body.block.args
+#         return_op = module.body.block.ops.last
+#         assert isinstance(return_op, llvm.ReturnOp)
+
+#         new_region = Rewriter().move_region_contents_to_new_regions(module.body)
+#         new_func = riscv_func.FuncOp(
+#             "main",
+#             new_region,
+#             FunctionType.from_lists(
+#                 [reg_type] * len(module_args), [reg_type] * len(return_op.operands)
+#             ),
+#         )
+
+#         module.body.add_block(Block())
+
+#         Rewriter().insert_op(new_func, InsertPoint.at_end(module.body.block))
+#         for arg in module_args:
+#             Rewriter().replace_value_with_new_type(
+#                 arg, IntRegisterType(NoneAttr(), StringAttr(""))
+#             )
+
+#         for arg in return_op.operands:
+#             Rewriter().replace_value_with_new_type(
+#                 arg, IntRegisterType(NoneAttr(), StringAttr(""))
+#             )
+
+#         Rewriter().replace_op(return_op, riscv_func.ReturnOp(*return_op.operands))
+#         ReconcileUnrealizedCastsPass().apply(self.ctx, module)
+
+#     def run(self):
+#         chunks, file_extension = self.prepare_input()
+#         output_stream = open('xdsl_tmo_log.log')
+
+#         try:
+#             for i, (chunk, offset) in enumerate(chunks):
+#                 try:
+#                     if i > 0:
+#                         output_stream.write("// -----\n")
+#                     module = self.parse_chunk(chunk, file_extension, offset)
+
+#                     if module is not None:
+#                         self.process_module(module)
+#                         output_stream.write(self.output_resulting_program(module))
+#                     output_stream.flush()
+#                 finally:
+#                     chunk.close()
+#         finally:
+#             if output_stream is not sys.stdout:
+#                 output_stream.close()
+
 def generate_benchmarks(file_name, num, jobs):
     # extract mlir blocks and put them all in separate files
     clear_folders()
@@ -259,22 +324,24 @@ def generate_benchmarks(file_name, num, jobs):
 
     extract_mlir_blocks(input_file, MLIR_single_DIR, num)
 
-    for i in range(num):
-        print(i)
-        # Run mlir-opt and convert into LLVM dialect
-        MLIR_opt_arith_llvm(i)
-        # Run mlir-translate and convert LLVM into LLVMIR
-        MLIR_translate_llvmir(i)
-        # Use llc to compile LLVMIR into RISCV
-        LLC_compile_riscv(i)
-        # Extract bb0
-        extract_bb0(i)
+    # for i in range(num):
+    #     print(i)
+    #     # Run mlir-opt and convert into LLVM dialect
+    #     MLIR_opt_arith_llvm(i)
+    #     # Run mlir-translate and convert LLVM into LLVMIR
+    #     MLIR_translate_llvmir(i)
+    #     # Use llc to compile LLVMIR into RISCV
+    #     LLC_compile_riscv(i)
+    #     # Extract bb0
+    #     extract_bb0(i)
 
-    # We run the lean pass in parallel
-    LAKE_compile_riscv64(num, jobs)
+    # # We run the lean pass in parallel
+    # LAKE_compile_riscv64(num, jobs)
 
-    clear_empty_logs()
+    # MyOptMain().run()
+    # XDSL_parse(MLIR_single_DIR+'function_0.mlir')
 
+    # clear_empty_logs()
 
 def main():
     parser = argparse.ArgumentParser(

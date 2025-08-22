@@ -1,5 +1,0 @@
-{
-^bb0(%arg0: i1):
-%0 = "llvm.sext"(%arg0) : (i1) -> i64
-"llvm.return"(%0) : (i64) -> ()
-}
