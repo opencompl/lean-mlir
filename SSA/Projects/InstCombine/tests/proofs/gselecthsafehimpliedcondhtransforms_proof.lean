@@ -19,7 +19,7 @@ theorem a_true_implies_b_true_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -30,7 +30,7 @@ theorem a_true_implies_b_true2_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -41,7 +41,7 @@ theorem a_true_implies_b_true2_comm_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -53,7 +53,7 @@ theorem a_true_implies_b_false_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -64,7 +64,7 @@ theorem a_true_implies_b_false2_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -75,7 +75,7 @@ theorem a_true_implies_b_false2_comm_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -87,7 +87,7 @@ theorem a_false_implies_b_true_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -98,7 +98,7 @@ theorem a_false_implies_b_true2_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -109,7 +109,7 @@ theorem a_false_implies_b_true2_comm_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -121,7 +121,7 @@ theorem a_false_implies_b_false_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -132,7 +132,7 @@ theorem a_false_implies_b_false2_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -143,5 +143,5 @@ theorem a_false_implies_b_false2_comm_thm (e e_1 : IntW 1) (e_2 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

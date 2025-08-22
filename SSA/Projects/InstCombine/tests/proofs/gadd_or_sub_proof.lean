@@ -17,7 +17,7 @@ theorem add_or_sub_comb_i32_commuted1_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -28,7 +28,7 @@ theorem add_or_sub_comb_i8_commuted2_nsw_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -38,7 +38,7 @@ theorem add_or_sub_comb_i128_commuted3_nuw_nsw_thm (e : IntW 128) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -49,7 +49,7 @@ theorem add_or_sub_comb_i64_commuted4_thm (e : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -59,7 +59,7 @@ theorem add_or_sub_comb_i8_negative_y_sub_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -69,7 +69,7 @@ theorem add_or_sub_comb_i8_negative_y_or_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -79,7 +79,7 @@ theorem add_or_sub_comb_i8_negative_y_add_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -89,5 +89,5 @@ theorem add_or_sub_comb_i8_negative_xor_instead_or_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

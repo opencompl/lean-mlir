@@ -16,7 +16,7 @@ theorem trunc_lshr_trunc_thm (e : IntW 64) : trunc 8 (lshr (trunc 32 e) (const? 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -27,7 +27,7 @@ theorem trunc_lshr_trunc_outofrange_thm (e : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -36,7 +36,7 @@ theorem trunc_ashr_trunc_thm (e : IntW 64) : trunc 8 (ashr (trunc 32 e) (const? 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -47,7 +47,7 @@ theorem trunc_ashr_trunc_exact_thm (e : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -58,5 +58,5 @@ theorem trunc_ashr_trunc_outofrange_thm (e : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

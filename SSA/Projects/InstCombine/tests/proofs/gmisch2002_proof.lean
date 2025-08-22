@@ -16,7 +16,7 @@ theorem cast_test_2002h08h02_thm (e : IntW 64) : zext 64 (trunc 8 e) ⊑ LLVM.an
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -26,5 +26,5 @@ theorem missed_const_prop_2002h12h05_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

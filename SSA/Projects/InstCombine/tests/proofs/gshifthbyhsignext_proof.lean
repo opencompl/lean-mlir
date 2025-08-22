@@ -16,7 +16,7 @@ theorem t0_shl_thm (e : IntW 8) (e_1 : IntW 32) : shl e_1 (sext 32 e) ⊑ shl e_
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -26,7 +26,7 @@ theorem t1_lshr_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -36,5 +36,5 @@ theorem t2_ashr_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

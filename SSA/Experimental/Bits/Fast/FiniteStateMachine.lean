@@ -484,14 +484,6 @@ theorem evalWith_add_eq_evalWith_carryWith
     rw [← carryWith_carryWith_eq_carryWith_add]
     rw [← evalWith_eq_outputWith_carryWith]
 
-/-- `p.changeVars f` changes the arity of an `FSM`.
-The function `f` determines how the new input bits map to the input expected by `p` -/
-def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
-  { p with
-     outputCirc := p.outputCirc.map (Sum.map id changeVars),
-     nextStateCirc := fun a => (p.nextStateCirc a).map (Sum.map id changeVars)
-  }
-
 instance {α : Type _} [Hashable α] {f : α → Type _} [∀ (a : α), Hashable (f a)] : Hashable (Sigma f) where
   hash v := hash (v.fst, v.snd)
 
@@ -796,6 +788,27 @@ def map (fsm : FSM arity) (f : arity → arity') : FSM arity' where
   nextStateCirc := fun s =>
     fsm.nextStateCirc s |>.map (Sum.map id f)
 
+@[simp]
+theorem eval_map (fsm : FSM arity) (f : arity → arity')
+    (env' : arity' → BitStream):
+    (fsm.map f).eval env' = fsm.eval (env' ∘ f) := by
+  ext n
+  simp [eval, map, nextBit, Circuit.eval_map]
+  congr 1
+  ext arg
+  rcases arg with arg | arg
+  · induction n generalizing arg
+    case zero => simp [carry]
+    case succ n ih =>
+      simp only [map_inl, id_eq, elim_inl, carry, nextBit, Circuit.eval_map,
+        Function.comp_apply] at *
+      congr 1
+      ext q
+      rcases q with q | q
+      · simp only [map_inl, id_eq, elim_inl, ih]
+      · simp
+  · simp
+
 instance : Functor FSM where
   map f fsm :=  fsm.map f
 
@@ -1025,6 +1038,20 @@ def ls (b : Bool) : FSM Unit :=
     nextStateCirc := fun () => Circuit.var true (inr ()),
     outputCirc := Circuit.var true (inl ())
   }
+
+/-- Identity finite state machine -/
+def id : FSM Unit := {
+ α := Empty,
+ initCarry := Empty.elim,
+ outputCirc := Circuit.var true (inr ()),
+ nextStateCirc := Empty.elim
+}
+
+@[simp]
+def eval_id (env: Unit → BitStream) (i : Nat) : id.eval env i = (env ()) i := rfl
+
+@[simp]
+def eval_id' (env: Unit → BitStream) : id.eval env = env () := rfl
 
 theorem carry_ls (b : Bool) (x : Unit → BitStream) : ∀ (n : ℕ),
     (ls b).carry x (n+1) = fun _ => x () n
@@ -1467,17 +1494,35 @@ theorem eval_ofInt (x : Int) (i : Nat) {env : Fin 0 → BitStream} :
     ext i
     simp
 
-
-/-- Identity finite state machine -/
-def id : FSM Unit := {
- α := Empty,
- initCarry := Empty.elim,
- outputCirc := Circuit.var true (inr ()),
- nextStateCirc := Empty.elim
-}
+/-- Repeat the boolean bit 'b' 'n' times. -/
+def repeatN (b : Bool) (n : Nat) : FSM Unit :=
+  match n with
+  | 0 => FSM.id
+  | n' + 1 =>
+    composeUnaryAux (FSM.ls b) (repeatN b n')
 
 @[simp]
-def eval_id (env: Unit → BitStream) (i : Nat) : id.eval env i = (env ()) i := rfl
+theorem eval_repeatN_zero (b : Bool) (env : Unit → BitStream) :
+  (repeatN b 0).eval env = (env ()) := by
+  simp [repeatN]
+
+@[simp]
+theorem eval_repeatN_succ (b : Bool) (n : Nat) (env : Unit → BitStream) :
+  (repeatN b (n + 1)).eval env =
+  BitStream.concat b ((repeatN b n).eval env) := by
+  simp [repeatN]
+
+@[simp]
+theorem eval_repeatN (b : Bool) (n : Nat) (env : Unit → BitStream) :
+  (repeatN b n).eval env = fun i =>
+    if i < n then b else (env () (i - n)) := by
+  induction n
+  case zero =>
+    ext i; simp
+  case succ n hn =>
+    ext i
+    simp [hn]
+    rcases i with rfl | i <;> simp
 
 /-- Build logical shift left automata by `n` bits -/
 def shiftLeft (n : Nat) : FSM Unit :=

@@ -20,10 +20,13 @@ namespace TacBench
 inductive Config.OutputType
 | text  -- TACSTART..TACEND
 | csv -- CSV
+| jsonl -- JSONL
 deriving Repr, DecidableEq
 
 structure Config where
   outputType : Config.OutputType := .text
+  outputPath : Option System.FilePath := .none
+
 /-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
 declare_config_elab elabTacBenchConfig Config
 
@@ -114,8 +117,22 @@ def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
      return { name := name.getString, tac := tac : Item }
 | _ => throwUnsupportedSyntax
 
+private def toMessageDataToString [ToMessageData α] (a : α) : MetaM String := do
+  return ← MessageData.toString <| ← addMessageContextFull <| toMessageData a
+
 private def toMessageDataToCsvString [ToMessageData α] (a : α) : MetaM String := do
-  return csvEscapeString <| ← MessageData.toString <| ← addMessageContextFull <| toMessageData a
+  return csvEscapeString <| ← toMessageDataToString a
+
+structure RecordRow where
+  /-- The name of the theorem being benchmarked. -/
+  fileName : String
+  thmName : String
+  goal : String
+  tacName : String
+  isOk : Bool
+  errorMessage : String
+  timeElapsed : Float
+deriving Repr, Inhabited, ToJson
 
 @[tactic tacBench]
 def evalTacBench : Tactic := fun
@@ -135,15 +152,34 @@ def evalTacBench : Tactic := fun
         results := results.push out
         msg := msg ++ m!"\n" ++ out.toMessageData
       -- Produce output.
-      if cfg.outputType == Config.OutputType.text then
+      match cfg.outputType with
+      | Config.OutputType.text =>
         logInfo m!"TACSTART NAME {thmName} ENDNAME {.nestD msg}\nTACEND"
-      else if cfg.outputType == Config.OutputType.csv then
+      | Config.OutputType.csv =>
         let goalStr ← toMessageDataToCsvString g
         for result in results do
           let statusStr := if result.isOk then "ok" else "err"
           let errMsgStr ← if result.isOk then pure "<noerror>" else toMessageDataToCsvString result.errorMessage
           let outStr := m!"TACBENCHCSV| {thmName}, {goalStr}, {result.item.name}, {statusStr}, {errMsgStr}, {result.timeElapsed}"
           logInfo outStr
+      | Config.OutputType.jsonl =>
+        let goalStr ← toMessageDataToString g
+        for result in results do
+          let errMsgStr ← if result.isOk then pure "<noerror>" else (toMessageDataToString result.errorMessage)
+          let record : RecordRow := {
+            fileName := (← getFileName)
+            thmName := thmName
+            goal := goalStr
+            tacName := result.item.name
+            isOk := result.isOk
+            errorMessage := errMsgStr
+            timeElapsed := result.timeElapsed
+          }
+          let outStr := record |> toJson |>.compress
+          logInfo <| outStr
+          if let some path := cfg.outputPath then
+            IO.FS.writeFile path outStr
+
 
 | _ => throwUnsupportedSyntax
 end TacBench
@@ -154,10 +190,11 @@ section Examples
 theorem eg1 (x : Nat) : 1 = x := by
   tac_bench ["rfl" : rfl, "wrong" : (rw [Nat.add_comm]), "success" : simp, "ring_done" : foo, "sorry" : sorry]
   sorry
-
-theorem eg2 (x y : BitVec 8) : x * y = y * x := by
-  tac_bench ["bv_decide" :  bv_decide, "ac_nf" : ac_nf]
-  sorry
 -/
 
+/-
+theorem eg2 (x y : BitVec 8) : x * y = y * x := by
+  tac_bench (config := { outputType := .jsonl }) ["bv_decide" :  bv_decide, "ac_nf" : ac_nf]
+  sorry
+-/
 end Examples

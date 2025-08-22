@@ -46,6 +46,10 @@ class Refinement (α : Type) where
 instance instHRefinementOfRefinement [Refinement α] : HRefinement α α where
   IsRefinedBy := Refinement.IsRefinedBy
 
+@[simp_denote]
+def Refinement.ofHRefinement (inst : HRefinement α α) : Refinement α where
+  IsRefinedBy x y := x ⊑ y
+
 /-! #### Trivial Refinement -/
 
 section OfEq
@@ -66,7 +70,20 @@ instance (priority := low) [DecidableEq α] :
 
 end OfEq
 
+/-! ### Id Refinement -/
+namespace Id
+variable {α β} [inst : HRefinement α β]
+
+instance instRefinement : HRefinement (Id α) (Id β) := inst
+
+@[simp_denote (high)] -- high priority so that this is tried before the `reduceIsRefinedBy` simproc
+lemma pure_isRefinedBy_pure (x : α) (y : β) :
+  (pure x : Id _) ⊑ (pure y : Id _) ↔ x ⊑ y := by rfl
+
+end Id
+
 /-! ### Dialect Refinement -/
+section DialectHRefinement
 
 /--
 `DialectHRefinement` defines an heterogenous refinement relation accross two dialects.
@@ -77,175 +94,177 @@ refinement of pure values `x, y` is defined as `pure x ⊑ pure y.`
 -/
 class DialectHRefinement (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote d'.Ty] where
   /--
+  Define refinement of monadic values (of arbitrary underlying types)
+  -/
+  MonadIsRefinedBy {α β} [inst : HRefinement α β] : HRefinement (d.m α) (d'.m β) := by
+    solve
+    | exact @Id.instRefinement
+  /--
   We say that `a` is refined by `b`, written as `a ⊑ b`, when
   every observable behaviour of `b` is allowed by `a`.
   -/
-  IsRefinedBy {t : d.Ty} {u : d'.Ty} : d.m ⟦t⟧ → d'.m ⟦u⟧ → Prop
-open DialectHRefinement
+  IsRefinedBy {t : d.Ty} {u : d'.Ty} : HRefinement ⟦t⟧ ⟦u⟧
 
-/-
-TODO: we should decouple the refinement of monads `d.m` / `d'.m` from the
-refinement of values `⟦t⟧` and `⟦u⟧`. I.e., the definition of DialectHRefinement
-ought to be along the lines of:
-```lean
-  MIsRefinedBy {α β} [HRefinement α β] : d.m α → d'.m β → Prop
-  IsRefinedBy {t : d.Ty} {u : d'.Ty} : ⟦t⟧ → ⟦u⟧ → Prop
-```
+attribute [instance, simp, simp_denote] DialectHRefinement.IsRefinedBy
+attribute [instance, simp, simp_denote] DialectHRefinement.MonadIsRefinedBy
 
-It might also not be a bad idea to actually just have `DialectHRefinement`
-`extend` the appropriate HRefinement instances (although I'm not sure that's
-actually possible given the quantifications).
--/
+end DialectHRefinement
 
-namespace DialectHRefinement
-variable {d d' : Dialect} [TyDenote d.Ty] [TyDenote d'.Ty] [DialectHRefinement d d']
-variable {t : d.Ty} {u : d'.Ty}
+/-! ### EffectKind.toMonad Refinement -/
+section EffectKind
+open EffectKind (coe_toMonad)
+variable {eff₁ eff₂ : EffectKind} {m n : Type → Type} {α β : Type}
+          [HRefinement (m α) (n β)] [Pure m] [Pure n]
 
-/-- Refinement for monadic values -/
-instance instRefinementMonadic : HRefinement (d.m ⟦t⟧) (d'.m ⟦u⟧) where
-  IsRefinedBy := DialectHRefinement.IsRefinedBy
+instance instEffToMonadRefinement :
+    HRefinement (eff₁.toMonad m α) (eff₂.toMonad n β) where
+  IsRefinedBy x y := coe_toMonad x ⊑ coe_toMonad y
 
-variable [Pure d.m] [Pure d'.m]
-
-/-- Refinement for pure values -/
-instance instRefinementPure : HRefinement ⟦t⟧ ⟦u⟧ where
-  IsRefinedBy x y := (pure x : d.m _) ⊑ (pure y : d'.m _)
-
-/-- Refinement for *potentially* monadic values -/
-instance instRefinementEffect {eff eff' : EffectKind} :
-    HRefinement (eff.toMonad d.m ⟦t⟧) (eff'.toMonad d'.m ⟦u⟧) where
-  IsRefinedBy x y := eff.coe_toMonad x ⊑ eff'.coe_toMonad y
-
-section Lemmas
-
-@[simp] theorem toMonad_pure_IsRefinedBy_toMonad_pure_iff
-    {x : EffectKind.pure.toMonad d.m ⟦t⟧} {y : EffectKind.pure.toMonad d'.m ⟦u⟧} :
-    (x ⊑ y) ↔ (HRefinement.IsRefinedBy (α := ⟦t⟧) (β := ⟦u⟧) x y) := by
+open EffectKind (pure) in
+@[simp, simp_denote] lemma effToMonadRefinement_pure (x : pure.toMonad m α) (y : pure.toMonad n β) :
+    x ⊑ y ↔ pure (f := m) (@id α x) ⊑ pure (f := n) (@id β y) := by
   rfl
 
-@[simp] theorem toMonad_impure_IsRefinedBy_toMonad_impure_iff
-    {x : EffectKind.impure.toMonad d.m ⟦t⟧} {y : EffectKind.impure.toMonad d'.m ⟦u⟧} :
-    (x ⊑ y) ↔ (HRefinement.IsRefinedBy (α := d.m ⟦t⟧) (β := d'.m ⟦u⟧) x y) := by
+open EffectKind (impure) in
+@[simp, simp_denote] lemma effToMonadRefinement_impure (x : impure.toMonad m α) (y : impure.toMonad n β) :
+    x ⊑ y ↔ (@id (m α) x) ⊑ (@id (n β) y) := by
   rfl
 
-end Lemmas
+end EffectKind
 
-/-!
-## Normal Forms
+/-! ### HVector Refinement -/
+namespace HVector
+variable {A : α → Type} {B : β → Type} [∀ a b, HRefinement (A a) (B b)]
 
-In a concrete dialect, we expect to have a kind of waterfall of refinement
-instances. Take, for example, the LLVM dialect:
-* Firstly, there is the `PoisonOr _` type, which has a refinement relation.
-* Then, there is the `LLVM.IntW w` type, which is a (semireducible!) alias for
-  `PoisonOr (BitVec w)`. Because it is not reducible, it has its own refinement
-  instance.
-* Using the latter, there is the `DialectHRefinement` instance for the LLVM
-  dialect.
-* This `DialectHRefinement` instance implies refinement instances for both
-  monadic value `LLVM.m ⟦t⟧` and pure values `⟦t⟧`.
-
-Recall, however, that LLVM is a *pure* dialect (that is, `LLVM.m` is `Id`).
-Suppose we had a `MemLLVM` dialect, which also captures memory side effects,
-then we'd expect the following refinement instances:
-* We still start with `PoisonOr _` and `LLVM.IntW _`, and their refinement.
-* Then, we expect some `EffectM` monad, which will have a refinement instance
-  for `EffectM α`, with `α` being some generic type with a refinement instance.
-* Using both of the above, we then define the `DialectHRefinement` instance,
-  which implies the same refinement instances as before.
-
-Note that in either case, the semantics content is defined at the top of the
-list, with the instances after `DialectHRefinement` simply being ways to express
-this refinement for alternative spellings of the same type.
-
-Thus, although a rewrite like `toMonad_pure_IsRefinedBy_toMonad_pure_iff`
-*in general* seems like a good idea (the rhs is a simpler expression, after all),
-for a concrete dialect this rewrite is actually hiding the semantic content by
-going *down* this list of instances.
-
-Luckily, we have a dedicated simpset intended for concrete rewrites, `simp_denote`.
-Thus, we add set of lemmas to this simpset which rewrite the derived instances
-in terms of the original `DialectHRefinement` instance.
-
-We expect dialect implementors to then add their dialect-specific simplemmas to
-`simp_denote`, to go all the way up the list of instances.
+/--
+We say that a vector of values `xs` is refined by another vector `ys` (written
+`xs ⊑ ys`) when `xs` and `ys` have the same number of elements, and each element
+of `xs` is refined by the corresponding element of `ys` at the same index.
 -/
+def IsRefinedBy {as} {bs} : HVector A as → HVector B bs → Prop
+  | .nil, .nil => True
+  | .cons x xs, .cons y ys => x ⊑ y ∧ xs.IsRefinedBy ys
+  | _, _ => False
 
+instance  : HRefinement (HVector A as) (HVector B bs) where
+  IsRefinedBy := HVector.IsRefinedBy
+
+variable {x : A a} {xs : HVector A as} {y : B b} {ys : HVector B bs}
+
+@[simp, simp_denote] lemma cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
+@[simp, simp_denote] lemma nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
+
+@[simp, simp_denote] lemma not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
+@[simp, simp_denote] lemma not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
+
+end HVector
+
+/-! ## Canonicalization -/
 section SimpDenote
+open Lean Meta
+open Simp (SimpM)
+
+/-- Implementation of `reduceIsRefinedBy` simproc -/
+partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Expr) := do
+  let ⟨instFn, instArgs⟩ := inst.withApp Prod.mk
+  trace[LeanMLIR.Elab] "Refinement instance is an application of: {instFn}"
+  match instFn.constName with
+  | ``instEffToMonadRefinement => simpEffToMonad instArgs
+  | ``Id.instRefinement => simpId instArgs
+  | ``inferInstance   => simpInfer instArgs
+  | ``inferInstanceAs => simpInfer instArgs
+  | _ => return none
+where
+  loop (e : Expr) (returnArgOnFail := true) : SimpM (Option Expr) :=
+    let e? := if returnArgOnFail then some e else none
+    let_expr HRefinement.IsRefinedBy α β inst a b := e.consumeMData
+      | return e?
+    withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying refinement instance: {inst}") <| do
+      Meta.check e
+      let res? ← reduceIsRefinedByAux α β inst.consumeMData a b
+      if let some res := res? then
+        trace[LeanMLIR.Elab] "Simplified to: {res}"
+      else
+        trace[LeanMLIR.Elab] "Failed to simplify"
+      return res?.or e?
+  throwUnexpectedArgs := do
+    Meta.check inst
+    throwError "Error: unexpected number of arguments to instance. \
+                This could be an internal bug, or expression is mall-formed: {inst}"
+  isRefinedByAppN args :=
+    loop <| mkAppN (mkConst ``HRefinement.IsRefinedBy) args
+  isRefinedByAppOptM args : SimpM _ := do
+    let e ← mkAppOptM ``HRefinement.IsRefinedBy args
+    loop e
+  /--
+  Simplifier for `instEffToMonadRefinement`.
+  -/
+  simpEffToMonad instArgs := do
+    let #[eff₁, eff₂, m, n, α, β, instRef, instPureM, instPureN] := instArgs
+      | throwUnexpectedArgs
+    let lhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) m α instPureM eff₁ lhs
+    let rhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) n β instPureN eff₂ rhs
+    isRefinedByAppN #[m.app α, n.app β, instRef, lhs', rhs']
+  /--
+  Simplifier for `Id.instRefinement`
+  -/
+  simpId instArgs := do
+    trace[LeanMLIR.Elab] "args: {instArgs}"
+    let #[_α, _β, _self] := instArgs | throwUnexpectedArgs
+    isRefinedByAppN (instArgs ++ #[lhs, rhs])
+
+  /--
+  Simplifier for `inferInstance` & `inferInstanceAs`
+  -/
+  simpInfer instArgs := do
+    let some self := instArgs[1]? | throwUnexpectedArgs
+    trace[LeanMLIR.Elab] "actual instance: {self}"
+    isRefinedByAppN #[α, β, self, lhs, rhs]
 
 open Lean Meta in
 /--
-`reduceIsRefinedBy` simplifies `HRefinement` instances that are derived by an `DialectHRefinement`
-instance into an application of `DialectHRefinement.IsRefinedBy`.
+`reduceIsRefinedBy` simplifies certain `HRefinement` instances.
 
-NOTE: this simproc matches on *all* occurences of `HRefinement.IsRefinedBy`, which could potentially
-be expensive. Ideally, we'd include the specific instances we're searching for in the discrtree key.
-Furthermore, we have a tendency to rewrite `toType t` into the underlying type,
-so we do *not* want `toType`, or `Dialect.m` or similar methods to be part of the index.
+We tend to have a lot of types which are def-eq, but not *reducibly* def-eq,
+to others. Yet, we often want to write simp-lemmas just about the underlying
+types and not have to duplicate those.
 
-For example, this could be one of the rewrites that are expressed by this simproc:
-```
-theorem monadic_isRefinedBy_iff (x : d.m ⟦t⟧) (y : d'.m ⟦u⟧) :
-    @HRefinement.IsRefinedBy (no_index _) (no_index _) (instRefinementMonadic) x y
-    ↔ DialectHRefinement.IsRefinedBy x y := by rfl
-```
-However, even if we write these rewrites as simp-lemmas: the instances are *not*
-part of the discrtree key indexing, so the above will *also* match against all
-occurences of `HRefinement.IsRefinedBy`.
+In particular, this holds for the denotation of dialect types (i.e., `⟦t⟧` for
+some `t : Dialect.Ty _`), dialect monads (`Dialect.m _`) or even the identity
+monad `Id`. Thus, it is common to define a `DialectHRefinement` instance in
+terms of `inferInstance(As)` and mark the instance as `@[simp_denote]`.
+
+Note that the instances are not problematic, per se, as instances are *not* part
+of the discrtree matching that `simp` uses [1], however, the *types* that are
+passed to `HRefinement.IsRefinedBy` *are* part of the discrtree (unless
+explictly marked `no_index` by a particular simp-lemma). While unfolding the
+instances, `reduceIsRefinedBy` will also unfold the *types* into the canonical
+spelling for the unfolded type.
+
+Using `LLVM` as an example: the base framework will have goals `?lhs ⊑ ?rhs`
+where `?lhs : LLVM.m ⟦?t⟧` and `?t : LLVM.Ty`. Assuming the `DialectHRefinement`
+instance for `LLVM` is marked `@[simp_denote]`, `reduceIsRefinedBy` will
+canonicalize this into a goal `?lhs' ⊑ ?rhs'`, where `?lhs', ?rhs' : LLVM.IntW _`.
+
+[1] In fact, instances not being part of the discrtree is why `reduceIsRefinedBy`
+    is easier to implement as a simproc.
+
+WARNING: this simproc matches against *any* use of `_ ⊑ _`, thus it's important
+this simproc does not do any expensive reductions! If it turns out to be too
+expensive, still, we could register separate simprocs for specific patterns in
+the future, by keying on the *types* (i.e., the `α` and `β` arguments to
+`HRefinement.IsRefinedBy`).
 -/
 dsimproc [simp_denote] reduceIsRefinedBy (_ ⊑ _) := fun e => do
-  let_expr HRefinement.IsRefinedBy _α _β inst a b := e
-    | return .continue
-
-  /-
-    TODO: we probably only want to simplify these instances if the dialects `d`
-    and `d'` are concrete. Meaning if `d` and `d'` are not just fvars (although
-    we probably should allow them to be *contain* fvars, so that, say,
-    `MetaLLVM φ` is still considered concrete).
-  -/
-
-  match_expr inst with
-  | instRefinementMonadic d d' tyDenote tyDenote' instRefinement t u =>
-      let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
-        #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
-      return .visit expr
-  | instRefinementPure d d' tyDenote tyDenote' instRefinement t u instPure instPure' =>
-      let a :=
-        let Ty := mkApp (mkConst ``Dialect.Ty) d
-        let m := mkApp (mkConst ``Dialect.m) d
-        let α := mkApp3 (mkConst ``TyDenote.toType) Ty tyDenote t
-        mkApp4 (.const ``pure [0, 0]) m instPure α a
-      let b :=
-        let Ty := mkApp (mkConst ``Dialect.Ty) d'
-        let m := mkApp (mkConst ``Dialect.m) d'
-        let β := mkApp3 (mkConst ``TyDenote.toType) Ty tyDenote u
-        mkApp4 (.const ``pure [0, 0]) m instPure' β b
-      let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
-        #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
-      return .visit expr
-  | instRefinementEffect d d' tyDenote tyDenote' instRefinement t u instPure instPure' eff eff' =>
-      let a :=
-        let Ty := mkApp (mkConst ``Dialect.Ty) d
-        let m := mkApp (mkConst ``Dialect.m) d
-        let α := mkApp3 (mkConst ``TyDenote.toType) Ty tyDenote t
-        mkApp5 (mkConst ``EffectKind.coe_toMonad) m α instPure eff a
-      let b :=
-        let Ty := mkApp (mkConst ``Dialect.Ty) d'
-        let m := mkApp (mkConst ``Dialect.m) d'
-        let α := mkApp3 (mkConst ``TyDenote.toType) Ty tyDenote' u
-        mkApp5 (mkConst ``EffectKind.coe_toMonad) m α instPure' eff' b
-      let expr := mkAppN (mkConst ``DialectHRefinement.IsRefinedBy)
-        #[d, d', tyDenote, tyDenote', instRefinement, t, u, a, b]
-      return .visit expr
-  | instHRefinementOfRefinement α instRefinement =>
-      match_expr instRefinement with
-      | Refinement.ofEq _α =>
-          return .visit <| mkApp3 (.const ``Eq [1]) α a b
-      | _ => return .continue
-  | _ => return .continue
+  return match ← reduceIsRefinedByAux.loop (returnArgOnFail := false) e with
+  | some e => .visit e
+  | none => .continue
 
 end SimpDenote
 
-end DialectHRefinement
+/-!
+## Lawfulness
+-/
 
 /--
 A lawful homogenous (i.e., within a single dialect) refinement instance is one

@@ -7,7 +7,6 @@ import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import SSA.Core.EffectKind
 import SSA.Core.Framework.Dialect
-import SSA.Core.Framework.Refinement
 
 import Mathlib.Control.Monad.Basic
 import Mathlib.Data.Finset.Piecewise
@@ -785,37 +784,6 @@ section Lemmas
   rfl
 
 end Lemmas
-
-/-!
-## Refinement
--/
-section Refinement
-variable [DialectHRefinement d d]
-
-/-
-TODO: do we need refinement of expressions? If we do, we need to start by
-defining refinement of (monadic!) Valuations, which will require some more reworking.
-See also the TODO note in Refinement.lean
--/
-
--- /--
--- An expression `e₁` is refined by an expression `e₂` (of the same dialect) if their
--- respective denotations under every valuation are in the refinement relation.
--- -/
--- instance: HRefinement (Expr d Γ eff₁ t) (Expr d Γ eff₂ t) where
---   IsRefinedBy e₁ e₂ :=
---     ∀ V, e₁.denote V ⊑ e₂.denote V
-
-/--
-A program `c₁` is refined by a program `c₂` (of the same dialect) if their
-respective denotations under every valuation are in the refinement relation.
--/
-instance : HRefinement (Com d Γ eff₁ t) (Com d Γ eff₂ t) where
-  IsRefinedBy c₁ c₂ :=
-    ∀ V (i : _),
-      (·.get i) <$> c₁.denote V ⊑ (·.get i) <$> c₂.denote V
-
-end Refinement
 
 /-!
 ## `changeVars`

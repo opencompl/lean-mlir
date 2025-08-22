@@ -18,7 +18,7 @@ theorem select_icmp_eq_and_1_0_or_2_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem select_icmp_eq_and_1_0_xor_2_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -40,7 +40,7 @@ theorem select_icmp_eq_and_32_0_or_8_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -51,7 +51,7 @@ theorem select_icmp_eq_and_32_0_xor_8_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -62,7 +62,7 @@ theorem select_icmp_ne_0_and_4096_or_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -73,7 +73,7 @@ theorem select_icmp_ne_0_and_4096_xor_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -85,7 +85,7 @@ theorem select_icmp_ne_0_and_4096_and_not_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -96,7 +96,7 @@ theorem select_icmp_eq_and_4096_0_or_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -107,7 +107,7 @@ theorem select_icmp_eq_and_4096_0_xor_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -118,7 +118,7 @@ theorem select_icmp_eq_0_and_1_or_1_thm (e : IntW 32) (e_1 : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -129,7 +129,7 @@ theorem select_icmp_eq_0_and_1_xor_1_thm (e : IntW 32) (e_1 : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -140,7 +140,7 @@ theorem select_icmp_ne_0_and_4096_or_32_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -151,7 +151,7 @@ theorem select_icmp_ne_0_and_4096_xor_32_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -163,7 +163,7 @@ theorem select_icmp_ne_0_and_4096_and_not_32_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -174,7 +174,7 @@ theorem select_icmp_ne_0_and_32_or_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -185,7 +185,7 @@ theorem select_icmp_ne_0_and_32_xor_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -197,7 +197,7 @@ theorem select_icmp_ne_0_and_32_and_not_4096_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -209,7 +209,7 @@ theorem select_icmp_ne_0_and_1073741824_or_8_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -221,7 +221,7 @@ theorem select_icmp_ne_0_and_1073741824_xor_8_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -233,7 +233,7 @@ theorem select_icmp_ne_0_and_1073741824_and_not_8_thm (e : IntW 8) (e_1 : IntW 3
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -244,7 +244,7 @@ theorem select_icmp_ne_0_and_8_or_1073741824_thm (e : IntW 32) (e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -256,7 +256,7 @@ theorem select_icmp_ne_0_and_8_xor_1073741824_thm (e : IntW 32) (e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -268,7 +268,7 @@ theorem select_icmp_ne_0_and_8_and_not_1073741824_thm (e : IntW 32) (e_1 : IntW 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -279,7 +279,7 @@ theorem select_icmp_and_8_ne_0_xor_8_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -290,7 +290,7 @@ theorem select_icmp_and_8_eq_0_xor_8_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -301,7 +301,7 @@ theorem select_icmp_x_and_8_eq_0_y_xor_8_thm (e : IntW 64) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -312,7 +312,7 @@ theorem select_icmp_x_and_8_ne_0_y_xor_8_thm (e : IntW 64) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -323,7 +323,7 @@ theorem select_icmp_x_and_8_ne_0_y_or_8_thm (e : IntW 64) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -335,7 +335,7 @@ theorem select_icmp_and_2147483648_ne_0_xor_2147483648_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -347,7 +347,7 @@ theorem select_icmp_and_2147483648_eq_0_xor_2147483648_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -359,7 +359,7 @@ theorem select_icmp_x_and_2147483648_ne_0_or_2147483648_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -370,7 +370,7 @@ theorem test68_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -381,7 +381,7 @@ theorem test68_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -392,7 +392,7 @@ theorem test69_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -403,7 +403,7 @@ theorem test69_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -414,7 +414,7 @@ theorem test69_and_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -425,7 +425,7 @@ theorem test70_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -437,7 +437,7 @@ theorem shift_no_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -449,7 +449,7 @@ theorem shift_no_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -461,7 +461,7 @@ theorem no_shift_no_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -473,7 +473,7 @@ theorem no_shift_no_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -485,7 +485,7 @@ theorem no_shift_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -497,7 +497,7 @@ theorem no_shift_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -510,7 +510,7 @@ theorem no_shift_xor_multiuse_and_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -523,7 +523,7 @@ theorem shift_xor_multiuse_or_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -536,7 +536,7 @@ theorem shift_xor_multiuse_xor_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -549,7 +549,7 @@ theorem shift_xor_multiuse_and_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -562,7 +562,7 @@ theorem shift_no_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -575,7 +575,7 @@ theorem shift_no_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -588,7 +588,7 @@ theorem no_shift_no_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -601,7 +601,7 @@ theorem no_shift_no_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -614,7 +614,7 @@ theorem no_shift_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -627,7 +627,7 @@ theorem no_shift_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -644,7 +644,7 @@ theorem no_shift_xor_multiuse_cmp_with_and_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -657,7 +657,7 @@ theorem shift_xor_multiuse_cmp_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -671,7 +671,7 @@ theorem shift_xor_multiuse_cmp_with_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -688,7 +688,7 @@ theorem shift_xor_multiuse_cmp_with_and_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -706,7 +706,7 @@ theorem no_shift_no_xor_multiuse_cmp_or_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -725,7 +725,7 @@ theorem no_shift_no_xor_multiuse_cmp_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -744,7 +744,7 @@ theorem no_shift_xor_multiuse_cmp_or_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -765,7 +765,7 @@ theorem no_shift_xor_multiuse_cmp_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -786,7 +786,7 @@ theorem no_shift_xor_multiuse_cmp_and_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -805,7 +805,7 @@ theorem shift_xor_multiuse_cmp_or_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -826,7 +826,7 @@ theorem shift_xor_multiuse_cmp_xor_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -847,7 +847,7 @@ theorem shift_xor_multiuse_cmp_and_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -858,7 +858,7 @@ theorem set_bits_thm (e : IntW 8) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -870,7 +870,7 @@ theorem xor_i8_to_i64_shl_save_and_ne_thm (e : IntW 64) (e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -881,7 +881,7 @@ theorem select_icmp_eq_and_1_0_lshr_fv_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -892,5 +892,5 @@ theorem select_icmp_eq_and_1_0_lshr_tv_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

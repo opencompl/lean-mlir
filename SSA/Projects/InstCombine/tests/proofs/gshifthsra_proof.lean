@@ -18,7 +18,7 @@ theorem test1_thm (e : IntW 8) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem test2_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -38,7 +38,7 @@ theorem ashr_ashr_thm (e : IntW 32) : ashr (ashr e (const? 32 5)) (const? 32 7) 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -47,7 +47,7 @@ theorem ashr_overshift_thm (e : IntW 32) : ashr (ashr e (const? 32 15)) (const? 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -56,7 +56,7 @@ theorem hoist_ashr_ahead_of_sext_1_thm (e : IntW 8) : ashr (sext 32 e) (const? 3
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -65,5 +65,5 @@ theorem hoist_ashr_ahead_of_sext_2_thm (e : IntW 8) : ashr (sext 32 e) (const? 3
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
