@@ -1,7 +1,7 @@
 import Mathlib.Tactic.NormNum
 
 import Mathlib.Logic.Function.Iterate
--- import SSA.Projects.InstCombine.ForLean
+import BvDecideParametric.ForLean
 -- TODO: upstream the following section
 section UpStream
 

@@ -137,14 +137,14 @@ deriving Repr
 def evalRelation (rel : Relation) {w} (bv1 bv2 : BitVec w) : Prop :=
   match rel with
   | .eq => bv1 = bv2
-  | .signed .lt => bv1 <ₛ bv2
-  | .signed .le => bv1 ≤ₛ bv2
-  | .signed .gt => bv1 >ₛ bv2
-  | .signed .ge => bv1 ≥ₛ bv2
-  | .unsigned .lt => bv1 <ᵤ bv2
-  | .unsigned .le => bv1 ≤ᵤ bv2
-  | .unsigned .gt => bv1 >ᵤ bv2
-  | .unsigned .ge => bv1 ≥ᵤ bv2
+  | .signed .lt => bv1.slt bv2
+  | .signed .le => bv1.sle  bv2
+  | .signed .gt => bv2.slt bv1
+  | .signed .ge => bv2.sle bv1
+  | .unsigned .lt => bv1.ult bv2
+  | .unsigned .le => bv1.ule bv2
+  | .unsigned .gt => bv2.ult bv1
+  | .unsigned .ge => bv2.ule bv1
 
 @[simp]
 lemma evalRelation_coe (rel : Relation) (bv1 bv2 : BitVec w1) (heq : w1 = w2) :
