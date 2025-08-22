@@ -49,6 +49,7 @@ theorem Lets.denote_var_pure [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [Lawf
 
 variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 namespace CSE
+open Ctxt (Var)
 
 /-- State stored by CSE pass. -/
 structure State (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] [Monad d.m]
@@ -75,7 +76,9 @@ def State.vars2vars (self : State d lets) (vs : HVector Γ.Var ts) :
   let vs' := vs.map fun _ v => self.var2var v
   ⟨vs', by
     intro V
-    sorry
+    ext i
+    simp only [List.get_eq_getElem, HVector.get_map, vs']
+    exact self.var2var (vs.get i) |>.prop _
   ⟩
 
 variable [LawfulMonad d.m]
@@ -90,8 +93,8 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     rfl
   expr2cache β eneedle := do
     let ⟨eneedleΓ, heneedleΓ⟩ ← DCE.Expr.deleteVar? (DEL := Deleted.deleteAppend Γ α) (eneedle)
-    -- If `eneedleΓ` is none, this expression actually uses β in some nontrivial way,
-    -- and there's nothing we can really do
+    -- ^^ If `eneedleΓ` is none, this expression actually uses β in some
+    --    nontrivial way, and there's nothing we can really do
     match s.expr2cache _ eneedleΓ with /- find in cache -/
     | .some ⟨v', hv'⟩ => .some ⟨v'.map fun _ v => v.appendInl, by
         simp [heneedleΓ, hv', HVector.map_map]
@@ -99,12 +102,12 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     | .none => /- not in cache, check if new expr. -/
       if hβ : α = β then
         if exprEq : (hβ ▸ eneedleΓ) = e then
-          some ⟨hβ ▸ Var.varsOfType (Γ:=Γ) α, by
+          some ⟨hβ ▸ (Var.allVarsIn α).map (fun _ v => v.appendInr), by
             subst hβ
             intro V
             ext i
-            simpa [heneedleΓ, exprEq, Var.varsOfType, HVector.map_map]
-              using HVector.getElem_eq_get ..
+            simpa [heneedleΓ, exprEq, Var.allVarsIn, HVector.map_map]
+              using HVector.getElem_ofFin_eq_get ..
           ⟩
         else
           none
@@ -192,14 +195,14 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
       simp_all [Expr.denote_unfold]
   expr2cache := fun β eneedle =>
     let homRemap := Ctxt.Hom.remapAppend Γ vold
-    let lastVar := Var.varsOfType α
+    let lastVar := (Var.allVarsIn α).map (fun _ v => v.appendInr)
     let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap vold lastVar (by
         intros Vstart
         ext i
         simp +zetaDelta only [List.get_eq_getElem, HVector.get_map,
-          Ctxt.Valuation.comap_remapAppend, Var.varsOfType, HVector.map_map,
+          Ctxt.Valuation.comap_remapAppend, Var.allVarsIn, HVector.map_map,
           Ctxt.Valuation.append_appendInr, HVector.getElem_map, HVector.get_ofFn]
-        rw [← HVector.getElem_eq_get]
+        rw [← HVector.getElem_ofFin_eq_get]
         rfl
       )  eneedle
     match s.expr2cache β eneedle' with
@@ -334,9 +337,9 @@ def State.cseCom {α}
   { com' : Com d Γ .pure α
     // ∀ (V : Ctxt.Valuation Γstart), com.denote (lets.denote V) = com'.denote (lets.denote V) } :=
   match com with
-  | .ret vs =>
+  | .rets vs =>
       let ⟨vs', hvs'⟩ := s.vars2vars vs
-      ⟨.ret vs', by
+      ⟨.rets vs', by
         intros VΓ
         simp [Com.denote, hvs']⟩
   | .var e body =>

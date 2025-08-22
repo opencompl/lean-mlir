@@ -377,7 +377,6 @@ coincides exactly with `v = w`. -/
 /-- From `v.eq w` it follows that the types of `v` and `w` are the same. -/
 lemma eq.ty_eq {v : Γ.Var t} {w : Γ.Var u} (h : v.eq w) : t = u := h.1
 
-
 /-! ### Fintype instance -/
 
 instance [DecidableEq Ty] {Γ : Ctxt Ty} {t : Ty} : Fintype (Γ.Var t) where
@@ -423,9 +422,13 @@ def ofFinCases
 @[simp] lemma toFin_toSnoc (v : Γ.Var t) : (v.toSnoc (t':=t')).toFin = v.toFin.succ := rfl
 
 end Lemmas
+
+/-! ### All vars in a context -/
+
+def allVarsIn (ts : List Ty) : HVector (Var ⟨ts⟩) ts :=
+  .ofFn _ ts Var.ofFin
+
 end Var
-end Ctxt
-open Ctxt
 
 /-!
 ### Indexing an HVector by `Var`
@@ -433,6 +436,9 @@ Note that a `Var` is quite similar to a `Fin`, plus a static proof of the item
 at the particular index. This extra knowledge is useful when indexing into an
 HVector as well.
 -/
+end Ctxt
+open Ctxt
+
 instance {Γ} : GetElem (HVector A as) (Var Γ a) (A a) (fun _ _ => as = Γ.toList) where
   getElem xs i h := (cast · <| xs.get <| i.toFin.cast <| by rw [h]; rfl) <| by
     subst h
