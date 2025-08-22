@@ -148,31 +148,31 @@ theorem toOption_getNone : (PoisonOr.poison).toOption.getD y = y := by rfl
 end Lemmas
 
 /-! ### Refinement -/
-inductive IsRefinedBy [HRefinement α α] : PoisonOr α → PoisonOr α → Prop
+inductive IsRefinedBy [HRefinement α β] : PoisonOr α → PoisonOr β → Prop
   /-- `poison` is refined by anything -/
   | poisonLeft : IsRefinedBy poison b?
   /-- `value a` is only refined by a `value b` s.t. `a ⊑ b` -/
   | bothValues : a ⊑ b → IsRefinedBy (value a) (value b)
 
 section Refinement
-variable [HRefinement α α] (a? b? : PoisonOr α)
+variable [HRefinement α β] (a? : PoisonOr α) (b? : PoisonOr β) (a : α) (b : β)
 
-instance : Refinement (PoisonOr α) where
+instance : HRefinement (PoisonOr α) (PoisonOr β) where
   IsRefinedBy := IsRefinedBy
 
 @[simp] theorem poison_isRefinedBy : (@poison α) ⊑ b? :=
   IsRefinedBy.poisonLeft
 
-@[simp] theorem value_isRefinedBy_value (a b : α) :
+@[simp] theorem value_isRefinedBy_value :
     value a ⊑ value b ↔ a ⊑ b := by
   constructor
   · rintro ⟨⟩; assumption
   · exact IsRefinedBy.bothValues
 
-@[simp] theorem not_value_isRefinedBy_poison (a : α) : ¬value a ⊑ (@poison α) := by
+@[simp] theorem not_value_isRefinedBy_poison : ¬value a ⊑ (@poison β) := by
   rintro ⟨⟩
 
-theorem isRefinedBy_poison_iff : a? ⊑ (@poison α) ↔ a? = poison := by
+theorem isRefinedBy_poison_iff : a? ⊑ (@poison β) ↔ a? = poison := by
   cases a?
   · simp
   · simp only [not_value_isRefinedBy_poison, false_iff]; rintro ⟨⟩
@@ -184,9 +184,10 @@ theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
   cases a? <;> cases b? <;> simp
 
 @[simp, simp_denote]
-theorem eq_squb (a b : PoisonOr α) : PoisonOr.IsRefinedBy a b ↔ a ⊑ b := by rfl
+theorem eq_squb : PoisonOr.IsRefinedBy a? b? ↔ a? ⊑ b? := by rfl
 
 section PreOrder
+variable [HRefinement α α]
 
 /--
 Refinement on poison values is reflexive, when the underlying refinement is reflexive
@@ -217,7 +218,7 @@ end PreOrder
 /--
 Refinement on poison values is decidable if equality of the underlying values is decidable.
 -/
-instance [DecidableRel (· ⊑ · : α → α → _)] :
+instance [HRefinement α α] [DecidableRel (· ⊑ · : α → α → _)] :
     DecidableRel (· ⊑ · : PoisonOr α → PoisonOr α → _)
   | .poison, _ => .isTrue <| by simp
   | .value _, .poison => .isFalse <| by simp
@@ -226,7 +227,7 @@ instance [DecidableRel (· ⊑ · : α → α → _)] :
 
 /-! ### if-then-else -/
 section Ite
-variable {c : Prop} [Decidable c] (a? b? : PoisonOr α) (a : α)
+variable {c : Prop} [Decidable c] (a? b? : PoisonOr α) (a : α) [HRefinement α α]
 
 @[simp]
 theorem if_then_poison_isRefinedBy_iff  :
