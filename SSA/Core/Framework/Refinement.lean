@@ -247,19 +247,9 @@ where
       | throwUnexpectedArgs
     let mα := mkApp m α
     let nβ := mkApp n β
-    let fallback := do
-      let lhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) m α instPureM eff₁ lhs
-      let rhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) n β instPureN eff₂ rhs
-      isRefinedByAppN #[mα, nβ, instRef, lhs', rhs']
-
-    -- TODO: do I really need this special casing? I suspect that just using the fallback
-    --       defined above for every case is already enough, and would be quite a bit simpler
-    let some eff₁ := EffectKind.ofLeanLiteral eff₁ | fallback
-    let some eff₂ := EffectKind.ofLeanLiteral eff₂ | fallback
-    match eff₁, eff₂ with
-      | .impure, .impure =>
-        isRefinedByAppN #[mα, nβ, instRef, lhs, rhs]
-      | _, _ => fallback
+    let lhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) m α instPureM eff₁ lhs
+    let rhs' := mkApp5 (mkConst ``EffectKind.coe_toMonad) n β instPureN eff₂ rhs
+    isRefinedByAppN #[mα, nβ, instRef, lhs', rhs']
   /--
   Simplifier for `Id.instRefinement`
   -/
