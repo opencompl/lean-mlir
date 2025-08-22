@@ -198,14 +198,6 @@ private def Format.parenIfNonempty (l : String) (r : String) (separator : Format
   | [] => ""
   | _  =>  l ++ (Format.joinSep xs separator) ++ r
 
-/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
-the "()" if the list is empty. -/
-private def Format.parenIfNonemptyForPrint (l : String) (r : String) (separator : Format)
-    (xs : List Format) : Format :=
-  match xs with
-  | [] => "() "
-  | _  =>  l ++ (Format.joinSep xs separator) ++ r
-
 /-- Format a sequence of types as `(t₁, ..., tₙ)`. Will always display parentheses. -/
 private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
@@ -214,17 +206,6 @@ private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
 private def formatArgTuple [Repr Ty] {Γ : List Ty}
     (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.parenIfNonempty "(" ")" ", " (formatArgTupleAux args) where
-  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
-    match Γ with
-    | .nil => []
-    | .cons .. =>
-      match args with
-      | .cons a as => (repr a) :: (formatArgTupleAux as)
-
-/-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
-private def formatArgTupleForPrint [Repr Ty] {Γ : List Ty}
-    (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args) where
   formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
     match Γ with
     | .nil => []
@@ -331,6 +312,8 @@ end ToString
 
 /- # ToString instances for Com and Expr  -/
 section DialectPrint
+
+open Std (Format)
 variable {d} [DialectPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
@@ -342,6 +325,25 @@ partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : Str
 -- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
 private def formatTypeTuplePrint [ToString d.Ty] (xs : List d.Ty) : String :=
   "(" ++ String.intercalate ", " (xs.map DialectPrint.printTy) ++ ")"
+
+/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
+the "()" if the list is empty. -/
+private def Format.parenIfNonemptyForPrint (l : String) (r : String) (separator : Format)
+    (xs : List Format) : Format :=
+  match xs with
+  | [] => "() "
+  | _  =>  l ++ (Format.joinSep xs separator) ++ r
+
+/-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
+private def formatArgTupleForPrint [Repr Ty] {Γ : List Ty}
+    (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
+  Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args) where
+  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+    match Γ with
+    | .nil => []
+    | .cons .. =>
+      match args with
+      | .cons a as => (repr a) :: (formatArgTupleAux as)
 
 /--
 Converts an expression within a dialect to its MLIR string representation.
@@ -371,6 +373,7 @@ partial def Com.toPrint (com : Com d Γ eff t) : String :=
    "\n }"
 
 end DialectPrint
+
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
 mutual -- DecEq
@@ -1286,6 +1289,7 @@ section Lemmas
 end Lemmas
 
 end Map
+
 
 /-!
 ## `Lets.addComToEnd`, `Com.toLets` and `Com.toFlatCom`
