@@ -636,6 +636,8 @@ section Lemmas
     returnVar (var (d:=d) (eff:=eff) e body) = body.returnVar := by
   simp [returnVar]
 
+end Lemmas
+
 /-!
 ## `denote`
 Denote expressions, programs, and sequences of lets
