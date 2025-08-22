@@ -6,6 +6,7 @@ import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
 import BvDecideParametric.ForLean
 
+open BvDecideParametric
 open BitVec
 open MLIR AST
 open InstCombine (LLVM)
@@ -183,7 +184,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
               · have heqzero : x = 0#_ := BitVec.eq_zero_of_toNat_mod_eq_zero (by omega)
                 subst heqzero
                 simp [BitVec.sdiv_zero]
-          · exact intMin_neq_one (by omega)
+          · exact BitVec.intMin_neq_one (by omega)
         case isFalse hugt =>
           simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod] at hugt
           unfold LLVM.sdiv? -- TODO: devar this; write theorem to unfold sdiv?
@@ -249,7 +250,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, decide_eq_true_eq] at h
       simp only [el_three] at h
       by_cases a_allones : a = allOnes w
-      · have x := sdiv_one_allOnes w_gt_1
+      · have x := BitVec.sdiv_one_allOnes w_gt_1
         rw [a_allones]
         simp [x]
       · rw [Nat.add_mod_of_add_mod_lt] at h
@@ -295,7 +296,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
         Nat.add_comm, Nat.sub_add_cancel, Nat.mod_self] at h
       norm_num at h
       omega
-    simp [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
+    simp [BitVec.one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
