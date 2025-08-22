@@ -250,7 +250,7 @@ def test_file_preamble():
 import Std.Tactic.BVDecide
 import BvDecideParametric.SingleWidth.Tactic
 import BvDecideParametric.Fast.MBA
-import SSA.Core.Tactic.TacBench
+import TacBench
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 9000
