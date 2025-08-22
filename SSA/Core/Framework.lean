@@ -141,12 +141,21 @@ Another option, which would be more complicated, but correct by construction, is
 impurely.
 -/
 
+/--
+DialectPrint includes the functions to print the components of a dialect.
+-/
 class DialectPrint (d : Dialect) where
+  /-- prints the operation in the dialect -/
   printOpName : d.Op → String
+  /-- prints the type in the dialect -/
   printTy : d.Ty → String
+  /-- prints the attributes of the operation -/
   printAttributes : d.Op → String
+  /-- prints the name of the dialect -/
   printDialect : String
+  /-- prints the return instruction of the dialect -/
   printReturn : d.Ty → String
+  /-- prints the function header of the dialect -/
   printFunc : d.Ty → String
 
 /- # Datastructures -/
@@ -358,15 +367,21 @@ partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
     let argTys := DialectSignature.sig op
     s!"\"{DialectPrint.printOpName op}\"{formatArgTupleForPrint args}{DialectPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({DialectPrint.printTy outTy})"
 
-/-- This function recursivly converts the body of a `Com` into its string representation.
-Each bound variable is printed with its index and corresponding expression. -/
+/--
+  This function recursively converts the body of a `Com` into its string representation.
+  Each bound variable is printed with its index and corresponding expression.
+-/
 partial def Com.ToPrintBody : Com d Γ eff t → String
   | .ret v => s!"  \"{DialectPrint.printReturn t}\"({_root_.repr v }) : ({DialectPrint.printTy t}) -> ()"
   | .var e body =>
     s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
     Com.ToPrintBody body
 
-/- `Com.toString` implements a toString instance for the type `Com`.  -/
+/--
+  `Com.toString` implements a `toString` instance for the type `Com`.
+  This has a more general behaviour than `toString` and allows customizing the
+  printing of dialect objects.
+-/
 partial def Com.toPrint (com : Com d Γ eff t) : String :=
    "builtin.module { \n"
   ++ DialectPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
