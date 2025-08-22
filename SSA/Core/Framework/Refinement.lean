@@ -216,12 +216,7 @@ partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Exp
   | ``Id.instRefinement => simpId instArgs
   | ``inferInstance   => simpInfer instArgs
   | ``inferInstanceAs => simpInfer instArgs
-  | _ =>
-    -- if let .proj `DialectHRefinement projIdx instDialectRef := inst then
-    -- if let .proj _ projIdx instDialectRef := instFn then
-    --   simpProjDialect projIdx instDialectRef
-    -- else
-    return none
+  | _ => return none
 where
   loop (e : Expr) (returnArgOnFail := true) : SimpM (Option Expr) :=
     let e? := if returnArgOnFail then some e else none
