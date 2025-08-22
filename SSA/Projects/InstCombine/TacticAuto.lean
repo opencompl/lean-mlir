@@ -6,9 +6,9 @@ import Std.Tactic.BVDecide
 import Leanwuzla
 
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
-import SSA.Experimental.Bits.SingleWidth.Tactic
-import SSA.Experimental.Bits.Fast.MBA
-import SSA.Experimental.Bits.AutoStructs.ForLean
+import BvDecideParametric.SingleWidth.Tactic
+import BvDecideParametric.Fast.MBA
+import BvDecideParametric.AutoStructs.ForLean
 import SSA.Core.Tactic.TacBench
 import SSA.Core.Tactic.ExtractGoals
 
