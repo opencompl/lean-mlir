@@ -51,5 +51,5 @@ def mainCmd := `[Cli|
       file: String; "Input filename"
     ]
 
-unsafe def main (args : List String): IO UInt32 :=
+def main (args : List String): IO UInt32 :=
   mainCmd.validate args
