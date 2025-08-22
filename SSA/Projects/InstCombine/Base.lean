@@ -377,6 +377,22 @@ instance : ToString (MOp φ) where
 -- instance : ToString Op where
 --   toString o := repr o |>.pretty
 
+def printOverflowFlags (flags : NoWrapFlags) : String :=
+  match flags with
+  | ⟨false, false⟩ => "<{overflowFlags = #llvm.overflow<none>}>"
+  | ⟨true, false⟩  => "<{overflowFlags = #llvm.overflow<nsw>}>"
+  | ⟨false, true⟩  => "<{overflowFlags = #llvm.overflow<nuw>}>"
+  | ⟨true, true⟩   => "<{overflowFlags = #llvm.overflow<nsw,nuw>}>"
+
+def attributesToPrint (op : LLVM.Op) : String :=
+  match op with
+  | .const w v => s!"\{value = {v} : {w}}"
+  | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
+  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f -- overflowflag support
+  | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
+  | .icmp ty _ => s!"{ty}"
+  |_ => ""
+
 instance : ToString LLVM.Op := by unfold LLVM; infer_instance
 instance : Repr LLVM.Op := by unfold LLVM; infer_instance
 
@@ -396,6 +412,14 @@ instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
 instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
 
+instance : DialectPrint (LLVM) where
+  printOpName
+  | op => "llvm."++toString op
+  printTy := toString
+  printAttributes := attributesToPrint
+  printDialect:= "llvm"
+  printReturn _:= "llvm.return"
+  printFunc _:= "^bb0"
 /-! ### Signature -/
 
 @[simp, reducible]
