@@ -55,7 +55,7 @@ variable {Γ : Ctxt Ty}
 
 @[simp] lemma Ctxt.delete_empty :
     (empty : Ctxt Ty).delete vs = empty := by
-  sorry
+  simp [empty, delete]
 
 -- @[simp] lemma Ctxt.getElem_deleteOne_of_lt {i v : Nat} (h : i < v) :
 --     (Γ.deleteOne v)[i]? = Γ[i]? := by
@@ -65,23 +65,77 @@ variable {Γ : Ctxt Ty}
 --     (Γ.deleteOne v)[i]? = Γ[i + 1]? := by
 --   sorry
 
+def DCE.DeleteRange.pred (vs : DeleteRange (Γ.snoc t)) (h : vs.start ≠ 0) :
+    DeleteRange Γ where
+  start := vs.start.pred (fun h' => by simp [h'] at h)
+  num := ⟨vs.num, by
+    rcases vs with ⟨⟨start, hs⟩, ⟨num, hn⟩⟩
+    simp at h hn ⊢
+    omega
+  ⟩
+
+lemma Ctxt.delete_eq_of_num_eq_zero {vs : DeleteRange Γ} (h : vs.num.val = 0) :
+    Γ.delete vs = Γ := by
+  simp [delete, h]
+
+lemma Ctxt.delete_pred {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
+    (Ctxt.delete _ vs) = (Γ.delete (vs.pred h)).snoc t := by
+  rcases Γ with ⟨Γ⟩
+  rcases vs with ⟨ (start : Fin <| Γ.length + 2), (num : Fin <| Γ.length + 2 - start) ⟩
+  change start ≠ 0 at h
+
+  simp [delete, DeleteRange.pred, Ctxt.snoc]
+  suffices ∀ k,
+    let P (k) (x) :=
+      !decide (start.val ≤ x.2 + k) || decide (start.val - k + num.val ≤ x.2)
+    List.map Prod.fst (List.filter (P k) ((t, 0) :: Γ.zipIdx (k + 1)))
+    = t :: List.map Prod.fst (List.filter (P <| k + 1) (Γ.zipIdx k))
+  by exact this 0
+  induction Γ
+  case nil =>
+    obtain rfl : start = 1 := match start with | 1 => rfl
+    simp
+  case cons t' Γ ih =>
+    intro k
+    simp
+    rw [List.filter_cons_of_pos]
+    simp
+    have : start.val ≠ 0 := sorry
+    specialize ih (start.pred h) (num.cast <| by simp; omega) (k + 1)
+
+
+
+#check Function.comp
+
 theorem Ctxt.getElem_delete_of_lt {i : Nat} (vs : DeleteRange Γ) (h : i < vs.start) :
     Γ[i]? = (Γ.delete vs)[i]? := by
-  rcases Γ
-  simp only [getElem?_ofList, delete, length_ofList, not_and, not_lt, decide_implies, dite_eq_ite,
-    Bool.if_true_right, List.getElem?_map]
-  induction vs.num.val generalizing i
-  case zero =>
-    have : (Prod.fst ∘ fun a => (a, i)) = @id Ty :=
-      rfl
-    simp [this]
+  rcases Γ with ⟨Γ⟩
+  induction hnum : vs.num.val generalizing i Γ -- k
+  case zero => rw [delete_eq_of_num_eq_zero hnum]
   case succ ih =>
-    cases i
-    case zero =>
-      stop
-      simp []
-    case succ i =>
-      sorry
+    cases Γ with
+    | nil => exfalso; sorry
+    | cons t Γ =>
+      cases i
+      case zero =>
+        simp only [List.length_cons, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
+          getElem?_pos, List.getElem_cons_zero, List.zipIdx_cons, zero_add]
+        -- grind [List.filter_cons_of_pos]
+        rw [List.filter_cons_of_pos (by simp; sorry)]
+        simp
+      case succ i =>
+        have ne_zero : vs.start ≠ 0 := by
+          apply Fin.val_ne_zero_iff.mp
+          omega
+        specialize @ih i Γ (vs.pred ne_zero) (by simp [DeleteRange.pred]; omega)
+        rw [List.getElem?_cons_succ, ih]
+        rw [List.zipIdx_cons, List.filter_cons_of_pos (by grind)]
+        simp [DeleteRange.pred]
+
+
+
+
+        sorry
     -- rw [Nat.fold_succ, getElem_deleteOne_of_lt (by omega)]
     -- exact ih
 
@@ -195,33 +249,29 @@ def Var.tryDeleteOne? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : DeleteRange Γ}
   (DEL : Deleted Γ delv Γ') (v : Γ.Var β) :
     Option { v' : Γ'.Var β // v = DEL.toHom v' } :=
   if h_val_eq : delv.start ≤ v.val ∧ v.val < delv.start.val + delv.num.val then
-    none -- if it's the deleted variable, then return nothing.
+    none -- if `v` is in the range of deleted variables, return nothing.
   else
-    let idx := if v.val < delv.start then v.val else v.val - delv.num
+    let idx := if v.val < delv.start then v.val else v.val + delv.num
     let v' := ⟨idx, by
       subst DEL idx
       simp at h_val_eq
       rw [Ctxt.getElem_delete]
-      stop
-      by_cases v.val < delv.start
-      · simp [*]
-      · simp [*]
-
-      simp
-      split_ifs with h_val_lt h_val_sub_lt
+      split_ifs
       · exact v.prop
-      · omega
-      · rw [Nat.sub_add_cancel (by omega)]
+      · exfalso; omega
+      · rw [show v.val + delv.num - delv.num = v.val by omega]
         exact v.prop
     ⟩
     some ⟨v', by
-      stop
-      subst DEL
-      simp +zetaDelta only [Deleted.toHom, Hom.delete]
+      subst DEL idx v'
+      simp only [Deleted.toHom, Hom.delete, Var.castCtxt_rfl]
       split_ifs
       · rfl
-      · omega
-      · rcases v; congr; rw [Nat.sub_add_cancel (by omega)]
+      · exfalso; omega
+      · apply Subtype.eq
+        simp
+        omega
+        -- rcases v; congr; rw [Nat.sub_add_cancel (by omega)]
     ⟩
 
 /-- Given  `Γ' := Γ/delv`, transport a vector of variables from `Γ` to `Γ',
