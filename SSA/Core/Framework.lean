@@ -1290,7 +1290,6 @@ end Lemmas
 
 end Map
 
-
 /-!
 ## `Lets.addComToEnd`, `Com.toLets` and `Com.toFlatCom`
 -/
