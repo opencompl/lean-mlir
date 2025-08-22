@@ -214,7 +214,8 @@ partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Exp
   match instFn.constName with
   | ``instEffToMonadRefinement => simpEffToMonad instArgs
   | ``Id.instRefinement => simpId instArgs
-  | ``inferInstance => simpInfer instArgs
+  | ``inferInstance   => simpInfer instArgs
+  | ``inferInstanceAs => simpInfer instArgs
   | _ =>
     -- if let .proj `DialectHRefinement projIdx instDialectRef := inst then
     -- if let .proj _ projIdx instDialectRef := instFn then
@@ -271,31 +272,15 @@ where
     trace[LeanMLIR.Elab] "args: {instArgs}"
     let #[_α, _β, _self] := instArgs | throwUnexpectedArgs
     isRefinedByAppN (instArgs ++ #[lhs, rhs])
+
   /--
-  Simplifier for `inferInstance`
+  Simplifier for `inferInstance` & `inferInstanceAs`
   -/
   simpInfer instArgs := do
     let some self := instArgs[1]? | throwUnexpectedArgs
     trace[LeanMLIR.Elab] "actual instance: {self}"
     isRefinedByAppN #[α, β, self, lhs, rhs]
 
-  -- /--
-  -- Simplifier for projections of `DialectHRefinement` instances
-  -- -/
-  -- simpProjDialect projIdx _instDialectRef := do
-  --   -- trace[LeanMLIR.Elab] "is a projection: {Lean.checkEmoji}"
-  --   -- trace[LeanMLIR.Elab] "raw expression: {toExpr inst}"
-  --   if projIdx = 0 then -- MonadIsRefinedBy field
-  --     let α ← mkFreshExprMVar (Expr.sort 1)
-  --     let β ← mkFreshExprMVar (Expr.sort 1)
-  --     let i ← mkFreshExprMVar none
-  --     let expected := (mkAppN (mkConst ``instRefinementId) #[α, β, i])
-  --     if ← (withTransparency .default <| isDefEq inst expected) then
-  --       return visitIsRefinedByAppN #[α, β, i, lhs, rhs]
-  --     else
-  --       trace[LeanMLIR.Elab] "{Lean.crossEmoji} Failed to unify instance:\n\t{inst}\
-  --         \nwith expected:\n\t{expected}"
-  -- return .continue
 open Lean Meta in
 /--
 `reduceIsRefinedBy` simplifies `HRefinement` instances that are derived by an `DialectHRefinement`
