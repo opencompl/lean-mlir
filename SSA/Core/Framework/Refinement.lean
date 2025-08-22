@@ -247,6 +247,15 @@ Using `LLVM` as an example: the base framework will have goals `?lhs ⊑ ?rhs`
 where `?lhs : LLVM.m ⟦?t⟧` and `?t : LLVM.Ty`. Assuming the `DialectHRefinement`
 instance for `LLVM` is marked `@[simp_denote]`, `reduceIsRefinedBy` will
 canonicalize this into a goal `?lhs' ⊑ ?rhs'`, where `?lhs', ?rhs' : LLVM.IntW _`.
+
+[1] In fact, instances not being part of the discrtree is why `reduceIsRefinedBy`
+    is easier to implement as a simproc.
+
+WARNING: this simproc matches against *any* use of `_ ⊑ _`, thus it's important
+this simproc does not do any expensive reductions! If it turns out to be too
+expensive, still, we could register separate simprocs for specific patterns in
+the future, by keying on the *types* (i.e., the `α` and `β` arguments to
+`HRefinement.IsRefinedBy`).
 -/
 dsimproc [simp_denote] reduceIsRefinedBy (_ ⊑ _) := fun e => do
   return match ← reduceIsRefinedByAux.loop (returnArgOnFail := false) e with
