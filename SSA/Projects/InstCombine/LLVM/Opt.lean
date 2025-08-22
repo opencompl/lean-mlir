@@ -22,7 +22,7 @@ def wellformed (fileName : String ) : IO UInt32 := do
     match icom? with
     | none => return 1
     | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
-      IO.println s!"{toString c}"
+      IO.println s!"{Com.toPrint c}"
       return 0
 
 def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
@@ -51,5 +51,5 @@ def mainCmd := `[Cli|
       file: String; "Input filename"
     ]
 
-def main (args : List String): IO UInt32 :=
+unsafe def main (args : List String): IO UInt32 :=
   mainCmd.validate args
