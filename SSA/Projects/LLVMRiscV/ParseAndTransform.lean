@@ -42,9 +42,9 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       | EffectKind.pure =>
         match retTy with
         | Ty.llvm (.bitvec _w)  =>
-          let lowered := selectionPipeFuelWithCSE c true /- calls the instruction selector defined in `
-                                                  InstructionLowering`, true indicates pseudo variable lowering-/
-          IO.println s!"{Com.toPrint (lowered) }"
+          let lowered := selectionPipeFuelSafe c /- calls the instruction selector defined in `
+                                                  InstructionLowering`-/
+          IO.println s!"{toString lowered}"
           return 0
         | _ =>
         IO.println s!" debug: WRONG RETURN TYPE : expected Ty.llvm (Ty.bitvec 64) "
@@ -52,4 +52,4 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       | _ =>
       IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
       return 1
-
+#eval! passriscv64 "test/LLVMDialect/InstCombine/bb0.mlir"
