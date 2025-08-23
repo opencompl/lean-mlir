@@ -591,16 +591,15 @@ def lhs : Com ScfArith ⟨[/- v0 -/ t]⟩ .impure t :=
   /- start2 = -/ Com.letPure (cst <| niters1 + start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   Com.var (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def rhs : Com ScfArith ⟨[/- v0 -/ t]⟩ .impure t :=
   /- niters1 + niters2 = -/ Com.letPure (cst_nat <| niters1 + niters2) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   -- start step niter v
-  Com.var (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by
-      simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.var (for_ (t := t) ⟨1, rfl⟩ ⟨0, rfl⟩ ⟨2, rfl⟩ ⟨3, rfl⟩ rgn) <|
+  Com.ret ⟨0, rfl⟩
 
 
 open Scf in
