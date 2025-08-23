@@ -52,4 +52,3 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       | _ =>
       IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
       return 1
-
