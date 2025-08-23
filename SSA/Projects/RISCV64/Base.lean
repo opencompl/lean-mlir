@@ -111,6 +111,15 @@ inductive Op
   | czero.eqz
   | czero.nez
   deriving DecidableEq, Repr, Lean.ToExpr
+-- ^^ **NOTE:** this deriving clause is prone to causing stack overflows in the
+--    lsp while interactively editing. This is not surprising, given the quadratic
+--    nature of `deriving DecidableEq`, but annoying nonetheless.
+--    However, nothing in the current file actually depends on these derives, so
+--    the workaround is to comment out the line above while editing.
+--    Once satisfied, uncommment, and build via the CLI (which does not seem to
+--    trigger the stack overflow)!
+
+
 
 /--
 ## Dialect type definitions
