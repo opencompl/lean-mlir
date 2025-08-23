@@ -7,15 +7,15 @@ import subprocess
 import re
 import argparse
 import concurrent.futures
-# from xdsl.rewriter import Rewriter
-# from xdsl.xdsl_opt_main import xDSLOptMain
-# from xdsl.rewriter import InsertPoint
-# from xdsl.ir import Block
-# from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
-# from xdsl.dialects import llvm
-# from xdsl.dialects.riscv import IntRegisterType
-# from xdsl.dialects import riscv_func
-# from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
+from xdsl.rewriter import Rewriter
+from xdsl.xdsl_opt_main import xDSLOptMain
+from xdsl.rewriter import InsertPoint
+from xdsl.ir import Block
+from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
+from xdsl.dialects import llvm
+from xdsl.dialects.riscv import IntRegisterType
+from xdsl.dialects import riscv_func
+from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
 
 
 ROOT_DIR = (
@@ -46,6 +46,9 @@ LLC_ASM_DIR = (
 LEANMLIR_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/"
 )
+XDSL_no_casts_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts/"
+)
 LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
 
 def create_missing_folders(): 
@@ -61,6 +64,8 @@ def create_missing_folders():
         os.makedirs(LLC_ASM_DIR)
     if not os.path.exists(LEANMLIR_ASM_DIR):
         os.makedirs(LEANMLIR_ASM_DIR)
+    if not os.path.exists(XDSL_no_casts_DIR):
+        os.makedirs(XDSL_no_casts_DIR)
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
 
@@ -220,6 +225,7 @@ def LAKE_compile_riscv64(num, jobs):
             input_file = MLIR_bb0_DIR + "function_" + str(i) + ".mlir"
             output_file = LEANMLIR_ASM_DIR + "function_" + str(i) + ".mlir"
             log_file = open(LOGS_DIR + "lake_" + str(i) + ".mlir", "w")
+            # todo: cmd_base is very sneaky and should be corrected, I could not find a way
             print(f"Compiling '{input_file}' to RISC-V assembly in Lean-MLIR..")
             cmd_base = "cd; cd lean-mlir; lake exe opt --passriscv64 "
             cmd = cmd_base + input_file + " > " + output_file
@@ -233,6 +239,20 @@ def LAKE_compile_riscv64(num, jobs):
             percentage = ((float(idx) + float(1)) / float(total)) * 100
             print(f"{file_path} completed, {percentage:.2f}%")
 
+# this is just a temporary solution because I don't understand python classes.
+def XDSL_remove_casts(idx):
+    """
+    Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
+    """
+    input_file = LEANMLIR_ASM_DIR + "function_" + str(idx) + ".mlir"
+    output_file = XDSL_no_casts_DIR + "function_" + str(idx) + ".s"
+    log_file = open(LOGS_DIR + "xdsl_" + str(idx) + ".log", "w")
+    print(f"Removing unrealize casts from '{input_file}'.")
+    cmd_base = (
+        f"python3 {ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py "
+    )
+    cmd = cmd_base + input_file + " > " + output_file
+    run_command(cmd, log_file)
 
 def clear_folders():
     clear_folder(LLVM_DIR)
@@ -242,6 +262,7 @@ def clear_folders():
     clear_folder(LLC_ASM_DIR)
     clear_folder(LEANMLIR_ASM_DIR)
     clear_folder(LOGS_DIR)
+    clear_folder(XDSL_no_casts_DIR)
 
 
 def clear_empty_logs():
@@ -278,61 +299,6 @@ def clear_empty_logs():
                     print("Failed to delete {filename}")
 
 
-
-# class MyOptMain(xDSLOptMain):
-                
-#     def process_module(self, module: ModuleOp):
-#         reg_type = IntRegisterType(NoneAttr(), StringAttr(""))
-#         module_args = module.body.block.args
-#         return_op = module.body.block.ops.last
-#         assert isinstance(return_op, llvm.ReturnOp)
-
-#         new_region = Rewriter().move_region_contents_to_new_regions(module.body)
-#         new_func = riscv_func.FuncOp(
-#             "main",
-#             new_region,
-#             FunctionType.from_lists(
-#                 [reg_type] * len(module_args), [reg_type] * len(return_op.operands)
-#             ),
-#         )
-
-#         module.body.add_block(Block())
-
-#         Rewriter().insert_op(new_func, InsertPoint.at_end(module.body.block))
-#         for arg in module_args:
-#             Rewriter().replace_value_with_new_type(
-#                 arg, IntRegisterType(NoneAttr(), StringAttr(""))
-#             )
-
-#         for arg in return_op.operands:
-#             Rewriter().replace_value_with_new_type(
-#                 arg, IntRegisterType(NoneAttr(), StringAttr(""))
-#             )
-
-#         Rewriter().replace_op(return_op, riscv_func.ReturnOp(*return_op.operands))
-#         ReconcileUnrealizedCastsPass().apply(self.ctx, module)
-
-#     def run(self):
-#         chunks, file_extension = self.prepare_input()
-#         output_stream = open('xdsl_tmo_log.log')
-
-#         try:
-#             for i, (chunk, offset) in enumerate(chunks):
-#                 try:
-#                     if i > 0:
-#                         output_stream.write("// -----\n")
-#                     module = self.parse_chunk(chunk, file_extension, offset)
-
-#                     if module is not None:
-#                         self.process_module(module)
-#                         output_stream.write(self.output_resulting_program(module))
-#                     output_stream.flush()
-#                 finally:
-#                     chunk.close()
-#         finally:
-#             if output_stream is not sys.stdout:
-#                 output_stream.close()
-
 def generate_benchmarks(file_name, num, jobs):
     # extract mlir blocks and put them all in separate files
     create_missing_folders()
@@ -355,8 +321,8 @@ def generate_benchmarks(file_name, num, jobs):
     # We run the lean pass in parallel
     LAKE_compile_riscv64(num, jobs)
 
-    # MyOptMain().run()
-    # XDSL_parse(MLIR_single_DIR+'function_0.mlir')
+    for i in range(num):
+        XDSL_remove_casts(i)
 
     clear_empty_logs()
 
