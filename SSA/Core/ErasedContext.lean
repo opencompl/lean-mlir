@@ -55,9 +55,13 @@ lemma empty_eq : (∅ : Ctxt Ty) = .empty := rfl
 def snoc : Ctxt Ty → Ty → Ctxt Ty
   | ⟨tl⟩, hd => ⟨hd :: tl⟩
 
-instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
-  getElem xs i h := xs.toList[i]
-  getElem? xs i  := xs.toList[i]?
+
+@[grind=]
+def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
+
+instance : GetElem? (Ctxt Ty) Nat Ty (fun Γ i => i < Γ.length) where
+  getElem Γ i h := Γ.toList[i]
+  getElem? Γ i  := Γ.toList[i]?
 
 section GetElemLemmas
 
@@ -65,8 +69,14 @@ lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
 @[simp, grind=] lemma getElem?_ofList (i : Nat) : (ofList ts)[i]? = ts[i]? := rfl
 @[simp, grind=] lemma getElem_ofList (i : Nat) (h : _) : (ofList ts)[i]'h = ts[i]'h := rfl
 
-instance : LawfulGetElem (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
+instance : LawfulGetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) where
   getElem?_def Γ i _ := by rcases Γ; grind
+
+@[ext]
+theorem ext_getElem? {Γ Δ : Ctxt Ty} (h : ∀ (i : Nat), Γ[i]? = Δ[i]?) : Γ = Δ := by
+  rcases Γ; rcases Δ;
+  rw [ofList.injEq]
+  exact List.ext_getElem?_iff.mpr h
 
 end GetElemLemmas
 
@@ -79,8 +89,6 @@ def get? : Ctxt Ty → Nat → Option Ty := (·[·]?)
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   ofList ∘ (List.map f) ∘ toList
-
-def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
 
 section Lemmas
 variable (Γ : Ctxt Ty) (ts us : List Ty)

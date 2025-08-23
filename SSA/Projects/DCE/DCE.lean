@@ -8,47 +8,89 @@ import Mathlib.Tactic.DepRewrite
 open Ctxt (Var Valuation Hom)
 
 /-! ## DeleteRange -/
+namespace DCE
 
 /-- A `DeleteRange Γ` indicates a consecutive range of variables in `Γ` to
 be deleted. -/
-structure DCE.DeleteRange (Γ : Ctxt Ty) where
+structure DeleteRange (Γ : Ctxt Ty) where
   /-- The first variable to delete. -/
   start : Fin (Γ.length + 1)
   /-- The number of variables to delete -/
   num : Fin (Γ.length + 1 - start.val)
 open DCE (DeleteRange)
 
+namespace DeleteRange
+
 /-- `DeleteRange.full Γ` is the range of all variables in `Γ`. -/
-def DCE.DeleteRange.full (Γ : Ctxt Ty) : DeleteRange Γ where
+def full (Γ : Ctxt Ty) : DeleteRange Γ where
   start := ⟨0, by omega⟩
   num := ⟨Γ.length, by simp⟩
 
-def DCE.DeleteRange.appendInl {Γ : Ctxt Ty} {ts : List Ty}
+def appendInl {Γ : Ctxt Ty} {ts : List Ty}
     (r : DeleteRange Γ) : DeleteRange (Γ ++ ts) where
   start := ⟨r.start + ts.length, by grind⟩
   num := ⟨r.num, by grind⟩
 
-def DCE.DeleteRange.appendInr {Γ : Ctxt Ty} {ts : List Ty}
+def appendInr {Γ : Ctxt Ty} {ts : List Ty}
     (r : DeleteRange ⟨ts⟩) : DeleteRange (Γ ++ ts) where
   start := ⟨r.start, by grind⟩
   num := ⟨r.num, by grind⟩
 
+section Lemmas
+
+@[simp, grind=] lemma val_start_full  :
+    (full Γ).start.val = 0 := rfl
+@[simp, grind=] lemma val_num_full :
+    (full Γ).num.val = Γ.length := rfl
+
+@[simp, grind=] lemma val_start_appendInl (r : DeleteRange Γ) :
+    (r.appendInl (ts := ts)).start.val = r.start.val + ts.length := rfl
+@[simp, grind=] lemma val_num_appendInl (r : DeleteRange Γ) :
+    (r.appendInl (ts := ts)).num.val = r.num.val := rfl
+
+@[simp, grind=] lemma val_start_appendInr (r : DeleteRange ⟨ts⟩) :
+    (r.appendInr (Γ := Γ)).start.val = r.start.val := rfl
+@[simp, grind=] lemma val_num_appendInr (r : DeleteRange ⟨ts⟩) :
+    (r.appendInr (Γ := Γ)).num.val = r.num.val := rfl
+
+end Lemmas
+
+end DeleteRange
+end DCE
+
 /-! ## Ctxt.delete -/
+open DCE (DeleteRange)
 
 /-- Delete a vector of variables from a ctxt. -/
 def Ctxt.delete (Γ : Ctxt Ty) (vs : DeleteRange Γ) : Ctxt Ty :=
-  ⟨Γ.toList.zipIdx
-    |>.filter (fun ⟨_, i⟩ => ¬(vs.start ≤ i ∧ i < vs.start + vs.num))
-    |>.map Prod.fst
-  ⟩
+  Ctxt.ofList <| List.ofFn (n := Γ.length - vs.num.val) fun i =>
+    have := vs.start.prop
+    if hi : i.val < vs.start then
+      Γ[i.val]
+    else
+      Γ[i.val + vs.num]
 
 @[simp] theorem Ctxt.delete_append_appendInl {Γ : Ctxt Ty} {us : List Ty}
     {r : DeleteRange Γ} :
     (Γ ++ us).delete r.appendInl = (Γ.delete r) ++ us := by
-  simp [delete]
+  rcases Γ with ⟨Γ⟩
   ext i t
-  simp
-  sorry
+  simp only [delete, ofList_append, length_ofList, List.length_append,
+    DeleteRange.val_start_appendInl, DeleteRange.val_num_appendInl, Fin.coe_cast, getElem_ofList,
+    dite_eq_ite, getElem?_ofList, List.getElem?_ofFn, Option.dite_none_right_eq_some,
+    Option.some.injEq]
+  rw [List.getElem?_append]
+  by_cases hi : i < us.length <;> simp only [reduceIte, hi]
+  · have : i < us.length + Γ.length - r.num := by grind
+    have : i < r.start + us.length := by grind
+    simp [*]
+  · simp only [List.getElem?_ofFn, Option.dite_none_right_eq_some, Option.some.injEq]
+    simp only [
+      List.getElem_append_right (Nat.ge_of_not_lt hi),
+      List.getElem_append_right (by grind : us.length ≤ i + r.num),
+      length_ofList
+    ]
+    split <;> grind
 
 section Lemmas
 variable {Γ : Ctxt Ty}
@@ -65,6 +107,28 @@ variable {Γ : Ctxt Ty}
 --     (Γ.deleteOne v)[i]? = Γ[i + 1]? := by
 --   sorry
 
+set_option Elab.async false
+
+@[simp, grind=] lemma Ctxt.getElem?_delete_of_lt_start {i : Nat} {vs : DeleteRange Γ}
+    (h : i < vs.start) :
+    (Γ.delete vs)[i]? = Γ[i]? := by
+  grind [delete]
+
+@[simp, grind=] lemma Ctxt.getElem?_delete_of_ge_start {i : Nat} {vs : DeleteRange Γ}
+    (h : vs.start ≤ i) :
+    (Γ.delete vs)[i]? = Γ[i + vs.num]? := by
+  grind [delete]
+
+@[simp, grind=] lemma Ctxt.getElem?_delete_eq_none_iff {i : Nat} {vs : DeleteRange Γ} :
+    (Γ.delete vs)[i]? = none ↔ Γ.length ≤ i + vs.num := by
+  simp [delete]
+
+lemma Ctxt.getElem?_delete {i : Nat} {vs : DeleteRange Γ} :
+    (Γ.delete vs)[i]? = if i < vs.start then Γ[i]? else Γ[i + vs.num]? := by
+  split <;> grind
+
+/-- Subtract one from the starting position of a `DeleteRange` (without changing
+the number of variables deleted). -/
 def DCE.DeleteRange.pred (vs : DeleteRange (Γ.snoc t)) (h : vs.start ≠ 0) :
     DeleteRange Γ where
   start := vs.start.pred (fun h' => by simp [h'] at h)
@@ -76,92 +140,26 @@ def DCE.DeleteRange.pred (vs : DeleteRange (Γ.snoc t)) (h : vs.start ≠ 0) :
 
 lemma Ctxt.delete_eq_of_num_eq_zero {vs : DeleteRange Γ} (h : vs.num.val = 0) :
     Γ.delete vs = Γ := by
-  simp [delete, h]
+  ext i; grind [delete]
 
-lemma Ctxt.delete_pred {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
-    (Ctxt.delete _ vs) = (Γ.delete (vs.pred h)).snoc t := by
-  rcases Γ with ⟨Γ⟩
-  rcases vs with ⟨ (start : Fin <| Γ.length + 2), (num : Fin <| Γ.length + 2 - start) ⟩
-  change start ≠ 0 at h
-
-  simp [delete, DeleteRange.pred, Ctxt.snoc]
-  suffices ∀ k,
-    let P (k) (x) :=
-      !decide (start.val ≤ x.2 + k) || decide (start.val - k + num.val ≤ x.2)
-    List.map Prod.fst (List.filter (P k) ((t, 0) :: Γ.zipIdx (k + 1)))
-    = t :: List.map Prod.fst (List.filter (P <| k + 1) (Γ.zipIdx k))
-  by exact this 0
-  induction Γ
-  case nil =>
-    obtain rfl : start = 1 := match start with | 1 => rfl
-    simp
-  case cons t' Γ ih =>
-    intro k
-    simp
-    rw [List.filter_cons_of_pos]
-    simp
-    have : start.val ≠ 0 := sorry
-    specialize ih (start.pred h) (num.cast <| by simp; omega) (k + 1)
-
-
-
-#check Function.comp
-
-theorem Ctxt.getElem_delete_of_lt {i : Nat} (vs : DeleteRange Γ) (h : i < vs.start) :
-    Γ[i]? = (Γ.delete vs)[i]? := by
-  rcases Γ with ⟨Γ⟩
-  induction hnum : vs.num.val generalizing i Γ -- k
-  case zero => rw [delete_eq_of_num_eq_zero hnum]
-  case succ ih =>
-    cases Γ with
-    | nil => exfalso; sorry
-    | cons t Γ =>
-      cases i
-      case zero =>
-        simp only [List.length_cons, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
-          getElem?_pos, List.getElem_cons_zero, List.zipIdx_cons, zero_add]
-        -- grind [List.filter_cons_of_pos]
-        rw [List.filter_cons_of_pos (by simp; sorry)]
-        simp
-      case succ i =>
-        have ne_zero : vs.start ≠ 0 := by
-          apply Fin.val_ne_zero_iff.mp
-          omega
-        specialize @ih i Γ (vs.pred ne_zero) (by simp [DeleteRange.pred]; omega)
-        rw [List.getElem?_cons_succ, ih]
-        rw [List.zipIdx_cons, List.filter_cons_of_pos (by grind)]
-        simp [DeleteRange.pred]
-
-
-
-
-        sorry
-    -- rw [Nat.fold_succ, getElem_deleteOne_of_lt (by omega)]
-    -- exact ih
-
-theorem Ctxt.getElem_delete_of_ge {i : Nat} (vs : DeleteRange Γ) (h : vs.start ≤ i) :
-    Γ[i + vs.num]? = (Γ.delete vs)[i]? := by
-  stop
-  rcases Γ
-  simp only [getElem?_ofList, delete]
-  induction vs.num
-  case zero => rfl
-  case succ ih =>
-    rw [Nat.fold_succ, getElem_deleteOne_of_lt (by omega)]
-    exact ih
-
-/-
-TODO: I am not at all certain that the index maths here is correct, but I am
-cautiously optimistic that the general setup of these lemmas works
--/
-
-theorem Ctxt.getElem_delete (i : Nat) (vs : DeleteRange Γ) :
-    (Γ.delete vs)[i]? = Γ[if i < vs.start then i else i - vs.num]? := by
-  split_ifs with h
-  · rw [Ctxt.getElem_delete_of_lt _ h]
-  · obtain ⟨_, rfl⟩ := Nat.exists_eq_add_of_le (by omega : vs.start ≤ i)
-    stop
-    rw [Ctxt.getElem_delete_of_ge]
+lemma Ctxt.delete_snoc {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
+    (Γ.snoc t |>.delete vs) = (Γ.delete (vs.pred h) |>.snoc t) := by
+  ext i
+  rw [Ctxt.getElem?_delete]
+  induction i generalizing vs
+  case zero =>
+    have : 0 < vs.start := by
+      cases h : vs.start using Fin.succRec
+      · contradiction
+      · simp
+    simp [this]
+    rfl
+  case succ i ih =>
+    simp only [length_snoc, getElem?_snoc_succ,
+      show i + 1 + vs.num = i + vs.num + 1 by omega]
+    rw [Ctxt.getElem?_delete]
+    simp [DeleteRange.pred]
+    grind
 
 end Lemmas
 
@@ -175,10 +173,8 @@ def Hom.delete {Γ : Ctxt Ty} (delv : DeleteRange Γ) : Hom (Γ.delete delv) Γ 
     ⟨idx, by
       subst idx
       rcases v with ⟨v, hv⟩
-      simp only [← hv]; clear hv
-      split_ifs with h_val
-      · rw [Ctxt.getElem_delete_of_lt _ h_val]
-      · rw [Ctxt.getElem_delete_of_ge _ (by omega)]
+      simp only [← hv, Ctxt.getElem?_delete]
+      split_ifs with h_val <;> rfl
     ⟩
 
 /-- Witness that Γ' is Γ without v -/
@@ -188,27 +184,19 @@ def Deleted (Γ: Ctxt Ty) (vs : DeleteRange Γ) (Γ' : Ctxt Ty) : Prop :=
 /-- build a `Deleted` for a `(Γ ++ αs) → Γ`-/
 def Deleted.deleteAppend (Γ : Ctxt Ty) (αs : List Ty) :
     Deleted (Γ ++ αs) (DeleteRange.full ⟨αs⟩).appendInr Γ := by
-  stop
-  simp [Deleted, Var.varsOfType, Ctxt.delete]
-  induction αs
-  · rfl
-  case cons ih =>
-    simp [HVector.ofFn, HVector.map_cons]
-    rw [ih]
-    -- congr 1
-    -- rfl
-
-  -- sorry -- rfl
-
+  ext i
+  rw [Ctxt.getElem?_delete]
+  rcases Γ
+  simp
+  grind [List.getElem?_append_right]
 
 /-- append an `ωs` to both the input and output contexts of `Deleted Γ v Γ'` -/
 def Deleted.append {Γ : Ctxt Ty} {vs : DeleteRange Γ}
     (DEL : Deleted Γ vs Γ') (ωs : List Ty) :
     Deleted (Γ ++ ωs) vs.appendInl (Γ' ++ ωs) := by
-  stop
-  simp only [Deleted, Ctxt.delete, Ctxt.Var.val_toSnoc] at DEL ⊢
+  ext i
   subst DEL
-  rfl
+  simp
 
 def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
   fun _ v => Hom.delete r (v.castCtxt h)
@@ -228,11 +216,15 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
     injection DEL
     simp_all [Ctxt.delete]
   subst DEL'
-  funext t v;
-  simp only [Deleted.toHom]
-  cases v using Var.appendCases
-  · stop simp
-  · stop simp [Hom.delete]
+  funext t v
+  apply Subtype.eq
+  simp only [toHom, Hom.delete, Var.val_castCtxt, DeleteRange.val_start_appendInl,
+    DeleteRange.val_num_appendInl, Hom.append, Var.castCtxt_rfl]
+  cases v using Var.appendCases with
+  | left _  => simp; grind
+  | right v =>
+    have := v.val_lt
+    simp; grind
 
 @[simp] lemma Deleted.toHom_last
     (DEL : Deleted (Γ ++ us) (DeleteRange.full ⟨us⟩).appendInr Γ) :
@@ -251,16 +243,16 @@ def Var.tryDeleteOne? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : DeleteRange Γ}
   if h_val_eq : delv.start ≤ v.val ∧ v.val < delv.start.val + delv.num.val then
     none -- if `v` is in the range of deleted variables, return nothing.
   else
-    let idx := if v.val < delv.start then v.val else v.val + delv.num
+    let idx := if v.val < delv.start then v.val else v.val - delv.num
     let v' := ⟨idx, by
       subst DEL idx
       simp at h_val_eq
-      rw [Ctxt.getElem_delete]
+      rw [Ctxt.getElem?_delete]
       split_ifs
       · exact v.prop
       · exfalso; omega
-      · rw [show v.val + delv.num - delv.num = v.val by omega]
-        exact v.prop
+      · have := v.prop
+        grind
     ⟩
     some ⟨v', by
       subst DEL idx v'
@@ -271,7 +263,6 @@ def Var.tryDeleteOne? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : DeleteRange Γ}
       · apply Subtype.eq
         simp
         omega
-        -- rcases v; congr; rw [Nat.sub_add_cancel (by omega)]
     ⟩
 
 /-- Given  `Γ' := Γ/delv`, transport a vector of variables from `Γ` to `Γ',
@@ -414,6 +405,9 @@ def dce' {Γ : Ctxt d.Ty} {t}
   let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
   ⟨com'.changeVars hom, by simp [hcom']⟩
 
+/-- info: 'DCE.dce' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms dce
+
 namespace Examples
 
 /-- A very simple type universe. -/
@@ -480,9 +474,8 @@ def ex1_post_dce_expected : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 2) <|
   Com.ret ⟨0, rfl⟩
 
--- TODO: uncomment once sorries are fixed
--- theorem checkDCEasExpected :
---   ex1_post_dce = ex1_post_dce_expected := by native_decide
+theorem checkDCEasExpected :
+  ex1_post_dce = ex1_post_dce_expected := by native_decide
 
 end Examples
 end DCE
