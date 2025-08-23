@@ -99,16 +99,6 @@ variable {Γ : Ctxt Ty}
     (empty : Ctxt Ty).delete vs = empty := by
   simp [empty, delete]
 
--- @[simp] lemma Ctxt.getElem_deleteOne_of_lt {i v : Nat} (h : i < v) :
---     (Γ.deleteOne v)[i]? = Γ[i]? := by
---   sorry
-
--- @[simp] lemma Ctxt.getElem_deleteOne_of_ge {i v : Nat} (h : v ≤ i) :
---     (Γ.deleteOne v)[i]? = Γ[i + 1]? := by
---   sorry
-
-set_option Elab.async false
-
 @[simp, grind=] lemma Ctxt.getElem?_delete_of_lt_start {i : Nat} {vs : DeleteRange Γ}
     (h : i < vs.start) :
     (Γ.delete vs)[i]? = Γ[i]? := by
