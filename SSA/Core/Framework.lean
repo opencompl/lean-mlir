@@ -859,18 +859,6 @@ end Lemmas
   | .var _ body  => cast (by simp) <|
       Com.outContext_changeVars_hom (map := map.append) map_inv.append (c := body)
 
-@[simp, deprecated]  -- TODO: remove
-lemma Com.denoteLets_returnVar (c : Com d Γ .pure [ty]) (Γv : Valuation Γ) :
-    c.denoteLets Γv c.returnVar = (c.denote Γv).get (0 : Fin 1) := by
-  induction c using Com.rec'
-  case rets v =>
-    rcases v
-    simp
-    rfl
-  case var ih =>
-    simp [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
-      Id.bind_eq', returnVar_var, ih, denote]
-
 @[simp] lemma Com.denoteLets_returnVars (c : Com d Γ .pure tys) (V : Valuation Γ) :
     c.returnVars.map (c.denoteLets V) = c.denote V := by
   induction c using Com.rec'
