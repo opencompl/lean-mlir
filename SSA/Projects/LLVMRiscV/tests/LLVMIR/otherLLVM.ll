@@ -6,11 +6,37 @@
 
 ;copy paste your mlir basic block and run lake exe opt SSA/Projects/LLVMRiscV/tests/Parsing/arithbb0.mlir
 ; from the root folder.
+define i64 @s(i64 %a, i64 %b, i1 %cond) {
+entry:
+  %res = select i1 %cond, i64 %a, i64 %b
+  ret i64 %res
+}
 
+define i32 @exact(i32 %a, i32 %b) {
+entry:
+  %res = ashr exact i32 %a, %b
+  ret i32 %res
+}
 define i32 @select32(i32 %a, i32 %b, i1 %cond) {
 entry:
   %res = select i1 %cond, i32 %a, i32 %b
   ret i32 %res
+}
+
+
+define i1 @icmp64(i64 %a, i64 %b) {
+entry:
+  %res = icmp eq i64 %a, %b
+  %res1 = icmp ne i64 %a, %b
+  %res2 = icmp ugt i64 %a, %b
+  %res3 =  icmp uge i64 %a, %b
+  %res4 =  icmp ult i64 %a, %b
+  %res5 =  icmp ule i64 %a, %b
+  %res6 =  icmp sgt i64 %a, %b
+  %res7 =  icmp sge i64 %a, %b
+  %res8 =  icmp slt i64 %a, %b
+  %res9 =  icmp sle i64 %a, %b
+  ret i1 %res
 }
 
 define i64 @select64(i64 %a, i64 %b, i1 %cond) {
