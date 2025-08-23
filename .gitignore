@@ -46,3 +46,4 @@ SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/*
 SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0/*
 SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/*
 SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/*
+SSA/Projects/LLVMRiscV/Evaluation/mca-results/*
