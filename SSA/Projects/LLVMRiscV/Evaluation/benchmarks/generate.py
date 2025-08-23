@@ -7,15 +7,15 @@ import subprocess
 import re
 import argparse
 import concurrent.futures
-from xdsl.rewriter import Rewriter
-from xdsl.xdsl_opt_main import xDSLOptMain
-from xdsl.rewriter import InsertPoint
-from xdsl.ir import Block
-from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
-from xdsl.dialects import llvm
-from xdsl.dialects.riscv import IntRegisterType
-from xdsl.dialects import riscv_func
-from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
+# from xdsl.rewriter import Rewriter
+# from xdsl.xdsl_opt_main import xDSLOptMain
+# from xdsl.rewriter import InsertPoint
+# from xdsl.ir import Block
+# from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
+# from xdsl.dialects import llvm
+# from xdsl.dialects.riscv import IntRegisterType
+# from xdsl.dialects import riscv_func
+# from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
 
 
 ROOT_DIR = (
@@ -335,30 +335,30 @@ def clear_empty_logs():
 
 def generate_benchmarks(file_name, num, jobs):
     # extract mlir blocks and put them all in separate files
-    clear_folders()
     create_missing_folders()
+    clear_folders()
     input_file = MLIR_multi_DIR + file_name
 
     extract_mlir_blocks(input_file, MLIR_single_DIR, num)
 
-    # for i in range(num):
-    #     print(i)
-    #     # Run mlir-opt and convert into LLVM dialect
-    #     MLIR_opt_arith_llvm(i)
-    #     # Run mlir-translate and convert LLVM into LLVMIR
-    #     MLIR_translate_llvmir(i)
-    #     # Use llc to compile LLVMIR into RISCV
-    #     LLC_compile_riscv(i)
-    #     # Extract bb0
-    #     extract_bb0(i)
+    for i in range(num):
+        print(i)
+        # Run mlir-opt and convert into LLVM dialect
+        MLIR_opt_arith_llvm(i)
+        # Run mlir-translate and convert LLVM into LLVMIR
+        MLIR_translate_llvmir(i)
+        # Use llc to compile LLVMIR into RISCV
+        LLC_compile_riscv(i)
+        # Extract bb0
+        extract_bb0(i)
 
-    # # We run the lean pass in parallel
-    # LAKE_compile_riscv64(num, jobs)
+    # We run the lean pass in parallel
+    LAKE_compile_riscv64(num, jobs)
 
     # MyOptMain().run()
     # XDSL_parse(MLIR_single_DIR+'function_0.mlir')
 
-    # clear_empty_logs()
+    clear_empty_logs()
 
 def main():
     parser = argparse.ArgumentParser(
