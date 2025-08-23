@@ -67,9 +67,9 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
   | .llvm llvmOp => .llvm <$> DialectSignature.signature llvmOp
   | .riscv riscvOp => .riscv <$> DialectSignature.signature riscvOp
   | .castRiscv w =>
-      {sig := [Ty.riscv .bv], outTy := Ty.llvm (.bitvec w), regSig := []}
+      {sig := [Ty.riscv .bv], returnTypes := [Ty.llvm (.bitvec w)], regSig := []}
   | .castLLVM w =>
-      {sig := [Ty.llvm (.bitvec w)], outTy := (Ty.riscv .bv), regSig := []}
+      {sig := [Ty.llvm (.bitvec w)], returnTypes := [Ty.riscv .bv], regSig := []}
 
 instance : ToString LLVMPlusRiscV.Op  where
   toString := fun
@@ -98,19 +98,21 @@ def riscvArgsFromHybrid : {tys : List RISCV64.RV64.Ty} →
 @[simp, reducible]
 instance : DialectDenote (LLVMPlusRiscV) where
   denote
-  | .llvm (llvmOp), args, .nil =>
-      DialectDenote.denote llvmOp (llvmArgsFromHybrid args) .nil
-  | .riscv (riscvOp), args, .nil =>
-      DialectDenote.denote riscvOp (riscvArgsFromHybrid args) .nil
+  | .llvm llvmOp, args, .nil => do
+      let xs ← DialectDenote.denote llvmOp (llvmArgsFromHybrid args) .nil
+      return xs.map' Ty.llvm (fun t x => x)
+  | .riscv (riscvOp), args, .nil => do
+      let xs ← DialectDenote.denote riscvOp (riscvArgsFromHybrid args) .nil
+      return xs.map' Ty.riscv (fun t x => x)
   | .castRiscv _ , elemToCast, _ =>
     let toCast : BitVec 64 :=
       elemToCast.getN 0 (by simp [DialectSignature.sig, signature]) -- adapting to the newly introduced PoisonOr wrapper.
-    castriscvToLLVM toCast
+    [castriscvToLLVM toCast]ₕ
   | .castLLVM _,
     (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec _)]), _ =>
     let toCast : PoisonOr (BitVec _) :=
       elemToCast.getN 0 (by simp)
-    castLLVMToriscv toCast
+    [castLLVMToriscv toCast]ₕ
 
 @[simp_denote]
 def ctxtTransformToLLVM  (Γ : Ctxt LLVMPlusRiscV.Ty) :=
@@ -130,12 +132,11 @@ def ctxtTransformToRiscV (Γ : Ctxt LLVMPlusRiscV.Ty) :=
 
 /-- Projection of `outTy` commutes with `Signature.map`. -/
 @[simp, simp_denote]
-theorem outTy_map_signature_eq {s : Signature α} {f : α → β} :
-  Signature.outTy (f <$> s) = f s.outTy := rfl
+theorem returnTypes_map_signature_eq {s : Signature α} {f : α → β} :
+  Signature.returnTypes (f <$> s) = f <$> s.returnTypes := rfl
 
 /- We tag the following definitions as `simp` and `simp_denote`
    so that `simp_peephole` and `simp` include them during simplification. -/
-attribute [simp, simp_denote] outTy_map_signature_eq
 attribute [simp, simp_denote] HVector.mapM'
 attribute [simp, simp_denote] HVector.map'
 
@@ -148,7 +149,7 @@ attribute [simp, simp_denote] HVector.map'
  -/
 @[simp_denote]
 def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ) eff ty) :
-  MLIR.AST.ReaderM (LLVMPlusRiscV) (Expr LLVMPlusRiscV Γ eff (.llvm ty)) :=
+  MLIR.AST.ReaderM (LLVMPlusRiscV) (Expr LLVMPlusRiscV Γ eff (.llvm <$> ty)) :=
     match e with
     | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
         let args' : HVector (Ctxt.Var Γ) (.llvm <$> DialectSignature.sig op1) ←
@@ -171,7 +172,7 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
         return Expr.mk
           (op := Op.llvm op1)
           (eff_le := eff_le1)
-          (ty_eq := ty_eq1 ▸ rfl)
+          (ty_eq := by cases ty_eq1; rfl)
           (args := args')
           (regArgs := HVector.nil)
 
@@ -184,7 +185,7 @@ def transformExprLLVM (e : Expr (InstCombine.MetaLLVM 0) (ctxtTransformToLLVM Γ
 .-/
 @[simp_denote]
 def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) :
-  MLIR.AST.ReaderM LLVMPlusRiscV (Expr LLVMPlusRiscV Γ eff (.riscv ty)) :=
+  MLIR.AST.ReaderM LLVMPlusRiscV (Expr LLVMPlusRiscV Γ eff (.riscv <$> ty)) :=
     match e with
     | Expr.mk op1 ty_eq1 eff_le1 args1 regArgs1 => do
         let args' : HVector (Ctxt.Var Γ) (.riscv <$> DialectSignature.sig op1) ←
@@ -205,7 +206,7 @@ def transformExprRISCV (e : Expr RISCV64.RV64 (ctxtTransformToRiscV Γ) eff ty) 
         return Expr.mk
           (op := Op.riscv op1)
           (eff_le := eff_le1)
-          (ty_eq := ty_eq1 ▸ rfl)
+          (ty_eq := by cases ty_eq1; rfl)
           (args := args')
           (regArgs := HVector.nil)
 
@@ -244,11 +245,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     match llvmParse with
       | .ok ⟨eff, ty, expr⟩ => do
         let v ← transformExprLLVM expr
-        return ⟨eff, .llvm ty, v⟩
+        return ⟨eff, .llvm <$> ty, v⟩
       | .error  (_) => do
         let ⟨eff, ty , expr⟩ ← RiscvMkExpr.mkExpr (ctxtTransformToRiscV Γ) opStx (← read)
         let v ← transformExprRISCV expr
-        return ⟨eff, .riscv ty , v⟩
+        return ⟨eff, .riscv <$> ty, v⟩
 
 instance : MLIR.AST.TransformExpr (LLVMPlusRiscV) 0   where
   mkExpr := mkExpr
@@ -273,15 +274,19 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM LLVMPlusRi
   (Σ eff ty, Com LLVMPlusRiscV Γ eff ty) := do
   let llvmParseReturn := InstcombineTransformDialect.mkReturn (ctxtTransformToLLVM  Γ) opStx (← read)
   match llvmParseReturn with
-  | .ok ⟨eff, ty, Com.ret v⟩ =>
-    return ⟨eff, .llvm ty, Com.ret (← transformVarLLVM v)⟩
+  | .ok ⟨eff, ty, Com.rets vs⟩ =>
+    let vs : HVector Γ.Var (.llvm <$> ty) ←
+      vs.mapM' (fun _ => transformVarLLVM)
+    return ⟨eff, .llvm <$> ty, Com.rets vs⟩
   | .error e =>
     match e with
     | .unsupportedOp _s=>
       let ⟨eff, ty , com⟩ ← RiscvMkExpr.mkReturn (ctxtTransformToRiscV Γ) opStx (← read)
       match com with
-      | Com.ret v =>
-        return ⟨eff, .riscv ty, Com.ret (← transformVarRISCV v)⟩
+      | Com.rets vs =>
+        let vs : HVector Γ.Var (.riscv <$> ty) ←
+          vs.mapM' (fun _ => transformVarRISCV)
+        return ⟨eff, .riscv <$> ty, Com.rets vs⟩
       | _ => throw <| .unsupportedOp s!"Unable to parse return as either LLVM type or RISCV type."
     | e => throw e
   | _ => throw <| .generic s!"Unable to parse return as the program is impure and therefore not supported."
