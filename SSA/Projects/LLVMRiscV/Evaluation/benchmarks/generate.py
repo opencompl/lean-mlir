@@ -7,16 +7,6 @@ import subprocess
 import re
 import argparse
 import concurrent.futures
-from xdsl.rewriter import Rewriter
-from xdsl.xdsl_opt_main import xDSLOptMain
-from xdsl.rewriter import InsertPoint
-from xdsl.ir import Block
-from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
-from xdsl.dialects import llvm
-from xdsl.dialects.riscv import IntRegisterType
-from xdsl.dialects import riscv_func
-from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
-
 
 ROOT_DIR = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
@@ -28,27 +18,20 @@ TIMEOUT = 1800  # seconds
 LLVM_BUILD_DIR = "~/llvm-project/build/bin/"
 
 LLVM_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVM/"
-LLVMIR_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVMIR/"
-)
-MLIR_bb0_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0/"
-)
+LLVMIR_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVMIR/"
+MLIR_bb0_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0/"
 MLIR_single_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_single/"
 )
-MLIR_multi_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
-)
-LLC_ASM_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
-)
+MLIR_multi_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
+LLC_ASM_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
 LEANMLIR_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/"
 )
 LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
 
-def create_missing_folders(): 
+
+def create_missing_folders():
     if not os.path.exists(LLVM_DIR):
         os.makedirs(LLVM_DIR)
     if not os.path.exists(LLVMIR_DIR):
@@ -278,9 +261,8 @@ def clear_empty_logs():
                     print("Failed to delete {filename}")
 
 
-
 # class MyOptMain(xDSLOptMain):
-                
+
 #     def process_module(self, module: ModuleOp):
 #         reg_type = IntRegisterType(NoneAttr(), StringAttr(""))
 #         module_args = module.body.block.args
@@ -333,32 +315,34 @@ def clear_empty_logs():
 #             if output_stream is not sys.stdout:
 #                 output_stream.close()
 
+
 def generate_benchmarks(file_name, num, jobs):
     # extract mlir blocks and put them all in separate files
-    clear_folders()
     create_missing_folders()
+    clear_folders()
     input_file = MLIR_multi_DIR + file_name
 
     extract_mlir_blocks(input_file, MLIR_single_DIR, num)
 
-    # for i in range(num):
-    #     print(i)
-    #     # Run mlir-opt and convert into LLVM dialect
-    #     MLIR_opt_arith_llvm(i)
-    #     # Run mlir-translate and convert LLVM into LLVMIR
-    #     MLIR_translate_llvmir(i)
-    #     # Use llc to compile LLVMIR into RISCV
-    #     LLC_compile_riscv(i)
-    #     # Extract bb0
-    #     extract_bb0(i)
+    for i in range(num):
+        print(i)
+        # Run mlir-opt and convert into LLVM dialect
+        MLIR_opt_arith_llvm(i)
+        # Run mlir-translate and convert LLVM into LLVMIR
+        MLIR_translate_llvmir(i)
+        # Use llc to compile LLVMIR into RISCV
+        LLC_compile_riscv(i)
+        # Extract bb0
+        extract_bb0(i)
 
-    # # We run the lean pass in parallel
-    # LAKE_compile_riscv64(num, jobs)
+    # We run the lean pass in parallel
+    LAKE_compile_riscv64(num, jobs)
 
     # MyOptMain().run()
     # XDSL_parse(MLIR_single_DIR+'function_0.mlir')
 
-    # clear_empty_logs()
+    clear_empty_logs()
+
 
 def main():
     parser = argparse.ArgumentParser(

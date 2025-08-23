@@ -38,3 +38,4 @@ test-semantics/*.llvm
 lakefile.olean
 .lake/
 SSA/Projects/InstCombine/tests/logs/generalizer
+SSA/Projects/LLVMRiscV/Evaluation/benchmarks/.ruff_cache
