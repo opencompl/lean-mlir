@@ -412,4 +412,3 @@ def selection00 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     %rd = "builtin.unrealized_conversion_cast" (%c) : (!riscv.reg) -> (i64)
     llvm.return %rd : i64
   }]
-
