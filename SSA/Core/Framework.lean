@@ -377,7 +377,7 @@ partial def Com.toPrintBody : Com d Γ eff t → String
     Com.toPrintBody body
 
 /--
-  `Com.toPrint` implements a `toPrint` instance for the type `Com`.
+  `Com.toPrint` implements a `ToPrint` instance for the type `Com`.
   This has a more general behaviour than `toString` and allows customizing the
   printing of dialect objects.
 -/
