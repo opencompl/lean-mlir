@@ -59,10 +59,10 @@ def SNEZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
 
 @[simp_riscv]
 def SLTZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPE_pure64_RISCV_SLT (0)  (rs1_val)
+    RV64Semantics.RTYPE_pure64_RISCV_SLT (0)  (rs1_val)
 
 @[simp_riscv]
 def SGZT_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPE_pure64_RISCV_SLT (rs1_val) (0)
+    RV64Semantics.RTYPE_pure64_RISCV_SLT (rs1_val) (0)
 
 end RV64PseudoOpSemantics
