@@ -800,7 +800,6 @@ def simplify_neg_minmax : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
   correct := by
     simp_lowering
     simp
-    bv_decide
     sorry
 
  def RISCV_simplify_neg_minmax: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
@@ -826,7 +825,7 @@ def simplify_neg_minmax : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
  def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
   LLVMIR_identity_combines_32
 
-def GLobalISel_In_Lean_PostLegalizerCombiner_RISCV :
+def GLobalISel_In_Lean_PostLegalizerCombiner :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   PostLegalizerCombiner_LLVMIR_64)
@@ -836,9 +835,6 @@ def GLobalISel_In_Lean_PostLegalizerCombiner_RISCV :
   ++
   List.map (fun ⟨_,y⟩ => mkRewrite (RISCVPeepholeRewriteToRiscvPeephole y))
   PostLegalizerCombiner_RISCV
-
-
-
 
 /-
 def RISCVPreLegalizerCombiner: GICombiner<
@@ -860,19 +856,13 @@ def RISCVPostLegalizerCombiner
 }
 
 -/
-/-! # GLOBALISel Combiners taken from the pre-legalization pass run at the O1-O3 optimization levels.
-.-/
-/-
-def RISCVPreLegalizerCombiner: GICombiner<
-  "RISCVPreLegalizerCombinerImpl", [all_combines]> {
-} -/
-
 /-! # GLOBALISel Combiners taken from the pre-legalization pass run at the O0 optimization level.
 .-/
 /-
--- ; // A combine group used to for prelegalizer combiners at -O0. The combines in
--- ; // this group have been selected based on experiments to balance code size and
--- ; // compile time performance.
+-- ; A combine group used to for prelegalizer combiners at -O0. The combines in
+-- ; this group have been selected based on experiments to balance code size and
+-- ; compile time performance. They are all summarized in LLVM under opt-none combines.
+
 -- ; def optnone_combines : GICombineGroup<[trivial_combines,
 -- ;     ptr_add_immed_chain, combines_for_extload,
 -- ;     not_cmp_fold, opt_brcond_by_inverting_cond, combine_concat_vector]>;
@@ -882,15 +872,13 @@ def trivial_combines : GICombineGroup<[copy_prop, mul_to_shl, sub_to_add,
                                        idempotent_prop]>;
 -/
 
--- NO copy_prop
-
 -- def mul_to_shl : GICombineRule<
 --   (defs root:$d, unsigned_matchinfo:$matchinfo),
 --   (match (G_MUL $d, $op1, $op2):$mi,
 --          [{ return Helper.matchCombineMulToShl(*${mi}, ${matchinfo}); }]),
 --   (apply [{ Helper.applyCombineMulToShl(*${mi}, ${matchinfo}); }])>;
 -- rewrites any multiplication by a power of 2 into a shift
-def mul_to_shl : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def mul_to_shl_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
   ^entry (%x: i64):
   %c = llvm.mlir.constant (2) : i64
@@ -904,10 +892,136 @@ def mul_to_shl : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   llvm.return %0 : i64
   }]
 
+def mul_to_shl_4 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (4) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (2) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_8 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (8) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (3) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_16 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (16) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (4) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_32 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (32) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (5) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (64) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (6) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_256 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (256) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (8) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_512 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (512) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (9) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+def mul_to_shl_1024 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (1024) : i64
+  %0 = llvm.mul %x, %c : i64
+  llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+  %c = llvm.mlir.constant (10) : i64
+  %0 = llvm.shl %x, %c : i64
+  llvm.return %0 : i64
+  }]
+
+ def LLVMIR_mul_to_shl : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+    [⟨_, mul_to_shl_2⟩,
+    ⟨_,mul_to_shl_4⟩,
+    ⟨_,mul_to_shl_8⟩,
+    ⟨_,mul_to_shl_16⟩,
+    ⟨_,mul_to_shl_32⟩,
+    ⟨_,mul_to_shl_64⟩,
+    ⟨_,mul_to_shl_256⟩,
+    ⟨_,mul_to_shl_512⟩,
+    ⟨_,mul_to_shl_1024⟩]
+
 
 -- sub to add already above
+-- we reuse the sub_to_add rewrites from above.
+-- we replicate it here to makes its use explicit.
+ def LLVMIR_sub_to_add_O0 := LLVMIR_sub_to_add
 
--- NO add_p2i_to_ptradd
+-- we don't support add_p2i_to_ptradd
 
 -- mul_by_neg_one
 -- / Transform (mul x, -1) -> (sub 0, x)
@@ -930,4 +1044,136 @@ def mul_by_neg_one : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   llvm.return %0 : i64
   }]
 
--- idempotent_prop
+ def LLVMIR_mul_by_neg_one : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+    [⟨_, mul_by_neg_one⟩]
+
+/-
+def not_cmp_fold : GICombineRule<
+  (defs root:$d, register_vector_matchinfo:$info),
+  (match (wip_match_opcode G_XOR): $d,
+  [{ return Helper.matchNotCmp(*${d}, ${info}); }]),
+  (apply [{ Helper.applyNotCmp(*${d}, ${info}); }])
+>;
+/// Combine inverting a result of a compare into the opposite cond code.
+-/
+def not_cmp_fold_eq : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.eq %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.ne %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+def not_cmp_fold_ne : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.ne %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.eq %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+def not_cmp_fold_ge : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.ne %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.eq %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+def not_cmp_fold_ugt : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.ugt %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.ule %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+def not_cmp_fold_uge : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.uge %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.ult %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+def not_cmp_fold_sgt : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.sgt %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.sle %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+def not_cmp_fold_sge : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.sge %x, %y : i64
+  %c = llvm.mlir.constant (1) : i1
+  %1 = llvm.xor %0, %c : i1
+  llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+  %0 = llvm.icmp.slt %x, %y : i64
+  llvm.return %0 : i1
+  }]
+
+ def LLVMIR_not_cmp_fold : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+    [⟨_, not_cmp_fold_eq⟩,
+    ⟨_, not_cmp_fold_ne⟩,
+    ⟨_, not_cmp_fold_ge⟩,
+    ⟨_, not_cmp_fold_ugt⟩,
+    ⟨_, not_cmp_fold_uge⟩,
+    ⟨_, not_cmp_fold_sgt⟩,
+    ⟨_, not_cmp_fold_sge⟩,
+    ⟨_, not_cmp_fold_sge⟩]
+
+def GLobalISel_In_Lean_RISCVO0PreLegalizerCombiner :
+  List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  LLVMIR_not_cmp_fold)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+   LLVMIR_mul_by_neg_one)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  LLVMIR_sub_to_add_O0)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  LLVMIR_mul_to_shl)
