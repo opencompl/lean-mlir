@@ -120,10 +120,13 @@ rule hdel_compare_make_output:
     GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt"
   resources:
     # TODO: actually impose memory and time limit, using a python script.
-    runtime=config["hdel_timeout"]
-  shell:
-    "lake lean {input} 2>&1 > {output} && "
-    "echo 'done.'"
+  run:
+    status, stdout, stderr = run_with_limits(cmd=["lake", "lean", input[0]], timeout=int(config["hdel_timeout_sec"]), memout_mb=int(config["hdel_memout_mb"]))
+    with open(output[0], "w") as f:
+        f.write(stdout)
+        f.write(stderr)
+    if not isinstance(status, int) or status != 0:
+        raise Exception(f"rule failed with status '{status}'. See {output[0]} for possible more details.")
 
 # We can eventually split these, if we carefully understand the naming convention
 # of 'collect' for hacker's delight.
