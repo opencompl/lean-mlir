@@ -6,7 +6,7 @@ moreLeanArgs = ["--tstack=400000"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-rev = "nightly-testing-2025-08-06"
+rev = "nightly-testing-2025-08-11"
 
 [[require]]
 name = "Cli"
@@ -57,3 +57,7 @@ root = "SSA.Projects.InstCombine.LLVM.Enumerator"
 [[lean_lib]]
 name = "Tests"
 root = "SSA.Tests.Tests"
+
+[[lean_lib]]
+name = "core"
+roots = ["SSA.Core"]

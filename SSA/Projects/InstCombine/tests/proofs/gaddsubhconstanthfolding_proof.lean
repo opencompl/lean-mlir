@@ -16,7 +16,7 @@ theorem add_const_add_const_thm (e : IntW 32) : add (add e (const? 32 8)) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem add_const_sub_const_thm (e : IntW 32) : sub (add e (const? 32 8)) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,7 +34,7 @@ theorem add_const_const_sub_thm (e : IntW 32) : sub (const? 32 2) (add e (const?
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -45,7 +45,7 @@ theorem add_nsw_const_const_sub_nsw_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -55,7 +55,7 @@ theorem add_nsw_const_const_sub_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -65,7 +65,7 @@ theorem add_const_const_sub_nsw_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -76,7 +76,7 @@ theorem add_nsw_const_const_sub_nsw_ov_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -87,7 +87,7 @@ theorem add_nuw_const_const_sub_nuw_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -97,7 +97,7 @@ theorem add_nuw_const_const_sub_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -107,7 +107,7 @@ theorem add_const_const_sub_nuw_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -116,7 +116,7 @@ theorem sub_const_add_const_thm (e : IntW 32) : add (sub e (const? 32 8)) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -125,7 +125,7 @@ theorem sub_const_sub_const_thm (e : IntW 32) : sub (sub e (const? 32 8)) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -134,7 +134,7 @@ theorem sub_const_const_sub_thm (e : IntW 32) : sub (const? 32 2) (sub e (const?
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -143,7 +143,7 @@ theorem const_sub_add_const_thm (e : IntW 32) : add (sub (const? 32 8) e) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -152,7 +152,7 @@ theorem const_sub_sub_const_thm (e : IntW 32) : sub (sub (const? 32 8) e) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -161,7 +161,7 @@ theorem const_sub_const_sub_thm (e : IntW 32) : sub (const? 32 2) (sub (const? 3
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -172,7 +172,7 @@ theorem addsub_combine_constants_thm (e e_1 : IntW 7) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -181,7 +181,7 @@ theorem sub_from_constant_thm (e e_1 : IntW 5) : add (sub (const? 5 10) e_1) e â
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -192,5 +192,5 @@ theorem sub_from_constant_commute_thm (e e_1 : IntW 5) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

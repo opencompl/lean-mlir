@@ -16,7 +16,7 @@ theorem test5_thm (e : IntW 16) : trunc 16 (LLVM.and (sext 32 e) (const? 32 15))
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem test6_thm (e : IntW 1) : icmp IntPred.ne (zext 32 e) (const? 32 0) âŠ‘ e
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,5 +34,5 @@ theorem test6a_thm (e : IntW 1) : icmp IntPred.ne (zext 32 e) (const? 32 (-1)) â
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

@@ -16,7 +16,7 @@ theorem zext_thm (e : IntW 1) : select e (const? 41 1) (const? 41 0) ⊑ zext 41
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem sext_thm (e : IntW 1) : select e (const? 41 (-1)) (const? 41 0) ⊑ sext
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,7 +34,7 @@ theorem not_zext_thm (e : IntW 1) : select e (const? 999 0) (const? 999 1) ⊑ z
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -44,7 +44,7 @@ theorem not_sext_thm (e : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -54,7 +54,7 @@ theorem test3_thm (e : IntW 41) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -65,5 +65,5 @@ theorem test4_thm (e : IntW 1023) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

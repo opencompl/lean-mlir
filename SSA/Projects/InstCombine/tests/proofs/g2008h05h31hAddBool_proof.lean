@@ -16,5 +16,5 @@ theorem test_thm (e e_1 : IntW 1) : add e_1 e ⊑ LLVM.xor e_1 e := by
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

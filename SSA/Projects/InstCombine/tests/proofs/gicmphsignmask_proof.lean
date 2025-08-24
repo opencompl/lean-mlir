@@ -18,5 +18,5 @@ theorem cmp_x_and_negp2_with_eq_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
