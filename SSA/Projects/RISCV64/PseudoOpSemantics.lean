@@ -4,16 +4,16 @@ open BitVec
 
 /-!
   ## Dialect Pseudo-operation semantics
-  This file contains the semantics for each modelled `RISCV-64` standart pseudoinstruction
+  This file contains the semantics for each modelled `RISCV-64` standard pseudoinstruction
   as defined by : https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
-  Unlike Semantics.lean these semanitcs are dervied from the Sail semanitics does not modell
+  Unlike Semantics.lean these semantics are derived from the Sail semantics does not modell
   all pseudoinstructions. To be precise, Sail only models pseudoinstructions if they are actually
   native instructions when certain extensions are enabled.
-  If any instruction can be psuedoinstruction in some processor configurations and a pseud instruction
-  in others, then we implemented their semanitcs in the Semanitcs.lean file where we modell all architectural
+  If any instruction can be pseudoinstruction in some processor configurations and a pseud instruction
+  in others, then we implemented their semantics in the Semantics.lean file where we modell all architectural
   instructions
-  The semantic defintions reuse the semanitcs of their underlying base instructions.
-  The following list of instructions are hardware or psuedo ops depending the processor :
+  The semantic definitions reuse the semantics of their underlying base instructions.
+  The following list of instructions are hardware or pseudo ops depending the processor :
   sext.b
   sext.h
   zext.h
@@ -48,7 +48,7 @@ def ZEXTB_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
 
 @[simp_riscv]
 def SEQZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.ITYPE_pure64_RISCV_SLTIU  1 rs1_val
+  RV64Semantics.ITYPE_pure64_RISCV_SLTIU 1 rs1_val
 
 @[simp_riscv]
 def SNEZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
