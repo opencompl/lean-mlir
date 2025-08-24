@@ -423,7 +423,7 @@ def generate_benchmarks(file_name, num, jobs):
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(XDSL_ASM_DIR, basename + '.s')
         log_file = open(os.path.join(LOGS_DIR, basename + '_xdsl_riscv.log'), 'w')
-        XDSL_reg_alloc(input_file, output_file, log_file)
+        XDSL_compile_riscv(input_file, output_file, log_file)
         if os.path.exists(output_file):
             delete_if_malformed(output_file)
 

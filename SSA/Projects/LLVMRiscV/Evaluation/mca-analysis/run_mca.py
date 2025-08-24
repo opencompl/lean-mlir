@@ -75,6 +75,7 @@ def mca_analysis(input_file, output_file, log_file):
         "llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs "
     )
     cmd = LLVM_BUILD_DIR + cmd_base + input_file + " > " + output_file
+    print(cmd)
     run_command(cmd, log_file)
     
 
@@ -98,15 +99,13 @@ def clear_empty_logs():
                     shutil.rmtree(file_path)
             except Exception:
                 print("Failed to delete {filename}")
-        elif "lake" in filename:
+        else :
             lines = open(file_path).readlines()
             meaningful_lines = 0
             for line in lines:
-                if "warning" in line:
-                    continue
-                elif "Replayed" in line:
-                    continue
-                else:
+                if "error" in line:
+                    meaningful_lines += 1
+                elif "Error" in line:
                     meaningful_lines += 1
             if meaningful_lines == 0:
                 try:
