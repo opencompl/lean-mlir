@@ -356,7 +356,7 @@ where
 
 /--
 Converts an expression within a dialect to its MLIR string representation.
-Since MLIR generic syntax uses "" to denote operations, this function, this functions uses
+Since MLIR generic syntax uses double quotes (`"..."`) to print operations, this function uses
 the DialectPrint typeclass of each dialect to print the various parts of an expressiom such as
 operation and types. Lastly, it arranges the expression printing according to MLIR syntax.
 -/
