@@ -504,7 +504,7 @@ def attributesToPrint: RISCV64.Op → String
 instance : ToString (Op) where
   toString := opToString
 
-instance : DialectPrint (RV64) where
+instance : ToPrint (RV64) where
   printOpName
   | op => "riscv." ++ toString op
   printTy := toString
