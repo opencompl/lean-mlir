@@ -53,8 +53,7 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 >   - Code is reviewed for correctness. Testing is recommended but optional, as
 >     is continuous integration.
 >   - No cross-project dependencies. If you need code from a different project,
->     either go through the effort of polishing the code into core, or clone
->     the code.
+>     either go through the effort of polishing the code into core, or clone the code.
 
 ##### `SSA/Experimental`:
 
