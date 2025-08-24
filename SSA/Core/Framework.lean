@@ -145,17 +145,17 @@ impurely.
 DialectPrint includes the functions to print the components of a dialect.
 -/
 class DialectPrint (d : Dialect) where
-  /-- prints the operation in the dialect -/
+  /-- Prints the operation in the dialect. -/
   printOpName : d.Op → String
-  /-- prints the type in the dialect -/
+  /-- Prints the type in the dialect. -/
   printTy : d.Ty → String
-  /-- prints the attributes of the operation -/
+  /-- Prints the attributes of the operation. -/
   printAttributes : d.Op → String
-  /-- prints the name of the dialect -/
+  /-- Prints the name of the dialect. -/
   printDialect : String
-  /-- prints the return instruction of the dialect -/
+  /-- Prints the return instruction of the dialect. -/
   printReturn : d.Ty → String
-  /-- prints the function header of the dialect -/
+  /-- Prints the function header of the dialect. -/
   printFunc : d.Ty → String
 
 /- # Datastructures -/
