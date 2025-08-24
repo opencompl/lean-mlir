@@ -31,6 +31,8 @@ def srl_riscv := [LV| {
     llvm.return %y : i64
   }]
 
+/- # SRL, exact  -/
+
 @[simp_denote]
 def llvm_srl_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := lshr_llvm_no_flag
@@ -50,3 +52,46 @@ def llvm_srl_lower_riscv_exact : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
 def srl_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_srl_lower_riscv_exact, llvm_srl_lower_riscv]
+
+/- # SRL i32, not exact
+Logical right shift operation in LLVM: if exact flag is set,
+then returns poison if any nonzero bit is shifted  -/
+
+@[simp_denote]
+def lshr_llvm_no_flag_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.lshr %x, %amount : i32
+    llvm.return %1 : i32
+  }]
+
+@[simp_denote]
+def srl_riscv_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %base = "builtin.unrealized_conversion_cast"(%x) : (i32) -> (!i64)
+    %shamt = "builtin.unrealized_conversion_cast"(%amount) : (i32) -> (!i64)
+    %res = srl %base, %shamt : !i64
+    %y= "builtin.unrealized_conversion_cast"(%res) : (!i64) -> (i32)
+    llvm.return %y : i32
+  }]
+
+-- @[simp_denote]
+-- def llvm_srl_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+--   lhs := lshr_llvm_no_flag_32
+--   rhs := srl_riscv_32
+
+/- # SRL, exact i32  -/
+
+@[simp_denote]
+def lshr_llvm_exact_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.lshr exact %x, %amount : i32
+    llvm.return %1 : i32
+  }]
+
+-- def llvm_srl_lower_riscv_exact_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+--   lhs := lshr_llvm_exact_32
+--   rhs := srl_riscv_32
+
+-- def srl_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+--   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+--   [llvm_srl_lower_riscv_exact_32, llvm_srl_lower_riscv_32]

@@ -143,9 +143,8 @@ def llvm_zext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
 def zext_riscv_i16_to_i64 := [LV| {
   ^entry (%arg: i16):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i16) -> (!i64)
-    %1 = slli %0, 48 : !i64
-    %2 = srli %1, 48 : !i64
-    %res = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
+    %1 = zext.h %0 : !i64
+    %res = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i64)
     llvm.return %res : i64
   }]
 
@@ -163,9 +162,8 @@ def llvm_zext_lower_riscv_i16_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.b
 def zext_riscv_i16_to_i32 := [LV| {
   ^entry (%arg: i16):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i16) -> (!i64)
-    %1 = slli %0, 48 : !i64
-    %2 = srli %1, 48 : !i64
-    %res = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i32)
+    %1 = zext.h %0 : !i64
+    %res = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i32)
     llvm.return %res : i32
   }]
 

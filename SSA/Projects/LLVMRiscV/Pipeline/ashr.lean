@@ -40,7 +40,121 @@ def llvm_ashr_lower_riscv_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
   lhs := ashr_llvm_exact_flag
   rhs := ashr_riscv
 
-
 def ashr_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_ashr_lower_riscv_no_flag,llvm_ashr_lower_riscv_flag]
+
+
+/- # ASHR i32, not exact -/
+@[simp_denote]
+def ashr_llvm_no_flag_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.ashr %x, %amount : i32
+    llvm.return %1 : i32
+  }]
+
+/- # ASHR i32,  exact -/
+@[simp_denote]
+def ashr_llvm_exact_flag_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.ashr exact %x, %amount : i32
+    llvm.return %1 : i32
+  }]
+
+@[simp_denote]
+def ashr_riscv_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %base = "builtin.unrealized_conversion_cast" (%x) : (i32) -> (!i64)
+    %shamt = "builtin.unrealized_conversion_cast" (%amount) : (i32) -> (!i64)
+    %res = sra %base, %shamt : !i64
+    %y= "builtin.unrealized_conversion_cast" (%res) : (!i64) -> (i32)
+    llvm.return %y : i32
+  }]
+
+def llvm_ashr_lower_riscv_no_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := ashr_llvm_no_flag_32
+  rhs := ashr_riscv_32
+
+def llvm_ashr_lower_riscv_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := ashr_llvm_exact_flag_32
+  rhs := ashr_riscv_32
+
+def ashr_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_ashr_lower_riscv_no_flag_32,llvm_ashr_lower_riscv_flag_32]
+
+/- # ASHR i16, not exact -/
+@[simp_denote]
+def ashr_llvm_no_flag_16 := [LV| {
+    ^entry (%x: i16, %amount: i16):
+    %1 = llvm.ashr %x, %amount : i16
+    llvm.return %1 : i16
+  }]
+
+/- # ASHR i32,  exact -/
+@[simp_denote]
+def ashr_llvm_exact_flag_16 := [LV| {
+    ^entry (%x: i16, %amount: i16):
+    %1 = llvm.ashr exact %x, %amount : i16
+    llvm.return %1 : i16
+  }]
+
+@[simp_denote]
+def ashr_riscv_16 := [LV| {
+    ^entry (%x: i16, %amount: i16):
+    %base = "builtin.unrealized_conversion_cast" (%x) : (i16) -> (!i64)
+    %shamt = "builtin.unrealized_conversion_cast" (%amount) : (i16) -> (!i64)
+    %res = sra %base, %shamt : !i64
+    %y= "builtin.unrealized_conversion_cast" (%res) : (!i64) -> (i16)
+    llvm.return %y : i16
+  }]
+
+def llvm_ashr_lower_riscv_no_flag_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16)] where
+  lhs := ashr_llvm_no_flag_16
+  rhs := ashr_riscv_16
+
+def llvm_ashr_lower_riscv_flag_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16)] where
+  lhs := ashr_llvm_exact_flag_16
+  rhs := ashr_riscv_16
+
+def ashr_match_16 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_ashr_lower_riscv_no_flag_16,llvm_ashr_lower_riscv_flag_16]
+
+/- # ASHR i8, not exact -/
+@[simp_denote]
+def ashr_llvm_no_flag_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %1 = llvm.ashr %x, %amount : i8
+    llvm.return %1 : i8
+  }]
+
+/- # ASHR i8,  exact -/
+@[simp_denote]
+def ashr_llvm_exact_flag_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %1 = llvm.ashr exact %x, %amount : i8
+    llvm.return %1 : i8
+  }]
+
+@[simp_denote]
+def ashr_riscv_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %base = "builtin.unrealized_conversion_cast" (%x) : (i8) -> (!i64)
+    %shamt = "builtin.unrealized_conversion_cast" (%amount) : (i8) -> (!i64)
+    %res = sra %base, %shamt : !i64
+    %y= "builtin.unrealized_conversion_cast" (%res) : (!i64) -> (i8)
+    llvm.return %y : i8
+  }]
+
+def llvm_ashr_lower_riscv_no_flag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := ashr_llvm_no_flag_8
+  rhs := ashr_riscv_8
+
+def llvm_ashr_lower_riscv_flag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := ashr_llvm_exact_flag_8
+  rhs := ashr_riscv_8
+
+def ashr_match_8 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_ashr_lower_riscv_no_flag_8,llvm_ashr_lower_riscv_flag_8]
