@@ -411,7 +411,7 @@ instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
 
 instance : DialectPrint (LLVM) where
   printOpName
-  | op => "llvm."++toString op
+  | op => "llvm." ++ toString op
   printTy := toString
   printAttributes := attributesToPrint
   printDialect:= "llvm"
