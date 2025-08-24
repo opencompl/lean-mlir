@@ -44,7 +44,6 @@ def kill_process_tree(pid):
     except psutil.NoSuchProcess:
         pass
 
-
 def monitor_memory(pid, memout_mb, flag):
     try:
         proc = psutil.Process(pid)
@@ -62,7 +61,6 @@ def monitor_memory(pid, memout_mb, flag):
             time.sleep(5)
     except psutil.NoSuchProcess:
         pass
-
 
 def run_with_limits(cmd, timeout, memout_mb):
     try:
