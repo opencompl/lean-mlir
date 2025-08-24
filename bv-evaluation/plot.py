@@ -901,25 +901,25 @@ def plot_hackersdelight():
     file = "HackersDelight"
     df_new = df[df["bvw"] == str(64)]
     bv_decide_tot_stacked(df_new, file + "_bvw64")
-    # bv_decide_tot_stacked_perc(df_new, file + "_bvw64", "h_tot")
+    bv_decide_tot_stacked_perc(df_new, file + "_bvw64", "h_tot")
 
-    # cumul_solving_time_hackers_delight(
-    #     df,
-    #     "solved_bv_decide_times_average",
-    #     "solved_bitwuzla_times_average",
-    #     file,
-    #     bv_width,
-    # )
+    cumul_solving_time_hackers_delight(
+        df,
+        "solved_bv_decide_times_average",
+        "solved_bitwuzla_times_average",
+        file,
+        bv_width,
+    )
 
-    # bar_bw_impact(df, file, "solved_bitwuzla_times_average", bv_width)
-    # bar_bw_impact(df, file, "solved_bv_decide_times_average", bv_width)
-    # compare_tools_diff_bw(
-    #     df,
-    #     file,
-    #     "solved_bv_decide_times_average",
-    #     "solved_bitwuzla_times_average",
-    #     bv_width,
-    # )
+    bar_bw_impact(df, file, "solved_bitwuzla_times_average", bv_width)
+    bar_bw_impact(df, file, "solved_bv_decide_times_average", bv_width)
+    compare_tools_diff_bw(
+        df,
+        file,
+        "solved_bv_decide_times_average",
+        "solved_bitwuzla_times_average",
+        bv_width,
+    )
 
 
 def plot_instcombine():
