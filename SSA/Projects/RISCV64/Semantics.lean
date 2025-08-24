@@ -802,7 +802,7 @@ theorem ZBS_RTYPE_pure64_RISCV_BSET_eq_ZBS_RTYPE_pure64_RISCV_BSET_bv (rs2_val :
 
 @[simp_riscv]
 def ZBS_IOP_pure64_RISCV_BCLRI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
-    BitVec.and rs1_val (BitVec.not ((BitVec.setWidth 64 1#1) <<< shamt))
+  BitVec.and rs1_val (BitVec.not ((BitVec.setWidth 64 1#1) <<< shamt))
 
 @[simp_riscv]
 def ZBS_IOP_pure64_RISCV_BCLRI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :=
@@ -944,16 +944,16 @@ def ZBA_pure64_RISCV_SLLIUW (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64
 
 @[simp_riscv]
 def ZBB_pure64_RISCV_RORIW (shamt : (BitVec 5)) (rs1_val : BitVec 64) : BitVec 64 :=
-    BitVec.signExtend 64
+  BitVec.signExtend 64
     (BitVec.extractLsb 31 0 rs1_val >>> shamt.toNat ||| BitVec.extractLsb 31 0 rs1_val <<< ((32 - shamt.toNat) % 32))
 
 @[simp_riscv]
 def ZBB_pure64_RISCV_RORI (shamt : (BitVec 5)) (rs1_val : BitVec 64) : BitVec 64 :=
-    rs1_val >>> shamt.toNat ||| rs1_val <<< ((64 - shamt.toNat) % 64)
+  rs1_val >>> shamt.toNat ||| rs1_val <<< ((64 - shamt.toNat) % 64)
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_XNOR (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-    ~~~(rs1_val ^^^ rs2_val)
+  ~~~(rs1_val ^^^ rs2_val)
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_ORN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
@@ -961,7 +961,7 @@ def ZBB_RTYPE_pure_RISCV_ORN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVe
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_ANDN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-   rs1_val &&& ~~~rs2_val
+  rs1_val &&& ~~~rs2_val
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MIN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
@@ -969,14 +969,14 @@ def ZBB_RTYPE_pure_RISCV_MIN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVe
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MINU (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-   BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (min ↑rs1_val.toNat ↑rs2_val.toNat))
+  BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (min ↑rs1_val.toNat ↑rs2_val.toNat))
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MAXU (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-   BitVec.extractLsb' 0 64 (BitVec.ofInt (65) (max ↑rs1_val.toNat ↑rs2_val.toNat))
+  BitVec.extractLsb' 0 64 (BitVec.ofInt (65) (max ↑rs1_val.toNat ↑rs2_val.toNat))
 
 @[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MAX (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-   BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (max rs1_val.toInt rs2_val.toInt))
+  BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (max rs1_val.toInt rs2_val.toInt))
 
 end RV64Semantics
