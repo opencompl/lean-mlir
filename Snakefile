@@ -104,12 +104,6 @@ rule venv:
     venv/bin/pip install -r {GIT_ROOT}/requirements.txt
     """
 
-# rule hdel_setup:
-#   output:
-#     SSA_built
-#   shell:
-#     "lake exe cache get && lake build"
-
 rule hdel_compare_make_lean:
   input:
     GIT_ROOT / "SSA/Projects/InstCombine/HackersDelight/{file}.lean"
